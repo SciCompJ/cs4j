@@ -1,0 +1,10 @@
+ObjectType = Image
+NDims = 3
+DimSize = 100 80 160
+ElementType = MET_UCHAR
+ElementSize = 1.0 1.0 1.0
+ElementSpacing = 1.0 1.0 1.0
+AnatomicalOrientation = LIP
+BinaryData = true
+ElementByteOrderMSB = false
+ElementDataFile = rat60_LipNor552.raw

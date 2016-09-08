@@ -1,0 +1,46 @@
+/**
+ * 
+ */
+package net.sci.array.process;
+
+import net.sci.array.Array;
+import net.sci.array.data.ScalarArray;
+import net.sci.array.type.Scalar;
+
+/**
+ * Sample operator to demonstrate the use of ScalarArrayOperator interface.
+ * 
+ * Computes the square root of each scalar in the array and puts the result in
+ * target array.
+ * 
+ * @author dlegland
+ *
+ */
+public class PowerOfTwo implements ScalarArrayOperator
+{
+
+	/**
+	 * 
+	 */
+	public PowerOfTwo()
+	{
+	}
+
+	/* (non-Javadoc)
+	 * @see net.sci.array.process.ScalarArrayOperator#processScalar(net.sci.array.data.ScalarArray, net.sci.array.data.ScalarArray)
+	 */
+	@Override
+	public void processScalar(ScalarArray<? extends Scalar> input,
+			ScalarArray<? extends Scalar> output)
+	{
+		Array.Cursor cursor = input.getCursor();
+		while (cursor.hasNext())
+		{
+			cursor.forward();
+			int[] pos = cursor.getPosition();
+			
+			output.setValue(pos, Math.pow(input.getValue(pos), 2));
+		}
+	}
+
+}
