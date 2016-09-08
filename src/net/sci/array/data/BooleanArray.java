@@ -4,6 +4,7 @@
 package net.sci.array.data;
 
 import net.sci.array.data.scalar2d.BooleanArray2D;
+import net.sci.array.data.scalar3d.BooleanArray3D;
 import net.sci.array.type.Boolean;
 
 /**
@@ -21,8 +22,8 @@ public interface BooleanArray extends IntArray<Boolean>
 		{
 		case 2:
 			return BooleanArray2D.create(dims[0], dims[1]);
-//		case 3:
-//			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
+		case 3:
+			return BooleanArray3D.create(dims[0], dims[1], dims[2]);
 		default:
 			throw new RuntimeException("Cound not create Boolean array of dimension " + dims.length);
 //			return UInt8ArrayND.create(dims);
