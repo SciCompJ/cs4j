@@ -4,6 +4,7 @@
 package net.sci.array.data;
 
 import net.sci.array.data.scalar2d.FloatArray2D;
+import net.sci.array.data.scalar3d.FloatArray3D;
 import net.sci.array.type.Float;
 
 /**
@@ -21,8 +22,8 @@ public interface FloatArray extends ScalarArray<Float>
 		{
 		case 2:
 			return FloatArray2D.create(dims[0], dims[1]);
-//		case 3:
-//			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
+		case 3:
+			return FloatArray3D.create(dims[0], dims[1], dims[2]);
 		default:
 			//TODO: implement the rest
 			throw new RuntimeException("Can not create such image");

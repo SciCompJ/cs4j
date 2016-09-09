@@ -3,35 +3,33 @@
  */
 package net.sci.array.data.scalar3d;
 
-import net.sci.array.data.UInt8Array;
-import net.sci.array.type.UInt8;
+import net.sci.array.data.FloatArray;
+import net.sci.array.type.Float;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedUInt8Array3D extends UInt8Array3D
+public class BufferedFloatArray3D extends FloatArray3D
 {
 	// =============================================================
 	// Class fields
 
-	byte[] buffer;
+	float[] buffer;
 
 	
 	// =============================================================
 	// Constructors
 
 	/**
-	 * @param size0
-	 * @param size1
 	 */
-	public BufferedUInt8Array3D(int size0, int size1, int size2)
+	public BufferedFloatArray3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
-		this.buffer = new byte[size0 * size1 * size2];
+		this.buffer = new float[size0 * size1 * size2];
 	}
 
-	public BufferedUInt8Array3D(int size0, int size1, int size2, byte[] buffer)
+	public BufferedFloatArray3D(int size0, int size1, int size2, float[] buffer)
 	{
 		super(size0, size1, size2);
 		if (buffer.length < size0 * size1 * size2)
@@ -43,26 +41,20 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 
 
 	// =============================================================
-	// Specialization of the UInt8Array3D interface
+	// Implementation of the Array3D class
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array3D#getByte(int, int, int)
-	 */
 	@Override
-	public byte getByte(int x, int y, int z)
+	public double getValue(int x, int y, int z)
 	{
 		int index = x + this.size0 * (y + z * this.size1);
 		return this.buffer[index];
 	}
-		
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array3D#setByte(int, int, int, byte)
-	 */
+
 	@Override
-	public void setByte(int x, int y, int z, byte b)
+	public void setValue(int x, int y, int z, double value)
 	{
 		int index = x + this.size0 * (y + z * this.size1);
-		this.buffer[index] = b;
+		this.buffer[index] = (float) value;
 	}
 
 	
@@ -70,27 +62,27 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 	// Specialization of the Array interface
 
 	@Override
-	public UInt8Array3D duplicate()
+	public FloatArray3D duplicate()
 	{
-		byte[] buffer2 = new byte[size0 * size1 * size2];
+		float[] buffer2 = new float[size0 * size1 * size2];
 		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1 * size2);
-		return new BufferedUInt8Array3D(size0, size1, size2, buffer2);
+		return new BufferedFloatArray3D(size0, size1, size2, buffer2);
 	}
 
 	
 	// =============================================================
 	// Implementation of the Iterator interface
 
-	public UInt8Array.Iterator iterator()
+	public FloatArray.Iterator iterator()
 	{
-		return new UInt8Iterator();
+		return new FloatIterator();
 	}
 	
-	private class UInt8Iterator implements UInt8Array.Iterator
+	private class FloatIterator implements FloatArray.Iterator
 	{
 		int index = -1;
 		
-		public UInt8Iterator() 
+		public FloatIterator() 
 		{
 		}
 		
@@ -101,10 +93,10 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 		}
 
 		@Override
-		public UInt8 next()
+		public Float next()
 		{
 			this.index++;
-			return new UInt8(buffer[index]);
+			return new Float(buffer[index]);
 		}
 
 		@Override
@@ -114,22 +106,21 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 		}
 
 		@Override
-		public UInt8 get()
+		public Float get()
 		{
-			return new UInt8(buffer[index]);
+			return new Float(buffer[index]);
 		}
 
 		@Override
-		public byte getByte()
+		public double getValue()
 		{
 			return buffer[index];
 		}
 
 		@Override
-		public void setByte(byte b)
+		public void setValue(double value)
 		{
-			buffer[index] = b;
+			buffer[index] = (float) value;
 		}
 	}
-
 }

@@ -3,19 +3,19 @@
  */
 package net.sci.array.data.scalar3d;
 
-import net.sci.array.data.UInt8Array;
-import net.sci.array.type.UInt8;
+import net.sci.array.data.BooleanArray;
+import net.sci.array.type.Boolean;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedUInt8Array3D extends UInt8Array3D
+public class BufferedBooleanArray3D extends BooleanArray3D
 {
 	// =============================================================
 	// Class fields
 
-	byte[] buffer;
+	boolean[] buffer;
 
 	
 	// =============================================================
@@ -25,13 +25,13 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 	 * @param size0
 	 * @param size1
 	 */
-	public BufferedUInt8Array3D(int size0, int size1, int size2)
+	public BufferedBooleanArray3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
-		this.buffer = new byte[size0 * size1 * size2];
+		this.buffer = new boolean[size0 * size1 * size2];
 	}
 
-	public BufferedUInt8Array3D(int size0, int size1, int size2, byte[] buffer)
+	public BufferedBooleanArray3D(int size0, int size1, int size2, boolean[] buffer)
 	{
 		super(size0, size1, size2);
 		if (buffer.length < size0 * size1 * size2)
@@ -43,23 +43,23 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 
 
 	// =============================================================
-	// Specialization of the UInt8Array3D interface
+	// Specialization of the BooleanArray3D interface
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array3D#getByte(int, int, int)
+	 * @see net.sci.array.data.scalar2d.BooleanArray3D#getState(int, int, int)
 	 */
 	@Override
-	public byte getByte(int x, int y, int z)
+	public boolean getState(int x, int y, int z)
 	{
 		int index = x + this.size0 * (y + z * this.size1);
 		return this.buffer[index];
 	}
 		
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array3D#setByte(int, int, int, byte)
+	 * @see net.sci.array.data.scalar2d.BooleanArray3D#setState(int, int, int, boolean)
 	 */
 	@Override
-	public void setByte(int x, int y, int z, byte b)
+	public void setState(int x, int y, int z, boolean b)
 	{
 		int index = x + this.size0 * (y + z * this.size1);
 		this.buffer[index] = b;
@@ -70,27 +70,27 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 	// Specialization of the Array interface
 
 	@Override
-	public UInt8Array3D duplicate()
+	public BooleanArray3D duplicate()
 	{
-		byte[] buffer2 = new byte[size0 * size1 * size2];
+		boolean[] buffer2 = new boolean[size0 * size1 * size2];
 		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1 * size2);
-		return new BufferedUInt8Array3D(size0, size1, size2, buffer2);
+		return new BufferedBooleanArray3D(size0, size1, size2, buffer2);
 	}
 
 	
 	// =============================================================
 	// Implementation of the Iterator interface
 
-	public UInt8Array.Iterator iterator()
+	public BooleanArray.Iterator iterator()
 	{
-		return new UInt8Iterator();
+		return new BooleanIterator();
 	}
 	
-	private class UInt8Iterator implements UInt8Array.Iterator
+	private class BooleanIterator implements BooleanArray.Iterator
 	{
 		int index = -1;
 		
-		public UInt8Iterator() 
+		public BooleanIterator() 
 		{
 		}
 		
@@ -101,10 +101,10 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 		}
 
 		@Override
-		public UInt8 next()
+		public Boolean next()
 		{
 			this.index++;
-			return new UInt8(buffer[index]);
+			return new Boolean(buffer[index]);
 		}
 
 		@Override
@@ -114,19 +114,19 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 		}
 
 		@Override
-		public UInt8 get()
+		public Boolean get()
 		{
-			return new UInt8(buffer[index]);
+			return new Boolean(buffer[index]);
 		}
 
 		@Override
-		public byte getByte()
+		public boolean getState()
 		{
 			return buffer[index];
 		}
 
 		@Override
-		public void setByte(byte b)
+		public void setState(boolean b)
 		{
 			buffer[index] = b;
 		}

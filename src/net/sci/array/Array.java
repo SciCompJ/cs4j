@@ -14,7 +14,7 @@ package net.sci.array;
  * @author dlegland
  *
  */
-public interface Array<T> extends Iterable<T>, Positionable<T>
+public interface Array<T> extends Iterable<T>
 {
 	/**
 	 * Returns the dimensionality of this array, i.e. the number of dimensions.
@@ -89,9 +89,9 @@ public interface Array<T> extends Iterable<T>, Positionable<T>
 	}
 
 	/**
-	 * Returns an array iterator, for implementing the Iterable interface.
+	 * Returns an iterator over the elements of the array, for implementing the
+	 * Iterable interface.
 	 */
-	// TODO: decide whether one should iterate over values, or over positions...
 	public Iterator<T> iterator();
 
 	public interface Iterator<T> extends java.util.Iterator<T>

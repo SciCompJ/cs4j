@@ -43,7 +43,7 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 
 
 	// =============================================================
-	// Constructors
+	// Implementation of the UInt8Array2D interface
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.scalar2d.UInt8Array2D#getByte(int, int)
@@ -55,8 +55,6 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		return this.buffer[index];
 	}
 	
-	
-
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.scalar2d.UInt8Array2D#setByte(int, int, byte)
 	 */
@@ -66,6 +64,22 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		int index = x + y * this.size0;
 		this.buffer[index] = b;
 	}
+
+
+	// =============================================================
+	// Implementation of the Array interface
+
+	@Override
+	public UInt8Array2D duplicate()
+	{
+		byte[] buffer2 = new byte[size0 * size1];
+		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1);
+		return new BufferedUInt8Array2D(size0, size1, buffer2);
+	}
+
+	
+	// =============================================================
+	// Implementation of the Iterable interface
 
 	public UInt8Array.Iterator iterator()
 	{
@@ -116,14 +130,6 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		{
 			buffer[index] = b;
 		}
-	}
-
-	@Override
-	public UInt8Array2D duplicate()
-	{
-		byte[] buffer2 = new byte[size0 * size1];
-		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1);
-		return new BufferedUInt8Array2D(size0, size1, buffer2);
 	}
 
 }
