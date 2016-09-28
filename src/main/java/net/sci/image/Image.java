@@ -1,0 +1,389 @@
+/**
+ * 
+ */
+package net.sci.image;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+
+import net.sci.array.Array;
+import net.sci.array.ArrayOperator;
+import net.sci.array.data.BooleanArray;
+import net.sci.array.data.FloatArray;
+import net.sci.array.data.UInt8Array;
+import net.sci.array.data.VectorArray;
+import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
+import net.sci.array.data.scalar2d.IntArray2D;
+import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
+import net.sci.array.data.scalar3d.UInt8Array3D;
+import net.sci.image.io.TiffImageReader;
+import net.sci.image.io.TiffTag;
+
+/**
+ * A multi-dimensional image, represented by a multi-dimensional array together
+ * with interpretation info and meta-data.
+ * 
+ * Follows same implementation pattern as "Image" class from Matlab project.
+ * 
+ * @author dlegland
+ *
+ */
+public class Image
+{
+	// =============================================================
+	// Public enumerations
+
+	/**
+	 * The different types of images.
+	 * @author dlegland
+	 *
+	 */
+	public enum Type
+	{
+		UNKNOWN, 
+		GRAYSCALE,
+		INTENSITY,
+		BINARY,
+		LABEL,
+		COLOR,
+		COMPLEX,
+		GRADIENT,
+		VECTOR	
+	}
+	
+	// =============================================================
+	// Static methods
+
+	public static final Image readImage(File file) throws IOException 
+	{
+		// check if file exists
+		if (!file.exists()) 
+		{
+			throw new FileNotFoundException("Could not find file: "
+					+ file.getName());
+		}
+		
+		Image metaImage;
+		
+		if (file.getName().endsWith(".tif"))
+		{
+			TiffImageReader reader = new TiffImageReader(file);
+			metaImage = reader.readImage();
+			reader.close();
+		} 
+		else
+		{
+			BufferedImage bufImg = ImageIO.read(file);
+			metaImage = createImage(bufImg);
+		}
+		
+		metaImage.setName(file.getName());
+		return metaImage;
+	}
+	
+	/**
+	 * Creates a new Image from an AWT image.
+	 * 
+	 * @param bufImg an instance of BufferedImage
+	 * @return the converted image
+	 */
+	public final static Image createImage(BufferedImage bufImg)
+	{
+		// TODO: keep here?
+		// Image dimension
+		int width = bufImg.getWidth();
+		int height = bufImg.getHeight();
+
+		// get the raster, that contains data
+		WritableRaster raster = bufImg.getRaster();
+
+		int nc = raster.getNumBands();
+
+		Array<?> array = null;
+		if (nc == 1)
+		{
+			// Create new image
+			IntArray2D<?> img = new BufferedUInt8Array2D(width, height);
+
+			// Initialize image data with raster content
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					int value = raster.getSample(x, y, 0);
+					img.setInt(x, y, value);
+				}
+			}
+			array = img;
+
+		} 
+		else if (nc == 3 || nc == 4)
+		{
+			// Create new image
+			UInt8Array3D img = new BufferedUInt8Array3D(width, height, 3);
+
+			// Initialize image data with raster content
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					img.setInt(x, y, 0, raster.getSample(x, y, 0));
+					img.setInt(x, y, 1, raster.getSample(x, y, 1));
+					img.setInt(x, y, 2, raster.getSample(x, y, 2));
+				}
+			}
+			array = img;
+		} 
+		else
+		{
+			throw new RuntimeException(
+					"Can not manage images with number of bands equal to " + nc);
+		}
+
+		// create the meta-image
+		Image image = new Image(array);
+		return image;
+	}
+
+
+
+	// =============================================================
+	// Class fields
+
+	/**
+	 * The multi-dimensional array containing image data.
+	 */
+	Array<?> data;
+	
+	/**
+	 * The size of image, including physical and time dimensions.
+	 */
+	int[] size;
+	
+	/**
+	 * The type of image, giving information on how to interpret image element.
+	 */
+	Type type;
+	
+	String name = "";
+	
+	/**
+	 * The min and max displayable values of scalar images. Default is [0, 255].
+	 */
+	double[] displayRange = new double[]{0, 255};
+
+	int[][] colorMap = null;
+	
+	//TODO: find a better way to store meta data
+	public ArrayList<TiffTag> tiffTags = new ArrayList<>(0);
+	
+
+	// =============================================================
+	// Constructors
+
+	/**
+	 * Constructor from data array, trying to infer type from data type and shape. 
+	 */
+	public Image(Array<?> data)
+	{
+		this.data = data;
+		setImageTypeFromDataType();
+		computeImageSize();
+	}
+
+	/**
+	 * Constructor from data array and type specifier. 
+	 */
+	public Image(Array<?> data, Type type)
+	{
+		this.data = data;
+		this.type = type;
+		computeImageSize();
+	}
+
+	/**
+	 * Creates a new meta-image, initialized by image buffer, and keeping
+	 * meta-information from parent meta-image.
+	 * 
+	 * @param image the initial buffer for this meta-image
+	 */
+	public Image(Array<?> data, Image parent)
+	{
+		this(data);
+		
+		// additional processing to take into account parent image
+		this.type = parent.type;
+		this.name = parent.name;
+		this.displayRange = parent.displayRange;
+		this.colorMap = parent.colorMap;
+	}
+	
+	/**
+	 * Determines the type of image from the type of the inner data array.
+	 */
+	private void setImageTypeFromDataType()
+	{
+		if (this.data instanceof UInt8Array) 
+		{
+			this.type = Type.GRAYSCALE;
+//			int[] dims = this.data.getSize();
+//			if (dims.length == 3)
+//			{
+//				if (dims[2] == 3)
+//				{
+//					this.type = Type.COLOR;
+//				}
+//			}
+		} 
+		else if (this.data instanceof BooleanArray)
+		{
+			this.type = Type.BINARY;
+		} 
+		else if (this.data instanceof FloatArray) 
+		{
+			this.type = Type.INTENSITY;
+		} 
+//		else if (this.data instanceof RGB8Array)
+//		{
+//			this.type = Type.RGB8;
+//		} 
+		else if (this.data instanceof VectorArray) 
+		{
+			this.type = Type.VECTOR;
+		}
+		else
+		{
+			this.type = Type.UNKNOWN;
+		}
+	}
+
+	/**
+	 * Compute the size of image from size of data and image type.
+	 */
+	private void computeImageSize()
+	{
+		// get data infos
+		int dataND = this.data.dimensionality();
+		int[] dataSize = this.data.getSize();
+		
+		// compute size of image
+		int nd = isVectorImage() ? dataND - 1 : dataND;
+
+		// create size array depending on image type
+		this.size = new int[nd];
+		System.arraycopy(dataSize, 0, this.size, 0, nd);
+	}
+	
+	
+	// =============================================================
+	// Methods
+
+	public Array<?> getData()
+	{
+		return this.data;
+	}
+	
+	public int[][] getColorMap()
+	{
+		return this.colorMap;
+	}
+	
+	public void setColorMap(int[][] map)
+	{
+		this.colorMap = map;
+	}
+	
+	public double[] getDisplayRange()
+	{
+		return displayRange;
+	}
+
+	public void setDisplayRange(double[] displayRange)
+	{
+		this.displayRange = displayRange;
+	}
+
+	public String getName()
+	{
+		return this.name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	
+	// =============================================================
+	// Basic accessors
+
+	/**
+	 * @return the number of physical dimensions of this image.
+	 */
+	public int getDimension()
+	{
+		return this.size.length;
+	}
+
+	/**
+	 * Returns the physical size of the image.
+	 */
+	public int[] getSize()
+	{
+		return this.size;
+	}
+	
+	/**
+	 * Returns the size of the image along the specified dimension, starting
+	 * from 0.
+	 */
+	public int getSize(int dim)
+	{
+		return this.size[dim];
+	}
+
+	public Type getType()
+	{
+		return type;
+	}
+
+	public void setType(Type type)
+	{
+		this.type = type;
+	}
+	
+	public boolean isGrayscaleImage()
+	{
+		return this.type == Type.GRAYSCALE || this.type == Type.BINARY;
+	}
+
+	public boolean isColorImage()
+	{
+		return this.type == Type.COLOR;
+	}
+
+	public boolean isVectorImage()
+	{
+		return this.type == Type.COLOR || this.type == Type.VECTOR || this.type == Type.COMPLEX || this.type == Type.GRADIENT;
+	}
+
+	/**
+	 * Applies the given operator to image data, and returns a new image with
+	 * the result.
+	 * 
+	 * @param op
+	 *            the operator to apply on image data
+	 * @return a new Image instance
+	 */
+	public Image apply(ArrayOperator op)
+	{
+		Array<?> newData = op.process(this.data);
+		return new Image(newData, this);
+	}
+
+}

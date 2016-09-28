@@ -1,0 +1,311 @@
+/**
+ * 
+ */
+package net.sci.image.io;
+
+import java.io.PrintStream;
+import java.util.ArrayList;
+
+/**
+ * Stores all information that are necessary to load an image from a TIFF file. 
+ */
+public class TiffFileInfo {
+	
+	public enum PixelType {
+		/** 8-bit unsigned integer (0-255). */
+		GRAY8,
+		/**
+		 * 16-bit signed integer (-32768-32767). Imported signed images are
+		 * converted to unsigned by adding 32768.
+		 */
+		GRAY16_SIGNED,
+		/** 16-bit unsigned integer (0-65535). */
+		GRAY16_UNSIGNED,
+		/**
+		 * 32-bit signed integer. Imported 32-bit integer images are converted
+		 * to floating-point.
+		 */
+		GRAY32_INT,
+		/** 32-bit floating-point. */
+		GRAY32_FLOAT,
+		/** 8-bit unsigned integer with color lookup table. */
+		COLOR8,
+		/** 24-bit interleaved RGB. Import/export only. */
+		RGB,
+		/** 24-bit planer RGB. Import only. */
+		RGB_PLANAR,
+		/** 1-bit black and white. Import only. */
+		BITMAP, 
+		/** 32-bit interleaved ARGB. Import only. */
+		ARGB, 
+		/** 24-bit interleaved BGR. Import only. */
+		BGR,
+		/**
+		 * 32-bit unsigned integer. Imported 32-bit integer images are converted
+		 * to floating-point.
+		 */
+		GRAY32_UNSIGNED,
+		/** 48-bit interleaved RGB. */
+		RGB48,
+		/** 12-bit unsigned integer (0-4095). Import only. */
+		GRAY12_UNSIGNED, 
+		/** 24-bit unsigned integer. Import only. */
+		GRAY24_UNSIGNED, 
+		/** 32-bit interleaved BARG (MCID). Import only. */
+		BARG, 
+		/** 64-bit floating-point. Import only.*/
+		GRAY64_FLOAT, 
+		/** 48-bit planar RGB. Import only. */
+		RGB48_PLANAR, 
+		/** 32-bit interleaved ABGR. Import only. */
+		ABGR
+	};
+	
+	// Compression modes
+	public enum Compression {
+		UNKNOWN,
+		NONE,
+		CCITT_RLE,
+		CCITT_GROUP3,
+		CCITT_GROUP4,
+		LZW, 
+		JPEG, 
+		JPEG_OLD, 
+		PACK_BITS, 
+		ZIP;
+		
+		public static Compression fromValue(int value) {
+			switch (value) {
+			// First test official values
+			case 1: 	return Compression.NONE;
+			case 2: 	return Compression.CCITT_RLE;
+			case 32773: return Compression.PACK_BITS;
+			case 8:
+			case 32946: return Compression.ZIP;
+			
+			// Test also less common values
+			case 3: 	return Compression.CCITT_GROUP3;
+			case 4: 	return Compression.CCITT_GROUP4;
+			case 5: 	return Compression.LZW;
+			case 6: 	return Compression.JPEG_OLD;
+			case 7: 	return Compression.JPEG;
+			default:
+				throw new IllegalArgumentException(
+						"No Compression type defined for state" + value);
+			}
+		}
+	};
+	
+	// File formats
+	public enum FileFormat {
+		UNKNOWN, 
+		RAW, 
+		TIFF, 
+		GIF_OR_JPG,
+		FITS,
+		BMP, 
+		DICOM, 
+		ZIP_ARCHIVE,
+		PGM,
+		IMAGIO;
+	};
+
+	public enum SubFileType {
+		IMAGE,
+		REDUCEDIMAGE,
+		PAGE,
+		MASK; 
+			
+		public static SubFileType fromValue(int value) {
+			switch (value) {
+			case 0: return SubFileType.IMAGE;
+			case 1: return SubFileType.REDUCEDIMAGE;
+			case 2: return SubFileType.PAGE;
+			case 4: return SubFileType.MASK;
+			default:
+				throw new IllegalArgumentException(
+						"Not SubFileType defined for state " + value);
+			}
+		}
+	}
+	
+	public enum Orientation {
+		TOPLEFT,
+		TOPRIGHT,
+		BOTRIGHT,
+		BOTLEFT,
+		LEFTTOP,
+		RIGHTTOP,
+		RIGHTBOT,
+		LEFTBOT; 
+		
+		public static Orientation fromValue(int value) {
+			switch (value) {
+			case 1: return Orientation.TOPLEFT;
+			case 2: return Orientation.TOPRIGHT;
+			case 3: return Orientation.BOTRIGHT;
+			case 4: return Orientation.BOTLEFT;
+			case 5: return Orientation.LEFTTOP;
+			case 6: return Orientation.RIGHTTOP;
+			case 7: return Orientation.RIGHTBOT;
+			case 8: return Orientation.LEFTBOT;
+			default:
+				throw new IllegalArgumentException("No orientation defined for state " + value);
+			}
+		}
+	};
+	
+	/**
+	 * Size of the image
+	 */
+	public int width; 
+	public int height; 
+	
+	public int nImages = 1;
+
+	public SubFileType subFileType;
+	
+	/**
+	 * Spatial calibration info 
+	 */
+	public double pixelWidth;
+	public double pixelHeight;
+	public String unit;
+	
+	boolean intelByteOrder;
+	Compression compression = Compression.NONE;
+	
+	Orientation orientation = Orientation.TOPLEFT;
+	
+	String imageDescription;
+	
+//	/** the beginning of the image buffer */ 
+//	int offset;
+	
+	/** Info for reading image buffer */
+	int[] stripOffsets;
+	int[] stripLengths;
+	int rowsPerStrip;
+	
+	PixelType fileType;
+	int samplesPerPixel;
+	int bytesPerPixel = 1;
+	
+	boolean whiteIsZero; 
+	int photometricInterpretation;
+	int[][] lut = null;
+	
+	/**
+	 * A list of TiffTag for the additional tags that may be provided in files.
+	 */
+	ArrayList<TiffTag> tags = new ArrayList<TiffTag>();
+	
+	
+	/** Returns the number of bytes used per pixel. */
+	public int getBytesPerPixel() {
+		switch (fileType) {
+		case GRAY8:
+		case COLOR8:
+		case BITMAP:
+			return 1;
+		case GRAY16_SIGNED:
+		case GRAY16_UNSIGNED:
+			return 2;
+		case RGB:
+		case RGB_PLANAR:
+		case BGR:
+			return 3;
+		case GRAY32_INT:
+		case GRAY32_UNSIGNED:
+		case GRAY32_FLOAT:
+		case ARGB:
+		case GRAY24_UNSIGNED:
+		case BARG:
+		case ABGR:
+			return 4;
+		case RGB48:
+		case RGB48_PLANAR:
+			return 6;
+		case GRAY64_FLOAT:
+			return 8;
+		default:
+			return 0;
+		}
+	}
+
+	/**
+	 * Display the content of the image file directory to the console.  
+	 */
+	public void print() {
+		print(System.out);
+	}
+
+	/**
+	 * Display the content of the image file directory to the specified print stream.  
+	 */
+	public void print(PrintStream out) {
+		out.println("--- Tiff File Info Description ---");
+		out.println("file type: " + fileType);
+		out.println("size0: " + width);
+		out.println("size1: " + height);
+		out.println("intel byte order: " + intelByteOrder);
+		out.println("compression: " + compression);
+//		out.println("offset: " + offset);
+
+		out.println("samples per pixel: " + samplesPerPixel);
+		out.println("bytes per pixel: " + bytesPerPixel);
+		out.println("Photometric intrepretation: " + photometricInterpretation);
+
+		if (imageDescription != null) {
+			out.println("image description: " + imageDescription);
+		}
+		
+		out.print("strip offsets:");
+		for (int i = 0; i < stripOffsets.length; i++)
+			out.print(" " + stripOffsets[i]);
+		out.println();
+
+		out.print("strip lengths:");
+		for (int i = 0; i < stripLengths.length; i++)
+			out.print(" " + stripLengths[i]);
+		out.println();
+		
+		out.println("rowsPerStrip: " + rowsPerStrip);
+	}
+	
+	public String getTagName(int tag) {
+//		// tags
+//		public static final int NEW_SUBFILE_TYPE = 254;
+//		public static final int IMAGE_WIDTH = 256;
+//		public static final int IMAGE_LENGTH = 257;
+//		public static final int BITS_PER_SAMPLE = 258;
+//		public static final int COMPRESSION = 259;
+//		public static final int PHOTO_INTERP = 262;
+//		public static final int IMAGE_DESCRIPTION = 270;
+//		public static final int STRIP_OFFSETS = 273;
+//		public static final int ORIENTATION = 274;
+//		public static final int SAMPLES_PER_PIXEL = 277;
+//		public static final int ROWS_PER_STRIP = 278;
+//		public static final int STRIP_BYTE_COUNT = 279;
+//		public static final int X_RESOLUTION = 282;
+//		public static final int Y_RESOLUTION = 283;
+//		public static final int PLANAR_CONFIGURATION = 284;
+//		public static final int RESOLUTION_UNIT = 296;
+//		public static final int SOFTWARE = 305;
+//		public static final int DATE_TIME = 306;
+//		public static final int ARTEST = 315;
+//		public static final int HOST_COMPUTER = 316;
+//		public static final int PREDICTOR = 317;
+//		public static final int COLOR_MAP = 320;
+//		public static final int TILE_WIDTH = 322;
+//		public static final int SAMPLE_FORMAT = 339;
+//		public static final int JPEG_TABLES = 347;
+//		public static final int METAMORPH1 = 33628;
+//		public static final int METAMORPH2 = 33629;
+//		public static final int IPLAB = 34122;
+//		public static final int NIH_IMAGE_HDR = 43314;
+//		public static final int META_DATA_BYTE_COUNTS = 50838; // private tag registered with Adobe
+//		public static final int META_DATA = 50839; // private tag registered with Adobe
+		return "unknown";
+	}
+}
