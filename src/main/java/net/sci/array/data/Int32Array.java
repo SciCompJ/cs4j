@@ -4,6 +4,7 @@
 package net.sci.array.data;
 
 import net.sci.array.data.scalar2d.Int32Array2D;
+import net.sci.array.data.scalar3d.Int32Array3D;
 import net.sci.array.type.Int32;
 
 /**
@@ -21,8 +22,8 @@ public interface Int32Array extends IntArray<Int32>
 		{
 		case 2:
 			return Int32Array2D.create(dims[0], dims[1]);
-//		case 3:
-//			return Int32Array3D.create(dims[0], dims[1], dims[2]);
+		case 3:
+			return Int32Array3D.create(dims[0], dims[1], dims[2]);
 		default:
 			throw new IllegalArgumentException("Not implemented for dimension " + dims.length);
 //			return Int32ArrayND.create(dims);
@@ -36,9 +37,7 @@ public interface Int32Array extends IntArray<Int32>
 	@Override
 	public default Int32Array newInstance(int... dims)
 	{
-		//TODO: implement me!
-//		return Int32Array.create(dims);
-		return null;
+		return Int32Array.create(dims);
 	}
 
 	@Override
