@@ -15,7 +15,31 @@ import net.sci.array.ArrayOperator;
  */
 public class Slicer implements ArrayOperator
 {
+	public static final <T> void getSlice(Array<? extends T> source, Array<? super T> target, int dim, int sliceIndex)
+	{
+		// create position pointer for source image
+		int nd = target.dimensionality();
+		int[] srcPos = new int[nd + 1];
+		srcPos[dim] = sliceIndex;
 
+		// iterate over position in target image
+		Array.Cursor cursor = target.getCursor();
+		while (cursor.hasNext())
+		{
+			// get position in target image
+			cursor.forward();
+			int[] pos = cursor.getPosition();
+			
+			// convert to position in source image
+			System.arraycopy(pos, 0, srcPos, 0, dim);
+			System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
+			
+			// copy value of selected position
+			target.set(pos, source.get(srcPos));
+		}
+	}
+	
+	
 	int dim;
 	
 	int index;
@@ -72,22 +96,26 @@ public class Slicer implements ArrayOperator
 	
 	public void processDoubleNd(Array<?> source, Array<?> target)
 	{
-		Array.Cursor cursor = target.getCursor();
-		
+		// create position pointer for source image
 		int nd = target.dimensionality();
 		int[] srcPos = new int[nd + 1];
 		srcPos[this.dim] = this.index;
-		
+
+		// iterate over position in target image
+		Array.Cursor cursor = target.getCursor();
 		while (cursor.hasNext())
 		{
+			// get position in target image
 			cursor.forward();
 			int[] pos = cursor.getPosition();
 			
-			System.arraycopy(pos, 0, srcPos, 0, this.dim);
-			System.arraycopy(pos, this.dim, srcPos, this.dim + 1, nd - this.dim);
+			// convert to position in source image
+			System.arraycopy(pos, 0, srcPos, 0, dim);
+			System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
+			
+			// copy value of selected position
 			target.setValue(pos, source.getValue(srcPos));
 		}
 	}
-
 
 }
