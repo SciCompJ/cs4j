@@ -43,4 +43,29 @@ public class Double extends Scalar
 		return DoubleArray.create(dims);
 	}
 
+
+	// =============================================================
+	// Override Object methods
+	
+	public boolean equals(Object that)
+	{
+		// check for self-comparison
+		if (this == that)
+			return true;
+
+		// check for class
+		if (!(that instanceof Double))
+			return false;
+
+		// cast to native object is now safe
+		Double thatDouble = (Double) that;
+
+	    // now a proper field-by-field evaluation can be made
+	    return this.value == thatDouble.value;
+	}
+	
+	public int hashCode()
+	{
+		return java.lang.Double.hashCode(this.value);
+	}
 }

@@ -12,6 +12,9 @@ public class Boolean extends Int
 {
 	boolean state;
 	
+	// =============================================================
+	// Constructor
+
 	/**
 	 * Default constructor.
 	 */
@@ -27,7 +30,11 @@ public class Boolean extends Int
 	{
 		this.state = value != 0;
 	}
+
 	
+	// =============================================================
+	// Methods
+
 	public boolean getState()
 	{
 		return state;
@@ -45,4 +52,29 @@ public class Boolean extends Int
 		return state ? 1 : 0;
 	}
 
+
+	// =============================================================
+	// Override Object methods
+	
+	public boolean equals(Object that)
+	{
+		// check for self-comparison
+		if (this == that)
+			return true;
+
+		// check for class
+		if (!(that instanceof Boolean))
+			return false;
+
+		// cast to native object is now safe
+		Boolean thatBoolean = (Boolean) that;
+
+	    // now a proper field-by-field evaluation can be made
+	    return this.state == thatBoolean.state;
+	}
+	
+	public int hashCode()
+	{
+		return java.lang.Boolean.hashCode(this.state);
+	}
 }
