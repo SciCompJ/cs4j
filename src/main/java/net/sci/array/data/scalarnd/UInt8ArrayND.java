@@ -25,5 +25,14 @@ public abstract class UInt8ArrayND extends ArrayND<UInt8> implements UInt8Array
 	{
 		super(sizes);
 	}
+
+	// =============================================================
+	// Specialization of Array interface
+	
+	@Override
+	public UInt8Array newInstance(int... dims)
+	{
+		return UInt8Array.create(dims);
+	}
 	
 }

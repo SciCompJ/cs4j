@@ -43,4 +43,29 @@ public class Float extends Scalar
 		return FloatArray.create(dims);
 	}
 
+
+	// =============================================================
+	// Override Object methods
+	
+	public boolean equals(Object that)
+	{
+		// check for self-comparison
+		if (this == that)
+			return true;
+
+		// check for class
+		if (!(that instanceof Float))
+			return false;
+
+		// cast to native object is now safe
+		Float thatFloat = (Float) that;
+
+	    // now a proper field-by-field evaluation can be made
+	    return this.value == thatFloat.value;
+	}
+	
+	public int hashCode()
+	{
+		return java.lang.Float.hashCode(this.value);
+	}
 }
