@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The set of tags used by ImageJ to save oerlays.
+ * The set of tags used by ImageJ to save overlays.
  * 
  * @author dlegland
  *

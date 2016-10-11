@@ -337,6 +337,7 @@ public class TiffImageReader implements ImageReader
 			case 258: // Bits Per Sample
 				if (count == 1)
 				{
+					// Scalar type images (grayscale)
 					if (value == 8)
 						info.fileType = PixelType.GRAY8;
 					else if (value == 16)
@@ -449,7 +450,7 @@ public class TiffImageReader implements ImageReader
 				break;
 				
 				
-			default: // unknown tag
+			default: // non-elementary tags
 				TiffTag tag = tagMap.get(tagCode);
 				
 				boolean unknown = false;
@@ -465,31 +466,7 @@ public class TiffImageReader implements ImageReader
 				tag.type = fieldType;
 				tag.count = count;
 				
-				readTag(tag, value);
-//				// parse tag data
-//				// TODO: improve unknown tag parsing?
-//				switch (fieldType)
-//				{
-//				case BYTE_TYPE:
-//					tag.value = new Integer(state);
-////					System.out.println(String.format("state of tag %d (%s) is %d", tag.code, tag.name, state));
-//					break;
-//				case SHORT_TYPE:
-//					tag.value = new Integer(state);
-////					System.out.println(String.format("state of tag %d (%s) is %d", tag.code, tag.name, state));
-//					break;
-//				case LONG_TYPE:
-//					tag.value = new Integer(state);
-////					System.out.println(String.format("state of tag %d (%s) is %d", tag.code, tag.name, state));
-//					break;
-//				case ASCII_TYPE:
-//					tag.value = readAscii(count, state);
-////					System.out.println(String.format("state of tag %d (%s) is %s", tag.code, tag.name, tag.value));
-//					break;
-//				default:
-//					System.err.println("Could not interpret rational with code: "
-//									+ tag.code + " (" + tag.name + ")");
-//				}
+				setupTag(tag, value);
 
 				if (unknown)
 				{
@@ -510,7 +487,7 @@ public class TiffImageReader implements ImageReader
 								tag.name, tag.value));
 						break;
 					default:
-						System.err.println("Could not interpret rational with code: "
+						System.err.println("Could not interpret rational type of tag with code: "
 										+ tag.code + " (" + tag.name + ")");
 					}
 				}
@@ -523,11 +500,20 @@ public class TiffImageReader implements ImageReader
 		return info;
 	}
 	
-	private void readTag(TiffTag tag, int value) throws IOException
+	/**
+	 * Initialize the value of the tag given its code and the specified value.
+	 * 
+	 * @param tag
+	 *            the tag instance to initialize
+	 * @param value
+	 *            the value read in the file
+	 * @throws IOException
+	 *             if tried to read from the file and problem occured
+	 */
+	private void setupTag(TiffTag tag, int value) throws IOException
 	{
 		int count = tag.count;
 		// parse tag data
-		// TODO: improve unknown tag parsing?
 		switch (tag.type)
 		{
 		case BYTE_TYPE:
@@ -542,9 +528,10 @@ public class TiffImageReader implements ImageReader
 		case ASCII_TYPE:
 			tag.value = readAscii(count, value);
 			break;
-		default:
+		case RATIONAL_TYPE:
 			System.err.println("Could not interpret rational with code: "
-							+ tag.code + " (" + tag.name + ")");
+					+ tag.code + " (" + tag.name + ")");
+			break;
 		}
 	}
 	
@@ -955,27 +942,6 @@ public class TiffImageReader implements ImageReader
 		return totalRead;
 	}
 
-	//	private byte[] readByteArray(TiffFileInfo info) throws IOException {
-//
-//		int nBytes = info.width * info.height * info.getBytesPerPixel();
-//		byte[] pixels = new byte[nBytes]; 
-//
-//		int totalRead = 0;
-//		int offset = 0;
-//		
-//		// read each strip successively
-//		int nStrips = info.stripOffsets.length;
-//		for (int i = 0; i < nStrips; i++) {
-//			inputStream.seek(info.stripOffsets[i]);
-//			int nRead = inputStream.read(pixels, offset, info.stripLengths[i]);
-//			offset += nRead;
-//			totalRead += nRead;
-//		}
-////		System.out.println("Read " + totalRead + " pixels.");
-//
-//		return pixels;
-//	}
-
 	private int readByteArrayPackBits(byte[] buffer, TiffFileInfo info)
 			throws IOException
 	{
@@ -1028,65 +994,12 @@ public class TiffImageReader implements ImageReader
 		return nRead;
 	}
 
-//	private byte[] readByteArrayPackBits(TiffFileInfo info) throws IOException {
-//		// Number of strips
-//		int nStrips = info.stripOffsets.length;
-//
-//		// Compute the number of bytes per strip
-//		int nBytes = 0;
-//		for (int i = 0; i < nStrips; i++)
-//			nBytes += info.stripOffsets[i];
-//		byte[] compressedBytes = new byte[nBytes]; 
-//
-//		// read each compressed strip
-//		int totalRead = 0;
-//		int offset = 0;
-//		for (int i = 0; i < nStrips; i++) {
-//			inputStream.seek(info.stripOffsets[i]);
-//			int nRead = inputStream.read(compressedBytes, offset, info.stripLengths[i]);
-//			offset += nRead;
-//			totalRead += nRead;
-//		}
-//		System.out.println("Read " + totalRead + " pixels.");
-//
-//		int expected = info.width * info.height * info.bytesPerPixel;
-//		byte[] pixels = uncompressPackBits(compressedBytes, expected);
-//		
-//		return pixels;
-//	}
-
-//	/**
-//	 * Uncompress byte array using Packbits compression. Based on the
-//	 * Bio-Formats PackbitsCodec written by Melissa Linkert.
-//	 */
-//	private byte[] uncompressPackBits(byte[] input, int expected) {
-//		if (expected == 0)
-//			expected = Integer.MAX_VALUE;
-//		ByteVector output = new ByteVector(1024);
-//		int index = 0;
-//		while (output.size() < expected && index < input.length) {
-//			byte n = input[index++];
-//			if (n >= 0) { 
-//				// 0 <= n <= 127: copy the next n+1 bytes literally
-//				byte[] b = new byte[n + 1];
-//				for (int i = 0; i < n + 1; i++)
-//					b[i] = input[index++];
-//				output.add(b);
-//				b = null;
-//			} else if (n != -128) { 
-//				// -127 <= n <= -1: copy the next byte state -n+1 times
-//				int len = -n + 1;
-//				byte inp = input[index++];
-//				for (int i = 0; i < len; i++)
-//					output.add(inp);
-//			}
-//		}
-//		return output.toByteArray();
-//	}
-
 	/**
 	 * Uncompress byte array into a pre-allocated result byte array, using
 	 * Packbits compression.
+	 * 
+	 * Based on the ImagJ code, which is based on Bio-Formats PackbitsCodec
+	 * written by Melissa Linkert.
 	 * 
 	 * @returns the length of the buffer after decompression
 	 */
@@ -1120,6 +1033,9 @@ public class TiffImageReader implements ImageReader
 	/**
 	 * Uncompress byte array into a pre-allocated result byte array, using
 	 * Packbits compression.
+	 * 
+	 * Based on the ImagJ code, which is based on Bio-Formats PackbitsCodec
+	 * written by Melissa Linkert.
 	 * 
 	 * @returns the length of the buffer after decompression
 	 */
