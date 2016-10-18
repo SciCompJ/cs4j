@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import net.sci.array.Array;
 import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.image.Image;
 
 public class TiffImageReaderTest
@@ -107,7 +108,16 @@ public class TiffImageReaderTest
 		assertEquals(510, image.getSize(1));
 		
 		Array<?> array = image.getData();
+		assertEquals(218, array.getValue(new int[]{0, 0}), .1);
+		assertEquals(275, array.getValue(new int[]{5, 0}), .1);
 		assertEquals(10106, array.getValue(new int[]{80, 347}), .1);
+		
+		// try also with Array2D interface
+		UInt16Array2D array2d = (UInt16Array2D) image.getData();
+		assertEquals(218, array2d.getValue(0, 0), .1);
+		assertEquals(275, array2d.getValue(5, 0), .1);
+		assertEquals(10106, array2d.getValue(80, 347), .1);
+		
 	}
 
 }

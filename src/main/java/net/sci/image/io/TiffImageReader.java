@@ -856,8 +856,8 @@ public class TiffImageReader implements ImageReader
 			// convert byte array into sort array
 			for (int i = 0; i < nPixels; i++)
 			{
-				int b1 = buffer[2 * i];
-				int b2 = buffer[2 * i + 1];
+				int b1 = buffer[2 * i] & 0x00FF;
+				int b2 = buffer[2 * i + 1] & 0x00FF;
 				
 				// encode bytes to short
 				if (littleEndian)
@@ -877,10 +877,10 @@ public class TiffImageReader implements ImageReader
 			// convert byte array into sort array
 			for (int i = 0; i < nPixels; i++)
 			{
-				int b1 = buffer[4 * i];
-				int b2 = buffer[4 * i + 1];
-				int b3 = buffer[4 * i + 2];
-				int b4 = buffer[4 * i + 3];
+				int b1 = buffer[4 * i] & 0x00FF;
+				int b2 = buffer[4 * i + 1] & 0x00FF;
+				int b3 = buffer[4 * i + 2] & 0x00FF;
+				int b4 = buffer[4 * i + 3] & 0x00FF;
 				
 				// encode bytes to short
 				if (littleEndian)
@@ -901,10 +901,10 @@ public class TiffImageReader implements ImageReader
 			// convert byte array into sort array
 			for (int i = 0; i < nPixels; i++)
 			{
-				int b1 = buffer[4 * i];
-				int b2 = buffer[4 * i + 1];
-				int b3 = buffer[4 * i + 2];
-				int b4 = buffer[4 * i + 3];
+				int b1 = buffer[4 * i] & 0x00FF;
+				int b2 = buffer[4 * i + 1] & 0x00FF;
+				int b3 = buffer[4 * i + 2] & 0x00FF;
+				int b4 = buffer[4 * i + 3] & 0x00FF;
 				
 				// encode bytes to short
 				if (littleEndian)
