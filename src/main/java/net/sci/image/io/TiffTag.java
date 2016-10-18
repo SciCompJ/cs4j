@@ -8,6 +8,8 @@ import java.util.Collection;
 
 /**
  * Manages tag information in TIFF files.
+ * 
+ * For complete Tiff Tag list, see http://www.awaresystems.be/imaging/tiff/tifftags.html  
  * @author dlegland
  *
  */
@@ -28,7 +30,7 @@ public class TiffTag
 	// static methods
 
 	/**
-	 * List of baseline tags. Should be processed direclty by the tiff reader.
+	 * List of baseline tags. Should be processed directly by the tiff reader.
 	 * Uncomplete for now.
 	 * 
 	 * @return a list of common tags.
@@ -38,6 +40,30 @@ public class TiffTag
 		ArrayList<TiffTag> tags = new ArrayList<>();
 		
 //		tags.add(new TiffTag(256, "ImageWidth"));
+//		tags.add(new TiffTag(257, "ImageLength"));
+//		tags.add(new TiffTag(258, "BitsPerSample"));
+		
+		return tags;
+	}
+
+	/**
+	 * List of extension tags. 
+	 *  
+	 * @return a list of extension tags
+	 */
+	public static final Collection<TiffTag> getExtensionTags()
+	{
+		ArrayList<TiffTag> tags = new ArrayList<>();
+		
+		tags.add(new TiffTag(339, "SampleFormat"));
+//		tags.add(new TiffTag(339, "SampleFormat")
+//		{
+//			public void process(TiffFileInfo info)
+//			{
+//				System.out.println("process sample format");
+//				info.bytesPerPixel = 4;
+//			}
+//		});
 //		tags.add(new TiffTag(257, "ImageLength"));
 //		tags.add(new TiffTag(258, "BitsPerSample"));
 		
@@ -96,13 +122,8 @@ public class TiffTag
 	 */
 	public Object value;
 	
+	
 //	public String description = null;
-	
-//	/** The integer state of this tag */
-//	public int intValue;
-//
-//	public String stringValue = null;
-	
 	
 	// =============================================================
 	// Constructor
@@ -116,5 +137,11 @@ public class TiffTag
 	// =============================================================
 	// specific methods
 
-//	public void initValue(RandomAccessFile inputStream, )
+//	/**
+//	 * Updates the specified FileInfo data structure according to the current value of the tag.
+//	 * @param info an instance of TiffFileInfo.
+//	 */
+//	public void process(TiffFileInfo info)
+//	{
+//	}
 }

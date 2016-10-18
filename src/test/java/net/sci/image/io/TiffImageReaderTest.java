@@ -3,23 +3,22 @@ package net.sci.image.io;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.File;
 import java.io.IOException;
+
+import org.junit.Test;
 
 import net.sci.array.Array;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.image.Image;
-
-import org.junit.Test;
 
 public class TiffImageReaderTest
 {
 	@Test
 	public void testReadImage_Gray8_2D() throws IOException
 	{
-		File file = new File("files/grains.tif");
+		String fileName = getClass().getResource("/files/grains.tif").getFile();
 		
-		TiffImageReader reader = new TiffImageReader(file);
+		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
 		
 		assertEquals(2, image.getDimension());
@@ -27,6 +26,25 @@ public class TiffImageReaderTest
 		ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
 		assertEquals(256, data.getSize(0));
 		assertEquals(256, data.getSize(1));
+		
+		assertEquals(193, data.getValue(150, 135), .1);
+	}
+
+	@Test
+	public void testReadImage_Float_2D_grains() throws IOException
+	{
+		String fileName = getClass().getResource("/files/grains_float.tif").getFile();
+		
+		TiffImageReader reader = new TiffImageReader(fileName);
+		Image image = reader.readImage();
+		
+		assertEquals(2, image.getDimension());
+
+		ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
+		assertEquals(256, data.getSize(0));
+		assertEquals(256, data.getSize(1));
+		
+		assertEquals(193, data.getValue(150, 135), .1);
 	}
 
 	/**
@@ -36,9 +54,9 @@ public class TiffImageReaderTest
 	@Test
 	public void testReadImage_Cameraman() throws IOException
 	{
-		File file = new File("files/cameraman.tif");
+		String fileName = getClass().getResource("/files/cameraman.tif").getFile();
 		
-		TiffImageReader reader = new TiffImageReader(file);
+		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
 		
 		assertEquals(2, image.getDimension());
@@ -51,9 +69,9 @@ public class TiffImageReaderTest
 	@Test
 	public void testReadImage_Gray8_3D_Stack() throws IOException
 	{
-		File file = new File("files/mri.tif");
+		String fileName = getClass().getResource("/files/mri.tif").getFile();
 		
-		TiffImageReader reader = new TiffImageReader(file);
+		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
 		
 		assertEquals(3, image.getDimension());
@@ -67,14 +85,29 @@ public class TiffImageReaderTest
 	@Test
 	public void testReadImage_RGB8_2D() throws IOException
 	{
-		File file = new File("files/lena_color_512.tif");
+		String fileName = getClass().getResource("/files/lena_color_512.tif").getFile();
 		
-		TiffImageReader reader = new TiffImageReader(file);
+		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
 		
 		assertEquals(2, image.getDimension());
 		assertEquals(512, image.getSize(0));
 		assertEquals(512, image.getSize(1));
+	}
+
+	@Test
+	public void testReadImage_UInt16_M51() throws IOException
+	{
+		String fileName = getClass().getResource("/files/m51.tif").getFile();
+		
+		TiffImageReader reader = new TiffImageReader(fileName);
+		Image image = reader.readImage();
+		assertEquals(2, image.getDimension());
+		assertEquals(320, image.getSize(0));
+		assertEquals(510, image.getSize(1));
+		
+		Array<?> array = image.getData();
+		assertEquals(10106, array.getValue(new int[]{80, 347}), .1);
 	}
 
 }

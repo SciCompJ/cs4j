@@ -13,6 +13,9 @@ import java.util.TreeMap;
 
 import net.sci.array.Array;
 import net.sci.array.data.*;
+import net.sci.array.data.scalar2d.BufferedFloatArray2D;
+import net.sci.array.data.scalar2d.BufferedInt32Array2D;
+import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
@@ -47,15 +50,27 @@ public class TiffImageReader implements ImageReader
 	static final Map<Integer, TiffTag> getAllTags()
 	{
 		TreeMap<Integer, TiffTag> map = new TreeMap<>();
-		// Some other tag collections may be added in the future.
+		
+		// Baseline tags (image size and format)
 		for (TiffTag tag : TiffTag.getBaseLineTags())
 		{
 			map.put(tag.code, tag);
 		}
+		
+		// Extension tags: less common formats
+		for (TiffTag tag : TiffTag.getExtensionTags())
+		{
+			map.put(tag.code, tag);
+		}
+		
+		// TIFF/IT specification 
 		for (TiffTag tag : TiffTag.getTiffITTags())
 		{
 			map.put(tag.code, tag);
 		}
+		
+		// Some other tag collections may be added in the future.
+		
 		return map;
 	}
 
@@ -166,28 +181,14 @@ public class TiffImageReader implements ImageReader
 			throw new RuntimeException("Could not read any meta-information from file");
 		}
 
+		
 		// Read File information of the first image stored in the file
 		TiffFileInfo info0 = infoList.iterator().next();
 		// info.print();
 
-		// If file contains several images, check if we should read a stack
-		// Condition: all images must have same size
-		boolean isStack = false;
-		if (infoList.size() > 1)
-		{
-			isStack = true;
-			for (TiffFileInfo info : infoList)
-			{
-				if (info.width != info0.width || info.height != info0.height)
-				{
-					isStack = false;
-					break;
-				}
-			}
-		}
-
 		// Read image data
 		Array<?> data;
+		boolean isStack = isStack(infoList);
 		if (isStack)
 		{
 			data = readImageStack(infoList);
@@ -197,24 +198,48 @@ public class TiffImageReader implements ImageReader
 			data = readImageData(info0);
 		}
 
-		// Create new MetaImage by incorporating meta-buffer
-		Image image;
-		if (info0.lut == null)
+		// Create new Image
+		Image image = new Image(data);
+		
+		// Add Image meta-data
+		if (info0.lut != null)
 		{
-			image = new Image(data);
-		}
-		else
-		{
-			image = new Image(data);
 			image.setColorMap(info0.lut);
 		}
-
 		image.setName(file.getName());
 		image.tiffTags = info0.tags;
 		
 		return image;
 	}
 
+	/**
+	 * @param infoList a list of TiffFileInfo typically read from a single file
+	 * @return true if the list of FileInfo can be seen as a 3D stack
+	 */
+	private boolean isStack(Collection<TiffFileInfo> infoList)
+	{
+		// single image is not stack by definition
+		if (infoList.size() == 1)
+		{
+			return false;
+		}
+		
+		// Read File information of the first image stored in the file
+		TiffFileInfo info0 = infoList.iterator().next();
+				
+		// If file contains several images, check if we should read a stack
+		// Condition: all images must have same size
+		for (TiffFileInfo info : infoList)
+		{
+			if (info.width != info0.width || info.height != info0.height)
+			{
+				return false;
+			}
+		}
+		
+		// if all items declare the same size, we can load a stack
+		return true;
+	}
 	/**
 	 * Closes the stream open by this ImageReader.
 	 * 
@@ -301,40 +326,23 @@ public class TiffImageReader implements ImageReader
 			long offset = ((long) value) & 0xffffffffL;
 
 			switch (tagCode) {
-			case 254: // Image subfile type
+			case 254: 
+				// Image subfile type
 				info.subFileType = TiffFileInfo.SubFileType.fromValue(value);
 				break;
 
-			case 256: // Image Width
+			case 256: 
+				// Image Width
 				info.width = value;
 				break;
 
-			case 257: // Image height
+			case 257: 
+				// Image height
 				info.height = value;
 				break;
 
-			case 270: // Image description
-				info.imageDescription = readAscii(count, value);
-				break;
-
-			case 273: // Strip Offsets
-				info.stripOffsets = readArray(fieldType, count, value);
-				break;
-
-			case 274: // orientation
-				info.orientation = TiffFileInfo.Orientation.fromValue(value);
-				break;
-
-			case 279: // Strip Byte Counts
-				info.stripLengths = readArray(fieldType, count, value);
-				break;
-
-			case 262: // Photometric interpretation
-				info.photometricInterpretation = value;
-				info.whiteIsZero = value == 0;
-				break;
-
-			case 258: // Bits Per Sample
+			case 258:
+				// Bits Per Sample
 				if (count == 1)
 				{
 					// Scalar type images (grayscale)
@@ -343,7 +351,7 @@ public class TiffImageReader implements ImageReader
 					else if (value == 16)
 						info.fileType = PixelType.GRAY16_UNSIGNED;
 					else if (value == 32)
-						info.fileType = PixelType.GRAY32_INT;
+						info.fileType = PixelType.GRAY32_FLOAT;
 					else if (value == 12)
 						info.fileType = PixelType.GRAY12_UNSIGNED;
 					else if (value == 1)
@@ -374,6 +382,31 @@ public class TiffImageReader implements ImageReader
 				}
 				break;
 
+			case 259: // Compression mode
+				info.compression = Compression.fromValue(value);
+				break;
+
+			case 262: // Photometric interpretation
+				info.photometricInterpretation = value;
+				info.whiteIsZero = value == 0;
+				break;
+
+			case 270: // Image description
+				info.imageDescription = readAscii(count, value);
+				break;
+
+			case 273: // Strip Offsets
+				info.stripOffsets = readArray(fieldType, count, value);
+				break;
+
+			case 274: // orientation
+				info.orientation = TiffFileInfo.Orientation.fromValue(value);
+				break;
+
+			case 279: // Strip Byte Counts
+				info.stripLengths = readArray(fieldType, count, value);
+				break;
+
 			case 277: // Samples Per Pixel
 				info.samplesPerPixel = value;
 				if (value == 3 && info.fileType != PixelType.RGB48)
@@ -399,23 +432,6 @@ public class TiffImageReader implements ImageReader
 					info.pixelHeight = 1.0 / yScale;
 				break;
 
-			case 296: // Resolution unit
-				if (value == 1 && info.unit == null)
-					info.unit = " ";
-				else if (value == 2)
-				{
-					if (info.pixelWidth == 1.0 / 72.0)
-					{
-						info.pixelWidth = 1.0;
-						info.pixelHeight = 1.0;
-					}
-					else
-						info.unit = "inch";
-				}
-				else if (value == 3)
-					info.unit = "cm";
-				break;
-
 			case 284: // Planar Configuration. 1=chunky, 2=planar
 				if (value == 2 && info.fileType == PixelType.RGB48)
 					info.fileType = PixelType.GRAY16_UNSIGNED;
@@ -432,8 +448,21 @@ public class TiffImageReader implements ImageReader
 				}
 				break;
 
-			case 259: // Compression mode
-				info.compression = Compression.fromValue(value);
+			case 296: // Resolution unit
+				if (value == 1 && info.unit == null)
+					info.unit = " ";
+				else if (value == 2)
+				{
+					if (info.pixelWidth == 1.0 / 72.0)
+					{
+						info.pixelWidth = 1.0;
+						info.pixelHeight = 1.0;
+					}
+					else
+						info.unit = "inch";
+				}
+				else if (value == 3)
+					info.unit = "cm";
 				break;
 
 			case 320: // color palette (LUT)
@@ -495,6 +524,16 @@ public class TiffImageReader implements ImageReader
 
 				break;
 			} // end of switch(tag)
+		}
+
+		// Adjust the number of bytes per pixel for some specific formats 
+		switch (info.fileType)
+		{
+		case GRAY32_INT:
+		case GRAY32_FLOAT:
+			info.bytesPerPixel = 4;
+			break;
+		default:
 		}
 
 		return info;
@@ -782,6 +821,8 @@ public class TiffImageReader implements ImageReader
 	{
 		// Size of image and of buffer buffer
 		int nPixels = info.width * info.height;
+
+		// compute size of buffer
 		int nBytes = nPixels * info.getBytesPerPixel();
 
 		// Read the byte array
@@ -795,51 +836,93 @@ public class TiffImageReader implements ImageReader
 					+ " bytes over the " + nBytes + " expected");
 		}
 
+		
 		// Transform raw buffer into interpreted buffer
 		switch (info.fileType) {
 		case GRAY8:
 		case COLOR8:
 		case BITMAP:
+		{
+			// Case of data coded with 8 bits
 			return new BufferedUInt8Array2D(info.width, info.height, buffer);
+		}
+		
+		case GRAY16_UNSIGNED:
+		case GRAY12_UNSIGNED:
+		{
+			// Store data as short array
+			short[] shortBuffer = new short[nPixels];
 			
-//		case GRAY16_SIGNED:
-//		case GRAY16_UNSIGNED:
-//		case GRAY12_UNSIGNED:
-//			pixels = readPixels(info);
-//			if (pixels == null)
-//				return null;
-//			ip = new ShortProcessor(size0, size1, (short[]) pixels, cm);
-//			imp = new ImagePlus(fi.fileName, ip);
-//			break;
+			// convert byte array into sort array
+			for (int i = 0; i < nPixels; i++)
+			{
+				int b1 = buffer[2 * i];
+				int b2 = buffer[2 * i + 1];
+				
+				// encode bytes to short
+				if (littleEndian)
+					shortBuffer[i] = (short) ((b2 << 8) + b1);
+				else
+					shortBuffer[i] = (short) ((b1 << 8) + b2);
+			}
 			
-//		case GRAY32_INT:
-//		case GRAY32_UNSIGNED:
-//		case GRAY32_FLOAT:
-//			pixels = readPixels(info);
-//			if (pixels == null)
-//				return null;
-//			ip = new FloatProcessor(size0, size1, (float[]) pixels, cm);
-//			imp = new ImagePlus(fi.fileName, ip);
-//			break;
+			return new BufferedUInt16Array2D(info.width, info.height, shortBuffer);
+		}	
 
-//		case GRAY24_UNSIGNED:
-//		case GRAY64_FLOAT:
-//			pixels = readPixels(info);
-//			if (pixels == null)
-//				return null;
-//			ip = new FloatProcessor(size0, size1, (float[]) pixels, cm);
-//			imp = new ImagePlus(fi.fileName, ip);
-//			break;
+		case GRAY32_INT:
+		{
+			// Store data as short array
+			int[] intBuffer = new int[nPixels];
 			
+			// convert byte array into sort array
+			for (int i = 0; i < nPixels; i++)
+			{
+				int b1 = buffer[4 * i];
+				int b2 = buffer[4 * i + 1];
+				int b3 = buffer[4 * i + 2];
+				int b4 = buffer[4 * i + 3];
+				
+				// encode bytes to short
+				if (littleEndian)
+					intBuffer[i] = ((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
+				else
+					intBuffer[i] = ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
+			}
+			
+			return new BufferedInt32Array2D(info.width, info.height, intBuffer);
+		}	
+		
+		
+		case GRAY32_FLOAT:
+		{
+			// Store data as short array
+			float[] floatBuffer = new float[nPixels];
+			
+			// convert byte array into sort array
+			for (int i = 0; i < nPixels; i++)
+			{
+				int b1 = buffer[4 * i];
+				int b2 = buffer[4 * i + 1];
+				int b3 = buffer[4 * i + 2];
+				int b4 = buffer[4 * i + 3];
+				
+				// encode bytes to short
+				if (littleEndian)
+					floatBuffer[i] = Float.intBitsToFloat((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
+				else
+					floatBuffer[i] = Float.intBitsToFloat((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
+			}
+			
+			return new BufferedFloatArray2D(info.width, info.height, floatBuffer);
+		}	
+
 		case RGB:
 		case BGR:
 		case ARGB:
 		case ABGR:
 		case BARG:
 		case RGB_PLANAR:
-//			RGB8Array2D<?> rgb2d = new RGB8Array2D<?>ByteBuffer(info.width, info.height, buffer);
-//			return rgb2d;
-//			UInt8Array3D rgb2d = new BufferedUInt8Array3D(3, info.width, info.height, buffer);
+			// allocate memory for array
 			UInt8Array3D rgb2d = new BufferedUInt8Array3D(info.width, info.height, 3);
 			
 			// fill array with re-ordered buffer content
@@ -855,6 +938,18 @@ public class TiffImageReader implements ImageReader
 			}
 			return rgb2d;
 			
+//			case GRAY16_SIGNED:
+//			case GRAY24_UNSIGNED:
+			
+//			case GRAY32_UNSIGNED:
+			
+//			case GRAY64_FLOAT:
+//				pixels = readPixels(info);
+//				if (pixels == null)
+//					return null;
+//				ip = new FloatProcessor(size0, size1, (float[]) pixels, cm);
+//				imp = new ImagePlus(fi.fileName, ip);
+//				break;
 		default:
 			throw new IOException("Can not process file info of type " + info.fileType);
 		}
@@ -903,7 +998,6 @@ public class TiffImageReader implements ImageReader
 	private int readByteArrayUncompressed(byte[] buffer, TiffFileInfo info)
 			throws IOException
 	{
-
 		int totalRead = 0;
 		int offset = 0;
 
