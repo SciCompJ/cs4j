@@ -5,7 +5,7 @@ package net.sci.array.type;
 
 
 /**
- * Array value stored as 32 bits integer.
+ * Represents a signed 32-bits integer, simply coded with an int.
  * 
  * @author dlegland
  *

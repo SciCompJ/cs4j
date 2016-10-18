@@ -14,7 +14,7 @@ public class BufferedUInt8Array2DTest
 		UInt8Array2D array = new BufferedUInt8Array2D(5, 5);
 		for (int y = 0; y < 5; y++)
 		{
-			for (int x = 0;x < 5;x++)
+			for (int x = 0; x < 5;x++)
 			{
 				array.setInt(x, y, 10);
 			}

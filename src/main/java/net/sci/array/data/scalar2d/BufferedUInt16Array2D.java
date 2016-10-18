@@ -3,21 +3,21 @@
  */
 package net.sci.array.data.scalar2d;
 
-import net.sci.array.data.UInt8Array;
-import net.sci.array.type.UInt8;
+import net.sci.array.data.UInt16Array;
+import net.sci.array.type.UInt16;
 
 /**
- * Implements UInt8Array by storing data in a linear byte buffer.
+ * Implements UInt16Array by storing data in a linear short buffer.
  * 
  * @author dlegland
  *
  */
-public class BufferedUInt8Array2D extends UInt8Array2D
+public class BufferedUInt16Array2D extends UInt16Array2D
 {
 	// =============================================================
 	// Class fields
 
-	byte[] buffer;
+	short[] buffer;
 
 	
 	// =============================================================
@@ -27,13 +27,13 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 	 * @param size0
 	 * @param size1
 	 */
-	public BufferedUInt8Array2D(int size0, int size1)
+	public BufferedUInt16Array2D(int size0, int size1)
 	{
 		super(size0, size1);
-		this.buffer = new byte[size0 * size1];
+		this.buffer = new short[size0 * size1];
 	}
 
-	public BufferedUInt8Array2D(int size0, int size1, byte[] buffer)
+	public BufferedUInt16Array2D(int size0, int size1, short[] buffer)
 	{
 		super(size0, size1);
 		if (buffer.length < size0 * size1)
@@ -45,26 +45,26 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 
 
 	// =============================================================
-	// Implementation of the UInt8Array2D interface
+	// Implementation of the UInt16Array2D interface
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array2D#getByte(int, int)
+	 * @see net.sci.array.data.scalar2d.UInt16Array2D#getShort(int, int)
 	 */
 	@Override
-	public byte getByte(int x, int y)
+	public short getShort(int x, int y)
 	{
 		int index = x + y * this.size0;
 		return this.buffer[index];
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array2D#setByte(int, int, byte)
+	 * @see net.sci.array.data.scalar2d.UInt16Array2D#setShort(int, int, short)
 	 */
 	@Override
-	public void setByte(int x, int y, byte b)
+	public void setShort(int x, int y, short s)
 	{
 		int index = x + y * this.size0;
-		this.buffer[index] = b;
+		this.buffer[index] = s;
 	}
 
 
@@ -72,27 +72,27 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 	// Implementation of the Array interface
 
 	@Override
-	public UInt8Array2D duplicate()
+	public UInt16Array2D duplicate()
 	{
-		byte[] buffer2 = new byte[size0 * size1];
+		short[] buffer2 = new short[size0 * size1];
 		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1);
-		return new BufferedUInt8Array2D(size0, size1, buffer2);
+		return new BufferedUInt16Array2D(size0, size1, buffer2);
 	}
 
 	
 	// =============================================================
 	// Implementation of the Iterable interface
 
-	public UInt8Array.Iterator iterator()
+	public UInt16Array.Iterator iterator()
 	{
-		return new Iterator();
+		return new UInt16Iterator();
 	}
 	
-	private class Iterator implements UInt8Array.Iterator
+	private class UInt16Iterator implements UInt16Array.Iterator
 	{
 		int index = -1;
 		
-		public Iterator() 
+		public UInt16Iterator() 
 		{
 		}
 		
@@ -103,10 +103,10 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		}
 
 		@Override
-		public UInt8 next()
+		public UInt16 next()
 		{
 			this.index++;
-			return new UInt8(buffer[index]);
+			return new UInt16(buffer[index]);
 		}
 
 		@Override
@@ -116,19 +116,19 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		}
 
 		@Override
-		public UInt8 get()
+		public UInt16 get()
 		{
-			return new UInt8(buffer[index]);
+			return new UInt16(buffer[index]);
 		}
 
 		@Override
-		public byte getByte()
+		public short getShort()
 		{
 			return buffer[index];
 		}
 
 		@Override
-		public void setByte(byte b)
+		public void setShort(short b)
 		{
 			buffer[index] = b;
 		}

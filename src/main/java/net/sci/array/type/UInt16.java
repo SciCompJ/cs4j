@@ -3,27 +3,30 @@
  */
 package net.sci.array.type;
 
-import net.sci.array.data.UInt8Array;
-
 /**
- * Represents an unsigned 8-bits integer, coded with a byte.
+ * Represents an unsigned 16-bits integer, coded with a short.
  * 
  * @author dlegland
  *
  */
-public class UInt8 extends Int
+public class UInt16 extends Int
 {
-	byte value;
+	/**
+	 * The maximum value that can be stored in a UInt16 instance, corresponding to 2^16-1.
+	 */
+	public final static int MAX_VALUE = 0x0FFFF;
+
+	short value;
 	
 	/**
 	 * 
 	 */
-	public UInt8(int value)
+	public UInt16(int value)
 	{
-		this.value =  (byte) value;
+		this.value =  (short) value;
 	}
 	
-	public byte getByte()
+	public short getShort()
 	{
 		return value;
 	}
@@ -31,19 +34,19 @@ public class UInt8 extends Int
 	@Override
 	public int getInt()
 	{
-		return value & 0x00FF;
+		return value & 0x00FFFF;
 	}
 	
 	@Override
 	public double getValue()
 	{
-		return value & 0x00FF;
+		return value & 0x00FFFF;
 	}
 
-	public UInt8Array createArray(int[] dims)
-	{
-		return UInt8Array.create(dims);
-	}
+//	public UInt16Array createArray(int[] dims)
+//	{
+//		return UInt16Array.create(dims);
+//	}
 
 
 	// =============================================================
@@ -56,11 +59,11 @@ public class UInt8 extends Int
 			return true;
 
 		// check for class
-		if (!(that instanceof UInt8))
+		if (!(that instanceof UInt16))
 			return false;
 
 		// cast to native object is now safe
-		UInt8 thatInt = (UInt8) that;
+		UInt16 thatInt = (UInt16) that;
 
 	    // now a proper field-by-field evaluation can be made
 	    return this.value == thatInt.value;
@@ -68,6 +71,6 @@ public class UInt8 extends Int
 	
 	public int hashCode()
 	{
-		return java.lang.Byte.hashCode(this.value);
+		return java.lang.Short.hashCode(this.value);
 	}
 }

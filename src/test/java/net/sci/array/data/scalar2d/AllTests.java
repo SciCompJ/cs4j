@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
 	BufferedDoubleArray2DTest.class,
+	BufferedUInt16Array2DTest.class,
 	BufferedUInt8Array2DTest.class,
 	})
 public class AllTests {

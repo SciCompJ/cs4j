@@ -9,8 +9,9 @@ import net.sci.array.data.scalarnd.UInt8ArrayND;
 import net.sci.array.type.UInt8;
 
 /**
+ * An array containing 8-bits unsigned integers.
+ * 
  * @author dlegland
- *
  */
 public interface UInt8Array extends IntArray<UInt8>
 {
@@ -50,7 +51,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	@Override
 	public default void setInt(int[] pos, int value)
 	{
-		setByte(pos, (byte) value);
+		setByte(pos, (byte) Math.min(Math.max(value, 0), 255));
 	}
 
 	
@@ -74,7 +75,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	 */
 	public default void setValue(int[] pos, double value)
 	{
-		setInt(pos, (int) Math.min(Math.max(value, 0), 255));
+		setByte(pos, (byte) Math.min(Math.max(value, 0), 255));
 	}
 
 

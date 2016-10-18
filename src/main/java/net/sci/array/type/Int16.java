@@ -3,46 +3,35 @@
  */
 package net.sci.array.type;
 
-import net.sci.array.data.UInt8Array;
 
 /**
- * Represents an unsigned 8-bits integer, coded with a byte.
+ * Represents a signed 16-bits integer, coded with a short.
  * 
  * @author dlegland
  *
  */
-public class UInt8 extends Int
+public class Int16 extends Int
 {
-	byte value;
+	short value;
 	
 	/**
 	 * 
 	 */
-	public UInt8(int value)
+	public Int16(short value)
 	{
-		this.value =  (byte) value;
+		this.value =  value;
 	}
 	
-	public byte getByte()
-	{
-		return value;
-	}
-
 	@Override
 	public int getInt()
 	{
-		return value & 0x00FF;
+		return value;
 	}
 	
 	@Override
 	public double getValue()
 	{
-		return value & 0x00FF;
-	}
-
-	public UInt8Array createArray(int[] dims)
-	{
-		return UInt8Array.create(dims);
+		return value;
 	}
 
 
@@ -56,11 +45,11 @@ public class UInt8 extends Int
 			return true;
 
 		// check for class
-		if (!(that instanceof UInt8))
+		if (!(that instanceof Int16))
 			return false;
 
 		// cast to native object is now safe
-		UInt8 thatInt = (UInt8) that;
+		Int16 thatInt = (Int16) that;
 
 	    // now a proper field-by-field evaluation can be made
 	    return this.value == thatInt.value;
@@ -68,6 +57,6 @@ public class UInt8 extends Int
 	
 	public int hashCode()
 	{
-		return java.lang.Byte.hashCode(this.value);
+		return java.lang.Short.hashCode(this.value);
 	}
 }
