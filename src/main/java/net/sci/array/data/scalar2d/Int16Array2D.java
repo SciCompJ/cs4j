@@ -3,80 +3,83 @@
  */
 package net.sci.array.data.scalar2d;
 
-import net.sci.array.data.UInt8Array;
-import net.sci.array.type.UInt8;
+import net.sci.array.data.Int16Array;
+import net.sci.array.type.Int16;
 
 /**
  * @author dlegland
  *
  */
-public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Array
+public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Array
 {
 	// =============================================================
 	// Static methods
 
-	public static final UInt8Array2D create(int size0, int size1)
+	public static final Int16Array2D create(int size0, int size1)
 	{
-		return new BufferedUInt8Array2D(size0, size1);
+		return new BufferedInt16Array2D(size0, size1);
 	}
 	
 	
 	// =============================================================
 	// Constructor
 
-	protected UInt8Array2D(int size0, int size1)
+	protected Int16Array2D(int size0, int size1)
 	{
 		super(size0, size1);
 	}
 
-	
 	// =============================================================
 	// New methods
 
 	/**
-	 * Returns the byte value at a given position.
+	 * Returns the short value at a given position.
 	 */
-	public abstract byte getByte(int x, int y);
+	public abstract short getShort(int x, int y);
 
 	/**
-	 * Sets the byte value at a given position
+	 * Sets the short value at a given position
 	 */
-	public abstract void setByte(int x, int y, byte value);
+	public abstract void setShort(int x, int y, short value);
 	
 	
 	// =============================================================
-	// Specialization of the UInt8Array interface
+	// Specialization of the Int16Array interface
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt8Array#getByte(int[])
+	 * @see net.sci.array.data.UInt16Array#getShort(int[])
 	 */
 	@Override
-	public byte getByte(int[] pos)
+	public short getShort(int[] pos)
 	{
-		return getByte(pos[0], pos[1]);
+		return getShort(pos[0], pos[1]);
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt8Array#setByte(int[], java.lang.Byte)
+	 * @see net.sci.array.data.UInt16Array#setShort(int[], java.lang.Short)
 	 */
 	@Override
-	public void setByte(int[] pos, byte value)
+	public void setShort(int[] pos, short value)
 	{
-		setByte(pos[0], pos[1], value);
+		setShort(pos[0], pos[1], value);
 	}
+	
 
 	// =============================================================
-	// Specialization of IntArray2D interface
+	// Specialization of the IntArray2D interface
 
+	@Override
 	public int getInt(int x, int y)
 	{
-		return getByte(x, y) & 0x00FF; 
+		return getShort(x, y);
 	}
 
+	@Override
 	public void setInt(int x, int y, int value)
 	{
-		setByte(x, y, (byte) Math.min(Math.max(value, 0), 255));
+		setShort(x, y, (short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE));
 	}
+
 
 	// =============================================================
 	// Specialization of Array2D interface
@@ -85,18 +88,18 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public UInt8 get(int x, int y)
+	public Int16 get(int x, int y)
 	{
-		return new UInt8(getByte(x, y));
+		return new Int16(getShort(x, y));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, UInt8 value)
+	public void set(int x, int y, Int16 value)
 	{
-		setByte(x, y, value.getByte());
+		setShort(x, y, value.getShort());
 	}
 
 	/* (non-Javadoc)
@@ -105,7 +108,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	@Override
 	public double getValue(int x, int y)
 	{
-		return getByte(x, y) & 0x00FF;
+		return getShort(x, y);
 	}
 
 	/**
@@ -117,38 +120,37 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	@Override
 	public void setValue(int x, int y, double value)
 	{
-		value = Math.min(Math.max(value, 0), 255);
-		setByte(x, y, (byte) value);
+		setShort(x, y, (short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE));
 	}
 
-	
+
 	// =============================================================
 	// Specialization of Array interface
 	
-	@Override
-	public UInt8Array newInstance(int... dims)
-	{
-		return UInt8Array.create(dims);
-	}
+//	@Override
+//	public Int32Array newInstance(int... dims)
+//	{
+//		return Int32Array.create(dims);
+//	}
 
 	@Override
-	public abstract UInt8Array2D duplicate();
+	public abstract Int16Array2D duplicate();
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#get(int[])
 	 */
 	@Override
-	public UInt8 get(int[] pos)
+	public Int16 get(int[] pos)
 	{
-		return new UInt8(getByte(pos[0], pos[1]));
+		return new Int16(getShort(pos[0], pos[1]));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#set(int[], java.lang.Object)
 	 */
 	@Override
-	public void set(int[] pos, UInt8 value)
+	public void set(int[] pos, Int16 value)
 	{
-		setByte(pos[0], pos[1], value.getByte());
+		setInt(pos[0], pos[1], value.getInt());
 	}
 }
