@@ -12,6 +12,28 @@ import net.sci.array.type.Scalar;
  */
 public interface ScalarArray<T extends Scalar> extends Array<T>
 {
+	
+	// =============================================================
+	// New methods
+
+	/**
+	 * Returns the range of values within this scalar array.
+	 *  
+	 * @return an array with two elements, containing the lower and the large values in this Array instance
+	 */
+	public default double[] getValueRange()
+	{
+		double vMin = Double.POSITIVE_INFINITY;
+		double vMax = Double.NEGATIVE_INFINITY;
+		for (Scalar scalar : this)
+		{
+			double value = scalar.getValue();
+			vMin = Math.min(vMin, value);
+			vMax = Math.max(vMax, value);
+		}
+		return new double[]{vMin, vMax};
+	}
+
 	// =============================================================
 	// Specialization of the Array interface
 
