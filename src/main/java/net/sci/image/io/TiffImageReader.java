@@ -33,15 +33,6 @@ public class TiffImageReader implements ImageReader
 {
 	// =============================================================
 	// Static
-
-	// Entry type for TIFF Image File Directories
-	static final int BYTE_TYPE = 1;
-	static final int ASCII_TYPE = 2;
-	static final int SHORT_TYPE = 3;
-	static final int LONG_TYPE = 4;
-	static final int RATIONAL_TYPE = 5;
-	static final String[] typeNames = {"None", "Byte", "Ascii", "Short", "Long", "Rational"};
-
 	
 	/**
 	 * Default method for managing tags.
@@ -126,7 +117,7 @@ public class TiffImageReader implements ImageReader
 	}
 	
 	/**
-	 * Read the beginning of the tiff file. The header is composed of 8 bytes:
+	 * Reads the beginning of the tiff file. The header is composed of 8 bytes:
 	 * <ul>
 	 * <li>2 bytes for indicating the byte order</li>
 	 * <li>2 bytes for the magic number 42</li>
@@ -301,10 +292,6 @@ public class TiffImageReader implements ImageReader
 					+ nEntries);
 		}
 
-		// entry buffer
-		int tagCode, fieldType, count;
-		int value;
-
 		// create a new FileInfo instance
 		TiffFileInfo info = new TiffFileInfo();
 		info.intelByteOrder = littleEndian;
@@ -315,14 +302,23 @@ public class TiffImageReader implements ImageReader
 		for (int i = 0; i < nEntries; i++)
 		{
 			// read tag code
-			tagCode = readShort();
+			int tagCode = readShort();
 			
 			// read tag data info
-			fieldType = readShort();
-			count = readInt();
-			value = readValue(fieldType, count);
+			int typeValue = readShort();
+			TiffTag.Type type;
+			try 
+			{
+				type = TiffTag.Type.getType(typeValue); 
+			}
+			catch(IllegalArgumentException ex)
+			{
+				throw new RuntimeException(String.format("Tag with code %d has incorrect type value: %d", tagCode, typeValue));
+			}
+			int count = readInt();
+			int value = readTagValue(type, count);
 
-			// convert state to long offset for reading large buffer
+			// convert value to long offset for reading large buffer
 			long offset = ((long) value) & 0xffffffffL;
 
 			switch (tagCode) {
@@ -396,15 +392,11 @@ public class TiffImageReader implements ImageReader
 				break;
 
 			case 273: // Strip Offsets
-				info.stripOffsets = readArray(fieldType, count, value);
+				info.stripOffsets = readArray(type, count, value);
 				break;
 
 			case 274: // orientation
 				info.orientation = TiffFileInfo.Orientation.fromValue(value);
-				break;
-
-			case 279: // Strip Byte Counts
-				info.stripLengths = readArray(fieldType, count, value);
 				break;
 
 			case 277: // Samples Per Pixel
@@ -418,6 +410,10 @@ public class TiffImageReader implements ImageReader
 				
 			case 278: // Rows Per Strip
 				info.rowsPerStrip = value;
+				break;
+
+			case 279: // Strip Byte Counts
+				info.stripLengths = readArray(type, count, value);
 				break;
 
 			case 282: // X Resolution
@@ -486,30 +482,30 @@ public class TiffImageReader implements ImageReader
 				if (tag == null)
 				{
 					System.out.println("Unknown tag with code " + tagCode + ". Type="
-							+ typeNames[fieldType] + ", count=" + count + ", state=" + value);
+							+ type + ", count=" + count + ", state=" + value);
 					tag = new TiffTag(tagCode, "Unknown");
 					unknown = true;
 				}
 				
 				// init tag info
-				tag.type = fieldType;
+				tag.type = type;
 				tag.count = count;
 				
 				setupTag(tag, value);
 
 				if (unknown)
 				{
-					switch (fieldType)
+					switch (type)
 					{
-					case BYTE_TYPE:
-					case SHORT_TYPE:
-					case LONG_TYPE:
+					case BYTE:
+					case SHORT:
+					case LONG:
 						tag.value = new Integer(value);
 						System.out.println(String.format(
 								"state of tag %d (%s) is %d", tag.code,
 								tag.name, value));
 						break;
-					case ASCII_TYPE:
+					case ASCII:
 						tag.value = readAscii(count, value);
 						System.out.println(String.format(
 								"state of tag %d (%s) is %s", tag.code,
@@ -539,6 +535,34 @@ public class TiffImageReader implements ImageReader
 		return info;
 	}
 	
+//	private int readTagValue(int fieldType, int count) throws IOException
+//	{
+//		int value;
+//		if (fieldType == SHORT_TYPE && count == 1)
+//		{
+//			value = readShort();
+//			readShort();
+//		}
+//		else
+//			value = readInt();
+//		return value;
+//	}
+
+	private int readTagValue(TiffTag.Type type, int count) throws IOException
+	{
+		int value;
+		if (type == TiffTag.Type.SHORT && count == 1)
+		{
+			value = readShort();
+			readShort();
+		}
+		else
+		{
+			value = readInt();
+		}
+		return value;
+	}
+
 	/**
 	 * Initialize the value of the tag given its code and the specified value.
 	 * 
@@ -555,20 +579,21 @@ public class TiffImageReader implements ImageReader
 		// parse tag data
 		switch (tag.type)
 		{
-		case BYTE_TYPE:
+		case BYTE:
 			tag.value = new Integer(value);
 			break;
-		case SHORT_TYPE:
+		case SHORT:
 			tag.value = new Integer(value);
 			break;
-		case LONG_TYPE:
+		case LONG:
 			tag.value = new Integer(value);
 			break;
-		case ASCII_TYPE:
+		case ASCII:
 			tag.value = readAscii(count, value);
 			break;
-		case RATIONAL_TYPE:
-			System.err.println("Could not interpret rational with code: "
+		case NONE:
+		case RATIONAL:
+			System.err.println("Could not interpret tag with code: "
 					+ tag.code + " (" + tag.name + ")");
 			break;
 		}
@@ -607,19 +632,6 @@ public class TiffImageReader implements ImageReader
 		return lut;
 	}
 
-	int readValue(int fieldType, int count) throws IOException
-	{
-		int value;
-		if (fieldType == SHORT_TYPE && count == 1)
-		{
-			value = readShort();
-			readShort();
-		}
-		else
-			value = readInt();
-		return value;
-	}
-
 	private String readAscii(int count, int value) throws IOException
 	{
 		// Allocate memory for string buffer
@@ -649,7 +661,27 @@ public class TiffImageReader implements ImageReader
 		return new String(data);
 	}
 
-	private int[] readArray(int type, int count, int value) throws IOException
+//	private int[] readArray(int type, int count, int value) throws IOException
+//	{
+//		if (count == 1)
+//		{
+//			return new int[] { value };
+//		}
+//
+//		// convert to long offset for reading large buffer
+//		long offset = ((long) value) & 0xffffffffL;
+//
+//		if (type == SHORT_TYPE)
+//		{
+//			return readShortArray(count, offset);
+//		}
+//		else
+//		{
+//			return readIntArray(count, offset);
+//		}
+//	}
+
+	private int[] readArray(TiffTag.Type type, int count, int value) throws IOException
 	{
 		if (count == 1)
 		{
@@ -659,7 +691,7 @@ public class TiffImageReader implements ImageReader
 		// convert to long offset for reading large buffer
 		long offset = ((long) value) & 0xffffffffL;
 
-		if (type == SHORT_TYPE)
+		if (type == TiffTag.Type.SHORT)
 		{
 			return readShortArray(count, offset);
 		}

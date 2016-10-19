@@ -25,6 +25,29 @@ public class TiffTag
 	public static final int LONG_TYPE = 4;
 	public static final int RATIONAL_TYPE = 5;
 
+	static enum Type 
+	{
+		NONE,
+		BYTE,
+		ASCII,
+		SHORT,
+		LONG,
+		RATIONAL;
+		
+		public static final Type getType(int typeCode)
+		{
+			switch (typeCode)
+			{
+			case 0: return NONE;
+			case 1: return BYTE;
+			case 2: return ASCII;
+			case 3: return SHORT;
+			case 4: return LONG;
+			case 5: return RATIONAL;
+			}
+			throw new IllegalArgumentException("Incorrect value for tag type: " + typeCode);
+		}
+	};
 
 	// =============================================================
 	// static methods
@@ -108,9 +131,9 @@ public class TiffTag
 	public String name;
 	
 	/**
-	 * The type of state stored by this tag.
+	 * The type of value stored by this tag.
 	 */
-	public int type;
+	public Type type;
 	
 	/**
 	 * The number of data stored by this tag.

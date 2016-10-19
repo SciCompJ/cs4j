@@ -179,9 +179,6 @@ public class TiffFileInfo {
 	
 	String imageDescription;
 	
-//	/** the beginning of the image buffer */ 
-//	int offset;
-	
 	/** Info for reading image buffer */
 	int[] stripOffsets;
 	int[] stripLengths;
