@@ -55,7 +55,7 @@ public abstract class ArrayND<T> implements Array<T>
 	{
 		int index = 0;
 		int offset = 1;
-		for (int d = 0; d < this.sizes.length; d++)
+		for (int d = 0; d < inds.length; d++)
 		{
 			index += inds[d] * offset;
 			offset *= this.sizes[d];
@@ -98,25 +98,4 @@ public abstract class ArrayND<T> implements Array<T>
 	{
 		return this.sizes[dim];
 	}
-
-//	/* (non-Javadoc)
-//	 * @see net.sci.array.Array#getValueRange()
-//	 */
-//	@Override
-//	public double[] getValueRange()
-//	{
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	/* (non-Javadoc)
-//	 * @see net.sci.array.Array#fill(double)
-//	 */
-//	@Override
-//	public void fill(double value)
-//	{
-//		// TODO Auto-generated method stub
-//
-//	}
-//
 }
