@@ -15,13 +15,16 @@ import javax.imageio.ImageIO;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.data.BooleanArray;
-import net.sci.array.data.FloatArray;
+import net.sci.array.data.IntArray;
+import net.sci.array.data.ScalarArray;
+import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
+import net.sci.array.type.Int;
 import net.sci.image.io.TiffImageReader;
 import net.sci.image.io.TiffTag;
 
@@ -195,6 +198,7 @@ public class Image
 		this.data = data;
 		setImageTypeFromDataType();
 		computeImageSize();
+		setupDisplayRange();
 	}
 
 	/**
@@ -205,6 +209,7 @@ public class Image
 		this.data = data;
 		this.type = type;
 		computeImageSize();
+		setupDisplayRange();
 	}
 
 	/**
@@ -229,7 +234,11 @@ public class Image
 	 */
 	private void setImageTypeFromDataType()
 	{
-		if (this.data instanceof UInt8Array) 
+		if (this.data instanceof BooleanArray)
+		{
+			this.type = Type.BINARY;
+		} 
+		else if (this.data instanceof UInt8Array) 
 		{
 			this.type = Type.GRAYSCALE;
 //			int[] dims = this.data.getSize();
@@ -241,11 +250,11 @@ public class Image
 //				}
 //			}
 		} 
-		else if (this.data instanceof BooleanArray)
+		else if (this.data instanceof UInt16Array) 
 		{
-			this.type = Type.BINARY;
-		} 
-		else if (this.data instanceof FloatArray) 
+			this.type = Type.GRAYSCALE;
+		}
+		else if (this.data instanceof ScalarArray) 
 		{
 			this.type = Type.INTENSITY;
 		} 
@@ -259,6 +268,7 @@ public class Image
 		}
 		else
 		{
+			System.out.println("Could not determine image type for data of class " + this.data.getClass());
 			this.type = Type.UNKNOWN;
 		}
 	}
@@ -279,7 +289,44 @@ public class Image
 		this.size = new int[nd];
 		System.arraycopy(dataSize, 0, this.size, 0, nd);
 	}
-	
+
+	private void setupDisplayRange()
+	{
+		if (this.type == Type.BINARY)
+		{
+			this.displayRange = new double[]{0, 1};
+		}
+		else if (this.type == Type.GRAYSCALE || this.type == Type.INTENSITY)
+		{
+			if (this.data instanceof UInt8Array)
+			{
+				this.displayRange = new double[]{0, 255};
+			}
+			else if (this.data instanceof ScalarArray)
+			{
+				this.displayRange = ((ScalarArray<?>) this.data).getValueRange();
+			}
+			else
+			{
+				throw new RuntimeException("Grayscale or intensity images require scalar array for data");
+			}
+		}
+		else if (this.type == Type.LABEL)
+		{
+			if (!(this.data instanceof IntArray))
+			{
+				throw new RuntimeException("Label images require int array for data");
+			}
+			@SuppressWarnings("unchecked")
+			IntArray<? extends Int> array = (IntArray<? extends Int>) this.data;
+			int maxInt = 0;
+			for (Int pixel : array)
+			{
+				maxInt = Math.max(maxInt, pixel.getInt());
+			}
+			this.displayRange = new double[]{0, maxInt};
+		}
+	}
 	
 	// =============================================================
 	// Methods
