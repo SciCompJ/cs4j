@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import net.sci.array.Array;
-import net.sci.array.data.*;
+import net.sci.array.data.Array3D;
 import net.sci.array.data.scalar2d.BufferedFloatArray2D;
 import net.sci.array.data.scalar2d.BufferedInt32Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
@@ -21,8 +21,6 @@ import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
 import net.sci.image.Image;
-import net.sci.image.io.TiffFileInfo.Compression;
-import net.sci.image.io.TiffFileInfo.PixelType;
 
 /**
  * Provides methods for reading Image files in TIFF Format.
@@ -65,30 +63,6 @@ public class TiffImageReader implements ImageReader
 		
 		return map;
 	}
-
-//	/**
-//	 * Future set of tags that can be interpreted and added to the list of tags
-//	 * of a given image.
-//	 */
-//	private static TreeMap<Integer, TiffTag> knownTags = createDefaultKnowTAgs();	
-//	
-//	private static TreeMap<Integer, TiffTag> createDefaultKnowTAgs()
-//	{
-//		TreeMap<Integer, TiffTag> tags = new TreeMap<Integer, TiffTag>();
-//		for (TiffTag tag : new ImageJTiffTags().getTags())
-//		{
-//			tags.put(tag.code, tag);
-//		}
-//		return tags;
-//	}
-//	
-//	public static void addKnowTags(Collection<TiffTag> tags)
-//	{
-//		for (TiffTag tag : new ImageJTiffTags().getTags())
-//		{
-//			knownTags.put(tag.code, tag);
-//		}
-//	}
 
 	
 	// =============================================================
@@ -321,224 +295,26 @@ public class TiffImageReader implements ImageReader
 			int count = dataReader.readInt();
 			int value = readTagValue(type, count);
 
-			// convert value to long offset for reading large buffer
-			long offset = ((long) value) & 0xffffffffL;
-
 			TiffTag tag = tagMap.get(tagCode);
-//			if (tag != null)
-//			{
-//				// process tag obtained from tag list
-//				// init tag info
-//				tag.type = type;
-//				tag.count = count;
-//				
-//				setupTag(tag, value);
-//				
-//				tag.process(info);
-//
-//				continue;
-//			}
 			
-			switch (tagCode) {
-			case 254: 
-				// Image subfile type
-				info.subFileType = TiffFileInfo.SubFileType.fromValue(value);
-				break;
+			// if tag was not found, create a default empty tag
+			if (tag == null)
+			{
+				System.out.println("Unknown tag with code " + tagCode + ". Type="
+						+ type + ", count=" + count + ", value=" + value);
+				tag = new TiffTag(tagCode, "Unknown");
+			}
+			
+			// init tag info
+			tag.type = type;
+			tag.count = count;
+			tag.value = value;
+			tag.readContent(dataReader);
 
-			case 256: 
-				// Image Width
-				info.width = value;
-				break;
+			// call the initialization procedure specific to tag
+			tag.process(info, this.dataReader);
 
-			case 257: 
-				// Image height
-				info.height = value;
-				break;
-
-			case 258:
-				// Bits Per Sample
-				if (count == 1)
-				{
-					// Scalar type images (grayscale)
-					if (value == 8)
-						info.fileType = PixelType.GRAY8;
-					else if (value == 16)
-						info.fileType = PixelType.GRAY16_UNSIGNED;
-					else if (value == 32)
-						info.fileType = PixelType.GRAY32_FLOAT;
-					else if (value == 12)
-						info.fileType = PixelType.GRAY12_UNSIGNED;
-					else if (value == 1)
-						info.fileType = PixelType.BITMAP;
-					else
-						throw new IOException("Unsupported BitsPerSample: "
-								+ value);
-				}
-				else if (count == 3)
-				{
-					// Case of color images stored as 3 bands
-					int bitDepth = readShort(offset);
-
-					if (bitDepth == 8)
-					{
-						info.fileType = PixelType.RGB;
-					}
-					else if (bitDepth == 16)
-					{
-						info.fileType = PixelType.RGB48;
-					}
-					else
-					{
-						throw new IOException(
-								"Can only open 8 and 16 bit/channel RGB images ("
-										+ bitDepth + ")");
-					}
-				}
-				break;
-
-			case 259: // Compression mode
-				info.compression = Compression.fromValue(value);
-				break;
-
-			case 262: // Photometric interpretation
-				info.photometricInterpretation = value;
-				info.whiteIsZero = value == 0;
-				break;
-
-			case 270: // Image description
-				info.imageDescription = readAscii(count, value);
-				break;
-
-			case 273: // Strip Offsets
-				info.stripOffsets = readArray(type, count, value);
-				break;
-
-			case 274: // orientation
-				info.orientation = TiffFileInfo.Orientation.fromValue(value);
-				break;
-
-			case 277: // Samples Per Pixel
-				info.samplesPerPixel = value;
-				if (value == 3 && info.fileType != PixelType.RGB48)
-					info.fileType = info.fileType == PixelType.GRAY16_UNSIGNED ? PixelType.RGB48
-							: PixelType.RGB;
-				else if (value == 4 && info.fileType == PixelType.GRAY8)
-					info.fileType = PixelType.ARGB;
-				break;
-				
-			case 278: // Rows Per Strip
-				info.rowsPerStrip = value;
-				break;
-
-			case 279: // Strip Byte Counts
-				info.stripLengths = readArray(type, count, value);
-				break;
-
-			case 282: // X Resolution
-				double xScale = readRational(offset);
-				if (xScale != 0.0)
-					info.pixelWidth = 1.0 / xScale;
-				break;
-
-			case 283: // Y Resolution
-				double yScale = readRational(offset);
-				if (yScale != 0.0)
-					info.pixelHeight = 1.0 / yScale;
-				break;
-
-			case 284: // Planar Configuration. 1=chunky, 2=planar
-				if (value == 2 && info.fileType == PixelType.RGB48)
-					info.fileType = PixelType.GRAY16_UNSIGNED;
-				else if (value == 2 && info.fileType == PixelType.RGB)
-					info.fileType = PixelType.RGB_PLANAR;
-				else if (value == 1 && info.samplesPerPixel == 4)
-					info.fileType = PixelType.ARGB;
-				else if (value != 2
-						&& !((info.samplesPerPixel == 1) || (info.samplesPerPixel == 3)))
-				{
-					String msg = "Unsupported SamplesPerPixel: "
-							+ info.samplesPerPixel;
-					throw new IOException(msg);
-				}
-				break;
-
-			case 296: // Resolution unit
-				if (value == 1 && info.unit == null)
-					info.unit = " ";
-				else if (value == 2)
-				{
-					if (info.pixelWidth == 1.0 / 72.0)
-					{
-						info.pixelWidth = 1.0;
-						info.pixelHeight = 1.0;
-					}
-					else
-						info.unit = "inch";
-				}
-				else if (value == 3)
-					info.unit = "cm";
-				break;
-
-			case 320: // color palette (LUT)
-				int lutLength = (int) Math.pow(2, 8 * info.bytesPerPixel);
-				int expLength = 3 * lutLength;
-				if (count != expLength)
-				{
-					throw new RuntimeException("Tiff Color Palette has "
-							+ count + " elements, while it requires "
-							+ expLength);
-				}
-				
-				info.lut = readColorMap(lutLength, count, offset);
-				break;
-				
-				
-			default: 
-				// process non-elementary tags
-				// (following code should to be removed in the future)
-				boolean unknown = false;
-				if (tag == null)
-				{
-					System.out.println("Unknown tag with code " + tagCode + ". Type="
-							+ type + ", count=" + count + ", state=" + value);
-					tag = new TiffTag(tagCode, "Unknown");
-					unknown = true;
-				}
-				
-				// init tag info
-				tag.type = type;
-				tag.count = count;
-				tag.value = value;
-				
-				setupTag(tag, value);
-
-				if (unknown)
-				{
-					switch (type)
-					{
-					case BYTE:
-					case SHORT:
-					case LONG:
-						tag.content = new Integer(value);
-						System.out.println(String.format(
-								"state of tag %d (%s) is %d", tag.code,
-								tag.name, value));
-						break;
-					case ASCII:
-						tag.content = readAscii(count, value);
-						System.out.println(String.format(
-								"state of tag %d (%s) is %s", tag.code,
-								tag.name, tag.value));
-						break;
-					default:
-						System.err.println("Could not interpret rational type of tag with code: "
-										+ tag.code + " (" + tag.name + ")");
-					}
-				}
-				info.tags.add(tag);
-
-				break;
-			} // end of switch(tag)
+			info.tags.add(tag);
 		}
 
 		// Adjust the number of bytes per pixel for some specific formats 
@@ -586,190 +362,6 @@ public class TiffImageReader implements ImageReader
 		return value;
 	}
 
-	/**
-	 * Initialize the value of the tag given its code and the specified value.
-	 * 
-	 * @param tag
-	 *            the tag instance to initialize
-	 * @param value
-	 *            the value read in the file
-	 * @throws IOException
-	 *             if tried to read from the file and problem occured
-	 */
-	private void setupTag(TiffTag tag, int value) throws IOException
-	{
-		int count = tag.count;
-		// parse tag data
-		switch (tag.type)
-		{
-		case BYTE:
-			tag.content = new Integer(value);
-			break;
-		case SHORT:
-			tag.content = new Integer(value);
-			break;
-		case LONG:
-			tag.content = new Integer(value);
-			break;
-		case ASCII:
-			tag.content = readAscii(count, value);
-			break;
-		case NONE:
-		case RATIONAL:
-			System.err.println("Could not interpret tag with code: "
-					+ tag.code + " (" + tag.name + ")");
-			break;
-		}
-	}
-	
-	private int[][] readColorMap(int lutLength, int count, long offset)
-			throws IOException
-	{
-		// Allocate memory for raw array
-		int nBytes = 3 * lutLength * 2;
-		byte[] lut16 = new byte[nBytes];
-		
-		// read the full raw array
-		long saveLoc = dataReader.getFilePointer();
-		dataReader.seek(offset);
-		int nRead = dataReader.read(lut16);
-		dataReader.seek(saveLoc);
-		if (nRead != nBytes)
-		{
-			throw new IOException(
-					"Could not decode the color palette from TIFF File");
-		}
-		
-		// convert raw array into N-by-3 look-up table
-		int[][] lut = new int[lutLength][3];
-		int j = 0;
-		if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
-			j++;
-		for (int i = 0; i < lutLength; i++)
-		{
-			lut[i][0] = lut16[j];
-			lut[i][1] = lut16[j + 512];
-			lut[i][2] = lut16[j + 1024];
-			j += 2;
-		}
-		return lut;
-	}
-
-	private String readAscii(int count, int value) throws IOException
-	{
-		// Allocate memory for string buffer
-		byte[] data = new byte[count];
-
-		// read string buffer
-		if (count <= 4)
-		{
-			// unpack integer
-			for (int i = 0; i < count; i++)
-			{
-				data[i] = (byte) (value & 0x00FF);
-				value = value >> 8;
-			}
-		}
-		else
-		{
-			// convert state to long offset for reading large buffer
-			long offset = ((long) value) & 0xffffffffL;
-
-			long pos0 = dataReader.getFilePointer();
-			dataReader.seek(offset);
-			dataReader.read(data);
-			dataReader.seek(pos0);
-		}
-
-		return new String(data);
-	}
-
-	private int[] readArray(TiffTag.Type type, int count, int value) throws IOException
-	{
-		if (count == 1)
-		{
-			return new int[] { value };
-		}
-
-		// convert to long offset for reading large buffer
-		long offset = ((long) value) & 0xffffffffL;
-
-		if (type == TiffTag.Type.SHORT)
-		{
-			return readShortArray(count, offset);
-		}
-		else
-		{
-			return readIntArray(count, offset);
-		}
-	}
-
-	private int[] readShortArray(int count, long offset) throws IOException
-	{
-		// allocate memory for result
-		int[] res = new int[count];
-
-		// save pointer location
-		long saveLoc = dataReader.getFilePointer();
-
-		// fill up array
-		dataReader.seek(offset);
-		for (int c = 0; c < count; c++)
-			res[c] = dataReader.readShort();
-
-		// restore pointer and return result
-		dataReader.seek(saveLoc);
-		return res;
-	}
-
-	private int[] readIntArray(int count, long offset) throws IOException
-	{
-		// allocate memory for result
-		int[] res = new int[count];
-
-		// save pointer location
-		long saveLoc = dataReader.getFilePointer();
-
-		// fill up array
-		dataReader.seek(offset);
-		for (int c = 0; c < count; c++)
-		{
-			res[c] = dataReader.readInt();
-		}
-		
-		// restore pointer and return result
-		dataReader.seek(saveLoc);
-		return res;
-	}
-
-	/**
-	 * Read the short state stored at the specified position
-	 */
-	private int readShort(long pos) throws IOException
-	{
-		long pos0 = dataReader.getFilePointer();
-		dataReader.seek(pos);
-		int result = dataReader.readShort();
-		dataReader.seek(pos0);
-		return result;
-	}
-
-	/**
-	 * Reads the rationale at the given position, as the ratio of two integers.
-	 */
-	private double readRational(long loc) throws IOException
-	{
-		long saveLoc = dataReader.getFilePointer();
-		dataReader.seek(loc);
-		int numerator = dataReader.readInt();
-		int denominator = dataReader.readInt();
-		dataReader.seek(saveLoc);
-
-		if (denominator != 0)
-			return (double) numerator / denominator;
-		else
-			return 0.0;
-	}
 
 	public Array3D<?> readImageStack(Collection<TiffFileInfo> infos)
 			throws IOException

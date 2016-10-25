@@ -4,6 +4,7 @@
 package net.sci.image.io;
 
 import java.io.IOException;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -71,7 +72,7 @@ public class TiffTag
 
 		tags.add(new TiffTag(254, "SubFileType")
 		{
-			public void process(TiffFileInfo info)
+			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 			{
 				info.subFileType = TiffFileInfo.SubFileType.fromValue(value);
 			}
@@ -79,7 +80,7 @@ public class TiffTag
 
 		tags.add(new TiffTag(256, "ImageWidth")
 		{
-			public void process(TiffFileInfo info)
+			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 			{
 				info.width = value;
 			}
@@ -87,98 +88,57 @@ public class TiffTag
 
 		tags.add(new TiffTag(257, "ImageHeight")
 		{
-			public void process(TiffFileInfo info)
+			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 			{
 				info.height = value;
 			}
 		});
 
-//		tags.add(new TiffTag(258, "BitsPerSample")
-//		{
-//			public void process(TiffFileInfo info)
-//			{
-//				if (count == 1)
-//				{
-//					// Scalar type images (grayscale)
-//					if (value == 8)
-//						info.fileType = PixelType.GRAY8;
-//					else if (value == 16)
-//						info.fileType = PixelType.GRAY16_UNSIGNED;
-//					else if (value == 32)
-//						info.fileType = PixelType.GRAY32_FLOAT;
-//					else if (value == 12)
-//						info.fileType = PixelType.GRAY12_UNSIGNED;
-//					else if (value == 1)
-//						info.fileType = PixelType.BITMAP;
-//					else
-//						throw new IOException(
-//								"Unsupported BitsPerSample: " + value);
-//				} 
-//				else if (count == 3)
-//				{
-//					// Case of color images stored as 3 bands
-//					int bitDepth = readShort(offset);
-//
-//					if (bitDepth == 8)
-//					{
-//						info.fileType = PixelType.RGB;
-//					} else if (bitDepth == 16)
-//					{
-//						info.fileType = PixelType.RGB48;
-//					} else
-//					{
-//						throw new IOException(
-//								"Can only open 8 and 16 bit/channel RGB images ("
-//										+ bitDepth + ")");
-//					}
-//				}
-//			}
-//		});
+		tags.add(new TiffTag(258, "BitsPerSample")
+		{
+			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			{
+				if (count == 1)
+				{
+					// Scalar type images (grayscale)
+					if (value == 8)
+						info.fileType = PixelType.GRAY8;
+					else if (value == 16)
+						info.fileType = PixelType.GRAY16_UNSIGNED;
+					else if (value == 32)
+						info.fileType = PixelType.GRAY32_FLOAT;
+					else if (value == 12)
+						info.fileType = PixelType.GRAY12_UNSIGNED;
+					else if (value == 1)
+						info.fileType = PixelType.BITMAP;
+					else
+						throw new IOException(
+								"Unsupported BitsPerSample: " + value);
+				} 
+				else if (count == 3)
+				{
+					// Case of color images stored as 3 bands/channels
+					int bitDepth = readShort(dataReader);
 
-//		case 258:
-//			// Bits Per Sample
-//			if (count == 1)
-//			{
-//				// Scalar type images (grayscale)
-//				if (value == 8)
-//					info.fileType = PixelType.GRAY8;
-//				else if (value == 16)
-//					info.fileType = PixelType.GRAY16_UNSIGNED;
-//				else if (value == 32)
-//					info.fileType = PixelType.GRAY32_FLOAT;
-//				else if (value == 12)
-//					info.fileType = PixelType.GRAY12_UNSIGNED;
-//				else if (value == 1)
-//					info.fileType = PixelType.BITMAP;
-//				else
-//					throw new IOException("Unsupported BitsPerSample: "
-//							+ value);
-//			}
-//			else if (count == 3)
-//			{
-//				// Case of color images stored as 3 bands
-//				int bitDepth = readShort(offset);
-//	
-//				if (bitDepth == 8)
-//				{
-//					info.fileType = PixelType.RGB;
-//				}
-//				else if (bitDepth == 16)
-//				{
-//					info.fileType = PixelType.RGB48;
-//				}
-//				else
-//				{
-//					throw new IOException(
-//							"Can only open 8 and 16 bit/channel RGB images ("
-//									+ bitDepth + ")");
-//				}
-//			}
-//			break;
+					if (bitDepth == 8)
+					{
+						info.fileType = PixelType.RGB;
+					} else if (bitDepth == 16)
+					{
+						info.fileType = PixelType.RGB48;
+					} else
+					{
+						throw new IOException(
+								"Can only open 8 and 16 bit/channel RGB images ("
+										+ bitDepth + ")");
+					}
+				}
+			}
+		});
 
 		tags.add(new TiffTag(259, "CompressionMode")
 		{
-			public void process(TiffFileInfo info)
+			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 			{
 				info.compression = Compression.fromValue(value);
 			}
@@ -186,7 +146,7 @@ public class TiffTag
 
 		tags.add(new TiffTag(262, "PhotometricInterpretation")
 		{
-			public void process(TiffFileInfo info)
+			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 			{
 				info.photometricInterpretation = value;
 				info.whiteIsZero = value == 0;
@@ -195,23 +155,23 @@ public class TiffTag
 
 		tags.add(new TiffTag(270, "ImageDescription")
 		{
-			public void process(TiffFileInfo info)
+			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
 			{
-				info.compression = Compression.fromValue(value);
+				info.imageDescription = readAscii(dataReader);
 			}
 		});
 
-//		case 270: // Image description
-//			info.imageDescription = readAscii(count, value);
-//			break;
-//	
-//		case 273: // Strip Offsets
-//			info.stripOffsets = readArray(type, count, value);
-//			break;
-//	
+		tags.add(new TiffTag(273, "StripOffsets")
+		{
+			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			{
+				info.stripOffsets = readArray(dataReader);
+			}
+		});
+
 		tags.add(new TiffTag(274, "Orientation")
 		{
-			public void process(TiffFileInfo info)
+			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 			{
 				info.orientation = TiffFileInfo.Orientation.fromValue(value);
 			}
@@ -219,7 +179,7 @@ public class TiffTag
 
 		tags.add(new TiffTag(277, "SamplesPerPixel")
 		{
-			public void process(TiffFileInfo info)
+			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 			{
 				info.samplesPerPixel = value;
 				if (value == 3 && info.fileType != PixelType.RGB48)
@@ -232,78 +192,105 @@ public class TiffTag
 
 		tags.add(new TiffTag(278, "RowsPerStrip")
 		{
-			public void process(TiffFileInfo info)
+			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 			{
 				info.rowsPerStrip = value;
 			}
 		});
 		
-//		case 279: // Strip Byte Counts
-//			info.stripLengths = readArray(type, count, value);
-//			break;
-//	
-//		case 282: // X Resolution
-//			double xScale = readRational(offset);
-//			if (xScale != 0.0)
-//				info.pixelWidth = 1.0 / xScale;
-//			break;
-//	
-//		case 283: // Y Resolution
-//			double yScale = readRational(offset);
-//			if (yScale != 0.0)
-//				info.pixelHeight = 1.0 / yScale;
-//			break;
-//	
-//		case 284: // Planar Configuration. 1=chunky, 2=planar
-//			if (value == 2 && info.fileType == PixelType.RGB48)
-//				info.fileType = PixelType.GRAY16_UNSIGNED;
-//			else if (value == 2 && info.fileType == PixelType.RGB)
-//				info.fileType = PixelType.RGB_PLANAR;
-//			else if (value == 1 && info.samplesPerPixel == 4)
-//				info.fileType = PixelType.ARGB;
-//			else if (value != 2
-//					&& !((info.samplesPerPixel == 1) || (info.samplesPerPixel == 3)))
-//			{
-//				String msg = "Unsupported SamplesPerPixel: "
-//						+ info.samplesPerPixel;
-//				throw new IOException(msg);
-//			}
-//			break;
-//	
-//		case 296: // Resolution unit
-//			if (value == 1 && info.unit == null)
-//				info.unit = " ";
-//			else if (value == 2)
-//			{
-//				if (info.pixelWidth == 1.0 / 72.0)
-//				{
-//					info.pixelWidth = 1.0;
-//					info.pixelHeight = 1.0;
-//				}
-//				else
-//					info.unit = "inch";
-//			}
-//			else if (value == 3)
-//				info.unit = "cm";
-//			break;
-//	
-//		case 320: // color palette (LUT)
-//			int lutLength = (int) Math.pow(2, 8 * info.bytesPerPixel);
-//			int expLength = 3 * lutLength;
-//			if (count != expLength)
-//			{
-//				throw new RuntimeException("Tiff Color Palette has "
-//						+ count + " elements, while it requires "
-//						+ expLength);
-//			}
-//			
-//			info.lut = readColorMap(lutLength, count, offset);
-//			break;
+		tags.add(new TiffTag(279, "StripByteCount")
+		{
+			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			{
+				info.stripLengths = readArray(dataReader);
+			}
+		});
 		
+		tags.add(new TiffTag(282, "XResolution")
+		{
+			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			{
+				double xScale = readRational(dataReader);
+				if (xScale != 0.0)
+					info.pixelWidth = 1.0 / xScale;
+			}
+		});
+		
+		tags.add(new TiffTag(283, "YResolution")
+		{
+			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			{
+				double yScale = readRational(dataReader);
+				if (yScale != 0.0)
+					info.pixelHeight = 1.0 / yScale;
+			}
+		});
+		
+		tags.add(new TiffTag(284, "PlanarConfiguration")
+		{
+			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			{
+				if (value == 2 && info.fileType == PixelType.RGB48)
+					info.fileType = PixelType.GRAY16_UNSIGNED;
+				else if (value == 2 && info.fileType == PixelType.RGB)
+					info.fileType = PixelType.RGB_PLANAR;
+				else if (value == 1 && info.samplesPerPixel == 4)
+					info.fileType = PixelType.ARGB;
+				else if (value != 2
+						&& !((info.samplesPerPixel == 1) || (info.samplesPerPixel == 3)))
+				{
+					String msg = "Unsupported SamplesPerPixel: " + info.samplesPerPixel;
+					throw new IOException(msg);
+				}
+			}
+		});
+		
+		tags.add(new TiffTag(296, "ResolutionUnit")
+		{
+			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			{
+				if (value == 1 && info.unit == null)
+				{
+					info.unit = "";
+				}
+				else if (value == 2)
+				{
+					if (info.pixelWidth == 1.0 / 72.0)
+					{
+						info.pixelWidth = 1.0;
+						info.pixelHeight = 1.0;
+					}
+					else
+					{
+						info.unit = "inch";
+					}
+				}
+				else if (value == 3)
+				{
+					info.unit = "cm";
+				}
+			}
+		});
+		
+		tags.add(new TiffTag(320, "ColorMap")
+		{
+			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			{
+				int lutLength = (int) Math.pow(2, 8 * info.bytesPerPixel);
+				int expLength = 3 * lutLength;
+				if (count != expLength)
+				{
+					throw new RuntimeException("Tiff Color Palette has "
+							+ count + " elements, while it requires "
+							+ expLength);
+				}
+				
+				info.lut = readColorMap(dataReader, lutLength);
+			}
+		});
 		
 		return tags;
 	}
-
 
 	
 	/**
@@ -314,19 +301,7 @@ public class TiffTag
 	public static final Collection<TiffTag> getExtensionTags()
 	{
 		ArrayList<TiffTag> tags = new ArrayList<>();
-		
-		tags.add(new TiffTag(339, "SampleFormat"));
-//		tags.add(new TiffTag(339, "SampleFormat")
-//		{
-//			public void process(TiffFileInfo info)
-//			{
-//				System.out.println("process sample format");
-//				info.bytesPerPixel = 4;
-//			}
-//		});
-//		tags.add(new TiffTag(257, "ImageLength"));
-//		tags.add(new TiffTag(258, "BitsPerSample"));
-		
+
 		return tags;
 	}
 
@@ -409,13 +384,220 @@ public class TiffTag
 	
 	
 	// =============================================================
-	// specific methods
+	// public new methods
 
+	/**
+	 * Initialize the content of the tag from the data reader, given its code
+	 * and the specified value.
+	 * 
+	 * @param dataReader the instance of DataReader to read optional information from
+	 * @throws IOException
+	 *             if tried to read from the file and problem occurred
+	 */
+	public void readContent(BinaryDataReader dataReader) throws IOException
+	{
+		// parse tag data
+		switch (this.type)
+		{
+		case BYTE:
+			this.content = new Integer(value);
+			break;
+		case SHORT:
+			this.content = new Integer(value);
+			break;
+		case LONG:
+			this.content = new Integer(value);
+			break;
+		case ASCII:
+			this.content = readAscii(dataReader);
+			break;
+		case RATIONAL:
+			// convert tag value to long offset for reading large buffer
+			this.content = readRational(dataReader);
+			break;
+			
+		case NONE:
+			System.err.println("Could not interpret tag with code: "
+					+ this.code + " (" + this.name + ")");
+			break;
+		}		
+	}
+	
 	/**
 	 * Updates the specified FileInfo data structure according to the current value of the tag.
 	 * @param info an instance of TiffFileInfo.
 	 */
-	public void process(TiffFileInfo info)
+	public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
 	{
 	}
+	
+	
+	// =============================================================
+	// protected methods used by subclasses
+
+	protected int[][] readColorMap(BinaryDataReader dataReader, int lutLength)
+			throws IOException
+	{
+		// Allocate memory for raw array
+		int nBytes = 3 * lutLength * 2;
+		byte[] lut16 = new byte[nBytes];
+		
+		// convert state to long offset for reading large buffer
+		long offset = ((long) this.value) & 0xffffffffL;
+
+		// read the full raw array
+		long saveLoc = dataReader.getFilePointer();
+		dataReader.seek(offset);
+		int nRead = dataReader.read(lut16);
+		dataReader.seek(saveLoc);
+		if (nRead != nBytes)
+		{
+			throw new IOException(
+					"Could not decode the color palette from TIFF File");
+		}
+		
+		// convert raw array into N-by-3 look-up table
+		int[][] lut = new int[lutLength][3];
+		int j = 0;
+		if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
+			j++;
+		for (int i = 0; i < lutLength; i++)
+		{
+			lut[i][0] = lut16[j];
+			lut[i][1] = lut16[j + 512];
+			lut[i][2] = lut16[j + 1024];
+			j += 2;
+		}
+		return lut;
+	}
+
+	protected String readAscii(BinaryDataReader dataReader) throws IOException
+	{
+		// Allocate memory for string buffer
+		byte[] data = new byte[this.count];
+
+		// read string buffer
+		if (this.count <= 4)
+		{
+			// unpack integer
+			int value = this.value;
+			for (int i = 0; i < this.count; i++)
+			{
+				data[i] = (byte) (value & 0x00FF);
+				value = value >> 8;
+			}
+		}
+		else
+		{
+			// convert state to long offset for reading large buffer
+			long offset = ((long) this.value) & 0xffffffffL;
+
+			long pos0 = dataReader.getFilePointer();
+			dataReader.seek(offset);
+			dataReader.read(data);
+			dataReader.seek(pos0);
+		}
+
+		return new String(data);
+	}
+
+	protected  int[] readArray(BinaryDataReader dataReader) throws IOException
+	{
+		if (this.count == 1)
+		{
+			return new int[] { this.value };
+		}
+
+		if (this.type == TiffTag.Type.SHORT)
+		{
+			return readShortArray(dataReader);
+		}
+		else
+		{
+			return readIntArray(dataReader);
+		}
+	}
+
+	protected  int[] readShortArray(BinaryDataReader dataReader) throws IOException
+	{
+		// convert tag value to long offset for reading large buffer
+		long offset = ((long) this.value) & 0xffffffffL;
+
+		// allocate memory for result
+		int[] res = new int[this.count];
+
+		// save pointer location
+		long saveLoc = dataReader.getFilePointer();
+
+		// fill up array
+		dataReader.seek(offset);
+		for (int c = 0; c < this.count; c++)
+		{
+			res[c] = dataReader.readShort();
+		}
+		
+		// restore pointer and return result
+		dataReader.seek(saveLoc);
+		return res;
+	}
+
+	protected  int[] readIntArray(BinaryDataReader dataReader) throws IOException
+	{
+		// convert tag value to long offset for reading large buffer
+		long offset = ((long) this.value) & 0xffffffffL;
+
+		// allocate memory for result
+		int[] res = new int[this.count];
+
+		// save pointer location
+		long saveLoc = dataReader.getFilePointer();
+
+		// fill up array
+		dataReader.seek(offset);
+		for (int c = 0; c < this.count; c++)
+		{
+			res[c] = dataReader.readInt();
+		}
+		
+		// restore pointer and return result
+		dataReader.seek(saveLoc);
+		return res;
+	}
+
+	/**
+	 * Read the short state stored at the specified position
+	 */
+	protected  int readShort(BinaryDataReader dataReader) throws IOException
+	{
+		// convert tag value to long offset for reading large buffer
+		long offset = ((long) this.value) & 0xffffffffL;
+
+		long pos0 = dataReader.getFilePointer();
+		dataReader.seek(offset);
+		int result = dataReader.readShort();
+		dataReader.seek(pos0);
+		return result;
+	}
+
+	/**
+	 * Reads the rationale at the given position, as the ratio of two integers.
+	 */
+	protected  double readRational(BinaryDataReader dataReader) throws IOException
+	{
+		// convert tag value to long offset for reading large buffer
+		long offset = ((long) this.value) & 0xffffffffL;
+
+		long saveLoc = dataReader.getFilePointer();
+		dataReader.seek(offset);
+		
+		int numerator = dataReader.readInt();
+		int denominator = dataReader.readInt();
+		dataReader.seek(saveLoc);
+
+		if (denominator != 0)
+			return (double) numerator / denominator;
+		else
+			return 0.0;
+	}
+
 }
