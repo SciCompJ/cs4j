@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 
 import net.sci.image.io.TiffFileInfo.Compression;
 import net.sci.image.io.TiffFileInfo.PixelType;
@@ -59,6 +61,44 @@ public class TiffTag
 
 	// =============================================================
 	// static methods
+
+	/**
+	 * Returns a set of know tags indexed by their code.
+	 * 
+	 * @return
+	 */
+	static final Map<Integer, TiffTag> getAllTags()
+	{
+		TreeMap<Integer, TiffTag> map = new TreeMap<>();
+		
+		// Baseline tags (image size and format)
+		for (TiffTag tag : TiffTag.getBaseLineTags())
+		{
+			map.put(tag.code, tag);
+		}
+		
+		// Extension tags: less common formats
+		for (TiffTag tag : TiffTag.getExtensionTags())
+		{
+			map.put(tag.code, tag);
+		}
+		
+		// TIFF/IT specification 
+		for (TiffTag tag : TiffTag.getTiffITTags())
+		{
+			map.put(tag.code, tag);
+		}
+		
+		// ImageJ Tags 
+		for (TiffTag tag : TiffTag.getImageJTags())
+		{
+			map.put(tag.code, tag);
+		}
+		
+		// Some other tag collections may be added in the future.
+		
+		return map;
+	}
 
 	/**
 	 * List of baseline tags. Should be processed directly by the tiff reader.
@@ -330,7 +370,21 @@ public class TiffTag
 		return tags;
 	}
 	
-	
+	/**
+	 * List of ImageJ Tags. They seem to correspond to ROI management.
+	 *  
+	 * @return a list of extension tags
+	 */
+	public static final Collection<TiffTag> getImageJTags()
+	{
+		ArrayList<TiffTag> tags = new ArrayList<>();
+
+		tags.add(new TiffTag(50838, "ImageJMetaDataCounts"));
+		tags.add(new TiffTag(50839, "ImageJMetaData"));
+
+		return tags;
+	}
+
 	// =============================================================
 	// Class variables
 

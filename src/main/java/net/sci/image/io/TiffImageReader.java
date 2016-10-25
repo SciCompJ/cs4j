@@ -10,7 +10,6 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-import java.util.TreeMap;
 
 import net.sci.array.Array;
 import net.sci.array.data.Array3D;
@@ -33,37 +32,6 @@ public class TiffImageReader implements ImageReader
 	// =============================================================
 	// Static
 	
-	/**
-	 * Default method for managing tags.
-	 * @return
-	 */
-	static final Map<Integer, TiffTag> getAllTags()
-	{
-		TreeMap<Integer, TiffTag> map = new TreeMap<>();
-		
-		// Baseline tags (image size and format)
-		for (TiffTag tag : TiffTag.getBaseLineTags())
-		{
-			map.put(tag.code, tag);
-		}
-		
-		// Extension tags: less common formats
-		for (TiffTag tag : TiffTag.getExtensionTags())
-		{
-			map.put(tag.code, tag);
-		}
-		
-		// TIFF/IT specification 
-		for (TiffTag tag : TiffTag.getTiffITTags())
-		{
-			map.put(tag.code, tag);
-		}
-		
-		// Some other tag collections may be added in the future.
-		
-		return map;
-	}
-
 	
 	// =============================================================
 	// Class variables
@@ -280,7 +248,7 @@ public class TiffImageReader implements ImageReader
 		TiffFileInfo info = new TiffFileInfo();
 		info.intelByteOrder = dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN;
 
-		Map<Integer, TiffTag> tagMap = getAllTags();
+		Map<Integer, TiffTag> tagMap = TiffTag.getAllTags();
 
 		// Read each entry
 		for (int i = 0; i < nEntries; i++)
