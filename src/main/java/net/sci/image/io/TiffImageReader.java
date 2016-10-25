@@ -6,6 +6,7 @@ package net.sci.image.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -92,30 +93,26 @@ public class TiffImageReader implements ImageReader
 	
 	// =============================================================
 	// Class variables
+	
+	/**
+	 * The file stream from which data are extracted, and which manages data endianness.
+	 */
+	BinaryDataReader dataReader;
 
-	RandomAccessFile inputStream;
-	File file;
-	
-	boolean littleEndian = false;
-	
 	
 	// =============================================================
 	// Constructor
 
-	public TiffImageReader(File file) throws IOException
-	{
-		this.file = file;
-		this.inputStream = new RandomAccessFile(file, "r");
-		readTiffHeader();
-	}
-
 	public TiffImageReader(String fileName) throws IOException
 	{
-		this.file = new File(fileName);
-		this.inputStream = new RandomAccessFile(fileName, "r");
-		readTiffHeader();
+		this(new File(fileName));
 	}
-	
+
+	public TiffImageReader(File file) throws IOException
+	{
+		createTiffDataReader(file);
+	}
+
 	/**
 	 * Reads the beginning of the tiff file. The header is composed of 8 bytes:
 	 * <ul>
@@ -126,29 +123,41 @@ public class TiffImageReader implements ImageReader
 	 * 
 	 * @throws IOException
 	 */
-	private void readTiffHeader() throws IOException
+	private void createTiffDataReader(File file) throws IOException
 	{
+		RandomAccessFile inputStream = new RandomAccessFile(file, "r");
+		
 		// read bytes indicating endianness
 		int b1 = inputStream.read();
 		int b2 = inputStream.read();
 		int byteOrder = ((b2 << 8) + b1);
 
 		// Setup local endianness
+		boolean littleEndian = true;
 		if (byteOrder == 0x4949) // "II"
+		{
 			littleEndian = true;
+		}
 		else if (byteOrder == 0x4d4d) // "MM"
+		{
 			littleEndian = false;
+		}
 		else
 		{
 			String str = Integer.toHexString(b2) + Integer.toHexString(b1);
+			inputStream.close();
 			throw new RuntimeException(
 					"Could not decode endianness of TIFF File: " + str);
 		}
+		ByteOrder order = littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN; 
+		
+		this.dataReader = new BinaryDataReader(inputStream, order);
 		
 		// Read the magic number indicating tiff format
-		int magicNumber = readShort(); // should be 42
+		int magicNumber = dataReader.readShort();
 		if (magicNumber != 42)
 		{
+			inputStream.close();
 			throw new RuntimeException(
 					"Invalid TIFF file, magic number is different from 42");
 		}
@@ -157,6 +166,7 @@ public class TiffImageReader implements ImageReader
 	
 	// =============================================================
 	// Methods
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -197,7 +207,6 @@ public class TiffImageReader implements ImageReader
 		{
 			image.setColorMap(info0.lut);
 		}
-		image.setName(file.getName());
 		image.tiffTags = info0.tags;
 		
 		return image;
@@ -220,6 +229,7 @@ public class TiffImageReader implements ImageReader
 				
 		// If file contains several images, check if we should read a stack
 		// Condition: all images must have same size
+		// TODO: detect multi-channel images
 		for (TiffFileInfo info : infoList)
 		{
 			if (info.width != info0.width || info.height != info0.height)
@@ -238,37 +248,37 @@ public class TiffImageReader implements ImageReader
 	 */
 	public void close() throws IOException
 	{
-		this.inputStream.close();
+		this.dataReader.close();
 	}
 
 	/**
-	 * Reads the set of image file directories within the TIFF File.
+	 * Reads the set of image file directories within this TIFF File.
 	 */
 	public Collection<TiffFileInfo> readImageFileDirectories()
 			throws IOException
 	{
 		// Read file offset of first Image
-		inputStream.seek(4);
-		long offset = ((long) readInt()) & 0xffffffffL;
+		dataReader.seek(4);
+		long offset = ((long) dataReader.readInt()) & 0xffffffffL;
 		// System.out.println("offset: " + offset);
 
 		if (offset < 0L)
 		{
-			inputStream.close();
+			dataReader.close();
 			throw new RuntimeException("Found negative offset in tiff file");
 		}
 
 		ArrayList<TiffFileInfo> infoList = new ArrayList<TiffFileInfo>();
 		while (offset > 0L)
 		{
-			inputStream.seek(offset);
+			dataReader.seek(offset);
 			TiffFileInfo info = readImageFileDirectory();
 			if (info != null)
 			{
 				infoList.add(info);
 			}
 
-			offset = ((long) readInt()) & 0xffffffffL;
+			offset = ((long) dataReader.readInt()) & 0xffffffffL;
 		}
 
 		if (infoList.size() == 0)
@@ -285,7 +295,7 @@ public class TiffImageReader implements ImageReader
 	private TiffFileInfo readImageFileDirectory() throws IOException
 	{
 		// Read and control the number of entries
-		int nEntries = readShort();
+		int nEntries = dataReader.readShort();
 		if (nEntries < 1 || nEntries > 1000)
 		{
 			throw new RuntimeException("Number of entries is out of range: "
@@ -294,7 +304,7 @@ public class TiffImageReader implements ImageReader
 
 		// create a new FileInfo instance
 		TiffFileInfo info = new TiffFileInfo();
-		info.intelByteOrder = littleEndian;
+		info.intelByteOrder = dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN;
 
 		Map<Integer, TiffTag> tagMap = getAllTags();
 
@@ -302,25 +312,33 @@ public class TiffImageReader implements ImageReader
 		for (int i = 0; i < nEntries; i++)
 		{
 			// read tag code
-			int tagCode = readShort();
+			int tagCode = dataReader.readShort();
 			
-			// read tag data info
-			int typeValue = readShort();
-			TiffTag.Type type;
-			try 
-			{
-				type = TiffTag.Type.getType(typeValue); 
-			}
-			catch(IllegalArgumentException ex)
-			{
-				throw new RuntimeException(String.format("Tag with code %d has incorrect type value: %d", tagCode, typeValue));
-			}
-			int count = readInt();
+			// read type of tag data
+			TiffTag.Type type = readTagType(tagCode);
+			
+			// reader number of data and value / offset
+			int count = dataReader.readInt();
 			int value = readTagValue(type, count);
 
 			// convert value to long offset for reading large buffer
 			long offset = ((long) value) & 0xffffffffL;
 
+			TiffTag tag = tagMap.get(tagCode);
+//			if (tag != null)
+//			{
+//				// process tag obtained from tag list
+//				// init tag info
+//				tag.type = type;
+//				tag.count = count;
+//				
+//				setupTag(tag, value);
+//				
+//				tag.process(info);
+//
+//				continue;
+//			}
+			
 			switch (tagCode) {
 			case 254: 
 				// Image subfile type
@@ -475,9 +493,9 @@ public class TiffImageReader implements ImageReader
 				break;
 				
 				
-			default: // non-elementary tags
-				TiffTag tag = tagMap.get(tagCode);
-				
+			default: 
+				// process non-elementary tags
+				// (following code should to be removed in the future)
 				boolean unknown = false;
 				if (tag == null)
 				{
@@ -490,6 +508,7 @@ public class TiffImageReader implements ImageReader
 				// init tag info
 				tag.type = type;
 				tag.count = count;
+				tag.value = value;
 				
 				setupTag(tag, value);
 
@@ -500,13 +519,13 @@ public class TiffImageReader implements ImageReader
 					case BYTE:
 					case SHORT:
 					case LONG:
-						tag.value = new Integer(value);
+						tag.content = new Integer(value);
 						System.out.println(String.format(
 								"state of tag %d (%s) is %d", tag.code,
 								tag.name, value));
 						break;
 					case ASCII:
-						tag.value = readAscii(count, value);
+						tag.content = readAscii(count, value);
 						System.out.println(String.format(
 								"state of tag %d (%s) is %s", tag.code,
 								tag.name, tag.value));
@@ -534,31 +553,35 @@ public class TiffImageReader implements ImageReader
 
 		return info;
 	}
-	
-//	private int readTagValue(int fieldType, int count) throws IOException
-//	{
-//		int value;
-//		if (fieldType == SHORT_TYPE && count == 1)
-//		{
-//			value = readShort();
-//			readShort();
-//		}
-//		else
-//			value = readInt();
-//		return value;
-//	}
+
+	private TiffTag.Type readTagType(int tagCode) throws IOException
+	{
+		// read tag data info
+		int typeValue = dataReader.readShort();
+		TiffTag.Type type;
+		try 
+		{
+			type = TiffTag.Type.getType(typeValue); 
+		}
+		catch(IllegalArgumentException ex)
+		{
+			throw new RuntimeException(String.format("Tag with code %d has incorrect type value: %d", tagCode, typeValue));
+		}
+		
+		return type;
+	}
 
 	private int readTagValue(TiffTag.Type type, int count) throws IOException
 	{
 		int value;
 		if (type == TiffTag.Type.SHORT && count == 1)
 		{
-			value = readShort();
-			readShort();
+			value = dataReader.readShort();
+			dataReader.readShort();
 		}
 		else
 		{
-			value = readInt();
+			value = dataReader.readInt();
 		}
 		return value;
 	}
@@ -580,16 +603,16 @@ public class TiffImageReader implements ImageReader
 		switch (tag.type)
 		{
 		case BYTE:
-			tag.value = new Integer(value);
+			tag.content = new Integer(value);
 			break;
 		case SHORT:
-			tag.value = new Integer(value);
+			tag.content = new Integer(value);
 			break;
 		case LONG:
-			tag.value = new Integer(value);
+			tag.content = new Integer(value);
 			break;
 		case ASCII:
-			tag.value = readAscii(count, value);
+			tag.content = readAscii(count, value);
 			break;
 		case NONE:
 		case RATIONAL:
@@ -607,10 +630,10 @@ public class TiffImageReader implements ImageReader
 		byte[] lut16 = new byte[nBytes];
 		
 		// read the full raw array
-		long saveLoc = inputStream.getFilePointer();
-		inputStream.seek(offset);
-		int nRead = inputStream.read(lut16);
-		inputStream.seek(saveLoc);
+		long saveLoc = dataReader.getFilePointer();
+		dataReader.seek(offset);
+		int nRead = dataReader.read(lut16);
+		dataReader.seek(saveLoc);
 		if (nRead != nBytes)
 		{
 			throw new IOException(
@@ -620,7 +643,7 @@ public class TiffImageReader implements ImageReader
 		// convert raw array into N-by-3 look-up table
 		int[][] lut = new int[lutLength][3];
 		int j = 0;
-		if (littleEndian)
+		if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
 			j++;
 		for (int i = 0; i < lutLength; i++)
 		{
@@ -652,34 +675,14 @@ public class TiffImageReader implements ImageReader
 			// convert state to long offset for reading large buffer
 			long offset = ((long) value) & 0xffffffffL;
 
-			long pos0 = inputStream.getFilePointer();
-			inputStream.seek(offset);
-			inputStream.read(data);
-			inputStream.seek(pos0);
+			long pos0 = dataReader.getFilePointer();
+			dataReader.seek(offset);
+			dataReader.read(data);
+			dataReader.seek(pos0);
 		}
 
 		return new String(data);
 	}
-
-//	private int[] readArray(int type, int count, int value) throws IOException
-//	{
-//		if (count == 1)
-//		{
-//			return new int[] { value };
-//		}
-//
-//		// convert to long offset for reading large buffer
-//		long offset = ((long) value) & 0xffffffffL;
-//
-//		if (type == SHORT_TYPE)
-//		{
-//			return readShortArray(count, offset);
-//		}
-//		else
-//		{
-//			return readIntArray(count, offset);
-//		}
-//	}
 
 	private int[] readArray(TiffTag.Type type, int count, int value) throws IOException
 	{
@@ -707,15 +710,15 @@ public class TiffImageReader implements ImageReader
 		int[] res = new int[count];
 
 		// save pointer location
-		long saveLoc = inputStream.getFilePointer();
+		long saveLoc = dataReader.getFilePointer();
 
 		// fill up array
-		inputStream.seek(offset);
+		dataReader.seek(offset);
 		for (int c = 0; c < count; c++)
-			res[c] = readShort();
+			res[c] = dataReader.readShort();
 
 		// restore pointer and return result
-		inputStream.seek(saveLoc);
+		dataReader.seek(saveLoc);
 		return res;
 	}
 
@@ -725,50 +728,18 @@ public class TiffImageReader implements ImageReader
 		int[] res = new int[count];
 
 		// save pointer location
-		long saveLoc = inputStream.getFilePointer();
+		long saveLoc = dataReader.getFilePointer();
 
 		// fill up array
-		inputStream.seek(offset);
+		dataReader.seek(offset);
 		for (int c = 0; c < count; c++)
-			res[c] = readInt();
-
+		{
+			res[c] = dataReader.readInt();
+		}
+		
 		// restore pointer and return result
-		inputStream.seek(saveLoc);
+		dataReader.seek(saveLoc);
 		return res;
-	}
-
-	/**
-	 * Reads the next integer from the stream.
-	 */
-	private int readInt() throws IOException
-	{
-		// read bytes
-		int b1 = inputStream.read();
-		int b2 = inputStream.read();
-		int b3 = inputStream.read();
-		int b4 = inputStream.read();
-
-		// encode bytes to integer
-		if (littleEndian)
-			return ((b4 << 24) + (b3 << 16) + (b2 << 8) + (b1 << 0));
-		else
-			return ((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
-	}
-
-	/**
-	 * Reads the next short state from the stream.
-	 */
-	private int readShort() throws IOException
-	{
-		// read bytes
-		int b1 = inputStream.read();
-		int b2 = inputStream.read();
-
-		// encode bytes to short
-		if (littleEndian)
-			return ((b2 << 8) + b1);
-		else
-			return ((b1 << 8) + b2);
 	}
 
 	/**
@@ -776,10 +747,10 @@ public class TiffImageReader implements ImageReader
 	 */
 	private int readShort(long pos) throws IOException
 	{
-		long pos0 = inputStream.getFilePointer();
-		inputStream.seek(pos);
-		int result = readShort();
-		inputStream.seek(pos0);
+		long pos0 = dataReader.getFilePointer();
+		dataReader.seek(pos);
+		int result = dataReader.readShort();
+		dataReader.seek(pos0);
 		return result;
 	}
 
@@ -788,11 +759,11 @@ public class TiffImageReader implements ImageReader
 	 */
 	private double readRational(long loc) throws IOException
 	{
-		long saveLoc = inputStream.getFilePointer();
-		inputStream.seek(loc);
-		int numerator = readInt();
-		int denominator = readInt();
-		inputStream.seek(saveLoc);
+		long saveLoc = dataReader.getFilePointer();
+		dataReader.seek(loc);
+		int numerator = dataReader.readInt();
+		int denominator = dataReader.readInt();
+		dataReader.seek(saveLoc);
 
 		if (denominator != 0)
 			return (double) numerator / denominator;
@@ -892,7 +863,7 @@ public class TiffImageReader implements ImageReader
 				int b2 = buffer[2 * i + 1] & 0x00FF;
 				
 				// encode bytes to short
-				if (littleEndian)
+				if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
 					shortBuffer[i] = (short) ((b2 << 8) + b1);
 				else
 					shortBuffer[i] = (short) ((b1 << 8) + b2);
@@ -915,7 +886,7 @@ public class TiffImageReader implements ImageReader
 				int b4 = buffer[4 * i + 3] & 0x00FF;
 				
 				// encode bytes to short
-				if (littleEndian)
+				if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
 					intBuffer[i] = ((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
 				else
 					intBuffer[i] = ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
@@ -939,7 +910,7 @@ public class TiffImageReader implements ImageReader
 				int b4 = buffer[4 * i + 3] & 0x00FF;
 				
 				// encode bytes to short
-				if (littleEndian)
+				if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
 					floatBuffer[i] = Float.intBitsToFloat((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
 				else
 					floatBuffer[i] = Float.intBitsToFloat((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
@@ -1037,8 +1008,8 @@ public class TiffImageReader implements ImageReader
 		int nStrips = info.stripOffsets.length;
 		for (int i = 0; i < nStrips; i++)
 		{
-			inputStream.seek(info.stripOffsets[i]);
-			int nRead = inputStream.read(buffer, offset, info.stripLengths[i]);
+			dataReader.seek(info.stripOffsets[i]);
+			int nRead = dataReader.read(buffer, offset, info.stripLengths[i]);
 			offset += nRead;
 			totalRead += nRead;
 		}
@@ -1059,8 +1030,8 @@ public class TiffImageReader implements ImageReader
 		int nStrips = info.stripOffsets.length;
 		for (int i = 0; i < nStrips; i++)
 		{
-			inputStream.seek(info.stripOffsets[i]);
-			int nRead = inputStream.read(buffer, offset, info.stripLengths[i]);
+			dataReader.seek(info.stripOffsets[i]);
+			int nRead = dataReader.read(buffer, offset, info.stripLengths[i]);
 			offset += nRead;
 			totalRead += nRead;
 		}
@@ -1084,8 +1055,8 @@ public class TiffImageReader implements ImageReader
 		int offset = 0;
 		for (int i = 0; i < nStrips; i++)
 		{
-			inputStream.seek(info.stripOffsets[i]);
-			int nRead = inputStream.read(compressedBytes, offset,
+			dataReader.seek(info.stripOffsets[i]);
+			int nRead = dataReader.read(compressedBytes, offset,
 					info.stripLengths[i]);
 			offset += nRead;
 		}
@@ -1110,8 +1081,8 @@ public class TiffImageReader implements ImageReader
 		int offset0 = 0;
 		for (int i = 0; i < nStrips; i++)
 		{
-			inputStream.seek(info.stripOffsets[i]);
-			int nRead = inputStream.read(compressedBytes, offset0,
+			dataReader.seek(info.stripOffsets[i]);
+			int nRead = dataReader.read(compressedBytes, offset0,
 					info.stripLengths[i]);
 			offset0 += nRead;
 		}
@@ -1124,12 +1095,12 @@ public class TiffImageReader implements ImageReader
 	 * Uncompress byte array into a pre-allocated result byte array, using
 	 * Packbits compression.
 	 * 
-	 * Based on the ImagJ code, which is based on Bio-Formats PackbitsCodec
+	 * Based on the ImageJ code, which is based on Bio-Formats PackbitsCodec
 	 * written by Melissa Linkert.
 	 * 
 	 * @returns the length of the buffer after decompression
 	 */
-	private int uncompressPackBits(byte[] input, byte[] output)
+	private static int uncompressPackBits(byte[] input, byte[] output)
 	{
 		int index = 0;
 		int index2 = 0;
@@ -1160,12 +1131,12 @@ public class TiffImageReader implements ImageReader
 	 * Uncompress byte array into a pre-allocated result byte array, using
 	 * Packbits compression.
 	 * 
-	 * Based on the ImagJ code, which is based on Bio-Formats PackbitsCodec
+	 * Based on the ImageJ code, which is based on Bio-Formats PackbitsCodec
 	 * written by Melissa Linkert.
 	 * 
 	 * @returns the length of the buffer after decompression
 	 */
-	private int uncompressPackBits(byte[] input, byte[] output, int offset)
+	private static int uncompressPackBits(byte[] input, byte[] output, int offset)
 	{
 		int index = 0;
 		int index2 = offset;
