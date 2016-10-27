@@ -83,14 +83,14 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 
 	public UInt8Array.Iterator iterator()
 	{
-		return new UInt8Iterator();
+		return new Iterator();
 	}
 	
-	private class UInt8Iterator implements UInt8Array.Iterator
+	private class Iterator implements UInt8Array.Iterator
 	{
 		int index = -1;
 		
-		public UInt8Iterator() 
+		public Iterator() 
 		{
 		}
 		
