@@ -29,15 +29,35 @@ public abstract class VectorArray2D extends Array2D<Vector> implements VectorArr
 	public abstract void setValues(int x, int y, double[] values);
 	
 	/**
-	 * Returns the scalar value for the specified position and the specified component.
-	 * @param x the x-position of the vector
-	 * @param y the y-position of the vector
-	 * @param c the component to investigate
+	 * Returns the scalar value for the specified position and the specified
+	 * component.
+	 * 
+	 * @param x
+	 *            the x-position of the vector
+	 * @param y
+	 *            the y-position of the vector
+	 * @param c
+	 *            the component to investigate
 	 * @return the value of the given component at the given position
 	 */
 	public abstract double getValue(int x, int y, int c);
 	
 	public abstract void setValue(int x, int y, int c, double value);
+
+
+	// =============================================================
+	// Specialization of VectorArray interface
+	
+	public double[] getValues(int[] pos)
+	{
+		return getValues(pos[0], pos[1]);
+	}
+	
+	public void setValues(int[] pos, double[] values)
+	{
+		setValues(pos[0], pos[1], values);
+	}
+	
 
 	// =============================================================
 	// Specialization of Array interface
@@ -65,54 +85,14 @@ public abstract class VectorArray2D extends Array2D<Vector> implements VectorArr
 	@Override
 	public void setValue(int x, int y, double value)
 	{
-		// TODO Auto-generated method stub
-
+		setValue(x, y, 0, value);
 	}
 
-//	/* (non-Javadoc)
-//	 * @see net.sci.array.Positionable#getCursor()
-//	 */
-//	@Override
-//	public net.sci.array.Positionable.Cursor getCursor()
-//	{
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#duplicate()
 	 */
 	@Override
 	public abstract VectorArray2D duplicate();
-
-//	/* (non-Javadoc)
-//	 * @see net.sci.array.Array#getValue(int[])
-//	 */
-//	@Override
-//	public double getValue(int[] position)
-//	{
-//		// TODO Auto-generated method stub
-//		return 0;
-//	}
-//
-//	/* (non-Javadoc)
-//	 * @see net.sci.array.Array#setValue(int[], double)
-//	 */
-//	@Override
-//	public void setValue(int[] position, double value)
-//	{
-//		// TODO Auto-generated method stub
-//
-//	}
-
-//	/* (non-Javadoc)
-//	 * @see net.sci.array.data.VectorArray#iterator()
-//	 */
-//	@Override
-//	public Iterator iterator()
-//	{
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 }

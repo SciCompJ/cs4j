@@ -17,6 +17,28 @@ public interface VectorArray extends Array<Vector>
 	
 	public int getVectorLength();
 
+	/**
+	 * Returns the set of values corresponding to the array element for the
+	 * given position.
+	 * 
+	 * @param pos
+	 *            list of indices in each dimension
+	 * @return the set of values corresponding to the array element for the
+	 *         given position
+	 */
+	public double[] getValues(int[] pos);
+	
+	/**
+	 * Sets of values corresponding to the array element for the given position.
+	 * 
+	 * @param pos
+	 *            list of indices in each dimension
+	 * @param values
+	 *            the new set of values to assign to the array
+	 */
+	public void setValues(int[] pos, double[] values);
+	
+	
 	// =============================================================
 	// Specialization of Array interface
 
