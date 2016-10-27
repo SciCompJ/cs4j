@@ -11,7 +11,7 @@ import net.sci.array.type.Vector;
  * @author dlegland
  *
  */
-public abstract class VectorArray2D extends Array2D<Vector> implements VectorArray
+public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> implements VectorArray<V>
 {
 	// =============================================================
 	// Constructors
@@ -93,6 +93,6 @@ public abstract class VectorArray2D extends Array2D<Vector> implements VectorArr
 	 * @see net.sci.array.data.VectorArray#duplicate()
 	 */
 	@Override
-	public abstract VectorArray2D duplicate();
+	public abstract VectorArray2D<V> duplicate();
 
 }

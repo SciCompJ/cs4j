@@ -9,7 +9,7 @@ import static java.lang.Double.doubleToLongBits;
  * @author dlegland
  *
  */
-public class DoubleVector extends Vector
+public class DoubleVector extends Vector<Double>
 {
 	double[] data;
 	

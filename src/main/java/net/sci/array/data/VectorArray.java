@@ -4,13 +4,14 @@
 package net.sci.array.data;
 
 import net.sci.array.Array;
+import net.sci.array.type.Scalar;
 import net.sci.array.type.Vector;
 
 /**
  * @author dlegland
  *
  */
-public interface VectorArray extends Array<Vector>
+public interface VectorArray<V extends Vector<?>> extends Array<V>
 {
 	// =============================================================
 	// New methods
@@ -43,17 +44,17 @@ public interface VectorArray extends Array<Vector>
 	// Specialization of Array interface
 
 	@Override
-	public VectorArray newInstance(int... dims);
+	public VectorArray<V> newInstance(int... dims);
 	
 	@Override
-	public VectorArray duplicate();
+	public VectorArray<V> duplicate();
 
-	public VectorArray.Iterator iterator();
+	public VectorArray.Iterator<V> iterator();
 	
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator extends Array.Iterator<Vector>
+	public interface Iterator<V extends Vector<? extends Scalar>> extends Array.Iterator<V>
 	{
 		public default double nextValue()
 		{

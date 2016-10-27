@@ -31,7 +31,7 @@ public class SobelGradient implements ArrayOperator
 	{
 		if (source instanceof ScalarArray2D && target instanceof VectorArray2D)
 		{
-			process2d((ScalarArray2D<?>) source, (VectorArray2D) target);
+			process2d((ScalarArray2D<?>) source, (VectorArray2D<?>) target);
 		}
 		else
 		{
@@ -39,7 +39,7 @@ public class SobelGradient implements ArrayOperator
 		}
 	}
 
-	public void process2d(ScalarArray2D<?> source, VectorArray2D target)
+	public void process2d(ScalarArray2D<?> source, VectorArray2D<?> target)
 	{
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);

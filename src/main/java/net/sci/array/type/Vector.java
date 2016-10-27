@@ -9,7 +9,7 @@ package net.sci.array.type;
  * @author dlegland
  *
  */
-public abstract class Vector
+public abstract class Vector<T extends Scalar>
 {
 	/**
 	 * Returns the set of values that constitutes this vector.

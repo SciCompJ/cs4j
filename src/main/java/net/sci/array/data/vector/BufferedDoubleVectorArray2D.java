@@ -5,13 +5,12 @@ package net.sci.array.data.vector;
 
 import net.sci.array.data.VectorArray;
 import net.sci.array.type.DoubleVector;
-import net.sci.array.type.Vector;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedDoubleVectorArray2D extends VectorArray2D
+public class BufferedDoubleVectorArray2D extends VectorArray2D<DoubleVector>
 {
 	// =============================================================
 	// Class members
@@ -87,7 +86,7 @@ public class BufferedDoubleVectorArray2D extends VectorArray2D
 	 * @see net.sci.array.data.VectorArray#newInstance(int[])
 	 */
 	@Override
-	public VectorArray newInstance(int... dims)
+	public VectorArray<DoubleVector> newInstance(int... dims)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -97,7 +96,7 @@ public class BufferedDoubleVectorArray2D extends VectorArray2D
 	 * @see net.sci.array.data.vector.VectorArray2D#duplicate()
 	 */
 	@Override
-	public VectorArray2D duplicate()
+	public VectorArray2D<DoubleVector> duplicate()
 	{
 		double[] buffer2 = new double[buffer.length];
 		int n = this.size0 * this.size1 * this.vectorLength;
@@ -131,7 +130,7 @@ public class BufferedDoubleVectorArray2D extends VectorArray2D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public Vector get(int x, int y)
+	public DoubleVector get(int x, int y)
 	{
 		return new DoubleVector(getValues(x, y));
 	}
@@ -140,7 +139,7 @@ public class BufferedDoubleVectorArray2D extends VectorArray2D
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, Vector vect)
+	public void set(int x, int y, DoubleVector vect)
 	{
 		setValues(x, y, vect.getValues());
 	}
@@ -149,12 +148,12 @@ public class BufferedDoubleVectorArray2D extends VectorArray2D
 	 * @see net.sci.array.data.VectorArray#iterator()
 	 */
 	@Override
-	public net.sci.array.data.VectorArray.Iterator iterator()
+	public VectorArray.Iterator<DoubleVector> iterator()
 	{
 		return new Iterator();
 	}
 
-	private class Iterator implements VectorArray.Iterator
+	private class Iterator implements VectorArray.Iterator<DoubleVector>
 	{
 		int index = -1;
 		
@@ -185,7 +184,7 @@ public class BufferedDoubleVectorArray2D extends VectorArray2D
 		}
 
 		@Override
-		public Vector get()
+		public DoubleVector get()
 		{
 			double[] vals = new double[vectorLength];
 			int offset = index * vectorLength;
