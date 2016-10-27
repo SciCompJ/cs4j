@@ -266,10 +266,9 @@ public class TiffImageReader implements ImageReader
 			TiffTag tag = tagMap.get(tagCode);
 			
 			// if tag was not found, create a default empty tag
-			if (tag == null)
+			boolean unknownTag = tag == null;
+			if (unknownTag)
 			{
-				System.out.println("Unknown tag with code " + tagCode + ". Type="
-						+ type + ", count=" + count + ", value=" + value);
 				tag = new TiffTag(tagCode, "Unknown");
 			}
 			
@@ -278,6 +277,12 @@ public class TiffImageReader implements ImageReader
 			tag.count = count;
 			tag.value = value;
 			tag.readContent(dataReader);
+
+			if (unknownTag)
+			{
+				System.out.println("Unknown tag with code " + tagCode + ". Type="
+						+ type + ", count=" + count + ", value=" + tag.content);
+			}
 
 			// call the initialization procedure specific to tag
 			tag.process(info, this.dataReader);

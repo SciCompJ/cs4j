@@ -118,6 +118,8 @@ public class TiffTag
 			}
 		});
 
+		// Tag 255 is deprecated
+		
 		tags.add(new TiffTag(256, "ImageWidth")
 		{
 			public void process(TiffFileInfo info, BinaryDataReader dataReader)
@@ -184,6 +186,8 @@ public class TiffTag
 			}
 		});
 
+		// No ref for tags 260-261
+		
 		tags.add(new TiffTag(262, "PhotometricInterpretation")
 		{
 			public void process(TiffFileInfo info, BinaryDataReader dataReader)
@@ -193,6 +197,17 @@ public class TiffTag
 			}
 		});
 
+//		tags.add(new TiffTag(263, "Threshholding")
+//		{
+//			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+//			{
+//			}
+//		});
+
+		// Tags 264-265 refer to half-toning
+		
+		// Tag 266 refer to logical order of bits within a byte
+		
 		tags.add(new TiffTag(270, "ImageDescription")
 		{
 			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
@@ -201,6 +216,8 @@ public class TiffTag
 			}
 		});
 
+		// Tags 271-272 refer to scanner model name and manufacturer
+		
 		tags.add(new TiffTag(273, "StripOffsets")
 		{
 			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
@@ -244,6 +261,16 @@ public class TiffTag
 			{
 				info.stripLengths = readArray(dataReader);
 			}
+		});
+		
+		tags.add(new TiffTag(280, "MinSampleValue", "The minimum component value used")
+		{
+			//TODO: add processing
+		});
+		
+		tags.add(new TiffTag(281, "MaxSampleValue", "The maximum component value used")
+		{
+			//TODO: add processing
 		});
 		
 		tags.add(new TiffTag(282, "XResolution")
@@ -312,6 +339,9 @@ public class TiffTag
 			}
 		});
 		
+		tags.add(new TiffTag(305, "Software",
+				"Name and version number of the software package(s) used to create the image."));
+
 		tags.add(new TiffTag(320, "ColorMap")
 		{
 			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
@@ -342,6 +372,8 @@ public class TiffTag
 	{
 		ArrayList<TiffTag> tags = new ArrayList<>();
 
+		tags.add(new TiffTag(339, "SampleFormat", "Specifies how to interpret each data sample in a pixel"));
+		
 		return tags;
 	}
 
