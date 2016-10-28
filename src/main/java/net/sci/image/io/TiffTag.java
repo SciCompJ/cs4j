@@ -37,7 +37,7 @@ public class TiffTag
 	 */
 	static enum Type 
 	{
-		NONE,
+		UNKNOWN,
 		BYTE,
 		ASCII,
 		SHORT,
@@ -48,14 +48,13 @@ public class TiffTag
 		{
 			switch (typeCode)
 			{
-			case 0: return NONE;
 			case 1: return BYTE;
 			case 2: return ASCII;
 			case 3: return SHORT;
 			case 4: return LONG;
 			case 5: return RATIONAL;
+			default: return UNKNOWN;
 			}
-			throw new IllegalArgumentException("Incorrect value for tag type: " + typeCode);
 		}
 	};
 
@@ -502,7 +501,7 @@ public class TiffTag
 			this.content = readRational(dataReader);
 			break;
 			
-		case NONE:
+		case UNKNOWN:
 			System.err.println("Could not interpret tag with code: "
 					+ this.code + " (" + this.name + ")");
 			break;
@@ -587,7 +586,7 @@ public class TiffTag
 		return new String(data);
 	}
 
-	protected  int[] readArray(BinaryDataReader dataReader) throws IOException
+	protected int[] readArray(BinaryDataReader dataReader) throws IOException
 	{
 		if (this.count == 1)
 		{
@@ -604,7 +603,7 @@ public class TiffTag
 		}
 	}
 
-	protected  int[] readShortArray(BinaryDataReader dataReader) throws IOException
+	protected int[] readShortArray(BinaryDataReader dataReader) throws IOException
 	{
 		// convert tag value to long offset for reading large buffer
 		long offset = ((long) this.value) & 0xffffffffL;
@@ -627,7 +626,7 @@ public class TiffTag
 		return res;
 	}
 
-	protected  int[] readIntArray(BinaryDataReader dataReader) throws IOException
+	protected int[] readIntArray(BinaryDataReader dataReader) throws IOException
 	{
 		// convert tag value to long offset for reading large buffer
 		long offset = ((long) this.value) & 0xffffffffL;
@@ -653,7 +652,7 @@ public class TiffTag
 	/**
 	 * Read the short state stored at the specified position
 	 */
-	protected  int readShort(BinaryDataReader dataReader) throws IOException
+	protected int readShort(BinaryDataReader dataReader) throws IOException
 	{
 		// convert tag value to long offset for reading large buffer
 		long offset = ((long) this.value) & 0xffffffffL;
@@ -668,7 +667,7 @@ public class TiffTag
 	/**
 	 * Reads the rationale at the given position, as the ratio of two integers.
 	 */
-	protected  double readRational(BinaryDataReader dataReader) throws IOException
+	protected double readRational(BinaryDataReader dataReader) throws IOException
 	{
 		// convert tag value to long offset for reading large buffer
 		long offset = ((long) this.value) & 0xffffffffL;
