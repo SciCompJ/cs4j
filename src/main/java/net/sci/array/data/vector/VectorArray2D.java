@@ -79,13 +79,20 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 		return Math.sqrt(sum);
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Changes the value of the vector at given position, by setting the first
+	 * component and clearing the others.
+	 * 
 	 * @see net.sci.array.data.Array2D#setValue(int, int, double)
 	 */
 	@Override
 	public void setValue(int x, int y, double value)
 	{
 		setValue(x, y, 0, value);
+		for (int c = 1; c < this.getVectorLength(); c++)
+		{
+			setValue(x, y, c, 0);
+		}
 	}
 
 

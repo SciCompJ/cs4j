@@ -13,6 +13,19 @@ import net.sci.array.data.UInt8Array;
  */
 public class UInt8 extends Int
 {
+	/**
+	 * Computes the integer value between 0 and 255 closest to the specified
+	 * value.
+	 * 
+	 * @param value
+	 *            a double value
+	 * @return the closest corresponding integer between 0 and 255
+	 */
+	public final static int clamp(double value)
+	{
+		return (int) Math.min(Math.max(0, value), 255);
+	}
+	
 	byte value;
 	
 	/**
