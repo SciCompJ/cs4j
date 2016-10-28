@@ -3,43 +3,40 @@
  */
 package net.sci.array.data.color;
 
-import net.sci.array.data.scalar3d.UInt8Array3D;
+import net.sci.array.data.Int32Array;
+import net.sci.array.data.scalar2d.Int32Array2D;
 import net.sci.array.type.RGB8;
 import net.sci.array.type.UInt8;
 
 /**
- * Implementation of 2D array of RGB8, by keeping value in a byte buffer, with
- * packed channels.
+ * Implementation of 2D array of RGB8, by keeping value in a buffer if Int32.
  * 
- * The buffer contains first all values for red, then all values for green, then
- * all values for blue.
+ * The integer values are encoded and decoded on the fly. The number of elements
+ * of the underlying integer array is the same as the number of elements of the
+ * RGB8 array.
  * 
  * @author dlegland
  *
  */
-public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
+public class Int32EncodedRGB8Array2D extends RGB8Array2D
 {
 	// =============================================================
 	// Class variables
 
-	UInt8Array3D buffer;
+	Int32Array2D buffer;
 	
 	// =============================================================
 	// Constructor
 
-	public BufferedPackedByteRGB8Array2D(int size0, int size1)
+	public Int32EncodedRGB8Array2D(int size0, int size1)
 	{
 		super(size0, size1);
-		this.buffer = UInt8Array3D.create(size0, size1, 3);
+		this.buffer = Int32Array2D.create(size0, size1);
 	}
 
-	public BufferedPackedByteRGB8Array2D(UInt8Array3D buffer)
+	public Int32EncodedRGB8Array2D(Int32Array2D buffer)
 	{
 		super(buffer.getSize(0), buffer.getSize(1));
-		if (buffer.getSize(2) != 3)
-		{
-			throw new IllegalArgumentException("Requires an array of UInt8 with 3 slices");
-		}
 		this.buffer = buffer;
 	}
 
@@ -53,12 +50,7 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	@Override
 	public double[] getValues(int x, int y)
 	{
-		double[] values = new double[3];
-		for (int c = 0; c < 3; c++)
-		{
-			values[c] = this.buffer.getInt(x, y, c);
-		}
-		return values;
+		return new RGB8(this.buffer.getInt(x, y)).getValues();
 	}
 
 	/* (non-Javadoc)
@@ -67,10 +59,11 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	@Override
 	public void setValues(int x, int y, double[] values)
 	{
-		for (int c = 0; c < 3; c++)
-		{
-			this.buffer.setValue(x, y, c, values[c]);
-		}
+		int r = UInt8.clamp(values[0]);
+		int g = UInt8.clamp(values[1]);
+		int b = UInt8.clamp(values[2]);
+		int intCode = b << 16 | g << 8 | r;
+		this.buffer.setInt(x, y, intCode);
 	}
 
 	/* (non-Javadoc)
@@ -79,7 +72,14 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	@Override
 	public double getValue(int x, int y, int c)
 	{
-		return this.buffer.getValue(x, y, c);
+		int intCode = this.buffer.getInt(x, y);
+		switch (c)
+		{
+		case 0: return intCode & 0x00FF;
+		case 1: return (intCode >> 8) & 0x00FF;
+		case 2: return (intCode >> 16) & 0x00FF;
+		}
+		throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
 	}
 
 	/* (non-Javadoc)
@@ -88,7 +88,24 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	@Override
 	public void setValue(int x, int y, int c, double value)
 	{
-		this.buffer.setValue(x, y, c, value);
+		int intCode = this.buffer.getInt(x, y);
+		int r = intCode & 0x00FF;
+		int g = intCode & 0x00FF00;
+		int b = intCode & 0x00FF0000;
+		int intValue = UInt8.clamp(value);
+		
+		switch (c)
+		{
+		case 0: r = intValue; break;
+		case 1: g = intValue << 8; break;
+		case 2: b = intValue << 16; break;
+		default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
+		}
+		intCode = r | g | b;
+		this.buffer.setInt(x, y, intCode);
+//		int[] rgb = new RGB8(this.buffer.getInt(x, y)).getSamples();
+//		rgb[c] = UInt8.clamp(value);
+//		this.buffer.setInt(x, y, new RGB8(rgb[0], rgb[1], rgb[2]).getIntCode());
 	}
 
 	
@@ -101,10 +118,7 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	@Override
 	public RGB8 get(int x, int y)
 	{
-		int r = this.buffer.getInt(x, y, 0);
-		int g = this.buffer.getInt(x, y, 1);
-		int b = this.buffer.getInt(x, y, 2);
-		return new RGB8(r, g, b);
+		return new RGB8(this.buffer.getInt(x, y));
 	}
 
 	/* (non-Javadoc)
@@ -113,9 +127,7 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	@Override
 	public void set(int x, int y, RGB8 rgb)
 	{
-		this.buffer.setInt(x, y, 0, rgb.getSample(0));
-		this.buffer.setInt(x, y, 1, rgb.getSample(1));
-		this.buffer.setInt(x, y, 2, rgb.getSample(2));
+		this.buffer.setInt(x, y, rgb.getIntCode());
 	}
 
 
@@ -128,8 +140,8 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	@Override
 	public RGB8Array2D duplicate()
 	{
-		UInt8Array3D newBuffer = this.buffer.duplicate();
-		return new BufferedPackedByteRGB8Array2D(newBuffer);
+		Int32Array2D newBuffer = this.buffer.duplicate();
+		return new Int32EncodedRGB8Array2D(newBuffer);
 	}
 
 	/* (non-Javadoc)
@@ -143,8 +155,9 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	
 	private class Iterator implements RGB8Array.Iterator
 	{
-		int posX = -1;
-		int posY = 0;
+		Int32Array.Iterator intIterator;
+//		int posX = -1;
+//		int posY = 0;
 		
 		public Iterator() 
 		{
@@ -153,7 +166,8 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 		@Override
 		public boolean hasNext()
 		{
-			return this.posX < size0 - 1 || posY < size1 - 1;
+			return intIterator.hasNext();
+//			return this.posX < size0 - 1 || posY < size1 - 1;
 		}
 
 		@Override
@@ -166,21 +180,19 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 		@Override
 		public void forward()
 		{
-			this.posX++;
-			if (posX >= size0)
-			{
-				posX = 0;
-				posY++;
-			}
+			intIterator.forward();
+//			this.posX++;
+//			if (posX >= size0)
+//			{
+//				posX = 0;
+//				posY++;
+//			}
 		}
 
 		@Override
 		public RGB8 get()
-		{
-			int r = buffer.getInt(posX, posY, 0);
-			int g = buffer.getInt(posX, posY, 1);
-			int b = buffer.getInt(posX, posY, 2);
-			return new RGB8(r, g, b);
+		{	
+			return new RGB8(intIterator.getInt());
 		}
 
 		@Override
@@ -193,9 +205,9 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 		public void setValue(double value)
 		{
 			int val = UInt8.clamp(value);
-			buffer.setInt(posX, posY, 0, val);
-			buffer.setInt(posX, posY, 1, val);
-			buffer.setInt(posX, posY, 2, val);
+			int intCode = val << 16 & val << 8 & val;
+			intIterator.setInt(intCode);
+//			buffer.setInt(posX, posY, intCode);
 		}
 	}
 }

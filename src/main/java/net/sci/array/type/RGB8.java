@@ -36,7 +36,7 @@ public class RGB8 extends Vector<UInt8>
 	public final static RGB8 fromValue(double value)
 	{
 		int val = clamp255(value);
-		return new RGB8(val, val, val);
+		return new RGB8(val << 16 | val << 8 | val);
 	}
 	
 	// =============================================================
@@ -64,12 +64,32 @@ public class RGB8 extends Vector<UInt8>
 		int r = clamp255(red);
 		int g = clamp255(green);
 		int b = clamp255(blue);
-		this.intCode = r & 0x00FF | (g & 0x00FF) << 8 | (b & 0x00FF) << 16;   
-	}
+		this.intCode = b << 16 | g << 8 | r;   
+	}	
 	
+	/**
+	 * Creates a new color by specifying the double value of each component.
+	 */
+	public RGB8(double red, double green, double blue)
+	{
+		int r = clamp255(red);
+		int g = clamp255(green);
+		int b = clamp255(blue);
+		this.intCode = b << 16 | g << 8 | r;   
+	}
 
 	// =============================================================
 	// General methods
+	
+	/**
+	 * Returns the int-based representation of this RGB8 element.
+	 * 
+	 * @return an int-based representation of this RGB8 color.
+	 */
+	public int getIntCode()
+	{
+		return this.intCode;
+	}
 	
 	/**
 	 * @return a double value corresponding to the luma of this color.

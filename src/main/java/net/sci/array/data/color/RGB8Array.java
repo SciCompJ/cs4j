@@ -21,10 +21,10 @@ public interface RGB8Array extends VectorArray<RGB8>
 	{
 		switch (dims.length)
 		{
-//		case 2:
-//			return DoubleArray2D.create(dims[0], dims[1]);
-//		case 3:
-//			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
+		case 2:
+			return RGB8Array2D.create(dims[0], dims[1]);
+		case 3:
+			return RGB8Array3D.create(dims[0], dims[1], dims[2]);
 		default:
 			//TODO: implement the rest
 			throw new RuntimeException("Can not create such image");
