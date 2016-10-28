@@ -26,7 +26,7 @@ public interface FloatArray extends ScalarArray<Float>
 			return FloatArray3D.create(dims[0], dims[1], dims[2]);
 		default:
 			//TODO: implement the rest
-			throw new RuntimeException("Can not create such image");
+			throw new IllegalArgumentException("Can not create FloatArray with " + dims.length + " dimensions");
 //			return UInt8ArrayND.create(dims);
 		}
 	}

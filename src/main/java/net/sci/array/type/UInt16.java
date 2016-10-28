@@ -16,6 +16,19 @@ public class UInt16 extends Int
 	 */
 	public final static int MAX_VALUE = 0x0FFFF;
 
+	/**
+	 * Computes the integer value between 0 and MAX_VALUE closest to the specified
+	 * double value.
+	 * 
+	 * @param value
+	 *            a double value
+	 * @return the closest corresponding integer between 0 and MAX_VALUE
+	 */
+	public final static int clamp(double value)
+	{
+		return (int) Math.min(Math.max(0, value), MAX_VALUE);
+	}
+
 	short value;
 	
 	/**

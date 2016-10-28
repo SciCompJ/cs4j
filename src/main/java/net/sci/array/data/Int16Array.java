@@ -24,7 +24,7 @@ public interface Int16Array extends IntArray<Int16>
 //		case 3:
 //			return Int32Array3D.create(dims[0], dims[1], dims[2]);
 		default:
-			throw new IllegalArgumentException("Not implemented for dimension " + dims.length);
+			throw new IllegalArgumentException("Can not create Int16Array with " + dims.length + " dimensions");
 //			return Int32ArrayND.create(dims);
 		}
 	}

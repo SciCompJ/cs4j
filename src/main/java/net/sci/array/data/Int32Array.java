@@ -25,7 +25,7 @@ public interface Int32Array extends IntArray<Int32>
 		case 3:
 			return Int32Array3D.create(dims[0], dims[1], dims[2]);
 		default:
-			throw new IllegalArgumentException("Not implemented for dimension " + dims.length);
+			throw new IllegalArgumentException("Can not create Int32Array with " + dims.length + " dimensions");
 //			return Int32ArrayND.create(dims);
 		}
 	}

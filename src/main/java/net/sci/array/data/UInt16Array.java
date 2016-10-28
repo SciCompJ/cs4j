@@ -4,6 +4,7 @@
 package net.sci.array.data;
 
 import net.sci.array.data.scalar2d.UInt16Array2D;
+import net.sci.array.data.scalar3d.UInt16Array3D;
 import net.sci.array.type.UInt16;
 
 /**
@@ -22,12 +23,13 @@ public interface UInt16Array extends IntArray<UInt16>
 		{
 		case 2:
 			return UInt16Array2D.create(dims[0], dims[1]);
-//		case 3:
-//			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
+		case 3:
+			return UInt16Array3D.create(dims[0], dims[1], dims[2]);
+		default:
+			throw new IllegalArgumentException("Can not create UInt16Array with " + dims.length + " dimensions");
 //		default:
 //			return UInt8ArrayND.create(dims);
 		}
-		return null;
 	}
 	
 	// =============================================================

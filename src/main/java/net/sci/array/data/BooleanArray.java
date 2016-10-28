@@ -25,7 +25,7 @@ public interface BooleanArray extends IntArray<Boolean>
 		case 3:
 			return BooleanArray3D.create(dims[0], dims[1], dims[2]);
 		default:
-			throw new RuntimeException("Cound not create Boolean array of dimension " + dims.length);
+			throw new IllegalArgumentException("Can not create BooleanArray with " + dims.length + " dimensions");
 //			return UInt8ArrayND.create(dims);
 		}
 	}
