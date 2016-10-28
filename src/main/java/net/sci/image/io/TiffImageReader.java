@@ -13,12 +13,14 @@ import java.util.Map;
 
 import net.sci.array.Array;
 import net.sci.array.data.Array3D;
+import net.sci.array.data.color.BufferedPackedByteRGB8Array2D;
+import net.sci.array.data.color.RGB8Array2D;
 import net.sci.array.data.scalar2d.BufferedFloatArray2D;
 import net.sci.array.data.scalar2d.BufferedInt32Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
-import net.sci.array.data.scalar3d.UInt8Array3D;
+import net.sci.array.type.RGB8;
 import net.sci.image.Image;
 
 /**
@@ -491,7 +493,8 @@ public class TiffImageReader implements ImageReader
 		case BARG:
 		case RGB_PLANAR:
 			// allocate memory for array
-			UInt8Array3D rgb2d = new BufferedUInt8Array3D(info.width, info.height, 3);
+//			UInt8Array3D rgb2d = new BufferedUInt8Array3D(info.width, info.height, 3);
+			RGB8Array2D rgb2d = new BufferedPackedByteRGB8Array2D(info.width, info.height);
 			
 			// fill array with re-ordered buffer content
 			int index = 0;
@@ -499,9 +502,13 @@ public class TiffImageReader implements ImageReader
 			{
 				for (int x = 0; x < info.width; x++)
 				{
-					rgb2d.setByte(x, y, 0, buffer[index++]);
-					rgb2d.setByte(x, y, 1, buffer[index++]);
-					rgb2d.setByte(x, y, 2, buffer[index++]);
+					int r = buffer[index++] & 0x00FF;
+					int g = buffer[index++] & 0x00FF;
+					int b = buffer[index++] & 0x00FF;
+					rgb2d.set(x, y, new RGB8(r, g, b));
+//					rgb2d.setByte(x, y, 0, buffer[index++]);
+//					rgb2d.setByte(x, y, 1, buffer[index++]);
+//					rgb2d.setByte(x, y, 2, buffer[index++]);
 				}
 			}
 			return rgb2d;

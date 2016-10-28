@@ -20,6 +20,7 @@ import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
+import net.sci.array.data.color.RGB8Array;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
@@ -258,10 +259,10 @@ public class Image
 		{
 			this.type = Type.INTENSITY;
 		} 
-//		else if (this.data instanceof RGB8Array)
-//		{
-//			this.type = Type.RGB8;
-//		} 
+		else if (this.data instanceof RGB8Array)
+		{
+			this.type = Type.COLOR;
+		} 
 		else if (this.data instanceof VectorArray) 
 		{
 			this.type = Type.VECTOR;
@@ -282,9 +283,10 @@ public class Image
 		int dataND = this.data.dimensionality();
 		int[] dataSize = this.data.getSize();
 		
-		// compute size of image
-		int nd = isVectorImage() ? dataND - 1 : dataND;
-
+//		// compute size of image
+//		int nd = isVectorImage() ? dataND - 1 : dataND;
+		int nd = dataND;
+		
 		// create size array depending on image type
 		this.size = new int[nd];
 		System.arraycopy(dataSize, 0, this.size, 0, nd);
