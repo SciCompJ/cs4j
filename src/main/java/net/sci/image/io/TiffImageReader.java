@@ -19,6 +19,7 @@ import net.sci.array.data.scalar2d.BufferedFloatArray2D;
 import net.sci.array.data.scalar2d.BufferedInt32Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
+import net.sci.array.data.scalar3d.BufferedUInt16Array3D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
 import net.sci.array.type.RGB8;
 import net.sci.image.Image;
@@ -248,7 +249,7 @@ public class TiffImageReader implements ImageReader
 
 		// create a new FileInfo instance
 		TiffFileInfo info = new TiffFileInfo();
-		info.intelByteOrder = dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN;
+//		info.intelByteOrder = dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN;
 
 		Map<Integer, TiffTag> tagMap = TiffTag.getAllTags();
 
@@ -350,6 +351,8 @@ public class TiffImageReader implements ImageReader
 		// Compute size of buffer buffer for each plane
 		int pixelsPerPlane = width * height;
 		int bytesPerPlane  = pixelsPerPlane * info0.getBytesPerPixel();
+		
+		// compute total number of expected bytes
 		int nBytes = bytesPerPlane * depth;
 		
 		// Allocate buffer array
@@ -377,8 +380,17 @@ public class TiffImageReader implements ImageReader
 		case COLOR8:
 		case BITMAP:
 			return new BufferedUInt8Array3D(width, height, depth, buffer);
+			
+		case GRAY16_UNSIGNED:
+		case GRAY12_UNSIGNED:
+		{
+			// Store data as short array
+			short[] shortBuffer = convertToShortArray(buffer, info0);
+			return new BufferedUInt16Array3D(width, height, depth, shortBuffer);
+		}	
+
 		default:
-			throw new IOException("Can not process file info of type "
+			throw new IOException("Can not read stack with data type "
 					+ info0.fileType);
 		}
 	}
@@ -421,21 +433,7 @@ public class TiffImageReader implements ImageReader
 		case GRAY12_UNSIGNED:
 		{
 			// Store data as short array
-			short[] shortBuffer = new short[nPixels];
-			
-			// convert byte array into sort array
-			for (int i = 0; i < nPixels; i++)
-			{
-				int b1 = buffer[2 * i] & 0x00FF;
-				int b2 = buffer[2 * i + 1] & 0x00FF;
-				
-				// encode bytes to short
-				if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
-					shortBuffer[i] = (short) ((b2 << 8) + b1);
-				else
-					shortBuffer[i] = (short) ((b1 << 8) + b2);
-			}
-			
+			short[] shortBuffer = convertToShortArray(buffer, info);
 			return new BufferedUInt16Array2D(info.width, info.height, shortBuffer);
 		}	
 
@@ -530,6 +528,29 @@ public class TiffImageReader implements ImageReader
 		}
 	}
 
+	private short[] convertToShortArray(byte[] byteBuffer, TiffFileInfo info)
+	{
+		// Store data as short array
+		int nPixels = byteBuffer.length / 2;
+		short[] shortBuffer = new short[nPixels];
+		
+		// convert byte array into sort array
+		for (int i = 0; i < nPixels; i++)
+		{
+			int b1 = byteBuffer[2 * i] & 0x00FF;
+			int b2 = byteBuffer[2 * i + 1] & 0x00FF;
+
+			// encode bytes to short
+			// TODO change test
+			if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
+				shortBuffer[i] = (short) ((b2 << 8) + b1);
+			else
+				shortBuffer[i] = (short) ((b1 << 8) + b2);
+		}
+		
+		return shortBuffer;
+	}
+	
 	/**
 	 * Read an array of bytes into a pre-allocated buffer, by iterating over the
 	 * strips, and returns the number of bytes read.

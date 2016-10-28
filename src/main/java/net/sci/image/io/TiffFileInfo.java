@@ -172,7 +172,8 @@ public class TiffFileInfo {
 	public double pixelHeight;
 	public String unit;
 	
-	boolean intelByteOrder;
+	// boolean intelByteOrder;
+	
 	Compression compression = Compression.NONE;
 	
 	Orientation orientation = Orientation.TOPLEFT;
@@ -245,7 +246,7 @@ public class TiffFileInfo {
 		out.println("file type: " + fileType);
 		out.println("size0: " + width);
 		out.println("size1: " + height);
-		out.println("intel byte order: " + intelByteOrder);
+//		out.println("intel byte order: " + intelByteOrder);
 		out.println("compression: " + compression);
 //		out.println("offset: " + offset);
 
