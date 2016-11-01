@@ -3,14 +3,14 @@
  */
 package net.sci.array.data.vector;
 
-import net.sci.array.data.VectorArray;
+import net.sci.array.data.DoubleVectorArray;
 import net.sci.array.type.DoubleVector;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedDoubleVectorArray2D extends VectorArray2D<DoubleVector>
+public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 {
 	// =============================================================
 	// Class members
@@ -86,7 +86,7 @@ public class BufferedDoubleVectorArray2D extends VectorArray2D<DoubleVector>
 	 * @see net.sci.array.data.VectorArray#newInstance(int[])
 	 */
 	@Override
-	public VectorArray<DoubleVector> newInstance(int... dims)
+	public DoubleVectorArray newInstance(int... dims)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -96,7 +96,7 @@ public class BufferedDoubleVectorArray2D extends VectorArray2D<DoubleVector>
 	 * @see net.sci.array.data.vector.VectorArray2D#duplicate()
 	 */
 	@Override
-	public VectorArray2D<DoubleVector> duplicate()
+	public DoubleVectorArray2D duplicate()
 	{
 		double[] buffer2 = new double[buffer.length];
 		int n = this.size0 * this.size1 * this.vectorLength;
@@ -148,12 +148,12 @@ public class BufferedDoubleVectorArray2D extends VectorArray2D<DoubleVector>
 	 * @see net.sci.array.data.VectorArray#iterator()
 	 */
 	@Override
-	public VectorArray.Iterator<DoubleVector> iterator()
+	public DoubleVectorArray.Iterator iterator()
 	{
 		return new Iterator();
 	}
 
-	private class Iterator implements VectorArray.Iterator<DoubleVector>
+	private class Iterator implements DoubleVectorArray.Iterator
 	{
 		int index = -1;
 		

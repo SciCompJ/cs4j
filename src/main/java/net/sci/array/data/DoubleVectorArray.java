@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.data.vector.DoubleVectorArray2D;
 import net.sci.array.type.DoubleVector;
 
 /**
@@ -17,12 +18,12 @@ public interface DoubleVectorArray extends VectorArray<DoubleVector>
 	// =============================================================
 	// Static methods
 
-	public static DoubleVectorArray create(int[] dims)
+	public static DoubleVectorArray create(int[] dims, int sizeV)
 	{
 		switch (dims.length)
 		{
-//		case 2:
-//			return DoubleArray2D.create(dims[0], dims[1]);
+		case 2:
+			return DoubleVectorArray2D.create(dims[0], dims[1], sizeV);
 //		case 3:
 //			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
 		default:
@@ -38,7 +39,7 @@ public interface DoubleVectorArray extends VectorArray<DoubleVector>
 	@Override
 	public default DoubleVectorArray newInstance(int... dims)
 	{
-		return DoubleVectorArray.create(dims);
+		return DoubleVectorArray.create(dims, this.getVectorLength());
 	}
 
 	@Override
