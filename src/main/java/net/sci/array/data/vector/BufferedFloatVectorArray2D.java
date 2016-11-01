@@ -3,19 +3,19 @@
  */
 package net.sci.array.data.vector;
 
-import net.sci.array.data.DoubleVectorArray;
-import net.sci.array.type.DoubleVector;
+import net.sci.array.data.FloatVectorArray;
+import net.sci.array.type.FloatVector;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
+public class BufferedFloatVectorArray2D extends FloatVectorArray2D
 {
 	// =============================================================
 	// Class members
 
-	double[] buffer;
+	float[] buffer;
 	
 	int vectorLength;
 	
@@ -28,11 +28,11 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 	 * @param size1 array size in the second dimension
 	 * @param sizeV number of components of vectors
 	 */
-	public BufferedDoubleVectorArray2D(int size0, int size1, int sizeV)
+	public BufferedFloatVectorArray2D(int size0, int size1, int sizeV)
 	{
 		super(size0, size1);
 		this.vectorLength = sizeV;
-		this.buffer = new double[size0 * size1 * sizeV];
+		this.buffer = new float[size0 * size1 * sizeV];
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 	 * @param size1 array size in the second dimension
 	 * @param sizeV number of components of vectors
 	 */
-	public BufferedDoubleVectorArray2D(int size0, int size1, int sizeV, double[] buffer)
+	public BufferedFloatVectorArray2D(int size0, int size1, int sizeV, float[] buffer)
 	{
 		super(size0, size1);
 		this.vectorLength = sizeV;
@@ -76,7 +76,7 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 	public void setValue(int x, int y, int c, double value)
 	{
 		int offset = (y * this.size0 + x) * this.vectorLength;
-		this.buffer[offset + c] = value;
+		this.buffer[offset + c] = (float) value;
 	}
 
 	
@@ -87,21 +87,21 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 	 * @see net.sci.array.data.VectorArray#newInstance(int[])
 	 */
 	@Override
-	public DoubleVectorArray newInstance(int... dims)
+	public FloatVectorArray newInstance(int... dims)
 	{
-		return DoubleVectorArray.create(dims, this.vectorLength);
+		return FloatVectorArray.create(dims, this.vectorLength);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.vector.VectorArray2D#duplicate()
 	 */
 	@Override
-	public DoubleVectorArray2D duplicate()
+	public FloatVectorArray2D duplicate()
 	{
-		double[] buffer2 = new double[buffer.length];
+		float[] buffer2 = new float[buffer.length];
 		int n = this.size0 * this.size1 * this.vectorLength;
 		System.arraycopy(this.buffer, 0, buffer2, 0, n);
-		return new BufferedDoubleVectorArray2D(this.size0, this.size1, this.vectorLength, buffer2);
+		return new BufferedFloatVectorArray2D(this.size0, this.size1, this.vectorLength, buffer2);
 	}
 
 	/* (non-Javadoc)
@@ -112,7 +112,10 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 	{
 		double[] res = new double[this.vectorLength];
 		int offset = (y * this.size0 + x) * this.vectorLength;
-		System.arraycopy(this.buffer, offset, res, 0, this.vectorLength);
+		for (int c = 0; c < this.vectorLength; c++)
+		{
+			res[c] = this.buffer[offset + c];
+		}
 		return res;
 	}
 
@@ -123,23 +126,26 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 	public void setValues(int x, int y, double[] values)
 	{
 		int offset = (y * this.size0 + x) * this.vectorLength;
-		System.arraycopy(values, 0, this.buffer, offset, this.vectorLength);
+		for (int c = 0; c < this.vectorLength; c++)
+		{
+			this.buffer[offset + c] = (float) values[c];
+		}
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public DoubleVector get(int x, int y)
+	public FloatVector get(int x, int y)
 	{
-		return new DoubleVector(getValues(x, y));
+		return new FloatVector(getValues(x, y));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, DoubleVector vect)
+	public void set(int x, int y, FloatVector vect)
 	{
 		setValues(x, y, vect.getValues());
 	}
@@ -148,12 +154,12 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 	 * @see net.sci.array.data.VectorArray#iterator()
 	 */
 	@Override
-	public DoubleVectorArray.Iterator iterator()
+	public FloatVectorArray.Iterator iterator()
 	{
 		return new Iterator();
 	}
 
-	private class Iterator implements DoubleVectorArray.Iterator
+	private class Iterator implements FloatVectorArray.Iterator
 	{
 		int index = -1;
 		
@@ -168,13 +174,13 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 		}
 
 		@Override
-		public DoubleVector next()
+		public FloatVector next()
 		{
 			this.index++;
-			double[] vals = new double[vectorLength];
+			float[] vals = new float[vectorLength];
 			int offset = index * vectorLength;
 			System.arraycopy(buffer, offset, vals, 0, vectorLength);
-			return new DoubleVector(vals);
+			return new FloatVector(vals);
 		}
 
 		@Override
@@ -184,12 +190,12 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 		}
 
 		@Override
-		public DoubleVector get()
+		public FloatVector get()
 		{
-			double[] vals = new double[vectorLength];
+			float[] vals = new float[vectorLength];
 			int offset = index * vectorLength;
 			System.arraycopy(buffer, offset, vals, 0, vectorLength);
-			return new DoubleVector(vals);
+			return new FloatVector(vals);
 		}
 
 		@Override
@@ -209,7 +215,7 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 		public void setValue(double value)
 		{
 			int offset = index * vectorLength;
-			buffer[index] = value;
+			buffer[index] = (float) value;
 			for (int i = 1; i < vectorLength; i++)
 			{
 				buffer[++offset] = 0;
