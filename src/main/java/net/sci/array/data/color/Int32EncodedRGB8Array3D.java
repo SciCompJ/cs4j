@@ -159,6 +159,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 		
 		public Iterator() 
 		{
+			this.intIterator = buffer.iterator();
 		}
 		
 		@Override
