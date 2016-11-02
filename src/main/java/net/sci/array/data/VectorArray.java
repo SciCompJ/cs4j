@@ -14,6 +14,32 @@ import net.sci.array.type.Vector;
 public interface VectorArray<V extends Vector<?>> extends Array<V>
 {
 	// =============================================================
+	// Static methods
+	
+	public static ScalarArray<?> norm(VectorArray<? extends Vector<?>> array)
+	{
+		FloatArray result = FloatArray.create(array.getSize());
+		
+		Iterator<? extends Vector<?>> iter1 = array.iterator();
+		FloatArray.Iterator iter2 = result.iterator();
+		while (iter1.hasNext() && iter2.hasNext())
+		{
+			double[] values = iter1.next().getValues();
+			double norm = 0;
+			for (double d : values)
+			{
+				norm += d * d;
+			}
+			norm = Math.sqrt(norm);
+			
+			iter2.forward();
+			iter2.setValue(norm);
+		}
+		
+		return result;
+	}
+	
+	// =============================================================
 	// New methods
 	
 	public int getVectorLength();
