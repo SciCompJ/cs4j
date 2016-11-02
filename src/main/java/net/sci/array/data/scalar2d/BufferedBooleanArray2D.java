@@ -122,6 +122,12 @@ public class BufferedBooleanArray2D extends BooleanArray2D
 		}
 
 		@Override
+		public void set(Boolean b)
+		{
+			buffer[index] = b.getState();
+		}
+		
+		@Override
 		public boolean getState()
 		{
 			return buffer[index];

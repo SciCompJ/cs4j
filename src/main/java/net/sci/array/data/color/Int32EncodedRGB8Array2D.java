@@ -156,8 +156,6 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 	private class Iterator implements RGB8Array.Iterator
 	{
 		Int32Array.Iterator intIterator;
-//		int posX = -1;
-//		int posY = 0;
 		
 		public Iterator() 
 		{
@@ -167,7 +165,6 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 		public boolean hasNext()
 		{
 			return intIterator.hasNext();
-//			return this.posX < size0 - 1 || posY < size1 - 1;
 		}
 
 		@Override
@@ -181,18 +178,18 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 		public void forward()
 		{
 			intIterator.forward();
-//			this.posX++;
-//			if (posX >= size0)
-//			{
-//				posX = 0;
-//				posY++;
-//			}
 		}
 
 		@Override
 		public RGB8 get()
 		{	
 			return new RGB8(intIterator.getInt());
+		}
+
+		@Override
+		public void set(RGB8 rgb)
+		{
+			intIterator.setInt(rgb.getIntCode());
 		}
 
 		@Override
@@ -207,7 +204,6 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 			int val = UInt8.clamp(value);
 			int intCode = val << 16 & val << 8 & val;
 			intIterator.setInt(intCode);
-//			buffer.setInt(posX, posY, intCode);
 		}
 	}
 }

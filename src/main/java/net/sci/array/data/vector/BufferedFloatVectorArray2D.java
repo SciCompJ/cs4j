@@ -199,6 +199,14 @@ public class BufferedFloatVectorArray2D extends FloatVectorArray2D
 		}
 
 		@Override
+		public void set(FloatVector vect)
+		{
+			float[] vals = vect.getFloats();
+			int offset = index * vectorLength;
+			System.arraycopy(vals, 0, buffer, offset, vectorLength);
+		}
+
+		@Override
 		public double getValue()
 		{
 			double sum = 0;

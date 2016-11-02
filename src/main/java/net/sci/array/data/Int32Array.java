@@ -60,5 +60,16 @@ public interface Int32Array extends IntArray<Int32>
 
 	public interface Iterator extends IntArray.Iterator<Int32>
 	{
+		@Override
+		public default Int32 get()
+		{
+			return new Int32(getInt());
+		}
+		
+		@Override
+		public default void set(Int32 value)
+		{
+			setInt(value.getInt());
+		}
 	}
 }

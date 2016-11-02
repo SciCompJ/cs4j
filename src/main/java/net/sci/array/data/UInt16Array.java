@@ -104,5 +104,16 @@ public interface UInt16Array extends IntArray<UInt16>
 			setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
 		}
 
+		@Override
+		public default UInt16 get()
+		{
+			return new UInt16(getShort());
+		}
+		
+		@Override
+		public default void set(UInt16 value)
+		{
+			setShort(value.getShort());
+		}
 	}
 }

@@ -197,6 +197,12 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 		}
 
 		@Override
+		public void set(UInt8 value)
+		{
+			buffer[index] = value.getByte();
+		}
+		
+		@Override
 		public void setInt(int value)
 		{
 			buffer[index] = (byte) value; 

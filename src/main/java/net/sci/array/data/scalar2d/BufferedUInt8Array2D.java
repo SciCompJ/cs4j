@@ -122,6 +122,12 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		}
 
 		@Override
+		public void set(UInt8 value)
+		{
+			buffer[index] = value.getByte();
+		}
+		
+		@Override
 		public byte getByte()
 		{
 			return buffer[index];

@@ -120,6 +120,12 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 		}
 
 		@Override
+		public void set(UInt8 value)
+		{
+			buffer[index] = value.getByte();
+		}
+		
+		@Override
 		public byte getByte()
 		{
 			return buffer[index];

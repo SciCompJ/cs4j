@@ -120,6 +120,12 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 		}
 
 		@Override
+		public void set(Boolean b)
+		{
+			buffer[index] = b.getState();
+		}
+		
+		@Override
 		public boolean getState()
 		{
 			return buffer[index];

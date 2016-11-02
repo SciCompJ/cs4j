@@ -50,5 +50,17 @@ public interface FloatArray extends ScalarArray<Float>
 
 	public interface Iterator extends ScalarArray.Iterator<Float>
 	{
+		//TODO: new methods getFloat() and setFloat()
+		@Override
+		public default Float get()
+		{
+			return new Float((float) getValue());
+		}
+		
+		@Override
+		public default void set(Float value)
+		{
+			setValue(value.getValue());
+		}
 	}
 }

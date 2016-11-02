@@ -11,7 +11,14 @@ import static java.lang.Float.floatToRawIntBits;
  */
 public class FloatVector extends Vector<Float>
 {
+	// =============================================================
+	// Class variables
+	
 	float[] data;
+	
+	
+	// =============================================================
+	// Constructor
 	
 	public FloatVector(float[] array)
 	{
@@ -27,6 +34,36 @@ public class FloatVector extends Vector<Float>
 			this.data[c] = (float) array[c];
 		}
 	}
+	
+
+	// =============================================================
+	// New methods
+	
+	/**
+	 * @return a defensive copy of the inner float data.
+	 */
+	public float[] getFloats()
+	{
+		float[] res = new float[this.data.length];
+		System.arraycopy(this.data, 0, res, 0, this.data.length);
+		return res;
+	}
+	
+	/**
+	 * Returns the specified component of the float vector. No bound checking is
+	 * performed.
+	 * 
+	 * @param c
+	 *            the index of the component
+	 * @return the specified component of the vector.
+	 */
+	public float getFloat(int c)
+	{
+		return this.data[c];
+	}
+
+	// =============================================================
+	// Implementation of Vector interface
 	
 	/**
 	 * Returns a defensive copy of the inner array.
@@ -46,9 +83,9 @@ public class FloatVector extends Vector<Float>
 	 * Returns the value at the specified position.
 	 */
 	@Override
-	public double getValue(int i)
+	public double getValue(int c)
 	{
-		return this.data[i];
+		return this.data[c];
 	}
 
 

@@ -260,6 +260,12 @@ public abstract class Array2D<T> implements Array<T>
 			}
 
 			@Override
+			public void set(T value)
+			{
+				Array2DView.this.set(x, y, value);
+			}
+			
+			@Override
 			public double nextValue()
 			{
 				forward();

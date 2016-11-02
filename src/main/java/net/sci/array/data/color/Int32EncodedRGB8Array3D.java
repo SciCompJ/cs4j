@@ -187,6 +187,12 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 		}
 
 		@Override
+		public void set(RGB8 rgb)
+		{
+			intIterator.setInt(rgb.getIntCode());
+		}
+
+		@Override
 		public double getValue()
 		{
 			return get().getValue();

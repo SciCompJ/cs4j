@@ -184,6 +184,14 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 		}
 
 		@Override
+		public void set(RGB8 rgb)
+		{
+			buffer.setInt(posX, posY, 0, rgb.getSample(0));
+			buffer.setInt(posX, posY, 1, rgb.getSample(1));
+			buffer.setInt(posX, posY, 2, rgb.getSample(2));
+		}
+
+		@Override
 		public double getValue()
 		{
 			return get().getValue();

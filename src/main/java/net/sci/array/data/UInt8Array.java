@@ -99,5 +99,16 @@ public interface UInt8Array extends IntArray<UInt8>
 			setByte((byte) value);
 		}
 
+		@Override
+		public default UInt8 get()
+		{
+			return new UInt8(getByte());
+		}
+		
+		@Override
+		public default void set(UInt8 value)
+		{
+			setByte(value.getByte());
+		}
 	}
 }

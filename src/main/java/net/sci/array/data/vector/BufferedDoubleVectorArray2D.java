@@ -193,6 +193,14 @@ public class BufferedDoubleVectorArray2D extends DoubleVectorArray2D
 		}
 
 		@Override
+		public void set(DoubleVector vect)
+		{
+			double[] vals = vect.getValues();
+			int offset = index * vectorLength;
+			System.arraycopy(vals, 0, buffer, offset, vectorLength);
+		}
+
+		@Override
 		public double getValue()
 		{
 			double sum = 0;

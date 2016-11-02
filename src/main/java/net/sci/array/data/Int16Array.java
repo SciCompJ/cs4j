@@ -101,5 +101,17 @@ public interface Int16Array extends IntArray<Int16>
 		{
 			setShort((short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE));
 		}
+
+		@Override
+		public default Int16 get()
+		{
+			return new Int16(getShort());
+		}
+		
+		@Override
+		public default void set(Int16 value)
+		{
+			setShort(value.getShort());
+		}
 	}
 }

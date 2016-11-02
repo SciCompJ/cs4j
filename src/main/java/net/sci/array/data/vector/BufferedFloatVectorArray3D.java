@@ -199,6 +199,14 @@ public class BufferedFloatVectorArray3D extends FloatVectorArray3D
 		}
 
 		@Override
+		public void set(FloatVector vect)
+		{
+			float[] vals = vect.getFloats();
+			int offset = index * vectorLength;
+			System.arraycopy(vals, 0, buffer, offset, vectorLength);
+		}
+
+		@Override
 		public double getValue()
 		{
 			double sum = 0;

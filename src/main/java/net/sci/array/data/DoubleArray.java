@@ -49,5 +49,16 @@ public interface DoubleArray extends ScalarArray<Double>
 
 	public interface Iterator extends ScalarArray.Iterator<Double>
 	{
+		@Override
+		public default Double get()
+		{
+			return new Double(getValue());
+		}
+		
+		@Override
+		public default void set(Double value)
+		{
+			setValue(value.getValue());
+		}
 	}
 }
