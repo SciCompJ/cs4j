@@ -47,7 +47,7 @@ public interface ArrayOperator
 	 *            the input array
 	 * @return the result of operator
 	 */
-	public default Array<?> process(Array<?> array)
+	public default <T> Array<?> process(Array<T> array)
 	{
 		Array<?> result = createEmptyOutputArray(array);
 		process(array, result);

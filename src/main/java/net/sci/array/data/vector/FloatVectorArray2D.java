@@ -3,20 +3,27 @@
  */
 package net.sci.array.data.vector;
 
-import net.sci.array.data.Array2D;
-import net.sci.array.data.VectorArray;
-import net.sci.array.type.Vector;
+import net.sci.array.data.FloatVectorArray;
+import net.sci.array.type.FloatVector;
 
 /**
  * @author dlegland
  *
  */
-public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> implements VectorArray<V>
-{	
+public abstract class FloatVectorArray2D extends VectorArray2D<FloatVector> implements FloatVectorArray
+{
+	// =============================================================
+	// Static methods
+
+	public static final FloatVectorArray2D create(int size0, int size1, int sizeV)
+	{
+		return new BufferedFloatVectorArray2D(size0, size1, sizeV);
+	}
+	
 	// =============================================================
 	// Constructors
 
-	protected VectorArray2D(int size0, int size1)
+	protected FloatVectorArray2D(int size0, int size1)
 	{
 		super(size0, size1);
 	}
@@ -62,44 +69,11 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 	// =============================================================
 	// Specialization of Array interface
 
-	/**
-	 * Returns the norm of the vector at the given position.
-	 * 
-	 * @see net.sci.array.data.Array2D#getValue(int, int)
-	 */
-	@Override
-	public double getValue(int x, int y)
-	{
-		double[] values = getValues(x, y);
-		double sum = 0;
-		for (double v : values)
-		{
-			sum += v * v;
-		}
-		return Math.sqrt(sum);
-	}
-
-	/**
-	 * Changes the value of the vector at given position, by setting the first
-	 * component and clearing the others.
-	 * 
-	 * @see net.sci.array.data.Array2D#setValue(int, int, double)
-	 */
-	@Override
-	public void setValue(int x, int y, double value)
-	{
-		setValue(x, y, 0, value);
-		for (int c = 1; c < this.getVectorLength(); c++)
-		{
-			setValue(x, y, c, 0);
-		}
-	}
-
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#duplicate()
 	 */
 	@Override
-	public abstract VectorArray2D<V> duplicate();
+	public abstract FloatVectorArray2D duplicate();
 
 }

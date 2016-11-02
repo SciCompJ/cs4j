@@ -7,7 +7,6 @@ import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.Array3D;
-import net.sci.array.type.Type;
 
 /**
  * @author dlegland
@@ -50,10 +49,24 @@ public class Flip implements ArrayOperator
 	 *            the input array
 	 * @return the result of operator
 	 */
-	public<T extends Type<T>> Array<?> processT(Array<T> array)
+	public <T> Array<?> process(Array<T> array)
 	{
-		Array<?> result = createEmptyOutputArray(array);
-//		processSameType<?>(array, result);
+		Array<T> result = array.duplicate();
+		processSameType(array, result);
+		return result;
+	}
+	
+	/**
+	 * Processes the given array, and returns a new Array containing the result.
+	 * 
+	 * @param array
+	 *            the input array
+	 * @return the result of operator
+	 */
+	public <T> Array<?> processT(Array<T> array)
+	{
+		Array<T> result = array.duplicate();
+		processSameType(array, result);
 		return result;
 	}
 

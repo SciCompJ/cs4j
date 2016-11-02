@@ -12,15 +12,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 /**
- * A simple plain table for storing measurement results. Data table is indexed
- * by column first. Methods access data by row indexing first.
+ * A simple plain table for storing measurement results. 
+ * Data are stored as an double array indexed by column first. 
+ * Methods access data by row indexing first.
  * 
  * @author David Legland
  *
  */
 public class DataTable
 {
-
 	/**
 	 * Inner data array, first index corresponds to columns.
 	 */
@@ -58,7 +58,8 @@ public class DataTable
 		if (this.nCols > 0)
 		{
 			this.nRows = data[0].length;
-		} else
+		} 
+		else
 		{
 			this.nRows = 0;
 		}
@@ -76,7 +77,8 @@ public class DataTable
 		if (this.nCols > 0)
 		{
 			this.nRows = data[0].length;
-		} else
+		}
+		else
 		{
 			this.nRows = 0;
 		}
@@ -273,8 +275,6 @@ public class DataTable
 	 */
 	public JFrame show()
 	{
-		// TODO: convert to JavaFX stuff
-		
 		// Need to cast to object array...
 		Object[][] dats = new Object[this.nRows][this.nCols];
 		for (int r = 0; r < this.nRows; r++)
@@ -318,7 +318,7 @@ public class DataTable
 	 */
 	public final static void main(String[] args)
 	{
-		DataTable tbl = new DataTable(5, 15);
+		DataTable tbl = new DataTable(15, 5);
 		tbl.setColumnNames(new String[] { "length", "area", "diameter",
 				"number", "density" });
 		JFrame frame = tbl.show();

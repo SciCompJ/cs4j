@@ -3,29 +3,30 @@
  */
 package net.sci.array.data;
 
-import net.sci.array.data.vector.DoubleVectorArray2D;
-import net.sci.array.type.DoubleVector;
+import net.sci.array.data.vector.FloatVectorArray2D;
+import net.sci.array.data.vector.FloatVectorArray3D;
+import net.sci.array.type.FloatVector;
 
 /**
  * Specialization of the interface VectorArray for arrays of vectors that
- * contains double values.
+ * contains 32-bits floating point values.
  * 
  * @author dlegland
  *
  */
-public interface DoubleVectorArray extends VectorArray<DoubleVector>
+public interface FloatVectorArray extends VectorArray<FloatVector>
 {
 	// =============================================================
 	// Static methods
 
-	public static DoubleVectorArray create(int[] dims, int sizeV)
+	public static FloatVectorArray create(int[] dims, int sizeV)
 	{
 		switch (dims.length)
 		{
 		case 2:
-			return DoubleVectorArray2D.create(dims[0], dims[1], sizeV);
-//		case 3:
-//			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
+			return FloatVectorArray2D.create(dims[0], dims[1], sizeV);
+		case 3:
+			return FloatVectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
 		default:
 			//TODO: implement the rest
 			throw new RuntimeException("Can not create such image");
@@ -37,13 +38,13 @@ public interface DoubleVectorArray extends VectorArray<DoubleVector>
 	// Specialization of Array interface
 
 	@Override
-	public default DoubleVectorArray newInstance(int... dims)
+	public default FloatVectorArray newInstance(int... dims)
 	{
-		return DoubleVectorArray.create(dims, this.getVectorLength());
+		return FloatVectorArray.create(dims, this.getVectorLength());
 	}
 
 	@Override
-	public DoubleVectorArray duplicate();
+	public FloatVectorArray duplicate();
 
 	public Iterator iterator();
 
@@ -51,7 +52,7 @@ public interface DoubleVectorArray extends VectorArray<DoubleVector>
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator extends VectorArray.Iterator<DoubleVector>
+	public interface Iterator extends VectorArray.Iterator<FloatVector>
 	{
 	}
 }
