@@ -140,7 +140,6 @@ public class Flip implements ArrayOperator
 			
 			System.arraycopy(pos, 0, pos2, 0, nd);
 			pos[dim] = sizeDim - 1 - pos[dim];
-//			output.setValue(pos2, input.getValue(pos));
 			output.setValue(pos2, input.getValue(pos));
 		}
 	}

@@ -56,7 +56,8 @@ public class Slicer implements ArrayOperator
 	@Override
 	public <T> Array<?> process(Array<T> source)
 	{
-		Array<T> target = source.newInstance(source.getSize());
+		int[] newDims = computeOutputArraySize(source);
+		Array<T> target = source.newInstance(newDims);
 		processNd(source, target);
 		return target;
 	}
@@ -85,8 +86,14 @@ public class Slicer implements ArrayOperator
 	 */
 	public Array<?> createEmptyOutputArray(Array<?> array)
 	{
+		int[] newDims = computeOutputArraySize(array);
+		return array.newInstance(newDims);
+	}
+
+	private int[] computeOutputArraySize(Array<?> inputArray)
+	{
 		// number of dimensions of new array
-		int nd = array.dimensionality() - 1;
+		int nd = inputArray.dimensionality() - 1;
 		
 		if (dim > nd)
 		{
@@ -97,15 +104,15 @@ public class Slicer implements ArrayOperator
 		int[] dims = new int[nd];
 		for (int d = 0; d  < this.dim; d++)
 		{
-			dims[d] = array.getSize(d);
+			dims[d] = inputArray.getSize(d);
 		}
 		for (int d = this.dim; d < nd; d++)
 		{
-			dims[d] = array.getSize(d+1);
+			dims[d] = inputArray.getSize(d+1);
 		}
-		return array.newInstance(dims);
-	}
 
+		return dims;
+	}
 	
 	public void processDoubleNd(Array<?> source, Array<?> target)
 	{
