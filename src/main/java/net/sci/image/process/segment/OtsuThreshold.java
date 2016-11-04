@@ -22,28 +22,16 @@ public class OtsuThreshold extends AutoThreshold
 	@Override
 	public double computeThresholdValue(ScalarArray<?> array)
 	{
-		double minValue = Double.POSITIVE_INFINITY; 
-		double maxValue = Double.NEGATIVE_INFINITY;
-		ScalarArray.Iterator<?> iter = array.iterator();
-		while(iter.hasNext())
-		{
-			double value = iter.nextValue();
-			minValue = Math.min(minValue, value);
-			maxValue = Math.max(maxValue, value);
-		}
-		double[] range = new double[]{minValue, maxValue};
+		// get bounds for computing histogram
+		double[] range = array.getValueRange();
 		
 		// choose 256 levels by default (convenient for 8-bits, should be enough for other types)
 		int nLevels = 256;
 		
 		// compte the array of possible thresholds
-		double[] levels = new double[nLevels];
-		double levelStep = (range[1] - range[0]) / (nLevels - 1);
-		for (int i = 0; i < nLevels; i++)
-		{
-			levels[i] = range[0] + i * levelStep; 
-		}
+		double[] levels = Histogram.computeBinPositions(range, nLevels);
 		
+		// Compute count histogram
 		int[] histo = Histogram.histogram(array, range, nLevels);
 		
 		// compute total number of elements from the histogram
@@ -128,62 +116,6 @@ public class OtsuThreshold extends AutoThreshold
 		}
 		
 		return levels[indMin+1];
-//
-//		if nargout > 1
-//		    segImg = img >= value;
-//		end
-
-//		% vector of gray levels for variance computation
-//		levels = 0:L-1;
-//
-//		% compute normalized histogram
-//		h = imHistogram(img, varargin{:})';
-//		h = h / sum(h);
-//
-//		% average value within whole image
-//		mu = sum(h .* levels);
-//
-//		% vector of thresholds to consider (size is number of graylevels minus one)
-//		threshInds = 2:L;
-//
-//		% allocate memory
-//		sigmab = zeros(1, L - 1);
-//		sigmaw = zeros(1, L - 1);
-//
-//		for i = 1:length(threshInds)
-//		    % index of current threshold in histogram values, from 2 to L
-//		    t = threshInds(i);
-//		    
-//		    % linear indices for each class
-//		    ind0 = 1:(t-1); % background
-//		    ind1 = t:L;     % foreground, including threshold
-//		    
-//		    % probabilities associated with each class
-//		    p0 = sum(h(ind0));
-//		    p1 = sum(h(ind1));
-//		    
-//		    % average value of each class
-//		    mu0 = sum(h(ind0) .* levels(ind0)) / p0;
-//		    mu1 = sum(h(ind1) .* levels(ind1)) / p1;
-//		    
-//		    % inner variance of each class
-//		    var0 = sum( h(ind0) .* (levels(ind0) - mu0) .^ 2) / p0;
-//		    var1 = sum( h(ind1) .* (levels(ind1) - mu1) .^ 2) / p1;
-//		    
-//		    % between (inter) class variance
-//		    sigmab(i) = p0 * (mu0 - mu) ^ 2 + p1 * (mu1 - mu) ^ 2;
-//		    
-//		    % within (intra) class variance
-//		    sigmaw(i) = p0 * var0 + p1 * var1;
-//		end
-//
-//		% compute threshold value
-//		[mini, ind] = min(sigmaw); %#ok<ASGLU>
-//		value = levels(ind + 1);
-//
-//		if nargout > 1
-//		    segImg = img >= value;
-//		end
 	}
 
 }

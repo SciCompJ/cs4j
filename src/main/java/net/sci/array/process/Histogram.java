@@ -53,4 +53,16 @@ public class Histogram
 		
 		return histo;
 	}
+	
+	public static final double[] computeBinPositions(double[] range, int nBins)
+	{
+		// compte the array of possible thresholds
+		double[] levels = new double[nBins];
+		double levelStep = (range[1] - range[0]) / (nBins - 1);
+		for (int i = 0; i < nBins; i++)
+		{
+			levels[i] = range[0] + i * levelStep; 
+		}
+		return levels;
+	}
 }
