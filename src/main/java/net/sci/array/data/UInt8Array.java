@@ -18,7 +18,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	// =============================================================
 	// Static methods
 
-	public static UInt8Array create(int[] dims)
+	public static UInt8Array create(int... dims)
 	{
 		switch (dims.length)
 		{

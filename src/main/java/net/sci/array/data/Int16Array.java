@@ -15,7 +15,7 @@ public interface Int16Array extends IntArray<Int16>
 	// =============================================================
 	// Static methods
 
-	public static Int16Array create(int[] dims)
+	public static Int16Array create(int... dims)
 	{
 		switch (dims.length)
 		{

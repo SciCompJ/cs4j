@@ -17,7 +17,7 @@ public interface UInt16Array extends IntArray<UInt16>
 	// =============================================================
 	// Static methods
 
-	public static UInt16Array create(int[] dims)
+	public static UInt16Array create(int... dims)
 	{
 		switch (dims.length)
 		{

@@ -5,6 +5,7 @@ package net.sci.array.data;
 
 import net.sci.array.data.scalar2d.Int32Array2D;
 import net.sci.array.data.scalar3d.Int32Array3D;
+import net.sci.array.data.scalarnd.Int32ArrayND;
 import net.sci.array.type.Int32;
 
 /**
@@ -16,7 +17,7 @@ public interface Int32Array extends IntArray<Int32>
 	// =============================================================
 	// Static methods
 
-	public static Int32Array create(int[] dims)
+	public static Int32Array create(int... dims)
 	{
 		switch (dims.length)
 		{
@@ -25,8 +26,7 @@ public interface Int32Array extends IntArray<Int32>
 		case 3:
 			return Int32Array3D.create(dims[0], dims[1], dims[2]);
 		default:
-			throw new IllegalArgumentException("Can not create Int32Array with " + dims.length + " dimensions");
-//			return Int32ArrayND.create(dims);
+			return Int32ArrayND.create(dims);
 		}
 	}
 	

@@ -4,21 +4,21 @@
 package net.sci.array.data.scalarnd;
 
 import net.sci.array.data.ArrayND;
-import net.sci.array.data.UInt8Array;
-import net.sci.array.type.UInt8;
+import net.sci.array.data.Int32Array;
+import net.sci.array.type.Int32;
 
 /**
  * @author dlegland
  *
  */
-public abstract class UInt8ArrayND extends ArrayND<UInt8> implements UInt8Array
+public abstract class Int32ArrayND extends ArrayND<Int32> implements Int32Array
 {
 	// =============================================================
 	// Static factory
 	
-	public static UInt8ArrayND create(int... dims)
+	public static Int32ArrayND create(int... dims)
 	{
-		return new BufferedUInt8ArrayND(dims);
+		return new BufferedInt32ArrayND(dims);
 	}
 	
 	
@@ -28,7 +28,7 @@ public abstract class UInt8ArrayND extends ArrayND<UInt8> implements UInt8Array
 	/**
 	 * @param sizes
 	 */
-	protected UInt8ArrayND(int[] sizes)
+	protected Int32ArrayND(int[] sizes)
 	{
 		super(sizes);
 	}
@@ -38,9 +38,9 @@ public abstract class UInt8ArrayND extends ArrayND<UInt8> implements UInt8Array
 	// Specialization of Array interface
 	
 	@Override
-	public UInt8Array newInstance(int... dims)
+	public Int32Array newInstance(int... dims)
 	{
-		return UInt8Array.create(dims);
+		return Int32Array.create(dims);
 	}
 	
 }

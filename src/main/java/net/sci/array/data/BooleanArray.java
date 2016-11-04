@@ -16,7 +16,7 @@ public interface BooleanArray extends IntArray<Boolean>
 	// =============================================================
 	// Static methods
 
-	public static BooleanArray create(int[] dims)
+	public static BooleanArray create(int... dims)
 	{
 		switch (dims.length)
 		{
