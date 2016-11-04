@@ -9,7 +9,7 @@ import net.sci.array.type.RGB8;
 import net.sci.array.type.UInt8;
 
 /**
- * Implementation of 2D array of RGB8, by keeping value in a buffer if Int32.
+ * Implementation of 3D array of RGB8, by keeping value in a buffer if Int32.
  * 
  * The integer values are encoded and decoded on the fly. The number of elements
  * of the underlying integer array is the same as the number of elements of the

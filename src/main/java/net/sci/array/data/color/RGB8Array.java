@@ -9,6 +9,7 @@ import java.util.Collection;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.type.RGB8;
+import net.sci.array.type.UInt8;
 
 /**
  * An array that contains colors that can be represented as instances of RGB8 type.
@@ -21,7 +22,7 @@ public interface RGB8Array extends VectorArray<RGB8>
 	// =============================================================
 	// Static methods
 
-	public static RGB8Array create(int[] dims)
+	public static RGB8Array create(int... dims)
 	{
 		switch (dims.length)
 		{
@@ -30,12 +31,17 @@ public interface RGB8Array extends VectorArray<RGB8>
 		case 3:
 			return RGB8Array3D.create(dims[0], dims[1], dims[2]);
 		default:
-			//TODO: implement the rest
-			throw new RuntimeException("Can not create such image");
-//			return UInt8ArrayND.create(dims);
+			return RGB8ArrayND.create(dims);
 		}
 	}
 
+	/**
+	 * Splits the three channels of a RGB8 array.
+	 * 
+	 * @param array
+	 *            the RGB8 array
+	 * @return a collection containing the three channels
+	 */
 	public static Collection<UInt8Array> splitChannels(RGB8Array array)
 	{
 		// create result arrays
@@ -72,8 +78,20 @@ public interface RGB8Array extends VectorArray<RGB8>
 		return channels;
 	}
 	
+	/**
+	 * Creates a new RGB8 array by concatenating the specified channels.
+	 * 
+	 * @param redChannel
+	 *            an instance of UInt8Array representing the red channel
+	 * @param greenChannel
+	 *            an instance of UInt8Array representing the green channel
+	 * @param blueChannel
+	 *            an instance of UInt8Array representing the blue channel
+	 * @return a new instance of RGB8 array
+	 */
 	public static RGB8Array mergeChannels(UInt8Array redChannel, UInt8Array greenChannel, UInt8Array blueChannel)
 	{
+		// create result array
 		int[] dims = redChannel.getSize();
 		RGB8Array result = create(dims);
 		
@@ -111,9 +129,36 @@ public interface RGB8Array extends VectorArray<RGB8>
 		return 3;
 	}
 
+	@Override
+	public default double[] getValues(int[] pos)
+	{
+		return get(pos).getValues();
+	}
+
+	@Override
+	public default void setValues(int[] pos, double[] values)
+	{
+		int r = UInt8.clamp(values[0]);
+		int g = UInt8.clamp(values[1]);
+		int b = UInt8.clamp(values[2]);
+		set(pos, new RGB8(r, g, b));
+	}
+
 
 	// =============================================================
 	// Specialization of Array interface
+
+	@Override
+	public default double getValue(int[] position)
+	{
+		return get(position).getValue();
+	}
+
+	@Override
+	public default void setValue(int[] position, double value)
+	{
+		set(position, RGB8.fromValue(value));
+	}
 
 	@Override
 	public default RGB8Array newInstance(int... dims)

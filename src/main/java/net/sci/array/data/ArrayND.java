@@ -20,19 +20,18 @@ public abstract class ArrayND<T> implements Array<T>
 	// =============================================================
 	// Constructors
 
-	protected ArrayND(int[] sizes)
+	protected ArrayND(int... sizes)
 	{
 		this.sizes = sizes;
 	}
 
 
-	
 	// =============================================================
 	// Utility methods
 
 	/**
-	 * Computes the number of image elements.
-	 * @return the number of image elements ("pixels")
+	 * Computes the number of array elements.
+	 * @return the number of array elements ("pixels")
 	 */
 	protected int elementNumber()
 	{
