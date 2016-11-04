@@ -5,6 +5,8 @@ package net.sci.array.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.data.ScalarArray;
+import net.sci.array.data.VectorArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.data.vector.FloatVectorArray2D;
@@ -172,4 +174,16 @@ public class SobelGradient implements ArrayOperator
 		}
 	}
 
+	public boolean canProcess(Array<?> array)
+	{
+		return array instanceof ScalarArray;
+	}
+	
+	public boolean canProcess(Array<?> source, Array<?> target)
+	{
+		if (!(source instanceof ScalarArray)) return false;
+		if (!(target instanceof VectorArray)) return false;
+		if(source.dimensionality() != target.dimensionality()) return false;
+		return true;
+	}
 }

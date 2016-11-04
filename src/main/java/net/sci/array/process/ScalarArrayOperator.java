@@ -27,4 +27,26 @@ public interface ScalarArrayOperator extends ArrayOperator
 			throw new IllegalArgumentException("Requires both arrays to be scalar");
 		}
 	}
+
+	/**
+	 * Override default behavior to check if input array is scalar.
+	 * 
+	 * @return true if input array is scalar
+	 */
+	@Override
+	public default boolean canProcess(Array<?> array)
+	{
+		return array instanceof ScalarArray;
+	}
+	
+	/**
+	 * Override default behavior to check if source array is scalar.
+	 * 
+	 * @return true if source array is scalar
+	 */
+	@Override
+	public default boolean canProcess(Array<?> source, Array<?> target)
+	{
+		return canProcess(source);
+	}
 }

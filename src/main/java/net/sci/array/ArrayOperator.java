@@ -54,4 +54,34 @@ public interface ArrayOperator
 		return result;
 	}
 
+	/**
+	 * Checks if this operator can process the specified array.
+	 * 
+	 * Returns true by default.
+	 * 
+	 * @param array
+	 *            the array to check
+	 * @return true if this operator can process the specified array
+	 */
+	public default boolean canProcess(Array<?> array)
+	{
+		return true;
+	}
+	
+	/**
+	 * Checks if this operator can process the specified source array and put
+	 * the result in the specified target array.
+	 * 
+	 * Returns true by default.
+	 * 
+	 * @param source
+	 *            the source array
+	 * @param target
+	 *            the target array
+	 * @return true if this operator can process the source and store result in the target
+	 */
+	public default boolean canProcess(Array<?> source, Array<?> target)
+	{
+		return true;
+	}
 }
