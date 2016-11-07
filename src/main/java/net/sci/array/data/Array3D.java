@@ -6,6 +6,8 @@ package net.sci.array.data;
 import net.sci.array.Array;
 
 /**
+ * Base implementation for three-dimensional array.
+ * 
  * @author dlegland
  *
  */
@@ -17,12 +19,13 @@ public abstract class Array3D<T> implements Array<T>
 	protected int size0;
 	protected int size1;
 	protected int size2;
+
 	
 	// =============================================================
 	// Constructors
 
 	/**
-	 * 
+	 * Initialize the protected size variables. 
 	 */
 	protected Array3D(int size0, int size1, int size2)
 	{
@@ -41,6 +44,7 @@ public abstract class Array3D<T> implements Array<T>
 	public abstract double getValue(int x, int y, int z);
 	
 	public abstract void setValue(int x, int y, int z, double value);
+	
 	
 	// =============================================================
 	// Specialization of the Array interface
