@@ -5,6 +5,7 @@ package net.sci.array.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.Cursor;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.Array3D;
 
@@ -127,7 +128,7 @@ public class Flip implements ArrayOperator
 
 	public void processDoubleNd(Array<?> input, Array<?> output)
 	{
-		Array.Cursor cursor = input.getCursor();
+		Cursor cursor = input.getCursor();
 		
 		int nd = input.dimensionality();
 		int sizeDim = input.getSize(this.dim);
@@ -146,7 +147,7 @@ public class Flip implements ArrayOperator
 
 	public <T> void processSameType(Array<T> input, Array<T> output)
 	{
-		Array.Cursor cursor = input.getCursor();
+		Cursor cursor = input.getCursor();
 		
 		int nd = input.dimensionality();
 		int sizeDim = input.getSize(this.dim);

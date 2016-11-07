@@ -3,7 +3,7 @@
  */
 package net.sci.array.process;
 
-import net.sci.array.Array;
+import net.sci.array.Cursor;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.type.Scalar;
 
@@ -33,7 +33,7 @@ public class Sqrt implements ScalarArrayOperator
 	public void processScalar(ScalarArray<? extends Scalar> input,
 			ScalarArray<? extends Scalar> output)
 	{
-		Array.Cursor cursor = input.getCursor();
+		Cursor cursor = input.getCursor();
 		while (cursor.hasNext())
 		{
 			cursor.forward();

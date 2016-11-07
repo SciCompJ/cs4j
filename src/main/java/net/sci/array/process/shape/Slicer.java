@@ -5,6 +5,7 @@ package net.sci.array.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.Cursor;
 
 /**
  * Extract a slice from an array, by specifying dimension and slice index along
@@ -23,7 +24,7 @@ public class Slicer implements ArrayOperator
 		srcPos[dim] = sliceIndex;
 
 		// iterate over position in target image
-		Array.Cursor cursor = target.getCursor();
+		Cursor cursor = target.getCursor();
 		while (cursor.hasNext())
 		{
 			// get position in target image
@@ -122,7 +123,7 @@ public class Slicer implements ArrayOperator
 		srcPos[this.dim] = this.index;
 
 		// iterate over position in target image
-		Array.Cursor cursor = target.getCursor();
+		Cursor cursor = target.getCursor();
 		while (cursor.hasNext())
 		{
 			// get position in target image
@@ -146,7 +147,7 @@ public class Slicer implements ArrayOperator
 		srcPos[this.dim] = this.index;
 
 		// iterate over position in target image
-		Array.Cursor cursor = target.getCursor();
+		Cursor cursor = target.getCursor();
 		while (cursor.hasNext())
 		{
 			// get position in target image

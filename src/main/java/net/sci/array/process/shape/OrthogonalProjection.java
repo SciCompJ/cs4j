@@ -5,6 +5,7 @@ package net.sci.array.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.Cursor;
 
 /**
  * @author dlegland
@@ -71,7 +72,7 @@ public class OrthogonalProjection implements ArrayOperator
 		int indMax = source.getSize(this.dim);
 		
 		// iterate over position in target image
-		Array.Cursor cursor = target.getCursor();
+		Cursor cursor = target.getCursor();
 		while (cursor.hasNext())
 		{
 			// get position in target image
