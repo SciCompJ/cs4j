@@ -9,8 +9,12 @@ import net.sci.array.Cursor;
 import net.sci.array.data.FloatArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.array.data.scalar3d.ScalarArray3D;
 
 /**
+ * Box filter for multidimensional arrays. Considers a square box, with length
+ * 2*r+1.
+ * 
  * @author dlegland
  *
  */
@@ -18,8 +22,14 @@ public final class BoxFilter implements ArrayOperator
 {
 	int[] radiusList;
 	
-	String outputType;
 	
+	/**
+	 * Creates a new instance of box filter by specifying the list of radius in
+	 * each dimension.
+	 * 
+	 * @param radiusList
+	 *            the box radius in each dimension
+	 */
 	public BoxFilter(int[] radiusList)
 	{
 		this.radiusList = new int[radiusList.length];
@@ -35,8 +45,18 @@ public final class BoxFilter implements ArrayOperator
 	@Override
 	public void process(Array<?> source, Array<?> target)
 	{
-		if (source instanceof ScalarArray && target instanceof ScalarArray)
+		// Choose the best possible implementation, depending on array dimensions
+		if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
 		{
+			processScalar2d((ScalarArray2D<?>) source, (ScalarArray2D<?>) target);
+		}
+		else if (source instanceof ScalarArray3D && target instanceof ScalarArray3D)
+		{
+			processScalar3d((ScalarArray3D<?>) source, (ScalarArray3D<?>) target);
+		}
+		else if (source instanceof ScalarArray && target instanceof ScalarArray)
+		{
+			// most generic implementation, slow...
 			processScalar((ScalarArray<?>) source, (ScalarArray<?>) target);
 		}
 		else
@@ -139,6 +159,60 @@ public final class BoxFilter implements ArrayOperator
 					}
 				}
 				target.setValue(x, y, sum / boxSize);
+			}
+		}
+	}
+
+	/**
+	 * Process the specific case of 3D arrays.
+	 */
+	public void processScalar3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
+	{
+		// get size of input array
+		int sizeX = source.getSize(0);
+		int sizeY = source.getSize(1);
+		int sizeZ = source.getSize(2);
+		
+		// get first three radiuses
+		if (this.radiusList.length < 3)
+		{
+			throw new RuntimeException("Can not process 3D array with less than three radiuses.");
+		}
+		int radiusX = this.radiusList[0];
+		int radiusY = this.radiusList[1];
+		int radiusZ = this.radiusList[2];
+
+		// compute the normalization constant
+		int boxSize = 1;
+		for (int r : this.radiusList)
+		{
+			boxSize *= (2 * r + 1);
+		}
+		
+		for(int z = 0; z < sizeZ; z++)
+		{
+			for(int y = 0; y < sizeY; y++)
+			{
+				for(int x = 0; x < sizeX; x++)
+				{
+					double sum = 0;
+
+					// iterate over neighbors
+					for (int z2 = z - radiusZ; z2 <= z + radiusZ; z2++)
+					{
+						int z2r = Math.min(Math.max(z2, 0), sizeZ - 1);
+						for (int y2 = y - radiusY; y2 <= y + radiusY; y2++)
+						{
+							int y2r = Math.min(Math.max(y2, 0), sizeY - 1);
+							for (int x2 = x - radiusX; x2 <= x + radiusX; x2++)
+							{
+								int x2r = Math.min(Math.max(x2, 0), sizeX - 1);
+								sum += source.getValue(x2r, y2r, z2r);
+							}
+						}
+					}
+					target.setValue(x, y, z, sum / boxSize);
+				}
 			}
 		}
 	}
