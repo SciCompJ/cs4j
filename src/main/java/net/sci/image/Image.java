@@ -224,7 +224,6 @@ public class Image
 		this(data);
 		
 		// additional processing to take into account parent image
-		this.type = parent.type;
 		this.name = parent.name;
 		this.displayRange = parent.displayRange;
 		this.colorMap = parent.colorMap;
@@ -242,14 +241,6 @@ public class Image
 		else if (this.data instanceof UInt8Array) 
 		{
 			this.type = Type.GRAYSCALE;
-//			int[] dims = this.data.getSize();
-//			if (dims.length == 3)
-//			{
-//				if (dims[2] == 3)
-//				{
-//					this.type = Type.COLOR;
-//				}
-//			}
 		} 
 		else if (this.data instanceof UInt16Array) 
 		{
@@ -283,12 +274,11 @@ public class Image
 		int dataND = this.data.dimensionality();
 		int[] dataSize = this.data.getSize();
 		
-//		// compute size of image
-//		int nd = isVectorImage() ? dataND - 1 : dataND;
+		// compute size of image
 		int nd = dataND;
+		this.size = new int[nd];
 		
 		// create size array depending on image type
-		this.size = new int[nd];
 		System.arraycopy(dataSize, 0, this.size, 0, nd);
 	}
 
@@ -406,6 +396,11 @@ public class Image
 		this.type = type;
 	}
 	
+	public boolean isBinaryImage()
+	{
+		return this.type == Type.BINARY;
+	}
+
 	public boolean isGrayscaleImage()
 	{
 		return this.type == Type.GRAYSCALE || this.type == Type.BINARY;
