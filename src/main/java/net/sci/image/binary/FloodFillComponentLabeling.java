@@ -5,7 +5,6 @@ package net.sci.image.binary;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
 import net.sci.array.data.Int32Array;
 import net.sci.array.data.IntArray;
 import net.sci.array.data.UInt16Array;
@@ -15,6 +14,8 @@ import net.sci.array.data.scalar2d.Int32Array2D;
 import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
+import net.sci.image.Image;
+import net.sci.image.ImageArrayOperator;
 import net.sci.image.morphology.FloodFill;
 
 /**
@@ -29,7 +30,7 @@ import net.sci.image.morphology.FloodFill;
  * @author dlegland
  *
  */
-public class FloodFillComponentLabeling extends AlgoStub implements ArrayOperator
+public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayOperator
 {
 	/** 
 	 * The connectivity of the components, either 4 (default) or 8.
@@ -73,6 +74,26 @@ public class FloodFillComponentLabeling extends AlgoStub implements ArrayOperato
 	{
 		this.connectivity = connectivity;
 		this.bitDepth = bitDepth;
+	}
+	
+
+	/**
+	 * Calls the "createEmptyOutputArray" methods from ArrayOperator interface
+	 * for creating the result array, and put the result in a new label image.
+	 * 
+	 * @param image
+	 *            the reference image
+	 * @return a new instance of Image that can be used for processing input
+	 *         image.
+	 */
+	@Override
+	public Image createEmptyOutputImage(Image image)
+	{
+		Array<?> array = image.getData();
+		Array<?> newArray = createEmptyOutputArray(array);
+		Image result = new Image(newArray, image);
+		result.setType(Image.Type.LABEL);
+		return result;
 	}
 	
 	public IntArray2D<?> process(BooleanArray2D image)
