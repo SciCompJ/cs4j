@@ -7,4 +7,4 @@
  * @author dlegland
  *
  */
-package net.sci.interp;
+package net.sci.array.interp;

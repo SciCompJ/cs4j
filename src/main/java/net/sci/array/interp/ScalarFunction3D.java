@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.interp;
+package net.sci.array.interp;
 
 import net.sci.geom.geom3d.Point3d;
 

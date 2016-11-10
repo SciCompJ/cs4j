@@ -6,8 +6,8 @@ package net.sci.register.image;
 import net.sci.geom.geom2d.Point2d;
 import net.sci.geom.geom2d.Transform2d;
 import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.interp.LinearInterpolator2D;
-import net.sci.interp.ScalarFunction2D;
+import net.sci.array.interp.LinearInterpolator2D;
+import net.sci.array.interp.ScalarFunction2D;
 
 /**
  * @author dlegland

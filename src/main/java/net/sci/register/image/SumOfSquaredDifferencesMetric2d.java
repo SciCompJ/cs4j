@@ -5,8 +5,8 @@ package net.sci.register.image;
 
 import java.util.Collection;
 
+import net.sci.array.interp.ScalarFunction2D;
 import net.sci.geom.geom2d.Point2d;
-import net.sci.interp.ScalarFunction2D;
 
 /**
  * @author dlegland

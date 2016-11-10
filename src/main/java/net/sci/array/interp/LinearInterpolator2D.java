@@ -1,10 +1,12 @@
 /**
  * 
  */
-package net.sci.interp;
+package net.sci.array.interp;
 
 import net.sci.array.data.scalar2d.FloatArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.array.interp.LinearInterpolator2D;
+import net.sci.array.interp.ScalarFunction2D;
 
 
 /**
@@ -13,7 +15,7 @@ import net.sci.array.data.scalar2d.ScalarArray2D;
  * @author dlegland
  *
  */
-public class NearestNeighborInterpolator2D implements ScalarFunction2D
+public class LinearInterpolator2D implements ScalarFunction2D
 {
 	// ===================================================================
 	// class variables
@@ -29,62 +31,73 @@ public class NearestNeighborInterpolator2D implements ScalarFunction2D
 	// ===================================================================
 	// constructors
 
-	public NearestNeighborInterpolator2D(ScalarArray2D<?> image)
+	public LinearInterpolator2D(ScalarArray2D<?> image)
 	{
 		this.array = image;
 	}
 	
-	public NearestNeighborInterpolator2D(ScalarArray2D<?> image, double padValue)
+	public LinearInterpolator2D(ScalarArray2D<?> image, double padValue)
 	{
 		this.array = image;
 		this.padValue = padValue;
 	}
-
 	
+
 	// ===================================================================
 	// implementation of the BivariateFunction interface
 
 	/**
-	 * Evaluates 2D image. returns NaN if evaluation is outside image bounds.
+	 * Evaluates position within a 2D array. Returns stored pad value if evaluation is outside image bounds.
 	 */
 	public double evaluate(double x, double y)
 	{
-		// compute indices
-		int i = (int) Math.round(x);
-		int j = (int) Math.round(y);
-		
-		// check if point is located within interpolation area
+		// select points located inside interpolation area
+		// (smaller than image size)
 		int[] dims = this.array.getSize();
-		boolean isInside = i >= 0 && j >= 0 && i < dims[0] && j < dims[1];
+		boolean isInside = x >= 0 && y >= 0 && x < (dims[0]-1) && y < (dims[1]-1);
 		if (!isInside)
 		{
 			return this.padValue;
 		}
 		
-		// Returns the state of the closest image point
-		double val = this.array.getValue(i, j);
+		// compute indices
+		int i = (int) Math.floor(x);
+		int j = (int) Math.floor(y);
+		
+		// compute distances to lower-left corner of pixel
+		double dx = (x - i);
+		double dy = (y - j);
+		
+		// values of the 4 pixels around each current point
+		double val11 = this.array.getValue(i, j) 	* (1-dx) * (1-dy);
+		double val12 = this.array.getValue(i+1, j) 	* dx * (1-dy);
+		double val21 = this.array.getValue(i, j+1) 	* (1-dx) * dy;
+		double val22 = this.array.getValue(i+1, j+1) * dx * dy;
+		
+		// compute result values
+		double val = val11 + val12 + val21 + val22;
 
 		return val;
 	}
 	
-
+	
 	// ===================================================================
 	// local main method for testing
 
 	public static final void main(String[] args)
 	{
 		// Create a demo image
-		FloatArray2D array = FloatArray2D.create(10, 10);
+		FloatArray2D image = FloatArray2D.create(10, 10);
 		for (int y = 2; y < 8; y++)
 		{
 			for (int x = 2; x < 8; x++)
 			{
-				array.setValue(x, y, 100);
+				image.setValue(x,  y, 100);
 			}
 		}
 		
 		// Create interpolator for input image
-		NearestNeighborInterpolator2D interp = new NearestNeighborInterpolator2D(array);
+		LinearInterpolator2D interp = new LinearInterpolator2D(image);
 		
 		// allocate memory for output image
 		FloatArray2D image2 = FloatArray2D.create(10, 10);
@@ -105,7 +118,7 @@ public class NearestNeighborInterpolator2D implements ScalarFunction2D
 				double y2 = -xc * sinTheta + yc * cosTheta + 4.5;
 				
 				double val = interp.evaluate(x2, y2); 
-				image2.setValue(x,  y, val);
+				image2.setValue(x, y, val);
 			}
 		}
 		
@@ -119,5 +132,7 @@ public class NearestNeighborInterpolator2D implements ScalarFunction2D
 			}
 			System.out.println("");
 		}
+
+		
 	}
 }
