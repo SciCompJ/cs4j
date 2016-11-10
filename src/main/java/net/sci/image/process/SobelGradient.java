@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.process;
+package net.sci.image.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
