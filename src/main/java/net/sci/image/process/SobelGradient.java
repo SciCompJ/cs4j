@@ -4,7 +4,6 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.VectorArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
@@ -13,16 +12,19 @@ import net.sci.array.data.vector.FloatVectorArray2D;
 import net.sci.array.data.vector.FloatVectorArray3D;
 import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.data.vector.VectorArray3D;
+import net.sci.image.ImageArrayOperator;
 
 /**
+ * Compute gradient of a scalar array using Sobel coefficients, using a
+ * VectorArray for representing the result.
+ * 
  * @author dlegland
- *
  */
-public class SobelGradient implements ArrayOperator
+public class SobelGradient implements ImageArrayOperator
 {
 
 	/**
-	 * 
+	 * Creates a new instance of Sobel Gradient operator.
 	 */
 	public SobelGradient()
 	{

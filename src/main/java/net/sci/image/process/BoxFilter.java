@@ -4,12 +4,12 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
 import net.sci.array.Cursor;
 import net.sci.array.data.FloatArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Box filter for multidimensional arrays. Considers a square box, with length
@@ -18,7 +18,7 @@ import net.sci.array.data.scalar3d.ScalarArray3D;
  * @author dlegland
  *
  */
-public final class BoxFilter implements ArrayOperator
+public final class BoxFilter implements ImageArrayOperator
 {
 	int[] radiusList;
 	

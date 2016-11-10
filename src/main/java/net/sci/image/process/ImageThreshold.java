@@ -6,8 +6,7 @@ package net.sci.image.process;
 import net.sci.array.Array;
 import net.sci.array.data.BooleanArray;
 import net.sci.array.data.ScalarArray;
-import net.sci.image.Image;
-import net.sci.image.ImageOperator;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Thresholds an image, by retaining only values greater than or equal to a
@@ -16,7 +15,7 @@ import net.sci.image.ImageOperator;
  * @author dlegland
  *
  */
-public class ImageThreshold implements ImageOperator
+public class ImageThreshold implements ImageArrayOperator
 {
 	double value;
 	
@@ -32,27 +31,49 @@ public class ImageThreshold implements ImageOperator
 	 * @see net.sci.image.ImageOperator#process(net.sci.image.Image, net.sci.image.Image)
 	 */
 	@Override
-	public void process(Image inputImage, Image outputImage)
+	public void process(Array<?> source, Array<?> target)
 	{
-		Array<?> inputData = inputImage.getData();
-		if (!(inputData instanceof ScalarArray))
+		if (!(source instanceof ScalarArray))
 		{
 			throw new IllegalArgumentException("Input image must be scalar");
 		}
-		Array<?> outputData = outputImage.getData();
-		if (!(outputData instanceof BooleanArray))
+		if (!(target instanceof BooleanArray))
 		{
 			throw new IllegalArgumentException("Output image must be boolean");
 		}
-		if (inputData.dimensionality() != outputData.dimensionality())
+		if (source.dimensionality() != target.dimensionality())
 		{
 			throw new IllegalArgumentException("Input and output images must have same dimensionality");
 		}
 
-		process((ScalarArray<?>) inputData, (BooleanArray) outputData);
+		processScalar((ScalarArray<?>) source, (BooleanArray) target);
 	}
 
-	public void process(ScalarArray<?> source, BooleanArray target)
+//	/* (non-Javadoc)
+//	 * @see net.sci.image.ImageOperator#process(net.sci.image.Image, net.sci.image.Image)
+//	 */
+//	@Override
+//	public void process(Image inputImage, Image outputImage)
+//	{
+//		Array<?> inputData = inputImage.getData();
+//		if (!(inputData instanceof ScalarArray))
+//		{
+//			throw new IllegalArgumentException("Input image must be scalar");
+//		}
+//		Array<?> outputData = outputImage.getData();
+//		if (!(outputData instanceof BooleanArray))
+//		{
+//			throw new IllegalArgumentException("Output image must be boolean");
+//		}
+//		if (inputData.dimensionality() != outputData.dimensionality())
+//		{
+//			throw new IllegalArgumentException("Input and output images must have same dimensionality");
+//		}
+//
+//		processScalar((ScalarArray<?>) inputData, (BooleanArray) outputData);
+//	}
+
+	public void processScalar(ScalarArray<?> source, BooleanArray target)
 	{
 		ScalarArray.Iterator<?> iter1 = source.iterator(); 
 		BooleanArray.Iterator iter2 = target.iterator();
@@ -66,18 +87,43 @@ public class ImageThreshold implements ImageOperator
 	}
 	
 	/**
-	 * Creates a new binary image that can be used as output for processing the
-	 * given input image.
+	 * Creates a new binary array that can be used as output for processing the
+	 * given input array.
 	 * 
-	 * @param inputImage
-	 *            the reference image
-	 * @return a new instance of Image with binary data type
+	 * @param inputArray
+	 *            the reference array
+	 * @return a new instance of BooleanArray
 	 */
-	public Image createEmptyOutputImage(Image inputImage)
+	public BooleanArray createEmptyOutputArray(Array<?> array)
 	{
-		Array<?> array = inputImage.getData();
-		array = BooleanArray.create(array.getSize());
-		return new Image(array, inputImage);
+		return BooleanArray.create(array.getSize());
 	}
 	
+//	/**
+//	 * Creates a new binary image that can be used as output for processing the
+//	 * given input image.
+//	 * 
+//	 * @param inputImage
+//	 *            the reference image
+//	 * @return a new instance of Image with binary data type
+//	 */
+//	public Image createEmptyOutputImage(Image inputImage)
+//	{
+//		Array<?> array = inputImage.getData();
+//		array = BooleanArray.create(array.getSize());
+//		return new Image(array, inputImage);
+//	}
+	
+	public boolean canProcess(Array<?> source, Array<?> target)
+	{
+		if (!(source instanceof ScalarArray))
+		{
+			return false;
+		}
+		if (!(target instanceof BooleanArray))
+		{
+			return false;
+		}
+		return source.dimensionality() == target.dimensionality();
+	}
 }
