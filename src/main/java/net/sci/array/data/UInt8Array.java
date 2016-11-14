@@ -109,10 +109,14 @@ public interface UInt8Array extends IntArray<UInt8>
 			return getByte() & 0x00FF; 
 		}
 
+		/**
+		 * Sets the value at the specified position, by clamping the value between 0
+		 * and 255.
+		 */
 		@Override
 		public default void setInt(int value)
 		{
-			setByte((byte) value);
+			setByte((byte) Math.min(Math.max(value, 0), 255));
 		}
 
 		@Override

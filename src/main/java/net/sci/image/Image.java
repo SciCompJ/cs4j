@@ -225,7 +225,10 @@ public class Image
 		
 		// additional processing to take into account parent image
 		this.name = parent.name;
-		this.displayRange = parent.displayRange;
+		if (this.type == parent.type)
+		{
+			this.displayRange = parent.displayRange;
+		}
 		this.colorMap = parent.colorMap;
 	}
 	
