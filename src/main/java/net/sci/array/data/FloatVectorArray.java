@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.vector.FloatVectorArray2D;
 import net.sci.array.data.vector.FloatVectorArray3D;
 import net.sci.array.type.FloatVector;
@@ -29,7 +30,7 @@ public interface FloatVectorArray extends VectorArray<FloatVector>
 			return FloatVectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
 		default:
 			//TODO: implement the rest
-			throw new RuntimeException("Can not create such image");
+			throw new RuntimeException("Can not create float vector image with dimension " + dims);
 //			return UInt8ArrayND.create(dims);
 		}
 	}
@@ -41,6 +42,21 @@ public interface FloatVectorArray extends VectorArray<FloatVector>
 	public default FloatVectorArray newInstance(int... dims)
 	{
 		return FloatVectorArray.create(dims, this.getVectorLength());
+	}
+
+	@Override
+	public default ArrayFactory<FloatVector> getFactory()
+	{
+		return new ArrayFactory<FloatVector>()
+		{
+			@Override
+			public FloatVectorArray create(int[] dims, FloatVector value)
+			{
+				FloatVectorArray array = FloatVectorArray.create(dims, value.size());
+				array.fill(value);
+				return array;
+			}
+		};
 	}
 
 	@Override

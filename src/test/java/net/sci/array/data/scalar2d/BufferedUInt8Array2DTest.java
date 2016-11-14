@@ -1,6 +1,9 @@
 package net.sci.array.data.scalar2d;
 
 import static org.junit.Assert.*;
+
+import net.sci.array.Array;
+import net.sci.array.ArrayFactory;
 import net.sci.array.type.UInt8;
 
 import org.junit.Test;
@@ -29,6 +32,43 @@ public class BufferedUInt8Array2DTest
 		}
 		assertEquals(300, sum, .01);
 		assertEquals(30, count);
+	}
+
+	@Test
+	public final void testFill()
+	{
+		UInt8Array2D array = new BufferedUInt8Array2D(6, 5);
+		array.fill(new UInt8(10));
+		
+		int count = 0;
+		double sum = 0;
+		for (UInt8 val : array) 
+		{
+			sum += val.getValue();
+			count++;
+		}
+		assertEquals(300, sum, .01);
+		assertEquals(30, count);
+	}
+
+	@Test
+	public final void testGetFactory()
+	{
+		UInt8Array2D array = new BufferedUInt8Array2D(6, 5);
+		
+		ArrayFactory<UInt8> factory = array.getFactory();
+		int[] dims = new int[]{4, 3, 2};
+		Array<UInt8> array2 = factory.create(dims, new UInt8(10));
+		
+		int count = 0;
+		double sum = 0;
+		for (UInt8 val : array2) 
+		{
+			sum += val.getValue();
+			count++;
+		}
+		assertEquals(240, sum, .01);
+		assertEquals(24, count);
 	}
 
 }

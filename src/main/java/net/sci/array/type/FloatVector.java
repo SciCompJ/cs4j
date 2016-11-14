@@ -88,10 +88,16 @@ public class FloatVector extends Vector<Float>
 		return this.data[c];
 	}
 
+	@Override
+	public int size()
+	{
+		return this.data.length;
+	}
+	
 
 	// =============================================================
 	// Override Object methods
-	
+
 	public boolean equals(Object that)
 	{
 		// check for self-comparison

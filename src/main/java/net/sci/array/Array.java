@@ -43,10 +43,31 @@ public interface Array<T> extends Iterable<T>
 	public Array<T> newInstance(int... dims);
 
 	/**
+	 * Returns the factory of this array.
+	 * @return the factory of this array
+	 */
+	public ArrayFactory<T> getFactory();
+	
+	/**
 	 * Creates a new writable array with same size and same content.
 	 * @return a new writable copy of this array
 	 */
 	public Array<T> duplicate();
+	
+	/**
+	 * Fills the array with the specified (typed) value.
+	 * 
+	 * @param value an instance of T for filling the array.
+	 */
+	public default void fill(T value)
+	{
+		Iterator<T> iter = iterator();
+		while(iter.hasNext())
+		{
+			iter.forward();
+			iter.set(value);
+		}
+	}
 	
 	/**
 	 * Returns the array element at the given position

@@ -4,6 +4,7 @@
 package net.sci.array.data;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayFactory;
 
 /**
  * @author dlegland
@@ -127,6 +128,12 @@ public abstract class Array2D<T> implements Array<T>
 		public Array<T> newInstance(int... dims)
 		{
 			return this.array.newInstance(dims);
+		}
+
+		@Override
+		public ArrayFactory<T> getFactory()
+		{
+			return this.array.getFactory();
 		}
 
 		@Override

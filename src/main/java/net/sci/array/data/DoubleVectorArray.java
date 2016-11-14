@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.vector.DoubleVectorArray2D;
 import net.sci.array.type.DoubleVector;
 
@@ -28,7 +29,7 @@ public interface DoubleVectorArray extends VectorArray<DoubleVector>
 //			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
 		default:
 			//TODO: implement the rest
-			throw new RuntimeException("Can not create such image");
+			throw new RuntimeException("Can not create double vector image with dimension " + dims.length);
 //			return UInt8ArrayND.create(dims);
 		}
 	}
@@ -40,6 +41,21 @@ public interface DoubleVectorArray extends VectorArray<DoubleVector>
 	public default DoubleVectorArray newInstance(int... dims)
 	{
 		return DoubleVectorArray.create(dims, this.getVectorLength());
+	}
+
+	@Override
+	public default ArrayFactory<DoubleVector> getFactory()
+	{
+		return new ArrayFactory<DoubleVector>()
+		{
+			@Override
+			public DoubleVectorArray create(int[] dims, DoubleVector value)
+			{
+				DoubleVectorArray array = DoubleVectorArray.create(dims, value.size());
+				array.fill(value);
+				return array;
+			}
+		};
 	}
 
 	@Override

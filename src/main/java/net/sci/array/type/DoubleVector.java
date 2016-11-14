@@ -39,6 +39,12 @@ public class DoubleVector extends Vector<Double>
 		return this.data[i];
 	}
 
+	@Override
+	public int size()
+	{
+		return this.data.length;
+	}
+	
 
 	// =============================================================
 	// Override Object methods

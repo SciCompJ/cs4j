@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.DoubleArray2D;
 import net.sci.array.type.Double;
 
@@ -37,6 +38,21 @@ public interface DoubleArray extends ScalarArray<Double>
 	public default DoubleArray newInstance(int... dims)
 	{
 		return DoubleArray.create(dims);
+	}
+
+	@Override
+	public default ArrayFactory<Double> getFactory()
+	{
+		return new ArrayFactory<Double>()
+		{
+			@Override
+			public DoubleArray create(int[] dims, Double value)
+			{
+				DoubleArray array = DoubleArray.create(dims);
+				array.fill(value);
+				return array;
+			}
+		};
 	}
 
 	@Override

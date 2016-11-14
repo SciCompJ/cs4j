@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.FloatArray2D;
 import net.sci.array.data.scalar3d.FloatArray3D;
 import net.sci.array.type.Float;
@@ -40,6 +41,21 @@ public interface FloatArray extends ScalarArray<Float>
 		return FloatArray.create(dims);
 	}
 	
+	@Override
+	public default ArrayFactory<Float> getFactory()
+	{
+		return new ArrayFactory<Float>()
+		{
+			@Override
+			public FloatArray create(int[] dims, Float value)
+			{
+				FloatArray array = FloatArray.create(dims);
+				array.fill(value);
+				return array;
+			}
+		};
+	}
+
 	@Override
 	public FloatArray duplicate();
 

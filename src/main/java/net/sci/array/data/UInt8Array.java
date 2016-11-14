@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
 import net.sci.array.data.scalarnd.UInt8ArrayND;
@@ -62,6 +63,21 @@ public interface UInt8Array extends IntArray<UInt8>
 	public default UInt8Array newInstance(int... dims)
 	{
 		return UInt8Array.create(dims);
+	}
+
+	@Override
+	public default ArrayFactory<UInt8> getFactory()
+	{
+		return new ArrayFactory<UInt8>()
+		{
+			@Override
+			public UInt8Array create(int[] dims, UInt8 value)
+			{
+				UInt8Array array = UInt8Array.create(dims);
+				array.fill(value);
+				return array;
+			}
+		};
 	}
 
 	@Override

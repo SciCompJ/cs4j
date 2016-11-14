@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.Int32Array2D;
 import net.sci.array.data.scalar3d.Int32Array3D;
 import net.sci.array.data.scalarnd.Int32ArrayND;
@@ -38,6 +39,21 @@ public interface Int32Array extends IntArray<Int32>
 	public default Int32Array newInstance(int... dims)
 	{
 		return Int32Array.create(dims);
+	}
+
+	@Override
+	public default ArrayFactory<Int32> getFactory()
+	{
+		return new ArrayFactory<Int32>()
+		{
+			@Override
+			public Int32Array create(int[] dims, Int32 value)
+			{
+				Int32Array array = Int32Array.create(dims);
+				array.fill(value);
+				return array;
+			}
+		};
 	}
 
 	@Override

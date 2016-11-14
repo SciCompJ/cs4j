@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.BooleanArray2D;
 import net.sci.array.data.scalar3d.BooleanArray3D;
 import net.sci.array.type.Boolean;
@@ -61,6 +62,21 @@ public interface BooleanArray extends IntArray<Boolean>
 	public default BooleanArray newInstance(int... dims)
 	{
 		return BooleanArray.create(dims);
+	}
+
+	@Override
+	public default ArrayFactory<Boolean> getFactory()
+	{
+		return new ArrayFactory<Boolean>()
+		{
+			@Override
+			public BooleanArray create(int[] dims, Boolean value)
+			{
+				BooleanArray array = BooleanArray.create(dims);
+				array.fill(value);
+				return array;
+			}
+		};
 	}
 
 	@Override

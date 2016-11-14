@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.array.data.scalar3d.UInt16Array3D;
 import net.sci.array.type.UInt16;
@@ -67,6 +68,21 @@ public interface UInt16Array extends IntArray<UInt16>
 	public default UInt16Array newInstance(int... dims)
 	{
 		return UInt16Array.create(dims);
+	}
+
+	@Override
+	public default ArrayFactory<UInt16> getFactory()
+	{
+		return new ArrayFactory<UInt16>()
+		{
+			@Override
+			public UInt16Array create(int[] dims, UInt16 value)
+			{
+				UInt16Array array = UInt16Array.create(dims);
+				array.fill(value);
+				return array;
+			}
+		};
 	}
 
 	@Override

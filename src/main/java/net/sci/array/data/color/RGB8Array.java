@@ -6,6 +6,7 @@ package net.sci.array.data.color;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.type.RGB8;
@@ -164,6 +165,21 @@ public interface RGB8Array extends VectorArray<RGB8>
 	public default RGB8Array newInstance(int... dims)
 	{
 		return RGB8Array.create(dims);
+	}
+
+	@Override
+	public default ArrayFactory<RGB8> getFactory()
+	{
+		return new ArrayFactory<RGB8>()
+		{
+			@Override
+			public RGB8Array create(int[] dims, RGB8 value)
+			{
+				RGB8Array array = RGB8Array.create(dims);
+				array.fill(value);
+				return array;
+			}
+		};
 	}
 
 	@Override
