@@ -7,7 +7,7 @@ import net.sci.array.Array;
 import net.sci.array.data.BooleanArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.image.Image;
-import net.sci.image.ImageOperator;
+import net.sci.image.ImageToImageOperator;
 
 /**
  * Base implementation for auto-threshold algorithms.
@@ -15,7 +15,7 @@ import net.sci.image.ImageOperator;
  * @author dlegland
  *
  */
-public abstract class AutoThreshold implements ImageOperator
+public abstract class AutoThreshold implements ImageToImageOperator
 {
 	public abstract double computeThresholdValue(ScalarArray<?> array);
 	
