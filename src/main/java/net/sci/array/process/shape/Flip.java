@@ -4,7 +4,7 @@
 package net.sci.array.process.shape;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
+import net.sci.array.ArrayToArrayOperator;
 import net.sci.array.Cursor;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.Array3D;
@@ -13,7 +13,7 @@ import net.sci.array.data.Array3D;
  * @author dlegland
  *
  */
-public class Flip implements ArrayOperator
+public class Flip implements ArrayToArrayOperator
 {
 	int dim;
 	

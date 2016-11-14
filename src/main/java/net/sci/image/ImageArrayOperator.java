@@ -17,26 +17,11 @@ import net.sci.array.ArrayOperator;
  */
 public interface ImageArrayOperator extends ArrayOperator, ImageOperator
 {
-	public default void process(Image inputImage, Image outputImage)
-	{
-		Array<?> inputArray = inputImage.getData();
-		Array<?> outputArray = outputImage.getData();
-		process(inputArray, outputArray);
-	}
-
-	/**
-	 * Calls the "createEmptyOutputArray" methods from ArrayOperator interface
-	 * for creating the result array that will be used for storing data.
-	 * 
-	 * @param image
-	 *            the reference image
-	 * @return a new instance of Image that can be used for processing input
-	 *         image.
-	 */
-	public default Image createEmptyOutputImage(Image image)
+	@Override
+	public default Image process(Image image)
 	{
 		Array<?> array = image.getData();
-		Array<?> newArray = createEmptyOutputArray(array);
-		return new Image(newArray, image);
+		Array<?> result = process(array);
+		return new Image(result, image);
 	}
 }

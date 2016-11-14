@@ -4,7 +4,7 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
+import net.sci.array.ArrayToArrayOperator;
 import net.sci.array.data.scalar2d.FloatArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.vector.VectorArray2D;
@@ -14,7 +14,7 @@ import net.sci.array.interp.LinearInterpolator2D;
  * @author dlegland
  *
  */
-public class RotationAroundCenter implements ArrayOperator
+public class RotationAroundCenter implements ArrayToArrayOperator
 {
 	/**
 	 * The rotation angle, in degrees counter-clockwise.

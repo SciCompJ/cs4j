@@ -11,14 +11,14 @@ import net.sci.array.data.UInt8Array;
 import net.sci.array.data.color.RGB8Array;
 import net.sci.array.type.RGB8;
 import net.sci.array.type.UInt16;
-import net.sci.image.ImageArrayOperator;
+import net.sci.image.ImageArrayToArrayOperator;
 
 /**
  * An image inverter. 
  * @author dlegland
  *
  */
-public final class ImageInverter implements ImageArrayOperator
+public final class ImageInverter implements ImageArrayToArrayOperator
 {
 	/**
 	 */

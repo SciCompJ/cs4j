@@ -9,7 +9,7 @@ import net.sci.array.data.FloatArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.image.ImageArrayOperator;
+import net.sci.image.ImageArrayToArrayOperator;
 
 /**
  * Box filter for multidimensional arrays. Considers a square box, with length
@@ -18,7 +18,7 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  */
-public final class BoxFilter implements ImageArrayOperator
+public final class BoxFilter implements ImageArrayToArrayOperator
 {
 	int[] radiusList;
 	

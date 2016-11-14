@@ -4,7 +4,7 @@
 package net.sci.array.process;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
+import net.sci.array.ArrayToArrayOperator;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.type.Scalar;
 
@@ -12,7 +12,7 @@ import net.sci.array.type.Scalar;
  * @author dlegland
  *
  */
-public interface ScalarArrayOperator extends ArrayOperator
+public interface ScalarArrayOperator extends ArrayToArrayOperator
 {
 	public void processScalar(ScalarArray<? extends Scalar> input, ScalarArray<? extends Scalar> output);
 	

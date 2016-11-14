@@ -12,7 +12,7 @@ import net.sci.array.data.vector.FloatVectorArray2D;
 import net.sci.array.data.vector.FloatVectorArray3D;
 import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.data.vector.VectorArray3D;
-import net.sci.image.ImageArrayOperator;
+import net.sci.image.ImageArrayToArrayOperator;
 
 /**
  * Compute gradient of a scalar array using Sobel coefficients, using a
@@ -20,7 +20,7 @@ import net.sci.image.ImageArrayOperator;
  * 
  * @author dlegland
  */
-public class SobelGradient implements ImageArrayOperator
+public class SobelGradient implements ImageArrayToArrayOperator
 {
 
 	/**

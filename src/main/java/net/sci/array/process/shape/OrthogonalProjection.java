@@ -4,14 +4,14 @@
 package net.sci.array.process.shape;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
+import net.sci.array.ArrayToArrayOperator;
 import net.sci.array.Cursor;
 
 /**
  * @author dlegland
  *
  */
-public class OrthogonalProjection implements ArrayOperator
+public class OrthogonalProjection implements ArrayToArrayOperator
 {
 	int dim;
 	

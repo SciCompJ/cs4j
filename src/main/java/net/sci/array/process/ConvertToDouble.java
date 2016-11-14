@@ -5,14 +5,14 @@ package net.sci.array.process;
 
 import net.sci.array.Array;
 import net.sci.array.Array.Iterator;
-import net.sci.array.ArrayOperator;
+import net.sci.array.ArrayToArrayOperator;
 
 
 /**
  * @author dlegland
  *
  */
-public class ConvertToDouble implements ArrayOperator
+public class ConvertToDouble implements ArrayToArrayOperator
 {
 
 	@Override

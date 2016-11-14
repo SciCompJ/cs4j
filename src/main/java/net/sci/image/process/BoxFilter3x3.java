@@ -4,7 +4,7 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
+import net.sci.array.ArrayToArrayOperator;
 import net.sci.array.data.FloatArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
@@ -13,7 +13,7 @@ import net.sci.array.data.scalar2d.ScalarArray2D;
  * @author dlegland
  *
  */
-public final class BoxFilter3x3 implements ArrayOperator
+public final class BoxFilter3x3 implements ArrayToArrayOperator
 {
 
 	/* (non-Javadoc)

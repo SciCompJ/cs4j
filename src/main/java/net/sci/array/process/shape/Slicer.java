@@ -4,7 +4,7 @@
 package net.sci.array.process.shape;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
+import net.sci.array.ArrayToArrayOperator;
 import net.sci.array.Cursor;
 
 /**
@@ -14,7 +14,7 @@ import net.sci.array.Cursor;
  * @author dlegland
  *
  */
-public class Slicer implements ArrayOperator
+public class Slicer implements ArrayToArrayOperator
 {
 	public static final <T> void getSlice(Array<? extends T> source, Array<? super T> target, int dim, int sliceIndex)
 	{

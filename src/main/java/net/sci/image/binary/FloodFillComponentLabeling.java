@@ -15,7 +15,7 @@ import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.image.Image;
-import net.sci.image.ImageArrayOperator;
+import net.sci.image.ImageArrayToArrayOperator;
 import net.sci.image.morphology.FloodFill;
 
 /**
@@ -30,7 +30,7 @@ import net.sci.image.morphology.FloodFill;
  * @author dlegland
  *
  */
-public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayOperator
+public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayToArrayOperator
 {
 	/** 
 	 * The connectivity of the components, either 4 (default) or 8.
@@ -77,25 +77,6 @@ public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayOp
 	}
 	
 
-	/**
-	 * Calls the "createEmptyOutputArray" methods from ArrayOperator interface
-	 * for creating the result array, and put the result in a new label image.
-	 * 
-	 * @param image
-	 *            the reference image
-	 * @return a new instance of Image that can be used for processing input
-	 *         image.
-	 */
-	@Override
-	public Image createEmptyOutputImage(Image image)
-	{
-		Array<?> array = image.getData();
-		Array<?> newArray = createEmptyOutputArray(array);
-		Image result = new Image(newArray, image);
-		result.setType(Image.Type.LABEL);
-		return result;
-	}
-	
 	public IntArray2D<?> process(BooleanArray2D image)
 	{
 		// get image size
@@ -218,6 +199,25 @@ public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayOp
 			}
 		}
 		this.fireProgressChanged(this, 1, 1);
+	}
+
+	/**
+	 * Calls the "createEmptyOutputArray" methods from ArrayOperator interface
+	 * for creating the result array, and put the result in a new label image.
+	 * 
+	 * @param image
+	 *            the reference image
+	 * @return a new instance of Image that can be used for processing input
+	 *         image.
+	 */
+	@Override
+	public Image createEmptyOutputImage(Image image)
+	{
+		Array<?> array = image.getData();
+		Array<?> newArray = createEmptyOutputArray(array);
+		Image result = new Image(newArray, image);
+		result.setType(Image.Type.LABEL);
+		return result;
 	}
 
 	/**
