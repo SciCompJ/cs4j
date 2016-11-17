@@ -3,7 +3,7 @@
  */
 package net.sci.array.interp;
 
-import net.sci.array.data.scalar2d.FloatArray2D;
+import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.interp.NearestNeighborInterpolator2D;
 import net.sci.array.interp.ScalarFunction2D;
@@ -76,7 +76,7 @@ public class NearestNeighborInterpolator2D implements ScalarFunction2D
 	public static final void main(String[] args)
 	{
 		// Create a demo image
-		FloatArray2D array = FloatArray2D.create(10, 10);
+		Float32Array2D array = Float32Array2D.create(10, 10);
 		for (int y = 2; y < 8; y++)
 		{
 			for (int x = 2; x < 8; x++)
@@ -89,7 +89,7 @@ public class NearestNeighborInterpolator2D implements ScalarFunction2D
 		NearestNeighborInterpolator2D interp = new NearestNeighborInterpolator2D(array);
 		
 		// allocate memory for output array
-		FloatArray2D array2 = FloatArray2D.create(10, 10);
+		Float32Array2D array2 = Float32Array2D.create(10, 10);
 		
 		// compute transform parameters
 		double angle = Math.toRadians(20);

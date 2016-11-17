@@ -15,7 +15,7 @@ import net.sci.array.Array;
 import net.sci.array.data.Array3D;
 import net.sci.array.data.color.BufferedPackedByteRGB8Array2D;
 import net.sci.array.data.color.RGB8Array2D;
-import net.sci.array.data.scalar2d.BufferedFloatArray2D;
+import net.sci.array.data.scalar2d.BufferedFloat32Array2D;
 import net.sci.array.data.scalar2d.BufferedInt32Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
@@ -481,7 +481,7 @@ public class TiffImageReader implements ImageReader
 					floatBuffer[i] = Float.intBitsToFloat((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
 			}
 			
-			return new BufferedFloatArray2D(info.width, info.height, floatBuffer);
+			return new BufferedFloat32Array2D(info.width, info.height, floatBuffer);
 		}	
 
 		case RGB:

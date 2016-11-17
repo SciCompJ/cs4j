@@ -9,7 +9,7 @@ import static java.lang.Float.floatToRawIntBits;
  * @author dlegland
  *
  */
-public class FloatVector extends Vector<Float>
+public class Float32Vector extends Vector<Float32>
 {
 	// =============================================================
 	// Class variables
@@ -20,13 +20,13 @@ public class FloatVector extends Vector<Float>
 	// =============================================================
 	// Constructor
 	
-	public FloatVector(float[] array)
+	public Float32Vector(float[] array)
 	{
 		this.data = new float[array.length];
 		System.arraycopy(array, 0, this.data, 0, array.length);
 	}
 	
-	public FloatVector(double[] array)
+	public Float32Vector(double[] array)
 	{
 		this.data = new float[array.length];
 		for (int c = 0; c < array.length; c++)
@@ -105,11 +105,11 @@ public class FloatVector extends Vector<Float>
 			return true;
 
 		// check for class
-		if (!(that instanceof FloatVector))
+		if (!(that instanceof Float32Vector))
 			return false;
 
 		// cast to native object is now safe
-		FloatVector thatVector = (FloatVector) that;
+		Float32Vector thatVector = (Float32Vector) that;
 
 	    // now a proper field-by-field evaluation can be made
 		if (this.data.length != thatVector.data.length)

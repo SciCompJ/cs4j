@@ -9,11 +9,11 @@ import static java.lang.Double.doubleToLongBits;
  * @author dlegland
  *
  */
-public class DoubleVector extends Vector<Double>
+public class Float64Vector extends Vector<Float64>
 {
 	double[] data;
 	
-	public DoubleVector(double[] array)
+	public Float64Vector(double[] array)
 	{
 		this.data = new double[array.length];
 		System.arraycopy(array, 0, this.data, 0, array.length);
@@ -56,11 +56,11 @@ public class DoubleVector extends Vector<Double>
 			return true;
 
 		// check for class
-		if (!(that instanceof DoubleVector))
+		if (!(that instanceof Float64Vector))
 			return false;
 
 		// cast to native object is now safe
-		DoubleVector thatVector = (DoubleVector) that;
+		Float64Vector thatVector = (Float64Vector) that;
 
 	    // now a proper field-by-field evaluation can be made
 		if (this.data.length != thatVector.data.length)

@@ -3,20 +3,20 @@
  */
 package net.sci.array.type;
 
-import net.sci.array.data.FloatArray;
+import net.sci.array.data.Float32Array;
 
 /**
  * @author dlegland
  *
  */
-public class Float extends Scalar
+public class Float32 extends Scalar
 {
 	float value;
 	
 	/**
 	 * Creates new Float with default value 0.
 	 */
-	public Float()
+	public Float32()
 	{
 		value = 0;
 	}
@@ -24,7 +24,7 @@ public class Float extends Scalar
 	/**
 	 * Creates new Float with specified value.
 	 */
-	public Float(float value)
+	public Float32(float value)
 	{
 		this.value = value;
 	}
@@ -38,9 +38,9 @@ public class Float extends Scalar
 		return value;
 	}
 
-	public FloatArray createArray(int[] dims)
+	public Float32Array createArray(int[] dims)
 	{
-		return FloatArray.create(dims);
+		return Float32Array.create(dims);
 	}
 
 
@@ -54,11 +54,11 @@ public class Float extends Scalar
 			return true;
 
 		// check for class
-		if (!(that instanceof Float))
+		if (!(that instanceof Float32))
 			return false;
 
 		// cast to native object is now safe
-		Float thatFloat = (Float) that;
+		Float32 thatFloat = (Float32) that;
 
 	    // now a proper field-by-field evaluation can be made
 	    return this.value == thatFloat.value;

@@ -4,27 +4,27 @@
 package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
-import net.sci.array.data.scalar2d.FloatArray2D;
-import net.sci.array.data.scalar3d.FloatArray3D;
-import net.sci.array.type.Float;
+import net.sci.array.data.scalar2d.Float32Array2D;
+import net.sci.array.data.scalar3d.Float32Array3D;
+import net.sci.array.type.Float32;
 
 /**
  * @author dlegland
  *
  */
-public interface FloatArray extends ScalarArray<Float>
+public interface Float32Array extends ScalarArray<Float32>
 {
 	// =============================================================
 	// Static methods
 
-	public static FloatArray create(int[] dims)
+	public static Float32Array create(int[] dims)
 	{
 		switch (dims.length)
 		{
 		case 2:
-			return FloatArray2D.create(dims[0], dims[1]);
+			return Float32Array2D.create(dims[0], dims[1]);
 		case 3:
-			return FloatArray3D.create(dims[0], dims[1], dims[2]);
+			return Float32Array3D.create(dims[0], dims[1], dims[2]);
 		default:
 			//TODO: implement the rest
 			throw new IllegalArgumentException("Can not create FloatArray with " + dims.length + " dimensions");
@@ -36,20 +36,20 @@ public interface FloatArray extends ScalarArray<Float>
 	// Specialization of Array interface
 
 	@Override
-	public default FloatArray newInstance(int... dims)
+	public default Float32Array newInstance(int... dims)
 	{
-		return FloatArray.create(dims);
+		return Float32Array.create(dims);
 	}
 	
 	@Override
-	public default ArrayFactory<Float> getFactory()
+	public default ArrayFactory<Float32> getFactory()
 	{
-		return new ArrayFactory<Float>()
+		return new ArrayFactory<Float32>()
 		{
 			@Override
-			public FloatArray create(int[] dims, Float value)
+			public Float32Array create(int[] dims, Float32 value)
 			{
-				FloatArray array = FloatArray.create(dims);
+				Float32Array array = Float32Array.create(dims);
 				array.fill(value);
 				return array;
 			}
@@ -57,24 +57,24 @@ public interface FloatArray extends ScalarArray<Float>
 	}
 
 	@Override
-	public FloatArray duplicate();
+	public Float32Array duplicate();
 
 	public Iterator iterator();
 	
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator extends ScalarArray.Iterator<Float>
+	public interface Iterator extends ScalarArray.Iterator<Float32>
 	{
 		//TODO: new methods getFloat() and setFloat()
 		@Override
-		public default Float get()
+		public default Float32 get()
 		{
-			return new Float((float) getValue());
+			return new Float32((float) getValue());
 		}
 		
 		@Override
-		public default void set(Float value)
+		public default void set(Float32 value)
 		{
 			setValue(value.getValue());
 		}

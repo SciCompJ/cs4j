@@ -4,24 +4,24 @@
 package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
-import net.sci.array.data.scalar2d.DoubleArray2D;
-import net.sci.array.type.Double;
+import net.sci.array.data.scalar2d.Float64Array2D;
+import net.sci.array.type.Float64;
 
 /**
  * @author dlegland
  *
  */
-public interface DoubleArray extends ScalarArray<Double>
+public interface Float64Array extends ScalarArray<Float64>
 {
 	// =============================================================
 	// Static methods
 
-	public static DoubleArray create(int[] dims)
+	public static Float64Array create(int[] dims)
 	{
 		switch (dims.length)
 		{
 		case 2:
-			return DoubleArray2D.create(dims[0], dims[1]);
+			return Float64Array2D.create(dims[0], dims[1]);
 //		case 3:
 //			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
 		default:
@@ -35,20 +35,20 @@ public interface DoubleArray extends ScalarArray<Double>
 	// Specialization of Array interface
 
 	@Override
-	public default DoubleArray newInstance(int... dims)
+	public default Float64Array newInstance(int... dims)
 	{
-		return DoubleArray.create(dims);
+		return Float64Array.create(dims);
 	}
 
 	@Override
-	public default ArrayFactory<Double> getFactory()
+	public default ArrayFactory<Float64> getFactory()
 	{
-		return new ArrayFactory<Double>()
+		return new ArrayFactory<Float64>()
 		{
 			@Override
-			public DoubleArray create(int[] dims, Double value)
+			public Float64Array create(int[] dims, Float64 value)
 			{
-				DoubleArray array = DoubleArray.create(dims);
+				Float64Array array = Float64Array.create(dims);
 				array.fill(value);
 				return array;
 			}
@@ -56,23 +56,23 @@ public interface DoubleArray extends ScalarArray<Double>
 	}
 
 	@Override
-	public DoubleArray duplicate();
+	public Float64Array duplicate();
 
 	public Iterator iterator();
 	
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator extends ScalarArray.Iterator<Double>
+	public interface Iterator extends ScalarArray.Iterator<Float64>
 	{
 		@Override
-		public default Double get()
+		public default Float64 get()
 		{
-			return new Double(getValue());
+			return new Float64(getValue());
 		}
 		
 		@Override
-		public default void set(Double value)
+		public default void set(Float64 value)
 		{
 			setValue(value.getValue());
 		}

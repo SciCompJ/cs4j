@@ -10,7 +10,7 @@ import org.junit.Test;
 import net.sci.array.Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.data.scalar3d.FloatArray3D;
+import net.sci.array.data.scalar3d.Float32Array3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
 import net.sci.image.Image;
@@ -85,7 +85,7 @@ public class BoxFilterTest
 		
 		System.out.println("Start comparing timing");
 
-		FloatArray3D target1 = FloatArray3D.create(128, 128, 27);
+		Float32Array3D target1 = Float32Array3D.create(128, 128, 27);
 		t0 = System.nanoTime();
 		filter.processScalar3d(array, target1);
 		t1 = System.nanoTime();

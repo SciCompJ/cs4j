@@ -2,7 +2,7 @@ package net.sci.array.process;
 
 import static org.junit.Assert.*;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
-import net.sci.array.data.scalar2d.DoubleArray2D;
+import net.sci.array.data.scalar2d.Float64Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 
 import org.junit.Test;
@@ -23,7 +23,7 @@ public class ConvertToDoubleTest
 		}
 
 		ConvertToDouble op = new ConvertToDouble();
-		DoubleArray2D res = DoubleArray2D.create(5, 5);
+		Float64Array2D res = Float64Array2D.create(5, 5);
 		op.process(array, res);
 
 		for (int y = 0; y < 5; y++)

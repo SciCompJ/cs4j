@@ -5,7 +5,7 @@ package net.sci.image.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayToArrayOperator;
-import net.sci.array.data.FloatArray;
+import net.sci.array.data.Float32Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 
@@ -64,7 +64,7 @@ public final class BoxFilter3x3 implements ArrayToArrayOperator
 	public Array<?> createEmptyOutputArray(Array<?> array)
 	{
 		int[] dims = array.getSize();
-		return FloatArray.create(dims);
+		return Float32Array.create(dims);
 	}
 	
 	public boolean canProcess(Array<?> array)

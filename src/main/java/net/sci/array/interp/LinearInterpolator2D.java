@@ -3,7 +3,7 @@
  */
 package net.sci.array.interp;
 
-import net.sci.array.data.scalar2d.FloatArray2D;
+import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.interp.LinearInterpolator2D;
 import net.sci.array.interp.ScalarFunction2D;
@@ -87,7 +87,7 @@ public class LinearInterpolator2D implements ScalarFunction2D
 	public static final void main(String[] args)
 	{
 		// Create a demo image
-		FloatArray2D image = FloatArray2D.create(10, 10);
+		Float32Array2D image = Float32Array2D.create(10, 10);
 		for (int y = 2; y < 8; y++)
 		{
 			for (int x = 2; x < 8; x++)
@@ -100,7 +100,7 @@ public class LinearInterpolator2D implements ScalarFunction2D
 		LinearInterpolator2D interp = new LinearInterpolator2D(image);
 		
 		// allocate memory for output image
-		FloatArray2D image2 = FloatArray2D.create(10, 10);
+		Float32Array2D image2 = Float32Array2D.create(10, 10);
 		
 		// compute transform parameters
 		double angle = Math.toRadians(20);

@@ -3,19 +3,19 @@
  */
 package net.sci.array.data.scalar2d;
 
-import net.sci.array.data.FloatArray;
-import net.sci.array.type.Float;
+import net.sci.array.data.Float64Array;
+import net.sci.array.type.Float64;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedFloatArray2D extends FloatArray2D
+public class BufferedFloat64Array2D extends Float64Array2D
 {
 	// =============================================================
 	// Class fields
 
-	float[] buffer;
+	double[] buffer;
 	
 	// =============================================================
 	// Constructors
@@ -24,17 +24,17 @@ public class BufferedFloatArray2D extends FloatArray2D
 	 * @param size0
 	 * @param size1
 	 */
-	public BufferedFloatArray2D(int size0, int size1)
+	public BufferedFloat64Array2D(int size0, int size1)
 	{
 		super(size0, size1);
-		this.buffer = new float[size0 * size1];
+		this.buffer = new double[size0 * size1];
 	}
 
 	/**
 	 * @param size0
 	 * @param size1
 	 */
-	public BufferedFloatArray2D(int size0, int size1, float[] buffer)
+	public BufferedFloat64Array2D(int size0, int size1, double[] buffer)
 	{
 		super(size0, size1);
 		if (buffer.length < size0 * size1)
@@ -45,13 +45,13 @@ public class BufferedFloatArray2D extends FloatArray2D
 	}
 
 	@Override
-	public FloatArray2D duplicate()
+	public Float64Array2D duplicate()
 	{
-		float[] buffer2 = new float[size0 * size1];
+		double[] buffer2 = new double[size0 * size1];
 		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1);
-		return new BufferedFloatArray2D(size0, size1, buffer2);
+		return new BufferedFloat64Array2D(size0, size1, buffer2);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#getValue(int, int)
 	 */
@@ -69,23 +69,23 @@ public class BufferedFloatArray2D extends FloatArray2D
 	public void setValue(int x, int y, double value)
 	{
 		int index = x + y * this.size0;
-		this.buffer[index] = (float) value;
+		this.buffer[index] = value;
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.ScalarArray#iterator()
 	 */
 	@Override
-	public FloatArray.Iterator iterator()
+	public Float64Array.Iterator iterator()
 	{
-		return new FloatIterator();
+		return new DoubleIterator();
 	}
 
-	private class FloatIterator implements FloatArray.Iterator
+	private class DoubleIterator implements Float64Array.Iterator
 	{
 		int index = -1;
 		
-		public FloatIterator() 
+		public DoubleIterator() 
 		{
 		}
 		
@@ -96,10 +96,10 @@ public class BufferedFloatArray2D extends FloatArray2D
 		}
 
 		@Override
-		public Float next()
+		public Float64 next()
 		{
 			this.index++;
-			return new Float(buffer[index]);
+			return new Float64(buffer[index]);
 		}
 
 		@Override
@@ -109,9 +109,9 @@ public class BufferedFloatArray2D extends FloatArray2D
 		}
 
 		@Override
-		public Float get()
+		public Float64 get()
 		{
-			return new Float(buffer[index]);
+			return new Float64(buffer[index]);
 		}
 
 		@Override
@@ -123,7 +123,7 @@ public class BufferedFloatArray2D extends FloatArray2D
 		@Override
 		public void setValue(double value)
 		{
-			buffer[index] = (float) value;
+			buffer[index] = value;
 		}
 	}
 }

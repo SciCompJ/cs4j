@@ -3,19 +3,19 @@
  */
 package net.sci.array.data.vector;
 
-import net.sci.array.data.FloatVectorArray;
-import net.sci.array.type.FloatVector;
+import net.sci.array.data.Float64VectorArray;
+import net.sci.array.type.Float64Vector;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedFloatVectorArray3D extends FloatVectorArray3D
+public class BufferedFloat64VectorArray2D extends Float64VectorArray2D
 {
 	// =============================================================
 	// Class members
 
-	float[] buffer;
+	double[] buffer;
 	
 	int vectorLength;
 	
@@ -28,11 +28,11 @@ public class BufferedFloatVectorArray3D extends FloatVectorArray3D
 	 * @param size1 array size in the second dimension
 	 * @param sizeV number of components of vectors
 	 */
-	public BufferedFloatVectorArray3D(int size0, int size1, int size2, int sizeV)
+	public BufferedFloat64VectorArray2D(int size0, int size1, int sizeV)
 	{
-		super(size0, size1, size2);
+		super(size0, size1);
 		this.vectorLength = sizeV;
-		this.buffer = new float[size0 * size1 * size2 * sizeV];
+		this.buffer = new double[size0 * size1 * sizeV];
 	}
 
 	/**
@@ -40,11 +40,11 @@ public class BufferedFloatVectorArray3D extends FloatVectorArray3D
 	 * @param size1 array size in the second dimension
 	 * @param sizeV number of components of vectors
 	 */
-	public BufferedFloatVectorArray3D(int size0, int size1, int size2, int sizeV, float[] buffer)
+	public BufferedFloat64VectorArray2D(int size0, int size1, int sizeV, double[] buffer)
 	{
-		super(size0, size1, size2);
+		super(size0, size1);
 		this.vectorLength = sizeV;
-		if (buffer.length < size0 * size1 * size2 * sizeV)
+		if (buffer.length < size0 * size1 * sizeV)
 		{
 			throw new IllegalArgumentException("Buffer size does not match array dimensions");
 		}
@@ -65,18 +65,18 @@ public class BufferedFloatVectorArray3D extends FloatVectorArray3D
 	}
 
 	@Override
-	public double getValue(int x, int y, int z, int c)
+	public double getValue(int x, int y, int c)
 	{
-		int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
+		int offset = (y * this.size0 + x) * this.vectorLength;
 		return this.buffer[offset + c];
 	}
 
 
 	@Override
-	public void setValue(int x, int y, int z, int c, double value)
+	public void setValue(int x, int y, int c, double value)
 	{
-		int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
-		this.buffer[offset + c] = (float) value;
+		int offset = (y * this.size0 + x) * this.vectorLength;
+		this.buffer[offset + c] = value;
 	}
 
 	
@@ -87,35 +87,32 @@ public class BufferedFloatVectorArray3D extends FloatVectorArray3D
 	 * @see net.sci.array.data.VectorArray#newInstance(int[])
 	 */
 	@Override
-	public FloatVectorArray newInstance(int... dims)
+	public Float64VectorArray newInstance(int... dims)
 	{
-		return FloatVectorArray.create(dims, this.vectorLength);
+		return Float64VectorArray.create(dims, this.vectorLength);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.vector.VectorArray2D#duplicate()
 	 */
 	@Override
-	public FloatVectorArray3D duplicate()
+	public Float64VectorArray2D duplicate()
 	{
-		float[] buffer2 = new float[buffer.length];
-		int n = this.size0 * this.size1 * this.size2 * this.vectorLength;
+		double[] buffer2 = new double[buffer.length];
+		int n = this.size0 * this.size1 * this.vectorLength;
 		System.arraycopy(this.buffer, 0, buffer2, 0, n);
-		return new BufferedFloatVectorArray3D(this.size0, this.size1, this.size2, this.vectorLength, buffer2);
+		return new BufferedFloat64VectorArray2D(this.size0, this.size1, this.vectorLength, buffer2);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.vector.VectorArray2D#getValues(int, int)
 	 */
 	@Override
-	public double[] getValues(int x, int y, int z)
+	public double[] getValues(int x, int y)
 	{
 		double[] res = new double[this.vectorLength];
-		int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
-		for (int c = 0; c < this.vectorLength; c++)
-		{
-			res[c] = this.buffer[offset + c];
-		}
+		int offset = (y * this.size0 + x) * this.vectorLength;
+		System.arraycopy(this.buffer, offset, res, 0, this.vectorLength);
 		return res;
 	}
 
@@ -123,43 +120,40 @@ public class BufferedFloatVectorArray3D extends FloatVectorArray3D
 	 * @see net.sci.array.data.vector.VectorArray2D#setValues(int, int, double[])
 	 */
 	@Override
-	public void setValues(int x, int y, int z, double[] values)
+	public void setValues(int x, int y, double[] values)
 	{
-		int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
-		for (int c = 0; c < this.vectorLength; c++)
-		{
-			this.buffer[offset + c] = (float) values[c];
-		}
+		int offset = (y * this.size0 + x) * this.vectorLength;
+		System.arraycopy(values, 0, this.buffer, offset, this.vectorLength);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public FloatVector get(int x, int y, int z)
+	public Float64Vector get(int x, int y)
 	{
-		return new FloatVector(getValues(x, y, z));
+		return new Float64Vector(getValues(x, y));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, int z, FloatVector vect)
+	public void set(int x, int y, Float64Vector vect)
 	{
-		setValues(x, y, z, vect.getValues());
+		setValues(x, y, vect.getValues());
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#iterator()
 	 */
 	@Override
-	public FloatVectorArray.Iterator iterator()
+	public Float64VectorArray.Iterator iterator()
 	{
 		return new Iterator();
 	}
 
-	private class Iterator implements FloatVectorArray.Iterator
+	private class Iterator implements Float64VectorArray.Iterator
 	{
 		int index = -1;
 		
@@ -170,17 +164,17 @@ public class BufferedFloatVectorArray3D extends FloatVectorArray3D
 		@Override
 		public boolean hasNext()
 		{
-			return this.index < (size0 * size1 * size2 - 1);
+			return this.index < (size0 * size1 - 1);
 		}
 
 		@Override
-		public FloatVector next()
+		public Float64Vector next()
 		{
 			this.index++;
-			float[] vals = new float[vectorLength];
+			double[] vals = new double[vectorLength];
 			int offset = index * vectorLength;
 			System.arraycopy(buffer, offset, vals, 0, vectorLength);
-			return new FloatVector(vals);
+			return new Float64Vector(vals);
 		}
 
 		@Override
@@ -190,18 +184,18 @@ public class BufferedFloatVectorArray3D extends FloatVectorArray3D
 		}
 
 		@Override
-		public FloatVector get()
+		public Float64Vector get()
 		{
-			float[] vals = new float[vectorLength];
+			double[] vals = new double[vectorLength];
 			int offset = index * vectorLength;
 			System.arraycopy(buffer, offset, vals, 0, vectorLength);
-			return new FloatVector(vals);
+			return new Float64Vector(vals);
 		}
 
 		@Override
-		public void set(FloatVector vect)
+		public void set(Float64Vector vect)
 		{
-			float[] vals = vect.getFloats();
+			double[] vals = vect.getValues();
 			int offset = index * vectorLength;
 			System.arraycopy(vals, 0, buffer, offset, vectorLength);
 		}
@@ -223,7 +217,7 @@ public class BufferedFloatVectorArray3D extends FloatVectorArray3D
 		public void setValue(double value)
 		{
 			int offset = index * vectorLength;
-			buffer[index] = (float) value;
+			buffer[index] = value;
 			for (int i = 1; i < vectorLength; i++)
 			{
 				buffer[++offset] = 0;

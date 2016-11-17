@@ -4,8 +4,8 @@
 package net.sci.array.data;
 
 import net.sci.array.Array;
-import net.sci.array.data.scalar3d.FloatArray3D;
-import net.sci.array.data.vector.DoubleVectorArray2D;
+import net.sci.array.data.scalar3d.Float32Array3D;
+import net.sci.array.data.vector.Float64VectorArray2D;
 import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.type.Scalar;
 import net.sci.array.type.Vector;
@@ -34,11 +34,11 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	public static ScalarArray<?> norm(VectorArray<? extends Vector<?>> array)
 	{
 		// allocate memory for result
-		FloatArray result = FloatArray.create(array.getSize());
+		Float32Array result = Float32Array.create(array.getSize());
 		
 		// create array iterators
 		Iterator<? extends Vector<?>> iter1 = array.iterator();
-		FloatArray.Iterator iter2 = result.iterator();
+		Float32Array.Iterator iter2 = result.iterator();
 		
 		// iterate over both arrays in parallel
 		while (iter1.hasNext() && iter2.hasNext())
@@ -95,7 +95,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 		}
 		
 		// create output array
-		VectorArray2D<? extends Vector<?>> result = DoubleVectorArray2D.create(newDims[0], newDims[1], dims[2]);
+		VectorArray2D<? extends Vector<?>> result = Float64VectorArray2D.create(newDims[0], newDims[1], dims[2]);
 		int[] pos = new int[3];
 		for (int c = 0; c < dims[2]; c++)
 		{
@@ -147,7 +147,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 		newDims[nd] = nChannels;
 		
 		// create output array
-		FloatArray3D result = FloatArray3D.create(newDims[0], newDims[1], newDims[2]);
+		Float32Array3D result = Float32Array3D.create(newDims[0], newDims[1], newDims[2]);
 		int[] pos = new int[2];
 		for (int c = 0; c < nChannels; c++)
 		{

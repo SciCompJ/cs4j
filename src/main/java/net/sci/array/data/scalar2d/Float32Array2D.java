@@ -3,21 +3,21 @@
  */
 package net.sci.array.data.scalar2d;
 
-import net.sci.array.data.FloatArray;
-import net.sci.array.type.Float;
+import net.sci.array.data.Float32Array;
+import net.sci.array.type.Float32;
 
 /**
  * @author dlegland
  *
  */
-public abstract class FloatArray2D extends ScalarArray2D<Float> implements FloatArray
+public abstract class Float32Array2D extends ScalarArray2D<Float32> implements Float32Array
 {
 	// =============================================================
 	// Static methods
 
-	public static final FloatArray2D create(int size0, int size1)
+	public static final Float32Array2D create(int size0, int size1)
 	{
-		return new BufferedFloatArray2D(size0, size1);
+		return new BufferedFloat32Array2D(size0, size1);
 	}
 	
 	
@@ -28,7 +28,7 @@ public abstract class FloatArray2D extends ScalarArray2D<Float> implements Float
 	 * @param size0
 	 * @param size1
 	 */
-	public FloatArray2D(int size0, int size1)
+	public Float32Array2D(int size0, int size1)
 	{
 		super(size0, size1);
 	}
@@ -40,16 +40,16 @@ public abstract class FloatArray2D extends ScalarArray2D<Float> implements Float
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public Float get(int x, int y)
+	public Float32 get(int x, int y)
 	{
-		return new Float((float) getValue(x, y));
+		return new Float32((float) getValue(x, y));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, Float value)
+	public void set(int x, int y, Float32 value)
 	{
 		setValue(x, y, value.getValue());
 	}
@@ -58,12 +58,12 @@ public abstract class FloatArray2D extends ScalarArray2D<Float> implements Float
 	// Specialization of Array2D 
 
 	@Override
-	public FloatArray newInstance(int... dims)
+	public Float32Array newInstance(int... dims)
 	{
-		return FloatArray.create(dims);
+		return Float32Array.create(dims);
 	}
 
 	@Override
-	public abstract FloatArray2D duplicate();
+	public abstract Float32Array2D duplicate();
 
 }

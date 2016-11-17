@@ -11,7 +11,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.data.scalar2d.BooleanArray2D;
-import net.sci.array.data.scalar2d.FloatArray2D;
+import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.image.binary.ChamferWeights;
 
 /**
@@ -33,7 +33,7 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 	int sizeY;
 	
 	BooleanArray2D mask;
-	FloatArray2D result;
+	Float32Array2D result;
 	
 	public ChamferDistanceTransform2DFloat(ChamferWeights weights, boolean normalize)
 	{
@@ -65,7 +65,7 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 		throw new RuntimeException("Unable to process array of class " + array.getClass());
 	}
 	
-	public FloatArray2D process2d(BooleanArray2D array)
+	public Float32Array2D process2d(BooleanArray2D array)
 	{
 		// size of image
 		sizeX = array.getSize(0);
@@ -75,8 +75,8 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 		this.mask = array;
 
 		// create new empty image, and fill it with black
-		this.result = FloatArray2D.create(sizeX, sizeY);
-		result.fill(new net.sci.array.type.Float(0));
+		this.result = Float32Array2D.create(sizeX, sizeY);
+		result.fill(new net.sci.array.type.Float32(0));
 		
 		this.fireStatusChanged(new AlgoEvent(this, "Initialization"));
 		

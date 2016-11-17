@@ -5,7 +5,7 @@ package net.sci.image.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayToArrayOperator;
-import net.sci.array.data.scalar2d.FloatArray2D;
+import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.interp.LinearInterpolator2D;
@@ -93,12 +93,12 @@ public class RotationAroundCenter implements ArrayToArrayOperator
 		// input array size
 		int sourceSizeX = target.getSize(0);
 		int sourceSizeY = target.getSize(1);
-		FloatArray2D sourceChannel = FloatArray2D.create(sourceSizeX, sourceSizeY);
+		Float32Array2D sourceChannel = Float32Array2D.create(sourceSizeX, sourceSizeY);
 		
 		// output array size
 		int targetSizeX = target.getSize(0);
 		int targetSizeY = target.getSize(1);
-		FloatArray2D targetChannel = FloatArray2D.create(targetSizeX, targetSizeY);
+		Float32Array2D targetChannel = Float32Array2D.create(targetSizeX, targetSizeY);
 
 		int nChannels = source.getVectorLength();
 		for (int c = 0; c < nChannels; c++)

@@ -8,8 +8,8 @@ import net.sci.array.data.ScalarArray;
 import net.sci.array.data.VectorArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.array.data.vector.FloatVectorArray2D;
-import net.sci.array.data.vector.FloatVectorArray3D;
+import net.sci.array.data.vector.Float32VectorArray2D;
+import net.sci.array.data.vector.Float32VectorArray3D;
 import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.data.vector.VectorArray3D;
 import net.sci.image.ImageArrayToArrayOperator;
@@ -161,14 +161,14 @@ public class SobelGradient implements ImageArrayToArrayOperator
 		{
 			int size0 = array.getSize(0);
 			int size1 = array.getSize(1);
-			return FloatVectorArray2D.create(size0, size1, 2);
+			return Float32VectorArray2D.create(size0, size1, 2);
 		}
 		else if (array instanceof ScalarArray3D)
 		{
 			int size0 = array.getSize(0);
 			int size1 = array.getSize(1);
 			int size2 = array.getSize(2);
-			return FloatVectorArray3D.create(size0, size1, size2, 3);
+			return Float32VectorArray3D.create(size0, size1, size2, 3);
 		}
 		else
 		{

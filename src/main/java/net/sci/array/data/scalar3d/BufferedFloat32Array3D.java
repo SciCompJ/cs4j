@@ -3,14 +3,14 @@
  */
 package net.sci.array.data.scalar3d;
 
-import net.sci.array.data.FloatArray;
-import net.sci.array.type.Float;
+import net.sci.array.data.Float32Array;
+import net.sci.array.type.Float32;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedFloatArray3D extends FloatArray3D
+public class BufferedFloat32Array3D extends Float32Array3D
 {
 	// =============================================================
 	// Class fields
@@ -23,13 +23,13 @@ public class BufferedFloatArray3D extends FloatArray3D
 
 	/**
 	 */
-	public BufferedFloatArray3D(int size0, int size1, int size2)
+	public BufferedFloat32Array3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
 		this.buffer = new float[size0 * size1 * size2];
 	}
 
-	public BufferedFloatArray3D(int size0, int size1, int size2, float[] buffer)
+	public BufferedFloat32Array3D(int size0, int size1, int size2, float[] buffer)
 	{
 		super(size0, size1, size2);
 		if (buffer.length < size0 * size1 * size2)
@@ -62,23 +62,23 @@ public class BufferedFloatArray3D extends FloatArray3D
 	// Specialization of the Array interface
 
 	@Override
-	public FloatArray3D duplicate()
+	public Float32Array3D duplicate()
 	{
 		float[] buffer2 = new float[size0 * size1 * size2];
 		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1 * size2);
-		return new BufferedFloatArray3D(size0, size1, size2, buffer2);
+		return new BufferedFloat32Array3D(size0, size1, size2, buffer2);
 	}
 
 	
 	// =============================================================
 	// Implementation of the Iterator interface
 
-	public FloatArray.Iterator iterator()
+	public Float32Array.Iterator iterator()
 	{
 		return new FloatIterator();
 	}
 	
-	private class FloatIterator implements FloatArray.Iterator
+	private class FloatIterator implements Float32Array.Iterator
 	{
 		int index = -1;
 		
@@ -93,10 +93,10 @@ public class BufferedFloatArray3D extends FloatArray3D
 		}
 
 		@Override
-		public Float next()
+		public Float32 next()
 		{
 			this.index++;
-			return new Float(buffer[index]);
+			return new Float32(buffer[index]);
 		}
 
 		@Override
@@ -106,9 +106,9 @@ public class BufferedFloatArray3D extends FloatArray3D
 		}
 
 		@Override
-		public Float get()
+		public Float32 get()
 		{
-			return new Float(buffer[index]);
+			return new Float32(buffer[index]);
 		}
 
 		@Override

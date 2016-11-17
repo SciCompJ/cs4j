@@ -1,7 +1,7 @@
 package net.sci.array.data.scalar2d;
 
 import static org.junit.Assert.*;
-import net.sci.array.type.Double;
+import net.sci.array.type.Float64;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ public class BufferedDoubleArray2DTest
 	@Test
 	public final void testIterator()
 	{
-		DoubleArray2D array = new BufferedDoubleArray2D(5, 5);
+		Float64Array2D array = new BufferedFloat64Array2D(5, 5);
 		for (int y = 0; y < 5; y++)
 		{
 			for (int x = 0;x < 5;x++)
@@ -22,7 +22,7 @@ public class BufferedDoubleArray2DTest
 		
 		int count = 0;
 		double sum = 0;
-		for (Double val : array) 
+		for (Float64 val : array) 
 		{
 			sum += val.getValue();
 			count++;

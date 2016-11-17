@@ -4,8 +4,8 @@
 package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
-import net.sci.array.data.vector.DoubleVectorArray2D;
-import net.sci.array.type.DoubleVector;
+import net.sci.array.data.vector.Float64VectorArray2D;
+import net.sci.array.type.Float64Vector;
 
 /**
  * Specialization of the interface VectorArray for arrays of vectors that
@@ -14,17 +14,17 @@ import net.sci.array.type.DoubleVector;
  * @author dlegland
  *
  */
-public interface DoubleVectorArray extends VectorArray<DoubleVector>
+public interface Float64VectorArray extends VectorArray<Float64Vector>
 {
 	// =============================================================
 	// Static methods
 
-	public static DoubleVectorArray create(int[] dims, int sizeV)
+	public static Float64VectorArray create(int[] dims, int sizeV)
 	{
 		switch (dims.length)
 		{
 		case 2:
-			return DoubleVectorArray2D.create(dims[0], dims[1], sizeV);
+			return Float64VectorArray2D.create(dims[0], dims[1], sizeV);
 //		case 3:
 //			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
 		default:
@@ -38,20 +38,20 @@ public interface DoubleVectorArray extends VectorArray<DoubleVector>
 	// Specialization of Array interface
 
 	@Override
-	public default DoubleVectorArray newInstance(int... dims)
+	public default Float64VectorArray newInstance(int... dims)
 	{
-		return DoubleVectorArray.create(dims, this.getVectorLength());
+		return Float64VectorArray.create(dims, this.getVectorLength());
 	}
 
 	@Override
-	public default ArrayFactory<DoubleVector> getFactory()
+	public default ArrayFactory<Float64Vector> getFactory()
 	{
-		return new ArrayFactory<DoubleVector>()
+		return new ArrayFactory<Float64Vector>()
 		{
 			@Override
-			public DoubleVectorArray create(int[] dims, DoubleVector value)
+			public Float64VectorArray create(int[] dims, Float64Vector value)
 			{
-				DoubleVectorArray array = DoubleVectorArray.create(dims, value.size());
+				Float64VectorArray array = Float64VectorArray.create(dims, value.size());
 				array.fill(value);
 				return array;
 			}
@@ -59,7 +59,7 @@ public interface DoubleVectorArray extends VectorArray<DoubleVector>
 	}
 
 	@Override
-	public DoubleVectorArray duplicate();
+	public Float64VectorArray duplicate();
 
 	public Iterator iterator();
 
@@ -67,7 +67,7 @@ public interface DoubleVectorArray extends VectorArray<DoubleVector>
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator extends VectorArray.Iterator<DoubleVector>
+	public interface Iterator extends VectorArray.Iterator<Float64Vector>
 	{
 	}
 }

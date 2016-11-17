@@ -3,27 +3,27 @@
  */
 package net.sci.array.data.vector;
 
-import net.sci.array.data.DoubleVectorArray;
-import net.sci.array.type.DoubleVector;
+import net.sci.array.data.Float64VectorArray;
+import net.sci.array.type.Float64Vector;
 
 /**
  * @author dlegland
  *
  */
-public abstract class DoubleVectorArray2D extends VectorArray2D<DoubleVector> implements DoubleVectorArray
+public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> implements Float64VectorArray
 {
 	// =============================================================
 	// Static methods
 
-	public static final DoubleVectorArray2D create(int size0, int size1, int sizeV)
+	public static final Float64VectorArray2D create(int size0, int size1, int sizeV)
 	{
-		return new BufferedDoubleVectorArray2D(size0, size1, sizeV);
+		return new BufferedFloat64VectorArray2D(size0, size1, sizeV);
 	}
 	
 	// =============================================================
 	// Constructors
 
-	protected DoubleVectorArray2D(int size0, int size1)
+	protected Float64VectorArray2D(int size0, int size1)
 	{
 		super(size0, size1);
 	}
@@ -73,6 +73,6 @@ public abstract class DoubleVectorArray2D extends VectorArray2D<DoubleVector> im
 	 * @see net.sci.array.data.VectorArray#duplicate()
 	 */
 	@Override
-	public abstract DoubleVectorArray2D duplicate();
+	public abstract Float64VectorArray2D duplicate();
 
 }

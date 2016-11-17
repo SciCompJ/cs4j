@@ -3,21 +3,21 @@
  */
 package net.sci.array.data.scalar2d;
 
-import net.sci.array.data.DoubleArray;
-import net.sci.array.type.Double;
+import net.sci.array.data.Float64Array;
+import net.sci.array.type.Float64;
 
 /**
  * @author dlegland
  *
  */
-public abstract class DoubleArray2D extends ScalarArray2D<Double> implements DoubleArray
+public abstract class Float64Array2D extends ScalarArray2D<Float64> implements Float64Array
 {
 	// =============================================================
 	// Static methods
 
-	public static final DoubleArray2D create(int size0, int size1)
+	public static final Float64Array2D create(int size0, int size1)
 	{
-		return new BufferedDoubleArray2D(size0, size1);
+		return new BufferedFloat64Array2D(size0, size1);
 	}
 	
 	
@@ -28,7 +28,7 @@ public abstract class DoubleArray2D extends ScalarArray2D<Double> implements Dou
 	 * @param size0
 	 * @param size1
 	 */
-	public DoubleArray2D(int size0, int size1)
+	public Float64Array2D(int size0, int size1)
 	{
 		super(size0, size1);
 	}
@@ -41,16 +41,16 @@ public abstract class DoubleArray2D extends ScalarArray2D<Double> implements Dou
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public net.sci.array.type.Double get(int x, int y)
+	public net.sci.array.type.Float64 get(int x, int y)
 	{
-		return new Double(getValue(x, y));
+		return new Float64(getValue(x, y));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, net.sci.array.type.Double value)
+	public void set(int x, int y, net.sci.array.type.Float64 value)
 	{
 		setValue(x, y, value.getValue());
 	}
@@ -60,12 +60,12 @@ public abstract class DoubleArray2D extends ScalarArray2D<Double> implements Dou
 	// Specialization of Array 
 
 	@Override
-	public DoubleArray newInstance(int... dims)
+	public Float64Array newInstance(int... dims)
 	{
-		return DoubleArray.create(dims);
+		return Float64Array.create(dims);
 	}
 
 	@Override
-	public abstract DoubleArray2D duplicate();
+	public abstract Float64Array2D duplicate();
 
 }

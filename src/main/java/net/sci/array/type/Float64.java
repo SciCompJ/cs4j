@@ -3,20 +3,20 @@
  */
 package net.sci.array.type;
 
-import net.sci.array.data.DoubleArray;
+import net.sci.array.data.Float64Array;
 
 /**
  * @author dlegland
  *
  */
-public class Double extends Scalar
+public class Float64 extends Scalar
 {
 	double value;
 	
 	/**
 	 * Creates new double with default value 0.
 	 */
-	public Double()
+	public Float64()
 	{
 		value = 0;
 	}
@@ -24,7 +24,7 @@ public class Double extends Scalar
 	/**
 	 * Creates new double with specified value.
 	 */
-	public Double(double value)
+	public Float64(double value)
 	{
 		this.value = value;
 	}
@@ -38,9 +38,9 @@ public class Double extends Scalar
 		return value;
 	}
 
-	public DoubleArray createArray(int[] dims)
+	public Float64Array createArray(int[] dims)
 	{
-		return DoubleArray.create(dims);
+		return Float64Array.create(dims);
 	}
 
 
@@ -54,11 +54,11 @@ public class Double extends Scalar
 			return true;
 
 		// check for class
-		if (!(that instanceof Double))
+		if (!(that instanceof Float64))
 			return false;
 
 		// cast to native object is now safe
-		Double thatDouble = (Double) that;
+		Float64 thatDouble = (Float64) that;
 
 	    // now a proper field-by-field evaluation can be made
 	    return this.value == thatDouble.value;

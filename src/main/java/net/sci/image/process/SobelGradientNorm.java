@@ -7,7 +7,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import net.sci.array.Array;
-import net.sci.array.data.FloatArray;
+import net.sci.array.data.Float32Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
@@ -46,7 +46,7 @@ public class SobelGradientNorm implements ImageArrayToArrayOperator
 	public Image createEmptyOutputImage(Image inputImage)
 	{
 		Array<?> array = inputImage.getData();
-		array = FloatArray.create(array.getSize());
+		array = Float32Array.create(array.getSize());
 		return new Image(array, inputImage);
 	}
 
