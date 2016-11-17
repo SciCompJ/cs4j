@@ -16,7 +16,7 @@ import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayToArrayOperator;
-import net.sci.image.morphology.FloodFill;
+import net.sci.image.morphology.FloodFill2D;
 
 /**
  * Computes the labels of the connected components in a binary image. The type
@@ -26,7 +26,7 @@ import net.sci.image.morphology.FloodFill;
  * time a foreground pixel not yet associated with a label is encountered, its
  * connected component is associated with a new label.
  *
- * @see inra.ijpb.morphology.FloodFill
+ * @see FloodFill2D.ijpb.morphology.FloodFill
  * @author dlegland
  *
  */
@@ -127,7 +127,7 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ImageArray
 				
 				// increment label index, and propagate
 				nLabels++;
-				FloodFill.floodFill2DFloat(image, x, y, labels, nLabels, this.connectivity);
+				FloodFill2D.floodFillFloat(image, x, y, labels, nLabels, this.connectivity);
 			}
 		}
 		this.fireProgressChanged(this, 1, 1);
@@ -195,7 +195,7 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ImageArray
 				
 				// increment label index, and propagate
 				nLabels++;
-				FloodFill.floodFill2DFloat(source, x, y, target, nLabels, this.connectivity);
+				FloodFill2D.floodFillFloat(source, x, y, target, nLabels, this.connectivity);
 			}
 		}
 		this.fireProgressChanged(this, 1, 1);
