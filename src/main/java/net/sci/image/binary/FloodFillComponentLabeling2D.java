@@ -59,6 +59,12 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ImageArray
 	public FloodFillComponentLabeling2D(int connectivity)
 	{
 		this.connectivity = connectivity;
+
+		// check validity of input argument
+		if (connectivity != 4 && connectivity != 8)
+		{
+			throw new IllegalArgumentException("Connectivity must be either 4 or 8, not " + connectivity);
+		}
 	}
 	
 	/**
@@ -72,8 +78,14 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ImageArray
 	 */
 	public FloodFillComponentLabeling2D(int connectivity, int bitDepth)
 	{
-		this.connectivity = connectivity;
+		this(connectivity);
 		this.bitDepth = bitDepth;
+
+		// check validity of input argument
+		if (bitDepth != 8 && bitDepth != 16 && bitDepth != 32)
+		{
+			throw new IllegalArgumentException("Bit depth must be 8, 16 or 32, not " + bitDepth);
+		}
 	}
 	
 
