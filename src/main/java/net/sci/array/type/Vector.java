@@ -19,11 +19,20 @@ public abstract class Vector<T extends Scalar>
 	public abstract double[] getValues();
 	
 	/**
+	 * Returns the value at the specified index as a double.
 	 * 
 	 * @param i the index of element
-	 * @return the valueat the specified index.
+	 * @return the value at the specified index.
 	 */
 	public abstract double getValue(int i);
+	
+	/**
+	 * Returns the value at the specified index.
+	 * 
+	 * @param i the index of element
+	 * @return the value at the specified index.
+	 */
+	public abstract T get(int i);
 	
 	/**
 	 * Returns the number of component of this vector.

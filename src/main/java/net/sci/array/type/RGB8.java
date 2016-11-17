@@ -147,6 +147,12 @@ public class RGB8 extends Vector<UInt8>
 	}
 
 	@Override
+	public UInt8 get(int c)
+	{
+		return new UInt8(getSample(c));
+	}
+
+	@Override
 	public int size()
 	{
 		return 3;

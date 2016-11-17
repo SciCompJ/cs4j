@@ -40,6 +40,12 @@ public class Float64Vector extends Vector<Float64>
 	}
 
 	@Override
+	public Float64 get(int i)
+	{
+		return new Float64(this.data[i]);
+	}
+
+	@Override
 	public int size()
 	{
 		return this.data.length;

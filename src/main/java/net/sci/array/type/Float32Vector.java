@@ -89,6 +89,12 @@ public class Float32Vector extends Vector<Float32>
 	}
 
 	@Override
+	public Float32 get(int c)
+	{
+		return new Float32(this.data[c]);
+	}
+
+	@Override
 	public int size()
 	{
 		return this.data.length;
