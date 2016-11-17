@@ -3,6 +3,9 @@
  */
 package net.sci.array.data;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import net.sci.array.Array;
 import net.sci.array.data.scalar3d.Float32Array3D;
 import net.sci.array.data.vector.Float64VectorArray2D;
@@ -61,6 +64,37 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 		
 		return result;
 	}
+	
+	public static Collection<ScalarArray<?>> splitChannels(VectorArray<? extends Vector<?>> array)
+	{
+		int nc = array.getVectorLength();
+		ArrayList<ScalarArray<?>> result = new ArrayList<ScalarArray<?>>(nc);
+		
+		int[] dims = array.getSize();
+		
+		// allocate memory for each channel array
+		for (int c = 0; c < nc; c++)
+		{
+			ScalarArray<?> channel = Float32Array.create(dims);
+			
+			// create iterators
+			VectorArray.Iterator<? extends Vector<? extends Scalar>> iter1 = array.iterator();
+			ScalarArray.Iterator<? extends Scalar> iter2 = channel.iterator();
+			
+			// iterate both iterators in parallel
+			while (iter1.hasNext() && iter2.hasNext())
+			{
+				iter1.forward();
+				iter2.forward();
+				iter2.setValue(iter1.getValue(c));
+			}
+			
+			result.add(channel);
+		}
+		
+		return result;
+	}
+	
 	
 	/**
 	 * Creates a new instance of VectorArray from a scalar array with three dimensions.
@@ -214,6 +248,31 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 			forward();
 			return getValue();
 		}
+		
+		/**
+		 * Returns the value of the c-th component of the current vector.
+		 * 
+		 * Index must be comprised between 0 and the number of components of
+		 * this vector array.
+		 * 
+		 * @param c
+		 *            the component / channel index
+		 * @return the value of the specified component
+		 */
+		public double getValue(int c);
+		
+		/**
+		 * Changes the value of the c-th component of the current vector.
+		 * 
+		 * Index must be comprised between 0 and the number of components of
+		 * this vector array.
+		 * 
+		 * @param c
+		 *            the component / channel index
+		 * @param value
+		 *            the new value of the specified component
+		 */
+		public void setValue(int c, double value);
 	}
 
 }

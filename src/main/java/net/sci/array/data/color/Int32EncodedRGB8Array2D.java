@@ -79,7 +79,7 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 		case 1: return (intCode >> 8) & 0x00FF;
 		case 2: return (intCode >> 16) & 0x00FF;
 		}
-		throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
+		throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
 	}
 
 	/* (non-Javadoc)
@@ -99,13 +99,11 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 		case 0: r = intValue; break;
 		case 1: g = intValue << 8; break;
 		case 2: b = intValue << 16; break;
-		default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
+		default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
 		}
+		
 		intCode = r | g | b;
 		this.buffer.setInt(x, y, intCode);
-//		int[] rgb = new RGB8(this.buffer.getInt(x, y)).getSamples();
-//		rgb[c] = UInt8.clamp(value);
-//		this.buffer.setInt(x, y, new RGB8(rgb[0], rgb[1], rgb[2]).getIntCode());
 	}
 
 	
@@ -179,6 +177,40 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 		public void forward()
 		{
 			intIterator.forward();
+		}
+
+		@Override
+		public double getValue(int c)
+		{
+			int intCode = intIterator.getInt();
+			switch (c)
+			{
+			case 0: return intCode & 0x00FF;
+			case 1: return (intCode >> 8) & 0x00FF;
+			case 2: return (intCode >> 16) & 0x00FF;
+			}
+			throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
+		}
+
+		@Override
+		public void setValue(int c, double value)
+		{
+			int intCode = intIterator.getInt();
+			int r = intCode & 0x00FF;
+			int g = intCode & 0x00FF00;
+			int b = intCode & 0x00FF0000;
+			int intValue = UInt8.clamp(value);
+			
+			switch (c)
+			{
+			case 0: r = intValue; break;
+			case 1: g = intValue << 8; break;
+			case 2: b = intValue << 16; break;
+			default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
+			}
+			
+			intCode = r | g | b;
+			intIterator.setInt(intCode);
 		}
 
 		@Override

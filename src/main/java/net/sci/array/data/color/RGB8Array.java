@@ -193,6 +193,20 @@ public interface RGB8Array extends VectorArray<RGB8>
 
 	public interface Iterator extends VectorArray.Iterator<RGB8>
 	{
+		@Override
+		public default double getValue(int c)
+		{
+			return get().getValues()[c];
+		}
+
+		@Override
+		public default void setValue(int c, double value)
+		{
+			int[] samples = get().getSamples();
+			samples[c] = UInt8.clamp(value);
+			set(new RGB8(samples[0], samples[1], samples[2]));
+		}
+
 	}
 
 }

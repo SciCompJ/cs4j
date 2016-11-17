@@ -183,21 +183,19 @@ public class BufferedFloat64VectorArray2D extends Float64VectorArray2D
 			this.index++;
 		}
 
+
 		@Override
-		public Float64Vector get()
+		public double getValue(int c)
 		{
-			double[] vals = new double[vectorLength];
-			int offset = index * vectorLength;
-			System.arraycopy(buffer, offset, vals, 0, vectorLength);
-			return new Float64Vector(vals);
+			int ind = index * vectorLength + c;
+			return buffer[ind];
 		}
 
 		@Override
-		public void set(Float64Vector vect)
+		public void setValue(int c, double value)
 		{
-			double[] vals = vect.getValues();
-			int offset = index * vectorLength;
-			System.arraycopy(vals, 0, buffer, offset, vectorLength);
+			int ind = index * vectorLength + c;
+			buffer[ind] = value;
 		}
 
 		@Override
@@ -222,6 +220,23 @@ public class BufferedFloat64VectorArray2D extends Float64VectorArray2D
 			{
 				buffer[++offset] = 0;
 			}
+		}
+		
+		@Override
+		public Float64Vector get()
+		{
+			double[] vals = new double[vectorLength];
+			int offset = index * vectorLength;
+			System.arraycopy(buffer, offset, vals, 0, vectorLength);
+			return new Float64Vector(vals);
+		}
+
+		@Override
+		public void set(Float64Vector vect)
+		{
+			double[] vals = vect.getValues();
+			int offset = index * vectorLength;
+			System.arraycopy(vals, 0, buffer, offset, vectorLength);
 		}
 	}
 
