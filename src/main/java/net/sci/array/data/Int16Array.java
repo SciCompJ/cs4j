@@ -23,11 +23,24 @@ public interface Int16Array extends IntArray<Int16>
 		case 2:
 			return Int16Array2D.create(dims[0], dims[1]);
 //		case 3:
-//			return Int32Array3D.create(dims[0], dims[1], dims[2]);
+//			return Int16Array3D.create(dims[0], dims[1], dims[2]);
 		default:
 			throw new IllegalArgumentException("Can not create Int16Array with " + dims.length + " dimensions");
-//			return Int32ArrayND.create(dims);
+//			return Int16sArrayND.create(dims);
 		}
+	}
+	
+	public static Int16Array convert(ScalarArray<?> array)
+	{
+		Int16Array result = Int16Array.create(array.getSize());
+		ScalarArray.Iterator<?> iter1 = array.iterator();
+		Int16Array.Iterator iter2 = result.iterator();
+		while (iter1.hasNext() && iter2.hasNext())
+		{
+			iter2.forward();
+			iter2.setValue(iter1.nextValue());
+		}
+		return result;
 	}
 	
 	

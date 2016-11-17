@@ -33,6 +33,19 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 	}
 	
+	public static UInt16Array convert(ScalarArray<?> array)
+	{
+		UInt16Array result = UInt16Array.create(array.getSize());
+		ScalarArray.Iterator<?> iter1 = array.iterator();
+		UInt16Array.Iterator iter2 = result.iterator();
+		while (iter1.hasNext() && iter2.hasNext())
+		{
+			iter2.forward();
+			iter2.setValue(iter1.nextValue());
+		}
+		return result;
+	}
+	
 	// =============================================================
 	// New methods
 

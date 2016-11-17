@@ -32,6 +32,19 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 	}
 	
+	public static UInt8Array convert(ScalarArray<?> array)
+	{
+		UInt8Array result = UInt8Array.create(array.getSize());
+		ScalarArray.Iterator<?> iter1 = array.iterator();
+		UInt8Array.Iterator iter2 = result.iterator();
+		while (iter1.hasNext() && iter2.hasNext())
+		{
+			iter2.forward();
+			iter2.setValue(iter1.nextValue());
+		}
+		return result;
+	}
+	
 	// =============================================================
 	// New methods
 

@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.array.data.scalar3d.Float32Array3D;
@@ -32,6 +33,19 @@ public interface Float32Array extends ScalarArray<Float32>
 		}
 	}
 
+	public static Float32Array convert(Array<?> array)
+	{
+		Float32Array result = Float32Array.create(array.getSize());
+		Array.Iterator<?> iter1 = array.iterator();
+		Float32Array.Iterator iter2 = result.iterator();
+		while (iter1.hasNext() && iter2.hasNext())
+		{
+			iter2.forward();
+			iter2.setValue(iter1.nextValue());
+		}
+		return result;
+	}
+	
 	// =============================================================
 	// Specialization of Array interface
 
