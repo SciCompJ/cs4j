@@ -6,7 +6,6 @@ package net.sci.image.morphology;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 import net.sci.array.data.Array2D;
@@ -59,7 +58,7 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (4 or 8)
 	 */
-	public final static void floodFillInt(IntArray2D<?> input, int x, int y,
+	public final static void floodFill2DInt(IntArray2D<?> input, int x, int y,
 			IntArray2D<?> output, int value, int conn)
 	{
 
@@ -80,8 +79,8 @@ public class FloodFill
 		int oldValue = input.getInt(x, y);
 				
 		// initialize the stack with original pixel
-		ArrayList<Point> stack = new ArrayList<Point>();
-		stack.add(new Point(x, y));
+		ArrayList<Cursor2D> stack = new ArrayList<Cursor2D>();
+		stack.add(new Cursor2D(x, y));
 		
 		boolean inScanLine;
 		
@@ -89,7 +88,7 @@ public class FloodFill
 		while (!stack.isEmpty()) 
 		{
 			// Extract current position
-			Point p = stack.remove(stack.size()-1);
+			Cursor2D p = stack.remove(stack.size()-1);
 			x = p.x;
 			y = p.y;
 			
@@ -123,7 +122,7 @@ public class FloodFill
 					int lab = output.getInt(i, y - 1);
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Point(i, y - 1));
+						stack.add(new Cursor2D(i, y - 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -143,7 +142,7 @@ public class FloodFill
 					int lab = output.getInt(i, y + 1);
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Point(i, y + 1));
+						stack.add(new Cursor2D(i, y + 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -173,7 +172,7 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (4 or 8)
 	 */
-	public final static void floodFillFloat(ScalarArray2D<?> input, int x, int y,
+	public final static void floodFill2DFloat(ScalarArray2D<?> input, int x, int y,
 			ScalarArray2D<?> output, double value, int conn)
 	{
 		// the shifts to look for new markers to start lines
@@ -193,8 +192,8 @@ public class FloodFill
 		double oldValue = input.getValue(x, y);
 		
 		// initialize the stack with original pixel
-		ArrayList<Point> stack = new ArrayList<Point>();
-		stack.add(new Point(x, y));
+		ArrayList<Cursor2D> stack = new ArrayList<Cursor2D>();
+		stack.add(new Cursor2D(x, y));
 		
 		
 		boolean inScanLine;
@@ -203,7 +202,7 @@ public class FloodFill
 		while (!stack.isEmpty()) 
 		{
 			// Extract current position
-			Point p = stack.remove(stack.size()-1);
+			Cursor2D p = stack.remove(stack.size()-1);
 			x = p.x;
 			y = p.y;
 			
@@ -236,7 +235,7 @@ public class FloodFill
 					double lab = output.getValue(i, y - 1);
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Point(i, y - 1));
+						stack.add(new Cursor2D(i, y - 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -256,7 +255,7 @@ public class FloodFill
 					double lab = output.getValue(i, y + 1);
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Point(i, y + 1));
+						stack.add(new Cursor2D(i, y + 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -316,6 +315,20 @@ public class FloodFill
 		for (int x = x1; x <= x2; x++)
 			array.setValue(x, y, value);
 	}
-
-
+	
+	/**
+	 * Defines a position within a 2D array.
+	 * Needs to be a static class to be called by static methods.
+	 */
+	private static class Cursor2D 
+	{
+		int x;
+		int y;
+		
+		public Cursor2D(int x, int y) 
+		{
+			this.x = x;
+			this.y = y;
+		}
+	}
 }

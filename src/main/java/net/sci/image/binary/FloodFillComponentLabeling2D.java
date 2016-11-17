@@ -30,7 +30,7 @@ import net.sci.image.morphology.FloodFill;
  * @author dlegland
  *
  */
-public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayToArrayOperator
+public class FloodFillComponentLabeling2D extends AlgoStub implements ImageArrayToArrayOperator
 {
 	/** 
 	 * The connectivity of the components, either 4 (default) or 8.
@@ -46,7 +46,7 @@ public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayTo
 	/**
 	 * Constructor with default connectivity 4 and default output bitdepth equal to 16.  
 	 */
-	public FloodFillComponentLabeling()
+	public FloodFillComponentLabeling2D()
 	{
 	}
 	
@@ -56,7 +56,7 @@ public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayTo
 	 * @param connectivity
 	 *            the connectivity of connected components (4 or 8)
 	 */
-	public FloodFillComponentLabeling(int connectivity)
+	public FloodFillComponentLabeling2D(int connectivity)
 	{
 		this.connectivity = connectivity;
 	}
@@ -70,7 +70,7 @@ public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayTo
 	 * @param bitDepth
 	 *            the bit depth of the result (8, 16, or 32)
 	 */
-	public FloodFillComponentLabeling(int connectivity, int bitDepth)
+	public FloodFillComponentLabeling2D(int connectivity, int bitDepth)
 	{
 		this.connectivity = connectivity;
 		this.bitDepth = bitDepth;
@@ -127,7 +127,7 @@ public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayTo
 				
 				// increment label index, and propagate
 				nLabels++;
-				FloodFill.floodFillFloat(image, x, y, labels, nLabels, this.connectivity);
+				FloodFill.floodFill2DFloat(image, x, y, labels, nLabels, this.connectivity);
 			}
 		}
 		this.fireProgressChanged(this, 1, 1);
@@ -195,7 +195,7 @@ public class FloodFillComponentLabeling extends AlgoStub implements ImageArrayTo
 				
 				// increment label index, and propagate
 				nLabels++;
-				FloodFill.floodFillFloat(source, x, y, target, nLabels, this.connectivity);
+				FloodFill.floodFill2DFloat(source, x, y, target, nLabels, this.connectivity);
 			}
 		}
 		this.fireProgressChanged(this, 1, 1);
