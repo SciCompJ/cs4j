@@ -358,6 +358,9 @@ public class TiffTag
 			}
 		});
 		
+		tags.add(new TiffTag(338, "ExtraSamples",
+				"Description of extra components."));
+
 		return tags;
 	}
 
@@ -371,6 +374,7 @@ public class TiffTag
 	{
 		ArrayList<TiffTag> tags = new ArrayList<>();
 
+		tags.add(new TiffTag(317, "Predictor", "A mathematical operator that is applied to the image data before an encoding scheme is applied"));
 		tags.add(new TiffTag(339, "SampleFormat", "Specifies how to interpret each data sample in a pixel"));
 		
 		return tags;
