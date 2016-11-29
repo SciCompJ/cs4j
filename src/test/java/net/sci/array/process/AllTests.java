@@ -7,6 +7,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
 	ConvertToDoubleTest.class,
+	PowerOfTwoTest.class,
+	SqrtTest.class,
 	})
 public class AllTests {
   //nothing

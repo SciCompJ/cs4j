@@ -3,7 +3,6 @@
  */
 package net.sci.array.process;
 
-import net.sci.array.Cursor;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.type.Scalar;
 
@@ -33,13 +32,18 @@ public class Sqrt implements ScalarArrayOperator
 	public void processScalar(ScalarArray<? extends Scalar> input,
 			ScalarArray<? extends Scalar> output)
 	{
-		Cursor cursor = input.getCursor();
-		while (cursor.hasNext())
+		// create array iterators
+		ScalarArray.Iterator<?> sourceIter = input.iterator();
+		ScalarArray.Iterator<?> targetIter = output.iterator();
+		
+		// iterate over both arrays in parallel 
+		while (sourceIter.hasNext() && targetIter.hasNext())
 		{
-			cursor.forward();
-			int[] pos = cursor.getPosition();
+			sourceIter.forward();
+			targetIter.forward();
 			
-			output.setValue(pos, Math.sqrt(input.getValue(pos)));
+			// compute new walue
+			targetIter.setValue(Math.sqrt(sourceIter.getValue()));
 		}
 	}
 
