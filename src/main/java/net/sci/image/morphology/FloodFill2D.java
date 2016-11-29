@@ -44,21 +44,25 @@ public class FloodFill2D
 	 * have the same pixel value in <code>image</code>, the specified new label
 	 * value (<code>value</code>), using the specified connectivity.
 	 * 
-	 * @param input
+	 * This method uses generics, and should be applicable to any type. It is
+	 * based on the equals methods, and may be slower than similar operation on
+	 * float or int arrays
+	 * 
+	 * @param source
 	 *            original image to read the pixel values from
 	 * @param x
 	 *            x- coordinate of the seed pixel
 	 * @param y
 	 *            y- coordinate of the seed pixel
-	 * @param output
+	 * @param target
 	 *            the label image to fill in
 	 * @param value
 	 *            filling value
 	 * @param conn
 	 *            connectivity to use (4 or 8)
 	 */
-	public final static <S, T> void floodFill(Array2D<S> input, int x, int y,
-			Array2D<T> output, T value, Connectivity2D conn)
+	public final static <S, T> void floodFill(Array2D<S> source, int x, int y,
+			Array2D<T> target, T value, Connectivity2D conn)
 	{
 		// initialize the shifts to look for new markers to start lines
 		// default values for C4
@@ -71,11 +75,11 @@ public class FloodFill2D
 		}
 		
 		// get image size
-		int sizeX = input.getSize(0);
-		int sizeY = input.getSize(1);
+		int sizeX = source.getSize(0);
+		int sizeY = source.getSize(1);
 		
 		// get old value
-		S oldValue = input.get(x, y);
+		S oldValue = source.get(x, y);
 		
 		// initialize the stack with original pixel
 		ArrayList<Cursor2D> stack = new ArrayList<Cursor2D>();
@@ -92,7 +96,7 @@ public class FloodFill2D
 			y = p.y;
 			
 			// process only pixel of the same value
-			if (input.get(x, y) != oldValue) 
+			if (!source.get(x, y).equals(oldValue))
 				continue;
 			
 			// x extremities of scan-line
@@ -100,15 +104,15 @@ public class FloodFill2D
 			int x2 = x;
 			
 			// find start of scan-line
-			while (x1 > 0 && input.get(x1-1, y) == oldValue)
+			while (x1 > 0 && source.get(x1-1, y).equals(oldValue))
 				x1--;
 			
 			// find end of scan-line
-			while (x2 < sizeX - 1 && input.get(x2+1, y) == oldValue)
+			while (x2 < sizeX - 1 && source.get(x2+1, y).equals(oldValue))
 				x2++;
 			
 			// fill current scan-line
-			fillLine(output, y, x1, x2, value);
+			fillLine(target, y, x1, x2, value);
 			
 			// find scan-lines above the current one
 			if (y > 0)
@@ -116,14 +120,14 @@ public class FloodFill2D
 				inScanLine = false;
 				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
 				{
-					S val = input.get(i, y - 1);
-					T lab = output.get(i, y - 1);
-					if (!inScanLine && val == oldValue && lab != value)
+					S val = source.get(i, y - 1);
+					T lab = target.get(i, y - 1);
+					if (!inScanLine && val.equals(oldValue) && !lab.equals(value))
 					{
 						stack.add(new Cursor2D(i, y - 1));
 						inScanLine = true;
 					} 
-					else if (inScanLine && val != oldValue)
+					else if (inScanLine && !val.equals(oldValue))
 					{
 						inScanLine = false;
 					}
@@ -136,14 +140,14 @@ public class FloodFill2D
 				inScanLine = false;
 				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
 				{
-					S val = input.get(i, y + 1);
-					T lab = output.get(i, y - 1);
-					if (!inScanLine && val == oldValue && lab != value)
+					S val = source.get(i, y + 1);
+					T lab = target.get(i, y + 1);
+					if (!inScanLine && val.equals(oldValue) && !lab.equals(value))
 					{
 						stack.add(new Cursor2D(i, y + 1));
 						inScanLine = true;
 					} 
-					else if (inScanLine && val != oldValue)
+					else if (inScanLine && !val.equals(oldValue))
 					{
 						inScanLine = false;
 					}
