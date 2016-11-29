@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.image.data.Connectivity2D;
 
 /**
 * <p>
 * Implements various flood-fill algorithms, for planar images. Rewritten from
-* ij.process.FloodFiller. Also support floating point images. The FloodFill3D
-* class provides support for 3D flood-fill algorithms.
+* ij.process.FloodFiller. Also supports floating point images. 
+* 
+* The FloodFill3D class provides support for 3D flood-fill algorithms.
 * </p>
 * 
 * <p>
@@ -35,6 +37,41 @@ public class FloodFill2D
 	 */
 	private FloodFill2D()
 	{
+	}
+
+	/**
+	 * Assigns in <code>labelImage</code> all the neighbor pixels of (x,y) that
+	 * have the same pixel value in <code>image</code>, the specified new label
+	 * value (<code>value</code>), using the specified connectivity.
+	 * 
+	 * @param input
+	 *            original image to read the pixel values from
+	 * @param x
+	 *            x- coordinate of the seed pixel
+	 * @param y
+	 *            y- coordinate of the seed pixel
+	 * @param output
+	 *            the label image to fill in
+	 * @param value
+	 *            filling value
+	 * @param conn
+	 *            connectivity to use (4 or 8)
+	 */
+	public final static void floodFillFloat(ScalarArray2D<?> input, int x, int y,
+			ScalarArray2D<?> output, double value, Connectivity2D conn)
+	{
+		if (conn == Connectivity2D.C4)
+		{
+			floodFillFloat(input, x, y, output, value, 4);
+		}
+		else if (conn == Connectivity2D.C8)
+		{
+			floodFillFloat(input, x, y, output, value, 8);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Unkown connectivity option");
+		}
 	}
 
 	/**
@@ -167,6 +204,42 @@ public class FloodFill2D
 	
 		for (int x = x1; x <= x2; x++)
 			array.setValue(x, y, value);
+	}
+
+	/**
+	 * Assigns in <code>labelImage</code> all the neighbor pixels of (x,y) that
+	 * have the same pixel value in <code>image</code>, the specified new label
+	 * value (<code>value</code>), using the specified connectivity.
+	 * 
+	 * @param input
+	 *            original image to read the pixel values from
+	 * @param x
+	 *            x- coordinate of the seed pixel
+	 * @param y
+	 *            y- coordinate of the seed pixel
+	 * @param output
+	 *            the label image to fill in
+	 * @param value
+	 *            filling value
+	 * @param conn
+	 *            connectivity to use (4 or 8)
+	 */
+	public final static void floodFillInt(IntArray2D<?> input, int x, int y,
+			IntArray2D<?> output, int value, Connectivity2D conn)
+	{
+		if (conn == Connectivity2D.C4)
+		{
+			floodFillInt(input, x, y, output, value, 4);
+		}
+		else if (conn == Connectivity2D.C8)
+		{
+			floodFillInt(input, x, y, output, value, 8);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Unkown connectivity option");
+		}
+		
 	}
 
 	/**

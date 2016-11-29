@@ -10,12 +10,14 @@ import java.util.ArrayList;
 
 import net.sci.array.data.Array3D;
 import net.sci.array.data.scalar3d.IntArray3D;
+import net.sci.image.data.Connectivity3D;
 
 /**
 * <p>
-* Implements various flood-fill algorithms, for planar images. Rewritten from
-* ij.process.FloodFiller. Also support floating point images. The FloodFill3D
-* class provides support for 3D flood-fill algorithms.
+* Implements various flood-fill algorithms, for 3D images. Rewritten from
+* ij.process.FloodFiller. Also supports floating point images. 
+* 
+* The FloodFill2D class provides support for 2D flood-fill algorithms.
 * </p>
 * 
 * <p>
@@ -71,6 +73,45 @@ public class FloodFill3D
 		default:
 			throw new IllegalArgumentException(
 					"Connectivity must be either 6 or 26, not " + conn);
+		}
+	}
+	
+	/**
+	 * Assigns to all the neighbor voxels of (x,y,z) that have the same voxel
+	 * value in <code>image</code>, the specified new label value (
+	 * <code>value</code>) in <code>labelImage</code>, using the specified
+	 * connectivity.
+	 * 
+	 * @param inputImage
+	 *            original image to read the voxel values from
+	 * @param x
+	 *            x- coordinate of the seed voxel
+	 * @param y
+	 *            y- coordinate of the seed voxel
+	 * @param z
+	 *            z- coordinate of the seed voxel
+	 * @param outputImage
+	 *            output label image (to fill)
+	 * @param value
+	 *            filling value
+	 * @param conn
+	 *            connectivity to use (6 or 26)
+	 */
+	public final static void floodFillFloat(Array3D<?> inputArray, int x,
+			int y, int z, Array3D<?> outputArray, double value, Connectivity3D conn)
+	{
+		if (conn == Connectivity3D.C6)
+		{
+			floodFillFloatC6(inputArray, x, y, z, outputArray, value);
+		}
+		else if (conn == Connectivity3D.C26)
+		{
+			floodFillFloatC26(inputArray, x, y, z, outputArray, value);
+		}
+		else
+		{
+			throw new IllegalArgumentException(
+					"Unsupported connectivity option");
 		}
 	}
 	
@@ -376,6 +417,46 @@ public class FloodFill3D
 		}
 	}
 	
+
+	/**
+	 * Assigns to all the neighbor voxels of (x,y,z) that have the same voxel
+	 * value in <code>image</code>, the specified new label value (
+	 * <code>value</code>) in <code>labelImage</code>, using the specified
+	 * connectivity.
+	 * 
+	 * @param inputImage
+	 *            original image to read the voxel values from
+	 * @param x
+	 *            x- coordinate of the seed voxel
+	 * @param y
+	 *            y- coordinate of the seed voxel
+	 * @param z
+	 *            z- coordinate of the seed voxel
+	 * @param outputImage
+	 *            output label image (to fill)
+	 * @param value
+	 *            filling value
+	 * @param conn
+	 *            connectivity to use (6 or 26)
+	 */
+	public final static void floodFillInt(IntArray3D<?> inputArray, int x,
+			int y, int z, IntArray3D<?> outputArray, int value, Connectivity3D conn)
+	{
+		if (conn == Connectivity3D.C6)
+		{
+			floodFillIntC6(inputArray, x, y, z, outputArray, value);
+		}
+		else if (conn == Connectivity3D.C26)
+		{
+			floodFillIntC26(inputArray, x, y, z, outputArray, value);
+		}
+		else
+		{
+			throw new IllegalArgumentException(
+					"Unsupported connectivity option");
+		}
+	}
+
 	/**
 	 * Assigns to all the neighbor voxels of (x,y,z) that have the same voxel
 	 * value in <code>image</code>, the specified new label value (

@@ -16,6 +16,7 @@ import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.FloodFill2D;
 
 /**
@@ -35,7 +36,7 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ImageArray
 	/** 
 	 * The connectivity of the components, either 4 (default) or 8.
 	 */
-	int connectivity = 4;
+	Connectivity2D connectivity = Connectivity2D.C4;
 
 	/**
 	 * The number of bits for representing the result label image. Can be 8, 16
@@ -56,9 +57,26 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ImageArray
 	 * @param connectivity
 	 *            the connectivity of connected components (4 or 8)
 	 */
-	public FloodFillComponentLabeling2D(int connectivity)
+	public FloodFillComponentLabeling2D(Connectivity2D connectivity)
 	{
 		this.connectivity = connectivity;
+
+		// check validity of input argument
+		if (connectivity != Connectivity2D.C4 && connectivity != Connectivity2D.C8)
+		{
+			throw new IllegalArgumentException("Connectivity must be either 4 or 8, not " + connectivity);
+		}
+	}
+	
+	/**
+	 * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
+	 * 
+	 * @param connectivity
+	 *            the connectivity of connected components (4 or 8)
+	 */
+	public FloodFillComponentLabeling2D(int connectivity)
+	{
+		this.connectivity = Connectivity2D.fromValue(connectivity);
 
 		// check validity of input argument
 		if (connectivity != 4 && connectivity != 8)

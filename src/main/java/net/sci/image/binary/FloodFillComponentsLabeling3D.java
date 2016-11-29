@@ -13,6 +13,7 @@ import net.sci.array.data.scalar3d.BooleanArray3D;
 import net.sci.array.data.scalar3d.IntArray3D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.FloodFill3D;
 
 /**
@@ -30,9 +31,9 @@ import net.sci.image.morphology.FloodFill3D;
 public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArrayToArrayOperator
 {
 	/** 
-	 * The connectivity of the components, either 6 (default) or 26.
+	 * The connectivity of the components, either Connectivity3D.C6 (default) or Connectivity3D.C26.
 	 */
-	int connectivity = 6;
+	Connectivity3D connectivity = Connectivity3D.C6;
 	
 	/**
 	 * The number of bits for representing the result label image. Can be 8, 16
@@ -53,14 +54,52 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	 * @param connectivity
 	 *            the connectivity of connected components (6 or 26)
 	 */
-	public FloodFillComponentsLabeling3D(int connectivity)
+	public FloodFillComponentsLabeling3D(Connectivity3D connectivity)
 	{
 		this.connectivity = connectivity;
+
+		// check validity of input argument
+		if (connectivity != Connectivity3D.C6 && connectivity != Connectivity3D.C26)
+		{
+			throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + connectivity);
+		}
+	}
+	
+	/**
+	 * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
+	 * 
+	 * @param connectivity
+	 *            the connectivity of connected components (6 or 26)
+	 */
+	public FloodFillComponentsLabeling3D(int connectivity)
+	{
+		this.connectivity = Connectivity3D.fromValue(connectivity);
 
 		// check validity of input argument
 		if (connectivity != 6 && connectivity != 26)
 		{
 			throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + connectivity);
+		}
+	}
+	
+	/**
+	 * Constructor specifying the connectivity and the bitdepth of result label
+	 * image
+	 * 
+	 * @param connectivity
+	 *            the connectivity of connected components (6 or 26)
+	 * @param bitDepth
+	 *            the bit depth of the result (8, 16, or 32)
+	 */
+	public FloodFillComponentsLabeling3D(Connectivity3D connectivity, int bitDepth)
+	{
+		this(connectivity);
+		this.bitDepth = bitDepth;
+
+		// check validity of input argument
+		if (bitDepth != 8 && bitDepth != 16 && bitDepth != 32)
+		{
+			throw new IllegalArgumentException("Bit depth must be 8, 16 or 32, not " + bitDepth);
 		}
 	}
 	

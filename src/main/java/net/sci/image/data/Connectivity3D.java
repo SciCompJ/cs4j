@@ -12,6 +12,21 @@ import java.util.Collection;
 public interface Connectivity3D extends Connectivity
 {
 	/**
+	 * Returns a new connectivity object from a connectivity value.
+	 * @param conn the connectivity value, either 6 or 26
+	 * @return a Connectivity3D object
+	 */
+	public static Connectivity3D fromValue(int conn)
+	{
+		if (conn == 6)
+			return C6;
+		else if (conn == 26)
+			return C26;
+		else
+			throw new IllegalArgumentException("Connectivity value should be either 6 or 26");
+	}
+
+	/**
 	 * 3D connectivity that considers the six orthogonal neighbors of a voxel.
 	 */
 	public static final Connectivity3D C6 = new Connectivity3D()
