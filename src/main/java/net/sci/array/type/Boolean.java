@@ -10,7 +10,19 @@ package net.sci.array.type;
  */
 public class Boolean extends Int
 {
+	// =============================================================
+	// Constants
+
+	public static final Boolean FALSE = new Boolean(false);
+
+	public static final Boolean TRUE = new Boolean(true);
+
+
+	// =============================================================
+	// state of the boolean variable
+
 	boolean state;
+	
 	
 	// =============================================================
 	// Constructor

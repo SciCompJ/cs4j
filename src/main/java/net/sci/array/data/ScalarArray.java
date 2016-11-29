@@ -34,6 +34,22 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 		return new double[]{vMin, vMax};
 	}
 
+	/**
+	 * Fills the array with the specified double value.
+	 * 
+	 * @param value the value to fill the array with
+	 */
+	public default void fill(double value)
+	{
+		Iterator<? extends Scalar> iter = iterator();
+		while(iter.hasNext())
+		{
+			iter.forward();
+			iter.setValue(value);
+		}
+	}
+	
+
 	// =============================================================
 	// Specialization of the Array interface
 

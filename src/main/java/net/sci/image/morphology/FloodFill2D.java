@@ -57,6 +57,140 @@ public class FloodFill2D
 	 * @param conn
 	 *            connectivity to use (4 or 8)
 	 */
+	public final static <S, T> void floodFill(Array2D<S> input, int x, int y,
+			Array2D<T> output, T value, Connectivity2D conn)
+	{
+		// initialize the shifts to look for new markers to start lines
+		// default values for C4
+		int dx1 = 0;
+		int dx2 = 0;
+		if (conn == Connectivity2D.C8) 
+		{
+			dx1 = -1;
+			dx2 = +1;
+		}
+		
+		// get image size
+		int sizeX = input.getSize(0);
+		int sizeY = input.getSize(1);
+		
+		// get old value
+		S oldValue = input.get(x, y);
+		
+		// initialize the stack with original pixel
+		ArrayList<Cursor2D> stack = new ArrayList<Cursor2D>();
+		stack.add(new Cursor2D(x, y));
+				
+		boolean inScanLine;
+		
+		// process all items in stack
+		while (!stack.isEmpty()) 
+		{
+			// Extract current position
+			Cursor2D p = stack.remove(stack.size()-1);
+			x = p.x;
+			y = p.y;
+			
+			// process only pixel of the same value
+			if (input.get(x, y) != oldValue) 
+				continue;
+			
+			// x extremities of scan-line
+			int x1 = x; 
+			int x2 = x;
+			
+			// find start of scan-line
+			while (x1 > 0 && input.get(x1-1, y) == oldValue)
+				x1--;
+			
+			// find end of scan-line
+			while (x2 < sizeX - 1 && input.get(x2+1, y) == oldValue)
+				x2++;
+			
+			// fill current scan-line
+			fillLine(output, y, x1, x2, value);
+			
+			// find scan-lines above the current one
+			if (y > 0)
+			{
+				inScanLine = false;
+				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
+				{
+					S val = input.get(i, y - 1);
+					T lab = output.get(i, y - 1);
+					if (!inScanLine && val == oldValue && lab != value)
+					{
+						stack.add(new Cursor2D(i, y - 1));
+						inScanLine = true;
+					} 
+					else if (inScanLine && val != oldValue)
+					{
+						inScanLine = false;
+					}
+				}
+			}
+
+			// find scan-lines below the current one
+			if (y < sizeY - 1)
+			{
+				inScanLine = false;
+				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
+				{
+					S val = input.get(i, y + 1);
+					T lab = output.get(i, y - 1);
+					if (!inScanLine && val == oldValue && lab != value)
+					{
+						stack.add(new Cursor2D(i, y + 1));
+						inScanLine = true;
+					} 
+					else if (inScanLine && val != oldValue)
+					{
+						inScanLine = false;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Fill in the horizontal line define by y-coordinate and the two x 
+	 * coordinate extremities (inclusive), with the specified integer value.
+	 * the value x1 must be lower than or equal the value x2. 
+	 */
+	private final static <T> void fillLine(Array2D<T> array, int y, int x1,
+			int x2, T value)
+	{
+		if (x1 > x2)
+		{
+			int t = x1;
+			x1 = x2;
+			x2 = t;
+		}
+	
+		for (int x = x1; x <= x2; x++)
+			array.set(x, y, value);
+	}
+
+
+
+	/**
+	 * Assigns in <code>labelImage</code> all the neighbor pixels of (x,y) that
+	 * have the same pixel value in <code>image</code>, the specified new label
+	 * value (<code>value</code>), using the specified connectivity.
+	 * 
+	 * @param input
+	 *            original image to read the pixel values from
+	 * @param x
+	 *            x- coordinate of the seed pixel
+	 * @param y
+	 *            y- coordinate of the seed pixel
+	 * @param output
+	 *            the label image to fill in
+	 * @param value
+	 *            filling value
+	 * @param conn
+	 *            connectivity to use (4 or 8)
+	 */
 	public final static void floodFillFloat(ScalarArray2D<?> input, int x, int y,
 			ScalarArray2D<?> output, double value, Connectivity2D conn)
 	{
