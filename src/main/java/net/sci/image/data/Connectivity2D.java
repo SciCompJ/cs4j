@@ -15,7 +15,7 @@ import java.util.Collection;
  * @author dlegland
  *
  */
-public interface Connectivity2D extends Connectivity<Cursor2D>
+public interface Connectivity2D extends Connectivity
 {
 	
 	/**
@@ -39,24 +39,24 @@ public interface Connectivity2D extends Connectivity<Cursor2D>
 	public static final Connectivity2D C4 = new Connectivity2D()
 	{
 		@Override
-		public Collection<Cursor2D> getNeighbors(int x, int y)
+		public Collection<int[]> getNeighbors(int x, int y)
 		{
-			ArrayList<Cursor2D> array = new ArrayList<Cursor2D>(4);
-			array.add(new Cursor2D(x, y-1));
-			array.add(new Cursor2D(x-1, y));
-			array.add(new Cursor2D(x+1, y));
-			array.add(new Cursor2D(x, y+1));
+			ArrayList<int[]> array = new ArrayList<int[]>(4);
+			array.add(new int[]{x, y-1});
+			array.add(new int[]{x-1, y});
+			array.add(new int[]{x+1, y});
+			array.add(new int[]{x, y+1});
 			return array;
 		}
 
 		@Override
-		public Collection<Cursor2D> getOffsets()
+		public Collection<int[]> getOffsets()
 		{
-			ArrayList<Cursor2D> array = new ArrayList<Cursor2D>(4);
-			array.add(new Cursor2D( 0, -1));
-			array.add(new Cursor2D(-1,  0));
-			array.add(new Cursor2D(+1,  0));
-			array.add(new Cursor2D( 0, +1));
+			ArrayList<int[]> array = new ArrayList<int[]>(4);
+			array.add(new int[]{ 0, -1});
+			array.add(new int[]{-1,  0});
+			array.add(new int[]{+1,  0});
+			array.add(new int[]{ 0, +1});
 			return array;
 		}
 
@@ -69,28 +69,28 @@ public interface Connectivity2D extends Connectivity<Cursor2D>
 	public static final Connectivity2D C6_1 = new Connectivity2D()
 	{
 		@Override
-		public Collection<Cursor2D> getNeighbors(int x, int y)
+		public Collection<int[]> getNeighbors(int x, int y)
 		{
-			ArrayList<Cursor2D> array = new ArrayList<Cursor2D>(6);
-			array.add(new Cursor2D(x,   y-1));
-			array.add(new Cursor2D(x+1, y-1));
-			array.add(new Cursor2D(x-1, y));
-			array.add(new Cursor2D(x+1, y));
-			array.add(new Cursor2D(x-1, y+1));
-			array.add(new Cursor2D(x,   y+1));
+			ArrayList<int[]> array = new ArrayList<int[]>(6);
+			array.add(new int[]{  x, y-1});
+			array.add(new int[]{x+1, y-1});
+			array.add(new int[]{x-1,  y});
+			array.add(new int[]{x+1,   y});
+			array.add(new int[]{x-1, y+1});
+			array.add(new int[]{  x, y+1});
 			return array;
 		}
 
 		@Override
-		public Collection<Cursor2D> getOffsets()
+		public Collection<int[]> getOffsets()
 		{
-			ArrayList<Cursor2D> array = new ArrayList<Cursor2D>(6);
-			array.add(new Cursor2D( 0, -1));
-			array.add(new Cursor2D(+1, -1));
-			array.add(new Cursor2D(-1,  0));
-			array.add(new Cursor2D(+1,  0));
-			array.add(new Cursor2D(-1, +1));
-			array.add(new Cursor2D( 0, +1));
+			ArrayList<int[]> array = new ArrayList<int[]>(6);
+			array.add(new int[]{ 0, -1});
+			array.add(new int[]{+1, -1});
+			array.add(new int[]{-1,  0});
+			array.add(new int[]{+1,  0});
+			array.add(new int[]{-1, +1});
+			array.add(new int[]{ 0, +1});
 			return array;
 		}
 	};
@@ -102,32 +102,32 @@ public interface Connectivity2D extends Connectivity<Cursor2D>
 	public static final Connectivity2D C8 = new Connectivity2D()
 	{
 		@Override
-		public Collection<Cursor2D> getNeighbors(int x, int y)
+		public Collection<int[]> getNeighbors(int x, int y)
 		{
-			ArrayList<Cursor2D> array = new ArrayList<Cursor2D>(8);
-			array.add(new Cursor2D(x-1, y-1));
-			array.add(new Cursor2D(  x, y-1));
-			array.add(new Cursor2D(x+1, y-1));
-			array.add(new Cursor2D(x-1,   y));
-			array.add(new Cursor2D(x+1,   y));
-			array.add(new Cursor2D(x-1, y+1));
-			array.add(new Cursor2D(  x, y+1));
-			array.add(new Cursor2D(x+1, y+1));
+			ArrayList<int[]> array = new ArrayList<int[]>(8);
+			array.add(new int[]{x-1, y-1});
+			array.add(new int[]{  x, y-1});
+			array.add(new int[]{x+1, y-1});
+			array.add(new int[]{x-1,   y});
+			array.add(new int[]{x+1,   y});
+			array.add(new int[]{x-1, y+1});
+			array.add(new int[]{  x, y+1});
+			array.add(new int[]{x+1, y+1});
 			return array;
 		}
 
 		@Override
-		public Collection<Cursor2D> getOffsets()
+		public Collection<int[]> getOffsets()
 		{
-			ArrayList<Cursor2D> array = new ArrayList<Cursor2D>(8);
-			array.add(new Cursor2D(-1, -1));
-			array.add(new Cursor2D( 0, -1));
-			array.add(new Cursor2D(+1, -1));
-			array.add(new Cursor2D(-1,  0));
-			array.add(new Cursor2D(+1,  0));
-			array.add(new Cursor2D(-1, +1));
-			array.add(new Cursor2D( 0, +1));
-			array.add(new Cursor2D(+1, +1));
+			ArrayList<int[]> array = new ArrayList<int[]>(8);
+			array.add(new int[]{-1, -1});
+			array.add(new int[]{ 0, -1});
+			array.add(new int[]{+1, -1});
+			array.add(new int[]{-1,  0});
+			array.add(new int[]{+1,  0});
+			array.add(new int[]{-1, +1});
+			array.add(new int[]{ 0, +1});
+			array.add(new int[]{+1, +1});
 			return array;
 		}
 	};
@@ -139,16 +139,16 @@ public interface Connectivity2D extends Connectivity<Cursor2D>
 	 * @param y the y position of the pixel
 	 * @return the list of neighbors of specified pixel
 	 */
-	public Collection<Cursor2D> getNeighbors(int x, int y);
+	public Collection<int[]> getNeighbors(int x, int y);
 
-	public default Collection<Cursor2D> getNeighbors(Cursor2D c)
+	public default Collection<int[]> getNeighbors(int[] pos)
 	{
-		return getNeighbors(c.getX(), c.getY());
+		return getNeighbors(pos[0], pos[1]);
 	}
 
 	/**
 	 * @return the list of offsets computed relative to the center pixel.
 	 */
-	public Collection<Cursor2D> getOffsets();
+	public Collection<int[]> getOffsets();
 
 }

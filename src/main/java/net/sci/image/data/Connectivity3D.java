@@ -9,7 +9,7 @@ import java.util.Collection;
 /**
  * Defines the connectivity for 3D images.
  */
-public interface Connectivity3D extends Connectivity<Cursor3D>
+public interface Connectivity3D extends Connectivity
 {
 	/**
 	 * 3D connectivity that considers the six orthogonal neighbors of a voxel.
@@ -17,42 +17,42 @@ public interface Connectivity3D extends Connectivity<Cursor3D>
 	public static final Connectivity3D C6 = new Connectivity3D()
 	{
 		@Override
-		public Collection<Cursor3D> getNeighbors(int x, int y, int z)
+		public Collection<int[]> getNeighbors(int x, int y, int z)
 		{
-			ArrayList<Cursor3D> array = new ArrayList<Cursor3D>(6);
-			array.add(new Cursor3D(x, y, z-1));
-			array.add(new Cursor3D(x, y-1, z));
-			array.add(new Cursor3D(x-1, y, z));
-			array.add(new Cursor3D(x+1, y, z));
-			array.add(new Cursor3D(x, y+1, z));
-			array.add(new Cursor3D(x, y, z+1));
+			ArrayList<int[]> array = new ArrayList<int[]>(6);
+			array.add(new int[]{x, y, z-1});
+			array.add(new int[]{x, y-1, z});
+			array.add(new int[]{x-1, y, z});
+			array.add(new int[]{x+1, y, z});
+			array.add(new int[]{x, y+1, z});
+			array.add(new int[]{x, y, z+1});
 			return array;
 		}
 
 		@Override
-		public Collection<Cursor3D> getOffsets()
+		public Collection<int[]> getOffsets()
 		{
-			ArrayList<Cursor3D> array = new ArrayList<Cursor3D>(6);
-			array.add(new Cursor3D( 0,  0, -1));
-			array.add(new Cursor3D( 0, -1,  0));
-			array.add(new Cursor3D(-1,  0,  0));
-			array.add(new Cursor3D(+1,  0,  0));
-			array.add(new Cursor3D( 0, +1,  0));
-			array.add(new Cursor3D( 0,  0, +1));
+			ArrayList<int[]> array = new ArrayList<int[]>(6);
+			array.add(new int[]{ 0,  0, -1});
+			array.add(new int[]{ 0, -1,  0});
+			array.add(new int[]{-1,  0,  0});
+			array.add(new int[]{+1,  0,  0});
+			array.add(new int[]{ 0, +1,  0});
+			array.add(new int[]{ 0,  0, +1});
 			return array;
 		}
 
 	};
 	
 	/**
-	 * 3D connectivity that considers the all 26 neighbors of a voxel.
+	 * 3D connectivity that considers all the 26 neighbors of a voxel.
 	 */
 	public static final Connectivity3D C26 = new Connectivity3D()
 	{
 		@Override
-		public Collection<Cursor3D> getNeighbors(int x, int y, int z)
+		public Collection<int[]> getNeighbors(int x, int y, int z)
 		{
-			ArrayList<Cursor3D> array = new ArrayList<Cursor3D>(26);
+			ArrayList<int[]> array = new ArrayList<int[]>(26);
 			for (int dz = -1; dz <= 1; dz++)
 			{
 				for (int dy = -1; dy <= 1; dy++)
@@ -61,7 +61,7 @@ public interface Connectivity3D extends Connectivity<Cursor3D>
 					{
 						if (dx != 0 || dy != 0 || dz != 0)
 						{
-							array.add(new Cursor3D(x + dx, y + dy, z + dz));
+							array.add(new int[]{x + dx, y + dy, z + dz});
 						}
 					}
 				}
@@ -70,9 +70,9 @@ public interface Connectivity3D extends Connectivity<Cursor3D>
 		}
 
 		@Override
-		public Collection<Cursor3D> getOffsets()
+		public Collection<int[]> getOffsets()
 		{
-			ArrayList<Cursor3D> array = new ArrayList<Cursor3D>(26);
+			ArrayList<int[]> array = new ArrayList<int[]>(26);
 			for (int dz = -1; dz <= 1; dz++)
 			{
 				for (int dy = -1; dy <= 1; dy++)
@@ -81,7 +81,7 @@ public interface Connectivity3D extends Connectivity<Cursor3D>
 					{
 						if (dx != 0 || dy != 0 || dz != 0)
 						{
-							array.add(new Cursor3D(dx, dy, dz));
+							array.add(new int[]{dx, dy, dz});
 						}
 					}
 				}
@@ -102,17 +102,17 @@ public interface Connectivity3D extends Connectivity<Cursor3D>
 	 *            the z position of the voxel
 	 * @return the list of neighbors of specified voxel
 	 */
-	public Collection<Cursor3D> getNeighbors(int x, int y, int z);
+	public Collection<int[]> getNeighbors(int x, int y, int z);
 	
-	public default Collection<Cursor3D> getNeighbors(Cursor3D c)
+	public default Collection<int[]> getNeighbors(int[] pos)
 	{
-		return getNeighbors(c.getX(), c.getY(), c.getZ());
+		return getNeighbors(pos[0], pos[1], pos[2]);
 	}
 
 	/**
 	 * @return the list of 3D offsets computed relative to the center voxel.
 	 */
-	public Collection<Cursor3D> getOffsets();
+	public Collection<int[]> getOffsets();
 
 
 }
