@@ -1,24 +1,24 @@
 /**
  * 
  */
-package net.sci.image.process;
-
-import java.util.Arrays;
+package net.sci.image.process.filter;
 
 import net.sci.array.Array;
 import net.sci.array.Cursor;
+import net.sci.array.data.Float32Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.ImageArrayToArrayOperator;
 
 /**
- * Computes the median value in a box neighborhood aroundeach array element.
+ * Box filter for multidimensional arrays. Considers a square box, with length
+ * 2*r+1.
  * 
  * @author dlegland
  *
  */
-public final class MedianBoxFilter implements ImageArrayToArrayOperator
+public final class BoxFilter implements ImageArrayToArrayOperator
 {
 	int[] radiusList;
 	
@@ -30,7 +30,7 @@ public final class MedianBoxFilter implements ImageArrayToArrayOperator
 	 * @param radiusList
 	 *            the box radius in each dimension
 	 */
-	public MedianBoxFilter(int[] radiusList)
+	public BoxFilter(int[] radiusList)
 	{
 		this.radiusList = new int[radiusList.length];
 		for (int i = 0; i < radiusList.length; i++)
@@ -80,31 +80,26 @@ public final class MedianBoxFilter implements ImageArrayToArrayOperator
 		{
 			throw new RuntimeException("Requires at least as many radiuses as array dimensionality");
 		}
-		
 		// compute the normalization constant
-		int totalCount = 1;
+		int boxSize = 1;
 		for (int r : this.radiusList)
 		{
-			totalCount *= (2 * r + 1);
+			boxSize *= (2 * r + 1);
 		}
 		
-		// the position of the median value within the sorted array
-		int medianCount = (totalCount - 1) / 2;
-		
-		double[] values = new double[totalCount];
-		
-		
-		// iterate over positions
+		// iterate over 2D positions
 		Cursor inputCursor = source.getCursor();
 		while (inputCursor.hasNext())
 		{
-			// find the position of next element
+			// iterate position cursor
 			inputCursor.forward();
 			int[] pos = inputCursor.getPosition();
 			
+			// init result
+			double sum = 0;
+			
 			// iterate over neighbors
 			Neighborhood nbg = new BoxNeighborhood(pos, radiusList);
-			int count = 0;
 			for (int[] neighPos : nbg)
 			{
 				
@@ -115,12 +110,11 @@ public final class MedianBoxFilter implements ImageArrayToArrayOperator
 				}
 								
 				// get value of "clamped" neighbor
-				values[count++] = source.getValue(neighPos); 
+				sum += source.getValue(neighPos);
 			}
 			
-			// sort neighborhood values and keep the median value
-			Arrays.parallelSort(values);
-			target.setValue(pos, values[medianCount]);
+			// setup result in target array
+			target.setValue(pos, sum / boxSize);
 		}
 	}
 	
@@ -142,36 +136,29 @@ public final class MedianBoxFilter implements ImageArrayToArrayOperator
 		int radiusY = this.radiusList[1];
 
 		// compute the normalization constant
-		int totalCount = 1;
+		int boxSize = 1;
 		for (int r : this.radiusList)
 		{
-			totalCount *= (2 * r + 1);
+			boxSize *= (2 * r + 1);
 		}
-		
-		// the position of the median value within the sorted array
-		int medianCount = (totalCount - 1) / 2;
-		
-		double[] values = new double[totalCount];
 		
 		for(int y = 0; y < sizeY; y++)
 		{
 			for(int x = 0; x < sizeX; x++)
 			{
-				// iterate over neighbors of current pixel
-				int count = 0;
+				double sum = 0;
+				
+				// iterate over neighbors
 				for (int y2 = y - radiusY; y2 <= y + radiusY; y2++)
 				{
 					int y2r = Math.min(Math.max(y2, 0), sizeY - 1);
 					for (int x2 = x - radiusX; x2 <= x + radiusX; x2++)
 					{
 						int x2r = Math.min(Math.max(x2, 0), sizeX - 1);
-						values[count++] = source.getValue(x2r, y2r); 
+						sum += source.getValue(x2r, y2r);
 					}
 				}
-				
-				// sort neighborhood values and keep the median value
-				Arrays.parallelSort(values);
-				target.setValue(x, y, values[medianCount]);
+				target.setValue(x, y, sum / boxSize);
 			}
 		}
 	}
@@ -196,16 +183,11 @@ public final class MedianBoxFilter implements ImageArrayToArrayOperator
 		int radiusZ = this.radiusList[2];
 
 		// compute the normalization constant
-		int totalCount = 1;
+		int boxSize = 1;
 		for (int r : this.radiusList)
 		{
-			totalCount *= (2 * r + 1);
+			boxSize *= (2 * r + 1);
 		}
-		
-		// the position of the median value within the sorted array
-		int medianCount = (totalCount - 1) / 2;
-		
-		double[] values = new double[totalCount];
 		
 		for(int z = 0; z < sizeZ; z++)
 		{
@@ -213,8 +195,9 @@ public final class MedianBoxFilter implements ImageArrayToArrayOperator
 			{
 				for(int x = 0; x < sizeX; x++)
 				{
-					// iterate over neighbors of current pixel
-					int count = 0;
+					double sum = 0;
+
+					// iterate over neighbors
 					for (int z2 = z - radiusZ; z2 <= z + radiusZ; z2++)
 					{
 						int z2r = Math.min(Math.max(z2, 0), sizeZ - 1);
@@ -224,25 +207,23 @@ public final class MedianBoxFilter implements ImageArrayToArrayOperator
 							for (int x2 = x - radiusX; x2 <= x + radiusX; x2++)
 							{
 								int x2r = Math.min(Math.max(x2, 0), sizeX - 1);
-								values[count++] = source.getValue(x2r, y2r, z2r); 
+								sum += source.getValue(x2r, y2r, z2r);
 							}
 						}
 					}
-					
-					// sort neighborhood values and keep the median value
-					Arrays.parallelSort(values);
-					target.setValue(x, y, z, values[medianCount]);
+					target.setValue(x, y, z, sum / boxSize);
 				}
 			}
 		}
 	}
 
 	/**
-	 * Creates a new array the same size and same type as original.
+	 * Creates a new array the same size as original, with float type.
 	 */
 	public Array<?> createEmptyOutputArray(Array<?> array)
 	{
-		return array.duplicate();
+		int[] dims = array.getSize();
+		return Float32Array.create(dims);
 	}
 	
 	public boolean canProcess(Array<?> array)

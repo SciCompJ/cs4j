@@ -1,4 +1,4 @@
-package net.sci.image.process;
+package net.sci.image.process.filter;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,6 +10,7 @@ import net.sci.array.data.scalar3d.Float32Array3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.Image;
 import net.sci.image.io.TiffImageReader;
+import net.sci.image.process.filter.BoxFilter;
 
 public class BoxFilterTiming
 {

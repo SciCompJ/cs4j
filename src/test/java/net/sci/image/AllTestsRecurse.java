@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
 	net.sci.image.binary.AllTests.class,
 	net.sci.image.io.AllTests.class,
 	net.sci.image.morphology.AllTests.class,
-	net.sci.image.process.AllTests.class,
+	net.sci.image.process.filter.AllTests.class,
 	})
 public class AllTestsRecurse {
   //nothing

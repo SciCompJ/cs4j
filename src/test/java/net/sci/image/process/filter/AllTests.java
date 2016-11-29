@@ -1,4 +1,4 @@
-package net.sci.image.process;
+package net.sci.image.process.filter;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

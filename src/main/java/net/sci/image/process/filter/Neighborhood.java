@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.process;
+package net.sci.image.process.filter;
 
 /**
  * @author dlegland

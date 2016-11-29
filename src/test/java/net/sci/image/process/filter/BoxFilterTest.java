@@ -1,4 +1,4 @@
-package net.sci.image.process;
+package net.sci.image.process.filter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -9,6 +9,7 @@ import net.sci.array.Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
+import net.sci.image.process.filter.BoxFilter;
 
 public class BoxFilterTest
 {
