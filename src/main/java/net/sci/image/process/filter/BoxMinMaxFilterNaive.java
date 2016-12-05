@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.morphology.filter;
+package net.sci.image.process.filter;
 
 import net.sci.array.Array;
 import net.sci.array.Cursor;
@@ -13,13 +13,21 @@ import net.sci.image.process.filter.BoxNeighborhood;
 import net.sci.image.process.filter.Neighborhood;
 
 /**
- * Naive implementation of morphological dilation within a n-dimensional box.
+ * Naive implementation of min/max filtering within a n-dimensional box.
  * 
  * @author dlegland
  *
  */
-public final class BoxDilationNaive implements ImageArrayToArrayOperator
+public final class BoxMinMaxFilterNaive implements ImageArrayToArrayOperator
 {
+	public enum Type 
+	{
+		MIN,
+		MAX
+	};
+	
+	Type type = Type.MAX;
+
 	int[] radiusList;
 	
 	
@@ -30,8 +38,10 @@ public final class BoxDilationNaive implements ImageArrayToArrayOperator
 	 * @param radiusList
 	 *            the box radius in each dimension
 	 */
-	public BoxDilationNaive(int[] radiusList)
+	public BoxMinMaxFilterNaive(Type type, int[] radiusList)
 	{
+		this.type = type;
+		
 		this.radiusList = new int[radiusList.length];
 		for (int i = 0; i < radiusList.length; i++)
 		{
@@ -75,6 +85,9 @@ public final class BoxDilationNaive implements ImageArrayToArrayOperator
 		int nd = source.dimensionality();
 		int[] sizes = source.getSize();
 		
+		// get the sign for min/max computations
+		int sign = this.type == Type.MAX ? +1 : -1;
+		
 		// get first two radiuses
 		if (this.radiusList.length < source.dimensionality())
 		{
@@ -110,12 +123,12 @@ public final class BoxDilationNaive implements ImageArrayToArrayOperator
 				
 				if (inside)
 				{
-					localMax = Math.max(localMax, source.getValue(neighPos));
+					localMax = Math.max(localMax, source.getValue(neighPos) * sign);
 				}
 			}
 			
 			// setup result in target array
-			target.setValue(pos, localMax);
+			target.setValue(pos, localMax * sign);
 		}
 	}
 	
@@ -127,6 +140,9 @@ public final class BoxDilationNaive implements ImageArrayToArrayOperator
 		// get size of input array
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
+		
+		// get the sign for min/max computations
+		int sign = this.type == Type.MAX ? +1 : -1;
 		
 		// get first two radiuses
 		if (this.radiusList.length < 2)
@@ -152,12 +168,12 @@ public final class BoxDilationNaive implements ImageArrayToArrayOperator
 						// update local max only if pixel is within image bounds 
 						if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY)
 						{
-							localMax = Math.max(localMax, source.getValue(x2, y2));
+							localMax = Math.max(localMax, source.getValue(x2, y2) * sign);
 						}
 					}
 				}
 				
-				target.setValue(x, y, localMax);
+				target.setValue(x, y, localMax * sign);
 			}
 		}
 	}
@@ -171,6 +187,9 @@ public final class BoxDilationNaive implements ImageArrayToArrayOperator
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
 		int sizeZ = source.getSize(2);
+		
+		// get the sign for min/max computations
+		int sign = this.type == Type.MAX ? +1 : -1;
 		
 		// ensure radius list is large enough
 		if (this.radiusList.length < 3)
@@ -203,13 +222,13 @@ public final class BoxDilationNaive implements ImageArrayToArrayOperator
 								// update local max only if pixel is within image bounds 
 								if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY && z2 >= 0 && z2 < sizeZ)
 								{
-									localMax = Math.max(localMax, source.getValue(x2, y2, z2));
+									localMax = Math.max(localMax, source.getValue(x2, y2, z2) * sign);
 								}
 							}
 						}
 					}
 					
-					target.setValue(x, y, z, localMax);
+					target.setValue(x, y, z, localMax * sign);
 				}
 			}
 		}
@@ -231,6 +250,7 @@ public final class BoxDilationNaive implements ImageArrayToArrayOperator
 
 	public boolean canProcess(Array<?> source, Array<?> target)
 	{
-		return source instanceof ScalarArray && target instanceof ScalarArray;
+		return source instanceof ScalarArray && target instanceof ScalarArray
+				&& source.dimensionality() == target.dimensionality();
 	}
 }

@@ -3,6 +3,8 @@
  */
 package net.sci.array.data.scalar2d;
 
+import java.io.PrintStream;
+
 import net.sci.array.data.UInt8Array;
 import net.sci.array.type.UInt8;
 
@@ -33,6 +35,23 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	// =============================================================
 	// New methods
 
+	/**
+	 * Displays the content of this array on the stream (typically System.out).
+	 * 
+	 * @param stream The stream to use for printing
+	 */
+	public void print(PrintStream ps)
+	{
+		for (int y = 0; y < this.size1; y++)
+		{
+			for (int x = 0; x < this.size0; x++)
+			{
+				ps.printf(" %3d", this.getInt(x, y));
+			}
+			ps.println();
+		}
+	}
+	
 	/**
 	 * Returns the byte value at a given position.
 	 */
