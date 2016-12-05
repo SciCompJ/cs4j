@@ -2,7 +2,9 @@ package net.sci.image.data;
 
 import java.util.Collection;
 
-public interface Connectivity
+import net.sci.array.Dimensional;
+
+public interface Connectivity extends Dimensional
 {
 	/**
 	 * Returns the set of neighbors associated to a given position

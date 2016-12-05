@@ -9,7 +9,7 @@ package net.sci.array;
  * @author dlegland
  *
  */
-public interface Array<T> extends Iterable<T>
+public interface Array<T> extends Iterable<T>, Dimensional
 {
 	/**
 	 * Returns the dimensionality of this array, i.e. the number of dimensions.

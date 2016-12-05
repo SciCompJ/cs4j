@@ -17,21 +17,8 @@ import java.util.Collection;
  */
 public interface Connectivity2D extends Connectivity
 {
-	
-	/**
-	 * Returns a new connectivity object from a connectivity value.
-	 * @param conn the connectivity value, either 4 or 8
-	 * @return a Connectivity object
-	 */
-	public static Connectivity2D fromValue(int conn)
-	{
-		if (conn == 4)
-			return C4;
-		else if (conn == 8)
-			return C8;
-		else
-			throw new IllegalArgumentException("Connectivity value should be either 4 or 8");
-	}
+	// =============================================================
+	// Constants
 
 	/**
 	 * Planar connectivity that considers the four orthogonal neighbors of a pixel.
@@ -59,7 +46,6 @@ public interface Connectivity2D extends Connectivity
 			array.add(new int[]{ 0, +1});
 			return array;
 		}
-
 	};
 
 	/**
@@ -133,6 +119,28 @@ public interface Connectivity2D extends Connectivity
 	};
 
 	
+	// =============================================================
+	// Static methods
+
+	/**
+	 * Returns a new connectivity object from a connectivity value.
+	 * @param conn the connectivity value, either 4 or 8
+	 * @return a Connectivity object
+	 */
+	public static Connectivity2D fromValue(int conn)
+	{
+		if (conn == 4)
+			return C4;
+		else if (conn == 8)
+			return C8;
+		else
+			throw new IllegalArgumentException("Connectivity value should be either 4 or 8");
+	}
+
+	
+	// =============================================================
+	// New methods
+
 	/**
 	 * Returns the set of neighbors associated to a given position
 	 * @param x the x position of the pixel
@@ -141,14 +149,22 @@ public interface Connectivity2D extends Connectivity
 	 */
 	public Collection<int[]> getNeighbors(int x, int y);
 
+	
+	// =============================================================
+	// Default implementation of the Connectivity interface
+
 	public default Collection<int[]> getNeighbors(int[] pos)
 	{
 		return getNeighbors(pos[0], pos[1]);
 	}
 
-	/**
-	 * @return the list of offsets computed relative to the center pixel.
-	 */
-	public Collection<int[]> getOffsets();
+	
+	// =============================================================
+	// Default implementation of the Dimensional interface
 
+	@Override
+	public default int dimensionality()
+	{
+		return 2;
+	}
 }

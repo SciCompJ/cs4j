@@ -11,20 +11,8 @@ import java.util.Collection;
  */
 public interface Connectivity3D extends Connectivity
 {
-	/**
-	 * Returns a new connectivity object from a connectivity value.
-	 * @param conn the connectivity value, either 6 or 26
-	 * @return a Connectivity3D object
-	 */
-	public static Connectivity3D fromValue(int conn)
-	{
-		if (conn == 6)
-			return C6;
-		else if (conn == 26)
-			return C26;
-		else
-			throw new IllegalArgumentException("Connectivity value should be either 6 or 26");
-	}
+	// =============================================================
+	// Constants
 
 	/**
 	 * 3D connectivity that considers the six orthogonal neighbors of a voxel.
@@ -106,6 +94,29 @@ public interface Connectivity3D extends Connectivity
 		
 	};
 	
+
+	// =============================================================
+	// Static methods
+
+	/**
+	 * Returns a new connectivity object from a connectivity value.
+	 * @param conn the connectivity value, either 6 or 26
+	 * @return a Connectivity3D object
+	 */
+	public static Connectivity3D fromValue(int conn)
+	{
+		if (conn == 6)
+			return C6;
+		else if (conn == 26)
+			return C26;
+		else
+			throw new IllegalArgumentException("Connectivity value should be either 6 or 26");
+	}
+
+	
+	// =============================================================
+	// New methods
+
 	/**
 	 * Returns the set of neighbors associated to a given position
 	 * 
@@ -119,15 +130,22 @@ public interface Connectivity3D extends Connectivity
 	 */
 	public Collection<int[]> getNeighbors(int x, int y, int z);
 	
+	
+	// =============================================================
+	// Default implementation of the Connectivity interface
+
 	public default Collection<int[]> getNeighbors(int[] pos)
 	{
 		return getNeighbors(pos[0], pos[1], pos[2]);
 	}
 
-	/**
-	 * @return the list of 3D offsets computed relative to the center voxel.
-	 */
-	public Collection<int[]> getOffsets();
+	
+	// =============================================================
+	// Default implementation of the Dimensional interface
 
-
+	@Override
+	public default int dimensionality()
+	{
+		return 3;
+	}
 }
