@@ -18,7 +18,12 @@ import static net.sci.array.type.Boolean.FALSE;
 import static net.sci.array.type.Boolean.TRUE;
 
 /**
- * Computes regional minima and maxima on planar images.
+ * Computes regional minima and maxima on planar images, using generic version
+ * of flood-fill algorithm.
+ * 
+ * The main goal of this class was to test the validity of generic flood-fill
+ * algorithm. It is not expected to be more efficient than the standard version
+ * using floating-point computations.
  * 
  * @author dlegland
  *
@@ -121,7 +126,9 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	/**
 	 * Computes regional extrema in current input image, using
 	 * flood-filling-like algorithm with 4 connectivity.
-	 * Computations are made with double values.
+	 * 
+	 * Computations on source array are made with floating-point computation.
+	 * Flood-fill on target array is made type genericicty.
 	 */
 	private void processScalar2dC4(ScalarArray2D<?> source, BooleanArray2D target) 
 	{
@@ -180,8 +187,10 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 
 	/**
 	 * Computes regional extrema in current input image, using
-	 * flood-filling-like algorithm with 4 connectivity.
-	 * Computations are made with double values.
+	 * flood-filling-like algorithm with 8 connectivity.
+	 * 
+	 * Computations on source array are made with floating-point computation.
+	 * Flood-fill on target array is made type genericicty.
 	 */
 	private void processScalar2dC8(ScalarArray2D<?> source, BooleanArray2D target) 
 	{
@@ -254,6 +263,8 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	@Override
 	public boolean canProcess(Array<?> source, Array<?> target)
 	{
-		return (source instanceof ScalarArray2D && target instanceof BooleanArray2D);
+		return source instanceof ScalarArray2D
+				&& target instanceof BooleanArray2D
+				&& source.dimensionality() == target.dimensionality();
 	}
 }

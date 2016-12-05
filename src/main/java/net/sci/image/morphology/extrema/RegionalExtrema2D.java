@@ -121,7 +121,8 @@ public class RegionalExtrema2D extends AlgoStub
 	/**
 	 * Computes regional extrema in current input image, using
 	 * flood-filling-like algorithm with 4 connectivity.
-	 * Computations are made with double values.
+	 * 
+	 * Computations are made with floating point values.
 	 */
 	private void processScalar2dC4(ScalarArray2D<?> source, BooleanArray2D target) 
 	{
@@ -181,7 +182,8 @@ public class RegionalExtrema2D extends AlgoStub
 	/**
 	 * Computes regional extrema in current input image, using
 	 * flood-filling-like algorithm with 4 connectivity.
-	 * Computations are made with double values.
+	 * 
+	 * Computations are made with floating point values.
 	 */
 	private void processScalar2dC8(ScalarArray2D<?> source, BooleanArray2D target) 
 	{
@@ -254,6 +256,8 @@ public class RegionalExtrema2D extends AlgoStub
 	@Override
 	public boolean canProcess(Array<?> source, Array<?> target)
 	{
-		return (source instanceof ScalarArray2D && target instanceof BooleanArray2D);
+		return source instanceof ScalarArray2D
+				&& target instanceof BooleanArray2D
+				&& source.dimensionality() == target.dimensionality();
 	}
 }
