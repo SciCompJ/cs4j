@@ -7,8 +7,10 @@ import net.sci.array.Array;
 import net.sci.array.Cursor;
 import net.sci.array.data.Float32Array;
 import net.sci.array.data.ScalarArray;
+import net.sci.array.type.Scalar;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
+import net.sci.array.process.VectorArrayMarginalOperator;
 import net.sci.image.ImageArrayToArrayOperator;
 
 /**
@@ -18,7 +20,7 @@ import net.sci.image.ImageArrayToArrayOperator;
  * @author dlegland
  *
  */
-public final class BoxFilter implements ImageArrayToArrayOperator
+public final class BoxFilter implements ImageArrayToArrayOperator, VectorArrayMarginalOperator
 {
 	int[] radiusList;
 	
@@ -43,7 +45,7 @@ public final class BoxFilter implements ImageArrayToArrayOperator
 	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
 	 */
 	@Override
-	public void process(Array<?> source, Array<?> target)
+	public void processScalar(ScalarArray<? extends Scalar> source, ScalarArray<? extends Scalar> target)
 	{
 		// Choose the best possible implementation, depending on array dimensions
 		if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
@@ -57,7 +59,7 @@ public final class BoxFilter implements ImageArrayToArrayOperator
 		else if (source instanceof ScalarArray && target instanceof ScalarArray)
 		{
 			// most generic implementation, slow...
-			processScalar((ScalarArray<?>) source, (ScalarArray<?>) target);
+			processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
 		}
 		else
 		{
@@ -69,7 +71,7 @@ public final class BoxFilter implements ImageArrayToArrayOperator
 	/**
 	 * Process scalar arrays of any dimension.
 	 */
-	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
+	public void processScalarNd(ScalarArray<? extends Scalar> source, ScalarArray<? extends Scalar> target)
 	{
 		// get array size (for cropping)
 		int nd = source.dimensionality();
@@ -223,7 +225,14 @@ public final class BoxFilter implements ImageArrayToArrayOperator
 	public Array<?> createEmptyOutputArray(Array<?> array)
 	{
 		int[] dims = array.getSize();
-		return Float32Array.create(dims);
+		if (array instanceof ScalarArray)
+		{
+			return Float32Array.create(dims);
+		}
+		else
+		{
+			return array.newInstance(dims);
+		}
 	}
 	
 	public boolean canProcess(Array<?> array)
