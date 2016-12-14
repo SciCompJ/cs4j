@@ -10,7 +10,7 @@ import net.sci.array.Cursor;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.ArrayToArrayImageOperator;
 
 /**
  * Computes the median value in a box neighborhood aroundeach array element.
@@ -18,7 +18,7 @@ import net.sci.image.ImageArrayToArrayOperator;
  * @author dlegland
  *
  */
-public final class MedianBoxFilter implements ImageArrayToArrayOperator
+public final class MedianBoxFilter implements ArrayToArrayImageOperator
 {
 	int[] radiusList;
 	

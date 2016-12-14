@@ -15,7 +15,7 @@ import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.image.Image;
-import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.FloodFill2D;
 
@@ -31,7 +31,7 @@ import net.sci.image.morphology.FloodFill2D;
  * @author dlegland
  *
  */
-public class FloodFillComponentLabeling2D extends AlgoStub implements ImageArrayToArrayOperator
+public class FloodFillComponentLabeling2D extends AlgoStub implements ArrayToArrayImageOperator
 {
 	/** 
 	 * The connectivity of the components, either 4 (default) or 8.

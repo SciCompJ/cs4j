@@ -6,7 +6,7 @@ package net.sci.image.process;
 import net.sci.array.Array;
 import net.sci.array.data.BooleanArray;
 import net.sci.array.data.ScalarArray;
-import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.ArrayToArrayImageOperator;
 
 /**
  * Thresholds an image, by retaining only values greater than or equal to a
@@ -15,7 +15,7 @@ import net.sci.image.ImageArrayToArrayOperator;
  * @author dlegland
  *
  */
-public class ImageThreshold implements ImageArrayToArrayOperator
+public class ImageThreshold implements ArrayToArrayImageOperator
 {
 	double value;
 	

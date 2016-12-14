@@ -8,7 +8,7 @@ import net.sci.array.Cursor;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.process.filter.BoxNeighborhood;
 import net.sci.image.process.filter.Neighborhood;
 
@@ -18,7 +18,7 @@ import net.sci.image.process.filter.Neighborhood;
  * @author dlegland
  *
  */
-public final class BoxDilationNaive implements ImageArrayToArrayOperator
+public final class BoxDilationNaive implements ArrayToArrayImageOperator
 {
 	int[] radiusList;
 	

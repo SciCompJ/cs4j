@@ -15,7 +15,7 @@ import net.sci.array.ArrayToArrayOperator;
  * @author dlegland
  *
  */
-public interface ImageArrayToArrayOperator extends ArrayToArrayOperator, ImageArrayOperator
+public interface ArrayToArrayImageOperator extends ArrayToArrayOperator, ImageArrayOperator
 {
 	public default void process(Image inputImage, Image outputImage)
 	{

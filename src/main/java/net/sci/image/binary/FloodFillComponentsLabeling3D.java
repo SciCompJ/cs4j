@@ -12,7 +12,7 @@ import net.sci.array.data.UInt8Array;
 import net.sci.array.data.scalar3d.BooleanArray3D;
 import net.sci.array.data.scalar3d.IntArray3D;
 import net.sci.image.Image;
-import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.FloodFill3D;
 
@@ -28,7 +28,7 @@ import net.sci.image.morphology.FloodFill3D;
  * 
  * @author dlegland
  */
-public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArrayToArrayOperator
+public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToArrayImageOperator
 {
 	/** 
 	 * The connectivity of the components, either Connectivity3D.C6 (default) or Connectivity3D.C26.

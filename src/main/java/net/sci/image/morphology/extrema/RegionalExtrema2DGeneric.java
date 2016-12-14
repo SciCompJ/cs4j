@@ -11,7 +11,7 @@ import net.sci.array.Array;
 import net.sci.array.data.BooleanArray;
 import net.sci.array.data.scalar2d.BooleanArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.FloodFill2D;
 import static net.sci.array.type.Boolean.FALSE;
@@ -29,7 +29,7 @@ import static net.sci.array.type.Boolean.TRUE;
  *
  */
 public class RegionalExtrema2DGeneric extends AlgoStub
-		implements ImageArrayToArrayOperator, Algo
+		implements ArrayToArrayImageOperator, Algo
 {
 	// ==============================================================
 	// Class variables

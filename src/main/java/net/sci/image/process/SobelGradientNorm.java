@@ -12,7 +12,7 @@ import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.Image;
-import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.ArrayToArrayImageOperator;
 
 /**
  * Compute norm of Sobel gradient of a scalar image (2D or 3D), without storing
@@ -22,7 +22,7 @@ import net.sci.image.ImageArrayToArrayOperator;
  * @author David Legland
  *
  */
-public class SobelGradientNorm implements ImageArrayToArrayOperator
+public class SobelGradientNorm implements ArrayToArrayImageOperator
 {
 	@Override
 	public void process(Array<?> input, Array<?> output)

@@ -12,7 +12,7 @@ import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.data.vector.VectorArray3D;
 import net.sci.array.type.Vector;
-import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.ArrayToArrayImageOperator;
 
 /**
  * Compute the norm of a vector array.
@@ -20,7 +20,7 @@ import net.sci.image.ImageArrayToArrayOperator;
  * @author David Legland
  *
  */
-public class VectorArrayNorm implements ImageArrayToArrayOperator
+public class VectorArrayNorm implements ArrayToArrayImageOperator
 {
 	@Override
 	public void process(Array<?> input, Array<?> output)

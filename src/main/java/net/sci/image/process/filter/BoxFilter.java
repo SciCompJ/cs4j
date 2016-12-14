@@ -11,7 +11,7 @@ import net.sci.array.type.Scalar;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.process.VectorArrayMarginalOperator;
-import net.sci.image.ImageArrayToArrayOperator;
+import net.sci.image.ArrayToArrayImageOperator;
 
 /**
  * Box filter for multidimensional arrays. Considers a square box, with length
@@ -20,7 +20,7 @@ import net.sci.image.ImageArrayToArrayOperator;
  * @author dlegland
  *
  */
-public final class BoxFilter implements ImageArrayToArrayOperator, VectorArrayMarginalOperator
+public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMarginalOperator
 {
 	int[] radiusList;
 	
