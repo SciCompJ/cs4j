@@ -5,4 +5,4 @@
  * and several implementations.</p>
  *
  */
-package net.sci.image.morphology.morphrec;
+package net.sci.image.morphology.reconstruct;

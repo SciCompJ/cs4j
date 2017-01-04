@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.morphology.morphrec;
+package net.sci.image.morphology.reconstruct;
 
 import net.sci.array.data.scalar2d.ScalarArray2D;
 

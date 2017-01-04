@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.morphology.morphrec;
+package net.sci.image.morphology.reconstruct;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;

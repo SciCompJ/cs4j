@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.morphology.morphrec;
+package net.sci.image.morphology.reconstruct;
 
 /**
  * Enumeration of the two different types of morphological reconstruction.
