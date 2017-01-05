@@ -16,17 +16,17 @@ import net.sci.image.data.Cursor2D;
 
 /**
  * <p>
- * Geodesic reconstruction for planar images, using hybrid algorithm.
+ * Morphological reconstruction for planar arrays, using hybrid algorithm. The
+ * algorithms performs forward scan, backward scan that also initialize a queue
+ * of positions that need updates, and finally recursively the positions in the
+ * queue.
  * </p>
  * 
  * <p>
- * This class performs the algorithm on the two instances of ScalarArray2D
- * kept in it. 
+ * This class performs the algorithm on the two instances of ScalarArray2D kept
+ * in it.
  * </p>
  * 
- * @see GeodesicReconstructionScanning
- * @see GeodesicReconstructionByDilation
- * @see GeodesicReconstructionByErosion
  * @author David Legland
  *
  */
@@ -35,6 +35,14 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	// ==================================================
 	// Class variables 
 	
+	// ==================================================
+	// Class variables that could be factorized 
+	
+	/**
+	 * The connectivity of the algorithm, usually either C4 or C8.
+	 */
+	Connectivity2D connectivity = Connectivity2D.C4;
+
 	ReconstructionType reconstructionType = ReconstructionType.BY_DILATION;
 
 	ScalarArray2D<?> marker;
@@ -44,6 +52,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	
 	/** image width */
 	int sizeX = 0;
+	
 	/** image height */
 	int sizeY = 0;
 
@@ -53,11 +62,6 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 
 	// ==================================================
 	// Class variables that could be factorized 
-	
-	/**
-	 * The connectivity of the algorithm, either 4 or 8.
-	 */
-	protected Connectivity2D connectivity = Connectivity2D.C4;
 	
 	/**
 	 * Boolean flag for the display of debugging infos.
@@ -73,23 +77,6 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 * Boolean flag for the display of algorithm progress in ImageJ status bar
 	 */
 	public boolean showProgress = false; 
-
-	
-	/* (non-Javadoc)
-	 * @see inra.ijpb.morphology.geodrec.GeodesicReconstructionAlgo#getConnectivity()
-	 */
-	public Connectivity2D getConnectivity()
-	{
-		return this.connectivity;
-	}
-
-	/* (non-Javadoc)
-	 * @see inra.ijpb.morphology.geodrec.GeodesicReconstructionAlgo#setConnectivity(int)
-	 */
-	public void setConnectivity(Connectivity2D conn)
-	{
-		this.connectivity = conn;
-	}
 
 	
 	// ==================================================
@@ -161,12 +148,29 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		this.reconstructionType = reconstructionType;
 	}
 
+	/**
+	 * @return the connectivity
+	 */
+	public Connectivity2D getConnectivity()
+	{
+		return connectivity;
+	}
+
+	/**
+	 * @param connectivity the connectivity to set
+	 */
+	public void setConnectivity(Connectivity2D connectivity)
+	{
+		this.connectivity = connectivity;
+	}
+
 	
+
 	// ==================================================
-	// Methods implementing the GeodesicReconstruction interface
+	// Methods implementing the MorphologicalReconstruction interface
 	
 	/**
-	 * Run the morphological reconstruction algorithm using the specified images
+	 * Run the morphological reconstruction algorithm using the specified arrays
 	 * as argument.
 	 */
 	public ScalarArray2D<?> process(ScalarArray2D<?> marker, ScalarArray2D<?> mask)
@@ -202,11 +206,10 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		{
 			System.out.println("Forward iteration");
 		}
-//		if (showStatus)
-//		{
-		//TODO: implement with events
-//			IJ.showStatus("Geod. Rec. by Dil. Fwd");
-//		}
+		if (showStatus)
+		{
+			fireStatusChanged(this, "Morpho. Rec. Forward");
+		}
 
 		// forward iteration
 		if (connectivity == Connectivity2D.C4)
@@ -223,11 +226,10 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		{
 			System.out.println("Backward iteration");
 		}
-//		if (showStatus)
-		//TODO: implement with events
-//		{
-//			IJ.showStatus("Geod. Rec. by Dil. Bwd");
-//		}
+		if (showStatus)
+		{
+			fireStatusChanged(this, "Morpho. Rec. Backward");
+		}
 
 		// backward iteration
 		if (connectivity == Connectivity2D.C4)
@@ -243,11 +245,10 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		{
 			System.out.println("Process queue ");
 		}
-		//TODO: implement with events
-//		if (showStatus)
-//		{
-//			IJ.showStatus("Processing Queue... ");
-//		}
+		if (showStatus)
+		{
+			fireStatusChanged(this, "Morpho. Rec. Processing queue");
+		}
 
 		// Process queue
 		if (connectivity == Connectivity2D.C4)
@@ -262,6 +263,10 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		return this.result;
 	}
 
+	
+	// ==================================================
+	// Inner processing methods
+	
 	private void initializeResult()
 	{
 		// Create result image the same size as the mask image
@@ -288,21 +293,19 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	{
 		final int sign = this.reconstructionType.getSign();
 		
-//		if (showProgress)
-//		{
-//			// TODO: use algo interface
-//			IJ.showProgress(0, this.sizeY);
-//		}
+		if (showProgress)
+		{
+			fireProgressChanged(this, 0, this.sizeY);
+		}
 		
 		// Process all other lines
 		for (int y = 0; y < this.sizeY; y++) 
 		{
 			
-//			if (showProgress)
-//			{
-//				// TODO: use algo interface
-//				IJ.showProgress(y, this.sizeY);
-//			}
+			if (showProgress)
+			{
+				fireProgressChanged(this, y, this.sizeY);
+			}
 	
 			// Process pixels in the middle of the line
 			for (int x = 0; x < this.sizeX; x++) 
@@ -376,18 +379,18 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	{
 		final int sign = this.reconstructionType.getSign();
 		
-//		if (showProgress)
-//		{
-//			IJ.showProgress(0, this.sizeY);
-//		}
+		if (showProgress)
+		{
+			fireProgressChanged(this, 0, this.sizeY);
+		}
 		
 		// Process all other lines
 		for (int y = 0; y < this.sizeY; y++)
 		{
-//			if (showProgress) 
-//			{
-//				IJ.showProgress(y, this.sizeY);
-//			}
+			if (showProgress)
+			{
+				fireProgressChanged(this, y, this.sizeY);
+			}
 
 			// Process pixels in the middle of the line
 			for (int x = 0; x < this.sizeX; x++) 
@@ -475,18 +478,18 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	{
 		final int sign = this.reconstructionType.getSign();
 		
-//		if (showProgress)
-//		{
-//			IJ.showProgress(0, this.sizeY);
-//		}
+		if (showProgress)
+		{
+			fireProgressChanged(this, 0, this.sizeY);
+		}
 		
 		// Process regular lines
 		for (int y = this.sizeY-1; y >= 0; y--)
 		{
-//			if (showProgress) 
-//			{
-//				IJ.showProgress(this.sizeY-1-y, this.sizeY);
-//			}
+			if (showProgress)
+			{
+				fireProgressChanged(this, this.sizeY-1-y, this.sizeY);
+			}
 	
 			// Process pixels in the middle of the current line
 			// consider pixels on the right and below
@@ -587,18 +590,18 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	{
 		final int sign = this.reconstructionType.getSign();
 		
-//		if (showProgress)
-//		{
-//			IJ.showProgress(0, this.sizeY);
-//		}
+		if (showProgress)
+		{
+			fireProgressChanged(this, 0, this.sizeY);
+		}
 		
 		// Process regular lines
 		for (int y = this.sizeY-1; y >= 0; y--)
 		{
-//			if (showProgress) 
-//			{
-//				IJ.showProgress(this.sizeY-1-y, this.sizeY);
-//			}
+			if (showProgress)
+			{
+				fireProgressChanged(this, this.sizeY-1-y, this.sizeY);
+			}
 
 			// Process pixels in the middle of the current line
 			for (int x = this.sizeX - 1; x >= 0; x--)
