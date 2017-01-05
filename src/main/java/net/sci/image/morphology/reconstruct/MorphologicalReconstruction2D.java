@@ -8,7 +8,7 @@ import net.sci.array.data.scalar2d.ScalarArray2D;
 /**
  * <p>
  * Defines the interface for morphological reconstructions algorithms applied to
- * planar images.
+ * planar arrays.
  * </p>
  * 
  * <p>

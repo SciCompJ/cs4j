@@ -41,9 +41,19 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	/**
 	 * The connectivity of the algorithm, usually either C4 or C8.
 	 */
-	Connectivity2D connectivity = Connectivity2D.C4;
+	protected Connectivity2D connectivity = Connectivity2D.C4;
 
-	ReconstructionType reconstructionType = ReconstructionType.BY_DILATION;
+	protected ReconstructionType reconstructionType = ReconstructionType.BY_DILATION;
+	
+	/**
+	 * The sign value associated to reconstruction type.
+	 * <ul>
+	 * <li>+1 : reconstruction by dilation.</li> 
+	 * <li>-1 : reconstruction by erosion.</li>
+	 * </ul> 
+	 */
+	protected int sign = 1;
+	
 
 	ScalarArray2D<?> marker;
 	ScalarArray2D<?> mask;
@@ -99,7 +109,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	public MorphologicalReconstruction2DHybrid(ReconstructionType type) 
 	{
-		this.reconstructionType = type;
+		setReconstructionType(type);
 	}
 
 	/**
@@ -111,7 +121,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	public MorphologicalReconstruction2DHybrid(Connectivity2D connectivity)
 	{
-		this.connectivity = connectivity;
+		setConnectivity(connectivity);
 	}
 
 	/**
@@ -125,8 +135,8 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	public MorphologicalReconstruction2DHybrid(ReconstructionType type, Connectivity2D connectivity) 
 	{
-		this.reconstructionType = type;
-		this.connectivity = connectivity;
+		setReconstructionType(type);
+		setConnectivity(connectivity);
 	}
 
 	// ==================================================
@@ -146,6 +156,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	public void setReconstructionType(ReconstructionType reconstructionType) 
 	{
 		this.reconstructionType = reconstructionType;
+		this.sign = reconstructionType.getSign();
 	}
 
 	/**
@@ -273,14 +284,13 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		// TODO: result as ScalarArray or ScalarArray2D ?
 		this.result = (ScalarArray2D<?>) this.mask.newInstance(this.sizeX, this.sizeY);
 	
-		int sign = this.reconstructionType.getSign();
 		for (int y = 0; y < this.sizeY; y++) 
 		{
 			for (int x = 0; x < this.sizeX; x++) 
 			{
-				double v1 = this.marker.getValue(x, y) * sign; 
-				double v2 = this.mask.getValue(x, y) * sign; 
-				this.result.setValue(x, y, Math.min(v1, v2) * sign);
+				double v1 = this.marker.getValue(x, y) * this.sign; 
+				double v2 = this.mask.getValue(x, y) * this.sign; 
+				this.result.setValue(x, y, Math.min(v1, v2) * this.sign);
 			}
 		}		
 	}
@@ -291,8 +301,6 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	private void forwardScanC4() 
 	{
-		final int sign = this.reconstructionType.getSign();
-		
 		if (showProgress)
 		{
 			fireProgressChanged(this, 0, this.sizeY);
@@ -310,66 +318,29 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 			// Process pixels in the middle of the line
 			for (int x = 0; x < this.sizeX; x++) 
 			{
-				double currentValue = result.getValue(x, y) * sign;
+				double currentValue = result.getValue(x, y) * this.sign;
 				double maxValue = currentValue;
 				
 				if (x > 0)
-					maxValue = Math.max(maxValue, result.getValue(x-1, y) * sign);
+					maxValue = Math.max(maxValue, result.getValue(x-1, y) * this.sign);
 				if (y > 0)
-					maxValue = Math.max(maxValue, result.getValue(x, y-1) * sign);
+					maxValue = Math.max(maxValue, result.getValue(x, y-1) * this.sign);
 				
 				// update value of current pixel
-				maxValue = min(maxValue, mask.getValue(x, y) * sign);
+				maxValue = min(maxValue, mask.getValue(x, y) * this.sign);
 				if (maxValue > currentValue) 
 				{
-					result.setValue(x, y, maxValue * sign);
+					result.setValue(x, y, maxValue * this.sign);
 				}
 			}
 		} // end of forward iteration
-	}
 
-//	/**
-//	 * Update result image using pixels in the upper left neighborhood,
-//	 * using the 4-adjacency.
-//	 */
-//	private void forwardScanC4Float()
-//	{
-//		final float sign = this.reconstructionType.getSign();
-//		
-//		if (showProgress)
-//		{
-//			IJ.showProgress(0, this.sizeY);
-//		}
-//		
-//		// Process all other lines
-//		for (int y = 0; y < this.sizeY; y++) 
-//		{
-//			
-//			if (showProgress)
-//			{
-//				IJ.showProgress(y, this.sizeY);
-//			}
-//	
-//			// Process pixels in the middle of the line
-//			for (int x = 0; x < this.sizeX; x++) 
-//			{
-//				float currentValue = result.getf(x, y) * sign;
-//				float maxValue = currentValue;
-//				
-//				if (x > 0)
-//					maxValue = Math.max(maxValue, result.getf(x-1, y) * sign);
-//				if (y > 0)
-//					maxValue = Math.max(maxValue, result.getf(x, y-1) * sign);
-//				
-//				// update value of current pixel
-//				maxValue = min(maxValue, mask.getf(x, y) * sign);
-//				if (maxValue > currentValue) 
-//				{
-//					result.setf(x, y, maxValue * sign);
-//				}
-//			}
-//		} // end of forward iteration
-//	}
+		// reset progress display
+		if (showProgress)
+		{
+			fireProgressChanged(this, this.sizeY, this.sizeY);
+		}
+	}
 
 	/**
 	 * Update result image using pixels in the upper left neighborhood,
@@ -377,8 +348,6 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	private void forwardScanC8()
 	{
-		final int sign = this.reconstructionType.getSign();
-		
 		if (showProgress)
 		{
 			fireProgressChanged(this, 0, this.sizeY);
@@ -395,80 +364,36 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 			// Process pixels in the middle of the line
 			for (int x = 0; x < this.sizeX; x++) 
 			{
-				double currentValue = result.getValue(x, y) * sign;
+				double currentValue = result.getValue(x, y) * this.sign;
 				double maxValue = currentValue;
 				
 				if (y > 0) 
 				{
 					// process the 3 values on the line above current pixel
 					if (x > 0)
-						maxValue = Math.max(maxValue, result.getValue(x-1, y-1) * sign);
-					maxValue = Math.max(maxValue, result.getValue(x, y-1) * sign);
+						maxValue = Math.max(maxValue, result.getValue(x-1, y-1) * this.sign);
+					maxValue = Math.max(maxValue, result.getValue(x, y-1) * this.sign);
 					if (x < this.sizeX - 1)
-						maxValue = Math.max(maxValue, result.getValue(x+1, y-1) * sign);
+						maxValue = Math.max(maxValue, result.getValue(x+1, y-1) * this.sign);
 				}
 				if (x > 0)
-					maxValue = Math.max(maxValue, result.getValue(x-1, y) * sign);
+					maxValue = Math.max(maxValue, result.getValue(x-1, y) * this.sign);
 				
 				// update value of current pixel
-				maxValue = min(maxValue, mask.getValue(x, y) * sign);
+				maxValue = min(maxValue, mask.getValue(x, y) * this.sign);
 				if (maxValue > currentValue) 
 				{
-					result.setValue(x, y, maxValue * sign);
+					result.setValue(x, y, maxValue * this.sign);
 				}
 			}
 		} // end of forward iteration
+
+		// reset progress display
+		if (showProgress)
+		{
+			fireProgressChanged(this, this.sizeY, this.sizeY);
+		}
 	}
-	
-//	/**
-//	 * Update result image using pixels in the upper left neighborhood,
-//	 * using the 8-adjacency.
-//	 */
-//	private void forwardScanC8Float()
-//	{
-//		final float sign = this.reconstructionType.getSign();
-//		
-//		if (showProgress)
-//		{
-//			IJ.showProgress(0, this.sizeY);
-//		}
-//		
-//		// Process all other lines
-//		for (int y = 0; y < this.sizeY; y++)
-//		{
-//			
-//			if (showProgress) 
-//			{
-//				IJ.showProgress(y, this.sizeY);
-//			}
-//
-//			// Process pixels in the middle of the line
-//			for (int x = 0; x < this.sizeX; x++) 
-//			{
-//				float currentValue = result.getf(x, y) * sign;
-//				float maxValue = currentValue;
-//				
-//				if (y > 0) 
-//				{
-//					// process the 3 values on the line above current pixel
-//					if (x > 0)
-//						maxValue = Math.max(maxValue, result.getf(x-1, y-1) * sign);
-//					maxValue = Math.max(maxValue, result.getf(x, y-1) * sign);
-//					if (x < this.sizeX - 1)
-//						maxValue = Math.max(maxValue, result.getf(x+1, y-1) * sign);
-//				}
-//				if (x > 0)
-//					maxValue = Math.max(maxValue, result.getf(x-1, y) * sign);
-//				
-//				// update value of current pixel
-//				maxValue = min(maxValue, mask.getf(x, y) * sign);
-//				if (maxValue > currentValue) 
-//				{
-//					result.setf(x, y, maxValue * sign);
-//				}
-//			}
-//		} // end of forward iteration
-//	}
 
 	/**
 	 * Update result image using pixels in the lower-right neighborhood, 
@@ -476,8 +401,6 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	private void backwardScanC4() 
 	{
-		final int sign = this.reconstructionType.getSign();
-		
 		if (showProgress)
 		{
 			fireProgressChanged(this, 0, this.sizeY);
@@ -496,16 +419,16 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 			for (int x = this.sizeX - 1; x >= 0; x--) 
 			{
 
-				double currentValue = result.getValue(x, y) * sign;
+				double currentValue = result.getValue(x, y) * this.sign;
 				double maxValue = currentValue;
 				
 				if (x < this.sizeX - 1)
-					maxValue = Math.max(maxValue, result.getValue(x+1, y) * sign);
+					maxValue = Math.max(maxValue, result.getValue(x+1, y) * this.sign);
 				if (y < this.sizeY - 1)
-					maxValue = Math.max(maxValue, result.getValue(x, y+1) * sign);
+					maxValue = Math.max(maxValue, result.getValue(x, y+1) * this.sign);
 				
 				// combine with mask
-				maxValue = min(maxValue, mask.getValue(x, y) * sign);
+				maxValue = min(maxValue, mask.getValue(x, y) * this.sign);
 
 				// check if update is required
 				if (maxValue <= currentValue)
@@ -514,73 +437,22 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 				}
 
 				// update value of current pixel
-				result.setValue(x, y, maxValue * sign);
+				result.setValue(x, y, maxValue * this.sign);
 				
 				// eventually add lower-right neighbors to queue
 				if (x < this.sizeX - 1) 
-					updateQueue(x + 1, y, maxValue, sign);
+					updateQueue(x + 1, y, maxValue);
 				if (y < this.sizeY - 1) 
-					updateQueue(x, y + 1, maxValue, sign);
+					updateQueue(x, y + 1, maxValue);
 			}
-		} 
-	} // end of backward iteration
+		} // end of backward iteration
 
-//	/**
-//	 * Update result image using pixels in the lower-right neighborhood, 
-//	 * using the 4-adjacency.
-//	 */
-//	private void backwardScanC4Float() 
-//	{
-//		final float sign = this.reconstructionType.getSign();
-//		
-//		if (showProgress)
-//		{
-//			IJ.showProgress(0, this.sizeY);
-//		}
-//		
-//		// Process regular lines
-//		for (int y = this.sizeY-1; y >= 0; y--)
-//		{
-//	
-//			if (showProgress) 
-//			{
-//				IJ.showProgress(this.sizeY-1-y, this.sizeY);
-//			}
-//	
-//			// Process pixels in the middle of the current line
-//			// consider pixels on the right and below
-//			for (int x = this.sizeX - 1; x >= 0; x--) 
-//			{
-//
-//				float currentValue = result.getf(x, y) * sign;
-//				float maxValue = currentValue;
-//				
-//				if (x < this.sizeX - 1)
-//					maxValue = Math.max(maxValue, result.getf(x+1, y) * sign);
-//				if (y < this.sizeY - 1)
-//					maxValue = Math.max(maxValue, result.getf(x, y+1) * sign);
-//				
-//				// combine with mask
-//				maxValue = min(maxValue, mask.getf(x, y) * sign);
-//
-//				// check if update is required
-//				if (maxValue <= currentValue)
-//				{
-//					continue;
-//				}
-//
-//				// update value of current pixel
-//				result.setf(x, y, maxValue * sign);
-//				
-//				// eventually add lower-right neighbors to queue
-//				if (x < this.sizeX - 1) 
-//					updateQueue(x + 1, y, maxValue, sign);
-//				if (y < this.sizeY - 1) 
-//					updateQueue(x, y + 1, maxValue, sign);
-//			}
-//		} 
-//	} // end of backward iteration
-
+		// reset progress display
+		if (showProgress)
+		{
+			fireProgressChanged(this, this.sizeY, this.sizeY);
+		}
+	}
 
 	/**
 	 * Update result image using pixels in the lower-right neighborhood, using
@@ -588,8 +460,6 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	private void backwardScanC8() 
 	{
-		final int sign = this.reconstructionType.getSign();
-		
 		if (showProgress)
 		{
 			fireProgressChanged(this, 0, this.sizeY);
@@ -606,31 +476,23 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 			// Process pixels in the middle of the current line
 			for (int x = this.sizeX - 1; x >= 0; x--)
 			{
-				double currentValue = result.getValue(x, y) * sign;
+				double currentValue = result.getValue(x, y) * this.sign;
 				double maxValue = currentValue;
 				
 				if (y < this.sizeY - 1)
 				{
 					// process the 3 values on the line below current pixel
 					if (x > 0)
-						maxValue = Math.max(maxValue, result.getValue(x-1, y+1) * sign);
-					maxValue = Math.max(maxValue, result.getValue(x, y+1) * sign);
+						maxValue = Math.max(maxValue, result.getValue(x-1, y+1) * this.sign);
+					maxValue = Math.max(maxValue, result.getValue(x, y+1) * this.sign);
 					if (x < this.sizeX - 1)
-						maxValue = Math.max(maxValue, result.getValue(x+1, y+1) * sign);
+						maxValue = Math.max(maxValue, result.getValue(x+1, y+1) * this.sign);
 				}
 				if (x < this.sizeX - 1)
-					maxValue = Math.max(maxValue, result.getValue(x+1, y) * sign);
+					maxValue = Math.max(maxValue, result.getValue(x+1, y) * this.sign);
 				
-//				// update value of current pixel
-//				maxValue = min(maxValue, mask.get(x, y) * sign);
-//				if (maxValue > currentValue) 
-//				{
-//					result.set(x, y, maxValue * sign);
-//					modif = true;
-//				}
-
 				// combine with mask
-				maxValue = min(maxValue, mask.getValue(x, y) * sign);
+				maxValue = min(maxValue, mask.getValue(x, y) * this.sign);
 
 				// check if update is required
 				if (maxValue <= currentValue)
@@ -639,101 +501,35 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 				}
 
 				// update value of current pixel
-				result.setValue(x, y, maxValue * sign);
+				result.setValue(x, y, maxValue * this.sign);
 				
 				// eventually add lower-right neighbors to queue
 				if (x < this.sizeX - 1) 
-					updateQueue(x + 1, y, maxValue, sign);
+					updateQueue(x + 1, y, maxValue);
 				if (y < this.sizeY - 1) 
 				{
 					if (x > 0) 
-						updateQueue(x - 1, y + 1, maxValue, sign);
-					updateQueue(x, y + 1, maxValue, sign);
+						updateQueue(x - 1, y + 1, maxValue);
+					updateQueue(x, y + 1, maxValue);
 					if (x < this.sizeX - 1) 
-						updateQueue(x + 1, y + 1, maxValue, sign);
+						updateQueue(x + 1, y + 1, maxValue);
 				}
-				
 			}
-		} 
-	} // end of backward iteration
+		} // end of backward iteration
 
-//	/**
-//	 * Update result image using pixels in the lower-right neighborhood, using
-//	 * the 8-adjacency.
-//	 */
-//	private void backwardScanC8Float() 
-//	{
-//		final float sign = this.reconstructionType.getSign();
-//		
-//		if (showProgress)
-//		{
-//			IJ.showProgress(0, this.sizeY);
-//		}
-//		
-//		// Process regular lines
-//		for (int y = this.sizeY-1; y >= 0; y--)
-//		{
-//
-//			if (showProgress) 
-//			{
-//				IJ.showProgress(this.sizeY-1-y, this.sizeY);
-//			}
-//
-//			// Process pixels in the middle of the current line
-//			for (int x = this.sizeX - 1; x >= 0; x--)
-//			{
-//				float currentValue = result.getf(x, y) * sign;
-//				float maxValue = currentValue;
-//				
-//				if (y < this.sizeY - 1)
-//				{
-//					// process the 3 values on the line below current pixel
-//					if (x > 0)
-//						maxValue = Math.max(maxValue, result.getf(x-1, y+1) * sign);
-//					maxValue = Math.max(maxValue, result.getf(x, y+1) * sign);
-//					if (x < this.sizeX - 1)
-//						maxValue = Math.max(maxValue, result.getf(x+1, y+1) * sign);
-//				}
-//				if (x < this.sizeX - 1)
-//					maxValue = Math.max(maxValue, result.getf(x+1, y) * sign);
-//				
-//				// combine with mask
-//				maxValue = min(maxValue, mask.getf(x, y) * sign);
-//
-//				// check if update is required
-//				if (maxValue <= currentValue)
-//				{
-//					continue;
-//				}
-//
-//				// update value of current pixel
-//				result.setf(x, y, maxValue * sign);
-//				
-//				// eventually add lower-right neighbors to queue
-//				if (x < this.sizeX - 1) 
-//					updateQueue(x + 1, y, maxValue, sign);
-//				if (y < this.sizeY - 1) 
-//				{
-//					if (x > 0) 
-//						updateQueue(x - 1, y + 1, maxValue, sign);
-//					updateQueue(x, y + 1, maxValue, sign);
-//					if (x < this.sizeX - 1) 
-//						updateQueue(x + 1, y + 1, maxValue, sign);
-//				}
-//				
-//			}
-//		} 
-//	} // end of backward iteration
+		// reset progress display
+		if (showProgress)
+		{
+			fireProgressChanged(this, this.sizeY, this.sizeY);
+		}
+	} 
 
 	/**
 	 * Update result image using next pixel in the queue,
-	 * using the 6-adjacency.
+	 * using the 4-adjacency.
 	 */
 	private void processQueueC4() 
 	{
-		// sign for adapting dilation and erosion algorithms
-		final int sign = this.reconstructionType.getSign();
-
 		// the maximal value around current pixel
 		double value;
 		
@@ -746,87 +542,36 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 			
 			// compare with each one of the four neighbors
 			if (x > 0) 
-				value = max(value, result.getValue(x - 1, y) * sign);
+				value = max(value, result.getValue(x - 1, y) * this.sign);
 			if (x < this.sizeX - 1) 
-				value = max(value, result.getValue(x + 1, y) * sign);
+				value = max(value, result.getValue(x + 1, y) * this.sign);
 			if (y > 0) 
-				value = max(value, result.getValue(x, y - 1) * sign);
+				value = max(value, result.getValue(x, y - 1) * this.sign);
 			if (y < this.sizeY - 1) 
-				value = max(value, result.getValue(x, y + 1) * sign);
+				value = max(value, result.getValue(x, y + 1) * this.sign);
 
 			// bound with mask value
-			value = min(value, mask.getValue(x, y) * sign);
+			value = min(value, mask.getValue(x, y) * this.sign);
 			
 			// if no update is needed, continue to next item in queue
-			if (value <= result.getValue(x, y) * sign) 
+			if (value <= result.getValue(x, y) * this.sign) 
 				continue;
 			
 			// update result for current position
-			result.setValue(x, y, value * sign);
+			result.setValue(x, y, value * this.sign);
 
 			// Eventually add each neighbor
 			if (x > 0)
-				updateQueue(x - 1, y, value, sign);
+				updateQueue(x - 1, y, value);
 			if (x < sizeX - 1)
-				updateQueue(x + 1, y, value, sign);
+				updateQueue(x + 1, y, value);
 			if (y > 0)
-				updateQueue(x, y - 1, value, sign);
+				updateQueue(x, y - 1, value);
 			if (y < sizeY - 1)
-				updateQueue(x, y + 1, value, sign);
+				updateQueue(x, y + 1, value);
 		}
 	}
 	
-//	/**
-//	 * Update result image using next pixel in the queue,
-//	 * using the 6-adjacency and floating point values.
-//	 */
-//	private void processQueueC4Float()
-//	{
-//		// sign for adapting dilation and erosion algorithms
-//		final float sign = this.reconstructionType.getSign();
-//
-//		// the maximal value around current pixel
-//		float value;
-//		
-//		while (!queue.isEmpty()) 
-//		{
-//			Cursor2D p = queue.removeFirst();
-//			int x = p.getX();
-//			int y = p.getY();
-//			value = result.getf(x, y) * sign;
-//			
-//			// compare with each one of the four neighbors
-//			if (x > 0) 
-//				value = max(value, result.getf(x - 1, y) * sign);
-//			if (x < this.sizeX - 1) 
-//				value = max(value, result.getf(x + 1, y) * sign);
-//			if (y > 0) 
-//				value = max(value, result.getf(x, y - 1) * sign);
-//			if (y < this.sizeY - 1) 
-//				value = max(value, result.getf(x, y + 1) * sign);
-//
-//			// bound with mask value
-//			value = min(value, mask.getf(x, y) * sign);
-//			
-//			// if no update is needed, continue to next item in queue
-//			if (value <= result.getf(x, y) * sign) 
-//				continue;
-//			
-//			// update result for current position
-//			result.setf(x, y, value * sign);
-//
-//			// Eventually add each neighbor
-//			if (x > 0)
-//				updateQueue(x - 1, y, value, sign);
-//			if (x < sizeX - 1)
-//				updateQueue(x + 1, y, value, sign);
-//			if (y > 0)
-//				updateQueue(x, y - 1, value, sign);
-//			if (y < sizeY - 1)
-//				updateQueue(x, y + 1, value, sign);
-//		}
-//	}
-
 	/**
 	 * Update result image using next pixel in the queue,
 	 * using the 8-adjacency.
@@ -876,88 +621,11 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 			{
 				for (int x2 = xmin; x2 <= xmax; x2++) 
 				{
-					updateQueue(x2, y2, value, sign);
+					updateQueue(x2, y2, value);
 				}
 			}
 		}
 	}
-
-//	/**
-//	 * Update result image using next pixel in the queue,
-//	 * using the 8-adjacency and floating point processing.
-//	 */
-//	private void processQueueC8Float() 
-//	{
-//		// sign for adapting dilation and erosion algorithms
-//		final float sign = this.reconstructionType.getSign();
-//
-//		// the maximal value around current pixel
-//		float value;
-//		
-//		while (!queue.isEmpty()) 
-//		{
-////			System.out.println("  queue size: " + queue.size());
-//			
-//			Cursor2D p = queue.removeFirst();
-//			int x = p.getX();
-//			int y = p.getY();
-//			value = result.getf(x, y) * sign;
-//			
-//			// compute bounds of neighborhood
-//			int xmin = max(x - 1, 0);
-//			int xmax = min(x + 1, sizeX - 1);
-//			int ymin = max(y - 1, 0);
-//			int ymax = min(y + 1, sizeY - 1);
-//
-//			// compare with each one of the neighbors
-//			for (int y2 = ymin; y2 <= ymax; y2++) 
-//			{
-//				for (int x2 = xmin; x2 <= xmax; x2++)
-//				{
-//					value = max(value, result.getf(x2, y2) * sign);
-//				}
-//			}
-//			
-//			// bound with mask value
-//			value = min(value, mask.getf(x, y) * sign);
-//			
-//			// if no update is needed, continue to next item in queue
-//			if (value <= result.getf(x, y) * sign) 
-//				continue;
-//			
-//			// update result for current position
-//			result.setf(x, y, value * sign);
-//
-//			// compare with each one of the neighbors
-//			for (int y2 = ymin; y2 <= ymax; y2++) 
-//			{
-//				for (int x2 = xmin; x2 <= xmax; x2++) 
-//				{
-//					updateQueue(x2, y2, value, sign);
-//				}
-//			}
-//		}
-//	}
-
-//	/**
-//	 * Adds the current position to the queue if and only if the value 
-//	 * <code>value<value> is greater than the value of the mask.
-//	 * @param x column index
-//	 * @param y row index
-//	 * @param value value at (x, y) position
-//	 * @param sign integer +1 or -1 to manage both erosions and dilations
-//	 */
-//	private void updateQueue(int x, int y, int value, int sign) {
-//		// update current value only if value is strictly greater
-//		int maskValue = mask.get(x, y) * sign;
-//		value = Math.min(value, maskValue);
-//		
-//		int resultValue = result.get(x, y) * sign; 
-//		if (value > resultValue) {
-//			Cursor2D position = new Cursor2D(x, y);
-//			queue.add(position);
-//		}
-//	}
 
 	/**
 	 * Adds the current position to the queue if and only if the value
@@ -972,13 +640,13 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 * @param sign
 	 *            integer +1 or -1 to manage both erosions and dilations
 	 */
-	private void updateQueue(int x, int y, double value, double sign)
+	private void updateQueue(int x, int y, double value)
 	{
 		// update current value only if value is strictly greater
-		double maskValue = mask.getValue(x, y) * sign;
+		double maskValue = mask.getValue(x, y) * this.sign;
 		value = Math.min(value, maskValue);
 		
-		double resultValue = result.getValue(x, y) * sign; 
+		double resultValue = result.getValue(x, y) * this.sign; 
 		if (value > resultValue) 
 		{
 			Cursor2D position = new Cursor2D(x, y);

@@ -55,7 +55,8 @@ public class MorphologicalReconstruction
 	 *            the planar connectivity (usually C4 or C8)
 	 * @return the result of morphological reconstruction
 	 */
-	public final static Array2D<?> reconstructByDilation(ScalarArray2D<?> marker, ScalarArray2D<?> mask, Connectivity2D conn) 
+	public final static Array2D<?> reconstructByDilation(ScalarArray2D<?> marker, ScalarArray2D<?> mask, 
+			Connectivity2D conn) 
 	{
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
 				ReconstructionType.BY_DILATION, conn);
