@@ -8,6 +8,7 @@ import net.sci.array.data.scalar2d.BooleanArray2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.array.type.Boolean;
 import net.sci.image.data.Connectivity2D;
+import net.sci.image.morphology.MinimaAndMaxima;
 
 public class RegionalExtrema2DGenericTest
 {
@@ -38,7 +39,7 @@ public class RegionalExtrema2DGenericTest
 			}
 		}
 		
-		RegionalExtrema2DGeneric algo = new RegionalExtrema2DGeneric(ExtremaType.MAXIMA, Connectivity2D.C4);
+		RegionalExtrema2DGeneric algo = new RegionalExtrema2DGeneric(MinimaAndMaxima.Type.MAXIMA, Connectivity2D.C4);
 		BooleanArray2D maxima = (BooleanArray2D) algo.process(image);
 		
 		assertEquals(Boolean.FALSE, maxima.get(0, 0));
@@ -75,7 +76,7 @@ public class RegionalExtrema2DGenericTest
 			}
 		}
 		
-		RegionalExtrema2DGeneric algo = new RegionalExtrema2DGeneric(ExtremaType.MAXIMA, Connectivity2D.C8);
+		RegionalExtrema2DGeneric algo = new RegionalExtrema2DGeneric(MinimaAndMaxima.Type.MAXIMA, Connectivity2D.C8);
 		BooleanArray2D maxima = (BooleanArray2D) algo.process(image);
 		
 		assertEquals(Boolean.FALSE, maxima.get(0, 0));
@@ -106,7 +107,7 @@ public class RegionalExtrema2DGenericTest
 			}
 		}
 		
-		RegionalExtrema2DGeneric algo = new RegionalExtrema2DGeneric(ExtremaType.MINIMA, Connectivity2D.C4);
+		RegionalExtrema2DGeneric algo = new RegionalExtrema2DGeneric(MinimaAndMaxima.Type.MINIMA, Connectivity2D.C4);
 		BooleanArray2D maxima = (BooleanArray2D) algo.process(image);
 		
 		assertEquals(Boolean.FALSE, maxima.get(0, 0));
@@ -137,7 +138,7 @@ public class RegionalExtrema2DGenericTest
 			}
 		}
 		
-		RegionalExtrema2DGeneric algo = new RegionalExtrema2DGeneric(ExtremaType.MINIMA, Connectivity2D.C8);
+		RegionalExtrema2DGeneric algo = new RegionalExtrema2DGeneric(MinimaAndMaxima.Type.MINIMA, Connectivity2D.C8);
 		BooleanArray2D maxima = (BooleanArray2D) algo.process(image);
 		
 		assertEquals(Boolean.FALSE, maxima.get(0, 0));

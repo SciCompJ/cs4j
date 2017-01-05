@@ -14,6 +14,8 @@ import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.FloodFill2D;
+import net.sci.image.morphology.MinimaAndMaxima;
+
 import static net.sci.array.type.Boolean.FALSE;
 import static net.sci.array.type.Boolean.TRUE;
 
@@ -34,7 +36,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	// ==============================================================
 	// Class variables
 	
-	ExtremaType type = ExtremaType.MINIMA;
+	MinimaAndMaxima.Type type = MinimaAndMaxima.Type.MINIMA;
 	
 	Connectivity2D connectivity;
 	
@@ -60,7 +62,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	 * @param connectivity
 	 *            should be 4 or 8
 	 */
-	public RegionalExtrema2DGeneric(ExtremaType type, Connectivity2D connectivity)
+	public RegionalExtrema2DGeneric(MinimaAndMaxima.Type type, Connectivity2D connectivity)
 	{
 		this.type = type;
 		this.connectivity = connectivity;
@@ -70,6 +72,16 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	// ==============================================================
 	// getter and setters
 	
+	public MinimaAndMaxima.Type getExtremaType() 
+	{
+		return type;
+	}
+
+	public void setExtremaType(MinimaAndMaxima.Type type)
+	{
+		this.type = type;
+	}
+
 	public Connectivity2D getConnectivity()
 	{
 		return this.connectivity;
@@ -80,16 +92,6 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 		this.connectivity = conn;
 	}
 	
-	public ExtremaType getExtremaType() 
-	{
-		return type;
-	}
-
-	public void setExtremaType(ExtremaType type)
-	{
-		this.type = type;
-	}
-
 	
 	// ==============================================================
 	// Implementation of Array operator interface
@@ -141,7 +143,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 		
 		// initialize local data depending on extrema type
 		int sign = 1;
-		if (this.type == ExtremaType.MAXIMA) 
+		if (this.type == MinimaAndMaxima.Type.MAXIMA) 
 		{
 			sign = -1;
 		}
@@ -203,7 +205,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 		
 		// initialize local data depending on extrema type
 		int sign = 1;
-		if (this.type == ExtremaType.MAXIMA) 
+		if (this.type == MinimaAndMaxima.Type.MAXIMA) 
 		{
 			sign = -1;
 		}
