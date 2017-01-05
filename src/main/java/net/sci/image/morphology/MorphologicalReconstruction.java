@@ -4,8 +4,6 @@
 package net.sci.image.morphology;
 
 import net.sci.array.Array;
-import net.sci.array.data.Array2D;
-import net.sci.array.data.Array3D;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
@@ -204,7 +202,7 @@ public class MorphologicalReconstruction
 	 *            input mask array
 	 * @return the result of morphological reconstruction
 	 */
-	public final static Array2D<?> reconstructByDilation(ScalarArray2D<?> marker, ScalarArray2D<?> mask) 
+	public final static ScalarArray2D<?> reconstructByDilation(ScalarArray2D<?> marker, ScalarArray2D<?> mask) 
 	{
 		return reconstructByDilation(marker, mask, Connectivity2D.C4);
 	}
@@ -221,7 +219,7 @@ public class MorphologicalReconstruction
 	 *            the planar connectivity (usually C4 or C8)
 	 * @return the result of morphological reconstruction
 	 */
-	public final static Array2D<?> reconstructByDilation(ScalarArray2D<?> marker, ScalarArray2D<?> mask, 
+	public final static ScalarArray2D<?> reconstructByDilation(ScalarArray2D<?> marker, ScalarArray2D<?> mask, 
 			Connectivity2D conn) 
 	{
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
@@ -239,7 +237,7 @@ public class MorphologicalReconstruction
 	 *            input mask array
 	 * @return the result of morphological reconstruction
 	 */
-	public final static Array2D<?> reconstructByErosion(ScalarArray2D<?> marker, ScalarArray2D<?> mask) 
+	public final static ScalarArray2D<?> reconstructByErosion(ScalarArray2D<?> marker, ScalarArray2D<?> mask) 
 	{
 		return reconstructByErosion(marker, mask, Connectivity2D.C4);
 	}
@@ -256,7 +254,7 @@ public class MorphologicalReconstruction
 	 *            the planar connectivity (usually C4 or C8)
 	 * @return the result of morphological reconstruction
 	 */
-	public final static Array2D<?> reconstructByErosion(ScalarArray2D<?> marker, ScalarArray2D<?> mask, 
+	public final static ScalarArray2D<?> reconstructByErosion(ScalarArray2D<?> marker, ScalarArray2D<?> mask, 
 			Connectivity2D conn) 
 	{
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
@@ -278,7 +276,7 @@ public class MorphologicalReconstruction
 	 *            input mask array
 	 * @return the result of morphological reconstruction
 	 */
-	public final static Array3D<?> reconstructByDilation(ScalarArray3D<?> marker, ScalarArray3D<?> mask) 
+	public final static ScalarArray3D<?> reconstructByDilation(ScalarArray3D<?> marker, ScalarArray3D<?> mask) 
 	{
 		return reconstructByDilation(marker, mask, Connectivity3D.C6);
 	}
@@ -295,7 +293,7 @@ public class MorphologicalReconstruction
 	 *            the planar connectivity (usually C6 or C26)
 	 * @return the result of morphological reconstruction
 	 */
-	public final static Array3D<?> reconstructByDilation(ScalarArray3D<?> marker, ScalarArray3D<?> mask, 
+	public final static ScalarArray3D<?> reconstructByDilation(ScalarArray3D<?> marker, ScalarArray3D<?> mask, 
 			Connectivity3D conn) 
 	{
 		MorphologicalReconstruction3DHybrid algo = new MorphologicalReconstruction3DHybrid(
@@ -313,7 +311,7 @@ public class MorphologicalReconstruction
 	 *            input mask array
 	 * @return the result of morphological reconstruction
 	 */
-	public final static Array3D<?> reconstructByErosion(ScalarArray3D<?> marker, ScalarArray3D<?> mask) 
+	public final static ScalarArray3D<?> reconstructByErosion(ScalarArray3D<?> marker, ScalarArray3D<?> mask) 
 	{
 		return reconstructByErosion(marker, mask, Connectivity3D.C6);
 	}
@@ -330,7 +328,7 @@ public class MorphologicalReconstruction
 	 *            the planar connectivity (usually C6 or C26)
 	 * @return the result of morphological reconstruction
 	 */
-	public final static Array3D<?> reconstructByErosion(ScalarArray3D<?> marker, ScalarArray3D<?> mask, 
+	public final static ScalarArray3D<?> reconstructByErosion(ScalarArray3D<?> marker, ScalarArray3D<?> mask, 
 			Connectivity3D conn) 
 	{
 		MorphologicalReconstruction3DHybrid algo = new MorphologicalReconstruction3DHybrid(
