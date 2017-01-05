@@ -6,7 +6,6 @@ package net.sci.image.morphology;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.image.data.Connectivity2D;
-import net.sci.image.morphology.extrema.ExtremaType;
 import net.sci.image.morphology.extrema.RegionalExtrema2D;
 import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2D;
 import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid;
@@ -43,10 +42,30 @@ import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid;
  */
 public class MinimaAndMaxima
 {
+	// ==============================================================
+	// Public enumerations
+
+	/**
+	 * One of the two types of extrema.
+	 */
+	public enum Type 
+	{
+		MINIMA, 
+		MAXIMA;
+	}
+	
+	
+	// ==============================================================
+	// Private constants
+
 	/**
 	 * The default connectivity used by reconstruction algorithms in 2D images.
 	 */
 	private final static Connectivity2D DEFAULT_CONNECTIVITY_2D = Connectivity2D.C4;
+	
+
+	// ==============================================================
+	// Constructor
 	
 	/**
 	 * Private constructor to prevent class instantiation.
@@ -55,6 +74,10 @@ public class MinimaAndMaxima
 	{
 	}
 
+
+	// ==============================================================
+	// Static methods for 2D arrays
+	
 	/**
 	 * Computes the regional maxima in grayscale image <code>image</code>, using
 	 * the default connectivity.
@@ -83,7 +106,7 @@ public class MinimaAndMaxima
 	{
 		RegionalExtrema2D algo = new RegionalExtrema2D();
 		algo.setConnectivity(conn);
-		algo.setExtremaType(ExtremaType.MAXIMA);
+		algo.setExtremaType(Type.MAXIMA);
 		
 		return (ScalarArray2D<?>) algo.process(image);
 	}
@@ -156,7 +179,7 @@ public class MinimaAndMaxima
 	{
 		RegionalExtrema2D algo = new RegionalExtrema2D();
 		algo.setConnectivity(conn);
-		algo.setExtremaType(ExtremaType.MINIMA);
+		algo.setExtremaType(Type.MINIMA);
 		
 		return (ScalarArray2D<?>) algo.process(image);
 	}
@@ -397,6 +420,10 @@ public class MinimaAndMaxima
 		return MorphologicalReconstruction.reconstructByErosion(marker, mask, conn);
 	}
 	
+	
+	// ==============================================================
+	// Private utilities
+
 	private static void addValue(ScalarArray<?> array, double value)
 	{
 		ScalarArray.Iterator<?> iter = array.iterator();
