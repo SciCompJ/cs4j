@@ -26,7 +26,7 @@ import static net.sci.array.type.Boolean.TRUE;
  * using floating-point computations.
  * 
  * @author dlegland
- *
+ * @see RegionalExtrema2D
  */
 public class RegionalExtrema2DGeneric extends AlgoStub
 		implements ArrayToArrayImageOperator, Algo

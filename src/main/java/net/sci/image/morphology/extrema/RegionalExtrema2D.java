@@ -67,16 +67,6 @@ public class RegionalExtrema2D extends AlgoStub
 	// ==============================================================
 	// getter and setters
 	
-	public Connectivity2D getConnectivity()
-	{
-		return this.connectivity;
-	}
-	
-	public void setConnectivity(Connectivity2D conn)
-	{
-		this.connectivity = conn;
-	}
-	
 	public MinimaAndMaxima.Type getExtremaType() 
 	{
 		return type;
@@ -87,6 +77,16 @@ public class RegionalExtrema2D extends AlgoStub
 		this.type = type;
 	}
 
+	public Connectivity2D getConnectivity()
+	{
+		return this.connectivity;
+	}
+	
+	public void setConnectivity(Connectivity2D conn)
+	{
+		this.connectivity = conn;
+	}
+	
 	
 	// ==============================================================
 	// Implementation of Array operator interface
