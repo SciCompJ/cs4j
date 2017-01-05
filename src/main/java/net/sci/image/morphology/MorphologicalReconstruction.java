@@ -3,10 +3,17 @@
  */
 package net.sci.image.morphology;
 
+import net.sci.array.Array;
 import net.sci.array.data.Array2D;
+import net.sci.array.data.Array3D;
+import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.array.data.scalar3d.ScalarArray3D;
+import net.sci.image.Image;
 import net.sci.image.data.Connectivity2D;
+import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid;
+import net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid;
 
 /**
  * <p>
@@ -65,7 +72,125 @@ public class MorphologicalReconstruction
 	{	
 	}
 
-	
+	// ==================================================
+	// Static methods for Image instance
+
+	/**
+	 * Static method to computes the morphological reconstruction by dilation of the
+	 * marker image under the mask image.
+	 *
+	 * @param marker
+	 *            input marker array
+	 * @param mask
+	 *            input mask array
+	 * @return the result of morphological reconstruction
+	 */
+	public final static Image reconstructByDilation(Image markerImage, Image maskImage) 
+	{
+		Array<?> marker = markerImage.getData();
+		Array<?> mask = markerImage.getData();
+		
+		if (marker.dimensionality() != mask.dimensionality())
+		{
+			throw new IllegalArgumentException("Both images must have same dimensionality");
+		}
+		if (!(marker instanceof ScalarArray && mask instanceof ScalarArray))
+		{
+			throw new IllegalArgumentException("Both images must be instances of SclalarArray");
+		}
+		
+		Array<?> result;
+		int nd = marker.dimensionality();
+		
+		// dispatch processing depending on array dimensionality
+		if (nd == 2)
+		{
+			if (!(marker instanceof ScalarArray2D && mask instanceof ScalarArray2D))
+			{
+				throw new IllegalArgumentException("Both images must be instances of ScalarArray2D");
+			}
+
+			Connectivity2D conn = Connectivity2D.C4;
+			result = reconstructByDilation((ScalarArray2D<?>) marker, (ScalarArray2D<?>) mask, conn);			
+		}
+		else if (nd == 3)
+		{
+			if (!(marker instanceof ScalarArray3D && mask instanceof ScalarArray3D))
+			{
+				throw new IllegalArgumentException("Both images must be instances of ScalarArray3D");
+			}
+
+			Connectivity3D conn = Connectivity3D.C6;
+			result = reconstructByDilation((ScalarArray3D<?>) marker, (ScalarArray3D<?>) mask, conn);			
+		}
+		else
+		{
+			throw new RuntimeException("Unable to process arrays with dimension " + nd);
+		}
+
+		// Create result image from result array
+		Image resultImage = new Image(result, maskImage);
+		return resultImage;
+	}
+
+	/**
+	 * Static method to computes the morphological reconstruction by erosion of the
+	 * marker image over the mask image.
+	 *
+	 * @param marker
+	 *            input marker array
+	 * @param mask
+	 *            input mask array
+	 * @return the result of morphological reconstruction
+	 */
+	public final static Image reconstructByErosion(Image markerImage, Image maskImage) 
+	{
+		Array<?> marker = markerImage.getData();
+		Array<?> mask = markerImage.getData();
+		
+		if (marker.dimensionality() != mask.dimensionality())
+		{
+			throw new IllegalArgumentException("Both images must have same dimensionality");
+		}
+		if (!(marker instanceof ScalarArray && mask instanceof ScalarArray))
+		{
+			throw new IllegalArgumentException("Both images must be instances of SclalarArray");
+		}
+		
+		Array<?> result;
+		int nd = marker.dimensionality();
+		
+		// dispatch processing depending on array dimensionality
+		if (nd == 2)
+		{
+			if (!(marker instanceof ScalarArray2D && mask instanceof ScalarArray2D))
+			{
+				throw new IllegalArgumentException("Both images must be instances of ScalarArray2D");
+			}
+
+			Connectivity2D conn = Connectivity2D.C4;
+			result = reconstructByErosion((ScalarArray2D<?>) marker, (ScalarArray2D<?>) mask, conn);			
+		}
+		else if (nd == 3)
+		{
+			if (!(marker instanceof ScalarArray3D && mask instanceof ScalarArray3D))
+			{
+				throw new IllegalArgumentException("Both images must be instances of ScalarArray3D");
+			}
+
+			Connectivity3D conn = Connectivity3D.C6;
+			result = reconstructByErosion((ScalarArray3D<?>) marker, (ScalarArray3D<?>) mask, conn);			
+		}
+		else
+		{
+			throw new RuntimeException("Unable to process arrays with dimension " + nd);
+		}
+
+		// Create result image from result array
+		Image resultImage = new Image(result, maskImage);
+		return resultImage;
+	}
+
 	// ==================================================
 	// Static methods for 2D
 
@@ -135,6 +260,80 @@ public class MorphologicalReconstruction
 			Connectivity2D conn) 
 	{
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
+				Type.BY_EROSION, conn);
+		return algo.process(marker, mask);
+	}
+
+	
+	// ==================================================
+	// Static methods for 3D
+
+	/**
+	 * Static method to computes the morphological reconstruction by dilation of the
+	 * marker image under the mask image.
+	 *
+	 * @param marker
+	 *            input marker array
+	 * @param mask
+	 *            input mask array
+	 * @return the result of morphological reconstruction
+	 */
+	public final static Array3D<?> reconstructByDilation(ScalarArray3D<?> marker, ScalarArray3D<?> mask) 
+	{
+		return reconstructByDilation(marker, mask, Connectivity3D.C6);
+	}
+
+	/**
+	 * Static method to computes the morphological reconstruction by dilation of
+	 * the marker image under the mask image.
+	 *
+	 * @param marker
+	 *            input marker array
+	 * @param mask
+	 *            input mask array
+	 * @param conn
+	 *            the planar connectivity (usually C6 or C26)
+	 * @return the result of morphological reconstruction
+	 */
+	public final static Array3D<?> reconstructByDilation(ScalarArray3D<?> marker, ScalarArray3D<?> mask, 
+			Connectivity3D conn) 
+	{
+		MorphologicalReconstruction3DHybrid algo = new MorphologicalReconstruction3DHybrid(
+				Type.BY_DILATION, conn);
+		return algo.process(marker, mask);
+	}
+
+	/**
+	 * Static method to computes the morphological reconstruction by erosion of the
+	 * marker image under the mask image.
+	 *
+	 * @param marker
+	 *            input marker array
+	 * @param mask
+	 *            input mask array
+	 * @return the result of morphological reconstruction
+	 */
+	public final static Array3D<?> reconstructByErosion(ScalarArray3D<?> marker, ScalarArray3D<?> mask) 
+	{
+		return reconstructByErosion(marker, mask, Connectivity3D.C6);
+	}
+
+	/**
+	 * Static method to computes the morphological reconstruction by erosion of
+	 * the marker image under the mask image.
+	 *
+	 * @param marker
+	 *            input marker array
+	 * @param mask
+	 *            input mask array
+	 * @param conn
+	 *            the planar connectivity (usually C6 or C26)
+	 * @return the result of morphological reconstruction
+	 */
+	public final static Array3D<?> reconstructByErosion(ScalarArray3D<?> marker, ScalarArray3D<?> mask, 
+			Connectivity3D conn) 
+	{
+		MorphologicalReconstruction3DHybrid algo = new MorphologicalReconstruction3DHybrid(
 				Type.BY_EROSION, conn);
 		return algo.process(marker, mask);
 	}

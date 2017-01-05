@@ -8,6 +8,7 @@ import net.sci.array.data.Array2D;
 import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.image.data.Connectivity2D;
+import net.sci.image.morphology.MorphologicalReconstruction;
 
 public class MorphologicalReconstruction2DHybridTest
 {
@@ -46,7 +47,7 @@ public class MorphologicalReconstruction2DHybridTest
 		marker.setInt(2, 3, 255);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_DILATION, Connectivity2D.C4);
+				MorphologicalReconstruction.Type.BY_DILATION, Connectivity2D.C4);
 
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 		// printImage(result);
@@ -93,7 +94,7 @@ public class MorphologicalReconstruction2DHybridTest
 		marker.setInt(2, 3, 255);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_DILATION, Connectivity2D.C8);
+				MorphologicalReconstruction.Type.BY_DILATION, Connectivity2D.C8);
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 
 		assertEquals(16, result.getSize(0));
@@ -132,7 +133,7 @@ public class MorphologicalReconstruction2DHybridTest
 
 		// Compute geodesic reconstruction by dilation
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_DILATION, Connectivity2D.C4);
+				MorphologicalReconstruction.Type.BY_DILATION, Connectivity2D.C4);
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 		// printImage(result);
 
@@ -173,7 +174,7 @@ public class MorphologicalReconstruction2DHybridTest
 
 		// Compute geodesic reconstruction by dilation
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_DILATION, Connectivity2D.C8);
+				MorphologicalReconstruction.Type.BY_DILATION, Connectivity2D.C8);
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 		// printImage(result);
 
@@ -214,7 +215,7 @@ public class MorphologicalReconstruction2DHybridTest
 
 		// Compute geodesic reconstruction by dilation
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_DILATION, Connectivity2D.C4);
+				MorphologicalReconstruction.Type.BY_DILATION, Connectivity2D.C4);
 		Float32Array2D result = (Float32Array2D) algo.process(marker, mask);
 		// printImage(result);
 
@@ -254,7 +255,7 @@ public class MorphologicalReconstruction2DHybridTest
 
 		// Compute geodesic reconstruction by dilation
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_DILATION, Connectivity2D.C8);
+				MorphologicalReconstruction.Type.BY_DILATION, Connectivity2D.C8);
 		Float32Array2D result = (Float32Array2D) algo.process(marker, mask);
 		// printImage(result);
 
@@ -305,7 +306,7 @@ public class MorphologicalReconstruction2DHybridTest
 		marker.setInt(2, 3, 0);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_EROSION, Connectivity2D.C4);
+				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C4);
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 
 		assertEquals(16, result.getSize(0));
@@ -357,7 +358,7 @@ public class MorphologicalReconstruction2DHybridTest
 		marker.setInt(2, 3, 0);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_EROSION, Connectivity2D.C8);
+				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C8);
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 
 		assertEquals(16, result.getSize(0));
@@ -411,7 +412,7 @@ public class MorphologicalReconstruction2DHybridTest
 		marker.setValue(2, 3, BG);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_EROSION, Connectivity2D.C4);
+				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C4);
 		Float32Array2D result = (Float32Array2D) algo.process(marker, mask);
 
 		assertEquals(16, result.getSize(0));
@@ -465,7 +466,7 @@ public class MorphologicalReconstruction2DHybridTest
 		marker.setValue(2, 3, BG);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
-				ReconstructionType.BY_EROSION, Connectivity2D.C8);
+				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C8);
 		Float32Array2D result = (Float32Array2D) algo.process(marker, mask);
 
 		assertEquals(16, result.getSize(0));
