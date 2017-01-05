@@ -15,7 +15,7 @@ import net.sci.array.data.scalar3d.BooleanArray3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.data.Connectivity3D;
-import net.sci.image.morphology.FloodFill3D;
+import net.sci.image.morphology.FloodFill;
 import net.sci.image.morphology.MinimaAndMaxima;
 
 /**
@@ -198,7 +198,7 @@ implements ArrayToArrayImageOperator, Algo
 					// set to the marker for non-minima.
 					if (value < currentValue) 
 					{
-						FloodFill3D.floodFillFloat(source, x, y, z, target, 0, Connectivity3D.C6);
+						FloodFill.floodFill(source, x, y, z, target, 0, Connectivity3D.C6);
 					}
 				}
 			}
@@ -266,14 +266,13 @@ implements ArrayToArrayImageOperator, Algo
 					// set to the marker for non-minima.
 					if (value < currentValue) 
 					{
-						FloodFill3D.floodFillFloat(source, x, y, z, target, 0, Connectivity3D.C26);
+						FloodFill.floodFill(source, x, y, z, target, 0, Connectivity3D.C26);
 					}
 				}
 			}
 		}
 		
 		fireProgressChanged(this, sizeZ, sizeZ);
-
 	}
 	
 	/**
