@@ -88,7 +88,7 @@ public class MorphologicalReconstruction
 	public final static Image reconstructByDilation(Image markerImage, Image maskImage) 
 	{
 		Array<?> marker = markerImage.getData();
-		Array<?> mask = markerImage.getData();
+		Array<?> mask = maskImage.getData();
 		
 		if (marker.dimensionality() != mask.dimensionality())
 		{
@@ -146,7 +146,7 @@ public class MorphologicalReconstruction
 	public final static Image reconstructByErosion(Image markerImage, Image maskImage) 
 	{
 		Array<?> marker = markerImage.getData();
-		Array<?> mask = markerImage.getData();
+		Array<?> mask = maskImage.getData();
 		
 		if (marker.dimensionality() != mask.dimensionality())
 		{
