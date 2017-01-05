@@ -13,6 +13,8 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.data.Cursor2D;
+import net.sci.image.morphology.MorphologicalReconstruction;
+import net.sci.image.morphology.MorphologicalReconstruction.Type;
 
 /**
  * <p>
@@ -35,15 +37,12 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	// ==================================================
 	// Class variables 
 	
-	// ==================================================
-	// Class variables that could be factorized 
-	
 	/**
 	 * The connectivity of the algorithm, usually either C4 or C8.
 	 */
 	protected Connectivity2D connectivity = Connectivity2D.C4;
 
-	protected ReconstructionType reconstructionType = ReconstructionType.BY_DILATION;
+	protected Type reconstructionType = Type.BY_DILATION;
 	
 	/**
 	 * The sign value associated to reconstruction type.
@@ -93,7 +92,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	// Constructors 
 		
 	/**
-	 * Creates a new instance of geodesic reconstruction by dilation algorithm,
+	 * Creates a new instance of morphological reconstruction by dilation algorithm,
 	 * using the default connectivity 4.
 	 */
 	public MorphologicalReconstruction2DHybrid()
@@ -101,19 +100,19 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	}
 	
 	/**
-	 * Creates a new instance of geodesic reconstruction by dilation algorithm,
-	 * that specifies the type of reconstruction, and using the connectivity 4.
+	 * Creates a new instance of morphological reconstruction algorithm,
+	 * that specifies the type of reconstruction, and using the default connectivity 4.
 	 * 
 	 * @param type
 	 *            the type of reconstruction (erosion or dilation)
 	 */
-	public MorphologicalReconstruction2DHybrid(ReconstructionType type) 
+	public MorphologicalReconstruction2DHybrid(MorphologicalReconstruction.Type type) 
 	{
 		setReconstructionType(type);
 	}
 
 	/**
-	 * Creates a new instance of geodesic reconstruction by dilation algorithm,
+	 * Creates a new instance of morphological reconstruction by dilation algorithm,
 	 * that specifies the connectivity to use.
 	 * 
 	 * @param connectivity
@@ -125,7 +124,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	}
 
 	/**
-	 * Creates a new instance of geodesic reconstruction by dilation algorithm,
+	 * Creates a new instance of morphological reconstruction algorithm,
 	 * that specifies the type of reconstruction, and the connectivity to use.
 	 * 
 	 * @param type
@@ -133,11 +132,12 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 * @param connectivity
 	 *            the 2D connectivity to use (either 4 or 8)
 	 */
-	public MorphologicalReconstruction2DHybrid(ReconstructionType type, Connectivity2D connectivity) 
+	public MorphologicalReconstruction2DHybrid(MorphologicalReconstruction.Type type, Connectivity2D connectivity) 
 	{
 		setReconstructionType(type);
 		setConnectivity(connectivity);
 	}
+
 
 	// ==================================================
 	// Accesors and mutators
@@ -145,7 +145,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	/**
 	 * @return the reconstructionType
 	 */
-	public ReconstructionType getReconstructionType()
+	public MorphologicalReconstruction.Type getReconstructionType()
 	{
 		return reconstructionType;
 	}
@@ -153,7 +153,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	/**
 	 * @param reconstructionType the reconstructionType to set
 	 */
-	public void setReconstructionType(ReconstructionType reconstructionType) 
+	public void setReconstructionType(MorphologicalReconstruction.Type reconstructionType) 
 	{
 		this.reconstructionType = reconstructionType;
 		this.sign = reconstructionType.getSign();
@@ -174,7 +174,6 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	{
 		this.connectivity = connectivity;
 	}
-
 	
 
 	// ==================================================
