@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology;
 
+import net.sci.algo.Algo;
 import net.sci.array.data.Array2D;
 
 /**
@@ -21,7 +22,7 @@ import net.sci.array.data.Array2D;
  * @author David Legland
  *
  */
-public interface Strel extends Strel3D 
+public interface Strel extends Algo
 {
 	/**
 	 * Default value for background pixels.

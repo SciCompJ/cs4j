@@ -8,15 +8,15 @@ import net.sci.image.morphology.Strel;
 
 /**
  * Implementation basis for planar structuring elements. 
- * Morphological operations for stacks are implemented such that the planar
- * strel is applied to each slice, and the result is added to the result
- * stack? 
  * 
  * @author David Legland
  *
  */
-public abstract class AbstractStrel extends AlgoStub implements Strel {
-	
+//* Morphological operations for stacks are implemented such that the planar
+//* strel is applied to each slice, and the result is added to the result
+//* array.
+public abstract class AbstractStrel extends AlgoStub implements Strel 
+{	
 	private String channelName = null;
 	
 //	public int[][][] getMask3D() {
@@ -47,9 +47,9 @@ public abstract class AbstractStrel extends AlgoStub implements Strel {
 	/**
 	 * Returns the name of the channel currently processed, or null by default.
 	 */
-	public String getChannelName() {
+	public String getChannelName()
+	{
 		return this.channelName;
-		
 	}
 	
 //	public Array3D<?> dilation(Array3D<?> stack) {

@@ -6,14 +6,14 @@ package net.sci.image.morphology.filter;
 import net.sci.array.data.Array2D;
 
 /**
- * Implementation stub for in place Structuring elements.
- * Implements operations methods by calling in-place versions.  
+ * Implementation stub for in place Structuring elements. Implements operations
+ * methods by calling in-place versions.
+ * 
  * @author David Legland
  *
  */
-public abstract class AbstractInPlaceStrel extends AbstractStrel implements
-		InPlaceStrel {
-	
+public abstract class AbstractInPlaceStrel extends AbstractStrel implements	InPlaceStrel
+		{
 //	public ImageStack dilation(ImageStack stack) {
 //		ImageStack result = stack.duplicate();
 //		this.inPlaceDilation(result);
@@ -82,26 +82,30 @@ public abstract class AbstractInPlaceStrel extends AbstractStrel implements
 //		this.showProgress(flag);
 //	}
 
-	public Array2D<?> dilation(Array2D<?> image) {
+	public Array2D<?> dilation(Array2D<?> image)
+	{
 		Array2D<?> result = image.duplicate();
 		this.inPlaceDilation(result);
 		return result;
 	}
-	
-	public Array2D<?> erosion(Array2D<?> image) {
+
+	public Array2D<?> erosion(Array2D<?> image)
+	{
 		Array2D<?> result = image.duplicate();
 		this.inPlaceErosion(result);
 		return result;
 	}
-	
-	public Array2D<?> closing(Array2D<?> image) {
+
+	public Array2D<?> closing(Array2D<?> image)
+	{
 		Array2D<?> result = image.duplicate();
 		this.inPlaceDilation(result);
 		this.reverse().inPlaceErosion(result);
 		return result;
 	}
-	
-	public Array2D<?> opening(Array2D<?> image) {
+
+	public Array2D<?> opening(Array2D<?> image)
+	{
 		Array2D<?> result = image.duplicate();
 		this.inPlaceErosion(result);
 		this.reverse().inPlaceDilation(result);

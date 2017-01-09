@@ -7,12 +7,12 @@ import net.sci.algo.Algo;
 import net.sci.array.data.Array3D;
 
 /**
- * Structuring element that process 3D stack.
+ * Structuring element that process 3D arrays.
  * @author David Legland
  *
  */
-public interface Strel3D extends Algo {
-
+public interface Strel3D extends Algo 
+{
 	/**
 	 * Default value for background pixels.
 	 */

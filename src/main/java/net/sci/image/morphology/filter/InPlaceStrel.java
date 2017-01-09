@@ -15,8 +15,8 @@ import net.sci.image.morphology.Strel;
  * @author David Legland
  *
  */
-public interface InPlaceStrel extends Strel {
-
+public interface InPlaceStrel extends Strel
+{
 	/**
 	 * Performs dilation of the image given as argument, and stores the result
 	 * in the same image. 
