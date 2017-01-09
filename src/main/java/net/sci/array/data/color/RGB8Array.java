@@ -5,6 +5,7 @@ package net.sci.array.data.color;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.UInt8Array;
@@ -77,6 +78,56 @@ public interface RGB8Array extends VectorArray<RGB8>
 		channels.add(blueChannel);
 		
 		return channels;
+	}
+	
+	/**
+	 * Splits the channels of the color image and returns the new ByteImages
+	 * into a Map, using channel names as key. 
+	 *  
+	 * Example:
+	 * <pre><code>
+	 * ColorProcessor colorImage = ...
+	 * HashMap&lt;String, ByteProcessor&gt; channels = mapChannels(colorImage);
+	 * ByteProcessor blue = channels.get("blue");
+	 * </code></pre>
+	 * 
+	 * @param image the original image, assumed to be a ColorProcessor
+	 * @return a hashmap indexing the three channels by their names
+	 */
+	public static HashMap<String, UInt8Array> mapChannels(RGB8Array array)
+	{
+		// create result arrays
+		int[] dims = array.getSize();
+		UInt8Array redChannel = UInt8Array.create(dims);
+		UInt8Array greenChannel = UInt8Array.create(dims);
+		UInt8Array blueChannel = UInt8Array.create(dims);
+		
+		// create iterators
+		Iterator rgbIter = array.iterator();
+		UInt8Array.Iterator rIter = redChannel.iterator();
+		UInt8Array.Iterator gIter = greenChannel.iterator();
+		UInt8Array.Iterator bIter = blueChannel.iterator();
+		
+		// iterate over elements of all arrays simultaneously
+		while (rgbIter.hasNext())
+		{
+			rgbIter.forward();
+			RGB8 rgb = rgbIter.get();
+			rIter.forward();
+			rIter.setInt(rgb.getSample(0));
+			gIter.forward();
+			gIter.setInt(rgb.getSample(1));
+			bIter.forward();
+			bIter.setInt(rgb.getSample(2));
+		}
+		
+		// concatenate channels into a new collection
+		HashMap<String, UInt8Array> map = new HashMap<String, UInt8Array>(3);
+		map.put("red", redChannel);
+		map.put("green", greenChannel);
+		map.put("blue", blueChannel);
+
+		return map;
 	}
 	
 	/**
