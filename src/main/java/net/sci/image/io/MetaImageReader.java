@@ -11,12 +11,18 @@ import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 import net.sci.array.Array;
+import net.sci.array.data.Float32Array;
+import net.sci.array.data.Float64Array;
 import net.sci.array.data.Int16Array;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
+import net.sci.array.data.scalar2d.BufferedFloat32Array2D;
+import net.sci.array.data.scalar2d.BufferedFloat64Array2D;
 import net.sci.array.data.scalar2d.BufferedInt16Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
+import net.sci.array.data.scalar3d.BufferedFloat32Array3D;
+import net.sci.array.data.scalar3d.BufferedFloat64Array3D;
 import net.sci.array.data.scalar3d.BufferedInt16Array3D;
 import net.sci.array.data.scalar3d.BufferedUInt16Array3D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
@@ -238,6 +244,14 @@ public class MetaImageReader implements ImageReader
 		{
 			array = readInt16Array(info);
 		}
+		else if (info.elementType == MetaImageInfo.ElementType.FLOAT32)
+		{
+			array = readFloat32Array(info);
+		}
+		else if (info.elementType == MetaImageInfo.ElementType.FLOAT64)
+		{
+			array = readFloat64Array(info);
+		}
 		else
 		{
 			throw new RuntimeException("Unable to process files with data type: " + info.elementTypeName);
@@ -326,10 +340,10 @@ public class MetaImageReader implements ImageReader
 			int b1 = byteArray[2 * i] & 0x00FF;
 			int b2 = byteArray[2 * i + 1] & 0x00FF;
 		
-			if (info.binaryDataByteOrderMSB)
-				buffer[i] = (short) ((b2 << 8) + b1);
-			else
+			if (info.elementByteOrderMSB)
 				buffer[i] = (short) ((b1 << 8) + b2);
+			else
+				buffer[i] = (short) ((b2 << 8) + b1);
 		}
 		
 		UInt16Array array;
@@ -385,10 +399,10 @@ public class MetaImageReader implements ImageReader
 			int b1 = byteArray[2 * i] & 0x00FF;
 			int b2 = byteArray[2 * i + 1] & 0x00FF;
 		
-			if (info.binaryDataByteOrderMSB)
-				buffer[i] = (short) ((b2 << 8) + b1);
-			else
+			if (info.elementByteOrderMSB)
 				buffer[i] = (short) ((b1 << 8) + b2);
+			else
+				buffer[i] = (short) ((b2 << 8) + b1);
 		}
 		
 		Int16Array array;
@@ -399,6 +413,132 @@ public class MetaImageReader implements ImageReader
 		else if (info.nDims == 3)
 		{
 			array = new BufferedInt16Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
+		}
+		else 
+		{
+			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
+		}
+
+		// closes file
+		inputStream.close();
+
+		return array;
+	}
+	
+	private Float32Array readFloat32Array(MetaImageInfo info) throws IOException
+	{
+		// Open binary stream on data
+		File dataFile = new File(this.file.getParent(), info.elementDataFile);
+		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
+
+		// allocate memory for buffer
+		// Size of image and of data buffer
+		int nPixels = computePixelNumber(info);
+		int nBytes  = nPixels * info.elementNumberOfChannels * 4;
+		byte[] byteArray = new byte[nBytes];
+
+		// Read the byte array
+		inputStream.seek(info.headerSize);
+		int nRead = inputStream.read(byteArray, 0, nBytes);
+
+		// closes file
+		inputStream.close();
+
+		// Check all data have been read
+		if (nRead != nBytes) 
+		{
+			throw new IOException("Could read only " + nRead
+					+ " bytes over the " + nBytes + " expected");
+		}
+
+		// convert byte array to short array
+		float[] buffer = new float[nPixels];
+		for (int i = 0; i < nPixels; i++)
+		{
+			int b1 = byteArray[4 * i] & 0x00FF;
+			int b2 = byteArray[4 * i + 1] & 0x00FF;
+			int b3 = byteArray[4 * i + 2] & 0x00FF;
+			int b4 = byteArray[4 * i + 3] & 0x00FF;
+		
+			if (info.elementByteOrderMSB)
+				buffer[i] = Float.intBitsToFloat((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
+			else
+				buffer[i] = Float.intBitsToFloat((b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
+		}
+		
+		Float32Array array;
+		if (info.nDims == 2)
+		{
+			array = new BufferedFloat32Array2D(info.dimSize[0], info.dimSize[1], buffer);
+		} 
+		else if (info.nDims == 3)
+		{
+			array = new BufferedFloat32Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
+		}
+		else 
+		{
+			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
+		}
+
+		// closes file
+		inputStream.close();
+
+		return array;
+	}
+	
+	private Float64Array readFloat64Array(MetaImageInfo info) throws IOException
+	{
+		// Open binary stream on data
+		File dataFile = new File(this.file.getParent(), info.elementDataFile);
+		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
+
+		// allocate memory for buffer
+		// Size of image and of data buffer
+		int nPixels = computePixelNumber(info);
+		int nBytes  = nPixels * info.elementNumberOfChannels * 8;
+		byte[] byteArray = new byte[nBytes];
+
+		// Read the byte array
+		inputStream.seek(info.headerSize);
+		int nRead = inputStream.read(byteArray, 0, nBytes);
+
+		// closes file
+		inputStream.close();
+
+		// Check all data have been read
+		if (nRead != nBytes) 
+		{
+			throw new IOException("Could read only " + nRead
+					+ " bytes over the " + nBytes + " expected");
+		}
+
+		// convert byte array to short array
+		double[] buffer = new double[nPixels];
+		for (int i = 0; i < nPixels; i++)
+		{
+			long b1 = byteArray[8 * i] & 0x00FF;
+			long b2 = byteArray[8 * i + 1] & 0x00FF;
+			long b3 = byteArray[8 * i + 2] & 0x00FF;
+			long b4 = byteArray[8 * i + 3] & 0x00FF;
+			long b5 = byteArray[8 * i + 4] & 0x00FF;
+			long b6 = byteArray[8 * i + 5] & 0x00FF;
+			long b7 = byteArray[8 * i + 6] & 0x00FF;
+			long b8 = byteArray[8 * i + 7] & 0x00FF;
+		
+			if (info.elementByteOrderMSB)
+				buffer[i] = Double.longBitsToDouble((b1 << 56) + (b2 << 48) + (b3 << 40) + (b4 << 32) + (b5 << 24) + (b6 << 16) + (b7 << 8) + b8);
+			else
+				buffer[i] = Double.longBitsToDouble((b8 << 56) + (b7 << 48) + (b6 << 40) + (b5 << 32) + (b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
+		}
+		
+		Float64Array array;
+		if (info.nDims == 2)
+		{
+			array = new BufferedFloat64Array2D(info.dimSize[0], info.dimSize[1], buffer);
+		} 
+		else if (info.nDims == 3)
+		{
+			array = new BufferedFloat64Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
 		}
 		else 
 		{
