@@ -5,6 +5,7 @@ package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.Int16Array2D;
+import net.sci.array.data.scalar3d.Int16Array3D;
 import net.sci.array.type.Int16;
 
 /**
@@ -22,8 +23,8 @@ public interface Int16Array extends IntArray<Int16>
 		{
 		case 2:
 			return Int16Array2D.create(dims[0], dims[1]);
-//		case 3:
-//			return Int16Array3D.create(dims[0], dims[1], dims[2]);
+		case 3:
+			return Int16Array3D.create(dims[0], dims[1], dims[2]);
 		default:
 			throw new IllegalArgumentException("Can not create Int16Array with " + dims.length + " dimensions");
 //			return Int16sArrayND.create(dims);

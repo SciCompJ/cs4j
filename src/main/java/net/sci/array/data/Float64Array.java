@@ -6,6 +6,7 @@ package net.sci.array.data;
 import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.Float64Array2D;
+import net.sci.array.data.scalar3d.Float64Array3D;
 import net.sci.array.type.Float64;
 
 /**
@@ -23,8 +24,8 @@ public interface Float64Array extends ScalarArray<Float64>
 		{
 		case 2:
 			return Float64Array2D.create(dims[0], dims[1]);
-//		case 3:
-//			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
+		case 3:
+			return Float64Array3D.create(dims[0], dims[1], dims[2]);
 		default:
 			//TODO: implement the rest
 			throw new IllegalArgumentException("Can not create DoubleArray with " + dims.length + " dimensions");
