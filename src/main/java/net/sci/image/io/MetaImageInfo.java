@@ -13,9 +13,35 @@ public final class MetaImageInfo
 	 */
 	public enum ElementType 
 	{
-		UINT8,
-		UINT16;
+		UINT8(1),
+		UINT16(2),
+		INT16(2);
 		
+		int bytesPerElement;
+		
+		private ElementType(int bytesPerElement)
+		{
+			this.bytesPerElement = bytesPerElement;
+		}
+		
+		/**
+		 * Used to parse element type from metaImage files.
+		 * 
+		 * @param metString
+		 *            the value in the meta image header file
+		 * @return the MetaImage.ElementType corresponding to the string
+		 */
+		public static final ElementType parseMET(String metString) 
+		{
+			if (metString.equalsIgnoreCase("MET_UCHAR"))
+				return ElementType.UINT8;
+			if (metString.equalsIgnoreCase("MET_USHORT"))
+				return ElementType.UINT16;
+			if (metString.equalsIgnoreCase("MET_SHORT"))
+				return ElementType.INT16;
+			throw new IllegalArgumentException("Unable to parse ElementType with label: " + metString);
+		}
+
 		/**
 		 * Parses element type from its name. Should be case insensitive.
 		 */
@@ -34,6 +60,11 @@ public final class MetaImageInfo
 				}
 			}
 			throw new IllegalArgumentException("Unable to parse ElementType with label: " + label);
+		}
+		
+		public int getBytePerElement()
+		{
+			return this.bytesPerElement;
 		}
 	}
 

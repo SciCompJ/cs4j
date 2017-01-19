@@ -11,10 +11,16 @@ import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 import net.sci.array.Array;
+import net.sci.array.data.Int16Array;
+import net.sci.array.data.UInt16Array;
+import net.sci.array.data.UInt8Array;
+import net.sci.array.data.scalar2d.BufferedInt16Array2D;
+import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
+import net.sci.array.data.scalar3d.BufferedInt16Array3D;
+import net.sci.array.data.scalar3d.BufferedUInt16Array3D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
 import net.sci.image.Image;
-import net.sci.image.io.MetaImageInfo;
 
 /**
  * An implementation of ImageReader for Meta-Image file format.
@@ -82,6 +88,7 @@ public class MetaImageReader implements ImageReader
 			else if (tag.equalsIgnoreCase("ElementType")) 
 			{
 				info.elementTypeName = valueString;
+				info.elementType = MetaImageInfo.ElementType.parseMET(valueString);
 			}
 			else if (tag.equalsIgnoreCase("ElementDataFile"))
 			{
@@ -214,23 +221,42 @@ public class MetaImageReader implements ImageReader
 
 		return res;
 	}
-
+	
 	public Array<?> readImageData(MetaImageInfo info) throws IOException 
 	{
-		// Size of image and of data buffer
-		int nPixels = 1;
-		for (int d = 0; d < info.nDims; d++)
+		// TODO: process other data types
+		Array<?> array;
+		if (info.elementType == MetaImageInfo.ElementType.UINT8)
 		{
-			nPixels *= info.dimSize[d];
+			array = readUInt8Array(info);
 		}
-		int nBytes  = nPixels * info.elementNumberOfChannels;
+		else if (info.elementType == MetaImageInfo.ElementType.UINT16)
+		{
+			array = readUInt16Array(info);
+		}
+		else if (info.elementType == MetaImageInfo.ElementType.INT16)
+		{
+			array = readInt16Array(info);
+		}
+		else
+		{
+			throw new RuntimeException("Unable to process files with data type: " + info.elementTypeName);
+		}
+		
 
+		return array;
+	}
+	
+	private UInt8Array readUInt8Array(MetaImageInfo info) throws IOException
+	{
 		// Open binary stream on data
 		File dataFile = new File(this.file.getParent(), info.elementDataFile);
-		//			System.out.println("data file: " + dataFile.getAbsolutePath());
 		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
 
 		// allocate memory for buffer
+		// Size of image and of data buffer
+		int nPixels = computePixelNumber(info);
+		int nBytes  = nPixels * info.elementNumberOfChannels;
 		byte[] buffer = new byte[nBytes];
 
 		// Read the byte array
@@ -241,13 +267,13 @@ public class MetaImageReader implements ImageReader
 		inputStream.close();
 
 		// Check all data have been read
-		if (nRead != nBytes) {
+		if (nRead != nBytes) 
+		{
 			throw new IOException("Could read only " + nRead
 					+ " bytes over the " + nBytes + " expected");
 		}
 
-		// TODO: process other data types
-		Array<?> array;
+		UInt8Array array;
 		if (info.nDims == 2)
 		{
 			array = new BufferedUInt8Array2D(info.dimSize[0], info.dimSize[1], buffer);
@@ -261,6 +287,139 @@ public class MetaImageReader implements ImageReader
 			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
 		}
 
+		// closes file
+		inputStream.close();
+
 		return array;
 	}
+
+	private UInt16Array readUInt16Array(MetaImageInfo info) throws IOException
+	{
+		// Open binary stream on data
+		File dataFile = new File(this.file.getParent(), info.elementDataFile);
+		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
+
+		// allocate memory for buffer
+		// Size of image and of data buffer
+		int nPixels = computePixelNumber(info);
+		int nBytes  = nPixels * info.elementNumberOfChannels * 2;
+		byte[] byteArray = new byte[nBytes];
+
+		// Read the byte array
+		inputStream.seek(info.headerSize);
+		int nRead = inputStream.read(byteArray, 0, nBytes);
+
+		// closes file
+		inputStream.close();
+
+		// Check all data have been read
+		if (nRead != nBytes) 
+		{
+			throw new IOException("Could read only " + nRead
+					+ " bytes over the " + nBytes + " expected");
+		}
+
+		// convert byte array to short array
+		short[] buffer = new short[nPixels];
+		for (int i = 0; i < nPixels; i++)
+		{
+			int b1 = byteArray[2 * i] & 0x00FF;
+			int b2 = byteArray[2 * i + 1] & 0x00FF;
+		
+			if (info.binaryDataByteOrderMSB)
+				buffer[i] = (short) ((b2 << 8) + b1);
+			else
+				buffer[i] = (short) ((b1 << 8) + b2);
+		}
+		
+		UInt16Array array;
+		if (info.nDims == 2)
+		{
+			array = new BufferedUInt16Array2D(info.dimSize[0], info.dimSize[1], buffer);
+		} 
+		else if (info.nDims == 3)
+		{
+			array = new BufferedUInt16Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
+		}
+		else 
+		{
+			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
+		}
+
+		// closes file
+		inputStream.close();
+
+		return array;
+	}
+	
+	private Int16Array readInt16Array(MetaImageInfo info) throws IOException
+	{
+		// Open binary stream on data
+		File dataFile = new File(this.file.getParent(), info.elementDataFile);
+		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
+
+		// allocate memory for buffer
+		// Size of image and of data buffer
+		int nPixels = computePixelNumber(info);
+		int nBytes  = nPixels * info.elementNumberOfChannels * 2;
+		byte[] byteArray = new byte[nBytes];
+
+		// Read the byte array
+		inputStream.seek(info.headerSize);
+		int nRead = inputStream.read(byteArray, 0, nBytes);
+
+		// closes file
+		inputStream.close();
+
+		// Check all data have been read
+		if (nRead != nBytes) 
+		{
+			throw new IOException("Could read only " + nRead
+					+ " bytes over the " + nBytes + " expected");
+		}
+
+		// convert byte array to short array
+		short[] buffer = new short[nPixels];
+		for (int i = 0; i < nPixels; i++)
+		{
+			int b1 = byteArray[2 * i] & 0x00FF;
+			int b2 = byteArray[2 * i + 1] & 0x00FF;
+		
+			if (info.binaryDataByteOrderMSB)
+				buffer[i] = (short) ((b2 << 8) + b1);
+			else
+				buffer[i] = (short) ((b1 << 8) + b2);
+		}
+		
+		Int16Array array;
+		if (info.nDims == 2)
+		{
+			array = new BufferedInt16Array2D(info.dimSize[0], info.dimSize[1], buffer);
+		} 
+		else if (info.nDims == 3)
+		{
+			array = new BufferedInt16Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
+		}
+		else 
+		{
+			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
+		}
+
+		// closes file
+		inputStream.close();
+
+		return array;
+	}
+	
+	private int computePixelNumber(MetaImageInfo info)
+	{
+		// Size of image and of data buffer
+		int nPixels = 1;
+		for (int d = 0; d < info.nDims; d++)
+		{
+			nPixels *= info.dimSize[d];
+		}
+		return nPixels;
+	}
+	
 }
