@@ -18,8 +18,11 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 
 	/**
 	 * Returns the range of values within this scalar array.
-	 *  
-	 * @return an array with two elements, containing the lower and the large values in this Array instance
+	 * 
+	 * Does not take into account eventual NaN values.
+	 * 
+	 * @return an array with two elements, containing the lowest and the largest
+	 *         finite values within this Array instance
 	 */
 	public default double[] getValueRange()
 	{
@@ -28,8 +31,11 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 		for (Scalar scalar : this)
 		{
 			double value = scalar.getValue();
-			vMin = Math.min(vMin, value);
-			vMax = Math.max(vMax, value);
+			if (!Double.isNaN(value))
+			{
+				vMin = Math.min(vMin, value);
+				vMax = Math.max(vMax, value);
+			}
 		}
 		return new double[]{vMin, vMax};
 	}
