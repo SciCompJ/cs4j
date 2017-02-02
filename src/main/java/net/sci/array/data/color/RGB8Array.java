@@ -234,7 +234,25 @@ public interface RGB8Array extends VectorArray<RGB8>
 	}
 
 	@Override
-	public RGB8Array duplicate();
+	public default RGB8Array duplicate()
+	{
+		// create output array
+		RGB8Array result = RGB8Array.create(this.getSize());
+
+		// initialize iterators
+		RGB8Array.Iterator iter1 = this.iterator();
+		RGB8Array.Iterator iter2 = result.iterator();
+		
+		// copy values into output array
+		while(iter1.hasNext())
+		{
+			iter2.forward();
+			iter2.set(iter1.next());
+		}
+		
+		// return result
+		return result;
+	}
 
 	public Iterator iterator();
 

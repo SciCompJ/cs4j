@@ -80,7 +80,25 @@ public interface BooleanArray extends IntArray<Boolean>
 	}
 
 	@Override
-	public BooleanArray duplicate();
+	public default BooleanArray duplicate()
+	{
+		// create output array
+		BooleanArray result = BooleanArray.create(this.getSize());
+
+		// initialize iterators
+		BooleanArray.Iterator iter1 = this.iterator();
+		BooleanArray.Iterator iter2 = result.iterator();
+		
+		// copy values into output array
+		while(iter1.hasNext())
+		{
+			iter2.forward();
+			iter2.set(iter1.next());
+		}
+		
+		// return output
+		return result;
+	}
 
 	public Iterator iterator();
 	

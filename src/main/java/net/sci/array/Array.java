@@ -49,7 +49,9 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	public ArrayFactory<T> getFactory();
 	
 	/**
-	 * Creates a new writable array with same size and same content.
+	 * Creates a new writable array with same size as this array and containing
+	 * the same values.
+	 *
 	 * @return a new writable copy of this array
 	 */
 	public Array<T> duplicate();

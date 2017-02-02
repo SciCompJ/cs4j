@@ -99,7 +99,25 @@ public interface UInt16Array extends IntArray<UInt16>
 	}
 
 	@Override
-	public UInt16Array duplicate();
+	public default UInt16Array duplicate()
+	{
+		// create output array
+		UInt16Array result = UInt16Array.create(this.getSize());
+
+		// initialize iterators
+		UInt16Array.Iterator iter1 = this.iterator();
+		UInt16Array.Iterator iter2 = result.iterator();
+		
+		// copy values into output array
+		while(iter1.hasNext())
+		{
+			iter2.forward();
+			iter2.set(iter1.next());
+		}
+		
+		// return output
+		return result;
+	}
 
 	public Iterator iterator();
 	

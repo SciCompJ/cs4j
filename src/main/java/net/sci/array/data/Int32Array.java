@@ -70,7 +70,25 @@ public interface Int32Array extends IntArray<Int32>
 	}
 
 	@Override
-	public Int32Array duplicate();
+	public default Int32Array duplicate()
+	{
+		// create output array
+		Int32Array result = Int32Array.create(this.getSize());
+
+		// initialize iterators
+		Int32Array.Iterator iter1 = this.iterator();
+		Int32Array.Iterator iter2 = result.iterator();
+		
+		// copy values into output array
+		while(iter1.hasNext())
+		{
+			iter2.forward();
+			iter2.set(iter1.next());
+		}
+		
+		// return output
+		return result;
+	}
 
 	public Iterator iterator();
 	

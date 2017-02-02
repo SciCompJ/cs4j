@@ -71,7 +71,25 @@ public interface Float32Array extends ScalarArray<Float32>
 	}
 
 	@Override
-	public Float32Array duplicate();
+	public default Float32Array duplicate()
+	{
+		// create output array
+		Float32Array result = Float32Array.create(this.getSize());
+
+		// initialize iterators
+		Float32Array.Iterator iter1 = this.iterator();
+		Float32Array.Iterator iter2 = result.iterator();
+		
+		// copy values into output array
+		while(iter1.hasNext())
+		{
+			iter2.forward();
+			iter2.set(iter1.next());
+		}
+		
+		// return output
+		return result;
+	}
 
 	public Iterator iterator();
 	

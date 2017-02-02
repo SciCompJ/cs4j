@@ -60,7 +60,25 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	}
 
 	@Override
-	public Float32VectorArray duplicate();
+	public default Float32VectorArray duplicate()
+	{
+		// create output array
+		Float32VectorArray result = Float32VectorArray.create(this.getSize(), this.getVectorLength());
+
+		// initialize iterators
+		Float32VectorArray.Iterator iter1 = this.iterator();
+		Float32VectorArray.Iterator iter2 = result.iterator();
+		
+		// copy values into output array
+		while(iter1.hasNext())
+		{
+			iter2.forward();
+			iter2.set(iter1.next());
+		}
+		
+		// return output
+		return result;
+	}
 
 	public Iterator iterator();
 

@@ -102,16 +102,21 @@ public interface UInt8Array extends IntArray<UInt8>
 	@Override
 	public default UInt8Array duplicate()
 	{
+		// create output array
 		UInt8Array result = UInt8Array.create(this.getSize());
+
+		// initialize iterators
 		UInt8Array.Iterator iter1 = this.iterator();
 		UInt8Array.Iterator iter2 = result.iterator();
 		
+		// copy values into output array
 		while(iter1.hasNext())
 		{
 			iter2.forward();
 			iter2.set(iter1.next());
 		}
 		
+		// return result
 		return result;
 	}
 

@@ -59,7 +59,25 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 	}
 
 	@Override
-	public Float64VectorArray duplicate();
+	public default Float64VectorArray duplicate()
+	{
+		// create output array
+		Float64VectorArray result = Float64VectorArray.create(this.getSize(), this.getVectorLength());
+
+		// initialize iterators
+		Float64VectorArray.Iterator iter1 = this.iterator();
+		Float64VectorArray.Iterator iter2 = result.iterator();
+		
+		// copy values into output array
+		while(iter1.hasNext())
+		{
+			iter2.forward();
+			iter2.set(iter1.next());
+		}
+		
+		// return output
+		return result;
+	}
 
 	public Iterator iterator();
 
