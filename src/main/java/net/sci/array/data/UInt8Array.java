@@ -247,7 +247,7 @@ public interface UInt8Array extends IntArray<UInt8>
 			@Override
 			public void setByte(byte b)
 			{
-				set(new UInt8(b));
+				iter.setValue(new UInt8(b).getValue());
 			}
 
 			@Override

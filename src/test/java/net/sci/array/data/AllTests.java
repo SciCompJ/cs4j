@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
 	Array2DTest.class,
+	UInt8ArrayWrapperTest.class,
 	})
 public class AllTests {
   //nothing
