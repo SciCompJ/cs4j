@@ -45,6 +45,12 @@ public interface UInt8Array extends IntArray<UInt8>
 		return result;
 	}
 	
+	public static UInt8Array wrap(ScalarArray<?> array)
+	{
+		return new Wrapper(array);
+		
+	}
+	
 	// =============================================================
 	// New methods
 
@@ -94,7 +100,20 @@ public interface UInt8Array extends IntArray<UInt8>
 	}
 
 	@Override
-	public UInt8Array duplicate();
+	public default UInt8Array duplicate()
+	{
+		UInt8Array result = UInt8Array.create(this.getSize());
+		UInt8Array.Iterator iter1 = this.iterator();
+		UInt8Array.Iterator iter2 = result.iterator();
+		
+		while(iter1.hasNext())
+		{
+			iter2.forward();
+			iter2.set(iter1.next());
+		}
+		
+		return result;
+	}
 
 	public Iterator iterator();
 	
@@ -142,6 +161,112 @@ public interface UInt8Array extends IntArray<UInt8>
 		public default void set(UInt8 value)
 		{
 			setByte(value.getByte());
+		}
+	}
+	
+	class Wrapper implements UInt8Array
+	{
+		ScalarArray<?> array;
+		
+		public Wrapper(ScalarArray<?> array)
+		{
+			this.array = array;
+		}
+		
+
+		// =============================================================
+		// Implementation of the UInt8Array interface
+
+		@Override
+		public byte getByte(int[] pos)
+		{
+			return get(pos).getByte();
+		}
+
+		@Override
+		public void setByte(int[] pos, byte value)
+		{
+			set(pos, new UInt8(value));
+		}
+
+		
+		// =============================================================
+		// Specialization of the Array interface
+
+		@Override
+		public int dimensionality()
+		{
+			return array.dimensionality();
+		}
+
+		@Override
+		public int[] getSize()
+		{
+			return array.getSize();
+		}
+
+		@Override
+		public int getSize(int dim)
+		{
+			return array.getSize(dim);
+		}
+
+		@Override
+		public UInt8 get(int[] pos)
+		{
+			return new UInt8(UInt8.clamp(array.getValue(pos)));
+		}
+
+		@Override
+		public void set(int[] pos, UInt8 value)
+		{
+			array.setValue(pos, value.getValue());
+		}
+
+		@Override
+		public Iterator iterator()
+		{
+			return new Iterator(array.iterator());
+		}
+		
+		class Iterator implements UInt8Array.Iterator
+		{
+			ScalarArray.Iterator<?> iter;
+			
+			public Iterator(ScalarArray.Iterator<?> iter)
+			{
+				this.iter = iter;
+			}
+
+			@Override
+			public byte getByte()
+			{
+				return get().getByte();
+			}
+
+			@Override
+			public void setByte(byte b)
+			{
+				set(new UInt8(b));
+			}
+
+			@Override
+			public void forward()
+			{
+				this.iter.forward();
+			}
+
+			@Override
+			public UInt8 next()
+			{
+				return new UInt8(UInt8.clamp(iter.nextValue()));
+			}
+
+			@Override
+			public boolean hasNext()
+			{
+				return iter.hasNext();
+			}
 		}
 	}
 }
