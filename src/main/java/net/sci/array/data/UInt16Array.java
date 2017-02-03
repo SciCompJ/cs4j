@@ -46,6 +46,16 @@ public interface UInt16Array extends IntArray<UInt16>
 		return result;
 	}
 	
+	public static UInt16Array wrap(ScalarArray<?> array)
+	{
+		if (array instanceof UInt16Array)
+		{
+			return (UInt16Array) array;
+		}
+		return new Wrapper(array);
+	}
+	
+
 	// =============================================================
 	// New methods
 
@@ -127,7 +137,7 @@ public interface UInt16Array extends IntArray<UInt16>
 	 */
 	public default void setValue(int[] pos, double value)
 	{
-		setInt(pos, (int) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
+		setInt(pos, (int) UInt16.clamp(value));
 	}
 
 
@@ -161,6 +171,112 @@ public interface UInt16Array extends IntArray<UInt16>
 		public default void set(UInt16 value)
 		{
 			setShort(value.getShort());
+		}
+	}
+	
+	class Wrapper implements UInt16Array
+	{
+		ScalarArray<?> array;
+		
+		public Wrapper(ScalarArray<?> array)
+		{
+			this.array = array;
+		}
+		
+
+		// =============================================================
+		// Implementation of the UInt16Array interface
+
+		@Override
+		public short getShort(int[] pos)
+		{
+			return get(pos).getShort();
+		}
+
+		@Override
+		public void setShort(int[] pos, short value)
+		{
+			set(pos, new UInt16(value));
+		}
+
+		
+		// =============================================================
+		// Specialization of the Array interface
+
+		@Override
+		public int dimensionality()
+		{
+			return array.dimensionality();
+		}
+
+		@Override
+		public int[] getSize()
+		{
+			return array.getSize();
+		}
+
+		@Override
+		public int getSize(int dim)
+		{
+			return array.getSize(dim);
+		}
+
+		@Override
+		public UInt16 get(int[] pos)
+		{
+			return new UInt16(UInt16.clamp(array.getValue(pos)));
+		}
+
+		@Override
+		public void set(int[] pos, UInt16 value)
+		{
+			array.setValue(pos, value.getValue());
+		}
+
+		@Override
+		public Iterator iterator()
+		{
+			return new Iterator(array.iterator());
+		}
+		
+		class Iterator implements UInt16Array.Iterator
+		{
+			ScalarArray.Iterator<?> iter;
+			
+			public Iterator(ScalarArray.Iterator<?> iter)
+			{
+				this.iter = iter;
+			}
+
+			@Override
+			public short getShort()
+			{
+				return get().getShort();
+			}
+
+			@Override
+			public void setShort(short b)
+			{
+				iter.setValue(new UInt16(b).getValue());
+			}
+
+			@Override
+			public void forward()
+			{
+				this.iter.forward();
+			}
+
+			@Override
+			public UInt16 next()
+			{
+				return new UInt16(UInt16.clamp(iter.nextValue()));
+			}
+
+			@Override
+			public boolean hasNext()
+			{
+				return iter.hasNext();
+			}
 		}
 	}
 }

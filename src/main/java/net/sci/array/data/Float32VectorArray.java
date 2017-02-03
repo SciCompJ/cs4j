@@ -31,7 +31,6 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 		default:
 			//TODO: implement the rest
 			throw new RuntimeException("Can not create float vector image with dimension " + dims);
-//			return UInt8ArrayND.create(dims);
 		}
 	}
 

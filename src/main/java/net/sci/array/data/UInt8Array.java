@@ -47,10 +47,14 @@ public interface UInt8Array extends IntArray<UInt8>
 	
 	public static UInt8Array wrap(ScalarArray<?> array)
 	{
+		if (array instanceof UInt8Array)
+		{
+			return (UInt8Array) array;
+		}
 		return new Wrapper(array);
-		
 	}
 	
+
 	// =============================================================
 	// New methods
 
@@ -128,7 +132,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	 */
 	public default void setValue(int[] pos, double value)
 	{
-		setByte(pos, (byte) Math.min(Math.max(value, 0), 255));
+		setByte(pos, (byte) UInt8.clamp(value));
 	}
 
 

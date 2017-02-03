@@ -22,9 +22,17 @@ public class Int16 extends Int
 	 */
 	public final static int MIN_VALUE = Short.MIN_VALUE;
 	
-	public final static int clamp(int value)
+	/**
+	 * Computes the integer value between MIN_VALUE and MAX_VALUE closest to the
+	 * specified double value.
+	 * 
+	 * @param value
+	 *            a double value
+	 * @return the closest corresponding integer between MIN_VALUE and MAX_VALUE
+	 */
+	public final static int clamp(double value)
 	{
-		return Math.min(Math.max(value, MIN_VALUE), MAX_VALUE);
+		return (int) Math.min(Math.max(value, MIN_VALUE), MAX_VALUE);
 	}
 
 	short value;
