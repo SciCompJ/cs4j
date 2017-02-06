@@ -28,7 +28,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	 * Computes the norm of each element of the given vector array.
 	 * 
 	 * Current implementation returns the result in a new instance of
-	 * FloatArray.
+	 * Float32Array.
 	 * 
 	 * @param array
 	 *            a vector array
@@ -203,19 +203,46 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	// =============================================================
 	// New methods
 	
+//	/**
+//     * Returns a new ScalarArray corresponding to the specified channel.
+//     * 
+//     * The type of the channel is specified by subclasses.
+//     * 
+//     * @param channel
+//     *            the index of the channel, between 0 and nChannels-1
+//     * @return a new scalar array.
+//     */
+//	public ScalarArray<?> channel(int channel);
+	
+    /**
+     * Returns the number of elements used to represent each array element.
+     * 
+     * @return the number of elements used to represent each array element.
+     */
 	public int getVectorLength();
 
-	/**
-	 * Returns the set of values corresponding to the array element for the
-	 * given position.
-	 * 
-	 * @param pos
-	 *            list of indices in each dimension
-	 * @return the set of values corresponding to the array element for the
-	 *         given position
-	 */
-	public double[] getValues(int[] pos);
-	
+    /**
+     * Returns the set of values corresponding to the array element for the
+     * given position.
+     * 
+     * @param pos
+     *            list of indices in each dimension
+     * @return the set of values corresponding to the array element for the
+     *         given position
+     */
+    public double[] getValues(int[] pos);
+    
+    /**
+     * Returns the set of values corresponding to the array element for the
+     * given position.
+     * 
+     * @param pos
+     *            list of indices in each dimension
+     * @return the set of values corresponding to the array element for the
+     *         given position
+     */
+    public double[] getValues(int[] pos, double[] values);
+    
 	/**
 	 * Sets of values corresponding to the array element for the given position.
 	 * 

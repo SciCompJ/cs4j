@@ -56,7 +56,16 @@ public abstract class RGB8Array3D extends VectorArray3D<RGB8> implements RGB8Arr
 		return get(x, y, z).getValues();
 	}
 
-	@Override
+    /* (non-Javadoc)
+     * @see net.sci.array.data.vector.VectorArray3D#getValues(int, int, int, double[])
+     */
+    @Override
+    public double[] getValues(int x, int y, int z, double[] values)
+    {
+        return get(x, y, z).getValues(values);
+    }
+
+    @Override
 	public void setValues(int x, int y, int z, double[] values)
 	{
 		int r = UInt8.clamp(values[0]);

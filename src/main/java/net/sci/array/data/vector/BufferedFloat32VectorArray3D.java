@@ -104,22 +104,25 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 		return new BufferedFloat32VectorArray3D(this.size0, this.size1, this.size2, this.vectorLength, buffer2);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.vector.VectorArray2D#getValues(int, int)
-	 */
-	@Override
-	public double[] getValues(int x, int y, int z)
-	{
-		double[] res = new double[this.vectorLength];
-		int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
-		for (int c = 0; c < this.vectorLength; c++)
-		{
-			res[c] = this.buffer[offset + c];
-		}
-		return res;
-	}
+    /* (non-Javadoc)
+     * @see net.sci.array.data.vector.VectorArray3D#getValues(int, int, int)
+     */
+    @Override
+    public double[] getValues(int x, int y, int z)
+    {
+        double[] res = new double[this.vectorLength];
+        return getValues(x, y, z, res);
+    }
 
-	/* (non-Javadoc)
+    @Override
+    public double[] getValues(int x, int y, int z, double[] values)
+    {
+        int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
+        System.arraycopy(this.buffer, offset, values, 0, this.vectorLength);
+        return values;
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.data.vector.VectorArray2D#setValues(int, int, double[])
 	 */
 	@Override

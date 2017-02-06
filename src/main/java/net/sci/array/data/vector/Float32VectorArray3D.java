@@ -62,6 +62,12 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
 		return getValues(pos[0], pos[1], pos[2]);
 	}
 	
+    @Override
+    public double[] getValues(int[] pos, double[] values)
+    {
+        return getValues(pos[0], pos[1], pos[2], values);
+    }
+
 	public void setValues(int[] pos, double[] values)
 	{
 		setValues(pos[0], pos[1], pos[2], values);

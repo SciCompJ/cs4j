@@ -60,6 +60,12 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
 		return getValues(pos[0], pos[1]);
 	}
 	
+    @Override
+    public double[] getValues(int[] pos, double[] values)
+    {
+        return getValues(pos[0], pos[1], values);
+    }
+
 	public void setValues(int[] pos, double[] values)
 	{
 		setValues(pos[0], pos[1], values);

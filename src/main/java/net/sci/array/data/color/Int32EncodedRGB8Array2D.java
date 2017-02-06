@@ -45,28 +45,6 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 	// Implementation of the VectorArray2D interface
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.vector.VectorArray2D#getValues(int, int)
-	 */
-	@Override
-	public double[] getValues(int x, int y)
-	{
-		return new RGB8(this.buffer.getInt(x, y)).getValues();
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.vector.VectorArray2D#setValues(int, int, double[])
-	 */
-	@Override
-	public void setValues(int x, int y, double[] values)
-	{
-		int r = UInt8.clamp(values[0]);
-		int g = UInt8.clamp(values[1]);
-		int b = UInt8.clamp(values[2]);
-		int intCode = b << 16 | g << 8 | r;
-		this.buffer.setInt(x, y, intCode);
-	}
-
-	/* (non-Javadoc)
 	 * @see net.sci.array.data.vector.VectorArray2D#getValue(int, int, int)
 	 */
 	@Override

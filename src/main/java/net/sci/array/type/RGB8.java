@@ -122,20 +122,29 @@ public class RGB8 extends Vector<UInt8>
 		throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.type.Vector#getValues()
-	 */
-	@Override
-	public double[] getValues()
-	{
-		double[] values = new double[3];
-		int c = 0;
-		for (int v : getSamples())
-		{
-			values[c++] = v;
-		}
-		return values;
-	}
+    /* (non-Javadoc)
+     * @see net.sci.array.type.Vector#getValues()
+     */
+    @Override
+    public double[] getValues()
+    {
+        double[] values = new double[3];
+        return getValues(values);
+    }
+
+    /**
+     * Returns the three red, green and blue as floating point values in the
+     * pre-allocated array.
+     */
+    public double[] getValues(double[] values)
+    {
+        int c = 0;
+        for (int v : getSamples())
+        {
+            values[c++] = v;
+        }
+        return values;
+    }
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.type.Vector#getValue(int)

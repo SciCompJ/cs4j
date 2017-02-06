@@ -34,7 +34,8 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 		}
 	}
 
-	// =============================================================
+
+    // =============================================================
 	// Specialization of Array interface
 
 	@Override

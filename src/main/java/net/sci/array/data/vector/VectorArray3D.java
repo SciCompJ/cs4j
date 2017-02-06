@@ -26,7 +26,23 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
 
 	public abstract double[] getValues(int x, int y, int z);
 	
-	public abstract void setValues(int x, int y, int z, double[] values);
+    /**
+     * Returns the values at a given location in the specified pre-allocated
+     * array.
+     * 
+     * @param x
+     *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
+     * @param z
+     *            the z-position of the vector
+     * @param values
+     *            the pre-allocated array for storing values
+     * @return a reference to the pre-allocated array
+     */
+    public abstract double[] getValues(int x, int y, int z, double[] values);
+
+    public abstract void setValues(int x, int y, int z, double[] values);
 	
 	/**
 	 * Returns the scalar value for the specified position and the specified

@@ -187,6 +187,12 @@ public interface RGB8Array extends VectorArray<RGB8>
 		return get(pos).getValues();
 	}
 
+    @Override
+    public default double[] getValues(int[] pos, double[] values)
+    {
+        return get(pos).getValues(values);
+    }
+
 	@Override
 	public default void setValues(int[] pos, double[] values)
 	{

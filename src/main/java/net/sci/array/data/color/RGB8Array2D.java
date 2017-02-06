@@ -56,7 +56,13 @@ public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Arr
 		return get(x, y).getValues();
 	}
 
-	@Override
+    @Override
+    public double[] getValues(int x, int y, double[] values)
+    {
+        return get(x, y).getValues(values);
+    }
+
+    @Override
 	public void setValues(int x, int y, double[] values)
 	{
 		int r = UInt8.clamp(values[0]);

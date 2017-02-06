@@ -104,17 +104,23 @@ public class BufferedFloat64VectorArray2D extends Float64VectorArray2D
 		return new BufferedFloat64VectorArray2D(this.size0, this.size1, this.vectorLength, buffer2);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.vector.VectorArray2D#getValues(int, int)
-	 */
-	@Override
-	public double[] getValues(int x, int y)
-	{
-		double[] res = new double[this.vectorLength];
-		int offset = (y * this.size0 + x) * this.vectorLength;
-		System.arraycopy(this.buffer, offset, res, 0, this.vectorLength);
-		return res;
-	}
+    /* (non-Javadoc)
+     * @see net.sci.array.data.vector.VectorArray2D#getValues(int, int)
+     */
+    @Override
+    public double[] getValues(int x, int y)
+    {
+        double[] res = new double[this.vectorLength];
+        return getValues(x, y, res);
+    }
+
+    @Override
+    public double[] getValues(int x, int y, double[] values)
+    {
+        int offset = (y * this.size0 + x) * this.vectorLength;
+        System.arraycopy(this.buffer, offset, values, 0, this.vectorLength);
+        return values;
+    }
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.vector.VectorArray2D#setValues(int, int, double[])

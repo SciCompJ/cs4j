@@ -4,7 +4,10 @@
 package net.sci.array.data.vector;
 
 import net.sci.array.data.Array2D;
+import net.sci.array.data.Float32Array;
 import net.sci.array.data.VectorArray;
+import net.sci.array.data.scalar2d.Float32Array2D;
+import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.type.Vector;
 
 /**
@@ -12,7 +15,53 @@ import net.sci.array.type.Vector;
  *
  */
 public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> implements VectorArray<V>
-{	
+{
+    // =============================================================
+    // Static methods
+
+    /**
+     * Computes the norm of each element of the given vector array and returns
+     * an instance of ScalarArray2D.
+     * 
+     * Current implementation returns the result in a new instance of
+     * Float32Array.
+     * 
+     * @param array
+     *            a vector array
+     * @return a scalar array with the same size at the input array
+     */
+    public static ScalarArray2D<?> norm(VectorArray2D<? extends Vector<?>> array)
+    {
+        // allocate memory for result
+        Float32Array2D result = Float32Array2D.create(array.getSize(0), array.getSize(1));
+        
+        // create array iterators
+        VectorArray.Iterator<? extends Vector<?>> iter1 = array.iterator();
+        Float32Array.Iterator iter2 = result.iterator();
+        
+        // iterate over both arrays in parallel
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            // get current vector
+            double[] values = iter1.next().getValues();
+            
+            // compute norm of current vector
+            double norm = 0;
+            for (double d : values)
+            {
+                norm += d * d;
+            }
+            norm = Math.sqrt(norm);
+            
+            // allocate result
+            iter2.forward();
+            iter2.setValue(norm);
+        }
+        
+        return result;
+    }
+    
+    
 	// =============================================================
 	// Constructors
 
@@ -24,8 +73,22 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 	// =============================================================
 	// New methods
 
-	public abstract double[] getValues(int x, int y);
-	
+    public abstract double[] getValues(int x, int y);
+    
+    /**
+     * Returns the values at a given location in the specified pre-allocated
+     * array.
+     * 
+     * @param x
+     *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
+     * @param values
+     *            the pre-allocated array for storing values
+     * @return a reference to the pre-allocated array
+     */
+    public abstract double[] getValues(int x, int y, double[] values);
+    
 	public abstract void setValues(int x, int y, double[] values);
 	
 	/**
