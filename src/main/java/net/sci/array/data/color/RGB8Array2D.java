@@ -85,6 +85,6 @@ public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Arr
 	 * @see net.sci.array.data.color.RGB8Array#iterator()
 	 */
 	@Override
-	public abstract net.sci.array.data.color.RGB8Array.Iterator iterator();
+	public abstract RGB8Array.Iterator iterator();
 
 }

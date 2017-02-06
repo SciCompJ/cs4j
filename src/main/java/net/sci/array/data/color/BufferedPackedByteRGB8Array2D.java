@@ -187,7 +187,16 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 			}
 		}
 
-		@Override
+        @Override
+        public double[] getValues(double[] values)
+        {
+            values[0] = buffer.getInt(posX, posY, 0);
+            values[1] = buffer.getInt(posX, posY, 1);
+            values[2] = buffer.getInt(posX, posY, 2);
+            return values;
+        }
+
+        @Override
 		public void setValue(int c, double value)
 		{
 			switch(c)

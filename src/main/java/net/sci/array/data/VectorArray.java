@@ -289,6 +289,14 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 		 */
 		public double getValue(int c);
 		
+		public double[] getValues(double[] values);
+//        @Override
+//        public default double[] getValues(double[] values)
+//        {
+//            return get().getValues(values);
+//        }
+
+
 		/**
 		 * Changes the value of the c-th component of the current vector.
 		 * 

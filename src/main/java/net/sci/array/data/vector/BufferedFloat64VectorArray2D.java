@@ -197,6 +197,14 @@ public class BufferedFloat64VectorArray2D extends Float64VectorArray2D
 			return buffer[ind];
 		}
 
+        @Override
+        public double[] getValues(double[] values)
+        {
+            int ind = index * vectorLength;
+            System.arraycopy(buffer, ind, values, 0, vectorLength);
+            return values;
+        }
+
 		@Override
 		public void setValue(int c, double value)
 		{

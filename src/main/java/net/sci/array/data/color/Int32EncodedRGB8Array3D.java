@@ -194,6 +194,16 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 			throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
 		}
 
+        @Override
+        public double[] getValues(double[] values)
+        {
+            int intCode = intIterator.getInt();
+            values[0] = intCode & 0x00FF;
+            values[1] = (intCode >> 8) & 0x00FF;
+            values[2] = (intCode >> 16) & 0x00FF;
+            return values;
+        }
+
 		@Override
 		public void setValue(int c, double value)
 		{

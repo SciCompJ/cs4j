@@ -199,6 +199,17 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 			return buffer[ind];
 		}
 
+        @Override
+        public double[] getValues(double[] values)
+        {
+            int ind = index * vectorLength;
+            for (int c = 0; c < vectorLength; c++)
+            {
+                values[c] = buffer[ind + c];
+            }
+            return values;
+        }
+
 		@Override
 		public void setValue(int c, double value)
 		{
