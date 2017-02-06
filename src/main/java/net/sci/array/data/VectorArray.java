@@ -44,10 +44,11 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 		Float32Array.Iterator iter2 = result.iterator();
 		
 		// iterate over both arrays in parallel
+		double[] values = new double[array.getVectorLength()]; 
 		while (iter1.hasNext() && iter2.hasNext())
 		{
 			// get current vector
-			double[] values = iter1.next().getValues();
+			iter1.next().getValues(values);
 			
 			// compute norm of current vector
 			double norm = 0;

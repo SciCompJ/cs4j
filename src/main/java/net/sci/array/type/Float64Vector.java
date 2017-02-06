@@ -30,6 +30,19 @@ public class Float64Vector extends Vector<Float64>
 		return res;
 	}
 
+    /**
+     * Fill in the specified array.
+     */
+    @Override
+    public double[] getValues(double[] values)
+    {
+        for(int c = 0; c < this.data.length; c++)
+        {
+            values[c] = this.data[c];
+        }
+        return values;
+    }
+
 	/**
 	 * Returns the value at the specified position.
 	 */

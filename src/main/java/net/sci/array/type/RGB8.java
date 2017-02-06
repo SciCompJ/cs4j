@@ -102,15 +102,34 @@ public class RGB8 extends Vector<UInt8>
 		return .2989 * r  + .5870 * g + .1140 * b;
 	}
 	
-	public int[] getSamples()
-	{
-		int[] rgb = new int[3];
-		rgb[0] = this.intCode & 0x00FF;
-		rgb[1] = (this.intCode >> 8) & 0x00FF;
-		rgb[2] = (this.intCode >> 16) & 0x00FF;
-		return rgb;
-	}
-	
+    /**
+     * Returns the red, green and blue values into an integer array.
+     * 
+     * @param rgb
+     *            a preallocated array with three elements
+     * @return the reference to the rgb array
+     */
+    public int[] getSamples()
+    {
+        int[] rgb = new int[3];
+        return getSamples(rgb);
+    }
+    
+    /**
+     * Returns the red, green and blue values into the pre-allocated array.
+     * 
+     * @param rgb
+     *            a preallocated array with three elements
+     * @return the reference to the rgb array
+     */
+    public int[] getSamples(int[] rgb)
+    {
+        rgb[0] = this.intCode & 0x00FF;
+        rgb[1] = (this.intCode >> 8) & 0x00FF;
+        rgb[2] = (this.intCode >> 16) & 0x00FF;
+        return rgb;
+    }
+    
 	public int getSample(int channel)
 	{
 		switch (channel)
@@ -138,11 +157,9 @@ public class RGB8 extends Vector<UInt8>
      */
     public double[] getValues(double[] values)
     {
-        int c = 0;
-        for (int v : getSamples())
-        {
-            values[c++] = v;
-        }
+        values[0] = this.intCode & 0x00FF;
+        values[1] = (this.intCode >> 8) & 0x00FF;
+        values[2] = (this.intCode >> 16) & 0x00FF;
         return values;
     }
 

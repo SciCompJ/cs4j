@@ -65,19 +65,32 @@ public class Float32Vector extends Vector<Float32>
 	// =============================================================
 	// Implementation of Vector interface
 	
-	/**
-	 * Returns a defensive copy of the inner array.
-	 */
-	@Override
-	public double[] getValues()
-	{
-		double[] res = new double[this.data.length];
-		for(int c = 0; c < this.data.length; c++)
-		{
-			res[c] = this.data[c];
-		}
-		return res;
-	}
+    /**
+     * Returns a defensive copy of the inner array.
+     */
+    @Override
+    public double[] getValues()
+    {
+        double[] res = new double[this.data.length];
+        for(int c = 0; c < this.data.length; c++)
+        {
+            res[c] = this.data[c];
+        }
+        return res;
+    }
+
+    /**
+     * Fill in the specified array.
+     */
+    @Override
+    public double[] getValues(double[] values)
+    {
+        for(int c = 0; c < this.data.length; c++)
+        {
+            values[c] = this.data[c];
+        }
+        return values;
+    }
 
 	/**
 	 * Returns the value at the specified position.

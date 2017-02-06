@@ -11,13 +11,20 @@ package net.sci.array.type;
  */
 public abstract class Vector<T extends Scalar>
 {
-	/**
-	 * Returns the set of values that constitutes this vector.
-	 * 
-	 * @return the set of values that constitutes this vector.
-	 */
-	public abstract double[] getValues();
-	
+    /**
+     * Returns the set of values that constitutes this vector.
+     * 
+     * @return the set of values that constitutes this vector.
+     */
+    public abstract double[] getValues();
+    
+    /**
+     * Returns the set of values that constitutes this vector.
+     * 
+     * @return the set of values that constitutes this vector.
+     */
+    public abstract double[] getValues(double[] values);
+    
 	/**
 	 * Returns the value at the specified index as a double.
 	 * 
