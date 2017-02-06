@@ -215,6 +215,49 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 //     */
 //	public ScalarArray<?> channel(int channel);
 	
+	/**
+     * Computes the norm of each element of the given vector array.
+     * 
+     * Current implementation returns the result in a new instance of
+     * Float32Array.
+     * 
+     * @param array
+     *            a vector array
+     * @return a scalar array with the same size at the input array
+     */
+    public default ScalarArray<?> norm()
+    {
+        // allocate memory for result
+        Float32Array result = Float32Array.create(getSize());
+        
+        // create array iterators
+        Iterator<? extends Vector<?>> iter1 = iterator();
+        Float32Array.Iterator iter2 = result.iterator();
+        
+        // iterate over both arrays in parallel
+        double[] values = new double[getVectorLength()]; 
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            // get current vector
+            iter1.forward();
+            iter1.getValues(values);
+            
+            // compute norm of current vector
+            double norm = 0;
+            for (double d : values)
+            {
+                norm += d * d;
+            }
+            norm = Math.sqrt(norm);
+            
+            // allocate result
+            iter2.forward();
+            iter2.setValue(norm);
+        }
+        
+        return result;
+    }
+    
     /**
      * Returns the number of elements used to represent each array element.
      * 
@@ -289,13 +332,23 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 		 */
 		public double getValue(int c);
 		
-		public double[] getValues(double[] values);
-//        @Override
-//        public default double[] getValues(double[] values)
-//        {
-//            return get().getValues(values);
-//        }
-
+        /**
+         * Returns the values at current position of the iterator into a
+         * pre-allocated array.
+         * 
+         * Default implementation uses the <code>getValues(double[])</code> of a new
+         * <code>Vector</code> instance. Subclasses may use a more efficient
+         * implementation.
+         * 
+         * @param values
+         *            a pre-allocated array with <code>getVectorLength()</code>
+         *            elements.
+         * @return the reference to the values array.
+         */
+        public default double[] getValues(double[] values)
+        {
+            return get().getValues(values);
+        }
 
 		/**
 		 * Changes the value of the c-th component of the current vector.

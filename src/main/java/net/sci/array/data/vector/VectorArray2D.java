@@ -29,7 +29,9 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
      * @param array
      *            a vector array
      * @return a scalar array with the same size at the input array
+     * @deprecated use instance method instead
      */
+    @Deprecated
     public static ScalarArray2D<?> norm(VectorArray2D<? extends Vector<?>> array)
     {
         // allocate memory for result
@@ -70,8 +72,85 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 		super(size0, size1);
 	}
 	
-	// =============================================================
-	// New methods
+	
+    // =============================================================
+    // New methods
+
+   /**
+     * Computes the norm of each element of the given vector array.
+     * 
+     * Current implementation returns the result in a new instance of
+     * Float32Array.
+     * 
+     * @param array
+     *            a vector array
+     * @return a scalar array with the same size at the input array
+     */
+    public ScalarArray2D<?> norm()
+    {
+        // allocate memory for result
+        Float32Array2D result = Float32Array2D.create(getSize(0), getSize(1));
+        
+        // create array iterators
+        VectorArray.Iterator<? extends Vector<?>> iter1 = iterator();
+        Float32Array.Iterator iter2 = result.iterator();
+        
+        // iterate over both arrays in parallel
+        double[] values = new double[getVectorLength()]; 
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            // get current vector
+            iter1.forward();
+            iter1.getValues(values);
+            
+            // compute norm of current vector
+            double norm = 0;
+            for (double d : values)
+            {
+                norm += d * d;
+            }
+            norm = Math.sqrt(norm);
+            
+            // allocate result
+            iter2.forward();
+            iter2.setValue(norm);
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Returns a new ScalarArray corresponding to the specified channel.
+     * 
+     * @param channelIndex
+     *            the index of the channel, between 0 and nChannels-1
+     * @return a new scalar array.
+     */
+    public ScalarArray2D<?> channel(int channelIndex)
+    {
+        // allocate memory for result
+        Float32Array2D result = Float32Array2D.create(getSize(0), getSize(1));
+        
+        // create array iterators
+        VectorArray.Iterator<? extends Vector<?>> iter1 = iterator();
+        Float32Array.Iterator iter2 = result.iterator();
+        
+        // iterate over both arrays in parallel
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            // iterate
+            iter1.forward();
+            iter2.forward();
+            
+            iter2.setValue(iter1.getValue(channelIndex));
+        }
+        
+        return result;
+    }
+    
+
+    // =============================================================
+	// New abstract methods
 
     public abstract double[] getValues(int x, int y);
     
