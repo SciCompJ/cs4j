@@ -3,7 +3,6 @@
  */
 package net.sci.array.data.color;
 
-import net.sci.array.data.Int32Array;
 import net.sci.array.data.scalar3d.Int32Array3D;
 import net.sci.array.type.RGB8;
 import net.sci.array.type.UInt8;
@@ -103,9 +102,6 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 		}
 		intCode = r | g | b;
 		this.buffer.setInt(x, y, z, intCode);
-//		int[] rgb = new RGB8(this.buffer.getInt(x, y)).getSamples();
-//		rgb[c] = UInt8.clamp(value);
-//		this.buffer.setInt(x, y, new RGB8(rgb[0], rgb[1], rgb[2]).getIntCode());
 	}
 
 	
@@ -150,105 +146,6 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
 	public RGB8Array.Iterator iterator()
 	{
-		return new Iterator();
-	}
-	
-	private class Iterator implements RGB8Array.Iterator
-	{
-		Int32Array.Iterator intIterator;
-		
-		public Iterator() 
-		{
-			this.intIterator = buffer.iterator();
-		}
-		
-		@Override
-		public boolean hasNext()
-		{
-			return intIterator.hasNext();
-		}
-
-		@Override
-		public RGB8 next()
-		{
-			forward();
-			return get();
-		}
-
-		@Override
-		public void forward()
-		{
-			intIterator.forward();
-		}
-
-		@Override
-		public double getValue(int c)
-		{
-			int intCode = intIterator.getInt();
-			switch (c)
-			{
-			case 0: return intCode & 0x00FF;
-			case 1: return (intCode >> 8) & 0x00FF;
-			case 2: return (intCode >> 16) & 0x00FF;
-			}
-			throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
-		}
-
-        @Override
-        public double[] getValues(double[] values)
-        {
-            int intCode = intIterator.getInt();
-            values[0] = intCode & 0x00FF;
-            values[1] = (intCode >> 8) & 0x00FF;
-            values[2] = (intCode >> 16) & 0x00FF;
-            return values;
-        }
-
-		@Override
-		public void setValue(int c, double value)
-		{
-			int intCode = intIterator.getInt();
-			int r = intCode & 0x00FF;
-			int g = intCode & 0x00FF00;
-			int b = intCode & 0x00FF0000;
-			int intValue = UInt8.clamp(value);
-			
-			switch (c)
-			{
-			case 0: r = intValue; break;
-			case 1: g = intValue << 8; break;
-			case 2: b = intValue << 16; break;
-			default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
-			}
-			
-			intCode = r | g | b;
-			intIterator.setInt(intCode);
-		}
-
-		@Override
-		public RGB8 get()
-		{	
-			return new RGB8(intIterator.getInt());
-		}
-
-		@Override
-		public void set(RGB8 rgb)
-		{
-			intIterator.setInt(rgb.getIntCode());
-		}
-
-		@Override
-		public double getValue()
-		{
-			return get().getValue();
-		}
-
-		@Override
-		public void setValue(double value)
-		{
-			int val = UInt8.clamp(value);
-			int intCode = val << 16 & val << 8 & val;
-			intIterator.setInt(intCode);
-		}
+      return new Int32ArrayRGB8Iterator(this.buffer);
 	}
 }
