@@ -12,15 +12,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 /**
- * A simple plain table for storing measurement results. 
+ * Default implementation for the Table interface
+ * 
  * Data are stored as an double array indexed by column first. 
  * Methods access data by row indexing first.
  * 
  * @author David Legland
  *
  */
-public class DataTable
+public class DataTable implements Table
 {
+    // =============================================================
+    // Class variables
+
 	/**
 	 * Inner data array, first index corresponds to columns.
 	 */
@@ -31,6 +35,10 @@ public class DataTable
 
 	String[] colNames = null;
 	String[] rowNames = null;
+
+
+	// =============================================================
+    // Constructors
 
 	/**
 	 * Creates a new data table with the given number of rows and columns.
@@ -95,86 +103,9 @@ public class DataTable
 
 	}
 
-	/**
-	 * Returns the value at the specified position in the table.
-	 * 
-	 * @param row
-	 *            the row index, 0-indexed
-	 * @param col
-	 *            the column index, 0-indexed
-	 * @return the value at the specified position
-	 */
-	public double getValue(int row, int col)
-	{
-		return this.data[col][row];
-	}
-
-	/**
-	 * Returns the value at the specified position in the table.
-	 * 
-	 * @param row
-	 *            the row index, 0-indexed
-	 * @param colName
-	 *            the name of the column
-	 * @return the value at the specified position
-	 */
-	public double getValue(int row, String colName)
-	{
-		int col = this.getColumnIndex(colName);
-		return this.data[col][row];
-	}
-
-	/**
-	 * Changes the value at the specified position
-	 * 
-	 * @param col
-	 *            the column index, 0-indexed
-	 * @param row
-	 *            the row index, 0-indexed
-	 * @param value
-	 *            the new value
-	 */
-	public void setValue(int row, int col, double value)
-	{
-		this.data[col][row] = value;
-	}
-
-	/**
-	 * Changes the value at the specified position
-	 * 
-	 * @param row
-	 *            the row index, 0-indexed
-	 * @param colName
-	 *            the name of the column to modify
-	 * @param value
-	 *            the new value
-	 */
-	public void setValue(int row, String colName, double value)
-	{
-		int col = this.getColumnIndex(colName);
-		this.data[col][row] = value;
-	}
-
-	/**
-	 * Returns an entire column of the data table.
-	 */
-	public double[] getColumn(int col)
-	{
-		return this.data[col];
-	}
-
-	/**
-	 * Returns an entire row of the data table.
-	 */
-	public double[] getRow(int row)
-	{
-		double[] res = new double[this.nCols];
-		for (int c = 0; c < this.nCols; c++)
-		{
-			res[c] = this.data[c][row];
-		}
-		return res;
-	}
+	
+    // =============================================================
+    // General methods
 
 	/**
 	 * Returns the number of columns (measurements, variables) in the data
@@ -218,11 +149,6 @@ public class DataTable
 		return -1;
 	}
 
-	public double[] getColumnValues(int colIndex)
-	{
-		return this.data[colIndex];
-	}
-	
 	public String[] getRowNames()
 	{
 		return this.rowNames;
@@ -236,39 +162,77 @@ public class DataTable
 		this.rowNames = names;
 	}
 
-	/**
-	 * Display the content of the data table to standard output.
-	 */
-	public void print()
-	{
+    // =============================================================
+    // Getters and setters for values
 
-		// First display column headers
-		if (this.colNames != null)
-		{
-			for (int c = 0; c < this.nCols; c++)
-			{
-				if (this.rowNames != null)
-					System.out.print("\t");
-				System.out.print(this.colNames[c]);
-			}
-			System.out.println();
-		}
+    /**
+     * Returns the value at the specified position in the table.
+     * 
+     * @param row
+     *            the row index, 0-indexed
+     * @param col
+     *            the column index, 0-indexed
+     * @return the value at the specified position
+     */
+    public double getValue(int row, int col)
+    {
+        return this.data[col][row];
+    }
 
-		// Then display content of each row
-		for (int r = 0; r < this.nRows; r++)
-		{
-			// row header
-			if (this.rowNames != null)
-				System.out.print(this.rowNames[r] + "\t");
+    /**
+     * Returns the value at the specified position in the table.
+     * 
+     * @param row
+     *            the row index, 0-indexed
+     * @param colName
+     *            the name of the column
+     * @return the value at the specified position
+     */
+    public double getValue(int row, String colName)
+    {
+        int col = this.getColumnIndex(colName);
+        return this.data[col][row];
+    }
 
-			// row data
-			for (int c = 0; c < this.nCols; c++)
-			{
-				System.out.print(this.data[c][r] + "\t");
-			}
-			System.out.println();
-		}
-	}
+    /**
+     * Returns an entire column of the data table.
+     */
+    public double[] getColumnValues(int colIndex)
+    {
+        return this.data[colIndex];
+    }
+    
+    /**
+     * Changes the value at the specified position
+     * 
+     * @param col
+     *            the column index, 0-indexed
+     * @param row
+     *            the row index, 0-indexed
+     * @param value
+     *            the new value
+     */
+    public void setValue(int row, int col, double value)
+    {
+        this.data[col][row] = value;
+    }
+
+    /**
+     * Changes the value at the specified position
+     * 
+     * @param row
+     *            the row index, 0-indexed
+     * @param colName
+     *            the name of the column to modify
+     * @param value
+     *            the new value
+     */
+    public void setValue(int row, String colName, double value)
+    {
+        int col = this.getColumnIndex(colName);
+        this.data[col][row] = value;
+    }
+
 
 	/**
 	 * Opens a new JFrame and shows this table inside
@@ -319,8 +283,10 @@ public class DataTable
 	public final static void main(String[] args)
 	{
 		DataTable tbl = new DataTable(15, 5);
-		tbl.setColumnNames(new String[] { "length", "area", "diameter",
-				"number", "density" });
+        tbl.setColumnNames(new String[] { "Length", "Area", "Diam.",
+                "Number", "Density" });
+		tbl.print();
+		
 		JFrame frame = tbl.show();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
