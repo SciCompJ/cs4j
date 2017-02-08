@@ -18,7 +18,7 @@ public class Array2DTest
 {
 
 	/**
-	 * Test method for {@link net.sci.array.data.Array2D#createView(net.sci.array.Array)}.
+	 * Test method for {@link net.sci.array.data.Array2D#wrap(net.sci.array.Array)}.
 	 */
 	@Test
 	public final void testCreateView()
@@ -33,7 +33,7 @@ public class Array2DTest
 			}
 		}
 		
-		Array2D<UInt8> res = Array2D.createView(array);
+		Array2D<UInt8> res = Array2D.wrap(array);
 		assertEquals(5, res.getSize(0));
 		assertEquals(4, res.getSize(1));
 		
@@ -41,7 +41,7 @@ public class Array2DTest
 	}
 
 	/**
-	 * Test method for {@link net.sci.array.data.Array2D#createView(net.sci.array.Array)}.
+	 * Test method for {@link net.sci.array.data.Array2D#wrap(net.sci.array.Array)}.
 	 */
 	@Test
 	public final void testCreateView_3d()
@@ -59,7 +59,7 @@ public class Array2DTest
 			}
 		}
 		
-		Array2D<UInt8> res = Array2D.createView(array);
+		Array2D<UInt8> res = Array2D.wrap(array);
 		assertEquals(5, res.getSize(0));
 		assertEquals(4, res.getSize(1));
 		

@@ -78,5 +78,4 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 			return next().getValue();
 		}
 	}
-
 }

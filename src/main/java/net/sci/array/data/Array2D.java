@@ -15,9 +15,13 @@ public abstract class Array2D<T> implements Array<T>
 	// =============================================================
 	// static methods
 	
-	public static final <T> Array2D<T> createView(Array<T> array)
+	public static final <T> Array2D<T> wrap(Array<T> array)
 	{
-		return new Array2DView<T>(array);
+		if (array instanceof Array2D)
+		{
+			return (Array2D<T>) array;
+		}
+		return new Wrap<T>(array);
 	}
 
 	// =============================================================
@@ -108,11 +112,11 @@ public abstract class Array2D<T> implements Array<T>
 		setValue(pos[0], pos[1], value);
 	}
 	
-	private static class Array2DView<T> extends Array2D<T>
+	private static class Wrap<T> extends Array2D<T>
 	{
 		private Array<T> array;
 		
-		protected Array2DView(Array<T> array)
+		protected Wrap(Array<T> array)
 		{
 			super(0, 0);
 			if (array.dimensionality() < 2)
@@ -217,7 +221,7 @@ public abstract class Array2D<T> implements Array<T>
 		}
 		
 		@Override
-		public net.sci.array.Array.Iterator<T> iterator()
+		public Array.Iterator<T> iterator()
 		{
 			return new Iterator2D();
 		}
@@ -246,7 +250,7 @@ public abstract class Array2D<T> implements Array<T>
 					this.y++;
 					this.x = 0;
 				}
-				return Array2DView.this.get(x, y);
+				return Wrap.this.get(x, y);
 			}
 
 			@Override
@@ -263,13 +267,13 @@ public abstract class Array2D<T> implements Array<T>
 			@Override
 			public T get()
 			{
-				return Array2DView.this.get(x, y);
+				return Wrap.this.get(x, y);
 			}
 
 			@Override
 			public void set(T value)
 			{
-				Array2DView.this.set(x, y, value);
+				Wrap.this.set(x, y, value);
 			}
 			
 			@Override
@@ -282,13 +286,13 @@ public abstract class Array2D<T> implements Array<T>
 			@Override
 			public double getValue()
 			{
-				return Array2DView.this.getValue(x, y);
+				return Wrap.this.getValue(x, y);
 			}
 
 			@Override
 			public void setValue(double value)
 			{
-				Array2DView.this.setValue(x, y, value);				
+				Wrap.this.setValue(x, y, value);				
 			}
 		}
 
