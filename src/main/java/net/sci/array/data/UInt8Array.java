@@ -4,8 +4,11 @@
 package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
+import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
+import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
+import net.sci.array.data.scalarnd.BufferedUInt8ArrayND;
 import net.sci.array.data.scalarnd.UInt8ArrayND;
 import net.sci.array.type.UInt8;
 
@@ -29,6 +32,19 @@ public interface UInt8Array extends IntArray<UInt8>
 			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
 		default:
 			return UInt8ArrayND.create(dims);
+		}
+	}
+	
+	public static UInt8Array create(int[] dims, byte[] buffer)
+	{
+		switch (dims.length)
+		{
+		case 2:
+			return new BufferedUInt8Array2D(dims[0], dims[1], buffer);
+		case 3:
+			return new BufferedUInt8Array3D(dims[0], dims[1], dims[2], buffer);
+		default:
+			return new BufferedUInt8ArrayND(dims, buffer);
 		}
 	}
 	

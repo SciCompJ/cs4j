@@ -5,7 +5,9 @@ package net.sci.array.data;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
+import net.sci.array.data.scalar2d.BufferedFloat32Array2D;
 import net.sci.array.data.scalar2d.Float32Array2D;
+import net.sci.array.data.scalar3d.BufferedFloat32Array3D;
 import net.sci.array.data.scalar3d.Float32Array3D;
 import net.sci.array.type.Float32;
 
@@ -32,6 +34,21 @@ public interface Float32Array extends ScalarArray<Float32>
 		}
 	}
 
+	public static Float32Array create(int[] dims, float[] buffer)
+	{
+		switch (dims.length)
+		{
+		case 2:
+			return new BufferedFloat32Array2D(dims[0], dims[1], buffer);
+		case 3:
+			return new BufferedFloat32Array3D(dims[0], dims[1], dims[2], buffer);
+		default:
+			//TODO: implement the rest
+			throw new IllegalArgumentException("Can not create Float32Array with " + dims.length + " dimensions");
+//			return new BufferedFloat32ArrayND(dims, buffer);
+		}
+	}
+	
 	public static Float32Array convert(Array<?> array)
 	{
 		Float32Array result = Float32Array.create(array.getSize());

@@ -4,8 +4,11 @@
 package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
+import net.sci.array.data.scalar2d.BufferedInt32Array2D;
 import net.sci.array.data.scalar2d.Int32Array2D;
+import net.sci.array.data.scalar3d.BufferedInt32Array3D;
 import net.sci.array.data.scalar3d.Int32Array3D;
+import net.sci.array.data.scalarnd.BufferedInt32ArrayND;
 import net.sci.array.data.scalarnd.Int32ArrayND;
 import net.sci.array.type.Int32;
 
@@ -28,6 +31,19 @@ public interface Int32Array extends IntArray<Int32>
 			return Int32Array3D.create(dims[0], dims[1], dims[2]);
 		default:
 			return Int32ArrayND.create(dims);
+		}
+	}
+	
+	public static Int32Array create(int[] dims, int[] buffer)
+	{
+		switch (dims.length)
+		{
+		case 2:
+			return new BufferedInt32Array2D(dims[0], dims[1], buffer);
+		case 3:
+			return new BufferedInt32Array3D(dims[0], dims[1], dims[2], buffer);
+		default:
+			return new BufferedInt32ArrayND(dims, buffer);
 		}
 	}
 	

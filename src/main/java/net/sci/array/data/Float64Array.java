@@ -5,7 +5,9 @@ package net.sci.array.data;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
+import net.sci.array.data.scalar2d.BufferedFloat64Array2D;
 import net.sci.array.data.scalar2d.Float64Array2D;
+import net.sci.array.data.scalar3d.BufferedFloat64Array3D;
 import net.sci.array.data.scalar3d.Float64Array3D;
 import net.sci.array.type.Float64;
 
@@ -18,7 +20,7 @@ public interface Float64Array extends ScalarArray<Float64>
 	// =============================================================
 	// Static methods
 
-	public static Float64Array create(int[] dims)
+	public static Float64Array create(int... dims)
 	{
 		switch (dims.length)
 		{
@@ -32,6 +34,21 @@ public interface Float64Array extends ScalarArray<Float64>
 		}
 	}
 
+	public static Float64Array create(int[] dims, double[] buffer)
+	{
+		switch (dims.length)
+		{
+		case 2:
+			return new BufferedFloat64Array2D(dims[0], dims[1], buffer);
+		case 3:
+			return new BufferedFloat64Array3D(dims[0], dims[1], dims[2], buffer);
+		default:
+			//TODO: implement the rest
+			throw new IllegalArgumentException("Can not create Float32Array with " + dims.length + " dimensions");
+//			return new BufferedFloat32ArrayND(dims, buffer);
+		}
+	}
+	
 	public static Float64Array convert(Array<?> array)
 	{
 		Float64Array result = Float64Array.create(array.getSize());

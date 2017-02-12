@@ -22,8 +22,8 @@ public class BufferedBooleanArray2D extends BooleanArray2D
 	// Constructors
 
 	/**
-	 * @param size0
-	 * @param size1
+	 * @param size0 the size of the array in the first dimension
+	 * @param size1 the size of the array in the second dimension
 	 */
 	public BufferedBooleanArray2D(int size0, int size1)
 	{
@@ -36,7 +36,7 @@ public class BufferedBooleanArray2D extends BooleanArray2D
 		super(size0, size1);
 		if (buffer.length < size0 * size1)
 		{
-			throw new IllegalArgumentException("Buffer size does not match image dimensions");
+			throw new IllegalArgumentException("Buffer size does not match array dimensions");
 		}
 		this.buffer = buffer;
 	}

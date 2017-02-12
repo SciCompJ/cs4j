@@ -5,7 +5,9 @@ package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.scalar2d.BooleanArray2D;
+import net.sci.array.data.scalar2d.BufferedBooleanArray2D;
 import net.sci.array.data.scalar3d.BooleanArray3D;
+import net.sci.array.data.scalar3d.BufferedBooleanArray3D;
 import net.sci.array.type.Boolean;
 
 /**
@@ -30,6 +32,21 @@ public interface BooleanArray extends IntArray<Boolean>
 //			return UInt8ArrayND.create(dims);
 		}
 	}
+	
+	public static BooleanArray create(int[] dims, boolean[] buffer)
+	{
+		switch (dims.length)
+		{
+		case 2:
+			return new BufferedBooleanArray2D(dims[0], dims[1], buffer);
+		case 3:
+			return new BufferedBooleanArray3D(dims[0], dims[1], dims[2], buffer);
+		default:
+			throw new IllegalArgumentException("Can not create BooleanArray with " + dims.length + " dimensions");
+//			return UInt8ArrayND.create(dims);
+		}
+	}
+
 	
 	// =============================================================
 	// New methods
