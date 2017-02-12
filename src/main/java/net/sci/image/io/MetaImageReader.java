@@ -16,16 +16,6 @@ import net.sci.array.data.Float64Array;
 import net.sci.array.data.Int16Array;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
-import net.sci.array.data.scalar2d.BufferedFloat32Array2D;
-import net.sci.array.data.scalar2d.BufferedFloat64Array2D;
-import net.sci.array.data.scalar2d.BufferedInt16Array2D;
-import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
-import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
-import net.sci.array.data.scalar3d.BufferedFloat32Array3D;
-import net.sci.array.data.scalar3d.BufferedFloat64Array3D;
-import net.sci.array.data.scalar3d.BufferedInt16Array3D;
-import net.sci.array.data.scalar3d.BufferedUInt16Array3D;
-import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
 import net.sci.image.Image;
 
 /**
@@ -232,32 +222,33 @@ public class MetaImageReader implements ImageReader
 	{
 		// TODO: process other data types
 		Array<?> array;
-		if (info.elementType == MetaImageInfo.ElementType.UINT8)
+		switch(info.elementType)
 		{
+		case UINT8:
 			array = readUInt8Array(info);
-		}
-		else if (info.elementType == MetaImageInfo.ElementType.UINT16)
-		{
+			break;
+		
+		case UINT16:
 			array = readUInt16Array(info);
-		}
-		else if (info.elementType == MetaImageInfo.ElementType.INT16)
-		{
+			break;
+
+		case INT16:
 			array = readInt16Array(info);
-		}
-		else if (info.elementType == MetaImageInfo.ElementType.FLOAT32)
-		{
+			break;
+			
+//		case INT32:
+		case FLOAT32:
 			array = readFloat32Array(info);
-		}
-		else if (info.elementType == MetaImageInfo.ElementType.FLOAT64)
-		{
+			break;
+			
+		case FLOAT64:
 			array = readFloat64Array(info);
-		}
-		else
-		{
+			break;
+			
+//			case BOOLEAN:
+		default:
 			throw new RuntimeException("Unable to process files with data type: " + info.elementTypeName);
 		}
-		
-
 		return array;
 	}
 	
@@ -287,24 +278,7 @@ public class MetaImageReader implements ImageReader
 					+ " bytes over the " + nBytes + " expected");
 		}
 
-		UInt8Array array;
-		if (info.nDims == 2)
-		{
-			array = new BufferedUInt8Array2D(info.dimSize[0], info.dimSize[1], buffer);
-		} 
-		else if (info.nDims == 3)
-		{
-			array = new BufferedUInt8Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
-		}
-		else 
-		{
-			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
-		}
-
-		// closes file
-		inputStream.close();
-
-		return array;
+		return UInt8Array.create(info.dimSize, buffer);
 	}
 
 	private UInt16Array readUInt16Array(MetaImageInfo info) throws IOException
@@ -346,24 +320,7 @@ public class MetaImageReader implements ImageReader
 				buffer[i] = (short) ((b2 << 8) + b1);
 		}
 		
-		UInt16Array array;
-		if (info.nDims == 2)
-		{
-			array = new BufferedUInt16Array2D(info.dimSize[0], info.dimSize[1], buffer);
-		} 
-		else if (info.nDims == 3)
-		{
-			array = new BufferedUInt16Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
-		}
-		else 
-		{
-			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
-		}
-
-		// closes file
-		inputStream.close();
-
-		return array;
+		return UInt16Array.create(info.dimSize, buffer);
 	}
 	
 	private Int16Array readInt16Array(MetaImageInfo info) throws IOException
@@ -404,25 +361,8 @@ public class MetaImageReader implements ImageReader
 			else
 				buffer[i] = (short) ((b2 << 8) + b1);
 		}
-		
-		Int16Array array;
-		if (info.nDims == 2)
-		{
-			array = new BufferedInt16Array2D(info.dimSize[0], info.dimSize[1], buffer);
-		} 
-		else if (info.nDims == 3)
-		{
-			array = new BufferedInt16Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
-		}
-		else 
-		{
-			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
-		}
-
-		// closes file
-		inputStream.close();
-
-		return array;
+	
+		return Int16Array.create(info.dimSize, buffer);
 	}
 	
 	private Float32Array readFloat32Array(MetaImageInfo info) throws IOException
@@ -466,24 +406,7 @@ public class MetaImageReader implements ImageReader
 				buffer[i] = Float.intBitsToFloat((b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
 		}
 		
-		Float32Array array;
-		if (info.nDims == 2)
-		{
-			array = new BufferedFloat32Array2D(info.dimSize[0], info.dimSize[1], buffer);
-		} 
-		else if (info.nDims == 3)
-		{
-			array = new BufferedFloat32Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
-		}
-		else 
-		{
-			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
-		}
-
-		// closes file
-		inputStream.close();
-
-		return array;
+		return Float32Array.create(info.dimSize, buffer);
 	}
 	
 	private Float64Array readFloat64Array(MetaImageInfo info) throws IOException
@@ -531,24 +454,7 @@ public class MetaImageReader implements ImageReader
 				buffer[i] = Double.longBitsToDouble((b8 << 56) + (b7 << 48) + (b6 << 40) + (b5 << 32) + (b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
 		}
 		
-		Float64Array array;
-		if (info.nDims == 2)
-		{
-			array = new BufferedFloat64Array2D(info.dimSize[0], info.dimSize[1], buffer);
-		} 
-		else if (info.nDims == 3)
-		{
-			array = new BufferedFloat64Array3D(info.dimSize[0], info.dimSize[1], info.dimSize[2], buffer);
-		}
-		else 
-		{
-			throw new RuntimeException("Can not manage image dimension other than 2 or 3");
-		}
-
-		// closes file
-		inputStream.close();
-
-		return array;
+		return Float64Array.create(info.dimSize, buffer);
 	}
 	
 	private int computePixelNumber(MetaImageInfo info)
