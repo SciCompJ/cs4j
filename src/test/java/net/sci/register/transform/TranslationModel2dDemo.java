@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.junit.Test;
+
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.interp.LinearInterpolator2D;
 import net.sci.geom.geom2d.Point2d;
@@ -25,22 +27,24 @@ import net.sci.register.image.TransformedImage2d;
  */
 public class TranslationModel2dDemo
 {
-
-	public static final void main(String[] args) throws IOException
+	@Test
+	public void testRegister_Translation_MSD_Simplex_5758() throws IOException
 	{
-		//		File file0 = new File(".");
-		//		System.out.println(file0.getAbsolutePath());
+//				File file0 = new File(".");
+//				System.out.println(file0.getAbsolutePath());
 
 		// Read input images
 		
-		File file1 = new File("files/rat_BF_LipNor552/rat57_LipNor552_080.tif");
+		String fileName = getClass().getResource("/files/rat_BF_LipNor552/rat57_LipNor552_080.tif").getFile();
+		File file1 = new File(fileName);
 		System.out.println("file exists: " + file1.exists());
 
 		TiffImageReader reader = new TiffImageReader(file1);
 		ScalarArray2D<?> image1 = (ScalarArray2D<?>) reader.readImage().getData();
 //		Array2d array1 = (Array2d) reader.readImage().getImageArray();
 
-		File file2 = new File("files/rat_BF_LipNor552/rat58_LipNor552_080.tif");
+		String fileName2 = getClass().getResource("/files/rat_BF_LipNor552/rat58_LipNor552_080.tif").getFile();
+		File file2 = new File(fileName2);
 		System.out.println("file exists: " + file2.exists());
 
 		reader = new TiffImageReader(file2);
