@@ -6,7 +6,7 @@ package net.sci.register.image;
 import java.util.Collection;
 
 import net.sci.array.interp.ScalarFunction2D;
-import net.sci.geom.geom2d.Point2d;
+import net.sci.geom.geom2d.Point2D;
 
 /**
  * For each point, compute state in both images, compute the squared difference,
@@ -33,11 +33,11 @@ public class MeanSquaredDifferencesMetric2d extends ImageToImageMetric2d
 	 */
 	@Override
 	public double evaluate(ScalarFunction2D img1, ScalarFunction2D img2,
-			Collection<Point2d> points)
+			Collection<Point2D> points)
 	{
 		double accum = 0;
 		
-		for (Point2d p : points)
+		for (Point2D p : points)
 		{
 			double v1 = img1.evaluate(p.getX(), p.getY());
 			if (Double.isNaN(v1))

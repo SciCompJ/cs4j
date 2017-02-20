@@ -7,7 +7,7 @@ package net.sci.geom.geom2d;
  * @author dlegland
  *
  */
-public interface Transform2d
+public interface Transform2D
 {
-	public Point2d transform(Point2d point);
+	public Point2D transform(Point2D point);
 }

@@ -9,7 +9,7 @@ package net.sci.geom.geom2d;
  * @author dlegland
  *
  */
-public class MatrixAffineTransform2d implements AffineTransform2d
+public class MatrixAffineTransform2D implements AffineTransform2D
 {
 	// ===================================================================
 	// class members
@@ -27,7 +27,7 @@ public class MatrixAffineTransform2d implements AffineTransform2d
 	/**
 	 * Empty constructor, that creates an instance of the identity transform.
 	 */
-	public MatrixAffineTransform2d()
+	public MatrixAffineTransform2D()
 	{
 		m00 = 1;
 		m01 = 0;
@@ -37,7 +37,7 @@ public class MatrixAffineTransform2d implements AffineTransform2d
 		m12 = 0;
 	}
 
-	public MatrixAffineTransform2d(double xx, double yx, double tx, double xy,
+	public MatrixAffineTransform2D(double xx, double yx, double tx, double xy,
 			double yy, double ty)
 	{
 		m00 = xx;
@@ -89,10 +89,10 @@ public class MatrixAffineTransform2d implements AffineTransform2d
 //						+ that.m12);
 //	}
 
-	public Point2d transform(Point2d p)
+	public Point2D transform(Point2D p)
 	{
 		
-		return new Point2d(
+		return new Point2D(
 				p.getX() * m00 + p.getY() * m01 + m02,
 				p.getX() * m10 + p.getY() * m11 + m12);
 	}
@@ -136,16 +136,16 @@ public class MatrixAffineTransform2d implements AffineTransform2d
 	/**
 	 * Transforms a vector, by using only the linear part of this transform.
 	 */
-	public Vector2d transform(Vector2d v)
+	public Vector2D transform(Vector2D v)
 	{
-		return new Vector2d(v.getX() * m00 + v.getY() * m01, v.getX() * m10 + v.getY() * m11);
+		return new Vector2D(v.getX() * m00 + v.getY() * m01, v.getX() * m10 + v.getY() * m11);
 	}
 
 	/**
 	 * Returns the inverse transform. If the transform is not invertible, throws
 	 * a new NonInvertibleTransform2DException.
 	 */
-	public MatrixAffineTransform2d invert()
+	public MatrixAffineTransform2D invert()
 	{
 		// compute determinant
 		double det = m00 * m11 - m10 * m01;
@@ -155,7 +155,7 @@ public class MatrixAffineTransform2d implements AffineTransform2d
 			throw new RuntimeException("Non-invertible matrix");
 
 		// create matrix
-		return new MatrixAffineTransform2d(
+		return new MatrixAffineTransform2D(
 				m11 / det, -m01 / det, (m01 * m12 - m02 * m11) / det, 
 				-m10 / det, m00 / det, (m02 * m10 - m00 * m12) / det);
 	}

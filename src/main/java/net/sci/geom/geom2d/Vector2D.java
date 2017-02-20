@@ -2,7 +2,7 @@ package net.sci.geom.geom2d;
 
 import static java.lang.Math.abs;
 
-public class Vector2d
+public class Vector2D
 {
     // ===================================================================
     // constants
@@ -13,12 +13,12 @@ public class Vector2d
     // ===================================================================
     // Static methods
 
-	public static boolean isParallel(Vector2d v1, Vector2d v2)
+	public static boolean isParallel(Vector2D v1, Vector2D v2)
 	{
 		return isParallel(v1, v2, DEFAULT_TOL);
 	}
 	
-	public static boolean isParallel(Vector2d v1, Vector2d v2, double tol)
+	public static boolean isParallel(Vector2D v1, Vector2D v2, double tol)
 	{
 		v1 = v1.normalize();
 		v2 = v2.normalize();
@@ -30,7 +30,7 @@ public class Vector2d
 	 * 
 	 * @return true if the vectors are perpendicular
 	 */
-	public static boolean isPerpendicular(Vector2d v1, Vector2d v2)
+	public static boolean isPerpendicular(Vector2D v1, Vector2D v2)
 	{
 		return isPerpendicular(v1, v2, DEFAULT_TOL);
 	}
@@ -40,7 +40,7 @@ public class Vector2d
 	 * 
 	 * @return true if the vectors are perpendicular
 	 */
-	public static boolean isPerpendicular(Vector2d v1, Vector2d v2, double tol)
+	public static boolean isPerpendicular(Vector2D v1, Vector2D v2, double tol)
 	{
 		v1 = v1.normalize();
 		v2 = v2.normalize();
@@ -56,7 +56,7 @@ public class Vector2d
 	 * orthogonal. It is positive if vectors are in the same direction, and
 	 * negative if they are in opposite direction.
 	 */
-	public static double dotProduct(Vector2d v1, Vector2d v2)
+	public static double dotProduct(Vector2D v1, Vector2D v2)
 	{
 		return v1.x * v2.x + v1.y * v2.y;
 	}
@@ -70,7 +70,7 @@ public class Vector2d
 	 * between vector 1 and vector 2 is comprised between 0 and PI, and negative
 	 * otherwise.
 	 */
-	public static double crossProduct(Vector2d v1, Vector2d v2)
+	public static double crossProduct(Vector2D v1, Vector2D v2)
 	{
 		return v1.x * v2.y - v2.x * v1.y;
 	}
@@ -89,13 +89,13 @@ public class Vector2d
 	// constructors
 
 	/** Empty constructor, similar to Vector2d(0,0) */
-	public Vector2d()
+	public Vector2D()
 	{
 		this(0, 0);
 	}
 
 	/** New Vector2d given by its coordinates */
-	public Vector2d(double x, double y)
+	public Vector2D(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
@@ -104,7 +104,7 @@ public class Vector2d
 	/**
 	 * Constructs a new vector with the same coordinates as the given point.
 	 */
-	public Vector2d(Point2d point)
+	public Vector2D(Point2D point)
 	{
 		this(point.x, point.y);
 	}
@@ -112,7 +112,7 @@ public class Vector2d
 	/**
 	 * Constructs a new vector between two points
 	 */
-	public Vector2d(Point2d p1, Point2d p2)
+	public Vector2D(Point2D p1, Point2D p2)
 	{
 		this(p2.x - p1.x, p2.y - p1.y);
 	}
@@ -141,18 +141,18 @@ public class Vector2d
 	 * Returns the sum of current vector with vector given as parameter. Inner
 	 * fields are not modified.
 	 */
-	public Vector2d add(Vector2d v)
+	public Vector2D add(Vector2D v)
 	{
-		return new Vector2d(this.x + v.x, this.y + v.y);
+		return new Vector2D(this.x + v.x, this.y + v.y);
 	}
 
 	/**
 	 * Returns the subtraction of current vector with vector given as parameter.
 	 * Inner fields are not modified.
 	 */
-	public Vector2d subtract(Vector2d v)
+	public Vector2D subtract(Vector2D v)
 	{
-		return new Vector2d(this.x - v.x, this.y - v.y);
+		return new Vector2D(this.x - v.x, this.y - v.y);
 	}
 
 	/**
@@ -162,9 +162,9 @@ public class Vector2d
 	 *            the scale factor
 	 * @return the scaled vector
 	 */
-	public Vector2d multiply(double k)
+	public Vector2D multiply(double k)
 	{
-		return new Vector2d(this.x * k, this.y * k);
+		return new Vector2D(this.x * k, this.y * k);
 	}
 
 	/**
@@ -173,9 +173,9 @@ public class Vector2d
 	 * 
 	 * @return the vector opposite to <code>this</code>.
 	 */
-	public Vector2d opposite()
+	public Vector2D opposite()
 	{
-		return new Vector2d(-x, -y);
+		return new Vector2D(-x, -y);
 	}
 
 	/**
@@ -190,10 +190,10 @@ public class Vector2d
 	 * Returns the normalized vector, with same direction but with norm equal to
 	 * 1.
 	 */
-	public Vector2d normalize()
+	public Vector2D normalize()
 	{
 		double n = Math.hypot(x, y);
-		return new Vector2d(x / n, y / n);
+		return new Vector2D(x / n, y / n);
 	}
 
 	
@@ -210,7 +210,7 @@ public class Vector2d
 	 * vectors are in the same direction, and negative if they are in opposite
 	 * direction.
 	 */
-	public double dotProduct(Vector2d v)
+	public double dotProduct(Vector2D v)
 	{
 		return x * v.x + y * v.y;
 	}
@@ -225,7 +225,7 @@ public class Vector2d
 	 * between vector 1 and vector 2 is comprised between 0 and PI, and negative
 	 * otherwise.
 	 */
-	public double crossProduct(Vector2d v)
+	public double crossProduct(Vector2D v)
 	{
 		return x * v.y - v.x * y;
 	}

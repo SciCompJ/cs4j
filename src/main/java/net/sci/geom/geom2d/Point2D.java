@@ -7,7 +7,7 @@ package net.sci.geom.geom2d;
  * @author dlegland
  *
  */
-public class Point2d
+public class Point2D
 {
 	// ===================================================================
 	// class variables
@@ -23,13 +23,13 @@ public class Point2d
 	// constructors
 
 	/** Empty constructor, similar to Point(0,0) */
-	public Point2d()
+	public Point2D()
 	{
 		this(0, 0);
 	}
 
 	/** New point given by its coordinates */
-	public Point2d(double x, double y)
+	public Point2D(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
@@ -60,17 +60,17 @@ public class Point2d
 	/**
 	 * Adds the specified vector to the point, and returns the result.
 	 */
-	public Point2d add(Vector2d v)
+	public Point2D add(Vector2D v)
 	{
-		return new Point2d(this.x + v.getX(), this.y + v.getY());
+		return new Point2D(this.x + v.getX(), this.y + v.getY());
 	}
 
 	/**
 	 * Subtracts the specified vector from the point, and returns the result.
 	 */
-	public Point2d subtract(Vector2d v)
+	public Point2D subtract(Vector2D v)
 	{
-		return new Point2d(this.x - v.getX(), this.y - v.getY());
+		return new Point2D(this.x - v.getX(), this.y - v.getY());
 	}
 
 	
@@ -80,7 +80,7 @@ public class Point2d
 	/**
 	 * Computes the distance between this and the point <code>point</code>.
 	 */
-	public double distance(Point2d point)
+	public double distance(Point2D point)
 	{
 		return distance(point.x, point.y);
 	}

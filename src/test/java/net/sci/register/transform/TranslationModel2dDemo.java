@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.interp.LinearInterpolator2D;
-import net.sci.geom.geom2d.Point2d;
+import net.sci.geom.geom2d.Point2D;
 import net.sci.image.io.TiffImageReader;
 import net.sci.optim.NelderMeadSimplexOptimizer;
 import net.sci.optim.Optimizer;
@@ -62,18 +62,18 @@ public class TranslationModel2dDemo
 
 		double[] params = new double[2];
 		
-		ParametricTransform2d transfo = new TranslationModel2d(params);
+		ParametricTransform2D transfo = new TranslationModel2D(params);
 		TransformedImage2d tim = new TransformedImage2d(interp2, transfo);
 		
 		
 		// Create the metric 
 		
-		Collection<Point2d> grid = new ArrayList<Point2d>(100 * 80);
+		Collection<Point2D> grid = new ArrayList<Point2D>(100 * 80);
 		for (int y = 0; y < 80; y++)
 		{
 			for (int x = 0; x < 100; x++)
 			{
-				grid.add(new Point2d(x, y));
+				grid.add(new Point2D(x, y));
 			}
 		}
 		

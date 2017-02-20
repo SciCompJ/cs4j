@@ -9,7 +9,7 @@ package net.sci.geom.geom3d;
  * @author dlegland
  *
  */
-public class Vector3d
+public class Vector3D
 {
 	// ===================================================================
 	// class variables
@@ -28,13 +28,13 @@ public class Vector3d
 	// constructors
 
 	/** Empty constructor, similar to Vector3d(0,0,0) */
-	public Vector3d()
+	public Vector3D()
 	{
 		this(0, 0, 0);
 	}
 
 	/** New Vector3d given by its coordinates */
-	public Vector3d(double x, double y, double z)
+	public Vector3D(double x, double y, double z)
 	{
 		this.x = x;
 		this.y = y;
@@ -44,7 +44,7 @@ public class Vector3d
 	/**
 	 * Constructs a new vector with the same coordinates as the given point.
 	 */
-	public Vector3d(Point3d point)
+	public Vector3D(Point3D point)
 	{
 		this(point.x, point.y, point.z);
 	}
@@ -52,7 +52,7 @@ public class Vector3d
 	/**
 	 * Constructs a new vector between two points
 	 */
-	public Vector3d(Point3d p1, Point3d p2)
+	public Vector3D(Point3D p1, Point3D p2)
 	{
 		this(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
 	}
@@ -90,18 +90,18 @@ public class Vector3d
 	 * Returns the sum of current vector with vector given as parameter. Inner
 	 * fields are not modified.
 	 */
-	public Vector3d add(Vector3d v)
+	public Vector3D add(Vector3D v)
 	{
-		return new Vector3d(this.x + v.x, this.y + v.y, this.z + v.z);
+		return new Vector3D(this.x + v.x, this.y + v.y, this.z + v.z);
 	}
 
 	/**
 	 * Returns the subtraction of current vector with vector given as parameter.
 	 * Inner fields are not modified.
 	 */
-	public Vector3d subtract(Vector3d v)
+	public Vector3D subtract(Vector3D v)
 	{
-		return new Vector3d(this.x - v.x, this.y - v.y, this.z - v.z);
+		return new Vector3D(this.x - v.x, this.y - v.y, this.z - v.z);
 	}
 
 	/**
@@ -111,9 +111,9 @@ public class Vector3d
 	 *            the scale factor
 	 * @return the scaled vector
 	 */
-	public Vector3d multiply(double k)
+	public Vector3D multiply(double k)
 	{
-		return new Vector3d(this.x * k, this.y * k, this.z * k);
+		return new Vector3D(this.x * k, this.y * k, this.z * k);
 	}
 
 	/**
@@ -122,9 +122,9 @@ public class Vector3d
 	 * 
 	 * @return the vector opposite to <code>this</code>.
 	 */
-	public Vector3d opposite()
+	public Vector3D opposite()
 	{
-		return new Vector3d(-x, -y, -z);
+		return new Vector3D(-x, -y, -z);
 	}
 
 	/**
@@ -139,10 +139,10 @@ public class Vector3d
 	 * Returns the normalized vector, with same direction but with norm equal to
 	 * 1.
 	 */
-	public Vector3d normalize()
+	public Vector3D normalize()
 	{
 		double n = this.norm();
-		return new Vector3d(x / n, y / n, z / n);
+		return new Vector3D(x / n, y / n, z / n);
 	}
 
 	// ===================================================================
@@ -158,14 +158,14 @@ public class Vector3d
 	 * vectors are in the same direction, and negative if they are in opposite
 	 * direction.
 	 */
-	public double dotProduct(Vector3d v)
+	public double dotProduct(Vector3D v)
 	{
 		return x * v.x + y * v.y + z * v.z;
 	}
 
-	public Vector3d crossProduct(Vector3d v)
+	public Vector3D crossProduct(Vector3D v)
 	{
-		return new Vector3d(
+		return new Vector3D(
 				this.y * v.z - this.z * v.y, 
 				this.z * v.x - this.x * v.z, 
 				this.x * v.y - this.y * v.x);

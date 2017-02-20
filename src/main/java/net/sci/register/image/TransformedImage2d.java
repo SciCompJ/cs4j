@@ -3,8 +3,8 @@
  */
 package net.sci.register.image;
 
-import net.sci.geom.geom2d.Point2d;
-import net.sci.geom.geom2d.Transform2d;
+import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.Transform2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.interp.LinearInterpolator2D;
 import net.sci.array.interp.ScalarFunction2D;
@@ -15,23 +15,23 @@ import net.sci.array.interp.ScalarFunction2D;
  */
 public class TransformedImage2d implements ScalarFunction2D
 {
-	Transform2d transform;
+	Transform2D transform;
 	
 	ScalarFunction2D image;
 	
-	public TransformedImage2d(ScalarArray2D<?> image, Transform2d transform)
+	public TransformedImage2d(ScalarArray2D<?> image, Transform2D transform)
 	{
 		this.image = new LinearInterpolator2D(image);
 		this.transform = transform;
 	}
 
-	public TransformedImage2d(ScalarFunction2D image, Transform2d transform)
+	public TransformedImage2d(ScalarFunction2D image, Transform2D transform)
 	{
 		this.image = image;
 		this.transform = transform;
 	}
 
-	public Transform2d getTransform()
+	public Transform2D getTransform()
 	{
 		return transform;
 	}
@@ -39,13 +39,13 @@ public class TransformedImage2d implements ScalarFunction2D
 	@Override
 	public double evaluate(double x, double y)
 	{
-		Point2d p = new Point2d(x, y);
+		Point2D p = new Point2D(x, y);
 		p = transform.transform(p);
 		return this.image.evaluate(p.getX(), p.getY());
 	}
 
 	@Override
-	public double evaluate(Point2d p)
+	public double evaluate(Point2D p)
 	{
 		p = transform.transform(p);
 		return this.image.evaluate(p.getX(), p.getY());

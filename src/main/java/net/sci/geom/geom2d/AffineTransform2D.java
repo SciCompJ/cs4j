@@ -10,7 +10,7 @@ import static java.lang.Math.sin;
  * @author dlegland
  *
  */
-public interface AffineTransform2d extends Transform2d
+public interface AffineTransform2D extends Transform2D
 {
 	// ===================================================================
 	// static methods
@@ -18,35 +18,35 @@ public interface AffineTransform2d extends Transform2d
 	/**
 	 * Creates a translation by the given vector.
 	 */
-	public static AffineTransform2d createTranslation(Vector2d vect)
+	public static AffineTransform2D createTranslation(Vector2D vect)
 	{
-		return new MatrixAffineTransform2d(1, 0, vect.getX(), 0, 1, vect.getY());
+		return new MatrixAffineTransform2D(1, 0, vect.getX(), 0, 1, vect.getY());
 	}
 
 	/**
 	 * Creates a translation by the given vector.
 	 */
-	public static AffineTransform2d createTranslation(double dx, double dy)
+	public static AffineTransform2D createTranslation(double dx, double dy)
 	{
-		return new MatrixAffineTransform2d(1, 0, dx, 0, 1, dy);
+		return new MatrixAffineTransform2D(1, 0, dx, 0, 1, dy);
 	}
 
 	/**
 	 * Creates a scaling by the given coefficients, centered on the origin.
 	 */
-	public static AffineTransform2d createScaling(double sx, double sy)
+	public static AffineTransform2D createScaling(double sx, double sy)
 	{
-		return new MatrixAffineTransform2d(sx, 0, 0, 0, sy, 0);
+		return new MatrixAffineTransform2D(sx, 0, 0, 0, sy, 0);
 	}
 
 	/**
 	 * Creates a scaling by the given coefficients, centered on the point given
 	 * by (x0,y0).
 	 */
-	public static AffineTransform2d createScaling(Point2d center, double sx,
+	public static AffineTransform2D createScaling(Point2D center, double sx,
 			double sy)
 	{
-		return new MatrixAffineTransform2d(
+		return new MatrixAffineTransform2D(
 				sx, 0, (1 - sx) * center.getX(), 
 				0, sy, (1 - sy) * center.getY());
 	}
@@ -54,7 +54,7 @@ public interface AffineTransform2d extends Transform2d
 	/**
 	 * Creates a rotation around the origin, with angle in radians.
 	 */
-	public static AffineTransform2d createRotation(double angle)
+	public static AffineTransform2D createRotation(double angle)
 	{
 		return createRotation(0, 0, angle);
 	}
@@ -62,7 +62,7 @@ public interface AffineTransform2d extends Transform2d
 	/**
 	 * Creates a rotation around the specified point, with angle in radians.
 	 */
-	public static AffineTransform2d createRotation(Point2d center, double angle)
+	public static AffineTransform2D createRotation(Point2D center, double angle)
 	{
 		return createRotation(center.getX(), center.getY(), angle);
 	}
@@ -70,7 +70,7 @@ public interface AffineTransform2d extends Transform2d
 	/**
 	 * Creates a rotation around the specified point, with angle in radians.
 	 */
-	public static AffineTransform2d createRotation(double cx, double cy,
+	public static AffineTransform2D createRotation(double cx, double cy,
 			double angle)
 	{
 		// pre-compute trigonometric functions
@@ -78,7 +78,7 @@ public interface AffineTransform2d extends Transform2d
 		double sit = sin(angle);
 
 		// init coef of the new AffineTransform.
-		return new MatrixAffineTransform2d(
+		return new MatrixAffineTransform2D(
 				cot, -sit, (1 - cot) * cx + sit * cy, 
 				sit,  cot, (1 - cot) * cy - sit * cx);
 	}
@@ -87,18 +87,18 @@ public interface AffineTransform2d extends Transform2d
 	 * Creates a rotation composed of the given number of rotations by 90
 	 * degrees around the origin.
 	 */
-	public static MatrixAffineTransform2d createQuadrantRotation(int numQuadrant)
+	public static MatrixAffineTransform2D createQuadrantRotation(int numQuadrant)
 	{
 		int n = ((numQuadrant % 4) + 4) % 4;
 		switch (n) {
 		case 0:
-			return new MatrixAffineTransform2d(1, 0, 0, 0, 1, 0);
+			return new MatrixAffineTransform2D(1, 0, 0, 0, 1, 0);
 		case 1:
-			return new MatrixAffineTransform2d(0, -1, 0, 1, 0, 0);
+			return new MatrixAffineTransform2D(0, -1, 0, 1, 0, 0);
 		case 2:
-			return new MatrixAffineTransform2d(-1, 0, 0, 0, -1, 0);
+			return new MatrixAffineTransform2D(-1, 0, 0, 0, -1, 0);
 		case 3:
-			return new MatrixAffineTransform2d(0, 1, 0, -1, 0, 0);
+			return new MatrixAffineTransform2D(0, 1, 0, -1, 0, 0);
 		default:
 			throw new RuntimeException("Error in integer rounding...");
 		}
@@ -108,7 +108,7 @@ public interface AffineTransform2d extends Transform2d
 	 * Creates a rotation composed of the given number of rotations by 90
 	 * degrees around the given point.
 	 */
-	public static MatrixAffineTransform2d createQuadrantRotation(Point2d center,
+	public static MatrixAffineTransform2D createQuadrantRotation(Point2D center,
 			int numQuadrant)
 	{
 		return createQuadrantRotation(center.getX(), center.getY(), numQuadrant);
@@ -118,7 +118,7 @@ public interface AffineTransform2d extends Transform2d
 	 * Creates a rotation composed of the given number of rotations by 90
 	 * degrees around the point given by (x0,y0).
 	 */
-	public static MatrixAffineTransform2d createQuadrantRotation(double x0,
+	public static MatrixAffineTransform2D createQuadrantRotation(double x0,
 			double y0, int numQuadrant)
 	{
 		int n = ((numQuadrant % 4) + 4) % 4;
@@ -140,7 +140,7 @@ public interface AffineTransform2d extends Transform2d
 		double m02 = (1 - m00) * x0 - m01 * y0;
 		double m12 = (1 - m11) * y0 - m10 * x0;
 
-		return new MatrixAffineTransform2d(m00, m01, m02, m10, m11, m12);
+		return new MatrixAffineTransform2D(m00, m01, m02, m10, m11, m12);
 	}
 
 
@@ -181,7 +181,7 @@ public interface AffineTransform2d extends Transform2d
 	 *            the center of the reflection
 	 * @return an instance of MatrixAffineTransform2d representing a point reflection
 	 */
-	public static AffineTransform2d createPointReflection(Point2d center)
+	public static AffineTransform2D createPointReflection(Point2D center)
 	{
 		return createScaling(center, -1, -1);
 	}
@@ -191,9 +191,9 @@ public interface AffineTransform2d extends Transform2d
 
 	public double[][] getMatrix();
 
-	public AffineTransform2d invert();
+	public AffineTransform2D invert();
 	
-	public default Point2d transform(Point2d point)
+	public default Point2D transform(Point2D point)
 	{
 		double[][] mat = this.getMatrix();
 		double x = point.getX();
@@ -202,6 +202,6 @@ public interface AffineTransform2d extends Transform2d
 		double xt = x * mat[0][0] + y * mat[0][1] + mat[0][2]; 
 		double yt = x * mat[1][0] + y * mat[1][1] + mat[1][2];
 		
-		return new Point2d(xt, yt);
+		return new Point2D(xt, yt);
 	}
 }

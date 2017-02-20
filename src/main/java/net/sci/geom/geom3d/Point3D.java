@@ -8,7 +8,7 @@ package net.sci.geom.geom3d;
  * @author dlegland
  *
  */
-public class Point3d
+public class Point3D
 {
 	// ===================================================================
 	// class variables
@@ -27,13 +27,13 @@ public class Point3d
 	// constructors
 
 	/** Empty constructor, similar to Point(0,0,0) */
-	public Point3d()
+	public Point3D()
 	{
 		this(0, 0, 0);
 	}
 
 	/** New point given by its coordinates */
-	public Point3d(double x, double y, double z)
+	public Point3D(double x, double y, double z)
 	{
 		this.x = x;
 		this.y = y;
@@ -72,17 +72,17 @@ public class Point3d
 	/**
 	 * Adds the specified vector to the point, and returns the result.
 	 */
-	public Point3d add(Vector3d v)
+	public Point3D add(Vector3D v)
 	{
-		return new Point3d(this.x + v.getX(), this.y + v.getY(), this.z + v.getZ());
+		return new Point3D(this.x + v.getX(), this.y + v.getY(), this.z + v.getZ());
 	}
 
 	/**
 	 * Subtracts the specified vector from the point, and returns the result.
 	 */
-	public Point3d subtract(Vector3d v)
+	public Point3D subtract(Vector3D v)
 	{
-		return new Point3d(this.x - v.getX(), this.y - v.getY(), this.z - v.getZ());
+		return new Point3D(this.x - v.getX(), this.y - v.getY(), this.z - v.getZ());
 	}
 
 	
@@ -92,7 +92,7 @@ public class Point3d
 	/**
 	 * Computes the distance between this and the point <code>point</code>.
 	 */
-	public double distance(Point3d point)
+	public double distance(Point3D point)
 	{
 		return distance(point.x, point.y, point.z);
 	}

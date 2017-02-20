@@ -3,21 +3,21 @@
  */
 package net.sci.register.transform;
 
-import net.sci.geom.geom2d.AffineTransform2d;
-import net.sci.geom.geom2d.Point2d;
+import net.sci.geom.geom2d.AffineTransform2D;
+import net.sci.geom.geom2d.Point2D;
 
 /**
  * @author dlegland
  *
  */
-public class TranslationModel2d extends ParametricTransform2d implements AffineTransform2d
+public class TranslationModel2D extends ParametricTransform2D implements AffineTransform2D
 {
-	public TranslationModel2d()
+	public TranslationModel2D()
 	{
 		super(new double[]{0, 0});
 	}
 	
-	public TranslationModel2d(double[] params)
+	public TranslationModel2D(double[] params)
 	{
 		super(params);
 		if (params.length != 2)
@@ -30,9 +30,9 @@ public class TranslationModel2d extends ParametricTransform2d implements AffineT
 	 * @see net.sci.geom.geom2d.Transform2d#transform(net.sci.geom.geom2d.Point2d)
 	 */
 	@Override
-	public Point2d transform(Point2d point)
+	public Point2D transform(Point2D point)
 	{
-		return new Point2d(
+		return new Point2D(
 				point.getX() + this.parameters[0], 
 				point.getY() + this.parameters[1]);
 	}
@@ -47,11 +47,11 @@ public class TranslationModel2d extends ParametricTransform2d implements AffineT
 	}
 
 	@Override
-	public AffineTransform2d invert()
+	public AffineTransform2D invert()
 	{
 		double tx = this.parameters[0];
 		double ty = this.parameters[1];
-		return new TranslationModel2d(new double[]{-tx, -ty});
+		return new TranslationModel2D(new double[]{-tx, -ty});
 	}
 
 }

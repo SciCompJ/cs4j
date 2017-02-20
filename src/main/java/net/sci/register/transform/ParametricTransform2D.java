@@ -3,17 +3,17 @@
  */
 package net.sci.register.transform;
 
-import net.sci.geom.geom2d.Transform2d;
+import net.sci.geom.geom2d.Transform2D;
 import net.sci.register.ParametricObject;
 
 /**
  * @author dlegland
  *
  */
-public abstract class ParametricTransform2d extends ParametricObject implements
-		Transform2d
+public abstract class ParametricTransform2D extends ParametricObject implements
+		Transform2D
 {
-	protected ParametricTransform2d(double[] params)
+	protected ParametricTransform2D(double[] params)
 	{
 		super(params);
 	}

@@ -6,9 +6,9 @@ package net.sci.register.image;
 import java.util.Collection;
 
 import net.sci.array.interp.ScalarFunction2D;
-import net.sci.geom.geom2d.Point2d;
+import net.sci.geom.geom2d.Point2D;
 import net.sci.optim.ScalarFunction;
-import net.sci.register.transform.ParametricTransform2d;
+import net.sci.register.transform.ParametricTransform2D;
 
 /**
  * @author dlegland
@@ -22,11 +22,11 @@ public class SimpleImageRegistrationEvaluator implements ScalarFunction
 	
 	ImageToImageMetric2d metric;
 	
-	Collection<Point2d> points;
+	Collection<Point2D> points;
 	
 	public SimpleImageRegistrationEvaluator(ScalarFunction2D refImage,
 			TransformedImage2d transformedImage, ImageToImageMetric2d metric,
-			Collection<Point2d> points)
+			Collection<Point2D> points)
 	{
 		this.refImage = refImage;
 		this.transformedImage = transformedImage;
@@ -41,7 +41,7 @@ public class SimpleImageRegistrationEvaluator implements ScalarFunction
 	public double evaluate(double[] theta)
 	{
 		// TODO: check class conversion
-		ParametricTransform2d transform = (ParametricTransform2d) this.transformedImage.getTransform();
+		ParametricTransform2D transform = (ParametricTransform2D) this.transformedImage.getTransform();
 		transform.setParameters(theta);
 		
 		return metric.evaluate(refImage, transformedImage, points);

@@ -3,7 +3,7 @@
  */
 package net.sci.array.interp;
 
-import net.sci.geom.geom2d.Point2d;
+import net.sci.geom.geom2d.Point2D;
 
 /**
  * A scalar function of two variables, used to represent interpolated images.
@@ -21,7 +21,7 @@ public interface ScalarFunction2D
 	/**
 	 * Evaluates a position given as a point.
 	 */
-	public default double evaluate(Point2d p)
+	public default double evaluate(Point2D p)
 	{
 		return this.evaluate(p.getX(), p.getY());
 	}

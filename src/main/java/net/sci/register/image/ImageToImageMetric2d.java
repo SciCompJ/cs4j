@@ -6,7 +6,7 @@ package net.sci.register.image;
 import java.util.Collection;
 
 import net.sci.array.interp.ScalarFunction2D;
-import net.sci.geom.geom2d.Point2d;
+import net.sci.geom.geom2d.Point2D;
 
 /**
  * Base class for measuring how much two images can differ. 
@@ -30,5 +30,5 @@ public abstract class ImageToImageMetric2d
 	/**
 	 * Evaluates the difference between two images, using the specified positions.
 	 */
-	public abstract double evaluate(ScalarFunction2D img1, ScalarFunction2D img2, Collection<Point2d> points);
+	public abstract double evaluate(ScalarFunction2D img1, ScalarFunction2D img2, Collection<Point2D> points);
 }
