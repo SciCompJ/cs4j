@@ -3,11 +3,13 @@
  */
 package net.sci.geom.geom2d;
 
+import net.sci.geom.Point;
+
 /**
  * @author dlegland
  *
  */
-public class Point2D
+public class Point2D implements Point
 {
 	// ===================================================================
 	// class variables
@@ -94,6 +96,29 @@ public class Point2D
 	{
 		return Math.hypot(this.x - x, this.y - y);
 	}
+
+
+    // ===================================================================
+    // Implements Point interface
+
+    @Override
+    public double get(int dim)
+    {
+        switch(dim)
+        {
+        case 0: return this.x;
+        case 1: return this.y;
+        default:
+            throw new IllegalArgumentException("Dimension should be comprised between 0 and 1");
+        }
+    }
+
+    @Override
+    public int dimensionality()
+    {
+        return 2;
+    }
+
 
 //	@Override
 //	public boolean contains(Point2d p)

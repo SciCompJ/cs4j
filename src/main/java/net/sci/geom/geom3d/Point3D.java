@@ -3,12 +3,15 @@
  */
 package net.sci.geom.geom3d;
 
+import net.sci.geom.Point;
 
 /**
+ * A three-dimensional point.
+ * 
  * @author dlegland
  *
  */
-public class Point3D
+public class Point3D implements Point
 {
 	// ===================================================================
 	// class variables
@@ -106,6 +109,31 @@ public class Point3D
 	{
 		return Math.hypot(Math.hypot(this.x - x, this.y - y), this.z - z);
 	}
+
+
+    // ===================================================================
+    // Implements Point interface
+
+    @Override
+    public double get(int dim)
+    {
+        switch(dim)
+        {
+        case 0: return this.x;
+        case 1: return this.y;
+        case 2: return this.z;
+        default:
+            throw new IllegalArgumentException("Dimension should be comprised between 0 and 2");
+        }
+    }
+	
+    @Override
+    public int dimensionality()
+    {
+        return 3;
+    }
+
+	
 
 //	@Override
 //	public boolean contains(Point2d p)
