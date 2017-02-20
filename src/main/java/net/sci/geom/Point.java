@@ -3,15 +3,13 @@
  */
 package net.sci.geom;
 
-import net.sci.array.Dimensional;
-
 /**
  * A point in a N-dimensional space.
  *
  * @author dlegland
  *
  */
-public interface Point extends Dimensional
+public interface Point extends Shape
 {
     /**
      * Returns the given coordinate of this multidimensional point

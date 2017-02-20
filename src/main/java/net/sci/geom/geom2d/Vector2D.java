@@ -2,7 +2,9 @@ package net.sci.geom.geom2d;
 
 import static java.lang.Math.abs;
 
-public class Vector2D
+import net.sci.array.Dimensional;
+
+public class Vector2D implements Dimensional
 {
     // ===================================================================
     // constants
@@ -229,6 +231,19 @@ public class Vector2D
 	{
 		return x * v.y - v.x * y;
 	}
+
+
+	// ===================================================================
+    // Implements Dimensional interface
+
+	/**
+	 * Returns a dimensionality equals to 2.
+	 */
+    @Override
+    public int dimensionality()
+    {
+        return 2;
+    }
 
 //	/**
 //	 * Transform the vector, by using only the first 4 parameters of the

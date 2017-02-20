@@ -9,7 +9,7 @@ import net.sci.geom.Point;
  * @author dlegland
  *
  */
-public class Point2D implements Point
+public class Point2D implements Shape2D, Point
 {
 	// ===================================================================
 	// class variables
@@ -112,13 +112,6 @@ public class Point2D implements Point
             throw new IllegalArgumentException("Dimension should be comprised between 0 and 1");
         }
     }
-
-    @Override
-    public int dimensionality()
-    {
-        return 2;
-    }
-
 
 //	@Override
 //	public boolean contains(Point2d p)

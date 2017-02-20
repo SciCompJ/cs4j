@@ -11,7 +11,7 @@ import net.sci.geom.Point;
  * @author dlegland
  *
  */
-public class Point3D implements Point
+public class Point3D implements Point, Shape3D
 {
 	// ===================================================================
 	// class variables
@@ -127,12 +127,6 @@ public class Point3D implements Point
         }
     }
 	
-    @Override
-    public int dimensionality()
-    {
-        return 3;
-    }
-
 	
 
 //	@Override

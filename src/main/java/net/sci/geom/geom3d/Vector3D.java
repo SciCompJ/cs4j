@@ -3,13 +3,13 @@
  */
 package net.sci.geom.geom3d;
 
-
+import net.sci.array.Dimensional;
 
 /**
  * @author dlegland
  *
  */
-public class Vector3D
+public class Vector3D implements Dimensional
 {
 	// ===================================================================
 	// class variables
@@ -170,4 +170,17 @@ public class Vector3D
 				this.z * v.x - this.x * v.z, 
 				this.x * v.y - this.y * v.x);
 	}
+	
+    // ===================================================================
+    // Implements Dimensional interface
+
+    /**
+     * Returns a dimensionality equals to 3.
+     */
+    @Override
+    public int dimensionality()
+    {
+        return 3;
+    }
+	
 }
