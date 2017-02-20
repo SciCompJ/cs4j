@@ -11,7 +11,7 @@ import net.sci.array.Dimensional;
  * @author dlegland
  *
  */
-public interface Shape extends Dimensional
+public interface Geometry extends Dimensional
 {
     
 }

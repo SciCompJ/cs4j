@@ -9,7 +9,7 @@ package net.sci.geom;
  * @author dlegland
  *
  */
-public interface Point extends Shape
+public interface Point extends Geometry
 {
     /**
      * Returns the given coordinate of this multidimensional point

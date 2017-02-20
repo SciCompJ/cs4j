@@ -11,7 +11,7 @@ import net.sci.geom.Point;
  * @author dlegland
  *
  */
-public class Point3D implements Point, Shape3D
+public class Point3D implements Point, Geometry3D
 {
 	// ===================================================================
 	// class variables

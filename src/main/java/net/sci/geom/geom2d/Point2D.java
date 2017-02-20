@@ -9,7 +9,7 @@ import net.sci.geom.Point;
  * @author dlegland
  *
  */
-public class Point2D implements Shape2D, Point
+public class Point2D implements Geometry2D, Point
 {
 	// ===================================================================
 	// class variables

@@ -3,13 +3,13 @@
  */
 package net.sci.geom.geom3d;
 
-import net.sci.geom.Shape;
+import net.sci.geom.Geometry;
 
 /**
  * @author dlegland
  *
  */
-public interface Shape3D extends Shape
+public interface Geometry3D extends Geometry
 {
     /**
      * Returns dimensionality equals to 3.

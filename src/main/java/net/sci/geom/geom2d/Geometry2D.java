@@ -3,7 +3,7 @@
  */
 package net.sci.geom.geom2d;
 
-import net.sci.geom.Shape;
+import net.sci.geom.Geometry;
 
 /**
  * A shape embedded into a 2-dimensional space.
@@ -11,7 +11,7 @@ import net.sci.geom.Shape;
  * @author dlegland
  *
  */
-public interface Shape2D extends Shape
+public interface Geometry2D extends Geometry
 {
     /**
      * Returns dimensionality equals to 2.
