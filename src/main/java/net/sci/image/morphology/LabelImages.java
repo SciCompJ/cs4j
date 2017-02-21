@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -57,5 +58,26 @@ public class LabelImages
         }
         
         return array;
-    }   
+    }
+    
+    /**
+     * Create associative array to retrieve the index corresponding each label.
+     * 
+     * @param labels
+     *            an array of labels
+     * @return a HashMap instance with each label as key, and the index of the
+     *         label in array as value.
+     */
+    public static final HashMap<Integer, Integer> mapLabelIndices(int[] labels)
+    {
+        int nLabels = labels.length;
+        HashMap<Integer, Integer> labelIndices = new HashMap<Integer, Integer>();
+        for (int i = 0; i < nLabels; i++) 
+        {
+            labelIndices.put(labels[i], i);
+        }
+
+        return labelIndices;
+    }
+
 }
