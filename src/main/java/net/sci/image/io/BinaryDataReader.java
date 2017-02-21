@@ -66,75 +66,6 @@ public class BinaryDataReader implements Closeable
 		this.littleEndian = order == ByteOrder.LITTLE_ENDIAN;
 	}
 	
-	
-	
-//	public String readAscii(int count, int value) throws IOException
-//	{
-//		// Allocate memory for string buffer
-//		byte[] data = new byte[count];
-//
-//		// read string buffer
-//		if (count <= 4)
-//		{
-//			// unpack integer
-//			for (int i = 0; i < count; i++)
-//			{
-//				data[i] = (byte) (value & 0x00FF);
-//				value = value >> 8;
-//			}
-//		}
-//		else
-//		{
-//			// convert state to long offset for reading large buffer
-//			long offset = ((long) value) & 0xffffffffL;
-//
-//			long pos0 = inputStream.getFilePointer();
-//			inputStream.seek(offset);
-//			inputStream.read(data);
-//			inputStream.seek(pos0);
-//		}
-//
-//		return new String(data);
-//	}
-//
-//	public int[] readArray(TiffTag.Type type, int count, int value) throws IOException
-//	{
-//		if (count == 1)
-//		{
-//			return new int[] { value };
-//		}
-//
-//		// convert to long offset for reading large buffer
-//		long offset = ((long) value) & 0xffffffffL;
-//
-//		if (type == TiffTag.Type.SHORT)
-//		{
-//			return readShortArray(count, offset);
-//		}
-//		else
-//		{
-//			return readIntArray(count, offset);
-//		}
-//	}
-//
-//	public int[] readShortArray(int count, long offset) throws IOException
-//	{
-//		// allocate memory for result
-//		int[] res = new int[count];
-//
-//		// save pointer location
-//		long saveLoc = inputStream.getFilePointer();
-//
-//		// fill up array
-//		inputStream.seek(offset);
-//		for (int c = 0; c < count; c++)
-//			res[c] = readShort();
-//
-//		// restore pointer and return result
-//		inputStream.seek(saveLoc);
-//		return res;
-//	}
-//
 //	public int[] readIntArray(int count, long offset) throws IOException
 //	{
 //		// allocate memory for result
@@ -153,6 +84,38 @@ public class BinaryDataReader implements Closeable
 //		return res;
 //	}
 
+//	private UInt8Array readUInt8Array(MetaImageInfo info) throws IOException
+//	{
+//	    // Open binary stream on data
+//	    File dataFile = new File(this.file.getParent(), info.elementDataFile);
+//	    RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
+//	    
+//	    // allocate memory for buffer
+//	    // Size of image and of data buffer
+//	    int nPixels = computePixelNumber(info);
+//	    int nBytes  = nPixels * info.elementNumberOfChannels;
+//	    byte[] buffer = new byte[nBytes];
+//	    
+//	    // Read the byte array
+//	    inputStream.seek(info.headerSize);
+//	    int nRead = inputStream.read(buffer, 0, nBytes);
+//	    
+//	    // closes file
+//	    inputStream.close();
+//	    
+//	    // Check all data have been read
+//	    if (nRead != nBytes) 
+//	    {
+//	        throw new IOException("Could read only " + nRead
+//	                + " bytes over the " + nBytes + " expected");
+//	    }
+//	    
+//	    return UInt8Array.create(info.dimSize, buffer);
+//	}
+
+	// =============================================================
+	// Read arrays
+    
 	/**
 	 * Reads up to len bytes of data from this file into an array of bytes.
 	 * 
@@ -189,7 +152,99 @@ public class BinaryDataReader implements Closeable
 		return this.inputStream.read(buffer);
 	}
 	
-	/**
+    public int readShortArray(short[] buffer, int off, int len) throws IOException
+    {
+//        System.out.print("read short array...");
+//        // fill up array
+//        int pos = off;
+//        for (int c = 0; c < len; c++)
+//        {
+//            buffer[pos++] = (short) readShort();
+//        }
+//        System.out.println("(done)");
+        
+        // convert byte array to short array
+        System.out.print("read byte array...");
+        byte[] byteBuffer = new byte[len * 2];
+        int nRead = read(byteBuffer);
+
+        System.out.print("convert to short array...");
+        for (int i = 0; i < len; i++)
+        {
+            int b1 = byteBuffer[2 * i] & 0x00FF;
+            int b2 = byteBuffer[2 * i + 1] & 0x00FF;
+        
+            if (littleEndian)
+                buffer[i] = (short) ((b1 << 8) + b2);
+            else
+                buffer[i] = (short) ((b2 << 8) + b1);
+        }
+        System.out.println("(done)");
+        
+        // restore pointer and return result
+        return nRead / 2;
+    }
+
+    public int readIntArray(int[] buffer, int off, int len) throws IOException
+    {
+        // fill up array
+        int pos = off;
+        for (int c = 0; c < len; c++)
+        {
+            buffer[pos++] = (int) readInt();
+        }
+        
+        // restore pointer and return result
+        return len;
+    }
+
+    public int readFloatArray(float[] buffer, int off, int len) throws IOException
+    {
+        // fill up array
+        int pos = off;
+        for (int c = 0; c < len; c++)
+        {
+            buffer[pos++] = (float) readFloat();
+        }
+        
+        // restore pointer and return result
+        return len;
+    }
+
+    public int readDoubleArray(double[] buffer, int off, int len) throws IOException
+    {
+        // fill up array
+        int pos = off;
+        for (int c = 0; c < len; c++)
+        {
+            buffer[pos++] = readDouble();
+        }
+        
+        // restore pointer and return result
+        return len;
+    }
+
+    
+    // =============================================================
+    // Read primitive types
+
+     /**
+     * Reads the next short state from the stream.
+     */
+    public int readShort() throws IOException
+    {
+        // read bytes
+        int b1 = inputStream.read();
+        int b2 = inputStream.read();
+
+        // encode bytes to short
+        if (littleEndian)
+            return ((b2 << 8) + b1);
+        else
+            return ((b1 << 8) + b2);
+    }
+
+   /**
 	 * Reads the next integer from the stream.
 	 */
 	public int readInt() throws IOException
@@ -202,55 +257,52 @@ public class BinaryDataReader implements Closeable
 
 		// encode bytes to integer
 		if (littleEndian)
-			return ((b4 << 24) + (b3 << 16) + (b2 << 8) + (b1 << 0));
+			return ((b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
 		else
 			return ((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
 	}
 
-	/**
-	 * Reads the next short state from the stream.
-	 */
-	public int readShort() throws IOException
-	{
-		// read bytes
-		int b1 = inputStream.read();
-		int b2 = inputStream.read();
+    /**
+     * Reads the next floating point value from the stream.
+     */
+    public float readFloat() throws IOException
+    {
+        // read bytes
+        int b1 = inputStream.read();
+        int b2 = inputStream.read();
+        int b3 = inputStream.read();
+        int b4 = inputStream.read();
 
-		// encode bytes to short
-		if (littleEndian)
-			return ((b2 << 8) + b1);
-		else
-			return ((b1 << 8) + b2);
-	}
+        // encode bytes to integer
+        if (littleEndian)
+            return Float.intBitsToFloat((b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
+        else
+            return Float.intBitsToFloat((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
+    }
 
-//	/**
-//	 * Read the short state stored at the specified position
-//	 */
-//	public int readShort(long pos) throws IOException
-//	{
-//		long pos0 = inputStream.getFilePointer();
-//		inputStream.seek(pos);
-//		int result = readShort();
-//		inputStream.seek(pos0);
-//		return result;
-//	}
-//
-//	/**
-//	 * Reads the rationale at the given position, as the ratio of two integers.
-//	 */
-//	public double readRational(long loc) throws IOException
-//	{
-//		long saveLoc = inputStream.getFilePointer();
-//		inputStream.seek(loc);
-//		int numerator = readInt();
-//		int denominator = readInt();
-//		inputStream.seek(saveLoc);
-//
-//		if (denominator != 0)
-//			return (double) numerator / denominator;
-//		else
-//			return 0.0;
-//	}
+    /**
+     * Reads the next floating point value from the stream.
+     */
+    public double readDouble() throws IOException
+    {
+        // read bytes
+        int b1 = inputStream.read();
+        int b2 = inputStream.read();
+        int b3 = inputStream.read();
+        int b4 = inputStream.read();
+        int b5 = inputStream.read();
+        int b6 = inputStream.read();
+        int b7 = inputStream.read();
+        int b8 = inputStream.read();
+
+        // encode bytes to integer
+        if (littleEndian)
+            return Double.longBitsToDouble((b8 << 56) + (b7 << 48) + (b6 << 40) + (b5 << 32) + (b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
+        else
+            return Double.longBitsToDouble((b1 << 56) + (b2 << 48) + (b3 << 40) + (b4 << 32) + (b5 << 24) + (b6 << 16) + (b7 << 8) + b8);
+    }
+
+	
 
 	/**
 	 * Sets the file-pointer offset, measured from the beginning of this file,
