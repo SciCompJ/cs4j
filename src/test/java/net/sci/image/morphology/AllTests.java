@@ -7,7 +7,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
 	FloodFill2DTest.class,
-	FloodFill2DTest.class,
+    FloodFill3DTest.class,
+    LabelImagesTest.class,
 	})
 public class AllTests {
   //nothing
