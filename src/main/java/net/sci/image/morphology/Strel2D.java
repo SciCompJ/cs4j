@@ -30,7 +30,7 @@ import net.sci.image.morphology.filter.SquareStrel;
  * @author David Legland
  *
  */
-public interface Strel extends Algo
+public interface Strel2D extends Algo
 {
 	/**
 	 * Default value for background pixels.
@@ -123,7 +123,7 @@ public interface Strel extends Algo
 		 * @return a new structuring element
 		 * 
 		 */
-		public Strel fromRadius(int radius)
+		public Strel2D fromRadius(int radius)
 		{
 //			if (this == DISK) 
 //				return DiskStrel.fromRadius(radius);
@@ -136,7 +136,7 @@ public interface Strel extends Algo
 		 * @param diam the orthogonal diameter of the structuring element (max of x and y sizes), in pixels
 		 * @return a new structuring element
 		 */
-		public Strel fromDiameter(int diam) 
+		public Strel2D fromDiameter(int diam) 
 		{
 //			if (this == DISK) 
 //				return DiskStrel.fromDiameter(diam);
@@ -245,7 +245,7 @@ public interface Strel extends Algo
 	 * 
 	 * @return the reversed structuring element
 	 */
-	public Strel reverse();
+	public Strel2D reverse();
 
 	/**
 	 * Performs a morphological dilation of the input image with this

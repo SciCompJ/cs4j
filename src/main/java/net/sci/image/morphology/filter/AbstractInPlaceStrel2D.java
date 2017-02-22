@@ -12,7 +12,7 @@ import net.sci.array.data.Array2D;
  * @author David Legland
  *
  */
-public abstract class AbstractInPlaceStrel extends AbstractStrel implements	InPlaceStrel
+public abstract class AbstractInPlaceStrel2D extends AbstractStrel2D implements	InPlaceStrel2D
 		{
 //	public ImageStack dilation(ImageStack stack) {
 //		ImageStack result = stack.duplicate();

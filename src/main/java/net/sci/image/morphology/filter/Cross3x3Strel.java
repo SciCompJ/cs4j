@@ -5,7 +5,7 @@ package net.sci.image.morphology.filter;
 
 import net.sci.array.data.Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.image.morphology.Strel;
+import net.sci.image.morphology.Strel2D;
 
 /**
  * Structuring element representing a 3x3 cross, that considers the center
@@ -14,7 +14,7 @@ import net.sci.image.morphology.Strel;
  * @author David Legland
  *
  */
-public class Cross3x3Strel extends AbstractInPlaceStrel
+public class Cross3x3Strel extends AbstractInPlaceStrel2D
 {
 
 	/*
@@ -69,10 +69,10 @@ public class Cross3x3Strel extends AbstractInPlaceStrel
 	/**
 	 * Returns this structuring element, as is is self-reverse.
 	 * 
-	 * @see inra.ijpb.morphology.strel.InPlaceStrel#reverse()
+	 * @see InPlaceStrel2D.ijpb.morphology.strel.InPlaceStrel#reverse()
 	 */
 	@Override
-	public InPlaceStrel reverse()
+	public InPlaceStrel2D reverse()
 	{
 		return this;
 	}
@@ -102,8 +102,8 @@ public class Cross3x3Strel extends AbstractInPlaceStrel
 		// init buffer with background and first two lines
 		for (int x = 0; x < width; x++)
 		{
-			buffer[0][x] = Strel.BACKGROUND;
-			buffer[1][x] = Strel.BACKGROUND;
+			buffer[0][x] = Strel2D.BACKGROUND;
+			buffer[1][x] = Strel2D.BACKGROUND;
 			buffer[2][x] = image.getInt(x, 0);
 		}
 
@@ -126,13 +126,13 @@ public class Cross3x3Strel extends AbstractInPlaceStrel
 			} else
 			{
 				for (int x = 0; x < width; x++)
-					tmp[x] = Strel.BACKGROUND;
+					tmp[x] = Strel2D.BACKGROUND;
 			}
 			buffer[2] = tmp;
 
 			// process first pixel independently
 			valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1],
-					buffer[2][0], Strel.BACKGROUND);
+					buffer[2][0], Strel2D.BACKGROUND);
 			image.setInt(0, y, valMax);
 
 			// Iterate over pixel of the line
@@ -146,7 +146,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel
 			// process last pixel independently
 			valMax = max5(buffer[0][width - 1], buffer[1][width - 2],
 					buffer[1][width - 1], buffer[2][width - 1],
-					Strel.BACKGROUND);
+					Strel2D.BACKGROUND);
 			image.setInt(width - 1, y, valMax);
 		}
 
@@ -209,7 +209,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel
 			// process last pixel independently
 			valMax = max5(buffer[0][width - 1], buffer[1][width - 2],
 					buffer[1][width - 1], buffer[2][width - 1],
-					Strel.BACKGROUND);
+					Strel2D.BACKGROUND);
 			image.setValue(width - 1, y, valMax);
 		}
 
@@ -265,8 +265,8 @@ public class Cross3x3Strel extends AbstractInPlaceStrel
 		// init buffer with background and first two lines
 		for (int x = 0; x < width; x++)
 		{
-			buffer[0][x] = Strel.FOREGROUND;
-			buffer[1][x] = Strel.FOREGROUND;
+			buffer[0][x] = Strel2D.FOREGROUND;
+			buffer[1][x] = Strel2D.FOREGROUND;
 			buffer[2][x] = image.getInt(x, 0);
 		}
 
@@ -289,13 +289,13 @@ public class Cross3x3Strel extends AbstractInPlaceStrel
 			} else
 			{
 				for (int x = 0; x < width; x++)
-					tmp[x] = Strel.FOREGROUND;
+					tmp[x] = Strel2D.FOREGROUND;
 			}
 			buffer[2] = tmp;
 
 			// process first pixel independently
 			valMin = min5(buffer[0][0], buffer[1][0], buffer[1][1],
-					buffer[2][0], Strel.FOREGROUND);
+					buffer[2][0], Strel2D.FOREGROUND);
 			image.setInt(0, y, valMin);
 
 			// Iterate over pixel of the line
@@ -309,7 +309,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel
 			// process last pixel independently
 			valMin = min5(buffer[0][width - 1], buffer[1][width - 2],
 					buffer[1][width - 1], buffer[2][width - 1],
-					Strel.FOREGROUND);
+					Strel2D.FOREGROUND);
 			image.setInt(width - 1, y, valMin);
 		}
 

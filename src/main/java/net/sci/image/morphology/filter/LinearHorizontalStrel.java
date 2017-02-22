@@ -5,7 +5,7 @@ package net.sci.image.morphology.filter;
 
 import net.sci.array.data.Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.image.morphology.Strel;
+import net.sci.image.morphology.Strel2D;
 
 /**
  * An horizontal linear structuring element of a given length. Provides methods
@@ -17,7 +17,7 @@ import net.sci.image.morphology.Strel;
  * @author David Legland
  *
  */
-public class LinearHorizontalStrel extends AbstractInPlaceStrel
+public class LinearHorizontalStrel extends AbstractInPlaceStrel2D
 {
 	// ==================================================
 	// Static methods
@@ -141,7 +141,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, y, sizeY);
 
 			// init local histogram with background values
-			localMax.fill(Strel.BACKGROUND);
+			localMax.fill(Strel2D.BACKGROUND);
 
 			// add neighbor values
 			for (int x = 0; x < Math.min(shift, sizeX); x++)
@@ -159,7 +159,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel
 			// process pixels at the end of the line
 			for (int x = Math.max(0, sizeX - shift); x < sizeX; x++)
 			{
-				localMax.add(Strel.BACKGROUND);
+				localMax.add(Strel2D.BACKGROUND);
 				image.setInt(x, y, localMax.getMax());
 			}
 		}
@@ -254,7 +254,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, y, sizeY);
 
 			// reset local histogram
-			localMin.fill(Strel.FOREGROUND);
+			localMin.fill(Strel2D.FOREGROUND);
 
 			// init local histogram with neighbor values
 			for (int x = 0; x < Math.min(shift, sizeX); x++)
@@ -272,7 +272,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel
 			// process pixels at the end of the line
 			for (int x = Math.max(0, sizeX - shift); x < sizeX; x++)
 			{
-				localMin.add(Strel.FOREGROUND);
+				localMin.add(Strel2D.FOREGROUND);
 				image.setInt(x, y, localMin.getMax());
 			}
 		}
@@ -391,7 +391,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel
 	 * Returns a linear horizontal line with same size and offset equal to
 	 * size-offset-1.
 	 * 
-	 * @see net.sci.image.morphology.Strel#reverse()
+	 * @see net.sci.image.morphology.Strel2D#reverse()
 	 */
 	@Override
 	public LinearHorizontalStrel reverse()

@@ -5,7 +5,7 @@ package net.sci.image.morphology.filter;
 
 import net.sci.array.data.Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.image.morphology.Strel;
+import net.sci.image.morphology.Strel2D;
 
 /**
  * A diagonal linear structuring element of a given length, with direction
@@ -19,7 +19,7 @@ import net.sci.image.morphology.Strel;
  * @author David Legland
  *
  */
-public class LinearDiagUpStrel extends AbstractInPlaceStrel
+public class LinearDiagUpStrel extends AbstractInPlaceStrel2D
 {
 
 	// ==================================================
@@ -145,7 +145,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMax.fill(Strel.BACKGROUND);
+			localMax.fill(Strel2D.BACKGROUND);
 
 			int xmin = Math.max(0, d + 1 - sizeY);
 			int xmax = Math.min(sizeX, d + 1);
@@ -178,7 +178,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel
 			// and that do not touch the upper left image boundary
 			while (t < tmax + this.offset)
 			{
-				localMax.add(Strel.BACKGROUND);
+				localMax.add(Strel2D.BACKGROUND);
 				int t2 = t - this.offset;
 				int x = t2;
 				int y = d - t2;
@@ -301,7 +301,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMin.fill(Strel.FOREGROUND);
+			localMin.fill(Strel2D.FOREGROUND);
 
 			int xmin = Math.max(0, d - sizeY - 1);
 			int xmax = Math.min(sizeX, d + 1);
@@ -334,7 +334,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel
 			// and that do not touch the upper left image boundary
 			while (t < tmax + this.offset)
 			{
-				localMin.add(Strel.FOREGROUND);
+				localMin.add(Strel2D.FOREGROUND);
 				int t2 = t - this.offset;
 				int x = t2;
 				int y = d - t2;
@@ -473,7 +473,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel
 	 * Returns a linear diagonal line with same size and offset equal to
 	 * size-offset.
 	 * 
-	 * @see inra.ijpb.morphology.Strel#reverse()
+	 * @see Strel2D.ijpb.morphology.Strel#reverse()
 	 */
 	@Override
 	public LinearDiagUpStrel reverse()

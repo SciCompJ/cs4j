@@ -5,7 +5,7 @@ package net.sci.image.morphology.filter;
 
 import net.sci.array.data.Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.image.morphology.Strel;
+import net.sci.image.morphology.Strel2D;
 
 /**
  * Structuring element representing a 3x3 cross, that considers the reference
@@ -36,7 +36,7 @@ public class ShiftedCross3x3Strel
 		 * </code>
 	 * </pre>
 	 */
-	public final static InPlaceStrel LEFT = new ShiftedCross3x3Strel.Left();
+	public final static InPlaceStrel2D LEFT = new ShiftedCross3x3Strel.Left();
 
 	/**
 	 * A cross-shaped structuring element located on the right of the reference
@@ -56,7 +56,7 @@ public class ShiftedCross3x3Strel
 	 * </code>
 	 * </pre>
 	 */
-	public final static InPlaceStrel RIGHT = new ShiftedCross3x3Strel.Right();
+	public final static InPlaceStrel2D RIGHT = new ShiftedCross3x3Strel.Right();
 
 	/**
 	 * A cross-shaped structuring element located on the left of the reference
@@ -72,7 +72,7 @@ public class ShiftedCross3x3Strel
 	 *  . . . . . 
 	 * </pre></code>
 	 */
-	private final static class Left extends AbstractInPlaceStrel
+	private final static class Left extends AbstractInPlaceStrel2D
 	{
 
 		/**
@@ -135,10 +135,10 @@ public class ShiftedCross3x3Strel
 		/**
 		 * Returns this structuring element, as is is self-reverse.
 		 * 
-		 * @see InPlaceStrel#reverse()
+		 * @see InPlaceStrel2D#reverse()
 		 */
 		@Override
-		public InPlaceStrel reverse()
+		public InPlaceStrel2D reverse()
 		{
 			return RIGHT;
 		}
@@ -168,8 +168,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = Strel.BACKGROUND;
-				buffer[1][x] = Strel.BACKGROUND;
+				buffer[0][x] = Strel2D.BACKGROUND;
+				buffer[1][x] = Strel2D.BACKGROUND;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -192,15 +192,15 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = Strel.BACKGROUND;
+						tmp[x] = Strel2D.BACKGROUND;
 				}
 				buffer[2] = tmp;
 
 				// process first two pixels independently
-				valMax = Math.max(buffer[1][0], Strel.BACKGROUND);
+				valMax = Math.max(buffer[1][0], Strel2D.BACKGROUND);
 				image.setInt(0, y, valMax);
 				valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1],
-						buffer[2][0], Strel.BACKGROUND);
+						buffer[2][0], Strel2D.BACKGROUND);
 				image.setInt(1, y, valMax);
 
 				// Iterate over pixel of the line, starting from the third one
@@ -300,8 +300,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = Strel.FOREGROUND;
-				buffer[1][x] = Strel.FOREGROUND;
+				buffer[0][x] = Strel2D.FOREGROUND;
+				buffer[1][x] = Strel2D.FOREGROUND;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -324,15 +324,15 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = Strel.FOREGROUND;
+						tmp[x] = Strel2D.FOREGROUND;
 				}
 				buffer[2] = tmp;
 
 				// process first pixel independently
-				valMin = Math.min(buffer[1][0], Strel.FOREGROUND);
+				valMin = Math.min(buffer[1][0], Strel2D.FOREGROUND);
 				image.setInt(0, y, valMin);
 				valMin = min5(buffer[0][0], buffer[1][0], buffer[1][1],
-						buffer[2][0], Strel.FOREGROUND);
+						buffer[2][0], Strel2D.FOREGROUND);
 				image.setInt(1, y, valMin);
 
 				// Iterate over pixel of the line
@@ -422,7 +422,7 @@ public class ShiftedCross3x3Strel
 	 *  . . . . . 
 	 * </pre></code>
 	 */
-	private final static class Right extends AbstractInPlaceStrel
+	private final static class Right extends AbstractInPlaceStrel2D
 	{
 
 		/**
@@ -485,10 +485,10 @@ public class ShiftedCross3x3Strel
 		/**
 		 * Returns this structuring element, as is is self-reverse.
 		 * 
-		 * @see InPlaceStrel#reverse()
+		 * @see InPlaceStrel2D#reverse()
 		 */
 		@Override
-		public InPlaceStrel reverse()
+		public InPlaceStrel2D reverse()
 		{
 			return LEFT;
 		}
@@ -518,8 +518,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = Strel.BACKGROUND;
-				buffer[1][x] = Strel.BACKGROUND;
+				buffer[0][x] = Strel2D.BACKGROUND;
+				buffer[1][x] = Strel2D.BACKGROUND;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -542,7 +542,7 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = Strel.BACKGROUND;
+						tmp[x] = Strel2D.BACKGROUND;
 				}
 				buffer[2] = tmp;
 
@@ -558,9 +558,9 @@ public class ShiftedCross3x3Strel
 				// process last two pixels independently
 				valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 						buffer[1][sizeX - 1], buffer[2][sizeX - 1],
-						Strel.BACKGROUND);
+						Strel2D.BACKGROUND);
 				image.setInt(sizeX - 2, y, valMax);
-				valMax = Math.max(buffer[1][sizeX - 1], Strel.BACKGROUND);
+				valMax = Math.max(buffer[1][sizeX - 1], Strel2D.BACKGROUND);
 				image.setInt(sizeX - 1, y, valMax);
 			}
 
@@ -655,8 +655,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = Strel.FOREGROUND;
-				buffer[1][x] = Strel.FOREGROUND;
+				buffer[0][x] = Strel2D.FOREGROUND;
+				buffer[1][x] = Strel2D.FOREGROUND;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -679,7 +679,7 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = Strel.FOREGROUND;
+						tmp[x] = Strel2D.FOREGROUND;
 				}
 				buffer[2] = tmp;
 
@@ -695,9 +695,9 @@ public class ShiftedCross3x3Strel
 				// process last two pixels independently
 				valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 						buffer[1][sizeX - 1], buffer[2][sizeX - 1],
-						Strel.FOREGROUND);
+						Strel2D.FOREGROUND);
 				image.setInt(sizeX - 2, y, valMin);
-				valMin = Math.min(buffer[1][sizeX - 1], Strel.FOREGROUND);
+				valMin = Math.min(buffer[1][sizeX - 1], Strel2D.FOREGROUND);
 				image.setInt(sizeX - 1, y, valMin);
 			}
 

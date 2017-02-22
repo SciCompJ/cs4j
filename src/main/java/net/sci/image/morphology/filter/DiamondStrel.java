@@ -17,7 +17,7 @@ import java.util.Collection;
  * @see ShiftedCross3x3Strel
  * @author David Legland
  */
-public class DiamondStrel extends AbstractSeparableStrel
+public class DiamondStrel extends AbstractSeparableStrel2D
 {
 
 	// ==================================================
@@ -208,7 +208,7 @@ public class DiamondStrel extends AbstractSeparableStrel
 	 * @see ijt.morphology.SeparableStrel#reverse()
 	 */
 	@Override
-	public SeparableStrel reverse()
+	public SeparableStrel2D reverse()
 	{
 		return new DiamondStrel(this.size, this.size - 1 - this.offset);
 	}
@@ -219,10 +219,10 @@ public class DiamondStrel extends AbstractSeparableStrel
 	 * @see ijt.morphology.SeparableStrel#decompose()
 	 */
 	@Override
-	public Collection<InPlaceStrel> decompose()
+	public Collection<InPlaceStrel2D> decompose()
 	{
 		// allocate memory
-		ArrayList<InPlaceStrel> strels = new ArrayList<InPlaceStrel>(3);
+		ArrayList<InPlaceStrel2D> strels = new ArrayList<InPlaceStrel2D>(3);
 
 		// add each elementary strel
 		int linSize = (this.size - 1) / 2;

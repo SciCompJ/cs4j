@@ -5,7 +5,7 @@ package net.sci.image.morphology.filter;
 
 import net.sci.array.data.Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.image.morphology.Strel;
+import net.sci.image.morphology.Strel2D;
 
 /**
  * A diagonal linear structuring element of a given length, with direction
@@ -19,7 +19,7 @@ import net.sci.image.morphology.Strel;
  * @author David Legland
  *
  */
-public class LinearDiagDownStrel extends AbstractInPlaceStrel
+public class LinearDiagDownStrel extends AbstractInPlaceStrel2D
 {
 	// ==================================================
 	// Static methods
@@ -147,7 +147,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMax.fill(Strel.BACKGROUND);
+			localMax.fill(Strel2D.BACKGROUND);
 
 			int xmin = Math.max(0, -d);
 			int xmax = Math.min(sizeX, sizeY - d);
@@ -180,7 +180,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel
 			// and that do not touch the upper left image boundary
 			while (t < tmax + this.offset)
 			{
-				localMax.add(Strel.BACKGROUND);
+				localMax.add(Strel2D.BACKGROUND);
 				int x = t - this.offset;
 				int y = t + d - this.offset;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
@@ -310,7 +310,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMin.fill(Strel.FOREGROUND);
+			localMin.fill(Strel2D.FOREGROUND);
 
 			int xmin = Math.max(0, -d);
 			int xmax = Math.min(sizeX, sizeY - d);
@@ -342,7 +342,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel
 			// and that do not touch the upper left image boundary
 			while (t < tmax + dt0)
 			{
-				localMin.add(Strel.FOREGROUND);
+				localMin.add(Strel2D.FOREGROUND);
 				int x = t - dt0;
 				int y = t + d - dt0;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
@@ -487,7 +487,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel
 	 * Returns a linear diagonal line with same size and offset equal to
 	 * size-offset.
 	 * 
-	 * @see inra.ijpb.morphology.Strel#reverse()
+	 * @see Strel2D.ijpb.morphology.Strel#reverse()
 	 */
 	@Override
 	public LinearDiagDownStrel reverse()

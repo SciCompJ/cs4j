@@ -4,7 +4,7 @@
 package net.sci.image.morphology.filter;
 
 import net.sci.algo.AlgoStub;
-import net.sci.image.morphology.Strel;
+import net.sci.image.morphology.Strel2D;
 
 /**
  * Implementation basis for planar structuring elements. 
@@ -15,7 +15,7 @@ import net.sci.image.morphology.Strel;
 //* Morphological operations for stacks are implemented such that the planar
 //* strel is applied to each slice, and the result is added to the result
 //* array.
-public abstract class AbstractStrel extends AlgoStub implements Strel 
+public abstract class AbstractStrel2D extends AlgoStub implements Strel2D 
 {	
 	private String channelName = null;
 	

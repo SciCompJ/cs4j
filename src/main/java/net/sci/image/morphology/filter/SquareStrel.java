@@ -16,7 +16,7 @@ import java.util.Collection;
  * @author David Legland
  *
  */
-public class SquareStrel extends AbstractSeparableStrel {
+public class SquareStrel extends AbstractSeparableStrel2D {
 
 	// ==================================================
 	// Static methods 
@@ -88,8 +88,8 @@ public class SquareStrel extends AbstractSeparableStrel {
 	 * @see ijt.morphology.SeparableStrel#separate()
 	 */
 	@Override
-	public Collection<InPlaceStrel> decompose() {
-		ArrayList<InPlaceStrel> strels = new ArrayList<InPlaceStrel>(2);
+	public Collection<InPlaceStrel2D> decompose() {
+		ArrayList<InPlaceStrel2D> strels = new ArrayList<InPlaceStrel2D>(2);
 		strels.add(new LinearHorizontalStrel(this.size, this.offset));
 		strels.add(new LinearVerticalStrel(this.size, this.offset));
 		return strels;

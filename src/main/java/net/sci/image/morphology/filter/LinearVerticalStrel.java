@@ -5,7 +5,7 @@ package net.sci.image.morphology.filter;
 
 import net.sci.array.data.Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.image.morphology.Strel;
+import net.sci.image.morphology.Strel2D;
 
 /**
  * A vertical linear structuring element of a given length. Provides methods for
@@ -17,7 +17,7 @@ import net.sci.image.morphology.Strel;
  * @author David Legland
  *
  */
-public class LinearVerticalStrel extends AbstractInPlaceStrel
+public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 {
 
 	// ==================================================
@@ -141,7 +141,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, x, width);
 
 			// reset local histogram
-			localMax.fill(Strel.BACKGROUND);
+			localMax.fill(Strel2D.BACKGROUND);
 
 			// init local histogram with neighbor values
 			for (int y = 0; y < Math.min(shift, height); y++)
@@ -159,7 +159,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel
 			// process pixels at the end of the line
 			for (int y = Math.max(0, height - shift); y < height; y++)
 			{
-				localMax.add(Strel.BACKGROUND);
+				localMax.add(Strel2D.BACKGROUND);
 				image.setInt(x, y, localMax.getMax());
 			}
 		}
@@ -253,7 +253,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, x, width);
 
 			// reset local histogram
-			localMin.fill(Strel.FOREGROUND);
+			localMin.fill(Strel2D.FOREGROUND);
 
 			// init local histogram with neighbor values
 			for (int y = 0; y < Math.min(shift, height); y++)
@@ -271,7 +271,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel
 			// process pixels at the end of the line
 			for (int y = Math.max(0, height - shift); y < height; y++)
 			{
-				localMin.add(Strel.FOREGROUND);
+				localMin.add(Strel2D.FOREGROUND);
 				image.setInt(x, y, localMin.getMax());
 			}
 		}
@@ -390,7 +390,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel
 	 * Returns a linear vertical line with same size and offset equal to
 	 * size-offset-1.
 	 * 
-	 * @see net.sci.image.morphology.Strel#reverse()
+	 * @see net.sci.image.morphology.Strel2D#reverse()
 	 */
 	@Override
 	public LinearVerticalStrel reverse()

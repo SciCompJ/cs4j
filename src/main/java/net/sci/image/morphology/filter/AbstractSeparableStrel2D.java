@@ -14,8 +14,8 @@ import net.sci.array.data.Array2D;
  * @author David Legland
  *
  */
-public abstract class AbstractSeparableStrel extends AbstractStrel 
-implements SeparableStrel, AlgoListener 
+public abstract class AbstractSeparableStrel2D extends AbstractStrel2D 
+implements SeparableStrel2D, AlgoListener 
 {
 	public Array2D<?> dilation(Array2D<?> image)
 	{
@@ -23,12 +23,12 @@ implements SeparableStrel, AlgoListener
 		Array2D<?> result = image.duplicate();
 		
 		// Extract structuring elements
-		Collection<InPlaceStrel> strels = this.decompose();
+		Collection<InPlaceStrel2D> strels = this.decompose();
 		int n = strels.size();
 		
 		// Dilation
 		int i = 1;
-		for (InPlaceStrel strel : strels)
+		for (InPlaceStrel2D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Dilation", i, n));
 			runDilation(result, strel);
@@ -47,12 +47,12 @@ implements SeparableStrel, AlgoListener
 		Array2D<?> result = image.duplicate();
 		
 		// Extract structuring elements
-		Collection<InPlaceStrel> strels = this.decompose();
+		Collection<InPlaceStrel2D> strels = this.decompose();
 		int n = strels.size();
 		
 		// Erosion
 		int i = 1;
-		for (InPlaceStrel strel : strels)
+		for (InPlaceStrel2D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Erosion", i, n));
 			runErosion(result, strel);
@@ -71,12 +71,12 @@ implements SeparableStrel, AlgoListener
 		Array2D<?> result = image.duplicate();
 		
 		// Extract structuring elements
-		Collection<InPlaceStrel> strels = this.decompose();
+		Collection<InPlaceStrel2D> strels = this.decompose();
 		int n = strels.size();
 		
 		// Dilation
 		int i = 1;
-		for (InPlaceStrel strel : strels)
+		for (InPlaceStrel2D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Dilation", i, n));
 			runDilation(result, strel);
@@ -86,7 +86,7 @@ implements SeparableStrel, AlgoListener
 		// Erosion (with reversed strel)
 		i = 1;
 		strels = this.reverse().decompose();
-		for (InPlaceStrel strel : strels)
+		for (InPlaceStrel2D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Erosion", i, n));
 			runErosion(result, strel);
@@ -105,12 +105,12 @@ implements SeparableStrel, AlgoListener
 		Array2D<?> result = image.duplicate();
 		
 		// Extract structuring elements
-		Collection<InPlaceStrel> strels = this.decompose();
+		Collection<InPlaceStrel2D> strels = this.decompose();
 		int n = strels.size();
 		
 		// Erosion
 		int i = 1;
-		for (InPlaceStrel strel : strels)
+		for (InPlaceStrel2D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Erosion", i, n));
 			runErosion(result, strel);
@@ -120,7 +120,7 @@ implements SeparableStrel, AlgoListener
 		// Dilation (with reversed strel)
 		i = 1;
 		strels = this.reverse().decompose();
-		for (InPlaceStrel strel : strels) 
+		for (InPlaceStrel2D strel : strels) 
 		{
 			fireStatusChanged(this, createStatusMessage("Dilation", i, n));
 			runDilation(result, strel);
@@ -133,14 +133,14 @@ implements SeparableStrel, AlgoListener
 		return result;
 	}
 	
-	private void runDilation(Array2D<?> image, InPlaceStrel strel)
+	private void runDilation(Array2D<?> image, InPlaceStrel2D strel)
 	{
 		strel.addAlgoListener(this);
 		strel.inPlaceDilation(image);
 		strel.removeAlgoListener(this);
 	}
 	
-	private void runErosion(Array2D<?> image, InPlaceStrel strel) 
+	private void runErosion(Array2D<?> image, InPlaceStrel2D strel) 
 	{
 		strel.addAlgoListener(this);
 		strel.inPlaceErosion(image);

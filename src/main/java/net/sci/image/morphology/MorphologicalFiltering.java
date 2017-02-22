@@ -94,7 +94,7 @@ public class MorphologicalFiltering
 		 *            the structuring element to use
 		 * @return the result of morphological operation applied to image
 		 */
-		public Array2D<?> apply(Array2D<?> image, Strel strel) 
+		public Array2D<?> apply(Array2D<?> image, Strel2D strel) 
 		{
 			if (this == DILATION)
 				return dilation(image, strel);
@@ -226,7 +226,7 @@ public class MorphologicalFiltering
 	 * @see #erosion(Array2D<?>, Strel)
 	 * @see Strel#dilation(Array2D<?>)
 	 */
-	public static Array2D<?> dilation(Array2D<?> image, Strel strel)
+	public static Array2D<?> dilation(Array2D<?> image, Strel2D strel)
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
@@ -296,7 +296,7 @@ public class MorphologicalFiltering
 	 *            the structuring element used for erosion
 	 * @return the result of the erosion
 	 */
-	public static Array2D<?> erosion(Array2D<?> image, Strel strel)
+	public static Array2D<?> erosion(Array2D<?> image, Strel2D strel)
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
@@ -366,7 +366,7 @@ public class MorphologicalFiltering
 	 *            the structuring element used for opening
 	 * @return the result of the morphological opening
 	 */
-	public static Array2D<?> opening(Array2D<?> image, Strel strel)
+	public static Array2D<?> opening(Array2D<?> image, Strel2D strel)
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
@@ -432,7 +432,7 @@ public class MorphologicalFiltering
 	 *            the structuring element used for closing
 	 * @return the result of the morphological closing
 	 */
-	public static Array2D<?> closing(Array2D<?> image, Strel strel) 
+	public static Array2D<?> closing(Array2D<?> image, Strel2D strel) 
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
@@ -499,7 +499,7 @@ public class MorphologicalFiltering
 	 *            the structuring element used for white top-hat
 	 * @return the result of the white top-hat
 	 */
-	public static Array2D<?> whiteTopHat(Array2D<?> image, Strel strel) 
+	public static Array2D<?> whiteTopHat(Array2D<?> image, Strel2D strel) 
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
@@ -604,7 +604,7 @@ public class MorphologicalFiltering
 	 *            the structuring element used for black top-hat
 	 * @return the result of the black top-hat
 	 */
-	public static Array2D<?> blackTopHat(Array2D<?> image, Strel strel)
+	public static Array2D<?> blackTopHat(Array2D<?> image, Strel2D strel)
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
@@ -700,7 +700,7 @@ public class MorphologicalFiltering
 	 *            the structuring element used for morphological gradient
 	 * @return the result of the morphological gradient
 	 */
-	public static Array2D<?> gradient(Array2D<?> image, Strel strel)
+	public static Array2D<?> gradient(Array2D<?> image, Strel2D strel)
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
@@ -809,7 +809,7 @@ public class MorphologicalFiltering
 	 *            the structuring element used for morphological laplacian
 	 * @return the result of the morphological laplacian
 	 */
-	public static Array2D<?> laplacian(Array2D<?> image, Strel strel) 
+	public static Array2D<?> laplacian(Array2D<?> image, Strel2D strel) 
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
@@ -933,7 +933,7 @@ public class MorphologicalFiltering
 	 *            the structuring element used for morphological internal gradient
 	 * @return the result of the morphological internal gradient
 	 */
-	public static Array2D<?> internalGradient(Array2D<?> image, Strel strel) 
+	public static Array2D<?> internalGradient(Array2D<?> image, Strel2D strel) 
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
@@ -1029,7 +1029,7 @@ public class MorphologicalFiltering
 	 *            the structuring element used for morphological external gradient
 	 * @return the result of the morphological external gradient
 	 */
-	public static Array2D<?> externalGradient(Array2D<?> image, Strel strel) 
+	public static Array2D<?> externalGradient(Array2D<?> image, Strel2D strel) 
 	{
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)

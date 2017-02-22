@@ -14,7 +14,7 @@ import java.util.Collection;
  * @author David Legland
  *
  */
-public class OctagonStrel extends AbstractSeparableStrel
+public class OctagonStrel extends AbstractSeparableStrel2D
 {
 	// ==================================================
 	// Static methods
@@ -177,14 +177,14 @@ public class OctagonStrel extends AbstractSeparableStrel
 	 * Returns a decomposition into four structuring elements, corresponding to
 	 * horizontal, vertical, and diagonal linear structuring elements.
 	 * 
-	 * @see SeparableStrel#decompose()
+	 * @see SeparableStrel2D#decompose()
 	 * @see LinearHorizontalStrel
 	 * @see LinearVerticalStrel
 	 * @see LinearDiagUpStrel
 	 * @see LinearDiagDownStrel
 	 */
 	@Override
-	public Collection<InPlaceStrel> decompose()
+	public Collection<InPlaceStrel2D> decompose()
 	{
 		// We need to use a different offset for horizontal lines, because
 		// the sum of offsets for diagonals shifts the reference point by one
@@ -194,7 +194,7 @@ public class OctagonStrel extends AbstractSeparableStrel
 			horizOffset = this.squareSize - 1 - this.squareOffset;
 
 		// Allocate memory for linear strels
-		ArrayList<InPlaceStrel> strels = new ArrayList<InPlaceStrel>(4);
+		ArrayList<InPlaceStrel2D> strels = new ArrayList<InPlaceStrel2D>(4);
 
 		// create elementary strels in each of the four directions
 		strels.add(new LinearHorizontalStrel(this.squareSize, horizOffset));
