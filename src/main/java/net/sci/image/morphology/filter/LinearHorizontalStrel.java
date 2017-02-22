@@ -187,7 +187,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, y, sizeY);
 
 			// init local histogram with background values
-			localMax.fill(Float.MIN_VALUE);
+			localMax.fill(Double.NEGATIVE_INFINITY);
 
 			// add neighbor values
 			for (int x = 0; x < Math.min(shift, sizeX); x++)
@@ -205,7 +205,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel
 			// process pixels at the end of the line
 			for (int x = Math.max(0, sizeX - shift); x < sizeX; x++)
 			{
-				localMax.add(Strel.BACKGROUND);
+				localMax.add(Double.NEGATIVE_INFINITY);
 				image.setValue(x, y, localMax.getMax());
 			}
 		}
@@ -300,7 +300,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, y, sizeY);
 
 			// reset local histogram
-			localMin.fill(Float.MAX_VALUE);
+			localMin.fill(Double.POSITIVE_INFINITY);
 
 			// init local histogram with neighbor values
 			for (int x = 0; x < Math.min(shift, sizeX); x++)
@@ -318,7 +318,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel
 			// process pixels at the end of the line
 			for (int x = Math.max(0, sizeX - shift); x < sizeX; x++)
 			{
-				localMin.add(Float.MAX_VALUE);
+				localMin.add(Double.POSITIVE_INFINITY);
 				image.setValue(x, y, localMin.getMax());
 			}
 		}

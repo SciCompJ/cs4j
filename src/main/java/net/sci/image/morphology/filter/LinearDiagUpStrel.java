@@ -369,7 +369,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMin.fill(Double.MAX_VALUE);
+			localMin.fill(Double.POSITIVE_INFINITY);
 
 			int xmin = Math.max(0, d - sizeY - 1);
 			int xmax = Math.min(sizeX, d + 1);
@@ -402,7 +402,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel
 			// and that do not touch the upper left image boundary
 			while (t < tmax + this.offset)
 			{
-				localMin.add(Double.MAX_VALUE);
+				localMin.add(Double.POSITIVE_INFINITY);
 				int t2 = t - this.offset;
 				int x = t2;
 				int y = d - t2;

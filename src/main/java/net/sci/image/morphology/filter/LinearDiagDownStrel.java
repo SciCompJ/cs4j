@@ -382,7 +382,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMin.fill(Double.MAX_VALUE);
+			localMin.fill(Double.POSITIVE_INFINITY);
 
 			int xmin = Math.max(0, -d);
 			int xmax = Math.min(sizeX, sizeY - d);
@@ -414,7 +414,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel
 			// and that do not touch the upper left image boundary
 			while (t < tmax + dt0)
 			{
-				localMin.add(Double.MAX_VALUE);
+				localMin.add(Double.POSITIVE_INFINITY);
 				int x = t - dt0;
 				int y = t + d - dt0;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
