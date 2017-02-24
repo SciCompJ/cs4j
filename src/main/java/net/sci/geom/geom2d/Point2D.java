@@ -99,7 +99,7 @@ public class Point2D implements Geometry2D, Point
 
 
     // ===================================================================
-    // Implements Point interface
+    // Implements the Point interface
 
     @Override
     public double get(int dim)
@@ -111,6 +111,16 @@ public class Point2D implements Geometry2D, Point
         default:
             throw new IllegalArgumentException("Dimension should be comprised between 0 and 1");
         }
+    }
+
+    
+    // ===================================================================
+    // Implements the Geometry interface
+
+    @Override
+    public Box2D boundingBox()
+    {
+        return new Box2D(this.x, this.x, this.y, this.y);
     }
 
 //	@Override

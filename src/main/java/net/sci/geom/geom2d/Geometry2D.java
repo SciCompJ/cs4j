@@ -22,4 +22,5 @@ public interface Geometry2D extends Geometry
         return 2;
     }
 
+    public Box2D boundingBox();
 }

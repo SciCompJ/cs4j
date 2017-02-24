@@ -53,4 +53,13 @@ public class LineSegment2D implements Curve2D
     {
         return new Point2D(x2, y2);
     }
+    
+    // ===================================================================
+    // Implements the Geometry interface
+
+    @Override
+    public Box2D boundingBox()
+    {
+        return new Box2D(getP1(), getP2());
+    }
 }
