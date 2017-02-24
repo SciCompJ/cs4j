@@ -136,33 +136,4 @@ public class Point3D implements Point, Geometry3D
     {
         return new Box3D(this.x, this.x, this.y, this.y, this.z, this.z);
     }
-	
-
-//	@Override
-//	public boolean contains(Point2d p)
-//	{
-//		return this.equals(p);
-//	}
-
-//	@Override
-//	public Box2D boundingBox()
-//	{
-//		return new Box2D(this.x, this.x, this.y, this.y);
-//	}
-
-//	@Override
-//	public Collection<Point2d> clip(Box2D box)
-//	{
-//		ArrayList<Point2d> set = new ArrayList<Point2d>(1);
-//		if (box.contains(this))
-//			set.add(this);
-//		return set;
-//	}
-
-
-//	public Point2d transform(Transform2d trans) 
-//	{
-//		return trans.transform(this);
-//	}
-
 }

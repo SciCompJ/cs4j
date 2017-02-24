@@ -1,7 +1,9 @@
 /**
  * 
  */
-package net.sci.geom.geom2d;
+package net.sci.geom.geom2d.transform;
+
+import net.sci.geom.geom2d.Point2D;
 
 /**
  * @author dlegland

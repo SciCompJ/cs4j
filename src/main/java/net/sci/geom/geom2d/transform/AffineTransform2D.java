@@ -1,10 +1,13 @@
 /**
  * 
  */
-package net.sci.geom.geom2d;
+package net.sci.geom.geom2d.transform;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+
+import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.Vector2D;
 
 /**
  * @author dlegland

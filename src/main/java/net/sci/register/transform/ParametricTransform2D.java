@@ -3,7 +3,7 @@
  */
 package net.sci.register.transform;
 
-import net.sci.geom.geom2d.Transform2D;
+import net.sci.geom.geom2d.transform.Transform2D;
 import net.sci.register.ParametricObject;
 
 /**

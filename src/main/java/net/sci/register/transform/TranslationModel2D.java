@@ -3,8 +3,8 @@
  */
 package net.sci.register.transform;
 
-import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * @author dlegland
