@@ -13,6 +13,12 @@ import net.sci.geom.Geometry;
  */
 public interface Geometry2D extends Geometry
 {
+    
+    /**
+     * Checks if the shape contains the given point, with a given precision.
+     */
+    public boolean contains(Point2D point, double eps);
+    
     /**
      * Returns dimensionality equals to 2.
      */

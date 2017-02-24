@@ -13,5 +13,5 @@ import net.sci.array.Dimensional;
  */
 public interface Geometry extends Dimensional
 {
-    
+    public Box boundingBox();
 }

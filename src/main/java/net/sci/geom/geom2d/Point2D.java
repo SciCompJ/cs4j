@@ -115,6 +115,17 @@ public class Point2D implements Geometry2D, Point
 
     
     // ===================================================================
+    // Implements the Geometry2D interface
+
+    @Override
+    public boolean contains(Point2D point, double eps)
+    {
+        if (Math.abs(this.x - point.x) > eps) return false;
+        if (Math.abs(this.y - point.y) > eps) return false;
+        return true;
+    }
+
+    // ===================================================================
     // Implements the Geometry interface
 
     @Override

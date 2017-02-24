@@ -126,7 +126,16 @@ public class Point3D implements Point, Geometry3D
             throw new IllegalArgumentException("Dimension should be comprised between 0 and 2");
         }
     }
-	
+
+
+    // ===================================================================
+    // Implements Geometry interface
+
+    @Override
+    public Box3D boundingBox()
+    {
+        return new Box3D(this.x, this.x, this.y, this.y, this.z, this.z);
+    }
 	
 
 //	@Override
