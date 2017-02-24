@@ -138,7 +138,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel2D
 		int dmax = sizeY - 1;
 
 		// create local histogram instance
-		LocalExtremumBufferGray8 localMax = new LocalExtremumBufferGray8(size,
+		LocalExtremumBufferInt localMax = new LocalExtremumBufferInt(size,
 				LocalExtremum.Type.MAXIMUM);
 
 		// Iterate on diagonal lines
@@ -301,7 +301,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel2D
 		int dt0 = this.offset;
 
 		// create local histogram instance
-		LocalExtremumBufferGray8 localMin = new LocalExtremumBufferGray8(size,
+		LocalExtremumBufferInt localMin = new LocalExtremumBufferInt(size,
 				LocalExtremum.Type.MINIMUM);
 
 		// Iterate on diagonal lines

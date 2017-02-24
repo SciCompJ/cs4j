@@ -132,7 +132,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 		int shift = this.size - this.offset - 1;
 
 		// create local histogram instance
-		LocalExtremumBufferGray8 localMax = new LocalExtremumBufferGray8(size,
+		LocalExtremumBufferInt localMax = new LocalExtremumBufferInt(size,
 				LocalExtremum.Type.MAXIMUM);
 
 		// Iterate on image columns
@@ -244,7 +244,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 		int shift = this.size - this.offset - 1;
 
 		// create local histogram instance
-		LocalExtremumBufferGray8 localMin = new LocalExtremumBufferGray8(size,
+		LocalExtremumBufferInt localMin = new LocalExtremumBufferInt(size,
 				LocalExtremum.Type.MINIMUM);
 
 		// Iterate on image columns

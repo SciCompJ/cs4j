@@ -136,7 +136,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel2D
 		int dmax = sizeX + sizeY - 1;
 
 		// create local histogram instance
-		LocalExtremumBufferGray8 localMax = new LocalExtremumBufferGray8(size,
+		LocalExtremumBufferInt localMax = new LocalExtremumBufferInt(size,
 				LocalExtremum.Type.MAXIMUM);
 
 		// Iterate on diagonal lines
@@ -292,7 +292,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel2D
 		int dmax = sizeX + sizeY - 1;
 
 		// create local histogram instance
-		LocalExtremumBufferGray8 localMin = new LocalExtremumBufferGray8(size,
+		LocalExtremumBufferInt localMin = new LocalExtremumBufferInt(size,
 				LocalExtremum.Type.MINIMUM);
 
 		// Iterate on diagonal lines

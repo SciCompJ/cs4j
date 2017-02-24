@@ -16,7 +16,7 @@ package net.sci.image.morphology.filter;
  * @author David Legland
  *
  */
-public class LocalExtremumBufferGray8 implements LocalExtremum 
+public class LocalExtremumBufferInt implements LocalExtremum 
 {
 	/**
 	 * Current max value
@@ -33,7 +33,7 @@ public class LocalExtremumBufferGray8 implements LocalExtremum
 	int sign;
 	
 	/**
-	 * Circular buffer of stored values
+	 * Circular buffer to store values
 	 */
 	int[] buffer;
 	
@@ -48,7 +48,7 @@ public class LocalExtremumBufferGray8 implements LocalExtremum
 	 * @param n
 	 *            the size of the buffer
 	 */
-	public LocalExtremumBufferGray8(int n)
+	public LocalExtremumBufferInt(int n)
 	{
 		this.buffer = new int[n];
 		for (int i = 0; i < n; i++)
@@ -63,7 +63,7 @@ public class LocalExtremumBufferGray8 implements LocalExtremum
 	 * @param type
 	 *            the type of extremum (maximum or minimum)
 	 */
-	public LocalExtremumBufferGray8(int n, LocalExtremum.Type type)
+	public LocalExtremumBufferInt(int n, LocalExtremum.Type type)
 	{
 		this(n);
 		switch (type)
@@ -81,7 +81,7 @@ public class LocalExtremumBufferGray8 implements LocalExtremum
 	 * @param value
 	 *            the initial value of all elements in buffer
 	 */
-	public LocalExtremumBufferGray8(int n, int value) 
+	public LocalExtremumBufferInt(int n, int value) 
 	{
 		this.buffer = new int[n];
 		for (int i = 0; i < n; i++)
@@ -179,9 +179,9 @@ public class LocalExtremumBufferGray8 implements LocalExtremum
 	public void clear()
 	{
 		if (this.sign == 1)
-			this.fill(0);
+			this.fill(Integer.MIN_VALUE);
 		else
-			this.fill(255);
+			this.fill(Integer.MAX_VALUE);
 	}
 	
 	/**
