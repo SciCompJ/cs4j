@@ -10,8 +10,9 @@ import net.sci.geom.geom2d.Vector2D;
 /**
  * A line segment between two extremity points.
  * 
+ * @see StraightLine2D
+ * 
  * @author dlegland
- *
  */
 public class LineSegment2D implements LinearGeometry2D
 {
@@ -148,6 +149,33 @@ public class LineSegment2D implements LinearGeometry2D
         return ((y - this.y1) * dy + (x - this.x1) * dx) / denom;
     }
 
+    @Override
+    public double distance(Point2D point)
+    {
+        double x = point.getX();
+        double y = point.getY();
+        
+        // In case of line segment with same extremities, computes distance to initial point 
+        if (length() < 100 * Double.MIN_VALUE)
+        {
+            return Math.hypot(this.x1 - x, this.y1 - y);
+        }
+        
+        // compute position on the supporting line
+        StraightLine2D line = this.supportingLine();
+        double t = line.projectedPosition(point);
+
+        // clamp with parameterization bounds of edge
+        t = Math.max(Math.min(t, 1), 0);
+        
+        // compute position of projected point on the edge
+        Point2D proj = line.point(t);
+        
+        // return distance to projected point
+        return proj.distance(x, y);
+    }
+
+    
     // ===================================================================
     // Implements the Geometry interface
 

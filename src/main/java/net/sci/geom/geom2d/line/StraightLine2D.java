@@ -58,6 +58,46 @@ public class StraightLine2D implements LinearGeometry2D
     
 
     // ===================================================================
+    // Methods specific to StraightLine2D 
+
+    /**
+     * Returns the point at the specified position using the parametric
+     * representation of this line.
+     * 
+     * @param t the position on the line
+     * @return the point located at specified position
+     */
+    public Point2D point(double t)
+    {
+        return new Point2D(x0 + dx * t, y0 + dy * t);
+    }
+    
+    /**
+     * Computes the coordinates of the projection of the specified point on this
+     * line.
+     * 
+     * @param point
+     *            a point
+     * @return the projection of the point on this line
+     */
+    public Point2D project(Point2D point)
+    {
+        // compute position on the line
+        double t = projectedPosition(point);
+
+        // compute position of intersection point
+        return new Point2D(x0 + t * dx, y0 + t * dy);
+    }
+
+    public double projectedPosition(Point2D point)
+    {
+        double denom = dx * dx + dy * dy;
+//        if (Math.abs(denom) < Shape2D.ACCURACY)
+//            throw new DegeneratedLine2DException(this);
+        return ((point.getY() - y0) * dy + (point.getX() - x0) * dx) / denom;
+    }
+    
+    // ===================================================================
     // Implementation of the LinearGeometry interface 
 
     /**
@@ -107,6 +147,13 @@ public class StraightLine2D implements LinearGeometry2D
 
     // ===================================================================
     // Implementation of the Geometry interface
+
+    @Override
+    public double distance(Point2D point)
+    {
+        Point2D proj = project(point);
+        return proj.distance(point);
+    }
 
     /* (non-Javadoc)
      * @see net.sci.geom.Geometry#boundingBox()

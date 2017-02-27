@@ -20,6 +20,13 @@ public interface Geometry2D extends Geometry
     public boolean contains(Point2D point, double eps);
     
     /**
+     * @param point
+     *            a point in the same space
+     * @return the Euclidean distance between this shape and the specified point
+     */
+    public double distance(Point2D point);
+    
+    /**
      * Returns dimensionality equals to 2.
      */
     @Override

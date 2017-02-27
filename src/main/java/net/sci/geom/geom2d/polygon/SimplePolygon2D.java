@@ -128,18 +128,27 @@ public class SimplePolygon2D implements Region2D
     
     
     // ===================================================================
-    // Implementation of the Region2D interface
+    // Implementation of the Geometry2D interface
     
-    
-    // ===================================================================
-    // Implementation of the Geometry interface
-    
+    /**
+     * Returns true if the specified point is inside the polygon, or located on
+     * its boundary.
+     */
     @Override
     public boolean contains(Point2D point, double eps)
     {
         if (this.boundaryContains(point, eps))
             return true;
         
+        return isInside(point);
+    }
+
+    /**
+     * Returns true if the specified point is inside the polygon, without
+     * checking of it belongs to the boundary or not.
+     */
+    private boolean isInside(Point2D point)
+    {
         double area = this.signedArea();
         int winding = this.windingNumber(point);
         if (area > 0) 
@@ -151,7 +160,7 @@ public class SimplePolygon2D implements Region2D
             return winding == 0;
         }
     }
-    
+
     private boolean boundaryContains(Point2D point, double eps)
     {
         // Extract the vertex of the collection
@@ -161,6 +170,7 @@ public class SimplePolygon2D implements Region2D
         for (Point2D current : this.vertices)
         {
             LineSegment2D edge = new LineSegment2D(previous, current);
+            // avoid problem of degenerated line segments
             if (edge.length() == 0)
                 continue;
             if (edge.contains(point, eps))
@@ -226,6 +236,25 @@ public class SimplePolygon2D implements Region2D
         return (int) Math.signum((p2.getX() - x) * (pt.getY() - y) - (pt.getX() - x) * (p2.getY() - y));
     }
     
+    /**
+     * Returns the distance to the boundary of this polygon, or zero if the
+     * point is inside the polygon.
+     */
+    @Override
+    public double distance(Point2D point)
+    {
+        // computes distance to boundary
+        LinearRing2D boundary = new LinearRing2D(this.vertices);
+        double dist = boundary.distance(point);
+        
+        // choose sign depending on if the point is inside or outside
+        if (this.isInside(point))
+            return 0;
+        else
+            return dist;
+    }
+    
+
     // ===================================================================
     // Implementation of the Geometry interface
     

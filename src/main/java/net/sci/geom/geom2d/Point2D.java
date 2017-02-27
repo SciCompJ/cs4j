@@ -77,29 +77,7 @@ public class Point2D implements Geometry2D, Point
 
 	
 	// ===================================================================
-	// Implements Shape2D methods
-
-	/**
-	 * Computes the distance between this and the point <code>point</code>.
-	 */
-	public double distance(Point2D point)
-	{
-		return distance(point.x, point.y);
-	}
-
-	/**
-	 * Computes the distance between current point and point with coordinate
-	 * <code>(x,y)</code>. Uses the <code>Math.hypot()</code> function for
-	 * better robustness than simple square root.
-	 */
-	public double distance(double x, double y)
-	{
-		return Math.hypot(this.x - x, this.y - y);
-	}
-
-
-    // ===================================================================
-    // Implements the Point interface
+    // Implementation of the Point interface
 
     @Override
     public double get(int dim)
@@ -115,7 +93,7 @@ public class Point2D implements Geometry2D, Point
 
     
     // ===================================================================
-    // Implements the Geometry2D interface
+    // Implementation of the Geometry2D interface
 
     @Override
     public boolean contains(Point2D point, double eps)
@@ -125,8 +103,34 @@ public class Point2D implements Geometry2D, Point
         return true;
     }
 
+    /**
+     * Computes the distance between this and the point <code>point</code>.
+     * 
+     * @param point another point
+     * @return the distance between the two points
+     */
+    public double distance(Point2D point)
+    {
+        return distance(point.x, point.y);
+    }
+
+    /**
+     * Computes the distance between current point and point with coordinate
+     * <code>(x,y)</code>. Uses the <code>Math.hypot()</code> function for
+     * better robustness than simple square root.
+     * 
+     * @param x the x-coordinate of the other point
+     * @param y the y-coordinate of the other point
+     * @return the distance between the two points
+     */
+    public double distance(double x, double y)
+    {
+        return Math.hypot(this.x - x, this.y - y);
+    }
+
+
     // ===================================================================
-    // Implements the Geometry interface
+    // Implementation of the Geometry interface
 
     @Override
     public Box2D boundingBox()

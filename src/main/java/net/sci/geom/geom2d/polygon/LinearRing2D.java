@@ -9,6 +9,7 @@ import java.util.Collection;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.line.LineSegment2D;
 
 /**
  * <p>
@@ -146,16 +147,57 @@ public class LinearRing2D implements Curve2D
     }
     
     
+    // TODO: create Edge iterator
+    
     // ===================================================================
     // Implementation of the Geometry2D interface 
 
     @Override
     public boolean contains(Point2D point, double eps)
     {
-        // TODO Auto-generated method stub
+        // Extract the last point of the collection
+        Point2D previous = vertices.get(vertices.size() - 1);
+        
+        // Iterate on couple of vertices, starting from couple (last,first)
+        for (Point2D current : vertices)
+        {
+            LineSegment2D edge = new LineSegment2D(previous, current);
+            
+            if (edge.contains(point, eps))
+            {
+                return true;
+            }
+            
+            previous = current;
+        }
+        
         return false;
     }
 
+    // Iterate over edges to find the minimal distance
+    @Override
+    public double distance(Point2D point)
+    {
+        // Extract the last point of the collection
+        Point2D previous = vertices.get(vertices.size() - 1);
+        double minDist = Double.POSITIVE_INFINITY;
+        
+        // Iterate on couple of vertices, starting from couple (last,first)
+        for (Point2D current : vertices)
+        {
+            LineSegment2D edge = new LineSegment2D(previous, current);
+            
+            double dist = edge.distance(point);
+            if (dist < minDist)
+            {
+                minDist = dist;
+            }
+            
+            previous = current;
+        }
+        
+        return minDist;
+    }
     
     // ===================================================================
     // Implementation of the Geometry interface 
