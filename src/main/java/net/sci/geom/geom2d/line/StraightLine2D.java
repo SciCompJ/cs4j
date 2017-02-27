@@ -5,7 +5,6 @@ package net.sci.geom.geom2d.line;
 
 import net.sci.geom.UnboundedGeometryException;
 import net.sci.geom.geom2d.Box2D;
-import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Vector2D;
 
@@ -13,7 +12,7 @@ import net.sci.geom.geom2d.Vector2D;
  * @author dlegland
  *
  */
-public class StraightLine2D implements Curve2D
+public class StraightLine2D implements LinearGeometry2D
 {
     // ===================================================================
     // class variables
@@ -59,7 +58,7 @@ public class StraightLine2D implements Curve2D
     
 
     // ===================================================================
-    // Methods specific to StraightLine2D 
+    // Implementation of the LinearGeometry interface 
 
     /**
      * Returns the origin point of this line.
@@ -78,6 +77,13 @@ public class StraightLine2D implements Curve2D
     }
 
 
+    @Override
+    public StraightLine2D supportingLine()
+    {
+        return this;
+    }
+    
+
     // ===================================================================
     // Implementation of the Geometry2D interface 
 
@@ -88,10 +94,10 @@ public class StraightLine2D implements Curve2D
     public boolean contains(Point2D point, double eps)
     {
         double denom = Math.hypot(this.dx, this.dy);
-//        if (denom < eps)
-//        {
-//            throw new DegeneratedLine2DException(this);
-//        }
+        if (denom < eps)
+        {
+            throw new DegeneratedLine2DException(this);
+        }
         double x = point.getX();
         double y = point.getY();
         return Math.sqrt(Math.abs((x - x0) * dy - (y - y0) * dx)) / denom < eps;
@@ -110,5 +116,4 @@ public class StraightLine2D implements Curve2D
     {
         throw new UnboundedGeometryException(this);
     }
-    
 }

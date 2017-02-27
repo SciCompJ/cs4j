@@ -4,8 +4,8 @@
 package net.sci.geom.geom2d.line;
 
 import net.sci.geom.geom2d.Box2D;
-import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.Vector2D;
 
 /**
  * A line segment between two extremity points.
@@ -13,7 +13,7 @@ import net.sci.geom.geom2d.Point2D;
  * @author dlegland
  *
  */
-public class LineSegment2D implements Curve2D
+public class LineSegment2D implements LinearGeometry2D
 {
     // =============================================================
     // class variables
@@ -60,11 +60,38 @@ public class LineSegment2D implements Curve2D
 
     
     // ===================================================================
+    // Implementation of the LinearGeometry interface 
+
+    /**
+     * Returns the origin point of this line.
+     */
+    public Point2D origin() 
+    {
+        return new Point2D(this.x1, this.y1);
+    }
+
+    /**
+     * Returns the direction vector of this line.
+     */
+    public Vector2D direction() 
+    {
+        return new Vector2D(this.x2 - this.x1, this.y2 - this.y1);
+    }
+
+
+    @Override
+    public StraightLine2D supportingLine()
+    {
+        return new StraightLine2D(this.x1, this.y1, this.x2 - this.x1,  this.y2 - this.y1);
+    }
+
+    
+    // ===================================================================
     // Implements the Geometry2D interface
 
     public boolean contains(Point2D point, double eps) 
     {
-        if (!supportingLine().contains(point, eps))
+        if (!supportContains(point, eps))
             return false;
 
         // compute position on the support line
@@ -76,6 +103,28 @@ public class LineSegment2D implements Curve2D
             return false;
 
         return true;
+    }
+
+    /**
+     * Returns true if the specified point lies on the line covering the object,
+     * with the given precision.
+     * 
+     * @see StraightLine2D.contains(Point2D, double)
+     */
+    private boolean supportContains(Point2D point, double eps) 
+    {
+        double dx = this.x2 - this.x1;
+        double dy = this.y2 - this.y1;
+        
+        double denom = Math.hypot(dx, dy);
+        if (denom < eps)
+        {
+            throw new DegeneratedLine2DException(this);
+        }
+        
+        double x = point.getX();
+        double y = point.getY();
+        return Math.sqrt(Math.abs((x - this.x1) * dy - (y - this.y1) * dx)) / denom < eps;
     }
 
     /**
@@ -92,16 +141,11 @@ public class LineSegment2D implements Curve2D
         double dy = this.y2 - this.y1;
         double denom = dx * dx + dy * dy;
         
-//        if (Math.abs(denom) < Shape2D.ACCURACY)
+//        if (Math.abs(denom) < eps)
 //            throw new DegeneratedLine2DException(this);
         double x = point.getX();
         double y = point.getY();
         return ((y - this.y1) * dy + (x - this.x1) * dx) / denom;
-    }
-
-    public StraightLine2D supportingLine()
-    {
-        return new StraightLine2D(this.x1, this.y1, this.x2 - this.x1,  this.y2 - this.y1);
     }
 
     // ===================================================================
