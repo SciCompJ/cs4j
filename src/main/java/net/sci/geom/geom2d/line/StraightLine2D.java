@@ -144,10 +144,6 @@ public class StraightLine2D implements LinearGeometry2D
 
     }
     
-
-    // ===================================================================
-    // Implementation of the Geometry interface
-
     @Override
     public double distance(Point2D point)
     {
@@ -155,6 +151,18 @@ public class StraightLine2D implements LinearGeometry2D
         return proj.distance(point);
     }
 
+
+    // ===================================================================
+    // Implementation of the Geometry interface
+
+    /**
+     * Returns false, as a straight line is not bounded.
+     */
+    public boolean isBounded()
+    {
+        return false;
+    }
+    
     /* (non-Javadoc)
      * @see net.sci.geom.Geometry#boundingBox()
      */

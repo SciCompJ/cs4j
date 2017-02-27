@@ -179,6 +179,14 @@ public class LineSegment2D implements LinearGeometry2D
     // ===================================================================
     // Implements the Geometry interface
 
+    /**
+     * Returns true, as a line segment is bounded by definition.
+     */
+    public boolean isBounded()
+    {
+        return true;
+    }
+
     @Override
     public Box2D boundingBox()
     {

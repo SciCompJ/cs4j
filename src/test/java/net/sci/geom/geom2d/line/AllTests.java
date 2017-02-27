@@ -6,8 +6,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	LineSegment2DTest.class,
-	})
+    LineSegment2DTest.class,
+    StraightLine2DTest.class,
+    })
 public class AllTests {
   //nothing
 }

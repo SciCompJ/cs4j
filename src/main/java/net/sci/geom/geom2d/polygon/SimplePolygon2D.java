@@ -259,6 +259,14 @@ public class SimplePolygon2D implements Region2D
     // Implementation of the Geometry interface
     
     /**
+     * Returns true if the signed area of this polygon is greater than zero.
+     */
+    public boolean isBounded()
+    {
+        return this.signedArea() >= 0;
+    }
+
+    /**
      * Returns the bounding box of this polygon.
      * 
      * @see net.sci.geom.geom2d.Geometry2D#boundingBox()

@@ -131,6 +131,14 @@ public class Point3D implements Point, Geometry3D
     // ===================================================================
     // Implements Geometry interface
 
+    /**
+     * Returns true, as a point is bounded by definition.
+     */
+    public boolean isBounded()
+    {
+        return true;
+    }
+
     @Override
     public Box3D boundingBox()
     {

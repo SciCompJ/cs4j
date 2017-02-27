@@ -202,10 +202,12 @@ public class LinearRing2D implements Curve2D
     // ===================================================================
     // Implementation of the Geometry interface 
 
-    @Override
-    public int dimensionality()
+    /**
+     * Returns true, as a linear ring is bounded by definition.
+     */
+    public boolean isBounded()
     {
-        return 2;
+        return true;
     }
 
     @Override
