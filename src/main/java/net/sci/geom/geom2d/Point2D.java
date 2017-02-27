@@ -75,6 +75,13 @@ public class Point2D implements Geometry2D, Point
 		return new Point2D(this.x - v.getX(), this.y - v.getY());
 	}
 
+	public boolean almostEquals(Point2D point, double eps)
+	{
+        if (Math.abs(point.x - x) > eps) return false;
+        if (Math.abs(point.y - y) > eps) return false;
+        return true;
+	}
+	
 	
 	// ===================================================================
     // Implementation of the Point interface

@@ -232,6 +232,13 @@ public class Vector2D implements Dimensional
 		return x * v.y - v.x * y;
 	}
 
+    public boolean almostEquals(Vector2D vect, double eps)
+    {
+        if (Math.abs(vect.x - x) > eps) return false;
+        if (Math.abs(vect.y - y) > eps) return false;
+        return true;
+    }
+    
 
 	// ===================================================================
     // Implements Dimensional interface
