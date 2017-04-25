@@ -94,13 +94,14 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	private void inPlaceDilationGray8(UInt8Array2D image)
 	{
 		// size of image
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int sizeX = image.getSize(0);
+		int sizeY = image.getSize(1);
+		System.out.println("dialte with cross 3x3 uint8");
 
-		int[][] buffer = new int[3][width];
+		int[][] buffer = new int[3][sizeX];
 
 		// init buffer with background and first two lines
-		for (int x = 0; x < width; x++)
+		for (int x = 0; x < sizeX; x++)
 		{
 			buffer[0][x] = Strel2D.BACKGROUND;
 			buffer[1][x] = Strel2D.BACKGROUND;
@@ -109,9 +110,9 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 
 		// Iterate over image lines
 		int valMax;
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			fireProgressChanged(this, y, height);
+			fireProgressChanged(this, y, sizeY);
 
 			// permute lines in buffer
 			int[] tmp = buffer[0];
@@ -119,13 +120,13 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			buffer[1] = buffer[2];
 
 			// initialize values of the last line in buffer
-			if (y < height - 1)
+			if (y < sizeY - 1)
 			{
-				for (int x = 0; x < width; x++)
+				for (int x = 0; x < sizeX; x++)
 					tmp[x] = image.getInt(x, y + 1);
 			} else
 			{
-				for (int x = 0; x < width; x++)
+				for (int x = 0; x < sizeX; x++)
 					tmp[x] = Strel2D.BACKGROUND;
 			}
 			buffer[2] = tmp;
@@ -136,7 +137,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			image.setInt(0, y, valMax);
 
 			// Iterate over pixel of the line
-			for (int x = 1; x < width - 1; x++)
+			for (int x = 1; x < sizeX - 1; x++)
 			{
 				valMax = max5(buffer[0][x], buffer[1][x - 1], buffer[1][x],
 						buffer[1][x + 1], buffer[2][x]);
@@ -144,37 +145,37 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			}
 
 			// process last pixel independently
-			valMax = max5(buffer[0][width - 1], buffer[1][width - 2],
-					buffer[1][width - 1], buffer[2][width - 1],
+			valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
+					buffer[1][sizeX - 1], buffer[2][sizeX - 1],
 					Strel2D.BACKGROUND);
-			image.setInt(width - 1, y, valMax);
+			image.setInt(sizeX - 1, y, valMax);
 		}
 
 		// clear the progress bar
-		fireProgressChanged(this, height, height);
+		fireProgressChanged(this, sizeY, sizeY);
 	}
 
 	private void inPlaceDilationFloat(Array2D<?> image)
 	{
 		// size of image
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int sizeX = image.getSize(0);
+		int sizeY = image.getSize(1);
 
-		double[][] buffer = new double[3][width];
+		double[][] buffer = new double[3][sizeX];
 
 		// init buffer with background and first two lines
-		for (int x = 0; x < width; x++)
+		for (int x = 0; x < sizeX; x++)
 		{
-			buffer[0][x] = Double.MIN_VALUE;
-			buffer[1][x] = Double.MIN_VALUE;
+			buffer[0][x] = Double.NEGATIVE_INFINITY;
+			buffer[1][x] = Double.NEGATIVE_INFINITY;
 			buffer[2][x] = image.getValue(x, 0);
 		}
 
 		// Iterate over image lines
 		double valMax;
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			fireProgressChanged(this, y, height);
+			fireProgressChanged(this, y, sizeY);
 
 			// permute lines in buffer
 			double[] tmp = buffer[0];
@@ -182,24 +183,24 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			buffer[1] = buffer[2];
 
 			// initialize values of the last line in buffer
-			if (y < height - 1)
+			if (y < sizeY - 1)
 			{
-				for (int x = 0; x < width; x++)
+				for (int x = 0; x < sizeX; x++)
 					tmp[x] = image.getValue(x, y + 1);
 			} else
 			{
-				for (int x = 0; x < width; x++)
-					tmp[x] = Double.MIN_VALUE;
+				for (int x = 0; x < sizeX; x++)
+					tmp[x] = Double.NEGATIVE_INFINITY;
 			}
 			buffer[2] = tmp;
 
 			// process first pixel independently
 			valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1],
-					buffer[2][0], Double.MIN_VALUE);
+					buffer[2][0], Double.NEGATIVE_INFINITY);
 			image.setValue(0, y, valMax);
 
 			// Iterate over pixel of the line
-			for (int x = 1; x < width - 1; x++)
+			for (int x = 1; x < sizeX - 1; x++)
 			{
 				valMax = max5(buffer[0][x], buffer[1][x - 1], buffer[1][x],
 						buffer[1][x + 1], buffer[2][x]);
@@ -207,14 +208,14 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			}
 
 			// process last pixel independently
-			valMax = max5(buffer[0][width - 1], buffer[1][width - 2],
-					buffer[1][width - 1], buffer[2][width - 1],
-					Strel2D.BACKGROUND);
-			image.setValue(width - 1, y, valMax);
+			valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
+					buffer[1][sizeX - 1], buffer[2][sizeX - 1],
+					Double.NEGATIVE_INFINITY);
+			image.setValue(sizeX - 1, y, valMax);
 		}
 
 		// clear the progress bar
-		fireProgressChanged(this, height, height);
+		fireProgressChanged(this, sizeY, sizeY);
 	}
 
 	/**
@@ -257,13 +258,13 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	private void inPlaceErosionGray8(UInt8Array2D image)
 	{
 		// size of image
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int sizeX = image.getSize(0);
+		int sizeY = image.getSize(1);
 
-		int[][] buffer = new int[3][width];
+		int[][] buffer = new int[3][sizeX];
 
 		// init buffer with background and first two lines
-		for (int x = 0; x < width; x++)
+		for (int x = 0; x < sizeX; x++)
 		{
 			buffer[0][x] = Strel2D.FOREGROUND;
 			buffer[1][x] = Strel2D.FOREGROUND;
@@ -272,9 +273,9 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 
 		// Iterate over image lines
 		int valMin;
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			fireProgressChanged(this, y, height);
+			fireProgressChanged(this, y, sizeY);
 
 			// permute lines in buffer
 			int[] tmp = buffer[0];
@@ -282,13 +283,13 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			buffer[1] = buffer[2];
 
 			// initialize values of the last line in buffer
-			if (y < height - 1)
+			if (y < sizeY - 1)
 			{
-				for (int x = 0; x < width; x++)
+				for (int x = 0; x < sizeX; x++)
 					tmp[x] = image.getInt(x, y + 1);
 			} else
 			{
-				for (int x = 0; x < width; x++)
+				for (int x = 0; x < sizeX; x++)
 					tmp[x] = Strel2D.FOREGROUND;
 			}
 			buffer[2] = tmp;
@@ -299,7 +300,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			image.setInt(0, y, valMin);
 
 			// Iterate over pixel of the line
-			for (int x = 1; x < width - 1; x++)
+			for (int x = 1; x < sizeX - 1; x++)
 			{
 				valMin = min5(buffer[0][x], buffer[1][x - 1], buffer[1][x],
 						buffer[1][x + 1], buffer[2][x]);
@@ -307,26 +308,26 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			}
 
 			// process last pixel independently
-			valMin = min5(buffer[0][width - 1], buffer[1][width - 2],
-					buffer[1][width - 1], buffer[2][width - 1],
+			valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
+					buffer[1][sizeX - 1], buffer[2][sizeX - 1],
 					Strel2D.FOREGROUND);
-			image.setInt(width - 1, y, valMin);
+			image.setInt(sizeX - 1, y, valMin);
 		}
 
 		// clear the progress bar
-		fireProgressChanged(this, height, height);
+		fireProgressChanged(this, sizeY, sizeY);
 	}
 
 	private void inPlaceErosionFloat(Array2D<?> image)
 	{
 		// size of image
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int sizeX = image.getSize(0);
+		int sizeY = image.getSize(1);
 
-		double[][] buffer = new double[3][width];
+		double[][] buffer = new double[3][sizeX];
 
 		// init buffer with background and first line
-		for (int x = 0; x < width; x++)
+		for (int x = 0; x < sizeX; x++)
 		{
 			buffer[0][x] = Double.MAX_VALUE;
 			buffer[1][x] = Double.MAX_VALUE;
@@ -335,9 +336,9 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 
 		// Iterate over image lines
 		double valMin;
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			fireProgressChanged(this, y, height);
+			fireProgressChanged(this, y, sizeY);
 
 			// permute lines in buffer
 			double[] tmp = buffer[0];
@@ -345,13 +346,13 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			buffer[1] = buffer[2];
 
 			// initialize values of the last line in buffer
-			if (y < height - 1)
+			if (y < sizeY - 1)
 			{
-				for (int x = 0; x < width; x++)
+				for (int x = 0; x < sizeX; x++)
 					tmp[x] = image.getValue(x, y + 1);
 			} else
 			{
-				for (int x = 0; x < width; x++)
+				for (int x = 0; x < sizeX; x++)
 					tmp[x] = Double.MAX_VALUE;
 			}
 			buffer[2] = tmp;
@@ -362,7 +363,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			image.setValue(0, y, valMin);
 
 			// Iterate over pixel of the line
-			for (int x = 1; x < width - 1; x++)
+			for (int x = 1; x < sizeX - 1; x++)
 			{
 				valMin = min5(buffer[0][x], buffer[1][x - 1], buffer[1][x],
 						buffer[1][x + 1], buffer[2][x]);
@@ -370,14 +371,14 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			}
 
 			// process last pixel independently
-			valMin = min5(buffer[0][width - 1], buffer[1][width - 2],
-					buffer[1][width - 1], buffer[2][width - 1],
+			valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
+					buffer[1][sizeX - 1], buffer[2][sizeX - 1],
 					Double.MAX_VALUE);
-			image.setValue(width - 1, y, valMin);
+			image.setValue(sizeX - 1, y, valMin);
 		}
 
 		// clear the progress bar
-		fireProgressChanged(this, height, height);
+		fireProgressChanged(this, sizeY, sizeY);
 	}
 
 	/**
