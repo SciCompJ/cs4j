@@ -21,11 +21,11 @@ import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.data.color.RGB8Array;
-import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar2d.IntArray2D;
-import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
+import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
 import net.sci.array.type.Int;
+import net.sci.image.io.MetaImageReader;
 import net.sci.image.io.TiffImageReader;
 import net.sci.image.io.TiffTag;
 
@@ -73,22 +73,27 @@ public class Image
 					+ file.getName());
 		}
 		
-		Image metaImage;
+		Image image;
 		
 		if (file.getName().endsWith(".tif"))
 		{
 			TiffImageReader reader = new TiffImageReader(file);
-			metaImage = reader.readImage();
+			image = reader.readImage();
 			reader.close();
+		} 
+		else if (file.getName().endsWith(".mhd"))
+		{
+			MetaImageReader reader = new MetaImageReader(file);
+			image = reader.readImage();
 		} 
 		else
 		{
 			BufferedImage bufImg = ImageIO.read(file);
-			metaImage = createImage(bufImg);
+			image = createImage(bufImg);
 		}
 		
-		metaImage.setName(file.getName());
-		return metaImage;
+		image.setName(file.getName());
+		return image;
 	}
 	
 	/**
@@ -113,7 +118,7 @@ public class Image
 		if (nc == 1)
 		{
 			// Create new image
-			IntArray2D<?> img = new BufferedUInt8Array2D(width, height);
+			IntArray2D<?> img = UInt8Array2D.create(width, height);
 
 			// Initialize image data with raster content
 			for (int y = 0; y < height; y++)
@@ -130,7 +135,7 @@ public class Image
 		else if (nc == 3 || nc == 4)
 		{
 			// Create new image
-			UInt8Array3D img = new BufferedUInt8Array3D(width, height, 3);
+			UInt8Array3D img = UInt8Array3D.create(width, height, 3);
 
 			// Initialize image data with raster content
 			for (int y = 0; y < height; y++)
