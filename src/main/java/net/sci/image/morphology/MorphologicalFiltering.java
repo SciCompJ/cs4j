@@ -231,7 +231,6 @@ public class MorphologicalFiltering
 		checkImageType(image);
 //		if (image instanceof RGB8Array2D)
 //			return dilationRGB(image, strel);
-		
 		return strel.dilation(image);
 	}
 
