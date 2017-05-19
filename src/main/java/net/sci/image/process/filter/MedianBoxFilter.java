@@ -4,7 +4,9 @@
 package net.sci.image.process.filter;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Cursor;
 import net.sci.array.data.ScalarArray;
@@ -18,7 +20,7 @@ import net.sci.image.ArrayToArrayImageOperator;
  * @author dlegland
  *
  */
-public final class MedianBoxFilter implements ArrayToArrayImageOperator
+public final class MedianBoxFilter extends AlgoStub implements ArrayToArrayImageOperator
 {
 	int[] radiusList;
 	
@@ -155,6 +157,16 @@ public final class MedianBoxFilter implements ArrayToArrayImageOperator
 		
 		for(int y = 0; y < sizeY; y++)
 		{
+			this.fireProgressChanged(this, y, sizeY);
+//			try
+//			{
+//				TimeUnit.MILLISECONDS.sleep(5);
+//			} catch (InterruptedException e)
+//			{
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			
 			for(int x = 0; x < sizeX; x++)
 			{
 				// iterate over neighbors of current pixel
@@ -209,6 +221,8 @@ public final class MedianBoxFilter implements ArrayToArrayImageOperator
 		
 		for(int z = 0; z < sizeZ; z++)
 		{
+			this.fireProgressChanged(this, z, sizeZ);
+			
 			for(int y = 0; y < sizeY; y++)
 			{
 				for(int x = 0; x < sizeX; x++)
