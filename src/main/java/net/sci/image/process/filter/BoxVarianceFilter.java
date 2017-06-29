@@ -27,7 +27,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 	 * Creates a new instance of box filter by specifying the list of radius in
 	 * each dimension.
 	 * 
-	 * @param radiusList
+	 * @param diameters
 	 *            the box radius in each dimension
 	 */
 	public BoxVarianceFilter(int[] radiusList)
@@ -99,7 +99,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 			int[] pos = inputCursor.getPosition();
 			
 			// iterate over neighbors
-			Neighborhood nbg = new BoxNeighborhood(pos, radiusList);
+			Neighborhood nbg = new BoxNeighborhoodRadius(pos, radiusList);
 			int count = 0;
 			for (int[] neighPos : nbg)
 			{

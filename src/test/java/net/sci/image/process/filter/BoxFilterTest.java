@@ -19,22 +19,24 @@ public class BoxFilterTest
 	@Test
 	public void testProcessScalar2D()
 	{
-		UInt8Array2D array = UInt8Array2D.create(6, 5);
-		for (int y = 0; y < 5; y++)
+		UInt8Array2D array = UInt8Array2D.create(8, 7);
+		for (int y = 2; y < 6; y++)
 		{
-			for (int x = 0; x < 6; x++)
+			for (int x = 2; x < 5; x++)
 			{
 				array.setInt(x, y, 10);
 			}
 		}
 		
-		int[] radiusList = new int[]{1,1};
-		BoxFilter filter = new BoxFilter(radiusList);
+		int[] diameters = new int[]{3, 3};
+		BoxFilter filter = new BoxFilter(diameters);
 		
 		Array<?> result = filter.process(array);
 		
 		assertTrue(result instanceof ScalarArray);
 		assertEquals(2, result.dimensionality());
+		
+		assertEquals(10, result.getValue(new int[]{3, 3}), .01);
 	}
 
 	@Test

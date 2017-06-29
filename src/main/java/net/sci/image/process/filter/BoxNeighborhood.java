@@ -8,26 +8,50 @@ import java.util.Iterator;
 import net.sci.array.Cursor;
 
 /**
+ * A rectangular neighborhood defined by the diameter in each dimension.
+ * 
+ * @see BoxFilter
+ * @see BoxMedianFilter
+ * @see BoxVarianceFilter
+ * 
  * @author dlegland
  *
  */
 public class BoxNeighborhood implements Neighborhood
 {
+	/** The position of neighborhood center in original array */
 	int[] refPos;
-	int[] radiusList;
 	
-	public BoxNeighborhood(Cursor cursor, int[] radiusList)
+	/** The radius in the negative direction */
+	int[] offsets1;
+
+	/** The radius in the positive direction */
+	int[] offsets2;
+	
+	public BoxNeighborhood(Cursor cursor, int[] diameters)
 	{
-		this.refPos = cursor.getPosition();
-		this.radiusList = radiusList;
+		this(cursor.getPosition(), diameters);
 	}
 	
-	public BoxNeighborhood(int[] refPos, int[] radiusList)
+	public BoxNeighborhood(int[] refPos, int[] diameters)
 	{
 		this.refPos = new int[refPos.length];
 		System.arraycopy(refPos, 0, this.refPos, 0, refPos.length);
-		this.radiusList = new int[radiusList.length];
-		System.arraycopy(radiusList, 0, this.radiusList, 0, radiusList.length);
+		computeOffsets(diameters);
+	}
+	
+	private void computeOffsets(int[] diameters)
+	{
+		int nd = diameters.length;
+		this.offsets1 = new int[nd];
+		this.offsets2 = new int[nd];
+		
+		for (int d = 0; d < nd; d++)
+		{
+			double radius = ((double) diameters[d]) / 2;
+			this.offsets1[d] = (int) Math.floor(radius);
+			this.offsets2[d] = (int) Math.ceil(radius);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -42,7 +66,7 @@ public class BoxNeighborhood implements Neighborhood
 	private class CursorIterator implements Iterator<int[]>
 	{
 		/** 
-		 * each index in pos iterates between -radius[d] and +radius[d], including both.
+		 * Each index in pos iterates between -offset1[d] and +offset1[d], including both.
 		 */
 		int[] shift;
 		
@@ -53,12 +77,13 @@ public class BoxNeighborhood implements Neighborhood
 
 		public CursorIterator()
 		{
-			this.nd = radiusList.length;
+			// initialize current position before the first position in neighborhood
+			this.nd = offsets1.length;
 			this.shift = new int[nd];
-			this.shift[0] = -radiusList[0] - 1;
+			this.shift[0] = -offsets1[0] - 1;
 			for (int d = 1; d < nd; d++)
 			{
-				this.shift[d] = -radiusList[d];
+				this.shift[d] = -offsets1[d];
 			}
 		}
 		
@@ -67,7 +92,7 @@ public class BoxNeighborhood implements Neighborhood
 		{
 			for (int d = 0; d < nd; d++)
 			{
-				if (this.shift[d] < radiusList[d])
+				if (this.shift[d] < offsets2[d])
 					return true;
 			}
 			return false;
@@ -84,34 +109,13 @@ public class BoxNeighborhood implements Neighborhood
 			}
 			return coords;	
 		}
-//		public int[] getPosition()
-//		{
-//			int[] res = new int[nd];
-//			System.arraycopy(this.pos, 0, res, 0, nd);
-//			return res;
-//		}
-//		
-//		public boolean hasNext()
-//		{
-//			for (int d = 0; d < nd; d++)
-//			{
-//				if (this.pos[d] < sizes[d] - 1)
-//					return true;
-//			}
-//			return false;
-//		}
-//		
-//		public void forward()
-//		{
-//			incrementDim(0);
-//		}
-//		
+
 		private void incrementDim(int d)
 		{
 			this.shift[d]++;
-			if (this.shift[d] > radiusList[d] && d < nd - 1)
+			if (this.shift[d] > offsets2[d] && d < nd - 1)
 			{
-				this.shift[d] = -radiusList[d];
+				this.shift[d] = -offsets1[d];
 				incrementDim(d + 1);
 			}
 		}

@@ -28,7 +28,7 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 	 * Creates a new instance of box filter by specifying the list of radius in
 	 * each dimension.
 	 * 
-	 * @param radiusList
+	 * @param diameters
 	 *            the box radius in each dimension
 	 */
 	public BoxMedianFilter(int[] radiusList)
@@ -104,7 +104,7 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 			int[] pos = inputCursor.getPosition();
 			
 			// iterate over neighbors
-			Neighborhood nbg = new BoxNeighborhood(pos, radiusList);
+			Neighborhood nbg = new BoxNeighborhoodRadius(pos, radiusList);
 			int count = 0;
 			for (int[] neighPos : nbg)
 			{

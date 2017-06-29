@@ -14,31 +14,27 @@ import net.sci.array.process.VectorArrayMarginalOperator;
 import net.sci.image.ArrayToArrayImageOperator;
 
 /**
- * Box filter for multidimensional arrays. Considers a square box, with length
- * 2*r+1.
+ * Box filter for multidimensional arrays. Considers a rectangular box, with
+ * size defined by side lengths.
  * 
  * @author dlegland
  *
  */
 public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMarginalOperator
 {
-	int[] radiusList;
-	
+	int[] diameters;
 	
 	/**
-	 * Creates a new instance of box filter by specifying the list of radius in
+	 * Creates a new instance of box filter by specifying the list of diameters in
 	 * each dimension.
 	 * 
-	 * @param radiusList
-	 *            the box radius in each dimension
+	 * @param diameters
+	 *            the box diameter in each dimension
 	 */
-	public BoxFilter(int[] radiusList)
+	public BoxFilter(int[] diameters)
 	{
-		this.radiusList = new int[radiusList.length];
-		for (int i = 0; i < radiusList.length; i++)
-		{
-			this.radiusList[i] = radiusList[i];
-		}
+		this.diameters = new int[diameters.length];
+		System.arraycopy(diameters, 0, this.diameters, 0, diameters.length);
 	}
 
 	/* (non-Javadoc)
@@ -78,15 +74,16 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 		int[] sizes = source.getSize();
 		
 		// get first two radiuses
-		if (this.radiusList.length < source.dimensionality())
+		if (this.diameters.length < source.dimensionality())
 		{
-			throw new RuntimeException("Requires at least as many radiuses as array dimensionality");
+			throw new RuntimeException("Requires at least as many diameters as array dimensionality");
 		}
+		
 		// compute the normalization constant
 		int boxSize = 1;
-		for (int r : this.radiusList)
+		for (int diam : this.diameters)
 		{
-			boxSize *= (2 * r + 1);
+			boxSize *= diam;
 		}
 		
 		// iterate over 2D positions
@@ -101,10 +98,9 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 			double sum = 0;
 			
 			// iterate over neighbors
-			Neighborhood nbg = new BoxNeighborhood(pos, radiusList);
+			Neighborhood nbg = new BoxNeighborhood(pos, diameters);
 			for (int[] neighPos : nbg)
 			{
-				
 				// clamp neighbor position to array bounds
 				for (int d = 0; d < nd; d++)
 				{
@@ -129,21 +125,27 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
 		
-		// get first two radiuses
-		if (this.radiusList.length < 2)
+		// check dimensions
+		if (this.diameters.length < 2)
 		{
-			throw new RuntimeException("Can not process 2D array with less than two radiuses.");
+			throw new RuntimeException("Can not process 2D array with less than two diameters.");
 		}
-		int radiusX = this.radiusList[0];
-		int radiusY = this.radiusList[1];
 
+		// compute the radius extent in each direction
+		double diamX = (double) this.diameters[0];
+		int rx1 = (int) Math.floor(diamX / 2.0);
+		int rx2 = (int) Math.ceil(diamX / 2.0);
+		double diamY = (double) this.diameters[1];
+		int ry1 = (int) Math.floor(diamY / 2.0);
+		int ry2 = (int) Math.ceil(diamY / 2.0);
+		
 		// compute the normalization constant
 		int boxSize = 1;
-		for (int r : this.radiusList)
+		for (int d : this.diameters)
 		{
-			boxSize *= (2 * r + 1);
+			boxSize *= d;
 		}
-		
+
 		for(int y = 0; y < sizeY; y++)
 		{
 			for(int x = 0; x < sizeX; x++)
@@ -151,10 +153,10 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 				double sum = 0;
 				
 				// iterate over neighbors
-				for (int y2 = y - radiusY; y2 <= y + radiusY; y2++)
+				for (int y2 = y - ry1; y2 < y + ry2; y2++)
 				{
 					int y2r = Math.min(Math.max(y2, 0), sizeY - 1);
-					for (int x2 = x - radiusX; x2 <= x + radiusX; x2++)
+					for (int x2 = x - rx1; x2 < x + rx2; x2++)
 					{
 						int x2r = Math.min(Math.max(x2, 0), sizeX - 1);
 						sum += source.getValue(x2r, y2r);
@@ -175,20 +177,28 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 		int sizeY = source.getSize(1);
 		int sizeZ = source.getSize(2);
 		
-		// get first three radiuses
-		if (this.radiusList.length < 3)
+		// check dimensions
+		if (this.diameters.length < 3)
 		{
 			throw new RuntimeException("Can not process 3D array with less than three radiuses.");
 		}
-		int radiusX = this.radiusList[0];
-		int radiusY = this.radiusList[1];
-		int radiusZ = this.radiusList[2];
 
+		// compute the radius extent in each direction
+		double diamX = (double) this.diameters[0];
+		int rx1 = (int) Math.floor(diamX / 2.0);
+		int rx2 = (int) Math.ceil(diamX / 2.0);
+		double diamY = (double) this.diameters[1];
+		int ry1 = (int) Math.floor(diamY / 2.0);
+		int ry2 = (int) Math.ceil(diamY / 2.0);
+		double diamZ = (double) this.diameters[2];
+		int rz1 = (int) Math.floor(diamZ / 2.0);
+		int rz2 = (int) Math.ceil(diamZ / 2.0);
+		
 		// compute the normalization constant
 		int boxSize = 1;
-		for (int r : this.radiusList)
+		for (int d : this.diameters)
 		{
-			boxSize *= (2 * r + 1);
+			boxSize *= d;
 		}
 		
 		for(int z = 0; z < sizeZ; z++)
@@ -200,13 +210,13 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 					double sum = 0;
 
 					// iterate over neighbors
-					for (int z2 = z - radiusZ; z2 <= z + radiusZ; z2++)
+					for (int z2 = z - rz1; z2 < z + rz2; z2++)
 					{
 						int z2r = Math.min(Math.max(z2, 0), sizeZ - 1);
-						for (int y2 = y - radiusY; y2 <= y + radiusY; y2++)
+						for (int y2 = y - ry1; y2 < y + ry2; y2++)
 						{
 							int y2r = Math.min(Math.max(y2, 0), sizeY - 1);
-							for (int x2 = x - radiusX; x2 <= x + radiusX; x2++)
+							for (int x2 = x - rx1; x2 < x + rx2; x2++)
 							{
 								int x2r = Math.min(Math.max(x2, 0), sizeX - 1);
 								sum += source.getValue(x2r, y2r, z2r);

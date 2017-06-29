@@ -9,7 +9,7 @@ import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.ArrayToArrayImageOperator;
-import net.sci.image.process.filter.BoxNeighborhood;
+import net.sci.image.process.filter.BoxNeighborhoodRadius;
 import net.sci.image.process.filter.Neighborhood;
 
 /**
@@ -27,7 +27,7 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 	 * Creates a new instance of box filter by specifying the list of radius in
 	 * each dimension.
 	 * 
-	 * @param radiusList
+	 * @param diameters
 	 *            the box radius in each dimension
 	 */
 	public BoxDilationNaive(int[] radiusList)
@@ -93,7 +93,7 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 			double localMax = Double.NEGATIVE_INFINITY;
 			
 			// iterate over neighbors
-			Neighborhood nbg = new BoxNeighborhood(pos, radiusList);
+			Neighborhood nbg = new BoxNeighborhoodRadius(pos, radiusList);
 			for (int[] neighPos : nbg)
 			{
 				// clamp neighbor position to array bounds
