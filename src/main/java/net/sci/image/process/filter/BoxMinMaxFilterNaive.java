@@ -26,7 +26,7 @@ public final class BoxMinMaxFilterNaive implements ArrayToArrayImageOperator
 	
 	Type type = Type.MAX;
 
-//	int[] radiusList;
+//	int[] diameters;
 	int[] diameters;
 
 	

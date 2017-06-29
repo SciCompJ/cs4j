@@ -180,7 +180,7 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 		// check dimensions
 		if (this.diameters.length < 3)
 		{
-			throw new RuntimeException("Can not process 3D array with less than three radiuses.");
+			throw new RuntimeException("Can not process 3D array with less than three diameters.");
 		}
 
 		// compute the radius extent in each direction

@@ -20,22 +20,21 @@ import net.sci.image.ArrayToArrayImageOperator;
  */
 public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayImageOperator
 {
-	int[] radiusList;
-	
+	int[] diameters;
 	
 	/**
 	 * Creates a new instance of box filter by specifying the list of radius in
 	 * each dimension.
 	 * 
 	 * @param diameters
-	 *            the box radius in each dimension
+	 *            the box diameter in each dimension
 	 */
-	public BoxVarianceFilter(int[] radiusList)
+	public BoxVarianceFilter(int[] diameters)
 	{
-		this.radiusList = new int[radiusList.length];
-		for (int i = 0; i < radiusList.length; i++)
+		this.diameters = new int[diameters.length];
+		for (int i = 0; i < diameters.length; i++)
 		{
-			this.radiusList[i] = radiusList[i];
+			this.diameters[i] = diameters[i];
 		}
 	}
 
@@ -76,16 +75,16 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 		int[] sizes = source.getSize();
 		
 		// get first two radiuses
-		if (this.radiusList.length < source.dimensionality())
+		if (this.diameters.length < source.dimensionality())
 		{
-			throw new RuntimeException("Requires at least as many radiuses as array dimensionality");
+			throw new RuntimeException("Requires at least as many diameters as array dimensionality");
 		}
 		
 		// compute the normalization constant
 		int totalCount = 1;
-		for (int r : this.radiusList)
+		for (int diam : this.diameters)
 		{
-			totalCount *= (2 * r + 1);
+			totalCount *= diam;
 		}
 		
 		double[] values = new double[totalCount];
@@ -99,11 +98,10 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 			int[] pos = inputCursor.getPosition();
 			
 			// iterate over neighbors
-			Neighborhood nbg = new BoxNeighborhoodRadius(pos, radiusList);
+			Neighborhood nbg = new BoxNeighborhood(pos, diameters);
 			int count = 0;
 			for (int[] neighPos : nbg)
 			{
-				
 				// clamp neighbor position to array bounds
 				for (int d = 0; d < nd; d++)
 				{
@@ -129,21 +127,26 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 		int sizeY = source.getSize(1);
 		
 		// get first two radiuses
-		if (this.radiusList.length < 2)
+		if (this.diameters.length < 2)
 		{
-			throw new RuntimeException("Can not process 2D array with less than two radiuses.");
+			throw new RuntimeException("Can not process 2D array with less than two diameters.");
 		}
-		int radiusX = this.radiusList[0];
-		int radiusY = this.radiusList[1];
-
+		// compute the radius extent in each direction
+		double diamX = (double) this.diameters[0];
+		int rx1 = (int) Math.floor(diamX / 2.0);
+		int rx2 = (int) Math.ceil(diamX / 2.0);
+		double diamY = (double) this.diameters[1];
+		int ry1 = (int) Math.floor(diamY / 2.0);
+		int ry2 = (int) Math.ceil(diamY / 2.0);
+		
 		// compute the normalization constant
-		int totalCount = 1;
-		for (int r : this.radiusList)
+		int boxSize = 1;
+		for (int d : this.diameters)
 		{
-			totalCount *= (2 * r + 1);
+			boxSize *= d;
 		}
 		
-		double[] values = new double[totalCount];
+		double[] values = new double[boxSize];
 		
 		for(int y = 0; y < sizeY; y++)
 		{
@@ -153,10 +156,11 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 			{
 				// iterate over neighbors of current pixel
 				int count = 0;
-				for (int y2 = y - radiusY; y2 <= y + radiusY; y2++)
+				// iterate over neighbors
+				for (int y2 = y - ry1; y2 < y + ry2; y2++)
 				{
 					int y2r = Math.min(Math.max(y2, 0), sizeY - 1);
-					for (int x2 = x - radiusX; x2 <= x + radiusX; x2++)
+					for (int x2 = x - rx1; x2 < x + rx2; x2++)
 					{
 						int x2r = Math.min(Math.max(x2, 0), sizeX - 1);
 						values[count++] = source.getValue(x2r, y2r); 
@@ -180,17 +184,24 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 		int sizeZ = source.getSize(2);
 		
 		// get first three radiuses
-		if (this.radiusList.length < 3)
+		if (this.diameters.length < 3)
 		{
 			throw new RuntimeException("Can not process 3D array with less than three radiuses.");
 		}
-		int radiusX = this.radiusList[0];
-		int radiusY = this.radiusList[1];
-		int radiusZ = this.radiusList[2];
-
+		// compute the radius extent in each direction
+		double diamX = (double) this.diameters[0];
+		int rx1 = (int) Math.floor(diamX / 2.0);
+		int rx2 = (int) Math.ceil(diamX / 2.0);
+		double diamY = (double) this.diameters[1];
+		int ry1 = (int) Math.floor(diamY / 2.0);
+		int ry2 = (int) Math.ceil(diamY / 2.0);
+		double diamZ = (double) this.diameters[2];
+		int rz1 = (int) Math.floor(diamZ / 2.0);
+		int rz2 = (int) Math.ceil(diamZ / 2.0);
+		
 		// compute the normalization constant
 		int totalCount = 1;
-		for (int r : this.radiusList)
+		for (int r : this.diameters)
 		{
 			totalCount *= (2 * r + 1);
 		}
@@ -207,13 +218,13 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 				{
 					// iterate over neighbors of current pixel
 					int count = 0;
-					for (int z2 = z - radiusZ; z2 <= z + radiusZ; z2++)
+					for (int z2 = z - rz1; z2 < z + rz2; z2++)
 					{
 						int z2r = Math.min(Math.max(z2, 0), sizeZ - 1);
-						for (int y2 = y - radiusY; y2 <= y + radiusY; y2++)
+						for (int y2 = y - ry1; y2 < y + ry2; y2++)
 						{
 							int y2r = Math.min(Math.max(y2, 0), sizeY - 1);
-							for (int x2 = x - radiusX; x2 <= x + radiusX; x2++)
+							for (int x2 = x - rx1; x2 < x + rx2; x2++)
 							{
 								int x2r = Math.min(Math.max(x2, 0), sizeX - 1);
 								values[count++] = source.getValue(x2r, y2r, z2r); 
