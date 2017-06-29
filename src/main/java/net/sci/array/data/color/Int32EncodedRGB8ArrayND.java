@@ -54,6 +54,12 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 		this.buffer.setInt(pos, rgb.getIntCode());
 	}
 
+	@Override
+	public RGB8Array newInstance(int... dims)
+	{
+		return RGB8Array.create(dims);
+	}
+
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.color.RGB8Array2D#duplicate()
 	 */

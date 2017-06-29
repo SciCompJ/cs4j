@@ -122,6 +122,12 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	// =============================================================
 	// Implementation of the Array interface
 
+	@Override
+	public RGB8Array newInstance(int... dims)
+	{
+		return RGB8Array.create(dims);
+	}
+
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.color.RGB8Array2D#duplicate()
 	 */
