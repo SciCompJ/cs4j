@@ -4,7 +4,6 @@
 package net.sci.image.process.filter;
 
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
@@ -15,12 +14,12 @@ import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.ArrayToArrayImageOperator;
 
 /**
- * Computes the median value in a box neighborhood aroundeach array element.
+ * Computes the median value in a box neighborhood around each array element.
  * 
  * @author dlegland
  *
  */
-public final class MedianBoxFilter extends AlgoStub implements ArrayToArrayImageOperator
+public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImageOperator
 {
 	int[] radiusList;
 	
@@ -32,7 +31,7 @@ public final class MedianBoxFilter extends AlgoStub implements ArrayToArrayImage
 	 * @param radiusList
 	 *            the box radius in each dimension
 	 */
-	public MedianBoxFilter(int[] radiusList)
+	public BoxMedianFilter(int[] radiusList)
 	{
 		this.radiusList = new int[radiusList.length];
 		for (int i = 0; i < radiusList.length; i++)
@@ -158,14 +157,6 @@ public final class MedianBoxFilter extends AlgoStub implements ArrayToArrayImage
 		for(int y = 0; y < sizeY; y++)
 		{
 			this.fireProgressChanged(this, y, sizeY);
-//			try
-//			{
-//				TimeUnit.MILLISECONDS.sleep(5);
-//			} catch (InterruptedException e)
-//			{
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
 			
 			for(int x = 0; x < sizeX; x++)
 			{
