@@ -1,5 +1,5 @@
 /**
- * Image processing filter for reducing noise.
+ * Image processing filters, for reducing noise or enhancing image.
  * 
  * @author dlegland
  *

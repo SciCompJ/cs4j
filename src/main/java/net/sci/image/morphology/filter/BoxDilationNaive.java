@@ -9,7 +9,7 @@ import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.ArrayToArrayImageOperator;
-import net.sci.image.process.filter.BoxNeighborhoodRadius;
+import net.sci.image.process.filter.BoxNeighborhood;
 import net.sci.image.process.filter.Neighborhood;
 
 /**
@@ -20,22 +20,22 @@ import net.sci.image.process.filter.Neighborhood;
  */
 public final class BoxDilationNaive implements ArrayToArrayImageOperator
 {
-	int[] radiusList;
-	
+    /** The size of the box in each dimension */
+    int[] diameters;
 	
 	/**
-	 * Creates a new instance of box filter by specifying the list of radius in
+	 * Creates a new instance of box filter by specifying the list of diameters in
 	 * each dimension.
 	 * 
 	 * @param diameters
-	 *            the box radius in each dimension
+	 *            the box diameter in each dimension
 	 */
-	public BoxDilationNaive(int[] radiusList)
+	public BoxDilationNaive(int[] diameters)
 	{
-		this.radiusList = new int[radiusList.length];
-		for (int i = 0; i < radiusList.length; i++)
+		this.diameters = new int[diameters.length];
+		for (int i = 0; i < diameters.length; i++)
 		{
-			this.radiusList[i] = radiusList[i];
+			this.diameters[i] = diameters[i];
 		}
 	}
 
@@ -76,9 +76,9 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 		int[] sizes = source.getSize();
 		
 		// get first two radiuses
-		if (this.radiusList.length < source.dimensionality())
+		if (this.diameters.length < source.dimensionality())
 		{
-			throw new RuntimeException("Requires at least as many radiuses as array dimensionality");
+			throw new RuntimeException("Requires at least as many diameters as array dimensionality");
 		}
 		
 		// iterate over 2D positions
@@ -93,7 +93,7 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 			double localMax = Double.NEGATIVE_INFINITY;
 			
 			// iterate over neighbors
-			Neighborhood nbg = new BoxNeighborhoodRadius(pos, radiusList);
+			Neighborhood nbg = new BoxNeighborhood(pos, diameters);
 			for (int[] neighPos : nbg)
 			{
 				// clamp neighbor position to array bounds
@@ -128,13 +128,20 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
 		
-		// get first two radiuses
-		if (this.radiusList.length < 2)
-		{
-			throw new RuntimeException("Can not process 2D array with less than two radiuses.");
-		}
-		int radiusX = this.radiusList[0];
-		int radiusY = this.radiusList[1];
+        // check dimensions
+        if (this.diameters.length < 2)
+        {
+            throw new RuntimeException("Can not process 2D array with less than two diameters.");
+        }
+
+        // compute the radius extent in each direction
+        double diamX = (double) this.diameters[0];
+        int rx1 = (int) Math.floor(diamX / 2.0);
+        int rx2 = (int) Math.ceil(diamX / 2.0);
+        double diamY = (double) this.diameters[1];
+        int ry1 = (int) Math.floor(diamY / 2.0);
+        int ry2 = (int) Math.ceil(diamY / 2.0);
+        
 		
 		// iterate over image pixels
 		for(int y = 0; y < sizeY; y++)
@@ -144,13 +151,13 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 				// init result
 				double localMax = Double.NEGATIVE_INFINITY;
 				
-				// iterate over neighbors of current pixel
-				for (int y2 = y - radiusY; y2 <= y + radiusY; y2++)
-				{
-					for (int x2 = x - radiusX; x2 <= x + radiusX; x2++)
-					{
-						// update local max only if pixel is within image bounds 
-						if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY)
+                // iterate over neighbors
+                for (int y2 = y - ry1; y2 < y + ry2; y2++)
+                {
+                    for (int x2 = x - rx1; x2 < x + rx2; x2++)
+                    {
+                        // update local max only if pixel is within image bounds 
+                        if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY)
 						{
 							localMax = Math.max(localMax, source.getValue(x2, y2));
 						}
@@ -172,17 +179,23 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 		int sizeY = source.getSize(1);
 		int sizeZ = source.getSize(2);
 		
-		// ensure radius list is large enough
-		if (this.radiusList.length < 3)
-		{
-			throw new RuntimeException("Can not process 3D array with less than three radiuses.");
-		}
-		
-		// get first three radiuses
-		int radiusX = this.radiusList[0];
-		int radiusY = this.radiusList[1];
-		int radiusZ = this.radiusList[2];
+        // check dimensions
+        if (this.diameters.length < 3)
+        {
+            throw new RuntimeException("Can not process 3D array with less than three diameters.");
+        }
 
+        // compute the radius extent in each direction
+        double diamX = (double) this.diameters[0];
+        int rx1 = (int) Math.floor(diamX / 2.0);
+        int rx2 = (int) Math.ceil(diamX / 2.0);
+        double diamY = (double) this.diameters[1];
+        int ry1 = (int) Math.floor(diamY / 2.0);
+        int ry2 = (int) Math.ceil(diamY / 2.0);
+        double diamZ = (double) this.diameters[2];
+        int rz1 = (int) Math.floor(diamZ / 2.0);
+        int rz2 = (int) Math.ceil(diamZ / 2.0);
+        
 		// iterate over image voxels
 		for(int z = 0; z < sizeZ; z++)
 		{
@@ -193,15 +206,15 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 					// init result
 					double localMax = Double.NEGATIVE_INFINITY;
 					
-					// iterate over neighbors of current voxel
-					for (int z2 = z - radiusZ; z2 <= z + radiusZ; z2++)
-					{
-						for (int y2 = y - radiusY; y2 <= y + radiusY; y2++)
-						{
-							for (int x2 = x - radiusX; x2 <= x + radiusX; x2++)
-							{
-								// update local max only if pixel is within image bounds 
-								if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY && z2 >= 0 && z2 < sizeZ)
+                    // iterate over neighbors
+                    for (int z2 = z - rz1; z2 < z + rz2; z2++)
+                    {
+                        for (int y2 = y - ry1; y2 < y + ry2; y2++)
+                        {
+                            for (int x2 = x - rx1; x2 < x + rx2; x2++)
+                            {
+                                // update local max only if pixel is within image bounds 
+                                if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY && z2 >= 0 && z2 < sizeZ)
 								{
 									localMax = Math.max(localMax, source.getValue(x2, y2, z2));
 								}

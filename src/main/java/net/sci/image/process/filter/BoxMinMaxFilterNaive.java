@@ -11,10 +11,13 @@ import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.ArrayToArrayImageOperator;
 
 /**
- * Naive implementation of min/max filtering within a n-dimensional box.
+ * Naive implementation of min/max filtering within a n-dimensional box, used
+ * for validating box processing.
  * 
  * @author dlegland
  *
+ * @see BoxFilter
+ * @see BoxMedianFilter
  */
 public final class BoxMinMaxFilterNaive implements ArrayToArrayImageOperator
 {
@@ -26,16 +29,16 @@ public final class BoxMinMaxFilterNaive implements ArrayToArrayImageOperator
 	
 	Type type = Type.MAX;
 
-//	int[] diameters;
+    /** The size of the box in each dimension */
 	int[] diameters;
 
 	
 	/**
-	 * Creates a new instance of box filter by specifying the list of radius in
+	 * Creates a new instance of box filter by specifying the list of diameters in
 	 * each dimension.
 	 * 
 	 * @param diameters
-	 *            the box radius in each dimension
+	 *            the box diameter in each dimension
 	 */
 	public BoxMinMaxFilterNaive(Type type, int[] diameters)
 	{
@@ -87,7 +90,7 @@ public final class BoxMinMaxFilterNaive implements ArrayToArrayImageOperator
 		// check dimensions
 		if (this.diameters.length < source.dimensionality())
 		{
-			throw new RuntimeException("Requires at least as many radiuses as array dimensionality");
+			throw new RuntimeException("Requires at least as many diameters as array dimensionality");
 		}
 		
 		// iterate over 2D positions
@@ -195,7 +198,7 @@ public final class BoxMinMaxFilterNaive implements ArrayToArrayImageOperator
 		// check dimensions
 		if (this.diameters.length < 3)
 		{
-			throw new RuntimeException("Can not process 3D array with less than three radiuses.");
+			throw new RuntimeException("Can not process 3D array with less than three diameters.");
 		}
 
 		// compute the radius extent in each direction

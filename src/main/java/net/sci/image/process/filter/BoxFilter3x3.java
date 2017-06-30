@@ -10,6 +10,10 @@ import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 
 /**
+ * A preliminary implementation of Box Mean Filter. Superseeded by BoxFilter.
+ * 
+ * @see BoxFilter
+ * 
  * @author dlegland
  *
  */

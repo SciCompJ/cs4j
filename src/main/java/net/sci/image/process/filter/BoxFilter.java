@@ -19,9 +19,12 @@ import net.sci.image.ArrayToArrayImageOperator;
  * 
  * @author dlegland
  *
- */
+ * @see BoxMedianFilter
+ * @see BoxVarianceFilter
+*/
 public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMarginalOperator
 {
+    /** The size of the box in each dimension */
 	int[] diameters;
 	
 	/**

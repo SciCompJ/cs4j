@@ -17,13 +17,16 @@ import net.sci.image.ArrayToArrayImageOperator;
  * 
  * @author dlegland
  *
+ * @see BoxMedianFilter
+ * @see BoxVarianceFilter
  */
 public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayImageOperator
 {
+    /** The size of the box in each dimension */
 	int[] diameters;
 	
 	/**
-	 * Creates a new instance of box filter by specifying the list of radius in
+	 * Creates a new instance of box filter by specifying the list of diameters in
 	 * each dimension.
 	 * 
 	 * @param diameters
@@ -270,7 +273,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 	}
 	
 	/**
-	 * Creates a new array the same size and same type as original.
+	 * Creates a new array the same size as original and with float type.
 	 */
 	public Array<?> createEmptyOutputArray(Array<?> array)
 	{

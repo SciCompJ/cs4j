@@ -8,9 +8,15 @@ import java.util.Iterator;
 import net.sci.array.Cursor;
 
 /**
+ * A rectangular neighborhood defined by the radius in each dimension.
+ * 
+ * Corresponds to a preliminary version of the {@link BoxNeighborhood} implementation.
+ * 
  * @author dlegland
- *
+ * 
+ * @see BoxNeighborhood
  */
+@Deprecated
 public class BoxNeighborhoodRadius implements Neighborhood
 {
 	int[] refPos;
