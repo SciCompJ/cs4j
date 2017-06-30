@@ -98,9 +98,7 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 		
 		// the position of the median value within the sorted array
 		int medianCount = (totalCount - 1) / 2;
-		
 		double[] values = new double[totalCount];
-		
 		
 		// iterate over positions
 		Cursor inputCursor = source.getCursor();
@@ -115,7 +113,6 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 			int count = 0;
 			for (int[] neighPos : nbg)
 			{
-				
 				// clamp neighbor position to array bounds
 				for (int d = 0; d < nd; d++)
 				{
@@ -133,7 +130,7 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 	}
 	
 	/**
-	 * Process the specific case of 2D arrays.
+	 * Process the specific case of 2D scalar arrays.
      * 
      * @param source
      *            the source array
@@ -169,7 +166,6 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 				
 		// the position of the median value within the sorted array
 		int medianCount = (totalCount - 1) / 2;
-		
 		double[] values = new double[totalCount];
 		
 		for(int y = 0; y < sizeY; y++)
@@ -238,7 +234,6 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 		
 		// the position of the median value within the sorted array
 		int medianCount = (totalCount - 1) / 2;
-		
 		double[] values = new double[totalCount];
 		
 		for(int z = 0; z < sizeZ; z++)

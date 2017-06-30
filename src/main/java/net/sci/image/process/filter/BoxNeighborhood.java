@@ -10,6 +10,35 @@ import net.sci.array.Cursor;
 /**
  * A rectangular neighborhood defined by the diameter in each dimension.
  * 
+ * <pre>
+ * {@code
+ *  // size and dimensionality of input array
+ *  int[] sizes = source.getSize();
+ *  int nd = sizes.length;
+ *  
+ *  // creates 3-by-3 neighborhood around a specific position 
+ *  int[] pos = new int[]{10, 10};
+ *  Neighborhood nbg = new BoxNeighborhood(pos, new int[]{3, 3});
+ *  
+ *  // prepare iteration
+ *  double localSum = 0;
+ *  int count = 0;
+ *  
+ *  // iterate over neighbors
+ *  for (int[] neighPos : nbg)
+ *  {
+ *    // clamp neighbor position to array bounds
+ *    for (int d = 0; d < nd; d++)
+ *    {
+ *      neighPos[d] = Math.min(Math.max(neighPos[d], 0), sizes[d]-1);
+ *    }
+ *    
+ *    // update local sum
+ *    localSum += source.getValue(neighPos); 
+ *  }
+ * }
+ * </pre>
+ * 
  * @see BoxFilter
  * @see BoxMedianFilter
  * @see BoxVarianceFilter
@@ -28,11 +57,27 @@ public class BoxNeighborhood implements Neighborhood
 	/** The radius in the positive direction */
 	int[] offsets2;
 	
+	/**
+     * Creates a new rectangular neighborhood around a specific position.
+     * 
+     * @param cursor
+     *            the center position of the neighborhood
+     * @param diameters
+     *            the side length of the neighborhood along each dimension
+     */
 	public BoxNeighborhood(Cursor cursor, int[] diameters)
 	{
 		this(cursor.getPosition(), diameters);
 	}
 	
+    /**
+     * Creates a new rectangular neighborhood around a specific position.
+     * 
+     * @param refPos
+     *            the center position of the neighborhood
+     * @param diameters
+     *            the side length of the neighborhood along each dimension
+     */
 	public BoxNeighborhood(int[] refPos, int[] diameters)
 	{
 		this.refPos = new int[refPos.length];
