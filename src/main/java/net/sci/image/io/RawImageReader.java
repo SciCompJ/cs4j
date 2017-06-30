@@ -43,6 +43,10 @@ public class RawImageReader implements ImageReader
         
         /**
          * Parses element type from its name. Should be case insensitive.
+         * 
+         * @param label
+         *            the label of the type
+         * @return the DataType instance corresponding to the label
          */
         public static final DataType fromLabel(String label) 
         {

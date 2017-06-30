@@ -48,9 +48,14 @@ public final class ImageInverter implements ArrayToArrayImageOperator
 
 	}
 
-	/**
-	 * Process scalar arrays of any dimension.
-	 */
+    /**
+     * Process scalar arrays of any dimension.
+     * 
+     * @param source
+     *            the input array
+     * @param target
+     *            the target array
+     */
 	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
 	{
 		// determine max value
@@ -69,10 +74,12 @@ public final class ImageInverter implements ArrayToArrayImageOperator
 	}
 	
 	/**
-	 * Compute the value used for inverting array.
-	 * @param array the array to be inverted
-	 * @return the value that can be used to invert this array
-	 */
+     * Computes the value used for inverting array.
+     * 
+     * @param array
+     *            the array to be inverted
+     * @return the value that can be used to invert this array
+     */
 	private double determineUpperValue(ScalarArray<?> array)
 	{
 		if (array instanceof UInt8Array) return 255;
@@ -85,6 +92,11 @@ public final class ImageInverter implements ArrayToArrayImageOperator
 
 	/**
 	 * Process RGB8 arrays of any dimension.
+     * 
+     * @param source
+     *            the input array
+     * @param target
+     *            the target array
 	 */
 	public void processRGB8(RGB8Array source, RGB8Array target)
 	{

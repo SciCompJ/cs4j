@@ -230,6 +230,10 @@ public class BinaryDataReader implements Closeable
 
      /**
      * Reads the next short state from the stream.
+     * 
+     * @return the next short value within this stream
+     * @throws IOException
+     *             if an error occurs
      */
     public int readShort() throws IOException
     {
@@ -246,6 +250,10 @@ public class BinaryDataReader implements Closeable
 
    /**
 	 * Reads the next integer from the stream.
+     * 
+     * @return the next int value within this stream
+     * @throws IOException
+     *             if an error occurs
 	 */
 	public int readInt() throws IOException
 	{
@@ -264,6 +272,10 @@ public class BinaryDataReader implements Closeable
 
     /**
      * Reads the next floating point value from the stream.
+     * 
+     * @return the next float value within this stream
+     * @throws IOException
+     *             if an error occurs
      */
     public float readFloat() throws IOException
     {
@@ -282,6 +294,10 @@ public class BinaryDataReader implements Closeable
 
     /**
      * Reads the next floating point value from the stream.
+     * 
+     * @return the next double value within this stream
+     * @throws IOException
+     *             if an error occurs
      */
     public double readDouble() throws IOException
     {
@@ -305,11 +321,15 @@ public class BinaryDataReader implements Closeable
 	
 
 	/**
-	 * Sets the file-pointer offset, measured from the beginning of this file,
-	 * at which the next read or write occurs.
-	 * 
-	 * @throws IOException if pos is less than 0 or if an I/O error occurs.
-	 */
+     * Sets the file-pointer offset, measured from the beginning of this file,
+     * at which the next read or write occurs.
+     * 
+     * @param pos
+     *            the position within the file
+     * 
+     * @throws IOException
+     *             if pos is less than 0 or if an I/O error occurs.
+     */
 	public void seek(long pos) throws IOException
 	{
 		this.inputStream.seek(pos);

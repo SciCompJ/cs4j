@@ -30,8 +30,7 @@ public interface ArrayToArrayOperator extends ArrayOperator
 	 * 
 	 * @param array
 	 *            the reference array
-	 * @return a new instance of Array<?> that can be used for processing input
-	 *         array.
+	 * @return a new instance of Array that can be used for processing input array.
 	 */
 	public default Array<?> createEmptyOutputArray(Array<?> array)
 	{

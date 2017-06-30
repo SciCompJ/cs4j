@@ -20,7 +20,10 @@ public class ImageThreshold implements ArrayToArrayImageOperator
 	double value;
 	
 	/**
+	 * Creates a new instance of ImageThreshold.
 	 * 
+	 * @param value
+	 *     the value for threshold.
 	 */
 	public ImageThreshold(double value)
 	{
@@ -90,7 +93,7 @@ public class ImageThreshold implements ArrayToArrayImageOperator
 	 * Creates a new binary array that can be used as output for processing the
 	 * given input array.
 	 * 
-	 * @param inputArray
+	 * @param array
 	 *            the reference array
 	 * @return a new instance of BooleanArray
 	 */

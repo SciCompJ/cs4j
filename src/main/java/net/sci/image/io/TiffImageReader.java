@@ -186,11 +186,13 @@ public class TiffImageReader implements ImageReader
 		// if all items declare the same size, we can load a stack
 		return true;
 	}
-	/**
-	 * Closes the stream open by this ImageReader.
-	 * 
-	 * @throws IOException 
-	 */
+	
+    /**
+     * Closes the stream open by this ImageReader.
+     * 
+     * @throws IOException
+     *             if an error occurs
+     */
 	public void close() throws IOException
 	{
 		this.dataReader.close();
@@ -198,6 +200,10 @@ public class TiffImageReader implements ImageReader
 
 	/**
 	 * Reads the set of image file directories within this TIFF File.
+     * 
+     * @return the collection of TiffFileInfo stored within this file.
+     * @throws IOException
+     *             if an error occurs
 	 */
 	public Collection<TiffFileInfo> readImageFileDirectories()
 			throws IOException
@@ -396,9 +402,14 @@ public class TiffImageReader implements ImageReader
 	}
 	
 	/**
-	 * Reads the buffer from the current stream and specified info. 
-	 * @throws IOException 
-	 */
+     * Reads the buffer from the current stream and specified info.
+     * 
+     * @param info
+     *            an instance of TiffFileInfo
+     * @return the data array corresponding to the specified TiffFileInfo
+     * @throws IOException
+     *             if an error occurs
+     */
 	public Array<?> readImageData(TiffFileInfo info) throws IOException
 	{
 		// Size of image and of buffer buffer

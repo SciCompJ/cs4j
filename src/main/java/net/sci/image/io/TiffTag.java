@@ -512,10 +512,17 @@ public class TiffTag
 		}		
 	}
 	
-	/**
-	 * Updates the specified FileInfo data structure according to the current value of the tag.
-	 * @param info an instance of TiffFileInfo.
-	 */
+    /**
+     * Updates the specified FileInfo data structure according to the current
+     * value of the tag.
+     * 
+     * @param info
+     *            an instance of TiffFileInfo.
+     * @param dataReader
+     *            the instance of DataReader used to read information
+     * @throws IOException
+     *             if an error occurs
+     */
 	public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
 	{
 	}

@@ -15,12 +15,14 @@ package net.sci.array;
 public interface ArrayOperator
 {
 	/**
-	 * Processes the given array, and returns a new Array containing the result.
-	 * 
-	 * @param array
-	 *            the input array
-	 * @return the result of operator
-	 */
+     * Processes the given array, and returns a new Array containing the result.
+     * 
+     * @param T
+     *            the type of the input array
+     * @param array
+     *            the input array
+     * @return the result of operator
+     */
 	public <T> Array<?> process(Array<T> array);
 
 	/**

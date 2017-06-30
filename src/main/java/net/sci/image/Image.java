@@ -197,8 +197,12 @@ public class Image
 	// Constructors
 
 	/**
-	 * Constructor from data array, trying to infer type from data type and shape. 
-	 */
+     * Constructor from data array, trying to infer type from data type and
+     * shape.
+     * 
+     * @param data
+     *            the array containing image data
+     */
 	public Image(Array<?> data)
 	{
 		this.data = data;
@@ -209,6 +213,11 @@ public class Image
 
 	/**
 	 * Constructor from data array and type specifier. 
+     *
+     * @param data
+     *            the array containing image data
+     * @param type
+     *            the type of image (Intensity, label, binary...)
 	 */
 	public Image(Array<?> data, Type type)
 	{
@@ -219,11 +228,14 @@ public class Image
 	}
 
 	/**
-	 * Creates a new meta-image, initialized by image buffer, and keeping
-	 * meta-information from parent meta-image.
-	 * 
-	 * @param image the initial buffer for this meta-image
-	 */
+     * Creates a new image, initialized by image data, and keeping meta-data
+     * from parent image.
+     * 
+     * @param data
+     *            the initial data array for this image
+     * @param parent
+     *            the parent image used for inferring meta data
+     */
 	public Image(Array<?> data, Image parent)
 	{
 		this(data);
@@ -378,7 +390,7 @@ public class Image
 	}
 
 	/**
-	 * Returns the physical size of the image.
+	 * @return the physical size of the image.
 	 */
 	public int[] getSize()
 	{
@@ -386,19 +398,32 @@ public class Image
 	}
 	
 	/**
-	 * Returns the size of the image along the specified dimension, starting
-	 * from 0.
-	 */
+     * Returns the size of the image along the specified dimension, starting
+     * from 0.
+     * 
+     * @param dim
+     *            the dimension for computing size
+     * @return the size in the specified dimension
+     */
 	public int getSize(int dim)
 	{
 		return this.size[dim];
 	}
 
+	/**
+	 * @return the image type
+	 */
 	public Type getType()
 	{
 		return type;
 	}
 
+	/**
+     * Changes the way the image data should be interpreted.
+     * 
+     * @param type
+     *            the type of data within this image
+     */
 	public void setType(Type type)
 	{
 		this.type = type;

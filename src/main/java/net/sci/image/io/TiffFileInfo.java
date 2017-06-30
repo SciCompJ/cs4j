@@ -199,7 +199,7 @@ public class TiffFileInfo {
 	ArrayList<TiffTag> tags = new ArrayList<TiffTag>();
 	
 	
-	/** Returns the number of bytes used per pixel. */
+    /** @return the number of bytes used per pixel. */
 	public int getBytesPerPixel() {
 		switch (fileType) {
 		case GRAY8:
@@ -239,8 +239,12 @@ public class TiffFileInfo {
 	}
 
 	/**
-	 * Display the content of the image file directory to the specified print stream.  
-	 */
+     * Display the content of the image file directory to the specified print
+     * stream.
+     * 
+     * @param out
+     *            the the stream used to display information
+     */
 	public void print(PrintStream out) {
 		out.println("--- Tiff File Info Description ---");
 		out.println("file type: " + fileType);

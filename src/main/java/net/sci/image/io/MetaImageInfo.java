@@ -49,8 +49,12 @@ public final class MetaImageInfo
 		}
 
 		/**
-		 * Parses element type from its name. Should be case insensitive.
-		 */
+         * Parses element type from its name. Should be case insensitive.
+         * 
+         * @param label
+         *            the label of the type
+         * @return the type of the element specified by label
+         */
 		public static final ElementType fromLabel(String label) 
 		{
 			if (label != null)
@@ -76,7 +80,7 @@ public final class MetaImageInfo
 
 	public String ObjectTypeName = "";
 
-	/** Number of dimensions, should be >0 when initialized */
+	/** Number of dimensions, should be greater than 0 when initialized */
 	public int nDims = 0;
 
 	/** The size in each dimension */
