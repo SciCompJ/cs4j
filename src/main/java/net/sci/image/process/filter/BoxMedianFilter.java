@@ -71,6 +71,11 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 
 	/**
 	 * Process scalar arrays of any dimension.
+     * 
+     * @param source
+     *            the source array
+     * @param target
+     *            the target array
 	 */
 	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
 	{
@@ -129,6 +134,11 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 	
 	/**
 	 * Process the specific case of 2D arrays.
+     * 
+     * @param source
+     *            the source array
+     * @param target
+     *            the target array
 	 */
 	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
 	{
@@ -189,6 +199,11 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 
 	/**
 	 * Process the specific case of 3D arrays.
+     * 
+     * @param source
+     *            the source array
+     * @param target
+     *            the target array
 	 */
 	public void processScalar3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
 	{
