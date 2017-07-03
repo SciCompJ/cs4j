@@ -25,11 +25,12 @@ import net.sci.image.morphology.MorphologicalReconstruction.Type;
  * </p>
  * 
  * <p>
- * This class performs the algorithm on the two instances of ScalarArray2D kept
- * in it.
+ * This class performs the algorithm on the two instances of ScalarArray2D
+ * stored as inner variables.
  * </p>
  * 
  * @author David Legland
+ * @see MorphologicalReconstruction3DHybrid
  *
  */
 public class MorphologicalReconstruction2DHybrid extends AlgoStub implements MorphologicalReconstruction2D 
@@ -42,6 +43,9 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	protected Connectivity2D connectivity = Connectivity2D.C4;
 
+	/**
+	 * The type of morphological reconstruction.
+	 */
 	protected Type reconstructionType = Type.BY_DILATION;
 	
 	/**
@@ -53,10 +57,19 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	protected int sign = 1;
 	
-
+	/**
+	 * The array corresponding to the marker.
+	 */
 	ScalarArray2D<?> marker;
+
+	/**
+	 * The array corresponding to the mask.
+	 */
 	ScalarArray2D<?> mask;
 	
+	/**
+	 * The result array .
+	 */
 	ScalarArray2D<?> result;
 	
 	/** image width */
@@ -112,11 +125,11 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	}
 
 	/**
-	 * Creates a new instance of morphological reconstruction by dilation algorithm,
+	 * Creates a new instance of morphological reconstruction algorithm,
 	 * that specifies the connectivity to use.
 	 * 
 	 * @param connectivity
-	 *            the 2D connectivity to use (either 4 or 8)
+	 *            the 2D connectivity to use (either C4 or C8)
 	 */
 	public MorphologicalReconstruction2DHybrid(Connectivity2D connectivity)
 	{
@@ -130,9 +143,10 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 * @param type
 	 *            the type of reconstruction (erosion or dilation)
 	 * @param connectivity
-	 *            the 2D connectivity to use (either 4 or 8)
+	 *            the 2D connectivity to use (either C4 or C8)
 	 */
-	public MorphologicalReconstruction2DHybrid(MorphologicalReconstruction.Type type, Connectivity2D connectivity) 
+	public MorphologicalReconstruction2DHybrid(MorphologicalReconstruction.Type type, 
+			Connectivity2D connectivity) 
 	{
 		setReconstructionType(type);
 		setConnectivity(connectivity);

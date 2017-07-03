@@ -16,18 +16,24 @@ import net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid;
 /**
  * <p>
  * Morphological reconstruction for grayscale or binary arrays. Most algorithms works
- * for any data type.
+ * for any scalar data type.
  * </p>
  * 
  * 
  * @author dlegland
  *
+ * @see net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid 
+ * @see net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid 
  */
 public class MorphologicalReconstruction
 {
 	// ==================================================
 	// Static enum
 
+	/**
+	 * The type of morphological reconstruction, that can be by dilation or by
+	 * erosion.
+	 */
 	public enum Type 
 	{
 		BY_DILATION,

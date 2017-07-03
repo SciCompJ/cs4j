@@ -17,25 +17,18 @@ import java.util.Deque;
 
 /**
  * <p>
- * Geodesic reconstruction for 3D stacks of floats, using hybrid algorithm. This class
- * manages both reconstructions by dilation and erosion.
+ * Morphological reconstruction for 3D arrays of scalar values, using hybrid
+ * algorithm. This class manages both reconstructions by dilation and erosion.
  * </p>
  * 
  * <p>
  * This version first performs forward scan, then performs a backward scan that
  * also add lower-right neighbors to the queue, and finally processes voxels in
- * the queue. It is intended to work on float 3D images, using 6 or 26
- * adjacencies.
- * </p>
- * 
- * <p>
- * For efficiency, the stack of FloatProcessor objects corresponding to the 3D
- * image is stored internally as float arrays, thus avoiding conversion induced
- * by the ScalarArray3D object.
+ * the queue. It is intended to work on 3D images, using 6 or 26 connectivity.
  * </p>
  * 
  * @author David Legland
- * 
+ * @see MorphologicalReconstruction2DHybrid 
  */
 public class MorphologicalReconstruction3DHybrid extends AlgoStub 
 {
