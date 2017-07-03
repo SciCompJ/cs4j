@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.line.LineSegment2D;
 
@@ -121,91 +120,6 @@ public class LineString2D implements Polyline2D
     	return new EdgeIterator();
     }
     
-    
-    // ===================================================================
-    // Implementation of the Geometry2D interface 
-
-    @Override
-    public boolean contains(Point2D point, double eps)
-    {
-        // Extract the last point of the collection
-        Point2D previous = vertices.get(0);
-        
-        // Iterate on couple of vertices, starting from couple (firt,first)
-        for (Point2D current : vertices)
-        {
-            LineSegment2D edge = new LineSegment2D(previous, current);
-            
-            if (edge.contains(point, eps))
-            {
-                return true;
-            }
-            
-            previous = current;
-        }
-        
-        return false;
-    }
-
-    // Iterate over edges to find the minimal distance
-    @Override
-    public double distance(Point2D point)
-    {
-        // Extract the last point of the collection
-        Point2D previous = vertices.get(vertices.size() - 1);
-        double minDist = Double.POSITIVE_INFINITY;
-        
-        // Iterate on couple of vertices, starting from couple (last,first)
-        for (Point2D current : vertices)
-        {
-            LineSegment2D edge = new LineSegment2D(previous, current);
-            
-            double dist = edge.distance(point);
-            if (dist < minDist)
-            {
-                minDist = dist;
-            }
-            
-            previous = current;
-        }
-        
-        return minDist;
-    }
-    
-    // ===================================================================
-    // Implementation of the Geometry interface 
-
-    /**
-     * Returns true, as a linear ring is bounded by definition.
-     */
-    public boolean isBounded()
-    {
-        return true;
-    }
-
-    @Override
-    public Box2D boundingBox()
-    {
-        // initialize with extreme values
-        double xmin = Double.POSITIVE_INFINITY;
-        double xmax = Double.NEGATIVE_INFINITY;
-        double ymin = Double.POSITIVE_INFINITY;
-        double ymax = Double.NEGATIVE_INFINITY;
-        
-        // compute min/max for each coordinate
-        for (Point2D vertex : this.vertices)
-        {
-            double x = vertex.getX();
-            double y = vertex.getY();
-            xmin = Math.min(xmin, x);
-            xmax = Math.max(xmax, x);
-            ymin = Math.min(ymin, y);
-            ymax = Math.max(ymax, y);
-        }
-        
-        // return new Bounding Box
-        return new Box2D(xmin, xmax, ymin, ymax);
-    }
     
     // ===================================================================
     // Edge iterator implementation

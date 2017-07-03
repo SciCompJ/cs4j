@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     LinearRing2DTest.class,
+    LineString2DTest.class,
     })
 public class AllTests {
   //nothing
