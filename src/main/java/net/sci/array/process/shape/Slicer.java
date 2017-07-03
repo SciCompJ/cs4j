@@ -40,6 +40,52 @@ public class Slicer implements ArrayToArrayOperator
 		}
 	}
 	
+	public static final <T> Array<T> slice2d(Array<T> array,
+			int dim1, int dim2, int[] refPos)
+	{
+		// check dimensionality
+		int nd= array.dimensionality();
+		if (dim1 >= nd || dim2 >= nd)
+		{
+			throw new IllegalArgumentException("slicing dimensions must be lower than input array dimension");
+		}
+
+		// check dimensionality
+		if (refPos.length < nd)
+		{
+			throw new IllegalArgumentException("Reference position must have as many dimension as input array");
+		}
+
+		// create position pointer for source image
+		int[] srcPos = new int[nd];
+		System.arraycopy(refPos, 0, srcPos, 0, nd);
+		
+		// create position pointer for target image
+		int[] pos = new int[2];
+
+		// create output
+		int sizeX = array.getSize(dim1);
+		int sizeY = array.getSize(dim2);
+		Array<T> result = array.newInstance(new int[]{sizeX, sizeY});
+		
+		// iterate over position in target image
+		for (int y = 0; y < sizeY; y++)
+		{
+			srcPos[dim2] = y;
+			pos[1] = y;
+			
+			for (int x = 0; x < sizeX; x++)
+			{
+				srcPos[dim1] = x;
+				pos[0] = x;
+				
+				// copy value of selected position
+				result.set(pos, array.get(srcPos));
+			}
+		}
+		
+		return result;
+	}
 	
 	int dim;
 	
