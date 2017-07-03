@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Region2D;
 import net.sci.geom.geom2d.line.LineSegment2D;
 
 /**
@@ -18,7 +17,7 @@ import net.sci.geom.geom2d.line.LineSegment2D;
  * 
  * @author dlegland
  */
-public class SimplePolygon2D implements Region2D
+public class SimplePolygon2D implements Polygon2D
 {
     // ===================================================================
     // Class variables

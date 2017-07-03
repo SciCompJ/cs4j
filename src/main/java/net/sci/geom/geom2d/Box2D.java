@@ -4,8 +4,9 @@
 package net.sci.geom.geom2d;
 
 import static java.lang.Double.isInfinite;
-
 import net.sci.geom.Box;
+import net.sci.geom.geom2d.polygon.Polygon2D;
+import net.sci.geom.geom2d.polygon.SimplePolygon2D;
 
 /**
  * Contains the bounds of a planar geometry.
@@ -59,6 +60,61 @@ public class Box2D implements Box
         this.ymax = Math.max(y1, y2);
     }
     
+    
+    // ===================================================================
+    // General methods
+    
+    /**
+     * Converts this bounding box to a rectangular polyon.
+     * @return
+     */
+    public Polygon2D getRectangle()
+    {
+    	Point2D p1 = new Point2D(this.xmin, this.ymin);
+    	Point2D p2 = new Point2D(this.xmax, this.ymin);
+    	Point2D p3 = new Point2D(this.xmax, this.ymax);
+    	Point2D p4 = new Point2D(this.xmin, this.ymax);
+    	Polygon2D poly = new SimplePolygon2D(p1, p2, p3, p4);
+    	return poly;
+    }
+
+    
+    // ===================================================================
+    // Tests of inclusion
+    
+    /**
+     * Checks if this box contains the given point.
+     */
+    public boolean contains(Point2D point)
+    {
+        double x = point.getX();
+        double y = point.getY();
+        if (x < xmin)
+            return false;
+        if (y < ymin)
+            return false;
+        if (x > xmax)
+            return false;
+        if (y > ymax)
+            return false;
+        return true;
+    }
+    
+    /**
+     * Checks if this box contains the point defined by the given coordinates.
+     */
+    public boolean contains(double x, double y)
+    {
+        if (x < xmin)
+            return false;
+        if (y < ymin)
+            return false;
+        if (x > xmax)
+            return false;
+        if (y > ymax)
+            return false;
+        return true;
+    }
 
     // ===================================================================
     // Accessors to Box2D fields
@@ -131,42 +187,12 @@ public class Box2D implements Box
         }
     }
     
-
-
-    // ===================================================================
-    // tests of inclusion
-    
-    /**
-     * Checks if this box contains the given point.
-     */
-    public boolean contains(Point2D point)
+    public boolean almostEquals(Box2D box, double eps)
     {
-        double x = point.getX();
-        double y = point.getY();
-        if (x < xmin)
-            return false;
-        if (y < ymin)
-            return false;
-        if (x > xmax)
-            return false;
-        if (y > ymax)
-            return false;
-        return true;
-    }
-    
-    /**
-     * Checks if this box contains the point defined by the given coordinates.
-     */
-    public boolean contains(double x, double y)
-    {
-        if (x < xmin)
-            return false;
-        if (y < ymin)
-            return false;
-        if (x > xmax)
-            return false;
-        if (y > ymax)
-            return false;
+        if (Math.abs(box.xmin - xmin) > eps) return false;
+        if (Math.abs(box.xmax - xmax) > eps) return false;
+        if (Math.abs(box.ymin - ymin) > eps) return false;
+        if (Math.abs(box.ymax - ymax) > eps) return false;
         return true;
     }
 }
