@@ -6,6 +6,8 @@ package net.sci.image.analyze;
 import java.util.HashMap;
 
 import net.sci.array.data.scalar2d.IntArray2D;
+import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Point2D;
 import net.sci.image.morphology.LabelImages;
 
 /**
@@ -26,7 +28,7 @@ public class RegionAnalysis2D
      * @return an array containing for each label, the coordinates of the
      *         centroid, in pixel coordinates
      */
-    public final static double[][] centroids(IntArray2D<?> image, int[] labels)
+    public final static Point2D[] centroids(IntArray2D<?> image, int[] labels)
     {
         // create associative array to know index of each label
         int nLabels = labels.length;
@@ -34,7 +36,8 @@ public class RegionAnalysis2D
 
         // allocate memory for result
         int[] counts = new int[nLabels];
-        double[][] coords = new double[nLabels][2];
+        double[] xcoords = new double[nLabels];
+        double[] ycoords = new double[nLabels];
 
         // size of input image
         int sizeX = image.getSize(0);
@@ -54,18 +57,75 @@ public class RegionAnalysis2D
                     continue;
                 
                 int index = labelIndices.get(label);
-                coords[index][0] += x;
-                coords[index][1] += y;
+                xcoords[index] += x;
+                ycoords[index] += y;
                 counts[index]++;
             }
         }
 
         // normalize by the number of pixels in each region
+        // and convert to point array
+        Point2D[] centroids = new Point2D[nLabels];
         for (int i = 0; i < nLabels; i++)
         {
-            coords[i][0] /= counts[i];
-            coords[i][1] /= counts[i];
+            int nc = counts[i];
+            centroids[i] = new Point2D(xcoords[i] / nc, ycoords[i] / nc);
         }
-        return coords;
+        
+        return centroids;
+    }
+    
+    public final static Box2D[] boundingBoxes(IntArray2D<?> image, int[] labels)
+    {
+        // create associative array to know index of each label
+        int nLabels = labels.length;
+        HashMap<Integer, Integer> labelIndices = LabelImages.mapLabelIndices(labels);
+
+        // allocate memory for result
+        double[] xmin = new double[nLabels];
+        double[] xmax = new double[nLabels];
+        double[] ymin = new double[nLabels];
+        double[] ymax = new double[nLabels];
+        for (int i = 0; i < nLabels; i++)
+        {
+        	xmin[i] = Double.POSITIVE_INFINITY; 
+        	xmax[i] = Double.NEGATIVE_INFINITY;
+        	ymin[i] = Double.POSITIVE_INFINITY; 
+        	ymax[i] = Double.NEGATIVE_INFINITY;
+        }
+
+        // size of input image
+        int sizeX = image.getSize(0);
+        int sizeY = image.getSize(1);
+
+        // compute centroid of each region
+        for (int y = 0; y < sizeY; y++) 
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                int label = image.getInt(x, y);
+                if (label == 0)
+                    continue;
+
+                // do not process labels that are not in the input list 
+                if (!labelIndices.containsKey(label))
+                    continue;
+                
+                int index = labelIndices.get(label);
+
+                xmin[index] = Math.min(xmin[index], x - .5);
+                xmax[index] = Math.max(xmax[index], x + .5);
+                ymin[index] = Math.min(ymin[index], y - .5);
+                ymax[index] = Math.max(ymax[index], y + .5);
+            }
+        }
+        
+        Box2D[] boxes = new Box2D[nLabels];
+        for (int i = 0; i < nLabels; i++)
+        {
+        	boxes[i] = new Box2D(xmin[i], xmax[i], ymin[i], ymax[i]);
+        }
+        
+        return boxes;
     }
 }
