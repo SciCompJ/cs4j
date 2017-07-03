@@ -13,9 +13,9 @@ import net.sci.geom.geom2d.line.LineSegment2D;
 /**
  * A polygonal region whose boundary is a single linear ring.
  * 
- * @see LinearRing2D
- * 
  * @author dlegland
+ * 
+ * @see LinearRing2D
  */
 public class SimplePolygon2D implements Polygon2D
 {
@@ -243,7 +243,7 @@ public class SimplePolygon2D implements Polygon2D
     public double distance(Point2D point)
     {
         // computes distance to boundary
-        LinearRing2D boundary = new LinearRing2D(this.vertices);
+        LineString2D boundary = new LineString2D(this.vertices);
         double dist = boundary.distance(point);
         
         // choose sign depending on if the point is inside or outside
