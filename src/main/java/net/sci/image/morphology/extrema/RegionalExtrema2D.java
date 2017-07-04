@@ -19,7 +19,7 @@ import net.sci.image.morphology.FloodFill;
 import net.sci.image.morphology.MinimaAndMaxima;
 
 /**
- * Computes regional minima and maxima on planar images.
+ * Computes regional minima and maxima on planar arrays.
  * 
  * @author dlegland
  *
@@ -245,7 +245,7 @@ public class RegionalExtrema2D extends AlgoStub
 	 * 
 	 * @param array
 	 *            the reference array
-	 * @return a new instance of Array<?> that can be used for processing input
+	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
 	public BooleanArray createEmptyOutputArray(Array<?> array)

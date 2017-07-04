@@ -20,7 +20,7 @@ import static net.sci.array.type.Boolean.FALSE;
 import static net.sci.array.type.Boolean.TRUE;
 
 /**
- * Computes regional minima and maxima on planar images, using generic version
+ * Computes regional minima and maxima on planar arrays, using generic version
  * of flood-fill algorithm.
  * 
  * The main goal of this class was to test the validity of generic flood-fill
@@ -253,7 +253,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	 * 
 	 * @param array
 	 *            the reference array
-	 * @return a new instance of Array<?> that can be used for processing input
+	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
 	public BooleanArray createEmptyOutputArray(Array<?> array)

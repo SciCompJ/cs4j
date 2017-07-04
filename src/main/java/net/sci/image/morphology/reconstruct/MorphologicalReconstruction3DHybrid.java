@@ -6,6 +6,7 @@ package net.sci.image.morphology.reconstruct;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import net.sci.algo.AlgoStub;
+import net.sci.array.Array;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.data.Connectivity3D;
 import net.sci.image.data.Cursor3D;
@@ -71,12 +72,12 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 	public boolean verbose = false;
 	
 	/**
-	 * Boolean flag for the display of algorithm state in ImageJ status bar
+	 * Boolean flag for the display of algorithm state
 	 */
 	public boolean showStatus = true;
 	
 	/**
-	 * Boolean flag for the display of algorithm progress in ImageJ status bar
+	 * Boolean flag for the display of algorithm progress
 	 */
 	public boolean showProgress = false; 
 
@@ -86,7 +87,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 	// Constructors 
 		
 	/**
-	 * Creates a new instance of geodesic reconstruction by dilation algorithm,
+	 * Creates a new instance of 3D morphological reconstruction by dilation algorithm,
 	 * using the default connectivity 6.
 	 */
 	public MorphologicalReconstruction3DHybrid()
@@ -94,7 +95,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 	}
 	
 	/**
-	 * Creates a new instance of geodesic reconstruction by dilation algorithm,
+	 * Creates a new instance of 3D morphological reconstruction algorithm,
 	 * that specifies the type of reconstruction, and using the connectivity 6.
 	 * 
 	 * @param type
@@ -106,7 +107,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 	}
 
 	/**
-	 * Creates a new instance of geodesic reconstruction by dilation algorithm,
+	 * Creates a new instance of 3D morphological reconstruction algorithm,
 	 * that specifies the type of reconstruction, and the connectivity to use.
 	 * 
 	 * @param type
@@ -121,8 +122,8 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 	}
 
 	/**
-	 * Creates a new instance of geodesic reconstruction by dilation algorithm,
-	 * that specifies the connectivity to use.
+	 * Creates a new instance of 3D morphological reconstruction by dilation
+	 * algorithm, that specifies the connectivity to use.
 	 * 
 	 * @param connectivity
 	 *            the 3D connectivity to use (either C6 or C26)
@@ -174,8 +175,13 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 	// Methods implementing the MorphologicalReconstruction interface
 	
 	/**
-	 * Run the reconstruction by dilation algorithm using the images specified
+	 * Run the morphological reconstruction algorithm using the specified arrays
 	 * as argument.
+	 * 
+	 * @marker the 3D array of the marker
+	 * @mask the 3D array of the mask
+	 * @return the morphological reconstruction of the marker array constrained
+	 *         to the mask array
 	 */
 	public ScalarArray3D<?> process(ScalarArray3D<?> marker, ScalarArray3D<?> mask)
 	{
@@ -183,14 +189,14 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 		this.marker = marker;
 		this.mask = mask;
 
-		// Check sizes are consistent
+		// Check dimensions consistency
 		this.sizeX 	= marker.getSize(0);
 		this.sizeY 	= marker.getSize(1);
 		this.sizeZ 	= marker.getSize(2);
-//		if (!Images3D.isSameSize(marker, mask)) 
-//		{
-//			throw new IllegalArgumentException("Marker and Mask images must have the same size");
-//		}
+		if (!Array.isSameSize(marker, mask)) 
+		{
+			throw new IllegalArgumentException("Marker and Mask images must have the same size");
+		}
 		
 		// Check connectivity has a correct value
 		if (connectivity != Connectivity3D.C6 && connectivity != Connectivity3D.C26)
