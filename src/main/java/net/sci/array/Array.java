@@ -11,6 +11,34 @@ package net.sci.array;
  */
 public interface Array<T> extends Iterable<T>, Dimensional
 {
+    // ==================================================
+    // Static methods
+	
+	public static boolean isSameSize(Array<?> array1, Array<?> array2)
+	{
+		// first check dimensionality
+		int nd1 = array1.dimensionality();
+		if (array2.dimensionality() != nd1) return false;
+		
+		// check each dimension successively
+		for (int d = 0; d < nd1; d++)
+		{
+			if (array1.getSize(d) != array2.getSize(d)) return false;
+		}
+		
+		// otherwise return true
+		return true;
+	}
+	
+	public static boolean isSameDimensionality(Array<?> array1, Array<?> array2)
+	{
+		return array1.dimensionality() == array2.dimensionality();
+	}
+
+	
+    // ==================================================
+    // Interface declaration
+	
 	/**
 	 * Returns the dimensionality of this array, i.e. the number of dimensions.
 	 * 
@@ -112,6 +140,10 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
 	public Iterator<T> iterator();
 
+	
+    // ==================================================
+    // Implementation of an iterator interface
+	
 	public interface Iterator<T> extends java.util.Iterator<T>
 	{
 		/**
