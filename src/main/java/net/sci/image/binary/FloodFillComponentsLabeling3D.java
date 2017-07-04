@@ -10,9 +10,12 @@ import net.sci.array.data.IntArray;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.scalar3d.BooleanArray3D;
+import net.sci.array.data.scalar3d.Int32Array3D;
 import net.sci.array.data.scalar3d.IntArray3D;
-import net.sci.image.Image;
+import net.sci.array.data.scalar3d.UInt16Array3D;
+import net.sci.array.data.scalar3d.UInt8Array3D;
 import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.image.Image;
 import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.FloodFill3D;
 
@@ -124,6 +127,35 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 		}
 	}
 	
+	public IntArray3D<?> process(BooleanArray3D image)
+	{
+		// get image size
+		int sizeX = image.getSize(0);
+		int sizeY = image.getSize(1);
+		int sizeZ = image.getSize(2);
+	
+		// Depending on bitDepth, create result image, and choose max label 
+		// number
+		IntArray3D<?> labels;
+		switch (this.bitDepth) {
+		case 8: 
+			labels = UInt8Array3D.create(sizeX, sizeY, sizeZ);
+			break; 
+		case 16: 
+			labels = UInt16Array3D.create(sizeX, sizeY, sizeZ);
+			break;
+		case 32:
+			labels = Int32Array3D.create(sizeX, sizeY, sizeZ);
+			break;
+		default:
+			throw new IllegalArgumentException(
+					"Bit Depth should be 8, 16 or 32.");
+		}
+
+		process3d(image, labels);
+		return labels;
+	}
+
 	/* (non-Javadoc)
 	 * @see inra.ijpb.binary.conncomp.ConnectedComponentsLabeling3D#computeLabels(ij.ImageStack)
 	 */

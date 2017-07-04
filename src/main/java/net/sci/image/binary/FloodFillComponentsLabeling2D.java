@@ -31,7 +31,7 @@ import net.sci.image.morphology.FloodFill2D;
  * @author dlegland
  *
  */
-public class FloodFillComponentLabeling2D extends AlgoStub implements ArrayToArrayImageOperator
+public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToArrayImageOperator
 {
 	/** 
 	 * The connectivity of the components, either 4 (default) or 8.
@@ -47,7 +47,7 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ArrayToArr
 	/**
 	 * Constructor with default connectivity 4 and default output bitdepth equal to 16.  
 	 */
-	public FloodFillComponentLabeling2D()
+	public FloodFillComponentsLabeling2D()
 	{
 	}
 	
@@ -57,7 +57,7 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ArrayToArr
 	 * @param connectivity
 	 *            the connectivity of connected components (4 or 8)
 	 */
-	public FloodFillComponentLabeling2D(Connectivity2D connectivity)
+	public FloodFillComponentsLabeling2D(Connectivity2D connectivity)
 	{
 		this.connectivity = connectivity;
 
@@ -74,7 +74,7 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ArrayToArr
 	 * @param connectivity
 	 *            the connectivity of connected components (4 or 8)
 	 */
-	public FloodFillComponentLabeling2D(int connectivity)
+	public FloodFillComponentsLabeling2D(int connectivity)
 	{
 		this.connectivity = Connectivity2D.fromValue(connectivity);
 
@@ -94,7 +94,7 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ArrayToArr
 	 * @param bitDepth
 	 *            the bit depth of the result (8, 16, or 32)
 	 */
-	public FloodFillComponentLabeling2D(int connectivity, int bitDepth)
+	public FloodFillComponentsLabeling2D(int connectivity, int bitDepth)
 	{
 		this(connectivity);
 		this.bitDepth = bitDepth;
@@ -106,7 +106,6 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ArrayToArr
 		}
 	}
 	
-
 	public IntArray2D<?> process(BooleanArray2D image)
 	{
 		// get image size
@@ -225,7 +224,7 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ArrayToArr
 				
 				// increment label index, and propagate
 				nLabels++;
-				FloodFill2D.floodFillFloat(source, x, y, target, nLabels, this.connectivity);
+				FloodFill2D.floodFillFloat(source, x, y, target, nLabels, this.connectivity); // why float ?
 			}
 		}
 		this.fireProgressChanged(this, 1, 1);

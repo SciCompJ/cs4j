@@ -33,6 +33,7 @@ import net.sci.image.data.Connectivity3D;
 */
 public class FloodFill
 {
+	//TODO: keep this one or the two other ones?
 	/**
 	 * Private constructor to prevent class instantiation.
 	 */
