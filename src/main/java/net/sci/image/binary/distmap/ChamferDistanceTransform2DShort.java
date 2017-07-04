@@ -19,7 +19,7 @@ import net.sci.image.binary.ChamferWeights;
  * @author dlegland
  *
  */
-public class ChamferDistanceTransform2DShort extends AlgoStub implements ArrayOperator
+public class ChamferDistanceTransform2DShort extends AlgoStub implements ArrayOperator, DistanceTransform2D
 {
 	private short[] weights = new short[]{3, 4, 5};
 

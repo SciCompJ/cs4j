@@ -18,7 +18,7 @@ import net.sci.image.binary.ChamferWeights;
  * @author dlegland
  *
  */
-public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOperator
+public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOperator, DistanceTransform2D
 {
 	private float[] weights = new float[]{3, 4, 5};
 
