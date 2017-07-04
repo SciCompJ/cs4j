@@ -22,7 +22,8 @@ import net.sci.image.morphology.MinimaAndMaxima;
  * Interface for computing regional extrema (regional minima and regional maxima).
  * 
  * Example of use:
- * <pre><code>
+ * <pre>
+{@code
  * ImageStack image = IJ.getImage().getStack();
  * RegionalExtrema3DAlgo algo = new RegionalExtrema3DFlooding(); 
  * algo.setConnectivity(6);
@@ -30,7 +31,7 @@ import net.sci.image.morphology.MinimaAndMaxima;
  * ImageStack result = algo.applyTo(image);
  * ImagePlus resPlus = new ImagePlus("Regional Extrema", result); 
  * resPlus.show(); 
- * </code></pre>
+ * }</pre>
  *
  * @see RegionalExtrema3DByFlooding
  * 
@@ -281,7 +282,7 @@ implements ArrayToArrayImageOperator, Algo
 	 * 
 	 * @param array
 	 *            the reference array
-	 * @return a new instance of Array<?> that can be used for processing input
+	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
 	public BooleanArray createEmptyOutputArray(Array<?> array)

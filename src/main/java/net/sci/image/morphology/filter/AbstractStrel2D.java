@@ -17,7 +17,7 @@ import net.sci.image.morphology.Strel2D;
 //* array.
 public abstract class AbstractStrel2D extends AlgoStub implements Strel2D 
 {	
-	private String channelName = null;
+//	private String channelName = null;
 	
 //	public int[][][] getMask3D() {
 //		int[][][] mask3d = new int[1][][];
@@ -36,21 +36,6 @@ public abstract class AbstractStrel2D extends AlgoStub implements Strel2D
 //		return shifts3d;
 //	}
 	
-	/**
-	 * Sets the name of the currently processed channel.
-	 */
-	public void setChannelName(String channelName) 
-	{
-		this.channelName = channelName;
-	}
-
-	/**
-	 * Returns the name of the channel currently processed, or null by default.
-	 */
-	public String getChannelName()
-	{
-		return this.channelName;
-	}
 	
 //	public Array3D<?> dilation(Array3D<?> stack) {
 //		boolean flag = this.showProgress();

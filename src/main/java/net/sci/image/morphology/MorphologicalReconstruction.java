@@ -81,12 +81,12 @@ public class MorphologicalReconstruction
 
 	/**
 	 * Static method to computes the morphological reconstruction by dilation of the
-	 * marker image under the mask image.
+	 * marker image constrained by the mask image.
 	 *
-	 * @param marker
-	 *            input marker array
-	 * @param mask
-	 *            input mask array
+	 * @param markerImage
+	 *            input marker image
+	 * @param maskImage
+	 *            input mask image
 	 * @return the result of morphological reconstruction
 	 */
 	public final static Image reconstructByDilation(Image markerImage, Image maskImage) 
@@ -139,12 +139,12 @@ public class MorphologicalReconstruction
 
 	/**
 	 * Static method to computes the morphological reconstruction by erosion of the
-	 * marker image over the mask image.
+	 * marker image constrained by the mask image.
 	 *
-	 * @param marker
-	 *            input marker array
-	 * @param mask
-	 *            input mask array
+	 * @param markerImage
+	 *            input marker image
+	 * @param maskImage
+	 *            input mask image
 	 * @return the result of morphological reconstruction
 	 */
 	public final static Image reconstructByErosion(Image markerImage, Image maskImage) 

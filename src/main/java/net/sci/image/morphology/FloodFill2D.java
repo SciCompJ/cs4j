@@ -48,6 +48,10 @@ public class FloodFill2D
 	 * based on the equals methods, and may be slower than similar operation on
 	 * float or int arrays
 	 * 
+	 * @param <S>
+	 *            the type of the source array
+	 * @param <T>
+	 *            the type of the target array
 	 * @param source
 	 *            original image to read the pixel values from
 	 * @param x

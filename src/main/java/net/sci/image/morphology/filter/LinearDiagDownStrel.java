@@ -475,7 +475,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getSize()
+	 * @see Strel#getSize()
 	 */
 	@Override
 	public int[] getSize()
@@ -487,7 +487,7 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel2D
 	 * Returns a linear diagonal line with same size and offset equal to
 	 * size-offset.
 	 * 
-	 * @see Strel2D.ijpb.morphology.Strel#reverse()
+	 * @see Strel2D#reverse()
 	 */
 	@Override
 	public LinearDiagDownStrel reverse()

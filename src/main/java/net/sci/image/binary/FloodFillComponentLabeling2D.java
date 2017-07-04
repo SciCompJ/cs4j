@@ -27,7 +27,7 @@ import net.sci.image.morphology.FloodFill2D;
  * time a foreground pixel not yet associated with a label is encountered, its
  * connected component is associated with a new label.
  *
- * @see FloodFill2D.ijpb.morphology.FloodFill
+ * @see net.sci.image.morphology.FloodFill2D
  * @author dlegland
  *
  */
@@ -256,7 +256,7 @@ public class FloodFillComponentLabeling2D extends AlgoStub implements ArrayToArr
 	 * 
 	 * @param array
 	 *            the reference array
-	 * @return a new instance of Array<?> that can be used for processing input
+	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
 	public IntArray<?> createEmptyOutputArray(Array<?> array)

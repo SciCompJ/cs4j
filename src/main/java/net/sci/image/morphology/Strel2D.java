@@ -17,21 +17,21 @@ import net.sci.image.morphology.filter.SquareStrel;
 /**
  * Interface for planar structuring elements. 
  * 
- * <pre><code>
+ * <pre>
+ * {@code
  *  // Creates a 5x5 square structuring element
- *  Strel strel = Strel.Shape.SQUARE.fromRadius(2);
+ *  Strel strel = Strel.Shape.SQUARE.fromDiameter(5);
  *  // applies dilation on current image
- *  Array2D<?> image = IJ.getImage().getProcessor();
+ *  Array2D<?> array = ...
  *  Array2D<?> dilated = strel.dilation(image);
- *  // Display results
- *  new ImagePlus("dilated", dilated).show();
- * </code></pre>
- * 
+ * }
+ * </pre>
  * @author David Legland
  *
  */
 public interface Strel2D extends Algo
 {
+	//TODO: extends Strel3D (?)
 	/**
 	 * Default value for background pixels.
 	 */
@@ -55,7 +55,7 @@ public interface Strel2D extends Algo
 //		 * @see DiskStrel 
 //		 */
 //		DISK("Disk"),
-		
+		//TODO: implement a DiskStrel
 		/** 
 		 * Square of a given side
 		 * @see SquareStrel 
@@ -133,7 +133,10 @@ public interface Strel2D extends Algo
 		/**
 		 * Creates a structuring element of the given type and with the
 		 * specified diameter.
-		 * @param diam the orthogonal diameter of the structuring element (max of x and y sizes), in pixels
+		 * 
+		 * @param diam
+		 *            the orthogonal diameter of the structuring element (max of
+		 *            x and y sizes), in pixels
 		 * @return a new structuring element
 		 */
 		public Strel2D fromDiameter(int diam) 
@@ -194,10 +197,10 @@ public interface Strel2D extends Algo
 		{
 			if (label != null)
 				label = label.toLowerCase();
-			for (Shape type : Shape.values()) 
+			for (Shape s : Shape.values()) 
 			{
-				if (type.label.toLowerCase().equals(label))
-					return type;
+				if (s.label.toLowerCase().equals(label))
+					return s;
 			}
 			throw new IllegalArgumentException("Unable to parse Strel.Shape with label: " + label);
 		}
@@ -249,33 +252,33 @@ public interface Strel2D extends Algo
 
 	/**
 	 * Performs a morphological dilation of the input image with this
-	 * structuring element, and returns the result in a new Array2D<?>.
+	 * structuring element, and returns the result in a new Array2D.
 	 * 
 	 * @param image
 	 *            the input image
 	 * @return the result of dilation with this structuring element
-	 * @see #erosion(ij.process.Array2D<?>)
-	 * @see #closing(ij.process.Array2D<?>)
-	 * @see #opening(ij.process.Array2D<?>)
+	 * @see #erosion(Array2D)
+	 * @see #closing(Array2D)
+	 * @see #opening(Array2D)
 	 */
 	public Array2D<?> dilation(Array2D<?> image);
 
 	/**
 	 * Performs an morphological erosion of the input image with this
-	 * structuring element, and returns the result in a new Array2D<?>.
+	 * structuring element, and returns the result in a new Array2.
 	 * 
 	 * @param image
 	 *            the input image
 	 * @return the result of erosion with this structuring element
-	 * @see #dilation(ij.process.Array2D<?>)
-	 * @see #closing(ij.process.Array2D<?>)
-	 * @see #opening(ij.process.Array2D<?>)
+	 * @see #dilation(Array2D)
+	 * @see #closing(Array2D)
+	 * @see #opening(Array2D)
 	 */
 	public Array2D<?> erosion(Array2D<?> image);
 	
 	/**
 	 * Performs a morphological closing of the input image with this structuring
-	 * element, and returns the result in a new Array2D<?>.
+	 * element, and returns the result in a new Array2D.
 	 *  
 	 * The closing is equivalent in performing a dilation followed by an
 	 * erosion with the reversed structuring element.
@@ -283,16 +286,16 @@ public interface Strel2D extends Algo
 	 * @param image
 	 *            the input image
 	 * @return the result of closing with this structuring element
-	 * @see #dilation(ij.process.Array2D<?>)
-	 * @see #erosion(ij.process.Array2D<?>)
-	 * @see #opening(ij.process.Array2D<?>)
+	 * @see #dilation(Array2D)
+	 * @see #erosion(Array2D)
+	 * @see #opening(Array2D)
 	 * @see #reverse()
 	 */
 	public Array2D<?> closing(Array2D<?> image);
 
 	/**
 	 * Performs a morphological opening of the input image with this structuring
-	 * element, and returns the result in a new Array2D<?>.
+	 * element, and returns the result in a new Array2D.
 	 * 
 	 * The opening is equivalent in performing an erosion followed by a
 	 * dilation with the reversed structuring element.
@@ -300,25 +303,10 @@ public interface Strel2D extends Algo
 	 * @param image
 	 *            the input image
 	 * @return the result of opening with this structuring element
-	 * @see #dilation(ij.process.Array2D<?>)
-	 * @see #erosion(ij.process.Array2D<?>)
-	 * @see #closing(ij.process.Array2D<?>)
+	 * @see #dilation(Array2D)
+	 * @see #erosion(Array2D)
+	 * @see #closing(Array2D)
 	 * @see #reverse()
 	 */
 	public Array2D<?> opening(Array2D<?> image);
-	
-	/**
-	 * Sets the name of the currently processed channel, for process monitoring.
-	 * 
-	 * @param channelName
-	 *            the name of the currently processed channel
-	 */
-	public void setChannelName(String channelName);
-
-	/**
-	 * Returns the name of the channel currently processed, or null by default.
-	 * 
-	 * @return the name of the currently processed channel
-	 */
-	public String getChannelName();
 }

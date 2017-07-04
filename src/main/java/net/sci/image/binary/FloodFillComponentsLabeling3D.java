@@ -24,7 +24,7 @@ import net.sci.image.morphology.FloodFill3D;
  * time a foreground voxel not yet associated with a label is encountered, its
  * connected component is associated with a new label.
  * 
- * @see inra.ijpb.morphology.FloodFill3D
+ * @see net.sci.image.morphology.FloodFill3D
  * 
  * @author dlegland
  */
@@ -229,7 +229,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 	 * 
 	 * @param array
 	 *            the reference array
-	 * @return a new instance of Array<?> that can be used for processing input
+	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
 	public IntArray<?> createEmptyOutputArray(Array<?> array)

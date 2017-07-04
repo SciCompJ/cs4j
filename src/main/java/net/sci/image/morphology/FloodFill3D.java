@@ -44,7 +44,7 @@ public class FloodFill3D
 	 * <code>value</code>) in <code>labelImage</code>, using the specified
 	 * connectivity.
 	 * 
-	 * @param inputImage
+	 * @param inputArray
 	 *            original image to read the voxel values from
 	 * @param x
 	 *            x- coordinate of the seed voxel
@@ -52,7 +52,7 @@ public class FloodFill3D
 	 *            y- coordinate of the seed voxel
 	 * @param z
 	 *            z- coordinate of the seed voxel
-	 * @param outputImage
+	 * @param outputArray
 	 *            output label image (to fill)
 	 * @param value
 	 *            filling value
@@ -82,7 +82,7 @@ public class FloodFill3D
 	 * <code>value</code>) in <code>labelImage</code>, using the specified
 	 * connectivity.
 	 * 
-	 * @param inputImage
+	 * @param inputArray
 	 *            original image to read the voxel values from
 	 * @param x
 	 *            x- coordinate of the seed voxel
@@ -90,7 +90,7 @@ public class FloodFill3D
 	 *            y- coordinate of the seed voxel
 	 * @param z
 	 *            z- coordinate of the seed voxel
-	 * @param outputImage
+	 * @param outputArray
 	 *            output label image (to fill)
 	 * @param value
 	 *            filling value
@@ -385,7 +385,7 @@ public class FloodFill3D
 	 * <code>value</code>) in <code>labelImage</code>, using the specified
 	 * connectivity.
 	 * 
-	 * @param inputImage
+	 * @param inputArray
 	 *            original image to read the voxel values from
 	 * @param x
 	 *            x- coordinate of the seed voxel
@@ -393,7 +393,7 @@ public class FloodFill3D
 	 *            y- coordinate of the seed voxel
 	 * @param z
 	 *            z- coordinate of the seed voxel
-	 * @param outputImage
+	 * @param outputArray
 	 *            output label image (to fill)
 	 * @param value
 	 *            filling value
@@ -424,7 +424,7 @@ public class FloodFill3D
 	 * <code>value</code>) in <code>labelImage</code>, using the specified
 	 * connectivity.
 	 * 
-	 * @param inputImage
+	 * @param inputArray
 	 *            original image to read the voxel values from
 	 * @param x
 	 *            x- coordinate of the seed voxel
@@ -432,7 +432,7 @@ public class FloodFill3D
 	 *            y- coordinate of the seed voxel
 	 * @param z
 	 *            z- coordinate of the seed voxel
-	 * @param outputImage
+	 * @param outputArray
 	 *            output label image (to fill)
 	 * @param value
 	 *            filling value

@@ -69,7 +69,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	/**
 	 * Returns this structuring element, as is is self-reverse.
 	 * 
-	 * @see InPlaceStrel2D.ijpb.morphology.strel.InPlaceStrel#reverse()
+	 * @see InPlaceStrel2D#reverse()
 	 */
 	@Override
 	public InPlaceStrel2D reverse()
@@ -80,7 +80,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.InPlaceStrel#inPlaceDilation(ij.process.Array2D<?>)
+	 * @see net.sci.array.data.Array2D)
 	 */
 	@Override
 	public void inPlaceDilation(Array2D<?> image)

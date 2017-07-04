@@ -49,6 +49,10 @@ public class FloodFill
 	 * based on the equals methods, and may be slower than similar operation on
 	 * float or int arrays
 	 * 
+	 * @param <S>
+	 *            the type of the source array
+	 * @param <T>
+	 *            the type of the target array
 	 * @param source
 	 *            original image to read the pixel values from
 	 * @param x
@@ -585,7 +589,7 @@ public class FloodFill
 	 * <code>value</code>) in <code>labelImage</code>, using the specified
 	 * connectivity.
 	 * 
-	 * @param inputImage
+	 * @param inputArray
 	 *            original image to read the voxel values from
 	 * @param x
 	 *            x- coordinate of the seed voxel
@@ -593,7 +597,7 @@ public class FloodFill
 	 *            y- coordinate of the seed voxel
 	 * @param z
 	 *            z- coordinate of the seed voxel
-	 * @param outputImage
+	 * @param outputArray
 	 *            output label image (to fill)
 	 * @param value
 	 *            filling value
@@ -927,7 +931,7 @@ public class FloodFill
 	 * <code>value</code>) in <code>labelImage</code>, using the specified
 	 * connectivity.
 	 * 
-	 * @param inputImage
+	 * @param inputArray
 	 *            original image to read the voxel values from
 	 * @param x
 	 *            x- coordinate of the seed voxel
@@ -935,7 +939,7 @@ public class FloodFill
 	 *            y- coordinate of the seed voxel
 	 * @param z
 	 *            z- coordinate of the seed voxel
-	 * @param outputImage
+	 * @param outputArray
 	 *            output label image (to fill)
 	 * @param value
 	 *            filling value

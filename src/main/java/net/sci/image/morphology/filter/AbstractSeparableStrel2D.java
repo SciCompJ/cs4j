@@ -149,11 +149,7 @@ implements SeparableStrel2D, AlgoListener
 	
 	private String createStatusMessage(String opName, int i, int n)
 	{
-		String channel = this.getChannelName();
-		if (channel == null)
-			return opName + " " + i + "/" + n;
-		else
-			return opName + " " + channel + " " + i + "/" + n;
+		return opName + " " + i + "/" + n;
 	}
 	
 	/**

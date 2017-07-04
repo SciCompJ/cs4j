@@ -24,7 +24,7 @@ import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid;
  * Example of use:
  * 
  * <pre>
- * <code>
+ * {@code
  *	// Get current image processor
  *	ScalarArray2D<?> image = IJ.getImage().getProcessor();
  *	// Computes extended minima with a dynamic of 15, using the 4-connectivity
@@ -32,10 +32,9 @@ import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid;
  *	// Display result in a new imagePlus
  *	ImagePlus res = new ImagePlus("Minima", minima);
  *	res.show(); 
- * </code>
- * </pre>
+ * }</pre>
  * 
- * @see GeodesicReconstruction
+ * @see MorphologicalReconstruction
  * 
  * @author David Legland
  *

@@ -15,23 +15,25 @@ import net.sci.array.data.UInt8Array;
  * 
  * <p>
  * Example of use:
- * <pre><code>
+ * <pre>
+ * {@code
  * Array2D<?> image = IJ.getImage().getProcessor();
  * Strel se = SquareStrel.fromDiameter(5);
  * Array2D<?> grad = Morphology.gradient(image, se);
  * ImagePlus res = new ImagePlus("Gradient", grad);
  * res.show(); 
- * </code></pre>
- * 
+ *  }</pre>
+ *
  * <p>
  * Example of use with 3D image (stack):
- * <pre><code>
+ * <pre>
+ * {@code
  * ImageStack image = IJ.getImage().getStack();
  * Strel3D se = CubeStrel.fromDiameter(3);
  * ImageStack grad = Morphology.gradient(image, se);
  * ImagePlus res = new ImagePlus("Gradient3D", grad);
  * res.show(); 
- * </code></pre>
+ * }</pre>
  * @author David Legland
  *
  */
@@ -44,8 +46,9 @@ public class MorphologicalFiltering
 	 * A pre-defined set of basis morphological operations, that can be easily 
 	 * used with a GenericDialog. 
 	 * Example:
-	 * <pre><code>
-	 * // Use a generic dialog to define an operator 
+	 * <pre>
+	 * {@code
+ 	 * // Use a generic dialog to define an operator 
 	 * GenericDialog gd = new GenericDialog();
 	 * gd.addChoice("Operation", Operation.getAllLabels();
 	 * gd.showDialog();
@@ -53,7 +56,7 @@ public class MorphologicalFiltering
 	 * // Apply the operation on the current image
 	 * Array2D<?> image = IJ.getImage().getProcessor();
 	 * op.apply(image, SquareStrel.fromRadius(2));
-	 * </code></pre>
+	 * }</pre>
 	 */
 	public enum Operation 
 	{
@@ -223,8 +226,8 @@ public class MorphologicalFiltering
 	 *            the structuring element used for dilation
 	 * @return the result of the dilation
 	 * 
-	 * @see #erosion(Array2D<?>, Strel)
-	 * @see Strel#dilation(Array2D<?>)
+	 * @see #erosion(Array2D, Strel2D)
+	 * @see Strel2D#dilation(Array2D)
 	 */
 	public static Array2D<?> dilation(Array2D<?> image, Strel2D strel)
 	{
@@ -286,8 +289,8 @@ public class MorphologicalFiltering
 	 * This methods is mainly a wrapper to the erosion method of the strel
 	 * object.
 	 * 
-	 * @see #dilation(Array2D<?>, Strel)
-	 * @see Strel#erosion(Array2D<?>)
+	 * @see #dilation(Array2D, Strel2D)
+	 * @see Strel2D#erosion(Array2D)
 	 * 
 	 * @param image
 	 *            the input image to process (grayscale or RGB)
@@ -356,8 +359,8 @@ public class MorphologicalFiltering
 	 * 
 	 * This methods is mainly a wrapper to the opening method of the strel object.
 	 * 
-	 * @see #closing(Array2D<?>, Strel)
-	 * @see Strel#opening(Array2D<?>)
+	 * @see #closing(Array2D, Strel2D)
+	 * @see Strel2D#opening(Array2D)
 	 * 
 	 * @param image
 	 *            the input image to process (grayscale or RGB)
@@ -422,8 +425,8 @@ public class MorphologicalFiltering
 	 * with the reversed structuring element.
 	 *  
 	 * This methods is mainly a wrapper to the opening method of the strel object.
-	 * @see #opening(Array2D<?>, Strel)
-	 * @see Strel#closing(Array2D<?>)
+	 * @see #opening(Array2D, Strel2D)
+	 * @see Strel2D#closing(Array2D)
 	 * 
 	 * @param image
 	 *            the input image to process (grayscale or RGB)
@@ -489,8 +492,8 @@ public class MorphologicalFiltering
 	 *  
 	 * The white top hat enhances light structures smaller than the structuring element.
 	 * 
-	 * @see #blackTopHat(Array2D<?>, Strel)
-	 * @see #opening(Array2D<?>, Strel)
+	 * @see #blackTopHat(Array2D, Strel2D)
+	 * @see #opening(Array2D, Strel2D)
 	 * 
 	 * @param image
 	 *            the input image to process (grayscale or RGB)
@@ -594,8 +597,8 @@ public class MorphologicalFiltering
 	 *  
 	 * The black top hat enhances dark structures smaller than the structuring element.
 	 * 
-	 * @see #whiteTopHat(Array2D<?>, Strel)
-	 * @see #closing(Array2D<?>, Strel)
+	 * @see #whiteTopHat(Array2D, Strel2D)
+	 * @see #closing(Array2D, Strel2D)
 	 * 
 	 * @param image
 	 *            the input image to process (grayscale or RGB)
@@ -690,8 +693,8 @@ public class MorphologicalFiltering
 	 * The morphological gradient is obtained by from the difference of image 
 	 * dilation and image erosion computed with the same structuring element. 
 	 * 
-	 * @see #erosion(Array2D<?>, Strel)
-	 * @see #dilation(Array2D<?>, Strel)
+	 * @see #erosion(Array2D, Strel2D)
+	 * @see #dilation(Array2D, Strel2D)
 	 * 
 	 * @param image
 	 *            the input image to process (grayscale or RGB)
@@ -799,8 +802,8 @@ public class MorphologicalFiltering
 	 * 
 	 * Homogeneous regions appear as gray.
 	 * 
-	 * @see #erosion(Array2D<?>, Strel)
-	 * @see #dilation(Array2D<?>, Strel)
+	 * @see #erosion(Array2D, Strel2D)
+	 * @see #dilation(Array2D, Strel2D)
 	 * 
 	 * @param image
 	 *            the input image to process (grayscale or RGB)
@@ -922,9 +925,9 @@ public class MorphologicalFiltering
 	 * The morphological internal gradient is obtained by from the difference 
 	 * of original image with the result of an erosion.
 	 * 
-	 * @see #erosion(Array2D<?>, Strel)
-	 * @see #gradient(Array2D<?>, Strel)
-	 * @see #externalGradient(Array2D<?>, Strel)
+	 * @see #erosion(Array2D, Strel2D)
+	 * @see #gradient(Array2D, Strel2D)
+	 * @see #externalGradient(Array2D, Strel2D)
 	 * 
 	 * @param image
 	 *            the input image to process (grayscale or RGB)
@@ -1020,7 +1023,7 @@ public class MorphologicalFiltering
 	 * The morphological external gradient is obtained by from the difference 
 	 * of the result of a dilation and of the original image .
 	 * 
-	 * @see #dilation(Array2D<?>, Strel)
+	 * @see #dilation(Array2D, Strel2D)
 	 * 
 	 * @param image
 	 *            the input image to process (grayscale or RGB)

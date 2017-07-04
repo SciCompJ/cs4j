@@ -28,7 +28,7 @@ public class RegionAnalysis2D
      * @return an array containing for each label, the coordinates of the
      *         centroid, in pixel coordinates
      */
-    public final static Point2D[] centroids(IntArray2D<?> image, int[] labels)
+    public final static Point2D[] centroids(IntArray2D<?> labelImage, int[] labels)
     {
         // create associative array to know index of each label
         int nLabels = labels.length;
@@ -40,15 +40,15 @@ public class RegionAnalysis2D
         double[] ycoords = new double[nLabels];
 
         // size of input image
-        int sizeX = image.getSize(0);
-        int sizeY = image.getSize(1);
+        int sizeX = labelImage.getSize(0);
+        int sizeY = labelImage.getSize(1);
 
         // compute centroid of each region
         for (int y = 0; y < sizeY; y++) 
         {
             for (int x = 0; x < sizeX; x++)
             {
-                int label = image.getInt(x, y);
+                int label = labelImage.getInt(x, y);
                 if (label == 0)
                     continue;
 

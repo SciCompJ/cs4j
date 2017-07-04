@@ -178,8 +178,10 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 	 * Run the morphological reconstruction algorithm using the specified arrays
 	 * as argument.
 	 * 
-	 * @marker the 3D array of the marker
-	 * @mask the 3D array of the mask
+	 * @param marker
+	 *            the 3D array of the marker
+	 * @param mask
+	 *            the 3D array of the mask
 	 * @return the morphological reconstruction of the marker array constrained
 	 *         to the mask array
 	 */
