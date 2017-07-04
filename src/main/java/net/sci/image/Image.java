@@ -241,12 +241,24 @@ public class Image
 		this(data);
 		
 		// additional processing to take into account parent image
-		this.name = parent.name;
-		if (this.type == parent.type)
-		{
-			this.displayRange = parent.displayRange;
-		}
-		this.colorMap = parent.colorMap;
+		copySettings(parent);
+	}
+	
+	/**
+     * Creates a new image, initialized by image data, and keeping meta-data
+     * from parent image.
+     * 
+     * @param data
+     *            the initial data array for this image
+     * @param parent
+     *            the parent image used for inferring meta data
+     */
+	public Image(Array<?> data, Type type, Image parent)
+	{
+		this(data, type);
+		
+		// additional processing to take into account parent image
+		copySettings(parent);
 	}
 	
 	/**
@@ -338,6 +350,17 @@ public class Image
 			}
 			this.displayRange = new double[]{0, maxInt};
 		}
+	}
+	
+	private void copySettings(Image parent)
+	{
+		if (this.type == parent.type)
+		{
+			this.displayRange = parent.displayRange;
+		}
+		this.colorMap = parent.colorMap;
+
+		this.name = parent.name;
 	}
 	
 	// =============================================================
