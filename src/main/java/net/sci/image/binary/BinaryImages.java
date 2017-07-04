@@ -13,7 +13,6 @@ import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.BooleanArray3D;
 import net.sci.array.data.scalar3d.IntArray3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.array.type.Int;
 import net.sci.image.Image;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DShort;
@@ -88,31 +87,9 @@ public class BinaryImages
 			throw new RuntimeException("Can not manage binary array of class: " + array.getClass());
 		}
 
-		labelImage = new Image(labels, Image.Type.LABEL);
-
-		// setup display range to show largest label as white
-		int nLabels = findMaxLabel(labels);
-		labelImage.setDisplayRange(new double[]{0, nLabels});
-		// TODO: add parent image
+		labelImage = new Image(labels, Image.Type.LABEL, image);
 
 		return labelImage;
-	}
-
-	/**
-	 * Computes maximum value in the input array of integers.
-	 * 
-	 * This method is used to compute display range of result Image.
-	 */
-	private final static int findMaxLabel(IntArray<?> array) 
-	{
-		// find maximum value over array elements
-		int maxVal = 0;
-		for (Int i : array)
-		{
-			maxVal = Math.max(maxVal, i.getInt());
-		}
-		
-		return maxVal;
 	}
 
 	/**
@@ -175,17 +152,16 @@ public class BinaryImages
 	// Distance maps
 	
 	/**
-	 * Computes the distance map (or distance transform) from a binary image
-	 * processor. Distance is computed for each foreground (white) pixel or
-	 * voxel, as the chamfer distance to the nearest background (black) pixel or
-	 * voxel.
+	 * Computes the distance map (or distance transform) from a boolean array.
+	 * Distance is computed for each foreground (white) pixel or voxel, as the
+	 * chamfer distance to the nearest background (black) pixel or voxel.
 	 * 
 	 * @param image
 	 *            an Image object containing a binary array
 	 * @return a new Image containing the distance map
 	 * 
-	 * @see inra.ijpb.binary.distmap.DistanceTransform
-	 * @see inra.ijpb.binary.distmap.DistanceTransform3D
+	 * @see net.sci.image.binary.distmap.DistanceTransform2D
+	 * @see net.sci.image.binary.distmap.DistanceTransform3D
 	 */
 	public static final Image distanceMap(Image image)
 	{
@@ -200,7 +176,7 @@ public class BinaryImages
 		} 
 		else if (array instanceof BooleanArray3D)
 		{
-			// process planar image
+			// process 3D image
 			distMap = distanceMap((BooleanArray3D) array);
 		}
 		else
@@ -208,34 +184,33 @@ public class BinaryImages
 			throw new RuntimeException("Can not manage binary array of class: " + array.getClass());
 		}
 		
-		return new Image(distMap);
-		// TODO: add parent image
+		return new Image(distMap, image);
 	}
 	
 	/**
 	 * <p>
-	 * Computes the distance map (or distance transform) from a binary image
-	 * processor. Distance is computed for each foreground (white) pixel, as the
+	 * Computes the distance map (or distance transform) from a boolean 2D
+	 * array. Distance is computed for each foreground (white) pixel, as the
 	 * chamfer distance to the nearest background (black) pixel.
 	 * </p>
 	 * 
 	 * <p>
-	 * This method uses default 5x5 weights, and normalizes the resulting map.
-	 * Result is given in a new instance of IntArray2D.
+	 * This method uses default 5x5 chamfer weights, and normalizes the
+	 * resulting map. Result is given in a new instance of IntArray2D.
 	 * </p>
 	 * 
-	 * @param image
-	 *            the input binary image
+	 * @param array
+	 *            the input boolean array
 	 * @return a new Array2D containing the distance map result
 	 */
-	public static final ScalarArray2D<?> distanceMap(BooleanArray2D image) 
+	public static final ScalarArray2D<?> distanceMap(BooleanArray2D array) 
 	{
-		return distanceMap(image, new short[]{5, 7, 11}, true);
+		return distanceMap(array, new short[]{5, 7, 11}, true);
 	}
 	
 	/**
 	 * <p>
-	 * Computes the distance map from a binary image processor, by specifying
+	 * Computes the distance map from a boolean 2D array, by specifying
 	 * weights and normalization.
 	 * </p>
 	 * 
@@ -245,7 +220,7 @@ public class BinaryImages
 	 * new instance of IntArray2D.
 	 * </p>
 	 * 
-	 * @param image
+	 * @param array
 	 *            the input binary image
 	 * @param weights
 	 *            an array of chamfer weights, with at least two values
@@ -254,16 +229,16 @@ public class BinaryImages
 	 *            normalized (divide distances by the first chamfer weight)
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final IntArray2D<?> distanceMap(BooleanArray2D image,
+	public static final IntArray2D<?> distanceMap(BooleanArray2D array,
 			short[] weights, boolean normalize)
 	{
 		ChamferDistanceTransform2DShort algo = new ChamferDistanceTransform2DShort(weights, normalize);
-		return algo.process2d(image);
+		return algo.process2d(array);
 	}
 
 	/**
 	 * <p>
-	 * Computes the distance map from a binary image processor, by specifying
+	 * Computes the distance map from a boolean array, by specifying
 	 * weights and normalization.
 	 * </p>
 	 * 
@@ -273,8 +248,8 @@ public class BinaryImages
 	 * new instance of FloatArray2D.
 	 * </p>
 	 * 
-	 * @param image
-	 *            the input binary image
+	 * @param array
+	 *            the input binary array
 	 * @param weights
 	 *            an array of chamfer weights, with at least two values
 	 * @param normalize
@@ -282,36 +257,36 @@ public class BinaryImages
 	 *            normalized (divide distances by the first chamfer weight)
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final Float32Array2D distanceMap(BooleanArray2D image,
+	public static final Float32Array2D distanceMap(BooleanArray2D array,
 			float[] weights, boolean normalize) 
 	{
 		ChamferDistanceTransform2DFloat algo = new ChamferDistanceTransform2DFloat(weights, normalize);
-		return algo.process2d(image);
+		return algo.process2d(array);
 	}
 
 	/**
-	 * Computes the distance map from a binary 3D image. 
+	 * Computes the distance map from a boolean 3D array. 
 	 * Distance is computed for each foreground (white) pixel, as the 
 	 * chamfer distance to the nearest background (black) pixel.
 	 * 
-	 * @param image
-	 *            the input binary image
+	 * @param array
+	 *            the input boolean array
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final ScalarArray3D<?> distanceMap(BooleanArray3D image)
+	public static final ScalarArray3D<?> distanceMap(BooleanArray3D array)
 	{
 		float[] weights = new float[]{3.0f, 4.0f, 5.0f};
 		DistanceTransform3D algo = new DistanceTransform3DFloat(weights);
-		return algo.process3d(image);
+		return algo.process3d(array);
 	}
 	
 	/**
-	 * Computes the distance map from a binary 3D image. 
+	 * Computes the distance map from a boolean 3D array. 
 	 * Distance is computed for each foreground (white) pixel, as the 
 	 * chamfer distance to the nearest background (black) pixel.
 	 * 
-	 * @param image
-	 *            the input binary image
+	 * @param array
+	 *            the input boolean array
 	 * @param weights
 	 *            an array of chamfer weights, with at least three values
 	 * @param normalize
@@ -319,20 +294,20 @@ public class BinaryImages
 	 *            normalized (divide distances by the first chamfer weight)
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final ScalarArray3D<?> distanceMap(BooleanArray3D image,
+	public static final ScalarArray3D<?> distanceMap(BooleanArray3D array,
 			short[] weights, boolean normalize)
 	{
 		DistanceTransform3D algo = new DistanceTransform3DShort(weights, normalize);
-		return algo.process3d(image);
+		return algo.process3d(array);
 	}
 	
 	/**
-	 * Computes the distance map from a binary 3D image. 
+	 * Computes the distance map from a boolean 3D array. 
 	 * Distance is computed for each foreground (white) pixel, as the 
 	 * chamfer distance to the nearest background (black) pixel.
 	 * 
-	 * @param image
-	 *            the input 3D binary image
+	 * @param array
+	 *            the input boolean array
 	 * @param weights
 	 *            an array of chamfer weights, with at least three values
 	 * @param normalize
@@ -340,18 +315,18 @@ public class BinaryImages
 	 *            normalized (divide distances by the first chamfer weight)
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final ScalarArray3D<?> distanceMap(BooleanArray3D image, 
+	public static final ScalarArray3D<?> distanceMap(BooleanArray3D array, 
 			float[] weights, boolean normalize)
 	{
 		DistanceTransform3D algo = new DistanceTransform3DFloat(weights, normalize);
-		return algo.process3d(image);
+		return algo.process3d(array);
 	}
 	
 	/**
 	 * Checks that the image is binary, and returns the inner boolean array.
 	 * 
 	 * @param image
-	 *            the image
+	 *            the input image
 	 * @return the boolean array contained in image
 	 * @throws IllegalArgumentException
 	 *             if input image is not a binary image
