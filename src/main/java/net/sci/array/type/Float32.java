@@ -23,6 +23,9 @@ public class Float32 extends Scalar
 	
 	/**
 	 * Creates new Float with specified value.
+	 * 
+	 * @param value
+	 *            the value stored within this Float32
 	 */
 	public Float32(float value)
 	{

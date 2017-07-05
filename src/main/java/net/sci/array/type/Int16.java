@@ -38,7 +38,10 @@ public class Int16 extends Int
 	short value;
 	
 	/**
+	 * Creates a new instance of Int16 using the specified value.
 	 * 
+	 * @param value
+	 *            the value stored within this Int16
 	 */
 	public Int16(int value)
 	{

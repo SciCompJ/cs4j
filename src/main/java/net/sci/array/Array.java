@@ -57,6 +57,8 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 * Returns the size of the image along the specified dimension, starting
 	 * from 0.
 	 * 
+	 * @param dim
+	 *            the dimension, between 0 and dimensionality()-1
 	 * @return the size along the specified dimension.
 	 */
 	public int getSize(int dim);
@@ -106,28 +108,34 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 *            the position, as an array of indices
 	 * @return the element at the given position
 	 */
-	public T get(int[]pos);
+	public T get(int[] pos);
 
 	/**
 	 * Sets the value at the given position.
+	 * 
 	 * @param pos
+	 *            the position, as an array of indices
 	 * @param value
+	 *            the new value for the given position
 	 */
-	public void set(int[]pos, T value);
+	public void set(int[] pos, T value);
 
 	/**
 	 * Gets the value at the given position as a numeric double.
-	 * @param position
-	 * @return
+	 * @param pos
+	 *            the position, as an array of indices
+	 * @return the double value at the given position
 	 */
-	public double getValue(int[] position);
+	public double getValue(int[] pos);
 	
 	/**
 	 * Sets the value at the given position as a numeric double.
-	 * @param position
-	 * @return
+	 * @param pos
+	 *            the position, as an array of indices
+	 * @param value
+	 *            the new value for the given position
 	 */
-	public void setValue(int[] position, double value);
+	public void setValue(int[] pos, double value);
 
 	public default Cursor getCursor()
 	{
@@ -173,6 +181,8 @@ public interface Array<T> extends Iterable<T>, Dimensional
 		
 		/**
 		 * Returns the next value as a double.
+		 * 
+		 * @return the next value as a double
 		 */
 		public double nextValue();
 	

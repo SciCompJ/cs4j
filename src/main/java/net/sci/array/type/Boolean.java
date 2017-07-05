@@ -29,6 +29,9 @@ public class Boolean extends Int
 
 	/**
 	 * Default constructor.
+	 * 
+	 * @param state
+	 *            the logical state of this Boolean
 	 */
 	public Boolean(boolean state)
 	{
@@ -36,7 +39,11 @@ public class Boolean extends Int
 	}
 	
 	/**
-	 * Constructor from an int, setting to a TRUE state if the value is different from 0. 
+	 * Constructor from an int, setting to a TRUE state if the value is
+	 * different from 0.
+	 * 
+	 * @param value
+	 *            the value used to defined the state of this boolean
 	 */
 	public Boolean(int value)
 	{

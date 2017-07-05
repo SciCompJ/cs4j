@@ -31,7 +31,7 @@ public class RGB8 extends Vector<UInt8>
 	 * @param value
 	 *            a double value corresponding to luma value between 0 and 255.
 	 * @return the corresponding RGB8 instance
-	 * @see getValue()
+	 * @see #getValue()
 	 */
 	public final static RGB8 fromValue(double value)
 	{
@@ -69,6 +69,13 @@ public class RGB8 extends Vector<UInt8>
 	
 	/**
 	 * Creates a new color by specifying the double value of each component.
+	 * 
+	 * @param red
+	 *            the value of the red component, between 0 and 255
+	 * @param green
+	 *            the value of the green component, between 0 and 255
+	 * @param blue
+	 *            the value of the blue component, between 0 and 255
 	 */
 	public RGB8(double red, double green, double blue)
 	{
@@ -105,9 +112,7 @@ public class RGB8 extends Vector<UInt8>
     /**
      * Returns the red, green and blue values into an integer array.
      * 
-     * @param rgb
-     *            a preallocated array with three elements
-     * @return the reference to the rgb array
+     * @return the reference to the RGB array
      */
     public int[] getSamples()
     {
@@ -120,7 +125,7 @@ public class RGB8 extends Vector<UInt8>
      * 
      * @param rgb
      *            a preallocated array with three elements
-     * @return the reference to the rgb array
+     * @return the reference to the RGB array
      */
     public int[] getSamples(int[] rgb)
     {

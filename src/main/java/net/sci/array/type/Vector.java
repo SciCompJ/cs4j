@@ -19,10 +19,12 @@ public abstract class Vector<T extends Scalar>
     public abstract double[] getValues();
     
     /**
-     * Returns the set of values that constitutes this vector.
-     * 
-     * @return the set of values that constitutes this vector.
-     */
+	 * Returns the set of values that constitutes this vector.
+	 * 
+	 * @param values
+	 *            an array used to store the result
+	 * @return the set of values that constitutes this vector.
+	 */
     public abstract double[] getValues(double[] values);
     
 	/**

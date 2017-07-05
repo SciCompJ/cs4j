@@ -32,7 +32,10 @@ public class UInt16 extends Int
 	short value;
 	
 	/**
+	 * Creates a new instance of UInt16 using the specified value.
 	 * 
+	 * @param value
+	 *            the value stored within this UInt16
 	 */
 	public UInt16(int value)
 	{

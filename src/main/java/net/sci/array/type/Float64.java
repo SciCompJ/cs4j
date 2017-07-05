@@ -23,6 +23,9 @@ public class Float64 extends Scalar
 	
 	/**
 	 * Creates new double with specified value.
+	 * 
+	 * @param value
+	 *            the value stored within this Float64
 	 */
 	public Float64(double value)
 	{

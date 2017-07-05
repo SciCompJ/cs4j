@@ -15,7 +15,10 @@ public class Int32 extends Int
 	int value;
 	
 	/**
+	 * Creates a new instance of Int32 using the specified value.
 	 * 
+	 * @param value
+	 *            the value stored within this Int32
 	 */
 	public Int32(int value)
 	{

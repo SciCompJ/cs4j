@@ -29,7 +29,10 @@ public class UInt8 extends Int
 	byte value;
 	
 	/**
+	 * Creates a new instance of UInt8 using the specified value.
 	 * 
+	 * @param value
+	 *            the value stored within this UInt8
 	 */
 	public UInt8(int value)
 	{
