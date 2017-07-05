@@ -34,7 +34,7 @@ import net.sci.array.data.scalar3d.ScalarArray3D;
  * @author David Legland
  * 
  */
-public class DistanceTransform3DFloat extends AlgoStub implements DistanceTransform3D
+public class ChamferDistanceTransform3DFloat extends AlgoStub implements DistanceTransform3D
 {
 	private float[] weights;
 
@@ -62,7 +62,7 @@ public class DistanceTransform3DFloat extends AlgoStub implements DistanceTransf
 	 * Default constructor that specifies the chamfer weights.
 	 * @param weights an array of two weights for orthogonal and diagonal directions
 	 */
-	public DistanceTransform3DFloat(float[] weights)
+	public ChamferDistanceTransform3DFloat(float[] weights)
 	{
 		this.weights = weights;
 	}
@@ -77,7 +77,7 @@ public class DistanceTransform3DFloat extends AlgoStub implements DistanceTransf
 	 *            flag indicating whether the final distance map should be
 	 *            normalized by the first weight
 	 */
-	public DistanceTransform3DFloat(float[] weights, boolean normalize)
+	public ChamferDistanceTransform3DFloat(float[] weights, boolean normalize)
 	{
 		this.weights = weights;
 		this.normalizeMap = normalize;

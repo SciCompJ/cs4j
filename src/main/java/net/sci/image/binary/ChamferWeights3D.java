@@ -19,7 +19,7 @@ package net.sci.image.binary;
  * <pre><code>
  * float[] floatWeights = ChamferWeights3D.BORGEFORS.getFloatWeights();
  * boolean normalize = true;
- * DistanceTransform3D algo = new DistanceTransform3DFloat(floatWeights, normalize);
+ * DistanceTransform3D algo = new ChamferDistanceTransform3DFloat(floatWeights, normalize);
  * ScalarArray3D result = algo.process3d(inputArray);
  * </code></pre>
  *
