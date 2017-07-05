@@ -302,7 +302,7 @@ public class MorphologicalReconstruction2DHybridTest
 		mask = invert(mask);
 
 		UInt8Array2D marker = UInt8Array2D.create(width, height);
-		marker.fill(255);
+		marker.fillValue(255);
 		marker.setInt(2, 3, 0);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
@@ -354,7 +354,7 @@ public class MorphologicalReconstruction2DHybridTest
 		mask = invert(mask);
 
 		UInt8Array2D marker = UInt8Array2D.create(width, height);
-		marker.fill(255);
+		marker.fillValue(255);
 		marker.setInt(2, 3, 0);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
@@ -408,7 +408,7 @@ public class MorphologicalReconstruction2DHybridTest
 		}
 
 		Float32Array2D marker = Float32Array2D.create(width, height);
-		marker.fill(FG);
+		marker.fillValue(FG);
 		marker.setValue(2, 3, BG);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
@@ -462,7 +462,7 @@ public class MorphologicalReconstruction2DHybridTest
 		}
 
 		Float32Array2D marker = Float32Array2D.create(width, height);
-		marker.fill(FG);
+		marker.fillValue(FG);
 		marker.setValue(2, 3, BG);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(

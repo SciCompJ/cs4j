@@ -150,10 +150,10 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 					if (x > 1) 
 						diag2 = Math.min(diag2, result.getValue(x-2, y-1));
 					if (x > 0) 
-						diago = Math.min(diag2, result.getValue(x-1, y-1));
+						diago = Math.min(diago, result.getValue(x-1, y-1));
 					ortho = Math.min(ortho, result.getValue(x, y-1));
 					if (x < sizeX - 1) 
-						diago = Math.min(diag2, result.getValue(x+1, y-1));
+						diago = Math.min(diago, result.getValue(x+1, y-1));
 					if (x < sizeX - 2) 
 						diag2 = Math.min(diag2, result.getValue(x+2, y-1));
 				}
@@ -209,10 +209,10 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 					if (x < sizeX - 2) 
 						diag2 = Math.min(diag2, result.getValue(x+2, y+1));
 					if (x < sizeX - 1) 
-						diago = Math.min(diag2, result.getValue(x+1, y+1));
+						diago = Math.min(diago, result.getValue(x+1, y+1));
 					ortho = Math.min(ortho, result.getValue(x, y+1));
 					if (x > 0) 
-						diago = Math.min(diag2, result.getValue(x-1, y+1));
+						diago = Math.min(diago, result.getValue(x-1, y+1));
 					if (x > 1) 
 						diag2 = Math.min(diag2, result.getValue(x-2, y+1));
 				}
@@ -233,5 +233,4 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 		
 		this.fireProgressChanged(this, sizeY, sizeY);
 	} // end of backward iteration
-
 }
