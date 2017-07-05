@@ -81,8 +81,39 @@ public class MorphologicalReconstruction
 	// Static methods for Image instance
 
 	/**
-	 * Removes the border of the input image, by performing a morphological
-	 * reconstruction by dilation initialized with image boundary.
+	 * Removes the border of the input 2D or 3D image.
+	 * 
+	 * @param array
+	 *            the image to process
+	 * @return a new image with borders removed
+	 * 
+	 * @see #killBorders(ScalarArray2D)
+	 * @see #killBorders(ScalarArray3D)
+	 */
+	public static final Image killBorders(Image image)
+	{
+		Array<?> array = image.getData();
+		Array<?> res;
+		if (array instanceof ScalarArray2D)
+		{
+			res = killBorders((ScalarArray2D<?>) array);
+		}
+		else if (array instanceof ScalarArray3D)
+		{
+			res = killBorders((ScalarArray3D<?>) array);
+		}
+		else
+		{
+			throw new RuntimeException("Requires an image containing a 2D or 3D scalar array");
+		}
+		
+		return new Image(res, image);
+	}
+
+	/**
+	 * Removes the border of the input 2D array. The principle is to perform a
+	 * morphological reconstruction by dilation initialized with image boundary.
+	 * 
 	 * 
 	 * @see #fillHoles(ScalarArray2D)
 	 * 
@@ -95,12 +126,11 @@ public class MorphologicalReconstruction
 		int sizeX = array.getSize(0);
 		int sizeY = array.getSize(1);
 
-		
 		// Initialize marker image with zeros everywhere except at borders
 		ScalarArray2D<?> marker = array.duplicate();
-		for (int y = 1; y < sizeY-1; y++) 
+		for (int y = 1; y < sizeY - 1; y++)
 		{
-			for (int x = 1; x < sizeX-1; x++) 
+			for (int x = 1; x < sizeX - 1; x++)
 			{
 				marker.setValue(x, y, Double.NEGATIVE_INFINITY);
 			}
@@ -123,12 +153,93 @@ public class MorphologicalReconstruction
 	}
 
 	/**
+	 * Removes the border of the input 3D array. The principle is to perform a
+	 * morphological reconstruction by dilation initialized with image boundary.
+	 * 
+	 * @see #fillHoles(ScalarArray3D)
+	 * @see #killBorders(ScalarArray2D)
+	 * 
+	 * @param array
+	 *            the image to process
+	 * @return a new image with borders removed
+	 */
+	public static final ScalarArray3D<?> killBorders(ScalarArray3D<?> array) 
+	{
+		// Image size
+		int sizeX = array.getSize(0);
+		int sizeY = array.getSize(1);
+		int sizeZ = array.getSize(2);
+
+		// Initialize marker image with zeros everywhere except at borders
+		ScalarArray3D<?> marker = array.duplicate();
+		for (int z = 1; z < sizeZ-1; z++) 
+		{
+			for (int y = 1; y < sizeY-1; y++) 
+			{
+				for (int x = 1; x < sizeX-1; x++) 
+				{
+					marker.setValue(x, y, z, Double.NEGATIVE_INFINITY);
+				}
+			}
+		}
+		
+		// Reconstruct image from borders to find touching structures
+		ScalarArray3D<?> result = reconstructByDilation(marker, array);
+		
+		// removes result from original image
+		for (int z = 0; z < sizeZ; z++) 
+		{
+			for (int y = 0; y < sizeY; y++) 
+			{
+				for (int x = 0; x < sizeX; x++) 
+				{
+					double val = array.getValue(x, y, z) - result.getValue(x, y, z);
+					result.setValue(x, y, z, Math.max(val, 0));
+				}
+			}
+		}		
+		return result;
+	}
+
+
+	/**
+	 * Fill the holes in the input image.
+	 * 
+	 * @param array
+	 *            the image to process
+	 * @return a new image with holes filled
+	 * 
+	 * @see #fillHoles(ScalarArray2D)
+	 * @see #fillHoles(ScalarArray3D)
+	 */
+	public static final Image fillHoles(Image image)
+	{
+		Array<?> array = image.getData();
+		Array<?> res;
+		if (array instanceof ScalarArray2D)
+		{
+			res = fillHoles((ScalarArray2D<?>) array);
+		}
+		else if (array instanceof ScalarArray3D)
+		{
+			res = fillHoles((ScalarArray3D<?>) array);
+		}
+		else
+		{
+			throw new RuntimeException("Requires an image containing a 2D or 3D scalar array");
+		}
+		
+		return new Image(res, image);
+	}
+
+	/**
 	 * Fills the holes in the input array.
 	 *
 	 * The method consists in creating a marker image corresponding to the full
 	 * array without the borders, and performing morphological reconstruction by
 	 * erosion.
 	 * 
+	 * @see #fillHoles(ScalarArray3D)
 	 * @see #killBorders(ScalarArray2D)
 	 * 
 	 * @param array
@@ -148,6 +259,44 @@ public class MorphologicalReconstruction
 			for (int x = 1; x < sizeX - 1; x++)
 			{
 				marker.setValue(x, y, Double.POSITIVE_INFINITY);
+			}
+		}
+		
+		// Reconstruct image from borders to find touching structures
+		return reconstructByErosion(marker, array);
+	}
+
+	/**
+	 * Fills the holes in the input 3D array.
+	 *
+	 * The method consists in creating a marker image corresponding to the full
+	 * array without the borders, and performing morphological reconstruction by
+	 * erosion.
+	 * 
+	 * @see #fillHoles(ScalarArray2D)
+	 * @see #killBorders(ScalarArray3D)
+	 * 
+	 * @param array
+	 *            the image to process
+	 * @return a new image with holes filled
+	 */
+	public static final ScalarArray3D<?> fillHoles(ScalarArray3D<?> array) 
+	{
+		// Image size
+		int sizeX = array.getSize(0);
+		int sizeY = array.getSize(1);
+		int sizeZ = array.getSize(2);
+
+		// Initialize marker image with white everywhere except at borders
+		ScalarArray3D<?> marker = array.duplicate();
+		for (int z = 1; z < sizeZ - 1; z++)
+		{
+			for (int y = 1; y < sizeY - 1; y++)
+			{
+				for (int x = 1; x < sizeX - 1; x++)
+				{
+					marker.setValue(x, y, z, Double.POSITIVE_INFINITY);
+				}
 			}
 		}
 		
