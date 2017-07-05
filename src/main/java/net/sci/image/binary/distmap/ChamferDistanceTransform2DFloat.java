@@ -12,7 +12,7 @@ import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.data.scalar2d.BooleanArray2D;
 import net.sci.array.data.scalar2d.Float32Array2D;
-import net.sci.image.binary.ChamferWeights;
+import net.sci.image.binary.ChamferWeights2D;
 
 /**
  * @author dlegland
@@ -35,7 +35,7 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 	BooleanArray2D mask;
 	Float32Array2D result;
 	
-	public ChamferDistanceTransform2DFloat(ChamferWeights weights, boolean normalize)
+	public ChamferDistanceTransform2DFloat(ChamferWeights2D weights, boolean normalize)
 	{
 		this(weights.getFloatWeights(), normalize);
 	}

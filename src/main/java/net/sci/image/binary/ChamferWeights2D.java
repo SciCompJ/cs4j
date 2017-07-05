@@ -16,20 +16,19 @@ package net.sci.image.binary;
  * 
  * <p>
  * Example of use:
- * <pre><code>
- *	short[] shortWeights = ChamferWeights.CHESSKNIGHT.getShortWeights();
+ * {@code
+ *	short[] shortWeights = ChamferWeights2D.CHESSKNIGHT.getShortWeights();
  *	boolean normalize = true;
- *	DistanceTransform dt = new DistanceTransform5x5Short(shortWeights, normalize);
- *	ImageProcessor result = dt.distanceMap(inputImage);
+ *	DistanceTransform2D algo = new ChamferDistanceTransform2DShort(shortWeights, normalize);
+ *	ScalarArray2D<?> result = algo.process2d(inputArray);
  *	// or:
- *	ImagePlus resultPlus = BinaryImages.distanceMap(imagePlus, shortWeights, normalize);
- * </code></pre>
+ *	ImagePlus resultPlus = BinaryImages.distanceMap(image, shortWeights, normalize);
+ * }</pre>
  * 
- * @see inra.ijpb.binary.BinaryImages#distanceMap(ij.process.ImageProcessor, short[], boolean)
- * @see inra.ijpb.binary.BinaryImages#distanceMap(ij.process.ImageProcessor, float[], boolean)
- * @see inra.ijpb.binary.distmap.DistanceTransform
+ * @see net.sci.image.binary.distmap.DistanceTransform2D
+ * @see net.sci.image.binary.BinaryImages#distanceMap(net.sci.array.data.scalar2d.BooleanArray2D)
  */
-public enum ChamferWeights
+public enum ChamferWeights2D
 {
 	/** Use weight equal to 1 for all neighbors */
 	CHESSBOARD("Chessboard (1,1)", new short[] { 1, 1 }), 
@@ -61,7 +60,7 @@ public enum ChamferWeights
 	private final short[] shortWeights;
 	private final float[] floatWeights;
 
-	private ChamferWeights(String label, short[] shortWeights)
+	private ChamferWeights2D(String label, short[] shortWeights)
 	{
 		this.label = label;
 		this.shortWeights = shortWeights;
@@ -70,7 +69,7 @@ public enum ChamferWeights
 			this.floatWeights[i] = (float) shortWeights[i];
 	}
 
-	private ChamferWeights(String label, short[] shortWeights,
+	private ChamferWeights2D(String label, short[] shortWeights,
 			float[] floatWeights)
 	{
 		this.label = label;
@@ -95,11 +94,11 @@ public enum ChamferWeights
 
 	public static String[] getAllLabels()
 	{
-		int n = ChamferWeights.values().length;
+		int n = ChamferWeights2D.values().length;
 		String[] result = new String[n];
 
 		int i = 0;
-		for (ChamferWeights weight : ChamferWeights.values())
+		for (ChamferWeights2D weight : ChamferWeights2D.values())
 			result[i++] = weight.label;
 
 		return result;
@@ -109,23 +108,23 @@ public enum ChamferWeights
 	 * Determines the operation type from its label.
 	 * 
 	 * @param label the name of a chamfer weight 
-	 * @return the ChamferWeights enum corresponding to the given name
+	 * @return the ChamferWeights2D enum corresponding to the given name
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if label name is not recognized.
 	 */
-	public static ChamferWeights fromLabel(String label)
+	public static ChamferWeights2D fromLabel(String label)
 	{
 		if (label != null)
 			label = label.toLowerCase();
-		for (ChamferWeights weight : ChamferWeights.values())
+		for (ChamferWeights2D weight : ChamferWeights2D.values())
 		{
 			String cmp = weight.label.toLowerCase();
 			if (cmp.equals(label))
 				return weight;
 		}
 		throw new IllegalArgumentException(
-				"Unable to parse ChamferWeights with label: " + label);
+				"Unable to parse ChamferWeights2D with label: " + label);
 	}
 
 }

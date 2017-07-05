@@ -13,7 +13,7 @@ import net.sci.array.ArrayOperator;
 import net.sci.array.data.scalar2d.BooleanArray2D;
 import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.array.type.UInt16;
-import net.sci.image.binary.ChamferWeights;
+import net.sci.image.binary.ChamferWeights2D;
 
 /**
  * @author dlegland
@@ -36,7 +36,7 @@ public class ChamferDistanceTransform2DShort extends AlgoStub implements ArrayOp
 	BooleanArray2D mask;
 	UInt16Array2D result;
 	
-	public ChamferDistanceTransform2DShort(ChamferWeights weights, boolean normalize)
+	public ChamferDistanceTransform2DShort(ChamferWeights2D weights, boolean normalize)
 	{
 		this(weights.getShortWeights(), normalize);
 	}

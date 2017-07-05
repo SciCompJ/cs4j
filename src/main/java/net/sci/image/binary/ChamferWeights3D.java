@@ -19,13 +19,13 @@ package net.sci.image.binary;
  * <pre><code>
  * float[] floatWeights = ChamferWeights3D.BORGEFORS.getFloatWeights();
  * boolean normalize = true;
- * DistanceTransform3D dt = new DistanceTransform3DFloat(floatWeights, normalize);
- * ImageStack result = dt.distanceMap(inputStack);
+ * DistanceTransform3D algo = new DistanceTransform3DFloat(floatWeights, normalize);
+ * ScalarArray3D result = algo.process3d(inputArray);
  * </code></pre>
  *
  * 
- * @see BinaryImages#distanceMap(ij.ImageStack)
- * @see inra.ijpb.binary.distmap.DistanceTransform3D
+ * @see net.sci.image.binary.distmap.DistanceTransform3D
+ * @see net.sci.image.binary.BinaryImages#distanceMap(net.sci.array.data.scalar3d.BooleanArray3D)
  */
 public enum ChamferWeights3D
 {
