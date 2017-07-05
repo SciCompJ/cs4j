@@ -3,14 +3,10 @@
  */
 package net.sci.image;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
@@ -21,10 +17,8 @@ import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.data.color.RGB8Array;
-import net.sci.array.data.scalar2d.IntArray2D;
-import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.data.scalar3d.UInt8Array3D;
 import net.sci.array.type.Int;
+import net.sci.image.io.ImageIOImageReader;
 import net.sci.image.io.MetaImageReader;
 import net.sci.image.io.TiffImageReader;
 import net.sci.image.io.TiffTag;
@@ -88,78 +82,14 @@ public class Image
 		} 
 		else
 		{
-			BufferedImage bufImg = ImageIO.read(file);
-			image = createImage(bufImg);
+			ImageIOImageReader reader = new ImageIOImageReader(file); 
+			image = reader.readImage();
 		}
 		
 		image.setName(file.getName());
 		return image;
 	}
 	
-	/**
-	 * Creates a new Image from an AWT image.
-	 * 
-	 * @param bufImg an instance of BufferedImage
-	 * @return the converted image
-	 */
-	public final static Image createImage(BufferedImage bufImg)
-	{
-		// TODO: keep here?
-		// Image dimension
-		int width = bufImg.getWidth();
-		int height = bufImg.getHeight();
-
-		// get the raster, that contains data
-		WritableRaster raster = bufImg.getRaster();
-
-		int nc = raster.getNumBands();
-
-		Array<?> array = null;
-		if (nc == 1)
-		{
-			// Create new image
-			IntArray2D<?> img = UInt8Array2D.create(width, height);
-
-			// Initialize image data with raster content
-			for (int y = 0; y < height; y++)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					int value = raster.getSample(x, y, 0);
-					img.setInt(x, y, value);
-				}
-			}
-			array = img;
-
-		} 
-		else if (nc == 3 || nc == 4)
-		{
-			// Create new image
-			UInt8Array3D img = UInt8Array3D.create(width, height, 3);
-
-			// Initialize image data with raster content
-			for (int y = 0; y < height; y++)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					img.setInt(x, y, 0, raster.getSample(x, y, 0));
-					img.setInt(x, y, 1, raster.getSample(x, y, 1));
-					img.setInt(x, y, 2, raster.getSample(x, y, 2));
-				}
-			}
-			array = img;
-		} 
-		else
-		{
-			throw new RuntimeException(
-					"Can not manage images with number of bands equal to " + nc);
-		}
-
-		// create the meta-image
-		Image image = new Image(array);
-		return image;
-	}
-
 
 
 	// =============================================================
