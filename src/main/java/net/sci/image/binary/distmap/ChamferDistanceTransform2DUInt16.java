@@ -5,7 +5,6 @@ package net.sci.image.binary.distmap;
 
 
 import static java.lang.Math.min;
-
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
@@ -16,10 +15,14 @@ import net.sci.array.type.UInt16;
 import net.sci.image.binary.ChamferWeights2D;
 
 /**
- * @author dlegland
- *
+ * Computes 2D Chamfer distance maps using in a 3x3 or 5x5 neighborhood of each
+ * pixel, and storing result in a 2D UInt16 array.
+ * 
+ * @author David Legland
+ * @see ChamferDistanceTransform2DFloat
  */
-public class ChamferDistanceTransform2DShort extends AlgoStub implements ArrayOperator, DistanceTransform2D
+public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
+		ArrayOperator, DistanceTransform2D
 {
 	private short[] weights = new short[]{3, 4, 5};
 
@@ -36,12 +39,12 @@ public class ChamferDistanceTransform2DShort extends AlgoStub implements ArrayOp
 	BooleanArray2D mask;
 	UInt16Array2D result;
 	
-	public ChamferDistanceTransform2DShort(ChamferWeights2D weights, boolean normalize)
+	public ChamferDistanceTransform2DUInt16(ChamferWeights2D weights, boolean normalize)
 	{
 		this(weights.getShortWeights(), normalize);
 	}
 
-	public ChamferDistanceTransform2DShort(short[] weights, boolean normalize)
+	public ChamferDistanceTransform2DUInt16(short[] weights, boolean normalize)
 	{
 		this.weights = weights;
 		

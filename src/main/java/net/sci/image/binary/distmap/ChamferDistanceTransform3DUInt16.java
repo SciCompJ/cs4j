@@ -26,19 +26,19 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.data.scalar3d.BooleanArray3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.data.scalar3d.UInt16Array3D;
+import net.sci.image.binary.ChamferWeights3D;
 
 
 /**
- * Computes Chamfer distances in a 3x3x3 neighborhood using short point 
- * calculation.
+ * Computes Chamfer distances in a 3x3x3 neighborhood using UInt16.
  * 
  * In practice, computations are done with floats, but result is stored in a
- * 3D short image, thus requiring less memory than floating point. 
+ * 3D array of UInt16, thus requiring less memory than floating point. 
  * 
  * @author David Legland
- * 
+ * @see ChamferDistanceTransform3DFloat
  */
-public class ChamferDistanceTransform3DShort extends AlgoStub implements DistanceTransform3D
+public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements DistanceTransform3D
 {
 	// ==============================================================
 	// class members
@@ -69,10 +69,26 @@ public class ChamferDistanceTransform3DShort extends AlgoStub implements Distanc
 	// Constructors
 
 	/**
+	 * Constructor specifying the chamfer weights and the optional
+	 * normalization option.
+	 * 
+	 * @param weights
+	 *            an instance of ChamferWeights3D specifying the weights
+	 * @param normalize
+	 *            flag indicating whether the final distance map should be
+	 *            normalized by the first weight
+	 */
+	public ChamferDistanceTransform3DUInt16(ChamferWeights3D weights, boolean normalize)
+	{
+		this.weights = weights.getShortWeights();
+		this.normalizeMap = normalize;
+	}
+
+	/**
 	 * Default constructor that specifies the chamfer weights.
 	 * @param weights an array of two weights for orthogonal and diagonal directions
 	 */
-	public ChamferDistanceTransform3DShort(short[] weights)
+	public ChamferDistanceTransform3DUInt16(short[] weights)
 	{
 		this.weights = weights;
 	}
@@ -85,7 +101,7 @@ public class ChamferDistanceTransform3DShort extends AlgoStub implements Distanc
 	 *            flag indicating whether the final distance map should be
 	 *            normalized by the first weight
 	 */
-	public ChamferDistanceTransform3DShort(short[] weights, boolean normalize)
+	public ChamferDistanceTransform3DUInt16(short[] weights, boolean normalize)
 	{
 		this.weights = weights;
 		this.normalizeMap = normalize;
@@ -96,7 +112,7 @@ public class ChamferDistanceTransform3DShort extends AlgoStub implements Distanc
 	 * Distance is computed for each foreground (white) pixel, as the 
 	 * chamfer distance to the nearest background (black) pixel.
 	 * 
-	 * @param image a 3D binary image with white pixels (255) as foreground
+	 * @param array a 3D binary image with white pixels (255) as foreground
 	 * @return a new 3D image containing: <ul>
 	 * <li> 0 for each background pixel </li>
 	 * <li> the distance to the nearest background pixel otherwise</li>
@@ -125,7 +141,7 @@ public class ChamferDistanceTransform3DShort extends AlgoStub implements Distanc
 				for (int x = 0; x < sizeX; x++) 
 				{
 					boolean b = array.getState(x, y, z);
-					distMap.setInt(x, y, z, b ? 0 : Short.MAX_VALUE);
+					distMap.setInt(x, y, z, b ? Short.MAX_VALUE : 0);
 				}
 			}
 		}
@@ -233,7 +249,7 @@ public class ChamferDistanceTransform3DShort extends AlgoStub implements Distanc
 						{
 							diago = Math.min(diago, distMap.getInt(x-1, y-1, z));
 						}
-						ortho = Math.min(ortho, distMap.getInt(x-1, y-1, z));
+						ortho = Math.min(ortho, distMap.getInt(x, y-1, z));
 						if (x < sizeX - 1) 
 						{
 							diago = Math.min(diago, distMap.getInt(x+1, y-1, z));

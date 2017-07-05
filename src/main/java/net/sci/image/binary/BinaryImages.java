@@ -15,10 +15,10 @@ import net.sci.array.data.scalar3d.IntArray3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.Image;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat;
-import net.sci.image.binary.distmap.ChamferDistanceTransform2DShort;
+import net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16;
 import net.sci.image.binary.distmap.DistanceTransform3D;
 import net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat;
-import net.sci.image.binary.distmap.ChamferDistanceTransform3DShort;
+import net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16;
 
 /**
  * A collection of static methods for operating on binary images (2D/3D).
@@ -232,7 +232,7 @@ public class BinaryImages
 	public static final IntArray2D<?> distanceMap(BooleanArray2D array,
 			short[] weights, boolean normalize)
 	{
-		ChamferDistanceTransform2DShort algo = new ChamferDistanceTransform2DShort(weights, normalize);
+		ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(weights, normalize);
 		return algo.process2d(array);
 	}
 
@@ -297,7 +297,7 @@ public class BinaryImages
 	public static final ScalarArray3D<?> distanceMap(BooleanArray3D array,
 			short[] weights, boolean normalize)
 	{
-		DistanceTransform3D algo = new ChamferDistanceTransform3DShort(weights, normalize);
+		DistanceTransform3D algo = new ChamferDistanceTransform3DUInt16(weights, normalize);
 		return algo.process3d(array);
 	}
 	

@@ -19,7 +19,7 @@ package net.sci.image.binary;
  * {@code
  *	short[] shortWeights = ChamferWeights2D.CHESSKNIGHT.getShortWeights();
  *	boolean normalize = true;
- *	DistanceTransform2D algo = new ChamferDistanceTransform2DShort(shortWeights, normalize);
+ *	DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(shortWeights, normalize);
  *	ScalarArray2D<?> result = algo.process2d(inputArray);
  *	// or:
  *	ImagePlus resultPlus = BinaryImages.distanceMap(image, shortWeights, normalize);

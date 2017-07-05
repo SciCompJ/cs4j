@@ -26,13 +26,14 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.data.scalar3d.BooleanArray3D;
 import net.sci.array.data.scalar3d.Float32Array3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
+import net.sci.image.binary.ChamferWeights3D;
 
 /**
  * Computes Chamfer distances in a 3x3x3 neighborhood using floating point 
- * calculation.
+ * computation. 
  * 
  * @author David Legland
- * 
+ * @see ChamferDistanceTransform3DUInt16
  */
 public class ChamferDistanceTransform3DFloat extends AlgoStub implements DistanceTransform3D
 {
@@ -59,6 +60,22 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 	private int sizeZ;	
 	
 	/**
+	 * Constructor specifying the chamfer weights and the optional
+	 * normalization option.
+	 * 
+	 * @param weights
+	 *            an instance of ChamferWeights3D specifying the weights
+	 * @param normalize
+	 *            flag indicating whether the final distance map should be
+	 *            normalized by the first weight
+	 */
+	public ChamferDistanceTransform3DFloat(ChamferWeights3D weights, boolean normalize)
+	{
+		this.weights = weights.getFloatWeights();
+		this.normalizeMap = normalize;
+	}
+
+	/**
 	 * Default constructor that specifies the chamfer weights.
 	 * @param weights an array of two weights for orthogonal and diagonal directions
 	 */
@@ -69,7 +86,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 
 	/**
 	 * Constructor specifying the chamfer weights and the optional
-	 * normalization.
+	 * normalization option.
 	 * 
 	 * @param weights
 	 *            an array of two weights for orthogonal and diagonal directions
@@ -88,7 +105,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 	 * for each foreground (white) pixel, as the chamfer distance to the nearest
 	 * background (black) pixel.
 	 * 
-	 * @param image
+	 * @param array
 	 *            a 3D binary image with white pixels (255) as foreground
 	 * @return a new 3D image containing:
 	 *         <ul>
@@ -119,7 +136,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 				for (int x = 0; x < sizeX; x++) 
 				{
 					boolean b = array.getState(x, y, z);
-					distMap.setValue(x, y, z, b ? 0 : Float.MAX_VALUE);
+					distMap.setValue(x, y, z, b ? Float.MAX_VALUE : 0);
 				}
 			}
 		}
@@ -228,7 +245,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 						{
 							diago = Math.min(diago, distMap.getValue(x-1, y-1, z));
 						}
-						ortho = Math.min(ortho, distMap.getValue(x-1, y-1, z));
+						ortho = Math.min(ortho, distMap.getValue(x, y-1, z));
 						if (x < sizeX - 1) 
 						{
 							diago = Math.min(diago, distMap.getValue(x+1, y-1, z));
