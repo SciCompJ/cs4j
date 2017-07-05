@@ -45,7 +45,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 	 * 
 	 * @param value the value to fill the array with
 	 */
-	public default void fill(double value)
+	public default void fillValue(double value)
 	{
 		Iterator<? extends Scalar> iter = iterator();
 		while(iter.hasNext())

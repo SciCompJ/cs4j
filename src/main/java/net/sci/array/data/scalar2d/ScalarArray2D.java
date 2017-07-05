@@ -3,6 +3,9 @@
  */
 package net.sci.array.data.scalar2d;
 
+import java.io.PrintStream;
+import java.util.Locale;
+
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.ScalarArray;
@@ -36,6 +39,27 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	}
 
 	
+	// =============================================================
+	// Methods specific to ScalarArray2D
+
+	/**
+	 * Prints the content of this array on the specified stream.
+	 * 
+	 * @param stream
+	 *            the stream to print on.
+	 */
+	public void print(PrintStream stream)
+	{
+		for (int y = 0; y < this.size1; y++)
+		{
+			for (int x = 0; x < this.size0; x++)
+			{
+				System.out.print(String.format(Locale.ENGLISH, " %g", getValue(x, y)));
+			}
+			System.out.println();
+		}
+	}
+
 	// =============================================================
 	// Specialization of the Array interface
 

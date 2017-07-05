@@ -60,7 +60,7 @@ public class BoxMinMaxFilterNaiveTest
 	public void testErodeDotRadius3()
 	{
 		UInt8Array2D image = UInt8Array2D.create(10, 10);
-		image.fill(200);
+		image.fillValue(200);
 		image.setInt(4, 4, 50);
 //		System.out.println("Input image:");
 //		image.print(System.out);
