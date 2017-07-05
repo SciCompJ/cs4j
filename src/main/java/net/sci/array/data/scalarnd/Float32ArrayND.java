@@ -3,21 +3,21 @@
  */
 package net.sci.array.data.scalarnd;
 
-import net.sci.array.data.Int32Array;
-import net.sci.array.type.Int32;
+import net.sci.array.data.Float32Array;
+import net.sci.array.type.Float32;
 
 /**
  * @author dlegland
  *
  */
-public abstract class Int32ArrayND extends IntArrayND<Int32> implements Int32Array
+public abstract class Float32ArrayND extends ScalarArrayND<Float32> implements Float32Array
 {
 	// =============================================================
 	// Static factory
 	
-	public static Int32ArrayND create(int... dims)
+	public static Float32ArrayND create(int... dims)
 	{
-		return new BufferedInt32ArrayND(dims);
+		return new BufferedFloat32ArrayND(dims);
 	}
 	
 	
@@ -27,7 +27,7 @@ public abstract class Int32ArrayND extends IntArrayND<Int32> implements Int32Arr
 	/**
 	 * @param sizes
 	 */
-	protected Int32ArrayND(int[] sizes)
+	protected Float32ArrayND(int[] sizes)
 	{
 		super(sizes);
 	}
@@ -37,9 +37,9 @@ public abstract class Int32ArrayND extends IntArrayND<Int32> implements Int32Arr
 	// Specialization of Array interface
 	
 	@Override
-	public Int32Array newInstance(int... dims)
+	public Float32Array newInstance(int... dims)
 	{
-		return Int32Array.create(dims);
+		return Float32Array.create(dims);
 	}
 	
 }

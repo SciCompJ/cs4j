@@ -3,7 +3,6 @@
  */
 package net.sci.array.data.scalarnd;
 
-import net.sci.array.data.ArrayND;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.type.UInt8;
 
@@ -11,7 +10,7 @@ import net.sci.array.type.UInt8;
  * @author dlegland
  *
  */
-public abstract class UInt8ArrayND extends ArrayND<UInt8> implements UInt8Array
+public abstract class UInt8ArrayND extends IntArrayND<UInt8> implements UInt8Array
 {
 	// =============================================================
 	// Static factory

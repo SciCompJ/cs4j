@@ -9,6 +9,8 @@ import net.sci.array.data.scalar2d.BufferedFloat64Array2D;
 import net.sci.array.data.scalar2d.Float64Array2D;
 import net.sci.array.data.scalar3d.BufferedFloat64Array3D;
 import net.sci.array.data.scalar3d.Float64Array3D;
+import net.sci.array.data.scalarnd.BufferedFloat64ArrayND;
+import net.sci.array.data.scalarnd.Float64ArrayND;
 import net.sci.array.type.Float64;
 
 /**
@@ -29,8 +31,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		case 3:
 			return Float64Array3D.create(dims[0], dims[1], dims[2]);
 		default:
-			//TODO: implement the rest
-			throw new IllegalArgumentException("Can not create Float64Array with " + dims.length + " dimensions");
+			return Float64ArrayND.create(dims);
 		}
 	}
 
@@ -43,9 +44,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		case 3:
 			return new BufferedFloat64Array3D(dims[0], dims[1], dims[2], buffer);
 		default:
-			//TODO: implement the rest
-			throw new IllegalArgumentException("Can not create Float32Array with " + dims.length + " dimensions");
-//			return new BufferedFloat32ArrayND(dims, buffer);
+			return new BufferedFloat64ArrayND(dims, buffer);
 		}
 	}
 	
