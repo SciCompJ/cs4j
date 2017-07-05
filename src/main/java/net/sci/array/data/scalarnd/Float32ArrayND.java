@@ -15,6 +15,13 @@ public abstract class Float32ArrayND extends ScalarArrayND<Float32> implements F
 	// =============================================================
 	// Static factory
 	
+	/**
+	 * Creates a new array of Float32.
+	 * 
+	 * @param dims
+	 *            the dimensions of the array
+	 * @return a new instance of FloatArrayND
+	 */
 	public static Float32ArrayND create(int... dims)
 	{
 		return new BufferedFloat32ArrayND(dims);
@@ -25,7 +32,10 @@ public abstract class Float32ArrayND extends ScalarArrayND<Float32> implements F
 	// Constructors
 	
 	/**
+	 * Initialize a new array of floats.
+	 * 
 	 * @param sizes
+	 *            the dimensions of the array
 	 */
 	protected Float32ArrayND(int[] sizes)
 	{

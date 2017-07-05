@@ -22,6 +22,12 @@ public class BufferedFloat32Array3D extends Float32Array3D
 	// Constructors
 
 	/**
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
 	 */
 	public BufferedFloat32Array3D(int size0, int size1, int size2)
 	{
@@ -29,6 +35,17 @@ public class BufferedFloat32Array3D extends Float32Array3D
 		this.buffer = new float[size0 * size1 * size2];
 	}
 
+	/**
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
+	 * @param buffer
+	 *            the buffer containing the float values
+	 */
 	public BufferedFloat32Array3D(int size0, int size1, int size2, float[] buffer)
 	{
 		super(size0, size1, size2);

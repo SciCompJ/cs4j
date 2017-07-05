@@ -15,6 +15,16 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
 	// =============================================================
 	// Static methods
 
+	/**
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
+	 * @return a new instance of Float32Array3D
+	 */
 	public static final Float32Array3D create(int size0, int size1, int size2)
 	{
 		return new BufferedFloat32Array3D(size0, size1, size2);
@@ -25,11 +35,16 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
 	// Constructor
 
 	/**
+	 * Initialize the protected size variables. 
+	 * 
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
 	 * @param size2
+	 *            the size of the array along the third dimension
 	 */
-	public Float32Array3D(int size0, int size1, int size2)
+	protected Float32Array3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
 	}

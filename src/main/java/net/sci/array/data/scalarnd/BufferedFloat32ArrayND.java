@@ -23,6 +23,8 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 	// Constructors
 
 	/**
+	 * Initialize a new array of floats.
+	 * 
 	 * @param sizes the dimensions of this array
 	 */
 	public BufferedFloat32ArrayND(int[] sizes)

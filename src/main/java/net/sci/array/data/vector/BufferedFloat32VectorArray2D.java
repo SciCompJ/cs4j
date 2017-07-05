@@ -24,6 +24,8 @@ public class BufferedFloat32VectorArray2D extends Float32VectorArray2D
 	// Constructors
 
 	/**
+	 * Initialize a new array of vectors.
+	 * 
 	 * @param size0 array size in the first dimension
 	 * @param size1 array size in the second dimension
 	 * @param sizeV number of components of vectors
@@ -36,9 +38,16 @@ public class BufferedFloat32VectorArray2D extends Float32VectorArray2D
 	}
 
 	/**
-	 * @param size0 array size in the first dimension
-	 * @param size1 array size in the second dimension
-	 * @param sizeV number of components of vectors
+	 * Initialize a new array of vectors, using the specified buffer.
+	 * 
+	 * @param size0
+	 *            array size in the first dimension
+	 * @param size1
+	 *            array size in the second dimension
+	 * @param sizeV
+	 *            number of components of vectors
+	 * @param buffer
+	 *            the buffer containing the float values
 	 */
 	public BufferedFloat32VectorArray2D(int size0, int size1, int sizeV, float[] buffer)
 	{

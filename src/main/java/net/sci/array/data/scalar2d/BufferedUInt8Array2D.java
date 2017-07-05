@@ -25,7 +25,9 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 
 	/**
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
 	 */
 	public BufferedUInt8Array2D(int size0, int size1)
 	{
@@ -33,6 +35,15 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		this.buffer = new byte[size0 * size1];
 	}
 
+	/**
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param buffer
+	 *            the buffer containing the byte values
+	 */
 	public BufferedUInt8Array2D(int size0, int size1, byte[] buffer)
 	{
 		super(size0, size1);

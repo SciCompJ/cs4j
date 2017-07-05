@@ -17,6 +17,13 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Static methods
 
+	/**
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @return a new instance of UInt16Array2D
+	 */
 	public static final UInt8Array2D create(int size0, int size1)
 	{
 		return new BufferedUInt8Array2D(size0, size1);
@@ -26,6 +33,14 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Constructor
 
+	/**
+	 * Initialize the protected size variables. 
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 */
 	protected UInt8Array2D(int size0, int size1)
 	{
 		super(size0, size1);
@@ -38,7 +53,8 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	/**
 	 * Displays the content of this array on the stream (typically System.out).
 	 * 
-	 * @param stream The stream to use for printing
+	 * @param ps
+	 *            the stream to use for printing
 	 */
 	public void print(PrintStream ps)
 	{
@@ -54,11 +70,24 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	
 	/**
 	 * Returns the byte value at a given position.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @return the byte value at the given position
 	 */
 	public abstract byte getByte(int x, int y);
 
 	/**
 	 * Sets the byte value at a given position
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param value
+	 *            the new byte value at the given position
 	 */
 	public abstract void setByte(int x, int y, byte value);
 	

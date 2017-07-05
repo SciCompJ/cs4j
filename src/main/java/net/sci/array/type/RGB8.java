@@ -49,7 +49,11 @@ public class RGB8 extends Vector<UInt8>
 	// Constructors
 	
 	/**
-	 * Creates a new color by specifying the integer code representing this color.
+	 * Creates a new color by specifying the integer code representing this
+	 * color.
+	 * 
+	 * @param intCode
+	 *            the integer code of the RGB8 value
 	 */
 	public RGB8(int intCode)
 	{
@@ -58,6 +62,13 @@ public class RGB8 extends Vector<UInt8>
 	
 	/**
 	 * Creates a new color by specifying the int value of each component.
+	 * 
+	 * @param red
+	 *            the value of the red component, between 0 and 255
+	 * @param green
+	 *            the value of the green component, between 0 and 255
+	 * @param blue
+	 *            the value of the blue component, between 0 and 255
 	 */
 	public RGB8(int red, int green, int blue)
 	{

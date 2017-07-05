@@ -40,9 +40,9 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	 * Initialize a new multidimensional array, using the specified buffer.
 	 * 
 	 * @param sizes
-	 *            the dimensions of this image
-	 * @param the
-	 *            array containing buffer for this image
+	 *            the dimensions of the array
+	 * @param buffer
+	 *            the array containing buffer for this image
 	 */
 	public BufferedUInt8ArrayND(int[] sizes, byte[] buffer)
 	{

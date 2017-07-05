@@ -23,7 +23,11 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 
 	/**
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
 	 */
 	public BufferedUInt8Array3D(int size0, int size1, int size2)
 	{
@@ -31,6 +35,16 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 		this.buffer = new byte[size0 * size1 * size2];
 	}
 
+	/**
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
+	 * @param buffer
+	 *            the buffer containing the byte values
+	 */
 	public BufferedUInt8Array3D(int size0, int size1, int size2, byte[] buffer)
 	{
 		super(size0, size1, size2);

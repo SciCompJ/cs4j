@@ -23,7 +23,11 @@ public class BufferedInt32Array3D extends Int32Array3D
 
 	/**
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
 	 */
 	public BufferedInt32Array3D(int size0, int size1, int size2)
 	{
@@ -31,6 +35,17 @@ public class BufferedInt32Array3D extends Int32Array3D
 		this.buffer = new int[size0 * size1 * size2];
 	}
 
+	/**
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
+	 * @param buffer
+	 *            the buffer containing the integer values
+	 */
 	public BufferedInt32Array3D(int size0, int size1, int size2, int[] buffer)
 	{
 		super(size0, size1, size2);

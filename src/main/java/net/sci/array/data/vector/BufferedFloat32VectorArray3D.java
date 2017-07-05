@@ -24,9 +24,16 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	// Constructors
 
 	/**
-	 * @param size0 array size in the first dimension
-	 * @param size1 array size in the second dimension
-	 * @param sizeV number of components of vectors
+	 * Initialize a new array of vectors.
+	 * 
+	 * @param size0
+	 *            array size in the first dimension
+	 * @param size1
+	 *            array size in the second dimension
+	 * @param size2
+	 *            array size in the third dimension
+	 * @param sizeV
+	 *            number of components of vectors
 	 */
 	public BufferedFloat32VectorArray3D(int size0, int size1, int size2, int sizeV)
 	{
@@ -36,9 +43,18 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	}
 
 	/**
-	 * @param size0 array size in the first dimension
-	 * @param size1 array size in the second dimension
-	 * @param sizeV number of components of vectors
+	 * Initialize a new array of vectors, using the specified buffer.
+	 * 
+	 * @param size0
+	 *            array size in the first dimension
+	 * @param size1
+	 *            array size in the second dimension
+	 * @param size2
+	 *            array size in the third dimension
+	 * @param sizeV
+	 *            number of components of vectors
+	 * @param buffer
+	 *            the buffer containing the float values
 	 */
 	public BufferedFloat32VectorArray3D(int size0, int size1, int size2, int sizeV, float[] buffer)
 	{

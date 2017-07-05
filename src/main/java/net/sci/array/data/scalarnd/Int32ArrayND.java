@@ -15,6 +15,13 @@ public abstract class Int32ArrayND extends IntArrayND<Int32> implements Int32Arr
 	// =============================================================
 	// Static factory
 	
+	/**
+	 * Creates a new array of UInt32.
+	 * 
+	 * @param dims
+	 *            the dimensions of the array
+	 * @return a new instance of Int32ArrayND
+	 */
 	public static Int32ArrayND create(int... dims)
 	{
 		return new BufferedInt32ArrayND(dims);
@@ -25,7 +32,10 @@ public abstract class Int32ArrayND extends IntArrayND<Int32> implements Int32Arr
 	// Constructors
 	
 	/**
+	 * Initialize a new array of integers.
+	 * 
 	 * @param sizes
+	 *            the dimensions of the array
 	 */
 	protected Int32ArrayND(int[] sizes)
 	{

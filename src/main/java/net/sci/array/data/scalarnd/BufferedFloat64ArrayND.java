@@ -41,8 +41,8 @@ public class BufferedFloat64ArrayND extends Float64ArrayND
 	 * 
 	 * @param sizes
 	 *            the dimensions of this image
-	 * @param the
-	 *            array containing buffer for this image
+	 * @param buffer
+	 *            the array containing buffer for this image
 	 */
 	public BufferedFloat64ArrayND(int[] sizes, double[] buffer)
 	{

@@ -24,9 +24,14 @@ public class BufferedFloat64VectorArray2D extends Float64VectorArray2D
 	// Constructors
 
 	/**
-	 * @param size0 array size in the first dimension
-	 * @param size1 array size in the second dimension
-	 * @param sizeV number of components of vectors
+	 * Initialize a new array of vectors.
+	 * 
+	 * @param size0
+	 *            array size in the first dimension
+	 * @param size1
+	 *            array size in the second dimension
+	 * @param sizeV
+	 *            number of components of vectors
 	 */
 	public BufferedFloat64VectorArray2D(int size0, int size1, int sizeV)
 	{
@@ -36,9 +41,16 @@ public class BufferedFloat64VectorArray2D extends Float64VectorArray2D
 	}
 
 	/**
-	 * @param size0 array size in the first dimension
-	 * @param size1 array size in the second dimension
-	 * @param sizeV number of components of vectors
+	 * Initialize a new array of vectors, using the specified buffer.
+	 * 
+	 * @param size0
+	 *            array size in the first dimension
+	 * @param size1
+	 *            array size in the second dimension
+	 * @param sizeV
+	 *            number of components of vectors
+	 * @param buffer
+	 *            the buffer containing the float values
 	 */
 	public BufferedFloat64VectorArray2D(int size0, int size1, int sizeV, double[] buffer)
 	{

@@ -23,7 +23,11 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 
 	/**
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
 	 */
 	public BufferedBooleanArray3D(int size0, int size1, int size2)
 	{
@@ -31,6 +35,17 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 		this.buffer = new boolean[size0 * size1 * size2];
 	}
 
+	/**
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
+	 * @param buffer
+	 *            the buffer containing the boolean values
+	 */
 	public BufferedBooleanArray3D(int size0, int size1, int size2, boolean[] buffer)
 	{
 		super(size0, size1, size2);

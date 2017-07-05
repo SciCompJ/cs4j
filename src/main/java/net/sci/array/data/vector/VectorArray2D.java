@@ -82,8 +82,6 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
      * Current implementation returns the result in a new instance of
      * Float32Array.
      * 
-     * @param array
-     *            a vector array
      * @return a scalar array with the same size at the input array
      */
     public ScalarArray2D<?> norm()

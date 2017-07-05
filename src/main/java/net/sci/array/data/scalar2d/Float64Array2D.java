@@ -25,10 +25,14 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
 	// Constructor
 
 	/**
+	 * Initialize the protected size variables. 
+	 *
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
 	 */
-	public Float64Array2D(int size0, int size1)
+	protected Float64Array2D(int size0, int size1)
 	{
 		super(size0, size1);
 	}

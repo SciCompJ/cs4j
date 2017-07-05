@@ -15,6 +15,13 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	// =============================================================
 	// Static methods
 
+	/**
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @return a new instance of Int16Array2D
+	 */
 	public static final Int16Array2D create(int size0, int size1)
 	{
 		return new BufferedInt16Array2D(size0, size1);
@@ -24,6 +31,14 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	// =============================================================
 	// Constructor
 
+	/**
+	 * Initialize the protected size variables. 
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 */
 	protected Int16Array2D(int size0, int size1)
 	{
 		super(size0, size1);
@@ -34,11 +49,24 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 
 	/**
 	 * Returns the short value at a given position.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @return the short value at the given position
 	 */
 	public abstract short getShort(int x, int y);
 
 	/**
 	 * Sets the short value at a given position
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param value
+	 *            the new short value at the given position
 	 */
 	public abstract void setShort(int x, int y, short value);
 	

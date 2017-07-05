@@ -221,8 +221,6 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
      * Current implementation returns the result in a new instance of
      * Float32Array.
      * 
-     * @param array
-     *            a vector array
      * @return a scalar array with the same size at the input array
      */
     public default ScalarArray<?> norm()
@@ -277,14 +275,15 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
     public double[] getValues(int[] pos);
     
     /**
-     * Returns the set of values corresponding to the array element for the
-     * given position.
-     * 
-     * @param pos
-     *            list of indices in each dimension
-     * @return the set of values corresponding to the array element for the
-     *         given position
-     */
+	 * Returns the set of values corresponding to the array element for the
+	 * given position.
+	 * 
+	 * @param pos
+	 *            the position as a list of indices in each dimension
+	 * @param values
+	 *            the new set of values corresponding for the given position
+	 * @return a reference to the array of values at the given position
+	 */
     public double[] getValues(int[] pos, double[] values);
     
 	/**

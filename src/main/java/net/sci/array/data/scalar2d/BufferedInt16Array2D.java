@@ -25,7 +25,9 @@ public class BufferedInt16Array2D extends Int16Array2D
 
 	/**
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
 	 */
 	public BufferedInt16Array2D(int size0, int size1)
 	{
@@ -33,6 +35,15 @@ public class BufferedInt16Array2D extends Int16Array2D
 		this.buffer = new short[size0 * size1];
 	}
 
+	/**
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param buffer
+	 *            the buffer containing the values
+	 */
 	public BufferedInt16Array2D(int size0, int size1, short[] buffer)
 	{
 		super(size0, size1);

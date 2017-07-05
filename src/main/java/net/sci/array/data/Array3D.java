@@ -26,6 +26,13 @@ public abstract class Array3D<T> implements Array<T>
 
 	/**
 	 * Initialize the protected size variables. 
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
 	 */
 	protected Array3D(int size0, int size1, int size2)
 	{

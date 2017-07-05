@@ -23,7 +23,9 @@ public class BufferedInt32Array2D extends Int32Array2D
 
 	/**
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
 	 */
 	public BufferedInt32Array2D(int size0, int size1)
 	{
@@ -31,6 +33,15 @@ public class BufferedInt32Array2D extends Int32Array2D
 		this.buffer = new int[size0 * size1];
 	}
 
+	/**
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param buffer
+	 *            the buffer containing the values
+	 */
 	public BufferedInt32Array2D(int size0, int size1, int[] buffer)
 	{
 		super(size0, size1);

@@ -15,6 +15,13 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 	// =============================================================
 	// Static methods
 
+	/**
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @return a new instance of BooleanArray2D
+	 */
 	public static final BooleanArray2D create(int size0, int size1)
 	{
 		return new BufferedBooleanArray2D(size0, size1);
@@ -24,6 +31,14 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 	// =============================================================
 	// Constructor
 
+	/**
+	 * Initialize the protected size variables. 
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 */
 	protected BooleanArray2D(int size0, int size1)
 	{
 		super(size0, size1);
@@ -35,11 +50,24 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 
 	/**
 	 * Returns the logical state at a given position.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @return the boolean state at the given position
 	 */
 	public abstract boolean getState(int x, int y);
 
 	/**
 	 * Sets the logical state at a given position
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param state
+	 *            the new state at the given position
 	 */
 	public abstract void setState(int x, int y, boolean state);
 	

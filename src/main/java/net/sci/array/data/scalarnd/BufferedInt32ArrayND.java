@@ -41,8 +41,8 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 	 * 
 	 * @param sizes
 	 *            the dimensions of this image
-	 * @param the
-	 *            array containing buffer for this image
+	 * @param buffer
+	 *            the array containing buffer for this image
 	 */
 	public BufferedInt32ArrayND(int[] sizes, int[] buffer)
 	{

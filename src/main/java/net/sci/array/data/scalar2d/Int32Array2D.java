@@ -24,6 +24,14 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 	// =============================================================
 	// Constructor
 
+	/**
+	 * Initialize the protected size variables. 
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 */
 	protected Int32Array2D(int size0, int size1)
 	{
 		super(size0, size1);

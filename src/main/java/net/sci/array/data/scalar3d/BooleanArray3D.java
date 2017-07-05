@@ -35,11 +35,28 @@ public abstract class BooleanArray3D extends IntArray3D<Boolean> implements Bool
 
 	/**
 	 * Returns the logical state at a given position.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param z
+	 *            the z-coordinate of the position
+	 * @return the boolean value at the given position
 	 */
 	public abstract boolean getState(int x, int y, int z);
 
 	/**
-	 * Sets the logical state at a given position
+	 * Sets the logical state at a given position.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param z
+	 *            the z-coordinate of the position
+	 * @param state
+	 *            the new state at the given position
 	 */
 	public abstract void setState(int x, int y, int z, boolean state);
 	

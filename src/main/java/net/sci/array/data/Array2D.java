@@ -34,7 +34,10 @@ public abstract class Array2D<T> implements Array<T>
 	// Constructors
 
 	/**
-	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
 	 */
 	protected Array2D(int size0, int size1)
 	{

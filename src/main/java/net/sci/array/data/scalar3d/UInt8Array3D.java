@@ -24,6 +24,16 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Constructor
 
+	/**
+	 * Initialize the protected size variables. 
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
+	 */
 	protected UInt8Array3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
@@ -35,11 +45,28 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 
 	/**
 	 * Returns the byte value at a given position.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param z
+	 *            the z-coordinate of the position
+	 * @return the byte value at the given position
 	 */
 	public abstract byte getByte(int x, int y, int z);
 
 	/**
 	 * Sets the byte value at a given position
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param z
+	 *            the z-coordinate of the position
+	 * @param value
+	 *            the new byte value at the given position
 	 */
 	public abstract void setByte(int x, int y, int z, byte value);
 	

@@ -15,6 +15,13 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	// =============================================================
 	// Static methods
 
+	/**
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @return a new instance of UInt16Array2D
+	 */
 	public static final UInt16Array2D create(int size0, int size1)
 	{
 		return new BufferedUInt16Array2D(size0, size1);
@@ -24,6 +31,14 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	// =============================================================
 	// Constructor
 
+	/**
+	 * Initialize the protected size variables. 
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 */
 	protected UInt16Array2D(int size0, int size1)
 	{
 		super(size0, size1);
@@ -35,11 +50,24 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 
 	/**
 	 * Returns the short value at a given position.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @return the short value at the given position
 	 */
 	public abstract short getShort(int x, int y);
 
 	/**
 	 * Sets the short value at a given position
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param value
+	 *            the new short value at the given position
 	 */
 	public abstract void setShort(int x, int y, short value);
 	

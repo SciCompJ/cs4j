@@ -82,16 +82,20 @@ public interface RGB8Array extends VectorArray<RGB8>
 	
 	/**
 	 * Splits the channels of the color image and returns the new ByteImages
-	 * into a Map, using channel names as key. 
-	 *  
+	 * into a Map, using channel names as key.
+	 * 
 	 * Example:
-	 * <pre><code>
+	 * 
+	 * <pre>
+	 * <code>
 	 * ColorProcessor colorImage = ...
 	 * HashMap&lt;String, ByteProcessor&gt; channels = mapChannels(colorImage);
 	 * ByteProcessor blue = channels.get("blue");
-	 * </code></pre>
+	 * </code>
+	 * </pre>
 	 * 
-	 * @param image the original image, assumed to be a ColorProcessor
+	 * @param array
+	 *            the original color array
 	 * @return a hashmap indexing the three channels by their names
 	 */
 	public static HashMap<String, UInt8Array> mapChannels(RGB8Array array)

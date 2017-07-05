@@ -8,6 +8,8 @@ import net.sci.array.type.Int16;
 import net.sci.array.type.UInt16;
 
 /**
+ * Base implementation for 3D arrays containing Int16 values.
+ * 
  * @author dlegland
  *
  */
@@ -16,6 +18,15 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	// =============================================================
 	// Static methods
 
+	/**
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
+	 * @return a new instance of Int16Array3D
+	 */
 	public static final Int16Array3D create(int size0, int size1, int size2)
 	{
 		return new BufferedInt16Array3D(size0, size1, size2);
@@ -25,6 +36,16 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	// =============================================================
 	// Constructor
 
+	/**
+	 * Initialize the protected size variables. 
+	 * 
+	 * @param size0
+	 *            the size of the array along the first dimension
+	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param size2
+	 *            the size of the array along the third dimension
+	 */
 	protected Int16Array3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
@@ -36,11 +57,28 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 
 	/**
 	 * Returns the short value at a given position.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param z
+	 *            the z-coordinate of the position
+	 * @return the short value at the given position
 	 */
 	public abstract short getShort(int x, int y, int z);
 
 	/**
 	 * Sets the short value at a given position
+	 * 
+	 * @param x
+	 *            the x-coordinate of the position
+	 * @param y
+	 *            the y-coordinate of the position
+	 * @param z
+	 *            the z-coordinate of the position
+	 * @param value
+	 *            the new short value at the given position
 	 */
 	public abstract void setShort(int x, int y, int z, short value);
 	

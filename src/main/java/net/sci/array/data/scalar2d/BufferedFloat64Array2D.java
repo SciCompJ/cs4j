@@ -22,7 +22,9 @@ public class BufferedFloat64Array2D extends Float64Array2D
 
 	/**
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
 	 */
 	public BufferedFloat64Array2D(int size0, int size1)
 	{
@@ -32,7 +34,11 @@ public class BufferedFloat64Array2D extends Float64Array2D
 
 	/**
 	 * @param size0
+	 *            the size of the array along the first dimension
 	 * @param size1
+	 *            the size of the array along the second dimension
+	 * @param buffer
+	 *            the buffer containing the values
 	 */
 	public BufferedFloat64Array2D(int size0, int size1, double[] buffer)
 	{
