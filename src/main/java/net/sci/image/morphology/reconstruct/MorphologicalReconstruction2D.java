@@ -8,7 +8,7 @@ import net.sci.array.data.scalar2d.ScalarArray2D;
 /**
  * <p>
  * Defines the interface for morphological reconstructions algorithms applied to
- * planar arrays.
+ * planar scalar arrays.
  * </p>
  * 
  * @author David Legland
@@ -17,14 +17,14 @@ public interface MorphologicalReconstruction2D
 {
 	/**
 	 * Applies morphological reconstruction algorithm to the input marker and
-	 * mask images.
+	 * mask arrays.
 	 * 
 	 * @param marker
-	 *            image used to initialize the reconstruction
+	 *            the marker array used to initialize the reconstruction
 	 * @param mask
-	 *            image used to constrain the reconstruction
-	 * @return the geodesic reconstruction of marker image constrained by mask
-	 *         image
+	 *            the mask array used to constrain the reconstruction
+	 * @return the morphological reconstruction of marker array constrained by mask
+	 *         array
 	 */
 	public ScalarArray2D<?> process(ScalarArray2D<?> marker, ScalarArray2D<?> mask);
 }

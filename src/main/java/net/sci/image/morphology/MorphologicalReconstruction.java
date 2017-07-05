@@ -76,8 +76,88 @@ public class MorphologicalReconstruction
 	{	
 	}
 
+
 	// ==================================================
 	// Static methods for Image instance
+
+	/**
+	 * Removes the border of the input image, by performing a morphological
+	 * reconstruction by dilation initialized with image boundary.
+	 * 
+	 * @see #fillHoles(ScalarArray2D)
+	 * 
+	 * @param array the image to process
+	 * @return a new image with borders removed
+	 */
+	public static final ScalarArray2D<?> killBorders(ScalarArray2D<?> array) 
+	{
+		// Image size
+		int sizeX = array.getSize(0);
+		int sizeY = array.getSize(1);
+
+		
+		// Initialize marker image with zeros everywhere except at borders
+		ScalarArray2D<?> marker = array.duplicate();
+		for (int y = 1; y < sizeY-1; y++) 
+		{
+			for (int x = 1; x < sizeX-1; x++) 
+			{
+				marker.setValue(x, y, Double.NEGATIVE_INFINITY);
+			}
+		}
+		
+		// Reconstruct image from borders to find touching structures
+		ScalarArray2D<?> result = reconstructByDilation(marker, array);
+		
+		// removes result from original image
+		for (int y = 0; y < sizeY; y++) 
+		{
+			for (int x = 0; x < sizeX; x++) 
+			{
+				double val = array.getValue(x, y) - result.getValue(x, y);
+				result.setValue(x, y, Math.max(val, 0));
+			}
+		}
+		
+		return result;
+	}
+
+	/**
+	 * Fills the holes in the input array.
+	 *
+	 * The method consists in creating a marker image corresponding to the full
+	 * array without the borders, and performing morphological reconstruction by
+	 * erosion.
+	 * 
+	 * @see #killBorders(ScalarArray2D)
+	 * 
+	 * @param array
+	 *            the image to process
+	 * @return a new image with holes filled
+	 */
+	public static final ScalarArray2D<?> fillHoles(ScalarArray2D<?> array) 
+	{
+		// Image size
+		int sizeX = array.getSize(0);
+		int sizeY = array.getSize(1);
+
+		// Initialize marker image with white everywhere except at borders
+		ScalarArray2D<?> marker = array.duplicate();
+		for (int y = 1; y < sizeY - 1; y++)
+		{
+			for (int x = 1; x < sizeX - 1; x++)
+			{
+				marker.setValue(x, y, Double.POSITIVE_INFINITY);
+			}
+		}
+		
+		// Reconstruct image from borders to find touching structures
+		return reconstructByErosion(marker, array);
+	}
+
+
+	// ==================================================
+	// Morphological reconstructions shortcuts
 
 	/**
 	 * Static method to computes the morphological reconstruction by dilation of the
