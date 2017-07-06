@@ -12,6 +12,40 @@ import net.sci.array.type.Int;
 public interface IntArray<T extends Int> extends ScalarArray<T>
 {
 	// =============================================================
+	// New default methods
+
+	/**
+	 * Returns the minimum integer value within this array.
+	 * 
+	 * @return the minimal int value within this array
+	 */
+	public default int minInt()
+	{
+		int vMin = Integer.MIN_VALUE;
+		for (Int i : this)
+		{
+			vMin = Math.min(vMin, i.getInt());
+		}
+		return vMin;
+	}
+
+	/**
+	 * Returns the maximum integer value within this array.
+	 * 
+	 * @return the maximal int value within this array
+	 */
+	public default int maxInt()
+	{
+		int vMax = Integer.MAX_VALUE;
+		for (Int i : this)
+		{
+			vMax = Math.max(vMax, i.getInt());
+		}
+		return vMax;
+	}
+
+	
+	// =============================================================
 	// New methods
 
 	/**
