@@ -10,6 +10,5 @@ package net.sci.geom;
  *
  */
 public interface Curve extends Geometry
-{
-    
+{    
 }

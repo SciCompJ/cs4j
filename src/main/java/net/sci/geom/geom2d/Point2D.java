@@ -30,7 +30,12 @@ public class Point2D implements Geometry2D, Point
 		this(0, 0);
 	}
 
-	/** New point given by its coordinates */
+	/** 
+	 * New point given by its coordinates 
+	 * 
+	 * @param x the x coordinate of the new point
+	 * @param y the y coordinate of the new point
+	 */
 	public Point2D(double x, double y)
 	{
 		this.x = x;
@@ -61,6 +66,10 @@ public class Point2D implements Geometry2D, Point
 
 	/**
 	 * Adds the specified vector to the point, and returns the result.
+	 * 
+	 * @param v
+	 *            the vector to add
+	 * @return the result of the addition of<code>v</code> to this point
 	 */
 	public Point2D add(Vector2D v)
 	{
@@ -69,6 +78,10 @@ public class Point2D implements Geometry2D, Point
 
 	/**
 	 * Subtracts the specified vector from the point, and returns the result.
+	 * 
+	 * @param v
+	 *            the vector to subtract
+	 * @return the result of the subtraction of<code>v</code> to this point
 	 */
 	public Point2D subtract(Vector2D v)
 	{

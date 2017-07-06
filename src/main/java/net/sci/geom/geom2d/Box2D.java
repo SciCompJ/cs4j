@@ -35,8 +35,18 @@ public class Box2D implements Box
     }
     
     /**
-     * Main constructor, given bounds for x coord, then bounds for y coord.
-     */
+	 * Main constructor, given bounds for x coordinate, then bounds for y
+	 * coordinate.
+	 * 
+	 * @param xmin
+	 *            the minimum value along the first dimension
+	 * @param xmax
+	 *            the maximum value along the first dimension
+	 * @param ymin
+	 *            the minimum value along the second dimension
+	 * @param ymax
+	 *            the maximum value along the second dimension
+	 */
     public Box2D(double xmin, double xmax, double ymin, double ymax)
     {
         this.xmin = xmin;
@@ -46,8 +56,13 @@ public class Box2D implements Box
     }
     
     /**
-     * Constructor from 2 points, giving extreme coordinates of the box.
-     */
+	 * Constructor from 2 points, giving extreme coordinates of the box.
+	 * 
+	 * @param p1
+	 *            a point corresponding to a corner of the box
+	 * @param p2
+	 *            a point corresponding to a corner of the box, opposite of p1
+	 */
     public Box2D(Point2D p1, Point2D p2)
     {
         double x1 = p1.getX();
@@ -65,9 +80,10 @@ public class Box2D implements Box
     // General methods
     
     /**
-     * Converts this bounding box to a rectangular polyon.
-     * @return
-     */
+	 * Converts this bounding box to a rectangular polyon.
+	 * 
+	 * @return the polygon corresponding to this bounding box
+	 */
     public Polygon2D getRectangle()
     {
     	Point2D p1 = new Point2D(this.xmin, this.ymin);
@@ -83,8 +99,12 @@ public class Box2D implements Box
     // Tests of inclusion
     
     /**
-     * Checks if this box contains the given point.
-     */
+	 * Checks if this box contains the given point.
+	 * 
+	 * @param point
+	 *            the test point
+	 * @return true if the point is inside the bounding box
+	 */
     public boolean contains(Point2D point)
     {
         double x = point.getX();
@@ -102,6 +122,11 @@ public class Box2D implements Box
     
     /**
      * Checks if this box contains the point defined by the given coordinates.
+	 * @param x
+	 *            the x-coordinate of the test point
+	 * @param y
+	 *            the y-coordinate of the test point
+	 * @return true if the point is inside the bounding box
      */
     public boolean contains(double x, double y)
     {
@@ -149,7 +174,7 @@ public class Box2D implements Box
         return ymax - ymin;
     }
     
-    /** Returns true if all bounds are finite. */
+    /** @return true if all bounds are finite. */
     public boolean isBounded()
     {
         if (isInfinite(xmin))

@@ -20,6 +20,10 @@ public interface AffineTransform2D extends Transform2D
 
 	/**
 	 * Creates a translation by the given vector.
+	 * 
+	 * @param vect
+	 *            the vector of the translation transform
+	 * @return a new instance of AffineTransform2D representing a translation
 	 */
 	public static AffineTransform2D createTranslation(Vector2D vect)
 	{
@@ -28,6 +32,12 @@ public interface AffineTransform2D extends Transform2D
 
 	/**
 	 * Creates a translation by the given vector.
+	 * 
+	 * @param dx
+	 *            the x-component of the translation transform
+	 * @param dy
+	 *            the y-component of the translation transform
+	 * @return a new instance of AffineTransform2D representing a translation
 	 */
 	public static AffineTransform2D createTranslation(double dx, double dy)
 	{
@@ -36,6 +46,12 @@ public interface AffineTransform2D extends Transform2D
 
 	/**
 	 * Creates a scaling by the given coefficients, centered on the origin.
+	 * 
+	 * @param sx
+	 *            the scaling along the x direction
+	 * @param sy
+	 *            the scaling along the y direction
+	 * @return a new instance of AffineTransform2D representing a translation
 	 */
 	public static AffineTransform2D createScaling(double sx, double sy)
 	{
@@ -45,6 +61,14 @@ public interface AffineTransform2D extends Transform2D
 	/**
 	 * Creates a scaling by the given coefficients, centered on the point given
 	 * by (x0,y0).
+	 * 
+	 * @param center
+	 * 			  the center of the scaling
+	 * @param sx
+	 *            the scaling along the x direction
+	 * @param sy
+	 *            the scaling along the y direction
+	 * @return a new instance of AffineTransform2D representing a centered scaling
 	 */
 	public static AffineTransform2D createScaling(Point2D center, double sx,
 			double sy)
@@ -56,6 +80,10 @@ public interface AffineTransform2D extends Transform2D
 
 	/**
 	 * Creates a rotation around the origin, with angle in radians.
+	 * 
+	 * @param angle
+	 *            the angle of the rotation, in radians
+	 * @return a new instance of AffineTransform2D representing a centered rotation
 	 */
 	public static AffineTransform2D createRotation(double angle)
 	{
@@ -64,6 +92,12 @@ public interface AffineTransform2D extends Transform2D
 
 	/**
 	 * Creates a rotation around the specified point, with angle in radians.
+	 * 
+	 * @param center
+	 * 			  the center of the rotation
+	 * @param angle
+	 *            the angle of the rotation, in radians
+	 * @return a new instance of AffineTransform2D representing a centered rotation
 	 */
 	public static AffineTransform2D createRotation(Point2D center, double angle)
 	{
@@ -72,6 +106,14 @@ public interface AffineTransform2D extends Transform2D
 
 	/**
 	 * Creates a rotation around the specified point, with angle in radians.
+	 * 
+	 * @param cx
+	 * 			  the x-coordinate of the rotation center
+	 * @param cy
+	 * 			  the y-coordinate of the rotation center
+	 * @param angle
+	 *            the angle of the rotation, in radians
+	 * @return a new instance of AffineTransform2D representing a centered rotation
 	 */
 	public static AffineTransform2D createRotation(double cx, double cy,
 			double angle)
@@ -89,8 +131,13 @@ public interface AffineTransform2D extends Transform2D
 	/**
 	 * Creates a rotation composed of the given number of rotations by 90
 	 * degrees around the origin.
+	 * 
+	 * @param numQuadrant
+	 *            the quadrant number
+	 * @return a new instance of AffineTransform representing a rotation by a
+	 *         multiple of 90 degrees
 	 */
-	public static MatrixAffineTransform2D createQuadrantRotation(int numQuadrant)
+	public static AffineTransform2D createQuadrantRotation(int numQuadrant)
 	{
 		int n = ((numQuadrant % 4) + 4) % 4;
 		switch (n) {
@@ -110,6 +157,13 @@ public interface AffineTransform2D extends Transform2D
 	/**
 	 * Creates a rotation composed of the given number of rotations by 90
 	 * degrees around the given point.
+	 * 
+	 * @param center
+	 *            the rotation center
+	 * @param numQuadrant
+	 *            the quadrant number
+	 * @return a new instance of AffineTransform representing a rotation by a
+	 *         multiple of 90 degrees
 	 */
 	public static MatrixAffineTransform2D createQuadrantRotation(Point2D center,
 			int numQuadrant)
@@ -120,6 +174,15 @@ public interface AffineTransform2D extends Transform2D
 	/**
 	 * Creates a rotation composed of the given number of rotations by 90
 	 * degrees around the point given by (x0,y0).
+	 * 
+	 * @param x0
+	 *            the x-coordinate of the rotation center
+	 * @param y0
+	 *            the y-coordinate of the rotation center
+	 * @param numQuadrant
+	 *            the quadrant number
+	 * @return a new instance of AffineTransform representing a rotation by a
+	 *         multiple of 90 degrees
 	 */
 	public static MatrixAffineTransform2D createQuadrantRotation(double x0,
 			double y0, int numQuadrant)
@@ -192,10 +255,20 @@ public interface AffineTransform2D extends Transform2D
 	// ===================================================================
 	// static methods
 
+	/**
+	 * @return the affine matrix of the coefficients corresponding to this transform 
+	 */
 	public double[][] getMatrix();
 
 	public AffineTransform2D invert();
 	
+	/**
+	 * Applies this transformation to the given point.
+	 * 
+	 * @param point
+	 *            the point to transform
+	 * @return the transformed point
+	 */
 	public default Point2D transform(Point2D point)
 	{
 		double[][] mat = this.getMatrix();
@@ -207,4 +280,22 @@ public interface AffineTransform2D extends Transform2D
 		
 		return new Point2D(xt, yt);
 	}
+	
+	/**
+	 * Transforms a vector, by using only the linear part of this transform.
+	 * 
+	 * @param v
+	 *            the vector to transform
+	 * @return the transformed vector
+	 */
+	public default Vector2D transform(Vector2D v)
+	{
+		double vx = v.getX();
+		double vy = v.getY();
+		double[][] mat = this.getMatrix();
+		return new Vector2D(
+				vx * mat[0][0] + vy * mat[0][1], 
+				vx * mat[1][0] + vy * mat[1][1]);
+	}
+
 }

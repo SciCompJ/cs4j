@@ -30,6 +30,10 @@ public class Vector2D implements Dimensional
 	/**
 	 * Tests if the two vectors are perpendicular
 	 * 
+	 * @param v1
+	 *            the first vector to test
+	 * @param v2
+	 *            the second vector to test
 	 * @return true if the vectors are perpendicular
 	 */
 	public static boolean isPerpendicular(Vector2D v1, Vector2D v2)
@@ -40,6 +44,12 @@ public class Vector2D implements Dimensional
 	/**
 	 * Tests if the two vectors are perpendicular
 	 * 
+	 * @param v1
+	 *            the first vector
+	 * @param v2
+	 *            the second vector
+	 * @param tol
+	 *            the tolerance used for testing the product
 	 * @return true if the vectors are perpendicular
 	 */
 	public static boolean isPerpendicular(Vector2D v1, Vector2D v2, double tol)
@@ -57,6 +67,12 @@ public class Vector2D implements Dimensional
 	 * Dot product is zero if the vectors defined by the 2 vectors are
 	 * orthogonal. It is positive if vectors are in the same direction, and
 	 * negative if they are in opposite direction.
+	 * 
+	 * @param v1
+	 *            the first vector
+	 * @param v2
+	 *            the second vector
+	 * @return the dot product of <code>v1</code> and <code>v2</code>.
 	 */
 	public static double dotProduct(Vector2D v1, Vector2D v2)
 	{
@@ -71,6 +87,12 @@ public class Vector2D implements Dimensional
 	 * Cross product is zero for colinear vectors. It is positive if angle
 	 * between vector 1 and vector 2 is comprised between 0 and PI, and negative
 	 * otherwise.
+	 * 
+	 * @param v1
+	 *            the first vector
+	 * @param v2
+	 *            the second vector
+	 * @return the cross product of <code>v1</code> and <code>v2</code>.
 	 */
 	public static double crossProduct(Vector2D v1, Vector2D v2)
 	{
@@ -96,7 +118,14 @@ public class Vector2D implements Dimensional
 		this(0, 0);
 	}
 
-	/** New Vector2d given by its coordinates */
+	/**
+	 * New Vector2d given by its coordinates.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the vector
+	 * @param y
+	 *            the y-coordinate of the vector
+	 */
 	public Vector2D(double x, double y)
 	{
 		this.x = x;
@@ -105,6 +134,9 @@ public class Vector2D implements Dimensional
 
 	/**
 	 * Constructs a new vector with the same coordinates as the given point.
+	 * 
+	 * @param point
+	 *            the point used to build the vector
 	 */
 	public Vector2D(Point2D point)
 	{
@@ -113,6 +145,11 @@ public class Vector2D implements Dimensional
 
 	/**
 	 * Constructs a new vector between two points
+	 * 
+	 * @param p1
+	 *            the origin of the vector
+	 * @param p2
+	 *            the destination of the vector
 	 */
 	public Vector2D(Point2D p1, Point2D p2)
 	{
@@ -142,6 +179,10 @@ public class Vector2D implements Dimensional
 	/**
 	 * Returns the sum of current vector with vector given as parameter. Inner
 	 * fields are not modified.
+	 * 
+	 * @param v
+	 *            the vector to add
+	 * @return the result of the addition of this vector with <code>v</code>
 	 */
 	public Vector2D add(Vector2D v)
 	{
@@ -151,6 +192,10 @@ public class Vector2D implements Dimensional
 	/**
 	 * Returns the subtraction of current vector with vector given as parameter.
 	 * Inner fields are not modified.
+	 * 
+	 * @param v
+	 *            the vector to subtract
+	 * @return the result of the subtraction of this vector with <code>v</code>
 	 */
 	public Vector2D subtract(Vector2D v)
 	{
@@ -181,7 +226,7 @@ public class Vector2D implements Dimensional
 	}
 
 	/**
-	 * Computes the norm of the vector
+	 * @return the norm of this vector
 	 */
 	public double norm()
 	{
@@ -191,6 +236,8 @@ public class Vector2D implements Dimensional
 	/**
 	 * Returns the normalized vector, with same direction but with norm equal to
 	 * 1.
+	 * 
+	 * @return the vector with same direction and with norm equal to 1.
 	 */
 	public Vector2D normalize()
 	{
@@ -211,6 +258,10 @@ public class Vector2D implements Dimensional
 	 * Dot product is zero if the vectors are orthogonal. It is positive if
 	 * vectors are in the same direction, and negative if they are in opposite
 	 * direction.
+	 * 
+	 * @param v
+	 *            the vector for dot product
+	 * @return the dot product of this vector with <code>v</code>
 	 */
 	public double dotProduct(Vector2D v)
 	{
@@ -226,6 +277,10 @@ public class Vector2D implements Dimensional
 	 * Cross product is zero for colinear vector. It is positive if angle
 	 * between vector 1 and vector 2 is comprised between 0 and PI, and negative
 	 * otherwise.
+	 * 
+	 * @param v
+	 *            the vector for cross product
+	 * @return the cross product of this vector with <code>v</code>
 	 */
 	public double crossProduct(Vector2D v)
 	{
