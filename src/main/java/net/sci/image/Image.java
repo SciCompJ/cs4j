@@ -258,7 +258,7 @@ public class Image
 			}
 			else if (this.data instanceof ScalarArray)
 			{
-				this.displayRange = ((ScalarArray<?>) this.data).getValueRange();
+				this.displayRange = ((ScalarArray<?>) this.data).valueRange();
 			}
 			else
 			{

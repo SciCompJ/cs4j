@@ -59,7 +59,7 @@ public class DynamicAdjustment implements ImageArrayOperator
 	
 	public double[] computeAdjustmentRange(ScalarArray<?> array)
 	{
-		double[] valueRange = array.getValueRange();
+		double[] valueRange = array.valueRange();
 		
 		int nBins = 200;
 		int[] histo = Histogram.histogram(array, valueRange, nBins);

@@ -23,7 +23,7 @@ public class OtsuThreshold extends AutoThreshold
 	public double computeThresholdValue(ScalarArray<?> array)
 	{
 		// get bounds for computing histogram
-		double[] range = array.getValueRange();
+		double[] range = array.valueRange();
 		
 		// choose 256 levels by default (convenient for 8-bits, should be enough for other types)
 		int nLevels = 256;

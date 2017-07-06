@@ -86,7 +86,7 @@ public final class ImageInverter implements ArrayToArrayImageOperator
 		if (array instanceof UInt16Array) return UInt16.MAX_VALUE;
 		if (array instanceof BooleanArray) return 1;
 		
-		double[] valueRange = array.getValueRange();
+		double[] valueRange = array.valueRange();
 		return valueRange[1] - valueRange[0];
 	}
 
