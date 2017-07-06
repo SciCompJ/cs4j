@@ -267,17 +267,15 @@ public class Image
 		}
 		else if (this.type == Type.LABEL)
 		{
+			// check array type
 			if (!(this.data instanceof IntArray))
 			{
 				throw new RuntimeException("Label images require int array for data");
 			}
+		
 			@SuppressWarnings("unchecked")
 			IntArray<? extends Int> array = (IntArray<? extends Int>) this.data;
-			int maxInt = 0;
-			for (Int pixel : array)
-			{
-				maxInt = Math.max(maxInt, pixel.getInt());
-			}
+			int maxInt = array.maxInt();
 			this.displayRange = new double[]{0, maxInt};
 		}
 	}
