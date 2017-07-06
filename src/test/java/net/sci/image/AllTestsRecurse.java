@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
+	net.sci.image.analyze.AllTests.class,
 	net.sci.image.binary.AllTests.class,
 	net.sci.image.io.AllTests.class,
 	net.sci.image.morphology.AllTestsRecurse.class,

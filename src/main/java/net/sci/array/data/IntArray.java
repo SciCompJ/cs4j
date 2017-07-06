@@ -93,6 +93,17 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 		public int getInt();
 		public void setInt(int value);
 		
+		/**
+		 * Iterates and returns the next int value.
+		 * 
+		 * @return the next int value.
+		 */
+		public default int nextInt()
+		{
+			forward();
+			return getInt();
+		}
+		
 		@Override
 		public default double getValue()
 		{

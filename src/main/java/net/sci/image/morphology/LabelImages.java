@@ -63,6 +63,14 @@ public class LabelImages
     /**
      * Create associative array to retrieve the index corresponding each label.
      * 
+     * Usage:
+     * <pre>{@code
+     * int[] labels = new int[]{3, 4, 6, 7};
+     * HashMap<Integer, Integer> labelInds = LabelImages.mapLabelIndices(labels);
+     * int thirdLabel = labelInds.get(6);
+     * // should return 2, the index of value 6 within original array of labels
+     * }</pre>
+     * 
      * @param labels
      *            an array of labels
      * @return a HashMap instance with each label as key, and the index of the
