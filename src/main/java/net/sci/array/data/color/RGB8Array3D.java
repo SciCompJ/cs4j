@@ -48,9 +48,7 @@ public abstract class RGB8Array3D extends VectorArray3D<RGB8> implements RGB8Arr
 		UInt8Array.Iterator uint8Iter = result.iterator();
 		while(rgb8Iter.hasNext() && uint8Iter.hasNext())
 		{
-			RGB8 rgb = rgb8Iter.next();
-			uint8Iter.forward();
-			uint8Iter.setInt(rgb.getInt());
+			uint8Iter.setNextInt(rgb8Iter.next().getInt());
 		}
 		
 		return result;

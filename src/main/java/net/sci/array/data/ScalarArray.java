@@ -116,6 +116,19 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 
 	public interface Iterator<T extends Scalar> extends Array.Iterator<T>
 	{
+		/**
+		 * Moves this iterator to the next element and updates the value with
+		 * the specified scalar value (optional operation).
+		 * 
+		 * @param value
+		 *            the new value at the next position
+		 */
+		public default void setNextValue(double value)
+		{
+			forward();
+			setValue(value);
+		}
+		
 		public default double nextValue()
 		{
 			return next().getValue();

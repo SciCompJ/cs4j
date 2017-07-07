@@ -171,6 +171,19 @@ public interface Array<T> extends Iterable<T>, Dimensional
 		public T get();
 		
 		/**
+		 * Moves this iterator to the next element and updates the value with
+		 * the specified value (optional operation).
+		 * 
+		 * @param value
+		 *            the new value at the next position
+		 */
+		public default void setNext(T value)
+		{
+			forward();
+			set(value);
+		}
+		
+		/**
 		 * Updates the array element pointed by this iterator with the specified
 		 * value (optional operation).
 		 * 

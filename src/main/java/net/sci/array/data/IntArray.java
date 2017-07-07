@@ -94,6 +94,19 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 		public void setInt(int value);
 		
 		/**
+		 * Moves this iterator to the next element and updates the value with
+		 * the specified integer value (optional operation).
+		 * 
+		 * @param intValue
+		 *            the new value at the next position
+		 */
+		public default void setNextInt(int intValue)
+		{
+			forward();
+			setInt(intValue);
+		}
+		
+		/**
 		 * Iterates and returns the next int value.
 		 * 
 		 * @return the next int value.
