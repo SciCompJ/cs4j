@@ -3,6 +3,8 @@
  */
 package net.sci.array.data.color;
 
+import net.sci.array.data.UInt8Array;
+import net.sci.array.data.scalar3d.UInt8Array3D;
 import net.sci.array.data.vector.VectorArray3D;
 import net.sci.array.type.RGB8;
 import net.sci.array.type.UInt8;
@@ -32,9 +34,28 @@ public abstract class RGB8Array3D extends VectorArray3D<RGB8> implements RGB8Arr
 
 
 	// =============================================================
-	// New methods
+	// Implementation of the RGB8Array interface
 
-	
+	@Override
+	public UInt8Array3D convertToUInt8()
+	{
+		int size0 = this.getSize(0);
+		int size1 = this.getSize(1);
+		int size2 = this.getSize(2);
+		UInt8Array3D result = UInt8Array3D.create(size0, size1, size2);
+		
+		RGB8Array.Iterator rgb8Iter = iterator();
+		UInt8Array.Iterator uint8Iter = result.iterator();
+		while(rgb8Iter.hasNext() && uint8Iter.hasNext())
+		{
+			RGB8 rgb = rgb8Iter.next();
+			uint8Iter.forward();
+			uint8Iter.setInt(rgb.getInt());
+		}
+		
+		return result;
+	}
+
 	// =============================================================
 	// Specialization of Array3D interface
 

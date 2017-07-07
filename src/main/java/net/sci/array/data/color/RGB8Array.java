@@ -172,6 +172,18 @@ public interface RGB8Array extends VectorArray<RGB8>
 	
 
 	// =============================================================
+	// New methods specific to RGB8Array
+
+	/**
+	 * Converts this RGB8 array into a new UInt8Array, by computing the
+	 * luminance of each element.
+	 * 
+	 * @return an UInt8 version of this RGB8 array
+	 */
+	public UInt8Array convertToUInt8();
+	
+
+	// =============================================================
 	// Specialization of VectorArray interface
 
 	/**
