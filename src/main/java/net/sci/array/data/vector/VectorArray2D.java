@@ -8,6 +8,8 @@ import net.sci.array.data.Float32Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.array.data.scalar3d.Float32Array3D;
+import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.type.Vector;
 
 /**
@@ -20,44 +22,72 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
     // Static methods
 
     /**
-     * Computes the norm of each element of the given vector array and returns
-     * an instance of ScalarArray2D.
+     * Creates a new instance of VectorArray from a scalar array with three dimensions.
+     * 
+     * @param array
+     *            an instance of scalar array
+     * @return a new instance of vector array, with the one dimension less than
+     *         original array
+     */
+    public static VectorArray2D<?> fromStack(ScalarArray3D<?> array)
+    {
+        // size and dimension of input array
+        int sizeX = array.getSize(0);
+        int sizeY = array.getSize(1);
+        int sizeZ = array.getSize(2);
+    
+        // create output array
+        VectorArray2D<? extends Vector<?>> result = Float64VectorArray2D.create(sizeX, sizeY, sizeZ);
+        int[] pos = new int[3];
+        for (int c = 0; c < sizeZ; c++)
+        {
+            pos[2] = c;
+            for (int y = 0; y < sizeY; y++)
+            {
+                pos[1] = y;
+                for (int x = 0; x < sizeX; x++)
+                {
+                    pos[0] = x;
+                    result.setValue(x, y, c, array.getValue(pos));
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Converts a vector array to a higher-dimensional array, by considering the
+     * channels as a new dimension.
      * 
      * Current implementation returns the result in a new instance of
      * Float32Array.
-     * 
+     *
      * @param array
-     *            a vector array
-     * @return a scalar array with the same size at the input array
-     * @deprecated use instance method instead
+     *            a vector array with two dimensions
+     * @return a scalar array with three dimensions
      */
-    @Deprecated
-    public static ScalarArray2D<?> norm(VectorArray2D<? extends Vector<?>> array)
+    public static ScalarArray3D<?> convertToStack(VectorArray2D<?> array)
     {
-        // allocate memory for result
-        Float32Array2D result = Float32Array2D.create(array.getSize(0), array.getSize(1));
+        // size and dimension of input array
+        int sizeX = array.getSize(0);
+        int sizeY = array.getSize(1);
+        int nChannels = array.getVectorLength();
         
-        // create array iterators
-        VectorArray.Iterator<? extends Vector<?>> iter1 = array.iterator();
-        Float32Array.Iterator iter2 = result.iterator();
-        
-        // iterate over both arrays in parallel
-        while (iter1.hasNext() && iter2.hasNext())
+        // create output array
+        Float32Array3D result = Float32Array3D.create(sizeX, sizeY, nChannels);
+        int[] pos = new int[2];
+        for (int c = 0; c < nChannels; c++)
         {
-            // get current vector
-            double[] values = iter1.next().getValues();
-            
-            // compute norm of current vector
-            double norm = 0;
-            for (double d : values)
+            for (int y = 0; y < sizeY; y++)
             {
-                norm += d * d;
+                pos[1] = y;
+                for (int x = 0; x < sizeX; x++)
+                {
+                    pos[0] = x;
+                    result.setValue(x, y, c, array.get(pos).getValue(c));
+                }
             }
-            norm = Math.sqrt(norm);
-            
-            // allocate result
-            iter2.forward();
-            iter2.setValue(norm);
         }
         
         return result;

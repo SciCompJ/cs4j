@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.array.Array;
-import net.sci.array.data.scalar3d.Float32Array3D;
-import net.sci.array.data.vector.Float64VectorArray2D;
-import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.type.Scalar;
 import net.sci.array.type.Vector;
 
@@ -97,124 +94,10 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	}
 	
 	
-	/**
-	 * Creates a new instance of VectorArray from a scalar array with three dimensions.
-	 * 
-	 * @param array
-	 *            an instance of scalar array
-	 * @return a new instance of vector array, with the one dimension less than
-	 *         original array
-	 */
-	public static VectorArray<?> fromStack(ScalarArray<?> array)
-	{
-		if (!(array instanceof ScalarArray))
-		{
-			throw new IllegalArgumentException("Requires a scalar array");
-		}
-		
-		if (array.dimensionality() != 3)
-		{
-			// TODO: manage more than three dimensions
-			throw new IllegalArgumentException("Requires a scalar array with three dimensions");
-		}
-		
-		// size and dimension of input array
-		int[] dims = array.getSize();
-		int nd = dims.length;
-		
-		// compute size and dimension of output array
-		int[] newDims = new int[nd - 1];
-		for (int d= 0; d < nd - 1; d++)
-		{
-			newDims[d] = dims[d];
-		}
-		
-		// create output array
-		VectorArray2D<? extends Vector<?>> result = Float64VectorArray2D.create(newDims[0], newDims[1], dims[2]);
-		int[] pos = new int[3];
-		for (int c = 0; c < dims[2]; c++)
-		{
-			pos[2] = c;
-			for (int y = 0; y < dims[1]; y++)
-			{
-				pos[1] = y;
-				for (int x = 0; x < dims[0]; x++)
-				{
-					pos[0] = x;
-					result.setValue(x, y, c, array.getValue(pos));
-				}
-			}
-		}
-		
-		return result;
-	}
-	
-	/**
-	 * Converts a vector array to a higher-dimensional array, by considering the
-	 * channels as a new dimension.
-	 * 
-	 * Current implementation returns the result in a new instance of
-	 * FloatArray.
-	 *
-	 * @param array
-	 *            a vector array with N dimensions
-	 * @return a scalar array with N+1 dimensions
-	 */
-	public static ScalarArray<?> convertToStack(VectorArray<?> array)
-	{
-		// TODO: manage more than two dimensions
-		if (array.dimensionality() != 2)
-		{
-			throw new IllegalArgumentException("Requires a vector array with two dimensions");
-		}
-		
-		// size and dimension of input array
-		int[] dims = array.getSize();
-		int nd = dims.length;
-		int nChannels = array.getVectorLength();
-		
-		// compute size and dimension of output array
-		int[] newDims = new int[nd + 1];
-		for (int d= 0; d < nd; d++)
-		{
-			newDims[d] = dims[d];
-		}
-		newDims[nd] = nChannels;
-		
-		// create output array
-		Float32Array3D result = Float32Array3D.create(newDims[0], newDims[1], newDims[2]);
-		int[] pos = new int[2];
-		for (int c = 0; c < nChannels; c++)
-		{
-			for (int y = 0; y < dims[1]; y++)
-			{
-				pos[1] = y;
-				for (int x = 0; x < dims[0]; x++)
-				{
-					pos[0] = x;
-					result.setValue(x, y, c, array.get(pos).getValue(c));
-				}
-			}
-		}
-		
-		return result;
-	}
-	
-	
+
 	// =============================================================
 	// New methods
-	
-//	/**
-//     * Returns a new ScalarArray corresponding to the specified channel.
-//     * 
-//     * The type of the channel is specified by subclasses.
-//     * 
-//     * @param channel
-//     *            the index of the channel, between 0 and nChannels-1
-//     * @return a new scalar array.
-//     */
-//	public ScalarArray<?> channel(int channel);
-	
+		
 	/**
      * Computes the norm of each element of the given vector array.
      * 
