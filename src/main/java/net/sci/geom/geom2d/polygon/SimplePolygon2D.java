@@ -136,10 +136,12 @@ public class SimplePolygon2D implements Polygon2D
     @Override
     public boolean contains(Point2D point, double eps)
     {
+        if (this.isInside(point))
+            return true;
         if (this.boundaryContains(point, eps))
             return true;
         
-        return isInside(point);
+        return false;
     }
 
     /**

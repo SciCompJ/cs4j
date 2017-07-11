@@ -1,0 +1,62 @@
+/**
+ * 
+ */
+package net.sci.image.discretize;
+
+import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.polygon.Polygon2D;
+
+/**
+ * Generate 2D phantom images.
+ * 
+ * @author dlegland
+ *
+ */
+public class Phantoms2D
+{
+    /**
+     * private constructor to prevent instantiations.
+     */
+    private Phantoms2D(){};
+    
+    public static final void fillDisk(ScalarArray2D<?> array, Point2D center, double radius, double value)
+    {
+        // get image size
+        int sizeX = array.getSize(0);
+        int sizeY = array.getSize(1);
+        
+        // get disk center
+        double xc = center.getX();
+        double yc = center.getY();
+        
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                if (Math.hypot(x - xc, y - yc) <= radius)
+                {
+                    array.setValue(x, y, value);
+                }
+            }
+        }
+    }
+    
+    public static final void fillPolygon(ScalarArray2D<?> array, Polygon2D poly, double value)
+    {
+        // get image size
+        int sizeX = array.getSize(0);
+        int sizeY = array.getSize(1);
+        
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                if (poly.contains(new Point2D(x, y), .01))
+                {
+                    array.setValue(x, y, value);
+                }
+            }
+        }
+    }
+}
