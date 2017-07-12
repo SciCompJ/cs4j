@@ -13,6 +13,7 @@ import java.util.Map;
 
 import net.sci.array.Array;
 import net.sci.array.data.Array3D;
+import net.sci.array.data.UInt8Array;
 import net.sci.array.data.color.BufferedPackedByteRGB8Array2D;
 import net.sci.array.data.color.RGB8Array2D;
 import net.sci.array.data.scalar2d.BufferedFloat32Array2D;
@@ -21,6 +22,7 @@ import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar3d.BufferedUInt16Array3D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
+import net.sci.array.data.scalar3d.SlicedUInt8Array3D;
 import net.sci.array.type.RGB8;
 import net.sci.image.Image;
 
@@ -44,6 +46,11 @@ public class TiffImageReader implements ImageReader
 	 */
 	BinaryDataReader dataReader;
 
+	/**
+	 * The list of file info stored in the TIFF file.
+	 */
+	ArrayList<TiffFileInfo> fileInfoList;
+	
 	
 	// =============================================================
 	// Constructor
@@ -56,6 +63,7 @@ public class TiffImageReader implements ImageReader
 	public TiffImageReader(File file) throws IOException
 	{
 		createTiffDataReader(file);
+		this.fileInfoList = readImageFileDirectories();
 	}
 
 	/**
@@ -112,6 +120,44 @@ public class TiffImageReader implements ImageReader
 	// =============================================================
 	// Methods
 	
+	/**
+     * Reads the image at the specified index.
+     * 
+     * @param index
+     *            the index of image within this file reader
+     * @return the image at the specified index
+     * @throws IOException
+     *             if an error occurs
+     */
+	public Image readImage(int index) throws IOException
+	{
+        // check validity of index input
+        if (index >= this.fileInfoList.size())
+        {
+            throw new IllegalArgumentException("Requires an index below the number of images ("
+                    + this.fileInfoList.size() + ")");
+        }
+
+        // Read File information of the image stored in the file
+        TiffFileInfo fileInfo = this.fileInfoList.get(index);
+
+        // Read image data
+        Array<?> data = readImageData(fileInfo);
+
+        // Create new Image
+        Image image = new Image(data);
+        
+        // Add Image meta-data
+        if (fileInfo.lut != null)
+        {
+            image.setColorMap(fileInfo.lut);
+        }
+        image.tiffTags = fileInfo.tags;
+        
+        return image;
+	}
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -121,23 +167,20 @@ public class TiffImageReader implements ImageReader
 	public Image readImage() throws IOException
 	{
 		// Read the set of image information in the file
-		Collection<TiffFileInfo> infoList = readImageFileDirectories();
-		if (infoList.size() == 0)
+		if (this.fileInfoList.size() == 0)
 		{
 			throw new RuntimeException("Could not read any meta-information from file");
 		}
 
 		
 		// Read File information of the first image stored in the file
-		TiffFileInfo info0 = infoList.iterator().next();
-		// info.print();
+		TiffFileInfo info0 = this.fileInfoList.get(0);
 
 		// Read image data
 		Array<?> data;
-		boolean isStack = isStack(infoList);
-		if (isStack)
+		if (isStackImage())
 		{
-			data = readImageStack(infoList);
+			data = readImageStack();
 		}
 		else
 		{
@@ -157,25 +200,25 @@ public class TiffImageReader implements ImageReader
 		return image;
 	}
 
-	/**
-	 * @param infoList a list of TiffFileInfo typically read from a single file
-	 * @return true if the list of FileInfo can be seen as a 3D stack
-	 */
-	private boolean isStack(Collection<TiffFileInfo> infoList)
+    /**
+     * @return true if the list of FileInfo stored within this reader can be
+     *         seen as a 3D stack
+     */
+	private boolean isStackImage()
 	{
 		// single image is not stack by definition
-		if (infoList.size() == 1)
+		if (fileInfoList.size() == 1)
 		{
 			return false;
 		}
 		
 		// Read File information of the first image stored in the file
-		TiffFileInfo info0 = infoList.iterator().next();
+		TiffFileInfo info0 = fileInfoList.iterator().next();
 				
 		// If file contains several images, check if we should read a stack
 		// Condition: all images must have same size
 		// TODO: detect multi-channel images
-		for (TiffFileInfo info : infoList)
+		for (TiffFileInfo info : fileInfoList)
 		{
 			if (info.width != info0.width || info.height != info0.height)
 			{
@@ -199,13 +242,23 @@ public class TiffImageReader implements ImageReader
 	}
 
 	/**
+     * Returns the set of image file directories stored within this TIFF File.
+     * 
+     * @return the collection of TiffFileInfo stored within this file.
+     */
+    public Collection<TiffFileInfo> getImageFileDirectories()
+    {
+        return this.fileInfoList;
+    }
+
+	/**
 	 * Reads the set of image file directories within this TIFF File.
      * 
      * @return the collection of TiffFileInfo stored within this file.
      * @throws IOException
      *             if an error occurs
 	 */
-	public Collection<TiffFileInfo> readImageFileDirectories()
+	private ArrayList<TiffFileInfo> readImageFileDirectories()
 			throws IOException
 	{
 		// Read file offset of first Image
@@ -223,7 +276,7 @@ public class TiffImageReader implements ImageReader
 		while (offset > 0L)
 		{
 			dataReader.seek(offset);
-			TiffFileInfo info = readImageFileDirectory();
+			TiffFileInfo info = readNextImageFileDirectory();
 			if (info != null)
 			{
 				infoList.add(info);
@@ -243,7 +296,7 @@ public class TiffImageReader implements ImageReader
 	/**
 	 * Reads the next Image File Directory structure from the input stream.
 	 */
-	private TiffFileInfo readImageFileDirectory() throws IOException
+	private TiffFileInfo readNextImageFileDirectory() throws IOException
 	{
 		// Read and control the number of entries
 		int nEntries = dataReader.readShort();
@@ -255,8 +308,6 @@ public class TiffImageReader implements ImageReader
 
 		// create a new FileInfo instance
 		TiffFileInfo info = new TiffFileInfo();
-//		info.intelByteOrder = dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN;
-
 		Map<Integer, TiffTag> tagMap = TiffTag.getAllTags();
 
 		// Read each entry
@@ -345,21 +396,56 @@ public class TiffImageReader implements ImageReader
 	}
 
 
-	public Array3D<?> readImageStack(Collection<TiffFileInfo> infos)
+	public Array3D<?> readImageStack()
 			throws IOException
 	{
 		// Compute image size
-		TiffFileInfo info0 = infos.iterator().next();
-		int width = info0.width;
-		int height = info0.height;
-		int depth = infos.size();
+		TiffFileInfo info0 = this.fileInfoList.get(0);
+		int sizeX = info0.width;
+		int sizeY = info0.height;
+		int sizeZ = this.fileInfoList.size();
 		
 		// Compute size of buffer buffer for each plane
-		int pixelsPerPlane = width * height;
+		int pixelsPerPlane = sizeX * sizeY;
 		int bytesPerPlane  = pixelsPerPlane * info0.getBytesPerPixel();
 		
 		// compute total number of expected bytes
-		int nBytes = bytesPerPlane * depth;
+		int nBytes = bytesPerPlane * sizeZ;
+		
+        // when number of bytes in larger than Integer.MAXINT, creates a new
+        // instance of SlicedUInt8Array3D
+		if (nBytes < 0)
+		{
+		    System.out.println("Large array! Switch to sliced array...");
+		    // check type limit
+		    if(info0.fileType != TiffFileInfo.PixelType.GRAY8) 
+		    {
+		        throw new RuntimeException("Can only process UInt8 arrays");
+		    }
+		    
+		    // create the container
+		    ArrayList<UInt8Array> arrayList = new ArrayList<>(sizeZ);
+		    
+		    // iterate over slices to create each 2D array
+		    for (TiffFileInfo info : this.fileInfoList)
+		    {
+	            byte[] buffer = new byte[bytesPerPlane];
+	            int nRead = readByteArray(buffer, info);
+
+	            // Check the whole buffer has been read
+	            if (nRead != bytesPerPlane)
+	            {
+	                throw new IOException("Could read only " + nRead
+	                        + " bytes over the " + bytesPerPlane + " expected");
+	            }
+	            
+	            arrayList.add(new BufferedUInt8Array2D(sizeX, sizeY, buffer));
+		    }
+		    
+		    // create a new instance of 3D array that stores each slice
+		    System.out.println("create 3D array");
+            return new SlicedUInt8Array3D(arrayList);
+		}
 		
 		// Allocate buffer array
 		byte[] buffer = new byte[nBytes];
@@ -367,13 +453,13 @@ public class TiffImageReader implements ImageReader
 		// Read the byte array
 		int offset = 0;
 		int nRead = 0;
-		for (TiffFileInfo info : infos)
+		for (TiffFileInfo info : this.fileInfoList)
 		{
 			nRead += readByteArray(buffer, info, offset);
 			offset += bytesPerPlane;
 		}
 
-		// Check all buffer have been read
+        // Check the whole buffer has been read
 		if (nRead != nBytes)
 		{
 			throw new IOException("Could read only " + nRead
@@ -385,14 +471,14 @@ public class TiffImageReader implements ImageReader
 		case GRAY8:
 		case COLOR8:
 		case BITMAP:
-			return new BufferedUInt8Array3D(width, height, depth, buffer);
+			return new BufferedUInt8Array3D(sizeX, sizeY, sizeZ, buffer);
 			
 		case GRAY16_UNSIGNED:
 		case GRAY12_UNSIGNED:
 		{
 			// Store data as short array
 			short[] shortBuffer = convertToShortArray(buffer, info0);
-			return new BufferedUInt16Array3D(width, height, depth, shortBuffer);
+			return new BufferedUInt16Array3D(sizeX, sizeY, sizeZ, shortBuffer);
 		}	
 
 		default:
@@ -401,6 +487,27 @@ public class TiffImageReader implements ImageReader
 		}
 	}
 	
+    /**
+     * Reads the image data for the specified index.
+     * 
+     * @param idnex
+     *            the index of image data to read
+     * @return the data array corresponding to the specified index
+     * @throws IOException
+     *             if an error occurs
+     */
+    public Array<?> readImageData(int index) throws IOException
+    {
+        // check validity of index input
+        if (index >= this.fileInfoList.size())
+        {
+            throw new IllegalArgumentException("Requires an index below the number of images ("
+                    + this.fileInfoList.size() + ")");
+        }
+        
+        return readImageData(this.fileInfoList.get(index));
+    }
+    
 	/**
      * Reads the buffer from the current stream and specified info.
      * 
@@ -502,7 +609,6 @@ public class TiffImageReader implements ImageReader
 		case BARG:
 		case RGB_PLANAR:
 			// allocate memory for array
-//			UInt8Array3D rgb2d = new BufferedUInt8Array3D(info.width, info.height, 3);
 			RGB8Array2D rgb2d = new BufferedPackedByteRGB8Array2D(info.width, info.height);
 			
 			// fill array with re-ordered buffer content
@@ -515,9 +621,6 @@ public class TiffImageReader implements ImageReader
 					int g = buffer[index++] & 0x00FF;
 					int b = buffer[index++] & 0x00FF;
 					rgb2d.set(x, y, new RGB8(r, g, b));
-//					rgb2d.setByte(x, y, 0, buffer[index++]);
-//					rgb2d.setByte(x, y, 1, buffer[index++]);
-//					rgb2d.setByte(x, y, 2, buffer[index++]);
 				}
 			}
 			return rgb2d;
@@ -552,7 +655,6 @@ public class TiffImageReader implements ImageReader
 			int b2 = byteBuffer[2 * i + 1] & 0x00FF;
 
 			// encode bytes to short
-			// TODO change test
 			if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
 				shortBuffer[i] = (short) ((b2 << 8) + b1);
 			else
@@ -612,7 +714,7 @@ public class TiffImageReader implements ImageReader
 		int nStrips = info.stripOffsets.length;
 		for (int i = 0; i < nStrips; i++)
 		{
-			dataReader.seek(info.stripOffsets[i]);
+			dataReader.seek(info.stripOffsets[i] & 0xffffffffL);
 			int nRead = dataReader.read(buffer, offset, info.stripLengths[i]);
 			offset += nRead;
 			totalRead += nRead;
@@ -634,7 +736,7 @@ public class TiffImageReader implements ImageReader
 		int nStrips = info.stripOffsets.length;
 		for (int i = 0; i < nStrips; i++)
 		{
-			dataReader.seek(info.stripOffsets[i]);
+			dataReader.seek(info.stripOffsets[i] & 0xffffffffL);
 			int nRead = dataReader.read(buffer, offset, info.stripLengths[i]);
 			offset += nRead;
 			totalRead += nRead;
@@ -659,9 +761,8 @@ public class TiffImageReader implements ImageReader
 		int offset = 0;
 		for (int i = 0; i < nStrips; i++)
 		{
-			dataReader.seek(info.stripOffsets[i]);
-			int nRead = dataReader.read(compressedBytes, offset,
-					info.stripLengths[i]);
+			dataReader.seek(info.stripOffsets[i] & 0xffffffffL);
+            int nRead = dataReader.read(compressedBytes, offset, info.stripLengths[i]);
 			offset += nRead;
 		}
 
@@ -669,8 +770,8 @@ public class TiffImageReader implements ImageReader
 		return nRead;
 	}
 
-	private int readByteArrayPackBits(byte[] buffer, TiffFileInfo info,
-			int offset) throws IOException
+    private int readByteArrayPackBits(byte[] buffer, TiffFileInfo info, int offset)
+            throws IOException
 	{
 		// Number of strips
 		int nStrips = info.stripOffsets.length;
@@ -678,16 +779,17 @@ public class TiffImageReader implements ImageReader
 		// Compute the number of bytes per strip
 		int nBytes = 0;
 		for (int i = 0; i < nStrips; i++)
+		{
 			nBytes += info.stripLengths[i];
+		}
 		byte[] compressedBytes = new byte[nBytes];
 
 		// read each compressed strip
 		int offset0 = 0;
 		for (int i = 0; i < nStrips; i++)
 		{
-			dataReader.seek(info.stripOffsets[i]);
-			int nRead = dataReader.read(compressedBytes, offset0,
-					info.stripLengths[i]);
+			dataReader.seek(info.stripOffsets[i] & 0xffffffffL);
+            int nRead = dataReader.read(compressedBytes, offset0, info.stripLengths[i]);
 			offset0 += nRead;
 		}
 
@@ -695,6 +797,7 @@ public class TiffImageReader implements ImageReader
 		return nRead;
 	}
 
+	//TODO: put packbits compression code outside of TiffReader
 	/**
 	 * Uncompress byte array into a pre-allocated result byte array, using
 	 * Packbits compression.
@@ -716,7 +819,9 @@ public class TiffImageReader implements ImageReader
 			{
 				// copy the next n+1 bytes literally
 				for (int i = 0; i < n + 1; i++)
+				{
 					output[index2++] = input[index++];
+				}
 			}
 			else if (n != -128)
 			{
@@ -724,7 +829,9 @@ public class TiffImageReader implements ImageReader
 				int count = -n + 1;
 				byte value = input[index++];
 				for (int i = 0; i < count; i++)
+				{
 					output[index2++] = value;
+				}
 			}
 		}
 
@@ -752,7 +859,9 @@ public class TiffImageReader implements ImageReader
 			{
 				// copy the next n+1 bytes literally
 				for (int i = 0; i < n + 1; i++)
+				{
 					output[index2++] = input[index++];
+				}
 			}
 			else if (n != -128)
 			{
@@ -760,7 +869,9 @@ public class TiffImageReader implements ImageReader
 				int count = -n + 1;
 				byte value = input[index++];
 				for (int i = 0; i < count; i++)
+				{
 					output[index2++] = value;
+				}
 			}
 		}
 

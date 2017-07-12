@@ -119,5 +119,4 @@ public class TiffImageReaderTest
 		assertEquals(10106, array2d.getValue(80, 347), .1);
 		
 	}
-
 }
