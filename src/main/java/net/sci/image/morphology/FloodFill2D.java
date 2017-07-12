@@ -29,7 +29,10 @@ import net.sci.image.data.Connectivity2D;
 * @see MinimaAndMaxima
 * 
 * @author David Legland
+* 
+* @deprecated replaced by FloodFill class
 */
+@Deprecated
 public class FloodFill2D
 {
 	/**

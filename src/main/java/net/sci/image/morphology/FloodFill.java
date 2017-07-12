@@ -17,23 +17,24 @@ import net.sci.image.data.Connectivity2D;
 import net.sci.image.data.Connectivity3D;
 
 /**
-* <p>
-* Implements various flood-fill algorithms, for 2D and 3D arrays. 
-* Rewritten from ij.process.FloodFiller, and updated for double values. 
-* 
-* </p>
-* 
-* <p>
-* Check also "http://en.wikipedia.org/wiki/Flood_fill".
-* </p>
-* 
-* @see MinimaAndMaxima
-* 
-* @author David Legland
-*/
+ * <p>
+ * Implements various flood-fill algorithms, for 2D and 3D arrays.
+ * 
+ * Rewritten from class ImageJ ij.process.FloodFiller, and updated for double
+ * values and 3D arrays.
+ * 
+ * </p>
+ * 
+ * <p>
+ * Check also "http://en.wikipedia.org/wiki/Flood_fill".
+ * </p>
+ * 
+ * @see MinimaAndMaxima
+ * 
+ * @author David Legland
+ */
 public class FloodFill
 {
-	//TODO: keep this one or the two other ones?
 	/**
 	 * Private constructor to prevent class instantiation.
 	 */
@@ -167,8 +168,7 @@ public class FloodFill
 	 * coordinate extremities (inclusive), with the specified integer value.
 	 * the value x1 must be lower than or equal the value x2. 
 	 */
-	private final static <T> void fillLine(Array2D<T> array, int y, int x1,
-			int x2, T value)
+    private final static <T> void fillLine(Array2D<T> array, int y, int x1, int x2, T value)
 	{
 		if (x1 > x2)
 		{
@@ -199,7 +199,7 @@ public class FloodFill
 	 * @param value
 	 *            filling value
 	 * @param conn
-	 *            connectivity to use (4 or 8)
+	 *            connectivity to use (C4 or C8)
 	 */
 	public final static void floodFill(ScalarArray2D<?> input, int x, int y,
 			ScalarArray2D<?> output, double value, Connectivity2D conn)
@@ -336,8 +336,7 @@ public class FloodFill
 	 * coordinate extremities (inclusive), with the specified integer value.
 	 * the value x1 must be lower than or equal the value x2. 
 	 */
-	private final static void fillLine(Array2D<?> array, int y, int x1,
-			int x2, double value)
+    private final static void fillLine(Array2D<?> array, int y, int x1, int x2, double value)
 	{
 		if (x1 > x2)
 		{
@@ -404,8 +403,8 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (4 or 8)
 	 */
-	public final static void floodFillInt(IntArray2D<?> input, int x, int y,
-			IntArray2D<?> output, int value, int conn)
+    public final static void floodFillInt(IntArray2D<?> input, int x, int y, IntArray2D<?> output,
+            int value, int conn)
 	{
 	
 		// the shifts to look for new markers to start lines
@@ -516,8 +515,7 @@ public class FloodFill
 	 * @param value
 	 *            the new value of the pixels
 	 */
-	private final static void fillLineInt(IntArray2D<?> array, int y, int x1,
-			int x2, int value)
+    private final static void fillLineInt(IntArray2D<?> array, int y, int x1, int x2, int value)
 	{
 		if (x1 > x2)
 		{
@@ -603,10 +601,10 @@ public class FloodFill
 	 * @param value
 	 *            filling value
 	 * @param conn
-	 *            connectivity to use (6 or 26)
+	 *            connectivity to use (C6 or C26)
 	 */
-	public final static void floodFill(Array3D<?> inputArray, int x,
-			int y, int z, Array3D<?> outputArray, double value, Connectivity3D conn)
+    public final static void floodFill(Array3D<?> inputArray, int x, int y, int z,
+            Array3D<?> outputArray, double value, Connectivity3D conn)
 	{
 		if (conn == Connectivity3D.C6)
 		{
@@ -641,8 +639,8 @@ public class FloodFill
 	 * @param value
 	 *            filling value
 	 */
-	private final static void floodFillC6(Array3D<?> inputArray, int x,
-			int y, int z, Array3D<?> outputArray, double value)
+    private final static void floodFillC6(Array3D<?> inputArray, int x, int y, int z,
+            Array3D<?> outputArray, double value)
 	{
 		// get image size
 		int sizeX = inputArray.getSize(0);
@@ -795,8 +793,8 @@ public class FloodFill
 	 * @param value
 	 *            filling value
 	 */
-	private final static void floodFillC26(Array3D<?> inputArray, int x,
-			int y, int z, Array3D<?> outputArray, double value)
+    private final static void floodFillC26(Array3D<?> inputArray, int x, int y, int z,
+            Array3D<?> outputArray, double value)
 	{
 		// get image size
 		int sizeX = inputArray.getSize(0);
@@ -880,8 +878,7 @@ public class FloodFill
 	 * coordinate extremities (inclusive), with the specified integer value. the
 	 * value x1 must be lower than or equal the value x2.
 	 */
-	private final static void fillLine(Array3D<?> array, int x1, int x2,
-			int y, int z, double value)
+    private final static void fillLine(Array3D<?> array, int x1, int x2, int y, int z, double value)
 	{
 		for (int x = x1; x <= x2; x++)
 			array.setValue(x, y, z, value);
@@ -947,8 +944,8 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (6 or 26)
 	 */
-	public final static void floodFillInt(IntArray3D<?> inputArray, int x,
-			int y, int z, IntArray3D<?> outputArray, int value, Connectivity3D conn)
+    public final static void floodFillInt(IntArray3D<?> inputArray, int x, int y, int z,
+            IntArray3D<?> outputArray, int value, Connectivity3D conn)
 	{
 		if (conn == Connectivity3D.C6)
 		{
@@ -983,8 +980,8 @@ public class FloodFill
 	 * @param value
 	 *            filling value
 	 */
-	private final static void floodFillIntC6(IntArray3D<?> inputArray, int x,
-			int y, int z, IntArray3D<?> outputArray, int value)
+    private final static void floodFillIntC6(IntArray3D<?> inputArray, int x, int y, int z,
+            IntArray3D<?> outputArray, int value)
 	{
 		// get image size
 		int sizeX = inputArray.getSize(0);
@@ -1119,26 +1116,26 @@ public class FloodFill
 	}
 
 	/**
-	 * Assigns to all the neighbor voxels of (x,y,z) that have the same voxel
-	 * value in <code>image</code>, the specified new label value (
-	 * <code>value</code>) in <code>labelImage</code>, using the
-	 * 26-connectivity.
-	 * 
-	 * @param inputImage
-	 *            original image to read the voxel values from
-	 * @param x
-	 *            x- coordinate of the seed voxel
-	 * @param y
-	 *            y- coordinate of the seed voxel
-	 * @param z
-	 *            z- coordinate of the seed voxel
-	 * @param outputImage
-	 *            output label image (to fill)
-	 * @param value
-	 *            filling value
-	 */
-	private final static void floodFillIntC26(IntArray3D<?> inputArray, int x,
-			int y, int z, IntArray3D<?> outputArray, int value)
+     * Assigns to all the neighbor voxels of (x,y,z) that have the same voxel
+     * value in <code>image</code>, the specified new label value (
+     * <code>value</code>) in <code>labelImage</code>, using the
+     * 26-connectivity.
+     * 
+     * @param inputImage
+     *            original image to read the voxel values from
+     * @param x
+     *            x- coordinate of the seed voxel
+     * @param y
+     *            y- coordinate of the seed voxel
+     * @param z
+     *            z- coordinate of the seed voxel
+     * @param outputImage
+     *            output label image (to fill)
+     * @param value
+     *            filling value
+     */
+    private final static void floodFillIntC26(IntArray3D<?> inputArray, int x, int y, int z,
+            IntArray3D<?> outputArray, int value)
 	{
 		// get image size
 		int sizeX = inputArray.getSize(0);
@@ -1222,8 +1219,8 @@ public class FloodFill
 	 * coordinate extremities (inclusive), with the specified integer value. the
 	 * value x1 must be lower than or equal the value x2.
 	 */
-	private final static void fillLineInt(IntArray3D<?> array, int x1, int x2, int y,
-			int z, int value)
+    private final static void fillLineInt(IntArray3D<?> array, int x1, int x2, int y, int z,
+            int value)
 	{
 		for (int x = x1; x <= x2; x++)
 			array.setInt(x, y, z, value);

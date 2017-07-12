@@ -14,10 +14,10 @@ import net.sci.array.data.scalar2d.Int32Array2D;
 import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.image.Image;
 import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.image.Image;
 import net.sci.image.data.Connectivity2D;
-import net.sci.image.morphology.FloodFill2D;
+import net.sci.image.morphology.FloodFill;
 
 /**
  * Computes the labels of the connected components in a binary image. The type
@@ -156,7 +156,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 				
 				// increment label index, and propagate
 				nLabels++;
-				FloodFill2D.floodFillFloat(image, x, y, labels, nLabels, this.connectivity);
+				FloodFill.floodFill(image, x, y, labels, nLabels, this.connectivity);
 			}
 		}
 		this.fireProgressChanged(this, 1, 1);
@@ -224,7 +224,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 				
 				// increment label index, and propagate
 				nLabels++;
-				FloodFill2D.floodFillFloat(source, x, y, target, nLabels, this.connectivity); // why float ?
+				FloodFill.floodFillInt(source, x, y, target, nLabels, this.connectivity);
 			}
 		}
 		this.fireProgressChanged(this, 1, 1);

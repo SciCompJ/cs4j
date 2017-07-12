@@ -28,7 +28,10 @@ import net.sci.image.data.Connectivity3D;
 * @see MinimaAndMaxima
 * 
 * @author David Legland
+* 
+* @deprecated replaced by FloodFill class
 */
+@Deprecated
 public class FloodFill3D
 {
 	/**

@@ -4,6 +4,8 @@
 package net.sci.image.morphology.extrema;
 
 import static java.lang.Math.min;
+import static net.sci.array.type.Boolean.FALSE;
+import static net.sci.array.type.Boolean.TRUE;
 
 import net.sci.algo.Algo;
 import net.sci.algo.AlgoStub;
@@ -13,11 +15,8 @@ import net.sci.array.data.scalar2d.BooleanArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.data.Connectivity2D;
-import net.sci.image.morphology.FloodFill2D;
+import net.sci.image.morphology.FloodFill;
 import net.sci.image.morphology.MinimaAndMaxima;
-
-import static net.sci.array.type.Boolean.FALSE;
-import static net.sci.array.type.Boolean.TRUE;
 
 /**
  * Computes regional minima and maxima on planar arrays, using generic version
@@ -180,7 +179,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 				// neighbors with same value are set to 0 in the output image. 
 				if (value < currentValue * sign)
 				{
-					FloodFill2D.floodFill(source, x, y, target, FALSE, Connectivity2D.C4);
+					FloodFill.floodFill(source, x, y, target, FALSE, Connectivity2D.C4);
 				}
 			}
 		}
@@ -240,7 +239,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 				// neighbors with same value are set to 0 in the output image. 
 				if (value < currentValue * sign) 
 				{
-					FloodFill2D.floodFill(source, x, y, target, FALSE, Connectivity2D.C8);
+					FloodFill.floodFill(source, x, y, target, FALSE, Connectivity2D.C8);
 				}
 			}
 		}

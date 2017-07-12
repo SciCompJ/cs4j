@@ -17,7 +17,7 @@ import net.sci.array.data.scalar3d.UInt8Array3D;
 import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.Image;
 import net.sci.image.data.Connectivity3D;
-import net.sci.image.morphology.FloodFill3D;
+import net.sci.image.morphology.FloodFill;
 
 /**
  * Computes the labels of the connected components in a 3D binary image. The
@@ -213,7 +213,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 					
 					// increment label index, and propagate
 					nLabels++;
-					FloodFill3D.floodFillInt(image, x, y, z, labels, nLabels, this.connectivity);
+					FloodFill.floodFillInt(image, x, y, z, labels, nLabels, this.connectivity);
 				}
 			}
 		}
