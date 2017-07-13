@@ -15,7 +15,7 @@ public class BoxDilationNaiveTest
 		UInt8Array2D image = UInt8Array2D.create(10, 10);
 		image.setInt(4, 4, 200);
 	
-		BoxDilationNaive dil = new BoxDilationNaive(new int[]{3, 3});
+		BoxDilationNaive dil = new BoxDilationNaive(new int[]{7, 7});
 		UInt8Array2D result = (UInt8Array2D) dil.process(image);
 		
 		// Expected:
@@ -29,7 +29,7 @@ public class BoxDilationNaiveTest
 		//   0 200 200 200 200 200 200 200   0   0
 		//   0   0   0   0   0   0   0   0   0   0
 		//   0   0   0   0   0   0   0   0   0   0
-		result.print(System.out);
+//		result.print(System.out);
 
 		for (int y = 0; y < 1; y++)
 		{

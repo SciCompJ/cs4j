@@ -56,6 +56,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	 * @param ps
 	 *            the stream to use for printing
 	 */
+	@Override
 	public void print(PrintStream ps)
 	{
 		for (int y = 0; y < this.size1; y++)
