@@ -74,7 +74,7 @@ public class ImageIOImageReader implements ImageReader
 		Array<?> array = null;
 		if (nc == 1)
 		{
-			// Create new image
+			// Create new intensity image
 			IntArray2D<?> intArray = UInt8Array2D.create(width, height);
 
 			// Initialize image data with raster content
@@ -91,7 +91,7 @@ public class ImageIOImageReader implements ImageReader
 		} 
 		else if (nc == 3 || nc == 4)
 		{
-			// Create new image
+			// Create new color image
 			RGB8Array2D rgbArray = RGB8Array2D.create(width, height);
 
 			// Initialize image data with raster content
