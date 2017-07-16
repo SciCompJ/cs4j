@@ -43,6 +43,21 @@ public abstract class AutoThreshold implements ImageToImageOperator
 		process((ScalarArray<?>) inputData, (BooleanArray) outputData);
 	}
 
+	/**
+	 * Computes the threshold value on a scalar array and returns the resulting
+	 * binary array.
+	 * 
+	 * @param source
+	 *            the scalar array to threshold
+	 * @return the binary array resulting from thresholding
+	 */
+	public BooleanArray processScalar(ScalarArray<?> source)
+	{
+		BooleanArray target = createEmptyOutputArray(source);
+		process(source, target);
+		return target;
+	}
+	
 	public void process(ScalarArray<?> source, BooleanArray target)
 	{
 		// compute threshold value
@@ -61,6 +76,20 @@ public abstract class AutoThreshold implements ImageToImageOperator
 		}
 	}
 	
+	/**
+	 * Creates a new boolean array that can be used as output for processing the
+	 * given input array.
+	 * 
+	 * @param inputArray
+	 *            the reference array
+	 * @return a new instance of Array that can be used for processing input
+	 *         array.
+	 */
+	public BooleanArray createEmptyOutputArray(Array<?> inputArray)
+	{
+		return BooleanArray.create(inputArray.getSize());
+	}
+
 	/**
 	 * Creates a new boolean image that can be used as output for processing the
 	 * given input image.

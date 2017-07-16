@@ -28,7 +28,7 @@ public class OtsuThreshold extends AutoThreshold
 		// choose 256 levels by default (convenient for 8-bits, should be enough for other types)
 		int nLevels = 256;
 		
-		// compte the array of possible thresholds
+		// compute the array of possible thresholds
 		double[] levels = Histogram.computeBinPositions(range, nLevels);
 		
 		// Compute count histogram
@@ -65,7 +65,7 @@ public class OtsuThreshold extends AutoThreshold
 		// second class range from i+1 to nLevels-1
 		for (int i = 0; i < nLevels - 1; i++)
 		{
-			// compute probability and mean value for each class
+			// probability and mean value for first class
 			double p0 = 0, mu0 = 0;
 			for (int j = 0; j <= i; j++)
 			{
@@ -74,6 +74,7 @@ public class OtsuThreshold extends AutoThreshold
 			}
 			mu0 /= p0;
 			
+			// probability and mean value for second class
 			double p1 = 0, mu1 = 0;
 			for (int j = i + 1; j < nLevels; j++)
 			{
@@ -82,13 +83,15 @@ public class OtsuThreshold extends AutoThreshold
 			}
 			mu1 /= p1;
 			
-			// compute variance for each class
+			// compute variance for first class
 			double var0 = 0;
 			for (int j = 0; j <= i; j++)
 			{
 				double level2 = levels[j] - mu0;
 				var0 += freqHisto[j] * level2 * level2 / p0;
 			}
+			
+			// compute variance for second class
 			double var1 = 0;
 			for (int j = i + 1; j < nLevels; j++)
 			{
@@ -103,7 +106,8 @@ public class OtsuThreshold extends AutoThreshold
 		    sigmaw[i] = p0 * var0 + p1 * var1;
 		}
 		
-		// compute threshold value
+		// compute threshold value by identifying the level that prodicues the
+		// minimal intra-class variance
 		double minSigmaW = Double.POSITIVE_INFINITY;
 		int indMin = 0;
 		for (int i = 0; i < nLevels - 1; i++)
