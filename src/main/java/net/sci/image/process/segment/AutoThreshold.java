@@ -61,7 +61,7 @@ public abstract class AutoThreshold implements ImageToImageOperator
 	public void process(ScalarArray<?> source, BinaryArray target)
 	{
 		// compute threshold value
-		double value = computeThresholdValue(source);
+		double threshold = computeThresholdValue(source);
 		
 		// create array iterators
 		ScalarArray.Iterator<?> iter1 = source.iterator(); 
@@ -70,9 +70,7 @@ public abstract class AutoThreshold implements ImageToImageOperator
 		// iterate on both arrays for computing segmented values
 		while(iter1.hasNext() && iter2.hasNext())
 		{
-			iter1.forward();
-			iter2.forward();
-			iter2.setBoolean(iter1.getValue() >= value);
+			iter2.setNextBoolean(iter1.nextValue() >= threshold);
 		}
 	}
 	

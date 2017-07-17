@@ -168,7 +168,7 @@ public interface Int16Array extends IntArray<Int16>
 		@Override
 		public default int getInt()
 		{
-			return getShort() & 0x00FFFF; 
+			return getShort(); 
 		}
 
 		@Override
