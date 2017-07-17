@@ -32,7 +32,7 @@ public class RegionalExtrema2D extends AlgoStub
 	
 	MinimaAndMaxima.Type type = MinimaAndMaxima.Type.MINIMA;
 	
-	Connectivity2D connectivity;
+	Connectivity2D connectivity = Connectivity2D.C4;
 	
 	
 	// ==============================================================
