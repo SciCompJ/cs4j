@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.data.scalar3d.BooleanArray3D;
+import net.sci.array.data.scalar3d.BinaryArray3D;
 import net.sci.array.data.scalar3d.IntArray3D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
 import net.sci.array.type.UInt8;
@@ -115,7 +115,7 @@ public class FloodFillTest
     @Test
     public final void testFloodFillPair_Cross3d_C26Float()
     {
-        BooleanArray3D image = createCornerCross();
+        BinaryArray3D image = createCornerCross();
         // System.out.println("input image:");
         // printStack(image);
 
@@ -140,13 +140,13 @@ public class FloodFillTest
      * Creates a stack representing a cross with branches touching only by
      * corners.
      */
-    public BooleanArray3D createCornerCross()
+    public BinaryArray3D createCornerCross()
     {
         // Create test image
         int sizeX = 9;
         int sizeY = 9;
         int sizeZ = 9;
-        BooleanArray3D image = BooleanArray3D.create(sizeX, sizeY, sizeZ);
+        BinaryArray3D image = BinaryArray3D.create(sizeX, sizeY, sizeZ);
         int val0 = 50;
         
         // Center voxel

@@ -4,7 +4,7 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
-import net.sci.array.data.BooleanArray;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
@@ -84,7 +84,7 @@ public final class ImageInverter implements ArrayToArrayImageOperator
 	{
 		if (array instanceof UInt8Array) return 255;
 		if (array instanceof UInt16Array) return UInt16.MAX_VALUE;
-		if (array instanceof BooleanArray) return 1;
+		if (array instanceof BinaryArray) return 1;
 		
 		double[] valueRange = array.valueRange();
 		return valueRange[1] - valueRange[0];

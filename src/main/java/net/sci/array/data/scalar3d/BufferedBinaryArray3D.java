@@ -3,14 +3,17 @@
  */
 package net.sci.array.data.scalar3d;
 
-import net.sci.array.data.BooleanArray;
-import net.sci.array.type.Boolean;
+import net.sci.array.data.BinaryArray;
+import net.sci.array.type.Binary;
 
 /**
+ * Concrete implementation of BinaryArray3D that stores inner data in a linear
+ * array of booleans.
+ * 
  * @author dlegland
  *
  */
-public class BufferedBooleanArray3D extends BooleanArray3D
+public class BufferedBinaryArray3D extends BinaryArray3D
 {
 	// =============================================================
 	// Class fields
@@ -29,7 +32,7 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 	 * @param size2
 	 *            the size of the array along the third dimension
 	 */
-	public BufferedBooleanArray3D(int size0, int size1, int size2)
+	public BufferedBinaryArray3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
 		this.buffer = new boolean[size0 * size1 * size2];
@@ -46,7 +49,7 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 	 * @param buffer
 	 *            the buffer containing the boolean values
 	 */
-	public BufferedBooleanArray3D(int size0, int size1, int size2, boolean[] buffer)
+	public BufferedBinaryArray3D(int size0, int size1, int size2, boolean[] buffer)
 	{
 		super(size0, size1, size2);
 		if (buffer.length < size0 * size1 * size2)
@@ -85,23 +88,23 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 	// Specialization of the Array interface
 
 	@Override
-	public BooleanArray3D duplicate()
+	public BinaryArray3D duplicate()
 	{
 		boolean[] buffer2 = new boolean[size0 * size1 * size2];
 		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1 * size2);
-		return new BufferedBooleanArray3D(size0, size1, size2, buffer2);
+		return new BufferedBinaryArray3D(size0, size1, size2, buffer2);
 	}
 
 	
 	// =============================================================
 	// Implementation of the Iterator interface
 
-	public BooleanArray.Iterator iterator()
+	public BinaryArray.Iterator iterator()
 	{
 		return new BooleanIterator();
 	}
 	
-	private class BooleanIterator implements BooleanArray.Iterator
+	private class BooleanIterator implements BinaryArray.Iterator
 	{
 		int index = -1;
 		
@@ -116,10 +119,10 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 		}
 
 		@Override
-		public Boolean next()
+		public Binary next()
 		{
 			this.index++;
-			return new Boolean(buffer[index]);
+			return new Binary(buffer[index]);
 		}
 
 		@Override
@@ -129,13 +132,13 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 		}
 
 		@Override
-		public Boolean get()
+		public Binary get()
 		{
-			return new Boolean(buffer[index]);
+			return new Binary(buffer[index]);
 		}
 
 		@Override
-		public void set(Boolean b)
+		public void set(Binary b)
 		{
 			buffer[index] = b.getState();
 		}

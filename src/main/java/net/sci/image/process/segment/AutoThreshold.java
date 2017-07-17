@@ -4,7 +4,7 @@
 package net.sci.image.process.segment;
 
 import net.sci.array.Array;
-import net.sci.array.data.BooleanArray;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.image.Image;
 import net.sci.image.ImageToImageOperator;
@@ -31,7 +31,7 @@ public abstract class AutoThreshold implements ImageToImageOperator
 			throw new IllegalArgumentException("Input image must be scalar");
 		}
 		Array<?> outputData = outputImage.getData();
-		if (!(outputData instanceof BooleanArray))
+		if (!(outputData instanceof BinaryArray))
 		{
 			throw new IllegalArgumentException("Output image must be boolean");
 		}
@@ -40,7 +40,7 @@ public abstract class AutoThreshold implements ImageToImageOperator
 			throw new IllegalArgumentException("Input and output images must have same dimensionality");
 		}
 
-		process((ScalarArray<?>) inputData, (BooleanArray) outputData);
+		process((ScalarArray<?>) inputData, (BinaryArray) outputData);
 	}
 
 	/**
@@ -51,21 +51,21 @@ public abstract class AutoThreshold implements ImageToImageOperator
 	 *            the scalar array to threshold
 	 * @return the binary array resulting from thresholding
 	 */
-	public BooleanArray processScalar(ScalarArray<?> source)
+	public BinaryArray processScalar(ScalarArray<?> source)
 	{
-		BooleanArray target = createEmptyOutputArray(source);
+		BinaryArray target = createEmptyOutputArray(source);
 		process(source, target);
 		return target;
 	}
 	
-	public void process(ScalarArray<?> source, BooleanArray target)
+	public void process(ScalarArray<?> source, BinaryArray target)
 	{
 		// compute threshold value
 		double value = computeThresholdValue(source);
 		
 		// create array iterators
 		ScalarArray.Iterator<?> iter1 = source.iterator(); 
-		BooleanArray.Iterator iter2 = target.iterator();
+		BinaryArray.Iterator iter2 = target.iterator();
 		
 		// iterate on both arrays for computing segmented values
 		while(iter1.hasNext() && iter2.hasNext())
@@ -85,9 +85,9 @@ public abstract class AutoThreshold implements ImageToImageOperator
 	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
-	public BooleanArray createEmptyOutputArray(Array<?> inputArray)
+	public BinaryArray createEmptyOutputArray(Array<?> inputArray)
 	{
-		return BooleanArray.create(inputArray.getSize());
+		return BinaryArray.create(inputArray.getSize());
 	}
 
 	/**
@@ -102,7 +102,7 @@ public abstract class AutoThreshold implements ImageToImageOperator
 	public Image createEmptyOutputImage(Image inputImage)
 	{
 		Array<?> array = inputImage.getData();
-		BooleanArray outputArray = BooleanArray.create(array.getSize());
+		BinaryArray outputArray = BinaryArray.create(array.getSize());
 		return new Image(outputArray, inputImage);
 	}
 }

@@ -10,12 +10,12 @@ import java.awt.image.WritableRaster;
 
 import net.sci.array.Array;
 import net.sci.array.Cursor;
-import net.sci.array.data.BooleanArray;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.data.color.RGB8Array;
-import net.sci.array.data.scalar2d.BooleanArray2D;
+import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.array.type.RGB8;
@@ -51,10 +51,10 @@ public class BufferedImageUtils
 		Array<?> array = getImageSlice(image, sliceIndex);
 
 		// Process array depending on its data type
-		if (array instanceof BooleanArray2D)
+		if (array instanceof BinaryArray2D)
 		{
 			// binary images are converted to bi-color images
-			return convertBooleanArray((BooleanArray2D) array, Color.RED, Color.WHITE);
+			return convertBooleanArray((BinaryArray2D) array, Color.RED, Color.WHITE);
 		}
  		else if (array instanceof ScalarArray2D)
  		{
@@ -225,9 +225,9 @@ public class BufferedImageUtils
 		{
 			return convertRGB8Array((RGB8Array) array);
 		}
-		else if (array instanceof BooleanArray)
+		else if (array instanceof BinaryArray)
 		{
-			return convertBooleanArray((BooleanArray) array, Color.WHITE, Color.BLACK);
+			return convertBooleanArray((BinaryArray) array, Color.WHITE, Color.BLACK);
 		}
 		
 		throw new RuntimeException("Could not convert the array of class: " + array.getClass());
@@ -280,7 +280,7 @@ public class BufferedImageUtils
 	}
 	
 	public static final java.awt.image.BufferedImage convertBooleanArray(
-			BooleanArray array, Color fgColor, Color bgColor)
+			BinaryArray array, Color fgColor, Color bgColor)
 	{
 		// get array size
 		int sizeX = array.getSize(0);

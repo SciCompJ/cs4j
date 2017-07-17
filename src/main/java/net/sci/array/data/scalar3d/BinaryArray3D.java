@@ -3,28 +3,30 @@
  */
 package net.sci.array.data.scalar3d;
 
-import net.sci.array.data.BooleanArray;
-import net.sci.array.type.Boolean;
+import net.sci.array.data.BinaryArray;
+import net.sci.array.type.Binary;
 
 /**
+ * A three-dimensional array containing boolean values.
+ * 
  * @author dlegland
  *
  */
-public abstract class BooleanArray3D extends IntArray3D<Boolean> implements BooleanArray
+public abstract class BinaryArray3D extends IntArray3D<Binary> implements BinaryArray
 {
 	// =============================================================
 	// Static methods
 
-	public static final BooleanArray3D create(int size0, int size1, int size2)
+	public static final BinaryArray3D create(int size0, int size1, int size2)
 	{
-		return new BufferedBooleanArray3D(size0, size1, size2);
+		return new BufferedBinaryArray3D(size0, size1, size2);
 	}
 	
 	
 	// =============================================================
 	// Constructor
 
-	protected BooleanArray3D(int size0, int size1, int size2)
+	protected BinaryArray3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
 	}
@@ -83,11 +85,11 @@ public abstract class BooleanArray3D extends IntArray3D<Boolean> implements Bool
 	}
 
     @Override
-    public BooleanArray3D complement()
+    public BinaryArray3D complement()
     {
-        BooleanArray3D result = duplicate();
-        BooleanArray.Iterator iter1 = iterator();
-        BooleanArray.Iterator iter2 = result.iterator();
+        BinaryArray3D result = duplicate();
+        BinaryArray.Iterator iter1 = iterator();
+        BinaryArray.Iterator iter2 = result.iterator();
         while (iter1.hasNext() && iter2.hasNext())
         {
             iter1.forward();
@@ -115,21 +117,21 @@ public abstract class BooleanArray3D extends IntArray3D<Boolean> implements Bool
 	// Specialization of Array3D interface
 
 	@Override
-	public abstract BooleanArray3D duplicate();
+	public abstract BinaryArray3D duplicate();
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#get(int, int, int)
 	 */
 	@Override
-	public Boolean get(int x, int y, int z)
+	public Binary get(int x, int y, int z)
 	{
-		return new Boolean(getState(x, y, z));
+		return new Binary(getState(x, y, z));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
 	 */
-	public void set(int x, int y, int z, Boolean value)
+	public void set(int x, int y, int z, Binary value)
 	{
 		setState(x, y, z, value.getState());
 	}
@@ -157,24 +159,24 @@ public abstract class BooleanArray3D extends IntArray3D<Boolean> implements Bool
 	// Specialization of Array interface
 	
 	@Override
-	public BooleanArray newInstance(int... dims)
+	public BinaryArray newInstance(int... dims)
 	{
-		return BooleanArray.create(dims);
+		return BinaryArray.create(dims);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#get(int[])
 	 */
 	@Override
-	public Boolean get(int[] pos)
+	public Binary get(int[] pos)
 	{
-		return new Boolean(getState(pos[0], pos[1], pos[2]));
+		return new Binary(getState(pos[0], pos[1], pos[2]));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#set(int[], java.lang.Object)
 	 */
-	public void set(int[] pos, Boolean value)
+	public void set(int[] pos, Binary value)
 	{
 		setState(pos[0], pos[1], pos[2], value.getState());
 	}

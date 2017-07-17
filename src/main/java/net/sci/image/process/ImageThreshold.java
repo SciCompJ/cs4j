@@ -4,7 +4,7 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
-import net.sci.array.data.BooleanArray;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.image.ArrayToArrayImageOperator;
 
@@ -40,7 +40,7 @@ public class ImageThreshold implements ArrayToArrayImageOperator
 		{
 			throw new IllegalArgumentException("Input image must be scalar");
 		}
-		if (!(target instanceof BooleanArray))
+		if (!(target instanceof BinaryArray))
 		{
 			throw new IllegalArgumentException("Output image must be boolean");
 		}
@@ -49,7 +49,7 @@ public class ImageThreshold implements ArrayToArrayImageOperator
 			throw new IllegalArgumentException("Input and output images must have same dimensionality");
 		}
 
-		processScalar((ScalarArray<?>) source, (BooleanArray) target);
+		processScalar((ScalarArray<?>) source, (BinaryArray) target);
 	}
 
 //	/* (non-Javadoc)
@@ -76,10 +76,10 @@ public class ImageThreshold implements ArrayToArrayImageOperator
 //		processScalar((ScalarArray<?>) inputData, (BooleanArray) outputData);
 //	}
 
-	public void processScalar(ScalarArray<?> source, BooleanArray target)
+	public void processScalar(ScalarArray<?> source, BinaryArray target)
 	{
 		ScalarArray.Iterator<?> iter1 = source.iterator(); 
-		BooleanArray.Iterator iter2 = target.iterator();
+		BinaryArray.Iterator iter2 = target.iterator();
 		
 		while(iter1.hasNext() && iter2.hasNext())
 		{
@@ -97,9 +97,9 @@ public class ImageThreshold implements ArrayToArrayImageOperator
 	 *            the reference array
 	 * @return a new instance of BooleanArray
 	 */
-	public BooleanArray createEmptyOutputArray(Array<?> array)
+	public BinaryArray createEmptyOutputArray(Array<?> array)
 	{
-		return BooleanArray.create(array.getSize());
+		return BinaryArray.create(array.getSize());
 	}
 	
 //	/**
@@ -123,7 +123,7 @@ public class ImageThreshold implements ArrayToArrayImageOperator
 		{
 			return false;
 		}
-		if (!(target instanceof BooleanArray))
+		if (!(target instanceof BinaryArray))
 		{
 			return false;
 		}

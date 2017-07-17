@@ -22,7 +22,7 @@
 package net.sci.image.binary.distmap;
 
 import net.sci.algo.Algo;
-import net.sci.array.data.scalar2d.BooleanArray2D;
+import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 
 
@@ -42,5 +42,5 @@ public interface DistanceTransform2D extends Algo
 	 * <li> the distance to the nearest background pixel otherwise</li>
 	 * </ul>
 	 */
-	public ScalarArray2D<?> process2d(BooleanArray2D array);
+	public ScalarArray2D<?> process2d(BinaryArray2D array);
 }

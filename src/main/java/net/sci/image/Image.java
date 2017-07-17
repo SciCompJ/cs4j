@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.data.BooleanArray;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.IntArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt16Array;
@@ -196,7 +196,7 @@ public class Image
 	 */
 	private void setImageTypeFromDataType()
 	{
-		if (this.data instanceof BooleanArray)
+		if (this.data instanceof BinaryArray)
 		{
 			this.type = Type.BINARY;
 		} 

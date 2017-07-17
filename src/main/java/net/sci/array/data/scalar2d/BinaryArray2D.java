@@ -3,14 +3,16 @@
  */
 package net.sci.array.data.scalar2d;
 
-import net.sci.array.data.BooleanArray;
-import net.sci.array.type.Boolean;
+import net.sci.array.data.BinaryArray;
+import net.sci.array.type.Binary;
 
 /**
+ * A two-dimensional array containing boolean values.
+ * 
  * @author dlegland
  *
  */
-public abstract class BooleanArray2D extends IntArray2D<Boolean> implements BooleanArray
+public abstract class BinaryArray2D extends IntArray2D<Binary> implements BinaryArray
 {
 	// =============================================================
 	// Static methods
@@ -22,9 +24,9 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 	 *            the size of the array along the second dimension
 	 * @return a new instance of BooleanArray2D
 	 */
-	public static final BooleanArray2D create(int size0, int size1)
+	public static final BinaryArray2D create(int size0, int size1)
 	{
-		return new BufferedBooleanArray2D(size0, size1);
+		return new BufferedBinaryArray2D(size0, size1);
 	}
 	
 	
@@ -39,7 +41,7 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 	 * @param size1
 	 *            the size of the array along the second dimension
 	 */
-	protected BooleanArray2D(int size0, int size1)
+	protected BinaryArray2D(int size0, int size1)
 	{
 		super(size0, size1);
 	}
@@ -93,11 +95,11 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 	}
 
     @Override
-    public BooleanArray2D complement()
+    public BinaryArray2D complement()
     {
-        BooleanArray2D result = duplicate();
-        BooleanArray.Iterator iter1 = iterator();
-        BooleanArray.Iterator iter2 = result.iterator();
+        BinaryArray2D result = duplicate();
+        BinaryArray.Iterator iter1 = iterator();
+        BinaryArray.Iterator iter2 = result.iterator();
         while (iter1.hasNext() && iter2.hasNext())
         {
             iter1.forward();
@@ -128,16 +130,16 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public Boolean get(int x, int y)
+	public Binary get(int x, int y)
 	{
-		return new Boolean(getState(x, y));
+		return new Binary(getState(x, y));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, Boolean value)
+	public void set(int x, int y, Binary value)
 	{
 		setState(x, y, value.getState());
 	}
@@ -167,28 +169,28 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 	// Specialization of Array interface
 	
 	@Override
-	public BooleanArray newInstance(int... dims)
+	public BinaryArray newInstance(int... dims)
 	{
-		return BooleanArray.create(dims);
+		return BinaryArray.create(dims);
 	}
 
 	@Override
-	public abstract BooleanArray2D duplicate();
+	public abstract BinaryArray2D duplicate();
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#get(int[])
 	 */
 	@Override
-	public Boolean get(int[] pos)
+	public Binary get(int[] pos)
 	{
-		return new Boolean(getState(pos[0], pos[1]));
+		return new Binary(getState(pos[0], pos[1]));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#set(int[], java.lang.Object)
 	 */
 	@Override
-	public void set(int[] pos, Boolean value)
+	public void set(int[] pos, Binary value)
 	{
 		setState(pos[0], pos[1], value.getState());
 	}

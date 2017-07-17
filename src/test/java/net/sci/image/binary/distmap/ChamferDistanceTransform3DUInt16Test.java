@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import net.sci.array.data.UInt16Array;
-import net.sci.array.data.scalar3d.BooleanArray3D;
+import net.sci.array.data.scalar3d.BinaryArray3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.binary.ChamferWeights3D;
 
@@ -21,13 +21,13 @@ public class ChamferDistanceTransform3DUInt16Test
 {
 
 	/**
-	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16#process3d(net.sci.array.data.scalar3d.BooleanArray3D)}.
+	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16#process3d(net.sci.array.data.scalar3d.BinaryArray3D)}.
 	 */
 	@Test
 	public final void testProcess3d_Cuboid()
 	{
 		// create 3D image containing a cube 
-		BooleanArray3D image = BooleanArray3D.create(20, 20, 20);
+		BinaryArray3D image = BinaryArray3D.create(20, 20, 20);
 		for (int z = 2; z < 19; z++)
 		{
 			for (int y = 2; y < 19; y++)
@@ -62,7 +62,7 @@ public class ChamferDistanceTransform3DUInt16Test
 	public void testDistanceMap_FromCenter()
 	{
 		// create 3D image filled with white containing a black dot in the middle
-		BooleanArray3D image = BooleanArray3D.create(21, 21, 21);
+		BinaryArray3D image = BinaryArray3D.create(21, 21, 21);
 		image.fillValue(1);
 		image.setValue(10, 10, 10, 0);
 

@@ -4,7 +4,7 @@
 package net.sci.image.binary.distmap;
 
 import static org.junit.Assert.*;
-import net.sci.array.data.scalar2d.BooleanArray2D;
+import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.image.binary.ChamferWeights2D;
 
@@ -18,13 +18,13 @@ public class ChamferDistanceTransform2DUInt16Test
 {
 
 	/**
-	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16#process2d(net.sci.array.data.scalar2d.BooleanArray2D)}.
+	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16#process2d(net.sci.array.data.scalar2d.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess2d()
 	{
 		// Create a black image with a white 8-by-6 rectangle in the middle
-		BooleanArray2D image = BooleanArray2D.create(12, 10);
+		BinaryArray2D image = BinaryArray2D.create(12, 10);
 		for (int y = 2; y < 8; y++)
 		{
 			for (int x = 2; x < 10; x++)
@@ -49,7 +49,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	@Test
 	public final void testDistanceMap_UntilCorners_CityBlock() 
 	{
-		BooleanArray2D image = BooleanArray2D.create(7, 7);
+		BinaryArray2D image = BinaryArray2D.create(7, 7);
 		image.fillValue(1);
 		image.setValue(4, 4, 0);
 		
@@ -71,7 +71,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	@Test
 	public final void testDistanceMap_UntilCorners_Chessboard() 
 	{
-		BooleanArray2D image = BooleanArray2D.create(7, 7);
+		BinaryArray2D image = BinaryArray2D.create(7, 7);
 		image.fillValue(1);
 		image.setValue(4, 4, 0);
 		
@@ -91,7 +91,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	@Test
 	public final void testDistanceMap_UntilCorners_Weights_23() 
 	{
-		BooleanArray2D image = BooleanArray2D.create(7, 7);
+		BinaryArray2D image = BinaryArray2D.create(7, 7);
 		image.fillValue(1);
 		image.setValue(4, 4, 0);
 		
@@ -111,7 +111,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	@Test
 	public final void testDistanceMap_UntilCorners_Borgefors34() 
 	{
-		BooleanArray2D image = BooleanArray2D.create(7, 7);
+		BinaryArray2D image = BinaryArray2D.create(7, 7);
 		image.fillValue(1);
 		image.setValue(4, 4, 0);
 		
@@ -131,7 +131,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	@Test
 	public final void testDistanceMap_UntilCorners_Chessknight() 
 	{
-		BooleanArray2D image = BooleanArray2D.create(9, 9);
+		BinaryArray2D image = BinaryArray2D.create(9, 9);
 		image.fillValue(1);
 		image.setValue(6, 6, 0);
 		

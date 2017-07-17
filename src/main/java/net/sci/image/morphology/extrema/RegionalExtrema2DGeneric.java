@@ -4,14 +4,14 @@
 package net.sci.image.morphology.extrema;
 
 import static java.lang.Math.min;
-import static net.sci.array.type.Boolean.FALSE;
-import static net.sci.array.type.Boolean.TRUE;
+import static net.sci.array.type.Binary.FALSE;
+import static net.sci.array.type.Binary.TRUE;
 
 import net.sci.algo.Algo;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.data.BooleanArray;
-import net.sci.array.data.scalar2d.BooleanArray2D;
+import net.sci.array.data.BinaryArray;
+import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.data.Connectivity2D;
@@ -105,18 +105,18 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 		{
 			throw new IllegalArgumentException("Source array should be 2D scalar array");
 		}
-		if (!(target instanceof BooleanArray2D))
+		if (!(target instanceof BinaryArray2D))
 		{
 			throw new IllegalArgumentException("target array should be 2D boolean array");
 		}
 		
 		if (this.connectivity == Connectivity2D.C4)
 		{
-			processScalar2dC4((ScalarArray2D<?>) source, (BooleanArray2D) target);
+			processScalar2dC4((ScalarArray2D<?>) source, (BinaryArray2D) target);
 		}
 		else if (this.connectivity == Connectivity2D.C8)
 		{
-			processScalar2dC8((ScalarArray2D<?>) source, (BooleanArray2D) target);
+			processScalar2dC8((ScalarArray2D<?>) source, (BinaryArray2D) target);
 		}
 		else
 		{
@@ -131,7 +131,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	 * Computations on source array are made with floating-point computation.
 	 * Flood-fill on target array is made type genericicty.
 	 */
-	private void processScalar2dC4(ScalarArray2D<?> source, BooleanArray2D target) 
+	private void processScalar2dC4(ScalarArray2D<?> source, BinaryArray2D target) 
 	{
 		// get image size
 		int sizeX = source.getSize(0);
@@ -193,7 +193,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	 * Computations on source array are made with floating-point computation.
 	 * Flood-fill on target array is made type genericicty.
 	 */
-	private void processScalar2dC8(ScalarArray2D<?> source, BooleanArray2D target) 
+	private void processScalar2dC8(ScalarArray2D<?> source, BinaryArray2D target) 
 	{
 		// get image size
 		int sizeX = source.getSize(0);
@@ -255,17 +255,17 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
-	public BooleanArray createEmptyOutputArray(Array<?> array)
+	public BinaryArray createEmptyOutputArray(Array<?> array)
 	{
 		int[] dims = array.getSize();
-		return BooleanArray.create(dims);
+		return BinaryArray.create(dims);
 	}
 	
 	@Override
 	public boolean canProcess(Array<?> source, Array<?> target)
 	{
 		return source instanceof ScalarArray2D
-				&& target instanceof BooleanArray2D
+				&& target instanceof BinaryArray2D
 				&& source.dimensionality() == target.dimensionality();
 	}
 }

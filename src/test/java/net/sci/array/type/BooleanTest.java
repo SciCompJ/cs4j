@@ -10,10 +10,10 @@ public class BooleanTest
 	@Test
 	public void testEquals_TRUE()
 	{
-		Boolean b = new Boolean(true);
+		Binary b = new Binary(true);
 		
-		assertTrue(b.equals(Boolean.TRUE));
-		assertTrue(b == Boolean.TRUE);
+		assertTrue(b.equals(Binary.TRUE));
+		assertTrue(b == Binary.TRUE);
 	}
 
 }

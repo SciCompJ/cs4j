@@ -3,14 +3,17 @@
  */
 package net.sci.array.data.scalar2d;
 
-import net.sci.array.data.BooleanArray;
-import net.sci.array.type.Boolean;
+import net.sci.array.data.BinaryArray;
+import net.sci.array.type.Binary;
 
 /**
+ * Concrete implementation of BinaryArray2D that stores inner data in a linear
+ * array of booleans.
+ * 
  * @author dlegland
  *
  */
-public class BufferedBooleanArray2D extends BooleanArray2D
+public class BufferedBinaryArray2D extends BinaryArray2D
 {
 	// =============================================================
 	// Class fields
@@ -25,13 +28,21 @@ public class BufferedBooleanArray2D extends BooleanArray2D
 	 * @param size0 the size of the array in the first dimension
 	 * @param size1 the size of the array in the second dimension
 	 */
-	public BufferedBooleanArray2D(int size0, int size1)
+	public BufferedBinaryArray2D(int size0, int size1)
 	{
 		super(size0, size1);
 		this.buffer = new boolean[size0 * size1];
 	}
 
-	public BufferedBooleanArray2D(int size0, int size1, boolean[] buffer)
+    /**
+     * @param size0
+     *            the size of the array in the first dimension
+     * @param size1
+     *            the size of the array in the second dimension
+     * @param buffer
+     *            the buffer used for storing array data
+     */
+	public BufferedBinaryArray2D(int size0, int size1, boolean[] buffer)
 	{
 		super(size0, size1);
 		if (buffer.length < size0 * size1)
@@ -71,24 +82,24 @@ public class BufferedBooleanArray2D extends BooleanArray2D
 	 * @see net.sci.array.data.scalar2d.BooleanArray2D#duplicate()
 	 */
 	@Override
-	public BooleanArray2D duplicate()
+	public BinaryArray2D duplicate()
 	{
 		int n = this.size0 * this.size1;
 		boolean[] buffer2 = new boolean[n];
 		System.arraycopy(this.buffer, 0, buffer2, 0, n);
-		return new BufferedBooleanArray2D(this.size0, this.size1, buffer2);
+		return new BufferedBinaryArray2D(this.size0, this.size1, buffer2);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.BooleanArray#iterator()
 	 */
 	@Override
-	public net.sci.array.data.BooleanArray.Iterator iterator()
+	public net.sci.array.data.BinaryArray.Iterator iterator()
 	{
 		return new BooleanIterator();
 	}
 
-	private class BooleanIterator implements BooleanArray.Iterator
+	private class BooleanIterator implements BinaryArray.Iterator
 	{
 		int index = -1;
 		
@@ -103,10 +114,10 @@ public class BufferedBooleanArray2D extends BooleanArray2D
 		}
 
 		@Override
-		public Boolean next()
+		public Binary next()
 		{
 			this.index++;
-			return new Boolean(buffer[index]);
+			return new Binary(buffer[index]);
 		}
 
 		@Override
@@ -116,13 +127,13 @@ public class BufferedBooleanArray2D extends BooleanArray2D
 		}
 
 		@Override
-		public Boolean get()
+		public Binary get()
 		{
-			return new Boolean(buffer[index]);
+			return new Binary(buffer[index]);
 		}
 
 		@Override
-		public void set(Boolean b)
+		public void set(Binary b)
 		{
 			buffer[index] = b.getState();
 		}

@@ -4,13 +4,13 @@
 package net.sci.image.binary;
 
 import net.sci.array.Array;
-import net.sci.array.data.BooleanArray;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.IntArray;
-import net.sci.array.data.scalar2d.BooleanArray2D;
+import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.array.data.scalar3d.BooleanArray3D;
+import net.sci.array.data.scalar3d.BinaryArray3D;
 import net.sci.array.data.scalar3d.IntArray3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.Image;
@@ -70,17 +70,17 @@ public class BinaryImages
 	{
 		Image labelImage;
 
-		BooleanArray array = getBooleanArray(image);
+		BinaryArray array = getBooleanArray(image);
 		
 		// Dispatch processing depending on input image dimensionality
 		IntArray<?> labels;
-		if (array instanceof BooleanArray2D)
+		if (array instanceof BinaryArray2D)
 		{
-			labels = componentsLabeling((BooleanArray2D) array, conn, bitDepth);
+			labels = componentsLabeling((BinaryArray2D) array, conn, bitDepth);
 		}
-		else if (array instanceof BooleanArray3D)
+		else if (array instanceof BinaryArray3D)
 		{
-			labels = componentsLabeling((BooleanArray3D) array, conn, bitDepth);
+			labels = componentsLabeling((BinaryArray3D) array, conn, bitDepth);
 		}
 		else
 		{
@@ -113,7 +113,7 @@ public class BinaryImages
 	 *             
 	 * @see FloodFillConnectedComponentsLabeling2D     
 	 */
-	public final static IntArray2D<?> componentsLabeling(BooleanArray2D array,
+	public final static IntArray2D<?> componentsLabeling(BinaryArray2D array,
 			int conn, int bitDepth) 
 	{
 		FloodFillComponentsLabeling2D algo = new FloodFillComponentsLabeling2D(conn, bitDepth);
@@ -141,7 +141,7 @@ public class BinaryImages
 	 *             
 	 * @see inra.ijpb.binary.conncomp.ConnectedComponentsLabeling3D     
 	 */
-	public final static IntArray3D<?> componentsLabeling(BooleanArray3D image,
+	public final static IntArray3D<?> componentsLabeling(BinaryArray3D image,
 			int conn, int bitDepth)
 	{
 		FloodFillComponentsLabeling3D algo = new FloodFillComponentsLabeling3D(conn, bitDepth);
@@ -165,19 +165,19 @@ public class BinaryImages
 	 */
 	public static final Image distanceMap(Image image)
 	{
-		BooleanArray array = getBooleanArray(image);
+		BinaryArray array = getBooleanArray(image);
 
 		// Dispatch to appropriate function depending on dimension
 		Array<?> distMap;
-		if (array instanceof BooleanArray2D) 
+		if (array instanceof BinaryArray2D) 
 		{
 			// process planar image
-			distMap = distanceMap((BooleanArray2D) array);
+			distMap = distanceMap((BinaryArray2D) array);
 		} 
-		else if (array instanceof BooleanArray3D)
+		else if (array instanceof BinaryArray3D)
 		{
 			// process 3D image
-			distMap = distanceMap((BooleanArray3D) array);
+			distMap = distanceMap((BinaryArray3D) array);
 		}
 		else
 		{
@@ -203,7 +203,7 @@ public class BinaryImages
 	 *            the input boolean array
 	 * @return a new Array2D containing the distance map result
 	 */
-	public static final ScalarArray2D<?> distanceMap(BooleanArray2D array) 
+	public static final ScalarArray2D<?> distanceMap(BinaryArray2D array) 
 	{
 		return distanceMap(array, new short[]{5, 7, 11}, true);
 	}
@@ -229,7 +229,7 @@ public class BinaryImages
 	 *            normalized (divide distances by the first chamfer weight)
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final IntArray2D<?> distanceMap(BooleanArray2D array,
+	public static final IntArray2D<?> distanceMap(BinaryArray2D array,
 			short[] weights, boolean normalize)
 	{
 		ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(weights, normalize);
@@ -257,7 +257,7 @@ public class BinaryImages
 	 *            normalized (divide distances by the first chamfer weight)
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final Float32Array2D distanceMap(BooleanArray2D array,
+	public static final Float32Array2D distanceMap(BinaryArray2D array,
 			float[] weights, boolean normalize) 
 	{
 		ChamferDistanceTransform2DFloat algo = new ChamferDistanceTransform2DFloat(weights, normalize);
@@ -273,7 +273,7 @@ public class BinaryImages
 	 *            the input boolean array
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final ScalarArray3D<?> distanceMap(BooleanArray3D array)
+	public static final ScalarArray3D<?> distanceMap(BinaryArray3D array)
 	{
 		float[] weights = new float[]{3.0f, 4.0f, 5.0f};
 		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat(weights);
@@ -294,7 +294,7 @@ public class BinaryImages
 	 *            normalized (divide distances by the first chamfer weight)
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final ScalarArray3D<?> distanceMap(BooleanArray3D array,
+	public static final ScalarArray3D<?> distanceMap(BinaryArray3D array,
 			short[] weights, boolean normalize)
 	{
 		DistanceTransform3D algo = new ChamferDistanceTransform3DUInt16(weights, normalize);
@@ -315,7 +315,7 @@ public class BinaryImages
 	 *            normalized (divide distances by the first chamfer weight)
 	 * @return the distance map obtained after applying the distance transform
 	 */
-	public static final ScalarArray3D<?> distanceMap(BooleanArray3D array, 
+	public static final ScalarArray3D<?> distanceMap(BinaryArray3D array, 
 			float[] weights, boolean normalize)
 	{
 		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat(weights, normalize);
@@ -331,7 +331,7 @@ public class BinaryImages
 	 * @throws IllegalArgumentException
 	 *             if input image is not a binary image
 	 */
-	private static final BooleanArray getBooleanArray(Image image)
+	private static final BinaryArray getBooleanArray(Image image)
 	{
 		if (!image.isBinaryImage())
 		{
@@ -339,11 +339,11 @@ public class BinaryImages
 		}
 		
 		Array<?> array = image.getData();
-		if (!(array instanceof BooleanArray))
+		if (!(array instanceof BinaryArray))
 		{
 			throw new IllegalArgumentException("Requires boolean input array");
 		}
 
-		return (BooleanArray) array;
+		return (BinaryArray) array;
 	}
 }

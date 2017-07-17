@@ -9,7 +9,7 @@ import net.sci.array.data.Int32Array;
 import net.sci.array.data.IntArray;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
-import net.sci.array.data.scalar2d.BooleanArray2D;
+import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.Int32Array2D;
 import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar2d.UInt16Array2D;
@@ -106,7 +106,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 		}
 	}
 	
-	public IntArray2D<?> process(BooleanArray2D image)
+	public IntArray2D<?> process(BinaryArray2D image)
 	{
 		// get image size
 		int sizeX = image.getSize(0);
@@ -168,9 +168,9 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 	@Override
 	public void process(Array<?> source, Array<?> target)
 	{
-		if (source instanceof BooleanArray2D && target instanceof IntArray2D)
+		if (source instanceof BinaryArray2D && target instanceof IntArray2D)
 		{
-			process2d((BooleanArray2D) source, (IntArray2D<?>) target);
+			process2d((BinaryArray2D) source, (IntArray2D<?>) target);
 		}
 		else
 		{
@@ -178,7 +178,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 		}
 	}
 	
-	public void process2d(BooleanArray2D source, IntArray2D<?> target)
+	public void process2d(BinaryArray2D source, IntArray2D<?> target)
 	{
 		// get image size
 		int sizeX = source.getSize(0);

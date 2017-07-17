@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import net.sci.array.data.BooleanArray;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class OtsuThresholdTest
 		}
 
 		// act
-        BooleanArray segStem = new OtsuThreshold().processScalar(array);
+        BinaryArray segStem = new OtsuThreshold().processScalar(array);
         
         // assert
         assertFalse(segStem.getState(new int[]{0, 0}));

@@ -4,45 +4,47 @@
 package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
-import net.sci.array.data.scalar2d.BooleanArray2D;
-import net.sci.array.data.scalar2d.BufferedBooleanArray2D;
-import net.sci.array.data.scalar3d.BooleanArray3D;
-import net.sci.array.data.scalar3d.BufferedBooleanArray3D;
-import net.sci.array.type.Boolean;
+import net.sci.array.data.scalar2d.BinaryArray2D;
+import net.sci.array.data.scalar2d.BufferedBinaryArray2D;
+import net.sci.array.data.scalar3d.BinaryArray3D;
+import net.sci.array.data.scalar3d.BufferedBinaryArray3D;
+import net.sci.array.type.Binary;
 
 /**
+ * A multidimensional array containing boolean values.
+ * 
  * @author dlegland
  *
  */
-public interface BooleanArray extends IntArray<Boolean>
+public interface BinaryArray extends IntArray<Binary>
 {
 	// =============================================================
 	// Static methods
 
-	public static BooleanArray create(int... dims)
+	public static BinaryArray create(int... dims)
 	{
 		switch (dims.length)
 		{
 		case 2:
-			return BooleanArray2D.create(dims[0], dims[1]);
+			return BinaryArray2D.create(dims[0], dims[1]);
 		case 3:
-			return BooleanArray3D.create(dims[0], dims[1], dims[2]);
+			return BinaryArray3D.create(dims[0], dims[1], dims[2]);
 		default:
-			throw new IllegalArgumentException("Can not create BooleanArray with " + dims.length + " dimensions");
+			throw new IllegalArgumentException("Can not create BinaryArray with " + dims.length + " dimensions");
 //			return UInt8ArrayND.create(dims);
 		}
 	}
 	
-	public static BooleanArray create(int[] dims, boolean[] buffer)
+	public static BinaryArray create(int[] dims, boolean[] buffer)
 	{
 		switch (dims.length)
 		{
 		case 2:
-			return new BufferedBooleanArray2D(dims[0], dims[1], buffer);
+			return new BufferedBinaryArray2D(dims[0], dims[1], buffer);
 		case 3:
-			return new BufferedBooleanArray3D(dims[0], dims[1], dims[2], buffer);
+			return new BufferedBinaryArray3D(dims[0], dims[1], dims[2], buffer);
 		default:
-			throw new IllegalArgumentException("Can not create BooleanArray with " + dims.length + " dimensions");
+			throw new IllegalArgumentException("Can not create BinaryArray with " + dims.length + " dimensions");
 //			return UInt8ArrayND.create(dims);
 		}
 	}
@@ -61,7 +63,7 @@ public interface BooleanArray extends IntArray<Boolean>
      * 
      * @return the complement of this array.
      */
-	public BooleanArray complement();
+	public BinaryArray complement();
 	
 	// =============================================================
 	// Specialization of the IntArray interface
@@ -83,20 +85,20 @@ public interface BooleanArray extends IntArray<Boolean>
 	// Specialization of the Array interface
 
 	@Override
-	public default BooleanArray newInstance(int... dims)
+	public default BinaryArray newInstance(int... dims)
 	{
-		return BooleanArray.create(dims);
+		return BinaryArray.create(dims);
 	}
 
 	@Override
-	public default ArrayFactory<Boolean> getFactory()
+	public default ArrayFactory<Binary> getFactory()
 	{
-		return new ArrayFactory<Boolean>()
+		return new ArrayFactory<Binary>()
 		{
 			@Override
-			public BooleanArray create(int[] dims, Boolean value)
+			public BinaryArray create(int[] dims, Binary value)
 			{
-				BooleanArray array = BooleanArray.create(dims);
+				BinaryArray array = BinaryArray.create(dims);
 				array.fill(value);
 				return array;
 			}
@@ -104,14 +106,14 @@ public interface BooleanArray extends IntArray<Boolean>
 	}
 
 	@Override
-	public default BooleanArray duplicate()
+	public default BinaryArray duplicate()
 	{
 		// create output array
-		BooleanArray result = BooleanArray.create(this.getSize());
+		BinaryArray result = BinaryArray.create(this.getSize());
 
 		// initialize iterators
-		BooleanArray.Iterator iter1 = this.iterator();
-		BooleanArray.Iterator iter2 = result.iterator();
+		BinaryArray.Iterator iter1 = this.iterator();
+		BinaryArray.Iterator iter2 = result.iterator();
 		
 		// copy values into output array
 		while(iter1.hasNext())
@@ -139,7 +141,7 @@ public interface BooleanArray extends IntArray<Boolean>
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator extends IntArray.Iterator<Boolean>
+	public interface Iterator extends IntArray.Iterator<Binary>
 	{
 		public boolean getState();
 		public void setState(boolean b);

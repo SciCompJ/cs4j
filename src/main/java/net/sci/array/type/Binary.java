@@ -5,17 +5,19 @@ package net.sci.array.type;
 
 
 /**
+ * A binary type that encapsulates a boolean.
+ * 
  * @author dlegland
  *
  */
-public class Boolean extends Int
+public class Binary extends Int
 {
 	// =============================================================
 	// Constants
 
-	public static final Boolean FALSE = new Boolean(false);
+	public static final Binary FALSE = new Binary(false);
 
-	public static final Boolean TRUE = new Boolean(true);
+	public static final Binary TRUE = new Binary(true);
 
 
 	// =============================================================
@@ -31,9 +33,9 @@ public class Boolean extends Int
 	 * Default constructor.
 	 * 
 	 * @param state
-	 *            the logical state of this Boolean
+	 *            the logical state of this Binary
 	 */
-	public Boolean(boolean state)
+	public Binary(boolean state)
 	{
 		this.state = state;
 	}
@@ -45,7 +47,7 @@ public class Boolean extends Int
 	 * @param value
 	 *            the value used to defined the state of this boolean
 	 */
-	public Boolean(int value)
+	public Binary(int value)
 	{
 		this.state = value != 0;
 	}
@@ -82,14 +84,14 @@ public class Boolean extends Int
 			return true;
 
 		// check for class
-		if (!(that instanceof Boolean))
+		if (!(that instanceof Binary))
 			return false;
 
 		// cast to native object is now safe
-		Boolean thatBoolean = (Boolean) that;
+		Binary thatBinary = (Binary) that;
 
 	    // now a proper field-by-field evaluation can be made
-	    return this.state == thatBoolean.state;
+	    return this.state == thatBinary.state;
 	}
 	
 	public int hashCode()

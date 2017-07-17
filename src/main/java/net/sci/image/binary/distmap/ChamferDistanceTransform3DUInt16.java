@@ -23,7 +23,7 @@ package net.sci.image.binary.distmap;
 
 import static java.lang.Math.min;
 import net.sci.algo.AlgoStub;
-import net.sci.array.data.scalar3d.BooleanArray3D;
+import net.sci.array.data.scalar3d.BinaryArray3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.data.scalar3d.UInt16Array3D;
 import net.sci.image.binary.ChamferWeights3D;
@@ -52,7 +52,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 	 */
 	private boolean normalizeMap = true;
 
-	BooleanArray3D maskArray;
+	BinaryArray3D maskArray;
 
 	/**
 	 * The result image that will store the distance map. The content
@@ -118,7 +118,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 	 * <li> the distance to the nearest background pixel otherwise</li>
 	 * </ul>
 	 */
-	public ScalarArray3D<?> process3d(BooleanArray3D array) 
+	public ScalarArray3D<?> process3d(BinaryArray3D array) 
 	{
 		this.maskArray = array;
 		

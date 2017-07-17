@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.data.Array3D;
-import net.sci.array.data.scalar3d.BooleanArray3D;
+import net.sci.array.data.scalar3d.BinaryArray3D;
 
 public class FloodFillComponentsLabeling3DTest
 {
@@ -14,7 +14,7 @@ public class FloodFillComponentsLabeling3DTest
 	public void testProcess3d()
 	{
 		// create the reference 3D image, that contains height cubes with size 2x2x2
-		BooleanArray3D image = BooleanArray3D.create(8, 8, 8);
+		BinaryArray3D image = BinaryArray3D.create(8, 8, 8);
 		for (int z = 0; z < 2; z++)
 		{
 			for (int y = 0; y < 2; y++)

@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.data.scalar2d.BooleanArray2D;
+import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.type.Boolean;
+import net.sci.array.type.Binary;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.MinimaAndMaxima;
 
@@ -40,13 +40,13 @@ public class RegionalExtrema2DTest
 		}
 		
 		RegionalExtrema2D algo = new RegionalExtrema2D(MinimaAndMaxima.Type.MAXIMA, Connectivity2D.C4);
-		BooleanArray2D maxima = (BooleanArray2D) algo.process(image);
+		BinaryArray2D maxima = (BinaryArray2D) algo.process(image);
 		
-		assertEquals(Boolean.FALSE, maxima.get(0, 0));
-		assertEquals(Boolean.TRUE, maxima.get(1, 1));
-		assertEquals(Boolean.TRUE, maxima.get(9, 1));
-		assertEquals(Boolean.TRUE, maxima.get(5, 5));
-		assertEquals(Boolean.FALSE, maxima.get(10, 10));	
+		assertEquals(Binary.FALSE, maxima.get(0, 0));
+		assertEquals(Binary.TRUE, maxima.get(1, 1));
+		assertEquals(Binary.TRUE, maxima.get(9, 1));
+		assertEquals(Binary.TRUE, maxima.get(5, 5));
+		assertEquals(Binary.FALSE, maxima.get(10, 10));	
 	}
 
 	@Test
@@ -77,13 +77,13 @@ public class RegionalExtrema2DTest
 		}
 		
 		RegionalExtrema2D algo = new RegionalExtrema2D(MinimaAndMaxima.Type.MAXIMA, Connectivity2D.C8);
-		BooleanArray2D maxima = (BooleanArray2D) algo.process(image);
+		BinaryArray2D maxima = (BinaryArray2D) algo.process(image);
 		
-		assertEquals(Boolean.FALSE, maxima.get(0, 0));
-		assertEquals(Boolean.FALSE, maxima.get(1, 1));
-		assertEquals(Boolean.FALSE, maxima.get(9, 1));
-		assertEquals(Boolean.TRUE, maxima.get(5, 5));
-		assertEquals(Boolean.FALSE, maxima.get(10, 10));	
+		assertEquals(Binary.FALSE, maxima.get(0, 0));
+		assertEquals(Binary.FALSE, maxima.get(1, 1));
+		assertEquals(Binary.FALSE, maxima.get(9, 1));
+		assertEquals(Binary.TRUE, maxima.get(5, 5));
+		assertEquals(Binary.FALSE, maxima.get(10, 10));	
 	}
 
 	@Test
@@ -108,13 +108,13 @@ public class RegionalExtrema2DTest
 		}
 		
 		RegionalExtrema2D algo = new RegionalExtrema2D(MinimaAndMaxima.Type.MINIMA, Connectivity2D.C4);
-		BooleanArray2D maxima = (BooleanArray2D) algo.process(image);
+		BinaryArray2D maxima = (BinaryArray2D) algo.process(image);
 		
-		assertEquals(Boolean.FALSE, maxima.get(0, 0));
-		assertEquals(Boolean.TRUE, maxima.get(1, 1));
-		assertEquals(Boolean.TRUE, maxima.get(2, 2));
-		assertEquals(Boolean.TRUE, maxima.get(3, 3));
-		assertEquals(Boolean.FALSE, maxima.get(2, 4));
+		assertEquals(Binary.FALSE, maxima.get(0, 0));
+		assertEquals(Binary.TRUE, maxima.get(1, 1));
+		assertEquals(Binary.TRUE, maxima.get(2, 2));
+		assertEquals(Binary.TRUE, maxima.get(3, 3));
+		assertEquals(Binary.FALSE, maxima.get(2, 4));
 	}
 	
 	@Test
@@ -139,13 +139,13 @@ public class RegionalExtrema2DTest
 		}
 		
 		RegionalExtrema2D algo = new RegionalExtrema2D(MinimaAndMaxima.Type.MINIMA, Connectivity2D.C8);
-		BooleanArray2D maxima = (BooleanArray2D) algo.process(image);
+		BinaryArray2D maxima = (BinaryArray2D) algo.process(image);
 		
-		assertEquals(Boolean.FALSE, maxima.get(0, 0));
-		assertEquals(Boolean.TRUE, maxima.get(1, 1));
-		assertEquals(Boolean.FALSE, maxima.get(2, 2));
-		assertEquals(Boolean.TRUE, maxima.get(3, 3));
-		assertEquals(Boolean.FALSE, maxima.get(2, 4));
+		assertEquals(Binary.FALSE, maxima.get(0, 0));
+		assertEquals(Binary.TRUE, maxima.get(1, 1));
+		assertEquals(Binary.FALSE, maxima.get(2, 2));
+		assertEquals(Binary.TRUE, maxima.get(3, 3));
+		assertEquals(Binary.FALSE, maxima.get(2, 4));
 	}
 
 }

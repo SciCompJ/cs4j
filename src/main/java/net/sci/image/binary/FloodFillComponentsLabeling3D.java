@@ -9,7 +9,7 @@ import net.sci.array.data.Int32Array;
 import net.sci.array.data.IntArray;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
-import net.sci.array.data.scalar3d.BooleanArray3D;
+import net.sci.array.data.scalar3d.BinaryArray3D;
 import net.sci.array.data.scalar3d.Int32Array3D;
 import net.sci.array.data.scalar3d.IntArray3D;
 import net.sci.array.data.scalar3d.UInt16Array3D;
@@ -127,7 +127,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 		}
 	}
 	
-	public IntArray3D<?> process(BooleanArray3D image)
+	public IntArray3D<?> process(BinaryArray3D image)
 	{
 		// get image size
 		int sizeX = image.getSize(0);
@@ -159,7 +159,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 	/* (non-Javadoc)
 	 * @see inra.ijpb.binary.conncomp.ConnectedComponentsLabeling3D#computeLabels(ij.ImageStack)
 	 */
-	public void process3d(BooleanArray3D image, IntArray3D<?> labels)
+	public void process3d(BinaryArray3D image, IntArray3D<?> labels)
 	{
 		// get image size
 		int sizeX = image.getSize(0);
@@ -225,9 +225,9 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 	@Override
 	public void process(Array<?> source, Array<?> target)
 	{
-		if (source instanceof BooleanArray3D && target instanceof IntArray3D)
+		if (source instanceof BinaryArray3D && target instanceof IntArray3D)
 		{
-			process3d((BooleanArray3D) source, (IntArray3D<?>) target);
+			process3d((BinaryArray3D) source, (IntArray3D<?>) target);
 		}
 		else
 		{

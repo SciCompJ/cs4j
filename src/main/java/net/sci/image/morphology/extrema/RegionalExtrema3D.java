@@ -5,13 +5,13 @@ package net.sci.image.morphology.extrema;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-import static net.sci.array.type.Boolean.TRUE;
+import static net.sci.array.type.Binary.TRUE;
 
 import net.sci.algo.Algo;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.data.BooleanArray;
-import net.sci.array.data.scalar3d.BooleanArray3D;
+import net.sci.array.data.BinaryArray;
+import net.sci.array.data.scalar3d.BinaryArray3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.data.Connectivity3D;
@@ -120,18 +120,18 @@ implements ArrayToArrayImageOperator, Algo
 		{
 			throw new IllegalArgumentException("Source array should be 2D scalar array");
 		}
-		if (!(target instanceof BooleanArray3D))
+		if (!(target instanceof BinaryArray3D))
 		{
 			throw new IllegalArgumentException("target array should be 2D boolean array");
 		}
 		
 		if (this.connectivity == Connectivity3D.C6)
 		{
-			processScalar3dC6((ScalarArray3D<?>) source, (BooleanArray3D) target);
+			processScalar3dC6((ScalarArray3D<?>) source, (BinaryArray3D) target);
 		}
 		else if (this.connectivity == Connectivity3D.C26)
 		{
-			processScalar3dC26((ScalarArray3D<?>) source, (BooleanArray3D) target);
+			processScalar3dC26((ScalarArray3D<?>) source, (BinaryArray3D) target);
 		}
 		else
 		{
@@ -145,7 +145,7 @@ implements ArrayToArrayImageOperator, Algo
 	 * 
 	 * Computations are made with floating point values.
 	 */
-	private void processScalar3dC6(ScalarArray3D<?> source, BooleanArray3D target) 
+	private void processScalar3dC6(ScalarArray3D<?> source, BinaryArray3D target) 
 	{
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
@@ -214,7 +214,7 @@ implements ArrayToArrayImageOperator, Algo
 	 * 
 	 * Computations are made with floating point values.
 	 */
-	private void processScalar3dC26(ScalarArray3D<?> source, BooleanArray3D target) 
+	private void processScalar3dC26(ScalarArray3D<?> source, BinaryArray3D target) 
 	{
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
@@ -285,17 +285,17 @@ implements ArrayToArrayImageOperator, Algo
 	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
-	public BooleanArray createEmptyOutputArray(Array<?> array)
+	public BinaryArray createEmptyOutputArray(Array<?> array)
 	{
 		int[] dims = array.getSize();
-		return BooleanArray.create(dims);
+		return BinaryArray.create(dims);
 	}
 	
 	@Override
 	public boolean canProcess(Array<?> source, Array<?> target)
 	{
 		return source instanceof ScalarArray3D
-				&& target instanceof BooleanArray3D
+				&& target instanceof BinaryArray3D
 				&& source.dimensionality() == target.dimensionality();
 	}
 }
