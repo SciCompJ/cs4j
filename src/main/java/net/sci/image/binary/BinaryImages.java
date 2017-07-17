@@ -17,6 +17,8 @@ import net.sci.image.Image;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16;
 import net.sci.image.binary.distmap.DistanceTransform3D;
+import net.sci.image.data.Connectivity2D;
+import net.sci.image.data.Connectivity3D;
 import net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat;
 import net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16;
 
@@ -92,27 +94,53 @@ public class BinaryImages
 		return labelImage;
 	}
 
+    /**
+     * Computes the labels of the connected components in the given planar
+     * binary image. The type of result is controlled by the bitDepth option.
+     * 
+     * Uses a Flood-fill type algorithm.
+     * 
+     * @param array
+     *            contains the binary data
+     * @param conn
+     *            the connectivity, either C4 or C8
+     * @param bitDepth
+     *            the number of bits used to create the result image (8, 16 or 32)
+     * @return a new instance of Array2D containing the label of each connected
+     *         component.
+     * @throws RuntimeException
+     *             if the number of labels reaches the maximum number that can
+     *             be represented with this bitDepth
+     * 
+     * @see FloodFillConnectedComponentsLabeling2D
+     */
+    public final static IntArray2D<?> componentsLabeling(BinaryArray2D array,
+            Connectivity2D conn, int bitDepth) 
+    {
+        FloodFillComponentsLabeling2D algo = new FloodFillComponentsLabeling2D(conn, bitDepth);
+        return algo.process(array);
+    }
+
 	/**
-	 * Computes the labels of the connected components in the given planar
-	 * binary image. The type of result is controlled by the bitDepth option.
-	 * 
-	 * Uses a Flood-fill type algorithm.
-	 * 
-	 * @param array
-	 *            contains the binary data
-	 * @param conn
-	 *            the connectivity, either 4 or 8
-	 * @param bitDepth
-	 *            the number of bits used to create the result image (8, 16 or
-	 *            32)
-	 * @return a new instance of Array2D containing the label of each
-	 *         connected component.
-	 * @throws RuntimeException
-	 *             if the number of labels reaches the maximum number that can
-	 *             be represented with this bitDepth
-	 *             
-	 * @see FloodFillConnectedComponentsLabeling2D     
-	 */
+     * Computes the labels of the connected components in the given planar
+     * binary image. The type of result is controlled by the bitDepth option.
+     * 
+     * Uses a Flood-fill type algorithm.
+     * 
+     * @param array
+     *            contains the binary data
+     * @param conn
+     *            the connectivity, either 4 or 8
+     * @param bitDepth
+     *            the number of bits used to create the result image (8, 16 or 32)
+     * @return a new instance of Array2D containing the label of each connected
+     *         component.
+     * @throws RuntimeException
+     *             if the number of labels reaches the maximum number that can
+     *             be represented with this bitDepth
+     * 
+     * @see FloodFillConnectedComponentsLabeling2D
+     */
 	public final static IntArray2D<?> componentsLabeling(BinaryArray2D array,
 			int conn, int bitDepth) 
 	{
@@ -120,6 +148,34 @@ public class BinaryImages
 		return algo.process(array);
 	}
 
+    /**
+     * Computes the labels of the connected components in the given 3D binary
+     * image. The type of result is controlled by the bitDepth option.
+     * 
+     * Uses a Flood-fill type algorithm.
+     * 
+     * @param image
+     *            contains the 3D binary image
+     * @param conn
+     *            the connectivity, either C6 or C26
+     * @param bitDepth
+     *            the number of bits used to create the result stack (8, 16 or
+     *            32)
+     * @return a new instance of Array3D containing the label of each
+     *         connected component.
+     * @throws RuntimeException
+     *             if the number of labels reaches the maximum number that can
+     *             be represented with this bitDepth
+     *             
+     * @see inra.ijpb.binary.conncomp.ConnectedComponentsLabeling3D     
+     */
+    public final static IntArray3D<?> componentsLabeling(BinaryArray3D image,
+            Connectivity3D conn, int bitDepth)
+    {
+        FloodFillComponentsLabeling3D algo = new FloodFillComponentsLabeling3D(conn, bitDepth);
+        return algo.process(image);
+    }
+    
 	/**
 	 * Computes the labels of the connected components in the given 3D binary
 	 * image. The type of result is controlled by the bitDepth option.

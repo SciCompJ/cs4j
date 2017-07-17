@@ -38,7 +38,7 @@ import net.sci.image.morphology.MinimaAndMaxima;
  * @author David Legland
  *
  */
-public abstract class RegionalExtrema3D extends AlgoStub
+public class RegionalExtrema3D extends AlgoStub
 implements ArrayToArrayImageOperator, Algo
 {
 	// ==============================================================

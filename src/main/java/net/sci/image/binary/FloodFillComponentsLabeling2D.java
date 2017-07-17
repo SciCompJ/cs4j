@@ -33,6 +33,9 @@ import net.sci.image.morphology.FloodFill;
  */
 public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToArrayImageOperator
 {
+    // ==============================================================
+    // Class variables
+    
 	/** 
 	 * The connectivity of the components, either 4 (default) or 8.
 	 */
@@ -44,6 +47,10 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 	 */
 	int bitDepth = 16;
 	
+
+	// ==============================================================
+    // Constructors
+    
 	/**
 	 * Constructor with default connectivity 4 and default output bitdepth equal to 16.  
 	 */
@@ -51,38 +58,44 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 	{
 	}
 	
+    /**
+     * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
+     * 
+     * @param connectivity
+     *            the connectivity of connected components (4 or 8)
+     */
+    public FloodFillComponentsLabeling2D(Connectivity2D connectivity)
+    {
+        this.connectivity = connectivity;
+        checkConnectivity();
+    }
+    
+    /**
+     * Constructor specifying the connectivity and the bitdepth.  
+     * 
+     * @param connectivity
+     *            the connectivity of connected components (4 or 8)
+     * @param bitDepth
+     *            the bit depth of the result (8, 16, or 32)
+     */
+    public FloodFillComponentsLabeling2D(Connectivity2D connectivity, int bitDepth)
+    {
+        this(connectivity);
+        this.bitDepth = bitDepth;
+        checkBitDepth();
+    }
+    
 	/**
-	 * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
-	 * 
-	 * @param connectivity
-	 *            the connectivity of connected components (4 or 8)
-	 */
-	public FloodFillComponentsLabeling2D(Connectivity2D connectivity)
-	{
-		this.connectivity = connectivity;
-
-		// check validity of input argument
-		if (connectivity != Connectivity2D.C4 && connectivity != Connectivity2D.C8)
-		{
-			throw new IllegalArgumentException("Connectivity must be either 4 or 8, not " + connectivity);
-		}
-	}
-	
-	/**
-	 * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
-	 * 
-	 * @param connectivity
-	 *            the connectivity of connected components (4 or 8)
-	 */
+     * Constructor specifying the connectivity and using default output bit
+     * depth equal to 16.
+     * 
+     * @param connectivity
+     *            the integer value for connectivity of connected components (4
+     *            or 8)
+     */
 	public FloodFillComponentsLabeling2D(int connectivity)
 	{
-		this.connectivity = Connectivity2D.fromValue(connectivity);
-
-		// check validity of input argument
-		if (connectivity != 4 && connectivity != 8)
-		{
-			throw new IllegalArgumentException("Connectivity must be either 4 or 8, not " + connectivity);
-		}
+		this(Connectivity2D.fromValue(connectivity));
 	}
 	
 	/**
@@ -90,7 +103,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 	 * image
 	 * 
 	 * @param connectivity
-	 *            the connectivity of connected components (4 or 8)
+	 *            the integer value for connectivity of connected components (4 or 8)
 	 * @param bitDepth
 	 *            the bit depth of the result (8, 16, or 32)
 	 */
@@ -99,13 +112,34 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 		this(connectivity);
 		this.bitDepth = bitDepth;
 
-		// check validity of input argument
-		if (bitDepth != 8 && bitDepth != 16 && bitDepth != 32)
-		{
-			throw new IllegalArgumentException("Bit depth must be 8, 16 or 32, not " + bitDepth);
-		}
+		checkBitDepth();
 	}
 	
+	/**
+	 * Throw an exception if connectivity is not 4 or 8 (necessary for FloodFill algorithms). 
+	 */
+	private void checkConnectivity()
+	{
+	    if (connectivity != Connectivity2D.C4 && connectivity != Connectivity2D.C8)
+        {
+            throw new IllegalArgumentException("Connectivity must be either 4 or 8, not " + connectivity);
+        }
+	}
+  
+    /**
+     * Throw an exception if bit depth is different from 8, 16 or 32. 
+     */
+    private void checkBitDepth()
+    {
+        if (bitDepth != 8 && bitDepth != 16 && bitDepth != 32)
+        {
+            throw new IllegalArgumentException("Bit depth must be 8, 16 or 32, not " + bitDepth);
+        }
+    }
+
+    // ==============================================================
+    // Processing methods
+    
 	public IntArray2D<?> process(BinaryArray2D image)
 	{
 		// get image size
@@ -195,7 +229,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 			maxLabel = 65535;
 			break;
 		case 32:
-			maxLabel = 0x01 << 31 - 1;
+			maxLabel = (0x01 << 31) - 1;
 			break;
 		default:
 			throw new IllegalArgumentException(

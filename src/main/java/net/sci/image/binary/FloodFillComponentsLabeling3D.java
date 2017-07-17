@@ -27,12 +27,15 @@ import net.sci.image.morphology.FloodFill;
  * time a foreground voxel not yet associated with a label is encountered, its
  * connected component is associated with a new label.
  * 
- * @see net.sci.image.morphology.FloodFill3D
+ * @see net.sci.image.morphology.FloodFill
  * 
  * @author dlegland
  */
 public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToArrayImageOperator
 {
+    // ==============================================================
+    // Class variables
+    
 	/** 
 	 * The connectivity of the components, either Connectivity3D.C6 (default) or Connectivity3D.C26.
 	 */
@@ -44,6 +47,9 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 	 */
 	int bitDepth = 16;
 	
+    // ==============================================================
+    // Constructors
+    
 	/**
 	 * Constructor with default connectivity 6 and default output bitdepth equal to 16.  
 	 */
@@ -63,23 +69,6 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 
 		// check validity of input argument
 		if (connectivity != Connectivity3D.C6 && connectivity != Connectivity3D.C26)
-		{
-			throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + connectivity);
-		}
-	}
-	
-	/**
-	 * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
-	 * 
-	 * @param connectivity
-	 *            the connectivity of connected components (6 or 26)
-	 */
-	public FloodFillComponentsLabeling3D(int connectivity)
-	{
-		this.connectivity = Connectivity3D.fromValue(connectivity);
-
-		// check validity of input argument
-		if (connectivity != 6 && connectivity != 26)
 		{
 			throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + connectivity);
 		}
@@ -107,6 +96,23 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 	}
 	
 	/**
+     * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
+     * 
+     * @param connectivity
+     *            the connectivity of connected components (6 or 26)
+     */
+    public FloodFillComponentsLabeling3D(int connectivity)
+    {
+    	this.connectivity = Connectivity3D.fromValue(connectivity);
+    
+    	// check validity of input argument
+    	if (connectivity != 6 && connectivity != 26)
+    	{
+    		throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + connectivity);
+    	}
+    }
+
+    /**
 	 * Constructor specifying the connectivity and the bitdepth of result label
 	 * image
 	 * 
@@ -127,6 +133,10 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 		}
 	}
 	
+	
+    // ==============================================================
+    // Processing methods
+    
 	public IntArray3D<?> process(BinaryArray3D image)
 	{
 		// get image size
@@ -176,7 +186,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 			maxLabel = 65535;
 			break;
 		case 32:
-			maxLabel = 0x01 << 23;
+			maxLabel = (0x01 << 31) - 1;
 			break;
 		default:
 			throw new IllegalArgumentException(
