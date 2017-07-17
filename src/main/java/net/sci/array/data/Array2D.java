@@ -45,8 +45,21 @@ public abstract class Array2D<T> implements Array<T>
 		this.size1 = size1;
 	}
 
+
 	// =============================================================
 	// New methods
+
+	public boolean containsPosition(int x, int y)
+	{
+        if (x < 0 || y < 0) return false;
+        if (x >= this.size0) return false;
+        if (y >= this.size1) return false;
+        return true;
+	}
+
+	
+    // =============================================================
+    // New abstract methods
 
 	public abstract T get(int x, int y);
 
