@@ -143,20 +143,53 @@ public interface BinaryArray extends IntArray<Binary>
 
 	public interface Iterator extends IntArray.Iterator<Binary>
 	{
-		public boolean getState();
-		public void setState(boolean b);
-		
+		/**
+         * Moves this iterator to the next element and updates the value with
+         * the specified boolean (optional operation).
+         * 
+         * @param intValue
+         *            the new value at the next position
+         */
+        public default void setNextBoolean(boolean b)
+        {
+            forward();
+            setBoolean(b);
+        }
+        
+        /**
+         * Iterates and returns the next boolean.
+         * 
+         * @return the next int value.
+         */
+        public default boolean nextBoolean()
+        {
+            forward();
+            return getBoolean();
+        }
+        
+        /**
+         * @return the current state pointed by this iterator
+         */
+        public boolean getBoolean();
+        
+        /**
+         * Changes the state of the current position pointed by this iterator.
+         * 
+         * @param b
+         *            the new state for the current position
+         */
+        public void setBoolean(boolean b);
+        
 		@Override
 		public default int getInt()
 		{
-			return getState() ? 1 : 0; 
+			return getBoolean() ? 1 : 0; 
 		}
 
 		@Override
 		public default void setInt(int value)
 		{
-			setState(value > 0);
+			setBoolean(value > 0);
 		}
-
 	}
 }

@@ -144,13 +144,13 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 		}
 		
 		@Override
-		public boolean getState()
+		public boolean getBoolean()
 		{
 			return buffer[index];
 		}
 
 		@Override
-		public void setState(boolean b)
+		public void setBoolean(boolean b)
 		{
 			buffer[index] = b;
 		}

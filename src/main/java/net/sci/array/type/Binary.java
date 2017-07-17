@@ -23,6 +23,9 @@ public class Binary extends Int
 	// =============================================================
 	// state of the boolean variable
 
+	/**
+	 * The inner state of this binary variable.
+	 */
 	boolean state;
 	
 	

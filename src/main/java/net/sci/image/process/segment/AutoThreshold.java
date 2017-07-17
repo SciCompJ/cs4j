@@ -72,7 +72,7 @@ public abstract class AutoThreshold implements ImageToImageOperator
 		{
 			iter1.forward();
 			iter2.forward();
-			iter2.setState(iter1.getValue() >= value);
+			iter2.setBoolean(iter1.getValue() >= value);
 		}
 	}
 	

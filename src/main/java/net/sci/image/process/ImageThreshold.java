@@ -85,7 +85,7 @@ public class ImageThreshold implements ArrayToArrayImageOperator
 		{
 			iter1.forward();
 			iter2.forward();
-			iter2.setState(iter1.getValue() > this.value);
+			iter2.setBoolean(iter1.getValue() > this.value);
 		}
 	}
 	

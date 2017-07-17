@@ -92,9 +92,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         BinaryArray.Iterator iter2 = result.iterator();
         while (iter1.hasNext() && iter2.hasNext())
         {
-            iter1.forward();
-            iter2.forward();
-            iter2.setInt(1 - iter1.getInt());
+            iter2.setNextBoolean(!iter1.nextBoolean());
         }
         return result;
     }
