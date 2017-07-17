@@ -55,6 +55,13 @@ public interface BooleanArray extends IntArray<Boolean>
 	
 	public void setState(int[] pos, boolean state);
 	
+	/**
+     * Returns the complement of this array. Replaces each 0 by 1, and each 1 by
+     * 0.
+     * 
+     * @return the complement of this array.
+     */
+	public BooleanArray complement();
 	
 	// =============================================================
 	// Specialization of the IntArray interface

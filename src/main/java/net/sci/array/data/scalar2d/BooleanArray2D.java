@@ -71,7 +71,6 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 	 */
 	public abstract void setState(int x, int y, boolean state);
 	
-	
 	// =============================================================
 	// Specialization of the BooleanArray interface
 
@@ -93,7 +92,23 @@ public abstract class BooleanArray2D extends IntArray2D<Boolean> implements Bool
 		setState(pos[0], pos[1], value);
 	}
 
-	// =============================================================
+    @Override
+    public BooleanArray2D complement()
+    {
+        BooleanArray2D result = duplicate();
+        BooleanArray.Iterator iter1 = iterator();
+        BooleanArray.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter1.forward();
+            iter2.forward();
+            iter2.setInt(1 - iter1.getInt());
+        }
+        return result;
+    }
+
+
+    // =============================================================
 	// Specialization of IntArray2D interface
 
 	public int getInt(int x, int y)

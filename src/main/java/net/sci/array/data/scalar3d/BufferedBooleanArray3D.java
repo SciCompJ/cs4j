@@ -58,7 +58,7 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 
 
 	// =============================================================
-	// Specialization of the BooleanArray3D interface
+	// Implementation of the BooleanArray3D interface
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.scalar2d.BooleanArray3D#getState(int, int, int)
@@ -80,7 +80,7 @@ public class BufferedBooleanArray3D extends BooleanArray3D
 		this.buffer[index] = b;
 	}
 
-	
+
 	// =============================================================
 	// Specialization of the Array interface
 

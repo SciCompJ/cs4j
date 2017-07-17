@@ -82,6 +82,22 @@ public abstract class BooleanArray3D extends IntArray3D<Boolean> implements Bool
 		setState(pos[0], pos[1], pos[2], state);
 	}
 
+    @Override
+    public BooleanArray3D complement()
+    {
+        BooleanArray3D result = duplicate();
+        BooleanArray.Iterator iter1 = iterator();
+        BooleanArray.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter1.forward();
+            iter2.forward();
+            iter2.setInt(1 - iter1.getInt());
+        }
+        return result;
+    }
+
+    
 	// =============================================================
 	// Specialization of IntArrayND interface
 
