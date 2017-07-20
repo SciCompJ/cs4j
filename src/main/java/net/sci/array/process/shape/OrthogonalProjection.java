@@ -18,7 +18,10 @@ public class OrthogonalProjection implements ArrayToArrayOperator
 	// uses max projection by default
 	
 	/**
+	 * Creates a new instance of OrthogonalProjection operator, that specifies
+	 * the dimension to project along.
 	 * 
+	 * @dim the dimension for projection
 	 */
 	public OrthogonalProjection(int dim)
 	{
@@ -31,7 +34,7 @@ public class OrthogonalProjection implements ArrayToArrayOperator
 	 * 
 	 * @param array
 	 *            the reference array
-	 * @return a new instance of Array<?> that can be used for processing input
+	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
 	public Array<?> createEmptyOutputArray(Array<?> array)

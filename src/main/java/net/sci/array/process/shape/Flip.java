@@ -18,7 +18,12 @@ public class Flip implements ArrayToArrayOperator
 	int dim;
 	
 	/**
+	 * Creates a new instance of Flip operator, that specifies the dimension of
+	 * flip.
 	 * 
+	 * @param dim
+	 *            the dimension to flip, between 0 and the array
+	 *            dimensionality minus one
 	 */
 	public Flip(int dim)
 	{
@@ -62,6 +67,8 @@ public class Flip implements ArrayToArrayOperator
 	 * 
 	 * @param array
 	 *            the input array
+	 * @param T
+	 *            the data type of the array
 	 * @return the result of operator
 	 */
 	public <T> Array<?> processT(Array<T> array)
@@ -71,6 +78,15 @@ public class Flip implements ArrayToArrayOperator
 		return result;
 	}
 
+	/**
+	 * Flips the content of the input 2D array, and stores the result in the
+	 * output array.
+	 * 
+	 * @param input
+	 *            the input array
+	 * @param output
+	 *            the output array
+	 */
 	public <T1, T2 extends T1> void process2d (Array2D<T1> input, Array2D<T2> output)
 	{
 		// get image size
@@ -95,6 +111,15 @@ public class Flip implements ArrayToArrayOperator
 		}
 	}
 
+	/**
+	 * Flips the content of the input 3D array, and stores the result in the
+	 * output array.
+	 * 
+	 * @param input
+	 *            the input array
+	 * @param output
+	 *            the output array
+	 */
 	public void process3d(Array3D<?> input, Array3D<?> output)
 	{
 		// get image size
@@ -126,6 +151,9 @@ public class Flip implements ArrayToArrayOperator
 		}
 	}
 
+	
+	// Below are some implementations based on the use of a cursor
+	
 	public void processDoubleNd(Array<?> input, Array<?> output)
 	{
 		Cursor cursor = input.getCursor();

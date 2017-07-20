@@ -92,7 +92,14 @@ public class Slicer implements ArrayToArrayOperator
 	int index;
 	
 	/**
+	 * Creates a new instance of Slicer operator, that specifies the dimension
+	 * of slicing and the reference slice along that dimension.
 	 * 
+	 * @param dim
+	 *            the dimension of slicing, 0-indexed
+	 * @param index
+	 *            the index of the slice in the <code>dim</code> dimension,
+	 *            starting from 0
 	 */
 	public Slicer(int dim, int index)
 	{
@@ -128,7 +135,7 @@ public class Slicer implements ArrayToArrayOperator
 	 * 
 	 * @param array
 	 *            the reference array
-	 * @return a new instance of Array<?> that can be used for processing input
+	 * @return a new instance of Array that can be used for processing input
 	 *         array.
 	 */
 	public Array<?> createEmptyOutputArray(Array<?> array)

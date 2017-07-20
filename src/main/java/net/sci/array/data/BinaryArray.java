@@ -147,8 +147,8 @@ public interface BinaryArray extends IntArray<Binary>
          * Moves this iterator to the next element and updates the value with
          * the specified boolean (optional operation).
          * 
-         * @param intValue
-         *            the new value at the next position
+         * @param b
+         *            the new boolean value for the next position
          */
         public default void setNextBoolean(boolean b)
         {
