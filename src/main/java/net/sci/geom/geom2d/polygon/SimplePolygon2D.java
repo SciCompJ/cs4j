@@ -87,15 +87,6 @@ public class SimplePolygon2D implements Polygon2D
     // Specific methods
     
     /**
-     * Returns the vertices of this polygon. The result is a pointer to the inner
-     * collection of vertices.
-     */
-    public Collection<Point2D> vertices() 
-    {
-        return vertices;
-    }
-
-    /**
      * Computes the signed area of this polygon. 
      * 
      * Algorithm is taken from the following page:
@@ -111,7 +102,7 @@ public class SimplePolygon2D implements Polygon2D
         
         // number of vertices
         int n = this.vertices.size();
-       
+    
         // initialize with the last vertex
         Point2D prev = this.vertices.get(n-1);
         
@@ -124,8 +115,33 @@ public class SimplePolygon2D implements Polygon2D
         
         return area /= 2;
     }
+
+    // ===================================================================
+    // Implementation of the Polygon2D interface
     
+    /**
+     * Returns the vertices of this polygon. The result is a pointer to the inner
+     * collection of vertices.
+     */
+    public Collection<Point2D> vertices() 
+    {
+        return vertices;
+    }
+
+ 
+    // ===================================================================
+    // Implementation of the Region2D interface
     
+    /**
+     * Returns true if the specified point is inside the polygon. 
+     * No specific test is made for points on the boundary.
+     */
+    @Override
+    public boolean contains(Point2D point)
+    {
+        return isInside(point);
+    }
+
     // ===================================================================
     // Implementation of the Geometry2D interface
     
