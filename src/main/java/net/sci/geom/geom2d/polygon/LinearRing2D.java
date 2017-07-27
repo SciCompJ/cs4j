@@ -166,7 +166,7 @@ public class LinearRing2D implements Polyline2D
         newVertices.add(this.vertices.get(0));
         for (int i = 1; i < n; i++)
         {
-            newVertices.set(i, this.vertices.get(n-i));
+            newVertices.add(this.vertices.get(n-i));
         }
         
         LinearRing2D reverse = new LinearRing2D(0);

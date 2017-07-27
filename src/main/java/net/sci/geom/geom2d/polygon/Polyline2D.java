@@ -66,7 +66,14 @@ public interface Polyline2D extends Curve2D
         return false;
     }
 
-    // Iterate over edges to find the minimal distance
+    /**
+     * Iterate over edges to find the minimal distance between the test point
+     * and this polyline.
+     * 
+     * @param point
+     *            the point to test
+     * @return the distance to the polyline
+     */
     public default double distance(Point2D point)
     {
         double minDist = Double.POSITIVE_INFINITY;

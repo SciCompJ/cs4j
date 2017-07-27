@@ -93,9 +93,9 @@ public class SimplePolygon2D implements Polygon2D
         int n = this.vertexNumber();
         ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
         newVertices.add(this.vertices.get(0));
-        for (int i = 0; i < n; i++)
+        for (int i = 1; i < n; i++)
         {
-            newVertices.set(i, this.vertices.get(n-1-i));
+            newVertices.add(this.vertices.get(n-i));
         }
         
         // create a new SimplePolygon2D with this new set of vertices

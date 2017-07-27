@@ -130,10 +130,9 @@ public class LineString2D implements Polyline2D
     {
         int n = this.vertexNumber();
         ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
-        newVertices.add(this.vertices.get(0));
         for (int i = 0; i < n; i++)
         {
-            newVertices.set(i, this.vertices.get(n-1-i));
+            newVertices.add(this.vertices.get(n-1-i));
         }
         
         LineString2D reverse = new LineString2D(0);
