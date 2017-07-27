@@ -74,7 +74,7 @@ public class LinearRing2D implements Polyline2D
     }
     
     // ===================================================================
-    // Methods specific to ClosedPolyline2D
+    // Methods specific to LinearRing2D
 
     /**
      * Computes the index of the closest vertex to the input point.
@@ -151,7 +151,29 @@ public class LinearRing2D implements Polyline2D
     	return new EdgeIterator();
     }
     
-    
+
+    /**
+     * Returns a new linear ring with same vertices but in reverse order. The
+     * first vertex remains the same.
+     */
+    @Override
+    public Polyline2D reverse()
+    {
+        // create a new collection of vertices in reverse order, keeping first
+        // vertex unchanged.
+        int n = this.vertexNumber();
+        ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
+        newVertices.add(this.vertices.get(0));
+        for (int i = 1; i < n; i++)
+        {
+            newVertices.set(i, this.vertices.get(n-i));
+        }
+        
+        LinearRing2D reverse = new LinearRing2D(0);
+        reverse.vertices = newVertices;
+        return reverse;
+    }
+
     
     // ===================================================================
     // Edge iterator implementation

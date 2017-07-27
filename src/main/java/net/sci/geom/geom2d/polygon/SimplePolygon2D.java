@@ -86,6 +86,24 @@ public class SimplePolygon2D implements Polygon2D
     // ===================================================================
     // Specific methods
     
+    @Override
+    public SimplePolygon2D complement()
+    {
+        // create a new collection of vertices in reverse order, keeping first vertex unchanged.
+        int n = this.vertexNumber();
+        ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
+        newVertices.add(this.vertices.get(0));
+        for (int i = 0; i < n; i++)
+        {
+            newVertices.set(i, this.vertices.get(n-1-i));
+        }
+        
+        // create a new SimplePolygon2D with this new set of vertices
+        SimplePolygon2D reverse = new SimplePolygon2D(0);
+        reverse.vertices = newVertices;
+        return reverse;
+    }
+
     /**
      * Computes the signed area of this polygon. 
      * 

@@ -21,6 +21,22 @@ public interface Polygon2D extends Region2D
     // Specific methods
     
     /**
+     * Computed the complement of this polygon, that is the set of all the
+     * points not contained by this polygon.
+     * 
+     * The complement polygon is expected to have a signed area opposite to the
+     * signed area of this polygon.
+     * 
+     * @return the complement of this polygon.
+     */
+    public Polygon2D complement();
+    
+    /**
+     * @return returns the signed area of this polygon.
+     */
+    public double signedArea();
+
+    /**
      * Returns the vertices of this polygon. 
      */
     public Collection<Point2D> vertices();

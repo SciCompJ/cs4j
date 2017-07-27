@@ -120,7 +120,28 @@ public class LineString2D implements Polyline2D
     	return new EdgeIterator();
     }
     
-    
+    /**
+     * Returns a new linear ring with same vertices but in reverse order. The
+     * first vertex of the new line string is the last vertex of this line
+     * string.
+     */
+    @Override
+    public LineString2D reverse()
+    {
+        int n = this.vertexNumber();
+        ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
+        newVertices.add(this.vertices.get(0));
+        for (int i = 0; i < n; i++)
+        {
+            newVertices.set(i, this.vertices.get(n-1-i));
+        }
+        
+        LineString2D reverse = new LineString2D(0);
+        reverse.vertices = newVertices;
+        return reverse;
+    }
+
+
     // ===================================================================
     // Edge iterator implementation
     

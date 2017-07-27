@@ -40,7 +40,13 @@ public interface Polyline2D extends Curve2D
 
 
     public Iterator<LineSegment2D> edgeIterator();
-    
+
+    /**
+     * Returns the polyline composed with the same vertices, but in reverse order.
+     * 
+     * @return the polyline with same vertices but in reverse order.
+     */
+    public Polyline2D reverse();
     
     // ===================================================================
     // Implementation of the Geometry2D interface 
