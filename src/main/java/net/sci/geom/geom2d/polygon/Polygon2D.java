@@ -24,4 +24,9 @@ public interface Polygon2D extends Region2D
      * Returns the vertices of this polygon. 
      */
     public Collection<Point2D> vertices();
+    
+    /**
+     * @return the number of vertices in this polygon.
+     */
+    public int vertexNumber();
 }

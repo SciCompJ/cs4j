@@ -125,7 +125,16 @@ public class SimplePolygon2D implements Polygon2D
      */
     public Collection<Point2D> vertices() 
     {
+        // TODO: do we need to protect vertices, or is polygon mutable?
         return vertices;
+    }
+    
+    /**
+     * @return the number of vertices in this polygon.
+     */
+    public int vertexNumber()
+    {
+        return this.vertices.size();
     }
 
  
@@ -142,6 +151,17 @@ public class SimplePolygon2D implements Polygon2D
         return isInside(point);
     }
 
+    /**
+     * Returns true if the specified point is inside the polygon. 
+     * No specific test is made for points on the boundary.
+     */
+    @Override
+    public boolean contains(double x, double y)
+    {
+        return isInside(new Point2D(x, y));
+    }
+
+    
     // ===================================================================
     // Implementation of the Geometry2D interface
     
@@ -166,6 +186,7 @@ public class SimplePolygon2D implements Polygon2D
      */
     private boolean isInside(Point2D point)
     {
+        // TODO: use only one iteration for both computations
         double area = this.signedArea();
         int winding = this.windingNumber(point);
         if (area > 0) 
@@ -261,7 +282,7 @@ public class SimplePolygon2D implements Polygon2D
     public double distance(Point2D point)
     {
         // computes distance to boundary
-        LineString2D boundary = new LineString2D(this.vertices);
+        LinearRing2D boundary = new LinearRing2D(this.vertices);
         double dist = boundary.distance(point);
         
         // choose sign depending on if the point is inside or outside

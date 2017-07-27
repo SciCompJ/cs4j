@@ -77,6 +77,27 @@ public class LinearRing2D implements Polyline2D
     // Methods specific to ClosedPolyline2D
 
     /**
+     * Computes the index of the closest vertex to the input point.
+     */
+    public int closestVertexIndex(Point2D point)
+    {
+        double minDist = Double.POSITIVE_INFINITY;
+        int index = -1;
+        
+        for (int i = 0; i < vertices.size(); i++)
+        {
+            double dist = vertices.get(i).distance(point);
+            if (dist < minDist)
+            {
+                index = i;
+                minDist = dist;
+            }
+        }
+        
+        return index;
+    }
+
+    /**
      * Computes the signed area of the linear ring. Algorithm is taken from page:
      * <a href="http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/">
      * http://local.wasp.uwa.edu.au/~pbourke/geometry/polyarea/</a>. Signed area
@@ -125,27 +146,6 @@ public class LinearRing2D implements Polyline2D
         return vertices.size();
     }
 
-    /**
-     * Computes the index of the closest vertex to the input point.
-     */
-    public int closestVertexIndex(Point2D point)
-    {
-        double minDist = Double.POSITIVE_INFINITY;
-        int index = -1;
-        
-        for (int i = 0; i < vertices.size(); i++)
-        {
-            double dist = vertices.get(i).distance(point);
-            if (dist < minDist)
-            {
-                index = i;
-                minDist = dist;
-            }
-        }
-        
-        return index;
-    }
-    
     public Iterator<LineSegment2D> edgeIterator()
     {
     	return new EdgeIterator();
