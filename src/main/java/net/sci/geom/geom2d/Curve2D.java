@@ -13,5 +13,8 @@ import net.sci.geom.Curve;
  */
 public interface Curve2D extends Curve, Geometry2D
 {
-    
+    /**
+     * @return true if this curve is closed.
+     */
+    boolean isClosed();
 }

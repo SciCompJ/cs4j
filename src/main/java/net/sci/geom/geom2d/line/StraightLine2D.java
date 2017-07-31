@@ -123,6 +123,16 @@ public class StraightLine2D implements LinearGeometry2D
         return this;
     }
     
+    
+    // ===================================================================
+    // Methods implementing the Curve2D interface
+    
+    @Override
+    public boolean isClosed()
+    {
+        return false;
+    }
+    
 
     // ===================================================================
     // Implementation of the Geometry2D interface 
@@ -156,13 +166,16 @@ public class StraightLine2D implements LinearGeometry2D
     // Implementation of the Geometry interface
 
     /**
-     * Returns false, as a straight line is not bounded.
+     * Returns false, as a straight line is unbounded by definition.
+     * 
+     * @return false
      */
+    @Override
     public boolean isBounded()
     {
         return false;
     }
-    
+
     /* (non-Javadoc)
      * @see net.sci.geom.Geometry#boundingBox()
      */
@@ -171,4 +184,5 @@ public class StraightLine2D implements LinearGeometry2D
     {
         throw new UnboundedGeometryException(this);
     }
+
 }

@@ -88,6 +88,16 @@ public class LineSegment2D implements LinearGeometry2D
 
     
     // ===================================================================
+    // Methods implementing the Curve2D interface
+    
+    @Override
+    public boolean isClosed()
+    {
+        return false;
+    }
+    
+    
+    // ===================================================================
     // Implements the Geometry2D interface
 
     public boolean contains(Point2D point, double eps) 

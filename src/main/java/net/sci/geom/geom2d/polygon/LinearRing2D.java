@@ -174,6 +174,15 @@ public class LinearRing2D implements Polyline2D
         return reverse;
     }
 
+    // ===================================================================
+    // Methods implementing the Curve2D interface
+    
+    @Override
+    public boolean isClosed()
+    {
+        return true;
+    }
+    
     
     // ===================================================================
     // Edge iterator implementation

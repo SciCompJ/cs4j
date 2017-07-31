@@ -142,6 +142,16 @@ public class LineString2D implements Polyline2D
 
 
     // ===================================================================
+    // Methods implementing the Curve2D interface
+    
+    @Override
+    public boolean isClosed()
+    {
+        return false;
+    }
+    
+
+    // ===================================================================
     // Edge iterator implementation
     
     class EdgeIterator implements Iterator<LineSegment2D>
