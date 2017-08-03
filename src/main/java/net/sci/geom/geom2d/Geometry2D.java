@@ -27,11 +27,29 @@ public interface Geometry2D extends Geometry
     public boolean contains(Point2D point, double eps);
     
     /**
+     * Computes the distance between this geometry and the given point.
+     * 
      * @param point
-     *            a point in the same space
+     *            a point in the 2D plane
      * @return the Euclidean distance between this geometry and the specified point
      */
-    public double distance(Point2D point);
+    public default double distance(Point2D point)
+    {
+        return distance(point.getX(), point.getY());
+    }
+    
+    /**
+     * Computes the distance between this geometry and the point given by the
+     * couple of coordinates.
+     * 
+     * @param x
+     *            the x-coordinate of the point to test
+     * @param y
+     *            the y-coordinate of the point to test
+     * @return the Euclidean distance between this geometry and the specified
+     *         point
+     */
+    public double distance(double x, double y);
     
     /**
      * @return a dimensionality value equals to 2.

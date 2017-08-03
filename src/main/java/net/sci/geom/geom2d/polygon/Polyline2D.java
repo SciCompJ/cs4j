@@ -70,11 +70,13 @@ public interface Polyline2D extends Curve2D
      * Iterate over edges to find the minimal distance between the test point
      * and this polyline.
      * 
-     * @param point
-     *            the point to test
+     * @param x
+     *            the x-coordinate of the point to test
+     * @param y
+     *            the y-coordinate of the point to test
      * @return the distance to the polyline
      */
-    public default double distance(Point2D point)
+    public default double distance(double x, double y)
     {
         double minDist = Double.POSITIVE_INFINITY;
         
@@ -82,13 +84,8 @@ public interface Polyline2D extends Curve2D
         Iterator<LineSegment2D> iter = edgeIterator();
         while(iter.hasNext())
         {
-            double dist = iter.next().distance(point);
-            if (dist < minDist)
-            {
-                minDist = dist;
-            }
+            minDist = Math.min(minDist, iter.next().distance(x, y));
         }
-        
         return minDist;
     }
     

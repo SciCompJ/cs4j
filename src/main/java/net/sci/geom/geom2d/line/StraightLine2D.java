@@ -97,6 +97,15 @@ public class StraightLine2D implements LinearGeometry2D
         return ((point.getY() - y0) * dy + (point.getX() - x0) * dx) / denom;
     }
     
+    public double projectedPosition(double x, double y)
+    {
+        double denom = dx * dx + dy * dy;
+//        if (Math.abs(denom) < Shape2D.ACCURACY)
+//            throw new DegeneratedLine2DException(this);
+        return ((y - y0) * dy + (x - x0) * dx) / denom;
+    }
+    
+    
     // ===================================================================
     // Implementation of the LinearGeometry interface 
 
@@ -154,11 +163,32 @@ public class StraightLine2D implements LinearGeometry2D
 
     }
     
-    @Override
-    public double distance(Point2D point)
+//    @Override
+//    public double distance(Point2D point)
+//    {
+//        Point2D proj = project(point);
+//        return proj.distance(point);
+//    }
+
+    /**
+     * Returns the distance of the given point to this line.
+     * 
+     * Uses formula given in Mathworld:
+     * http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
+     * 
+     * @param x
+     *            the x-coordinate of the point
+     * @param y
+     *            the y-coordinate of the point
+     * @return the distance between the point and the lien
+     */
+    public double distance(double x, double y)
     {
-        Point2D proj = project(point);
-        return proj.distance(point);
+        // compute shift between the point and the line origin
+        double sx = x - this.x0;
+        double sy = y - this.y0;
+        
+        return Math.abs(this.dx * sy - this.dy * sx) / Math.hypot(this.dx, this.dy);
     }
 
 

@@ -301,17 +301,15 @@ public class SimplePolygon2D implements Polygon2D
      * point is inside the polygon.
      */
     @Override
-    public double distance(Point2D point)
+    public double distance(double x, double y)
     {
+        // if point is inside of the polygon returns 0
+        if (this.contains(x, y))
+            return 0;
+        
         // computes distance to boundary
         LinearRing2D boundary = new LinearRing2D(this.vertices);
-        double dist = boundary.distance(point);
-        
-        // choose sign depending on if the point is inside or outside
-        if (this.contains(point.getX(), point.getY()))
-            return 0;
-        else
-            return dist;
+        return boundary.distance(x, y);
     }
     
 

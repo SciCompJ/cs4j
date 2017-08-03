@@ -54,13 +54,13 @@ public class CurveSet2D implements CurveShape2D
     }
 
     @Override
-    public double distance(Point2D point)
+    public double distance(double x, double y)
     {
         double minDist = Double.POSITIVE_INFINITY;
         
         for (Curve2D curve : this.curves)
         {
-            minDist = Math.min(minDist,  curve.distance(point));
+            minDist = Math.min(minDist,  curve.distance(x, y));
         }
         return minDist;
     }

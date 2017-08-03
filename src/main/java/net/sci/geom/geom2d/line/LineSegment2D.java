@@ -106,7 +106,7 @@ public class LineSegment2D implements LinearGeometry2D
             return false;
 
         // compute position on the support line
-        double t = positionOnLine(point);
+        double t = positionOnLine(point.getX(), point.getY());
 
         if (t < -eps)
             return false;
@@ -145,26 +145,20 @@ public class LineSegment2D implements LinearGeometry2D
      * <p>
      * If the point does not belong to the line, the method returns the position
      * of its projection on the line.
+     * 
+     * Assumes a non-degenerated line.
      */
-    private double positionOnLine(Point2D point) 
+    private double positionOnLine(double x, double y) 
     {
         double dx = this.x2 - this.x1;
         double dy = this.y2 - this.y1;
         double denom = dx * dx + dy * dy;
-        
-//        if (Math.abs(denom) < eps)
-//            throw new DegeneratedLine2DException(this);
-        double x = point.getX();
-        double y = point.getY();
         return ((y - this.y1) * dy + (x - this.x1) * dx) / denom;
     }
 
     @Override
-    public double distance(Point2D point)
+    public double distance(double x, double y)
     {
-        double x = point.getX();
-        double y = point.getY();
-        
         // In case of line segment with same extremities, computes distance to initial point 
         if (length() < 100 * Double.MIN_VALUE)
         {
@@ -173,7 +167,7 @@ public class LineSegment2D implements LinearGeometry2D
         
         // compute position on the supporting line
         StraightLine2D line = this.supportingLine();
-        double t = line.projectedPosition(point);
+        double t = line.projectedPosition(x, y);
 
         // clamp with parameterization bounds of edge
         t = Math.max(Math.min(t, 1), 0);

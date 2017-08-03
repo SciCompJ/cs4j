@@ -117,13 +117,13 @@ public class Ellipse2D implements Curve2D
     }
     
     /* (non-Javadoc)
-     * @see net.sci.geom.geom2d.Geometry2D#distance(net.sci.geom.geom2d.Point2D)
+     * @see net.sci.geom.geom2d.Geometry2D#distance(double, double)
      */
     @Override
-    public double distance(Point2D point)
+    public double distance(double x, double y)
     {
         // TODO Auto-generated method stub
-        return asPolyline(200).distance(point);
+        return asPolyline(200).distance(x, y);
     }
     
     /* (non-Javadoc)
