@@ -10,6 +10,13 @@ package net.sci.geom.geom2d;
 public interface Region2D extends Geometry2D
 {
     /**
+     * Returns the curve that bounds this region.
+     * 
+     * @return the boundary curve of this region
+     */
+    public CurveShape2D boundary();
+    
+    /**
      * Checks if the point is contained within this region.
      * 
      * The behavior for points located on the boundary is undefined.

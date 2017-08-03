@@ -159,6 +159,12 @@ public class SimplePolygon2D implements Polygon2D
     // ===================================================================
     // Implementation of the Region2D interface
     
+    @Override
+    public LinearRing2D boundary()
+    {
+        return new LinearRing2D(this.vertices);
+    }
+    
     /**
      * Returns true if the specified point is inside the polygon. 
      * No specific test is made for points on the boundary.
