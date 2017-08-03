@@ -143,7 +143,6 @@ public class SimplePolygon2D implements Polygon2D
      */
     public Collection<Point2D> vertices() 
     {
-        // TODO: do we need to protect vertices, or is polygon mutable?
         return vertices;
     }
     
@@ -172,19 +171,91 @@ public class SimplePolygon2D implements Polygon2D
     @Override
     public boolean contains(Point2D point)
     {
-        return isInside(point);
+        return contains(point.getX(), point.getY());
+    }
+    
+    /**
+     * Returns true if the point specified by the given coordinates is inside
+     * the polygon, without checking of it belongs to the boundary or not.
+     * 
+     * @param x
+     *            the x-coordinate of the point to test
+     * @param y
+     *            the y-coordinate of the point to test
+     * @return true if the point is located within the polygon
+     * 
+     * @see #signedArea()
+     * @see #contains(Point2D, double)
+     */
+    public boolean contains(double x, double y)
+    {
+        double area = 0;
+    
+        // the winding number counter
+        int winding = 0;
+    
+        // initialize with the last vertex
+        Point2D previous = this.vertices.get(vertices.size() - 1);
+        double xprev = previous.getX();
+        double yprev = previous.getY();
+    
+        // iterate on vertices, keeping coordinates of previous vertex in memory
+        for (Point2D current : vertices)
+        {
+            // coordinates of current vertex
+            double xcurr = current.getX();
+            double ycurr = current.getY();
+    
+            // update area computation
+            area += xprev * ycurr - yprev * xcurr;
+            
+            
+            if (yprev <= y)
+            {
+                // detect upward crossing
+                if (ycurr > y) 
+                    if (isLeft(xprev, yprev, xcurr, ycurr, x, y) > 0)
+                        winding++;
+            }
+            else
+            {
+                // detect downward crossing
+                if (ycurr <= y)
+                    if (isLeft(xprev, yprev, xcurr, ycurr, x, y) < 0)
+                        winding--;
+            }
+            
+            // for next iteration
+            xprev = xcurr;
+            yprev = ycurr;
+            previous = current;
+        }
+    
+        if (area > 0) 
+        {
+            return winding == 1;
+        }
+        else 
+        {
+            return winding == 0;
+        }
     }
 
     /**
-     * Returns true if the specified point is inside the polygon. 
-     * No specific test is made for points on the boundary.
+     * Tests if the point p3 is Left|On|Right of the infinite line formed by p1 and p2.
+     * 
+     * Input:  three points P0, P1, and P2
+     * Return: >0 for P2 left of the line through P0 and P1
+     *         =0 for P2 on the line
+     *         <0 for P2 right of the line
+     *         
+     * See: the January 2001 Algorithm "Area of 2D and 3D Triangles and Polygons"
      */
-    @Override
-    public boolean contains(double x, double y)
+    private final static int isLeft(double x1, double y1, double x2, double y2, double x3, double y3)
     {
-        return isInside(new Point2D(x, y));
+        return (int) Math.signum((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1));
     }
-
+    
     
     // ===================================================================
     // Implementation of the Geometry2D interface
@@ -196,31 +267,12 @@ public class SimplePolygon2D implements Polygon2D
     @Override
     public boolean contains(Point2D point, double eps)
     {
-        if (this.isInside(point))
+        if (this.contains(point.getX(), point.getY()))
             return true;
         if (this.boundaryContains(point, eps))
             return true;
         
         return false;
-    }
-
-    /**
-     * Returns true if the specified point is inside the polygon, without
-     * checking of it belongs to the boundary or not.
-     */
-    private boolean isInside(Point2D point)
-    {
-        // TODO: use only one iteration for both computations
-        double area = this.signedArea();
-        int winding = this.windingNumber(point);
-        if (area > 0) 
-        {
-            return winding == 1;
-        }
-        else 
-        {
-            return winding == 0;
-        }
     }
 
     private boolean boundaryContains(Point2D point, double eps)
@@ -244,60 +296,6 @@ public class SimplePolygon2D implements Polygon2D
         return false;
     }
     
-    private int windingNumber(Point2D point)
-    {
-        int wn = 0; // the winding number counter
-        
-        // Extract the last point of the collection
-        Point2D previous = vertices.get(vertices.size() - 1);
-        double y1 = previous.getY();
-        double y2;
-        
-        // keep y-coordinate of test point
-        double y = point.getY();
-        
-        // Iterate on couple of vertices, starting from couple (last,first)
-        for (Point2D current : vertices)
-        {
-            // second vertex of current edge
-            y2 = current.getY();
-            
-            if (y1 <= y)
-            {
-                if (y2 > y) // an upward crossing
-                    if (isLeft(previous, current, point) > 0)
-                        wn++;
-            }
-            else
-            {
-                if (y2 <= y) // a downward crossing
-                    if (isLeft(previous, current, point) < 0)
-                        wn--;
-            }
-            
-            // for next iteration
-            y1 = y2;
-            previous = current;
-        }
-        
-        return wn;
-    }
-    
-    /**
-     * Tests if a point is Left|On|Right of an infinite line.
-     * Input:  three points P0, P1, and P2
-     * Return: >0 for P2 left of the line through P0 and P1
-     *         =0 for P2 on the line
-     *         <0 for P2 right of the line
-     * See: the January 2001 Algorithm "Area of 2D and 3D Triangles and Polygons"
-     */
-    private final static int isLeft(Point2D p1, Point2D p2, Point2D pt)
-    {
-        double x = p1.getX();
-        double y = p1.getY();
-        return (int) Math.signum((p2.getX() - x) * (pt.getY() - y) - (pt.getX() - x) * (p2.getY() - y));
-    }
-    
     /**
      * Returns the distance to the boundary of this polygon, or zero if the
      * point is inside the polygon.
@@ -310,7 +308,7 @@ public class SimplePolygon2D implements Polygon2D
         double dist = boundary.distance(point);
         
         // choose sign depending on if the point is inside or outside
-        if (this.isInside(point))
+        if (this.contains(point.getX(), point.getY()))
             return 0;
         else
             return dist;
