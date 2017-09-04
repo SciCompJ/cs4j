@@ -18,5 +18,5 @@ public interface CurveShape2D extends Curve, Geometry2D
     /**
      * @return the collection of continuous curves that forms this curve shape.
      */
-    public Collection<Curve2D> curves();
+    public Collection<? extends Curve2D> curves();
 }

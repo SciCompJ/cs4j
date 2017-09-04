@@ -7,12 +7,15 @@ import net.sci.geom.UnboundedGeometryException;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Vector2D;
+import net.sci.geom.geom2d.curve.Contour2D;
 
 /**
+ * A straight line, with infinite bounds in each direction.
+ * 
  * @author dlegland
  *
  */
-public class StraightLine2D implements LinearGeometry2D
+public class StraightLine2D implements LinearGeometry2D, Contour2D
 {
     // ===================================================================
     // class variables
@@ -133,6 +136,29 @@ public class StraightLine2D implements LinearGeometry2D
     }
     
     
+
+    // ===================================================================
+    // Methods implementing the Boundary2D interface
+    
+    @Override
+    public double signedDistance(Point2D point)
+    {
+        return signedDistance(point.getX(), point.getY());
+    }
+    
+    public double signedDistance(double x, double y)
+    {
+        // distance between point and line
+        double dist = distance(x, y);
+        
+        // compute offset between point and line origin
+        double xDiff = x - this.x0;
+        double yDiff = y - this.y0;
+
+        // determine relative position of point using dot product 
+        return (xDiff * this.dy - yDiff * this.dx) > 0 ? dist : -dist;
+    }
+
     // ===================================================================
     // Methods implementing the Curve2D interface
     
@@ -162,13 +188,6 @@ public class StraightLine2D implements LinearGeometry2D
         return Math.sqrt(Math.abs((x - x0) * dy - (y - y0) * dx)) / denom < eps;
 
     }
-    
-//    @Override
-//    public double distance(Point2D point)
-//    {
-//        Point2D proj = project(point);
-//        return proj.distance(point);
-//    }
 
     /**
      * Returns the distance of the given point to this line.
@@ -214,5 +233,4 @@ public class StraightLine2D implements LinearGeometry2D
     {
         throw new UnboundedGeometryException(this);
     }
-
 }

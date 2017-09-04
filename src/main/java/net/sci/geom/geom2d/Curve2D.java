@@ -25,7 +25,7 @@ public interface Curve2D extends CurveShape2D
      * @returns a collection of curve containing this curve.
      */
     @Override
-    public default Collection<Curve2D> curves() 
+    public default Collection<? extends Curve2D> curves() 
     {
         ArrayList<Curve2D> res = new ArrayList<Curve2D>(1);
         res.add(this);

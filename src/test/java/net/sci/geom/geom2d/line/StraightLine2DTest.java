@@ -151,4 +151,18 @@ public class StraightLine2DTest
         assertFalse(line.isBounded());
     }
     
+    @Test
+    public final void testSignedDistance()
+    {
+        StraightLine2D line = new StraightLine2D(1, 2, 3, 4);
+        Point2D pt;
+
+        // point outside the line, in "Right" side
+        pt = new Point2D(5, -1);
+        assertEquals(5, line.signedDistance(pt), 1e-14);  
+        
+        // point outside the line, in "Left" side
+        pt = new Point2D(-3, 5);
+        assertEquals(-5, line.signedDistance(pt), 1e-14);  
+    }
 }

@@ -6,10 +6,8 @@ package net.sci.geom.geom2d.curve;
 import java.util.ArrayList;
 
 import net.sci.geom.geom2d.Box2D;
-import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
-import net.sci.geom.geom2d.polygon.Polyline2D;
 
 /**
  * An ellipse, defined by a center, two semi-axis lengths, and one orientation angle in degrees.
@@ -17,7 +15,7 @@ import net.sci.geom.geom2d.polygon.Polyline2D;
  * @author dlegland
  *
  */
-public class Ellipse2D implements Curve2D
+public class Ellipse2D implements Contour2D
 {
     // ===================================================================
     // Constructors
@@ -72,7 +70,7 @@ public class Ellipse2D implements Curve2D
      * @param nVertices the number of vertices of the created linear ring
      * @return a new instance of LinearRing2D
      */
-    public Polyline2D asPolyline(int nVertices)
+    public LinearRing2D asPolyline(int nVertices)
     {
         double thetaRad = Math.toRadians(this.theta);
         double cost = Math.cos(thetaRad);
@@ -91,7 +89,16 @@ public class Ellipse2D implements Curve2D
         
         return new LinearRing2D(vertices);
     }
+
+    // ===================================================================
+    // Methods implementing the Boundary2D interface
     
+    public double signedDistance(Point2D point)
+    {
+        // TODO: use exact computation 
+        return this.asPolyline(200).signedDistance(point);
+    }
+
     // ===================================================================
     // Methods implementing the Curve2D interface
     

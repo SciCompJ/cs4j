@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.curve.Contour2D;
 import net.sci.geom.geom2d.line.LineSegment2D;
 
 /**
@@ -21,7 +22,7 @@ import net.sci.geom.geom2d.line.LineSegment2D;
  * </p>
  * @author dlegland
  */
-public class LinearRing2D implements Polyline2D
+public class LinearRing2D implements Polyline2D, Contour2D
 {
     // ===================================================================
     // Class variables
@@ -152,6 +153,91 @@ public class LinearRing2D implements Polyline2D
     }
     
 
+    // ===================================================================
+    // Methods implementing the Boundary2D interface
+    
+    @Override
+    public double signedDistance(Point2D point)
+    {
+        return signedDistance(point.getX(), point.getY());
+    }
+    
+    public double signedDistance(double x, double y)
+    {
+        double minDist = Double.POSITIVE_INFINITY; 
+                
+        double area = 0;
+        
+        // the winding number counter
+        int winding = 0;
+    
+        // initialize iteration with last vertex
+        Point2D p0 = this.vertices.get(this.vertices.size()-1);
+        Point2D previous = p0;
+        double xprev = previous.getX();
+        double yprev = previous.getY();
+
+        // iterate over vertex pairs
+        for (Point2D current : this.vertices)
+        {
+            // update distance to nearest edge 
+            double dist = new LineSegment2D(previous, current).distance(x, y);
+            minDist = Math.min(dist, minDist);
+            
+            // coordinates of current vertex
+            double xcurr = current.getX();
+            double ycurr = current.getY();
+    
+            // update area computation
+            area += xprev * ycurr - yprev * xcurr;
+            
+            // update winding number
+            if (yprev <= y)
+            {
+                // detect upward crossing
+                if (ycurr > y) 
+                    if (isLeft(xprev, yprev, xcurr, ycurr, x, y) > 0)
+                        winding++;
+            }
+            else
+            {
+                // detect downward crossing
+                if (ycurr <= y)
+                    if (isLeft(xprev, yprev, xcurr, ycurr, x, y) < 0)
+                        winding--;
+            }
+            
+            // for next iteration
+            xprev = xcurr;
+            yprev = ycurr;
+            previous = current;
+        }
+        
+        boolean inside = area > 0 ^ winding == 0;
+        return inside ? -minDist : minDist;
+    }
+
+    /**
+     * Tests if the point p3 is Left|On|Right of the infinite line formed by p1 and p2.
+     * 
+     * Input:  three points P0, P1, and P2
+     * Return: >0 for P2 left of the line through P0 and P1
+     *         =0 for P2 on the line
+     *         <0 for P2 right of the line
+     *         
+     * See: the January 2001 Algorithm "Area of 2D and 3D Triangles and Polygons"
+     * 
+     * @see SimplePolygon2D.isLeft(double, double, double, double, double, double)
+     */
+    private final static int isLeft(double x1, double y1, double x2, double y2, double x3, double y3)
+    {
+        return (int) Math.signum((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1));
+    }
+
+    
+    // ===================================================================
+    // Methods implementing the Polyline2D interface
+    
     /**
      * Returns a new linear ring with same vertices but in reverse order. The
      * first vertex remains the same.

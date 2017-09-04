@@ -3,6 +3,8 @@
  */
 package net.sci.geom.geom2d;
 
+import net.sci.geom.geom2d.curve.Boundary2D;
+
 /**
  * @author dlegland
  *
@@ -14,7 +16,7 @@ public interface Region2D extends Geometry2D
      * 
      * @return the boundary curve of this region
      */
-    public CurveShape2D boundary();
+    public Boundary2D boundary();
     
     /**
      * Checks if the point is contained within this region.
