@@ -3,6 +3,7 @@ package net.sci.geom.geom2d;
 import static java.lang.Math.abs;
 
 import net.sci.array.Dimensional;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 public class Vector2D implements Dimensional
 {
@@ -156,26 +157,22 @@ public class Vector2D implements Dimensional
 		this(p2.x - p1.x, p2.y - p1.y);
 	}
 
-	
+
 	// ===================================================================
-	// base operations
+    // Methods specific to Vector2D
 
-	/**
-	 * @return the x coordinate of this vector
-	 */
-	public double getX()
-	{
-		return x;
-	}
-
-	/**
-	 * @return the y coordinate of this vector
-	 */
-	public double getY()
-	{
-		return y;
-	}
-
+    /**
+     * Returns the result of the given transformation applied to this vector.
+     * 
+     * @param trans
+     *            the transformation to apply
+     * @return the transformed vector
+     */
+    public Vector2D transform(AffineTransform2D trans)
+    {
+        return trans.transform(this);
+    }
+    
 	/**
 	 * Returns the sum of current vector with vector given as parameter. Inner
 	 * fields are not modified.
@@ -294,6 +291,26 @@ public class Vector2D implements Dimensional
         return true;
     }
     
+    
+    // ===================================================================
+    // Accessors
+
+    /**
+     * @return the x coordinate of this vector
+     */
+    public double getX()
+    {
+        return x;
+    }
+
+    /**
+     * @return the y coordinate of this vector
+     */
+    public double getY()
+    {
+        return y;
+    }
+
 
 	// ===================================================================
     // Implements Dimensional interface

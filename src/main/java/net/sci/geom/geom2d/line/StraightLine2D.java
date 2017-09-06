@@ -8,6 +8,7 @@ import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Vector2D;
 import net.sci.geom.geom2d.curve.Contour2D;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * A straight line, with infinite bounds in each direction.
@@ -111,6 +112,19 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     
     // ===================================================================
     // Implementation of the LinearGeometry interface 
+
+    /**
+     * Transforms this straight line with the specified affine transform.
+     * 
+     * @param trans
+     *            an affine transform
+     * @return the transformed straight line
+     */
+    @Override
+    public StraightLine2D transform(AffineTransform2D trans)
+    {
+        return new StraightLine2D(origin().transform(trans), direction().transform(trans));
+    }
 
     /**
      * Returns the origin point of this line.

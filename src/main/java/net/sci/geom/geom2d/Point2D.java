@@ -4,6 +4,7 @@
 package net.sci.geom.geom2d;
 
 import net.sci.geom.Point;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * @author dlegland
@@ -22,7 +23,7 @@ public class Point2D implements Geometry2D, Point
 
 	
 	// ===================================================================
-	// constructors
+	// Constructors
 
 	/** Empty constructor, similar to Point(0,0) */
 	public Point2D()
@@ -44,26 +45,20 @@ public class Point2D implements Geometry2D, Point
 	
 	
 	// ===================================================================
-	// accessors
+	// Specific methods
 
 	/**
-	 * @return the x coordinate of this point
-	 */
-	public double getX() {
-		return x;
-	}
-
-	/**
-	 * @return the y coordinate of this point
-	 */
-	public double getY() {
-		return y;
+     * Returns the result of the given transformation applied to this point.
+     * 
+     * @param trans
+     *            the transformation to apply
+     * @return the transformed point
+     */
+	public Point2D transform(AffineTransform2D trans)
+	{
+	    return trans.transform(this);
 	}
 	
-	
-	// ===================================================================
-	// generic methods
-
 	/**
 	 * Adds the specified vector to the point, and returns the result.
 	 * 
@@ -95,6 +90,25 @@ public class Point2D implements Geometry2D, Point
         return true;
 	}
 	
+	
+    // ===================================================================
+    // accessors
+
+    /**
+     * @return the x coordinate of this point
+     */
+    public double getX() {
+        return x;
+    }
+
+    /**
+     * @return the y coordinate of this point
+     */
+    public double getY() {
+        return y;
+    }
+    
+    
 	
 	// ===================================================================
     // Implementation of the Point interface

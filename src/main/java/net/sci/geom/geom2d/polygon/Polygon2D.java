@@ -3,9 +3,12 @@
  */
 package net.sci.geom.geom2d.polygon;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * A polygonal region whose boundary is a single linear ring.
@@ -57,6 +60,18 @@ public interface Polygon2D extends PolygonalDomain2D
     // ===================================================================
     // Specialization of the PolygonalDomain2D interface    
     
+    @Override
+    public default Polygon2D transform(AffineTransform2D trans)
+    {
+        ArrayList<Point2D> newVertices = new ArrayList<>(this.vertices().size());
+        Iterator<Point2D> iter = vertexIterator();
+        while(iter.hasNext())
+        {
+            newVertices.add(iter.next().transform(trans));
+        }
+        return Polygon2D.create(newVertices);
+    }
+
     @Override
     public Polygon2D complement();
     

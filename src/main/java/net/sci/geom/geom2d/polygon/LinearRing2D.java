@@ -10,6 +10,7 @@ import java.util.Iterator;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.curve.Contour2D;
 import net.sci.geom.geom2d.line.LineSegment2D;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * <p>
@@ -153,6 +154,30 @@ public class LinearRing2D implements Polyline2D, Contour2D
     	return new EdgeIterator();
     }
     
+    // ===================================================================
+    // Methods implementing the Polyline2D interface
+    
+    /**
+     * Transforms this geometry with the specified affine transform.
+     * 
+     * @param trans
+     *            an affine transform
+     * @return the transformed line string
+     */
+    public LinearRing2D transform(AffineTransform2D trans)
+    {
+        int n = this.vertexNumber();
+        ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
+        for (int i = 0; i < n; i++)
+        {
+            newVertices.add(this.vertices.get(i).transform(trans));
+        }
+        
+        LinearRing2D res = new LinearRing2D(0);
+        res.vertices = newVertices;
+        return res;
+    }
+
 
     // ===================================================================
     // Methods implementing the Boundary2D interface

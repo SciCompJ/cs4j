@@ -5,6 +5,7 @@ package net.sci.geom.geom2d.polygon;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
@@ -69,22 +70,23 @@ public class SimplePolygon2D implements Polygon2D
      */
     public SimplePolygon2D(double[] xcoords, double[] ycoords)
     {
-        vertices = new ArrayList<Point2D>(xcoords.length);
+        this.vertices = new ArrayList<Point2D>(xcoords.length);
         for (int i = 0; i < xcoords.length; i++)
-            vertices.add(new Point2D(xcoords[i], ycoords[i]));
+            this.vertices.add(new Point2D(xcoords[i], ycoords[i]));
     }
     
     /**
      * Ensures the polygon has enough memory for storing the required number of
      * vertices.
      */
-    public SimplePolygon2D(int nVertices)
+    private SimplePolygon2D(int nVertices)
     {
-        vertices = new ArrayList<Point2D>(nVertices);
+        this.vertices = new ArrayList<Point2D>(nVertices);
     }
     
+    
     // ===================================================================
-    // Specific methods
+    // Methods implementing the PolygonalDomain2D interface
     
     @Override
     public SimplePolygon2D complement()
@@ -144,6 +146,11 @@ public class SimplePolygon2D implements Polygon2D
     public Collection<Point2D> vertices() 
     {
         return vertices;
+    }
+    
+    public Iterator<Point2D> vertexIterator()
+    {
+        return this.vertices.iterator();
     }
     
     /**

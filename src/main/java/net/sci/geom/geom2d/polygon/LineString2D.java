@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.line.LineSegment2D;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * <p>
@@ -120,6 +121,31 @@ public class LineString2D implements Polyline2D
     	return new EdgeIterator();
     }
     
+
+    // ===================================================================
+    // Methods implementing the Polyline2D interface
+    
+    /**
+     * Transforms this geometry with the specified affine transform.
+     * 
+     * @param trans
+     *            an affine transform
+     * @return the transformed line string
+     */
+    public LineString2D transform(AffineTransform2D trans)
+    {
+        int n = this.vertexNumber();
+        ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
+        for (int i = 0; i < n; i++)
+        {
+            newVertices.add(this.vertices.get(i).transform(trans));
+        }
+        
+        LineString2D res = new LineString2D(0);
+        res.vertices = newVertices;
+        return res;
+    }
+
     /**
      * Returns a new linear ring with same vertices but in reverse order. The
      * first vertex of the new line string is the last vertex of this line

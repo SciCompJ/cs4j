@@ -4,8 +4,10 @@
 package net.sci.geom.geom2d.polygon;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 import net.sci.geom.geom2d.Domain2D;
 
 /**
@@ -17,6 +19,11 @@ import net.sci.geom.geom2d.Domain2D;
  */
 public interface PolygonalDomain2D extends Domain2D
 {
+    // ===================================================================
+    // New methods
+    
+    public PolygonalDomain2D transform(AffineTransform2D trans);
+    
     // ===================================================================
     // Specific methods
     
@@ -40,6 +47,16 @@ public interface PolygonalDomain2D extends Domain2D
      * Returns the vertices of this polygon. 
      */
     public Collection<Point2D> vertices();
+    
+    /**
+     * Returns an iterator to the set of vertices contained within this polygon.
+     * 
+     * @return an iterator to the vertices in the polygon.
+     */
+    public default Iterator<Point2D> vertexIterator()
+    {
+        return this.vertices().iterator();
+    }
     
     /**
      * @return the number of vertices in this polygon.

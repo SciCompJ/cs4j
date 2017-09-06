@@ -10,6 +10,7 @@ import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.line.LineSegment2D;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * <p>
@@ -47,6 +48,20 @@ public interface Polyline2D extends Curve2D
      * @return the polyline with same vertices but in reverse order.
      */
     public Polyline2D reverse();
+    
+
+    // ===================================================================
+    // Geoemtry methods 
+
+    /**
+     * Transforms this geometry with the specified affine transform.
+     * 
+     * @param trans
+     *            an affine transform
+     * @return the transformed geometry
+     */
+    public Polyline2D transform(AffineTransform2D trans);
+
     
     // ===================================================================
     // Implementation of the Geometry2D interface 

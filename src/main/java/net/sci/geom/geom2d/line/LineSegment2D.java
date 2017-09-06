@@ -6,6 +6,7 @@ package net.sci.geom.geom2d.line;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Vector2D;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * A line segment between two extremity points.
@@ -62,6 +63,19 @@ public class LineSegment2D implements LinearGeometry2D
     
     // ===================================================================
     // Implementation of the LinearGeometry interface 
+
+    /**
+     * Transforms this line segment with the specified affine transform.
+     * 
+     * @param trans
+     *            an affine transform
+     * @return the transformed line segment
+     */
+    @Override
+    public LineSegment2D transform(AffineTransform2D trans)
+    {
+        return new LineSegment2D(getP1().transform(trans), getP2().transform(trans));
+    }
 
     /**
      * Returns the origin point of this line.
