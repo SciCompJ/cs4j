@@ -4,7 +4,7 @@
 package net.sci.geom.geom2d;
 
 import static org.junit.Assert.*;
-import net.sci.geom.geom2d.polygon.Polygon2D;
+import net.sci.geom.geom2d.polygon.PolygonalDomain2D;
 
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class Box2DTest
 	public final void testGetRectangle()
 	{
 		Box2D box = new Box2D(10, 50, 20, 40);
-		Polygon2D poly = box.getRectangle();
+		PolygonalDomain2D poly = box.getRectangle();
 		
 		assertEquals(4, poly.vertices().size());
 	}

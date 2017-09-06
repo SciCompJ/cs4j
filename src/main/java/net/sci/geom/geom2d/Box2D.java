@@ -5,7 +5,7 @@ package net.sci.geom.geom2d;
 
 import static java.lang.Double.isInfinite;
 import net.sci.geom.Box;
-import net.sci.geom.geom2d.polygon.Polygon2D;
+import net.sci.geom.geom2d.polygon.PolygonalDomain2D;
 import net.sci.geom.geom2d.polygon.SimplePolygon2D;
 
 /**
@@ -84,13 +84,13 @@ public class Box2D implements Box
 	 * 
 	 * @return the polygon corresponding to this bounding box
 	 */
-    public Polygon2D getRectangle()
+    public PolygonalDomain2D getRectangle()
     {
     	Point2D p1 = new Point2D(this.xmin, this.ymin);
     	Point2D p2 = new Point2D(this.xmax, this.ymin);
     	Point2D p3 = new Point2D(this.xmax, this.ymax);
     	Point2D p4 = new Point2D(this.xmin, this.ymax);
-    	Polygon2D poly = new SimplePolygon2D(p1, p2, p3, p4);
+    	PolygonalDomain2D poly = new SimplePolygon2D(p1, p2, p3, p4);
     	return poly;
     }
 

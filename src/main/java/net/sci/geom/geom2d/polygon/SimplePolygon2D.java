@@ -17,7 +17,7 @@ import net.sci.geom.geom2d.line.LineSegment2D;
  * 
  * @see LinearRing2D
  */
-public class SimplePolygon2D implements Polygon2D
+public class SimplePolygon2D implements PolygonalDomain2D
 {
     // ===================================================================
     // Class variables

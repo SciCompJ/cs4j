@@ -15,21 +15,21 @@ import net.sci.geom.geom2d.Domain2D;
  * @author dlegland
  *
  */
-public interface Polygon2D extends Domain2D
+public interface PolygonalDomain2D extends Domain2D
 {
     // ===================================================================
     // Specific methods
     
     /**
-     * Computed the complement of this polygon, that is the set of all the
-     * points not contained by this polygon.
+     * Computed the complement of this polygonal domain, that is the set of all
+     * the points not contained by this polygonal domain.
      * 
-     * The complement polygon is expected to have a signed area opposite to the
-     * signed area of this polygon.
+     * The complement polygonal domain is expected to have a signed area
+     * opposite to the signed area of this polygonal domain.
      * 
      * @return the complement of this polygon.
      */
-    public Polygon2D complement();
+    public PolygonalDomain2D complement();
     
     /**
      * @return returns the signed area of this polygon.
