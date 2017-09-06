@@ -13,12 +13,13 @@ import net.sci.geom.geom2d.line.LineSegment2D;
 
 /**
  * <p>
- * A LineString2D is a line string whose last point is connected to the first one.
+ * A LinearRing2D is a polyline whose last point is connected to the first one.
  * This is typically the boundary of a (Simple)Polygon2D.
  * </p>
  * <p>
- * The name 'LineString2D' was used for 2 reasons:
- * <ul><li>it is short</li> <li>it is consistent with the JTS name</li></ul>
+ * The name 'LinearRing2D' was used for 2 reasons:
+ * <ul><li>it is short</li>
+ *  <li>it is consistent with the JTS name</li></ul>
  * </p>
  * @author dlegland
  */

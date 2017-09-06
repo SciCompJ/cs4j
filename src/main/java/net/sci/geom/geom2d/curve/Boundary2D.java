@@ -9,6 +9,12 @@ import net.sci.geom.geom2d.CurveShape2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
+ * A specialization of the CurveShape2D interface that represents the boundary
+ * of a domain.
+ * 
+ * An instance of Boundary2D is composed of one or several instances of
+ * Contour2D, that extends the Curve2D interface.
+ * 
  * @author dlegland
  *
  */
