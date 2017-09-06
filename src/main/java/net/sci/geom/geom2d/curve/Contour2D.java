@@ -14,7 +14,7 @@ import net.sci.geom.geom2d.Curve2D;
  * @author dlegland
  * 
  * @see Boundary2D
- * @see net.sci.geom.geom2d.Region2D
+ * @see net.sci.geom.geom2d.Domain2D
  */
 public interface Contour2D extends Curve2D, Boundary2D
 {

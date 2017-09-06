@@ -6,16 +6,16 @@ package net.sci.geom.geom2d.polygon;
 import java.util.Collection;
 
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Region2D;
+import net.sci.geom.geom2d.Domain2D;
 
 /**
- * A polygonal region whose boundary is composed of one or several linear
+ * A polygonal domain whose boundary is composed of one or several linear
  * ring(s).
  * 
  * @author dlegland
  *
  */
-public interface Polygon2D extends Region2D
+public interface Polygon2D extends Domain2D
 {
     // ===================================================================
     // Specific methods
