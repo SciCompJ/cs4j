@@ -4,6 +4,7 @@
 package net.sci.image.discretize;
 
 import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.geom.geom2d.Domain2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.PolygonalDomain2D;
 
@@ -52,7 +53,25 @@ public class Phantoms2D
         {
             for (int x = 0; x < sizeX; x++)
             {
-                if (poly.contains(new Point2D(x, y)))
+                if (poly.contains(x, y))
+                {
+                    array.setValue(x, y, value);
+                }
+            }
+        }
+    }
+    
+    public static final void fillDomain(ScalarArray2D<?> array, Domain2D domain, double value)
+    {
+        // get image size
+        int sizeX = array.getSize(0);
+        int sizeY = array.getSize(1);
+        
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                if (domain.contains(x, y))
                 {
                     array.setValue(x, y, value);
                 }
