@@ -165,4 +165,19 @@ public class StraightLine2DTest
         pt = new Point2D(-3, 5);
         assertEquals(-5, line.signedDistance(pt), 1e-14);  
     }
+    
+    @Test
+    public final void testIsInside()
+    {
+        StraightLine2D line = new StraightLine2D(1, 2, 3, 4);
+        Point2D pt;
+
+        // point outside the domain bounded by the line
+        pt = new Point2D(5, -1);
+        assertFalse(line.isInside(pt));  
+        
+        // point inside the domain bounded by the line
+        pt = new Point2D(-3, 5);
+        assertTrue(line.isInside(pt));  
+    }
 }

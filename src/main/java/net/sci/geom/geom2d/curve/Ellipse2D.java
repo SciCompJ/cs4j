@@ -32,7 +32,7 @@ public class Ellipse2D implements Contour2D
     /** Length of minor semi-axis. Must be positive. */
     protected double  r2;
 
-    /** Orientation of major semi-axis, in degrees, between 0 and 360. */
+    /** Orientation of major semi-axis, in degrees, between 0 and 180. */
     protected double  theta  = 0;
 
     
@@ -75,7 +75,7 @@ public class Ellipse2D implements Contour2D
         double thetaRad = Math.toRadians(this.theta);
         double cost = Math.cos(thetaRad);
         double sint = Math.sin(thetaRad);
-        double dt = Math.toRadians(360 / nVertices);
+        double dt = Math.toRadians(360.0 / nVertices);
         
         ArrayList<Point2D> vertices = new ArrayList<>(nVertices);
         for (int i = 0; i < nVertices; i++)
@@ -96,9 +96,26 @@ public class Ellipse2D implements Contour2D
     public double signedDistance(Point2D point)
     {
         // TODO: use exact computation 
-        return this.asPolyline(200).signedDistance(point);
+        return this.asPolyline(200).signedDistance(point.getX(), point.getY());
     }
 
+    public double signedDistance(double x, double y)
+    {
+        // TODO: use exact computation 
+        return this.asPolyline(200).signedDistance(x, y);
+    }
+
+    public boolean isInside(Point2D point)
+    {
+    	return isInside(point.getX(), point.getY());
+    }
+
+    public boolean isInside(double x, double y)
+    {
+    	return quasiDistanceToCenter(x, y) <= 1;
+    }
+
+    
     // ===================================================================
     // Methods implementing the Curve2D interface
     
@@ -108,7 +125,6 @@ public class Ellipse2D implements Contour2D
         return true;
     }
     
-   
 
     // ===================================================================
     // Methods implementing the Geometry2D interface
@@ -119,8 +135,40 @@ public class Ellipse2D implements Contour2D
     @Override
     public boolean contains(Point2D point, double eps)
     {
-        // TODO Auto-generated method stub
-        return false;
+    	double rho = quasiDistanceToCenter(point.getX(), point.getY());    	
+        return Math.abs(rho - 1) <= eps;
+    }
+    
+    /**
+	 * Apply to the point the transform that transforms this ellipse into unit
+	 * circle, and computes distance to origin.
+	 * 
+	 * @param x
+	 *            the x-coordinate of the point
+	 * @param y
+	 *            the y-coordinate of the point
+	 * @return the distance of the transformed point to the origin
+	 */
+    private double quasiDistanceToCenter(double x, double y)
+    {
+    	// recenter point
+    	x -= this.xc;
+    	y -= this.yc;
+    	
+    	// pre-computes trigonometric values
+    	double thetaRad = Math.toRadians(this.theta);
+        double cost = Math.cos(thetaRad);
+        double sint = Math.sin(thetaRad);
+        
+        // orient along main axes
+    	double x2 = x * cost + y * sint;
+        double y2 = -x * sint + y * cost;
+        
+        // and divides by semi axes length
+        x2 /= this.r1;
+        y2 /= this.r2;
+    	
+        return Math.hypot(x2, y2);
     }
     
     /* (non-Javadoc)

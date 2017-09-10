@@ -173,6 +173,24 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
         return (xDiff * this.dy - yDiff * this.dx) > 0 ? dist : -dist;
     }
 
+    @Override
+    public boolean isInside(Point2D point)
+    {
+    	return isInside(point.getX(), point.getY());
+    }
+    
+    @Override
+    public boolean isInside(double x, double y)
+    {
+        // compute offset between point and line origin
+        double xDiff = x - this.x0;
+        double yDiff = y - this.y0;
+
+        // determine relative position of point using dot product 
+        return (xDiff * this.dy - yDiff * this.dx) < 0;
+    }
+    
+    
     // ===================================================================
     // Methods implementing the Curve2D interface
     

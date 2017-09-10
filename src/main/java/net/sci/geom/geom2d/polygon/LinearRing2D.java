@@ -243,6 +243,67 @@ public class LinearRing2D implements Polyline2D, Contour2D
         return inside ? -minDist : minDist;
     }
 
+	@Override
+	public boolean isInside(Point2D point)
+	{
+		return isInside(point.getX(), point.getY());
+	}
+
+	@Override
+	public boolean isInside(double x, double y)
+	{
+        double area = 0;
+        
+        // the winding number counter
+        int winding = 0;
+    
+        // initialize with the last vertex
+        Point2D previous = this.vertices.get(vertices.size() - 1);
+        double xprev = previous.getX();
+        double yprev = previous.getY();
+    
+        // iterate on vertices, keeping coordinates of previous vertex in memory
+        for (Point2D current : vertices)
+        {
+            // coordinates of current vertex
+            double xcurr = current.getX();
+            double ycurr = current.getY();
+    
+            // update area computation
+            area += xprev * ycurr - yprev * xcurr;
+            
+            
+            if (yprev <= y)
+            {
+                // detect upward crossing
+                if (ycurr > y) 
+                    if (isLeft(xprev, yprev, xcurr, ycurr, x, y) > 0)
+                        winding++;
+            }
+            else
+            {
+                // detect downward crossing
+                if (ycurr <= y)
+                    if (isLeft(xprev, yprev, xcurr, ycurr, x, y) < 0)
+                        winding--;
+            }
+            
+            // for next iteration
+            xprev = xcurr;
+            yprev = ycurr;
+            previous = current;
+        }
+    
+        if (area > 0) 
+        {
+            return winding == 1;
+        }
+        else 
+        {
+            return winding == 0;
+        }
+	}
+    
     /**
      * Tests if the point p3 is Left|On|Right of the infinite line formed by p1 and p2.
      * 
