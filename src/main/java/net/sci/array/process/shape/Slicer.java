@@ -16,6 +16,20 @@ import net.sci.array.Cursor;
  */
 public class Slicer implements ArrayToArrayOperator
 {
+    /**
+     * Extract a lower dimensional array from an ND array, by specifying the
+     * slicing dimension and the slice index along this dimension.
+     * 
+     * @param source
+     *            the source array (dimensionality N)
+     * @param target
+     *            the target array (dimensionality N-1)
+     * @param dim
+     *            the slicing dimension, between 0 and N-1
+     * @param sliceIndex
+     *            the position of the slice along specified dimension, between 0
+     *            and <code>target.getSize(dim)-1</code>
+     */
 	public static final <T> void getSlice(Array<? extends T> source, Array<? super T> target, int dim, int sliceIndex)
 	{
 		// create position pointer for source image
@@ -44,7 +58,7 @@ public class Slicer implements ArrayToArrayOperator
 			int dim1, int dim2, int[] refPos)
 	{
 		// check dimensionality
-		int nd= array.dimensionality();
+		int nd = array.dimensionality();
 		if (dim1 >= nd || dim2 >= nd)
 		{
 			throw new IllegalArgumentException("slicing dimensions must be lower than input array dimension");
