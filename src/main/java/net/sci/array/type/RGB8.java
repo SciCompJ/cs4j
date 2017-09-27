@@ -96,6 +96,89 @@ public class RGB8 extends Vector<UInt8>
 		this.intCode = b << 16 | g << 8 | r;   
 	}
 
+	
+    // =============================================================
+    // Methods specific to RGB8
+	
+    /**
+     * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+     * 
+     * @return the hue value of this color, between 0 and 1. 
+     */
+	public double getHue()
+	{
+	    int r = this.intCode & 0x00FF;
+	    int g = (this.intCode >> 8) & 0x00FF;
+	    int b = (this.intCode >> 16) & 0x00FF;
+	    
+	    // max components
+        double cmax = Math.max(Math.max(r, g), b);
+        double cmin = Math.min(Math.min(r, g), b);
+        double delta = cmax - cmin;
+        
+        // case of gray colors. Maybe return NaN ?
+        if (delta < .0001) 
+        {
+            return 0;
+        }
+        
+        // switch depending on dominant channel
+        // Compute hue between 0 and 6
+        double hue = 0;
+        if (r >= g && r >= b)
+        {
+            // between yellow & magenta
+            hue = (g - b) / delta;
+            if (hue < 0)
+                hue += 6;
+        }
+        else if (g >= r && g >= b)
+        {
+            // between cyan & yellow
+            hue = 2 + (b - r) / delta;
+        }
+        else if (b >= r && b >= r)
+        {
+            // between magenta & cyan
+            hue = 4 + (r - g) / delta;
+        }
+        
+	    return hue / 6;
+	}
+
+	/**
+	 * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+	 * 
+	 * @return the saturation of this color, between 0 and 1. 
+	 */
+    public double getSaturation()
+    {
+        int r = this.intCode & 0x00FF;
+        int g = (this.intCode >> 8) & 0x00FF;
+        int b = (this.intCode >> 16) & 0x00FF;
+        
+        double cmax = Math.max(Math.max(r, g), b);
+        double cmin = Math.min(Math.min(r, g), b);
+        
+        if (cmax == 0)
+        {
+            return 0;
+        }
+        return (cmax - cmin) / cmax;
+    }
+    
+    /**
+     * @return the luma / luminance of this color, between 0 and 1. 
+     */
+	public double getLuminance()
+	{
+	    int r = this.intCode & 0x00FF;
+        int g = (this.intCode >> 8) & 0x00FF;
+        int b = (this.intCode >> 16) & 0x00FF;
+        return (.2989 * r  + .5870 * g + .1140 * b) / 255.0;
+	}
+    
+
 	// =============================================================
 	// General methods
 	
@@ -125,6 +208,8 @@ public class RGB8 extends Vector<UInt8>
 	}
 
 	/**
+	 * //TODO: change to "max channel" ?
+	 * 
 	 * @return a double value corresponding to the luma of this color.
 	 */
 	public double getValue()
@@ -132,7 +217,7 @@ public class RGB8 extends Vector<UInt8>
 		int r = this.intCode & 0x00FF;
 		int g = (this.intCode >> 8) & 0x00FF;
 		int b = (this.intCode >> 16) & 0x00FF;
-		return .2989 * r  + .5870 * g + .1140 * b;
+		return .2989 * r + .5870 * g + .1140 * b;
 	}
 	
     /**
