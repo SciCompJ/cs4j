@@ -15,6 +15,8 @@ import net.sci.array.Array;
 import net.sci.array.data.Array3D;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.color.BufferedPackedByteRGB8Array2D;
+import net.sci.array.data.color.BufferedPackedShortRGB16Array2D;
+import net.sci.array.data.color.RGB16Array2D;
 import net.sci.array.data.color.RGB8Array2D;
 import net.sci.array.data.scalar2d.BufferedFloat32Array2D;
 import net.sci.array.data.scalar2d.BufferedInt32Array2D;
@@ -23,6 +25,7 @@ import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar3d.BufferedUInt16Array3D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
 import net.sci.array.data.scalar3d.SlicedUInt8Array3D;
+import net.sci.array.type.RGB16;
 import net.sci.array.type.RGB8;
 import net.sci.image.Image;
 
@@ -608,6 +611,7 @@ public class TiffImageReader implements ImageReader
 		case ABGR:
 		case BARG:
 		case RGB_PLANAR:
+		{
 			// allocate memory for array
 			RGB8Array2D rgb2d = new BufferedPackedByteRGB8Array2D(info.width, info.height);
 			
@@ -624,7 +628,28 @@ public class TiffImageReader implements ImageReader
 				}
 			}
 			return rgb2d;
-			
+		}
+		
+		case RGB48:
+		{
+		    RGB16Array2D rgb2d = new BufferedPackedShortRGB16Array2D(info.width, info.height);
+		    
+		    ByteOrder order = dataReader.getOrder(); 
+		    // fill array with re-ordered buffer content
+		    int index = 0;
+		    for (int y = 0; y < info.height; y++)
+		    {
+		        for (int x = 0; x < info.width; x++)
+		        {
+                    int r = convertBytesToShort(buffer[index++], buffer[index++], order) & 0x00FFFF;
+                    int g = convertBytesToShort(buffer[index++], buffer[index++], order) & 0x00FFFF;
+                    int b = convertBytesToShort(buffer[index++], buffer[index++], order) & 0x00FFFF;
+		            rgb2d.set(x, y, new RGB16(r, g, b));
+		        }
+		    }
+		    return rgb2d;
+		}
+		
 //			case GRAY16_SIGNED:
 //			case GRAY24_UNSIGNED:
 			
@@ -656,12 +681,24 @@ public class TiffImageReader implements ImageReader
 
 			// encode bytes to short
 			if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
-				shortBuffer[i] = (short) ((b2 << 8) + b1);
+				shortBuffer[i] = (short) ((b2 << 8) | b1);
 			else
-				shortBuffer[i] = (short) ((b1 << 8) + b2);
+				shortBuffer[i] = (short) ((b1 << 8) | b2);
 		}
 		
 		return shortBuffer;
+	}
+
+	private static short convertBytesToShort(byte b1, byte b2, ByteOrder order)
+	{
+        int v1 = b1 & 0x00FF;
+        int v2 = b2 & 0x00FF;
+        
+        // encode bytes to short
+        if (order == ByteOrder.LITTLE_ENDIAN)
+            return (short) ((v2 << 8) | v1);
+        else
+            return (short) ((v1 << 8) | v2);
 	}
 	
 	/**

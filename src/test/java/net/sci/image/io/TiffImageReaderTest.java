@@ -8,8 +8,10 @@ import java.io.IOException;
 import org.junit.Test;
 
 import net.sci.array.Array;
+import net.sci.array.data.color.RGB16Array2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar2d.UInt16Array2D;
+import net.sci.array.type.RGB16;
 import net.sci.image.Image;
 
 public class TiffImageReaderTest
@@ -96,6 +98,13 @@ public class TiffImageReaderTest
 		assertEquals(512, image.getSize(1));
 	}
 
+	/**
+	 * Read an image coded with uint16, and containing a LUT. 
+	 * 
+	 * The LUT is currently not tested.
+	 * 
+	 * @throws IOException
+	 */
 	@Test
 	public void testReadImage_UInt16_M51() throws IOException
 	{
@@ -117,6 +126,45 @@ public class TiffImageReaderTest
 		assertEquals(218, array2d.getValue(0, 0), .1);
 		assertEquals(275, array2d.getValue(5, 0), .1);
 		assertEquals(10106, array2d.getValue(80, 347), .1);
-		
 	}
+	
+	/**
+	 * Try to read an image containing RGB colors coded as 48 bits.
+	 * 
+	 * @throws IOException
+	 */
+    @Test
+    public void testReadImage_RGB16_2D() throws IOException
+    {
+        // image size 324x238
+        String fileName = getClass().getResource("/files/imagej/hela-cells-crop.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(2, image.getDimension());
+        assertEquals(324, image.getSize(0));
+        assertEquals(238, image.getSize(1));
+        
+        RGB16Array2D data = (RGB16Array2D) image.getData();
+        
+        // pixel at position (0,0) has value (519, 414, 351)
+        RGB16 rgb_0_0 = data.get(0, 0);
+        assertEquals(519, rgb_0_0.getSample(0));
+        assertEquals(414, rgb_0_0.getSample(1));
+        assertEquals(351, rgb_0_0.getSample(2));
+        
+        // pixel at position (1,0) has value (495, 392, 362)
+        RGB16 rgb_1_0 = data.get(1, 0);
+        assertEquals(495, rgb_1_0.getSample(0));
+        assertEquals(392, rgb_1_0.getSample(1));
+        assertEquals(362, rgb_1_0.getSample(2));
+        
+        // pixel at position (140,140) has value (1182, 620, 1673)
+        RGB16 rgb = data.get(140, 140);
+        assertEquals(1182, rgb.getSample(0));
+        assertEquals( 620, rgb.getSample(1));
+        assertEquals(1673, rgb.getSample(2));
+    }
+
 }

@@ -9,16 +9,19 @@ import java.util.ArrayList;
 /**
  * Stores all information that are necessary to load an image from a TIFF file. 
  */
-public class TiffFileInfo {
-	
-	public enum PixelType {
-		/** 8-bit unsigned integer (0-255). */
-		GRAY8,
-		/**
-		 * 16-bit signed integer (-32768-32767). Imported signed images are
-		 * converted to unsigned by adding 32768.
-		 */
-		GRAY16_SIGNED,
+public class TiffFileInfo 
+{
+	public enum PixelType 
+	{
+        /** 8-bit unsigned integer (0-255). */
+        GRAY8,
+        
+        /**
+         * 16-bit signed integer (-32768-32767). Imported signed images are
+         * converted to unsigned by adding 32768.
+         */
+        GRAY16_SIGNED,
+        
 		/** 16-bit unsigned integer (0-65535). */
 		GRAY16_UNSIGNED,
 		/**
@@ -26,18 +29,25 @@ public class TiffFileInfo {
 		 * to floating-point.
 		 */
 		GRAY32_INT,
+
 		/** 32-bit floating-point. */
 		GRAY32_FLOAT,
+		
 		/** 8-bit unsigned integer with color lookup table. */
 		COLOR8,
+		
 		/** 24-bit interleaved RGB. Import/export only. */
 		RGB,
+		
 		/** 24-bit planer RGB. Import only. */
 		RGB_PLANAR,
+		
 		/** 1-bit black and white. Import only. */
 		BITMAP, 
+		
 		/** 32-bit interleaved ARGB. Import only. */
 		ARGB, 
+		
 		/** 24-bit interleaved BGR. Import only. */
 		BGR,
 		/**
@@ -45,24 +55,32 @@ public class TiffFileInfo {
 		 * to floating-point.
 		 */
 		GRAY32_UNSIGNED,
+		
 		/** 48-bit interleaved RGB. */
 		RGB48,
+		
 		/** 12-bit unsigned integer (0-4095). Import only. */
 		GRAY12_UNSIGNED, 
+		
 		/** 24-bit unsigned integer. Import only. */
 		GRAY24_UNSIGNED, 
+		
 		/** 32-bit interleaved BARG (MCID). Import only. */
 		BARG, 
+		
 		/** 64-bit floating-point. Import only.*/
 		GRAY64_FLOAT, 
+		
 		/** 48-bit planar RGB. Import only. */
 		RGB48_PLANAR, 
+		
 		/** 32-bit interleaved ABGR. Import only. */
 		ABGR
 	};
 	
 	// Compression modes
-	public enum Compression {
+	public enum Compression 
+	{
 		UNKNOWN,
 		NONE,
 		CCITT_RLE,
@@ -74,8 +92,10 @@ public class TiffFileInfo {
 		PACK_BITS, 
 		ZIP;
 		
-		public static Compression fromValue(int value) {
-			switch (value) {
+		public static Compression fromValue(int value) 
+		{
+			switch (value) 
+			{
 			// First test official values
 			case 1: 	return Compression.NONE;
 			case 2: 	return Compression.CCITT_RLE;
@@ -97,7 +117,8 @@ public class TiffFileInfo {
 	};
 	
 	// File formats
-	public enum FileFormat {
+	public enum FileFormat
+	{
 		UNKNOWN, 
 		RAW, 
 		TIFF, 
@@ -110,14 +131,17 @@ public class TiffFileInfo {
 		IMAGIO;
 	};
 
-	public enum SubFileType {
+	public enum SubFileType 
+	{
 		IMAGE,
 		REDUCEDIMAGE,
 		PAGE,
 		MASK; 
 			
-		public static SubFileType fromValue(int value) {
-			switch (value) {
+		public static SubFileType fromValue(int value)
+		{
+			switch (value) 
+			{
 			case 0: return SubFileType.IMAGE;
 			case 1: return SubFileType.REDUCEDIMAGE;
 			case 2: return SubFileType.PAGE;
@@ -129,7 +153,8 @@ public class TiffFileInfo {
 		}
 	}
 	
-	public enum Orientation {
+	public enum Orientation
+	{
 		TOPLEFT,
 		TOPRIGHT,
 		BOTRIGHT,
@@ -139,7 +164,8 @@ public class TiffFileInfo {
 		RIGHTBOT,
 		LEFTBOT; 
 		
-		public static Orientation fromValue(int value) {
+		public static Orientation fromValue(int value)
+		{
 			switch (value) {
 			case 1: return Orientation.TOPLEFT;
 			case 2: return Orientation.TOPRIGHT;
@@ -200,7 +226,9 @@ public class TiffFileInfo {
 	
 	
     /** @return the number of bytes used per pixel. */
-	public int getBytesPerPixel() {
+	public int getBytesPerPixel()
+	{
+	    // TODO: include this information into Type enum
 		switch (fileType) {
 		case GRAY8:
 		case COLOR8:
@@ -234,7 +262,8 @@ public class TiffFileInfo {
 	/**
 	 * Display the content of the image file directory to the console.  
 	 */
-	public void print() {
+	public void print() 
+	{
 		print(System.out);
 	}
 
@@ -245,7 +274,8 @@ public class TiffFileInfo {
      * @param out
      *            the the stream used to display information
      */
-	public void print(PrintStream out) {
+	public void print(PrintStream out)
+	{
 		out.println("--- Tiff File Info Description ---");
 		out.println("file type: " + fileType);
 		out.println("size0: " + width);

@@ -196,7 +196,7 @@ public class TiffTag
 			}
 		});
 
-//		tags.add(new TiffTag(263, "Threshholding")
+//		tags.add(new TiffTag(263, "Thresholding")
 //		{
 //			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 //			{
