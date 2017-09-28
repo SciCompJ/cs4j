@@ -10,7 +10,7 @@ package net.sci.array.type;
  * @author dlegland
  *
  */
-public class RGB8 extends Vector<UInt8>
+public class RGB8 extends IntVector<UInt8>
 {
 	// =============================================================
 	// Static methods

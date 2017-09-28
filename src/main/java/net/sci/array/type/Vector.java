@@ -4,7 +4,7 @@
 package net.sci.array.type;
 
 /**
- * A vector a numeric values.
+ * A vector of numeric values.
  * 
  * @author dlegland
  *
