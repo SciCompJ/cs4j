@@ -176,7 +176,7 @@ public interface RGB8Array extends VectorArray<RGB8>
 
 	/**
 	 * Converts this RGB8 array into a new UInt8Array, by computing the
-	 * luminance of each element.
+	 * maximum channel value for each element.
 	 * 
 	 * @return an UInt8 version of this RGB8 array
 	 */

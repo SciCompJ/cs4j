@@ -26,10 +26,10 @@ public class RGB8 extends IntVector<UInt8>
 	}
 	
 	/**
-	 * Creates a new RGB8 from luma value
+	 * Creates a new RGB8 from grayscale value
 	 * 
 	 * @param value
-	 *            a double value corresponding to luma value between 0 and 255.
+	 *            a double value corresponding to grayscale value, between 0 and 255
 	 * @return the corresponding RGB8 instance
 	 * @see #getValue()
 	 */
@@ -193,31 +193,31 @@ public class RGB8 extends IntVector<UInt8>
 	}
 	
 	/**
-	 * Converts this RGB8 value into an integer value representing the luma,
-	 * coded between 0 and 255.
+	 * Converts this RGB8 value into an integer value representing the maximum
+	 * channel value, coded between 0 and 255.
 	 * 
-	 * @return an integer value corresponding to the luma of this color.
+	 * @return an integer value corresponding to the maximum channel value.
 	 */
 	public int getInt()
 	{
 		int r = this.intCode & 0x00FF;
 		int g = (this.intCode >> 8) & 0x00FF;
 		int b = (this.intCode >> 16) & 0x00FF;
-		int luma = (int) Math.round(.2989 * r  + .5870 * g + .1140 * b);
-		return Math.min(Math.max(luma, 0), 255);
+		return Math.max(Math.max(r, g), b);
 	}
 
 	/**
-	 * //TODO: change to "max channel" ?
+	 * Converts this RGB8 value into a floating-point value value representing
+	 * the maximum channel value.
 	 * 
-	 * @return a double value corresponding to the luma of this color.
+	 * @return a double value corresponding to the maximum channel value.
 	 */
 	public double getValue()
 	{
 		int r = this.intCode & 0x00FF;
 		int g = (this.intCode >> 8) & 0x00FF;
 		int b = (this.intCode >> 16) & 0x00FF;
-		return .2989 * r + .5870 * g + .1140 * b;
+		return Math.max(Math.max(r, g), b);
 	}
 	
     /**
