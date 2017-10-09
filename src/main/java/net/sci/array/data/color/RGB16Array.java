@@ -24,15 +24,14 @@ public interface RGB16Array extends VectorArray<RGB16>
 	{
 		switch (dims.length)
 		{
-		//TODO: complete me!
-//		case 2:
-//			return RGB8Array2D.create(dims[0], dims[1]);
-//		case 3:
-//			return RGB8Array3D.create(dims[0], dims[1], dims[2]);
+		case 2:
+			return RGB16Array2D.create(dims[0], dims[1]);
+		case 3:
+			return RGB16Array3D.create(dims[0], dims[1], dims[2]);
 //		default:
 //			return RGB8ArrayND.create(dims);
 		}
-		return null;
+		throw new RuntimeException("RGB16Arrays not yet implemented for dimension " + dims.length);
 	}
 
 //	/**
