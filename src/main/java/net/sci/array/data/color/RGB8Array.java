@@ -170,7 +170,6 @@ public interface RGB8Array extends VectorArray<RGB8>
 		return result;
 	}
 	
-
 	// =============================================================
 	// New methods specific to RGB8Array
 
@@ -182,6 +181,10 @@ public interface RGB8Array extends VectorArray<RGB8>
 	 */
 	public UInt8Array convertToUInt8();
 	
+	public default UInt8Array createUInt8View()
+	{
+	    return new UInt8View(this);
+	}
 
 	// =============================================================
 	// Specialization of VectorArray interface
@@ -300,4 +303,122 @@ public interface RGB8Array extends VectorArray<RGB8>
 
 	}
 
+	/**
+	 * 
+	 * @author dlegland
+	 * @see UInt8Array.Wrapper
+	 */
+	// TODO: put in a specific file?
+	class UInt8View implements UInt8Array
+	{
+	    RGB8Array parent;
+	    
+	    UInt8View(RGB8Array parent)
+	    {
+	        this.parent = parent;
+	    }
+
+        @Override
+        public int dimensionality()
+        {
+            return parent.dimensionality();
+        }
+
+        @Override
+        public int[] getSize()
+        {
+            return parent.getSize();
+        }
+
+        @Override
+        public int getSize(int dim)
+        {
+            return parent.getSize(dim);
+        }
+
+        @Override
+        public UInt8 get(int[] pos)
+        {
+            RGB8 rgb = parent.get(pos);
+            return new UInt8(UInt8.clamp(rgb.getValue()));
+        }
+
+        @Override
+        public void set(int[] pos, UInt8 value)
+        {
+            RGB8 rgb = new RGB8(value.getInt());
+            parent.set(pos, rgb);
+        }
+
+        @Override
+        public byte getByte(int[] pos)
+        {
+            return get(pos).getByte();
+        }
+
+        @Override
+        public void setByte(int[] pos, byte value)
+        {
+            RGB8 rgb = new RGB8(value & 0x00FF);
+            parent.set(pos, rgb);
+        }
+
+        @Override
+        public Iterator iterator()
+        {
+            return new Iterator(parent.iterator());
+        }
+        
+        private class Iterator implements UInt8Array.Iterator
+        {
+            RGB8Array.Iterator parentIter;
+            
+            public Iterator(RGB8Array.Iterator parentIter) 
+            {
+                this.parentIter = parentIter;
+            }
+            
+            @Override
+            public boolean hasNext()
+            {
+                return parentIter.hasNext();
+            }
+
+            @Override
+            public UInt8 next()
+            {
+                return parentIter.next().toUInt8();
+            }
+
+            @Override
+            public void forward()
+            {
+                parentIter.forward();
+            }
+
+            @Override
+            public UInt8 get()
+            {
+                return parentIter.get().toUInt8();
+            }
+
+            @Override
+            public void set(UInt8 value)
+            {
+                parentIter.set(RGB8.fromUInt8(value));
+            }
+            
+            @Override
+            public byte getByte()
+            {
+                return parentIter.get().toUInt8().getByte();
+            }
+
+            @Override
+            public void setByte(byte b)
+            {
+                parentIter.set(new RGB8(b & 0x00FF, b & 0x00FF, b & 0x00FF));
+            }
+        }
+	}
 }

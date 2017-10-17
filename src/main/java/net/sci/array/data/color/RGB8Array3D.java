@@ -29,7 +29,7 @@ public abstract class RGB8Array3D extends VectorArray3D<RGB8> implements RGB8Arr
 
 	protected RGB8Array3D(int size0, int size1, int size2)
 	{
-		super(size0, size1, size1);
+		super(size0, size1, size2);
 	}
 
 

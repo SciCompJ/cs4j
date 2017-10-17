@@ -39,6 +39,13 @@ public class RGB8 extends IntVector<UInt8>
 		return new RGB8(val << 16 | val << 8 | val);
 	}
 	
+	public final static RGB8 fromUInt8(UInt8 value)
+	{
+	    int val = clamp255(value.getInt());
+	    return new RGB8(val << 16 | val << 8 | val);
+	}
+	
+	
 	// =============================================================
 	// Class variables
 	
@@ -192,7 +199,20 @@ public class RGB8 extends IntVector<UInt8>
 		return this.intCode;
 	}
 	
-	/**
+    /**
+     * Converts this RGB8 value into an instance of UInt8.
+     * 
+     * @return the UInt8 instance corresponding to the maximum channel value.
+     */
+    public UInt8 toUInt8()
+    {
+        int r = this.intCode & 0x00FF;
+        int g = (this.intCode >> 8) & 0x00FF;
+        int b = (this.intCode >> 16) & 0x00FF;
+        return new UInt8((byte) Math.max(Math.max(r, g), b));
+    }
+
+    /**
 	 * Converts this RGB8 value into an integer value representing the maximum
 	 * channel value, coded between 0 and 255.
 	 * 

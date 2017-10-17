@@ -211,7 +211,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		@Override
 		public void setByte(int[] pos, byte value)
 		{
-			set(pos, new UInt8(value));
+			set(pos, new UInt8(value & 0x00FF));
 		}
 
 		
