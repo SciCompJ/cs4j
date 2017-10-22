@@ -72,10 +72,10 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 */
 	ScalarArray2D<?> result;
 	
-	/** image width */
+	/** image sizeX */
 	int sizeX = 0;
 	
-	/** image height */
+	/** image sizeY */
 	int sizeY = 0;
 
 	/** the queue containing the positions that need update */

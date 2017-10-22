@@ -56,9 +56,9 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 	ScalarArray3D<?> mask;
 	ScalarArray3D<?> result;
 	
-	/** image width */
+	/** image sizeX */
 	int sizeX = 0;
-	/** image height */
+	/** image sizeY */
 	int sizeY = 0;
 	/** image depth */
 	int sizeZ = 0;
