@@ -133,7 +133,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 	 * The function returns a new Float32Array2D the same size as the input, with
 	 * values greater or equal to zero.
 	 */
-	public Float32Array2D process(BinaryArray2D marker, BinaryArray2D mask)
+	public Float32Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
 	{
 		// TODO: could use hybrid algorithm
 		// TODO: check int overflow?
@@ -328,7 +328,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
             for (int x = 0; x < sizeX; x++) 
             {
                 double val = buffer.getValue(x, y);
-                if (val != this.backgroundValue)
+                if (Double.isFinite(val))
                 {
                     buffer.setValue(x, y, val / this.weights[0]);
                 }

@@ -128,7 +128,6 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
     }
 
 
-	
     // ==================================================
     // General Methods 
     
@@ -140,7 +139,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 	 * The function returns a new Float32Array2D the same size as the input, with
 	 * values greater or equal to zero.
 	 */
-	public Float32Array2D process(BinaryArray2D marker, BinaryArray2D mask)
+	public Float32Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
 	{
 		// TODO: check int overflow?
 		
@@ -408,26 +407,6 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
         }
 	}
 	
-//	/**
-//	 * Adds the current position to the queue if and only if the value
-//	 * <code>value<value> is greater than the value of the mask.
-//	 * 
-//	 * @param x
-//	 *            column index
-//	 * @param y
-//	 *            row index
-//	 * @param value
-//	 *            the new value at (x, y) position
-//	 */
-//	private void updateQueue(int x, int y, double value)
-//	{
-//	    double resultValue = buffer.getValue(x, y); 
-//	    if (value < resultValue) 
-//	    {
-//	        Cursor2D position = new Cursor2D(x, y);
-//	        queue.add(position);
-//	    }
-//	}
 	private void normalizeMap()
 	{
         for (int y = 0; y < sizeY; y++)
@@ -435,7 +414,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
             for (int x = 0; x < sizeX; x++) 
             {
                 double val = buffer.getValue(x, y);
-                if (val != this.backgroundValue)
+                if (Double.isFinite(val))
                 {
                     buffer.setValue(x, y, val / this.weights[0]);
                 }

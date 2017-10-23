@@ -109,7 +109,7 @@ public class GeodesicDistanceTransform2DShortScanning5x5 extends AlgoStub implem
 	 * The function returns a new UInt16Array2D the same size as the input, with
 	 * values greater or equal to zero.
 	 */
-	public UInt16Array2D process(BinaryArray2D marker, BinaryArray2D mask)
+	public UInt16Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
 	{
 		// TODO: could use hybrid algorithm
 		// TODO: check int overflow?
