@@ -12,7 +12,7 @@ import net.sci.image.binary.ChamferWeights2D;
  * @author David Legland
  * 
  */
-public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implements GeodesicDistanceTransform2D
+public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implements GeodesicDistanceTransform2D
 {
     // ==================================================
     // Class variables 
@@ -28,7 +28,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 	int sizeX;
 	int sizeY;
 
-	BinaryArray2D maskProc;
+	BinaryArray2D mask;
 
 	/** 
 	 * The value assigned to result pixels that do not belong to the mask. 
@@ -47,23 +47,23 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 	/**
 	 * Use default weights, and normalize map.
 	 */
-	public GeodesicDistanceTransform2DFloat5x5Scanning()
+	public GeodesicDistanceTransform2DFloatScanning5x5()
 	{
 		this(ChamferWeights2D.CHESSKNIGHT.getFloatWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DFloat5x5Scanning(ChamferWeights2D weights)
+	public GeodesicDistanceTransform2DFloatScanning5x5(ChamferWeights2D weights)
 	{
 		this(weights.getFloatWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DFloat5x5Scanning(ChamferWeights2D weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DFloatScanning5x5(ChamferWeights2D weights, boolean normalizeMap) 
 	{
 		this(weights.getFloatWeights(), normalizeMap);
 	}
 
 
-	public GeodesicDistanceTransform2DFloat5x5Scanning(float[] weights)
+	public GeodesicDistanceTransform2DFloatScanning5x5(float[] weights)
 	{
 		this(weights, true);
 	}
@@ -77,7 +77,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 	 * @param normalizeMap
 	 *            the flag for normalizing result
 	 */
-	public GeodesicDistanceTransform2DFloat5x5Scanning(float[] weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DFloatScanning5x5(float[] weights, boolean normalizeMap) 
 	{
 		this.weights = new double[3];
         this.weights[0] = weights[0];
@@ -105,7 +105,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
      * @param normalizeMap
      *            the flag for normalizing result
      */
-    public GeodesicDistanceTransform2DFloat5x5Scanning(double[] weights, boolean normalizeMap) 
+    public GeodesicDistanceTransform2DFloatScanning5x5(double[] weights, boolean normalizeMap) 
     {
         this.weights = weights;
         
@@ -143,7 +143,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 		sizeY = mask.getSize(1);
 		
 		// update mask
-		this.maskProc = mask;
+		this.mask = mask;
 
 		// create new empty image, and fill it with black
 		fireStatusChanged(this, "Initialization..."); 
@@ -184,7 +184,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 	    buffer = Float32Array2D.create(sizeX, sizeY);
 	    buffer.fillValue(0);
 	    
-	    // initialize empty image with either 0 (foreground) or Inf (background)
+	    // initialize empty image with either 0 (in marker), Inf (outside marker), or NaN (not in the mask)
 	    for (int y = 0; y < sizeY; y++) 
 	    {
 	        for (int x = 0; x < sizeX; x++) 
@@ -221,7 +221,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 
 			for (int x = 0; x < sizeX; x++)
 			{
-				if (!maskProc.getBoolean(x, y))
+				if (!mask.getBoolean(x, y))
 					continue;
 				
 				// iterate over neighbor pixels
@@ -239,7 +239,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 						continue;
 					
 					// process only pixels inside structure
-					if (!maskProc.getBoolean(x2, y2))
+					if (!mask.getBoolean(x2, y2))
 						continue;
 
 					// update minimum value
@@ -274,7 +274,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 
 			for (int x = sizeX - 1; x >= 0; x--)
 			{
-				if (!maskProc.getBoolean(x, y))
+				if (!mask.getBoolean(x, y))
 					continue;
 				
 				// iterate over neighbor pixels
@@ -292,7 +292,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 						continue;
 					
 					// process only pixels inside structure
-					if (!maskProc.getBoolean(x2, y2))
+					if (!mask.getBoolean(x2, y2))
 						continue;
 
 					// update minimum value

@@ -6,8 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-    GeodesicDistanceTransform2DShort5x5ScanningTest.class,
-    GeodesicDistanceTransform2DFloat5x5ScanningTest.class,
+    GeodesicDistanceTransform2DShortScanning5x5Test.class,
+    GeodesicDistanceTransform2DFloatScanning5x5Test.class,
 	})
 public class AllTests {
   //nothing
