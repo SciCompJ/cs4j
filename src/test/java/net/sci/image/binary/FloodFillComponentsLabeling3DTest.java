@@ -13,7 +13,7 @@ public class FloodFillComponentsLabeling3DTest
 	@Test
 	public void testProcess3d()
 	{
-		// create the reference 3D image, that contains height cubes with size 2x2x2
+		// create the reference 3D image, that contains eight cubes with size 2x2x2
 		BinaryArray3D image = BinaryArray3D.create(8, 8, 8);
 		for (int z = 0; z < 2; z++)
 		{

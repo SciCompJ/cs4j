@@ -134,13 +134,13 @@ public class MinimaAndMaxima
 //		ScalarArray2D<?> rec = algo.process(image, mask);
 //		
 //		// allocate memory for result
-//		int width = image.getSize(0);
-//		int height = image.getSize(1);
-//		ScalarArray2D<?> result = new ByteProcessor(width, height);
+//		int sizeX = image.getSize(0);
+//		int sizeY = image.getSize(1);
+//		ScalarArray2D<?> result = new ByteProcessor(sizeX, sizeY);
 //		
 //		// create binary result image
-//		for (int y = 0; y < height; y++) {
-//			for (int x = 0; x < width; x++) {
+//		for (int y = 0; y < sizeY; y++) {
+//			for (int x = 0; x < sizeX; x++) {
 //				if (mask.get(x, y) > rec.get(x, y)) 
 //					result.set(x,  y, 255);
 //				else
