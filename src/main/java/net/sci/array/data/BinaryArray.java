@@ -49,7 +49,27 @@ public interface BinaryArray extends IntArray<Binary>
 		}
 	}
 
-	
+	/**
+     * Converts a scalar array to a binary array, by thresholding all values
+     * above zero.
+     * 
+     * @param array
+     *            a scalar array
+     * @return the binary array corresponding to values greater than zero.
+     */
+	public static BinaryArray convert(ScalarArray<?> array)
+	{
+	    BinaryArray result = BinaryArray.create(array.getSize());
+	    ScalarArray.Iterator<?> iter1 = array.iterator();
+	    BinaryArray.Iterator iter2 = result.iterator();
+	    while (iter1.hasNext() && iter2.hasNext())
+	    {
+	        iter2.forward();
+	        iter2.setBoolean(iter1.nextValue() > 0);
+	    }
+	    return result;
+	}
+
 	// =============================================================
 	// New methods
 
