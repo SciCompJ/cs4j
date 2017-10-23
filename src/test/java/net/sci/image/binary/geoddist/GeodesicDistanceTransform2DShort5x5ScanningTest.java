@@ -13,10 +13,10 @@ import org.junit.Test;
  * @author dlegland
  *
  */
-public class GeodesicDistanceTransformShort2D5x5Test
+public class GeodesicDistanceTransform2DShort5x5ScanningTest
 {
 	/**
-	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransformShort2D5x5#process(net.sci.array.data.scalar2d.BinaryArray2D, net.sci.array.data.scalar2d.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DShort5x5Scanning#process(net.sci.array.data.scalar2d.BinaryArray2D, net.sci.array.data.scalar2d.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess_LineSegment()
@@ -28,7 +28,7 @@ public class GeodesicDistanceTransformShort2D5x5Test
 		mask.setState(2, 1, true);
 		mask.setState(3, 1, true);
 		
-		GeodesicDistanceTransform2D op = new GeodesicDistanceTransformShort2D5x5(new short[]{1,2,12}, false);
+		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DShort5x5Scanning(new short[]{1,2,12}, false);
 		IntArray2D<?> res = (IntArray2D<?>) op.process(marker, mask);
 		
 		assertEquals(0, res.getInt(1, 1));
@@ -36,7 +36,7 @@ public class GeodesicDistanceTransformShort2D5x5Test
 	}
 
 	/**
-	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransformShort2D5x5#process(net.sci.array.data.scalar2d.BinaryArray2D, net.sci.array.data.scalar2d.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DShort5x5Scanning#process(net.sci.array.data.scalar2d.BinaryArray2D, net.sci.array.data.scalar2d.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess_CShape()
@@ -52,7 +52,7 @@ public class GeodesicDistanceTransformShort2D5x5Test
 		mask.setState(2, 3, true);
 		mask.setState(3, 3, true);
 		
-		GeodesicDistanceTransform2D op = new GeodesicDistanceTransformShort2D5x5(new short[]{1,2,12}, false);
+		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DShort5x5Scanning(new short[]{1,2,12}, false);
 		IntArray2D<?> res = (IntArray2D<?>) op.process(marker, mask);
 		
 		assertEquals(0, res.getInt(3, 3));

@@ -9,7 +9,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
 	AllTests.class,
-	net.sci.image.binary.distmap.AllTests.class,
+    net.sci.image.binary.distmap.AllTests.class,
+    net.sci.image.binary.geoddist.AllTests.class,
 	})
 public class AllTestsRecurse {
   //nothing

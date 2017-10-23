@@ -1,5 +1,6 @@
 package net.sci.image.binary.geoddist;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.image.binary.ChamferWeights2D;
@@ -16,7 +17,7 @@ import net.sci.image.binary.ChamferWeights2D;
  * @author David Legland
  * 
  */
-public class GeodesicDistanceTransformShort2D5x5 extends net.sci.algo.AlgoStub implements GeodesicDistanceTransform2D
+public class GeodesicDistanceTransform2DShort5x5Scanning extends AlgoStub implements GeodesicDistanceTransform2D
 {
 	short[] weights = new short[]{5, 7, 11};
 
@@ -44,23 +45,23 @@ public class GeodesicDistanceTransformShort2D5x5 extends net.sci.algo.AlgoStub i
 	/**
 	 * Use default weights, and normalize map.
 	 */
-	public GeodesicDistanceTransformShort2D5x5()
+	public GeodesicDistanceTransform2DShort5x5Scanning()
 	{
 		this(ChamferWeights2D.CHESSKNIGHT.getShortWeights(), true);
 	}
 
-	public GeodesicDistanceTransformShort2D5x5(ChamferWeights2D weights)
+	public GeodesicDistanceTransform2DShort5x5Scanning(ChamferWeights2D weights)
 	{
 		this(weights.getShortWeights(), true);
 	}
 
-	public GeodesicDistanceTransformShort2D5x5(ChamferWeights2D weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DShort5x5Scanning(ChamferWeights2D weights, boolean normalizeMap) 
 	{
 		this(weights.getShortWeights(), normalizeMap);
 	}
 
 
-	public GeodesicDistanceTransformShort2D5x5(short[] weights)
+	public GeodesicDistanceTransform2DShort5x5Scanning(short[] weights)
 	{
 		this(weights, true);
 	}
@@ -74,7 +75,7 @@ public class GeodesicDistanceTransformShort2D5x5 extends net.sci.algo.AlgoStub i
 	 * @param normalizeMap
 	 *            the flag for normalizing result
 	 */
-	public GeodesicDistanceTransformShort2D5x5(short[] weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DShort5x5Scanning(short[] weights, boolean normalizeMap) 
 	{
 		this.weights = weights;
 		
