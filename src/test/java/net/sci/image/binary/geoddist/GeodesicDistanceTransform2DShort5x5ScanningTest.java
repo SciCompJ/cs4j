@@ -22,11 +22,11 @@ public class GeodesicDistanceTransform2DShort5x5ScanningTest
 	public final void testProcess_LineSegment()
 	{
 		BinaryArray2D marker = BinaryArray2D.create(5, 5);
-		marker.setState(1, 1, true);
+		marker.setBoolean(1, 1, true);
 		BinaryArray2D mask = BinaryArray2D.create(5, 5);
-		mask.setState(1, 1, true);
-		mask.setState(2, 1, true);
-		mask.setState(3, 1, true);
+		mask.setBoolean(1, 1, true);
+		mask.setBoolean(2, 1, true);
+		mask.setBoolean(3, 1, true);
 		
 		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DShort5x5Scanning(new short[]{1,2,12}, false);
 		IntArray2D<?> res = (IntArray2D<?>) op.process(marker, mask);
@@ -42,15 +42,15 @@ public class GeodesicDistanceTransform2DShort5x5ScanningTest
 	public final void testProcess_CShape()
 	{
 		BinaryArray2D marker = BinaryArray2D.create(5, 5);
-		marker.setState(3, 3, true);
+		marker.setBoolean(3, 3, true);
 		BinaryArray2D mask = BinaryArray2D.create(5, 5);
-		mask.setState(1, 1, true);
-		mask.setState(2, 1, true);
-		mask.setState(3, 1, true);
-		mask.setState(1, 2, true);
-		mask.setState(1, 3, true);
-		mask.setState(2, 3, true);
-		mask.setState(3, 3, true);
+		mask.setBoolean(1, 1, true);
+		mask.setBoolean(2, 1, true);
+		mask.setBoolean(3, 1, true);
+		mask.setBoolean(1, 2, true);
+		mask.setBoolean(1, 3, true);
+		mask.setBoolean(2, 3, true);
+		mask.setBoolean(3, 3, true);
 		
 		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DShort5x5Scanning(new short[]{1,2,12}, false);
 		IntArray2D<?> res = (IntArray2D<?>) op.process(marker, mask);

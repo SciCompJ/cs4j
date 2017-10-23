@@ -89,7 +89,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 		{
 			for (int x = 0; x < sizeX; x++)
 			{
-				boolean inside = array.getState(x, y);
+				boolean inside = array.getBoolean(x, y);
 				result.setInt(x, y, inside ? Short.MAX_VALUE : 0);
 			}
 		}
@@ -108,7 +108,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 			{
 				for (int x = 0; x < sizeX; x++) 
 				{
-					if (mask.getState(x, y)) 
+					if (mask.getBoolean(x, y)) 
 					{
 						result.setInt(x, y, result.getInt(x, y) / weights[0]);
 					}
@@ -133,7 +133,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 			for (int x = 0; x < sizeX; x++)
 			{
 				// process only pixels within the mask
-				if (!mask.getState(x, y))
+				if (!mask.getBoolean(x, y))
 					continue;
 				
 				// init neighbor values
@@ -192,7 +192,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 			for (int x = sizeX - 1; x >= 0; x--)
 			{
 				// process only pixels within the mask
-				if (!mask.getState(x, y))
+				if (!mask.getBoolean(x, y))
 					continue;
 				
 				// init neighbor values

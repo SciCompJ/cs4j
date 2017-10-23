@@ -140,7 +140,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 			{
 				for (int x = 0; x < sizeX; x++) 
 				{
-					boolean b = array.getState(x, y, z);
+					boolean b = array.getBoolean(x, y, z);
 					distMap.setInt(x, y, z, b ? Short.MAX_VALUE : 0);
 				}
 			}
@@ -163,7 +163,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 				{
 					for (int x = 0; x < sizeX; x++) 
 					{
-						if (array.getState(x, y, z))
+						if (array.getBoolean(x, y, z))
 						{
 							int value = distMap.getInt(x, y, z) / weights[0];
 							distMap.setInt(x, y, z, value);
@@ -188,7 +188,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 			{
 				for (int x = 0; x < sizeX; x++)
 				{
-					boolean maskState = maskArray.getState(x, y, z); 
+					boolean maskState = maskArray.getBoolean(x, y, z); 
 
 					// check if we need to update current voxel
 					if (!maskState)
@@ -282,7 +282,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 			{
 				for (int x = sizeX - 1; x >= 0; x--)
 				{
-					boolean maskState = maskArray.getState(x, y, z); 
+					boolean maskState = maskArray.getBoolean(x, y, z); 
 
 					// check if we need to update current voxel
 					if (!maskState)

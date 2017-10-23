@@ -177,7 +177,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 			this.fireProgressChanged(this, y, sizeY);
 			for (int x = 0; x < sizeX; x++) 
 			{
-				if (!image.getState(x,y))
+				if (!image.getBoolean(x,y))
 					continue;
 				if (labels.getInt(x, y) > 0)
 					continue;
@@ -245,7 +245,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 			this.fireProgressChanged(this, y, sizeY);
 			for (int x = 0; x < sizeX; x++) 
 			{
-				if (!source.getState(x,y))
+				if (!source.getBoolean(x,y))
 					continue;
 				if (target.getInt(x, y) > 0)
 					continue;

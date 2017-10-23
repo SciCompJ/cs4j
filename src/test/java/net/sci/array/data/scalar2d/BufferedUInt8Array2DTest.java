@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
+import net.sci.array.data.UInt8Array;
 import net.sci.array.type.UInt8;
 
 import org.junit.Test;
@@ -11,28 +12,52 @@ import org.junit.Test;
 public class BufferedUInt8Array2DTest
 {
 
-	@Test
-	public final void testIterator()
-	{
-		UInt8Array2D array = new BufferedUInt8Array2D(6, 5);
-		for (int y = 0; y < 5; y++)
-		{
-			for (int x = 0; x < 6; x++)
-			{
-				array.setInt(x, y, 10);
-			}
-		}
-		
-		int count = 0;
-		double sum = 0;
-		for (UInt8 val : array) 
-		{
-			sum += val.getValue();
-			count++;
-		}
-		assertEquals(300, sum, .01);
-		assertEquals(30, count);
-	}
+    @Test
+    public final void testIterator()
+    {
+        UInt8Array2D array = new BufferedUInt8Array2D(6, 5);
+        for (int y = 0; y < 5; y++)
+        {
+            for (int x = 0; x < 6; x++)
+            {
+                array.setInt(x, y, 10);
+            }
+        }
+        
+        int count = 0;
+        double sum = 0;
+        for (UInt8 val : array) 
+        {
+            sum += val.getValue();
+            count++;
+        }
+        assertEquals(300, sum, .01);
+        assertEquals(30, count);
+    }
+
+    @Test
+    public final void testIntIterator()
+    {
+        UInt8Array2D array = new BufferedUInt8Array2D(6, 5);
+        for (int y = 0; y < 5; y++)
+        {
+            for (int x = 0; x < 6; x++)
+            {
+                array.setInt(x, y, 200);
+            }
+        }
+        
+        UInt8Array.Iterator iter = array.iterator();
+        int count = 0;
+        double sum = 0;
+        while(iter.hasNext()) 
+        {
+            sum += iter.nextInt();
+            count++;
+        }
+        assertEquals(6000, sum, .01);
+        assertEquals(30, count);
+    }
 
 	@Test
 	public final void testFill()

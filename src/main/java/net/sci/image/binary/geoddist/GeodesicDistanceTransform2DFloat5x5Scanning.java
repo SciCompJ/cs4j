@@ -189,7 +189,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 	    {
 	        for (int x = 0; x < sizeX; x++) 
 	        {
-	            if (mask.getState(x, y))
+	            if (mask.getBoolean(x, y))
 	            {
     	            double val = marker.getValue(x, y);
     	            buffer.setValue(x, y, val == 0 ? backgroundValue : 0);
@@ -221,7 +221,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 
 			for (int x = 0; x < sizeX; x++)
 			{
-				if (!maskProc.getState(x, y))
+				if (!maskProc.getBoolean(x, y))
 					continue;
 				
 				// iterate over neighbor pixels
@@ -239,7 +239,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 						continue;
 					
 					// process only pixels inside structure
-					if (!maskProc.getState(x2, y2))
+					if (!maskProc.getBoolean(x2, y2))
 						continue;
 
 					// update minimum value
@@ -274,7 +274,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 
 			for (int x = sizeX - 1; x >= 0; x--)
 			{
-				if (!maskProc.getState(x, y))
+				if (!maskProc.getBoolean(x, y))
 					continue;
 				
 				// iterate over neighbor pixels
@@ -292,7 +292,7 @@ public class GeodesicDistanceTransform2DFloat5x5Scanning extends AlgoStub implem
 						continue;
 					
 					// process only pixels inside structure
-					if (!maskProc.getState(x2, y2))
+					if (!maskProc.getBoolean(x2, y2))
 						continue;
 
 					// update minimum value

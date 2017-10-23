@@ -311,7 +311,7 @@ public class BufferedImageUtils
 			for (int x = 0; x < sizeX; x++)
 			{
 				pos[0] = x;
-				int value = array.getState(pos) ? 255 : 0;
+				int value = array.getBoolean(pos) ? 255 : 0;
 				raster.setSample(x, y, 0, value); 
 			}
 		}

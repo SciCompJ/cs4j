@@ -29,7 +29,7 @@ public class ChamferDistanceTransform2DUInt16Test
 		{
 			for (int x = 2; x < 10; x++)
 			{
-				image.setState(x, y, true);
+				image.setBoolean(x, y, true);
 			}
 		}
 

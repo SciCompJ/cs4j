@@ -53,9 +53,9 @@ public interface BinaryArray extends IntArray<Binary>
 	// =============================================================
 	// New methods
 
-	public boolean getState(int[] pos);
+	public boolean getBoolean(int[] pos);
 	
-	public void setState(int[] pos, boolean state);
+	public void setBoolean(int[] pos, boolean state);
 	
 	/**
      * Returns the complement of this array. Replaces each 0 by 1, and each 1 by
@@ -71,13 +71,13 @@ public interface BinaryArray extends IntArray<Binary>
 	@Override
 	public default int getInt(int[] pos)
 	{
-		return getState(pos) ? 1 : 0; 
+		return getBoolean(pos) ? 1 : 0; 
 	}
 
 	@Override
 	public default void setInt(int[] pos, int value)
 	{
-		setState(pos, value != 0);
+		setBoolean(pos, value != 0);
 	}
 
 	

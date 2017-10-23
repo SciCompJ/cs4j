@@ -59,7 +59,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 *            the y-coordinate of the position
 	 * @return the boolean state at the given position
 	 */
-	public abstract boolean getState(int x, int y);
+	public abstract boolean getBoolean(int x, int y);
 
 	/**
 	 * Sets the logical state at a given position
@@ -71,7 +71,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 * @param state
 	 *            the new state at the given position
 	 */
-	public abstract void setState(int x, int y, boolean state);
+	public abstract void setBoolean(int x, int y, boolean state);
 	
 	// =============================================================
 	// Specialization of the BooleanArray interface
@@ -80,18 +80,18 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 * @see net.sci.array.data.BooleanArray#getState(int[])
 	 */
 	@Override
-	public boolean getState(int[] pos)
+	public boolean getBoolean(int[] pos)
 	{
-		return getState(pos[0], pos[1]);
+		return getBoolean(pos[0], pos[1]);
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.BooleanArray#setBoolean(int[], java.lang.Boolean)
 	 */
 	@Override
-	public void setState(int[] pos, boolean value)
+	public void setBoolean(int[] pos, boolean value)
 	{
-		setState(pos[0], pos[1], value);
+		setBoolean(pos[0], pos[1], value);
 	}
 
     @Override
@@ -113,12 +113,12 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 
 	public int getInt(int x, int y)
 	{
-		return getState(x, y) ? 1 : 0; 
+		return getBoolean(x, y) ? 1 : 0; 
 	}
 
 	public void setInt(int x, int y, int value)
 	{
-		setState(x, y, value != 0);
+		setBoolean(x, y, value != 0);
 	}
 
 	// =============================================================
@@ -130,7 +130,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	@Override
 	public Binary get(int x, int y)
 	{
-		return new Binary(getState(x, y));
+		return new Binary(getBoolean(x, y));
 	}
 
 	/* (non-Javadoc)
@@ -139,7 +139,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	@Override
 	public void set(int x, int y, Binary value)
 	{
-		setState(x, y, value.getState());
+		setBoolean(x, y, value.getState());
 	}
 
 	/* (non-Javadoc)
@@ -148,7 +148,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	@Override
 	public double getValue(int x, int y)
 	{
-		return getState(x, y) ? 1 : 0;
+		return getBoolean(x, y) ? 1 : 0;
 	}
 
 	/**
@@ -159,7 +159,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	@Override
 	public void setValue(int x, int y, double value)
 	{
-		setState(x, y, value != 0);
+		setBoolean(x, y, value != 0);
 	}
 
 	
@@ -181,7 +181,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	@Override
 	public Binary get(int[] pos)
 	{
-		return new Binary(getState(pos[0], pos[1]));
+		return new Binary(getBoolean(pos[0], pos[1]));
 	}
 
 	/* (non-Javadoc)
@@ -190,6 +190,6 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	@Override
 	public void set(int[] pos, Binary value)
 	{
-		setState(pos[0], pos[1], value.getState());
+		setBoolean(pos[0], pos[1], value.getState());
 	}
 }

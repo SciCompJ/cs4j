@@ -135,7 +135,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 			{
 				for (int x = 0; x < sizeX; x++) 
 				{
-					boolean b = array.getState(x, y, z);
+					boolean b = array.getBoolean(x, y, z);
 					distMap.setValue(x, y, z, b ? Float.MAX_VALUE : 0);
 				}
 			}
@@ -158,7 +158,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 				{
 					for (int x = 0; x < sizeX; x++) 
 					{
-						if (array.getState(x, y, z))
+						if (array.getBoolean(x, y, z))
 						{
 							double value = distMap.getValue(x, y, z) / weights[0];
 							distMap.setValue(x, y, z, value);
@@ -184,7 +184,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 			{
 				for (int x = 0; x < sizeX; x++)
 				{
-					boolean maskState = maskArray.getState(x, y, z); 
+					boolean maskState = maskArray.getBoolean(x, y, z); 
 
 					// check if we need to update current voxel
 					if (!maskState)
@@ -279,7 +279,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 			{
 				for (int x = sizeX - 1; x >= 0; x--)
 				{
-					boolean maskState = maskArray.getState(x, y, z); 
+					boolean maskState = maskArray.getBoolean(x, y, z); 
 
 					// check if we need to update current voxel
 					if (!maskState)

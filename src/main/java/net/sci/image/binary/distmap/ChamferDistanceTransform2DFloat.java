@@ -87,7 +87,7 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 		{
 			for (int x = 0; x < sizeX; x++)
 			{
-				boolean inside = array.getState(x, y);
+				boolean inside = array.getBoolean(x, y);
 				result.setValue(x, y, inside ? Float.MAX_VALUE : 0);
 			}
 		}
@@ -106,7 +106,7 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 			{
 				for (int x = 0; x < sizeX; x++) 
 				{
-					if (mask.getState(x, y)) 
+					if (mask.getBoolean(x, y)) 
 					{
 						result.setValue(x, y, result.getValue(x, y) / weights[0]);
 					}
@@ -131,7 +131,7 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 			for (int x = 0; x < sizeX; x++)
 			{
 				// process only pixels within the mask
-				if (!mask.getState(x, y))
+				if (!mask.getBoolean(x, y))
 					continue;
 				
 				// init neighbor values
@@ -190,7 +190,7 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 			for (int x = sizeX - 1; x >= 0; x--)
 			{
 				// process only pixels within the mask
-				if (!mask.getState(x, y))
+				if (!mask.getBoolean(x, y))
 					continue;
 				
 				// init neighbor values

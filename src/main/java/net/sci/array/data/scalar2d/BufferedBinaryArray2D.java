@@ -59,7 +59,7 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 	 * @see net.sci.array.data.scalar2d.BooleanArray2D#getState(int, int)
 	 */
 	@Override
-	public boolean getState(int x, int y)
+	public boolean getBoolean(int x, int y)
 	{
 		int index = x + y * this.size0;
 		return buffer[index];
@@ -69,7 +69,7 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 	 * @see net.sci.array.data.scalar2d.BooleanArray2D#setState(int, int, boolean)
 	 */
 	@Override
-	public void setState(int x, int y, boolean state)
+	public void setBoolean(int x, int y, boolean state)
 	{
 		int index = x + y * this.size0;
 		buffer[index] = state;

@@ -208,7 +208,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 				for (int x = 0; x < sizeX; x++) 
 				{
 					// Do not process background voxels
-					if (!image.getState(x, y, z))
+					if (!image.getBoolean(x, y, z))
 						continue;
 	
 					// Do not process voxels already labeled
