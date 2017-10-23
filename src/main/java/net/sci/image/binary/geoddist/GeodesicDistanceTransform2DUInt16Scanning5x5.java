@@ -17,7 +17,7 @@ import net.sci.image.binary.ChamferWeights2D;
  * @author David Legland
  * 
  */
-public class GeodesicDistanceTransform2DShortScanning5x5 extends AlgoStub implements GeodesicDistanceTransform2D
+public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub implements GeodesicDistanceTransform2D
 {
     // ==================================================
     // Class variables 
@@ -52,23 +52,23 @@ public class GeodesicDistanceTransform2DShortScanning5x5 extends AlgoStub implem
 	/**
 	 * Use default weights, and normalize map.
 	 */
-	public GeodesicDistanceTransform2DShortScanning5x5()
+	public GeodesicDistanceTransform2DUInt16Scanning5x5()
 	{
 		this(ChamferWeights2D.CHESSKNIGHT.getShortWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DShortScanning5x5(ChamferWeights2D weights)
+	public GeodesicDistanceTransform2DUInt16Scanning5x5(ChamferWeights2D weights)
 	{
 		this(weights.getShortWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DShortScanning5x5(ChamferWeights2D weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DUInt16Scanning5x5(ChamferWeights2D weights, boolean normalizeMap) 
 	{
 		this(weights.getShortWeights(), normalizeMap);
 	}
 
 
-	public GeodesicDistanceTransform2DShortScanning5x5(short[] weights)
+	public GeodesicDistanceTransform2DUInt16Scanning5x5(short[] weights)
 	{
 		this(weights, true);
 	}
@@ -82,7 +82,7 @@ public class GeodesicDistanceTransform2DShortScanning5x5 extends AlgoStub implem
 	 * @param normalizeMap
 	 *            the flag for normalizing result
 	 */
-	public GeodesicDistanceTransform2DShortScanning5x5(short[] weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DUInt16Scanning5x5(short[] weights, boolean normalizeMap) 
 	{
 		this.weights = weights;
 		

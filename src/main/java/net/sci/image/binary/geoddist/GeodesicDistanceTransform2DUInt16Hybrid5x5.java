@@ -5,7 +5,7 @@ import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.data.scalar2d.BinaryArray2D;
-import net.sci.array.data.scalar2d.Float32Array2D;
+import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.image.binary.ChamferWeights2D;
 import net.sci.image.data.Cursor2D;
 
@@ -16,12 +16,12 @@ import net.sci.image.data.Cursor2D;
  * @author David Legland
  * 
  */
-public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implements GeodesicDistanceTransform2D
+public class GeodesicDistanceTransform2DUInt16Hybrid5x5 extends AlgoStub implements GeodesicDistanceTransform2D
 {
     // ==================================================
     // Class variables 
     
-	double[] weights = new double[]{5, 7, 11};
+	short[] weights = new short[]{5, 7, 11};
 
 	/**
 	 * Flag for dividing final distance map by the value first weight. 
@@ -36,11 +36,11 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 
 	/** 
 	 * The value assigned to result pixels that do not belong to the mask. 
-	 * Default is Double.POSITIVE_INFINITY.
+	 * Default is Short.MAX_VALUE.
 	 */
-	double backgroundValue = Double.POSITIVE_INFINITY;
+	short backgroundValue = Short.MAX_VALUE;
 	
-	Float32Array2D buffer;
+	UInt16Array2D buffer;
 	
     /** 
      * The queue containing the positions that need update.
@@ -54,23 +54,23 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 	/**
 	 * Use default weights, and normalize map.
 	 */
-	public GeodesicDistanceTransform2DFloatHybrid5x5()
+	public GeodesicDistanceTransform2DUInt16Hybrid5x5()
 	{
-		this(ChamferWeights2D.CHESSKNIGHT.getFloatWeights(), true);
+		this(ChamferWeights2D.CHESSKNIGHT.getShortWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DFloatHybrid5x5(ChamferWeights2D weights)
+	public GeodesicDistanceTransform2DUInt16Hybrid5x5(ChamferWeights2D weights)
 	{
-		this(weights.getFloatWeights(), true);
+		this(weights.getShortWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DFloatHybrid5x5(ChamferWeights2D weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DUInt16Hybrid5x5(ChamferWeights2D weights, boolean normalizeMap) 
 	{
-		this(weights.getFloatWeights(), normalizeMap);
+		this(weights.getShortWeights(), normalizeMap);
 	}
 
 
-	public GeodesicDistanceTransform2DFloatHybrid5x5(float[] weights)
+	public GeodesicDistanceTransform2DUInt16Hybrid5x5(short[] weights)
 	{
 		this(weights, true);
 	}
@@ -84,16 +84,16 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 	 * @param normalizeMap
 	 *            the flag for normalizing result
 	 */
-	public GeodesicDistanceTransform2DFloatHybrid5x5(float[] weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DUInt16Hybrid5x5(short[] weights, boolean normalizeMap) 
 	{
-		this.weights = new double[3];
+		this.weights = new short[3];
         this.weights[0] = weights[0];
         this.weights[1] = weights[1];
 		
 		// ensure weight array has minimum size 3
 		if (this.weights.length < 3)
 		{
-			this.weights[2] = weights[0] + weights[1];
+			this.weights[2] = (short) (weights[0] + weights[1]);
 		}
 		else
 		{
@@ -102,30 +102,6 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 		
 		this.normalizeMap = normalizeMap;
 	}
-	
-    /**
-     * Low-level constructor.
-     * 
-     * @param weights
-     *            the array of weights for orthogonal, diagonal, and eventually
-     *            2-by-1 moves
-     * @param normalizeMap
-     *            the flag for normalizing result
-     */
-    public GeodesicDistanceTransform2DFloatHybrid5x5(double[] weights, boolean normalizeMap) 
-    {
-        this.weights = weights;
-        
-        // ensure weight array has minimum size 3
-        if (this.weights.length < 3)
-        {
-            this.weights = new double[3];
-            this.weights[0] = weights[0];
-            this.weights[1] = weights[1];
-            this.weights[2] = weights[0] + weights[1];
-        }
-        this.normalizeMap = normalizeMap;
-    }
 
 
     // ==================================================
@@ -139,7 +115,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 	 * The function returns a new Float32Array2D the same size as the input, with
 	 * values greater or equal to zero.
 	 */
-	public Float32Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
+	public UInt16Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
 	{
 		// TODO: check int overflow?
 		
@@ -180,7 +156,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 	private void initializeResult(BinaryArray2D marker, BinaryArray2D mask)
 	{
 	    // Allocate memory
-	    buffer = Float32Array2D.create(sizeX, sizeY);
+	    buffer = UInt16Array2D.create(sizeX, sizeY);
 	    buffer.fillValue(0);
 	    
 	    // initialize empty image with either 0 (in marker), Inf (outside marker), or NaN (not in the mask)
@@ -190,12 +166,8 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 	        {
 	            if (mask.getBoolean(x, y))
 	            {
-    	            double val = marker.getValue(x, y);
-    	            buffer.setValue(x, y, val == 0 ? backgroundValue : 0);
-	            }
-	            else
-	            {
-	                buffer.setValue(x, y, Double.NaN);
+    	            double val = marker.getInt(x, y);
+    	            buffer.setInt(x, y, val == 0 ? backgroundValue : 0);
 	            }
 	        }
 	    }
@@ -208,10 +180,10 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 		int[] dy = new int[]{-2, -2, -1, -1, -1, -1, -1, +0};
 		
 		// also create corresponding array of weights
-		double w0 = weights[0];
-		double w1 = weights[1];
-		double w2 = weights[2];
-		double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0};
+		int w0 = weights[0];
+		int w1 = weights[1];
+		int w2 = weights[2];
+		int[] ws = new int[]{w2, w2, w2, w1, w0, w1, w2, w0};
 
 		// iterate over pixels
 		for (int y = 0; y < sizeY; y++)
@@ -224,10 +196,10 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 					continue;
 
 				// get value of current pixel
-                double value = buffer.getValue(x, y);
+                int value = buffer.getInt(x, y);
 
 				// update value with value of neighbors
-                double newVal = buffer.getValue(x, y);
+                int newVal = buffer.getInt(x, y);
 				for(int i = 0; i < dx.length; i++)
 				{
 					// coordinates of neighbor pixel
@@ -245,13 +217,13 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 						continue;
 
 					// update minimum value
-					newVal = Math.min(newVal, buffer.getValue(x2, y2) + ws[i]);
+					newVal = Math.min(newVal, buffer.getInt(x2, y2) + ws[i]);
 				}
 				
 				// modify current pixel if needed
 				if (newVal < value) 
 		        {
-				    buffer.setValue(x, y, newVal);
+				    buffer.setInt(x, y, newVal);
 		        }
 			}
 		}
@@ -266,10 +238,10 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 		int[] dy = new int[]{+2, +2, +1, +1, +1, +1, +1, +0};
 		
 		// also create corresponding array of weights
-		double w0 = weights[0];
-		double w1 = weights[1];
-		double w2 = weights[2];
-		double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0};
+        int w0 = weights[0];
+        int w1 = weights[1];
+        int w2 = weights[2];
+        int[] ws = new int[]{w2, w2, w2, w1, w0, w1, w2, w0};
 
 		// initialize queue
 		queue = new ArrayDeque<Cursor2D>();
@@ -285,10 +257,10 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 					continue;
 				
                 // get value of current pixel
-                double value = buffer.getValue(x, y);
+                int value = buffer.getInt(x, y);
 
                 // update value with value of neighbors
-                double newVal = buffer.getValue(x, y);
+                int newVal = buffer.getInt(x, y);
 				for(int i = 0; i < dx.length; i++)
 				{
 					// coordinates of neighbor pixel
@@ -306,7 +278,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 						continue;
 
 					// update minimum value
-					newVal = Math.min(newVal, buffer.getValue(x2, y2) + ws[i]);
+					newVal = Math.min(newVal, buffer.getInt(x2, y2) + ws[i]);
 				}
 				
                 // check if update is necessary
@@ -316,7 +288,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
                 }
                 
                 // modify current pixel
-                buffer.setValue(x, y, newVal);
+                buffer.setInt(x, y, newVal);
                 
                 // eventually add lower-right neighbors to queue
                 for(int i = 0; i < dx.length; i++)
@@ -336,9 +308,9 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
                         continue;
 
                     // update neighbor and add to the queue
-                    if (newVal + ws[i] < buffer.getValue(x2, y2)) 
+                    if (newVal + ws[i] < buffer.getInt(x2, y2)) 
                     {
-                        buffer.setValue(x2, y2, newVal + ws[i]);
+                        buffer.setInt(x2, y2, newVal + ws[i]);
                         queue.add(new Cursor2D(x2, y2));
                     }
                 }
@@ -359,10 +331,10 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
         int[] dy = new int[]{-2, -2, -1, -1, -1, -1, -1, +0, +2, +2, +1, +1, +1, +1, +1, +0};
 
         // also create corresponding array of weights
-        double w0 = weights[0];
-        double w1 = weights[1];
-        double w2 = weights[2];
-        double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0, w2, w2, w2, w1, w0, w1, w2, w0};
+        int w0 = weights[0];
+        int w1 = weights[1];
+        int w2 = weights[2];
+        int[] ws = new int[]{w2, w2, w2, w1, w0, w1, w2, w0, w2, w2, w2, w1, w0, w1, w2, w0};
 
         // Process elements in queue until it is empty
         while (!queue.isEmpty()) 
@@ -372,7 +344,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
             int y = p.getY();
             
             // get geodesic distance value for current pixel
-            double value = buffer.getValue(x, y);
+            int value = buffer.getInt(x, y);
 
             // iterate over neighbor pixels
             for(int i = 0; i < dx.length; i++)
@@ -392,13 +364,13 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
                     continue;
 
                 // update minimum value
-                double newVal = value + ws[i];
+                int newVal = value + ws[i];
                 
                 // if no update is needed, continue to next item in queue
-                if (newVal < buffer.getValue(x2, y2))
+                if (newVal < buffer.getInt(x2, y2))
                 {
                     // update result for current position
-                    buffer.setValue(x2, y2, newVal);
+                    buffer.setInt(x2, y2, newVal);
                     
                     // add the new modified position to the queue 
                     queue.add(new Cursor2D(x2, y2));
@@ -413,10 +385,10 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
         {
             for (int x = 0; x < sizeX; x++) 
             {
-                double val = buffer.getValue(x, y);
+                int val = buffer.getInt(x, y);
                 if (Double.isFinite(val))
                 {
-                    buffer.setValue(x, y, val / this.weights[0]);
+                    buffer.setInt(x, y, val / this.weights[0]);
                 }
             }
         }
