@@ -650,8 +650,6 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	 *            row index
 	 * @param value
 	 *            value at (x, y) position
-	 * @param sign
-	 *            integer +1 or -1 to manage both erosions and dilations
 	 */
 	private void updateQueue(int x, int y, double value)
 	{

@@ -1,9 +1,13 @@
 package net.sci.image.binary.geoddist;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import net.sci.algo.AlgoStub;
 import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.image.binary.ChamferWeights2D;
+import net.sci.image.data.Cursor2D;
 
 /**
  * Computation of Chamfer geodesic distances using floating point integer array
@@ -12,7 +16,7 @@ import net.sci.image.binary.ChamferWeights2D;
  * @author David Legland
  * 
  */
-public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implements GeodesicDistanceTransform2D
+public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implements GeodesicDistanceTransform2D
 {
     // ==================================================
     // Class variables 
@@ -38,7 +42,10 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 	
 	Float32Array2D buffer;
 	
-	boolean modif;
+    /** 
+     * The queue containing the positions that need update.
+     */
+    Deque<Cursor2D> queue;
 
 
 	// ==================================================
@@ -47,23 +54,23 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 	/**
 	 * Use default weights, and normalize map.
 	 */
-	public GeodesicDistanceTransform2DFloatScanning5x5()
+	public GeodesicDistanceTransform2DFloatHybrid5x5()
 	{
 		this(ChamferWeights2D.CHESSKNIGHT.getFloatWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DFloatScanning5x5(ChamferWeights2D weights)
+	public GeodesicDistanceTransform2DFloatHybrid5x5(ChamferWeights2D weights)
 	{
 		this(weights.getFloatWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DFloatScanning5x5(ChamferWeights2D weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DFloatHybrid5x5(ChamferWeights2D weights, boolean normalizeMap) 
 	{
 		this(weights.getFloatWeights(), normalizeMap);
 	}
 
 
-	public GeodesicDistanceTransform2DFloatScanning5x5(float[] weights)
+	public GeodesicDistanceTransform2DFloatHybrid5x5(float[] weights)
 	{
 		this(weights, true);
 	}
@@ -77,7 +84,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 	 * @param normalizeMap
 	 *            the flag for normalizing result
 	 */
-	public GeodesicDistanceTransform2DFloatScanning5x5(float[] weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DFloatHybrid5x5(float[] weights, boolean normalizeMap) 
 	{
 		this.weights = new double[3];
         this.weights[0] = weights[0];
@@ -105,7 +112,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
      * @param normalizeMap
      *            the flag for normalizing result
      */
-    public GeodesicDistanceTransform2DFloatScanning5x5(double[] weights, boolean normalizeMap) 
+    public GeodesicDistanceTransform2DFloatHybrid5x5(double[] weights, boolean normalizeMap) 
     {
         this.weights = weights;
         
@@ -135,7 +142,6 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 	 */
 	public Float32Array2D process(BinaryArray2D marker, BinaryArray2D mask)
 	{
-		// TODO: could use hybrid algorithm
 		// TODO: check int overflow?
 		
 		// size of image
@@ -148,33 +154,27 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 		// create new empty image, and fill it with black
 		fireStatusChanged(this, "Initialization..."); 
 		initializeResult(marker, mask);
-
-		// Performs forward and backward scanning until stabilization
-		int iter = 0;
-		do 
-		{
-			modif = false;
-
-			// forward iteration
-			fireStatusChanged(this, "Forward iteration " + iter);
-			forwardIteration();
-
-			// backward iteration
-			fireStatusChanged(this, "Backward iteration " + iter); 
-			backwardIteration();
-
-			// Iterate while pixels have been modified
-			iter++;
-		}
-		while (modif);
-
+		
+		// forward iteration
+		fireStatusChanged(this, "Forward iteration ");
+		forwardIteration();
+		
+		// backward iteration
+		fireStatusChanged(this, "Backward iteration "); 
+		backwardIteration();
+		
+        // Process queue
+		fireStatusChanged(this, "Process queue "); 
+		processQueue();
+		
 		// Normalize values by the first weight
 		if (this.normalizeMap) 
 		{
-			fireStatusChanged(this, "Normalize map");
-			normalizeMap();
+		    fireStatusChanged(this, "Normalize map");
+		    normalizeMap();
 		}
-				
+		
+		fireStatusChanged(this, ""); 
 		return buffer;
 	}
 
@@ -223,9 +223,12 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 			{
 				if (!mask.getBoolean(x, y))
 					continue;
-				
-				// iterate over neighbor pixels
-				double newVal = buffer.getValue(x, y);
+
+				// get value of current pixel
+                double value = buffer.getValue(x, y);
+
+				// update value with value of neighbors
+                double newVal = buffer.getValue(x, y);
 				for(int i = 0; i < dx.length; i++)
 				{
 					// coordinates of neighbor pixel
@@ -247,10 +250,12 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 				}
 				
 				// modify current pixel if needed
-				updateIfNeeded(x, y, newVal);
+				if (newVal < value) 
+		        {
+				    buffer.setValue(x, y, newVal);
+		        }
 			}
 		}
-		
 
 		fireProgressChanged(this, 1, 1); 
 	}
@@ -267,6 +272,9 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 		double w2 = weights[2];
 		double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0};
 
+		// initialize queue
+		queue = new ArrayDeque<Cursor2D>();
+        
 		// iterate over pixels
 		for (int y = sizeY - 1; y >= 0; y--)
 		{
@@ -277,8 +285,11 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 				if (!mask.getBoolean(x, y))
 					continue;
 				
-				// iterate over neighbor pixels
-				double newVal = buffer.getValue(x, y);
+                // get value of current pixel
+                double value = buffer.getValue(x, y);
+
+                // update value with value of neighbors
+                double newVal = buffer.getValue(x, y);
 				for(int i = 0; i < dx.length; i++)
 				{
 					// coordinates of neighbor pixel
@@ -299,28 +310,124 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 					newVal = Math.min(newVal, buffer.getValue(x2, y2) + ws[i]);
 				}
 				
-				// modify current pixel if needed
-				updateIfNeeded(x, y, newVal);
+                // check if update is necessary
+                if (value < newVal)
+                {
+                    continue;
+                }
+                
+                // modify current pixel
+                buffer.setValue(x, y, newVal);
+                
+                // eventually add lower-right neighbors to queue
+                for(int i = 0; i < dx.length; i++)
+                {
+                    // coordinates of neighbor pixel
+                    int x2 = x + dx[i];
+                    int y2 = y + dy[i];
+                    
+                    // check image bounds
+                    if (x2 < 0 || x2 > sizeX - 1)
+                        continue;
+                    if (y2 < 0 || y2 > sizeY - 1)
+                        continue;
+                    
+                    // process only pixels inside structure
+                    if (!mask.getBoolean(x2, y2))
+                        continue;
+
+                    // update neighbor and add to the queue
+                    if (newVal + ws[i] < buffer.getValue(x2, y2)) 
+                    {
+                        buffer.setValue(x2, y2, newVal + ws[i]);
+                        queue.add(new Cursor2D(x2, y2));
+                    }
+                }
 			}
 		}
 		
 		fireProgressChanged(this, 1, 1); 
 	}
-		
+	
 	/**
-	 * Updates the pixel at position (x,y) with the value newVal. If newVal is
-	 * greater or equal to current value at position (x,y), do nothing.
-	 */
-	private void updateIfNeeded(int x, int y, double newVal) 
+     * For each element in the queue, get neighbors, try to update them, and
+     * eventually add them to the queue.
+     */
+	private void processQueue()
 	{
-		double value = buffer.getValue(x, y);
-		if (newVal < value) 
-		{
-			modif = true;
-			buffer.setValue(x, y, newVal);
-		}
-	}
+        // create array of offsets relative to current pixel
+        int[] dx = new int[]{-1, +1, -2, -1, +0, +1, +2, -1, +1, -1, +2, +1, +0, -1, -2, +1};
+        int[] dy = new int[]{-2, -2, -1, -1, -1, -1, -1, +0, +2, +2, +1, +1, +1, +1, +1, +0};
 
+        // also create corresponding array of weights
+        double w0 = weights[0];
+        double w1 = weights[1];
+        double w2 = weights[2];
+        double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0, w2, w2, w2, w1, w0, w1, w2, w0};
+
+        // Process elements in queue until it is empty
+        while (!queue.isEmpty()) 
+        {
+            Cursor2D p = queue.removeFirst();
+            int x = p.getX();
+            int y = p.getY();
+            
+            // get geodesic distance value for current pixel
+            double value = buffer.getValue(x, y);
+
+            // iterate over neighbor pixels
+            for(int i = 0; i < dx.length; i++)
+            {
+                // coordinates of neighbor pixel
+                int x2 = x + dx[i];
+                int y2 = y + dy[i];
+                
+                // check image bounds
+                if (x2 < 0 || x2 > sizeX - 1)
+                    continue;
+                if (y2 < 0 || y2 > sizeY - 1)
+                    continue;
+                
+                // process only pixels inside structure
+                if (!mask.getBoolean(x2, y2))
+                    continue;
+
+                // update minimum value
+                double newVal = value + ws[i];
+                
+                // if no update is needed, continue to next item in queue
+                if (newVal < buffer.getValue(x2, y2))
+                {
+                    // update result for current position
+                    buffer.setValue(x2, y2, newVal);
+                    
+                    // add the new modified position to the queue 
+                    queue.add(new Cursor2D(x2, y2));
+                }
+            }
+        }
+	}
+	
+//	/**
+//	 * Adds the current position to the queue if and only if the value
+//	 * <code>value<value> is greater than the value of the mask.
+//	 * 
+//	 * @param x
+//	 *            column index
+//	 * @param y
+//	 *            row index
+//	 * @param value
+//	 *            the new value at (x, y) position
+//	 */
+//	private void updateQueue(int x, int y, double value)
+//	{
+//	    double resultValue = buffer.getValue(x, y); 
+//	    if (value < resultValue) 
+//	    {
+//	        Cursor2D position = new Cursor2D(x, y);
+//	        queue.add(position);
+//	    }
+//	}
 	private void normalizeMap()
 	{
         for (int y = 0; y < sizeY; y++)
