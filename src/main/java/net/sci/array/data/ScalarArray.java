@@ -17,13 +17,15 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 	// New default methods 
 
 	/**
-	 * Returns the range of values within this scalar array.
-	 * 
-	 * Does not take into account eventual NaN values.
-	 * 
-	 * @return an array with two elements, containing the lowest and the largest
-	 *         finite values within this Array instance
-	 */
+     * Returns the range of values within this scalar array.
+     * 
+     * Does not take into account eventual NaN values, so the result ever
+     * contains NaN values. 
+     * 
+     * @return an array with two elements, containing the lowest and the largest
+     *         finite values within this Array instance
+     * @see #finiteValueRange()
+     */
 	public default double[] valueRange()
 	{
 		double vMin = Double.POSITIVE_INFINITY;
@@ -39,6 +41,31 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 		}
 		return new double[]{vMin, vMax};
 	}
+
+    /**
+     * Returns the range of finite values within this scalar array.
+     * 
+     * Does not take into account eventual NaN or infinite values. 
+     * 
+     * @return an array with two elements, containing the lowest and the largest
+     *         finite values within this Array instance
+     * @see #valueRange()
+     */
+    public default double[] finiteValueRange()
+    {
+        double vMin = Double.POSITIVE_INFINITY;
+        double vMax = Double.NEGATIVE_INFINITY;
+        for (Scalar scalar : this)
+        {
+            double value = scalar.getValue();
+            if (Double.isFinite(value))
+            {
+                vMin = Math.min(vMin, value);
+                vMax = Math.max(vMax, value);
+            }
+        }
+        return new double[]{vMin, vMax};
+    }
 
 	/**
 	 * Returns the minimum value within this scalar array.

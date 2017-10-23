@@ -258,7 +258,7 @@ public class Image
 			}
 			else if (this.data instanceof ScalarArray)
 			{
-				this.displayRange = ((ScalarArray<?>) this.data).valueRange();
+				this.displayRange = ((ScalarArray<?>) this.data).finiteValueRange();
 			}
 			else
 			{
@@ -290,6 +290,7 @@ public class Image
 
 		this.name = parent.name;
 	}
+	
 	
 	// =============================================================
 	// Methods
