@@ -50,7 +50,12 @@ public class ImageIOImageReader implements ImageReader
 	public Image readImage() throws IOException
 	{
 		BufferedImage bufImg = ImageIO.read(file);
-		return convertBufferedImage(bufImg);
+
+		// Convert to Image class
+		Image image = convertBufferedImage(bufImg);
+		image.setFilePath(file.getPath());
+
+		return image;
 	}
 
 	/**

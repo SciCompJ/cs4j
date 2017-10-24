@@ -110,8 +110,16 @@ public class Image
 	 */
 	Type type;
 	
+	/**
+	 * The name of the image, used to identify it and populate GUI widgets.
+	 */
 	String name = "";
 	
+    /**
+     * The name of the full path to the image file, if loaded from a file.
+     */
+    String filePath = "";
+    
 	/**
 	 * The min and max displayable values of scalar images. Default is [0, 255].
 	 */
@@ -330,6 +338,17 @@ public class Image
 		this.name = name;
 	}
 	
+    public String getFilePath()
+    {
+        return this.filePath;
+    }
+    
+    public void setFilePath(String path)
+    {
+        this.filePath = path;
+    }
+    
+
 	// =============================================================
 	// Basic accessors
 

@@ -44,6 +44,8 @@ public class TiffImageReader implements ImageReader
 	// =============================================================
 	// Class variables
 	
+    String filePath;
+    
 	/**
 	 * The file stream from which data are extracted, and which manages data endianness.
 	 */
@@ -65,7 +67,8 @@ public class TiffImageReader implements ImageReader
 
 	public TiffImageReader(File file) throws IOException
 	{
-		createTiffDataReader(file);
+		this.filePath = file.getPath();
+	    createTiffDataReader(file);
 		this.fileInfoList = readImageFileDirectories();
 	}
 
@@ -199,6 +202,9 @@ public class TiffImageReader implements ImageReader
 			image.setColorMap(info0.lut);
 		}
 		image.tiffTags = info0.tags;
+		
+		// setup the file related to the image
+		image.setFilePath(this.filePath);
 		
 		return image;
 	}

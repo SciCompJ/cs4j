@@ -119,7 +119,11 @@ public class VgiImageReader implements ImageReader
 
         UInt16Array3D array = new BufferedUInt16Array3D(sizeX, sizeY, sizeZ, data);
         
-        return new Image(array); 
+        // Create new image
+        Image image = new Image(array);
+        image.setFilePath(file.getPath());
+        
+        return image; 
     }
     
     private short[] read16bitsData(File file, int offset, int size, boolean littleEndian) throws IOException 
