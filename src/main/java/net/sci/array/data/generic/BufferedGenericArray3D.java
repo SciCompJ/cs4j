@@ -4,14 +4,14 @@
 package net.sci.array.data.generic;
 
 import net.sci.array.Array;
-import net.sci.array.data.Array2D;
+import net.sci.array.data.Array3D;
 import net.sci.array.data.GenericArray;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedGenericArray2D<T> extends Array2D<T> implements GenericArray<T>
+public class BufferedGenericArray3D<T> extends Array3D<T> implements GenericArray<T>
 {
     // =============================================================
     // Class fields
@@ -26,16 +26,16 @@ public class BufferedGenericArray2D<T> extends Array2D<T> implements GenericArra
     // =============================================================
     // Constructors
 
-    public BufferedGenericArray2D(int size0, int size1, T initValue)
+    public BufferedGenericArray3D(int size0, int size1, int size2, T initValue)
     {
-        super(size0, size1);
-        this.buffer = new Object[size0 * size1];
+        super(size0, size1, size2);
+        this.buffer = new Object[size0 * size1 * size2];
         fill(initValue);
     }
     
-    public BufferedGenericArray2D(int size0, int size1, T[] buffer)
+    public BufferedGenericArray3D(int size0, int size1, int size2, T[] buffer)
     {
-        super(size0, size1);
+        super(size0, size1, size2);
         this.buffer = buffer;
         this.initValue = buffer[0];
     }
@@ -46,12 +46,12 @@ public class BufferedGenericArray2D<T> extends Array2D<T> implements GenericArra
 
     @SuppressWarnings("unchecked")
     @Override
-    public Array2D<T> duplicate()
+    public Array3D<T> duplicate()
     {
         int n = this.buffer.length;
         Object[] newBuffer = new Object[n];
         System.arraycopy(this.buffer, 0, newBuffer, 0, n);
-        return new BufferedGenericArray2D<T>(this.size0, this.size1, (T[]) newBuffer);
+        return new BufferedGenericArray3D<T>(this.size0, this.size1, this.size2, (T[]) newBuffer);
     }
 
     @Override
@@ -66,39 +66,39 @@ public class BufferedGenericArray2D<T> extends Array2D<T> implements GenericArra
 
     @SuppressWarnings("unchecked")
     /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#get(int, int)
+     * @see net.sci.array.data.Array3D#get(int, int, int)
      */
     @Override
-    public T get(int x, int y)
+    public T get(int x, int y, int z)
     {
-        int index = x + y * this.size0;
+        int index = x + this.size0 * (y + this.size1 * z);
         return (T) this.buffer[index];
     }
 
     /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#set(int, int, T)
+     * @see net.sci.array.data.Array3D#set(int, int, int, T)
      */
     @Override
-    public void set(int x, int y, T value)
+    public void set(int x, int y, int z, T value)
     {
-        int index = x + y * this.size0;
+        int index = x + this.size0 * (y + this.size1 * z);
         this.buffer[index] = value;
     }
 
     /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#getValue(int, int)
+     * @see net.sci.array.data.Array3D#getValue(int, int, int)
      */
     @Override
-    public double getValue(int x, int y)
+    public double getValue(int x, int y, int z)
     {
         throw new RuntimeException("Unimplemented operation");
     }
 
     /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#setValue(int, int, double)
+     * @see net.sci.array.data.Array3D#setValue(int, int, int, double)
      */
     @Override
-    public void setValue(int x, int y, double value)
+    public void setValue(int x, int y, int z, double value)
     {
         throw new RuntimeException("Unimplemented operation");
     }
@@ -120,7 +120,7 @@ public class BufferedGenericArray2D<T> extends Array2D<T> implements GenericArra
         @Override
         public boolean hasNext()
         {
-            return this.index < (size0 * size1 - 1);
+            return this.index < (size0 * size1 * size2 - 1);
         }
 
         @SuppressWarnings("unchecked")

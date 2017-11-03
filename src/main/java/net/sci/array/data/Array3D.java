@@ -56,7 +56,10 @@ public abstract class Array3D<T> implements Array<T>
 	// =============================================================
 	// Specialization of the Array interface
 
-	/* (non-Javadoc)
+    @Override
+    public abstract Array3D<T> duplicate();
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.Array#dimensionality()
 	 */
 	@Override

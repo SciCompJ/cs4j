@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
 	AllTests.class,
-	net.sci.array.data.scalar2d.AllTests.class,
+    net.sci.array.data.generic.AllTests.class,
+    net.sci.array.data.scalar2d.AllTests.class,
 	net.sci.array.data.scalar3d.AllTests.class,
 	net.sci.array.data.scalarnd.AllTests.class,
 	})
