@@ -63,8 +63,8 @@ public class FlipTest
 		}
 		
 		Flip flipX = new Flip(0);
-		Array<?> resFlip = array.duplicate();
-		flipX.processDoubleNd(array, resFlip);
+		UInt8Array2D resFlip = array.duplicate();
+		flipX.processScalarNd(array, resFlip);
 		
 		assertEquals(2, resFlip.dimensionality());
 		assertEquals(sizeX, resFlip.getSize(0));
@@ -118,8 +118,8 @@ public class FlipTest
 		}
 		
 		Flip flipY = new Flip(1);
-		Array<?> resFlip = array.duplicate();
-		flipY.processDoubleNd(array, resFlip);
+		UInt8Array2D resFlip = array.duplicate();
+		flipY.processScalarNd(array, resFlip);
 		
 		assertEquals(2, resFlip.dimensionality());
 		assertEquals(sizeX, resFlip.getSize(0));
