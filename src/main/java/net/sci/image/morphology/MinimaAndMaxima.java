@@ -349,13 +349,13 @@ public class MinimaAndMaxima
 			{
 				if (maxima.getValue(x, y) > 0)
 				{
-					marker.setValue(x, y, 255);// TODO: use another value ?
-					mask.setValue(x, y, 255);
+					marker.setValue(x, y, Double.MAX_VALUE);
+					mask.setValue(x, y, Double.MAX_VALUE);
 				} 
 				else
 				{
-					marker.setValue(x, y, 0);
-					mask.setValue(x, y, image.getValue(x, y)-1);
+					marker.setValue(x, y, Double.NEGATIVE_INFINITY);
+					mask.setValue(x, y, image.getValue(x, y)-1); // TODO: potential problem for floating-point arrays
 				}
 			}
 		}
@@ -405,13 +405,13 @@ public class MinimaAndMaxima
 			{
 				if (minima.getValue(x, y) > 0)
 				{
-					marker.setValue(x, y, 0);
-					mask.setValue(x, y, 0);
+					marker.setValue(x, y, Double.NEGATIVE_INFINITY);
+					mask.setValue(x, y, Double.NEGATIVE_INFINITY);
 				} 
 				else
 				{
-					marker.setValue(x, y, 255); // TODO: use another value ?
-					mask.setValue(x, y, image.getValue(x, y)+1);
+					marker.setValue(x, y, Double.MAX_VALUE);
+					mask.setValue(x, y, image.getValue(x, y)+1);  // TODO: potential problem for floating point arrays
 				}
 			}
 		}
