@@ -10,6 +10,7 @@ import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.CurveShape2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * A collection of curves that implements the CurveShape2D interface.
@@ -19,9 +20,16 @@ import net.sci.geom.geom2d.Point2D;
  */
 public class CurveSet2D implements CurveShape2D
 {
-    ArrayList<Curve2D> curves;
+    // ===================================================================
+    // Class variables
     
-    public CurveSet2D(Collection<Curve2D> curves)
+    ArrayList<Curve2D> curves;
+
+    
+    // ===================================================================
+    // Constructors
+    
+    public CurveSet2D(Collection<? extends Curve2D> curves)
     {
         this.curves = new ArrayList<Curve2D>(curves.size());
         this.curves.addAll(curves);
@@ -35,13 +43,36 @@ public class CurveSet2D implements CurveShape2D
     }
     
     
+    // ===================================================================
+    // Implementation of CurveShape2D interface
+    
     @Override
     public Collection<Curve2D> curves()
     {
         return this.curves;
     }
     
+    /**
+     * Returns the result of the given transformation applied to this curve shape.
+     * 
+     * @param trans
+     *            the transformation to apply
+     * @return the transformed geometry
+     */
+    public CurveSet2D transform(AffineTransform2D trans)
+    {
+        ArrayList<Curve2D> newCurves = new ArrayList<Curve2D>(this.curves.size());
+        for (Curve2D curve : this.curves)
+        {
+            newCurves.add(curve.transform(trans));
+        }
+        return new CurveSet2D(newCurves);
+    }
 
+    
+    // ===================================================================
+    // Geometry2D interface
+    
     @Override
     public boolean contains(Point2D point, double eps)
     {

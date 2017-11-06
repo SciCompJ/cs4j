@@ -6,6 +6,8 @@ package net.sci.geom.geom2d;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.geom.geom2d.transform.AffineTransform2D;
+
 /**
  * A continuous curve embedded in the 2D plane.
  * 
@@ -31,4 +33,13 @@ public interface Curve2D extends CurveShape2D
         res.add(this);
         return res;
     }
+    
+    /**
+     * Returns the result of the given transformation applied to this curve.
+     * 
+     * @param trans
+     *            the transformation to apply
+     * @return the transformed curve
+     */
+    public Curve2D transform(AffineTransform2D trans);
 }
