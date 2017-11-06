@@ -139,7 +139,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	@Override
 	public void set(int x, int y, Binary value)
 	{
-		setBoolean(x, y, value.getState());
+		setBoolean(x, y, value.getBoolean());
 	}
 
 	/* (non-Javadoc)
@@ -190,6 +190,6 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	@Override
 	public void set(int[] pos, Binary value)
 	{
-		setBoolean(pos[0], pos[1], value.getState());
+		setBoolean(pos[0], pos[1], value.getBoolean());
 	}
 }

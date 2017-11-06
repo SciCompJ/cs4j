@@ -59,7 +59,7 @@ public class Binary extends Int
 	// =============================================================
 	// Methods
 
-	public boolean getState()
+	public boolean getBoolean()
 	{
 		return state;
 	}

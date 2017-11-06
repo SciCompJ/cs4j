@@ -140,7 +140,7 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 		@Override
 		public void set(Binary b)
 		{
-			buffer[index] = b.getState();
+			buffer[index] = b.getBoolean();
 		}
 		
 		@Override

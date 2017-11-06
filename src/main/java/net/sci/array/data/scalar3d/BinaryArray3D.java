@@ -131,7 +131,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	 */
 	public void set(int x, int y, int z, Binary value)
 	{
-		setBoolean(x, y, z, value.getState());
+		setBoolean(x, y, z, value.getBoolean());
 	}
 
 	/* (non-Javadoc)
@@ -176,6 +176,6 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	 */
 	public void set(int[] pos, Binary value)
 	{
-		setBoolean(pos[0], pos[1], pos[2], value.getState());
+		setBoolean(pos[0], pos[1], pos[2], value.getBoolean());
 	}
 }

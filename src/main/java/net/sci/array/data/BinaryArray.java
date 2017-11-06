@@ -269,7 +269,7 @@ public interface BinaryArray extends IntArray<Binary>
         @Override
         public boolean getBoolean(int[] pos)
         {
-            return get(pos).getState();
+            return get(pos).getBoolean();
         }
 
         @Override
@@ -330,7 +330,7 @@ public interface BinaryArray extends IntArray<Binary>
             @Override
             public boolean getBoolean()
             {
-                return get().getState();
+                return get().getBoolean();
             }
 
             @Override

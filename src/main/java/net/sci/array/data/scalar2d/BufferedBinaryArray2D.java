@@ -135,7 +135,7 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 		@Override
 		public void set(Binary b)
 		{
-			buffer[index] = b.getState();
+			buffer[index] = b.getBoolean();
 		}
 		
 		@Override

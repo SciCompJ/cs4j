@@ -11,9 +11,7 @@ public class BooleanTest
 	public void testEquals_TRUE()
 	{
 		Binary b = new Binary(true);
-		
 		assertTrue(b.equals(Binary.TRUE));
-		assertTrue(b == Binary.TRUE);
 	}
 
 }
