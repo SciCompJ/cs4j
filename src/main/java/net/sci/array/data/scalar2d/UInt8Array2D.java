@@ -29,6 +29,24 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 		return new BufferedUInt8Array2D(size0, size1);
 	}
 	
+    /**
+     * Encapsulates the instance of Scalar array into a new UInt8Array, by
+     * creating a Wrapper if necessary. 
+     * If the original array is already an instance of UInt8Array, it is returned.  
+     * 
+     * @param array
+     *            the original array
+     * @return a UInt8 view of the original array
+     */
+    public static UInt8Array2D wrap(UInt8Array array)
+    {
+        if (array instanceof UInt8Array2D)
+        {
+            return (UInt8Array2D) array;
+        }
+        return new Wrapper(array);
+    }
+    
 	
 	// =============================================================
 	// Constructor
@@ -200,4 +218,51 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	{
 		setByte(pos[0], pos[1], value.getByte());
 	}
+	
+	/**
+     * Wraps a UInt8 array into a UInt8Array2D, with two dimensions.
+     */
+    private static class Wrapper extends UInt8Array2D
+    {
+        UInt8Array array;
+
+        public Wrapper(UInt8Array array)
+        {
+            super(0, 0);
+            if (array.dimensionality() != 2)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 2.");
+            }
+            this.size0 = array.getSize(0);
+            this.size1 = array.getSize(1);
+            this.array = array;
+        }
+
+        @Override
+        public byte getByte(int x, int y)
+        {
+            return this.array.getByte(new int[]{x, y});
+        }
+
+        @Override
+        public void setByte(int x, int y, byte value)
+        {
+            this.array.setByte(new int[]{x, y}, value);
+        }
+
+        @Override
+        public UInt8Array2D duplicate()
+        {
+            return new Wrapper(this.array.duplicate());
+        }
+
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.data.UInt8Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
 }

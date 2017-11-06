@@ -69,7 +69,6 @@ public interface Int32Array extends IntArray<Int32>
 		return new Wrapper(array);
 	}
 	
-
 		
 	// =============================================================
 	// Specialization of the Array interface

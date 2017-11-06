@@ -61,6 +61,15 @@ public interface UInt8Array extends IntArray<UInt8>
 		return result;
 	}
 	
+	/**
+     * Encapsulates the instance of Scalar array into a new UInt8Array, by
+     * creating a Wrapper if necessary. 
+     * If the original array is already an instance of UInt8Array, it is returned.  
+     * 
+     * @param array
+     *            the original array
+     * @return a UInt8 view of the original array
+     */
 	public static UInt8Array wrap(ScalarArray<?> array)
 	{
 		if (array instanceof UInt8Array)
@@ -189,8 +198,14 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 	}
 	
-	class Wrapper implements UInt8Array
+	/**
+	 * Wraps a scalar array into a UInt8Array with same dimension.
+	 * 
+	 * @see UInt8Array.wrap(ScalarArray)
+	 */
+	static class Wrapper implements UInt8Array
 	{
+	    /** The parent array */
 		ScalarArray<?> array;
 		
 		public Wrapper(ScalarArray<?> array)

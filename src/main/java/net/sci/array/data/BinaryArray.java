@@ -70,7 +70,17 @@ public interface BinaryArray extends IntArray<Binary>
 	    return result;
 	}
 
-	// =============================================================
+    public static BinaryArray wrap(ScalarArray<?> array)
+    {
+        if (array instanceof BinaryArray)
+        {
+            return (BinaryArray) array;
+        }
+        return new Wrapper(array);
+    }
+    
+
+    // =============================================================
 	// New methods
 
 	public boolean getBoolean(int[] pos);
@@ -84,6 +94,7 @@ public interface BinaryArray extends IntArray<Binary>
      * @return the complement of this array.
      */
 	public BinaryArray complement();
+	
 	
 	// =============================================================
 	// Specialization of the IntArray interface
@@ -212,4 +223,151 @@ public interface BinaryArray extends IntArray<Binary>
 			setBoolean(value > 0);
 		}
 	}
+	
+    /**
+     * Wraps a scalar array into a BinaryArray with same dimension.
+     * 
+     * Conversion between scalar and binary:
+     * <ul>
+     * <li>scalar value > 0 -> binary value TRUE</li>
+     * <li>scalar value <= 0 -> binary value FALSE</li>
+     * </ul>
+     * 
+     * @see BinaryArray.wrap(ScalarArray)
+     */
+    static class Wrapper implements BinaryArray
+    {
+        /** The parent array */
+        ScalarArray<?> array;
+        
+        public Wrapper(ScalarArray<?> array)
+        {
+            this.array = array;
+        }
+        
+
+        // =============================================================
+        // Implementation of the BinaryArray interface
+
+        @Override
+        public BinaryArray complement()
+        {
+            BinaryArray result = BinaryArray.create(array.getSize());
+            ScalarArray.Iterator<?> iter1 = array.iterator();
+            BinaryArray.Iterator iter2 = result.iterator();
+            while (iter1.hasNext() && iter2.hasNext())
+            {
+                iter2.setNextBoolean(!(iter1.nextValue() > 0));
+            }
+            return result;
+        }
+
+
+        // =============================================================
+        // Specialization of the Array interface
+        
+        @Override
+        public boolean getBoolean(int[] pos)
+        {
+            return get(pos).getState();
+        }
+
+        @Override
+        public void setBoolean(int[] pos, boolean value)
+        {
+            set(pos, new Binary(value));
+        }
+
+        
+        // =============================================================
+        // Specialization of the Array interface
+
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] getSize()
+        {
+            return array.getSize();
+        }
+
+        @Override
+        public int getSize(int dim)
+        {
+            return array.getSize(dim);
+        }
+
+        @Override
+        public Binary get(int[] pos)
+        {
+            return new Binary(array.getValue(pos) > 0);
+        }
+
+        @Override
+        public void set(int[] pos, Binary value)
+        {
+            array.setValue(pos, value.getValue());
+        }
+
+        @Override
+        public Iterator iterator()
+        {
+            return new Iterator(array.iterator());
+        }
+        
+        class Iterator implements BinaryArray.Iterator
+        {
+            ScalarArray.Iterator<?> iter;
+            
+            public Iterator(ScalarArray.Iterator<?> iter)
+            {
+                this.iter = iter;
+            }
+
+            @Override
+            public boolean getBoolean()
+            {
+                return get().getState();
+            }
+
+            @Override
+            public void setBoolean(boolean b)
+            {
+                iter.setValue(new Binary(b).getValue());
+            }
+
+            @Override
+            public Binary get()
+            {
+                return new Binary(iter.getValue() > 0);
+            }
+
+            @Override
+            public void set(Binary value)
+            {
+                iter.setValue(value.getValue());
+            }
+            
+            @Override
+            public void forward()
+            {
+                this.iter.forward();
+            }
+
+            @Override
+            public Binary next()
+            {
+                return new Binary(iter.nextValue() > 0);
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+        }
+    }
 }
