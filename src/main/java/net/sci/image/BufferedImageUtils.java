@@ -10,6 +10,7 @@ import java.awt.image.WritableRaster;
 
 import net.sci.array.Array;
 import net.sci.array.Cursor;
+import net.sci.array.CursorIterator;
 import net.sci.array.data.BinaryArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt8Array;
@@ -184,12 +185,12 @@ public class BufferedImageUtils
 		int[] pos2;
 		
 		// iterate over slice pixels
-		Cursor cursor = slice.getCursor();
-		while (cursor.hasNext())
+		CursorIterator<? extends Cursor> iter = slice.cursorIterator();
+		while (iter.hasNext())
 		{
 			// get current position on slice
-			cursor.forward();
-			pos2 = cursor.getPosition();
+			iter.forward();
+			pos2 = iter.getPosition();
 			
 			// convert position on slice to position in original array
 			for (int d = 0; d < dim; d++)

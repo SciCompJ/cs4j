@@ -5,6 +5,7 @@ package net.sci.image.morphology.filter;
 
 import net.sci.array.Array;
 import net.sci.array.Cursor;
+import net.sci.array.CursorIterator;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
@@ -86,13 +87,13 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 			throw new RuntimeException("Requires at least as many diameters as array dimensionality");
 		}
 		
-		// iterate over 2D positions
-		Cursor inputCursor = source.getCursor();
-		while (inputCursor.hasNext())
+		// iterate over positions
+		CursorIterator<? extends Cursor> iter = source.cursorIterator();
+		while (iter.hasNext())
 		{
 			// iterate position cursor
-			inputCursor.forward();
-			int[] pos = inputCursor.getPosition();
+			iter.forward();
+			int[] pos = iter.getPosition();
 			
 			// init result
 			double localMax = Double.NEGATIVE_INFINITY;

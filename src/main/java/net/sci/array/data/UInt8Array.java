@@ -4,6 +4,8 @@
 package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
+import net.sci.array.Cursor;
+import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
@@ -262,6 +264,11 @@ public interface UInt8Array extends IntArray<UInt8>
 		{
 			array.setValue(pos, value.getValue());
 		}
+
+    	public CursorIterator<? extends Cursor> cursorIterator()
+    	{
+    		return array.cursorIterator();
+    	}
 
 		@Override
 		public Iterator iterator()

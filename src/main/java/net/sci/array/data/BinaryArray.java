@@ -4,6 +4,8 @@
 package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
+import net.sci.array.Cursor;
+import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.BufferedBinaryArray2D;
 import net.sci.array.data.scalar3d.BinaryArray3D;
@@ -311,6 +313,11 @@ public interface BinaryArray extends IntArray<Binary>
         {
             array.setValue(pos, value.getValue());
         }
+
+    	public CursorIterator<? extends Cursor> cursorIterator()
+    	{
+    		return array.cursorIterator();
+    	}
 
         @Override
         public Iterator iterator()

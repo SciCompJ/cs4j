@@ -8,6 +8,7 @@ import java.util.Arrays;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Cursor;
+import net.sci.array.CursorIterator;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
@@ -101,12 +102,12 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 		double[] values = new double[totalCount];
 		
 		// iterate over positions
-		Cursor inputCursor = source.getCursor();
-		while (inputCursor.hasNext())
+		CursorIterator<? extends Cursor> cursIter = source.cursorIterator();
+		while (cursIter.hasNext())
 		{
 			// find the position of next element
-			inputCursor.forward();
-			int[] pos = inputCursor.getPosition();
+			cursIter.forward();
+			int[] pos = cursIter.getPosition();
 			
 			// iterate over neighbors
 			Neighborhood nbg = new BoxNeighborhood(pos, diameters);

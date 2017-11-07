@@ -5,6 +5,7 @@ package net.sci.image.process.filter;
 
 import net.sci.array.Array;
 import net.sci.array.Cursor;
+import net.sci.array.CursorIterator;
 import net.sci.array.data.Float32Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.type.Scalar;
@@ -94,13 +95,13 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 			boxSize *= diam;
 		}
 		
-		// iterate over 2D positions
-		Cursor inputCursor = source.getCursor();
-		while (inputCursor.hasNext())
+		// iterate over positions
+		CursorIterator<? extends Cursor> iter = source.cursorIterator();
+		while (iter.hasNext())
 		{
 			// iterate position cursor
-			inputCursor.forward();
-			int[] pos = inputCursor.getPosition();
+			iter.forward();
+			int[] pos = iter.getPosition();
 			
 			// init result
 			double sum = 0;

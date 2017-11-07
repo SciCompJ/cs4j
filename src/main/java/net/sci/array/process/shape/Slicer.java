@@ -6,6 +6,7 @@ package net.sci.array.process.shape;
 import net.sci.array.Array;
 import net.sci.array.ArrayToArrayOperator;
 import net.sci.array.Cursor;
+import net.sci.array.CursorIterator;
 
 /**
  * Extract a slice from an array, by specifying dimension and slice index along
@@ -37,13 +38,12 @@ public class Slicer implements ArrayToArrayOperator
 		int[] srcPos = new int[nd + 1];
 		srcPos[dim] = sliceIndex;
 
-		// iterate over position in target image
-		Cursor cursor = target.getCursor();
-		while (cursor.hasNext())
+		CursorIterator<? extends Cursor> cursIter = source.cursorIterator();
+		while (cursIter.hasNext())
 		{
-			// get position in target image
-			cursor.forward();
-			int[] pos = cursor.getPosition();
+			// find the position of next element
+			cursIter.forward();
+			int[] pos = cursIter.getPosition();
 			
 			// convert to position in source image
 			System.arraycopy(pos, 0, srcPos, 0, dim);
@@ -190,12 +190,12 @@ public class Slicer implements ArrayToArrayOperator
 		srcPos[this.dim] = this.index;
 
 		// iterate over position in target image
-		Cursor cursor = target.getCursor();
-		while (cursor.hasNext())
+		CursorIterator<? extends Cursor> cursIter = target.cursorIterator();
+		while (cursIter.hasNext())
 		{
-			// get position in target image
-			cursor.forward();
-			int[] pos = cursor.getPosition();
+			// find the position of next element
+			cursIter.forward();
+			int[] pos = cursIter.getPosition();
 			
 			// convert to position in source image
 			System.arraycopy(pos, 0, srcPos, 0, dim);
@@ -214,12 +214,12 @@ public class Slicer implements ArrayToArrayOperator
 		srcPos[this.dim] = this.index;
 
 		// iterate over position in target image
-		Cursor cursor = target.getCursor();
-		while (cursor.hasNext())
+		CursorIterator<? extends Cursor> cursIter = target.cursorIterator();
+		while (cursIter.hasNext())
 		{
-			// get position in target image
-			cursor.forward();
-			int[] pos = cursor.getPosition();
+			// find the position of next element
+			cursIter.forward();
+			int[] pos = cursIter.getPosition();
 			
 			// convert to position in source image
 			System.arraycopy(pos, 0, srcPos, 0, dim);

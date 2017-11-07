@@ -6,6 +6,7 @@ package net.sci.array.process.shape;
 import net.sci.array.Array;
 import net.sci.array.ArrayToArrayOperator;
 import net.sci.array.Cursor;
+import net.sci.array.CursorIterator;
 
 /**
  * @author dlegland
@@ -74,13 +75,13 @@ public class OrthogonalProjection implements ArrayToArrayOperator
 		
 		int indMax = source.getSize(this.dim);
 		
-		// iterate over position in target image
-		Cursor cursor = target.getCursor();
-		while (cursor.hasNext())
+		// iterate over positions
+		CursorIterator<? extends Cursor> iter = target.cursorIterator();
+		while (iter.hasNext())
 		{
-			// get position in target image
-			cursor.forward();
-			int[] pos = cursor.getPosition();
+			// iterate position cursor
+			iter.forward();
+			int[] pos = iter.getPosition();
 			
 			// convert to position in source image
 			System.arraycopy(pos, 0, srcPos, 0, dim);

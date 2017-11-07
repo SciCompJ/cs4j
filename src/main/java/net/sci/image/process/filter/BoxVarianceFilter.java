@@ -6,6 +6,7 @@ package net.sci.image.process.filter;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Cursor;
+import net.sci.array.CursorIterator;
 import net.sci.array.data.Float64Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
@@ -98,12 +99,12 @@ public final class BoxVarianceFilter extends AlgoStub implements ArrayToArrayIma
 		double[] values = new double[totalCount];
 		
 		// iterate over positions
-		Cursor inputCursor = source.getCursor();
-		while (inputCursor.hasNext())
+		CursorIterator<? extends Cursor> iter = source.cursorIterator();
+		while (iter.hasNext())
 		{
-			// find the position of next element
-			inputCursor.forward();
-			int[] pos = inputCursor.getPosition();
+			// iterate position cursor
+			iter.forward();
+			int[] pos = iter.getPosition();
 			
 			// iterate over neighbors
 			Neighborhood nbg = new BoxNeighborhood(pos, diameters);

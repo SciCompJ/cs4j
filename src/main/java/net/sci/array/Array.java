@@ -137,11 +137,8 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
 	public void setValue(int[] pos, double value);
 
-	public default Cursor getCursor()
-	{
-		return new Cursor(this.getSize());
-	}
-
+	public CursorIterator<? extends Cursor> cursorIterator();
+	
 	/**
 	 * Returns an iterator over the elements of the array, for implementing the
 	 * Iterable interface.
