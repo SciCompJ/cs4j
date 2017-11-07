@@ -19,10 +19,10 @@ public class FlipTest
 {
 
 	/**
-	 * Test method for {@link net.sci.array.process.shape.Flip#process(net.sci.array.Array, net.sci.array.Array)}.
+	 * Test method for {@link net.sci.array.process.shape.Flip#process(net.sci.array.Array)}.
 	 */
 	@Test
-	public final void testProcess2d_X()
+	public final void testProcessArray_X()
 	{
 		int sizeX = 6;
 		int sizeY = 4;
@@ -49,7 +49,7 @@ public class FlipTest
 	 * Test method for {@link net.sci.array.process.shape.Flip#process(net.sci.array.Array, net.sci.array.Array)}.
 	 */
 	@Test
-	public final void testProcess2d_X_ND()
+	public final void testProcessArrayArray_X()
 	{
 		int sizeX = 6;
 		int sizeY = 4;
@@ -64,7 +64,7 @@ public class FlipTest
 		
 		Flip flipX = new Flip(0);
 		UInt8Array2D resFlip = array.duplicate();
-		flipX.processScalarNd(array, resFlip);
+		flipX.process(array, resFlip);
 		
 		assertEquals(2, resFlip.dimensionality());
 		assertEquals(sizeX, resFlip.getSize(0));
@@ -77,7 +77,7 @@ public class FlipTest
 	 * Test method for {@link net.sci.array.process.shape.Flip#process(net.sci.array.Array, net.sci.array.Array)}.
 	 */
 	@Test
-	public final void testProcess2d_Y()
+	public final void testProcessArray_Y()
 	{
 		int sizeX = 6;
 		int sizeY = 4;
@@ -104,7 +104,7 @@ public class FlipTest
 	 * Test method for {@link net.sci.array.process.shape.Flip#process(net.sci.array.Array, net.sci.array.Array)}.
 	 */
 	@Test
-	public final void testProcess2d_Y_ND()
+	public final void testProcessArrayArray_Y()
 	{
 		int sizeX = 6;
 		int sizeY = 4;
@@ -119,7 +119,7 @@ public class FlipTest
 		
 		Flip flipY = new Flip(1);
 		UInt8Array2D resFlip = array.duplicate();
-		flipY.processScalarNd(array, resFlip);
+		flipY.process(array, resFlip);
 		
 		assertEquals(2, resFlip.dimensionality());
 		assertEquals(sizeX, resFlip.getSize(0));

@@ -4,17 +4,16 @@
 package net.sci.array.process.shape;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayToArrayOperator;
+import net.sci.array.ArrayOperator;
 import net.sci.array.Cursor;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.Array3D;
-import net.sci.array.data.ScalarArray;
 
 /**
  * @author dlegland
  *
  */
-public class Flip implements ArrayToArrayOperator
+public class Flip implements ArrayOperator
 {
 	int dim;
 	
@@ -31,61 +30,12 @@ public class Flip implements ArrayToArrayOperator
 		this.dim = dim;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
 	@Override
-	public void process(Array<?> input, Array<?> output)
+	public <T> Array<?> process(Array<T> array)
 	{
-	    if (input instanceof ScalarArray && output instanceof ScalarArray)
-	    {
-	        // Try to work on scalar data when possible
-	        processScalarNd((ScalarArray<?>) input, (ScalarArray<?>) output);
-	    }
-	    else
-	    {
-	        
-	    }
-        // TODO: how to check array have same type?
-//		if (input instanceof Array2D && output instanceof Array2D)
-//		{
-//			process2d((Array2D<?>) input, (Array2D<?>) output);
-//		}
-//		else if (input instanceof Array3D && output instanceof Array3D)
-//		{
-//			process3d((Array3D<?>) input, (Array3D<?>) output);
-//		}
-	}
-
-	/**
-	 * Processes the given array, and returns a new Array containing the result.
-	 * 
-	 * @param array
-	 *            the input array
-	 * @return the result of operator
-	 */
-	@Override
-	public <T> Array<T> process(Array<T> array)
-	{
-		Array<T> result = array.newInstance(array.getSize());
-		processSameType(array, result);
-		return result;
-	}
-	
-	/**
-	 * Processes the given array, and returns a new Array containing the result.
-	 * 
-	 * @param array
-	 *            the input array
-	 * @param T
-	 *            the data type of the array
-	 * @return the result of operator
-	 */
-	public <T> Array<?> processT(Array<T> array)
-	{
-		Array<T> result = array.duplicate();
-		processSameType(array, result);
-		return result;
+		Array<T> output = array.newInstance(array.getSize());
+		process(array, output);
+		return output;
 	}
 
 	/**
@@ -161,48 +111,7 @@ public class Flip implements ArrayToArrayOperator
 		}
 	}
 
-	
-	// Below are some implementations based on the use of a cursor
-	public <T1 extends T2, T2> void processNd(Array<T1> input, Array<T2> output)
-	{
-	    Cursor cursor = input.getCursor();
-	    
-	    int nd = input.dimensionality();
-	    int sizeDim = input.getSize(this.dim);
-	    int[] pos2 = new int[nd];
-	    
-	    while (cursor.hasNext())
-	    {
-	        cursor.forward();
-	        int[] pos = cursor.getPosition();
-	        
-	        System.arraycopy(pos, 0, pos2, 0, nd);
-	        pos[dim] = sizeDim - 1 - pos[dim];
-	        output.set(pos2, input.get(pos));
-	    }
-	}
-	
-
-	public void processScalarNd(ScalarArray<?> input, ScalarArray<?> output)
-	{
-		Cursor cursor = input.getCursor();
-		
-		int nd = input.dimensionality();
-		int sizeDim = input.getSize(this.dim);
-		int[] pos2 = new int[nd];
-		
-		while (cursor.hasNext())
-		{
-			cursor.forward();
-			int[] pos = cursor.getPosition();
-			
-			System.arraycopy(pos, 0, pos2, 0, nd);
-			pos[dim] = sizeDim - 1 - pos[dim];
-			output.setValue(pos2, input.getValue(pos));
-		}
-	}
-
-	public <T> void processSameType(Array<T> input, Array<T> output)
+	public <T1 extends T2, T2> void process(Array<T1> input, Array<T2> output)
 	{
 		Cursor cursor = input.getCursor();
 		
@@ -220,14 +129,14 @@ public class Flip implements ArrayToArrayOperator
 			output.set(pos2, input.get(pos));
 		}
 	}
-	
-	public int[] flipPosition(int[] pos, int[] arrayDims)
-	{
-	    int nd = pos.length;
-	    int[] pos2 = new int[nd];
-	    System.arraycopy(pos, 0, pos2, 0, nd);
-	    pos2[this.dim] = arrayDims[this.dim] - 1 - pos[this.dim];
-	    return pos2;
-	}
+
+//	public int[] flipPosition(int[] pos, int[] arrayDims)
+//	{
+//	    int nd = pos.length;
+//	    int[] pos2 = new int[nd];
+//	    System.arraycopy(pos, 0, pos2, 0, nd);
+//	    pos2[this.dim] = arrayDims[this.dim] - 1 - pos[this.dim];
+//	    return pos2;
+//	}
 
 }
