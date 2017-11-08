@@ -203,6 +203,19 @@ public class DataTable implements Table
     }
     
     /**
+     * Returns an entire row of the data table.
+     */
+    public double[] getRowValues(int rowIndex)
+    {
+    	double[] values = new double[this.nCols];
+    	for (int c = 0; c < this.nCols; c++)
+    	{
+    		values[c] = this.data[c][rowIndex];
+    	}
+        return values;
+    }
+    
+    /**
      * Changes the value at the specified position
      * 
      * @param col

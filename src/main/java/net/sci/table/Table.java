@@ -27,6 +27,41 @@ public interface Table
         return new DataTable(nRows, nColumns);
     }
     
+    public static Table selectColumns(Table table, int[] columnIndices)
+    {
+    	int nr = table.getRowNumber();
+    	int nc = table.getColumnNumber();
+    	int nc2 = columnIndices.length;
+    	
+		Table result = Table.create(nr, nc2);
+		String[] colNames = new String[nc2];
+		
+		for (int c = 0; c < nc2; c++)
+		{
+			// check validity of column index
+			int index = columnIndices[c];
+			if (index < 0)
+			{
+				throw new IllegalArgumentException("Column indices must be positive");
+			}
+			if (index >= nc)
+			{
+				throw new IllegalArgumentException("Column index greater than column number: " + nc);
+			}
+			
+			// copy column values
+			for (int i = 0; i < nr; i++)
+			{
+				result.setValue(i, c, table.getValue(i, index));
+			}
+			colNames[c] = table.getColumnNames()[index];
+		}
+		
+		result.setColumnNames(colNames);
+
+		return result;
+    }
+    
     
     // =============================================================
     // Getters and setters for inner values 
@@ -114,6 +149,15 @@ public interface Table
      * @return the set of values of the specified column
      */
     public double[] getColumnValues(int colIndex);    
+
+    /**
+     * Returns an entire row of the data table.
+     * 
+     * @param rowIndex
+     *            the row index, 0-indexed
+     * @return the set of values of the specified row
+     */
+    public double[] getRowValues(int rowIndex);    
 
     
     // =============================================================
