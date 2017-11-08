@@ -18,27 +18,36 @@ import net.sci.table.Table;
  */
 public class DelimitedTableWriter implements TableWriter
 {
-	File file;
+	String delim = "\t";
+	
+	/**
+	 * Creates a new instance with default delimiter set as tabulation.
+	 */
+	public DelimitedTableWriter()
+	{
+	}
 
 	/**
-	 * 
+	 * Creates a new instance specifying the delimiter.
 	 */
-	public DelimitedTableWriter(File file)
+	public DelimitedTableWriter(String delim)
 	{
-		this.file = file;
+		this.delim = delim;
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.table.io.TableWriter#writeTable(net.sci.table.Table)
 	 */
 	@Override
-	public void writeTable(Table table) throws IOException
+	public void writeTable(Table table, File file) throws IOException
 	{
 		PrintWriter writer;
-		try {
-			writer = new PrintWriter(new BufferedWriter(new FileWriter(this.file)));
-		} catch(IOException ex) {
-			throw new RuntimeException("Could not open file: " + this.file, ex);
+		try 
+		{
+			writer = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+		} catch(IOException ex) 
+		{
+			throw new RuntimeException("Could not open file: " + file, ex);
 		}
 		
 		int nc = table.getColumnNumber();
@@ -52,7 +61,7 @@ public class DelimitedTableWriter implements TableWriter
 			writer.print("name");
 			for (int c = 0; c < nc; c++)
 			{
-				writer.print("\t" + colNames[c]);
+				writer.print(this.delim + colNames[c]);
 			}
 			writer.println("");
 		}
@@ -62,12 +71,13 @@ public class DelimitedTableWriter implements TableWriter
 		{
 			if (rowNames != null)
 			{
-				writer.print(rowNames[r] + "\t");
+				writer.print(rowNames[r] + delim);
 			}
 			
-			for (int c = 0; c < nc; c++)
+			writer.print(String.format(Locale.ENGLISH, "%7.2f", table.getValue(r, 0)));
+			for (int c = 1; c < nc; c++)
 			{
-				writer.print(String.format(Locale.ENGLISH, "%7.2f\t", table.getValue(r, c)));
+				writer.print(String.format(Locale.ENGLISH, "%s%7.2f", delim, table.getValue(r, c)));
 			}
 
 			writer.println("");

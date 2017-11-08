@@ -19,9 +19,9 @@ public class DelimitedTableWriterTest
 		table.setRowNames(new String[]{"row1", "row2", "row3", "row4", "row5"});
 		
 		File file = new File("output.txt");
-		DelimitedTableWriter tw = new DelimitedTableWriter(file);
+		DelimitedTableWriter tw = new DelimitedTableWriter();
 		
-		tw.writeTable(table);
+		tw.writeTable(table, file);
 	}
 
 }
