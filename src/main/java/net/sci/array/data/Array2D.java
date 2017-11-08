@@ -333,7 +333,6 @@ public abstract class Array2D<T> implements Array<T>
 		
 		public Cursor2DIterator()
 		{
-			
 		}
 		
 		@Override
@@ -363,8 +362,7 @@ public abstract class Array2D<T> implements Array<T>
 		@Override
 		public int[] getPosition()
 		{
-			// TODO Auto-generated method stub
-			return null;
+			return new int[]{posX, posY};
 		}
 	}
 	
