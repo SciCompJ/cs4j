@@ -33,6 +33,7 @@ public class DataTable implements Table
 	int nCols;
 	int nRows;
 
+	String name = "";
 	String[] colNames = null;
 	String[] rowNames = null;
 
@@ -107,7 +108,30 @@ public class DataTable implements Table
     // =============================================================
     // General methods
 
-	/**
+    /**
+     * Returns the dimensions of this table: first the number of rows, then the
+     * number of columns.
+     * 
+     * @return an array of integers containing the dimensions of this table
+     */
+    public int[] getSize()
+    {
+        return new int[]{this.nRows, this.nCols};
+    }
+
+    @Override
+    public String getName()
+    {
+        return this.name;
+    }
+
+    @Override
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    /**
 	 * Returns the number of columns (measurements, variables) in the data
 	 * table.
 	 */

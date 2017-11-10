@@ -67,6 +67,14 @@ public interface Table
     // Getters and setters for inner values 
     
     /**
+     * Returns the dimensions of this table: first the number of rows, then the
+     * number of columns.
+     * 
+     * @return an array of integers containing the dimensions of this table
+     */
+    public int[] getSize();
+    
+    /**
      * Returns the number of columns (measurements, variables) in the data
      * table.
      */
@@ -80,6 +88,21 @@ public interface Table
     
     // =============================================================
     // Getters and setters for table meta data
+    
+    /**
+     * Returns a name associated to this table, that can be used to identify
+     * table or populate graphical widgets.
+     * 
+     * @return the name of this table
+     */
+    public String getName();
+
+    /**
+     * Changes the name of this table.
+     * 
+     * @param name the new name for this table.
+     */
+    public void setName(String name);
     
     public String[] getColumnNames();
 
