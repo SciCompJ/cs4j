@@ -74,16 +74,27 @@ public class DelimitedTableWriter implements TableWriter
 				writer.print(rowNames[r] + delim);
 			}
 			
-			writer.print(String.format(Locale.ENGLISH, "%7.2f", table.getValue(r, 0)));
+			writer.print(createToken(table, r, 0));
 			for (int c = 1; c < nc; c++)
 			{
-				writer.print(String.format(Locale.ENGLISH, "%s%7.2f", delim, table.getValue(r, c)));
+				writer.print(delim + createToken(table, r, c));
 			}
 
 			writer.println("");
 		}
 		
 		writer.close();
+	}
+	
+	private static final String createToken(Table table, int row, int col)
+	{
+	    Object obj = table.get(row, col);
+	    if (obj instanceof String)
+	    {
+	        return (String) obj;
+	    }
+	    
+	    return String.format(Locale.ENGLISH, "%7.2f", table.getValue(row, col));
 	}
 
 }

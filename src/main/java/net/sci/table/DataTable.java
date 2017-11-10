@@ -53,46 +53,13 @@ public class DataTable implements Table
 	 */
 	public DataTable(int nRows, int nCols)
 	{
-		this.data = new double[nCols][nRows];
-		// this.colNames = new String[nCols];
-		// this.rowNames = new String[nRows];
-
-		this.nCols = nCols;
-		this.nRows = nRows;
-	}
-
-	public DataTable(double[][] data)
-	{
-		this.data = data;
-
-		this.nCols = data.length;
-		if (this.nCols > 0)
-		{
-			this.nRows = data[0].length;
-		} 
-		else
-		{
-			this.nRows = 0;
-		}
-
-		// this.colNames = new String[this.nCols];
-		// this.rowNames = new String[this.nRows];
-
+		this(new double[nCols][nRows]);
 	}
 
 	public DataTable(double[][] data, String[] colNames, String[] rowNames)
 	{
-		this.data = data;
+		this(data);
 
-		this.nCols = data.length;
-		if (this.nCols > 0)
-		{
-			this.nRows = data[0].length;
-		}
-		else
-		{
-			this.nRows = 0;
-		}
 
 		if (colNames.length != this.nCols)
 			throw new IllegalArgumentException(
@@ -103,8 +70,22 @@ public class DataTable implements Table
 			throw new IllegalArgumentException(
 					"Number of row names should match number of data rows");
 		this.rowNames = rowNames;
-
 	}
+
+    public DataTable(double[][] data)
+    {
+        this.data = data;
+
+        this.nCols = data.length;
+        if (this.nCols > 0)
+        {
+            this.nRows = data[0].length;
+        } 
+        else
+        {
+            this.nRows = 0;
+        }
+    }
 
 	
     // =============================================================
