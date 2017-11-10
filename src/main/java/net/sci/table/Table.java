@@ -119,6 +119,17 @@ public interface Table
     // Getters and setters for inner values 
 
     /**
+     * Returns the content at the specified position as an Object.
+     * 
+     * @param row
+     *            the row index (0-indexed)
+     * @param col
+     *            the column index (0-indexed)
+     * @return the content at the specified position.
+     */
+    public Object get(int row, int col);
+    
+    /**
      * Returns the value at the specified position in the table.
      * 
      * @param row
@@ -218,7 +229,7 @@ public interface Table
             // row data
             for (int c = 0; c < nCols; c++)
             {
-                System.out.print(this.getValue(r, c) + "\t");
+                System.out.print(this.get(r, c) + "\t");
             }
             System.out.println();
         }

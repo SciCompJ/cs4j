@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 
+import net.sci.table.DefaultTable;
 import net.sci.table.Table;
 
 /**
@@ -207,26 +208,63 @@ public class DelimitedTableReader implements TableReader
 		reader.close();
 		
 		// convert columns
-		Table table = Table.create(nRows, nCols);
+//        Table table = Table.create(nRows, nCols);
+		DefaultTable table = new DefaultTable(nRows, nCols);
 		
 		// convert string arrays to double values
 		for (int c = 0; c < nCols; c++)
 		{
 			ArrayList<String> column = columns.get(c);
+			
+			ArrayList<String> levelTokens = new ArrayList<String>();
+			boolean isNumeric = true;
+			
 			for (int r = 0; r < nRows; r++)
 			{
 				String token = column.get(r);
-				double value;
-				try 
+				
+				// test if contains a numeric value or not
+				if(token.matches(".*\\d.*"))
 				{
-					value = Double.parseDouble(token);
-					table.setValue(r, c, value);
+				    // numeric value
+				    double value = Double.parseDouble(token);
+                    table.setValue(r, c, value);
 				}
-				catch(NumberFormatException ex)
+				else
 				{
-					table.setValue(r, c, Double.NaN);
+				    if (!(levelTokens.contains(token)))
+				    {
+				        levelTokens.add(token);
+				    }
+				    isNumeric = false;
 				}
+//				double value;
+//				try 
+//				{
+//					value = Double.parseDouble(token);
+//					table.setValue(r, c, value);
+//				}
+//				catch(NumberFormatException ex)
+//				{
+//					table.setValue(r, c, Double.NaN);
+//					isNumeric = false;
+//				}
 			}
+            
+            // If column is not numeric, setup levels and store level indices 
+            if (!isNumeric)
+            {
+                // setup levels
+                String[] levels = levelTokens.toArray(new String[]{});
+                table.setLevels(c, levels);
+                
+                // compute level index for each column
+                for (int r = 0; r < nRows; r++)
+                {
+                    String token = column.get(r);
+                    table.setValue(r, c, levelTokens.indexOf(token));
+                }
+            }
 		}
 
 		table.setColumnNames(colNames);

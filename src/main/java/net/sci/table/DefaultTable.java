@@ -6,23 +6,24 @@ package net.sci.table;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 /**
- * Old implementation for the Table interface, that can contains only numeric value.
- * 
- * @see DefaultTable for better implementation.
+ * Implements the Table interface allowing both numerical and categorical columns.
  * 
  * Data are stored as an double array indexed by column first. 
  * Methods access data by row indexing first.
+ * Categorical variables are stored in an array of levels for each column.
+ * 
  * 
  * @author David Legland
  *
  */
-public class DataTable implements Table
+public class DefaultTable implements Table
 {
     // =============================================================
     // Class variables
@@ -39,7 +40,12 @@ public class DataTable implements Table
 	String[] colNames = null;
 	String[] rowNames = null;
 
+	/**
+	 * The list of levels for each column, or null if a column is numeric.
+	 */
+	ArrayList<String[]> levels = null;
 
+	
 	// =============================================================
     // Constructors
 
@@ -51,48 +57,14 @@ public class DataTable implements Table
 	 * @param nCols
 	 *            the number of columns
 	 */
-	public DataTable(int nRows, int nCols)
+	public DefaultTable(int nRows, int nCols)
 	{
-		this.data = new double[nCols][nRows];
-		// this.colNames = new String[nCols];
-		// this.rowNames = new String[nRows];
-
-		this.nCols = nCols;
-		this.nRows = nRows;
+		this(new double[nCols][nRows]);
 	}
 
-	public DataTable(double[][] data)
+	public DefaultTable(double[][] data, String[] colNames, String[] rowNames)
 	{
-		this.data = data;
-
-		this.nCols = data.length;
-		if (this.nCols > 0)
-		{
-			this.nRows = data[0].length;
-		} 
-		else
-		{
-			this.nRows = 0;
-		}
-
-		// this.colNames = new String[this.nCols];
-		// this.rowNames = new String[this.nRows];
-
-	}
-
-	public DataTable(double[][] data, String[] colNames, String[] rowNames)
-	{
-		this.data = data;
-
-		this.nCols = data.length;
-		if (this.nCols > 0)
-		{
-			this.nRows = data[0].length;
-		}
-		else
-		{
-			this.nRows = 0;
-		}
+		this(data);
 
 		if (colNames.length != this.nCols)
 			throw new IllegalArgumentException(
@@ -106,7 +78,79 @@ public class DataTable implements Table
 
 	}
 
+	/**
+	 * Initialize the data, the number of columns and rows.
+	 * @param data
+	 */
+	public DefaultTable(double[][] data)
+	{
+		this.data = data;
+
+		this.nCols = data.length;
+		if (this.nCols > 0)
+		{
+			this.nRows = data[0].length;
+		} 
+		else
+		{
+			this.nRows = 0;
+		}
+		
+		// initialize levels
+		this.levels = new ArrayList<>(this.nCols);
+		for (int c = 0; c < nCols; c++)
+		{
+		    this.levels.add(null);
+		}
+	}
+
+    
+    // =============================================================
+    // Management of factor levels
 	
+	public boolean isNumericColumn(int col)
+	{
+	    return this.levels.get(col) == null;
+	}
+
+    public String[] getLevels(int col)
+    {
+        return this.levels.get(col);
+    }
+    
+    public void setLevels(int col, String[] levels)
+    {
+        this.levels.set(col, levels);
+    }
+    
+    public void clearLevels(int col)
+    {
+        this.levels.set(col, null);
+    }
+
+    public void addLevel(int col, String newLevel)
+    {
+        String[] colLevels = this.levels.get(col);
+        String[] newLevels = new String[colLevels.length];
+        System.arraycopy(colLevels, 0, newLevels, 0, colLevels.length);
+        newLevels[colLevels.length] = newLevel;
+        this.levels.set(col, newLevels);
+    }
+
+    public Object get(int row, int col)
+    {
+        double value = getValue(row, col);
+        if (isNumericColumn(col))
+        {
+            return value;
+        }
+        else
+        {
+            return this.levels.get(col)[(int) value];
+        }
+    }
+    
+    
     // =============================================================
     // General methods
 
@@ -190,12 +234,6 @@ public class DataTable implements Table
 
     // =============================================================
     // Getters and setters for values
-
-    @Override
-    public Object get(int row, int col)
-    {
-        return getValue(row, col);
-    }
 
     /**
      * Returns the value at the specified position in the table.
@@ -327,7 +365,7 @@ public class DataTable implements Table
 	 */
 	public final static void main(String[] args)
 	{
-		DataTable tbl = new DataTable(15, 5);
+		DefaultTable tbl = new DefaultTable(15, 5);
         tbl.setColumnNames(new String[] { "Length", "Area", "Diam.",
                 "Number", "Density" });
 		tbl.print();
