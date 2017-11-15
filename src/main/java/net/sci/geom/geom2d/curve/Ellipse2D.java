@@ -185,10 +185,10 @@ public class Ellipse2D implements Contour2D
     /** X-coordinate of the center. */
     protected double  yc;
 
-    /** Length of major semi-axis. Must be positive. */
+    /** Length of semi-major axis. Must be positive. */
     protected double  r1;
     
-    /** Length of minor semi-axis. Must be positive. */
+    /** Length of semi-minor axis. Must be positive. */
     protected double  r2;
 
     /** Orientation of major semi-axis, in degrees, between 0 and 180. */
@@ -252,6 +252,30 @@ public class Ellipse2D implements Contour2D
     public Point2D center()
     {
         return new Point2D(xc, yc);
+    }
+    
+    /** 
+     * @return the length of the semi-major axis.
+     */
+    public double semiMajorAxisLength()
+    {
+        return r1;
+    }
+    
+    /** 
+     * @return the length of the semi-minor axis.
+     */
+    public double semiMinorAxisLength()
+    {
+        return r2;
+    }
+    
+    /**
+    /* @eturn the orientation of major semi-axis, in degrees, between 0 and 180.
+     */
+    public double orientation()
+    {
+        return theta;
     }
     
     
