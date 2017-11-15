@@ -4,19 +4,21 @@
 package net.sci.array.process.shape;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayToArrayOperator;
+import net.sci.array.ArrayOperator;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
+import net.sci.array.data.ScalarArray;
 
 /**
+ * Computes maximum intensity projection along a specified dimension. Returns an
+ * array with one dimension less than the input array.
+ * 
  * @author dlegland
  *
  */
-public class OrthogonalProjection implements ArrayToArrayOperator
+public class OrthogonalProjection implements ArrayOperator
 {
 	int dim;
-	
-	// uses max projection by default
 	
 	/**
 	 * Creates a new instance of OrthogonalProjection operator, that specifies
@@ -29,46 +31,8 @@ public class OrthogonalProjection implements ArrayToArrayOperator
 		this.dim = dim;
 	}
 
-	/**
-	 * Creates a new array that can be used as output for processing the given
-	 * input array.
-	 * 
-	 * @param array
-	 *            the reference array
-	 * @return a new instance of Array that can be used for processing input
-	 *         array.
-	 */
-	public Array<?> createEmptyOutputArray(Array<?> array)
+	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
 	{
-		// number of dimensions of new array
-		int nd = array.dimensionality() - 1;
-		
-		if (dim > nd)
-		{
-			throw new IllegalArgumentException(String.format(
-					"Slicer in dim %d can not process array of size %d", dim,
-					nd + 1));
-		}
-		int[] dims = new int[nd];
-		for (int d = 0; d  < this.dim; d++)
-		{
-			dims[d] = array.getSize(d);
-		}
-		for (int d = this.dim; d < nd; d++)
-		{
-			dims[d] = array.getSize(d+1);
-		}
-		return array.newInstance(dims);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
-	@Override
-	public void process(Array<?> source, Array<?> target)
-	{
-		// TODO: requires scalar arrays
-		
 		// create position pointer for source image
 		int nd = target.dimensionality();
 		int[] srcPos = new int[nd + 1];
@@ -101,4 +65,57 @@ public class OrthogonalProjection implements ArrayToArrayOperator
 		}
 	}
 
+    /**
+     * Creates a new array that can be used as output for processing the given
+     * input array.
+     * 
+     * @param array
+     *            the reference array
+     * @return a new instance of Array that can be used for processing input
+     *         array.
+     */
+    public ScalarArray<?> createEmptyOutputArray(ScalarArray<?> array)
+    {
+    	// number of dimensions of new array
+    	int nd = array.dimensionality() - 1;
+    	
+    	if (dim > nd)
+    	{
+    		throw new IllegalArgumentException(String.format(
+    				"Slicer in dim %d can not process array of size %d", dim,
+    				nd + 1));
+    	}
+    	int[] dims = new int[nd];
+    	for (int d = 0; d  < this.dim; d++)
+    	{
+    		dims[d] = array.getSize(d);
+    	}
+    	for (int d = this.dim; d < nd; d++)
+    	{
+    		dims[d] = array.getSize(d+1);
+    	}
+    	return array.newInstance(dims);
+    }
+
+    @Override
+    public <T> Array<?> process(Array<T> array)
+    {
+        if (!(array instanceof ScalarArray))
+        {
+            throw new IllegalArgumentException("Requires a scalar array");
+        }
+        
+        ScalarArray<?> input = (ScalarArray<?>) array;
+        ScalarArray<?> output = createEmptyOutputArray(input);
+        
+        processScalar(input, output);
+        
+        return output;
+    }
+
+    @Override
+    public boolean canProcess(Array<?> array)
+    {
+        return array instanceof ScalarArray;
+    }
 }

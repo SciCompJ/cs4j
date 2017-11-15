@@ -3,11 +3,8 @@
  */
 package net.sci.array;
 
-
 /**
  * Apply a process on an array.
- * 
- * Either returns a new Array, or uses a method to put fill result array.
  * 
  * @author dlegland
  *
