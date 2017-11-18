@@ -12,6 +12,58 @@ import net.sci.array.type.Scalar;
  */
 public interface ScalarArray<T extends Scalar> extends Array<T>
 {
+	// =============================================================
+	// Default methods for arithmetic on arrays
+	
+
+	public default ScalarArray<T> plus(double v)
+	{
+		ScalarArray<T> res = duplicate();
+		ScalarArray.Iterator<T> iter1 = iterator();
+		ScalarArray.Iterator<T> iter2 = res.iterator();
+		while(iter1.hasNext())
+		{
+			iter2.setNextValue(iter1.nextValue() + v);
+		}
+		return res;
+	}
+
+	public default ScalarArray<T> minus(double v)
+	{
+		ScalarArray<T> res = duplicate();
+		ScalarArray.Iterator<T> iter1 = iterator();
+		ScalarArray.Iterator<T> iter2 = res.iterator();
+		while(iter1.hasNext())
+		{
+			iter2.setNextValue(iter1.nextValue() - v);
+		}
+		return res;
+	}
+
+	public default ScalarArray<T> times(double k)
+	{
+		ScalarArray<T> res = duplicate();
+		ScalarArray.Iterator<T> iter1 = iterator();
+		ScalarArray.Iterator<T> iter2 = res.iterator();
+		while(iter1.hasNext())
+		{
+			iter2.setNextValue(iter1.nextValue() * k);
+		}
+		return res;
+	}
+
+	public default ScalarArray<T> divideBy(double k)
+	{
+		ScalarArray<T> res = duplicate();
+		ScalarArray.Iterator<T> iter1 = iterator();
+		ScalarArray.Iterator<T> iter2 = res.iterator();
+		while(iter1.hasNext())
+		{
+			iter2.setNextValue(iter1.nextValue() / k);
+		}
+		return res;
+	}
+
 	
 	// =============================================================
 	// New default methods 
