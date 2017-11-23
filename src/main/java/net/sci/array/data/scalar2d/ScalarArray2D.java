@@ -179,6 +179,12 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 		}
 		
 		@Override
+		public Class<T> getDataType()
+		{
+			return array.getDataType();
+		}
+
+		@Override
 		public ScalarArray.Iterator<T> iterator()
 		{
 			return new Iterator2D();

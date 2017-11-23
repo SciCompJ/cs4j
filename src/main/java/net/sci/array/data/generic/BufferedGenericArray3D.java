@@ -54,6 +54,13 @@ public class BufferedGenericArray3D<T> extends Array3D<T> implements GenericArra
         return new BufferedGenericArray3D<T>(this.size0, this.size1, this.size2, (T[]) newBuffer);
     }
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<T> getDataType()
+	{
+		return (Class<T>) initValue.getClass();
+	}
+
     @Override
     public Iterator iterator()
     {

@@ -151,6 +151,12 @@ public interface UInt8Array extends IntArray<UInt8>
 		return result;
 	}
 
+	@Override
+	public default Class<UInt8> getDataType()
+	{
+		return UInt8.class;
+	}
+
 	public Iterator iterator();
 	
 	/**

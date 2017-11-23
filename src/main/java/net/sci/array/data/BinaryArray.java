@@ -159,6 +159,12 @@ public interface BinaryArray extends IntArray<Binary>
 		return result;
 	}
 
+	@Override
+	public default Class<Binary> getDataType()
+	{
+		return Binary.class;
+	}
+
 	public Iterator iterator();
 	
 	/**

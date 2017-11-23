@@ -54,6 +54,13 @@ public class BufferedGenericArray2D<T> extends Array2D<T> implements GenericArra
         return new BufferedGenericArray2D<T>(this.size0, this.size1, (T[]) newBuffer);
     }
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<T> getDataType()
+	{
+		return (Class<T>) initValue.getClass();
+	}
+
     @Override
     public Iterator iterator()
     {
