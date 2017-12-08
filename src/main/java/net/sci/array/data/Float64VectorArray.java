@@ -79,6 +79,12 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 		return result;
 	}
 
+	@Override
+	public default Class<Float64Vector> getDataType()
+	{
+		return Float64Vector.class;
+	}
+
 	public Iterator iterator();
 
 	

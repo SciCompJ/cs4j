@@ -80,6 +80,12 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 		return result;
 	}
 
+	@Override
+	public default Class<Float32Vector> getDataType()
+	{
+		return Float32Vector.class;
+	}
+
 	public Iterator iterator();
 
 	

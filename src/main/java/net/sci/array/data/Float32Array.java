@@ -118,6 +118,12 @@ public interface Float32Array extends ScalarArray<Float32>
 		return result;
 	}
 
+	@Override
+	public default Class<Float32> getDataType()
+	{
+		return Float32.class;
+	}
+
 	public Iterator iterator();
 	
 	// =============================================================

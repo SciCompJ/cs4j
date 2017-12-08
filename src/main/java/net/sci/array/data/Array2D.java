@@ -244,6 +244,12 @@ public abstract class Array2D<T> implements Array<T>
 		}
 		
 		@Override
+		public Class<T> getDataType()
+		{
+			return array.getDataType();
+		}
+
+		@Override
 		public Array.Iterator<T> iterator()
 		{
 			return new Iterator2D();

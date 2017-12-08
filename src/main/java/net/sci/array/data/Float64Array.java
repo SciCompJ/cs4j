@@ -118,6 +118,12 @@ public interface Float64Array extends ScalarArray<Float64>
 		return result;
 	}
 
+	@Override
+	public default Class<Float64> getDataType()
+	{
+		return Float64.class;
+	}
+
 	public Iterator iterator();
 	
 	// =============================================================

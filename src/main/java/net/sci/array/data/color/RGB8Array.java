@@ -287,6 +287,12 @@ public interface RGB8Array extends VectorArray<RGB8>
 	// =============================================================
 	// Inner interface
 
+	@Override
+	public default Class<RGB8> getDataType()
+	{
+		return RGB8.class;
+	}
+
 	public interface Iterator extends VectorArray.Iterator<RGB8>
 	{
         @Override

@@ -64,6 +64,11 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	public int getSize(int dim);
 
 	/**
+	 * @return the class of the data type stored in this array.
+	 */
+	public Class<T> getDataType();
+	
+	/**
 	 * Creates a new array with same type but with the specified dimensions
 	 * 
 	 * @param dims

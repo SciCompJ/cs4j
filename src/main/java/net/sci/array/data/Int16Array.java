@@ -146,6 +146,11 @@ public interface Int16Array extends IntArray<Int16>
 		return result;
 	}
 
+	@Override
+	public default Class<Int16> getDataType()
+	{
+		return Int16.class;
+	}
 
 	public Iterator iterator();
 	

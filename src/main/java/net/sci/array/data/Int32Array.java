@@ -117,6 +117,12 @@ public interface Int32Array extends IntArray<Int32>
 		return result;
 	}
 
+	@Override
+	public default Class<Int32> getDataType()
+	{
+		return Int32.class;
+	}
+
 	public Iterator iterator();
 	
 	/**

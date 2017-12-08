@@ -149,6 +149,12 @@ public interface UInt16Array extends IntArray<UInt16>
 		return result;
 	}
 
+	@Override
+	public default Class<UInt16> getDataType()
+	{
+		return UInt16.class;
+	}
+
 	public Iterator iterator();
 	
 	/**

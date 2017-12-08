@@ -273,6 +273,12 @@ public interface RGB16Array extends VectorArray<RGB16>
 		return result;
 	}
 
+	@Override
+	public default Class<RGB16> getDataType()
+	{
+		return RGB16.class;
+	}
+
 	public Iterator iterator();
 
 	
