@@ -59,7 +59,7 @@ public class SimpleGraph2D
         return this.edges.get(edgeIndex).v1;
     }
     
-    public int getTragetVertex(int edgeIndex)
+    public int getTargetVertex(int edgeIndex)
     {
         return this.edges.get(edgeIndex).v2;
     }
