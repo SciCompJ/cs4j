@@ -71,7 +71,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 	/**
      * Returns the range of values within this scalar array.
      * 
-     * Does not take into account eventual NaN values, so the result ever
+     * Does not take into account eventual NaN values, so the result never
      * contains NaN values. 
      * 
      * @return an array with two elements, containing the lowest and the largest
@@ -97,7 +97,9 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
     /**
      * Returns the range of finite values within this scalar array.
      * 
-     * Does not take into account eventual NaN or infinite values. 
+     * Does not take into account eventual NaN or infinite values, so the result
+     * array always contains finite values (except if all values within array
+     * are infinite).
      * 
      * @return an array with two elements, containing the lowest and the largest
      *         finite values within this Array instance
