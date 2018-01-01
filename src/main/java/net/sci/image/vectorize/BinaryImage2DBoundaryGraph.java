@@ -5,6 +5,7 @@ package net.sci.image.vectorize;
 
 import java.util.ArrayList;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.graph.SimpleGraph2D;
@@ -13,24 +14,34 @@ import net.sci.geom.geom2d.graph.SimpleGraph2D;
  * @author dlegland
  *
  */
-public class BinaryImage2DBoundaryGraph
+public class BinaryImage2DBoundaryGraph extends AlgoStub
 {
-
 	/**
-	 * 
+	 * Default empty constructor.
 	 */
 	public BinaryImage2DBoundaryGraph()
 	{
 	}
 
+	/**
+	 * Computes the boundary graph of the binary structure stored within the
+	 * input binary array.
+	 * 
+	 * @param array
+	 *            the input binary array containing the structure
+	 * @return a graph instance representing the boundary of pixels within array
+	 */
 	public SimpleGraph2D process(BinaryArray2D array)
 	{
+		// create intermediate data structure 
 		ArrayList<IntPoint2D> corners = new ArrayList<IntPoint2D>();
 		ArrayList<int[]> adjacencies = new ArrayList<int[]>();
 		
+		// size of array
 		int size0 = array.getSize(0);
 		int size1 = array.getSize(1);
 		
+		// iterate over image pixels
 		for (int y = 0; y < size1; y++)
 		{
 			for (int x = 0; x < size0; x++)
@@ -47,6 +58,7 @@ public class BinaryImage2DBoundaryGraph
 					adjacencies.add(new int[]{indV1, indV2});
 				}
 
+				// detect transitions with left pixel
 				boolean left = (x > 0) ? array.getBoolean(x-1, y) : false;
 				if (pixel != left)
 				{
@@ -57,6 +69,7 @@ public class BinaryImage2DBoundaryGraph
 			}
 		}
 		
+		// create the graph
 		SimpleGraph2D graph = new SimpleGraph2D();
 		for (IntPoint2D v : corners)
 		{
@@ -81,6 +94,11 @@ public class BinaryImage2DBoundaryGraph
 		return index;
 	}
 	
+	/**
+	 * Representation of a 2-dimensional point with integer coordinates.
+	 * 
+	 * @author dlegland
+	 */
 	static class IntPoint2D implements Comparable<IntPoint2D>
 	{
 		int x;
@@ -99,7 +117,18 @@ public class BinaryImage2DBoundaryGraph
 				return this.x - that.x;
 			return this.y - that.y;
 		}
+
+		@Override
+		public int hashCode()
+		{
+			// uses values givenby J. Bloch.
+			int res = 23;
+			res =  res * 37 + this.x;
+			res =  res * 37 + this.y;
+			return res;
+		}
 		
+		@Override
 		public boolean equals(Object that)
 		{
 			if (that instanceof IntPoint2D)
@@ -109,7 +138,5 @@ public class BinaryImage2DBoundaryGraph
 			}
 			return false;
 		}
-		
-		//TODO: implements hashcode
 	}
 }
