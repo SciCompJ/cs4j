@@ -15,7 +15,7 @@ import net.sci.array.type.UInt16;
  * @author dlegland
  *
  */
-public interface RGB16Array extends VectorArray<RGB16>
+public interface RGB16Array extends VectorArray<RGB16>, ColorArray<RGB16>
 {
 	// =============================================================
 	// Static methods

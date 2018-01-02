@@ -23,7 +23,7 @@ import net.sci.array.type.UInt8;
  * @author dlegland
  *
  */
-public interface RGB8Array extends VectorArray<RGB8>
+public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
 {
 	// =============================================================
 	// Static methods
@@ -442,7 +442,6 @@ public interface RGB8Array extends VectorArray<RGB8>
 			samples[c] = UInt8.clamp(value);
 			set(new RGB8(samples[0], samples[1], samples[2]));
 		}
-
 	}
 
 	/**
