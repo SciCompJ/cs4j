@@ -115,6 +115,19 @@ public class RGB16 extends IntVector<UInt16> implements Color
 		return this.longCode;
 	}
 	
+    /**
+     * Converts this RGB8 value into an instance of UInt8.
+     * 
+     * @return the UInt8 instance corresponding to the maximum channel value.
+     */
+    public UInt16 toUInt16()
+    {
+        int r = (int) (this.longCode & 0x00FFFF);
+        int g = (int) ((this.longCode >> 8) & 0x00FFFF);
+        int b = (int) ((this.longCode >> 16) & 0x00FFFF);
+        return new UInt16(Math.max(Math.max(r, g), b));
+    }
+	
 	/**
 	 * Converts this RGB8 value into an integer value representing the maximum
 	 * channel value, coded between 0 and 2^16-1.

@@ -10,15 +10,13 @@ import java.util.HashMap;
 import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
-import net.sci.array.data.Float32Array;
-import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.type.RGB8;
 import net.sci.array.type.UInt8;
 
 /**
- * An array that contains colors that can be represented as instances of RGB8 type.
+ * An array that contains colors represented as instances of RGB8 type.
  * 
  * @author dlegland
  *
@@ -63,17 +61,13 @@ public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
 		UInt8Array.Iterator bIter = blueChannel.iterator();
 		
 		// iterate over elements of all arrays simultaneously
-		while (rgbIter.hasNext())
-		{
-			rgbIter.forward();
-			RGB8 rgb = rgbIter.get();
-			rIter.forward();
-			rIter.setInt(rgb.getSample(0));
-			gIter.forward();
-			gIter.setInt(rgb.getSample(1));
-			bIter.forward();
-			bIter.setInt(rgb.getSample(2));
-		}
+        while (rgbIter.hasNext())
+        {
+            RGB8 rgb = rgbIter.next();
+            rIter.setNextInt(rgb.getSample(0));
+            gIter.setNextInt(rgb.getSample(1));
+            bIter.setNextInt(rgb.getSample(2));
+        }
 		
 		// create the collection of channels
 		Collection<UInt8Array> channels = new ArrayList<>(3);
@@ -118,16 +112,12 @@ public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
 		
 		// iterate over elements of all arrays simultaneously
 		while (rgbIter.hasNext())
-		{
-			rgbIter.forward();
-			RGB8 rgb = rgbIter.get();
-			rIter.forward();
-			rIter.setInt(rgb.getSample(0));
-			gIter.forward();
-			gIter.setInt(rgb.getSample(1));
-			bIter.forward();
-			bIter.setInt(rgb.getSample(2));
-		}
+        {
+            RGB8 rgb = rgbIter.next();
+            rIter.setNextInt(rgb.getSample(0));
+            gIter.setNextInt(rgb.getSample(1));
+            bIter.setNextInt(rgb.getSample(2));
+        }
 		
 		// concatenate channels into a new collection
 		HashMap<String, UInt8Array> map = new HashMap<String, UInt8Array>(3);
@@ -175,140 +165,8 @@ public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
 	}
 	
 	// =============================================================
-	// New methods specific to RGB8Array
+	// Methods specific to RGB8Array
 
-    /**
-     * @return the red channel of this array, with elements between 0 and 1.
-     */
-    public default ScalarArray<?> redChannel()
-    {
-        // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
-        
-        // create iterators
-        RGB8Array.Iterator rgb8Iter = iterator();
-        Float32Array.Iterator channelIter = channel.iterator();
-        
-        // iterate over both arrays
-        while (rgb8Iter.hasNext())
-        {
-            channelIter.setNextValue(rgb8Iter.next().red());
-        }
-        
-        // return the channel
-        return channel;
-    }
-    
-    /**
-     * @return the green channel of this array, with elements between 0 and 1.
-     */
-    public default ScalarArray<?> greenChannel()
-    {
-        // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
-        
-        // create iterators
-        RGB8Array.Iterator rgb8Iter = iterator();
-        Float32Array.Iterator channelIter = channel.iterator();
-        
-        // iterate over both arrays
-        while (rgb8Iter.hasNext())
-        {
-            channelIter.setNextValue(rgb8Iter.next().green());
-        }
-        
-        // return the channel
-        return channel;
-    }
-    
-    /**
-     * @return the blue channel of this array, with elements between 0 and 1.
-     */
-    public default ScalarArray<?> blueChannel()
-    {
-        // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
-        
-        // create iterators
-        RGB8Array.Iterator rgb8Iter = iterator();
-        Float32Array.Iterator channelIter = channel.iterator();
-        
-        // iterate over both arrays
-        while (rgb8Iter.hasNext())
-        {
-            channelIter.setNextValue(rgb8Iter.next().blue());
-        }
-        
-        // return the channel
-        return channel;
-    }
-    
-    /**
-     * @return the hue channel of this array, with elements between 0 and 1.
-     */
-    public default ScalarArray<?> hueChannel()
-    {
-        // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
-        
-        // create iterators
-        RGB8Array.Iterator rgb8Iter = iterator();
-        Float32Array.Iterator channelIter = channel.iterator();
-        
-        // iterate over both arrays
-        while (rgb8Iter.hasNext())
-        {
-            channelIter.setNextValue(rgb8Iter.next().hue());
-        }
-        
-        // return the channel
-        return channel;
-    }
-    
-    /**
-     * @return the saturation channel of this array, with elements between 0 and 1.
-     */
-    public default ScalarArray<?> saturationChannel()
-    {
-        // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
-        
-        // create iterators
-        RGB8Array.Iterator rgb8Iter = iterator();
-        Float32Array.Iterator channelIter = channel.iterator();
-        
-        // iterate over both arrays
-        while (rgb8Iter.hasNext())
-        {
-            channelIter.setNextValue(rgb8Iter.next().saturation());
-        }
-        
-        // return the channel
-        return channel;
-    }
-    
-    /**
-     * @return the luminance channel of this array, with elements between 0 and 1.
-     */
-    public default ScalarArray<?> luminanceChannel()
-    {
-        // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
-        
-        // create iterators
-        RGB8Array.Iterator rgb8Iter = iterator();
-        Float32Array.Iterator channelIter = channel.iterator();
-        
-        // iterate over both arrays
-        while (rgb8Iter.hasNext())
-        {
-            channelIter.setNextValue(rgb8Iter.next().luminance());
-        }
-        
-        // return the channel
-        return channel;
-    }
-    
 	/**
 	 * Converts this RGB8 array into a new UInt8Array, by computing the
 	 * maximum channel value for each element.
