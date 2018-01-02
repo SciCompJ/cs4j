@@ -13,13 +13,17 @@ import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.graph.SimpleGraph2D;
 
 /**
- * Computes the set of curves (polylines) corresponding to isocontour of a scalar 2D image.
- *  
+ * Computes the set of curves (polylines) corresponding to isocontour of a
+ * scalar 2D image, using marching squares algorithm.
+ * 
  * @author dlegland
  *
  */
 public class Isocontour extends AlgoStub
 {
+    // =============================================================
+    // class variables
+
     /**
      * The list of vertex indices for each configuration.
      */
@@ -47,6 +51,10 @@ public class Isocontour extends AlgoStub
      */
     double value;
     
+
+    // =============================================================
+    // Constructor
+
 	/**
 	 * Default empty constructor.
 	 */
@@ -54,6 +62,10 @@ public class Isocontour extends AlgoStub
 	{
 	    this.value = value;
 	}
+
+	
+    // =============================================================
+    // Methods
 
 	public Geometry2D processScalar2d(ScalarArray2D<? extends Scalar> array)
 	{
@@ -66,7 +78,6 @@ public class Isocontour extends AlgoStub
 		int size1 = array.getSize(1);
 		
 		// iterate over image pixels
-		// TODO: manage array borders
 		for (int y = 0; y < size1 - 1; y++)
 		{
 			for (int x = 0; x < size0 - 1; x++)
@@ -98,11 +109,26 @@ public class Isocontour extends AlgoStub
                 // iterate over pairs of vertex indices to create edges
                 for (int i = 0; i < vertexCodes.length; i += 2)
                 {
-                    Vertex v1 = createVertex(x, y, vertexCodes[i]); 
-                    Vertex v2 = createVertex(x, y, vertexCodes[i + 1]);
+                    // find vertex codes (top, left, right or bottom) for current configuration
+                    int vertexCode1 = vertexCodes[i];
+                    int vertexCode2 = vertexCodes[i + 1];
                     
-                    int indV1 = findVertexIndex(vertices, v1);
-                    int indV2 = findVertexIndex(vertices, v2);
+                    // get vertex indices, creating them if necessary
+                    int indV1 = findVertexIndex(vertices, x, y, vertexCode1);
+                    int indV2 = findVertexIndex(vertices, x, y, vertexCode2);
+                    
+                    // update position of vertices if necessary
+                    Vertex v1 = vertices.get(indV1);
+                    if (v1.position == null)
+                    {
+                        computeVertexPosition(v1, vertexCode1, v00, v01, v10, v11);
+                    }
+                    Vertex v2 = vertices.get(indV2);
+                    if (v2.position == null)
+                    {
+                        computeVertexPosition(v2, vertexCode2, v00, v01, v10, v11);
+                    }
+                    
                     adjacencies.add(new int[]{indV1, indV2});
                 }
 			}
@@ -123,6 +149,18 @@ public class Isocontour extends AlgoStub
 		return graph;
 	}
 	
+	private int findVertexIndex(ArrayList<Vertex> vertices, int x, int y, int code)
+	{
+	    Vertex vertex = createVertex(x, y, code);
+	    int index = vertices.indexOf(vertex);
+	    if (index < 0)
+	    {
+	        index = vertices.size();
+	        vertices.add(vertex);
+	    }
+	    return index;
+	}
+	
 	private Vertex createVertex(int x, int y, int code)
 	{
 	    switch (code)
@@ -135,25 +173,55 @@ public class Isocontour extends AlgoStub
             throw new IllegalArgumentException("Code should be comprised between 0 and 3");
 	    }
 	}
-	
-	private int findVertexIndex(ArrayList<Vertex> vertices, Vertex point)
+
+	private void computeVertexPosition(Vertex vertex, int vertexCode, double v00, double v01, double v10, double v11)
 	{
-		int index = vertices.indexOf(point);
-		if (index < 0)
-		{
-			index = vertices.size();
-			vertices.add(point);
-		}
-		return index;
+        switch(vertexCode)
+        {
+        case 0:
+            vertex.position = new Point2D(vertex.ix + interpolate(value, v00, v01), vertex.iy);
+            break;
+        case 1:
+            vertex.position = new Point2D(vertex.ix, vertex.iy + interpolate(value, v00, v10));
+            break;
+        case 2:
+            vertex.position = new Point2D(vertex.ix, vertex.iy + interpolate(value, v01, v11));
+            break;
+        case 3:
+            vertex.position = new Point2D(vertex.ix + interpolate(value, v10, v11), vertex.iy);
+            break;
+        }
+	}
+	
+    /**
+     * Returns the fraction (between 0 and 1) corresponding to value-vmin within
+     * the interval vmax-vmin.
+     * 
+     * @param value
+     *            the value whose position need to be interpolated
+     * @param vmin
+     *            the value at the beginning of the interval
+     * @param vmax
+     *            the value at the end of the interval
+     * @return the relative position of the value within the interval
+     */
+    private static final double interpolate(double value, double vmin, double vmax)
+	{
+	    return (value - vmin) / (vmax - vmin);
 	}
 	
 	/**
-	 * Representation of a 2-dimensional point with integer coordinates.
-	 * 
-	 * @author dlegland
-	 */
+     * Representation of a 2-dimensional point with integer coordinates, and a
+     * flag for indicating the position on horizontal or vertical lines.
+     * 
+     * @author dlegland
+     */
 	static class Vertex implements Comparable<Vertex>
 	{
+	    /**
+         * Coordinates of the upper-left corner of the grid tile containing this
+         * vertex
+         */
 		int ix;
 		int iy;
 		
@@ -161,31 +229,30 @@ public class Isocontour extends AlgoStub
          * Equals 0 if vertex lies on a horizontal line (vertex codes 0 and 3),
          * and 1 if vertex lies on vertical line (vertex codes 1 and 2).
          */
-		int pos;
+		int code;
 		
-		public Vertex(int x, int y, int pos)
+		Point2D position;
+		
+		public Vertex(int x, int y, int code)
 		{
 			this.ix = x;
 			this.iy = y;
-			this.pos = pos;
+			this.code = code;
 		}
 		
 		public Point2D getPosition()
 		{
-		    if (pos == 0)
-                return new Point2D(this.ix + 0.5, this.iy);
-		    else
-		        return new Point2D(this.ix, this.iy + 0.5);
+		    return position;
 		}
-		
+        
 		@Override
 		public int compareTo(Vertex that)
 		{
+            if (this.iy != that.iy)
+                return this.iy - that.iy;
 			if (this.ix != that.ix)
 				return this.ix - that.ix;
-			if (this.iy != that.iy)
-	            return this.iy - that.iy;
-			return this.pos - that.pos;
+			return this.code - that.code;
 		}
 
 		@Override
@@ -195,7 +262,7 @@ public class Isocontour extends AlgoStub
 			int res = 23;
 			res =  res * 37 + this.ix;
             res =  res * 37 + this.iy;
-            res =  res * 37 + this.pos;
+            res =  res * 37 + this.code;
 			return res;
 		}
 		
@@ -205,7 +272,7 @@ public class Isocontour extends AlgoStub
 			if (that instanceof Vertex)
 			{
 				Vertex ip = (Vertex) that;
-				return this.ix == ip.ix && this.iy == ip.iy && this.pos == ip.pos;
+				return this.ix == ip.ix && this.iy == ip.iy && this.code == ip.code;
 			}
 			return false;
 		}
