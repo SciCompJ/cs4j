@@ -10,8 +10,10 @@ package net.sci.array.type;
  * @author dlegland
  *
  */
-public class RGB16 extends IntVector<UInt16>
+public class RGB16 extends IntVector<UInt16> implements Color
 {
+    private static final double MAX_UINT16_FLOAT = 0X00FFFF; 
+    
 	// =============================================================
 	// Static methods
 	
@@ -97,90 +99,11 @@ public class RGB16 extends IntVector<UInt16>
 	}
 
 	
-//    // =============================================================
-//    // Methods specific to RGB16
-//	
-//    /**
-//     * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
-//     * 
-//     * @return the hue value of this color, between 0 and 1. 
-//     */
-//	public double getHue()
-//	{
-//	    int r = this.longCode & 0x00FF;
-//	    int g = (this.longCode >> 8) & 0x00FF;
-//	    int b = (this.longCode >> 16) & 0x00FF;
-//	    
-//	    // max components
-//        double cmax = Math.max(Math.max(r, g), b);
-//        double cmin = Math.min(Math.min(r, g), b);
-//        double delta = cmax - cmin;
-//        
-//        // case of gray colors. Maybe return NaN ?
-//        if (delta < .0001) 
-//        {
-//            return 0;
-//        }
-//        
-//        // switch depending on dominant channel
-//        // Compute hue between 0 and 6
-//        double hue = 0;
-//        if (r >= g && r >= b)
-//        {
-//            // between yellow & magenta
-//            hue = (g - b) / delta;
-//            if (hue < 0)
-//                hue += 6;
-//        }
-//        else if (g >= r && g >= b)
-//        {
-//            // between cyan & yellow
-//            hue = 2 + (b - r) / delta;
-//        }
-//        else if (b >= r && b >= r)
-//        {
-//            // between magenta & cyan
-//            hue = 4 + (r - g) / delta;
-//        }
-//        
-//	    return hue / 6;
-//	}
-//
-//	/**
-//	 * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
-//	 * 
-//	 * @return the saturation of this color, between 0 and 1. 
-//	 */
-//    public double getSaturation()
-//    {
-//        int r = this.longCode & 0x00FF;
-//        int g = (this.longCode >> 8) & 0x00FF;
-//        int b = (this.longCode >> 16) & 0x00FF;
-//        
-//        double cmax = Math.max(Math.max(r, g), b);
-//        double cmin = Math.min(Math.min(r, g), b);
-//        
-//        if (cmax == 0)
-//        {
-//            return 0;
-//        }
-//        return (cmax - cmin) / cmax;
-//    }
-//    
-//    /**
-//     * @return the luma / luminance of this color, between 0 and 1. 
-//     */
-//	public double getLuminance()
-//	{
-//	    int r = this.longCode & 0x00FF;
-//        int g = (this.longCode >> 8) & 0x00FF;
-//        int b = (this.longCode >> 16) & 0x00FF;
-//        return (.2989 * r  + .5870 * g + .1140 * b) / 255.0;
-//	}
-    
+
 
 	// =============================================================
 	// General methods
+	
 	
 	/**
 	 * Returns the long-based representation of this RGB16 element.
@@ -220,6 +143,118 @@ public class RGB16 extends IntVector<UInt16>
 		return Math.max(Math.max(r, g), b);
 	}
 	
+    // =============================================================
+    // Extraction of color components
+    
+    /**
+     * @return the red component of this color, between 0 and 1.
+     */
+    public double red()
+    {
+        return (this.longCode & 0x00FFFF) / MAX_UINT16_FLOAT;
+            
+    }
+    
+    /**
+     * @return the green component of this color, between 0 and 1.
+     */
+    public double green()
+    {
+        return ((this.longCode >> 16) & 0x00FFFF) / MAX_UINT16_FLOAT;
+            
+    }
+    
+    /**
+     * @return the red component of this color, between 0 and 1.
+     */
+    public double blue()
+    {
+        return ((this.longCode >> 32) & 0x00FFFF) / MAX_UINT16_FLOAT;
+            
+    }
+    
+    /**
+     * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+     * 
+     * @return the hue value of this color, between 0 and 1. 
+     */
+    public double hue()
+    {
+        int r = (int) (this.longCode & 0x00FFFF);
+        int g = (int) ((this.longCode >> 16) & 0x00FFFF);
+        int b = (int) ((this.longCode >> 32) & 0x00FFFF);
+        
+        // max components
+        double cmax = Math.max(Math.max(r, g), b);
+        double cmin = Math.min(Math.min(r, g), b);
+        double delta = cmax - cmin;
+        
+        // case of gray colors. Maybe return NaN ?
+        if (delta < 0.0001) 
+        {
+            return 0;
+        }
+        
+        // switch depending on dominant channel
+        // Compute hue between 0 and 6
+        double hue = 0;
+        if (r >= g && r >= b)
+        {
+            // between yellow & magenta
+            hue = (g - b) / delta;
+            if (hue < 0)
+                hue += 6;
+        }
+        else if (g >= r && g >= b)
+        {
+            // between cyan & yellow
+            hue = 2 + (b - r) / delta;
+        }
+        else if (b >= r && b >= r)
+        {
+            // between magenta & cyan
+            hue = 4 + (r - g) / delta;
+        }
+        
+        return hue / 6;
+    }
+
+    /**
+     * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+     * 
+     * @return the saturation of this color, between 0 and 1. 
+     */
+    public double saturation()
+    {
+        int r = (int) (this.longCode & 0x00FFFF);
+        int g = (int) ((this.longCode >> 16) & 0x00FFFF);
+        int b = (int) ((this.longCode >> 32) & 0x00FFFF);
+        
+        double cmax = Math.max(Math.max(r, g), b);
+        double cmin = Math.min(Math.min(r, g), b);
+        
+        if (cmax == 0)
+        {
+            return 0;
+        }
+        return (cmax - cmin) / cmax;
+    }
+    
+    /**
+     * @return the luma / luminance of this color, between 0 and 1. 
+     */
+    public double luminance()
+    {
+        int r = (int) (this.longCode & 0x00FFFF);
+        int g = (int) ((this.longCode >> 16) & 0x00FFFF);
+        int b = (int) ((this.longCode >> 32) & 0x00FFFF);
+        return (0.2989 * r  + 0.5870 * g + 0.1140 * b) / MAX_UINT16_FLOAT;
+    }
+    
+
+    // =============================================================
+    // Implementation of vector type
+
     /**
      * Returns the red, green and blue values into an integer array.
      * 
