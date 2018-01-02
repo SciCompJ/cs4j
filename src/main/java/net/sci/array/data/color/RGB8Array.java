@@ -316,7 +316,6 @@ public interface RGB8Array extends VectorArray<RGB8>
 	 * @author dlegland
 	 * @see UInt8Array.Wrapper
 	 */
-	// TODO: put in a specific file?
 	class UInt8View implements UInt8Array
 	{
 	    RGB8Array parent;

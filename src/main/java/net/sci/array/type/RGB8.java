@@ -7,6 +7,8 @@ package net.sci.array.type;
  * A color that is represented by a triplet of red, green and blue components,
  * each of them being coded as UInt8.
  * 
+ * Immutable class.
+ * 
  * @author dlegland
  *
  */
@@ -49,7 +51,7 @@ public class RGB8 extends IntVector<UInt8>
 	// =============================================================
 	// Class variables
 	
-	int intCode;
+	final int intCode;
 	
 	
 	// =============================================================
@@ -108,11 +110,38 @@ public class RGB8 extends IntVector<UInt8>
     // Methods specific to RGB8
 	
     /**
+     * @return the red component of this color, between 0 and 1.
+     */
+    public double red()
+    {
+        return (this.intCode & 0x00FF) / 255.0;
+            
+    }
+    
+    /**
+     * @return the green component of this color, between 0 and 1.
+     */
+    public double green()
+    {
+        return ((this.intCode >> 8) & 0x00FF) / 255.0;
+            
+    }
+    
+    /**
+     * @return the red component of this color, between 0 and 1.
+     */
+    public double blue()
+    {
+        return ((this.intCode >> 16) & 0x00FF) / 255.0;
+            
+    }
+    
+    /**
      * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
      * 
      * @return the hue value of this color, between 0 and 1. 
      */
-	public double getHue()
+	public double hue()
 	{
 	    int r = this.intCode & 0x00FF;
 	    int g = (this.intCode >> 8) & 0x00FF;
@@ -124,7 +153,7 @@ public class RGB8 extends IntVector<UInt8>
         double delta = cmax - cmin;
         
         // case of gray colors. Maybe return NaN ?
-        if (delta < .0001) 
+        if (delta < 0.0001) 
         {
             return 0;
         }
@@ -158,7 +187,7 @@ public class RGB8 extends IntVector<UInt8>
 	 * 
 	 * @return the saturation of this color, between 0 and 1. 
 	 */
-    public double getSaturation()
+    public double saturation()
     {
         int r = this.intCode & 0x00FF;
         int g = (this.intCode >> 8) & 0x00FF;
@@ -177,12 +206,12 @@ public class RGB8 extends IntVector<UInt8>
     /**
      * @return the luma / luminance of this color, between 0 and 1. 
      */
-	public double getLuminance()
+	public double luminance()
 	{
 	    int r = this.intCode & 0x00FF;
         int g = (this.intCode >> 8) & 0x00FF;
         int b = (this.intCode >> 16) & 0x00FF;
-        return (.2989 * r  + .5870 * g + .1140 * b) / 255.0;
+        return (0.2989 * r  + 0.5870 * g + 0.1140 * b) / 255.0;
 	}
     
 
@@ -319,5 +348,4 @@ public class RGB8 extends IntVector<UInt8>
 	{
 		return 3;
 	}
-	
 }
