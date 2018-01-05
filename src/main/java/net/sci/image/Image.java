@@ -120,6 +120,11 @@ public class Image
      */
     String filePath = "";
     
+    /**
+     * The spatial calibration of this image, initialized at construction.
+     */
+	SpatialCalibration calib = null;
+	
 	/**
 	 * The min and max displayable values of scalar images. Default is [0, 255].
 	 */
@@ -250,6 +255,9 @@ public class Image
 		
 		// create size array depending on image type
 		System.arraycopy(dataSize, 0, this.size, 0, nd);
+		
+		// initialze spatial calibration
+		this.calib = new SpatialCalibration(nd);
 	}
 
 	private void setupDisplayRange()
@@ -290,13 +298,15 @@ public class Image
 	
 	private void copySettings(Image parent)
 	{
-		if (this.type == parent.type)
-		{
-			this.displayRange = parent.displayRange;
-		}
-		this.colorMap = parent.colorMap;
-
 		this.name = parent.name;
+		
+		this.calib = parent.calib;
+
+		if (this.type == parent.type)
+        {
+            this.displayRange = parent.displayRange;
+        }
+        this.colorMap = parent.colorMap;
 	}
 	
 	
@@ -328,7 +338,23 @@ public class Image
 		this.displayRange = displayRange;
 	}
 
-	public String getName()
+	/**
+     * @return the spatial calibration 
+     */
+    public SpatialCalibration getSpatialCalibration()
+    {
+        return calib;
+    }
+
+    /**
+     * @param calib the spatial calibration  to set
+     */
+    public void setSpatialCalibration(SpatialCalibration calib)
+    {
+        this.calib = calib;
+    }
+
+    public String getName()
 	{
 		return this.name;
 	}
