@@ -14,6 +14,7 @@ import java.io.LineNumberReader;
 import net.sci.array.data.scalar3d.BufferedUInt16Array3D;
 import net.sci.array.data.scalar3d.UInt16Array3D;
 import net.sci.image.Image;
+import net.sci.image.SpatialCalibration;
 
 /**
  * @author dlegland
@@ -40,6 +41,8 @@ public class VgiImageReader implements ImageReader
         int sizeZ = 0;
         int bitDepth = 0;
         boolean littleEndian = true;
+        
+        SpatialCalibration calib = new SpatialCalibration(3);
         
         try (LineNumberReader reader = new LineNumberReader(new FileReader(file))) 
         { 
@@ -104,6 +107,27 @@ public class VgiImageReader implements ImageReader
                             dataFileName = valueString;
                         }
                     }
+                    else if ("resolution".equalsIgnoreCase(key))
+                    {
+                        // read spatial calibration of voxel
+                        tokens = valueString.split(" ");
+                        if (tokens.length != 3)
+                        {
+                            System.err.println("Could not parse spatial resolution from line:" + line);
+                            continue;
+                        }
+                        
+                        double[] resol = new double[3]; 
+                        resol[0] = Double.parseDouble(tokens[0]);
+                        resol[1] = Double.parseDouble(tokens[1]);
+                        resol[2] = Double.parseDouble(tokens[2]);
+                        calib.setResolutions(resol);
+                    }
+                    else if ("unit".equalsIgnoreCase(key))
+                    {
+                        // read unit of spatial calibration
+                        calib.setUnit(valueString);
+                    }
                 }
             }
             reader.close();
@@ -122,7 +146,8 @@ public class VgiImageReader implements ImageReader
         // Create new image
         Image image = new Image(array);
         image.setFilePath(file.getPath());
-        
+        image.setSpatialCalibration(calib);
+                
         return image; 
     }
     
