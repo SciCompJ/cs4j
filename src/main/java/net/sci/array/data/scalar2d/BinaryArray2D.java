@@ -3,6 +3,7 @@
  */
 package net.sci.array.data.scalar2d;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.BinaryArray;
 import net.sci.array.type.Binary;
 
@@ -28,7 +29,16 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	{
 		return new BufferedBinaryArray2D(size0, size1);
 	}
-	
+
+    public final static BinaryArray2D wrap(BinaryArray array)
+    {
+        if (array instanceof BinaryArray2D)
+        {
+            return (BinaryArray2D) array;
+        }
+        return new Wrapper(array);
+
+    }
 	
 	// =============================================================
 	// Constructor
@@ -192,4 +202,148 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	{
 		setBoolean(pos[0], pos[1], value.getBoolean());
 	}
+	
+    // =============================================================
+    // Inner Wrapper class
+
+    private static class Wrapper extends BinaryArray2D
+    {
+        private BinaryArray array;
+        
+        protected Wrapper(BinaryArray array)
+        {
+            super(0, 0);
+            if (array.dimensionality() < 2)
+            {
+                throw new IllegalArgumentException("Requires an array with at least two dimensions");
+            }
+            this.array = array;
+            this.size0 = array.getSize(0);
+            this.size1 = array.getSize(1);
+        }
+
+        @Override
+        public boolean getBoolean(int x, int y)
+        {
+            return this.array.getBoolean(new int[] {x, y});
+        }
+
+        @Override
+        public void setBoolean(int x, int y, boolean state)
+        {
+            this.array.setBoolean(new int[] {x, y}, state);
+        }
+
+        @Override
+        public ArrayFactory<Binary> getFactory()
+        {
+            return this.array.getFactory();
+        }
+
+        
+        @Override
+        public BinaryArray2D duplicate()
+        {
+            BinaryArray tmp = this.array.newInstance(this.size0, this.size1);
+            if (!(tmp instanceof BinaryArray2D))
+            {
+                throw new RuntimeException("Can not create BinaryArray2D instance from " + this.array.getClass().getName() + " class.");
+            }
+            
+            BinaryArray2D result = (BinaryArray2D) tmp;
+            
+            int nd = this.array.dimensionality();
+            int[] pos = new int[nd];
+
+            // Fill new array with input array
+            for (int y = 0; y < this.size1; y++)
+            {
+                pos[1] = y;
+                for (int x = 0; x < this.size0; x++)
+                {
+                    pos[0] = x;
+                    result.setBoolean(x, y, this.array.getBoolean(pos));
+                }
+            }
+
+            return result;
+        }
+        
+        @Override
+        public Class<Binary> getDataType()
+        {
+            return array.getDataType();
+        }
+
+        @Override
+        public BinaryArray.Iterator iterator()
+        {
+            return new Iterator2D();
+        }
+        
+        private class Iterator2D implements BinaryArray.Iterator
+        {
+            int x = -1;
+            int y = 0;
+            
+            public Iterator2D() 
+            {
+            }
+            
+            @Override
+            public boolean hasNext()
+            {
+                return this.x < size0 - 1 || this.y < size1 - 1;
+            }
+
+            @Override
+            public Binary next()
+            {
+                this.x++;
+                if (this.x == size0)
+                {
+                    this.y++;
+                    this.x = 0;
+                }
+                return Wrapper.this.get(x, y);
+            }
+
+            @Override
+            public void forward()
+            {
+                this.x++;
+                if (this.x == size0)
+                {
+                    this.y++;
+                    this.x = 0;
+                }
+            }
+
+            @Override
+            public Binary get()
+            {
+                return Wrapper.this.get(x, y);
+            }
+
+            @Override
+            public void set(Binary value)
+            {
+                Wrapper.this.set(x, y, value);
+            }
+
+            @Override
+            public boolean getBoolean()
+            {
+                return Wrapper.this.getBoolean(x, y);
+            }
+
+            @Override
+            public void setBoolean(boolean b)
+            {
+                Wrapper.this.setBoolean(x, y, b);
+            }
+        }
+
+    }
+    
 }

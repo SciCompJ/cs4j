@@ -101,53 +101,29 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 		@Override
 		public T get(int x, int y)
 		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
 			// return value from specified position
-			return this.array.get(pos);
+			return this.array.get(new int[]{x, y});
 		}
 
 		@Override
 		public void set(int x, int y, T value)
 		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
 			// set value at specified position
-			this.array.set(pos, value);
+			this.array.set(new int[]{x, y}, value);
 		}
 
 		@Override
 		public double getValue(int x, int y)
 		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
 			// return value from specified position
-			return this.array.getValue(pos);
+			return this.array.getValue(new int[]{x, y});
 		}
 
 		@Override
 		public void setValue(int x, int y, double value)
 		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
 			// set value at specified position
-			this.array.setValue(pos, value);
+			this.array.setValue(new int[]{x, y}, value);
 		}
 
 		@Override
