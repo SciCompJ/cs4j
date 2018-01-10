@@ -6,7 +6,7 @@ package net.sci.image.morphology.reconstruct;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
+import net.sci.array.Arrays;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.data.Connectivity3D;
 import net.sci.image.data.Cursor3D;
@@ -195,7 +195,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 		this.sizeX 	= marker.getSize(0);
 		this.sizeY 	= marker.getSize(1);
 		this.sizeZ 	= marker.getSize(2);
-		if (!Array.isSameSize(marker, mask)) 
+		if (!Arrays.isSameSize(marker, mask)) 
 		{
 			throw new IllegalArgumentException("Marker and Mask images must have the same size");
 		}
