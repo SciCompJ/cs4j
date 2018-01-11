@@ -4,6 +4,7 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayOperator;
 import net.sci.array.data.BinaryArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt16Array;
@@ -11,41 +12,19 @@ import net.sci.array.data.UInt8Array;
 import net.sci.array.data.color.RGB8Array;
 import net.sci.array.type.RGB8;
 import net.sci.array.type.UInt16;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * An image inverter. 
  * @author dlegland
  *
  */
-public final class ImageInverter implements ArrayToArrayImageOperator
+public final class ImageInverter implements ImageArrayOperator, ArrayOperator
 {
 	/**
 	 */
 	public ImageInverter()
 	{
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
-	@Override
-	public void process(Array<?> source, Array<?> target)
-	{
-		// Choose the best possible implementation, depending on array dimensions
-		if (source instanceof ScalarArray && target instanceof ScalarArray)
-		{
-			processScalar((ScalarArray<?>) source, (ScalarArray<?>) target);
-		}
-		else if (source instanceof RGB8Array && target instanceof RGB8Array)
-		{
-			processRGB8((RGB8Array) source, (RGB8Array) target);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Can not process array of class " + source.getClass());
-		}
-
 	}
 
     /**
@@ -116,23 +95,31 @@ public final class ImageInverter implements ArrayToArrayImageOperator
 			targetIter.set(new RGB8(vals[0], vals[1], vals[2]) );
 		}
 	}
-	
-	/**
-	 * Creates a new array the same size as original, and same type.
-	 */
-	public Array<?> createEmptyOutputArray(Array<?> array)
-	{
-		int[] dims = array.getSize();
-		return array.newInstance(dims);
-	}
-	
-	public boolean canProcess(Array<?> array)
-	{
-		return array instanceof ScalarArray;
-	}
 
-	public boolean canProcess(Array<?> source, Array<?> target)
+	
+	@Override
+    public <T> Array<?> process(Array<T> array)
+    {
+	    if (array instanceof ScalarArray)
+	    {
+	        ScalarArray<?> scalar = (ScalarArray<?>) array;
+	        ScalarArray<?> result = scalar.newInstance(array.getSize());
+	        processScalar(scalar, result);
+	        return result;
+	    }
+	    else if (array instanceof RGB8Array)
+	    {
+	        RGB8Array rgb8 = (RGB8Array) array;
+	        RGB8Array result = rgb8.newInstance(array.getSize());
+	        processRGB8(rgb8, result);
+	        return result;
+	    }
+	    
+        throw new IllegalArgumentException("Requires either a sclalar or a RGB8 array");
+    }
+
+    public boolean canProcess(Array<?> array)
 	{
-		return source instanceof ScalarArray && target instanceof ScalarArray;
+		return array instanceof ScalarArray || array instanceof RGB8Array;
 	}
 }

@@ -6,13 +6,14 @@ package net.sci.image.process.filter;
 import java.util.Arrays;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.type.Scalar;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Computes the median value in a box neighborhood around each array element.
@@ -22,7 +23,7 @@ import net.sci.image.ArrayToArrayImageOperator;
  * @see BoxFilter
  * @see BoxVarianceFilter
  */
-public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImageOperator
+public final class BoxMedianFilter extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator
 {
     /** The size of the box in each dimension */
 	int[] diameters;
@@ -46,28 +47,34 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 	/* (non-Javadoc)
 	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
 	 */
-	@Override
-	public void process(Array<?> source, Array<?> target)
+	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
 	{
-		// Choose the best possible implementation, depending on array dimensions
-		if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
-		{
-			processScalar2d((ScalarArray2D<?>) source, (ScalarArray2D<?>) target);
-		}
-		else if (source instanceof ScalarArray3D && target instanceof ScalarArray3D)
-		{
-			processScalar3d((ScalarArray3D<?>) source, (ScalarArray3D<?>) target);
-		}
-		else if (source instanceof ScalarArray && target instanceof ScalarArray)
-		{
-			// most generic implementation, slow...
-			processScalar((ScalarArray<?>) source, (ScalarArray<?>) target);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Can not process array of class " + source.getClass());
-		}
-
+        int nd1 = source.dimensionality();
+        int nd2 = target.dimensionality();
+        if (nd1 != nd2)
+        {
+            throw new IllegalArgumentException("Both arrays must have the same dimensionality");
+        }
+        
+        if (!net.sci.array.Arrays.isSameSize(source, target))
+        {
+            throw new IllegalArgumentException("Both arrays must have the same size");
+        }
+        
+        // Choose the best possible implementation, depending on array dimensions
+        if (nd1 == 2 && nd2 == 2)
+        {
+            processScalar2d(ScalarArray2D.wrap(source), ScalarArray2D.wrap(target));
+        }
+        else if (nd1 == 3 && nd2 == 3)
+        {
+            processScalar3d(ScalarArray3D.wrap(source), ScalarArray3D.wrap(target));
+        }
+        else 
+        {
+            // use the most generic implementation, also slower
+            processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
+        }
 	}
 
 	/**
@@ -78,7 +85,7 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
      * @param target
      *            the target array
 	 */
-	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
+	public void processScalarNd(ScalarArray<?> source, ScalarArray<?> target)
 	{
 		// get array size (for cropping)
 		int nd = source.dimensionality();
@@ -269,21 +276,10 @@ public final class BoxMedianFilter extends AlgoStub implements ArrayToArrayImage
 		}
 	}
 
-	/**
-	 * Creates a new array the same size and same type as original.
-	 */
-	public Array<?> createEmptyOutputArray(Array<?> array)
-	{
-		return array.duplicate();
-	}
-	
-	public boolean canProcess(Array<?> array)
-	{
-		return array instanceof ScalarArray;
-	}
-
-	public boolean canProcess(Array<?> source, Array<?> target)
-	{
-		return source instanceof ScalarArray && target instanceof ScalarArray;
-	}
+    @Override
+    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

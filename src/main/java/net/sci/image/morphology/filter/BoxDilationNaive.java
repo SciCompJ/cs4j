@@ -71,7 +71,7 @@ public final class BoxDilationNaive implements ImageArrayOperator, ScalarArrayOp
 		else 
 		{
 		    // use the most generic implementation, also slower
-			processScalar((ScalarArray<?>) source, (ScalarArray<?>) target);
+			processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
 		}
 	}
 
