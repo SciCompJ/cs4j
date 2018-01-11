@@ -16,14 +16,25 @@ import net.sci.array.type.Scalar;
  */
 public interface ScalarArrayOperator extends ArrayOperator
 {
-	public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> input);
-
     /**
-     * Process the input scalar array and return the result in a new array.
+     * Process the input scalar array and return the result in a new ScalarArray.
      * 
      * @param array
      *            the input array
      * @return the operator result as a new Scalar Array
+     */
+	public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array);
+
+    /**
+     * Process the input scalar array and return the result in a new array.
+     * 
+     * The input array must be an instance of ScalarArray.
+     * 
+     * @param array
+     *            the input array
+     * @return the operator result as a new instance of ScalarArray
+     * @throws IllegalArgumentException
+     *             if the input array is not an instance of ScalarArray
      */
     @Override
     public default <T> ScalarArray<? extends Scalar> process(Array<T> array)

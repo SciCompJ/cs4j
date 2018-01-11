@@ -179,7 +179,7 @@ public class BinaryImages
             Connectivity3D conn, int bitDepth)
     {
         FloodFillComponentsLabeling3D algo = new FloodFillComponentsLabeling3D(conn, bitDepth);
-        return algo.process(image);
+        return algo.processBinary3d(image);
     }
     
 	/**
@@ -207,7 +207,7 @@ public class BinaryImages
 			int conn, int bitDepth)
 	{
 		FloodFillComponentsLabeling3D algo = new FloodFillComponentsLabeling3D(conn, bitDepth);
-		return algo.process(image);
+		return algo.processBinary3d(image);
 	}
 	
 	// ==============================================================

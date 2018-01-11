@@ -5,8 +5,10 @@ package net.sci.image.binary;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.Int32Array;
 import net.sci.array.data.IntArray;
+import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.scalar3d.BinaryArray3D;
@@ -14,8 +16,8 @@ import net.sci.array.data.scalar3d.Int32Array3D;
 import net.sci.array.data.scalar3d.IntArray3D;
 import net.sci.array.data.scalar3d.UInt16Array3D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
-import net.sci.image.ArrayToArrayImageOperator;
-import net.sci.image.Image;
+import net.sci.array.process.BinaryArrayOperator;
+import net.sci.image.ImageArrayOperator;
 import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.FloodFill;
 
@@ -31,7 +33,7 @@ import net.sci.image.morphology.FloodFill;
  * 
  * @author dlegland
  */
-public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToArrayImageOperator
+public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArrayOperator, BinaryArrayOperator
 {
     // ==============================================================
     // Class variables
@@ -137,7 +139,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
     // ==============================================================
     // Processing methods
     
-	public IntArray3D<?> process(BinaryArray3D image)
+	public IntArray3D<?> processBinary3d(BinaryArray3D image)
 	{
 		// get image size
 		int sizeX = image.getSize(0);
@@ -232,7 +234,6 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 		fireProgressChanged(this, 1, 1);
 	}
 
-	@Override
 	public void process(Array<?> source, Array<?> target)
 	{
 		if (source instanceof BinaryArray3D && target instanceof IntArray3D)
@@ -243,26 +244,6 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 		{
 			throw new RuntimeException("Can not process input of class " + source.getClass() + " with output of class " + target.getClass());
 		}
-	}
-	
-
-	/**
-	 * Calls the "createEmptyOutputArray" methods from ArrayOperator interface
-	 * for creating the result array, and put the result in a new label image.
-	 * 
-	 * @param image
-	 *            the reference image
-	 * @return a new instance of Image that can be used for processing input
-	 *         image.
-	 */
-	@Override
-	public Image createEmptyOutputImage(Image image)
-	{
-		Array<?> array = image.getData();
-		Array<?> newArray = createEmptyOutputArray(array);
-		Image result = new Image(newArray, image);
-		result.setType(Image.Type.LABEL);
-		return result;
 	}
 
 	/**
@@ -289,4 +270,23 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ArrayToAr
 					"Bit Depth should be 8, 16 or 32.");
 		}
 	}
+
+    @Override
+    public ScalarArray<?> processBinary(BinaryArray array)
+    {
+        if (!canProcess(array))
+        {
+            throw new IllegalArgumentException("Requires a 3D binary array");
+        }
+        
+        return processBinary3d(BinaryArray3D.wrap(array));
+    }
+    
+    @Override
+    public boolean canProcess(Array<?> array)
+    {
+        if (!(array instanceof BinaryArray))
+            return false;
+        return array.dimensionality() == 3;
+    }
 }

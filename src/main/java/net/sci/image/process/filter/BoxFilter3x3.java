@@ -4,10 +4,13 @@
 package net.sci.image.process.filter;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayToArrayOperator;
+import net.sci.array.Arrays;
 import net.sci.array.data.Float32Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.type.Scalar;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * A preliminary implementation of Box Mean Filter. Superseeded by BoxFilter.
@@ -17,24 +20,27 @@ import net.sci.array.data.scalar2d.ScalarArray2D;
  * @author dlegland
  *
  */
-public final class BoxFilter3x3 implements ArrayToArrayOperator
+public final class BoxFilter3x3 implements ImageArrayOperator, ScalarArrayOperator
 {
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
 	 */
-	@Override
-	public void process(Array<?> source, Array<?> target)
+	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
 	{
-		if (source instanceof ScalarArray2D && target instanceof ScalarArray2D )
-		{
-			processScalar2d((ScalarArray2D<?>) source, (ScalarArray2D<?>) target);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Can not process array of class " + source.getClass());
-		}
+        int nd1 = source.dimensionality();
+        int nd2 = target.dimensionality();
+        if (nd1 != 2 || nd2 != 2)
+        {
+            throw new IllegalArgumentException("Both arrays must have the dimensionality 2");
+        }
+        
+        if (!Arrays.isSameSize(source, target))
+        {
+            throw new IllegalArgumentException("Both arrays must have the same size");
+        }
 
+        processScalar2d(ScalarArray2D.wrap(source), ScalarArray2D.wrap(target));
 	}
 
 	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
@@ -70,14 +76,12 @@ public final class BoxFilter3x3 implements ArrayToArrayOperator
 		int[] dims = array.getSize();
 		return Float32Array.create(dims);
 	}
-	
-	public boolean canProcess(Array<?> array)
-	{
-		return array instanceof ScalarArray;
-	}
 
-	public boolean canProcess(Array<?> source, Array<?> target)
-	{
-		return source instanceof ScalarArray && target instanceof ScalarArray;
-	}
+    @Override
+    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    {
+        ScalarArray<?> output = array.newInstance(array.getSize());
+        processScalar(array, output);
+        return output;
+    }
 }
