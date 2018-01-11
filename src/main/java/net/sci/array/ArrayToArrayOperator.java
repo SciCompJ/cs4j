@@ -11,6 +11,8 @@ package net.sci.array;
  * @author dlegland
  *
  */
+@Deprecated
+// TODO: remove
 public interface ArrayToArrayOperator extends ArrayOperator
 {
 	/**
