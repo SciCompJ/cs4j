@@ -37,9 +37,9 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
             return (BinaryArray2D) array;
         }
         return new Wrapper(array);
-
     }
 	
+    
 	// =============================================================
 	// Constructor
 
@@ -82,6 +82,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 *            the new state at the given position
 	 */
 	public abstract void setBoolean(int x, int y, boolean state);
+	
 	
 	// =============================================================
 	// Specialization of the BooleanArray interface
