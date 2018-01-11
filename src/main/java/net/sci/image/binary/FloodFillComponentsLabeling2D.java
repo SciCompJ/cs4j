@@ -5,6 +5,7 @@ package net.sci.image.binary;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.Int32Array;
 import net.sci.array.data.IntArray;
 import net.sci.array.data.UInt16Array;
@@ -14,8 +15,8 @@ import net.sci.array.data.scalar2d.Int32Array2D;
 import net.sci.array.data.scalar2d.IntArray2D;
 import net.sci.array.data.scalar2d.UInt16Array2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.image.ArrayToArrayImageOperator;
 import net.sci.image.Image;
+import net.sci.image.ImageArrayOperator;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.FloodFill;
 
@@ -31,7 +32,7 @@ import net.sci.image.morphology.FloodFill;
  * @author dlegland
  *
  */
-public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToArrayImageOperator
+public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArrayOperator
 {
     // ==============================================================
     // Class variables
@@ -198,21 +199,8 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 //		labels.setMinAndMax(0, nLabels);
 		return labels;
 	}
-
-	@Override
-	public void process(Array<?> source, Array<?> target)
-	{
-		if (source instanceof BinaryArray2D && target instanceof IntArray2D)
-		{
-			process2d((BinaryArray2D) source, (IntArray2D<?>) target);
-		}
-		else
-		{
-			throw new RuntimeException("Can not process input of class " + source.getClass() + " with output of class " + target.getClass());
-		}
-	}
 	
-	public void process2d(BinaryArray2D source, IntArray2D<?> target)
+	public void processBinary2d(BinaryArray2D source, IntArray2D<?> target)
 	{
 		// get image size
 		int sizeX = source.getSize(0);
@@ -273,7 +261,6 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 	 * @return a new instance of Image that can be used for processing input
 	 *         image.
 	 */
-	@Override
 	public Image createEmptyOutputImage(Image image)
 	{
 		Array<?> array = image.getData();
@@ -307,4 +294,22 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ArrayToAr
 					"Bit Depth should be 8, 16 or 32.");
 		}
 	}
+
+    @Override
+    public <T> Array<?> process(Array<T> array)
+    {
+        if (!(array instanceof BinaryArray))
+        {
+            throw new IllegalArgumentException("Requires a BinaryArray instance");
+        }
+        if (array.dimensionality() != 2)
+        {
+            throw new IllegalArgumentException("Requires a BinaryArray of dimensionality 2");
+        }
+        IntArray<?> result = createEmptyOutputArray(array);
+        processBinary2d(BinaryArray2D.wrap((BinaryArray) array), IntArray2D.wrap(result));
+        return result;
+    }
+    
+    // TODO: add canProcess()
 }

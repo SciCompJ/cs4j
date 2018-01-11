@@ -65,6 +65,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	
 	public static Collection<ScalarArray<?>> splitChannels(VectorArray<? extends Vector<?>> array)
 	{
+	    // TODO: remove static
 		int nc = array.getVectorLength();
 		ArrayList<ScalarArray<?>> result = new ArrayList<ScalarArray<?>>(nc);
 		
@@ -73,6 +74,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 		// allocate memory for each channel array
 		for (int c = 0; c < nc; c++)
 		{
+		    //TODO: add psb to choose output type
 			ScalarArray<?> channel = Float32Array.create(dims);
 			
 			// create iterators

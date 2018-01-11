@@ -9,26 +9,28 @@ import net.sci.array.type.Scalar;
 /**
  * Sample operator to demonstrate the use of ScalarArrayOperator interface.
  * 
- * Computes the square root of each scalar in the array and puts the result in
- * target array.
+ * Computes the square of each element of an array of scalars.
  * 
  * @author dlegland
  *
  */
 public class PowerOfTwo implements ScalarArrayOperator
 {
-
 	/**
-	 * 
+	 * Empty constructor.
 	 */
 	public PowerOfTwo()
 	{
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.process.ScalarArrayOperator#processScalar(net.sci.array.data.ScalarArray, net.sci.array.data.ScalarArray)
-	 */
-	@Override
+	/**
+     * Processes an input array and populates the output array.
+     * 
+     * @param input
+     *            the input array
+     * @param output
+     *            the output array
+     */
 	public void processScalar(ScalarArray<? extends Scalar> input,
 			ScalarArray<? extends Scalar> output)
 	{
@@ -39,12 +41,17 @@ public class PowerOfTwo implements ScalarArrayOperator
 		// iterate over both arrays in parallel 
 		while (sourceIter.hasNext() && targetIter.hasNext())
 		{
-			sourceIter.forward();
-			targetIter.forward();
-			
-			// compute new walue
-			targetIter.setValue(Math.pow(sourceIter.getValue(), 2));
+			// process next value
+			targetIter.setNextValue(Math.pow(sourceIter.nextValue(), 2));
 		}
 	}
 
+    @Override
+    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    {
+        // TODO: choose the class of the output array
+        ScalarArray<?> output = array.newInstance(array.getSize());
+        processScalar(array, output);
+        return output;
+    }
 }

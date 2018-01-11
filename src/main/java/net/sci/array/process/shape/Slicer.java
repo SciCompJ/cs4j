@@ -4,7 +4,7 @@
 package net.sci.array.process.shape;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayToArrayOperator;
+import net.sci.array.ArrayOperator;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 
@@ -15,7 +15,7 @@ import net.sci.array.CursorIterator;
  * @author dlegland
  *
  */
-public class Slicer implements ArrayToArrayOperator
+public class Slicer implements ArrayOperator
 {
     /**
      * Extract a lower dimensional array from an ND array, by specifying the
@@ -130,7 +130,6 @@ public class Slicer implements ArrayToArrayOperator
 		return target;
 	}
 	
-	@Override
 	public void process(Array<?> source, Array<?> target)
 	{
 		// TODO: check dims

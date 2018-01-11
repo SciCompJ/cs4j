@@ -25,7 +25,7 @@ public class PowerOfTwoTest
 		
 		PowerOfTwo op = new PowerOfTwo();
 		Float64Array2D res = Float64Array2D.create(6, 6);
-		op.process(array, res);
+		op.processScalar(array, res);
 
 		index = 0;
 		for (int y = 1; y < 5; y++)

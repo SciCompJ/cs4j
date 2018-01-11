@@ -7,13 +7,15 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static net.sci.array.type.Binary.TRUE;
 
-import net.sci.algo.Algo;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.data.BinaryArray;
+import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar3d.BinaryArray3D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.type.Scalar;
+import net.sci.image.ImageArrayOperator;
 import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.FloodFill;
 import net.sci.image.morphology.MinimaAndMaxima;
@@ -39,7 +41,7 @@ import net.sci.image.morphology.MinimaAndMaxima;
  *
  */
 public class RegionalExtrema3D extends AlgoStub
-implements ArrayToArrayImageOperator, Algo
+implements ImageArrayOperator, ScalarArrayOperator
 {
 	// ==============================================================
 	// class variables
@@ -108,30 +110,20 @@ implements ArrayToArrayImageOperator, Algo
 
 	
 	// ==============================================================
-	// Implementation of Array operator interface
-	
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayToArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
-	@Override
-	public void process(Array<?> source, Array<?> target)
+    // Processing methods
+    
+    public void process(ScalarArray<?> source, BinaryArray target)
 	{
-		if (!(source instanceof ScalarArray3D))
-		{
-			throw new IllegalArgumentException("Source array should be 2D scalar array");
-		}
-		if (!(target instanceof BinaryArray3D))
-		{
-			throw new IllegalArgumentException("target array should be 2D boolean array");
-		}
+        ScalarArray3D<?> source3d = ScalarArray3D.wrap(source);
+        BinaryArray3D target3d = BinaryArray3D.wrap(target);
 		
 		if (this.connectivity == Connectivity3D.C6)
 		{
-			processScalar3dC6((ScalarArray3D<?>) source, (BinaryArray3D) target);
+			processScalar3dC6(source3d, target3d);
 		}
 		else if (this.connectivity == Connectivity3D.C26)
 		{
-			processScalar3dC26((ScalarArray3D<?>) source, (BinaryArray3D) target);
+			processScalar3dC26(source3d, target3d);
 		}
 		else
 		{
@@ -290,12 +282,16 @@ implements ArrayToArrayImageOperator, Algo
 		int[] dims = array.getSize();
 		return BinaryArray.create(dims);
 	}
-	
-	@Override
-	public boolean canProcess(Array<?> source, Array<?> target)
-	{
-		return source instanceof ScalarArray3D
-				&& target instanceof BinaryArray3D
-				&& source.dimensionality() == target.dimensionality();
-	}
+
+    
+    // ==============================================================
+    // Implementation of ScalarArrayOperator interface
+
+    @Override
+    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> input)
+    {
+        BinaryArray output = createEmptyOutputArray(input);
+        process(input, output);
+        return output;
+    }
 }

@@ -15,6 +15,8 @@ import net.sci.array.ArrayToArrayOperator;
  * @author dlegland
  *
  */
+@Deprecated
+//TODO: remove
 public interface ArrayToArrayImageOperator extends ArrayToArrayOperator, ImageArrayOperator
 {
 	public default void process(Image inputImage, Image outputImage)

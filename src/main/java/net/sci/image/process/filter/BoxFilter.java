@@ -12,7 +12,7 @@ import net.sci.array.type.Scalar;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.process.VectorArrayMarginalOperator;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Box filter for multidimensional arrays. Considers a rectangular box, with
@@ -23,7 +23,7 @@ import net.sci.image.ArrayToArrayImageOperator;
  * @see BoxMedianFilter
  * @see BoxVarianceFilter
 */
-public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMarginalOperator
+public final class BoxFilter implements ImageArrayOperator, VectorArrayMarginalOperator
 {
     /** The size of the box in each dimension */
 	int[] diameters;
@@ -44,7 +44,6 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 	/* (non-Javadoc)
 	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
 	 */
-	@Override
 	public void processScalar(ScalarArray<? extends Scalar> source, ScalarArray<? extends Scalar> target)
 	{
 		// Choose the best possible implementation, depending on array dimensions
@@ -247,30 +246,23 @@ public final class BoxFilter implements ArrayToArrayImageOperator, VectorArrayMa
 			}
 		}
 	}
-
-	/**
-	 * Creates a new array the same size as original, with float type.
-	 */
-	public Array<?> createEmptyOutputArray(Array<?> array)
-	{
-		int[] dims = array.getSize();
-		if (array instanceof ScalarArray)
-		{
-			return Float32Array.create(dims);
-		}
-		else
-		{
-			return array.newInstance(dims);
-		}
-	}
 	
-	public boolean canProcess(Array<?> array)
+	@Override
+    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    {
+	    // TODO: choose the class of the output array
+        ScalarArray<?> output = Float32Array.create(array.getSize());
+        processScalar(array, output);
+        return output;
+    }
+
+    public boolean canProcess(Array<?> array)
 	{
 		return array instanceof ScalarArray;
 	}
 
-	public boolean canProcess(Array<?> source, Array<?> target)
-	{
-		return source instanceof ScalarArray && target instanceof ScalarArray;
-	}
+//	public boolean canProcess(Array<?> source, Array<?> target)
+//	{
+//		return source instanceof ScalarArray && target instanceof ScalarArray;
+//	}
 }

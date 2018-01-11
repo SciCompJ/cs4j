@@ -7,13 +7,15 @@ import static java.lang.Math.min;
 import static net.sci.array.type.Binary.FALSE;
 import static net.sci.array.type.Binary.TRUE;
 
-import net.sci.algo.Algo;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.data.BinaryArray;
+import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.type.Scalar;
+import net.sci.image.ImageArrayOperator;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.FloodFill;
 import net.sci.image.morphology.MinimaAndMaxima;
@@ -29,8 +31,7 @@ import net.sci.image.morphology.MinimaAndMaxima;
  * @author dlegland
  * @see RegionalExtrema2D
  */
-public class RegionalExtrema2DGeneric extends AlgoStub
-		implements ArrayToArrayImageOperator, Algo
+public class RegionalExtrema2DGeneric extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator
 {
 	// ==============================================================
 	// Class variables
@@ -93,35 +94,25 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 	
 	
 	// ==============================================================
-	// Implementation of Array operator interface
+	// Processing methods
 	
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayToArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
-	@Override
-	public void process(Array<?> source, Array<?> target)
+	public void process(ScalarArray<?> source, BinaryArray target)
 	{
-		if (!(source instanceof ScalarArray2D))
-		{
-			throw new IllegalArgumentException("Source array should be 2D scalar array");
-		}
-		if (!(target instanceof BinaryArray2D))
-		{
-			throw new IllegalArgumentException("target array should be 2D boolean array");
-		}
+        ScalarArray2D<?> source2d = ScalarArray2D.wrap(source);
+        BinaryArray2D target2d = BinaryArray2D.wrap(target);
 		
-		if (this.connectivity == Connectivity2D.C4)
-		{
-			processScalar2dC4((ScalarArray2D<?>) source, (BinaryArray2D) target);
-		}
-		else if (this.connectivity == Connectivity2D.C8)
-		{
-			processScalar2dC8((ScalarArray2D<?>) source, (BinaryArray2D) target);
-		}
-		else
-		{
-			throw new RuntimeException("Unable to process connectivity: " + this.connectivity);
-		}
+        if (this.connectivity == Connectivity2D.C4)
+        {
+            processScalar2dC4(source2d, target2d);
+        }
+        else if (this.connectivity == Connectivity2D.C8)
+        {
+            processScalar2dC8(source2d, target2d);
+        }
+        else
+        {
+            throw new RuntimeException("Unable to process connectivity: " + this.connectivity);
+        }
 	}
 
 	/**
@@ -261,11 +252,15 @@ public class RegionalExtrema2DGeneric extends AlgoStub
 		return BinaryArray.create(dims);
 	}
 	
+	
+    // ==============================================================
+    // Implementation of ScalarArrayOperator interface
+
 	@Override
-	public boolean canProcess(Array<?> source, Array<?> target)
-	{
-		return source instanceof ScalarArray2D
-				&& target instanceof BinaryArray2D
-				&& source.dimensionality() == target.dimensionality();
-	}
+    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> input)
+    {
+        BinaryArray output = createEmptyOutputArray(input);
+        process(input, output);
+        return output;
+    }
 }

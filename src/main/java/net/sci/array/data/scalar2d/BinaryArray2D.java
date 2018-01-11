@@ -279,72 +279,8 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         @Override
         public BinaryArray.Iterator iterator()
         {
-            return new Iterator2D();
+            return array.iterator();
         }
-        
-        private class Iterator2D implements BinaryArray.Iterator
-        {
-            int x = -1;
-            int y = 0;
-            
-            public Iterator2D() 
-            {
-            }
-            
-            @Override
-            public boolean hasNext()
-            {
-                return this.x < size0 - 1 || this.y < size1 - 1;
-            }
-
-            @Override
-            public Binary next()
-            {
-                this.x++;
-                if (this.x == size0)
-                {
-                    this.y++;
-                    this.x = 0;
-                }
-                return Wrapper.this.get(x, y);
-            }
-
-            @Override
-            public void forward()
-            {
-                this.x++;
-                if (this.x == size0)
-                {
-                    this.y++;
-                    this.x = 0;
-                }
-            }
-
-            @Override
-            public Binary get()
-            {
-                return Wrapper.this.get(x, y);
-            }
-
-            @Override
-            public void set(Binary value)
-            {
-                Wrapper.this.set(x, y, value);
-            }
-
-            @Override
-            public boolean getBoolean()
-            {
-                return Wrapper.this.getBoolean(x, y);
-            }
-
-            @Override
-            public void setBoolean(boolean b)
-            {
-                Wrapper.this.setBoolean(x, y, b);
-            }
-        }
-
-    }
-    
+    }    
 }
+

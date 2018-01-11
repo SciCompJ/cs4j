@@ -3,13 +3,15 @@
  */
 package net.sci.image.morphology.filter;
 
-import net.sci.array.Array;
+import net.sci.array.Arrays;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.type.Scalar;
+import net.sci.image.ImageArrayOperator;
 import net.sci.image.process.filter.BoxNeighborhood;
 import net.sci.image.process.filter.Neighborhood;
 
@@ -19,7 +21,7 @@ import net.sci.image.process.filter.Neighborhood;
  * @author dlegland
  *
  */
-public final class BoxDilationNaive implements ArrayToArrayImageOperator
+public final class BoxDilationNaive implements ImageArrayOperator, ScalarArrayOperator
 {
     /** The size of the box in each dimension */
     int[] diameters;
@@ -43,28 +45,34 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 	/* (non-Javadoc)
 	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
 	 */
-	@Override
-	public void process(Array<?> source, Array<?> target)
+	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
 	{
+        int nd1 = source.dimensionality();
+        int nd2 = target.dimensionality();
+        if (nd1 != nd2)
+        {
+            throw new IllegalArgumentException("Both arrays must have the same dimensionality");
+        }
+        
+        if (!Arrays.isSameSize(source, target))
+        {
+            throw new IllegalArgumentException("Both arrays must have the same size");
+        }
+        
 		// Choose the best possible implementation, depending on array dimensions
-		if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
+		if (nd1 == 2 && nd2 == 2)
 		{
-			processScalar2d((ScalarArray2D<?>) source, (ScalarArray2D<?>) target);
+			processScalar2d(ScalarArray2D.wrap(source), ScalarArray2D.wrap(target));
 		}
-		else if (source instanceof ScalarArray3D && target instanceof ScalarArray3D)
+		else if (nd1 == 3 && nd2 == 3)
 		{
-			processScalar3d((ScalarArray3D<?>) source, (ScalarArray3D<?>) target);
+			processScalar3d(ScalarArray3D.wrap(source), ScalarArray3D.wrap(target));
 		}
-		else if (source instanceof ScalarArray && target instanceof ScalarArray)
+		else 
 		{
-			// most generic implementation, slow...
+		    // use the most generic implementation, also slower
 			processScalar((ScalarArray<?>) source, (ScalarArray<?>) target);
 		}
-		else
-		{
-			throw new IllegalArgumentException("Can not process array of class " + source.getClass());
-		}
-
 	}
 
 	/**
@@ -75,7 +83,7 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 	 * @param target
 	 *            the target array
 	 */
-	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
+	public void processScalarNd(ScalarArray<?> source, ScalarArray<?> target)
 	{
 		// get array size (for cropping)
 		int nd = source.dimensionality();
@@ -244,22 +252,11 @@ public final class BoxDilationNaive implements ArrayToArrayImageOperator
 		}
 	}
 
-	/**
-	 * Creates a new array the same size and same type as original.
-	 */
-	public Array<?> createEmptyOutputArray(Array<?> array)
-	{
-		int[] dims = array.getSize();
-		return array.newInstance(dims);
-	}
-	
-	public boolean canProcess(Array<?> array)
-	{
-		return array instanceof ScalarArray;
-	}
-
-	public boolean canProcess(Array<?> source, Array<?> target)
-	{
-		return source instanceof ScalarArray && target instanceof ScalarArray;
-	}
+    @Override
+    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    {
+        ScalarArray<?> output = array.newInstance(array.getSize());
+        processScalar(array, output);
+        return output;
+    }
 }
