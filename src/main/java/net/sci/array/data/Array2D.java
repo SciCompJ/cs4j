@@ -252,77 +252,7 @@ public abstract class Array2D<T> implements Array<T>
 		@Override
 		public Array.Iterator<T> iterator()
 		{
-			return new Iterator2D();
-		}
-		
-		private class Iterator2D implements Array.Iterator<T>
-		{
-			int x = -1;
-			int y = 0;
-			
-			public Iterator2D() 
-			{
-			}
-			
-			@Override
-			public boolean hasNext()
-			{
-				return this.x < size0 - 1 || this.y < size1 - 1;
-			}
-
-			@Override
-			public T next()
-			{
-				this.x++;
-				if (this.x == size0)
-				{
-					this.y++;
-					this.x = 0;
-				}
-				return Wrap.this.get(x, y);
-			}
-
-			@Override
-			public void forward()
-			{
-				this.x++;
-				if (this.x == size0)
-				{
-					this.y++;
-					this.x = 0;
-				}
-			}
-
-			@Override
-			public T get()
-			{
-				return Wrap.this.get(x, y);
-			}
-
-			@Override
-			public void set(T value)
-			{
-				Wrap.this.set(x, y, value);
-			}
-			
-			@Override
-			public double nextValue()
-			{
-				forward();
-				return getValue();
-			}
-
-			@Override
-			public double getValue()
-			{
-				return Wrap.this.getValue(x, y);
-			}
-
-			@Override
-			public void setValue(double value)
-			{
-				Wrap.this.setValue(x, y, value);				
-			}
+			return array.iterator();
 		}
 	}
 	

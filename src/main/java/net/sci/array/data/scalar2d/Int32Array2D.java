@@ -81,31 +81,10 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 	}
 
 	
-	// =============================================================
-	// Implementation of the IntArray interface
-
-	@Override
-	public int getInt(int[] pos)
-	{
-		return getInt(pos[0], pos[1]);
-	}
-
-	@Override
-	public void setInt(int[] pos, int value)
-	{
-		setInt(pos[0], pos[1], value);		
-	}
-
 
 	// =============================================================
 	// Specialization of Array interface
 	
-//	@Override
-//	public Int32Array newInstance(int... dims)
-//	{
-//		return Int32Array.create(dims);
-//	}
-
 	@Override
 	public abstract Int32Array2D duplicate();
 

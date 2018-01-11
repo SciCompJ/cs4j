@@ -155,12 +155,6 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	// =============================================================
 	// Specialization of Array interface
 	
-//	@Override
-//	public Int32Array newInstance(int... dims)
-//	{
-//		return Int32Array.create(dims);
-//	}
-
 	@Override
 	public abstract Int16Array2D duplicate();
 
