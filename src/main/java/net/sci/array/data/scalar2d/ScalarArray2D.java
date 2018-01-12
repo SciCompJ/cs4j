@@ -27,7 +27,6 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 			return (ScalarArray2D<T>) array;
 		}
 		return new Wrapper<T>(array);
-
 	}
 
 	// =============================================================

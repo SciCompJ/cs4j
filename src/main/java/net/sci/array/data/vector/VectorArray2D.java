@@ -3,6 +3,7 @@
  */
 package net.sci.array.data.vector;
 
+import net.sci.array.ArrayFactory;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.Float32Array;
 import net.sci.array.data.VectorArray;
@@ -20,6 +21,15 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 {
     // =============================================================
     // Static methods
+
+    public final static <T extends Vector<?>> VectorArray2D<T> wrap(VectorArray<T> array)
+    {
+        if (array instanceof VectorArray2D)
+        {
+            return (VectorArray2D<T>) array;
+        }
+        return new Wrapper<T>(array);
+    }
 
     /**
      * Creates a new instance of VectorArray from a scalar array with three dimensions.
@@ -223,7 +233,13 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 		return getValues(pos[0], pos[1]);
 	}
 	
-	public void setValues(int[] pos, double[] values)
+	@Override
+    public double[] getValues(int[] pos, double[] values)
+    {
+        return getValues(pos[0], pos[1], values);
+    }
+
+    public void setValues(int[] pos, double[] values)
 	{
 		setValues(pos[0], pos[1], values);
 	}
@@ -272,4 +288,121 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 	@Override
 	public abstract VectorArray2D<V> duplicate();
 
+    // =============================================================
+    // Inner Wrapper class
+
+    private static class Wrapper<T extends Vector<?>> extends VectorArray2D<T>
+    {
+        private VectorArray<T> array;
+        
+        protected Wrapper(VectorArray<T> array)
+        {
+            super(0, 0);
+            if (array.dimensionality() < 2)
+            {
+                throw new IllegalArgumentException("Requires an array with at least two dimensions");
+            }
+            this.array = array;
+            this.size0 = array.getSize(0);
+            this.size1 = array.getSize(1);
+        }
+
+        @Override
+        public VectorArray<T> newInstance(int... dims)
+        {
+            return this.array.newInstance(dims);
+        }
+
+        @Override
+        public ArrayFactory<T> getFactory()
+        {
+            return this.array.getFactory();
+        }
+
+        @Override
+        public T get(int x, int y)
+        {
+            // return value from specified position
+            return this.array.get(new int[]{x, y});
+        }
+
+        @Override
+        public void set(int x, int y, T value)
+        {
+            // set value at specified position
+            this.array.set(new int[]{x, y}, value);
+        }
+
+        @Override
+        public VectorArray2D<T> duplicate()
+        {
+            VectorArray<T> tmp = this.array.newInstance(this.size0, this.size1);
+            if (!(tmp instanceof VectorArray2D))
+            {
+                throw new RuntimeException("Can not create Array2D instance from " + this.array.getClass().getName() + " class.");
+            }
+            
+            VectorArray2D<T> result = (VectorArray2D <T>) tmp;
+            
+            VectorArray.Iterator<T> iter1 = array.iterator();
+            VectorArray.Iterator<T> iter2 = result.iterator();
+            while (iter1.hasNext())
+            {
+                iter2.setNext(iter1.next());
+            }
+
+            return result;
+        }
+        
+        @Override
+        public Class<T> getDataType()
+        {
+            return array.getDataType();
+        }
+
+        @Override
+        public VectorArray.Iterator<T> iterator()
+        {
+            return array.iterator();
+        }
+
+        @Override
+        public int getVectorLength()
+        {
+            return array.getVectorLength();
+        }
+
+        @Override
+        public double[] getValues(int x, int y)
+        {
+            return array.getValues(new int[] {x, y});
+        }
+
+        @Override
+        public double[] getValues(int x, int y, double[] values)
+        {
+            return getValues(new int[] {x, y}, values);
+        }
+
+        @Override
+        public void setValues(int x, int y, double[] values)
+        {
+            setValues(new int[] {x, y}, values);
+        }
+
+        @Override
+        public double getValue(int x, int y, int c)
+        {
+            return getValues(new int[] {x, y})[c];
+        }
+
+        @Override
+        public void setValue(int x, int y, int c, double value)
+        {
+            int[] pos = new int[] {x, y};
+            double[] values = array.getValues(pos);
+            values[c] = value;
+            array.setValues(pos, values);
+        }
+    }
 }
