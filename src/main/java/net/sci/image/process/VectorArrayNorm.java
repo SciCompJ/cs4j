@@ -12,7 +12,7 @@ import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.data.vector.VectorArray3D;
 import net.sci.array.type.Vector;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Compute the norm of a vector array.
@@ -20,15 +20,14 @@ import net.sci.image.ArrayToArrayImageOperator;
  * @author David Legland
  *
  */
-public class VectorArrayNorm implements ArrayToArrayImageOperator
+public class VectorArrayNorm implements ImageArrayOperator
 {
-	@Override
-	public void process(Array<?> input, Array<?> output)
+	public void processVector(VectorArray<?> input, ScalarArray<?> output)
 	{
-		if (input instanceof VectorArray && output instanceof ScalarArray)
-		{
-			processNd((VectorArray<?>) input, (ScalarArray<?>) output);
-		}
+//		if (input instanceof VectorArray && output instanceof ScalarArray)
+//		{
+			processVectorNd((VectorArray<?>) input, (ScalarArray<?>) output);
+//		}
 //		if (input instanceof VectorArray2D && output instanceof ScalarArray2D)
 //		{
 //			process2d((VectorArray2D<?>) input, (ScalarArray2D<?>) output);
@@ -37,15 +36,15 @@ public class VectorArrayNorm implements ArrayToArrayImageOperator
 //		{
 //			process3d((VectorArray3D<?>) input, (ScalarArray3D<?>) output);
 //		}
-		else
-		{
-			throw new RuntimeException(
-					"Can not process input of class " + input.getClass()
-							+ " with output of class " + output.getClass());
-		}
+//		else
+//		{
+//			throw new RuntimeException(
+//					"Can not process input of class " + input.getClass()
+//							+ " with output of class " + output.getClass());
+//		}
 	}
 
-	public void process2d(VectorArray2D<?> source, ScalarArray2D<?> target)
+	public void processVector2d(VectorArray2D<?> source, ScalarArray2D<?> target)
 	{
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
@@ -69,7 +68,7 @@ public class VectorArrayNorm implements ArrayToArrayImageOperator
 		}
 	}
 
-	public void process3d(VectorArray3D<?> source, ScalarArray3D<?> target)
+	public void processVector3d(VectorArray3D<?> source, ScalarArray3D<?> target)
 	{
 		// get array size
 		int sizeX = source.getSize(0);
@@ -98,7 +97,7 @@ public class VectorArrayNorm implements ArrayToArrayImageOperator
 		}
 	}
 
-	public void processNd(VectorArray<?> source, ScalarArray<?> target)
+	public void processVectorNd(VectorArray<?> source, ScalarArray<?> target)
 	{
 		// create iterators
 		VectorArray.Iterator<? extends Vector<?>> sourceIterator = source.iterator();
@@ -110,35 +109,39 @@ public class VectorArrayNorm implements ArrayToArrayImageOperator
 			Vector<?> vector = sourceIterator.next();
 			
 			// compute norm of current element
-			double norm = 0;
-			for (double d : vector.getValues())
-			{
-				norm += d * d;
-			}
-			
+			double norm = computeNorm(vector.getValues());
+
 			// update target
-			targetIterator.forward();
-			targetIterator.setValue(Math.sqrt(norm));
+			targetIterator.setNextValue(norm);
 		}
 	}
 
-	@Override
-	public Array<?> createEmptyOutputArray(Array<?> array)
+	private double computeNorm(double[] vector)
 	{
-		return Float32Array.create(array.getSize());
-	}
-
-	@Override
-	public boolean canProcess(Array<?> array)
-	{
-		return array instanceof VectorArray;
+	    double norm = 0;
+        for (double d : vector)
+        {
+            norm += d * d;
+        }
+        return Math.sqrt(norm);
 	}
 	
 	@Override
-	public boolean canProcess(Array<?> source, Array<?> target)
+    public <T> Array<?> process(Array<T> array)
+    {
+	    if (!(array instanceof VectorArray))
+	    {
+	        throw new IllegalArgumentException("Requires 2D ort 3D Vector array");
+	    }
+	            
+	    ScalarArray<?> norm = Float32Array.create(array.getSize());
+	    processVector((VectorArray<?>) array, norm);
+	    return norm;
+    }
+
+    @Override
+	public boolean canProcess(Array<?> array)
 	{
-		if (!(source instanceof VectorArray)) return false;
-		if (!(target instanceof ScalarArray)) return false;
-		return source.dimensionality() == target.dimensionality();
+		return array instanceof VectorArray;
 	}
 }

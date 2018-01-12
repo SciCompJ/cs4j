@@ -44,9 +44,6 @@ public final class BoxMedianFilter extends AlgoStub implements ImageArrayOperato
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
 	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
 	{
         int nd1 = source.dimensionality();
@@ -73,7 +70,7 @@ public final class BoxMedianFilter extends AlgoStub implements ImageArrayOperato
         else 
         {
             // use the most generic implementation, also slower
-            processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
+            processScalarNd(source, target);
         }
 	}
 
@@ -279,7 +276,8 @@ public final class BoxMedianFilter extends AlgoStub implements ImageArrayOperato
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        // TODO Auto-generated method stub
-        return null;
+        ScalarArray<?> result = array.newInstance(array.getSize());
+        processScalar(array, result);
+        return result;
     }
 }

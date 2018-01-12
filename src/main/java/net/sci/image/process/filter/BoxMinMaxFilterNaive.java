@@ -3,13 +3,15 @@
  */
 package net.sci.image.process.filter;
 
-import net.sci.array.Array;
+import net.sci.array.Arrays;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.type.Scalar;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Naive implementation of min/max filtering within a n-dimensional box, used
@@ -20,7 +22,7 @@ import net.sci.image.ArrayToArrayImageOperator;
  * @see BoxFilter
  * @see BoxMedianFilter
  */
-public final class BoxMinMaxFilterNaive implements ArrayToArrayImageOperator
+public final class BoxMinMaxFilterNaive  implements ImageArrayOperator, ScalarArrayOperator
 {
 	public enum Type 
 	{
@@ -51,32 +53,35 @@ public final class BoxMinMaxFilterNaive implements ArrayToArrayImageOperator
 		System.arraycopy(diameters, 0, this.diameters, 0, diameters.length);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
-	@Override
-	public void process(Array<?> source, Array<?> target)
-	{
-		// Choose the best possible implementation, depending on array dimensions
-		if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
-		{
-			processScalar2d((ScalarArray2D<?>) source, (ScalarArray2D<?>) target);
-		}
-		else if (source instanceof ScalarArray3D && target instanceof ScalarArray3D)
-		{
-			processScalar3d((ScalarArray3D<?>) source, (ScalarArray3D<?>) target);
-		}
-		else if (source instanceof ScalarArray && target instanceof ScalarArray)
-		{
-			// most generic implementation, slow...
-			processScalar((ScalarArray<?>) source, (ScalarArray<?>) target);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Can not process array of class " + source.getClass());
-		}
-
-	}
+    public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
+    {
+        int nd1 = source.dimensionality();
+        int nd2 = target.dimensionality();
+        if (nd1 != nd2)
+        {
+            throw new IllegalArgumentException("Both arrays must have the same dimensionality");
+        }
+        
+        if (!Arrays.isSameSize(source, target))
+        {
+            throw new IllegalArgumentException("Both arrays must have the same size");
+        }
+        
+        // Choose the best possible implementation, depending on array dimensions
+        if (nd1 == 2 && nd2 == 2)
+        {
+            processScalar2d(ScalarArray2D.wrap(source), ScalarArray2D.wrap(target));
+        }
+        else if (nd1 == 3 && nd2 == 3)
+        {
+            processScalar3d(ScalarArray3D.wrap(source), ScalarArray3D.wrap(target));
+        }
+        else 
+        {
+            // use the most generic implementation, also slower
+            processScalarNd(source, target);
+        }
+    }
 
 	/**
 	 * Process scalar arrays of any dimension.
@@ -86,7 +91,7 @@ public final class BoxMinMaxFilterNaive implements ArrayToArrayImageOperator
      * @param target
      *            the target array
 	 */
-	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
+	public void processScalarNd(ScalarArray<?> source, ScalarArray<?> target)
 	{
 		// get array size (for cropping)
 		int nd = source.dimensionality();
@@ -261,23 +266,20 @@ public final class BoxMinMaxFilterNaive implements ArrayToArrayImageOperator
 		}
 	}
 
-	/**
-	 * Creates a new array the same size and same type as original.
-	 */
-	public Array<?> createEmptyOutputArray(Array<?> array)
-	{
-		int[] dims = array.getSize();
-		return array.newInstance(dims);
-	}
+//	/**
+//	 * Creates a new array the same size and same type as original.
+//	 */
+//	public Array<?> createEmptyOutputArray(Array<?> array)
+//	{
+//		int[] dims = array.getSize();
+//		return array.newInstance(dims);
+//	}
 	
-	public boolean canProcess(Array<?> array)
-	{
-		return array instanceof ScalarArray;
-	}
-
-	public boolean canProcess(Array<?> source, Array<?> target)
-	{
-		return source instanceof ScalarArray && target instanceof ScalarArray
-				&& source.dimensionality() == target.dimensionality();
-	}
+    @Override
+    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    {
+        ScalarArray<?> result = array.newInstance(array.getSize());
+        processScalar(array, result);
+        return result;
+    }
 }

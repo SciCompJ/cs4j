@@ -12,7 +12,7 @@ import net.sci.array.data.vector.Float32VectorArray2D;
 import net.sci.array.data.vector.Float32VectorArray3D;
 import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.data.vector.VectorArray3D;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Compute gradient of a scalar array using Sobel coefficients, using a
@@ -20,9 +20,8 @@ import net.sci.image.ArrayToArrayImageOperator;
  * 
  * @author dlegland
  */
-public class SobelGradient implements ArrayToArrayImageOperator
+public class SobelGradient implements ImageArrayOperator
 {
-
 	/**
 	 * Creates a new instance of Sobel Gradient operator.
 	 */
@@ -30,27 +29,37 @@ public class SobelGradient implements ArrayToArrayImageOperator
 	{
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
-	@Override
-	public void process(Array<?> source, Array<?> target)
-	{
-		if (source instanceof ScalarArray2D && target instanceof VectorArray2D)
-		{
-			process2d((ScalarArray2D<?>) source, (VectorArray2D<?>) target);
-		}
-		else if (source instanceof ScalarArray3D && target instanceof VectorArray3D)
-		{
-			process3d((ScalarArray3D<?>) source, (VectorArray3D<?>) target);
-		}
-		else
-		{
-			throw new RuntimeException("Unable to compute Sobel gradient");
-		}
-	}
+    public void processScalar(ScalarArray<?> source, VectorArray<?> target)
+    {
+        int nd1 = source.dimensionality();
+        int nd2 = target.dimensionality();
+        if (nd1 != nd2)
+        {
+            throw new IllegalArgumentException("Both arrays must have the same dimensionality");
+        }
+        
+        if (!net.sci.array.Arrays.isSameSize(source, target))
+        {
+            throw new IllegalArgumentException("Both arrays must have the same size");
+        }
+        
+        // Choose the best possible implementation, depending on array dimensions
+        if (nd1 == 2 && nd2 == 2)
+        {
+            processScalar2d(ScalarArray2D.wrap(source), VectorArray2D.wrap(target));
+        }
+        else if (nd1 == 3 && nd2 == 3)
+        {
+            processScalar3d(ScalarArray3D.wrap(source), VectorArray3D.wrap(target));
+        }
+        else 
+        {
+            throw new IllegalArgumentException("Can process Sobel Gradient only on 2D or 3D images");
+        }
+    }
 
-	public void process2d(ScalarArray2D<?> source, VectorArray2D<?> target)
+
+	public void processScalar2d(ScalarArray2D<?> source, VectorArray2D<?> target)
 	{
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
@@ -91,7 +100,7 @@ public class SobelGradient implements ArrayToArrayImageOperator
 		}
 	}
 	
-	public void process3d(ScalarArray3D<?> source, VectorArray3D<?> target)
+	public void processScalar3d(ScalarArray3D<?> source, VectorArray3D<?> target)
 	{
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
@@ -155,36 +164,41 @@ public class SobelGradient implements ArrayToArrayImageOperator
 		}
 	}
 	
-	public Array<?> createEmptyOutputArray(Array<?> array)
-	{
-		if (array instanceof ScalarArray2D)
-		{
-			int size0 = array.getSize(0);
-			int size1 = array.getSize(1);
-			return Float32VectorArray2D.create(size0, size1, 2);
-		}
-		else if (array instanceof ScalarArray3D)
-		{
-			int size0 = array.getSize(0);
-			int size1 = array.getSize(1);
-			int size2 = array.getSize(2);
-			return Float32VectorArray3D.create(size0, size1, size2, 3);
-		}
-		else
-		{
-			throw new RuntimeException("Unable to create default array for input of class " + array.getClass());
-		}
-	}
+	@Override
+    public <T> Array<?> process(Array<T> array)
+    {
+	    if (!(array instanceof ScalarArray))
+	    {
+	        throw new IllegalArgumentException("Requires a scalar array as input");
+	    }
+        VectorArray<?> result = createEmptyOutputArray(array);
+        processScalar((ScalarArray<?>) array, result);
+        return result;
+    }
 
-	public boolean canProcess(Array<?> array)
+    private VectorArray<?> createEmptyOutputArray(Array<?> array)
+    {
+        if (array instanceof ScalarArray2D)
+        {
+            int size0 = array.getSize(0);
+            int size1 = array.getSize(1);
+            return Float32VectorArray2D.create(size0, size1, 2);
+        }
+        else if (array instanceof ScalarArray3D)
+        {
+            int size0 = array.getSize(0);
+            int size1 = array.getSize(1);
+            int size2 = array.getSize(2);
+            return Float32VectorArray3D.create(size0, size1, size2, 3);
+        }
+        else
+        {
+            throw new RuntimeException("Unable to create default array for input of class " + array.getClass());
+        }
+    }
+
+    public boolean canProcess(Array<?> array)
 	{
 		return array instanceof ScalarArray;
-	}
-	
-	public boolean canProcess(Array<?> source, Array<?> target)
-	{
-		if (!(source instanceof ScalarArray)) return false;
-		if (!(target instanceof VectorArray)) return false;
-		return source.dimensionality() == target.dimensionality();
 	}
 }

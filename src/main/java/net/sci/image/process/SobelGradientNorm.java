@@ -11,8 +11,7 @@ import net.sci.array.data.Float32Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
-import net.sci.image.Image;
-import net.sci.image.ArrayToArrayImageOperator;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Compute norm of Sobel gradient of a scalar image (2D or 3D), without storing
@@ -22,18 +21,24 @@ import net.sci.image.ArrayToArrayImageOperator;
  * @author David Legland
  *
  */
-public class SobelGradientNorm implements ArrayToArrayImageOperator
+public class SobelGradientNorm implements ImageArrayOperator
 {
-	@Override
-	public void process(Array<?> input, Array<?> output)
+    /**
+     * Creates a new instance of Sobel Gradient operator.
+     */
+    public SobelGradientNorm()
+    {
+    }
+
+    public void processScalar(ScalarArray<?> input, ScalarArray<?> output)
 	{
 		if (input instanceof ScalarArray2D && output instanceof ScalarArray2D)
 		{
-			process2d((ScalarArray2D<?>) input, (ScalarArray2D<?>) output);
+			processScalar2d((ScalarArray2D<?>) input, (ScalarArray2D<?>) output);
 		}
 		else if (input instanceof ScalarArray3D && output instanceof ScalarArray3D)
 		{
-			process3d((ScalarArray3D<?>) input, (ScalarArray3D<?>) output);
+			processScalar3d((ScalarArray3D<?>) input, (ScalarArray3D<?>) output);
 		}
 		else
 		{
@@ -43,14 +48,7 @@ public class SobelGradientNorm implements ArrayToArrayImageOperator
 		}
 	}
 
-	public Image createEmptyOutputImage(Image inputImage)
-	{
-		Array<?> array = inputImage.getData();
-		array = Float32Array.create(array.getSize());
-		return new Image(array, inputImage);
-	}
-
-	public void process2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
+	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
 	{
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
@@ -93,7 +91,7 @@ public class SobelGradientNorm implements ArrayToArrayImageOperator
 		}
 	}
 
-	public void process3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
+	public void processScalar3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
 	{
 		// get array size
 		int sizeX = source.getSize(0);
@@ -161,15 +159,25 @@ public class SobelGradientNorm implements ArrayToArrayImageOperator
 		}
 	}
 
-	public boolean canProcess(Array<?> array)
+    @Override
+    public <T> Array<?> process(Array<T> array)
+    {
+        if (!(array instanceof ScalarArray))
+        {
+            throw new IllegalArgumentException("Requires a scalar array as input");
+        }
+        ScalarArray<?> result = createEmptyOutputArray((ScalarArray<?>) array);
+        processScalar((ScalarArray<?>) array, result);
+        return result;
+    }
+
+    public ScalarArray<?> createEmptyOutputArray(ScalarArray<?> array)
+    {
+        return Float32Array.create(array.getSize());
+    }
+
+    public boolean canProcess(Array<?> array)
 	{
 		return array instanceof ScalarArray;
-	}
-	
-	public boolean canProcess(Array<?> source, Array<?> target)
-	{
-		if (!(source instanceof ScalarArray)) return false;
-		if (!(target instanceof ScalarArray)) return false;
-		return source.dimensionality() == target.dimensionality();
 	}
 }

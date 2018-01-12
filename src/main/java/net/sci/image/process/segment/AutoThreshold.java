@@ -6,8 +6,7 @@ package net.sci.image.process.segment;
 import net.sci.array.Array;
 import net.sci.array.data.BinaryArray;
 import net.sci.array.data.ScalarArray;
-import net.sci.image.Image;
-import net.sci.image.ImageToImageOperator;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Base implementation for auto-threshold algorithms.
@@ -15,63 +14,49 @@ import net.sci.image.ImageToImageOperator;
  * @author dlegland
  *
  */
-public abstract class AutoThreshold implements ImageToImageOperator
+public abstract class AutoThreshold implements ImageArrayOperator
 {
 	public abstract double computeThresholdValue(ScalarArray<?> array);
 	
-	/* (non-Javadoc)
-	 * @see net.sci.image.ImageOperator#process(net.sci.image.Image, net.sci.image.Image)
-	 */
-	@Override
-	public void process(Image inputImage, Image outputImage)
-	{
-		Array<?> inputData = inputImage.getData();
-		if (!(inputData instanceof ScalarArray))
-		{
-			throw new IllegalArgumentException("Input image must be scalar");
-		}
-		Array<?> outputData = outputImage.getData();
-		if (!(outputData instanceof BinaryArray))
-		{
-			throw new IllegalArgumentException("Output image must be boolean");
-		}
-		if (inputData.dimensionality() != outputData.dimensionality())
-		{
-			throw new IllegalArgumentException("Input and output images must have same dimensionality");
-		}
-
-		process((ScalarArray<?>) inputData, (BinaryArray) outputData);
-	}
+	public void process(ScalarArray<?> source, BinaryArray target)
+    {
+    	// compute threshold value
+    	double threshold = computeThresholdValue(source);
+    	
+    	// create array iterators
+    	ScalarArray.Iterator<?> iter1 = source.iterator(); 
+    	BinaryArray.Iterator iter2 = target.iterator();
+    	
+    	// iterate on both arrays for computing segmented values
+    	while(iter1.hasNext() && iter2.hasNext())
+    	{
+    		iter2.setNextBoolean(iter1.nextValue() >= threshold);
+    	}
+    }
 
 	/**
 	 * Computes the threshold value on a scalar array and returns the resulting
 	 * binary array.
 	 * 
-	 * @param source
+	 * @param array
 	 *            the scalar array to threshold
 	 * @return the binary array resulting from thresholding
 	 */
-	public BinaryArray processScalar(ScalarArray<?> source)
+	public BinaryArray processScalar(ScalarArray<?> array)
 	{
-		BinaryArray target = createEmptyOutputArray(source);
-		process(source, target);
-		return target;
+		BinaryArray result = createEmptyOutputArray(array);
+		process(array, result);
+		return result;
 	}
 	
-	public void process(ScalarArray<?> source, BinaryArray target)
+	@Override
+	public <T> BinaryArray process(Array<T> array)
 	{
-		// compute threshold value
-		double threshold = computeThresholdValue(source);
-		
-		// create array iterators
-		ScalarArray.Iterator<?> iter1 = source.iterator(); 
-		BinaryArray.Iterator iter2 = target.iterator();
-		
-		// iterate on both arrays for computing segmented values
-		while(iter1.hasNext() && iter2.hasNext())
-		{
-			iter2.setNextBoolean(iter1.nextValue() >= threshold);
-		}
+	    if (!(array instanceof ScalarArray))
+	    {
+	        throw new IllegalArgumentException("Requires a scalar array");
+	    }
+	    return processScalar((ScalarArray<?>) array);
 	}
 	
 	/**
@@ -86,21 +71,5 @@ public abstract class AutoThreshold implements ImageToImageOperator
 	public BinaryArray createEmptyOutputArray(Array<?> inputArray)
 	{
 		return BinaryArray.create(inputArray.getSize());
-	}
-
-	/**
-	 * Creates a new boolean image that can be used as output for processing the
-	 * given input image.
-	 * 
-	 * @param inputImage
-	 *            the reference image
-	 * @return a new instance of Image that can be used for processing input
-	 *         image.
-	 */
-	public Image createEmptyOutputImage(Image inputImage)
-	{
-		Array<?> array = inputImage.getData();
-		BinaryArray outputArray = BinaryArray.create(array.getSize());
-		return new Image(outputArray, inputImage);
 	}
 }

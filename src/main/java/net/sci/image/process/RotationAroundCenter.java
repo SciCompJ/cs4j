@@ -4,17 +4,19 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayToArrayOperator;
+import net.sci.array.data.ScalarArray;
+import net.sci.array.data.VectorArray;
 import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.interp.LinearInterpolator2D;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * @author dlegland
  *
  */
-public class RotationAroundCenter implements ArrayToArrayOperator
+public class RotationAroundCenter implements ImageArrayOperator
 {
 	/**
 	 * The rotation angle, in degrees counter-clockwise.
@@ -29,11 +31,7 @@ public class RotationAroundCenter implements ArrayToArrayOperator
 	{
 		this.angle = angle;
 	}
-	
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
-	@Override
+
 	public void process(Array<?> source, Array<?> target)
 	{
 		if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
@@ -136,4 +134,39 @@ public class RotationAroundCenter implements ArrayToArrayOperator
 			}
 		}
 	}
+
+    @Override
+    public <T> Array<?> process(Array<T> array)
+    {
+        if (array.dimensionality() != 2)
+        {
+            throw new IllegalArgumentException("Requires an array of dimensionality 2");
+        }
+        
+        if (array instanceof ScalarArray<?>)
+        {
+            ScalarArray2D<?> scalar2d = ScalarArray2D.wrap((ScalarArray<?>) array);
+            ScalarArray2D<?> result = ScalarArray2D.wrap(scalar2d.newInstance(scalar2d.getSize())); 
+            processScalar2d(scalar2d, result);
+            return result;
+        }
+        else if (array instanceof VectorArray<?>)
+        {
+            VectorArray2D<?> vector2d = VectorArray2D.wrap((VectorArray<?>) array);
+            VectorArray2D<?> result = VectorArray2D.wrap(vector2d.newInstance(vector2d.getSize())); 
+            processVector2d(vector2d, result);
+            return result;
+        }
+        else
+        {
+            throw new RuntimeException("Unable to compute array rotation");
+        }
+    }
+    
+    public boolean canProcess(Array<?> array)
+    {
+        if (array.dimensionality() != 2)
+            return false;
+        return array instanceof ScalarArray || array instanceof VectorArray;
+    }
 }

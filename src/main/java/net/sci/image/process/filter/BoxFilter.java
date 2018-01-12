@@ -3,7 +3,6 @@
  */
 package net.sci.image.process.filter;
 
-import net.sci.array.Array;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.Float32Array;
@@ -25,6 +24,7 @@ import net.sci.image.ImageArrayOperator;
 */
 public final class BoxFilter implements ImageArrayOperator, VectorArrayMarginalOperator
 {
+    //TODO: need some work for processing vector images
     /** The size of the box in each dimension */
 	int[] diameters;
 	
@@ -256,13 +256,8 @@ public final class BoxFilter implements ImageArrayOperator, VectorArrayMarginalO
         return output;
     }
 
-    public boolean canProcess(Array<?> array)
-	{
-		return array instanceof ScalarArray;
-	}
-
-//	public boolean canProcess(Array<?> source, Array<?> target)
+//    public boolean canProcess(Array<?> array)
 //	{
-//		return source instanceof ScalarArray && target instanceof ScalarArray;
+//		return array instanceof ScalarArray;
 //	}
 }
