@@ -27,6 +27,7 @@ import net.sci.array.data.scalar3d.BufferedUInt8Array3D;
 import net.sci.array.data.scalar3d.SlicedUInt8Array3D;
 import net.sci.array.type.RGB16;
 import net.sci.array.type.RGB8;
+import net.sci.image.DefaultColorMap;
 import net.sci.image.Image;
 
 /**
@@ -156,7 +157,7 @@ public class TiffImageReader implements ImageReader
         // Add Image meta-data
         if (fileInfo.lut != null)
         {
-            image.setColorMap(fileInfo.lut);
+            image.setColorMap(new DefaultColorMap(fileInfo.lut));
         }
         image.tiffTags = fileInfo.tags;
         
@@ -199,7 +200,7 @@ public class TiffImageReader implements ImageReader
 		// Add Image meta-data
 		if (info0.lut != null)
 		{
-			image.setColorMap(info0.lut);
+			image.setColorMap(new DefaultColorMap(info0.lut));
 		}
 		image.tiffTags = info0.tags;
 		

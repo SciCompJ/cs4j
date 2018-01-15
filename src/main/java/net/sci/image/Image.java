@@ -136,7 +136,7 @@ public class Image
 	 */
 	double[] displayRange = new double[]{0, 255};
 
-	int[][] colorMap = null;
+	ColorMap colorMap = null;
 	
 	//TODO: find a better way to store meta data
 	public ArrayList<TiffTag> tiffTags = new ArrayList<>(0);
@@ -333,12 +333,12 @@ public class Image
 		return this.data;
 	}
 	
-	public int[][] getColorMap()
+	public ColorMap getColorMap()
 	{
 		return this.colorMap;
 	}
 	
-	public void setColorMap(int[][] map)
+	public void setColorMap(ColorMap map)
 	{
 		this.colorMap = map;
 	}
