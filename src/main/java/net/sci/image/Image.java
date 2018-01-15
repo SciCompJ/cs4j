@@ -121,6 +121,12 @@ public class Image
     String filePath = "";
     
     /**
+     * The meta-data associated to each axis. The array must have as many
+     * elements as the number of dimensions of the iamge.
+     */
+    ImageAxis[] axes;
+    
+    /**
      * The spatial calibration of this image, initialized at construction.
      */
 	SpatialCalibration calib = null;
@@ -151,6 +157,7 @@ public class Image
 		this.data = data;
 		setImageTypeFromDataType();
 		computeImageSize();
+		setupAxes();
 		setupDisplayRange();
 	}
 
@@ -167,6 +174,7 @@ public class Image
 		this.data = data;
 		this.type = type;
 		computeImageSize();
+		setupAxes();
 		setupDisplayRange();
 	}
 
@@ -301,6 +309,13 @@ public class Image
 		this.name = parent.name;
 		
 		this.calib = parent.calib;
+		// duplicate the axis array
+		int nd = getDimension();
+		this.axes = new ImageAxis[nd];
+		for (int d = 0; d < nd; d++)
+		{
+		    this.axes[d] = parent.axes[d];
+		}
 
 		if (this.type == parent.type)
         {
@@ -337,23 +352,54 @@ public class Image
 	{
 		this.displayRange = displayRange;
 	}
-
-	/**
-     * @return the spatial calibration 
+	
+    /**
+     * @return the axes
      */
-    public SpatialCalibration getSpatialCalibration()
+    public ImageAxis[] getAxes()
     {
-        return calib;
+        return axes;
     }
 
     /**
-     * @param calib the spatial calibration  to set
+     * @param axes the axes to set
      */
-    public void setSpatialCalibration(SpatialCalibration calib)
+    public void setAxes(ImageAxis[] axes)
     {
-        this.calib = calib;
+        this.axes = axes;
     }
 
+    /**
+     * Creates default numerical axes for each image dimension.
+     */
+    private void setupAxes()
+    {
+        int nd = this.getDimension();
+        this.axes = new ImageAxis[nd];
+        for (int i = 0;i < nd; i++)
+        {
+            this.axes[i] = new NumericalAxis("Axis-" + i, 1.0, 0.0);
+        }
+    }
+    
+    public void setSpatialCalibration(double[] resol, String unitName)
+    {
+        int nd = this.getDimension();
+        if (nd != resol.length)
+        {
+            throw new IllegalArgumentException("Resolution array must have same size as image dimensionality");
+        }
+        
+        // create image axes
+        ImageAxis axes[] = new ImageAxis[nd];
+        for (int d = 0; d < nd; d++)
+        {
+            axes[d] = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPATIAL, resol[d], 0.0, unitName);
+        }
+        
+        this.setAxes(axes);
+    }
+    
     public String getName()
 	{
 		return this.name;

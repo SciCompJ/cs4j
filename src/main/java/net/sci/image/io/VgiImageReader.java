@@ -14,7 +14,7 @@ import java.io.LineNumberReader;
 import net.sci.array.data.scalar3d.BufferedUInt16Array3D;
 import net.sci.array.data.scalar3d.UInt16Array3D;
 import net.sci.image.Image;
-import net.sci.image.SpatialCalibration;
+import net.sci.image.ImageAxis;
 
 /**
  * @author dlegland
@@ -42,7 +42,8 @@ public class VgiImageReader implements ImageReader
         int bitDepth = 0;
         boolean littleEndian = true;
         
-        SpatialCalibration calib = new SpatialCalibration(3);
+        double[] resol = new double[3];
+        String unitName = "";
         
         try (LineNumberReader reader = new LineNumberReader(new FileReader(file))) 
         { 
@@ -117,16 +118,14 @@ public class VgiImageReader implements ImageReader
                             continue;
                         }
                         
-                        double[] resol = new double[3]; 
                         resol[0] = Double.parseDouble(tokens[0]);
                         resol[1] = Double.parseDouble(tokens[1]);
                         resol[2] = Double.parseDouble(tokens[2]);
-                        calib.setResolutions(resol);
                     }
                     else if ("unit".equalsIgnoreCase(key))
                     {
                         // read unit of spatial calibration
-                        calib.setUnit(valueString);
+                        unitName = valueString;
                     }
                 }
             }
@@ -146,7 +145,13 @@ public class VgiImageReader implements ImageReader
         // Create new image
         Image image = new Image(array);
         image.setFilePath(file.getPath());
-        image.setSpatialCalibration(calib);
+        
+        // setup spatial resolution
+        ImageAxis[] axes = new ImageAxis[3];
+        axes[0] = new ImageAxis.X(resol[0], 0.0, unitName);
+        axes[1] = new ImageAxis.Y(resol[1], 0.0, unitName);
+        axes[2] = new ImageAxis.Z(resol[2], 0.0, unitName);
+        image.setAxes(axes);
                 
         return image; 
     }
