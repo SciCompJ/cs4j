@@ -124,7 +124,7 @@ public class BinaryImages
             Connectivity2D conn, int bitDepth) 
     {
         FloodFillComponentsLabeling2D algo = new FloodFillComponentsLabeling2D(conn, bitDepth);
-        return algo.process(array);
+        return algo.processBinary2d(array);
     }
 
 	/**
@@ -151,7 +151,7 @@ public class BinaryImages
 			int conn, int bitDepth) 
 	{
 		FloodFillComponentsLabeling2D algo = new FloodFillComponentsLabeling2D(conn, bitDepth);
-		return algo.process(array);
+		return algo.processBinary2d(array);
 	}
 
     /**

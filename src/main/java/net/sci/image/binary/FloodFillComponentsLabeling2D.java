@@ -141,7 +141,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
     // ==============================================================
     // Processing methods
     
-	public IntArray2D<?> process(BinaryArray2D image)
+	public IntArray2D<?> processBinary2d(BinaryArray2D image)
 	{
 		// get image size
 		int sizeX = image.getSize(0);
@@ -311,5 +311,12 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
         return result;
     }
     
-    // TODO: add canProcess()
+    public boolean canProcess(Array<?> array)
+    {
+        if (!(array instanceof BinaryArray)) 
+            return false;
+        if (array.dimensionality() != 2)
+            return false;
+        return true;
+    }
 }
