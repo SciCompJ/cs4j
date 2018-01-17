@@ -31,7 +31,6 @@ import net.sci.image.Image;
  */
 public class BufferedImageUtils
 {
-
 	/**
 	 * Private constructor to prevent instantiation.
 	 */
@@ -104,47 +103,6 @@ public class BufferedImageUtils
 		array = createArraySlice(array, nd - 1, sliceIndex);
 		return array;
 	}
-	
-//	private static <T> Array<T> createArraySlice(Array<T> array, int sliceIndex)
-//	{
-//		// check validity of dimension number 
-//		if (array.dimensionality() < 3)
-//		{
-//			throw new IllegalArgumentException("Requires an array with at least three dimensions");
-//		}
-//		
-//		// check validity of slice index
-//		int sizeZ = array.getSize(2);
-//		if (sliceIndex < 0 || sliceIndex >= sizeZ)
-//		{
-//			throw new IllegalArgumentException(String.format("Slice index (%d) must be comprised between 0 and %d", sliceIndex, sizeZ-1));
-//		}
-//
-//		// create new array for slice
-//		int sizeX = array.getSize(0);
-//		int sizeY = array.getSize(1);
-//		Array<T> slice = array.newInstance(sizeX, sizeY);
-//		
-//		// create position cursors
-//		int[] pos3d = new int[3];
-//		pos3d[2] = sliceIndex;
-//		int[] pos2d = new int[2];
-//		
-//		// iterate over slice pixels
-//		for (int y = 0; y < sizeY; y++)
-//		{
-//			pos3d[1] = y; 
-//			pos2d[1] = y;
-//			for (int x = 0; x < sizeX; x++)
-//			{
-//				pos3d[0] = x; 
-//				pos2d[0] = x;
-//				slice.set(pos2d, array.get(pos3d));
-//			}
-//		}
-//
-//		return slice;
-//	}
 	
 	private static <T> Array<T> createArraySlice(Array<T> array, int dim, int sliceIndex)
 	{
@@ -270,15 +228,6 @@ public class BufferedImageUtils
 		return bufImg;
 	}
 
-//    private static final int[][] createGrayLut()
-//    {
-//        int[][] lut = new int[256][];
-//        for (int i = 0; i < 256; i++)
-//        {
-//            lut[i] = new int[]{i, i, i};
-//        }
-//        return lut;
-//    }
     private static final ColorMap createGrayLut()
     {
         return ColorMaps.GRAY.createColorMap(256);
