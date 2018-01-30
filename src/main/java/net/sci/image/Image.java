@@ -482,25 +482,35 @@ public class Image
 		this.type = type;
 	}
 	
-	public boolean isBinaryImage()
-	{
-		return this.type == Type.BINARY;
-	}
+    public boolean isScalarImage()
+    {
+        return isGrayscaleImage() || isLabelImage() || this.type == Type.INTENSITY;
+    }
+
+    public boolean isLabelImage()
+    {
+        return this.type == Type.LABEL || this.type == Type.BINARY;
+    }
 
 	public boolean isGrayscaleImage()
 	{
 		return this.type == Type.GRAYSCALE || this.type == Type.BINARY;
 	}
 
-	public boolean isColorImage()
-	{
-		return this.type == Type.COLOR;
-	}
+    public boolean isBinaryImage()
+    {
+        return this.type == Type.BINARY;
+    }
 
 	public boolean isVectorImage()
 	{
 		return this.type == Type.COLOR || this.type == Type.VECTOR || this.type == Type.COMPLEX || this.type == Type.GRADIENT;
 	}
+
+    public boolean isColorImage()
+    {
+        return this.type == Type.COLOR;
+    }
 
 	/**
 	 * Applies the given operator to image data, and returns a new image with
