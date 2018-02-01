@@ -19,7 +19,6 @@ import net.sci.array.data.VectorArray;
 import net.sci.array.data.color.RGB8Array;
 import net.sci.array.type.Color;
 import net.sci.array.type.Int;
-import net.sci.array.type.RGB8;
 import net.sci.image.io.ImageIOImageReader;
 import net.sci.image.io.MetaImageReader;
 import net.sci.image.io.TiffImageReader;
@@ -141,7 +140,7 @@ public class Image
 	/**
 	 * The background color used to represent label or binary images.
 	 */
-	Color backgroundColor = new RGB8(0, 0, 0);
+	Color backgroundColor = Color.BLACK;
 	
 	//TODO: find a better way to store meta data
 	public ArrayList<TiffTag> tiffTags = new ArrayList<>(0);

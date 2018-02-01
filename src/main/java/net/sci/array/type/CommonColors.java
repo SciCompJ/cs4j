@@ -45,17 +45,17 @@ import java.util.EnumSet;
  */
 public enum CommonColors
 {
-	WHITE("White", 		new RGB8(255, 255, 255)), 
-	BLACK("Black", 		new RGB8(0, 0, 0)), 
-	RED("Red", 			new RGB8(255, 0, 0)), 
-	GREEN("Green", 		new RGB8(0, 255, 0)), 
-	BLUE("Blue", 		new RGB8(0, 0, 255)), 
-	CYAN("Cyan", 		new RGB8(0, 255, 255)), 
-	MAGENTA("Magenta", 	new RGB8(255, 0, 255)), 
-	YELLOW("Yellow", 	new RGB8(255, 255, 0)), 
-	GRAY("Gray", 		new RGB8(127, 127, 127)), 
-	DARK_GRAY("Dark Gray", 	 new RGB8(63, 63, 63)), 
-	LIGHT_GRAY("Light Gray", new RGB8(191, 191, 191));
+	WHITE("White", 		Color.WHITE), 
+	BLACK("Black", 		Color.BLACK), 
+	RED("Red", 			Color.RED), 
+	GREEN("Green", 		Color.GREEN), 
+	BLUE("Blue", 		Color.BLUE), 
+	CYAN("Cyan", 		Color.CYAN), 
+	MAGENTA("Magenta", 	Color.MAGENTA), 
+	YELLOW("Yellow", 	Color.YELLOW), 
+	GRAY("Gray", 		Color.GRAY), 
+	DARK_GRAY("Dark Gray", 	 Color.DARK_GRAY), 
+	LIGHT_GRAY("Light Gray", Color.LIGHT_GRAY);
 
 	/** The name of the color, as displayed in a widget */
 	private final String label;

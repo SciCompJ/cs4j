@@ -15,6 +15,25 @@ package net.sci.array.type;
  */
 public interface Color
 {
+    // =============================================================
+    // Constants
+
+    public static final Color WHITE = new RGB8(255, 255, 255);
+    public static final Color BLACK = new RGB8(0, 0, 0);
+    public static final Color RED = new RGB8(255, 0, 0);
+    public static final Color GREEN = new RGB8(0, 255, 0);
+    public static final Color BLUE = new RGB8(0, 0, 255);
+    public static final Color CYAN = new RGB8(0, 255, 255);
+    public static final Color MAGENTA = new RGB8(255, 0, 255);
+    public static final Color YELLOW = new RGB8(255, 255, 0);
+    public static final Color GRAY = new RGB8(127, 127, 127);
+    public static final Color DARK_GRAY = new RGB8(63, 63, 63);
+    public static final Color LIGHT_GRAY = new RGB8(191, 191, 191);
+
+    
+    // =============================================================
+    // methods
+
     /**
      * @return the red component of this color, between 0 and 1.
      */
