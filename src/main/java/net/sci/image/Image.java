@@ -128,11 +128,6 @@ public class Image
      */
     ImageAxis[] axes;
     
-    /**
-     * The spatial calibration of this image, initialized at construction.
-     */
-	SpatialCalibration calib = null;
-	
 	/**
 	 * The min and max displayable values of scalar images. Default is [0, 255].
 	 */
@@ -273,9 +268,6 @@ public class Image
 		
 		// create size array depending on image type
 		System.arraycopy(dataSize, 0, this.size, 0, nd);
-		
-		// initialze spatial calibration
-		this.calib = new SpatialCalibration(nd);
 	}
 
 	private void setupDisplayRange()
@@ -318,7 +310,6 @@ public class Image
 	{
 		this.name = parent.name;
 		
-		this.calib = parent.calib;
 		// duplicate the axis array
 		int nd = getDimension();
 		this.axes = new ImageAxis[nd];
@@ -335,8 +326,25 @@ public class Image
 	}
 	
 	
-	// =============================================================
-	// Methods
+    // =============================================================
+    // Methods
+
+	/**
+	 * Duplicates image data, and copy meta-data.
+	 * 
+	 * @return a duplicate of this image
+	 */
+	public Image duplicate()
+	{
+	    Image res = new Image(this.data.duplicate(), this);
+	    
+	    // some fields are not copied by constructor
+	    res.type = this.type;
+	    return res;
+	}
+	
+    // =============================================================
+    // Setters and Getters
 
 	public Array<?> getData()
 	{
