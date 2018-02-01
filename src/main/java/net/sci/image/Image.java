@@ -353,7 +353,23 @@ public class Image
 		this.colorMap = map;
 	}
 	
-	public double[] getDisplayRange()
+	/**
+     * @return the backgroundColor
+     */
+    public Color getBackgroundColor()
+    {
+        return backgroundColor;
+    }
+
+    /**
+     * @param backgroundColor the backgroundColor to set
+     */
+    public void setBackgroundColor(Color backgroundColor)
+    {
+        this.backgroundColor = backgroundColor;
+    }
+
+    public double[] getDisplayRange()
 	{
 		return displayRange;
 	}

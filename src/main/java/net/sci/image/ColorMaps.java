@@ -19,7 +19,7 @@ public class ColorMaps
         @Override
         public ColorMap createColorMap(int nColors)
         {
-            ArrayList<RGB8> colors = new ArrayList<RGB8>(nColors);
+            ArrayList<Color> colors = new ArrayList<Color>(nColors);
             for (int i = 0; i < nColors; i++)
             {
                 colors.add(new RGB8(i * 255.0 / nColors, 0, 0));
@@ -33,7 +33,7 @@ public class ColorMaps
         @Override
         public ColorMap createColorMap(int nColors)
         {
-            ArrayList<RGB8> colors = new ArrayList<RGB8>(nColors);
+            ArrayList<Color> colors = new ArrayList<Color>(nColors);
             for (int i = 0; i < nColors; i++)
             {
                 colors.add(new RGB8(0, i * 255.0 / nColors, 0));
@@ -47,7 +47,7 @@ public class ColorMaps
         @Override
         public ColorMap createColorMap(int nColors)
         {
-            ArrayList<RGB8> colors = new ArrayList<RGB8>(nColors);
+            ArrayList<Color> colors = new ArrayList<Color>(nColors);
             for (int i = 0; i < nColors; i++)
             {
                 colors.add(new RGB8(0, 0, i * 255.0 / nColors));
@@ -61,7 +61,7 @@ public class ColorMaps
         @Override
         public ColorMap createColorMap(int nColors)
         {
-            ArrayList<RGB8> colors = new ArrayList<RGB8>(nColors);
+            ArrayList<Color> colors = new ArrayList<Color>(nColors);
             for (int i = 0; i < nColors; i++)
             {
                 int gray = (int) (i * 255.0 / nColors);
@@ -76,7 +76,7 @@ public class ColorMaps
         @Override
         public ColorMap createColorMap(int nColors)
         {
-            ArrayList<RGB8> colors = new ArrayList<RGB8>(nColors);
+            ArrayList<Color> colors = new ArrayList<Color>(nColors);
             colors.add(new RGB8(0, 0, 255));
             for (int i = 1; i < nColors-1; i++)
             {
@@ -93,7 +93,7 @@ public class ColorMaps
         @Override
         public ColorMap createColorMap(int nColors)
         {
-            ArrayList<RGB8> colors = createJetColors();
+            ArrayList<Color> colors = createJetColors();
             ColorMap baseMap = new DefaultColorMap(colors);
             if (nColors == 256)
                 return baseMap;
@@ -101,10 +101,10 @@ public class ColorMaps
                 return interpolate(baseMap, nColors);
         }
         
-        private ArrayList<RGB8> createJetColors() 
+        private ArrayList<Color> createJetColors() 
         {
             // create map
-            ArrayList<RGB8> map = new ArrayList<RGB8>(256);
+            ArrayList<Color> map = new ArrayList<Color>(256);
             
             // shade of dark blue to blue
             for (int i = 0; i < 32; i++)
@@ -144,7 +144,7 @@ public class ColorMaps
             return map;
         }
 
-        private ArrayList<RGB8> createColors() 
+        private ArrayList<Color> createColors() 
         {
             // initial values
             int[] r = { 0, 0, 1, 25, 49, 73, 98, 122, 146, 162, 173, 184, 195, 207,
@@ -158,7 +158,7 @@ public class ColorMaps
                     255 };
 
             // create map
-            ArrayList<RGB8> colors = new ArrayList<RGB8>(r.length);
+            ArrayList<Color> colors = new ArrayList<Color>(r.length);
             
             // cast elements
             for (int i = 0; i < r.length; i++) 
@@ -196,7 +196,7 @@ public class ColorMaps
             return map;
         }
 
-        private ArrayList<RGB8> createColors() 
+        private ArrayList<Color> createColors() 
         {
             // initial values (copied from Fiji's Glasbey LUT)
             int[] r = { 255, 0, 255, 0, 0, 255, 0, 255, 0, 154, 0, 120, 31, 255, 
@@ -257,7 +257,7 @@ public class ColorMaps
                     2, 158, 212, 89, 193, 43, 40, 246, 146, 84, 238, 72, 101, 101 };
 
             // create map
-            ArrayList<RGB8> colors = new ArrayList<RGB8>(r.length);
+            ArrayList<Color> colors = new ArrayList<Color>(r.length);
             
             // cast elements
             for (int i = 0; i < r.length; i++) 
@@ -288,7 +288,7 @@ public class ColorMaps
     public static final ColorMap interpolate(ColorMap colorMap, int nColors) 
     {
         // allocate memory for new colormap
-        ArrayList<RGB8> newColors = new ArrayList<RGB8>(nColors);
+        ArrayList<Color> newColors = new ArrayList<Color>(nColors);
         
         // linear interpolation of each color of new colormap
         int n0 = colorMap.size();

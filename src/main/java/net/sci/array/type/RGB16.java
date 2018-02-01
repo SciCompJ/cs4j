@@ -3,6 +3,7 @@
  */
 package net.sci.array.type;
 
+
 /**
  * A color that is represented by a triplet of red, green and blue components,
  * each of them being coded as UInt16.

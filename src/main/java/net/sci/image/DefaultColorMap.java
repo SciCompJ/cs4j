@@ -5,6 +5,7 @@ package net.sci.image;
 
 import java.util.ArrayList;
 
+import net.sci.array.type.Color;
 import net.sci.array.type.RGB8;
 
 /**
@@ -14,14 +15,14 @@ import net.sci.array.type.RGB8;
  */
 public class DefaultColorMap implements ColorMap
 {
-    ArrayList<RGB8> colors;
+    ArrayList<Color> colors;
     
     /**
      * 
      */
-    public DefaultColorMap(ArrayList<RGB8> colors)
+    public DefaultColorMap(ArrayList<Color> colors)
     {
-        this.colors = new ArrayList<RGB8>(colors.size());
+        this.colors = new ArrayList<Color>(colors.size());
         this.colors.addAll(colors);
     }
 
@@ -30,7 +31,7 @@ public class DefaultColorMap implements ColorMap
      */
     public DefaultColorMap(int[][] array)
     {
-        this.colors = new ArrayList<RGB8>(array.length);
+        this.colors = new ArrayList<Color>(array.length);
         for (int[] rgb : array)
         {
             this.colors.add(new RGB8(rgb[0], rgb[1], rgb[2]));
@@ -41,7 +42,7 @@ public class DefaultColorMap implements ColorMap
      * @see net.sci.image.ColorMap#getColor(int)
      */
     @Override
-    public RGB8 getColor(int i)
+    public Color getColor(int i)
     {
         return colors.get(i);
     }
