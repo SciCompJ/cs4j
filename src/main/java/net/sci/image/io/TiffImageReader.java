@@ -74,17 +74,19 @@ public class TiffImageReader implements ImageReader
 	}
 
 	/**
-	 * Reads the beginning of the tiff file. The header is composed of 8 bytes:
+	 * Reads the main header of the TIFF file. The header is composed of 8 bytes:
 	 * <ul>
 	 * <li>2 bytes for indicating the byte order</li>
 	 * <li>2 bytes for the magic number 42</li>
 	 * <li>4 bytes for indicating the offset of the first Image File Directory</li>
 	 * </ul>
 	 * 
-	 * @throws IOException
+     * @throws IOException if a reading problem occured
+     * @throws RuntimeException if the endianess of the magic number could not be read
 	 */
 	private void createTiffDataReader(File file) throws IOException
 	{
+	    // open the stream
 		RandomAccessFile inputStream = new RandomAccessFile(file, "r");
 		
 		// read bytes indicating endianness
@@ -92,7 +94,8 @@ public class TiffImageReader implements ImageReader
 		int b2 = inputStream.read();
 		int byteOrder = ((b2 << 8) + b1);
 
-		// Setup local endianness
+		// Read file endianness
+		// If a problem occur, this may be the sign of an file in another format
 		boolean littleEndian = true;
 		if (byteOrder == 0x4949) // "II"
 		{
@@ -104,13 +107,13 @@ public class TiffImageReader implements ImageReader
 		}
 		else
 		{
-			String str = Integer.toHexString(b2) + Integer.toHexString(b1);
 			inputStream.close();
 			throw new RuntimeException(
-					"Could not decode endianness of TIFF File: " + str);
+					"Could not decode endianness of TIFF File: " + file.getName());
 		}
+
+		// Create binary data reader from input stream
 		ByteOrder order = littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN; 
-		
 		this.dataReader = new BinaryDataReader(inputStream, order);
 		
 		// Read the magic number indicating tiff format
