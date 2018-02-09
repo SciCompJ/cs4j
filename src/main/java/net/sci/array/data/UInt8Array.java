@@ -57,8 +57,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		UInt8Array.Iterator iter2 = result.iterator();
 		while (iter1.hasNext() && iter2.hasNext())
 		{
-			iter2.forward();
-			iter2.setValue(iter1.nextValue());
+			iter2.setNextValue(iter1.nextValue());
 		}
 		return result;
 	}

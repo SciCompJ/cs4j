@@ -57,8 +57,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		Float64Array.Iterator iter2 = result.iterator();
 		while (iter1.hasNext() && iter2.hasNext())
 		{
-			iter2.forward();
-			iter2.setValue(iter1.nextValue());
+			iter2.setNextValue(iter1.nextValue());
 		}
 		return result;
 	}

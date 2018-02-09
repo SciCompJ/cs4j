@@ -66,8 +66,7 @@ public interface BinaryArray extends IntArray<Binary>
 	    BinaryArray.Iterator iter2 = result.iterator();
 	    while (iter1.hasNext() && iter2.hasNext())
 	    {
-	        iter2.forward();
-	        iter2.setBoolean(iter1.nextValue() > 0);
+	        iter2.setNextBoolean(iter1.nextValue() > 0);
 	    }
 	    return result;
 	}
