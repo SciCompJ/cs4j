@@ -14,6 +14,36 @@ import net.sci.image.Image;
  */
 public class ImageSlicer
 {
+    /**
+     * Computes the planar z-slice from the specified 3D image and the slice
+     * index (in z-direction).
+     * 
+     * @param image
+     *            the input 3D image
+     * @param sliceIndex
+     *            the index of the slice in the z-direction (0-indexed)
+     * @return the corresponding planar slice
+     */
+    public static final <T> Image slice2d(Image image, int sliceIndex)
+    {
+        return slice2d(image, 0, 1, new int[]{0, 0, sliceIndex});
+    }
+
+    /**
+     * Create a 2D slice from a 3D image, specifying the axes of the slice.
+     * 
+     * @param image
+     *            the input 3D image
+     * @param dim1
+     *            the direction of the 3D image corresponding to first slice
+     *            axis
+     * @param dim2
+     *            the direction of the 3D image corresponding to second slice
+     *            axis
+     * @param refPos
+     *            the position of a 3D point belonging to the slice
+     * @return the resulting slice
+     */
     public static final <T> Image slice2d(Image image, int dim1, int dim2, int[] refPos)
     {
         @SuppressWarnings("unchecked")
@@ -64,5 +94,4 @@ public class ImageSlicer
         Image resultImage = new Image(resArray, image);
         return resultImage;
     }
-
 }
