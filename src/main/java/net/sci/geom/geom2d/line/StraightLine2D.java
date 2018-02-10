@@ -114,19 +114,6 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     // Implementation of the LinearGeometry interface 
 
     /**
-     * Transforms this straight line with the specified affine transform.
-     * 
-     * @param trans
-     *            an affine transform
-     * @return the transformed straight line
-     */
-    @Override
-    public StraightLine2D transform(AffineTransform2D trans)
-    {
-        return new StraightLine2D(origin().transform(trans), direction().transform(trans));
-    }
-
-    /**
      * Returns the origin point of this line.
      */
     public Point2D origin() 
@@ -203,6 +190,19 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
 
     // ===================================================================
     // Implementation of the Geometry2D interface 
+
+    /**
+     * Transforms this straight line with the specified affine transform.
+     * 
+     * @param trans
+     *            an affine transform
+     * @return the transformed straight line
+     */
+    @Override
+    public StraightLine2D transform(AffineTransform2D trans)
+    {
+        return new StraightLine2D(origin().transform(trans), direction().transform(trans));
+    }
 
     /* (non-Javadoc)
      * @see net.sci.geom.geom2d.Geometry2D#contains(net.sci.geom.geom2d.Point2D, double)
