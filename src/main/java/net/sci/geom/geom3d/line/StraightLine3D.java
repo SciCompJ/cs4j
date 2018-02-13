@@ -26,7 +26,7 @@ public class StraightLine3D implements LinearGeometry3D
     protected double x0, y0, z0;
 
     /**
-     * Direction vector of the line. dx and dy should not be both zero.
+     * Direction vector of the line. dx, dy and dz should not be all zero.
      */
     protected double dx, dy, dz;
 
@@ -156,6 +156,19 @@ public class StraightLine3D implements LinearGeometry3D
     // ===================================================================
     // Implementation of the Geometry3D interface 
 
+    @Override
+    public boolean contains(Point3D point, double eps)
+    {
+        // TODO develop?
+        return project(point).distance(point) < eps;
+    }
+
+    @Override
+    public double distance(double x, double y, double z)
+    {
+        return project(new Point3D(x, y, z)).distance(x, y, z);
+    }
+    
     /**
      * Transforms this straight line with the specified affine transform.
      * 

@@ -4,6 +4,7 @@
 package net.sci.geom.geom3d;
 
 import net.sci.geom.Point;
+import net.sci.geom.geom3d.transform.AffineTransform3D;
 
 /**
  * A three-dimensional point.
@@ -89,26 +90,24 @@ public class Point3D implements Point, Geometry3D
 	}
 
 	
-	// ===================================================================
-	// Implements Shape2D methods
+    // ===================================================================
+    // Implements Geometry3D methods
 
-	/**
-	 * Computes the distance between this and the point <code>point</code>.
-	 */
-	public double distance(Point3D point)
-	{
-		return distance(point.x, point.y, point.z);
-	}
+    @Override
+    public boolean contains(Point3D point, double eps)
+    {
+        return distance(point) <= eps;
+    }
 
-	/**
-	 * Computes the distance between current point and point with coordinate
-	 * <code>(x,y)</code>. Uses the <code>Math.hypot()</code> function for
-	 * better robustness than simple square root.
-	 */
-	public double distance(double x, double y, double z)
-	{
-		return Math.hypot(Math.hypot(this.x - x, this.y - y), this.z - z);
-	}
+    /**
+     * Computes the distance between current point and point with coordinate
+     * <code>(x,y)</code>. Uses the <code>Math.hypot()</code> function for
+     * better robustness than simple square root.
+     */
+    public double distance(double x, double y, double z)
+    {
+        return Math.hypot(Math.hypot(this.x - x, this.y - y), this.z - z);
+    }
 
 
     // ===================================================================
@@ -143,5 +142,10 @@ public class Point3D implements Point, Geometry3D
     public Box3D boundingBox()
     {
         return new Box3D(this.x, this.x, this.y, this.y, this.z, this.z);
+    }
+
+    public Point3D transform(AffineTransform3D trans)
+    {
+        return trans.transform(this);
     }
 }
