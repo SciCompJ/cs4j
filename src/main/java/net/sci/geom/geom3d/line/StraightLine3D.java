@@ -159,7 +159,6 @@ public class StraightLine3D implements LinearGeometry3D
     @Override
     public boolean contains(Point3D point, double eps)
     {
-        // TODO develop?
         return project(point).distance(point) < eps;
     }
 

@@ -74,17 +74,17 @@ public class Point3D implements Point, Geometry3D
 	// generic methods
 
 	/**
-	 * Adds the specified vector to the point, and returns the result.
+	 * Adds the specified vector to the point, and returns the new point.
 	 */
-	public Point3D add(Vector3D v)
+	public Point3D plus(Vector3D v)
 	{
 		return new Point3D(this.x + v.getX(), this.y + v.getY(), this.z + v.getZ());
 	}
 
 	/**
-	 * Subtracts the specified vector from the point, and returns the result.
+	 * Subtracts the specified vector from the point, and returns the new point.
 	 */
-	public Point3D subtract(Vector3D v)
+	public Point3D minus(Vector3D v)
 	{
 		return new Point3D(this.x - v.getX(), this.y - v.getY(), this.z - v.getZ());
 	}
