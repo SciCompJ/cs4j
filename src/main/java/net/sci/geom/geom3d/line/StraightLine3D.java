@@ -67,19 +67,6 @@ public class StraightLine3D implements LinearGeometry3D
 
     // ===================================================================
     // Methods specific to StraightLine3D 
-
-    /**
-     * Returns the point at the specified position using the parametric
-     * representation of this line.
-     * 
-     * @param t
-     *            the position on the line
-     * @return the point located at specified position
-     */
-    public Point3D point(double t)
-    {
-        return new Point3D(x0 + dx * t, y0 + dy * t, z0 + dz * t);
-    }
     
     /**
      * Computes the coordinates of the projection of the specified point on this
@@ -145,6 +132,31 @@ public class StraightLine3D implements LinearGeometry3D
 
     // ===================================================================
     // Implementation of the Curve3D interface 
+
+    /**
+     * Returns the point at the specified position using the parametric
+     * representation of this line.
+     * 
+     * @param t
+     *            the position on the line
+     * @return the point located at specified position
+     */
+    public Point3D point(double t)
+    {
+        return new Point3D(x0 + dx * t, y0 + dy * t, z0 + dz * t);
+    }
+
+    @Override
+    public double getT0()
+    {
+        return Double.NEGATIVE_INFINITY;
+    }
+
+    @Override
+    public double getT1()
+    {
+        return Double.POSITIVE_INFINITY;
+    }
 
     @Override
     public boolean isClosed()

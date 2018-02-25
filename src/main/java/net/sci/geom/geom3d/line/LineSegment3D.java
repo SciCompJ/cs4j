@@ -70,19 +70,6 @@ public class LineSegment3D implements LinearGeometry3D
     // Implementation of the LinearGeometry interface 
 
     /**
-     * Transforms this line segment with the specified affine transform.
-     * 
-     * @param trans
-     *            an affine transform
-     * @return the transformed line segment
-     */
-    @Override
-    public LineSegment3D transform(AffineTransform3D trans)
-    {
-        return new LineSegment3D(getP1().transform(trans), getP2().transform(trans));
-    }
-
-    /**
      * Returns the origin point of this line.
      */
     public Point3D origin() 
@@ -105,10 +92,54 @@ public class LineSegment3D implements LinearGeometry3D
         return new StraightLine3D(this.x1, this.y1, this.z1, this.x2 - this.x1, this.y2 - this.y1, this.z2 - this.z1);
     }
 
-    
+    /**
+     * Transforms this line segment with the specified affine transform.
+     * 
+     * @param trans
+     *            an affine transform
+     * @return the transformed line segment
+     */
+    @Override
+    public LineSegment3D transform(AffineTransform3D trans)
+    {
+        return new LineSegment3D(getP1().transform(trans), getP2().transform(trans));
+    }
+
+
     // ===================================================================
     // Methods implementing the Curve3D interface
     
+    /**
+     * Returns the point at the specified position using the parametric
+     * representation of this line segment.
+     * 
+     * @param t
+     *            the position on the line segment, between 0 and 1
+     * @return the point located at specified position
+     */
+    public Point3D point(double t)
+    {
+        // clamp to [0 , 1]
+        t = Math.min(Math.max(t, 0), 1);
+        
+        double dx = x2 - x1;
+        double dy = y2 - y1;
+        double dz = z2 - z1;
+        return new Point3D(x1 + dx * t, y1 + dy * t, z1 + dz * t);
+    }
+
+    @Override
+    public double getT0()
+    {
+        return 0;
+    }
+
+    @Override
+    public double getT1()
+    {
+        return 1;
+    }
+
     @Override
     public boolean isClosed()
     {

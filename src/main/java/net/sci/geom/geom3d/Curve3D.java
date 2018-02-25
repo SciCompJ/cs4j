@@ -16,6 +16,11 @@ import net.sci.geom.geom3d.transform.AffineTransform3D;
  */
 public interface Curve3D extends CurveShape3D
 {
+    public abstract Point3D point(double t);
+
+    public abstract double getT0();
+    public abstract double getT1();
+    
     /**
      * @return true if this curve is closed.
      */
