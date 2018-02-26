@@ -63,18 +63,6 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
 
     // ===================================================================
     // Methods specific to StraightLine2D 
-
-    /**
-     * Returns the point at the specified position using the parametric
-     * representation of this line.
-     * 
-     * @param t the position on the line
-     * @return the point located at specified position
-     */
-    public Point2D point(double t)
-    {
-        return new Point2D(x0 + dx * t, y0 + dy * t);
-    }
     
     /**
      * Computes the coordinates of the projection of the specified point on this
@@ -181,6 +169,33 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     // ===================================================================
     // Methods implementing the Curve2D interface
     
+    /**
+     * Returns the point at the specified position using the parametric
+     * representation of this line.
+     * 
+     * @param t the position on the line
+     * @return the point located at specified position
+     */
+    @Override
+    public Point2D getPoint(double t)
+    {
+        double x = this.x0 + t * this.dx;
+        double y = this.y0 + t * this.dy;
+        return new Point2D(x, y);
+    }
+
+    @Override
+    public double getT0()
+    {
+        return Double.NEGATIVE_INFINITY;
+    }
+
+    @Override
+    public double getT1()
+    {
+        return Double.POSITIVE_INFINITY;
+    }
+
     @Override
     public boolean isClosed()
     {

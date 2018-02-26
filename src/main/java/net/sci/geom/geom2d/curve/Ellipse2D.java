@@ -309,6 +309,37 @@ public class Ellipse2D implements Contour2D
     // Methods implementing the Curve2D interface
     
     @Override
+    public Point2D getPoint(double t)
+    {
+        // pre-copute rotation coefficients
+        double thetaRad = Math.toRadians(this.theta);
+        double cot = Math.cos(thetaRad);
+        double sit = Math.sin(thetaRad);
+
+        // position for a centered and axis-aligned ellipse
+        double x0 = this.r1 * cos(t);
+        double y0 = this.r2 * sin(t);
+        
+        //apply rotation and translatino
+        double x = x0 * cot - y0 * sit + this.xc;
+        double y = x0 * sit + y0 * cot + this.yc;
+
+        return new Point2D(x, y);
+    }
+
+    @Override
+    public double getT0()
+    {
+        return 0;
+    }
+
+    @Override
+    public double getT1()
+    {
+        return 2 * Math.PI;
+    }
+
+    @Override
     public boolean isClosed()
     {
         return true;
@@ -398,5 +429,4 @@ public class Ellipse2D implements Contour2D
         // TODO could be more precise
         return asPolyline(200).boundingBox();
     }
-
 }

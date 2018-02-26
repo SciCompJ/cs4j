@@ -104,6 +104,34 @@ public class LineSegment2D implements LinearGeometry2D
     // ===================================================================
     // Methods implementing the Curve2D interface
     
+    /**
+     * Returns the point at the specified position using the parametric
+     * representation of this line.
+     * 
+     * @param t the position on the line
+     * @return the point located at specified position
+     */
+    @Override
+    public Point2D getPoint(double t)
+    {
+        t = Math.min(Math.max(t, 0), 1);
+        double x = this.x1 + t * (this.x2 - this.x1);
+        double y = this.y1 + t * (this.y2 - this.y1);
+        return new Point2D(x, y);
+    }
+
+    @Override
+    public double getT0()
+    {
+        return 0;
+    }
+
+    @Override
+    public double getT1()
+    {
+        return 1;
+    }
+
     @Override
     public boolean isClosed()
     {
@@ -187,7 +215,7 @@ public class LineSegment2D implements LinearGeometry2D
         t = Math.max(Math.min(t, 1), 0);
         
         // compute position of projected point on the edge
-        Point2D proj = line.point(t);
+        Point2D proj = line.getPoint(t);
         
         // return distance to projected point
         return proj.distance(x, y);

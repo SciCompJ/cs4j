@@ -351,6 +351,51 @@ public class LinearRing2D implements Polyline2D, Contour2D
     // Methods implementing the Curve2D interface
     
     @Override
+    public Point2D getPoint(double t)
+    {
+        t = Math.min(Math.max(t, 0), 1);
+        int n = vertices.size();
+
+        // index of vertex before point
+        int ind0 = (int) Math.floor(t + Double.MIN_VALUE);
+        double tl = t - ind0;
+
+        if (ind0 == n)
+            ind0 = 0;
+        Point2D p0 = vertices.get(ind0);
+
+//        // check if equal to a vertex
+//        if (Math.abs(t - ind0) < Shape2D.ACCURACY)
+//            return p0;
+
+        // index of vertex after point
+        int ind1 = ind0 + 1;
+        if (ind1 == n)
+            ind1 = 0;
+        Point2D p1 = vertices.get(ind1);
+
+        // position on line;
+        double x0 = p0.getX();
+        double y0 = p0.getY();
+        double dx = p1.getX() - x0;
+        double dy = p1.getY() - y0;
+
+        return new Point2D(x0 + tl * dx, y0 + tl *dy);
+    }
+
+    @Override
+    public double getT0()
+    {
+        return 0;
+    }
+
+    @Override
+    public double getT1()
+    {
+        return vertices.size();
+    }
+
+    @Override
     public boolean isClosed()
     {
         return true;

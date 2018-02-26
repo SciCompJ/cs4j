@@ -171,6 +171,46 @@ public class LineString2D implements Polyline2D
     // Methods implementing the Curve2D interface
     
     @Override
+    public Point2D getPoint(double t)
+    {
+        // format position to stay between limits
+        double t0 = this.getT0();
+        double t1 = this.getT1();
+        t = Math.max(Math.min(t, t1), t0);
+
+        // index of vertex before point
+        int ind0 = (int) Math.floor(t + Double.MIN_VALUE);
+        double tl = t - ind0;
+        Point2D p0 = vertices.get(ind0);
+
+//        // check if equal to a vertex
+//        if (Math.abs(t - ind0) < Shape2D.ACCURACY)
+//            return p0;
+
+        // index of vertex after point
+        int ind1 = ind0+1;
+        Point2D p1 = vertices.get(ind1);
+
+        // position on line;
+        double x0 = p0.getX();
+        double y0 = p0.getY();
+        double dx = p1.getX() - x0;
+        double dy = p1.getY() - y0;
+        return new Point2D(x0 + tl * dx, y0 + tl * dy);
+    }
+
+    @Override
+    public double getT0()
+    {
+        return 0;
+    }
+
+    @Override
+    public double getT1()
+    {
+        return vertices.size();
+    }
+    @Override
     public boolean isClosed()
     {
         return false;

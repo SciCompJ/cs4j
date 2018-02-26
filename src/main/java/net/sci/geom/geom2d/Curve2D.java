@@ -16,6 +16,11 @@ import net.sci.geom.geom2d.transform.AffineTransform2D;
  */
 public interface Curve2D extends CurveShape2D
 {
+    public abstract Point2D getPoint(double t);
+
+    public abstract double getT0();
+    public abstract double getT1();
+
     /**
      * @return true if this curve is closed.
      */

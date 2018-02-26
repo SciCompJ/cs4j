@@ -117,7 +117,7 @@ public class LineSegment3D implements LinearGeometry3D
      *            the position on the line segment, between 0 and 1
      * @return the point located at specified position
      */
-    public Point3D point(double t)
+    public Point3D getPoint(double t)
     {
         // clamp to [0 , 1]
         t = Math.min(Math.max(t, 0), 1);
@@ -225,7 +225,7 @@ public class LineSegment3D implements LinearGeometry3D
         t = Math.max(Math.min(t, 1), 0);
         
         // compute position of projected point on the edge
-        Point3D proj = line.point(t);
+        Point3D proj = line.getPoint(t);
         
         // return distance to projected point
         return proj.distance(x, y, z);

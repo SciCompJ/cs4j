@@ -3,7 +3,7 @@
  */
 package net.sci.geom.geom3d;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import net.sci.geom.geom3d.transform.AffineTransform3D;
@@ -16,7 +16,7 @@ import net.sci.geom.geom3d.transform.AffineTransform3D;
  */
 public interface Curve3D extends CurveShape3D
 {
-    public abstract Point3D point(double t);
+    public abstract Point3D getPoint(double t);
 
     public abstract double getT0();
     public abstract double getT1();
@@ -34,9 +34,7 @@ public interface Curve3D extends CurveShape3D
     @Override
     public default Collection<? extends Curve3D> curves() 
     {
-        ArrayList<Curve3D> res = new ArrayList<Curve3D>(1);
-        res.add(this);
-        return res;
+        return Arrays.asList(this);
     }
     
     /**
