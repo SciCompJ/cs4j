@@ -90,8 +90,36 @@ public class Plane3D implements Geometry3D
 
     public StraightLine3D intersection(Plane3D plane)
     {
-        // TODO: implement
-        return null;
+        // compute plane normals
+        Vector3D n1 = this.normal().normalize();
+        Vector3D n2 = plane.normal().normalize();
+        
+//        // test if planes are parallel
+//        if abs(cross(n1, n2, 2)) < tol
+//        line = [NaN NaN NaN NaN NaN NaN];
+//        return;
+//        end
+
+        // Uses Hessian form, ie : N.p = d
+        // nI this case, d can be found as : -N.p0, when N is normalized
+        double d1 = Vector3D.dotProduct(n1, new Vector3D(this.origin()));
+        double d2 = Vector3D.dotProduct(n2, new Vector3D(plane.origin()));
+        
+        //% compute dot products
+        double dot1 = Vector3D.dotProduct(n1, n1);
+        double dot2 = Vector3D.dotProduct(n2, n2);
+        double dot12 = Vector3D.dotProduct(n1, n2);
+
+        // intermediate computations
+        double det = dot1 * dot2 - dot12 * dot12;
+        double c1 = (d1 * dot2 - d2 * dot12) / det;
+        double c2 = (d2 * dot1 - d1 * dot12) / det;
+
+        // compute line origin and direction
+        Point3D p0 = new Point3D(n1.times(c1).plus(n2.times(c2)));
+        Vector3D dp = Vector3D.crossProduct(n1, n2);
+
+        return new StraightLine3D(p0, dp);
     }
     
     public Point3D origin()

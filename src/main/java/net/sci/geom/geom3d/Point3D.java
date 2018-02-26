@@ -44,6 +44,12 @@ public class Point3D implements Point, Geometry3D
 		this.z = z;
 	}
 	
+    /** Convert a vector to a point */
+    public Point3D(Vector3D vect)
+    {
+        this(vect.getX(), vect.getY(), vect.getZ());
+    }
+
 	
 	// ===================================================================
 	// accessors
