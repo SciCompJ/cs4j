@@ -89,4 +89,10 @@ public class UInt16 extends Int
 	{
 		return java.lang.Short.hashCode(this.value);
 	}
+    
+    @Override
+    public String toString()
+    {
+        return String.format("UInt16(%d)", this.value & 0x00FFFF);
+    }    
 }

@@ -97,4 +97,10 @@ public class UInt8 extends Int
 	{
 		return java.lang.Byte.hashCode(this.value);
 	}
+	
+    @Override
+    public String toString()
+    {
+        return String.format("UInt8(%d)", this.value & 0x00FF);
+    }    
 }

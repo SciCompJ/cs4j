@@ -90,4 +90,10 @@ public class Int16 extends Int
 	{
 		return java.lang.Short.hashCode(this.value);
 	}
+    
+    @Override
+    public String toString()
+    {
+        return String.format("Int16(%d)", this.value);
+    }    
 }

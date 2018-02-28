@@ -62,4 +62,10 @@ public class Int32 extends Int
 	{
 		return java.lang.Integer.hashCode(this.value);
 	}
+
+	@Override
+    public String toString()
+    {
+        return String.format("Int32(%d)", this.value);
+    }    
 }

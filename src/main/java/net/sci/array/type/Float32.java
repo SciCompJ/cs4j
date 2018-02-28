@@ -71,4 +71,10 @@ public class Float32 extends Scalar
 	{
 		return java.lang.Float.hashCode(this.value);
 	}
+
+	@Override
+    public String toString()
+    {
+        return String.format("Float32(%f)", this.value);
+    }    
 }

@@ -349,4 +349,15 @@ public class RGB16 extends IntVector<UInt16> implements Color
 		return 3;
 	}
 	
+    // =============================================================
+    // Override Object methods
+    
+    @Override
+    public String toString()
+    {
+        int r = (int) (this.longCode & 0x00FFFF);
+        int g = (int) (this.longCode >> 16) & 0x00FFFF;
+        int b = (int) (this.longCode >> 32) & 0x00FFFF;
+        return String.format("RGB16(%d,%d,%d)", r, g, b);
+    }
 }

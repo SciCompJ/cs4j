@@ -355,4 +355,17 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	{
 		return 3;
 	}
+
+	// =============================================================
+    // Override Object methods
+	
+	@Override
+	public String toString()
+	{
+        int r = this.intCode & 0x00FF;
+        int g = (this.intCode >> 8) & 0x00FF;
+        int b = (this.intCode >> 16) & 0x00FF;
+	    return String.format("RGB8(%d,%d,%d)", r, g, b);
+	}
+    
 }
