@@ -14,6 +14,8 @@ import net.sci.geom.geom2d.curve.Ellipse2D;
 import net.sci.image.morphology.LabelImages;
 
 /**
+ * A collections of static methods for the analysis of 3D regions.
+ * 
  * @author dlegland
  *
  */
