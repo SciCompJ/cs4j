@@ -4,7 +4,6 @@
 package net.sci.geom.geom3d;
 
 import static java.lang.Double.isInfinite;
-
 import net.sci.geom.Box;
 
 /**
@@ -44,6 +43,8 @@ public class Box3D implements Box
         this.xmax = xmax;
         this.ymin = ymin;
         this.ymax = ymax;
+        this.zmin = zmin;
+        this.zmax = zmax;
     }
     
     /**
@@ -69,34 +70,49 @@ public class Box3D implements Box
     // ===================================================================
     // Accessors to Box2D fields
     
-    public double getMinX()
+    public double getXMin()
     {
         return xmin;
     }
     
-    public double getMaxX()
+    public double getXMax()
     {
         return xmax;
     }
     
-    public double getMinY()
+    public double getYMin()
     {
         return ymin;
     }
     
-    public double getMaxY()
+    public double getYMax()
     {
         return ymax;
     }
     
-    public double getWidth()
+    public double getZMin()
+    {
+        return zmin;
+    }
+    
+    public double getZMax()
+    {
+        return zmax;
+    }
+    
+    public double getSizeX()
     {
         return xmax - xmin;
     }
     
-    public double getHeight()
+    public double getSizeY()
     {
         return ymax - ymin;
+    }
+    
+    public double getSizeZ()
+    {
+        return zmax - zmin;
     }
     
     /** Returns true if all bounds are finite. */
@@ -106,9 +122,13 @@ public class Box3D implements Box
             return false;
         if (isInfinite(ymin))
             return false;
+        if (isInfinite(zmin))
+            return false;
         if (isInfinite(xmax))
             return false;
         if (isInfinite(ymax))
+            return false;
+        if (isInfinite(zmax))
             return false;
         return true;
     }
@@ -123,7 +143,8 @@ public class Box3D implements Box
         {
         case 0: return this.xmin;
         case 1: return this.ymin;
-        default: throw new IllegalArgumentException("Dimension index must be eithre 0 or 1, not " + d);
+        case 2: return this.zmin;
+        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
         }
     }
     
@@ -133,15 +154,26 @@ public class Box3D implements Box
         {
         case 0: return this.xmax;
         case 1: return this.ymax;
-        default: throw new IllegalArgumentException("Dimension index must be eithre 0 or 1, not " + d);
+        case 2: return this.zmax;
+        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
         }
     }
     
 
-
     // ===================================================================
     // tests of inclusion
     
+    public double getSize(int d)
+    {
+        switch(d)
+        {
+        case 0: return this.xmax - this.xmin;
+        case 1: return this.ymax - this.ymin;
+        case 2: return this.zmax - this.zmin;
+        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
+        }
+    }
+
     /**
      * Checks if this box contains the given point.
      */
@@ -162,22 +194,6 @@ public class Box3D implements Box
         if (y > ymax)
             return false;
         if (z > zmax)
-            return false;
-        return true;
-    }
-    
-    /**
-     * Checks if this box contains the point defined by the given coordinates.
-     */
-    public boolean contains(double x, double y)
-    {
-        if (x < xmin)
-            return false;
-        if (y < ymin)
-            return false;
-        if (x > xmax)
-            return false;
-        if (y > ymax)
             return false;
         return true;
     }

@@ -108,10 +108,10 @@ public class CurveSet2D implements CurveShape2D
         for (Curve2D curve : curves)
         {
             Box2D box = curve.boundingBox();
-            xmin = Math.min(xmin, box.getMinX());
-            xmax = Math.max(xmax, box.getMaxX());
-            ymin = Math.min(ymin, box.getMinY());
-            ymax = Math.max(ymax, box.getMaxY());
+            xmin = Math.min(xmin, box.getXMin());
+            xmax = Math.max(xmax, box.getXMax());
+            ymin = Math.min(ymin, box.getYMin());
+            ymax = Math.max(ymax, box.getYMax());
         }
         
         return new Box2D(xmin, xmax, ymin, ymax);

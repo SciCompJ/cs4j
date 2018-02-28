@@ -144,32 +144,32 @@ public class Box2D implements Box
     // ===================================================================
     // Accessors to Box2D fields
     
-    public double getMinX()
+    public double getXMin()
     {
         return xmin;
     }
     
-    public double getMaxX()
+    public double getXMax()
     {
         return xmax;
     }
     
-    public double getMinY()
+    public double getYMin()
     {
         return ymin;
     }
     
-    public double getMaxY()
+    public double getYMax()
     {
         return ymax;
     }
     
-    public double getWidth()
+    public double getSizeX()
     {
         return xmax - xmin;
     }
     
-    public double getHeight()
+    public double getSizeY()
     {
         return ymax - ymin;
     }
@@ -198,7 +198,7 @@ public class Box2D implements Box
         {
         case 0: return this.xmin;
         case 1: return this.ymin;
-        default: throw new IllegalArgumentException("Dimension index must be eithre 0 or 1, not " + d);
+        default: throw new IllegalArgumentException("Dimension index must be either 0 or 1, not " + d);
         }
     }
     
@@ -208,7 +208,17 @@ public class Box2D implements Box
         {
         case 0: return this.xmax;
         case 1: return this.ymax;
-        default: throw new IllegalArgumentException("Dimension index must be eithre 0 or 1, not " + d);
+        default: throw new IllegalArgumentException("Dimension index must be either 0 or 1, not " + d);
+        }
+    }
+    
+    public double getSize(int d)
+    {
+        switch(d)
+        {
+        case 0: return this.xmax - this.xmin;
+        case 1: return this.ymax - this.ymin;
+        default: throw new IllegalArgumentException("Dimension index must be either 0 or 1, not " + d);
         }
     }
     
