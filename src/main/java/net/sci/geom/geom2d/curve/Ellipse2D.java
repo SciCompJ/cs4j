@@ -182,7 +182,7 @@ public class Ellipse2D implements Contour2D
     /** X-coordinate of the center. */
     protected double  xc;
 
-    /** X-coordinate of the center. */
+    /** Y-coordinate of the center. */
     protected double  yc;
 
     /** Length of semi-major axis. Must be positive. */
