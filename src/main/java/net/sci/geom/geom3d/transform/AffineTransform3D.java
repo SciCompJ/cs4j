@@ -32,8 +32,10 @@ public interface AffineTransform3D extends Transform3D
 	 * 
 	 * @param dx
 	 *            the x-component of the translation transform
-	 * @param dy
-	 *            the y-component of the translation transform
+     * @param dy
+     *            the y-component of the translation transform
+     * @param dz
+     *            the z-component of the translation transform
 	 * @return a new instance of AffineTransform3D representing a translation
 	 */
 	public static AffineTransform3D createTranslation(double dx, double dy, double dz)
@@ -56,15 +58,16 @@ public interface AffineTransform3D extends Transform3D
 	}
 
 	/**
-	 * Creates a scaling by the given coefficients, centered on the point given
-	 * by (x0,y0).
+	 * Creates a scaling by the given coefficients, centered on the given point.
 	 * 
 	 * @param center
 	 * 			  the center of the scaling
 	 * @param sx
-	 *            the scaling along the x direction
-	 * @param sy
-	 *            the scaling along the y direction
+	 *            the scaling along the X direction
+     * @param sy
+     *            the scaling along the Y direction
+     * @param sz
+     *            the scaling along the Z direction
 	 * @return a new instance of AffineTransform3D representing a centered scaling
 	 */
 	public static AffineTransform3D createScaling(Point3D center, double sx,
@@ -76,6 +79,13 @@ public interface AffineTransform3D extends Transform3D
                 0, 0, sz, (1 - sz) * center.getZ());
 	}
 
+	/**
+     * Creates a rotation around the X axis.
+     * 
+     * @param theta
+     *            the angle of rotation, in radians
+     * @return a new instance of AffineTransform3D representing the rotation
+     */
     public static AffineTransform3D createRotationOx(double theta)
     {
         double cot = Math.cos(theta);
@@ -84,6 +94,13 @@ public interface AffineTransform3D extends Transform3D
                 0);
     }
 
+    /**
+     * Creates a rotation around the Y axis.
+     * 
+     * @param theta
+     *            the angle of rotation, in radians
+     * @return a new instance of AffineTransform3D representing the rotation
+     */
     public static AffineTransform3D createRotationOy(double theta)
     {
         double cot = Math.cos(theta);
@@ -92,6 +109,13 @@ public interface AffineTransform3D extends Transform3D
                 0);
     }
 
+    /**
+     * Creates a rotation around the Z axis.
+     * 
+     * @param theta
+     *            the angle of rotation, in radians
+     * @return a new instance of AffineTransform3D representing the rotation
+     */
     public static AffineTransform3D createRotationOz(double theta)
     {
         double cot = Math.cos(theta);
