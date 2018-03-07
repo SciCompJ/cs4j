@@ -167,4 +167,42 @@ public class TiffImageReaderTest
         assertEquals(1673, rgb.getSample(2));
     }
 
+    /**
+     * Try to read an image containing RGB colors coded as 48 bits.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testReadImage_Tiff_CCITT_RLE() throws IOException
+    {
+        // image size 324x238
+        String fileName = getClass().getResource("/files/binary/lozenge_ccitt_rle.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(2, image.getDimension());
+        assertEquals(324, image.getSize(0));
+        assertEquals(238, image.getSize(1));
+        
+        RGB16Array2D data = (RGB16Array2D) image.getData();
+        
+        // pixel at position (0,0) has value (519, 414, 351)
+        RGB16 rgb_0_0 = data.get(0, 0);
+        assertEquals(519, rgb_0_0.getSample(0));
+        assertEquals(414, rgb_0_0.getSample(1));
+        assertEquals(351, rgb_0_0.getSample(2));
+        
+        // pixel at position (1,0) has value (495, 392, 362)
+        RGB16 rgb_1_0 = data.get(1, 0);
+        assertEquals(495, rgb_1_0.getSample(0));
+        assertEquals(392, rgb_1_0.getSample(1));
+        assertEquals(362, rgb_1_0.getSample(2));
+        
+        // pixel at position (140,140) has value (1182, 620, 1673)
+        RGB16 rgb = data.get(140, 140);
+        assertEquals(1182, rgb.getSample(0));
+        assertEquals( 620, rgb.getSample(1));
+        assertEquals(1673, rgb.getSample(2));
+    }
 }

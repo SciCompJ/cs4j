@@ -3,8 +3,10 @@
  */
 package net.sci.image.io;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -739,8 +741,11 @@ public class TiffImageReader implements ImageReader
 		switch (info.compression) {
 		case NONE:
 			return readByteArrayUncompressed(buffer, info, offset);
-		case PACK_BITS:
-			return readByteArrayPackBits(buffer, info, offset);
+        case PACK_BITS:
+            return readByteArrayPackBits(buffer, info, offset);
+        case CCITT_RLE:
+            
+            return readByteArrayPackBits(buffer, info, offset);
 		default:
 			throw new RuntimeException("Unsupported compression mode: "
 					+ info.compression);
@@ -924,4 +929,19 @@ public class TiffImageReader implements ImageReader
 
 		return index2 - offset;
 	}
+	
+	private int readByteArray_CCITT_RLE(byte[] buffer, TiffFileInfo info, int offset)
+	        throws IOException
+	{
+	    InputStream inputStream = new DataInputStream(dataReader.inputStream);
+	    CCITTFaxDecoderStream decoder = new CCITTFaxDecoderStream(
+	            new DataInputStream(inputStream), 
+	            info.width, 
+	            2, // uses CCITT type 2 compression
+	            1, // assumes FillOrder from left to right (default)
+                0, // not used for Type 2 compression 
+                false // try false as default
+	            );
+	}
+
 }
