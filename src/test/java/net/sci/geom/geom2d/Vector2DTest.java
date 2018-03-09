@@ -14,7 +14,7 @@ public class Vector2DTest
         Vector2D v3 = new Vector2D(40, 60);
         
         double eps = 1e-10;
-        assertTrue(v3.almostEquals(v1.add(v2), eps));
+        assertTrue(v3.almostEquals(v1.plus(v2), eps));
     }
     
     @Test
@@ -25,7 +25,7 @@ public class Vector2DTest
         Vector2D v3 = new Vector2D(-20, -20);
         
         double eps = 1e-10;
-        assertTrue(v3.almostEquals(v1.subtract(v2), eps));
+        assertTrue(v3.almostEquals(v1.minus(v2), eps));
     }
     
     @Test
@@ -35,10 +35,10 @@ public class Vector2DTest
         double eps = 1e-10;
         
         Vector2D v2 = new Vector2D(30, 60);
-        assertTrue(v2.almostEquals(v1.multiply(3), eps));
+        assertTrue(v2.almostEquals(v1.times(3), eps));
 
         Vector2D v3 = new Vector2D(5, 10);
-        assertTrue(v3.almostEquals(v1.multiply(0.5), eps));
+        assertTrue(v3.almostEquals(v1.times(0.5), eps));
     }
     
     @Test

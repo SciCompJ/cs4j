@@ -30,7 +30,7 @@ public class Point2DTest
         Point2D p1 = new Point2D(20, 30);
         Vector2D v = new Vector2D(40, 50);
         
-        Point2D res = p1.add(v);
+        Point2D res = p1.plus(v);
         Point2D exp = new Point2D(60, 80);
         double eps = 1e-10;
         assertTrue(res.almostEquals(exp, eps));
@@ -41,7 +41,7 @@ public class Point2DTest
         Point2D p1 = new Point2D(60, 80);
         Vector2D v = new Vector2D(40, 50);
         
-        Point2D res = p1.subtract(v);
+        Point2D res = p1.minus(v);
         Point2D exp = new Point2D(20, 30);
         double eps = 1e-10;
         assertTrue(res.almostEquals(exp, eps));

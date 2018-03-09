@@ -181,7 +181,7 @@ public class Vector2D implements Dimensional
 	 *            the vector to add
 	 * @return the result of the addition of this vector with <code>v</code>
 	 */
-	public Vector2D add(Vector2D v)
+	public Vector2D plus(Vector2D v)
 	{
 		return new Vector2D(this.x + v.x, this.y + v.y);
 	}
@@ -194,7 +194,7 @@ public class Vector2D implements Dimensional
 	 *            the vector to subtract
 	 * @return the result of the subtraction of this vector with <code>v</code>
 	 */
-	public Vector2D subtract(Vector2D v)
+	public Vector2D minus(Vector2D v)
 	{
 		return new Vector2D(this.x - v.x, this.y - v.y);
 	}
@@ -206,7 +206,7 @@ public class Vector2D implements Dimensional
 	 *            the scale factor
 	 * @return the scaled vector
 	 */
-	public Vector2D multiply(double k)
+	public Vector2D times(double k)
 	{
 		return new Vector2D(this.x * k, this.y * k);
 	}

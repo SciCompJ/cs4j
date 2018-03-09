@@ -66,7 +66,7 @@ public class Point2D implements Geometry2D, Point
 	 *            the vector to add
 	 * @return the result of the addition of<code>v</code> to this point
 	 */
-	public Point2D add(Vector2D v)
+	public Point2D plus(Vector2D v)
 	{
 		return new Point2D(this.x + v.getX(), this.y + v.getY());
 	}
@@ -78,7 +78,7 @@ public class Point2D implements Geometry2D, Point
 	 *            the vector to subtract
 	 * @return the result of the subtraction of<code>v</code> to this point
 	 */
-	public Point2D subtract(Vector2D v)
+	public Point2D minus(Vector2D v)
 	{
 		return new Point2D(this.x - v.getX(), this.y - v.getY());
 	}
@@ -97,14 +97,16 @@ public class Point2D implements Geometry2D, Point
     /**
      * @return the x coordinate of this point
      */
-    public double getX() {
+    public double getX()
+    {
         return x;
     }
-
+    
     /**
      * @return the y coordinate of this point
      */
-    public double getY() {
+    public double getY()
+    {
         return y;
     }
     
@@ -138,11 +140,18 @@ public class Point2D implements Geometry2D, Point
     }
 
     /**
-     * Computes the distance between this and the point <code>point</code>.
-     * 
-     * @param point another point
+     * Computes the distance between this point and the point
+     * <code>point</code>.
+     *
+     * @param point
+     *            another point
      * @return the distance between the two points
      */
+    /* 
+     * Overrides the default implementation in Geometry2D interface to directly
+     * compare point coordinates.
+     */ 
+    @Override
     public double distance(Point2D point)
     {
         return distance(point.x, point.y);

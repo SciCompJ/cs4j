@@ -55,29 +55,32 @@ public class Point3D implements Point, Geometry3D
 	// accessors
 
 	/**
-	 * @return the x coordinate of this point
-	 */
-	public double getX() {
-		return x;
-	}
-
-	/**
-	 * @return the y coordinate of this point
-	 */
-	public double getY() {
-		return y;
-	}
-	
-	/**
-	 * @return the z coordinate of this point
-	 */
-	public double getZ() {
-		return z;
+     * @return the x coordinate of this point
+     */
+    public double getX()
+    {
+        return x;
+    }
+    
+    /**
+     * @return the y coordinate of this point
+     */
+    public double getY()
+    {
+        return y;
+    }
+    
+    /**
+     * @return the z coordinate of this point
+     */
+    public double getZ()
+    {
+        return z;
 	}
 	
 	
 	// ===================================================================
-	// generic methods
+	// Methods specific to Point3D
 
 	/**
 	 * Adds the specified vector to the point, and returns the new point.
@@ -95,6 +98,11 @@ public class Point3D implements Point, Geometry3D
 		return new Point3D(this.x - v.getX(), this.y - v.getY(), this.z - v.getZ());
 	}
 
+	public Point3D transform(AffineTransform3D trans)
+    {
+        return trans.transform(this);
+    }
+    
 	
     // ===================================================================
     // Implements Geometry3D methods
@@ -148,10 +156,5 @@ public class Point3D implements Point, Geometry3D
     public Box3D boundingBox()
     {
         return new Box3D(this.x, this.x, this.y, this.y, this.z, this.z);
-    }
-
-    public Point3D transform(AffineTransform3D trans)
-    {
-        return trans.transform(this);
     }
 }
