@@ -93,6 +93,18 @@ public class Circle2D implements Contour2D
         return new Ellipse2D(xc, yc, radius, radius, 0);
     }
     
+    /**
+     * Computes the area of this circle, by multiplying the squared radius by
+     * PI.
+     * 
+     * @see net.sci.geom.geom2d.curve.Ellipse2D#area()
+     * @return the area of this circle.
+     */
+    public double area()
+    {
+        return this.radius * this.radius * Math.PI;
+    }
+    
     public Point2D center()
     {
         return new Point2D(xc, yc);

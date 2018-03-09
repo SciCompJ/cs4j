@@ -22,6 +22,7 @@ import net.sci.geom.geom2d.transform.AffineTransform2D;
  * 
  * @author dlegland
  *
+ * @see Circle2D
  */
 public class Ellipse2D implements Contour2D
 {
@@ -249,6 +250,18 @@ public class Ellipse2D implements Contour2D
         return new LinearRing2D(vertices);
     }
 
+    /**
+     * Computes the area of this ellipse, by multiplying the semi axis lengths by
+     * PI.
+     * 
+     * @return the area of this ellipse.
+     * @see net.sci.geom.geom2d.curve.Circle2D#area()
+     */
+    public double area()
+    {
+        return this.r1 * this.r2 * Math.PI;
+    }
+    
     public Point2D center()
     {
         return new Point2D(xc, yc);
