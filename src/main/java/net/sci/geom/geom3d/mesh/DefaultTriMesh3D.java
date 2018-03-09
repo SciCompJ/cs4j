@@ -4,6 +4,7 @@
 package net.sci.geom.geom3d.mesh;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import net.sci.geom.geom3d.Box3D;
@@ -23,8 +24,15 @@ public class DefaultTriMesh3D implements Mesh3D
     // ===================================================================
     // Class variables
 
-    ArrayList<Point3D> vertices;
+    /**
+     * The position of the vertices. 
+     */
+    // TODO: allow null elements ?
+    ArrayList<Point3D> vertexPositions;
     
+    /**
+     * For each face, the triplet of vertex indices.
+     */
     ArrayList<int[]> faces;
     
     
@@ -36,7 +44,7 @@ public class DefaultTriMesh3D implements Mesh3D
      */
     public DefaultTriMesh3D()
     {
-        this.vertices = new ArrayList<Point3D>();
+        this.vertexPositions = new ArrayList<Point3D>();
         this.faces = new ArrayList<int[]>();
     }
     
@@ -55,9 +63,9 @@ public class DefaultTriMesh3D implements Mesh3D
         // Computes the sum of the norm of the cross products.
         for (int[] faceIndices : faces)
         {
-            Point3D v1 = this.vertices.get(faceIndices[0]);
-            Point3D v2 = this.vertices.get(faceIndices[1]);
-            Point3D v3 = this.vertices.get(faceIndices[2]);
+            Point3D v1 = this.vertexPositions.get(faceIndices[0]);
+            Point3D v2 = this.vertexPositions.get(faceIndices[1]);
+            Point3D v3 = this.vertexPositions.get(faceIndices[2]);
             
             Vector3D v12 = new Vector3D(v1, v2);
             Vector3D v13 = new Vector3D(v1, v3);
@@ -70,22 +78,7 @@ public class DefaultTriMesh3D implements Mesh3D
 
     // ===================================================================
     // Management of vertices
-    
-    /**
-     * Adds a vertex to the mesh and returns the index associated to its
-     * position.
-     * 
-     * @param position
-     *            the position of the new vertex
-     * @return the index of the new vertex
-     */
-    public int addVertex(Point3D position)
-    {
-        int index = vertices.size();
-        vertices.add(position);
-        return index;
-    }
-
+   
     /**
      * Finds the index of the closest vertex to the input point.
      * 
@@ -97,9 +90,9 @@ public class DefaultTriMesh3D implements Mesh3D
     {
         double minDist = Double.POSITIVE_INFINITY;
         int index = -1;
-        for (int i = 0; i < vertices.size(); i++)
+        for (int i = 0; i < vertexPositions.size(); i++)
         {
-            double dist = vertices.get(i).distance(point);
+            double dist = vertexPositions.get(i).distance(point);
             if (dist < minDist)
             {
                 minDist = dist;
@@ -109,6 +102,28 @@ public class DefaultTriMesh3D implements Mesh3D
         return index;
     }
     
+    public Point3D vertexPosition(int index)
+    {
+        return vertexPositions.get(index);
+    }
+    
+    /**
+     * Adds a triangular face defined by the indices of its three vertices.
+     * 
+     * @param iv1 index of the first face vertex (0-based)
+     * @param iv2 index of the second face vertex (0-based)
+     * @param iv3 index of the third face vertex (0-based)
+     * @return the index of the newly created face
+     */
+    public int addFace(Vertex v1, Vertex v2, Vertex v3)
+    {
+        int iv1 = v1.index;
+        int iv2 = v2.index;
+        int iv3 = v3.index;
+        int index = addFace(iv1, iv2, iv3);
+        return index;
+    }
+
     /**
      * Adds a triangular face defined by the indices of its three vertices.
      * 
@@ -127,9 +142,9 @@ public class DefaultTriMesh3D implements Mesh3D
     public Triangle3D getFacePolygon(int faceIndex)
     {
         int[] inds = faces.get(faceIndex);
-        Point3D p1 = this.vertices.get(inds[0]);
-        Point3D p2 = this.vertices.get(inds[1]);
-        Point3D p3 = this.vertices.get(inds[2]);
+        Point3D p1 = this.vertexPositions.get(inds[0]);
+        Point3D p2 = this.vertexPositions.get(inds[1]);
+        Point3D p3 = this.vertexPositions.get(inds[2]);
         
         return new Triangle3D(p1, p2, p3);
     }
@@ -138,6 +153,39 @@ public class DefaultTriMesh3D implements Mesh3D
     // ===================================================================
     // Implementation of the Mesh3D interface
 
+    // ===================================================================
+    // Management of vertices
+    
+    /**
+     * Adds a vertex to the mesh and returns the index associated to its
+     * position.
+     * 
+     * @param position
+     *            the position of the new vertex
+     * @return the index of the new vertex
+     */
+    public Vertex addVertex(Point3D position)
+    {
+        int index = vertexPositions.size();
+        vertexPositions.add(position);
+        return new Vertex(index);
+    }
+
+    @Override
+    public Collection<Vertex> vertices()
+    {
+        ArrayList<Vertex> vertexList = new ArrayList<Vertex>(vertexPositions.size());
+        for (int i = 0; i < vertexPositions.size(); i++)
+        {
+            if (vertexPositions.get(i) != null)
+            {
+                vertexList.add(new Vertex(i));
+            }
+        }
+        
+        return vertexList;
+    }
+  
     /* (non-Javadoc)
      * @see net.sci.geom.geom3d.mesh.Mesh3D#vertices()
      */
@@ -162,7 +210,27 @@ public class DefaultTriMesh3D implements Mesh3D
     @Override
     public int vertexNumber()
     {
-        return vertices.size();
+        return vertexPositions.size();
+    }
+
+    @Override
+    public Collection<? extends Face> faces()
+    {
+        ArrayList<Face> faceList = new ArrayList<Face>(faces.size());
+        for (int[] inds : faces)
+        {
+            if (inds != null)
+            {
+                faceList.add(new Face(inds[0], inds[1], inds[2]));
+            }
+        }
+        return faceList;
+    }
+
+    @Override
+    public int faceNumber()
+    {
+        return faces.size();
     }
 
     
@@ -175,11 +243,11 @@ public class DefaultTriMesh3D implements Mesh3D
     @Override
     public boolean contains(Point3D point, double eps)
     {
-        for (int[] faceIndices : faces)
+        for (int[] inds : faces)
         {
-            Point3D p1 = this.vertices.get(faceIndices[0]);
-            Point3D p2 = this.vertices.get(faceIndices[1]);
-            Point3D p3 = this.vertices.get(faceIndices[2]);
+            Point3D p1 = this.vertexPositions.get(inds[0]);
+            Point3D p2 = this.vertexPositions.get(inds[1]);
+            Point3D p3 = this.vertexPositions.get(inds[2]);
             
             if (new Triangle3D(p1, p2, p3).contains(point, eps))
             {
@@ -198,11 +266,11 @@ public class DefaultTriMesh3D implements Mesh3D
     {
         double distMin = Double.POSITIVE_INFINITY;
         
-        for (int[] faceIndices : faces)
+        for (int[] inds : faces)
         {
-            Point3D p1 = this.vertices.get(faceIndices[0]);
-            Point3D p2 = this.vertices.get(faceIndices[1]);
-            Point3D p3 = this.vertices.get(faceIndices[2]);
+            Point3D p1 = this.vertexPositions.get(inds[0]);
+            Point3D p2 = this.vertexPositions.get(inds[1]);
+            Point3D p3 = this.vertexPositions.get(inds[2]);
             
             double dist = new Triangle3D(p1, p2, p3).distance(x, y, z);
             distMin = Math.min(distMin,  dist);
@@ -226,7 +294,7 @@ public class DefaultTriMesh3D implements Mesh3D
         double zmax = Double.NEGATIVE_INFINITY;
         
         // compute min max in each direction
-        for (Point3D vertex : this.vertices)
+        for (Point3D vertex : this.vertexPositions)
         {
             xmin = Math.min(xmin, vertex.getX());
             xmax = Math.max(xmax, vertex.getX());
@@ -248,5 +316,86 @@ public class DefaultTriMesh3D implements Mesh3D
     {
         return true;
     }
+ 
+    private class Vertex implements Mesh3D.Vertex
+    {
+        // the index of the vertex
+        int index;
+
+        public Vertex(int index)
+        {
+            this.index = index;
+        }
+        
+        @Override
+        public Collection<Face> faces()
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Collection<Edge> edges()
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Point3D position()
+        {
+            return vertexPositions.get(index);
+        }
+
+        @Override
+        public Vector3D normal()
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+        
+        
+        // TODO: implements equals+hashcode
+    }
     
+    private class Face implements Mesh3D.Face
+    {
+        // index of first vertex
+        int iv1;
+        // index of second vertex
+        int iv2;
+        // index of third vertex
+        int iv3;
+
+        public Face(int iv1, int iv2, int iv3)
+        {
+            this.iv1 = iv1;
+            this.iv2 = iv2;
+            this.iv3 = iv3;
+        }
+
+        @Override
+        public Collection<Vertex> vertices()
+        {
+            return Arrays.asList(new Vertex(iv1), new Vertex(iv2), new Vertex(iv3));
+        }
+
+        @Override
+        public Collection<Edge> edges()
+        {
+            // TODO Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public Vector3D normal()
+        {
+            Point3D p1 = vertexPositions.get(iv1);
+            Vector3D v12 = new Vector3D(p1, vertexPosition(iv2));
+            Vector3D v13 = new Vector3D(p1, vertexPosition(iv3));
+            return Vector3D.crossProduct(v12, v13);
+        }
+        
+        // TODO: implements equals+hashcode
+    }
 }
