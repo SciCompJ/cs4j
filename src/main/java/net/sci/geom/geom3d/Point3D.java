@@ -14,6 +14,26 @@ import net.sci.geom.geom3d.transform.AffineTransform3D;
  */
 public class Point3D implements Point, Geometry3D
 {
+    // ===================================================================
+    // Static methods
+    
+    public static final Point3D centroid(Point3D... points)
+    {
+        double xc = 0;
+        double yc = 0;
+        double zc = 0;
+        int np = points.length;
+        for (Point3D p : points)
+        {
+            xc += p.x;
+            yc += p.y;
+            zc += p.z;
+        }
+        
+        return new Point3D(xc / np, yc / np, zc / np);
+    }
+
+    
 	// ===================================================================
 	// class variables
 
@@ -103,7 +123,15 @@ public class Point3D implements Point, Geometry3D
         return trans.transform(this);
     }
     
+	public boolean almostEquals(Point3D point, double eps)
+	{
+	    if (Math.abs(point.x - x) > eps) return false;
+        if (Math.abs(point.y - y) > eps) return false;
+        if (Math.abs(point.z - z) > eps) return false;
+	    return true;
+	}
 	
+
     // ===================================================================
     // Implements Geometry3D methods
 

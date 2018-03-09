@@ -11,7 +11,8 @@ public class Point2DTest
      * Test for double getDistance(Point2D)
      */
     @Test
-    public void testDistancePoint2D() {
+    public void testDistancePoint2D() 
+    {
         Point2D p1 = new Point2D(2, 3);
         Point2D p2 = new Point2D(1, 4);
         Point2D p3 = new Point2D(2, 4);
@@ -26,7 +27,8 @@ public class Point2DTest
     }
 
     @Test
-    public void testPlusVector() {
+    public void testPlusVector() 
+    {
         Point2D p1 = new Point2D(20, 30);
         Vector2D v = new Vector2D(40, 50);
         
@@ -37,7 +39,8 @@ public class Point2DTest
     }
     
     @Test
-    public void testMinusVector() {
+    public void testMinusVector() 
+    {
         Point2D p1 = new Point2D(60, 80);
         Vector2D v = new Vector2D(40, 50);
         
@@ -47,4 +50,16 @@ public class Point2DTest
         assertTrue(res.almostEquals(exp, eps));
     }
     
+    @Test
+    public void testCentroid() 
+    {
+        Point2D p1 = new Point2D(20, 20); 
+        Point2D p2 = new Point2D(60, 30); 
+        Point2D p3 = new Point2D(80, 80); 
+        Point2D p4 = new Point2D(40, 70);
+        Point2D centroid = Point2D.centroid(p1, p2, p3, p4);
+        
+        assertEquals(50, centroid.getX(), .01);
+        assertEquals(50, centroid.getY(), .01);
+    }
 }

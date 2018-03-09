@@ -12,8 +12,25 @@ import net.sci.geom.geom2d.transform.AffineTransform2D;
  */
 public class Point2D implements Geometry2D, Point
 {
-	// ===================================================================
-	// class variables
+    // ===================================================================
+    // Static methods
+    
+    public static final Point2D centroid(Point2D... points)
+    {
+        double xc = 0;
+        double yc = 0;
+        int np = points.length;
+        for (Point2D p : points)
+        {
+            xc += p.x;
+            yc += p.y;
+        }
+        
+        return new Point2D(xc / np, yc / np);
+    }
+
+    // ===================================================================
+    // class variables
 
 	/** x coordinate of the point */
 	final double x;
