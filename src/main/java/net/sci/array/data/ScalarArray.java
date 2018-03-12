@@ -3,6 +3,8 @@
  */
 package net.sci.array.data;
 
+import java.util.function.UnaryOperator;
+
 import net.sci.array.Array;
 import net.sci.array.type.Scalar;
 
@@ -63,6 +65,26 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 		}
 		return res;
 	}
+
+	/**
+     * Applies the given function to each element of the array, and return a new
+     * Array with the same class.
+     * 
+     * @param fun
+     *            the function to apply
+     * @return the result array
+     */
+    public default ScalarArray<T> apply(UnaryOperator<Double> fun)
+    {
+        ScalarArray<T> res = duplicate();
+        ScalarArray.Iterator<T> iter1 = iterator();
+        ScalarArray.Iterator<T> iter2 = res.iterator();
+        while(iter1.hasNext())
+        {
+            iter2.setNextValue(fun.apply(iter1.nextValue()));
+        }
+        return res;
+    }
 
 	
 	// =============================================================
