@@ -6,6 +6,7 @@ package net.sci.geom.geom3d.mesh;
 import java.util.Collection;
 
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.geom3d.Polygon3D;
 import net.sci.geom.geom3d.Vector3D;
 import net.sci.geom.geom3d.Geometry3D;
 
@@ -60,10 +61,24 @@ public interface Mesh3D extends Geometry3D
      */
     public interface Vertex
     {
+        /**
+         * @return the collection of faces adjacent to this vertex.
+         */
         public Collection<? extends Face> faces();
+
+        /**
+         * @return the collection of edges adjacent to this vertex.
+         */
         public Collection<? extends Edge> edges();
         
+        /**
+         * @return the position of this vertex, as a 3D Point
+         */
         public Point3D position();
+
+        /**
+         * @return the normal of this vertex, as a 3D Vector
+         */
         public Vector3D normal();
     }
 
@@ -72,9 +87,24 @@ public interface Mesh3D extends Geometry3D
      */
     public interface Face
     {
+        /**
+         * @return the collection of vertices adjacent to this face.
+         */
         public Collection<? extends Vertex> vertices();
+
+        /**
+         * @return the collection of edges adjacent to this face.
+         */
         public Collection<? extends Edge> edges();
         
+        /**
+         * @return the 3D polygon representing this face.
+         */
+        public Polygon3D polygon();
+        
+        /**
+         * @return the normal of this face.
+         */
         public Vector3D normal();
     }
     
@@ -83,7 +113,14 @@ public interface Mesh3D extends Geometry3D
      */
     public interface Edge
     {
+        /**
+         * @return the collection of vertices adjacent to this edge.
+         */
         public Collection<? extends Vertex> vertices();
+
+        /**
+         * @return the collection of faces adjacent to this edge.
+         */
         public Collection<? extends Face> faces();
     }
 }

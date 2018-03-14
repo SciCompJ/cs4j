@@ -1,12 +1,15 @@
 package net.sci.geom.geom3d.mesh;
 
+import static net.sci.geom.geom3d.Vector3D.dotProduct;
+
+import java.util.Arrays;
+import java.util.Collection;
+
 import net.sci.geom.geom3d.Box3D;
-import net.sci.geom.geom3d.Geometry3D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.geom3d.Polygon3D;
 import net.sci.geom.geom3d.Vector3D;
 import net.sci.geom.geom3d.line.Plane3D;
-
-import static net.sci.geom.geom3d.Vector3D.dotProduct;
 
 
 /**
@@ -15,7 +18,7 @@ import static net.sci.geom.geom3d.Vector3D.dotProduct;
  * @author dlegland
  *
  */
-public class Triangle3D implements Geometry3D
+public class Triangle3D implements Polygon3D
 {
     // ===================================================================
     // Class variables
@@ -39,13 +42,6 @@ public class Triangle3D implements Geometry3D
     // ===================================================================
     // Methods specific to Triangle3D
     
-    public Plane3D supportingPlane()
-    {
-        Vector3D v12 = new Vector3D(p1, p2);
-        Vector3D v13 = new Vector3D(p1, p3);
-        return new Plane3D(p1, v12, v13);
-    }
-
     /**
      * Computes the position of the projected point onto the plane containing the triangle.
      * @return an array with two values 
@@ -73,6 +69,25 @@ public class Triangle3D implements Geometry3D
         return new double[] {s / det, t / det};
     }
     
+    
+    // ===================================================================
+    // Methods implementing the Polygon3D interface
+    
+    public Plane3D supportingPlane()
+    {
+        Vector3D v12 = new Vector3D(p1, p2);
+        Vector3D v13 = new Vector3D(p1, p3);
+        return new Plane3D(p1, v12, v13);
+    }
+
+
+    @Override
+    public Collection<Point3D> vertices()
+    {
+        return Arrays.asList(p1, p2, p3);
+    }
+
+
     // ===================================================================
     // Methods implementing the Geometry3D interface
 

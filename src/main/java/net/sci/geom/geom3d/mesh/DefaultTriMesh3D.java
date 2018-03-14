@@ -27,13 +27,14 @@ public class DefaultTriMesh3D implements Mesh3D
     /**
      * The position of the vertices. 
      */
-    // TODO: allow null elements ?
     ArrayList<Point3D> vertexPositions;
     
     /**
      * For each face, the triplet of vertex indices.
      */
     ArrayList<int[]> faces;
+    
+    ArrayList<Edge> edges = null;
     
     
     // ===================================================================
@@ -151,11 +152,38 @@ public class DefaultTriMesh3D implements Mesh3D
     
 
     // ===================================================================
-    // Implementation of the Mesh3D interface
-
-    // ===================================================================
     // Management of vertices
     
+    public Vertex getVertex(int index)
+    {
+        return new Vertex(index);
+    }
+
+    // ===================================================================
+    // Management of faces
+    
+    public Face getFace(int index)
+    {
+        int[] inds = this.faces.get(index);
+        return new Face(inds[0], inds[1], inds[2]);
+    }
+    
+    // ===================================================================
+    // Management of edges
+    
+    public Edge getEdge(int index)
+    {
+        if (edges == null)
+        {
+            throw new RuntimeException("Edge array not computed");
+        }
+        return edges.get(index);
+    }
+    
+
+    // ===================================================================
+    // Implementation of the Mesh3D interface
+
     /**
      * Adds a vertex to the mesh and returns the index associated to its
      * position.
@@ -330,15 +358,39 @@ public class DefaultTriMesh3D implements Mesh3D
         @Override
         public Collection<Face> faces()
         {
-            // TODO Auto-generated method stub
-            return null;
+            // Allocate typical number of neighbor edge equal to 6.
+            ArrayList<Face> vertexFaces = new ArrayList<Face>(6);
+            
+            // iterate over the collection of faces
+            for (int[] inds : faces)
+            {
+                if (inds[0] == this.index || inds[1] == this.index || inds[2] == this.index)
+                {
+                    vertexFaces.add(new Face(inds[0], inds[1], inds[2]));
+                }
+            }
+            
+            // return edges around vertex
+            return vertexFaces;
         }
 
         @Override
         public Collection<Edge> edges()
         {
-            // TODO Auto-generated method stub
-            return null;
+            // Allocate typical number of neighbor edge equal to 6.
+            ArrayList<Edge> vertexEdges = new ArrayList<Edge>(6);
+            
+            // iterate over the collection of edges
+            for (Edge edge : edges)
+            {
+                if (edge.iv1 == this.index || edge.iv2 == this.index)
+                {
+                    vertexEdges.add(edge);
+                }
+            }
+            
+            // return edges around vertex
+            return vertexEdges;
         }
 
         @Override
@@ -350,12 +402,34 @@ public class DefaultTriMesh3D implements Mesh3D
         @Override
         public Vector3D normal()
         {
-            // TODO Auto-generated method stub
-            return null;
+            Vector3D normal = new Vector3D();
+            for (Face face : this.faces())
+            {
+                normal.plus(face.normal());
+            }
+            return normal.normalize();
         }
         
+        // ===================================================================
+        // Override equals and hashcode to allow indexing
         
-        // TODO: implements equals+hashcode
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (!(obj instanceof Vertex))
+            {
+                return false;
+            }
+            
+            Vertex that = (Vertex) obj;
+            return this.index == that.index;
+        }
+        
+        @Override
+        public int hashCode()
+        {
+            return this.index + 17;
+        }
     }
     
     private class Face implements Mesh3D.Face
@@ -375,6 +449,16 @@ public class DefaultTriMesh3D implements Mesh3D
         }
 
         @Override
+        public Triangle3D polygon()
+        {
+            Point3D p1 = vertexPositions.get(this.iv1);
+            Point3D p2 = vertexPositions.get(this.iv2);
+            Point3D p3 = vertexPositions.get(this.iv3);
+            
+            return new Triangle3D(p1, p2, p3);    
+        }
+        
+        @Override
         public Collection<Vertex> vertices()
         {
             return Arrays.asList(new Vertex(iv1), new Vertex(iv2), new Vertex(iv3));
@@ -383,8 +467,11 @@ public class DefaultTriMesh3D implements Mesh3D
         @Override
         public Collection<Edge> edges()
         {
-            // TODO Auto-generated method stub
-            return null;
+            ArrayList<Edge> faceEdges = new ArrayList<Edge>(3);
+            faceEdges.add(new Edge(iv1, iv2));
+            faceEdges.add(new Edge(iv2, iv3));
+            faceEdges.add(new Edge(iv3, iv1));
+            return faceEdges;
         }
 
         @Override
@@ -396,6 +483,103 @@ public class DefaultTriMesh3D implements Mesh3D
             return Vector3D.crossProduct(v12, v13);
         }
         
-        // TODO: implements equals+hashcode
+        // ===================================================================
+        // Override equals and hashcode to allow indexing
+        
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (!(obj instanceof Face))
+            {
+                return false;
+            }
+            
+            Face that = (Face) obj;
+            if (this.iv1 != that.iv1) return false;
+            if (this.iv2 != that.iv2) return false;
+            if (this.iv3 != that.iv3) return false;
+            return true;
+        }
+        
+        @Override
+        public int hashCode()
+        {
+            int hash = 1;
+            hash = hash * 17 + iv1;
+            hash = hash * 17 + iv2;
+            hash = hash * 17 + iv3;
+            return hash;
+        }
+    }
+
+    private class Edge implements Mesh3D.Edge
+    {
+        /** index of first vertex  (iv1 < iv2)*/
+        int iv1;
+        
+        /** index of second vertex (iv1 < iv2) */
+        int iv2;
+
+        // TODO: keep face info in edge structure, or use a separate map?
+        /** index of first adjacent face */
+        int if1 = -1;
+        /** index of second adjacent face */
+        int if2 = -1;
+        
+        public Edge(int iv1, int iv2)
+        {
+            if (iv1 < iv2)
+            {
+                this.iv1 = iv1;
+                this.iv2 = iv2;
+            }
+            else
+            {
+                this.iv1 = iv2;
+                this.iv2 = iv1;
+            }
+        }
+        
+        @Override
+        public Collection<Vertex> vertices()
+        {
+            return Arrays.asList(new Vertex(iv1), new Vertex(iv2));
+        }
+        
+        @Override
+        public Collection<Face> faces()
+        {
+            ArrayList<Face> edgeFaces = new ArrayList<Face>(2);
+            if (if1 != -1) edgeFaces.add(getFace(if1));
+            if (if2 != -1) edgeFaces.add(getFace(if2));
+            return edgeFaces;
+        }
+
+        
+        // ===================================================================
+        // Override equals and hashcode to allow indexing
+        
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (!(obj instanceof Edge))
+            {
+                return false;
+            }
+            
+            Edge that = (Edge) obj;
+            if (this.iv1 != that.iv1) return false;
+            if (this.iv2 != that.iv2) return false;
+            return true;
+        }
+        
+        @Override
+        public int hashCode()
+        {
+            int hash = 1;
+            hash = hash * 17 + iv1;
+            hash = hash * 17 + iv2;
+            return hash;
+        }
     }
 }
