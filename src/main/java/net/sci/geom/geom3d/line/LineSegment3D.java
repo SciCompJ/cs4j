@@ -65,6 +65,26 @@ public class LineSegment3D implements LinearGeometry3D
         return new Point3D(x2, y2, z2);
     }
 
+    /**
+     * Computes the intersection point with a plane.
+     * 
+     * @param plane
+     * @return
+     */
+    public Point3D intersection(Plane3D plane)
+    {
+        if (Vector3D.isPerpendicular(direction(), plane.normal()))
+        {
+            return null;
+        }
+        Point3D inter = plane.intersection(this.supportingLine());
+        double pos = positionOnLine(inter.getX(), inter.getY(), inter.getZ());
+        
+        double eps = 1e-12;
+        if (pos <  -eps || pos > 1+eps)
+            return null;
+        return inter;
+    }
     
     // ===================================================================
     // Implementation of the LinearGeometry interface 
