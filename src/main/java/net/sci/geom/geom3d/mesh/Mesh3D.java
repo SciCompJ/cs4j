@@ -8,6 +8,7 @@ import java.util.Collection;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Polygon3D;
 import net.sci.geom.geom3d.Vector3D;
+import net.sci.geom.geom3d.line.LineSegment3D;
 import net.sci.geom.geom3d.Geometry3D;
 
 /**
@@ -122,5 +123,10 @@ public interface Mesh3D extends Geometry3D
          * @return the collection of faces adjacent to this edge.
          */
         public Collection<? extends Face> faces();
+        
+        /**
+         * @return the line segment that represents this edge.
+         */
+        public LineSegment3D curve();
     }
 }

@@ -6,10 +6,12 @@ package net.sci.geom.geom3d.mesh;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.TreeSet;
 
 import net.sci.geom.geom3d.Box3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
+import net.sci.geom.geom3d.line.LineSegment3D;
 
 /**
  * Default class for representing triangular meshes in 3D.
@@ -34,6 +36,7 @@ public class DefaultTriMesh3D implements Mesh3D
      */
     ArrayList<int[]> faces;
     
+    //TODO: use a TreeSet instead?
     ArrayList<Edge> edges = null;
     
     
@@ -108,6 +111,14 @@ public class DefaultTriMesh3D implements Mesh3D
         return vertexPositions.get(index);
     }
     
+    public Vertex getVertex(int index)
+    {
+        return new Vertex(index);
+    }
+
+    // ===================================================================
+    // Management of faces
+    
     /**
      * Adds a triangular face defined by the indices of its three vertices.
      * 
@@ -137,6 +148,10 @@ public class DefaultTriMesh3D implements Mesh3D
     {
         int index = faces.size();
         faces.add(new int[] { iv1, iv2, iv3 });
+        
+        // clear edge information as it is now outdated
+        this.edges = null;
+        
         return index;
     }
 
@@ -149,18 +164,6 @@ public class DefaultTriMesh3D implements Mesh3D
         
         return new Triangle3D(p1, p2, p3);
     }
-    
-
-    // ===================================================================
-    // Management of vertices
-    
-    public Vertex getVertex(int index)
-    {
-        return new Vertex(index);
-    }
-
-    // ===================================================================
-    // Management of faces
     
     public Face getFace(int index)
     {
@@ -175,12 +178,73 @@ public class DefaultTriMesh3D implements Mesh3D
     {
         if (edges == null)
         {
-            throw new RuntimeException("Edge array not computed");
+            computeEdgeVertices();
         }
         return edges.get(index);
     }
     
 
+    public Collection<Edge> edges()
+    {
+        if (edges == null)
+        {
+            computeEdgeVertices();
+        }
+        return edges;
+    }
+
+    private void computeEdgeVertices()
+    {
+        // Creates adjacency data structure: for each vertex, keep the list of
+        // adjacent vertices with greater index
+        int nv = this.vertexNumber();
+        ArrayList<TreeSet<Integer>> vertexAdjList = new ArrayList<TreeSet<Integer>>(nv-1);
+
+        // Initialize vertex adjacency list with a small number of vertices
+        for (int iv = 0; iv < nv-1; iv++)
+        {
+            vertexAdjList.add(new TreeSet<Integer>());
+        }
+        
+        // Iterate over faces to create edges
+        int nEdges = 0;
+        for (int[] inds : this.faces)
+        {
+            // iterate over pairs of consecutive indices
+            for (int i = 0; i < 3; i++)
+            {
+                int iv1 = inds[i];
+                int iv2 = inds[(i + 1) % 3];
+                
+                // make sure iv1 is lower than iv2
+                if (iv1 > iv2)
+                {
+                    int tmp = iv1;
+                    iv1 = iv2;
+                    iv2 = tmp;
+                }
+                
+                TreeSet<Integer> adjVertices = vertexAdjList.get(iv1);
+                if (!adjVertices.contains(iv2))
+                {
+                    adjVertices.add(iv2);
+                    nEdges++;
+                }
+            }
+        }
+        
+        // Convert to an array of edges
+        this.edges = new ArrayList<Edge>(nEdges);
+        for (int iv1 = 0; iv1 < nv - 1; iv1++)
+        {
+            for (int iv2 : vertexAdjList.get(iv1))
+            {
+                this.edges.add(new Edge(iv1, iv2));
+            }
+        }
+    }
+    
+    
     // ===================================================================
     // Implementation of the Mesh3D interface
 
@@ -261,7 +325,6 @@ public class DefaultTriMesh3D implements Mesh3D
         return faces.size();
     }
 
-    
     // ===================================================================
     // Implementation of the Geometry3D interface
 
@@ -345,7 +408,7 @@ public class DefaultTriMesh3D implements Mesh3D
         return true;
     }
  
-    private class Vertex implements Mesh3D.Vertex
+    public class Vertex implements Mesh3D.Vertex
     {
         // the index of the vertex
         int index;
@@ -432,7 +495,7 @@ public class DefaultTriMesh3D implements Mesh3D
         }
     }
     
-    private class Face implements Mesh3D.Face
+    public class Face implements Mesh3D.Face
     {
         // index of first vertex
         int iv1;
@@ -512,20 +575,14 @@ public class DefaultTriMesh3D implements Mesh3D
         }
     }
 
-    private class Edge implements Mesh3D.Edge
+    public class Edge implements Mesh3D.Edge, Comparable<Edge>
     {
-        /** index of first vertex  (iv1 < iv2)*/
+        /** index of first vertex  (iv1 < iv2) */
         int iv1;
         
         /** index of second vertex (iv1 < iv2) */
         int iv2;
 
-        // TODO: keep face info in edge structure, or use a separate map?
-        /** index of first adjacent face */
-        int if1 = -1;
-        /** index of second adjacent face */
-        int if2 = -1;
-        
         public Edge(int iv1, int iv2)
         {
             if (iv1 < iv2)
@@ -540,6 +597,13 @@ public class DefaultTriMesh3D implements Mesh3D
             }
         }
         
+        public LineSegment3D curve()
+        {
+            Point3D p1 = vertexPosition(iv1);
+            Point3D p2 = vertexPosition(iv2);
+            return new LineSegment3D(p1, p2);
+        }
+        
         @Override
         public Collection<Vertex> vertices()
         {
@@ -550,12 +614,24 @@ public class DefaultTriMesh3D implements Mesh3D
         public Collection<Face> faces()
         {
             ArrayList<Face> edgeFaces = new ArrayList<Face>(2);
-            if (if1 != -1) edgeFaces.add(getFace(if1));
-            if (if2 != -1) edgeFaces.add(getFace(if2));
+//            if (if1 != -1) edgeFaces.add(getFace(if1));
+//            if (if2 != -1) edgeFaces.add(getFace(if2));
             return edgeFaces;
         }
 
         
+        /**
+         * Implements compareTo to allows for fast indexing.
+         */
+        @Override
+        public int compareTo(Edge that)
+        {
+            int diff = this.iv1 - that.iv1;
+            if (diff != 0)
+                return diff;
+            return this.iv2 - that.iv2;
+        }
+
         // ===================================================================
         // Override equals and hashcode to allow indexing
         
