@@ -1,0 +1,8 @@
+/**
+ * 
+ */
+/**
+ * @author dlegland
+ *
+ */
+package net.sci.image.binary.skeleton;
