@@ -15,6 +15,21 @@ package net.sci.array.type;
  */
 public class RGB8 extends IntVector<UInt8> implements Color
 {
+    // =============================================================
+    // Constants
+
+    public static final RGB8 WHITE = new RGB8(255, 255, 255);
+    public static final RGB8 BLACK = new RGB8(0, 0, 0);
+    public static final RGB8 RED = new RGB8(255, 0, 0);
+    public static final RGB8 GREEN = new RGB8(0, 255, 0);
+    public static final RGB8 BLUE = new RGB8(0, 0, 255);
+    public static final RGB8 CYAN = new RGB8(0, 255, 255);
+    public static final RGB8 MAGENTA = new RGB8(255, 0, 255);
+    public static final RGB8 YELLOW = new RGB8(255, 255, 0);
+    public static final RGB8 GRAY = new RGB8(127, 127, 127);
+    public static final RGB8 DARK_GRAY = new RGB8(63, 63, 63);
+    public static final RGB8 LIGHT_GRAY = new RGB8(191, 191, 191);
+
 	// =============================================================
 	// Static methods
 	
@@ -65,6 +80,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	 * @param intCode
 	 *            the integer code of the RGB8 value
 	 */
+	// TODO: signature not explicit -> replace by static factory
 	public RGB8(int intCode)
 	{
 		this.intCode = intCode;
@@ -106,7 +122,20 @@ public class RGB8 extends IntVector<UInt8> implements Color
 		this.intCode = b << 16 | g << 8 | r;   
 	}
 
-	
+	/**
+     * Conversion constructor from another color, that can use another
+     * representation format.
+     * 
+     * @param color
+     *            the other color
+     */
+	public RGB8(Color color)
+	{
+        int r = (int) Math.floor(color.red() * 255 + .5);
+        int g = (int) Math.floor(color.green() * 255 + .5);
+        int b = (int) Math.floor(color.blue() * 255 + .5);
+        this.intCode = b << 16 | g << 8 | r;   
+	}
 
 
 	// =============================================================

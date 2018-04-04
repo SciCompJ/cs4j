@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
+import net.sci.array.data.BinaryArray;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.type.RGB8;
@@ -162,6 +164,84 @@ public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
 		}
 		
 		return result;
+	}
+
+	/**
+     * Computes a binary overlay over a color or grayscale image.
+     * 
+     * @param baseArray
+     *            the array to use as base
+     * @param overlay
+     *            the binary array that specifies the pixels to colorize
+     * @param color
+     *            the overlay color
+     * @return the reference to the baseArray
+     */
+	public static RGB8Array binaryOverlay(RGB8Array baseArray, BinaryArray overlay, RGB8 color)
+	{
+	    RGB8Array.Iterator iter1 = baseArray.iterator();
+	    BinaryArray.Iterator iter2 = overlay.iterator();
+	    
+	    while (iter1.hasNext() && iter2.hasNext())
+	    {
+	        iter1.forward();
+	        iter2.forward();
+            
+	        if (iter2.getBoolean())
+	        {
+	            iter1.set(color);
+	        }
+	    }
+
+	    return baseArray;
+	}
+
+	/**
+     * Convert the given array to a color array. If the input array is already
+     * an instance of RGB8Array, simply returns it.
+     * 
+     * Can process RGB8, UInt8 or Binary arrays.
+     * 
+     * @param array
+     *            the input array to convert
+     * @return a RG8 array with the same size
+     */
+	public static RGB8Array convert(Array<?> array)
+	{
+	    // Return input RGB8 array
+	    if (array instanceof RGB8Array)
+	    {
+	        return (RGB8Array) array;
+	    }
+	    
+        // convert UInt8 to RGB8
+        if (array instanceof UInt8Array)
+        {
+            RGB8Array res = RGB8Array.create(array.getSize());
+            UInt8Array.Iterator iter1 = ((UInt8Array) array).iterator();
+            RGB8Array.Iterator iter2 = res.iterator();
+            while (iter1.hasNext())
+            {
+                int gray = iter1.nextInt();
+                iter2.setNext(new RGB8(gray, gray, gray));
+            }
+            return res;
+        }
+
+        // convert Binary to RGB8
+        if (array instanceof BinaryArray)
+        {
+            RGB8Array res = RGB8Array.create(array.getSize());
+            BinaryArray.Iterator iter1 = ((BinaryArray) array).iterator();
+            RGB8Array.Iterator iter2 = res.iterator();
+            while (iter1.hasNext())
+            {
+                iter2.setNext(iter1.nextBoolean() ? RGB8.WHITE : RGB8.BLACK);
+            }
+            return res;
+        }
+
+        throw new RuntimeException("Can not convert to RGB8Array array of class: " + array.getClass());
 	}
 	
 	// =============================================================
