@@ -3,6 +3,7 @@
  */
 package net.sci.image.process.filter;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
@@ -22,7 +23,7 @@ import net.sci.image.ImageArrayOperator;
  * @see BoxFilter
  * @see BoxMedianFilter
  */
-public final class BoxMinMaxFilterNaive  implements ImageArrayOperator, ScalarArrayOperator
+public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator
 {
 	public enum Type 
 	{
@@ -177,6 +178,8 @@ public final class BoxMinMaxFilterNaive  implements ImageArrayOperator, ScalarAr
 		
 		for(int y = 0; y < sizeY; y++)
 		{
+		    this.fireProgressChanged(this, y, sizeY);
+		    
 			for(int x = 0; x < sizeX; x++)
 			{
 				// init result
@@ -198,6 +201,8 @@ public final class BoxMinMaxFilterNaive  implements ImageArrayOperator, ScalarAr
 				target.setValue(x, y, localMax * sign);
 			}
 		}
+		
+		this.fireProgressChanged(this, sizeY, sizeY);
 	}
 
 	/**
@@ -237,7 +242,9 @@ public final class BoxMinMaxFilterNaive  implements ImageArrayOperator, ScalarAr
 		
 		for(int z = 0; z < sizeZ; z++)
 		{
-			for(int y = 0; y < sizeY; y++)
+		    this.fireProgressChanged(this, z, sizeZ);
+            
+		    for(int y = 0; y < sizeY; y++)
 			{
 				for(int x = 0; x < sizeX; x++)
 				{
@@ -264,6 +271,8 @@ public final class BoxMinMaxFilterNaive  implements ImageArrayOperator, ScalarAr
 				}
 			}
 		}
+		
+		this.fireProgressChanged(this, sizeZ, sizeZ);        
 	}
 
 //	/**
