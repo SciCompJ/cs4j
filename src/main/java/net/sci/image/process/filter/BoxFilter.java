@@ -3,6 +3,7 @@
  */
 package net.sci.image.process.filter;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.Float32Array;
@@ -22,7 +23,7 @@ import net.sci.image.ImageArrayOperator;
  * @see BoxMedianFilter
  * @see BoxVarianceFilter
 */
-public final class BoxFilter implements ImageArrayOperator, VectorArrayMarginalOperator
+public final class BoxFilter extends AlgoStub implements ImageArrayOperator, VectorArrayMarginalOperator
 {
     //TODO: need some work for processing vector images
     /** The size of the box in each dimension */
@@ -161,6 +162,7 @@ public final class BoxFilter implements ImageArrayOperator, VectorArrayMarginalO
 
 		for(int y = 0; y < sizeY; y++)
 		{
+		    this.fireProgressChanged(this, y, sizeY);
 			for(int x = 0; x < sizeX; x++)
 			{
 				double sum = 0;
@@ -178,6 +180,8 @@ public final class BoxFilter implements ImageArrayOperator, VectorArrayMarginalO
 				target.setValue(x, y, sum / boxSize);
 			}
 		}
+		
+        this.fireProgressChanged(this, 0, sizeY);
 	}
 
 	/**
@@ -221,7 +225,9 @@ public final class BoxFilter implements ImageArrayOperator, VectorArrayMarginalO
 		
 		for(int z = 0; z < sizeZ; z++)
 		{
-			for(int y = 0; y < sizeY; y++)
+		    this.fireProgressChanged(this, z, sizeZ);
+		    
+		    for(int y = 0; y < sizeY; y++)
 			{
 				for(int x = 0; x < sizeX; x++)
 				{
@@ -245,6 +251,8 @@ public final class BoxFilter implements ImageArrayOperator, VectorArrayMarginalO
 				}
 			}
 		}
+
+		this.fireProgressChanged(this, 0, sizeZ);
 	}
 	
 	@Override

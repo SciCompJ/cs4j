@@ -3,6 +3,7 @@
  */
 package net.sci.image.process.filter;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.data.Float32Array;
@@ -14,13 +15,14 @@ import net.sci.image.ImageArrayOperator;
 
 /**
  * A preliminary implementation of Box Mean Filter. Superseeded by BoxFilter.
+ * Kept for testing purpose.
  * 
  * @see BoxFilter
  * 
  * @author dlegland
  *
  */
-public final class BoxFilter3x3 implements ImageArrayOperator, ScalarArrayOperator
+public final class BoxFilter3x3 extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator
 {
 
 	/* (non-Javadoc)
@@ -50,6 +52,14 @@ public final class BoxFilter3x3 implements ImageArrayOperator, ScalarArrayOperat
 		
 		for(int y = 0; y < sizeY; y++)
 		{
+		    
+	        this.fireProgressChanged(this, y, sizeY);
+//	        SwingUtilities.invokeLater(new Runnable() {
+//	            public void run() {
+//	              progressBar.setValue(i);
+//	            }
+//	          });
+	        
 			for(int x = 0; x < sizeX; x++)
 			{
 				double sum = 0;
@@ -66,9 +76,20 @@ public final class BoxFilter3x3 implements ImageArrayOperator, ScalarArrayOperat
 				}
 				
 				target.setValue(x, y, sum / 9);
-			}			
+			}
+			
+//			// Temporisation to test ui update
+//			try 
+//			{
+//			    Thread.sleep(100);
+//			} 
+//			catch(InterruptedException ex)
+//			{
+//			    ex.printStackTrace();
+//			}
 		}
 		
+        this.fireProgressChanged(this, sizeY, sizeY);
 	}
 	
 	public Array<?> createEmptyOutputArray(Array<?> array)
