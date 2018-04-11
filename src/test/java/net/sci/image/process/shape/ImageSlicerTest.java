@@ -53,4 +53,26 @@ public class ImageSlicerTest
         }
         return array;
     }
+
+    /**
+     * Test method for {@link net.sci.image.process.shape.ImageSlicer#slice2d(net.sci.image.Image, int, int, int[])}.
+     */
+    @Test
+    public final void testSlice2dLabelImage()
+    {
+        // create  a basic array with some labels on the 10-th slice
+        UInt8Array3D array = UInt8Array3D.create(50, 40, 30);
+        array.setInt(10, 10, 20, 10);
+        array.setInt(20, 10, 20, 20);
+        array.setInt(10, 20, 20, 30);
+        array.setInt(20, 20, 20, 40);
+        Image image = new Image(array, Image.Type.LABEL);
+
+        Image slice = ImageSlicer.slice2d(image, 10);
+        assertEquals(50, slice.getSize(0));
+        assertEquals(40, slice.getSize(1));
+        assertTrue(slice.isLabelImage());
+
+    }
+
 }

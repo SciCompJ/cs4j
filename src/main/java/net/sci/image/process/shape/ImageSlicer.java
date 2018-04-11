@@ -91,7 +91,7 @@ public class ImageSlicer
             }
         }
      
-        Image resultImage = new Image(resArray, image);
+        Image resultImage = new Image(resArray, image.getType(), image);
         return resultImage;
     }
 }
