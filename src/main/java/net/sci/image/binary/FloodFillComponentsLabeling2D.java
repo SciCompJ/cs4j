@@ -295,6 +295,13 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 		}
 	}
 
+	@Override
+	public Image process(Image image)
+	{
+	    Array<?> result = process(image.getData());
+	    return new Image(result, Image.Type.LABEL, image);
+	}
+	
     @Override
     public <T> Array<?> process(Array<T> array)
     {

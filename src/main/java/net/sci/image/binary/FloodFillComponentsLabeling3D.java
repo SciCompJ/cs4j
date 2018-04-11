@@ -8,7 +8,6 @@ import net.sci.array.Array;
 import net.sci.array.data.BinaryArray;
 import net.sci.array.data.Int32Array;
 import net.sci.array.data.IntArray;
-import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.scalar3d.BinaryArray3D;
@@ -16,7 +15,7 @@ import net.sci.array.data.scalar3d.Int32Array3D;
 import net.sci.array.data.scalar3d.IntArray3D;
 import net.sci.array.data.scalar3d.UInt16Array3D;
 import net.sci.array.data.scalar3d.UInt8Array3D;
-import net.sci.array.process.BinaryArrayOperator;
+import net.sci.image.Image;
 import net.sci.image.ImageArrayOperator;
 import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.FloodFill;
@@ -33,7 +32,7 @@ import net.sci.image.morphology.FloodFill;
  * 
  * @author dlegland
  */
-public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArrayOperator, BinaryArrayOperator
+public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArrayOperator
 {
     // ==============================================================
     // Class variables
@@ -164,14 +163,14 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 					"Bit Depth should be 8, 16 or 32.");
 		}
 
-		process3d(image, labels);
+		processBinary3d(image, labels);
 		return labels;
 	}
 
 	/* (non-Javadoc)
 	 * @see inra.ijpb.binary.conncomp.ConnectedComponentsLabeling3D#computeLabels(ij.ImageStack)
 	 */
-	public void process3d(BinaryArray3D image, IntArray3D<?> labels)
+	public void processBinary3d(BinaryArray3D image, IntArray3D<?> labels)
 	{
 		// get image size
 		int sizeX = image.getSize(0);
@@ -238,7 +237,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	{
 		if (source instanceof BinaryArray3D && target instanceof IntArray3D)
 		{
-			process3d((BinaryArray3D) source, (IntArray3D<?>) target);
+			processBinary3d((BinaryArray3D) source, (IntArray3D<?>) target);
 		}
 		else
 		{
@@ -272,16 +271,27 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	}
 
     @Override
-    public ScalarArray<?> processBinary(BinaryArray array)
+    public Image process(Image image)
     {
-        if (!canProcess(array))
-        {
-            throw new IllegalArgumentException("Requires a 3D binary array");
-        }
-        
-        return processBinary3d(BinaryArray3D.wrap(array));
+        Array<?> result = process(image.getData());
+        return new Image(result, Image.Type.LABEL, image);
     }
-    
+
+    @Override
+    public <T> Array<?> process(Array<T> array)
+    {
+        if (!(array instanceof BinaryArray))
+        {
+            throw new IllegalArgumentException("Requires a BinaryArray instance");
+        }
+        if (array.dimensionality() != 3)
+        {
+            throw new IllegalArgumentException("Requires a BinaryArray of dimensionality 3");
+        }
+
+        return processBinary3d(BinaryArray3D.wrap((BinaryArray) array));
+    }
+
     @Override
     public boolean canProcess(Array<?> array)
     {
