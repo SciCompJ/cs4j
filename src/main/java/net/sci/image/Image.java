@@ -195,7 +195,7 @@ public class Image
 	public Image(Array<?> data, Image parent)
 	{
 		this(data);
-		
+
 		// additional processing to take into account parent image
 		copySettings(parent);
 	}
@@ -310,7 +310,7 @@ public class Image
 	{
 		this.name = parent.name;
 		
-		// duplicate the axis array
+		// duplicate the axis array (for spatial calibration)
 		int nd = getDimension();
 		this.axes = new ImageAxis[nd];
 		for (int d = 0; d < nd; d++)
@@ -318,11 +318,13 @@ public class Image
 		    this.axes[d] = parent.axes[d];
 		}
 
+		// copy display settings
 		if (this.type == parent.type)
         {
             this.displayRange = parent.displayRange;
         }
         this.colorMap = parent.colorMap;
+        this.backgroundColor = parent.backgroundColor;
 	}
 	
 	
