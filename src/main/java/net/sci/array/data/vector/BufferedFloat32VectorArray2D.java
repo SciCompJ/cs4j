@@ -127,7 +127,10 @@ public class BufferedFloat32VectorArray2D extends Float32VectorArray2D
     public double[] getValues(int x, int y, double[] values)
     {
 	    int offset = (y * this.size0 + x) * this.vectorLength;
-	    System.arraycopy(this.buffer, offset, values, 0, this.vectorLength);
+	    for (int c = 0; c < this.vectorLength; c++)
+        {
+            values[c] = this.buffer[offset + c];
+        }
         return values;
     }
 
