@@ -71,7 +71,61 @@ public interface Float64Array extends ScalarArray<Float64>
 		return new Wrapper(array);
 	}
 	
+    // =============================================================
+    // Default implementation of NumericArray interface
 
+    public default Float64Array plus(Float64 v)
+    {
+        double value = v.getValue();
+        Float64Array result = Float64Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Float64Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() + value);
+        }
+        return result;
+    }
+
+    public default Float64Array minus(Float64 v)
+    {
+        double value = v.getValue();
+        Float64Array result = Float64Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Float64Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() - value);
+        }
+        return result;
+    }
+
+    public default Float64Array times(Float64 v)
+    {
+        double value = v.getValue();
+        Float64Array result = Float64Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Float64Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() * value);
+        }
+        return result;
+    }
+
+    public default Float64Array divideBy(Float64 v)
+    {
+        double value = v.getValue();
+        Float64Array result = Float64Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Float64Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() / value);
+        }
+        return result;
+    }
+    
 	// =============================================================
 	// Specialization of Array interface
 

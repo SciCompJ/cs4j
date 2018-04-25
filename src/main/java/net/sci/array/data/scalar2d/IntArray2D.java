@@ -6,6 +6,7 @@ package net.sci.array.data.scalar2d;
 import java.io.PrintStream;
 import java.util.Locale;
 
+import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.IntArray;
 import net.sci.array.type.Int;
@@ -107,7 +108,7 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
 	
 
 	// =============================================================
-    // Inner wrapprt class
+    // Inner wrapper class
 
 	/**
      * Wraps a UInt8 array into a IntArray2D, with two dimensions.
@@ -128,6 +129,62 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
             this.array = array;
         }
 
+        // =============================================================
+        // Default implementation of NumericArray interface
+
+        public IntArray2D<T> plus(T v)
+        {
+            double value = v.getValue();
+            IntArray<T> result = this.array.newInstance(this.size0, this.size1);
+            Array.Iterator<?> iter1 = this.array.iterator();
+            IntArray.Iterator<T> iter2 = result.iterator();
+            while (iter1.hasNext() && iter2.hasNext())
+            {
+                iter2.setNextValue(iter1.nextValue() + value);
+            }
+            return wrap(result);
+        }
+
+        public IntArray2D<T> minus(T v)
+        {
+            double value = v.getValue();
+            IntArray<T> result = this.array.newInstance(this.size0, this.size1);
+            Array.Iterator<?> iter1 = this.array.iterator();
+            IntArray.Iterator<T> iter2 = result.iterator();
+            while (iter1.hasNext() && iter2.hasNext())
+            {
+                iter2.setNextValue(iter1.nextValue() - value);
+            }
+            return wrap(result);
+        }
+
+        public IntArray2D<T> times(T v)
+        {
+            double value = v.getValue();
+            IntArray<T> result = this.array.newInstance(this.size0, this.size1);
+            Array.Iterator<?> iter1 = this.array.iterator();
+            IntArray.Iterator<T> iter2 = result.iterator();
+            while (iter1.hasNext() && iter2.hasNext())
+            {
+                iter2.setNextValue(iter1.nextValue() * value);
+            }
+            return wrap(result);
+        }
+
+        public IntArray2D<T> divideBy(T v)
+        {
+            double value = v.getValue();
+            IntArray<T> result = this.array.newInstance(this.size0, this.size1);
+            Array.Iterator<?> iter1 = this.array.iterator();
+            IntArray.Iterator<T> iter2 = result.iterator();
+            while (iter1.hasNext() && iter2.hasNext())
+            {
+                iter2.setNextValue(iter1.nextValue() / value);
+            }
+            return wrap(result);
+        }
+        
+        
         @Override
         public IntArray2D<T> duplicate()
         {

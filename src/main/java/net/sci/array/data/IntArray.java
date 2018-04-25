@@ -9,7 +9,7 @@ import net.sci.array.type.Int;
  * @author dlegland
  *
  */
-public interface IntArray<T extends Int> extends ScalarArray<T>
+public interface IntArray<T extends Int> extends ScalarArray<T>, NumericArray<T>
 {
 	// =============================================================
 	// New default methods

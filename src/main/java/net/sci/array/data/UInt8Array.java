@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
@@ -104,7 +105,61 @@ public interface UInt8Array extends IntArray<UInt8>
 		setByte(pos, (byte) Math.min(Math.max(value, 0), 255));
 	}
 
-	
+    // =============================================================
+    // Default implementation of NumericArray interface
+
+    public default UInt8Array plus(UInt8 v)
+    {
+        double value = v.getValue();
+        UInt8Array result = UInt8Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        UInt8Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() + value);
+        }
+        return result;
+    }
+
+    public default UInt8Array minus(UInt8 v)
+    {
+        double value = v.getValue();
+        UInt8Array result = UInt8Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        UInt8Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() - value);
+        }
+        return result;
+    }
+
+    public default UInt8Array times(UInt8 v)
+    {
+        double value = v.getValue();
+        UInt8Array result = UInt8Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        UInt8Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() * value);
+        }
+        return result;
+    }
+
+    public default UInt8Array divideBy(UInt8 v)
+    {
+        double value = v.getValue();
+        UInt8Array result = UInt8Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        UInt8Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() / value);
+        }
+        return result;
+    }
+    
 	// =============================================================
 	// Specialization of the Array interface
 

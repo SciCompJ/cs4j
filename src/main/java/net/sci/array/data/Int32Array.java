@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
@@ -71,7 +72,63 @@ public interface Int32Array extends IntArray<Int32>
 	}
 	
 		
-	// =============================================================
+    // =============================================================
+    // Default implementation of NumericArray interface
+
+    public default Int32Array plus(Int32 v)
+    {
+        double value = v.getValue();
+        Int32Array result = Int32Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Int32Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() + value);
+        }
+        return result;
+    }
+
+    public default Int32Array minus(Int32 v)
+    {
+        double value = v.getValue();
+        Int32Array result = Int32Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Int32Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() - value);
+        }
+        return result;
+    }
+
+    public default Int32Array times(Int32 v)
+    {
+        double value = v.getValue();
+        Int32Array result = Int32Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Int32Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() * value);
+        }
+        return result;
+    }
+
+    public default Int32Array divideBy(Int32 v)
+    {
+        double value = v.getValue();
+        Int32Array result = Int32Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Int32Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() / value);
+        }
+        return result;
+    }
+    
+    
+    // =============================================================
 	// Specialization of the Array interface
 
 	@Override

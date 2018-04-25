@@ -19,7 +19,7 @@ import net.sci.array.type.Float32;
  * @author dlegland
  *
  */
-public interface Float32Array extends ScalarArray<Float32>
+public interface Float32Array extends ScalarArray<Float32>, NumericArray<Float32>
 {
 	// =============================================================
 	// Static methods
@@ -71,6 +71,62 @@ public interface Float32Array extends ScalarArray<Float32>
 		return new Wrapper(array);
 	}
 	
+
+    // =============================================================
+    // Default implementation of NumericArray interface
+
+    public default Float32Array plus(Float32 v)
+    {
+        double value = v.getValue();
+        Float32Array result = Float32Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Float32Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() + value);
+        }
+        return result;
+    }
+
+    public default Float32Array minus(Float32 v)
+    {
+        double value = v.getValue();
+        Float32Array result = Float32Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Float32Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() - value);
+        }
+        return result;
+    }
+
+    public default Float32Array times(Float32 v)
+    {
+        double value = v.getValue();
+        Float32Array result = Float32Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Float32Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() * value);
+        }
+        return result;
+    }
+
+    public default Float32Array divideBy(Float32 v)
+    {
+        double value = v.getValue();
+        Float32Array result = Float32Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        Float32Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() / value);
+        }
+        return result;
+    }
+    
 
 	// =============================================================
 	// Specialization of Array interface

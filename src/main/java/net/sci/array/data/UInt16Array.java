@@ -3,6 +3,7 @@
  */
 package net.sci.array.data;
 
+import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
@@ -102,7 +103,61 @@ public interface UInt16Array extends IntArray<UInt16>
 		setShort(pos, (short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
 	}
 
-	
+    // =============================================================
+    // Default implementation of NumericArray interface
+
+    public default UInt16Array plus(UInt16 v)
+    {
+        double value = v.getValue();
+        UInt16Array result = UInt16Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        UInt16Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() + value);
+        }
+        return result;
+    }
+
+    public default UInt16Array minus(UInt16 v)
+    {
+        double value = v.getValue();
+        UInt16Array result = UInt16Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        UInt16Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() - value);
+        }
+        return result;
+    }
+
+    public default UInt16Array times(UInt16 v)
+    {
+        double value = v.getValue();
+        UInt16Array result = UInt16Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        UInt16Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() * value);
+        }
+        return result;
+    }
+
+    public default UInt16Array divideBy(UInt16 v)
+    {
+        double value = v.getValue();
+        UInt16Array result = UInt16Array.create(getSize());
+        Array.Iterator<?> iter1 = iterator();
+        UInt16Array.Iterator iter2 = result.iterator();
+        while (iter1.hasNext() && iter2.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue() / value);
+        }
+        return result;
+    }
+    
 	// =============================================================
 	// Specialization of the Array interface
 
