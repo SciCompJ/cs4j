@@ -136,9 +136,27 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#duplicate()
 	 */
-	@Override
-	public abstract VectorArray3D<V> duplicate();
+    @Override
+    public VectorArray3D<V> duplicate()
+    {
+        VectorArray<V> tmp = this.newInstance(this.size0, this.size1, this.size2);
+        if (!(tmp instanceof VectorArray3D))
+        {
+            throw new RuntimeException("Can not create VectorArray3D instance from " + this.getClass().getName() + " class.");
+        }
+        
+        VectorArray3D<V> result = (VectorArray3D <V>) tmp;
+        
+        VectorArray.Iterator<V> iter1 = this.iterator();
+        VectorArray.Iterator<V> iter2 = result.iterator();
+        while (iter1.hasNext())
+        {
+            iter2.setNext(iter1.next());
+        }
 
+        return result;
+    }
+    
 	
     // =============================================================
     // Inner Wrapper class
@@ -186,28 +204,6 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             this.array.set(new int[]{x, y, z}, value);
         }
 
-        @Override
-        public VectorArray3D<T> duplicate()
-        {
-            // TODO: implement in VectorArray3D
-            VectorArray<T> tmp = this.array.newInstance(this.size0, this.size1, this.size2);
-            if (!(tmp instanceof VectorArray3D))
-            {
-                throw new RuntimeException("Can not create VectorArray3D instance from " + this.array.getClass().getName() + " class.");
-            }
-            
-            VectorArray3D<T> result = (VectorArray3D <T>) tmp;
-            
-            VectorArray.Iterator<T> iter1 = array.iterator();
-            VectorArray.Iterator<T> iter2 = result.iterator();
-            while (iter1.hasNext())
-            {
-                iter2.setNext(iter1.next());
-            }
-
-            return result;
-        }
-        
         @Override
         public Class<T> getDataType()
         {

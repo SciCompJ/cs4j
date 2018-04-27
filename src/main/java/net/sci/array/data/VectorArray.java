@@ -217,9 +217,21 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	@Override
 	public VectorArray<V> newInstance(int... dims);
 	
-	@Override
-	public VectorArray<V> duplicate();
+    @Override
+    public default VectorArray<V> duplicate()
+    {
+        VectorArray<V> result = this.newInstance(this.getSize());
+        
+        VectorArray.Iterator<V> iter1 = this.iterator();
+        VectorArray.Iterator<V> iter2 = result.iterator();
+        while (iter1.hasNext())
+        {
+            iter2.setNext(iter1.next());
+        }
 
+        return result;
+    }
+   
 	public VectorArray.Iterator<V> iterator();
 	
 	// =============================================================

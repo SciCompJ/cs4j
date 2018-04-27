@@ -281,12 +281,31 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 		}
 	}
 
+    /* (non-Javadoc)
+     * @see net.sci.array.data.VectorArray#duplicate()
+     */
+    @Override
+    public VectorArray2D<V> duplicate()
+    {
+        VectorArray<V> tmp = this.newInstance(this.size0, this.size1);
+        if (!(tmp instanceof VectorArray2D))
+        {
+            throw new RuntimeException("Can not create VectorArray2D instance from " + this.getClass().getName() + " class.");
+        }
+        
+        VectorArray2D<V> result = (VectorArray2D <V>) tmp;
+        
+        VectorArray.Iterator<V> iter1 = this.iterator();
+        VectorArray.Iterator<V> iter2 = result.iterator();
+        while (iter1.hasNext())
+        {
+            iter2.setNext(iter1.next());
+        }
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.VectorArray#duplicate()
-	 */
-	@Override
-	public abstract VectorArray2D<V> duplicate();
+        return result;
+    }
+    
+
 
     // =============================================================
     // Inner Wrapper class
@@ -333,27 +352,6 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
             this.array.set(new int[]{x, y}, value);
         }
 
-        @Override
-        public VectorArray2D<T> duplicate()
-        {
-            VectorArray<T> tmp = this.array.newInstance(this.size0, this.size1);
-            if (!(tmp instanceof VectorArray2D))
-            {
-                throw new RuntimeException("Can not create Array2D instance from " + this.array.getClass().getName() + " class.");
-            }
-            
-            VectorArray2D<T> result = (VectorArray2D <T>) tmp;
-            
-            VectorArray.Iterator<T> iter1 = array.iterator();
-            VectorArray.Iterator<T> iter2 = result.iterator();
-            while (iter1.hasNext())
-            {
-                iter2.setNext(iter1.next());
-            }
-
-            return result;
-        }
-        
         @Override
         public Class<T> getDataType()
         {

@@ -20,15 +20,4 @@ public abstract class VectorArrayND<V extends Vector<?>> extends ArrayND<V> impl
 	{
 		super(sizes);
 	}
-
-	
-//	// =============================================================
-//	// Specialization of Array3D interface
-//
-//	/* (non-Javadoc)
-//	 * @see net.sci.array.data.VectorArray#duplicate()
-//	 */
-//	@Override
-//	public abstract VectorArrayND<V> duplicate();
-
 }
