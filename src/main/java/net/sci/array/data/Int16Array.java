@@ -10,6 +10,8 @@ import net.sci.array.data.scalar2d.BufferedInt16Array2D;
 import net.sci.array.data.scalar2d.Int16Array2D;
 import net.sci.array.data.scalar3d.BufferedInt16Array3D;
 import net.sci.array.data.scalar3d.Int16Array3D;
+import net.sci.array.data.scalarnd.BufferedInt16ArrayND;
+import net.sci.array.data.scalarnd.Int16ArrayND;
 import net.sci.array.type.Int16;
 
 /**
@@ -30,8 +32,7 @@ public interface Int16Array extends IntArray<Int16>
 		case 3:
 			return Int16Array3D.create(dims[0], dims[1], dims[2]);
 		default:
-			throw new IllegalArgumentException("Can not create Int16Array with " + dims.length + " dimensions");
-//			return Int16sArrayND.create(dims);
+			return Int16ArrayND.create(dims);
 		}
 	}
 	
@@ -44,9 +45,7 @@ public interface Int16Array extends IntArray<Int16>
 		case 3:
 			return new BufferedInt16Array3D(dims[0], dims[1], dims[2], buffer);
 		default:
-			//TODO: implement the rest
-			throw new IllegalArgumentException("Can not create UInt16Array with " + dims.length + " dimensions");
-//			return new BufferedUInt16ArrayND(dims, buffer);
+			return new BufferedInt16ArrayND(dims, buffer);
 		}
 	}
 	
