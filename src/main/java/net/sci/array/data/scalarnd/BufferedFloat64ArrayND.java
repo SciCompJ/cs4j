@@ -28,12 +28,7 @@ public class BufferedFloat64ArrayND extends Float64ArrayND
 	public BufferedFloat64ArrayND(int[] sizes)
 	{
 		super(sizes);
-		int bufferSize = 1;
-		for (int i = 0; i < sizes.length; i++)
-		{
-			bufferSize *= sizes[i];
-		}
-		this.buffer = new double[bufferSize]; 
+		this.buffer = new double[cumProd(sizes)]; 
 	}
 
 	/**
@@ -114,14 +109,8 @@ public class BufferedFloat64ArrayND extends Float64ArrayND
 			
 		public Float64Iterator()
 		{
-			int n = 1;
-			int nd = sizes.length;
-			for (int d = 0; d < nd; d++)
-			{
-				n *= sizes[d];
-			}
 			this.index = -1;
-			this.indexMax = n - 1;
+			this.indexMax = cumProd(sizes) - 1;
 		}
 		
 		@Override

@@ -181,9 +181,38 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	 */
 	public void setValues(int[] pos, double[] values);
 	
-	
-	// =============================================================
-	// Specialization of Array interface
+
+    // =============================================================
+    // Specialization of Array interface
+    
+    /**
+     * Returns the maximum values within the components/channels.
+     */
+    @Override
+    public default double getValue(int[] pos)
+    {
+        double maxi = Double.NEGATIVE_INFINITY;
+        for (double v :  getValues(pos))
+        {
+            maxi = Math.max(maxi, v);
+        }
+        return maxi;
+    }
+    
+    /**
+     * Sets all the components/channels at the given position to the specified value.
+     */
+    @Override
+    public default void setValue(int[] pos, double value)
+    {
+        int nc = this.getVectorLength();
+        double[] vals = new double[nc];
+        for (int c = 0; c < nc; c++)
+        {
+            vals[c] = value;
+        }
+        setValues(pos, vals);
+    }
 
 	@Override
 	public VectorArray<V> newInstance(int... dims);

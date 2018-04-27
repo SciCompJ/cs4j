@@ -15,10 +15,27 @@ import net.sci.array.CursorIterator;
  */
 public abstract class ArrayND<T> implements Array<T>
 {
+    // =============================================================
+    // Static methods
+
+    protected static int cumProd(int[] dims)
+    {
+        int prod = 1;
+        for (int d : dims)
+        {
+            prod *= d;
+        }
+        return prod;
+    }
+    
 	// =============================================================
 	// Class fields
 
+    /**
+     * The list of dimensions of this array.
+     */
 	protected int[] sizes;
+	
 	
 	// =============================================================
 	// Constructors

@@ -28,12 +28,7 @@ public class BufferedUInt16ArrayND extends UInt16ArrayND
 	public BufferedUInt16ArrayND(int[] sizes)
 	{
 		super(sizes);
-		int bufferSize = 1;
-		for (int i = 0; i < sizes.length; i++)
-		{
-			bufferSize *= sizes[i];
-		}
-		this.buffer = new short[bufferSize]; 
+        this.buffer = new short[cumProd(sizes)]; 
 	}
 
 	/**
@@ -156,14 +151,8 @@ public class BufferedUInt16ArrayND extends UInt16ArrayND
 			
 		public UInt16Iterator()
 		{
-			int n = 1;
-			int nd = sizes.length;
-			for (int d = 0; d < nd; d++)
-			{
-				n *= sizes[d];
-			}
-			this.index = -1;
-			this.indexMax = n - 1;
+            this.index = -1;
+            this.indexMax = cumProd(sizes) - 1;
 		}
 		
 		@Override

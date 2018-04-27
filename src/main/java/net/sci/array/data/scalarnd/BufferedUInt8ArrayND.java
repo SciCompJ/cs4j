@@ -28,12 +28,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	public BufferedUInt8ArrayND(int[] sizes)
 	{
 		super(sizes);
-		int bufferSize = 1;
-		for (int i = 0; i < sizes.length; i++)
-		{
-			bufferSize *= sizes[i];
-		}
-		this.buffer = new byte[bufferSize]; 
+		this.buffer = new byte[cumProd(sizes)]; 
 	}
 
 	/**
@@ -156,14 +151,8 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 			
 		public UInt8Iterator()
 		{
-			int n = 1;
-			int nd = sizes.length;
-			for (int d = 0; d < nd; d++)
-			{
-				n *= sizes[d];
-			}
-			this.index = -1;
-			this.indexMax = n - 1;
+            this.index = -1;
+            this.indexMax = cumProd(sizes) - 1;
 		}
 		
 		@Override

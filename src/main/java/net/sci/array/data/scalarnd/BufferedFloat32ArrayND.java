@@ -30,12 +30,7 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 	public BufferedFloat32ArrayND(int[] sizes)
 	{
 		super(sizes);
-		int bufferSize = 1;
-		for (int i = 0; i < sizes.length; i++)
-		{
-			bufferSize *= sizes[i];
-		}
-		this.buffer = new float[bufferSize]; 
+		this.buffer = new float[cumProd(sizes)]; 
 	}
 
 	/**
@@ -116,14 +111,8 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 			
 		public Float32Iterator()
 		{
-			int n = 1;
-			int nd = sizes.length;
-			for (int d = 0; d < nd; d++)
-			{
-				n *= sizes[d];
-			}
-			this.index = -1;
-			this.indexMax = n - 1;
+            this.index = -1;
+            this.indexMax = cumProd(sizes) - 1;
 		}
 		
 		@Override

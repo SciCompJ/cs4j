@@ -6,6 +6,7 @@ package net.sci.array.data;
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.vector.Float64VectorArray2D;
 import net.sci.array.data.vector.Float64VectorArray3D;
+import net.sci.array.data.vector.Float64VectorArrayND;
 import net.sci.array.type.Float64Vector;
 
 /**
@@ -29,9 +30,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 		case 3:
 			return Float64VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
 		default:
-			//TODO: implement the rest
-			throw new RuntimeException("Can not create double vector image with dimension " + dims.length);
-//			return UInt8ArrayND.create(dims);
+		    return Float64VectorArrayND.create(dims, sizeV);
 		}
 	}
 
@@ -72,8 +71,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 		// copy values into output array
 		while(iter1.hasNext())
 		{
-			iter2.forward();
-			iter2.set(iter1.next());
+            iter2.setNext(iter1.next());
 		}
 		
 		// return output

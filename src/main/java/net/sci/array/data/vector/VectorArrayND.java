@@ -22,13 +22,13 @@ public abstract class VectorArrayND<V extends Vector<?>> extends ArrayND<V> impl
 	}
 
 	
-	// =============================================================
-	// Specialization of Array3D interface
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.VectorArray#duplicate()
-	 */
-	@Override
-	public abstract VectorArrayND<V> duplicate();
+//	// =============================================================
+//	// Specialization of Array3D interface
+//
+//	/* (non-Javadoc)
+//	 * @see net.sci.array.data.VectorArray#duplicate()
+//	 */
+//	@Override
+//	public abstract VectorArrayND<V> duplicate();
 
 }

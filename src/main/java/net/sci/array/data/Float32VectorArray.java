@@ -6,6 +6,7 @@ package net.sci.array.data;
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.vector.Float32VectorArray2D;
 import net.sci.array.data.vector.Float32VectorArray3D;
+import net.sci.array.data.vector.Float32VectorArrayND;
 import net.sci.array.type.Float32Vector;
 
 /**
@@ -29,11 +30,9 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 		case 3:
 			return Float32VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
 		default:
-			//TODO: implement the rest
-			throw new RuntimeException("Can not create float vector image with dimension " + dims);
+	         return Float32VectorArrayND.create(dims, sizeV);
 		}
 	}
-
 
     // =============================================================
 	// Specialization of Array interface
@@ -72,8 +71,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 		// copy values into output array
 		while(iter1.hasNext())
 		{
-			iter2.forward();
-			iter2.set(iter1.next());
+			iter2.setNext(iter1.next());
 		}
 		
 		// return output
