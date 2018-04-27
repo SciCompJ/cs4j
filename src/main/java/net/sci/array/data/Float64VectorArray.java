@@ -5,6 +5,7 @@ package net.sci.array.data;
 
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.vector.Float64VectorArray2D;
+import net.sci.array.data.vector.Float64VectorArray3D;
 import net.sci.array.type.Float64Vector;
 
 /**
@@ -25,8 +26,8 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 		{
 		case 2:
 			return Float64VectorArray2D.create(dims[0], dims[1], sizeV);
-//		case 3:
-//			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
+		case 3:
+			return Float64VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
 		default:
 			//TODO: implement the rest
 			throw new RuntimeException("Can not create double vector image with dimension " + dims.length);
