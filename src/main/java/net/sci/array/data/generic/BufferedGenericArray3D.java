@@ -30,6 +30,7 @@ public class BufferedGenericArray3D<T> extends Array3D<T> implements GenericArra
     {
         super(size0, size1, size2);
         this.buffer = new Object[size0 * size1 * size2];
+        this.initValue = initValue;
         fill(initValue);
     }
     

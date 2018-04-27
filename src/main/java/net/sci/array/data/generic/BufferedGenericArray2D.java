@@ -30,6 +30,7 @@ public class BufferedGenericArray2D<T> extends Array2D<T> implements GenericArra
     {
         super(size0, size1);
         this.buffer = new Object[size0 * size1];
+        this.initValue = initValue;
         fill(initValue);
     }
     

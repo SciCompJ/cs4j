@@ -7,6 +7,7 @@ import net.sci.array.Array;
 import net.sci.array.ArrayFactory;
 import net.sci.array.data.generic.BufferedGenericArray2D;
 import net.sci.array.data.generic.BufferedGenericArray3D;
+import net.sci.array.data.generic.BufferedGenericArrayND;
 
 /**
  * Interface for array implementation based on a generic data type.
@@ -28,8 +29,7 @@ public interface GenericArray<T> extends Array<T>
         case 3:
             return new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], value);
         default:
-            //TODO: add n-dimensional implementation
-            throw new RuntimeException("Not implemented");
+            return new BufferedGenericArrayND<T>(dims, value);
         }
     }
 
