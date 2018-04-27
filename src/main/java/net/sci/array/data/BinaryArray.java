@@ -10,6 +10,8 @@ import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.BufferedBinaryArray2D;
 import net.sci.array.data.scalar3d.BinaryArray3D;
 import net.sci.array.data.scalar3d.BufferedBinaryArray3D;
+import net.sci.array.data.scalarnd.BinaryArrayND;
+import net.sci.array.data.scalarnd.BufferedBinaryArrayND;
 import net.sci.array.type.Binary;
 
 /**
@@ -32,8 +34,7 @@ public interface BinaryArray extends IntArray<Binary>
 		case 3:
 			return BinaryArray3D.create(dims[0], dims[1], dims[2]);
 		default:
-			throw new IllegalArgumentException("Can not create BinaryArray with " + dims.length + " dimensions");
-//			return UInt8ArrayND.create(dims);
+			return BinaryArrayND.create(dims);
 		}
 	}
 	
@@ -46,8 +47,7 @@ public interface BinaryArray extends IntArray<Binary>
 		case 3:
 			return new BufferedBinaryArray3D(dims[0], dims[1], dims[2], buffer);
 		default:
-			throw new IllegalArgumentException("Can not create BinaryArray with " + dims.length + " dimensions");
-//			return UInt8ArrayND.create(dims);
+            return new BufferedBinaryArrayND(dims, buffer);
 		}
 	}
 
@@ -94,7 +94,17 @@ public interface BinaryArray extends IntArray<Binary>
      * 
      * @return the complement of this array.
      */
-	public BinaryArray complement();
+	public default BinaryArray complement()
+	{
+	    BinaryArray result = BinaryArray.create(this.getSize());
+        BinaryArray.Iterator iter1 = this.iterator();
+        BinaryArray.Iterator iter2 = result.iterator();
+        while (iter1.hasNext())
+        {
+            iter2.setNextBoolean(!iter1.nextBoolean());
+        }
+        return result;
+	}
 	
 	
 	// =============================================================

@@ -105,20 +105,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 		setBoolean(pos[0], pos[1], value);
 	}
 
-    @Override
-    public BinaryArray2D complement()
-    {
-        BinaryArray2D result = duplicate();
-        BinaryArray.Iterator iter1 = iterator();
-        BinaryArray.Iterator iter2 = result.iterator();
-        while (iter1.hasNext() && iter2.hasNext())
-        {
-            iter2.setNextBoolean(!iter1.nextBoolean());
-        }
-        return result;
-    }
-
-
+	
     // =============================================================
 	// Specialization of IntArray2D interface
 

@@ -94,20 +94,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 		setBoolean(pos[0], pos[1], pos[2], state);
 	}
 
-    @Override
-    public BinaryArray3D complement()
-    {
-        BinaryArray3D result = duplicate();
-        BinaryArray.Iterator iter1 = iterator();
-        BinaryArray.Iterator iter2 = result.iterator();
-        while (iter1.hasNext() && iter2.hasNext())
-        {
-            iter2.setNextBoolean(!iter1.nextBoolean());
-        }
-        return result;
-    }
-
-    
+	
 	// =============================================================
 	// Specialization of IntArrayND interface
 
@@ -121,6 +108,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 		setBoolean(x, y, z, value != 0);
 	}
 
+	
 	// =============================================================
 	// Specialization of Array3D interface
 
