@@ -3,7 +3,6 @@
  */
 package net.sci.array.data;
 
-import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BinaryArray2D;
@@ -22,6 +21,26 @@ import net.sci.array.type.Binary;
  */
 public interface BinaryArray extends IntArray<Binary>
 {
+    // =============================================================
+    // Static variables
+
+    public static final IntArray.Factory<Binary> factory = new IntArray.Factory<Binary>()
+    {
+        @Override
+        public IntArray<Binary> create(int[] dims)
+        {
+            return BinaryArray.create(dims);
+        }
+
+        @Override
+        public BinaryArray create(int[] dims, Binary value)
+        {
+            BinaryArray array = BinaryArray.create(dims);
+            array.fill(value);
+            return array;
+        }
+    };
+
 	// =============================================================
 	// Static methods
 
@@ -133,18 +152,9 @@ public interface BinaryArray extends IntArray<Binary>
 	}
 
 	@Override
-	public default ArrayFactory<Binary> getFactory()
+	public default IntArray.Factory<Binary> getFactory()
 	{
-		return new ArrayFactory<Binary>()
-		{
-			@Override
-			public BinaryArray create(int[] dims, Binary value)
-			{
-				BinaryArray array = BinaryArray.create(dims);
-				array.fill(value);
-				return array;
-			}
-		};
+		return factory;
 	}
 
 	@Override

@@ -3,6 +3,7 @@
  */
 package net.sci.array.process;
 
+import net.sci.array.data.Float32Array;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.type.Scalar;
 
@@ -16,6 +17,7 @@ import net.sci.array.type.Scalar;
  */
 public class Sqrt implements ScalarArrayOperator
 {
+    ScalarArray.Factory<? extends Scalar> factory = Float32Array.factory;
 
 	/**
 	 * Empty constructor
@@ -50,8 +52,7 @@ public class Sqrt implements ScalarArrayOperator
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        // TODO: choose the class of the output array
-        ScalarArray<?> output = array.newInstance(array.getSize());
+        ScalarArray<?> output = factory.create(array.getSize());
         processScalar(array, output);
         return output;
     }

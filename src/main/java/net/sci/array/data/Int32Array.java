@@ -3,7 +3,6 @@
  */
 package net.sci.array.data;
 
-import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BufferedInt32Array2D;
@@ -20,6 +19,26 @@ import net.sci.array.type.Int32;
  */
 public interface Int32Array extends IntArray<Int32>
 {
+    // =============================================================
+    // Static variables
+
+    public static final IntArray.Factory<Int32> factory = new IntArray.Factory<Int32>()
+    {
+        @Override
+        public IntArray<Int32> create(int[] dims)
+        {
+            return Int32Array.create(dims);
+        }
+
+        @Override
+        public Int32Array create(int[] dims, Int32 value)
+        {
+            Int32Array array = Int32Array.create(dims);
+            array.fill(value);
+            return array;
+        }
+    };
+
 	// =============================================================
 	// Static methods
 
@@ -81,18 +100,9 @@ public interface Int32Array extends IntArray<Int32>
 	}
 
 	@Override
-	public default ArrayFactory<Int32> getFactory()
+	public default IntArray.Factory<Int32> getFactory()
 	{
-		return new ArrayFactory<Int32>()
-		{
-			@Override
-			public Int32Array create(int[] dims, Int32 value)
-			{
-				Int32Array array = Int32Array.create(dims);
-				array.fill(value);
-				return array;
-			}
-		};
+		return factory;
 	}
 
 	@Override

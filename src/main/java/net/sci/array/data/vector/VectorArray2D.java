@@ -3,7 +3,7 @@
  */
 package net.sci.array.data.vector;
 
-import net.sci.array.ArrayFactory;
+import net.sci.array.Array;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.Float32Array;
 import net.sci.array.data.VectorArray;
@@ -333,7 +333,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
-        public ArrayFactory<T> getFactory()
+        public Array.Factory<T> getFactory()
         {
             return this.array.getFactory();
         }

@@ -4,7 +4,6 @@
 package net.sci.array.data;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 
@@ -158,7 +157,7 @@ public abstract class Array2D<T> implements Array<T>
 		}
 
 		@Override
-		public ArrayFactory<T> getFactory()
+		public Factory<T> getFactory()
 		{
 			return this.array.getFactory();
 		}

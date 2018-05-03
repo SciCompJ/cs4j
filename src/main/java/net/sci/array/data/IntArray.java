@@ -82,8 +82,40 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 		return getInt(pos);
 	}
 
+    @Override
+    public IntArray.Factory<T> getFactory();
+
 	public Iterator<T> iterator();	
 	
+    
+    // =============================================================
+    // Specialization of the Factory interface
+
+    public interface Factory<T extends Int> extends ScalarArray.Factory<T>
+    {
+        /**
+         * Creates a new int array of the specified dimensions, initialized
+         * with zeros.
+         * 
+         * @param dims
+         *            the dimensions of the new array
+         * @return a new scalar array initialized with zeros
+         */
+        public IntArray<T> create(int[] dims);
+
+        /**
+         * Creates a new Int array with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial integer value
+         * @return a new instance of IntArray
+         */
+        public IntArray<T> create(int[] dims, T value);
+    }
+    
 
 	// =============================================================
 	// Inner interface

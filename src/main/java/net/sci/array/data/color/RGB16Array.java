@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
-import net.sci.array.ArrayFactory;
+import net.sci.array.Array;
 import net.sci.array.data.UInt16Array;
 import net.sci.array.data.VectorArray;
 import net.sci.array.type.RGB16;
@@ -21,6 +21,20 @@ import net.sci.array.type.UInt16;
  */
 public interface RGB16Array extends VectorArray<RGB16>, ColorArray<RGB16>
 {
+    // =============================================================
+    // Static variables
+
+    public static final Array.Factory<RGB16> factory = new Array.Factory<RGB16>()
+    {
+        @Override
+        public RGB16Array create(int[] dims, RGB16 value)
+        {
+            RGB16Array array = RGB16Array.create(dims);
+            array.fill(value);
+            return array;
+        }
+    };
+
 	// =============================================================
 	// Static methods
 
@@ -234,18 +248,9 @@ public interface RGB16Array extends VectorArray<RGB16>, ColorArray<RGB16>
 	}
 
 	@Override
-	public default ArrayFactory<RGB16> getFactory()
+	public default Array.Factory<RGB16> getFactory()
 	{
-		return new ArrayFactory<RGB16>()
-		{
-			@Override
-			public RGB16Array create(int[] dims, RGB16 value)
-			{
-				RGB16Array array = RGB16Array.create(dims);
-				array.fill(value);
-				return array;
-			}
-		};
+		return factory;
 	}
 
 	@Override

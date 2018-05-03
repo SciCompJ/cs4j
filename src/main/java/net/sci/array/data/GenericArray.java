@@ -4,7 +4,6 @@
 package net.sci.array.data;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayFactory;
 import net.sci.array.data.generic.BufferedGenericArray2D;
 import net.sci.array.data.generic.BufferedGenericArray3D;
 import net.sci.array.data.generic.BufferedGenericArrayND;
@@ -41,9 +40,9 @@ public interface GenericArray<T> extends Array<T>
     }
     
     @Override
-    public default ArrayFactory<T> getFactory()
+    public default Array.Factory<T> getFactory()
     {
-        return new ArrayFactory<T>()
+        return new Array.Factory<T>()
         {
             public GenericArray<T> create(int[] dims, T value)
             {

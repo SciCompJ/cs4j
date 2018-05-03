@@ -3,7 +3,7 @@
  */
 package net.sci.array.data.vector;
 
-import net.sci.array.ArrayFactory;
+import net.sci.array.Array;
 import net.sci.array.data.Array3D;
 import net.sci.array.data.VectorArray;
 import net.sci.array.type.Vector;
@@ -185,7 +185,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         }
 
         @Override
-        public ArrayFactory<T> getFactory()
+        public Array.Factory<T> getFactory()
         {
             return this.array.getFactory();
         }

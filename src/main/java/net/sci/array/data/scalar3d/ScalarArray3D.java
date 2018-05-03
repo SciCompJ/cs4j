@@ -3,7 +3,6 @@
  */
 package net.sci.array.data.scalar3d;
 
-import net.sci.array.ArrayFactory;
 import net.sci.array.data.Array3D;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.type.Scalar;
@@ -70,7 +69,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
         }
 
         @Override
-        public ArrayFactory<T> getFactory()
+        public ScalarArray.Factory<T> getFactory()
         {
             return this.array.getFactory();
         }

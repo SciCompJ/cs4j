@@ -3,7 +3,6 @@
  */
 package net.sci.array.data;
 
-import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
@@ -21,6 +20,26 @@ import net.sci.array.type.UInt8;
  */
 public interface UInt8Array extends IntArray<UInt8>
 {
+    // =============================================================
+    // Static variables
+
+    public static final IntArray.Factory<UInt8> factory = new IntArray.Factory<UInt8>()
+    {
+        @Override
+        public IntArray<UInt8> create(int[] dims)
+        {
+            return UInt8Array.create(dims);
+        }
+
+        @Override
+        public UInt8Array create(int[] dims, UInt8 value)
+        {
+            UInt8Array array = UInt8Array.create(dims);
+            array.fill(value);
+            return array;
+        }
+    };
+
 	// =============================================================
 	// Static methods
 
@@ -115,18 +134,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	}
 
 	@Override
-	public default ArrayFactory<UInt8> getFactory()
+	public default IntArray.Factory<UInt8> getFactory()
 	{
-		return new ArrayFactory<UInt8>()
-		{
-			@Override
-			public UInt8Array create(int[] dims, UInt8 value)
-			{
-				UInt8Array array = UInt8Array.create(dims);
-				array.fill(value);
-				return array;
-			}
-		};
+		return factory;
 	}
 
 	@Override

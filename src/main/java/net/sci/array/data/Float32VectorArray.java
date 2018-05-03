@@ -3,7 +3,7 @@
  */
 package net.sci.array.data;
 
-import net.sci.array.ArrayFactory;
+import net.sci.array.Array;
 import net.sci.array.data.vector.Float32VectorArray2D;
 import net.sci.array.data.vector.Float32VectorArray3D;
 import net.sci.array.data.vector.Float32VectorArrayND;
@@ -18,6 +18,20 @@ import net.sci.array.type.Float32Vector;
  */
 public interface Float32VectorArray extends VectorArray<Float32Vector>
 {
+    // =============================================================
+    // Static variables
+
+    public static final Array.Factory<Float32Vector> factory = new Array.Factory<Float32Vector>()
+    {
+        @Override
+        public Float32VectorArray create(int[] dims, Float32Vector value)
+        {
+            Float32VectorArray array = Float32VectorArray.create(dims, value.size());
+            array.fill(value);
+            return array;
+        }
+    };
+
 	// =============================================================
 	// Static methods
 
@@ -44,18 +58,9 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	}
 
 	@Override
-	public default ArrayFactory<Float32Vector> getFactory()
+	public default Array.Factory<Float32Vector> getFactory()
 	{
-		return new ArrayFactory<Float32Vector>()
-		{
-			@Override
-			public Float32VectorArray create(int[] dims, Float32Vector value)
-			{
-				Float32VectorArray array = Float32VectorArray.create(dims, value.size());
-				array.fill(value);
-				return array;
-			}
-		};
+		return factory;
 	}
 
 	@Override

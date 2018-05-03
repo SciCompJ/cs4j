@@ -211,9 +211,41 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 	@Override
 	public ScalarArray<T> duplicate();
 	
+    @Override
+    public ScalarArray.Factory<T> getFactory();
+
 	public ScalarArray.Iterator<T> iterator();
 	
+	
+    // =============================================================
+    // Specialization of the Factory interface
 
+	public interface Factory<T extends Scalar> extends Array.Factory<T>
+	{
+        /**
+         * Creates a new scalar array of the specified dimensions, initialized
+         * with zeros.
+         * 
+         * @param dims
+         *            the dimensions of the new array
+         * @return a new scalar array initialized with zeros
+         */
+	    public ScalarArray<T> create(int[] dims);
+
+        /**
+         * Creates a new scalar array with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial value
+         * @return a new instance of ScalarArray
+         */
+        public ScalarArray<T> create(int[] dims, T value);
+	}
+	
+	
 	// =============================================================
 	// Inner interface
 

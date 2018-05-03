@@ -6,7 +6,6 @@ package net.sci.array.data.scalar2d;
 import java.io.PrintStream;
 import java.util.Locale;
 
-import net.sci.array.ArrayFactory;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.type.Scalar;
@@ -92,7 +91,7 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 		}
 
 		@Override
-		public ArrayFactory<T> getFactory()
+		public ScalarArray.Factory<T> getFactory()
 		{
 			return this.array.getFactory();
 		}

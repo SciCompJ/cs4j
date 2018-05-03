@@ -1,9 +1,7 @@
 package net.sci.array.data.scalar2d;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
 import net.sci.array.Array;
-import net.sci.array.ArrayFactory;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.type.UInt8;
 
@@ -81,7 +79,7 @@ public class BufferedUInt8Array2DTest
 	{
 		UInt8Array2D array = new BufferedUInt8Array2D(6, 5);
 		
-		ArrayFactory<UInt8> factory = array.getFactory();
+		Array.Factory<UInt8> factory = array.getFactory();
 		int[] dims = new int[]{4, 3, 2};
 		Array<UInt8> array2 = factory.create(dims, new UInt8(10));
 		

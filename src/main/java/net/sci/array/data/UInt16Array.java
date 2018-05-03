@@ -3,7 +3,6 @@
  */
 package net.sci.array.data;
 
-import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BufferedUInt16Array2D;
@@ -21,6 +20,26 @@ import net.sci.array.type.UInt16;
  */
 public interface UInt16Array extends IntArray<UInt16>
 {
+    // =============================================================
+    // Static variables
+
+    public static final IntArray.Factory<UInt16> factory = new IntArray.Factory<UInt16>()
+    {
+        @Override
+        public IntArray<UInt16> create(int[] dims)
+        {
+            return UInt16Array.create(dims);
+        }
+
+        @Override
+        public UInt16Array create(int[] dims, UInt16 value)
+        {
+            UInt16Array array = UInt16Array.create(dims);
+            array.fill(value);
+            return array;
+        }
+    };
+
 	// =============================================================
 	// Static methods
 
@@ -110,18 +129,9 @@ public interface UInt16Array extends IntArray<UInt16>
 	}
 
 	@Override
-	public default ArrayFactory<UInt16> getFactory()
+	public default IntArray.Factory<UInt16> getFactory()
 	{
-		return new ArrayFactory<UInt16>()
-		{
-			@Override
-			public UInt16Array create(int[] dims, UInt16 value)
-			{
-				UInt16Array array = UInt16Array.create(dims);
-				array.fill(value);
-				return array;
-			}
-		};
+		return factory;
 	}
 
 	@Override

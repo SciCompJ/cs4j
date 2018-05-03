@@ -4,7 +4,6 @@
 package net.sci.array.data;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BufferedFloat64Array2D;
@@ -21,6 +20,26 @@ import net.sci.array.type.Float64;
  */
 public interface Float64Array extends ScalarArray<Float64>
 {
+    // =============================================================
+    // Static variables
+
+    public static final ScalarArray.Factory<Float64> factory = new ScalarArray.Factory<Float64>()
+    {
+        @Override
+        public ScalarArray<Float64> create(int[] dims)
+        {
+            return Float64Array.create(dims);
+        }
+
+        @Override
+        public Float64Array create(int[] dims, Float64 value)
+        {
+            Float64Array array = Float64Array.create(dims);
+            array.fill(value);
+            return array;
+        }
+    };
+
 	// =============================================================
 	// Static methods
 
@@ -82,18 +101,9 @@ public interface Float64Array extends ScalarArray<Float64>
 	}
 
 	@Override
-	public default ArrayFactory<Float64> getFactory()
+	public default ScalarArray.Factory<Float64> getFactory()
 	{
-		return new ArrayFactory<Float64>()
-		{
-			@Override
-			public Float64Array create(int[] dims, Float64 value)
-			{
-				Float64Array array = Float64Array.create(dims);
-				array.fill(value);
-				return array;
-			}
-		};
+		return factory;
 	}
 
 	@Override

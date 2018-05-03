@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayFactory;
 import net.sci.array.Cursor;
 import net.sci.array.CursorIterator;
 import net.sci.array.data.BinaryArray;
@@ -25,6 +24,20 @@ import net.sci.array.type.UInt8;
  */
 public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
 {
+    // =============================================================
+    // Static variables
+
+    public static final Array.Factory<RGB8> factory = new Array.Factory<RGB8>()
+    {
+        @Override
+        public RGB8Array create(int[] dims, RGB8 value)
+        {
+            RGB8Array array = RGB8Array.create(dims);
+            array.fill(value);
+            return array;
+        }
+    };
+
 	// =============================================================
 	// Static methods
 
@@ -318,18 +331,9 @@ public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
 	}
 
 	@Override
-	public default ArrayFactory<RGB8> getFactory()
+	public default Array.Factory<RGB8> getFactory()
 	{
-		return new ArrayFactory<RGB8>()
-		{
-			@Override
-			public RGB8Array create(int[] dims, RGB8 value)
-			{
-				RGB8Array array = RGB8Array.create(dims);
-				array.fill(value);
-				return array;
-			}
-		};
+		return factory;
 	}
 
 	@Override

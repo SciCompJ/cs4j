@@ -57,7 +57,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 * Returns the factory of this array.
 	 * @return the factory of this array
 	 */
-	public ArrayFactory<T> getFactory();
+	public Factory<T> getFactory();
 	
 	/**
 	 * Creates a new writable array with same size as this array and containing
@@ -126,6 +126,24 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
 	public Iterator<T> iterator();
 
+    
+    // ==================================================
+    // Declaration of a factory interface
+    
+	public interface Factory<T>
+	{
+	    /**
+	     * Creates a new array with the specified dimensions, filled with the
+	     * specified initial value.
+	     * 
+	     * @param dims
+	     *            the dimensions of the array to be created
+	     * @param value
+	     *            an instance of the initial value
+	     * @return a new instance of Array
+	     */
+	    public Array<T> create(int[] dims, T value);
+	}
 	
     // ==================================================
     // Implementation of an iterator interface

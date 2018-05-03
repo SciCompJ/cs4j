@@ -3,7 +3,7 @@
  */
 package net.sci.array.data;
 
-import net.sci.array.ArrayFactory;
+import net.sci.array.Array;
 import net.sci.array.data.vector.Float64VectorArray2D;
 import net.sci.array.data.vector.Float64VectorArray3D;
 import net.sci.array.data.vector.Float64VectorArrayND;
@@ -18,7 +18,22 @@ import net.sci.array.type.Float64Vector;
  */
 public interface Float64VectorArray extends VectorArray<Float64Vector>
 {
-	// =============================================================
+    // =============================================================
+    // Static variables
+
+    public static final Array.Factory<Float64Vector> factory = new Array.Factory<Float64Vector>()
+    {
+        @Override
+        public Float64VectorArray create(int[] dims, Float64Vector value)
+        {
+            Float64VectorArray array = Float64VectorArray.create(dims, value.size());
+            array.fill(value);
+            return array;
+        }
+    };
+
+
+    // =============================================================
 	// Static methods
 
 	public static Float64VectorArray create(int[] dims, int sizeV)
@@ -44,18 +59,9 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 	}
 
 	@Override
-	public default ArrayFactory<Float64Vector> getFactory()
+	public default Array.Factory<Float64Vector> getFactory()
 	{
-		return new ArrayFactory<Float64Vector>()
-		{
-			@Override
-			public Float64VectorArray create(int[] dims, Float64Vector value)
-			{
-				Float64VectorArray array = Float64VectorArray.create(dims, value.size());
-				array.fill(value);
-				return array;
-			}
-		};
+		return factory;
 	}
 
 	@Override

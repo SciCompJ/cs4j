@@ -3,8 +3,8 @@
  */
 package net.sci.array.data.scalar2d;
 
-import net.sci.array.ArrayFactory;
 import net.sci.array.data.BinaryArray;
+import net.sci.array.data.IntArray;
 import net.sci.array.type.Binary;
 
 /**
@@ -223,7 +223,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         }
 
         @Override
-        public ArrayFactory<Binary> getFactory()
+        public IntArray.Factory<Binary> getFactory()
         {
             return this.array.getFactory();
         }
