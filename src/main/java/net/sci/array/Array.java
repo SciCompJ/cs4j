@@ -121,6 +121,14 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	public CursorIterator<? extends Cursor> cursorIterator();
 	
 	/**
+     * Return an instance if PositionIterator that allows to iterate over the
+     * positions of a multi-dimensional array.
+     * 
+     * @return an instance of PositionIterator
+     */
+	public PositionIterator positionIterator();
+	
+	/**
 	 * Returns an iterator over the elements of the array, for implementing the
 	 * Iterable interface.
 	 */
@@ -208,5 +216,12 @@ public interface Array<T> extends Iterable<T>, Dimensional
 		 *            the new value
 		 */
 		public void setValue(double value);		
+	}
+	
+	public interface PositionIterator extends java.util.Iterator<int[]>
+	{
+	    public void forward();
+	    public int[] get();
+	    public int get(int dim);
 	}
 }

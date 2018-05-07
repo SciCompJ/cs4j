@@ -119,6 +119,12 @@ public abstract class Array3D<T> implements Array<T>
 	{
 		return new Cursor3DIterator();
 	}
+    
+	public PositionIterator positionIterator()
+    {
+        return new PositionIterator3D();
+    }
+
 
 
 	/**
@@ -204,6 +210,72 @@ public abstract class Array3D<T> implements Array<T>
 			default: throw new IllegalArgumentException("Requires dimension beween 0 and 2");
 			}
 		}
-		
 	}
+
+	/**
+     * Iterator over the positions of a 3D array.
+     * 
+     * @author dlegland
+     *
+     */
+    private class PositionIterator3D implements PositionIterator
+    {
+        int posX = -1;
+        int posY = 0;
+        int posZ = 0;
+        
+        public PositionIterator3D()
+        {
+        }
+        
+        @Override
+        public void forward()
+        {
+            posX++;
+            if (posX == size0)
+            {
+                posX = 0;
+                posY++;
+                if (posY == size1)
+                {
+                    posY = 0;
+                    posZ++;
+                }
+            }
+        }
+        
+        @Override
+        public int[] get()
+        {
+            return new int[] { posX, posY, posZ };
+        }
+        
+        public int get(int dim)
+        {
+            switch (dim)
+            {
+            case 0:
+                return posX;
+            case 1:
+                return posY;
+            case 2:
+                return posZ;
+            default:
+                throw new IllegalArgumentException("Requires dimension beween 0 and 2");
+            }
+        }
+        
+        @Override
+        public boolean hasNext()
+        {
+            return posX < size0 - 1 || posY < size1 - 1 || posZ < size2 - 1;
+        }
+        
+        @Override
+        public int[] next()
+        {
+            forward();
+            return new int[] { posX, posY, posZ };
+        }
+    }
 }

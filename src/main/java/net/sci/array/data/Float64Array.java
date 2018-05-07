@@ -215,6 +215,12 @@ public interface Float64Array extends ScalarArray<Float64>
     		return array.cursorIterator();
     	}
 
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
 		@Override
 		public Iterator iterator()
 		{

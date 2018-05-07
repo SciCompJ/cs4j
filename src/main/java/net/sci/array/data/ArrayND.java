@@ -122,7 +122,12 @@ public abstract class ArrayND<T> implements Array<T>
 	{
 		return new CursorNDIterator(this.sizes);
 	}
-	
+
+	public PositionIterator positionIterator()
+	{
+	    return new PositionIteratorND();
+	}
+
 	private class CursorNDIterator implements net.sci.array.CursorIterator<CursorND>
 	{
 		int[] sizes;
@@ -201,4 +206,75 @@ public abstract class ArrayND<T> implements Array<T>
 			return pos[dim];
 		}
 	}
+
+    /**
+     * Iterator over the positions of an array.
+     * 
+     * @author dlegland
+     *
+     */
+    private class PositionIteratorND implements PositionIterator
+    {
+//        int[] sizes;
+        int[] pos;
+        int nd;
+
+        public PositionIteratorND()
+        {
+            this.nd = sizes.length;
+            this.pos = new int[this.nd];
+            for (int d = 0; d < this.nd - 1; d++)
+            {
+                this.pos[d] = sizes[d] - 1;
+            }
+            this.pos[this.nd - 2] = -1;
+        }
+        
+        @Override
+        public void forward()
+        {
+            incrementDim(0);
+        }
+        
+        private void incrementDim(int d)
+        {
+            this.pos[d]++;
+            if (this.pos[d] == sizes[d] && d < nd - 1)
+            {
+                this.pos[d] = 0;
+                incrementDim(d + 1);
+            }
+        }
+        
+        @Override
+        public int[] get()
+        {
+            int[] res = new int[nd];
+            System.arraycopy(this.pos, 0, res, 0, nd);
+            return res;
+        }
+        
+        public int get(int dim)
+        {
+            return pos[dim];
+        }
+        
+        @Override
+        public boolean hasNext()
+        {
+            for (int d = 0; d < nd; d++)
+            {
+                if (this.pos[d] < sizes[d] - 1)
+                    return true;
+            }
+            return false;
+        }
+        
+        @Override
+        public int[] next()
+        {
+            forward();
+            return get();
+        }
+    }
 }

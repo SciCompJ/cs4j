@@ -5,8 +5,6 @@ package net.sci.array.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 import net.sci.array.data.Array2D;
 import net.sci.array.data.Array3D;
 
@@ -112,24 +110,42 @@ public class Flip implements ArrayOperator
 		}
 	}
 
-	public <T1 extends T2, T2> void process(Array<T1> input, Array<T2> output)
-	{
-		int nd = input.dimensionality();
-		int sizeDim = input.getSize(this.dim);
-		int[] pos2 = new int[nd];
+    public <T1 extends T2, T2> void process(Array<T1> input, Array<T2> output)
+    {
+        int nd = input.dimensionality();
+        int sizeDim = input.getSize(this.dim);
+        int[] pos2 = new int[nd];
 
-		// iterate over positions of input array
-		CursorIterator<? extends Cursor> cursIter = input.cursorIterator();
-		while (cursIter.hasNext())
-		{
-			cursIter.forward();
-			int[] pos = cursIter.getPosition();
-			
-			System.arraycopy(pos, 0, pos2, 0, nd);
-			pos[dim] = sizeDim - 1 - pos[dim];
-			output.set(pos2, input.get(pos));
-		}
-	}
+        // iterate over positions of input array
+        Array.PositionIterator iter = input.positionIterator();
+        while (iter.hasNext())
+        {
+            int[] pos = iter.next();
+            
+            System.arraycopy(pos, 0, pos2, 0, nd);
+            pos[dim] = sizeDim - 1 - pos[dim];
+            output.set(pos2, input.get(pos));
+        }
+    }
+    
+//    public <T1 extends T2, T2> void process(Array<T1> input, Array<T2> output)
+//    {
+//        int nd = input.dimensionality();
+//        int sizeDim = input.getSize(this.dim);
+//        int[] pos2 = new int[nd];
+//
+//        // iterate over positions of input array
+//        CursorIterator<? extends Cursor> cursIter = input.cursorIterator();
+//        while (cursIter.hasNext())
+//        {
+//            cursIter.forward();
+//            int[] pos = cursIter.getPosition();
+//            
+//            System.arraycopy(pos, 0, pos2, 0, nd);
+//            pos[dim] = sizeDim - 1 - pos[dim];
+//            output.set(pos2, input.get(pos));
+//        }
+//    }
 
 //	public int[] flipPosition(int[] pos, int[] arrayDims)
 //	{

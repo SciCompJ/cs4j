@@ -129,10 +129,15 @@ public abstract class Array2D<T> implements Array<T>
 		setValue(pos[0], pos[1], value);
 	}
 	
-	public CursorIterator<Cursor2D> cursorIterator()
-	{
-		return new Cursor2DIterator();
-	}
+    public CursorIterator<Cursor2D> cursorIterator()
+    {
+        return new Cursor2DIterator();
+    }
+
+    public PositionIterator positionIterator()
+    {
+        return new PositionIterator2D();
+    }
 
 	private static class Wrap<T> extends Array2D<T>
 	{
@@ -328,6 +333,64 @@ public abstract class Array2D<T> implements Array<T>
 			default: throw new IllegalArgumentException("Requires dimension beween 0 and 1");
 			}
 		}
-		
 	}
+	
+    /**
+     * Iterator over the positions of an array.
+     * 
+     * @author dlegland
+     *
+     */
+    private class PositionIterator2D implements PositionIterator
+    {
+        int posX = -1;
+        int posY = 0;
+        
+        public PositionIterator2D()
+        {
+        }
+        
+        @Override
+        public void forward()
+        {
+            posX++;
+            if (posX == size0)
+            {
+                posX = 0;
+                posY++;
+            }
+        }
+        
+        @Override
+        public int[] get()
+        {
+            return new int[] { posX, posY };
+        }
+        
+        public int get(int dim)
+        {
+            switch (dim)
+            {
+            case 0:
+                return posX;
+            case 1:
+                return posY;
+            default:
+                throw new IllegalArgumentException("Requires dimension beween 0 and 1");
+            }
+        }
+        
+        @Override
+        public boolean hasNext()
+        {
+            return posX < size0 - 1 || posY < size1 - 1;
+        }
+        
+        @Override
+        public int[] next()
+        {
+            forward();
+            return new int[] { posX, posY };
+        }
+    }
 }

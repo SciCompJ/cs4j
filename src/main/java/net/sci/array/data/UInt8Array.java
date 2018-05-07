@@ -285,6 +285,12 @@ public interface UInt8Array extends IntArray<UInt8>
     		return array.cursorIterator();
     	}
 
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
 		@Override
 		public Iterator iterator()
 		{

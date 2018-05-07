@@ -345,6 +345,12 @@ public interface BinaryArray extends IntArray<Binary>
     	}
 
         @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
         public Iterator iterator()
         {
             return new Iterator(array.iterator());

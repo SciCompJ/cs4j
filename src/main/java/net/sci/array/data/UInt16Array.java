@@ -270,6 +270,12 @@ public interface UInt16Array extends IntArray<UInt16>
     		return array.cursorIterator();
     	}
 
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
 		@Override
 		public Iterator iterator()
 		{

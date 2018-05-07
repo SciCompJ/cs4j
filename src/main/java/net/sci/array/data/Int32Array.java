@@ -226,6 +226,12 @@ public interface Int32Array extends IntArray<Int32>
     		return array.cursorIterator();
     	}
 
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
 		@Override
 		public Iterator iterator()
 		{

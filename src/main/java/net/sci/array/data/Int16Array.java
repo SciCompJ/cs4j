@@ -269,6 +269,12 @@ public interface Int16Array extends IntArray<Int16>
     		return array.cursorIterator();
     	}
 
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
 		@Override
 		public Iterator iterator()
 		{

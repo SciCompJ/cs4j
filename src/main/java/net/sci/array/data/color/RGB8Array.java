@@ -450,7 +450,13 @@ public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
     		return parent.cursorIterator();
     	}
 
-       @Override
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return parent.positionIterator();
+        }
+
+        @Override
         public Iterator iterator()
         {
             return new Iterator(parent.iterator());
