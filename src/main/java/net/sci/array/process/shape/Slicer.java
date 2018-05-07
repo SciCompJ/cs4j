@@ -5,8 +5,6 @@ package net.sci.array.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 
 /**
  * Extract a slice from an array, by specifying dimension and slice index along
@@ -38,20 +36,19 @@ public class Slicer implements ArrayOperator
 		int[] srcPos = new int[nd + 1];
 		srcPos[dim] = sliceIndex;
 
-		CursorIterator<? extends Cursor> cursIter = source.cursorIterator();
-		while (cursIter.hasNext())
-		{
-			// find the position of next element
-			cursIter.forward();
-			int[] pos = cursIter.getPosition();
-			
-			// convert to position in source image
-			System.arraycopy(pos, 0, srcPos, 0, dim);
-			System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
-			
-			// copy value of selected position
-			target.set(pos, source.get(srcPos));
-		}
+        Array.PositionIterator iter = source.positionIterator();
+        while (iter.hasNext())
+        {
+            // find the position of next element
+            int[] pos = iter.next();
+            
+            // convert to position in source image
+            System.arraycopy(pos, 0, srcPos, 0, dim);
+            System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
+            
+            // copy value of selected position
+            target.set(pos, source.get(srcPos));
+        }
 	}
 	
 	public static final <T> Array<T> slice2d(Array<T> array,
@@ -188,13 +185,12 @@ public class Slicer implements ArrayOperator
 		int[] srcPos = new int[nd + 1];
 		srcPos[this.dim] = this.index;
 
-		// iterate over position in target image
-		CursorIterator<? extends Cursor> cursIter = target.cursorIterator();
-		while (cursIter.hasNext())
-		{
-			// find the position of next element
-			cursIter.forward();
-			int[] pos = cursIter.getPosition();
+        // iterate over positions in target image
+        Array.PositionIterator cursIter = target.positionIterator();
+        while (cursIter.hasNext())
+        {
+            // find the position of next element
+            int[] pos = cursIter.next();
 			
 			// convert to position in source image
 			System.arraycopy(pos, 0, srcPos, 0, dim);
@@ -212,13 +208,12 @@ public class Slicer implements ArrayOperator
 		int[] srcPos = new int[nd + 1];
 		srcPos[this.dim] = this.index;
 
-		// iterate over position in target image
-		CursorIterator<? extends Cursor> cursIter = target.cursorIterator();
+		// iterate over positions in target image
+		Array.PositionIterator cursIter = target.positionIterator();
 		while (cursIter.hasNext())
 		{
 			// find the position of next element
-			cursIter.forward();
-			int[] pos = cursIter.getPosition();
+			int[] pos = cursIter.next();
 			
 			// convert to position in source image
 			System.arraycopy(pos, 0, srcPos, 0, dim);

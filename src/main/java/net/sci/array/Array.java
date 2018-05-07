@@ -118,8 +118,6 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
 	public void setValue(int[] pos, double value);
 
-	public CursorIterator<? extends Cursor> cursorIterator();
-	
 	/**
      * Return an instance if PositionIterator that allows to iterate over the
      * positions of a multi-dimensional array.

@@ -4,8 +4,6 @@
 package net.sci.array.data;
 
 import net.sci.array.Array;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 
 /**
  * Base implementation for three-dimensional array.
@@ -115,102 +113,10 @@ public abstract class Array3D<T> implements Array<T>
 		setValue(pos[0], pos[1], pos[2], value);
 	}
 	
-	public CursorIterator<Cursor3D> cursorIterator()
-	{
-		return new Cursor3DIterator();
-	}
-    
 	public PositionIterator positionIterator()
     {
         return new PositionIterator3D();
     }
-
-
-
-	/**
-	 * Iterator over the positions of an array.
-	 * 
-	 * @author dlegland
-	 *
-	 */
-	public class Cursor3DIterator implements CursorIterator<Cursor3D>
-	{
-		int posX = -1;
-		int posY = 0;
-		int posZ = 0;
-		
-		public Cursor3DIterator()
-		{
-			
-		}
-		
-		@Override
-		public boolean hasNext()
-		{
-			return posX < size0 - 1 || posY < size1 - 1 || posZ < size2 - 1;
-		}
-
-		@Override
-		public Cursor3D next()
-		{
-			forward();
-			return new Cursor3D(posX, posY, posZ);
-		}
-
-		@Override
-		public void forward()
-		{
-			posX++;
-			if (posX == size0)
-			{
-				posX = 0;
-				posY++;
-				if (posY == size1)
-				{
-					posY = 0;
-					posZ++;
-				}
-			}
-		}
-
-		@Override
-		public int[] getPosition()
-		{
-			return new int[]{posX, posY, posZ};
-		}
-	}
-	
-	public class Cursor3D implements Cursor
-	{
-		int x;
-		int y;
-		int z;
-
-		public Cursor3D(int x, int y, int z)
-		{
-			this.x = x;
-			this.y = y;
-			this.z = z;
-		}
-		
-		@Override
-		public int[] getPosition()
-		{
-			return new int[]{x, y, z};
-		}
-
-		@Override
-		public int getPosition(int dim)
-		{
-			switch(dim)
-			{
-			case 0: return x;
-			case 1: return y;
-			case 2: return z;
-			default: throw new IllegalArgumentException("Requires dimension beween 0 and 2");
-			}
-		}
-	}
 
 	/**
      * Iterator over the positions of a 3D array.

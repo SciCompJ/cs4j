@@ -5,8 +5,6 @@ package net.sci.image.process.filter;
 
 import java.util.Iterator;
 
-import net.sci.array.Cursor;
-
 /**
  * A rectangular neighborhood defined by the radius in each dimension.
  * 
@@ -21,12 +19,6 @@ public class BoxNeighborhoodRadius implements Neighborhood
 {
 	int[] refPos;
 	int[] radiusList;
-	
-	public BoxNeighborhoodRadius(Cursor cursor, int[] radiusList)
-	{
-		this.refPos = cursor.getPosition();
-		this.radiusList = radiusList;
-	}
 	
 	public BoxNeighborhoodRadius(int[] refPos, int[] radiusList)
 	{

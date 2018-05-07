@@ -4,8 +4,6 @@
 package net.sci.array.data;
 
 import net.sci.array.Array;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BufferedFloat32Array2D;
 import net.sci.array.data.scalar2d.Float32Array2D;
 import net.sci.array.data.scalar3d.BufferedFloat32Array3D;
@@ -209,11 +207,6 @@ public interface Float32Array extends ScalarArray<Float32>
 		{
 			array.setValue(pos, value.getValue());
 		}
-
-    	public CursorIterator<? extends Cursor> cursorIterator()
-    	{
-    		return array.cursorIterator();
-    	}
 
         @Override
         public PositionIterator positionIterator()

@@ -8,8 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 import net.sci.array.data.BinaryArray;
 import net.sci.array.data.UInt8Array;
 import net.sci.array.data.VectorArray;
@@ -444,11 +442,6 @@ public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
             RGB8 rgb = new RGB8(value & 0x00FF);
             parent.set(pos, rgb);
         }
-
-    	public CursorIterator<? extends Cursor> cursorIterator()
-    	{
-    		return parent.cursorIterator();
-    	}
 
         @Override
         public PositionIterator positionIterator()

@@ -5,8 +5,6 @@ package net.sci.array.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 
 /**
  * Compute a crude down-sampled (decimated) version of the input array, by
@@ -76,11 +74,10 @@ public class Downsampler implements ArrayOperator
 	    int[] pos2 = new int[nd];
 	    
 	    // copy elements of input array to result
-	    CursorIterator<? extends Cursor> iter = result.cursorIterator();
+	    Array.PositionIterator iter = result.positionIterator();
 	    while(iter.hasNext())
 	    {
-	        Cursor c = iter.next();
-	        int[] pos = c.getPosition();
+	        int[] pos = iter.next();
 	        for (int d = 0; d < nd; d++)
 	        {
 	            pos2[d] = pos[d] * k[d];

@@ -4,8 +4,6 @@
 package net.sci.array.data;
 
 import net.sci.array.Array;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 
 /**
  * @author dlegland
@@ -129,11 +127,6 @@ public abstract class Array2D<T> implements Array<T>
 		setValue(pos[0], pos[1], value);
 	}
 	
-    public CursorIterator<Cursor2D> cursorIterator()
-    {
-        return new Cursor2DIterator();
-    }
-
     public PositionIterator positionIterator()
     {
         return new PositionIterator2D();
@@ -257,81 +250,6 @@ public abstract class Array2D<T> implements Array<T>
 		public Array.Iterator<T> iterator()
 		{
 			return array.iterator();
-		}
-	}
-	
-	/**
-	 * Iterator over the positions of an array.
-	 * 
-	 * @author dlegland
-	 *
-	 */
-	public class Cursor2DIterator implements CursorIterator<Cursor2D>
-	{
-		int posX = -1;
-		int posY = 0;
-		
-		public Cursor2DIterator()
-		{
-		}
-		
-		@Override
-		public boolean hasNext()
-		{
-			return posX < size0 - 1 || posY < size1 - 1;
-		}
-
-		@Override
-		public Cursor2D next()
-		{
-			forward();
-			return new Cursor2D(posX, posY);
-		}
-
-		@Override
-		public void forward()
-		{
-			posX++;
-			if (posX == size0)
-			{
-				posX = 0;
-				posY++;
-			}
-		}
-
-		@Override
-		public int[] getPosition()
-		{
-			return new int[]{posX, posY};
-		}
-	}
-	
-	public class Cursor2D implements Cursor
-	{
-		int x;
-		int y;
-
-		public Cursor2D(int x, int y)
-		{
-			this.x = x;
-			this.y = y;
-		}
-		
-		@Override
-		public int[] getPosition()
-		{
-			return new int[]{x, y};
-		}
-
-		@Override
-		public int getPosition(int dim)
-		{
-			switch(dim)
-			{
-			case 0: return x;
-			case 1: return y;
-			default: throw new IllegalArgumentException("Requires dimension beween 0 and 1");
-			}
 		}
 	}
 	

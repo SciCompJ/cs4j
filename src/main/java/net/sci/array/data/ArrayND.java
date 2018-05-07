@@ -5,8 +5,6 @@ package net.sci.array.data;
 
 
 import net.sci.array.Array;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 
 /**
  * Base implementation for arrays of any dimensionality.
@@ -118,93 +116,9 @@ public abstract class ArrayND<T> implements Array<T>
 		return this.sizes[dim];
 	}
 	
-	public CursorIterator<? extends Cursor> cursorIterator()
-	{
-		return new CursorNDIterator(this.sizes);
-	}
-
 	public PositionIterator positionIterator()
 	{
 	    return new PositionIteratorND();
-	}
-
-	private class CursorNDIterator implements net.sci.array.CursorIterator<CursorND>
-	{
-		int[] sizes;
-		int[] pos;
-		int nd;
-
-		public CursorNDIterator(int[] sizes)
-		{
-			this.sizes = sizes;
-			this.nd = sizes.length;
-			this.pos = new int[this.nd];
-			for (int d = 0; d < this.nd - 1; d++)
-			{
-				this.pos[d] = sizes[d] - 1;
-			}
-			this.pos[this.nd - 2] = -1;
-		}
-		
-		public int[] getPosition()
-		{
-			int[] res = new int[nd];
-			System.arraycopy(this.pos, 0, res, 0, nd);
-			return res;
-		}
-		
-		public boolean hasNext()
-		{
-			for (int d = 0; d < nd; d++)
-			{
-				if (this.pos[d] < sizes[d] - 1)
-					return true;
-			}
-			return false;
-		}
-		
-		@Override
-		public CursorND next()
-		{
-			forward();
-			return new CursorND(pos);
-		}
-
-		public void forward()
-		{
-			incrementDim(0);
-		}
-		
-		private void incrementDim(int d)
-		{
-			this.pos[d]++;
-			if (this.pos[d] == sizes[d] && d < nd - 1)
-			{
-				this.pos[d] = 0;
-				incrementDim(d + 1);
-			}
-		}
-	}
-
-	public class CursorND implements Cursor
-	{
-		int[] pos;
-
-		protected CursorND(int[] pos)
-		{
-			this.pos = pos;
-		}
-		
-		public int[] getPosition()
-		{
-			return pos;
-		}
-		
-		@Override
-		public int getPosition(int dim)
-		{
-			return pos[dim];
-		}
 	}
 
     /**

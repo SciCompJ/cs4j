@@ -3,8 +3,6 @@
  */
 package net.sci.array.data;
 
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BufferedInt16Array2D;
 import net.sci.array.data.scalar2d.Int16Array2D;
 import net.sci.array.data.scalar3d.BufferedInt16Array3D;
@@ -263,11 +261,6 @@ public interface Int16Array extends IntArray<Int16>
 		{
 			array.setValue(pos, value.getValue());
 		}
-
-    	public CursorIterator<? extends Cursor> cursorIterator()
-    	{
-    		return array.cursorIterator();
-    	}
 
         @Override
         public PositionIterator positionIterator()

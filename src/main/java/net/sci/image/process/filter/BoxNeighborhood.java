@@ -5,8 +5,6 @@ package net.sci.image.process.filter;
 
 import java.util.Iterator;
 
-import net.sci.array.Cursor;
-
 /**
  * A rectangular neighborhood defined by the diameter in each dimension.
  * 
@@ -56,19 +54,6 @@ public class BoxNeighborhood implements Neighborhood
 
 	/** The radius in the positive direction */
 	int[] offsets2;
-	
-	/**
-     * Creates a new rectangular neighborhood around a specific position.
-     * 
-     * @param cursor
-     *            the center position of the neighborhood
-     * @param diameters
-     *            the side length of the neighborhood along each dimension
-     */
-	public BoxNeighborhood(Cursor cursor, int[] diameters)
-	{
-		this(cursor.getPosition(), diameters);
-	}
 	
     /**
      * Creates a new rectangular neighborhood around a specific position.

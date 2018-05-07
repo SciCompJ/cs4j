@@ -3,8 +3,6 @@
  */
 package net.sci.array.data;
 
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 import net.sci.array.data.scalar2d.BufferedInt32Array2D;
 import net.sci.array.data.scalar2d.Int32Array2D;
 import net.sci.array.data.scalar3d.BufferedInt32Array3D;
@@ -220,11 +218,6 @@ public interface Int32Array extends IntArray<Int32>
 		{
 			array.setValue(pos, value.getValue());
 		}
-
-    	public CursorIterator<? extends Cursor> cursorIterator()
-    	{
-    		return array.cursorIterator();
-    	}
 
         @Override
         public PositionIterator positionIterator()

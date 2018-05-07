@@ -4,9 +4,8 @@
 package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.Array;
 import net.sci.array.Arrays;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar3d.ScalarArray3D;
@@ -108,12 +107,11 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 		}
 		
 		// iterate over positions
-		CursorIterator<? extends Cursor> iter = source.cursorIterator();
-		while (iter.hasNext())
-		{
-			// iterate position cursor
-			iter.forward();
-			int[] pos = iter.getPosition();
+        Array.PositionIterator iter = source.positionIterator();
+        while (iter.hasNext())
+        {
+            // iterate position cursor
+            int[] pos = iter.next();
 			
 			// init result
 			double localMax = Double.NEGATIVE_INFINITY;

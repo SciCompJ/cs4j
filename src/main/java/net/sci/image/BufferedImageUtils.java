@@ -9,8 +9,6 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 
 import net.sci.array.Array;
-import net.sci.array.Cursor;
-import net.sci.array.CursorIterator;
 import net.sci.array.data.BinaryArray;
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.UInt8Array;
@@ -20,7 +18,6 @@ import net.sci.array.data.scalar2d.BinaryArray2D;
 import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.data.scalar2d.UInt8Array2D;
 import net.sci.array.type.RGB8;
-import net.sci.image.Image;
 
 /**
  * Collection of methods for managing conversion to java BufferedImage
@@ -143,12 +140,11 @@ public class BufferedImageUtils
 		int[] pos2;
 		
 		// iterate over slice pixels
-		CursorIterator<? extends Cursor> iter = slice.cursorIterator();
-		while (iter.hasNext())
-		{
-			// get current position on slice
-			iter.forward();
-			pos2 = iter.getPosition();
+        Array.PositionIterator iter = array.positionIterator();
+        while (iter.hasNext())
+        {
+            // iterate position cursor
+            pos2 = iter.next();
 			
 			// convert position on slice to position in original array
 			for (int d = 0; d < dim; d++)
