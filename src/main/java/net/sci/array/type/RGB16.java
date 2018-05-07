@@ -188,9 +188,12 @@ public class RGB16 extends IntVector<UInt16> implements Color
     }
     
     /**
-     * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+     * Returns the hue component of this color, coded between 0 and 1.
      * 
      * @return the hue value of this color, between 0 and 1. 
+     * 
+     * @see <a href= "http://www.rapidtables.com/convert/color/rgb-to-hsv.htm">
+     *      http://www.rapidtables.com/convert/color/rgb-to-hsv.htm</a>
      */
     public double hue()
     {
@@ -234,9 +237,12 @@ public class RGB16 extends IntVector<UInt16> implements Color
     }
 
     /**
-     * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+     * Returns the saturation component of this color, coded between 0 and 1.
      * 
      * @return the saturation of this color, between 0 and 1. 
+     * 
+     * @see <a href= "http://www.rapidtables.com/convert/color/rgb-to-hsv.htm">
+     *      http://www.rapidtables.com/convert/color/rgb-to-hsv.htm</a>
      */
     public double saturation()
     {

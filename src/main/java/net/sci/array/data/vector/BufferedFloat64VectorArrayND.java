@@ -26,14 +26,11 @@ public class BufferedFloat64VectorArrayND extends Float64VectorArrayND
 	/**
 	 * Initialize a new array of vectors.
 	 * 
-	 * @param size0
-	 *            array size in the first dimension
-	 * @param size1
-	 *            array size in the second dimension
-	 * @param size2
-	 *            array size in the third dimension
-	 * @param sizeV
-	 *            number of components of vectors
+     * 
+     * @param sizes
+     *            the array of sizes of the array
+     * @param sizeV
+     *            the number of components of vectors
 	 */
 	public BufferedFloat64VectorArrayND(int[] sizes, int sizeV)
 	{
@@ -45,14 +42,11 @@ public class BufferedFloat64VectorArrayND extends Float64VectorArrayND
 	/**
 	 * Initialize a new array of vectors, using the specified buffer.
 	 * 
-	 * @param size0
-	 *            array size in the first dimension
-	 * @param size1
-	 *            array size in the second dimension
-	 * @param size2
-	 *            array size in the third dimension
-	 * @param sizeV
-	 *            number of components of vectors
+     * 
+     * @param sizes
+     *            the array of sizes of the array
+     * @param sizeV
+     *            the number of components of vectors
 	 * @param buffer
 	 *            the buffer containing the double values
 	 */

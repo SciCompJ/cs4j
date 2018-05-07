@@ -19,36 +19,51 @@ public interface Color
     // methods
 
     /**
+     * Returns the red component of this color, coded between 0 and 1.
+     * 
      * @return the red component of this color, between 0 and 1.
      */
     public double red();
     
     /**
+     * Returns the green component of this color, coded between 0 and 1.
+     * 
      * @return the green component of this color, between 0 and 1.
      */
     public double green();
     
     /**
+     * Returns the blue component of this color, coded between 0 and 1.
+     * 
      * @return the red component of this color, between 0 and 1.
      */
     public double blue();
     
     /**
-     * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+     * Returns the hue component of this color, coded between 0 and 1.
      * 
-     * @return the hue value of this color, between 0 and 1. 
+     * @return the hue value of this color, between 0 and 1.
+     * 
+     * @see <a href= "http://www.rapidtables.com/convert/color/rgb-to-hsv.htm">
+     *      http://www.rapidtables.com/convert/color/rgb-to-hsv.htm</a>
      */
     public double hue();
 
     /**
-     * @see http://www.rapidtables.com/convert/color/rgb-to-hsv.htm
+     * Returns the saturation component of this color, coded between 0 and 1.
      * 
      * @return the saturation of this color, between 0 and 1. 
+     *  
+     * @see <a href= "http://www.rapidtables.com/convert/color/rgb-to-hsv.htm">
+     *      http://www.rapidtables.com/convert/color/rgb-to-hsv.htm</a>
      */
     public double saturation();
     
     /**
-     * @return the luma / luminance of this color, between 0 and 1. 
+     * Returns the luma / luminance component of this color, coded between 0 and
+     * 1.
+     * 
+     * @return the luma / luminance of this color, between 0 and 1.
      */
     public double luminance();
 }

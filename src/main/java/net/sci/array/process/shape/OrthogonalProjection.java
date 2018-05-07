@@ -22,7 +22,7 @@ public class OrthogonalProjection implements ArrayOperator
 	 * Creates a new instance of OrthogonalProjection operator, that specifies
 	 * the dimension to project along.
 	 * 
-	 * @dim the dimension for projection
+	 * @param dim the dimension for projection
 	 */
 	public OrthogonalProjection(int dim)
 	{

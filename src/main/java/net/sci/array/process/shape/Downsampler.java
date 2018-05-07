@@ -18,7 +18,9 @@ public class Downsampler implements ArrayOperator
 	int[] ratios;
 	
     /**
-     * Create a resampler operator with a given sampling ratio. 
+     * Create a resampler operator with a given sampling ratio.
+     * 
+     *  @param ratio the sampling ratio
      */
     public Downsampler(int ratio)
     {
@@ -27,6 +29,8 @@ public class Downsampler implements ArrayOperator
 
     /**
      * Create a resampler operator with different sampling ratio depending on the dimension 
+     * 
+     *  @param ratios the sampling ratio along each dimension
      */
     public Downsampler(int[] ratios)
     {

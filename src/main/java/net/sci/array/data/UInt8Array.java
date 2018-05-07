@@ -216,7 +216,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	/**
 	 * Wraps a scalar array into a UInt8Array with same dimension.
 	 * 
-	 * @see UInt8Array.wrap(ScalarArray)
+	 * @see UInt8Array#wrap(ScalarArray)
 	 */
 	static class Wrapper implements UInt8Array
 	{

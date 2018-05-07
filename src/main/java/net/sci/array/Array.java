@@ -40,6 +40,8 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	public int getSize(int dim);
 
 	/**
+	 * Returns the class of the data type stored in this array.
+	 * 
 	 * @return the class of the data type stored in this array.
 	 */
 	public Class<T> getDataType();
@@ -136,6 +138,15 @@ public interface Array<T> extends Iterable<T>, Dimensional
     // ==================================================
     // Declaration of a factory interface
     
+	/**
+     * An array factory, used to create new array instances without knowing a
+     * priori the type of the array.
+     * 
+     * @author dlegland
+     *
+     * @param <T>
+     *            the type of the arrays created by this factory.
+     */
 	public interface Factory<T>
 	{
 	    /**
@@ -154,6 +165,13 @@ public interface Array<T> extends Iterable<T>, Dimensional
     // ==================================================
     // Implementation of an iterator interface
 	
+	/**
+	 * Iterator over the elements of this array.
+	 *  
+	 * @author dlegland
+	 *
+	 * @param <T> the type of the elements stored within this array.
+	 */
 	public interface Iterator<T> extends java.util.Iterator<T>
 	{
 		/**
@@ -216,6 +234,13 @@ public interface Array<T> extends Iterable<T>, Dimensional
 		public void setValue(double value);		
 	}
 	
+    /**
+     * Iterator over the element positions in this array. Can be used to design
+     * operators based on the neighborhood of each element.
+     * 
+     * @author dlegland
+     *
+     */
 	public interface PositionIterator extends java.util.Iterator<int[]>
 	{
 	    public void forward();

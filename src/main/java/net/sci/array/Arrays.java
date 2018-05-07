@@ -10,14 +10,27 @@ package net.sci.array;
  */
 public class Arrays
 {
-    
     /**
      * Private constructor to prevent instantiation.
      */
     private Arrays()
     {
     }
-    
+ 
+    /**
+     * Checks if two arrays have the same size along each dimension.
+     * 
+     * Both arrays must have same dimensionality.
+     * 
+     * @param array1
+     *            the first array to check
+     * @param array2
+     *            the second array to check
+     * @return true if both arrays have same size
+     * 
+     * @see Array#getSize()
+     * @see Array#getSize(int)
+     */
     public static boolean isSameSize(Array<?> array1, Array<?> array2)
     {
         // first check dimensionality
@@ -34,6 +47,19 @@ public class Arrays
         return true;
     }
     
+    /**
+     * Checks if two arrays have the same number of dimensions.
+     * 
+     * Both arrays must have same dimensionality.
+     * 
+     * @param array1
+     *            the first array to check
+     * @param array2
+     *            the second array to check
+     * @return true if both arrays have same number of dimensions
+     * 
+     * @see Array#dimensionality()
+     */
     public static boolean isSameDimensionality(Array<?> array1, Array<?> array2)
     {
         return array1.dimensionality() == array2.dimensionality();

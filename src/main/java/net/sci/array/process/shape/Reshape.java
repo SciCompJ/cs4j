@@ -19,7 +19,9 @@ public class Reshape implements ArrayOperator
 	int[] newDims;
 	
 	/**
-	 * Create a reshape operator. 
+	 * Create a reshape operator.
+	 * 
+	 *  @param newDims the dimensions of the array after reshaping
 	 */
 	public Reshape(int[] newDims)
 	{

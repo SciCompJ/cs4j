@@ -254,11 +254,11 @@ public interface BinaryArray extends IntArray<Binary>
      * 
      * Conversion between scalar and binary:
      * <ul>
-     * <li>scalar value > 0 -> binary value TRUE</li>
-     * <li>scalar value <= 0 -> binary value FALSE</li>
+     * <li>scalar value &gt; 0: binary value TRUE</li>
+     * <li>scalar value &lt; or = 0: binary value FALSE</li>
      * </ul>
      * 
-     * @see BinaryArray.wrap(ScalarArray)
+     * @see BinaryArray#wrap(ScalarArray)
      */
     static class Wrapper implements BinaryArray
     {

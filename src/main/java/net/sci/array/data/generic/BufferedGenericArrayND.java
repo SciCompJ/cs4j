@@ -9,6 +9,8 @@ import net.sci.array.data.GenericArray;
 
 
 /**
+ * Concrete array containing generic data stored in a linear Object buffer.
+ * 
  * @author dlegland
  *
  */
@@ -22,16 +24,18 @@ public class BufferedGenericArrayND<T> extends ArrayND<T> implements GenericArra
     
     /** initialization value, required for creating new arrays */
     T initValue;
-
 	
 	// =============================================================
 	// Constructors
 
 	/**
-	 * Initialize a new array of floats.
-	 * 
-	 * @param sizes the dimensions of this array
-	 */
+     * Initialize a new array containing generic data.
+     * 
+     * @param sizes
+     *            the dimensions of this array
+     * @param initValue
+     *            the initial value, used to known the data type of elements
+     */
 	public BufferedGenericArrayND(int[] sizes, T initValue)
 	{
 		super(sizes);

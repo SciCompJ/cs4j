@@ -38,14 +38,18 @@ public class Flip implements ArrayOperator
 	}
 
 	/**
-	 * Flips the content of the input 2D array, and stores the result in the
-	 * output array.
-	 * 
-	 * @param input
-	 *            the input array
-	 * @param output
-	 *            the output array
-	 */
+     * Flips the content of the input 2D array, and stores the result in the
+     * output array.
+     * 
+     * @param input
+     *            the input array
+     * @param output
+     *            the output array
+     * @param <T1>
+     *            the type of the input array
+     * @param <T2>
+     *            the type of the output array
+     */
 	public <T1 extends T2, T2> void process2d(Array2D<T1> input, Array2D<T2> output)
 	{
 		// get image size
@@ -78,6 +82,10 @@ public class Flip implements ArrayOperator
 	 *            the input array
 	 * @param output
 	 *            the output array
+     * @param <T1>
+     *            the type of the input array
+     * @param <T2>
+     *            the type of the output array
 	 */
 	public <T1 extends T2, T2> void process3d(Array3D<T1> input, Array3D<T2> output)
 	{

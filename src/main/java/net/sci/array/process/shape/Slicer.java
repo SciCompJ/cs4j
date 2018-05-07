@@ -19,6 +19,8 @@ public class Slicer implements ArrayOperator
      * Extract a lower dimensional array from an ND array, by specifying the
      * slicing dimension and the slice index along this dimension.
      * 
+     * @param <T>
+     *            the type of the array
      * @param source
      *            the source array (dimensionality N)
      * @param target

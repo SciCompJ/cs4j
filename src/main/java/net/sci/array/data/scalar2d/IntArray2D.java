@@ -19,10 +19,12 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
     // Static method
     
     /**
-     * Encapsulates the instance of Int array into a new IntArray2D, by
-     * creating a Wrapper if necessary. 
-     * If the original array is already an instance of IntArray2D, it is returned.  
-     * 
+     * Encapsulates the instance of Int array into a new IntArray2D, by creating
+     * a Wrapper if necessary. If the original array is already an instance of
+     * IntArray2D, it is returned.
+     *
+     * @param <T>
+     *            the type of the input array
      * @param array
      *            the original array
      * @return a Int view of the original array

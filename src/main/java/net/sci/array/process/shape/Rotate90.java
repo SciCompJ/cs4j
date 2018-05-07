@@ -27,6 +27,8 @@ public class Rotate90 implements ArrayOperator
 	/**
 	 * Rotate array by several 90 degrees rotations. Using negative number
 	 * rotates in clockwise order.
+	 * 
+	 * @param dim the number of rotations to apply
 	 */
 	public Rotate90(int number)
 	{
@@ -48,12 +50,14 @@ public class Rotate90 implements ArrayOperator
 	}
 
 	/**
-	 * Rotates the planar array by 90 degrees in clock-wise order.
-	 * 
-	 * @param array
-	 *            the array to rotate
-	 * @return the rotated array
-	 */
+     * Rotates the planar array by 90 degrees in clock-wise order.
+     * 
+     * @param <T>
+     *            the type of the array to process
+     * @param array
+     *            the array to rotate
+     * @return the rotated array
+     */
 	public <T> Array2D<?> process2d(Array2D<T> array)
 	{
 		int size0 = array.getSize(0);
