@@ -16,11 +16,14 @@ import net.sci.geom.geom2d.transform.AffineTransform2D;
  * <p>
  * A LinearRing2D is a polyline whose last point is connected to the first one.
  * This is typically the boundary of a (Simple)Polygon2D.
+ * 
  * </p>
  * <p>
  * The name 'LinearRing2D' was used for 2 reasons:
- * <ul><li>it is short</li>
- *  <li>it is consistent with the JTS name</li></ul>
+ * <ul>
+ * <li>it is short</li>
+ *  <li>it is consistent with the JTS name</li>
+ *  </ul>
  * </p>
  * @author dlegland
  */
@@ -43,7 +46,7 @@ public class LinearRing2D implements Polyline2D, Contour2D
      * Creates a new linear curve by allocating enough memory for the specified
      * number of vertices.
      * 
-     * @param nVertices
+     * @param nVertices the number of vertices in this polyline
      */
     public LinearRing2D(int nVertices)
     {
@@ -81,6 +84,10 @@ public class LinearRing2D implements Polyline2D, Contour2D
 
     /**
      * Computes the index of the closest vertex to the input point.
+     * 
+     * @param point
+     *            the query point
+     * @return the index of the closest vertex to the query point
      */
     public int closestVertexIndex(Point2D point)
     {

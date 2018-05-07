@@ -40,7 +40,7 @@ public class LineString2D implements Polyline2D
      * Creates a new linear curve by allocating enough memory for the specified
      * number of vertices.
      * 
-     * @param nVertices
+     * @param nVertices the number of vertices in this polyline
      */
     public LineString2D(int nVertices)
     {
@@ -96,7 +96,11 @@ public class LineString2D implements Polyline2D
     }
 
     /**
-     * Computes the index of the closest vertex to the input point.
+     * Computes the index of the closest vertex to the input query point.
+     * 
+     * @param point
+     *            the query point
+     * @return the index of the closest vertex to the query point
      */
     public int closestVertexIndex(Point2D point)
     {

@@ -8,15 +8,23 @@ import net.sci.geom.geom2d.Domain2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
+ * A domain determined by a boundary curve.
+ * 
  * @author dlegland
  *
+ * @see Boundary2D
  */
 public class GenericDomain2D implements Domain2D
 {
+    /**
+     * The boundary curve that encloses this domain.
+     */
 	Boundary2D boundary;
 	
 	/**
+	 * Creates a new domain determined by the specified boundary. 
 	 * 
+	 * @param boundary the boundary of the new domain.
 	 */
 	public GenericDomain2D(Boundary2D boundary)
 	{

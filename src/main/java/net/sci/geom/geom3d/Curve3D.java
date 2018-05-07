@@ -29,7 +29,7 @@ public interface Curve3D extends CurveShape3D
     /**
      * Returns a collection of curves that contains only this curve.
      * 
-     * @returns a collection of curve containing this curve.
+     * @return a collection of curves containing this curve.
      */
     @Override
     public default Collection<? extends Curve3D> curves() 

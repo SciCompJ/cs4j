@@ -120,11 +120,14 @@ public class DefaultTriMesh3D implements Mesh3D
     // Management of faces
     
     /**
-     * Adds a triangular face defined by the indices of its three vertices.
+     * Adds a triangular face defined by references to its three vertices.
      * 
-     * @param iv1 index of the first face vertex (0-based)
-     * @param iv2 index of the second face vertex (0-based)
-     * @param iv3 index of the third face vertex (0-based)
+     * @param v1
+     *            reference to the first face vertex
+     * @param v2
+     *            reference to the second face vertex
+     * @param v3
+     *            reference to the third face vertex
      * @return the index of the newly created face
      */
     public int addFace(Vertex v1, Vertex v2, Vertex v3)
@@ -139,9 +142,12 @@ public class DefaultTriMesh3D implements Mesh3D
     /**
      * Adds a triangular face defined by the indices of its three vertices.
      * 
-     * @param iv1 index of the first face vertex (0-based)
-     * @param iv2 index of the second face vertex (0-based)
-     * @param iv3 index of the third face vertex (0-based)
+     * @param iv1
+     *            index of the first face vertex (0-based)
+     * @param iv2
+     *            index of the second face vertex (0-based)
+     * @param iv3
+     *            index of the third face vertex (0-based)
      * @return the index of the newly created face
      */
     public int addFace(int iv1, int iv2, int iv3)

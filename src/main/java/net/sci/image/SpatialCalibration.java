@@ -27,6 +27,8 @@ public class SpatialCalibration
     
     /**
      * Copy constructor.
+     * 
+     * @param calib the spatial calibration to copy
      */
     public SpatialCalibration(SpatialCalibration calib)
     {

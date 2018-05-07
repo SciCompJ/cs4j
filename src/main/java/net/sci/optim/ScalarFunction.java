@@ -12,8 +12,12 @@ package net.sci.optim;
 public interface ScalarFunction
 {
 	/**
-	 * Evaluate the function at the specified position.
-	 */
+     * Evaluates the function at the specified position.
+     * 
+     * @param theta
+     *            the vector used to evaluate the function
+     * @return the value of the function at the specified position
+     */
 	public double evaluate(double[] theta);
 	
 	/**

@@ -30,8 +30,8 @@ public class RegionAnalysis2D
      * @param labels
      *            the array of unique labels in image the number of directions
      *            to process, either 2 or 4
-     * @return an array containing for each label, the coordinates of the
-     *         centroid, in pixel coordinates
+     * @return an array of Point2D corresponding to the centroid of each label
+     *         in pixel coordinates
      */
     public final static Point2D[] centroids(IntArray2D<?> labelImage, int[] labels)
     {
@@ -139,8 +139,9 @@ public class RegionAnalysis2D
      * 
      * @param labelMap
      *            the input image containing label of particles
-     * @return an ResultsTable containing for each label, the parameters of the
-     *         inertia ellipsoid, in pixel coordinates
+     * @param labels
+     *            the list of labels to process
+     * @return the inertia ellipsoids corresponding to each label, in pixel coordinates
      */
     public final static Ellipse2D[] inertiaEllipses(IntArray2D<?> labelMap, int[] labels)
     {

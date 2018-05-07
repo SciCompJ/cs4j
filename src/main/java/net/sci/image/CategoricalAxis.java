@@ -18,7 +18,9 @@ public class CategoricalAxis implements ImageAxis
     String name;
 
     /**
-	 * 
+     * Creates a new axis by specifying its name.
+     * 
+	 * @param name the name of the axis 
 	 */
     protected CategoricalAxis(String name)
     {
@@ -26,7 +28,9 @@ public class CategoricalAxis implements ImageAxis
     }
 
     /**
-     * @return the name
+     * Returns the name of the axis.
+     * 
+     * @return the name of the axis
      */
     public String getName()
     {
@@ -34,6 +38,8 @@ public class CategoricalAxis implements ImageAxis
     }
 
     /**
+     * Changes the name of the axis
+     * 
      * @param name the name to set
      */
     public void setName(String name)

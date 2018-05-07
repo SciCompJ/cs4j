@@ -36,7 +36,9 @@ public class NumericalAxis implements ImageAxis
     // Constructors
     
     /**
+     * Creates a new numerical axis
      * 
+     * @param name the name of the numerical axis
      */
     public NumericalAxis(String name)
     {
@@ -44,7 +46,14 @@ public class NumericalAxis implements ImageAxis
     }
 
     /**
+     * Creates a new numerical axis
      * 
+     * @param name
+     *            the name of the numerical axis
+     * @param spacing
+     *            the spacing between each tick of the axis
+     * @param origin
+     *            the origin of the axis (position of the first tick)
      */
     public NumericalAxis(String name, double spacing, double origin)
     {
@@ -54,11 +63,16 @@ public class NumericalAxis implements ImageAxis
     /**
      * Constructor with initial value for all fields.
      * 
-     * @param name the name of the axis
-     * @param type the type of axis
-     * @param spacing the spacing between two elements of the array
-     * @param origin the position of the first element of the array 
-     * @param unitName the name of the unit
+     * @param name
+     *            the name of the axis
+     * @param type
+     *            the type of axis
+     * @param spacing
+     *            the spacing between two elements of the array
+     * @param origin
+     *            the position of the first element of the array
+     * @param unitName
+     *            the name of the unit
      */
     public NumericalAxis(String name, ImageAxis.Type type, double spacing, double origin, String unitName)
     {

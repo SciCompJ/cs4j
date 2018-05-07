@@ -30,12 +30,16 @@ public class LabelIntensities
 	}
 
 	/**
-	 * Computes the average value within a scalar array.
-	 * 
-	 * @param array
-	 *            the array to analyze
-	 * @return the average value within the array
-	 */
+     * Computes the average value within a scalar array.
+     * 
+     * @param array
+     *            the array to analyze
+     * @param labelArray
+     *            the array containing label values
+     * @param labels
+     *            the list of labels to process
+     * @return the average value within the array
+     */
 	public static final double[] mean(ScalarArray<?> array, IntArray<?> labelArray, int[] labels)
 	{
 		// check input consistency

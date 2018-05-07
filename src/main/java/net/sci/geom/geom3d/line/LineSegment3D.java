@@ -66,10 +66,11 @@ public class LineSegment3D implements LinearGeometry3D
     }
 
     /**
-     * Computes the intersection point with a plane.
+     * Computes the intersection point of this 3D line with a plane.
      * 
      * @param plane
-     * @return
+     *            the plane to intersect
+     * @return the intersection point of this line with the given plane
      */
     public Point3D intersection(Plane3D plane)
     {
@@ -91,6 +92,8 @@ public class LineSegment3D implements LinearGeometry3D
 
     /**
      * Returns the origin point of this line.
+     * 
+     * @return the origin of this line
      */
     public Point3D origin() 
     {
@@ -99,6 +102,8 @@ public class LineSegment3D implements LinearGeometry3D
 
     /**
      * Returns the direction vector of this line.
+     * 
+     * @return the direction vector of this line
      */
     public Vector3D direction() 
     {

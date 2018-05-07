@@ -48,7 +48,14 @@ public class Plane3D implements Geometry3D
     }
 
     /**
-     * Default constructor
+     * Default constructor using an origin point and a direction vector.
+     * 
+     * @param origin
+     *            the origin point of the new plane
+     * @param v1
+     *            the first direction vector of the new plane
+     * @param v2
+     *            the second direction vector of the new plane
      */
     public Plane3D(Point3D origin, Vector3D v1, Vector3D v2)
     {

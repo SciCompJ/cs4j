@@ -83,7 +83,7 @@ public class MorphologicalReconstruction
 	/**
 	 * Removes the border of the input 2D or 3D image.
 	 * 
-	 * @param array
+	 * @param image
 	 *            the image to process
 	 * @return a new image with borders removed
 	 * 
@@ -205,7 +205,7 @@ public class MorphologicalReconstruction
 	/**
 	 * Fill the holes in the input image.
 	 * 
-	 * @param array
+	 * @param image
 	 *            the image to process
 	 * @return a new image with holes filled
 	 * 

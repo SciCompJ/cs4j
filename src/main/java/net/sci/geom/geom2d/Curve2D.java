@@ -61,7 +61,7 @@ public interface Curve2D extends CurveShape2D
     /**
      * Returns a collection of curves that contains only this curve.
      * 
-     * @returns a collection of curve containing this curve.
+     * @return a collection of curves containing this curve.
      */
     @Override
     public default Collection<? extends Curve2D> curves() 

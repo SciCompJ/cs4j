@@ -127,7 +127,16 @@ public class Vector3D implements Dimensional
 		this(0, 0, 0);
 	}
 
-	/** New Vector3d given by its coordinates */
+	/**
+     * New Vector3d given by its coordinates
+     * 
+     * @param the
+     *            x-coordinate of the vector
+     * @param the
+     *            y-coordinate of the vector
+     * @param the
+     *            z-coordinate of the vector
+     */
 	public Vector3D(double x, double y, double z)
 	{
 		this.x = x;
@@ -136,16 +145,24 @@ public class Vector3D implements Dimensional
 	}
 
 	/**
-	 * Constructs a new vector with the same coordinates as the given point.
-	 */
+     * Constructs a new vector with the same coordinates as the given point.
+     * 
+     * @param point
+     *            the point used to initialize the new vector
+     */
 	public Vector3D(Point3D point)
 	{
 		this(point.x, point.y, point.z);
 	}
 
 	/**
-	 * Constructs a new vector between two points
-	 */
+     * Constructs a new vector between two points
+     * 
+     * @param p1
+     *            the origin of the vector
+     * @param p2
+     *            the destination of the vector
+     */
 	public Vector3D(Point3D p1, Point3D p2)
 	{
 		this(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
@@ -181,9 +198,13 @@ public class Vector3D implements Dimensional
 	}
 
 	/**
-	 * Returns the sum of current vector with vector given as parameter. Inner
-	 * fields are not modified.
-	 */
+     * Returns the sum of current vector with vector given as parameter. Inner
+     * fields are not modified.
+     * 
+     * @param v
+     *            the vector to add
+     * @return the result of the addition of the two vectors
+     */
 	public Vector3D plus(Vector3D v)
 	{
 		return new Vector3D(this.x + v.x, this.y + v.y, this.z + v.z);
@@ -192,6 +213,10 @@ public class Vector3D implements Dimensional
 	/**
 	 * Returns the subtraction of current vector with vector given as parameter.
 	 * Inner fields are not modified.
+     * 
+     * @param v
+     *            the vector to subtract
+     * @return the result of the subtraction of the two vectors
 	 */
 	public Vector3D minus(Vector3D v)
 	{
@@ -222,7 +247,9 @@ public class Vector3D implements Dimensional
 	}
 
 	/**
-	 * Computes the norm of the vector
+	 * Computes the norm of the vector.
+	 * 
+	 * @return the norm of this vector
 	 */
 	public double norm()
 	{
@@ -232,6 +259,8 @@ public class Vector3D implements Dimensional
 	/**
 	 * Returns the normalized vector, with same direction but with norm equal to
 	 * 1.
+	 * 
+	 * @return the normalized vector with same direction as this vector
 	 */
 	public Vector3D normalize()
 	{
@@ -243,20 +272,30 @@ public class Vector3D implements Dimensional
 	// operations between vectors
 
 	/**
-	 * Computes the dot product with vector <code>v</code>. The dot product is
-	 * defined by:
-	 * <p>
-	 * <code> x1*y2 + x2*y1</code>
-	 * <p>
-	 * Dot product is zero if the vectors are orthogonal. It is positive if
-	 * vectors are in the same direction, and negative if they are in opposite
-	 * direction.
-	 */
+     * Computes the dot product with vector <code>v</code>. The dot product is
+     * defined by:
+     * <p>
+     * <code> x1*y2 + x2*y1</code>
+     * <p>
+     * Dot product is zero if the vectors are orthogonal. It is positive if
+     * vectors are in the same direction, and negative if they are in opposite
+     * direction.
+     * 
+     * @param v
+     *            the vector to process
+     * @return the dot product of the two vectors
+     */
 	public double dotProduct(Vector3D v)
 	{
 		return x * v.x + y * v.y + z * v.z;
 	}
 
+    /**
+     * Computes the cross product with vector <code>v</code>. 
+     * @param v
+     *            the vector to process
+     * @return the cross product of the two vectors
+     */
 	public Vector3D crossProduct(Vector3D v)
 	{
 		return new Vector3D(
@@ -270,6 +309,8 @@ public class Vector3D implements Dimensional
 
     /**
      * Returns a dimensionality equals to 3.
+     * 
+     * @return the value 3
      */
     @Override
     public int dimensionality()

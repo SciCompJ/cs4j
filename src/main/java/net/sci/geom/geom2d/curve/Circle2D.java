@@ -40,8 +40,12 @@ public class Circle2D implements Contour2D
     // Constructors
     
     /**
-     * Define center by point, major and minor semi axis lengths, and
-     * orientation angle.
+     * Defines circle by coordinates of center and radius.
+     * 
+     * @param center
+     *            the center of the circle
+     * @param radius
+     *            the radius of the circle
      */
     public Circle2D(Point2D center, double radius)
     {
@@ -49,8 +53,14 @@ public class Circle2D implements Contour2D
     }
     
     /**
-     * Define center by coordinate, major and minor semi axis lengths, and
-     * orientation angle.
+     * Define circle by coordinates of center and radius.
+     * 
+     * @param xc
+     *            the x-coordinate of circle center
+     * @param yc
+     *            the y-coordinate of circle center
+     * @param radius
+     *            the radius of the circle
      */
     public Circle2D(double xc, double yc, double radius)
     {

@@ -43,8 +43,12 @@ public class Triangle3D implements Polygon3D
     // Methods specific to Triangle3D
     
     /**
-     * Computes the position of the projected point onto the plane containing the triangle.
-     * @return an array with two values 
+     * Computes the position of the projected point onto the plane containing
+     * the triangle.
+     * 
+     * @param point
+     *            the 3D point to project on the triangle
+     * @return an array with two values
      */
     public double[] projectedPosition(Point3D point)
     {

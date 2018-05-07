@@ -79,9 +79,11 @@ public class DefaultTable implements Table
 	}
 
 	/**
-	 * Initialize the data, the number of columns and rows.
-	 * @param data
-	 */
+     * Initialize the data, the number of columns and rows.
+     * 
+     * @param data
+     *            the initial data of the table
+     */
 	public DefaultTable(double[][] data)
 	{
 		this.data = data;
@@ -319,6 +321,8 @@ public class DefaultTable implements Table
 
 	/**
 	 * Opens a new JFrame and shows this table inside
+     * 
+     * @param the instance of the widget used for display 
 	 */
 	public JFrame show()
 	{
@@ -362,6 +366,8 @@ public class DefaultTable implements Table
 
 	/**
 	 * Small demonstration of the usage of the DataTable class.
+	 * 
+	 * @param args optiojnal arguments, not used
 	 */
 	public final static void main(String[] args)
 	{

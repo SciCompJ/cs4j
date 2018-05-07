@@ -29,6 +29,8 @@ public interface Polyline2D extends Curve2D
     
     /**
      * Returns a pointer to the vertices.
+     * 
+     * @return a pointer to the collection of vertices
      */
     public Collection<Point2D> vertices();
     

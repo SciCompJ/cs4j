@@ -44,7 +44,9 @@ public interface PolygonalDomain2D extends Domain2D
     public double signedArea();
 
     /**
-     * Returns the vertices of this polygon. 
+     * Returns the vertices of this polygon.
+     * 
+     * @return the vertices of this polygon
      */
     public Collection<Point2D> vertices();
     

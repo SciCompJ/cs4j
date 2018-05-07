@@ -33,15 +33,19 @@ public class DelimitedTableReader implements TableReader
 	// Constructors
 
 	/**
-	 * 
+	 * Creates a new instance of DelimitedTableReader.
 	 */
 	public DelimitedTableReader()
 	{
 	}
 
 	/**
-	 * 
-	 */
+     * Creates a new instance of DelimitedTableReader, specifying the
+     * delimiters.
+     * 
+     * @param delimiters
+     *            the delimiters
+     */
 	public DelimitedTableReader(String delimiters)
 	{
 		this.delimiters = delimiters;

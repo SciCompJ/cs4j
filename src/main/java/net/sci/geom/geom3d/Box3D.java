@@ -35,7 +35,21 @@ public class Box3D implements Box
     }
     
     /**
-     * Main constructor, given bounds for x coord, then bounds for y coord.
+     * Main constructor, given bounds for x coord, then bounds for y coord, then
+     * bounds for the z coords.
+     * 
+     * @param xmin
+     *            the minimum value of the x coordinate of the box
+     * @param xmax
+     *            the maximum value of the x coordinate of the box
+     * @param ymin
+     *            the minimum value of the y coordinate of the box
+     * @param ymax
+     *            the maximum value of the y coordinate of the box
+     * @param zmin
+     *            the minimum value of the z coordinate of the box
+     * @param zmax
+     *            the maximum value of the z coordinate of the box
      */
     public Box3D(double xmin, double xmax, double ymin, double ymax, double zmin, double zmax)
     {
@@ -49,6 +63,11 @@ public class Box3D implements Box
     
     /**
      * Constructor from 2 points, giving extreme coordinates of the box.
+     * 
+     * @param p1
+     *            first corner of the box
+     * @param p2
+     *            the corner of the box opposite to the first corner
      */
     public Box3D(Point3D p1, Point3D p2)
     {
@@ -115,7 +134,11 @@ public class Box3D implements Box
         return zmax - zmin;
     }
     
-    /** Returns true if all bounds are finite. */
+    /** 
+     * Returns true if all bounds are finite. 
+     *
+     * @return true is the box is bounded
+     */
     public boolean isBounded()
     {
         if (isInfinite(xmin))
@@ -176,6 +199,10 @@ public class Box3D implements Box
 
     /**
      * Checks if this box contains the given point.
+     * 
+     * @param point
+     *            the point to evaluate
+     * @return true if the 3D point is within this 3D box
      */
     public boolean contains(Point3D point)
     {

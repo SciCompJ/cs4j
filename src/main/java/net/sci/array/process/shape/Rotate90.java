@@ -28,7 +28,7 @@ public class Rotate90 implements ArrayOperator
 	 * Rotate array by several 90 degrees rotations. Using negative number
 	 * rotates in clockwise order.
 	 * 
-	 * @param dim the number of rotations to apply
+	 * @param number the number of rotations to apply
 	 */
 	public Rotate90(int number)
 	{

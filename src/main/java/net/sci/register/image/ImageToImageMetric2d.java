@@ -28,7 +28,16 @@ public abstract class ImageToImageMetric2d
 //	public abstract double evaluate();
 	
 	/**
-	 * Evaluates the difference between two images, using the specified positions.
-	 */
+     * Evaluates the difference between two images, using the specified
+     * positions.
+     * 
+     * @param img1
+     *            the first function to evaluate
+     * @param img2
+     *            the second function to evaluate
+     * @param points
+     *            the collection of points for sampling the function
+     * @return the result of the metric evaluated at the sampling points
+     */
 	public abstract double evaluate(ScalarFunction2D img1, ScalarFunction2D img2, Collection<Point2D> points);
 }

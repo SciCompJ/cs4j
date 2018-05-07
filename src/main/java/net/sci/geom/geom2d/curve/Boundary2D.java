@@ -23,35 +23,38 @@ public interface Boundary2D extends CurveShape2D
     /**
      * Returns the signed distance of the point to this boundary.
      * 
-     * Let <em>dist</em> be the distance of the point to the curve.
-     * The signed distance is defined by:
+     * Let <em>dist</em> be the distance of the point to the curve. The signed
+     * distance is defined by:
      * <ul>
-     * <li> -dist if the point is inside the region defined by the boundary </li>
-     * <li> +dist if the point is outside the region. </li>
+     * <li>-dist if the point is inside the region defined by the boundary</li>
+     * <li>+dist if the point is outside the region.</li>
      * </ul>
      * 
-     * @see net.sci.geom.geom2d.distance(Point2D)
-     * 
-     * @param point a point in the plane
+     * @param point
+     *            a point in the plane
      * @return the signed distance of the point to the boundary
+     * 
+     * @see net.sci.geom.geom2d.Geometry2D#distance(Point2D)
      */
     public double signedDistance(Point2D point);
     
     /**
      * Returns the signed distance of the point to this boundary.
      * 
-     * Let <em>dist</em> be the distance of the point to the curve.
-     * The signed distance is defined by:
+     * Let <em>dist</em> be the distance of the point to the curve. The signed
+     * distance is defined by:
      * <ul>
-     * <li> -dist if the point is inside the region defined by the boundary </li>
-     * <li> +dist if the point is outside the region. </li>
+     * <li>-dist if the point is inside the region defined by the boundary</li>
+     * <li>+dist if the point is outside the region.</li>
      * </ul>
      * 
-     * @see net.sci.geom.geom2d.distance(Point2D)
-     * 
-     * @param x the x-coordinate of the point
-     * @param y the y-coordinate of the point
+     * @param x
+     *            the x-coordinate of the query point
+     * @param y
+     *            the y-coordinate of the query point
      * @return the signed distance of the point to the boundary
+     * 
+     * @see net.sci.geom.geom2d.Geometry2D#distance(Point2D)
      */
     public double signedDistance(double x, double y);
 

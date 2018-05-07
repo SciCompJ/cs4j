@@ -28,8 +28,11 @@ public class DelimitedTableWriter implements TableWriter
 	}
 
 	/**
-	 * Creates a new instance specifying the delimiter.
-	 */
+     * Creates a new instance specifying the delimiter.
+     * 
+     * @param delim
+     *            the delimiters
+     */
 	public DelimitedTableWriter(String delim)
 	{
 		this.delim = delim;

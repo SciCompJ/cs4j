@@ -34,8 +34,6 @@ import net.sci.image.morphology.MinimaAndMaxima;
  * ImagePlus resPlus = new ImagePlus("Regional Extrema", result); 
  * resPlus.show(); 
  * }</pre>
- *
- * @see RegionalExtrema3DByFlooding
  * 
  * @author David Legland
  *

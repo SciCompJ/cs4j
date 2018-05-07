@@ -202,6 +202,15 @@ public class Ellipse2D implements Contour2D
     /**
      * Define center by point, major and minor semi axis lengths, and
      * orientation angle.
+     * 
+     * @param center
+     *            the center of the ellipse
+     * @param r1
+     *            the length of the semi-major axis
+     * @param r2
+     *            the length of the semi-minor axis
+     * @param theta
+     *            the orientation of the ellipse, in degrees, counter-clockwise.
      */
     public Ellipse2D(Point2D center, double r1, double r2, double theta)
     {
@@ -211,6 +220,17 @@ public class Ellipse2D implements Contour2D
     /**
      * Define center by coordinate, major and minor semi axis lengths, and
      * orientation angle.
+     * 
+     * @param xc
+     *            the x-coordinate of ellipse center
+     * @param yc
+     *            the y-coordinate of ellipse center
+     * @param r1
+     *            the length of the semi-major axis
+     * @param r2
+     *            the length of the semi-minor axis
+     * @param theta
+     *            the orientation of the ellipse, in degrees, counter-clockwise.
      */
     public Ellipse2D(double xc, double yc, double r1, double r2, double theta)
     {
@@ -225,9 +245,11 @@ public class Ellipse2D implements Contour2D
     // Specific methods
     
     /**
-     * Converts this ellipse into a new LinearRing2D with the specified number of vertices.
+     * Converts this ellipse into a new LinearRing2D with the specified number
+     * of vertices.
      * 
-     * @param nVertices the number of vertices of the created linear ring
+     * @param nVertices
+     *            the number of vertices of the created linear ring
      * @return a new instance of LinearRing2D
      */
     public LinearRing2D asPolyline(int nVertices)
@@ -251,8 +273,8 @@ public class Ellipse2D implements Contour2D
     }
 
     /**
-     * Computes the area of this ellipse, by multiplying the semi axis lengths by
-     * PI.
+     * Computes the area of this ellipse, by multiplying the semi axis lengths
+     * by PI.
      * 
      * @return the area of this ellipse.
      * @see net.sci.geom.geom2d.curve.Circle2D#area()
@@ -284,7 +306,9 @@ public class Ellipse2D implements Contour2D
     }
     
     /**
-    /* @eturn the orientation of major semi-axis, in degrees, between 0 and 180.
+     * Returns the orientation of the ellipse, in degrees. 
+     * 
+     * @return the orientation of major semi-axis, in degrees, between 0 and 180.
      */
     public double orientation()
     {

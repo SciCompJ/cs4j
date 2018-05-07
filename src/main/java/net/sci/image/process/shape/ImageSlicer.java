@@ -18,13 +18,14 @@ public class ImageSlicer
      * Computes the planar z-slice from the specified 3D image and the slice
      * index (in z-direction).
      * 
+     *  
      * @param image
      *            the input 3D image
      * @param sliceIndex
      *            the index of the slice in the z-direction (0-indexed)
      * @return the corresponding planar slice
      */
-    public static final <T> Image slice2d(Image image, int sliceIndex)
+    public static final Image slice2d(Image image, int sliceIndex)
     {
         return slice2d(image, 0, 1, new int[]{0, 0, sliceIndex});
     }
@@ -32,6 +33,8 @@ public class ImageSlicer
     /**
      * Create a 2D slice from a 3D image, specifying the axes of the slice.
      * 
+     * @param <T>
+     *            the type of the array contained within this image
      * @param image
      *            the input 3D image
      * @param dim1

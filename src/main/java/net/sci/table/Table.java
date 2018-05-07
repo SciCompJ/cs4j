@@ -19,8 +19,9 @@ public interface Table
      * 
      * @param nRows
      *            the number of rows
-     * @param nCols
+     * @param nColumns
      *            the number of columns
+     * @return a new Table instance            
      */
     public static Table create(int nRows, int nColumns)
     {
@@ -77,11 +78,15 @@ public interface Table
     /**
      * Returns the number of columns (measurements, variables) in the data
      * table.
+     * 
+     * @return the number of columns in this table
      */
     public int getColumnNumber();
 
     /**
      * Returns the number of rows (individuals, observations) in the data table.
+     * 
+     * @return the number of rows in this table
      */
     public int getRowNumber();
 

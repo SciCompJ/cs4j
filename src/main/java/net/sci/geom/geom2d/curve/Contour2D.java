@@ -21,7 +21,7 @@ public interface Contour2D extends Curve2D, Boundary2D
     /**
      * Returns a collection of Contour2D that contains only this contour.
      * 
-     * @returns a collection of contours containing only this contour.
+     * @return a collection of contours containing only this contour.
      */
     @Override
     public default Collection<? extends Contour2D> curves() 

@@ -8,7 +8,9 @@ package net.sci.optim;
  *
  * The Rosenbrock function (also called "banana function" due to its shape) is
  * a function of 2 variables given by equation:
- * 	<code><pre>f(x,y) = (1 - x)^2 + 100*(y - x^2)^2 </pre></code>
+ * 	<pre><code>
+ * f(x,y) = (1 - x)^2 + 100*(y - x^2)^2 
+ * </code></pre>
  *   
  * The global minimum is given by x = [1 1], for which f = 0.
  * 

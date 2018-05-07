@@ -27,6 +27,7 @@ public interface Polygon2D extends PolygonalDomain2D
      * 
      * @param vertices
      *            the vertices stored in an array of Point2D
+     * @return a new polygon formed by the vertices
      */
     public static Polygon2D create(Collection<? extends Point2D> vertices)
     {
@@ -38,6 +39,7 @@ public interface Polygon2D extends PolygonalDomain2D
      * 
      * @param vertices
      *            the vertices stored in an array of Point2D
+     * @return a new polygon formed by the vertices
      */
     public static Polygon2D create(Point2D... vertices)
     {
@@ -51,6 +53,7 @@ public interface Polygon2D extends PolygonalDomain2D
      *            the x coordinate of each vertex
      * @param ycoords
      *            the y coordinate of each vertex
+     * @return a new polygon formed by the vertices
      */
     public static Polygon2D create(double[] xcoords, double[] ycoords)
     {

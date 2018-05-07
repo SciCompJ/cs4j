@@ -48,8 +48,10 @@ public interface AffineTransform3D extends Transform3D
 	 * 
 	 * @param sx
 	 *            the scaling along the x direction
-	 * @param sy
-	 *            the scaling along the y direction
+     * @param sy
+     *            the scaling along the y direction
+     * @param sz
+     *            the scaling along the z direction
 	 * @return a new instance of AffineTransform3D representing a translation
 	 */
 	public static AffineTransform3D createScaling(double sx, double sy, double sz)

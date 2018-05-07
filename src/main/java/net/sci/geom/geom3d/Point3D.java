@@ -56,7 +56,16 @@ public class Point3D implements Point, Geometry3D
 		this(0, 0, 0);
 	}
 
-	/** New point given by its coordinates */
+	/**
+     * New point given by its coordinates
+     * 
+     * @param x
+     *            the x coordinate of the new point
+     * @param y
+     *            the y coordinate of the new point
+     * @param z
+     *            the z coordinate of the new point
+     */
 	public Point3D(double x, double y, double z)
 	{
 		this.x = x;
@@ -64,7 +73,12 @@ public class Point3D implements Point, Geometry3D
 		this.z = z;
 	}
 	
-    /** Convert a vector to a point */
+    /**
+     * Convert a vector to a point
+     *
+     * @param vect
+     *            the vector to convert
+     */
     public Point3D(Vector3D vect)
     {
         this(vect.getX(), vect.getY(), vect.getZ());
@@ -103,16 +117,25 @@ public class Point3D implements Point, Geometry3D
 	// Methods specific to Point3D
 
 	/**
-	 * Adds the specified vector to the point, and returns the new point.
-	 */
+     * Adds the specified vector to the point, and returns the new point.
+     * 
+     * @param v
+     *            the 3D vector to add
+     * @return the result of the translation of this point by the given vector
+     */
 	public Point3D plus(Vector3D v)
 	{
 		return new Point3D(this.x + v.getX(), this.y + v.getY(), this.z + v.getZ());
 	}
 
 	/**
-	 * Subtracts the specified vector from the point, and returns the new point.
-	 */
+     * Subtracts the specified vector from the point, and returns the new point.
+     * 
+     * @param v
+     *            the 3D vector to subtract
+     * @return the result of the translation of this point by the opposite of
+     *         the given vector
+     */
 	public Point3D minus(Vector3D v)
 	{
 		return new Point3D(this.x - v.getX(), this.y - v.getY(), this.z - v.getZ());

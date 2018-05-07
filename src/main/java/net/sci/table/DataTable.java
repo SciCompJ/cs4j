@@ -262,6 +262,8 @@ public class DataTable implements Table
 
 	/**
 	 * Opens a new JFrame and shows this table inside
+	 * 
+	 * @param the instance of the widget used for display 
 	 */
 	public JFrame show()
 	{
@@ -304,8 +306,11 @@ public class DataTable implements Table
 	}
 
 	/**
-	 * Small demonstration of the usage of the DataTable class.
-	 */
+     * Small demonstration of the usage of the DataTable class.
+     * 
+     * @param args
+     *            optional arguments, not used.
+     */
 	public final static void main(String[] args)
 	{
 		DataTable tbl = new DataTable(15, 5);
