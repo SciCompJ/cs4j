@@ -64,4 +64,24 @@ public class Arrays
     {
         return array1.dimensionality() == array2.dimensionality();
     }
+    
+    public static <T> void copy(Array<? extends T> source, Array<? super T> target, int[] offset)
+    {
+        // dimensionality of source array
+        int nd = source.dimensionality();
+        
+        // initializes a default target position from the offset
+        int[] pos2 = new int[offset.length];
+        System.arraycopy(offset, 0, pos2, 0, offset.length);
+        
+        for (int[] pos : source.positions())
+        {
+            // update the first nd positions
+            for (int d = 0; d  < nd; d++)
+            {
+                pos2[d] = pos[d] + offset[d];
+            }
+            target.set(pos2, source.get(pos));
+        }
+    }
 }

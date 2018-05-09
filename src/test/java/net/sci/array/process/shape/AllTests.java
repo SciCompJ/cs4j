@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	FlipTest.class,
+    ConcatenateTest.class,
+    FlipTest.class,
 	OrthogonalProjectionTest.class,
 	SlicerTest.class,
 	})
