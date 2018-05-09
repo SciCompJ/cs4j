@@ -3,9 +3,14 @@
  */
 package net.sci.geom.geom3d.surface;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import net.sci.geom.geom3d.Box3D;
 import net.sci.geom.geom3d.Geometry3D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.geom3d.Vector3D;
+import net.sci.geom.geom3d.line.StraightLine3D;
 
 /**
  * A 3D sphere, defined by a center and a radius.
@@ -80,6 +85,49 @@ public class Sphere3D implements Geometry3D
         return r * r * (4.0 * Math.PI); 
     }
 
+    /**
+     * Compute the set of intersections between this sphere and a straight line.
+     * 
+     * Returns either a list of two points if the distance between line and
+     * sphere center is less than or equal to the sphere radius, or an empty
+     * list otherwise.
+     * 
+     * @param line
+     *            the query straight line
+     * @return the list of intersections with the straight line
+     */
+    public Collection<Point3D> intersections(StraightLine3D line)
+    {
+        // Compute difference between line origin and sphere center
+        Vector3D dc = new Vector3D(this.center, line.origin());
+        
+        // Compute coefficients of equation
+        Vector3D dir = line.direction();
+        double a = dir.dotProduct(dir);
+        double b = 2 * dc.dotProduct(dir);
+        double c = dc.dotProduct(dc) - this.radius * this.radius;
+        
+        // compute discriminant
+        double delta = b * b - 4 * a * c;
+        
+        // Special case of no intersection between line and sphere
+        if (delta < 0)
+        {
+            return new ArrayList<Point3D>(0);
+        }
+        
+        // compute curvilinear abscissa of points on the line
+        double sqrtDelta = Math.sqrt(delta);
+        double t1 = (-b - sqrtDelta) / (2 * a);
+        double t2 = (-b + sqrtDelta) / (2 * a);
+        
+        // add the two points on the line
+        ArrayList<Point3D> result = new ArrayList<Point3D>(2);
+        result.add(line.getPoint(t1));
+        result.add(line.getPoint(t2));
+        return result;
+    }
+    
     
     // ===================================================================
     // Getters
@@ -87,7 +135,7 @@ public class Sphere3D implements Geometry3D
     /**
      * @return the center
      */
-    public Point3D getCenter()
+    public Point3D center()
     {
         return center;
     }
@@ -95,7 +143,7 @@ public class Sphere3D implements Geometry3D
     /**
      * @return the radius
      */
-    public double getRadius()
+    public double radius()
     {
         return radius;
     }
