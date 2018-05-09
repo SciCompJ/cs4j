@@ -313,7 +313,7 @@ public class Image
 		// duplicate the axis array (for spatial calibration)
 		int nd = getDimension();
 		this.axes = new ImageAxis[nd];
-		for (int d = 0; d < nd; d++)
+		for (int d = 0; d < Math.min(nd, parent.getDimension()); d++)
 		{
 		    this.axes[d] = parent.axes[d];
 		}
@@ -412,7 +412,7 @@ public class Image
     {
         int nd = this.getDimension();
         this.axes = new ImageAxis[nd];
-        for (int i = 0;i < nd; i++)
+        for (int i = 0; i < nd; i++)
         {
             this.axes[i] = new NumericalAxis("Axis-" + i, 1.0, 0.0);
         }
