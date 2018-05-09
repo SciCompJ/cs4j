@@ -125,13 +125,10 @@ public class Flip implements ArrayOperator
         int[] pos2 = new int[nd];
 
         // iterate over positions of input array
-        Array.PositionIterator iter = input.positionIterator();
-        while (iter.hasNext())
+        for (int[] pos : input.positions()) 
         {
-            int[] pos = iter.next();
-            
             System.arraycopy(pos, 0, pos2, 0, nd);
-            pos[dim] = sizeDim - 1 - pos[dim];
+            pos2[dim] = sizeDim - 1 - pos[dim];
             output.set(pos2, input.get(pos));
         }
     }

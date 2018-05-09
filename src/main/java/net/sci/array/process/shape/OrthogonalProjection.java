@@ -37,13 +37,9 @@ public class OrthogonalProjection implements ArrayOperator
 		
 		int indMax = source.getSize(this.dim);
 		
-		// iterate over positions
-		Array.PositionIterator iter = target.positionIterator();
-		while (iter.hasNext())
-		{
-			// iterate position cursor
-			int[] pos = iter.next();
-			
+        // iterate over positions in target image
+        for (int[] pos : target.positions()) 
+        {
 			// convert to position in source image
 			System.arraycopy(pos, 0, srcPos, 0, dim);
 			System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);

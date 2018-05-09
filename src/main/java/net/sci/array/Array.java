@@ -120,6 +120,16 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
 	public void setValue(int[] pos, double value);
 
+	public default Iterable<int[]> positions()
+	{
+	    Iterable<int[]> it = new Iterable<int[]>() {
+	        public java.util.Iterator<int[]> iterator() {
+	            return positionIterator();
+	        }
+	    };
+	    return it;
+	}
+	
 	/**
      * Return an instance if PositionIterator that allows to iterate over the
      * positions of a multi-dimensional array.
