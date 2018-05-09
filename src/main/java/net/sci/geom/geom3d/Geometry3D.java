@@ -6,11 +6,25 @@ package net.sci.geom.geom3d;
 import net.sci.geom.Geometry;
 
 /**
+ * Interface for all geometries in a 3D Euclidean space.
+ * 
  * @author dlegland
  *
  */
 public interface Geometry3D extends Geometry
 {
+    // ===================================================================
+    // Static variables
+    
+    /**
+     * The origin of the basis, equal to (0,0,0).
+     */
+    public static final Point3D ORIGIN = new Point3D(0,0,0);
+    
+        
+    // ===================================================================
+    // Methods declaration
+    
     /**
      * Checks if the geometry contains the given point, with a given precision.
      * 

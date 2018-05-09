@@ -13,6 +13,17 @@ import net.sci.geom.Geometry;
  */
 public interface Geometry2D extends Geometry
 {
+    // ===================================================================
+    // Static variables
+    
+    /**
+     * The origin of the basis, equal to (0,0).
+     */
+    public static final Point2D ORIGIN = new Point2D(0,0);
+    
+        
+    // ===================================================================
+    // Methods declaration
     
     /**
 	 * Checks if the geometry contains the given point, with a given precision.
