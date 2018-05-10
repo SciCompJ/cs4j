@@ -87,6 +87,23 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	// =============================================================
 	// Specialization of the BooleanArray interface
 
+    /* (non-Javadoc)
+     * @see net.sci.array.data.BooleanArray#complement()
+     */
+    @Override
+    public BinaryArray2D complement()
+    {
+        BinaryArray2D result = BinaryArray2D.create(getSize(0), getSize(1));
+        BinaryArray.Iterator iter1 = this.iterator();
+        BinaryArray.Iterator iter2 = result.iterator();
+        while (iter1.hasNext())
+        {
+            iter2.setNextBoolean(!iter1.nextBoolean());
+        }
+        return result;
+    }
+
+    
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.BooleanArray#getState(int[])
 	 */

@@ -76,6 +76,22 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	// =============================================================
 	// Specialization of the BooleanArray interface
 
+    /* (non-Javadoc)
+     * @see net.sci.array.data.BooleanArray#complement()
+     */
+    @Override
+    public BinaryArray3D complement()
+    {
+        BinaryArray3D result = BinaryArray3D.create(this.size0, this.size1, this.size2);
+        BinaryArray.Iterator iter1 = this.iterator();
+        BinaryArray.Iterator iter2 = result.iterator();
+        while (iter1.hasNext())
+        {
+            iter2.setNextBoolean(!iter1.nextBoolean());
+        }
+        return result;
+    }
+
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.BooleanArray#getState(int[])
 	 */
