@@ -5,8 +5,11 @@ package net.sci.image.morphology;
 
 import net.sci.array.data.ScalarArray;
 import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.image.data.Connectivity2D;
+import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.extrema.RegionalExtrema2D;
+import net.sci.image.morphology.extrema.RegionalExtrema3D;
 import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2D;
 import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid;
 
@@ -57,11 +60,16 @@ public class MinimaAndMaxima
 	// ==============================================================
 	// Private constants
 
-	/**
-	 * The default connectivity used by reconstruction algorithms in 2D images.
-	 */
-	private final static Connectivity2D DEFAULT_CONNECTIVITY_2D = Connectivity2D.C4;
-	
+    /**
+     * The default connectivity used by reconstruction algorithms in 2D arrays.
+     */
+    private final static Connectivity2D DEFAULT_CONNECTIVITY_2D = Connectivity2D.C4;
+    
+    /**
+     * The default connectivity used by reconstruction algorithms in 3D arrays.
+     */
+    private final static Connectivity3D DEFAULT_CONNECTIVITY_3D = Connectivity3D.C6;
+    
 
 	// ==============================================================
 	// Constructor
@@ -78,67 +86,98 @@ public class MinimaAndMaxima
 	// Static methods for 2D arrays
 	
 	/**
-	 * Computes the regional maxima in grayscale image <code>image</code>, using
+	 * Computes the regional maxima in grayscale array <code>array</code>, using
 	 * the default connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
-	 * @return the regional maxima of input image
+	 * @param array
+	 *            the array to process
+	 * @return the regional maxima of input array
 	 */
-	public final static ScalarArray2D<?> regionalMaxima(ScalarArray2D<?> image)
+	public final static ScalarArray2D<?> regionalMaxima(ScalarArray2D<?> array)
 	{
-		return regionalMaxima(image, DEFAULT_CONNECTIVITY_2D);
+		return regionalMaxima(array, DEFAULT_CONNECTIVITY_2D);
 	}
 
 	/**
-	 * Computes the regional maxima in grayscale image <code>image</code>, using
+	 * Computes the regional maxima in grayscale array <code>array</code>, using
 	 * the specified connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
+	 * @param array
+	 *            the array to process
 	 * @param conn
 	 *            the connectivity for maxima, that should be either 4 or 8
-	 * @return the regional maxima of input image
+	 * @return the regional maxima of input array
 	 */
-	public final static ScalarArray2D<?> regionalMaxima(ScalarArray2D<?> image,
+	public final static ScalarArray2D<?> regionalMaxima(ScalarArray2D<?> array,
 			Connectivity2D conn)
 	{
 		RegionalExtrema2D algo = new RegionalExtrema2D();
 		algo.setConnectivity(conn);
 		algo.setExtremaType(Type.MAXIMA);
 		
-		return (ScalarArray2D<?>) algo.process(image);
+		return (ScalarArray2D<?>) algo.process(array);
 	}
 	
+    /**
+     * Computes the regional maxima in grayscale 3D array <code>array</code>, 
+     * using the default connectivity for 3D arrays.
+     * 
+     * @param array
+     *            the array to process
+     * @return the regional minima of input array
+     */
+    public final static ScalarArray3D<?> regionalMaxima(ScalarArray3D<?> array) 
+    {
+        return regionalMaxima(array, DEFAULT_CONNECTIVITY_3D);
+    }
+    /**
+     * Computes the regional maxima in 3D grayscale array <code>array</code>, 
+     * using the specified connectivity.
+     * 
+     * @param array
+     *            the arrayto process
+     * @param conn
+     *            the connectivity for minima, that should be either 4 or 8
+     * @return the regional minima of input array
+     */
+    public final static ScalarArray3D<?> regionalMaxima(ScalarArray3D<?> array, Connectivity3D conn) 
+    {
+        RegionalExtrema3D algo = new RegionalExtrema3D();
+        algo.setConnectivity(conn);
+        algo.setExtremaType(Type.MAXIMA);
+        
+        return (ScalarArray3D<?>) algo.process(array);
+    }
+    
 //	/**
-//	 * Computes the regional maxima in grayscale image <code>image</code>, 
+//	 * Computes the regional maxima in grayscale array <code>array</code>, 
 //	 * using the specified connectivity, and a slower algorithm (used for testing).
 //	 * 
-//	 * @param image
-//	 *            the image to process
+//	 * @param array
+//	 *            the array to process
 //	 * @param conn
 //	 *            the connectivity for maxima, that should be either 4 or 8
-//	 * @return the regional maxima of input image
+//	 * @return the regional maxima of input array
 //	 */
 //	public final static ScalarArray2D<?> regionalMaximaByReconstruction(
-//			ScalarArray2D<?> image,
+//			ScalarArray2D<?> array,
 //			int conn) 
 //	{
-//		// Compute mask image
-//		ScalarArray2D<?> mask = image.duplicate();
+//		// Compute mask array
+//		ScalarArray2D<?> mask = array.duplicate();
 //		mask.add(1);
 //		
 //		// Call geodesic reconstruction algorithm
 //		MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
 //				GeodesicReconstructionType.BY_DILATION, conn);
-//		ScalarArray2D<?> rec = algo.process(image, mask);
+//		ScalarArray2D<?> rec = algo.process(array, mask);
 //		
 //		// allocate memory for result
-//		int sizeX = image.getSize(0);
-//		int sizeY = image.getSize(1);
+//		int sizeX = array.getSize(0);
+//		int sizeY = array.getSize(1);
 //		ScalarArray2D<?> result = new ByteProcessor(sizeX, sizeY);
 //		
-//		// create binary result image
+//		// create binary result array
 //		for (int y = 0; y < sizeY; y++) {
 //			for (int x = 0; x < sizeX; x++) {
 //				if (mask.get(x, y) > rec.get(x, y)) 
@@ -152,59 +191,91 @@ public class MinimaAndMaxima
 //	}
 
 	/**
-	 * Computes the regional minima in grayscale image <code>image</code>, 
+	 * Computes the regional minima in grayscale array <code>array</code>, 
 	 * using the default connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
-	 * @return the regional minima of input image
+	 * @param array
+	 *            the array to process
+	 * @return the regional minima of input array
 	 */
-	public final static ScalarArray2D<?> regionalMinima(ScalarArray2D<?> image) 
+	public final static ScalarArray2D<?> regionalMinima(ScalarArray2D<?> array) 
 	{
-		return regionalMinima(image, DEFAULT_CONNECTIVITY_2D);
+		return regionalMinima(array, DEFAULT_CONNECTIVITY_2D);
 	}
 
-	/**
-	 * Computes the regional minima in grayscale image <code>image</code>, 
-	 * using the specified connectivity.
-	 * 
-	 * @param image
-	 *            the image to process
-	 * @param conn
-	 *            the connectivity for minima, that should be either 4 or 8
-	 * @return the regional minima of input image
-	 */
-	public final static ScalarArray2D<?> regionalMinima(ScalarArray2D<?> image, Connectivity2D conn) 
-	{
-		RegionalExtrema2D algo = new RegionalExtrema2D();
-		algo.setConnectivity(conn);
-		algo.setExtremaType(Type.MINIMA);
-		
-		return (ScalarArray2D<?>) algo.process(image);
-	}
-	
+    /**
+     * Computes the regional minima in grayscale array <code>array</code>, 
+     * using the specified connectivity.
+     * 
+     * @param array
+     *            the array to process
+     * @param conn
+     *            the connectivity for minima, that should be either 4 or 8
+     * @return the regional minima of input array
+     */
+    public final static ScalarArray2D<?> regionalMinima(ScalarArray2D<?> array, Connectivity2D conn) 
+    {
+        RegionalExtrema2D algo = new RegionalExtrema2D();
+        algo.setConnectivity(conn);
+        algo.setExtremaType(Type.MINIMA);
+        
+        return (ScalarArray2D<?>) algo.process(array);
+    }
+    
+    /**
+     * Computes the regional minima in grayscale array <code>array</code>, 
+     * using the default connectivity for 3D arrays.
+     * 
+     * @param array
+     *            the array to process
+     * @return the regional minima of input array
+     */
+    public final static ScalarArray3D<?> regionalMinima(ScalarArray3D<?> array) 
+    {
+        return regionalMinima(array, DEFAULT_CONNECTIVITY_3D);
+    }
+
+    /**
+     * Computes the regional minima in 3D grayscale array <code>array</code>, 
+     * using the specified connectivity.
+     * 
+     * @param array
+     *            the array to process
+     * @param conn
+     *            the connectivity for minima, that should be either 4 or 8
+     * @return the regional minima of input array
+     */
+    public final static ScalarArray3D<?> regionalMinima(ScalarArray3D<?> array, Connectivity3D conn) 
+    {
+        RegionalExtrema3D algo = new RegionalExtrema3D();
+        algo.setConnectivity(conn);
+        algo.setExtremaType(Type.MINIMA);
+        
+        return (ScalarArray3D<?>) algo.process(array);
+    }
+    
 //	/**
-//	 * Computes the regional minima in grayscale image <code>image</code>, 
+//	 * Computes the regional minima in grayscale array <code>array</code>, 
 //	 * using the specified connectivity, and a slower algorithm (used for testing).
 //	 * 
-//	 * @param image
-//	 *            the image to process
+//	 * @param array
+//	 *            the array to process
 //	 * @param conn
 //	 *            the connectivity for minima, that should be either 4 or 8
-//	 * @return the regional minima of input image
+//	 * @return the regional minima of input array
 //	 */
-//	public final static ScalarArray2D<?> regionalMinimaByReconstruction(ScalarArray2D<?> image,
+//	public final static ScalarArray2D<?> regionalMinimaByReconstruction(ScalarArray2D<?> array,
 //			Connectivity2D conn)
 //	{
-//		ScalarArray2D<?> marker = image.duplicate();
+//		ScalarArray2D<?> marker = array.duplicate();
 //		addValue(marker, 1);
 //		
 //		MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
 //				MorphologicalReconstruction.Type.BY_EROSION, conn);
-//		ScalarArray2D<?> rec = algo.process(marker, image);
+//		ScalarArray2D<?> rec = algo.process(marker, array);
 //		
-//		int sizeX = image.getSize(0);
-//		int sizeY = image.getSize(1);
+//		int sizeX = array.getSize(0);
+//		int sizeY = array.getSize(1);
 //		ScalarArray2D<?> result = new ByteProcessor(sizeX, sizeY);
 //		
 //		for (int y = 0; y < sizeY; y++)
@@ -222,127 +293,126 @@ public class MinimaAndMaxima
 //	}
 
 	/**
-	 * Computes the extended maxima in grayscale image <code>image</code>, 
+	 * Computes the extended maxima in grayscale array <code>array</code>, 
 	 * keeping maxima with the specified dynamic, and using the default 
 	 * connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
+	 * @param array
+	 *            the array to process
 	 * @param dynamic
 	 *            the minimal difference between a maxima and its boundary 
-	 * @return the extended maxima of input image
+	 * @return the extended maxima of input array
 	 */
-	public final static ScalarArray2D<?> extendedMaxima(ScalarArray2D<?> image,
+	public final static ScalarArray2D<?> extendedMaxima(ScalarArray2D<?> array,
 			double dynamic)
 	{
-		return extendedMaxima(image, dynamic, DEFAULT_CONNECTIVITY_2D);
+		return extendedMaxima(array, dynamic, DEFAULT_CONNECTIVITY_2D);
 	}
 
 	/**
-	 * Computes the extended maxima in grayscale image <code>image</code>, 
+	 * Computes the extended maxima in grayscale array <code>array</code>, 
 	 * keeping maxima with the specified dynamic, and using the specified
 	 * connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
+	 * @param array
+	 *            the array to process
 	 * @param dynamic
 	 *            the minimal difference between a maxima and its boundary 
 	 * @param conn
 	 *            the connectivity for maxima, that should be either 4 or 8
-	 * @return the extended maxima of input image
+	 * @return the extended maxima of input array
 	 */
-	public final static ScalarArray2D<?> extendedMaxima(ScalarArray2D<?> image,
+	public final static ScalarArray2D<?> extendedMaxima(ScalarArray2D<?> array,
 			double dynamic, Connectivity2D conn)
 	{
-		ScalarArray2D<?> mask = image.duplicate();
+		ScalarArray2D<?> mask = array.duplicate();
 		addValue(mask, dynamic);
 		
 		MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
 				MorphologicalReconstruction.Type.BY_DILATION, conn);
-		ScalarArray2D<?> rec = algo.process(image, mask);
+		ScalarArray2D<?> rec = algo.process(array, mask);
 		
 		return regionalMaxima(rec, conn);
 	}
 
 	/**
-	 * Computes the extended minima in grayscale image <code>image</code>, 
+	 * Computes the extended minima in grayscale array <code>array</code>, 
 	 * keeping minima with the specified dynamic, and using the default 
 	 * connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
+	 * @param array
+	 *            the array to process
 	 * @param dynamic
 	 *            the minimal difference between a minima and its boundary 
-	 * @return the extended minima of input image
+	 * @return the extended minima of input array
 	 */
-	public final static ScalarArray2D<?> extendedMinima(ScalarArray2D<?> image,
+	public final static ScalarArray2D<?> extendedMinima(ScalarArray2D<?> array,
 			double dynamic)
 	{
-		return extendedMinima(image, dynamic, DEFAULT_CONNECTIVITY_2D);
+		return extendedMinima(array, dynamic, DEFAULT_CONNECTIVITY_2D);
 	}
 
 	/**
-	 * Computes the extended minima in grayscale image <code>image</code>, 
+	 * Computes the extended minima in grayscale array <code>array</code>, 
 	 * keeping minima with the specified dynamic, and using the specified 
 	 * connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
+	 * @param array
+	 *            the array to process
 	 * @param dynamic
 	 *            the minimal difference between a minima and its boundary 
 	 * @param conn
 	 *            the connectivity for minima, that should be either 4 or 8
-	 * @return the extended minima of input image
+	 * @return the extended minima of input array
 	 */
-	public final static ScalarArray2D<?> extendedMinima(ScalarArray2D<?> image,
+	public final static ScalarArray2D<?> extendedMinima(ScalarArray2D<?> array,
 			double dynamic, Connectivity2D conn)
 	{
-		ScalarArray2D<?> marker = image.duplicate();
-		addValue(marker, dynamic);
+		ScalarArray2D<?> marker = (ScalarArray2D<?>) array.plus(dynamic);
 		
 		MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
 				MorphologicalReconstruction.Type.BY_EROSION, conn);
-		ScalarArray2D<?> rec = algo.process(marker, image);
+		ScalarArray2D<?> rec = algo.process(marker, array);
 
 		return regionalMinima(rec, conn);
 	}
 
 	/**
-	 * Imposes the maxima given by marker image into the input image, using 
+	 * Imposes the maxima given by marker array into the input array, using 
 	 * the default connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
+	 * @param array
+	 *            the array to process
 	 * @param maxima
-	 *            a binary image of maxima 
+	 *            a binary array of maxima 
 	 * @return the result of maxima imposition
 	 */
-	public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> image,
+	public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array,
 			ScalarArray2D<?> maxima)
 	{
-		return imposeMaxima(image, maxima, DEFAULT_CONNECTIVITY_2D);
+		return imposeMaxima(array, maxima, DEFAULT_CONNECTIVITY_2D);
 	}
 	
 	/**
-	 * Imposes the maxima given by marker image into the input image, using
+	 * Imposes the maxima given by marker array into the input array, using
 	 * the specified connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
+	 * @param array
+	 *            the array to process
 	 * @param maxima
-	 *            a binary image of maxima 
+	 *            a binary array of maxima 
 	 * @param conn
 	 *            the connectivity for maxima, that should be either 4 or 8
 	 * @return the result of maxima imposition
 	 */
-	public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> image,
+	public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array,
 			ScalarArray2D<?> maxima, Connectivity2D conn)
 	{
-		ScalarArray2D<?> marker = image.duplicate();
-		ScalarArray2D<?> mask = image.duplicate();
+		ScalarArray2D<?> marker = array.duplicate();
+		ScalarArray2D<?> mask = array.duplicate();
 		
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = array.getSize(0);
+		int sizeY = array.getSize(1);
 		for (int y = 0; y < sizeY; y++)
 		{
 			for (int x = 0; x < sizeX; x++)
@@ -355,7 +425,7 @@ public class MinimaAndMaxima
 				else
 				{
 					marker.setValue(x, y, Double.NEGATIVE_INFINITY);
-					mask.setValue(x, y, image.getValue(x, y)-1); // TODO: potential problem for floating-point arrays
+					mask.setValue(x, y, array.getValue(x, y)-1); // TODO: potential problem for floating-point arrays
 				}
 			}
 		}
@@ -364,41 +434,41 @@ public class MinimaAndMaxima
 	}
 
 	/**
-	 * Imposes the minima given by marker image into the input image, using 
+	 * Imposes the minima given by marker array into the input array, using 
 	 * the default connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
+	 * @param array
+	 *            the array to process
 	 * @param minima
-	 *            a binary image of minima 
+	 *            a binary array of minima 
 	 * @return the result of minima imposition
 	 */
-	public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> image,
+	public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array,
 			ScalarArray2D<?> minima)
 	{
-		return imposeMinima(image, minima, DEFAULT_CONNECTIVITY_2D);
+		return imposeMinima(array, minima, DEFAULT_CONNECTIVITY_2D);
 	}
 	
 	/**
-	 * Imposes the minima given by marker image into the input image, using 
+	 * Imposes the minima given by marker array into the input array, using 
 	 * the specified connectivity.
 	 * 
-	 * @param image
-	 *            the image to process
+	 * @param array
+	 *            the array to process
 	 * @param minima
-	 *            a binary image of minima 
+	 *            a binary array of minima 
 	 * @param conn
 	 *            the connectivity for minima, that should be either 4 or 8
 	 * @return the result of minima imposition
 	 */
-	public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> image,
+	public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array,
 			ScalarArray2D<?> minima, Connectivity2D conn)
 	{
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = array.getSize(0);
+		int sizeY = array.getSize(1);
 		
-		ScalarArray2D<?> marker = image.duplicate();
-		ScalarArray2D<?> mask = image.duplicate();
+		ScalarArray2D<?> marker = array.duplicate();
+		ScalarArray2D<?> mask = array.duplicate();
 		for (int y = 0; y < sizeY; y++)
 		{
 			for (int x = 0; x < sizeX; x++)
@@ -411,7 +481,7 @@ public class MinimaAndMaxima
 				else
 				{
 					marker.setValue(x, y, Double.MAX_VALUE);
-					mask.setValue(x, y, image.getValue(x, y)+1);  // TODO: potential problem for floating point arrays
+					mask.setValue(x, y, array.getValue(x, y)+1);  // TODO: potential problem for floating point arrays
 				}
 			}
 		}
