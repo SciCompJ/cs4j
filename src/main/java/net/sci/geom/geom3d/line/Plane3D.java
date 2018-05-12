@@ -4,6 +4,7 @@
 package net.sci.geom.geom3d.line;
 
 import net.sci.geom.UnboundedGeometryException;
+import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom3d.Box3D;
 import net.sci.geom.geom3d.Geometry3D;
 import net.sci.geom.geom3d.Point3D;
@@ -48,7 +49,7 @@ public class Plane3D implements Geometry3D
     }
 
     /**
-     * Default constructor using an origin point and a direction vector.
+     * Default constructor using an origin point and two direction vectors.
      * 
      * @param origin
      *            the origin point of the new plane
@@ -70,6 +71,70 @@ public class Plane3D implements Geometry3D
         dz2 = v2.getZ();
     }
 
+    /**
+     * Constructor using an origin point and a normal vector.
+     * 
+     * @param origin
+     *            the plane origin
+     * @param normal
+     *            a vector normal to the plane
+     */
+    public Plane3D(Point3D origin, Vector3D normal)
+    {
+        // setup origin
+        x0 = origin.getX();
+        y0 = origin.getY();
+        z0 = origin.getZ();
+        
+        // find a vector not colinear to the normal
+        Vector3D v0 = new Vector3D(1, 0, 0);
+        if (Vector3D.crossProduct(normal, v0).norm() < 1e-14)
+        {
+            v0 = new Vector3D(0, 1, 0);
+        }
+        
+        // create direction vectors
+        Vector3D v1 = Vector3D.crossProduct(normal, v0).normalize();
+        Vector3D v2 = Vector3D.crossProduct(normal, v1).normalize();
+
+        // setup direction
+        dx1 = v1.getX();
+        dy1 = v1.getY();
+        dz1 = v1.getZ();
+        dx2 = v2.getX();
+        dy2 = v2.getY();
+        dz2 = v2.getZ();
+    }
+
+
+    // ===================================================================
+    // Accessors
+    
+    public Point3D origin()
+    {
+        return new Point3D(this.x0, this.y0, this.z0);
+    }
+    
+    public Vector3D directionVector1()
+    {
+        return new Vector3D(dx1, dy1, dz1);
+    }
+    
+    public Vector3D directionVector2()
+    {
+        return new Vector3D(dx2, dy2, dz2);
+    }
+    
+    /**
+     * @return the normal to the plane, computed as the cross product of the two direction vectors
+     */
+    public Vector3D normal()
+    {
+        return new Vector3D(
+                dy1 * dz2 - dz1 * dy2, 
+                dz1 * dx2 - dx1 * dz2, 
+                dx1 * dy2 - dy1 * dx2);
+    }
 
     // ===================================================================
     // Methods specific to Plane3D
@@ -128,23 +193,52 @@ public class Plane3D implements Geometry3D
 
         return new StraightLine3D(p0, dp);
     }
-    
-    public Point3D origin()
+
+    /**
+     * Computes the projection of the point on this plane.
+     * 
+     * @param point
+     *            the point to project
+     * @return the 3D position of the projection
+     */
+    public Point3D projection(Point3D point)
     {
-        return new Point3D(this.x0, this.y0, this.z0);
+        Point3D origin = origin();
+        Vector3D normal = normal();
+
+        // difference between origin of plane and point
+        Vector3D diffPoint = new Vector3D(point, origin);
+        
+        // relative position of point on normal's line
+        double norm = normal.norm();
+        double t = Vector3D.dotProduct(normal, diffPoint) / (norm * norm);
+
+        // add relative difference to project point back to plane
+        return point.plus(normal.times(t));
     }
     
     /**
-     * @return the normal to the plane, computed as the cross product of the two direction vectors
+     * Computes the projection of the point on this plane and returns result in coordinate of plane.
+     * 
+     * @param point
+     *            the point to project
+     * @return the 2D position of the projection
      */
-    public Vector3D normal()
+    public Point2D projection2d(Point3D point)
     {
-        return new Vector3D(
-                dy1 * dz2 - dz1 * dy2, 
-                dz1 * dx2 - dx1 * dz2, 
-                dx1 * dy2 - dy1 * dx2);
-    }
+        Point3D origin = origin();
 
+        // origin and direction vectors of the plane
+        Vector3D d1 = new Vector3D(dx1, dy1, dz1);
+        Vector3D d2 = new Vector3D(dx2, dy2, dz2);
+        
+        Vector3D diffPoint = new Vector3D(origin, point);
+        double s = Vector3D.dotProduct(diffPoint, d1) / d1.norm();
+        double t = Vector3D.dotProduct(diffPoint, d2) / d2.norm();
+
+        return new Point2D(s, t);
+    }
+    
 
     // ===================================================================
     // Methods implementing the Geometry3D interface

@@ -3,7 +3,7 @@
  */
 package net.sci.geom.geom3d.line;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
 
@@ -15,6 +15,42 @@ import org.junit.Test;
  */
 public class Plane3DTest
 {
+    @Test
+    public final void testProjectionPoint3D_XY()
+    {
+        Plane3D plane = new Plane3D(new Point3D(10, 10, 10), new Vector3D(1, 0, 0), new Vector3D(0, 1, 0));
+        Point3D point = new Point3D(30, 40, 50);
+
+        Point3D exp = new Point3D(30, 40, 10);
+        Point3D proj = plane.projection(point);
+
+        assertTrue(exp.almostEquals(proj, .01));
+    }
+    
+    @Test
+    public final void testProjectionPoint3D_XZ()
+    {
+        Plane3D plane = new Plane3D(new Point3D(10, 10, 10), new Vector3D(1, 0, 0), new Vector3D(0, 0, 1));
+        Point3D point = new Point3D(30, 40, 50);
+
+        Point3D exp = new Point3D(30, 10, 50);
+        Point3D proj = plane.projection(point);
+
+        assertTrue(exp.almostEquals(proj, .01));
+    }
+    
+    @Test
+    public final void testProjectionPoint3D_YZ()
+    {
+        Plane3D plane = new Plane3D(new Point3D(10, 10, 10), new Vector3D(0, 1, 0), new Vector3D(0, 0, 1));
+        Point3D point = new Point3D(30, 40, 50);
+
+        Point3D exp = new Point3D(10, 40, 50);
+        Point3D proj = plane.projection(point);
+
+        assertTrue(exp.almostEquals(proj, .01));
+    }
+    
     /**
      * Test method for {@link net.sci.geom.geom3d.line.Plane3D#intersection(net.sci.geom.geom3d.line.Pane3D)}.
      */
