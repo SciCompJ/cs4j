@@ -6,10 +6,13 @@ package net.sci.geom.geom3d.surface;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.curve.Circle2D;
 import net.sci.geom.geom3d.Box3D;
 import net.sci.geom.geom3d.Geometry3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
+import net.sci.geom.geom3d.line.Plane3D;
 import net.sci.geom.geom3d.line.StraightLine3D;
 
 /**
@@ -85,6 +88,29 @@ public class Sphere3D implements Geometry3D
         return r * r * (4.0 * Math.PI); 
     }
 
+    
+    
+    
+    // ===================================================================
+    // Getters
+
+    /**
+     * @return the center
+     */
+    public Point3D center()
+    {
+        return center;
+    }
+
+    /**
+     * @return the radius
+     */
+    public double radius()
+    {
+        return radius;
+    }
+
+
     /**
      * Compute the set of intersections between this sphere and a straight line.
      * 
@@ -127,27 +153,28 @@ public class Sphere3D implements Geometry3D
         result.add(line.getPoint(t2));
         return result;
     }
-    
-    
-    // ===================================================================
-    // Getters
 
-    /**
-     * @return the center
-     */
-    public Point3D center()
+    public Circle2D intersection2d(Plane3D plane)
     {
-        return center;
-    }
+        // distance between plane and sphere center
+        double dist = plane.distance(center);
+        
+        // check non inetersection case
+        if (dist > radius)
+        {
+            return null;
+        }
+        
+        // projection of sphere center on plane -> gives circle center
+        Point2D center2d = plane.projection2d(center);
 
-    /**
-     * @return the radius
-     */
-    public double radius()
-    {
-        return radius;
-    }
+        // compute radius on circle
+        double radius2d = Math.sqrt(radius * radius - dist * dist);
 
+        // create the new circle
+        return new Circle2D(center2d, radius2d);
+    }
+    
 
     // ===================================================================
     // Implementation of the Geometry3D interface
