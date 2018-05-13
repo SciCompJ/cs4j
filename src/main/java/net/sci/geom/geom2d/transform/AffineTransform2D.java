@@ -5,7 +5,6 @@ package net.sci.geom.geom2d.transform;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
-
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Vector2D;
 
@@ -253,7 +252,7 @@ public interface AffineTransform2D extends Transform2D
 	}
 
 	// ===================================================================
-	// static methods
+	// specific methods
 
 	/**
 	 * @return the affine matrix of the coefficients corresponding to this transform 
@@ -262,6 +261,62 @@ public interface AffineTransform2D extends Transform2D
 
 	public AffineTransform2D invert();
 	
+    // ===================================================================
+    // default methods
+
+	/**
+     * Returns the affine transform created by applying first the affine
+     * transform given by <code>that</code>, then this affine transform. 
+     * This is the equivalent method of the 'concatenate' method in
+     * java.awt.geom.AffineTransform.
+     * 
+     * @param that
+     *            the transform to apply first
+     * @return the composition this * that
+     */
+    public default AffineTransform2D concatenate(AffineTransform2D that)
+    {
+        double[][] m1 = this.getMatrix();
+        double[][] m2 = that.getMatrix();
+        double n00 = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0];
+        double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1];
+        double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2];
+        double n10 = m1[1][0] * m2[0][0] + m1[1][1] * m2[1][0];
+        double n11 = m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1];
+        double n12 = m1[1][0] * m2[0][2] + m1[1][1] * m2[1][2] + m1[1][2];
+        return new MatrixAffineTransform2D(n00, n01, n02, n10, n11, n12);
+    }
+
+    /**
+     * Returns the affine transform created by applying first this affine
+     * transform, then the affine transform given by <code>that</code>. This the
+     * equivalent method of the 'preConcatenate' method in
+     * java.awt.geom.AffineTransform. <code><pre>
+     * shape = shape.transform(T1.preConcatenate(T2).preConcatenate(T3));
+     * </pre></code> is equivalent to the sequence: <code><pre>
+     * shape = shape.transform(T1);
+     * shape = shape.transform(T2);
+     * shape = shape.transform(T3);
+     * </pre></code>
+     * 
+     * @param that
+     *            the transform to apply in a second step
+     * @return the composition that * this
+     */
+    public default AffineTransform2D preConcatenate(AffineTransform2D that) 
+    {
+        double[][] m1 = that.getMatrix();
+        double[][] m2 = this.getMatrix();
+        double n00 = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0];
+        double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1];
+        double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2];
+        double n10 = m1[1][0] * m2[0][0] + m1[1][1] * m2[1][0];
+        double n11 = m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1];
+        double n12 = m1[1][0] * m2[0][2] + m1[1][1] * m2[1][2] + m1[1][2];
+        return new MatrixAffineTransform2D(n00, n01, n02, n10, n11, n12);
+    }
+
+
 	/**
 	 * Applies this transformation to the given point.
 	 * 

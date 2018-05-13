@@ -11,7 +11,8 @@ import org.junit.runners.Suite;
     net.sci.geom.geom2d.curve.AllTests.class,
     net.sci.geom.geom2d.graph.AllTests.class,
 	net.sci.geom.geom2d.line.AllTests.class,
-	net.sci.geom.geom2d.polygon.AllTests.class,
+    net.sci.geom.geom2d.polygon.AllTests.class,
+    net.sci.geom.geom2d.transform.AllTests.class,
 	})
 public class AllTestsRecurse {
   //nothing
