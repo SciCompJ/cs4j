@@ -81,7 +81,7 @@ public interface AffineTransform3D extends Transform3D
                 0, 0, sz, (1 - sz) * center.getZ());
 	}
 
-	/**
+    /**
      * Creates a rotation around the X axis.
      * 
      * @param theta
@@ -92,8 +92,31 @@ public interface AffineTransform3D extends Transform3D
     {
         double cot = Math.cos(theta);
         double sit = Math.sin(theta);
-        return new MatrixAffineTransform3D(1, 0, 0, 0, 0, cot, -sit, 0, 0, sit, cot,
-                0);
+        return new MatrixAffineTransform3D(
+                1, 0, 0, 0, 
+                0, cot, -sit, 0, 
+                0, sit, cot, 0);
+    }
+
+    /**
+     * Creates a rotation around the X axis.
+     * 
+     * @param center
+     *            the center of the rotation
+     * @param theta
+     *            the angle of rotation, in radians
+     * @return a new instance of AffineTransform3D representing the rotation
+     */
+    public static AffineTransform3D createRotationOx(Point3D center, double theta)
+    {
+        double cot = Math.cos(theta);
+        double sit = Math.sin(theta);
+        double ty =  (1 - cot) * center.getY() + sit * center.getZ();
+        double tz =  (1 - cot) * center.getZ() - sit * center.getY();
+        return new MatrixAffineTransform3D(
+                1, 0, 0, 0, 
+                0, cot, -sit, ty, 
+                0, sit, cot, tz);
     }
 
     /**
@@ -127,7 +150,75 @@ public interface AffineTransform3D extends Transform3D
     }
 
 
-	// ===================================================================
+    // ===================================================================
+    // default methods
+
+    /**
+     * Returns the affine transform created by applying first the affine
+     * transform given by <code>that</code>, then this affine transform. 
+     * This is the equivalent method of the 'concatenate' method in
+     * java.awt.geom.AffineTransform.
+     * 
+     * @param that
+     *            the transform to apply first
+     * @return the composition this * that
+     */
+    public default AffineTransform3D concatenate(AffineTransform3D that)
+    {
+        double[][] m1 = this.getMatrix();
+        double[][] m2 = that.getMatrix();
+        double n00 = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0] + m1[0][2] * m2[2][0];
+        double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1] + m1[0][2] * m2[2][1];
+        double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2] * m2[2][2];
+        double n03 = m1[0][0] * m2[0][3] + m1[0][1] * m2[1][3] + m1[0][2] * m2[2][3] + m1[0][3];
+        double n10 = m1[1][0] * m2[1][0] + m1[1][1] * m2[1][0] + m1[1][2] * m2[2][0];
+        double n11 = m1[1][0] * m2[1][1] + m1[1][1] * m2[1][1] + m1[1][2] * m2[2][1];
+        double n12 = m1[1][0] * m2[1][2] + m1[1][1] * m2[1][2] + m1[1][2] * m2[2][2];
+        double n13 = m1[1][0] * m2[1][3] + m1[1][1] * m2[1][3] + m1[1][2] * m2[2][3] + m1[1][3];
+        double n20 = m1[2][0] * m2[1][0] + m1[2][1] * m2[1][0] + m1[2][2] * m2[2][0];
+        double n21 = m1[2][0] * m2[1][1] + m1[2][1] * m2[1][1] + m1[2][2] * m2[2][1];
+        double n22 = m1[2][0] * m2[1][2] + m1[2][1] * m2[1][2] + m1[2][2] * m2[2][2];
+        double n23 = m1[2][0] * m2[1][3] + m1[2][1] * m2[1][3] + m1[2][2] * m2[2][3] + m1[2][3];
+        return new MatrixAffineTransform3D(n00, n01, n02, n03, n10, n11, n12, n13, n20, n21, n22, n23);
+    }
+
+    /**
+     * Returns the affine transform created by applying first this affine
+     * transform, then the affine transform given by <code>that</code>. This the
+     * equivalent method of the 'preConcatenate' method in
+     * java.awt.geom.AffineTransform. <code><pre>
+     * shape = shape.transform(T1.preConcatenate(T2).preConcatenate(T3));
+     * </pre></code> is equivalent to the sequence: <code><pre>
+     * shape = shape.transform(T1);
+     * shape = shape.transform(T2);
+     * shape = shape.transform(T3);
+     * </pre></code>
+     * 
+     * @param that
+     *            the transform to apply in a second step
+     * @return the composition that * this
+     */
+    public default AffineTransform3D preConcatenate(AffineTransform3D that) 
+    {
+        double[][] m1 = that.getMatrix();
+        double[][] m2 = this.getMatrix();
+        double n00 = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0] + m1[0][2] * m2[2][0];
+        double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1] + m1[0][2] * m2[2][1];
+        double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2] * m2[2][2];
+        double n03 = m1[0][0] * m2[0][3] + m1[0][1] * m2[1][3] + m1[0][2] * m2[2][3] + m1[0][3];
+        double n10 = m1[1][0] * m2[1][0] + m1[1][1] * m2[1][0] + m1[1][2] * m2[2][0];
+        double n11 = m1[1][0] * m2[1][1] + m1[1][1] * m2[1][1] + m1[1][2] * m2[2][1];
+        double n12 = m1[1][0] * m2[1][2] + m1[1][1] * m2[1][2] + m1[1][2] * m2[2][2];
+        double n13 = m1[1][0] * m2[1][3] + m1[1][1] * m2[1][3] + m1[1][2] * m2[2][3] + m1[1][3];
+        double n20 = m1[2][0] * m2[1][0] + m1[2][1] * m2[1][0] + m1[2][2] * m2[2][0];
+        double n21 = m1[2][0] * m2[1][1] + m1[2][1] * m2[1][1] + m1[2][2] * m2[2][1];
+        double n22 = m1[2][0] * m2[1][2] + m1[2][1] * m2[1][2] + m1[2][2] * m2[2][2];
+        double n23 = m1[2][0] * m2[1][3] + m1[2][1] * m2[1][3] + m1[2][2] * m2[2][3] + m1[2][3];
+        return new MatrixAffineTransform3D(n00, n01, n02, n03, n10, n11, n12, n13, n20, n21, n22, n23);
+    }
+
+
+    // ===================================================================
 	// Interface declaration
 
 	/**
