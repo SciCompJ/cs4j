@@ -7,10 +7,10 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import net.sci.array.Array;
-import net.sci.array.data.Float32Array;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.array.data.scalar3d.ScalarArray3D;
+import net.sci.array.scalar.Float32Array;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.ImageArrayOperator;
 
 /**

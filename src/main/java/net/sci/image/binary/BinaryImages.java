@@ -4,16 +4,16 @@
 package net.sci.image.binary;
 
 import net.sci.array.Array;
-import net.sci.array.data.BinaryArray;
-import net.sci.array.data.IntArray;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.scalar2d.BinaryArray2D;
-import net.sci.array.data.scalar2d.Float32Array2D;
-import net.sci.array.data.scalar2d.IntArray2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.array.data.scalar3d.BinaryArray3D;
-import net.sci.array.data.scalar3d.IntArray3D;
-import net.sci.array.data.scalar3d.ScalarArray3D;
+import net.sci.array.scalar.BinaryArray;
+import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.scalar.Float32Array2D;
+import net.sci.array.scalar.IntArray;
+import net.sci.array.scalar.IntArray2D;
+import net.sci.array.scalar.IntArray3D;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.Image;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16;

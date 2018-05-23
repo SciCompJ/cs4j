@@ -4,7 +4,7 @@
 package net.sci.image.morphology;
 
 import net.sci.algo.Algo;
-import net.sci.array.data.Array3D;
+import net.sci.array.Array3D;
 
 /**
  * Structuring element that process 3D arrays.
@@ -297,9 +297,9 @@ public interface Strel3D extends Algo
 	 * @param image
 	 *            the input image
 	 * @return the result of dilation with this structuring element
-	 * @see #erosion(net.sci.array.data.Array3D)
-	 * @see #closing(net.sci.array.data.Array3D)
-	 * @see #opening(net.sci.array.data.Array3D)
+	 * @see #erosion(net.sci.array.Array3D)
+	 * @see #closing(net.sci.array.Array3D)
+	 * @see #opening(net.sci.array.Array3D)
 	 */
 	public Array3D<?> dilation(Array3D<?> image);
 
@@ -310,9 +310,9 @@ public interface Strel3D extends Algo
 	 * @param image
 	 *            the input image
 	 * @return the result of erosion with this structuring element
-	 * @see #dilation(net.sci.array.data.Array3D)
-	 * @see #closing(net.sci.array.data.Array3D)
-	 * @see #opening(net.sci.array.data.Array3D)
+	 * @see #dilation(net.sci.array.Array3D)
+	 * @see #closing(net.sci.array.Array3D)
+	 * @see #opening(net.sci.array.Array3D)
 	 */
 	public Array3D<?> erosion(Array3D<?> image);
 	
@@ -326,9 +326,9 @@ public interface Strel3D extends Algo
 	 * @param image
 	 *            the input image
 	 * @return the result of closing with this structuring element
-	 * @see #dilation(net.sci.array.data.Array3D)
-	 * @see #erosion(net.sci.array.data.Array3D)
-	 * @see #opening(net.sci.array.data.Array3D)
+	 * @see #dilation(net.sci.array.Array3D)
+	 * @see #erosion(net.sci.array.Array3D)
+	 * @see #opening(net.sci.array.Array3D)
 	 * @see #reverse()
 	 */
 	public Array3D<?> closing(Array3D<?> image);
@@ -343,9 +343,9 @@ public interface Strel3D extends Algo
 	 * @param image
 	 *            the input image
 	 * @return the result of opening with this structuring element
-	 * @see #dilation(net.sci.array.data.Array3D)
-	 * @see #erosion(net.sci.array.data.Array3D)
-	 * @see #closing(net.sci.array.data.Array3D)
+	 * @see #dilation(net.sci.array.Array3D)
+	 * @see #erosion(net.sci.array.Array3D)
+	 * @see #closing(net.sci.array.Array3D)
 	 * @see #reverse()
 	 */
 	public Array3D<?> opening(Array3D<?> image);

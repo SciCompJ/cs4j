@@ -5,8 +5,8 @@ package net.sci.image;
 
 import java.util.ArrayList;
 
-import net.sci.array.type.Color;
-import net.sci.array.type.RGB8;
+import net.sci.array.color.Color;
+import net.sci.array.color.RGB8;
 
 /**
  * A collection of color maps.

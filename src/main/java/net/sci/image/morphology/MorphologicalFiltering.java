@@ -4,8 +4,8 @@
 package net.sci.image.morphology;
 
 import net.sci.array.Array;
-import net.sci.array.data.Array2D;
-import net.sci.array.data.UInt8Array;
+import net.sci.array.Array2D;
+import net.sci.array.scalar.UInt8Array;
 
 /**
  * <p>

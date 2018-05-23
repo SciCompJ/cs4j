@@ -4,9 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.data.scalar2d.BinaryArray2D;
-import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.type.Binary;
+import net.sci.array.scalar.Binary;
+import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.MinimaAndMaxima;
 

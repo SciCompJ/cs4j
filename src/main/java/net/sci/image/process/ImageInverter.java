@@ -5,13 +5,13 @@ package net.sci.image.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.data.BinaryArray;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.UInt16Array;
-import net.sci.array.data.UInt8Array;
-import net.sci.array.data.color.RGB8Array;
-import net.sci.array.type.RGB8;
-import net.sci.array.type.UInt16;
+import net.sci.array.color.RGB8;
+import net.sci.array.color.RGB8Array;
+import net.sci.array.scalar.BinaryArray;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.UInt16;
+import net.sci.array.scalar.UInt16Array;
+import net.sci.array.scalar.UInt8Array;
 import net.sci.image.ImageArrayOperator;
 
 /**

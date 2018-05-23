@@ -8,10 +8,10 @@ import java.io.IOException;
 import org.junit.Test;
 
 import net.sci.array.Array;
-import net.sci.array.data.color.RGB16Array2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.array.data.scalar2d.UInt16Array2D;
-import net.sci.array.type.RGB16;
+import net.sci.array.color.RGB16;
+import net.sci.array.color.RGB16Array2D;
+import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt16Array2D;
 import net.sci.image.Image;
 
 public class TiffImageReaderTest

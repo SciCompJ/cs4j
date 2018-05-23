@@ -8,9 +8,9 @@ import static java.lang.Math.min;
 
 import java.util.ArrayList;
 
-import net.sci.array.data.Array2D;
-import net.sci.array.data.scalar2d.IntArray2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.array.Array2D;
+import net.sci.array.scalar.IntArray2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.data.Connectivity2D;
 
 /**

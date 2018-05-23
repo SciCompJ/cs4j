@@ -4,7 +4,7 @@
 package net.sci.image.morphology;
 
 import net.sci.algo.Algo;
-import net.sci.array.data.Array2D;
+import net.sci.array.Array2D;
 import net.sci.image.morphology.filter.Cross3x3Strel;
 import net.sci.image.morphology.filter.DiamondStrel;
 import net.sci.image.morphology.filter.LinearDiagDownStrel;

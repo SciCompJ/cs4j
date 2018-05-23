@@ -4,8 +4,8 @@
 package net.sci.image.process.segment;
 
 import net.sci.array.Array;
-import net.sci.array.data.BinaryArray;
-import net.sci.array.data.ScalarArray;
+import net.sci.array.scalar.BinaryArray;
+import net.sci.array.scalar.ScalarArray;
 import net.sci.image.ImageArrayOperator;
 
 /**

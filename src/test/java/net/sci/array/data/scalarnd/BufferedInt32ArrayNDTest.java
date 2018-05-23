@@ -4,8 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.data.Int32Array;
-import net.sci.array.type.Int32;
+import net.sci.array.scalar.Int32;
+import net.sci.array.scalar.Int32Array;
+import net.sci.array.scalar.Int32ArrayND;
 
 public class BufferedInt32ArrayNDTest
 {

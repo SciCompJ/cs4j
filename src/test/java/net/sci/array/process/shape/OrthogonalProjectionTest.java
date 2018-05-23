@@ -2,7 +2,7 @@ package net.sci.array.process.shape;
 
 import static org.junit.Assert.*;
 import net.sci.array.Array;
-import net.sci.array.data.scalar3d.UInt8Array3D;
+import net.sci.array.scalar.UInt8Array3D;
 
 import org.junit.Test;
 

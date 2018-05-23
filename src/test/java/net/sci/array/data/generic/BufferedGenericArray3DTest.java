@@ -7,7 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.data.Array3D;
+import net.sci.array.Array3D;
+import net.sci.array.generic.BufferedGenericArray3D;
 
 /**
  * @author dlegland
@@ -16,7 +17,7 @@ import net.sci.array.data.Array3D;
 public class BufferedGenericArray3DTest
 {
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray3D#BufferedGenericArray3D(int, int, int, Object)}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#BufferedGenericArray3D(int, int, int, Object)}.
      */
     @Test
     public final void testCreate()
@@ -27,7 +28,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray3D#get(int, int, int)}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#get(int, int, int)}.
      */
     @Test
     public final void testGetIntInt()
@@ -40,7 +41,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray3D#set(int, int, int, java.lang.Object)}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#set(int, int, int, java.lang.Object)}.
      */
     @Test
     public final void testSetIntIntT()
@@ -51,7 +52,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray3D#duplicate()}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#duplicate()}.
      */
     @Test
     public final void testDuplicate()
@@ -67,7 +68,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray3D#iterator()}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#iterator()}.
      */
     @Test
     public final void testIterator()

@@ -4,8 +4,10 @@
 package net.sci.array.data;
 
 import static org.junit.Assert.*;
-import net.sci.array.data.scalar2d.Float32Array2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
+
+import net.sci.array.scalar.Float32Array2D;
+import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt8Array;
 
 import org.junit.Test;
 
@@ -17,7 +19,7 @@ public class UInt8ArrayTest
 {
 
 	/**
-	 * Test method for {@link net.sci.array.data.UInt8Array#convert(net.sci.array.data.ScalarArray)}.
+	 * Test method for {@link net.sci.array.scalar.UInt8Array#convert(net.sci.array.scalar.ScalarArray)}.
 	 */
 	@Test
 	public final void testConvert()
@@ -31,7 +33,7 @@ public class UInt8ArrayTest
 
 
 	/**
-	 * Test method for {@link net.sci.array.data.UInt8Array#wrap(net.sci.array.data.ScalarArray)}.
+	 * Test method for {@link net.sci.array.scalar.UInt8Array#wrap(net.sci.array.scalar.ScalarArray)}.
 	 */
 	@Test
 	public final void testWrap()

@@ -7,7 +7,7 @@ import static java.lang.Math.sqrt;
 
 import java.util.HashMap;
 
-import net.sci.array.data.scalar2d.IntArray2D;
+import net.sci.array.scalar.IntArray2D;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.curve.Ellipse2D;

@@ -4,8 +4,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.data.scalar3d.BinaryArray3D;
-import net.sci.array.data.scalar3d.Float32Array3D;
+import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.scalar.Float32Array3D;
 import net.sci.image.binary.ChamferWeights3D;
 import net.sci.image.data.Cursor3D;
 

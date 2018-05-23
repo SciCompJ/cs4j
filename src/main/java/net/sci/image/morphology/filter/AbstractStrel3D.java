@@ -5,7 +5,7 @@ package net.sci.image.morphology.filter;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
-import net.sci.array.data.Array3D;
+import net.sci.array.Array3D;
 import net.sci.image.morphology.Strel3D;
 
 /**

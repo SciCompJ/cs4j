@@ -4,12 +4,12 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.VectorArray;
-import net.sci.array.data.scalar2d.Float32Array2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.array.data.vector.VectorArray2D;
 import net.sci.array.interp.LinearInterpolator2D;
+import net.sci.array.scalar.Float32Array2D;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.vector.VectorArray;
+import net.sci.array.vector.VectorArray2D;
 import net.sci.image.ImageArrayOperator;
 
 /**

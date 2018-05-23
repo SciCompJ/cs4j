@@ -4,7 +4,8 @@
 package net.sci.image.analyze;
 
 import static org.junit.Assert.*;
-import net.sci.array.data.scalar2d.UInt8Array2D;
+
+import net.sci.array.scalar.UInt8Array2D;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
 

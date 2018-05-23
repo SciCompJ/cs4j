@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.data.Array3D;
-import net.sci.array.data.scalar3d.BinaryArray3D;
+import net.sci.array.Array3D;
+import net.sci.array.scalar.BinaryArray3D;
 
 public class FloodFillComponentsLabeling3DTest
 {

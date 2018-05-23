@@ -5,11 +5,11 @@ package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.array.data.scalar3d.ScalarArray3D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.type.Scalar;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.ImageArrayOperator;
 
 /**

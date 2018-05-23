@@ -4,10 +4,10 @@
 package net.sci.image.process;
 
 import net.sci.array.Array;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.UInt8Array;
 import net.sci.array.process.Histogram;
-import net.sci.array.type.Scalar;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.UInt8Array;
 import net.sci.image.ImageArrayOperator;
 
 /**

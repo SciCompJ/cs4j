@@ -8,11 +8,11 @@ import static java.lang.Math.min;
 
 import java.util.ArrayList;
 
-import net.sci.array.data.Array2D;
-import net.sci.array.data.Array3D;
-import net.sci.array.data.scalar2d.IntArray2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.array.data.scalar3d.IntArray3D;
+import net.sci.array.Array2D;
+import net.sci.array.Array3D;
+import net.sci.array.scalar.IntArray2D;
+import net.sci.array.scalar.IntArray3D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.data.Connectivity3D;
 

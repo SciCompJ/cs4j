@@ -5,7 +5,7 @@ package net.sci.array.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.data.ScalarArray;
+import net.sci.array.scalar.ScalarArray;
 
 /**
  * Computes maximum intensity projection along a specified dimension. Returns an

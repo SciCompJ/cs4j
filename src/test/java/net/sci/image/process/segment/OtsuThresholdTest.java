@@ -8,8 +8,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import net.sci.array.data.BinaryArray;
-import net.sci.array.data.scalar2d.UInt8Array2D;
+import net.sci.array.scalar.BinaryArray;
+import net.sci.array.scalar.UInt8Array2D;
 
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ import org.junit.Test;
 public class OtsuThresholdTest
 {
 	/**
-	 * Test method for {@link net.sci.image.process.segment.AutoThreshold#processScalar(net.sci.array.data.ScalarArray)}.
+	 * Test method for {@link net.sci.image.process.segment.AutoThreshold#processScalar(net.sci.array.scalar.ScalarArray)}.
 	 * @throws IOException 
 	 */
 	@Test

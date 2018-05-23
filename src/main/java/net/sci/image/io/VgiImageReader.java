@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
 
-import net.sci.array.data.scalar3d.BufferedUInt16Array3D;
-import net.sci.array.data.scalar3d.UInt16Array3D;
+import net.sci.array.scalar.BufferedUInt16Array3D;
+import net.sci.array.scalar.UInt16Array3D;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
 

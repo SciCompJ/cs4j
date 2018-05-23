@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.type.Int16;
+import net.sci.array.scalar.BufferedInt16Array2D;
+import net.sci.array.scalar.Int16;
+import net.sci.array.scalar.Int16Array2D;
 
 public class BufferedInt16Array2DTest
 {

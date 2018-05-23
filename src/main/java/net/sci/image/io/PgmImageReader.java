@@ -10,9 +10,9 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.util.Scanner;
 
-import net.sci.array.data.scalar2d.IntArray2D;
-import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.type.Int;
+import net.sci.array.scalar.Int;
+import net.sci.array.scalar.IntArray2D;
+import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.Image;
 
 /**

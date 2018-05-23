@@ -7,7 +7,7 @@ import static java.lang.Math.max;
 import static java.lang.Math.min;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
-import net.sci.array.data.scalar3d.ScalarArray3D;
+import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.data.Connectivity3D;
 import net.sci.image.data.Cursor3D;
 import net.sci.image.morphology.MorphologicalReconstruction;

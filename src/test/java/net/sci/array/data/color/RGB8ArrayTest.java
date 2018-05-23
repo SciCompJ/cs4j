@@ -7,8 +7,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.data.UInt8Array;
-import net.sci.array.type.UInt8;
+import net.sci.array.color.RGB8Array;
+import net.sci.array.scalar.UInt8;
+import net.sci.array.scalar.UInt8Array;
 
 /**
  * @author dlegland
@@ -18,7 +19,7 @@ public class RGB8ArrayTest
 {
     
     /**
-     * Test method for {@link net.sci.array.data.color.RGB8Array#create(int[])}.
+     * Test method for {@link net.sci.array.color.RGB8Array#create(int[])}.
      */
     @Test
     public final void testCreate()
@@ -32,7 +33,7 @@ public class RGB8ArrayTest
     }
 
     /**
-     * Test method for {@link net.sci.array.data.color.RGB8Array#create(int[])}.
+     * Test method for {@link net.sci.array.color.RGB8Array#create(int[])}.
      */
     @Test
     public final void testCreateUInt8View()
@@ -48,7 +49,7 @@ public class RGB8ArrayTest
     }
     
     /**
-     * Test method for {@link net.sci.array.data.color.RGB8Array#create(int[])}.
+     * Test method for {@link net.sci.array.color.RGB8Array#create(int[])}.
      */
     @Test
     public final void testUInt8ViewIterator()

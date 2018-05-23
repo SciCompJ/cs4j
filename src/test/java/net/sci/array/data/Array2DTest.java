@@ -5,8 +5,9 @@ package net.sci.array.data;
 
 import static org.junit.Assert.*;
 import net.sci.array.Array;
-import net.sci.array.data.scalarnd.UInt8ArrayND;
-import net.sci.array.type.UInt8;
+import net.sci.array.Array2D;
+import net.sci.array.scalar.UInt8;
+import net.sci.array.scalar.UInt8ArrayND;
 
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class Array2DTest
 {
 
 	/**
-	 * Test method for {@link net.sci.array.data.Array2D#wrap(net.sci.array.Array)}.
+	 * Test method for {@link net.sci.array.Array2D#wrap(net.sci.array.Array)}.
 	 */
 	@Test
 	public final void testCreateView()
@@ -41,7 +42,7 @@ public class Array2DTest
 	}
 
 	/**
-	 * Test method for {@link net.sci.array.data.Array2D#wrap(net.sci.array.Array)}.
+	 * Test method for {@link net.sci.array.Array2D#wrap(net.sci.array.Array)}.
 	 */
 	@Test
 	public final void testCreateView_3d()

@@ -9,8 +9,8 @@ import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.data.scalar2d.BinaryArray2D;
-import net.sci.array.data.scalar2d.Float32Array2D;
+import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.Float32Array2D;
 import net.sci.image.binary.ChamferWeights2D;
 
 /**
@@ -78,7 +78,7 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 
 		// create new empty image, and fill it with black
 		this.result = Float32Array2D.create(sizeX, sizeY);
-		result.fill(new net.sci.array.type.Float32(0));
+		result.fill(new net.sci.array.scalar.Float32(0));
 		
 		this.fireStatusChanged(new AlgoEvent(this, "Initialization"));
 		

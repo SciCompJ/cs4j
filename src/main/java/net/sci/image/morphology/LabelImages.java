@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import net.sci.array.data.IntArray;
-import net.sci.array.type.Int;
+import net.sci.array.scalar.Int;
+import net.sci.array.scalar.IntArray;
 
 /**
  * A collection of static methods for processing label images.

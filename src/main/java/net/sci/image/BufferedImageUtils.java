@@ -9,15 +9,15 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 
 import net.sci.array.Array;
-import net.sci.array.data.BinaryArray;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.UInt8Array;
-import net.sci.array.data.VectorArray;
-import net.sci.array.data.color.RGB8Array;
-import net.sci.array.data.scalar2d.BinaryArray2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.type.RGB8;
+import net.sci.array.color.RGB8;
+import net.sci.array.color.RGB8Array;
+import net.sci.array.scalar.BinaryArray;
+import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt8Array;
+import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.vector.VectorArray;
 
 /**
  * Collection of methods for managing conversion to java BufferedImage
@@ -370,7 +370,7 @@ public class BufferedImageUtils
         byte[] blue = new byte[256];
         for(int i = 0; i < 256; i++) 
         {
-            net.sci.array.type.Color color = colormap.getColor(i);
+            net.sci.array.color.Color color = colormap.getColor(i);
             red[i]      = (byte) (color.red() * 255);
             green[i]    = (byte) (color.green() * 255);
             blue[i]     = (byte) (color.blue() * 255);

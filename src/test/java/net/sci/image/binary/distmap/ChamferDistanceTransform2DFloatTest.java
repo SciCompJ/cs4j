@@ -5,8 +5,9 @@ package net.sci.image.binary.distmap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import net.sci.array.data.scalar2d.BinaryArray2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
+
+import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.binary.ChamferWeights2D;
 
 import org.junit.Test;
@@ -19,7 +20,7 @@ public class ChamferDistanceTransform2DFloatTest
 {
 
 	/**
-	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat#process2d(net.sci.array.data.scalar2d.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat#process2d(net.sci.array.scalar.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess2d()

@@ -4,17 +4,17 @@
 package net.sci.image.morphology.extrema;
 
 import static java.lang.Math.min;
-import static net.sci.array.type.Binary.FALSE;
-import static net.sci.array.type.Binary.TRUE;
+import static net.sci.array.scalar.Binary.FALSE;
+import static net.sci.array.scalar.Binary.TRUE;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.data.BinaryArray;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.scalar2d.BinaryArray2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.type.Scalar;
+import net.sci.array.scalar.BinaryArray;
+import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.ImageArrayOperator;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.FloodFill;

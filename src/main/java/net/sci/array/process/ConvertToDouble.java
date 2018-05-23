@@ -5,8 +5,8 @@ package net.sci.array.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.data.Float32Array;
-import net.sci.array.data.ScalarArray;
+import net.sci.array.scalar.Float32Array;
+import net.sci.array.scalar.ScalarArray;
 
 
 /**

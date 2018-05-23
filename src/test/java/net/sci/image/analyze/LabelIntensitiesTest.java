@@ -4,9 +4,10 @@
 package net.sci.image.analyze;
 
 import static org.junit.Assert.*;
-import net.sci.array.data.scalar2d.UInt8Array2D;
 
 import org.junit.Test;
+
+import net.sci.array.scalar.UInt8Array2D;
 
 /**
  * @author dlegland
@@ -16,7 +17,7 @@ public class LabelIntensitiesTest
 {
 
 	/**
-	 * Test method for {@link net.sci.image.analyze.LabelIntensities#mean(net.sci.array.data.ScalarArray, net.sci.array.data.IntArray, int[])}.
+	 * Test method for {@link net.sci.image.analyze.LabelIntensities#mean(net.sci.array.scalar.ScalarArray, net.sci.array.scalar.IntArray, int[])}.
 	 */
 	@Test
 	public final void testMean()
@@ -36,7 +37,7 @@ public class LabelIntensitiesTest
 	}
 
 	/**
-	 * Test method for {@link net.sci.image.analyze.LabelIntensities#sum(net.sci.array.data.ScalarArray)}.
+	 * Test method for {@link net.sci.image.analyze.LabelIntensities#sum(net.sci.array.scalar.ScalarArray)}.
 	 */
 	@Test
 	public final void testSum()

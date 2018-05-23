@@ -3,10 +3,10 @@
  */
 package net.sci.array.interp;
 
-import net.sci.array.data.scalar2d.Float32Array2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.interp.LinearInterpolator2D;
 import net.sci.array.interp.ScalarFunction2D;
+import net.sci.array.scalar.Float32Array2D;
+import net.sci.array.scalar.ScalarArray2D;
 
 
 /**

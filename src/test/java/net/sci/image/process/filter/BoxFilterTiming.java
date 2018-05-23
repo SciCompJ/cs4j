@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import net.sci.array.data.scalar3d.Float32Array3D;
-import net.sci.array.data.scalar3d.ScalarArray3D;
+import net.sci.array.scalar.Float32Array3D;
+import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.Image;
 import net.sci.image.io.TiffImageReader;
 import net.sci.image.process.filter.BoxFilter;

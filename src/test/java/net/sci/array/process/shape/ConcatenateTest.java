@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.Array;
-import net.sci.array.data.color.RGB8Array;
-import net.sci.array.data.color.RGB8Array2D;
+import net.sci.array.color.RGB8Array;
+import net.sci.array.color.RGB8Array2D;
 
 public class ConcatenateTest
 {

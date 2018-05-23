@@ -4,8 +4,8 @@
 package net.sci.array.process.shape;
 
 import net.sci.array.Array;
+import net.sci.array.Array2D;
 import net.sci.array.ArrayOperator;
-import net.sci.array.data.Array2D;
 
 /**
  * Rotate an array by 90 degrees counter-clockwise.

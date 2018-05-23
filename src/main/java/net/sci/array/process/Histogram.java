@@ -3,12 +3,12 @@
  */
 package net.sci.array.process;
 
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.color.RGB16Array;
-import net.sci.array.data.color.RGB8Array;
-import net.sci.array.type.RGB16;
-import net.sci.array.type.RGB8;
-import net.sci.array.type.Scalar;
+import net.sci.array.color.RGB16;
+import net.sci.array.color.RGB16Array;
+import net.sci.array.color.RGB8;
+import net.sci.array.color.RGB8Array;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
 
 /**
  * Computes histograms of values from arrays.

@@ -7,8 +7,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.data.scalar2d.Float32Array2D;
-import net.sci.array.type.Float32;
+import net.sci.array.scalar.Float32;
+import net.sci.array.scalar.Float32Array2D;
+import net.sci.array.scalar.ScalarArray;
 
 /**
  * @author dlegland
@@ -18,7 +19,7 @@ public class ScalarArrayTest
 {
     
     /**
-     * Test method for {@link net.sci.array.data.ScalarArray#apply(java.util.function.UnaryOperator)}.
+     * Test method for {@link net.sci.array.scalar.ScalarArray#apply(java.util.function.UnaryOperator)}.
      */
     @Test
     public final void testApply()

@@ -3,7 +3,7 @@
  */
 package net.sci.image.morphology.filter;
 
-import net.sci.array.data.Array2D;
+import net.sci.array.Array2D;
 
 /**
  * Implementation stub for in place Structuring elements. Implements operations

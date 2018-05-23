@@ -8,9 +8,9 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.Array;
-import net.sci.array.data.UInt16Array;
-import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
-import net.sci.array.data.scalar2d.UInt8Array2D;
+import net.sci.array.scalar.BufferedUInt8Array2D;
+import net.sci.array.scalar.UInt16Array;
+import net.sci.array.scalar.UInt8Array2D;
 
 /**
  * @author dlegland

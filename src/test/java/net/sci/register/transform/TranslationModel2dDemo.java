@@ -10,8 +10,8 @@ import java.util.Collection;
 
 import org.junit.Test;
 
-import net.sci.array.data.scalar2d.ScalarArray2D;
 import net.sci.array.interp.LinearInterpolator2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.io.TiffImageReader;
 import net.sci.optim.NelderMeadSimplexOptimizer;

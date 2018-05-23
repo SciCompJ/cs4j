@@ -11,10 +11,10 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import net.sci.array.Array;
-import net.sci.array.data.color.RGB8Array2D;
-import net.sci.array.data.scalar2d.IntArray2D;
-import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.type.RGB8;
+import net.sci.array.color.RGB8;
+import net.sci.array.color.RGB8Array2D;
+import net.sci.array.scalar.IntArray2D;
+import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.Image;
 
 /**

@@ -3,8 +3,8 @@
  */
 package net.sci.array.process;
 
-import net.sci.array.data.ScalarArray;
-import net.sci.array.type.Scalar;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
 
 /**
  * Sample operator to demonstrate the use of ScalarArrayOperator interface.

@@ -22,8 +22,8 @@
 package net.sci.image.binary.distmap;
 
 import net.sci.algo.Algo;
-import net.sci.array.data.scalar3d.BinaryArray3D;
-import net.sci.array.data.scalar3d.ScalarArray3D;
+import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.scalar.ScalarArray3D;
 
 
 /**

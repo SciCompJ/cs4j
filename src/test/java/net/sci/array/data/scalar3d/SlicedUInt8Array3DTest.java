@@ -6,8 +6,9 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.type.UInt8;
+import net.sci.array.scalar.SlicedUInt8Array3D;
+import net.sci.array.scalar.UInt8;
+import net.sci.array.scalar.UInt8Array2D;
 
 public class SlicedUInt8Array3DTest
 {

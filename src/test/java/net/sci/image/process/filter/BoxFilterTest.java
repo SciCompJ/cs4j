@@ -6,11 +6,11 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import net.sci.array.Array;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.color.RGB8Array2D;
-import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.data.scalar3d.UInt8Array3D;
-import net.sci.array.type.RGB8;
+import net.sci.array.color.RGB8;
+import net.sci.array.color.RGB8Array2D;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.scalar.UInt8Array3D;
 import net.sci.image.process.filter.BoxFilter;
 
 public class BoxFilterTest

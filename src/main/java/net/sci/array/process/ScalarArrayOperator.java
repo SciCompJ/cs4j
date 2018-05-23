@@ -5,8 +5,8 @@ package net.sci.array.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.type.Scalar;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
 
 /**
  * Interface for Array operators that operate on a Scalar Array instance and

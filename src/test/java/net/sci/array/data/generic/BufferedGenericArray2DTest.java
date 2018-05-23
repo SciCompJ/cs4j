@@ -7,7 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.data.Array2D;
+import net.sci.array.Array2D;
+import net.sci.array.generic.BufferedGenericArray2D;
 
 /**
  * @author dlegland
@@ -16,7 +17,7 @@ import net.sci.array.data.Array2D;
 public class BufferedGenericArray2DTest
 {
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray2D#BufferedGenericArray2D(int, int, Object)}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray2D#BufferedGenericArray2D(int, int, Object)}.
      */
     @Test
     public final void testCreate()
@@ -27,7 +28,7 @@ public class BufferedGenericArray2DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray2D#get(int, int)}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray2D#get(int, int)}.
      */
     @Test
     public final void testGetIntInt()
@@ -40,7 +41,7 @@ public class BufferedGenericArray2DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray2D#set(int, int, java.lang.Object)}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray2D#set(int, int, java.lang.Object)}.
      */
     @Test
     public final void testSetIntIntT()
@@ -51,7 +52,7 @@ public class BufferedGenericArray2DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray2D#duplicate()}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray2D#duplicate()}.
      */
     @Test
     public final void testDuplicate()
@@ -66,7 +67,7 @@ public class BufferedGenericArray2DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.data.generic.BufferedGenericArray2D#iterator()}.
+     * Test method for {@link net.sci.array.generic.BufferedGenericArray2D#iterator()}.
      */
     @Test
     public final void testIterator()

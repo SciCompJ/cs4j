@@ -7,11 +7,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.data.scalar2d.UInt8Array2D;
-import net.sci.array.data.scalar3d.BinaryArray3D;
-import net.sci.array.data.scalar3d.IntArray3D;
-import net.sci.array.data.scalar3d.UInt8Array3D;
-import net.sci.array.type.UInt8;
+import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.scalar.IntArray3D;
+import net.sci.array.scalar.UInt8;
+import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.scalar.UInt8Array3D;
 import net.sci.image.data.Connectivity3D;
 
 /**

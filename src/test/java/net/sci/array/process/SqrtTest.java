@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.data.scalar2d.Float64Array2D;
-import net.sci.array.data.scalar2d.UInt16Array2D;
+import net.sci.array.scalar.Float64Array2D;
+import net.sci.array.scalar.UInt16Array2D;
 
 public class SqrtTest
 {

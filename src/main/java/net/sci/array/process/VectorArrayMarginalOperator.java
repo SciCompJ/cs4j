@@ -7,10 +7,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.sci.array.Array;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.data.VectorArray;
-import net.sci.array.type.Scalar;
-import net.sci.array.type.Vector;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
+import net.sci.array.vector.Vector;
+import net.sci.array.vector.VectorArray;
 
 /**
  * An interface that allows instances of ScalarArrayOperator to work on vector

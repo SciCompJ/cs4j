@@ -1,9 +1,11 @@
 package net.sci.array.data;
 
 import static org.junit.Assert.assertEquals;
-import net.sci.array.data.scalar2d.BufferedUInt8Array2D;
-import net.sci.array.data.scalar2d.IntArray2D;
-import net.sci.array.type.UInt8;
+
+import net.sci.array.scalar.BufferedUInt8Array2D;
+import net.sci.array.scalar.IntArray2D;
+import net.sci.array.scalar.UInt8;
+import net.sci.array.scalar.UInt8Array;
 
 import org.junit.Test;
 

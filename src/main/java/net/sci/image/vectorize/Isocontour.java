@@ -6,8 +6,8 @@ package net.sci.image.vectorize;
 import java.util.ArrayList;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.data.scalar2d.ScalarArray2D;
-import net.sci.array.type.Scalar;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.geom.geom2d.Geometry2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.graph.SimpleGraph2D;

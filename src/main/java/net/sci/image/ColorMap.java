@@ -3,7 +3,7 @@
  */
 package net.sci.image;
 
-import net.sci.array.type.Color;
+import net.sci.array.color.Color;
 
 /**
  * Color map definition for intensity or label images.

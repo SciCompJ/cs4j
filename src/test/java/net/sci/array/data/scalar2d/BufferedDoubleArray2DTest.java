@@ -1,9 +1,12 @@
 package net.sci.array.data.scalar2d;
 
 import static org.junit.Assert.*;
-import net.sci.array.type.Float64;
 
 import org.junit.Test;
+
+import net.sci.array.scalar.BufferedFloat64Array2D;
+import net.sci.array.scalar.Float64;
+import net.sci.array.scalar.Float64Array2D;
 
 public class BufferedDoubleArray2DTest
 {

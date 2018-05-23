@@ -8,8 +8,8 @@ import static java.lang.Math.min;
 
 import java.util.ArrayList;
 
-import net.sci.array.data.Array3D;
-import net.sci.array.data.scalar3d.IntArray3D;
+import net.sci.array.Array3D;
+import net.sci.array.scalar.IntArray3D;
 import net.sci.image.data.Connectivity3D;
 
 /**

@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 
 import net.sci.array.Array;
-import net.sci.array.data.Float32Array;
-import net.sci.array.data.Float64Array;
-import net.sci.array.data.Int16Array;
-import net.sci.array.data.Int32Array;
-import net.sci.array.data.UInt16Array;
-import net.sci.array.data.UInt8Array;
+import net.sci.array.scalar.Float32Array;
+import net.sci.array.scalar.Float64Array;
+import net.sci.array.scalar.Int16Array;
+import net.sci.array.scalar.Int32Array;
+import net.sci.array.scalar.UInt16Array;
+import net.sci.array.scalar.UInt8Array;
 import net.sci.image.Image;
 
 /**

@@ -3,7 +3,7 @@
  */
 package net.sci.image.discretize;
 
-import net.sci.array.data.scalar2d.ScalarArray2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.geom.geom2d.Domain2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.PolygonalDomain2D;

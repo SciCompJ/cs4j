@@ -4,9 +4,9 @@
 package net.sci.array.process.shape;
 
 import net.sci.array.Array;
+import net.sci.array.Array2D;
+import net.sci.array.Array3D;
 import net.sci.array.ArrayOperator;
-import net.sci.array.data.Array2D;
-import net.sci.array.data.Array3D;
 
 /**
  * @author dlegland

@@ -4,8 +4,9 @@
 package net.sci.image.binary.distmap;
 
 import static org.junit.Assert.*;
-import net.sci.array.data.scalar2d.BinaryArray2D;
-import net.sci.array.data.scalar2d.ScalarArray2D;
+
+import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.binary.ChamferWeights2D;
 
 import org.junit.Test;
@@ -18,7 +19,7 @@ public class ChamferDistanceTransform2DUInt16Test
 {
 
 	/**
-	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16#process2d(net.sci.array.data.scalar2d.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16#process2d(net.sci.array.scalar.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess2d()

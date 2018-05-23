@@ -1,8 +1,8 @@
 package net.sci.image.binary.geoddist;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.data.scalar2d.BinaryArray2D;
-import net.sci.array.data.scalar2d.UInt16Array2D;
+import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.UInt16Array2D;
 import net.sci.image.binary.ChamferWeights2D;
 
 /**

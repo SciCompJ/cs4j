@@ -6,10 +6,10 @@ package net.sci.image.analyze;
 import java.util.HashMap;
 
 import net.sci.array.Arrays;
-import net.sci.array.data.IntArray;
-import net.sci.array.data.ScalarArray;
-import net.sci.array.type.Int;
-import net.sci.array.type.Scalar;
+import net.sci.array.scalar.Int;
+import net.sci.array.scalar.IntArray;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
 import net.sci.image.morphology.LabelImages;
 
 /**
