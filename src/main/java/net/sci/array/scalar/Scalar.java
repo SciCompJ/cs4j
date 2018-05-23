@@ -4,6 +4,8 @@
 package net.sci.array.scalar;
 
 /**
+ * Top-level definition of scalar value. Can represent any double or integer value. 
+ * 
  * @author dlegland
  *
  */

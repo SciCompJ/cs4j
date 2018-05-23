@@ -1,12 +1,9 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.generic;
 
 import net.sci.array.Array;
-import net.sci.array.generic.BufferedGenericArray2D;
-import net.sci.array.generic.BufferedGenericArray3D;
-import net.sci.array.generic.BufferedGenericArrayND;
 
 /**
  * Interface for array implementation based on a generic data type.

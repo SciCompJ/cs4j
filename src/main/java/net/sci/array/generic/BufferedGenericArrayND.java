@@ -5,7 +5,6 @@ package net.sci.array.generic;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayND;
-import net.sci.array.scalar.GenericArray;
 
 
 /**
