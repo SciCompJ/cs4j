@@ -105,6 +105,13 @@ public class DelimitedTableReader implements TableReader
 	@Override
 	public Table readTable(File file) throws IOException
 	{
+        // meta data for table
+        int nCols;
+        ArrayList<ArrayList<String>> columns;
+        String[] colNames;
+        ArrayList<String> rowNames = new ArrayList<String>();
+
+        // Create text reader from file 
 		LineNumberReader reader;
 		try 
 		{
@@ -115,6 +122,7 @@ public class DelimitedTableReader implements TableReader
 			throw new RuntimeException("Could not open file: " + file, ex);
 		}
 		
+		// number of rows read
 		int nRows = 0;
 
 		// eventually skip some lines
@@ -127,15 +135,8 @@ public class DelimitedTableReader implements TableReader
 
 		// parse header line
 		String firstLine = reader.readLine();
-	
 		String[] tokens = firstLine.split(delimiterRegexp);
 
-		// meta data for table
-		int nCols;
-		ArrayList<ArrayList<String>> columns;
-		String[] colNames;
-		ArrayList<String> rowNames = new ArrayList<String>();
-		
 		// parse first line to identify number of columns 
 		if (readHeader)
 		{
@@ -242,17 +243,6 @@ public class DelimitedTableReader implements TableReader
 				    }
 				    isNumeric = false;
 				}
-//				double value;
-//				try 
-//				{
-//					value = Double.parseDouble(token);
-//					table.setValue(r, c, value);
-//				}
-//				catch(NumberFormatException ex)
-//				{
-//					table.setValue(r, c, Double.NaN);
-//					isNumeric = false;
-//				}
 			}
             
             // If column is not numeric, setup levels and store level indices 
@@ -271,12 +261,16 @@ public class DelimitedTableReader implements TableReader
             }
 		}
 
+		// populates meta-data
 		table.setColumnNames(colNames);
-		
 		if (readRowNames)
 		{
 			table.setRowNames(rowNames.toArray(new String[0]));
 		}
+		
+		// also set the name of the table to the name of the file
+		table.setName(file.getName());
+		
 		return table;
 	}
 }
