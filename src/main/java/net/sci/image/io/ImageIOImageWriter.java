@@ -22,18 +22,21 @@ import net.sci.image.Image;
  */
 public class ImageIOImageWriter implements ImageWriter
 {
+    File file = null;
+    
 	/**
 	 * public constructor.
 	 */
-	public ImageIOImageWriter()
+	public ImageIOImageWriter( File file)
 	{
+	    this.file = file;
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sci.image.io.ImageWriter#writeImage(net.sci.image.Image, java.io.File)
+	 * @see net.sci.image.io.ImageWriter#writeImage(net.sci.image.Image)
 	 */
 	@Override
-	public void writeImage(Image image, File file) throws IOException
+	public void writeImage(Image image) throws IOException
 	{
 		Array<?> array = image.getData();
 		if (array.dimensionality() > 2)
