@@ -7,7 +7,6 @@ package net.sci.image.binary.distmap;
 import static java.lang.Math.min;
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.BinaryArray2D;
 import net.sci.array.scalar.Float32Array2D;
@@ -57,16 +56,6 @@ public class ChamferDistanceTransform2DFloat extends AlgoStub implements ArrayOp
 		this.normalizeMap = normalize;
 	}
 
-	@Override
-	public <T> Array<?> process(Array<T> array)
-	{
-		if (array instanceof BinaryArray2D)
-		{
-			return process2d((BinaryArray2D) array);
-		}
-		throw new RuntimeException("Unable to process array of class " + array.getClass());
-	}
-	
 	public Float32Array2D process2d(BinaryArray2D array)
 	{
 		// size of image

@@ -22,14 +22,18 @@
 package net.sci.image.binary.distmap;
 
 import net.sci.algo.Algo;
+import net.sci.array.Array;
+import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray3D;
 
 
 /**
  * Interface for computing distance maps from binary 3D images.
  */
-public interface DistanceTransform3D extends Algo
+public interface DistanceTransform3D extends Algo, ArrayOperator
 {
 	/**
 	 * Computes the distance map from a 3D binary image. 
@@ -43,4 +47,37 @@ public interface DistanceTransform3D extends Algo
 	 * </ul>
 	 */
 	public ScalarArray3D<?> process3d(BinaryArray3D array);
+
+	/**
+     * Process the input scalar array and return the result in a new array.
+     * 
+     * The input array must be an instance of BinaryArray.
+     * 
+     * @param array
+     *            the input array
+     * @return the operator result as a new instance of ScalarArray
+     * @throws IllegalArgumentException
+     *             if the input array is not an instance of BinaryArray3D
+     */
+    @Override
+    public default <T> ScalarArray<? extends Scalar> process(Array<T> array)
+    {
+        if (!(array instanceof BinaryArray3D))
+        {
+            throw new IllegalArgumentException("Requires a 3D binary array as input");
+        }
+        
+        return process3d((BinaryArray3D) array);
+    }
+
+    /**
+     * Override default behavior to check if input array is binary.
+     * 
+     * @return true if input array is binary and 3D
+     */
+    @Override
+    public default boolean canProcess(Array<?> array)
+    {
+        return array instanceof BinaryArray3D;
+    }
 }

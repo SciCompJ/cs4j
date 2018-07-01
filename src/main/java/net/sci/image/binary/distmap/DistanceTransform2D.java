@@ -22,14 +22,18 @@
 package net.sci.image.binary.distmap;
 
 import net.sci.algo.Algo;
+import net.sci.array.Array;
+import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.Scalar;
+import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 
 
 /**
  * Interface for computing distance maps from binary 2D images.
  */
-public interface DistanceTransform2D extends Algo
+public interface DistanceTransform2D extends Algo, ArrayOperator
 {
 	/**
 	 * Computes the distance map from a 2D binary image. 
@@ -43,4 +47,37 @@ public interface DistanceTransform2D extends Algo
 	 * </ul>
 	 */
 	public ScalarArray2D<?> process2d(BinaryArray2D array);
+	
+    /**
+     * Process the input scalar array and return the result in a new array.
+     * 
+     * The input array must be an instance of BinaryArray.
+     * 
+     * @param array
+     *            the input array
+     * @return the operator result as a new instance of ScalarArray
+     * @throws IllegalArgumentException
+     *             if the input array is not an instance of BinaryArray
+     */
+    @Override
+    public default <T> ScalarArray<? extends Scalar> process(Array<T> array)
+    {
+        if (!(array instanceof BinaryArray2D))
+        {
+            throw new IllegalArgumentException("Requires a binary array as input");
+        }
+        
+        return process2d((BinaryArray2D) array);
+    }
+
+    /**
+     * Override default behavior to check if input array is binary.
+     * 
+     * @return true if input array is binary
+     */
+    @Override
+    public default boolean canProcess(Array<?> array)
+    {
+        return array instanceof BinaryArray2D;
+    }
 }
