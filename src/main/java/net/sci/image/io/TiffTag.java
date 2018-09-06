@@ -24,14 +24,6 @@ public class TiffTag
 {
 	// =============================================================
 	// Static constants
-
-	// Entry type for TIFF Image File Directories
-	public static final int BYTE_TYPE = 1;
-	public static final int ASCII_TYPE = 2;
-	public static final int SHORT_TYPE = 3;
-	public static final int LONG_TYPE = 4;
-	public static final int RATIONAL_TYPE = 5;
-
 	/**
 	 * The type of data stored by a tag.
 	 */
@@ -143,15 +135,15 @@ public class TiffTag
 				{
 					// Scalar type images (grayscale)
 					if (value == 8)
-						info.fileType = PixelType.GRAY8;
+						info.pixelType = PixelType.GRAY8;
 					else if (value == 16)
-						info.fileType = PixelType.GRAY16_UNSIGNED;
+						info.pixelType = PixelType.GRAY16_UNSIGNED;
 					else if (value == 32)
-						info.fileType = PixelType.GRAY32_FLOAT;
+						info.pixelType = PixelType.GRAY32_FLOAT;
 					else if (value == 12)
-						info.fileType = PixelType.GRAY12_UNSIGNED;
+						info.pixelType = PixelType.GRAY12_UNSIGNED;
 					else if (value == 1)
-						info.fileType = PixelType.BITMAP;
+						info.pixelType = PixelType.BITMAP;
 					else
 						throw new IOException(
 								"Unsupported BitsPerSample: " + value);
@@ -163,10 +155,10 @@ public class TiffTag
 
 					if (bitDepth == 8)
 					{
-						info.fileType = PixelType.RGB;
+						info.pixelType = PixelType.RGB;
 					} else if (bitDepth == 16)
 					{
-						info.fileType = PixelType.RGB48;
+						info.pixelType = PixelType.RGB48;
 					} else
 					{
 						throw new IOException(
@@ -237,12 +229,18 @@ public class TiffTag
 		{
 			public void process(TiffFileInfo info, BinaryDataReader dataReader)
 			{
-				info.samplesPerPixel = value;
-				if (value == 3 && info.fileType != PixelType.RGB48)
-					info.fileType = info.fileType == PixelType.GRAY16_UNSIGNED ? PixelType.RGB48
-							: PixelType.RGB;
-				else if (value == 4 && info.fileType == PixelType.GRAY8)
-					info.fileType = PixelType.ARGB;
+			    // Eventually update pixel type value
+				if (value == 3 && info.pixelType != PixelType.RGB48)
+				{
+					if (info.pixelType == PixelType.GRAY16_UNSIGNED) 
+					    info.pixelType = PixelType.RGB48;
+					else
+					    info.pixelType = PixelType.RGB;
+				}
+				else if (value == 4 && info.pixelType == PixelType.GRAY8)
+				{
+					info.pixelType = PixelType.ARGB;
+				}
 			}
 		});
 
@@ -296,16 +294,16 @@ public class TiffTag
 		{
 			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
 			{
-				if (value == 2 && info.fileType == PixelType.RGB48)
-					info.fileType = PixelType.GRAY16_UNSIGNED;
-				else if (value == 2 && info.fileType == PixelType.RGB)
-					info.fileType = PixelType.RGB_PLANAR;
-				else if (value == 1 && info.samplesPerPixel == 4)
-					info.fileType = PixelType.ARGB;
+			    if (value == 2 && info.pixelType == PixelType.RGB48)
+					info.pixelType = PixelType.GRAY16_UNSIGNED;
+				else if (value == 2 && info.pixelType == PixelType.RGB)
+					info.pixelType = PixelType.RGB_PLANAR;
+				else if (value == 1 && info.pixelType.getSampleNumber() == 4)
+					info.pixelType = PixelType.ARGB;
 				else if (value != 2
-						&& !((info.samplesPerPixel == 1) || (info.samplesPerPixel == 3)))
+						&& !((info.pixelType.getSampleNumber() == 1) || (info.pixelType.getSampleNumber() == 3)))
 				{
-					String msg = "Unsupported SamplesPerPixel: " + info.samplesPerPixel;
+					String msg = "Unsupported SamplesPerPixel: " + info.pixelType.getSampleNumber();
 					throw new IOException(msg);
 				}
 			}
@@ -345,7 +343,7 @@ public class TiffTag
 		{
 			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
 			{
-				int lutLength = (int) Math.pow(2, 8 * info.bytesPerPixel);
+				int lutLength = (int) Math.pow(2, 8 * info.pixelType.getByteNumber());
 				int expLength = 3 * lutLength;
 				if (count != expLength)
 				{

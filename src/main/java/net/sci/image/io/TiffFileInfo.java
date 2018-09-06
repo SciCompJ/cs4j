@@ -11,71 +11,116 @@ import java.util.ArrayList;
  */
 public class TiffFileInfo 
 {
-	public enum PixelType 
+    // =============================================================
+    // Public enumerations
+
+    public enum PixelType 
 	{
+        // ---------------------------------------------------------
+        // Constant list
+
         /** 8-bit unsigned integer (0-255). */
-        GRAY8,
+        GRAY8(1, 1, false),
         
         /**
          * 16-bit signed integer (-32768-32767). Imported signed images are
          * converted to unsigned by adding 32768.
          */
-        GRAY16_SIGNED,
+        GRAY16_SIGNED(2, 1, false),
         
 		/** 16-bit unsigned integer (0-65535). */
-		GRAY16_UNSIGNED,
+		GRAY16_UNSIGNED(2, 1, false),
 		/**
 		 * 32-bit signed integer. Imported 32-bit integer images are converted
 		 * to floating-point.
 		 */
-		GRAY32_INT,
+		GRAY32_INT(4, 1, false),
 
 		/** 32-bit floating-point. */
-		GRAY32_FLOAT,
+		GRAY32_FLOAT(4, 1, false),
 		
 		/** 8-bit unsigned integer with color lookup table. */
-		COLOR8,
+		COLOR8(1, 1, true),
 		
 		/** 24-bit interleaved RGB. Import/export only. */
-		RGB,
+		RGB(3, 3, true),
 		
 		/** 24-bit planer RGB. Import only. */
-		RGB_PLANAR,
+		RGB_PLANAR(3, 3, true),
 		
 		/** 1-bit black and white. Import only. */
-		BITMAP, 
+		BITMAP(1, 1, false), 
 		
 		/** 32-bit interleaved ARGB. Import only. */
-		ARGB, 
+		ARGB(4, 4, true), 
 		
 		/** 24-bit interleaved BGR. Import only. */
-		BGR,
+		BGR(3, 3, true),
 		/**
 		 * 32-bit unsigned integer. Imported 32-bit integer images are converted
 		 * to floating-point.
 		 */
-		GRAY32_UNSIGNED,
+		GRAY32_UNSIGNED(4, 1, false),
 		
 		/** 48-bit interleaved RGB. */
-		RGB48,
+		RGB48(6, 3, true),
 		
 		/** 12-bit unsigned integer (0-4095). Import only. */
-		GRAY12_UNSIGNED, 
+		GRAY12_UNSIGNED(2, 1, false), 
 		
 		/** 24-bit unsigned integer. Import only. */
-		GRAY24_UNSIGNED, 
+		GRAY24_UNSIGNED(3, 1, false), 
 		
 		/** 32-bit interleaved BARG (MCID). Import only. */
-		BARG, 
+		BARG(4, 4, true), 
 		
 		/** 64-bit floating-point. Import only.*/
-		GRAY64_FLOAT, 
+		GRAY64_FLOAT(8, 1, false), 
 		
 		/** 48-bit planar RGB. Import only. */
-		RGB48_PLANAR, 
+		RGB48_PLANAR(6, 3, true), 
 		
 		/** 32-bit interleaved ABGR. Import only. */
-		ABGR
+		ABGR(4, 4, true);
+		
+        
+        // ---------------------------------------------------------
+        // enumeration variables
+        
+        private int byteNumber;
+        
+        private int sampleNumber;
+        
+        private boolean color;
+        
+        
+        // ---------------------------------------------------------
+        // Constructors
+
+        private PixelType(int byteNumber, int sampleNumber, boolean color)
+        {
+            this.byteNumber = byteNumber;
+            this.sampleNumber = sampleNumber;
+            this.color = color;
+        }
+
+        // ---------------------------------------------------------
+        // Methods
+        
+        public int getByteNumber() 
+        {
+            return this.byteNumber;
+        }
+
+        public int getSampleNumber() 
+        {
+            return this.sampleNumber;
+        }
+
+        public boolean isColor()
+        {
+            return this.color;
+        }
 	};
 	
 	// Compression modes
@@ -181,6 +226,10 @@ public class TiffFileInfo
 		}
 	};
 	
+	
+    // =============================================================
+    // Class variables
+	
 	/**
 	 * Size of the image
 	 */
@@ -211,9 +260,8 @@ public class TiffFileInfo
 	int[] stripLengths;
 	int rowsPerStrip;
 	
-	PixelType fileType;
-	int samplesPerPixel;
-	int bytesPerPixel = 1;
+	PixelType pixelType;
+//	int samplesPerPixel;
 	
 	boolean whiteIsZero; 
 	int photometricInterpretation;
@@ -225,39 +273,8 @@ public class TiffFileInfo
 	ArrayList<TiffTag> tags = new ArrayList<TiffTag>();
 	
 	
-    /** @return the number of bytes used per pixel. */
-	public int getBytesPerPixel()
-	{
-	    // TODO: include this information into Type enum
-		switch (fileType) {
-		case GRAY8:
-		case COLOR8:
-		case BITMAP:
-			return 1;
-		case GRAY16_SIGNED:
-		case GRAY16_UNSIGNED:
-			return 2;
-		case RGB:
-		case RGB_PLANAR:
-		case BGR:
-			return 3;
-		case GRAY32_INT:
-		case GRAY32_UNSIGNED:
-		case GRAY32_FLOAT:
-		case ARGB:
-		case GRAY24_UNSIGNED:
-		case BARG:
-		case ABGR:
-			return 4;
-		case RGB48:
-		case RGB48_PLANAR:
-			return 6;
-		case GRAY64_FLOAT:
-			return 8;
-		default:
-			return 0;
-		}
-	}
+    // =============================================================
+    // Methods
 
 	/**
 	 * Display the content of the image file directory to the console.  
@@ -277,15 +294,15 @@ public class TiffFileInfo
 	public void print(PrintStream out)
 	{
 		out.println("--- Tiff File Info Description ---");
-		out.println("file type: " + fileType);
+		out.println("file type: " + pixelType);
 		out.println("size0: " + width);
 		out.println("size1: " + height);
 //		out.println("intel byte order: " + intelByteOrder);
 		out.println("compression: " + compression);
 //		out.println("offset: " + offset);
 
-		out.println("samples per pixel: " + samplesPerPixel);
-		out.println("bytes per pixel: " + bytesPerPixel);
+		out.println("samples per pixel: " + pixelType.sampleNumber);
+		out.println("bytes per pixel: " + pixelType.byteNumber);
 		out.println("Photometric intrepretation: " + photometricInterpretation);
 
 		if (imageDescription != null) {
@@ -303,41 +320,5 @@ public class TiffFileInfo
 		out.println();
 		
 		out.println("rowsPerStrip: " + rowsPerStrip);
-	}
-	
-	public String getTagName(int tag) {
-//		// tags
-//		public static final int NEW_SUBFILE_TYPE = 254;
-//		public static final int IMAGE_WIDTH = 256;
-//		public static final int IMAGE_LENGTH = 257;
-//		public static final int BITS_PER_SAMPLE = 258;
-//		public static final int COMPRESSION = 259;
-//		public static final int PHOTO_INTERP = 262;
-//		public static final int IMAGE_DESCRIPTION = 270;
-//		public static final int STRIP_OFFSETS = 273;
-//		public static final int ORIENTATION = 274;
-//		public static final int SAMPLES_PER_PIXEL = 277;
-//		public static final int ROWS_PER_STRIP = 278;
-//		public static final int STRIP_BYTE_COUNT = 279;
-//		public static final int X_RESOLUTION = 282;
-//		public static final int Y_RESOLUTION = 283;
-//		public static final int PLANAR_CONFIGURATION = 284;
-//		public static final int RESOLUTION_UNIT = 296;
-//		public static final int SOFTWARE = 305;
-//		public static final int DATE_TIME = 306;
-//		public static final int ARTEST = 315;
-//		public static final int HOST_COMPUTER = 316;
-//		public static final int PREDICTOR = 317;
-//		public static final int COLOR_MAP = 320;
-//		public static final int TILE_WIDTH = 322;
-//		public static final int SAMPLE_FORMAT = 339;
-//		public static final int JPEG_TABLES = 347;
-//		public static final int METAMORPH1 = 33628;
-//		public static final int METAMORPH2 = 33629;
-//		public static final int IPLAB = 34122;
-//		public static final int NIH_IMAGE_HDR = 43314;
-//		public static final int META_DATA_BYTE_COUNTS = 50838; // private tag registered with Adobe
-//		public static final int META_DATA = 50839; // private tag registered with Adobe
-		return "unknown";
 	}
 }

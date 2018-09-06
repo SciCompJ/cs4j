@@ -430,7 +430,7 @@ public class Image
         ImageAxis axes[] = new ImageAxis[nd];
         for (int d = 0; d < nd; d++)
         {
-            axes[d] = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPATIAL, resol[d], 0.0, unitName);
+            axes[d] = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPACE, resol[d], 0.0, unitName);
         }
         
         this.setAxes(axes);

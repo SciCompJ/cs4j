@@ -363,15 +363,15 @@ public class TiffImageReader implements ImageReader
 			info.tags.add(tag);
 		}
 
-		// Adjust the number of bytes per pixel for some specific formats 
-		switch (info.fileType)
-		{
-		case GRAY32_INT:
-		case GRAY32_FLOAT:
-			info.bytesPerPixel = 4;
-			break;
-		default:
-		}
+//		// Adjust the number of bytes per pixel for some specific formats 
+//		switch (info.fileType)
+//		{
+//		case GRAY32_INT:
+//		case GRAY32_FLOAT:
+//			info.bytesPerPixel = 4;
+//			break;
+//		default:
+//		}
 
 		return info;
 	}
@@ -420,7 +420,7 @@ public class TiffImageReader implements ImageReader
 		
 		// Compute size of buffer buffer for each plane
 		int pixelsPerPlane = sizeX * sizeY;
-		int bytesPerPlane  = pixelsPerPlane * info0.getBytesPerPixel();
+		int bytesPerPlane  = pixelsPerPlane * info0.pixelType.getByteNumber();
 		
 		// compute total number of expected bytes
 		int nBytes = bytesPerPlane * sizeZ;
@@ -431,7 +431,7 @@ public class TiffImageReader implements ImageReader
 		{
 		    System.out.println("Large array! Switch to sliced array...");
 		    // check type limit
-		    if(info0.fileType != TiffFileInfo.PixelType.GRAY8) 
+		    if(info0.pixelType != TiffFileInfo.PixelType.GRAY8) 
 		    {
 		        throw new RuntimeException("Can only process UInt8 arrays");
 		    }
@@ -480,7 +480,7 @@ public class TiffImageReader implements ImageReader
 		}
 
 		// Transform raw buffer into interpreted buffer
-		switch (info0.fileType) {
+		switch (info0.pixelType) {
 		case GRAY8:
 		case COLOR8:
 		case BITMAP:
@@ -496,7 +496,7 @@ public class TiffImageReader implements ImageReader
 
 		default:
 			throw new IOException("Can not read stack with data type "
-					+ info0.fileType);
+					+ info0.pixelType);
 		}
 	}
 	
@@ -536,7 +536,7 @@ public class TiffImageReader implements ImageReader
 		int nPixels = info.width * info.height;
 
 		// compute size of buffer
-		int nBytes = nPixels * info.getBytesPerPixel();
+		int nBytes = nPixels * info.pixelType.getByteNumber();
 
 		// Read the byte array
 		byte[] buffer = new byte[nBytes];
@@ -551,7 +551,7 @@ public class TiffImageReader implements ImageReader
 
 		
 		// Transform raw buffer into interpreted buffer
-		switch (info.fileType) {
+		switch (info.pixelType) {
 		case GRAY8:
 		case COLOR8:
 		case BITMAP:
@@ -673,7 +673,7 @@ public class TiffImageReader implements ImageReader
 //				imp = new ImagePlus(fi.fileName, ip);
 //				break;
 		default:
-			throw new IOException("Can not process file info of type " + info.fileType);
+			throw new IOException("Can not process file info of type " + info.pixelType);
 		}
 	}
 
