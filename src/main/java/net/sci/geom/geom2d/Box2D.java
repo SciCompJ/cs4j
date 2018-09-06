@@ -14,7 +14,7 @@ import net.sci.geom.geom2d.polygon.Polygon2D;
  * @author dlegland
  *
  */
-public class Box2D implements Box
+public class Box2D implements Box, Geometry2D
 {
     // ===================================================================
     // class variables
@@ -229,5 +229,25 @@ public class Box2D implements Box
         if (Math.abs(box.ymin - ymin) > eps) return false;
         if (Math.abs(box.ymax - ymax) > eps) return false;
         return true;
+    }
+
+    @Override
+    public boolean contains(Point2D point, double eps)
+    {
+        if (point.x < xmin || point.x > xmax) return false;
+        if (point.y < ymin || point.y > ymax) return false;
+        return true;
+    }
+
+    @Override
+    public double distance(double x, double y)
+    {
+        return getRectangle().distance(x, y);
+    }
+
+    @Override
+    public Box2D boundingBox()
+    {
+        return this;
     }
 }
