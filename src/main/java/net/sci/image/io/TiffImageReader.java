@@ -30,6 +30,7 @@ import net.sci.array.scalar.UInt8Array;
 import net.sci.image.DefaultColorMap;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
+import net.sci.image.NumericalAxis;
 
 /**
  * Provides methods for reading Image files in TIFF Format.
@@ -191,22 +192,22 @@ public class TiffImageReader implements ImageReader
 
 		// Create new Image
 		Image image = new Image(data);
+        image.tiffTags = info.tags;
 		
-		// Setup spatial calibration
-		ImageAxis[] axes = new ImageAxis[image.getDimension()];
-        axes[0] = new ImageAxis.X(info.pixelWidth, 0, info.unit);
-        axes[1] = new ImageAxis.Y(info.pixelHeight, 0, info.unit);
-		image.setAxes(axes);
+        // setup the file related to the image
+        image.setFilePath(this.filePath);
+
+        // Setup spatial calibration
+		setupSpatialCalibration(image, info);
 		
-		// Add Image meta-data
+		// setup LUT
 		if (info.lut != null)
 		{
 			image.setColorMap(new DefaultColorMap(info.lut));
 		}
-		image.tiffTags = info.tags;
 		
-		// setup the file related to the image
-		image.setFilePath(this.filePath);
+		// Check if ImageJ Tags exist within image
+		processImageJTags(image, info);
 		
 		return image;
 	}
@@ -255,6 +256,65 @@ public class TiffImageReader implements ImageReader
 		
 		// if all items declare the same size, we can load a stack
 		return true;
+	}
+	
+	private void setupSpatialCalibration(Image image, TiffFileInfo info)
+	{
+	    ImageAxis[] axes = new ImageAxis[image.getDimension()];
+	    axes[0] = new ImageAxis.X(info.pixelWidth, 0, info.unit);
+	    axes[1] = new ImageAxis.Y(info.pixelHeight, 0, info.unit);
+	    image.setAxes(axes);
+	}
+	
+	private void processImageJTags(Image image, TiffFileInfo info)
+	{
+	    // Get the  description tag, or null if not initialized
+	    TiffTag tag = info.tags.get(270);
+	    if (tag == null)
+	    {
+	        return;
+	    }
+
+	    // extract description string
+	    String description = (String) tag.content; 
+	    if (!description.startsWith("ImageJ"))
+	    {
+	        return;
+	    }
+
+	    // iterate over the different tokens stored in description
+	    String[] items = description.split("\n");
+	    for (String item : items)
+	    {
+	        // split key and value, separated by "="
+	        String[] tokens = item.split("=");
+	        if (tokens.length < 2)
+	        {
+	            continue;
+	        }
+            String key = tokens[0];
+            String valueString = tokens[1];
+            
+            if ("unit".compareToIgnoreCase(key) == 0)
+            {
+                for (ImageAxis axis : image.getAxes())
+                {
+                    if (axis instanceof NumericalAxis)
+                    {
+                        ((NumericalAxis) axis).setUnitName(valueString);
+                    }
+                        
+                }
+            }
+            else if ("spacing".compareToIgnoreCase(key) == 0)
+            {
+                ImageAxis zAxis = image.getAxis(2);
+                if (zAxis instanceof NumericalAxis)
+                {
+                    ((NumericalAxis) zAxis).setSpacing(Double.parseDouble(valueString));
+                }
+            }
+	    }
 	}
 	
     /**
@@ -374,7 +434,7 @@ public class TiffImageReader implements ImageReader
 			// call the initialization procedure specific to tag
 			tag.process(info, this.dataReader);
 
-			info.tags.add(tag);
+			info.tags.put(tagCode, tag);
 		}
 
 //		// Adjust the number of bytes per pixel for some specific formats 

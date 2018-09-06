@@ -33,7 +33,7 @@ public interface ImageAxis
     {
         public X()
         {
-            this(1.0, 0.0);
+            this(1.0, 0.0, "");
         }
         
         public X(double spacing, double origin)
@@ -54,7 +54,7 @@ public interface ImageAxis
     {
         public Y()
         {
-            this(1.0, 0.0);
+            this(1.0, 0.0, "");
         }
         
         public Y(double spacing, double origin)
@@ -75,7 +75,7 @@ public interface ImageAxis
     {
         public Z()
         {
-            this(1.0, 0.0);
+            this(1.0, 0.0, "");
         }
         
         public Z(double spacing, double origin)
@@ -112,7 +112,7 @@ public interface ImageAxis
     {
         public T()
         {
-            this(1.0, 0.0);
+            this(1.0, 0.0, "");
         }
         
         public T(double spacing, double origin)

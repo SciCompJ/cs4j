@@ -6,7 +6,8 @@ package net.sci.image;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
@@ -143,8 +144,11 @@ public class Image
 	 */
 	Color backgroundColor = RGB8.BLACK;
 	
-	//TODO: find a better way to store meta data
-	public ArrayList<TiffTag> tiffTags = new ArrayList<>(0);
+	// TODO: find a better way to store meta data
+    /**
+     * The optional list of TIFF tags read from file, indexed by Tiff Tag code
+     */
+	public Map<Integer, TiffTag> tiffTags = new TreeMap<Integer, TiffTag>();
 	
 
 	// =============================================================
@@ -405,6 +409,28 @@ public class Image
         this.axes = axes;
     }
 
+    /**
+     * @param dim
+     *            the axis dimension
+     * @return the axis at the specified dimension
+     */
+    public ImageAxis getAxis(int dim)
+    {
+        return axes[dim];
+    }
+
+    /**
+     * @param dim
+     *            the axis index
+     * @param axis
+     *            the axis to set
+     */
+    public void setAxis(int dim, ImageAxis axis)
+    {
+        this.axes[dim] = axis;
+    }
+
+    
     /**
      * Creates default numerical axes for each image dimension.
      */

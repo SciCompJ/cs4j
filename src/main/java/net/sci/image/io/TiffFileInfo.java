@@ -4,7 +4,8 @@
 package net.sci.image.io;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Stores all information that are necessary to load an image from a TIFF file. 
@@ -270,7 +271,8 @@ public class TiffFileInfo
 	/**
 	 * A list of TiffTag for the additional tags that may be provided in files.
 	 */
-	ArrayList<TiffTag> tags = new ArrayList<TiffTag>();
+    Map<Integer,TiffTag> tags = new TreeMap<Integer,TiffTag>();
+//    ArrayList<TiffTag> tags = new ArrayList<TiffTag>();
 	
 	
     // =============================================================

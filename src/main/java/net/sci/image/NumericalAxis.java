@@ -109,6 +109,11 @@ public class NumericalAxis implements ImageAxis
     // =============================================================
     // Getters / setters
 
+    public Type getType()
+    {
+        return this.type;
+    }
+    
     /**
      * @return the name
      */
@@ -117,9 +122,9 @@ public class NumericalAxis implements ImageAxis
         return name;
     }
 
-    public Type getType()
+    public void setName(String name)
     {
-        return this.type;
+        this.name = name;
     }
     
     public String getUnitName()
@@ -127,19 +132,38 @@ public class NumericalAxis implements ImageAxis
         return unitName;
     }
     
+    public void setUnitName(String unitName)
+    {
+        this.unitName = unitName;
+    }
+    
     public double getSpacing()
     {
         return spacing;
     }
 
+    public void setSpacing(double spacing)
+    {
+        this.spacing = spacing;
+    }
+    
     public double getOrigin()
     {
         return origin;
     }
 
+    public void setOrigin(double origin)
+    {
+        this.origin = origin;
+    }
+    
+    
+    // =============================================================
+    // Getters / setters
+    
     @Override
     public String toString()
     {
-        return String.format("NumericalAxis(Type=%s, Spacing=%f, origin=%f, unit=%s)", this.type, this.spacing, this.origin, this.unitName);
+        return String.format("NumericalAxis(name=%s, type=%s, spacing=%f, origin=%f, unit=%s)", this.name, this.type, this.spacing, this.origin, this.unitName);
     }
 }
