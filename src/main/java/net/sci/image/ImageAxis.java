@@ -12,11 +12,11 @@ package net.sci.image;
 public interface ImageAxis
 {
     // =============================================================
-    // Enuemrations
+    // Enumerations
 
     enum Type 
     {
-        SPATIAL, 
+        SPACE, 
         CHANNEL, 
         TIME, 
         WAVELENGTH,
@@ -43,7 +43,7 @@ public interface ImageAxis
         
         public X(double spacing, double origin, String unitName)
         {
-            super("X-Axis", Type.SPATIAL, spacing, origin, unitName);
+            super("X-Axis", Type.SPACE, spacing, origin, unitName);
         }
     }
     
@@ -64,7 +64,7 @@ public interface ImageAxis
         
         public Y(double spacing, double origin, String unitName)
         {
-            super("Y-Axis", Type.SPATIAL, spacing, origin, unitName);
+            super("Y-Axis", Type.SPACE, spacing, origin, unitName);
         }
     }
     
@@ -85,7 +85,7 @@ public interface ImageAxis
 
         public Z(double spacing, double origin, String unitName)
         {
-            super("Z-Axis", Type.SPATIAL, spacing, origin, unitName);
+            super("Z-Axis", Type.SPACE, spacing, origin, unitName);
         }
     }
     

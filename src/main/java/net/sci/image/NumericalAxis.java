@@ -136,4 +136,10 @@ public class NumericalAxis implements ImageAxis
     {
         return origin;
     }
+
+    @Override
+    public String toString()
+    {
+        return String.format("NumericalAxis(Type=%s, Spacing=%f, origin=%f, unit=%s)", this.type, this.spacing, this.origin, this.unitName);
+    }
 }

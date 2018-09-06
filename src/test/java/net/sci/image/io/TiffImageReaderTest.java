@@ -2,6 +2,7 @@ package net.sci.image.io;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ import net.sci.array.color.RGB16Array2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt16Array2D;
 import net.sci.image.Image;
+import net.sci.image.ImageAxis;
 
 public class TiffImageReaderTest
 {
@@ -167,4 +169,28 @@ public class TiffImageReaderTest
         assertEquals(1673, rgb.getSample(2));
     }
 
+    /**
+     * Read a TIFF image containing spatial calibration info.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testReadImage_SpatialCalibration() throws IOException
+    {
+        // image size 324x238
+        String fileName = getClass().getResource("/files/16c_Col0_PFS_DAPI_015_C2_cropf_z054.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(2, image.getDimension());
+        assertEquals(349, image.getSize(0));
+        assertEquals(372, image.getSize(1));
+
+        ImageAxis[] axes = image.getAxes();
+        assertEquals(2, axes.length);
+        
+        assertTrue(axes[0].getType() == ImageAxis.Type.SPACE);
+        assertTrue(axes[1].getType() == ImageAxis.Type.SPACE);
+    }
 }

@@ -29,6 +29,7 @@ import net.sci.array.scalar.SlicedUInt8Array3D;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.image.DefaultColorMap;
 import net.sci.image.Image;
+import net.sci.image.ImageAxis;
 
 /**
  * Provides methods for reading Image files in TIFF Format.
@@ -182,30 +183,27 @@ public class TiffImageReader implements ImageReader
 			throw new RuntimeException("Could not read any meta-information from file");
 		}
 
-		
 		// Read File information of the first image stored in the file
-		TiffFileInfo info0 = this.fileInfoList.get(0);
+		TiffFileInfo info = this.fileInfoList.get(0);
 
 		// Read image data
-		Array<?> data;
-		if (isStackImage())
-		{
-			data = readImageStack();
-		}
-		else
-		{
-			data = readImageData(info0);
-		}
+		Array<?> data = readImageData();
 
 		// Create new Image
 		Image image = new Image(data);
 		
+		// Setup spatial calibration
+		ImageAxis[] axes = new ImageAxis[image.getDimension()];
+        axes[0] = new ImageAxis.X(info.pixelWidth, 0, info.unit);
+        axes[1] = new ImageAxis.Y(info.pixelHeight, 0, info.unit);
+		image.setAxes(axes);
+		
 		// Add Image meta-data
-		if (info0.lut != null)
+		if (info.lut != null)
 		{
-			image.setColorMap(new DefaultColorMap(info0.lut));
+			image.setColorMap(new DefaultColorMap(info.lut));
 		}
-		image.tiffTags = info0.tags;
+		image.tiffTags = info.tags;
 		
 		// setup the file related to the image
 		image.setFilePath(this.filePath);
@@ -213,6 +211,22 @@ public class TiffImageReader implements ImageReader
 		return image;
 	}
 
+	private Array<?> readImageData() throws IOException
+	{
+	    // Read image data
+        if (isStackImage())
+        {
+            // Read all images and return a 3D array
+            return readImageStack();
+        }
+        else
+        {
+            // Read File information of the first image stored in the file
+            TiffFileInfo info0 = this.fileInfoList.get(0);
+            return readImageData(info0);
+        }
+	}
+	
     /**
      * @return true if the list of FileInfo stored within this reader can be
      *         seen as a 3D stack
