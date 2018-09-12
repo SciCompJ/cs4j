@@ -10,7 +10,7 @@ import net.sci.array.Array2D;
  * @author dlegland
  *
  */
-public class BufferedGenericArray2D<T> extends Array2D<T> implements GenericArray<T>
+public class BufferedGenericArray2D<T> extends GenericArray2D<T>
 {
     // =============================================================
     // Class fields
@@ -90,24 +90,6 @@ public class BufferedGenericArray2D<T> extends Array2D<T> implements GenericArra
     {
         int index = x + y * this.size0;
         this.buffer[index] = value;
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#getValue(int, int)
-     */
-    @Override
-    public double getValue(int x, int y)
-    {
-        throw new RuntimeException("Unimplemented operation");
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#setValue(int, int, double)
-     */
-    @Override
-    public void setValue(int x, int y, double value)
-    {
-        throw new RuntimeException("Unimplemented operation");
     }
 
 

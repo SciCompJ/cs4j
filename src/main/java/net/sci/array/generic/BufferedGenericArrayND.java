@@ -4,7 +4,6 @@
 package net.sci.array.generic;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayND;
 
 
 /**
@@ -13,7 +12,7 @@ import net.sci.array.ArrayND;
  * @author dlegland
  *
  */
-public class BufferedGenericArrayND<T> extends ArrayND<T> implements GenericArray<T>
+public class BufferedGenericArrayND<T> extends GenericArrayND<T>
 {
 	// =============================================================
 	// Class fields
@@ -100,18 +99,6 @@ public class BufferedGenericArrayND<T> extends ArrayND<T> implements GenericArra
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = (T) value;
-	}
-
-	@Override
-	public double getValue(int[] pos)
-	{
-	    throw new RuntimeException("Unimplemented operation");
-	}
-
-	@Override
-	public void setValue(int[] pos, double value)
-	{
-	    throw new RuntimeException("Unimplemented operation");
 	}
 	
     @SuppressWarnings("unchecked")

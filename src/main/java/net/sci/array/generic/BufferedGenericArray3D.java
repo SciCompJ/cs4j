@@ -10,7 +10,7 @@ import net.sci.array.Array3D;
  * @author dlegland
  *
  */
-public class BufferedGenericArray3D<T> extends Array3D<T> implements GenericArray<T>
+public class BufferedGenericArray3D<T> extends GenericArray3D<T>
 {
     // =============================================================
     // Class fields
@@ -91,25 +91,6 @@ public class BufferedGenericArray3D<T> extends Array3D<T> implements GenericArra
         int index = x + this.size0 * (y + this.size1 * z);
         this.buffer[index] = value;
     }
-
-    /* (non-Javadoc)
-     * @see net.sci.array.data.Array3D#getValue(int, int, int)
-     */
-    @Override
-    public double getValue(int x, int y, int z)
-    {
-        throw new RuntimeException("Unimplemented operation");
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.array.data.Array3D#setValue(int, int, int, double)
-     */
-    @Override
-    public void setValue(int x, int y, int z, double value)
-    {
-        throw new RuntimeException("Unimplemented operation");
-    }
-
 
 
     // =============================================================
