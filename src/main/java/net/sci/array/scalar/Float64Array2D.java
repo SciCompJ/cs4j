@@ -66,7 +66,19 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
 		return Float64Array.create(dims);
 	}
 
-	@Override
-	public abstract Float64Array2D duplicate();
+    @Override
+    public Float64Array2D duplicate()
+    {
+        Float64Array2D res = Float64Array2D.create(size0, size1);
+        for (int y = 0; y < size1; y++)
+        {
+            for (int x = 0; x < size0; x++)
+            {
+                res.setValue(x, y, getValue(x, y));
+            }
+        }
+        return res;
+    }
+
 
 }

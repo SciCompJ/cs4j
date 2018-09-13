@@ -82,6 +82,20 @@ public interface Float32Array extends ScalarArray<Float32>
 	}
 	
 
+    // =============================================================
+    // New methods
+	
+    public default float getFloat(int[] pos)
+    {
+        return (float) getValue(pos);
+    }
+
+    public default void setFloat(int[] pos, float value)
+    {
+        setValue(pos, value);
+    }
+
+    
 	// =============================================================
 	// Specialization of Array interface
 
@@ -153,8 +167,8 @@ public interface Float32Array extends ScalarArray<Float32>
 			this.array = array;
 		}
 
-		
-		// =============================================================
+
+	    // =============================================================
 		// Specialization of the Array interface
 
 		@Override

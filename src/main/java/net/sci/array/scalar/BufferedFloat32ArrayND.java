@@ -53,18 +53,20 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 		this.buffer = buffer;
 	}
 
+    // =============================================================
+    // Specialization of FloatArray3D
 
-	// =============================================================
-	// Implementation of the Array interface
-	
-	@Override
-	public Float32Array duplicate()
-	{
-		int n = buffer.length;
-		float[] buffer2 = new float[n];
-		System.arraycopy(this.buffer, 0, buffer2, 0, n);
-		return new BufferedFloat32ArrayND(sizes, buffer2);
-	}
+    public float getFloat(int[] pos)
+    {
+        int index = subsToInd(pos);
+        return this.buffer[index];
+    }
+
+    public void setFloat(int[] pos, float value)
+    {
+        int index = subsToInd(pos);
+        this.buffer[index] = value;
+    }
 
 	@Override
 	public Float32 get(int[] pos)
@@ -94,7 +96,19 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 		this.buffer[index] = (float) value;
 	}
 	
-	@Override
+	// =============================================================
+    // Implementation of the Array interface
+    
+    @Override
+    public Float32Array duplicate()
+    {
+    	int n = buffer.length;
+    	float[] buffer2 = new float[n];
+    	System.arraycopy(this.buffer, 0, buffer2, 0, n);
+    	return new BufferedFloat32ArrayND(sizes, buffer2);
+    }
+
+    @Override
 	public Float32Array.Iterator iterator()
 	{
 		return new Float32Iterator();

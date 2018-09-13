@@ -47,13 +47,23 @@ public class BufferedFloat32Array2D extends Float32Array2D
 		this.buffer = buffer;
 	}
 
-	@Override
-	public Float32Array2D duplicate()
-	{
-		float[] buffer2 = new float[size0 * size1];
-		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1);
-		return new BufferedFloat32Array2D(size0, size1, buffer2);
-	}
+    // =============================================================
+    // Specialization of FloatArray2D
+
+    public float getFloat(int x, int y)
+    {
+        int index = x + y * this.size0;
+        return this.buffer[index];
+    }
+
+    public void setFloat(int x, int y, float value)
+    {
+        int index = x + y * this.size0;
+        this.buffer[index] = value;
+    }
+
+    // =============================================================
+    // Specialization of Array2D
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#getValue(int, int)
@@ -74,6 +84,17 @@ public class BufferedFloat32Array2D extends Float32Array2D
 		int index = x + y * this.size0;
 		this.buffer[index] = (float) value;
 	}
+
+    // =============================================================
+    // Implementation of Array interface
+
+    @Override
+    public Float32Array2D duplicate()
+    {
+        float[] buffer2 = new float[size0 * size1];
+        System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1);
+        return new BufferedFloat32Array2D(size0, size1, buffer2);
+    }
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.ScalarArray#iterator()

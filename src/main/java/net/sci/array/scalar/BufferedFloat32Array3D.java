@@ -53,9 +53,23 @@ public class BufferedFloat32Array3D extends Float32Array3D
 		this.buffer = buffer;
 	}
 
+    // =============================================================
+    // Specialization of FloatArray3D
 
-	// =============================================================
-	// Implementation of the Array3D class
+    public float getFloat(int x, int y, int z)
+    {
+        int index = x + this.size0 * (y + z * this.size1);
+        return this.buffer[index];
+    }
+
+    public void setFloat(int x, int y, int z, float value)
+    {
+        int index = x + this.size0 * (y + z * this.size1);
+        this.buffer[index] = value;
+    }
+
+    // =============================================================
+    // Specialization of the Array3D class
 
 	@Override
 	public double getValue(int x, int y, int z)

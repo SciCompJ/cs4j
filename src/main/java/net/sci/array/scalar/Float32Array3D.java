@@ -47,6 +47,32 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
 	}
 
 
+    // =============================================================
+    // New methods
+    
+    public float getFloat(int x, int y, int z)
+    {
+        return (float) getValue(x, y, z);
+    }
+
+    public void setFloat(int x, int y, int z, float value)
+    {
+        setValue(x, y, z, value);
+    }
+
+    // =============================================================
+    // Specialization of Float32Array
+    
+    public float getFloat(int[] pos)
+    {
+        return (float) getValue(pos[0], pos[1], pos[2]);
+    }
+
+    public void setFloat(int[] pos, float value)
+    {
+        setValue(pos[0], pos[1], pos[2], value);
+    }
+
 	// =============================================================
 	// Specialization of Array3D 
 
