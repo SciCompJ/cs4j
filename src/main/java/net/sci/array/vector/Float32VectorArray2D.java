@@ -3,6 +3,9 @@
  */
 package net.sci.array.vector;
 
+import net.sci.array.scalar.Float32;
+import net.sci.array.scalar.Float32Array2D;
+
 /**
  * @author dlegland
  *
@@ -26,7 +29,27 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
 	}
 
 
-	// =============================================================
+    // =============================================================
+    // New methods
+
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public Float32Array2D channelView(int channel)
+    {
+        return new ChannelView(channel);
+    }
+    
+    public java.util.Iterator<Float32Array2D> channelIterator()
+    {
+        return new ChannelIterator();
+    }
+
+    // =============================================================
 	// Specialization of VectorArray interface
 
 	public double[] getValues(int[] pos)
@@ -56,4 +79,100 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
 	@Override
 	public abstract Float32VectorArray2D duplicate();
 
+    private class ChannelView extends Float32Array2D
+    {
+        int channel;
+        
+        protected ChannelView(int channel)
+        {
+            super(Float32VectorArray2D.this.size0, Float32VectorArray2D.this.size1);
+            int nChannels = Float32VectorArray2D.this.getVectorLength();
+            if (channel < 0 || channel >= nChannels)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Channel index %d must be comprised between 0 and %d", channel, nChannels));
+            }
+            this.channel = channel;
+        }
+
+        @Override
+        public net.sci.array.scalar.Float32Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
+        @Override
+        public double getValue(int x, int y)
+        {
+            return Float32VectorArray2D.this.getValue(x, y, channel);
+        }
+
+        @Override
+        public void setValue(int x, int y, double value)
+        {
+            Float32VectorArray2D.this.setValue(x, y, channel, value);
+        }
+        
+        class Iterator implements net.sci.array.scalar.Float32Array.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+
+            @Override
+            public Float32 next()
+            {
+                forward();
+                return get();
+            }
+
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                }
+            }
+
+            @Override
+            public double getValue()
+            {
+                return Float32VectorArray2D.this.getValue(indX, indY, channel);
+            }
+
+            @Override
+            public void setValue(double value)
+            {
+                Float32VectorArray2D.this.setValue(indX, indY, channel, value);
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 && indY < size1 - 1;
+            }     
+        }
+    }
+    
+    private class ChannelIterator implements java.util.Iterator<Float32Array2D> 
+    {
+        int channel = -1;
+
+        @Override
+        public boolean hasNext()
+        {
+            return channel < getVectorLength();
+        }
+
+        @Override
+        public Float32Array2D next()
+        {
+            channel++;
+            return new ChannelView(channel);
+        }
+        
+    }
+	
 }
