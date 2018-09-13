@@ -337,7 +337,7 @@ public class FloodFill2D
 	 * coordinate extremities (inclusive), with the specified integer value.
 	 * the value x1 must be lower than or equal the value x2. 
 	 */
-	private final static void fillLineFloat(Array2D<?> array, int y, int x1,
+	private final static void fillLineFloat(ScalarArray2D<?> array, int y, int x1,
 			int x2, double value)
 	{
 		if (x1 > x2)

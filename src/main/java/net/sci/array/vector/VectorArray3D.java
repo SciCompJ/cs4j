@@ -97,38 +97,38 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
 	// =============================================================
 	// Specialization of Array3D interface
 
-	/**
-	 * Returns the norm of the vector at the given position.
-	 * 
-	 * @see net.sci.array.Array3D#getValue(int, int, int)
-	 */
-	@Override
-	public double getValue(int x, int y, int z)
-	{
-		double[] values = getValues(x, y, z);
-		double sum = 0;
-		for (double v : values)
-		{
-			sum += v * v;
-		}
-		return Math.sqrt(sum);
-	}
-
-	/**
-	 * Changes the value of the vector at given position, by setting the first
-	 * component and clearing the others.
-	 * 
-	 * @see net.sci.array.Array3D#setValue(int, int, int, double)
-	 */
-	@Override
-	public void setValue(int x, int y, int z, double value)
-	{
-		setValue(x, y, z, 0, value);
-		for (int c = 1; c < this.getVectorLength(); c++)
-		{
-			setValue(x, y, c, 0);
-		}
-	}
+//	/**
+//	 * Returns the norm of the vector at the given position.
+//	 * 
+//	 * @see net.sci.array.Array3D#getValue(int, int, int)
+//	 */
+//	@Override
+//	public double getValue(int x, int y, int z)
+//	{
+//		double[] values = getValues(x, y, z);
+//		double sum = 0;
+//		for (double v : values)
+//		{
+//			sum += v * v;
+//		}
+//		return Math.sqrt(sum);
+//	}
+//
+//	/**
+//	 * Changes the value of the vector at given position, by setting the first
+//	 * component and clearing the others.
+//	 * 
+//	 * @see net.sci.array.Array3D#setValue(int, int, int, double)
+//	 */
+//	@Override
+//	public void setValue(int x, int y, int z, double value)
+//	{
+//		setValue(x, y, z, 0, value);
+//		for (int c = 1; c < this.getVectorLength(); c++)
+//		{
+//			setValue(x, y, c, 0);
+//		}
+//	}
 
 
 	/* (non-Javadoc)

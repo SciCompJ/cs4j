@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import net.sci.array.Array2D;
 import net.sci.array.scalar.Float32Array2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.MorphologicalReconstruction;
@@ -510,7 +511,7 @@ public class MorphologicalReconstruction2DHybridTest
 		}
 	}
 
-	public void printImageFloat(Array2D<?> image)
+	public void printImageFloat(ScalarArray2D<?> image)
 	{
 		int width = image.getSize(0);
 		int height = image.getSize(1);

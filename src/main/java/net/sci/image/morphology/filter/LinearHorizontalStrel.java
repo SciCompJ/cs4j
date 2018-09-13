@@ -3,7 +3,7 @@
  */
 package net.sci.image.morphology.filter;
 
-import net.sci.array.Array2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.morphology.Strel2D;
 
@@ -105,10 +105,10 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel2D
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * net.sci.image.morphology.filter.InPlaceStrel#inPlaceDilation(Array2D)
+	 * net.sci.image.morphology.filter.InPlaceStrel#inPlaceDilation(ScalarArray2D)
 	 */
 	@Override
-	public void inPlaceDilation(Array2D<?> image)
+	public void inPlaceDilation(ScalarArray2D<?> image)
 	{
 		// If size is one, there is no need to compute
 		if (size <= 1)
@@ -168,7 +168,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel2D
 		fireProgressChanged(this, sizeY, sizeY);
 	}
 
-	private void inPlaceDilationFloat(Array2D<?> image)
+	private void inPlaceDilationFloat(ScalarArray2D<?> image)
 	{
 		// get image size
 		int sizeX = image.getSize(0);
@@ -218,10 +218,10 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel2D
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * inra.ijpb.morphology.InPlaceStrel#inPlaceErosion(Array2D)
+	 * inra.ijpb.morphology.InPlaceStrel#inPlaceErosion(ScalarArray2D)
 	 */
 	@Override
-	public void inPlaceErosion(Array2D<?> image)
+	public void inPlaceErosion(ScalarArray2D<?> image)
 	{
 		// If size is one, there is no need to compute
 		if (size <= 1)
@@ -281,7 +281,7 @@ public class LinearHorizontalStrel extends AbstractInPlaceStrel2D
 		fireProgressChanged(this, sizeY, sizeY);
 	}
 
-	private void inPlaceErosionFloat(Array2D<?> image)
+	private void inPlaceErosionFloat(ScalarArray2D<?> image)
 	{
 		// get image size
 		int sizeX = image.getSize(0);

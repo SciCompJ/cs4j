@@ -5,6 +5,7 @@ package net.sci.image.morphology;
 
 import net.sci.algo.Algo;
 import net.sci.array.Array2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.morphology.filter.Cross3x3Strel;
 import net.sci.image.morphology.filter.DiamondStrel;
 import net.sci.image.morphology.filter.LinearDiagDownStrel;
@@ -261,7 +262,7 @@ public interface Strel2D extends Algo
 	 * @see #closing(Array2D)
 	 * @see #opening(Array2D)
 	 */
-	public Array2D<?> dilation(Array2D<?> image);
+	public ScalarArray2D<?> dilation(ScalarArray2D<?> image);
 
 	/**
 	 * Performs an morphological erosion of the input image with this
@@ -274,7 +275,7 @@ public interface Strel2D extends Algo
 	 * @see #closing(Array2D)
 	 * @see #opening(Array2D)
 	 */
-	public Array2D<?> erosion(Array2D<?> image);
+	public ScalarArray2D<?> erosion(ScalarArray2D<?> image);
 	
 	/**
 	 * Performs a morphological closing of the input image with this structuring
@@ -291,7 +292,7 @@ public interface Strel2D extends Algo
 	 * @see #opening(Array2D)
 	 * @see #reverse()
 	 */
-	public Array2D<?> closing(Array2D<?> image);
+	public ScalarArray2D<?> closing(ScalarArray2D<?> image);
 
 	/**
 	 * Performs a morphological opening of the input image with this structuring
@@ -308,5 +309,5 @@ public interface Strel2D extends Algo
 	 * @see #closing(Array2D)
 	 * @see #reverse()
 	 */
-	public Array2D<?> opening(Array2D<?> image);
+	public ScalarArray2D<?> opening(ScalarArray2D<?> image);
 }

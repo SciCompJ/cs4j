@@ -56,17 +56,17 @@ public abstract class RGB16Array3D extends VectorArray3D<RGB16> implements RGB16
 	// =============================================================
 	// Specialization of Array3D interface
 
-	@Override
-	public double getValue(int x, int y, int z)
-	{
-		return get(x, y, z).getValue();
-	}
-
-	@Override
-	public void setValue(int x, int y, int z, double value)
-	{
-		set(x, y, z, RGB16.fromValue(value));
-	}
+//	@Override
+//	public double getValue(int x, int y, int z)
+//	{
+//		return get(x, y, z).getValue();
+//	}
+//
+//	@Override
+//	public void setValue(int x, int y, int z, double value)
+//	{
+//		set(x, y, z, RGB16.fromValue(value));
+//	}
 
 	@Override
 	public double[] getValues(int x, int y, int z)

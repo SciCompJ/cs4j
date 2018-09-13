@@ -3,7 +3,7 @@
  */
 package net.sci.image.morphology.filter;
 
-import net.sci.array.Array2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.morphology.Strel2D;
 
@@ -146,10 +146,10 @@ public class ShiftedCross3x3Strel
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see InPlaceStrel#inPlaceDilation(ij.process.Array2D<?>)
+		 * @see InPlaceStrel#inPlaceDilation(ij.process.ScalarArray2D<?>)
 		 */
 		@Override
-		public void inPlaceDilation(Array2D<?> image)
+		public void inPlaceDilation(ScalarArray2D<?> image)
 		{
 			if (image instanceof UInt8Array2D)
 				inPlaceDilationGray8((UInt8Array2D) image);
@@ -216,7 +216,7 @@ public class ShiftedCross3x3Strel
 			fireProgressChanged(this, sizeY, sizeY);
 		}
 
-		private void inPlaceDilationFloat(Array2D<?> image)
+		private void inPlaceDilationFloat(ScalarArray2D<?> image)
 		{
 			// size of image
 			int sizeX = image.getSize(0);
@@ -278,10 +278,10 @@ public class ShiftedCross3x3Strel
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see InPlaceStrel#inPlaceErosion(ij.process.Array2D<?>)
+		 * @see InPlaceStrel#inPlaceErosion(ij.process.ScalarArray2D<?>)
 		 */
 		@Override
-		public void inPlaceErosion(Array2D<?> image)
+		public void inPlaceErosion(ScalarArray2D<?> image)
 		{
 			if (image instanceof UInt8Array2D)
 				inPlaceErosionGray8((UInt8Array2D) image);
@@ -348,7 +348,7 @@ public class ShiftedCross3x3Strel
 			fireProgressChanged(this, sizeY, sizeY);
 		}
 
-		private void inPlaceErosionFloat(Array2D<?> image)
+		private void inPlaceErosionFloat(ScalarArray2D<?> image)
 		{
 			// size of image
 			int sizeX = image.getSize(0);
@@ -496,10 +496,10 @@ public class ShiftedCross3x3Strel
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see InPlaceStrel#inPlaceDilation(ij.process.Array2D<?>)
+		 * @see InPlaceStrel#inPlaceDilation(ij.process.ScalarArray2D<?>)
 		 */
 		@Override
-		public void inPlaceDilation(Array2D<?> image)
+		public void inPlaceDilation(ScalarArray2D<?> image)
 		{
 			if (image instanceof UInt8Array2D)
 				inPlaceDilationGray8((UInt8Array2D) image);
@@ -568,7 +568,7 @@ public class ShiftedCross3x3Strel
 			fireProgressChanged(this, sizeY, sizeY);
 		}
 
-		private void inPlaceDilationFloat(Array2D<?> image)
+		private void inPlaceDilationFloat(ScalarArray2D<?> image)
 		{
 			// size of image
 			int sizeX = image.getSize(0);
@@ -633,10 +633,10 @@ public class ShiftedCross3x3Strel
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see InPlaceStrel#inPlaceErosion(ij.process.Array2D<?>)
+		 * @see InPlaceStrel#inPlaceErosion(ij.process.ScalarArray2D<?>)
 		 */
 		@Override
-		public void inPlaceErosion(Array2D<?> image)
+		public void inPlaceErosion(ScalarArray2D<?> image)
 		{
 			if (image instanceof UInt8Array2D)
 				inPlaceErosionGray8((UInt8Array2D) image);
@@ -705,7 +705,7 @@ public class ShiftedCross3x3Strel
 			fireProgressChanged(this, sizeY, sizeY);
 		}
 
-		private void inPlaceErosionFloat(Array2D<?> image)
+		private void inPlaceErosionFloat(ScalarArray2D<?> image)
 		{
 			// size of image
 			int sizeX = image.getSize(0);

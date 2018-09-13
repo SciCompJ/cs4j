@@ -31,7 +31,7 @@ public class BoxFilterTest
 		int[] diameters = new int[]{3, 3};
 		BoxFilter filter = new BoxFilter(diameters);
 		
-		Array<?> result = filter.process(array);
+		ScalarArray<?> result = (ScalarArray<?>) filter.process(array);
 		
 		assertTrue(result instanceof ScalarArray);
 		assertEquals(2, result.dimensionality());

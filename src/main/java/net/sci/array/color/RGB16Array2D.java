@@ -55,17 +55,17 @@ public abstract class RGB16Array2D extends VectorArray2D<RGB16> implements RGB16
 	// =============================================================
 	// Specialization of Array2D interface
 
-	@Override
-	public double getValue(int x, int y)
-	{
-		return get(x, y).getValue();
-	}
-
-	@Override
-	public void setValue(int x, int y, double value)
-	{
-		set(x, y, RGB16.fromValue(value));
-	}
+//	@Override
+//	public double getValue(int x, int y)
+//	{
+//		return get(x, y).getValue();
+//	}
+//
+//	@Override
+//	public void setValue(int x, int y, double value)
+//	{
+//		set(x, y, RGB16.fromValue(value));
+//	}
 
 	@Override
 	public double[] getValues(int x, int y)

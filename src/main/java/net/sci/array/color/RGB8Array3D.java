@@ -56,17 +56,17 @@ public abstract class RGB8Array3D extends VectorArray3D<RGB8> implements RGB8Arr
 	// =============================================================
 	// Specialization of Array3D interface
 
-	@Override
-	public double getValue(int x, int y, int z)
-	{
-		return get(x, y, z).getValue();
-	}
-
-	@Override
-	public void setValue(int x, int y, int z, double value)
-	{
-		set(x, y, z, RGB8.fromValue(value));
-	}
+//	@Override
+//	public double getValue(int x, int y, int z)
+//	{
+//		return get(x, y, z).getValue();
+//	}
+//
+//	@Override
+//	public void setValue(int x, int y, int z, double value)
+//	{
+//		set(x, y, z, RGB8.fromValue(value));
+//	}
 
 	@Override
 	public double[] getValues(int x, int y, int z)

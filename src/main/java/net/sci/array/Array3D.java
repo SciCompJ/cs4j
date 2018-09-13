@@ -46,10 +46,6 @@ public abstract class Array3D<T> implements Array<T>
 
 	public abstract void set(int x, int y, int z, T value);
 
-	public abstract double getValue(int x, int y, int z);
-	
-	public abstract void setValue(int x, int y, int z, double value);
-	
 	
 	// =============================================================
 	// Specialization of the Array interface
@@ -99,16 +95,6 @@ public abstract class Array3D<T> implements Array<T>
 	public void set(int[] pos, T value)
 	{
 		set(pos[0], pos[1], pos[2], value);
-	}
-	
-	public double getValue(int[] pos)
-	{
-		return getValue(pos[0], pos[1], pos[2]);
-	}
-
-	public void setValue(int[] pos, double value)
-	{
-		setValue(pos[0], pos[1], pos[2], value);
 	}
 	
 	public PositionIterator positionIterator()

@@ -56,6 +56,27 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 		}
 	}
 
+    // =============================================================
+    // New abstract methods
+
+	public abstract double getValue(int x, int y);
+
+	public abstract void setValue(int x, int y, double value);
+	    
+
+    // =============================================================
+    // Specialization of the ScalarArray interface
+
+    public double getValue(int[] pos)
+    {
+        return getValue(pos[0], pos[1]);
+    }
+
+    public void setValue(int[] pos, double value)
+    {
+        setValue(pos[0], pos[1], value);
+    }
+    
 	// =============================================================
 	// Specialization of the Array interface
 

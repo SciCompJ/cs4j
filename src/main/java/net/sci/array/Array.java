@@ -103,23 +103,6 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
 	public void set(int[] pos, T value);
 
-	/**
-	 * Gets the value at the given position as a numeric double.
-	 * @param pos
-	 *            the position, as an array of indices
-	 * @return the double value at the given position
-	 */
-	public double getValue(int[] pos);
-	
-	/**
-	 * Sets the value at the given position as a numeric double.
-	 * @param pos
-	 *            the position, as an array of indices
-	 * @param value
-	 *            the new value for the given position
-	 */
-	public void setValue(int[] pos, double value);
-
 	public default Iterable<int[]> positions()
 	{
 	    Iterable<int[]> it = new Iterable<int[]>() {

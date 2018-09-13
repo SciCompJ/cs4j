@@ -55,17 +55,17 @@ public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Arr
 	// =============================================================
 	// Specialization of Array2D interface
 
-	@Override
-	public double getValue(int x, int y)
-	{
-		return get(x, y).getValue();
-	}
-
-	@Override
-	public void setValue(int x, int y, double value)
-	{
-		set(x, y, RGB8.fromValue(value));
-	}
+//	@Override
+//	public double getValue(int x, int y)
+//	{
+//		return get(x, y).getValue();
+//	}
+//
+//	@Override
+//	public void setValue(int x, int y, double value)
+//	{
+//		set(x, y, RGB8.fromValue(value));
+//	}
 
 	@Override
 	public double[] getValues(int x, int y)

@@ -62,10 +62,6 @@ public abstract class Array2D<T> implements Array<T>
 
 	public abstract void set(int x, int y, T value);
 
-	public abstract double getValue(int x, int y);
-	
-	public abstract void setValue(int x, int y, double value);
-	
 	// =============================================================
 	// Specialization of the Array interface
 
@@ -113,16 +109,6 @@ public abstract class Array2D<T> implements Array<T>
 	public void set(int[] pos, T value)
 	{
 		set(pos[0], pos[1], value);
-	}
-	
-	public double getValue(int[] pos)
-	{
-		return getValue(pos[0], pos[1]);
-	}
-
-	public void setValue(int[] pos, double value)
-	{
-		setValue(pos[0], pos[1], value);
 	}
 	
     public PositionIterator positionIterator()
@@ -183,32 +169,31 @@ public abstract class Array2D<T> implements Array<T>
 			// set value at specified position
 			this.array.set(pos, value);
 		}
-
-		@Override
-		public double getValue(int x, int y)
-		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
-			// return value from specified position
-			return this.array.getValue(pos);
-		}
-
-		@Override
-		public void setValue(int x, int y, double value)
-		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
-			// set value at specified position
-			this.array.setValue(pos, value);
-		}
+//      @Override
+//      public double getValue(int x, int y)
+//      {
+//          // convert (x,y) to ND integer array
+//          int nd = this.array.dimensionality();
+//          int[] pos = new int[nd];
+//          pos[0] = x;
+//          pos[1] = y;
+//          
+//          // return value from specified position
+//          return this.array.getValue(pos);
+//      }
+//
+//      @Override
+//      public void setValue(int x, int y, double value)
+//      {
+//          // convert (x,y) to ND integer array
+//          int nd = this.array.dimensionality();
+//          int[] pos = new int[nd];
+//          pos[0] = x;
+//          pos[1] = y;
+//          
+//          // set value at specified position
+//          this.array.setValue(pos, value);
+//      }
 
 		@Override
 		public Array2D<T> duplicate()

@@ -9,10 +9,10 @@ import static java.lang.Math.min;
 import java.util.ArrayList;
 
 import net.sci.array.Array2D;
-import net.sci.array.Array3D;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.data.Connectivity3D;
 
@@ -336,7 +336,7 @@ public class FloodFill
 	 * coordinate extremities (inclusive), with the specified integer value.
 	 * the value x1 must be lower than or equal the value x2. 
 	 */
-    private final static void fillLine(Array2D<?> array, int y, int x1, int x2, double value)
+    private final static void fillLine(ScalarArray2D<?> array, int y, int x1, int x2, double value)
 	{
 		if (x1 > x2)
 		{
@@ -603,8 +603,8 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (C6 or C26)
 	 */
-    public final static void floodFill(Array3D<?> inputArray, int x, int y, int z,
-            Array3D<?> outputArray, double value, Connectivity3D conn)
+    public final static void floodFill(ScalarArray3D<?> inputArray, int x, int y, int z,
+            ScalarArray3D<?> outputArray, double value, Connectivity3D conn)
 	{
 		if (conn == Connectivity3D.C6)
 		{
@@ -639,8 +639,8 @@ public class FloodFill
 	 * @param value
 	 *            filling value
 	 */
-    private final static void floodFillC6(Array3D<?> inputArray, int x, int y, int z,
-            Array3D<?> outputArray, double value)
+    private final static void floodFillC6(ScalarArray3D<?> inputArray, int x, int y, int z,
+            ScalarArray3D<?> outputArray, double value)
 	{
 		// get image size
 		int sizeX = inputArray.getSize(0);
@@ -793,8 +793,8 @@ public class FloodFill
 	 * @param value
 	 *            filling value
 	 */
-    private final static void floodFillC26(Array3D<?> inputArray, int x, int y, int z,
-            Array3D<?> outputArray, double value)
+    private final static void floodFillC26(ScalarArray3D<?> inputArray, int x, int y, int z,
+            ScalarArray3D<?> outputArray, double value)
 	{
 		// get image size
 		int sizeX = inputArray.getSize(0);
@@ -878,7 +878,7 @@ public class FloodFill
 	 * coordinate extremities (inclusive), with the specified integer value. the
 	 * value x1 must be lower than or equal the value x2.
 	 */
-    private final static void fillLine(Array3D<?> array, int x1, int x2, int y, int z, double value)
+    private final static void fillLine(ScalarArray3D<?> array, int x1, int x2, int y, int z, double value)
 	{
 		for (int x = x1; x <= x2; x++)
 			array.setValue(x, y, z, value);

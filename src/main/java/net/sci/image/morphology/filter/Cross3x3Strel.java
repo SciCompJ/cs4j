@@ -3,7 +3,7 @@
  */
 package net.sci.image.morphology.filter;
 
-import net.sci.array.Array2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.morphology.Strel2D;
 
@@ -83,7 +83,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	 * @see net.sci.array.data.Array2D)
 	 */
 	@Override
-	public void inPlaceDilation(Array2D<?> image)
+	public void inPlaceDilation(ScalarArray2D<?> image)
 	{
 		if (image instanceof UInt8Array2D)
 			inPlaceDilationGray8((UInt8Array2D) image);
@@ -155,7 +155,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 		fireProgressChanged(this, sizeY, sizeY);
 	}
 
-	private void inPlaceDilationFloat(Array2D<?> image)
+	private void inPlaceDilationFloat(ScalarArray2D<?> image)
 	{
 		// size of image
 		int sizeX = image.getSize(0);
@@ -247,7 +247,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	 * @see ijt.morphology.InPlaceStrel#inPlaceErosion(ij.process.Array2D<?>)
 	 */
 	@Override
-	public void inPlaceErosion(Array2D<?> image)
+	public void inPlaceErosion(ScalarArray2D<?> image)
 	{
 		if (image instanceof UInt8Array2D)
 			inPlaceErosionGray8((UInt8Array2D) image);
@@ -318,7 +318,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 		fireProgressChanged(this, sizeY, sizeY);
 	}
 
-	private void inPlaceErosionFloat(Array2D<?> image)
+	private void inPlaceErosionFloat(ScalarArray2D<?> image)
 	{
 		// size of image
 		int sizeX = image.getSize(0);

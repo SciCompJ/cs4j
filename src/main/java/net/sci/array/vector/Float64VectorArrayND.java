@@ -28,6 +28,18 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
 		super(sizes);
 	}
 	
+	public Iterable<Float64ArrayND> channels()
+	{
+	    return new Iterable<Float64ArrayND>()
+	            {
+                    @Override
+                    public java.util.Iterator<Float64ArrayND> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+	            };
+	}
+	
     /**
      * Returns a view on the channel specified by the given index.
      * 

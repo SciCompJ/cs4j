@@ -228,17 +228,17 @@ public interface RGB16Array extends VectorArray<RGB16>, ColorArray<RGB16>
 	// =============================================================
 	// Specialization of Array interface
 
-	@Override
-	public default double getValue(int[] position)
-	{
-		return get(position).getValue();
-	}
-
-	@Override
-	public default void setValue(int[] position, double value)
-	{
-		set(position, RGB16.fromValue(value));
-	}
+//	@Override
+//	public default double getValue(int[] position)
+//	{
+//		return get(position).getValue();
+//	}
+//
+//	@Override
+//	public default void setValue(int[] position, double value)
+//	{
+//		set(position, RGB16.fromValue(value));
+//	}
 
 	@Override
 	public default RGB16Array newInstance(int... dims)

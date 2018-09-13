@@ -8,8 +8,8 @@ import static java.lang.Math.min;
 
 import java.util.ArrayList;
 
-import net.sci.array.Array3D;
 import net.sci.array.scalar.IntArray3D;
+import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.data.Connectivity3D;
 
 /**
@@ -62,8 +62,8 @@ public class FloodFill3D
 	 * @param conn
 	 *            connectivity to use (6 or 26)
 	 */
-	public final static void floodFillFloat(Array3D<?> inputArray, int x,
-			int y, int z, Array3D<?> outputArray, double value, int conn)
+	public final static void floodFillFloat(ScalarArray3D<?> inputArray, int x,
+			int y, int z, ScalarArray3D<?> outputArray, double value, int conn)
 	{
 		switch (conn)
 		{
@@ -100,8 +100,8 @@ public class FloodFill3D
 	 * @param conn
 	 *            connectivity to use (6 or 26)
 	 */
-	public final static void floodFillFloat(Array3D<?> inputArray, int x,
-			int y, int z, Array3D<?> outputArray, double value, Connectivity3D conn)
+	public final static void floodFillFloat(ScalarArray3D<?> inputArray, int x,
+			int y, int z, ScalarArray3D<?> outputArray, double value, Connectivity3D conn)
 	{
 		if (conn == Connectivity3D.C6)
 		{
@@ -136,8 +136,8 @@ public class FloodFill3D
 	 * @param value
 	 *            filling value
 	 */
-	private final static void floodFillFloatC6(Array3D<?> inputArray, int x,
-			int y, int z, Array3D<?> outputArray, double value)
+	private final static void floodFillFloatC6(ScalarArray3D<?> inputArray, int x,
+			int y, int z, ScalarArray3D<?> outputArray, double value)
 	{
 		// get image size
 		int sizeX = inputArray.getSize(0);
@@ -290,8 +290,8 @@ public class FloodFill3D
 	 * @param value
 	 *            filling value
 	 */
-	private final static void floodFillFloatC26(Array3D<?> inputArray, int x,
-			int y, int z, Array3D<?> outputArray, double value)
+	private final static void floodFillFloatC26(ScalarArray3D<?> inputArray, int x,
+			int y, int z, ScalarArray3D<?> outputArray, double value)
 	{
 		// get image size
 		int sizeX = inputArray.getSize(0);
@@ -375,7 +375,7 @@ public class FloodFill3D
 	 * coordinate extremities (inclusive), with the specified integer value. the
 	 * value x1 must be lower than or equal the value x2.
 	 */
-	private final static void fillLineFloat(Array3D<?> array, int x1, int x2,
+	private final static void fillLineFloat(ScalarArray3D<?> array, int x1, int x2,
 			int y, int z, double value)
 	{
 		for (int x = x1; x <= x2; x++)

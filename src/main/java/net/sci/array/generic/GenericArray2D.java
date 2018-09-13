@@ -27,26 +27,4 @@ public abstract class GenericArray2D<T> extends Array2D<T> implements GenericArr
         super(size0, size1);
     }
 
-    // =============================================================
-    // Implementation of Array2D interface
-
-    /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#getValue(int, int)
-     */
-    @Override
-    public double getValue(int x, int y)
-    {
-        throw new RuntimeException("Unimplemented operation");
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#setValue(int, int, double)
-     */
-    @Override
-    public void setValue(int x, int y, double value)
-    {
-        throw new RuntimeException("Unimplemented operation");
-    }
-
-
 }

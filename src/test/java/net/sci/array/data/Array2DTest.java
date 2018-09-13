@@ -38,7 +38,7 @@ public class Array2DTest
 		assertEquals(5, res.getSize(0));
 		assertEquals(4, res.getSize(1));
 		
-		assertEquals(34, res.getValue(4, 3), .1);
+		assertEquals(new UInt8(34), res.get(4, 3));
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class Array2DTest
 		assertEquals(5, res.getSize(0));
 		assertEquals(4, res.getSize(1));
 		
-		assertEquals(34, res.getValue(4, 3), .1);
+		assertEquals(new UInt8(34), res.get(4, 3));
 	}
 
 }

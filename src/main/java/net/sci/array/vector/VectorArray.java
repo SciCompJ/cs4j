@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import net.sci.array.Array;
 import net.sci.array.scalar.Float32Array;
+//import net.sci.array.scalar.Float32ArrayND;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
@@ -149,6 +150,8 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
      */
 	public int getVectorLength();
 
+//	public java.util.Iterator<ScalarArray<?>> channelIterator();
+	
     /**
      * Returns the set of values corresponding to the array element for the
      * given position.
@@ -186,34 +189,34 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
     // =============================================================
     // Specialization of Array interface
     
-    /**
-     * Returns the maximum values within the components/channels.
-     */
-    @Override
-    public default double getValue(int[] pos)
-    {
-        double maxi = Double.NEGATIVE_INFINITY;
-        for (double v :  getValues(pos))
-        {
-            maxi = Math.max(maxi, v);
-        }
-        return maxi;
-    }
-    
-    /**
-     * Sets all the components/channels at the given position to the specified value.
-     */
-    @Override
-    public default void setValue(int[] pos, double value)
-    {
-        int nc = this.getVectorLength();
-        double[] vals = new double[nc];
-        for (int c = 0; c < nc; c++)
-        {
-            vals[c] = value;
-        }
-        setValues(pos, vals);
-    }
+//    /**
+//     * Returns the maximum values within the components/channels.
+//     */
+//    @Override
+//    public default double getValue(int[] pos)
+//    {
+//        double maxi = Double.NEGATIVE_INFINITY;
+//        for (double v :  getValues(pos))
+//        {
+//            maxi = Math.max(maxi, v);
+//        }
+//        return maxi;
+//    }
+//    
+//    /**
+//     * Sets all the components/channels at the given position to the specified value.
+//     */
+//    @Override
+//    public default void setValue(int[] pos, double value)
+//    {
+//        int nc = this.getVectorLength();
+//        double[] vals = new double[nc];
+//        for (int c = 0; c < nc; c++)
+//        {
+//            vals[c] = value;
+//        }
+//        setValues(pos, vals);
+//    }
 
 	@Override
 	public VectorArray<V> newInstance(int... dims);

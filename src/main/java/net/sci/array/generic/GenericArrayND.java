@@ -26,26 +26,4 @@ public abstract class GenericArrayND<T> extends ArrayND<T> implements GenericArr
     {
         super(sizes);
     }
-
-    // =============================================================
-    // Implementation of ArrayND interface
-
-    /* (non-Javadoc)
-     * @see net.sci.array.data.ArrayND#getValue(int[])
-     */
-    @Override
-    public double getValue(int[] pos)
-    {
-        throw new RuntimeException("Unimplemented operation");
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.array.data.ArrayND#setValue(int[], double)
-     */
-    @Override
-    public void setValue(int[] pos, double value)
-    {
-        throw new RuntimeException("Unimplemented operation");
-    }
-
 }

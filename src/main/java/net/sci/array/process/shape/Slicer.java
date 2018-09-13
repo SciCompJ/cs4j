@@ -5,6 +5,7 @@ package net.sci.array.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.scalar.ScalarArray;
 
 /**
  * Extract a slice from an array, by specifying dimension and slice index along
@@ -129,7 +130,8 @@ public class Slicer implements ArrayOperator
 	public void process(Array<?> source, Array<?> target)
 	{
 		// TODO: check dims
-		processDoubleNd(source, target);
+	    if (source instanceof ScalarArray && target instanceof ScalarArray)
+		processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
 	}
 	
 	public <T> void processTyped(Array<? extends T> source, Array<? super T> target)
@@ -177,7 +179,7 @@ public class Slicer implements ArrayOperator
 		return dims;
 	}
 	
-	public void processDoubleNd(Array<?> source, Array<?> target)
+	public void processScalarNd(ScalarArray<?> source, ScalarArray<?> target)
 	{
 		// create position pointer for source image
 		int nd = target.dimensionality();

@@ -3,7 +3,7 @@
  */
 package net.sci.image.morphology.filter;
 
-import net.sci.array.Array2D;
+import net.sci.array.scalar.ScalarArray2D;
 
 /**
  * Implementation stub for in place Structuring elements. Implements operations
@@ -82,31 +82,31 @@ public abstract class AbstractInPlaceStrel2D extends AbstractStrel2D implements	
 //		this.showProgress(flag);
 //	}
 
-	public Array2D<?> dilation(Array2D<?> image)
+	public ScalarArray2D<?> dilation(ScalarArray2D<?> image)
 	{
-		Array2D<?> result = image.duplicate();
+	    ScalarArray2D<?> result = image.duplicate();
 		this.inPlaceDilation(result);
 		return result;
 	}
 
-	public Array2D<?> erosion(Array2D<?> image)
+	public ScalarArray2D<?> erosion(ScalarArray2D<?> image)
 	{
-		Array2D<?> result = image.duplicate();
+	    ScalarArray2D<?> result = image.duplicate();
 		this.inPlaceErosion(result);
 		return result;
 	}
 
-	public Array2D<?> closing(Array2D<?> image)
+	public ScalarArray2D<?> closing(ScalarArray2D<?> image)
 	{
-		Array2D<?> result = image.duplicate();
+	    ScalarArray2D<?> result = image.duplicate();
 		this.inPlaceDilation(result);
 		this.reverse().inPlaceErosion(result);
 		return result;
 	}
 
-	public Array2D<?> opening(Array2D<?> image)
+	public ScalarArray2D<?> opening(ScalarArray2D<?> image)
 	{
-		Array2D<?> result = image.duplicate();
+	    ScalarArray2D<?> result = image.duplicate();
 		this.inPlaceErosion(result);
 		this.reverse().inPlaceDilation(result);
 		return result;

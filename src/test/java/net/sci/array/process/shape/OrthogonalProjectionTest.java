@@ -32,7 +32,7 @@ public class OrthogonalProjectionTest
 		assertEquals(array.getSize(1), result.getSize(1));
 
 		// max value in (3, 2) corresponds to source (3, 2, 2) 
-		assertEquals(array.getValue(3, 2, 2), result.getValue(new int[]{3, 2}), .1);
+		assertEquals(array.get(3, 2, 2), result.get(new int[]{3, 2}));
 	}
 
 }

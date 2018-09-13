@@ -5,6 +5,7 @@ package net.sci.image.morphology;
 
 import net.sci.array.Array;
 import net.sci.array.Array2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array;
 
 /**
@@ -231,10 +232,14 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> dilation(Array2D<?> image, Strel2D strel)
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return dilationRGB(image, strel);
-		return strel.dilation(image);
+	    if (image instanceof ScalarArray2D)
+	    {
+	        return strel.dilation((ScalarArray2D<?>) image);
+	    }
+	    else
+	    {
+	        throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+	    }
 	}
 
 //	/**
@@ -300,11 +305,14 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> erosion(Array2D<?> image, Strel2D strel)
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return erosionRGB(image, strel);
-
-		return strel.erosion(image);
+        if (image instanceof ScalarArray2D)
+        {
+            return strel.erosion((ScalarArray2D<?>) image);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+        }
 	}
 
 //	/**
@@ -370,11 +378,14 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> opening(Array2D<?> image, Strel2D strel)
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return openingRGB(image, strel);
-
-		return strel.opening(image);
+        if (image instanceof ScalarArray2D)
+        {
+            return strel.opening((ScalarArray2D<?>) image);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+        }
 	}
 
 //	/**
@@ -436,11 +447,14 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> closing(Array2D<?> image, Strel2D strel) 
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return closingRGB(image, strel);
-
-		return strel.closing(image);
+        if (image instanceof ScalarArray2D)
+        {
+            return strel.closing((ScalarArray2D<?>) image);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+        }
 	}
 
 //	/**
@@ -503,17 +517,19 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> whiteTopHat(Array2D<?> image, Strel2D strel) 
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return whiteTopHatRGB(image, strel);
+	    // check array type validity
+        if (!(image instanceof ScalarArray2D))
+        {
+            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+        }
 
-		// First performs closing
-		Array2D<?> result = strel.opening(image);
+        // First performs closing
+        ScalarArray2D<?> result = strel.opening((ScalarArray2D<?>) image);
 		
 		// Compute subtraction of result from original image
 		Array.Iterator<?> iter1 = image.iterator();
 		Array.Iterator<?> iter2 = result.iterator();
-		while(iter1.hasNext() && iter2.hasNext())
+		while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
 		{
 			double val = iter1.nextValue() - iter2.nextValue();
 			iter2.setValue(val);
@@ -608,23 +624,25 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> blackTopHat(Array2D<?> image, Strel2D strel)
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return blackTopHatRGB(image, strel);
+        // check array type validity
+        if (!(image instanceof ScalarArray2D))
+        {
+            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+        }
 
-		// First performs closing
-		Array2D<?> result = strel.closing(image);
-		
-		// Compute subtraction of result from original image
-		Array.Iterator<?> iter1 = image.iterator();
-		Array.Iterator<?> iter2 = result.iterator();
-		while(iter1.hasNext() && iter2.hasNext())
-		{
-			double val = iter2.nextValue() - iter1.nextValue();
-			iter2.setValue(val);
-		}
+        // First performs closing
+        ScalarArray2D<?> result = strel.closing((ScalarArray2D<?>) image);
+        
+        // Compute subtraction of result from original image
+        Array.Iterator<?> iter1 = image.iterator();
+        Array.Iterator<?> iter2 = result.iterator();
+        while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
+        {
+            double val = iter2.nextValue() - iter1.nextValue();
+            iter2.setValue(val);
+        }
 
-		return result;
+        return result;
 	}
 	
 //	/**
@@ -704,28 +722,26 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> gradient(Array2D<?> image, Strel2D strel)
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return gradientRGB(image, strel);
+        // check array type validity
+        if (!(image instanceof ScalarArray2D))
+        {
+            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+        }
 
-		// First performs dilation and erosion
-		Array2D<?> result = strel.dilation(image);
-		Array2D<?> eroded = strel.erosion(image);
+        // First performs closing
+        ScalarArray2D<?> result = strel.dilation((ScalarArray2D<?>) image);
+        ScalarArray2D<?> eroded = strel.erosion((ScalarArray2D<?>) image);
+        
+        // Compute subtraction of result from original image
+        Array.Iterator<?> iter1 = result.iterator();
+        Array.Iterator<?> iter2 = eroded.iterator();
+        while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
+        {
+            double val = iter1.nextValue() - iter2.nextValue();
+            iter1.setValue(val);
+        }
 
-		// Compute subtraction of result from original image
-		Array.Iterator<?> iter1 = result.iterator();
-		Array.Iterator<?> iter2 = eroded.iterator();
-		while(iter1.hasNext() && iter2.hasNext())
-		{
-			double val = iter1.nextValue() - iter2.nextValue();
-			iter1.setValue(val);
-		}
-
-		// free memory
-		eroded = null;
-		
-		// return gradient
-		return result;
+        return result;
 	}
 
 //	/**
@@ -813,17 +829,19 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> laplacian(Array2D<?> image, Strel2D strel) 
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return laplacianRGB(image, strel);
+        // check array type validity
+        if (!(image instanceof ScalarArray2D))
+        {
+            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+        }
 
-		// First performs dilation and erosion
-		Array2D<?> outer = externalGradient(image, strel);
-		Array2D<?> inner = internalGradient(image, strel);
-		
-		// Subtract inner gradient from outer gradient
-		Array2D<?> result = image.duplicate();
-
+        // First performs closing
+        // TODO: use Array2D cast ?
+        ScalarArray2D<?> outer = (ScalarArray2D<?>) externalGradient((ScalarArray2D<?>) image, strel);
+        ScalarArray2D<?> inner = (ScalarArray2D<?>) internalGradient((ScalarArray2D<?>) image, strel);
+        
+        ScalarArray2D<?> result = ((ScalarArray2D<?>) image).duplicate();
+        
 		double shift = 0;
 		if (image instanceof UInt8Array)
 		{
@@ -831,6 +849,7 @@ public class MorphologicalFiltering
 		}
 		
 		// Compute subtraction of result from original image
+		// TODO: iterate over positions
 		Array.Iterator<?> iter1 = outer.iterator();
 		Array.Iterator<?> iter2 = inner.iterator();
 		Array.Iterator<?> resultIter = result.iterator();
@@ -937,24 +956,26 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> internalGradient(Array2D<?> image, Strel2D strel) 
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return internalGradientRGB(image, strel);
+        // check array type validity
+        if (!(image instanceof ScalarArray2D))
+        {
+            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+        }
 
-		// First performs erosion
-		Array2D<?> result = strel.erosion(image);
+        // First performs closing
+        ScalarArray2D<?> result = strel.erosion((ScalarArray2D<?>) image);
+//        ScalarArray2D<?> eroded = strel.erosion((ScalarArray2D<?>) image);
+        
+        // Compute subtraction of result from original image
+        Array.Iterator<?> iter1 = image.iterator();
+        Array.Iterator<?> iter2 = result.iterator();
+        while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
+        {
+            double val = iter1.nextValue() - iter2.nextValue();
+            iter2.setValue(val);
+        }
 
-		// Subtract erosion result from original image
-		Array.Iterator<?> iter1 = image.iterator();
-		Array.Iterator<?> iter2 = result.iterator();
-		while(iter1.hasNext() && iter2.hasNext())
-		{
-			double val = iter1.nextValue() - iter2.nextValue();
-			iter2.setValue(val);
-		}
-
-		// return gradient
-		return result;
+        return result;
 	}
 
 //	private static Array2D<?> internalGradientRGB(Array2D<?> image, Strel strel) 
@@ -1033,24 +1054,25 @@ public class MorphologicalFiltering
 	 */
 	public static Array2D<?> externalGradient(Array2D<?> image, Strel2D strel) 
 	{
-		checkImageType(image);
-//		if (image instanceof RGB8Array2D)
-//			return externalGradientRGB(image, strel);
+        // check array type validity
+        if (!(image instanceof ScalarArray2D))
+        {
+            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+        }
 
-		// First performs dilation
-		Array2D<?> result = strel.dilation(image);
+        // First performs closing
+        ScalarArray2D<?> result = strel.dilation((ScalarArray2D<?>) image);
+        
+        // Compute subtraction of result from original image
+        Array.Iterator<?> iter1 = result.iterator();
+        Array.Iterator<?> iter2 = image.iterator();
+        while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
+        {
+            double val = iter1.nextValue() - iter2.nextValue();
+            iter1.setValue(val);
+        }
 
-		// Subtract erosion result from original image
-		Array.Iterator<?> iter1 = result.iterator();
-		Array.Iterator<?> iter2 = image.iterator();
-		while(iter1.hasNext() && iter2.hasNext())
-		{
-			double val = iter1.nextValue() - iter2.nextValue();
-			iter1.setValue(val);
-		}
-
-		// return gradient
-		return result;
+        return result;
 	}
 
 //	private static Array2D<?> externalGradientRGB(Array2D<?> image, Strel strel)
@@ -1112,61 +1134,4 @@ public class MorphologicalFiltering
 //		
 //		return result;
 //	}
-
-	// =======================================================================
-	// Private utilitary functions
-	
-	/**
-	 * Check that input image can be processed for classical algorithms, and throw an
-	 * exception if not the case.
-	 * In the current version, accepts all image types.
-	 */
-	private final static void checkImageType(Array2D<?> image)
-	{
-//		if ((image instanceof FloatProcessor)
-//				|| (image instanceof ShortProcessor)) {
-//			throw new IllegalArgumentException(
-//					"Input image must be a UInt8Array2D or a RGB8Array2D");
-//		}
-	}
-
-//	/**
-//	 * Check that input image can be processed for classical algorithms, and throw an
-//	 * exception if not the case.
-//	 * In the current version, accepts all image types.
-//	 */
-//	private final static void checkImageType(ImageStack stack)
-//	{
-////		Array2D<?> image = stack.getProcessor(1);
-////		if ((image instanceof FloatProcessor) || (image instanceof ShortProcessor)) {
-////			throw new IllegalArgumentException("Input image must be a UInt8Array2D or a RGB8Array2D");
-////		}
-//	}
-
-//	/**
-//	 * Determine max possible value from bit depth.
-//	 *  8 bits -> 255
-//	 * 16 bits -> 65535
-//	 * 32 bits -> Float.MAX_VALUE
-//	 */
-//	private static final double getMaxPossibleValue(ImageStack stack)
-//	{
-//		double maxVal = 255;
-//		int bitDepth = stack.getBitDepth(); 
-//		if (bitDepth == 16)
-//		{
-//			maxVal = 65535;
-//		}
-//		else if (bitDepth == 32)
-//		{
-//			maxVal = Float.MAX_VALUE;
-//		}
-//		return maxVal;
-//	}
-//	
-//	private final static int clamp(int value, int min, int max) 
-//	{
-//		return Math.min(Math.max(value, min), max);
-//	}
-
 }

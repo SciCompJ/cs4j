@@ -10,6 +10,7 @@ import org.junit.Test;
 import net.sci.array.Array;
 import net.sci.array.scalar.BufferedUInt8Array2D;
 import net.sci.array.scalar.UInt16Array;
+import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
 
 /**
@@ -43,7 +44,7 @@ public class FlipTest
 		assertEquals(sizeX, resFlip.getSize(0));
 		assertEquals(sizeY, resFlip.getSize(1));
 		
-		assertEquals(35, resFlip.getValue(new int[]{0, 3}), .1);
+		assertEquals(new UInt8(35), resFlip.get(new int[]{0, 3}));
 	}
 
 	/**
@@ -98,7 +99,7 @@ public class FlipTest
         assertEquals(sizeX, resFlip.getSize(0));
         assertEquals(sizeY, resFlip.getSize(1));
         
-        assertEquals(35, resFlip.getValue(new int[]{5, 0}), .1);
+        assertEquals(new UInt8(35), resFlip.get(new int[]{5, 0}));
     }
     
     /**
@@ -128,8 +129,8 @@ public class FlipTest
         assertEquals(dims[0], resFlip.getSize(0));
         assertEquals(dims[1], resFlip.getSize(1));
         
-        assertEquals(array.getValue(new int[] {4, 3}), resFlip.getValue(new int[] {1, 3}), .1);
-        assertEquals(array.getValue(new int[] {2, 1}), resFlip.getValue(new int[] {3, 1}), .1);
+        assertEquals(array.get(new int[] {4, 3}), resFlip.get(new int[] {1, 3}));
+        assertEquals(array.get(new int[] {2, 1}), resFlip.get(new int[] {3, 1}));
     }
     
     /**
@@ -161,8 +162,8 @@ public class FlipTest
         assertEquals(dims[2], resFlip.getSize(2));
         assertEquals(dims[3], resFlip.getSize(3));
         
-        assertEquals(array.getValue(new int[] {4, 3, 2, 1}), resFlip.getValue(new int[] {4, 3, 0, 1}), .1);
-        assertEquals(array.getValue(new int[] {2, 3, 2, 0}), resFlip.getValue(new int[] {2, 3, 0, 0}), .1);
+        assertEquals(array.get(new int[] {4, 3, 2, 1}), resFlip.get(new int[] {4, 3, 0, 1}));
+        assertEquals(array.get(new int[] {2, 3, 2, 0}), resFlip.get(new int[] {2, 3, 0, 0}));
     }
     
 	/**

@@ -69,7 +69,7 @@ public class SlicerTest
 		assertEquals(array.getSize(0), result.getSize(0));
 		assertEquals(array.getSize(1), result.getSize(1));
 
-		assertEquals(array.getValue(3, 2, 1), result.getValue(new int[]{3, 2}), .1);
+		assertEquals(array.get(3, 2, 1), result.get(new int[]{3, 2}));
 	}
 
 	private UInt8Array3D create543Array()

@@ -4,7 +4,7 @@
 package net.sci.image.morphology;
 
 import net.sci.algo.Algo;
-import net.sci.array.Array3D;
+import net.sci.array.scalar.ScalarArray3D;
 
 /**
  * Structuring element that process 3D arrays.
@@ -301,7 +301,7 @@ public interface Strel3D extends Algo
 	 * @see #closing(net.sci.array.Array3D)
 	 * @see #opening(net.sci.array.Array3D)
 	 */
-	public Array3D<?> dilation(Array3D<?> image);
+	public ScalarArray3D<?> dilation(ScalarArray3D<?> image);
 
 	/**
 	 * Performs an morphological erosion of the input image with this
@@ -314,7 +314,7 @@ public interface Strel3D extends Algo
 	 * @see #closing(net.sci.array.Array3D)
 	 * @see #opening(net.sci.array.Array3D)
 	 */
-	public Array3D<?> erosion(Array3D<?> image);
+	public ScalarArray3D<?> erosion(ScalarArray3D<?> image);
 	
 	/**
 	 * Performs a morphological closing of the input image with this structuring
@@ -331,7 +331,7 @@ public interface Strel3D extends Algo
 	 * @see #opening(net.sci.array.Array3D)
 	 * @see #reverse()
 	 */
-	public Array3D<?> closing(Array3D<?> image);
+	public ScalarArray3D<?> closing(ScalarArray3D<?> image);
 
 	/**
 	 * Performs a morphological opening of the input image with this structuring
@@ -348,7 +348,7 @@ public interface Strel3D extends Algo
 	 * @see #closing(net.sci.array.Array3D)
 	 * @see #reverse()
 	 */
-	public Array3D<?> opening(Array3D<?> image);
+	public ScalarArray3D<?> opening(ScalarArray3D<?> image);
 
 	/**
 	 * Returns a boolean flag indicating whether or not this structuring

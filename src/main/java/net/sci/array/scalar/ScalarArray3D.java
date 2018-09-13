@@ -33,6 +33,27 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
 		super(size0, size1, size2);
 	}
 
+    // =============================================================
+    // New methods
+
+    public abstract double getValue(int x, int y, int z);
+    
+    public abstract void setValue(int x, int y, int z, double value);
+    
+
+    // =============================================================
+    // Specialization of the ScalarArray interface
+
+    public double getValue(int[] pos)
+    {
+        return getValue(pos[0], pos[1], pos[2]);
+    }
+
+    public void setValue(int[] pos, double value)
+    {
+        setValue(pos[0], pos[1], pos[2], value);
+    }
+    
 	// =============================================================
     // Specialization of the Array interface
 

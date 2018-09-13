@@ -5,7 +5,7 @@ package net.sci.image.morphology.filter;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array3D;
+import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.morphology.Strel3D;
 
 /**
@@ -42,12 +42,12 @@ public abstract class AbstractStrel3D extends AlgoStub implements Strel3D
 	// ===================================================================
 	// Default implementation of some methods
 	
-	public Array3D<?> closing(Array3D<?> stack)
+	public ScalarArray3D<?> closing(ScalarArray3D<?> stack)
 	{
 		return this.reverse().erosion(this.dilation(stack));
 	}
 
-	public Array3D<?> opening(Array3D<?> stack)
+	public ScalarArray3D<?> opening(ScalarArray3D<?> stack)
 	{
 		return this.reverse().dilation(this.erosion(stack));
 	}

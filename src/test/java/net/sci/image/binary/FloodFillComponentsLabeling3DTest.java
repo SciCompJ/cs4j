@@ -1,11 +1,10 @@
 package net.sci.image.binary;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.scalar.ScalarArray3D;
 
 import org.junit.Test;
-
-import net.sci.array.Array3D;
-import net.sci.array.scalar.BinaryArray3D;
 
 public class FloodFillComponentsLabeling3DTest
 {
@@ -35,7 +34,7 @@ public class FloodFillComponentsLabeling3DTest
 		
 		// compute labels of the binary image
 		FloodFillComponentsLabeling3D algo = new FloodFillComponentsLabeling3D(6, 8); 
-		Array3D<?> labels = (Array3D<?>) algo.process(image);
+		ScalarArray3D<?> labels = (ScalarArray3D<?>) algo.process(image);
 		
 		// check labels and empty regions
 		assertEquals(0, (int) labels.getValue(0, 0, 0));

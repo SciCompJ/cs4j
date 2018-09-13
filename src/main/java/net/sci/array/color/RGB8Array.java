@@ -309,17 +309,17 @@ public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
 	// =============================================================
 	// Specialization of Array interface
 
-	@Override
-	public default double getValue(int[] position)
-	{
-		return get(position).getValue();
-	}
-
-	@Override
-	public default void setValue(int[] position, double value)
-	{
-		set(position, RGB8.fromValue(value));
-	}
+//	@Override
+//	public default double getValue(int[] position)
+//	{
+//		return get(position).getValue();
+//	}
+//
+//	@Override
+//	public default void setValue(int[] position, double value)
+//	{
+//		set(position, RGB8.fromValue(value));
+//	}
 
 	@Override
 	public default RGB8Array newInstance(int... dims)

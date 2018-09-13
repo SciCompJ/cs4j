@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
-import net.sci.array.Array2D;
+import net.sci.array.scalar.ScalarArray2D;
 
 /**
  * Implementation stub for separable Structuring elements.
@@ -17,10 +17,10 @@ import net.sci.array.Array2D;
 public abstract class AbstractSeparableStrel2D extends AbstractStrel2D 
 implements SeparableStrel2D, AlgoListener 
 {
-	public Array2D<?> dilation(Array2D<?> image)
+	public ScalarArray2D<?> dilation(ScalarArray2D<?> image)
 	{
 		// Allocate memory for result
-		Array2D<?> result = image.duplicate();
+	    ScalarArray2D<?> result = image.duplicate();
 		
 		// Extract structuring elements
 		Collection<InPlaceStrel2D> strels = this.decompose();
@@ -41,10 +41,10 @@ implements SeparableStrel2D, AlgoListener
 		return result;
 	}
 
-	public Array2D<?> erosion(Array2D<?> image) 
+	public ScalarArray2D<?> erosion(ScalarArray2D<?> image) 
 	{
 		// Allocate memory for result
-		Array2D<?> result = image.duplicate();
+	    ScalarArray2D<?> result = image.duplicate();
 		
 		// Extract structuring elements
 		Collection<InPlaceStrel2D> strels = this.decompose();
@@ -65,10 +65,10 @@ implements SeparableStrel2D, AlgoListener
 		return result;
 	}
 
-	public Array2D<?> closing(Array2D<?> image)
+	public ScalarArray2D<?> closing(ScalarArray2D<?> image)
 	{
 		// Allocate memory for result
-		Array2D<?> result = image.duplicate();
+	    ScalarArray2D<?> result = image.duplicate();
 		
 		// Extract structuring elements
 		Collection<InPlaceStrel2D> strels = this.decompose();
@@ -99,10 +99,10 @@ implements SeparableStrel2D, AlgoListener
 		return result;
 	}
 
-	public Array2D<?> opening(Array2D<?> image) 
+	public ScalarArray2D<?> opening(ScalarArray2D<?> image) 
 	{
 		// Allocate memory for result
-		Array2D<?> result = image.duplicate();
+	    ScalarArray2D<?> result = image.duplicate();
 		
 		// Extract structuring elements
 		Collection<InPlaceStrel2D> strels = this.decompose();
@@ -133,14 +133,14 @@ implements SeparableStrel2D, AlgoListener
 		return result;
 	}
 	
-	private void runDilation(Array2D<?> image, InPlaceStrel2D strel)
+	private void runDilation(ScalarArray2D<?> image, InPlaceStrel2D strel)
 	{
 		strel.addAlgoListener(this);
 		strel.inPlaceDilation(image);
 		strel.removeAlgoListener(this);
 	}
 	
-	private void runErosion(Array2D<?> image, InPlaceStrel2D strel) 
+	private void runErosion(ScalarArray2D<?> image, InPlaceStrel2D strel) 
 	{
 		strel.addAlgoListener(this);
 		strel.inPlaceErosion(image);
