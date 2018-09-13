@@ -112,6 +112,20 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
 	 * @see net.sci.array.data.FloatArray#duplicate()
 	 */
 	@Override
-	public abstract Float32Array3D duplicate();
+    public Float32Array3D duplicate()
+    {
+        Float32Array3D res = Float32Array3D.create(size0, size1, size2);
+        for (int z = 0; z < size2; z++)
+        {
+            for (int y = 0; y < size1; y++)
+            {
+                for (int x = 0; x < size0; x++)
+                {
+                    res.setValue(x, y, z, getValue(x, y, z));
+                }
+            }
+        }
+        return res;
+    }
 
 }

@@ -81,10 +81,24 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
 		return Float64Array.create(dims);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.FloatArray#duplicate()
-	 */
-	@Override
-	public abstract Float64Array3D duplicate();
+    /* (non-Javadoc)
+     * @see net.sci.array.data.FloatArray#duplicate()
+     */
+    @Override
+    public Float64Array3D duplicate()
+    {
+        Float64Array3D res = Float64Array3D.create(size0, size1, size2);
+        for (int z = 0; z < size2; z++)
+        {
+            for (int y = 0; y < size1; y++)
+            {
+                for (int x = 0; x < size0; x++)
+                {
+                    res.setValue(x, y, z, getValue(x, y, z));
+                }
+            }
+        }
+        return res;
+    }
 
 }
