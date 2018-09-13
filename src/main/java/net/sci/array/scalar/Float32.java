@@ -30,6 +30,14 @@ public class Float32 extends Scalar
 		this.value = value;
 	}
 
+	/**
+	 * @return this value as a float
+	 */
+	public float getFloat()
+	{
+	    return value;
+	}
+	
 	/* (non-Javadoc)
 	 * @see net.sci.array.type.Scalar#getValue()
 	 */
