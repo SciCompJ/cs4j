@@ -6,6 +6,7 @@ package net.sci.table;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.io.PrintStream;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -87,10 +88,26 @@ public class DataTable implements Table
         }
     }
 
-	
+
     // =============================================================
     // General methods
 
+    /**
+     * Displays some info about columns within table.
+     * 
+     * @param stream
+     *            the stream to use.
+     */
+    public void printInfo(PrintStream stream)
+    {
+        stream.println("Table: " + name);
+        for (int c = 0; c < nCols; c++)
+        {
+            stream.print(String.format(" [%d] %s: quantitative", c, colNames[c]));
+            stream.println();
+        }
+    }
+    
     /**
      * Returns the dimensions of this table: first the number of rows, then the
      * number of columns.

@@ -3,6 +3,8 @@
  */
 package net.sci.table;
 
+import java.io.PrintStream;
+
 /**
  * Defines the interface for storing measurements.
  *   
@@ -201,6 +203,14 @@ public interface Table
     
     // =============================================================
     // Some specific implementations
+
+    /**
+     * Displays some info about columns within table.
+     * 
+     * @param stream
+     *            the stream to use.
+     */
+    public abstract void printInfo(PrintStream stream);
 
    /**
      * Display the content of the data table to standard output.

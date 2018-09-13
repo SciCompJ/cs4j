@@ -6,6 +6,7 @@ package net.sci.table;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -106,6 +107,26 @@ public class DefaultTable implements Table
 		}
 	}
 
+    // =============================================================
+    // Global information
+	
+	/**
+     * Displays some info about columns within table.
+     * 
+     * @param stream
+     *            the stream to use.
+     */
+	public void printInfo(PrintStream stream)
+	{
+	    stream.println("Table: " + name);
+	    for (int c = 0; c < nCols; c++)
+	    {
+	        stream.print(String.format(" [%d] %s: ", c, colNames[c]));
+	        stream.print(isNumericColumn(c) ? "numeric" : "qualitative");
+	        stream.println();
+	    }
+	}
+    
     
     // =============================================================
     // Management of factor levels
@@ -115,6 +136,15 @@ public class DefaultTable implements Table
 	    return this.levels.get(col) == null;
 	}
 
+	    /**
+     * Returns the levels of the factor column specified by the column index, or
+     * null if the column contains quantitative data.
+     * 
+     * @param col
+     *            index of the column
+     * @return levels of the factor column, or null if the column is
+     *         quantitative
+     */
     public String[] getLevels(int col)
     {
         return this.levels.get(col);
@@ -374,9 +404,11 @@ public class DefaultTable implements Table
 		DefaultTable tbl = new DefaultTable(15, 5);
         tbl.setColumnNames(new String[] { "Length", "Area", "Diam.",
                 "Number", "Density" });
-		tbl.print();
+//		tbl.print();
 		
-		JFrame frame = tbl.show();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        tbl.printInfo(System.out);
+        
+//		JFrame frame = tbl.show();
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }
