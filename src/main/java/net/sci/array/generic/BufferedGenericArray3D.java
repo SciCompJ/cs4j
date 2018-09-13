@@ -137,23 +137,5 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
         {
             buffer[index] = value;
         }
-
-        @Override
-        public double nextValue()
-        {
-            throw new RuntimeException("Unimplemented operation");
-        }
-
-        @Override
-        public double getValue()
-        {
-            throw new RuntimeException("Unimplemented operation");
-        }
-
-        @Override
-        public void setValue(double value)
-        {
-            throw new RuntimeException("Unimplemented operation");
-        }
     }
 }

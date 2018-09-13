@@ -240,20 +240,5 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 			buffer.setInt(new int[]{posX, posY, posZ, 1}, rgb.getSample(1));
 			buffer.setInt(new int[]{posX, posY, posZ, 2}, rgb.getSample(2));
 		}
-
-		@Override
-		public double getValue()
-		{
-			return get().getValue();
-		}
-
-		@Override
-		public void setValue(double value)
-		{
-			int val = UInt16.clamp(value);
-			buffer.setInt(new int[]{posX, posY, posZ, 0}, val);
-			buffer.setInt(new int[]{posX, posY, posZ, 1}, val);
-			buffer.setInt(new int[]{posX, posY, posZ, 2}, val);
-		}
 	}
 }

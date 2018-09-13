@@ -246,29 +246,6 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 			int offset = index * vectorLength;
 			System.arraycopy(vals, 0, buffer, offset, vectorLength);
 		}
-
-        @Override
-        public double getValue()
-        {
-            double maxi = Double.NEGATIVE_INFINITY;
-            int offset = index * vectorLength;
-            for (int i = 0; i < vectorLength; i++)
-            {
-                double v = buffer[offset++];
-                maxi = Math.max(maxi,  v);
-            }
-            return maxi;
-        }
-
-        @Override
-        public void setValue(double value)
-        {
-            int offset = index * vectorLength;
-            for (int i = 0; i < vectorLength; i++)
-            {
-                buffer[offset++] = (float) value;
-            }
-        }
 	}
 
 }

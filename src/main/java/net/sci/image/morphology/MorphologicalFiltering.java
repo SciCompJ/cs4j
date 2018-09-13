@@ -3,8 +3,8 @@
  */
 package net.sci.image.morphology;
 
-import net.sci.array.Array;
 import net.sci.array.Array2D;
+import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array;
 
@@ -527,8 +527,8 @@ public class MorphologicalFiltering
         ScalarArray2D<?> result = strel.opening((ScalarArray2D<?>) image);
 		
 		// Compute subtraction of result from original image
-		Array.Iterator<?> iter1 = image.iterator();
-		Array.Iterator<?> iter2 = result.iterator();
+		ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) image).iterator();
+		ScalarArray.Iterator<?> iter2 = result.iterator();
 		while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
 		{
 			double val = iter1.nextValue() - iter2.nextValue();
@@ -634,8 +634,8 @@ public class MorphologicalFiltering
         ScalarArray2D<?> result = strel.closing((ScalarArray2D<?>) image);
         
         // Compute subtraction of result from original image
-        Array.Iterator<?> iter1 = image.iterator();
-        Array.Iterator<?> iter2 = result.iterator();
+        ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) image).iterator();
+        ScalarArray.Iterator<?> iter2 = result.iterator();
         while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
         {
             double val = iter2.nextValue() - iter1.nextValue();
@@ -733,8 +733,8 @@ public class MorphologicalFiltering
         ScalarArray2D<?> eroded = strel.erosion((ScalarArray2D<?>) image);
         
         // Compute subtraction of result from original image
-        Array.Iterator<?> iter1 = result.iterator();
-        Array.Iterator<?> iter2 = eroded.iterator();
+        ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) result).iterator();
+        ScalarArray.Iterator<?> iter2 = eroded.iterator();
         while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
         {
             double val = iter1.nextValue() - iter2.nextValue();
@@ -850,9 +850,9 @@ public class MorphologicalFiltering
 		
 		// Compute subtraction of result from original image
 		// TODO: iterate over positions
-		Array.Iterator<?> iter1 = outer.iterator();
-		Array.Iterator<?> iter2 = inner.iterator();
-		Array.Iterator<?> resultIter = result.iterator();
+		ScalarArray.Iterator<?> iter1 = outer.iterator();
+		ScalarArray.Iterator<?> iter2 = inner.iterator();
+		ScalarArray.Iterator<?> resultIter = result.iterator();
 		while(iter1.hasNext() && iter2.hasNext())
 		{
 			double val = iter1.nextValue() - iter2.nextValue();
@@ -967,8 +967,8 @@ public class MorphologicalFiltering
 //        ScalarArray2D<?> eroded = strel.erosion((ScalarArray2D<?>) image);
         
         // Compute subtraction of result from original image
-        Array.Iterator<?> iter1 = image.iterator();
-        Array.Iterator<?> iter2 = result.iterator();
+        ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) image).iterator();
+        ScalarArray.Iterator<?> iter2 = result.iterator();
         while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
         {
             double val = iter1.nextValue() - iter2.nextValue();
@@ -1064,8 +1064,8 @@ public class MorphologicalFiltering
         ScalarArray2D<?> result = strel.dilation((ScalarArray2D<?>) image);
         
         // Compute subtraction of result from original image
-        Array.Iterator<?> iter1 = result.iterator();
-        Array.Iterator<?> iter2 = image.iterator();
+        ScalarArray.Iterator<?> iter1 = result.iterator();
+        ScalarArray.Iterator<?> iter2 = ((ScalarArray<?>) image).iterator();
         while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
         {
             double val = iter1.nextValue() - iter2.nextValue();

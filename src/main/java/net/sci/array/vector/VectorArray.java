@@ -243,12 +243,6 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 
 	public interface Iterator<V extends Vector<? extends Scalar>> extends Array.Iterator<V>
 	{
-		public default double nextValue()
-		{
-			forward();
-			return getValue();
-		}
-		
 		/**
 		 * Returns the value of the c-th component of the current vector.
 		 * 

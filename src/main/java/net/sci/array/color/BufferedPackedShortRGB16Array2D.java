@@ -230,20 +230,5 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 			buffer.setInt(posX, posY, 1, rgb.getSample(1));
 			buffer.setInt(posX, posY, 2, rgb.getSample(2));
 		}
-
-		@Override
-		public double getValue()
-		{
-			return get().getValue();
-		}
-
-		@Override
-		public void setValue(double value)
-		{
-			int val = UInt16.clamp(value);
-			buffer.setInt(posX, posY, 0, val);
-			buffer.setInt(posX, posY, 1, val);
-			buffer.setInt(posX, posY, 2, val);
-		}
 	}
 }

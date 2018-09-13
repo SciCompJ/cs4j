@@ -162,23 +162,5 @@ public class BufferedGenericArrayND<T> extends GenericArrayND<T>
 		{
 			buffer[index] = (T) value;
 		}
-
-		@Override
-		public double nextValue()
-		{
-		    throw new RuntimeException("Unimplemented operation");
-		}
-
-		@Override
-		public double getValue()
-		{
-		    throw new RuntimeException("Unimplemented operation");
-		}
-
-		@Override
-		public void setValue(double value)
-		{
-			buffer[index] = (float) value;
-		}
 	}
 }

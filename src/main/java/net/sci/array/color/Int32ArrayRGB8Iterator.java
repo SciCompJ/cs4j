@@ -120,18 +120,4 @@ public class Int32ArrayRGB8Iterator implements RGB8Array.Iterator
     {
         intIterator.setInt(rgb.getIntCode());
     }
-    
-    @Override
-    public double getValue()
-    {
-        return get().getValue();
-    }
-    
-    @Override
-    public void setValue(double value)
-    {
-        int val = UInt8.clamp(value);
-        int intCode = val << 16 & val << 8 & val;
-        intIterator.setInt(intCode);
-    }
 }

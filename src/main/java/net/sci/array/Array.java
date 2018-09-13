@@ -204,27 +204,6 @@ public interface Array<T> extends Iterable<T>, Dimensional
 		 *            the new value to be set in the array.
 		 */
 		public void set(T value);
-		
-		/**
-		 * Returns the next value as a double.
-		 * 
-		 * @return the next value as a double
-		 */
-		public double nextValue();
-	
-		/**
-		 * @return the value at the current iterator position as a double value
-		 */
-		public double getValue();
-		
-		/**
-		 * Changes the value of the array at the current iterator position
-		 * (optional operation).
-		 * 
-		 * @param value
-		 *            the new value
-		 */
-		public void setValue(double value);		
 	}
 	
     /**

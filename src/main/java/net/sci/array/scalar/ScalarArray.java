@@ -283,9 +283,29 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 			setValue(value);
 		}
 		
+        /**
+         * Returns the next value as a double.
+         * 
+         * @return the next value as a double
+         */
 		public default double nextValue()
 		{
 			return next().getValue();
 		}
+    
+        /**
+         * @return the value at the current iterator position as a double value
+         */
+        public double getValue();
+        
+        /**
+         * Changes the value of the array at the current iterator position
+         * (optional operation).
+         * 
+         * @param value
+         *            the new value
+         */
+        public void setValue(double value);     
+		
 	}
 }

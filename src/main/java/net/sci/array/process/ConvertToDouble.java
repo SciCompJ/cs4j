@@ -18,9 +18,13 @@ public class ConvertToDouble implements ArrayOperator
 	@Override
     public <T> ScalarArray<?> process(Array<T> array)
     {
+	    if (!(array instanceof ScalarArray))
+	    {
+	        throw new RuntimeException("Requires a scalar array");
+	    }
         Float32Array result = Float32Array.create(array.getSize());
         
-        Array.Iterator<?> iter1 = array.iterator(); 
+        ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) array).iterator(); 
         ScalarArray.Iterator<?> iter2 = result.iterator();
         
         while(iter1.hasNext() && iter2.hasNext())
@@ -31,12 +35,12 @@ public class ConvertToDouble implements ArrayOperator
         return result;
     }
 
-    public <T> ScalarArray<?> convert(Array<T> array, ScalarArray<?> output)
+    public ScalarArray<?> convert(ScalarArray<?> array, ScalarArray<?> output)
     {
         // TODO: check dim
         // TODO: check size
         
-        Array.Iterator<?> iter1 = array.iterator(); 
+        ScalarArray.Iterator<?> iter1 = array.iterator(); 
         ScalarArray.Iterator<?> iter2 = output.iterator();
         
         while(iter1.hasNext() && iter2.hasNext())

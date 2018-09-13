@@ -3,7 +3,6 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.Array;
 
 /**
  * @author dlegland
@@ -60,10 +59,10 @@ public interface Float32Array extends ScalarArray<Float32>
 		}
 	}
 	
-	public static Float32Array convert(Array<?> array)
+	public static Float32Array convert(ScalarArray<?> array)
 	{
 		Float32Array result = Float32Array.create(array.getSize());
-		Array.Iterator<?> iter1 = array.iterator();
+		ScalarArray.Iterator<?> iter1 = array.iterator();
 		Float32Array.Iterator iter2 = result.iterator();
 		while (iter1.hasNext() && iter2.hasNext())
 		{
