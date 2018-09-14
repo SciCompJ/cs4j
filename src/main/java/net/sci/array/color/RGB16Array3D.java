@@ -6,13 +6,13 @@ package net.sci.array.color;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt16Array3D;
-import net.sci.array.vector.VectorArray3D;
+import net.sci.array.vector.IntVectorArray3D;
 
 /**
  * @author dlegland
  *
  */
-public abstract class RGB16Array3D extends VectorArray3D<RGB16> implements RGB16Array
+public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RGB16Array
 {
 	// =============================================================
 	// Static methods
@@ -53,20 +53,30 @@ public abstract class RGB16Array3D extends VectorArray3D<RGB16> implements RGB16
 		return result;
 	}
 
+    // =============================================================
+    // Specialization of IntVectorArray3D interface
+
+    @Override
+    public int[] getSamples(int x, int y, int z)
+    {
+        return get(x, y, z).getSamples();
+    }
+
+    @Override
+    public int[] getSamples(int x, int y, int z, int[] values)
+    {
+        return get(x, y, z).getSamples(values);
+    }
+
+    @Override
+    public void setSamples(int x, int y, int z, int[] values)
+    {
+        set(x, y, z, new RGB16(values));
+    }
+
+    
 	// =============================================================
 	// Specialization of Array3D interface
-
-//	@Override
-//	public double getValue(int x, int y, int z)
-//	{
-//		return get(x, y, z).getValue();
-//	}
-//
-//	@Override
-//	public void setValue(int x, int y, int z, double value)
-//	{
-//		set(x, y, z, RGB16.fromValue(value));
-//	}
 
 	@Override
 	public double[] getValues(int x, int y, int z)

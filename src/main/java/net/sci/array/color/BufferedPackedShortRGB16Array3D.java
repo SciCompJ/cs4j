@@ -47,6 +47,66 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	}
 
 
+    @Override
+    public int[] getSamples(int x, int y, int z)
+    {
+        int[] values = new int[3];
+        int[] pos = new int[4];
+        pos[0] = x;
+        pos[1] = y;
+        pos[2] = z;
+        for (int c = 0; c < 3; c++)
+        {
+            pos[3] = c;
+            values[c] = this.buffer.getInt(pos);
+        }
+        return values;
+    }
+
+    @Override
+    public int[] getSamples(int x, int y, int z, int[] values)
+    {
+        int[] pos = new int[4];
+        pos[0] = x;
+        pos[1] = y;
+        pos[2] = z;
+        for (int c = 0; c < 3; c++)
+        {
+            pos[3] = c;
+            values[c] = this.buffer.getInt(pos);
+        }
+        return values;
+    }
+
+    @Override
+    public void setSamples(int x, int y, int z, int[] intValues)
+    {
+        int[] pos = new int[4];
+        pos[0] = x;
+        pos[1] = y;
+        pos[2] = z;
+        for (int c = 0; c < 3; c++)
+        {
+            pos[3] = c;
+            this.buffer.setInt(pos, intValues[c]);
+        }
+    }
+
+    @Override
+    public int getSample(int x, int y, int z, int c)
+    {
+        int[] pos = new int[]{x, y, z, c};
+        return this.buffer.getInt(pos);
+    }
+
+    @Override
+    public void setSample(int x, int y, int z, int c, int intValue)
+    {
+        int[] pos = new int[]{x, y, z, c};
+        this.buffer.setInt(pos, intValue);
+    }
+
+    
 	// =============================================================
 	// Implementation of the VectorArray3D interface
 

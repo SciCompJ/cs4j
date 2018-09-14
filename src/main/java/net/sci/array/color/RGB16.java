@@ -30,8 +30,58 @@ public class RGB16 extends IntVector<UInt16> implements Color
 		return (int) Math.min(Math.max(value, 0), 0x00FFFF);
 	}
 	
+    /**
+     * Converts an array of 3 RGB values into an int code
+     * 
+     * @param rgbValues
+     *            the three values of red, green and blue components
+     * @return the corresponding intCode
+     */
+    public static final long intCode(int[] rgb)
+    {
+        long r = clampUInt16(rgb[0]);
+        long g = clampUInt16(rgb[1]);
+        long b = clampUInt16(rgb[2]);
+        return b << 32 | g << 16 | r;   
+    }
+    
+    /**
+     * Converts the int code representing a RGBvalue into the three components
+     * as integers.
+     * 
+     * @param intCode
+     *            the int code of the RGB color
+     * @return the three red, green and blue components
+     */
+    public static final int[] rgbValues(long longCode)
+    {
+        int[] rgb = new int[3];
+        rgb[0] = (int) (longCode & 0x00FFFF);
+        rgb[1] = (int) ((longCode >> 16) & 0x00FFFF);
+        rgb[2] = (int) ((longCode >> 32) & 0x00FFFF);
+        return rgb;
+    }
+
+    /**
+     * Converts the int code representing a RGB value into the three components
+     * as integers.
+     * 
+     * @param intCode
+     *            the int code of the RGB color
+     * @param rgbValues
+     *            the pre-allocated array of int
+     * @return the three red, green and blue components
+     */
+    public static final int[] rgbValues(long longCode, int[] rgb)
+    {
+        rgb[0] = (int) (longCode & 0x00FFFF);
+        rgb[1] = (int) ((longCode >> 16) & 0x00FFFF);
+        rgb[2] = (int) ((longCode >> 32) & 0x00FFFF);
+        return rgb;
+    }
+    
 	/**
-	 * Creates a new RGB8 from grayscale value
+	 * Creates a new RGB16 from grayscale value
 	 * 
 	 * @param value
 	 *            a double value corresponding to grayscale value, between 0 and 2^16-1.
@@ -83,6 +133,24 @@ public class RGB16 extends IntVector<UInt16> implements Color
 		this.longCode = b << 32 | g << 16 | r;   
 	}	
 	
+    /**
+     * Creates a new color by specifying the int value of each component.
+     * 
+     * @param red
+     *            the value of the red component, between 0 and 2^16-1
+     * @param green
+     *            the value of the green component, between 0 and 2^16-1
+     * @param blue
+     *            the value of the blue component, between 0 and 2^16-1
+     */
+    public RGB16(int[] rgb)
+    {
+        long r = clampUInt16(rgb[0]);
+        long g = clampUInt16(rgb[1]);
+        long b = clampUInt16(rgb[2]);
+        this.longCode = b << 32 | g << 16 | r;   
+    }   
+    
 	/**
 	 * Creates a new color by specifying the double value of each component.
 	 * 

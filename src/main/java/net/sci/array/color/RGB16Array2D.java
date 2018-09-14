@@ -6,13 +6,13 @@ package net.sci.array.color;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt16Array2D;
-import net.sci.array.vector.VectorArray2D;
+import net.sci.array.vector.IntVectorArray2D;
 
 /**
  * @author dlegland
  *
  */
-public abstract class RGB16Array2D extends VectorArray2D<RGB16> implements RGB16Array
+public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RGB16Array
 {
 	// =============================================================
 	// Static methods
@@ -42,6 +42,7 @@ public abstract class RGB16Array2D extends VectorArray2D<RGB16> implements RGB16
 		int size1 = this.getSize(1);
 		UInt16Array2D result = UInt16Array2D.create(size0, size1);
 		
+		// TODO: use position iterator
 		RGB16Array.Iterator rgb16Iter = iterator();
 		UInt16Array.Iterator uint16Iter = result.iterator();
 		while(rgb16Iter.hasNext() && uint16Iter.hasNext())
@@ -52,20 +53,32 @@ public abstract class RGB16Array2D extends VectorArray2D<RGB16> implements RGB16
 		return result;
 	}
 	
+	
+    // =============================================================
+    // Specialization of IntVectorArray2D interface
+
+    @Override
+    public int[] getSamples(int x, int y)
+    {
+        return get(x, y).getSamples();
+    }
+
+    @Override
+    public int[] getSamples(int x, int y, int[] values)
+    {
+        return get(x, y).getSamples(values);
+    }
+
+    @Override
+    public void setSamples(int x, int y, int[] values)
+    {
+        set(x, y, new RGB16(values));
+    }
+
+    
 	// =============================================================
 	// Specialization of Array2D interface
 
-//	@Override
-//	public double getValue(int x, int y)
-//	{
-//		return get(x, y).getValue();
-//	}
-//
-//	@Override
-//	public void setValue(int x, int y, double value)
-//	{
-//		set(x, y, RGB16.fromValue(value));
-//	}
 
 	@Override
 	public double[] getValues(int x, int y)

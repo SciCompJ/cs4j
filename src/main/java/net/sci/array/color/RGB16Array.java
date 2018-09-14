@@ -10,6 +10,7 @@ import java.util.HashMap;
 import net.sci.array.Array;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
+import net.sci.array.vector.IntVectorArray;
 import net.sci.array.vector.VectorArray;
 
 /**
@@ -18,7 +19,7 @@ import net.sci.array.vector.VectorArray;
  * @author dlegland
  *
  */
-public interface RGB16Array extends VectorArray<RGB16>, ColorArray<RGB16>
+public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 {
     // =============================================================
     // Static variables

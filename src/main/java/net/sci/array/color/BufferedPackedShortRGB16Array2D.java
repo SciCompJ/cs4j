@@ -43,6 +43,52 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 	}
 
 
+    // =============================================================
+    // Implementation of the IntVectorArray2D interface
+
+    @Override
+    public int[] getSamples(int x, int y)
+    {
+        int[] values = new int[3];
+        for (int c = 0; c < 3; c++)
+        {
+            values[c] = this.buffer.getInt(x, y, c);
+        }
+        return values;
+    }
+
+    @Override
+    public int[] getSamples(int x, int y, int[] values)
+    {
+        for (int c = 0; c < 3; c++)
+        {
+            values[c] = this.buffer.getInt(x, y, c);
+        }
+        return values;
+    }
+
+    @Override
+    public void setSamples(int x, int y, int[] intValues)
+    {
+        for (int c = 0; c < 3; c++)
+        {
+            this.buffer.setInt(x, y, c, intValues[c]);
+        }
+    }
+
+    @Override
+    public int getSample(int x, int y, int c)
+    {
+        return this.buffer.getInt(x, y, c);
+    }
+
+    @Override
+    public void setSample(int x, int y, int c, int intValue)
+    {
+        this.buffer.setInt(x, y, c, intValue);
+    }
+
+    
 	// =============================================================
 	// Implementation of the VectorArray2D interface
 

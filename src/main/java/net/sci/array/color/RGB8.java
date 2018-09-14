@@ -87,7 +87,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
     }
 	
     /**
-     * Converts the int code representing a RGBvalue into the three components
+     * Converts the int code representing a RGB value into the three components
      * as integers.
      * 
      * @param intCode
@@ -104,7 +104,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
     }
 
     /**
-     * Converts the int code representing a RGBvalue into the three components
+     * Converts the int code representing a RGB value into the three components
      * as integers.
      * 
      * @param intCode
