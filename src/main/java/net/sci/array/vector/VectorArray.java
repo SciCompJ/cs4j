@@ -151,6 +151,15 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
      */
 	public int getVectorLength();
 
+//    /**
+//     * Returns a view on the channel specified by the given index.
+//     * 
+//     * @param channel
+//     *            index of the channel to view
+//     * @return a view on the channel
+//     */
+//    public ScalarArray<?> channel(int channel);
+
 //	public java.util.Iterator<ScalarArray<?>> channelIterator();
 	
     /**

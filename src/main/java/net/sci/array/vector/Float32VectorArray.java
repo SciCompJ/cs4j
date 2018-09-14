@@ -4,6 +4,7 @@
 package net.sci.array.vector;
 
 import net.sci.array.Array;
+import net.sci.array.scalar.Float32Array;
 
 /**
  * Specialization of the interface VectorArray for arrays of vectors that
@@ -44,6 +45,20 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 		}
 	}
 
+
+    // =============================================================
+    // Specialization of VectorArray interface
+
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public Float32Array channel(int channel);
+
+    
     // =============================================================
 	// Specialization of Array interface
 

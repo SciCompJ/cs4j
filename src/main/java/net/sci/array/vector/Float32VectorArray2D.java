@@ -39,7 +39,7 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
      *            index of the channel to view
      * @return a view on the channel
      */
-    public Float32Array2D channelView(int channel)
+    public Float32Array2D channel(int channel)
     {
         return new ChannelView(channel);
     }

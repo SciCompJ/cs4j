@@ -156,7 +156,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
     }
     
     /**
-     * Returns a new ScalarArray corresponding to the specified channel.
+     * Returns a view to the specified channel.
      * 
      * @param channelIndex
      *            the index of the channel, between 0 and nChannels-1

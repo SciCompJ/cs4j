@@ -47,7 +47,7 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
      *            index of the channel to view
      * @return a view on the channel
      */
-    public Float64ArrayND channelView(int channel)
+    public Float64ArrayND channel(int channel)
     {
         return new ChannelView(channel);
     }

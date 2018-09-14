@@ -49,7 +49,7 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
      *            index of the channel to view
      * @return a view on the channel
      */
-    public Float32ArrayND channelView(int channel)
+    public Float32ArrayND channel(int channel)
     {
         return new ChannelView(channel);
     }

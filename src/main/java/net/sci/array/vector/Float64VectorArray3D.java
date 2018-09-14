@@ -38,7 +38,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
      *            index of the channel to view
      * @return a view on the channel
      */
-    public Float64Array3D channelView(int channel)
+    public Float64Array3D channel(int channel)
     {
         return new ChannelView(channel);
     }
