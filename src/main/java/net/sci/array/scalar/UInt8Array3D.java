@@ -105,9 +105,6 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Specialization of Array3D interface
 
-	@Override
-	public abstract UInt8Array3D duplicate();
-
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#get(int, int, int)
 	 */
@@ -152,6 +149,23 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	{
 		return UInt8Array.create(dims);
 	}
+
+    @Override
+    public UInt8Array3D duplicate()
+    {
+        UInt8Array3D res = UInt8Array3D.create(size0, size1, size2);
+        for (int z = 0; z < size2; z++)
+        {
+            for (int y = 0; y < size1; y++)
+            {
+                for (int x = 0; x < size0; x++)
+                {
+                    res.setByte(x, y, z, getByte(x, y, z));
+                }
+            }
+        }
+        return res;
+    }
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#get(int[])

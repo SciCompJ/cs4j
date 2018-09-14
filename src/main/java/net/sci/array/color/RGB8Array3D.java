@@ -77,6 +77,27 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 	// =============================================================
 	// Specialization of VectorArray3D interface
 
+    // =============================================================
+    // New methods
+
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public UInt8Array3D channel(int channel)
+    {
+        return new ChannelView(channel);
+    }
+    
+    public java.util.Iterator<UInt8Array3D> channelIterator()
+    {
+        return new ChannelIterator();
+    }
+
+
 	@Override
 	public double[] getValues(int x, int y, int z)
 	{
@@ -117,4 +138,128 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 	@Override
 	public abstract net.sci.array.color.RGB8Array.Iterator iterator();
 
+    private class ChannelView extends UInt8Array3D
+    {
+        int channel;
+        
+        protected ChannelView(int channel)
+        {
+            super(RGB8Array3D.this.size0, RGB8Array3D.this.size1, RGB8Array3D.this.size2);
+            int nChannels = 3;
+            if (channel < 0 || channel >= nChannels)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Channel index %d must be comprised between 0 and %d", channel, nChannels));
+            }
+            this.channel = channel;
+        }
+
+        @Override
+        public byte getByte(int x, int y, int z)
+        {
+            return (byte) RGB8Array3D.this.getSample(x, y, z, channel);
+        }
+
+        @Override
+        public void setByte(int x, int y, int z, byte byteValue)
+        {
+            RGB8Array3D.this.setSample(x, y, z, channel, byteValue & 0x00FF);
+        }
+
+        @Override
+        public net.sci.array.scalar.UInt8Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
+        class Iterator implements net.sci.array.scalar.UInt8Array.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+            int indZ = 0;
+
+            @Override
+            public UInt8 next()
+            {
+                forward();
+                return get();
+            }
+
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                    if (indY >= size1)
+                    {
+                        indY = 0;
+                        indZ++;
+                    }
+                }
+            }
+
+            @Override
+            public double getValue()
+            {
+                return RGB8Array3D.this.getValue(indX, indY, indZ, channel);
+            }
+
+            @Override
+            public void setValue(double value)
+            {
+                RGB8Array3D.this.setValue(indX, indY, indZ, channel, value);
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 && indY < size1 - 1 && indZ < size2 - 1;
+            }
+
+            @Override
+            public int getInt()
+            {
+                return RGB8Array3D.this.getSample(indX, indY, indZ, channel);
+            }
+
+            @Override
+            public void setInt(int intValue)
+            {
+                RGB8Array3D.this.setSample(indX, indY, indZ, channel, intValue);
+            }
+
+            @Override
+            public byte getByte()
+            {
+                return (byte) RGB8Array3D.this.getSample(indX, indY, indZ, channel);
+            }
+
+            @Override
+            public void setByte(byte byteValue)
+            {
+                RGB8Array3D.this.setSample(indX, indY, indZ, channel, byteValue & 0x00FF);
+            }     
+        }
+    }
+    
+    private class ChannelIterator implements java.util.Iterator<UInt8Array3D> 
+    {
+        int channel = -1;
+
+        @Override
+        public boolean hasNext()
+        {
+            return channel < 3;
+        }
+
+        @Override
+        public UInt8Array3D next()
+        {
+            channel++;
+            return new ChannelView(channel);
+        }
+    }
 }

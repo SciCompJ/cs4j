@@ -41,7 +41,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
      *            index of the channel to view
      * @return a view on the channel
      */
-    public UInt8Array2D channelView(int channel)
+    public UInt8Array2D channel(int channel)
     {
         return new ChannelView(channel);
     }
@@ -153,7 +153,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
         @Override
         public byte getByte(int x, int y)
         {
-            return (byte) RGB8Array2D.this.get(x, y).getSample(channel);
+            return (byte) RGB8Array2D.this.getSample(x, y, channel);
         }
 
         @Override
@@ -212,7 +212,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
             @Override
             public int getInt()
             {
-                return RGB8Array2D.this.get(indX, indY).getSample(channel);
+                return RGB8Array2D.this.getSample(indX, indY, channel);
             }
 
             @Override
@@ -224,7 +224,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
             @Override
             public byte getByte()
             {
-                return (byte) RGB8Array2D.this.get(indX, indY).getSample(channel);
+                return (byte) RGB8Array2D.this.getSample(indX, indY, channel);
             }
 
             @Override
