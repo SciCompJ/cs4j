@@ -66,13 +66,13 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 		Float32VectorArray result = Float32VectorArray.create(this.getSize(), this.getVectorLength());
 
 		// initialize iterators
-		Float32VectorArray.Iterator iter1 = this.iterator();
-		Float32VectorArray.Iterator iter2 = result.iterator();
-		
+        Array.PositionIterator iter1 = this.positionIterator();
+        Array.PositionIterator iter2 = result.positionIterator();
+        
 		// copy values into output array
 		while(iter1.hasNext())
 		{
-			iter2.setNext(iter1.next());
+			result.setValues(iter2.next(), this.getValues(iter1.next()));
 		}
 		
 		// return output

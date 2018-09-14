@@ -72,7 +72,6 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
 	// =============================================================
 	// Specialization of Array interface
 
-
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#duplicate()
 	 */

@@ -196,7 +196,18 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	}
 
 	@Override
-	public abstract UInt8Array2D duplicate();
+	public UInt8Array2D duplicate()
+    {
+        UInt8Array2D res = UInt8Array2D.create(size0, size1);
+        for (int y = 0; y < size1; y++)
+        {
+            for (int x = 0; x < size0; x++)
+            {
+                res.setByte(x, y, getByte(x, y));
+            }
+        }
+        return res;
+    }
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#get(int[])

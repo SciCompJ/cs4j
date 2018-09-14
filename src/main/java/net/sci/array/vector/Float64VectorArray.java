@@ -66,18 +66,18 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 		// create output array
 		Float64VectorArray result = Float64VectorArray.create(this.getSize(), this.getVectorLength());
 
-		// initialize iterators
-		Float64VectorArray.Iterator iter1 = this.iterator();
-		Float64VectorArray.Iterator iter2 = result.iterator();
-		
-		// copy values into output array
-		while(iter1.hasNext())
-		{
-            iter2.setNext(iter1.next());
-		}
-		
-		// return output
-		return result;
+        // initialize iterators
+        Array.PositionIterator iter1 = this.positionIterator();
+        Array.PositionIterator iter2 = result.positionIterator();
+        
+        // copy values into output array
+        while(iter1.hasNext())
+        {
+            result.setValues(iter2.next(), this.getValues(iter1.next()));
+        }
+        
+        // return output
+        return result;
 	}
 
 	@Override

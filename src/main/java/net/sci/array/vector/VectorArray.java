@@ -226,13 +226,18 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
     {
         VectorArray<V> result = this.newInstance(this.getSize());
         
-        VectorArray.Iterator<V> iter1 = this.iterator();
-        VectorArray.Iterator<V> iter2 = result.iterator();
-        while (iter1.hasNext())
+        // initialize iterators
+        Array.PositionIterator iter1 = this.positionIterator();
+        Array.PositionIterator iter2 = result.positionIterator();
+
+        // copy values into output array
+        while(iter1.hasNext())
         {
-            iter2.setNext(iter1.next());
+            // TODO: use values?
+            result.setValues(iter2.next(), this.getValues(iter1.next()));
         }
 
+        // return output
         return result;
     }
    

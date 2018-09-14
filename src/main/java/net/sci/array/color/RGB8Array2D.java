@@ -31,6 +31,26 @@ public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Arr
 		super(size0, size1);
 	}
 
+    // =============================================================
+    // New methods
+
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public UInt8Array2D channelView(int channel)
+    {
+        return new ChannelView(channel);
+    }
+    
+    public java.util.Iterator<UInt8Array2D> channelIterator()
+    {
+        return new ChannelIterator();
+    }
+
 
 	// =============================================================
 	// Implementation of the RGB8Array interface
@@ -104,4 +124,133 @@ public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Arr
 	@Override
 	public abstract RGB8Array.Iterator iterator();
 
+    private class ChannelView extends UInt8Array2D
+    {
+        int channel;
+        
+        protected ChannelView(int channel)
+        {
+            super(RGB8Array2D.this.size0, RGB8Array2D.this.size1);
+            int nChannels = 3;
+            if (channel < 0 || channel >= nChannels)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Channel index %d must be comprised between 0 and %d", channel, nChannels));
+            }
+            this.channel = channel;
+        }
+
+        @Override
+        public byte getByte(int x, int y)
+        {
+            return (byte) RGB8Array2D.this.get(x, y).getSample(channel);
+        }
+
+        @Override
+        public void setByte(int x, int y, byte byteValue)
+        {
+            // TODO:simplify it...
+            int[] rgb = RGB8Array2D.this.get(x, y).getSamples();
+            rgb[channel] = byteValue & 0x00FF;
+            RGB8Array2D.this.set(x, y, new RGB8(rgb));
+        }
+
+        @Override
+        public net.sci.array.scalar.UInt8Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
+        class Iterator implements net.sci.array.scalar.UInt8Array.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+
+            @Override
+            public UInt8 next()
+            {
+                forward();
+                return get();
+            }
+
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                }
+            }
+
+            @Override
+            public double getValue()
+            {
+                return RGB8Array2D.this.getValue(indX, indY, channel);
+            }
+
+            @Override
+            public void setValue(double value)
+            {
+                RGB8Array2D.this.setValue(indX, indY, channel, value);
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 && indY < size1 - 1;
+            }
+
+            @Override
+            public int getInt()
+            {
+                return RGB8Array2D.this.get(indX, indY).getSample(channel);
+            }
+
+            @Override
+            public void setInt(int value)
+            {
+                // TODO Can be more efficient
+                // -> RGB8Array2D.setInt(x, y, c, intVal);
+                int[] rgb = RGB8Array2D.this.get(indX, indY).getSamples();
+                rgb[channel] = value;
+                RGB8Array2D.this.set(indX, indY, new RGB8(rgb));
+            }
+
+            @Override
+            public byte getByte()
+            {
+                return (byte) RGB8Array2D.this.get(indX, indY).getSample(channel);
+            }
+
+            @Override
+            public void setByte(byte b)
+            {
+                // TODO Can be more efficient
+                // -> RGB8Array2D.setInt(x, y, c, intVal);
+                int[] rgb = RGB8Array2D.this.get(indX, indY).getSamples();
+                rgb[channel] = b & 0x00FF;
+                RGB8Array2D.this.set(indX, indY, new RGB8(rgb));
+            }     
+        }
+    }
+    
+    private class ChannelIterator implements java.util.Iterator<UInt8Array2D> 
+    {
+        int channel = -1;
+
+        @Override
+        public boolean hasNext()
+        {
+            return channel < 3;
+        }
+
+        @Override
+        public UInt8Array2D next()
+        {
+            channel++;
+            return new ChannelView(channel);
+        }
+    }
 }

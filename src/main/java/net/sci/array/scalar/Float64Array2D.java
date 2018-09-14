@@ -80,5 +80,4 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
         return res;
     }
 
-
 }

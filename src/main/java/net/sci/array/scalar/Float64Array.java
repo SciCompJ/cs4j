@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.Array;
+
 
 /**
  * @author dlegland
@@ -91,31 +93,29 @@ public interface Float64Array extends ScalarArray<Float64>
 	}
 
 	@Override
-	public default ScalarArray.Factory<Float64> getFactory()
-	{
-		return factory;
-	}
-
-	@Override
 	public default Float64Array duplicate()
 	{
 		// create output array
 		Float64Array result = Float64Array.create(this.getSize());
 
-		// initialize iterators
-		Float64Array.Iterator iter1 = this.iterator();
-		Float64Array.Iterator iter2 = result.iterator();
-		
-		// copy values into output array
-		while(iter1.hasNext())
-		{
-			iter2.forward();
-			iter2.set(iter1.next());
-		}
-		
-		// return output
+        Array.PositionIterator iter1 = this.positionIterator();
+        Array.PositionIterator iter2 = result.positionIterator();
+        
+        // copy values into output array
+        while(iter1.hasNext())
+        {
+            result.setValue(iter2.next(), this.getValue(iter1.next()));
+        }
+
+        // return output
 		return result;
 	}
+
+    @Override
+    public default ScalarArray.Factory<Float64> getFactory()
+    {
+        return factory;
+    }
 
 	@Override
 	public default Class<Float64> getDataType()

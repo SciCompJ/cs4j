@@ -59,7 +59,13 @@ public class RGB8 extends IntVector<UInt8> implements Color
 		return new RGB8(val << 16 | val << 8 | val);
 	}
 	
-	public final static RGB8 fromUInt8(UInt8 value)
+    public static final RGB8 fromIntCode(int intCode)
+    {
+        return new RGB8(intCode);
+    }
+
+    
+    public final static RGB8 fromUInt8(UInt8 value)
 	{
 	    int val = clamp255(value.getInt());
 	    return new RGB8(val << 16 | val << 8 | val);
@@ -82,7 +88,6 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	 * @param intCode
 	 *            the integer code of the RGB8 value
 	 */
-	// TODO: signature not explicit -> replace by static factory
 	public RGB8(int intCode)
 	{
 		this.intCode = intCode;
@@ -106,6 +111,24 @@ public class RGB8 extends IntVector<UInt8> implements Color
 		this.intCode = b << 16 | g << 8 | r;   
 	}	
 	
+    /**
+     * Creates a new color by specifying the int value of each component.
+     * 
+     * @param red
+     *            the value of the red component, between 0 and 255
+     * @param green
+     *            the value of the green component, between 0 and 255
+     * @param blue
+     *            the value of the blue component, between 0 and 255
+     */
+    public RGB8(int[] rgb)
+    {
+        int r = clamp255(rgb[0]);
+        int g = clamp255(rgb[1]);
+        int b = clamp255(rgb[2]);
+        this.intCode = b << 16 | g << 8 | r;   
+    }   
+    
 	/**
 	 * Creates a new color by specifying the double value of each component.
 	 * 
