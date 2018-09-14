@@ -114,7 +114,24 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
 	// Specialization of Array3D interface
 
 	@Override
-	public abstract UInt16Array3D duplicate();
+    public UInt16Array3D duplicate()
+    {
+        // create output array
+        UInt16Array3D res = UInt16Array3D.create(this.size0, this.size1, this.size2);
+
+        for (int z = 0; z < size2; z++)
+        {
+            for (int y = 0; y < size1; y++)
+            {
+                for (int x = 0; x < size0; x++)
+                {
+                    res.setShort(x, y, z, getShort(x, y, z));
+                }
+            }
+        }
+        return res;
+    }
+
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#get(int, int, int)

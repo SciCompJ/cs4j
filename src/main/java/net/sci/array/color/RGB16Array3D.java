@@ -103,6 +103,28 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
 	}
 
 
+    // =============================================================
+    // New Implementation of VectorArray interface
+
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public UInt16Array3D channel(int channel)
+    {
+        return new ChannelView(channel);
+    }
+    
+    public java.util.Iterator<UInt16Array3D> channelIterator()
+    {
+        return new ChannelIterator();
+    }
+
+
+
 	// =============================================================
 	// Specialization of Array interface
 	
@@ -117,5 +139,130 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
 	 */
 	@Override
 	public abstract net.sci.array.color.RGB16Array.Iterator iterator();
+
+    private class ChannelView extends UInt16Array3D
+    {
+        int channel;
+        
+        protected ChannelView(int channel)
+        {
+            super(RGB16Array3D.this.size0, RGB16Array3D.this.size1, RGB16Array3D.this.size2);
+            int nChannels = 3;
+            if (channel < 0 || channel >= nChannels)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Channel index %d must be comprised between 0 and %d", channel, nChannels));
+            }
+            this.channel = channel;
+        }
+
+        @Override
+        public short getShort(int x, int y, int z)
+        {
+            return (short) RGB16Array3D.this.getSample(x, y, z, channel);
+        }
+
+        @Override
+        public void setShort(int x, int y, int z, short shortValue)
+        {
+            RGB16Array3D.this.setSample(x, y, z, channel, shortValue & 0x00FFFF);
+        }
+
+        @Override
+        public net.sci.array.scalar.UInt16Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
+        class Iterator implements net.sci.array.scalar.UInt16Array.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+            int indZ = 0;
+
+            @Override
+            public UInt16 next()
+            {
+                forward();
+                return get();
+            }
+
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                    if (indY >= size1)
+                    {
+                        indY = 0;
+                        indZ++;
+                    }
+                }
+            }
+
+            @Override
+            public double getValue()
+            {
+                return RGB16Array3D.this.getValue(indX, indY, indZ, channel);
+            }
+
+            @Override
+            public void setValue(double value)
+            {
+                RGB16Array3D.this.setValue(indX, indY, indZ, channel, value);
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 && indY < size1 - 1 && indZ < size2 - 1;
+            }
+
+            @Override
+            public int getInt()
+            {
+                return RGB16Array3D.this.getSample(indX, indY, indZ, channel);
+            }
+
+            @Override
+            public void setInt(int intValue)
+            {
+                RGB16Array3D.this.setSample(indX, indY, indZ, channel, intValue);
+            }
+
+            @Override
+            public short getShort()
+            {
+                return (short) RGB16Array3D.this.getSample(indX, indY, indZ, channel);
+            }
+
+            @Override
+            public void setShort(short shortValue)
+            {
+                RGB16Array3D.this.setSample(indX, indY, indZ, channel, shortValue & 0x00FFFF);
+            }     
+        }
+    }
+    
+    private class ChannelIterator implements java.util.Iterator<UInt16Array3D> 
+    {
+        int channel = -1;
+
+        @Override
+        public boolean hasNext()
+        {
+            return channel < 3;
+        }
+
+        @Override
+        public UInt16Array3D next()
+        {
+            channel++;
+            return new ChannelView(channel);
+        }
+    }
 
 }

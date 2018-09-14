@@ -75,10 +75,15 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	@Override
 	public IntArray<T> duplicate();
 
-	public default double getValue(int[] pos)
-	{
-		return getInt(pos);
-	}
+    public default double getValue(int[] pos)
+    {
+        return getInt(pos);
+    }
+
+    public default void setValue(int[] pos, double value)
+    {
+        setInt(pos, (int) value);
+    }
 
     @Override
     public IntArray.Factory<T> getFactory();

@@ -3,6 +3,7 @@
  */
 package net.sci.array.scalar;
 
+
 /**
  * @author dlegland
  *
@@ -157,7 +158,21 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	}
 
 	@Override
-	public abstract UInt16Array2D duplicate();
+	public UInt16Array2D duplicate()
+	{
+        // create output array
+        UInt16Array2D res = UInt16Array2D.create(this.size0, this.size1);
+
+        for (int y = 0; y < size1; y++)
+        {
+            for (int x = 0; x < size0; x++)
+            {
+                res.setShort(x, y, getShort(x, y));
+            }
+        }
+        
+        return res;
+	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#get(int[])

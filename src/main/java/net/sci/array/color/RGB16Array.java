@@ -190,9 +190,21 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	public UInt16Array convertToUInt16();
 	
 
-	// =============================================================
-	// Specialization of VectorArray interface
+    // =============================================================
+    // Specialization of VectorArray interface
 
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public UInt16Array channel(int channel);
+    
+    public java.util.Iterator<? extends UInt16Array> channelIterator();
+
+    
 	/**
 	 * Always returns 3, as this is the number of components of the RGB16 type.
 	 * 
@@ -228,18 +240,6 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 
 	// =============================================================
 	// Specialization of Array interface
-
-//	@Override
-//	public default double getValue(int[] position)
-//	{
-//		return get(position).getValue();
-//	}
-//
-//	@Override
-//	public default void setValue(int[] position, double value)
-//	{
-//		set(position, RGB16.fromValue(value));
-//	}
 
 	@Override
 	public default RGB16Array newInstance(int... dims)

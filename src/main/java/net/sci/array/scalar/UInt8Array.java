@@ -131,13 +131,25 @@ public interface UInt8Array extends IntArray<UInt8>
 		return factory;
 	}
 
-	@Override
+    @Override
+    public default UInt8 get(int[] pos)
+    {
+        return new UInt8(getByte(pos)); 
+    }
+
+    @Override
+    public default void set(int[] pos, UInt8 value)
+    {
+        setByte(pos, value.getByte());
+    }
+
+    @Override
 	public default UInt8Array duplicate()
 	{
 		// create output array
 		UInt8Array result = UInt8Array.create(this.getSize());
 
-        Array.PositionIterator iter1 = this.positionIterator();
+		Array.PositionIterator iter1 = this.positionIterator();
         Array.PositionIterator iter2 = result.positionIterator();
         
         // copy values into output array
