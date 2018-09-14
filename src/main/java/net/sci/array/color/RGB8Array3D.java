@@ -71,7 +71,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
     @Override
     public void setSamples(int x, int y, int z, int[] values)
     {
-        set(x, y, x, new RGB8(values));
+        set(x, y, z, new RGB8(values));
     }
 
 	// =============================================================

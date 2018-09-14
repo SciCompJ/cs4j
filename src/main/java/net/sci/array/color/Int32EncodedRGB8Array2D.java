@@ -75,7 +75,25 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
         this.buffer.setInt(x, y, intCode);
     }
 
-	
+    @Override
+    public int[] getSamples(int x, int y)
+    {
+        return RGB8.rgbValues(this.buffer.getInt(x, y));
+    }
+
+    @Override
+    public int[] getSamples(int x, int y, int[] values)
+    {
+        return RGB8.rgbValues(this.buffer.getInt(x, y), values);
+    }
+
+    @Override
+    public void setSamples(int x, int y, int[] rgb)
+    {
+        this.buffer.setInt(x, y, RGB8.intCode(rgb));
+    }
+
+
 	// =============================================================
 	// Implementation of the Array2D interface
 

@@ -68,6 +68,24 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
         this.buffer.setInt(x, y, z, intCode);
     }
 
+    @Override
+    public int[] getSamples(int x, int y, int z)
+    {
+        return RGB8.rgbValues(this.buffer.getInt(x, y, z));
+    }
+
+    @Override
+    public int[] getSamples(int x, int y, int z, int[] values)
+    {
+        return RGB8.rgbValues(this.buffer.getInt(x, y, z), values);
+    }
+
+    @Override
+    public void setSamples(int x, int y, int z, int[] rgb)
+    {
+        this.buffer.setInt(x, y, z, RGB8.intCode(rgb));
+    }
+
 
     // =============================================================
 	// Implementation of the VectorArray3D interface

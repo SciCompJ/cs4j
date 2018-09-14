@@ -71,8 +71,58 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	    return new RGB8(val << 16 | val << 8 | val);
 	}
 	
+    /**
+     * Converts an array of 3 RGB values into an int code
+     * 
+     * @param rgbValues
+     *            the three values of red, green and blue components
+     * @return the corresponding intCode
+     */
+    public static final int intCode(int[] rgb)
+    {
+        int r = clamp255(rgb[0]);
+        int g = clamp255(rgb[1]);
+        int b = clamp255(rgb[2]);
+        return b << 16 | g << 8 | r;   
+    }
 	
-	// =============================================================
+    /**
+     * Converts the int code representing a RGBvalue into the three components
+     * as integers.
+     * 
+     * @param intCode
+     *            the int code of the RGB color
+     * @return the three red, green and blue components
+     */
+    public static final int[] rgbValues(int intCode)
+    {
+        int[] rgb = new int[3];
+        rgb[0] = intCode & 0x00FF;
+        rgb[1] = (intCode >> 8) & 0x00FF;
+        rgb[2] = (intCode >> 16) & 0x00FF;
+        return rgb;
+    }
+
+    /**
+     * Converts the int code representing a RGBvalue into the three components
+     * as integers.
+     * 
+     * @param intCode
+     *            the int code of the RGB color
+     * @param rgbValues
+     *            the pre-allocated array of int
+     * @return the three red, green and blue components
+     */
+    public static final int[] rgbValues(int intCode, int[] rgb)
+    {
+        rgb[0] = intCode & 0x00FF;
+        rgb[1] = (intCode >> 8) & 0x00FF;
+        rgb[2] = (intCode >> 16) & 0x00FF;
+        return rgb;
+    }
+
+    
+    // =============================================================
 	// Class variables
 	
 	final int intCode;
