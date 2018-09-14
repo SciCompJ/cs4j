@@ -39,7 +39,37 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	}
 
 
-	// =============================================================
+    // =============================================================
+    // Implementation of the IntVectorArray3D interface
+
+    @Override
+    public int getSample(int x, int y, int z, int c)
+    {
+        return get(x, y, z).getSample(c);
+    }
+
+    @Override
+    public void setSample(int x, int y, int z, int c, int intValue)
+    {
+        int intCode = this.buffer.getInt(x, y, z);
+        int r = intCode & 0x00FF;
+        int g = intCode & 0x00FF00;
+        int b = intCode & 0x00FF0000;
+        intValue = UInt8.clamp(intValue);
+        
+        switch (c)
+        {
+        case 0: r = intValue; break;
+        case 1: g = intValue << 8; break;
+        case 2: b = intValue << 16; break;
+        default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
+        }
+        intCode = r | g | b;
+        this.buffer.setInt(x, y, z, intCode);
+    }
+
+
+    // =============================================================
 	// Implementation of the VectorArray3D interface
 
 	/* (non-Javadoc)
@@ -48,6 +78,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
 	public double[] getValues(int x, int y, int z)
 	{
+	    // TODO: keep it?
 		return new RGB8(this.buffer.getInt(x, y, z)).getValues();
 	}
 
@@ -61,45 +92,6 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 		int g = UInt8.clamp(values[1]);
 		int b = UInt8.clamp(values[2]);
 		int intCode = b << 16 | g << 8 | r;
-		this.buffer.setInt(x, y, z, intCode);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.vector.VectorArray3D#getValue(int, int, int, int)
-	 */
-	@Override
-	public double getValue(int x, int y, int z, int c)
-	{
-		int intCode = this.buffer.getInt(x, y, z);
-		switch (c)
-		{
-		case 0: return intCode & 0x00FF;
-		case 1: return (intCode >> 8) & 0x00FF;
-		case 2: return (intCode >> 16) & 0x00FF;
-		}
-		throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.vector.VectorArray3D#setValue(int, int, int, int, double)
-	 */
-	@Override
-	public void setValue(int x, int y, int z, int c, double value)
-	{
-		int intCode = this.buffer.getInt(x, y, z);
-		int r = intCode & 0x00FF;
-		int g = intCode & 0x00FF00;
-		int b = intCode & 0x00FF0000;
-		int intValue = UInt8.clamp(value);
-		
-		switch (c)
-		{
-		case 0: r = intValue; break;
-		case 1: g = intValue << 8; break;
-		case 2: b = intValue << 16; break;
-		default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
-		}
-		intCode = r | g | b;
 		this.buffer.setInt(x, y, z, intCode);
 	}
 

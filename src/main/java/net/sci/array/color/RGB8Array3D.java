@@ -6,13 +6,13 @@ package net.sci.array.color;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array3D;
-import net.sci.array.vector.VectorArray3D;
+import net.sci.array.vector.IntVectorArray3D;
 
 /**
  * @author dlegland
  *
  */
-public abstract class RGB8Array3D extends VectorArray3D<RGB8> implements RGB8Array
+public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8Array
 {
 	// =============================================================
 	// Static methods
@@ -53,20 +53,29 @@ public abstract class RGB8Array3D extends VectorArray3D<RGB8> implements RGB8Arr
 		return result;
 	}
 
-	// =============================================================
-	// Specialization of Array3D interface
+    // =============================================================
+    // Specialization of IntVectorArray3D interface
 
-//	@Override
-//	public double getValue(int x, int y, int z)
-//	{
-//		return get(x, y, z).getValue();
-//	}
-//
-//	@Override
-//	public void setValue(int x, int y, int z, double value)
-//	{
-//		set(x, y, z, RGB8.fromValue(value));
-//	}
+    @Override
+    public int[] getSamples(int x, int y, int z)
+    {
+        return get(x, y, z).getSamples();
+    }
+
+    @Override
+    public int[] getSamples(int x, int y, int z, int[] values)
+    {
+        return get(x, y, z).getSamples(values);
+    }
+
+    @Override
+    public void setSamples(int x, int y, int z, int[] values)
+    {
+        set(x, y, x, new RGB8(values));
+    }
+
+	// =============================================================
+	// Specialization of VectorArray3D interface
 
 	@Override
 	public double[] getValues(int x, int y, int z)
