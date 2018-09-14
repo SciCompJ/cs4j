@@ -6,13 +6,13 @@ package net.sci.array.color;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.vector.VectorArray2D;
+import net.sci.array.vector.IntVectorArray2D;
 
 /**
  * @author dlegland
  *
  */
-public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Array
+public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8Array
 {
 	// =============================================================
 	// Static methods
@@ -72,20 +72,30 @@ public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Arr
 		return result;
 	}
 	
-	// =============================================================
-	// Specialization of Array2D interface
+    // =============================================================
+    // Specialization of IntVectorArray2D interface
 
-//	@Override
-//	public double getValue(int x, int y)
-//	{
-//		return get(x, y).getValue();
-//	}
-//
-//	@Override
-//	public void setValue(int x, int y, double value)
-//	{
-//		set(x, y, RGB8.fromValue(value));
-//	}
+    @Override
+    public int[] getSamples(int x, int y)
+    {
+        return get(x, y).getSamples();
+    }
+
+    @Override
+    public int[] getSamples(int x, int y, int[] values)
+    {
+        return get(x, y).getSamples(values);
+    }
+
+    @Override
+    public void setSamples(int x, int y, int[] values)
+    {
+        set(x, y, new RGB8(values));
+    }
+
+    
+	// =============================================================
+	// Specialization of VectorArray2D interface
 
 	@Override
 	public double[] getValues(int x, int y)
@@ -149,10 +159,7 @@ public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Arr
         @Override
         public void setByte(int x, int y, byte byteValue)
         {
-            // TODO:simplify it...
-            int[] rgb = RGB8Array2D.this.get(x, y).getSamples();
-            rgb[channel] = byteValue & 0x00FF;
-            RGB8Array2D.this.set(x, y, new RGB8(rgb));
+            RGB8Array2D.this.setSample(x, y, channel, byteValue & 0x00FF);
         }
 
         @Override
@@ -209,13 +216,9 @@ public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Arr
             }
 
             @Override
-            public void setInt(int value)
+            public void setInt(int intValue)
             {
-                // TODO Can be more efficient
-                // -> RGB8Array2D.setInt(x, y, c, intVal);
-                int[] rgb = RGB8Array2D.this.get(indX, indY).getSamples();
-                rgb[channel] = value;
-                RGB8Array2D.this.set(indX, indY, new RGB8(rgb));
+                RGB8Array2D.this.setSample(indX, indY, channel, intValue);
             }
 
             @Override
@@ -225,13 +228,9 @@ public abstract class RGB8Array2D extends VectorArray2D<RGB8> implements RGB8Arr
             }
 
             @Override
-            public void setByte(byte b)
+            public void setByte(byte byteValue)
             {
-                // TODO Can be more efficient
-                // -> RGB8Array2D.setInt(x, y, c, intVal);
-                int[] rgb = RGB8Array2D.this.get(indX, indY).getSamples();
-                rgb[channel] = b & 0x00FF;
-                RGB8Array2D.this.set(indX, indY, new RGB8(rgb));
+                RGB8Array2D.this.setSample(indX, indY, channel, byteValue & 0x00FF);
             }     
         }
     }

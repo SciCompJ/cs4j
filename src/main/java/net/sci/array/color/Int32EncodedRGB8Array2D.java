@@ -38,49 +38,73 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 		this.buffer = buffer;
 	}
 
+    // =============================================================
+    // Implementation of the IntVectorArray2D interface
 
-	// =============================================================
-	// Implementation of the VectorArray2D interface
+	// TODO: could convert directly betwween intCode to/from int[]
+//    @Override
+//    public int[] getSamples(int x, int y)
+//    {
+//        int[] values = new int[3];
+//        for (int c = 0; c < 3; c++)
+//        {
+//            values[c] = this.buffer.getInt(x, y, c);
+//        }
+//        return values;
+//    }
+//
+//    @Override
+//    public int[] getSamples(int x, int y, int[] values)
+//    {
+//        for (int c = 0; c < 3; c++)
+//        {
+//            values[c] = this.buffer.getInt(x, y, c);
+//        }
+//        return values;
+//    }
+//
+//    @Override
+//    public void setSamples(int x, int y, int[] intValues)
+//    {
+//        for (int c = 0; c < 3; c++)
+//        {
+//            this.buffer.setInt(x, y, c, intValues[c]);
+//        }
+//    }
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.vector.VectorArray2D#getValue(int, int, int)
-	 */
-	@Override
-	public double getValue(int x, int y, int c)
-	{
-		int intCode = this.buffer.getInt(x, y);
-		switch (c)
-		{
-		case 0: return intCode & 0x00FF;
-		case 1: return (intCode >> 8) & 0x00FF;
-		case 2: return (intCode >> 16) & 0x00FF;
-		}
-		throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
-	}
+    @Override
+    public int getSample(int x, int y, int c)
+    {
+        int intCode = this.buffer.getInt(x, y);
+        switch (c)
+        {
+        case 0: return intCode & 0x00FF;
+        case 1: return (intCode >> 8) & 0x00FF;
+        case 2: return (intCode >> 16) & 0x00FF;
+        }
+        throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
+    }
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.vector.VectorArray2D#setValue(int, int, int, double)
-	 */
-	@Override
-	public void setValue(int x, int y, int c, double value)
-	{
-		int intCode = this.buffer.getInt(x, y);
-		int r = intCode & 0x00FF;
-		int g = intCode & 0x00FF00;
-		int b = intCode & 0x00FF0000;
-		int intValue = UInt8.clamp(value);
-		
-		switch (c)
-		{
-		case 0: r = intValue; break;
-		case 1: g = intValue << 8; break;
-		case 2: b = intValue << 16; break;
-		default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
-		}
-		
-		intCode = r | g | b;
-		this.buffer.setInt(x, y, intCode);
-	}
+    @Override
+    public void setSample(int x, int y, int c, int intValue)
+    {
+        int intCode = this.buffer.getInt(x, y);
+        int r = intCode & 0x00FF;
+        int g = intCode & 0x00FF00;
+        int b = intCode & 0x00FF0000;
+        intValue = UInt8.clamp(intValue);
+        
+        switch (c)
+        {
+        case 0: r = intValue; break;
+        case 1: g = intValue << 8; break;
+        case 2: b = intValue << 16; break;
+        default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + c);
+        }
+        
+        intCode = r | g | b;
+        this.buffer.setInt(x, y, intCode);
+    }
 
 	
 	// =============================================================
