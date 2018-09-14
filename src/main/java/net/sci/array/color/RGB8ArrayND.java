@@ -49,6 +49,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 		return result;
 	}
 
+
 	// =============================================================
 	// Specialization of Array interface
 	

@@ -4,6 +4,7 @@
 package net.sci.array.color;
 
 import net.sci.array.scalar.Int32Array;
+import net.sci.array.scalar.UInt8;
 
 /**
  * Implementation of multidimensional array of RGB8, by keeping value in a buffer if Int32.
@@ -38,7 +39,45 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 	}
 
 	
-	// =============================================================
+    // =============================================================
+    // Implementation of the IntVectorArray interface
+
+    @Override
+    public int getSample(int[] pos, int channel)
+    {
+        int intCode = this.buffer.getInt(pos);
+        switch (channel)
+        {
+        case 0: return intCode & 0x00FF;
+        case 1: return (intCode >> 8) & 0x00FF;
+        case 2: return (intCode >> 16) & 0x00FF;
+        }
+        throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + channel);
+    }
+
+    @Override
+    public void setSample(int[] pos, int channel, int intValue)
+    {
+        int intCode = this.buffer.getInt(pos);
+        int r = intCode & 0x00FF;
+        int g = intCode & 0x00FF00;
+        int b = intCode & 0x00FF0000;
+        intValue = UInt8.clamp(intValue);
+        
+        switch (channel)
+        {
+        case 0: r = intValue; break;
+        case 1: g = intValue << 8; break;
+        case 2: b = intValue << 16; break;
+        default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2, not " + channel);
+        }
+        
+        intCode = r | g | b;
+        this.buffer.setInt(pos, intCode);
+    }
+
+    
+    // =============================================================
 	// Implementation of the Array interface
 
 	@Override

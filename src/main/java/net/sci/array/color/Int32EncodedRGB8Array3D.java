@@ -78,8 +78,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
 	public double[] getValues(int x, int y, int z)
 	{
-	    // TODO: keep it?
-		return new RGB8(this.buffer.getInt(x, y, z)).getValues();
+	 	return new RGB8(this.buffer.getInt(x, y, z)).getValues();
 	}
 
 	/* (non-Javadoc)

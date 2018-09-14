@@ -11,6 +11,7 @@ import net.sci.array.Array;
 import net.sci.array.scalar.BinaryArray;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
+import net.sci.array.vector.IntVectorArray;
 import net.sci.array.vector.VectorArray;
 
 /**
@@ -19,7 +20,7 @@ import net.sci.array.vector.VectorArray;
  * @author dlegland
  *
  */
-public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
+public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 {
     // =============================================================
     // Static variables
@@ -269,6 +270,42 @@ public interface RGB8Array extends VectorArray<RGB8>, ColorArray<RGB8>
 	{
 	    return new UInt8View(this);
 	}
+
+    // =============================================================
+    // Default Implementation of the IntVectorArray interface
+
+    @Override
+    public default int[] getSamples(int[] pos)
+    {
+        return get(pos).getSamples();
+    }
+
+    @Override
+    public default int[] getSamples(int[] pos, int[] intValues)
+    {
+        return get(pos).getSamples(intValues);
+    }
+
+    @Override
+    public default void setSamples(int[] pos, int[] intValues)
+    {
+        set(pos, new RGB8(intValues));
+    }
+
+    @Override
+    public default int getSample(int[] pos, int channel)
+    {
+        return get(pos).getSample(channel);
+    }
+
+    @Override
+    public default void setSample(int[] pos, int channel, int intValue)
+    {
+        int[] samples = get(pos).getSamples();
+        samples[channel] = UInt8.clamp(intValue);
+        set(pos, new RGB8(samples));
+    }
+    
 
 	// =============================================================
 	// Specialization of VectorArray interface
