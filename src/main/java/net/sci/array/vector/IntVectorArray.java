@@ -18,6 +18,8 @@ public interface IntVectorArray<V extends IntVector<? extends Int>> extends Vect
 
     public int[] getSamples(int[] pos);
 
+    public int[] getSamples(int[] pos, int[] intValues);
+
     public void setSamples(int[] pos, int[] intValues);
 
     public int getSample(int[] pos, int channel);
@@ -32,7 +34,7 @@ public interface IntVectorArray<V extends IntVector<? extends Int>> extends Vect
     // =============================================================
     // Specialization of Array interface
 
-    public IntVectorArray2D<V> duplicate();
+    public IntVectorArray<V> duplicate();
     
     public interface Iterator<V extends IntVector<?>> extends VectorArray.Iterator<V>
     {

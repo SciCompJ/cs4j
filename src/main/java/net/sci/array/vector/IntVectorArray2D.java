@@ -180,7 +180,7 @@ public abstract class IntVectorArray2D<V extends IntVector<?>> extends VectorArr
     }
     
     // =============================================================
-    // Specialization of VectorArray interface
+    // Specialization of VectorArray2D interface
 
     public double getValue(int x, int y, int c)
     {
