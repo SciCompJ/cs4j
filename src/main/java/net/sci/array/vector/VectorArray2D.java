@@ -162,6 +162,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
      *            the index of the channel, between 0 and nChannels-1
      * @return a new scalar array.
      */
+    // TODO: merge with channelView
     public ScalarArray2D<?> channel(int channelIndex)
     {
         // allocate memory for result

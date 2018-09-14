@@ -84,6 +84,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 			ScalarArray.Iterator<? extends Scalar> iter2 = channel.iterator();
 			
 			// iterate both iterators in parallel
+			// TODO: iterate over positions
 			while (iter1.hasNext() && iter2.hasNext())
 			{
 				iter1.forward();
