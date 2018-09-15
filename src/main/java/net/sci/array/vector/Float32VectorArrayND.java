@@ -28,20 +28,10 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
 		super(sizes);
 	}
 	
-    // =============================================================
-    // New methods
 
-    public Iterable<Float32ArrayND> channels()
-    {
-        return new Iterable<Float32ArrayND>()
-                {
-                    @Override
-                    public java.util.Iterator<Float32ArrayND> iterator()
-                    {
-                        return new ChannelIterator();
-                    }
-                };
-    }
+	// =============================================================
+    // Implementation of VectorArray interface
+
     /**
      * Returns a view on the channel specified by the given index.
      * 
@@ -54,6 +44,18 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
         return new ChannelView(channel);
     }
     
+    public Iterable<Float32ArrayND> channels()
+    {
+        return new Iterable<Float32ArrayND>()
+                {
+                    @Override
+                    public java.util.Iterator<Float32ArrayND> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
     public java.util.Iterator<Float32ArrayND> channelIterator()
     {
         return new ChannelIterator();

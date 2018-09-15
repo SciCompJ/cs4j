@@ -155,36 +155,6 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         return result;
     }
     
-    /**
-     * Returns a view to the specified channel.
-     * 
-     * @param channelIndex
-     *            the index of the channel, between 0 and nChannels-1
-     * @return a new scalar array.
-     */
-    // TODO: merge with channelView
-    public ScalarArray2D<?> channel(int channelIndex)
-    {
-        // allocate memory for result
-        Float32Array2D result = Float32Array2D.create(getSize(0), getSize(1));
-        
-        // create array iterators
-        VectorArray.Iterator<? extends Vector<?>> iter1 = iterator();
-        Float32Array.Iterator iter2 = result.iterator();
-        
-        // iterate over both arrays in parallel
-        while (iter1.hasNext() && iter2.hasNext())
-        {
-            // iterate
-            iter1.forward();
-            iter2.forward();
-            
-            iter2.setValue(iter1.getValue(channelIndex));
-        }
-        
-        return result;
-    }
-    
 
     // =============================================================
 	// New abstract methods
@@ -226,7 +196,17 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 
 	// =============================================================
 	// Specialization of VectorArray interface
-	
+
+	public abstract ScalarArray2D<?> channel(int channel);
+
+    /**
+     * Iterates over the channels
+     * @return 
+     */
+    public abstract Iterable<? extends ScalarArray2D<?>> channels();
+
+    public abstract java.util.Iterator<? extends ScalarArray2D<?>> channelIterator();
+
 	public double[] getValues(int[] pos)
 	{
 		return getValues(pos[0], pos[1]);
@@ -370,6 +350,31 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
+        public ScalarArray2D<?> channel(int channel)
+        {
+            return ScalarArray2D.wrap(array.channel(channel));
+        }
+
+        @Override
+        public Iterable<? extends ScalarArray2D<?>> channels()
+        {
+            return new Iterable<ScalarArray2D<?>>()
+                    {
+                        @Override
+                        public java.util.Iterator<ScalarArray2D<?>> iterator()
+                        {
+                            return new ChannelIterator();
+                        }
+                    };
+        }
+
+        @Override
+        public java.util.Iterator<ScalarArray2D<?>> channelIterator()
+        {
+            return new ChannelIterator();
+        }
+
+        @Override
         public double[] getValues(int x, int y)
         {
             return array.getValues(new int[] {x, y});
@@ -401,5 +406,24 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
             values[c] = value;
             array.setValues(pos, values);
         }
+        
+        private class ChannelIterator implements java.util.Iterator<ScalarArray2D<?>> 
+        {
+            int channel = -1;
+
+            @Override
+            public boolean hasNext()
+            {
+                return channel < array.getVectorLength();
+            }
+
+            @Override
+            public ScalarArray2D<?> next()
+            {
+                channel++;
+                return ScalarArray2D.wrap(array.channel(channel));
+            }
+        }
+
     }
 }

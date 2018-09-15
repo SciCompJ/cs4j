@@ -103,7 +103,7 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RG
 
 
     // =============================================================
-    // New Implementation of VectorArray interface
+    // Implementation of VectorArray interface
 
     /**
      * Returns a view on the channel specified by the given index.
@@ -117,6 +117,18 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RG
         return new ChannelView(channel);
     }
     
+    public Iterable<UInt16Array2D> channels()
+    {
+        return new Iterable<UInt16Array2D>()
+                {
+                    @Override
+                    public java.util.Iterator<UInt16Array2D> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
     public java.util.Iterator<UInt16Array2D> channelIterator()
     {
         return new ChannelIterator();

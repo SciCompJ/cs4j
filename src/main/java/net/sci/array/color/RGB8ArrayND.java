@@ -53,7 +53,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 
 
     // =============================================================
-    // New methods
+    // Implementation of VectorArray interface
 
     /**
      * Returns a view on the channel specified by the given index.
@@ -67,6 +67,18 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
         return new ChannelView(channel);
     }
     
+    public Iterable<UInt8ArrayND> channels()
+    {
+        return new Iterable<UInt8ArrayND>()
+                {
+                    @Override
+                    public java.util.Iterator<UInt8ArrayND> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
     public java.util.Iterator<UInt8ArrayND> channelIterator()
     {
         return new ChannelIterator();

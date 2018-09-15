@@ -58,7 +58,11 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
      */
     public Float32Array channel(int channel);
 
-    
+    public Iterable<? extends Float32Array> channels();
+
+    public java.util.Iterator<? extends Float32Array> channelIterator();
+
+
     // =============================================================
 	// Specialization of Array interface
 

@@ -46,6 +46,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 		}
 	}
 
+	
     // =============================================================
     // Specialization of VectorArray interface
 
@@ -58,8 +59,12 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
      */
     public Float64Array channel(int channel);
 
-    
-	// =============================================================
+    public Iterable<? extends Float64Array> channels();
+
+    public java.util.Iterator<? extends Float64Array> channelIterator();
+
+
+    // =============================================================
 	// Specialization of Array interface
 
 	@Override

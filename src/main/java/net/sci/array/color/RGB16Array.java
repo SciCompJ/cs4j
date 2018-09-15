@@ -191,7 +191,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	
 
     // =============================================================
-    // Specialization of VectorArray interface
+    // Implementation of VectorArray interface
 
     /**
      * Returns a view on the channel specified by the given index.
@@ -202,6 +202,8 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
      */
     public UInt16Array channel(int channel);
     
+    public Iterable<? extends UInt16Array> channels();
+
     public java.util.Iterator<? extends UInt16Array> channelIterator();
 
     

@@ -43,6 +43,18 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
 	    return new ChannelView(channel);
 	}
 	
+    public Iterable<Float64Array2D> channels()
+    {
+        return new Iterable<Float64Array2D>()
+                {
+                    @Override
+                    public java.util.Iterator<Float64Array2D> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
 	public java.util.Iterator<Float64Array2D> channelIterator()
 	{
 	    return new ChannelIterator();

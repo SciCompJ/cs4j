@@ -5,6 +5,7 @@ package net.sci.array.vector;
 
 import net.sci.array.Array;
 import net.sci.array.Array3D;
+import net.sci.array.scalar.ScalarArray3D;
 
 /**
  * @author dlegland
@@ -77,7 +78,17 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
 	// =============================================================
 	// Specialization of VectorArray interface
 	
-	public double[] getValues(int[] pos)
+    public abstract ScalarArray3D<?> channel(int channel);
+
+    /**
+     * ITerates over the channels
+     * @return
+     */
+    public abstract Iterable<? extends ScalarArray3D<?>> channels();
+
+    public abstract java.util.Iterator<? extends ScalarArray3D<?>> channelIterator();
+
+    public double[] getValues(int[] pos)
 	{
 		return getValues(pos[0], pos[1], pos[2]);
 	}
@@ -221,6 +232,31 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         }
 
         @Override
+        public ScalarArray3D<?> channel(int channel)
+        {
+            return ScalarArray3D.wrap(array.channel(channel));
+        }
+
+        @Override
+        public Iterable<? extends ScalarArray3D<?>> channels()
+        {
+            return new Iterable<ScalarArray3D<?>>()
+                    {
+                        @Override
+                        public java.util.Iterator<ScalarArray3D<?>> iterator()
+                        {
+                            return new ChannelIterator();
+                        }
+                    };
+        }
+
+        @Override
+        public java.util.Iterator<ScalarArray3D<?>> channelIterator()
+        {
+            return new ChannelIterator();
+        }
+
+        @Override
         public double[] getValues(int x, int y, int z)
         {
             return array.getValues(new int[] {x, y, z});
@@ -252,5 +288,24 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             values[c] = value;
             array.setValues(pos, values);
         }
+        
+        private class ChannelIterator implements java.util.Iterator<ScalarArray3D<?>> 
+        {
+            int channel = -1;
+
+            @Override
+            public boolean hasNext()
+            {
+                return channel < array.getVectorLength();
+            }
+
+            @Override
+            public ScalarArray3D<?> next()
+            {
+                channel++;
+                return ScalarArray3D.wrap(array.channel(channel));
+            }
+        }
+
     }
 }

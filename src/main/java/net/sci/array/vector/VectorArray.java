@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import net.sci.array.Array;
 import net.sci.array.scalar.Float32Array;
-//import net.sci.array.scalar.Float32ArrayND;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
@@ -67,35 +66,14 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	
 	public static Collection<ScalarArray<?>> splitChannels(VectorArray<? extends Vector<?>> array)
 	{
-	    // TODO: remove static
-		int nc = array.getVectorLength();
-		ArrayList<ScalarArray<?>> result = new ArrayList<ScalarArray<?>>(nc);
-		
-		int[] dims = array.getSize();
-		
-		// allocate memory for each channel array
-		for (int c = 0; c < nc; c++)
-		{
-		    //TODO: add psb to choose output type
-			ScalarArray<?> channel = Float32Array.create(dims);
-			
-			// create iterators
-			VectorArray.Iterator<? extends Vector<? extends Scalar>> iter1 = array.iterator();
-			ScalarArray.Iterator<? extends Scalar> iter2 = channel.iterator();
-			
-			// iterate both iterators in parallel
-			// TODO: iterate over positions
-			while (iter1.hasNext() && iter2.hasNext())
-			{
-				iter1.forward();
-				iter2.forward();
-				iter2.setValue(iter1.getValue(c));
-			}
-			
-			result.add(channel);
-		}
-		
-		return result;
+	    int nc = array.getVectorLength();
+	    ArrayList<ScalarArray<?>> channels = new ArrayList<ScalarArray<?>>(nc);
+	    
+	    for (ScalarArray<?> channel : array.channels())
+	    {
+	        channels.add(channel.duplicate());
+	    }
+	    return channels;
 	}
 	
 	
@@ -151,16 +129,22 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
      */
 	public int getVectorLength();
 
-//    /**
-//     * Returns a view on the channel specified by the given index.
-//     * 
-//     * @param channel
-//     *            index of the channel to view
-//     * @return a view on the channel
-//     */
-//    public ScalarArray<?> channel(int channel);
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public ScalarArray<?> channel(int channel);
 
-//	public java.util.Iterator<ScalarArray<?>> channelIterator();
+    /**
+     * ITerates over the channels
+     * @return
+     */
+    public Iterable<? extends ScalarArray<?>> channels();
+
+    public java.util.Iterator<? extends ScalarArray<?>> channelIterator();
 	
     /**
      * Returns the set of values corresponding to the array element for the
@@ -199,35 +183,6 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
     // =============================================================
     // Specialization of Array interface
     
-//    /**
-//     * Returns the maximum values within the components/channels.
-//     */
-//    @Override
-//    public default double getValue(int[] pos)
-//    {
-//        double maxi = Double.NEGATIVE_INFINITY;
-//        for (double v :  getValues(pos))
-//        {
-//            maxi = Math.max(maxi, v);
-//        }
-//        return maxi;
-//    }
-//    
-//    /**
-//     * Sets all the components/channels at the given position to the specified value.
-//     */
-//    @Override
-//    public default void setValue(int[] pos, double value)
-//    {
-//        int nc = this.getVectorLength();
-//        double[] vals = new double[nc];
-//        for (int c = 0; c < nc; c++)
-//        {
-//            vals[c] = value;
-//        }
-//        setValues(pos, vals);
-//    }
-
 	@Override
 	public VectorArray<V> newInstance(int... dims);
 	
@@ -241,10 +196,10 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
         Array.PositionIterator iter2 = result.positionIterator();
 
         // copy values into output array
+        double[] values = new double[getVectorLength()];
         while(iter1.hasNext())
         {
-            // TODO: use values?
-            result.setValues(iter2.next(), this.getValues(iter1.next()));
+            result.setValues(iter2.next(), this.getValues(iter1.next(), values));
         }
 
         // return output

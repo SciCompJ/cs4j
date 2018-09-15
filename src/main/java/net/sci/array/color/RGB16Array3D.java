@@ -102,9 +102,9 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
 		set(x, y, z, new RGB16(r, g, b));
 	}
 
-
+    
     // =============================================================
-    // New Implementation of VectorArray interface
+    // Implementation of VectorArray interface
 
     /**
      * Returns a view on the channel specified by the given index.
@@ -118,11 +118,22 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
         return new ChannelView(channel);
     }
     
+    public Iterable<UInt16Array3D> channels()
+    {
+        return new Iterable<UInt16Array3D>()
+                {
+                    @Override
+                    public java.util.Iterator<UInt16Array3D> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
     public java.util.Iterator<UInt16Array3D> channelIterator()
     {
         return new ChannelIterator();
     }
-
 
 
 	// =============================================================

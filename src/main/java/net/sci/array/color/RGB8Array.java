@@ -311,6 +311,17 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	// Specialization of VectorArray interface
 
     /**
+     * Always returns 3, as this is the number of components of the RGB8 type.
+     * 
+     * @see net.sci.array.vector.VectorArray#getVectorLength()
+     */
+    @Override
+    public default int getVectorLength()
+    {
+        return 3;
+    }
+
+    /**
      * Returns a view on the channel specified by the given index.
      * 
      * @param channel
@@ -319,17 +330,9 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
      */
     public UInt8Array channel(int channel);
     
+    public Iterable<? extends UInt8Array> channels();
+
     public java.util.Iterator<? extends UInt8Array> channelIterator();
-	/**
-	 * Always returns 3, as this is the number of components of the RGB8 type.
-	 * 
-	 * @see net.sci.array.vector.VectorArray#getVectorLength()
-	 */
-	@Override
-	public default int getVectorLength()
-	{
-		return 3;
-	}
 
 	@Override
 	public default double[] getValues(int[] pos)

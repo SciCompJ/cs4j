@@ -74,11 +74,9 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
         set(x, y, z, new RGB8(values));
     }
 
-	// =============================================================
-	// Specialization of VectorArray3D interface
 
     // =============================================================
-    // New methods
+    // Implementation of VectorArray interface
 
     /**
      * Returns a view on the channel specified by the given index.
@@ -92,6 +90,18 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
         return new ChannelView(channel);
     }
     
+    public Iterable<UInt8Array3D> channels()
+    {
+        return new Iterable<UInt8Array3D>()
+                {
+                    @Override
+                    public java.util.Iterator<UInt8Array3D> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
     public java.util.Iterator<UInt8Array3D> channelIterator()
     {
         return new ChannelIterator();

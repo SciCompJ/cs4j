@@ -28,26 +28,9 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
 		super(size0, size1, size2);
 	}
 	
+
 	// =============================================================
-	// New methods
-
-    /**
-     * Returns a view on the channel specified by the given index.
-     * 
-     * @param channel
-     *            index of the channel to view
-     * @return a view on the channel
-     */
-    public Float32Array3D channel(int channel)
-    {
-        return new ChannelView(channel);
-    }
-    
-    public java.util.Iterator<Float32Array3D> channelIterator()
-    {
-        return new ChannelIterator();
-    }
-
+    // Specialization of VectorArray2D interface
 
 	public abstract double[] getValues(int x, int y, int z);
 	
@@ -71,10 +54,39 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
 	
 	public abstract void setValue(int x, int y, int z, int c, double value);
 
-
-	// =============================================================
-	// Specialization of VectorArray interface
 	
+    // =============================================================
+    // Implementation of VectorArray interface
+
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public Float32Array3D channel(int channel)
+    {
+        return new ChannelView(channel);
+    }
+    
+    public Iterable<Float32Array3D> channels()
+    {
+        return new Iterable<Float32Array3D>()
+                {
+                    @Override
+                    public java.util.Iterator<Float32Array3D> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
+    public java.util.Iterator<Float32Array3D> channelIterator()
+    {
+        return new ChannelIterator();
+    }
+
 	public double[] getValues(int[] pos)
 	{
 		return getValues(pos[0], pos[1], pos[2]);

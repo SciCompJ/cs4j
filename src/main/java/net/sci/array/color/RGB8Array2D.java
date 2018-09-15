@@ -31,26 +31,6 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 		super(size0, size1);
 	}
 
-    // =============================================================
-    // New methods
-
-    /**
-     * Returns a view on the channel specified by the given index.
-     * 
-     * @param channel
-     *            index of the channel to view
-     * @return a view on the channel
-     */
-    public UInt8Array2D channel(int channel)
-    {
-        return new ChannelView(channel);
-    }
-    
-    public java.util.Iterator<UInt8Array2D> channelIterator()
-    {
-        return new ChannelIterator();
-    }
-
 
 	// =============================================================
 	// Implementation of the RGB8Array interface
@@ -94,8 +74,37 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
     }
 
     
-	// =============================================================
-	// Specialization of VectorArray2D interface
+    // =============================================================
+    // Implementation of VectorArray interface
+
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public UInt8Array2D channel(int channel)
+    {
+        return new ChannelView(channel);
+    }
+    
+    public Iterable<UInt8Array2D> channels()
+    {
+        return new Iterable<UInt8Array2D>()
+                {
+                    @Override
+                    public java.util.Iterator<UInt8Array2D> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
+    public java.util.Iterator<UInt8Array2D> channelIterator()
+    {
+        return new ChannelIterator();
+    }
 
 	@Override
 	public double[] getValues(int x, int y)

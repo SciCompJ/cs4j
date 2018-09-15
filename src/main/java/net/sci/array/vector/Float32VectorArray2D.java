@@ -30,7 +30,7 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
 
 
     // =============================================================
-    // New methods
+    // Implementation of VectorArray interface
 
     /**
      * Returns a view on the channel specified by the given index.
@@ -44,13 +44,22 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
         return new ChannelView(channel);
     }
     
+    public Iterable<Float32Array2D> channels()
+    {
+        return new Iterable<Float32Array2D>()
+                {
+                    @Override
+                    public java.util.Iterator<Float32Array2D> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
     public java.util.Iterator<Float32Array2D> channelIterator()
     {
         return new ChannelIterator();
     }
-
-    // =============================================================
-	// Specialization of VectorArray interface
 
 	public double[] getValues(int[] pos)
 	{

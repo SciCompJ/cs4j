@@ -43,6 +43,18 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         return new ChannelView(channel);
     }
     
+    public Iterable<Float64Array3D> channels()
+    {
+        return new Iterable<Float64Array3D>()
+                {
+                    @Override
+                    public java.util.Iterator<Float64Array3D> iterator()
+                    {
+                        return new ChannelIterator();
+                    }
+                };
+    }
+
     public java.util.Iterator<Float64Array3D> channelIterator()
     {
         return new ChannelIterator();
