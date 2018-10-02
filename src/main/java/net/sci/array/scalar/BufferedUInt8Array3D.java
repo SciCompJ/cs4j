@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.vector.Float64VectorArray2D;
+
 /**
  * @author dlegland
  *
@@ -148,5 +150,4 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 			buffer[index] = b;
 		}
 	}
-
 }

@@ -68,7 +68,38 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	public abstract void setByte(int x, int y, int z, byte value);
 	
 	
-	// =============================================================
+    // =============================================================
+    // Management of slices
+
+    public UInt8Array2D slice(int sliceIndex)
+    {
+        return new SliceView(sliceIndex);
+    }
+
+    /**
+     * Iterates over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
+    public Iterable<? extends UInt8Array2D> slices()
+    {
+        return new Iterable<UInt8Array2D>()
+        {
+            @Override
+            public java.util.Iterator<UInt8Array2D> iterator()
+            {
+                return new SliceIterator();
+            }
+        };
+    }
+
+    public java.util.Iterator<? extends UInt8Array2D> sliceIterator()
+    {
+        return new SliceIterator();
+    }
+
+
+    // =============================================================
 	// Specialization of the UInt8Array interface
 
 	/* (non-Javadoc)
@@ -183,4 +214,105 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	{
 		setByte(pos[0], pos[1], pos[2], value.getByte());
 	}
+
+	
+    private class SliceView extends UInt8Array2D
+    {
+        int sliceIndex;
+        
+        protected SliceView(int slice)
+        {
+            super(UInt8Array3D.this.size0, UInt8Array3D.this.size1);
+            if (slice < 0 || slice >= UInt8Array3D.this.size2)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Slice index %d must be comprised between 0 and %d", slice, UInt8Array3D.this.size2));
+            }
+            this.sliceIndex = slice;
+        }
+
+        @Override
+        public byte getByte(int x, int y)
+        {
+            return UInt8Array3D.this.getByte(x, y, this.sliceIndex);
+        }
+
+        @Override
+        public void setByte(int x, int y, byte value)
+        {
+            UInt8Array3D.this.setByte(x, y, this.sliceIndex, value);            
+        }
+
+        @Override
+        public net.sci.array.scalar.UInt8Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
+        class Iterator implements UInt8Array.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+            
+            public Iterator() 
+            {
+            }
+            
+            @Override
+            public UInt8 next()
+            {
+                forward();
+                return get();
+            }
+
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                }
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 && indY < size1 - 1;
+            }
+
+            @Override
+            public byte getByte()
+            {
+                return UInt8Array3D.this.getByte(indX, indY, sliceIndex);
+            }
+
+            @Override
+            public void setByte(byte b)
+            {
+                UInt8Array3D.this.setByte(indX, indY, sliceIndex, b);
+            }
+        }
+    }
+    
+    private class SliceIterator implements java.util.Iterator<UInt8Array2D> 
+    {
+        int sliceIndex = -1;
+
+        @Override
+        public boolean hasNext()
+        {
+            return sliceIndex < UInt8Array3D.this.size2;
+        }
+
+        @Override
+        public UInt8Array2D next()
+        {
+            sliceIndex++;
+            return new SliceView(sliceIndex);
+        }
+        
+    }
+
 }
