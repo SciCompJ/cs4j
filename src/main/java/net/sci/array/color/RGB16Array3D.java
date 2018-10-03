@@ -229,7 +229,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
             @Override
             public boolean hasNext()
             {
-                return indX < size0 - 1 && indY < size1 - 1 && indZ < size2 - 1;
+                return indX < size0 - 1 || indY < size1 - 1 || indZ < size2 - 1;
             }
 
             @Override

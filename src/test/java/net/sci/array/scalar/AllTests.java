@@ -15,6 +15,7 @@ import org.junit.runners.Suite;
 	BufferedUInt16Array2DTest.class,
 	BufferedUInt8Array2DTest.class,
     // 3D implementations
+    UInt8Array3DTest.class,
     BufferedUInt8Array3DTest.class,
     SlicedUInt8Array3DTest.class,
     // ND implementations

@@ -192,7 +192,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
             @Override
             public boolean hasNext()
             {
-                return indX < size0 - 1 && indY < size1 - 1 && indZ < size2 - 1;
+                return indX < size0 - 1 || indY < size1 - 1 || indZ < size2 - 1;
             }     
         }
     }

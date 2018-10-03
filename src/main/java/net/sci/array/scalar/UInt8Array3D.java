@@ -279,7 +279,7 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
             @Override
             public boolean hasNext()
             {
-                return indX < size0 - 1 && indY < size1 - 1;
+                return indX < size0 - 1 || indY < size1 - 1;
             }
 
             @Override
