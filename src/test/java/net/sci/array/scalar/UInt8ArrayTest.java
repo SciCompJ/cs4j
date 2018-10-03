@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.data;
+package net.sci.array.scalar;
 
 import static org.junit.Assert.*;
 

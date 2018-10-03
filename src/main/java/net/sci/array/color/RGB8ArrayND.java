@@ -89,13 +89,13 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 	// Specialization of Array interface
 	
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.color.RGB8Array#duplicate()
+	 * @see net.sci.array.color.RGB8Array#duplicate()
 	 */
 	@Override
 	public abstract RGB8ArrayND duplicate();
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.color.RGB8Array#iterator()
+	 * @see net.sci.array.color.RGB8Array#iterator()
 	 */
 	@Override
 	public abstract RGB8Array.Iterator iterator();

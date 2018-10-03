@@ -140,13 +140,13 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
 	// Specialization of Array interface
 	
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.color.RGB16Array#duplicate()
+	 * @see net.sci.array.color.RGB16Array#duplicate()
 	 */
 	@Override
 	public abstract RGB16Array3D duplicate();
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.color.RGB16Array#iterator()
+	 * @see net.sci.array.color.RGB16Array#iterator()
 	 */
 	@Override
 	public abstract net.sci.array.color.RGB16Array.Iterator iterator();

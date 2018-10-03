@@ -1,4 +1,4 @@
-package net.sci.array.data.scalar2d;
+package net.sci.array.scalar;
 
 import static org.junit.Assert.*;
 

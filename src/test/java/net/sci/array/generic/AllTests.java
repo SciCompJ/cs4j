@@ -1,4 +1,4 @@
-package net.sci.array.data;
+package net.sci.array.generic;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -6,11 +6,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-    Array2DTest.class,
-    ScalarArrayTest.class,
-	UInt8ArrayTest.class,
-	UInt8ArrayWrapperTest.class,
-	})
+    BufferedGenericArray2DTest.class,
+    BufferedGenericArray3DTest.class,
+    })
 public class AllTests {
   //nothing
 }

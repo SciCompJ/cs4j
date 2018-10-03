@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.data.color;
+package net.sci.array.color;
 
 import static org.junit.Assert.*;
 

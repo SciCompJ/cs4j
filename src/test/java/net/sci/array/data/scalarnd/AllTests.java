@@ -1,5 +1,8 @@
 package net.sci.array.data.scalarnd;
 
+import net.sci.array.scalar.BufferedInt32ArrayNDTest;
+import net.sci.array.scalar.BufferedUInt8ArrayNDTest;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

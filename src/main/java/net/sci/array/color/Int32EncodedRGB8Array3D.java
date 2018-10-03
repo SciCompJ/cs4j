@@ -145,7 +145,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.color.RGB8Array2D#duplicate()
+	 * @see net.sci.array.color.RGB8Array2D#duplicate()
 	 */
 	@Override
 	public RGB8Array3D duplicate()
@@ -155,7 +155,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.color.RGB8Array#iterator()
+	 * @see net.sci.array.color.RGB8Array#iterator()
 	 */
 	@Override
 	public RGB8Array.Iterator iterator()

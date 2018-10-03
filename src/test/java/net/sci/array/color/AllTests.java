@@ -1,4 +1,4 @@
-package net.sci.array.data.generic;
+package net.sci.array.color;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -6,8 +6,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-    BufferedGenericArray2DTest.class,
-    BufferedGenericArray3DTest.class,
+    RGB8ArrayTest.class,
     })
 public class AllTests {
   //nothing

@@ -1,5 +1,8 @@
 package net.sci.array.data.scalar3d;
 
+import net.sci.array.scalar.BufferedUInt8Array3DTest;
+import net.sci.array.scalar.SlicedUInt8Array3DTest;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 

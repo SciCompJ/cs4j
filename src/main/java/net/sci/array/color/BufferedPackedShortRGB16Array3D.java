@@ -192,7 +192,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.color.RGB8Array3D#duplicate()
+	 * @see net.sci.array.color.RGB8Array3D#duplicate()
 	 */
 	@Override
 	public RGB16Array3D duplicate()
@@ -202,7 +202,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.color.RGB8Array3D#iterator()
+	 * @see net.sci.array.color.RGB8Array3D#iterator()
 	 */
 	@Override
 	public RGB16Array.Iterator iterator()
