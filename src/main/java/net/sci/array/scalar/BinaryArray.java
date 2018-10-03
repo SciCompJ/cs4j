@@ -239,6 +239,18 @@ public interface BinaryArray extends IntArray<Binary>
 		{
 			setBoolean(value > 0);
 		}
+
+		@Override
+		public default Binary get()
+		{
+		    return new Binary(getBoolean());
+		}
+
+		@Override
+		public default void set(Binary value)
+		{
+		    setBoolean(value.getBoolean());
+		}
 	}
 	
     /**

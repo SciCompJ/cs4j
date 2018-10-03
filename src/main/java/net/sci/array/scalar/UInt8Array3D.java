@@ -312,7 +312,6 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
             sliceIndex++;
             return new SliceView(sliceIndex);
         }
-        
     }
 
 }

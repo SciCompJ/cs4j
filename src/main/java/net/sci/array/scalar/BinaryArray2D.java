@@ -183,8 +183,20 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 		return BinaryArray.create(dims);
 	}
 
-	@Override
-	public abstract BinaryArray2D duplicate();
+    @Override
+    public BinaryArray2D duplicate()
+    {
+        BinaryArray2D res = BinaryArray2D.create(size0, size1);
+        for (int y = 0; y < size1; y++)
+        {
+            for (int x = 0; x < size0; x++)
+            {
+                res.setBoolean(x, y, getBoolean(x, y));
+            }
+        }
+        return res;
+    }
+
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#get(int[])

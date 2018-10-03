@@ -82,8 +82,23 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 	// =============================================================
 	// Specialization of Array interface
 	
-	@Override
-	public abstract Int32Array2D duplicate();
+    @Override
+    public Int32Array2D duplicate()
+    {
+        // create output array
+        Int32Array2D res = Int32Array2D.create(this.size0, this.size1);
+
+        for (int y = 0; y < size1; y++)
+        {
+            for (int x = 0; x < size0; x++)
+            {
+                res.setInt(x, y, getInt(x, y));
+            }
+        }
+        
+        return res;
+    }
+
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#get(int[])

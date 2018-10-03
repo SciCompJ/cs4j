@@ -68,6 +68,36 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	 */
 	public abstract void setBoolean(int x, int y, int z, boolean state);
 	
+    // =============================================================
+    // Management of slices
+
+    public BinaryArray2D slice(int sliceIndex)
+    {
+        return new SliceView(sliceIndex);
+    }
+
+    /**
+     * Iterates over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
+    public Iterable<? extends BinaryArray2D> slices()
+    {
+        return new Iterable<BinaryArray2D>()
+        {
+            @Override
+            public java.util.Iterator<BinaryArray2D> iterator()
+            {
+                return new SliceIterator();
+            }
+        };
+    }
+
+    public java.util.Iterator<? extends BinaryArray2D> sliceIterator()
+    {
+        return new SliceIterator();
+    }
+
 	
 	// =============================================================
 	// Specialization of the BooleanArray interface
@@ -327,6 +357,104 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
                 Wrapper.this.setBoolean(x, y, z, b);
             }
         }
-
     }
+    
+    private class SliceView extends BinaryArray2D
+    {
+        int sliceIndex;
+        
+        protected SliceView(int slice)
+        {
+            super(BinaryArray3D.this.size0, BinaryArray3D.this.size1);
+            if (slice < 0 || slice >= BinaryArray3D.this.size2)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Slice index %d must be comprised between 0 and %d", slice, BinaryArray3D.this.size2));
+            }
+            this.sliceIndex = slice;
+        }
+
+        @Override
+        public boolean getBoolean(int x, int y)
+        {
+            return BinaryArray3D.this.getBoolean(x, y, this.sliceIndex);
+        }
+
+        @Override
+        public void setBoolean(int x, int y, boolean bool)
+        {
+            BinaryArray3D.this.setBoolean(x, y, this.sliceIndex, bool);            
+        }
+
+        @Override
+        public net.sci.array.scalar.BinaryArray.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
+        class Iterator implements BinaryArray.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+            
+            public Iterator() 
+            {
+            }
+            
+            @Override
+            public Binary next()
+            {
+                forward();
+                return get();
+            }
+
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                }
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 || indY < size1 - 1;
+            }
+
+            @Override
+            public boolean getBoolean()
+            {
+                return BinaryArray3D.this.getBoolean(indX, indY, sliceIndex);
+            }
+
+            @Override
+            public void setBoolean(boolean b)
+            {
+                BinaryArray3D.this.setBoolean(indX, indY, sliceIndex, b);
+            }
+        }
+    }
+    
+    private class SliceIterator implements java.util.Iterator<BinaryArray2D> 
+    {
+        int sliceIndex = -1;
+
+        @Override
+        public boolean hasNext()
+        {
+            return sliceIndex < BinaryArray3D.this.size2;
+        }
+
+        @Override
+        public BinaryArray2D next()
+        {
+            sliceIndex++;
+            return new SliceView(sliceIndex);
+        }
+    }
+
 }

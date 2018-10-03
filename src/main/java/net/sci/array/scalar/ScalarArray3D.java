@@ -39,8 +39,8 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     public abstract double getValue(int x, int y, int z);
     
     public abstract void setValue(int x, int y, int z, double value);
-    
 
+    
     // =============================================================
     // Specialization of the ScalarArray interface
 

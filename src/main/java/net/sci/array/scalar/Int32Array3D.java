@@ -3,6 +3,7 @@
  */
 package net.sci.array.scalar;
 
+
 /**
  * @author dlegland
  *
@@ -26,7 +27,37 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
 		super(size0, size1, size2);
 	}
 
+    // =============================================================
+    // Management of slices
 
+    public Int32Array2D slice(int sliceIndex)
+    {
+        return new SliceView(sliceIndex);
+    }
+
+    /**
+     * Iterates over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
+    public Iterable<? extends Int32Array2D> slices()
+    {
+        return new Iterable<Int32Array2D>()
+        {
+            @Override
+            public java.util.Iterator<Int32Array2D> iterator()
+            {
+                return new SliceIterator();
+            }
+        };
+    }
+
+    public java.util.Iterator<? extends Int32Array2D> sliceIterator()
+    {
+        return new SliceIterator();
+    }
+
+    
 	// =============================================================
 	// Specialization of the IntArray interface
 
@@ -110,4 +141,102 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
 	{
 		setInt(pos[0], pos[1], pos[2], value.getInt());
 	}
+    
+    private class SliceView extends Int32Array2D
+    {
+        int sliceIndex;
+        
+        protected SliceView(int slice)
+        {
+            super(Int32Array3D.this.size0, Int32Array3D.this.size1);
+            if (slice < 0 || slice >= Int32Array3D.this.size2)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Slice index %d must be comprised between 0 and %d", slice, Int32Array3D.this.size2));
+            }
+            this.sliceIndex = slice;
+        }
+
+        @Override
+        public int getInt(int x, int y)
+        {
+            return Int32Array3D.this.getInt(x, y, this.sliceIndex);
+        }
+
+        @Override
+        public void setInt(int x, int y, int value)
+        {
+            Int32Array3D.this.setInt(x, y, this.sliceIndex, value);            
+        }
+
+        @Override
+        public net.sci.array.scalar.Int32Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
+        class Iterator implements Int32Array.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+            
+            public Iterator() 
+            {
+            }
+            
+            @Override
+            public Int32 next()
+            {
+                forward();
+                return get();
+            }
+
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                }
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 || indY < size1 - 1;
+            }
+
+            @Override
+            public int getInt()
+            {
+                return Int32Array3D.this.getInt(indX, indY, sliceIndex);
+            }
+
+            @Override
+            public void setInt(int b)
+            {
+                Int32Array3D.this.setInt(indX, indY, sliceIndex, b);
+            }
+        }
+    }
+    
+    private class SliceIterator implements java.util.Iterator<Int32Array2D> 
+    {
+        int sliceIndex = -1;
+
+        @Override
+        public boolean hasNext()
+        {
+            return sliceIndex < Int32Array3D.this.size2;
+        }
+
+        @Override
+        public Int32Array2D next()
+        {
+            sliceIndex++;
+            return new SliceView(sliceIndex);
+        }
+    }
 }

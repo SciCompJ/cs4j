@@ -3,6 +3,7 @@
  */
 package net.sci.array.scalar;
 
+
 /**
  * Base implementation for 3D arrays containing Int16 values.
  * 
@@ -100,6 +101,36 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 		setShort(pos[0], pos[1], pos[2], value);
 	}
 
+    // =============================================================
+    // Management of slices
+
+    public Int16Array2D slice(int sliceIndex)
+    {
+        return new SliceView(sliceIndex);
+    }
+
+    /**
+     * Iterates over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
+    public Iterable<? extends Int16Array2D> slices()
+    {
+        return new Iterable<Int16Array2D>()
+        {
+            @Override
+            public java.util.Iterator<Int16Array2D> iterator()
+            {
+                return new SliceIterator();
+            }
+        };
+    }
+
+    public java.util.Iterator<? extends Int16Array2D> sliceIterator()
+    {
+        return new SliceIterator();
+    }
+
 	
 	// =============================================================
 	// Specialization of IntArrayND interface
@@ -181,4 +212,103 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	{
 		setShort(pos[0], pos[1], pos[2], value.getShort());
 	}
+	
+	
+    private class SliceView extends Int16Array2D
+    {
+        int sliceIndex;
+        
+        protected SliceView(int slice)
+        {
+            super(Int16Array3D.this.size0, Int16Array3D.this.size1);
+            if (slice < 0 || slice >= Int16Array3D.this.size2)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Slice index %d must be comprised between 0 and %d", slice, Int16Array3D.this.size2));
+            }
+            this.sliceIndex = slice;
+        }
+
+        @Override
+        public short getShort(int x, int y)
+        {
+            return Int16Array3D.this.getShort(x, y, this.sliceIndex);
+        }
+
+        @Override
+        public void setShort(int x, int y, short value)
+        {
+            Int16Array3D.this.setShort(x, y, this.sliceIndex, value);            
+        }
+
+        @Override
+        public net.sci.array.scalar.Int16Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
+        class Iterator implements Int16Array.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+            
+            public Iterator() 
+            {
+            }
+            
+            @Override
+            public Int16 next()
+            {
+                forward();
+                return get();
+            }
+
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                }
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 || indY < size1 - 1;
+            }
+
+            @Override
+            public short getShort()
+            {
+                return Int16Array3D.this.getShort(indX, indY, sliceIndex);
+            }
+
+            @Override
+            public void setShort(short b)
+            {
+                Int16Array3D.this.setShort(indX, indY, sliceIndex, b);
+            }
+        }
+    }
+    
+    private class SliceIterator implements java.util.Iterator<Int16Array2D> 
+    {
+        int sliceIndex = -1;
+
+        @Override
+        public boolean hasNext()
+        {
+            return sliceIndex < Int16Array3D.this.size2;
+        }
+
+        @Override
+        public Int16Array2D next()
+        {
+            sliceIndex++;
+            return new SliceView(sliceIndex);
+        }
+    }
 }
