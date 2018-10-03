@@ -3,7 +3,6 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.vector.Float64VectorArray2D;
 
 /**
  * @author dlegland
