@@ -11,6 +11,7 @@ import org.junit.runners.Suite;
     net.sci.array.AllTests.class,
     net.sci.array.type.AllTests.class,
     net.sci.array.scalar.AllTests.class,
+    net.sci.array.vector.AllTests.class,
     net.sci.array.color.AllTests.class,
     net.sci.array.generic.AllTests.class,
     net.sci.array.process.AllTestsRecurse.class,
