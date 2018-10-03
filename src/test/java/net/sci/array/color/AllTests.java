@@ -7,6 +7,9 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     RGB8ArrayTest.class,
+    RGB8ArrayChannelViewTest.class,
+    RGB16ArrayTest.class,
+    RGB16ArrayChannelViewTest.class,
     })
 public class AllTests {
   //nothing

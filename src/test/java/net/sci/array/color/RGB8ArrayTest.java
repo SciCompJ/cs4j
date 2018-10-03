@@ -65,5 +65,5 @@ public class RGB8ArrayTest
         }
         assertEquals(60, count);
     }
-    
+
 }

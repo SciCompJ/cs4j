@@ -28,7 +28,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
 
 	protected RGB16Array3D(int size0, int size1, int size2)
 	{
-		super(size0, size1, size1);
+		super(size0, size1, size2);
 	}
 
 
