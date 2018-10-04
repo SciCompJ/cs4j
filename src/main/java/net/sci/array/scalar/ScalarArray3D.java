@@ -42,6 +42,21 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
 
     
     // =============================================================
+    // Specialization of the Array3D interface
+
+    public abstract ScalarArray2D<T> slice(int sliceIndex);
+
+    /**
+     * Iterates over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
+    public abstract Iterable<? extends ScalarArray2D<T>> slices();
+
+    public abstract java.util.Iterator<? extends ScalarArray2D<T>> sliceIterator();
+
+    
+    // =============================================================
     // Specialization of the ScalarArray interface
 
     public double getValue(int[] pos)
@@ -81,32 +96,42 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             this.size2 = array.getSize(2);
         }
 
-        @Override
-        public ScalarArray<T> newInstance(int... dims)
+        // =============================================================
+        // Management of slices
+
+        public ScalarArray2D<T> slice(int sliceIndex)
         {
-            return this.array.newInstance(dims);
+            return new SliceView(sliceIndex);
         }
 
-        @Override
-        public ScalarArray.Factory<T> getFactory()
+        /**
+         * Iterates over the slices
+         * 
+         * @return an iterator over 2D slices
+         */
+        public Iterable<? extends ScalarArray2D<T>> slices()
         {
-            return this.array.getFactory();
+            return new Iterable<ScalarArray2D<T>>()
+            {
+                @Override
+                public java.util.Iterator<ScalarArray2D<T>> iterator()
+                {
+                    return new SliceIterator();
+                }
+            };
         }
 
-        @Override
-        public T get(int x, int y, int z)
+        public java.util.Iterator<? extends ScalarArray2D<T>> sliceIterator()
         {
-            // return value from specified position
-            return this.array.get(new int[]{x, y, z});
+            return new SliceIterator();
         }
 
-        @Override
-        public void set(int x, int y, int z, T value)
-        {
-            // set value at specified position
-            this.array.set(new int[]{x, y, z}, value);
-        }
+        // =============================================================
+        // Implements the ScalarArray3D interface
 
+        /** 
+         * return value from specified position 
+         * */
         @Override
         public double getValue(int x, int y, int z)
         {
@@ -114,12 +139,39 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             return this.array.getValue(new int[]{x, y, z});
         }
 
+        /**
+         * set double value at specified position
+         */
         @Override
         public void setValue(int x, int y, int z, double value)
         {
-            // set value at specified position
             this.array.setValue(new int[]{x, y, z}, value);
         }
+
+        
+        // =============================================================
+        // Implements the Array3D interface
+
+        /** 
+         * return value from specified position 
+         * */
+        @Override
+        public T get(int x, int y, int z)
+        {
+            return this.array.get(new int[]{x, y, z});
+        }
+
+        /**
+         * set value at specified position
+         */
+        @Override
+        public void set(int x, int y, int z, T value)
+        {
+            this.array.set(new int[]{x, y, z}, value);
+        }
+
+        // =============================================================
+        // Implements the Array interface
 
         @Override
         public ScalarArray3D<T> duplicate()
@@ -149,6 +201,18 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
         public Class<T> getDataType()
         {
             return array.getDataType();
+        }
+
+        @Override
+        public ScalarArray<T> newInstance(int... dims)
+        {
+            return this.array.newInstance(dims);
+        }
+
+        @Override
+        public ScalarArray.Factory<T> getFactory()
+        {
+            return this.array.getFactory();
         }
 
         @Override
@@ -225,6 +289,166 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             public void setValue(double value)
             {
                 Wrapper.this.setValue(x, y, z, value);             
+            }
+        }
+        
+        private class SliceView extends ScalarArray2D<T>
+        {
+            int sliceIndex;
+            
+            protected SliceView(int slice)
+            {
+                super(Wrapper.this.size0, Wrapper.this.size1);
+                if (slice < 0 || slice >= Wrapper.this.size2)
+                {
+                    throw new IllegalArgumentException(String.format(
+                            "Slice index %d must be comprised between 0 and %d", slice, Wrapper.this.size2));
+                }
+                this.sliceIndex = slice;
+            }
+
+            @Override
+            public double getValue(int x, int y)
+            {
+                return Wrapper.this.getValue(x, y, this.sliceIndex);
+            }
+
+            @Override
+            public void setValue(int x, int y, double value)
+            {
+                Wrapper.this.setValue(x, y, this.sliceIndex, value);            
+            }
+
+
+            @Override
+            public T get(int x, int y)
+            {
+                return Wrapper.this.get(x, y, this.sliceIndex);
+            }
+
+            @Override
+            public void set(int x, int y, T value)
+            {
+                Wrapper.this.set(x, y, this.sliceIndex, value);            
+            }
+
+            @Override
+            public ScalarArray<T> newInstance(int... dims)
+            {
+                return Wrapper.this.array.newInstance(dims);
+            }
+
+            @Override
+            public Class<T> getDataType()
+            {
+                return Wrapper.this.array.getDataType();
+            }
+
+            @Override
+            public ScalarArray2D<T> duplicate()
+            {
+                // create a new array, and ensure type is 2D
+                ScalarArray2D<T> result = ScalarArray2D.wrap(Wrapper.this.array.newInstance(this.size0, this.size1));
+                
+                // Fill new array with input slice
+                for (int y = 0; y < Wrapper.this.size1; y++)
+                {
+                    for (int x = 0; x < Wrapper.this.size0; x++)
+                    {
+                        result.setValue(x, y, Wrapper.this.getValue(x, y, sliceIndex));
+                    }
+                }
+                                
+                return result;
+            }
+
+            @Override
+            public ScalarArray.Factory<T> getFactory()
+            {
+                return Wrapper.this.getFactory();
+            }
+
+            @Override
+            public net.sci.array.scalar.ScalarArray.Iterator<T> iterator()
+            {
+                return new Iterator();
+            }
+
+            class Iterator implements ScalarArray.Iterator<T>
+            {
+                int indX = -1;
+                int indY = 0;
+                
+                public Iterator() 
+                {
+                }
+                
+                @Override
+                public T next()
+                {
+                    forward();
+                    return get();
+                }
+
+                @Override
+                public void forward()
+                {
+                    indX++;
+                    if (indX >= size0)
+                    {
+                        indX = 0;
+                        indY++;
+                    }
+                }
+
+                @Override
+                public boolean hasNext()
+                {
+                    return indX < size0 - 1 || indY < size1 - 1;
+                }
+
+
+                @Override
+                public double getValue()
+                {
+                    return Wrapper.this.getValue(indX, indY, sliceIndex);
+                }
+
+                @Override
+                public void setValue(double value)
+                {
+                    Wrapper.this.setValue(indX, indY, sliceIndex, value);
+                }
+
+                @Override
+                public T get()
+                {
+                    return Wrapper.this.get(indX, indY, sliceIndex);
+                }
+
+                @Override
+                public void set(T value)
+                {
+                    Wrapper.this.set(indX, indY, sliceIndex, value);
+                }
+            }
+        }
+        
+        private class SliceIterator implements java.util.Iterator<ScalarArray2D<T>> 
+        {
+            int sliceIndex = -1;
+
+            @Override
+            public boolean hasNext()
+            {
+                return sliceIndex < array.getSize(2);
+            }
+
+            @Override
+            public ScalarArray2D<T> next()
+            {
+                sliceIndex++;
+                return new SliceView(sliceIndex);
             }
         }
     }
