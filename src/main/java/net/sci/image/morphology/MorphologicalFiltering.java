@@ -4,9 +4,9 @@
 package net.sci.image.morphology;
 
 import net.sci.array.Array2D;
-import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array;
+import net.sci.array.vector.VectorArray2D;
 
 /**
  * <p>
@@ -18,26 +18,27 @@ import net.sci.array.scalar.UInt8Array;
  * Example of use:
  * <pre>
  * {@code
- * Array2D<?> image = IJ.getImage().getProcessor();
+ * Array2D<?> array = IJ.getImage().getProcessor();
  * Strel se = SquareStrel.fromDiameter(5);
- * Array2D<?> grad = Morphology.gradient(image, se);
+ * Array2D<?> grad = Morphology.gradient(array, se);
  * ImagePlus res = new ImagePlus("Gradient", grad);
  * res.show(); 
  *  }</pre>
  *
  * <p>
- * Example of use with 3D image (stack):
+ * Example of use with 3D array (stack):
  * <pre>
  * {@code
- * ImageStack image = IJ.getImage().getStack();
+ * ImageStack array = IJ.getImage().getStack();
  * Strel3D se = CubeStrel.fromDiameter(3);
- * ImageStack grad = Morphology.gradient(image, se);
+ * ImageStack grad = Morphology.gradient(array, se);
  * ImagePlus res = new ImagePlus("Gradient3D", grad);
  * res.show(); 
  * }</pre>
  * @author David Legland
  *
  */
+//TODO: update code sample
 public class MorphologicalFiltering 
 {
 	// =======================================================================
@@ -54,9 +55,9 @@ public class MorphologicalFiltering
 	 * gd.addChoice("Operation", Operation.getAllLabels();
 	 * gd.showDialog();
 	 * Operation op = Operation.fromLabel(gd.getNextChoice());
-	 * // Apply the operation on the current image
-	 * Array2D<?> image = IJ.getImage().getProcessor();
-	 * op.apply(image, SquareStrel.fromRadius(2));
+	 * // Apply the operation on the current array
+	 * Array2D<?> array = IJ.getImage().getProcessor();
+	 * op.apply(array, SquareStrel.fromRadius(2));
 	 * }</pre>
 	 */
 	public enum Operation 
@@ -77,9 +78,9 @@ public class MorphologicalFiltering
 		GRADIENT("Gradient"), 
 		/** Morphological laplacian (difference of external gradient with internal gradient) */
 		LAPLACIAN("Laplacian"), 
-		/** Morphological internal gradient (difference of dilation with original image) */
+		/** Morphological internal gradient (difference of dilation with original array) */
 		INTERNAL_GRADIENT("Internal Gradient"), 
-		/** Morphological internal gradient (difference of original image with erosion) */
+		/** Morphological internal gradient (difference of original array with erosion) */
 		EXTERNAL_GRADIENT("External Gradient");
 		
 		private final String label;
@@ -90,72 +91,72 @@ public class MorphologicalFiltering
 		}
 		
 		/**
-		 * Applies the current operator to the input image.
+		 * Applies the current operator to the input array.
 		 * 
-		 * @param image
-		 *            the image to process
+		 * @param array
+		 *            the array to process
 		 * @param strel
 		 *            the structuring element to use
-		 * @return the result of morphological operation applied to image
+		 * @return the result of morphological operation applied to array
 		 */
-		public Array2D<?> apply(Array2D<?> image, Strel2D strel) 
+		public Array2D<?> apply(Array2D<?> array, Strel2D strel) 
 		{
 			if (this == DILATION)
-				return dilation(image, strel);
+				return dilation(array, strel);
 			if (this == EROSION)
-				return erosion(image, strel);
+				return erosion(array, strel);
 			if (this == CLOSING)
-				return closing(image, strel);
+				return closing(array, strel);
 			if (this == OPENING)
-				return opening(image, strel);
+				return opening(array, strel);
 			if (this == TOPHAT)
-				return whiteTopHat(image, strel);
+				return whiteTopHat(array, strel);
 			if (this == BOTTOMHAT)
-				return blackTopHat(image, strel);
+				return blackTopHat(array, strel);
 			if (this == GRADIENT)
-				return gradient(image, strel);
+				return gradient(array, strel);
 			if (this == LAPLACIAN)
-				return laplacian(image, strel);
+				return laplacian(array, strel);
 			if (this == INTERNAL_GRADIENT)
-				return internalGradient(image, strel);
+				return internalGradient(array, strel);
 			if (this == EXTERNAL_GRADIENT)
-				return externalGradient(image, strel);
+				return externalGradient(array, strel);
 			
 			throw new RuntimeException(
 					"Unable to process the " + this + " morphological operation");
 		}
 		
 //		/**
-//		 * Applies the current operator to the input 3D image.
+//		 * Applies the current operator to the input 3D array.
 //		 * 
-//		 * @param image
-//		 *            the image to process
+//		 * @param array
+//		 *            the array to process
 //		 * @param strel
 //		 *            the structuring element to use
-//		 * @return the result of morphological operation applied to image
+//		 * @return the result of morphological operation applied to array
 //		 */
-//		public ImageStack apply(ImageStack image, Strel3D strel)
+//		public ImageStack apply(ImageStack array, Strel3D strel)
 //		{
 //			if (this == DILATION)
-//				return dilation(image, strel);
+//				return dilation(array, strel);
 //			if (this == EROSION)
-//				return erosion(image, strel);
+//				return erosion(array, strel);
 //			if (this == CLOSING)
-//				return closing(image, strel);
+//				return closing(array, strel);
 //			if (this == OPENING)
-//				return opening(image, strel);
+//				return opening(array, strel);
 //			if (this == TOPHAT)
-//				return whiteTopHat(image, strel);
+//				return whiteTopHat(array, strel);
 //			if (this == BOTTOMHAT)
-//				return blackTopHat(image, strel);
+//				return blackTopHat(array, strel);
 //			if (this == GRADIENT)
-//				return gradient(image, strel);
+//				return gradient(array, strel);
 //			if (this == LAPLACIAN)
-//				return laplacian(image, strel);
+//				return laplacian(array, strel);
 //			if (this == INTERNAL_GRADIENT)
-//				return internalGradient(image, strel);
+//				return internalGradient(array, strel);
 //			if (this == EXTERNAL_GRADIENT)
-//				return externalGradient(image, strel);
+//				return externalGradient(array, strel);
 //			
 //			throw new RuntimeException(
 //					"Unable to process the " + this + " morphological operation");
@@ -213,7 +214,7 @@ public class MorphologicalFiltering
 	// Main morphological operations
 	
 	/**
-	 * Performs morphological dilation on the input image.
+	 * Performs morphological dilation on the input array.
 	 * 
 	 * Dilation is obtained by extracting the maximum value among pixels in the
 	 * neighborhood given by the structuring element.
@@ -221,8 +222,8 @@ public class MorphologicalFiltering
 	 * This methods is mainly a wrapper to the dilation method of the strel
 	 * object.
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
 	 *            the structuring element used for dilation
 	 * @return the result of the dilation
@@ -230,64 +231,48 @@ public class MorphologicalFiltering
 	 * @see #erosion(Array2D, Strel2D)
 	 * @see Strel2D#dilation(Array2D)
 	 */
-	public static Array2D<?> dilation(Array2D<?> image, Strel2D strel)
+	public static Array2D<?> dilation(Array2D<?> array, Strel2D strel)
 	{
-	    if (image instanceof ScalarArray2D)
+	    if (array instanceof ScalarArray2D)
 	    {
-	        return strel.dilation((ScalarArray2D<?>) image);
-	    }
-	    else
-	    {
-	        throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+	        return strel.dilation((ScalarArray2D<?>) array);
+        }
+        else if (array instanceof VectorArray2D<?>)
+        {
+            return dilation_vector2d((VectorArray2D<?>) array, strel);
+        }
+        else
+        {
+	        throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
 	    }
 	}
 
-//	/**
-//	 * Performs morphological dilation on each channel, and reconstitutes the
-//	 * resulting color image.
-//	 * 
-//	 * @param image
-//	 *            the input RGB image
-//	 * @param strel
-//	 *            the structuring element used for dilation
-//	 * @return the result of the dilation
-//	 */
-//	private static Array2D<?> dilationRGB(Array2D<?> image, Strel strel) 
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"}) 
-//		{
-//			strel.setChannelName(name);
-//			res.add(strel.dilation(channels.get(name)));
-//		}
-//		
-//		return RGB8Array.mergeChannels(res);
-//	}
-
-//	/**
-//	 * Performs morphological dilation on the input 3D image.
-//	 * 
-//	 * Dilation is obtained by extracting the maximum value among voxels in the
-//	 * neighborhood given by the 3D structuring element.
-//	 * 
-//	 * @param image
-//	 *            the input 3D image to process (grayscale or RGB)
-//	 * @param strel
-//	 *            the structuring element used for dilation
-//	 * @return the result of the dilation
-//	 */
-//	public static ImageStack dilation(ImageStack image, Strel3D strel)
-//	{
-//		checkImageType(image);
-//		return strel.dilation(image);
-//	}
+    /**
+     * Performs morphological dilation on each channel of a vector array, and
+     * reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for dilation
+     * @return the result of the dilation
+     */
+	private static VectorArray2D<?> dilation_vector2d(VectorArray2D<?> array, Strel2D strel)
+	{
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(strel.dilation(array.channel(c)), res, c);
+        }
+        return res;
+	}
 	
 	/**
-	 * Performs morphological erosion on the input image. Erosion is obtained by
+	 * Performs morphological erosion on the input array. Erosion is obtained by
 	 * extracting the minimum value among pixels in the neighborhood given by
 	 * the structuring element.
 	 * 
@@ -297,70 +282,54 @@ public class MorphologicalFiltering
 	 * @see #dilation(Array2D, Strel2D)
 	 * @see Strel2D#erosion(Array2D)
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
 	 *            the structuring element used for erosion
 	 * @return the result of the erosion
 	 */
-	public static Array2D<?> erosion(Array2D<?> image, Strel2D strel)
+	public static Array2D<?> erosion(Array2D<?> array, Strel2D strel)
 	{
-        if (image instanceof ScalarArray2D)
+        if (array instanceof ScalarArray2D)
         {
-            return strel.erosion((ScalarArray2D<?>) image);
+            return strel.erosion((ScalarArray2D<?>) array);
+        }
+        else if (array instanceof VectorArray2D<?>)
+        {
+            return erosion_vector2d((VectorArray2D<?>) array, strel);
         }
         else
         {
-            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
         }
 	}
 
-//	/**
-//	 * Performs morphological erosion on each channel, and reconstitutes the
-//	 * resulting color image.
-//	 * 
-//	 * @param image
-//	 *            the input image to process (RGB)
-//	 * @param strel
-//	 *            the structuring element used for erosion
-//	 * @return the result of the erosion
-//	 */
-//	private static Array2D<?> erosionRGB(Array2D<?> image, Strel strel)
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"}) 
-//		{
-//			strel.setChannelName(name);
-//			res.add(strel.erosion(channels.get(name)));
-//		}
-//		
-//		return RGB8Array.mergeChannels(res);
-//	}
-	
-//	/**
-//	 * Performs morphological erosion on the input 3D image.
-//	 * 
-//	 * Erosion is obtained by extracting the minimum value among voxels in the
-//	 * neighborhood given by the 3D structuring element.
-//	 * 
-//	 * @param image
-//	 *            the input image to process (grayscale or RGB)
-//	 * @param strel
-//	 *            the structuring element used for erosion
-//	 * @return the result of the erosion
-//	 */
-//	public static ImageStack erosion(ImageStack image, Strel3D strel) 
-//	{
-//		checkImageType(image);
-//		return strel.erosion(image);
-//	}
+    /**
+     * Performs morphological erosion on each channel of a vector array, and
+     * reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for erosion
+     * @return the result of the erosion
+     */
+    private static VectorArray2D<?> erosion_vector2d(VectorArray2D<?> array, Strel2D strel)
+    {
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(strel.erosion(array.channel(c)), res, c);
+        }
+        return res;
+    }
 
 	/**
-	 * Performs morphological opening on the input image.
+	 * Performs morphological opening on the input array.
 	 * 
 	 * The opening is obtained by performing an erosion followed by an dilation
 	 * with the reversed structuring element.
@@ -370,68 +339,55 @@ public class MorphologicalFiltering
 	 * @see #closing(Array2D, Strel2D)
 	 * @see Strel2D#opening(Array2D)
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
 	 *            the structuring element used for opening
 	 * @return the result of the morphological opening
 	 */
-	public static Array2D<?> opening(Array2D<?> image, Strel2D strel)
+	public static Array2D<?> opening(Array2D<?> array, Strel2D strel)
 	{
-        if (image instanceof ScalarArray2D)
+        if (array instanceof ScalarArray2D)
         {
-            return strel.opening((ScalarArray2D<?>) image);
+            return strel.opening((ScalarArray2D<?>) array);
+        }
+        else if (array instanceof VectorArray2D<?>)
+        {
+            return opening_vector2d((VectorArray2D<?>) array, strel);
         }
         else
         {
-            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
         }
 	}
 
-//	/**
-//	 * Performs morphological opening on each channel, and reconstitutes the
-//	 * resulting color image.
-//	 */
-//	private static Array2D<?> openingRGB(Array2D<?> image, Strel strel)
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"}) 
-//		{
-//			strel.setChannelName(name);
-//			res.add(strel.opening(channels.get(name)));
-//		}
-//		
-//		return RGB8Array.mergeChannels(res);
-//	}
-	
-//	/**
-//	 * Performs morphological opening on the input 3D image.
-//	 * 
-//	 * The 3D opening is obtained by performing a 3D erosion followed by a 3D
-//	 * dilation with the reversed structuring element.
-//	 * 
-//	 * @see #closing(ImageStack, Strel3D)
-//	 * @see Strel#opening(ImageStack)
-//	 * 
-//	 * @param image
-//	 *            the input 3D image to process
-//	 * @param strel
-//	 *            the structuring element used for opening
-//	 * @return the result of the 3D morphological opening
-//	 */
-//	public static ImageStack opening(ImageStack image, Strel3D strel) 
-//	{
-//		checkImageType(image);
-//		return strel.opening(image);
-//	}
+    /**
+     * Performs morphological opening on each channel of a vector array, and
+     * reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for opening
+     * @return the result of the opening
+     */
+    private static VectorArray2D<?> opening_vector2d(VectorArray2D<?> array, Strel2D strel)
+    {
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(strel.opening(array.channel(c)), res, c);
+        }
+        return res;
+    }
 
 
 	/**
-	 * Performs closing on the input image.
+	 * Performs closing on the input array.
 	 * The closing is obtained by performing a dilation followed by an erosion
 	 * with the reversed structuring element.
 	 *  
@@ -439,176 +395,129 @@ public class MorphologicalFiltering
 	 * @see #opening(Array2D, Strel2D)
 	 * @see Strel2D#closing(Array2D)
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
 	 *            the structuring element used for closing
 	 * @return the result of the morphological closing
 	 */
-	public static Array2D<?> closing(Array2D<?> image, Strel2D strel) 
+	public static Array2D<?> closing(Array2D<?> array, Strel2D strel) 
 	{
-        if (image instanceof ScalarArray2D)
+        if (array instanceof ScalarArray2D)
         {
-            return strel.closing((ScalarArray2D<?>) image);
+            return strel.closing((ScalarArray2D<?>) array);
+        }
+        else if (array instanceof VectorArray2D<?>)
+        {
+            return closing_vector2d((VectorArray2D<?>) array, strel);
         }
         else
         {
-            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
         }
 	}
 
-//	/**
-//	 * Performs morphological closing on each channel, and reconstitutes the
-//	 * resulting color image.
-//	 */
-//	private static Array2D<?> closingRGB(Array2D<?> image, Strel strel)
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"})
-//		{
-//			strel.setChannelName(name);
-//			res.add(strel.closing(channels.get(name)));
-//		}
-//		
-//		return RGB8Array.mergeChannels(res);
-//	}
-	
-//	/**
-//	 * Performs morphological closing on the input 3D image.
-//	 * 
-//	 * The 3D closing is obtained by performing a 3D dilation followed by a 3D
-//	 * erosion with the reversed structuring element.
-//	 * 
-//	 * @see #opening(ImageStack, Strel3D)
-//	 * @see Strel#opening(ImageStack)
-//	 * 
-//	 * @param image
-//	 *            the input 3D image to process
-//	 * @param strel
-//	 *            the structuring element used for closing
-//	 * @return the result of the 3D morphological closing
-//	 */
-//	public static ImageStack closing(ImageStack image, Strel3D strel) 
-//	{
-//		checkImageType(image);
-//		return strel.closing(image);
-//	}
-
+    /**
+     * Performs morphological closing on each channel of a vector array, and
+     * reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for closing
+     * @return the result of the closing
+     */
+    private static VectorArray2D<?> closing_vector2d(VectorArray2D<?> array, Strel2D strel)
+    {
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(strel.closing(array.channel(c)), res, c);
+        }
+        return res;
+    }
 
 	/**
-	 * Computes white top hat of the original image.
+	 * Computes white top hat of the original array.
 	 * The white top hat is obtained by subtracting the result of an opening 
-	 * from the original image.
+	 * from the original array.
 	 *  
 	 * The white top hat enhances light structures smaller than the structuring element.
 	 * 
 	 * @see #blackTopHat(Array2D, Strel2D)
 	 * @see #opening(Array2D, Strel2D)
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
-	 *            the structuring element used for white top-hat
+	 *            the structuring element used for computing white top-hat
 	 * @return the result of the white top-hat
 	 */
-	public static Array2D<?> whiteTopHat(Array2D<?> image, Strel2D strel) 
-	{
-	    // check array type validity
-        if (!(image instanceof ScalarArray2D))
+    public static Array2D<?> whiteTopHat(Array2D<?> array, Strel2D strel)
+    {
+        if (array instanceof ScalarArray2D)
         {
-            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+            return whiteTopHat_scalar2d((ScalarArray2D<?>) array, strel);
         }
-
-        // First performs closing
-        ScalarArray2D<?> result = strel.opening((ScalarArray2D<?>) image);
+        else if (array instanceof VectorArray2D<?>)
+        {
+            return whiteTopHat_vector2d((VectorArray2D<?>) array, strel);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
+        }
+    }
+    
+	private static ScalarArray2D<?> whiteTopHat_scalar2d(ScalarArray2D<?> array, Strel2D strel) 
+	{
+        // First performs opening
+        ScalarArray2D<?> result = strel.opening(array);
 		
-		// Compute subtraction of result from original image
-		ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) image).iterator();
-		ScalarArray.Iterator<?> iter2 = result.iterator();
-		while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
-		{
-			double val = iter1.nextValue() - iter2.nextValue();
-			iter2.setValue(val);
-		}
+		// Compute subtraction of result from original array
+        for (int y = 0; y < array.getSize(1); y++)
+        {
+            for (int x = 0; x < array.getSize(0); x++)
+            {
+                double val = array.getValue(x, y) - result.getValue(x, y);
+                result.setValue(x, y, val);
+            }
+        }
 
 		return result;
 	}
 	
-//	/**
-//	 * Performs morphological closing on each channel, and reconstitutes the
-//	 * resulting color image.
-//	 */
-//	private static Array2D<?> whiteTopHatRGB(Array2D<?> image, Strel strel) 
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"}) 
-//		{
-//			strel.setChannelName(name);
-//			res.add(whiteTopHat(channels.get(name), strel));
-//		}
-//
-//		// create new color image
-//		return RGB8Array.mergeChannels(res);
-//	}
-	
-//	/**
-//	 * Computes 3D white top hat of the original image.
-//	 * 
-//	 * The white top hat is obtained by subtracting the result of an opening 
-//	 * from the original image.
-//	 *  
-//	 * The white top hat enhances light structures smaller than the structuring element.
-//	 * 
-//	 * @see #blackTopHat(ImageStack, Strel3D)
-//	 * @see #opening(ImageStack, Strel3D)
-//	 * 
-//	 * @param image
-//	 *            the input 3D image to process 
-//	 * @param strel
-//	 *            the structuring element used for white top-hat
-//	 * @return the result of the 3D white top-hat
-//	 */
-//	public static ImageStack whiteTopHat(ImageStack image, Strel3D strel)
-//	{
-//		checkImageType(image);
-//		
-//		// First performs opening
-//		ImageStack result = strel.opening(image);
-//		
-//		// compute max possible value
-//		double maxVal = getMaxPossibleValue(image);
-//		
-//		// Compute subtraction of result from original image
-//		int nx = image.getWidth();
-//		int ny = image.getHeight();
-//		int nz = image.getSize();
-//		for (int z = 0; z < nz; z++)
-//		{
-//			for (int y = 0; y < ny; y++)
-//			{
-//				for (int x = 0; x < nx; x++) 
-//				{
-//					double v1 = image.getVoxel(x, y, z);
-//					double v2 = result.getVoxel(x, y, z);
-//					result.setVoxel(x, y, z, min(max(v1 - v2, 0), maxVal));
-//				}
-//			}
-//		}
-//		
-//		return result;
-//	}
+    /**
+     * Computes white top hat on each channel of a vector array, and
+     * reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for computing white top hat
+     * @return the result of the white top hat
+     */
+    private static VectorArray2D<?> whiteTopHat_vector2d(VectorArray2D<?> array, Strel2D strel)
+    {
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(whiteTopHat_scalar2d(array.channel(c), strel), res, c);
+        }
+        return res;
+    }
 
 	/**
-	 * Computes black top hat (or "bottom hat") of the original image.
-	 * The black top hat is obtained by subtracting the original image from
+	 * Computes black top hat (or "bottom hat") of the original array.
+	 * The black top hat is obtained by subtracting the original array from
 	 * the result of a closing.
 	 *  
 	 * The black top hat enhances dark structures smaller than the structuring element.
@@ -616,202 +525,145 @@ public class MorphologicalFiltering
 	 * @see #whiteTopHat(Array2D, Strel2D)
 	 * @see #closing(Array2D, Strel2D)
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
 	 *            the structuring element used for black top-hat
 	 * @return the result of the black top-hat
 	 */
-	public static Array2D<?> blackTopHat(Array2D<?> image, Strel2D strel)
+	public static Array2D<?> blackTopHat(Array2D<?> array, Strel2D strel)
 	{
-        // check array type validity
-        if (!(image instanceof ScalarArray2D))
+        if (array instanceof ScalarArray2D)
         {
-            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+            return blackTopHat_scalar2d((ScalarArray2D<?>) array, strel);
         }
-
-        // First performs closing
-        ScalarArray2D<?> result = strel.closing((ScalarArray2D<?>) image);
-        
-        // Compute subtraction of result from original image
-        ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) image).iterator();
-        ScalarArray.Iterator<?> iter2 = result.iterator();
-        while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
+        else if (array instanceof VectorArray2D<?>)
         {
-            double val = iter2.nextValue() - iter1.nextValue();
-            iter2.setValue(val);
+            return blackTopHat_vector2d((VectorArray2D<?>) array, strel);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
+        }
+	}
+	
+    private static ScalarArray2D<?> blackTopHat_scalar2d(ScalarArray2D<?> array, Strel2D strel) 
+    {
+        // First performs closing
+        ScalarArray2D<?> result = strel.closing(array);
+        
+        // Compute subtraction of result from original array
+        for (int y = 0; y < array.getSize(1); y++)
+        {
+            for (int x = 0; x < array.getSize(0); x++)
+            {
+                double val = result.getValue(x, y) - array.getValue(x, y);
+                result.setValue(x, y, val);
+            }
         }
 
         return result;
-	}
-	
-//	/**
-//	 * Performs morphological black top hat on each channel, and reconstitutes
-//	 * the resulting color image.
-//	 */
-//	private static Array2D<?> blackTopHatRGB(Array2D<?> image, Strel strel)
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"})
-//		{
-//			strel.setChannelName(name);
-//			res.add(blackTopHat(channels.get(name), strel));
-//		}
-//		
-//		return RGB8Array.mergeChannels(res);
-//	}
-	
-//	/**
-//	 * Computes black top hat (or "bottom hat") of the original image.
-//	 * The black top hat is obtained by subtracting the original image from
-//	 * the result of a closing.
-//	 *  
-//	 * The black top hat enhances dark structures smaller than the structuring element.
-//	 * 
-//	 * @see #whiteTopHat(ImageStack, Strel3D)
-//	 * @see #closing(ImageStack, Strel3D)
-//	 * 
-//	 * @param image
-//	 *            the input 3D image to process
-//	 * @param strel
-//	 *            the structuring element used for black top-hat
-//	 * @return the result of the 3D black top-hat
-//	 */
-//	public static ImageStack blackTopHat(ImageStack image, Strel3D strel)
-//	{
-//		checkImageType(image);
-//		
-//		// First performs closing
-//		ImageStack result = strel.closing(image);
-//		
-//		// Compute subtraction of result from original image
-//		int nx = image.getWidth();
-//		int ny = image.getHeight();
-//		int nz = image.getSize();
-//		for (int z = 0; z < nz; z++) {
-//			for (int y = 0; y < ny; y++) {
-//				for (int x = 0; x < nx; x++) {
-//					double v1 = result.getVoxel(x, y, z);
-//					double v2 = image.getVoxel(x, y, z);
-//					result.setVoxel(x, y, z, min(max(v1 - v2, 0), 255));
-//				}
-//			}
-//		}
-//		
-//		return result;
-//	}
-
+    }
+    
+    /**
+     * Computes black top hat on each channel of a vector array, and
+     * reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for computing black top hat
+     * @return the result of the black top hat
+     */
+    private static VectorArray2D<?> blackTopHat_vector2d(VectorArray2D<?> array, Strel2D strel)
+    {
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(blackTopHat_scalar2d(array.channel(c), strel), res, c);
+        }
+        return res;
+    }
 	
 	/**
-	 * Computes the morphological gradient of the input image.
-	 * The morphological gradient is obtained by from the difference of image 
-	 * dilation and image erosion computed with the same structuring element. 
+	 * Computes the morphological gradient of the input array.
+	 * The morphological gradient is obtained by from the difference of array 
+	 * dilation and array erosion computed with the same structuring element. 
 	 * 
 	 * @see #erosion(Array2D, Strel2D)
 	 * @see #dilation(Array2D, Strel2D)
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
 	 *            the structuring element used for morphological gradient
 	 * @return the result of the morphological gradient
 	 */
-	public static Array2D<?> gradient(Array2D<?> image, Strel2D strel)
+    public static Array2D<?> gradient(Array2D<?> array, Strel2D strel)
+    {
+        if (array instanceof ScalarArray2D)
+        {
+            return gradient_scalar2d((ScalarArray2D<?>) array, strel);
+        }
+        else if (array instanceof VectorArray2D<?>)
+        {
+            return gradient_vector2d((VectorArray2D<?>) array, strel);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
+        }
+    }
+    
+	private static ScalarArray2D<?> gradient_scalar2d(ScalarArray2D<?> array, Strel2D strel)
 	{
-        // check array type validity
-        if (!(image instanceof ScalarArray2D))
-        {
-            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
-        }
-
         // First performs closing
-        ScalarArray2D<?> result = strel.dilation((ScalarArray2D<?>) image);
-        ScalarArray2D<?> eroded = strel.erosion((ScalarArray2D<?>) image);
+        ScalarArray2D<?> result = strel.dilation(array);
+        ScalarArray2D<?> eroded = strel.erosion(array);
         
-        // Compute subtraction of result from original image
-        ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) result).iterator();
-        ScalarArray.Iterator<?> iter2 = eroded.iterator();
-        while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
+        // Compute subtraction of result from original array
+        for (int y = 0; y < array.getSize(1); y++)
         {
-            double val = iter1.nextValue() - iter2.nextValue();
-            iter1.setValue(val);
+            for (int x = 0; x < array.getSize(0); x++)
+            {
+                double val = result.getValue(x, y) - eroded.getValue(x, y);
+                result.setValue(x, y, val);
+            }
         }
-
+        
         return result;
 	}
 
-//	/**
-//	 * Performs morphological gradient on each channel, and reconstitutes
-//	 * the resulting color image.
-//	 */
-//	private static Array2D<?> gradientRGB(Array2D<?> image, Strel strel)
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"})
-//		{
-//			strel.setChannelName(name);
-//			res.add(gradient(channels.get(name), strel));
-//		}
-//		
-//		return RGB8Array.mergeChannels(res);
-//	}
-
-//	/**
-//	 * Computes the morphological gradient of the input 3D image.
-//	 * The morphological gradient is obtained by from the difference of image 
-//	 * dilation and image erosion computed with the same structuring element. 
-//	 * 
-//	 * @see #erosion(ImageStack, Strel3D)
-//	 * @see #dilation(ImageStack, Strel3D)
-//	 * 
-//	 * @param image
-//	 *            the input 3D image to process
-//	 * @param strel
-//	 *            the structuring element used for morphological gradient
-//	 * @return the result of the 3D morphological gradient
-//	 */
-//	public static ImageStack gradient(ImageStack image, Strel3D strel)
-//	{
-//		checkImageType(image);
-//		
-//		// First performs dilation and erosion
-//		ImageStack result = strel.dilation(image);
-//		ImageStack eroded = strel.erosion(image);
-//		
-//		// Determine max possible value from bit depth
-//		double maxVal = getMaxPossibleValue(image);
-//
-//		// Compute subtraction of result from original image
-//		int nx = image.getWidth();
-//		int ny = image.getHeight();
-//		int nz = image.getSize();
-//		for (int z = 0; z < nz; z++) 
-//		{
-//			for (int y = 0; y < ny; y++) 
-//			{
-//				for (int x = 0; x < nx; x++) 
-//				{
-//					double v1 = result.getVoxel(x, y, z);
-//					double v2 = eroded.getVoxel(x, y, z);
-//					result.setVoxel(x, y, z, min(max(v1 - v2, 0), maxVal));
-//				}
-//			}
-//		}
-//		
-//		return result;
-//	}
-
+    /**
+     * Computes morphological gradient on each channel of a vector array, and
+     * reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for gradient
+     * @return the result of the morphological gradient
+     */
+    private static VectorArray2D<?> gradient_vector2d(VectorArray2D<?> array, Strel2D strel)
+    {
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(gradient_scalar2d(array.channel(c), strel), res, c);
+        }
+        return res;
+    }
 
 	/**
-	 * Computes the morphological Laplacian of the input image. The
+	 * Computes the morphological Laplacian of the input array. The
 	 * morphological gradient is obtained from the difference of the external
 	 * gradient with the internal gradient, both computed with the same
 	 * structuring element.
@@ -821,317 +673,234 @@ public class MorphologicalFiltering
 	 * @see #erosion(Array2D, Strel2D)
 	 * @see #dilation(Array2D, Strel2D)
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
 	 *            the structuring element used for morphological laplacian
 	 * @return the result of the morphological laplacian
 	 */
-	public static Array2D<?> laplacian(Array2D<?> image, Strel2D strel) 
-	{
-        // check array type validity
-        if (!(image instanceof ScalarArray2D))
+    public static Array2D<?> laplacian(Array2D<?> array, Strel2D strel) 
+    {
+        if (array instanceof ScalarArray2D)
         {
-            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+            return laplacian_scalar2d((ScalarArray2D<?>) array, strel);
+        }
+        else if (array instanceof VectorArray2D<?>)
+        {
+            return laplacian_vector2d((VectorArray2D<?>) array, strel);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
+        }
+    }
+    
+    private static ScalarArray2D<?> laplacian_scalar2d(ScalarArray2D<?> array, Strel2D strel) 
+	{
+        // computes gradients
+        ScalarArray2D<?> dil = strel.dilation(array);
+        ScalarArray2D<?> ero = strel.erosion(array);
+        
+        double shift = 0;
+        if (array instanceof UInt8Array)
+        {
+            shift = 128;
         }
 
-        // First performs closing
-        // TODO: use Array2D cast ?
-        ScalarArray2D<?> outer = (ScalarArray2D<?>) externalGradient((ScalarArray2D<?>) image, strel);
-        ScalarArray2D<?> inner = (ScalarArray2D<?>) internalGradient((ScalarArray2D<?>) image, strel);
-        
-        ScalarArray2D<?> result = ((ScalarArray2D<?>) image).duplicate();
-        
-		double shift = 0;
-		if (image instanceof UInt8Array)
-		{
-			shift = 128;
-		}
-		
-		// Compute subtraction of result from original image
-		// TODO: iterate over positions
-		ScalarArray.Iterator<?> iter1 = outer.iterator();
-		ScalarArray.Iterator<?> iter2 = inner.iterator();
-		ScalarArray.Iterator<?> resultIter = result.iterator();
-		while(iter1.hasNext() && iter2.hasNext())
-		{
-			double val = iter1.nextValue() - iter2.nextValue();
-			resultIter.forward();
-			resultIter.setValue(val + shift);
-		}
+        // Compute subtraction of result from original array
+        for (int y = 0; y < array.getSize(1); y++)
+        {
+            for (int x = 0; x < array.getSize(0); x++)
+            {
+                double val = (dil.getValue(x, y) + ero.getValue(x, y)) / 2 - array.getValue(x, y);
+                dil.setValue(x, y, val + shift);
+            }
+        }
 
-		// free memory
-		outer = null;
-		inner = null;
-		
-		// return gradient
-		return result;
+		// return laplacian
+		return dil;
 	}
+    
+    /**
+     * Computes morphological laplacian on each channel of a vector array, and
+     * reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for laplacian
+     * @return the result of the morphological laplacian
+     */
+    private static VectorArray2D<?> laplacian_vector2d(VectorArray2D<?> array, Strel2D strel)
+    {
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(laplacian_scalar2d(array.channel(c), strel), res, c);
+        }
+        return res;
+    }
 
-//	/**
-//	 * Performs morphological Laplacian on each channel, and reconstitutes
-//	 * the resulting color image.
-//	 * 
-//	 * Homogeneous regions appear as gray.
-//	 */
-//	private static Array2D<?> laplacianRGB(Array2D<?> image, Strel strel) 
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"}) 
-//		{
-//			strel.setChannelName(name);
-//			res.add(laplacian(channels.get(name), strel));
-//		}
-//		
-//		return RGB8Array.mergeChannels(res);
-//	}
-
-//	/**
-//	 * Computes the morphological Laplacian of the 3D input image. The
-//	 * morphological gradient is obtained from the difference of the external
-//	 * gradient with the internal gradient, both computed with the same
-//	 * structuring element.
-//	 * 
-//	 * Homogeneous regions appear as gray.
-//	 * 
-//	 * @see #externalGradient(ImageStack, Strel3D)
-//	 * @see #internalGradient(ImageStack, Strel3D)
-//	 * 
-//	 * @param image
-//	 *            the input 3D image to process 
-//	 * @param strel
-//	 *            the structuring element used for morphological laplacian
-//	 * @return the result of the 3D morphological laplacian
-//	 */
-//	public static ImageStack laplacian(ImageStack image, Strel3D strel)
-//	{
-//		checkImageType(image);
-//		
-//		// First performs dilation and erosion
-//		ImageStack outer = externalGradient(image, strel);
-//		ImageStack inner = internalGradient(image, strel);
-//		
-//		// Determine max possible value from bit depth
-//		double maxVal = getMaxPossibleValue(image);
-//		double midVal = maxVal / 2;
-//		
-//		// Compute subtraction of result from original image
-//		int nx = image.getWidth();
-//		int ny = image.getHeight();
-//		int nz = image.getSize();
-//		for (int z = 0; z < nz; z++) 
-//		{
-//			for (int y = 0; y < ny; y++)
-//			{
-//				for (int x = 0; x < nx; x++)
-//				{
-//					double v1 = outer.getVoxel(x, y, z);
-//					double v2 = inner.getVoxel(x, y, z);
-//					outer.setVoxel(x, y, z, min(max(v1 - v2 + midVal, 0), maxVal));
-//				}
-//			}
-//		}
-//		
-//		return outer;
-//	}
 
 	/** 
-	 * Computes the morphological internal gradient of the input image.
+	 * Computes the morphological internal gradient of the input array.
 	 * The morphological internal gradient is obtained by from the difference 
-	 * of original image with the result of an erosion.
+	 * of original array with the result of an erosion.
 	 * 
 	 * @see #erosion(Array2D, Strel2D)
 	 * @see #gradient(Array2D, Strel2D)
 	 * @see #externalGradient(Array2D, Strel2D)
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
 	 *            the structuring element used for morphological internal gradient
 	 * @return the result of the morphological internal gradient
 	 */
-	public static Array2D<?> internalGradient(Array2D<?> image, Strel2D strel) 
+    public static Array2D<?> internalGradient(Array2D<?> array, Strel2D strel)
+    {
+        if (array instanceof ScalarArray2D)
+        {
+            return internalGradient_scalar2d((ScalarArray2D<?>) array, strel);
+        }
+        else if (array instanceof VectorArray2D<?>)
+        {
+            return internalGradient_vector2d((VectorArray2D<?>) array, strel);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
+        }
+    }
+    
+    private static ScalarArray2D<?> internalGradient_scalar2d(ScalarArray2D<?> array, Strel2D strel) 
 	{
-        // check array type validity
-        if (!(image instanceof ScalarArray2D))
-        {
-            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
-        }
-
         // First performs closing
-        ScalarArray2D<?> result = strel.erosion((ScalarArray2D<?>) image);
-//        ScalarArray2D<?> eroded = strel.erosion((ScalarArray2D<?>) image);
+        ScalarArray2D<?> result = strel.erosion(array);
         
-        // Compute subtraction of result from original image
-        ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) image).iterator();
-        ScalarArray.Iterator<?> iter2 = result.iterator();
-        while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
+        // Compute subtraction of result from original array
+        for (int y = 0; y < array.getSize(1); y++)
         {
-            double val = iter1.nextValue() - iter2.nextValue();
-            iter2.setValue(val);
+            for (int x = 0; x < array.getSize(0); x++)
+            {
+                double val = array.getValue(x, y) - result.getValue(x, y);
+                result.setValue(x, y, val);
+            }
         }
-
+        
         return result;
 	}
 
-//	private static Array2D<?> internalGradientRGB(Array2D<?> image, Strel strel) 
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"})
-//		{
-//			strel.setChannelName(name);
-//			res.add(internalGradient(channels.get(name), strel));
-//		}
-//		
-//		return RGB8Array.mergeChannels(res);
-//	}
+    /**
+     * Computes internal morphological gradient on each channel of a vector
+     * array, and reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for gradient
+     * @return the result of the morphological gradient
+     */
+    private static VectorArray2D<?> internalGradient_vector2d(VectorArray2D<?> array, Strel2D strel)
+    {
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(internalGradient_scalar2d(array.channel(c), strel), res, c);
+        }
+        return res;
+    }
 
-//	/** 
-//	 * Computes the morphological internal gradient of the 3D input image.
-//	 * The morphological internal gradient is obtained by from the difference 
-//	 * of original image with the result of an erosion.
-//	 * 
-//	 * @see #erosion(ImageStack, Strel3D)
-//	 * @see #gradient(ImageStack, Strel3D)
-//	 * @see #externalGradient(ImageStack, Strel3D)
-//	 * 
-//	 * @param image
-//	 *            the input image to process
-//	 * @param strel
-//	 *            the structuring element used for morphological internal gradient
-//	 * @return the result of the 3D morphological internal gradient
-//	 */
-//	public static ImageStack internalGradient(ImageStack image, Strel3D strel)
-//	{
-//		checkImageType(image);
-//		
-//		// First performs erosion
-//		ImageStack result = strel.erosion(image);
-//		
-//		// Determine max possible value from bit depth
-//		double maxVal = getMaxPossibleValue(image);
-//
-//		// Compute subtraction of result from original image
-//		int nx = image.getWidth();
-//		int ny = image.getHeight();
-//		int nz = image.getSize();
-//		for (int z = 0; z < nz; z++) 
-//		{
-//			for (int y = 0; y < ny; y++) 
-//			{
-//				for (int x = 0; x < nx; x++) 
-//				{
-//					double v1 = image.getVoxel(x, y, z);
-//					double v2 = result.getVoxel(x, y, z);
-//					result.setVoxel(x, y, z, min(max(v1 - v2, 0), maxVal));
-//				}
-//			}
-//		}
-//		
-//		return result;
-//	}
 
 	/** 
-	 * Computes the morphological external gradient of the input image.
+	 * Computes the morphological external gradient of the input array.
 	 * The morphological external gradient is obtained by from the difference 
-	 * of the result of a dilation and of the original image .
+	 * of the result of a dilation and of the original array .
 	 * 
 	 * @see #dilation(Array2D, Strel2D)
 	 * 
-	 * @param image
-	 *            the input image to process (grayscale or RGB)
+	 * @param array
+	 *            the input array to process (grayscale or RGB)
 	 * @param strel
 	 *            the structuring element used for morphological external gradient
 	 * @return the result of the morphological external gradient
 	 */
-	public static Array2D<?> externalGradient(Array2D<?> image, Strel2D strel) 
+	public static Array2D<?> externalGradient(Array2D<?> array, Strel2D strel) 
 	{
-        // check array type validity
-        if (!(image instanceof ScalarArray2D))
+        if (array instanceof ScalarArray2D)
         {
-            throw new RuntimeException("Can not process array of class: " + image.getClass().getName());
+            return externalGradient_scalar2d((ScalarArray2D<?>) array, strel);
         }
-
-        // First performs closing
-        ScalarArray2D<?> result = strel.dilation((ScalarArray2D<?>) image);
-        
-        // Compute subtraction of result from original image
-        ScalarArray.Iterator<?> iter1 = result.iterator();
-        ScalarArray.Iterator<?> iter2 = ((ScalarArray<?>) image).iterator();
-        while(iter1.hasNext() && iter2.hasNext()) // TODO: iterate on positions
+        else if (array instanceof VectorArray2D<?>)
         {
-            double val = iter1.nextValue() - iter2.nextValue();
-            iter1.setValue(val);
+            return externalGradient_vector2d((VectorArray2D<?>) array, strel);
         }
-
-        return result;
+        else
+        {
+            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
+        }
 	}
+    
+    private static ScalarArray2D<?> externalGradient_scalar2d(ScalarArray2D<?> array, Strel2D strel) 
+    {
+        // First performs closing
+        ScalarArray2D<?> result = strel.dilation(array);
+        
+        // Compute subtraction of result from original array
+        for (int y = 0; y < array.getSize(1); y++)
+        {
+            for (int x = 0; x < array.getSize(0); x++)
+            {
+                double val = result.getValue(x, y) - array.getValue(x, y);
+                result.setValue(x, y, val);
+            }
+        }
+        
+        return result;
+    }
 
-//	private static Array2D<?> externalGradientRGB(Array2D<?> image, Strel strel)
-//	{
-//		// extract channels and allocate memory for result
-//		Map<String, UInt8Array2D> channels = RGB8Array.mapChannels(image);
-//		Collection<Array2D<?>> res = new ArrayList<Array2D<?>>(channels.size());
-//		
-//		// Process each channel individually
-//		for (String name : new String[]{"red", "green", "blue"}) 
-//		{
-//			strel.setChannelName(name);
-//			res.add(externalGradient(channels.get(name), strel));
-//		}
-//		
-//		return RGB8Array.mergeChannels(res);
-//	}
+    /**
+     * Computes external morphological gradient on each channel of a vector
+     * array, and reconstitutes the resulting vector array.
+     * 
+     * @param array
+     *            the input vector array
+     * @param strel
+     *            the structuring element used for gradient
+     * @return the result of the morphological gradient
+     */
+    private static VectorArray2D<?> externalGradient_vector2d(VectorArray2D<?> array, Strel2D strel)
+    {
+        // allocate memory for result
+        VectorArray2D<?> res = array.duplicate();
+        
+        // iterate over channels
+        for (int c = 0; c < array.getVectorLength(); c++)
+        {
+            // process current channel and copy into result array
+            copyChannel(externalGradient_scalar2d(array.channel(c), strel), res, c);
+        }
+        return res;
+    }
 
-//	/** 
-//	 * Computes the morphological external gradient of the input 3D image.
-//	 * The morphological external gradient is obtained by from the difference 
-//	 * of the result of a dilation and of the original image .
-//	 * 
-//	 * @see #dilation(ImageStack, Strel3D)
-//	 * @see #internalGradient(ImageStack, Strel3D)
-//	 * 
-//	 * @param image
-//	 *            the input image to process 
-//	 * @param strel
-//	 *            the structuring element used for morphological external gradient
-//	 * @return the result of the 3D morphological external gradient
-//	 */
-//	public static ImageStack externalGradient(ImageStack image, Strel3D strel) 
-//	{
-//		checkImageType(image);
-//		
-//		// First performs dilation
-//		ImageStack result = strel.dilation(image);
-//		
-//		// Determine max possible value from bit depth
-//		double maxVal = getMaxPossibleValue(image);
-//		
-//		// Compute subtraction of result from original image
-//		int nx = image.getWidth();
-//		int ny = image.getHeight();
-//		int nz = image.getSize();
-//		for (int z = 0; z < nz; z++)
-//		{
-//			for (int y = 0; y < ny; y++) 
-//			{
-//				for (int x = 0; x < nx; x++)
-//				{
-//					double v1 = result.getVoxel(x, y, z);
-//					double v2 = image.getVoxel(x, y, z);
-//					result.setVoxel(x, y, z, min(max(v1 - v2, 0), maxVal));
-//				}
-//			}
-//		}
-//		
-//		return result;
-//	}
+	
+	private static void copyChannel(ScalarArray2D<?> channel, VectorArray2D<?> array, int channelIndex)
+	{
+        // copy into result
+        for (int y = 0; y < array.getSize(1); y++)
+        {
+            for (int x = 0; x < array.getSize(0); x++)
+            {
+                array.setValue(x, y, channelIndex, channel.getValue(x, y));
+            }
+        }
+	}
 }
