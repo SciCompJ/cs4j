@@ -222,43 +222,22 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
 	{
 		setValues(pos[0], pos[1], values);
 	}
-	
+
+    @Override
+    public double getValue(int[] pos, int channel)
+    {
+        return getValue(pos[0], pos[1], channel);
+    }
+
+    @Override
+    public void setValue(int[] pos, int channel, double value)
+    {
+        setValue(pos[0], pos[1], channel, channel);
+    }
+
 
 	// =============================================================
 	// Specialization of Array interface
-
-//	/**
-//	 * Returns the norm of the vector at the given position.
-//	 * 
-//	 * @see net.sci.array.Array2D#getValue(int, int)
-//	 */
-//	@Override
-//	public double getValue(int x, int y)
-//	{
-//		double[] values = getValues(x, y);
-//		double sum = 0;
-//		for (double v : values)
-//		{
-//			sum += v * v;
-//		}
-//		return Math.sqrt(sum);
-//	}
-//
-//	/**
-//	 * Changes the value of the vector at given position, by setting the first
-//	 * component and clearing the others.
-//	 * 
-//	 * @see net.sci.array.Array2D#setValue(int, int, double)
-//	 */
-//	@Override
-//	public void setValue(int x, int y, double value)
-//	{
-//		setValue(x, y, 0, value);
-//		for (int c = 1; c < this.getVectorLength(); c++)
-//		{
-//			setValue(x, y, c, 0);
-//		}
-//	}
 
     /* (non-Javadoc)
      * @see net.sci.array.data.VectorArray#duplicate()
@@ -274,16 +253,19 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         
         VectorArray2D<V> result = (VectorArray2D <V>) tmp;
         
-        VectorArray.Iterator<V> iter1 = this.iterator();
-        VectorArray.Iterator<V> iter2 = result.iterator();
-        while (iter1.hasNext())
+        double[] buf = new double[this.getVectorLength()];
+
+        // iterate over positions
+        for (int y = 0; y < this.getSize(1); y++)
         {
-            iter2.setNext(iter1.next());
+            for (int x = 0; x < this.getSize(0); x++)
+            {
+                result.setValues(x, y, this.getValues(x, y, buf));
+            }
         }
 
         return result;
     }
-    
 
 
     // =============================================================

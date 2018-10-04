@@ -94,7 +94,25 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
         this.buffer.setInt(pos, RGB8.intCode(rgb));
     }
 
-    
+
+    // =============================================================
+    // Specialization of the VectorArray interface
+
+    @Override
+    public double getValue(int[] pos, int channel)
+    {
+        return RGB8.rgbValues(this.buffer.getInt(pos))[channel];
+    }
+
+    @Override
+    public void setValue(int[] pos, int channel, double value)
+    {
+        int[] samples = getSamples(pos);
+        samples[channel] = UInt8.clamp(value);
+        this.buffer.setInt(pos, RGB8.intCode(samples));
+    }
+
+
     // =============================================================
 	// Implementation of the Array interface
 

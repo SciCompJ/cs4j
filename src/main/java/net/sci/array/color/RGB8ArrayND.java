@@ -79,6 +79,20 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
                 };
     }
 
+    @Override
+    public double getValue(int[] pos, int channel)
+    {
+        return getSamples(pos)[channel];
+    }
+
+    @Override
+    public void setValue(int[] pos, int channel, double value)
+    {
+        int[] samples = getSamples(pos);
+        samples[channel] = UInt8.clamp(value);
+        setSamples(pos, samples);
+    }
+
     public java.util.Iterator<UInt8ArrayND> channelIterator()
     {
         return new ChannelIterator();

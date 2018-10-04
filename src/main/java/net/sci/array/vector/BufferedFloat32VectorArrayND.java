@@ -89,6 +89,24 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
     }
 
     @Override
+    public double getValue(int[] pos, int channel)
+    {
+        int index = subsToInd(pos) * vectorLength + channel;
+        return this.buffer[index];
+    }
+
+    @Override
+    public void setValue(int[] pos, int channel, double value)
+    {
+        int index = subsToInd(pos) * vectorLength + channel;
+        this.buffer[index] = (float) value;
+    }
+
+    
+    // =============================================================
+    // Implementation of the Array interface
+    
+    @Override
     public Float32Vector get(int[] pos)
     {
         return new Float32Vector(getValues(pos, new double[vectorLength]));
@@ -100,14 +118,6 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
         setValues(pos, vect.getValues());
     }
 
-
-    //TODO: implement
-//    getValue(int[], int):double
-//    setValue(int[], int, double);
-
-    // =============================================================
-    // Implementation of the Array interface
-    
     /* (non-Javadoc)
 	 * @see net.sci.array.data.vector.VectorArray2D#duplicate()
 	 */

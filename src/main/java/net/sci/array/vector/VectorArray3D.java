@@ -104,43 +104,21 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
 		setValues(pos[0], pos[1], pos[2], values);
 	}
 	
+    @Override
+    public double getValue(int[] pos, int channel)
+    {
+        return getValue(pos[0], pos[1], pos[2], channel);
+    }
+
+    @Override
+    public void setValue(int[] pos, int channel, double value)
+    {
+        setValue(pos[0], pos[1], pos[2], channel, channel);
+    }
+
 
 	// =============================================================
 	// Specialization of Array3D interface
-
-//	/**
-//	 * Returns the norm of the vector at the given position.
-//	 * 
-//	 * @see net.sci.array.Array3D#getValue(int, int, int)
-//	 */
-//	@Override
-//	public double getValue(int x, int y, int z)
-//	{
-//		double[] values = getValues(x, y, z);
-//		double sum = 0;
-//		for (double v : values)
-//		{
-//			sum += v * v;
-//		}
-//		return Math.sqrt(sum);
-//	}
-//
-//	/**
-//	 * Changes the value of the vector at given position, by setting the first
-//	 * component and clearing the others.
-//	 * 
-//	 * @see net.sci.array.Array3D#setValue(int, int, int, double)
-//	 */
-//	@Override
-//	public void setValue(int x, int y, int z, double value)
-//	{
-//		setValue(x, y, z, 0, value);
-//		for (int c = 1; c < this.getVectorLength(); c++)
-//		{
-//			setValue(x, y, c, 0);
-//		}
-//	}
-
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#duplicate()
@@ -156,11 +134,18 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         
         VectorArray3D<V> result = (VectorArray3D <V>) tmp;
         
-        VectorArray.Iterator<V> iter1 = this.iterator();
-        VectorArray.Iterator<V> iter2 = result.iterator();
-        while (iter1.hasNext())
+        double[] buf = new double[this.getVectorLength()];
+        
+        // iterate over positions
+        for (int z = 0; z < this.getSize(2); z++)
         {
-            iter2.setNext(iter1.next());
+            for (int y = 0; y < this.getSize(1); y++)
+            {
+                for (int x = 0; x < this.getSize(0); x++)
+                {
+                    result.setValues(x, y, z, this.getValues(x, y, z, buf));
+                }
+            }
         }
 
         return result;

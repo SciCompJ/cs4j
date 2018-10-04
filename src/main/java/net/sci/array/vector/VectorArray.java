@@ -179,7 +179,30 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	 */
 	public void setValues(int[] pos, double[] values);
 	
+    /**
+     * Returns the value corresponding to a position and a channel index.
+     * 
+     * @param pos
+     *            the n-dimensional position
+     * @param channel
+     *            index of channel (from 0)
+     * @return the scalar value at specified position of specified channel
+     */
+	public double getValue(int[] pos, int channel);
+	
+    /**
+     * Changes the value corresponding to a position and a channel index.
+     * 
+     * @param pos
+     *            the n-dimensional position
+     * @param channel
+     *            index of channel (from 0)
+     * @param value
+     *            the new value
+     */
+    public void setValue(int[] pos, int channel, double value);
 
+    
     // =============================================================
     // Specialization of Array interface
     
