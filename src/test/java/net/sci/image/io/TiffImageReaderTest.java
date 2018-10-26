@@ -16,6 +16,7 @@ import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt16Array2D;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
+import net.sci.image.NumericalAxis;
 
 public class TiffImageReaderTest
 {
@@ -179,7 +180,7 @@ public class TiffImageReaderTest
     public void testReadImage_SpatialCalibration() throws IOException
     {
         // image size 324x238
-        String fileName = getClass().getResource("/files/16c_Col0_PFS_DAPI_015_C2_cropf_z054.tif").getFile();
+        String fileName = getClass().getResource("/files/arabidopsis_embryo/16c_Col0_PFS_DAPI_015_C2_cropf_z054.tif").getFile();
         
         TiffImageReader reader = new TiffImageReader(fileName);
         Image image = reader.readImage();
@@ -193,5 +194,35 @@ public class TiffImageReaderTest
         
         assertTrue(axes[0].getType() == ImageAxis.Type.SPACE);
         assertTrue(axes[1].getType() == ImageAxis.Type.SPACE);
+    }
+
+    /**
+     * Read a TIFF image containing known spatial calibration info.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testReadImage_2D_SpatialCalibration() throws IOException
+    {
+        // image size 109x112
+        String fileName = getClass().getResource("/files/arabidopsis_embryo/31c_Col0_762_crop_z061.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(2, image.getDimension());
+        assertEquals(109, image.getSize(0));
+        assertEquals(112, image.getSize(1));
+
+        ImageAxis[] axes = image.getAxes();
+        assertEquals(2, axes.length);
+        
+        assertTrue(axes[0].getType() == ImageAxis.Type.SPACE);
+        assertTrue(axes[1].getType() == ImageAxis.Type.SPACE);
+        
+        ImageAxis xAxis = axes[0];
+        assertEquals(0.350, ((NumericalAxis) xAxis).getSpacing(), .001);
+        ImageAxis yAxis = axes[1];
+        assertEquals(0.350, ((NumericalAxis) yAxis).getSpacing(), .001);
     }
 }

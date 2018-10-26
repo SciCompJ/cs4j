@@ -263,6 +263,11 @@ public class TiffImageReader implements ImageReader
 	    ImageAxis[] axes = new ImageAxis[image.getDimension()];
 	    axes[0] = new ImageAxis.X(info.pixelWidth, 0, info.unit);
 	    axes[1] = new ImageAxis.Y(info.pixelHeight, 0, info.unit);
+	    if (axes.length > 2)
+	    {
+	        axes[2] = new ImageAxis.Z();
+	    }
+	        
 	    image.setAxes(axes);
 	}
 	
@@ -306,7 +311,7 @@ public class TiffImageReader implements ImageReader
                         
                 }
             }
-            else if ("spacing".compareToIgnoreCase(key) == 0)
+            else if ("spacing".compareToIgnoreCase(key) == 0 && image.getDimension() > 2)
             {
                 ImageAxis zAxis = image.getAxis(2);
                 if (zAxis instanceof NumericalAxis)
