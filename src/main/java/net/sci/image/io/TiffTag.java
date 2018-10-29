@@ -63,32 +63,31 @@ public class TiffTag
 		TreeMap<Integer, TiffTag> map = new TreeMap<>();
 		
 		// Baseline tags (image size and format)
-		for (TiffTag tag : TiffTag.getBaseLineTags())
-		{
-			map.put(tag.code, tag);
-		}
+		addAllTags(map, TiffTag.getBaseLineTags());
 		
 		// Extension tags: less common formats
-		for (TiffTag tag : TiffTag.getExtensionTags())
-		{
-			map.put(tag.code, tag);
-		}
+        addAllTags(map, TiffTag.getExtensionTags());
 		
 		// TIFF/IT specification 
-		for (TiffTag tag : TiffTag.getTiffITTags())
-		{
-			map.put(tag.code, tag);
-		}
+        addAllTags(map, TiffTag.getTiffITTags());
 		
 		// ImageJ Tags 
-		for (TiffTag tag : TiffTag.getImageJTags())
-		{
-			map.put(tag.code, tag);
-		}
+        addAllTags(map, TiffTag.getImageJTags());
 		
-		// Some other tag collections may be added in the future.
+        // LSM tags
+        addAllTags(map, TiffTag.getLSMTags());
+
+        // Some other tag collections may be added in the future.
 		
 		return map;
+	}
+	
+	private static final void addAllTags(Map<Integer, TiffTag> map, Collection<TiffTag> tagSet)
+	{
+	    for (TiffTag tag : tagSet)
+        {
+            map.put(tag.code, tag);
+        }
 	}
 
 	/**
@@ -501,6 +500,55 @@ public class TiffTag
 		return tags;
 	}
 
+	/**
+     * Management of LSM Tags.
+     *
+     * References:
+     * <ul>
+     * <li> <a href="https://fr.mathworks.com/matlabcentral/fileexchange/8412-lsm-file-toolbox"> LSM File Toolbox</a> by Peter Li </li>
+     * <li> <a href="https://fr.mathworks.com/matlabcentral/fileexchange/46892-zeiss-laser-scanning-confocal-microscope-lsm-file-reader"> LSM File Reader</a> by Chao-Yuan Yeh</li>
+     * </ul>
+     *  
+     * @return a list of extension tags
+     */
+    public static final Collection<TiffTag> getLSMTags()
+    {
+        ArrayList<TiffTag> tags = new ArrayList<>();
+
+        tags.add(new TiffTag(34412, "LSMInfo")
+        {
+            public void init(BinaryDataReader dataReader) throws IOException
+            {
+                Map<String, Object> map = new TreeMap<>();
+                
+                // keep reader pointer
+                long pos0 = dataReader.getFilePointer();
+
+                // convert tag value to long offset for reading large buffer
+                long offset = ((long) this.value) & 0xffffffffL;
+                dataReader.seek(offset+8);
+
+                map.put("dimX", dataReader.readInt());
+                map.put("dimY", dataReader.readInt());
+                map.put("dimZ", dataReader.readInt());
+                map.put("dimC", dataReader.readInt());
+                map.put("dimT", dataReader.readInt());
+                dataReader.seek(dataReader.getFilePointer() + 12);
+                map.put("voxelSizeX", dataReader.readDouble());
+                map.put("voxelSizeY", dataReader.readDouble());
+                map.put("voxelSizeZ", dataReader.readDouble());
+                map.put("specScan", dataReader.readShort() & 0x00FFFF);
+                
+                // revert reader to initial position
+                dataReader.seek(pos0);
+                
+                this.content = map;
+            }           
+        });
+
+        return tags;
+    }
+
 	// =============================================================
 	// Class variables
 
@@ -531,9 +579,10 @@ public class TiffTag
 	 */
 	public int value;
 	
-	/**
-	 * The data contained by this tag, that have to be interpreted depending on the type.
-	 */
+    /**
+     * The data contained by this tag, that have to be interpreted depending on
+     * the type.
+     */
 	public Object content;
 	
 	// =============================================================
@@ -557,13 +606,14 @@ public class TiffTag
 	// public new methods
 
 	/**
-	 * Initialize the content of the tag from the data reader, given its code
-	 * and the specified value.
-	 * 
-	 * @param dataReader the instance of DataReader to read optional information from
-	 * @throws IOException
-	 *             if tried to read from the file and problem occurred
-	 */
+     * Initialize the content of the tag from the data reader, given its code
+     * and the specified value.
+     * 
+     * @param dataReader
+     *            the instance of DataReader to read optional information from
+     * @throws IOException
+     *             if tried to read from the file and problem occurred
+     */
 	public void readContent(BinaryDataReader dataReader) throws IOException
 	{
 		// parse tag data
@@ -751,8 +801,14 @@ public class TiffTag
 	}
 
 	/**
-	 * Read the short state stored at the specified position
-	 */
+     * Read the short state stored at the specified position
+     * 
+     * @param dataReader
+     *            the instance of BinaryDataReader to read from
+     * @return the short content at the specified position, as an integer
+     * @throws IOException
+     *             if an I/O Exception occurs
+     */
 	protected int readShort(BinaryDataReader dataReader) throws IOException
 	{
 		// convert tag value to long offset for reading large buffer
@@ -765,9 +821,17 @@ public class TiffTag
 		return result;
 	}
 
-	/**
-	 * Reads the rationale at the given position, as the ratio of two integers.
-	 */
+    /**
+     * Reads the rational value at the given position, as the ratio of two
+     * integers.
+     * 
+     * @param dataReader
+     *            the instance of BinaryDataReader to read from
+     * @return the approximated rational content at the specified position, as a
+     *         double
+     * @throws IOException
+     *             if an I/O Exception occurs
+     */
 	protected double readRational(BinaryDataReader dataReader) throws IOException
 	{
 		// convert tag value to long offset for reading large buffer
