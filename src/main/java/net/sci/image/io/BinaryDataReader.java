@@ -302,14 +302,14 @@ public class BinaryDataReader implements Closeable
     public double readDouble() throws IOException
     {
         // read bytes
-        int b1 = inputStream.read();
-        int b2 = inputStream.read();
-        int b3 = inputStream.read();
-        int b4 = inputStream.read();
-        int b5 = inputStream.read();
-        int b6 = inputStream.read();
-        int b7 = inputStream.read();
-        int b8 = inputStream.read();
+        long b1 = inputStream.read();
+        long b2 = inputStream.read();
+        long b3 = inputStream.read();
+        long b4 = inputStream.read();
+        long b5 = inputStream.read();
+        long b6 = inputStream.read();
+        long b7 = inputStream.read();
+        long b8 = inputStream.read();
 
         // encode bytes to integer
         if (littleEndian)
