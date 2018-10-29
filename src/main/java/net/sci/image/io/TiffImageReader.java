@@ -438,7 +438,10 @@ public class TiffImageReader implements ImageReader
 			}
 
 			// call the initialization procedure specific to tag
-			tag.process(info, this.dataReader);
+			tag.init(this.dataReader);
+
+			// populates the current TiffFileInfo instance
+            tag.process(info);
 
 			info.tags.put(tagCode, tag);
 		}

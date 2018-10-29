@@ -103,7 +103,7 @@ public class TiffTag
 
 		tags.add(new TiffTag(254, "NewSubfileType", "A general indication of the kind of data contained in this subfile")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+			public void process(TiffFileInfo info)
 			{
 				info.subFileType = TiffFileInfo.SubFileType.fromValue(value);
 			}
@@ -111,7 +111,7 @@ public class TiffTag
 
         tags.add(new TiffTag(255, "SubFileType", "(deprecated) A general indication of the kind of data contained in this subfile")
         {
-            public void process(TiffFileInfo info, BinaryDataReader dataReader)
+            public void process(TiffFileInfo info)
             {
                 System.out.println("Warning: TiffTag with code 255 (SubFileType) is deprecated.");
                 info.subFileType = TiffFileInfo.SubFileType.fromValue(value);
@@ -120,7 +120,7 @@ public class TiffTag
 		
 		tags.add(new TiffTag(256, "ImageWidth", "The number of columns in the image")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+			public void process(TiffFileInfo info)
 			{
 				info.width = value;
 			}
@@ -128,7 +128,7 @@ public class TiffTag
 
 		tags.add(new TiffTag(257, "ImageHeight", "The number of rows of pixels in the image")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+			public void process(TiffFileInfo info)
 			{
 				info.height = value;
 			}
@@ -136,21 +136,21 @@ public class TiffTag
 
 		tags.add(new TiffTag(258, "BitsPerSample", "Number of bits per component")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			public void init(BinaryDataReader dataReader) throws IOException
 			{
 				if (count == 1)
 				{
 					// Scalar type images (grayscale)
 					if (value == 8)
-						info.pixelType = PixelType.GRAY8;
+						this.content = PixelType.GRAY8;
 					else if (value == 16)
-						info.pixelType = PixelType.GRAY16_UNSIGNED;
+					    this.content = PixelType.GRAY16_UNSIGNED;
 					else if (value == 32)
-						info.pixelType = PixelType.GRAY32_FLOAT;
+					    this.content = PixelType.GRAY32_FLOAT;
 					else if (value == 12)
-						info.pixelType = PixelType.GRAY12_UNSIGNED;
+					    this.content = PixelType.GRAY12_UNSIGNED;
 					else if (value == 1)
-						info.pixelType = PixelType.BITMAP;
+					    this.content = PixelType.BITMAP;
 					else
 						throw new IOException(
 								"Unsupported BitsPerSample: " + value);
@@ -162,10 +162,10 @@ public class TiffTag
 
 					if (bitDepth == 8)
 					{
-						info.pixelType = PixelType.RGB;
+					    this.content = PixelType.RGB;
 					} else if (bitDepth == 16)
 					{
-						info.pixelType = PixelType.RGB48;
+					    this.content = PixelType.RGB48;
 					} else
 					{
 						throw new IOException(
@@ -174,11 +174,16 @@ public class TiffTag
 					}
 				}
 			}
+			
+			public void process(TiffFileInfo info)
+			{
+			    info.pixelType = (PixelType) this.content;
+			}
 		});
 
 		tags.add(new TiffTag(259, "CompressionMode", "Compression scheme used on the image data")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+			public void process(TiffFileInfo info)
 			{
 				info.compression = Compression.fromValue(value);
 			}
@@ -188,7 +193,7 @@ public class TiffTag
 		
 		tags.add(new TiffTag(262, "PhotometricInterpretation", "The color space of the image data")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+			public void process(TiffFileInfo info)
 			{
 				info.photometricInterpretation = value;
 				info.whiteIsZero = value == 0;
@@ -198,7 +203,7 @@ public class TiffTag
 		tags.add(new TiffTag(263, "Thresholding", 
 		        "For black and white TIFF files that represent shades of gray, the technique used to convert from gray to black and white pixels")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+			public void process(TiffFileInfo info)
 			{
 			}
 		});
@@ -207,7 +212,7 @@ public class TiffTag
 		
         tags.add(new TiffTag(266, "FillOrder", "The logical order of bits within a byte")
         {
-            public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+            public void process(TiffFileInfo info)
             {
                 if (value == 2)
                 {
@@ -218,9 +223,14 @@ public class TiffTag
 
 		tags.add(new TiffTag(270, "ImageDescription", "A string that describes the subject of the image")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+            public void init(BinaryDataReader dataReader) throws IOException
+            {
+                this.content = readAscii(dataReader);
+            }
+            
+			public void process(TiffFileInfo info)
 			{
-				info.imageDescription = readAscii(dataReader);
+				info.imageDescription = (String) this.content;
 			}
 		});
 
@@ -231,15 +241,19 @@ public class TiffTag
 		
 		tags.add(new TiffTag(273, "StripOffsets", "For each strip, the byte offset of that strip")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			public void init(BinaryDataReader dataReader) throws IOException
 			{
-				info.stripOffsets = readArray(dataReader);
+				this.content = readArray(dataReader);
 			}
+            public void process(TiffFileInfo info)
+            {
+                info.stripOffsets = (int[]) this.content;
+            }
 		});
 
 		tags.add(new TiffTag(274, "Orientation", "The orientation of the image with respect to the rows and columns")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+			public void process(TiffFileInfo info)
 			{
 				info.orientation = TiffFileInfo.Orientation.fromValue(value);
 			}
@@ -247,7 +261,7 @@ public class TiffTag
 
 		tags.add(new TiffTag(277, "SamplesPerPixel", "The number of components per pixel")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+			public void process(TiffFileInfo info)
 			{
 			    // Eventually update pixel type value
 				if (value == 3 && info.pixelType != PixelType.RGB48)
@@ -266,7 +280,7 @@ public class TiffTag
 
 		tags.add(new TiffTag(278, "RowsPerStrip", "The number of rows per strip")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader)
+			public void process(TiffFileInfo info)
 			{
 				info.rowsPerStrip = value;
 			}
@@ -274,10 +288,14 @@ public class TiffTag
 		
 		tags.add(new TiffTag(279, "StripByteCount", "For each strip, the number of bytes in the strip after compression")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
-			{
-				info.stripLengths = readArray(dataReader);
-			}
+            public void init(BinaryDataReader dataReader) throws IOException
+            {
+                this.content = readArray(dataReader);
+            }
+            public void process(TiffFileInfo info)
+            {
+                info.stripLengths = (int[]) this.content;
+            }
 		});
 		
 		tags.add(new TiffTag(280, "MinSampleValue", "The minimum component value used")
@@ -290,9 +308,13 @@ public class TiffTag
 		
 		tags.add(new TiffTag(282, "XResolution", "The number of pixels per ResolutionUnit in the ImageWidth direction")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+            public void init(BinaryDataReader dataReader) throws IOException
+            {
+                this.content = readRational(dataReader);
+            }
+			public void process(TiffFileInfo info)
 			{
-				double xScale = readRational(dataReader);
+				double xScale = (double) this.content;
 				if (xScale != 0.0)
 					info.pixelWidth = 1.0 / xScale;
 			}
@@ -300,9 +322,13 @@ public class TiffTag
 		
 		tags.add(new TiffTag(283, "YResolution", "The number of pixels per ResolutionUnit in the ImageHeight direction")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+            public void init(BinaryDataReader dataReader) throws IOException
+            {
+                this.content = readRational(dataReader);
+            }
+			public void process(TiffFileInfo info)
 			{
-				double yScale = readRational(dataReader);
+				double yScale = (double) this.content;
 				if (yScale != 0.0)
 					info.pixelHeight = 1.0 / yScale;
 			}
@@ -310,7 +336,7 @@ public class TiffTag
 		
 		tags.add(new TiffTag(284, "PlanarConfiguration", "How the components of each pixel are stored")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			public void process(TiffFileInfo info)
 			{
 			    if (value == 2 && info.pixelType == PixelType.RGB48)
 					info.pixelType = PixelType.GRAY16_UNSIGNED;
@@ -322,7 +348,7 @@ public class TiffTag
 						&& !((info.pixelType.getSampleNumber() == 1) || (info.pixelType.getSampleNumber() == 3)))
 				{
 					String msg = "Unsupported SamplesPerPixel: " + info.pixelType.getSampleNumber();
-					throw new IOException(msg);
+					throw new RuntimeException(msg);
 				}
 			}
 		});
@@ -346,7 +372,7 @@ public class TiffTag
         tags.add(new TiffTag(291, "GrayResponseCurve",
                 "For grayscale data, the optical density of each possible pixel value")
         {
-            public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+            public void init(BinaryDataReader dataReader) throws IOException
             {
                 this.content = readShortArray(dataReader);
             }
@@ -357,7 +383,7 @@ public class TiffTag
 		
 		tags.add(new TiffTag(296, "ResolutionUnit", "The unit of measurement for XResolution and YResolution")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			public void process(TiffFileInfo info)
 			{
 			    if (value == 1)
 				{
@@ -398,19 +424,14 @@ public class TiffTag
 
 		tags.add(new TiffTag(320, "ColorMap", "A color map for palette color images")
 		{
-			public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+			public void init(BinaryDataReader dataReader) throws IOException
 			{
-				int lutLength = (int) Math.pow(2, 8 * info.pixelType.getByteNumber());
-				int expLength = 3 * lutLength;
-				if (count != expLength)
-				{
-					throw new RuntimeException("Tiff Color Palette has "
-							+ count + " elements, while it requires "
-							+ expLength);
-				}
-				
-				info.lut = readColorMap(dataReader, lutLength);
+				this.content = readColorMap(dataReader, count / 3);
 			}
+            public void process(TiffFileInfo info)
+            {
+                info.lut = (int[][]) this.content;
+            }
 		});
 		
 		tags.add(new TiffTag(338, "ExtraSamples",
@@ -573,20 +594,28 @@ public class TiffTag
 	}
 	
     /**
-     * Updates the specified FileInfo data structure according to the current
-     * value of the tag.
+     * Initializes the content field of this tag, based on value and eventually data reader.
      * 
-     * @param info
-     *            an instance of TiffFileInfo.
      * @param dataReader
      *            the instance of DataReader used to read information
      * @throws IOException
      *             if an error occurs
      */
-	public void process(TiffFileInfo info, BinaryDataReader dataReader) throws IOException
+	public void init(BinaryDataReader dataReader) throws IOException
 	{
 	}
 	
+    /**
+     * Updates the specified FileInfo data structure according to the current
+     * value of the tag.
+     * 
+     * @param info
+     *            an instance of TiffFileInfo.
+     */
+    public void process(TiffFileInfo info)
+    {
+    }
+    
 	
 	// =============================================================
 	// protected methods used by subclasses
@@ -595,6 +624,7 @@ public class TiffTag
 			throws IOException
 	{
 		// Allocate memory for raw array
+	    // (each triplet of components is stored in two bytes)
 		int nBytes = 3 * lutLength * 2;
 		byte[] lut16 = new byte[nBytes];
 		
