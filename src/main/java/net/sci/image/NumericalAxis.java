@@ -3,6 +3,7 @@
  */
 package net.sci.image;
 
+import java.util.Locale;
 
 /**
  * Numeric image axis, for spatial, time, wave-length... axes.
@@ -164,6 +165,7 @@ public class NumericalAxis implements ImageAxis
     @Override
     public String toString()
     {
-        return String.format("NumericalAxis(name=%s, type=%s, spacing=%f, origin=%f, unit=%s)", this.name, this.type, this.spacing, this.origin, this.unitName);
+        String format = "NumericalAxis(name=%s, type=%s, spacing=%.4g, origin=%.4g, unit=%s)";
+        return String.format(Locale.ENGLISH, format, this.name, this.type, this.spacing, this.origin, this.unitName);
     }
 }

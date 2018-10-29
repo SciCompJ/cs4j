@@ -699,9 +699,9 @@ public class TiffTag
 			j++;
 		for (int i = 0; i < lutLength; i++)
 		{
-			lut[i][0] = lut16[j];
-			lut[i][1] = lut16[j + 512];
-			lut[i][2] = lut16[j + 1024];
+			lut[i][0] = lut16[j] & 0x00FF;
+			lut[i][1] = lut16[j + 512] & 0x00FF;
+			lut[i][2] = lut16[j + 1024] & 0x00FF;
 			j += 2;
 		}
 		return lut;

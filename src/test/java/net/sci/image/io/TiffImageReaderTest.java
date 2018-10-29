@@ -73,23 +73,6 @@ public class TiffImageReaderTest
 		assertEquals(512, data.getSize(1));
 	}
 
-    @Test
-    public void testReadImage_Gray8_2D_LsmInfo() throws IOException
-    {
-        String fileName = getClass().getResource("/files/slices/a2b010.tif").getFile();
-        
-        TiffImageReader reader = new TiffImageReader(fileName);
-        Image image = reader.readImage();
-        
-        assertEquals(2, image.getDimension());
-
-        Array<?> data = image.getData();
-        assertEquals(512, data.getSize(0));
-        assertEquals(512, data.getSize(1));
-        
-        
-    }
-
 	@Test
 	public void testReadImage_Gray8_3D_Stack() throws IOException
 	{
