@@ -157,7 +157,7 @@ public class TiffFileInfo
 			case 7: 	return Compression.JPEG;
 			default:
 				throw new IllegalArgumentException(
-						"No Compression type defined for state" + value);
+						"No Compression type defined for state: " + value);
 			}
 		}
 	};
@@ -222,7 +222,7 @@ public class TiffFileInfo
 			case 7: return Orientation.RIGHTBOT;
 			case 8: return Orientation.LEFTBOT;
 			default:
-				throw new IllegalArgumentException("No orientation defined for state " + value);
+				throw new IllegalArgumentException("No orientation defined for state: " + value);
 			}
 		}
 	};
@@ -244,12 +244,10 @@ public class TiffFileInfo
 	/**
 	 * Spatial calibration info 
 	 */
-	public double pixelWidth;
-	public double pixelHeight;
-	public String unit;
-	
-	// boolean intelByteOrder;
-	
+	public double pixelWidth = 1;
+	public double pixelHeight = 1;
+	public String unit = "";
+		
 	Compression compression = Compression.NONE;
 	
 	Orientation orientation = Orientation.TOPLEFT;
@@ -262,7 +260,6 @@ public class TiffFileInfo
 	int rowsPerStrip;
 	
 	PixelType pixelType;
-//	int samplesPerPixel;
 	
 	boolean whiteIsZero; 
 	int photometricInterpretation;
@@ -272,7 +269,6 @@ public class TiffFileInfo
 	 * A list of TiffTag for the additional tags that may be provided in files.
 	 */
     Map<Integer,TiffTag> tags = new TreeMap<Integer,TiffTag>();
-//    ArrayList<TiffTag> tags = new ArrayList<TiffTag>();
 	
 	
     // =============================================================

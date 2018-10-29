@@ -260,9 +260,10 @@ public class TiffImageReader implements ImageReader
 	
 	private void setupSpatialCalibration(Image image, TiffFileInfo info)
 	{
+	    String unit = info.unit;
 	    ImageAxis[] axes = new ImageAxis[image.getDimension()];
-	    axes[0] = new ImageAxis.X(info.pixelWidth, 0, info.unit);
-	    axes[1] = new ImageAxis.Y(info.pixelHeight, 0, info.unit);
+	    axes[0] = new ImageAxis.X(info.pixelWidth, 0, unit);
+	    axes[1] = new ImageAxis.Y(info.pixelHeight, 0, unit);
 	    if (axes.length > 2)
 	    {
 	        axes[2] = new ImageAxis.Z();
@@ -441,16 +442,6 @@ public class TiffImageReader implements ImageReader
 
 			info.tags.put(tagCode, tag);
 		}
-
-//		// Adjust the number of bytes per pixel for some specific formats 
-//		switch (info.fileType)
-//		{
-//		case GRAY32_INT:
-//		case GRAY32_FLOAT:
-//			info.bytesPerPixel = 4;
-//			break;
-//		default:
-//		}
 
 		return info;
 	}
