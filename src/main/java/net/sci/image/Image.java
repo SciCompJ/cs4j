@@ -383,6 +383,12 @@ public class Image
         this.backgroundColor = backgroundColor;
     }
 
+    /**
+     * Returns the range of values used for displaying this image.
+     * 
+     * @return an array containing the min and max values to display as black an
+     *         white.
+     */
     public double[] getDisplayRange()
 	{
 		return displayRange;
