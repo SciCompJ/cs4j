@@ -37,30 +37,17 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 		// allocate memory for result
 		Float32Array result = Float32Array.create(array.getSize());
 		
-		// create array iterators
-		Iterator<? extends Vector<?>> iter1 = array.iterator();
-		Float32Array.Iterator iter2 = result.iterator();
-		
-		// iterate over both arrays in parallel
-		double[] values = new double[array.getVectorLength()]; 
-		while (iter1.hasNext() && iter2.hasNext())
-		{
-			// get current vector
-			iter1.next().getValues(values);
-			
-			// compute norm of current vector
-			double norm = 0;
-			for (double d : values)
-			{
-				norm += d * d;
-			}
-			norm = Math.sqrt(norm);
-			
-			// allocate result
-			iter2.forward();
-			iter2.setValue(norm);
-		}
-		
+        // create array iterators
+        PositionIterator posIter = array.positionIterator();
+        
+        // iterate over both arrays in parallel
+        double[] values = new double[array.getVectorLength()];
+        while(posIter.hasNext())
+        {
+            int[] pos = posIter.next();
+            result.setValue(pos, norm(array.getValues(pos, values)));
+        }
+
 		return result;
 	}
 	
@@ -76,7 +63,25 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	    return channels;
 	}
 	
-	
+    /**
+     * Computes the norm of the vector represented by given values
+     * 
+     * @param values
+     *            the values of the vector
+     * @return the norm of the vector
+     */
+    public static double norm(double[] values)
+    {
+        // compute norm of current vector
+        double norm = 0;
+        for (double d : values)
+        {
+            norm += d * d;
+        }
+        return Math.sqrt(norm);
+    }
+    
+
 
 	// =============================================================
 	// New methods
@@ -95,33 +100,19 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
         Float32Array result = Float32Array.create(getSize());
         
         // create array iterators
-        Iterator<? extends Vector<?>> iter1 = iterator();
-        Float32Array.Iterator iter2 = result.iterator();
+        PositionIterator posIter = this.positionIterator();
         
         // iterate over both arrays in parallel
-        double[] values = new double[getVectorLength()]; 
-        while (iter1.hasNext() && iter2.hasNext())
+        double[] values = new double[getVectorLength()];
+        while(posIter.hasNext())
         {
-            // get current vector
-            iter1.forward();
-            iter1.getValues(values);
-            
-            // compute norm of current vector
-            double norm = 0;
-            for (double d : values)
-            {
-                norm += d * d;
-            }
-            norm = Math.sqrt(norm);
-            
-            // allocate result
-            iter2.forward();
-            iter2.setValue(norm);
+            int[] pos = posIter.next();
+            result.setValue(pos, norm(getValues(pos, values)));
         }
         
         return result;
     }
-    
+
     /**
      * Returns the number of elements used to represent each array element.
      * 
@@ -139,8 +130,9 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
     public ScalarArray<?> channel(int channel);
 
     /**
-     * ITerates over the channels
-     * @return
+     * Iterates over the channels
+     * 
+     * @return an iterator over the (scalar) channels
      */
     public Iterable<? extends ScalarArray<?>> channels();
 
