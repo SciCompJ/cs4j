@@ -198,7 +198,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
     
     private class ChannelIterator implements java.util.Iterator<Float32Array3D> 
     {
-        int channel = -1;
+        int channel = 0;
 
         @Override
         public boolean hasNext()
@@ -209,9 +209,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         @Override
         public Float32Array3D next()
         {
-            channel++;
-            return new ChannelView(channel);
+            return new ChannelView(channel++);
         }
-        
     }
 }

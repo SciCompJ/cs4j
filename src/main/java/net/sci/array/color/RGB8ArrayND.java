@@ -227,7 +227,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
         @Override
         public boolean hasNext()
         {
-            return channel < 3;
+            return channel < 2;
         }
 
         @Override

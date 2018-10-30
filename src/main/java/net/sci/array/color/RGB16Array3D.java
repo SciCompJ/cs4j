@@ -265,7 +265,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
         @Override
         public boolean hasNext()
         {
-            return channel < 3;
+            return channel < 2;
         }
 
         @Override

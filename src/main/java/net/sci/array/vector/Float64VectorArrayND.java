@@ -181,7 +181,7 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
     
     private class ChannelIterator implements java.util.Iterator<Float64ArrayND> 
     {
-        int channel = -1;
+        int channel = 0;
 
         @Override
         public boolean hasNext()
@@ -192,8 +192,7 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
         @Override
         public Float64ArrayND next()
         {
-            channel++;
-            return new ChannelView(channel);
+            return new ChannelView(channel++);
         }
         
     }

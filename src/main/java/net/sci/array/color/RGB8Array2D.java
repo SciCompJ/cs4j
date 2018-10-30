@@ -251,7 +251,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
         @Override
         public boolean hasNext()
         {
-            return channel < 3;
+            return channel < 2;
         }
 
         @Override

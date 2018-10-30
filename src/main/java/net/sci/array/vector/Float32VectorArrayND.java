@@ -47,15 +47,15 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
     public Iterable<Float32ArrayND> channels()
     {
         return new Iterable<Float32ArrayND>()
-                {
-                    @Override
-                    public java.util.Iterator<Float32ArrayND> iterator()
-                    {
-                        return new ChannelIterator();
-                    }
-                };
+        {
+            @Override
+            public java.util.Iterator<Float32ArrayND> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
     }
-
+    
     public java.util.Iterator<Float32ArrayND> channelIterator()
     {
         return new ChannelIterator();
@@ -185,7 +185,7 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
     
     private class ChannelIterator implements java.util.Iterator<Float32ArrayND> 
     {
-        int channel = -1;
+        int channel = 0;
 
         @Override
         public boolean hasNext()
@@ -196,8 +196,7 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
         @Override
         public Float32ArrayND next()
         {
-            channel++;
-            return new ChannelView(channel);
+            return new ChannelView(channel++);
         }
     }
 }
