@@ -7,6 +7,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.process.VectorArrayMarginalOperator;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
@@ -22,7 +23,7 @@ import net.sci.image.ImageArrayOperator;
  * @see BoxFilter
  * @see BoxMedianFilter
  */
-public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator
+public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator, VectorArrayMarginalOperator
 {
 	public enum Type 
 	{

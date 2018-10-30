@@ -6,6 +6,7 @@ package net.sci.image.process.filter;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.process.VectorArrayMarginalOperator;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
@@ -20,7 +21,7 @@ import net.sci.image.ImageArrayOperator;
  * @see BoxMedianFilter
  * @see BoxVarianceFilter
  */
-public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator
+public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator, VectorArrayMarginalOperator
 {
     /** The size of the box in each dimension */
 	int[] diameters;

@@ -32,12 +32,12 @@ public interface ScalarArrayOperator extends ArrayOperator
      * 
      * @param array
      *            the input array
-     * @return the operator result as a new instance of ScalarArray
+     * @return the operator result 
      * @throws IllegalArgumentException
      *             if the input array is not an instance of ScalarArray
      */
     @Override
-    public default <T> ScalarArray<? extends Scalar> process(Array<T> array)
+    public default <T> Array<?> process(Array<T> array)
     {
         if (!(array instanceof ScalarArray))
         {

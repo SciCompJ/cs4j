@@ -3,7 +3,6 @@
  */
 package net.sci.array.process;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import net.sci.array.Array;
@@ -24,13 +23,9 @@ public interface VectorArrayMarginalOperator extends ScalarArrayOperator
 	public default void processVector(VectorArray<? extends Vector<?>> source,
 			VectorArray<? extends Vector<?>> target)
 	{
-	    // extract channels of each array
-		Collection<ScalarArray<?>> sourceChannels = VectorArray.splitChannels(source);
-		Collection<ScalarArray<?>> targetChannels = VectorArray.splitChannels(target);
-
-		// create iterators on channels
-		Iterator<ScalarArray<?>> sourceChannelIter = sourceChannels.iterator();
-		Iterator<ScalarArray<?>> targetChannelIter = targetChannels.iterator();
+        // create iterators on channels
+        Iterator<? extends ScalarArray<?>> sourceChannelIter = source.channelIterator();
+        Iterator<? extends ScalarArray<?>> targetChannelIter = target.channelIterator();
 		
 		// iterate over each collection of channels in parallel
 		int c = 0;
@@ -40,9 +35,10 @@ public interface VectorArrayMarginalOperator extends ScalarArrayOperator
 			ScalarArray<?> sourceChannel = sourceChannelIter.next();
 
 			// process current channel
-			ScalarArray<?> targetChannel = process(sourceChannel);
+			ScalarArray<?> targetChannel = processScalar(sourceChannel);
 
 			// copy result of current channel onto target vector array
+			// TODO: use position iterator
 			ScalarArray.Iterator<? extends Scalar> channelIter = targetChannel.iterator();
 			VectorArray.Iterator<? extends Vector<? extends Scalar>> targetIter = target.iterator();
 			while(targetIter.hasNext() && channelIter.hasNext())
@@ -55,7 +51,36 @@ public interface VectorArrayMarginalOperator extends ScalarArrayOperator
 		}
 	}
 
-	/**
+    /**
+     * Overrides default behavior to process each channel of a vector array as a scalar array.
+     * 
+     * The input array must be either an instance of ScalarArray or of VectorArray.
+     * 
+     * @param array
+     *            the input array
+     * @return the operator result as a new instance of Array
+     * @throws IllegalArgumentException
+     *             if the input array is not an instance of ScalarArray or VectorArray
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public default <T> Array<?> process(Array<T> array)
+    {
+        if (array instanceof ScalarArray)
+        {
+            return processScalar((ScalarArray<?>) array);
+        }
+        if (array instanceof VectorArray)
+        {
+            VectorArray<?> output = (VectorArray<? extends Vector<?>>) array.duplicate();
+            processVector((VectorArray<? extends Vector<?>>) array, output);
+            return output;
+        }
+
+        throw new IllegalArgumentException("Can not process array of class: " + array.getClass().getName());
+    }
+
+    /**
 	 * Override default behavior to check if input array is either scalar or
 	 * vector array.
 	 * 
