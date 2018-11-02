@@ -44,6 +44,13 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     // =============================================================
     // Specialization of the Array3D interface
 
+    /**
+     * Returns a view over the specified slice.
+     * 
+     * @param sliceIndex
+     *            the index of the slice
+     * @return a view on the specific slice, as a 2D array
+     */
     public abstract ScalarArray2D<T> slice(int sliceIndex);
 
     /**
@@ -53,6 +60,11 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
      */
     public abstract Iterable<? extends ScalarArray2D<T>> slices();
 
+    /**
+     * Creates an iterator over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
     public abstract java.util.Iterator<? extends ScalarArray2D<T>> sliceIterator();
 
     
@@ -441,7 +453,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             @Override
             public boolean hasNext()
             {
-                return sliceIndex < array.getSize(2);
+                return sliceIndex < array.getSize(2) - 1;
             }
 
             @Override

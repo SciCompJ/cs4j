@@ -57,6 +57,31 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
     // Specialization of IntVectorArray3D interface
 
     @Override
+    public RGB16Array2D slice(int sliceIndex)
+    {
+        return new SliceView(sliceIndex);
+    }
+
+    @Override
+    public Iterable<? extends RGB16Array2D> slices()
+    {
+        return new Iterable<RGB16Array2D>()
+        {
+            @Override
+            public java.util.Iterator<RGB16Array2D> iterator()
+            {
+                return new SliceIterator();
+            }
+        };
+    }
+
+    @Override
+    public java.util.Iterator<? extends RGB16Array2D> sliceIterator()
+    {
+        return new SliceIterator();
+    }
+
+    @Override
     public int[] getSamples(int x, int y, int z)
     {
         return get(x, y, z).getSamples();
@@ -150,6 +175,145 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
 	 */
 	@Override
 	public abstract net.sci.array.color.RGB16Array.Iterator iterator();
+
+	
+	// =============================================================
+    // Inner classes for Array3D
+    
+    private class SliceView extends RGB16Array2D
+    {
+        int sliceIndex;
+        
+        protected SliceView(int slice)
+        {
+            super(RGB16Array3D.this.size0, RGB16Array3D.this.size1);
+            if (slice < 0 || slice >= RGB16Array3D.this.size2)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Slice index %d must be comprised between 0 and %d", slice, RGB16Array3D.this.size2));
+            }
+            this.sliceIndex = slice;
+        }
+    
+
+        
+        @Override
+        public net.sci.array.color.RGB16Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+    
+        @Override
+        public RGB16Array2D duplicate()
+        {
+            // allocate
+            RGB16Array2D res = RGB16Array2D.create(size0, size1);
+            
+            // fill values
+            for (int y = 0; y < size1; y++)
+            {
+                for (int x = 0; x < size0; x++)
+                {
+                    res.set(x, y, RGB16Array3D.this.get(x, y, sliceIndex));
+                }
+            }
+            
+            // return
+            return res;
+        }
+
+        @Override
+        public int getSample(int x, int y, int c)
+        {
+            return RGB16Array3D.this.get(x, y, sliceIndex).getSample(c);
+        }
+
+        @Override
+        public void setSample(int x, int y, int c, int intValue)
+        {
+            RGB16Array3D.this.setSample(x, y, sliceIndex, c, intValue);
+        }
+
+        @Override
+        public RGB16 get(int x, int y)
+        {
+            return RGB16Array3D.this.get(x, y, sliceIndex);
+        }
+
+        @Override
+        public void set(int x, int y, RGB16 value)
+        {
+            RGB16Array3D.this.set(x, y, sliceIndex, value);
+        }
+
+        class Iterator implements RGB16Array.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+            
+            public Iterator() 
+            {
+            }
+            
+            @Override
+            public RGB16 next()
+            {
+                forward();
+                return get();
+            }
+    
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                }
+            }
+    
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 || indY < size1 - 1;
+            }
+
+            @Override
+            public RGB16 get()
+            {
+                return RGB16Array3D.this.get(indX, indY, sliceIndex);
+            }
+
+            @Override
+            public void set(RGB16 value)
+            {
+                RGB16Array3D.this.set(indX, indY, sliceIndex, value);
+            }
+        }
+    }
+    
+    private class SliceIterator implements java.util.Iterator<RGB16Array2D> 
+    {
+        int sliceIndex = -1;
+    
+        @Override
+        public boolean hasNext()
+        {
+            return sliceIndex < RGB16Array3D.this.size2;
+        }
+    
+        @Override
+        public RGB16Array2D next()
+        {
+            sliceIndex++;
+            return new SliceView(sliceIndex);
+        }
+    }
+
+
+    // =============================================================
+    // Inner classes for VectorArray
 
     private class ChannelView extends UInt16Array3D
     {

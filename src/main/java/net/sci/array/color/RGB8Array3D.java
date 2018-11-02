@@ -57,6 +57,32 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
     // Specialization of IntVectorArray3D interface
 
     @Override
+    public RGB8Array2D slice(int sliceIndex)
+    {
+        return new SliceView(sliceIndex);
+    }
+
+    @Override
+    public Iterable<? extends RGB8Array2D> slices()
+    {
+        return new Iterable<RGB8Array2D>()
+        {
+            @Override
+            public java.util.Iterator<RGB8Array2D> iterator()
+            {
+                return new SliceIterator();
+            }
+        };
+    }
+
+    @Override
+    public java.util.Iterator<? extends RGB8Array2D> sliceIterator()
+    {
+        return new SliceIterator();
+    }
+
+
+    @Override
     public int[] getSamples(int x, int y, int z)
     {
         return get(x, y, z).getSamples();
@@ -133,7 +159,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 	}
 
 
-	// =============================================================
+    // =============================================================
 	// Specialization of Array interface
 	
 	/* (non-Javadoc)
@@ -148,6 +174,144 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 	@Override
 	public abstract net.sci.array.color.RGB8Array.Iterator iterator();
 
+
+	// =============================================================
+    // Inner classes for Array3D
+    
+    private class SliceView extends RGB8Array2D
+    {
+        int sliceIndex;
+        
+        protected SliceView(int slice)
+        {
+            super(RGB8Array3D.this.size0, RGB8Array3D.this.size1);
+            if (slice < 0 || slice >= RGB8Array3D.this.size2)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Slice index %d must be comprised between 0 and %d", slice, RGB8Array3D.this.size2));
+            }
+            this.sliceIndex = slice;
+        }
+    
+
+        
+        @Override
+        public net.sci.array.color.RGB8Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+    
+        @Override
+        public RGB8Array2D duplicate()
+        {
+            // allocate
+            RGB8Array2D res = RGB8Array2D.create(size0, size1);
+            
+            // fill values
+            for (int y = 0; y < size1; y++)
+            {
+                for (int x = 0; x < size0; x++)
+                {
+                    res.set(x, y, RGB8Array3D.this.get(x, y, sliceIndex));
+                }
+            }
+            
+            // return
+            return res;
+        }
+
+        @Override
+        public int getSample(int x, int y, int c)
+        {
+            return RGB8Array3D.this.get(x, y, sliceIndex).getSample(c);
+        }
+
+        @Override
+        public void setSample(int x, int y, int c, int intValue)
+        {
+            RGB8Array3D.this.setSample(x, y, sliceIndex, c, intValue);
+        }
+
+        @Override
+        public RGB8 get(int x, int y)
+        {
+            return RGB8Array3D.this.get(x, y, sliceIndex);
+        }
+
+        @Override
+        public void set(int x, int y, RGB8 value)
+        {
+            RGB8Array3D.this.set(x, y, sliceIndex, value);
+        }
+
+        class Iterator implements RGB8Array.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+            
+            public Iterator() 
+            {
+            }
+            
+            @Override
+            public RGB8 next()
+            {
+                forward();
+                return get();
+            }
+    
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                }
+            }
+    
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 || indY < size1 - 1;
+            }
+
+            @Override
+            public RGB8 get()
+            {
+                return RGB8Array3D.this.get(indX, indY, sliceIndex);
+            }
+
+            @Override
+            public void set(RGB8 value)
+            {
+                RGB8Array3D.this.set(indX, indY, sliceIndex, value);
+            }
+        }
+    }
+
+    private class SliceIterator implements java.util.Iterator<RGB8Array2D> 
+    {
+        int sliceIndex = -1;
+    
+        @Override
+        public boolean hasNext()
+        {
+            return sliceIndex < RGB8Array3D.this.size2;
+        }
+    
+        @Override
+        public RGB8Array2D next()
+        {
+            sliceIndex++;
+            return new SliceView(sliceIndex);
+        }
+    }
+
+    // =============================================================
+    // Inner classes for VectorArray3D
+    
     private class ChannelView extends UInt8Array3D
     {
         int channel;

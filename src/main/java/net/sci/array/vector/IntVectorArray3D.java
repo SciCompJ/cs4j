@@ -3,7 +3,6 @@
  */
 package net.sci.array.vector;
 
-
 /**
  * @author dlegland
  *
@@ -85,6 +84,30 @@ public abstract class IntVectorArray3D<V extends IntVector<?>> extends VectorArr
     // =============================================================
     // Specialization of VectorArray3D interface
 
+    /**
+     * Returns a view over the specified slice.
+     * 
+     * @param sliceIndex
+     *            the index of the slice
+     * @return a view on the specific slice, as a 2D array
+     */
+    public abstract IntVectorArray2D<V> slice(int sliceIndex);
+
+    /**
+     * Iterates over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
+    public abstract Iterable<? extends IntVectorArray2D<V>> slices();
+
+    /**
+     * Creates an iterator over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
+    public abstract java.util.Iterator<? extends IntVectorArray2D<V>> sliceIterator();
+
+    
     public double getValue(int x, int y, int z, int c)
     {
         return getSample(x, y, z, c);

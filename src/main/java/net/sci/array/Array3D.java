@@ -39,10 +39,37 @@ public abstract class Array3D<T> implements Array<T>
 		this.size2 = size2;
 	}
 
-	// =============================================================
-	// New methods
+//	// =============================================================
+//	// New methods
+//
+//    /**
+//     * Returns a view over the specified slice.
+//     * 
+//     * @param sliceIndex
+//     *            the index of the slice
+//     * @return a view on the specific slice, as a 2D array
+//     */
+//    public abstract Array2D<T> slice(int sliceIndex);
+//
+//    /**
+//     * Iterates over the slices
+//     * 
+//     * @return an iterator over 2D slices
+//     */
+//    public abstract Iterable<? extends Array2D<T>> slices();
+//
+//    /**
+//     * Creates an iterator over the slices
+//     * 
+//     * @return an iterator over 2D slices
+//     */
+//    public abstract java.util.Iterator<? extends Array2D<T>> sliceIterator();
+//
 
-	public abstract T get(int x, int y, int z);
+    // =============================================================
+    // New getter / setter
+
+    public abstract T get(int x, int y, int z);
 
 	public abstract void set(int x, int y, int z, T value);
 

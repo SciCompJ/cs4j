@@ -28,9 +28,34 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
 		super(size0, size1, size2);
 	}
 	
+	
+    // =============================================================
+    // Specialization of VectorArray3D interface
 
-	// =============================================================
-    // Specialization of VectorArray2D interface
+    @Override
+    public Float32VectorArray2D slice(int sliceIndex)
+    {
+        return new SliceView(sliceIndex);
+    }
+
+    @Override
+    public Iterable<? extends Float32VectorArray2D> slices()
+    {
+        return new Iterable<Float32VectorArray2D>()
+        {
+            @Override
+            public java.util.Iterator<Float32VectorArray2D> iterator()
+            {
+                return new SliceIterator();
+            }
+        };
+    }
+
+    @Override
+    public java.util.Iterator<? extends Float32VectorArray2D> sliceIterator()
+    {
+        return new SliceIterator();
+    }
 
 	public abstract double[] getValues(int x, int y, int z);
 	
@@ -87,31 +112,191 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         return new ChannelIterator();
     }
 
-	public double[] getValues(int[] pos)
-	{
-		return getValues(pos[0], pos[1], pos[2]);
-	}
-	
-    @Override
-    public double[] getValues(int[] pos, double[] values)
-    {
-        return getValues(pos[0], pos[1], pos[2], values);
-    }
+    
+	// =============================================================
+	// Specialization of Array interface
 
-	public void setValues(int[] pos, double[] values)
-	{
-		setValues(pos[0], pos[1], pos[2], values);
-	}
-	
     /* (non-Javadoc)
      * @see net.sci.array.data.VectorArray#duplicate()
      */
     @Override
     public abstract Float32VectorArray3D duplicate();
 
-	// =============================================================
-	// Specialization of Array interface
+    
+    // =============================================================
+    // Inner classes for Array3D
+    
+    private class SliceView extends Float32VectorArray2D
+    {
+        int sliceIndex;
+        
+        protected SliceView(int slice)
+        {
+            super(Float32VectorArray3D.this.size0, Float32VectorArray3D.this.size1);
+            if (slice < 0 || slice >= Float32VectorArray3D.this.size2)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Slice index %d must be comprised between 0 and %d", slice, Float32VectorArray3D.this.size2));
+            }
+            this.sliceIndex = slice;
+        }
+    
 
+        @Override
+        public int getVectorLength()
+        {
+            return Float32VectorArray3D.this.getVectorLength();
+        }
+
+        @Override
+        public double[] getValues(int x, int y)
+        {
+            return Float32VectorArray3D.this.getValues(x, y, sliceIndex);
+        }
+
+        @Override
+        public double[] getValues(int x, int y, double[] values)
+        {
+            return Float32VectorArray3D.this.getValues(x, y, sliceIndex, values);
+        }
+     
+        @Override
+        public void setValues(int x, int y, double[] values)
+        {
+            Float32VectorArray3D.this.setValues(x, y, sliceIndex, values);
+        }
+
+        @Override
+        public double getValue(int x, int y, int c)
+        {
+            return Float32VectorArray3D.this.getValue(x, y, sliceIndex, c);
+        }
+
+        @Override
+        public void setValue(int x, int y, int c, double value)
+        {
+            Float32VectorArray3D.this.setValue(x, y, sliceIndex, c, value);
+        }
+
+        @Override
+        public Float32Vector get(int x, int y)
+        {
+            return Float32VectorArray3D.this.get(x, y, sliceIndex);
+        }
+
+        @Override
+        public void set(int x, int y, Float32Vector value)
+        {
+            Float32VectorArray3D.this.set(x, y, sliceIndex, value);
+        }
+
+        @Override
+        public Float32VectorArray2D duplicate()
+        {
+            // allocate
+            Float32VectorArray2D res = Float32VectorArray2D.create(size0, size1, getVectorLength());
+            
+            // fill values
+            double[] buffer = new double[getVectorLength()];
+            for (int y = 0; y < size1; y++)
+            {
+                for (int x = 0; x < size0; x++)
+                {
+                    res.setValues(x, y, Float32VectorArray3D.this.getValues(x, y, sliceIndex, buffer));
+                }
+            }
+            
+            // return
+            return res;
+        }
+
+        @Override
+        public Float32VectorArray.Iterator iterator()
+        {
+            return new Iterator();
+        }
+    
+
+        class Iterator implements Float32VectorArray.Iterator
+        {
+            int indX = -1;
+            int indY = 0;
+            
+            public Iterator() 
+            {
+            }
+            
+            @Override
+            public Float32Vector next()
+            {
+                forward();
+                return get();
+            }
+    
+            @Override
+            public void forward()
+            {
+                indX++;
+                if (indX >= size0)
+                {
+                    indX = 0;
+                    indY++;
+                }
+            }
+    
+            @Override
+            public boolean hasNext()
+            {
+                return indX < size0 - 1 || indY < size1 - 1;
+            }
+
+            @Override
+            public Float32Vector get()
+            {
+                return Float32VectorArray3D.this.get(indX, indY, sliceIndex);
+            }
+
+            @Override
+            public void set(Float32Vector value)
+            {
+                Float32VectorArray3D.this.set(indX, indY, sliceIndex, value);
+            }
+
+            @Override
+            public double getValue(int c)
+            {
+                return Float32VectorArray3D.this.getValue(indX, indY, sliceIndex, c);
+            }
+
+            @Override
+            public void setValue(int c, double value)
+            {
+                Float32VectorArray3D.this.setValue(indX, indY, sliceIndex, c, value);
+            }
+        }
+    }
+    
+    private class SliceIterator implements java.util.Iterator<Float32VectorArray2D> 
+    {
+        int sliceIndex = -1;
+    
+        @Override
+        public boolean hasNext()
+        {
+            return sliceIndex < Float32VectorArray3D.this.size2;
+        }
+    
+        @Override
+        public Float32VectorArray2D next()
+        {
+            sliceIndex++;
+            return new SliceView(sliceIndex);
+        }
+    }
+
+
+    // =============================================================
+    // Inner classes for VectorArray
 
     private class ChannelView extends Float32Array3D
     {
