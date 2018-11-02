@@ -3,12 +3,13 @@
  */
 package net.sci.array.generic;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import net.sci.array.Array2D;
 import net.sci.array.Array3D;
-import net.sci.array.generic.BufferedGenericArray3D;
 
 /**
  * @author dlegland
@@ -99,4 +100,25 @@ public class BufferedGenericArray3DTest
         return array;
     }
     
+    /**
+     * Test method for {@link net.sci.array.generic.GenericArray3D#slices()}.
+     */
+    @Test
+    public final void testSlices()
+    {
+        String val = "A";
+        Array3D<String> array = GenericArray3D.create(5, 4, 3, val);
+
+        int n = 0;
+        for(Array2D<String> slice : array.slices())
+        {
+            assertEquals(5, slice.getSize(0));
+            assertEquals(4, slice.getSize(1));
+            n++;
+        }
+
+        assertEquals(3, n);
+    }
+    
+
 }

@@ -27,4 +27,8 @@ public abstract class GenericArray3D<T> extends Array3D<T> implements GenericArr
         super(size0, size1, size2);
     }
 
+    public abstract T get(int x, int y, int z);
+    
+    public abstract void set(int x, int y, int z, T value);
+    
 }
