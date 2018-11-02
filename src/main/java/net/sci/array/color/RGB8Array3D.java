@@ -293,7 +293,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 
     private class SliceIterator implements java.util.Iterator<RGB8Array2D> 
     {
-        int sliceIndex = -1;
+        int sliceIndex = 0;
     
         @Override
         public boolean hasNext()
@@ -304,8 +304,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
         @Override
         public RGB8Array2D next()
         {
-            sliceIndex++;
-            return new SliceView(sliceIndex);
+            return new SliceView(sliceIndex++);
         }
     }
 

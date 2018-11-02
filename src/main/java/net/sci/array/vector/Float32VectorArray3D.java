@@ -278,7 +278,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
     
     private class SliceIterator implements java.util.Iterator<Float32VectorArray2D> 
     {
-        int sliceIndex = -1;
+        int sliceIndex = 0;
     
         @Override
         public boolean hasNext()
@@ -289,8 +289,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         @Override
         public Float32VectorArray2D next()
         {
-            sliceIndex++;
-            return new SliceView(sliceIndex);
+            return new SliceView(sliceIndex++);
         }
     }
 

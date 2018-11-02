@@ -295,7 +295,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
     
     private class SliceIterator implements java.util.Iterator<RGB16Array2D> 
     {
-        int sliceIndex = -1;
+        int sliceIndex = 0;
     
         @Override
         public boolean hasNext()
@@ -306,8 +306,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
         @Override
         public RGB16Array2D next()
         {
-            sliceIndex++;
-            return new SliceView(sliceIndex);
+            return new SliceView(sliceIndex++);
         }
     }
 

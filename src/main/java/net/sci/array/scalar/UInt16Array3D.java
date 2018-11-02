@@ -309,7 +309,7 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
     
     private class SliceIterator implements java.util.Iterator<UInt16Array2D> 
     {
-        int sliceIndex = -1;
+        int sliceIndex = 0;
 
         @Override
         public boolean hasNext()
@@ -320,8 +320,7 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
         @Override
         public UInt16Array2D next()
         {
-            sliceIndex++;
-            return new SliceView(sliceIndex);
+            return new SliceView(sliceIndex++);
         }
         
     }

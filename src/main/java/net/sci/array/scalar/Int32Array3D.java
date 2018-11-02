@@ -224,7 +224,7 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
     
     private class SliceIterator implements java.util.Iterator<Int32Array2D> 
     {
-        int sliceIndex = -1;
+        int sliceIndex = 0;
 
         @Override
         public boolean hasNext()
@@ -235,8 +235,7 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
         @Override
         public Int32Array2D next()
         {
-            sliceIndex++;
-            return new SliceView(sliceIndex);
+            return new SliceView(sliceIndex++);
         }
     }
 }

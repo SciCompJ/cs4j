@@ -441,7 +441,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
     
     private class SliceIterator implements java.util.Iterator<BinaryArray2D> 
     {
-        int sliceIndex = -1;
+        int sliceIndex = 0;
 
         @Override
         public boolean hasNext()
@@ -452,8 +452,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         @Override
         public BinaryArray2D next()
         {
-            sliceIndex++;
-            return new SliceView(sliceIndex);
+            return new SliceView(sliceIndex++);
         }
     }
 

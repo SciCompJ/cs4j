@@ -298,7 +298,7 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
     
     private class SliceIterator implements java.util.Iterator<UInt8Array2D> 
     {
-        int sliceIndex = -1;
+        int sliceIndex = 0;
 
         @Override
         public boolean hasNext()
@@ -309,8 +309,7 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         @Override
         public UInt8Array2D next()
         {
-            sliceIndex++;
-            return new SliceView(sliceIndex);
+            return new SliceView(sliceIndex++);
         }
     }
 

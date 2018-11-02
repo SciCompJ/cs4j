@@ -214,7 +214,7 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
     
     private class SliceIterator implements java.util.Iterator<Float64Array2D> 
     {
-        int sliceIndex = -1;
+        int sliceIndex = 0;
 
         @Override
         public boolean hasNext()
@@ -225,8 +225,7 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
         @Override
         public Float64Array2D next()
         {
-            sliceIndex++;
-            return new SliceView(sliceIndex);
+            return new SliceView(sliceIndex++);
         }
     }
 }

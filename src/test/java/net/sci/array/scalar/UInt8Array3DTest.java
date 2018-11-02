@@ -64,4 +64,22 @@ public class UInt8Array3DTest
         assertEquals(10.0*20, sum, .01);
     }
 
+    /**
+     * Test method for {@link net.sci.array.scalar.UInt8Array3D#sliceIterator()}.
+     */
+    @Test
+    public final void test_SliceIterator()
+    {
+        UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
+
+        int n = 0;
+        for(UInt8Array2D slice : array.slices())
+        {
+            assertEquals(5, slice.getSize(0));
+            assertEquals(4, slice.getSize(1));
+            n++;
+        }
+
+        assertEquals(3, n);
+    }
 }
