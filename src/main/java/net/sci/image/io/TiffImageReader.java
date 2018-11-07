@@ -187,6 +187,11 @@ public class TiffImageReader implements ImageReader
 		// Read File information of the first image stored in the file
 		TiffFileInfo info = this.fileInfoList.get(0);
 
+		if (info.pixelType == TiffFileInfo.PixelType.BITMAP)
+		{
+		    throw new RuntimeException("Reading Bitmap Tiff files not supported");
+		}
+		
 		// Read image data
 		Array<?> data = readImageData();
 
