@@ -329,6 +329,9 @@ public class Image
         }
         this.colorMap = parent.colorMap;
         this.backgroundColor = parent.backgroundColor;
+        
+        // copy meta-data if any (may be obsolete...)
+        this.tiffTags = parent.tiffTags;
 	}
 	
 	
