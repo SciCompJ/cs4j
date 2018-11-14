@@ -3,10 +3,8 @@
  */
 package net.sci.array.process;
 
-import java.util.Iterator;
-
 import net.sci.array.Array;
-import net.sci.array.scalar.Scalar;
+import net.sci.array.Array.PositionIterator;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.vector.Vector;
 import net.sci.array.vector.VectorArray;
@@ -23,31 +21,19 @@ public interface VectorArrayMarginalOperator extends ScalarArrayOperator
 	public default void processVector(VectorArray<? extends Vector<?>> source,
 			VectorArray<? extends Vector<?>> target)
 	{
-        // create iterators on channels
-        Iterator<? extends ScalarArray<?>> sourceChannelIter = source.channelIterator();
-        Iterator<? extends ScalarArray<?>> targetChannelIter = target.channelIterator();
-		
-		// iterate over each collection of channels in parallel
-		int c = 0;
-		while (sourceChannelIter.hasNext() && targetChannelIter.hasNext())
+		// iterate over channels
+        for (int c = 0; c < source.getVectorLength(); c++)
 		{
-			// extract current channels
-			ScalarArray<?> sourceChannel = sourceChannelIter.next();
-
 			// process current channel
-			ScalarArray<?> targetChannel = processScalar(sourceChannel);
+			ScalarArray<?> resultChannel = processScalar(source.channel(c));
 
-			// copy result of current channel onto target vector array
-			// TODO: use position iterator
-			ScalarArray.Iterator<? extends Scalar> channelIter = targetChannel.iterator();
-			VectorArray.Iterator<? extends Vector<? extends Scalar>> targetIter = target.iterator();
-			while(targetIter.hasNext() && channelIter.hasNext())
+			// copy result values into target array
+			PositionIterator posIter = resultChannel.positionIterator();
+			while (posIter.hasNext())
 			{
-				double value = channelIter.nextValue();
-				targetIter.forward();
-				targetIter.setValue(c, value);
+			    int[] pos = posIter.next();
+			    target.setValue(pos, c, resultChannel.getValue(pos));
 			}
-			c++;
 		}
 	}
 

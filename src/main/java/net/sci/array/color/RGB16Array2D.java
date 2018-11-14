@@ -4,7 +4,6 @@
 package net.sci.array.color;
 
 import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt16Array2D;
 import net.sci.array.vector.IntVectorArray2D;
 
@@ -38,18 +37,21 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RG
 	@Override
 	public UInt16Array2D convertToUInt16()
 	{
+	    // allocate memory for result
 		int size0 = this.getSize(0);
 		int size1 = this.getSize(1);
 		UInt16Array2D result = UInt16Array2D.create(size0, size1);
-		
-		// TODO: use position iterator
-		RGB16Array.Iterator rgb16Iter = iterator();
-		UInt16Array.Iterator uint16Iter = result.iterator();
-		while(rgb16Iter.hasNext() && uint16Iter.hasNext())
+
+		// iterate over pixels
+		for (int y = 0; y < size1; y++)
 		{
-			uint16Iter.setNextInt(rgb16Iter.next().getInt());
+	        for (int x = 0; x < size0; x++)
+	        {
+	            result.setInt(x,  y, this.get(x, y).getInt());
+	        }
 		}
 		
+		// return result
 		return result;
 	}
 	
