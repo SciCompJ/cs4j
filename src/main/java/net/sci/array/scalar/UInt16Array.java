@@ -124,9 +124,22 @@ public interface UInt16Array extends IntArray<UInt16>
 		return factory;
 	}
 
+    @Override
+    public default UInt16 get(int[] pos)
+    {
+        return new UInt16(getShort(pos)); 
+    }
+
+    @Override
+    public default void set(int[] pos, UInt16 value)
+    {
+        setShort(pos, value.getShort());
+    }
+
 	@Override
 	public default UInt16Array duplicate()
 	{
+	    // TODO: use position iterator
 		// create output array
 		UInt16Array result = UInt16Array.create(this.getSize());
 

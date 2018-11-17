@@ -3,50 +3,50 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8ArrayND;
+import net.sci.array.scalar.UInt16;
+import net.sci.array.scalar.UInt16Array;
+import net.sci.array.scalar.UInt16ArrayND;
 import net.sci.array.vector.VectorArrayND;
 
 /**
  * @author dlegland
  *
  */
-public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Array
+public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16Array
 {
-	// =============================================================
-	// Static methods
-
-	public static final RGB8ArrayND create(int...sizes)
-	{
-		return new Int32EncodedRGB8ArrayND(sizes);
-	}
+//	// =============================================================
+//	// Static methods
+//
+//	public static final RGB16ArrayND create(int...sizes)
+//	{
+//		return new Int32EncodedRGB16ArrayND(sizes);
+//	}
 	
 
 	// =============================================================
 	// Constructor
 
-	protected RGB8ArrayND(int... sizes)
+	protected RGB16ArrayND(int... sizes)
 	{
 		super(sizes);
 	}
 
 
 	// =============================================================
-	// Implementation of the RGB8Array interface
+	// Implementation of the RGB16Array interface
 
 	@Override
-	public UInt8Array convertToUInt8()
+	public UInt16Array convertToUInt16()
 	{
 		int[] sizes = this.getSize();
-		UInt8Array result = UInt8Array.create(sizes);
+		UInt16Array result = UInt16Array.create(sizes);
 		
-        // TODO: use position iterator
-		RGB8Array.Iterator rgb8Iter = iterator();
-		UInt8Array.Iterator uint8Iter = result.iterator();
-		while(rgb8Iter.hasNext() && uint8Iter.hasNext())
+		// TODO: use position iterator
+		RGB16Array.Iterator rgb16Iter = iterator();
+		UInt16Array.Iterator uint16Iter = result.iterator();
+		while(rgb16Iter.hasNext() && uint16Iter.hasNext())
 		{
-			uint8Iter.setNextInt(rgb8Iter.next().getInt());
+			uint16Iter.setNextInt(rgb16Iter.next().getInt());
 		}
 		
 		return result;
@@ -63,17 +63,17 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
      *            index of the channel to view
      * @return a view on the channel
      */
-    public UInt8ArrayND channel(int channel)
+    public UInt16ArrayND channel(int channel)
     {
         return new ChannelView(channel);
     }
     
-    public Iterable<UInt8ArrayND> channels()
+    public Iterable<UInt16ArrayND> channels()
     {
-        return new Iterable<UInt8ArrayND>()
+        return new Iterable<UInt16ArrayND>()
                 {
                     @Override
-                    public java.util.Iterator<UInt8ArrayND> iterator()
+                    public java.util.Iterator<UInt16ArrayND> iterator()
                     {
                         return new ChannelIterator();
                     }
@@ -90,11 +90,11 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
     public void setValue(int[] pos, int channel, double value)
     {
         int[] samples = getSamples(pos);
-        samples[channel] = UInt8.clamp(value);
+        samples[channel] = UInt16.clamp(value);
         setSamples(pos, samples);
     }
 
-    public java.util.Iterator<UInt8ArrayND> channelIterator()
+    public java.util.Iterator<UInt16ArrayND> channelIterator()
     {
         return new ChannelIterator();
     }
@@ -104,24 +104,24 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 	// Specialization of Array interface
 	
 	/* (non-Javadoc)
-	 * @see net.sci.array.color.RGB8Array#duplicate()
+	 * @see net.sci.array.color.RGB16Array#duplicate()
 	 */
 	@Override
-	public abstract RGB8ArrayND duplicate();
+	public abstract RGB16ArrayND duplicate();
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.color.RGB8Array#iterator()
+	 * @see net.sci.array.color.RGB16Array#iterator()
 	 */
 	@Override
-	public abstract RGB8Array.Iterator iterator();
+	public abstract RGB16Array.Iterator iterator();
 
-    private class ChannelView extends UInt8ArrayND
+    private class ChannelView extends UInt16ArrayND
     {
         int channel;
         
         protected ChannelView(int channel)
         {
-            super(RGB8ArrayND.this.sizes);
+            super(RGB16ArrayND.this.sizes);
             int nChannels = 3;
             if (channel < 0 || channel >= nChannels)
             {
@@ -132,26 +132,26 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
         }
 
         @Override
-        public byte getByte(int[] pos)
+        public short getShort(int[] pos)
         {
-            return (byte) RGB8ArrayND.this.get(pos).getSample(channel);
+            return (short) RGB16ArrayND.this.get(pos).getSample(channel);
         }
 
         @Override
-        public void setByte(int[] pos, byte value)
+        public void setShort(int[] pos, short value)
         {
-            int[] samples = RGB8ArrayND.this.getSamples(pos);
-            samples[channel] = value & 0x00FF;
-            RGB8ArrayND.this.setSamples(pos, samples);
+            int[] samples = RGB16ArrayND.this.getSamples(pos);
+            samples[channel] = value & 0x00FFFF;
+            RGB16ArrayND.this.setSamples(pos, samples);
         }
 
         @Override
-        public net.sci.array.scalar.UInt8Array.Iterator iterator()
+        public net.sci.array.scalar.UInt16Array.Iterator iterator()
         {
             return new Iterator();
         }
 
-        class Iterator implements net.sci.array.scalar.UInt8Array.Iterator
+        class Iterator implements net.sci.array.scalar.UInt16Array.Iterator
         {
             int[] pos;
             int nd;
@@ -168,7 +168,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
             }
 
             @Override
-            public UInt8 next()
+            public UInt16 next()
             {
                 forward();
                 return get();
@@ -202,26 +202,26 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
             }
 
             @Override
-            public byte getByte()
+            public short getShort()
             {
                 int[] res = new int[nd];
                 System.arraycopy(this.pos, 0, res, 0, nd);
-                return (byte) RGB8ArrayND.this.get(pos).getSample(channel);
+                return (short) RGB16ArrayND.this.get(pos).getSample(channel);
             }
 
             @Override
-            public void setByte(byte byteValue)
+            public void setShort(short byteValue)
             {
                 int[] res = new int[nd];
                 System.arraycopy(this.pos, 0, res, 0, nd);
-                int[] samples = RGB8ArrayND.this.get(pos).getSamples();
-                samples[channel] = byteValue & 0x00FF;
-                RGB8ArrayND.this.setSamples(pos, samples);
+                int[] samples = RGB16ArrayND.this.get(pos).getSamples();
+                samples[channel] = byteValue & 0x00FFFF;
+                RGB16ArrayND.this.setSamples(pos, samples);
             }     
         }
     }
     
-    private class ChannelIterator implements java.util.Iterator<UInt8ArrayND> 
+    private class ChannelIterator implements java.util.Iterator<UInt16ArrayND> 
     {
         int channel = -1;
 
@@ -232,7 +232,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
         }
 
         @Override
-        public UInt8ArrayND next()
+        public UInt16ArrayND next()
         {
             channel++;
             return new ChannelView(channel);
