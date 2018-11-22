@@ -294,8 +294,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	private void initializeResult()
 	{
 		// Create result image the same size as the mask image
-		// TODO: result as ScalarArray or ScalarArray2D ?
-		this.result = (ScalarArray2D<?>) this.mask.newInstance(this.sizeX, this.sizeY);
+		this.result = ScalarArray2D.wrap(this.mask.newInstance(this.sizeX, this.sizeY));
 	
 		for (int y = 0; y < this.sizeY; y++) 
 		{
