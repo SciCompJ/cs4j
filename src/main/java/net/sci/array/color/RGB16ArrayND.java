@@ -14,13 +14,13 @@ import net.sci.array.vector.VectorArrayND;
  */
 public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16Array
 {
-//	// =============================================================
-//	// Static methods
-//
-//	public static final RGB16ArrayND create(int...sizes)
-//	{
-//		return new Int32EncodedRGB16ArrayND(sizes);
-//	}
+	// =============================================================
+	// Static methods
+
+	public static final RGB16ArrayND create(int... dims)
+	{
+		return new BufferedPackedShortRGB16ArrayND(dims);
+	}
 	
 
 	// =============================================================
@@ -41,12 +41,11 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
 		int[] sizes = this.getSize();
 		UInt16Array result = UInt16Array.create(sizes);
 		
-		// TODO: use position iterator
-		RGB16Array.Iterator rgb16Iter = iterator();
-		UInt16Array.Iterator uint16Iter = result.iterator();
-		while(rgb16Iter.hasNext() && uint16Iter.hasNext())
+		PositionIterator iter = positionIterator();
+		while(iter.hasNext())
 		{
-			uint16Iter.setNextInt(rgb16Iter.next().getInt());
+		    int[] pos = iter.next();
+		    result.setInt(pos, get(pos).getInt());
 		}
 		
 		return result;

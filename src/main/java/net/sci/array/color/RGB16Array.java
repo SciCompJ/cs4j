@@ -46,11 +46,9 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 			return RGB16Array2D.create(dims[0], dims[1]);
 		case 3:
 			return RGB16Array3D.create(dims[0], dims[1], dims[2]);
-//		default:
-			// TODO: implement
-//			return RGB16ArrayND.create(dims);
+		default:
+			return RGB16ArrayND.create(dims);
 		}
-		throw new RuntimeException("RGB16Arrays not yet implemented for dimension " + dims.length);
 	}
 
     /**
@@ -281,7 +279,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 		return RGB16.class;
 	}
 
-	public Iterator iterator();
+	public abstract Iterator iterator();
 
 	
 	// =============================================================
@@ -303,4 +301,5 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 			set(new RGB16(samples[0], samples[1], samples[2]));
 		}
 	}
+
 }
