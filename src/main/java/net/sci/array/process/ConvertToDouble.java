@@ -4,7 +4,9 @@
 package net.sci.array.process;
 
 import net.sci.array.Array;
+import net.sci.array.Array.PositionIterator;
 import net.sci.array.ArrayOperator;
+import net.sci.array.Arrays;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.ScalarArray;
 
@@ -24,30 +26,37 @@ public class ConvertToDouble implements ArrayOperator
 	    }
         Float32Array result = Float32Array.create(array.getSize());
         
-        ScalarArray.Iterator<?> iter1 = ((ScalarArray<?>) array).iterator(); 
-        ScalarArray.Iterator<?> iter2 = result.iterator();
-        
-        while(iter1.hasNext() && iter2.hasNext())
+        PositionIterator iter = array.positionIterator();
+        while(iter.hasNext())
         {
-            iter2.setNextValue(iter1.nextValue());
+            int[] pos = iter.next();
+            result.setValue(pos, ((ScalarArray<?>) array).getValue(pos));
         }
 
         return result;
     }
 
-    public ScalarArray<?> convert(ScalarArray<?> array, ScalarArray<?> output)
+    public ScalarArray<?> convert(ScalarArray<?> source, ScalarArray<?> target)
     {
-        // TODO: check dim
-        // TODO: check size
-        
-        ScalarArray.Iterator<?> iter1 = array.iterator(); 
-        ScalarArray.Iterator<?> iter2 = output.iterator();
-        
-        while(iter1.hasNext() && iter2.hasNext())
+        // check inputs
+        if (!Arrays.isSameDimensionality(source, target))
         {
-            iter2.setNextValue(iter1.nextValue());
+            throw new IllegalArgumentException("Both arrays must have same dimensionality");
+        }
+        if (!Arrays.isSameSize(source, target))
+        {
+            throw new IllegalArgumentException("Both arrays must have same dimensions");
+        }
+        
+        // iterate over positions
+        PositionIterator iter = source.positionIterator();
+        while(iter.hasNext())
+        {
+            int[] pos = iter.next();
+            target.setValue(pos, ((ScalarArray<?>) source).getValue(pos));
         }
 
-        return output;
+        // return reference to target
+        return target;
     }
 }
