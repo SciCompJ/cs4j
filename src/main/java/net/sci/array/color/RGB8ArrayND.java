@@ -41,12 +41,11 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 		int[] sizes = this.getSize();
 		UInt8Array result = UInt8Array.create(sizes);
 		
-        // TODO: use position iterator
-		RGB8Array.Iterator rgb8Iter = iterator();
-		UInt8Array.Iterator uint8Iter = result.iterator();
-		while(rgb8Iter.hasNext() && uint8Iter.hasNext())
+		PositionIterator iter = positionIterator();
+		while(iter.hasNext())
 		{
-			uint8Iter.setNextInt(rgb8Iter.next().getInt());
+		    int[] pos = iter.next();
+		    result.setInt(pos, get(pos).getInt());
 		}
 		
 		return result;
