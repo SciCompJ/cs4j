@@ -34,23 +34,16 @@ public class PowerOfTwo implements ScalarArrayOperator
 	public void processScalar(ScalarArray<? extends Scalar> input,
 			ScalarArray<? extends Scalar> output)
 	{
-		// create array iterators
-		ScalarArray.Iterator<?> sourceIter = input.iterator();
-		ScalarArray.Iterator<?> targetIter = output.iterator();
-		
-		// iterate over both arrays in parallel 
-		while (sourceIter.hasNext() && targetIter.hasNext())
-		{
-			// process next value
-			targetIter.setNextValue(Math.pow(sourceIter.nextValue(), 2));
-		}
+	    for (int[] pos : input.positions())
+	    {
+	        output.setValue(pos, Math.pow(input.getValue(pos), 2));
+	    }
 	}
 
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        // TODO: choose the class of the output array
-        ScalarArray<?> output = array.newInstance(array.getSize());
+        ScalarArray<? extends Scalar> output = array.newInstance(array.getSize());
         processScalar(array, output);
         return output;
     }
