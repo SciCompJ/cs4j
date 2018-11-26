@@ -96,7 +96,12 @@ public interface ImageAxis
     {
         public C()
         {
-            super("Channel");
+            super("Channel", new String[0]);
+        }
+        
+        public C(String[] channelNames)
+        {
+            super("Channel", channelNames);
         }
         
         public Type getType()

@@ -23,8 +23,14 @@ public class NumericalAxis implements ImageAxis
 
     Type type;
     
+    /**
+     * The spacing between two elements along this axis
+     */
     double spacing;
     
+    /**
+     * The position of the first element (with index 0) on this axis.
+     */
     double origin;
     
     /**
@@ -87,7 +93,23 @@ public class NumericalAxis implements ImageAxis
     // =============================================================
     // General methods
 
-    public double indexToValue(int index)
+    /**
+     * @return the physical length of the given number of elements 
+     */
+    public double physicalLength(int number)
+    {
+        return number * this.spacing;
+    }
+    
+    /**
+     * @return the physical range occupied by the given number of elements  
+     */
+    public double[] physicalRange(int number)
+    {
+        return new double[] {this.origin, this.origin + this.spacing * number};
+    }
+    
+    public double indexToValue(double index)
     {
         return index * this.spacing + this.origin;
     }

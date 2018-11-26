@@ -17,14 +17,17 @@ public class CategoricalAxis implements ImageAxis
      */
     String name;
 
+    String[] channelNames;
+    
     /**
      * Creates a new axis by specifying its name.
      * 
 	 * @param name the name of the axis 
 	 */
-    protected CategoricalAxis(String name)
+    public CategoricalAxis(String name, String[] channelNames)
     {
         this.name = name;
+        this.channelNames = channelNames;
     }
 
     /**
