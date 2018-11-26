@@ -1,9 +1,10 @@
-package net.sci.array.process;
+package net.sci.array.process.math;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import net.sci.array.process.math.Sqrt;
 import net.sci.array.scalar.Float64Array2D;
 import net.sci.array.scalar.UInt16Array2D;
 

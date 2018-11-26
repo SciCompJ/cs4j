@@ -1,29 +1,33 @@
 /**
  * 
  */
-package net.sci.array.process;
+package net.sci.array.process.math;
 
+import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
 /**
  * Sample operator to demonstrate the use of ScalarArrayOperator interface.
  * 
- * Computes the square of each element of an array of scalars.
+ * Computes the square root of each element in an array of scalars.
  * 
  * @author dlegland
  *
  */
-public class PowerOfTwo implements ScalarArrayOperator
+public class Sqrt implements ScalarArrayOperator
 {
+    ScalarArray.Factory<? extends Scalar> factory = Float32Array.factory;
+
 	/**
-	 * Empty constructor.
+	 * Empty constructor
 	 */
-	public PowerOfTwo()
+	public Sqrt()
 	{
 	}
 
-	/**
+    /**
      * Processes an input array and populates the output array.
      * 
      * @param input
@@ -41,16 +45,15 @@ public class PowerOfTwo implements ScalarArrayOperator
 		// iterate over both arrays in parallel 
 		while (sourceIter.hasNext() && targetIter.hasNext())
 		{
-			// process next value
-			targetIter.setNextValue(Math.pow(sourceIter.nextValue(), 2));
+			// process the next value
+			targetIter.setNextValue(Math.sqrt(sourceIter.nextValue()));
 		}
 	}
 
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        // TODO: choose the class of the output array
-        ScalarArray<?> output = array.newInstance(array.getSize());
+        ScalarArray<?> output = factory.create(array.getSize());
         processScalar(array, output);
         return output;
     }
