@@ -9,6 +9,7 @@ import org.junit.runners.Suite;
     ConcatenateTest.class,
     FlipTest.class,
 	OrthogonalProjectionTest.class,
+	PermuteDimensionsTest.class,
 	SlicerTest.class,
 	})
 public class AllTests {
