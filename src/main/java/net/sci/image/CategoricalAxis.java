@@ -3,6 +3,8 @@
  */
 package net.sci.image;
 
+import java.util.Locale;
+
 /**
  * Categorical image axis, for example for channel axes (if not implemented as
  * vector arrays).
@@ -12,24 +14,85 @@ package net.sci.image;
  */
 public class CategoricalAxis implements ImageAxis
 {
+    // =============================================================
+    // Class fields
+    
     /**
      * The name for this axis.
      */
     String name;
 
-    String[] channelNames;
+    /**
+     * The type of axis
+     */
+    ImageAxis.Type type;
     
     /**
-     * Creates a new axis by specifying its name.
+     * The name of each item / category within this axis.
+     */
+    String[] itemNames;
+    
+    // =============================================================
+    // Constructors
+    
+    /**
+     * Creates a new axis by specifying its name and the name of each item.
      * 
-	 * @param name the name of the axis 
-	 */
-    public CategoricalAxis(String name, String[] channelNames)
+     * @param name
+     *            the name of the axis
+     * @param itemNames
+     *            the name of each item
+     */
+    public CategoricalAxis(String name, String[] itemNames)
     {
         this.name = name;
-        this.channelNames = channelNames;
+        this.itemNames = itemNames;
     }
 
+    /**
+     * Creates a new axis by specifying its name, its type, and the name of each item.
+     * 
+     * @param name
+     *            the name of the axis
+     * @param type
+     *            the type of the axis
+     * @param itemNames
+     *            the name of each item
+     */
+    public CategoricalAxis(String name, ImageAxis.Type type, String[] itemNames)
+    {
+        this.type = type;
+        this.name = name;
+        this.itemNames = itemNames;
+    }
+
+    
+    // =============================================================
+    // getters / setters
+    
+    /**
+     * @return the length of this axis, as the number of items.
+     */
+    public int length()
+    {
+        return this.itemNames.length;
+    }
+    
+    /**
+     * @param index
+     *            the index of the category
+     * @return the name of the category for the given index
+     */
+    public String getItem(int index)
+    {
+        return this.itemNames[index];
+    }
+    
+    public Type getType()
+    {
+        return this.type;
+    }
+    
     /**
      * Returns the name of the axis.
      * 
@@ -50,5 +113,29 @@ public class CategoricalAxis implements ImageAxis
         this.name = name;
     }
 
-
+    
+    // =============================================================
+    // Methods overriding Object
+    
+    @Override
+    public String toString()
+    {
+        int nItems = this.itemNames.length;
+        String itemString = String.format("String[%d]", nItems);
+        if (nItems < 6)
+        {
+            itemString = itemString + "{";
+            if (nItems > 0)
+            {
+                itemString = itemString + "\"" + this.itemNames[0] + "\"";
+            }
+            for (int i = 1; i < nItems; i++)
+            {
+                itemString = itemString + ", \"" + this.itemNames[i] + "\"";
+            }
+            itemString = itemString + "}";
+        }
+        String format = "CategoricalAxis(name=\"%s\", type=%s, items=%s)";
+        return String.format(Locale.ENGLISH, format, this.name, this.type, itemString);
+    }
 }

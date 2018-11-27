@@ -352,8 +352,9 @@ public class Image
 	    return res;
 	}
 	
+	
     // =============================================================
-    // Setters and Getters
+    // Management of value calibration
 
 	public Array<?> getData()
 	{
@@ -402,6 +403,10 @@ public class Image
 		this.displayRange = displayRange;
 	}
 	
+
+	// =============================================================
+    // Management of axes calibration
+
     /**
      * @return the axes
      */
@@ -471,6 +476,10 @@ public class Image
         this.setAxes(axes);
     }
     
+    
+    // =============================================================
+    // Identification meta-data
+
     public String getName()
 	{
 		return this.name;
@@ -496,7 +505,7 @@ public class Image
 	// Basic accessors
 
 	/**
-	 * @return the number of physical dimensions of this image.
+	 * @return the number of dimensions of this image.
 	 */
 	public int getDimension()
 	{
@@ -504,7 +513,7 @@ public class Image
 	}
 
 	/**
-	 * @return the physical size of the image.
+	 * @return the size of the image.
 	 */
 	public int[] getSize()
 	{

@@ -96,17 +96,12 @@ public interface ImageAxis
     {
         public C()
         {
-            super("Channel", new String[0]);
+            super("Channels", Type.CHANNEL, new String[] {"Value"});
         }
         
         public C(String[] channelNames)
         {
-            super("Channel", channelNames);
-        }
-        
-        public Type getType()
-        {
-            return Type.CHANNEL;
+            super("Channels", Type.CHANNEL, channelNames);
         }
     }
     
@@ -139,8 +134,8 @@ public interface ImageAxis
      */
     public String getName();
     
-    public default Type getType()
-    {
-        return Type.UNKNOWN;
-    }
+    /**
+     * @return the type of this axis
+     */
+    public Type getType();
 }
