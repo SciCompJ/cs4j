@@ -124,10 +124,10 @@ public class Image
     String filePath = "";
     
     /**
-     * The meta-data associated to each axis. The array must have as many
-     * elements as the number of dimensions of the iamge.
+     * The calibration of each axis (space, time...) and eventually of the
+     * channels.
      */
-    ImageAxis[] axes;
+    Calibration calibration;
     
 	/**
 	 * The min and max displayable values of scalar images. Default is [0, 255].
@@ -166,7 +166,7 @@ public class Image
 		this.data = data;
 		setImageTypeFromDataType();
 		computeImageSize();
-		setupAxes();
+		initCalibration();
 		setupDisplayRange();
 	}
 
@@ -183,7 +183,7 @@ public class Image
 		this.data = data;
 		this.type = type;
 		computeImageSize();
-		setupAxes();
+		initCalibration();
 		setupDisplayRange();
 	}
 
@@ -314,13 +314,8 @@ public class Image
 	{
 		this.name = parent.name;
 		
-		// duplicate the axis array (for spatial calibration)
-		int nd = getDimension();
-		this.axes = new ImageAxis[nd];
-		for (int d = 0; d < Math.min(nd, parent.getDimension()); d++)
-		{
-		    this.axes[d] = parent.axes[d];
-		}
+		// duplicate the spatial calibration
+		this.calibration = parent.calibration.duplicate(); 
 
 		// copy display settings
 		if (this.type == parent.type)
@@ -407,55 +402,24 @@ public class Image
 	// =============================================================
     // Management of axes calibration
 
-    /**
-     * @return the axes
-     */
-    public ImageAxis[] getAxes()
+    public Calibration getCalibration()
     {
-        return axes;
+        return this.calibration;
     }
-
-    /**
-     * @param axes the axes to set
-     */
-    public void setAxes(ImageAxis[] axes)
+    
+    public void setCalibration(Calibration calibration)
     {
-        this.axes = axes;
+        this.calibration = calibration;
     }
-
-    /**
-     * @param dim
-     *            the axis dimension
-     * @return the axis at the specified dimension
-     */
-    public ImageAxis getAxis(int dim)
-    {
-        return axes[dim];
-    }
-
-    /**
-     * @param dim
-     *            the axis index
-     * @param axis
-     *            the axis to set
-     */
-    public void setAxis(int dim, ImageAxis axis)
-    {
-        this.axes[dim] = axis;
-    }
-
+    
     
     /**
-     * Creates default numerical axes for each image dimension.
+     * Creates default calibration using spatial axis for each dimension.
      */
-    private void setupAxes()
+    private void initCalibration()
     {
         int nd = this.getDimension();
-        this.axes = new ImageAxis[nd];
-        for (int i = 0; i < nd; i++)
-        {
-            this.axes[i] = new NumericalAxis("Axis-" + i, 1.0, 0.0);
-        }
+        this.calibration = new Calibration(nd);
     }
     
     public void setSpatialCalibration(double[] resol, String unitName)
@@ -467,13 +431,11 @@ public class Image
         }
         
         // create image axes
-        ImageAxis axes[] = new ImageAxis[nd];
         for (int d = 0; d < nd; d++)
         {
-            axes[d] = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPACE, resol[d], 0.0, unitName);
+            ImageAxis axis = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPACE, resol[d], 0.0, unitName);
+            this.calibration.setAxis(d, axis);
         }
-        
-        this.setAxes(axes);
     }
     
     

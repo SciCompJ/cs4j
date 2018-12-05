@@ -73,6 +73,18 @@ public class Calibration
     }
 
 
+    /**
+     * Creates a new Calibration instance from an array of already defined
+     * ImageAxis objects.
+     * 
+     * @param axes
+     *            the axes definition for this calibration
+     */
+    public Calibration(ImageAxis[] axes)
+    {
+        this.axes = axes;
+    }
+
 
     // =============================================================
     // Methods
@@ -80,7 +92,6 @@ public class Calibration
     
     // =============================================================
     // Management of channels informations
-    
     public ImageAxis getChannelAxis()
     {
         return channelAxis;
