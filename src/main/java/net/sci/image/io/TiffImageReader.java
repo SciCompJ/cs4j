@@ -163,7 +163,7 @@ public class TiffImageReader implements ImageReader
         // Add Image meta-data
         if (fileInfo.lut != null)
         {
-            image.setColorMap(new DefaultColorMap(fileInfo.lut));
+            image.getDisplaySettings().setColorMap(new DefaultColorMap(fileInfo.lut));
         }
         image.tiffTags = fileInfo.tags;
         
@@ -209,7 +209,7 @@ public class TiffImageReader implements ImageReader
 		// setup LUT
 		if (info.lut != null)
 		{
-			image.setColorMap(new DefaultColorMap(info.lut));
+			image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
 		}
 		
 		// Check if ImageJ Tags exist within image

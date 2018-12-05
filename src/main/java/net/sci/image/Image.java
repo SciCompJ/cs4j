@@ -11,8 +11,6 @@ import java.util.TreeMap;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.color.Color;
-import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.scalar.BinaryArray;
 import net.sci.array.scalar.Int;
@@ -129,22 +127,12 @@ public class Image
      */
     Calibration calibration;
     
-	/**
-	 * The min and max displayable values of scalar images. Default is [0, 255].
-	 */
-	double[] displayRange = new double[]{0, 255};
+    /**
+     * Information necessary for representing and interpreting intensity values.
+     */
+    DisplaySettings displaySettings = new DisplaySettings(); 
 
-	/**
-	 * The color map for representing grayscale/intensity images, or label images. 
-	 */
-	ColorMap colorMap = null;
-	
-	/**
-	 * The background color used to represent label or binary images.
-	 */
-	Color backgroundColor = RGB8.BLACK;
-	
-	// TODO: find a better way to store meta data
+    // TODO: find a better way to store meta data
     /**
      * The optional list of TIFF tags read from file, indexed by Tiff Tag code
      */
@@ -276,19 +264,19 @@ public class Image
 
 	private void setupDisplayRange()
 	{
-		if (this.type == Type.BINARY)
+	    if (this.type == Type.BINARY)
 		{
-			this.displayRange = new double[]{0, 1};
+			this.displaySettings.displayRange = new double[]{0, 1};
 		}
 		else if (this.type == Type.GRAYSCALE || this.type == Type.INTENSITY)
 		{
 			if (this.data instanceof UInt8Array)
 			{
-				this.displayRange = new double[]{0, 255};
+				this.displaySettings.displayRange = new double[]{0, 255};
 			}
 			else if (this.data instanceof ScalarArray)
 			{
-				this.displayRange = ((ScalarArray<?>) this.data).finiteValueRange();
+				this.displaySettings.displayRange = ((ScalarArray<?>) this.data).finiteValueRange();
 			}
 			else
 			{
@@ -306,7 +294,7 @@ public class Image
 			@SuppressWarnings("unchecked")
 			IntArray<? extends Int> array = (IntArray<? extends Int>) this.data;
 			int maxInt = array.maxInt();
-			this.displayRange = new double[]{0, maxInt};
+			this.displaySettings.displayRange = new double[]{0, maxInt};
 		}
 	}
 	
@@ -318,12 +306,7 @@ public class Image
 		this.calibration = parent.calibration.duplicate(); 
 
 		// copy display settings
-		if (this.type == parent.type)
-        {
-            this.displayRange = parent.displayRange;
-        }
-        this.colorMap = parent.colorMap;
-        this.backgroundColor = parent.backgroundColor;
+		this.displaySettings = parent.displaySettings.duplicate();
         
         // copy meta-data if any (may be obsolete...)
         this.tiffTags = parent.tiffTags;
@@ -356,48 +339,22 @@ public class Image
 		return this.data;
 	}
 	
-	public ColorMap getColorMap()
-	{
-		return this.colorMap;
-	}
-	
-	public void setColorMap(ColorMap map)
-	{
-		this.colorMap = map;
-	}
-	
 	/**
-     * @return the backgroundColor
+	 * @return the displaySettings
      */
-    public Color getBackgroundColor()
+    public DisplaySettings getDisplaySettings()
     {
-        return backgroundColor;
+        return displaySettings;
     }
 
     /**
-     * @param backgroundColor the backgroundColor to set
+     * @param displaySettings the displaySettings to set
      */
-    public void setBackgroundColor(Color backgroundColor)
+    public void setDisplaySettings(DisplaySettings displaySettings)
     {
-        this.backgroundColor = backgroundColor;
+        this.displaySettings = displaySettings;
     }
-
-    /**
-     * Returns the range of values used for displaying this image.
-     * 
-     * @return an array containing the min and max values to display as black an
-     *         white.
-     */
-    public double[] getDisplayRange()
-	{
-		return displayRange;
-	}
-
-	public void setDisplayRange(double[] displayRange)
-	{
-		this.displayRange = displayRange;
-	}
-	
+    
 
 	// =============================================================
     // Management of axes calibration
@@ -412,7 +369,6 @@ public class Image
         this.calibration = calibration;
     }
     
-    
     /**
      * Creates default calibration using spatial axis for each dimension.
      */
@@ -424,6 +380,7 @@ public class Image
     
     public void setSpatialCalibration(double[] resol, String unitName)
     {
+        // TODO: to deprecate
         int nd = this.getDimension();
         if (nd != resol.length)
         {
