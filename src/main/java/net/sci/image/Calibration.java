@@ -99,7 +99,7 @@ public class Calibration
      * Tries to return the X-axis, or throws an exception if no X-axis is
      * present.
      * 
-     * @return the first instance of x-axis, if it exists
+     * @return the first instance of ImageAxis.X class, if it exists
      */
     public NumericalAxis getXAxis()
     {
@@ -117,7 +117,7 @@ public class Calibration
      * Tries to return the Y-axis, or throws an exception if no Y-axis is
      * present.
      * 
-     * @return the first instance of y-axis, if it exists
+     * @return the first instance of ImageAxis.Y class, if it exists
      */
     public NumericalAxis getYAxis()
     {
@@ -135,7 +135,7 @@ public class Calibration
      * Tries to return the Z-axis, or throws an exception if no Z-axis is
      * present.
      * 
-     * @return the first instance of z-axis, if it exists
+     * @return the first instance of ImageAxis.Z class, if it exists
      */
     public NumericalAxis getZAxis()
     {
@@ -153,7 +153,7 @@ public class Calibration
      * Tries to return the time axis, or throws an exception if no time axis is
      * present.
      * 
-     * @return the first instance of z-axis, if it exists
+     * @return the first instance of ImageAxis.T class, if it exists
      */
     public NumericalAxis getTimeAxis()
     {
@@ -205,6 +205,28 @@ public class Calibration
     }
 
 
+    // =============================================================
+    // generic methods
+
+    public Calibration duplicate()
+    {
+        // create new Calibration object
+        int nd = this.axes.length;
+        Calibration res = new Calibration(nd);
+        
+        // duplicate direction axes
+        for (int d = 0; d <nd; d++)
+        {
+            res.axes[d] = this.axes[d].duplicate();
+        }
+        
+        // also duplicates channel axis
+        res.channelAxis = this.channelAxis.duplicate();
+        
+        // return duplicate
+        return res;
+    }
+    
     // =============================================================
     // debug methods
 

@@ -185,6 +185,12 @@ public class NumericalAxis implements ImageAxis
     // Methods overriding Object
     
     @Override
+    public NumericalAxis duplicate()
+    {
+        return new NumericalAxis(this.name, this.type, this.spacing, this.origin, this.unitName);
+    }
+    
+    @Override
     public String toString()
     {
         String format = "NumericalAxis(name=\"%s\", type=%s, spacing=%.4g, origin=%.4g, unit=%s)";

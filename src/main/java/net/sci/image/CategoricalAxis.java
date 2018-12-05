@@ -118,6 +118,17 @@ public class CategoricalAxis implements ImageAxis
     // Methods overriding Object
     
     @Override
+    public CategoricalAxis duplicate()
+    {
+        String[] names = new String[this.itemNames.length];
+        for (int i = 0; i < names.length; i++)
+        {
+            names[i] = this.itemNames[i];
+        }
+        return new CategoricalAxis(this.name, this.type, this.itemNames);
+    }
+ 
+    @Override
     public String toString()
     {
         int nItems = this.itemNames.length;

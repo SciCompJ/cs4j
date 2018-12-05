@@ -45,6 +45,17 @@ public interface ImageAxis
         {
             super("X-Axis", Type.SPACE, spacing, origin, unitName);
         }
+
+        public X(String name, double spacing, double origin, String unitName)
+        {
+            super(name, Type.SPACE, spacing, origin, unitName);
+        }
+
+        @Override
+        public X duplicate()
+        {
+            return new X(this.name, this.spacing, this.origin, this.unitName);
+        }
     }
     
     /**
@@ -65,6 +76,17 @@ public interface ImageAxis
         public Y(double spacing, double origin, String unitName)
         {
             super("Y-Axis", Type.SPACE, spacing, origin, unitName);
+        }
+        
+        public Y(String name, double spacing, double origin, String unitName)
+        {
+            super(name, Type.SPACE, spacing, origin, unitName);
+        }
+
+        @Override
+        public Y duplicate()
+        {
+            return new Y(this.name, this.spacing, this.origin, this.unitName);
         }
     }
     
@@ -87,6 +109,17 @@ public interface ImageAxis
         {
             super("Z-Axis", Type.SPACE, spacing, origin, unitName);
         }
+
+        public Z(String name, double spacing, double origin, String unitName)
+        {
+            super(name, Type.SPACE, spacing, origin, unitName);
+        }
+
+        @Override
+        public Z duplicate()
+        {
+            return new Z(this.name, this.spacing, this.origin, this.unitName);
+        }
     }
     
     /**
@@ -102,6 +135,19 @@ public interface ImageAxis
         public C(String[] channelNames)
         {
             super("Channels", Type.CHANNEL, channelNames);
+        }
+
+        @Override
+        public C duplicate()
+        {
+            String[] names = new String[this.itemNames.length];
+            for (int i = 0; i < names.length; i++)
+            {
+                names[i] = this.itemNames[i];
+            }
+            C axis = new C(names);
+            axis.name = this.name;
+            return axis;
         }
     }
     
@@ -124,6 +170,19 @@ public interface ImageAxis
         {
             super("Time", Type.TIME, spacing, origin, unitName);
         }
+
+        public T(String name, double spacing, double origin, String unitName)
+        {
+            super(name, Type.SPACE, spacing, origin, unitName);
+        }
+
+        @Override
+        public T duplicate()
+        {
+            T axis = new T(this.spacing, this.origin, this.unitName);
+            axis.name = this.name;
+            return axis;
+        }
     }
     
     // =============================================================
@@ -138,4 +197,9 @@ public interface ImageAxis
      * @return the type of this axis
      */
     public Type getType();
+    
+    /**
+     * @return a duplicated image axis
+     */
+    public ImageAxis duplicate();
 }
