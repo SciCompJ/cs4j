@@ -48,7 +48,9 @@ public class Calibration
     private void setupAxes(int nDims)
     {
         this.axes = new ImageAxis[nDims];
-        setSpatialCalibration(new double[nDims], "");
+        double[] spacing = new double[nDims];
+        for (int d = 0; d < nDims; d++) spacing[d] = 1.0;
+        setSpatialCalibration(spacing, "");
     }
  
     public Calibration(double[] spacing, String unitName)
