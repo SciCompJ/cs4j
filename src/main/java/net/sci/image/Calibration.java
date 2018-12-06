@@ -48,10 +48,7 @@ public class Calibration
     private void setupAxes(int nDims)
     {
         this.axes = new ImageAxis[nDims];
-        for (int i = 0; i < nDims; i++)
-        {
-            this.axes[i] = new NumericalAxis("Axis-" + i, 1.0, 0.0);
-        }
+        setSpatialCalibration(new double[nDims], "");
     }
  
     public Calibration(double[] resol, String unitName)
@@ -60,16 +57,7 @@ public class Calibration
         int nd = resol.length;
         this.axes = new ImageAxis[nd];
         
-        // Process "usual" axes
-        if (nd > 0) axes[0] = new ImageAxis.X(resol[0], 0.0, unitName);
-        if (nd > 1) axes[1] = new ImageAxis.Y(resol[1], 0.0, unitName);
-        if (nd > 2) axes[2] = new ImageAxis.Z(resol[2], 0.0, unitName);
-        
-        // eventually process additional axes 
-        for (int d = 3; d < nd; d++)
-        {
-            axes[d] = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPACE, resol[d], 0.0, unitName);
-        }
+        setSpatialCalibration(resol, unitName);
     }
 
 
@@ -89,9 +77,31 @@ public class Calibration
     // =============================================================
     // Methods
 
+    public void setSpatialCalibration(double[] resol, String unitName)
+    {
+        // number of axes
+        int nd = this.axes.length;
+        if (nd != resol.length)
+        {
+            throw new IllegalArgumentException("Resolution array must have same size as image dimensionality");
+        }
+        
+        // Process "usual" axes
+        if (nd > 0) axes[0] = new ImageAxis.X(resol[0], 0.0, unitName);
+        if (nd > 1) axes[1] = new ImageAxis.Y(resol[1], 0.0, unitName);
+        if (nd > 2) axes[2] = new ImageAxis.Z(resol[2], 0.0, unitName);
+        
+        // eventually process additional axes 
+        for (int d = 3; d < nd; d++)
+        {
+            axes[d] = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPACE, resol[d], 0.0, unitName);
+        }
+    }
+    
     
     // =============================================================
     // Management of channels informations
+    
     public ImageAxis getChannelAxis()
     {
         return channelAxis;

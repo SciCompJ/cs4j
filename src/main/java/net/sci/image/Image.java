@@ -378,23 +378,6 @@ public class Image
         this.calibration = new Calibration(nd);
     }
     
-    public void setSpatialCalibration(double[] resol, String unitName)
-    {
-        // TODO: to deprecate
-        int nd = this.getDimension();
-        if (nd != resol.length)
-        {
-            throw new IllegalArgumentException("Resolution array must have same size as image dimensionality");
-        }
-        
-        // create image axes
-        for (int d = 0; d < nd; d++)
-        {
-            ImageAxis axis = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPACE, resol[d], 0.0, unitName);
-            this.calibration.setAxis(d, axis);
-        }
-    }
-    
     
     // =============================================================
     // Identification meta-data
