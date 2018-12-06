@@ -106,7 +106,7 @@ public class NumericalAxis implements ImageAxis
      */
     public double[] physicalRange(int number)
     {
-        return new double[] {this.origin, this.origin + this.spacing * number};
+        return new double[] {this.origin - 0.5 * this.spacing, this.origin + this.spacing * (number - 0.5)};
     }
     
     public double indexToValue(double index)
