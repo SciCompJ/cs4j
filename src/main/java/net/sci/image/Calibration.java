@@ -5,6 +5,10 @@ package net.sci.image;
 
 import java.io.PrintStream;
 
+import net.sci.axis.CategoricalAxis;
+import net.sci.axis.NumericalAxis;
+import net.sci.axis.Axis.Type;
+
 /**
  * Contains information for calibration of spatial axes, and eventually channels
  * and time axis.
@@ -28,7 +32,7 @@ public class Calibration
      * 
      * Default is a categorical axis with only one item named "value".
      */
-    ImageAxis channelAxis = new ImageAxis.C(new String[] {"Value"});
+    CategoricalAxis channelAxis = new CategoricalAxis("Channels", Type.CHANNEL, new String[] {"Value"});
     
     
     // =============================================================
@@ -111,7 +115,7 @@ public class Calibration
         for (int d = 0; d < nd; d++)
         {
             NumericalAxis numax = (NumericalAxis) spaceAxes[d];
-            res[d] = arraySize[d] * numax.spacing;
+            res[d] = arraySize[d] * numax.getSpacing();
         }
         
         return res;
@@ -169,7 +173,7 @@ public class Calibration
         // eventually process additional axes 
         for (int d = 3; d < nd; d++)
         {
-            axes[d] = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPACE, spacing[d], origin[d], unitName);
+            axes[d] = new ImageAxis("Axis-" + d, ImageAxis.Type.SPACE, spacing[d], origin[d], unitName);
         }
     }
     
@@ -177,12 +181,12 @@ public class Calibration
     // =============================================================
     // Management of channels informations
     
-    public ImageAxis getChannelAxis()
+    public CategoricalAxis getChannelAxis()
     {
         return channelAxis;
     }
 
-    public void setChannelAxis(ImageAxis newChannelAxis)
+    public void setChannelAxis(CategoricalAxis newChannelAxis)
     {
         this.channelAxis = newChannelAxis;
     }
@@ -197,13 +201,13 @@ public class Calibration
      * 
      * @return the first instance of ImageAxis.X class, if it exists
      */
-    public NumericalAxis getXAxis()
+    public ImageAxis getXAxis()
     {
         for (ImageAxis axis : this.axes)
         {
             if (axis instanceof ImageAxis.X)
             {
-                return (NumericalAxis) axis;
+                return (ImageAxis) axis;
             }
         }
         throw new RuntimeException("Calibration does not contain any X-axis");
@@ -215,13 +219,13 @@ public class Calibration
      * 
      * @return the first instance of ImageAxis.Y class, if it exists
      */
-    public NumericalAxis getYAxis()
+    public ImageAxis getYAxis()
     {
         for (ImageAxis axis : this.axes)
         {
             if (axis instanceof ImageAxis.Y)
             {
-                return (NumericalAxis) axis;
+                return (ImageAxis) axis;
             }
         }
         throw new RuntimeException("Calibration does not contain any Y-axis");
@@ -233,13 +237,13 @@ public class Calibration
      * 
      * @return the first instance of ImageAxis.Z class, if it exists
      */
-    public NumericalAxis getZAxis()
+    public ImageAxis getZAxis()
     {
         for (ImageAxis axis : this.axes)
         {
             if (axis instanceof ImageAxis.Z)
             {
-                return (NumericalAxis) axis;
+                return (ImageAxis) axis;
             }
         }
         throw new RuntimeException("Calibration does not contain any Z-axis");
@@ -277,13 +281,13 @@ public class Calibration
      * 
      * @return the first instance of ImageAxis.T class, if it exists
      */
-    public NumericalAxis getTimeAxis()
+    public ImageAxis getTimeAxis()
     {
         for (ImageAxis axis : this.axes)
         {
             if (axis instanceof ImageAxis.T)
             {
-                return (NumericalAxis) axis;
+                return (ImageAxis) axis;
             }
         }
         throw new RuntimeException("Calibration does not contain any time axis");

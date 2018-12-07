@@ -1,18 +1,17 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.axis;
 
 import java.util.Locale;
 
 /**
- * Categorical image axis, for example for channel axes (if not implemented as
- * vector arrays).
+ * Categorical axis, that encapsulates a series of item names.
  * 
  * @author dlegland
  *
  */
-public class CategoricalAxis implements ImageAxis
+public class CategoricalAxis implements Axis
 {
     // =============================================================
     // Class fields
@@ -25,12 +24,13 @@ public class CategoricalAxis implements ImageAxis
     /**
      * The type of axis
      */
-    ImageAxis.Type type;
+    Type type;
     
     /**
      * The name of each item / category within this axis.
      */
     String[] itemNames;
+    
     
     // =============================================================
     // Constructors
@@ -59,7 +59,7 @@ public class CategoricalAxis implements ImageAxis
      * @param itemNames
      *            the name of each item
      */
-    public CategoricalAxis(String name, ImageAxis.Type type, String[] itemNames)
+    public CategoricalAxis(String name, Axis.Type type, String[] itemNames)
     {
         this.type = type;
         this.name = name;

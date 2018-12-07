@@ -1,17 +1,17 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.axis;
 
 import java.util.Locale;
 
 /**
- * Numeric image axis, for spatial, time, wave-length... axes.
+ * Numeric axis, for spatial, time, wave-length... axes.
  * 
  * @author dlegland
  *
  */
-public class NumericalAxis implements ImageAxis
+public class NumericalAxis implements Axis
 {
     // =============================================================
     // Class variables
@@ -19,24 +19,24 @@ public class NumericalAxis implements ImageAxis
     /**
      * The name for this axis.
      */
-    String name;
+    protected String name;
 
-    Type type;
+    protected Type type;
     
     /**
      * The spacing between two elements along this axis
      */
-    double spacing;
+    protected double spacing;
     
     /**
      * The position of the first element (with index 0) on this axis.
      */
-    double origin;
+    protected double origin;
     
     /**
      * The unit name associated to this axis.
      */
-    String unitName;
+    protected String unitName;
 
 
     // =============================================================
@@ -81,7 +81,7 @@ public class NumericalAxis implements ImageAxis
      * @param unitName
      *            the name of the unit
      */
-    public NumericalAxis(String name, ImageAxis.Type type, double spacing, double origin, String unitName)
+    public NumericalAxis(String name, Axis.Type type, double spacing, double origin, String unitName)
     {
         this.name = name;
         this.type = type;

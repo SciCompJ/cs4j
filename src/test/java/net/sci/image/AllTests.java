@@ -10,7 +10,6 @@ import org.junit.runners.Suite;
     ImageAxisXTest.class,
     ImageAxisYTest.class,
     ImageAxisZTest.class,
-    ImageAxisCTest.class,
     ImageAxisTTest.class,
     })
 public class AllTests {

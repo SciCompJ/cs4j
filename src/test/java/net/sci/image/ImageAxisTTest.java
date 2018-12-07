@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import net.sci.axis.NumericalAxis;
+
 /**
  * @author dlegland
  *
@@ -15,7 +17,7 @@ public class ImageAxisTTest
 {
     
     /**
-     * Test method for {@link net.sci.image.NumericalAxis#duplicate()}.
+     * Test method for {@link net.sci.axis.NumericalAxis#duplicate()}.
      */
     @Test
     public final void testDuplicate()

@@ -27,11 +27,11 @@ import net.sci.array.scalar.BufferedUInt8Array2D;
 import net.sci.array.scalar.BufferedUInt8Array3D;
 import net.sci.array.scalar.SlicedUInt8Array3D;
 import net.sci.array.scalar.UInt8Array;
+import net.sci.axis.NumericalAxis;
 import net.sci.image.Calibration;
 import net.sci.image.DefaultColorMap;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
-import net.sci.image.NumericalAxis;
 
 /**
  * Provides methods for reading Image files in TIFF Format.

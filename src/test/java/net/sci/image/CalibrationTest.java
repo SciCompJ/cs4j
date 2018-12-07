@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import net.sci.axis.Axis;
+
 /**
  * @author dlegland
  *
@@ -23,9 +25,9 @@ public class CalibrationTest
         double[] resol = new double[] {2.5, 2.5, 2.8};
         Calibration calib = new Calibration(resol, "µm");
         
-        ImageAxis axis = calib.getChannelAxis();
+        Axis axis = calib.getChannelAxis();
         assertNotNull(axis);
-        assertTrue(axis.getType() == ImageAxis.Type.CHANNEL);
+        assertTrue(axis.getType() == Axis.Type.CHANNEL);
     }
     
     /**
@@ -37,9 +39,9 @@ public class CalibrationTest
         double[] resol = new double[] {2.5, 2.5, 2.8};
         Calibration calib = new Calibration(resol, "µm");
         
-        ImageAxis axis = calib.getXAxis();
+        Axis axis = calib.getXAxis();
         assertNotNull(axis);
-        assertTrue(axis.getType() == ImageAxis.Type.SPACE);
+        assertTrue(axis.getType() == Axis.Type.SPACE);
     }
     
     /**
@@ -51,9 +53,9 @@ public class CalibrationTest
         double[] resol = new double[] {2.5, 2.5, 2.8};
         Calibration calib = new Calibration(resol, "µm");
         
-        ImageAxis axis = calib.getYAxis();
+        Axis axis = calib.getYAxis();
         assertNotNull(axis);
-        assertTrue(axis.getType() == ImageAxis.Type.SPACE);
+        assertTrue(axis.getType() == Axis.Type.SPACE);
     }
     
     /**
@@ -65,9 +67,9 @@ public class CalibrationTest
         double[] resol = new double[] {2.5, 2.5, 2.8};
         Calibration calib = new Calibration(resol, "µm");
         
-        ImageAxis axis = calib.getZAxis();
+        Axis axis = calib.getZAxis();
         assertNotNull(axis);
-        assertTrue(axis.getType() == ImageAxis.Type.SPACE);
+        assertTrue(axis.getType() == Axis.Type.SPACE);
     }
     
     /**
