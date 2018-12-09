@@ -9,6 +9,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     net.sci.array.process.AllTests.class,
+    net.sci.array.process.math.AllTests.class,
     net.sci.array.process.shape.AllTests.class,
 	})
 public class AllTestsRecurse {

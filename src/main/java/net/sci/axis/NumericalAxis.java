@@ -1,17 +1,17 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.axis;
 
 import java.util.Locale;
 
 /**
- * Numeric image axis, for spatial, time, wave-length... axes.
+ * Numeric axis, for spatial, time, wave-length... axes.
  * 
  * @author dlegland
  *
  */
-public class NumericalAxis implements ImageAxis
+public class NumericalAxis implements Axis
 {
     // =============================================================
     // Class variables
@@ -19,18 +19,24 @@ public class NumericalAxis implements ImageAxis
     /**
      * The name for this axis.
      */
-    String name;
+    protected String name;
 
-    Type type;
+    protected Type type;
     
-    double spacing;
+    /**
+     * The spacing between two elements along this axis
+     */
+    protected double spacing;
     
-    double origin;
+    /**
+     * The position of the first element (with index 0) on this axis.
+     */
+    protected double origin;
     
     /**
      * The unit name associated to this axis.
      */
-    String unitName;
+    protected String unitName;
 
 
     // =============================================================
@@ -75,7 +81,7 @@ public class NumericalAxis implements ImageAxis
      * @param unitName
      *            the name of the unit
      */
-    public NumericalAxis(String name, ImageAxis.Type type, double spacing, double origin, String unitName)
+    public NumericalAxis(String name, Axis.Type type, double spacing, double origin, String unitName)
     {
         this.name = name;
         this.type = type;
@@ -87,7 +93,23 @@ public class NumericalAxis implements ImageAxis
     // =============================================================
     // General methods
 
-    public double indexToValue(int index)
+    /**
+     * @return the physical length of the given number of elements 
+     */
+    public double physicalLength(int number)
+    {
+        return number * this.spacing;
+    }
+    
+    /**
+     * @return the physical range occupied by the given number of elements  
+     */
+    public double[] physicalRange(int number)
+    {
+        return new double[] {this.origin - 0.5 * this.spacing, this.origin + this.spacing * (number - 0.5)};
+    }
+    
+    public double indexToValue(double index)
     {
         return index * this.spacing + this.origin;
     }
@@ -160,12 +182,18 @@ public class NumericalAxis implements ImageAxis
     
     
     // =============================================================
-    // Getters / setters
+    // Methods overriding Object
+    
+    @Override
+    public NumericalAxis duplicate()
+    {
+        return new NumericalAxis(this.name, this.type, this.spacing, this.origin, this.unitName);
+    }
     
     @Override
     public String toString()
     {
-        String format = "NumericalAxis(name=%s, type=%s, spacing=%.4g, origin=%.4g, unit=%s)";
+        String format = "NumericalAxis(name=\"%s\", type=%s, spacing=%.4g, origin=%.4g, unit=%s)";
         return String.format(Locale.ENGLISH, format, this.name, this.type, this.spacing, this.origin, this.unitName);
     }
 }

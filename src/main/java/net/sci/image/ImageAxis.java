@@ -3,33 +3,83 @@
  */
 package net.sci.image;
 
+import net.sci.axis.Axis;
+import net.sci.axis.NumericalAxis;
+
 /**
- * Meta-data associated to an individual image axis: calibration, unit name...
+ * Specialization of the NumericalAxis class for recurrent types of axes used
+ * for images.
  * 
  * @author dlegland
  *
  */
-public interface ImageAxis
+public class ImageAxis extends NumericalAxis
 {
     // =============================================================
-    // Enumerations
-
-    enum Type 
+    // Constructors
+    
+    /**
+     * Creates a new numerical axis
+     * 
+     * @param name the name of the numerical axis
+     */
+    public ImageAxis(String name)
     {
-        SPACE, 
-        CHANNEL, 
-        TIME, 
-        WAVELENGTH,
-        UNKNOWN
-    };
+        this(name, 1.0, 0.0);
+    }
+
+    /**
+     * Creates a new numerical axis
+     * 
+     * @param name
+     *            the name of the numerical axis
+     * @param spacing
+     *            the spacing between each tick of the axis
+     * @param origin
+     *            the origin of the axis (position of the first tick)
+     */
+    public ImageAxis(String name, double spacing, double origin)
+    {
+        this(name, Type.UNKNOWN, spacing, origin, "");
+    }
+
+    /**
+     * Constructor with initial value for all fields.
+     * 
+     * @param name
+     *            the name of the axis
+     * @param type
+     *            the type of axis
+     * @param spacing
+     *            the spacing between two elements of the array
+     * @param origin
+     *            the position of the first element of the array
+     * @param unitName
+     *            the name of the unit
+     */
+    public ImageAxis(String name, Axis.Type type, double spacing, double origin, String unitName)
+    {
+        super(name, type, spacing, origin, unitName);
+    }
+
     
     // =============================================================
-    // Static classes
+    // Specialize Axis interface methods
+    
+    @Override
+    public ImageAxis duplicate()
+    {
+        return new ImageAxis(this.name, this.type, this.spacing, this.origin, this.unitName);
+    }
+
+    
+    // =============================================================
+    // static inner classes
 
     /**
      * Default axis implementation for X-axis.
      */
-    public class X extends NumericalAxis
+    public static class X extends ImageAxis
     {
         public X()
         {
@@ -45,12 +95,23 @@ public interface ImageAxis
         {
             super("X-Axis", Type.SPACE, spacing, origin, unitName);
         }
+
+        public X(String name, double spacing, double origin, String unitName)
+        {
+            super(name, Type.SPACE, spacing, origin, unitName);
+        }
+
+        @Override
+        public X duplicate()
+        {
+            return new X(this.name, this.spacing, this.origin, this.unitName);
+        }
     }
     
     /**
      * Default axis implementation for Y-axis.
      */
-    public class Y extends NumericalAxis
+    public static class Y extends ImageAxis
     {
         public Y()
         {
@@ -66,12 +127,23 @@ public interface ImageAxis
         {
             super("Y-Axis", Type.SPACE, spacing, origin, unitName);
         }
+        
+        public Y(String name, double spacing, double origin, String unitName)
+        {
+            super(name, Type.SPACE, spacing, origin, unitName);
+        }
+
+        @Override
+        public Y duplicate()
+        {
+            return new Y(this.name, this.spacing, this.origin, this.unitName);
+        }
     }
     
     /**
      * Default axis implementation for Z-axis.
      */
-    public class Z extends NumericalAxis
+    public static class Z extends ImageAxis
     {
         public Z()
         {
@@ -87,28 +159,52 @@ public interface ImageAxis
         {
             super("Z-Axis", Type.SPACE, spacing, origin, unitName);
         }
+
+        public Z(String name, double spacing, double origin, String unitName)
+        {
+            super(name, Type.SPACE, spacing, origin, unitName);
+        }
+
+        @Override
+        public Z duplicate()
+        {
+            return new Z(this.name, this.spacing, this.origin, this.unitName);
+        }
     }
     
-    /**
-     * Default axis implementation for channel axis.
-     */
-    public class C extends CategoricalAxis
-    {
-        public C()
-        {
-            super("Channel");
-        }
-        
-        public Type getType()
-        {
-            return Type.CHANNEL;
-        }
-    }
+//    /**
+//     * Default axis implementation for channel axis.
+//     */
+//    public class C extends CategoricalAxis
+//    {
+//        public C()
+//        {
+//            super("Channels", Type.CHANNEL, new String[] {"Value"});
+//        }
+//        
+//        public C(String[] channelNames)
+//        {
+//            super("Channels", Type.CHANNEL, channelNames);
+//        }
+//
+//        @Override
+//        public C duplicate()
+//        {
+//            String[] names = new String[this.itemNames.length];
+//            for (int i = 0; i < names.length; i++)
+//            {
+//                names[i] = this.itemNames[i];
+//            }
+//            C axis = new C(names);
+//            axis.name = this.name;
+//            return axis;
+//        }
+//    }
     
     /**
      * Default axis implementation for time axis.
      */
-    public class T extends NumericalAxis
+    public static class T extends ImageAxis
     {
         public T()
         {
@@ -124,18 +220,19 @@ public interface ImageAxis
         {
             super("Time", Type.TIME, spacing, origin, unitName);
         }
-    }
-    
-    // =============================================================
-    // Method declarations
 
-    /**
-     * @return the name
-     */
-    public String getName();
-    
-    public default Type getType()
-    {
-        return Type.UNKNOWN;
+        public T(String name, double spacing, double origin, String unitName)
+        {
+            super(name, Type.SPACE, spacing, origin, unitName);
+        }
+
+        @Override
+        public T duplicate()
+        {
+            T axis = new T(this.spacing, this.origin, this.unitName);
+            axis.name = this.name;
+            return axis;
+        }
     }
+    
 }

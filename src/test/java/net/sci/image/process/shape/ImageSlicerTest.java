@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.scalar.UInt8Array3D;
+import net.sci.axis.NumericalAxis;
+import net.sci.image.Calibration;
 import net.sci.image.Image;
 
 /**
@@ -36,6 +38,35 @@ public class ImageSlicerTest
         Image imageXZ = ImageSlicer.slice2d(image, 0, 2, new int[]{1, 1, 1});
         assertEquals(5, imageXZ.getSize(0));
         assertEquals(3, imageXZ.getSize(1));
+    }
+
+    @Test
+    public final void testSlice2d_calibration()
+    {
+        Image image = new Image(create543Array());
+        Calibration calib = image.getCalibration();
+        calib.setSpatialCalibration(new double[] {0.3, 0.4, 0.5}, "mm");
+
+        Image imageXY = ImageSlicer.slice2d(image, 0, 1, new int[]{1, 1, 1});
+        assertEquals(5, imageXY.getSize(0));
+        assertEquals(4, imageXY.getSize(1));
+        Calibration calibXY = imageXY.getCalibration();
+        assertEquals(0.3, ((NumericalAxis) calibXY.getAxis(0)).getSpacing(), .01);
+        assertEquals(0.4, ((NumericalAxis) calibXY.getAxis(1)).getSpacing(), .01);
+
+        Image imageZY = ImageSlicer.slice2d(image, 2, 1, new int[]{1, 1, 1});
+        assertEquals(3, imageZY.getSize(0));
+        assertEquals(4, imageZY.getSize(1));
+        Calibration calibZY = imageZY.getCalibration();
+        assertEquals(0.5, ((NumericalAxis) calibZY.getAxis(0)).getSpacing(), .01);
+        assertEquals(0.4, ((NumericalAxis) calibZY.getAxis(1)).getSpacing(), .01);
+
+        Image imageXZ = ImageSlicer.slice2d(image, 0, 2, new int[]{1, 1, 1});
+        assertEquals(5, imageXZ.getSize(0));
+        assertEquals(3, imageXZ.getSize(1));
+        Calibration calibXZ = imageXZ.getCalibration();
+        assertEquals(0.3, ((NumericalAxis) calibXZ.getAxis(0)).getSpacing(), .01);
+        assertEquals(0.5, ((NumericalAxis) calibXZ.getAxis(1)).getSpacing(), .01);
     }
 
     private UInt8Array3D create543Array()

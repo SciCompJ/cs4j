@@ -18,7 +18,7 @@ public class Maths
 	/**
 	 * Private constructor to prevent instantiation.
 	 */
-	public Maths()
+	private Maths()
 	{
 	}
 
@@ -30,23 +30,17 @@ public class Maths
 	 *            the input array
 	 * @param value
 	 *            the value to add
-	 * @return a new array
+     * @return the result of the element-wise addition
 	 */
 	public static final ScalarArray<? extends Scalar> add(ScalarArray<? extends Scalar> array, double value)
 	{
 		// create array for result
 		ScalarArray<? extends Scalar> result = array.duplicate();
 		
-		// create iterators
-		ScalarArray.Iterator<? extends Scalar> iter1 = array.iterator(); 
-		ScalarArray.Iterator<? extends Scalar> iter2 = result.iterator();
-		
 		// iterate over elements of each array
-		while(iter1.hasNext())
+		for (int[] pos : result.positions())
 		{
-			double val = iter1.nextValue();
-			iter2.forward();
-			iter2.setValue(val + value);
+		    result.setValue(pos, array.getValue(pos) + value);
 		}
 		
 		// returns the created array
@@ -61,24 +55,18 @@ public class Maths
 	 *            the input array
 	 * @param value
 	 *            the value to subtract
-	 * @return a new array
+     * @return the result of the element-wise subtraction
 	 */
 	public static final ScalarArray<? extends Scalar> subtract(ScalarArray<? extends Scalar> array, double value)
 	{
 		// create array for result
 		ScalarArray<? extends Scalar> result = array.duplicate();
 		
-		// create iterators
-		ScalarArray.Iterator<? extends Scalar> iter1 = array.iterator(); 
-		ScalarArray.Iterator<? extends Scalar> iter2 = result.iterator();
-		
-		// iterate over elements of each array
-		while(iter1.hasNext())
-		{
-			double val = iter1.nextValue();
-			iter2.forward();
-			iter2.setValue(val - value);
-		}
+        // iterate over elements of each array
+        for (int[] pos : result.positions())
+        {
+            result.setValue(pos, array.getValue(pos) - value);
+        }
 		
 		// returns the created array
 		return result;
@@ -92,24 +80,18 @@ public class Maths
 	 *            the input array
 	 * @param value
 	 *            the value to multiply by
-	 * @return a new array
+     * @return the result of the element-wise multiplication
 	 */
 	public static final ScalarArray<? extends Scalar> multiply(ScalarArray<? extends Scalar> array, double value)
 	{
 		// create array for result
 		ScalarArray<? extends Scalar> result = array.duplicate();
 		
-		// create iterators
-		ScalarArray.Iterator<? extends Scalar> iter1 = array.iterator(); 
-		ScalarArray.Iterator<? extends Scalar> iter2 = result.iterator();
-		
-		// iterate over elements of each array
-		while(iter1.hasNext())
-		{
-			double val = iter1.nextValue();
-			iter2.forward();
-			iter2.setValue(val * value);
-		}
+        // iterate over elements of each array
+        for (int[] pos : result.positions())
+        {
+            result.setValue(pos, array.getValue(pos) * value);
+        }
 		
 		// returns the created array
 		return result;
@@ -123,25 +105,19 @@ public class Maths
 	 *            the input array
 	 * @param value
 	 *            the value to divide by
-	 * @return a new array
+	 * @return the result of the element-wise division
 	 */
 	public static final ScalarArray<? extends Scalar> divide(ScalarArray<? extends Scalar> array, double value)
 	{
 		// create array for result
 		ScalarArray<? extends Scalar> result = array.duplicate();
 		
-		// create iterators
-		ScalarArray.Iterator<? extends Scalar> iter1 = array.iterator(); 
-		ScalarArray.Iterator<? extends Scalar> iter2 = result.iterator();
-		
-		// iterate over elements of each array
-		while(iter1.hasNext())
-		{
-			double val = iter1.nextValue();
-			iter2.forward();
-			iter2.setValue(val / value);
-		}
-		
+        // iterate over elements of each array
+        for (int[] pos : result.positions())
+        {
+            result.setValue(pos, array.getValue(pos) / value);
+        }
+        
 		// returns the created array
 		return result;
 	}

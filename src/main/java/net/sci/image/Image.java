@@ -11,8 +11,6 @@ import java.util.TreeMap;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.color.Color;
-import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.scalar.BinaryArray;
 import net.sci.array.scalar.Int;
@@ -124,27 +122,17 @@ public class Image
     String filePath = "";
     
     /**
-     * The meta-data associated to each axis. The array must have as many
-     * elements as the number of dimensions of the iamge.
+     * The calibration of each axis (space, time...) and eventually of the
+     * channels.
      */
-    ImageAxis[] axes;
+    Calibration calibration;
     
-	/**
-	 * The min and max displayable values of scalar images. Default is [0, 255].
-	 */
-	double[] displayRange = new double[]{0, 255};
+    /**
+     * Information necessary for representing and interpreting intensity values.
+     */
+    DisplaySettings displaySettings = new DisplaySettings(); 
 
-	/**
-	 * The color map for representing grayscale/intensity images, or label images. 
-	 */
-	ColorMap colorMap = null;
-	
-	/**
-	 * The background color used to represent label or binary images.
-	 */
-	Color backgroundColor = RGB8.BLACK;
-	
-	// TODO: find a better way to store meta data
+    // TODO: find a better way to store meta data
     /**
      * The optional list of TIFF tags read from file, indexed by Tiff Tag code
      */
@@ -166,7 +154,7 @@ public class Image
 		this.data = data;
 		setImageTypeFromDataType();
 		computeImageSize();
-		setupAxes();
+		initCalibration();
 		setupDisplayRange();
 	}
 
@@ -183,7 +171,7 @@ public class Image
 		this.data = data;
 		this.type = type;
 		computeImageSize();
-		setupAxes();
+		initCalibration();
 		setupDisplayRange();
 	}
 
@@ -276,19 +264,19 @@ public class Image
 
 	private void setupDisplayRange()
 	{
-		if (this.type == Type.BINARY)
+	    if (this.type == Type.BINARY)
 		{
-			this.displayRange = new double[]{0, 1};
+			this.displaySettings.displayRange = new double[]{0, 1};
 		}
 		else if (this.type == Type.GRAYSCALE || this.type == Type.INTENSITY)
 		{
 			if (this.data instanceof UInt8Array)
 			{
-				this.displayRange = new double[]{0, 255};
+				this.displaySettings.displayRange = new double[]{0, 255};
 			}
 			else if (this.data instanceof ScalarArray)
 			{
-				this.displayRange = ((ScalarArray<?>) this.data).finiteValueRange();
+				this.displaySettings.displayRange = ((ScalarArray<?>) this.data).finiteValueRange();
 			}
 			else
 			{
@@ -306,7 +294,7 @@ public class Image
 			@SuppressWarnings("unchecked")
 			IntArray<? extends Int> array = (IntArray<? extends Int>) this.data;
 			int maxInt = array.maxInt();
-			this.displayRange = new double[]{0, maxInt};
+			this.displaySettings.displayRange = new double[]{0, maxInt};
 		}
 	}
 	
@@ -314,21 +302,11 @@ public class Image
 	{
 		this.name = parent.name;
 		
-		// duplicate the axis array (for spatial calibration)
-		int nd = getDimension();
-		this.axes = new ImageAxis[nd];
-		for (int d = 0; d < Math.min(nd, parent.getDimension()); d++)
-		{
-		    this.axes[d] = parent.axes[d];
-		}
+		// duplicate the spatial calibration
+		this.calibration = parent.calibration.duplicate(); 
 
 		// copy display settings
-		if (this.type == parent.type)
-        {
-            this.displayRange = parent.displayRange;
-        }
-        this.colorMap = parent.colorMap;
-        this.backgroundColor = parent.backgroundColor;
+		this.displaySettings = parent.displaySettings.duplicate();
         
         // copy meta-data if any (may be obsolete...)
         this.tiffTags = parent.tiffTags;
@@ -352,125 +330,58 @@ public class Image
 	    return res;
 	}
 	
+	
     // =============================================================
-    // Setters and Getters
+    // Management of value calibration
 
 	public Array<?> getData()
 	{
 		return this.data;
 	}
 	
-	public ColorMap getColorMap()
-	{
-		return this.colorMap;
-	}
-	
-	public void setColorMap(ColorMap map)
-	{
-		this.colorMap = map;
-	}
-	
 	/**
-     * @return the backgroundColor
+	 * @return the displaySettings
      */
-    public Color getBackgroundColor()
+    public DisplaySettings getDisplaySettings()
     {
-        return backgroundColor;
+        return displaySettings;
     }
 
     /**
-     * @param backgroundColor the backgroundColor to set
+     * @param displaySettings the displaySettings to set
      */
-    public void setBackgroundColor(Color backgroundColor)
+    public void setDisplaySettings(DisplaySettings displaySettings)
     {
-        this.backgroundColor = backgroundColor;
+        this.displaySettings = displaySettings;
     }
+    
 
-    /**
-     * Returns the range of values used for displaying this image.
-     * 
-     * @return an array containing the min and max values to display as black an
-     *         white.
-     */
-    public double[] getDisplayRange()
-	{
-		return displayRange;
-	}
+	// =============================================================
+    // Management of axes calibration
 
-	public void setDisplayRange(double[] displayRange)
-	{
-		this.displayRange = displayRange;
-	}
-	
-    /**
-     * @return the axes
-     */
-    public ImageAxis[] getAxes()
+    public Calibration getCalibration()
     {
-        return axes;
+        return this.calibration;
     }
-
-    /**
-     * @param axes the axes to set
-     */
-    public void setAxes(ImageAxis[] axes)
+    
+    public void setCalibration(Calibration calibration)
     {
-        this.axes = axes;
+        this.calibration = calibration;
     }
-
-    /**
-     * @param dim
-     *            the axis dimension
-     * @return the axis at the specified dimension
-     */
-    public ImageAxis getAxis(int dim)
-    {
-        return axes[dim];
-    }
-
-    /**
-     * @param dim
-     *            the axis index
-     * @param axis
-     *            the axis to set
-     */
-    public void setAxis(int dim, ImageAxis axis)
-    {
-        this.axes[dim] = axis;
-    }
-
     
     /**
-     * Creates default numerical axes for each image dimension.
+     * Creates default calibration using spatial axis for each dimension.
      */
-    private void setupAxes()
+    private void initCalibration()
     {
         int nd = this.getDimension();
-        this.axes = new ImageAxis[nd];
-        for (int i = 0; i < nd; i++)
-        {
-            this.axes[i] = new NumericalAxis("Axis-" + i, 1.0, 0.0);
-        }
+        this.calibration = new Calibration(nd);
     }
     
-    public void setSpatialCalibration(double[] resol, String unitName)
-    {
-        int nd = this.getDimension();
-        if (nd != resol.length)
-        {
-            throw new IllegalArgumentException("Resolution array must have same size as image dimensionality");
-        }
-        
-        // create image axes
-        ImageAxis axes[] = new ImageAxis[nd];
-        for (int d = 0; d < nd; d++)
-        {
-            axes[d] = new NumericalAxis("Axis-" + d, ImageAxis.Type.SPACE, resol[d], 0.0, unitName);
-        }
-        
-        this.setAxes(axes);
-    }
     
+    // =============================================================
+    // Identification meta-data
+
     public String getName()
 	{
 		return this.name;
@@ -496,7 +407,7 @@ public class Image
 	// Basic accessors
 
 	/**
-	 * @return the number of physical dimensions of this image.
+	 * @return the number of dimensions of this image.
 	 */
 	public int getDimension()
 	{
@@ -504,7 +415,7 @@ public class Image
 	}
 
 	/**
-	 * @return the physical size of the image.
+	 * @return the size of the image.
 	 */
 	public int[] getSize()
 	{

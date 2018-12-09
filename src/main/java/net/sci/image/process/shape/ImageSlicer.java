@@ -4,6 +4,7 @@
 package net.sci.image.process.shape;
 
 import net.sci.array.Array;
+import net.sci.image.Calibration;
 import net.sci.image.Image;
 
 /**
@@ -95,6 +96,12 @@ public class ImageSlicer
         }
      
         Image resultImage = new Image(resArray, image.getType(), image);
+        
+        // configure calibration
+        Calibration calib = resultImage.getCalibration();
+        calib.setAxis(0, image.getCalibration().getAxis(dim1));
+        calib.setAxis(1, image.getCalibration().getAxis(dim2));
+        
         return resultImage;
     }
 }

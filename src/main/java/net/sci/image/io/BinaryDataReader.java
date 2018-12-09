@@ -154,21 +154,11 @@ public class BinaryDataReader implements Closeable
 	
     public int readShortArray(short[] buffer, int off, int len) throws IOException
     {
-//        System.out.print("read short array...");
-//        // fill up array
-//        int pos = off;
-//        for (int c = 0; c < len; c++)
-//        {
-//            buffer[pos++] = (short) readShort();
-//        }
-//        System.out.println("(done)");
-        
-        // convert byte array to short array
-        System.out.print("read byte array...");
+        // read byte array of adequate length
         byte[] byteBuffer = new byte[len * 2];
         int nRead = read(byteBuffer);
 
-        System.out.print("convert to short array...");
+        // convert byte array to short array
         for (int i = 0; i < len; i++)
         {
             int b1 = byteBuffer[2 * i] & 0x00FF;
@@ -179,8 +169,7 @@ public class BinaryDataReader implements Closeable
             else
                 buffer[i] = (short) ((b2 << 8) + b1);
         }
-        System.out.println("(done)");
-        
+
         // restore pointer and return result
         return nRead / 2;
     }

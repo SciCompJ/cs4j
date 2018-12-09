@@ -14,9 +14,9 @@ import net.sci.array.color.RGB16Array2D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt16Array2D;
+import net.sci.axis.NumericalAxis;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
-import net.sci.image.NumericalAxis;
 
 public class TiffImageReaderTest
 {
@@ -189,7 +189,7 @@ public class TiffImageReaderTest
         assertEquals(349, image.getSize(0));
         assertEquals(372, image.getSize(1));
 
-        ImageAxis[] axes = image.getAxes();
+        ImageAxis[] axes = image.getCalibration().getAxes();
         assertEquals(2, axes.length);
         
         assertTrue(axes[0].getType() == ImageAxis.Type.SPACE);
@@ -214,7 +214,7 @@ public class TiffImageReaderTest
         assertEquals(109, image.getSize(0));
         assertEquals(112, image.getSize(1));
 
-        ImageAxis[] axes = image.getAxes();
+        ImageAxis[] axes = image.getCalibration().getAxes();
         assertEquals(2, axes.length);
         
         assertTrue(axes[0].getType() == ImageAxis.Type.SPACE);

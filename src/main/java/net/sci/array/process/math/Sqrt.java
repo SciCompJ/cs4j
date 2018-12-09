@@ -1,8 +1,9 @@
 /**
  * 
  */
-package net.sci.array.process;
+package net.sci.array.process.math;
 
+import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;

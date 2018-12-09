@@ -13,8 +13,8 @@ import java.io.LineNumberReader;
 
 import net.sci.array.scalar.BufferedUInt16Array3D;
 import net.sci.array.scalar.UInt16Array3D;
+import net.sci.image.Calibration;
 import net.sci.image.Image;
-import net.sci.image.ImageAxis;
 
 /**
  * @author dlegland
@@ -147,11 +147,7 @@ public class VgiImageReader implements ImageReader
         image.setFilePath(file.getPath());
         
         // setup spatial resolution
-        ImageAxis[] axes = new ImageAxis[3];
-        axes[0] = new ImageAxis.X(resol[0], 0.0, unitName);
-        axes[1] = new ImageAxis.Y(resol[1], 0.0, unitName);
-        axes[2] = new ImageAxis.Z(resol[2], 0.0, unitName);
-        image.setAxes(axes);
+        image.setCalibration(new Calibration(resol, unitName));
                 
         return image; 
     }

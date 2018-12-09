@@ -27,10 +27,11 @@ import net.sci.array.scalar.BufferedUInt8Array2D;
 import net.sci.array.scalar.BufferedUInt8Array3D;
 import net.sci.array.scalar.SlicedUInt8Array3D;
 import net.sci.array.scalar.UInt8Array;
+import net.sci.axis.NumericalAxis;
+import net.sci.image.Calibration;
 import net.sci.image.DefaultColorMap;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
-import net.sci.image.NumericalAxis;
 
 /**
  * Provides methods for reading Image files in TIFF Format.
@@ -162,7 +163,7 @@ public class TiffImageReader implements ImageReader
         // Add Image meta-data
         if (fileInfo.lut != null)
         {
-            image.setColorMap(new DefaultColorMap(fileInfo.lut));
+            image.getDisplaySettings().setColorMap(new DefaultColorMap(fileInfo.lut));
         }
         image.tiffTags = fileInfo.tags;
         
@@ -208,7 +209,7 @@ public class TiffImageReader implements ImageReader
 		// setup LUT
 		if (info.lut != null)
 		{
-			image.setColorMap(new DefaultColorMap(info.lut));
+			image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
 		}
 		
 		// Check if ImageJ Tags exist within image
@@ -266,15 +267,16 @@ public class TiffImageReader implements ImageReader
 	private void setupSpatialCalibration(Image image, TiffFileInfo info)
 	{
 	    String unit = info.unit;
-	    ImageAxis[] axes = new ImageAxis[image.getDimension()];
+	    int nd = image.getDimension();
+	    ImageAxis[] axes = new ImageAxis[nd];
 	    axes[0] = new ImageAxis.X(info.pixelWidth, 0, unit);
 	    axes[1] = new ImageAxis.Y(info.pixelHeight, 0, unit);
 	    if (axes.length > 2)
 	    {
 	        axes[2] = new ImageAxis.Z();
 	    }
-	        
-	    image.setAxes(axes);
+	    
+	    image.setCalibration(new Calibration(axes));
 	}
 	
 	private void processImageJTags(Image image, TiffFileInfo info)
@@ -293,6 +295,9 @@ public class TiffImageReader implements ImageReader
 	        return;
 	    }
 
+	    // get image calibration
+	    Calibration calib = image.getCalibration();
+	    
 	    // iterate over the different tokens stored in description
 	    String[] items = description.split("\n");
 	    for (String item : items)
@@ -308,7 +313,7 @@ public class TiffImageReader implements ImageReader
             
             if ("unit".compareToIgnoreCase(key) == 0)
             {
-                for (ImageAxis axis : image.getAxes())
+                for (ImageAxis axis : calib.getAxes())
                 {
                     if (axis instanceof NumericalAxis)
                     {
@@ -319,7 +324,7 @@ public class TiffImageReader implements ImageReader
             }
             else if ("spacing".compareToIgnoreCase(key) == 0 && image.getDimension() > 2)
             {
-                ImageAxis zAxis = image.getAxis(2);
+                ImageAxis zAxis = calib.getAxis(2);
                 if (zAxis instanceof NumericalAxis)
                 {
                     ((NumericalAxis) zAxis).setSpacing(Double.parseDouble(valueString));
