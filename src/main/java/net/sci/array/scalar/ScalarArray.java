@@ -19,49 +19,41 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 
 	public default ScalarArray<T> plus(double v)
 	{
-		ScalarArray<T> res = duplicate();
-		ScalarArray.Iterator<T> iter1 = iterator();
-		ScalarArray.Iterator<T> iter2 = res.iterator();
-		while(iter1.hasNext())
-		{
-			iter2.setNextValue(iter1.nextValue() + v);
-		}
+        ScalarArray<T> res = newInstance(getSize());
+        for (int[] pos : positions())
+        {
+            res.setValue(pos, this.getValue(pos) + v);
+        }
 		return res;
 	}
 
 	public default ScalarArray<T> minus(double v)
 	{
-		ScalarArray<T> res = duplicate();
-		ScalarArray.Iterator<T> iter1 = iterator();
-		ScalarArray.Iterator<T> iter2 = res.iterator();
-		while(iter1.hasNext())
-		{
-			iter2.setNextValue(iter1.nextValue() - v);
-		}
+        ScalarArray<T> res = newInstance(getSize());
+        for (int[] pos : positions())
+        {
+            res.setValue(pos, this.getValue(pos) - v);
+        }
 		return res;
 	}
 
 	public default ScalarArray<T> times(double k)
 	{
-		ScalarArray<T> res = duplicate();
-		ScalarArray.Iterator<T> iter1 = iterator();
-		ScalarArray.Iterator<T> iter2 = res.iterator();
-		while(iter1.hasNext())
-		{
-			iter2.setNextValue(iter1.nextValue() * k);
-		}
+        ScalarArray<T> res = newInstance(getSize());
+        for (int[] pos : positions())
+        {
+            res.setValue(pos, this.getValue(pos) * k);
+        }
 		return res;
 	}
 
 	public default ScalarArray<T> divideBy(double k)
 	{
-		ScalarArray<T> res = duplicate();
-		ScalarArray.Iterator<T> iter1 = iterator();
-		ScalarArray.Iterator<T> iter2 = res.iterator();
-		while(iter1.hasNext())
-		{
-			iter2.setNextValue(iter1.nextValue() / k);
-		}
+        ScalarArray<T> res = newInstance(getSize());
+        for (int[] pos : positions())
+        {
+            res.setValue(pos, this.getValue(pos) / k);
+        }
 		return res;
 	}
 
@@ -75,12 +67,10 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
      */
     public default ScalarArray<T> apply(UnaryOperator<Double> fun)
     {
-        ScalarArray<T> res = duplicate();
-        ScalarArray.Iterator<T> iter1 = iterator();
-        ScalarArray.Iterator<T> iter2 = res.iterator();
-        while(iter1.hasNext())
+        ScalarArray<T> res = newInstance(getSize());
+        for (int[] pos : positions())
         {
-            iter2.setNextValue(fun.apply(iter1.nextValue()));
+            res.setValue(pos, fun.apply(this.getValue(pos)));
         }
         return res;
     }
