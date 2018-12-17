@@ -58,16 +58,22 @@ public class DefaultMatrix extends Matrix
     // =============================================================
     // getter / setter
 
+    /* (non-Javadoc)
+     * @see net.sci.linalg.Matrix#get(int, int)
+     */
     @Override
-    public double get(int x, int y)
+    public double get(int i, int j)
     {
-        return this.data.getValue(x, y);
+        return this.data.getValue(i, j);
     }
 
+    /* (non-Javadoc)
+     * @see net.sci.linalg.Matrix#set(int, int, double)
+     */
     @Override
-    public void set(int x, int y, double value)
+    public void set(int i, int j, double value)
     {
-        this.data.setValue(x, y, value);
+        this.data.setValue(i, j, value);
     }
 
 

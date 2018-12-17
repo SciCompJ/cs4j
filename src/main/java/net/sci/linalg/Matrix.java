@@ -71,17 +71,17 @@ public abstract class Matrix
         Matrix res = Matrix.create(nr, nc);
         
         // iterate over positions within result matrix
-        for (int c = 0; c < nc; c++)
+        for (int j = 0; j < nc; j++)
         {
-            for (int r = 0; r < nr; r++)
+            for (int i = 0; i < nr; i++)
             {
                 // iterate over current row of first matrix and current column of second matrix
                 double acc = 0;
-                for (int i = 0; i < n; i++)
+                for (int k = 0; k < n; k++)
                 {
-                    acc += this.get(r, i) * that.get(i, c);
+                    acc += this.get(i, k) * that.get(k, j);
                 }
-                res.set(r, c, acc);
+                res.set(i, j, acc);
             }
         }
 
@@ -95,11 +95,11 @@ public abstract class Matrix
         Matrix res = Matrix.create(this.nCols, this.nRows);
         
         // iterate over positions of input
-        for (int r = 0; r < this.nRows; r++)
+        for (int i = 0; i < this.nRows; i++)
         {
-            for (int c = 0; c < this.nCols; c++)
+            for (int j = 0; j < this.nCols; j++)
             {
-                res.set(c, r, this.get(r, c));
+                res.set(j, i, this.get(i, j));
             }
         }
         
@@ -111,9 +111,9 @@ public abstract class Matrix
     // =============================================================
     // getter / setter
 
-    public abstract double get(int x, int y);
+    public abstract double get(int i, int j);
 
-    public abstract void set(int x, int y, double value);
+    public abstract void set(int i, int j, double value);
 
     public int getSize(int dim)
     {
@@ -132,11 +132,11 @@ public abstract class Matrix
     public Matrix duplicate()
     {
         Matrix matrix = Matrix.create(this.nRows, this.nCols);
-        for (int c = 0; c < this.nCols; c++)
+        for (int j = 0; j < this.nCols; j++)
         {
-            for (int r = 0; r < this.nRows; r++)
+            for (int i = 0; i < this.nRows; i++)
             {
-                matrix.set(r, c, this.get(r, c));
+                matrix.set(i, j, this.get(i, j));
             }
         }
         return matrix;
