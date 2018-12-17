@@ -3,7 +3,7 @@
  */
 package net.sci.linalg;
 
-import net.sci.array.scalar.Float64Array2D;
+import net.sci.linalg.matrix.DefaultMatrix;
 
 /**
  * A matrix that behave like a 2D array with additional properties.
@@ -11,12 +11,19 @@ import net.sci.array.scalar.Float64Array2D;
  * @author dlegland
  *
  */
-public class Matrix 
+public abstract class Matrix 
 {
     // =============================================================
-    // inner variables
+    // Static constructors
     
-    Float64Array2D data;
+    public static final Matrix create(int nRows, int nCols)
+    {
+        return new DefaultMatrix(nRows, nCols);
+    }
+    
+    // =============================================================
+    // Inner variables
+    
     int nRows;
     int nCols;
     
@@ -25,23 +32,17 @@ public class Matrix
     // Constructors
 
     /**
+     * Constructor that specificies matrix size.
      * 
+     * @param nRows
+     *            the number of rows
+     * @param nCols
+     *            the number of columns
      */
-    public Matrix(int nRows, int nCols)
+    protected Matrix(int nRows, int nCols)
     {
         this.nRows = nRows;
         this.nCols = nCols;
-        this.data = Float64Array2D.create(nRows, nCols);
-    }
-
-    /**
-     * 
-     */
-    public Matrix(Float64Array2D data)
-    {
-        this.nRows = data.getSize(0);
-        this.nCols = data.getSize(1);
-        this.data = data;
     }
 
 
@@ -67,7 +68,7 @@ public class Matrix
         int nc = that.nCols;
         
         // allocate memory for result
-        Matrix res = new Matrix(nr, nc);
+        Matrix res = Matrix.create(nr, nc);
         
         // iterate over positions within result matrix
         for (int c = 0; c < nc; c++)
@@ -91,7 +92,7 @@ public class Matrix
     public Matrix transpose()
     {
         // allocate memory for result
-        Matrix res = new Matrix(this.nCols, this.nRows);
+        Matrix res = Matrix.create(this.nCols, this.nRows);
         
         // iterate over positions of input
         for (int r = 0; r < this.nRows; r++)
@@ -110,19 +111,19 @@ public class Matrix
     // =============================================================
     // getter / setter
 
-    public double get(int x, int y)
-    {
-        return this.data.getValue(x, y);
-    }
+    public abstract double get(int x, int y);
 
-    public void set(int x, int y, double value)
-    {
-        this.data.setValue(x, y, value);
-    }
+    public abstract void set(int x, int y, double value);
 
     public int getSize(int dim)
     {
-        return data.getSize(dim);
+        switch (dim)
+        {
+        case 0: return nRows;
+        case 1: return nCols;
+        default:
+            throw new IllegalArgumentException("Size argument must be either 0 or 1, not " + dim);
+        }
     }
 
     // =============================================================
@@ -130,7 +131,15 @@ public class Matrix
 
     public Matrix duplicate()
     {
-        return new Matrix(this.data.duplicate());
+        Matrix matrix = Matrix.create(this.nRows, this.nCols);
+        for (int c = 0; c < this.nCols; c++)
+        {
+            for (int r = 0; r < this.nRows; r++)
+            {
+                matrix.set(r, c, this.get(r, c));
+            }
+        }
+        return matrix;
     }
 
 }

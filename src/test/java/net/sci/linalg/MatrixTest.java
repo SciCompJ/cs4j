@@ -22,7 +22,7 @@ public class MatrixTest
     {
         int nr = 3;
         int nc = 2;
-        Matrix mat = new Matrix(nr, nc);
+        Matrix mat = Matrix.create(nr, nc);
         mat.set(0, 0, 1);
         mat.set(1, 0, 2);
         mat.set(2, 0, 3);
@@ -49,7 +49,7 @@ public class MatrixTest
     {
         int nr = 3;
         int nc = 2;
-        Matrix mat = new Matrix(nr, nc);
+        Matrix mat = Matrix.create(nr, nc);
 
         Matrix res = mat.transpose();
         assertEquals(2, res.getSize(0));
