@@ -9,6 +9,7 @@ import net.sci.geom.geom3d.Box3D;
 import net.sci.geom.geom3d.Geometry3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
+import net.sci.geom.geom3d.transform.AffineTransform3D;
 
 /**
  * @author dlegland
@@ -239,6 +240,39 @@ public class Plane3D implements Geometry3D
         return new Point2D(s, t);
     }
     
+    public Plane3D transform(AffineTransform3D trans)
+    {
+        Point3D ot = origin().transform(trans);
+        Vector3D v1t = directionVector1().transform(trans);
+        Vector3D v2t = directionVector2().transform(trans);
+        return new Plane3D(ot, v1t, v2t);
+    }
+    
+    /**
+     * Normalizes this plane by keeping same normal vector and same distance to origin, but
+     * normalizing each direction vector and ensuring their orthogonality.
+     * 
+     * The second direction vector of normalized plane may not be aligned with
+     * second direction vector of original plane.
+     * 
+     * @return the normalized plane.
+     */
+    public Plane3D normalize()
+    {
+        // compute normalized first direction vector
+        Vector3D v1 = directionVector1().normalize();
+
+        // compute normalized second direction vector
+        Vector3D n = normal().normalize();
+        Vector3D v2 = n.crossProduct(v1).normalize();
+
+        // compute origin point of the new plane
+        Plane3D p = new Plane3D(this.origin(), v1, v2);
+        Point3D newOrigin = p.projection(ORIGIN);
+
+        // create the resulting plane
+        return new Plane3D(newOrigin, v1, v2);
+    }
 
     // ===================================================================
     // Methods implementing the Geometry3D interface

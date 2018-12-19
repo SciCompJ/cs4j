@@ -3,6 +3,7 @@
  */
 package net.sci.geom.geom3d.line;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
@@ -112,6 +113,28 @@ public class Plane3DTest
         Vector3D exp = new Vector3D(0, 0, 1);
         Vector3D normal = plane.normal();
         assertTrue(normal.minus(exp).norm() < 1e-10);
+    }
+ 
+    /**
+     * Test method for {@link net.sci.geom.geom3d.line.Plane3D#normalize()}.
+     */
+    @Test
+    public final void testNormalize_arbitraryPlane()
+    {
+        Point3D origin = new Point3D(5, 4, 3);
+        Vector3D vx = new Vector3D(3, 2, 1);
+        Vector3D vy = new Vector3D(-1, 2, -2);
+        Plane3D plane = new Plane3D(origin, vx, vy);
+        
+        Plane3D plane2 = plane.normalize();
+        
+        Vector3D v1 = plane2.directionVector1(); 
+        Vector3D v2 = plane2.directionVector2(); 
+        assertEquals(v1.norm(), 1.0, 1e-10);
+        assertEquals(v2.norm(), 1.0, 1e-10);
+        assertEquals(plane2.normal().norm(), 1.0, 1e-10);
+        assertEquals(v1.dotProduct(v2), 0.0, 1e-10);
+        
     }
  
 }

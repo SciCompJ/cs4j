@@ -112,7 +112,7 @@ public class Sphere3D implements Geometry3D
 
 
     /**
-     * Compute the set of intersections between this sphere and a straight line.
+     * Computes the set of intersections between this sphere and a straight line.
      * 
      * Returns either a list of two points if the distance between line and
      * sphere center is less than or equal to the sphere radius, or an empty
@@ -154,12 +154,23 @@ public class Sphere3D implements Geometry3D
         return result;
     }
 
+    /**
+     * Computes the intersection between this sphere and a 3D plane.
+     * 
+     * Returns either an instance of Circle2D defined in the space of the plane,
+     * or null if the plane does not intersect the sphere.
+     * 
+     * @param plane
+     *            the query plane
+     * @return intersection of the plane with the sphere, or null if the plane
+     *         does not intersect the sphere.
+     */
     public Circle2D intersection2d(Plane3D plane)
     {
         // distance between plane and sphere center
         double dist = plane.distance(center);
         
-        // check non inetersection case
+        // check non intersection case
         if (dist > radius)
         {
             return null;

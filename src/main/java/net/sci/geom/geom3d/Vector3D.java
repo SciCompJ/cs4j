@@ -5,6 +5,7 @@ package net.sci.geom.geom3d;
 
 import static java.lang.Math.abs;
 import net.sci.array.Dimensional;
+import net.sci.geom.geom3d.transform.AffineTransform3D;
 
 /**
  * @author dlegland
@@ -304,6 +305,12 @@ public class Vector3D implements Dimensional
 				this.x * v.y - this.y * v.x);
 	}
 	
+	public Vector3D transform(AffineTransform3D trans)
+	{
+	    return trans.transform(this);
+	}
+	
+
     // ===================================================================
     // Implements Dimensional interface
 
