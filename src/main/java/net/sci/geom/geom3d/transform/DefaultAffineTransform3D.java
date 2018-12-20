@@ -3,8 +3,8 @@
  */
 package net.sci.geom.geom3d.transform;
 
-import net.sci.geom.geom2d.Vector2D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.geom3d.Vector3D;
 
 /**
  * Concrete implementation of a 3D affine transform, that stores the twelve
@@ -13,10 +13,10 @@ import net.sci.geom.geom3d.Point3D;
  * @author dlegland
  *
  */
-public class MatrixAffineTransform3D implements AffineTransform3D
+public class DefaultAffineTransform3D implements AffineTransform3D
 {
 	// ===================================================================
-	// class members
+	// Class members
 
 	// coefficients for x coordinate.
 	protected double m00, m01, m02, m03;
@@ -34,7 +34,7 @@ public class MatrixAffineTransform3D implements AffineTransform3D
 	/**
 	 * Empty constructor, that creates an instance of the identity transform.
 	 */
-	public MatrixAffineTransform3D()
+	public DefaultAffineTransform3D()
 	{
 		m00 = 1;
 		m01 = 0;
@@ -50,7 +50,7 @@ public class MatrixAffineTransform3D implements AffineTransform3D
         m23 = 0;
 	}
 
-	public MatrixAffineTransform3D(
+	public DefaultAffineTransform3D(
             double xx, double yx, double zx, double tx, 
             double xy, double yy, double zy, double ty, 
             double xz, double yz, double zz, double tz)
@@ -121,42 +121,6 @@ public class MatrixAffineTransform3D implements AffineTransform3D
                 x * m20 + y * m21 + z * m22 + m23);
 	}
 
-//	public Point2d[] transform(Point2d[] src, Point2d[] dst)
-//	{
-//		if (dst == null)
-//			dst = new Point2d[src.length];
-//
-//		double x, y;
-//		for (int i = 0; i < src.length; i++)
-//		{
-//			x = src[i].getX();
-//			y = src[i].getY();
-//			dst[i] = new Point2d(x * m00 + y * m01 + m02, x * m10 + y * m11
-//					+ m12);
-//		}
-//		return dst;
-//	}
-
-//	/**
-//	 * Transforms each point in the collection and returns a new collection
-//	 * containing the transformed points.
-//	 */
-//	public Collection<Point2d> transform(Collection<Point2d> points)
-//	{
-//		// Allocate memory
-//		ArrayList<Point2d> res = new ArrayList<Point2d>(points.size());
-//
-//		// transform each point in the input image
-//		double x, y;
-//		for (Point2d p : points)
-//		{
-//			x = p.getX();
-//			y = p.getY();
-//			res.add(new Point2d(x * m00 + y * m01 + m02, x * m10 + y * m11 + m12));
-//		}
-//		return res;
-//	}
-
 	/**
 	 * Transforms a vector, by using only the linear part of this transform.
 	 * 
@@ -164,20 +128,25 @@ public class MatrixAffineTransform3D implements AffineTransform3D
 	 *            the vector to transform
 	 * @return the transformed vector
 	 */
-	public Vector2D transform(Vector2D v)
+	public Vector3D transform(Vector3D v)
 	{
 		double vx = v.getX();
 		double vy = v.getY();
-		return new Vector2D(
-				vx * m00 + vy * m01, 
-				vx * m10 + vy * m11);
+		double vz = v.getZ();
+		return new Vector3D(
+				vx * m00 + vy * m01 + vz * m02, 
+				vx * m10 + vy * m11 + vz * m12, 
+				vx * m20 + vy * m21 + vz * m22);
 	}
 
 	/**
 	 * Returns the inverse transform. If the transform is not invertible, throws
-	 * a new NonInvertibleTransform2DException.
+	 * a new RuntimeException.
+	 * 
+	 * @return the inverse of this transform
+	 * @throws a RuntimeException
 	 */
-	public MatrixAffineTransform3D invert()
+	public DefaultAffineTransform3D invert()
 	{
         double det = this.determinant();
 
@@ -185,7 +154,7 @@ public class MatrixAffineTransform3D implements AffineTransform3D
         if (Math.abs(det) < 1e-12)
             throw new RuntimeException("Non-invertible matrix");
         
-        return new MatrixAffineTransform3D(
+        return new DefaultAffineTransform3D(
                 (m11 * m22 - m21 * m12) / det,
                 (m21 * m02 - m01 * m22) / det,
                 (m01 * m12 - m11 * m02) / det,
@@ -214,33 +183,6 @@ public class MatrixAffineTransform3D implements AffineTransform3D
         return m00 * (m11 * m22 - m12 * m21) - m01 * (m10 * m22 - m20 * m12)
                 + m02 * (m10 * m21 - m20 * m11);
     }
-
-//	@Override
-//	public boolean equals(Object obj)
-//	{
-//		if (this == obj)
-//			return true;
-//
-//		if (!(obj instanceof MatrixAffineTransform2d))
-//			return false;
-//
-//		MatrixAffineTransform2d that = (MatrixAffineTransform2d) obj;
-//
-//		if (!math.jg.util.EqualUtils.areEqual(this.m00, that.m00))
-//			return false;
-//		if (!EqualUtils.areEqual(this.m01, that.m01))
-//			return false;
-//		if (!EqualUtils.areEqual(this.m02, that.m02))
-//			return false;
-//		if (!EqualUtils.areEqual(this.m00, that.m00))
-//			return false;
-//		if (!EqualUtils.areEqual(this.m01, that.m01))
-//			return false;
-//		if (!EqualUtils.areEqual(this.m02, that.m02))
-//			return false;
-//
-//		return true;
-//	}
 
     @Override
     public double[][] getMatrix()
