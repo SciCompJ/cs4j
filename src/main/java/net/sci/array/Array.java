@@ -171,7 +171,11 @@ public interface Array<T> extends Iterable<T>, Dimensional
 		 * Moves this iterator to the next element, and returns the new value
 		 * pointed by the iterator.
 		 */
-		public T next();
+		public default T next()
+		{
+			forward();
+			return get();
+		}
 		
 		/**
 		 * Moves this iterator to the next element.

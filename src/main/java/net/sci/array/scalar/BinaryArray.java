@@ -152,16 +152,11 @@ public interface BinaryArray extends IntArray<Binary>
 	{
 		// create output array
 		BinaryArray result = BinaryArray.create(this.getSize());
-
-		// initialize iterators
-		BinaryArray.Iterator iter1 = this.iterator();
-		BinaryArray.Iterator iter2 = result.iterator();
 		
 		// copy values into output array
-		while(iter1.hasNext())
+		for(int[] pos : positions())
 		{
-			iter2.forward();
-			iter2.set(iter1.next());
+			result.setBoolean(pos, this.getBoolean(pos));
 		}
 		
 		// return output
