@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -34,7 +35,14 @@ public class DefaultTable implements Table
 	 */
 	double[][] data;
 
+	/**
+	 * Number of columns
+	 */
 	int nCols;
+	
+    /**
+     * Number of Rows
+     */
 	int nRows;
 
 	String name = "";
@@ -226,7 +234,13 @@ public class DefaultTable implements Table
 		return this.nRows;
 	}
 
-	public String[] getColumnNames()
+	@Override
+    public Column column(int c)
+    {
+        return new NumericColumnView(c);
+    }
+
+    public String[] getColumnNames()
 	{
 		return this.colNames;
 	}
@@ -411,4 +425,83 @@ public class DefaultTable implements Table
 //		JFrame frame = tbl.show();
 //		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
+	class CategoricalColumnView implements CategoricalColumn
+	{
+	    int colIndex;
+	    String[] colLevels;
+	    
+	    public CategoricalColumnView(int index)
+	    {
+	        this.colIndex = index;
+	        this.colLevels = levels.get(colIndex);
+	        if (this.colLevels == null)
+	        {
+	            throw new IllegalArgumentException("column index must have levels been initialized");
+	        }
+        }
+
+        @Override
+        public String getName(int row)
+        {
+            int index = (int) data[colIndex][row];
+            return this.colLevels[index];
+        }
+
+        @Override
+        public int length()
+        {
+            return nRows;
+        }
+	}
+
+	class NumericColumnView implements NumericColumn
+    {
+        int colIndex;
+        
+        public NumericColumnView(int index)
+        {
+            this.colIndex = index;
+        }
+        
+        @Override
+        public double getValue(int row)
+        {
+            return data[colIndex][row];
+        }
+
+        @Override
+        public int length()
+        {
+            return nRows;
+        }
+
+        @Override
+        public Iterator<Double> iterator()
+        {
+            return new RowIterator();
+        }
+        
+        class RowIterator implements Iterator<Double>
+        {
+            int index = -1;
+            
+            public RowIterator()
+            {
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return index < nRows;
+            }
+
+            @Override
+            public Double next()
+            {
+                return data[colIndex][++index];
+            }
+        }
+
+    }
 }

@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.io.PrintStream;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -147,6 +148,12 @@ public class DataTable implements Table
 	{
 		return this.nRows;
 	}
+
+    @Override
+    public NumericColumn column(int c)
+    {
+        return new ColumnView(c);
+    }
 
 	public String[] getColumnNames()
 	{
@@ -338,4 +345,52 @@ public class DataTable implements Table
 		JFrame frame = tbl.show();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+    class ColumnView implements NumericColumn
+    {
+        int colIndex;
+        
+        public ColumnView(int index)
+        {
+            this.colIndex = index;
+        }
+        
+        @Override
+        public double getValue(int row)
+        {
+            return data[colIndex][row];
+        }
+
+        @Override
+        public int length()
+        {
+            return nRows;
+        }
+        
+        @Override
+        public Iterator<Double> iterator()
+        {
+            return new RowIterator();
+        }
+        
+        class RowIterator implements Iterator<Double>
+        {
+            int index = -1;
+            
+            public RowIterator()
+            {
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return index < nRows;
+            }
+
+            @Override
+            public Double next()
+            {
+                return data[colIndex][++index];
+            }
+        }
+    }
 }

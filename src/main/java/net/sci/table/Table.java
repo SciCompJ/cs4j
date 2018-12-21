@@ -110,6 +110,13 @@ public interface Table
      * @param name the new name for this table.
      */
     public void setName(String name);
+
+    /**
+     * Returns a vie to the specified column.
+     * @param c the column index, 0-based
+     * @return a view or a reference to the column
+     */
+    public Column column(int c);
     
     public String[] getColumnNames();
 
