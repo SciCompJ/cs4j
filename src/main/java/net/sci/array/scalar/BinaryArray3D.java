@@ -3,6 +3,7 @@
  */
 package net.sci.array.scalar;
 
+
 /**
  * A three-dimensional array containing boolean values.
  * 
@@ -216,6 +217,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	{
 		setBoolean(pos[0], pos[1], pos[2], value.getBoolean());
 	}
+	
 	
     // =============================================================
     // Inner Wrapper class

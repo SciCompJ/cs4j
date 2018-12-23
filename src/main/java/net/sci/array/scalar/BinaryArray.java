@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+
+
 /**
  * A multidimensional array containing boolean values.
  * 
@@ -94,6 +96,27 @@ public interface BinaryArray extends IntArray<Binary>
 	public boolean getBoolean(int[] pos);
 	
 	public void setBoolean(int[] pos, boolean state);
+
+	/**
+	 * @return an Iterable over the positions of only true elements within the
+	 *         array.
+	 */
+	public default Iterable<int[]> trueElementPositions()
+	{
+		return new Iterable<int[]>()
+		{
+			@Override
+			public java.util.Iterator<int[]> iterator()
+			{
+				return new TrueElementsPositionIterator(BinaryArray.this);
+			}
+		};
+	}
+
+	public default PositionIterator trueElementPositionIterator()
+	{
+		return new TrueElementsPositionIterator(this);
+	}
 	
 	/**
      * Returns the complement of this array. Replaces each 0 by 1, and each 1 by
@@ -179,6 +202,68 @@ public interface BinaryArray extends IntArray<Binary>
 	// =============================================================
 	// Inner interface
 
+	public class TrueElementsPositionIterator implements PositionIterator
+	{
+		BinaryArray array;
+		PositionIterator iter;
+		int[] nextPos = null;
+
+		public TrueElementsPositionIterator(BinaryArray array)
+		{
+			this.array = array;
+			iter = array.positionIterator();
+			findNextPos();
+		}
+		
+		@Override
+		public boolean hasNext()
+		{
+			return nextPos != null;
+		}
+
+		@Override
+		public void forward()
+		{
+			findNextPos();			
+		}
+
+		private void findNextPos()
+		{
+			nextPos = null;
+			while (iter.hasNext())
+			{
+				iter.forward();
+				if (array.getBoolean(iter.get()))
+				{
+					nextPos = iter.get();
+					break;
+				}
+			}
+		}
+
+		@Override
+		public int[] next()
+		{
+			forward();
+			return nextPos;
+		}
+
+		@Override
+		public int[] get()
+		{
+			return nextPos;
+		}
+
+		@Override
+		public int get(int dim)
+		{
+			return nextPos[dim];
+		}
+	}
+
+	// =============================================================
+	// Inner interface
+
 	public interface Iterator extends IntArray.Iterator<Binary>
 	{
 		/**
@@ -243,7 +328,7 @@ public interface BinaryArray extends IntArray<Binary>
 		}
 	}
 	
-    /**
+	/**
      * Wraps a scalar array into a BinaryArray with same dimension.
      * 
      * Conversion between scalar and binary:
@@ -284,6 +369,18 @@ public interface BinaryArray extends IntArray<Binary>
         // =============================================================
         // Specialization of the Array interface
 
+    	public Iterable<int[]> trueElementPositions()
+    	{
+    		return new Iterable<int[]>()
+    		{
+    			@Override
+    			public java.util.Iterator<int[]> iterator()
+    			{
+    				return new ItemPositionIterator();
+    			}
+    		};
+    	}
+    	
         @Override
         public int dimensionality()
         {
@@ -326,6 +423,63 @@ public interface BinaryArray extends IntArray<Binary>
             return new Iterator(array.iterator());
         }
         
+
+    	private class ItemPositionIterator implements PositionIterator
+    	{
+    		PositionIterator iter;
+    		int[] nextPos = null;
+
+    		public ItemPositionIterator()
+    		{
+    			iter = positionIterator();
+    			findNextPos();
+    		}
+    		
+    		@Override
+    		public boolean hasNext()
+    		{
+    			return nextPos != null;
+    		}
+
+    		@Override
+    		public void forward()
+    		{
+    			findNextPos();			
+    		}
+
+    		private void findNextPos()
+    		{
+    			nextPos = null;
+    			while (iter.hasNext())
+    			{
+    				iter.forward();
+    				if (getBoolean(iter.get()))
+    				{
+    					nextPos = iter.get();
+    					break;
+    				}
+    			}
+    		}
+
+    		@Override
+    		public int[] next()
+    		{
+    			forward();
+    			return nextPos;
+    		}
+
+    		@Override
+    		public int[] get()
+    		{
+    			return nextPos;
+    		}
+
+    		@Override
+    		public int get(int dim)
+    		{
+    			return nextPos[dim];
+    		}
+    	}
         class Iterator implements BinaryArray.Iterator
         {
             ScalarArray.Iterator<?> iter;

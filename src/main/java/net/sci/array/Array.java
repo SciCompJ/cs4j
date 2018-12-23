@@ -105,12 +105,13 @@ public interface Array<T> extends Iterable<T>, Dimensional
 
 	public default Iterable<int[]> positions()
 	{
-	    Iterable<int[]> it = new Iterable<int[]>() {
-	        public java.util.Iterator<int[]> iterator() {
-	            return positionIterator();
-	        }
-	    };
-	    return it;
+		return new Iterable<int[]>()
+		{
+			public java.util.Iterator<int[]> iterator()
+			{
+				return positionIterator();
+			}
+		};
 	}
 	
 	/**

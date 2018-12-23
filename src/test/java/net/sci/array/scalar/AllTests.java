@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
     UInt8ArrayTest.class,
     UInt8ArrayWrapperTest.class,
     // 2D implementations
+	BinaryArray2DTest.class,
 	BufferedDoubleArray2DTest.class,
 	BufferedInt16Array2DTest.class,
 	BufferedUInt16Array2DTest.class,
