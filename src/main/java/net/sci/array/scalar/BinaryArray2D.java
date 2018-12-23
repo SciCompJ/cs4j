@@ -90,12 +90,10 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     public BinaryArray2D complement()
     {
         BinaryArray2D result = BinaryArray2D.create(getSize(0), getSize(1));
-        BinaryArray.Iterator iter1 = this.iterator();
-        BinaryArray.Iterator iter2 = result.iterator();
-        while (iter1.hasNext())
-        {
-            iter2.setNextBoolean(!iter1.nextBoolean());
-        }
+	    for (int[] pos : positions())
+	    {
+	    	result.setBoolean(pos, !getBoolean(pos));
+	    }
         return result;
     }
 
@@ -257,13 +255,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         @Override
         public BinaryArray2D duplicate()
         {
-            BinaryArray tmp = this.array.newInstance(this.size0, this.size1);
-            if (!(tmp instanceof BinaryArray2D))
-            {
-                throw new RuntimeException("Can not create BinaryArray2D instance from " + this.array.getClass().getName() + " class.");
-            }
-            
-            BinaryArray2D result = (BinaryArray2D) tmp;
+            BinaryArray2D result = BinaryArray2D.create(this.size0, this.size1);
             
             int nd = this.array.dimensionality();
             int[] pos = new int[nd];

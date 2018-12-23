@@ -3,8 +3,6 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.Array;
-
 
 /**
  * @author dlegland
@@ -64,12 +62,10 @@ public interface Float64Array extends ScalarArray<Float64>
 	public static Float64Array convert(ScalarArray<?> array)
 	{
 		Float64Array result = Float64Array.create(array.getSize());
-		ScalarArray.Iterator<?> iter1 = array.iterator();
-		Float64Array.Iterator iter2 = result.iterator();
-		while (iter1.hasNext() && iter2.hasNext())
-		{
-			iter2.setNextValue(iter1.nextValue());
-		}
+	    for (int[] pos : array.positions())
+	    {
+	    	result.setValue(pos, array.getValue(pos));
+	    }
 		return result;
 	}
 	
@@ -97,15 +93,10 @@ public interface Float64Array extends ScalarArray<Float64>
 	{
 		// create output array
 		Float64Array result = Float64Array.create(this.getSize());
-
-        Array.PositionIterator iter1 = this.positionIterator();
-        Array.PositionIterator iter2 = result.positionIterator();
-        
-        // copy values into output array
-        while(iter1.hasNext())
-        {
-            result.setValue(iter2.next(), this.getValue(iter1.next()));
-        }
+	    for (int[] pos : positions())
+	    {
+	    	result.setValue(pos, this.getValue(pos));
+	    }
 
         // return output
 		return result;

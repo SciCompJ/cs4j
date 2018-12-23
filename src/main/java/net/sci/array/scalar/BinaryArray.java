@@ -71,11 +71,9 @@ public interface BinaryArray extends IntArray<Binary>
 	public static BinaryArray convert(ScalarArray<?> array)
 	{
 	    BinaryArray result = BinaryArray.create(array.getSize());
-	    ScalarArray.Iterator<?> iter1 = array.iterator();
-	    BinaryArray.Iterator iter2 = result.iterator();
-	    while (iter1.hasNext() && iter2.hasNext())
+	    for (int[] pos : array.positions())
 	    {
-	        iter2.setNextBoolean(iter1.nextValue() > 0);
+	    	result.setBoolean(pos, array.getValue(pos) > 0);
 	    }
 	    return result;
 	}
@@ -106,12 +104,10 @@ public interface BinaryArray extends IntArray<Binary>
 	public default BinaryArray complement()
 	{
 	    BinaryArray result = BinaryArray.create(this.getSize());
-        BinaryArray.Iterator iter1 = this.iterator();
-        BinaryArray.Iterator iter2 = result.iterator();
-        while (iter1.hasNext())
-        {
-            iter2.setNextBoolean(!iter1.nextBoolean());
-        }
+	    for (int[] pos : positions())
+	    {
+	    	result.setBoolean(pos, !getBoolean(pos));
+	    }
         return result;
 	}
 	
@@ -172,12 +168,11 @@ public interface BinaryArray extends IntArray<Binary>
 	public Iterator iterator();
 	
 	/**
-	 * Sets the value at the specified position, by clamping the value between 0
-	 * and 255.
+	 * Sets the value at the specified position, using true if value is greater than zero.
 	 */
 	public default void setValue(int[] pos, double value)
 	{
-		setInt(pos, (int) Math.min(Math.max(value, 0), 255));
+		setBoolean(pos, value > 0);
 	}
 
 
@@ -269,23 +264,6 @@ public interface BinaryArray extends IntArray<Binary>
             this.array = array;
         }
         
-
-        // =============================================================
-        // Implementation of the BinaryArray interface
-
-        @Override
-        public BinaryArray complement()
-        {
-            BinaryArray result = BinaryArray.create(array.getSize());
-            ScalarArray.Iterator<?> iter1 = array.iterator();
-            BinaryArray.Iterator iter2 = result.iterator();
-            while (iter1.hasNext() && iter2.hasNext())
-            {
-                iter2.setNextBoolean(!(iter1.nextValue() > 0));
-            }
-            return result;
-        }
-
 
         // =============================================================
         // Specialization of the Array interface

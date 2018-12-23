@@ -61,12 +61,10 @@ public interface Int16Array extends IntArray<Int16>
 	public static Int16Array convert(ScalarArray<?> array)
 	{
 		Int16Array result = Int16Array.create(array.getSize());
-		ScalarArray.Iterator<?> iter1 = array.iterator();
-		Int16Array.Iterator iter2 = result.iterator();
-		while (iter1.hasNext() && iter2.hasNext())
-		{
-			iter2.setNextValue(iter1.nextValue());
-		}
+	    for (int[] pos : array.positions())
+	    {
+	    	result.setValue(pos, array.getValue(pos));
+	    }
 		return result;
 	}
 		
@@ -128,17 +126,10 @@ public interface Int16Array extends IntArray<Int16>
 	{
 		// create output array
 		Int16Array result = Int16Array.create(this.getSize());
-
-		// initialize iterators
-		Int16Array.Iterator iter1 = this.iterator();
-		Int16Array.Iterator iter2 = result.iterator();
-		
-		// copy values into output array
-		while(iter1.hasNext())
-		{
-			iter2.forward();
-			iter2.set(iter1.next());
-		}
+	    for (int[] pos : positions())
+	    {
+	    	result.setShort(pos, getShort(pos));
+	    }
 		
 		// return output
 		return result;

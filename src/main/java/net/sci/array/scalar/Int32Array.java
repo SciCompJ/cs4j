@@ -61,12 +61,10 @@ public interface Int32Array extends IntArray<Int32>
 	public static Int32Array convert(ScalarArray<?> array)
 	{
 		Int32Array result = Int32Array.create(array.getSize());
-		ScalarArray.Iterator<?> iter1 = array.iterator();
-		Int32Array.Iterator iter2 = result.iterator();
-		while (iter1.hasNext() && iter2.hasNext())
-		{
-			iter2.setNextValue(iter1.nextValue());
-		}
+	    for (int[] pos : array.positions())
+	    {
+	    	result.setValue(pos, array.getValue(pos));
+	    }
 		return result;
 	}
 	
@@ -100,17 +98,10 @@ public interface Int32Array extends IntArray<Int32>
 	{
 		// create output array
 		Int32Array result = Int32Array.create(this.getSize());
-
-		// initialize iterators
-		Int32Array.Iterator iter1 = this.iterator();
-		Int32Array.Iterator iter2 = result.iterator();
-		
-		// copy values into output array
-		while(iter1.hasNext())
-		{
-			iter2.forward();
-			iter2.set(iter1.next());
-		}
+	    for (int[] pos : positions())
+	    {
+	    	result.setInt(pos, getInt(pos));
+	    }
 		
 		// return output
 		return result;

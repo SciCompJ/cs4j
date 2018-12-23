@@ -3,7 +3,6 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.Array;
 
 /**
  * An array containing 8-bits unsigned integers.
@@ -64,12 +63,10 @@ public interface UInt8Array extends IntArray<UInt8>
 	public static UInt8Array convert(ScalarArray<?> array)
 	{
 		UInt8Array result = UInt8Array.create(array.getSize());
-		ScalarArray.Iterator<?> iter1 = array.iterator();
-		UInt8Array.Iterator iter2 = result.iterator();
-		while (iter1.hasNext() && iter2.hasNext())
-		{
-			iter2.setNextValue(iter1.nextValue());
-		}
+	    for (int[] pos : array.positions())
+	    {
+	    	result.setValue(pos, array.getValue(pos));
+	    }
 		return result;
 	}
 	
@@ -149,14 +146,11 @@ public interface UInt8Array extends IntArray<UInt8>
 		// create output array
 		UInt8Array result = UInt8Array.create(this.getSize());
 
-		Array.PositionIterator iter1 = this.positionIterator();
-        Array.PositionIterator iter2 = result.positionIterator();
-        
         // copy values into output array
-        while(iter1.hasNext())
-        {
-            result.setByte(iter2.next(), this.getByte(iter1.next()));
-        }
+	    for (int[] pos : positions())
+	    {
+	    	result.setByte(pos, getByte(pos));
+	    }
 				
 		// return result
 		return result;

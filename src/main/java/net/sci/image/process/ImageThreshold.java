@@ -10,8 +10,8 @@ import net.sci.array.scalar.ScalarArray;
 import net.sci.image.ImageArrayOperator;
 
 /**
- * Thresholds an image, by retaining only values greater than or equal to a
- * given threshold value.
+ * Thresholds an image, by retaining only values strictly greater than a given
+ * threshold value.
  * 
  * @author dlegland
  *
@@ -33,12 +33,9 @@ public class ImageThreshold implements ImageArrayOperator, ScalarArrayOperator
 
 	public void processScalar(ScalarArray<?> source, BinaryArray target)
 	{
-		ScalarArray.Iterator<?> iter1 = source.iterator(); 
-		BinaryArray.Iterator iter2 = target.iterator();
-		
-		while(iter1.hasNext() && iter2.hasNext())
+		for (int[] pos : source.positions())
 		{
-			iter2.setNextBoolean(iter1.nextValue() > this.value);
+			target.setBoolean(pos, source.getValue(pos) > this.value);
 		}
 	}
 	

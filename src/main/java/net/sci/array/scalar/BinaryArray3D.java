@@ -109,12 +109,10 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
     public BinaryArray3D complement()
     {
         BinaryArray3D result = BinaryArray3D.create(this.size0, this.size1, this.size2);
-        BinaryArray.Iterator iter1 = this.iterator();
-        BinaryArray.Iterator iter2 = result.iterator();
-        while (iter1.hasNext())
-        {
-            iter2.setNextBoolean(!iter1.nextBoolean());
-        }
+	    for (int[] pos : positions())
+	    {
+	    	result.setBoolean(pos, !getBoolean(pos));
+	    }
         return result;
     }
 
@@ -261,24 +259,11 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         @Override
         public BinaryArray3D duplicate()
         {
-            BinaryArray tmp = this.array.newInstance(this.size0, this.size1, this.size2);
-            if (!(tmp instanceof BinaryArray3D))
-            {
-                // ensure result is instance of BinaryArray3D
-                tmp = new Wrapper(tmp);
-            }
-            
-            BinaryArray3D result = (BinaryArray3D) tmp;
-            
-            BinaryArray.Iterator iter1 = this.array.iterator();
-            BinaryArray.Iterator iter2 = result.iterator();
-            
-            // Fill new array with input array
-            while(iter1.hasNext() && iter2.hasNext())
-            {
-                iter2.setNextBoolean(iter1.nextBoolean());
-            }
-
+            BinaryArray3D result = BinaryArray3D.create(array.getSize(0), array.getSize(1), array.getSize(2));
+    	    for (int[] pos : array.positions())
+    	    {
+    	    	result.setBoolean(pos, array.getValue(pos) > 0);
+    	    }
             return result;
         }
         
