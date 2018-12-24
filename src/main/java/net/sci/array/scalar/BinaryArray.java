@@ -244,8 +244,9 @@ public interface BinaryArray extends IntArray<Binary>
 		@Override
 		public int[] next()
 		{
+			int[] pos = nextPos;
 			forward();
-			return nextPos;
+			return pos;
 		}
 
 		@Override
