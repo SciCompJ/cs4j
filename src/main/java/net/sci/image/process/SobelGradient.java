@@ -89,8 +89,8 @@ public class SobelGradient implements ImageArrayOperator
 					{
 						int x2 = Math.min(Math.max(x + ix - 1, 0), sizeX - 1);
 						double val = source.getValue(x2, y2);
-						res[0] += val * gradX[iy][ix] / 4;
-						res[1] += val * gradY[iy][ix] / 4;
+						res[0] += val * gradX[iy][ix] / 8;
+						res[1] += val * gradY[iy][ix] / 8;
 					}
 				}
 
@@ -149,9 +149,9 @@ public class SobelGradient implements ImageArrayOperator
 							{
 								int x2 = Math.min(Math.max(x + ix - 1, 0), sizeX - 1);
 								double val = source.getValue(x2, y2, z2);
-								res[0] += val * gradX[iz][iy][ix] / 16;
-								res[1] += val * gradY[iz][iy][ix] / 16;
-								res[2] += val * gradZ[iz][iy][ix] / 16;
+								res[0] += val * gradX[iz][iy][ix] / 32;
+								res[1] += val * gradY[iz][iy][ix] / 32;
+								res[2] += val * gradZ[iz][iy][ix] / 32;
 							}
 						}
 					}
