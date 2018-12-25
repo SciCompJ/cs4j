@@ -131,7 +131,10 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
     public double[] getValues(int x, int y, int z, double[] values)
     {
         int offset = ((z * this.size1 + y) * this.size0 + x) * this.vectorLength;
-        System.arraycopy(this.buffer, offset, values, 0, this.vectorLength);
+        for (int c = 0; c < this.vectorLength; c++)
+        {
+            values[c] = this.buffer[offset + c];
+        }
         return values;
     }
 
