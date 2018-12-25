@@ -80,7 +80,7 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	@Override
 	public double getValue(int x, int y, int z, int c)
 	{
-		int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
+		int offset = ((z * this.size1 + y) * this.size0 + x) * this.vectorLength;
 		return this.buffer[offset + c];
 	}
 
@@ -88,7 +88,7 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	@Override
 	public void setValue(int x, int y, int z, int c, double value)
 	{
-		int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
+		int offset = ((z * this.size1 + y) * this.size0 + x) * this.vectorLength;
 		this.buffer[offset + c] = (float) value;
 	}
 
@@ -130,7 +130,7 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
     @Override
     public double[] getValues(int x, int y, int z, double[] values)
     {
-        int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
+        int offset = ((z * this.size1 + y) * this.size0 + x) * this.vectorLength;
         System.arraycopy(this.buffer, offset, values, 0, this.vectorLength);
         return values;
     }
@@ -141,7 +141,7 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	@Override
 	public void setValues(int x, int y, int z, double[] values)
 	{
-		int offset = ((z * this.size2 + y) * this.size0 + x) * this.vectorLength;
+		int offset = ((z * this.size1 + y) * this.size0 + x) * this.vectorLength;
 		for (int c = 0; c < this.vectorLength; c++)
 		{
 			this.buffer[offset + c] = (float) values[c];
