@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.array.Array;
+import net.sci.array.Arrays;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
@@ -128,6 +129,35 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
      * @return a view on the channel
      */
     public ScalarArray<?> channel(int channel);
+
+    /**
+	 * Copies the values of the specified scalar array at the specified channel
+	 * index.
+	 * 
+	 * @param c
+	 *            the channel index, 0-indexed
+	 * @param channel
+	 *            the scalar array containing channel data
+	 */
+    public default void setChannel(int c, ScalarArray<?> channel)
+    {
+    	// check dims
+    	if (!Arrays.isSameDimensionality(this, channel))
+    	{
+    		throw new IllegalArgumentException("Vector array and channel array must have same dimensonality");
+    	}
+    	if (!Arrays.isSameSize(this, channel))
+    	{
+    		throw new IllegalArgumentException("Vector array and channel array must have same size");
+    	}
+    	
+    	// iterate over positions
+    	for (int[] pos : positions())
+    	{
+    		this.setValue(pos, c, channel.getValue(pos));
+    	}
+    }
+
 
     /**
      * Iterates over the channels
