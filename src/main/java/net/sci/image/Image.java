@@ -305,9 +305,12 @@ public class Image
 		// duplicate the spatial calibration
 		this.calibration = parent.calibration.duplicate(); 
 
-		// copy display settings
-		this.displaySettings = parent.displaySettings.duplicate();
-        
+		// copy display settings only if same type
+		if (this.type == parent.type)
+		{
+		    this.displaySettings = parent.displaySettings.duplicate();
+		}
+		
         // copy meta-data if any (may be obsolete...)
         this.tiffTags = parent.tiffTags;
 	}
