@@ -6,6 +6,7 @@ package net.sci.array.scalar;
 import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
+import net.sci.array.Arrays;
 
 /**
  * @author dlegland
@@ -68,11 +69,32 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
     public default ScalarArray<T> apply(UnaryOperator<Double> fun)
     {
         ScalarArray<T> res = newInstance(getSize());
+        apply(fun, res);
+        return res;
+    }
+
+    /**
+     * Applies the given function to each element of the array, and return a
+     * reference to the output array.
+     * 
+     * @param fun
+     *            the function to apply
+     * @param output
+     *            the array to put the result in
+     * @return the result array
+     */
+    public default ScalarArray<?> apply(UnaryOperator<Double> fun, ScalarArray<?> output)
+    {
+        if (!Arrays.isSameSize(this, output))
+        {
+            throw new IllegalArgumentException("Output array must have same size as input array");
+        }
+        
         for (int[] pos : positions())
         {
-            res.setValue(pos, fun.apply(this.getValue(pos)));
+            output.setValue(pos, fun.apply(this.getValue(pos)));
         }
-        return res;
+        return output;
     }
 
 	
