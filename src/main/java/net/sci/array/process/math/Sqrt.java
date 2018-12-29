@@ -38,16 +38,11 @@ public class Sqrt implements ScalarArrayOperator
 	public void processScalar(ScalarArray<? extends Scalar> input,
 			ScalarArray<? extends Scalar> output)
 	{
-		// create array iterators
-		ScalarArray.Iterator<?> sourceIter = input.iterator();
-		ScalarArray.Iterator<?> targetIter = output.iterator();
-		
-		// iterate over both arrays in parallel 
-		while (sourceIter.hasNext() && targetIter.hasNext())
-		{
-			// process the next value
-			targetIter.setNextValue(Math.sqrt(sourceIter.nextValue()));
-		}
+	    // iterate over positions
+	    for (int[] pos : input.positions())
+	    {
+	        output.setValue(pos, Math.sqrt(input.getValue(pos)));
+	    }
 	}
 
     @Override
