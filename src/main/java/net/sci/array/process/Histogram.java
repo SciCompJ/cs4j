@@ -29,8 +29,8 @@ public class Histogram
 		// iterate over samples to update the histogram
 		for (Scalar scalar : array)
 		{
-			int binIndex = (int) Math.round((scalar.getValue() - range[0] - binWidth / 2) / binWidth);
-			binIndex = Math.min(Math.max(binIndex, 0), nBins - 1);
+			int binIndex = (int) java.lang.Math.round((scalar.getValue() - range[0] - binWidth / 2) / binWidth);
+			binIndex = java.lang.Math.min(java.lang.Math.max(binIndex, 0), nBins - 1);
 			histo[binIndex]++;
 		}
 		
@@ -62,11 +62,11 @@ public class Histogram
         int rMax = 0, gMax = 0, bMax = 0;
         for (RGB16 rgb : array)
         {
-            rMax = Math.max(rMax, rgb.getSample(0));
-            gMax = Math.max(gMax, rgb.getSample(1));
-            bMax = Math.max(bMax, rgb.getSample(2));
+            rMax = java.lang.Math.max(rMax, rgb.getSample(0));
+            gMax = java.lang.Math.max(gMax, rgb.getSample(1));
+            bMax = java.lang.Math.max(bMax, rgb.getSample(2));
         }
-        double k = 255.0 / Math.max(Math.max(rMax,  gMax),  bMax);
+        double k = 255.0 / java.lang.Math.max(java.lang.Math.max(rMax,  gMax),  bMax);
         
         // allocate memory for result
         // first column contains bin center
@@ -81,9 +81,9 @@ public class Histogram
         // iterate over samples to update the histogram
         for (RGB16 rgb : array)
         {
-            int r = Math.min((int) (rgb.getSample(0) * k), 255);
-            int g = Math.min((int) (rgb.getSample(1) * k), 255);
-            int b = Math.min((int) (rgb.getSample(2) * k), 255);
+            int r = java.lang.Math.min((int) (rgb.getSample(0) * k), 255);
+            int g = java.lang.Math.min((int) (rgb.getSample(1) * k), 255);
+            int b = java.lang.Math.min((int) (rgb.getSample(2) * k), 255);
             histo[1][r]++;
             histo[2][g]++;
             histo[3][b]++;
