@@ -77,24 +77,6 @@ public interface Table
      */
     public int[] getSize();
     
-    /**
-     * Returns the number of columns (measurements, variables) in the data
-     * table.
-     * 
-     * @return the number of columns in this table
-     */
-    public int getColumnNumber();
-
-    /**
-     * Returns the number of rows (individuals, observations) in the data table.
-     * 
-     * @return the number of rows in this table
-     */
-    public int getRowNumber();
-
-    
-    // =============================================================
-    // Getters and setters for table meta data
     
     /**
      * Returns a name associated to this table, that can be used to identify
@@ -111,6 +93,25 @@ public interface Table
      */
     public void setName(String name);
 
+
+    // =============================================================
+    // Management of columns
+    
+    /**
+     * Returns an Iterable over the columns contained in this table.
+     * 
+     * @return an Iterable over the columns contained in this table
+     */
+    public Iterable<? extends Column> columns();
+    
+    /**
+     * Returns the number of columns (measurements, variables) in the data
+     * table.
+     * 
+     * @return the number of columns in this table
+     */
+    public int getColumnNumber();
+
     /**
      * Returns a vie to the specified column.
      * @param c the column index, 0-based
@@ -123,6 +124,17 @@ public interface Table
     public void setColumnNames(String[] names);
 
     public int getColumnIndex(String name);
+
+
+    // =============================================================
+    // Management of rows
+    
+    /**
+     * Returns the number of rows (individuals, observations) in the data table.
+     * 
+     * @return the number of rows in this table
+     */
+    public int getRowNumber();
 
     public String[] getRowNames();
 

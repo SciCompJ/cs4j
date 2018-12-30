@@ -144,7 +144,7 @@ public class DefaultTable implements Table
 	    return this.levels.get(col) == null;
 	}
 
-	    /**
+	/**
      * Returns the levels of the factor column specified by the column index, or
      * null if the column contains quantitative data.
      * 
@@ -217,6 +217,22 @@ public class DefaultTable implements Table
         this.name = name;
     }
 
+
+    // =============================================================
+    // Management of columns
+
+    public Iterable<? extends Column> columns()
+    {
+        return new Iterable<Column>()
+        {
+            @Override
+            public Iterator<Column> iterator()
+            {
+                return new ColumnIterator();
+            }
+        };
+    }
+
     /**
 	 * Returns the number of columns (measurements, variables) in the data
 	 * table.
@@ -224,14 +240,6 @@ public class DefaultTable implements Table
 	public int getColumnNumber()
 	{
 		return this.nCols;
-	}
-
-	/**
-	 * Returns the number of rows (individuals, observations) in the data table.
-	 */
-	public int getRowNumber()
-	{
-		return this.nRows;
 	}
 
 	@Override
@@ -265,6 +273,18 @@ public class DefaultTable implements Table
 		return -1;
 	}
 
+
+    // =============================================================
+    // Management of rows
+    
+    /**
+     * Returns the number of rows (individuals, observations) in the data table.
+     */
+    public int getRowNumber()
+    {
+        return this.nRows;
+    }
+
 	public String[] getRowNames()
 	{
 		return this.rowNames;
@@ -278,6 +298,7 @@ public class DefaultTable implements Table
 		this.rowNames = names;
 	}
 
+	
     // =============================================================
     // Getters and setters for values
 
@@ -502,6 +523,22 @@ public class DefaultTable implements Table
                 return data[colIndex][++index];
             }
         }
-
     }
+	
+	public class ColumnIterator implements Iterator<Column>
+	{
+	    int index = 0;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < getColumnNumber();
+        }
+
+        @Override
+        public Column next()
+        {
+            return column(index++);
+        }    
+	}
 }

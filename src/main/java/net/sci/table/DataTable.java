@@ -132,6 +132,21 @@ public class DataTable implements Table
         this.name = name;
     }
 
+    // =============================================================
+    // Management of columns
+
+    public Iterable<NumericColumn> columns()
+    {
+        return new Iterable<NumericColumn>()
+        {
+            @Override
+            public Iterator<NumericColumn> iterator()
+            {
+                return new ColumnIterator();
+            }
+        };
+    }
+
     /**
 	 * Returns the number of columns (measurements, variables) in the data
 	 * table.
@@ -139,14 +154,6 @@ public class DataTable implements Table
 	public int getColumnNumber()
 	{
 		return this.nCols;
-	}
-
-	/**
-	 * Returns the number of rows (individuals, observations) in the data table.
-	 */
-	public int getRowNumber()
-	{
-		return this.nRows;
 	}
 
     @Override
@@ -180,6 +187,18 @@ public class DataTable implements Table
 		return -1;
 	}
 
+	
+    // =============================================================
+    // Management of rows
+    
+    /**
+     * Returns the number of rows (individuals, observations) in the data table.
+     */
+    public int getRowNumber()
+    {
+        return this.nRows;
+    }
+
 	public String[] getRowNames()
 	{
 		return this.rowNames;
@@ -193,6 +212,7 @@ public class DataTable implements Table
 		this.rowNames = names;
 	}
 
+	
     // =============================================================
     // Getters and setters for values
 
@@ -392,5 +412,22 @@ public class DataTable implements Table
                 return data[colIndex][++index];
             }
         }
+    }
+
+    public class ColumnIterator implements Iterator<NumericColumn>
+    {
+        int index = 0;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < getColumnNumber();
+        }
+
+        @Override
+        public NumericColumn next()
+        {
+            return column(index++);
+        }    
     }
 }
