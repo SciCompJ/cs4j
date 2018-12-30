@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.io.PrintStream;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -131,6 +132,21 @@ public class DataTable implements Table
         this.name = name;
     }
 
+    // =============================================================
+    // Management of columns
+
+    public Iterable<NumericColumn> columns()
+    {
+        return new Iterable<NumericColumn>()
+        {
+            @Override
+            public Iterator<NumericColumn> iterator()
+            {
+                return new ColumnIterator();
+            }
+        };
+    }
+
     /**
 	 * Returns the number of columns (measurements, variables) in the data
 	 * table.
@@ -140,13 +156,11 @@ public class DataTable implements Table
 		return this.nCols;
 	}
 
-	/**
-	 * Returns the number of rows (individuals, observations) in the data table.
-	 */
-	public int getRowNumber()
-	{
-		return this.nRows;
-	}
+    @Override
+    public NumericColumn column(int c)
+    {
+        return new ColumnView(c);
+    }
 
 	public String[] getColumnNames()
 	{
@@ -173,6 +187,18 @@ public class DataTable implements Table
 		return -1;
 	}
 
+	
+    // =============================================================
+    // Management of rows
+    
+    /**
+     * Returns the number of rows (individuals, observations) in the data table.
+     */
+    public int getRowNumber()
+    {
+        return this.nRows;
+    }
+
 	public String[] getRowNames()
 	{
 		return this.rowNames;
@@ -186,6 +212,7 @@ public class DataTable implements Table
 		this.rowNames = names;
 	}
 
+	
     // =============================================================
     // Getters and setters for values
 
@@ -338,4 +365,76 @@ public class DataTable implements Table
 		JFrame frame = tbl.show();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+    class ColumnView implements NumericColumn
+    {
+        int colIndex;
+        
+        public ColumnView(int index)
+        {
+            this.colIndex = index;
+        }
+        
+        @Override
+        public double getValue(int row)
+        {
+            return data[colIndex][row];
+        }
+
+        @Override
+        public int length()
+        {
+            return nRows;
+        }
+        
+        public String getName()
+        {
+            if (colNames == null)
+                return null;
+            return colNames[colIndex];
+        }
+
+        @Override
+        public Iterator<Double> iterator()
+        {
+            return new RowIterator();
+        }
+        
+        class RowIterator implements Iterator<Double>
+        {
+            int index = -1;
+            
+            public RowIterator()
+            {
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return index < nRows;
+            }
+
+            @Override
+            public Double next()
+            {
+                return data[colIndex][++index];
+            }
+        }
+    }
+
+    public class ColumnIterator implements Iterator<NumericColumn>
+    {
+        int index = 0;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < getColumnNumber();
+        }
+
+        @Override
+        public NumericColumn next()
+        {
+            return column(index++);
+        }    
+    }
 }
