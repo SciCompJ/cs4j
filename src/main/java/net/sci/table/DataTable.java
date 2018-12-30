@@ -386,6 +386,13 @@ public class DataTable implements Table
             return nRows;
         }
         
+        public String getName()
+        {
+            if (colNames == null)
+                return null;
+            return colNames[colIndex];
+        }
+
         @Override
         public Iterator<Double> iterator()
         {

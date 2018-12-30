@@ -447,14 +447,36 @@ public class DefaultTable implements Table
 //		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
-	class CategoricalColumnView implements CategoricalColumn
+	abstract class ColumnView implements Column
 	{
-	    int colIndex;
+        int colIndex;
+
+        public ColumnView(int index)
+        {
+            this.colIndex = index;
+        }
+        
+        @Override
+        public int length()
+        {
+            return nRows;
+        }
+        
+        public String getName()
+        {
+            if (colNames == null)
+                return null;
+            return colNames[colIndex];
+        }
+	}
+	
+	class CategoricalColumnView extends ColumnView implements CategoricalColumn
+	{
 	    String[] colLevels;
 	    
 	    public CategoricalColumnView(int index)
 	    {
-	        this.colIndex = index;
+            super(index);
 	        this.colLevels = levels.get(colIndex);
 	        if (this.colLevels == null)
 	        {
@@ -468,33 +490,19 @@ public class DefaultTable implements Table
             int index = (int) data[colIndex][row];
             return this.colLevels[index];
         }
-
-        @Override
-        public int length()
-        {
-            return nRows;
-        }
 	}
 
-	class NumericColumnView implements NumericColumn
+	class NumericColumnView extends ColumnView implements NumericColumn
     {
-        int colIndex;
-        
         public NumericColumnView(int index)
         {
-            this.colIndex = index;
+            super(index);
         }
         
         @Override
         public double getValue(int row)
         {
             return data[colIndex][row];
-        }
-
-        @Override
-        public int length()
-        {
-            return nRows;
         }
 
         @Override

@@ -15,4 +15,6 @@ public interface Column
      * @return the number of elements within this column
      */
     public int length();
+    
+    public String getName();
 }
