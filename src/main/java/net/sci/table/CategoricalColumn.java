@@ -17,4 +17,6 @@ public interface CategoricalColumn extends Column
      * @return the category name for specified row index
      */
     public String getName(int row);
+    
+    public String[] getLevels();
 }

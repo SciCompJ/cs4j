@@ -6,7 +6,6 @@ package net.sci.table;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -113,26 +112,6 @@ public class DefaultTable implements Table
 		{
 		    this.levels.add(null);
 		}
-	}
-
-    // =============================================================
-    // Global information
-	
-	/**
-     * Displays some info about columns within table.
-     * 
-     * @param stream
-     *            the stream to use.
-     */
-	public void printInfo(PrintStream stream)
-	{
-	    stream.println("Table: " + name);
-	    for (int c = 0; c < nCols; c++)
-	    {
-	        stream.print(String.format(" [%d] %s: ", c, colNames[c]));
-	        stream.print(isNumericColumn(c) ? "numeric" : "qualitative");
-	        stream.println();
-	    }
 	}
     
     
@@ -245,7 +224,10 @@ public class DefaultTable implements Table
 	@Override
     public Column column(int c)
     {
-        return new NumericColumnView(c);
+	    if (isNumericColumn(c))
+	        return new NumericColumnView(c);
+	    else
+	        return new CategoricalColumnView(c);
     }
 
     public String[] getColumnNames()
@@ -490,6 +472,12 @@ public class DefaultTable implements Table
             int index = (int) data[colIndex][row];
             return this.colLevels[index];
         }
+
+        @Override
+        public String[] getLevels()
+        {
+            return DefaultTable.this.getLevels(colIndex);
+        }
 	}
 
 	class NumericColumnView extends ColumnView implements NumericColumn
@@ -513,7 +501,7 @@ public class DefaultTable implements Table
         
         class RowIterator implements Iterator<Double>
         {
-            int index = -1;
+            int index = 0;
             
             public RowIterator()
             {
@@ -528,7 +516,7 @@ public class DefaultTable implements Table
             @Override
             public Double next()
             {
-                return data[colIndex][++index];
+                return data[colIndex][index++];
             }
         }
     }

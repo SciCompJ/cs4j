@@ -19,7 +19,6 @@ import org.junit.Test;
  */
 public class DefaultTableTest
 {
-
     /**
      * Test method for {@link net.sci.table.DefaultTable#columns()}.
      * @throws IOException 
@@ -44,6 +43,22 @@ public class DefaultTableTest
         }
 
         assertEquals(nc, count);
+    }
+
+    /**
+     * Test method for {@link net.sci.table.DefaultTable#columns()}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testPrintInfos() throws IOException
+    {
+        String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();
+        
+        TableReader reader = new DelimitedTableReader();
+        
+        Table table = reader.readTable(new File(fileName));
+
+        table.printInfo(System.out);
     }
 
 }

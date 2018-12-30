@@ -229,7 +229,49 @@ public interface Table
      * @param stream
      *            the stream to use.
      */
-    public abstract void printInfo(PrintStream stream);
+    public default void printInfo(PrintStream stream)
+    {
+        // print table name
+        stream.println("Table: " + getName());
+        
+        // determine max length of column names
+        int nChars = 0;
+        for (String name : getColumnNames())
+        {
+            nChars = Math.max(nChars, name.length());
+        }
+        nChars = Math.min(nChars+1, 15);
+        
+        // create format string
+        int nDigits = getColumnNumber() > 9 ? 2 : 1;
+        String format = " [%" + nDigits + "d] %-" + nChars + "s ";
+        
+        // iterate over columns
+        int c = 0;
+        for (Column col : columns())
+        {
+            stream.print(String.format(format, c++, col.getName() + ":"));
+            if (col instanceof NumericColumn)
+            {
+                stream.print("numerical  ");
+                double minVal = Double.POSITIVE_INFINITY;
+                double maxVal = Double.NEGATIVE_INFINITY;
+                for (double v : (NumericColumn) col)
+                {
+                    minVal = Math.min(minVal, v);
+                    maxVal = Math.max(maxVal, v);
+                }
+                stream.print(String.format("  [ %7.3f ; %7.3f ]", minVal, maxVal));
+            }
+            else
+            {
+                stream.print("categorical");
+                int nLevels = ((CategoricalColumn) col).getLevels().length;
+                stream.print("  with " + nLevels + " levels");
+            }
+            stream.println();
+        }
+    }
 
    /**
      * Display the content of the data table to standard output.
