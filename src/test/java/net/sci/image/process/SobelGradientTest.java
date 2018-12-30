@@ -3,11 +3,19 @@
  */
 package net.sci.image.process;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.io.IOException;
+
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.Float32Array3D;
+import net.sci.array.scalar.ScalarArray;
 import net.sci.array.vector.Float32VectorArray2D;
 import net.sci.array.vector.Float32VectorArray3D;
+import net.sci.array.vector.VectorArray;
+import net.sci.image.DisplaySettings;
+import net.sci.image.Image;
 
 import org.junit.Test;
 
@@ -75,5 +83,29 @@ public class SobelGradientTest
         assertEquals(-50.0, grad.getValue(5, 7, 5, 1), .1);
         assertEquals( 50.0, grad.getValue(5, 5, 3, 2), .1);
         assertEquals(-50.0, grad.getValue(5, 5, 7, 2), .1);
+    }
+
+    /**
+     * Test method for {@link net.sci.image.process.SobelGradient#process(net.sci.image.Image)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcessImage() throws IOException
+    {
+        String fileName = getClass().getResource("/files/grains.tif").getFile();
+        Image image = Image.readImage(new File(fileName));
+        
+        assertNotNull(image);
+        
+        SobelGradient algo = new SobelGradient();
+        Image gradImage = algo.process(image);
+        
+        VectorArray<?> vectorArray = (VectorArray<?>) gradImage.getData();
+        ScalarArray<?> channelArray = vectorArray.channel(0);
+        Image resultImage = new Image(channelArray, gradImage);
+        
+        DisplaySettings settings = resultImage.getDisplaySettings();
+        double[] range = settings.getDisplayRange();
+        assertTrue(range[0] < 0);
     }
 }
