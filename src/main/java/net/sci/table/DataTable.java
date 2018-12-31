@@ -364,6 +364,12 @@ public class DataTable implements Table
         }
 
         @Override
+        public double[] getValues()
+        {
+            return data[colIndex];
+        }
+        
+        @Override
         public int length()
         {
             return nRows;

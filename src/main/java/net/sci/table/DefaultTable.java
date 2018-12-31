@@ -450,6 +450,18 @@ public class DefaultTable implements Table
                 return null;
             return colNames[colIndex];
         }
+
+        @Override
+        public double getValue(int row)
+        {
+            return data[colIndex][row];
+        }
+
+        @Override
+        public double[] getValues()
+        {
+            return data[colIndex];
+        }
 	}
 	
 	class CategoricalColumnView extends ColumnView implements CategoricalColumn
@@ -487,12 +499,6 @@ public class DefaultTable implements Table
             super(index);
         }
         
-        @Override
-        public double getValue(int row)
-        {
-            return data[colIndex][row];
-        }
-
         @Override
         public Iterator<Double> iterator()
         {
