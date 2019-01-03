@@ -141,7 +141,7 @@ public class LinearRing2D implements Polyline2D, Contour2D
     /**
      * Returns the inner collection of vertices.
      */
-    public ArrayList<Point2D> vertices()
+    public Iterable<Point2D> vertexPositions()
     {
         return vertices;
     }

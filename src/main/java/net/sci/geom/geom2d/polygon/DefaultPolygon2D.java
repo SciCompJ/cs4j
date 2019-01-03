@@ -5,7 +5,6 @@ package net.sci.geom.geom2d.polygon;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
@@ -18,7 +17,7 @@ import net.sci.geom.geom2d.line.LineSegment2D;
  * 
  * @see LinearRing2D
  */
-public class SimplePolygon2D implements Polygon2D
+public class DefaultPolygon2D implements Polygon2D
 {
     // ===================================================================
     // Class variables
@@ -36,12 +35,12 @@ public class SimplePolygon2D implements Polygon2D
     /**
      * Empty constructor: no vertex.
      */
-    public SimplePolygon2D()
+    public DefaultPolygon2D()
     {
         vertices = new ArrayList<Point2D>();
     }
     
-    public SimplePolygon2D(Collection<? extends Point2D> points)
+    public DefaultPolygon2D(Collection<? extends Point2D> points)
     {
         this.vertices = new ArrayList<Point2D>(points.size());
         this.vertices.addAll(points);
@@ -53,7 +52,7 @@ public class SimplePolygon2D implements Polygon2D
      * @param vertices
      *            the vertices stored in an array of Point2D
      */
-    public SimplePolygon2D(Point2D... vertices)
+    public DefaultPolygon2D(Point2D... vertices)
     {
         this.vertices = new ArrayList<Point2D>(vertices.length);
         for (Point2D vertex : vertices)
@@ -68,7 +67,7 @@ public class SimplePolygon2D implements Polygon2D
      * @param ycoords
      *            the y coordinate of each vertex
      */
-    public SimplePolygon2D(double[] xcoords, double[] ycoords)
+    public DefaultPolygon2D(double[] xcoords, double[] ycoords)
     {
         this.vertices = new ArrayList<Point2D>(xcoords.length);
         for (int i = 0; i < xcoords.length; i++)
@@ -79,7 +78,7 @@ public class SimplePolygon2D implements Polygon2D
      * Ensures the polygon has enough memory for storing the required number of
      * vertices.
      */
-    private SimplePolygon2D(int nVertices)
+    private DefaultPolygon2D(int nVertices)
     {
         this.vertices = new ArrayList<Point2D>(nVertices);
     }
@@ -89,7 +88,7 @@ public class SimplePolygon2D implements Polygon2D
     // Methods implementing the PolygonalDomain2D interface
     
     @Override
-    public SimplePolygon2D complement()
+    public DefaultPolygon2D complement()
     {
         // create a new collection of vertices in reverse order, keeping first vertex unchanged.
         int n = this.vertexNumber();
@@ -101,7 +100,7 @@ public class SimplePolygon2D implements Polygon2D
         }
         
         // create a new SimplePolygon2D with this new set of vertices
-        SimplePolygon2D reverse = new SimplePolygon2D(0);
+        DefaultPolygon2D reverse = new DefaultPolygon2D(0);
         reverse.vertices = newVertices;
         return reverse;
     }
@@ -140,19 +139,16 @@ public class SimplePolygon2D implements Polygon2D
     // Implementation of the Polygon2D interface
     
     /**
-     * Returns the vertices of this polygon. The result is a pointer to the inner
-     * collection of vertices.
+     * Returns the vertex positions of this polygon. The result is a pointer to the inner
+     * collection of vertex positions.
+     * 
+     * @return a reference to the inner vertex positions array
      */
-    public Collection<Point2D> vertices() 
+    public Iterable<Point2D> vertexPositions() 
     {
         return vertices;
     }
-    
-    public Iterator<Point2D> vertexIterator()
-    {
-        return this.vertices.iterator();
-    }
-    
+        
     /**
      * @return the number of vertices in this polygon.
      */

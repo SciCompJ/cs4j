@@ -3,7 +3,6 @@
  */
 package net.sci.geom.geom2d.polygon;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import net.sci.geom.geom2d.Box2D;
@@ -28,11 +27,11 @@ public interface Polyline2D extends Curve2D
     // Methods for managing vertices
     
     /**
-     * Returns a pointer to the vertices.
+     * Returns an iterable over the positions of the vertices.
      * 
-     * @return a pointer to the collection of vertices
+     * @return the positions of the vertices
      */
-    public Collection<Point2D> vertices();
+    public Iterable<Point2D> vertexPositions();
     
     /**
      * Returns the number of vertices.
@@ -44,6 +43,10 @@ public interface Polyline2D extends Curve2D
 
     public Iterator<LineSegment2D> edgeIterator();
 
+
+    // ===================================================================
+    // method related to Curve2D 
+
     /**
      * Returns the polyline composed with the same vertices, but in reverse order.
      * 
@@ -53,7 +56,7 @@ public interface Polyline2D extends Curve2D
     
 
     // ===================================================================
-    // Geoemtry methods 
+    // Geometry methods 
 
     /**
      * Transforms this geometry with the specified affine transform.
@@ -126,7 +129,7 @@ public interface Polyline2D extends Curve2D
         double ymax = Double.NEGATIVE_INFINITY;
         
         // compute min/max for each coordinate
-        for (Point2D vertex : this.vertices())
+        for (Point2D vertex : this.vertexPositions())
         {
             double x = vertex.getX();
             double y = vertex.getY();

@@ -5,7 +5,6 @@ package net.sci.geom.geom2d.polygon;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.transform.AffineTransform2D;
@@ -31,7 +30,7 @@ public interface Polygon2D extends PolygonalDomain2D
      */
     public static Polygon2D create(Collection<? extends Point2D> vertices)
     {
-        return new SimplePolygon2D(vertices);
+        return new DefaultPolygon2D(vertices);
     }
 
     /**
@@ -43,7 +42,7 @@ public interface Polygon2D extends PolygonalDomain2D
      */
     public static Polygon2D create(Point2D... vertices)
     {
-        return new SimplePolygon2D(vertices);
+        return new DefaultPolygon2D(vertices);
     }
     
     /**
@@ -57,7 +56,7 @@ public interface Polygon2D extends PolygonalDomain2D
      */
     public static Polygon2D create(double[] xcoords, double[] ycoords)
     {
-        return new SimplePolygon2D(xcoords, ycoords);
+        return new DefaultPolygon2D(xcoords, ycoords);
     }
     
     // ===================================================================
@@ -66,11 +65,10 @@ public interface Polygon2D extends PolygonalDomain2D
     @Override
     public default Polygon2D transform(AffineTransform2D trans)
     {
-        ArrayList<Point2D> newVertices = new ArrayList<>(this.vertices().size());
-        Iterator<Point2D> iter = vertexIterator();
-        while(iter.hasNext())
+        ArrayList<Point2D> newVertices = new ArrayList<>(this.vertexNumber());
+        for (Point2D point : this.vertexPositions())
         {
-            newVertices.add(iter.next().transform(trans));
+            newVertices.add(point.transform(trans));
         }
         return Polygon2D.create(newVertices);
     }
