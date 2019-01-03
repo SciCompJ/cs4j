@@ -42,6 +42,11 @@ public interface PolygonalDomain2D extends Domain2D
     // Management of vertices
     
     /**
+     * @return an Iterable over the vertices.
+     */
+    public Iterable<? extends Polygon2D.Vertex> vertices();
+    
+    /**
      * Returns the vertex positions of this polygon.
      * 
      * @return the vertex positions of this polygon

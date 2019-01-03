@@ -142,4 +142,52 @@ public interface Polyline2D extends Curve2D
         // return new Bounding Box
         return new Box2D(xmin, xmax, ymin, ymax);
     }
+    
+    // ===================================================================
+    // Inner interfaces
+    
+    /**
+     * A vertex of a polygon, or a polygonal domain.
+     */
+    public interface Vertex
+    {
+        /**
+         * @return the position of this vertex, as a Point2D
+         */
+        public Point2D position();
+
+        /**
+         * Changes the position of this vertex.
+         * 
+         * @param newPos
+         *            the new position of this vertex.
+         */
+        public void setPosition(Point2D newPos);
+        
+        /**
+         * @return the next vertex along the boundary of the polygon
+         */
+        public Vertex next();
+    }
+    
+    /**
+     * An edge of a polygon, between two vertices.
+     */
+    public interface Edge
+    {
+        /**
+         * @return the source vertex of this edge
+         */
+        public Vertex source();
+        
+        /**
+         * @return the target vertex of this edge
+         */
+        public Vertex target();
+        
+        /**
+         * @return the line segment representing this edge
+         */
+        public LineSegment2D lineSegment();
+    }
 }

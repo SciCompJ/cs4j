@@ -75,24 +75,18 @@ public class LineString2D implements Polyline2D
     
  
     // ===================================================================
-    // Management of vertices
+    // Methods specific to LineString2D
     
     /**
-     * Returns the inner collection of vertices.
-     */
-    public Iterable<Point2D> vertexPositions()
-    {
-        return vertices;
-    }
-    
-    /**
-     * Returns the number of vertices.
+     * Finds the closest vertex to the input point.
      * 
-     * @return the number of vertices
+     * @param point
+     *            the query point
+     * @return the closest vertex to the query point
      */
-    public int vertexNumber()
+    public Vertex closestVertex(Point2D point)
     {
-        return vertices.size();
+        return new Vertex(closestVertexIndex(point));
     }
 
     /**
@@ -119,7 +113,29 @@ public class LineString2D implements Polyline2D
         
         return index;
     }
+
+
+    // ===================================================================
+    // Management of vertices
     
+    /**
+     * Returns the inner collection of vertices.
+     */
+    public Iterable<Point2D> vertexPositions()
+    {
+        return vertices;
+    }
+    
+    /**
+     * Returns the number of vertices.
+     * 
+     * @return the number of vertices
+     */
+    public int vertexNumber()
+    {
+        return vertices.size();
+    }
+
     public Iterator<LineSegment2D> edgeIterator()
     {
     	return new EdgeIterator();
@@ -244,5 +260,53 @@ public class LineString2D implements Polyline2D
 			int index2 = (index + 1) % vertices.size();
 			return new LineSegment2D(vertices.get(index), vertices.get(index2));
 		}
+    }
+    
+    // ===================================================================
+    // Inner class for representing vertices
+
+    public class Vertex implements Polyline2D.Vertex
+    {
+        int index;
+        
+        public Vertex(int index)
+        {
+            this.index = index;
+        }
+
+        @Override
+        public Point2D position()
+        {
+            return vertices.get(index);
+        }
+
+        @Override
+        public void setPosition(Point2D newPos)
+        {
+            vertices.set(index, newPos);
+        }
+
+        @Override
+        public Vertex next()
+        {
+            return new Vertex((index + 1) % vertices.size());
+        }
+    }
+    
+    public class VertexIterator implements Iterator<Vertex>
+    {
+        int index = 0;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < vertices.size();
+        }
+
+        @Override
+        public Vertex next()
+        {
+            return new Vertex(index++);
+        }
     }
 }

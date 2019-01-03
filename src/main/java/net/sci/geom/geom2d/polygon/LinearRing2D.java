@@ -83,6 +83,18 @@ public class LinearRing2D implements Polyline2D, Contour2D
     // Methods specific to LinearRing2D
 
     /**
+     * Finds the closest vertex to the input point.
+     * 
+     * @param point
+     *            the query point
+     * @return the closest vertex to the query point
+     */
+    public Vertex closestVertex(Point2D point)
+    {
+        return new Vertex(closestVertexIndex(point));
+    }
+
+    /**
      * Computes the index of the closest vertex to the input point.
      * 
      * @param point
@@ -432,5 +444,53 @@ public class LinearRing2D implements Polyline2D, Contour2D
 			int index2 = (index + 1) % vertices.size();
 			return new LineSegment2D(vertices.get(index), vertices.get(index2));
 		}
+    }
+    
+    // ===================================================================
+    // Inner class for representing vertices
+
+    public class Vertex implements Polyline2D.Vertex
+    {
+        int index;
+        
+        public Vertex(int index)
+        {
+            this.index = index;
+        }
+
+        @Override
+        public Point2D position()
+        {
+            return vertices.get(index);
+        }
+
+        @Override
+        public void setPosition(Point2D newPos)
+        {
+            vertices.set(index, newPos);
+        }
+
+        @Override
+        public Vertex next()
+        {
+            return new Vertex((index + 1) % vertices.size());
+        }
+    }
+    
+    public class VertexIterator implements Iterator<Vertex>
+    {
+        int index = 0;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < vertices.size();
+        }
+
+        @Override
+        public Vertex next()
+        {
+            return new Vertex(index++);
+        }
     }
 }

@@ -5,6 +5,7 @@ package net.sci.geom.geom2d.polygon;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
@@ -137,6 +138,19 @@ public class DefaultPolygon2D implements Polygon2D
 
     // ===================================================================
     // Implementation of the Polygon2D interface
+    
+    @Override
+    public Iterable<Vertex> vertices()
+    {
+        return new Iterable<Vertex>()
+        {
+            @Override
+            public Iterator<Vertex> iterator()
+            {
+                return new VertexIterator();
+            }
+        };
+    }
     
     /**
      * Returns the vertex positions of this polygon. The result is a pointer to the inner
@@ -356,4 +370,52 @@ public class DefaultPolygon2D implements Polygon2D
         return new Box2D(xmin, xmax, ymin, ymax);
     }
 
+    
+    // ===================================================================
+    // Inner class for representing vertices
+
+    public class Vertex implements Polygon2D.Vertex
+    {
+        int index;
+        
+        public Vertex(int index)
+        {
+            this.index = index;
+        }
+
+        @Override
+        public Point2D position()
+        {
+            return vertices.get(index);
+        }
+
+        @Override
+        public void setPosition(Point2D newPos)
+        {
+            vertices.set(index, newPos);
+        }
+
+        @Override
+        public net.sci.geom.geom2d.polygon.Polygon2D.Vertex next()
+        {
+            return new Vertex((index + 1) % vertices.size());
+        }
+    }
+    
+    public class VertexIterator implements Iterator<Vertex>
+    {
+        int index = 0;
+
+        @Override
+        public boolean hasNext()
+        {
+            return index < vertices.size();
+        }
+
+        @Override
+        public Vertex next()
+        {
+            return new Vertex(index++);
+        }
+    }
 }
