@@ -88,6 +88,14 @@ public class DefaultPolygon2D implements Polygon2D
     // Methods implementing the PolygonalDomain2D interface
     
     @Override
+    public Iterable<LinearRing2D> rings()
+    {
+        ArrayList<LinearRing2D> rings = new ArrayList<LinearRing2D>(1); 
+        rings.add(new LinearRing2D(this.vertices));
+        return rings;
+    }
+
+    @Override
     public DefaultPolygon2D complement()
     {
         // create a new collection of vertices in reverse order, keeping first vertex unchanged.

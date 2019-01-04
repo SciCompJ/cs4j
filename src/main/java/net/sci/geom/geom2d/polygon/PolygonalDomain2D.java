@@ -19,6 +19,12 @@ public interface PolygonalDomain2D extends Domain2D
     // ===================================================================
     // New methods
     
+    /**
+     * @return the set of linear rings that compose the boundary of this
+     *         polygonal  domain.
+     */
+    public Iterable<LinearRing2D> rings();
+    
     public PolygonalDomain2D transform(AffineTransform2D trans);
     
     /**

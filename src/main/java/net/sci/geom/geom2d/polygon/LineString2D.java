@@ -229,20 +229,19 @@ public class LineString2D implements Polyline2D
     	/**
     	 * Index of the first vertex of current edge
     	 */
-    	int index = -1;
+    	int index = 0;
 
     	@Override
 		public boolean hasNext()
 		{
-			return index < vertices.size() - 2;
+			return index < vertices.size() - 1;
 		}
 
 		@Override
 		public LineSegment2D next()
 		{
-			index++;
 			int index2 = (index + 1) % vertices.size();
-			return new LineSegment2D(vertices.get(index), vertices.get(index2));
+			return new LineSegment2D(vertices.get(index++), vertices.get(index2));
 		}
     }
 }
