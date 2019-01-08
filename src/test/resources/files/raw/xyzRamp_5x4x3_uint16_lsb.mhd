@@ -1,0 +1,7 @@
+ObjectType = Image
+NDims = 2
+DimSize = 5 4
+ElementType = MET_USHORT
+ElementNumberOfChannels = 3
+ElementByteOrderMSB = false
+ElementDataFile = xyzRamp_5x4x3_uint16_lsb.raw

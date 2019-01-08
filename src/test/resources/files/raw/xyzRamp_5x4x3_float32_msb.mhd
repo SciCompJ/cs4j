@@ -1,0 +1,7 @@
+ObjectType = Image
+NDims = 2
+DimSize = 5 4
+ElementType = MET_FLOAT
+ElementNumberOfChannels = 3
+ElementByteOrderMSB = true
+ElementDataFile = xyzRamp_5x4x3_float32_msb.raw

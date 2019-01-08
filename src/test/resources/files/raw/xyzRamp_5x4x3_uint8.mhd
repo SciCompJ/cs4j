@@ -1,0 +1,8 @@
+ObjectType = Image
+NDims = 2
+DimSize = 5 4
+ElementType = MET_UCHAR
+ElementNumberOfChannels = 3
+BinaryData = true
+ElementByteOrderMSB = false
+ElementDataFile = xyzRamp_5x4x3_uint8.raw

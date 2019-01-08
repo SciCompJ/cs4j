@@ -165,9 +165,9 @@ public class BinaryDataReader implements Closeable
             int b2 = byteBuffer[2 * i + 1] & 0x00FF;
         
             if (littleEndian)
-                buffer[i] = (short) ((b1 << 8) + b2);
-            else
                 buffer[i] = (short) ((b2 << 8) + b1);
+            else
+                buffer[i] = (short) ((b1 << 8) + b2);
         }
 
         // restore pointer and return result

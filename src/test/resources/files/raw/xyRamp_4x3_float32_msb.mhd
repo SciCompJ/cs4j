@@ -1,0 +1,6 @@
+ObjectType = Image
+NDims = 2
+DimSize = 4 3
+ElementType = MET_FLOAT
+ElementByteOrderMSB = true
+ElementDataFile = xyRamp_4x3_float32_msb.raw
