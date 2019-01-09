@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 import java.io.PrintStream;
 import java.util.Locale;
+import java.util.function.BiFunction;
 
 import net.sci.array.Array2D;
 
@@ -38,6 +39,15 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	// =============================================================
 	// Methods specific to ScalarArray2D
 
+	public void populate(BiFunction<Double,Double,Double> fun)
+	{
+        for (int[] pos : this.positions())
+        {
+            this.setValue(pos[0], pos[1],
+                    fun.apply((double) pos[0], (double) pos[1]));
+        }
+	}
+	
 	/**
 	 * Prints the content of this array on the specified stream.
 	 * 

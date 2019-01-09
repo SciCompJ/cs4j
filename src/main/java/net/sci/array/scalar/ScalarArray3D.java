@@ -36,6 +36,15 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     // =============================================================
     // New methods
 
+    public void populate(TriFunction<Double,Double,Double,Double> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setValue(pos[0], pos[1], pos[2],
+                    fun.apply((double) pos[0], (double) pos[1], (double) pos[2]));
+        }
+    }
+    
     public abstract double getValue(int x, int y, int z);
     
     public abstract void setValue(int x, int y, int z, double value);

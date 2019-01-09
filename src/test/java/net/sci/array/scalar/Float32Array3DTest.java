@@ -32,5 +32,23 @@ public class Float32Array3DTest
 
         assertEquals(3, n);
     }
+  
+    /**
+     * Test method for {@link net.sci.array.scalar.Float32Array3D#populate(net.sci.array.scalar.TriFunction)}.
+     */
+    @Test
+    public final void testPopulate()
+    {
+        Float32Array3D array = Float32Array3D.create(5, 5, 5);
+        array.populate((x, y, z) -> Math.hypot(Math.hypot(x - 2, y - 2), z - 2));
+
+        assertEquals(0, array.getValue(2, 2, 2), .1);
+        assertEquals(2, array.getValue(0, 2, 2), .1);
+        assertEquals(2, array.getValue(4, 2, 2), .1);
+        assertEquals(2, array.getValue(2, 0, 2), .1);
+        assertEquals(2, array.getValue(2, 4, 2), .1);
+        assertEquals(2, array.getValue(2, 2, 0), .1);
+        assertEquals(2, array.getValue(2, 2, 4), .1);
+    }
     
 }

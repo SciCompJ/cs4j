@@ -9,14 +9,16 @@ import org.junit.runners.Suite;
     ScalarArrayTest.class,
     UInt8ArrayTest.class,
     UInt8ArrayWrapperTest.class,
-    // 2D implementations
+    // 2D abstract classes
 	BinaryArray2DTest.class,
+    Float32Array2DTest.class,
+    UInt8Array2DTest.class,
+    // 2D implementations
 	BufferedDoubleArray2DTest.class,
 	BufferedInt16Array2DTest.class,
 	BufferedUInt16Array2DTest.class,
 	BufferedUInt8Array2DTest.class,
-	UInt8Array2DTest.class,
-    // 3D implementations
+    // 3D abstract classes
 	BinaryArray3DTest.class,
     UInt8Array3DTest.class,
     UInt16Array3DTest.class,
@@ -24,6 +26,7 @@ import org.junit.runners.Suite;
     Int32Array3DTest.class,
     Float32Array3DTest.class,
     Float64Array3DTest.class,
+    // 3D implementations
     BufferedUInt8Array3DTest.class,
     SlicedUInt8Array3DTest.class,
     // ND implementations
