@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.shape;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.Array3D;
@@ -12,7 +13,7 @@ import net.sci.array.ArrayOperator;
  * @author dlegland
  *
  */
-public class Flip implements ArrayOperator
+public class Flip extends AlgoStub implements ArrayOperator
 {
 	int dim;
 	
