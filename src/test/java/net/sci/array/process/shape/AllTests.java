@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     ConcatenateTest.class,
+    CropTest.class,
     FlipTest.class,
 	OrthogonalProjectionTest.class,
 	PermuteDimensionsTest.class,

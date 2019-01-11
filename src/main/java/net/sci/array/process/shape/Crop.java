@@ -9,6 +9,13 @@ import net.sci.array.Array2D;
 import net.sci.array.ArrayOperator;
 
 /**
+ * Perform crop on an array.
+ * 
+ * Several ways for using it:
+ * <ul>
+ * <li> <code> Array output = crop.process(input);</code> </li>
+ * <li> <code> crop.process(input, output);</code> </li>
+ * </ul>
  * @author dlegland
  *
  */
@@ -20,9 +27,9 @@ public class Crop extends AlgoStub implements ArrayOperator
     int[] minIndices;
 
     /**
-     * The maximum index to keep (exclusive) for each dimension
+     * The size of the cropped array in each dimension.
      */
-    int[] maxIndices;
+    int[] sizes;
     
     /**
      * 
@@ -33,32 +40,57 @@ public class Crop extends AlgoStub implements ArrayOperator
      */
     public Crop(int[] minIndices, int[] maxIndices)
     {
+        if (minIndices.length != maxIndices.length)
+        {
+            throw new IllegalArgumentException("both rrays mus have same length");
+        }
         this.minIndices = minIndices;
-        this.maxIndices = maxIndices;
+
+        this.sizes = computeSizes(minIndices, maxIndices);
+    }
+    
+    private int[] computeSizes(int[] minIndices, int[] maxIndices)
+    {
+        int nd = minIndices.length;
+        int[] sizes = new int[nd];
+        for (int d = 0; d < nd; d++)
+        {
+            int siz = maxIndices[d] - minIndices[d];
+            if (siz < 1)
+            {
+                throw new IllegalArgumentException("size of crop array must be reater that 0");
+            }
+            sizes[d] = siz;
+        }
+        return sizes;
     }
 
     @Override
     public <T> Array<?> process(Array<T> array)
     {
-        if (array instanceof Array2D)
-        {
-            return process2d((Array2D<?>) array);
-        }
-        
-        // use generic method
-        return processNd(array);
+        // create result array
+        Array<T> res = array.newInstance(sizes);
+
+        return process(array, res);
     }
 
+    /**
+     * Specific implementation for 2D arrays
+     * 
+     * @param array
+     *            the input array
+     * @return the result of crop
+     */
     public <T> Array2D<?> process2d(Array2D<T> array)
     {
-        if (minIndices.length != 2 || maxIndices.length != 2)
+        if (minIndices.length != 2 || sizes.length != 2)
         {
             throw new RuntimeException("min and max indices arrays must have length of 2");
         }
         
         // compute dimensions of new array
-        int size0 = this.maxIndices[0] - this.minIndices[0];
-        int size1 = this.maxIndices[1] - this.minIndices[1];
+        int size0 = this.sizes[0];
+        int size1 = this.sizes[1];
         
         // create result array
         Array2D<T> res = Array2D.wrap(array.newInstance(size0, size1));
@@ -79,32 +111,51 @@ public class Crop extends AlgoStub implements ArrayOperator
     public <T> Array<?> processNd(Array<T> array)
     {
         int nd = array.dimensionality();
-        if (minIndices.length != nd || maxIndices.length != nd)
+        if (minIndices.length != nd || sizes.length != nd)
         {
             throw new RuntimeException("min and max indices arrays must have length of " + nd);
         }
 
-        // compute dimensions of new array
-        int[] dims = new int[nd];
-        for (int d = 0;d < nd; d++)
-        {
-            dims[d] = this.maxIndices[d] - this.minIndices[d];
-        }
-        
         // create result array
-        Array<T> res = array.newInstance(dims);
+        Array<T> res = array.newInstance(sizes);
 
         // iterate over position of result
+        return process(array, res);
+    }
+
+    public <T> Array<T> process(Array<T> source, Array<T> target)
+    {
+        int nd = source.dimensionality();
+        if (minIndices.length != nd || sizes.length != nd)
+        {
+            throw new RuntimeException("min indices and size arrays must have length of " + nd);
+        }
+        if (target.dimensionality() != nd)
+        {
+            throw new RuntimeException("Source and target arrays musthave same dimensionality");
+        }
+
+        // Check target array dimensions
+        for (int d = 0;d < nd; d++)
+        {
+            if (target.getSize(d) != sizes[d])
+            {
+                throw new IllegalArgumentException(
+                        "Dimensions of target array does not match crop dimensions");
+            }
+        }
+        
+        // iterate over position of result
         int[] pos2 = new int[nd];
-        for (int[] pos : res.positions())
+        for (int[] pos : target.positions())
         {
             for (int d = 0; d <nd; d++)
             {
                 pos2[d] = minIndices[d] + pos[d];
             }
-            res.set(pos, array.get(pos2));
+            target.set(pos, source.get(pos2));
         }
         
-        return res;
+        return target;
     }
 }
