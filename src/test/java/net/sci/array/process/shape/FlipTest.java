@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.Array;
+import net.sci.array.Arrays;
 import net.sci.array.scalar.BufferedUInt8Array2D;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt8;
@@ -194,7 +195,7 @@ public class FlipTest
 		assertEquals(35, resFlip.getValue(new int[]{5, 0}), .1);
 	}
 
-	/**
+    /**
      * Test method for {@link net.sci.array.process.shape.Flip#process(net.sci.array.Array)}.
      */
     @Test
@@ -219,6 +220,36 @@ public class FlipTest
         assertEquals(sizeY, resFlip.getSize(1));
         
         assertEquals(new UInt8(35), resFlip.get(new int[]{0, 3}));
+    }
+
+    /**
+     * Test method for {@link net.sci.array.process.shape.Flip#process(net.sci.array.Array)}.
+     */
+    @Test
+    public final void testProcessArray_String_2D_View()
+    {
+        int sizeX = 6;
+        int sizeY = 4;
+        Array<String> array = Arrays.create(new int[]{sizeX, sizeY}, "");
+        String[] digits = new String[]{"A", "B", "C", "D", "E", "F"};
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                String str = digits[y] + digits[x];
+                array.set(new int[]{x, y}, str);
+            }
+        }
+        
+        Flip flipX = new Flip(0);
+        Array<?> resFlip = flipX.view(array);
+        
+        assertEquals(2, resFlip.dimensionality());
+        assertEquals(sizeX, resFlip.getSize(0));
+        assertEquals(sizeY, resFlip.getSize(1));
+        
+        assertEquals("DF", resFlip.get(new int[]{0, 3}));
+        assertEquals("DA", resFlip.get(new int[]{5, 3}));
     }
 
 }

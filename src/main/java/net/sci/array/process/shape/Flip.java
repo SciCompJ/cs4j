@@ -10,7 +10,6 @@ import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.Array3D;
 import net.sci.array.ArrayOperator;
-import net.sci.array.scalar.UInt8Array;
 
 /**
  * @author dlegland
@@ -140,11 +139,6 @@ public class Flip extends AlgoStub implements ArrayOperator
         
     public <T> Array<?> view(Array<T> array)
     {
-        if (!(array instanceof UInt8Array))
-        {
-            throw new RuntimeException("Only implemented for UInt8Array instances");
-        }
-        
         int[] dims = array.getSize();
         Function<int[], int[]> mapping = (int[] pos) ->
         {
@@ -154,6 +148,6 @@ public class Flip extends AlgoStub implements ArrayOperator
             return pos2;
         };
         
-        return ((UInt8Array) array).view(dims, mapping);
+        return array.view(dims, mapping);
     }
 }

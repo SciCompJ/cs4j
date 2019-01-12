@@ -3,6 +3,8 @@
  */
 package net.sci.array;
 
+import java.util.function.Function;
+
 import net.sci.array.scalar.BinaryArray;
 
 /**
@@ -69,9 +71,22 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 *
 	 * @return a new writable copy of this array
 	 */
-	public Array<T> duplicate();
+	public default Array<T> duplicate()
+	{
+	    Array<T> dup = newInstance(getSize());
+	    for (int[] pos : positions())
+	    {
+	        dup.set(pos, get(pos));
+	    }
+	    return dup;
+	}
 	
-	/**
+    public default Array<T> view(int[] newDims, Function<int[], int[]> coordsMapping)
+    {
+        return new View<T>(this, newDims, coordsMapping);
+    }
+
+    /**
 	 * Fills the array with the specified (typed) value.
 	 * 
 	 * @param value an instance of T for filling the array.
@@ -269,4 +284,129 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	    public int[] get();
 	    public int get(int dim);
 	}
+	
+    static class View<T> implements Array<T>
+    {
+        Array<T> array;
+        
+        int[] newDims;
+        
+        Function<int[], int[]> coordsMapping;
+
+        /**
+         * 
+         */
+        public View(Array<T> array, int[] newDims, Function<int[], int[]> coordsMapping)
+        {
+            this.array = array;
+            this.newDims = newDims;
+            this.coordsMapping = coordsMapping;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#dimensionality()
+         */
+        @Override
+        public int dimensionality()
+        {
+            return newDims.length;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#getSize()
+         */
+        @Override
+        public int[] getSize()
+        {
+            return newDims;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#getSize(int)
+         */
+        @Override
+        public int getSize(int dim)
+        {
+            return newDims[dim];
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#positionIterator()
+         */
+        @Override
+        public net.sci.array.Array.PositionIterator positionIterator()
+        {
+            return new DefaultPositionIterator(newDims);
+        }
+
+        @Override
+        public Class<T> getDataType()
+        {
+            return array.getDataType();
+        }
+
+        @Override
+        public Array<T> newInstance(int... dims)
+        {
+            return array.newInstance(dims);
+        }
+
+        @Override
+        public net.sci.array.Array.Factory<T> getFactory()
+        {
+            return array.getFactory();
+        }
+
+        @Override
+        public T get(int[] pos)
+        {
+            return array.get(coordsMapping.apply(pos));
+        }
+
+        @Override
+        public void set(int[] pos, T value)
+        {
+            array.set(coordsMapping.apply(pos), value);
+        }
+
+        @Override
+        public net.sci.array.Array.Iterator<T> iterator()
+        {
+            return new Iterator<T>()
+            {
+                PositionIterator iter = positionIterator();
+
+                @Override
+                public boolean hasNext()
+                {
+                    return iter.hasNext();
+                }
+
+                @Override
+                public void forward()
+                {
+                    iter.forward();
+                }
+
+                @Override
+                public T next()
+                {
+                    iter.forward();
+                    return View.this.get(iter.get());
+                }
+
+                @Override
+                public T get()
+                {
+                    return View.this.get(iter.get());
+                }
+
+                @Override
+                public void set(T value)
+                {
+                    View.this.set(iter.get(), value);
+                }
+            };
+        }
+    }
 }
