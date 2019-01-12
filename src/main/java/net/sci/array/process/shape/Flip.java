@@ -3,11 +3,14 @@
  */
 package net.sci.array.process.shape;
 
+import java.util.function.Function;
+
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.Array3D;
 import net.sci.array.ArrayOperator;
+import net.sci.array.scalar.UInt8Array;
 
 /**
  * @author dlegland
@@ -134,32 +137,23 @@ public class Flip extends AlgoStub implements ArrayOperator
         }
     }
     
-//    public <T1 extends T2, T2> void process(Array<T1> input, Array<T2> output)
-//    {
-//        int nd = input.dimensionality();
-//        int sizeDim = input.getSize(this.dim);
-//        int[] pos2 = new int[nd];
-//
-//        // iterate over positions of input array
-//        CursorIterator<? extends Cursor> cursIter = input.cursorIterator();
-//        while (cursIter.hasNext())
-//        {
-//            cursIter.forward();
-//            int[] pos = cursIter.getPosition();
-//            
-//            System.arraycopy(pos, 0, pos2, 0, nd);
-//            pos[dim] = sizeDim - 1 - pos[dim];
-//            output.set(pos2, input.get(pos));
-//        }
-//    }
-
-//	public int[] flipPosition(int[] pos, int[] arrayDims)
-//	{
-//	    int nd = pos.length;
-//	    int[] pos2 = new int[nd];
-//	    System.arraycopy(pos, 0, pos2, 0, nd);
-//	    pos2[this.dim] = arrayDims[this.dim] - 1 - pos[this.dim];
-//	    return pos2;
-//	}
-
+        
+    public <T> Array<?> view(Array<T> array)
+    {
+        if (!(array instanceof UInt8Array))
+        {
+            throw new RuntimeException("Only implemented for UInt8Array instances");
+        }
+        
+        int[] dims = array.getSize();
+        Function<int[], int[]> mapping = (int[] pos) ->
+        {
+            int[] pos2 = new int[pos.length];
+            System.arraycopy(pos, 0, pos2, 0, pos.length);
+            pos2[dim] = array.getSize(dim) - 1 - pos[dim];
+            return pos2;
+        };
+        
+        return ((UInt8Array) array).view(dims, mapping);
+    }
 }

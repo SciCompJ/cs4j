@@ -3,6 +3,10 @@
  */
 package net.sci.array.scalar;
 
+import java.util.function.Function;
+
+import net.sci.array.DefaultPositionIterator;
+
 
 
 /**
@@ -109,6 +113,18 @@ public interface Float32Array extends ScalarArray<Float32>
 		return factory;
 	}
 
+    @Override
+    public default Float32 get(int[] pos)
+    {
+        return new Float32(getFloat(pos)); 
+    }
+
+    @Override
+    public default void set(int[] pos, Float32 value)
+    {
+        setFloat(pos, value.getFloat());
+    }
+
 	@Override
 	public default Float32Array duplicate()
 	{
@@ -122,6 +138,11 @@ public interface Float32Array extends ScalarArray<Float32>
 		// return output
 		return result;
 	}
+
+    public default Float32Array view(int[] newDims, Function<int[], int[]> coordsMapping)
+    {
+        return new View(this, newDims, coordsMapping);
+    }
 
 	@Override
 	public default Class<Float32> getDataType()
@@ -296,4 +317,77 @@ public interface Float32Array extends ScalarArray<Float32>
 			}
 		}
 	}
+
+    static class View implements Float32Array
+    {
+        Float32Array array;
+        
+        int[] newDims;
+        
+        Function<int[], int[]> coordsMapping;
+
+        /**
+         * 
+         */
+        public View(Float32Array array, int[] newDims, Function<int[], int[]> coordsMapping)
+        {
+            this.array = array;
+            this.newDims = newDims;
+            this.coordsMapping = coordsMapping;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.scalar.ScalarArray#getValue(int[])
+         */
+        @Override
+        public double getValue(int[] pos)
+        {
+            return array.getValue(coordsMapping.apply(pos));
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
+         */
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            array.setValue(coordsMapping.apply(pos), value);
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#dimensionality()
+         */
+        @Override
+        public int dimensionality()
+        {
+            return newDims.length;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#getSize()
+         */
+        @Override
+        public int[] getSize()
+        {
+            return newDims;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#getSize(int)
+         */
+        @Override
+        public int getSize(int dim)
+        {
+            return newDims[dim];
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#positionIterator()
+         */
+        @Override
+        public net.sci.array.Array.PositionIterator positionIterator()
+        {
+            return new DefaultPositionIterator(newDims);
+        }
+    }
 }

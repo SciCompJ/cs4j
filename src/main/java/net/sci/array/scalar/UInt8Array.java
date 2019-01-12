@@ -3,6 +3,10 @@
  */
 package net.sci.array.scalar;
 
+import java.util.function.Function;
+
+import net.sci.array.DefaultPositionIterator;
+
 
 
 /**
@@ -165,6 +169,12 @@ public interface UInt8Array extends IntArray<UInt8>
 		// return result
 		return result;
 	}
+
+    public default UInt8Array view(int[] newDims, Function<int[], int[]> coordsMapping)
+    {
+        return new View(this, newDims, coordsMapping);
+    }
+
 
 	@Override
 	public default Class<UInt8> getDataType()
@@ -365,5 +375,114 @@ public interface UInt8Array extends IntArray<UInt8>
 				return iter.hasNext();
 			}
 		}
+	}
+	
+	static class View implements UInt8Array
+	{
+	    UInt8Array array;
+	    
+	    int[] newDims;
+	    
+	    Function<int[], int[]> coordsMapping;
+
+	    /**
+	     * 
+	     */
+	    public View(UInt8Array array, int[] newDims, Function<int[], int[]> coordsMapping)
+	    {
+	        this.array = array;
+	        this.newDims = newDims;
+	        this.coordsMapping = coordsMapping;
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.scalar.UInt8Array#getByte(int[])
+	     */
+	    @Override
+	    public byte getByte(int[] pos)
+	    {
+	        return array.getByte(coordsMapping.apply(pos));
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.scalar.UInt8Array#setByte(int[], byte)
+	     */
+	    @Override
+	    public void setByte(int[] pos, byte value)
+	    {
+	        array.setByte(coordsMapping.apply(pos), value);
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.scalar.IntArray#getInt(int[])
+	     */
+	    @Override
+	    public int getInt(int[] pos)
+	    {
+	        return array.getInt(coordsMapping.apply(pos));
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.scalar.IntArray#setInt(int[], int)
+	     */
+	    @Override
+	    public void setInt(int[] pos, int value)
+	    {
+	        array.setInt(coordsMapping.apply(pos), value);
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.scalar.ScalarArray#getValue(int[])
+	     */
+	    @Override
+	    public double getValue(int[] pos)
+	    {
+	        return array.getValue(coordsMapping.apply(pos));
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
+	     */
+	    @Override
+	    public void setValue(int[] pos, double value)
+	    {
+	        array.setValue(coordsMapping.apply(pos), value);
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.Array#dimensionality()
+	     */
+	    @Override
+	    public int dimensionality()
+	    {
+	        return newDims.length;
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.Array#getSize()
+	     */
+	    @Override
+	    public int[] getSize()
+	    {
+	        return newDims;
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.Array#getSize(int)
+	     */
+	    @Override
+	    public int getSize(int dim)
+	    {
+	        return newDims[dim];
+	    }
+
+	    /* (non-Javadoc)
+	     * @see net.sci.array.Array#positionIterator()
+	     */
+	    @Override
+	    public net.sci.array.Array.PositionIterator positionIterator()
+	    {
+	        return new DefaultPositionIterator(newDims);
+	    }
 	}
 }
