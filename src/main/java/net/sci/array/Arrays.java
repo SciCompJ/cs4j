@@ -3,6 +3,8 @@
  */
 package net.sci.array;
 
+import net.sci.array.generic.GenericArray;
+
 /**
  * A collection of utility methods for arrays.
  * 
@@ -11,12 +13,19 @@ package net.sci.array;
 public class Arrays
 {
     /**
-     * Private constructor to prevent instantiation.
+     * Static factory for creating generic arrays.
+     * 
+     * @param sizes
+     *            the dimensions of the array
+     * @param initValue
+     *            the initialization value used to fill the array
+     * @return a new array with specified dimensions
      */
-    private Arrays()
+    public static final <T> Array<T> create(int[] sizes, T initValue)
     {
+        return GenericArray.create(sizes, initValue);
     }
- 
+
     /**
      * Checks if two arrays have the same size along each dimension.
      * 
@@ -84,4 +93,11 @@ public class Arrays
             target.set(pos2, source.get(pos));
         }
     }
+    
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private Arrays()
+    {
+    } 
 }
