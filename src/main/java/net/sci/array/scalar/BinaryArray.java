@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 
 
+
 /**
  * A multidimensional array containing boolean values.
  * 
@@ -151,7 +152,15 @@ public interface BinaryArray extends IntArray<Binary>
 	}
 
 	
-	// =============================================================
+	/**
+     * Sets the value at the specified position, using true if value is greater than zero.
+     */
+    public default void setValue(int[] pos, double value)
+    {
+    	setBoolean(pos, value > 0);
+    }
+
+    // =============================================================
 	// Specialization of the Array interface
 
 	@Override
@@ -188,17 +197,52 @@ public interface BinaryArray extends IntArray<Binary>
 		return Binary.class;
 	}
 
-	public Iterator iterator();
+    public default Iterator iterator()
+    {
+        return new Iterator()
+        {
+            PositionIterator iter = positionIterator();
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public Binary next()
+            {
+                iter.forward();
+                return BinaryArray.this.get(iter.get());
+            }
+
+            @Override
+            public void setValue(double value)
+            {
+                BinaryArray.this.setValue(iter.get(), value);
+            }
+
+            @Override
+            public boolean getBoolean()
+            {
+                return BinaryArray.this.getBoolean(iter.get());
+            }
+
+            @Override
+            public void setBoolean(boolean b)
+            {
+                BinaryArray.this.setBoolean(iter.get(), b);
+            }
+        };
+    }
+
 	
-	/**
-	 * Sets the value at the specified position, using true if value is greater than zero.
-	 */
-	public default void setValue(int[] pos, double value)
-	{
-		setBoolean(pos, value > 0);
-	}
-
-
 	// =============================================================
 	// Inner interface
 

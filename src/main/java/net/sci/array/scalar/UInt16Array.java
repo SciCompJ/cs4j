@@ -3,6 +3,7 @@
  */
 package net.sci.array.scalar;
 
+
 /**
  * An array containing 16-bits unsigned integers.
  * 
@@ -134,7 +135,16 @@ public interface UInt16Array extends IntArray<UInt16>
         setShort(pos, value.getShort());
     }
 
-	@Override
+	/**
+     * Sets the value at the specified position, by clamping the value between 0
+     * and 2^16-1.
+     */
+    public default void setValue(int[] pos, double value)
+    {
+    	setInt(pos, (int) UInt16.clamp(value));
+    }
+
+    @Override
 	public default UInt16Array duplicate()
 	{
 		// create output array
@@ -155,16 +165,45 @@ public interface UInt16Array extends IntArray<UInt16>
 		return UInt16.class;
 	}
 
-	public Iterator iterator();
-	
-	/**
-	 * Sets the value at the specified position, by clamping the value between 0
-	 * and 2^16-1.
-	 */
-	public default void setValue(int[] pos, double value)
-	{
-		setInt(pos, (int) UInt16.clamp(value));
-	}
+    public default Iterator iterator()
+    {
+        return new Iterator()
+        {
+            PositionIterator iter = positionIterator();
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public UInt16 next()
+            {
+                iter.forward();
+                return UInt16Array.this.get(iter.get());
+            }
+
+            @Override
+            public short getShort()
+            {
+                return UInt16Array.this.getShort(iter.get());
+            }
+
+            @Override
+            public void setShort(short s)
+            {
+                UInt16Array.this.setShort(iter.get(), s);
+            }
+        };
+    }
+
 
 
 	// =============================================================

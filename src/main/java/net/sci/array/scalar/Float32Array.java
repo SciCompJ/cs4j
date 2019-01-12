@@ -4,6 +4,7 @@
 package net.sci.array.scalar;
 
 
+
 /**
  * @author dlegland
  *
@@ -128,8 +129,46 @@ public interface Float32Array extends ScalarArray<Float32>
 		return Float32.class;
 	}
 
-	public Iterator iterator();
-	
+    public default Iterator iterator()
+    {
+        return new Iterator()
+        {
+            PositionIterator iter = positionIterator();
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public Float32 next()
+            {
+                iter.forward();
+                return Float32Array.this.get(iter.get());
+            }
+
+            @Override
+            public double getValue()
+            {
+                return Float32Array.this.getValue(iter.get());
+            }
+
+            @Override
+            public void setValue(double value)
+            {
+                Float32Array.this.setValue(iter.get(), value);
+            }
+        };
+    }
+
+    
 	// =============================================================
 	// Inner interface
 

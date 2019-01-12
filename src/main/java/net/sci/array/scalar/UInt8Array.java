@@ -4,6 +4,7 @@
 package net.sci.array.scalar;
 
 
+
 /**
  * An array containing 8-bits unsigned integers.
  * 
@@ -113,7 +114,16 @@ public interface UInt8Array extends IntArray<UInt8>
 	}
 
 	
-	// =============================================================
+	/**
+     * Sets the value at the specified position, by clamping the value between 0
+     * and 255.
+     */
+    public default void setValue(int[] pos, double value)
+    {
+    	setByte(pos, (byte) UInt8.clamp(value));
+    }
+
+    // =============================================================
 	// Specialization of the Array interface
 
 	@Override
@@ -162,18 +172,46 @@ public interface UInt8Array extends IntArray<UInt8>
 		return UInt8.class;
 	}
 
-	public Iterator iterator();
+	public default Iterator iterator()
+    {
+        return new Iterator()
+        {
+            PositionIterator iter = positionIterator();
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public UInt8 next()
+            {
+                iter.forward();
+                return UInt8Array.this.get(iter.get());
+            }
+
+            @Override
+            public byte getByte()
+            {
+                return UInt8Array.this.getByte(iter.get());
+            }
+
+            @Override
+            public void setByte(byte b)
+            {
+                UInt8Array.this.setByte(iter.get(), b);
+            }
+        };
+    }
+
 	
-	/**
-	 * Sets the value at the specified position, by clamping the value between 0
-	 * and 255.
-	 */
-	public default void setValue(int[] pos, double value)
-	{
-		setByte(pos, (byte) UInt8.clamp(value));
-	}
-
-
 	// =============================================================
 	// Inner interface
 

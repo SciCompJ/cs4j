@@ -3,6 +3,7 @@
  */
 package net.sci.array.scalar;
 
+
 /**
  * @author dlegland
  *
@@ -109,7 +110,16 @@ public interface Int16Array extends IntArray<Int16>
 	// =============================================================
 	// Specialization of the Array interface
 
-	@Override
+	/**
+     * Sets the value at the specified position, by clamping the value between
+     * min and max admissible values.
+     */
+    public default void setValue(int[] pos, double value)
+    {
+    	setInt(pos, (int) value);
+    }
+
+    @Override
 	public default Int16Array newInstance(int... dims)
 	{
 		return Int16Array.create(dims);
@@ -141,16 +151,46 @@ public interface Int16Array extends IntArray<Int16>
 		return Int16.class;
 	}
 
-	public Iterator iterator();
+    public default Iterator iterator()
+    {
+        return new Iterator()
+        {
+            PositionIterator iter = positionIterator();
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public Int16 next()
+            {
+                iter.forward();
+                return Int16Array.this.get(iter.get());
+            }
+
+            @Override
+            public short getShort()
+            {
+                return Int16Array.this.getShort(iter.get());
+            }
+
+            @Override
+            public void setShort(short s)
+            {
+                Int16Array.this.setShort(iter.get(), s);
+            }
+        };
+    }
+
 	
-	/**
-	 * Sets the value at the specified position, by clamping the value between
-	 * min and max admissible values.
-	 */
-	public default void setValue(int[] pos, double value)
-	{
-		setInt(pos, (int) value);
-	}
 
 
 	// =============================================================

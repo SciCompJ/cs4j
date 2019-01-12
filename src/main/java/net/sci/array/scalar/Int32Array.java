@@ -3,6 +3,7 @@
  */
 package net.sci.array.scalar;
 
+
 /**
  * @author dlegland
  *
@@ -81,7 +82,16 @@ public interface Int32Array extends IntArray<Int32>
 	// =============================================================
 	// Specialization of the Array interface
 
-	@Override
+	/**
+     * Sets the value at the specified position, by clamping the value between 0
+     * and 255.
+     */
+    public default void setValue(int[] pos, double value)
+    {
+    	setInt(pos, (int) value);
+    }
+
+    @Override
 	public default Int32Array newInstance(int... dims)
 	{
 		return Int32Array.create(dims);
@@ -113,18 +123,46 @@ public interface Int32Array extends IntArray<Int32>
 		return Int32.class;
 	}
 
-	public Iterator iterator();
-	
-	/**
-	 * Sets the value at the specified position, by clamping the value between 0
-	 * and 255.
-	 */
-	public default void setValue(int[] pos, double value)
-	{
-		setInt(pos, (int) value);
-	}
+    public default Iterator iterator()
+    {
+        return new Iterator()
+        {
+            PositionIterator iter = positionIterator();
 
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
 
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public Int32 next()
+            {
+                iter.forward();
+                return Int32Array.this.get(iter.get());
+            }
+
+            @Override
+            public int getInt()
+            {
+                return Int32Array.this.getInt(iter.get());
+            }
+
+            @Override
+            public void setInt(int intValue)
+            {
+                Int32Array.this.setInt(iter.get(), intValue);
+            }
+        };
+    }
+
+    
 	// =============================================================
 	// Inner interface
 
