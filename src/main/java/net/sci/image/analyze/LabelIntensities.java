@@ -6,9 +6,7 @@ package net.sci.image.analyze;
 import java.util.HashMap;
 
 import net.sci.array.Arrays;
-import net.sci.array.scalar.Int;
 import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.image.morphology.LabelImages;
 
@@ -55,20 +53,20 @@ public class LabelIntensities
 		
 		// extract indices of labels
 		HashMap<Integer, Integer> labelInds = LabelImages.mapLabelIndices(labels);
-		
-		// get iterators
-		ScalarArray.Iterator<? extends Scalar> scalarIter = array.iterator();
-		IntArray.Iterator<? extends Int> labelIter = labelArray.iterator();
-		
-		// iterate over elements
-		while(scalarIter.hasNext())
-		{
-			int label = labelIter.nextInt();
-			double value = scalarIter.nextValue();
+
+		// iterate over positions
+        for(int[] pos : array.positions())
+        {
+            int label = labelArray.getInt(pos);
+            double value = array.getValue(pos);
 			
 			if (label == 0)
 			{
 				continue;
+			}
+			if (!labelInds.containsKey(label))
+			{
+			    throw new RuntimeException("Label " + label + " that does not exist in label array");
 			}
 			
 			int index = labelInds.get(label);
@@ -106,20 +104,21 @@ public class LabelIntensities
 		// extract indices of labels
 		HashMap<Integer, Integer> labelInds = LabelImages.mapLabelIndices(labels);
 		
-		// get iterators
-		ScalarArray.Iterator<? extends Scalar> scalarIter = array.iterator();
-		IntArray.Iterator<? extends Int> labelIter = labelArray.iterator();
-		
-		// iterate over elements
-		while(scalarIter.hasNext())
+		// iterate over positions
+		for(int[] pos : array.positions())
 		{
-			int label = labelIter.nextInt();
-			double value = scalarIter.nextValue();
+            int label = labelArray.getInt(pos);
+            double value = array.getValue(pos);
 			
 			if (label == 0)
 			{
 				continue;
 			}
+            if (!labelInds.containsKey(label))
+            {
+                throw new RuntimeException("Label " + label + " that does not exist in label array");
+            }
+            
 			
 			int index = labelInds.get(label);
 			sum[index] += value;
