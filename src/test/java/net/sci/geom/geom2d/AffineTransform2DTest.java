@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.transform;
+package net.sci.geom.geom2d;
 
 import static org.junit.Assert.*;
 

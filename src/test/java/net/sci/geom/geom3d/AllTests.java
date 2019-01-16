@@ -6,7 +6,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	Point3DTest.class,
+    Point3DTest.class,
+    AffineTransform3DTest.class,
+    Plane3DTest.class,
 	})
 public class AllTests {
   //nothing

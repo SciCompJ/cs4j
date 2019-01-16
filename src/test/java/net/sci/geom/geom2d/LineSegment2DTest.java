@@ -1,4 +1,4 @@
-package net.sci.geom.geom2d.line;
+package net.sci.geom.geom2d;
 
 import static org.junit.Assert.*;
 

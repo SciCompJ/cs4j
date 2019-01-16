@@ -5,9 +5,14 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	// generic classes
+	// 0-dimensional geometric elements
 	Point2DTest.class,
-	Vector2DTest.class,
+    Vector2DTest.class,
+    AffineTransform2DTest.class,
+    
+    // 1-dimensional geometric elements
+    LineSegment2DTest.class,
+    StraightLine2DTest.class,
 	})
 public class AllTests {
   //nothing

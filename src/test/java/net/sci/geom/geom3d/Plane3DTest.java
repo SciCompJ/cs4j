@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.line;
+package net.sci.geom.geom3d;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

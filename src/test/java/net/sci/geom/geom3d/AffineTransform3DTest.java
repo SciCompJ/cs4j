@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.transform;
+package net.sci.geom.geom3d;
 
 import static org.junit.Assert.assertEquals;
 
