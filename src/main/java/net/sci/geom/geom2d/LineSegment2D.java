@@ -1,12 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.line;
-
-import net.sci.geom.geom2d.Box2D;
-import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Vector2D;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
+package net.sci.geom.geom2d;
 
 /**
  * A line segment between two extremity points.

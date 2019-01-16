@@ -5,7 +5,6 @@ package net.sci.geom.geom3d;
 
 import static java.lang.Math.abs;
 import net.sci.array.Dimensional;
-import net.sci.geom.geom3d.transform.AffineTransform3D;
 
 /**
  * @author dlegland

@@ -6,7 +6,6 @@ package net.sci.geom.geom2d;
 import java.util.Collection;
 
 import net.sci.geom.Curve;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * A geometry that is composed of one or more continuous curves.

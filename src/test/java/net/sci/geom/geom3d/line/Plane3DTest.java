@@ -5,7 +5,10 @@ package net.sci.geom.geom3d.line;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.geom3d.StraightLine3D;
 import net.sci.geom.geom3d.Vector3D;
 
 import org.junit.Test;
@@ -53,7 +56,7 @@ public class Plane3DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom3d.line.Plane3D#intersection(net.sci.geom.geom3d.line.Pane3D)}.
+     * Test method for {@link net.sci.geom.geom3d.Plane3D#intersection(net.sci.geom.geom3d.line.Pane3D)}.
      */
     @Test
     public final void testIntersectionPlane3D()
@@ -82,7 +85,7 @@ public class Plane3DTest
     }
 
     /**
-     * Test method for {@link net.sci.geom.geom3d.line.Plane3D#intersection(net.sci.geom.geom3d.line.StraightLine3D)}.
+     * Test method for {@link net.sci.geom.geom3d.Plane3D#intersection(net.sci.geom.geom3d.StraightLine3D)}.
      */
     @Test
     public final void testIntersectionStraightLine3D()
@@ -100,7 +103,7 @@ public class Plane3DTest
     }
 
     /**
-     * Test method for {@link net.sci.geom.geom3d.line.Plane3D#normal()}.
+     * Test method for {@link net.sci.geom.geom3d.Plane3D#normal()}.
      */
     @Test
     public final void testNormalOz()
@@ -116,7 +119,7 @@ public class Plane3DTest
     }
  
     /**
-     * Test method for {@link net.sci.geom.geom3d.line.Plane3D#normalize()}.
+     * Test method for {@link net.sci.geom.geom3d.Plane3D#normalize()}.
      */
     @Test
     public final void testNormalize_arbitraryPlane()

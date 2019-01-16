@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.geom.geom2d.transform.AffineTransform2D;
+import net.sci.geom.geom2d.AffineTransform2D;
 
 public class Ellipse2DTest
 {

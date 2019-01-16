@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.sci.geom.geom2d.AffineTransform2D;
+import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.curve.Contour2D;
-import net.sci.geom.geom2d.line.LineSegment2D;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * <p>

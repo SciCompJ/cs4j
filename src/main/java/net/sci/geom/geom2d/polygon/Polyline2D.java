@@ -5,11 +5,11 @@ package net.sci.geom.geom2d.polygon;
 
 import java.util.Iterator;
 
+import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Curve2D;
+import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.line.LineSegment2D;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * <p>

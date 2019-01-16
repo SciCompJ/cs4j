@@ -12,10 +12,10 @@ import static java.lang.Math.sqrt;
 
 import java.util.ArrayList;
 
+import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * An ellipse, defined by a center, two semi-axis lengths, and one orientation angle in degrees.

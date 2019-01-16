@@ -4,6 +4,8 @@
 package net.sci.geom.geom3d.transform;
 
 import static org.junit.Assert.assertEquals;
+
+import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Point3D;
 
 import org.junit.Test;
@@ -16,7 +18,7 @@ public class AffineTransform3DTest
 {
 
     /**
-     * Test method for {@link net.sci.geom.geom3d.transform.AffineTransform3D#concatenate(net.sci.geom.geom3d.transform.AffineTransform3D)}.
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#concatenate(net.sci.geom.geom3d.AffineTransform3D)}.
      */
     @Test
     public final void testConcatenate()
@@ -40,7 +42,7 @@ public class AffineTransform3DTest
     }
 
     /**
-     * Test method for {@link net.sci.geom.geom3d.transform.AffineTransform3D#preConcatenate(net.sci.geom.geom3d.transform.AffineTransform3D)}.
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#preConcatenate(net.sci.geom.geom3d.AffineTransform3D)}.
      */
     @Test
     public final void testPreConcatenate()

@@ -4,7 +4,6 @@
 package net.sci.geom.geom3d;
 
 import net.sci.geom.Point;
-import net.sci.geom.geom3d.transform.AffineTransform3D;
 
 /**
  * A three-dimensional point.

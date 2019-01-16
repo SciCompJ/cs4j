@@ -10,10 +10,10 @@ import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.curve.Circle2D;
 import net.sci.geom.geom3d.Box3D;
 import net.sci.geom.geom3d.Geometry3D;
+import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.geom3d.StraightLine3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.line.Plane3D;
-import net.sci.geom.geom3d.line.StraightLine3D;
 
 /**
  * A 3D sphere, defined by a center and a radius.

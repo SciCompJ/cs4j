@@ -1,13 +1,9 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.line;
+package net.sci.geom.geom3d;
 
 import net.sci.geom.UnboundedGeometryException;
-import net.sci.geom.geom3d.Box3D;
-import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.transform.AffineTransform3D;
 
 /**
  * A 3D straight line, with infinite bounds in each direction.

@@ -1,10 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.transform;
-
-import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.geom3d.Vector3D;
+package net.sci.geom.geom3d;
 
 /**
  * Concrete implementation of a 3D affine transform, that stores the twelve

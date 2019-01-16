@@ -3,7 +3,6 @@ package net.sci.geom.geom2d;
 import static java.lang.Math.abs;
 
 import net.sci.array.Dimensional;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 public class Vector2D implements Dimensional
 {

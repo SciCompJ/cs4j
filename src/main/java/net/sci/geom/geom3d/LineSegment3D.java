@@ -1,17 +1,12 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.line;
-
-import net.sci.geom.geom3d.Box3D;
-import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.transform.AffineTransform3D;
+package net.sci.geom.geom3d;
 
 /**
  * A 3D line segment defined by its two extremity points.
  * 
- * @see net.cs4j.geom.geom2d.line.LineSegment2D
+ * @see net.sci.geom.geom2d.cs4j.geom.geom2d.line.LineSegment2D
  * @see StraightLine3D
  * 
  * @author dlegland

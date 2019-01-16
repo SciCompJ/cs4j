@@ -6,8 +6,6 @@ package net.sci.geom.geom3d;
 import java.util.Arrays;
 import java.util.Collection;
 
-import net.sci.geom.geom3d.transform.AffineTransform3D;
-
 /**
  * A continuous curve embedded in the 3D space.
  * 

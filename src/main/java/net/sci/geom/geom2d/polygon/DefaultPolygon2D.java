@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.line.LineSegment2D;
 
 /**
  * A polygonal region whose boundary is a single linear ring.

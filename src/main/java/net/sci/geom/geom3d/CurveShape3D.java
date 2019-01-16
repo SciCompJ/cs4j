@@ -6,7 +6,6 @@ package net.sci.geom.geom3d;
 import java.util.Collection;
 
 import net.sci.geom.Curve;
-import net.sci.geom.geom3d.transform.AffineTransform3D;
 
 /**
  * A geometry that is composed of one or more continuous curves in the 3D space.

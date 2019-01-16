@@ -1,10 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.transform;
-
-import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Vector2D;
+package net.sci.geom.geom2d;
 
 /**
  * Concrete implementation of an affine transform, that stores the six coefficients.

@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import net.sci.geom.geom2d.AffineTransform2D;
+
 /**
  * @author dlegland
  *
@@ -15,7 +17,7 @@ public class AffineTransform2DTest
 {
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.transform.AffineTransform2D#concatenate(net.sci.geom.geom2d.transform.AffineTransform2D)}.
+     * Test method for {@link net.sci.geom.geom2d.AffineTransform2D#concatenate(net.sci.geom.geom2d.AffineTransform2D)}.
      */
     @Test
     public final void testConcatenate_TraRotTra()
@@ -39,7 +41,7 @@ public class AffineTransform2DTest
     }
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.transform.AffineTransform2D#preConcatenate(net.sci.geom.geom2d.transform.AffineTransform2D)}.
+     * Test method for {@link net.sci.geom.geom2d.AffineTransform2D#preConcatenate(net.sci.geom.geom2d.AffineTransform2D)}.
      */
     @Test
     public final void testPreConcatenate_TraRotTra()

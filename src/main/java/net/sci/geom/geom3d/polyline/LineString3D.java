@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.sci.geom.geom3d.AffineTransform3D;
+import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.geom3d.line.LineSegment3D;
-import net.sci.geom.geom3d.transform.AffineTransform3D;
 
 /**
  * <p>

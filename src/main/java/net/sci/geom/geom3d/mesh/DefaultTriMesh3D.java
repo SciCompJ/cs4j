@@ -9,9 +9,9 @@ import java.util.Collection;
 import java.util.TreeSet;
 
 import net.sci.geom.geom3d.Box3D;
+import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.line.LineSegment3D;
 
 /**
  * Default class for representing triangular meshes in 3D.

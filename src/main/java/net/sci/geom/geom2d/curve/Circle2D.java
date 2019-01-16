@@ -10,10 +10,10 @@ import static java.lang.Math.sin;
 
 import java.util.ArrayList;
 
+import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * An circle, defined by a center and a radius.

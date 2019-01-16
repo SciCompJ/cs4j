@@ -5,8 +5,6 @@ package net.sci.geom.geom3d;
 
 import java.util.Collection;
 
-import net.sci.geom.geom3d.line.Plane3D;
-
 /**
  * @author dlegland
  *

@@ -8,8 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.line.LineSegment2D;
 
 /**
  * @author dlegland

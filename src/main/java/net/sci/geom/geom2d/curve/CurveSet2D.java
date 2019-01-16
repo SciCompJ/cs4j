@@ -6,11 +6,11 @@ package net.sci.geom.geom2d.curve;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.CurveShape2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * A collection of curves that implements the CurveShape2D interface.

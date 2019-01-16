@@ -5,7 +5,7 @@
  *
  * Created: 19 août 2010
  */
-package net.sci.geom.geom2d.line;
+package net.sci.geom.geom2d;
 
 /**
  * A degenerated line, whose direction vector is undefined, had been

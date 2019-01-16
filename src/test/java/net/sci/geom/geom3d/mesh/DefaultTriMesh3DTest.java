@@ -10,9 +10,9 @@ import java.util.Collection;
 
 import org.junit.Test;
 
+import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.line.Plane3D;
 
 /**
  * @author dlegland

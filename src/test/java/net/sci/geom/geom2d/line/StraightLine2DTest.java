@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import net.sci.geom.UnboundedGeometryException;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.StraightLine2D;
 import net.sci.geom.geom2d.Vector2D;
 
 public class StraightLine2DTest

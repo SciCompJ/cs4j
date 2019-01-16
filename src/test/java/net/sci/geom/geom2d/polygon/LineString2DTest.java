@@ -7,8 +7,8 @@ import static org.junit.Assert.*;
 
 import java.util.Iterator;
 
+import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.line.LineSegment2D;
 
 import org.junit.Test;
 

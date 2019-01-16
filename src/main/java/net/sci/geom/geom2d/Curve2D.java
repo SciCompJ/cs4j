@@ -9,7 +9,6 @@ import java.util.Collection;
 import net.sci.geom.geom2d.polygon.LineString2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
 import net.sci.geom.geom2d.polygon.Polyline2D;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * A continuous curve embedded in the 2D plane.

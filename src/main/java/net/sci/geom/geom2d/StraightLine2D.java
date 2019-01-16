@@ -1,14 +1,10 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.line;
+package net.sci.geom.geom2d;
 
 import net.sci.geom.UnboundedGeometryException;
-import net.sci.geom.geom2d.Box2D;
-import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Vector2D;
 import net.sci.geom.geom2d.curve.Contour2D;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * A straight line, with infinite bounds in each direction.

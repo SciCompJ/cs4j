@@ -1,12 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.line;
-
-import net.sci.geom.geom2d.Curve2D;
-import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Vector2D;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
+package net.sci.geom.geom2d;
 
 /**
  * A curve that can be inscribed in a straight line, like a ray, a straight

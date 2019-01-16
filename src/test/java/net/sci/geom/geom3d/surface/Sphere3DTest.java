@@ -8,8 +8,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.geom3d.StraightLine3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.line.StraightLine3D;
 
 public class Sphere3DTest
 {

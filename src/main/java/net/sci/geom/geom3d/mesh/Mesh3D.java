@@ -8,8 +8,8 @@ import java.util.Collection;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Polygon3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.line.LineSegment3D;
 import net.sci.geom.geom3d.Geometry3D;
+import net.sci.geom.geom3d.LineSegment3D;
 
 /**
  * A polygonal mesh in 3D space

@@ -4,7 +4,6 @@
 package net.sci.geom.geom2d;
 
 import net.sci.geom.Point;
-import net.sci.geom.geom2d.transform.AffineTransform2D;
 
 /**
  * @author dlegland
