@@ -44,7 +44,6 @@ public class TransformedImage2d implements ScalarFunction2D
 		return this.image.evaluate(p.getX(), p.getY());
 	}
 
-	@Override
 	public double evaluate(Point2D p)
 	{
 		p = transform.transform(p);

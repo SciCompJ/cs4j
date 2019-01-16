@@ -3,8 +3,6 @@
  */
 package net.sci.array.interp;
 
-import net.sci.geom.geom3d.Point3D;
-
 /**
  * A scalar function of three variables, used to represent interpolated 3D images.
  * 
@@ -25,16 +23,4 @@ public interface ScalarFunction3D
 	 * @return the function evaluated at the given position
 	 */
 	public double evaluate(double x, double y, double z);
-	
-	/**
-	 * Evaluates a position given as a point.
-	 * 
-	 * @param p
-	 *            the position for evaluating the function
-	 * @return the function evaluated at the given position
-	 */
-	public default double evaluate(Point3D p)
-	{
-		return this.evaluate(p.getX(), p.getY(), p.getZ());
-	}
 }
