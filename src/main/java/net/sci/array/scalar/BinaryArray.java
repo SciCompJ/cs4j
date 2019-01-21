@@ -248,9 +248,14 @@ public interface BinaryArray extends IntArray<Binary>
 
 	public class TrueElementsPositionIterator implements PositionIterator
 	{
+	    /** The reference binary array */
 		BinaryArray array;
+		
+		/** Iterator on the binary array */
 		PositionIterator iter;
-		int[] nextPos = null;
+		
+		/** the position on the current true element */
+		int[] currentPos = null;
 
 		public TrueElementsPositionIterator(BinaryArray array)
 		{
@@ -262,7 +267,7 @@ public interface BinaryArray extends IntArray<Binary>
 		@Override
 		public boolean hasNext()
 		{
-			return nextPos != null;
+			return currentPos != null;
 		}
 
 		@Override
@@ -273,13 +278,13 @@ public interface BinaryArray extends IntArray<Binary>
 
 		private void findNextPos()
 		{
-			nextPos = null;
+			currentPos = null;
 			while (iter.hasNext())
 			{
 				iter.forward();
 				if (array.getBoolean(iter.get()))
 				{
-					nextPos = iter.get();
+					currentPos = iter.get();
 					break;
 				}
 			}
@@ -288,7 +293,7 @@ public interface BinaryArray extends IntArray<Binary>
 		@Override
 		public int[] next()
 		{
-			int[] pos = nextPos;
+			int[] pos = currentPos;
 			forward();
 			return pos;
 		}
@@ -296,13 +301,20 @@ public interface BinaryArray extends IntArray<Binary>
 		@Override
 		public int[] get()
 		{
-			return nextPos;
+			return currentPos;
 		}
 
-		@Override
+        @Override
+        public int[] get(int[] pos)
+        {
+            System.arraycopy(this.currentPos, 0, pos, 0, this.currentPos.length);
+            return pos;
+        }
+
+        @Override
 		public int get(int dim)
 		{
-			return nextPos[dim];
+			return currentPos[dim];
 		}
 	}
 
@@ -519,13 +531,21 @@ public interface BinaryArray extends IntArray<Binary>
     			return nextPos;
     		}
 
-    		@Override
+            @Override
+            public int[] get(int[] pos)
+            {
+                System.arraycopy(this.nextPos, 0, pos, 0, this.nextPos.length);
+                return pos;
+            }
+
+            @Override
     		public int get(int dim)
     		{
     			return nextPos[dim];
     		}
     	}
-        class Iterator implements BinaryArray.Iterator
+
+    	class Iterator implements BinaryArray.Iterator
         {
             ScalarArray.Iterator<?> iter;
             

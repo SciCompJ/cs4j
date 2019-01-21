@@ -183,6 +183,15 @@ public abstract class Array3D<T> implements Array<T>
         }
         
         @Override
+        public int[] get(int[] pos)
+        {
+            pos[0] = posX;
+            pos[1] = posY;
+            pos[2] = posZ;
+            return pos;
+        }
+
+        @Override
         public boolean hasNext()
         {
             return posX < size0 - 1 || posY < size1 - 1 || posZ < size2 - 1;

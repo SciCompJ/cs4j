@@ -283,6 +283,14 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	    public void forward();
 	    public int[] get();
 	    public int get(int dim);
+	    
+        /**
+         * @param pos
+         *            the pre-allocated array for storing current position
+         * @return the current position
+         */
+	    public int[] get(int[] pos);
+	    
 	}
 	
     static class View<T> implements Array<T>
@@ -334,7 +342,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
          * @see net.sci.array.Array#positionIterator()
          */
         @Override
-        public net.sci.array.Array.PositionIterator positionIterator()
+        public PositionIterator positionIterator()
         {
             return new DefaultPositionIterator(newDims);
         }

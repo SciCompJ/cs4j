@@ -70,6 +70,13 @@ public class DefaultPositionIterator implements PositionIterator
         return res;
     }
     
+    @Override
+    public int[] get(int[] pos)
+    {
+        System.arraycopy(this.pos, 0, pos, 0, this.pos.length);
+        return pos;
+    }
+
     public int get(int dim)
     {
         return pos[dim];

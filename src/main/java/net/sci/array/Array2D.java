@@ -293,5 +293,13 @@ public abstract class Array2D<T> implements Array<T>
             forward();
             return new int[] { posX, posY };
         }
+
+        @Override
+        public int[] get(int[] pos)
+        {
+            pos[0] = posX;
+            pos[1] = posY;
+            return pos;
+        }
     }
 }
