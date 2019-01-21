@@ -27,7 +27,7 @@ public interface Table
      */
     public static Table create(int nRows, int nColumns)
     {
-        return new DataTable(nRows, nColumns);
+        return new DefaultTable(nRows, nColumns);
     }
     
     public static Table selectColumns(Table table, int[] columnIndices)

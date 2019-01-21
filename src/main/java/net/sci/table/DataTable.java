@@ -23,7 +23,7 @@ import javax.swing.JTable;
  * @author David Legland
  *
  */
-public class DataTable implements Table
+public class DataTable implements NumericTable
 {
     // =============================================================
     // Class variables
