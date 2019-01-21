@@ -9,7 +9,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     net.sci.array.AllTests.class,
-    net.sci.array.type.AllTests.class,
     net.sci.array.scalar.AllTests.class,
     net.sci.array.vector.AllTests.class,
     net.sci.array.color.AllTests.class,

@@ -5,7 +5,9 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	// generic classes
+    // type classes
+    BooleanTest.class,
+    // generic array classes
     ScalarArrayTest.class,
     UInt8ArrayTest.class,
     UInt8ArrayWrapperTest.class,

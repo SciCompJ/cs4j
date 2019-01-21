@@ -1,4 +1,4 @@
-package net.sci.array.type;
+package net.sci.array.scalar;
 
 import static org.junit.Assert.*;
 
