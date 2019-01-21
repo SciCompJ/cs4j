@@ -49,7 +49,6 @@ public class DefaultTableTest
      * Test method for {@link net.sci.table.DefaultTable#columns()}.
      * @throws IOException 
      */
-    @Test
     public final void testPrintInfos() throws IOException
     {
         String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();

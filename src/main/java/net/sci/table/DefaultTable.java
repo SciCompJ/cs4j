@@ -451,6 +451,23 @@ public class DefaultTable implements Table
             return colNames[colIndex];
         }
 
+
+        @Override
+        public void setName(String newName)
+        {
+            if (colNames == null)
+            {
+                colNames = new String[nCols];
+            }
+            if (colNames.length != nCols)
+            {
+                String[] newColNames = new String[nCols];
+                System.arraycopy(colNames, 0, newColNames, 0, Math.min(nCols, colNames.length));
+            }
+            
+            colNames[colIndex] = newName;
+        }
+
         @Override
         public double getValue(int row)
         {

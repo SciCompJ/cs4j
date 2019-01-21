@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	DefaultTableTest.class,
+    DefaultTableTest.class,
+    NumericTableTest.class,
 	})
 public class AllTests {
   //nothing

@@ -90,6 +90,22 @@ public class DataTable implements NumericTable
 
 
     // =============================================================
+    // Data managment
+    
+    public void setColumnValues(int colIndex, double[] values)
+    {
+        if (values.length != this.nRows)
+        {
+            throw new IllegalArgumentException("Values array must have same length as row number in table: " + this.nRows);
+        }
+        
+        for (int r = 0; r < nRows; r++)
+        {
+            this.setValue(r, colIndex, values[r]);
+        }
+    }
+
+    // =============================================================
     // General methods
     
     /**
@@ -152,7 +168,7 @@ public class DataTable implements NumericTable
 
 	public void setColumnNames(String[] names)
 	{
-		if (names.length != this.nCols)
+		if (names != null && names.length != this.nCols)
 			throw new IllegalArgumentException(
 					"String array must have same length as the number of columns.");
 		this.colNames = names;
@@ -189,7 +205,7 @@ public class DataTable implements NumericTable
 
 	public void setRowNames(String[] names)
 	{
-		if (names.length != this.nRows)
+		if (names != null && names.length != this.nRows)
 			throw new IllegalArgumentException(
 					"String array must have same length as the number of rows.");
 		this.rowNames = names;
@@ -348,6 +364,7 @@ public class DataTable implements NumericTable
 		JFrame frame = tbl.show();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
     class ColumnView implements NumericColumn
     {
         int colIndex;
@@ -380,6 +397,22 @@ public class DataTable implements NumericTable
             if (colNames == null)
                 return null;
             return colNames[colIndex];
+        }
+
+        @Override
+        public void setName(String newName)
+        {
+            if (colNames == null)
+            {
+                colNames = new String[nCols];
+            }
+            if (colNames.length != nCols)
+            {
+                String[] newColNames = new String[nCols];
+                System.arraycopy(colNames, 0, newColNames, 0, Math.min(nCols, colNames.length));
+            }
+            
+            colNames[colIndex] = newName;
         }
 
         @Override
