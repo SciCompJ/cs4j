@@ -27,13 +27,13 @@ public interface Table
      */
     public static Table create(int nRows, int nColumns)
     {
-        return new DataTable(nRows, nColumns);
+        return new DefaultTable(nRows, nColumns);
     }
     
     public static Table selectColumns(Table table, int[] columnIndices)
     {
-    	int nr = table.getRowNumber();
-    	int nc = table.getColumnNumber();
+    	int nr = table.rowNumber();
+    	int nc = table.columnNumber();
     	int nc2 = columnIndices.length;
     	
 		Table result = Table.create(nr, nc2);
@@ -98,6 +98,14 @@ public interface Table
     // Management of columns
     
     /**
+     * Returns the number of columns (measurements, variables) in the data
+     * table.
+     * 
+     * @return the number of columns in this table
+     */
+    public int columnNumber();
+
+    /**
      * Returns an Iterable over the columns contained in this table.
      * 
      * @return an Iterable over the columns contained in this table
@@ -105,40 +113,53 @@ public interface Table
     public Iterable<? extends Column> columns();
     
     /**
-     * Returns the number of columns (measurements, variables) in the data
-     * table.
-     * 
-     * @return the number of columns in this table
-     */
-    public int getColumnNumber();
-
-    /**
      * Returns a vie to the specified column.
      * @param c the column index, 0-based
      * @return a view or a reference to the column
      */
     public Column column(int c);
+
+    public void addColumn(String name, double[] values);
     
     public String[] getColumnNames();
 
     public void setColumnNames(String[] names);
 
-    public int getColumnIndex(String name);
+    public String getColumnName(int colIndex);
+
+    public void setColumnName(int colIndex, String name);
+
+    public int findColumnIndex(String name);
 
 
     // =============================================================
     // Management of rows
     
     /**
+     * Returns an entire column of the data table.
+     * 
+     * @param colIndex
+     *            the column index, 0-indexed
+     * @return the set of values of the specified column
+     */
+    public double[] getColumnValues(int colIndex);
+
+    /**
      * Returns the number of rows (individuals, observations) in the data table.
      * 
      * @return the number of rows in this table
      */
-    public int getRowNumber();
+    public int rowNumber();
 
+//    public void addRow(String name, double[] values);
+    
     public String[] getRowNames();
 
     public void setRowNames(String[] names);
+
+    public String getRowName(int rowIndex);
+
+    public void setRowName(int rowIndex, String newName);
 
     
     // =============================================================
@@ -202,15 +223,6 @@ public interface Table
     public void setValue(int row, String colName, double value);
 
     /**
-     * Returns an entire column of the data table.
-     * 
-     * @param colIndex
-     *            the column index, 0-indexed
-     * @return the set of values of the specified column
-     */
-    public double[] getColumnValues(int colIndex);    
-
-    /**
      * Returns an entire row of the data table.
      * 
      * @param rowIndex
@@ -243,7 +255,7 @@ public interface Table
         nChars = Math.min(nChars+1, 15);
         
         // create format string
-        int nDigits = getColumnNumber() > 9 ? 2 : 1;
+        int nDigits = columnNumber() > 9 ? 2 : 1;
         String format = " [%" + nDigits + "d] %-" + nChars + "s ";
         
         // iterate over columns
@@ -278,8 +290,8 @@ public interface Table
      */
     public default void print()
     {
-        int nRows = getRowNumber();
-        int nCols = getColumnNumber();
+        int nRows = rowNumber();
+        int nCols = columnNumber();
         String[] colNames = getColumnNames();
         String[] rowNames = getRowNames();
 

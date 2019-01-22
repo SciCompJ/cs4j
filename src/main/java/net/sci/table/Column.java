@@ -22,6 +22,14 @@ public interface Column
     public String getName();
     
     /**
+     * Changes the name associated with this column (optional operation).
+     * 
+     * @param newName
+     *            the new name of the column
+     */
+    public void setName(String newName);
+    
+    /**
      * Returns the value at the i-th row.
      * 
      * @param row

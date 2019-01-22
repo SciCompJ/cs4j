@@ -61,8 +61,8 @@ public class KMeans implements TableOperator
 	public KMeans fit(Table table)
 	{
 	    // get table dimensions
-	    int nr = table.getRowNumber();
-	    int np = table.getColumnNumber();
+	    int nr = table.rowNumber();
+	    int np = table.columnNumber();
 
 	    // allocated the centroid array: nclass * nParams array
 	    this.centroids = new double[nClasses][np];
@@ -103,8 +103,8 @@ public class KMeans implements TableOperator
 	public Table predict(Table table)
 	{
 	    // get table dimension
-	    int nr = table.getRowNumber();
-	    int nc = table.getColumnNumber();
+	    int nr = table.rowNumber();
+	    int nc = table.columnNumber();
 	    
         // KMeans class must have been initialized
 	    if (this.centroids.length == 0)
@@ -137,7 +137,7 @@ public class KMeans implements TableOperator
     private int[] findClassIndices(Table table, double[][] centroids, int[] classes)
     {
         // allocate memory for result
-        int nr = table.getRowNumber();
+        int nr = table.rowNumber();
         if (classes == null)
         {
             classes = new int[nr];
@@ -183,8 +183,8 @@ public class KMeans implements TableOperator
 	
 	private static final double[][] computeClassCentroids(Table table, int[] classes, int nClasses)
 	{
-		int nr = table.getRowNumber();
-		int np = table.getColumnNumber();
+		int nr = table.rowNumber();
+		int np = table.columnNumber();
 		
 		double[][] cumsum = new double[nClasses][np];
 		int[] counts = new int[nClasses];

@@ -216,7 +216,7 @@ public class DefaultTable implements Table
 	 * Returns the number of columns (measurements, variables) in the data
 	 * table.
 	 */
-	public int getColumnNumber()
+	public int columnNumber()
 	{
 		return this.nCols;
 	}
@@ -230,10 +230,48 @@ public class DefaultTable implements Table
 	        return new CategoricalColumnView(c);
     }
 
-    public String[] getColumnNames()
+	/**
+     * Adds a new numeric column.
+     * 
+     * @param name
+     *            the name of the new column
+     * @param values
+     *            the values of the new column
+     */
+	public void addColumn(String name, double[] values)
 	{
-		return this.colNames;
+	    if (values.length != nRows)
+	    {
+	        throw new IllegalArgumentException("Requires an array with " + nRows + " values");
+	    }
+	    
+	    // create new data array
+	    double[][] data = new double[nCols+1][nRows];
+	    
+	    // duplicate existing columns
+	    for (int c = 0; c < nCols; c++)
+	    {
+	        System.arraycopy(data[c], 0, this.data[c], 0, nRows);
+	    }
+	    
+	    // copy new values
+        System.arraycopy(data[nCols], 0, values, 0, nRows);
+        this.data = data;
+        
+        // copy column names
+        String[] colNames = new String[nCols+1];
+        if (this.colNames != null)
+        {
+            System.arraycopy(this.colNames, 0, colNames, 0, nCols);
+        }
+        colNames[nCols] = name;
+        this.colNames = colNames;
 	}
+	
+    public String[] getColumnNames()
+    {
+        return this.colNames;
+    }
 
 	public void setColumnNames(String[] names)
 	{
@@ -243,7 +281,24 @@ public class DefaultTable implements Table
 		this.colNames = names;
 	}
 
-	public int getColumnIndex(String name)
+    public String getColumnName(int colIndex)
+    {
+        if (this.colNames == null)
+            return null;
+        return this.colNames[colIndex];
+    }
+
+	@Override
+    public void setColumnName(int colIndex, String name)
+    {
+        if (this.colNames == null)
+        {
+            this.colNames = new String[nCols];
+        }
+        this.colNames[colIndex] = name;
+    }
+
+    public int findColumnIndex(String name)
 	{
 		if (name == null || this.colNames == null)
 			return -1;
@@ -262,23 +317,40 @@ public class DefaultTable implements Table
     /**
      * Returns the number of rows (individuals, observations) in the data table.
      */
-    public int getRowNumber()
+    public int rowNumber()
     {
         return this.nRows;
     }
 
-	public String[] getRowNames()
+    public String[] getRowNames()
 	{
 		return this.rowNames;
 	}
 
-	public void setRowNames(String[] names)
-	{
-		if (names.length != this.nRows)
-			throw new IllegalArgumentException(
-					"String array must have same length as the number of rows.");
-		this.rowNames = names;
-	}
+    public void setRowNames(String[] names)
+    {
+        if (names.length != this.nRows)
+            throw new IllegalArgumentException(
+                    "String array must have same length as the number of rows.");
+        this.rowNames = names;
+    }
+
+    public String getRowName(int rowIndex)
+    {
+        if (this.rowNames == null)
+            return null;
+        return this.rowNames[rowIndex];
+    }
+
+    @Override
+    public void setRowName(int rowIndex, String name)
+    {
+        if (this.rowNames == null)
+        {
+            this.rowNames = new String[nRows];
+        }
+        this.rowNames[rowIndex] = name;
+    }
 
 	
     // =============================================================
@@ -309,7 +381,7 @@ public class DefaultTable implements Table
      */
     public double getValue(int row, String colName)
     {
-        int col = this.getColumnIndex(colName);
+        int col = this.findColumnIndex(colName);
         return this.data[col][row];
     }
 
@@ -361,7 +433,7 @@ public class DefaultTable implements Table
      */
     public void setValue(int row, String colName, double value)
     {
-        int col = this.getColumnIndex(colName);
+        int col = this.findColumnIndex(colName);
         this.data[col][row] = value;
     }
 
@@ -412,7 +484,7 @@ public class DefaultTable implements Table
 	}
 
 	/**
-	 * Small demonstration of the usage of the DataTable class.
+	 * Small demonstration of the usage of the DefaultNumericTable class.
 	 * 
 	 * @param args optiojnal arguments, not used
 	 */
@@ -449,6 +521,23 @@ public class DefaultTable implements Table
             if (colNames == null)
                 return null;
             return colNames[colIndex];
+        }
+
+
+        @Override
+        public void setName(String newName)
+        {
+            if (colNames == null)
+            {
+                colNames = new String[nCols];
+            }
+            if (colNames.length != nCols)
+            {
+                String[] newColNames = new String[nCols];
+                System.arraycopy(colNames, 0, newColNames, 0, Math.min(nCols, colNames.length));
+            }
+            
+            colNames[colIndex] = newName;
         }
 
         @Override
@@ -534,7 +623,7 @@ public class DefaultTable implements Table
         @Override
         public boolean hasNext()
         {
-            return index < getColumnNumber();
+            return index < columnNumber();
         }
 
         @Override

@@ -13,9 +13,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 /**
- * Old implementation for the Table interface, that can contains only numeric value.
+ * Default implementation for the Tables that can contains only numeric value.
  * 
- * @see DefaultTable for better implementation.
+ * @see DefaultTable for alternative implementation that also allows for categorical columns
  * 
  * Data are stored as an double array indexed by column first. 
  * Methods access data by row indexing first.
@@ -23,7 +23,7 @@ import javax.swing.JTable;
  * @author David Legland
  *
  */
-public class DataTable implements Table
+public class DefaultNumericTable implements NumericTable
 {
     // =============================================================
     // Class variables
@@ -33,11 +33,29 @@ public class DataTable implements Table
 	 */
 	double[][] data;
 
+	/**
+	 * Number of columns in the table
+	 */
 	int nCols;
+
+	/**
+     * Number of rows in the table
+     */
 	int nRows;
 
-	String name = "";
+    /**
+     * The name of this table
+     */
+    String name = "";
+    
+    /**
+     * The name of the columns.
+     */
 	String[] colNames = null;
+	
+	/**
+	 * The name of the rows.
+	 */
 	String[] rowNames = null;
 
 
@@ -52,12 +70,12 @@ public class DataTable implements Table
 	 * @param nCols
 	 *            the number of columns
 	 */
-	public DataTable(int nRows, int nCols)
+	public DefaultNumericTable(int nRows, int nCols)
 	{
 		this(new double[nCols][nRows]);
 	}
 
-	public DataTable(double[][] data, String[] colNames, String[] rowNames)
+	public DefaultNumericTable(double[][] data, String[] colNames, String[] rowNames)
 	{
 		this(data);
 
@@ -73,7 +91,7 @@ public class DataTable implements Table
 		this.rowNames = rowNames;
 	}
 
-    public DataTable(double[][] data)
+    public DefaultNumericTable(double[][] data)
     {
         this.data = data;
 
@@ -88,6 +106,22 @@ public class DataTable implements Table
         }
     }
 
+
+    // =============================================================
+    // Data managment
+    
+    public void setColumnValues(int colIndex, double[] values)
+    {
+        if (values.length != this.nRows)
+        {
+            throw new IllegalArgumentException("Values array must have same length as row number in table: " + this.nRows);
+        }
+        
+        for (int r = 0; r < nRows; r++)
+        {
+            this.setValue(r, colIndex, values[r]);
+        }
+    }
 
     // =============================================================
     // General methods
@@ -118,6 +152,15 @@ public class DataTable implements Table
     // =============================================================
     // Management of columns
 
+    /**
+     * Returns the number of columns (measurements, variables) in the data
+     * table.
+     */
+    public int columnNumber()
+    {
+    	return this.nCols;
+    }
+
     public Iterable<NumericColumn> columns()
     {
         return new Iterable<NumericColumn>()
@@ -130,35 +173,81 @@ public class DataTable implements Table
         };
     }
 
-    /**
-	 * Returns the number of columns (measurements, variables) in the data
-	 * table.
-	 */
-	public int getColumnNumber()
-	{
-		return this.nCols;
-	}
-
     @Override
     public NumericColumn column(int c)
     {
         return new ColumnView(c);
     }
 
+    /**
+     * Adds a new numeric column.
+     * 
+     * @param name
+     *            the name of the new column
+     * @param values
+     *            the values of the new column
+     */
+    public void addColumn(String name, double[] values)
+    {
+        if (values.length != nRows)
+        {
+            throw new IllegalArgumentException("Requires an array with " + nRows + " values");
+        }
+        
+        // create new data array
+        double[][] data = new double[nCols+1][nRows];
+        
+        // duplicate existing columns
+        for (int c = 0; c < nCols; c++)
+        {
+            System.arraycopy(data[c], 0, this.data[c], 0, nRows);
+        }
+        
+        // copy new values
+        System.arraycopy(data[nCols], 0, values, 0, nRows);
+        this.data = data;
+        
+        // copy column names
+        String[] colNames = new String[nCols+1];
+        if (this.colNames != null)
+        {
+            System.arraycopy(this.colNames, 0, colNames, 0, nCols);
+        }
+        colNames[nCols] = name;
+        this.colNames = colNames;
+    }
+    
 	public String[] getColumnNames()
 	{
 		return this.colNames;
 	}
 
-	public void setColumnNames(String[] names)
-	{
-		if (names.length != this.nCols)
-			throw new IllegalArgumentException(
-					"String array must have same length as the number of columns.");
-		this.colNames = names;
-	}
+    public void setColumnNames(String[] names)
+    {
+        if (names != null && names.length != this.nCols)
+            throw new IllegalArgumentException(
+                    "String array must have same length as the number of columns.");
+        this.colNames = names;
+    }
 
-	public int getColumnIndex(String name)
+    public String getColumnName(int colIndex)
+    {
+        if (this.colNames == null)
+            return null;
+        return this.colNames[colIndex];
+    }
+
+    @Override
+    public void setColumnName(int colIndex, String name)
+    {
+        if (this.colNames == null)
+        {
+            this.colNames = new String[nCols];
+        }
+        this.colNames[colIndex] = name;
+    }
+
+    public int findColumnIndex(String name)
 	{
 		if (name == null || this.colNames == null)
 			return -1;
@@ -177,23 +266,82 @@ public class DataTable implements Table
     /**
      * Returns the number of rows (individuals, observations) in the data table.
      */
-    public int getRowNumber()
+    public int rowNumber()
     {
         return this.nRows;
     }
 
+
+    /**
+     * Adds a new numeric row.
+     * 
+     * @param name
+     *            the name of the new row
+     * @param values
+     *            the values of the new row
+     */
+    public void addRow(String name, double[] values)
+    {
+        if (values.length != nCols)
+        {
+            throw new IllegalArgumentException("Requires an array with " + nCols+ " values");
+        }
+        
+        // create new data array
+        double[][] data = new double[nCols][nRows+1];
+        
+        // duplicate existing columns
+        for (int c = 0; c < nCols; c++)
+        {
+            System.arraycopy(data[c], 0, this.data[c], 0, nRows);
+        }
+        
+        // copy new values
+        for (int c = 0; c < nCols; c++)
+        {
+            data[c][nRows] = values[c];
+        }
+        this.data = data;
+        
+        // copy column names
+        String[] rowNames = new String[nRows+1];
+        if (this.rowNames != null)
+        {
+            System.arraycopy(this.rowNames, 0, rowNames, 0, nRows);
+        }
+        rowNames[nRows] = name;
+        this.rowNames = rowNames;
+    }
+    
 	public String[] getRowNames()
 	{
 		return this.rowNames;
 	}
 
-	public void setRowNames(String[] names)
-	{
-		if (names.length != this.nRows)
-			throw new IllegalArgumentException(
-					"String array must have same length as the number of rows.");
-		this.rowNames = names;
-	}
+    public void setRowNames(String[] names)
+    {
+        if (names != null && names.length != this.nRows)
+            throw new IllegalArgumentException(
+                    "String array must have same length as the number of rows.");
+        this.rowNames = names;
+    }
+
+    public String getRowName(int rowIndex)
+    {
+        if (this.rowNames == null)
+            return null;
+        return this.rowNames[rowIndex];
+    }
+
+    @Override
+    public void setRowName(int rowIndex, String name)
+    {
+        if (this.rowNames == null)
+        {
+            this.rowNames = new String[nRows];
+        }
+        this.rowNames[rowIndex] = name;
+    }
 
 	
     // =============================================================
@@ -230,7 +378,7 @@ public class DataTable implements Table
      */
     public double getValue(int row, String colName)
     {
-        int col = this.getColumnIndex(colName);
+        int col = this.findColumnIndex(colName);
         return this.data[col][row];
     }
 
@@ -282,7 +430,7 @@ public class DataTable implements Table
      */
     public void setValue(int row, String colName, double value)
     {
-        int col = this.getColumnIndex(colName);
+        int col = this.findColumnIndex(colName);
         this.data[col][row] = value;
     }
 
@@ -333,14 +481,14 @@ public class DataTable implements Table
 	}
 
 	/**
-     * Small demonstration of the usage of the DataTable class.
+     * Small demonstration of the usage of the DefaultNumericTable class.
      * 
      * @param args
      *            optional arguments, not used.
      */
 	public final static void main(String[] args)
 	{
-		DataTable tbl = new DataTable(15, 5);
+		DefaultNumericTable tbl = new DefaultNumericTable(15, 5);
         tbl.setColumnNames(new String[] { "Length", "Area", "Diam.",
                 "Number", "Density" });
 		tbl.print();
@@ -348,6 +496,7 @@ public class DataTable implements Table
 		JFrame frame = tbl.show();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
     class ColumnView implements NumericColumn
     {
         int colIndex;
@@ -380,6 +529,22 @@ public class DataTable implements Table
             if (colNames == null)
                 return null;
             return colNames[colIndex];
+        }
+
+        @Override
+        public void setName(String newName)
+        {
+            if (colNames == null)
+            {
+                colNames = new String[nCols];
+            }
+            if (colNames.length != nCols)
+            {
+                String[] newColNames = new String[nCols];
+                System.arraycopy(colNames, 0, newColNames, 0, Math.min(nCols, colNames.length));
+            }
+            
+            colNames[colIndex] = newName;
         }
 
         @Override
@@ -417,7 +582,7 @@ public class DataTable implements Table
         @Override
         public boolean hasNext()
         {
-            return index < getColumnNumber();
+            return index < columnNumber();
         }
 
         @Override
