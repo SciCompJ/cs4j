@@ -184,15 +184,32 @@ public class DefaultNumericTable implements NumericTable
 		return this.colNames;
 	}
 
-	public void setColumnNames(String[] names)
-	{
-		if (names != null && names.length != this.nCols)
-			throw new IllegalArgumentException(
-					"String array must have same length as the number of columns.");
-		this.colNames = names;
-	}
+    public void setColumnNames(String[] names)
+    {
+        if (names != null && names.length != this.nCols)
+            throw new IllegalArgumentException(
+                    "String array must have same length as the number of columns.");
+        this.colNames = names;
+    }
 
-	public int getColumnIndex(String name)
+    public String getColumnName(int colIndex)
+    {
+        if (this.colNames == null)
+            return null;
+        return this.colNames[colIndex];
+    }
+
+    @Override
+    public void setColumnName(int colIndex, String name)
+    {
+        if (this.colNames == null)
+        {
+            this.colNames = new String[nCols];
+        }
+        this.colNames[colIndex] = name;
+    }
+
+    public int findColumnIndex(String name)
 	{
 		if (name == null || this.colNames == null)
 			return -1;
@@ -221,13 +238,30 @@ public class DefaultNumericTable implements NumericTable
 		return this.rowNames;
 	}
 
-	public void setRowNames(String[] names)
-	{
-		if (names != null && names.length != this.nRows)
-			throw new IllegalArgumentException(
-					"String array must have same length as the number of rows.");
-		this.rowNames = names;
-	}
+    public void setRowNames(String[] names)
+    {
+        if (names != null && names.length != this.nRows)
+            throw new IllegalArgumentException(
+                    "String array must have same length as the number of rows.");
+        this.rowNames = names;
+    }
+
+    public String getRowName(int rowIndex)
+    {
+        if (this.rowNames == null)
+            return null;
+        return this.rowNames[rowIndex];
+    }
+
+    @Override
+    public void setRowName(int rowIndex, String name)
+    {
+        if (this.rowNames == null)
+        {
+            this.rowNames = new String[nRows];
+        }
+        this.rowNames[rowIndex] = name;
+    }
 
 	
     // =============================================================
@@ -264,7 +298,7 @@ public class DefaultNumericTable implements NumericTable
      */
     public double getValue(int row, String colName)
     {
-        int col = this.getColumnIndex(colName);
+        int col = this.findColumnIndex(colName);
         return this.data[col][row];
     }
 
@@ -316,7 +350,7 @@ public class DefaultNumericTable implements NumericTable
      */
     public void setValue(int row, String colName, double value)
     {
-        int col = this.getColumnIndex(colName);
+        int col = this.findColumnIndex(colName);
         this.data[col][row] = value;
     }
 
