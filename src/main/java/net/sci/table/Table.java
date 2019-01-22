@@ -118,6 +118,8 @@ public interface Table
      * @return a view or a reference to the column
      */
     public Column column(int c);
+
+    public void addColumn(String name, double[] values);
     
     public String[] getColumnNames();
 
@@ -149,6 +151,8 @@ public interface Table
      */
     public int rowNumber();
 
+//    public void addRow(String name, double[] values);
+    
     public String[] getRowNames();
 
     public void setRowNames(String[] names);

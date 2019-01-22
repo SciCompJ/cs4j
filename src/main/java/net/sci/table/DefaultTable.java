@@ -230,6 +230,44 @@ public class DefaultTable implements Table
 	        return new CategoricalColumnView(c);
     }
 
+	/**
+     * Adds a new numeric column.
+     * 
+     * @param name
+     *            the name of the new column
+     * @param values
+     *            the values of the new column
+     */
+	public void addColumn(String name, double[] values)
+	{
+	    if (values.length != nRows)
+	    {
+	        throw new IllegalArgumentException("Requires an array with " + nRows + " values");
+	    }
+	    
+	    // create new data array
+	    double[][] data = new double[nCols+1][nRows];
+	    
+	    // duplicate existing columns
+	    for (int c = 0; c < nCols; c++)
+	    {
+	        System.arraycopy(data[c], 0, this.data[c], 0, nRows);
+	    }
+	    
+	    // copy new values
+        System.arraycopy(data[nCols], 0, values, 0, nRows);
+        this.data = data;
+        
+        // copy column names
+        String[] colNames = new String[nCols+1];
+        if (this.colNames != null)
+        {
+            System.arraycopy(this.colNames, 0, colNames, 0, nCols);
+        }
+        colNames[nCols] = name;
+        this.colNames = colNames;
+	}
+	
     public String[] getColumnNames()
     {
         return this.colNames;
@@ -284,7 +322,7 @@ public class DefaultTable implements Table
         return this.nRows;
     }
 
-	public String[] getRowNames()
+    public String[] getRowNames()
 	{
 		return this.rowNames;
 	}

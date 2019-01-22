@@ -86,4 +86,6 @@ public interface NumericTable extends Table
     public NumericColumn column(int c);
     
     //TODO: (optional) setColumn(int index, [Numeric]Column col) ?
+    
+    public void addRow(String name, double[] values);
 }

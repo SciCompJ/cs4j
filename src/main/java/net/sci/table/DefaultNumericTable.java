@@ -152,6 +152,15 @@ public class DefaultNumericTable implements NumericTable
     // =============================================================
     // Management of columns
 
+    /**
+     * Returns the number of columns (measurements, variables) in the data
+     * table.
+     */
+    public int columnNumber()
+    {
+    	return this.nCols;
+    }
+
     public Iterable<NumericColumn> columns()
     {
         return new Iterable<NumericColumn>()
@@ -164,21 +173,50 @@ public class DefaultNumericTable implements NumericTable
         };
     }
 
-    /**
-	 * Returns the number of columns (measurements, variables) in the data
-	 * table.
-	 */
-	public int columnNumber()
-	{
-		return this.nCols;
-	}
-
     @Override
     public NumericColumn column(int c)
     {
         return new ColumnView(c);
     }
 
+    /**
+     * Adds a new numeric column.
+     * 
+     * @param name
+     *            the name of the new column
+     * @param values
+     *            the values of the new column
+     */
+    public void addColumn(String name, double[] values)
+    {
+        if (values.length != nRows)
+        {
+            throw new IllegalArgumentException("Requires an array with " + nRows + " values");
+        }
+        
+        // create new data array
+        double[][] data = new double[nCols+1][nRows];
+        
+        // duplicate existing columns
+        for (int c = 0; c < nCols; c++)
+        {
+            System.arraycopy(data[c], 0, this.data[c], 0, nRows);
+        }
+        
+        // copy new values
+        System.arraycopy(data[nCols], 0, values, 0, nRows);
+        this.data = data;
+        
+        // copy column names
+        String[] colNames = new String[nCols+1];
+        if (this.colNames != null)
+        {
+            System.arraycopy(this.colNames, 0, colNames, 0, nCols);
+        }
+        colNames[nCols] = name;
+        this.colNames = colNames;
+    }
+    
 	public String[] getColumnNames()
 	{
 		return this.colNames;
@@ -233,6 +271,48 @@ public class DefaultNumericTable implements NumericTable
         return this.nRows;
     }
 
+
+    /**
+     * Adds a new numeric row.
+     * 
+     * @param name
+     *            the name of the new row
+     * @param values
+     *            the values of the new row
+     */
+    public void addRow(String name, double[] values)
+    {
+        if (values.length != nCols)
+        {
+            throw new IllegalArgumentException("Requires an array with " + nCols+ " values");
+        }
+        
+        // create new data array
+        double[][] data = new double[nCols][nRows+1];
+        
+        // duplicate existing columns
+        for (int c = 0; c < nCols; c++)
+        {
+            System.arraycopy(data[c], 0, this.data[c], 0, nRows);
+        }
+        
+        // copy new values
+        for (int c = 0; c < nCols; c++)
+        {
+            data[c][nRows] = values[c];
+        }
+        this.data = data;
+        
+        // copy column names
+        String[] rowNames = new String[nRows+1];
+        if (this.rowNames != null)
+        {
+            System.arraycopy(this.rowNames, 0, rowNames, 0, nRows);
+        }
+        rowNames[nRows] = name;
+        this.rowNames = rowNames;
+    }
+    
 	public String[] getRowNames()
 	{
 		return this.rowNames;
