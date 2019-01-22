@@ -216,7 +216,7 @@ public class DefaultTable implements Table
 	 * Returns the number of columns (measurements, variables) in the data
 	 * table.
 	 */
-	public int getColumnNumber()
+	public int columnNumber()
 	{
 		return this.nCols;
 	}
@@ -262,7 +262,7 @@ public class DefaultTable implements Table
     /**
      * Returns the number of rows (individuals, observations) in the data table.
      */
-    public int getRowNumber()
+    public int rowNumber()
     {
         return this.nRows;
     }
@@ -551,7 +551,7 @@ public class DefaultTable implements Table
         @Override
         public boolean hasNext()
         {
-            return index < getColumnNumber();
+            return index < columnNumber();
         }
 
         @Override

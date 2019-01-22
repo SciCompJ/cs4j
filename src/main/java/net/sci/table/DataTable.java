@@ -150,7 +150,7 @@ public class DataTable implements NumericTable
 	 * Returns the number of columns (measurements, variables) in the data
 	 * table.
 	 */
-	public int getColumnNumber()
+	public int columnNumber()
 	{
 		return this.nCols;
 	}
@@ -193,7 +193,7 @@ public class DataTable implements NumericTable
     /**
      * Returns the number of rows (individuals, observations) in the data table.
      */
-    public int getRowNumber()
+    public int rowNumber()
     {
         return this.nRows;
     }
@@ -450,7 +450,7 @@ public class DataTable implements NumericTable
         @Override
         public boolean hasNext()
         {
-            return index < getColumnNumber();
+            return index < columnNumber();
         }
 
         @Override

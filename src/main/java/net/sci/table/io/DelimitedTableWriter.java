@@ -53,8 +53,8 @@ public class DelimitedTableWriter implements TableWriter
 			throw new RuntimeException("Could not open file: " + file, ex);
 		}
 		
-		int nc = table.getColumnNumber();
-		int nr = table.getRowNumber();
+		int nc = table.columnNumber();
+		int nr = table.rowNumber();
 		
 		String[] colNames = table.getColumnNames();
 		String[] rowNames = table.getRowNames();

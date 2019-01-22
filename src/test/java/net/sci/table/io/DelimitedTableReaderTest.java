@@ -21,8 +21,8 @@ public class DelimitedTableReaderTest
 		
 		Table table = reader.readTable(file);
 		
-		assertEquals(150, table.getRowNumber());
-		assertEquals(5, table.getColumnNumber());
+		assertEquals(150, table.rowNumber());
+		assertEquals(5, table.columnNumber());
 	}
 
 	@Test
@@ -37,8 +37,8 @@ public class DelimitedTableReaderTest
 		
 		Table table = reader.readTable(file);
 		
-		assertEquals(150, table.getRowNumber());
-		assertEquals(5, table.getColumnNumber());
+		assertEquals(150, table.rowNumber());
+		assertEquals(5, table.columnNumber());
 	}
 
 }

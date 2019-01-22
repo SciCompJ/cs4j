@@ -32,8 +32,8 @@ public class DefaultTableTest
         
         Table table = reader.readTable(new File(fileName));
 
-        int nr = table.getRowNumber();
-        int nc = table.getColumnNumber();
+        int nr = table.rowNumber();
+        int nc = table.columnNumber();
 
         int count = 0;
         for (Column col : table.columns())

@@ -32,8 +32,8 @@ public interface Table
     
     public static Table selectColumns(Table table, int[] columnIndices)
     {
-    	int nr = table.getRowNumber();
-    	int nc = table.getColumnNumber();
+    	int nr = table.rowNumber();
+    	int nc = table.columnNumber();
     	int nc2 = columnIndices.length;
     	
 		Table result = Table.create(nr, nc2);
@@ -110,7 +110,7 @@ public interface Table
      * 
      * @return the number of columns in this table
      */
-    public int getColumnNumber();
+    public int columnNumber();
 
     /**
      * Returns a vie to the specified column.
@@ -130,11 +130,20 @@ public interface Table
     // Management of rows
     
     /**
+     * Returns an entire column of the data table.
+     * 
+     * @param colIndex
+     *            the column index, 0-indexed
+     * @return the set of values of the specified column
+     */
+    public double[] getColumnValues(int colIndex);
+
+    /**
      * Returns the number of rows (individuals, observations) in the data table.
      * 
      * @return the number of rows in this table
      */
-    public int getRowNumber();
+    public int rowNumber();
 
     public String[] getRowNames();
 
@@ -202,15 +211,6 @@ public interface Table
     public void setValue(int row, String colName, double value);
 
     /**
-     * Returns an entire column of the data table.
-     * 
-     * @param colIndex
-     *            the column index, 0-indexed
-     * @return the set of values of the specified column
-     */
-    public double[] getColumnValues(int colIndex);    
-
-    /**
      * Returns an entire row of the data table.
      * 
      * @param rowIndex
@@ -243,7 +243,7 @@ public interface Table
         nChars = Math.min(nChars+1, 15);
         
         // create format string
-        int nDigits = getColumnNumber() > 9 ? 2 : 1;
+        int nDigits = columnNumber() > 9 ? 2 : 1;
         String format = " [%" + nDigits + "d] %-" + nChars + "s ";
         
         // iterate over columns
@@ -278,8 +278,8 @@ public interface Table
      */
     public default void print()
     {
-        int nRows = getRowNumber();
-        int nCols = getColumnNumber();
+        int nRows = rowNumber();
+        int nCols = columnNumber();
         String[] colNames = getColumnNames();
         String[] rowNames = getRowNames();
 
