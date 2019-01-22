@@ -412,7 +412,7 @@ public class DefaultTable implements Table
 	}
 
 	/**
-	 * Small demonstration of the usage of the DataTable class.
+	 * Small demonstration of the usage of the DefaultNumericTable class.
 	 * 
 	 * @param args optiojnal arguments, not used
 	 */

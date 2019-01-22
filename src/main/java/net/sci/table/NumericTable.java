@@ -27,7 +27,7 @@ public interface NumericTable extends Table
      */
     public static NumericTable create(int nRows, int nColumns)
     {
-        return new DataTable(nRows, nColumns);
+        return new DefaultNumericTable(nRows, nColumns);
     }
     
     public static NumericTable keepNumericColumns(Table table)

@@ -13,9 +13,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 /**
- * Old implementation for the Table interface, that can contains only numeric value.
+ * Default implementation for the Tables that can contains only numeric value.
  * 
- * @see DefaultTable for better implementation.
+ * @see DefaultTable for alternative implementation that also allows for categorical columns
  * 
  * Data are stored as an double array indexed by column first. 
  * Methods access data by row indexing first.
@@ -23,7 +23,7 @@ import javax.swing.JTable;
  * @author David Legland
  *
  */
-public class DataTable implements NumericTable
+public class DefaultNumericTable implements NumericTable
 {
     // =============================================================
     // Class variables
@@ -33,11 +33,29 @@ public class DataTable implements NumericTable
 	 */
 	double[][] data;
 
+	/**
+	 * Number of columns in the table
+	 */
 	int nCols;
+
+	/**
+     * Number of rows in the table
+     */
 	int nRows;
 
-	String name = "";
+    /**
+     * The name of this table
+     */
+    String name = "";
+    
+    /**
+     * The name of the columns.
+     */
 	String[] colNames = null;
+	
+	/**
+	 * The name of the rows.
+	 */
 	String[] rowNames = null;
 
 
@@ -52,12 +70,12 @@ public class DataTable implements NumericTable
 	 * @param nCols
 	 *            the number of columns
 	 */
-	public DataTable(int nRows, int nCols)
+	public DefaultNumericTable(int nRows, int nCols)
 	{
 		this(new double[nCols][nRows]);
 	}
 
-	public DataTable(double[][] data, String[] colNames, String[] rowNames)
+	public DefaultNumericTable(double[][] data, String[] colNames, String[] rowNames)
 	{
 		this(data);
 
@@ -73,7 +91,7 @@ public class DataTable implements NumericTable
 		this.rowNames = rowNames;
 	}
 
-    public DataTable(double[][] data)
+    public DefaultNumericTable(double[][] data)
     {
         this.data = data;
 
@@ -349,14 +367,14 @@ public class DataTable implements NumericTable
 	}
 
 	/**
-     * Small demonstration of the usage of the DataTable class.
+     * Small demonstration of the usage of the DefaultNumericTable class.
      * 
      * @param args
      *            optional arguments, not used.
      */
 	public final static void main(String[] args)
 	{
-		DataTable tbl = new DataTable(15, 5);
+		DefaultNumericTable tbl = new DefaultNumericTable(15, 5);
         tbl.setColumnNames(new String[] { "Length", "Area", "Diam.",
                 "Number", "Density" });
 		tbl.print();
