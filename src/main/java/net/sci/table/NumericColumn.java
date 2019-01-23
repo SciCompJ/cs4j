@@ -18,4 +18,6 @@ public interface NumericColumn extends Column, Iterable<Double>
      * @return the value at specified row index
      */
     public double getValue(int row);
+    
+    public void copyValues(double[] values, int index);
 }

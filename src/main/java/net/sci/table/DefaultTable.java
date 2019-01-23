@@ -230,7 +230,34 @@ public class DefaultTable implements Table
 	        return new CategoricalColumnView(c);
     }
 
-	/**
+    @Override
+    public void setColumn(int c, Column col)
+    {
+        // copy column values
+        if (col instanceof NumericColumn)
+        {
+            // use fast method
+            ((NumericColumn) col).copyValues(this.data[c], 0);
+        }
+        else
+        {
+            for (int r = 0; r < nRows; r++)
+            {
+                this.data[c][r] = col.getValue(r);
+            }
+        }
+
+        // copy levels
+        if (col instanceof CategoricalColumn)
+        {
+            this.levels.set(c, ((CategoricalColumn) col).getLevels());
+        }
+
+        // copy name
+        setColumnName(c, col.getName());
+    }
+
+    /**
      * Adds a new numeric column.
      * 
      * @param name
@@ -258,6 +285,9 @@ public class DefaultTable implements Table
         System.arraycopy(data[nCols], 0, values, 0, nRows);
         this.data = data;
         
+        // add empty level array
+        this.levels.add(null);
+        
         // copy column names
         String[] colNames = new String[nCols+1];
         if (this.colNames != null)
@@ -268,6 +298,42 @@ public class DefaultTable implements Table
         this.colNames = colNames;
 	}
 	
+    @Override
+    public void removeColumn(int colIndex)
+    {
+        if (colIndex < 0 || colIndex >= nCols)
+        {
+            throw new IllegalArgumentException("Illegal column index: " + colIndex);
+        }
+
+        // create new data array
+        double[][] data = new double[nCols-1][nRows];
+        
+        // duplicate columns before index
+        for (int c = 0; c < colIndex; c++)
+        {
+            System.arraycopy(data[c], 0, this.data[c], 0, nRows);
+        }
+        // duplicate columns after index
+        for (int c = colIndex+1; c < nCols; c++)
+        {
+            System.arraycopy(data[c-1], 0, this.data[c], 0, nRows);
+        }
+        this.data = data;
+        
+        // update level array
+        this.levels.remove(colIndex);
+        
+        // copy column names
+        if (this.colNames != null)
+        {
+            String[] colNames = new String[nCols-1];
+            System.arraycopy(colNames, 0, this.colNames, 0, colIndex - 1);
+            System.arraycopy(colNames, colIndex, this.colNames, colIndex + 1, nCols - 1 - colIndex);
+            this.colNames = colNames;
+        }
+    }
+
     public String[] getColumnNames()
     {
         return this.colNames;
@@ -588,6 +654,12 @@ public class DefaultTable implements Table
             super(index);
         }
         
+        @Override
+        public void copyValues(double[] values, int index)
+        {
+            System.arraycopy(data[colIndex], 0, values, index, nRows);
+        }
+
         @Override
         public Iterator<Double> iterator()
         {

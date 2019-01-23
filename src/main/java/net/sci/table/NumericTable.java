@@ -49,9 +49,7 @@ public interface NumericTable extends Table
         int c2 = 0;
         for (int c : indices)
         {
-            NumericColumn col = (NumericColumn) table.column(c);
-            res.setColumnValues(c2, col.getValues());
-            res.column(c2).setName(col.getName());
+            res.setColumn(c2, table.column(c));
             c2++;
         }
         

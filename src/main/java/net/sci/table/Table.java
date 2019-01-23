@@ -118,8 +118,12 @@ public interface Table
      * @return a view or a reference to the column
      */
     public Column column(int c);
+    
+    public void setColumn(int c, Column col);
 
     public void addColumn(String name, double[] values);
+    
+    public void removeColumn(int c);
     
     public String[] getColumnNames();
 
