@@ -28,7 +28,7 @@ public class SlicerTest
 	@Test
 	public final void testGetSlice()
 	{
-		UInt8Array3D array = create543Array();
+		UInt8Array3D array = createUInt8Array3D();
 		UInt8Array2D result = UInt8Array2D.create(5, 4);
 		
 		Slicer.getSlice(array, result, 2, 1);
@@ -39,7 +39,7 @@ public class SlicerTest
     @Test
     public final void testSlice2d()
     {
-        UInt8Array3D array = create543Array();
+        UInt8Array3D array = createUInt8Array3D();
         int[] refPos = new int[]{1, 1, 1};
 
         Array<UInt8> resXY = Slicer.slice2d(array, 0, 1, refPos);
@@ -108,9 +108,9 @@ public class SlicerTest
 	 * Test method for {@link net.sci.array.process.shape.Slicer#process(net.sci.array.Array, net.sci.array.Array)}.
 	 */
 	@Test
-	public final void testProcess_Array()
+	public final void testProcess_UInt8Array3D()
 	{
-		UInt8Array3D array = create543Array();
+		UInt8Array3D array = createUInt8Array3D();
 		Slicer slicer = new Slicer(2, 1);
 		
 		Array<?> result = slicer.process(array);
@@ -121,7 +121,26 @@ public class SlicerTest
 		assertEquals(array.get(3, 2, 1), result.get(new int[]{3, 2}));
 	}
 
-	private UInt8Array3D create543Array()
+    @Test
+    public final void testCreateView_UInt8Array3D()
+    {
+        UInt8Array3D array = createUInt8Array3D();
+
+        Slicer slicer = new Slicer(2, 1);
+        Array<?> view = slicer.createView(array);
+        
+        assertEquals(2, view.dimensionality());
+        assertEquals(array.getSize(0), view.getSize(0));
+        assertEquals(array.getSize(1), view.getSize(1));
+
+        assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
+        
+        // modifies value in array and check equality
+        array.setValue(3, 2, 1, 25.0);
+        assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
+    }
+
+	private UInt8Array3D createUInt8Array3D()
 	{
 		UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
 		for (int z = 0; z < 3; z++)
@@ -153,6 +172,25 @@ public class SlicerTest
             }
         }
         return array;
+    }
+
+    @Test
+    public final void testCreateView_StringArray3D()
+    {
+        Array3D<String> array = createStringArray3D();
+
+        Slicer slicer = new Slicer(2, 1);
+        Array<?> view = slicer.createView(array);
+        
+        assertEquals(2, view.dimensionality());
+        assertEquals(array.getSize(0), view.getSize(0));
+        assertEquals(array.getSize(1), view.getSize(1));
+
+        assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
+        
+        // modifies value in array and check equality
+        array.set(3, 2, 1, "Hello!");
+        assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
     }
 
 	private Float32VectorArray3D createVectorArray3D()

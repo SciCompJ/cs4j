@@ -3,6 +3,8 @@
  */
 package net.sci.array.process.shape;
 
+import java.util.function.Function;
+
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.ScalarArray;
@@ -127,17 +129,34 @@ public class Slicer implements ArrayOperator
 		return target;
 	}
 	
-	public void process(Array<?> source, Array<?> target)
+	@SuppressWarnings("unchecked")
+    public <T> void process(Array<?> source, Array<?> target)
 	{
-		// TODO: check dims
 	    if (source instanceof ScalarArray && target instanceof ScalarArray)
-		processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
+	    {
+	        processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
+	    }
+	    else
+	    {
+	        processNd((Array<? extends T>) source, (Array<? super T>) target);
+	    }
 	}
 	
-	public <T> void processTyped(Array<? extends T> source, Array<? super T> target)
+	public <T> Array<T> createView(Array<T> array)
 	{
-		// TODO: check dims
-		processNd(source, target);
+	    int[] newDims = computeOutputArraySize(array);
+	    int nd = newDims.length;
+        
+        // convert position in view to position in source image
+	    Function<int[], int[]> mapping = (int[] pos) -> {
+	        int[] srcPos = new int[nd+1];
+	        System.arraycopy(pos, 0, srcPos, 0, dim);
+            srcPos[dim] = index;
+	        System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
+	        return srcPos;
+	    };
+	    
+	    return array.view(newDims, mapping);
 	}
 	
 	/**
@@ -181,12 +200,13 @@ public class Slicer implements ArrayOperator
 	
 	public void processScalarNd(ScalarArray<?> source, ScalarArray<?> target)
 	{
-		// create position pointer for source image
+        checkTargetSize(source, target);
+
+        // create position pointer for source image
 		int nd = target.dimensionality();
 		int[] srcPos = new int[nd + 1];
 		srcPos[this.dim] = this.index;
 
-        // iterate over positions in target image
         for (int[] pos : target.positions()) 
         {
 			// convert to position in source image
@@ -200,6 +220,8 @@ public class Slicer implements ArrayOperator
 	
 	public <T> void processNd(Array<T> source, Array<? super T> target)
 	{
+	    checkTargetSize(source, target);
+	    
 		// create position pointer for source image
 		int nd = target.dimensionality();
 		int[] srcPos = new int[nd + 1];
@@ -217,4 +239,19 @@ public class Slicer implements ArrayOperator
 		}
 	}
 
+	private void checkTargetSize(Array<?> source, Array<?> target)
+	{
+	    int[] expDims = computeOutputArraySize(source);
+	    if (target.dimensionality() != expDims.length)
+	    {
+	        throw new IllegalArgumentException("Requires output array with " + expDims.length + " dimensions");
+	    }
+	    for (int d = 0; d < expDims.length; d++)
+	    {
+	        if (target.getSize(d) != expDims[d])
+	        {
+	            throw new IllegalArgumentException("Wrong dimensions for output array");
+	        }
+	    }
+	}
 }

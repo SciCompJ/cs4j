@@ -6,7 +6,7 @@ package net.sci.array;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8ArrayND;
+import net.sci.array.scalar.UInt8Array;
 
 import org.junit.Test;
 
@@ -24,13 +24,14 @@ public class Array2DTest
         Array<String> tmp = array.newInstance(new int[]{5, 4});
         assertNotNull(tmp);
     }
+    
 	/**
 	 * Test method for {@link net.sci.array.Array2D#wrap(net.sci.array.Array)}.
 	 */
 	@Test
-	public final void testCreateView()
+	public final void testWrap()
 	{
-		Array<UInt8> array = UInt8ArrayND.create(new int[]{5, 4});
+		Array<UInt8> array = UInt8Array.create(new int[]{5, 4});
 		for (int y = 0; y < 4; y++)
 		{
 			for (int x = 0; x < 5; x++)
@@ -51,17 +52,17 @@ public class Array2DTest
 	 * Test method for {@link net.sci.array.Array2D#wrap(net.sci.array.Array)}.
 	 */
 	@Test
-	public final void testCreateView_3d()
+	public final void testWrap_3d()
 	{
-		Array<UInt8> array = UInt8ArrayND.create(new int[]{5, 4, 3});
+		Array<UInt8> array = UInt8Array.create(new int[]{5, 4, 3});
 		for (int z = 0; z < 3; z++)
 		{
 			for (int y = 0; y < 4; y++)
 			{
 				for (int x = 0; x < 5; x++)
 				{
-					int[] pos = new int[]{x, y};
-					array.set(pos, new UInt8(y * 10 + x));
+					int[] pos = new int[]{x, y, z};
+					array.set(pos, new UInt8(z * 100 + y * 10 + x));
 				}
 			}
 		}
