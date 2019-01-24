@@ -3,6 +3,8 @@
  */
 package net.sci.array;
 
+import net.sci.array.generic.BufferedGenericArray2D;
+
 /**
  * @author dlegland
  *
@@ -11,7 +13,12 @@ public abstract class Array2D<T> implements Array<T>
 {
 	// =============================================================
 	// static methods
-	
+
+    public static <T> Array2D<T> create(int sizeX, int sizeY, T init)
+    {
+        return new BufferedGenericArray2D<T>(sizeX, sizeY, init);
+    }
+    
 	public static final <T> Array2D<T> wrap(Array<T> array)
 	{
 		if (array instanceof Array2D)

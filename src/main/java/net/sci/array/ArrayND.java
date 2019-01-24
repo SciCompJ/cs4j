@@ -3,6 +3,7 @@
  */
 package net.sci.array;
 
+
 /**
  * Base implementation for arrays of any dimensionality.
  * 
@@ -113,7 +114,7 @@ public abstract class ArrayND<T> implements Array<T>
 		return this.sizes[dim];
 	}
 	
-	public PositionIterator positionIterator()
+    public PositionIterator positionIterator()
 	{
 	    return new DefaultPositionIterator(this.sizes);
 	}

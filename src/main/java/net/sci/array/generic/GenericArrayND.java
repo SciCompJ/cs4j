@@ -26,4 +26,14 @@ public abstract class GenericArrayND<T> extends ArrayND<T> implements GenericArr
     {
         super(sizes);
     }
+
+    // =============================================================
+    // Specialization of Array interface
+
+    @Override
+    public GenericArray<T> newInstance(int... dims)
+    {
+        return GenericArray.create(dims, iterator().next());
+    }
+    
 }

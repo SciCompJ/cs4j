@@ -3,9 +3,8 @@
  */
 package net.sci.array;
 
-import static org.junit.Assert.*;
-import net.sci.array.Array;
-import net.sci.array.Array2D;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8ArrayND;
 
@@ -17,7 +16,14 @@ import org.junit.Test;
  */
 public class Array2DTest
 {
-
+    @Test
+    public final void testNewInstance_String()
+    {
+        Array2D<String> array = Array2D.create(5, 4, "");
+        
+        Array<String> tmp = array.newInstance(new int[]{5, 4});
+        assertNotNull(tmp);
+    }
 	/**
 	 * Test method for {@link net.sci.array.Array2D#wrap(net.sci.array.Array)}.
 	 */

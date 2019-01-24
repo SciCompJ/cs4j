@@ -3,6 +3,8 @@
  */
 package net.sci.array;
 
+import net.sci.array.generic.BufferedGenericArray3D;
+
 /**
  * Base implementation for three-dimensional array.
  * 
@@ -11,7 +13,15 @@ package net.sci.array;
  */
 public abstract class Array3D<T> implements Array<T>
 {
-	// =============================================================
+    // =============================================================
+    // static factories
+
+    public static <T> Array3D<T> create(int sizeX, int sizeY, int sizeZ, T init)
+    {
+        return new BufferedGenericArray3D<T>(sizeX, sizeY, sizeZ, init);
+    }
+    
+    // =============================================================
 	// class members
 
 	protected int size0;

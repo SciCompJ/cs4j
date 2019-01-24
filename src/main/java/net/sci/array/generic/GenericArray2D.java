@@ -27,6 +27,11 @@ public abstract class GenericArray2D<T> extends Array2D<T> implements GenericArr
         super(size0, size1);
     }
 
+    @Override
+    public GenericArray<T> newInstance(int... dims)
+    {
+        return GenericArray.create(dims, iterator().next());
+    }
 
     public abstract T get(int x, int y);
     
