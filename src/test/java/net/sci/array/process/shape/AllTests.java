@@ -11,7 +11,8 @@ import org.junit.runners.Suite;
     FlipTest.class,
 	OrthogonalProjectionTest.class,
 	PermuteDimensionsTest.class,
-	SlicerTest.class,
+	Rotate90Test.class,
+    SlicerTest.class,
 	})
 public class AllTests {
   //nothing

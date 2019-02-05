@@ -103,21 +103,41 @@ public class PermuteDimensions implements ArrayOperator
     
     public <T> Array<?> createView(Array<T> array)
     {
-        int[] dims = array.getSize();
+        if (array.dimensionality() > dimOrder.length)
+        {
+            throw new IllegalArgumentException(String.format(
+                    "Requires an array of dimensionality %d, not %d",
+                    dimOrder.length, array.dimensionality()));
+        }
+
+        int[] newDims = computeOutputArraySize(array);
 
         int nd = dimOrder.length;
-
         Function<int[], int[]> mapping = (int[] pos) ->
         {
             int[] srcPos = new int[pos.length];
             for (int d = 0; d < nd; d++)
             {
-                srcPos[d] = pos[dimOrder[d]];
+                srcPos[dimOrder[d]] = pos[d];
             }
             return srcPos;
         };
         
-        return array.view(dims, mapping);
+        return array.view(newDims, mapping);
+    }
+
+    private int[] computeOutputArraySize(Array<?> inputArray)
+    {
+        // number of dimensions of new array
+        int nd = dimOrder.length;
+        
+        int[] dims = new int[nd];
+        for (int d = 0; d < nd; d++)
+        {
+            dims[d] = inputArray.getSize(dimOrder[d]);
+        }
+
+        return dims;
     }
 
     @Override
