@@ -3,6 +3,8 @@
  */
 package net.sci.array.process.shape;
 
+import java.util.function.Function;
+
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array2D;
@@ -38,6 +40,7 @@ public class Crop extends AlgoStub implements ArrayOperator
      * @param maxIndices
      *            the maximum index to keep (exclusive) for each dimension
      */
+    //TODO: change for minIndices and sizes?
     public Crop(int[] minIndices, int[] maxIndices)
     {
         if (minIndices.length != maxIndices.length)
@@ -158,4 +161,27 @@ public class Crop extends AlgoStub implements ArrayOperator
         
         return target;
     }
+    
+    public <T> Array<T> createView(Array<T> array)
+    {
+        int nd = sizes.length;
+        if (array.dimensionality() != nd)
+        {
+            throw new IllegalArgumentException("Input array must have dimensionality " + nd);
+        }
+
+        // convert position in view to position in source image
+        Function<int[], int[]> mapping = (int[] pos) -> {
+            int[] srcPos = new int[nd];
+            for (int d = 0; d < nd; d++)
+            {
+                srcPos[d] = pos[d] + minIndices[d];
+            }
+            return srcPos;
+        };
+        
+        return array.view(this.sizes, mapping);
+    }
+   
+
 }

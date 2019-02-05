@@ -6,6 +6,7 @@ package net.sci.array.process.shape;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import net.sci.array.Array;
+import net.sci.array.Array3D;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
 
@@ -51,6 +52,46 @@ public class CropTest
         assertEquals(32, output.getValue(0, 0), .1);
         assertEquals(67, output.getValue(5, 3), .1);
     }
+
+
+    @Test
+    public final void testCreateView_StringArray3D()
+    {
+        Array3D<String> array = createStringArray3D();
+
+        Crop crop = new Crop(new int[] {1, 1, 1}, new int[] {4, 3, 2});
+        Array<?> view = crop.createView(array);
+        
+        assertEquals(3, view.dimensionality());
+        assertEquals(3, view.getSize(0));
+        assertEquals(2, view.getSize(1));
+        assertEquals(1, view.getSize(2));
+
+        assertEquals(array.get(1, 1, 1), view.get(new int[]{0, 0, 0}));
+        
+        // modifies value in array and check equality
+        array.set(1, 1, 1, "Hello!");
+        assertEquals(array.get(1, 1, 1), view.get(new int[]{0, 0, 0}));
+    }
+
+    private Array3D<String> createStringArray3D()
+    {
+        String[] digits = new String[]{"a", "b", "c", "d", "e"};
+        Array3D<String> array = Array3D.create(5, 4, 3, "");
+        for (int z = 0; z < 3; z++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    String str = digits[z] + digits[y] + digits[x];
+                    array.set(x, y, z, str);
+                }
+            }
+        }
+        return array;
+    }
+
 
     private UInt8Array2D createUInt8Array2D()
     {

@@ -3,6 +3,8 @@
  */
 package net.sci.array.process.shape;
 
+import java.util.function.Function;
+
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 
@@ -89,7 +91,7 @@ public class PermuteDimensions implements ArrayOperator
         int[] newPos = new int[nd];
         for (int[] pos : array.positions())
         {
-            for (int d = 0; d <nd; d++)
+            for (int d = 0; d < nd; d++)
             {
                 newPos[d] = pos[dimOrder[d]];
             }
@@ -99,6 +101,25 @@ public class PermuteDimensions implements ArrayOperator
         return result;
     }
     
+    public <T> Array<?> createView(Array<T> array)
+    {
+        int[] dims = array.getSize();
+
+        int nd = dimOrder.length;
+
+        Function<int[], int[]> mapping = (int[] pos) ->
+        {
+            int[] srcPos = new int[pos.length];
+            for (int d = 0; d < nd; d++)
+            {
+                srcPos[d] = pos[dimOrder[d]];
+            }
+            return srcPos;
+        };
+        
+        return array.view(dims, mapping);
+    }
+
     @Override
     public boolean canProcess(Array<?> array)
     {

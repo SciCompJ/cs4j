@@ -136,8 +136,7 @@ public class Flip extends AlgoStub implements ArrayOperator
         }
     }
     
-        
-    public <T> Array<?> view(Array<T> array)
+    public <T> Array<?> createView(Array<T> array)
     {
         int[] dims = array.getSize();
         Function<int[], int[]> mapping = (int[] pos) ->

@@ -213,7 +213,7 @@ public class FlipTest
         }
         
         Flip flipX = new Flip(0);
-        Array<?> resFlip = flipX.view(array);
+        Array<?> resFlip = flipX.createView(array);
         
         assertEquals(2, resFlip.dimensionality());
         assertEquals(sizeX, resFlip.getSize(0));
@@ -242,7 +242,7 @@ public class FlipTest
         }
         
         Flip flipX = new Flip(0);
-        Array<?> resFlip = flipX.view(array);
+        Array<?> resFlip = flipX.createView(array);
         
         assertEquals(2, resFlip.dimensionality());
         assertEquals(sizeX, resFlip.getSize(0));
