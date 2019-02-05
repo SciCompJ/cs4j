@@ -3,12 +3,18 @@
  */
 package net.sci.array.scalar;
 
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
+import net.sci.array.DefaultPositionIterator;
 
 /**
+ * Specialization of the Array interface that contains Scalar values. 
+ * 
+ * Provides methods for accessing and modifying values as double.
+ * 
  * @author dlegland
  *
  */
@@ -240,8 +246,21 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 	public ScalarArray<T> newInstance(int... dims);
 
 	@Override
-	public ScalarArray<T> duplicate();
+	public default ScalarArray<T> duplicate()
+	{
+	    ScalarArray<T> dup = newInstance(getSize());
+	    for (int[] pos : positions())
+	    {
+	        dup.set(pos, get(pos));
+	    }
+	    return dup;
+	}
 	
+    public default ScalarArray<T> view(int[] newDims, Function<int[], int[]> coordsMapping)
+    {
+        return new View<T>(this, newDims, coordsMapping);
+    }
+
     @Override
     public ScalarArray.Factory<T> getFactory();
 
@@ -318,6 +337,161 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
          *            the new value
          */
         public void setValue(double value);     
-		
 	}
+	
+    static class View<T extends Scalar> implements ScalarArray<T>
+    {
+        ScalarArray<T> array;
+        
+        int[] newDims;
+        
+        Function<int[], int[]> coordsMapping;
+
+        /**
+         * 
+         */
+        public View(ScalarArray<T> array, int[] newDims, Function<int[], int[]> coordsMapping)
+        {
+            this.array = (ScalarArray<T>) array;
+            this.newDims = newDims;
+            this.coordsMapping = coordsMapping;
+        }
+
+
+        // =============================================================
+        // Implementation of the Array interface
+
+        @Override
+        public double getValue(int[] pos)
+        {
+            return array.getValue(coordsMapping.apply(pos));
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            array.setValue(coordsMapping.apply(pos), value);
+        }
+
+        // =============================================================
+        // Implementation  of the Array interface
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#dimensionality()
+         */
+        @Override
+        public int dimensionality()
+        {
+            return newDims.length;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#getSize()
+         */
+        @Override
+        public int[] getSize()
+        {
+            return newDims;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#getSize(int)
+         */
+        @Override
+        public int getSize(int dim)
+        {
+            return newDims[dim];
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#positionIterator()
+         */
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return new DefaultPositionIterator(newDims);
+        }
+
+        @Override
+        public Class<T> getDataType()
+        {
+            return array.getDataType();
+        }
+
+        @Override
+        public ScalarArray<T> newInstance(int... dims)
+        {
+            return array.newInstance(dims);
+        }
+
+        @Override
+        public Factory<T> getFactory()
+        {
+            return array.getFactory();
+        }
+
+        @Override
+        public T get(int[] pos)
+        {
+            return array.get(coordsMapping.apply(pos));
+        }
+
+        @Override
+        public void set(int[] pos, T value)
+        {
+            array.set(coordsMapping.apply(pos), value);
+        }
+
+        @Override
+        public Iterator<T> iterator()
+        {
+            return new Iterator<T>()
+            {
+                PositionIterator iter = positionIterator();
+
+                @Override
+                public double getValue()
+                {
+                    return View.this.getValue(iter.get());
+                }
+
+                @Override
+                public void setValue(double value)
+                {
+                    View.this.setValue(iter.get(), value);
+                }
+
+                @Override
+                public boolean hasNext()
+                {
+                    return iter.hasNext();
+                }
+
+                @Override
+                public void forward()
+                {
+                    iter.forward();
+                }
+
+                @Override
+                public T next()
+                {
+                    iter.forward();
+                    return View.this.get(iter.get());
+                }
+
+                @Override
+                public T get()
+                {
+                    return View.this.get(iter.get());
+                }
+
+                @Override
+                public void set(T value)
+                {
+                    View.this.set(iter.get(), value);
+                }
+            };
+        }
+    }
 }
