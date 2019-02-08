@@ -164,7 +164,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         
         VectorArray3D<V> result = (VectorArray3D <V>) tmp;
         
-        double[] buf = new double[this.getVectorLength()];
+        double[] buf = new double[this.channelNumber()];
         
         // iterate over positions
         for (int z = 0; z < this.getSize(2); z++)
@@ -293,9 +293,9 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         // Implementation of VectorArray interface
 
         @Override
-        public int getVectorLength()
+        public int channelNumber()
         {
-            return array.getVectorLength();
+            return array.channelNumber();
         }
 
         @Override
@@ -431,9 +431,9 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             // Implements VectorArray
 
             @Override
-            public int getVectorLength()
+            public int channelNumber()
             {
-                return Wrapper.this.getVectorLength();
+                return Wrapper.this.channelNumber();
             }
 
             @Override
@@ -530,7 +530,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
                 @Override
                 public boolean hasNext()
                 {
-                    return channel < array.getVectorLength() - 1;
+                    return channel < array.channelNumber() - 1;
                 }
 
                 @Override
@@ -617,7 +617,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             @Override
             public boolean hasNext()
             {
-                return channel < array.getVectorLength() - 1;
+                return channel < array.channelNumber() - 1;
             }
 
             @Override

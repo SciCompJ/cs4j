@@ -53,7 +53,7 @@ public class Gradient implements ArrayOperator
     
     private void checkArrayDimensions(ScalarArray<?> source, VectorArray<?> target)
     {
-        if (target.getVectorLength() != source.dimensionality())
+        if (target.channelNumber() != source.dimensionality())
         {
             throw new IllegalArgumentException("Target array must have at least " + source.dimensionality() + " channels");
         }

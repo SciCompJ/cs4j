@@ -68,7 +68,7 @@ public class BufferedFloat64VectorArray2D extends Float64VectorArray2D
 	 * @see net.sci.array.data.VectorArray#getVectorLength()
 	 */
 	@Override
-	public int getVectorLength()
+	public int channelNumber()
 	{
 		return this.vectorLength;
 	}

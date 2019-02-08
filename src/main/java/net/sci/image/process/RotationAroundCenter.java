@@ -98,7 +98,7 @@ public class RotationAroundCenter implements ImageArrayOperator
 		int targetSizeY = target.getSize(1);
 		Float32Array2D targetChannel = Float32Array2D.create(targetSizeX, targetSizeY);
 
-		int nChannels = source.getVectorLength();
+		int nChannels = source.channelNumber();
 		for (int c = 0; c < nChannels; c++)
 		{
 			copyToChannel(source, c, sourceChannel);

@@ -70,7 +70,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 	@Override
 	public default Float64VectorArray newInstance(int... dims)
 	{
-		return Float64VectorArray.create(dims, this.getVectorLength());
+		return Float64VectorArray.create(dims, this.channelNumber());
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 	public default Float64VectorArray duplicate()
 	{
 		// create output array
-		Float64VectorArray result = Float64VectorArray.create(this.getSize(), this.getVectorLength());
+		Float64VectorArray result = Float64VectorArray.create(this.getSize(), this.channelNumber());
 
         // initialize iterators
         Array.PositionIterator iter1 = this.positionIterator();

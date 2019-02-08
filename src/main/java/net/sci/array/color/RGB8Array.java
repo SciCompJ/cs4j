@@ -313,10 +313,10 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
     /**
      * Always returns 3, as this is the number of components of the RGB8 type.
      * 
-     * @see net.sci.array.vector.VectorArray#getVectorLength()
+     * @see net.sci.array.vector.VectorArray#channelNumber()
      */
     @Override
-    public default int getVectorLength()
+    public default int channelNumber()
     {
         return 3;
     }

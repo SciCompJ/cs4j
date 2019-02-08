@@ -69,7 +69,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	@Override
 	public default Float32VectorArray newInstance(int... dims)
 	{
-		return Float32VectorArray.create(dims, this.getVectorLength());
+		return Float32VectorArray.create(dims, this.channelNumber());
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	public default Float32VectorArray duplicate()
 	{
 		// create output array
-		Float32VectorArray result = Float32VectorArray.create(this.getSize(), this.getVectorLength());
+		Float32VectorArray result = Float32VectorArray.create(this.getSize(), this.channelNumber());
 
 		// initialize iterators
         Array.PositionIterator iter1 = this.positionIterator();

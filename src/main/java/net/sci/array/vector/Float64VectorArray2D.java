@@ -117,7 +117,7 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
         protected ChannelView(int channel)
         {
             super(Float64VectorArray2D.this.size0, Float64VectorArray2D.this.size1);
-            int nChannels = Float64VectorArray2D.this.getVectorLength();
+            int nChannels = Float64VectorArray2D.this.channelNumber();
             if (channel < 0 || channel >= nChannels)
             {
                 throw new IllegalArgumentException(String.format(
@@ -194,7 +194,7 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
         @Override
         public boolean hasNext()
         {
-            return channel < getVectorLength();
+            return channel < channelNumber();
         }
 
         @Override

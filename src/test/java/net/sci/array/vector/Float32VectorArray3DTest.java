@@ -27,7 +27,7 @@ public class Float32VectorArray3DTest
         {
             assertEquals(5, slice.getSize(0));
             assertEquals(4, slice.getSize(1));
-            assertEquals(2, slice.getVectorLength());
+            assertEquals(2, slice.channelNumber());
             n++;
         }
 

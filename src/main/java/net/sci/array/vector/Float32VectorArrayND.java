@@ -69,7 +69,7 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
         protected ChannelView(int channel)
         {
             super(Float32VectorArrayND.this.sizes);
-            int nChannels = Float32VectorArrayND.this.getVectorLength();
+            int nChannels = Float32VectorArrayND.this.channelNumber();
             if (channel < 0 || channel >= nChannels)
             {
                 throw new IllegalArgumentException(String.format(
@@ -190,7 +190,7 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
         @Override
         public boolean hasNext()
         {
-            return channel < getVectorLength();
+            return channel < channelNumber();
         }
 
         @Override

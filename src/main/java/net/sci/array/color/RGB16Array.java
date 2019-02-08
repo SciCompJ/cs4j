@@ -208,10 +208,10 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	/**
 	 * Always returns 3, as this is the number of components of the RGB16 type.
 	 * 
-	 * @see net.sci.array.vector.VectorArray#getVectorLength()
+	 * @see net.sci.array.vector.VectorArray#channelNumber()
 	 */
 	@Override
-	public default int getVectorLength()
+	public default int channelNumber()
 	{
 		return 3;
 	}

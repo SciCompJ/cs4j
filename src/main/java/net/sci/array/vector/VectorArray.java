@@ -42,7 +42,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
         PositionIterator posIter = array.positionIterator();
         
         // iterate over both arrays in parallel
-        double[] values = new double[array.getVectorLength()];
+        double[] values = new double[array.channelNumber()];
         while(posIter.hasNext())
         {
             int[] pos = posIter.next();
@@ -54,7 +54,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	
 	public static Collection<ScalarArray<?>> splitChannels(VectorArray<? extends Vector<?>> array)
 	{
-	    int nc = array.getVectorLength();
+	    int nc = array.channelNumber();
 	    ArrayList<ScalarArray<?>> channels = new ArrayList<ScalarArray<?>>(nc);
 	    
 	    for (ScalarArray<?> channel : array.channels())
@@ -104,7 +104,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
         PositionIterator posIter = this.positionIterator();
         
         // iterate over both arrays in parallel
-        double[] values = new double[getVectorLength()];
+        double[] values = new double[channelNumber()];
         while(posIter.hasNext())
         {
             int[] pos = posIter.next();
@@ -114,13 +114,16 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
         return result;
     }
 
+
+    // =============================================================
+    // Management of channels
+    
     /**
      * Returns the number of elements used to represent each array element.
      * 
      * @return the number of elements used to represent each array element.
      */
-    // TODO: rename as channelNumber()?
-	public int getVectorLength();
+	public int channelNumber();
 
     /**
      * Returns a view on the channel specified by the given index.
@@ -132,14 +135,23 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
     public ScalarArray<?> channel(int channel);
 
     /**
-	 * Copies the values of the specified scalar array at the specified channel
-	 * index.
-	 * 
-	 * @param c
-	 *            the channel index, 0-indexed
-	 * @param channel
-	 *            the scalar array containing channel data
-	 */
+     * Iterates over the channels
+     * 
+     * @return an iterator over the (scalar) channels
+     */
+    public Iterable<? extends ScalarArray<?>> channels();
+
+    public java.util.Iterator<? extends ScalarArray<?>> channelIterator();
+	
+    /**
+     * Copies the values of the specified scalar array at the specified channel
+     * index.
+     * 
+     * @param c
+     *            the channel index, 0-indexed
+     * @param channel
+     *            the scalar array containing channel data
+     */
     public default void setChannel(int c, ScalarArray<?> channel)
     {
     	// check dims
@@ -160,15 +172,9 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
     }
 
 
-    /**
-     * Iterates over the channels
-     * 
-     * @return an iterator over the (scalar) channels
-     */
-    public Iterable<? extends ScalarArray<?>> channels();
-
-    public java.util.Iterator<? extends ScalarArray<?>> channelIterator();
-	
+    // =============================================================
+    // Management of values as double arrays
+    
     /**
      * Returns the set of values corresponding to the array element for the
      * given position.
@@ -242,7 +248,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
         Array.PositionIterator iter2 = result.positionIterator();
 
         // copy values into output array
-        double[] values = new double[getVectorLength()];
+        double[] values = new double[channelNumber()];
         while(iter1.hasNext())
         {
             result.setValues(iter2.next(), this.getValues(iter1.next(), values));

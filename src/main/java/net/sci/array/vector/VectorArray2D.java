@@ -80,7 +80,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         // size and dimension of input array
         int sizeX = array.getSize(0);
         int sizeY = array.getSize(1);
-        int nChannels = array.getVectorLength();
+        int nChannels = array.channelNumber();
         
         // create output array
         Float32Array3D result = Float32Array3D.create(sizeX, sizeY, nChannels);
@@ -132,7 +132,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         Float32Array.Iterator iter2 = result.iterator();
         
         // iterate over both arrays in parallel
-        double[] values = new double[getVectorLength()]; 
+        double[] values = new double[channelNumber()]; 
         while (iter1.hasNext() && iter2.hasNext())
         {
             // get current vector
@@ -253,7 +253,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         
         VectorArray2D<V> result = (VectorArray2D <V>) tmp;
         
-        double[] buf = new double[this.getVectorLength()];
+        double[] buf = new double[this.channelNumber()];
 
         // iterate over positions
         for (int y = 0; y < this.getSize(1); y++)
@@ -326,9 +326,9 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
-        public int getVectorLength()
+        public int channelNumber()
         {
-            return array.getVectorLength();
+            return array.channelNumber();
         }
 
         @Override
@@ -396,7 +396,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
             @Override
             public boolean hasNext()
             {
-                return channel < array.getVectorLength();
+                return channel < array.channelNumber();
             }
 
             @Override

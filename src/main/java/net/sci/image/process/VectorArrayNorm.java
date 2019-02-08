@@ -48,7 +48,7 @@ public class VectorArrayNorm implements ImageArrayOperator
 	{
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
-		int nChannels = source.getVectorLength();
+		int nChannels = source.channelNumber();
 		
 		for (int y = 0; y < sizeY; y++)
 		{
@@ -74,7 +74,7 @@ public class VectorArrayNorm implements ImageArrayOperator
 		int sizeX = source.getSize(0);
 		int sizeY = source.getSize(1);
 		int sizeZ = source.getSize(2);
-		int nChannels = source.getVectorLength();
+		int nChannels = source.channelNumber();
 
 		for (int z = 0; z < sizeZ; z++)
 		{
