@@ -11,6 +11,7 @@ import org.junit.runners.Suite;
     AllTests.class,
     net.sci.table.cluster.AllTests.class,
     net.sci.table.io.AllTests.class,
+    net.sci.table.process.AllTests.class,
 	})
 public class AllTestsRecurse {
   //nothing
