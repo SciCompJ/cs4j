@@ -9,7 +9,8 @@ import net.sci.array.process.math.SqrtTest;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	PowerOfTwoTest.class,
+    FiniteDifferencesTest.class,
+    PowerOfTwoTest.class,
 	SqrtTest.class,
 	})
 public class AllTests {
