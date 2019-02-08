@@ -119,6 +119,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
      * 
      * @return the number of elements used to represent each array element.
      */
+    // TODO: rename as channelNumber()?
 	public int getVectorLength();
 
     /**

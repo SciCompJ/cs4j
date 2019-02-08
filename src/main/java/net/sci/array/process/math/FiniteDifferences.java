@@ -59,7 +59,7 @@ public class FiniteDifferences implements ArrayOperator
      * @see net.sci.array.ArrayOperator#process(net.sci.array.Array)
      */
     @Override
-    public <T> Array<?> process(Array<T> array)
+    public <T> ScalarArray<?> process(Array<T> array)
     {
         // check validity of input
         if (!(array instanceof ScalarArray))
@@ -67,8 +67,10 @@ public class FiniteDifferences implements ArrayOperator
             throw new IllegalArgumentException("Requires an instance of ScalarArray as input");
         }
         
-        // allocate memory for result
+        // class cast source 
         ScalarArray<?> source = (ScalarArray<?>) array;
+
+        // allocate memory for result
         ScalarArray<?> target = source.newInstance(source.getSize());
         
         processScalar(source, target);

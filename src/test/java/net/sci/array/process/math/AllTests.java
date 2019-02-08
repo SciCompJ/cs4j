@@ -10,6 +10,7 @@ import net.sci.array.process.math.SqrtTest;
 @Suite.SuiteClasses({
 	// generic classes
     FiniteDifferencesTest.class,
+    GradientTest.class,
     PowerOfTwoTest.class,
 	SqrtTest.class,
 	})
