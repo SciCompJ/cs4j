@@ -20,8 +20,8 @@ public class ConcatenateTest
         
         Array<?> result = op.process(array1, array2);
         assertTrue(result instanceof RGB8Array);
-        assertEquals(4+8, result.getSize(0));
-        assertEquals(6, result.getSize(1));
+        assertEquals(4+8, result.size(0));
+        assertEquals(6, result.size(1));
     }
     
     @Test
@@ -33,8 +33,8 @@ public class ConcatenateTest
         
         Array<?> result = op.process(array1, array2);
         assertTrue(result instanceof RGB8Array);
-        assertEquals(8, result.getSize(0));
-        assertEquals(6+10, result.getSize(1));
+        assertEquals(8, result.size(0));
+        assertEquals(6+10, result.size(1));
     }
     
     @Test
@@ -46,9 +46,9 @@ public class ConcatenateTest
         
         Array<?> result = op.process(array1, array2);
         assertTrue(result instanceof RGB8Array);
-        assertEquals(4, result.getSize(0));
-        assertEquals(3, result.getSize(1));
-        assertEquals(2, result.getSize(2));
+        assertEquals(4, result.size(0));
+        assertEquals(3, result.size(1));
+        assertEquals(2, result.size(2));
     }
     
 }

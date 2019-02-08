@@ -234,9 +234,9 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
                 throw new IllegalArgumentException("Requires an array with at least three dimensions");
             }
             this.array = array;
-            this.size0 = array.getSize(0);
-            this.size1 = array.getSize(1);
-            this.size2 = array.getSize(2);
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.size2 = array.size(2);
         }
 
         @Override
@@ -261,7 +261,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         @Override
         public BinaryArray3D duplicate()
         {
-            BinaryArray3D result = BinaryArray3D.create(array.getSize(0), array.getSize(1), array.getSize(2));
+            BinaryArray3D result = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
     	    for (int[] pos : array.positions())
     	    {
     	    	result.setBoolean(pos, array.getValue(pos) > 0);
@@ -270,9 +270,9 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         }
         
         @Override
-        public Class<Binary> getDataType()
+        public Class<Binary> dataType()
         {
-            return array.getDataType();
+            return array.dataType();
         }
 
         @Override

@@ -70,11 +70,11 @@ public class SlicedInt32Array3D extends Int32Array3D
 		
 		// check slices have same dimensions
 		Int32Array slice0 = slices.iterator().next();
-		int size0 = slice0.getSize(0);
-		int size1 = slice0.getSize(1);
+		int size0 = slice0.size(0);
+		int size1 = slice0.size(1);
 		for (Int32Array slice : slices)
 		{
-			if (slice.getSize(0) != size0 || slice.getSize(1) != size1)
+			if (slice.size(0) != size0 || slice.size(1) != size1)
 			{
 				throw new IllegalArgumentException("All slices must have the same size");
 			}

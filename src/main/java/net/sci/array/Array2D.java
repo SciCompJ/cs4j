@@ -105,7 +105,7 @@ public abstract class Array2D<T> implements Array<T>
 	 * @see net.sci.array.Array#getSize()
 	 */
 	@Override
-	public int[] getSize()
+	public int[] size()
 	{
 		return new int[]{this.size0, this.size1};
 	}
@@ -114,7 +114,7 @@ public abstract class Array2D<T> implements Array<T>
 	 * @see net.sci.array.Array#getSize(int)
 	 */
 	@Override
-	public int getSize(int dim)
+	public int size(int dim)
 	{
 		switch(dim)
 		{
@@ -155,8 +155,8 @@ public abstract class Array2D<T> implements Array<T>
 				throw new IllegalArgumentException("Requires an array with at least two dimensions");
 			}
 			this.array = array;
-			this.size0 = array.getSize(0);
-			this.size1 = array.getSize(1);
+			this.size0 = array.size(0);
+			this.size1 = array.size(1);
 		}
 
 		@Override
@@ -251,9 +251,9 @@ public abstract class Array2D<T> implements Array<T>
 		}
 		
 		@Override
-		public Class<T> getDataType()
+		public Class<T> dataType()
 		{
-			return array.getDataType();
+			return array.dataType();
 		}
 
 		@Override

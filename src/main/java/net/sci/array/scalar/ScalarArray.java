@@ -26,7 +26,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 
 	public default ScalarArray<T> plus(double v)
 	{
-        ScalarArray<T> res = newInstance(getSize());
+        ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, this.getValue(pos) + v);
@@ -36,7 +36,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 
 	public default ScalarArray<T> minus(double v)
 	{
-        ScalarArray<T> res = newInstance(getSize());
+        ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, this.getValue(pos) - v);
@@ -46,7 +46,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 
 	public default ScalarArray<T> times(double k)
 	{
-        ScalarArray<T> res = newInstance(getSize());
+        ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, this.getValue(pos) * k);
@@ -56,7 +56,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 
 	public default ScalarArray<T> divideBy(double k)
 	{
-        ScalarArray<T> res = newInstance(getSize());
+        ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, this.getValue(pos) / k);
@@ -74,7 +74,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
      */
     public default ScalarArray<T> apply(UnaryOperator<Double> fun)
     {
-        ScalarArray<T> res = newInstance(getSize());
+        ScalarArray<T> res = newInstance(size());
         apply(fun, res);
         return res;
     }
@@ -248,7 +248,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 	@Override
 	public default ScalarArray<T> duplicate()
 	{
-	    ScalarArray<T> dup = newInstance(getSize());
+	    ScalarArray<T> dup = newInstance(size());
 	    for (int[] pos : positions())
 	    {
 	        dup.set(pos, get(pos));
@@ -389,7 +389,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
          * @see net.sci.array.Array#getSize()
          */
         @Override
-        public int[] getSize()
+        public int[] size()
         {
             return newDims;
         }
@@ -398,7 +398,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
          * @see net.sci.array.Array#getSize(int)
          */
         @Override
-        public int getSize(int dim)
+        public int size(int dim)
         {
             return newDims[dim];
         }
@@ -413,9 +413,9 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
         }
 
         @Override
-        public Class<T> getDataType()
+        public Class<T> dataType()
         {
-            return array.getDataType();
+            return array.dataType();
         }
 
         @Override

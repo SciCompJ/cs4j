@@ -38,7 +38,7 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
 	@Override
 	public UInt16Array convertToUInt16()
 	{
-		int[] sizes = this.getSize();
+		int[] sizes = this.size();
 		UInt16Array result = UInt16Array.create(sizes);
 		
 		PositionIterator iter = positionIterator();

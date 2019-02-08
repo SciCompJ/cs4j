@@ -31,8 +31,8 @@ public class TiffImageReaderTest
 		assertEquals(2, image.getDimension());
 
 		ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-		assertEquals(256, data.getSize(0));
-		assertEquals(256, data.getSize(1));
+		assertEquals(256, data.size(0));
+		assertEquals(256, data.size(1));
 		
 		assertEquals(193, data.getValue(150, 135), .1);
 	}
@@ -48,8 +48,8 @@ public class TiffImageReaderTest
 		assertEquals(2, image.getDimension());
 
 		ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-		assertEquals(256, data.getSize(0));
-		assertEquals(256, data.getSize(1));
+		assertEquals(256, data.size(0));
+		assertEquals(256, data.size(1));
 		
 		assertEquals(193, data.getValue(150, 135), .1);
 	}
@@ -69,8 +69,8 @@ public class TiffImageReaderTest
 		assertEquals(2, image.getDimension());
 
 		ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-		assertEquals(512, data.getSize(0));
-		assertEquals(512, data.getSize(1));
+		assertEquals(512, data.size(0));
+		assertEquals(512, data.size(1));
 	}
 
 	@Test
@@ -84,9 +84,9 @@ public class TiffImageReaderTest
 		assertEquals(3, image.getDimension());
 
 		Array<?> data = image.getData();
-		assertEquals(128, data.getSize(0));
-		assertEquals(128, data.getSize(1));
-		assertEquals( 27, data.getSize(2));
+		assertEquals(128, data.size(0));
+		assertEquals(128, data.size(1));
+		assertEquals( 27, data.size(2));
 	}
 
 	@Test

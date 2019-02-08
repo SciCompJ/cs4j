@@ -61,7 +61,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
     public static Collection<UInt16Array> splitChannels(RGB16Array array)
     {
         // create result arrays
-        int[] dims = array.getSize();
+        int[] dims = array.size();
         UInt16Array redChannel = UInt16Array.create(dims);
         UInt16Array greenChannel = UInt16Array.create(dims);
         UInt16Array blueChannel = UInt16Array.create(dims);
@@ -111,7 +111,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
     public static HashMap<String, UInt16Array> mapChannels(RGB16Array array)
     {
         // create result arrays
-        int[] dims = array.getSize();
+        int[] dims = array.size();
         UInt16Array redChannel = UInt16Array.create(dims);
         UInt16Array greenChannel = UInt16Array.create(dims);
         UInt16Array blueChannel = UInt16Array.create(dims);
@@ -154,7 +154,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
     public static RGB16Array mergeChannels(UInt16Array redChannel, UInt16Array greenChannel, UInt16Array blueChannel)
     {
         // create result array
-        int[] dims = redChannel.getSize();
+        int[] dims = redChannel.size();
         RGB16Array result = create(dims);
         
         // get iterators
@@ -257,7 +257,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	public default RGB16Array duplicate()
 	{
 		// create output array
-		RGB16Array result = RGB16Array.create(this.getSize());
+		RGB16Array result = RGB16Array.create(this.size());
 
 		// initialize iterators
 		RGB16Array.Iterator iter1 = this.iterator();
@@ -274,7 +274,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	}
 
 	@Override
-	public default Class<RGB16> getDataType()
+	public default Class<RGB16> dataType()
 	{
 		return RGB16.class;
 	}

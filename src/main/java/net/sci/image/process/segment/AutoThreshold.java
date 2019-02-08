@@ -70,6 +70,6 @@ public abstract class AutoThreshold implements ImageArrayOperator
 	 */
 	public BinaryArray createEmptyOutputArray(Array<?> inputArray)
 	{
-		return BinaryArray.create(inputArray.getSize());
+		return BinaryArray.create(inputArray.size());
 	}
 }

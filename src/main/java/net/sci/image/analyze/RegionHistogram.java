@@ -41,9 +41,9 @@ public class RegionHistogram
 		// compute bounding box f domain to avoid unnecessary computations
 		Box2D bbox = domain.boundingBox();
 		int xmin = (int) Math.max(0, Math.floor(bbox.getXMin()));
-		int xmax = (int) Math.min(array.getSize(0), Math.ceil(bbox.getXMax()));
+		int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.getXMax()));
 		int ymin = (int) Math.max(0, Math.floor(bbox.getYMin()));
-		int ymax = (int) Math.min(array.getSize(1), Math.ceil(bbox.getYMax()));
+		int ymax = (int) Math.min(array.size(1), Math.ceil(bbox.getYMax()));
 		
 		// iterate over samples to update the histogram
 		for (int y = ymin; y < ymax; y++)
@@ -71,9 +71,9 @@ public class RegionHistogram
 		// compute bounding box f domain to avoid unnecessary computations
 		Box2D bbox = domain.boundingBox();
 		int xmin = (int) Math.max(0, Math.floor(bbox.getXMin()));
-		int xmax = (int) Math.min(array.getSize(0), Math.ceil(bbox.getXMax()));
+		int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.getXMax()));
 		int ymin = (int) Math.max(0, Math.floor(bbox.getYMin()));
-		int ymax = (int) Math.min(array.getSize(1), Math.ceil(bbox.getYMax()));
+		int ymax = (int) Math.min(array.size(1), Math.ceil(bbox.getYMax()));
 		
 		// iterate over samples to update the histogram
 		for (int y = ymin; y < ymax; y++)

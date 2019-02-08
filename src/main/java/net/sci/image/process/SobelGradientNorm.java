@@ -50,8 +50,8 @@ public class SobelGradientNorm implements ImageArrayOperator
 
 	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
 	{
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 
 		float[][] maskGradX = { { -1, 0, 1 }, { -2, 0, 2 }, { -1, 0, 1 } };
 		float[][] maskGradY = { { -1, -2, -1 }, { 0, 0, 0 }, { 1, 2, 1 } };
@@ -94,9 +94,9 @@ public class SobelGradientNorm implements ImageArrayOperator
 	public void processScalar3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
 	{
 		// get array size
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
-		int sizeZ = source.getSize(2);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
+		int sizeZ = source.size(2);
 
 		// create kernels for Sobel gradient along each direction
 		float[][][] maskGradX = { 
@@ -173,7 +173,7 @@ public class SobelGradientNorm implements ImageArrayOperator
 
     public ScalarArray<?> createEmptyOutputArray(ScalarArray<?> array)
     {
-        return Float32Array.create(array.getSize());
+        return Float32Array.create(array.size());
     }
 
     public boolean canProcess(Array<?> array)

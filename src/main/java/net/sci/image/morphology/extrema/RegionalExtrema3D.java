@@ -137,9 +137,9 @@ implements ImageArrayOperator, ScalarArrayOperator
 	 */
 	private void processScalar3dC6(ScalarArray3D<?> source, BinaryArray3D target) 
 	{
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
-		int sizeZ = source.getSize(2);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
+		int sizeZ = source.size(2);
 
 		// initialize local data depending on extrema type
 		int sign = 1;
@@ -206,9 +206,9 @@ implements ImageArrayOperator, ScalarArrayOperator
 	 */
 	private void processScalar3dC26(ScalarArray3D<?> source, BinaryArray3D target) 
 	{
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
-		int sizeZ = source.getSize(2);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
+		int sizeZ = source.size(2);
 
 		// initialize local data depending on extrema type
 		int sign = 1;
@@ -277,7 +277,7 @@ implements ImageArrayOperator, ScalarArrayOperator
 	 */
 	public BinaryArray createEmptyOutputArray(Array<?> array)
 	{
-		int[] dims = array.getSize();
+		int[] dims = array.size();
 		return BinaryArray.create(dims);
 	}
 

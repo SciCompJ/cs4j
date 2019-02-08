@@ -53,7 +53,7 @@ public class LinearInterpolator2D implements ScalarFunction2D
 	{
 		// select points located inside interpolation area
 		// (smaller than image size)
-		int[] dims = this.array.getSize();
+		int[] dims = this.array.size();
 		boolean isInside = x >= 0 && y >= 0 && x < (dims[0]-1) && y < (dims[1]-1);
 		if (!isInside)
 		{

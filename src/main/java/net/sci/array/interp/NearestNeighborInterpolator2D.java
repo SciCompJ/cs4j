@@ -56,7 +56,7 @@ public class NearestNeighborInterpolator2D implements ScalarFunction2D
 		int j = (int) Math.round(y);
 		
 		// check if point is located within interpolation area
-		int[] dims = this.array.getSize();
+		int[] dims = this.array.size();
 		boolean isInside = i >= 0 && j >= 0 && i < dims[0] && j < dims[1];
 		if (!isInside)
 		{

@@ -24,7 +24,7 @@ public class ConvertToDouble implements ArrayOperator
 	    {
 	        throw new RuntimeException("Requires a scalar array");
 	    }
-        Float32Array result = Float32Array.create(array.getSize());
+        Float32Array result = Float32Array.create(array.size());
         
         PositionIterator iter = array.positionIterator();
         while(iter.hasNext())

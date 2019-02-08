@@ -82,8 +82,8 @@ public class FloodFill
 		}
 		
 		// get image size
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		
 		// get old value
 		S oldValue = source.get(x, y);
@@ -249,8 +249,8 @@ public class FloodFill
 		}
 		
 		// get image size
-		int sizeX = input.getSize(0);
-		int sizeY = input.getSize(1);
+		int sizeX = input.size(0);
+		int sizeY = input.size(1);
 		
 		// get old value
 		double oldValue = input.getValue(x, y);
@@ -417,8 +417,8 @@ public class FloodFill
 		}
 		
 		// get image size
-		int sizeX = input.getSize(0);
-		int sizeY = input.getSize(1);
+		int sizeX = input.size(0);
+		int sizeY = input.size(1);
 		
 		// get old value
 		int oldValue = input.getInt(x, y);
@@ -643,9 +643,9 @@ public class FloodFill
             ScalarArray3D<?> outputArray, double value)
 	{
 		// get image size
-		int sizeX = inputArray.getSize(0);
-		int sizeY = inputArray.getSize(1);
-		int sizeZ = inputArray.getSize(2);
+		int sizeX = inputArray.size(0);
+		int sizeY = inputArray.size(1);
+		int sizeZ = inputArray.size(2);
 
 		// get old value
 		double oldValue = inputArray.getValue(x, y, z);
@@ -797,9 +797,9 @@ public class FloodFill
             ScalarArray3D<?> outputArray, double value)
 	{
 		// get image size
-		int sizeX = inputArray.getSize(0);
-		int sizeY = inputArray.getSize(1);
-		int sizeZ = inputArray.getSize(2);
+		int sizeX = inputArray.size(0);
+		int sizeY = inputArray.size(1);
+		int sizeZ = inputArray.size(2);
 		
 		// get old value
 		double oldValue = inputArray.getValue(x, y, z);
@@ -984,9 +984,9 @@ public class FloodFill
             IntArray3D<?> outputArray, int value)
 	{
 		// get image size
-		int sizeX = inputArray.getSize(0);
-		int sizeY = inputArray.getSize(1);
-		int sizeZ = inputArray.getSize(2);
+		int sizeX = inputArray.size(0);
+		int sizeY = inputArray.size(1);
+		int sizeZ = inputArray.size(2);
 
 		// get old value
 		int oldValue = inputArray.getInt(x, y, z);
@@ -1138,9 +1138,9 @@ public class FloodFill
             IntArray3D<?> outputArray, int value)
 	{
 		// get image size
-		int sizeX = inputArray.getSize(0);
-		int sizeY = inputArray.getSize(1);
-		int sizeZ = inputArray.getSize(2);
+		int sizeX = inputArray.size(0);
+		int sizeY = inputArray.size(1);
+		int sizeZ = inputArray.size(2);
 		
 		// get old value
 		int oldValue = inputArray.getInt(x, y, z);

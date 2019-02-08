@@ -66,7 +66,7 @@ public interface Float32Array extends ScalarArray<Float32>
 	
 	public static Float32Array convert(ScalarArray<?> array)
 	{
-		Float32Array result = Float32Array.create(array.getSize());
+		Float32Array result = Float32Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
 	    	result.setValue(pos, array.getValue(pos));
@@ -129,7 +129,7 @@ public interface Float32Array extends ScalarArray<Float32>
 	public default Float32Array duplicate()
 	{
 		// create output array
-		Float32Array result = Float32Array.create(this.getSize());
+		Float32Array result = Float32Array.create(this.size());
 	    for (int[] pos : positions())
 	    {
 	    	result.setValue(pos, this.getValue(pos));
@@ -145,7 +145,7 @@ public interface Float32Array extends ScalarArray<Float32>
     }
 
 	@Override
-	public default Class<Float32> getDataType()
+	public default Class<Float32> dataType()
 	{
 		return Float32.class;
 	}
@@ -228,15 +228,15 @@ public interface Float32Array extends ScalarArray<Float32>
 		}
 
 		@Override
-		public int[] getSize()
+		public int[] size()
 		{
-			return array.getSize();
+			return array.size();
 		}
 
 		@Override
-		public int getSize(int dim)
+		public int size(int dim)
 		{
-			return array.getSize(dim);
+			return array.size(dim);
 		}
 
 		@Override
@@ -367,7 +367,7 @@ public interface Float32Array extends ScalarArray<Float32>
          * @see net.sci.array.Array#getSize()
          */
         @Override
-        public int[] getSize()
+        public int[] size()
         {
             return newDims;
         }
@@ -376,7 +376,7 @@ public interface Float32Array extends ScalarArray<Float32>
          * @see net.sci.array.Array#getSize(int)
          */
         @Override
-        public int getSize(int dim)
+        public int size(int dim)
         {
             return newDims[dim];
         }

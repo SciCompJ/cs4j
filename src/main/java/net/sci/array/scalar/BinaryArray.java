@@ -73,7 +73,7 @@ public interface BinaryArray extends IntArray<Binary>
      */
 	public static BinaryArray convert(ScalarArray<?> array)
 	{
-	    BinaryArray result = BinaryArray.create(array.getSize());
+	    BinaryArray result = BinaryArray.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
 	    	result.setBoolean(pos, array.getValue(pos) > 0);
@@ -127,7 +127,7 @@ public interface BinaryArray extends IntArray<Binary>
      */
 	public default BinaryArray complement()
 	{
-	    BinaryArray result = BinaryArray.create(this.getSize());
+	    BinaryArray result = BinaryArray.create(this.size());
 	    for (int[] pos : positions())
 	    {
 	    	result.setBoolean(pos, !getBoolean(pos));
@@ -179,7 +179,7 @@ public interface BinaryArray extends IntArray<Binary>
 	public default BinaryArray duplicate()
 	{
 		// create output array
-		BinaryArray result = BinaryArray.create(this.getSize());
+		BinaryArray result = BinaryArray.create(this.size());
 		
 		// copy values into output array
 		for(int[] pos : positions())
@@ -192,7 +192,7 @@ public interface BinaryArray extends IntArray<Binary>
 	}
 
 	@Override
-	public default Class<Binary> getDataType()
+	public default Class<Binary> dataType()
 	{
 		return Binary.class;
 	}
@@ -445,15 +445,15 @@ public interface BinaryArray extends IntArray<Binary>
         }
 
         @Override
-        public int[] getSize()
+        public int[] size()
         {
-            return array.getSize();
+            return array.size();
         }
 
         @Override
-        public int getSize(int dim)
+        public int size(int dim)
         {
-            return array.getSize(dim);
+            return array.size(dim);
         }
 
         @Override

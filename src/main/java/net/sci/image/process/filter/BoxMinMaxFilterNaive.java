@@ -96,7 +96,7 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 	{
 		// get array size (for cropping)
 		int nd = source.dimensionality();
-		int[] sizes = source.getSize();
+		int[] sizes = source.size();
 		
 		// get the sign for min/max computations
 		int sign = this.type == Type.MAX ? +1 : -1;
@@ -155,8 +155,8 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
 	{
 		// get size of input array
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		
 		// get the sign for min/max computations
 		int sign = this.type == Type.MAX ? +1 : -1;
@@ -215,9 +215,9 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 	public void processScalar3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
 	{
 		// get size of input array
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
-		int sizeZ = source.getSize(2);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
+		int sizeZ = source.size(2);
 		
 		// get the sign for min/max computations
 		int sign = this.type == Type.MAX ? +1 : -1;
@@ -286,7 +286,7 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        ScalarArray<?> result = array.newInstance(array.getSize());
+        ScalarArray<?> result = array.newInstance(array.size());
         processScalar(array, result);
         return result;
     }

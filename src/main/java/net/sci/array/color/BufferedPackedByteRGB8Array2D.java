@@ -34,8 +34,8 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 
 	public BufferedPackedByteRGB8Array2D(UInt8Array3D buffer)
 	{
-		super(buffer.getSize(0), buffer.getSize(1));
-		if (buffer.getSize(2) != 3)
+		super(buffer.size(0), buffer.size(1));
+		if (buffer.size(2) != 3)
 		{
 			throw new IllegalArgumentException("Requires an array of UInt8 with 3 slices");
 		}

@@ -65,7 +65,7 @@ public interface Int16Array extends IntArray<Int16>
 	
 	public static Int16Array convert(ScalarArray<?> array)
 	{
-		Int16Array result = Int16Array.create(array.getSize());
+		Int16Array result = Int16Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
 	    	result.setValue(pos, array.getValue(pos));
@@ -151,7 +151,7 @@ public interface Int16Array extends IntArray<Int16>
 	public default Int16Array duplicate()
 	{
 		// create output array
-		Int16Array result = Int16Array.create(this.getSize());
+		Int16Array result = Int16Array.create(this.size());
 	    for (int[] pos : positions())
 	    {
 	    	result.setShort(pos, getShort(pos));
@@ -168,7 +168,7 @@ public interface Int16Array extends IntArray<Int16>
 
 
 	@Override
-	public default Class<Int16> getDataType()
+	public default Class<Int16> dataType()
 	{
 		return Int16.class;
 	}
@@ -284,15 +284,15 @@ public interface Int16Array extends IntArray<Int16>
 		}
 
 		@Override
-		public int[] getSize()
+		public int[] size()
 		{
-			return array.getSize();
+			return array.size();
 		}
 
 		@Override
-		public int getSize(int dim)
+		public int size(int dim)
 		{
-			return array.getSize(dim);
+			return array.size(dim);
 		}
 
 		@Override
@@ -445,7 +445,7 @@ public interface Int16Array extends IntArray<Int16>
          * @see net.sci.array.Array#getSize()
          */
         @Override
-        public int[] getSize()
+        public int[] size()
         {
             return newDims;
         }
@@ -454,7 +454,7 @@ public interface Int16Array extends IntArray<Int16>
          * @see net.sci.array.Array#getSize(int)
          */
         @Override
-        public int getSize(int dim)
+        public int size(int dim)
         {
             return newDims[dim];
         }

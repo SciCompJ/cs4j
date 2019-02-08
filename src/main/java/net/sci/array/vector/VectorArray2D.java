@@ -40,9 +40,9 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
     public static VectorArray2D<?> fromStack(ScalarArray3D<?> array)
     {
         // size and dimension of input array
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
-        int sizeZ = array.getSize(2);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
     
         // create output array
         VectorArray2D<? extends Vector<?>> result = Float64VectorArray2D.create(sizeX, sizeY, sizeZ);
@@ -78,8 +78,8 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
     public static ScalarArray3D<?> convertToStack(VectorArray2D<?> array)
     {
         // size and dimension of input array
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
         int nChannels = array.channelNumber();
         
         // create output array
@@ -125,7 +125,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
     public ScalarArray2D<?> norm()
     {
         // allocate memory for result
-        Float32Array2D result = Float32Array2D.create(getSize(0), getSize(1));
+        Float32Array2D result = Float32Array2D.create(size(0), size(1));
         
         // create array iterators
         VectorArray.Iterator<? extends Vector<?>> iter1 = iterator();
@@ -256,9 +256,9 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         double[] buf = new double[this.channelNumber()];
 
         // iterate over positions
-        for (int y = 0; y < this.getSize(1); y++)
+        for (int y = 0; y < this.size(1); y++)
         {
-            for (int x = 0; x < this.getSize(0); x++)
+            for (int x = 0; x < this.size(0); x++)
             {
                 result.setValues(x, y, this.getValues(x, y, buf));
             }
@@ -283,8 +283,8 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
                 throw new IllegalArgumentException("Requires an array with at least two dimensions");
             }
             this.array = array;
-            this.size0 = array.getSize(0);
-            this.size1 = array.getSize(1);
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
         }
 
         @Override
@@ -314,9 +314,9 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
-        public Class<T> getDataType()
+        public Class<T> dataType()
         {
-            return array.getDataType();
+            return array.dataType();
         }
 
         @Override

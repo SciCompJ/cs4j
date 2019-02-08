@@ -66,7 +66,7 @@ public interface UInt16Array extends IntArray<UInt16>
 	
 	public static UInt16Array convert(ScalarArray<?> array)
 	{
-		UInt16Array result = UInt16Array.create(array.getSize());
+		UInt16Array result = UInt16Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
 	    	result.setValue(pos, array.getValue(pos));
@@ -152,7 +152,7 @@ public interface UInt16Array extends IntArray<UInt16>
 	public default UInt16Array duplicate()
 	{
 		// create output array
-		UInt16Array result = UInt16Array.create(this.getSize());
+		UInt16Array result = UInt16Array.create(this.size());
 		
 	    for (int[] pos : positions())
 	    {
@@ -170,7 +170,7 @@ public interface UInt16Array extends IntArray<UInt16>
 
 
 	@Override
-	public default Class<UInt16> getDataType()
+	public default Class<UInt16> dataType()
 	{
 		return UInt16.class;
 	}
@@ -285,15 +285,15 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 
 		@Override
-		public int[] getSize()
+		public int[] size()
 		{
-			return array.getSize();
+			return array.size();
 		}
 
 		@Override
-		public int getSize(int dim)
+		public int size(int dim)
 		{
-			return array.getSize(dim);
+			return array.size(dim);
 		}
 
 		@Override
@@ -446,7 +446,7 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.Array#getSize()
          */
         @Override
-        public int[] getSize()
+        public int[] size()
         {
             return newDims;
         }
@@ -455,7 +455,7 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.Array#getSize(int)
          */
         @Override
-        public int getSize(int dim)
+        public int size(int dim)
         {
             return newDims[dim];
         }

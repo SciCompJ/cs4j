@@ -31,7 +31,7 @@ public class Gradient implements ArrayOperator
         
         // allocate memory for result
         ScalarArray<?> source = (ScalarArray<?>) array;
-        VectorArray<?> target = Float32VectorArray.create(source.getSize(), source.dimensionality());
+        VectorArray<?> target = Float32VectorArray.create(source.size(), source.dimensionality());
         
         processScalar(source, target);
         

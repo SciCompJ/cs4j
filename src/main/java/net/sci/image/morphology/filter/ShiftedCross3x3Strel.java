@@ -160,8 +160,8 @@ public class ShiftedCross3x3Strel
 		private void inPlaceDilationGray8(UInt8Array2D image)
 		{
 			// size of image
-			int sizeX = image.getSize(0);
-			int sizeY = image.getSize(1);
+			int sizeX = image.size(0);
+			int sizeY = image.size(1);
 
 			int[][] buffer = new int[3][sizeX];
 
@@ -219,8 +219,8 @@ public class ShiftedCross3x3Strel
 		private void inPlaceDilationFloat(ScalarArray2D<?> image)
 		{
 			// size of image
-			int sizeX = image.getSize(0);
-			int sizeY = image.getSize(1);
+			int sizeX = image.size(0);
+			int sizeY = image.size(1);
 
 			double[][] buffer = new double[3][sizeX];
 
@@ -292,8 +292,8 @@ public class ShiftedCross3x3Strel
 		private void inPlaceErosionGray8(UInt8Array2D image)
 		{
 			// size of image
-			int sizeX = image.getSize(0);
-			int sizeY = image.getSize(1);
+			int sizeX = image.size(0);
+			int sizeY = image.size(1);
 
 			int[][] buffer = new int[3][sizeX];
 
@@ -351,8 +351,8 @@ public class ShiftedCross3x3Strel
 		private void inPlaceErosionFloat(ScalarArray2D<?> image)
 		{
 			// size of image
-			int sizeX = image.getSize(0);
-			int sizeY = image.getSize(1);
+			int sizeX = image.size(0);
+			int sizeY = image.size(1);
 
 			double[][] buffer = new double[3][sizeX];
 
@@ -510,8 +510,8 @@ public class ShiftedCross3x3Strel
 		private void inPlaceDilationGray8(UInt8Array2D image)
 		{
 			// size of image
-			int sizeX = image.getSize(0);
-			int sizeY = image.getSize(1);
+			int sizeX = image.size(0);
+			int sizeY = image.size(1);
 
 			int[][] buffer = new int[3][sizeX];
 
@@ -571,8 +571,8 @@ public class ShiftedCross3x3Strel
 		private void inPlaceDilationFloat(ScalarArray2D<?> image)
 		{
 			// size of image
-			int sizeX = image.getSize(0);
-			int sizeY = image.getSize(1);
+			int sizeX = image.size(0);
+			int sizeY = image.size(1);
 
 			double[][] buffer = new double[3][sizeX];
 
@@ -647,8 +647,8 @@ public class ShiftedCross3x3Strel
 		private void inPlaceErosionGray8(UInt8Array2D image)
 		{
 			// size of image
-			int sizeX = image.getSize(0);
-			int sizeY = image.getSize(1);
+			int sizeX = image.size(0);
+			int sizeY = image.size(1);
 
 			int[][] buffer = new int[3][sizeX];
 
@@ -708,8 +708,8 @@ public class ShiftedCross3x3Strel
 		private void inPlaceErosionFloat(ScalarArray2D<?> image)
 		{
 			// size of image
-			int sizeX = image.getSize(0);
-			int sizeY = image.getSize(1);
+			int sizeX = image.size(0);
+			int sizeY = image.size(1);
 
 			double[][] buffer = new double[3][sizeX];
 

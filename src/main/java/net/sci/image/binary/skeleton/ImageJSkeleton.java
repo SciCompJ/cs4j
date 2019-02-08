@@ -83,8 +83,8 @@ public class ImageJSkeleton extends AlgoStub
     
     private void clearBorders(BinaryArray2D array)
     {
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
 
         // clear left and right borders
         for (int y = 0; y < sizeY; y++)
@@ -103,8 +103,8 @@ public class ImageJSkeleton extends AlgoStub
     
     private int thin(BinaryArray2D array, int pass, int[] table)
     {
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
         
         BinaryArray2D array2 = array.duplicate();
         

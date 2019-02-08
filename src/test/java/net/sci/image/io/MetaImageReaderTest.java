@@ -26,8 +26,8 @@ public class MetaImageReaderTest
 		assertEquals(2, image.getDimension());
 
 		ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-		assertEquals(15, data.getSize(0));
-		assertEquals(10, data.getSize(1));
+		assertEquals(15, data.size(0));
+		assertEquals(10, data.size(1));
 	}
 
 	@Test
@@ -41,9 +41,9 @@ public class MetaImageReaderTest
 		assertEquals(3, image.getDimension());
 
 		ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-		assertEquals(10, data.getSize(0));
-		assertEquals(15, data.getSize(1));
-		assertEquals(20, data.getSize(2));
+		assertEquals(10, data.size(0));
+		assertEquals(15, data.size(1));
+		assertEquals(20, data.size(2));
 		
 		assertTrue(data instanceof UInt16Array);
 	}
@@ -59,9 +59,9 @@ public class MetaImageReaderTest
 		assertEquals(3, image.getDimension());
 
 		ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-		assertEquals(10, data.getSize(0));
-		assertEquals(15, data.getSize(1));
-		assertEquals(20, data.getSize(2));
+		assertEquals(10, data.size(0));
+		assertEquals(15, data.size(1));
+		assertEquals(20, data.size(2));
 		
 		assertTrue(data instanceof Int16Array);
 	}
@@ -77,9 +77,9 @@ public class MetaImageReaderTest
 		assertEquals(3, image.getDimension());
 
 		Array<?> data = (Array<?>) image.getData();
-		assertEquals(100, data.getSize(0));
-		assertEquals(80, data.getSize(1));
-		assertEquals(160, data.getSize(2));
+		assertEquals(100, data.size(0));
+		assertEquals(80, data.size(1));
+		assertEquals(160, data.size(2));
 	}
 
 }

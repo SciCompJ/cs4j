@@ -103,7 +103,7 @@ public abstract class Array3D<T> implements Array<T>
 	 * @see net.sci.array.Array#getSize()
 	 */
 	@Override
-	public int[] getSize()
+	public int[] size()
 	{
 		return new int[]{this.size0, this.size1, this.size2};
 	}
@@ -112,7 +112,7 @@ public abstract class Array3D<T> implements Array<T>
 	 * @see net.sci.array.Array#getSize(int)
 	 */
 	@Override
-	public int getSize(int dim)
+	public int size(int dim)
 	{
 		switch(dim)
 		{

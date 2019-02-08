@@ -125,8 +125,8 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 	private void inPlaceDilationGray8(UInt8Array2D image)
 	{
 		// get image size
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int width = image.size(0);
+		int height = image.size(1);
 
 		// shifts between reference position and last position
 		int shift = this.size - this.offset - 1;
@@ -171,8 +171,8 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 	private void inPlaceDilationFloat(ScalarArray2D<?> image)
 	{
 		// get image size
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int width = image.size(0);
+		int height = image.size(1);
 
 		// shifts between reference position and last position
 		int shift = this.size - this.offset - 1;
@@ -237,8 +237,8 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 	private void inPlaceErosionGray8(UInt8Array2D image)
 	{
 		// get image size
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int width = image.size(0);
+		int height = image.size(1);
 
 		// shifts between reference position and last position
 		int shift = this.size - this.offset - 1;
@@ -283,8 +283,8 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 	private void inPlaceErosionFloat(ScalarArray2D<?> image)
 	{
 		// get image size
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int width = image.size(0);
+		int height = image.size(1);
 
 		// shifts between reference position and last position
 		int shift = this.size - this.offset - 1;

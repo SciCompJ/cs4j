@@ -204,9 +204,9 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		this.mask = mask;
 		
 		// Check sizes are consistent
-		this.sizeX = marker.getSize(0);
-		this.sizeY = marker.getSize(1);
-		if (this.sizeX != mask.getSize(0) || this.sizeY != mask.getSize(1)) 
+		this.sizeX = marker.size(0);
+		this.sizeY = marker.size(1);
+		if (this.sizeX != mask.size(0) || this.sizeY != mask.size(1)) 
 		{
 			throw new IllegalArgumentException("Marker and Mask images must have the same size");
 		}

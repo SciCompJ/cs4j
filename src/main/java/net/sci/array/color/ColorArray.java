@@ -22,7 +22,7 @@ public interface ColorArray<T extends Color>  extends Array<T>
     public default ScalarArray<?> redChannel()
     {
         // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
+        Float32Array channel = Float32Array.create(this.size());
         
         // create iterators
         Iterator<T> colorIter = iterator();
@@ -44,7 +44,7 @@ public interface ColorArray<T extends Color>  extends Array<T>
     public default ScalarArray<?> greenChannel()
     {
         // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
+        Float32Array channel = Float32Array.create(this.size());
         
         // create iterators
         Iterator<T> colorIter = iterator();
@@ -66,7 +66,7 @@ public interface ColorArray<T extends Color>  extends Array<T>
     public default ScalarArray<?> blueChannel()
     {
         // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
+        Float32Array channel = Float32Array.create(this.size());
         
         // create iterators
         Iterator<T> colorIter = iterator();
@@ -88,7 +88,7 @@ public interface ColorArray<T extends Color>  extends Array<T>
     public default ScalarArray<?> hueChannel()
     {
         // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
+        Float32Array channel = Float32Array.create(this.size());
         
         // create iterators
         Iterator<T> colorIter = iterator();
@@ -110,7 +110,7 @@ public interface ColorArray<T extends Color>  extends Array<T>
     public default ScalarArray<?> saturationChannel()
     {
         // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
+        Float32Array channel = Float32Array.create(this.size());
         
         // create iterators
         Iterator<T> colorIter = iterator();
@@ -132,7 +132,7 @@ public interface ColorArray<T extends Color>  extends Array<T>
     public default ScalarArray<?> luminanceChannel()
     {
         // allocate array for storing result
-        Float32Array channel = Float32Array.create(this.getSize());
+        Float32Array channel = Float32Array.create(this.size());
         
         // create iterators
         Iterator<T> colorIter = iterator();

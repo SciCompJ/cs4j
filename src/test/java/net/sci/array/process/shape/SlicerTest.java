@@ -44,18 +44,18 @@ public class SlicerTest
 
         Array<UInt8> resXY = Slicer.slice2d(array, 0, 1, refPos);
         assertEquals(2, resXY.dimensionality());
-        assertEquals(5, resXY.getSize(0));
-        assertEquals(4, resXY.getSize(1));
+        assertEquals(5, resXY.size(0));
+        assertEquals(4, resXY.size(1));
 
         Array<UInt8> resYZ = Slicer.slice2d(array, 1, 2, refPos);
         assertEquals(2, resYZ.dimensionality());
-        assertEquals(4, resYZ.getSize(0));
-        assertEquals(3, resYZ.getSize(1));
+        assertEquals(4, resYZ.size(0));
+        assertEquals(3, resYZ.size(1));
 
         Array<UInt8> resXZ = Slicer.slice2d(array, 0, 2, refPos);
         assertEquals(2, resXZ.dimensionality());
-        assertEquals(5, resXZ.getSize(0));
-        assertEquals(3, resXZ.getSize(1));
+        assertEquals(5, resXZ.size(0));
+        assertEquals(3, resXZ.size(1));
     }
 
     @Test
@@ -68,18 +68,18 @@ public class SlicerTest
 
         Array<String> resXY = Slicer.slice2d(array, 0, 1, refPos);
         assertEquals(2, resXY.dimensionality());
-        assertEquals(5, resXY.getSize(0));
-        assertEquals(4, resXY.getSize(1));
+        assertEquals(5, resXY.size(0));
+        assertEquals(4, resXY.size(1));
 
         Array<String> resYZ = Slicer.slice2d(array, 1, 2, refPos);
         assertEquals(2, resYZ.dimensionality());
-        assertEquals(4, resYZ.getSize(0));
-        assertEquals(3, resYZ.getSize(1));
+        assertEquals(4, resYZ.size(0));
+        assertEquals(3, resYZ.size(1));
 
         Array<String> resXZ = Slicer.slice2d(array, 0, 2, refPos);
         assertEquals(2, resXZ.dimensionality());
-        assertEquals(5, resXZ.getSize(0));
-        assertEquals(3, resXZ.getSize(1));
+        assertEquals(5, resXZ.size(0));
+        assertEquals(3, resXZ.size(1));
     }
 
     @Test
@@ -90,18 +90,18 @@ public class SlicerTest
 
         Array<Float32Vector> resXY = Slicer.slice2d(array, 0, 1, refPos);
         assertEquals(2, resXY.dimensionality());
-        assertEquals(5, resXY.getSize(0));
-        assertEquals(4, resXY.getSize(1));
+        assertEquals(5, resXY.size(0));
+        assertEquals(4, resXY.size(1));
 
         Array<Float32Vector> resYZ = Slicer.slice2d(array, 1, 2, refPos);
         assertEquals(2, resYZ.dimensionality());
-        assertEquals(4, resYZ.getSize(0));
-        assertEquals(3, resYZ.getSize(1));
+        assertEquals(4, resYZ.size(0));
+        assertEquals(3, resYZ.size(1));
 
         Array<Float32Vector> resXZ = Slicer.slice2d(array, 0, 2, refPos);
         assertEquals(2, resXZ.dimensionality());
-        assertEquals(5, resXZ.getSize(0));
-        assertEquals(3, resXZ.getSize(1));
+        assertEquals(5, resXZ.size(0));
+        assertEquals(3, resXZ.size(1));
     }
 
 	/**
@@ -115,8 +115,8 @@ public class SlicerTest
 		
 		Array<?> result = slicer.process(array);
 		assertEquals(2, result.dimensionality());
-		assertEquals(array.getSize(0), result.getSize(0));
-		assertEquals(array.getSize(1), result.getSize(1));
+		assertEquals(array.size(0), result.size(0));
+		assertEquals(array.size(1), result.size(1));
 
 		assertEquals(array.get(3, 2, 1), result.get(new int[]{3, 2}));
 	}
@@ -130,8 +130,8 @@ public class SlicerTest
         Array<?> view = slicer.createView(array);
         
         assertEquals(2, view.dimensionality());
-        assertEquals(array.getSize(0), view.getSize(0));
-        assertEquals(array.getSize(1), view.getSize(1));
+        assertEquals(array.size(0), view.size(0));
+        assertEquals(array.size(1), view.size(1));
 
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
         
@@ -183,8 +183,8 @@ public class SlicerTest
         Array<?> view = slicer.createView(array);
         
         assertEquals(2, view.dimensionality());
-        assertEquals(array.getSize(0), view.getSize(0));
-        assertEquals(array.getSize(1), view.getSize(1));
+        assertEquals(array.size(0), view.size(0));
+        assertEquals(array.size(1), view.size(1));
 
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
         

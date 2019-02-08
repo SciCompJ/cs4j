@@ -24,8 +24,8 @@ public class Phantoms2D
     public static final void fillDisk(ScalarArray2D<?> array, Point2D center, double radius, double value)
     {
         // get image size
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
         
         // get disk center
         double xc = center.getX();
@@ -46,8 +46,8 @@ public class Phantoms2D
     public static final void fillPolygon(ScalarArray2D<?> array, PolygonalDomain2D poly, double value)
     {
         // get image size
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
         
         for (int y = 0; y < sizeY; y++)
         {
@@ -64,8 +64,8 @@ public class Phantoms2D
     public static final void fillDomain(ScalarArray2D<?> array, Domain2D domain, double value)
     {
         // get image size
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
         
         for (int y = 0; y < sizeY; y++)
         {

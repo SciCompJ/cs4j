@@ -109,8 +109,8 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 				throw new IllegalArgumentException("Requires an array with at least two dimensions");
 			}
 			this.array = array;
-			this.size0 = array.getSize(0);
-			this.size1 = array.getSize(1);
+			this.size0 = array.size(0);
+			this.size1 = array.size(1);
 		}
 
 		@Override
@@ -182,9 +182,9 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 		}
 		
 		@Override
-		public Class<T> getDataType()
+		public Class<T> dataType()
 		{
-			return array.getDataType();
+			return array.dataType();
 		}
 
 		@Override

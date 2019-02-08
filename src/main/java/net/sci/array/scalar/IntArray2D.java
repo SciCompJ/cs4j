@@ -121,8 +121,8 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
             {
                 throw new IllegalArgumentException("Requires an array of dimensionality equal to 2.");
             }
-            this.size0 = array.getSize(0);
-            this.size1 = array.getSize(1);
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
             this.array = array;
         }
 
@@ -153,9 +153,9 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         }
 
         @Override
-        public Class<T> getDataType()
+        public Class<T> dataType()
         {
-            return array.getDataType();
+            return array.dataType();
         }
 
         @Override

@@ -24,8 +24,8 @@ public class BufferedGenericArray3DTest
     public final void testCreate()
     {
         Array3D<String> array = createStringArray();
-        assertEquals(10, array.getSize(0));
-        assertEquals(6, array.getSize(1));
+        assertEquals(10, array.size(0));
+        assertEquals(6, array.size(1));
     }
     
     /**
@@ -59,9 +59,9 @@ public class BufferedGenericArray3DTest
     public final void testDuplicate()
     {
         Array3D<String> array = createStringArray().duplicate();
-        assertEquals(10, array.getSize(0));
-        assertEquals(6, array.getSize(1));
-        assertEquals(4, array.getSize(2));
+        assertEquals(10, array.size(0));
+        assertEquals(6, array.size(1));
+        assertEquals(4, array.size(2));
         String first = array.get(0, 0, 0);
         assertTrue("AAA".equals(first));
         String last = array.get(9, 5, 3);
@@ -112,8 +112,8 @@ public class BufferedGenericArray3DTest
         int n = 0;
         for(Array2D<String> slice : array.slices())
         {
-            assertEquals(5, slice.getSize(0));
-            assertEquals(4, slice.getSize(1));
+            assertEquals(5, slice.size(0));
+            assertEquals(4, slice.size(1));
             n++;
         }
 

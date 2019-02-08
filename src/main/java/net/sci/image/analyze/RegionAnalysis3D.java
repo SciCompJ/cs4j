@@ -43,9 +43,9 @@ public class RegionAnalysis3D
         double[] zcoords = new double[nLabels];
 
         // size of input image
-        int sizeX = labelImage.getSize(0);
-        int sizeY = labelImage.getSize(1);
-        int sizeZ = labelImage.getSize(2);
+        int sizeX = labelImage.size(0);
+        int sizeY = labelImage.size(1);
+        int sizeZ = labelImage.size(2);
 
         // compute centroid of each region
         for (int z = 0; z < sizeZ; z++) 
@@ -107,9 +107,9 @@ public class RegionAnalysis3D
         }
 
         // size of input image
-        int sizeX = image.getSize(0);
-        int sizeY = image.getSize(1);
-        int sizeZ = image.getSize(1);
+        int sizeX = image.size(0);
+        int sizeY = image.size(1);
+        int sizeZ = image.size(1);
 
         // compute centroid of each region
         for (int z = 0; z < sizeZ; z++) 

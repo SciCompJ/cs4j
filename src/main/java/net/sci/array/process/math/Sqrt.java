@@ -48,7 +48,7 @@ public class Sqrt implements ScalarArrayOperator
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        ScalarArray<?> output = factory.create(array.getSize());
+        ScalarArray<?> output = factory.create(array.size());
         processScalar(array, output);
         return output;
     }

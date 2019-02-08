@@ -34,12 +34,12 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 
 	public BufferedPackedShortRGB16Array3D(UInt16Array buffer)
 	{
-		super(buffer.getSize(0), buffer.getSize(1), buffer.getSize(1));
+		super(buffer.size(0), buffer.size(1), buffer.size(1));
 		if (buffer.dimensionality() != 4)
 		{
 			throw new IllegalArgumentException("Requires an array of UInt16 with 4 dimensions");
 		}
-		if (buffer.getSize(3) != 3)
+		if (buffer.size(3) != 3)
 		{
 			throw new IllegalArgumentException("Requires an array of UInt16 with 3 slices");
 		}

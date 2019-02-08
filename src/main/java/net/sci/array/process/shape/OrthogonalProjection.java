@@ -35,7 +35,7 @@ public class OrthogonalProjection implements ArrayOperator
 		int nd = target.dimensionality();
 		int[] srcPos = new int[nd + 1];
 		
-		int indMax = source.getSize(this.dim);
+		int indMax = source.size(this.dim);
 		
         // iterate over positions in target image
         for (int[] pos : target.positions()) 
@@ -81,11 +81,11 @@ public class OrthogonalProjection implements ArrayOperator
     	int[] dims = new int[nd];
     	for (int d = 0; d  < this.dim; d++)
     	{
-    		dims[d] = array.getSize(d);
+    		dims[d] = array.size(d);
     	}
     	for (int d = this.dim; d < nd; d++)
     	{
-    		dims[d] = array.getSize(d+1);
+    		dims[d] = array.size(d+1);
     	}
     	return array.newInstance(dims);
     }

@@ -44,7 +44,7 @@ public class PowerOfTwo implements ScalarArrayOperator
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        ScalarArray<? extends Scalar> output = array.newInstance(array.getSize());
+        ScalarArray<? extends Scalar> output = array.newInstance(array.size());
         processScalar(array, output);
         return output;
     }

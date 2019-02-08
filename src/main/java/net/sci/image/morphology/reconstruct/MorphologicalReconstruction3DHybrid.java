@@ -192,9 +192,9 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub
 		this.mask = mask;
 
 		// Check dimensions consistency
-		this.sizeX 	= marker.getSize(0);
-		this.sizeY 	= marker.getSize(1);
-		this.sizeZ 	= marker.getSize(2);
+		this.sizeX 	= marker.size(0);
+		this.sizeY 	= marker.size(1);
+		this.sizeZ 	= marker.size(2);
 		if (!Arrays.isSameSize(marker, mask)) 
 		{
 			throw new IllegalArgumentException("Marker and Mask images must have the same size");

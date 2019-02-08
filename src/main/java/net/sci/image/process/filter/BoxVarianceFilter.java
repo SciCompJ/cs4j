@@ -84,7 +84,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 	{
 		// get array size (for cropping)
 		int nd = source.dimensionality();
-		int[] sizes = source.getSize();
+		int[] sizes = source.size();
 		
 		// get first two radiuses
 		if (this.diameters.length < source.dimensionality())
@@ -139,8 +139,8 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
 	{
 		// get size of input array
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		
 		// get first two radiuses
 		if (this.diameters.length < 2)
@@ -200,9 +200,9 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 	public void processScalar3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
 	{
 		// get size of input array
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
-		int sizeZ = source.getSize(2);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
+		int sizeZ = source.size(2);
 		
 		// get first three radiuses
 		if (this.diameters.length < 3)
@@ -293,7 +293,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        ScalarArray<?> result = array.newInstance(array.getSize());
+        ScalarArray<?> result = array.newInstance(array.size());
         processScalar(array, result);
         return result;
     }

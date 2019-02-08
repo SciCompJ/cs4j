@@ -79,7 +79,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 	{
 		// get array size (for cropping)
 		int nd = source.dimensionality();
-		int[] sizes = source.getSize();
+		int[] sizes = source.size();
 		
 		// get first two radiuses
 		if (this.diameters.length < source.dimensionality())
@@ -134,8 +134,8 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
 	{
 		// get size of input array
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		
 		// check dimensions
 		if (this.diameters.length < 2)
@@ -193,9 +193,9 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 	public void processScalar3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
 	{
 		// get size of input array
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
-		int sizeZ = source.getSize(2);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
+		int sizeZ = source.size(2);
 		
 		// check dimensions
 		if (this.diameters.length < 3)
@@ -257,7 +257,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
 	    // TODO: choose the class of the output array
-        ScalarArray<?> output = Float32Array.create(array.getSize());
+        ScalarArray<?> output = Float32Array.create(array.size());
         processScalar(array, output);
         return output;
     }

@@ -45,8 +45,8 @@ public class RegionAnalysis2D
         double[] ycoords = new double[nLabels];
 
         // size of input image
-        int sizeX = labelImage.getSize(0);
-        int sizeY = labelImage.getSize(1);
+        int sizeX = labelImage.size(0);
+        int sizeY = labelImage.size(1);
 
         // compute centroid of each region
         for (int y = 0; y < sizeY; y++) 
@@ -100,8 +100,8 @@ public class RegionAnalysis2D
         }
 
         // size of input image
-        int sizeX = image.getSize(0);
-        int sizeY = image.getSize(1);
+        int sizeX = image.size(0);
+        int sizeY = image.size(1);
 
         // compute centroid of each region
         for (int y = 0; y < sizeY; y++) 
@@ -150,8 +150,8 @@ public class RegionAnalysis2D
             return null;
 
         // size of image
-        int sizeX = labelMap.getSize(0);
-        int sizeY = labelMap.getSize(1);
+        int sizeX = labelMap.size(0);
+        int sizeY = labelMap.size(1);
 
         // extract particle labels
         int nLabels = labels.length;

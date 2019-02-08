@@ -47,8 +47,8 @@ public final class BoxFilter3x3 extends AlgoStub implements ImageArrayOperator, 
 
 	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
 	{
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		
 		for(int y = 0; y < sizeY; y++)
 		{
@@ -94,14 +94,14 @@ public final class BoxFilter3x3 extends AlgoStub implements ImageArrayOperator, 
 	
 	public Array<?> createEmptyOutputArray(Array<?> array)
 	{
-		int[] dims = array.getSize();
+		int[] dims = array.size();
 		return Float32Array.create(dims);
 	}
 
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        ScalarArray<?> output = array.newInstance(array.getSize());
+        ScalarArray<?> output = array.newInstance(array.size());
         processScalar(array, output);
         return output;
     }

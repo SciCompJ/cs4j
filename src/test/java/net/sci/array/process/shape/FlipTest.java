@@ -42,8 +42,8 @@ public class FlipTest
 		Array<?> resFlip= flipX.process(array);
 		
 		assertEquals(2, resFlip.dimensionality());
-		assertEquals(sizeX, resFlip.getSize(0));
-		assertEquals(sizeY, resFlip.getSize(1));
+		assertEquals(sizeX, resFlip.size(0));
+		assertEquals(sizeY, resFlip.size(1));
 		
 		assertEquals(new UInt8(35), resFlip.get(new int[]{0, 3}));
 	}
@@ -70,8 +70,8 @@ public class FlipTest
 		flipX.process(array, resFlip);
 		
 		assertEquals(2, resFlip.dimensionality());
-		assertEquals(sizeX, resFlip.getSize(0));
-		assertEquals(sizeY, resFlip.getSize(1));
+		assertEquals(sizeX, resFlip.size(0));
+		assertEquals(sizeY, resFlip.size(1));
 		
 		assertEquals(35, resFlip.getValue(new int[]{0, 3}), .1);
 	}
@@ -97,8 +97,8 @@ public class FlipTest
         Array<?> resFlip = flipY.process(array);
         
         assertEquals(2, resFlip.dimensionality());
-        assertEquals(sizeX, resFlip.getSize(0));
-        assertEquals(sizeY, resFlip.getSize(1));
+        assertEquals(sizeX, resFlip.size(0));
+        assertEquals(sizeY, resFlip.size(1));
         
         assertEquals(new UInt8(35), resFlip.get(new int[]{5, 0}));
     }
@@ -127,8 +127,8 @@ public class FlipTest
         Array<?> resFlip = flip.process(array);
         
         assertEquals(2, resFlip.dimensionality());
-        assertEquals(dims[0], resFlip.getSize(0));
-        assertEquals(dims[1], resFlip.getSize(1));
+        assertEquals(dims[0], resFlip.size(0));
+        assertEquals(dims[1], resFlip.size(1));
         
         assertEquals(array.get(new int[] {4, 3}), resFlip.get(new int[] {1, 3}));
         assertEquals(array.get(new int[] {2, 1}), resFlip.get(new int[] {3, 1}));
@@ -158,10 +158,10 @@ public class FlipTest
         Array<?> resFlip = flip.process(array);
         
         assertEquals(4, resFlip.dimensionality());
-        assertEquals(dims[0], resFlip.getSize(0));
-        assertEquals(dims[1], resFlip.getSize(1));
-        assertEquals(dims[2], resFlip.getSize(2));
-        assertEquals(dims[3], resFlip.getSize(3));
+        assertEquals(dims[0], resFlip.size(0));
+        assertEquals(dims[1], resFlip.size(1));
+        assertEquals(dims[2], resFlip.size(2));
+        assertEquals(dims[3], resFlip.size(3));
         
         assertEquals(array.get(new int[] {4, 3, 2, 1}), resFlip.get(new int[] {4, 3, 0, 1}));
         assertEquals(array.get(new int[] {2, 3, 2, 0}), resFlip.get(new int[] {2, 3, 0, 0}));
@@ -189,8 +189,8 @@ public class FlipTest
 		flipY.process(array, resFlip);
 		
 		assertEquals(2, resFlip.dimensionality());
-		assertEquals(sizeX, resFlip.getSize(0));
-		assertEquals(sizeY, resFlip.getSize(1));
+		assertEquals(sizeX, resFlip.size(0));
+		assertEquals(sizeY, resFlip.size(1));
 		
 		assertEquals(35, resFlip.getValue(new int[]{5, 0}), .1);
 	}
@@ -216,8 +216,8 @@ public class FlipTest
         Array<?> resFlip = flipX.createView(array);
         
         assertEquals(2, resFlip.dimensionality());
-        assertEquals(sizeX, resFlip.getSize(0));
-        assertEquals(sizeY, resFlip.getSize(1));
+        assertEquals(sizeX, resFlip.size(0));
+        assertEquals(sizeY, resFlip.size(1));
         
         assertEquals(new UInt8(35), resFlip.get(new int[]{0, 3}));
     }
@@ -245,8 +245,8 @@ public class FlipTest
         Array<?> resFlip = flipX.createView(array);
         
         assertEquals(2, resFlip.dimensionality());
-        assertEquals(sizeX, resFlip.getSize(0));
-        assertEquals(sizeY, resFlip.getSize(1));
+        assertEquals(sizeX, resFlip.size(0));
+        assertEquals(sizeY, resFlip.size(1));
         
         assertEquals("DF", resFlip.get(new int[]{0, 3}));
         assertEquals("DA", resFlip.get(new int[]{5, 3}));

@@ -94,8 +94,8 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	private void inPlaceDilationGray8(UInt8Array2D image)
 	{
 		// size of image
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
 		System.out.println("dialte with cross 3x3 uint8");
 
 		int[][] buffer = new int[3][sizeX];
@@ -158,8 +158,8 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	private void inPlaceDilationFloat(ScalarArray2D<?> image)
 	{
 		// size of image
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
 
 		double[][] buffer = new double[3][sizeX];
 
@@ -258,8 +258,8 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	private void inPlaceErosionGray8(UInt8Array2D image)
 	{
 		// size of image
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
 
 		int[][] buffer = new int[3][sizeX];
 
@@ -321,8 +321,8 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 	private void inPlaceErosionFloat(ScalarArray2D<?> image)
 	{
 		// size of image
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
 
 		double[][] buffer = new double[3][sizeX];
 

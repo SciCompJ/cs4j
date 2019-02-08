@@ -42,8 +42,8 @@ public class Array2DTest
 		}
 		
 		Array2D<UInt8> res = Array2D.wrap(array);
-		assertEquals(5, res.getSize(0));
-		assertEquals(4, res.getSize(1));
+		assertEquals(5, res.size(0));
+		assertEquals(4, res.size(1));
 		
 		assertEquals(new UInt8(34), res.get(4, 3));
 	}
@@ -68,8 +68,8 @@ public class Array2DTest
 		}
 		
 		Array2D<UInt8> res = Array2D.wrap(array);
-		assertEquals(5, res.getSize(0));
-		assertEquals(4, res.getSize(1));
+		assertEquals(5, res.size(0));
+		assertEquals(4, res.size(1));
 		
 		assertEquals(new UInt8(34), res.get(4, 3));
 	}

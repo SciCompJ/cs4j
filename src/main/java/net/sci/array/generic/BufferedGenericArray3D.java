@@ -85,7 +85,7 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Class<T> getDataType()
+	public Class<T> dataType()
 	{
 		return (Class<T>) initValue.getClass();
 	}
@@ -220,9 +220,9 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
 
 
         @Override
-        public Class<T> getDataType()
+        public Class<T> dataType()
         {
-            return BufferedGenericArray3D.this.getDataType();
+            return BufferedGenericArray3D.this.dataType();
         }
 
         @Override

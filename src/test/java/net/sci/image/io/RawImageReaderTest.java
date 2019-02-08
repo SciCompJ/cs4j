@@ -35,8 +35,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof UInt8Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -57,8 +57,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof UInt16Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -79,8 +79,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof UInt16Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -101,8 +101,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof Int16Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -123,8 +123,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof Int16Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -145,8 +145,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof Int32Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -167,8 +167,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof Int32Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -190,8 +190,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof Float32Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -212,8 +212,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof Float32Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -235,8 +235,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof Float64Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -257,8 +257,8 @@ public class RawImageReaderTest
         assertEquals(2, image.getDimension());
 
         ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-        assertEquals(4, data.getSize(0));
-        assertEquals(3, data.getSize(1));
+        assertEquals(4, data.size(0));
+        assertEquals(3, data.size(1));
         
         assertTrue(data instanceof Float64Array);
         assertEquals(230.0, data.getValue(3, 2), .01);
@@ -279,9 +279,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof UInt8Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -302,9 +302,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof UInt16Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -325,9 +325,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof UInt16Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -348,9 +348,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof Int16Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -371,9 +371,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof Int16Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -394,9 +394,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof Int32Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -417,9 +417,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof Int32Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -440,9 +440,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof Float32Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -463,9 +463,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof Float32Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -488,9 +488,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof Float64Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
@@ -511,9 +511,9 @@ public class RawImageReaderTest
         assertEquals(3, image.getDimension());
 
         ScalarArray3D<?> data = (ScalarArray3D<?>) image.getData();
-        assertEquals(5, data.getSize(0));
-        assertEquals(4, data.getSize(1));
-        assertEquals(3, data.getSize(2));
+        assertEquals(5, data.size(0));
+        assertEquals(4, data.size(1));
+        assertEquals(3, data.size(2));
         
         assertTrue(data instanceof Float64Array);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);

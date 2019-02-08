@@ -126,8 +126,8 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel2D
 	private void inPlaceDilationGray8(UInt8Array2D image)
 	{
 		// get image size
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
 
 		// Consider all diagonal lines with direction vector (+1,+1) that
 		// intersect image.
@@ -196,8 +196,8 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel2D
 	private void inPlaceDilationFloat(ScalarArray2D<?> image)
 	{
 		// get image size
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
 
 		// Consider all diagonal lines with direction vector (+1,+1) that
 		// intersect image.
@@ -286,8 +286,8 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel2D
 	private void inPlaceErosionGray8(UInt8Array2D image)
 	{
 		// get image size
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
 
 		// Consider all diagonal lines with direction vector (+1,+1) that
 		// intersect image.
@@ -358,8 +358,8 @@ public class LinearDiagDownStrel extends AbstractInPlaceStrel2D
 	private void inPlaceErosionFloat(ScalarArray2D<?> image)
 	{
 		// get image size
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
 
 		// Consider all diagonal lines with direction vector (+1,+1) that
 		// intersect image.

@@ -35,7 +35,7 @@ public class Reshape implements ArrayOperator
 	public <T> Array<?> process(Array<T> array)
 	{
 	    // compute element number of input array
-	    int prodDims = cumProd(array.getSize());
+	    int prodDims = cumProd(array.size());
 	    
         // compute element number of output array
 	    int prodDims2 = cumProd(newDims);
@@ -64,7 +64,7 @@ public class Reshape implements ArrayOperator
 	public boolean canProcess(Array<?> array)
 	{
         // compute element number of input array
-        int prodDims = cumProd(array.getSize());
+        int prodDims = cumProd(array.size());
         
         // compute element number of output array
         int prodDims2 = cumProd(newDims);

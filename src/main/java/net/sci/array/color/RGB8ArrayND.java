@@ -38,7 +38,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 	@Override
 	public UInt8Array convertToUInt8()
 	{
-		int[] sizes = this.getSize();
+		int[] sizes = this.size();
 		UInt8Array result = UInt8Array.create(sizes);
 		
 		PositionIterator iter = positionIterator();

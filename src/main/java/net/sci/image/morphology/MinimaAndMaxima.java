@@ -411,8 +411,8 @@ public class MinimaAndMaxima
 		ScalarArray2D<?> marker = array.duplicate();
 		ScalarArray2D<?> mask = array.duplicate();
 		
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
 		for (int y = 0; y < sizeY; y++)
 		{
 			for (int x = 0; x < sizeX; x++)
@@ -464,8 +464,8 @@ public class MinimaAndMaxima
 	public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array,
 			ScalarArray2D<?> minima, Connectivity2D conn)
 	{
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
 		
 		ScalarArray2D<?> marker = array.duplicate();
 		ScalarArray2D<?> mask = array.duplicate();

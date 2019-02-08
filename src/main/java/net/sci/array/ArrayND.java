@@ -95,7 +95,7 @@ public abstract class ArrayND<T> implements Array<T>
 	 * @see net.sci.array.Array#getSize()
 	 */
 	@Override
-	public int[] getSize()
+	public int[] size()
 	{
 		int[] res = new int[this.sizes.length];
 		for (int d=0; d < this.sizes.length; d++)
@@ -109,7 +109,7 @@ public abstract class ArrayND<T> implements Array<T>
 	 * @see net.sci.array.Array#getSize(int)
 	 */
 	@Override
-	public int getSize(int dim)
+	public int size(int dim)
 	{
 		return this.sizes[dim];
 	}

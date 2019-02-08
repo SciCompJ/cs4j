@@ -24,8 +24,8 @@ public class Find
      */
     public static final Collection<Point2D> findPixels(ScalarArray2D<?> image)
     {
-        int sizeX = image.getSize(0);
-        int sizeY = image.getSize(1);
+        int sizeX = image.size(0);
+        int sizeY = image.size(1);
         
         ArrayList<Point2D> posList = new ArrayList<>();
         

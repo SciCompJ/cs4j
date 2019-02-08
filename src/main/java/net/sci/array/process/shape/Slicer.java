@@ -77,8 +77,8 @@ public class Slicer implements ArrayOperator
 		int[] pos = new int[2];
 
 		// create output
-		int sizeX = array.getSize(dim1);
-		int sizeY = array.getSize(dim2);
+		int sizeX = array.size(dim1);
+		int sizeY = array.size(dim2);
 		Array<T> result = array.newInstance(new int[]{sizeX, sizeY});
 		
 		// iterate over position in target image
@@ -188,11 +188,11 @@ public class Slicer implements ArrayOperator
 		int[] dims = new int[nd];
 		for (int d = 0; d  < this.dim; d++)
 		{
-			dims[d] = inputArray.getSize(d);
+			dims[d] = inputArray.size(d);
 		}
 		for (int d = this.dim; d < nd; d++)
 		{
-			dims[d] = inputArray.getSize(d+1);
+			dims[d] = inputArray.size(d+1);
 		}
 
 		return dims;
@@ -248,7 +248,7 @@ public class Slicer implements ArrayOperator
 	    }
 	    for (int d = 0; d < expDims.length; d++)
 	    {
-	        if (target.getSize(d) != expDims[d])
+	        if (target.size(d) != expDims[d])
 	        {
 	            throw new IllegalArgumentException("Wrong dimensions for output array");
 	        }

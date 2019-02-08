@@ -241,8 +241,8 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
             {
                 throw new IllegalArgumentException("Requires an array of dimensionality equal to 2.");
             }
-            this.size0 = array.getSize(0);
-            this.size1 = array.getSize(1);
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
             this.array = array;
         }
 

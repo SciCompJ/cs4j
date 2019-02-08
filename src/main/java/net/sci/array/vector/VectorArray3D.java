@@ -167,11 +167,11 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         double[] buf = new double[this.channelNumber()];
         
         // iterate over positions
-        for (int z = 0; z < this.getSize(2); z++)
+        for (int z = 0; z < this.size(2); z++)
         {
-            for (int y = 0; y < this.getSize(1); y++)
+            for (int y = 0; y < this.size(1); y++)
             {
-                for (int x = 0; x < this.getSize(0); x++)
+                for (int x = 0; x < this.size(0); x++)
                 {
                     result.setValues(x, y, z, this.getValues(x, y, z, buf));
                 }
@@ -204,9 +204,9 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
                 throw new IllegalArgumentException("Requires an array with at least three dimensions");
             }
             this.array = array;
-            this.size0 = array.getSize(0);
-            this.size1 = array.getSize(1);
-            this.size2 = array.getSize(2);
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.size2 = array.size(2);
         }
 
         
@@ -340,9 +340,9 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         }
 
         @Override
-        public Class<T> getDataType()
+        public Class<T> dataType()
         {
-            return array.getDataType();
+            return array.dataType();
         }
 
         @Override
@@ -362,7 +362,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             @Override
             public boolean hasNext()
             {
-                return sliceIndex < array.getSize(2) - 1;
+                return sliceIndex < array.size(2) - 1;
             }
 
             @Override
@@ -488,9 +488,9 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             }
 
             @Override
-            public Class<T> getDataType()
+            public Class<T> dataType()
             {
-                return Wrapper.this.array.getDataType();
+                return Wrapper.this.array.dataType();
             }
 
             @Override

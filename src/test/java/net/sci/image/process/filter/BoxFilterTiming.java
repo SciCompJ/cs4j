@@ -25,9 +25,9 @@ public class BoxFilterTiming
 		assertEquals(3, image.getDimension());
 
 		ScalarArray3D<?> array = (ScalarArray3D<?>) image.getData();
-		assertEquals(128, array.getSize(0));
-		assertEquals(128, array.getSize(1));
-		assertEquals( 27, array.getSize(2));
+		assertEquals(128, array.size(0));
+		assertEquals(128, array.size(1));
+		assertEquals( 27, array.size(2));
 
 		BoxFilter filter = new BoxFilter(new int[]{3, 3, 1});
 		long t0, t1;

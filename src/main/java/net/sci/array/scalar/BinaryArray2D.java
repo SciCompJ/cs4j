@@ -89,7 +89,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     @Override
     public BinaryArray2D complement()
     {
-        BinaryArray2D result = BinaryArray2D.create(getSize(0), getSize(1));
+        BinaryArray2D result = BinaryArray2D.create(size(0), size(1));
 	    for (int[] pos : positions())
 	    {
 	    	result.setBoolean(pos, !getBoolean(pos));
@@ -228,8 +228,8 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
                 throw new IllegalArgumentException("Requires an array with at least two dimensions");
             }
             this.array = array;
-            this.size0 = array.getSize(0);
-            this.size1 = array.getSize(1);
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
         }
 
         @Override
@@ -274,9 +274,9 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         }
         
         @Override
-        public Class<Binary> getDataType()
+        public Class<Binary> dataType()
         {
-            return array.getDataType();
+            return array.dataType();
         }
 
         @Override

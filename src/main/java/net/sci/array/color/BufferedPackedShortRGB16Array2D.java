@@ -34,8 +34,8 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 
 	public BufferedPackedShortRGB16Array2D(UInt16Array3D buffer)
 	{
-		super(buffer.getSize(0), buffer.getSize(1));
-		if (buffer.getSize(2) != 3)
+		super(buffer.size(0), buffer.size(1));
+		if (buffer.size(2) != 3)
 		{
 			throw new IllegalArgumentException("Requires an array of UInt16 with 3 slices");
 		}

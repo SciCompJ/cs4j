@@ -37,8 +37,8 @@ public class Arrays
      *            the second array to check
      * @return true if both arrays have same size
      * 
-     * @see Array#getSize()
-     * @see Array#getSize(int)
+     * @see Array#size()
+     * @see Array#size(int)
      */
     public static boolean isSameSize(Array<?> array1, Array<?> array2)
     {
@@ -49,7 +49,7 @@ public class Arrays
         // check each dimension successively
         for (int d = 0; d < nd1; d++)
         {
-            if (array1.getSize(d) != array2.getSize(d)) return false;
+            if (array1.size(d) != array2.size(d)) return false;
         }
         
         // otherwise return true

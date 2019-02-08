@@ -103,7 +103,7 @@ public class BufferedGenericArrayND<T> extends GenericArrayND<T>
 	
     @SuppressWarnings("unchecked")
     @Override
-    public Class<T> getDataType()
+    public Class<T> dataType()
     {
         return (Class<T>) initValue.getClass();
     }

@@ -38,8 +38,8 @@ public class BinaryImage2DBoundaryGraph extends AlgoStub
 		ArrayList<int[]> adjacencies = new ArrayList<int[]>();
 		
 		// size of array
-		int size0 = array.getSize(0);
-		int size1 = array.getSize(1);
+		int size0 = array.size(0);
+		int size1 = array.size(1);
 		
 		// iterate over image pixels
 		for (int y = 0; y < size1; y++)

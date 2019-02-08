@@ -125,8 +125,8 @@ public class RegionalExtrema2DGeneric extends AlgoStub implements ImageArrayOper
 	private void processScalar2dC4(ScalarArray2D<?> source, BinaryArray2D target) 
 	{
 		// get image size
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 
 		// initialize result array with true everywhere
 		target.fill(TRUE);
@@ -187,8 +187,8 @@ public class RegionalExtrema2DGeneric extends AlgoStub implements ImageArrayOper
 	private void processScalar2dC8(ScalarArray2D<?> source, BinaryArray2D target) 
 	{
 		// get image size
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 
 		// initialize result array with true everywhere
 		target.fill(TRUE);
@@ -248,7 +248,7 @@ public class RegionalExtrema2DGeneric extends AlgoStub implements ImageArrayOper
 	 */
 	public BinaryArray createEmptyOutputArray(Array<?> array)
 	{
-		int[] dims = array.getSize();
+		int[] dims = array.size();
 		return BinaryArray.create(dims);
 	}
 	

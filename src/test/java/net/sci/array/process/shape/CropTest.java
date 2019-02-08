@@ -30,8 +30,8 @@ public class CropTest
         Array<?> res = crop.process(array);
         
         assertTrue(res instanceof UInt8Array);
-        assertEquals(6, res.getSize(0));
-        assertEquals(4, res.getSize(1));
+        assertEquals(6, res.size(0));
+        assertEquals(4, res.size(1));
         UInt8Array2D res2d = UInt8Array2D.wrap((UInt8Array) res);
         assertEquals(32, res2d.getValue(0, 0), .1);
     }
@@ -63,9 +63,9 @@ public class CropTest
         Array<?> view = crop.createView(array);
         
         assertEquals(3, view.dimensionality());
-        assertEquals(3, view.getSize(0));
-        assertEquals(2, view.getSize(1));
-        assertEquals(1, view.getSize(2));
+        assertEquals(3, view.size(0));
+        assertEquals(2, view.size(1));
+        assertEquals(1, view.size(2));
 
         assertEquals(array.get(1, 1, 1), view.get(new int[]{0, 0, 0}));
         

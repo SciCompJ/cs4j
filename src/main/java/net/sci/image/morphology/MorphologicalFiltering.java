@@ -479,9 +479,9 @@ public class MorphologicalFiltering
         ScalarArray2D<?> result = strel.opening(array);
 		
 		// Compute subtraction of result from original array
-        for (int y = 0; y < array.getSize(1); y++)
+        for (int y = 0; y < array.size(1); y++)
         {
-            for (int x = 0; x < array.getSize(0); x++)
+            for (int x = 0; x < array.size(0); x++)
             {
                 double val = array.getValue(x, y) - result.getValue(x, y);
                 result.setValue(x, y, val);
@@ -553,9 +553,9 @@ public class MorphologicalFiltering
         ScalarArray2D<?> result = strel.closing(array);
         
         // Compute subtraction of result from original array
-        for (int y = 0; y < array.getSize(1); y++)
+        for (int y = 0; y < array.size(1); y++)
         {
-            for (int x = 0; x < array.getSize(0); x++)
+            for (int x = 0; x < array.size(0); x++)
             {
                 double val = result.getValue(x, y) - array.getValue(x, y);
                 result.setValue(x, y, val);
@@ -626,9 +626,9 @@ public class MorphologicalFiltering
         ScalarArray2D<?> eroded = strel.erosion(array);
         
         // Compute subtraction of result from original array
-        for (int y = 0; y < array.getSize(1); y++)
+        for (int y = 0; y < array.size(1); y++)
         {
-            for (int x = 0; x < array.getSize(0); x++)
+            for (int x = 0; x < array.size(0); x++)
             {
                 double val = result.getValue(x, y) - eroded.getValue(x, y);
                 result.setValue(x, y, val);
@@ -708,9 +708,9 @@ public class MorphologicalFiltering
         }
 
         // Compute subtraction of result from original array
-        for (int y = 0; y < array.getSize(1); y++)
+        for (int y = 0; y < array.size(1); y++)
         {
-            for (int x = 0; x < array.getSize(0); x++)
+            for (int x = 0; x < array.size(0); x++)
             {
                 double val = (dil.getValue(x, y) + ero.getValue(x, y)) / 2 - array.getValue(x, y);
                 dil.setValue(x, y, val + shift);
@@ -783,9 +783,9 @@ public class MorphologicalFiltering
         ScalarArray2D<?> result = strel.erosion(array);
         
         // Compute subtraction of result from original array
-        for (int y = 0; y < array.getSize(1); y++)
+        for (int y = 0; y < array.size(1); y++)
         {
-            for (int x = 0; x < array.getSize(0); x++)
+            for (int x = 0; x < array.size(0); x++)
             {
                 double val = array.getValue(x, y) - result.getValue(x, y);
                 result.setValue(x, y, val);
@@ -855,9 +855,9 @@ public class MorphologicalFiltering
         ScalarArray2D<?> result = strel.dilation(array);
         
         // Compute subtraction of result from original array
-        for (int y = 0; y < array.getSize(1); y++)
+        for (int y = 0; y < array.size(1); y++)
         {
-            for (int x = 0; x < array.getSize(0); x++)
+            for (int x = 0; x < array.size(0); x++)
             {
                 double val = result.getValue(x, y) - array.getValue(x, y);
                 result.setValue(x, y, val);
@@ -895,9 +895,9 @@ public class MorphologicalFiltering
 	private static void copyChannel(ScalarArray2D<?> channel, VectorArray2D<?> array, int channelIndex)
 	{
         // copy into result
-        for (int y = 0; y < array.getSize(1); y++)
+        for (int y = 0; y < array.size(1); y++)
         {
-            for (int x = 0; x < array.getSize(0); x++)
+            for (int x = 0; x < array.size(0); x++)
             {
                 array.setValue(x, y, channelIndex, channel.getValue(x, y));
             }

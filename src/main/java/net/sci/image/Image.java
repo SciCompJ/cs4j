@@ -252,7 +252,7 @@ public class Image
 	{
 		// get data infos
 		int dataND = this.data.dimensionality();
-		int[] dataSize = this.data.getSize();
+		int[] dataSize = this.data.size();
 		
 		// compute size of image
 		int nd = dataND;

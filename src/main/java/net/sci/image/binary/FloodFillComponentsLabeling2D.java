@@ -144,8 +144,8 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 	public IntArray2D<?> processBinary2d(BinaryArray2D image)
 	{
 		// get image size
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
 		int maxLabel;
 
 		// Depending on bitDepth, create result image, and choose max label 
@@ -203,8 +203,8 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 	public void processBinary2d(BinaryArray2D source, IntArray2D<?> target)
 	{
 		// get image size
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		int maxLabel;
 
 		// Depending on bitDepth, create result image, and choose max label 
@@ -281,7 +281,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 	 */
 	public IntArray<?> createEmptyOutputArray(Array<?> array)
 	{
-		int[] dims = array.getSize();
+		int[] dims = array.size();
 		switch (this.bitDepth) {
 		case 8: 
 			return UInt8Array.create(dims);

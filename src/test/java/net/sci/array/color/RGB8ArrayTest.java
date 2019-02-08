@@ -27,9 +27,9 @@ public class RGB8ArrayTest
         RGB8Array array = RGB8Array.create(5, 4, 3);
         assertNotNull(array);
         assertEquals(3, array.dimensionality());
-        assertEquals(5, array.getSize(0));
-        assertEquals(4, array.getSize(1));
-        assertEquals(3, array.getSize(2));
+        assertEquals(5, array.size(0));
+        assertEquals(4, array.size(1));
+        assertEquals(3, array.size(2));
     }
 
     /**
@@ -43,9 +43,9 @@ public class RGB8ArrayTest
         
         assertNotNull(view);
         assertEquals(3, view.dimensionality());
-        assertEquals(5, view.getSize(0));
-        assertEquals(4, view.getSize(1));
-        assertEquals(3, view.getSize(2));
+        assertEquals(5, view.size(0));
+        assertEquals(4, view.size(1));
+        assertEquals(3, view.size(2));
     }
     
     /**

@@ -36,7 +36,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	public static ScalarArray<?> norm(VectorArray<? extends Vector<?>> array)
 	{
 		// allocate memory for result
-		Float32Array result = Float32Array.create(array.getSize());
+		Float32Array result = Float32Array.create(array.size());
 		
         // create array iterators
         PositionIterator posIter = array.positionIterator();
@@ -98,7 +98,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
     public default ScalarArray<?> norm()
     {
         // allocate memory for result
-        Float32Array result = Float32Array.create(getSize());
+        Float32Array result = Float32Array.create(size());
         
         // create array iterators
         PositionIterator posIter = this.positionIterator();
@@ -241,7 +241,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
     @Override
     public default VectorArray<V> duplicate()
     {
-        VectorArray<V> result = this.newInstance(this.getSize());
+        VectorArray<V> result = this.newInstance(this.size());
         
         // initialize iterators
         Array.PositionIterator iter1 = this.positionIterator();

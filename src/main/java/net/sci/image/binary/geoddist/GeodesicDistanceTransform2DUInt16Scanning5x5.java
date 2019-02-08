@@ -115,8 +115,8 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 		// TODO: check int overflow?
 		
 		// size of image
-		sizeX = mask.getSize(0);
-		sizeY = mask.getSize(1);
+		sizeX = mask.size(0);
+		sizeY = mask.size(1);
 		
 		// update mask
 		this.mask = mask;

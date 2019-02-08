@@ -141,7 +141,7 @@ public class Crop extends AlgoStub implements ArrayOperator
         // Check target array dimensions
         for (int d = 0;d < nd; d++)
         {
-            if (target.getSize(d) != sizes[d])
+            if (target.size(d) != sizes[d])
             {
                 throw new IllegalArgumentException(
                         "Dimensions of target array does not match crop dimensions");

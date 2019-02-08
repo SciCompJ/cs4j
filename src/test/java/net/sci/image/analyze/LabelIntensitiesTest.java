@@ -23,7 +23,7 @@ public class LabelIntensitiesTest
 	public final void testMean()
 	{
 		UInt8Array2D labelArray = createFourRectArray();
-		UInt8Array2D array = UInt8Array2D.create(labelArray.getSize(0), labelArray.getSize(1));
+		UInt8Array2D array = UInt8Array2D.create(labelArray.size(0), labelArray.size(1));
 		array.fillValue(10);
 		
 		int[] labels = new int[]{1, 2, 3, 4};
@@ -43,7 +43,7 @@ public class LabelIntensitiesTest
 	public final void testSum()
 	{
 		UInt8Array2D labelArray = createFourRectArray();
-		UInt8Array2D array = UInt8Array2D.create(labelArray.getSize(0), labelArray.getSize(1));
+		UInt8Array2D array = UInt8Array2D.create(labelArray.size(0), labelArray.size(1));
 		array.fillValue(10);
 		
 		int[] labels = new int[]{1, 2, 3, 4};

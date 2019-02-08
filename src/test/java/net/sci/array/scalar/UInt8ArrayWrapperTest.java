@@ -26,8 +26,8 @@ public class UInt8ArrayWrapperTest
 		
 		UInt8Array wrap = UInt8Array.wrap(array);
 		assertEquals(2, wrap.dimensionality());
-		assertEquals(8, wrap.getSize(0));
-		assertEquals(6, wrap.getSize(1));
+		assertEquals(8, wrap.size(0));
+		assertEquals(6, wrap.size(1));
 	}
 
 	@Test
@@ -45,8 +45,8 @@ public class UInt8ArrayWrapperTest
 		
 		UInt8Array wrap = UInt8Array.wrap(array);
 		assertEquals(2, wrap.dimensionality());
-		assertEquals(8, wrap.getSize(0));
-		assertEquals(6, wrap.getSize(1));
+		assertEquals(8, wrap.size(0));
+		assertEquals(6, wrap.size(1));
 		
 		int count = 0;
 		double sum = 0;

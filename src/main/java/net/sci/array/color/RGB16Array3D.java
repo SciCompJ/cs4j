@@ -38,9 +38,9 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
 	@Override
 	public UInt16Array3D convertToUInt16()
 	{
-		int size0 = this.getSize(0);
-		int size1 = this.getSize(1);
-		int size2 = this.getSize(2);
+		int size0 = this.size(0);
+		int size1 = this.size(1);
+		int size2 = this.size(2);
 		UInt16Array3D result = UInt16Array3D.create(size0, size1, size2);
 		
 		RGB16Array.Iterator rgb16Iter = iterator();

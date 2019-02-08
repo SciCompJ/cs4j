@@ -145,9 +145,9 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
 		// TODO: check int overflow?
 		
 		// size of image
-		sizeX = mask.getSize(0);
-        sizeY = mask.getSize(1);
-        sizeZ = mask.getSize(2);
+		sizeX = mask.size(0);
+        sizeY = mask.size(1);
+        sizeZ = mask.size(2);
 		
 		// update mask
 		this.mask = mask;

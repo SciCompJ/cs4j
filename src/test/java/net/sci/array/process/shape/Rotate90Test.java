@@ -27,8 +27,8 @@ public class Rotate90Test
         
         Array2D<?> result = rot.process2d(array);
         
-        assertEquals(4, result.getSize(0));
-        assertEquals(5, result.getSize(1));
+        assertEquals(4, result.size(0));
+        assertEquals(5, result.size(1));
         
         assertEquals(array.get(3, 1), result.get(1, 1));
     }
@@ -46,8 +46,8 @@ public class Rotate90Test
         Array<?> view = rot.createView(array);
         view.get(new int[]{3, 4});
         
-        assertEquals(4, view.getSize(0));
-        assertEquals(5, view.getSize(1));
+        assertEquals(4, view.size(0));
+        assertEquals(5, view.size(1));
         
         assertEquals(array.get(3, 1), view.get(new int[]{1, 1}));
     }

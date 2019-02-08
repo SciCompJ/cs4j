@@ -49,7 +49,7 @@ public class PermuteDimensionsTest
         assertTrue(Arrays.isSameDimensionality(array, result));
         for (int d = 0; d < 3; d++)
         {
-            assertTrue(result.getSize(d) == newDims[d]);
+            assertTrue(result.size(d) == newDims[d]);
         }
     }
     
@@ -63,9 +63,9 @@ public class PermuteDimensionsTest
         Array<?> view = permDims.createView(array);
         
         assertEquals(3, view.dimensionality());
-        assertEquals(3, view.getSize(0));
-        assertEquals(5, view.getSize(1));
-        assertEquals(4, view.getSize(2));
+        assertEquals(3, view.size(0));
+        assertEquals(5, view.size(1));
+        assertEquals(4, view.size(2));
 
         assertEquals(array.get(3, 2, 1), view.get(new int[]{1, 3, 2}));
         

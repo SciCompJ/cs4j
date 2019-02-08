@@ -61,8 +61,8 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 	public UInt16Array2D process2d(BinaryArray2D array)
 	{
 		// size of image
-		sizeX = array.getSize(0);
-		sizeY = array.getSize(1);
+		sizeX = array.size(0);
+		sizeY = array.size(1);
 		
 		// update mask
 		this.mask = array;

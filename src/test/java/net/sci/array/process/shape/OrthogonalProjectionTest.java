@@ -28,8 +28,8 @@ public class OrthogonalProjectionTest
 		
 		Array<?> result = op.process(array);
 		assertEquals(2, result.dimensionality());
-		assertEquals(array.getSize(0), result.getSize(0));
-		assertEquals(array.getSize(1), result.getSize(1));
+		assertEquals(array.size(0), result.size(0));
+		assertEquals(array.size(1), result.size(1));
 
 		// max value in (3, 2) corresponds to source (3, 2, 2) 
 		assertEquals(array.get(3, 2, 2), result.get(new int[]{3, 2}));

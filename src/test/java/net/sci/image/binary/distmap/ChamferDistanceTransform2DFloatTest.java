@@ -42,8 +42,8 @@ public class ChamferDistanceTransform2DFloatTest
 //		result.print(System.out);
 		
 		assertNotNull(result);
-		assertEquals(image.getSize(0), result.getSize(0));
-		assertEquals(image.getSize(1), result.getSize(1));
+		assertEquals(image.size(0), result.size(0));
+		assertEquals(image.size(1), result.size(1));
 		assertEquals(3, result.getValue(4, 4), 1e-12);
 	}
 
@@ -61,8 +61,8 @@ public class ChamferDistanceTransform2DFloatTest
 //		result.print(System.out);
 		
 		assertNotNull(result);
-		assertEquals(image.getSize(0), result.getSize(0));
-		assertEquals(image.getSize(1), result.getSize(1));
+		assertEquals(image.size(0), result.size(0));
+		assertEquals(image.size(1), result.size(1));
 		assertEquals(8, result.getValue(0, 0), .01);
 		assertEquals(6, result.getValue(6, 0), .01);
 		assertEquals(6, result.getValue(0, 6), .01);
@@ -81,8 +81,8 @@ public class ChamferDistanceTransform2DFloatTest
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
-		assertEquals(image.getSize(0), result.getSize(0));
-		assertEquals(image.getSize(1), result.getSize(1));
+		assertEquals(image.size(0), result.size(0));
+		assertEquals(image.size(1), result.size(1));
 		assertEquals(4, result.getValue(0, 0), .01);
 		assertEquals(4, result.getValue(6, 0), .01);
 		assertEquals(4, result.getValue(0, 6), .01);
@@ -101,8 +101,8 @@ public class ChamferDistanceTransform2DFloatTest
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
-		assertEquals(image.getSize(0), result.getSize(0));
-		assertEquals(image.getSize(1), result.getSize(1));
+		assertEquals(image.size(0), result.size(0));
+		assertEquals(image.size(1), result.size(1));
 		assertEquals(12, result.getValue(0, 0), .01);
 		assertEquals(10, result.getValue(6, 0), .01);
 		assertEquals(10, result.getValue(0, 6), .01);
@@ -121,8 +121,8 @@ public class ChamferDistanceTransform2DFloatTest
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
-		assertEquals(image.getSize(0), result.getSize(0));
-		assertEquals(image.getSize(1), result.getSize(1));
+		assertEquals(image.size(0), result.size(0));
+		assertEquals(image.size(1), result.size(1));
 		assertEquals(16, result.getValue(0, 0), .01);
 		assertEquals(14, result.getValue(6, 0), .01);
 		assertEquals(14, result.getValue(0, 6), .01);
@@ -141,8 +141,8 @@ public class ChamferDistanceTransform2DFloatTest
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
-		assertEquals(image.getSize(0), result.getSize(0));
-		assertEquals(image.getSize(1), result.getSize(1));
+		assertEquals(image.size(0), result.size(0));
+		assertEquals(image.size(1), result.size(1));
 		assertEquals(42, result.getValue(0, 0), .01);
 		assertEquals(32, result.getValue(8, 0), .01);
 		assertEquals(32, result.getValue(0, 8), .01);

@@ -35,7 +35,7 @@ public class Flip extends AlgoStub implements ArrayOperator
 	@Override
 	public <T> Array<?> process(Array<T> array)
 	{
-		Array<T> output = array.newInstance(array.getSize());
+		Array<T> output = array.newInstance(array.size());
 		process(array, output);
 		return output;
 	}
@@ -56,8 +56,8 @@ public class Flip extends AlgoStub implements ArrayOperator
 	public <T1 extends T2, T2> void process2d(Array2D<T1> input, Array2D<T2> output)
 	{
 		// get image size
-		int sizeX = input.getSize(0);
-		int sizeY = input.getSize(1);
+		int sizeX = input.size(0);
+		int sizeY = input.size(1);
 		
 		// iterate over pixels
 		for (int y = 0; y < sizeY; y++)
@@ -93,9 +93,9 @@ public class Flip extends AlgoStub implements ArrayOperator
 	public <T1 extends T2, T2> void process3d(Array3D<T1> input, Array3D<T2> output)
 	{
 		// get image size
-		int sizeX = input.getSize(0);
-		int sizeY = input.getSize(1);
-		int sizeZ = input.getSize(2);
+		int sizeX = input.size(0);
+		int sizeY = input.size(1);
+		int sizeZ = input.size(2);
 
 		// iterate over pixels
 		for (int z = 0; z < sizeZ; z++)
@@ -124,7 +124,7 @@ public class Flip extends AlgoStub implements ArrayOperator
     public <T1 extends T2, T2> void process(Array<T1> input, Array<T2> output)
     {
         int nd = input.dimensionality();
-        int sizeDim = input.getSize(this.dim);
+        int sizeDim = input.size(this.dim);
         int[] pos2 = new int[nd];
 
         // iterate over positions of input array
@@ -138,12 +138,12 @@ public class Flip extends AlgoStub implements ArrayOperator
     
     public <T> Array<?> createView(Array<T> array)
     {
-        int[] dims = array.getSize();
+        int[] dims = array.size();
         Function<int[], int[]> mapping = (int[] pos) ->
         {
             int[] pos2 = new int[pos.length];
             System.arraycopy(pos, 0, pos2, 0, pos.length);
-            pos2[dim] = array.getSize(dim) - 1 - pos[dim];
+            pos2[dim] = array.size(dim) - 1 - pos[dim];
             return pos2;
         };
         

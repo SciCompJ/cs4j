@@ -27,11 +27,11 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	public int dimensionality();
 	
 	/**
-	 * Returns the size of this image, as an array of dimension.
+	 * Returns the size of this image, as an array of dimensions.
 	 * 
 	 * @return an array of integer sizes
 	 */
-	public int[] getSize();
+	public int[] size();
 
 	/**
 	 * Returns the size of the image along the specified dimension, starting
@@ -41,14 +41,14 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 *            the dimension, between 0 and dimensionality()-1
 	 * @return the size along the specified dimension.
 	 */
-	public int getSize(int dim);
+	public int size(int dim);
 
 	/**
 	 * Returns the class of the data type stored in this array.
 	 * 
 	 * @return the class of the data type stored in this array.
 	 */
-	public Class<T> getDataType();
+	public Class<T> dataType();
 	
 	/**
 	 * Creates a new array with same type but with the specified dimensions
@@ -73,7 +73,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
 	public default Array<T> duplicate()
 	{
-	    Array<T> dup = newInstance(getSize());
+	    Array<T> dup = newInstance(size());
 	    for (int[] pos : positions())
 	    {
 	        dup.set(pos, get(pos));
@@ -324,7 +324,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
          * @see net.sci.array.Array#getSize()
          */
         @Override
-        public int[] getSize()
+        public int[] size()
         {
             return newDims;
         }
@@ -333,7 +333,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
          * @see net.sci.array.Array#getSize(int)
          */
         @Override
-        public int getSize(int dim)
+        public int size(int dim)
         {
             return newDims[dim];
         }
@@ -348,9 +348,9 @@ public interface Array<T> extends Iterable<T>, Dimensional
         }
 
         @Override
-        public Class<T> getDataType()
+        public Class<T> dataType()
         {
-            return array.getDataType();
+            return array.dataType();
         }
 
         @Override

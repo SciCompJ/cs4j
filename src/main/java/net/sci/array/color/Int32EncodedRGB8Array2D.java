@@ -34,7 +34,7 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 
 	public Int32EncodedRGB8Array2D(Int32Array2D buffer)
 	{
-		super(buffer.getSize(0), buffer.getSize(1));
+		super(buffer.size(0), buffer.size(1));
 		this.buffer = buffer;
 	}
 

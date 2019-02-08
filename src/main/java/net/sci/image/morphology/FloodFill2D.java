@@ -82,8 +82,8 @@ public class FloodFill2D
 		}
 		
 		// get image size
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		
 		// get old value
 		S oldValue = source.get(x, y);
@@ -250,8 +250,8 @@ public class FloodFill2D
 		}
 		
 		// get image size
-		int sizeX = input.getSize(0);
-		int sizeY = input.getSize(1);
+		int sizeX = input.size(0);
+		int sizeY = input.size(1);
 		
 		// get old value
 		double oldValue = input.getValue(x, y);
@@ -419,8 +419,8 @@ public class FloodFill2D
 		}
 		
 		// get image size
-		int sizeX = input.getSize(0);
-		int sizeY = input.getSize(1);
+		int sizeX = input.size(0);
+		int sizeY = input.size(1);
 		
 		// get old value
 		int oldValue = input.getInt(x, y);

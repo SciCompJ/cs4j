@@ -23,8 +23,8 @@ public class BufferedGenericArray2DTest
     public final void testCreate()
     {
         Array2D<String> array = createStringArray();
-        assertEquals(10, array.getSize(0));
-        assertEquals(6, array.getSize(1));
+        assertEquals(10, array.size(0));
+        assertEquals(6, array.size(1));
     }
     
     /**
@@ -58,8 +58,8 @@ public class BufferedGenericArray2DTest
     public final void testDuplicate()
     {
         Array2D<String> array = createStringArray().duplicate();
-        assertEquals(10, array.getSize(0));
-        assertEquals(6, array.getSize(1));
+        assertEquals(10, array.size(0));
+        assertEquals(6, array.size(1));
         String first = array.get(0, 0);
         assertTrue("AA".equals(first));
         String last = array.get(9, 5);

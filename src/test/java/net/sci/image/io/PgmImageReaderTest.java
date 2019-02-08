@@ -32,7 +32,7 @@ public class PgmImageReaderTest
         assertNotNull(image);
         
         Array<?> data = image.getData();
-        int[] dim = data.getSize();
+        int[] dim = data.size();
         assertEquals(2, dim.length);
         assertEquals(24, dim[0]);
         assertEquals(7, dim[1]);

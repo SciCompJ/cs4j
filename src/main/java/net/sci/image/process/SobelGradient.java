@@ -61,10 +61,10 @@ public class SobelGradient implements ImageArrayOperator
 
 	public void processScalar2d(ScalarArray2D<?> source, VectorArray2D<?> target)
 	{
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		
-		if (target.getSize(0) != sizeX || target.getSize(1) != sizeY)
+		if (target.size(0) != sizeX || target.size(1) != sizeY)
 		{
 			throw new IllegalArgumentException("Input image and output image must have same size");
 		}
@@ -102,11 +102,11 @@ public class SobelGradient implements ImageArrayOperator
 	
 	public void processScalar3d(ScalarArray3D<?> source, VectorArray3D<?> target)
 	{
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
-		int sizeZ = source.getSize(2);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
+		int sizeZ = source.size(2);
 		
-		if (target.getSize(0) != sizeX || target.getSize(1) != sizeY || target.getSize(2) != sizeZ)
+		if (target.size(0) != sizeX || target.size(1) != sizeY || target.size(2) != sizeZ)
 		{
 			throw new IllegalArgumentException("Input image and output image must have same size");
 		}
@@ -180,15 +180,15 @@ public class SobelGradient implements ImageArrayOperator
     {
         if (array instanceof ScalarArray2D)
         {
-            int size0 = array.getSize(0);
-            int size1 = array.getSize(1);
+            int size0 = array.size(0);
+            int size1 = array.size(1);
             return Float32VectorArray2D.create(size0, size1, 2);
         }
         else if (array instanceof ScalarArray3D)
         {
-            int size0 = array.getSize(0);
-            int size1 = array.getSize(1);
-            int size2 = array.getSize(2);
+            int size0 = array.size(0);
+            int size1 = array.size(1);
+            int size2 = array.size(2);
             return Float32VectorArray3D.create(size0, size1, size2, 3);
         }
         else

@@ -24,9 +24,9 @@ public class RGB16ArrayTest
         RGB16Array array = RGB16Array.create(5, 4, 3);
         assertNotNull(array);
         assertEquals(3, array.dimensionality());
-        assertEquals(5, array.getSize(0));
-        assertEquals(4, array.getSize(1));
-        assertEquals(3, array.getSize(2));
+        assertEquals(5, array.size(0));
+        assertEquals(4, array.size(1));
+        assertEquals(3, array.size(2));
     }
 
     /**

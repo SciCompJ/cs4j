@@ -38,8 +38,8 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RG
 	public UInt16Array2D convertToUInt16()
 	{
 	    // allocate memory for result
-		int size0 = this.getSize(0);
-		int size1 = this.getSize(1);
+		int size0 = this.size(0);
+		int size1 = this.size(1);
 		UInt16Array2D result = UInt16Array2D.create(size0, size1);
 
 		// iterate over pixels

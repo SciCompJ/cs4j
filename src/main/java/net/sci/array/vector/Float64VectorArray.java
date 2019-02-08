@@ -83,7 +83,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 	public default Float64VectorArray duplicate()
 	{
 		// create output array
-		Float64VectorArray result = Float64VectorArray.create(this.getSize(), this.channelNumber());
+		Float64VectorArray result = Float64VectorArray.create(this.size(), this.channelNumber());
 
         // initialize iterators
         Array.PositionIterator iter1 = this.positionIterator();
@@ -100,7 +100,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 	}
 
 	@Override
-	public default Class<Float64Vector> getDataType()
+	public default Class<Float64Vector> dataType()
 	{
 		return Float64Vector.class;
 	}

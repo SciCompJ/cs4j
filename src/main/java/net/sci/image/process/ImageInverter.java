@@ -103,14 +103,14 @@ public final class ImageInverter implements ImageArrayOperator, ArrayOperator
 	    if (array instanceof ScalarArray)
 	    {
 	        ScalarArray<?> scalar = (ScalarArray<?>) array;
-	        ScalarArray<?> result = scalar.newInstance(array.getSize());
+	        ScalarArray<?> result = scalar.newInstance(array.size());
 	        processScalar(scalar, result);
 	        return result;
 	    }
 	    else if (array instanceof RGB8Array)
 	    {
 	        RGB8Array rgb8 = (RGB8Array) array;
-	        RGB8Array result = rgb8.newInstance(array.getSize());
+	        RGB8Array result = rgb8.newInstance(array.size());
 	        processRGB8(rgb8, result);
 	        return result;
 	    }

@@ -141,9 +141,9 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	public IntArray3D<?> processBinary3d(BinaryArray3D image)
 	{
 		// get image size
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
-		int sizeZ = image.getSize(2);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
+		int sizeZ = image.size(2);
 	
 		// Depending on bitDepth, create result image, and choose max label 
 		// number
@@ -173,9 +173,9 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	public void processBinary3d(BinaryArray3D image, IntArray3D<?> labels)
 	{
 		// get image size
-		int sizeX = image.getSize(0);
-		int sizeY = image.getSize(1);
-		int sizeZ = image.getSize(2);
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
+		int sizeZ = image.size(2);
 	
 		// identify the maximum label index
 		int maxLabel;
@@ -256,7 +256,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	 */
 	public IntArray<?> createEmptyOutputArray(Array<?> array)
 	{
-		int[] dims = array.getSize();
+		int[] dims = array.size();
 		switch (this.bitDepth) {
 		case 8: 
 			return UInt8Array.create(dims);

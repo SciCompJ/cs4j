@@ -42,7 +42,7 @@ public class ImageThreshold implements ImageArrayOperator, ScalarArrayOperator
     @Override
     public BinaryArray processScalar(ScalarArray<? extends Scalar> array)
     {
-        BinaryArray result = BinaryArray.create(array.getSize());
+        BinaryArray result = BinaryArray.create(array.size());
         processScalar(array, result);
         return result;
     }

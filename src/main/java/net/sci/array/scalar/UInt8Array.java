@@ -67,7 +67,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	
 	public static UInt8Array convert(ScalarArray<?> array)
 	{
-		UInt8Array result = UInt8Array.create(array.getSize());
+		UInt8Array result = UInt8Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
 	    	result.setValue(pos, array.getValue(pos));
@@ -158,7 +158,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	public default UInt8Array duplicate()
 	{
 		// create output array
-		UInt8Array result = UInt8Array.create(this.getSize());
+		UInt8Array result = UInt8Array.create(this.size());
 
         // copy values into output array
 	    for (int[] pos : positions())
@@ -177,7 +177,7 @@ public interface UInt8Array extends IntArray<UInt8>
 
 
 	@Override
-	public default Class<UInt8> getDataType()
+	public default Class<UInt8> dataType()
 	{
 		return UInt8.class;
 	}
@@ -301,15 +301,15 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 
 		@Override
-		public int[] getSize()
+		public int[] size()
 		{
-			return array.getSize();
+			return array.size();
 		}
 
 		@Override
-		public int getSize(int dim)
+		public int size(int dim)
 		{
-			return array.getSize(dim);
+			return array.size(dim);
 		}
 
 		@Override
@@ -462,7 +462,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.Array#getSize()
 	     */
 	    @Override
-	    public int[] getSize()
+	    public int[] size()
 	    {
 	        return newDims;
 	    }
@@ -471,7 +471,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.Array#getSize(int)
 	     */
 	    @Override
-	    public int getSize(int dim)
+	    public int size(int dim)
 	    {
 	        return newDims[dim];
 	    }

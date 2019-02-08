@@ -46,8 +46,8 @@ public class VectorArrayNorm implements ImageArrayOperator
 
 	public void processVector2d(VectorArray2D<?> source, ScalarArray2D<?> target)
 	{
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		int nChannels = source.channelNumber();
 		
 		for (int y = 0; y < sizeY; y++)
@@ -71,9 +71,9 @@ public class VectorArrayNorm implements ImageArrayOperator
 	public void processVector3d(VectorArray3D<?> source, ScalarArray3D<?> target)
 	{
 		// get array size
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
-		int sizeZ = source.getSize(2);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
+		int sizeZ = source.size(2);
 		int nChannels = source.channelNumber();
 
 		for (int z = 0; z < sizeZ; z++)
@@ -134,7 +134,7 @@ public class VectorArrayNorm implements ImageArrayOperator
 	        throw new IllegalArgumentException("Requires 2D ort 3D Vector array");
 	    }
 	            
-	    ScalarArray<?> norm = Float32Array.create(array.getSize());
+	    ScalarArray<?> norm = Float32Array.create(array.size());
 	    processVector((VectorArray<?>) array, norm);
 	    return norm;
     }

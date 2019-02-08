@@ -39,7 +39,7 @@ public class DynamicAdjustment implements ImageArrayOperator
 		
 		double delta = range[1] - range[0];
 		
-		UInt8Array result = UInt8Array.create(array.getSize());
+		UInt8Array result = UInt8Array.create(array.size());
 		
 		// get iterator
 		ScalarArray.Iterator<? extends Scalar> sourceIter = scalarArray.iterator();

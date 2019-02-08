@@ -123,9 +123,9 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 		this.maskArray = array;
 		
 		// size of image
-		sizeX = array.getSize(0);
-		sizeY = array.getSize(1);
-		sizeZ = array.getSize(2);
+		sizeX = array.size(0);
+		sizeY = array.size(1);
+		sizeZ = array.size(2);
 		
 		// create new empty image, and fill it with black
 		this.distMap = UInt16Array3D.create(sizeX, sizeY, sizeZ);

@@ -123,8 +123,8 @@ public class MorphologicalReconstruction
 	public static final ScalarArray2D<?> killBorders(ScalarArray2D<?> array) 
 	{
 		// Image size
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
 
 		// Initialize marker image with zeros everywhere except at borders
 		ScalarArray2D<?> marker = array.duplicate();
@@ -166,9 +166,9 @@ public class MorphologicalReconstruction
 	public static final ScalarArray3D<?> killBorders(ScalarArray3D<?> array) 
 	{
 		// Image size
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
-		int sizeZ = array.getSize(2);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
+		int sizeZ = array.size(2);
 
 		// Initialize marker image with zeros everywhere except at borders
 		ScalarArray3D<?> marker = array.duplicate();
@@ -249,8 +249,8 @@ public class MorphologicalReconstruction
 	public static final ScalarArray2D<?> fillHoles(ScalarArray2D<?> array) 
 	{
 		// Image size
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
 
 		// Initialize marker image with white everywhere except at borders
 		ScalarArray2D<?> marker = array.duplicate();
@@ -283,9 +283,9 @@ public class MorphologicalReconstruction
 	public static final ScalarArray3D<?> fillHoles(ScalarArray3D<?> array) 
 	{
 		// Image size
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
-		int sizeZ = array.getSize(2);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
+		int sizeZ = array.size(2);
 
 		// Initialize marker image with white everywhere except at borders
 		ScalarArray3D<?> marker = array.duplicate();

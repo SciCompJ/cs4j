@@ -119,7 +119,7 @@ public class FloodFillTest
         // System.out.println("input image:");
         // printStack(image);
 
-        IntArray3D<?> result = UInt8Array3D.create(image.getSize(0), image.getSize(1), image.getSize(2)); 
+        IntArray3D<?> result = UInt8Array3D.create(image.size(0), image.size(1), image.size(2)); 
                 
         int newVal = 120;
         FloodFill.floodFill(image, 2, 4, 4, result, newVal, Connectivity3D.C26);

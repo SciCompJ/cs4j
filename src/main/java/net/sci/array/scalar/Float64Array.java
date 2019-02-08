@@ -66,7 +66,7 @@ public interface Float64Array extends ScalarArray<Float64>
 	
 	public static Float64Array convert(ScalarArray<?> array)
 	{
-		Float64Array result = Float64Array.create(array.getSize());
+		Float64Array result = Float64Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
 	    	result.setValue(pos, array.getValue(pos));
@@ -109,7 +109,7 @@ public interface Float64Array extends ScalarArray<Float64>
 	public default Float64Array duplicate()
 	{
 		// create output array
-		Float64Array result = Float64Array.create(this.getSize());
+		Float64Array result = Float64Array.create(this.size());
 	    for (int[] pos : positions())
 	    {
 	    	result.setValue(pos, this.getValue(pos));
@@ -131,7 +131,7 @@ public interface Float64Array extends ScalarArray<Float64>
     }
 
 	@Override
-	public default Class<Float64> getDataType()
+	public default Class<Float64> dataType()
 	{
 		return Float64.class;
 	}
@@ -214,15 +214,15 @@ public interface Float64Array extends ScalarArray<Float64>
 		}
 
 		@Override
-		public int[] getSize()
+		public int[] size()
 		{
-			return array.getSize();
+			return array.size();
 		}
 
 		@Override
-		public int getSize(int dim)
+		public int size(int dim)
 		{
-			return array.getSize(dim);
+			return array.size(dim);
 		}
 
 		@Override
@@ -353,7 +353,7 @@ public interface Float64Array extends ScalarArray<Float64>
          * @see net.sci.array.Array#getSize()
          */
         @Override
-        public int[] getSize()
+        public int[] size()
         {
             return newDims;
         }
@@ -362,7 +362,7 @@ public interface Float64Array extends ScalarArray<Float64>
          * @see net.sci.array.Array#getSize(int)
          */
         @Override
-        public int getSize(int dim)
+        public int size(int dim)
         {
             return newDims[dim];
         }

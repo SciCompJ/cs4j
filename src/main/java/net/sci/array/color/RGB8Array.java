@@ -62,7 +62,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	public static Collection<UInt8Array> splitChannels(RGB8Array array)
 	{
 		// create result arrays
-		int[] dims = array.getSize();
+		int[] dims = array.size();
 		UInt8Array redChannel = UInt8Array.create(dims);
 		UInt8Array greenChannel = UInt8Array.create(dims);
 		UInt8Array blueChannel = UInt8Array.create(dims);
@@ -112,7 +112,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	public static HashMap<String, UInt8Array> mapChannels(RGB8Array array)
 	{
 		// create result arrays
-		int[] dims = array.getSize();
+		int[] dims = array.size();
 		UInt8Array redChannel = UInt8Array.create(dims);
 		UInt8Array greenChannel = UInt8Array.create(dims);
 		UInt8Array blueChannel = UInt8Array.create(dims);
@@ -155,7 +155,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	public static RGB8Array mergeChannels(UInt8Array redChannel, UInt8Array greenChannel, UInt8Array blueChannel)
 	{
 		// create result array
-		int[] dims = redChannel.getSize();
+		int[] dims = redChannel.size();
 		RGB8Array result = create(dims);
 		
 		// get iterators
@@ -228,7 +228,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         // convert UInt8 to RGB8
         if (array instanceof UInt8Array)
         {
-            RGB8Array res = RGB8Array.create(array.getSize());
+            RGB8Array res = RGB8Array.create(array.size());
             UInt8Array.Iterator iter1 = ((UInt8Array) array).iterator();
             RGB8Array.Iterator iter2 = res.iterator();
             while (iter1.hasNext())
@@ -242,7 +242,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         // convert Binary to RGB8
         if (array instanceof BinaryArray)
         {
-            RGB8Array res = RGB8Array.create(array.getSize());
+            RGB8Array res = RGB8Array.create(array.size());
             BinaryArray.Iterator iter1 = ((BinaryArray) array).iterator();
             RGB8Array.Iterator iter2 = res.iterator();
             while (iter1.hasNext())
@@ -387,7 +387,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	public default RGB8Array duplicate()
 	{
 		// create output array
-		RGB8Array result = RGB8Array.create(this.getSize());
+		RGB8Array result = RGB8Array.create(this.size());
 
 		// initialize iterators
 		RGB8Array.Iterator iter1 = this.iterator();
@@ -411,7 +411,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	// Inner interface
 
 	@Override
-	public default Class<RGB8> getDataType()
+	public default Class<RGB8> dataType()
 	{
 		return RGB8.class;
 	}
@@ -454,15 +454,15 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         }
 
         @Override
-        public int[] getSize()
+        public int[] size()
         {
-            return parent.getSize();
+            return parent.size();
         }
 
         @Override
-        public int getSize(int dim)
+        public int size(int dim)
         {
-            return parent.getSize(dim);
+            return parent.size(dim);
         }
 
         @Override

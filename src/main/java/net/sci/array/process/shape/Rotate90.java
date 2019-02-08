@@ -74,8 +74,8 @@ public class Rotate90 implements ArrayOperator
      */
 	public <T> Array2D<?> process2d(Array2D<T> array)
 	{
-		int size0 = array.getSize(0);
-		int size1 = array.getSize(1);
+		int size0 = array.size(0);
+		int size1 = array.size(1);
 				
 		switch (this.number)
 		{
@@ -141,7 +141,7 @@ public class Rotate90 implements ArrayOperator
             throw new IllegalArgumentException("Requires a 2D array");
         }
         
-        int[] dims = array.getSize();
+        int[] dims = array.size();
         int[] newDims;
         if (number == 1 || number == 3)
         {

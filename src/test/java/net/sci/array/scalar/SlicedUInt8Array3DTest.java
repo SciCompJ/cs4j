@@ -29,9 +29,9 @@ public class SlicedUInt8Array3DTest
 			}
 		}
 
-		assertEquals(4, array.getSize(0));
-		assertEquals(3, array.getSize(1));
-		assertEquals(2, array.getSize(2));
+		assertEquals(4, array.size(0));
+		assertEquals(3, array.size(1));
+		assertEquals(2, array.size(2));
 	}
 	
 	@Test
@@ -54,9 +54,9 @@ public class SlicedUInt8Array3DTest
 		slices.add(slice1);
 		SlicedUInt8Array3D array = new SlicedUInt8Array3D(slices);
 		
-		assertEquals(4, array.getSize(0));
-		assertEquals(3, array.getSize(1));
-		assertEquals(2, array.getSize(2));
+		assertEquals(4, array.size(0));
+		assertEquals(3, array.size(1));
+		assertEquals(2, array.size(2));
 	}
 
 	@Test

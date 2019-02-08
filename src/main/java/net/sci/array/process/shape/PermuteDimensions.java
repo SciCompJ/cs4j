@@ -77,7 +77,7 @@ public class PermuteDimensions implements ArrayOperator
 
         // compute new size
         int nd = dimOrder.length;
-        int[] dims = array.getSize();
+        int[] dims = array.size();
         int[] newDims = new int[nd];
         for (int d = 0; d < nd; d++)
         {
@@ -134,7 +134,7 @@ public class PermuteDimensions implements ArrayOperator
         int[] dims = new int[nd];
         for (int d = 0; d < nd; d++)
         {
-            dims[d] = inputArray.getSize(dimOrder[d]);
+            dims[d] = inputArray.size(dimOrder[d]);
         }
 
         return dims;

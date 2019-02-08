@@ -54,16 +54,16 @@ public class RotationAroundCenter implements ImageArrayOperator
 		LinearInterpolator2D interp = new LinearInterpolator2D(source);
 				
 		// output array size
-		int sizeX = target.getSize(0);
-		int sizeY = target.getSize(1);
+		int sizeX = target.size(0);
+		int sizeY = target.size(1);
 		
 		// compute transform parameters
 		double angle = Math.toRadians(this.angle);
 		double cosTheta = Math.cos(angle);
 		double sinTheta = Math.sin(angle);
 		
-		double centerSourceX = source.getSize(0) * .5;
-		double centerSourceY = source.getSize(1) * .5;
+		double centerSourceX = source.size(0) * .5;
+		double centerSourceY = source.size(1) * .5;
 		double centerTargetX = sizeX * .5;
 		double centerTargetY = sizeY * .5;
 		
@@ -89,13 +89,13 @@ public class RotationAroundCenter implements ImageArrayOperator
 	public void processVector2d(VectorArray2D<?> source, VectorArray2D<?> target)
 	{
 		// input array size
-		int sourceSizeX = target.getSize(0);
-		int sourceSizeY = target.getSize(1);
+		int sourceSizeX = target.size(0);
+		int sourceSizeY = target.size(1);
 		Float32Array2D sourceChannel = Float32Array2D.create(sourceSizeX, sourceSizeY);
 		
 		// output array size
-		int targetSizeX = target.getSize(0);
-		int targetSizeY = target.getSize(1);
+		int targetSizeX = target.size(0);
+		int targetSizeY = target.size(1);
 		Float32Array2D targetChannel = Float32Array2D.create(targetSizeX, targetSizeY);
 
 		int nChannels = source.channelNumber();
@@ -109,8 +109,8 @@ public class RotationAroundCenter implements ImageArrayOperator
 	
 	private void copyToChannel(VectorArray2D<?> source, int channelIndex, ScalarArray2D<?> channel)
 	{
-		int sizeX = source.getSize(0);
-		int sizeY = source.getSize(1);
+		int sizeX = source.size(0);
+		int sizeY = source.size(1);
 		
 		for (int y = 0; y < sizeY; y++)
 		{
@@ -123,8 +123,8 @@ public class RotationAroundCenter implements ImageArrayOperator
 	
 	private void copyFromChannel(ScalarArray2D<?> channel, VectorArray2D<?> target, int channelIndex)
 	{
-		int sizeX = channel.getSize(0);
-		int sizeY = channel.getSize(1);
+		int sizeX = channel.size(0);
+		int sizeY = channel.size(1);
 		
 		for (int y = 0; y < sizeY; y++)
 		{
@@ -146,14 +146,14 @@ public class RotationAroundCenter implements ImageArrayOperator
         if (array instanceof ScalarArray<?>)
         {
             ScalarArray2D<?> scalar2d = ScalarArray2D.wrap((ScalarArray<?>) array);
-            ScalarArray2D<?> result = ScalarArray2D.wrap(scalar2d.newInstance(scalar2d.getSize())); 
+            ScalarArray2D<?> result = ScalarArray2D.wrap(scalar2d.newInstance(scalar2d.size())); 
             processScalar2d(scalar2d, result);
             return result;
         }
         else if (array instanceof VectorArray<?>)
         {
             VectorArray2D<?> vector2d = VectorArray2D.wrap((VectorArray<?>) array);
-            VectorArray2D<?> result = VectorArray2D.wrap(vector2d.newInstance(vector2d.getSize())); 
+            VectorArray2D<?> result = VectorArray2D.wrap(vector2d.newInstance(vector2d.size())); 
             processVector2d(vector2d, result);
             return result;
         }

@@ -40,17 +40,17 @@ public class Concatenate
             if (d != dim)
             {
                 // both arrays should have same size in the dimensions that are not concatenated
-                if (array1.getSize(d) != array2.getSize(d))
+                if (array1.size(d) != array2.size(d))
                 {
                     throw new IllegalArgumentException("Both arrays must have same size in dimension " + (d+1));
                 }
-                newDims[d] = array1.getSize(d);
+                newDims[d] = array1.size(d);
             }
             else
             {
                 // For the dimension of concatenation, simply add the size of each array
-                int size =  array1.dimensionality() > d ? array1.getSize(d) : 1;
-                size += array2.dimensionality() > d ? array2.getSize(d) : 1;
+                int size =  array1.dimensionality() > d ? array1.size(d) : 1;
+                size += array2.dimensionality() > d ? array2.size(d) : 1;
                 newDims[d] = size;
             }
         }
@@ -60,7 +60,7 @@ public class Concatenate
 
         int[] offset = new int[nd];
         Arrays.copy(array1, result, offset);
-        offset[this.dim] = array1.dimensionality() > this.dim ? array1.getSize(this.dim) : 1;
+        offset[this.dim] = array1.dimensionality() > this.dim ? array1.size(this.dim) : 1;
         Arrays.copy(array2, result, offset);
                 
         return result;

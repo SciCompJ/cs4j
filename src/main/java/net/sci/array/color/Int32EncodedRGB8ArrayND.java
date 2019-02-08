@@ -34,7 +34,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 
 	public Int32EncodedRGB8ArrayND(Int32Array buffer)
 	{
-		super(buffer.getSize());
+		super(buffer.size());
 		this.buffer = buffer;
 	}
 

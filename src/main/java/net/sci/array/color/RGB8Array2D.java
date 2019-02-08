@@ -38,8 +38,8 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 	@Override
 	public UInt8Array2D convertToUInt8()
 	{
-		int size0 = this.getSize(0);
-		int size1 = this.getSize(1);
+		int size0 = this.size(0);
+		int size1 = this.size(1);
 		UInt8Array2D result = UInt8Array2D.create(size0, size1);
 		
 		RGB8Array.Iterator rgb8Iter = iterator();

@@ -46,9 +46,9 @@ public class ChamferDistanceTransform3DFloatTest
 		ScalarArray3D<?> result = algo.process3d(image);
 		assertNotNull(result);
 		assertTrue(result instanceof Float32Array);
-		assertEquals(image.getSize(0), result.getSize(0));
-		assertEquals(image.getSize(1), result.getSize(1));
-		assertEquals(image.getSize(2), result.getSize(2));
+		assertEquals(image.size(0), result.size(0));
+		assertEquals(image.size(1), result.size(1));
+		assertEquals(image.size(2), result.size(2));
 		
 //		System.out.println("result:");
 //		for (int x = 0; x < 100; x++)
@@ -73,9 +73,9 @@ public class ChamferDistanceTransform3DFloatTest
 		ScalarArray3D<?> result = algo.process3d(image);
 		assertNotNull(result);
 		assertTrue(result instanceof Float32Array);
-		assertEquals(image.getSize(0), result.getSize(0));
-		assertEquals(image.getSize(1), result.getSize(1));
-		assertEquals(image.getSize(2), result.getSize(2));
+		assertEquals(image.size(0), result.size(0));
+		assertEquals(image.size(1), result.size(1));
+		assertEquals(image.size(2), result.size(2));
 		
 		// Test some voxels in the neighborhood of center
 		assertEquals(1.0, result.getValue( 9, 10, 10), .1);

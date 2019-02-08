@@ -43,7 +43,7 @@ public class Downsampler implements ArrayOperator
 	@Override
 	public <T> Array<?> process(Array<T> array)
 	{
-	    int[] dims = array.getSize();
+	    int[] dims = array.size();
 	    int nd = dims.length;
         int[] newDims = new int[nd];
 	    

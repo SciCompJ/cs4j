@@ -110,7 +110,7 @@ public class BufferedImageUtils
 		}
 		
 		// check validity of slice index
-		int sizeZ = array.getSize(dim);
+		int sizeZ = array.size(dim);
 		if (sliceIndex < 0 || sliceIndex >= sizeZ)
 		{
 			throw new IllegalArgumentException(String.format("Slice index (%d) must be comprised between 0 and %d", sliceIndex, sizeZ-1));
@@ -118,7 +118,7 @@ public class BufferedImageUtils
 
 		// infos of initial array
 		int nd = array.dimensionality();
-		int[] dims = array.getSize();
+		int[] dims = array.size();
 		
 		// create new array for slice
 		int nd2 = nd - 1;
@@ -191,8 +191,8 @@ public class BufferedImageUtils
 	public static final java.awt.image.BufferedImage convertUInt8Array(UInt8Array2D array, int[][] lut)
 	{
 		// get array size
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
 		
 		// Computes the color model
 		byte[] red = new byte[256];
@@ -233,8 +233,8 @@ public class BufferedImageUtils
 			BinaryArray array, Color fgColor, Color bgColor)
 	{
 		// get array size
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
 		
 		// Computes the color model
 		byte[] red = new byte[256];
@@ -274,8 +274,8 @@ public class BufferedImageUtils
             ScalarArray2D<?> array, double[] displayRange, int[][] colormap)
     {
         // get array size
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
         
         // Computes the color model
         IndexColorModel cm = createIndexColorModel(colormap);  
@@ -306,8 +306,8 @@ public class BufferedImageUtils
             ScalarArray2D<?> array, double[] displayRange, ColorMap colormap)
     {
         // get array size
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
         
         // Computes the color model
         IndexColorModel cm = createIndexColorModel(colormap);  
@@ -382,8 +382,8 @@ public class BufferedImageUtils
 	public static final java.awt.image.BufferedImage convertUInt8Array(UInt8Array array)
 	{
 		// get array size
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
 		
 		// Create the AWT image
 		int type = java.awt.image.BufferedImage.TYPE_INT_RGB;		
@@ -411,8 +411,8 @@ public class BufferedImageUtils
 	public static final java.awt.image.BufferedImage convertRGB8Array(RGB8Array array)
 	{
 		// get array size
-		int sizeX = array.getSize(0);
-		int sizeY = array.getSize(1);
+		int sizeX = array.size(0);
+		int sizeY = array.size(1);
 		
 		// Create the AWT image
 		int type = java.awt.image.BufferedImage.TYPE_INT_RGB;

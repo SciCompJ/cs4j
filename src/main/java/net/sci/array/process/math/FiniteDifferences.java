@@ -71,7 +71,7 @@ public class FiniteDifferences implements ArrayOperator
         ScalarArray<?> source = (ScalarArray<?>) array;
 
         // allocate memory for result
-        ScalarArray<?> target = source.newInstance(source.getSize());
+        ScalarArray<?> target = source.newInstance(source.size());
         
         processScalar(source, target);
         
@@ -87,7 +87,7 @@ public class FiniteDifferences implements ArrayOperator
         int nd = target.dimensionality();
         int[] srcPos = new int[nd];
         
-        int posMax = target.getSize(dim) - 1;
+        int posMax = target.size(dim) - 1;
   
         // iterate over positions in target array
         for (int[] pos : target.positions())

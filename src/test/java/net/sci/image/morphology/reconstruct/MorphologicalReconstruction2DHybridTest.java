@@ -53,8 +53,8 @@ public class MorphologicalReconstruction2DHybridTest
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 		// printImage(result);
 
-		assertEquals(16, result.getSize(0));
-		assertEquals(10, result.getSize(1));
+		assertEquals(16, result.size(0));
+		assertEquals(10, result.size(1));
 		assertEquals(255, result.getInt(2, 8));
 		assertEquals(255, result.getInt(8, 8));
 		assertEquals(255, result.getInt(8, 5));
@@ -98,8 +98,8 @@ public class MorphologicalReconstruction2DHybridTest
 				MorphologicalReconstruction.Type.BY_DILATION, Connectivity2D.C8);
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 
-		assertEquals(16, result.getSize(0));
-		assertEquals(10, result.getSize(1));
+		assertEquals(16, result.size(0));
+		assertEquals(10, result.size(1));
 		assertEquals(255, result.getInt(2, 6));
 		assertEquals(255, result.getInt(4, 8));
 		assertEquals(255, result.getInt(8, 4));
@@ -310,8 +310,8 @@ public class MorphologicalReconstruction2DHybridTest
 				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C4);
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 
-		assertEquals(16, result.getSize(0));
-		assertEquals(10, result.getSize(1));
+		assertEquals(16, result.size(0));
+		assertEquals(10, result.size(1));
 		assertEquals(0, result.getInt(2, 8));
 		assertEquals(0, result.getInt(8, 8));
 		assertEquals(0, result.getInt(8, 5));
@@ -362,8 +362,8 @@ public class MorphologicalReconstruction2DHybridTest
 				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C8);
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 
-		assertEquals(16, result.getSize(0));
-		assertEquals(10, result.getSize(1));
+		assertEquals(16, result.size(0));
+		assertEquals(10, result.size(1));
 		assertEquals(0, result.getInt(2, 6));
 		assertEquals(0, result.getInt(4, 8));
 		assertEquals(0, result.getInt(8, 5));
@@ -416,8 +416,8 @@ public class MorphologicalReconstruction2DHybridTest
 				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C4);
 		Float32Array2D result = (Float32Array2D) algo.process(marker, mask);
 
-		assertEquals(16, result.getSize(0));
-		assertEquals(10, result.getSize(1));
+		assertEquals(16, result.size(0));
+		assertEquals(10, result.size(1));
 		assertEquals(BG, result.getValue(2, 8), .01);
 		assertEquals(BG, result.getValue(8, 8), .01);
 		assertEquals(BG, result.getValue(8, 5), .01);
@@ -470,8 +470,8 @@ public class MorphologicalReconstruction2DHybridTest
 				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C8);
 		Float32Array2D result = (Float32Array2D) algo.process(marker, mask);
 
-		assertEquals(16, result.getSize(0));
-		assertEquals(10, result.getSize(1));
+		assertEquals(16, result.size(0));
+		assertEquals(10, result.size(1));
 		assertEquals(BG, result.getValue(2, 8), .01);
 		assertEquals(BG, result.getValue(8, 8), .01);
 		assertEquals(BG, result.getValue(8, 5), .01);
@@ -485,8 +485,8 @@ public class MorphologicalReconstruction2DHybridTest
 	private UInt8Array2D invert(UInt8Array2D array)
 	{
 		UInt8Array2D result = array.duplicate();
-		int size0 = array.getSize(0);
-		int size1 = array.getSize(1);
+		int size0 = array.size(0);
+		int size1 = array.size(1);
 		for (int y = 0; y < size1; y++)
 		{
 			for (int x = 0; x < size0; x++)
@@ -499,8 +499,8 @@ public class MorphologicalReconstruction2DHybridTest
 	
 	public void printImage(Array2D<?> image)
 	{
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int width = image.size(0);
+		int height = image.size(1);
 		for (int y = 0; y < height; y++)
 		{
 			for (int x = 0; x < width; x++)
@@ -513,8 +513,8 @@ public class MorphologicalReconstruction2DHybridTest
 
 	public void printImageFloat(ScalarArray2D<?> image)
 	{
-		int width = image.getSize(0);
-		int height = image.getSize(1);
+		int width = image.size(0);
+		int height = image.size(1);
 		for (int y = 0; y < height; y++)
 		{
 			for (int x = 0; x < width; x++)

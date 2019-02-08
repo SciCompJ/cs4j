@@ -57,8 +57,8 @@ public class GrayLevelCooccurenceMatrix extends AlgoStub implements ArrayOperato
     public IntArray2D<?> process2d(ScalarArray2D<?> array)
     {
         // array size
-        int sizeX = array.getSize(0);
-        int sizeY = array.getSize(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
        
         // compute iteration bounds
         int xmin = Math.max(0, -dx); 
