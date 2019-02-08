@@ -44,20 +44,6 @@ public abstract class ArrayND<T> implements Array<T>
 
 	// =============================================================
 	// Utility methods
-
-	/**
-	 * Computes the number of array elements.
-	 * @return the number of array elements ("pixels")
-	 */
-	protected int elementNumber()
-	{
-		int number = 1;
-		for (int d = 0; d < this.sizes.length; d++)
-		{
-			number *= this.sizes[d];
-		}
-		return number;
-	}
 	
 	/**
 	 * Converts a list of indices along each dimension into a linear index.
