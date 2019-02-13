@@ -23,14 +23,10 @@ public abstract class AutoThreshold implements ImageArrayOperator
     	// compute threshold value
     	double threshold = computeThresholdValue(source);
     	
-    	// create array iterators
-    	ScalarArray.Iterator<?> iter1 = source.iterator(); 
-    	BinaryArray.Iterator iter2 = target.iterator();
-    	
-    	// iterate on both arrays for computing segmented values
-    	while(iter1.hasNext() && iter2.hasNext())
+    	// iterate on array positions for computing segmented values
+    	for(int[] pos : target.positions())
     	{
-    		iter2.setNextBoolean(iter1.nextValue() >= threshold);
+    		target.setBoolean(pos, source.getValue(pos) >= threshold);
     	}
     }
 
