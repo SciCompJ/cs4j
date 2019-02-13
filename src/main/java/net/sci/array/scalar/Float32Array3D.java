@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.Array;
+
 /**
  * @author dlegland
  *
@@ -13,6 +15,7 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
 	// Static methods
 
 	/**
+	 * Creates a new 3D array containing Float32 values.
 	 * 
 	 * @param size0
 	 *            the size of the array along the first dimension
@@ -24,7 +27,10 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
 	 */
 	public static final Float32Array3D create(int size0, int size1, int size2)
 	{
-		return new BufferedFloat32Array3D(size0, size1, size2);
+        if (Array.countElements(size0, size1, size2) < Integer.MAX_VALUE)
+            return new BufferedFloat32Array3D(size0, size1, size2);
+        else 
+            return new SlicedFloat32Array3D(size0, size1, size2);
 	}
 	
 	

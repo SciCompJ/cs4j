@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.Array;
+
 
 /**
  * A three-dimensional array containing boolean values.
@@ -17,7 +19,10 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 
 	public static final BinaryArray3D create(int size0, int size1, int size2)
 	{
-		return new BufferedBinaryArray3D(size0, size1, size2);
+	    if (Array.countElements(size0, size1, size2) < Integer.MAX_VALUE)
+	        return new BufferedBinaryArray3D(size0, size1, size2);
+	    else 
+	        return new SlicedBinaryArray3D(size0, size1, size2);
 	}
 	
     public final static BinaryArray3D wrap(BinaryArray array)

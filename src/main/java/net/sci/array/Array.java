@@ -16,6 +16,14 @@ import net.sci.array.scalar.BinaryArray;
  */
 public interface Array<T> extends Iterable<T>, Dimensional
 {
+    static long countElements(int... dims)
+    {
+        long n = 1;
+        for (int dim : dims) 
+            n *= dim;
+        return n;
+    }
+    
     // ==================================================
     // Interface declaration
 	

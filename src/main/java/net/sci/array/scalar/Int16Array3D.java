@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.Array;
+
 
 /**
  * Base implementation for 3D arrays containing Int16 values.
@@ -16,6 +18,8 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	// Static methods
 
 	/**
+	 * Creates a new 3D array containing Int16 values.
+	 * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 * @param size1
@@ -26,7 +30,10 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	 */
 	public static final Int16Array3D create(int size0, int size1, int size2)
 	{
-		return new BufferedInt16Array3D(size0, size1, size2);
+        if (Array.countElements(size0, size1, size2) < Integer.MAX_VALUE)
+            return new BufferedInt16Array3D(size0, size1, size2);
+        else 
+            return new SlicedInt16Array3D(size0, size1, size2);
 	}
 	
 	
