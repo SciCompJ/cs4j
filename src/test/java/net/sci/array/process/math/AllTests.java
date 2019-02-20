@@ -12,6 +12,7 @@ import net.sci.array.process.math.SqrtTest;
     FiniteDifferencesTest.class,
     GradientTest.class,
     PowerOfTwoTest.class,
+    Smoothing1DTest.class,
 	SqrtTest.class,
 	})
 public class AllTests {
