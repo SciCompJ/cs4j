@@ -95,6 +95,21 @@ public class LineString2D implements Polyline2D
         return vertices.size();
     }
 
+    public void addVertex(Point2D vertexPosition)
+    {
+        this.vertices.add(vertexPosition);
+    }
+    
+    public void removeVertex(int vertexIndex)
+    {
+        this.vertices.remove(vertexIndex);
+    }
+    
+    public Point2D vertexPosition(int vertexIndex)
+    {
+        return this.vertices.get(vertexIndex);
+    }
+    
     /**
      * Computes the index of the closest vertex to the input query point.
      * 

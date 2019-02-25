@@ -8,7 +8,7 @@ import org.junit.runners.Suite;
 	// generic classes
     LinearRing2DTest.class,
     LineString2DTest.class,
-    SimplePolygon2DTest.class,
+    DefaultPolygon2DTest.class,
     })
 public class AllTests {
   //nothing

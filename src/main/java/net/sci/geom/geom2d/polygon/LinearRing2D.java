@@ -156,6 +156,21 @@ public class LinearRing2D implements Polyline2D, Contour2D
         return vertices.size();
     }
 
+    public void addVertex(Point2D vertexPosition)
+    {
+        this.vertices.add(vertexPosition);
+    }
+    
+    public void removeVertex(int vertexIndex)
+    {
+        this.vertices.remove(vertexIndex);
+    }
+    
+    public Point2D vertexPosition(int vertexIndex)
+    {
+        return this.vertices.get(vertexIndex);
+    }
+    
     public Iterator<LineSegment2D> edgeIterator()
     {
     	return new EdgeIterator();

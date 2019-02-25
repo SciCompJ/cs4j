@@ -16,7 +16,7 @@ import net.sci.geom.geom2d.Point2D;
  * @author dlegland
  *
  */
-public class SimplePolygon2DTest
+public class DefaultPolygon2DTest
 {
     
     /**

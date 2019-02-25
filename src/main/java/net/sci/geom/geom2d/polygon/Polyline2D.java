@@ -27,25 +27,27 @@ public interface Polyline2D extends Curve2D
     // Methods for managing vertices
     
     /**
-     * Returns an iterable over the positions of the vertices.
-     * 
-     * @return the positions of the vertices
-     */
-    public Iterable<Point2D> vertexPositions();
-    
-    /**
      * Returns the number of vertices.
      * 
      * @return the number of vertices
      */
     public int vertexNumber();
 
+    public Point2D vertexPosition(int vertexIndex);
+    
+    /**
+     * Returns an iterable over the positions of the vertices.
+     * 
+     * @return the positions of the vertices
+     */
+    public Iterable<Point2D> vertexPositions();
+    
 
     public Iterator<LineSegment2D> edgeIterator();
 
 
     // ===================================================================
-    // method related to Curve2D 
+    // Methods related to Curve2D 
 
     /**
      * Returns the polyline composed with the same vertices, but in reverse order.
