@@ -60,6 +60,7 @@ public interface Table
 			colNames[c] = table.getColumnNames()[index];
 		}
 		
+		result.setRowNames(table.getRowNames());
 		result.setColumnNames(colNames);
 
 		return result;

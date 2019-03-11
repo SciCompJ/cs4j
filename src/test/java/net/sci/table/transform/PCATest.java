@@ -3,6 +3,8 @@
  */
 package net.sci.table.transform;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -34,8 +36,16 @@ public class PCATest
         Table table = reader.readTable(new File(fileName));
         Table data = Table.selectColumns(table, new int[]{0, 1, 2, 3});
 
-        pca.fit(table);
+        pca.fit(data);
         
-    }
+        assertEquals(4, pca.eigenValues.rowNumber());
+        assertEquals(3, pca.eigenValues.columnNumber());
+        assertEquals(1.0, pca.eigenValues.getValue(3, 2), .01);
 
+        assertEquals(4, pca.loadings.columnNumber());
+        assertEquals(4, pca.loadings.rowNumber());
+
+        assertEquals(4, pca.scores.columnNumber());
+        assertEquals(150, pca.scores.rowNumber());
+    }
 }
