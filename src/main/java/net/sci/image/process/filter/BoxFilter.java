@@ -4,7 +4,6 @@
 package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
 import net.sci.array.process.VectorArrayMarginalOperator;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Scalar;
@@ -94,13 +93,9 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 			boxSize *= diam;
 		}
 		
-		// iterate over positions
-		Array.PositionIterator iter = source.positionIterator();
-		while (iter.hasNext())
+		// iterate over positions of target array
+		for (int[] pos : target.positions())
 		{
-			// iterate position cursor
-			int[] pos = iter.next();
-			
 			// init result
 			double sum = 0;
 			

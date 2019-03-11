@@ -165,7 +165,47 @@ public class DefaultPolygon2D implements Polygon2D
         return this.vertices.size();
     }
 
- 
+    public void addVertex(Point2D vertexPosition)
+    {
+        this.vertices.add(vertexPosition);
+    }
+    
+    public void removeVertex(int vertexIndex)
+    {
+        this.vertices.remove(vertexIndex);
+    }
+    
+    public Point2D vertexPosition(int vertexIndex)
+    {
+        return this.vertices.get(vertexIndex);
+    }
+    
+    /**
+     * Computes the index of the closest vertex to the input query point.
+     * 
+     * @param point
+     *            the query point
+     * @return the index of the closest vertex to the query point
+     */
+    public int closestVertexIndex(Point2D point)
+    {
+        double minDist = Double.POSITIVE_INFINITY;
+        int index = -1;
+        
+        for (int i = 0; i < vertices.size(); i++)
+        {
+            double dist = vertices.get(i).distance(point);
+            if (dist < minDist)
+            {
+                index = i;
+                minDist = dist;
+            }
+        }
+        
+        return index;
+    }
+    
+    
     // ===================================================================
     // Implementation of the Region2D interface
     

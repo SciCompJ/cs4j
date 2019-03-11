@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.Array;
+
 /**
  * @author dlegland
  *
@@ -12,9 +14,23 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 3D array containing UInt8 values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of UInt8Array3D
+     */
 	public static final UInt8Array3D create(int size0, int size1, int size2)
 	{
-		return new BufferedUInt8Array3D(size0, size1, size2);
+        if (Array.countElements(size0, size1, size2) < Integer.MAX_VALUE)
+            return new BufferedUInt8Array3D(size0, size1, size2);
+        else 
+            return new SlicedUInt8Array3D(size0, size1, size2);
 	}
 	
 	

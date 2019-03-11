@@ -1,4 +1,4 @@
-package net.sci.geom.geom2d.polygon;
+package net.sci.table.process;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -6,10 +6,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-    LinearRing2DTest.class,
-    LineString2DTest.class,
-    DefaultPolygon2DTest.class,
-    })
+	CorrelationMatrixTest.class,
+	CovarianceMatrixTest.class,
+	})
 public class AllTests {
   //nothing
 }

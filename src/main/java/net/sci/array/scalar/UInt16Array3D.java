@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.Array;
+
 
 /**
  * Base implementation for 3D arrays containing Int16 values.
@@ -15,18 +17,23 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
 	// =============================================================
 	// Static methods
 
-	/**
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param size2
-	 *            the size of the array along the third dimension
-	 * @return a new instance of UInt16Array3D
-		 */
+    /**
+     * Creates a new 3D array containing UInt16 values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of UInt16Array3D
+     */
 	public static final UInt16Array3D create(int size0, int size1, int size2)
 	{
-		return new BufferedUInt16Array3D(size0, size1, size2);
+        if (Array.countElements(size0, size1, size2) < Integer.MAX_VALUE)
+            return new BufferedUInt16Array3D(size0, size1, size2);
+        else 
+            return new SlicedUInt16Array3D(size0, size1, size2);
 	}
 	
 	
