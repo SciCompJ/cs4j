@@ -39,47 +39,34 @@ public class PCA
         int nr = table.rowNumber();
         int nc = table.columnNumber();
 
-        // get table name
-        String name = table.getName();
-        
         // assumes nr >> nc
         if (nr < nc)
         {
             throw new IllegalArgumentException("Requires table with more rows than columns");
         }
-
+        // Check all columns are numeric
+        for (int c = 0; c < nc; c++)
+        {
+            if (!(table.column(c) instanceof NumericColumn))
+            {
+                throw new IllegalArgumentException("Requires table with numeric columns only");
+            }
+        }
+        
+        // get table name
+        String name = table.getName();
+        
         // First step is to recenter the data (keep the mean in the meanValues field).
         Table cTable = recenterAndScale(table);
         
         // Compute covariance matrix = cData' * cData;
-        Matrix covMat = new Matrix(nc, nc);
-        for (int c1 = 0; c1 < nc; c1++)
-        {
-            // variance of i-th variable
-            double var = 0;
-            for (int r = 0; r < nr; r++)
-            {
-                double v = cTable.getValue(r, c1);
-                var += v * v; 
-            }
-            covMat.set(c1, c1, var / (nr - 1));
+        Matrix covMat = covarianceMatrix(cTable);
 
-            // covariance with other variables not yet computed
-            for (int c2 = c1+1; c2 < nc; c2++)
-            {
-                double sum = 0;
-                for (int r = 0; r < nr; r++)
-                {
-                    sum += cTable.getValue(r, c1) * cTable.getValue(r, c2); 
-                }
-                covMat.set(c1, c2, sum / (nr - 1));
-                covMat.set(c2, c1, sum / (nr - 1));
-            }
-        }
         
         // Diagonalisation of the covariance matrix.
         SingularValueDecomposition svd = new SingularValueDecomposition(covMat);
 
+        
         // Extract eigen values
         this.eigenValues = eigenValuesMatrixToTable(svd.getS());
         if (name == null)
@@ -194,6 +181,40 @@ public class PCA
             sum += v;
         }
         return sum / nr;
+    }
+    
+    private Matrix covarianceMatrix(Table cTable)
+    {
+        int nr = cTable.rowNumber();
+        int nc = cTable.columnNumber();
+        
+        // Compute covariance matrix = cData' * cData;
+        Matrix covMat = new Matrix(nc, nc);
+        for (int c1 = 0; c1 < nc; c1++)
+        {
+            // variance of i-th variable
+            double var = 0;
+            for (int r = 0; r < nr; r++)
+            {
+                double v = cTable.getValue(r, c1);
+                var += v * v; 
+            }
+            covMat.set(c1, c1, var / (nr - 1));
+
+            // compute covariance with other variables that are not yet computed
+            for (int c2 = c1+1; c2 < nc; c2++)
+            {
+                double sum = 0;
+                for (int r = 0; r < nr; r++)
+                {
+                    sum += cTable.getValue(r, c1) * cTable.getValue(r, c2); 
+                }
+                covMat.set(c1, c2, sum / (nr - 1));
+                covMat.set(c2, c1, sum / (nr - 1));
+            }
+        }
+        
+        return covMat;
     }
     
     /**
