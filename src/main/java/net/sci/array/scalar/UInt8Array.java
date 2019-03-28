@@ -65,16 +65,27 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 	}
 	
-	public static UInt8Array convert(ScalarArray<?> array)
-	{
-		UInt8Array result = UInt8Array.create(array.size());
-	    for (int[] pos : array.positions())
-	    {
-	    	result.setValue(pos, array.getValue(pos));
-	    }
-		return result;
-	}
-	
+    public static UInt8Array convert(ScalarArray<?> array)
+    {
+        UInt8Array result = UInt8Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setValue(pos, array.getValue(pos));
+        }
+        return result;
+    }
+    
+    public static UInt8Array convert(ScalarArray<?> array, double minValue, double maxValue)
+    {
+        double k = 255 / (maxValue - minValue);
+        UInt8Array result = UInt8Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setValue(pos, (array.getValue(pos) - minValue) * k);
+        }
+        return result;
+    }
+    
 	/**
      * Encapsulates the instance of Scalar array into a new UInt8Array, by
      * creating a Wrapper if necessary. 
