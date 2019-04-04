@@ -36,6 +36,7 @@ public interface Table
     	int nc = table.columnNumber();
     	int nc2 = columnIndices.length;
     	
+    	// TODO: choose type depending on parent table. Use "newInstance"-like strategy?
 		Table result = Table.create(nr, nc2);
 		String[] colNames = new String[nc2];
 		
@@ -107,14 +108,14 @@ public interface Table
     public int columnNumber();
 
     /**
-     * Returns an Iterable over the columns contained in this table.
+     * Returns a view on the collection of columns contained in this table.
      * 
      * @return an Iterable over the columns contained in this table
      */
-    public Iterable<? extends Column> columns();
+    public Columns<? extends Column> columns();
     
     /**
-     * Returns a vie to the specified column.
+     * Returns a view to the specified column.
      * @param c the column index, 0-based
      * @return a view or a reference to the column
      */
@@ -141,7 +142,7 @@ public interface Table
     // Management of rows
     
     /**
-     * Returns an entire column of the data table.
+     * Returns the list of values of column of the table.
      * 
      * @param colIndex
      *            the column index, 0-indexed
@@ -326,5 +327,23 @@ public interface Table
             }
             System.out.println();
         }
+    }
+
+    /**
+     * A container of columns.
+     *
+     */
+    public interface Columns<T extends Column> extends Iterable<T>
+    {
+        public int size();
+        
+//        /**
+//         * Returns a subset of the columns as specified by the index list.
+//         * 
+//         * @param indices
+//         *            the indices of the columns to return
+//         * @return a new list of views on the reduced list of columns
+//         */
+//        public Columns<T> select(int[] indices);
     }
 }

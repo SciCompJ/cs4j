@@ -161,16 +161,9 @@ public class DefaultNumericTable implements NumericTable
     	return this.nCols;
     }
 
-    public Iterable<NumericColumn> columns()
+    public Table.Columns<NumericColumn> columns()
     {
-        return new Iterable<NumericColumn>()
-        {
-            @Override
-            public Iterator<NumericColumn> iterator()
-            {
-                return new ColumnIterator();
-            }
-        };
+        return new Columns();
     }
 
     @Override
@@ -632,6 +625,21 @@ public class DefaultNumericTable implements NumericTable
         }
     }
 
+    private class Columns implements Table.Columns<NumericColumn>
+    {
+        @Override
+        public int size()
+        {
+            return nCols;
+        }
+
+        @Override
+        public Iterator<NumericColumn> iterator()
+        {
+            return new ColumnIterator();
+        }
+    }
+    
     public class ColumnIterator implements Iterator<NumericColumn>
     {
         int index = 0;

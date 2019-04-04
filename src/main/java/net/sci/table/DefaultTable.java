@@ -200,16 +200,9 @@ public class DefaultTable implements Table
     // =============================================================
     // Management of columns
 
-    public Iterable<? extends Column> columns()
+    public Table.Columns<Column> columns()
     {
-        return new Iterable<Column>()
-        {
-            @Override
-            public Iterator<Column> iterator()
-            {
-                return new ColumnIterator();
-            }
-        };
+        return new Columns();
     }
 
     /**
@@ -687,6 +680,28 @@ public class DefaultTable implements Table
             }
         }
     }
+	
+	private class Columns implements Table.Columns<Column>
+	{
+        @Override
+        public int size()
+        {
+            return nCols;
+        }
+
+//        @Override
+//        public Table.Columns<Column> select(int[] indices)
+//        {
+//            // TODO Auto-generated method stub
+//            return null;
+//        }
+
+        @Override
+        public Iterator<Column> iterator()
+        {
+            return new ColumnIterator();
+        }
+	}
 	
 	public class ColumnIterator implements Iterator<Column>
 	{

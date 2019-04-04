@@ -68,11 +68,11 @@ public interface NumericTable extends Table
     // Management of columns
     
     /**
-     * Returns an Iterable over the (numeric) columns contained in this table.
+     * Returns a view on the collection of (numeric) columns contained in this table.
      * 
-     * @return an Iterable over the (numeric) columns contained in this table
+     * @return a view on the collection of (numeric) columns contained in this table
      */
-    public Iterable<? extends NumericColumn> columns();
+    public Table.Columns<NumericColumn> columns();
     
     /**
      * Returns a view to the specified numeric column.
