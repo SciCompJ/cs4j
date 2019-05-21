@@ -202,9 +202,11 @@ public class DefaultTriMesh3D implements Mesh3D
 
     private void computeEdgeVertices()
     {
+        // number of vertices
+        int nv = this.vertexPositions.size();
+
         // Creates adjacency data structure: for each vertex, keep the list of
         // adjacent vertices with greater index
-        int nv = this.vertexNumber();
         ArrayList<TreeSet<Integer>> vertexAdjList = new ArrayList<TreeSet<Integer>>(nv-1);
 
         // Initialize vertex adjacency list with a small number of vertices
@@ -294,14 +296,14 @@ public class DefaultTriMesh3D implements Mesh3D
 //        return this.vertices.iterator();
 //    }
 
-    /* (non-Javadoc)
-     * @see net.sci.geom.geom3d.mesh.Mesh3D#vertexNumber()
-     */
-    @Override
-    public int vertexNumber()
-    {
-        return vertexPositions.size();
-    }
+//    /* (non-Javadoc)
+//     * @see net.sci.geom.geom3d.mesh.Mesh3D#vertexNumber()
+//     */
+//    @Override
+//    public int vertexNumber()
+//    {
+//        return vertexPositions.size();
+//    }
 
     @Override
     public Faces faces()
@@ -309,11 +311,11 @@ public class DefaultTriMesh3D implements Mesh3D
         return new Faces();
     }
 
-    @Override
-    public int faceNumber()
-    {
-        return faces.size();
-    }
+//    @Override
+//    public int faceNumber()
+//    {
+//        return faces.size();
+//    }
 
     // ===================================================================
     // Implementation of the Geometry3D interface
@@ -491,11 +493,6 @@ public class DefaultTriMesh3D implements Mesh3D
      */
     public class Vertices implements Mesh3D.Vertices
     {
-        public int size()
-        {
-            return vertexPositions.size();
-        }
-        
         public Vertex get(int index)
         {
             return new Vertex(index);
@@ -506,6 +503,11 @@ public class DefaultTriMesh3D implements Mesh3D
             return vertexPositions.get(index);
         }
         
+        public int size()
+        {
+            return vertexPositions.size();
+        }
+
         @Override
         public Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Vertex> iterator()
         {
@@ -610,11 +612,6 @@ public class DefaultTriMesh3D implements Mesh3D
 
     public class Faces implements Mesh3D.Faces
     {
-        public int size()
-        {
-            return faces.size();
-        }
-        
         public Face get(int index)
         {
             int[] inds = faces.get(index);
@@ -626,6 +623,11 @@ public class DefaultTriMesh3D implements Mesh3D
             return faces.get(index);
         }
         
+        public int size()
+        {
+            return faces.size();
+        }
+
         @Override
         public Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Face> iterator()
         {
@@ -687,6 +689,7 @@ public class DefaultTriMesh3D implements Mesh3D
         @Override
         public Collection<Face> faces()
         {
+            // TODO: complete me!
             ArrayList<Face> edgeFaces = new ArrayList<Face>(2);
 //            if (if1 != -1) edgeFaces.add(getFace(if1));
 //            if (if2 != -1) edgeFaces.add(getFace(if2));
@@ -731,5 +734,35 @@ public class DefaultTriMesh3D implements Mesh3D
             hash = hash * 17 + iv2;
             return hash;
         }
+    }
+    
+    public class Edges implements Mesh3D.Edges
+    {
+         @Override
+        public int size()
+        {
+            return edges.size();
+        }
+        
+       @Override
+        public Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Edge> iterator()
+        {
+           return new Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Edge>()
+           {
+               int index = 0;
+               @Override
+               public boolean hasNext()
+               {
+                   return index < edges.size();
+               }
+
+               @Override
+               public net.sci.geom.geom3d.mesh.Mesh3D.Edge next()
+               {
+                   return edges.get(index);
+               }
+           };
+        }
+
     }
 }

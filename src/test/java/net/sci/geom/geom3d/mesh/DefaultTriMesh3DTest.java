@@ -15,6 +15,7 @@ import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
 import net.sci.geom.geom3d.mesh.Mesh3D.Vertex;
+import net.sci.geom.geom3d.mesh.DefaultTriMesh3D.Edge;
 import net.sci.geom.geom3d.mesh.Mesh3D.Face;
 
 /**
@@ -37,6 +38,22 @@ public class DefaultTriMesh3DTest
         }
         
         assertEquals(6, count);
+    }
+    
+    @Test
+    public final void testEdges_Iterator()
+    {
+        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
+        
+        int count = 0;
+        Iterator<Edge> iterator = mesh.edges().iterator();
+        while(iterator.hasNext())
+        {
+            iterator.next();
+            count++;
+        }
+        
+        assertEquals(12, count);
     }
     
     @Test

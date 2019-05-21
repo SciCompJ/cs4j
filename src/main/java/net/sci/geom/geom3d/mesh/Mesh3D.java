@@ -24,16 +24,16 @@ public interface Mesh3D extends Geometry3D
 
     public Vertices vertices();
 
-    public Vertex addVertex(Point3D point);
+//    public Vertex addVertex(Point3D point);
     
     public Collection<Point3D> vertexPositions();
-    
-//    public Iterator<Point3D> vertexIterator();
-    
-    /**
-     * @return the number of vertices in this mesh.
-     */
-    public int vertexNumber();
+        
+//    /**
+//     * @return the number of vertices in this mesh.
+//     * @deprecated replaced by vertices().size()
+//     */
+//    @Deprecated
+//    public int vertexNumber();
     
     
     // ===================================================================
@@ -44,10 +44,12 @@ public interface Mesh3D extends Geometry3D
 
     public Faces faces();
 
-    /**
-     * @return the number of faces in this mesh.
-     */
-    public int faceNumber();
+//    /**
+//     * @return the number of faces in this mesh.
+//     * @deprecated replaced by faces().size()
+//     */
+//    @Deprecated
+//    public int faceNumber();
 
     
     // ===================================================================
@@ -88,7 +90,7 @@ public interface Mesh3D extends Geometry3D
      */
     public interface Vertices extends Iterable<Vertex>
     {
-        
+        public int size();
     }
     
     /**
@@ -117,9 +119,12 @@ public interface Mesh3D extends Geometry3D
         public Vector3D normal();
     }
     
+    /**
+     * The collection of faces stored in a mesh.
+     */
     public interface Faces extends Iterable<Face>
     {
-        
+        public int size();
     }
     
     /**
@@ -142,4 +147,13 @@ public interface Mesh3D extends Geometry3D
          */
         public LineSegment3D curve();
     }
+    
+    /**
+     * The collection of edges stored in a mesh.
+     */
+    public interface Edges extends Iterable<Edge>
+    {
+        public int size();
+    }
+    
 }
