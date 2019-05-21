@@ -7,12 +7,15 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.junit.Test;
 
 import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
+import net.sci.geom.geom3d.mesh.Mesh3D.Vertex;
+import net.sci.geom.geom3d.mesh.Mesh3D.Face;
 
 /**
  * @author dlegland
@@ -21,24 +24,42 @@ import net.sci.geom.geom3d.Vector3D;
 public class DefaultTriMesh3DTest
 {
     @Test
+    public final void testVertices_Iterator()
+    {
+        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
+        
+        int count = 0;
+        Iterator<Vertex> iterator = mesh.vertices().iterator();
+        while(iterator.hasNext())
+        {
+            iterator.next();
+            count++;
+        }
+        
+        assertEquals(6, count);
+    }
+    
+    @Test
+    public final void testFaces_Iterator()
+    {
+        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
+        
+        int count = 0;
+        Iterator<Face> iterator = mesh.faces().iterator();
+        while(iterator.hasNext())
+        {
+            iterator.next();
+            count++;
+        }
+        
+        assertEquals(8, count);
+    }
+    
+    @Test
     public final void testEdges()
     {
         // Create an octahedron
-        DefaultTriMesh3D mesh = new DefaultTriMesh3D();
-        mesh.addVertex(new Point3D( 1,  0,  0));
-        mesh.addVertex(new Point3D( 0,  1,  0));
-        mesh.addVertex(new Point3D(-1,  0,  0));
-        mesh.addVertex(new Point3D( 0, -1,  0));
-        mesh.addVertex(new Point3D( 0,  0,  1));
-        mesh.addVertex(new Point3D( 0,  0, -1));
-        mesh.addFace(0, 1, 4);
-        mesh.addFace(1, 2, 4);
-        mesh.addFace(2, 3, 4);
-        mesh.addFace(3, 0, 4);
-        mesh.addFace(0, 5, 1);
-        mesh.addFace(1, 5, 2);
-        mesh.addFace(2, 5, 3);
-        mesh.addFace(0, 3, 5);
+        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
         
         Collection<DefaultTriMesh3D.Edge> edges = mesh.edges();
         assertEquals(12, edges.size());
@@ -52,21 +73,7 @@ public class DefaultTriMesh3DTest
     public final void testIntersectEdgesWithPlane()
     {
         // Create an octahedron
-        DefaultTriMesh3D mesh = new DefaultTriMesh3D();
-        mesh.addVertex(new Point3D( 1,  0,  0));
-        mesh.addVertex(new Point3D( 0,  1,  0));
-        mesh.addVertex(new Point3D(-1,  0,  0));
-        mesh.addVertex(new Point3D( 0, -1,  0));
-        mesh.addVertex(new Point3D( 0,  0,  1));
-        mesh.addVertex(new Point3D( 0,  0, -1));
-        mesh.addFace(0, 1, 4);
-        mesh.addFace(1, 2, 4);
-        mesh.addFace(2, 3, 4);
-        mesh.addFace(3, 0, 4);
-        mesh.addFace(0, 5, 1);
-        mesh.addFace(1, 5, 2);
-        mesh.addFace(2, 5, 3);
-        mesh.addFace(0, 3, 5);
+        DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
         
         Point3D p0 = new Point3D(0, 0, .5);
         Vector3D v1 = new Vector3D(1, 0, 0);

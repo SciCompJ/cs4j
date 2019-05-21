@@ -6,6 +6,7 @@ package net.sci.geom.geom3d.mesh;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import net.sci.geom.geom3d.Box3D;
@@ -270,18 +271,9 @@ public class DefaultTriMesh3D implements Mesh3D
     }
 
     @Override
-    public Collection<Vertex> vertices()
+    public Vertices vertices()
     {
-        ArrayList<Vertex> vertexList = new ArrayList<Vertex>(vertexPositions.size());
-        for (int i = 0; i < vertexPositions.size(); i++)
-        {
-            if (vertexPositions.get(i) != null)
-            {
-                vertexList.add(new Vertex(i));
-            }
-        }
-        
-        return vertexList;
+        return new Vertices();
     }
   
     /* (non-Javadoc)
@@ -312,17 +304,9 @@ public class DefaultTriMesh3D implements Mesh3D
     }
 
     @Override
-    public Collection<? extends Face> faces()
+    public Faces faces()
     {
-        ArrayList<Face> faceList = new ArrayList<Face>(faces.size());
-        for (int[] inds : faces)
-        {
-            if (inds != null)
-            {
-                faceList.add(new Face(inds[0], inds[1], inds[2]));
-            }
-        }
-        return faceList;
+        return new Faces();
     }
 
     @Override
@@ -501,6 +485,49 @@ public class DefaultTriMesh3D implements Mesh3D
         }
     }
     
+
+    /**
+     * The collection of vertices stored in a mesh.
+     */
+    public class Vertices implements Mesh3D.Vertices
+    {
+        public int size()
+        {
+            return vertexPositions.size();
+        }
+        
+        public Vertex get(int index)
+        {
+            return new Vertex(index);
+        }
+        
+        public Point3D position(int index)
+        {
+            return vertexPositions.get(index);
+        }
+        
+        @Override
+        public Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Vertex> iterator()
+        {
+            return new Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Vertex>()
+            {
+                int index = 0;
+                @Override
+                public boolean hasNext()
+                {
+                    return index < vertexPositions.size();
+                }
+
+                @Override
+                public net.sci.geom.geom3d.mesh.Mesh3D.Vertex next()
+                {
+                    return new Vertex(index++);
+                }
+            };
+        }
+        
+    }
+
     public class Face implements Mesh3D.Face
     {
         // index of first vertex
@@ -581,6 +608,47 @@ public class DefaultTriMesh3D implements Mesh3D
         }
     }
 
+    public class Faces implements Mesh3D.Faces
+    {
+        public int size()
+        {
+            return faces.size();
+        }
+        
+        public Face get(int index)
+        {
+            int[] inds = faces.get(index);
+            return new Face(inds[0], inds[1], inds[2]);
+        }
+        
+        public int[] vertexIndices(int index)
+        {
+            return faces.get(index);
+        }
+        
+        @Override
+        public Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Face> iterator()
+        {
+            return new Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Face>()
+            {
+                int index = 0;
+                @Override
+                public boolean hasNext()
+                {
+                    return index < faces.size();
+                }
+
+                @Override
+                public net.sci.geom.geom3d.mesh.Mesh3D.Face next()
+                {
+                    int[] inds = faces.get(index++);
+                    return new Face(inds[0], inds[1], inds[2]);
+                }
+            };
+        }
+
+    }
+    
     public class Edge implements Mesh3D.Edge, Comparable<Edge>
     {
         /** index of first vertex  (iv1 < iv2) */

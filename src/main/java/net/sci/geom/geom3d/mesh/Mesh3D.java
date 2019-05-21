@@ -22,7 +22,7 @@ public interface Mesh3D extends Geometry3D
     // ===================================================================
     // Management of vertices
 
-    public Collection<? extends Vertex> vertices();
+    public Vertices vertices();
 
     public Vertex addVertex(Point3D point);
     
@@ -42,7 +42,7 @@ public interface Mesh3D extends Geometry3D
     // ===================================================================
     // Management of faces
 
-    public Collection<? extends Face> faces();
+    public Faces faces();
 
     /**
      * @return the number of faces in this mesh.
@@ -84,6 +84,14 @@ public interface Mesh3D extends Geometry3D
     }
 
     /**
+     * The collection of vertices stored in a mesh.
+     */
+    public interface Vertices extends Iterable<Vertex>
+    {
+        
+    }
+    
+    /**
      * Interface representing a face, a mesh element with dimension 2.
      */
     public interface Face
@@ -107,6 +115,11 @@ public interface Mesh3D extends Geometry3D
          * @return the normal of this face.
          */
         public Vector3D normal();
+    }
+    
+    public interface Faces extends Iterable<Face>
+    {
+        
     }
     
     /**
