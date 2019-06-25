@@ -18,14 +18,31 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	// =============================================================
 	// Static methods
 
-	public final static <T extends Scalar> ScalarArray2D<T> wrap(ScalarArray<T> array)
-	{
-		if (array instanceof ScalarArray2D)
-		{
-			return (ScalarArray2D<T>) array;
-		}
-		return new Wrapper<T>(array);
-	}
+    public final static <T extends Scalar> ScalarArray2D<T> wrap(ScalarArray<T> array)
+    {
+        if (array instanceof ScalarArray2D)
+        {
+            return (ScalarArray2D<T>) array;
+        }
+        return new Wrapper<T>(array);
+    }
+
+    /**
+     * Same as wrap method, but use different name to avoid runtime class cast
+     * exceptions.
+     * 
+     * @param array
+     *            an instance of ScalarArray with two dimensions
+     * @return an instance of ScalarArray2D
+     */
+    public final static <T extends Scalar> ScalarArray2D<T> wrapScalar2d(ScalarArray<T> array)
+    {
+        if (array instanceof ScalarArray2D)
+        {
+            return (ScalarArray2D<T>) array;
+        }
+        return new Wrapper<T>(array);
+    }
 
 	// =============================================================
 	// Constructor
