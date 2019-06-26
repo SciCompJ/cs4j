@@ -45,7 +45,7 @@ public class ImageIOImageWriter implements ImageWriter
 		}
 		
 		// convert to buffered image
-		BufferedImage bufImg = BufferedImageUtils.convertArray(array);
+		BufferedImage bufImg = BufferedImageUtils.createAwtImage(image);
 		
 		String format = formatFromFile(file);
 		ImageIO.write(bufImg, format, file);
