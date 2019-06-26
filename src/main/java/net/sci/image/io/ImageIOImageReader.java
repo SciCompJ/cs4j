@@ -53,6 +53,7 @@ public class ImageIOImageReader implements ImageReader
 
 		// Convert to Image class
 		Image image = convertBufferedImage(bufImg);
+		image.setName(file.getName());
 		image.setFilePath(file.getPath());
 
 		return image;

@@ -3,11 +3,17 @@
  */
 package net.sci.image;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
@@ -501,4 +507,36 @@ public class Image
 		return new Image(newData, this);
 	}
 
+	public void show()
+	{
+	    BufferedImage bImg = BufferedImageUtils.createAwtImage(this);
+	    
+	    JFrame frame = new JFrame(this.name);
+	    frame.setTitle(this.name);
+	    JPanel imagePanel = new JPanel()
+	    {
+            private static final long serialVersionUID = 1L;
+
+            public Dimension getPreferredSize()
+	        {
+	            return getDisplaySize();
+	        }
+	        
+	        public Dimension getDisplaySize() 
+	        {
+	            return new Dimension(bImg.getWidth(), bImg.getHeight());
+	        }
+
+	        public void paintComponent(Graphics g) 
+	        {
+	            super.paintComponent(g);
+                Dimension dim = this.getDisplaySize();
+                g.drawImage(bImg, 0, 0, dim.width, dim.height, null);
+	        }
+	    };
+	    frame.add(imagePanel);
+	    
+	    frame.pack();
+	    frame.setVisible(true);
+	}
 }
