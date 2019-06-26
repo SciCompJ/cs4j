@@ -264,7 +264,22 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	 * 
 	 * @return an UInt8 version of this RGB8 array
 	 */
-	public UInt8Array convertToUInt8();
+//	public UInt8Array convertToUInt8();
+//    @Override
+    public default UInt8Array convertToUInt8()
+    {
+        int[] sizes = this.size();
+        UInt8Array result = UInt8Array.create(sizes);
+        
+        PositionIterator iter = positionIterator();
+        while(iter.hasNext())
+        {
+            int[] pos = iter.next();
+            result.setInt(pos, get(pos).getInt());
+        }
+        
+        return result;
+    }
 	
 	public default UInt8Array createUInt8View()
 	{
