@@ -10,7 +10,6 @@ import org.junit.runners.Suite;
     // generic array classes
     ScalarArrayTest.class,
     UInt8ArrayTest.class,
-    UInt8ArrayWrapperTest.class,
     // 2D abstract classes
 	BinaryArray2DTest.class,
     Float32Array2DTest.class,
@@ -34,6 +33,10 @@ import org.junit.runners.Suite;
     // ND implementations
     BufferedInt32ArrayNDTest.class,
     BufferedUInt8ArrayNDTest.class,
+    // Wrappers and views
+    UInt8ArrayWrapperTest.class,
+    ScalarArrayUInt8ViewTest.class,
+    ScalarArrayThresholdViewTest.class,
 	})
 public class AllTests {
   //nothing

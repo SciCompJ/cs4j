@@ -8,6 +8,7 @@ package net.sci.array.scalar;
  * max values for conversion.
  * 
  * @see UInt8Array.Wrapper
+ * @see ScalarArrayThresholdView
  * 
  * @author dlegland
  *
@@ -28,6 +29,13 @@ public class ScalarArrayUInt8View implements UInt8Array
 
     /**
      * 
+     * @param array
+     *            the original scalar array to convert
+     * @param minValue
+     *            the value in original array that corresponds to 0 in the view
+     * @param maxValue
+     *            the value in original array that corresponds to 255 in the
+     *            view
      */
     public ScalarArrayUInt8View(ScalarArray<?> array, double minValue, double maxValue)
     {
@@ -35,7 +43,6 @@ public class ScalarArrayUInt8View implements UInt8Array
         this.minValue = minValue;
         this.diff = maxValue - minValue;
     }
-
 
 
     // =============================================================
