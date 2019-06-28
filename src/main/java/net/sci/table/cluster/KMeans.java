@@ -3,10 +3,9 @@
  */
 package net.sci.table.cluster;
 
-import java.util.Random;
-
 import net.sci.table.Table;
 import net.sci.table.TableOperator;
+import net.sci.util.RandomUtils;
 
 /**
  * KMeans algorithm, used to cluster individuals by minimizing intra class
@@ -64,18 +63,23 @@ public class KMeans implements TableOperator
 	    int nr = table.rowNumber();
 	    int np = table.columnNumber();
 
-	    // allocated the centroid array: nclass * nParams array
+	    // small checkup
+	    if (nr < np)
+	    {
+	        throw new IllegalArgumentException("Requires a table with at least as many rows as columns");
+	    }
+	    
+	    // allocated the centroid array: nClasses * nParams array
 	    this.centroids = new double[nClasses][np];
 
-	    // choose random individuals as centroids
-	    Random rand = new Random();
+	     int[] indices = RandomUtils.randomSubsetIndices(nr, nClasses);
+
+	    // compute initial centroids
 	    for (int k = 0; k < nClasses; k++)
 	    {
-	        int index = rand.nextInt(nr);
-	        // TODO:check not already chosen
 	        for (int p = 0; p < np; p++)
 	        {
-	            this.centroids[k][p] = table.getValue(index, p);
+	            this.centroids[k][p] = table.getValue(indices[k], p);
 	        }
 	    }
 
