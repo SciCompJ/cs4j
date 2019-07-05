@@ -77,25 +77,40 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
         return new Point2D(x0 + t * dx, y0 + t * dy);
     }
 
+    
+    // ===================================================================
+    // Implementation of the LinearGeometry interface 
+
     public double projectedPosition(Point2D point)
     {
+        if (Math.hypot(dx, dy) < Geometry2D.MIN_VECTOR_NORM)
+        {
+            throw new RuntimeException("The direction vector of the line hastoo small norm");
+        }
+
         double denom = dx * dx + dy * dy;
-//        if (Math.abs(denom) < Shape2D.ACCURACY)
-//            throw new DegeneratedLine2DException(this);
         return ((point.getY() - y0) * dy + (point.getX() - x0) * dx) / denom;
     }
     
     public double projectedPosition(double x, double y)
     {
+        if (Math.hypot(dx, dy) < Geometry2D.MIN_VECTOR_NORM)
+        {
+            throw new RuntimeException("The direction vector of the line hastoo small norm");
+        }
+
         double denom = dx * dx + dy * dy;
-//        if (Math.abs(denom) < Shape2D.ACCURACY)
-//            throw new DegeneratedLine2DException(this);
         return ((y - y0) * dy + (x - x0) * dx) / denom;
     }
     
-    
-    // ===================================================================
-    // Implementation of the LinearGeometry interface 
+    /**
+     * @return true
+     */
+    @Override
+    public boolean containsProjection(Point2D point, double tol)
+    {
+        return true;
+    }
 
     /**
      * Returns the origin point of this line.

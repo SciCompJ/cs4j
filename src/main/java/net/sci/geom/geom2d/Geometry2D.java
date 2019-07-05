@@ -21,6 +21,10 @@ public interface Geometry2D extends Geometry
      */
     public static final Point2D ORIGIN = new Point2D(0,0);
     
+    /**
+     * The minimum norm for which a vector can be assimilated to null vector.
+     */
+    public static final double MIN_VECTOR_NORM = 1e-12;
         
     // ===================================================================
     // Methods declaration

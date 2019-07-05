@@ -59,6 +59,34 @@ public class LineSegment2D implements LinearGeometry2D
     // ===================================================================
     // Implementation of the LinearGeometry interface 
 
+//    public double projectedPosition(Point2D point)
+//    {
+//        return projectedPosition(point.getX(), point.getY());
+//    }
+//    
+//    public double projectedPosition(double x, double y)
+//    {
+//        double dx = x2 - x1;
+//        double dy = y2 - y1;
+//        if (Math.hypot(dx, dy) < Geometry2D.MIN_VECTOR_NORM)
+//        {
+//            throw new RuntimeException("The direction vector of the line hastoo small norm");
+//        }
+//
+//        double denom = dx * dx + dy * dy;
+//        double pos = ((y - y1) * dy + (x - x1) * dx) / denom;
+//        
+//        // clamp between 0 and 1
+//        return Math.min(Math.max(pos, 0), 1);
+//    }
+    
+    @Override
+    public boolean containsProjection(Point2D point, double tol)
+    {
+        double pos = supportingLine().projectedPosition(point);
+        return pos >= 0-tol && pos <= 1+tol;
+    }
+
     /**
      * Transforms this line segment with the specified affine transform.
      * 

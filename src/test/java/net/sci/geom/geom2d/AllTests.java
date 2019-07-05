@@ -11,6 +11,7 @@ import org.junit.runners.Suite;
     AffineTransform2DTest.class,
     
     // 1-dimensional geometric elements
+    LinearGeometry2DTest.class,
     LineSegment2DTest.class,
     StraightLine2DTest.class,
 	})
