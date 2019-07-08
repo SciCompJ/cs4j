@@ -124,18 +124,18 @@ public class DefaultTriMesh3D implements Mesh3D
      * Adds a triangular face defined by references to its three vertices.
      * 
      * @param v1
-     *            reference to the first face vertex
+     *            the first face vertex
      * @param v2
-     *            reference to the second face vertex
+     *            the second face vertex
      * @param v3
-     *            reference to the third face vertex
-     * @return the index of the newly created face
+     *            the third face vertex
+     * @return the newly created face
      */
-    public int addFace(Vertex v1, Vertex v2, Vertex v3)
+    public int addFace(Mesh3D.Vertex v1, Mesh3D.Vertex v2, Mesh3D.Vertex v3)
     {
-        int iv1 = v1.index;
-        int iv2 = v2.index;
-        int iv3 = v3.index;
+        int iv1 = ((Vertex) v1).index;
+        int iv2 = ((Vertex) v2).index;
+        int iv3 = ((Vertex) v3).index;
         int index = addFace(iv1, iv2, iv3);
         return index;
     }
@@ -151,6 +151,7 @@ public class DefaultTriMesh3D implements Mesh3D
      *            index of the third face vertex (0-based)
      * @return the index of the newly created face
      */
+    //TODO: return a Face instance
     public int addFace(int iv1, int iv2, int iv3)
     {
         int index = faces.size();
@@ -183,24 +184,29 @@ public class DefaultTriMesh3D implements Mesh3D
     
     public Edge getEdge(int index)
     {
-        if (edges == null)
-        {
-            computeEdgeVertices();
-        }
+        ensureValidEdges();
         return edges.get(index);
     }
     
+    public Mesh3D.Edges edges()
+    {
+        ensureValidEdges();
+        return new Edges();
+    }
 
-    public Collection<Edge> edges()
+    /**
+     * Ensures the "edges" information is created, and recomputes edge array if
+     * it is null.
+     */
+    private void ensureValidEdges()
     {
         if (edges == null)
         {
-            computeEdgeVertices();
+            computeEdges();
         }
-        return edges;
     }
 
-    private void computeEdgeVertices()
+    private void computeEdges()
     {
         // number of vertices
         int nv = this.vertexPositions.size();
@@ -279,7 +285,7 @@ public class DefaultTriMesh3D implements Mesh3D
     }
   
     /* (non-Javadoc)
-     * @see net.sci.geom.geom3d.mesh.Mesh3D#vertices()
+     * @see Mesh3D#vertices()
      */
     @Override
     public Collection<Point3D> vertexPositions()
@@ -288,7 +294,7 @@ public class DefaultTriMesh3D implements Mesh3D
     }
 
 //    /* (non-Javadoc)
-//     * @see net.sci.geom.geom3d.mesh.Mesh3D#vertexIterator()
+//     * @see Mesh3D#vertexIterator()
 //     */
 //    @Override
 //    public Iterator<Point3D> vertexIterator()
@@ -297,7 +303,7 @@ public class DefaultTriMesh3D implements Mesh3D
 //    }
 
 //    /* (non-Javadoc)
-//     * @see net.sci.geom.geom3d.mesh.Mesh3D#vertexNumber()
+//     * @see Mesh3D#vertexNumber()
 //     */
 //    @Override
 //    public int vertexNumber()
@@ -509,9 +515,9 @@ public class DefaultTriMesh3D implements Mesh3D
         }
 
         @Override
-        public Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Vertex> iterator()
+        public Iterator<Mesh3D.Vertex> iterator()
         {
-            return new Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Vertex>()
+            return new Iterator<Mesh3D.Vertex>()
             {
                 int index = 0;
                 @Override
@@ -521,7 +527,7 @@ public class DefaultTriMesh3D implements Mesh3D
                 }
 
                 @Override
-                public net.sci.geom.geom3d.mesh.Mesh3D.Vertex next()
+                public Mesh3D.Vertex next()
                 {
                     return new Vertex(index++);
                 }
@@ -629,9 +635,9 @@ public class DefaultTriMesh3D implements Mesh3D
         }
 
         @Override
-        public Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Face> iterator()
+        public Iterator<Mesh3D.Face> iterator()
         {
-            return new Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Face>()
+            return new Iterator<Mesh3D.Face>()
             {
                 int index = 0;
                 @Override
@@ -641,7 +647,7 @@ public class DefaultTriMesh3D implements Mesh3D
                 }
 
                 @Override
-                public net.sci.geom.geom3d.mesh.Mesh3D.Face next()
+                public Mesh3D.Face next()
                 {
                     int[] inds = faces.get(index++);
                     return new Face(inds[0], inds[1], inds[2]);
@@ -673,19 +679,25 @@ public class DefaultTriMesh3D implements Mesh3D
             }
         }
         
-        public LineSegment3D curve()
-        {
-            Point3D p1 = vertexPosition(iv1);
-            Point3D p2 = vertexPosition(iv2);
-            return new LineSegment3D(p1, p2);
-        }
-        
         @Override
         public Collection<Vertex> vertices()
         {
             return Arrays.asList(new Vertex(iv1), new Vertex(iv2));
         }
         
+        
+        @Override
+        public Mesh3D.Vertex source()
+        {
+            return new Vertex(iv1);
+        }
+
+        @Override
+        public Mesh3D.Vertex target()
+        {
+            return new Vertex(iv2);
+        }
+
         @Override
         public Collection<Face> faces()
         {
@@ -696,7 +708,14 @@ public class DefaultTriMesh3D implements Mesh3D
             return edgeFaces;
         }
 
+        public LineSegment3D curve()
+        {
+            Point3D p1 = vertexPosition(iv1);
+            Point3D p2 = vertexPosition(iv2);
+            return new LineSegment3D(p1, p2);
+        }
         
+       
         /**
          * Implements compareTo to allows for fast indexing.
          */
@@ -745,9 +764,9 @@ public class DefaultTriMesh3D implements Mesh3D
         }
         
        @Override
-        public Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Edge> iterator()
+        public Iterator<Mesh3D.Edge> iterator()
         {
-           return new Iterator<net.sci.geom.geom3d.mesh.Mesh3D.Edge>()
+           return new Iterator<Mesh3D.Edge>()
            {
                int index = 0;
                @Override
@@ -757,9 +776,9 @@ public class DefaultTriMesh3D implements Mesh3D
                }
 
                @Override
-               public net.sci.geom.geom3d.mesh.Mesh3D.Edge next()
+               public Mesh3D.Edge next()
                {
-                   return edges.get(index);
+                   return edges.get(index++);
                }
            };
         }

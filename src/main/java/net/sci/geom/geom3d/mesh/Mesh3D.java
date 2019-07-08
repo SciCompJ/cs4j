@@ -136,12 +136,45 @@ public interface Mesh3D extends Geometry3D
          * @return the collection of vertices adjacent to this edge.
          */
         public Collection<? extends Vertex> vertices();
+        
+        /**
+         * @return the source vertex of this edge
+         */
+        public Vertex source();
+        
+        /**
+         * @return the target vertex of this edge
+         */
+        public Vertex target();
 
         /**
          * @return the collection of faces adjacent to this edge.
          */
         public Collection<? extends Face> faces();
         
+        /**
+         * @return the length of this edge.
+         */
+        public default double length()
+        {
+            Point3D p1 = source().position();
+            Point3D p2 = target().position();
+            return p1.distance(p2);
+        }
+        
+        /**
+         * @return the center of this edge.
+         */
+        public default Point3D center()
+        {
+            Point3D p1 = source().position();
+            Point3D p2 = target().position();
+            double x = p1.getX() + p2.getX();
+            double y = p1.getY() + p2.getY();
+            double z = p1.getZ() + p2.getZ();
+            return new Point3D(x, y, z);
+        }
+
         /**
          * @return the line segment that represents this edge.
          */

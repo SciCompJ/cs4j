@@ -3,10 +3,10 @@
  */
 package net.sci.geom.geom3d.mesh;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
 import org.junit.Test;
@@ -14,9 +14,8 @@ import org.junit.Test;
 import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.mesh.Mesh3D.Vertex;
-import net.sci.geom.geom3d.mesh.DefaultTriMesh3D.Edge;
 import net.sci.geom.geom3d.mesh.Mesh3D.Face;
+import net.sci.geom.geom3d.mesh.Mesh3D.Vertex;
 
 /**
  * @author dlegland
@@ -46,7 +45,7 @@ public class DefaultTriMesh3DTest
         DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
         
         int count = 0;
-        Iterator<Edge> iterator = mesh.edges().iterator();
+        Iterator<Mesh3D.Edge> iterator = mesh.edges().iterator();
         while(iterator.hasNext())
         {
             iterator.next();
@@ -78,7 +77,7 @@ public class DefaultTriMesh3DTest
         // Create an octahedron
         DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
         
-        Collection<DefaultTriMesh3D.Edge> edges = mesh.edges();
+        Mesh3D.Edges edges = mesh.edges();
         assertEquals(12, edges.size());
 //        for (DefaultTriMesh3D.Edge edge : mesh.edges())
 //        {
@@ -97,11 +96,11 @@ public class DefaultTriMesh3DTest
         Vector3D v2 = new Vector3D(0, 1, 0);
         Plane3D plane = new Plane3D(p0, v1, v2);
         
-        Collection<DefaultTriMesh3D.Edge> edges = mesh.edges();
+        Mesh3D.Edges edges = mesh.edges();
         assertEquals(12, edges.size());
        
         ArrayList<Point3D> intersections = new ArrayList<>();
-        for (DefaultTriMesh3D.Edge edge : mesh.edges())
+        for (Mesh3D.Edge edge : mesh.edges())
         {
             Point3D inter = edge.curve().intersection(plane);
             if (inter!= null)
