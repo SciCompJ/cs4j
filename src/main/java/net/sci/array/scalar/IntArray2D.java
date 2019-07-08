@@ -26,7 +26,7 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
      *            the original array
      * @return a Int view of the original array
      */
-    public static <T extends Int> IntArray2D<T> wrap(IntArray<T> array)
+    public final static <T extends Int> IntArray2D<T> wrap(IntArray<T> array)
     {
         if (array instanceof IntArray2D)
         {
@@ -105,10 +105,10 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
 	
 
 	// =============================================================
-    // Inner wrapprt class
+    // Inner wrapper class
 
 	/**
-     * Wraps a UInt8 array into a IntArray2D, with two dimensions.
+     * Wraps an integer array into a IntArray2D, with two dimensions.
      */
     private static class Wrapper<T extends Int> extends IntArray2D<T>
     {
