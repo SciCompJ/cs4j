@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     DefaultTriMesh3DTest.class,
+    Mesh3DTest.class,
     Triangle3DTest.class,
     })
 public class AllTests {

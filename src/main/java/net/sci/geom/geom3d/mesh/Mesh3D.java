@@ -5,11 +5,11 @@ package net.sci.geom.geom3d.mesh;
 
 import java.util.Collection;
 
+import net.sci.geom.geom3d.Geometry3D;
+import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Polygon3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.Geometry3D;
-import net.sci.geom.geom3d.LineSegment3D;
 
 /**
  * A polygonal mesh in 3D space
@@ -22,34 +22,71 @@ public interface Mesh3D extends Geometry3D
     // ===================================================================
     // Management of vertices
 
+    /**
+     * @return the collection of vertices within this mesh.
+     */
     public Vertices vertices();
 
-//    public Vertex addVertex(Point3D point);
+    public Vertex addVertex(Point3D point);
     
     public Collection<Point3D> vertexPositions();
         
-//    /**
-//     * @return the number of vertices in this mesh.
-//     * @deprecated replaced by vertices().size()
-//     */
-//    @Deprecated
-//    public int vertexNumber();
-    
+    /**
+     * @return the number of vertices in this mesh.
+     */
+    public int vertexNumber();
+
+    /**
+     * Finds the closest vertex to the input point.
+     * 
+     * @param point
+     *            a query point
+     * @return the index of the vertex the closest to query point
+     */
+    public default Vertex findClosestVertex(Point3D point)
+    {
+        double minDist = Double.POSITIVE_INFINITY;
+        Vertex closest = null;
+        for (Vertex v : vertices())
+        {
+            double dist = v.position().distance(point);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closest = v;
+            }
+        }
+        return closest;
+    }
+
     
     // ===================================================================
     // Management of edges ? 
     
+    /**
+     * Returns the collection of edges within this mesh (optional operation).
+     * 
+     * @return the collection of edges within this mesh.
+     */
+    public Edges edges();
+
+    /**
+     * @return the number of edges in this mesh.
+     */
+    public int edgeNumber();
+
     // ===================================================================
     // Management of faces
 
+    /**
+     * @return the collection of faces within this mesh.
+     */
     public Faces faces();
 
-//    /**
-//     * @return the number of faces in this mesh.
-//     * @deprecated replaced by faces().size()
-//     */
-//    @Deprecated
-//    public int faceNumber();
+    /**
+     * @return the number of faces in this mesh.
+     */
+    public int faceNumber();
 
     
     // ===================================================================
