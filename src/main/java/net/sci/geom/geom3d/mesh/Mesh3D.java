@@ -27,15 +27,13 @@ public interface Mesh3D extends Geometry3D
      */
     public Vertices vertices();
 
-    public Vertex addVertex(Point3D point);
-    
-    public Collection<Point3D> vertexPositions();
-        
     /**
      * @return the number of vertices in this mesh.
      */
     public int vertexNumber();
 
+    public Vertex addVertex(Point3D point);
+    
     /**
      * Finds the closest vertex to the input point.
      * 
@@ -119,7 +117,15 @@ public interface Mesh3D extends Geometry3D
         /**
          * @return the normal of this vertex, as a 3D Vector
          */
-        public Vector3D normal();
+        public default Vector3D normal()
+        {
+            Vector3D normal = new Vector3D();
+            for (Face face : this.faces())
+            {
+                normal.plus(face.normal());
+            }
+            return normal.normalize();
+        }
     }
 
     /**

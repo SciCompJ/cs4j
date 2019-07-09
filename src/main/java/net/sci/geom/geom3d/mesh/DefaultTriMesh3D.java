@@ -159,7 +159,6 @@ public class DefaultTriMesh3D implements Mesh3D
     /* (non-Javadoc)
      * @see Mesh3D#vertices()
      */
-    @Override
     public Collection<Point3D> vertexPositions()
     {
         return this.vertexPositions();
