@@ -4,7 +4,6 @@
 package net.sci.geom.geom3d.mesh;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -446,38 +445,23 @@ public class SimpleTriMesh3D implements Mesh3D
         }
         
         @Override
-        public Collection<Mesh3D.Face> faces()
-        {
-            // Allocate typical number of neighbor edge equal to 6.
-            ArrayList<Mesh3D.Face> vertexFaces = new ArrayList<>(6);
-            
-            // iterate over the collection of faces
-            for (int iFace = 0; iFace < faces.size(); iFace++)
-            {
-                int[] inds = faces.get(iFace);
-                if (inds[0] == this.index || inds[1] == this.index || inds[2] == this.index)
-                {
-                    vertexFaces.add(new Face(iFace));
-                }
-            }
-            
-            // return edges around vertex
-            return vertexFaces;
-        }
-
-        @Override
-        public Collection<Mesh3D.Edge> edges()
-        {
-            throw new UnsupportedOperationException("This implementation does not support edges");
-        }
-
-        @Override
         public Point3D position()
         {
             return vertexPositions.get(index);
         }
 
-        
+        @Override
+        public Vector3D normal()
+        {
+            Vector3D normal = new Vector3D();
+            for (Mesh3D.Face face : vertexFaces(this))
+            {
+                normal.plus(face.normal());
+            }
+            return normal.normalize();
+        }
+
+       
         // ===================================================================
         // Override equals and hashcode to allow indexing
         
@@ -540,20 +524,6 @@ public class SimpleTriMesh3D implements Mesh3D
             return new Triangle3D(p1, p2, p3);    
         }
         
-        @Override
-        public Collection<Vertex> vertices()
-        {
-            int[] indices = faces.get(this.index);
-            return Arrays.asList(new Vertex(indices[0]), new Vertex(indices[1]), new Vertex(indices[2]));
-        }
-
-        @Override
-        public Collection<Edge> edges()
-        {
-            ArrayList<Edge> faceEdges = new ArrayList<Edge>(0);
-            return faceEdges;
-        }
-
         @Override
         public Vector3D normal()
         {

@@ -127,7 +127,18 @@ public class DefaultTriMesh3D implements Mesh3D
     @Override
     public Collection<Mesh3D.Edge> vertexEdges(Mesh3D.Vertex vertex)
     {
-        throw new UnsupportedOperationException("This implementation does not support edges");
+        ensureValidEdges();
+        // cast to local vertex class
+        int index = getVertex(vertex).index;
+        ArrayList<Mesh3D.Edge> edges = new ArrayList<>();
+        for (Edge edge : this.edges)
+        {
+            if (edge.iv1 == index || edge.iv2 == index)
+            {
+                edges.add(edge);
+            }
+        }
+        return edges;
     }
 
     @Override
@@ -149,30 +160,34 @@ public class DefaultTriMesh3D implements Mesh3D
     @Override
     public Collection<Mesh3D.Vertex> edgeVertices(Mesh3D.Edge edge)
     {
-        throw new UnsupportedOperationException("This implementation does not support edges");
+        Edge edge2 = getEdge(edge);
+        return Arrays.asList(new Vertex(edge2.iv1), new Vertex(edge2.iv2));
     }
 
     @Override
     public Collection<Mesh3D.Face> edgeFaces(Mesh3D.Edge edge)
     {
-        throw new UnsupportedOperationException("This implementation does not support edges");
+        ensureValidEdgeFaces();
+        int[] inds = edgeFaces.get(edgeIndices.get(getEdge(edge)));
+        return Arrays.asList(new Face(inds[0]), new Face(inds[1]), new Face(inds[2]));
     }
 
     @Override
     public Collection<Mesh3D.Vertex> faceVertices(Mesh3D.Face face)
     {
         int[] inds = this.faces.get(getFace(face).index);
-        ArrayList<Mesh3D.Vertex> verts = new ArrayList<Mesh3D.Vertex>(3);
-        verts.add(new Vertex(inds[0]));
-        verts.add(new Vertex(inds[1]));
-        verts.add(new Vertex(inds[2]));
-        return verts;
+        return Arrays.asList(new Vertex(inds[0]), new Vertex(inds[1]), new Vertex(inds[2]));
     }
 
     @Override
     public Collection<Mesh3D.Edge> faceEdges(Mesh3D.Face face)
     {
-        throw new UnsupportedOperationException("This implementation does not support edges");
+        int[] indices = faces.get(getFace(face).index);
+        ArrayList<Mesh3D.Edge> faceEdges = new ArrayList<Mesh3D.Edge>(3);
+        faceEdges.add(new Edge(indices[0], indices[1]));
+        faceEdges.add(new Edge(indices[1], indices[2]));
+        faceEdges.add(new Edge(indices[2], indices[0]));
+        return faceEdges;
     }
     
     // ===================================================================
@@ -220,9 +235,15 @@ public class DefaultTriMesh3D implements Mesh3D
     @Override
     public void removeVertex(Mesh3D.Vertex vertex)
     {
-        Vertex vertex2 = getVertex(vertex);
-        // TODO: check vertex does not belong to any face
-        vertexPositions.remove(vertex2.index);
+        int index = getVertex(vertex).index;
+        for (int[] inds : faces)
+        {
+            if (inds[0] == index || inds[1] == index || inds[2] == index)
+            {
+                throw new RuntimeException("Can not remove a vertex if it belongs to a face");
+            }
+        }
+        vertexPositions.remove(index);
     }
 
     /* (non-Javadoc)
@@ -339,6 +360,18 @@ public class DefaultTriMesh3D implements Mesh3D
         return (Edge) edge;
     }
 
+    /**
+     * Ensures the "edges" information is created, and recomputes edge array if
+     * it is null.
+     */
+    private void ensureValidEdges()
+    {
+        if (edges == null)
+        {
+            computeEdges();
+        }
+    }
+
     private void computeEdges()
     {
         // number of vertices
@@ -395,6 +428,18 @@ public class DefaultTriMesh3D implements Mesh3D
                 this.edges.add(edge);
                 this.edgeIndices.put(edge, index++);
             }
+        }
+    }
+
+    /**
+     * Ensures the "edgeFaces" information is created, and recomputes edgeFaces
+     * array if it is null.
+     */
+    private void ensureValidEdgeFaces()
+    {
+        if (edgeFaces == null)
+        {
+            computeEdgeFaces();
         }
     }
 
@@ -471,18 +516,6 @@ public class DefaultTriMesh3D implements Mesh3D
         }
     }
     
-    /**
-     * Ensures the "edges" information is created, and recomputes edge array if
-     * it is null.
-     */
-    private void ensureValidEdges()
-    {
-        if (edges == null)
-        {
-            computeEdges();
-        }
-    }
-
     // ===================================================================
     // Management of faces
     
@@ -678,45 +711,6 @@ public class DefaultTriMesh3D implements Mesh3D
         }
         
         @Override
-        public Collection<Face> faces()
-        {
-            // Allocate typical number of neighbor edge equal to 6.
-            ArrayList<Face> vertexFaces = new ArrayList<Face>(6);
-            
-            // iterate over the collection of faces
-            for (int i = 0; i < faces.size(); i++)
-            {
-                int[] inds = faces.get(i);
-                if (inds[0] == this.index || inds[1] == this.index || inds[2] == this.index)
-                {
-                    vertexFaces.add(new Face(i));
-                }
-            }
-            
-            // return edges around vertex
-            return vertexFaces;
-        }
-
-        @Override
-        public Collection<Edge> edges()
-        {
-            // Allocate typical number of neighbor edge equal to 6.
-            ArrayList<Edge> vertexEdges = new ArrayList<Edge>(6);
-            
-            // iterate over the collection of edges
-            for (Edge edge : edges)
-            {
-                if (edge.iv1 == this.index || edge.iv2 == this.index)
-                {
-                    vertexEdges.add(edge);
-                }
-            }
-            
-            // return edges around vertex
-            return vertexEdges;
-        }
-
-        @Override
         public Point3D position()
         {
             return vertexPositions.get(index);
@@ -726,7 +720,7 @@ public class DefaultTriMesh3D implements Mesh3D
         public Vector3D normal()
         {
             Vector3D normal = new Vector3D();
-            for (Face face : this.faces())
+            for (Mesh3D.Face face : vertexFaces(this))
             {
                 normal.plus(face.normal());
             }
@@ -795,24 +789,6 @@ public class DefaultTriMesh3D implements Mesh3D
             return new Triangle3D(p1, p2, p3);    
         }
         
-        @Override
-        public Collection<Vertex> vertices()
-        {
-            int[] indices = faces.get(this.index);
-            return Arrays.asList(new Vertex(indices[0]), new Vertex(indices[1]), new Vertex(indices[2]));
-        }
-
-        @Override
-        public Collection<Edge> edges()
-        {
-            int[] indices = faces.get(this.index);
-            ArrayList<Edge> faceEdges = new ArrayList<Edge>(3);
-            faceEdges.add(new Edge(indices[0], indices[1]));
-            faceEdges.add(new Edge(indices[0], indices[2]));
-            faceEdges.add(new Edge(indices[1], indices[2]));
-            return faceEdges;
-        }
-
         @Override
         public Vector3D normal()
         {
@@ -893,13 +869,6 @@ public class DefaultTriMesh3D implements Mesh3D
         }
         
         @Override
-        public Collection<Vertex> vertices()
-        {
-            return Arrays.asList(new Vertex(iv1), new Vertex(iv2));
-        }
-        
-        
-        @Override
         public Mesh3D.Vertex source()
         {
             return new Vertex(iv1);
@@ -909,23 +878,6 @@ public class DefaultTriMesh3D implements Mesh3D
         public Mesh3D.Vertex target()
         {
             return new Vertex(iv2);
-        }
-
-        @Override
-        public Collection<Mesh3D.Face> faces()
-        {
-            if (edgeFaces == null)
-            {
-                computeEdgeFaces();
-            }
-            
-            int edgeIndex = edgeIndices.get(this);
-            ArrayList<Mesh3D.Face> faces = new ArrayList<>(2);
-            for (int faceIndex : edgeFaces.get(edgeIndex))
-            {
-                faces.add(new Face(faceIndex));
-            }
-            return faces;
         }
 
         public LineSegment3D curve()

@@ -7,15 +7,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.junit.Test;
 
 import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.mesh.Mesh3D.Face;
-import net.sci.geom.geom3d.mesh.Mesh3D.Vertex;
 
 /**
  * @author dlegland
@@ -29,10 +26,8 @@ public class DefaultTriMesh3DTest
         DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
         
         int count = 0;
-        Iterator<Vertex> iterator = mesh.vertices().iterator();
-        while(iterator.hasNext())
+        for (@SuppressWarnings("unused") Mesh3D.Vertex v : mesh.vertices())
         {
-            iterator.next();
             count++;
         }
         
@@ -45,10 +40,8 @@ public class DefaultTriMesh3DTest
         DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
         
         int count = 0;
-        Iterator<Mesh3D.Edge> iterator = mesh.edges().iterator();
-        while(iterator.hasNext())
+        for (@SuppressWarnings("unused") Mesh3D.Edge e : mesh.edges())
         {
-            iterator.next();
             count++;
         }
         
@@ -61,10 +54,8 @@ public class DefaultTriMesh3DTest
         DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
         
         int count = 0;
-        Iterator<Face> iterator = mesh.faces().iterator();
-        while(iterator.hasNext())
+        for (@SuppressWarnings("unused") Mesh3D.Face f : mesh.faces())
         {
-            iterator.next();
             count++;
         }
         
@@ -83,6 +74,24 @@ public class DefaultTriMesh3DTest
 //            System.out.println("Edge from " + edge.iv1 + " to " + edge.iv2);
 //        }
     }
+    
+    @Test
+    public final void testRemoveVertex()
+    {
+        // Create an simple mesh
+        DefaultTriMesh3D mesh = new DefaultTriMesh3D();
+        Mesh3D.Vertex v0 = mesh.addVertex(new Point3D(0, 0, 0));
+        Mesh3D.Vertex v1 = mesh.addVertex(new Point3D(1, 0, 0));
+        Mesh3D.Vertex v2 = mesh.addVertex(new Point3D(0, 1, 0));
+        Mesh3D.Vertex v3 = mesh.addVertex(new Point3D(0, 0, 1));
+        mesh.addFace(v1, v2, v3);
+        
+        // remove vertex
+        mesh.removeVertex(v0);
+        
+        assertEquals(3, mesh.vertexNumber());
+    }
+
     
     @Test
     public final void testIntersectEdgesWithPlane()
