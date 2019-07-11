@@ -118,7 +118,7 @@ public class SimpleTriMesh3D implements Mesh3D
             int[] inds = faces.get(iFace);
             if (inds[0] == index || inds[1] == index || inds[2] == index)
             {
-                vertexFaces.add(new Face(inds[0], inds[1], inds[2]));
+                vertexFaces.add(new Face(iFace));
             }
         }
         return vertexFaces;
@@ -139,11 +139,11 @@ public class SimpleTriMesh3D implements Mesh3D
     @Override
     public Collection<Mesh3D.Vertex> faceVertices(Mesh3D.Face face)
     {
-        Face face2 = getFace(face);
+        int[] inds = faces.get(getFace(face).index);
         ArrayList<Mesh3D.Vertex> verts = new ArrayList<Mesh3D.Vertex>(3);
-        verts.add(new Vertex(face2.iv1));
-        verts.add(new Vertex(face2.iv2));
-        verts.add(new Vertex(face2.iv3));
+        verts.add(new Vertex(inds[0]));
+        verts.add(new Vertex(inds[1]));
+        verts.add(new Vertex(inds[2]));
         return verts;
     }
 
@@ -164,9 +164,15 @@ public class SimpleTriMesh3D implements Mesh3D
     }
 
     @Override
-    public Vertices vertices()
+    public Iterable<Mesh3D.Vertex> vertices()
     {
-        return new Vertices();
+        return new Iterable<Mesh3D.Vertex>() {
+            @Override
+            public Iterator<Mesh3D.Vertex> iterator()
+            {
+                return new VertexIterator();
+            }
+        };
     }
   
     /**
@@ -231,7 +237,7 @@ public class SimpleTriMesh3D implements Mesh3D
         return 0;
     }
 
-    public Edges edges()
+    public Iterable<Mesh3D.Edge> edges()
     {
         throw new UnsupportedOperationException("This implementation does not support edges");
     }
@@ -253,11 +259,17 @@ public class SimpleTriMesh3D implements Mesh3D
     // Management of faces
     
     @Override
-    public Faces faces()
+    public Iterable<Mesh3D.Face> faces()
     {
-        return new Faces();
+        return new Iterable<Mesh3D.Face>() {
+            @Override
+            public Iterator<Mesh3D.Face> iterator()
+            {
+                return new FaceIterator();
+            }
+        };
     }
-    
+  
     @Override
     public int faceNumber()
     {
@@ -320,8 +332,7 @@ public class SimpleTriMesh3D implements Mesh3D
 
     public Face getFace(int index)
     {
-        int[] inds = this.faces.get(index);
-        return new Face(inds[0], inds[1], inds[2]);
+        return new Face(index);
     }
 
     /**
@@ -441,11 +452,12 @@ public class SimpleTriMesh3D implements Mesh3D
             ArrayList<Mesh3D.Face> vertexFaces = new ArrayList<>(6);
             
             // iterate over the collection of faces
-            for (int[] inds : faces)
+            for (int iFace = 0; iFace < faces.size(); iFace++)
             {
+                int[] inds = faces.get(iFace);
                 if (inds[0] == this.index || inds[1] == this.index || inds[2] == this.index)
                 {
-                    vertexFaces.add(new Face(inds[0], inds[1], inds[2]));
+                    vertexFaces.add(new Face(iFace));
                 }
             }
             
@@ -489,99 +501,66 @@ public class SimpleTriMesh3D implements Mesh3D
     }
     
 
-    /**
-     * The collection of vertices stored in a mesh.
-     */
-    public class Vertices implements Mesh3D.Vertices
+    private class VertexIterator implements Iterator<Mesh3D.Vertex>
     {
-        public Vertex get(int index)
-        {
-            return new Vertex(index);
-        }
-        
-        public Point3D position(int index)
-        {
-            return vertexPositions.get(index);
-        }
-        
-        public int size()
-        {
-            return vertexPositions.size();
-        }
-
+        int index = 0;
         @Override
-        public Iterator<Mesh3D.Vertex> iterator()
+        public boolean hasNext()
         {
-            return new Iterator<Mesh3D.Vertex>()
-            {
-                int index = 0;
-                @Override
-                public boolean hasNext()
-                {
-                    return index < vertexPositions.size();
-                }
-
-                @Override
-                public Vertex next()
-                {
-                    return new Vertex(index++);
-                }
-            };
+            return index < vertexPositions.size();
         }
         
+        @Override
+        public Vertex next()
+        {
+            return new Vertex(index++);
+        }
     }
 
     public class Face implements Mesh3D.Face
     {
-        // TODO: replace by index-based implementation
-        
-        // index of first vertex
-        int iv1;
-        // index of second vertex
-        int iv2;
-        // index of third vertex
-        int iv3;
+        /**
+         * The index of the face, used to retrieve index vertices in "faces" array.
+         */
+        int index;
 
-        public Face(int iv1, int iv2, int iv3)
+        public Face(int index)
         {
-            this.iv1 = iv1;
-            this.iv2 = iv2;
-            this.iv3 = iv3;
+            this.index = index;
         }
 
         @Override
         public Triangle3D polygon()
         {
-            Point3D p1 = vertexPositions.get(this.iv1);
-            Point3D p2 = vertexPositions.get(this.iv2);
-            Point3D p3 = vertexPositions.get(this.iv3);
+            int[] indices = faces.get(this.index);
+            Point3D p1 = vertexPositions.get(indices[0]);
+            Point3D p2 = vertexPositions.get(indices[1]);
+            Point3D p3 = vertexPositions.get(indices[2]);
             
             return new Triangle3D(p1, p2, p3);    
         }
         
-        public int[] vertexIndices()
-        {
-            return new int[] {iv1, iv2, iv3};
-        }
-
         @Override
         public Collection<Vertex> vertices()
         {
-            return Arrays.asList(new Vertex(iv1), new Vertex(iv2), new Vertex(iv3));
+            int[] indices = faces.get(this.index);
+            return Arrays.asList(new Vertex(indices[0]), new Vertex(indices[1]), new Vertex(indices[2]));
         }
 
         @Override
-        public Collection<? extends Mesh3D.Edge> edges()
+        public Collection<Edge> edges()
         {
-            throw new UnsupportedOperationException("This implementation does not support edges");
+            ArrayList<Edge> faceEdges = new ArrayList<Edge>(0);
+            return faceEdges;
         }
 
         @Override
         public Vector3D normal()
         {
-            Point3D p1 = vertexPositions.get(iv1);
-            Vector3D v12 = new Vector3D(p1, vertexPosition(iv2));
-            Vector3D v13 = new Vector3D(p1, vertexPosition(iv3));
+            int[] indices = faces.get(this.index);
+            Point3D p1 = vertexPositions.get(indices[0]);
+            Vector3D v12 = new Vector3D(p1, vertexPosition(indices[1]));
+            Vector3D v13 = new Vector3D(p1, vertexPosition(indices[2]));
             return Vector3D.crossProduct(v12, v13);
         }
         
@@ -597,9 +576,7 @@ public class SimpleTriMesh3D implements Mesh3D
             }
             
             Face that = (Face) obj;
-            if (this.iv1 != that.iv1) return false;
-            if (this.iv2 != that.iv2) return false;
-            if (this.iv3 != that.iv3) return false;
+            if (this.index != that.index) return false;
             return true;
         }
         
@@ -607,52 +584,24 @@ public class SimpleTriMesh3D implements Mesh3D
         public int hashCode()
         {
             int hash = 1;
-            hash = hash * 17 + iv1;
-            hash = hash * 17 + iv2;
-            hash = hash * 17 + iv3;
+            hash = hash * 17 + index;
             return hash;
         }
     }
 
-    public class Faces implements Mesh3D.Faces
+    private class FaceIterator implements Iterator<Mesh3D.Face>
     {
-        public Face get(int index)
-        {
-            int[] inds = faces.get(index);
-            return new Face(inds[0], inds[1], inds[2]);
-        }
-        
-        public int[] vertexIndices(int index)
-        {
-            return faces.get(index);
-        }
-        
-        public int size()
-        {
-            return faces.size();
-        }
-
+        int index = 0;
         @Override
-        public Iterator<Mesh3D.Face> iterator()
+        public boolean hasNext()
         {
-            return new Iterator<Mesh3D.Face>()
-            {
-                int index = 0;
-                @Override
-                public boolean hasNext()
-                {
-                    return index < faces.size();
-                }
-
-                @Override
-                public Face next()
-                {
-                    int[] inds = faces.get(index++);
-                    return new Face(inds[0], inds[1], inds[2]);
-                }
-            };
+            return index < faces.size();
         }
-
+        
+        @Override
+        public Mesh3D.Face next()
+        {
+            return new Face(index++);
+        }
     }
-
 }

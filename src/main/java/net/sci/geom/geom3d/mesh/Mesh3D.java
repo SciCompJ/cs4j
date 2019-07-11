@@ -20,6 +20,32 @@ import net.sci.geom.geom3d.Vector3D;
 public interface Mesh3D extends Geometry3D
 {
     // ===================================================================
+    // Geometric queries
+    
+    /**
+     * Finds the closest vertex to the input point.
+     * 
+     * @param point
+     *            a query point
+     * @return the index of the vertex the closest to query point
+     */
+    public default Vertex findClosestVertex(Point3D point)
+    {
+        double minDist = Double.POSITIVE_INFINITY;
+        Vertex closest = null;
+        for (Vertex v : vertices())
+        {
+            double dist = v.position().distance(point);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closest = v;
+            }
+        }
+        return closest;
+    }
+
+    // ===================================================================
     // Topological queries
     
     /**
@@ -92,7 +118,7 @@ public interface Mesh3D extends Geometry3D
     /**
      * @return the collection of vertices within this mesh.
      */
-    public Vertices vertices();
+    public Iterable<? extends Vertex> vertices();
 
     public Vertex addVertex(Point3D point);
 
@@ -104,30 +130,6 @@ public interface Mesh3D extends Geometry3D
      */
     public void removeVertex(Vertex vertex);
 
-    /**
-     * Finds the closest vertex to the input point.
-     * 
-     * @param point
-     *            a query point
-     * @return the index of the vertex the closest to query point
-     */
-    public default Vertex findClosestVertex(Point3D point)
-    {
-        double minDist = Double.POSITIVE_INFINITY;
-        Vertex closest = null;
-        for (Vertex v : vertices())
-        {
-            double dist = v.position().distance(point);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                closest = v;
-            }
-        }
-        return closest;
-    }
-
-    
     // ===================================================================
     // Management of edges ? 
     
@@ -141,7 +143,7 @@ public interface Mesh3D extends Geometry3D
      * 
      * @return the collection of edges within this mesh.
      */
-    public Edges edges();
+    public Iterable<? extends Edge> edges();
 
     /**
      * Adds an edge to this mesh structure (optional operation).
@@ -174,7 +176,7 @@ public interface Mesh3D extends Geometry3D
     /**
      * @return the collection of faces within this mesh.
      */
-    public Faces faces();
+    public Iterable<? extends Face> faces();
 
     /**
      * Removes a face from this mesh.
@@ -225,14 +227,6 @@ public interface Mesh3D extends Geometry3D
             return normal.normalize();
         }
     }
-
-    /**
-     * The collection of vertices stored in a mesh.
-     */
-    public interface Vertices extends Iterable<Vertex>
-    {
-        public int size();
-    }
     
     /**
      * Interface representing a face, a mesh element with dimension 2.
@@ -260,13 +254,6 @@ public interface Mesh3D extends Geometry3D
         public Vector3D normal();
     }
     
-    /**
-     * The collection of faces stored in a mesh.
-     */
-    public interface Faces extends Iterable<Face>
-    {
-        public int size();
-    }
     
     /**
      * Interface representing an edge, a mesh element with dimension 1.
@@ -320,14 +307,6 @@ public interface Mesh3D extends Geometry3D
          * @return the line segment that represents this edge.
          */
         public LineSegment3D curve();
-    }
-    
-    /**
-     * The collection of edges stored in a mesh.
-     */
-    public interface Edges extends Iterable<Edge>
-    {
-        public int size();
     }
     
 }

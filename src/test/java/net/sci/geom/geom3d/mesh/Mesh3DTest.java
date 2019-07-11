@@ -6,13 +6,13 @@ package net.sci.geom.geom3d.mesh;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import org.junit.Test;
 
 import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
+import net.sci.geom.geom3d.mesh.Mesh3D.Edge;
 import net.sci.geom.geom3d.mesh.Mesh3D.Face;
 import net.sci.geom.geom3d.mesh.Mesh3D.Vertex;
 
@@ -31,10 +31,8 @@ public class Mesh3DTest
         Mesh3D mesh = Meshes3D.createOctahedron();
         
         int count = 0;
-        Iterator<Vertex> iterator = mesh.vertices().iterator();
-        while(iterator.hasNext())
+        for (@SuppressWarnings("unused") Vertex v : mesh.vertices())
         {
-            iterator.next();
             count++;
         }
         
@@ -47,10 +45,8 @@ public class Mesh3DTest
         Mesh3D mesh = Meshes3D.createOctahedron();
         
         int count = 0;
-        Iterator<Mesh3D.Edge> iterator = mesh.edges().iterator();
-        while(iterator.hasNext())
+        for (@SuppressWarnings("unused") Edge e : mesh.edges())
         {
-            iterator.next();
             count++;
         }
         
@@ -63,10 +59,8 @@ public class Mesh3DTest
         Mesh3D mesh = Meshes3D.createOctahedron();
         
         int count = 0;
-        Iterator<Face> iterator = mesh.faces().iterator();
-        while(iterator.hasNext())
+        for (@SuppressWarnings("unused") Face f : mesh.faces())
         {
-            iterator.next();
             count++;
         }
         
@@ -78,9 +72,7 @@ public class Mesh3DTest
     {
         // Create an octahedron
         Mesh3D mesh = Meshes3D.createOctahedron();
-        
-        Mesh3D.Edges edges = mesh.edges();
-        assertEquals(12, edges.size());
+        assertEquals(12, mesh.edgeNumber());
     }
     
     @Test
@@ -94,11 +86,10 @@ public class Mesh3DTest
         Vector3D v2 = new Vector3D(0, 1, 0);
         Plane3D plane = new Plane3D(p0, v1, v2);
         
-        Mesh3D.Edges edges = mesh.edges();
-        assertEquals(12, edges.size());
+        assertEquals(12, mesh.edgeNumber());
        
         ArrayList<Point3D> intersections = new ArrayList<>();
-        for (Mesh3D.Edge edge : mesh.edges())
+        for (Edge edge : mesh.edges())
         {
             Point3D inter = edge.curve().intersection(plane);
             if (inter!= null)

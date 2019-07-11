@@ -185,10 +185,17 @@ public class DefaultTriMesh3D implements Mesh3D
     }
 
     @Override
-    public Vertices vertices()
+    public Iterable<Mesh3D.Vertex> vertices()
     {
-        return new Vertices();
+        return new Iterable<Mesh3D.Vertex>() {
+            @Override
+            public Iterator<Mesh3D.Vertex> iterator()
+            {
+                return new VertexIterator();
+            }
+        };
     }
+  
 
     public Point3D vertexPosition(int index)
     {
@@ -254,17 +261,21 @@ public class DefaultTriMesh3D implements Mesh3D
     @Override
     public int edgeNumber()
     {
-        if (edges == null)
-        {
-            return 0;
-        }
+        ensureValidEdges();
         return edges.size();
     }
 
-    public Mesh3D.Edges edges()
+    @Override
+    public Iterable<Mesh3D.Edge> edges()
     {
         ensureValidEdges();
-        return new Edges();
+        return new Iterable<Mesh3D.Edge>() {
+            @Override
+            public Iterator<Mesh3D.Edge> iterator()
+            {
+                return new EdgeIterator();
+            }
+        };
     }
 
     /**
@@ -476,11 +487,17 @@ public class DefaultTriMesh3D implements Mesh3D
     // Management of faces
     
     @Override
-    public Faces faces()
+    public Iterable<Mesh3D.Face> faces()
     {
-        return new Faces();
+        return new Iterable<Mesh3D.Face>() {
+            @Override
+            public Iterator<Mesh3D.Face> iterator()
+            {
+                return new FaceIterator();
+            }
+        };
     }
-
+  
     @Override
     public int faceNumber()
     {
@@ -737,48 +754,22 @@ public class DefaultTriMesh3D implements Mesh3D
             return this.index + 17;
         }
     }
+
     
-
-    /**
-     * The collection of vertices stored in a mesh.
-     */
-    public class Vertices implements Mesh3D.Vertices
+    private class VertexIterator implements Iterator<Mesh3D.Vertex>
     {
-        public Vertex get(int index)
-        {
-            return new Vertex(index);
-        }
-        
-        public Point3D position(int index)
-        {
-            return vertexPositions.get(index);
-        }
-        
-        public int size()
-        {
-            return vertexPositions.size();
-        }
-
+        int index = 0;
         @Override
-        public Iterator<Mesh3D.Vertex> iterator()
+        public boolean hasNext()
         {
-            return new Iterator<Mesh3D.Vertex>()
-            {
-                int index = 0;
-                @Override
-                public boolean hasNext()
-                {
-                    return index < vertexPositions.size();
-                }
-
-                @Override
-                public Mesh3D.Vertex next()
-                {
-                    return new Vertex(index++);
-                }
-            };
+            return index < vertexPositions.size();
         }
         
+        @Override
+        public Vertex next()
+        {
+            return new Vertex(index++);
+        }
     }
 
     public class Face implements Mesh3D.Face
@@ -857,40 +848,23 @@ public class DefaultTriMesh3D implements Mesh3D
         }
     }
 
-    public class Faces implements Mesh3D.Faces
+    
+    private class FaceIterator implements Iterator<Mesh3D.Face>
     {
-        public int[] vertexIndices(int index)
+        int index = 0;
+        @Override
+        public boolean hasNext()
         {
-            return faces.get(index);
+            return index < faces.size();
         }
         
-        public int size()
-        {
-            return faces.size();
-        }
-
         @Override
-        public Iterator<Mesh3D.Face> iterator()
+        public Mesh3D.Face next()
         {
-            return new Iterator<Mesh3D.Face>()
-            {
-                int index = 0;
-                @Override
-                public boolean hasNext()
-                {
-                    return index < faces.size();
-                }
-
-                @Override
-                public Mesh3D.Face next()
-                {
-                    return new Face(index++);
-               }
-            };
+            return new Face(index++);
         }
-
     }
-    
+
     public class Edge implements Mesh3D.Edge, Comparable<Edge>
     {
         /** index of first vertex  (iv1 < iv2) */
@@ -1001,32 +975,20 @@ public class DefaultTriMesh3D implements Mesh3D
         }
     }
     
-    public class Edges implements Mesh3D.Edges
+    private class EdgeIterator implements Iterator<Mesh3D.Edge>
     {
-         @Override
-        public int size()
+        int index = 0;
+        @Override
+        public boolean hasNext()
         {
-            return edges.size();
+            return index < edges.size();
         }
         
-       @Override
-        public Iterator<Mesh3D.Edge> iterator()
+        @Override
+        public Mesh3D.Edge next()
         {
-           return new Iterator<Mesh3D.Edge>()
-           {
-               int index = 0;
-               @Override
-               public boolean hasNext()
-               {
-                   return index < edges.size();
-               }
-
-               @Override
-               public Mesh3D.Edge next()
-               {
-                   return edges.get(index++);
-               }
-           };
+            return edges.get(index++);
         }
     }
+
 }
