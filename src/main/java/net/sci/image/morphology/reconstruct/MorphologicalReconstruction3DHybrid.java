@@ -29,9 +29,9 @@ import java.util.Deque;
  * </p>
  * 
  * @author David Legland
- * @see MorphologicalReconstruction2DHybrid 
+ * @see MorphologicalReconstruction2DHybrid
  */
-public class MorphologicalReconstruction3DHybrid extends AlgoStub 
+public class MorphologicalReconstruction3DHybrid extends AlgoStub implements MorphologicalReconstruction3D 
 {
 	// ==================================================
 	// Class variables 
