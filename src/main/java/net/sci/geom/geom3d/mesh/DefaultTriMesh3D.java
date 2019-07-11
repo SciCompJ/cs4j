@@ -125,15 +125,15 @@ public class DefaultTriMesh3D implements Mesh3D
     // Management of vertices
    
     @Override
-    public Vertices vertices()
-    {
-        return new Vertices();
-    }
-
-    @Override
     public int vertexNumber()
     {
         return vertexPositions.size();
+    }
+
+    @Override
+    public Vertices vertices()
+    {
+        return new Vertices();
     }
 
     public Point3D vertexPosition(int index)
@@ -156,6 +156,14 @@ public class DefaultTriMesh3D implements Mesh3D
         return new Vertex(index);
     }
 
+    @Override
+    public void removeVertex(Mesh3D.Vertex vertex)
+    {
+        Vertex vertex2 = getVertex(vertex);
+        // TODO: check vertex does not belong to any face
+        vertexPositions.remove(vertex2.index);
+    }
+
     /* (non-Javadoc)
      * @see Mesh3D#vertices()
      */
@@ -169,11 +177,25 @@ public class DefaultTriMesh3D implements Mesh3D
         return new Vertex(index);
     }
 
-    public Mesh3D.Edges edges()
+    /**
+     * Cast to local Vertex class
+     * 
+     * @param vertex
+     *            the Vertex instance
+     * @return the same instance casted to local Vertex implementation
+     */
+    private Vertex getVertex(Mesh3D.Vertex vertex)
     {
-        ensureValidEdges();
-        return new Edges();
+        if (!(vertex instanceof Vertex))
+        {
+            throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
+        }
+        return (Vertex) vertex;
     }
+
+
+    // ===================================================================
+    // Management of edges
 
     @Override
     public int edgeNumber()
@@ -185,10 +207,71 @@ public class DefaultTriMesh3D implements Mesh3D
         return edges.size();
     }
 
+    public Mesh3D.Edges edges()
+    {
+        ensureValidEdges();
+        return new Edges();
+    }
+
+    /**
+     * Adds an edge between a source and a target vertices.
+     * 
+     * @param v1
+     *            the source vertex (0-based)
+     * @param v2
+     *            the target vertex (0-based)
+     * @return the index of the newly created edge
+     */
+    public Edge addEdge(Mesh3D.Vertex v1, Mesh3D.Vertex v2)
+    {
+        // create new edge
+        Edge edge = new Edge((Vertex) v1, (Vertex) v2); 
+        
+        // ensure edge structure is created
+        if (edges == null)
+        {
+            this.edges = new ArrayList<>();
+            this.edgeIndices = new TreeMap<>();
+        }
+        
+        // add new edge to mesh
+        int index = edges.size();
+        edges.add(edge);
+        edgeIndices.put(edge, index);
+        
+        // return edge instance
+        return edge;
+    }
+
+    @Override
+    public void removeEdge(Mesh3D.Edge edge)
+    {
+        Edge edge2 = getEdge(edge);
+        int index = edgeIndices.get(edge2);
+        this.edges.remove(index);
+        this.edgeIndices.remove(edge2);
+    }
+
     public Edge getEdge(int index)
     {
         ensureValidEdges();
         return edges.get(index);
+    }
+
+    /**
+     * Cast to local Edge class
+     * 
+     * @param edge
+     *            the Edge instance
+     * @return the same instance casted to local Edge implementation
+     */
+    private Edge getEdge(Mesh3D.Edge edge)
+    {
+        if (!(edge instanceof Edge))
+        {
+            throw new IllegalArgumentException("Edge should be an instance of inner Edge implementation");
+        }
+        return (Edge) edge;
     }
 
     private void computeEdges()
@@ -405,40 +488,33 @@ public class DefaultTriMesh3D implements Mesh3D
     {
         return new Face(index);
     }
+    
+    @Override
+    public void removeFace(Mesh3D.Face face)
+    {
+        // Cast to local Face class
+        Face face2 = getFace(face);
+        this.faces.remove(face2.index);
+    }
 
+    /**
+     * Cast to local Face class
+     * 
+     * @param face
+     *            the Face instance
+     * @return the same instance casted to local Face implementation
+     */
+    private Face getFace(Mesh3D.Face face)
+    {
+        if (!(face instanceof Face))
+        {
+            throw new IllegalArgumentException("Face should be an instance of inner Face implementation");
+        }
+        return (Face) face;
+    }
     
     // ===================================================================
     // Management of edges
-    
-    /**
-     * Adds an edge between a source and a target vertices.
-     * 
-     * @param v1
-     *            the source vertex (0-based)
-     * @param v2
-     *            the target vertex (0-based)
-     * @return the index of the newly created edge
-     */
-    public Edge addEdge(Mesh3D.Vertex v1, Mesh3D.Vertex v2)
-    {
-        // create new edge
-        Edge edge = new Edge((Vertex) v1, (Vertex) v2); 
-        
-        // ensure edge structure is created
-        if (edges == null)
-        {
-            this.edges = new ArrayList<>();
-            this.edgeIndices = new TreeMap<>();
-        }
-        
-        // add new edge to mesh
-        int index = edges.size();
-        edges.add(edge);
-        edgeIndices.put(edge, index);
-        
-        // return edge instance
-        return edge;
-    }
 
     /* (non-Javadoc)
      * @see net.sci.geom.geom3d.Geometry3D#contains(net.sci.geom.geom3d.Point3D, double)

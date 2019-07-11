@@ -103,6 +103,21 @@ public class SimpleTriMesh3D implements Mesh3D
     // ===================================================================
     // Management of vertices
     
+    @Override
+    public int vertexNumber()
+    {
+        return vertexPositions.size();
+    }
+
+    @Override
+    public Vertices vertices()
+    {
+        return new Vertices();
+    }
+  
+    // ===================================================================
+    // Management of vertices
+    
     /**
      * Adds a vertex to the mesh and returns the index associated to its
      * position.
@@ -119,15 +134,14 @@ public class SimpleTriMesh3D implements Mesh3D
     }
 
     @Override
-    public Vertices vertices()
+    public void removeVertex(Mesh3D.Vertex vertex)
     {
-        return new Vertices();
+        throw new UnsupportedOperationException("This implementation does not support vertex removal");
     }
-  
-    @Override
-    public int vertexNumber()
+
+    public Vertex getVertex(int index)
     {
-        return vertexPositions.size();
+        return new Vertex(index);
     }
 
     public Point3D vertexPosition(int index)
@@ -140,24 +154,47 @@ public class SimpleTriMesh3D implements Mesh3D
         return vertexPositions();
     }
 
-    public Vertex getVertex(int index)
+    /**
+     * Cast to local Vertex class
+     * 
+     * @param vertex
+     *            the Vertex instance
+     * @return the same instance casted to local Vertex implementation
+     */
+    private Vertex getVertex(Mesh3D.Vertex vertex)
     {
-        return new Vertex(index);
+        if (!(vertex instanceof Vertex))
+        {
+            throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
+        }
+        return (Vertex) vertex;
     }
 
 
     // ===================================================================
     // Management of edges
     
+    @Override
+    public int edgeNumber()
+    {
+        return 0;
+    }
+
     public Edges edges()
     {
         throw new UnsupportedOperationException("This implementation does not support edges");
     }
 
     @Override
-    public int edgeNumber()
+    public Edge addEdge(Mesh3D.Vertex v1, Mesh3D.Vertex v2)
     {
-        return 0;
+        throw new UnsupportedOperationException("This implementation does not support edges");
+    }
+
+    @Override
+    public void removeEdge(Edge edge)
+    {
+        throw new UnsupportedOperationException("This implementation does not support edges");
     }
 
 
@@ -189,9 +226,9 @@ public class SimpleTriMesh3D implements Mesh3D
      */
     public int addFace(Mesh3D.Vertex v1, Mesh3D.Vertex v2, Mesh3D.Vertex v3)
     {
-        int iv1 = ((Vertex) v1).index;
-        int iv2 = ((Vertex) v2).index;
-        int iv3 = ((Vertex) v3).index;
+        int iv1 = getVertex(v1).index;
+        int iv2 = getVertex(v2).index;
+        int iv3 = getVertex(v3).index;
         int index = addFace(iv1, iv2, iv3);
         return index;
     }
@@ -212,6 +249,12 @@ public class SimpleTriMesh3D implements Mesh3D
         int index = faces.size();
         faces.add(new int[] { iv1, iv2, iv3 });
         return index;
+    }
+
+    @Override
+    public void removeFace(Mesh3D.Face face)
+    {
+        throw new UnsupportedOperationException("This implementation does not support face removal");
     }
 
     public Triangle3D getFacePolygon(int faceIndex)

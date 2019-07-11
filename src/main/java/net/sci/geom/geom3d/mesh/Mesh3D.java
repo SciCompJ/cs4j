@@ -23,17 +23,25 @@ public interface Mesh3D extends Geometry3D
     // Management of vertices
 
     /**
-     * @return the collection of vertices within this mesh.
-     */
-    public Vertices vertices();
-
-    /**
      * @return the number of vertices in this mesh.
      */
     public int vertexNumber();
 
+    /**
+     * @return the collection of vertices within this mesh.
+     */
+    public Vertices vertices();
+
     public Vertex addVertex(Point3D point);
-    
+
+    /**
+     * Removes a vertex from this mesh. The vertex should not belong to any face or any edge.
+     * 
+     * @param vertex
+     *            the vertex to remove.
+     */
+    public void removeVertex(Vertex vertex);
+
     /**
      * Finds the closest vertex to the input point.
      * 
@@ -62,6 +70,11 @@ public interface Mesh3D extends Geometry3D
     // Management of edges ? 
     
     /**
+     * @return the number of edges in this mesh.
+     */
+    public int edgeNumber();
+
+    /**
      * Returns the collection of edges within this mesh (optional operation).
      * 
      * @return the collection of edges within this mesh.
@@ -69,12 +82,32 @@ public interface Mesh3D extends Geometry3D
     public Edges edges();
 
     /**
-     * @return the number of edges in this mesh.
+     * Adds an edge to this mesh structure (optional operation).
+     * 
+     * @param v1
+     *            the source vertex
+     * @param v2
+     *            the target vertex
+     * @return the edge instance
      */
-    public int edgeNumber();
+    public Edge addEdge(Vertex v1, Vertex v2);
+    
+    /**
+     * Removes an edge from this mesh. The edge should not belong to any face.
+     * 
+     * @param edge
+     *            the edge to remove.
+     */
+    public void removeEdge(Edge edge);
 
+    
     // ===================================================================
     // Management of faces
+
+    /**
+     * @return the number of faces in this mesh.
+     */
+    public int faceNumber();
 
     /**
      * @return the collection of faces within this mesh.
@@ -82,9 +115,12 @@ public interface Mesh3D extends Geometry3D
     public Faces faces();
 
     /**
-     * @return the number of faces in this mesh.
+     * Removes a face from this mesh.
+     * 
+     * @param face
+     *            the face to remove.
      */
-    public int faceNumber();
+    public void removeFace(Face face);
 
     
     // ===================================================================
