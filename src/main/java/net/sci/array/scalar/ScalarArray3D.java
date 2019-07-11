@@ -21,7 +21,23 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             return (ScalarArray3D<T>) array;
         }
         return new Wrapper<T>(array);
-
+    }
+    
+    /**
+     * Same as wrap method, but use different name to avoid runtime class cast
+     * exceptions.
+     * 
+     * @param array
+     *            an instance of ScalarArray with two dimensions
+     * @return an instance of ScalarArray2D
+     */
+   public final static <T extends Scalar> ScalarArray3D<T> wrapScalar3d(ScalarArray<T> array)
+    {
+        if (array instanceof ScalarArray3D)
+        {
+            return (ScalarArray3D<T>) array;
+        }
+        return new Wrapper<T>(array);
     }
 
     // =============================================================
