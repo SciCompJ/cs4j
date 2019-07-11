@@ -119,7 +119,61 @@ public class DefaultTriMesh3D implements Mesh3D
         }
         return index;
     }
-        
+    
+    
+    // ===================================================================
+    // Topological queries
+    
+    @Override
+    public Collection<Mesh3D.Edge> vertexEdges(Mesh3D.Vertex vertex)
+    {
+        throw new UnsupportedOperationException("This implementation does not support edges");
+    }
+
+    @Override
+    public Collection<Mesh3D.Face> vertexFaces(Mesh3D.Vertex vertex)
+    {
+        int index = getVertex(vertex).index;
+        ArrayList<Mesh3D.Face> vertexFaces = new ArrayList<Mesh3D.Face>(6);
+        for (int iFace = 0; iFace < faces.size(); iFace++)
+        {
+            int[] inds = faces.get(iFace);
+            if (inds[0] == index || inds[1] == index || inds[2] == index)
+            {
+                vertexFaces.add(new Face(iFace));
+            }
+        }
+        return vertexFaces;
+    }
+
+    @Override
+    public Collection<Mesh3D.Vertex> edgeVertices(Mesh3D.Edge edge)
+    {
+        throw new UnsupportedOperationException("This implementation does not support edges");
+    }
+
+    @Override
+    public Collection<Mesh3D.Face> edgeFaces(Mesh3D.Edge edge)
+    {
+        throw new UnsupportedOperationException("This implementation does not support edges");
+    }
+
+    @Override
+    public Collection<Mesh3D.Vertex> faceVertices(Mesh3D.Face face)
+    {
+        int[] inds = this.faces.get(getFace(face).index);
+        ArrayList<Mesh3D.Vertex> verts = new ArrayList<Mesh3D.Vertex>(3);
+        verts.add(new Vertex(inds[0]));
+        verts.add(new Vertex(inds[1]));
+        verts.add(new Vertex(inds[2]));
+        return verts;
+    }
+
+    @Override
+    public Collection<Mesh3D.Edge> faceEdges(Mesh3D.Face face)
+    {
+        throw new UnsupportedOperationException("This implementation does not support edges");
+    }
     
     // ===================================================================
     // Management of vertices

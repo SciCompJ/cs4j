@@ -98,11 +98,65 @@ public class SimpleTriMesh3D implements Mesh3D
         return index;
     }
     
+
+    // ===================================================================
+    // Topological queries
     
+    @Override
+    public Collection<Edge> vertexEdges(Mesh3D.Vertex vertex)
+    {
+        throw new UnsupportedOperationException("This implementation does not support edges");
+    }
+
+    @Override
+    public Collection<Mesh3D.Face> vertexFaces(Mesh3D.Vertex vertex)
+    {
+        int index = getVertex(vertex).index;
+        ArrayList<Mesh3D.Face> vertexFaces = new ArrayList<Mesh3D.Face>(6);
+        for (int iFace = 0; iFace < faces.size(); iFace++)
+        {
+            int[] inds = faces.get(iFace);
+            if (inds[0] == index || inds[1] == index || inds[2] == index)
+            {
+                vertexFaces.add(new Face(inds[0], inds[1], inds[2]));
+            }
+        }
+        return vertexFaces;
+    }
+
+    @Override
+    public Collection<Mesh3D.Vertex> edgeVertices(Edge edge)
+    {
+        throw new UnsupportedOperationException("This implementation does not support edges");
+    }
+
+    @Override
+    public Collection<Mesh3D.Face> edgeFaces(Edge edge)
+    {
+        throw new UnsupportedOperationException("This implementation does not support edges");
+    }
+
+    @Override
+    public Collection<Mesh3D.Vertex> faceVertices(Mesh3D.Face face)
+    {
+        Face face2 = getFace(face);
+        ArrayList<Mesh3D.Vertex> verts = new ArrayList<Mesh3D.Vertex>(3);
+        verts.add(new Vertex(face2.iv1));
+        verts.add(new Vertex(face2.iv2));
+        verts.add(new Vertex(face2.iv3));
+        return verts;
+    }
+
+    @Override
+    public Collection<Edge> faceEdges(Mesh3D.Face face)
+    {
+        throw new UnsupportedOperationException("This implementation does not support edges");
+    }
+
 
     // ===================================================================
     // Management of vertices
-    
+
     @Override
     public int vertexNumber()
     {
@@ -115,9 +169,6 @@ public class SimpleTriMesh3D implements Mesh3D
         return new Vertices();
     }
   
-    // ===================================================================
-    // Management of vertices
-    
     /**
      * Adds a vertex to the mesh and returns the index associated to its
      * position.
@@ -273,6 +324,22 @@ public class SimpleTriMesh3D implements Mesh3D
         return new Face(inds[0], inds[1], inds[2]);
     }
 
+    /**
+     * Cast to local Face class
+     * 
+     * @param face
+     *            the Face instance
+     * @return the same instance casted to local Face implementation
+     */
+    private Face getFace(Mesh3D.Face face)
+    {
+        if (!(face instanceof Face))
+        {
+            throw new IllegalArgumentException("Face should be an instance of inner Face implementation");
+        }
+        return (Face) face;
+    }
+    
 
     // ===================================================================
     // Implementation of the Geometry3D interface
@@ -466,6 +533,8 @@ public class SimpleTriMesh3D implements Mesh3D
 
     public class Face implements Mesh3D.Face
     {
+        // TODO: replace by index-based implementation
+        
         // index of first vertex
         int iv1;
         // index of second vertex

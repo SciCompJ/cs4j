@@ -20,6 +20,68 @@ import net.sci.geom.geom3d.Vector3D;
 public interface Mesh3D extends Geometry3D
 {
     // ===================================================================
+    // Topological queries
+    
+    /**
+     * Returns the collection of edges adjacent to a given vertex (optional
+     * operation).
+     * 
+     * @param vertex
+     *            the vertex
+     * @return the edges adjacent to the specified vertex
+     */
+    public Collection<? extends Edge> vertexEdges(Vertex vertex);
+
+    /**
+     * Returns the collection of faces adjacent to a given vertex.
+     * 
+     * @param vertex
+     *            the vertex
+     * @return the faces adjacent to the specified vertex
+     */
+    public Collection<? extends Face> vertexFaces(Vertex vertex);
+    
+    /**
+     * Returns the collection of vertices adjacent to a given edge (optional
+     * operation).
+     * 
+     * @param edge
+     *            the edge
+     * @return the vertices adjacent to the specified edge
+     */
+    public Collection<? extends Vertex> edgeVertices(Edge edge);
+    
+    /**
+     * Returns the collection of faces adjacent to a given edge (optional
+     * operation).
+     * 
+     * @param edge
+     *            the edge
+     * @return the faces adjacent to the specified edge
+     */
+    public Collection<? extends Face> edgeFaces(Edge edge);
+    
+    /**
+     * Returns the collection of vertices adjacent to a given face.
+     * 
+     * @param face
+     *            the face
+     * @return the vertices adjacent to the specified face
+     */
+    public Collection<? extends Vertex> faceVertices(Face face);
+    
+    /**
+     * Returns the collection of edges adjacent to a given face (optional
+     * operation).
+     * 
+     * @param face
+     *            the face
+     * @return the edges adjacent to the specified face
+     */
+    public Collection<? extends Edge> faceEdges(Face face);
+   
+
+    // ===================================================================
     // Management of vertices
 
     /**
