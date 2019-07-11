@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	MorphologicalReconstruction2DHybridTest.class,
+    MorphologicalReconstruction2DHybridTest.class,
+    MorphologicalReconstruction3DHybridTest.class,
 	})
 public class AllTests {
   //nothing
