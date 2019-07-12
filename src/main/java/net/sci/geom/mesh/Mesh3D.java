@@ -68,6 +68,15 @@ public interface Mesh3D extends Geometry3D
     public Collection<? extends Face> vertexFaces(Vertex vertex);
     
     /**
+     * Returns the neighbor vertices of a given vertex. Neighbors correspond to
+     * a vertex that shares either a face or an edge.
+     * 
+     * @param vertex the reference vertex
+     * @return the neighbors of the reference vertex
+     */
+    public Collection<? extends Vertex> vertexNeighbors(Vertex vertex);
+    
+    /**
      * Returns the collection of vertices adjacent to a given edge (optional
      * operation).
      * 

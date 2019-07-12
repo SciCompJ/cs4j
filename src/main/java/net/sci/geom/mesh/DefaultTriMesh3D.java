@@ -158,6 +158,41 @@ public class DefaultTriMesh3D implements Mesh3D
     }
 
     @Override
+    public Collection<? extends Mesh3D.Vertex> vertexNeighbors(Mesh3D.Vertex vertex)
+    {
+        int index = getVertex(vertex).index;
+        
+        // identifies indices of neighbor vertices by iterating over faces
+        TreeSet<Integer> neighInds = new TreeSet<>();
+        for (int[] inds : faces)
+        {
+            if (inds[0] == index || inds[1] == index  || inds[2] == index)
+            {
+                if (inds[0] != index && !neighInds.contains(inds[0]))
+                {
+                    neighInds.add(inds[0]);
+                }
+                if (inds[1] != index && !neighInds.contains(inds[1]))
+                {
+                    neighInds.add(inds[1]);
+                }
+                if (inds[2] != index && !neighInds.contains(inds[2]))
+                {
+                    neighInds.add(inds[2]);
+                }
+            }
+        }
+        
+        // convert to vertex collection
+        ArrayList<Mesh3D.Vertex> vertices = new ArrayList<Mesh3D.Vertex>(neighInds.size());
+        for (int ind : neighInds)
+        {
+            vertices.add(new Vertex(ind));
+        }
+        return vertices;
+    }
+
+    @Override
     public Collection<Mesh3D.Vertex> edgeVertices(Mesh3D.Edge edge)
     {
         Edge edge2 = getEdge(edge);

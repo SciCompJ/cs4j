@@ -6,6 +6,7 @@ package net.sci.geom.mesh;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 import net.sci.geom.geom3d.Box3D;
 import net.sci.geom.geom3d.Point3D;
@@ -46,6 +47,22 @@ public class SimpleTriMesh3D implements Mesh3D
         this.vertexPositions = new ArrayList<Point3D>();
         this.faces = new ArrayList<int[]>();
     }
+    
+    /**
+     * Create a new empty mesh by allocating enough memory for storing the
+     * specified amount of vertices and faces.
+     * 
+     * @param nv
+     *            the number of vertices
+     * @param nf
+     *            the number of faces
+     */
+    public SimpleTriMesh3D(int nv, int nf)
+    {
+        this.vertexPositions = new ArrayList<Point3D>(nv);
+        this.faces = new ArrayList<int[]>(nf);
+    }
+
     
     // ===================================================================
     // Methods specific to Mesh3D
@@ -121,6 +138,41 @@ public class SimpleTriMesh3D implements Mesh3D
             }
         }
         return vertexFaces;
+    }
+
+    @Override
+    public Collection<? extends Mesh3D.Vertex> vertexNeighbors(Mesh3D.Vertex vertex)
+    {
+        int index = getVertex(vertex).index;
+        
+        // identifies indices of neighbor vertices by iterating over faces
+        TreeSet<Integer> neighInds = new TreeSet<>();
+        for (int[] inds : faces)
+        {
+            if (inds[0] == index || inds[1] == index  || inds[2] == index)
+            {
+                if (inds[0] != index && !neighInds.contains(inds[0]))
+                {
+                    neighInds.add(inds[0]);
+                }
+                if (inds[1] != index && !neighInds.contains(inds[1]))
+                {
+                    neighInds.add(inds[1]);
+                }
+                if (inds[2] != index && !neighInds.contains(inds[2]))
+                {
+                    neighInds.add(inds[2]);
+                }
+            }
+        }
+        
+        // convert to vertex collection
+        ArrayList<Mesh3D.Vertex> vertices = new ArrayList<Mesh3D.Vertex>(neighInds.size());
+        for (int ind : neighInds)
+        {
+            vertices.add(new Vertex(ind));
+        }
+        return vertices;
     }
 
     @Override
