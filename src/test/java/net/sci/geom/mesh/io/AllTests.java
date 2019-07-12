@@ -1,5 +1,4 @@
-package net.sci.geom.geom3d;
-
+package net.sci.geom.mesh.io;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -7,9 +6,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	AllTests.class,
-    net.sci.geom.geom3d.surface.AllTests.class,
+    OffMeshReaderTest.class,
+    OffMeshWriterTest.class,
 	})
-public class AllTestsRecurse {
+public class AllTests {
   //nothing
 }

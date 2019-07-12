@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.mesh;
+package net.sci.geom.mesh;
 
 import net.sci.geom.geom3d.Point3D;
 
@@ -26,7 +26,7 @@ public class Meshes3D
      * 
      * @return a Mesh instance representing a tetrahedron
      */
-    public Mesh3D createTetrahedron()
+    public static final Mesh3D createTetrahedron()
     {
         DefaultTriMesh3D mesh = new DefaultTriMesh3D();
         mesh.addVertex(new Point3D(0, 0, 0));
@@ -45,7 +45,7 @@ public class Meshes3D
      * 
      * @return a Mesh instance representing an octahedron
      */
-    public Mesh3D createOctahedron()
+    public static final Mesh3D createOctahedron()
     {
         DefaultTriMesh3D mesh = new DefaultTriMesh3D();
         mesh.addVertex(new Point3D( 1,  0,  0));

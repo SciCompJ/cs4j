@@ -1,4 +1,4 @@
-package net.sci.geom.geom3d.mesh;
+package net.sci.geom.mesh;
 
 import static net.sci.geom.geom3d.Vector3D.dotProduct;
 

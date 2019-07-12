@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.mesh;
+package net.sci.geom.mesh;
 
 import static java.lang.Math.sqrt;
 import static org.junit.Assert.assertEquals;
@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.mesh.Triangle3D;
 
 /**
  * @author dlegland
@@ -18,7 +19,7 @@ public class Triangle3DTest
 {
     
     /**
-     * Test method for {@link net.sci.geom.geom3d.mesh.Triangle3D#distance(double, double, double)}.
+     * Test method for {@link net.sci.geom.mesh.Triangle3D#distance(double, double, double)}.
      */
     @Test
     public final void testDistance_HorizontalTriangle()
