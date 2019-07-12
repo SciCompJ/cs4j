@@ -8,7 +8,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
 	AllTests.class,
-    net.sci.geom.geom3d.mesh.AllTests.class,
     net.sci.geom.geom3d.surface.AllTests.class,
 	})
 public class AllTestsRecurse {

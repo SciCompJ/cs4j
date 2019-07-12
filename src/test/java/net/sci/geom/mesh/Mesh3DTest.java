@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.mesh;
+package net.sci.geom.mesh;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,9 +12,11 @@ import org.junit.Test;
 import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.geom3d.mesh.Mesh3D.Edge;
-import net.sci.geom.geom3d.mesh.Mesh3D.Face;
-import net.sci.geom.geom3d.mesh.Mesh3D.Vertex;
+import net.sci.geom.mesh.Mesh3D;
+import net.sci.geom.mesh.Meshes3D;
+import net.sci.geom.mesh.Mesh3D.Edge;
+import net.sci.geom.mesh.Mesh3D.Face;
+import net.sci.geom.mesh.Mesh3D.Vertex;
 
 /**
  * High-level test class. Some tests are duplicated for the specific

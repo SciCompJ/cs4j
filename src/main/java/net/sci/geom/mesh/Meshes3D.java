@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.mesh;
+package net.sci.geom.mesh;
 
 import net.sci.geom.geom3d.Point3D;
 

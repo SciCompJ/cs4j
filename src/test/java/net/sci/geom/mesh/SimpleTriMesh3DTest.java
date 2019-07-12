@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom3d.mesh;
+package net.sci.geom.mesh;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,8 +10,10 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.geom3d.mesh.Mesh3D.Face;
-import net.sci.geom.geom3d.mesh.Mesh3D.Vertex;
+import net.sci.geom.mesh.Mesh3D;
+import net.sci.geom.mesh.SimpleTriMesh3D;
+import net.sci.geom.mesh.Mesh3D.Face;
+import net.sci.geom.mesh.Mesh3D.Vertex;
 
 /**
  * @author dlegland
