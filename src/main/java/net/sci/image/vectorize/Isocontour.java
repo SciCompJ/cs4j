@@ -10,7 +10,7 @@ import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.geom.geom2d.Geometry2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.graph.SimpleGraph2D;
+import net.sci.geom.graph.SimpleGraph2D;
 
 /**
  * Computes the set of curves (polylines) corresponding to isocontour of a

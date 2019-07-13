@@ -3,10 +3,11 @@
  */
 package net.sci.image.vectorize;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import net.sci.array.scalar.BinaryArray2D;
-import net.sci.geom.geom2d.graph.SimpleGraph2D;
+import net.sci.geom.graph.Graph2D;
 import net.sci.image.vectorize.BinaryImage2DBoundaryGraph.IntPoint2D;
-import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class BinaryImage2DBoundaryGraphTest
 		array.setBoolean(1, 1, true);
 		
 		BinaryImage2DBoundaryGraph op = new BinaryImage2DBoundaryGraph();
-		SimpleGraph2D graph = op.process(array);
+		Graph2D graph = op.process(array);
 		
 		assertEquals(4, graph.vertexNumber());
 		assertEquals(4, graph.edgeNumber());
@@ -43,7 +44,7 @@ public class BinaryImage2DBoundaryGraphTest
 //		array.print(System.out);
 		
 		BinaryImage2DBoundaryGraph op = new BinaryImage2DBoundaryGraph();
-		SimpleGraph2D graph = op.process(array);
+		Graph2D graph = op.process(array);
 		
 		assertEquals(16, graph.vertexNumber());
 		assertEquals(16, graph.edgeNumber());

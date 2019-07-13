@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.graph;
+package net.sci.geom.graph;
 
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Geometry2D;

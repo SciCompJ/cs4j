@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.graph.SimpleGraph2D;
 
 /**
  * @author dlegland
@@ -17,7 +18,7 @@ public class SimpleGraph2DTest
 {
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.graph.SimpleGraph2D#SimpleGraph2D()}.
+     * Test method for {@link net.sci.geom.graph.SimpleGraph2D#SimpleGraph2D()}.
      */
     @Test
     public final void testSimpleGraph2D()

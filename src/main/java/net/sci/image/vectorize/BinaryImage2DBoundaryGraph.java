@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import net.sci.algo.AlgoStub;
 import net.sci.array.scalar.BinaryArray2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.graph.SimpleGraph2D;
+import net.sci.geom.graph.Graph2D;
+import net.sci.geom.graph.SimpleGraph2D;
 
 /**
  * @author dlegland
@@ -31,7 +32,7 @@ public class BinaryImage2DBoundaryGraph extends AlgoStub
 	 *            the input binary array containing the structure
 	 * @return a graph instance representing the boundary of pixels within array
 	 */
-	public SimpleGraph2D process(BinaryArray2D array)
+	public Graph2D process(BinaryArray2D array)
 	{
 		// create intermediate data structure 
 		ArrayList<IntPoint2D> corners = new ArrayList<IntPoint2D>();
@@ -70,7 +71,7 @@ public class BinaryImage2DBoundaryGraph extends AlgoStub
 		}
 		
 		// create the graph
-		SimpleGraph2D graph = new SimpleGraph2D();
+		SimpleGraph2D graph = new SimpleGraph2D(corners.size(), adjacencies.size());
 		for (IntPoint2D v : corners)
 		{
 			graph.addVertex(new Point2D(v.x - 0.5, v.y - 0.5));
