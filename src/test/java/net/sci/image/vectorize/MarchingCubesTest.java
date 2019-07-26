@@ -5,12 +5,14 @@ package net.sci.image.vectorize;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
 
 import net.sci.array.scalar.UInt8Array3D;
 import net.sci.geom.mesh.Mesh3D;
+import net.sci.geom.mesh.io.OffMeshWriter;
 
 /**
  * @author dlegland
@@ -176,27 +178,161 @@ public class MarchingCubesTest
      * @throws IOException 
      */
     @Test
-    public final void testProcess_CubeWithoutCorner() throws IOException
+    public final void testProcess_RingXY() throws IOException
     {
-        UInt8Array3D array = UInt8Array3D.create(5, 5, 5);
+        UInt8Array3D array = UInt8Array3D.create(6, 6, 6);
         array.fillValue(0);
-        for(int z = 1; z < 4; z++)
+        for(int i = 1; i < 5; i++)
         {
-            for(int y = 1; y < 4; y++)
+            array.setValue(i, 1, 2, 10);
+            array.setValue(i, 4, 2, 10);
+            array.setValue(1, i, 2, 10);
+            array.setValue(4, i, 2, 10);
+        }
+        
+        MarchingCubes mc = new MarchingCubes(5.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("ringXYMarchingCube.off")).writeMesh(mesh);
+        
+        assertEquals(48, mesh.vertexNumber());
+        assertEquals(96, mesh.faceNumber());
+    }
+
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_RingXZ() throws IOException
+    {
+        UInt8Array3D array = UInt8Array3D.create(6, 6, 6);
+        array.fillValue(0);
+        for(int i = 1; i < 5; i++)
+        {
+            array.setValue(i, 2, 1, 10);
+            array.setValue(i, 2, 4, 10);
+            array.setValue(1, 2, i, 10);
+            array.setValue(4, 2, i, 10);
+        }
+        
+        MarchingCubes mc = new MarchingCubes(5.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("ringXZMarchingCube.off")).writeMesh(mesh);
+        
+        assertEquals(48, mesh.vertexNumber());
+        assertEquals(96, mesh.faceNumber());
+    }
+
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_RingYZ() throws IOException
+    {
+        UInt8Array3D array = UInt8Array3D.create(6, 6, 6);
+        array.fillValue(0);
+        for(int i = 1; i < 5; i++)
+        {
+            array.setValue(2, i, 1, 10);
+            array.setValue(2, i, 4, 10);
+            array.setValue(2, 1, i, 10);
+            array.setValue(2, 4, i, 10);
+        }
+        
+        MarchingCubes mc = new MarchingCubes(5.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("ringYZMarchingCube.off")).writeMesh(mesh);
+        
+        assertEquals(48, mesh.vertexNumber());
+        assertEquals(96, mesh.faceNumber());
+    }
+
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_CubeWithoutCorners() throws IOException
+    {
+        UInt8Array3D array = UInt8Array3D.create(6, 6, 6);
+        array.fillValue(0);
+        for(int z = 1; z < 5; z++)
+        {
+            for(int y = 1; y < 5; y++)
             {
-                for(int x = 1; x < 4; x++)
+                for(int x = 1; x < 5; x++)
                 {
                     array.setValue(x, y, z, 10);
                 }
             }
         }
-        // remove corner
-        array.setValue(3, 3, 3, 0);
+        
+        // remove corners
+        array.setValue(1, 1, 1, 0);
+        array.setValue(4, 1, 1, 0);
+        array.setValue(1, 4, 1, 0);
+        array.setValue(4, 4, 1, 0);
+        array.setValue(1, 1, 4, 0);
+        array.setValue(4, 1, 4, 0);
+        array.setValue(1, 4, 4, 0);
+        array.setValue(4, 4, 4, 0);
         
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        assertEquals(54, mesh.vertexNumber());
-        assertEquals(104, mesh.faceNumber());
+        new OffMeshWriter(new File("cubeWithoutCornersMarchingCube.off")).writeMesh(mesh);
+        
+        assertEquals(96, mesh.vertexNumber());
+        assertEquals(188, mesh.faceNumber());
+    }
+
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_CubeWithoutEdges() throws IOException
+    {
+        UInt8Array3D array = UInt8Array3D.create(7, 7, 7);
+        array.fillValue(0);
+        for(int z = 1; z < 6; z++)
+        {
+            for(int y = 1; y < 6; y++)
+            {
+                for(int x = 1; x < 6; x++)
+                {
+                    array.setValue(x, y, z, 10);
+                }
+            }
+        }
+        
+        // remove edges
+        for(int i = 1; i < 6; i++)
+        {
+            array.setValue(i, 1, 1, 0);
+            array.setValue(i, 5, 1, 0);
+            array.setValue(i, 1, 5, 0);
+            array.setValue(i, 5, 5, 0);
+            array.setValue(1, i, 1, 0);
+            array.setValue(5, i, 1, 0);
+            array.setValue(1, i, 5, 0);
+            array.setValue(5, i, 5, 0);
+            array.setValue(1, 1, i, 0);
+            array.setValue(5, 1, i, 0);
+            array.setValue(1, 5, i, 0);
+            array.setValue(5, 5, i, 0);
+        }
+        
+        MarchingCubes mc = new MarchingCubes(5.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("cubeWithoutEdgesMarchingCube.off")).writeMesh(mesh);
+        
+        assertEquals(126, mesh.vertexNumber());
+        assertEquals(248, mesh.faceNumber());
     }
 }
