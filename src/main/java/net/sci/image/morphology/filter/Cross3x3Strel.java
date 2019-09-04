@@ -4,8 +4,8 @@
 package net.sci.image.morphology.filter;
 
 import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.image.morphology.Strel2D;
 
 /**
  * Structuring element representing a 3x3 cross, that considers the center
@@ -96,15 +96,15 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 		// size of image
 		int sizeX = image.size(0);
 		int sizeY = image.size(1);
-		System.out.println("dialte with cross 3x3 uint8");
+		System.out.println("dilate with cross 3x3 uint8");
 
 		int[][] buffer = new int[3][sizeX];
 
 		// init buffer with background and first two lines
 		for (int x = 0; x < sizeX; x++)
 		{
-			buffer[0][x] = Strel2D.BACKGROUND;
-			buffer[1][x] = Strel2D.BACKGROUND;
+			buffer[0][x] = UInt8.MIN_VALUE;
+			buffer[1][x] = UInt8.MIN_VALUE;
 			buffer[2][x] = image.getInt(x, 0);
 		}
 
@@ -127,13 +127,13 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			} else
 			{
 				for (int x = 0; x < sizeX; x++)
-					tmp[x] = Strel2D.BACKGROUND;
+					tmp[x] = UInt8.MIN_VALUE;
 			}
 			buffer[2] = tmp;
 
 			// process first pixel independently
 			valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1],
-					buffer[2][0], Strel2D.BACKGROUND);
+					buffer[2][0], UInt8.MIN_VALUE);
 			image.setInt(0, y, valMax);
 
 			// Iterate over pixel of the line
@@ -147,7 +147,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			// process last pixel independently
 			valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 					buffer[1][sizeX - 1], buffer[2][sizeX - 1],
-					Strel2D.BACKGROUND);
+					UInt8.MIN_VALUE);
 			image.setInt(sizeX - 1, y, valMax);
 		}
 
@@ -266,8 +266,8 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 		// init buffer with background and first two lines
 		for (int x = 0; x < sizeX; x++)
 		{
-			buffer[0][x] = Strel2D.FOREGROUND;
-			buffer[1][x] = Strel2D.FOREGROUND;
+			buffer[0][x] = UInt8.MAX_VALUE;
+			buffer[1][x] = UInt8.MAX_VALUE;
 			buffer[2][x] = image.getInt(x, 0);
 		}
 
@@ -290,13 +290,13 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			} else
 			{
 				for (int x = 0; x < sizeX; x++)
-					tmp[x] = Strel2D.FOREGROUND;
+					tmp[x] = UInt8.MAX_VALUE;
 			}
 			buffer[2] = tmp;
 
 			// process first pixel independently
 			valMin = min5(buffer[0][0], buffer[1][0], buffer[1][1],
-					buffer[2][0], Strel2D.FOREGROUND);
+					buffer[2][0], UInt8.MAX_VALUE);
 			image.setInt(0, y, valMin);
 
 			// Iterate over pixel of the line
@@ -310,7 +310,7 @@ public class Cross3x3Strel extends AbstractInPlaceStrel2D
 			// process last pixel independently
 			valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 					buffer[1][sizeX - 1], buffer[2][sizeX - 1],
-					Strel2D.FOREGROUND);
+					UInt8.MAX_VALUE);
 			image.setInt(sizeX - 1, y, valMin);
 		}
 

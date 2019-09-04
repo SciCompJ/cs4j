@@ -8,21 +8,12 @@ import net.sci.array.scalar.ScalarArray3D;
 
 /**
  * Structuring element that process 3D arrays.
+ * 
  * @author David Legland
  *
  */
 public interface Strel3D extends Algo 
 {
-	/**
-	 * Default value for background pixels.
-	 */
-	public final static int BACKGROUND = 0;
-
-	/**
-	 * Default value for foreground pixels.
-	 */
-	public final static int FOREGROUND = 255;
-	//TODO: remove default values for FG and BG
 //	/**
 //	 * An enumeration of the different possible structuring element shapes. 
 //	 * Each item of the enumeration can create Strel instances of specific
@@ -350,18 +341,18 @@ public interface Strel3D extends Algo
 	 */
 	public ScalarArray3D<?> opening(ScalarArray3D<?> image);
 
-	/**
-	 * Returns a boolean flag indicating whether or not this structuring
-	 * element should display its progress or not
-	 * 
-	 * @return a boolean flag with value true if progress should be displayed
-	 */
-	public boolean showProgress();
-
-	/**
-	 * Specifies if this structuring element should display its progress.
-	 * 
-	 * @param b a boolean flag with value true if progress should be displayed
-	 */
-	public void showProgress(boolean b);
+//	/**
+//	 * Returns a boolean flag indicating whether or not this structuring
+//	 * element should display its progress or not
+//	 * 
+//	 * @return a boolean flag with value true if progress should be displayed
+//	 */
+//	public boolean showProgress();
+//
+//	/**
+//	 * Specifies if this structuring element should display its progress.
+//	 * 
+//	 * @param b a boolean flag with value true if progress should be displayed
+//	 */
+//	public void showProgress(boolean b);
 }

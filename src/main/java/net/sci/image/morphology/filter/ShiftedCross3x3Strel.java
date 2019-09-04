@@ -4,8 +4,8 @@
 package net.sci.image.morphology.filter;
 
 import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.image.morphology.Strel2D;
 
 /**
  * Structuring element representing a 3x3 cross, that considers the reference
@@ -168,8 +168,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = Strel2D.BACKGROUND;
-				buffer[1][x] = Strel2D.BACKGROUND;
+				buffer[0][x] = UInt8.MIN_VALUE;
+				buffer[1][x] = UInt8.MIN_VALUE;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -192,15 +192,15 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = Strel2D.BACKGROUND;
+						tmp[x] = UInt8.MIN_VALUE;
 				}
 				buffer[2] = tmp;
 
 				// process first two pixels independently
-				valMax = Math.max(buffer[1][0], Strel2D.BACKGROUND);
+				valMax = Math.max(buffer[1][0], UInt8.MIN_VALUE);
 				image.setInt(0, y, valMax);
 				valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1],
-						buffer[2][0], Strel2D.BACKGROUND);
+						buffer[2][0], UInt8.MIN_VALUE);
 				image.setInt(1, y, valMax);
 
 				// Iterate over pixel of the line, starting from the third one
@@ -300,8 +300,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = Strel2D.FOREGROUND;
-				buffer[1][x] = Strel2D.FOREGROUND;
+				buffer[0][x] = UInt8.MAX_VALUE;
+				buffer[1][x] = UInt8.MAX_VALUE;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -324,15 +324,15 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = Strel2D.FOREGROUND;
+						tmp[x] = UInt8.MAX_VALUE;
 				}
 				buffer[2] = tmp;
 
 				// process first pixel independently
-				valMin = Math.min(buffer[1][0], Strel2D.FOREGROUND);
+				valMin = Math.min(buffer[1][0], UInt8.MAX_VALUE);
 				image.setInt(0, y, valMin);
 				valMin = min5(buffer[0][0], buffer[1][0], buffer[1][1],
-						buffer[2][0], Strel2D.FOREGROUND);
+						buffer[2][0], UInt8.MAX_VALUE);
 				image.setInt(1, y, valMin);
 
 				// Iterate over pixel of the line
@@ -518,8 +518,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = Strel2D.BACKGROUND;
-				buffer[1][x] = Strel2D.BACKGROUND;
+				buffer[0][x] = UInt8.MIN_VALUE;
+				buffer[1][x] = UInt8.MIN_VALUE;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -542,7 +542,7 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = Strel2D.BACKGROUND;
+						tmp[x] = UInt8.MIN_VALUE;
 				}
 				buffer[2] = tmp;
 
@@ -558,9 +558,9 @@ public class ShiftedCross3x3Strel
 				// process last two pixels independently
 				valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 						buffer[1][sizeX - 1], buffer[2][sizeX - 1],
-						Strel2D.BACKGROUND);
+						UInt8.MIN_VALUE);
 				image.setInt(sizeX - 2, y, valMax);
-				valMax = Math.max(buffer[1][sizeX - 1], Strel2D.BACKGROUND);
+				valMax = Math.max(buffer[1][sizeX - 1], UInt8.MIN_VALUE);
 				image.setInt(sizeX - 1, y, valMax);
 			}
 
@@ -655,8 +655,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = Strel2D.FOREGROUND;
-				buffer[1][x] = Strel2D.FOREGROUND;
+				buffer[0][x] = UInt8.MAX_VALUE;
+				buffer[1][x] = UInt8.MAX_VALUE;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -679,7 +679,7 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = Strel2D.FOREGROUND;
+						tmp[x] = UInt8.MAX_VALUE;
 				}
 				buffer[2] = tmp;
 
@@ -695,9 +695,9 @@ public class ShiftedCross3x3Strel
 				// process last two pixels independently
 				valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 						buffer[1][sizeX - 1], buffer[2][sizeX - 1],
-						Strel2D.FOREGROUND);
+						UInt8.MAX_VALUE);
 				image.setInt(sizeX - 2, y, valMin);
-				valMin = Math.min(buffer[1][sizeX - 1], Strel2D.FOREGROUND);
+				valMin = Math.min(buffer[1][sizeX - 1], UInt8.MAX_VALUE);
 				image.setInt(sizeX - 1, y, valMin);
 			}
 

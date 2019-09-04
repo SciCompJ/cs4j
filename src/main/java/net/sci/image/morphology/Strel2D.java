@@ -32,18 +32,6 @@ import net.sci.image.morphology.filter.SquareStrel;
  */
 public interface Strel2D extends Algo
 {
-	//TODO: extends Strel3D (?)
-	/**
-	 * Default value for background pixels.
-	 */
-	public final static int BACKGROUND = Strel3D.BACKGROUND;
-
-	/**
-	 * Default value for foreground pixels.
-	 */
-	public final static int FOREGROUND = Strel3D.FOREGROUND;
-
-
 	/**
 	 * An enumeration of the different possible structuring element shapes. 
 	 * Each item of the enumeration can create Strel instances of specific

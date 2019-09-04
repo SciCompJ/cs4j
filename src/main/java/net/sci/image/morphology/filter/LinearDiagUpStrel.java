@@ -4,6 +4,7 @@
 package net.sci.image.morphology.filter;
 
 import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.morphology.Strel2D;
 
@@ -145,7 +146,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel2D
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMax.fill(Strel2D.BACKGROUND);
+			localMax.fill(UInt8.MIN_VALUE);
 
 			int xmin = Math.max(0, d + 1 - sizeY);
 			int xmax = Math.min(sizeX, d + 1);
@@ -178,7 +179,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel2D
 			// and that do not touch the upper left image boundary
 			while (t < tmax + this.offset)
 			{
-				localMax.add(Strel2D.BACKGROUND);
+				localMax.add(UInt8.MIN_VALUE);
 				int t2 = t - this.offset;
 				int x = t2;
 				int y = d - t2;
@@ -301,7 +302,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel2D
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMin.fill(Strel2D.FOREGROUND);
+			localMin.fill(UInt8.MAX_VALUE);
 
 			int xmin = Math.max(0, d - sizeY - 1);
 			int xmax = Math.min(sizeX, d + 1);
@@ -334,7 +335,7 @@ public class LinearDiagUpStrel extends AbstractInPlaceStrel2D
 			// and that do not touch the upper left image boundary
 			while (t < tmax + this.offset)
 			{
-				localMin.add(Strel2D.FOREGROUND);
+				localMin.add(UInt8.MAX_VALUE);
 				int t2 = t - this.offset;
 				int x = t2;
 				int y = d - t2;

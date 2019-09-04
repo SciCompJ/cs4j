@@ -4,8 +4,8 @@
 package net.sci.image.morphology.filter;
 
 import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.image.morphology.Strel2D;
 
 /**
  * A vertical linear structuring element of a given length. Provides methods for
@@ -141,7 +141,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 			fireProgressChanged(this, x, width);
 
 			// reset local histogram
-			localMax.fill(Strel2D.BACKGROUND);
+			localMax.fill(UInt8.MIN_VALUE);
 
 			// init local histogram with neighbor values
 			for (int y = 0; y < Math.min(shift, height); y++)
@@ -159,7 +159,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 			// process pixels at the end of the line
 			for (int y = Math.max(0, height - shift); y < height; y++)
 			{
-				localMax.add(Strel2D.BACKGROUND);
+				localMax.add(UInt8.MIN_VALUE);
 				image.setInt(x, y, localMax.getMax());
 			}
 		}
@@ -253,7 +253,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 			fireProgressChanged(this, x, width);
 
 			// reset local histogram
-			localMin.fill(Strel2D.FOREGROUND);
+			localMin.fill(UInt8.MAX_VALUE);
 
 			// init local histogram with neighbor values
 			for (int y = 0; y < Math.min(shift, height); y++)
@@ -271,7 +271,7 @@ public class LinearVerticalStrel extends AbstractInPlaceStrel2D
 			// process pixels at the end of the line
 			for (int y = Math.max(0, height - shift); y < height; y++)
 			{
-				localMin.add(Strel2D.FOREGROUND);
+				localMin.add(UInt8.MAX_VALUE);
 				image.setInt(x, y, localMin.getMax());
 			}
 		}
