@@ -4,13 +4,23 @@
 package net.sci.array.scalar;
 
 /**
+ * A floating-point value coded with 64 bits, using a <code>double</code> for
+ * internal representation.
+ * 
  * @author dlegland
  *
  */
 public class Float64 extends Scalar
 {
-	double value;
+    // =============================================================
+    // Class member
+
+    double value;
 	
+
+    // =============================================================
+    // Constructors
+    
 	/**
 	 * Creates new double with default value 0.
 	 */
@@ -30,6 +40,10 @@ public class Float64 extends Scalar
 		this.value = value;
 	}
 
+
+	// =============================================================
+    // Class methods
+
 	/* (non-Javadoc)
 	 * @see net.sci.array.type.Scalar#getValue()
 	 */
@@ -37,11 +51,6 @@ public class Float64 extends Scalar
 	public double getValue()
 	{
 		return value;
-	}
-
-	public Float64Array createArray(int[] dims)
-	{
-		return Float64Array.create(dims);
 	}
 
 

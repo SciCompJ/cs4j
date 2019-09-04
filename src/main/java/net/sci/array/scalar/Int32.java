@@ -12,8 +12,15 @@ package net.sci.array.scalar;
  */
 public class Int32 extends Int
 {
+    // =============================================================
+    // Class members
+    
 	int value;
 	
+    
+	// =============================================================
+    // Constructor
+    
 	/**
 	 * Creates a new instance of Int32 using the specified value.
 	 * 
@@ -25,6 +32,10 @@ public class Int32 extends Int
 		this.value =  value;
 	}
 	
+	
+    // =============================================================
+    // Class methods
+    
 	@Override
 	public int getInt()
 	{

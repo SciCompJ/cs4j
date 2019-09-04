@@ -11,6 +11,22 @@ package net.sci.array.scalar;
  */
 public class UInt8 extends Int
 {
+    // =============================================================
+    // Constants
+    
+    /**
+     * The minimum value that can be stored in a UInt8 instance, equal to 0.
+     */
+    public static final int MIN_VALUE = 0;
+    
+    /**
+     * The maximum value that can be stored in a UInt8 instance, equal to 255.
+     */
+    public static final int MAX_VALUE = 255;
+    
+    // =============================================================
+    // Static methods
+    
 	/**
 	 * Computes the integer value between 0 and 255 closest to the specified
 	 * value.
@@ -24,8 +40,16 @@ public class UInt8 extends Int
 		return (int) Math.min(Math.max(0, value), 255);
 	}
 	
+	
+    // =============================================================
+    // Class variables
+    
 	byte value;
 	
+	
+    // =============================================================
+    // Constructors
+    
     /**
      * Creates a new instance of UInt8 using the specified value.
      * 
@@ -48,6 +72,10 @@ public class UInt8 extends Int
         this.value = value;
     }
     
+
+    // =============================================================
+    // Methods
+    
 	public byte getByte()
 	{
 		return value;
@@ -63,11 +91,6 @@ public class UInt8 extends Int
 	public double getValue()
 	{
 		return value & 0x00FF;
-	}
-
-	public UInt8Array createArray(int[] dims)
-	{
-		return UInt8Array.create(dims);
 	}
 
 

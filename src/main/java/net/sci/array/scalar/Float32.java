@@ -4,12 +4,22 @@
 package net.sci.array.scalar;
 
 /**
+ * A floating-point value coded with 32 bits, using a <code>float</code> for
+ * internal representation.
+ * 
  * @author dlegland
  *
  */
 public class Float32 extends Scalar
 {
-	float value;
+    // =============================================================
+    // Class member
+	
+    float value;
+	
+	
+    // =============================================================
+    // Constructors
 	
 	/**
 	 * Creates new Float with default value 0.
@@ -30,6 +40,10 @@ public class Float32 extends Scalar
 		this.value = value;
 	}
 
+
+	// =============================================================
+    // Class methods
+	
 	/**
 	 * @return this value as a float
 	 */

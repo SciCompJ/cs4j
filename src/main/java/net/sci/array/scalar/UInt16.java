@@ -11,11 +11,23 @@ package net.sci.array.scalar;
  */
 public class UInt16 extends Int
 {
+    // =============================================================
+    // Constants
+    
+    /**
+     * The minimum value that can be stored in a UInt16 instance, corresponding to 0.
+     */
+    public final static int MIN_VALUE = 0;
+
 	/**
 	 * The maximum value that can be stored in a UInt16 instance, corresponding to 2^16-1.
 	 */
 	public final static int MAX_VALUE = 0x0FFFF;
 
+	
+    // =============================================================
+    // Static methods
+    
 	/**
 	 * Computes the integer value between 0 and MAX_VALUE closest to the specified
 	 * double value.
@@ -29,8 +41,16 @@ public class UInt16 extends Int
 		return (int) Math.min(Math.max(0, value), MAX_VALUE);
 	}
 
+
+	// =============================================================
+    // Class members
+    
 	short value;
 	
+
+	// =============================================================
+    // Constructor
+    
 	/**
 	 * Creates a new instance of UInt16 using the specified value.
 	 * 
@@ -42,6 +62,10 @@ public class UInt16 extends Int
 		this.value =  (short) value;
 	}
 	
+
+	// =============================================================
+    // Class methods
+    
 	public short getShort()
 	{
 		return value;
@@ -58,11 +82,6 @@ public class UInt16 extends Int
 	{
 		return value & 0x00FFFF;
 	}
-
-//	public UInt16Array createArray(int[] dims)
-//	{
-//		return UInt16Array.create(dims);
-//	}
 
 
 	// =============================================================

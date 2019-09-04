@@ -12,6 +12,9 @@ package net.sci.array.scalar;
  */
 public class Int16 extends Int
 {
+    // =============================================================
+    // Constants
+    
 	/**
 	 * The maximum value that can be stored in a Int16 instance, corresponding to 2^15-1.
 	 */
@@ -22,6 +25,10 @@ public class Int16 extends Int
 	 */
 	public final static int MIN_VALUE = Short.MIN_VALUE;
 	
+	
+    // =============================================================
+    // Static methods
+    
 	/**
 	 * Computes the integer value between MIN_VALUE and MAX_VALUE closest to the
 	 * specified double value.
@@ -35,8 +42,16 @@ public class Int16 extends Int
 		return (int) Math.min(Math.max(value, MIN_VALUE), MAX_VALUE);
 	}
 
-	short value;
 	
+    // =============================================================
+    // Class members
+    
+	short value;
+		
+	
+    // =============================================================
+    // Constructor
+    
 	/**
 	 * Creates a new instance of Int16 using the specified value.
 	 * 
@@ -48,6 +63,10 @@ public class Int16 extends Int
 		this.value = (short) value;
 	}
 	
+	
+    // =============================================================
+    // Class methods
+    
 	public short getShort()
 	{
 		return value;
