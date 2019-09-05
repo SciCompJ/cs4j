@@ -38,7 +38,7 @@ public class TranslationModel2D extends ParametricTransform2D implements AffineT
 	}
 
 	@Override
-	public double[][] getMatrix()
+	public double[][] affineMatrix()
 	{
 		double tx = this.parameters[0];
 		double ty = this.parameters[1];
@@ -47,7 +47,7 @@ public class TranslationModel2D extends ParametricTransform2D implements AffineT
 	}
 
 	@Override
-	public AffineTransform2D invert()
+	public AffineTransform2D inverse()
 	{
 		double tx = this.parameters[0];
 		double ty = this.parameters[1];

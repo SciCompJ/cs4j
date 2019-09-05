@@ -26,10 +26,10 @@ public class AffineTransform2DTest
         AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(30));
         AffineTransform2D exp = AffineTransform2D.createRotation(10, 20, Math.toRadians(30));
         
-        AffineTransform2D trans = tra.concatenate(rot.concatenate(tra.invert()));
+        AffineTransform2D trans = tra.concatenate(rot.concatenate(tra.inverse()));
                
-        double[][] mat = trans.getMatrix();
-        double[][] expMat = exp.getMatrix();
+        double[][] mat = trans.affineMatrix();
+        double[][] expMat = exp.affineMatrix();
         
         for(int i = 0; i < 2; i++)
         {
@@ -50,10 +50,10 @@ public class AffineTransform2DTest
         AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(30));
         AffineTransform2D exp = AffineTransform2D.createRotation(10, 20, Math.toRadians(30));
         
-        AffineTransform2D trans = tra.invert().preConcatenate(rot).preConcatenate(tra); 
+        AffineTransform2D trans = tra.inverse().preConcatenate(rot).preConcatenate(tra); 
                 
-        double[][] mat = trans.getMatrix();
-        double[][] expMat = exp.getMatrix();
+        double[][] mat = trans.affineMatrix();
+        double[][] expMat = exp.affineMatrix();
         
         for(int i = 0; i < 2; i++)
         {

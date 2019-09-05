@@ -13,7 +13,7 @@ import static java.lang.Math.sin;
 public interface AffineTransform2D extends Transform2D
 {
 	// ===================================================================
-	// static methods
+	// Static Factories
 
 	/**
 	 * Creates a translation by the given vector.
@@ -249,18 +249,23 @@ public interface AffineTransform2D extends Transform2D
 		return createScaling(center, -1, -1);
 	}
 
+	
 	// ===================================================================
-	// specific methods
+	// New methods declaration
 
 	/**
 	 * @return the affine matrix of the coefficients corresponding to this transform 
 	 */
-	public double[][] getMatrix();
+	public double[][] affineMatrix();
 
-	public AffineTransform2D invert();
+	/**
+	 * @return the inverse affine transform of this transform.
+	 */
+	public AffineTransform2D inverse();
+	
 	
     // ===================================================================
-    // default methods
+    // Default methods
 
 	/**
      * Returns the affine transform created by applying first the affine
@@ -274,8 +279,8 @@ public interface AffineTransform2D extends Transform2D
      */
     public default AffineTransform2D concatenate(AffineTransform2D that)
     {
-        double[][] m1 = this.getMatrix();
-        double[][] m2 = that.getMatrix();
+        double[][] m1 = this.affineMatrix();
+        double[][] m2 = that.affineMatrix();
         double n00 = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0];
         double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1];
         double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2];
@@ -303,8 +308,8 @@ public interface AffineTransform2D extends Transform2D
      */
     public default AffineTransform2D preConcatenate(AffineTransform2D that) 
     {
-        double[][] m1 = that.getMatrix();
-        double[][] m2 = this.getMatrix();
+        double[][] m1 = that.affineMatrix();
+        double[][] m2 = this.affineMatrix();
         double n00 = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0];
         double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1];
         double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2];
@@ -324,7 +329,7 @@ public interface AffineTransform2D extends Transform2D
 	 */
 	public default Point2D transform(Point2D point)
 	{
-		double[][] mat = this.getMatrix();
+		double[][] mat = this.affineMatrix();
 		double x = point.getX();
 		double y = point.getY();
 		
@@ -345,7 +350,7 @@ public interface AffineTransform2D extends Transform2D
 	{
 		double vx = v.getX();
 		double vy = v.getY();
-		double[][] mat = this.getMatrix();
+		double[][] mat = this.affineMatrix();
 		return new Vector2D(
 				vx * mat[0][0] + vy * mat[0][1], 
 				vx * mat[1][0] + vy * mat[1][1]);

@@ -27,10 +27,10 @@ public class AffineTransform3DTest
         AffineTransform3D rot = AffineTransform3D.createRotationOx(Math.toRadians(30));
         AffineTransform3D exp = AffineTransform3D.createRotationOx(new Point3D(30, 40, 50), Math.toRadians(30));
         
-        AffineTransform3D trans = tra.concatenate(rot.concatenate(tra.invert()));
+        AffineTransform3D trans = tra.concatenate(rot.concatenate(tra.inverse()));
                
-        double[][] mat = trans.getMatrix();
-        double[][] expMat = exp.getMatrix();
+        double[][] mat = trans.affineMatrix();
+        double[][] expMat = exp.affineMatrix();
         
         for(int i = 0; i < 3; i++)
         {
@@ -51,10 +51,10 @@ public class AffineTransform3DTest
         AffineTransform3D rot = AffineTransform3D.createRotationOx(Math.toRadians(30));
         AffineTransform3D exp = AffineTransform3D.createRotationOx(new Point3D(30, 40, 50), Math.toRadians(30));
         
-        AffineTransform3D trans = tra.invert().preConcatenate(rot).preConcatenate(tra);
+        AffineTransform3D trans = tra.inverse().preConcatenate(rot).preConcatenate(tra);
                
-        double[][] mat = trans.getMatrix();
-        double[][] expMat = exp.getMatrix();
+        double[][] mat = trans.affineMatrix();
+        double[][] expMat = exp.affineMatrix();
         
         for(int i = 0; i < 3; i++)
         {

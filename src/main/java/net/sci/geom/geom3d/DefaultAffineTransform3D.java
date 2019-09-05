@@ -143,7 +143,7 @@ public class DefaultAffineTransform3D implements AffineTransform3D
 	 * @return the inverse of this transform
 	 * @throws a RuntimeException
 	 */
-	public DefaultAffineTransform3D invert()
+	public DefaultAffineTransform3D inverse()
 	{
         double det = this.determinant();
 
@@ -182,7 +182,7 @@ public class DefaultAffineTransform3D implements AffineTransform3D
     }
 
     @Override
-    public double[][] getMatrix()
+    public double[][] affineMatrix()
     {
         return new double[][] {
                 { this.m00, this.m01, this.m02, this.m03 },

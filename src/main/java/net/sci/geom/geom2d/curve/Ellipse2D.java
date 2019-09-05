@@ -77,7 +77,7 @@ public class Ellipse2D implements Contour2D
     private final static double[] transformCenteredConicCoefficients(double[] coefs, AffineTransform2D trans)
     {
         // Extract transform coefficients
-        double[][] mat = trans.getMatrix();
+        double[][] mat = trans.affineMatrix();
         double a = mat[0][0];
         double b = mat[1][0];
         double c = mat[0][1];

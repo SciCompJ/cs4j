@@ -154,7 +154,7 @@ public class MatrixAffineTransform2D implements AffineTransform2D
 	 * Returns the inverse transform. If the transform is not invertible, throws
 	 * a new NonInvertibleTransform2DException.
 	 */
-	public MatrixAffineTransform2D invert()
+	public MatrixAffineTransform2D inverse()
 	{
 		// compute determinant
 		double det = m00 * m11 - m10 * m01;
@@ -197,7 +197,7 @@ public class MatrixAffineTransform2D implements AffineTransform2D
 //	}
 
 	@Override
-	public double[][] getMatrix()
+	public double[][] affineMatrix()
 	{
 		return new double[][] {
 				{this.m00, this.m01, this.m02}, 

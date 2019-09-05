@@ -162,8 +162,8 @@ public interface AffineTransform3D extends Transform3D
      */
     public default AffineTransform3D concatenate(AffineTransform3D that)
     {
-        double[][] m1 = this.getMatrix();
-        double[][] m2 = that.getMatrix();
+        double[][] m1 = this.affineMatrix();
+        double[][] m2 = that.affineMatrix();
         double n00 = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0] + m1[0][2] * m2[2][0];
         double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1] + m1[0][2] * m2[2][1];
         double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2] * m2[2][2];
@@ -197,8 +197,8 @@ public interface AffineTransform3D extends Transform3D
      */
     public default AffineTransform3D preConcatenate(AffineTransform3D that) 
     {
-        double[][] m1 = that.getMatrix();
-        double[][] m2 = this.getMatrix();
+        double[][] m1 = that.affineMatrix();
+        double[][] m2 = this.affineMatrix();
         double n00 = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0] + m1[0][2] * m2[2][0];
         double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1] + m1[0][2] * m2[2][1];
         double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2] * m2[2][2];
@@ -221,10 +221,12 @@ public interface AffineTransform3D extends Transform3D
 	/**
 	 * @return the affine matrix of the coefficients corresponding to this transform 
 	 */
-    // TODO: should return an instance of Matrix
-	public double[][] getMatrix();
+    public double[][] affineMatrix();
 
-	public AffineTransform3D invert();
+	/**
+     * @return the inverse affine transform of this transform.
+     */
+    public AffineTransform3D inverse();
 	
 	/**
 	 * Applies this transformation to the given point.
@@ -235,7 +237,7 @@ public interface AffineTransform3D extends Transform3D
 	 */
 	public default Point3D transform(Point3D point)
 	{
-		double[][] mat = this.getMatrix();
+		double[][] mat = this.affineMatrix();
 		double x = point.getX();
         double y = point.getY();
         double z = point.getZ();
@@ -259,7 +261,7 @@ public interface AffineTransform3D extends Transform3D
 		double vx = v.getX();
         double vy = v.getY();
         double vz = v.getZ();
-		double[][] mat = this.getMatrix();
+		double[][] mat = this.affineMatrix();
 		return new Vector3D(
 				vx * mat[0][0] + vy * mat[0][1] + vz * mat[0][2], 
                 vx * mat[1][0] + vy * mat[1][1] + vz * mat[1][2], 
