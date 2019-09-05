@@ -17,6 +17,9 @@ import net.sci.image.morphology.Strel2D;
  */
 public interface InPlaceStrel2D extends Strel2D
 {
+    // ===================================================================
+    // New methods
+    
 	/**
 	 * Performs dilation of the image given as argument, and stores the result
 	 * in the same image. 
@@ -31,6 +34,44 @@ public interface InPlaceStrel2D extends Strel2D
 	 */
 	public void inPlaceErosion(ScalarArray2D<?> image);
 	
+	
+    // ===================================================================
+    // Default implementations of Strel2D methods
+    
+    public default ScalarArray2D<?> dilation(ScalarArray2D<?> array)
+    {
+        ScalarArray2D<?> result = array.duplicate();
+        this.inPlaceDilation(result);
+        return result;
+    }
+
+    public default ScalarArray2D<?> erosion(ScalarArray2D<?> array)
+    {
+        ScalarArray2D<?> result = array.duplicate();
+        this.inPlaceErosion(result);
+        return result;
+    }
+
+    public default ScalarArray2D<?> closing(ScalarArray2D<?> array)
+    {
+        ScalarArray2D<?> result = array.duplicate();
+        this.inPlaceDilation(result);
+        this.reverse().inPlaceErosion(result);
+        return result;
+    }
+
+    public default ScalarArray2D<?> opening(ScalarArray2D<?> array)
+    {
+        ScalarArray2D<?> result = array.duplicate();
+        this.inPlaceErosion(result);
+        this.reverse().inPlaceDilation(result);
+        return result;
+    }
+
+    
+    // ===================================================================
+    // Specialize Strel2D methods
+    
 	/**
 	 * The reverse structuring element of an InPlaceStrel is also an
 	 * InPlaceStrel.

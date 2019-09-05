@@ -72,7 +72,7 @@ public class ShiftedCross3x3Strel
 	 *  . . . . . 
 	 * </pre></code>
 	 */
-	private final static class Left extends AbstractInPlaceStrel2D
+	private final static class Left extends AbstractStrel2D implements InPlaceStrel2D
 	{
 
 		/**
@@ -422,7 +422,7 @@ public class ShiftedCross3x3Strel
 	 *  . . . . . 
 	 * </pre></code>
 	 */
-	private final static class Right extends AbstractInPlaceStrel2D
+	private final static class Right extends AbstractStrel2D implements InPlaceStrel2D
 	{
 
 		/**

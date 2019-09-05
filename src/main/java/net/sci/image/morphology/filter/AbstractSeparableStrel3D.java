@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.ScalarArray3D;
 
 /**
  * Implementation stub for separable Structuring elements.
@@ -15,21 +15,21 @@ import net.sci.array.scalar.ScalarArray2D;
  * @author David Legland
  *
  */
-public abstract class AbstractSeparableStrel2D extends AbstractStrel2D 
-implements SeparableStrel2D, AlgoListener 
+public abstract class AbstractSeparableStrel3D extends AbstractStrel3D 
+implements SeparableStrel3D, AlgoListener 
 {
-	public ScalarArray2D<?> dilation(ScalarArray2D<?> image)
+	public ScalarArray3D<?> dilation(ScalarArray3D<?> image)
 	{
 		// Allocate memory for result
-	    ScalarArray2D<?> result = image.duplicate();
+	    ScalarArray3D<?> result = image.duplicate();
 		
 		// Extract structuring elements
-		Collection<InPlaceStrel2D> strels = this.decompose();
+		Collection<InPlaceStrel3D> strels = this.decompose();
 		int n = strels.size();
 		
 		// Dilation
 		int i = 1;
-		for (InPlaceStrel2D strel : strels)
+		for (InPlaceStrel3D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Dilation", i, n));
 			runDilation(result, strel);
@@ -42,18 +42,18 @@ implements SeparableStrel2D, AlgoListener
 		return result;
 	}
 
-	public ScalarArray2D<?> erosion(ScalarArray2D<?> image) 
+	public ScalarArray3D<?> erosion(ScalarArray3D<?> image) 
 	{
 		// Allocate memory for result
-	    ScalarArray2D<?> result = image.duplicate();
+	    ScalarArray3D<?> result = image.duplicate();
 		
 		// Extract structuring elements
-		Collection<InPlaceStrel2D> strels = this.decompose();
+		Collection<InPlaceStrel3D> strels = this.decompose();
 		int n = strels.size();
 		
 		// Erosion
 		int i = 1;
-		for (InPlaceStrel2D strel : strels)
+		for (InPlaceStrel3D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Erosion", i, n));
 			runErosion(result, strel);
@@ -66,18 +66,18 @@ implements SeparableStrel2D, AlgoListener
 		return result;
 	}
 
-	public ScalarArray2D<?> closing(ScalarArray2D<?> image)
+	public ScalarArray3D<?> closing(ScalarArray3D<?> image)
 	{
 		// Allocate memory for result
-	    ScalarArray2D<?> result = image.duplicate();
+	    ScalarArray3D<?> result = image.duplicate();
 		
 		// Extract structuring elements
-		Collection<InPlaceStrel2D> strels = this.decompose();
+		Collection<InPlaceStrel3D> strels = this.decompose();
 		int n = strels.size();
 		
 		// Dilation
 		int i = 1;
-		for (InPlaceStrel2D strel : strels)
+		for (InPlaceStrel3D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Dilation", i, n));
 			runDilation(result, strel);
@@ -87,7 +87,7 @@ implements SeparableStrel2D, AlgoListener
 		// Erosion (with reversed strel)
 		i = 1;
 		strels = this.reverse().decompose();
-		for (InPlaceStrel2D strel : strels)
+		for (InPlaceStrel3D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Erosion", i, n));
 			runErosion(result, strel);
@@ -100,18 +100,18 @@ implements SeparableStrel2D, AlgoListener
 		return result;
 	}
 
-	public ScalarArray2D<?> opening(ScalarArray2D<?> image) 
+	public ScalarArray3D<?> opening(ScalarArray3D<?> image) 
 	{
 		// Allocate memory for result
-	    ScalarArray2D<?> result = image.duplicate();
+	    ScalarArray3D<?> result = image.duplicate();
 		
 		// Extract structuring elements
-		Collection<InPlaceStrel2D> strels = this.decompose();
+		Collection<InPlaceStrel3D> strels = this.decompose();
 		int n = strels.size();
 		
 		// Erosion
 		int i = 1;
-		for (InPlaceStrel2D strel : strels)
+		for (InPlaceStrel3D strel : strels)
 		{
 			fireStatusChanged(this, createStatusMessage("Erosion", i, n));
 			runErosion(result, strel);
@@ -121,7 +121,7 @@ implements SeparableStrel2D, AlgoListener
 		// Dilation (with reversed strel)
 		i = 1;
 		strels = this.reverse().decompose();
-		for (InPlaceStrel2D strel : strels) 
+		for (InPlaceStrel3D strel : strels) 
 		{
 			fireStatusChanged(this, createStatusMessage("Dilation", i, n));
 			runDilation(result, strel);
@@ -134,14 +134,14 @@ implements SeparableStrel2D, AlgoListener
 		return result;
 	}
 	
-	private void runDilation(ScalarArray2D<?> image, InPlaceStrel2D strel)
+	private void runDilation(ScalarArray3D<?> image, InPlaceStrel3D strel)
 	{
 		strel.addAlgoListener(this);
 		strel.inPlaceDilation(image);
 		strel.removeAlgoListener(this);
 	}
 	
-	private void runErosion(ScalarArray2D<?> image, InPlaceStrel2D strel) 
+	private void runErosion(ScalarArray3D<?> image, InPlaceStrel3D strel) 
 	{
 		strel.addAlgoListener(this);
 		strel.inPlaceErosion(image);

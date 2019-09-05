@@ -5,7 +5,7 @@ package net.sci.image.morphology.filter;
 
 import java.util.Collection;
 
-import net.sci.image.morphology.Strel2D;
+import net.sci.image.morphology.Strel3D;
 
 /**
  * Interface for structuring elements that can be decomposed into several
@@ -13,13 +13,13 @@ import net.sci.image.morphology.Strel2D;
  * elements can performs in place dilation or erosion (i.e. the implements the
  * InPlaceStrel interface).
  * 
- * @see InPlaceStrel2D
- * @see SeparableStrel3D
+ * @see InPlaceStrel3D
+ * @see SeparableStrel2D
  * 
  * @author David Legland
  *
  */
-public interface SeparableStrel2D extends Strel2D
+public interface SeparableStrel3D extends Strel3D
 {
 	/**
 	 * Decomposes this separable structuring element into a set of smaller
@@ -28,10 +28,10 @@ public interface SeparableStrel2D extends Strel2D
 	 * 
 	 * @return a set of elementary structuring elements
 	 */
-	public Collection<InPlaceStrel2D> decompose();
+	public Collection<InPlaceStrel3D> decompose();
 
 	/**
 	 * @return this instance of separable Strel
 	 */
-	public SeparableStrel2D reverse();
+	public SeparableStrel3D reverse();
 }

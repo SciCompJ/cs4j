@@ -20,7 +20,7 @@ import net.sci.image.morphology.Strel2D;
  * @author David Legland
  *
  */
-public class LinearDiagUpStrel extends AbstractInPlaceStrel2D
+public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 {
 
 	// ==================================================

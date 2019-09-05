@@ -14,7 +14,7 @@ import net.sci.array.scalar.UInt8Array2D;
  * @author David Legland
  *
  */
-public class Cross3x3Strel extends AbstractInPlaceStrel2D
+public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 {
 
 	/*

@@ -5,15 +5,21 @@ package net.sci.image.morphology;
 
 import net.sci.algo.Algo;
 import net.sci.array.scalar.ScalarArray3D;
+import net.sci.image.morphology.filter.Strel2DWrapper;
 
 /**
- * Structuring element that process 3D arrays.
+ * Structuring element for processing 3D arrays.
  * 
  * @author David Legland
  *
  */
 public interface Strel3D extends Algo 
 {
+    public static Strel3D wrap(Strel2D strel)
+    {
+        return new Strel2DWrapper(strel);
+    }
+    
 //	/**
 //	 * An enumeration of the different possible structuring element shapes. 
 //	 * Each item of the enumeration can create Strel instances of specific
@@ -285,27 +291,27 @@ public interface Strel3D extends Algo
 	 * Performs a morphological dilation of the input image with this
 	 * structuring element, and returns the result in a new Array3D.
 	 * 
-	 * @param image
-	 *            the input image
+	 * @param array
+	 *            the input array
 	 * @return the result of dilation with this structuring element
-	 * @see #erosion(net.sci.array.Array3D)
-	 * @see #closing(net.sci.array.Array3D)
-	 * @see #opening(net.sci.array.Array3D)
+	 * @see #erosion(net.sci.array.ScalarArray3D)
+	 * @see #closing(net.sci.array.ScalarArray3D)
+	 * @see #opening(net.sci.array.ScalarArray3D)
 	 */
-	public ScalarArray3D<?> dilation(ScalarArray3D<?> image);
+	public ScalarArray3D<?> dilation(ScalarArray3D<?> array);
 
 	/**
 	 * Performs an morphological erosion of the input image with this
 	 * structuring element, and returns the result in a new Array3D.
 	 * 
-	 * @param image
-	 *            the input image
+	 * @param array
+	 *            the input array
 	 * @return the result of erosion with this structuring element
-	 * @see #dilation(net.sci.array.Array3D)
-	 * @see #closing(net.sci.array.Array3D)
-	 * @see #opening(net.sci.array.Array3D)
+	 * @see #dilation(net.sci.array.ScalarArray3D)
+	 * @see #closing(net.sci.array.ScalarArray3D)
+	 * @see #opening(net.sci.array.ScalarArray3D)
 	 */
-	public ScalarArray3D<?> erosion(ScalarArray3D<?> image);
+	public ScalarArray3D<?> erosion(ScalarArray3D<?> array);
 	
 	/**
 	 * Performs a morphological closing of the input image with this structuring
@@ -314,15 +320,18 @@ public interface Strel3D extends Algo
 	 * The closing is equivalent in performing a dilation followed by an
 	 * erosion with the reversed structuring element.
 	 * 
-	 * @param image
-	 *            the input image
+	 * @param array
+	 *            the input array
 	 * @return the result of closing with this structuring element
-	 * @see #dilation(net.sci.array.Array3D)
-	 * @see #erosion(net.sci.array.Array3D)
-	 * @see #opening(net.sci.array.Array3D)
+	 * @see #dilation(net.sci.array.ScalarArray3D)
+	 * @see #erosion(net.sci.array.ScalarArray3D)
+	 * @see #opening(net.sci.array.ScalarArray3D)
 	 * @see #reverse()
 	 */
-	public ScalarArray3D<?> closing(ScalarArray3D<?> image);
+	public default ScalarArray3D<?> closing(ScalarArray3D<?> array)
+	{
+	    return dilation(erosion(array));
+	}
 
 	/**
 	 * Performs a morphological opening of the input image with this structuring
@@ -331,28 +340,17 @@ public interface Strel3D extends Algo
 	 * The opening is equivalent in performing an erosion followed by a
 	 * dilation with the reversed structuring element.
 	 * 
-	 * @param image
-	 *            the input image
+	 * @param array
+	 *            the input array
 	 * @return the result of opening with this structuring element
-	 * @see #dilation(net.sci.array.Array3D)
-	 * @see #erosion(net.sci.array.Array3D)
-	 * @see #closing(net.sci.array.Array3D)
+	 * @see #dilation(net.sci.array.ScalarArray3D)
+	 * @see #erosion(net.sci.array.ScalarArray3D)
+	 * @see #closing(net.sci.array.ScalarArray3D)
 	 * @see #reverse()
 	 */
-	public ScalarArray3D<?> opening(ScalarArray3D<?> image);
+	public default ScalarArray3D<?> opening(ScalarArray3D<?> array)
+	{
+        return erosion(dilation(array));
+	}
 
-//	/**
-//	 * Returns a boolean flag indicating whether or not this structuring
-//	 * element should display its progress or not
-//	 * 
-//	 * @return a boolean flag with value true if progress should be displayed
-//	 */
-//	public boolean showProgress();
-//
-//	/**
-//	 * Specifies if this structuring element should display its progress.
-//	 * 
-//	 * @param b a boolean flag with value true if progress should be displayed
-//	 */
-//	public void showProgress(boolean b);
 }

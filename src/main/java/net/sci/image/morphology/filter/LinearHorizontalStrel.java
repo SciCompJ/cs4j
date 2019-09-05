@@ -17,7 +17,7 @@ import net.sci.array.scalar.UInt8Array2D;
  * @author David Legland
  *
  */
-public class LinearHorizontalStrel extends AbstractInPlaceStrel2D
+public class LinearHorizontalStrel extends AbstractStrel2D implements InPlaceStrel2D
 {
 	// ==================================================
 	// Static methods

@@ -17,7 +17,7 @@ import net.sci.array.scalar.UInt8Array2D;
  * @author David Legland
  *
  */
-public class LinearVerticalStrel extends AbstractInPlaceStrel2D
+public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel2D
 {
 
 	// ==================================================
