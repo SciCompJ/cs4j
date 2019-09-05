@@ -18,6 +18,21 @@ import net.sci.geom.geom2d.Point2D;
  */
 public class DefaultPolygon2DTest
 {
+    /**
+     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#signedArea()}.
+     */
+    @Test
+    public final void testCentroid()
+    {
+        DefaultPolygon2D poly = createDiamondPolygon();
+        Point2D exp = new Point2D(20, 20);
+        
+        Point2D centroid = poly.centroid();
+        
+        assertEquals(exp.getX(), centroid.getX(), .01);
+        assertEquals(exp.getY(), centroid.getY(), .01);
+    }
+    
     
     /**
      * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#signedArea()}.

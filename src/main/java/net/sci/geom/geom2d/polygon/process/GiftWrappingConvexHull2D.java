@@ -14,19 +14,19 @@ import net.sci.geom.geom2d.polygon.Polygon2D;
 
 /**
  * Computes the convex hull of a set of points as a single Polygon2D by gift
- * wrapping algorithm, also know as Jarvis March.
+ * wrapping algorithm, also known as Jarvis March.
  * </p>
  * 
- * The complexity of the algorithm is of O(n * h), where n is the number of
- * input points and h the number of vertices of the convex hull. This low
- * complexity makes it a good algorithm for computing convex hull, even if worst
- * case complexity is not optimum.
+ * The complexity of the algorithm is of <code>O(n * h)</code>, where
+ * <code>n</code> is the number of input points and <code>h</code> the number of
+ * vertices of the convex hull. This low complexity makes it a good algorithm
+ * for computing convex hull, even if worst case complexity is not optimum.
  * 
  * @author dlegland
  */
 public class GiftWrappingConvexHull2D
 {
-    private static final double M_2_PI = 2 * Math.PI;
+    private static final double TWO_PI = 2 * Math.PI;
  
     public GiftWrappingConvexHull2D()
     {
@@ -134,13 +134,24 @@ public class GiftWrappingConvexHull2D
         return minPoint;
     }
     
+    /**
+     * Computes the horizontal angle of the straight line going through two
+     * points.
+     * 
+     * @param p1
+     *            the first point
+     * @param p2
+     *            the second point
+     * @return the horizontal angle of the straight line going through the two
+     *         points, between 0 and 2*PI.
+     */
     private double computeAngle(Point2D p1, Point2D p2)
     {
-        return (Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()) + M_2_PI) % M_2_PI;
+        return (Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()) + TWO_PI) % TWO_PI;
     }
     
     private double diffAngle(double startAngle, double endAngle)
     {
-        return (endAngle - startAngle + M_2_PI) % M_2_PI; 
+        return (endAngle - startAngle + TWO_PI) % TWO_PI; 
     }
 }

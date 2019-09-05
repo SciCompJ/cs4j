@@ -5,6 +5,7 @@ package net.sci.geom.geom2d.polygon;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Point2D;
@@ -58,6 +59,52 @@ public interface Polygon2D extends PolygonalDomain2D
     {
         return new DefaultPolygon2D(xcoords, ycoords);
     }
+    
+    
+    // ===================================================================
+    // Default implementations 
+    
+    public default Point2D centroid()
+    {
+        // accumulators
+        double sx = 0.0;
+        double sy = 0.0;
+        double area = 0.0;
+        
+        // identify coordinates of the last vertex
+        Iterator<Point2D> iter = vertexPositions().iterator();
+        Point2D p0 = iter.next();
+        while(iter.hasNext())
+        {
+            p0 = iter.next();
+        }
+        double x0 = p0.getX();
+        double y0 = p0.getY();
+        
+        // iterate over edges
+        iter = vertexPositions().iterator();
+        while(iter.hasNext())
+        {
+            // coordinates of current vertex
+            Point2D p1 = iter.next();
+            double x1 = p1.getX();
+            double y1 = p1.getY();
+            
+            // update accumulators
+            double common = x0 * y1 - x1 * y0;
+            sx += (x0 + x1) * common;
+            sy += (y0 + y1) * common;
+            area += common / 2;
+            
+            // prepare for next edge
+            x0 = x1;
+            y0 = y1;
+        }
+        
+        // compute centroid coordinates
+        return new Point2D(sx / 6 / area, sy / 6 / area);
+    }
+    
     
     // ===================================================================
     // Specialization of the PolygonalDomain2D interface    
