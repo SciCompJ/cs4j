@@ -21,6 +21,16 @@ public abstract class Array3D<T> implements Array<T>
         return new BufferedGenericArray3D<T>(sizeX, sizeY, sizeZ, init);
     }
     
+    public final static <T> Array3D<T> wrap(Array<T> array)
+    {
+        if (array instanceof Array3D)
+        {
+            return (Array3D<T>) array;
+        }
+        return new Wrapper<T>(array);
+    }
+    
+    
     // =============================================================
 	// class members
 
@@ -212,6 +222,266 @@ public abstract class Array3D<T> implements Array<T>
         {
             forward();
             return new int[] { posX, posY, posZ };
+        }
+    }
+    
+    private static class Wrapper<T> extends Array3D<T>
+    {
+        private Array<T> array;
+        
+        protected Wrapper(Array<T> array)
+        {
+            super(0, 0, 0);
+            if (array.dimensionality() < 3)
+            {
+                throw new IllegalArgumentException("Requires an array with at least three dimensions");
+            }
+            this.array = array;
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.size2 = array.size(2);
+        }
+
+        @Override
+        public Array2D<T> slice(int sliceIndex)
+        {
+            return new SliceView(sliceIndex);
+        }
+
+        @Override
+        public Iterable<? extends Array2D<T>> slices()
+        {
+            return new Iterable<Array2D<T>>()
+            {
+                @Override
+                public java.util.Iterator<Array2D<T>> iterator()
+                {
+                    return new SliceIterator();
+                }
+            };
+        }
+
+        @Override
+        public java.util.Iterator<? extends Array2D<T>> sliceIterator()
+        {
+            return new SliceIterator();
+        }
+
+        @Override
+        public Array<T> newInstance(int... dims)
+        {
+            return this.array.newInstance(dims);
+        }
+
+        @Override
+        public Factory<T> getFactory()
+        {
+            return this.array.getFactory();
+        }
+
+        @Override
+        public T get(int x, int y, int z)
+        {
+            // convert (x,y,z) to ND integer array
+            int nd = this.array.dimensionality();
+            int[] pos = new int[nd];
+            pos[0] = x;
+            pos[1] = y;
+            pos[2] = z;
+            
+            // return value from specified position
+            return this.array.get(pos);
+        }
+
+        @Override
+        public void set(int x, int y, int z, T value)
+        {
+            // convert (x,y) to ND integer array
+            int nd = this.array.dimensionality();
+            int[] pos = new int[nd];
+            pos[0] = x;
+            pos[1] = y;
+            pos[2] = z;
+            
+            // set value at specified position
+            this.array.set(pos, value);
+        }
+
+        @Override
+        public Array3D<T> duplicate()
+        {
+            Array<T> tmp = this.array.newInstance(this.size0, this.size1, this.size2);
+            if (!(tmp instanceof Array3D))
+            {
+                throw new RuntimeException("Can not create Array3D instance from " + this.array.getClass().getName() + " class.");
+            }
+            
+            Array3D<T> result = (Array3D <T>) tmp;
+            
+            int nd = this.array.dimensionality();
+            int[] pos = new int[nd];
+
+            // Fill new array with input array
+            for (int z = 0; z < this.size2; z++)
+            {
+                pos[2] = z;
+                for (int y = 0; y < this.size1; y++)
+                {
+                    pos[1] = y;
+                    for (int x = 0; x < this.size0; x++)
+                    {
+                        pos[0] = x;
+                        result.set(x, y, z, this.array.get(pos));
+                    }
+                }
+            }
+            return result;
+        }
+        
+        @Override
+        public Class<T> dataType()
+        {
+            return array.dataType();
+        }
+
+        @Override
+        public Array.Iterator<T> iterator()
+        {
+            return array.iterator();
+        }
+        
+        private class SliceView extends Array2D<T>
+        {
+            int sliceIndex;
+            
+            protected SliceView(int slice)
+            {
+                super(Wrapper.this.size0, Wrapper.this.size1);
+                if (slice < 0 || slice >= Wrapper.this.size2)
+                {
+                    throw new IllegalArgumentException(String.format(
+                            "Slice index %d must be comprised between 0 and %d", slice, Wrapper.this.size2));
+                }
+                this.sliceIndex = slice;
+            }
+
+            @Override
+            public T get(int x, int y)
+            {
+                return Wrapper.this.get(x, y, this.sliceIndex);
+            }
+
+            @Override
+            public void set(int x, int y, T value)
+            {
+                Wrapper.this.set(x, y, this.sliceIndex, value);            
+            }
+
+            @Override
+            public Array<T> newInstance(int... dims)
+            {
+                return Wrapper.this.array.newInstance(dims);
+            }
+
+            @Override
+            public Class<T> dataType()
+            {
+                return Wrapper.this.array.dataType();
+            }
+
+            @Override
+            public Array2D<T> duplicate()
+            {
+                // create a new array, and ensure type is 2D
+                Array2D<T> result = Array2D.wrap(Wrapper.this.array.newInstance(this.size0, this.size1));
+                
+                // Fill new array with input slice
+                for (int y = 0; y < Wrapper.this.size1; y++)
+                {
+                    for (int x = 0; x < Wrapper.this.size0; x++)
+                    {
+                        result.set(x, y, Wrapper.this.get(x, y, sliceIndex));
+                    }
+                }
+                                
+                return result;
+            }
+
+            @Override
+            public Array.Factory<T> getFactory()
+            {
+                return Wrapper.this.getFactory();
+            }
+
+            @Override
+            public Array.Iterator<T> iterator()
+            {
+                return new Iterator();
+            }
+
+            class Iterator implements Array.Iterator<T>
+            {
+                int indX = -1;
+                int indY = 0;
+                
+                public Iterator() 
+                {
+                }
+                
+                @Override
+                public T next()
+                {
+                    forward();
+                    return get();
+                }
+
+                @Override
+                public void forward()
+                {
+                    indX++;
+                    if (indX >= size0)
+                    {
+                        indX = 0;
+                        indY++;
+                    }
+                }
+
+                @Override
+                public boolean hasNext()
+                {
+                    return indX < size0 - 1 || indY < size1 - 1;
+                }
+
+                @Override
+                public T get()
+                {
+                    return Wrapper.this.get(indX, indY, sliceIndex);
+                }
+
+                @Override
+                public void set(T value)
+                {
+                    Wrapper.this.set(indX, indY, sliceIndex, value);
+                }
+            }
+        }
+        
+        private class SliceIterator implements java.util.Iterator<Array2D<T>> 
+        {
+            int sliceIndex = -1;
+
+            @Override
+            public boolean hasNext()
+            {
+                return sliceIndex < array.size(2) - 1;
+            }
+
+            @Override
+            public Array2D<T> next()
+            {
+                sliceIndex++;
+                return new SliceView(sliceIndex);
+            }
         }
     }
 }

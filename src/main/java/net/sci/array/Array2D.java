@@ -28,7 +28,7 @@ public abstract class Array2D<T> implements Array<T>
 		{
 			return (Array2D<T>) array;
 		}
-		return new Wrap<T>(array);
+		return new Wrapper<T>(array);
 	}
 
 	// =============================================================
@@ -143,127 +143,7 @@ public abstract class Array2D<T> implements Array<T>
         return new PositionIterator2D();
     }
 
-	private static class Wrap<T> extends Array2D<T>
-	{
-		private Array<T> array;
-		
-		protected Wrap(Array<T> array)
-		{
-			super(0, 0);
-			if (array.dimensionality() < 2)
-			{
-				throw new IllegalArgumentException("Requires an array with at least two dimensions");
-			}
-			this.array = array;
-			this.size0 = array.size(0);
-			this.size1 = array.size(1);
-		}
-
-		@Override
-		public Array<T> newInstance(int... dims)
-		{
-			return this.array.newInstance(dims);
-		}
-
-		@Override
-		public Factory<T> getFactory()
-		{
-			return this.array.getFactory();
-		}
-
-		@Override
-		public T get(int x, int y)
-		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
-			// return value from specified position
-			return this.array.get(pos);
-		}
-
-		@Override
-		public void set(int x, int y, T value)
-		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
-			// set value at specified position
-			this.array.set(pos, value);
-		}
-//      @Override
-//      public double getValue(int x, int y)
-//      {
-//          // convert (x,y) to ND integer array
-//          int nd = this.array.dimensionality();
-//          int[] pos = new int[nd];
-//          pos[0] = x;
-//          pos[1] = y;
-//          
-//          // return value from specified position
-//          return this.array.getValue(pos);
-//      }
-//
-//      @Override
-//      public void setValue(int x, int y, double value)
-//      {
-//          // convert (x,y) to ND integer array
-//          int nd = this.array.dimensionality();
-//          int[] pos = new int[nd];
-//          pos[0] = x;
-//          pos[1] = y;
-//          
-//          // set value at specified position
-//          this.array.setValue(pos, value);
-//      }
-
-		@Override
-		public Array2D<T> duplicate()
-		{
-			Array<T> tmp = this.array.newInstance(this.size0, this.size1);
-			if (!(tmp instanceof Array2D))
-			{
-				throw new RuntimeException("Can not create Array2D instance from " + this.array.getClass().getName() + " class.");
-			}
-			
-			Array2D<T> result = (Array2D <T>) tmp;
-			
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-
-			// Fill new array with input array
-			for (int y = 0; y < this.size1; y++)
-			{
-				pos[1] = y;
-				for (int x = 0; x < this.size0; x++)
-				{
-					pos[0] = x;
-					result.set(x, y, this.array.get(pos));
-				}
-			}
-
-			return result;
-		}
-		
-		@Override
-		public Class<T> dataType()
-		{
-			return array.dataType();
-		}
-
-		@Override
-		public Array.Iterator<T> iterator()
-		{
-			return array.iterator();
-		}
-	}
-	
-    /**
+	/**
      * Iterator over the positions of an array.
      * 
      * @author dlegland
@@ -320,7 +200,7 @@ public abstract class Array2D<T> implements Array<T>
             forward();
             return new int[] { posX, posY };
         }
-
+    
         @Override
         public int[] get(int[] pos)
         {
@@ -329,4 +209,99 @@ public abstract class Array2D<T> implements Array<T>
             return pos;
         }
     }
+
+    private static class Wrapper<T> extends Array2D<T>
+	{
+		private Array<T> array;
+		
+		protected Wrapper(Array<T> array)
+		{
+			super(0, 0);
+			if (array.dimensionality() < 2)
+			{
+				throw new IllegalArgumentException("Requires an array with at least two dimensions");
+			}
+			this.array = array;
+			this.size0 = array.size(0);
+			this.size1 = array.size(1);
+		}
+
+		@Override
+		public Array<T> newInstance(int... dims)
+		{
+			return this.array.newInstance(dims);
+		}
+
+		@Override
+		public Factory<T> getFactory()
+		{
+			return this.array.getFactory();
+		}
+
+		@Override
+		public T get(int x, int y)
+		{
+			// convert (x,y) to ND integer array
+			int nd = this.array.dimensionality();
+			int[] pos = new int[nd];
+			pos[0] = x;
+			pos[1] = y;
+			
+			// return value from specified position
+			return this.array.get(pos);
+		}
+
+		@Override
+		public void set(int x, int y, T value)
+		{
+			// convert (x,y) to ND integer array
+			int nd = this.array.dimensionality();
+			int[] pos = new int[nd];
+			pos[0] = x;
+			pos[1] = y;
+			
+			// set value at specified position
+			this.array.set(pos, value);
+		}
+
+		@Override
+		public Array2D<T> duplicate()
+		{
+			Array<T> tmp = this.array.newInstance(this.size0, this.size1);
+			if (!(tmp instanceof Array2D))
+			{
+				throw new RuntimeException("Can not create Array2D instance from " + this.array.getClass().getName() + " class.");
+			}
+			
+			Array2D<T> result = (Array2D <T>) tmp;
+			
+			int nd = this.array.dimensionality();
+			int[] pos = new int[nd];
+
+			// Fill new array with input array
+			for (int y = 0; y < this.size1; y++)
+			{
+				pos[1] = y;
+				for (int x = 0; x < this.size0; x++)
+				{
+					pos[0] = x;
+					result.set(x, y, this.array.get(pos));
+				}
+			}
+
+			return result;
+		}
+		
+		@Override
+		public Class<T> dataType()
+		{
+			return array.dataType();
+		}
+
+		@Override
+		public Array.Iterator<T> iterator()
+		{
+			return array.iterator();
+		}
+	}
 }
