@@ -4,6 +4,7 @@
 package net.sci.array;
 
 import net.sci.array.generic.BufferedGenericArray3D;
+import net.sci.array.scalar.TriFunction;
 
 /**
  * Base implementation for three-dimensional array.
@@ -59,9 +60,35 @@ public abstract class Array3D<T> implements Array<T>
 		this.size2 = size2;
 	}
 
+	
 	// =============================================================
 	// New methods
 
+	/**
+     * Populates the array using a function from three input arguments.
+     * 
+     * <pre>
+     * {@code
+     * Array3D<String> array = Array3D.create(5, 4, 3, null); 
+     * String[] digits = {"A", "B", "C", "D", "E", "F"}; 
+     * array.populate((x,y,z) -> digits[z.intValue()] + digits[y.intValue()] + digits[x.intValue()]); 
+     * String res432 = array.get(4, 3, 2); // returns "CDE". 
+     * }
+     * 
+     * @param fun
+     *            a function of three variables that returns an instance of type
+     *            T. The three input variables correspond to the x, y, and z
+     *            coordinates.
+     */
+    public void populate(TriFunction<Double,Double,Double,T> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.set(pos[0], pos[1], pos[2], 
+                    fun.apply((double) pos[0], (double) pos[1], (double) pos[2]));
+        }
+    }
+    
     /**
      * Returns a view over the specified slice.
      * 

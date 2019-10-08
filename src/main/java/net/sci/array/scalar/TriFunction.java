@@ -6,7 +6,7 @@ package net.sci.array.scalar;
 /**
  * A simple functional interface declaration to be used with ScalarArray3D.populate.
  * 
- * @see net.sci.array.scalar.ScalarArray3D#populate(TriFunction)
+ * @see net.sci.array.scalar.ScalarArray3D#populateValues(TriFunction)
  * 
  * @author dlegland
  *

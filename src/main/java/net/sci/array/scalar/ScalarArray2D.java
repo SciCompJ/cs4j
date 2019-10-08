@@ -6,6 +6,7 @@ package net.sci.array.scalar;
 import java.io.PrintStream;
 import java.util.Locale;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import net.sci.array.Array2D;
 
@@ -56,15 +57,42 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	// =============================================================
 	// Methods specific to ScalarArray2D
 
-	public void populate(BiFunction<Double,Double,Double> fun)
-	{
+    public void populateValues(Function<Double[],Double> fun)
+    {
+        Double[] input = new Double[2];
+        for (int[] pos : this.positions())
+        {
+            input[0] = (double) pos[0];
+            input[1] = (double) pos[1];
+            this.setValue(pos[0], pos[1], fun.apply(input));
+        }
+    }
+
+    /**
+     * Initializes the content of the array by using the specified function of
+     * two variables.
+     * 
+     * Example:
+     * <pre>
+     * {@code
+     * ScalarArray2D<?> array = UInt8Array2D.create(5, 4);
+     * array.populateValues((x, y) -> x + y * 10);
+     * }
+     * </pre>
+     * 
+     * @param fun
+     *            a function of two variables that returns a double. The two
+     *            input variables correspond to the x and y coordinates.
+     */
+    public void populateValues(BiFunction<Double,Double,Double> fun)
+    {
         for (int[] pos : this.positions())
         {
             this.setValue(pos[0], pos[1],
                     fun.apply((double) pos[0], (double) pos[1]));
         }
-	}
-	
+    }
+
 	/**
 	 * Prints the content of this array on the specified stream.
 	 * 

@@ -11,7 +11,8 @@ import org.junit.runners.Suite;
     ScalarArrayTest.class,
     UInt8ArrayTest.class,
     // 2D abstract classes
-	BinaryArray2DTest.class,
+    ScalarArray2DTest.class,
+    BinaryArray2DTest.class,
     Float32Array2DTest.class,
     UInt8Array2DTest.class,
     // 2D implementations
@@ -20,6 +21,7 @@ import org.junit.runners.Suite;
 	BufferedUInt16Array2DTest.class,
 	BufferedUInt8Array2DTest.class,
     // 3D abstract classes
+    ScalarArray3DTest.class,
 	BinaryArray3DTest.class,
     UInt8Array3DTest.class,
     UInt16Array3DTest.class,

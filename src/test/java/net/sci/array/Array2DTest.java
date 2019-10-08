@@ -73,5 +73,19 @@ public class Array2DTest
 		
 		assertEquals(new UInt8(34), res.get(4, 3));
 	}
-
+	
+    /**
+     * Test method for {@link net.sci.array.Array2D#populate(java.util.function.BiFunction)}.
+     */
+    @Test
+    public final void testPopulate()
+    {
+        Array2D<String> array = Array2D.create(5, 4, null);
+        String[] digits = {"A", "B", "C", "D", "E", "F"};  
+        
+        array.populate((x,y) -> digits[x.intValue()] + digits[y.intValue()]);
+        
+        assertEquals(array.get(0, 0), "AA");
+        assertEquals(array.get(4, 3), "ED");
+    }
 }

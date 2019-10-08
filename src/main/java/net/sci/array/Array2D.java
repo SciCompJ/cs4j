@@ -5,6 +5,7 @@ package net.sci.array;
 
 import java.io.PrintStream;
 import java.util.Locale;
+import java.util.function.BiFunction;
 
 import net.sci.array.generic.BufferedGenericArray2D;
 
@@ -56,6 +57,29 @@ public abstract class Array2D<T> implements Array<T>
 	// =============================================================
 	// New methods
 
+    /**
+     * Populates the array using a function from two input arguments.
+     * 
+     * <pre>
+     * {@code
+     * Array2D<String> array = Array3D.create(5, 4, null); 
+     * String[] digits = {"A", "B", "C", "D", "E", "F"}; 
+     * array.populate((x,y) -> digits[y.intValue()] + digits[x.intValue()]);
+     * String res43 = array.get(4, 3); // returns "CD". 
+     * }
+     * 
+     * @param fun
+     *            a function of two variables that returns an instance of type
+     *            T. The two input variables correspond to the x and y coordinates.
+     */
+    public void populate(BiFunction<Double,Double,T> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.set(pos[0], pos[1], fun.apply((double) pos[0], (double) pos[1]));
+        }
+    }
+    
 	public boolean containsPosition(int x, int y)
 	{
         if (x < 0 || y < 0) return false;
@@ -82,6 +106,7 @@ public abstract class Array2D<T> implements Array<T>
         }
     }
 
+    
     // =============================================================
     // New abstract methods
 
@@ -89,6 +114,7 @@ public abstract class Array2D<T> implements Array<T>
 
 	public abstract void set(int x, int y, T value);
 
+	
 	// =============================================================
 	// Specialization of the Array interface
 

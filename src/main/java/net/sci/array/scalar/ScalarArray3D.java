@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import java.util.function.Function;
+
 import net.sci.array.Array3D;
 
 /**
@@ -27,6 +29,8 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
      * Same as wrap method, but use different name to avoid runtime class cast
      * exceptions.
      * 
+     * @param T
+     *            the type of data within the array
      * @param array
      *            an instance of ScalarArray with two dimensions
      * @return an instance of ScalarArray2D
@@ -52,7 +56,33 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     // =============================================================
     // New methods
 
-    public void populate(TriFunction<Double,Double,Double,Double> fun)
+    public void populateValues(Function<Double[],Double> fun)
+    {
+        Double[] input = new Double[3];
+        for (int[] pos : this.positions())
+        {
+            input[0] = (double) pos[0];
+            input[1] = (double) pos[1];
+            input[2] = (double) pos[2];
+            this.setValue(pos[0], pos[1], pos[2], fun.apply(input));
+        }
+    }
+
+    /**
+     * Initializes the content of the array by using the specified function of
+     * three variables.
+     * 
+     * Example:
+     * <pre>{@code
+     * ScalarArray3D<?> array = UInt8Array3D.create(5, 4, 3);
+     * array.populateValues((x,y,z) -> x + y * 10 + z * 100);
+     * }</pre>
+     * 
+     * @param fun
+     *            a function of three variables that returns a double. The three
+     *            input variables correspond to the x, y, and z coordinates.
+     */
+    public void populateValues(TriFunction<Double,Double,Double,Double> fun)
     {
         for (int[] pos : this.positions())
         {
