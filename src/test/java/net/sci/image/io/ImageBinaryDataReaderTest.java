@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 
+import net.sci.array.scalar.BufferedUInt16Array3D;
+import net.sci.array.scalar.UInt16Array3D;
+
 import org.junit.Test;
 
 public class ImageBinaryDataReaderTest
@@ -42,27 +45,27 @@ public class ImageBinaryDataReaderTest
         assertEquals(230.0, array[numel - 1] & 0x00FFFF, .01);
     }
 
-//    @Test
-//    public void testReadImage_2D_UInt16_lsb_xyRamp() throws IOException
-//    {
-//        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_uint16_lsb.raw").getFile();
-//        File file = new File(fileName);
-//        
-//        int[] size = new int[]{4, 3};
-//        RawImageReader.DataType type = RawImageReader.DataType.UINT16;
-//        
-//        RawImageReader reader = new RawImageReader(file, size, type, ByteOrder.LITTLE_ENDIAN);
-//        Image image = reader.readImage();
-//        
-//        assertEquals(2, image.getDimension());
-//
-//        ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
-//        assertEquals(4, data.getSize(0));
-//        assertEquals(3, data.getSize(1));
-//        
-//        assertTrue(data instanceof UInt16Array);
-//        assertEquals(230.0, data.getValue(3, 2), .01);
-//    }
+    @Test
+    public void testReadMHDImage_3D_UInt16() throws IOException
+    {
+        String fileName = getClass().getResource("/files/mhd/img_10x15x20_gray16.raw").getFile();
+        File file = new File(fileName);
+        
+        RandomAccessFile raf = new RandomAccessFile(file, "r");
+        ImageBinaryDataReader reader = new ImageBinaryDataReader(raf, ByteOrder.LITTLE_ENDIAN);
+        int numel = 20*15*10;
+        short[] buffer = new short[numel];
+        reader.readShortArray(buffer, 0, numel);
+        reader.close();
+        
+        UInt16Array3D array = new BufferedUInt16Array3D(10, 15, 20, buffer);
+        assertEquals(250.0, array.getValue(4, 4, 10), .01);
+        
+        assertEquals(3, array.dimensionality());
 
-
+        assertEquals(10, array.size(0));
+        assertEquals(15, array.size(1));
+        assertEquals(20, array.size(2));
+        
+    }
 }

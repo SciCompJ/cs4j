@@ -3,9 +3,16 @@
  */
 package net.sci.image.io;
 
+import java.nio.ByteOrder;
+
 /**
  * Information required to read data from a binary data file.
  * 
+ * Expected use:
+ * <pre>{@code
+ * ImageFileInfo info = MyCustomformat.readFileInfo(fileName);
+ * 
+ * }</pre>
  * @author dlegland
  *
  */
@@ -61,6 +68,15 @@ public class ImageFileInfo
         }
     }
 
+    /** the name of the file containing the data */
+    public String dataFileName = null;
+
+    /**
+     * The number of bytes to skip before reading data
+     */
+    public int headerSize = 0;
+
+
     /** Number of dimensions, should be greater than 0 when initialized */
     public int nDims = 0;
 
@@ -71,23 +87,23 @@ public class ImageFileInfo
     public ElementType elementType = ElementType.UINT8;
     public String elementTypeName = "";
 
-    /** the name of the file containing the data */
-    public String dataFileName = null;
-
-    /**
-     * The number of bytes to skip before reading data
-     */
-    public int headerSize = 0;
-
     // values for spatial calibration
     public double[] elementSpacing = null;
     public double[] elementSize = null;
 
-    public boolean elementByteOrderMSB = false;
     public int elementNumberOfChannels = 1;
 
     public boolean binaryData = true;
-    public boolean binaryDataByteOrderMSB = false;
+    
+//  public boolean elementByteOrderMSB = false;
+    /**
+     * Byte ordering of binary data. Can be one of:
+     * <ul>
+     * <li> ByteOrder.LITTLE_ENDIAN (default), corresponds to LSB (Least significant byte first)</li>
+     * <li> ByteOrder.BIG_ENDIAN: corresponds to MSB (Mostly significant byte first)</li>
+     * </ul>
+     */
+    public ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
     
 //    public boolean compressedData = false;
 //    public int compressedDataSize = 0;
