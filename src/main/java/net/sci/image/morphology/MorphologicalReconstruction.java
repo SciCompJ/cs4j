@@ -107,7 +107,7 @@ public class MorphologicalReconstruction
 			throw new RuntimeException("Requires an image containing a 2D or 3D scalar array");
 		}
 		
-		return new Image(res, image);
+		return new Image(res, image.getType(), image);
 	}
 
 	/**
@@ -229,7 +229,7 @@ public class MorphologicalReconstruction
 			throw new RuntimeException("Requires an image containing a 2D or 3D scalar array");
 		}
 		
-		return new Image(res, image);
+        return new Image(res, image.getType(), image);
 	}
 
 	/**
@@ -362,7 +362,7 @@ public class MorphologicalReconstruction
 		}
 
 		// Create result image from result array
-		Image resultImage = new Image(result, maskImage);
+		Image resultImage = new Image(result, maskImage.getType(), maskImage);
 		return resultImage;
 	}
 
@@ -420,7 +420,7 @@ public class MorphologicalReconstruction
 		}
 
 		// Create result image from result array
-		Image resultImage = new Image(result, maskImage);
+		Image resultImage = new Image(result, maskImage.getType(), maskImage);
 		return resultImage;
 	}
 

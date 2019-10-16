@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
 	// generic classes
 	FloodFillTest.class,
     LabelImagesTest.class,
+    MorphologicalReconstructionTest.class,
 	})
 public class AllTests {
   //nothing
