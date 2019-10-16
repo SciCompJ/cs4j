@@ -148,12 +148,20 @@ public interface BinaryArray extends IntArray<Binary>
 	@Override
 	public default void setInt(int[] pos, int value)
 	{
-		setBoolean(pos, value != 0);
+		setBoolean(pos, value > 0);
 	}
 
 	
-	/**
-     * Sets the value at the specified position, using true if value is greater than zero.
+    /**
+     * Sets the value at the specified position, using true if value is greater
+     * than zero.
+     * 
+     * @param pos
+     *            the position to modify
+     * @param value
+     *            the value to set up. The position is set to true if value is
+     *            greater than zero, and to false otherwise.
+     * 
      */
     public default void setValue(int[] pos, double value)
     {
@@ -225,7 +233,7 @@ public interface BinaryArray extends IntArray<Binary>
             @Override
             public void setValue(double value)
             {
-                BinaryArray.this.setValue(iter.get(), value);
+                BinaryArray.this.setBoolean(iter.get(), value > 0);
             }
 
             @Override

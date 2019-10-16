@@ -151,7 +151,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 
 	public void setInt(int x, int y, int z, int value)
 	{
-		setBoolean(x, y, z, value != 0);
+		setBoolean(x, y, z, value > 0);
 	}
 
 	
@@ -193,7 +193,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	@Override
 	public void setValue(int x, int y, int z, double value)
 	{
-		setBoolean(x, y, z, value != 0);
+		setBoolean(x, y, z, value > 0);
 	}
 
 	
@@ -269,7 +269,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
             BinaryArray3D result = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
     	    for (int[] pos : array.positions())
     	    {
-    	    	result.setBoolean(pos, array.getValue(pos) > 0);
+    	    	result.setBoolean(pos, array.getBoolean(pos));
     	    }
             return result;
         }

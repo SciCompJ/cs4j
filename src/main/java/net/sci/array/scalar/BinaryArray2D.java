@@ -126,7 +126,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 
 	public void setInt(int x, int y, int value)
 	{
-		setBoolean(x, y, value != 0);
+		setBoolean(x, y, value > 0);
 	}
 
 	// =============================================================
@@ -167,7 +167,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	@Override
 	public void setValue(int x, int y, double value)
 	{
-		setBoolean(x, y, value != 0);
+		setBoolean(x, y, value > 0);
 	}
 
 	

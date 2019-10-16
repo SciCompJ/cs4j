@@ -45,15 +45,27 @@ public class Binary extends Int
 	
 	/**
 	 * Constructor from an int, setting to a TRUE state if the value is
-	 * different from 0.
+	 * greater than 0.
 	 * 
 	 * @param value
 	 *            the value used to defined the state of this boolean
 	 */
 	public Binary(int value)
 	{
-		this.state = value != 0;
+		this.state = value > 0;
 	}
+
+    /**
+     * Constructor from a double, setting to a TRUE state if the value is
+     * greater than 0.
+     * 
+     * @param value
+     *            the value used to defined the state of this boolean
+     */
+    public Binary(double value)
+    {
+        this.state = value > 0;
+    }
 
 	
 	// =============================================================
