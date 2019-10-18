@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.graph;
+package net.sci.geom.graph;
 
 import static org.junit.Assert.*;
 

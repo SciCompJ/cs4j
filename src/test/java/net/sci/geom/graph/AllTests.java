@@ -1,4 +1,4 @@
-package net.sci.geom.geom2d.graph;
+package net.sci.geom.graph;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
