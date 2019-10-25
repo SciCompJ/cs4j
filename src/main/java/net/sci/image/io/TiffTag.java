@@ -684,7 +684,7 @@ public class TiffTag
 		// read the full raw array
 		long saveLoc = dataReader.getFilePointer();
 		dataReader.seek(offset);
-		int nRead = dataReader.read(lut16);
+		int nRead = dataReader.readByteArray(lut16);
 		dataReader.seek(saveLoc);
 		if (nRead != nBytes)
 		{
@@ -730,7 +730,7 @@ public class TiffTag
 
 			long pos0 = dataReader.getFilePointer();
 			dataReader.seek(offset);
-			dataReader.read(data);
+			dataReader.readByteArray(data);
 			dataReader.seek(pos0);
 		}
 

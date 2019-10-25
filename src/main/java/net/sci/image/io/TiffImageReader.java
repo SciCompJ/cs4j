@@ -845,7 +845,7 @@ public class TiffImageReader implements ImageReader
 		for (int i = 0; i < nStrips; i++)
 		{
 			dataReader.seek(info.stripOffsets[i] & 0xffffffffL);
-			int nRead = dataReader.read(buffer, offset, info.stripLengths[i]);
+			int nRead = dataReader.readByteArray(buffer, offset, info.stripLengths[i]);
 			offset += nRead;
 			totalRead += nRead;
 		}
@@ -867,7 +867,7 @@ public class TiffImageReader implements ImageReader
 		for (int i = 0; i < nStrips; i++)
 		{
 			dataReader.seek(info.stripOffsets[i] & 0xffffffffL);
-			int nRead = dataReader.read(buffer, offset, info.stripLengths[i]);
+			int nRead = dataReader.readByteArray(buffer, offset, info.stripLengths[i]);
 			offset += nRead;
 			totalRead += nRead;
 		}
@@ -892,7 +892,7 @@ public class TiffImageReader implements ImageReader
 		for (int i = 0; i < nStrips; i++)
 		{
 			dataReader.seek(info.stripOffsets[i] & 0xffffffffL);
-            int nRead = dataReader.read(compressedBytes, offset, info.stripLengths[i]);
+            int nRead = dataReader.readByteArray(compressedBytes, offset, info.stripLengths[i]);
 			offset += nRead;
 		}
 
@@ -919,7 +919,7 @@ public class TiffImageReader implements ImageReader
 		for (int i = 0; i < nStrips; i++)
 		{
 			dataReader.seek(info.stripOffsets[i] & 0xffffffffL);
-            int nRead = dataReader.read(compressedBytes, offset0, info.stripLengths[i]);
+            int nRead = dataReader.readByteArray(compressedBytes, offset0, info.stripLengths[i]);
 			offset0 += nRead;
 		}
 

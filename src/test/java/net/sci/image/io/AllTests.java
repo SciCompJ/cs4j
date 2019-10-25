@@ -6,6 +6,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
+    BinaryDataReaderTest.class,
     MetaImageReaderTest.class,
     PgmImageReaderTest.class,
     RawImageReaderTest.class,

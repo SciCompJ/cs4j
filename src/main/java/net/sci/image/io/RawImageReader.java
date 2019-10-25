@@ -163,7 +163,7 @@ public class RawImageReader implements ImageReader
         
         // Read the byte array
         reader.seek(this.offset);
-        int nRead = reader.read(buffer, 0, nBytes);
+        int nRead = reader.readByteArray(buffer, 0, nBytes);
         
         // closes file
         reader.close();

@@ -10,7 +10,9 @@ import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 
 /**
- * Read data with various formats taking into account endianness.
+ * Read data with various formats from a binary file taking into account
+ * endianness. This is the low-level class for reading binary data.
+ * Outputs can be primitive types or arrays of primitive types. 
  * 
  * @see java.io.DataInput
  * 
@@ -24,8 +26,7 @@ public class BinaryDataReader implements Closeable
 	
 	RandomAccessFile inputStream;
 	
-	boolean littleEndian = false;
-	
+	ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 	
 	// =============================================================
 	// Constructors
@@ -58,61 +59,15 @@ public class BinaryDataReader implements Closeable
 
 	public ByteOrder getOrder()
 	{
-		return this.littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
+	    return byteOrder;
 	}
 	
 	public void setOrder(ByteOrder order)
 	{
-		this.littleEndian = order == ByteOrder.LITTLE_ENDIAN;
+	    this.byteOrder = order;
 	}
+
 	
-//	public int[] readIntArray(int count, long offset) throws IOException
-//	{
-//		// allocate memory for result
-//		int[] res = new int[count];
-//
-//		// save pointer location
-//		long saveLoc = inputStream.getFilePointer();
-//
-//		// fill up array
-//		inputStream.seek(offset);
-//		for (int c = 0; c < count; c++)
-//			res[c] = readInt();
-//
-//		// restore pointer and return result
-//		inputStream.seek(saveLoc);
-//		return res;
-//	}
-
-//	private UInt8Array readUInt8Array(MetaImageInfo info) throws IOException
-//	{
-//	    // Open binary stream on data
-//	    File dataFile = new File(this.file.getParent(), info.elementDataFile);
-//	    RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
-//	    
-//	    // allocate memory for buffer
-//	    // Size of image and of data buffer
-//	    int nPixels = computePixelNumber(info);
-//	    int nBytes  = nPixels * info.elementNumberOfChannels;
-//	    byte[] buffer = new byte[nBytes];
-//	    
-//	    // Read the byte array
-//	    inputStream.seek(info.headerSize);
-//	    int nRead = inputStream.read(buffer, 0, nBytes);
-//	    
-//	    // closes file
-//	    inputStream.close();
-//	    
-//	    // Check all data have been read
-//	    if (nRead != nBytes) 
-//	    {
-//	        throw new IOException("Could read only " + nRead
-//	                + " bytes over the " + nBytes + " expected");
-//	    }
-//	    
-//	    return UInt8Array.create(info.dimSize, buffer);
-//	}
-
 	// =============================================================
 	// Read arrays
     
@@ -131,7 +86,7 @@ public class BinaryDataReader implements Closeable
 	 *             If the first byte cannot be read for any reason other than
 	 *             end of file
 	 */
-	public int read(byte[] b, int off, int len) throws IOException
+	public int readByteArray(byte[] b, int off, int len) throws IOException
 	{
 		return this.inputStream.read(b, off, len);
 	}
@@ -147,7 +102,7 @@ public class BinaryDataReader implements Closeable
 	 *             If the first byte cannot be read for any reason other than
 	 *             end of file
 	 */
-	public int read(byte[] buffer) throws IOException
+	public int readByteArray(byte[] buffer) throws IOException
 	{
 		return this.inputStream.read(buffer);
 	}
@@ -156,22 +111,22 @@ public class BinaryDataReader implements Closeable
     {
         // read byte array of adequate length
         byte[] byteBuffer = new byte[len * 2];
-        int nRead = read(byteBuffer);
+        int nRead = readByteArray(byteBuffer) / 2;
 
         // convert byte array to short array
-        for (int i = 0; i < len; i++)
+        for (int i = 0; i < nRead; i++)
         {
             int b1 = byteBuffer[2 * i] & 0x00FF;
             int b2 = byteBuffer[2 * i + 1] & 0x00FF;
         
-            if (littleEndian)
+            if (byteOrder == ByteOrder.LITTLE_ENDIAN)
                 buffer[i] = (short) ((b2 << 8) + b1);
             else
                 buffer[i] = (short) ((b1 << 8) + b2);
         }
 
-        // restore pointer and return result
-        return nRead / 2;
+        // return number of data read
+        return nRead;
     }
 
     public int readIntArray(int[] buffer, int off, int len) throws IOException
@@ -183,7 +138,7 @@ public class BinaryDataReader implements Closeable
             buffer[pos++] = (int) readInt();
         }
         
-        // restore pointer and return result
+        // return number of data read
         return len;
     }
 
@@ -196,7 +151,7 @@ public class BinaryDataReader implements Closeable
             buffer[pos++] = (float) readFloat();
         }
         
-        // restore pointer and return result
+        // return number of data read
         return len;
     }
 
@@ -209,7 +164,7 @@ public class BinaryDataReader implements Closeable
             buffer[pos++] = readDouble();
         }
         
-        // restore pointer and return result
+        // return number of data read
         return len;
     }
 
@@ -217,7 +172,19 @@ public class BinaryDataReader implements Closeable
     // =============================================================
     // Read primitive types
 
-     /**
+    /**
+     * Reads the next byte from the stream.
+     * 
+     * @return the next byte value within this stream
+     * @throws IOException
+     *             if an error occurs
+     */
+    public byte readByte() throws IOException
+    {
+        return inputStream.readByte();
+    }
+
+    /**
      * Reads the next short state from the stream.
      * 
      * @return the next short value within this stream
@@ -231,7 +198,7 @@ public class BinaryDataReader implements Closeable
         int b2 = inputStream.read();
 
         // encode bytes to short
-        if (littleEndian)
+        if (byteOrder == ByteOrder.LITTLE_ENDIAN)
             return ((b2 << 8) + b1);
         else
             return ((b1 << 8) + b2);
@@ -253,7 +220,7 @@ public class BinaryDataReader implements Closeable
 		int b4 = inputStream.read();
 
 		// encode bytes to integer
-		if (littleEndian)
+		if (byteOrder == ByteOrder.LITTLE_ENDIAN)
 			return ((b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
 		else
 			return ((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
@@ -275,7 +242,7 @@ public class BinaryDataReader implements Closeable
         int b4 = inputStream.read();
 
         // encode bytes to integer
-        if (littleEndian)
+        if (byteOrder == ByteOrder.LITTLE_ENDIAN)
             return Float.intBitsToFloat((b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
         else
             return Float.intBitsToFloat((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
@@ -301,7 +268,7 @@ public class BinaryDataReader implements Closeable
         long b8 = inputStream.read();
 
         // encode bytes to integer
-        if (littleEndian)
+        if (byteOrder == ByteOrder.LITTLE_ENDIAN)
             return Double.longBitsToDouble((b8 << 56) + (b7 << 48) + (b6 << 40) + (b5 << 32) + (b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
         else
             return Double.longBitsToDouble((b1 << 56) + (b2 << 48) + (b3 << 40) + (b4 << 32) + (b5 << 24) + (b6 << 16) + (b7 << 8) + b8);
