@@ -8,12 +8,6 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.Float32Array;
-import net.sci.array.scalar.Float64Array;
-import net.sci.array.scalar.Int16Array;
-import net.sci.array.scalar.Int32Array;
-import net.sci.array.scalar.UInt16Array;
-import net.sci.array.scalar.UInt8Array;
 import net.sci.image.Image;
 
 /**
@@ -125,199 +119,37 @@ public class RawImageReader implements ImageReader
     
     public Array<?> readImageData() throws IOException 
     {
+        ImageBinaryDataReader reader = new ImageBinaryDataReader(this.file, this.byteOrder);
+        reader.seek(this.offset);
+
+        Array<?> array;
         switch(this.type)
         {
         case UINT8:
-            return UInt8Array.create(this.size, readByteData());
+            array = reader.readUInt8Array(this.size); break;
         
         case UINT16:
-            return UInt16Array.create(this.size, readShortData());
+            array = reader.readUInt16Array(this.size); break;
 
         case INT16:
-            return Int16Array.create(this.size, readShortData());
+            array = reader.readInt16Array(this.size); break;
             
         case INT32:
-            return Int32Array.create(this.size, readIntData());
+            array = reader.readInt32Array(this.size); break;
 
         case FLOAT32:
-            return Float32Array.create(this.size, readFloatData());
+            array = reader.readFloat32Array(this.size); break;
 
         case FLOAT64:
-            return Float64Array.create(this.size, readDoubleData());
+            array = reader.readFloat64Array(this.size); break;
 
         default:
+            reader.close();
             throw new RuntimeException("Unable to process files with data type: " + type);
         }
-    }
-    
-    private byte[] readByteData() throws IOException
-    {
-        BinaryDataReader reader = new BinaryDataReader(this.file, this.byteOrder);
         
-        // Size of image and of data buffer
-        int nPixels = computeElementNumber();
-        int nBytes  = nPixels;
-
-        // allocate memory for buffer
-        byte[] buffer = new byte[nBytes];
-        
-        // Read the byte array
-        reader.seek(this.offset);
-        int nRead = reader.readByteArray(buffer, 0, nBytes);
-        
-        // closes file
         reader.close();
-        
-        // Check all data have been read
-        if (nRead != nBytes) 
-        {
-            throw new IOException("Could read only " + nRead
-                    + " bytes over the " + nBytes + " expected");
-        }
-        
-        return buffer;
-//        // Open binary stream on data
-//        RandomAccessFile inputStream = new RandomAccessFile(this.file, "r");
-//
-//        // allocate memory for buffer
-//        // Size of image and of data buffer
-//        int nPixels = computeElementNumber();
-//        int nBytes  = nPixels;
-//        byte[] buffer = new byte[nBytes];
-//
-//        // Read the byte array
-//        inputStream.seek(this.offset);
-//        int nRead = inputStream.read(buffer, 0, nBytes);
-//
-//        // closes file
-//        inputStream.close();
-//
-//        // Check all data have been read
-//        if (nRead != nBytes) 
-//        {
-//            throw new IOException("Could read only " + nRead
-//                    + " bytes over the " + nBytes + " expected");
-//        }
-//
-//        return UInt8Array.create(this.size, buffer);
+        return array;
     }
 
-    private short[] readShortData() throws IOException
-    {
-        BinaryDataReader reader = new BinaryDataReader(this.file, this.byteOrder);
-        
-        // Size of image and of data buffer
-        int nPixels = computeElementNumber();
-        
-        // allocate memory for buffer
-        short[] buffer = new short[nPixels];
-        
-        // Read the byte array
-        reader.seek(this.offset);
-        int nRead = reader.readShortArray(buffer, 0, nPixels);
-        
-        // closes file
-        reader.close();
-        
-        // Check all data have been read
-        if (nRead != nPixels) 
-        {
-            throw new IOException("Could read only " + nRead
-                    + " shorts over the " + nPixels + " expected");
-        }
-        
-        return buffer;
-    }
-    
-    private int[] readIntData() throws IOException
-    {
-        BinaryDataReader reader = new BinaryDataReader(this.file, this.byteOrder);
-        
-        // Size of image and of data buffer
-        int nPixels = computeElementNumber();
-        
-        // allocate memory for buffer
-        int[] buffer = new int[nPixels];
-        
-        // Read the byte array
-        reader.seek(this.offset);
-        int nRead = reader.readIntArray(buffer, 0, nPixels);
-        
-        // closes file
-        reader.close();
-        
-        // Check all data have been read
-        if (nRead != nPixels) 
-        {
-            throw new IOException("Could read only " + nRead
-                    + " shorts over the " + nPixels + " expected");
-        }
-        
-        return buffer;
-    }
-    
-    private float[] readFloatData() throws IOException
-    {
-        BinaryDataReader reader = new BinaryDataReader(this.file, this.byteOrder);
-        
-        // Size of image and of data buffer
-        int nPixels = computeElementNumber();
-        
-        // allocate memory for buffer
-        float[] buffer = new float[nPixels];
-        
-        // Read the byte array
-        reader.seek(this.offset);
-        int nRead = reader.readFloatArray(buffer, 0, nPixels);
-        
-        // closes file
-        reader.close();
-        
-        // Check all data have been read
-        if (nRead != nPixels) 
-        {
-            throw new IOException("Could read only " + nRead
-                    + " shorts over the " + nPixels + " expected");
-        }
-        
-        return buffer;
-    }
-    
-    private double[] readDoubleData() throws IOException
-    {
-        BinaryDataReader reader = new BinaryDataReader(this.file, this.byteOrder);
-        
-        // Size of image and of data buffer
-        int nPixels = computeElementNumber();
-        
-        // allocate memory for buffer
-        double[] buffer = new double[nPixels];
-        
-        // Read the byte array
-        reader.seek(this.offset);
-        int nRead = reader.readDoubleArray(buffer, 0, nPixels);
-        
-        // closes file
-        reader.close();
-        
-        // Check all data have been read
-        if (nRead != nPixels) 
-        {
-            throw new IOException("Could read only " + nRead
-                    + " shorts over the " + nPixels + " expected");
-        }
-        
-        return buffer;
-    }
-    
-    private int computeElementNumber()
-    {
-        int number = 1;
-        for (int d : this.size)
-        {
-            number *= d;
-        }
-        return number;
-    }
-    
 }
