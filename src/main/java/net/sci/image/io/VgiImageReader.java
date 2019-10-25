@@ -3,16 +3,13 @@
  */
 package net.sci.image.io;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.LineNumberReader;
+import java.nio.ByteOrder;
 
-import net.sci.array.scalar.BufferedUInt16Array3D;
-import net.sci.array.scalar.UInt16Array3D;
+import net.sci.array.Array;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 
@@ -137,10 +134,11 @@ public class VgiImageReader implements ImageReader
         dataFile = new File(file.getParentFile(), dataFile.getName());
         System.out.println("read data file: " + dataFile.getAbsolutePath());
 
-        int nPixels = sizeX * sizeY * sizeZ;
-        short[] data = read16bitsData(dataFile, 0, nPixels, littleEndian);
+        ByteOrder order = littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
+        ImageBinaryDataReader reader = new ImageBinaryDataReader(dataFile, order);
+        Array<?> array = reader.readUInt16Array(new int[]{sizeX, sizeY, sizeZ});
 
-        UInt16Array3D array = new BufferedUInt16Array3D(sizeX, sizeY, sizeZ, data);
+        reader.close();
         
         // Create new image
         Image image = new Image(array);
@@ -151,52 +149,5 @@ public class VgiImageReader implements ImageReader
                 
         return image; 
     }
-    
-    private short[] read16bitsData(File file, int offset, int size, boolean littleEndian) throws IOException 
-    {
-        if (!file.exists())
-        {
-            throw new RuntimeException("Could not find data file: " + file.getName());
-        }
 
-        try (InputStream inputStream = new BufferedInputStream(new FileInputStream(file)))
-        {
-            short[] data = new short[size];
-            int nBytes = size * 2;
-            byte[] byteData = new byte[nBytes];
-            
-//            inputStream.seek(0);
-            int nRead = inputStream.read(byteData, 0, nBytes);
-            inputStream.close();
-            
-            if (nRead != nBytes)
-            {
-                throw new RuntimeException("Could read only " + nRead + " over the " + nBytes + " expected");
-            }
-
-            if (littleEndian)
-            {
-                for (int i = 0; i < size; i++)
-                {
-                    byte b1 = byteData[2*i];
-                    byte b2 = byteData[2*i+1];
-
-                    int v = ((b2 & 0xFF) << 8 | (b1 & 0x00FF));
-                    data[i] = (short) v;
-                }
-            }
-            else
-            {
-                for (int i = 0; i < size; i++)
-                {
-                    byte b1 = byteData[2*i];
-                    byte b2 = byteData[2*i+1];
-                    data[i] = (short) ((b1 & 0xFF) << 8 | (b2 & 0xFF));
-                }
-            }
-
-            return data;
-        }
-    }
-    
 }

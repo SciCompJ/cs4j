@@ -15,7 +15,8 @@ public final class MetaImageInfo
 	{
 		UINT8(1),
 		UINT16(2),
-		INT16(2),
+        INT16(2),
+        INT32(4),
 		FLOAT32(4),
 		FLOAT64(8);
 		
@@ -39,8 +40,10 @@ public final class MetaImageInfo
 				return ElementType.UINT8;
 			if (metString.equalsIgnoreCase("MET_USHORT"))
 				return ElementType.UINT16;
-			if (metString.equalsIgnoreCase("MET_SHORT"))
-				return ElementType.INT16;
+            if (metString.equalsIgnoreCase("MET_SHORT"))
+                return ElementType.INT16;
+            if (metString.equalsIgnoreCase("MET_INT"))
+                return ElementType.INT32;
 			if (metString.equalsIgnoreCase("MET_FLOAT"))
 				return ElementType.FLOAT32;
 			if (metString.equalsIgnoreCase("MET_DOUBLE"))

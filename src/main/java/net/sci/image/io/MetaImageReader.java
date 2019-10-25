@@ -7,15 +7,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.nio.ByteOrder;
 import java.util.Scanner;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.Float32Array;
-import net.sci.array.scalar.Float64Array;
-import net.sci.array.scalar.Int16Array;
-import net.sci.array.scalar.UInt16Array;
-import net.sci.array.scalar.UInt8Array;
 import net.sci.image.Image;
 
 /**
@@ -220,252 +215,45 @@ public class MetaImageReader implements ImageReader
 	
 	public Array<?> readImageData(MetaImageInfo info) throws IOException 
 	{
-		// TODO: process other data types
+	    File dataFile = new File(this.file.getParent(), info.elementDataFile);
+	    ByteOrder order = info.binaryDataByteOrderMSB ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
+        ImageBinaryDataReader reader = new ImageBinaryDataReader(dataFile, order);
+        reader.seek(info.headerSize);
+
 		Array<?> array;
 		switch(info.elementType)
 		{
 		case UINT8:
-			array = readUInt8Array(info);
+			array = reader.readUInt8Array(info.dimSize);
 			break;
 		
 		case UINT16:
-			array = readUInt16Array(info);
+            array = reader.readUInt16Array(info.dimSize);
 			break;
 
-		case INT16:
-			array = readInt16Array(info);
-			break;
-			
-//		case INT32:
+        case INT16:
+            array = reader.readInt16Array(info.dimSize);
+            break;
+            
+        case INT32:
+            array = reader.readInt32Array(info.dimSize);
+            break;
+            
 		case FLOAT32:
-			array = readFloat32Array(info);
+            array = reader.readFloat32Array(info.dimSize);
 			break;
 			
 		case FLOAT64:
-			array = readFloat64Array(info);
+            array = reader.readFloat64Array(info.dimSize);
 			break;
 			
 //			case BOOLEAN:
 		default:
+		    reader.close();
 			throw new RuntimeException("Unable to process files with data type: " + info.elementTypeName);
 		}
+
+		reader.close();
 		return array;
 	}
-	
-	private UInt8Array readUInt8Array(MetaImageInfo info) throws IOException
-	{
-		// Open binary stream on data
-		File dataFile = new File(this.file.getParent(), info.elementDataFile);
-		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
-
-		// allocate memory for buffer
-		// Size of image and of data buffer
-		int nPixels = computePixelNumber(info);
-		int nBytes  = nPixels * info.elementNumberOfChannels;
-		byte[] buffer = new byte[nBytes];
-
-		// Read the byte array
-		inputStream.seek(info.headerSize);
-		int nRead = inputStream.read(buffer, 0, nBytes);
-
-		// closes file
-		inputStream.close();
-
-		// Check all data have been read
-		if (nRead != nBytes) 
-		{
-			throw new IOException("Could read only " + nRead
-					+ " bytes over the " + nBytes + " expected");
-		}
-
-		return UInt8Array.create(info.dimSize, buffer);
-	}
-
-	private UInt16Array readUInt16Array(MetaImageInfo info) throws IOException
-	{
-		// Open binary stream on data
-		File dataFile = new File(this.file.getParent(), info.elementDataFile);
-		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
-
-		// allocate memory for buffer
-		// Size of image and of data buffer
-		int nPixels = computePixelNumber(info);
-		int nBytes  = nPixels * info.elementNumberOfChannels * 2;
-		byte[] byteArray = new byte[nBytes];
-
-		// Read the byte array
-		inputStream.seek(info.headerSize);
-		int nRead = inputStream.read(byteArray, 0, nBytes);
-
-		// closes file
-		inputStream.close();
-
-		// Check all data have been read
-		if (nRead != nBytes) 
-		{
-			throw new IOException("Could read only " + nRead
-					+ " bytes over the " + nBytes + " expected");
-		}
-
-		// convert byte array to short array
-		short[] buffer = new short[nPixels];
-		for (int i = 0; i < nPixels; i++)
-		{
-			int b1 = byteArray[2 * i] & 0x00FF;
-			int b2 = byteArray[2 * i + 1] & 0x00FF;
-		
-			if (info.elementByteOrderMSB)
-				buffer[i] = (short) ((b1 << 8) + b2);
-			else
-				buffer[i] = (short) ((b2 << 8) + b1);
-		}
-		
-		return UInt16Array.create(info.dimSize, buffer);
-	}
-	
-	private Int16Array readInt16Array(MetaImageInfo info) throws IOException
-	{
-		// Open binary stream on data
-		File dataFile = new File(this.file.getParent(), info.elementDataFile);
-		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
-
-		// allocate memory for buffer
-		// Size of image and of data buffer
-		int nPixels = computePixelNumber(info);
-		int nBytes  = nPixels * info.elementNumberOfChannels * 2;
-		byte[] byteArray = new byte[nBytes];
-
-		// Read the byte array
-		inputStream.seek(info.headerSize);
-		int nRead = inputStream.read(byteArray, 0, nBytes);
-
-		// closes file
-		inputStream.close();
-
-		// Check all data have been read
-		if (nRead != nBytes) 
-		{
-			throw new IOException("Could read only " + nRead
-					+ " bytes over the " + nBytes + " expected");
-		}
-
-		// convert byte array to short array
-		short[] buffer = new short[nPixels];
-		for (int i = 0; i < nPixels; i++)
-		{
-			int b1 = byteArray[2 * i] & 0x00FF;
-			int b2 = byteArray[2 * i + 1] & 0x00FF;
-		
-			if (info.elementByteOrderMSB)
-				buffer[i] = (short) ((b1 << 8) + b2);
-			else
-				buffer[i] = (short) ((b2 << 8) + b1);
-		}
-	
-		return Int16Array.create(info.dimSize, buffer);
-	}
-	
-	private Float32Array readFloat32Array(MetaImageInfo info) throws IOException
-	{
-		// Open binary stream on data
-		File dataFile = new File(this.file.getParent(), info.elementDataFile);
-		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
-
-		// allocate memory for buffer
-		// Size of image and of data buffer
-		int nPixels = computePixelNumber(info);
-		int nBytes  = nPixels * info.elementNumberOfChannels * 4;
-		byte[] byteArray = new byte[nBytes];
-
-		// Read the byte array
-		inputStream.seek(info.headerSize);
-		int nRead = inputStream.read(byteArray, 0, nBytes);
-
-		// closes file
-		inputStream.close();
-
-		// Check all data have been read
-		if (nRead != nBytes) 
-		{
-			throw new IOException("Could read only " + nRead
-					+ " bytes over the " + nBytes + " expected");
-		}
-
-		// convert byte array to short array
-		float[] buffer = new float[nPixels];
-		for (int i = 0; i < nPixels; i++)
-		{
-			int b1 = byteArray[4 * i] & 0x00FF;
-			int b2 = byteArray[4 * i + 1] & 0x00FF;
-			int b3 = byteArray[4 * i + 2] & 0x00FF;
-			int b4 = byteArray[4 * i + 3] & 0x00FF;
-		
-			if (info.elementByteOrderMSB)
-				buffer[i] = Float.intBitsToFloat((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
-			else
-				buffer[i] = Float.intBitsToFloat((b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
-		}
-		
-		return Float32Array.create(info.dimSize, buffer);
-	}
-	
-	private Float64Array readFloat64Array(MetaImageInfo info) throws IOException
-	{
-		// Open binary stream on data
-		File dataFile = new File(this.file.getParent(), info.elementDataFile);
-		RandomAccessFile inputStream = new RandomAccessFile(dataFile, "r");
-
-		// allocate memory for buffer
-		// Size of image and of data buffer
-		int nPixels = computePixelNumber(info);
-		int nBytes  = nPixels * info.elementNumberOfChannels * 8;
-		byte[] byteArray = new byte[nBytes];
-
-		// Read the byte array
-		inputStream.seek(info.headerSize);
-		int nRead = inputStream.read(byteArray, 0, nBytes);
-
-		// closes file
-		inputStream.close();
-
-		// Check all data have been read
-		if (nRead != nBytes) 
-		{
-			throw new IOException("Could read only " + nRead
-					+ " bytes over the " + nBytes + " expected");
-		}
-
-		// convert byte array to short array
-		double[] buffer = new double[nPixels];
-		for (int i = 0; i < nPixels; i++)
-		{
-			long b1 = byteArray[8 * i] & 0x00FF;
-			long b2 = byteArray[8 * i + 1] & 0x00FF;
-			long b3 = byteArray[8 * i + 2] & 0x00FF;
-			long b4 = byteArray[8 * i + 3] & 0x00FF;
-			long b5 = byteArray[8 * i + 4] & 0x00FF;
-			long b6 = byteArray[8 * i + 5] & 0x00FF;
-			long b7 = byteArray[8 * i + 6] & 0x00FF;
-			long b8 = byteArray[8 * i + 7] & 0x00FF;
-		
-			if (info.elementByteOrderMSB)
-				buffer[i] = Double.longBitsToDouble((b1 << 56) + (b2 << 48) + (b3 << 40) + (b4 << 32) + (b5 << 24) + (b6 << 16) + (b7 << 8) + b8);
-			else
-				buffer[i] = Double.longBitsToDouble((b8 << 56) + (b7 << 48) + (b6 << 40) + (b5 << 32) + (b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
-		}
-		
-		return Float64Array.create(info.dimSize, buffer);
-	}
-	
-	private int computePixelNumber(MetaImageInfo info)
-	{
-		// Size of image and of data buffer
-		int nPixels = 1;
-		for (int d = 0; d < info.nDims; d++)
-		{
-			nPixels *= info.dimSize[d];
-		}
-		return nPixels;
-	}
-	
 }
