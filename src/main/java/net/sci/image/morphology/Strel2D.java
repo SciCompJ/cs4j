@@ -12,6 +12,7 @@ import net.sci.image.morphology.filter.LinearDiagDownStrel;
 import net.sci.image.morphology.filter.LinearDiagUpStrel;
 import net.sci.image.morphology.filter.LinearHorizontalStrel;
 import net.sci.image.morphology.filter.LinearVerticalStrel;
+import net.sci.image.morphology.filter.NaiveDiskStrel;
 import net.sci.image.morphology.filter.OctagonStrel;
 import net.sci.image.morphology.filter.SquareStrel;
 
@@ -32,6 +33,9 @@ import net.sci.image.morphology.filter.SquareStrel;
  */
 public interface Strel2D extends Algo
 {
+    // ===================================================================
+    // Enumeration
+    
 	/**
 	 * An enumeration of the different possible structuring element shapes. 
 	 * Each item of the enumeration can create Strel instances of specific
@@ -39,12 +43,12 @@ public interface Strel2D extends Algo
 	 */
 	public enum Shape
 	{
-//		/**
-//		 * Disk of a given radius
-//		 * @see DiskStrel 
-//		 */
-//		DISK("Disk"),
-		//TODO: implement a DiskStrel
+		/**
+		 * Disk of a given radius
+		 * @see NaiveDiskStrel 
+		 */
+		DISK("Disk"),
+
 		/** 
 		 * Square of a given side
 		 * @see SquareStrel 
@@ -114,8 +118,8 @@ public interface Strel2D extends Algo
 		 */
 		public Strel2D fromRadius(int radius)
 		{
-//			if (this == DISK) 
-//				return DiskStrel.fromRadius(radius);
+			if (this == DISK) 
+				return new NaiveDiskStrel(radius);
 			return fromDiameter(2 * radius + 1);
 		}
 		
@@ -130,8 +134,8 @@ public interface Strel2D extends Algo
 		 */
 		public Strel2D fromDiameter(int diam) 
 		{
-//			if (this == DISK) 
-//				return DiskStrel.fromDiameter(diam);
+			if (this == DISK) 
+				return new NaiveDiskStrel((diam - 1.0) * 0.5);
 			if (this == SQUARE) 
 				return new SquareStrel(diam);
 			if (this == DIAMOND) {
@@ -195,7 +199,84 @@ public interface Strel2D extends Algo
 		}
 	}
 	
+	
+    // ===================================================================
+    // High-level operations
+    
 	/**
+     * Performs a morphological dilation of the input image with this
+     * structuring element, and returns the result in a new Array2D.
+     * 
+     * @param array
+     *            the input image
+     * @return the result of dilation with this structuring element
+     * @see #erosion(Array2D)
+     * @see #closing(Array2D)
+     * @see #opening(Array2D)
+     */
+    public ScalarArray2D<?> dilation(ScalarArray2D<?> array);
+
+    /**
+     * Performs an morphological erosion of the input image with this
+     * structuring element, and returns the result in a new Array2.
+     * 
+     * @param array
+     *            the input image
+     * @return the result of erosion with this structuring element
+     * @see #dilation(Array2D)
+     * @see #closing(Array2D)
+     * @see #opening(Array2D)
+     */
+    public ScalarArray2D<?> erosion(ScalarArray2D<?> array);
+
+    /**
+     * Performs a morphological closing of the input image with this structuring
+     * element, and returns the result in a new Array2D.
+     *  
+     * The closing is equivalent in performing a dilation followed by an
+     * erosion with the reversed structuring element.
+     * 
+     * @param array
+     *            the input image
+     * @return the result of closing with this structuring element
+     * @see #dilation(Array2D)
+     * @see #erosion(Array2D)
+     * @see #opening(Array2D)
+     * @see #reverse()
+     */
+    public ScalarArray2D<?> closing(ScalarArray2D<?> array);
+
+    /**
+     * Performs a morphological opening of the input image with this structuring
+     * element, and returns the result in a new Array2D.
+     * 
+     * The opening is equivalent in performing an erosion followed by a
+     * dilation with the reversed structuring element.
+     * 
+     * @param array
+     *            the input image
+     * @return the result of opening with this structuring element
+     * @see #dilation(Array2D)
+     * @see #erosion(Array2D)
+     * @see #closing(Array2D)
+     * @see #reverse()
+     */
+    public ScalarArray2D<?> opening(ScalarArray2D<?> array);
+
+    /**
+     * Returns a reversed (i.e. symmetric wrt the origin) version of this
+     * structuring element. Implementations can return more specialized type
+     * depending on the implemented interfaces.
+     * 
+     * @return the reversed structuring element
+     */
+    public Strel2D reverse();
+
+
+    // ===================================================================
+    // Low-level operations
+    
+    /**
 	 * Returns the size of the structuring element, as an array of size in each
 	 * direction. The first index corresponds to the number of pixels in the x
 	 * direction.
@@ -229,73 +310,5 @@ public interface Strel2D extends Algo
 	 * @return a set of shifts
 	 */
 	public int[][] getShifts();
-
-	/**
-	 * Returns a reversed (i.e. symmetric wrt the origin) version of this
-	 * structuring element. Implementations can return more specialized type
-	 * depending on the implemented interfaces.
-	 * 
-	 * @return the reversed structuring element
-	 */
-	public Strel2D reverse();
-
-	/**
-	 * Performs a morphological dilation of the input image with this
-	 * structuring element, and returns the result in a new Array2D.
-	 * 
-	 * @param image
-	 *            the input image
-	 * @return the result of dilation with this structuring element
-	 * @see #erosion(Array2D)
-	 * @see #closing(Array2D)
-	 * @see #opening(Array2D)
-	 */
-	public ScalarArray2D<?> dilation(ScalarArray2D<?> image);
-
-	/**
-	 * Performs an morphological erosion of the input image with this
-	 * structuring element, and returns the result in a new Array2.
-	 * 
-	 * @param image
-	 *            the input image
-	 * @return the result of erosion with this structuring element
-	 * @see #dilation(Array2D)
-	 * @see #closing(Array2D)
-	 * @see #opening(Array2D)
-	 */
-	public ScalarArray2D<?> erosion(ScalarArray2D<?> image);
 	
-	/**
-	 * Performs a morphological closing of the input image with this structuring
-	 * element, and returns the result in a new Array2D.
-	 *  
-	 * The closing is equivalent in performing a dilation followed by an
-	 * erosion with the reversed structuring element.
-	 * 
-	 * @param image
-	 *            the input image
-	 * @return the result of closing with this structuring element
-	 * @see #dilation(Array2D)
-	 * @see #erosion(Array2D)
-	 * @see #opening(Array2D)
-	 * @see #reverse()
-	 */
-	public ScalarArray2D<?> closing(ScalarArray2D<?> image);
-
-	/**
-	 * Performs a morphological opening of the input image with this structuring
-	 * element, and returns the result in a new Array2D.
-	 * 
-	 * The opening is equivalent in performing an erosion followed by a
-	 * dilation with the reversed structuring element.
-	 * 
-	 * @param image
-	 *            the input image
-	 * @return the result of opening with this structuring element
-	 * @see #dilation(Array2D)
-	 * @see #erosion(Array2D)
-	 * @see #closing(Array2D)
-	 * @see #reverse()
-	 */
-	public ScalarArray2D<?> opening(ScalarArray2D<?> image);
 }

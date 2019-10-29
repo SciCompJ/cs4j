@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     BoxDilationNaiveTest.class,
+    NaiveDiskStrelTest.class,
     CubeStrel3DTest.class,
     LinearZStrel3DTest.class,
     SquareStrelTest.class,
