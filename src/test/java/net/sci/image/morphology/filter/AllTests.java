@@ -5,12 +5,15 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-	// generic classes
+	// 2D structuring element classes
     BoxDilationNaiveTest.class,
-    NaiveDiskStrelTest.class,
-    CubeStrel3DTest.class,
-    LinearZStrel3DTest.class,
     SquareStrelTest.class,
+    NaiveDiskStrelTest.class,
+    
+    // 3D structuring element classes
+    LinearZStrel3DTest.class,
+    CubeStrel3DTest.class,
+    NaiveBallStrel3DTest.class,
 	})
 public class AllTests {
   //nothing

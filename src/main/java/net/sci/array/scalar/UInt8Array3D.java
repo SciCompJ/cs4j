@@ -33,7 +33,25 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
             return new SlicedUInt8Array3D(size0, size1, size2);
 	}
 	
-	
+    /**
+     * Encapsulates the instance of UInt8Array into a new UInt8Array3D, by
+     * creating a Wrapper if necessary. If the original array is already an
+     * instance of UInt8Array3D, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a UInt8Array3D view of the original array
+     */
+    public static UInt8Array3D wrap(UInt8Array array)
+    {
+        if (array instanceof UInt8Array3D)
+        {
+            return (UInt8Array3D) array;
+        }
+        return new Wrapper(array);
+    }
+    
+
 	// =============================================================
 	// Constructor
 
@@ -329,4 +347,51 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         }
     }
 
+    /**
+     * Wraps a UInt8 array into a UInt8Array3D, with three dimensions.
+     */
+    private static class Wrapper extends UInt8Array3D
+    {
+        UInt8Array array;
+
+        public Wrapper(UInt8Array array)
+        {
+            super(0, 0, 0);
+            if (array.dimensionality() != 3)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 3.");
+            }
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.size2 = array.size(2);
+            this.array = array;
+        }
+
+        @Override
+        public byte getByte(int x, int y, int z)
+        {
+            return this.array.getByte(new int[]{x, y, z});
+        }
+
+        @Override
+        public void setByte(int x, int y, int z, byte value)
+        {
+            this.array.setByte(new int[]{x, y, z}, value);
+        }
+
+        @Override
+        public UInt8Array3D duplicate()
+        {
+            return new Wrapper(this.array.duplicate());
+        }
+
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.scalar.UInt8Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
 }
