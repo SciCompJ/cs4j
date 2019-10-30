@@ -88,7 +88,7 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getSize()
 		 */
 		@Override
-		public int[] getSize()
+		public int[] size()
 		{
 			return new int[] { 3, 3 };
 		}
@@ -438,7 +438,7 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getSize()
 		 */
 		@Override
-		public int[] getSize()
+		public int[] size()
 		{
 			return new int[] { 3, 3 };
 		}

@@ -105,13 +105,13 @@ public class NaiveBallStrel3DTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.NaiveBallStrel3D#getSize()}.
+     * Test method for {@link net.sci.image.morphology.strel.NaiveBallStrel3D#size()}.
      */
     @Test
     public final void testGetSize()
     {
         Strel3D strel = new NaiveBallStrel3D(3);
-        int[] size = strel.getSize();
+        int[] size = strel.size();
         assertEquals(7, size[0]);
         assertEquals(7, size[1]);
         assertEquals(7, size[2]);

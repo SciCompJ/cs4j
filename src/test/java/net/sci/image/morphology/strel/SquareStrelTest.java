@@ -22,7 +22,7 @@ public class SquareStrelTest
     public void testGetSize()
     {
         Strel2D strel = new SquareStrel(5);
-        int[] size = strel.getSize();
+        int[] size = strel.size();
         assertEquals(size[0], 5);
         assertEquals(size[1], 5);
     }
@@ -31,9 +31,9 @@ public class SquareStrelTest
     public void testReverse()
     {
         Strel2D strel = new SquareStrel(5);
-        int[] size = strel.getSize();
+        int[] size = strel.size();
         Strel2D strel2 = strel.reverse();
-        int[] size2 = strel2.getSize();
+        int[] size2 = strel2.size();
         assertEquals(size[0], size2[0]);
         assertEquals(size[1], size2[1]);
     }

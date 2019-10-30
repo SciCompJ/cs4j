@@ -343,7 +343,7 @@ public interface Strel3D extends Strel, Algo
 	 * 
 	 * @return the size of the structuring element
 	 */
-	public int[] getSize();
+	public int[] size();
 
 	/**
 	 * Returns the structuring element as a mask. Each value is either 0 or 255.
@@ -371,4 +371,8 @@ public interface Strel3D extends Strel, Algo
 	 */
 	public int[][] getShifts3D();
 
+    public default int dimensionality()
+    {
+        return 3;
+    }
 }

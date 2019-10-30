@@ -382,7 +382,7 @@ public class LinearHorizontalStrel extends AbstractStrel2D implements InPlaceStr
 	 * @see net.sci.image.morphology.Strel#getSize()
 	 */
 	@Override
-	public int[] getSize()
+	public int[] size()
 	{
 		return new int[] { this.size, 1 };
 	}

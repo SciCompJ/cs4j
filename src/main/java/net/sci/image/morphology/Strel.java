@@ -23,4 +23,14 @@ public interface Strel
      */
     public Strel reverse();
 
+    /**
+     * Returns the size of the structuring element, as an array of size in each
+     * direction. As many elements as the number of dimensions. The first index
+     * corresponds to the number of pixels in the x direction.
+     * 
+     * @return the size of the structuring element
+     */
+    public int[] size();
+
+    public int dimensionality();
 }

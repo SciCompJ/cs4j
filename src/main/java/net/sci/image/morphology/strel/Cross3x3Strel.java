@@ -23,7 +23,7 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 	 * @see ijt.morphology.Strel#getSize()
 	 */
 	@Override
-	public int[] getSize()
+	public int[] size()
 	{
 		return new int[] { 3, 3 };
 	}

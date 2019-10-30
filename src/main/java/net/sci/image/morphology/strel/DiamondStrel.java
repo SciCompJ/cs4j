@@ -115,7 +115,7 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	 * @see ijt.morphology.Strel#getSize()
 	 */
 	@Override
-	public int[] getSize()
+	public int[] size()
 	{
 		return new int[] { this.size, this.size };
 	}

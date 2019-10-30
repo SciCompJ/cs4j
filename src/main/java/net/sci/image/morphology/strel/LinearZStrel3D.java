@@ -201,7 +201,7 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
      * @see net.sci.image.morphology.Strel3D#getSize()
      */
     @Override
-    public int[] getSize()
+    public int[] size()
     {
         return new int[] { 1, 1, this.size};
     }

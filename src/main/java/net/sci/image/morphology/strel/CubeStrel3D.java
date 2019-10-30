@@ -127,7 +127,7 @@ public class CubeStrel3D extends AbstractSeparableStrel3D
      * @see net.sci.image.morphology.Strel3D#getSize()
      */
     @Override
-    public int[] getSize()
+    public int[] size()
     {
         return new int[]{this.size, this.size, this.size};
     }

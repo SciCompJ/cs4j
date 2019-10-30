@@ -73,13 +73,13 @@ public class NaiveDiskStrelTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.NaiveDiskStrel#getSize()}.
+     * Test method for {@link net.sci.image.morphology.strel.NaiveDiskStrel#size()}.
      */
     @Test
     public final void testGetSize()
     {
         Strel2D strel = new NaiveDiskStrel(3);
-        int[] size = strel.getSize();
+        int[] size = strel.size();
         assertEquals(7, size[0]);
         assertEquals(7, size[1]);
     }

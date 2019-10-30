@@ -479,7 +479,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 	 * @see Strel#getSize()
 	 */
 	@Override
-	public int[] getSize()
+	public int[] size()
 	{
 		return new int[] { this.size, this.size };
 	}

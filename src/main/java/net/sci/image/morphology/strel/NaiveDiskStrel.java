@@ -198,7 +198,7 @@ public class NaiveDiskStrel extends AlgoStub implements Strel2D
      * @see net.sci.image.morphology.Strel2D#getSize()
      */
     @Override
-    public int[] getSize()
+    public int[] size()
     {
         int diam = 2 * this.intRadius + 1;
         return new int[] {diam, diam};

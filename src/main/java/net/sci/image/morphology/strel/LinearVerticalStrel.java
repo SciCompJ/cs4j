@@ -381,7 +381,7 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
 	 * @see net.sci.image.morphology.Strel#getSize()
 	 */
 	@Override
-	public int[] getSize()
+	public int[] size()
 	{
 		return new int[] { 1, this.size };
 	}
