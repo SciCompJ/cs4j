@@ -20,6 +20,7 @@ import net.sci.array.color.RGB16Array2D;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array2D;
 import net.sci.array.scalar.BufferedFloat32Array2D;
+import net.sci.array.scalar.BufferedFloat32Array3D;
 import net.sci.array.scalar.BufferedInt32Array2D;
 import net.sci.array.scalar.BufferedUInt16Array2D;
 import net.sci.array.scalar.BufferedUInt16Array3D;
@@ -573,10 +574,15 @@ public class TiffImageReader implements ImageReader
 		case GRAY12_UNSIGNED:
 		{
 			// Store data as short array
-			short[] shortBuffer = convertToShortArray(buffer, info0);
+			short[] shortBuffer = convertToShortArray(buffer, dataReader.getOrder());
 			return new BufferedUInt16Array3D(sizeX, sizeY, sizeZ, shortBuffer);
 		}	
 
+		case GRAY32_FLOAT:
+		{
+		    float[] floatBuffer = convertToFloatArray(buffer, dataReader.getOrder());
+		    return new BufferedFloat32Array3D(sizeX, sizeY, sizeZ, floatBuffer);
+		}
 		default:
 			throw new IOException("Can not read stack with data type "
 					+ info0.pixelType);
@@ -647,7 +653,7 @@ public class TiffImageReader implements ImageReader
 		case GRAY12_UNSIGNED:
 		{
 			// Store data as short array
-			short[] shortBuffer = convertToShortArray(buffer, info);
+			short[] shortBuffer = convertToShortArray(buffer, dataReader.getOrder());
 			return new BufferedUInt16Array2D(info.width, info.height, shortBuffer);
 		}	
 
@@ -678,23 +684,7 @@ public class TiffImageReader implements ImageReader
 		case GRAY32_FLOAT:
 		{
 			// Store data as short array
-			float[] floatBuffer = new float[nPixels];
-			
-			// convert byte array into sort array
-			for (int i = 0; i < nPixels; i++)
-			{
-				int b1 = buffer[4 * i] & 0x00FF;
-				int b2 = buffer[4 * i + 1] & 0x00FF;
-				int b3 = buffer[4 * i + 2] & 0x00FF;
-				int b4 = buffer[4 * i + 3] & 0x00FF;
-				
-				// encode bytes to short
-				if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
-					floatBuffer[i] = Float.intBitsToFloat((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
-				else
-					floatBuffer[i] = Float.intBitsToFloat((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
-			}
-			
+			float[] floatBuffer = convertToFloatArray(buffer, dataReader.getOrder());
 			return new BufferedFloat32Array2D(info.width, info.height, floatBuffer);
 		}	
 
@@ -727,7 +717,7 @@ public class TiffImageReader implements ImageReader
 		{
 		    RGB16Array2D rgb2d = new BufferedPackedShortRGB16Array2D(info.width, info.height);
 		    
-		    ByteOrder order = dataReader.getOrder(); 
+		    ByteOrder order = dataReader.getOrder();
 		    // fill array with re-ordered buffer content
 		    int index = 0;
 		    for (int y = 0; y < info.height; y++)
@@ -760,27 +750,51 @@ public class TiffImageReader implements ImageReader
 		}
 	}
 
-	private short[] convertToShortArray(byte[] byteBuffer, TiffFileInfo info)
-	{
-		// Store data as short array
-		int nPixels = byteBuffer.length / 2;
-		short[] shortBuffer = new short[nPixels];
-		
-		// convert byte array into sort array
-		for (int i = 0; i < nPixels; i++)
-		{
-			int b1 = byteBuffer[2 * i] & 0x00FF;
-			int b2 = byteBuffer[2 * i + 1] & 0x00FF;
+    private final static short[] convertToShortArray(byte[] byteBuffer, ByteOrder order)
+    {
+        // Store data as short array
+        int nPixels = byteBuffer.length / 2;
+        short[] shortBuffer = new short[nPixels];
+        
+        // convert byte array into sort array
+        for (int i = 0; i < nPixels; i++)
+        {
+            int b1 = byteBuffer[2 * i] & 0x00FF;
+            int b2 = byteBuffer[2 * i + 1] & 0x00FF;
 
-			// encode bytes to short
-			if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
-				shortBuffer[i] = (short) ((b2 << 8) | b1);
-			else
-				shortBuffer[i] = (short) ((b1 << 8) | b2);
-		}
-		
-		return shortBuffer;
-	}
+            // encode bytes to short
+            if (order == ByteOrder.LITTLE_ENDIAN)
+                shortBuffer[i] = (short) ((b2 << 8) | b1);
+            else
+                shortBuffer[i] = (short) ((b1 << 8) | b2);
+        }
+        
+        return shortBuffer;
+    }
+
+    private final static float[] convertToFloatArray(byte[] byteBuffer, ByteOrder order)
+    {
+        // Store data as short array
+        int nFloats = byteBuffer.length / 4;
+        float[] floatBuffer = new float[nFloats];
+        
+        // convert byte array into sort array
+        for (int i = 0; i < nFloats; i++)
+        {
+            int b1 = byteBuffer[4 * i + 0] & 0x00FF;
+            int b2 = byteBuffer[4 * i + 1] & 0x00FF;
+            int b3 = byteBuffer[4 * i + 2] & 0x00FF;
+            int b4 = byteBuffer[4 * i + 3] & 0x00FF;
+
+            // encode bytes to short
+            if (order == ByteOrder.LITTLE_ENDIAN)
+                floatBuffer[i] = Float.intBitsToFloat((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
+            else
+                floatBuffer[i] = Float.intBitsToFloat((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
+        }
+        
+        return floatBuffer;
+    }
 
 	private static short convertBytesToShort(byte b1, byte b2, ByteOrder order)
 	{
