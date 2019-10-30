@@ -6,15 +6,15 @@ package net.sci.image.morphology;
 import net.sci.algo.Algo;
 import net.sci.array.Array2D;
 import net.sci.array.scalar.ScalarArray2D;
-import net.sci.image.morphology.filter.Cross3x3Strel;
-import net.sci.image.morphology.filter.DiamondStrel;
-import net.sci.image.morphology.filter.LinearDiagDownStrel;
-import net.sci.image.morphology.filter.LinearDiagUpStrel;
-import net.sci.image.morphology.filter.LinearHorizontalStrel;
-import net.sci.image.morphology.filter.LinearVerticalStrel;
-import net.sci.image.morphology.filter.NaiveDiskStrel;
-import net.sci.image.morphology.filter.OctagonStrel;
-import net.sci.image.morphology.filter.SquareStrel;
+import net.sci.image.morphology.strel.Cross3x3Strel;
+import net.sci.image.morphology.strel.DiamondStrel;
+import net.sci.image.morphology.strel.LinearDiagDownStrel;
+import net.sci.image.morphology.strel.LinearDiagUpStrel;
+import net.sci.image.morphology.strel.LinearHorizontalStrel;
+import net.sci.image.morphology.strel.LinearVerticalStrel;
+import net.sci.image.morphology.strel.NaiveDiskStrel;
+import net.sci.image.morphology.strel.OctagonStrel;
+import net.sci.image.morphology.strel.SquareStrel;
 
 /**
  * Interface for planar structuring elements. 
@@ -31,7 +31,7 @@ import net.sci.image.morphology.filter.SquareStrel;
  * @author David Legland
  *
  */
-public interface Strel2D extends Algo
+public interface Strel2D extends Strel, Algo
 {
     // ===================================================================
     // Enumeration
@@ -199,6 +199,17 @@ public interface Strel2D extends Algo
 		}
 	}
 	
+    // ===================================================================
+    // Static methods
+    
+    public static Strel2D wrap(Strel strel)
+    {
+        if (strel instanceof Strel2D)
+        {
+            return (Strel2D) strel;
+        }
+        throw new RuntimeException("Unable to wrap a strel with class: " + strel.getClass());
+    }
 	
     // ===================================================================
     // High-level operations

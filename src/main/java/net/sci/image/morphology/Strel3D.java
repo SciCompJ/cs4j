@@ -5,7 +5,7 @@ package net.sci.image.morphology;
 
 import net.sci.algo.Algo;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.morphology.filter.Strel2DWrapper;
+import net.sci.image.morphology.strel.Strel2DWrapper;
 
 /**
  * Structuring element for processing 3D arrays.
@@ -13,11 +13,22 @@ import net.sci.image.morphology.filter.Strel2DWrapper;
  * @author David Legland
  *
  */
-public interface Strel3D extends Algo 
+public interface Strel3D extends Strel, Algo 
 {
-    public static Strel3D wrap(Strel2D strel)
+    // ===================================================================
+    // Static methods
+    
+    public static Strel3D wrap(Strel strel)
     {
-        return new Strel2DWrapper(strel);
+        if (strel instanceof Strel3D)
+        {
+            return (Strel3D) strel;
+        }
+        if (strel instanceof Strel2D)
+        {
+            return new Strel2DWrapper((Strel2D) strel);
+        }
+        throw new RuntimeException("Unable to wrap a strel with class: " + strel.getClass());
     }
     
 //	/**
@@ -243,7 +254,89 @@ public interface Strel3D extends Algo
 //		}
 //	}
 	
+    // ===================================================================
+    // High-level operations
+    
 	/**
+     * Performs a morphological dilation of the input image with this
+     * structuring element, and returns the result in a new Array3D.
+     * 
+     * @param array
+     *            the input array
+     * @return the result of dilation with this structuring element
+     * @see #erosion(net.sci.array.ScalarArray3D)
+     * @see #closing(net.sci.array.ScalarArray3D)
+     * @see #opening(net.sci.array.ScalarArray3D)
+     */
+    public ScalarArray3D<?> dilation(ScalarArray3D<?> array);
+
+    /**
+     * Performs an morphological erosion of the input image with this
+     * structuring element, and returns the result in a new Array3D.
+     * 
+     * @param array
+     *            the input array
+     * @return the result of erosion with this structuring element
+     * @see #dilation(net.sci.array.ScalarArray3D)
+     * @see #closing(net.sci.array.ScalarArray3D)
+     * @see #opening(net.sci.array.ScalarArray3D)
+     */
+    public ScalarArray3D<?> erosion(ScalarArray3D<?> array);
+
+    /**
+     * Performs a morphological closing of the input image with this structuring
+     * element, and returns the result in a new Array3D.
+     *  
+     * The closing is equivalent in performing a dilation followed by an
+     * erosion with the reversed structuring element.
+     * 
+     * @param array
+     *            the input array
+     * @return the result of closing with this structuring element
+     * @see #dilation(net.sci.array.ScalarArray3D)
+     * @see #erosion(net.sci.array.ScalarArray3D)
+     * @see #opening(net.sci.array.ScalarArray3D)
+     * @see #reverse()
+     */
+    public default ScalarArray3D<?> closing(ScalarArray3D<?> array)
+    {
+        return dilation(erosion(array));
+    }
+
+    /**
+     * Performs a morphological opening of the input image with this structuring
+     * element, and returns the result in a new Array3D.
+     * 
+     * The opening is equivalent in performing an erosion followed by a
+     * dilation with the reversed structuring element.
+     * 
+     * @param array
+     *            the input array
+     * @return the result of opening with this structuring element
+     * @see #dilation(net.sci.array.ScalarArray3D)
+     * @see #erosion(net.sci.array.ScalarArray3D)
+     * @see #closing(net.sci.array.ScalarArray3D)
+     * @see #reverse()
+     */
+    public default ScalarArray3D<?> opening(ScalarArray3D<?> array)
+    {
+        return erosion(dilation(array));
+    }
+
+    /**
+     * Returns a reversed (i.e. symmetric wrt the origin) version of this
+     * structuring element. Implementations can return more specialized type
+     * depending on the implemented interfaces.
+     * 
+     * @return the reversed structuring element
+     */
+    public Strel3D reverse();
+    
+
+    // ===================================================================
+    // Low-level operations
+    
+    /**
 	 * Returns the size of the structuring element, as an array of size in each
 	 * direction. The first index corresponds to the number of pixels in the x
 	 * direction.
@@ -277,80 +370,5 @@ public interface Strel3D extends Algo
 	 * @return a set of shifts
 	 */
 	public int[][] getShifts3D();
-
-	/**
-	 * Returns a reversed (i.e. symmetric wrt the origin) version of this
-	 * structuring element. Implementations can return more specialized type
-	 * depending on the implemented interfaces.
-	 * 
-	 * @return the reversed structuring element
-	 */
-	public Strel3D reverse();
-
-	/**
-	 * Performs a morphological dilation of the input image with this
-	 * structuring element, and returns the result in a new Array3D.
-	 * 
-	 * @param array
-	 *            the input array
-	 * @return the result of dilation with this structuring element
-	 * @see #erosion(net.sci.array.ScalarArray3D)
-	 * @see #closing(net.sci.array.ScalarArray3D)
-	 * @see #opening(net.sci.array.ScalarArray3D)
-	 */
-	public ScalarArray3D<?> dilation(ScalarArray3D<?> array);
-
-	/**
-	 * Performs an morphological erosion of the input image with this
-	 * structuring element, and returns the result in a new Array3D.
-	 * 
-	 * @param array
-	 *            the input array
-	 * @return the result of erosion with this structuring element
-	 * @see #dilation(net.sci.array.ScalarArray3D)
-	 * @see #closing(net.sci.array.ScalarArray3D)
-	 * @see #opening(net.sci.array.ScalarArray3D)
-	 */
-	public ScalarArray3D<?> erosion(ScalarArray3D<?> array);
-	
-	/**
-	 * Performs a morphological closing of the input image with this structuring
-	 * element, and returns the result in a new Array3D.
-	 *  
-	 * The closing is equivalent in performing a dilation followed by an
-	 * erosion with the reversed structuring element.
-	 * 
-	 * @param array
-	 *            the input array
-	 * @return the result of closing with this structuring element
-	 * @see #dilation(net.sci.array.ScalarArray3D)
-	 * @see #erosion(net.sci.array.ScalarArray3D)
-	 * @see #opening(net.sci.array.ScalarArray3D)
-	 * @see #reverse()
-	 */
-	public default ScalarArray3D<?> closing(ScalarArray3D<?> array)
-	{
-	    return dilation(erosion(array));
-	}
-
-	/**
-	 * Performs a morphological opening of the input image with this structuring
-	 * element, and returns the result in a new Array3D.
-	 * 
-	 * The opening is equivalent in performing an erosion followed by a
-	 * dilation with the reversed structuring element.
-	 * 
-	 * @param array
-	 *            the input array
-	 * @return the result of opening with this structuring element
-	 * @see #dilation(net.sci.array.ScalarArray3D)
-	 * @see #erosion(net.sci.array.ScalarArray3D)
-	 * @see #closing(net.sci.array.ScalarArray3D)
-	 * @see #reverse()
-	 */
-	public default ScalarArray3D<?> opening(ScalarArray3D<?> array)
-	{
-        return erosion(dilation(array));
-	}
 
 }
