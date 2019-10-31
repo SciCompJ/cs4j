@@ -303,7 +303,8 @@ public class TiffFileInfo
 		out.println("bytes per pixel: " + pixelType.byteNumber);
 		out.println("Photometric intrepretation: " + photometricInterpretation);
 
-		if (imageDescription != null) {
+		if (imageDescription != null) 
+		{
 			out.println("image description: " + imageDescription);
 		}
 		
@@ -318,5 +319,30 @@ public class TiffFileInfo
 		out.println();
 		
 		out.println("rowsPerStrip: " + rowsPerStrip);
+	}
+	
+	public boolean hasSameTags(TiffFileInfo that)
+	{
+	    for (int key : tags.keySet())
+	    {
+	        if (!that.tags.containsKey(key))
+	        {
+	            return false;
+	        }
+	        
+	        // do not compare the tags corresponding to the way the data are stored in the file
+	        if (key == 273 || key == 278 || key == 279 || key == 288 || key == 289)
+	        {
+	            continue;
+	        }
+	        
+	        TiffTag tag = tags.get(key);
+            TiffTag tag2 = that.tags.get(key);
+            if (!tag.equals(tag2))
+            {
+                return false;
+            }
+	    }
+	    return true;
 	}
 }

@@ -851,4 +851,21 @@ public class TiffTag
 			return 0.0;
 	}
 
+	public boolean equals(Object obj)
+	{
+	    // check class type
+	    if (!(obj instanceof TiffTag))
+	    {
+	        return false;
+	    }
+	    
+	    // class cast, and check class membrs
+	    TiffTag that = (TiffTag) obj;
+        if (this.code != that.code) return false;
+        if (this.type != that.type) return false;
+        if (this.count != that.count) return false;
+        
+        // compare contents
+        return this.content.equals(that.content);
+	}
 }

@@ -57,6 +57,11 @@ public class TiffImageReader implements ImageReader
 	BinaryDataReader dataReader;
 
 	/**
+	 * The byte order used within the open stream.
+	 */
+	ByteOrder byteOrder;
+	
+	/**
 	 * The list of file info stored in the TIFF file.
 	 */
 	ArrayList<TiffFileInfo> fileInfoList;
@@ -96,18 +101,17 @@ public class TiffImageReader implements ImageReader
 		// read bytes indicating endianness
 		int b1 = inputStream.read();
 		int b2 = inputStream.read();
-		int byteOrder = ((b2 << 8) + b1);
+		int byteOrderInfo = ((b2 << 8) + b1);
 
-		// Read file endianness
+		// Determine file endianness
 		// If a problem occur, this may be the sign of an file in another format
-		boolean littleEndian = true;
-		if (byteOrder == 0x4949) // "II"
+		if (byteOrderInfo == 0x4949) // "II"
 		{
-			littleEndian = true;
+		    this.byteOrder = ByteOrder.LITTLE_ENDIAN;
 		}
-		else if (byteOrder == 0x4d4d) // "MM"
+		else if (byteOrderInfo == 0x4d4d) // "MM"
 		{
-			littleEndian = false;
+            this.byteOrder = ByteOrder.BIG_ENDIAN;
 		}
 		else
 		{
@@ -117,8 +121,7 @@ public class TiffImageReader implements ImageReader
 		}
 
 		// Create binary data reader from input stream
-		ByteOrder order = littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN; 
-		this.dataReader = new BinaryDataReader(inputStream, order);
+		this.dataReader = new BinaryDataReader(inputStream, this.byteOrder);
 		
 		// Read the magic number indicating tiff format
 		int magicNumber = dataReader.readShort();
@@ -255,10 +258,14 @@ public class TiffImageReader implements ImageReader
 		// TODO: detect multi-channel images
 		for (TiffFileInfo info : fileInfoList)
 		{
-			if (info.width != info0.width || info.height != info0.height)
+		    if (info.width != info0.width || info.height != info0.height)
 			{
 				return false;
 			}
+//		    if (!info.hasSameTags(info0))
+//		    {
+//		        return false;
+//		    }
 		}
 		
 		// if all items declare the same size, we can load a stack
@@ -574,13 +581,13 @@ public class TiffImageReader implements ImageReader
 		case GRAY12_UNSIGNED:
 		{
 			// Store data as short array
-			short[] shortBuffer = convertToShortArray(buffer, dataReader.getOrder());
+		    short[] shortBuffer = convertToShortArray(buffer, this.byteOrder);
 			return new BufferedUInt16Array3D(sizeX, sizeY, sizeZ, shortBuffer);
 		}	
 
 		case GRAY32_FLOAT:
 		{
-		    float[] floatBuffer = convertToFloatArray(buffer, dataReader.getOrder());
+		    float[] floatBuffer = convertToFloatArray(buffer, this.byteOrder);
 		    return new BufferedFloat32Array3D(sizeX, sizeY, sizeZ, floatBuffer);
 		}
 		default:
@@ -653,7 +660,7 @@ public class TiffImageReader implements ImageReader
 		case GRAY12_UNSIGNED:
 		{
 			// Store data as short array
-			short[] shortBuffer = convertToShortArray(buffer, dataReader.getOrder());
+			short[] shortBuffer = convertToShortArray(buffer, this.byteOrder);
 			return new BufferedUInt16Array2D(info.width, info.height, shortBuffer);
 		}	
 
@@ -671,7 +678,7 @@ public class TiffImageReader implements ImageReader
 				int b4 = buffer[4 * i + 3] & 0x00FF;
 				
 				// encode bytes to short
-				if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
+				if (this.byteOrder == ByteOrder.LITTLE_ENDIAN)
 					intBuffer[i] = ((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
 				else
 					intBuffer[i] = ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
@@ -684,7 +691,7 @@ public class TiffImageReader implements ImageReader
 		case GRAY32_FLOAT:
 		{
 			// Store data as short array
-			float[] floatBuffer = convertToFloatArray(buffer, dataReader.getOrder());
+			float[] floatBuffer = convertToFloatArray(buffer, this.byteOrder);
 			return new BufferedFloat32Array2D(info.width, info.height, floatBuffer);
 		}	
 
@@ -717,7 +724,7 @@ public class TiffImageReader implements ImageReader
 		{
 		    RGB16Array2D rgb2d = new BufferedPackedShortRGB16Array2D(info.width, info.height);
 		    
-		    ByteOrder order = dataReader.getOrder();
+		    ByteOrder order = this.byteOrder;
 		    // fill array with re-ordered buffer content
 		    int index = 0;
 		    for (int y = 0; y < info.height; y++)
