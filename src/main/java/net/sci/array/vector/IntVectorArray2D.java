@@ -174,9 +174,9 @@ public abstract class IntVectorArray2D<V extends IntVector<?>> extends VectorArr
         return getSample(pos[0], pos[1], channel);
     }
     
-    public void setSample(int[] pos, int channel, int intValues)
+    public void setSample(int[] pos, int channel, int sample)
     {
-        setSample(pos[0], pos[1], channel, intValues);
+        setSample(pos[0], pos[1], channel, sample);
     }
     
     // =============================================================

@@ -232,7 +232,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
     @Override
     public void setValue(int[] pos, int channel, double value)
     {
-        setValue(pos[0], pos[1], channel, channel);
+        setValue(pos[0], pos[1], channel, value);
     }
 
 

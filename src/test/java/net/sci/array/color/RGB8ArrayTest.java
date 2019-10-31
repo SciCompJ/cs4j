@@ -10,6 +10,7 @@ import org.junit.Test;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
+import net.sci.array.scalar.UInt8Array2D;
 
 /**
  * @author dlegland
@@ -64,6 +65,27 @@ public class RGB8ArrayTest
             count++;
         }
         assertEquals(60, count);
+    }
+    @Test
+    public final void testSetChannel()
+    {
+        RGB8Array2D array = RGB8Array2D.create(5, 4);
+        UInt8Array2D red = UInt8Array2D.create(5, 4);
+        red.fillValue(50);
+        UInt8Array2D green = UInt8Array2D.create(5, 4);
+        green.fillValue(100);
+        UInt8Array2D blue = UInt8Array2D.create(5, 4);
+        blue.fillValue(150);
+        
+        array.setChannel(0, red);
+        array.setChannel(1, green);
+        array.setChannel(2, blue);
+        
+        int[] samples = array.getSamples(2, 2);
+        
+        assertEquals( 50, samples[0]);
+        assertEquals(100, samples[1]);
+        assertEquals(150, samples[2]);
     }
 
 }
