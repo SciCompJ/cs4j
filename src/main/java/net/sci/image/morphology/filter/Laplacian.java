@@ -6,7 +6,6 @@ package net.sci.image.morphology.filter;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.morphology.MorphologicalFilter;
 import net.sci.image.morphology.Strel;
 import net.sci.image.morphology.Strel2D;
 import net.sci.image.morphology.Strel3D;
@@ -23,7 +22,7 @@ import net.sci.image.morphology.Strel3D;
  * Array inputArray = ...
  * Strel strel = SquareStrel.fromRadius(2);
  * double shift = 128.0; // for representing zero values as gray with UInt8 arrays
- * MorphologicalFilter filter = new Laplacian(strel, shift);
+ * MorphologicalFilterAlgo filter = new Laplacian(strel, shift);
  * Array result = filter.process(inputArray);
  * }
  * </pre>
@@ -31,7 +30,7 @@ import net.sci.image.morphology.Strel3D;
  * @author dlegland
  *
  */
-public class Laplacian extends MorphologicalFilter
+public class Laplacian extends MorphologicalFilterAlgo
 {
     double shift;
     

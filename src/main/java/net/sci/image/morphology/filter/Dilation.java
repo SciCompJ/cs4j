@@ -6,7 +6,6 @@ package net.sci.image.morphology.filter;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.morphology.MorphologicalFilter;
 import net.sci.image.morphology.Strel;
 import net.sci.image.morphology.Strel2D;
 import net.sci.image.morphology.Strel3D;
@@ -28,7 +27,7 @@ import net.sci.image.morphology.Strel3D;
  * @author dlegland
  *
  */
-public class Dilation extends MorphologicalFilter
+public class Dilation extends MorphologicalFilterAlgo
 {
     public Dilation(Strel strel)
     {

@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
 	// generic classes
 	net.sci.image.morphology.AllTests.class,
     net.sci.image.morphology.strel.AllTests.class,
+    net.sci.image.morphology.filter.AllTests.class,
     net.sci.image.morphology.extrema.AllTests.class,
     net.sci.image.morphology.reconstruct.AllTests.class,
     net.sci.image.morphology.watershed.AllTests.class,
