@@ -4,7 +4,6 @@
 package net.sci.image.morphology.strel;
 
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.morphology.Strel3D;
 
 /**
  * A 3D structuring element that can performs erosion or dilation directly on

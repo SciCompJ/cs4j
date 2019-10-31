@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array3D;
-import net.sci.image.morphology.Strel3D;
 import net.sci.image.morphology.strel.NaiveBallStrel3D;
 
 /**

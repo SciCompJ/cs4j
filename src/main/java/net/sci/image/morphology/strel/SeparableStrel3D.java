@@ -5,8 +5,6 @@ package net.sci.image.morphology.strel;
 
 import java.util.Collection;
 
-import net.sci.image.morphology.Strel3D;
-
 /**
  * Interface for structuring elements that can be decomposed into several
  * "simpler" structuring elements. It is assumed that elementary structuring

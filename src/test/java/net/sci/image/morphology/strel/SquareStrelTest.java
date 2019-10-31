@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.image.morphology.Strel2D;
 
 /**
  * @author dlegland

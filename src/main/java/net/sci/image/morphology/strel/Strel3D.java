@@ -1,11 +1,11 @@
 /**
  * 
  */
-package net.sci.image.morphology;
+package net.sci.image.morphology.strel;
 
 import net.sci.algo.Algo;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.morphology.strel.Strel2DWrapper;
+import net.sci.image.morphology.Strel;
 
 /**
  * Structuring element for processing 3D arrays.

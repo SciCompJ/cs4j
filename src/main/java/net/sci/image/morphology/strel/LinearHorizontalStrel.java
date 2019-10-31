@@ -391,7 +391,7 @@ public class LinearHorizontalStrel extends AbstractStrel2D implements InPlaceStr
 	 * Returns a linear horizontal line with same size and offset equal to
 	 * size-offset-1.
 	 * 
-	 * @see net.sci.image.morphology.Strel2D#reverse()
+	 * @see net.sci.image.morphology.strel.Strel2D#reverse()
 	 */
 	@Override
 	public LinearHorizontalStrel reverse()

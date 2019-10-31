@@ -3,6 +3,9 @@
  */
 package net.sci.image.morphology;
 
+import net.sci.image.morphology.strel.Strel2D;
+import net.sci.image.morphology.strel.Strel3D;
+
 /**
  * General interface for structuring elements.
  * 

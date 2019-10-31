@@ -7,6 +7,7 @@ import net.sci.array.Array2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.VectorArray2D;
+import net.sci.image.morphology.strel.Strel2D;
 
 /**
  * <p>

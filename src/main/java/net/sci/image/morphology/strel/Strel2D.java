@@ -1,20 +1,12 @@
 /**
  * 
  */
-package net.sci.image.morphology;
+package net.sci.image.morphology.strel;
 
 import net.sci.algo.Algo;
 import net.sci.array.Array2D;
 import net.sci.array.scalar.ScalarArray2D;
-import net.sci.image.morphology.strel.Cross3x3Strel;
-import net.sci.image.morphology.strel.DiamondStrel;
-import net.sci.image.morphology.strel.LinearDiagDownStrel;
-import net.sci.image.morphology.strel.LinearDiagUpStrel;
-import net.sci.image.morphology.strel.LinearHorizontalStrel;
-import net.sci.image.morphology.strel.LinearVerticalStrel;
-import net.sci.image.morphology.strel.NaiveDiskStrel;
-import net.sci.image.morphology.strel.OctagonStrel;
-import net.sci.image.morphology.strel.SquareStrel;
+import net.sci.image.morphology.Strel;
 
 /**
  * Interface for planar structuring elements. 

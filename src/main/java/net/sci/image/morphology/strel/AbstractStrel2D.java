@@ -4,7 +4,6 @@
 package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
-import net.sci.image.morphology.Strel2D;
 
 /**
  * Implementation basis for planar structuring elements. 

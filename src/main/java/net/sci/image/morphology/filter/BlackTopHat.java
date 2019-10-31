@@ -7,8 +7,8 @@ import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.morphology.Strel;
-import net.sci.image.morphology.Strel2D;
-import net.sci.image.morphology.Strel3D;
+import net.sci.image.morphology.strel.Strel2D;
+import net.sci.image.morphology.strel.Strel3D;
 
 /**
  * Black top-hat, that consists in subtracting the original array from

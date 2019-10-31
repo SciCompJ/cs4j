@@ -5,7 +5,6 @@ package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.scalar.ScalarArray2D;
-import net.sci.image.morphology.Strel2D;
 
 /**
  * @author dlegland

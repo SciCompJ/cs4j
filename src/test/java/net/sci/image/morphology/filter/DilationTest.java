@@ -9,8 +9,8 @@ import org.junit.Test;
 
 import net.sci.array.Array;
 import net.sci.array.color.RGB8Array2D;
-import net.sci.image.morphology.Strel2D;
 import net.sci.image.morphology.strel.SquareStrel;
+import net.sci.image.morphology.strel.Strel2D;
 
 /**
  * @author dlegland
