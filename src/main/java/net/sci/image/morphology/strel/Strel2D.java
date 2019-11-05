@@ -13,11 +13,19 @@ import net.sci.image.morphology.Strel;
  * 
  * <pre>
  * {@code
- *  // Creates a 5x5 square structuring element
- *  Strel strel = Strel.Shape.SQUARE.fromDiameter(5);
- *  // applies dilation on current image
- *  Array2D<?> array = ...
- *  Array2D<?> dilated = strel.dilation(image);
+    // Creates a 5x5 square structuring element
+    Strel2D strel = Strel2D.Shape.SQUARE.fromDiameter(5);
+    
+    // Creates a simple array with white dot in the middle
+    UInt8Array2D array = UInt8Array2D.create(9, 9);
+    array.setValue(4, 4, 255);
+    
+    // applies dilation on array
+    ScalarArray2D<?> dilated = strel.dilation(array);
+    
+    // display result
+    dilated.print(System.out);
+ *  
  * }
  * </pre>
  * @author David Legland
