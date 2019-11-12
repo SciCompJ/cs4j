@@ -210,7 +210,7 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
      * @see net.sci.image.morphology.Strel3D#getMask3D()
      */
     @Override
-    public int[][][] getMask3D()
+    public int[][][] getMask()
     {
         int[][][] mask = new int[this.size][1][1];
         for (int i = 0; i < this.size; i++) {
@@ -233,7 +233,7 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
      * @see net.sci.image.morphology.Strel3D#getShifts3D()
      */
     @Override
-    public int[][] getShifts3D()
+    public int[][] getShifts()
     {
         int[][] shifts = new int[this.size][3];
         for (int i = 0; i < this.size; i++) {

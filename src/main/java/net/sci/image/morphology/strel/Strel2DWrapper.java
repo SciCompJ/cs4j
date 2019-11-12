@@ -33,7 +33,7 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
     }
 
     @Override
-    public int[][][] getMask3D()
+    public int[][][] getMask()
     {
         int[] size = strel2d.size();
         int[][] mask2d = strel2d.getMask();
@@ -60,7 +60,7 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
     }
 
     @Override
-    public int[][] getShifts3D()
+    public int[][] getShifts()
     {
         int[][] shifts2d = strel2d.getShifts();
         int n = shifts2d.length;

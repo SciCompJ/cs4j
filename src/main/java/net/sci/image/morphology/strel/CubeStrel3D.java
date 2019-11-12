@@ -136,7 +136,7 @@ public class CubeStrel3D extends AbstractSeparableStrel3D
      * @see net.sci.image.morphology.Strel3D#getMask3D()
      */
     @Override
-    public int[][][] getMask3D()
+    public int[][][] getMask()
     {
         int[][][] mask = new int[this.size][this.size][this.size];
         for (int z = 0; z < this.size; z++)
@@ -165,7 +165,7 @@ public class CubeStrel3D extends AbstractSeparableStrel3D
      * @see net.sci.image.morphology.Strel3D#getShifts3D()
      */
     @Override
-    public int[][] getShifts3D()
+    public int[][] getShifts()
     {
         int n = this.size * this.size * this.size;
         int[][] shifts = new int[n][3];

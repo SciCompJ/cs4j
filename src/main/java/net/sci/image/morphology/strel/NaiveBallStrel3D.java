@@ -227,7 +227,7 @@ public class NaiveBallStrel3D extends AlgoStub implements Strel3D
      * @see net.sci.image.morphology.Strel3D#getMask()
      */
     @Override
-    public int[][][] getMask3D()
+    public int[][][] getMask()
     {
         // convert to "real" radius by taking into account central pixel
         double r2 = this.radius + 0.5;
@@ -267,7 +267,7 @@ public class NaiveBallStrel3D extends AlgoStub implements Strel3D
      * @see net.sci.image.morphology.Strel3D#getShifts()
      */
     @Override
-    public int[][] getShifts3D()
+    public int[][] getShifts()
     {
         return this.shiftArray;
     }

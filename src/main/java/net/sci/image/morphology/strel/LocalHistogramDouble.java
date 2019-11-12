@@ -7,7 +7,8 @@ import java.util.TreeMap;
 
 /**
  * <p>
- * Computes the maximum in a local buffer around current position.
+ * Keeps an histogram of values within the neighborhood of a position by storing
+ * the counts of values within a map indexed by values.
  * </p>
  * 
  * <p>
@@ -19,22 +20,48 @@ import java.util.TreeMap;
  *
  */
 public class LocalHistogramDouble
-{    
-    TreeMap<Double, Integer> valueCounts = new TreeMap<>(); 
-        
+{
+    // ==================================================
+    // Class variables
+
     /**
-     * Constructor from size and type of extremum (minimum or maximum).
-     *
-     * @param n
-     *            the size of the local histogram
-     * @param type
-     *            the type of extremum (maximum or minimum)
+     * The map storing the number of counts for each value in the histogram.
+     * 
+     * Each count should be strictly greater than 0, and the corresponding key
+     * removed if the count is decreased to 0.
      */
-    public LocalHistogramDouble(int n, double value)
+    TreeMap<Double, Integer> valueCounts = new TreeMap<>(); 
+    
+    
+    // ==================================================
+    // Constructors
+
+    /**
+     * Constructor from histogram size and filling value.
+     * 
+     * @param count
+     *            the number of values within the histogram
+     * @param value
+     *            the value that fills the histogram.
+     */
+    public LocalHistogramDouble(int count, double value)
     {
-        valueCounts.put(value, n);
+        valueCounts.put(value, count);
     }
     
+    
+    // ==================================================
+    // Class methods
+
+    /**
+     * Resets this local histogram by filling with the specified value, avoiding
+     * to create a new instance.
+     * 
+     * @param count
+     *            the number of values within the histogram
+     * @param value
+     *            the value that fills the histogram.
+     */
     public void reset(int count, double value)
     {
         valueCounts.clear();
@@ -63,7 +90,11 @@ public class LocalHistogramDouble
         {
             // decrease current count
             int count = valueCounts.get(value) - 1;
-            if (count == 0)
+            if (count > 0)
+            {
+                valueCounts.put(value, count);
+            }
+            else
             {
                 valueCounts.remove(value);
             }
@@ -85,7 +116,6 @@ public class LocalHistogramDouble
         {
             // create new count
             valueCounts.put(value, 1);
-            // TODO: test update
         }
     }
 }

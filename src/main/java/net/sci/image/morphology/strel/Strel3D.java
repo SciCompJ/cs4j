@@ -352,7 +352,7 @@ public interface Strel3D extends Strel, Algo
 	 * 
 	 * @return the mask of the structuring element
 	 */
-	public int[][][] getMask3D();
+	public int[][][] getMask();
 
 	/**
 	 * Returns the offset in the mask for each direction. 
@@ -369,7 +369,7 @@ public interface Strel3D extends Strel, Algo
 	 * 
 	 * @return a set of shifts
 	 */
-	public int[][] getShifts3D();
+	public int[][] getShifts();
 
     public default int dimensionality()
     {
