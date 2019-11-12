@@ -18,6 +18,7 @@ import org.junit.runners.Suite;
     LinearZStrel3DTest.class,
     CubeStrel3DTest.class,
     NaiveBallStrel3DTest.class,
+    SlidingBallStrel3DTest.class,
 	})
 public class AllTests {
   //nothing
