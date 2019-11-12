@@ -31,228 +31,156 @@ public interface Strel3D extends Strel, Algo
         throw new RuntimeException("Unable to wrap a strel with class: " + strel.getClass());
     }
     
-//	/**
-//	 * An enumeration of the different possible structuring element shapes. 
-//	 * Each item of the enumeration can create Strel instances of specific
-//	 * class and of given size.
-//	 */
-//	public enum Shape {
-//		/** 
-//		 * Ball of a given radius
-//		 * @see SquareStrel 
-//		 */
-//		BALL("Ball"),
-//		
-//		/** 
-//		 * Cube of a given side
-//		 * @see SquareStrel 
-//		 */
-//		CUBE("Cube"),
-//		
-//		/** 
-//		 * Square of a given side
-//		 * @see SquareStrel 
-//		 */
-//		SQUARE("Square"),
-//		
-//		/** 
-//		 * Diamond of a given diameter
-//		 * @see DiamondStrel
-//		 * @see Cross3x3Strel 
-//		 */
-//		DIAMOND("Diamond"),
-//		
-//		/** 
-//		 * Octagon of a given diameter
-//		 * @see OctagonStrel
-//		 */
-//		OCTAGON("Octagon"),
-//		
-//		/**
-//		 * Horizontal line of a given length 
-//		 * @see LinearHorizontalStrel
-//		 */
-//		LINE_HORIZ("Horizontal Line"),
-//		
-//		/** 
-//		 * Vertical line of a given length 
-//		 * @see LinearVerticalStrel
-//		 */
-//		LINE_VERT("Vertical Line"),
-//		
-//		/**
-//		 * Diagonal line of a given length 
-//		 * @see LinearDiagUpStrel
-//		 */
-//		LINE_DIAG_UP("Line 45 degrees"),
-//		
-//		/** 
-//		 * Diagonal line of a given length 
-//		 * @see LinearDiagDownStrel
-//		 */
-//		LINE_DIAG_DOWN("Line 135 degrees");
-//		
-//		private final String label;
-//		
-//		private Shape(String label) {
-//			this.label = label;
-//		}
-//		
-//		/**
-//		 * Returns the label associated to this shape.
-//		 */
-//		public String toString() {
-//			return this.label;
-//		}
-//		
-//		/**
-//		 * Creates a structuring element of the given type and with the
-//		 * specified radius. The final size is given by 2 * radius + 1, to
-//		 * take into account the central pixel.
-//		 * 
-//		 * @param radius the radius of the structuring element, in pixels
-//		 * @return a new structuring element
-//		 * 
-//		 */
-//		public Strel3D fromRadius(int radius) {
-//			return fromDiameter(2 * radius + 1);
-//		}
-//		
-//		/**
-//		 * Creates a structuring element of the given type and with the
-//		 * specified radius for each dimension. The final size is given for each
-//		 * dimension by 2 * radius + 1, to take into account the central pixel.
-//		 * 
-//		 * @param radiusX
-//		 *            the radius of the structuring element in the x-direction, in pixels
-//		 * @param radiusY
-//		 *            the radius of the structuring element in the y-direction, in pixels
-//		 * @param radiusZ
-//		 *            the radius of the structuring element in the z-direction, in pixels
-//		 * @return a new structuring element
-//		 * 
-//		 */
-//		public Strel3D fromRadiusList(int radiusX, int radiusY, int radiusZ) 
-//		{
-//			if (this == BALL) 
-//				return EllipsoidStrel.fromRadiusList(radiusX, radiusY, radiusZ);
-//			if (this == CUBE) 
-//				return CuboidStrel.fromRadiusList(radiusX, radiusY, radiusZ);
-//			
-//			if (radiusX != radiusY)
-//			{
-//				throw new IllegalArgumentException("For 2D structuring elements, radiusX and radiusY must be equal");
-//			}
-//			
-//			// create the planar shape with specified size in largest direction
-//			Strel.Shape shape2d = Strel.Shape.fromLabel(this.label);
-//			Strel strel2d = shape2d.fromRadius(radiusX);
-//			
-//			int diamZ = 2 * radiusZ + 1;
-//			return new ExtrudedStrel(strel2d, diamZ, radiusZ);
-//		}
-//		
-//		/**
-//		 * Creates a structuring element of the given type and with the
-//		 * specified diameter.
-//		 * @param diam the orthogonal diameter of the structuring element (max of x and y sizes), in pixels
-//		 * @return a new structuring element
-//		 */
-//		public Strel3D fromDiameter(int diam) 
-//		{
-//			if (this == BALL) 
-//				return BallStrel.fromDiameter(diam);
-//			if (this == CUBE) 
-//				return CubeStrel.fromDiameter(diam);
-//			if (this == SQUARE) 
-//				return new SquareStrel(diam);
-//			if (this == DIAMOND) {
-//				if (diam == 3)
-//					return new Cross3x3Strel();
-//				return new DiamondStrel(diam);
-//			}
-//			if (this == OCTAGON) 
-//				return new OctagonStrel(diam);
-//			if (this == LINE_HORIZ) 
-//				return new LinearHorizontalStrel(diam);
-//			if (this == LINE_VERT) 
-//				return new LinearVerticalStrel(diam);
-//			if (this == LINE_DIAG_UP) 
-//				return new LinearDiagUpStrel(diam);
-//			if (this == LINE_DIAG_DOWN) 
-//				return new LinearDiagDownStrel(diam);
-//			
-//			throw new IllegalArgumentException("No default method for creating element of type " + this.label);
-//		}
-//		
-//		/**
-//		 * Creates a structuring element of the given type and with the
-//		 * specified diameter.
-//		 * 
-//		 * @param diamX
-//		 *            the diameter of the structuring element in the X direction
-//		 * @param diamY
-//		 *            the diameter of the structuring element in the Y direction
-//		 * @param diamZ
-//		 *            the diameter of the structuring element in the Z direction
-//		 * @return a new structuring element
-//		 */
-//		public Strel3D fromDiameterList(int diamX, int diamY, int diamZ) 
-//		{
-//			if (this == BALL) 
-//				return EllipsoidStrel.fromDiameterList(diamX, diamY, diamZ);
-//			if (this == CUBE) 
-//				return CuboidStrel.fromDiameterList(diamX, diamY, diamZ);
-//			
-//			if (diamX != diamY)
-//			{
-//				throw new IllegalArgumentException("For 2D structuring elements, radiusX and radiusY must be equal");
-//			}
-//			
-//			// create the planar shape with specified size in largest direction
-//			Strel.Shape shape2d = Strel.Shape.fromLabel(this.label);
-//			Strel strel2d = shape2d.fromDiameter(diamX);
-//			
-//			return new ExtrudedStrel(strel2d, diamZ, (diamZ - 1) / 2);
-//		}
-//		
-//		/**
-//		 * Returns a set of labels for most of classical structuring elements.
-//		 * @return a list of labels
-//		 */
-//		public static String[] getAllLabels(){
-//			// array of all Strel types
-//			Shape[] values = Shape.values();
-//			int n = values.length;
-//			
-//			// keep all values but the last one ("Custom")
-//			String[] result = new String[n];
-//			for (int i = 0; i < n; i++)
-//				result[i] = values[i].label;
-//			
-//			return result;
-//		}
-//		
-//		/**
-//		 * Determines the strel shape from its label.
-//		 * 
-//		 * @param label
-//		 *            the name of the structuring element
-//		 * @return a Shape object that can be used to instantiate new
-//		 *         structuring elements
-//		 * @throws IllegalArgumentException
-//		 *             if label is not recognized.
-//		 */
-//		public static Shape fromLabel(String label) {
-//			if (label != null)
-//				label = label.toLowerCase();
-//			for (Shape type : Shape.values()) {
-//				if (type.label.toLowerCase().equals(label))
-//					return type;
-//			}
-//			throw new IllegalArgumentException("Unable to parse Strel.Shape with label: " + label);
-//		}
-//	}
+    /**
+     * An enumeration of the different possible structuring element shapes. 
+     * Each item of the enumeration can create Strel instances of specific
+     * class and of given size.
+     */
+    public enum Shape
+    {
+        /**
+         * Ball of a given radius
+         * @see SlidingBallStrel3D 
+         */
+        BALL("Ball"),
+
+        /** 
+         * Cube of a given side length.
+         * @see CubeStrel3D 
+         */
+        CUBE("CUBE"),
+        ;
+        
+//        
+//        /** 
+//         * Diamond of a given diameter
+//         * @see DiamondStrel
+//         * @see Cross3x3Strel 
+//         */
+//        DIAMOND("Diamond"),
+//        
+//        /** 
+//         * Octagon of a given diameter
+//         * @see OctagonStrel
+//         */
+//        OCTAGON("Octagon"),
+//        
+//        /**
+//         * Horizontal line of a given length 
+//         * @see LinearHorizontalStrel
+//         */
+//        LINE_HORIZ("Horizontal Line"),
+//        
+//        /** 
+//         * Vertical line of a given length 
+//         * @see LinearVerticalStrel
+//         */
+//        LINE_VERT("Vertical Line"),
+//        
+//        /**
+//         * Diagonal line of a given length 
+//         * @see LinearDiagUpStrel
+//         */
+//        LINE_DIAG_UP("Line 45 degrees"),
+//        
+//        /** 
+//         * Diagonal line of a given length 
+//         * @see LinearDiagDownStrel
+//         */
+//        LINE_DIAG_DOWN("Line 135 degrees");
+        
+        private final String label;
+        
+        private Shape(String label) 
+        {
+            this.label = label;
+        }
+        
+        /**
+         * @return the label associated to this shape.
+         */
+        public String toString()
+        {
+            return this.label;
+        }
+        
+        /**
+         * Creates a structuring element of the given type and with the
+         * specified radius. The final size is given by 2 * radius + 1, to
+         * take into account the central pixel.
+         * 
+         * @param radius the radius of the structuring element, in pixels
+         * @return a new structuring element
+         * 
+         */
+        public Strel3D fromRadius(int radius)
+        {
+            if (this == BALL) 
+                return new SlidingBallStrel3D(radius);
+            return fromDiameter(2 * radius + 1);
+        }
+        
+        /**
+         * Creates a structuring element of the given type and with the
+         * specified diameter.
+         * 
+         * @param diam
+         *            the orthogonal diameter of the structuring element (max of
+         *            x and y sizes), in pixels
+         * @return a new structuring element
+         */
+        public Strel3D fromDiameter(int diam) 
+        {
+            if (this == BALL) 
+                return new SlidingBallStrel3D((diam - 1.0) * 0.5);
+            if (this == CUBE) 
+                return new CubeStrel3D(diam);
+            
+            throw new IllegalArgumentException("No default method for creating element of type " + this.label);
+        }
+        
+        /**
+         * Returns a set of labels for most of classical structuring elements.
+         * 
+         * @return a list of labels
+         */
+        public static String[] getAllLabels()
+        {
+            // array of all Strel types
+            Shape[] values = Shape.values();
+            int n = values.length;
+            
+            // keep all values but the last one ("Custom")
+            String[] result = new String[n];
+            for (int i = 0; i < n; i++)
+                result[i] = values[i].label;
+            
+            return result;
+        }
+        
+        /**
+         * Determines the strel shape from its label.
+         * 
+         * @param label
+         *            the shape name of the structuring element
+         * @return a new Shape instance that can be used to create structuring
+         *         elements
+         * @throws IllegalArgumentException
+         *             if label is not recognized.
+         */
+        public static Shape fromLabel(String label)
+        {
+            if (label != null)
+                label = label.toLowerCase();
+            for (Shape s : Shape.values()) 
+            {
+                if (s.label.toLowerCase().equals(label))
+                    return s;
+            }
+            throw new IllegalArgumentException("Unable to parse Strel.Shape with label: " + label);
+        }
+    }
+    
 	
     // ===================================================================
     // High-level operations

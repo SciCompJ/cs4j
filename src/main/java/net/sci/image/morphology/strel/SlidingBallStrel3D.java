@@ -5,6 +5,7 @@ package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.scalar.UInt8Array3D;
 
 /**
  * <pre>{@code
@@ -143,6 +144,10 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
     @Override
     public ScalarArray3D<?> dilation(ScalarArray3D<?> array)
     {
+        if (array instanceof UInt8Array3D)
+        {
+            return slidingDilationUInt8((UInt8Array3D) array);
+        }
         return slidingDilationScalar(array);
     }
 
@@ -245,12 +250,115 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         return res;
     }
     
+    private UInt8Array3D slidingDilationUInt8(UInt8Array3D array)
+    {
+        // get array size
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        
+        // number of non zero elements 
+        int count = elementCount();
+        int nOffsets = this.xOffsets.length;
+        
+        // create local histogram instance
+        final int OUTSIDE = 0;
+        LocalHistogramUInt8 localHisto = new LocalHistogramUInt8(count, OUTSIDE);
+
+        // Allocate result
+        UInt8Array3D res = array.duplicate();
+
+        // temp variables for updating local histogram
+        int vOld, vNew;
+        
+        // Iterate on image rows indexed by z and y
+        for (int z = 0; z < sizeZ; z++)
+        {
+            fireProgressChanged(this, z, sizeZ);
+            
+            for (int y = 0; y < sizeY; y++)
+            {
+                // init local histogram with background values
+                localHisto.reset(count, OUTSIDE);
+
+                // update initialization with visible neighbors
+                for (int x = -intRadius; x < 0; x++)
+                {
+                    // iterate over the list of offsets
+                    for (int i = 0; i < nOffsets; i++)
+                    {
+                        int z2 = z + this.zOffsets[i];
+                        if (z2 < 0 || z2 >= sizeZ)
+                        {
+                            continue;
+                        }
+                        
+                        int y2 = y + this.yOffsets[i];
+                        if (y2 < 0 || y2 >= sizeY)
+                        {
+                            continue;
+                        }
+                        
+                        int x2 = x + this.xOffsets[i];
+                        if (x2 < 0 || x2 >= sizeX)
+                        {
+                            continue;
+                        }
+                        localHisto.replace(OUTSIDE, array.getInt(x2, y2, z2));
+                    }
+                }   
+                
+                // iterate along "middle" values
+                for (int x = 0; x < sizeX; x++)
+                {
+                    // iterate over the list of offsets
+                    for (int i = 0; i < nOffsets; i++)
+                    {
+                        int z2 = z + this.zOffsets[i];
+                        if (z2 < 0 || z2 >= sizeZ)
+                        {
+                            continue;
+                        }
+                        
+                        // current line offset
+                        int y2 = y + this.yOffsets[i];
+                        
+                        // We need to test values only for lines within array bounds
+                        if (y2 >= 0 && y2 < sizeY)
+                        {
+                            // old value
+                            int x2 = x - this.xOffsets[i] - 1;
+                            vOld = (x2 >= 0 && x2 < sizeX) ? array.getInt(x2, y2, z2) : OUTSIDE;
+                            
+                            // new value
+                            x2 = x + this.xOffsets[i];
+                            vNew = (x2 >= 0 && x2 < sizeX) ? array.getInt(x2, y2, z2) : OUTSIDE;
+                            
+                            localHisto.replace(vOld, vNew);
+                        }
+                    }
+
+                    res.setValue(x, y, z, localHisto.getMaxValue());
+                }
+            }
+        }
+
+        // clear the progress bar
+        fireProgressChanged(this, sizeZ, sizeZ);
+        
+        return res;
+    }
+
     /* (non-Javadoc)
      * @see net.sci.image.morphology.Strel2D#erosion(net.sci.array.scalar.ScalarArray3D)
      */
     @Override
     public ScalarArray3D<?> erosion(ScalarArray3D<?> array)
     {
+        if (array instanceof UInt8Array3D)
+        {
+            return slidingErosionUInt8((UInt8Array3D) array);
+        }
         return slidingErosionScalar(array);
     }
 
@@ -353,6 +461,105 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         return res;
     }
     
+    private UInt8Array3D slidingErosionUInt8(UInt8Array3D array)
+    {
+        // get array size
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        
+        // number of non zero elements 
+        int count = elementCount();
+        int nOffsets = this.xOffsets.length;
+        
+        // create local histogram instance
+        final int OUTSIDE = 255;
+        LocalHistogramUInt8 localHisto = new LocalHistogramUInt8(count, OUTSIDE);
+
+        // Allocate result
+        UInt8Array3D res = array.duplicate();
+
+        // temp variables for updating local histogram
+        int vOld, vNew;
+        
+        // Iterate on image rows indexed by z and y
+        for (int z = 0; z < sizeZ; z++)
+        {
+            fireProgressChanged(this, z, sizeZ);
+            
+            for (int y = 0; y < sizeY; y++)
+            {
+                // init local histogram with background values
+                localHisto.reset(count, OUTSIDE);
+
+                // update initialization with visible neighbors
+                for (int x = -intRadius; x < 0; x++)
+                {
+                    // iterate over the list of offsets
+                    for (int i = 0; i < nOffsets; i++)
+                    {
+                        int z2 = z + this.zOffsets[i];
+                        if (z2 < 0 || z2 >= sizeZ)
+                        {
+                            continue;
+                        }
+                        
+                        int y2 = y + this.yOffsets[i];
+                        if (y2 < 0 || y2 >= sizeY)
+                        {
+                            continue;
+                        }
+                        
+                        int x2 = x + this.xOffsets[i];
+                        if (x2 < 0 || x2 >= sizeX)
+                        {
+                            continue;
+                        }
+                        localHisto.replace(OUTSIDE, array.getInt(x2, y2, z2));
+                    }
+                }   
+                
+                // iterate along "middle" values
+                for (int x = 0; x < sizeX; x++)
+                {
+                    // iterate over the list of offsets
+                    for (int i = 0; i < nOffsets; i++)
+                    {
+                        int z2 = z + this.zOffsets[i];
+                        if (z2 < 0 || z2 >= sizeZ)
+                        {
+                            continue;
+                        }
+                        
+                        // current line offset
+                        int y2 = y + this.yOffsets[i];
+                        
+                        // We need to test values only for lines within array bounds
+                        if (y2 >= 0 && y2 < sizeY)
+                        {
+                            // old value
+                            int x2 = x - this.xOffsets[i] - 1;
+                            vOld = (x2 >= 0 && x2 < sizeX) ? array.getInt(x2, y2, z2) : OUTSIDE;
+                            
+                            // new value
+                            x2 = x + this.xOffsets[i];
+                            vNew = (x2 >= 0 && x2 < sizeX) ? array.getInt(x2, y2, z2) : OUTSIDE;
+                            
+                            localHisto.replace(vOld, vNew);
+                        }
+                    }
+
+                    res.setValue(x, y, z, localHisto.getMinValue());
+                }
+            }
+        }
+
+        // clear the progress bar
+        fireProgressChanged(this, sizeZ, sizeZ);
+        
+        return res;
+    }
+
     /* (non-Javadoc)
      * @see net.sci.image.morphology.strel.Strel3D#closing(net.sci.array.scalar.ScalarArray3D)
      */
