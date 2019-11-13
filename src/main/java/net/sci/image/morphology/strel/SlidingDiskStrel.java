@@ -297,7 +297,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
     @Override
     public ScalarArray2D<?> closing(ScalarArray2D<?> array)
     {
-        return dilation(erosion(array));
+        return erosion(dilation(array));
     }
 
     /* (non-Javadoc)
@@ -306,7 +306,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
     @Override
     public ScalarArray2D<?> opening(ScalarArray2D<?> array)
     {
-        return erosion(dilation(array));
+        return dilation(erosion(array));
     }
 
     /* (non-Javadoc)

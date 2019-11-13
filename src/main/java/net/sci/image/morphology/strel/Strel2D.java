@@ -255,7 +255,10 @@ public interface Strel2D extends Strel, Algo
      * @see #opening(Array2D)
      * @see #reverse()
      */
-    public ScalarArray2D<?> closing(ScalarArray2D<?> array);
+    public default ScalarArray2D<?> closing(ScalarArray2D<?> array)
+    {
+        return reverse().erosion(dilation(array));
+    }
 
     /**
      * Performs a morphological opening of the input image with this structuring
@@ -272,7 +275,10 @@ public interface Strel2D extends Strel, Algo
      * @see #closing(Array2D)
      * @see #reverse()
      */
-    public ScalarArray2D<?> opening(ScalarArray2D<?> array);
+    public default ScalarArray2D<?> opening(ScalarArray2D<?> array)
+    {
+        return reverse().dilation(erosion(array));
+    }
 
     /**
      * Returns a reversed (i.e. symmetric wrt the origin) version of this

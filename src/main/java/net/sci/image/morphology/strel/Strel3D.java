@@ -228,7 +228,7 @@ public interface Strel3D extends Strel, Algo
      */
     public default ScalarArray3D<?> closing(ScalarArray3D<?> array)
     {
-        return dilation(erosion(array));
+        return reverse().erosion(dilation(array));
     }
 
     /**
@@ -248,7 +248,7 @@ public interface Strel3D extends Strel, Algo
      */
     public default ScalarArray3D<?> opening(ScalarArray3D<?> array)
     {
-        return erosion(dilation(array));
+        return reverse().dilation(erosion(array));
     }
 
     /**

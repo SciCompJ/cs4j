@@ -566,7 +566,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
     @Override
     public ScalarArray3D<?> closing(ScalarArray3D<?> array)
     {
-        return dilation(erosion(array));
+        return erosion(dilation(array));
     }
 
     /* (non-Javadoc)
@@ -575,7 +575,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
     @Override
     public ScalarArray3D<?> opening(ScalarArray3D<?> array)
     {
-        return erosion(dilation(array));
+        return dilation(erosion(array));
     }
 
     /* (non-Javadoc)
