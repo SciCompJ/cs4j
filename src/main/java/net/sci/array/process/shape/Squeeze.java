@@ -8,9 +8,21 @@ import java.util.ArrayList;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 
+
 /**
  * Remove array dimensions whose size is 1.
  * 
+ * <pre>{@code
+ *    // create an empty array with only one non-unit dimension
+ *    UInt8Array array = UInt8Array.create(new int[]{1, 10, 1});
+ *    
+ *    // apply squeeze operation
+ *    Squeeze op = new Squeeze();
+ *    UInt8Array res = (UInt8Array) op.process(array);
+ *    
+ *    // the following should equal 1
+ *    int newDim = res.dimensionality();
+ * }</pre>
  * @author dlegland
  *
  */

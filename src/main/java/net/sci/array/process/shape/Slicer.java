@@ -3,8 +3,6 @@
  */
 package net.sci.array.process.shape;
 
-import java.util.function.Function;
-
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.ScalarArray;
@@ -18,114 +16,42 @@ import net.sci.array.scalar.ScalarArray;
  */
 public class Slicer implements ArrayOperator
 {
-    /**
-     * Extract a lower dimensional array from an ND array, by specifying the
-     * slicing dimension and the slice index along this dimension.
-     * 
-     * @param <T>
-     *            the type of the array
-     * @param source
-     *            the source array (dimensionality N)
-     * @param target
-     *            the target array (dimensionality N-1)
-     * @param dim
-     *            the slicing dimension, between 0 and N-1
-     * @param sliceIndex
-     *            the position of the slice along specified dimension, between 0
-     *            and <code>target.getSize(dim)-1</code>
-     */
-	public static final <T> void getSlice(Array<? extends T> source, Array<? super T> target, int dim, int sliceIndex)
-	{
-		// create position pointer for source image
-		int nd = target.dimensionality();
-		int[] srcPos = new int[nd + 1];
-		srcPos[dim] = sliceIndex;
+ 	// =============================================================
+    // Class members
 
-        // iterate over positions of input array
-        for (int[] pos : source.positions()) 
-        {
-            // convert to position in source image
-            System.arraycopy(pos, 0, srcPos, 0, dim);
-            System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
-            
-            // copy value of selected position
-            target.set(pos, source.get(srcPos));
-        }
-	}
+	int[] dims;
 	
-	public static final <T> Array<T> slice2d(Array<T> array,
-			int dim1, int dim2, int[] refPos)
-	{
-		// check dimensionality
-		int nd = array.dimensionality();
-		if (dim1 >= nd || dim2 >= nd)
-		{
-			throw new IllegalArgumentException("slicing dimensions must be lower than input array dimension");
-		}
+	int[] refPos;
+	
+	
+    // =============================================================
+    // Constructors
 
-		// check dimensionality
-		if (refPos.length < nd)
-		{
-			throw new IllegalArgumentException("Reference position must have as many dimension as input array");
-		}
-
-		// create position pointer for source image
-		int[] srcPos = new int[nd];
-		System.arraycopy(refPos, 0, srcPos, 0, nd);
-		
-		// create position pointer for target image
-		int[] pos = new int[2];
-
-		// create output
-		int sizeX = array.size(dim1);
-		int sizeY = array.size(dim2);
-		Array<T> result = array.newInstance(new int[]{sizeX, sizeY});
-		
-		// iterate over position in target image
-		for (int y = 0; y < sizeY; y++)
-		{
-			srcPos[dim2] = y;
-			pos[1] = y;
-			
-			for (int x = 0; x < sizeX; x++)
-			{
-				srcPos[dim1] = x;
-				pos[0] = x;
-				
-				// copy value of selected position
-				result.set(pos, array.get(srcPos));
-			}
-		}
-		
-		return result;
-	}
-	
-	int dim;
-	
-	int index;
-	
 	/**
 	 * Creates a new instance of Slicer operator, that specifies the dimension
 	 * of slicing and the reference slice along that dimension.
 	 * 
 	 * @param dim
-	 *            the dimension of slicing, 0-indexed
-	 * @param index
-	 *            the index of the slice in the <code>dim</code> dimension,
-	 *            starting from 0
+	 *            the dimensions of slicing, 0-indexed. Ex.: <code>new int[]{0, 1}</code>.
+	 * @param pos
+	 *            the position of point belonging to the sliced array. 
 	 */
-	public Slicer(int dim, int index)
+	public Slicer(int[] dims, int[] pos)
 	{
-		this.dim = dim;
-		this.index = index;
+		this.dims = dims;
+		this.refPos = pos;
 	}
 
+
+	// =============================================================
+    // Methods
+
 	@Override
-	public <T> Array<?> process(Array<T> source)
+	public <T> Array<T> process(Array<T> source)
 	{
 		int[] newDims = computeOutputArraySize(source);
 		Array<T> target = source.newInstance(newDims);
-		processNd(source, target);
+		process(source, target);
 		return target;
 	}
 	
@@ -142,22 +68,22 @@ public class Slicer implements ArrayOperator
 	    }
 	}
 	
-	public <T> Array<T> createView(Array<T> array)
-	{
-	    int[] newDims = computeOutputArraySize(array);
-	    int nd = newDims.length;
-        
-        // convert position in view to position in source image
-	    Function<int[], int[]> mapping = (int[] pos) -> {
-	        int[] srcPos = new int[nd+1];
-	        System.arraycopy(pos, 0, srcPos, 0, dim);
-            srcPos[dim] = index;
-	        System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
-	        return srcPos;
-	    };
-	    
-	    return array.view(newDims, mapping);
-	}
+//	public <T> Array<T> createView(Array<T> array)
+//	{
+//	    int[] newDims = computeOutputArraySize(array);
+//	    int nd = newDims.length;
+//        
+//        // convert position in view to position in source image
+//	    Function<int[], int[]> mapping = (int[] pos) -> {
+//	        int[] srcPos = new int[nd+1];
+//	        System.arraycopy(pos, 0, srcPos, 0, dim);
+//            srcPos[dim] = index;
+//	        System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
+//	        return srcPos;
+//	    };
+//	    
+//	    return array.view(newDims, mapping);
+//	}
 	
 	/**
 	 * Creates a new array that can be used as output for processing the given
@@ -177,41 +103,43 @@ public class Slicer implements ArrayOperator
 	private int[] computeOutputArraySize(Array<?> inputArray)
 	{
 		// number of dimensions of new array
-		int nd = inputArray.dimensionality() - 1;
+		int nd = inputArray.dimensionality();
+		int nd2 = this.dims.length;
 		
-		if (dim > nd)
+		if (nd2 > nd)
 		{
 			throw new IllegalArgumentException(String.format(
-					"Slicer in dim %d can not process array of size %d", dim,
-					nd + 1));
+                    "Slicer can not process array of size %d", nd));
 		}
-		int[] dims = new int[nd];
-		for (int d = 0; d  < this.dim; d++)
+		
+		int[] size2 = new int[nd2];
+		for (int d = 0; d  < nd2; d++)
 		{
-			dims[d] = inputArray.size(d);
-		}
-		for (int d = this.dim; d < nd; d++)
-		{
-			dims[d] = inputArray.size(d+1);
+			size2[d] = inputArray.size(this.dims[d]);
 		}
 
-		return dims;
+		return size2;
 	}
 	
 	public void processScalarNd(ScalarArray<?> source, ScalarArray<?> target)
 	{
         checkTargetSize(source, target);
 
+        // array dimensions
+        int nd = source.dimensionality();
+        int nd2 = target.dimensionality();
+
         // create position pointer for source image
-		int nd = target.dimensionality();
-		int[] srcPos = new int[nd + 1];
-		srcPos[this.dim] = this.index;
+        int[] srcPos = new int[nd];
+        System.arraycopy(this.refPos, 0, srcPos, 0, nd);
 
         for (int[] pos : target.positions()) 
         {
-			// convert to position in source image
-			System.arraycopy(pos, 0, srcPos, 0, dim);
-			System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
+            // update coords of pointer in source array
+            for (int d = 0; d < nd2; d++)
+            {
+                srcPos[this.dims[d]] = pos[d];
+            }
 			
 			// copy value of selected position
 			target.setValue(pos, source.getValue(srcPos));
@@ -222,17 +150,21 @@ public class Slicer implements ArrayOperator
 	{
 	    checkTargetSize(source, target);
 	    
-		// create position pointer for source image
-		int nd = target.dimensionality();
-		int[] srcPos = new int[nd + 1];
-		srcPos[this.dim] = this.index;
+        // array dimensions
+        int nd = source.dimensionality();
+        int nd2 = target.dimensionality();
 
-		// iterate over positions in target image
+        // create position pointer for source image
+        int[] srcPos = new int[nd];
+        System.arraycopy(this.refPos, 0, srcPos, 0, nd);
+
         for (int[] pos : target.positions()) 
         {
-			// convert to position in source image
-			System.arraycopy(pos, 0, srcPos, 0, dim);
-			System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
+            // update coords of pointer in source array
+            for (int d = 0; d < nd2; d++)
+            {
+                srcPos[this.dims[d]] = pos[d];
+            }
 			
 			// copy value of selected position
 			target.set(pos, source.get(srcPos));

@@ -13,6 +13,7 @@ import org.junit.runners.Suite;
 	PermuteDimensionsTest.class,
     Rotate90Test.class,
     Rotate3D90Test.class,
+    SimpleSlicerTest.class,
     SlicerTest.class,
     SqueezeTest.class,
 	})
