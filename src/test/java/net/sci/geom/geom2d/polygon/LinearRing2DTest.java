@@ -86,7 +86,23 @@ public class LinearRing2DTest
 		assertEquals(4, count);
 	}
 
-
+    /**
+     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#length()}.
+     */
+    @Test
+    public final void testLength()
+    {
+        // line stringwith edge lengths 40, 20, 40, and 20.
+        LinearRing2D poly = new LinearRing2D(
+                new Point2D(10, 20),
+                new Point2D(50, 20),
+                new Point2D(50, 40),
+                new Point2D(10, 40));
+        double length = poly.length();
+        
+        assertEquals(length, 120.0, 0.01);
+    }
+    
 	/**
 	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#distance(net.sci.geom.geom2d.Point2D)}.
 	 */

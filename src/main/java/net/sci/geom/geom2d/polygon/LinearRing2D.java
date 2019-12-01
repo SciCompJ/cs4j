@@ -372,6 +372,22 @@ public class LinearRing2D implements Polyline2D, Contour2D
     // ===================================================================
     // Methods implementing the Curve2D interface
     
+    public double length()
+    {
+        double cumSum = 0.0;
+        Point2D prev = vertices.get(vertices.size() - 1);
+        Iterator<Point2D> vertexIter = vertices.iterator();
+        while(vertexIter.hasNext())
+        {
+            Point2D vertex = vertexIter.next();
+            double dist = vertex.distance(prev);
+            cumSum += dist;
+            prev = vertex;
+        }
+        
+        return cumSum;
+    }
+    
     @Override
     public Point2D getPoint(double t)
     {

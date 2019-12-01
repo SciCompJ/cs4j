@@ -189,6 +189,22 @@ public class LineString2D implements Polyline2D
     // ===================================================================
     // Methods implementing the Curve2D interface
     
+    public double length()
+    {
+        double cumSum = 0.0;
+        Iterator<Point2D> vertexIter = vertices.iterator();
+        Point2D prev = vertexIter.next();
+        while(vertexIter.hasNext())
+        {
+            Point2D vertex = vertexIter.next();
+            double dist = vertex.distance(prev);
+            cumSum += dist;
+            prev = vertex;
+        }
+        
+        return cumSum;
+    }
+    
     @Override
     public Point2D getPoint(double t)
     {

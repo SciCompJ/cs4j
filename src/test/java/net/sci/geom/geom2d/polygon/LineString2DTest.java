@@ -19,7 +19,7 @@ import org.junit.Test;
 public class LineString2DTest
 {
 	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#closestVertexIndex(net.sci.geom.geom2d.Point2D)}.
+	 * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#closestVertexIndex(net.sci.geom.geom2d.Point2D)}.
 	 */
 	@Test
 	public final void testClosestVertexIndex()
@@ -40,7 +40,24 @@ public class LineString2DTest
 	}
 
 	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#edgeIterator()}.
+     * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#length()}.
+     */
+    @Test
+    public final void testLength()
+    {
+        // line stringwith edge lengths 40, 20, and 40.
+        LineString2D poly = new LineString2D(
+                new Point2D(10, 20),
+                new Point2D(50, 20),
+                new Point2D(50, 40),
+                new Point2D(10, 40));
+        double length = poly.length();
+        
+        assertEquals(length, 100.0, 0.01);
+    }
+    
+	/**
+	 * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#edgeIterator()}.
 	 */
 	@Test
 	public final void testEdgeIterator()
@@ -63,7 +80,7 @@ public class LineString2DTest
 
 
 	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#distance(net.sci.geom.geom2d.Point2D)}.
+	 * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#distance(net.sci.geom.geom2d.Point2D)}.
 	 */
 	@Test
 	public final void testDistance()
