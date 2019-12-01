@@ -369,8 +369,71 @@ public class LinearRing2D implements Polyline2D, Contour2D
         return reverse;
     }
 
+    public Point2D getPointAtLength(double pos)
+    {
+        double cumSum = 0;
+        Iterator<Point2D> vertexIter = vertices.iterator();
+        Point2D prev = vertexIter.next();
+        while(vertexIter.hasNext())
+        {
+            Point2D vertex = vertexIter.next();
+            double dist = vertex.distance(prev);
+            cumSum += dist;
+            if (cumSum >= pos)
+            {
+                double pos0 = pos - cumSum + dist;
+                double t1 = pos0 / dist;
+                double t0 = 1 - t1;
+                
+                double x = prev.getX() * t0 + vertex.getX() * t1;
+                double y = prev.getY() * t0 + vertex.getY() * t1;
+                return new Point2D(x, y);
+            }
+            prev = vertex;
+        }
+        
+        // specific processing of last edge
+        Point2D vertex = vertices.get(0);
+        double dist = vertex.distance(prev);
+        cumSum += dist;
+        if (cumSum >= pos)
+        {
+            double pos0 = pos - cumSum + dist;
+            double t1 = pos0 / dist;
+            double t0 = 1 - t1;
+            
+            double x = prev.getX() * t0 + vertex.getX() * t1;
+            double y = prev.getY() * t0 + vertex.getY() * t1;
+            return new Point2D(x, y);
+        }
+        
+        // otherwise return the first/last vertex
+        return vertex;
+    }
+
+    
     // ===================================================================
     // Methods implementing the Curve2D interface
+    
+    public LinearRing2D resampleBySpacing(double spacing)
+    {
+        // compute vertex number of resulting curve
+        double length = this.length();
+        int nv = (int) Math.round(length / spacing);
+        
+        // adjust step length to avoid last edge to have different size
+        double spacing2 = length / (nv + 1);
+        
+        // create new vertices
+        ArrayList<Point2D> vertices2 = new ArrayList<Point2D>(nv);
+        for (int i = 0; i < nv; i++)
+        {
+            double pos = Math.min(i * spacing2, nv);
+            vertices2.add(this.getPoint(pos));
+        }
+        
+        return new LinearRing2D(vertices2);
+    }
     
     public double length()
     {

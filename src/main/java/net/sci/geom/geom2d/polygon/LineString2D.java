@@ -135,14 +135,30 @@ public class LineString2D implements Polyline2D
         return index;
     }
     
-    public Iterator<LineSegment2D> edgeIterator()
-    {
-    	return new EdgeIterator();
-    }
-    
 
     // ===================================================================
     // Methods implementing the Polyline2D interface
+    
+    public LineString2D resampleBySpacing(double spacing)
+    {
+        // compute vertex number of resulting curve
+        double length = this.length();
+        int nv = (int) Math.round(length / spacing);
+        
+        // adjust step length to avoid last edge to have different size
+        double spacing2 = length / nv;
+        
+        // create new vertices
+        ArrayList<Point2D> vertices2 = new ArrayList<Point2D>(nv);
+        for (int i = 0; i < nv - 1; i++)
+        {
+            double pos = Math.min(i * spacing2, nv - 1);
+            vertices2.add(getPointAtLength(pos));
+        }
+        vertices2.add(this.vertices.get(this.vertices.size() - 1));
+        
+        return new LineString2D(vertices2);
+    }
     
     /**
      * Transforms this geometry with the specified affine transform.
@@ -185,6 +201,36 @@ public class LineString2D implements Polyline2D
         return reverse;
     }
 
+    public Iterator<LineSegment2D> edgeIterator()
+    {
+    	return new EdgeIterator();
+    }
+    
+
+    public Point2D getPointAtLength(double pos)
+    {
+        double cumSum = 0;
+        Iterator<Point2D> vertexIter = vertices.iterator();
+        Point2D prev = vertexIter.next();
+        while(vertexIter.hasNext())
+        {
+            Point2D vertex = vertexIter.next();
+            double dist = vertex.distance(prev);
+            cumSum += dist;
+            if (cumSum >= pos)
+            {
+                double pos0 = pos - cumSum + dist;
+                double t1 = pos0 / dist;
+                double t0 = 1 - t1;
+                
+                double x = prev.getX() * t0 + vertex.getX() * t1;
+                double y = prev.getY() * t0 + vertex.getY() * t1;
+                return new Point2D(x, y);
+            }
+            prev = vertex;
+        }
+        return prev;
+    }
 
     // ===================================================================
     // Methods implementing the Curve2D interface
@@ -218,9 +264,9 @@ public class LineString2D implements Polyline2D
         double tl = t - ind0;
         Point2D p0 = vertices.get(ind0);
 
-//        // check if equal to a vertex
-//        if (Math.abs(t - ind0) < Shape2D.ACCURACY)
-//            return p0;
+        // check if equal to last vertex
+        if (t == t1)
+            return p0;
 
         // index of vertex after point
         int ind1 = ind0+1;
@@ -243,7 +289,7 @@ public class LineString2D implements Polyline2D
     @Override
     public double getT1()
     {
-        return vertices.size();
+        return vertices.size() - 1;
     }
     @Override
     public boolean isClosed()

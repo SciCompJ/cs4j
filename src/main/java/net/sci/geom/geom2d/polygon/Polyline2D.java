@@ -24,6 +24,37 @@ import net.sci.geom.geom2d.Point2D;
 public interface Polyline2D extends Curve2D
 {
     // ===================================================================
+    // New methods
+    
+    /**
+     * Re-samples the polyline using the specified sampling step. The sampling
+     * step is adapted such that all edges of new polyline have approximately
+     * the same length.
+     * 
+     * @param spacing
+     *            the spacing between two vertices on the original curve
+     * @return a re-sampled polyline.
+     */
+    public Polyline2D resampleBySpacing(double spacing);
+
+    /**
+     * Returns a point from its curvilinear abscissa, between 0 and
+     * polyline.length().
+     * 
+     * @param pos
+     *            the curvilinear abcissa of the point, between 0 and
+     *            polyline.length().
+     * @return the coordinates of the point
+     */
+    public Point2D getPointAtLength(double pos);
+    
+    /**
+     * @return return the curvilinear length of this polyline, as the sum of edge lengths.
+     */
+    public double length();
+    
+    
+    // ===================================================================
     // Methods for managing vertices
     
     /**

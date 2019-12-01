@@ -64,6 +64,35 @@ public class LinearRing2DTest
 		assertEquals(3, poly.closestVertexIndex(p3));
 	}
 
+    /**
+     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#getPoint()}.
+     */
+    @Test
+    public final void testGetPointAtLength()
+    {
+        // line string with edge lengths 40, 20, and 40.
+        Point2D p0 = new Point2D(10, 20);
+        Point2D p1 = new Point2D(50, 20);
+        Point2D p2 = new Point2D(50, 40);
+        Point2D p3 = new Point2D(10, 40);
+        LinearRing2D poly = new LinearRing2D(p0, p1, p2, p3);
+        
+        // point in the middle of first edge
+        Point2D pL20 = poly.getPointAtLength(20);
+        Point2D expL20 = new Point2D(30, 20);
+        assertTrue(pL20.distance(expL20) < 0.001);
+        
+        // point in the middle of last edge
+        Point2D pL80 = poly.getPointAtLength(80);
+        Point2D expL80 = new Point2D(30, 40);
+        assertTrue(pL80.distance(expL80) < 0.001);
+
+        // last point of the polyline
+        Point2D pL100 = poly.getPointAtLength(120);
+        Point2D expL100 = new Point2D(10, 20);
+        assertTrue(pL100.distance(expL100) < 0.001);
+    }
+
 	/**
 	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#edgeIterator()}.
 	 */
