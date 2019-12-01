@@ -3,6 +3,8 @@
  */
 package net.sci.geom.geom2d;
 
+import java.util.Locale;
+
 import net.sci.geom.Point;
 
 /**
@@ -210,5 +212,13 @@ public class Point2D implements Geometry2D, Point
 //	{
 //		return trans.transform(this);
 //	}
+    // ===================================================================
+    // Override Object interface
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.ENGLISH, "Point2D(%g,%g)", this.x, this.y);
+    }
 
 }
