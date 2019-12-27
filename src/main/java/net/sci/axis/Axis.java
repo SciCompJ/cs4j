@@ -33,9 +33,25 @@ public interface Axis
     public String getName();
     
     /**
+     * Changes the name of the axis (optional operation).
+     * 
+     * @param name the name to set
+     */
+    public void setName(String name);
+
+    /**
      * @return the type of this axis
      */
     public Type getType();
+    
+    /**
+     * @return a short name (typically one-digit length) used for building
+     *         derived names
+     */
+    public default String getShortName()
+    {
+        return getName().substring(0, 1);
+    }
     
     /**
      * Duplicates this axis.

@@ -7,7 +7,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import net.sci.array.color.RGB8Array2D;
 import net.sci.axis.Axis;
+import net.sci.axis.CategoricalAxis;
 
 /**
  * @author dlegland
@@ -15,6 +17,29 @@ import net.sci.axis.Axis;
  */
 public class CalibrationTest
 {
+    /**
+     * Test method for {@link net.sci.image.Calibration#getChannelAxis()}.
+     */
+    @Test
+    public final void channelAxis_ColorImage()
+    {
+        RGB8Array2D array = RGB8Array2D.create(8, 6);
+        Image image = new Image(array, Image.Type.COLOR);
+        
+        Calibration calib = image.getCalibration();
+        
+        Axis axis = calib.getChannelAxis();
+        assertNotNull(axis);
+        assertTrue(axis.getType() == Axis.Type.CHANNEL);
+        assertTrue(axis instanceof CategoricalAxis);
+        
+        CategoricalAxis caxis = (CategoricalAxis) axis;
+        assertEquals(caxis.length(), 3);
+//        System.out.println(caxis.getItemName(0));
+//        System.out.println(caxis.getItemName(1));
+//        System.out.println(caxis.getItemName(2));
+    }
+    
     
     /**
      * Test method for {@link net.sci.image.Calibration#getChannelAxis()}.

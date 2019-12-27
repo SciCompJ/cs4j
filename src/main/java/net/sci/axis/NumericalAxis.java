@@ -193,7 +193,7 @@ public class NumericalAxis implements Axis
     @Override
     public String toString()
     {
-        String format = "NumericalAxis(name=\"%s\", type=%s, spacing=%.4g, origin=%.4g, unit=%s)";
+        String format = "NumericalAxis(name=\"%s\", type=%s, spacing=%.4g, origin=%.4g, unit=\"%s\")";
         return String.format(Locale.ENGLISH, format, this.name, this.type, this.spacing, this.origin, this.unitName);
     }
 }

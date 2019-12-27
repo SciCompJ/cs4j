@@ -71,7 +71,7 @@ public class CategoricalAxis implements Axis
     // getters / setters
     
     /**
-     * @return the length of this axis, as the number of items.
+     * @return the number of items on this axis, corresponding to its length
      */
     public int length()
     {
@@ -83,7 +83,7 @@ public class CategoricalAxis implements Axis
      *            the index of the category
      * @return the name of the category for the given index
      */
-    public String getItem(int index)
+    public String getItemName(int index)
     {
         return this.itemNames[index];
     }
@@ -92,6 +92,10 @@ public class CategoricalAxis implements Axis
     {
         return this.type;
     }
+    
+
+    // =============================================================
+    // Methods overriding the Axis interface
     
     /**
      * Returns the name of the axis.

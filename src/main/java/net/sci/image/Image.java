@@ -25,6 +25,8 @@ import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.VectorArray;
+import net.sci.axis.Axis;
+import net.sci.axis.CategoricalAxis;
 import net.sci.image.io.ImageIOImageReader;
 import net.sci.image.io.MetaImageReader;
 import net.sci.image.io.TiffImageReader;
@@ -385,6 +387,60 @@ public class Image
     {
         int nd = this.getDimension();
         this.calibration = new Calibration(nd);
+        
+        // initialize channel axis depending on image type
+        switch (type)
+        {
+        case GRAYSCALE:
+        case INTENSITY:
+        case BINARY:
+            this.calibration.setChannelAxis(new CategoricalAxis("Value", Axis.Type.CHANNEL, new String[]{"Value"}));
+            break;
+        case LABEL:
+            this.calibration.setChannelAxis(new CategoricalAxis("Label", new String[]{"Label"}));
+            break;
+            
+        case COLOR:
+        {
+            String[] channelNames = new String[]{"Red", "Green", "Blue"};
+            this.calibration.setChannelAxis(new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames));
+            break;
+        }
+        case COMPLEX:
+        {
+            String[] channelNames = new String[]{"Real", "Imag"};
+            this.calibration.setChannelAxis(new CategoricalAxis("Parts", Axis.Type.CHANNEL, channelNames));
+            break;
+        }
+        case GRADIENT:
+        {
+            int nChannels = ((VectorArray<?>) this.data).channelNumber();
+            String[] channelNames = new String[nChannels];
+            int nDigits = (int) Math.ceil(Math.log10(nChannels));
+            String pattern = "G%0" + nDigits + "d";
+            for (int c = 0; c < nChannels; c++)
+            {
+                channelNames[c] = String.format(pattern, c);
+            }
+            this.calibration.setChannelAxis(new CategoricalAxis("Dimensions", Axis.Type.CHANNEL, channelNames));
+            break;
+        }
+        case VECTOR:
+        {
+            int nChannels = ((VectorArray<?>) this.data).channelNumber();
+            String[] channelNames = new String[nChannels];
+            int nDigits = (int) Math.ceil(Math.log10(nChannels));
+            String pattern = "C%0" + nDigits + "d";
+            for (int c = 0; c < nChannels; c++)
+            {
+                channelNames[c] = String.format(pattern, c);
+            }
+            this.calibration.setChannelAxis(new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames));
+            break;
+        }
+        case UNKNOWN:
+            break;
+        }
     }
     
     
