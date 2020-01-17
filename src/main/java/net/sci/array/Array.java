@@ -24,6 +24,45 @@ public interface Array<T> extends Iterable<T>, Dimensional
         return n;
     }
     
+    
+    // ==================================================
+    // Convenience implementations
+    
+    /**
+     * Creates a new array with new dimensions and containing the same elements.
+     * 
+     * @param newDims
+     *            the dimensions of the new array
+     * @return a new array with same type and containing the same elements
+     */
+    public default Array<T> reshape(int... newDims)
+    {
+        // check dimension consistency
+        int n2 = 1;
+        for (int dim : newDims)
+        {
+            n2 *= dim;
+        }
+        if (n2 != this.elementNumber())
+        {
+            throw new IllegalArgumentException("The element number should not change after reshape.");
+        }
+        
+        // allocate memory
+        Array<T> res = this.newInstance(newDims);
+        
+        // iterate using a pair of Iterator instances
+        Iterator<T> iter1 = this.iterator();
+        Iterator<T> iter2 = res.iterator();
+        while(iter1.hasNext())
+        {
+            iter2.setNext(iter1.next());
+        }
+        
+        return res;
+    }
+   
+    
     // ==================================================
     // Interface declaration
 	

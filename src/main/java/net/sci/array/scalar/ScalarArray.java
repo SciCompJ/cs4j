@@ -242,6 +242,53 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 	// =============================================================
 	// Specialization of the Array interface
 
+    /**
+     * Creates a new scalar array with new dimensions and containing the same
+     * elements.
+     * 
+     * This method overrides the default behavior of the Array interface to
+     * simply manipulate double values.
+     * 
+     * </pre>{@code
+     * UInt8Array array = UInt8Array2D.create(6, 4);
+     * array.populateValues((x,y) -> x + 10 * y);
+     * ScalarArray<?> reshaped = array.reshape(4, 3, 2);
+     * double last = reshaped.getValue(new int[]{3, 2, 1}); // equals 35
+     * }
+     * 
+     * @param newDims
+     *            the dimensions of the new array
+     * @return a new array with same type and containing the same values
+     */
+    @Override
+    public default ScalarArray<T> reshape(int... newDims)
+    {
+        // check dimension consistency
+        int n2 = 1;
+        for (int dim : newDims)
+        {
+            n2 *= dim;
+        }
+        if (n2 != this.elementNumber())
+        {
+            throw new IllegalArgumentException("The element number should not change after reshape.");
+        }
+        
+        // allocate memory
+        ScalarArray<T> res = this.newInstance(newDims);
+        
+        // iterate using a pair of Iterator instances
+        Iterator<T> iter1 = this.iterator();
+        Iterator<T> iter2 = res.iterator();
+        while(iter1.hasNext())
+        {
+            iter2.setNextValue(iter1.nextValue());
+        }
+        
+        return res;
+    }
+   
+    
 	@Override
 	public ScalarArray<T> newInstance(int... dims);
 
