@@ -101,18 +101,18 @@ public class SlicedInt32Array3D extends Int32Array3D
 	 * @see net.sci.array.scalar.Int32Array3D#getInt(int, int, int)
 	 */
 	@Override
-	public int getInt(int x, int y, int z)
+	public int getInt(int... pos)
 	{
-		return this.slices.get(z).getInt(new int[]{x, y});
+		return this.slices.get(pos[2]).getInt(pos[0], pos[1]);
 	}
 		
 	/* (non-Javadoc)
 	 * @see net.sci.array.scalar.Int32Array3D#setInt(int, int, int, short)
 	 */
 	@Override
-	public void setInt(int x, int y, int z, int intValue)
+	public void setInt(int intValue, int... pos)
 	{
-		this.slices.get(z).setInt(new int[]{x, y}, intValue);
+		this.slices.get(pos[2]).setInt(intValue, pos[0], pos[1]);
 	}
 
 	

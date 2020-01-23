@@ -89,7 +89,7 @@ public class ImageIOImageReader implements ImageReader
 				for (int x = 0; x < width; x++)
 				{
 					int value = raster.getSample(x, y, 0);
-					intArray.setInt(x, y, value);
+					intArray.setInt(value, x, y);
 				}
 			}
 			array = intArray;

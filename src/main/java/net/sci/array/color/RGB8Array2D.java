@@ -43,7 +43,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 		
 		for (int[] pos : positions())
 		{
-		    result.setInt(pos, this.get(pos).getInt());
+		    result.setInt(this.get(pos).getInt(), pos);
 		}
 		
 		return result;

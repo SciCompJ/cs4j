@@ -22,7 +22,7 @@ public class BufferedUInt8ArrayNDTest
 			{
 				for (int x = 0; x < 4; x++)
 				{
-					array.setInt(new int[]{x, y, z}, 10);
+					array.setInt(10, x, y, z);
 				}
 			}
 		}

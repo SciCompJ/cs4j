@@ -45,7 +45,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 		while(iter.hasNext())
 		{
 		    int[] pos = iter.next();
-		    result.setInt(pos, get(pos).getInt());
+		    result.setInt(get(pos).getInt(), pos);
 		}
 		
 		return result;

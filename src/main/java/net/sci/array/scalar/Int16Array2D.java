@@ -53,18 +53,6 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	// =============================================================
 	// Specialization of the IntArray2D interface
 
-	@Override
-	public int getInt(int x, int y)
-	{
-		return getShort(x, y);
-	}
-
-	@Override
-	public void setInt(int x, int y, int value)
-	{
-		setShort((short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE), x, y);
-	}
-
 
 	// =============================================================
 	// Specialization of Array2D interface

@@ -271,11 +271,9 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         int[] sizes = this.size();
         UInt8Array result = UInt8Array.create(sizes);
         
-        PositionIterator iter = positionIterator();
-        while(iter.hasNext())
+        for(int[] pos : this.positions())
         {
-            int[] pos = iter.next();
-            result.setInt(pos, get(pos).getInt());
+            result.setInt(get(pos).getInt(), pos);
         }
         
         return result;

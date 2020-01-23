@@ -86,7 +86,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
         for (int c = 0; c < 3; c++)
         {
             pos2[nd] = c;
-            buffer.setInt(pos2, intValues[c]);
+            buffer.setInt(intValues[c], pos2);
         }
     }
 
@@ -113,7 +113,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
         int[] pos2 = new int[nd+1];
         System.arraycopy(pos, 0, pos2, 0, nd);
         pos2[nd] = channel;
-        buffer.setInt(pos2, intValue);
+        buffer.setInt(intValue, pos2);
     }
 
 
@@ -148,11 +148,11 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
         int[] pos2 = new int[nd+1];
         System.arraycopy(pos, 0, pos2, 0, nd);
         pos2[nd] = 0;
-        this.buffer.setInt(pos2, rgb.getSample(0));
+        this.buffer.setInt(rgb.getSample(0), pos2);
         pos2[nd] = 1;
-        this.buffer.setInt(pos2, rgb.getSample(1));
+        this.buffer.setInt(rgb.getSample(1), pos2);
         pos2[nd] = 2;
-        this.buffer.setInt(pos2, rgb.getSample(2));
+        this.buffer.setInt(rgb.getSample(2), pos2);
     }
 
     /* (non-Javadoc)

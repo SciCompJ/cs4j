@@ -140,13 +140,13 @@ public interface BinaryArray extends IntArray<Binary>
 	// Specialization of the IntArray interface
 
 	@Override
-	public default int getInt(int[] pos)
+	public default int getInt(int... pos)
 	{
 		return getBoolean(pos) ? 1 : 0; 
 	}
 
 	@Override
-	public default void setInt(int[] pos, int value)
+	public default void setInt(int value, int... pos)
 	{
 		setBoolean(value > 0, pos);
 	}

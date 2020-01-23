@@ -78,15 +78,6 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     // =============================================================
 	// Specialization of IntArray2D interface
 
-	public int getInt(int x, int y)
-	{
-		return getBoolean(x, y) ? 1 : 0; 
-	}
-
-	public void setInt(int x, int y, int value)
-	{
-		setBoolean(value > 0, x, y);
-	}
 
 	// =============================================================
 	// Specialization of Array2D interface
@@ -153,24 +144,6 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         return res;
     }
 
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#get(int[])
-	 */
-	@Override
-	public Binary get(int[] pos)
-	{
-		return new Binary(getBoolean(pos[0], pos[1]));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#set(int[], java.lang.Object)
-	 */
-	@Override
-	public void set(int[] pos, Binary value)
-	{
-		setBoolean(value.getBoolean(), pos);
-	}
 
     // =============================================================
     // Inner Wrapper class

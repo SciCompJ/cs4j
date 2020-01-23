@@ -74,7 +74,7 @@ public class PgmImageReader implements ImageReader
         {
             for (int x = 0; x < width; x++)
             {
-                array.setInt(x, y, scanner.nextInt());
+                array.setInt(scanner.nextInt(), x, y);
             }
         }
         

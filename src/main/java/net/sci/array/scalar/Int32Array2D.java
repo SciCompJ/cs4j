@@ -53,7 +53,7 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 	@Override
 	public void set(int x, int y, Int32 value)
 	{
-		setInt(x, y, value.getInt());
+		setInt(value.getInt(), x, y);
 	}
 
 	/* (non-Javadoc)
@@ -74,7 +74,7 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 	@Override
 	public void setValue(int x, int y, double value)
 	{
-		setInt(x, y, (int) value);
+		setInt((int) value, x, y);
 	}
 
 	
@@ -92,7 +92,7 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setInt(x, y, getInt(x, y));
+                res.setInt(getInt(x, y), x, y);
             }
         }
         
@@ -115,6 +115,6 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 	@Override
 	public void set(int[] pos, Int32 value)
 	{
-		setInt(pos[0], pos[1], value.getInt());
+		setInt(value.getInt(), pos);
 	}
 }

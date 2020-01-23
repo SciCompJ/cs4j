@@ -65,7 +65,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
         default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
         }
         intCode = r | g | b;
-        this.buffer.setInt(x, y, z, intCode);
+        this.buffer.setInt(intCode, x, y, z);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
     @Override
     public void setSamples(int x, int y, int z, int[] rgb)
     {
-        this.buffer.setInt(x, y, z, RGB8.intCode(rgb));
+        this.buffer.setInt(RGB8.intCode(rgb), x, y, z);
     }
 
 
@@ -109,7 +109,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 		int g = UInt8.clamp(values[1]);
 		int b = UInt8.clamp(values[2]);
 		int intCode = b << 16 | g << 8 | r;
-		this.buffer.setInt(x, y, z, intCode);
+		this.buffer.setInt(intCode, x, y, z);
 	}
 
 	
@@ -131,7 +131,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
 	public void set(int x, int y, int z, RGB8 rgb)
 	{
-		this.buffer.setInt(x, y, z, rgb.getIntCode());
+		this.buffer.setInt(rgb.getIntCode(), x, y, z);
 	}
 
 

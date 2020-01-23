@@ -90,7 +90,7 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	 * @see net.sci.array.data.IntArray#getInt(int[])
 	 */
 	@Override
-	public int getInt(int[] pos)
+	public int getInt(int... pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
@@ -100,7 +100,7 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	 * @see net.sci.array.data.IntArray#setInt(int[], int)
 	 */
 	@Override
-	public void setInt(int[] pos, int intValue)
+	public void setInt(int intValue, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = (short) Int16.clamp(intValue);

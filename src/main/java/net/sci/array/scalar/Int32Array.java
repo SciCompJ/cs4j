@@ -92,7 +92,7 @@ public interface Int32Array extends IntArray<Int32>
      */
     public default void setValue(int[] pos, double value)
     {
-    	setInt(pos, (int) value);
+    	setInt((int) value, pos);
     }
 
     @Override
@@ -116,7 +116,7 @@ public interface Int32Array extends IntArray<Int32>
     @Override
     public default void set(int[] pos, Int32 value)
     {
-        setInt(pos, value.getInt());
+        setInt(value.getInt(), pos);
     }
 
 	@Override
@@ -126,7 +126,7 @@ public interface Int32Array extends IntArray<Int32>
 		Int32Array result = Int32Array.create(this.size());
 	    for (int[] pos : positions())
 	    {
-	    	result.setInt(pos, getInt(pos));
+	    	result.setInt(getInt(pos), pos);
 	    }
 		
 		// return output
@@ -178,7 +178,7 @@ public interface Int32Array extends IntArray<Int32>
             @Override
             public void setInt(int intValue)
             {
-                Int32Array.this.setInt(iter.get(), intValue);
+                Int32Array.this.setInt(intValue, iter.get());
             }
         };
     }
@@ -216,13 +216,13 @@ public interface Int32Array extends IntArray<Int32>
 		// Implementation of the Int32Array interface
 
 		@Override
-		public int getInt(int[] pos)
+		public int getInt(int... pos)
 		{
 			return (int) array.getValue(pos);
 		}
 
 		@Override
-		public void setInt(int[] pos, int value)
+		public void setInt(int value, int... pos)
 		{
 			setValue(pos, value);
 		}
@@ -336,7 +336,7 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.IntArray#getInt(int[])
          */
         @Override
-        public int getInt(int[] pos)
+        public int getInt(int... pos)
         {
             return array.getInt(coordsMapping.apply(pos));
         }
@@ -345,9 +345,9 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.IntArray#setInt(int[], int)
          */
         @Override
-        public void setInt(int[] pos, int value)
+        public void setInt(int value, int... pos)
         {
-            array.setInt(coordsMapping.apply(pos), value);
+            array.setInt(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)

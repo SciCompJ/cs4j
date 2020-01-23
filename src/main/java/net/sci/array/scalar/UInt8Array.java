@@ -117,13 +117,13 @@ public interface UInt8Array extends IntArray<UInt8>
 	// Specialization of the IntArray interface
 
 	@Override
-	public default int getInt(int[] pos)
+	public default int getInt(int... pos)
 	{
 		return getByte(pos) & 0x00FF; 
 	}
 
 	@Override
-	public default void setInt(int[] pos, int value)
+	public default void setInt(int value, int... pos)
 	{
 		setByte((byte) Math.min(Math.max(value, 0), 255), pos);
 	}
@@ -428,7 +428,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.IntArray#getInt(int[])
 	     */
 	    @Override
-	    public int getInt(int[] pos)
+	    public int getInt(int... pos)
 	    {
 	        return array.getInt(coordsMapping.apply(pos));
 	    }
@@ -437,9 +437,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.IntArray#setInt(int[], int)
 	     */
 	    @Override
-	    public void setInt(int[] pos, int value)
+	    public void setInt(int value, int... pos)
 	    {
-	        array.setInt(coordsMapping.apply(pos), value);
+	        array.setInt(value, coordsMapping.apply(pos));
 	    }
 
 	    /* (non-Javadoc)

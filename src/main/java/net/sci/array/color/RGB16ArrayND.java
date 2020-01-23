@@ -45,7 +45,7 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
 		while(iter.hasNext())
 		{
 		    int[] pos = iter.next();
-		    result.setInt(pos, get(pos).getInt());
+		    result.setInt(get(pos).getInt(), pos);
 		}
 		
 		return result;

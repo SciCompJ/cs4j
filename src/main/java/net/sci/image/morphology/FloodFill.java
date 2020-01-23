@@ -525,7 +525,7 @@ public class FloodFill
 		}
 		
 		for (int x = x1; x <= x2; x++)
-			array.setInt(x, y, value);
+			array.setInt(value, x, y);
 	}
 
 	/**
@@ -1223,7 +1223,7 @@ public class FloodFill
             int value)
 	{
 		for (int x = x1; x <= x2; x++)
-			array.setInt(x, y, z, value);
+			array.setInt(value, x, y, z);
 	}
 
 	/**

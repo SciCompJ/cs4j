@@ -60,16 +60,6 @@ public class BufferedBinaryArrayND extends BinaryArrayND
 	// =============================================================
 	// New specific methods
 	
-	public int getInt(int i)
-	{
-		return buffer[i] ? 1 : 0;
-	}
-	
-	public void setInt(int i, int value)
-	{
-		buffer[i] = value > 0;
-	}
-	
 
 	// =============================================================
 	// Implementation of the BinaryArray interface

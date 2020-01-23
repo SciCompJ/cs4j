@@ -101,16 +101,6 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	// =============================================================
 	// Specialization of IntArrayND interface
 
-	public int getInt(int x, int y, int z)
-	{
-		return getBoolean(x, y, z) ? 1 : 0; 
-	}
-
-	public void setInt(int x, int y, int z, int value)
-	{
-		setBoolean(value > 0, x, y, z);
-	}
-
 	
 	// =============================================================
 	// Specialization of Array3D interface
@@ -161,23 +151,6 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	public BinaryArray newInstance(int... dims)
 	{
 		return BinaryArray.create(dims);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#get(int[])
-	 */
-	@Override
-	public Binary get(int[] pos)
-	{
-		return new Binary(getBoolean(pos));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#set(int[], java.lang.Object)
-	 */
-	public void set(int[] pos, Binary value)
-	{
-		setBoolean(value.getBoolean(), pos);
 	}
 	
 	

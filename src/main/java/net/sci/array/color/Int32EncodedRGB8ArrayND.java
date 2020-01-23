@@ -73,7 +73,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
         }
         
         intCode = r | g | b;
-        this.buffer.setInt(pos, intCode);
+        this.buffer.setInt(intCode, pos);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
     @Override
     public void setSamples(int[] pos, int[] rgb)
     {
-        this.buffer.setInt(pos, RGB8.intCode(rgb));
+        this.buffer.setInt(RGB8.intCode(rgb), pos);
     }
 
 
@@ -109,7 +109,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
     {
         int[] samples = getSamples(pos);
         samples[channel] = UInt8.clamp(value);
-        this.buffer.setInt(pos, RGB8.intCode(samples));
+        this.buffer.setInt(RGB8.intCode(samples), pos);
     }
 
 
@@ -125,7 +125,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 	@Override
 	public void set(int[] pos, RGB8 rgb)
 	{
-		this.buffer.setInt(pos, rgb.getIntCode());
+		this.buffer.setInt(rgb.getIntCode(), pos);
 	}
 
 	@Override

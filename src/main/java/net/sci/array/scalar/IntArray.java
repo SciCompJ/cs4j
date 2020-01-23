@@ -53,7 +53,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	 *            the position
 	 * @return the integer value
 	 */
-	public int getInt(int[] pos);
+	public int getInt(int... pos);
 	
 	/**
 	 * Sets the value at the specified position as an integer.
@@ -63,8 +63,8 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	 * @param value
 	 *            the new integer value
 	 */
-	public void setInt(int[] pos, int value);
-	
+	public void setInt(int value, int... pos);
+    
 	
 	// =============================================================
 	// Specialization of the Array interface
@@ -82,7 +82,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 
     public default void setValue(int[] pos, double value)
     {
-        setInt(pos, (int) value);
+        setInt((int) value, pos);
     }
 
     @Override

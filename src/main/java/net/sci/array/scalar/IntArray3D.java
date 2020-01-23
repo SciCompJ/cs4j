@@ -45,24 +45,9 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
     // =============================================================
     // New methods
 
-	public abstract int getInt(int x, int y, int z);
-	public abstract void setInt(int x, int y, int z, int value);
-
 	
     // =============================================================
     // Specialization of IntArray interface
-
-    @Override
-    public int getInt(int[] pos)
-    {
-        return getInt(pos[0], pos[1], pos[2]);
-    }
-
-    @Override
-    public void setInt(int[] pos, int value)
-    {
-        setInt(pos[0], pos[1], pos[2], value);
-    }
 
 
     // =============================================================
@@ -133,15 +118,15 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
         }
 
         @Override
-        public int getInt(int x, int y, int z)
+        public int getInt(int... pos)
         {
-            return array.getInt(new int[] { x, y, z });
+            return array.getInt(pos);
         }
         
         @Override
-        public void setInt(int x, int y, int z, int value)
+        public void setInt(int value, int... pos)
         {
-            array.setInt(new int[] { x, y, z }, value);
+            array.setInt(value, pos);
         }
         
         @Override
@@ -168,17 +153,6 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
             array.setValue(new int[] { x, y, z }, value);
         }
         
-        @Override
-        public int getInt(int[] pos)
-        {
-            return array.getInt(pos);
-        }
-
-        @Override
-        public void setInt(int[] pos, int value)
-        {
-            setInt(pos, value);
-        }
 
         @Override
         public IntArray2D<T> slice(int sliceIndex)
@@ -222,15 +196,15 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
             }
 
             @Override
-            public int getInt(int x, int y)
+            public int getInt(int... pos)
             {
-                return array.getInt(new int[] {x, y, this.sliceIndex});
+                return array.getInt(new int[] {pos[0], pos[1], this.sliceIndex});
             }
 
             @Override
-            public void setInt(int x, int y, int value)
+            public void setInt(int value, int... pos)
             {
-                Wrapper.this.setInt(x, y, this.sliceIndex, value);            
+                Wrapper.this.setInt(value, pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
@@ -270,7 +244,7 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
                 IntArray2D<T> res = IntArray2D.wrap(array.newInstance(dims));
                 for (int[] pos : res.positions())
                 {
-                    res.setInt(pos, array.getInt(pos));
+                    res.setInt(array.getInt(pos), pos);
                 }
                 return res;
             }
@@ -333,9 +307,9 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
                 }
             
                 @Override
-                public void setInt(int b)
+                public void setInt(int val)
                 {
-                    Wrapper.this.setInt(indX, indY, sliceIndex, b);
+                    Wrapper.this.setInt(val, indX, indY, sliceIndex);
                 }
             
                 @Override
