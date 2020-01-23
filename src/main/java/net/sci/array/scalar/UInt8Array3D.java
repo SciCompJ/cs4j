@@ -191,9 +191,9 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	 * @see net.sci.array.data.Array3D#getValue(int, int, int)
 	 */
 	@Override
-	public double getValue(int x, int y, int z)
+	public double getValue(int... pos)
 	{
-		return getByte(x, y, z) & 0x00FF;
+		return getByte(pos) & 0x00FF;
 	}
 
 	/* (non-Javadoc)

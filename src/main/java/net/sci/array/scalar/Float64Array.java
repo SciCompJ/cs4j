@@ -226,7 +226,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		}
 
 		@Override
-		public double getValue(int[] position)
+		public double getValue(int... position)
 		{
 			return array.getValue(position);
 		}
@@ -326,7 +326,7 @@ public interface Float64Array extends ScalarArray<Float64>
          * @see net.sci.array.scalar.ScalarArray#getValue(int[])
          */
         @Override
-        public double getValue(int[] pos)
+        public double getValue(int... pos)
         {
             return array.getValue(coordsMapping.apply(pos));
         }

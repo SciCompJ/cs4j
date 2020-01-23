@@ -75,14 +75,14 @@ public class BufferedBinaryArrayND extends BinaryArrayND
 	// Implementation of the BinaryArray interface
 	
 	@Override
-	public boolean getBoolean(int[] pos)
+	public boolean getBoolean(int... pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
 	}
 
 	@Override
-	public void setBoolean(int[] pos, boolean value)
+	public void setBoolean(boolean value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value;	

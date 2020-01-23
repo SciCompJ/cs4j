@@ -122,7 +122,7 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
     // =============================================================
     // Specialization of the ScalarArray interface
 
-    public double getValue(int[] pos)
+    public double getValue(int... pos)
     {
         return getValue(pos[0], pos[1]);
     }

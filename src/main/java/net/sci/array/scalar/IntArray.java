@@ -75,7 +75,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	@Override
 	public IntArray<T> duplicate();
 
-    public default double getValue(int[] pos)
+    public default double getValue(int... pos)
     {
         return getInt(pos);
     }

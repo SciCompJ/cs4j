@@ -114,15 +114,6 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#getValue(int, int, int)
-	 */
-	@Override
-	public double getValue(int x, int y, int z)
-	{
-		return getInt(x, y, z);
-	}
-
-	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#setValue(int, int, int, double)
 	 */
 	@Override

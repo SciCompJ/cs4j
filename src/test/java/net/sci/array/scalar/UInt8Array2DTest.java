@@ -32,7 +32,7 @@ public class UInt8Array2DTest
     	{
         	for (int x = 1; x < 5; x++)
         	{
-        		mask.setBoolean(x,  y, true);
+        		mask.setBoolean(true, x, y);
         	}
     	}
     	

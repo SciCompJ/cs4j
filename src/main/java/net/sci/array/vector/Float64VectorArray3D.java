@@ -321,9 +321,9 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
-        public double getValue(int x, int y, int z)
+        public double getValue(int... pos)
         {
-            return Float64VectorArray3D.this.getValue(x, y, z, channel);
+            return Float64VectorArray3D.this.getValue(pos[0], pos[1], pos[2], channel);
         }
 
         @Override

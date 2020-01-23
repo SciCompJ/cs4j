@@ -91,9 +91,9 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
         }
     }
     
-    public abstract double getValue(int x, int y, int z);
+//    public abstract double getValue(int... pos);
     
-    public abstract void setValue(int x, int y, int z, double value);
+    public abstract void setValue(int x, int y, int z, double vaslue);
 
     
     // =============================================================
@@ -125,11 +125,6 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     
     // =============================================================
     // Specialization of the ScalarArray interface
-
-    public double getValue(int[] pos)
-    {
-        return getValue(pos[0], pos[1], pos[2]);
-    }
 
     public void setValue(int[] pos, double value)
     {
@@ -200,10 +195,10 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
          * return value from specified position 
          * */
         @Override
-        public double getValue(int x, int y, int z)
+        public double getValue(int... pos)
         {
             // return value from specified position
-            return this.array.getValue(new int[]{x, y, z});
+            return this.array.getValue(pos);
         }
 
         /**

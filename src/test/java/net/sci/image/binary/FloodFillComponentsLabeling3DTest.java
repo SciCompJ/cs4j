@@ -20,14 +20,14 @@ public class FloodFillComponentsLabeling3DTest
 			{
 				for (int x = 0; x < 2; x++)
 				{
-					image.setBoolean(x + 1, y + 1, z + 1, true);
-					image.setBoolean(x + 5, y + 1, z + 1, true);
-					image.setBoolean(x + 1, y + 5, z + 1, true);
-					image.setBoolean(x + 5, y + 5, z + 1, true);
-					image.setBoolean(x + 1, y + 1, z + 5, true);
-					image.setBoolean(x + 5, y + 1, z + 5, true);
-					image.setBoolean(x + 1, y + 5, z + 5, true);
-					image.setBoolean(x + 5, y + 5, z + 5, true);
+					image.setBoolean(true, x + 1, y + 1, z + 1);
+					image.setBoolean(true, x + 5, y + 1, z + 1);
+					image.setBoolean(true, x + 1, y + 5, z + 1);
+					image.setBoolean(true, x + 5, y + 5, z + 1);
+					image.setBoolean(true, x + 1, y + 1, z + 5);
+					image.setBoolean(true, x + 5, y + 1, z + 5);
+					image.setBoolean(true, x + 1, y + 5, z + 5);
+					image.setBoolean(true, x + 5, y + 5, z + 5);
 				}
 			}
 		}

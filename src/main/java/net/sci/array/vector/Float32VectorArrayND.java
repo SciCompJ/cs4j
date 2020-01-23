@@ -93,7 +93,7 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
         }
 
         @Override
-        public double getValue(int[] pos)
+        public double getValue(int... pos)
         {
             return Float32VectorArrayND.this.get(pos).getValue(channel);
         }

@@ -175,14 +175,14 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 		setShort(x, y, z, value.getShort());
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#getValue(int, int, int)
-	 */
-	@Override
-	public double getValue(int x, int y, int z)
-	{
-		return getShort(x, y, z);
-	}
+//	/* (non-Javadoc)
+//	 * @see net.sci.array.data.Array3D#getValue(int, int, int)
+//	 */
+//	@Override
+//	public double getValue(int x, int y, int z)
+//	{
+//		return getShort(x, y, z);
+//	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#setValue(int, int, int, double)

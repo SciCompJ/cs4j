@@ -52,7 +52,7 @@ public abstract class ArrayND<T> implements Array<T>
 	 *            the list of indices for each dimension
 	 * @return a linear index
 	 */
-	protected int subsToInd(int[] inds)
+	protected int subsToInd(int... inds)
 	{
 		int index = 0;
 		int offset = 1;

@@ -157,9 +157,9 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
         }
 
         @Override
-        public double getValue(int x, int y, int z)
+        public double getValue(int... pos)
         {
-            return array.getValue(new int[] { x, y, z });
+            return array.getValue(pos);
         }
 
         @Override

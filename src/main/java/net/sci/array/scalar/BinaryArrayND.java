@@ -58,7 +58,7 @@ public abstract class BinaryArrayND extends IntArrayND<Binary> implements Binary
     @Override
     public void setInt(int[] pos, int intValue)
     {
-        setBoolean(pos, intValue > 0);
+        setBoolean(intValue > 0, pos);
     }
 
 	// =============================================================

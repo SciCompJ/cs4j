@@ -48,7 +48,7 @@ public class ScalarArrayThresholdView implements BinaryArray
 	 * @see net.sci.array.scalar.BinaryArray#getBoolean(int[])
 	 */
 	@Override
-	public boolean getBoolean(int[] pos)
+	public boolean getBoolean(int... pos)
 	{
 		return this.array.getValue(pos) > this.value;
 	}
@@ -57,7 +57,7 @@ public class ScalarArrayThresholdView implements BinaryArray
 	 * @see net.sci.array.scalar.BinaryArray#setBoolean(int[], boolean)
 	 */
 	@Override
-	public void setBoolean(int[] pos, boolean state)
+	public void setBoolean(boolean state, int... pos)
 	{
 		throw new RuntimeException("Unauthorized operation exception");
 	}

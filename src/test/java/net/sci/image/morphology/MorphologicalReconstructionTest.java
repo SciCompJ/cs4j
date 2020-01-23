@@ -138,15 +138,15 @@ public class MorphologicalReconstructionTest
         {
             for (int ix = 0; ix <  2; ix++)
             {
-                array.setBoolean(ix,     iy,     true);
-                array.setBoolean(ix + 4, iy,     true);
-                array.setBoolean(ix + 8, iy,     true);
-                array.setBoolean(ix,     iy + 4, true);
-                array.setBoolean(ix + 4, iy + 4, true);
-                array.setBoolean(ix + 8, iy + 4, true);
-                array.setBoolean(ix,     iy + 8, true);
-                array.setBoolean(ix + 4, iy + 8, true);
-                array.setBoolean(ix + 8, iy + 8, true);
+                array.setBoolean(true, ix,     iy);
+                array.setBoolean(true, ix + 4, iy);
+                array.setBoolean(true, ix + 8, iy);
+                array.setBoolean(true, ix,     iy + 4);
+                array.setBoolean(true, ix + 4, iy + 4);
+                array.setBoolean(true, ix + 8, iy + 4);
+                array.setBoolean(true, ix,     iy + 8);
+                array.setBoolean(true, ix + 4, iy + 8);
+                array.setBoolean(true, ix + 8, iy + 8);
             }
         }
         return array;

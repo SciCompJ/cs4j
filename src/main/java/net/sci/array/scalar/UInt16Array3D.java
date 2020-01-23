@@ -192,9 +192,9 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
 	 * @see net.sci.array.data.Array3D#getValue(int, int, int)
 	 */
 	@Override
-	public double getValue(int x, int y, int z)
+	public double getValue(int... pos)
 	{
-		return getShort(x, y, z) & 0x00FFFF;
+		return getShort(pos) & 0x00FFFF;
 	}
 
 	/* (non-Javadoc)

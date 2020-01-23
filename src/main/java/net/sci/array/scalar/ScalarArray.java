@@ -227,7 +227,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
      *            the position, as an array of indices
      * @return the double value at the given position
      */
-    public double getValue(int[] pos);
+    public double getValue(int... pos);
     
     /**
      * Sets the value at the given position as a numeric double.
@@ -409,7 +409,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
         // Implementation of the Array interface
 
         @Override
-        public double getValue(int[] pos)
+        public double getValue(int... pos)
         {
             return array.getValue(coordsMapping.apply(pos));
         }

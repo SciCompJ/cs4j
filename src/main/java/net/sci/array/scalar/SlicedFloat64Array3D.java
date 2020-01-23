@@ -101,9 +101,9 @@ public class SlicedFloat64Array3D extends Float64Array3D
 	 * @see net.sci.array.scalar.Float64Array3D#getDouble(int, int, int)
 	 */
 	@Override
-	public double getValue(int x, int y, int z)
+	public double getValue(int... pos)
 	{
-		return this.slices.get(z).getValue(new int[]{x, y});
+	    return this.slices.get(pos[2]).getValue(new int[]{pos[0], pos[1]});
 	}
 		
 	/* (non-Javadoc)

@@ -47,33 +47,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	// =============================================================
 	// New methods
 
-	/**
-	 * Returns the logical state at a given position.
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @param z
-	 *            the z-coordinate of the position
-	 * @return the boolean value at the given position
-	 */
-	public abstract boolean getBoolean(int x, int y, int z);
 
-	/**
-	 * Sets the logical state at a given position.
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @param z
-	 *            the z-coordinate of the position
-	 * @param state
-	 *            the new state at the given position
-	 */
-	public abstract void setBoolean(int x, int y, int z, boolean state);
-	
     // =============================================================
     // Management of slices
 
@@ -117,29 +91,12 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         BinaryArray3D result = BinaryArray3D.create(this.size0, this.size1, this.size2);
 	    for (int[] pos : positions())
 	    {
-	    	result.setBoolean(pos, !getBoolean(pos));
+	    	result.setBoolean(!getBoolean(pos), pos);
 	    }
         return result;
     }
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.BooleanArray#getState(int[])
-	 */
-	@Override
-	public boolean getBoolean(int[] pos)
-	{
-		return getBoolean(pos[0], pos[1], pos[2]);
-	}
 	
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.BooleanArray#setState(int[], java.lang.Boolean)
-	 */
-	@Override
-	public void setBoolean(int[] pos, boolean state)
-	{
-		setBoolean(pos[0], pos[1], pos[2], state);
-	}
-
+	
 	
 	// =============================================================
 	// Specialization of IntArrayND interface
@@ -151,7 +108,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 
 	public void setInt(int x, int y, int z, int value)
 	{
-		setBoolean(x, y, z, value > 0);
+		setBoolean(value > 0, x, y, z);
 	}
 
 	
@@ -175,16 +132,16 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	 */
 	public void set(int x, int y, int z, Binary value)
 	{
-		setBoolean(x, y, z, value.getBoolean());
+		setBoolean(value.getBoolean(), x, y, z);
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#getValue(int, int, int)
 	 */
 	@Override
-	public double getValue(int x, int y, int z)
+	public double getValue(int... pos)
 	{
-		return getBoolean(x, y, z) ? 1 : 0;
+		return getBoolean(pos) ? 1 : 0;
 	}
 
 	/* (non-Javadoc)
@@ -193,7 +150,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	@Override
 	public void setValue(int x, int y, int z, double value)
 	{
-		setBoolean(x, y, z, value > 0);
+		setBoolean(value > 0, x, y, z);
 	}
 
 	
@@ -212,7 +169,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	@Override
 	public Binary get(int[] pos)
 	{
-		return new Binary(getBoolean(pos[0], pos[1], pos[2]));
+		return new Binary(getBoolean(pos));
 	}
 
 	/* (non-Javadoc)
@@ -220,7 +177,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	 */
 	public void set(int[] pos, Binary value)
 	{
-		setBoolean(pos[0], pos[1], pos[2], value.getBoolean());
+		setBoolean(value.getBoolean(), pos);
 	}
 	
 	
@@ -245,15 +202,15 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         }
 
         @Override
-        public boolean getBoolean(int x, int y, int z)
+        public boolean getBoolean(int... pos)
         {
-            return this.array.getBoolean(new int[] {x, y, z});
+            return this.array.getBoolean(pos);
         }
 
         @Override
-        public void setBoolean(int x, int y, int z, boolean state)
+        public void setBoolean(boolean state, int... pos)
         {
-            this.array.setBoolean(new int[] {x, y, z}, state);
+            this.array.setBoolean(state, pos);
         }
 
         @Override
@@ -269,7 +226,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
             BinaryArray3D result = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
     	    for (int[] pos : array.positions())
     	    {
-    	    	result.setBoolean(pos, array.getBoolean(pos));
+    	    	result.setBoolean(array.getBoolean(pos), pos);
     	    }
             return result;
         }
@@ -346,7 +303,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
             @Override
             public void setBoolean(boolean b)
             {
-                Wrapper.this.setBoolean(x, y, z, b);
+                Wrapper.this.setBoolean(b, x, y, z);
             }
         }
     }
@@ -367,15 +324,15 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         }
 
         @Override
-        public boolean getBoolean(int x, int y)
+        public boolean getBoolean(int... pos)
         {
-            return BinaryArray3D.this.getBoolean(x, y, this.sliceIndex);
+            return BinaryArray3D.this.getBoolean(pos[0], pos[1], this.sliceIndex);
         }
 
         @Override
-        public void setBoolean(int x, int y, boolean bool)
+        public void setBoolean(boolean bool, int... pos)
         {
-            BinaryArray3D.this.setBoolean(x, y, this.sliceIndex, bool);            
+            BinaryArray3D.this.setBoolean(bool, pos[0], pos[1], this.sliceIndex);            
         }
 
         @Override
@@ -426,7 +383,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
             @Override
             public void setBoolean(boolean b)
             {
-                BinaryArray3D.this.setBoolean(indX, indY, sliceIndex, b);
+                BinaryArray3D.this.setBoolean(b, indX, indY, sliceIndex);
             }
         }
     }
