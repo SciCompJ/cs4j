@@ -65,7 +65,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
         default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
         }
         intCode = r | g | b;
-        this.buffer.setInt(x, y, z, intCode);
+        this.buffer.setInt(intCode, x, y, z);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
     @Override
     public void setSamples(int x, int y, int z, int[] rgb)
     {
-        this.buffer.setInt(x, y, z, RGB8.intCode(rgb));
+        this.buffer.setInt(RGB8.intCode(rgb), x, y, z);
     }
 
 
@@ -109,7 +109,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 		int g = UInt8.clamp(values[1]);
 		int b = UInt8.clamp(values[2]);
 		int intCode = b << 16 | g << 8 | r;
-		this.buffer.setInt(x, y, z, intCode);
+		this.buffer.setInt(intCode, x, y, z);
 	}
 
 	
@@ -120,18 +120,18 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public RGB8 get(int x, int y, int z)
+	public RGB8 get(int... pos)
 	{
-		return new RGB8(this.buffer.getInt(x, y, z));
+		return new RGB8(this.buffer.getInt(pos));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, int z, RGB8 rgb)
+	public void set(RGB8 rgb, int... pos)
 	{
-		this.buffer.setInt(x, y, z, rgb.getIntCode());
+		this.buffer.setInt(rgb.getIntCode(), pos);
 	}
 
 

@@ -55,30 +55,19 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	// =============================================================
 	// New specific methods
 	
-	public int getInt(int i)
-	{
-		return buffer[i] & 0x00FF;
-	}
-	
-	public void setInt(int i, int value)
-	{
-		value = Math.min(Math.max(value, 0), 255);
-		buffer[i] = (byte) value;
-	}
-	
 
 	// =============================================================
 	// Implementation of the UInt8Array interface
 	
 	@Override
-	public byte getByte(int[] pos)
+	public byte getByte(int... pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
 	}
 
 	@Override
-	public void setByte(int[] pos, byte value)
+	public void setByte(byte value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value;	
@@ -91,7 +80,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	 * @see net.sci.array.data.IntArray#getInt(int[])
 	 */
 	@Override
-	public int getInt(int[] pos)
+	public int getInt(int... pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index] & 0x00FF;	
@@ -101,7 +90,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	 * @see net.sci.array.data.IntArray#setInt(int[], int)
 	 */
 	@Override
-	public void setInt(int[] pos, int intValue)
+	public void setInt(int intValue, int... pos)
 	{
 		int index = subsToInd(pos);
 		intValue = Math.min(Math.max(intValue, 0), 255);
@@ -121,14 +110,14 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	}
 
 	@Override
-	public UInt8 get(int[] pos)
+	public UInt8 get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return new UInt8(this.buffer[index]);	
 	}
 
 	@Override
-	public void set(int[] pos, UInt8 value)
+	public void set(UInt8 value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getByte();

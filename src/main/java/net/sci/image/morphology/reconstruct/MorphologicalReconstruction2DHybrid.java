@@ -302,7 +302,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 			{
 				double v1 = this.marker.getValue(x, y) * this.sign; 
 				double v2 = this.mask.getValue(x, y) * this.sign; 
-				this.result.setValue(x, y, Math.min(v1, v2) * this.sign);
+				this.result.setValue(Math.min(v1, v2) * this.sign, x, y);
 			}
 		}		
 	}
@@ -342,7 +342,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 				maxValue = min(maxValue, mask.getValue(x, y) * this.sign);
 				if (maxValue > currentValue) 
 				{
-					result.setValue(x, y, maxValue * this.sign);
+					result.setValue( maxValue * this.sign, x, y);
 				}
 			}
 		} // end of forward iteration
@@ -395,7 +395,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 				maxValue = min(maxValue, mask.getValue(x, y) * this.sign);
 				if (maxValue > currentValue) 
 				{
-					result.setValue(x, y, maxValue * this.sign);
+					result.setValue(maxValue * this.sign, x, y);
 				}
 			}
 		} // end of forward iteration
@@ -449,7 +449,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 				}
 
 				// update value of current pixel
-				result.setValue(x, y, maxValue * this.sign);
+				result.setValue(maxValue * this.sign, x, y);
 				
 				// eventually add lower-right neighbors to queue
 				if (x < this.sizeX - 1) 
@@ -513,7 +513,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 				}
 
 				// update value of current pixel
-				result.setValue(x, y, maxValue * this.sign);
+				result.setValue(maxValue * this.sign, x, y);
 				
 				// eventually add lower-right neighbors to queue
 				if (x < this.sizeX - 1) 
@@ -570,7 +570,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 				continue;
 			
 			// update result for current position
-			result.setValue(x, y, value * this.sign);
+			result.setValue(value * this.sign, x, y);
 
 			// Eventually add each neighbor
 			if (x > 0)
@@ -626,7 +626,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 				continue;
 			
 			// update result for current position
-			result.setValue(x, y, value * sign);
+			result.setValue(value * sign, x, y);
 
 			// compare with each one of the neighbors
 			for (int y2 = ymin; y2 <= ymax; y2++) 

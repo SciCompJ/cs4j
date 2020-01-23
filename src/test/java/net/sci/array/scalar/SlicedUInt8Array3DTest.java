@@ -24,7 +24,7 @@ public class SlicedUInt8Array3DTest
 			{
 				for (int x = 0; x < 4; x++)
 				{
-					array.setValue(x, y, z, 10);
+					array.setValue(10, x, y, z);
 				}
 			}
 		}
@@ -43,8 +43,8 @@ public class SlicedUInt8Array3DTest
 		{
 			for (int x = 0; x < 4; x++)
 			{
-				slice0.setValue(x, y, 10);
-				slice1.setValue(x, y, 10);
+				slice0.setValue(10, x, y);
+				slice1.setValue(10, x, y);
 			}
 		}
 		
@@ -68,8 +68,8 @@ public class SlicedUInt8Array3DTest
 		{
 			for (int x = 0; x < 4; x++)
 			{
-				slice0.setValue(x, y, 10);
-				slice1.setValue(x, y, 10);
+				slice0.setValue(10, x, y);
+				slice1.setValue(10, x, y);
 			}
 		}
 		

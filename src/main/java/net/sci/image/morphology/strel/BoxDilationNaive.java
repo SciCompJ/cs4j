@@ -127,7 +127,7 @@ public final class BoxDilationNaive implements ImageArrayOperator, ScalarArrayOp
 			}
 			
 			// setup result in target array
-			target.setValue(pos, localMax);
+			target.setValue(localMax, pos);
 		}
 	}
 	
@@ -181,7 +181,7 @@ public final class BoxDilationNaive implements ImageArrayOperator, ScalarArrayOp
 					}
 				}
 				
-				target.setValue(x, y, localMax);
+				target.setValue(localMax, x, y);
 			}
 		}
 	}
@@ -244,7 +244,7 @@ public final class BoxDilationNaive implements ImageArrayOperator, ScalarArrayOp
 						}
 					}
 					
-					target.setValue(x, y, z, localMax);
+					target.setValue(localMax, x, y, z);
 				}
 			}
 		}

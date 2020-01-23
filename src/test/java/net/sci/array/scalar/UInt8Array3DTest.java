@@ -21,22 +21,14 @@ public class UInt8Array3DTest
     public final void testSlice()
     {
         UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
-        for (int z = 0; z < 3; z++)
-        {
-            for (int y = 0; y < 4; y++)
-            {
-                for (int x = 0; x < 5; x++)
-                {
-                    array.setValue(x, y, z, z*100 + y*10 + x);
-                }
-            }
-        }
+        array.populateValues((x, y, z) -> 100 * z + 10 * y + x);
+        
         assertEquals(array.getValue(3, 2, 1), 123, .01);
 
         UInt8Array2D slice = array.slice(1);
         assertEquals(slice.getValue(3, 2), 123, .01);
 
-        slice.setValue(3, 2, 200);
+        slice.setValue(200, 3, 2);
         assertEquals(array.getValue(3, 2, 1), 200, .01);
     }
 

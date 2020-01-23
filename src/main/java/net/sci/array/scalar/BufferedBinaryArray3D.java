@@ -64,9 +64,9 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 	 * @see net.sci.array.data.scalar2d.BooleanArray3D#getState(int, int, int)
 	 */
 	@Override
-	public boolean getBoolean(int x, int y, int z)
+	public boolean getBoolean(int... pos)
 	{
-		int index = x + this.size0 * (y + z * this.size1);
+		int index = pos[0] + this.size0 * (pos[1] + pos[2] * this.size1);
 		return this.buffer[index];
 	}
 		
@@ -74,9 +74,9 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 	 * @see net.sci.array.data.scalar2d.BooleanArray3D#setState(int, int, int, boolean)
 	 */
 	@Override
-	public void setBoolean(int x, int y, int z, boolean b)
+	public void setBoolean(boolean b, int... pos)
 	{
-		int index = x + this.size0 * (y + z * this.size1);
+		int index = pos[0] + this.size0 * (pos[1] + pos[2] * this.size1);
 		this.buffer[index] = b;
 	}
 

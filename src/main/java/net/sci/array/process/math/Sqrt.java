@@ -39,9 +39,9 @@ public class Sqrt implements ScalarArrayOperator
 			ScalarArray<? extends Scalar> output)
 	{
 	    // iterate over positions
-	    for (int[] pos : input.positions())
+	    for (int[] pos : output.positions())
 	    {
-	        output.setValue(pos, Math.sqrt(input.getValue(pos)));
+	        output.setValue(Math.sqrt(input.getValue(pos)), pos);
 	    }
 	}
 

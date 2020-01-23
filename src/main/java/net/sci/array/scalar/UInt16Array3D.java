@@ -56,33 +56,6 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
 	// =============================================================
 	// New methods
 
-	/**
-	 * Returns the short value at a given position.
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @param z
-	 *            the z-coordinate of the position
-	 * @return the short value at the given position
-	 */
-	public abstract short getShort(int x, int y, int z);
-
-	/**
-	 * Sets the short value at a given position
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @param z
-	 *            the z-coordinate of the position
-	 * @param value
-	 *            the new short value at the given position
-	 */
-	public abstract void setShort(int x, int y, int z, short value);
-	
 	
     // =============================================================
     // Management of slices
@@ -117,36 +90,10 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
 	// =============================================================
 	// Specialization of the UInt16Array interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt16Array#getByte(int[])
-	 */
-	@Override
-	public short getShort(int[] pos)
-	{
-		return getShort(pos[0], pos[1], pos[2]);
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt16Array#setByte(int[], java.lang.Byte)
-	 */
-	@Override
-	public void setShort(int[] pos, short value)
-	{
-		setShort(pos[0], pos[1], pos[2], value);
-	}
 
 	// =============================================================
 	// Specialization of IntArrayND interface
 
-	public int getInt(int x, int y, int z)
-	{
-		return getShort(x, y, z) & 0x00FFFF; 
-	}
-
-	public void setInt(int x, int y, int z, int value)
-	{
-		setShort(x, y, z, (short) value);
-	}
 
 	// =============================================================
 	// Specialization of Array3D interface
@@ -163,48 +110,12 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
             {
                 for (int x = 0; x < size0; x++)
                 {
-                    res.setShort(x, y, z, getShort(x, y, z));
+                    res.setShort(getShort(x, y, z), x, y, z);
                 }
             }
         }
         return res;
     }
-
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#get(int, int, int)
-	 */
-	@Override
-	public UInt16 get(int x, int y, int z)
-	{
-		return new UInt16(getShort(x, y, z));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
-	 */
-	public void set(int x, int y, int z, UInt16 value)
-	{
-		setShort(x, y, z, value.getShort());
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#getValue(int, int, int)
-	 */
-	@Override
-	public double getValue(int x, int y, int z)
-	{
-		return getShort(x, y, z) & 0x00FFFF;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#setValue(int, int, int, double)
-	 */
-	@Override
-	public void setValue(int x, int y, int z, double value)
-	{
-		setShort(x, y, z, (short) UInt16.clamp(value));
-	}
 
 	
 	// =============================================================
@@ -215,24 +126,6 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
 	{
 		return UInt16Array.create(dims);
 	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#get(int[])
-	 */
-	@Override
-	public UInt16 get(int[] pos)
-	{
-		return new UInt16(getShort(pos[0], pos[1], pos[2]));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#set(int[], java.lang.Object)
-	 */
-	public void set(int[] pos, UInt16 value)
-	{
-		setShort(pos[0], pos[1], pos[2], value.getShort());
-	}
-	
 	
     private class SliceView extends UInt16Array2D
     {
@@ -250,15 +143,15 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
         }
 
         @Override
-        public short getShort(int x, int y)
+        public short getShort(int... pos)
         {
-            return UInt16Array3D.this.getShort(x, y, this.sliceIndex);
+            return UInt16Array3D.this.getShort(pos[0], pos[1], this.sliceIndex);
         }
 
         @Override
-        public void setShort(int x, int y, short value)
+        public void setShort(short value, int... pos)
         {
-            UInt16Array3D.this.setShort(x, y, this.sliceIndex, value);            
+            UInt16Array3D.this.setShort(value, pos[0], pos[1], this.sliceIndex);            
         }
 
         @Override
@@ -307,9 +200,9 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
             }
 
             @Override
-            public void setShort(short b)
+            public void setShort(short s)
             {
-                UInt16Array3D.this.setShort(indX, indY, sliceIndex, b);
+                UInt16Array3D.this.setShort(s, indX, indY, sliceIndex);
             }
         }
     }

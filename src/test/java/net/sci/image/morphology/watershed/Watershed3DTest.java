@@ -52,7 +52,7 @@ public class Watershed3DTest
                     {
                         minDist = Math.min(minDist, p.distance(x, y, z));
                     }
-                    array.setValue(x, y, z, minDist);
+                    array.setValue(minDist, x, y, z);
                 }
             }
         }

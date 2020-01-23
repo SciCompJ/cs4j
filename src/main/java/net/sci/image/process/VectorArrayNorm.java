@@ -8,7 +8,6 @@ import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.vector.Vector;
 import net.sci.array.vector.VectorArray;
 import net.sci.array.vector.VectorArray2D;
 import net.sci.array.vector.VectorArray3D;
@@ -63,7 +62,7 @@ public class VectorArrayNorm implements ImageArrayOperator
 				}
 
 				// set up value of gradient norm
-				target.setValue(x, y, Math.sqrt(norm));
+				target.setValue(Math.sqrt(norm), x, y);
 			}
 		}
 	}
@@ -91,7 +90,7 @@ public class VectorArrayNorm implements ImageArrayOperator
 					}
 
 					// set up value of gradient norm
-					target.setValue(x, y, z, Math.sqrt(norm));
+					target.setValue(Math.sqrt(norm), x, y, z);
 				}
 			}
 		}
@@ -99,20 +98,10 @@ public class VectorArrayNorm implements ImageArrayOperator
 
 	public void processVectorNd(VectorArray<?> source, ScalarArray<?> target)
 	{
-		// create iterators
-		VectorArray.Iterator<? extends Vector<?>> sourceIterator = source.iterator();
-		ScalarArray.Iterator<?> targetIterator = target.iterator();
-		
-		while (targetIterator.hasNext() && sourceIterator.hasNext())
+		// iterate over vector pixels
+		for (int[] pos : target.positions())
 		{
-			// extract the next vector
-			Vector<?> vector = sourceIterator.next();
-			
-			// compute norm of current element
-			double norm = computeNorm(vector.getValues());
-
-			// update target
-			targetIterator.setNextValue(norm);
+		    target.setValue(computeNorm(source.getValues(pos)), pos);
 		}
 	}
 

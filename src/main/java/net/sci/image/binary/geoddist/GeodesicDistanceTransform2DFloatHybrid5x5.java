@@ -191,11 +191,11 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 	            if (mask.getBoolean(x, y))
 	            {
     	            double val = marker.getValue(x, y);
-    	            buffer.setValue(x, y, val == 0 ? backgroundValue : 0);
+    	            buffer.setValue(val == 0 ? backgroundValue : 0, x, y);
 	            }
 	            else
 	            {
-	                buffer.setValue(x, y, Double.NaN);
+	                buffer.setValue(Double.NaN, x, y);
 	            }
 	        }
 	    }
@@ -251,7 +251,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 				// modify current pixel if needed
 				if (newVal < value) 
 		        {
-				    buffer.setValue(x, y, newVal);
+				    buffer.setValue(newVal, x, y);
 		        }
 			}
 		}
@@ -316,7 +316,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
                 }
                 
                 // modify current pixel
-                buffer.setValue(x, y, newVal);
+                buffer.setValue(newVal, x, y);
                 
                 // eventually add lower-right neighbors to queue
                 for(int i = 0; i < dx.length; i++)
@@ -338,7 +338,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
                     // update neighbor and add to the queue
                     if (newVal + ws[i] < buffer.getValue(x2, y2)) 
                     {
-                        buffer.setValue(x2, y2, newVal + ws[i]);
+                        buffer.setValue(newVal + ws[i], x2, y2);
                         queue.add(new Cursor2D(x2, y2));
                     }
                 }
@@ -398,7 +398,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
                 if (newVal < buffer.getValue(x2, y2))
                 {
                     // update result for current position
-                    buffer.setValue(x2, y2, newVal);
+                    buffer.setValue(newVal, x2, y2);
                     
                     // add the new modified position to the queue 
                     queue.add(new Cursor2D(x2, y2));
@@ -416,7 +416,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
                 double val = buffer.getValue(x, y);
                 if (Double.isFinite(val))
                 {
-                    buffer.setValue(x, y, val / this.weights[0]);
+                    buffer.setValue(val / this.weights[0], x, y);
                 }
             }
         }

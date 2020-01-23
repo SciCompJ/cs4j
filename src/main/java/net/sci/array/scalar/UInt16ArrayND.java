@@ -29,7 +29,7 @@ public abstract class UInt16ArrayND extends IntArrayND<UInt16> implements UInt16
 	// Constructors
 	
 	/**
-	 * Initialize a new array of UInt16.
+	 * Initializes a new array of UInt16.
 	 * 
 	 * @param sizes
 	 *            the dimensions of the array

@@ -68,7 +68,7 @@ public interface Int16Array extends IntArray<Int16>
 		Int16Array result = Int16Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setValue(pos, array.getValue(pos));
+	    	result.setValue(array.getValue(pos), pos);
 	    }
 		return result;
 	}
@@ -86,16 +86,16 @@ public interface Int16Array extends IntArray<Int16>
 	// =============================================================
 	// New methods
 
-	public short getShort(int[] pos);
+	public short getShort(int... pos);
 	
-	public void setShort(int[] pos, short value);
+	public void setShort(short value, int... pos);
 	
 	
 	// =============================================================
 	// Specialization of the IntArray interface
 
 	@Override
-	public default int getInt(int[] pos)
+	public default int getInt(int... pos)
 	{
 		return getShort(pos); 
 	}
@@ -105,23 +105,14 @@ public interface Int16Array extends IntArray<Int16>
 	 * min and max admissible values.
 	 */
 	@Override
-	public default void setInt(int[] pos, int value)
+	public default void setInt(int value, int... pos)
 	{
-		setShort(pos, (short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE));
+		setShort((short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE), pos);
 	}
 
 		
 	// =============================================================
 	// Specialization of the Array interface
-
-	/**
-     * Sets the value at the specified position, by clamping the value between
-     * min and max admissible values.
-     */
-    public default void setValue(int[] pos, double value)
-    {
-    	setInt(pos, (int) value);
-    }
 
     @Override
 	public default Int16Array newInstance(int... dims)
@@ -136,15 +127,15 @@ public interface Int16Array extends IntArray<Int16>
 	}
 
     @Override
-    public default Int16 get(int[] pos)
+    public default Int16 get(int... pos)
     {
         return new Int16(getShort(pos)); 
     }
 
     @Override
-    public default void set(int[] pos, Int16 value)
+    public default void set(Int16 value, int... pos)
     {
-        setShort(pos, value.getShort());
+        setShort(value.getShort(), pos);
     }
 
 	@Override
@@ -154,7 +145,7 @@ public interface Int16Array extends IntArray<Int16>
 		Int16Array result = Int16Array.create(this.size());
 	    for (int[] pos : positions())
 	    {
-	    	result.setShort(pos, getShort(pos));
+	    	result.setShort(getShort(pos), pos);
 	    }
 		
 		// return output
@@ -207,7 +198,7 @@ public interface Int16Array extends IntArray<Int16>
             @Override
             public void setShort(short s)
             {
-                Int16Array.this.setShort(iter.get(), s);
+                Int16Array.this.setShort(s, iter.get());
             }
         };
     }
@@ -262,15 +253,15 @@ public interface Int16Array extends IntArray<Int16>
 		// Implementation of the Int16Array interface
 
 		@Override
-		public short getShort(int[] pos)
+		public short getShort(int... pos)
 		{
 			return get(pos).getShort();
 		}
 
 		@Override
-		public void setShort(int[] pos, short value)
+		public void setShort(short value, int... pos)
 		{
-			set(pos, new Int16(value));
+			set(new Int16(value), pos);
 		}
 
 		
@@ -296,15 +287,15 @@ public interface Int16Array extends IntArray<Int16>
 		}
 
 		@Override
-		public Int16 get(int[] pos)
+		public Int16 get(int... pos)
 		{
 			return new Int16(Int16.clamp(array.getValue(pos)));
 		}
 
 		@Override
-		public void set(int[] pos, Int16 value)
+		public void set(Int16 value, int... pos)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(value.getValue(), pos);
 		}
 
         @Override
@@ -382,7 +373,7 @@ public interface Int16Array extends IntArray<Int16>
          * @see net.sci.array.scalar.Int16Array#getShort(int[])
          */
         @Override
-        public short getShort(int[] pos)
+        public short getShort(int... pos)
         {
             return array.getShort(coordsMapping.apply(pos));
         }
@@ -391,16 +382,16 @@ public interface Int16Array extends IntArray<Int16>
          * @see net.sci.array.scalar.Int16Array#setShort(int[], short)
          */
         @Override
-        public void setShort(int[] pos, short shortValue)
+        public void setShort(short shortValue, int... pos)
         {
-            array.setShort(coordsMapping.apply(pos), shortValue);
+            array.setShort(shortValue, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)
          * @see net.sci.array.scalar.IntArray#getInt(int[])
          */
         @Override
-        public int getInt(int[] pos)
+        public int getInt(int... pos)
         {
             return array.getInt(coordsMapping.apply(pos));
         }
@@ -409,16 +400,16 @@ public interface Int16Array extends IntArray<Int16>
          * @see net.sci.array.scalar.IntArray#setInt(int[], int)
          */
         @Override
-        public void setInt(int[] pos, int value)
+        public void setInt(int value, int... pos)
         {
-            array.setInt(coordsMapping.apply(pos), value);
+            array.setInt(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)
          * @see net.sci.array.scalar.ScalarArray#getValue(int[])
          */
         @Override
-        public double getValue(int[] pos)
+        public double getValue(int... pos)
         {
             return array.getValue(coordsMapping.apply(pos));
         }
@@ -427,9 +418,9 @@ public interface Int16Array extends IntArray<Int16>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(int[] pos, double value)
+        public void setValue(double value, int... pos)
         {
-            array.setValue(coordsMapping.apply(pos), value);
+            array.setValue(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)

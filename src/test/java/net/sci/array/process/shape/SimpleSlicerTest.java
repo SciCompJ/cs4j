@@ -136,23 +136,14 @@ public class SimpleSlicerTest
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
         
         // modifies value in array and check equality
-        array.setValue(3, 2, 1, 25.0);
+        array.setValue(25.0, 3, 2, 1);
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
     }
 
 	private UInt8Array3D createUInt8Array3D()
 	{
 		UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
-		for (int z = 0; z < 3; z++)
-		{
-			for (int y = 0; y < 4; y++)
-			{
-				for (int x = 0; x < 5; x++)
-				{
-					array.setInt(x, y, z, z * 100 + y * 10 + x);
-				}
-			}
-		}
+		array.populateValues((x, y, z) -> x + y * 10 + z * 100);
 		return array;
 	}
 
@@ -167,7 +158,7 @@ public class SimpleSlicerTest
                 for (int x = 0; x < 5; x++)
                 {
                     String str = digits[z] + digits[y] + digits[x];
-                    array.set(x, y, z, str);
+                    array.set(str, x, y, z);
                 }
             }
         }
@@ -189,7 +180,7 @@ public class SimpleSlicerTest
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
         
         // modifies value in array and check equality
-        array.set(3, 2, 1, "Hello!");
+        array.set("Hello!", 3, 2, 1);
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
     }
 

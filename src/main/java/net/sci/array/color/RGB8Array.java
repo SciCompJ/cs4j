@@ -271,11 +271,9 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         int[] sizes = this.size();
         UInt8Array result = UInt8Array.create(sizes);
         
-        PositionIterator iter = positionIterator();
-        while(iter.hasNext())
+        for(int[] pos : this.positions())
         {
-            int[] pos = iter.next();
-            result.setInt(pos, get(pos).getInt());
+            result.setInt(get(pos).getInt(), pos);
         }
         
         return result;
@@ -304,7 +302,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
     @Override
     public default void setSamples(int[] pos, int[] intValues)
     {
-        set(pos, new RGB8(intValues));
+        set(new RGB8(intValues), pos);
     }
 
     @Override
@@ -318,7 +316,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
     {
         int[] samples = get(pos).getSamples();
         samples[channel] = UInt8.clamp(intValue);
-        set(pos, new RGB8(samples));
+        set(new RGB8(samples), pos);
     }
     
 
@@ -367,24 +365,12 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 		int r = UInt8.clamp(values[0]);
 		int g = UInt8.clamp(values[1]);
 		int b = UInt8.clamp(values[2]);
-		set(pos, new RGB8(r, g, b));
+		set(new RGB8(r, g, b), pos);
 	}
 
 
 	// =============================================================
 	// Specialization of Array interface
-
-//	@Override
-//	public default double getValue(int[] position)
-//	{
-//		return get(position).getValue();
-//	}
-//
-//	@Override
-//	public default void setValue(int[] position, double value)
-//	{
-//		set(position, RGB8.fromValue(value));
-//	}
 
 	@Override
 	public default RGB8Array newInstance(int... dims)
@@ -481,30 +467,30 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         }
 
         @Override
-        public UInt8 get(int[] pos)
+        public UInt8 get(int... pos)
         {
             RGB8 rgb = parent.get(pos);
             return new UInt8(UInt8.clamp(rgb.getValue()));
         }
 
         @Override
-        public void set(int[] pos, UInt8 value)
+        public void set(UInt8 value, int... pos)
         {
             RGB8 rgb = new RGB8(value.getInt());
-            parent.set(pos, rgb);
+            parent.set(rgb, pos);
         }
 
         @Override
-        public byte getByte(int[] pos)
+        public byte getByte(int... pos)
         {
             return get(pos).getByte();
         }
 
         @Override
-        public void setByte(int[] pos, byte value)
+        public void setByte(byte value, int... pos)
         {
             RGB8 rgb = new RGB8(value & 0x00FF);
-            parent.set(pos, rgb);
+            parent.set(rgb, pos);
         }
 
         @Override

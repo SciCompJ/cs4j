@@ -36,7 +36,7 @@ public class SlidingBallStrel3DTest
     public final void testDilation()
     {
         UInt8Array3D array = UInt8Array3D.create(5, 5, 5);
-        array.setInt(2, 2, 2, 255);
+        array.setInt(255, 2, 2, 2);
         
         Strel3D strel = new SlidingBallStrel3D(1.0);
         
@@ -80,8 +80,8 @@ public class SlidingBallStrel3DTest
     public final void testErosion()
     {
         UInt8Array3D array = UInt8Array3D.create(5, 5, 5);
-        array.fillValue(255);
-        array.setInt(2, 2, 2, 0);
+        array.fillInt(255);
+        array.setInt(0, 2, 2, 2);
         
         Strel3D strel = new SlidingBallStrel3D(1.0);
         

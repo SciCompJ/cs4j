@@ -141,7 +141,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 				for (int x = 0; x < sizeX; x++) 
 				{
 					boolean b = array.getBoolean(x, y, z);
-					distMap.setInt(x, y, z, b ? Short.MAX_VALUE : 0);
+					distMap.setInt(b ? Short.MAX_VALUE : 0, x, y, z);
 				}
 			}
 		}
@@ -166,7 +166,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 						if (array.getBoolean(x, y, z))
 						{
 							int value = distMap.getInt(x, y, z) / weights[0];
-							distMap.setInt(x, y, z, value);
+							distMap.setInt(value, x, y, z);
 						}
 					}
 				}
@@ -382,7 +382,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 		int value = distMap.getInt(x, y, z);
 		if (newVal < value) 
 		{
-			distMap.setInt(x, y, z, newVal);
+			distMap.setInt(newVal, x, y, z);
 		}
 	}
 }

@@ -152,18 +152,18 @@ public class BufferedFloat64VectorArray3D extends Float64VectorArray3D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public Float64Vector get(int x, int y, int z)
+	public Float64Vector get(int... pos)
 	{
-		return new Float64Vector(getValues(x, y, z));
+		return new Float64Vector(getValues(pos));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, int z, Float64Vector vect)
+	public void set(Float64Vector vect, int... pos)
 	{
-		setValues(x, y, z, vect.getValues());
+		setValues(pos, vect.getValues());
 	}
 
 	/* (non-Javadoc)

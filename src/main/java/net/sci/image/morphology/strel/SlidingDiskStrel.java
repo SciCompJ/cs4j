@@ -189,7 +189,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
                     }
                 }
 
-                res.setValue(x, y, localHisto.getMaxValue());
+                res.setValue(localHisto.getMaxValue(), x, y);
             }
         }
 
@@ -281,7 +281,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
                     }
                 }
 
-                res.setValue(x, y, localHisto.getMinValue());
+                res.setValue(localHisto.getMinValue(), x, y);
             }
         }
 

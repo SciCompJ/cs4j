@@ -24,7 +24,7 @@ public class BoxFilterTest
 		{
 			for (int x = 2; x < 5; x++)
 			{
-				array.setInt(x, y, 10);
+				array.setInt(10, x, y);
 			}
 		}
 		
@@ -36,23 +36,14 @@ public class BoxFilterTest
 		assertTrue(result instanceof ScalarArray);
 		assertEquals(2, result.dimensionality());
 		
-		assertEquals(10, result.getValue(new int[]{3, 3}), .01);
+		assertEquals(10, result.getValue(3, 3), .01);
 	}
 
 	@Test
 	public void testProcessScalar3D()
 	{
 		UInt8Array3D array = UInt8Array3D.create(6, 5, 4);
-		for (int z = 0; z < 4; z++)
-		{
-			for (int y = 0; y < 5; y++)
-			{
-				for (int x = 0; x < 6; x++)
-				{
-					array.setInt(x, y, z, 10);
-				}
-			}
-		}
+		array.fillInt(10);
 		
 		int[] radiusList = new int[]{2, 2, 1};
 		BoxFilter filter = new BoxFilter(radiusList);
@@ -71,7 +62,7 @@ public class BoxFilterTest
 		{
 			for (int x = 0; x < 6; x++)
 			{
-				array.set(x, y, new RGB8(x * 5, y * 5, 0));
+				array.set(new RGB8(x * 5, y * 5, 0), x, y);
 			}
 		}
 		

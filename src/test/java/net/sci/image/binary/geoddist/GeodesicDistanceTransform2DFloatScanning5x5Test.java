@@ -23,11 +23,11 @@ public class GeodesicDistanceTransform2DFloatScanning5x5Test
 	public final void testProcess_LineSegment()
 	{
 		BinaryArray2D marker = BinaryArray2D.create(5, 5);
-		marker.setBoolean(1, 1, true);
+		marker.setBoolean(true, 1, 1);
 		BinaryArray2D mask = BinaryArray2D.create(5, 5);
-		mask.setBoolean(1, 1, true);
-		mask.setBoolean(2, 1, true);
-		mask.setBoolean(3, 1, true);
+		mask.setBoolean(true, 1, 1);
+		mask.setBoolean(true, 2, 1);
+		mask.setBoolean(true, 3, 1);
 		
 		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DFloatScanning5x5(new double[]{1,2,12}, false);
 		ScalarArray2D<?> res = (ScalarArray2D<?>) op.process2d(marker, mask);
@@ -43,15 +43,15 @@ public class GeodesicDistanceTransform2DFloatScanning5x5Test
 	public final void testProcess_CShape()
 	{
 		BinaryArray2D marker = BinaryArray2D.create(5, 5);
-		marker.setBoolean(3, 3, true);
+		marker.setBoolean(true, 3, 3);
 		BinaryArray2D mask = BinaryArray2D.create(5, 5);
-		mask.setBoolean(1, 1, true);
-		mask.setBoolean(2, 1, true);
-		mask.setBoolean(3, 1, true);
-		mask.setBoolean(1, 2, true);
-		mask.setBoolean(1, 3, true);
-		mask.setBoolean(2, 3, true);
-		mask.setBoolean(3, 3, true);
+		mask.setBoolean(true, 1, 1);
+		mask.setBoolean(true, 2, 1);
+		mask.setBoolean(true, 3, 1);
+		mask.setBoolean(true, 1, 2);
+		mask.setBoolean(true, 1, 3);
+		mask.setBoolean(true, 2, 3);
+		mask.setBoolean(true, 3, 3);
 		
 		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DFloatScanning5x5(new double[]{1,2,12}, false);
 		ScalarArray2D<?> res = (ScalarArray2D<?>) op.process2d(marker, mask);
@@ -69,22 +69,22 @@ public class GeodesicDistanceTransform2DFloatScanning5x5Test
     public final void testProcess_CShape_TwoBlobs()
     {
         BinaryArray2D marker = BinaryArray2D.create(8, 5);
-        marker.setBoolean(3, 3, true);
+        marker.setBoolean(true, 3, 3);
         BinaryArray2D mask = BinaryArray2D.create(8, 5);
-        mask.setBoolean(1, 1, true);
-        mask.setBoolean(2, 1, true);
-        mask.setBoolean(3, 1, true);
-        mask.setBoolean(1, 2, true);
-        mask.setBoolean(1, 3, true);
-        mask.setBoolean(2, 3, true);
-        mask.setBoolean(3, 3, true);
+        mask.setBoolean(true, 1, 1);
+        mask.setBoolean(true, 2, 1);
+        mask.setBoolean(true, 3, 1);
+        mask.setBoolean(true, 1, 2);
+        mask.setBoolean(true, 1, 3);
+        mask.setBoolean(true, 2, 3);
+        mask.setBoolean(true, 3, 3);
         
-        mask.setBoolean(6, 1, true);
-        mask.setBoolean(7, 1, true);
-        mask.setBoolean(6, 2, true);
-        mask.setBoolean(7, 2, true);
-        mask.setBoolean(6, 3, true);
-        mask.setBoolean(7, 3, true);
+        mask.setBoolean(true, 6, 1);
+        mask.setBoolean(true, 7, 1);
+        mask.setBoolean(true, 6, 2);
+        mask.setBoolean(true, 7, 2);
+        mask.setBoolean(true, 6, 3);
+        mask.setBoolean(true, 7, 3);
 
         GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DFloatScanning5x5(new double[]{1,2,12}, false);
         ScalarArray2D<?> res = (ScalarArray2D<?>) op.process2d(marker, mask);

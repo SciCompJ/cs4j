@@ -485,7 +485,7 @@ public class MorphologicalFiltering
             for (int x = 0; x < array.size(0); x++)
             {
                 double val = array.getValue(x, y) - result.getValue(x, y);
-                result.setValue(x, y, val);
+                result.setValue(val, x, y);
             }
         }
 
@@ -559,7 +559,7 @@ public class MorphologicalFiltering
             for (int x = 0; x < array.size(0); x++)
             {
                 double val = result.getValue(x, y) - array.getValue(x, y);
-                result.setValue(x, y, val);
+                result.setValue(val, x, y);
             }
         }
 
@@ -632,7 +632,7 @@ public class MorphologicalFiltering
             for (int x = 0; x < array.size(0); x++)
             {
                 double val = result.getValue(x, y) - eroded.getValue(x, y);
-                result.setValue(x, y, val);
+                result.setValue(val, x, y);
             }
         }
         
@@ -714,7 +714,7 @@ public class MorphologicalFiltering
             for (int x = 0; x < array.size(0); x++)
             {
                 double val = (dil.getValue(x, y) + ero.getValue(x, y)) / 2 - array.getValue(x, y);
-                dil.setValue(x, y, val + shift);
+                dil.setValue(val + shift, x, y);
             }
         }
 
@@ -789,7 +789,7 @@ public class MorphologicalFiltering
             for (int x = 0; x < array.size(0); x++)
             {
                 double val = array.getValue(x, y) - result.getValue(x, y);
-                result.setValue(x, y, val);
+                result.setValue(val, x, y);
             }
         }
         
@@ -861,7 +861,7 @@ public class MorphologicalFiltering
             for (int x = 0; x < array.size(0); x++)
             {
                 double val = result.getValue(x, y) - array.getValue(x, y);
-                result.setValue(x, y, val);
+                result.setValue(val, x, y);
             }
         }
         

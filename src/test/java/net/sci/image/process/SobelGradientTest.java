@@ -37,7 +37,7 @@ public class SobelGradientTest
         {
             for (int x = 3; x < 7; x++)
             {
-                array.setValue(x, y, 100.0);
+                array.setValue(100.0, x, y);
             }
         }
         Float32VectorArray2D grad = Float32VectorArray2D.create(10, 10, 2);
@@ -68,7 +68,7 @@ public class SobelGradientTest
             {
                 for (int x = 3; x < 7; x++)
                 {
-                    array.setValue(x, y, z, 100.0);
+                    array.setValue(100.0, x, y, z);
                 }
             }
         }

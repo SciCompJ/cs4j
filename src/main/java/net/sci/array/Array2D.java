@@ -76,7 +76,7 @@ public abstract class Array2D<T> implements Array<T>
     {
         for (int[] pos : this.positions())
         {
-            this.set(pos[0], pos[1], fun.apply((double) pos[0], (double) pos[1]));
+            this.set(fun.apply((double) pos[0], (double) pos[1]), pos[0], pos[1]);
         }
     }
     
@@ -109,10 +109,6 @@ public abstract class Array2D<T> implements Array<T>
     
     // =============================================================
     // New abstract methods
-
-	public abstract T get(int x, int y);
-
-	public abstract void set(int x, int y, T value);
 
 	
 	// =============================================================
@@ -154,15 +150,6 @@ public abstract class Array2D<T> implements Array<T>
 	@Override
 	public abstract Array2D<T> duplicate();
 
-	public T get(int[] pos)
-	{
-		return get(pos[0], pos[1]);
-	}
-
-	public void set(int[] pos, T value)
-	{
-		set(pos[0], pos[1], value);
-	}
 	
     public PositionIterator positionIterator()
     {
@@ -265,29 +252,17 @@ public abstract class Array2D<T> implements Array<T>
 		}
 
 		@Override
-		public T get(int x, int y)
+		public T get(int... pos)
 		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
 			// return value from specified position
 			return this.array.get(pos);
 		}
 
 		@Override
-		public void set(int x, int y, T value)
+		public void set(T value, int... pos)
 		{
-			// convert (x,y) to ND integer array
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-			pos[0] = x;
-			pos[1] = y;
-			
 			// set value at specified position
-			this.array.set(pos, value);
+			this.array.set(value, pos);
 		}
 
 		@Override
@@ -301,20 +276,12 @@ public abstract class Array2D<T> implements Array<T>
 			
 			Array2D<T> result = (Array2D <T>) tmp;
 			
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-
 			// Fill new array with input array
-			for (int y = 0; y < this.size1; y++)
-			{
-				pos[1] = y;
-				for (int x = 0; x < this.size0; x++)
-				{
-					pos[0] = x;
-					result.set(x, y, this.array.get(pos));
-				}
-			}
-
+			for (int[] pos : result.positions())
+            {
+                result.set(this.array.get(pos), pos);
+            }
+            
 			return result;
 		}
 		

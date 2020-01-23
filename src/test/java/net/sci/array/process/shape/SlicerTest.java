@@ -89,17 +89,8 @@ public class SlicerTest
 
 	private UInt8Array3D createUInt8Array3D()
 	{
-		UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
-		for (int z = 0; z < 3; z++)
-		{
-			for (int y = 0; y < 4; y++)
-			{
-				for (int x = 0; x < 5; x++)
-				{
-					array.setInt(x, y, z, z * 100 + y * 10 + x);
-				}
-			}
-		}
+        UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
+        array.populateValues((x, y, z) -> x + y * 10 + z * 100);
 		return array;
 	}
 
@@ -149,7 +140,7 @@ public class SlicerTest
                 for (int x = 0; x < 5; x++)
                 {
                     String str = digits[z] + digits[y] + digits[x];
-                    array.set(x, y, z, str);
+                    array.set(str, x, y, z);
                 }
             }
         }

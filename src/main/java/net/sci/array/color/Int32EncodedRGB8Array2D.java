@@ -72,7 +72,7 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
         }
         
         intCode = r | g | b;
-        this.buffer.setInt(x, y, intCode);
+        this.buffer.setInt(intCode, x, y);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
     @Override
     public void setSamples(int x, int y, int[] rgb)
     {
-        this.buffer.setInt(x, y, RGB8.intCode(rgb));
+        this.buffer.setInt(RGB8.intCode(rgb), x, y);
     }
 
 
@@ -101,18 +101,18 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public RGB8 get(int x, int y)
+	public RGB8 get(int... pos)
 	{
-		return new RGB8(this.buffer.getInt(x, y));
+		return new RGB8(this.buffer.getInt(pos));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, RGB8 rgb)
+	public void set(RGB8 rgb, int... pos)
 	{
-		this.buffer.setInt(x, y, rgb.getIntCode());
+		this.buffer.setInt(rgb.getIntCode(), pos);
 	}
 
 

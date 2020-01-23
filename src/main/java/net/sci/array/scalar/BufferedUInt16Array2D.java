@@ -59,9 +59,9 @@ public class BufferedUInt16Array2D extends UInt16Array2D
 	 * @see net.sci.array.data.scalar2d.UInt16Array2D#getShort(int, int)
 	 */
 	@Override
-	public short getShort(int x, int y)
+	public short getShort(int... pos)
 	{
-		int index = x + y * this.size0;
+		int index = pos[0] + pos[1] * this.size0;
 		return this.buffer[index];
 	}
 	
@@ -69,9 +69,9 @@ public class BufferedUInt16Array2D extends UInt16Array2D
 	 * @see net.sci.array.data.scalar2d.UInt16Array2D#setShort(int, int, short)
 	 */
 	@Override
-	public void setShort(int x, int y, short s)
+	public void setShort(short s, int... pos)
 	{
-		int index = x + y * this.size0;
+		int index = pos[0] + pos[1] * this.size0;
 		this.buffer[index] = s;
 	}
 

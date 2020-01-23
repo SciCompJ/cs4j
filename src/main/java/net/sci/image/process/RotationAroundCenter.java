@@ -81,7 +81,7 @@ public class RotationAroundCenter implements ImageArrayOperator
 				double y2 = -xc * sinTheta + yc * cosTheta + centerSourceY;
 				
 				double val = interp.evaluate(x2, y2); 
-				target.setValue(x, y, val);
+				target.setValue(val, x, y);
 			}
 		}
 	}
@@ -116,7 +116,7 @@ public class RotationAroundCenter implements ImageArrayOperator
 		{
 			for (int x = 0; x < sizeX; x++)
 			{
-				channel.setValue(x, y, source.getValue(x, y, channelIndex));
+				channel.setValue(source.getValue(x, y, channelIndex), x, y);
 			}
 		}
 	}

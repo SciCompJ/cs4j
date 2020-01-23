@@ -4,7 +4,6 @@
 package net.sci.array.color;
 
 import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.vector.IntVectorArray2D;
 
@@ -42,11 +41,9 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 		int size1 = this.size(1);
 		UInt8Array2D result = UInt8Array2D.create(size0, size1);
 		
-		RGB8Array.Iterator rgb8Iter = iterator();
-		UInt8Array.Iterator uint8Iter = result.iterator();
-		while(rgb8Iter.hasNext() && uint8Iter.hasNext())
+		for (int[] pos : positions())
 		{
-			uint8Iter.setNextInt(rgb8Iter.next().getInt());
+		    result.setInt(this.get(pos).getInt(), pos);
 		}
 		
 		return result;
@@ -70,7 +67,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
     @Override
     public void setSamples(int x, int y, int[] values)
     {
-        set(x, y, new RGB8(values));
+        set(new RGB8(values), x, y);
     }
 
     
@@ -124,7 +121,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 		int r = UInt8.clamp(values[0]);
 		int g = UInt8.clamp(values[1]);
 		int b = UInt8.clamp(values[2]);
-		set(x, y, new RGB8(r, g, b));
+		set(new RGB8(r, g, b), x, y);
 	}
 
 
@@ -160,15 +157,15 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
         }
 
         @Override
-        public byte getByte(int x, int y)
+        public byte getByte(int... pos)
         {
-            return (byte) RGB8Array2D.this.getSample(x, y, channel);
+            return (byte) RGB8Array2D.this.getSample(pos[0], pos[1], channel);
         }
 
         @Override
-        public void setByte(int x, int y, byte byteValue)
+        public void setByte(byte byteValue, int... pos)
         {
-            RGB8Array2D.this.setSample(x, y, channel, byteValue & 0x00FF);
+            RGB8Array2D.this.setSample(pos[0], pos[1], channel, byteValue & 0x00FF);
         }
 
         @Override

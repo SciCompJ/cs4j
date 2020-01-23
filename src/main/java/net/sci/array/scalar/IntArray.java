@@ -46,14 +46,29 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	// =============================================================
 	// New methods
 
-	/**
+    /**
+     * Fills the array with the specified integer value.
+     * 
+     * @param value the value to fill the array with
+     */
+    public default void fillInt(int value)
+    {
+        Iterator<? extends Scalar> iter = iterator();
+        while(iter.hasNext())
+        {
+            iter.forward();
+            iter.setInt(value);
+        }
+    }
+    
+    /**
 	 * Returns the value at the specified position as an integer.
 	 * 
 	 * @param pos
 	 *            the position
 	 * @return the integer value
 	 */
-	public int getInt(int[] pos);
+	public int getInt(int... pos);
 	
 	/**
 	 * Sets the value at the specified position as an integer.
@@ -63,8 +78,8 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	 * @param value
 	 *            the new integer value
 	 */
-	public void setInt(int[] pos, int value);
-	
+	public void setInt(int value, int... pos);
+    
 	
 	// =============================================================
 	// Specialization of the Array interface
@@ -75,14 +90,14 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	@Override
 	public IntArray<T> duplicate();
 
-    public default double getValue(int[] pos)
+    public default double getValue(int... pos)
     {
         return getInt(pos);
     }
 
-    public default void setValue(int[] pos, double value)
+    public default void setValue(double value, int... pos)
     {
-        setInt(pos, (int) value);
+        setInt((int) value, pos);
     }
 
     @Override

@@ -19,7 +19,7 @@ public class BufferedDoubleArray2DTest
 		{
 			for (int x = 0;x < 5;x++)
 			{
-				array.setValue(x, y, 10);
+				array.setValue(10, x, y);
 			}
 		}
 		

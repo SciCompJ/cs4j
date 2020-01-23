@@ -27,7 +27,7 @@ public class MorphologicalReconstruction3DHybridTest
     {
         UInt8Array3D mask = createCubicMeshImage();
         UInt8Array3D marker = UInt8Array3D.create(20, 20, 20);
-        marker.setInt(5, 5, 5, 255);
+        marker.setInt(255, 5, 5, 5);
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(Connectivity3D.C6);
 
@@ -45,7 +45,7 @@ public class MorphologicalReconstruction3DHybridTest
     {
         UInt8Array3D mask = createCubicMeshImage();
         UInt8Array3D marker = UInt8Array3D.create(20, 20, 20);
-        marker.setInt(5, 5, 5, 255);
+        marker.setInt(255, 5, 5, 5);
         invertUInt8Array3D(mask);
         invertUInt8Array3D(marker);
         
@@ -66,7 +66,7 @@ public class MorphologicalReconstruction3DHybridTest
     {
         UInt8Array3D mask = createThinCubicMeshImage();
         UInt8Array3D marker = UInt8Array3D.create(5, 5, 5);
-        marker.setInt(0, 0, 0, 255);
+        marker.setInt(255, 0, 0, 0);
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(Connectivity3D.C6);
 
@@ -84,7 +84,7 @@ public class MorphologicalReconstruction3DHybridTest
     {
         UInt8Array3D mask = createThinCubicMeshImage();
         UInt8Array3D marker = UInt8Array3D.create(5, 5, 5);
-        marker.setInt(0, 0, 0, 255);
+        marker.setInt(255, 0, 0, 0);
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(Connectivity3D.C26);
 
@@ -102,7 +102,7 @@ public class MorphologicalReconstruction3DHybridTest
     {
         UInt8Array3D mask = createThinCubicMeshImage();
         UInt8Array3D marker = UInt8Array3D.create(5, 5, 5);
-        marker.setInt(0, 0, 0, 255);
+        marker.setInt(255, 0, 0, 0);
         invertUInt8Array3D(mask);
         invertUInt8Array3D(marker);
         
@@ -123,7 +123,7 @@ public class MorphologicalReconstruction3DHybridTest
     {
         UInt8Array3D mask = createThinCubicMeshImage();
         UInt8Array3D marker = UInt8Array3D.create(5, 5, 5);
-        marker.setInt(0, 0, 0, 255);
+        marker.setInt(255, 0, 0, 0);
         invertUInt8Array3D(mask);
         invertUInt8Array3D(marker);
         
@@ -151,8 +151,8 @@ public class MorphologicalReconstruction3DHybridTest
         for (int z = 5 - gap - 1; z <= 5 + gap + 1; z++) {
             for (int y = 5 - gap - 1; y <= 5 + gap + 1; y++) {
                 for (int x = 5 - gap - 1; x <= 15 + gap + 1; x++) {
-                    stack.setValue(x, y, z, 255);
-                    stack.setValue(x, y, z+10, 255);
+                    stack.setValue(255, x, y, z);
+                    stack.setValue(255, x, y, z+10);
                 }               
             }
         }
@@ -161,9 +161,9 @@ public class MorphologicalReconstruction3DHybridTest
         for (int z = 5 - gap - 1; z <= 5 + gap + 1; z++) {
             for (int x = 5 - gap - 1; x <= 5 + gap + 1; x++) {
                 for (int y = 5 - gap - 1; y <= 15 + gap + 1; y++) {
-                    stack.setValue(x + 10, y, z, 255);
-                    stack.setValue(x, y, z+10, 255);
-                    stack.setValue(x+10, y, z+10, 255);
+                    stack.setValue(255, x + 10, y, z);
+                    stack.setValue(255, x, y, z+10);
+                    stack.setValue(255, x+10, y, z+10);
                 }               
             }
         }
@@ -172,8 +172,8 @@ public class MorphologicalReconstruction3DHybridTest
         for (int y = 5 - gap - 1; y <= 5 + gap + 1; y++) {
             for (int x = 5 - gap - 1; x <= 5 + gap + 1; x++) {
                 for (int z = 5 - gap - 1; z <= 15 + gap + 1; z++) {
-                    stack.setValue(x, y+10, z, 255);
-                    stack.setValue(x+10, y+10, z, 255);
+                    stack.setValue(255, x, y+10, z);
+                    stack.setValue(255, x+10, y+10, z);
                 }               
             }
         }
@@ -214,21 +214,21 @@ public class MorphologicalReconstruction3DHybridTest
         
         // First, the two edges in the x direction
         for (int x = 0; x < 5; x++) {
-            stack.setValue(x, 0, 0, 255);
-            stack.setValue(x, 0, 4, 255);
+            stack.setValue(255, x, 0, 0);
+            stack.setValue(255, x, 0, 4);
         }               
         
         // then, the three edges in the y direction
         for (int y = 0; y < 5; y++) {
-            stack.setValue(4, y, 0, 255);
-            stack.setValue(0, y, 4, 255);
-            stack.setValue(4, y, 4, 255);
+            stack.setValue(255, 4, y, 0);
+            stack.setValue(255, 0, y, 4);
+            stack.setValue(255, 4, y, 4);
         }               
 
         // Finally, the two edges in the z direction
         for (int z = 0; z < 5; z++) {
-            stack.setValue(0, 4, z, 255);
-            stack.setValue(4, 4, z, 255);
+            stack.setValue(255, 0, 4, z);
+            stack.setValue(255, 4, 4, z);
         }
         
         return stack;
@@ -238,7 +238,7 @@ public class MorphologicalReconstruction3DHybridTest
     {
         int sizeX = image.size(0);
         int sizeY = image.size(1);
-        int sizeZ = image.size(1);
+        int sizeZ = image.size(2);
         
         for (int z = 0; z < sizeZ; z++)
         {
@@ -246,7 +246,7 @@ public class MorphologicalReconstruction3DHybridTest
             {
                 for (int x = 0; x < sizeX; x++)
                 {
-                    image.setInt(x, y, z, 255 - image.getInt(x, y, z));
+                    image.setInt(255 - image.getInt(x, y, z), x, y, z);
                 }
             }
         }
@@ -256,11 +256,11 @@ public class MorphologicalReconstruction3DHybridTest
     {
         int sizeX = image.size(0);
         int sizeY = image.size(1);
-        int sizeZ = image.size(1);
+        int sizeZ = image.size(2);
         
         assertEquals(sizeX, image2.size(0));
         assertEquals(sizeY, image2.size(1));
-        assertEquals(sizeZ, image2.size(1));
+        assertEquals(sizeZ, image2.size(2));
         
         for (int z = 0; z < sizeZ; z++)
         {

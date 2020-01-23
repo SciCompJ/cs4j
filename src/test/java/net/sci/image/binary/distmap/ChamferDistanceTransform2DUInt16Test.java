@@ -5,6 +5,7 @@ package net.sci.image.binary.distmap;
 
 import static org.junit.Assert.*;
 
+import net.sci.array.scalar.Binary;
 import net.sci.array.scalar.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.binary.ChamferWeights2D;
@@ -30,7 +31,7 @@ public class ChamferDistanceTransform2DUInt16Test
 		{
 			for (int x = 2; x < 10; x++)
 			{
-				image.setBoolean(x, y, true);
+				image.setBoolean(true, x, y);
 			}
 		}
 
@@ -51,8 +52,8 @@ public class ChamferDistanceTransform2DUInt16Test
 	public final void testDistanceMap_UntilCorners_CityBlock() 
 	{
 		BinaryArray2D image = BinaryArray2D.create(7, 7);
-		image.fillValue(1);
-		image.setValue(4, 4, 0);
+        image.fill(Binary.TRUE);
+        image.setBoolean(false, 4, 4);
 		
 		ChamferWeights2D weights = ChamferWeights2D.CITY_BLOCK;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);
@@ -73,8 +74,8 @@ public class ChamferDistanceTransform2DUInt16Test
 	public final void testDistanceMap_UntilCorners_Chessboard() 
 	{
 		BinaryArray2D image = BinaryArray2D.create(7, 7);
-		image.fillValue(1);
-		image.setValue(4, 4, 0);
+        image.fill(Binary.TRUE);
+        image.setBoolean(false, 4, 4);
 		
 		ChamferWeights2D weights = ChamferWeights2D.CHESSBOARD;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);
@@ -93,8 +94,8 @@ public class ChamferDistanceTransform2DUInt16Test
 	public final void testDistanceMap_UntilCorners_Weights_23() 
 	{
 		BinaryArray2D image = BinaryArray2D.create(7, 7);
-		image.fillValue(1);
-		image.setValue(4, 4, 0);
+        image.fill(Binary.TRUE);
+        image.setBoolean(false, 4, 4);
 		
 		ChamferWeights2D weights = ChamferWeights2D.WEIGHTS_23;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);
@@ -113,8 +114,8 @@ public class ChamferDistanceTransform2DUInt16Test
 	public final void testDistanceMap_UntilCorners_Borgefors34() 
 	{
 		BinaryArray2D image = BinaryArray2D.create(7, 7);
-		image.fillValue(1);
-		image.setValue(4, 4, 0);
+        image.fill(Binary.TRUE);
+        image.setBoolean(false, 4, 4);
 		
 		ChamferWeights2D weights = ChamferWeights2D.BORGEFORS;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);
@@ -133,8 +134,8 @@ public class ChamferDistanceTransform2DUInt16Test
 	public final void testDistanceMap_UntilCorners_Chessknight() 
 	{
 		BinaryArray2D image = BinaryArray2D.create(9, 9);
-		image.fillValue(1);
-		image.setValue(6, 6, 0);
+        image.fill(Binary.TRUE);
+        image.setBoolean(false, 6, 6);
 		
 		ChamferWeights2D weights = ChamferWeights2D.CHESSKNIGHT;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);

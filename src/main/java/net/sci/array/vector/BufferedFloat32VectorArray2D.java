@@ -148,18 +148,18 @@ public class BufferedFloat32VectorArray2D extends Float32VectorArray2D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public Float32Vector get(int x, int y)
+	public Float32Vector get(int... pos)
 	{
-		return new Float32Vector(getValues(x, y));
+		return new Float32Vector(getValues(pos));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, Float32Vector vect)
+	public void set(Float32Vector vect, int... pos)
 	{
-		setValues(x, y, vect.getValues());
+		setValues(pos, vect.getValues());
 	}
 
 	/* (non-Javadoc)

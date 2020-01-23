@@ -45,7 +45,7 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
 		while(iter.hasNext())
 		{
 		    int[] pos = iter.next();
-		    result.setInt(pos, get(pos).getInt());
+		    result.setInt(get(pos).getInt(), pos);
 		}
 		
 		return result;
@@ -131,13 +131,13 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
         }
 
         @Override
-        public short getShort(int[] pos)
+        public short getShort(int... pos)
         {
             return (short) RGB16ArrayND.this.get(pos).getSample(channel);
         }
 
         @Override
-        public void setShort(int[] pos, short value)
+        public void setShort(short value, int... pos)
         {
             int[] samples = RGB16ArrayND.this.getSamples(pos);
             samples[channel] = value & 0x00FFFF;

@@ -34,7 +34,7 @@ public class OtsuThresholdTest
 		{
 			for (int x = 3; x < 7; x++)
 			{
-				array.setValue(x, y, 150);
+				array.setValue(150, x, y);
 			}
 		}
 
@@ -42,7 +42,7 @@ public class OtsuThresholdTest
         BinaryArray segStem = new OtsuThreshold().processScalar(array);
         
         // assert
-        assertFalse(segStem.getBoolean(new int[]{0, 0}));
-        assertTrue(segStem.getBoolean(new int[]{5, 5}));
+        assertFalse(segStem.getBoolean(0, 0));
+        assertTrue(segStem.getBoolean(5, 5));
 	}
 }

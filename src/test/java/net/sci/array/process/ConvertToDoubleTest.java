@@ -15,13 +15,7 @@ public class ConvertToDoubleTest
 	public final void test()
 	{
 		UInt8Array2D array = new BufferedUInt8Array2D(5, 5);
-		for (int y = 0; y < 5; y++)
-		{
-			for (int x = 0;x < 5;x++)
-			{
-				array.setInt(x, y, 10);
-			}
-		}
+		array.fillValue(10);
 
 		ConvertToDouble op = new ConvertToDouble();
 		ScalarArray2D<?> res = (ScalarArray2D<?>) op.process(array);

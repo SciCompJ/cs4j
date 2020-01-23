@@ -86,7 +86,7 @@ public class SobelGradientNorm implements ImageArrayOperator
 				gy = gy / 4;
 
 				// set up value of gradient norm
-				target.setValue(x, y, Math.hypot(gx, gy));
+				target.setValue(Math.hypot(gx, gy), x, y);
 			}
 		}
 	}
@@ -152,8 +152,7 @@ public class SobelGradientNorm implements ImageArrayOperator
 					gz = gz / 16;
 
 					// set up values of gradient norm
-					target.setValue(x, y, z,
-							Math.sqrt(gx * gx + gy * gy + gz * gz));
+					target.setValue(Math.sqrt(gx * gx + gy * gy + gz * gz), x, y, z);
 				}
 			}
 		}

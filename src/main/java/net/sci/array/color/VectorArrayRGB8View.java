@@ -130,7 +130,7 @@ public class VectorArrayRGB8View implements RGB8Array
      * @see net.sci.array.Array#get(int[])
      */
     @Override
-    public RGB8 get(int[] pos)
+    public RGB8 get(int... pos)
     {
         double red   = array.getValue(pos, channels[0]);
         double green = array.getValue(pos, channels[1]);
@@ -145,7 +145,7 @@ public class VectorArrayRGB8View implements RGB8Array
      * @see net.sci.array.Array#set(int[], java.lang.Object)
      */
     @Override
-    public void set(int[] pos, RGB8 value)
+    public void set(RGB8 value, int... pos)
     {
         throw new RuntimeException("Can not modify values");
     }

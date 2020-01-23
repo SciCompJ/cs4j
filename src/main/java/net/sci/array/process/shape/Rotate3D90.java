@@ -133,7 +133,7 @@ public class Rotate3D90 implements ArrayOperator
                     for(int x = 0; x < sizeX; x++)
                     {
                         int x2 = x;
-                        output.set(x2, y2, z2, array.get(x, y, z));
+                        output.set(array.get(x, y, z), x2, y2, z2);
                     }
                 }
             }
@@ -152,7 +152,7 @@ public class Rotate3D90 implements ArrayOperator
                     for(int x = 0; x < sizeX; x++)
                     {
                         int x2 = x;
-                        output.set(x2, y2, z2, array.get(x, y, z));
+                        output.set(array.get(x, y, z), x2, y2, z2);
                     }
                 }
             }
@@ -171,7 +171,7 @@ public class Rotate3D90 implements ArrayOperator
                     for(int x = 0; x < sizeX; x++)
                     {
                         int x2 = x;
-                        output.set(x2, y2, z2, array.get(x, y, z));
+                        output.set(array.get(x, y, z), x2, y2, z2);
                     }
                 }
             }
@@ -208,7 +208,7 @@ public class Rotate3D90 implements ArrayOperator
                     for(int x = 0; x < sizeX; x++)
                     {
                         int z2 = sizeX - 1 - x;
-                        output.set(x2, y2, z2, array.get(x, y, z));
+                        output.set(array.get(x, y, z), x2, y2, z2);
                     }
                 }
             }
@@ -227,7 +227,7 @@ public class Rotate3D90 implements ArrayOperator
                     for(int x = 0; x < sizeX; x++)
                     {
                         int x2 = sizeX - 1 - x;
-                        output.set(x2, y2, z2, array.get(x, y, z));
+                        output.set(array.get(x, y, z), x2, y2, z2);
                     }
                 }
             }
@@ -246,7 +246,7 @@ public class Rotate3D90 implements ArrayOperator
                     for(int x = 0; x < sizeX; x++)
                     {
                         int z2 = x;
-                        output.set(x2, y2, z2, array.get(x, y, z));
+                        output.set(array.get(x, y, z), x2, y2, z2);
                     }
                 }
             }
@@ -292,7 +292,7 @@ public class Rotate3D90 implements ArrayOperator
 		            for(int x = 0; x < sizeX; x++)
 		            {
 		                int y2 = x;
-		                output.set(x2, y2, z2, array.get(x, y, z));
+		                output.set(array.get(x, y, z), x2, y2, z2);
 		            }
 		        }
 		    }
@@ -311,7 +311,7 @@ public class Rotate3D90 implements ArrayOperator
 		            for(int x = 0; x < sizeX; x++)
 		            {
 		                int x2 = sizeX - 1 - x;
-		                output.set(x2, y2, z2, array.get(x, y, z));
+		                output.set(array.get(x, y, z), x2, y2, z2);
 		            }
 		        }
 		    }
@@ -330,7 +330,7 @@ public class Rotate3D90 implements ArrayOperator
                     for(int x = 0; x < sizeX; x++)
                     {
                         int y2 = sizeX - 1 - x;
-                        output.set(x2, y2, z2, array.get(x, y, z));
+                        output.set(array.get(x, y, z), x2, y2, z2);
                     }
                 }
             }

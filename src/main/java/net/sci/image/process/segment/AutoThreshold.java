@@ -26,7 +26,7 @@ public abstract class AutoThreshold implements ImageArrayOperator
     	// iterate on array positions for computing segmented values
     	for(int[] pos : target.positions())
     	{
-    		target.setBoolean(pos, source.getValue(pos) >= threshold);
+    		target.setBoolean(source.getValue(pos) >= threshold, pos);
     	}
     }
 

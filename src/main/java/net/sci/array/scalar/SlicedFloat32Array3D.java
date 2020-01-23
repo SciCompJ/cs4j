@@ -98,24 +98,23 @@ public class SlicedFloat32Array3D extends Float32Array3D
 	// Specialization of the Float32Array3D interface
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.scalar.Float32Array3D#getFloat(int, int, int)
-	 */
-	@Override
-	public float getFloat(int x, int y, int z)
-	{
-		return this.slices.get(z).getFloat(new int[]{x, y});
-	}
-		
-	/* (non-Javadoc)
-	 * @see net.sci.array.scalar.Float32Array3D#setFloat(int, int, int, float)
-	 */
-	@Override
-	public void setFloat(int x, int y, int z, float floatValue)
-	{
-		this.slices.get(z).setFloat(new int[]{x, y}, floatValue);
-	}
+     * @see net.sci.array.scalar.Float32Array3D#getDouble(int, int, int)
+     */
+    @Override
+    public float getFloat(int... pos)
+    {
+        return this.slices.get(pos[2]).getFloat(pos[0], pos[1]);
+    }
+        
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.ScalarArray3D#setValue(int, int, int, double)
+     */
+    @Override
+    public void setFloat(float value, int... pos)
+    {
+        this.slices.get(pos[2]).setFloat(value, pos[0], pos[1]);
+    }
 
-	
 	// =============================================================
 	// Specialization of the ScalarArray3D interface
 
@@ -123,20 +122,21 @@ public class SlicedFloat32Array3D extends Float32Array3D
 	 * @see net.sci.array.scalar.Float32Array3D#getDouble(int, int, int)
 	 */
 	@Override
-	public double getValue(int x, int y, int z)
+	public double getValue(int... pos)
 	{
-		return this.slices.get(z).getValue(new int[]{x, y});
+		return this.slices.get(pos[2]).getValue(pos[0], pos[1]);
 	}
 		
 	/* (non-Javadoc)
 	 * @see net.sci.array.scalar.ScalarArray3D#setValue(int, int, int, double)
 	 */
 	@Override
-	public void setValue(int x, int y, int z, double value)
+	public void setValue(double value, int... pos)
 	{
-		this.slices.get(z).setValue(new int[]{x, y}, value);
+		this.slices.get(pos[2]).setValue(value, pos[0], pos[1]);
 	}
 
+	
 	// =============================================================
 	// Specialization of the Array interface
 

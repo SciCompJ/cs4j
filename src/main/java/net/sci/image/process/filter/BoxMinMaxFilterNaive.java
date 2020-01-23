@@ -140,7 +140,7 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 			}
 			
 			// setup result in target array
-			target.setValue(pos, localMax * sign);
+			target.setValue(localMax * sign, pos);
 		}
 	}
 	
@@ -197,7 +197,7 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 					}
 				}
 
-				target.setValue(x, y, localMax * sign);
+				target.setValue(localMax * sign, x, y);
 			}
 		}
 		
@@ -266,22 +266,13 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 						}
 					}
 
-					target.setValue(x, y, z, localMax * sign);
+					target.setValue(localMax * sign, x, y, z);
 				}
 			}
 		}
 		
 		this.fireProgressChanged(this, sizeZ, sizeZ);        
 	}
-
-//	/**
-//	 * Creates a new array the same size and same type as original.
-//	 */
-//	public Array<?> createEmptyOutputArray(Array<?> array)
-//	{
-//		int[] dims = array.getSize();
-//		return array.newInstance(dims);
-//	}
 	
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)

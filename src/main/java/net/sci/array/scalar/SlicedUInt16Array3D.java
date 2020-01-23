@@ -101,18 +101,18 @@ public class SlicedUInt16Array3D extends UInt16Array3D
 	 * @see net.sci.array.scalar.UInt16Array3D#getShort(int, int, int)
 	 */
 	@Override
-	public short getShort(int x, int y, int z)
+	public short getShort(int... pos)
 	{
-		return this.slices.get(z).getShort(new int[]{x, y});
+		return this.slices.get(pos[2]).getShort(new int[]{pos[0], pos[1]});
 	}
 		
 	/* (non-Javadoc)
 	 * @see net.sci.array.scalar.UInt16Array3D#setShort(int, int, int, short)
 	 */
 	@Override
-	public void setShort(int x, int y, int z, short s)
+	public void setShort(short s, int... pos)
 	{
-		this.slices.get(z).setShort(new int[]{x, y}, s);
+		this.slices.get(pos[2]).setShort(s, new int[]{pos[0], pos[1]});
 	}
 
 	

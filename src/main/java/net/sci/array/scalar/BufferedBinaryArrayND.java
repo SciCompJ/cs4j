@@ -60,29 +60,19 @@ public class BufferedBinaryArrayND extends BinaryArrayND
 	// =============================================================
 	// New specific methods
 	
-	public int getInt(int i)
-	{
-		return buffer[i] ? 1 : 0;
-	}
-	
-	public void setInt(int i, int value)
-	{
-		buffer[i] = value > 0;
-	}
-	
 
 	// =============================================================
 	// Implementation of the BinaryArray interface
 	
 	@Override
-	public boolean getBoolean(int[] pos)
+	public boolean getBoolean(int... pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
 	}
 
 	@Override
-	public void setBoolean(int[] pos, boolean value)
+	public void setBoolean(boolean value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value;	
@@ -101,14 +91,14 @@ public class BufferedBinaryArrayND extends BinaryArrayND
 	}
 
 	@Override
-	public Binary get(int[] pos)
+	public Binary get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return new Binary(this.buffer[index]);	
 	}
 
 	@Override
-	public void set(int[] pos, Binary value)
+	public void set(Binary value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getBoolean();

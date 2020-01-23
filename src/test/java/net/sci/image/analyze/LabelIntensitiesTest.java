@@ -58,26 +58,26 @@ public class LabelIntensitiesTest
 
 	private UInt8Array2D createFourRectArray()
 	{
-		UInt8Array2D array = UInt8Array2D.create(10, 8);
-		for (int x = 1; x < 3; x++)
-		{
-			array.setInt(x, 1, 1);
-			array.setInt(x, 2, 1);
-			
-			array.setInt(x, 4, 3);
-			array.setInt(x, 5, 3);
-			array.setInt(x, 6, 3);
-		}
-		for (int x = 4; x < 9; x++)
-		{
-			array.setInt(x, 1, 2);
-			array.setInt(x, 2, 2);
-			
-			array.setInt(x, 4, 4);
-			array.setInt(x, 5, 4);
-			array.setInt(x, 6, 4);
-		}
-		
-		return array;
+        UInt8Array2D array = UInt8Array2D.create(10, 8);
+        for (int x = 1; x < 3; x++)
+        {
+            array.setInt(1, x, 1);
+            array.setInt(1, x, 2);
+            
+            array.setInt(3, x, 4);
+            array.setInt(3, x, 5);
+            array.setInt(3, x, 6);
+        }
+        for (int x = 4; x < 9; x++)
+        {
+            array.setInt(2, x, 1);
+            array.setInt(2, x, 2);
+            
+            array.setInt(4, x, 4);
+            array.setInt(4, x, 5);
+            array.setInt(4, x, 6);
+        }
+        
+        return array;
 	}
 }

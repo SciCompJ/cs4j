@@ -21,7 +21,7 @@ public class BinaryImage2DBoundaryGraphTest
 	public final void test_SinglePixel()
 	{
 		BinaryArray2D array = BinaryArray2D.create(3, 3);
-		array.setBoolean(1, 1, true);
+		array.setBoolean(true, 1, 1);
 		
 		BinaryImage2DBoundaryGraph op = new BinaryImage2DBoundaryGraph();
 		Graph2D graph = op.process(array);
@@ -36,10 +36,10 @@ public class BinaryImage2DBoundaryGraphTest
 		BinaryArray2D array = BinaryArray2D.create(6, 6);
 		for (int i = 1; i < 5; i++)
 		{
-			array.setBoolean(i, 2, true);
-			array.setBoolean(i, 3, true);
-			array.setBoolean(2, i, true);
-			array.setBoolean(3, i, true);
+			array.setBoolean(true, i, 2);
+			array.setBoolean(true, i, 3);
+			array.setBoolean(true, 2, i);
+			array.setBoolean(true, 3, i);
 		}
 //		array.print(System.out);
 		

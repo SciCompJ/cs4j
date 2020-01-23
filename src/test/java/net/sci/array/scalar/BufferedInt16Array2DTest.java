@@ -19,7 +19,7 @@ public class BufferedInt16Array2DTest
 		{
 			for (int x = 0; x < 6; x++)
 			{
-				array.setInt(x, y, 1000);
+				array.setInt(1000, x, y);
 			}
 		}
 		

@@ -45,7 +45,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 		while(iter.hasNext())
 		{
 		    int[] pos = iter.next();
-		    result.setInt(pos, get(pos).getInt());
+		    result.setInt(get(pos).getInt(), pos);
 		}
 		
 		return result;
@@ -131,13 +131,13 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
         }
 
         @Override
-        public byte getByte(int[] pos)
+        public byte getByte(int... pos)
         {
             return (byte) RGB8ArrayND.this.get(pos).getSample(channel);
         }
 
         @Override
-        public void setByte(int[] pos, byte value)
+        public void setByte(byte value, int... pos)
         {
             int[] samples = RGB8ArrayND.this.getSamples(pos);
             samples[channel] = value & 0x00FF;

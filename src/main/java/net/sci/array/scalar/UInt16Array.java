@@ -69,7 +69,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		UInt16Array result = UInt16Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setValue(pos, array.getValue(pos));
+	    	result.setValue(array.getValue(pos), pos);
 	    }
 		return result;
 	}
@@ -87,16 +87,16 @@ public interface UInt16Array extends IntArray<UInt16>
 	// =============================================================
 	// New methods
 
-	public short getShort(int[] pos);
+	public short getShort(int... pos);
 	
-	public void setShort(int[] pos, short value);
+	public void setShort(short value, int... pos);
 	
 	
 	// =============================================================
 	// Specialization of the IntArray interface
 
 	@Override
-	public default int getInt(int[] pos)
+	public default int getInt(int... pos)
 	{
 		return getShort(pos) & 0x00FFFF; 
 	}
@@ -106,9 +106,9 @@ public interface UInt16Array extends IntArray<UInt16>
 	 * and 2^16-1.
 	 */
 	@Override
-	public default void setInt(int[] pos, int value)
+	public default void setInt(int value, int... pos)
 	{
-		setShort(pos, (short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
+		setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE), pos);
 	}
 
 	
@@ -128,24 +128,37 @@ public interface UInt16Array extends IntArray<UInt16>
 	}
 
     @Override
-    public default UInt16 get(int[] pos)
+    public default UInt16 get(int... pos)
     {
         return new UInt16(getShort(pos)); 
     }
 
     @Override
-    public default void set(int[] pos, UInt16 value)
+    public default void set(UInt16 value, int... pos)
     {
-        setShort(pos, value.getShort());
+        setShort(value.getShort(), pos);
     }
 
-	/**
+
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array2D#getValue(int, int)
+     */
+    @Override
+    public default double getValue(int... pos)
+    {
+        return getShort(pos) & 0x00FFFF;
+    }
+
+    /**
      * Sets the value at the specified position, by clamping the value between 0
      * and 2^16-1.
+     * 
+     * @see net.sci.array.Array2D#setValue(int, int, double)
      */
-    public default void setValue(int[] pos, double value)
+    @Override
+    public default void setValue(double value, int... pos)
     {
-    	setInt(pos, (int) UInt16.clamp(value));
+        setInt(UInt16.clamp(value), pos);
     }
 
     @Override
@@ -156,7 +169,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		
 	    for (int[] pos : positions())
 	    {
-	    	result.setShort(pos, getShort(pos));
+	    	result.setShort(getShort(pos), pos);
 	    }
 
 		// return output
@@ -209,7 +222,7 @@ public interface UInt16Array extends IntArray<UInt16>
             @Override
             public void setShort(short s)
             {
-                UInt16Array.this.setShort(iter.get(), s);
+                UInt16Array.this.setShort(s, iter.get());
             }
         };
     }
@@ -263,15 +276,15 @@ public interface UInt16Array extends IntArray<UInt16>
 		// Implementation of the UInt16Array interface
 
 		@Override
-		public short getShort(int[] pos)
+		public short getShort(int... pos)
 		{
 			return get(pos).getShort();
 		}
 
 		@Override
-		public void setShort(int[] pos, short value)
+		public void setShort(short value, int... pos)
 		{
-			set(pos, new UInt16(value));
+			set(new UInt16(value), pos);
 		}
 
 		
@@ -297,15 +310,15 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 
 		@Override
-		public UInt16 get(int[] pos)
+		public UInt16 get(int... pos)
 		{
 			return new UInt16(UInt16.clamp(array.getValue(pos)));
 		}
 
 		@Override
-		public void set(int[] pos, UInt16 value)
+		public void set(UInt16 value, int... pos)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(value.getValue(), pos);
 		}
 
         @Override
@@ -383,7 +396,7 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.UInt16Array#getShort(int[])
          */
         @Override
-        public short getShort(int[] pos)
+        public short getShort(int... pos)
         {
             return array.getShort(coordsMapping.apply(pos));
         }
@@ -392,16 +405,16 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.UInt16Array#setShort(int[], short)
          */
         @Override
-        public void setShort(int[] pos, short shortValue)
+        public void setShort(short shortValue, int... pos)
         {
-            array.setShort(coordsMapping.apply(pos), shortValue);
+            array.setShort(shortValue, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)
          * @see net.sci.array.scalar.IntArray#getInt(int[])
          */
         @Override
-        public int getInt(int[] pos)
+        public int getInt(int... pos)
         {
             return array.getInt(coordsMapping.apply(pos));
         }
@@ -410,16 +423,16 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.IntArray#setInt(int[], int)
          */
         @Override
-        public void setInt(int[] pos, int value)
+        public void setInt(int value, int... pos)
         {
-            array.setInt(coordsMapping.apply(pos), value);
+            array.setInt(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)
          * @see net.sci.array.scalar.ScalarArray#getValue(int[])
          */
         @Override
-        public double getValue(int[] pos)
+        public double getValue(int... pos)
         {
             return array.getValue(coordsMapping.apply(pos));
         }
@@ -428,9 +441,9 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(int[] pos, double value)
+        public void setValue(double value, int... pos)
         {
-            array.setValue(coordsMapping.apply(pos), value);
+            array.setValue(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)

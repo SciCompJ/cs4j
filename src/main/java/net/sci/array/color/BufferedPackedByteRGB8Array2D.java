@@ -72,7 +72,7 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
     {
         for (int c = 0; c < 3; c++)
         {
-            this.buffer.setInt(x, y, c, intValues[c]);
+            this.buffer.setInt(intValues[c], x, y, c);
         }
     }
 
@@ -85,7 +85,7 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
     @Override
     public void setSample(int x, int y, int c, int intValue)
     {
-        this.buffer.setInt(x, y, c, intValue);
+        this.buffer.setInt(intValue, x, y, c);
     }
 
     
@@ -114,7 +114,7 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	{
 		for (int c = 0; c < 3; c++)
 		{
-			this.buffer.setValue(x, y, c, values[c]);
+			this.buffer.setValue(values[c], x, y, c);
 		}
 	}
 
@@ -133,7 +133,7 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	@Override
 	public void setValue(int x, int y, int c, double value)
 	{
-		this.buffer.setValue(x, y, c, value);
+		this.buffer.setValue(value, x, y, c);
 	}
 
 	
@@ -144,8 +144,10 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public RGB8 get(int x, int y)
+	public RGB8 get(int... pos)
 	{
+        int x = pos[0];
+        int y = pos[1];
 		int r = this.buffer.getInt(x, y, 0);
 		int g = this.buffer.getInt(x, y, 1);
 		int b = this.buffer.getInt(x, y, 2);
@@ -156,11 +158,13 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, RGB8 rgb)
+	public void set(RGB8 rgb, int... pos)
 	{
-		this.buffer.setInt(x, y, 0, rgb.getSample(0));
-		this.buffer.setInt(x, y, 1, rgb.getSample(1));
-		this.buffer.setInt(x, y, 2, rgb.getSample(2));
+        int x = pos[0];
+        int y = pos[1];
+		this.buffer.setInt(rgb.getSample(0), x, y, 0);
+		this.buffer.setInt(rgb.getSample(1), x, y, 1);
+		this.buffer.setInt(rgb.getSample(2), x, y, 2);
 	}
 
 
@@ -252,9 +256,9 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 		{
 			switch(c)
 			{
-			case 0: buffer.setInt(posX, posY, 0, UInt8.clamp(value));
-			case 1: buffer.setInt(posX, posY, 1, UInt8.clamp(value));
-			case 2: buffer.setInt(posX, posY, 2, UInt8.clamp(value));
+			case 0: buffer.setInt(UInt8.clamp(value), posX, posY, 0);
+			case 1: buffer.setInt(UInt8.clamp(value), posX, posY, 1);
+			case 2: buffer.setInt(UInt8.clamp(value), posX, posY, 2);
 			default: new IllegalArgumentException(
 					"Channel index must be comprised between 0 and 2, not " + c);
 			}
@@ -272,9 +276,9 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 		@Override
 		public void set(RGB8 rgb)
 		{
-			buffer.setInt(posX, posY, 0, rgb.getSample(0));
-			buffer.setInt(posX, posY, 1, rgb.getSample(1));
-			buffer.setInt(posX, posY, 2, rgb.getSample(2));
+			buffer.setInt(rgb.getSample(0), posX, posY, 0);
+			buffer.setInt(rgb.getSample(1), posX, posY, 1);
+			buffer.setInt(rgb.getSample(2), posX, posY, 2);
 		}
 	}
 }

@@ -83,117 +83,23 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 			ps.println();
 		}
 	}
-	
-	/**
-	 * Returns the byte value at a given position.
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @return the byte value at the given position
-	 */
-	public abstract byte getByte(int x, int y);
-
-	/**
-	 * Sets the byte value at a given position
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @param value
-	 *            the new byte value at the given position
-	 */
-	public abstract void setByte(int x, int y, byte value);
-	
+		
 	
 	// =============================================================
 	// Specialization of the UInt8Array interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt8Array#getByte(int[])
-	 */
-	@Override
-	public byte getByte(int[] pos)
-	{
-		return getByte(pos[0], pos[1]);
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt8Array#setByte(int[], java.lang.Byte)
-	 */
-	@Override
-	public void setByte(int[] pos, byte value)
-	{
-		setByte(pos[0], pos[1], value);
-	}
+
 
 	// =============================================================
 	// Specialization of IntArray2D interface
 
-	public int getInt(int x, int y)
-	{
-		return getByte(x, y) & 0x00FF; 
-	}
-
-	public void setInt(int x, int y, int value)
-	{
-		setByte(x, y, (byte) Math.min(Math.max(value, 0), 255));
-	}
 
 	// =============================================================
 	// Specialization of Array2D interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#get(int, int)
-	 */
-	@Override
-	public UInt8 get(int x, int y)
-	{
-		return new UInt8(getByte(x, y));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
-	 */
-	@Override
-	public void set(int x, int y, UInt8 value)
-	{
-		setByte(x, y, value.getByte());
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#getValue(int, int)
-	 */
-	@Override
-	public double getValue(int x, int y)
-	{
-		return getByte(x, y) & 0x00FF;
-	}
-
-	/**
-	 * Sets the value at the specified position, by clamping the value between 0
-	 * and 255.
-	 * 
-	 * @see net.sci.array.Array2D#setValue(int, int, double)
-	 */
-	@Override
-	public void setValue(int x, int y, double value)
-	{
-		value = Math.min(Math.max(value, 0), 255);
-		setByte(x, y, (byte) value);
-	}
-
 	
 	// =============================================================
 	// Specialization of Array interface
-	
-	@Override
-	public UInt8Array newInstance(int... dims)
-	{
-		return UInt8Array.create(dims);
-	}
 
 	@Override
 	public UInt8Array2D duplicate()
@@ -203,29 +109,11 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setByte(x, y, getByte(x, y));
+                res.setByte(getByte(x, y), x, y);
             }
         }
         return res;
     }
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#get(int[])
-	 */
-	@Override
-	public UInt8 get(int[] pos)
-	{
-		return new UInt8(getByte(pos[0], pos[1]));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#set(int[], java.lang.Object)
-	 */
-	@Override
-	public void set(int[] pos, UInt8 value)
-	{
-		setByte(pos[0], pos[1], value.getByte());
-	}
 	
 	/**
      * Wraps a UInt8 array into a UInt8Array2D, with two dimensions.
@@ -247,15 +135,15 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
         }
 
         @Override
-        public byte getByte(int x, int y)
+        public byte getByte(int... pos)
         {
-            return this.array.getByte(new int[]{x, y});
+            return this.array.getByte(pos);
         }
 
         @Override
-        public void setByte(int x, int y, byte value)
+        public void setByte(byte value, int... pos)
         {
-            this.array.setByte(new int[]{x, y}, value);
+            this.array.setByte(value, pos);
         }
 
         @Override

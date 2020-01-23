@@ -47,7 +47,7 @@ public abstract class BinaryArrayND extends IntArrayND<Binary> implements Binary
      * @see net.sci.array.data.IntArray#getInt(int[])
      */
     @Override
-    public int getInt(int[] pos)
+    public int getInt(int... pos)
     {
         return getBoolean(pos) ? 1 : 0;
     }
@@ -56,9 +56,9 @@ public abstract class BinaryArrayND extends IntArrayND<Binary> implements Binary
      * @see net.sci.array.data.IntArray#setInt(int[], int)
      */
     @Override
-    public void setInt(int[] pos, int intValue)
+    public void setInt(int intValue, int... pos)
     {
-        setBoolean(pos, intValue > 0);
+        setBoolean(intValue > 0, pos);
     }
 
 	// =============================================================

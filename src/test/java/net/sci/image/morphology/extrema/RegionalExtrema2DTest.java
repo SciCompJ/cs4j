@@ -35,7 +35,7 @@ public class RegionalExtrema2DTest
 		{
 			for (int x = 0; x < 11; x++)
 			{
-				image.setInt(x, y, data[i++]);
+				image.setInt(data[i++], x, y);
 			}
 		}
 		
@@ -72,7 +72,7 @@ public class RegionalExtrema2DTest
 		{
 			for (int x = 0; x < 11; x++)
 			{
-				image.setInt(x, y, data[i++]);
+				image.setInt(data[i++], x, y);
 			}
 		}
 		
@@ -103,7 +103,7 @@ public class RegionalExtrema2DTest
 		{
 			for (int x = 0; x < 5; x++)
 			{
-				image.setInt(x, y, data[y][x]);
+				image.setInt(data[y][x], x, y);
 			}
 		}
 		
@@ -134,7 +134,7 @@ public class RegionalExtrema2DTest
 		{
 			for (int x = 0; x < 5; x++)
 			{
-				image.setInt(x, y, data[y][x]);
+				image.setInt(data[y][x], x, y);
 			}
 		}
 		

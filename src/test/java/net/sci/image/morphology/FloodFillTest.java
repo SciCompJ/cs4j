@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import net.sci.array.scalar.BinaryArray3D;
 import net.sci.array.scalar.IntArray3D;
-import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
 import net.sci.image.data.Connectivity3D;
@@ -33,28 +32,28 @@ public class FloodFillTest
                 { 10, 20, 10, 10, 10, 20, 10, 20, 20, 10, 10, 10, 10, 20, 10 },
                 { 10, 20, 10, 20, 20, 20, 10, 20, 20, 20, 20, 20, 20, 20, 10 },
                 { 10, 10, 20, 20, 10, 10, 10, 10, 10, 10, 10, 20, 20, 10, 10 }, };
-        int height = data.length;
-        int width = data[0].length;
-        UInt8Array2D image = UInt8Array2D.create(width, height);
-        for (int y = 0; y < height; y++)
+        int sizeY = data.length;
+        int sizeX = data[0].length;
+        UInt8Array2D image = UInt8Array2D.create(sizeX, sizeY);
+        for (int y = 0; y < sizeY; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < sizeX; x++)
             {
-                image.setInt(x, y, data[y][x]);
+                image.setInt(data[y][x], x, y);
             }
         }
 
         // initialize empty result image fill with 255
-        UInt8Array2D result = UInt8Array2D.create(width, height);
-        result.fill(new UInt8(255));
+        UInt8Array2D result = UInt8Array2D.create(sizeX, sizeY);
+        result.fillInt(255);
 
         // Apply
         FloodFill.floodFillInt(image, 7, 4, result, 50, 8);
         // printImage(result);
 
-        for (int y = 0; y < height; y++)
+        for (int y = 0; y < sizeY; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < sizeX; x++)
             {
                 if (image.getInt(x, y) == 20)
                     assertEquals(50, result.getInt(x, y));
@@ -81,20 +80,20 @@ public class FloodFillTest
                 {10, 20, 20, 20, 10, 10, 10, 30, 30, 30, 10},
                 {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10}
         };
-        int height = data.length;
-        int width = data[0].length;
-        UInt8Array2D image = UInt8Array2D.create(width, height);
-        for (int y = 0; y < height; y++)
+        int sizeY = data.length;
+        int sizeX = data[0].length;
+        UInt8Array2D image = UInt8Array2D.create(sizeX, sizeY);
+        for (int y = 0; y < sizeY; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < sizeX; x++)
             {
-                image.setInt(x, y, data[y][x]);
+                image.setInt(data[y][x], x, y);
             }
         }
 
         // initialize result
         UInt8Array2D result = UInt8Array2D.create(11, 11);
-        result.fill(new UInt8(255));
+        result.fillInt(255);
 
         // compute flood fill result
         FloodFill.floodFillInt(image, 1, 0, result, 50, 4);
@@ -150,25 +149,25 @@ public class FloodFillTest
         int val0 = 50;
         
         // Center voxel
-        image.setInt(4, 4, 4, val0);
+        image.setInt(val0, 4, 4, 4);
         // eight corners
-        image.setInt(3, 3, 3, val0);
-        image.setInt(3, 3, 5, val0);
-        image.setInt(3, 5, 3, val0);
-        image.setInt(3, 5, 5, val0);
-        image.setInt(5, 3, 3, val0);
-        image.setInt(5, 3, 5, val0);
-        image.setInt(5, 5, 3, val0);
-        image.setInt(5, 5, 5, val0);
+        image.setInt(val0, 3, 3, 3);
+        image.setInt(val0, 3, 3, 5);
+        image.setInt(val0, 3, 5, 3);
+        image.setInt(val0, 3, 5, 5);
+        image.setInt(val0, 5, 3, 3);
+        image.setInt(val0, 5, 3, 5);
+        image.setInt(val0, 5, 5, 3);
+        image.setInt(val0, 5, 5, 5);
         // six branches
         for (int i = 0; i < 3; i++)
         {
-            image.setInt(i, 4, 4, val0);
-            image.setInt(i + 6, 4, 4, val0);
-            image.setInt(4, i, 4, val0);
-            image.setInt(4, i + 6, 4, val0);
-            image.setInt(4, 4, i, val0);
-            image.setInt(4, 4, i + 6, val0);
+            image.setInt(val0, i, 4, 4);
+            image.setInt(val0, i + 6, 4, 4);
+            image.setInt(val0, 4, i, 4);
+            image.setInt(val0, 4, i + 6, 4);
+            image.setInt(val0, 4, 4, i);
+            image.setInt(val0, 4, 4, i + 6);
         }
 
         return image;

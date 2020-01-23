@@ -180,15 +180,15 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
-        public Float64Vector get(int x, int y)
+        public Float64Vector get(int... pos)
         {
-            return Float64VectorArray3D.this.get(x, y, sliceIndex);
+            return Float64VectorArray3D.this.get(pos[0], pos[1], sliceIndex);
         }
 
         @Override
-        public void set(int x, int y, Float64Vector value)
+        public void set(Float64Vector value, int... pos)
         {
-            Float64VectorArray3D.this.set(x, y, sliceIndex, value);
+            Float64VectorArray3D.this.set(value, pos[0], pos[1], sliceIndex);
         }
 
         @Override
@@ -260,7 +260,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
             @Override
             public void set(Float64Vector value)
             {
-                Float64VectorArray3D.this.set(indX, indY, sliceIndex, value);
+                Float64VectorArray3D.this.set(value, indX, indY, sliceIndex);
             }
 
             @Override
@@ -321,15 +321,15 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
-        public double getValue(int x, int y, int z)
+        public double getValue(int... pos)
         {
-            return Float64VectorArray3D.this.getValue(x, y, z, channel);
+            return Float64VectorArray3D.this.getValue(pos[0], pos[1], pos[2], channel);
         }
 
         @Override
-        public void setValue(int x, int y, int z, double value)
+        public void setValue(double value, int... pos)
         {
-            Float64VectorArray3D.this.setValue(x, y, z, channel, value);
+            Float64VectorArray3D.this.setValue(pos[0], pos[1], pos[2], channel, value);
         }
         
         class Iterator implements net.sci.array.scalar.Float64Array.Iterator

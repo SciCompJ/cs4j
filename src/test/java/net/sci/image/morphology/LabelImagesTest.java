@@ -17,15 +17,15 @@ public class LabelImagesTest
         {
             for (int dx = 0; dx < 2; dx++)
             {
-                array.setInt(dx + 1, dy + 1, 1);
-                array.setInt(dx + 4, dy + 1, 2);
-                array.setInt(dx + 7, dy + 1, 3);
-                array.setInt(dx + 1, dy + 4, 4);
-                array.setInt(dx + 4, dy + 4, 5);
-                array.setInt(dx + 7, dy + 4, 6);
-                array.setInt(dx + 1, dy + 7, 7);
-                array.setInt(dx + 4, dy + 7, 8);
-                array.setInt(dx + 7, dy + 7, 9);
+                array.setInt(1, dx + 1, dy + 1);
+                array.setInt(2, dx + 4, dy + 1);
+                array.setInt(3, dx + 7, dy + 1);
+                array.setInt(4, dx + 1, dy + 4);
+                array.setInt(5, dx + 4, dy + 4);
+                array.setInt(6, dx + 7, dy + 4);
+                array.setInt(7, dx + 1, dy + 7);
+                array.setInt(8, dx + 4, dy + 7);
+                array.setInt(9, dx + 7, dy + 7);
             }
         }
         

@@ -70,14 +70,14 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	// Implementation of the Int16Array interface
 	
 	@Override
-	public short getShort(int[] pos)
+	public short getShort(int... pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
 	}
 
 	@Override
-	public void setShort(int[] pos, short value)
+	public void setShort(short value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value;	
@@ -90,7 +90,7 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	 * @see net.sci.array.data.IntArray#getInt(int[])
 	 */
 	@Override
-	public int getInt(int[] pos)
+	public int getInt(int... pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
@@ -100,7 +100,7 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	 * @see net.sci.array.data.IntArray#setInt(int[], int)
 	 */
 	@Override
-	public void setInt(int[] pos, int intValue)
+	public void setInt(int intValue, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = (short) Int16.clamp(intValue);
@@ -119,14 +119,14 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	}
 
 	@Override
-	public Int16 get(int[] pos)
+	public Int16 get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return new Int16(this.buffer[index]);	
 	}
 
 	@Override
-	public void set(int[] pos, Int16 value)
+	public void set(Int16 value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getShort();

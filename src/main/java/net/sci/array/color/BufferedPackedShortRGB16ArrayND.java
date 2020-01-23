@@ -86,7 +86,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
         for (int c = 0; c < 3; c++)
         {
             pos2[nd] = c;
-            buffer.setInt(pos2, intValues[c]);
+            buffer.setInt(intValues[c], pos2);
         }
     }
 
@@ -113,7 +113,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
         int[] pos2 = new int[nd+1];
         System.arraycopy(pos, 0, pos2, 0, nd);
         pos2[nd] = channel;
-        buffer.setInt(pos2, intValue);
+        buffer.setInt(intValue, pos2);
     }
 
 
@@ -124,7 +124,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
      * @see net.sci.array.Array#get(int[])
      */
     @Override
-    public RGB16 get(int[] pos)
+    public RGB16 get(int... pos)
     {
         int nd = this.dimensionality();
         int[] pos2 = new int[nd+1];
@@ -142,17 +142,17 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
      * @see net.sci.array.Array#set(int[], java.lang.Object)
      */
     @Override
-    public void set(int[] pos, RGB16 rgb)
+    public void set(RGB16 rgb, int... pos)
     {
         int nd = this.dimensionality();
         int[] pos2 = new int[nd+1];
         System.arraycopy(pos, 0, pos2, 0, nd);
         pos2[nd] = 0;
-        this.buffer.setInt(pos2, rgb.getSample(0));
+        this.buffer.setInt(rgb.getSample(0), pos2);
         pos2[nd] = 1;
-        this.buffer.setInt(pos2, rgb.getSample(1));
+        this.buffer.setInt(rgb.getSample(1), pos2);
         pos2[nd] = 2;
-        this.buffer.setInt(pos2, rgb.getSample(2));
+        this.buffer.setInt(rgb.getSample(2), pos2);
     }
 
     /* (non-Javadoc)
@@ -162,11 +162,9 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
     public RGB16ArrayND duplicate()
     {
         RGB16ArrayND result = new BufferedPackedShortRGB16ArrayND(this.sizes);
-        PositionIterator posIter = this.positionIterator();
         int[] samples = new int[3];
-        while(posIter.hasNext())
+        for (int[] pos : result.positions())
         {
-            int[] pos = posIter.next();
             result.setSamples(pos, this.getSamples(pos, samples));
         }
         return result;
@@ -230,7 +228,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
         @Override
         public void set(RGB16 rgb16)
         {
-            BufferedPackedShortRGB16ArrayND.this.set(iter.get(), rgb16);
+            BufferedPackedShortRGB16ArrayND.this.set(rgb16, iter.get());
         }
     }
 }

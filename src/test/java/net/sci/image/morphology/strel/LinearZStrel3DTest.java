@@ -38,7 +38,7 @@ public class LinearZStrel3DTest
     private static final UInt8Array3D createIsolatedVoxelImage()
     {
         UInt8Array3D image = UInt8Array3D.create(10, 10, 10);
-        image.setValue(5, 5, 5, 255);
+        image.setValue(255, 5, 5, 5);
         return image;
     }
     

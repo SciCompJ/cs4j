@@ -16,10 +16,10 @@ public class FindTest
     public void testFindPixels()
     {
         UInt8Array2D img = UInt8Array2D.create(6, 5);
-        img.setValue(1, 1, 10);
-        img.setValue(4, 2, 10);
-        img.setValue(2, 3, 10);
-        img.setValue(4, 4, 10);
+        img.setValue(10, 1, 1);
+        img.setValue(10, 4, 2);
+        img.setValue(10, 2, 3);
+        img.setValue(10, 4, 4);
         
         Collection<Point2D> positions = Find.findPixels(img);
         

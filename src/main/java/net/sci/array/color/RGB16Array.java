@@ -234,7 +234,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 		int r = UInt16.clamp(values[0]);
 		int g = UInt16.clamp(values[1]);
 		int b = UInt16.clamp(values[2]);
-		set(pos, new RGB16(r, g, b));
+		set(new RGB16(r, g, b), pos);
 	}
 
 

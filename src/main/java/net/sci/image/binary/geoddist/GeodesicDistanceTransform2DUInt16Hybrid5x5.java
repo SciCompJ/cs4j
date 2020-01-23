@@ -167,7 +167,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5 extends AlgoStub impleme
 	            if (mask.getBoolean(x, y))
 	            {
     	            double val = marker.getInt(x, y);
-    	            buffer.setInt(x, y, val == 0 ? backgroundValue : 0);
+    	            buffer.setInt(val == 0 ? backgroundValue : 0, x, y);
 	            }
 	        }
 	    }
@@ -223,7 +223,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5 extends AlgoStub impleme
 				// modify current pixel if needed
 				if (newVal < value) 
 		        {
-				    buffer.setInt(x, y, newVal);
+				    buffer.setInt(newVal, x, y);
 		        }
 			}
 		}
@@ -288,7 +288,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5 extends AlgoStub impleme
                 }
                 
                 // modify current pixel
-                buffer.setInt(x, y, newVal);
+                buffer.setInt(newVal, x, y);
                 
                 // eventually add lower-right neighbors to queue
                 for(int i = 0; i < dx.length; i++)
@@ -310,7 +310,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5 extends AlgoStub impleme
                     // update neighbor and add to the queue
                     if (newVal + ws[i] < buffer.getInt(x2, y2)) 
                     {
-                        buffer.setInt(x2, y2, newVal + ws[i]);
+                        buffer.setInt(newVal + ws[i], x2, y2);
                         queue.add(new Cursor2D(x2, y2));
                     }
                 }
@@ -370,7 +370,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5 extends AlgoStub impleme
                 if (newVal < buffer.getInt(x2, y2))
                 {
                     // update result for current position
-                    buffer.setInt(x2, y2, newVal);
+                    buffer.setInt(newVal, x2, y2);
                     
                     // add the new modified position to the queue 
                     queue.add(new Cursor2D(x2, y2));
@@ -388,7 +388,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5 extends AlgoStub impleme
                 int val = buffer.getInt(x, y);
                 if (Double.isFinite(val))
                 {
-                    buffer.setInt(x, y, val / this.weights[0]);
+                    buffer.setInt(val / this.weights[0], x, y);
                 }
             }
         }

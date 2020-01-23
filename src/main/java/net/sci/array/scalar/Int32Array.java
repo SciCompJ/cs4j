@@ -68,7 +68,7 @@ public interface Int32Array extends IntArray<Int32>
 		Int32Array result = Int32Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setValue(pos, array.getValue(pos));
+	    	result.setValue(array.getValue(pos), pos);
 	    }
 		return result;
 	}
@@ -90,9 +90,9 @@ public interface Int32Array extends IntArray<Int32>
      * Sets the value at the specified position, by clamping the value between 0
      * and 255.
      */
-    public default void setValue(int[] pos, double value)
+	public default void setValue(double value, int... pos)
     {
-    	setInt(pos, (int) value);
+    	setInt((int) value, pos);
     }
 
     @Override
@@ -108,15 +108,15 @@ public interface Int32Array extends IntArray<Int32>
 	}
 
     @Override
-    public default Int32 get(int[] pos)
+    public default Int32 get(int... pos)
     {
         return new Int32(getInt(pos)); 
     }
 
     @Override
-    public default void set(int[] pos, Int32 value)
+    public default void set(Int32 value, int... pos)
     {
-        setInt(pos, value.getInt());
+        setInt(value.getInt(), pos);
     }
 
 	@Override
@@ -126,7 +126,7 @@ public interface Int32Array extends IntArray<Int32>
 		Int32Array result = Int32Array.create(this.size());
 	    for (int[] pos : positions())
 	    {
-	    	result.setInt(pos, getInt(pos));
+	    	result.setInt(getInt(pos), pos);
 	    }
 		
 		// return output
@@ -178,7 +178,7 @@ public interface Int32Array extends IntArray<Int32>
             @Override
             public void setInt(int intValue)
             {
-                Int32Array.this.setInt(iter.get(), intValue);
+                Int32Array.this.setInt(intValue, iter.get());
             }
         };
     }
@@ -216,15 +216,15 @@ public interface Int32Array extends IntArray<Int32>
 		// Implementation of the Int32Array interface
 
 		@Override
-		public int getInt(int[] pos)
+		public int getInt(int... pos)
 		{
 			return (int) array.getValue(pos);
 		}
 
 		@Override
-		public void setInt(int[] pos, int value)
+		public void setInt(int value, int... pos)
 		{
-			setValue(pos, value);
+			setValue(value, pos);
 		}
 
 		
@@ -250,15 +250,15 @@ public interface Int32Array extends IntArray<Int32>
 		}
 
 		@Override
-		public Int32 get(int[] pos)
+		public Int32 get(int... pos)
 		{
 			return new Int32((int) array.getValue(pos));
 		}
 
 		@Override
-		public void set(int[] pos, Int32 value)
+		public void set(Int32 value, int... pos)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(value.getValue(), pos);
 		}
 
         @Override
@@ -336,7 +336,7 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.IntArray#getInt(int[])
          */
         @Override
-        public int getInt(int[] pos)
+        public int getInt(int... pos)
         {
             return array.getInt(coordsMapping.apply(pos));
         }
@@ -345,16 +345,16 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.IntArray#setInt(int[], int)
          */
         @Override
-        public void setInt(int[] pos, int value)
+        public void setInt(int value, int... pos)
         {
-            array.setInt(coordsMapping.apply(pos), value);
+            array.setInt(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)
          * @see net.sci.array.scalar.ScalarArray#getValue(int[])
          */
         @Override
-        public double getValue(int[] pos)
+        public double getValue(int... pos)
         {
             return array.getValue(coordsMapping.apply(pos));
         }
@@ -363,9 +363,9 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(int[] pos, double value)
+        public void setValue(double value, int... pos)
         {
-            array.setValue(coordsMapping.apply(pos), value);
+            array.setValue(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)

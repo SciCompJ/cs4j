@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import net.sci.array.scalar.Binary;
 import net.sci.array.scalar.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.array.scalar.UInt16Array;
@@ -35,7 +36,7 @@ public class ChamferDistanceTransform3DUInt16Test
 			{
 				for (int x = 2; x < 19; x++)
 				{
-					image.setValue(x, y, z, 1);
+					image.setValue(1, x, y, z);
 				}
 			}
 		}
@@ -64,8 +65,8 @@ public class ChamferDistanceTransform3DUInt16Test
 	{
 		// create 3D image filled with white containing a black dot in the middle
 		BinaryArray3D image = BinaryArray3D.create(21, 21, 21);
-		image.fillValue(1);
-		image.setValue(10, 10, 10, 0);
+		image.fill(Binary.TRUE);
+		image.setBoolean(false, 10, 10, 10);
 
 		ChamferWeights3D weights = ChamferWeights3D.BORGEFORS;
 		DistanceTransform3D algo = new ChamferDistanceTransform3DUInt16(weights, false);

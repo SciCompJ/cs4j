@@ -54,11 +54,6 @@ public final class BoxFilter3x3 extends AlgoStub implements ImageArrayOperator, 
 		{
 		    
 	        this.fireProgressChanged(this, y, sizeY);
-//	        SwingUtilities.invokeLater(new Runnable() {
-//	            public void run() {
-//	              progressBar.setValue(i);
-//	            }
-//	          });
 	        
 			for(int x = 0; x < sizeX; x++)
 			{
@@ -75,18 +70,8 @@ public final class BoxFilter3x3 extends AlgoStub implements ImageArrayOperator, 
 					}
 				}
 				
-				target.setValue(x, y, sum / 9);
+				target.setValue(sum / 9, x, y);
 			}
-			
-//			// Temporisation to test ui update
-//			try 
-//			{
-//			    Thread.sleep(100);
-//			} 
-//			catch(InterruptedException ex)
-//			{
-//			    ex.printStackTrace();
-//			}
 		}
 		
         this.fireProgressChanged(this, sizeY, sizeY);

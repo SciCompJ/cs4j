@@ -20,7 +20,7 @@ public class PowerOfTwoTest
 		{
 			for (int x = 1; x < 5; x++)
 			{
-				array.setValue(x,  y, index++);
+				array.setValue(index++, x, y);
 			}
 		}
 		

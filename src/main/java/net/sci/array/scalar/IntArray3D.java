@@ -45,24 +45,9 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
     // =============================================================
     // New methods
 
-	public abstract int getInt(int x, int y, int z);
-	public abstract void setInt(int x, int y, int z, int value);
-
 	
     // =============================================================
     // Specialization of IntArray interface
-
-    @Override
-    public int getInt(int[] pos)
-    {
-        return getInt(pos[0], pos[1], pos[2]);
-    }
-
-    @Override
-    public void setInt(int[] pos, int value)
-    {
-        setInt(pos[0], pos[1], pos[2], value);
-    }
 
 
     // =============================================================
@@ -133,52 +118,41 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
         }
 
         @Override
-        public int getInt(int x, int y, int z)
-        {
-            return array.getInt(new int[] { x, y, z });
-        }
-        
-        @Override
-        public void setInt(int x, int y, int z, int value)
-        {
-            array.setInt(new int[] { x, y, z }, value);
-        }
-        
-        @Override
-        public T get(int x, int y, int z)
-        {
-            return array.get(new int[] { x, y, z });
-        }
-
-        @Override
-        public void set(int x, int y, int z, T value)
-        {
-            array.set(new int[] { x, y, z }, value);
-        }
-
-        @Override
-        public double getValue(int x, int y, int z)
-        {
-            return array.getValue(new int[] { x, y, z });
-        }
-
-        @Override
-        public void setValue(int x, int y, int z, double value)
-        {
-            array.setValue(new int[] { x, y, z }, value);
-        }
-        
-        @Override
-        public int getInt(int[] pos)
+        public int getInt(int... pos)
         {
             return array.getInt(pos);
         }
+        
+        @Override
+        public void setInt(int value, int... pos)
+        {
+            array.setInt(value, pos);
+        }
+        
+        @Override
+        public T get(int... pos)
+        {
+            return array.get(pos);
+        }
 
         @Override
-        public void setInt(int[] pos, int value)
+        public void set(T value, int... pos)
         {
-            setInt(pos, value);
+            array.set(value, pos);
         }
+
+        @Override
+        public double getValue(int... pos)
+        {
+            return array.getValue(pos);
+        }
+
+        @Override
+        public void setValue(double value, int... pos)
+        {
+            array.setValue(value, pos);
+        }
+        
 
         @Override
         public IntArray2D<T> slice(int sliceIndex)
@@ -222,27 +196,27 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
             }
 
             @Override
-            public int getInt(int x, int y)
+            public int getInt(int... pos)
             {
-                return array.getInt(new int[] {x, y, this.sliceIndex});
+                return array.getInt(new int[] {pos[0], pos[1], this.sliceIndex});
             }
 
             @Override
-            public void setInt(int x, int y, int value)
+            public void setInt(int value, int... pos)
             {
-                Wrapper.this.setInt(x, y, this.sliceIndex, value);            
+                Wrapper.this.setInt(value, pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
-            public double getValue(int x, int y)
+            public double getValue(int... pos)
             {
-                return array.getValue(new int[] {x, y, this.sliceIndex});
+                return array.getValue(pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
-            public void setValue(int x, int y, double value)
+            public void setValue(double value, int... pos)
             {
-                array.setValue(new int[] {x, y, this.sliceIndex}, value);
+                array.setValue(value, pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
@@ -270,21 +244,21 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
                 IntArray2D<T> res = IntArray2D.wrap(array.newInstance(dims));
                 for (int[] pos : res.positions())
                 {
-                    res.setInt(pos, array.getInt(pos));
+                    res.setInt(array.getInt(pos), pos);
                 }
                 return res;
             }
 
             @Override
-            public T get(int x, int y)
+            public T get(int... pos)
             {
-                return array.get(new int[] {x, y, this.sliceIndex});
+                return array.get(new int[] {pos[0], pos[1], this.sliceIndex});
             }
 
             @Override
-            public void set(int x, int y, T value)
+            public void set(T value, int... pos)
             {
-                array.set(new int[] {x, y, this.sliceIndex}, value);
+                array.set(value, new int[] {pos[0], pos[1], this.sliceIndex});
             }
 
             @Override
@@ -333,21 +307,21 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
                 }
             
                 @Override
-                public void setInt(int b)
+                public void setInt(int val)
                 {
-                    Wrapper.this.setInt(indX, indY, sliceIndex, b);
+                    Wrapper.this.setInt(val, indX, indY, sliceIndex);
                 }
             
                 @Override
                 public T get()
                 {
-                    return array.get(new int[] {indX, indY, sliceIndex});
+                    return array.get(indX, indY, sliceIndex);
                 }
             
                 @Override
                 public void set(T value)
                 {
-                    array.set(new int[] {indX, indY, sliceIndex}, value);
+                    array.set(value, indX, indY, sliceIndex);
                 }
             }
         }

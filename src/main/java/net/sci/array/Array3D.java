@@ -84,8 +84,7 @@ public abstract class Array3D<T> implements Array<T>
     {
         for (int[] pos : this.positions())
         {
-            this.set(pos[0], pos[1], pos[2], 
-                    fun.apply((double) pos[0], (double) pos[1], (double) pos[2]));
+            this.set(fun.apply((double) pos[0], (double) pos[1], (double) pos[2]), pos);
         }
     }
     
@@ -115,10 +114,6 @@ public abstract class Array3D<T> implements Array<T>
 
     // =============================================================
     // New getter / setter
-
-    public abstract T get(int x, int y, int z);
-
-	public abstract void set(int x, int y, int z, T value);
 
 	
 	// =============================================================
@@ -159,16 +154,6 @@ public abstract class Array3D<T> implements Array<T>
 		default:
 			throw new IllegalArgumentException("Dimension argument must be comprised between 0 and 2");
 		}
-	}
-
-	public T get(int[] pos)
-	{
-		return get(pos[0], pos[1], pos[2]);
-	}
-
-	public void set(int[] pos, T value)
-	{
-		set(pos[0], pos[1], pos[2], value);
 	}
 	
 	public PositionIterator positionIterator()
@@ -307,31 +292,17 @@ public abstract class Array3D<T> implements Array<T>
         }
 
         @Override
-        public T get(int x, int y, int z)
+        public T get(int... pos)
         {
-            // convert (x,y,z) to ND integer array
-            int nd = this.array.dimensionality();
-            int[] pos = new int[nd];
-            pos[0] = x;
-            pos[1] = y;
-            pos[2] = z;
-            
             // return value from specified position
             return this.array.get(pos);
         }
 
         @Override
-        public void set(int x, int y, int z, T value)
+        public void set(T value, int... pos)
         {
-            // convert (x,y) to ND integer array
-            int nd = this.array.dimensionality();
-            int[] pos = new int[nd];
-            pos[0] = x;
-            pos[1] = y;
-            pos[2] = z;
-            
             // set value at specified position
-            this.array.set(pos, value);
+            this.array.set(value, pos);
         }
 
         @Override
@@ -345,22 +316,10 @@ public abstract class Array3D<T> implements Array<T>
             
             Array3D<T> result = (Array3D <T>) tmp;
             
-            int nd = this.array.dimensionality();
-            int[] pos = new int[nd];
-
             // Fill new array with input array
-            for (int z = 0; z < this.size2; z++)
+            for (int[] pos : result.positions())
             {
-                pos[2] = z;
-                for (int y = 0; y < this.size1; y++)
-                {
-                    pos[1] = y;
-                    for (int x = 0; x < this.size0; x++)
-                    {
-                        pos[0] = x;
-                        result.set(x, y, z, this.array.get(pos));
-                    }
-                }
+                result.set(this.array.get(pos), pos);
             }
             return result;
         }
@@ -393,15 +352,15 @@ public abstract class Array3D<T> implements Array<T>
             }
 
             @Override
-            public T get(int x, int y)
+            public T get(int... pos)
             {
-                return Wrapper.this.get(x, y, this.sliceIndex);
+                return Wrapper.this.get(pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
-            public void set(int x, int y, T value)
+            public void set(T value, int... pos)
             {
-                Wrapper.this.set(x, y, this.sliceIndex, value);            
+                Wrapper.this.set(value, pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
@@ -427,7 +386,7 @@ public abstract class Array3D<T> implements Array<T>
                 {
                     for (int x = 0; x < Wrapper.this.size0; x++)
                     {
-                        result.set(x, y, Wrapper.this.get(x, y, sliceIndex));
+                        result.set(Wrapper.this.get(x, y, sliceIndex), x, y);
                     }
                 }
                                 
@@ -488,7 +447,7 @@ public abstract class Array3D<T> implements Array<T>
                 @Override
                 public void set(T value)
                 {
-                    Wrapper.this.set(indX, indY, sliceIndex, value);
+                    Wrapper.this.set(value, indX, indY, sliceIndex);
                 }
             }
         }

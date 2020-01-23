@@ -57,16 +57,16 @@ public class BufferedInt32Array3D extends Int32Array3D
 	// Specialization of the IntArray3D interface
 
 	@Override
-	public int getInt(int x, int y, int z)
+	public int getInt(int... pos)
 	{
-		int index = x + this.size0 * (y + z * this.size1);
+		int index = pos[0] + this.size0 * (pos[1] + pos[2] * this.size1);
 		return this.buffer[index];
 	}
 
 	@Override
-	public void setInt(int x, int y, int z, int value)
+	public void setInt(int value, int... pos)
 	{
-		int index = x + this.size0 * (y + z * this.size1);
+		int index = pos[0] + this.size0 * (pos[1] + pos[2] * this.size1);
 		this.buffer[index] = value;
 	}
 	

@@ -90,7 +90,7 @@ public class Arrays
             {
                 pos2[d] = pos[d] + offset[d];
             }
-            target.set(pos2, source.get(pos));
+            target.set(source.get(pos), pos2);
         }
     }
     
