@@ -328,15 +328,15 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
         }
 
         @Override
-        public byte getByte(int x, int y, int z)
+        public byte getByte(int... pos)
         {
-            return (byte) RGB8Array3D.this.getSample(x, y, z, channel);
+            return (byte) RGB8Array3D.this.getSample(pos[0], pos[1], pos[2], channel);
         }
 
         @Override
-        public void setByte(int x, int y, int z, byte byteValue)
+        public void setByte(byte byteValue, int... pos)
         {
-            RGB8Array3D.this.setSample(x, y, z, channel, byteValue & 0x00FF);
+            RGB8Array3D.this.setSample(pos[0], pos[1], pos[2], channel, byteValue);
         }
 
         @Override

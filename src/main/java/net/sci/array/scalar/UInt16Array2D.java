@@ -46,50 +46,9 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	// =============================================================
 	// New methods
 
-	/**
-	 * Returns the short value at a given position.
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @return the short value at the given position
-	 */
-	public abstract short getShort(int x, int y);
-
-	/**
-	 * Sets the short value at a given position
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @param value
-	 *            the new short value at the given position
-	 */
-	public abstract void setShort(int x, int y, short value);
-	
 	
 	// =============================================================
 	// Specialization of the UInt16Array interface
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt8Array#getByte(int[])
-	 */
-	@Override
-	public short getShort(int[] pos)
-	{
-		return getShort(pos[0], pos[1]);
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt8Array#setByte(int[], java.lang.Byte)
-	 */
-	@Override
-	public void setShort(int[] pos, short value)
-	{
-		setShort(pos[0], pos[1], value);
-	}
 
 
 	// =============================================================
@@ -102,7 +61,7 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 
 	public void setInt(int x, int y, int value)
 	{
-		setShort(x, y, (short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
+		setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE), x, y);
 	}
 
 	// =============================================================
@@ -123,7 +82,7 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	@Override
 	public void set(int x, int y, UInt16 value)
 	{
-		setShort(x, y, value.getShort());
+		setShort(value.getShort(), x, y);
 	}
 
 	/* (non-Javadoc)
@@ -144,7 +103,7 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	@Override
 	public void setValue(int x, int y, double value)
 	{
-		setShort(x, y, (short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
+		setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE), x, y);
 	}
 
 	
@@ -167,7 +126,7 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setShort(x, y, getShort(x, y));
+                res.setShort(getShort(x, y), x, y);
             }
         }
         
@@ -180,7 +139,7 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	@Override
 	public UInt16 get(int[] pos)
 	{
-		return new UInt16(getShort(pos[0], pos[1]));
+		return new UInt16(getShort(pos));
 	}
 
 	/* (non-Javadoc)
@@ -189,6 +148,6 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	@Override
 	public void set(int[] pos, UInt16 value)
 	{
-		setShort(pos[0], pos[1], value.getShort());
+		setShort(value.getShort(), pos[0], pos[1]);
 	}
 }

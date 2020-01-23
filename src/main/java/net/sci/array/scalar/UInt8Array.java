@@ -108,9 +108,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	// =============================================================
 	// New methods
 
-	public byte getByte(int[] pos);
+	public byte getByte(int... pos);
 	
-	public void setByte(int[] pos, byte value);
+	public void setByte(byte value, int... pos);
 	
 	
 	// =============================================================
@@ -125,7 +125,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	@Override
 	public default void setInt(int[] pos, int value)
 	{
-		setByte(pos, (byte) Math.min(Math.max(value, 0), 255));
+		setByte((byte) Math.min(Math.max(value, 0), 255), pos);
 	}
 
 	
@@ -135,7 +135,7 @@ public interface UInt8Array extends IntArray<UInt8>
      */
     public default void setValue(int[] pos, double value)
     {
-    	setByte(pos, (byte) UInt8.clamp(value));
+    	setByte((byte) UInt8.clamp(value), pos);
     }
 
     // =============================================================
@@ -162,7 +162,7 @@ public interface UInt8Array extends IntArray<UInt8>
     @Override
     public default void set(int[] pos, UInt8 value)
     {
-        setByte(pos, value.getByte());
+        setByte(value.getByte(), pos);
     }
 
     @Override
@@ -174,7 +174,7 @@ public interface UInt8Array extends IntArray<UInt8>
         // copy values into output array
 	    for (int[] pos : positions())
 	    {
-	    	result.setByte(pos, getByte(pos));
+	    	result.setByte(getByte(pos), pos);
 	    }
 				
 		// return result
@@ -227,7 +227,7 @@ public interface UInt8Array extends IntArray<UInt8>
             @Override
             public void setByte(byte b)
             {
-                UInt8Array.this.setByte(iter.get(), b);
+                UInt8Array.this.setByte(b, iter.get());
             }
         };
     }
@@ -290,13 +290,13 @@ public interface UInt8Array extends IntArray<UInt8>
 		// Implementation of the UInt8Array interface
 
 		@Override
-		public byte getByte(int[] pos)
+		public byte getByte(int... pos)
 		{
 			return get(pos).getByte();
 		}
 
 		@Override
-		public void setByte(int[] pos, byte value)
+		public void setByte(byte value, int... pos)
 		{
 			set(pos, new UInt8(value & 0x00FF));
 		}
@@ -410,7 +410,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.UInt8Array#getByte(int[])
 	     */
 	    @Override
-	    public byte getByte(int[] pos)
+	    public byte getByte(int... pos)
 	    {
 	        return array.getByte(coordsMapping.apply(pos));
 	    }
@@ -419,9 +419,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.UInt8Array#setByte(int[], byte)
 	     */
 	    @Override
-	    public void setByte(int[] pos, byte value)
+	    public void setByte(byte value, int... pos)
 	    {
-	        array.setByte(coordsMapping.apply(pos), value);
+	        array.setByte(value, coordsMapping.apply(pos));
 	    }
 
 	    /* (non-Javadoc)

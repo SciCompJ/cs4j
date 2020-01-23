@@ -87,9 +87,9 @@ public interface UInt16Array extends IntArray<UInt16>
 	// =============================================================
 	// New methods
 
-	public short getShort(int[] pos);
+	public short getShort(int... pos);
 	
-	public void setShort(int[] pos, short value);
+	public void setShort(short value, int... pos);
 	
 	
 	// =============================================================
@@ -108,7 +108,7 @@ public interface UInt16Array extends IntArray<UInt16>
 	@Override
 	public default void setInt(int[] pos, int value)
 	{
-		setShort(pos, (short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
+		setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE), pos);
 	}
 
 	
@@ -136,7 +136,7 @@ public interface UInt16Array extends IntArray<UInt16>
     @Override
     public default void set(int[] pos, UInt16 value)
     {
-        setShort(pos, value.getShort());
+        setShort(value.getShort(), pos);
     }
 
 	/**
@@ -156,7 +156,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		
 	    for (int[] pos : positions())
 	    {
-	    	result.setShort(pos, getShort(pos));
+	    	result.setShort(getShort(pos), pos);
 	    }
 
 		// return output
@@ -209,7 +209,7 @@ public interface UInt16Array extends IntArray<UInt16>
             @Override
             public void setShort(short s)
             {
-                UInt16Array.this.setShort(iter.get(), s);
+                UInt16Array.this.setShort(s, iter.get());
             }
         };
     }
@@ -263,13 +263,13 @@ public interface UInt16Array extends IntArray<UInt16>
 		// Implementation of the UInt16Array interface
 
 		@Override
-		public short getShort(int[] pos)
+		public short getShort(int... pos)
 		{
 			return get(pos).getShort();
 		}
 
 		@Override
-		public void setShort(int[] pos, short value)
+		public void setShort(short value, int... pos)
 		{
 			set(pos, new UInt16(value));
 		}
@@ -383,7 +383,7 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.UInt16Array#getShort(int[])
          */
         @Override
-        public short getShort(int[] pos)
+        public short getShort(int... pos)
         {
             return array.getShort(coordsMapping.apply(pos));
         }
@@ -392,9 +392,9 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.UInt16Array#setShort(int[], short)
          */
         @Override
-        public void setShort(int[] pos, short shortValue)
+        public void setShort(short shortValue, int... pos)
         {
-            array.setShort(coordsMapping.apply(pos), shortValue);
+            array.setShort(shortValue, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)

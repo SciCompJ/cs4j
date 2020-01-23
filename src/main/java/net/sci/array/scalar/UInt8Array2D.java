@@ -83,51 +83,12 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 			ps.println();
 		}
 	}
-	
-	/**
-	 * Returns the byte value at a given position.
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @return the byte value at the given position
-	 */
-	public abstract byte getByte(int x, int y);
-
-	/**
-	 * Sets the byte value at a given position
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @param value
-	 *            the new byte value at the given position
-	 */
-	public abstract void setByte(int x, int y, byte value);
-	
+		
 	
 	// =============================================================
 	// Specialization of the UInt8Array interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt8Array#getByte(int[])
-	 */
-	@Override
-	public byte getByte(int[] pos)
-	{
-		return getByte(pos[0], pos[1]);
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.UInt8Array#setByte(int[], java.lang.Byte)
-	 */
-	@Override
-	public void setByte(int[] pos, byte value)
-	{
-		setByte(pos[0], pos[1], value);
-	}
+
 
 	// =============================================================
 	// Specialization of IntArray2D interface
@@ -139,7 +100,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 
 	public void setInt(int x, int y, int value)
 	{
-		setByte(x, y, (byte) Math.min(Math.max(value, 0), 255));
+		setByte((byte) Math.min(Math.max(value, 0), 255), x, y);
 	}
 
 	// =============================================================
@@ -160,7 +121,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	@Override
 	public void set(int x, int y, UInt8 value)
 	{
-		setByte(x, y, value.getByte());
+		setByte(value.getByte(), x, y);
 	}
 
 	/* (non-Javadoc)
@@ -182,7 +143,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	public void setValue(int x, int y, double value)
 	{
 		value = Math.min(Math.max(value, 0), 255);
-		setByte(x, y, (byte) value);
+		setByte((byte) value, x, y);
 	}
 
 	
@@ -203,7 +164,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setByte(x, y, getByte(x, y));
+                res.setByte(getByte(x, y), x, y);
             }
         }
         return res;
@@ -215,7 +176,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	@Override
 	public UInt8 get(int[] pos)
 	{
-		return new UInt8(getByte(pos[0], pos[1]));
+		return new UInt8(getByte(pos));
 	}
 
 	/* (non-Javadoc)
@@ -224,7 +185,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	@Override
 	public void set(int[] pos, UInt8 value)
 	{
-		setByte(pos[0], pos[1], value.getByte());
+		setByte(value.getByte(), pos);
 	}
 	
 	/**
@@ -247,15 +208,15 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
         }
 
         @Override
-        public byte getByte(int x, int y)
+        public byte getByte(int... pos)
         {
-            return this.array.getByte(new int[]{x, y});
+            return this.array.getByte(pos);
         }
 
         @Override
-        public void setByte(int x, int y, byte value)
+        public void setByte(byte value, int... pos)
         {
-            this.array.setByte(new int[]{x, y}, value);
+            this.array.setByte(value, pos);
         }
 
         @Override

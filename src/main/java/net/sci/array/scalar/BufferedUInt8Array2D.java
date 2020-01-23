@@ -59,9 +59,9 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 	 * @see net.sci.array.data.scalar2d.UInt8Array2D#getByte(int, int)
 	 */
 	@Override
-	public byte getByte(int x, int y)
+	public byte getByte(int... pos)
 	{
-		int index = x + y * this.size0;
+		int index = pos[0] + pos[1] * this.size0;
 		return this.buffer[index];
 	}
 	
@@ -69,9 +69,9 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 	 * @see net.sci.array.data.scalar2d.UInt8Array2D#setByte(int, int, byte)
 	 */
 	@Override
-	public void setByte(int x, int y, byte b)
+	public void setByte(byte b, int... pos)
 	{
-		int index = x + y * this.size0;
+		int index = pos[0] + pos[1] * this.size0;
 		this.buffer[index] = b;
 	}
 

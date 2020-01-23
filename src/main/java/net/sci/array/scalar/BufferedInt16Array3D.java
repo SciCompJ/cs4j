@@ -61,9 +61,9 @@ public class BufferedInt16Array3D extends Int16Array3D
 	 * @see net.sci.array.data.scalar2d.UInt16Array3D#getShort(int, int, int)
 	 */
 	@Override
-	public short getShort(int x, int y, int z)
+	public short getShort(int... pos)
 	{
-		int index = x + this.size0 * (y + z * this.size1);
+		int index = pos[0] + this.size0 * (pos[1] + pos[2] * this.size1);
 		return this.buffer[index];
 	}
 		
@@ -71,10 +71,10 @@ public class BufferedInt16Array3D extends Int16Array3D
 	 * @see net.sci.array.data.scalar2d.UInt16Array3D#setShort(int, int, int, short)
 	 */
 	@Override
-	public void setShort(int x, int y, int z, short value)
+	public void setShort(short value, int... pos)
 	{
-		int index = x + this.size0 * (y + z * this.size1);
-		this.buffer[index] = value;
+	    int index = pos[0] + this.size0 * (pos[1] + pos[2] * this.size1);
+        this.buffer[index] = value;
 	}
 
 	

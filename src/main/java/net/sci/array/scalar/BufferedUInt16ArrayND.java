@@ -71,19 +71,20 @@ public class BufferedUInt16ArrayND extends UInt16ArrayND
 	// Implementation of the UInt16Array interface
 	
 	@Override
-	public short getShort(int[] pos)
+	public short getShort(int... pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
 	}
 
 	@Override
-	public void setShort(int[] pos, short value)
+	public void setShort(short value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value;	
 	}
 
+	
 	// =============================================================
 	// Implementation of the IntArray interface
 	
