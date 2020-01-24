@@ -25,7 +25,7 @@ public class NaiveDiskStrelTest
     public final void testDilation()
     {
         UInt8Array2D array = UInt8Array2D.create(11, 11);
-        array.setInt(5, 5, 255);
+        array.setInt(255, 5, 5);
         Strel2D strel = new NaiveDiskStrel(3);
        
         UInt8Array2D res = UInt8Array2D.wrap(UInt8Array.wrap(strel.dilation(array)));
@@ -51,8 +51,8 @@ public class NaiveDiskStrelTest
     public final void testErosion()
     {
         UInt8Array2D array = UInt8Array2D.create(11, 11);
-        array.fillValue(255);
-        array.setInt(5, 5, 0);
+        array.fillInt(255);
+        array.setInt(0, 5, 5);
         Strel2D strel = new NaiveDiskStrel(3);
        
         UInt8Array2D res = UInt8Array2D.wrap(UInt8Array.wrap(strel.erosion(array)));

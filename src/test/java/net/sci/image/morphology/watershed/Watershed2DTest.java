@@ -46,7 +46,7 @@ public class Watershed2DTest
                 {
                     minDist = Math.min(minDist, p.distance(x, y));
                 }
-                array.setValue(x, y, minDist);
+                array.setValue(minDist, x, y);
             }
         }
 

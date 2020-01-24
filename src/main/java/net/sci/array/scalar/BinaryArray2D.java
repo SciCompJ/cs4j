@@ -104,9 +104,9 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 * @see net.sci.array.data.Array2D#getValue(int, int)
 	 */
 	@Override
-	public double getValue(int x, int y)
+	public double getValue(int... pos)
 	{
-		return getBoolean(x, y) ? 1 : 0;
+		return getBoolean(pos) ? 1 : 0;
 	}
 
 	/**
@@ -115,9 +115,9 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 * @see net.sci.array.Array2D#setValue(int, int, double)
 	 */
 	@Override
-	public void setValue(int x, int y, double value)
+	public void setValue(double value, int... pos)
 	{
-		setBoolean(value > 0, x, y);
+		setBoolean(value > 0, pos);
 	}
 
 	

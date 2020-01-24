@@ -93,15 +93,6 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Specialization of IntArray2D interface
 
-	public int getInt(int x, int y)
-	{
-		return getByte(x, y) & 0x00FF; 
-	}
-
-	public void setInt(int x, int y, int value)
-	{
-		setByte((byte) Math.min(Math.max(value, 0), 255), x, y);
-	}
 
 	// =============================================================
 	// Specialization of Array2D interface
@@ -128,9 +119,9 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	 * @see net.sci.array.data.Array2D#getValue(int, int)
 	 */
 	@Override
-	public double getValue(int x, int y)
+	public double getValue(int... pos)
 	{
-		return getByte(x, y) & 0x00FF;
+		return getByte(pos) & 0x00FF;
 	}
 
 	/**
@@ -140,10 +131,10 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	 * @see net.sci.array.Array2D#setValue(int, int, double)
 	 */
 	@Override
-	public void setValue(int x, int y, double value)
+	public void setValue(double value, int... pos)
 	{
 		value = Math.min(Math.max(value, 0), 255);
-		setByte((byte) value, x, y);
+		setByte((byte) value, pos);
 	}
 
 	

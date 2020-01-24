@@ -14,7 +14,7 @@ public class BoxDilationNaiveTest
 	public void testDilateDotRadius3()
 	{
 		UInt8Array2D image = UInt8Array2D.create(10, 10);
-		image.setInt(4, 4, 200);
+		image.setInt(200, 4, 4);
 	
 		BoxDilationNaive dil = new BoxDilationNaive(new int[]{7, 7});
 		UInt8Array2D result = (UInt8Array2D) dil.process(image);

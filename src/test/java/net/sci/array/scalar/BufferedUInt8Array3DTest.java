@@ -21,7 +21,7 @@ public class BufferedUInt8Array3DTest
 			{
 				for (int x = 0; x < 4; x++)
 				{
-					array.setValue(x, y, z, 10);
+					array.setValue(10, x, y, z);
 				}
 			}
 		}
@@ -44,7 +44,7 @@ public class BufferedUInt8Array3DTest
 			{
 				for (int x = 0; x < 4; x++)
 				{
-					array.setValue(x, y, z, 10);
+					array.setValue(10, x, y, z);
 				}
 			}
 		}

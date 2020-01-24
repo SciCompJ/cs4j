@@ -4,7 +4,6 @@
 package net.sci.array.process;
 
 import net.sci.array.Array;
-import net.sci.array.Array.PositionIterator;
 import net.sci.array.ArrayOperator;
 import net.sci.array.Arrays;
 import net.sci.array.scalar.Float32Array;
@@ -26,11 +25,9 @@ public class ConvertToDouble implements ArrayOperator
 	    }
         Float32Array result = Float32Array.create(array.size());
         
-        PositionIterator iter = array.positionIterator();
-        while(iter.hasNext())
+        for(int[] pos : result.positions())
         {
-            int[] pos = iter.next();
-            result.setValue(pos, ((ScalarArray<?>) array).getValue(pos));
+            result.setValue(((ScalarArray<?>) array).getValue(pos), pos);
         }
 
         return result;
@@ -49,11 +46,9 @@ public class ConvertToDouble implements ArrayOperator
         }
         
         // iterate over positions
-        PositionIterator iter = source.positionIterator();
-        while(iter.hasNext())
+        for(int[] pos : target.positions())
         {
-            int[] pos = iter.next();
-            target.setValue(pos, ((ScalarArray<?>) source).getValue(pos));
+            target.setValue(((ScalarArray<?>) source).getValue(pos), pos);
         }
 
         // return reference to target

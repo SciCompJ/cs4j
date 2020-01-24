@@ -64,7 +64,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             input[0] = (double) pos[0];
             input[1] = (double) pos[1];
             input[2] = (double) pos[2];
-            this.setValue(pos[0], pos[1], pos[2], fun.apply(input));
+            this.setValue(fun.apply(input), pos[0], pos[1], pos[2]);
         }
     }
 
@@ -86,15 +86,11 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     {
         for (int[] pos : this.positions())
         {
-            this.setValue(pos[0], pos[1], pos[2],
-                    fun.apply((double) pos[0], (double) pos[1], (double) pos[2]));
+            this.setValue(fun.apply((double) pos[0], (double) pos[1], (double) pos[2]), 
+                    pos[0], pos[1], pos[2]);
         }
     }
     
-//    public abstract double getValue(int... pos);
-    
-    public abstract void setValue(int x, int y, int z, double vaslue);
-
     
     // =============================================================
     // Specialization of the Array3D interface
@@ -126,10 +122,6 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     // =============================================================
     // Specialization of the ScalarArray interface
 
-    public void setValue(int[] pos, double value)
-    {
-        setValue(pos[0], pos[1], pos[2], value);
-    }
     
 	// =============================================================
     // Specialization of the Array interface
@@ -205,9 +197,9 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
          * set double value at specified position
          */
         @Override
-        public void setValue(int x, int y, int z, double value)
+        public void setValue(double value, int... pos)
         {
-            this.array.setValue(new int[]{x, y, z}, value);
+            this.array.setValue(value, pos);
         }
 
         
@@ -350,7 +342,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             @Override
             public void setValue(double value)
             {
-                Wrapper.this.setValue(x, y, z, value);             
+                Wrapper.this.setValue(value, x, y, z);             
             }
         }
         
@@ -370,15 +362,15 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             }
 
             @Override
-            public double getValue(int x, int y)
+            public double getValue(int... pos)
             {
-                return Wrapper.this.getValue(x, y, this.sliceIndex);
+                return Wrapper.this.getValue(pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
-            public void setValue(int x, int y, double value)
+            public void setValue(double value, int... pos)
             {
-                Wrapper.this.setValue(x, y, this.sliceIndex, value);            
+                Wrapper.this.setValue(value, pos[0], pos[1], this.sliceIndex);            
             }
 
 
@@ -417,7 +409,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
                 {
                     for (int x = 0; x < Wrapper.this.size0; x++)
                     {
-                        result.setValue(x, y, Wrapper.this.getValue(x, y, sliceIndex));
+                        result.setValue(Wrapper.this.getValue(x, y, sliceIndex), x, y);
                     }
                 }
                                 
@@ -479,7 +471,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
                 @Override
                 public void setValue(double value)
                 {
-                    Wrapper.this.setValue(indX, indY, sliceIndex, value);
+                    Wrapper.this.setValue(value, indX, indY, sliceIndex);
                 }
 
                 @Override

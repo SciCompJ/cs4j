@@ -138,9 +138,9 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	 * @see net.sci.array.data.Array3D#setValue(int, int, int, double)
 	 */
 	@Override
-	public void setValue(int x, int y, int z, double value)
+	public void setValue(double value, int... pos)
 	{
-		setBoolean(value > 0, x, y, z);
+		setBoolean(value > 0, pos);
 	}
 
 	

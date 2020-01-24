@@ -101,7 +101,7 @@ public class CropTest
         {
             for (int x = 0; x < 10; x++)
             {
-                array.setValue(x, y, y * 10 + x);
+                array.setValue(y * 10 + x, x, y);
             }
         }
         return array;

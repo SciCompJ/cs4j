@@ -16,13 +16,7 @@ public class BufferedUInt8Array2DTest
     public final void testIterator()
     {
         UInt8Array2D array = new BufferedUInt8Array2D(6, 5);
-        for (int y = 0; y < 5; y++)
-        {
-            for (int x = 0; x < 6; x++)
-            {
-                array.setInt(x, y, 10);
-            }
-        }
+        array.fillValue(10);
         
         int count = 0;
         double sum = 0;
@@ -39,13 +33,7 @@ public class BufferedUInt8Array2DTest
     public final void testIntIterator()
     {
         UInt8Array2D array = new BufferedUInt8Array2D(6, 5);
-        for (int y = 0; y < 5; y++)
-        {
-            for (int x = 0; x < 6; x++)
-            {
-                array.setInt(x, y, 200);
-            }
-        }
+        array.fillValue(200);
         
         UInt8Array.Iterator iter = array.iterator();
         int count = 0;

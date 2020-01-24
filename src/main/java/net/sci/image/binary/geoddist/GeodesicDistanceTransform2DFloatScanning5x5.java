@@ -192,11 +192,11 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 	            if (mask.getBoolean(x, y))
 	            {
     	            double val = marker.getValue(x, y);
-    	            buffer.setValue(x, y, val == 0 ? backgroundValue : 0);
+    	            buffer.setValue(val == 0 ? backgroundValue : 0, x, y);
 	            }
 	            else
 	            {
-	                buffer.setValue(x, y, Double.NaN);
+	                buffer.setValue(Double.NaN, x, y);
 	            }
 	        }
 	    }
@@ -317,7 +317,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 		if (newVal < value) 
 		{
 			modif = true;
-			buffer.setValue(x, y, newVal);
+			buffer.setValue(newVal, x, y);
 		}
 	}
 
@@ -330,7 +330,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
                 double val = buffer.getValue(x, y);
                 if (Double.isFinite(val))
                 {
-                    buffer.setValue(x, y, val / this.weights[0]);
+                    buffer.setValue(val / this.weights[0], x, y);
                 }
             }
         }

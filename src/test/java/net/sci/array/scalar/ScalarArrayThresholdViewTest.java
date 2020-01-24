@@ -63,7 +63,7 @@ public class ScalarArrayThresholdViewTest
 		{
 			for (int x = 0; x < 5; x++)
 			{
-				array.setValue(x, y, y * 10 + x);
+				array.setValue(y * 10 + x, x, y);
 			}
 		}
 		return array;

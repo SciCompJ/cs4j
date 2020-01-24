@@ -24,7 +24,7 @@ public class SlidingDiskStrelDemo
         
         // Creates a simple array with white dot in the middle
         UInt8Array2D array = UInt8Array2D.create(15, 15);
-        array.setValue(7, 7, 255);
+        array.setValue(255, 7, 7);
         
         // applies dilation on array
         ScalarArray2D<?> dilated = strel.dilation(array);

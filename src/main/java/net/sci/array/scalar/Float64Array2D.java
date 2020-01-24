@@ -53,7 +53,7 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
 	@Override
 	public void set(int x, int y, net.sci.array.scalar.Float64 value)
 	{
-		setValue(x, y, value.getValue());
+		setValue(value.getValue(), x, y);
 	}
 	
 	
@@ -74,7 +74,7 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setValue(x, y, getValue(x, y));
+                res.setValue(getValue(x, y), x, y);
             }
         }
         return res;

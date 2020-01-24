@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import net.sci.array.scalar.BinaryArray3D;
 import net.sci.array.scalar.IntArray3D;
-import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
 import net.sci.image.data.Connectivity3D;
@@ -33,28 +32,28 @@ public class FloodFillTest
                 { 10, 20, 10, 10, 10, 20, 10, 20, 20, 10, 10, 10, 10, 20, 10 },
                 { 10, 20, 10, 20, 20, 20, 10, 20, 20, 20, 20, 20, 20, 20, 10 },
                 { 10, 10, 20, 20, 10, 10, 10, 10, 10, 10, 10, 20, 20, 10, 10 }, };
-        int height = data.length;
-        int width = data[0].length;
-        UInt8Array2D image = UInt8Array2D.create(width, height);
-        for (int y = 0; y < height; y++)
+        int sizeY = data.length;
+        int sizeX = data[0].length;
+        UInt8Array2D image = UInt8Array2D.create(sizeX, sizeY);
+        for (int y = 0; y < sizeY; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < sizeX; x++)
             {
-                image.setInt(x, y, data[y][x]);
+                image.setInt(data[y][x], x, y);
             }
         }
 
         // initialize empty result image fill with 255
-        UInt8Array2D result = UInt8Array2D.create(width, height);
-        result.fill(new UInt8(255));
+        UInt8Array2D result = UInt8Array2D.create(sizeX, sizeY);
+        result.fillInt(255);
 
         // Apply
         FloodFill.floodFillInt(image, 7, 4, result, 50, 8);
         // printImage(result);
 
-        for (int y = 0; y < height; y++)
+        for (int y = 0; y < sizeY; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < sizeX; x++)
             {
                 if (image.getInt(x, y) == 20)
                     assertEquals(50, result.getInt(x, y));
@@ -81,20 +80,20 @@ public class FloodFillTest
                 {10, 20, 20, 20, 10, 10, 10, 30, 30, 30, 10},
                 {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10}
         };
-        int height = data.length;
-        int width = data[0].length;
-        UInt8Array2D image = UInt8Array2D.create(width, height);
-        for (int y = 0; y < height; y++)
+        int sizeY = data.length;
+        int sizeX = data[0].length;
+        UInt8Array2D image = UInt8Array2D.create(sizeX, sizeY);
+        for (int y = 0; y < sizeY; y++)
         {
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < sizeX; x++)
             {
-                image.setInt(x, y, data[y][x]);
+                image.setInt(data[y][x], x, y);
             }
         }
 
         // initialize result
         UInt8Array2D result = UInt8Array2D.create(11, 11);
-        result.fill(new UInt8(255));
+        result.fillInt(255);
 
         // compute flood fill result
         FloodFill.floodFillInt(image, 1, 0, result, 50, 4);

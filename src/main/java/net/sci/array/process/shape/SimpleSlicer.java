@@ -229,7 +229,7 @@ public class SimpleSlicer implements ArrayOperator
 			System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
 			
 			// copy value of selected position
-			target.setValue(pos, source.getValue(srcPos));
+			target.setValue(source.getValue(srcPos), pos);
 		}
 	}
 	

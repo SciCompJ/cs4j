@@ -284,41 +284,20 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 		// Create result image the same size as marker image
 		this.result = (ScalarArray3D<?>) mask.newInstance(sizeX, sizeY, sizeZ);
 		
-			// Initialize integer result stack
-			for (int z = 0; z < sizeZ; z++)
-			{
-				for (int y = 0; y < sizeY; y++)
-				{
-					for (int x = 0; x < sizeX; x++)
-					{
-						double v1 = marker.getValue(x, y, z) * this.sign;
-						double v2 = mask.getValue(x, y, z) * this.sign;
-						result.setValue(x, y, z, min(v1, v2)  * this.sign);
-						
-					}
-				}
-			}
-//		} 
-//		else 
-//		{
-//			// Initialize the result image with the maximum value of marker and mask
-//			// images
-//			for (int z = 0; z < sizeZ; z++)
-//			{
-//				// Extract slices
-//				markerSlice = this.markerSlices[z];
-//				maskSlice = this.maskSlices[z];
-//				resultSlice = this.resultSlices[z];
-//				
-//				// process current slice
-//				for (int i = 0; i < sizeX * sizeY; i++)
-//				{
-//					float v1 = markerSlice[i];
-//					float v2 = maskSlice[i];
-//					resultSlice[i] = max(v1, v2);
-//				}
-//			}
-//		}
+		// Initialize integer result stack
+		for (int z = 0; z < sizeZ; z++)
+		{
+		    for (int y = 0; y < sizeY; y++)
+		    {
+		        for (int x = 0; x < sizeX; x++)
+		        {
+		            double v1 = marker.getValue(x, y, z) * this.sign;
+		            double v2 = mask.getValue(x, y, z) * this.sign;
+		            result.setValue(min(v1, v2)  * this.sign, x, y, z);
+		            
+		        }
+		    }
+		}
 	}
 	
 	private void forwardScan() 
@@ -370,7 +349,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 					maxValue = min(maxValue, mask.getValue(x, y, z) * this.sign);
 					if (maxValue > currentValue) 
 					{
-						result.setValue(x, y, z, maxValue * this.sign);
+						result.setValue(maxValue * this.sign, x, y, z);
 					}
 				}
 			}
@@ -426,7 +405,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 					maxValue = min(maxValue, mask.getValue(x, y, z) * sign);
 					if (maxValue > currentValue)
 					{
-						result.setValue(x, y, z, maxValue * this.sign);
+						result.setValue(maxValue * this.sign, x, y, z);
 					}
 				}
 			}
@@ -491,7 +470,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 						continue;
 
 					// update value of current voxel
-					result.setValue(x, y, z, maxValue * this.sign);
+					result.setValue(maxValue * this.sign, x, y, z);
 					
 					// eventually add lower-right neighbors to queue
 					if (x < sizeX - 1) 
@@ -558,7 +537,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 						continue;
 
 					// update value of current voxel
-					result.setValue(x, y, z, maxValue * this.sign);
+					result.setValue(maxValue * this.sign, x, y, z);
 					
 					// eventually add lower-right neighbors to queue
 					for (int z2 = min(z + 1, sizeZ - 1); z2 >= z; z2--) 
@@ -634,7 +613,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 				continue;
 			
 			// update result for current position
-			result.setValue(x, y, z, value * this.sign);
+			result.setValue(value * this.sign, x, y, z);
 
 			// Eventually add each neighbor
 			if (x > 0)
@@ -698,7 +677,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 				continue;
 			
 			// update result for current position
-			result.setValue(x, y, z, value * this.sign);
+			result.setValue(value * this.sign, x, y, z);
 
 			// compare with each one of the neighbors
 			for (int z2 = zmin; z2 <= zmax; z2++) 

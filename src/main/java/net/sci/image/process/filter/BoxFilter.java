@@ -23,7 +23,6 @@ import net.sci.image.ImageArrayOperator;
 */
 public final class BoxFilter extends AlgoStub implements ImageArrayOperator, VectorArrayMarginalOperator
 {
-    //TODO: need some work for processing vector images
     /** The size of the box in each dimension */
 	int[] diameters;
 	
@@ -114,7 +113,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 			}
 			
 			// setup result in target array
-			target.setValue(pos, sum / boxSize);
+			target.setValue(sum / boxSize, pos);
 		}
 	}
 	
@@ -170,7 +169,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 						sum += source.getValue(x2r, y2r);
 					}
 				}
-				target.setValue(x, y, sum / boxSize);
+				target.setValue(sum / boxSize, x, y);
 			}
 		}
 		
@@ -240,7 +239,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 							}
 						}
 					}
-					target.setValue(x, y, z, sum / boxSize);
+					target.setValue(sum / boxSize, x, y, z);
 				}
 			}
 		}

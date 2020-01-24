@@ -95,7 +95,7 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
         }
 
         @Override
-        public void setValue(int[] pos, double value)
+        public void setValue(double value, int... pos)
         {
             Float64Vector vect = Float64VectorArrayND.this.get(pos);
             vect.data[channel] = value;

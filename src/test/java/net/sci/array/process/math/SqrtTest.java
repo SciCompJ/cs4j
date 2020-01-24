@@ -21,7 +21,7 @@ public class SqrtTest
 			for (int x = 1; x < 5; x++)
 			{
 				double val = index++;
-				array.setValue(x,  y, val * val);
+				array.setValue(val * val, x, y);
 			}
 		}
 		

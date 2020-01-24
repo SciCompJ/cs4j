@@ -114,15 +114,6 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Specialization of IntArrayND interface
 
-	public int getInt(int x, int y, int z)
-	{
-		return getByte(x, y, z) & 0x00FF; 
-	}
-
-	public void setInt(int x, int y, int z, int value)
-	{
-		setByte((byte) value, x, y, z);
-	}
 
 	// =============================================================
 	// Specialization of Array3D interface
@@ -157,9 +148,9 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	 * @see net.sci.array.data.Array3D#setValue(int, int, int, double)
 	 */
 	@Override
-	public void setValue(int x, int y, int z, double value)
+	public void setValue(double value, int... pos)
 	{
-		setByte((byte) value, x, y, z);
+		setByte((byte) value, pos);
 	}
 
 	

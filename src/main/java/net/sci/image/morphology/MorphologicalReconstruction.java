@@ -132,7 +132,7 @@ public class MorphologicalReconstruction
 		{
 			for (int x = 1; x < sizeX - 1; x++)
 			{
-				marker.setValue(x, y, Double.NEGATIVE_INFINITY);
+				marker.setValue(Double.NEGATIVE_INFINITY, x, y);
 			}
 		}
 		
@@ -145,7 +145,7 @@ public class MorphologicalReconstruction
 			for (int x = 0; x < sizeX; x++) 
 			{
 				double val = array.getValue(x, y) - result.getValue(x, y);
-				result.setValue(x, y, Math.max(val, 0));
+				result.setValue(Math.max(val, 0), x, y);
 			}
 		}
 		
@@ -178,7 +178,7 @@ public class MorphologicalReconstruction
 			{
 				for (int x = 1; x < sizeX-1; x++) 
 				{
-					marker.setValue(x, y, z, Double.NEGATIVE_INFINITY);
+					marker.setValue(Double.NEGATIVE_INFINITY, x, y, z);
 				}
 			}
 		}
@@ -194,7 +194,7 @@ public class MorphologicalReconstruction
 				for (int x = 0; x < sizeX; x++) 
 				{
 					double val = array.getValue(x, y, z) - result.getValue(x, y, z);
-					result.setValue(x, y, z, Math.max(val, 0));
+					result.setValue(Math.max(val, 0), x, y, z);
 				}
 			}
 		}		
@@ -258,7 +258,7 @@ public class MorphologicalReconstruction
 		{
 			for (int x = 1; x < sizeX - 1; x++)
 			{
-				marker.setValue(x, y, Double.POSITIVE_INFINITY);
+				marker.setValue(Double.POSITIVE_INFINITY, x, y);
 			}
 		}
 		
@@ -295,7 +295,7 @@ public class MorphologicalReconstruction
 			{
 				for (int x = 1; x < sizeX - 1; x++)
 				{
-					marker.setValue(x, y, z, Double.POSITIVE_INFINITY);
+					marker.setValue(Double.POSITIVE_INFINITY, x, y, z);
 				}
 			}
 		}

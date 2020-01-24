@@ -56,28 +56,6 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 		setInt(value.getInt(), x, y);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#getValue(int, int)
-	 */
-	@Override
-	public double getValue(int x, int y)
-	{
-		return getInt(x, y);
-	}
-
-	/**
-	 * Sets the value at the specified position, by clamping the value between 0
-	 * and 255.
-	 * 
-	 * @see net.sci.array.Array2D#setValue(int, int, double)
-	 */
-	@Override
-	public void setValue(int x, int y, double value)
-	{
-		setInt((int) value, x, y);
-	}
-
-	
 
 	// =============================================================
 	// Specialization of Array interface

@@ -98,15 +98,6 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	// =============================================================
 	// Specialization of IntArrayND interface
 
-	public int getInt(int x, int y, int z)
-	{
-		return getShort(x, y, z); 
-	}
-
-	public void setInt(int x, int y, int z, int value)
-	{
-		setShort((short) Int16.clamp(value), x, y, z);
-	}
 
 	// =============================================================
 	// Specialization of Array3D interface
@@ -129,15 +120,6 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	public void set(int x, int y, int z, Int16 value)
 	{
 		setShort(value.getShort(), x, y, z);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#setValue(int, int, int, double)
-	 */
-	@Override
-	public void setValue(int x, int y, int z, double value)
-	{
-		setShort((short) UInt16.clamp(value), x, y, z);
 	}
 
 	

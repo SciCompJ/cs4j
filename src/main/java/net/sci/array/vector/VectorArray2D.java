@@ -93,7 +93,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
                 for (int x = 0; x < sizeX; x++)
                 {
                     pos[0] = x;
-                    result.setValue(x, y, c, array.get(pos).getValue(c));
+                    result.setValue(array.get(pos).getValue(c), x, y, c);
                 }
             }
         }

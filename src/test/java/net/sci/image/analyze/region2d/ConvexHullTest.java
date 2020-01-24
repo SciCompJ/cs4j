@@ -41,16 +41,16 @@ public class ConvexHullTest
     {
         UInt8Array2D array = UInt8Array2D.create(5, 5);
         array.fillValue(8);
-        array.setValue(0, 0, 2);
-        array.setValue(0, 1, 2);
-        array.setValue(1, 0, 2);
-        array.setValue(1, 1, 2);
+        array.setValue(2, 0, 0);
+        array.setValue(2, 0, 1);
+        array.setValue(2, 1, 0);
+        array.setValue(2, 1, 1);
         for (int i = 2; i < 5; i++)
         {
-            array.setValue(0, i, 4);
-            array.setValue(1, i, 4);
-            array.setValue(i, 0, 6);
-            array.setValue(i, 1, 6);
+            array.setValue(4, 0, i);
+            array.setValue(4, 1, i);
+            array.setValue(6, i, 0);
+            array.setValue(6, i, 1);
         }
 
         Polygon2D[] hulls = ConvexHull.convexHull(array, new int[] { 2, 4, 6, 8 });

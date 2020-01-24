@@ -70,7 +70,7 @@ public interface UInt8Array extends IntArray<UInt8>
         UInt8Array result = UInt8Array.create(array.size());
         for (int[] pos : array.positions())
         {
-            result.setValue(pos, array.getValue(pos));
+            result.setValue(array.getValue(pos), pos);
         }
         return result;
     }
@@ -81,7 +81,7 @@ public interface UInt8Array extends IntArray<UInt8>
         UInt8Array result = UInt8Array.create(array.size());
         for (int[] pos : array.positions())
         {
-            result.setValue(pos, (array.getValue(pos) - minValue) * k);
+            result.setValue((array.getValue(pos) - minValue) * k, pos);
         }
         return result;
     }
@@ -133,7 +133,7 @@ public interface UInt8Array extends IntArray<UInt8>
      * Sets the value at the specified position, by clamping the value between 0
      * and 255.
      */
-    public default void setValue(int[] pos, double value)
+    public default void setValue(double value, int... pos)
     {
     	setByte((byte) UInt8.clamp(value), pos);
     }
@@ -332,7 +332,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		@Override
 		public void set(int[] pos, UInt8 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(value.getValue(), pos);
 		}
 
         @Override
@@ -455,9 +455,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
 	     */
 	    @Override
-	    public void setValue(int[] pos, double value)
+	    public void setValue(double value, int... pos)
 	    {
-	        array.setValue(coordsMapping.apply(pos), value);
+	        array.setValue(value, coordsMapping.apply(pos));
 	    }
 
 	    /* (non-Javadoc)

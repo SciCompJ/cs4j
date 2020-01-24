@@ -119,7 +119,7 @@ public class FiniteDifferences implements ArrayOperator
             double v1 = source.getValue(srcPos);
             
             // compute local finite difference value
-            target.setValue(pos, (v1 - v0) * 0.5 / spacing);
+            target.setValue((v1 - v0) * 0.5 / spacing, pos);
         }
     }
     

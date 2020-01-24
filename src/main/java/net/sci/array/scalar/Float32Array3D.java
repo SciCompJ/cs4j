@@ -56,16 +56,6 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
     // =============================================================
     // New methods
     
-    public float getFloat(int x, int y, int z)
-    {
-        return (float) getValue(x, y, z);
-    }
-
-    public void setFloat(int x, int y, int z, float value)
-    {
-        setValue(x, y, z, value);
-    }
-
     // =============================================================
     // Management of slices
 
@@ -99,15 +89,6 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
     // =============================================================
     // Specialization of Float32Array
     
-    public float getFloat(int[] pos)
-    {
-        return (float) getValue(pos[0], pos[1], pos[2]);
-    }
-
-    public void setFloat(int[] pos, float value)
-    {
-        setValue(pos[0], pos[1], pos[2], value);
-    }
 
 	// =============================================================
 	// Specialization of Array3D 
@@ -128,7 +109,7 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
 	@Override
 	public void set(int x, int y, int z, Float32 value)
 	{
-		setValue(x, y, z, value.getValue());
+		setValue(value.getValue(), x, y, z);
 	}
 
 	
@@ -157,7 +138,7 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
             {
                 for (int x = 0; x < size0; x++)
                 {
-                    res.setValue(x, y, z, getValue(x, y, z));
+                    res.setValue(getValue(x, y, z), x, y, z);
                 }
             }
         }
@@ -180,15 +161,27 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
         }
 
         @Override
-        public double getValue(int x, int y)
+        public float getFloat(int... pos)
         {
-            return Float32Array3D.this.getValue(x, y, this.sliceIndex);
+            return Float32Array3D.this.getFloat(pos[0], pos[1], sliceIndex);
         }
 
         @Override
-        public void setValue(int x, int y, double value)
+        public void setFloat(float value, int... pos)
         {
-            Float32Array3D.this.setValue(x, y, this.sliceIndex, value);            
+            Float32Array3D.this.setFloat(value, pos[0], pos[1], sliceIndex);
+        }
+
+        @Override
+        public double getValue(int... pos)
+        {
+            return Float32Array3D.this.getValue(pos[0], pos[1], sliceIndex);
+        }
+
+        @Override
+        public void setValue(double value, int... pos)
+        {
+            Float32Array3D.this.setValue(value, pos[0], pos[1], sliceIndex);
         }
 
         @Override
@@ -239,7 +232,7 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
             @Override
             public void setValue(double value)
             {
-                Float32Array3D.this.setValue(indX, indY, sliceIndex, value);
+                Float32Array3D.this.setValue(value, indX, indY, sliceIndex);
             }
         }
     }

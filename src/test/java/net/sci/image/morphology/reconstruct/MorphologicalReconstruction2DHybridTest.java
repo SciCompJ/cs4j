@@ -34,18 +34,18 @@ public class MorphologicalReconstruction2DHybridTest
 				{ BG, FG, FG, FG, FG, FG, FG, FG, FG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, FG, FG, FG, FG, FG, FG, FG, FG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG }, };
-		int height = data.length;
-		int width = data[0].length;
-		UInt8Array2D mask = UInt8Array2D.create(width, height);
-		for (int y = 0; y < height; y++)
+		int sizeY = data.length;
+		int sizeX = data[0].length;
+		UInt8Array2D mask = UInt8Array2D.create(sizeX, sizeY);
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
-				mask.setInt(x, y, data[y][x]);
+				mask.setInt(data[y][x], x, y);
 			}
 		}
-		UInt8Array2D marker = UInt8Array2D.create(width, height);
-		marker.setInt(2, 3, 255);
+		UInt8Array2D marker = UInt8Array2D.create(sizeX, sizeY);
+		marker.setInt(255, 2, 3);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
 				MorphologicalReconstruction.Type.BY_DILATION, Connectivity2D.C4);
@@ -81,18 +81,18 @@ public class MorphologicalReconstruction2DHybridTest
 				{ BG, BG, BG, FG, FG, FG, FG, BG, BG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, BG, BG, FG, FG, FG, FG, BG, BG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG }, };
-		int height = data.length;
-		int width = data[0].length;
-		UInt8Array2D mask = UInt8Array2D.create(width, height);
-		for (int y = 0; y < height; y++)
+		int sizeY = data.length;
+		int sizeX = data[0].length;
+		UInt8Array2D mask = UInt8Array2D.create(sizeX, sizeY);
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
-				mask.setInt(x, y, data[y][x]);
+				mask.setInt(data[y][x], x, y);
 			}
 		}
-		UInt8Array2D marker = UInt8Array2D.create(width, height);
-		marker.setInt(2, 3, 255);
+		UInt8Array2D marker = UInt8Array2D.create(sizeX, sizeY);
+		marker.setInt(255, 2, 3);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
 				MorphologicalReconstruction.Type.BY_DILATION, Connectivity2D.C8);
@@ -111,8 +111,8 @@ public class MorphologicalReconstruction2DHybridTest
 	public void testReconstructByDilationGrayscaleC4()
 	{
 		// size of images
-		int width = 16;
-		int height = 10;
+		int sizeX = 16;
+		int sizeY = 10;
 
 		UInt8Array2D mask = UInt8Array2D.create(16, 10);
 		UInt8Array2D marker = UInt8Array2D.create(16, 10);
@@ -122,13 +122,13 @@ public class MorphologicalReconstruction2DHybridTest
 		int[] maskProfile = { 10, 10, 40, 40, 40, 40, 20, 20, 30, 30, 10, 10, 30, 30, 0, 0 };
 		int[] markerProfile = { 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		int[] expectedProfile = { 10, 10, 30, 30, 30, 30, 20, 20, 20, 20, 10, 10, 10, 10, 0, 0 };
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
-				mask.setInt(x, y, maskProfile[x]);
-				marker.setInt(x, y, markerProfile[x]);
-				expected.setInt(x, y, expectedProfile[x]);
+				mask.setInt(maskProfile[x], x, y);
+				marker.setInt(markerProfile[x], x, y);
+				expected.setInt(expectedProfile[x], x, y);
 			}
 		}
 
@@ -138,9 +138,9 @@ public class MorphologicalReconstruction2DHybridTest
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 		// printImage(result);
 
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
 				assertEquals(expectedProfile[x], result.getInt(x, y));
 			}
@@ -152,8 +152,8 @@ public class MorphologicalReconstruction2DHybridTest
 	public void testReconstructByDilationGrayscaleC8()
 	{
 		// size of images
-		int width = 16;
-		int height = 10;
+		int sizeX = 16;
+		int sizeY = 10;
 
 		UInt8Array2D mask = UInt8Array2D.create(16, 10);
 		UInt8Array2D marker = UInt8Array2D.create(16, 10);
@@ -163,13 +163,13 @@ public class MorphologicalReconstruction2DHybridTest
 		int[] maskProfile = { 10, 10, 40, 40, 40, 40, 20, 20, 30, 30, 10, 10, 30, 30, 0, 0 };
 		int[] markerProfile = { 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		int[] expectedProfile = { 10, 10, 30, 30, 30, 30, 20, 20, 20, 20, 10, 10, 10, 10, 0, 0 };
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
-				mask.setInt(x, y, maskProfile[x]);
-				marker.setInt(x, y, markerProfile[x]);
-				expected.setInt(x, y, expectedProfile[x]);
+				mask.setInt(maskProfile[x], x, y);
+				marker.setInt(markerProfile[x], x, y);
+				expected.setInt(expectedProfile[x], x, y);
 			}
 		}
 
@@ -179,9 +179,9 @@ public class MorphologicalReconstruction2DHybridTest
 		UInt8Array2D result = (UInt8Array2D) algo.process(marker, mask);
 		// printImage(result);
 
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
 				assertEquals(expectedProfile[x], result.getInt(x, y));
 			}
@@ -193,8 +193,8 @@ public class MorphologicalReconstruction2DHybridTest
 	public void testReconstructByDilationFloatC4()
 	{
 		// size of images
-		int width = 16;
-		int height = 10;
+		int sizeX = 16;
+		int sizeY = 10;
 
 		Float32Array2D mask = Float32Array2D.create(16, 10);
 		Float32Array2D marker = Float32Array2D.create(16, 10);
@@ -204,13 +204,13 @@ public class MorphologicalReconstruction2DHybridTest
 		int[] maskProfile = { 10, 10, 40, 40, 40, 40, 20, 20, 30, 30, 10, 10, 30, 30, 0, 0 };
 		int[] markerProfile = { 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		int[] expectedProfile = { 10, 10, 30, 30, 30, 30, 20, 20, 20, 20, 10, 10, 10, 10, 0, 0 };
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
-				mask.setValue(x, y, maskProfile[x]);
-				marker.setValue(x, y, markerProfile[x]);
-				expected.setValue(x, y, expectedProfile[x]);
+				mask.setValue(maskProfile[x], x, y);
+				marker.setValue(markerProfile[x], x, y);
+				expected.setValue(expectedProfile[x], x, y);
 			}
 		}
 
@@ -220,9 +220,9 @@ public class MorphologicalReconstruction2DHybridTest
 		Float32Array2D result = (Float32Array2D) algo.process(marker, mask);
 		// printImage(result);
 
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
 				assertEquals(expectedProfile[x], result.getValue(x, y), .01);
 			}
@@ -233,8 +233,8 @@ public class MorphologicalReconstruction2DHybridTest
 	public void testReconstructByDilationFloatC8()
 	{
 		// size of images
-		int width = 16;
-		int height = 10;
+		int sizeX = 16;
+		int sizeY = 10;
 
 		Float32Array2D mask = Float32Array2D.create(16, 10);
 		Float32Array2D marker = Float32Array2D.create(16, 10);
@@ -244,13 +244,13 @@ public class MorphologicalReconstruction2DHybridTest
 		int[] maskProfile = { 10, 10, 40, 40, 40, 40, 20, 20, 30, 30, 10, 10, 30, 30, 0, 0 };
 		int[] markerProfile = { 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		int[] expectedProfile = { 10, 10, 30, 30, 30, 30, 20, 20, 20, 20, 10, 10, 10, 10, 0, 0 };
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
-				mask.setValue(x, y, maskProfile[x]);
-				marker.setValue(x, y, markerProfile[x]);
-				expected.setValue(x, y, expectedProfile[x]);
+				mask.setValue(maskProfile[x], x, y);
+				marker.setValue(markerProfile[x], x, y);
+				expected.setValue(expectedProfile[x], x, y);
 			}
 		}
 
@@ -260,9 +260,9 @@ public class MorphologicalReconstruction2DHybridTest
 		Float32Array2D result = (Float32Array2D) algo.process(marker, mask);
 		// printImage(result);
 
-		for (int y = 0; y < height; y++)
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
 				assertEquals(expectedProfile[x], result.getValue(x, y), .01);
 			}
@@ -290,21 +290,21 @@ public class MorphologicalReconstruction2DHybridTest
 				{ BG, FG, FG, FG, FG, FG, FG, FG, FG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, FG, FG, FG, FG, FG, FG, FG, FG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG }, };
-		int height = data.length;
-		int width = data[0].length;
-		UInt8Array2D mask = UInt8Array2D.create(width, height);
-		for (int y = 0; y < height; y++)
+		int sizeY = data.length;
+		int sizeX = data[0].length;
+		UInt8Array2D mask = UInt8Array2D.create(sizeX, sizeY);
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
-				mask.setInt(x, y, data[y][x]);
+				mask.setInt(data[y][x], x, y);
 			}
 		}
 		mask = invert(mask);
 
-		UInt8Array2D marker = UInt8Array2D.create(width, height);
+		UInt8Array2D marker = UInt8Array2D.create(sizeX, sizeY);
 		marker.fillValue(255);
-		marker.setInt(2, 3, 0);
+		marker.setInt(0, 2, 3);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
 				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C4);
@@ -342,21 +342,21 @@ public class MorphologicalReconstruction2DHybridTest
 				{ BG, BG, BG, FG, FG, FG, FG, BG, BG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, BG, BG, FG, FG, FG, FG, BG, BG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG }, };
-		int height = data.length;
-		int width = data[0].length;
-		UInt8Array2D mask = UInt8Array2D.create(width, height);
-		for (int y = 0; y < height; y++)
+		int sizeY = data.length;
+		int sizeX = data[0].length;
+		UInt8Array2D mask = UInt8Array2D.create(sizeX, sizeY);
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
-				mask.setInt(x, y, data[y][x]);
+				mask.setInt(data[y][x], x, y);
 			}
 		}
 		mask = invert(mask);
 
-		UInt8Array2D marker = UInt8Array2D.create(width, height);
+		UInt8Array2D marker = UInt8Array2D.create(sizeX, sizeY);
 		marker.fillValue(255);
-		marker.setInt(2, 3, 0);
+		marker.setInt(0, 2, 3);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
 				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C8);
@@ -394,23 +394,23 @@ public class MorphologicalReconstruction2DHybridTest
 				{ BG, FG, FG, FG, FG, FG, FG, FG, FG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, FG, FG, FG, FG, FG, FG, FG, FG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG }, };
-		int height = data.length;
-		int width = data[0].length;
-		Float32Array2D mask = Float32Array2D.create(width, height);
-		for (int y = 0; y < height; y++)
+		int sizeY = data.length;
+		int sizeX = data[0].length;
+		Float32Array2D mask = Float32Array2D.create(sizeX, sizeY);
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
 				if (data[y][x] == FG)
-					mask.setValue(x, y, BG);
+					mask.setValue(BG, x, y);
 				else
-					mask.setValue(x, y, FG);
+					mask.setValue(FG, x, y);
 			}
 		}
 
-		Float32Array2D marker = Float32Array2D.create(width, height);
+		Float32Array2D marker = Float32Array2D.create(sizeX, sizeY);
 		marker.fillValue(FG);
-		marker.setValue(2, 3, BG);
+		marker.setValue(BG, 2, 3);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
 				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C4);
@@ -448,23 +448,23 @@ public class MorphologicalReconstruction2DHybridTest
 				{ BG, FG, FG, FG, FG, FG, FG, FG, FG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, FG, FG, FG, FG, FG, FG, FG, FG, BG, FG, FG, BG, FG, FG, BG },
 				{ BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG }, };
-		int height = data.length;
-		int width = data[0].length;
-		Float32Array2D mask = (Float32Array2D) Float32Array2D.create(width, height);
-		for (int y = 0; y < height; y++)
+		int sizeY = data.length;
+		int sizeX = data[0].length;
+		Float32Array2D mask = (Float32Array2D) Float32Array2D.create(sizeX, sizeY);
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
 				if (data[y][x] == FG)
-					mask.setValue(x, y, BG);
+					mask.setValue(BG, x, y);
 				else
-					mask.setValue(x, y, FG);
+					mask.setValue(FG, x, y);
 			}
 		}
 
-		Float32Array2D marker = Float32Array2D.create(width, height);
+		Float32Array2D marker = Float32Array2D.create(sizeX, sizeY);
 		marker.fillValue(FG);
-		marker.setValue(2, 3, BG);
+		marker.setValue(BG, 2, 3);
 
 		MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(
 				MorphologicalReconstruction.Type.BY_EROSION, Connectivity2D.C8);
@@ -491,7 +491,7 @@ public class MorphologicalReconstruction2DHybridTest
 		{
 			for (int x = 0; x < size0; x++)
 			{
-				result.setInt(x, y, 255 - array.getInt(x, y));
+				result.setInt(255 - array.getInt(x, y), x, y);
 			}
 		}
 		return result;
@@ -499,11 +499,11 @@ public class MorphologicalReconstruction2DHybridTest
 	
 	public void printImage(Array2D<?> image)
 	{
-		int width = image.size(0);
-		int height = image.size(1);
-		for (int y = 0; y < height; y++)
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
 				System.out.printf(" %3d", image.get(x, y));
 			}
@@ -513,11 +513,11 @@ public class MorphologicalReconstruction2DHybridTest
 
 	public void printImageFloat(ScalarArray2D<?> image)
 	{
-		int width = image.size(0);
-		int height = image.size(1);
-		for (int y = 0; y < height; y++)
+		int sizeX = image.size(0);
+		int sizeY = image.size(1);
+		for (int y = 0; y < sizeY; y++)
 		{
-			for (int x = 0; x < width; x++)
+			for (int x = 0; x < sizeX; x++)
 			{
 				System.out.printf(" %7.2f", image.getValue(x, y));
 			}

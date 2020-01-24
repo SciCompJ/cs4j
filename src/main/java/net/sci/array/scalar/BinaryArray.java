@@ -163,7 +163,7 @@ public interface BinaryArray extends IntArray<Binary>
      *            greater than zero, and to false otherwise.
      * 
      */
-    public default void setValue(int[] pos, double value)
+    public default void setValue(double value, int... pos)
     {
     	setBoolean(value > 0, pos);
     }
@@ -473,7 +473,7 @@ public interface BinaryArray extends IntArray<Binary>
         @Override
         public void set(int[] pos, Binary value)
         {
-            array.setValue(pos, value.getValue());
+            array.setValue(value.getValue(), pos);
         }
 
         @Override

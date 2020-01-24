@@ -172,17 +172,5 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         {
             array.set(new int[] { x, y }, value);
         }
-
-        @Override
-        public double getValue(int x, int y)
-        {
-            return array.getValue(new int[] { x, y });
-        }
-
-        @Override
-        public void setValue(int x, int y, double value)
-        {
-            array.setValue(new int[] { x, y }, value);
-        }
     }
 }

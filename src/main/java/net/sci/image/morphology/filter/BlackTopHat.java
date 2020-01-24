@@ -65,7 +65,7 @@ public class BlackTopHat extends MorphologicalFilterAlgo
             for (int x = 0; x < array.size(0); x++)
             {
                 double val = result.getValue(x, y) - array.getValue(x, y);
-                result.setValue(x, y, val);
+                result.setValue(val, x, y);
             }
         }
 
@@ -87,7 +87,7 @@ public class BlackTopHat extends MorphologicalFilterAlgo
                 for (int x = 0; x < array.size(0); x++)
                 {
                     double val = result.getValue(x, y, z) - array.getValue(x, y, z);
-                    result.setValue(x, y, z, val);
+                    result.setValue(val, x, y, z);
                 }
             }
         }

@@ -67,7 +67,7 @@ public class Gradient extends MorphologicalFilterAlgo
             for (int x = 0; x < array.size(0); x++)
             {
                 double val = result.getValue(x, y) - eroded.getValue(x, y);
-                result.setValue(x, y, val);
+                result.setValue(val, x, y);
             }
         }
         
@@ -90,7 +90,7 @@ public class Gradient extends MorphologicalFilterAlgo
                 for (int x = 0; x < array.size(0); x++)
                 {
                     double val = result.getValue(x, y, z) - eroded.getValue(x, y, z);
-                    result.setValue(x, y, z, val);
+                    result.setValue(val, x, y, z);
                 }
             }
         }
@@ -107,7 +107,7 @@ public class Gradient extends MorphologicalFilterAlgo
         for (int[] pos : result.positions())
         {
             double value = result.getValue(pos) - eroded.getValue(pos);
-            result.setValue(pos, value);
+            result.setValue(value, pos);
         }
         return result;
     }

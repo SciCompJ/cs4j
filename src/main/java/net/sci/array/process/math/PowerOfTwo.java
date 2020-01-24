@@ -35,9 +35,9 @@ public class PowerOfTwo implements ScalarArrayOperator
 	public void processScalar(ScalarArray<? extends Scalar> input,
 			ScalarArray<? extends Scalar> output)
 	{
-	    for (int[] pos : input.positions())
+	    for (int[] pos : output.positions())
 	    {
-	        output.setValue(pos, Math.pow(input.getValue(pos), 2));
+	        output.setValue(Math.pow(input.getValue(pos), 2), pos);
 	    }
 	}
 

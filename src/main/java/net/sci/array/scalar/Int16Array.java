@@ -68,7 +68,7 @@ public interface Int16Array extends IntArray<Int16>
 		Int16Array result = Int16Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setValue(pos, array.getValue(pos));
+	    	result.setValue(array.getValue(pos), pos);
 	    }
 		return result;
 	}
@@ -118,7 +118,7 @@ public interface Int16Array extends IntArray<Int16>
      * Sets the value at the specified position, by clamping the value between
      * min and max admissible values.
      */
-    public default void setValue(int[] pos, double value)
+	public default void setValue(double value, int... pos)
     {
     	setInt((int) value, pos);
     }
@@ -304,7 +304,7 @@ public interface Int16Array extends IntArray<Int16>
 		@Override
 		public void set(int[] pos, Int16 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(value.getValue(), pos);
 		}
 
         @Override
@@ -427,9 +427,9 @@ public interface Int16Array extends IntArray<Int16>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(int[] pos, double value)
+        public void setValue(double value, int... pos)
         {
-            array.setValue(coordsMapping.apply(pos), value);
+            array.setValue(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)

@@ -97,7 +97,7 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
             {
                 for (int x = 0; x < sizeX; x++)
                 {
-                    result.setValue(sizeX, y, z, resZ.getValue(x, y));
+                    result.setValue(resZ.getValue(x, y), x, y, z);
                 }
             }
         }
@@ -122,7 +122,7 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
             {
                 for (int x = 0; x < sizeX; x++)
                 {
-                    result.setValue(sizeX, y, z, resZ.getValue(x, y));
+                    result.setValue(resZ.getValue(x, y), x, y, z);
                 }
             }
         }

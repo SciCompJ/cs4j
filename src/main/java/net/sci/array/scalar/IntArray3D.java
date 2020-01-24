@@ -148,9 +148,9 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
         }
 
         @Override
-        public void setValue(int x, int y, int z, double value)
+        public void setValue(double value, int... pos)
         {
-            array.setValue(new int[] { x, y, z }, value);
+            array.setValue(value, pos);
         }
         
 
@@ -208,15 +208,15 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
             }
 
             @Override
-            public double getValue(int x, int y)
+            public double getValue(int... pos)
             {
-                return array.getValue(new int[] {x, y, this.sliceIndex});
+                return array.getValue(pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
-            public void setValue(int x, int y, double value)
+            public void setValue(double value, int... pos)
             {
-                array.setValue(new int[] {x, y, this.sliceIndex}, value);
+                array.setValue(value, pos[0], pos[1], this.sliceIndex);
             }
 
             @Override

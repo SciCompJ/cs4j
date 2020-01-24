@@ -38,15 +38,11 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 		// allocate memory for result
 		Float32Array result = Float32Array.create(array.size());
 		
-        // create array iterators
-        PositionIterator posIter = array.positionIterator();
-        
         // iterate over both arrays in parallel
         double[] values = new double[array.channelNumber()];
-        while(posIter.hasNext())
+        for(int[] pos : array.positions())
         {
-            int[] pos = posIter.next();
-            result.setValue(pos, norm(array.getValues(pos, values)));
+            result.setValue(norm(array.getValues(pos, values)), pos);
         }
 
 		return result;
@@ -100,15 +96,11 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
         // allocate memory for result
         Float32Array result = Float32Array.create(size());
         
-        // create array iterators
-        PositionIterator posIter = this.positionIterator();
-        
         // iterate over both arrays in parallel
         double[] values = new double[channelNumber()];
-        while(posIter.hasNext())
+        for (int[] pos : this.positions())
         {
-            int[] pos = posIter.next();
-            result.setValue(pos, norm(getValues(pos, values)));
+            result.setValue(norm(getValues(pos, values)), pos);
         }
         
         return result;

@@ -69,7 +69,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		UInt16Array result = UInt16Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setValue(pos, array.getValue(pos));
+	    	result.setValue(array.getValue(pos), pos);
 	    }
 		return result;
 	}
@@ -143,7 +143,7 @@ public interface UInt16Array extends IntArray<UInt16>
      * Sets the value at the specified position, by clamping the value between 0
      * and 2^16-1.
      */
-    public default void setValue(int[] pos, double value)
+    public default void setValue(double value, int... pos)
     {
     	setInt((int) UInt16.clamp(value), pos);
     }
@@ -305,7 +305,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		@Override
 		public void set(int[] pos, UInt16 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(value.getValue(), pos);
 		}
 
         @Override
@@ -428,9 +428,9 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(int[] pos, double value)
+        public void setValue(double value, int... pos)
         {
-            array.setValue(coordsMapping.apply(pos), value);
+            array.setValue(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)

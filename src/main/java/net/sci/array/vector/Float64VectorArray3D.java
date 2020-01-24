@@ -327,9 +327,9 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
-        public void setValue(int x, int y, int z, double value)
+        public void setValue(double value, int... pos)
         {
-            Float64VectorArray3D.this.setValue(x, y, z, channel, value);
+            Float64VectorArray3D.this.setValue(pos[0], pos[1], pos[2], channel, value);
         }
         
         class Iterator implements net.sci.array.scalar.Float64Array.Iterator

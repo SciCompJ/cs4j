@@ -54,15 +54,6 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	// =============================================================
 	// Specialization of IntArray2D interface
 
-	public int getInt(int x, int y)
-	{
-		return getShort(x, y) & 0x00FFFF; 
-	}
-
-	public void setInt(int x, int y, int value)
-	{
-		setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE), x, y);
-	}
 
 	// =============================================================
 	// Specialization of Array2D interface
@@ -89,9 +80,9 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	 * @see net.sci.array.data.Array2D#getValue(int, int)
 	 */
 	@Override
-	public double getValue(int x, int y)
+	public double getValue(int... pos)
 	{
-		return getShort(x, y) & 0x00FFFF;
+		return getShort(pos) & 0x00FFFF;
 	}
 
 	/**
@@ -101,9 +92,9 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	 * @see net.sci.array.Array2D#setValue(int, int, double)
 	 */
 	@Override
-	public void setValue(int x, int y, double value)
+	public void setValue(double value, int... pos)
 	{
-		setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE), x, y);
+		setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE), pos);
 	}
 
 	

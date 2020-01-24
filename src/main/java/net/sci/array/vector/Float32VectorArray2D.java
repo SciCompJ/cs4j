@@ -110,15 +110,15 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
         }
 
         @Override
-        public double getValue(int x, int y)
+        public double getValue(int... pos)
         {
-            return Float32VectorArray2D.this.getValue(x, y, channel);
+            return Float32VectorArray2D.this.getValue(pos[0], pos[1], channel);
         }
 
         @Override
-        public void setValue(int x, int y, double value)
+        public void setValue(double value, int... pos)
         {
-            Float32VectorArray2D.this.setValue(x, y, channel, value);
+            Float32VectorArray2D.this.setValue(pos[0], pos[1], channel, value);
         }
         
         class Iterator implements net.sci.array.scalar.Float32Array.Iterator

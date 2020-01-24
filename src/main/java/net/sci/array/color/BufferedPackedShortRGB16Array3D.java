@@ -51,14 +51,9 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
     public int[] getSamples(int x, int y, int z)
     {
         int[] values = new int[3];
-        int[] pos = new int[4];
-        pos[0] = x;
-        pos[1] = y;
-        pos[2] = z;
         for (int c = 0; c < 3; c++)
         {
-            pos[3] = c;
-            values[c] = this.buffer.getInt(pos);
+            values[c] = this.buffer.getInt(x, y, z, c);
         }
         return values;
     }
@@ -66,14 +61,9 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
     @Override
     public int[] getSamples(int x, int y, int z, int[] values)
     {
-        int[] pos = new int[4];
-        pos[0] = x;
-        pos[1] = y;
-        pos[2] = z;
         for (int c = 0; c < 3; c++)
         {
-            pos[3] = c;
-            values[c] = this.buffer.getInt(pos);
+            values[c] = this.buffer.getInt(x, y, z, c);
         }
         return values;
     }
@@ -81,29 +71,22 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
     @Override
     public void setSamples(int x, int y, int z, int[] intValues)
     {
-        int[] pos = new int[4];
-        pos[0] = x;
-        pos[1] = y;
-        pos[2] = z;
         for (int c = 0; c < 3; c++)
         {
-            pos[3] = c;
-            this.buffer.setInt(intValues[c], pos);
+            this.buffer.setInt(intValues[c], x, y, z, c);
         }
     }
 
     @Override
     public int getSample(int x, int y, int z, int c)
     {
-        int[] pos = new int[]{x, y, z, c};
-        return this.buffer.getInt(pos);
+        return this.buffer.getInt(x, y, z, c);
     }
 
     @Override
     public void setSample(int x, int y, int z, int c, int intValue)
     {
-        int[] pos = new int[]{x, y, z, c};
-        this.buffer.setInt(intValue, pos);
+        this.buffer.setInt(intValue, x, y, z, c);
     }
 
     
@@ -132,7 +115,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	{
 		for (int c = 0; c < 3; c++)
 		{
-			this.buffer.setValue(new int[]{x, y, z, c}, values[c]);
+			this.buffer.setValue(values[c], x, y, z, c);
 		}
 	}
 
@@ -142,7 +125,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	@Override
 	public double getValue(int x, int y, int z, int c)
 	{
-		return this.buffer.getValue(new int[]{x, y, z, c});
+		return this.buffer.getValue(x, y, z, c);
 	}
 
 	/* (non-Javadoc)
@@ -151,7 +134,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	@Override
 	public void setValue(int x, int y, int z, int c, double value)
 	{
-		this.buffer.setValue(new int[]{x, y, z, c}, value);
+		this.buffer.setValue(value, x, y, z, c);
 	}
 
 	
@@ -164,9 +147,9 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	@Override
 	public RGB16 get(int x, int y, int z)
 	{
-		int r = this.buffer.getInt(new int[]{x, y, z, 0});
-		int g = this.buffer.getInt(new int[]{x, y, z, 1});
-		int b = this.buffer.getInt(new int[]{x, y, z, 2});
+		int r = this.buffer.getInt(x, y, z, 0);
+		int g = this.buffer.getInt(x, y, z, 1);
+		int b = this.buffer.getInt(x, y, z, 2);
 		return new RGB16(r, g, b);
 	}
 

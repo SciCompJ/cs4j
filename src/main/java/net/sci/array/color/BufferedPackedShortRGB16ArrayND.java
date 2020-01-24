@@ -162,11 +162,9 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
     public RGB16ArrayND duplicate()
     {
         RGB16ArrayND result = new BufferedPackedShortRGB16ArrayND(this.sizes);
-        PositionIterator posIter = this.positionIterator();
         int[] samples = new int[3];
-        while(posIter.hasNext())
+        for (int[] pos : result.positions())
         {
-            int[] pos = posIter.next();
             result.setSamples(pos, this.getSamples(pos, samples));
         }
         return result;

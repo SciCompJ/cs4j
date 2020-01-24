@@ -22,7 +22,7 @@ public class ScalarArrayUInt8ViewTest
         {
             for (int x = 0; x < 100; x++)
             {
-                array.setValue(x,  y, x+y);
+                array.setValue(x+y, x, y);
             }
         }
         
@@ -44,7 +44,7 @@ public class ScalarArrayUInt8ViewTest
         {
             for (int x = 0; x < 100; x++)
             {
-                array.setValue(x,  y, x*5+y*2);
+                array.setValue(x*5+y*2, x, y);
             }
         }
         
@@ -65,7 +65,7 @@ public class ScalarArrayUInt8ViewTest
         {
             for (int x = 0; x < 100; x++)
             {
-                array.setValue(x,  y, x*5+y*2);
+                array.setValue(x*5+y*2, x, y);
             }
         }
         

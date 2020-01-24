@@ -328,14 +328,14 @@ public class Rotate3D90Test
     private UInt8Array3D createBasicTestArray()
     {
         UInt8Array3D array = UInt8Array3D.create(2, 2, 2);
-        array.setInt(0, 0, 0, 1);
-        array.setInt(1, 0, 0, 2);
-        array.setInt(0, 1, 0, 3);
-        array.setInt(1, 1, 0, 4);
-        array.setInt(0, 0, 1, 5);
-        array.setInt(1, 0, 1, 6);
-        array.setInt(0, 1, 1, 7);
-        array.setInt(1, 1, 1, 8);
+        array.setInt(1, 0, 0, 0);
+        array.setInt(2, 1, 0, 0);
+        array.setInt(3, 0, 1, 0);
+        array.setInt(4, 1, 1, 0);
+        array.setInt(5, 0, 0, 1);
+        array.setInt(6, 1, 0, 1);
+        array.setInt(7, 0, 1, 1);
+        array.setInt(8, 1, 1, 1);
         return array;
     }
     

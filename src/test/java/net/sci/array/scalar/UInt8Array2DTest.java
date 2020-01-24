@@ -25,7 +25,7 @@ public class UInt8Array2DTest
     	{
         	for (int x = 0; x < 6; x++)
         	{
-        		array.setValue(x, y, y * 10 + x);
+        		array.setValue(y * 10 + x, x, y);
         	}
     	}
     	for (int y = 1; y < 3; y++)

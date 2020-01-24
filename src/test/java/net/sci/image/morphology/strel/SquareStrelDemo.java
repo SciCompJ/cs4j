@@ -24,7 +24,7 @@ public class SquareStrelDemo
         
         // Creates a simple array with white dot in the middle
         UInt8Array2D array = UInt8Array2D.create(9, 9);
-        array.setValue(4, 4, 255);
+        array.setValue(255, 4, 4);
         
         // applies dilation on array
         ScalarArray2D<?> dilated = strel.dilation(array);

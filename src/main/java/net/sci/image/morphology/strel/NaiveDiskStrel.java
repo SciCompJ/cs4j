@@ -123,7 +123,7 @@ public class NaiveDiskStrel extends AlgoStub implements Strel2D
                     value = Math.max(value, array.getValue(x2, y2));
                 }
                 
-                res.setValue(x, y, value);
+                res.setValue(value, x, y);
             }
         }
         
@@ -159,7 +159,7 @@ public class NaiveDiskStrel extends AlgoStub implements Strel2D
                     value = Math.min(value, array.getValue(x2, y2));
                 }
                 
-                res.setValue(x, y, value);
+                res.setValue(value, x, y);
             }
         }
         

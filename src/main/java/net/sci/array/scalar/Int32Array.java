@@ -68,7 +68,7 @@ public interface Int32Array extends IntArray<Int32>
 		Int32Array result = Int32Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setValue(pos, array.getValue(pos));
+	    	result.setValue(array.getValue(pos), pos);
 	    }
 		return result;
 	}
@@ -90,7 +90,7 @@ public interface Int32Array extends IntArray<Int32>
      * Sets the value at the specified position, by clamping the value between 0
      * and 255.
      */
-    public default void setValue(int[] pos, double value)
+	public default void setValue(double value, int... pos)
     {
     	setInt((int) value, pos);
     }
@@ -224,7 +224,7 @@ public interface Int32Array extends IntArray<Int32>
 		@Override
 		public void setInt(int value, int... pos)
 		{
-			setValue(pos, value);
+			setValue(value, pos);
 		}
 
 		
@@ -258,7 +258,7 @@ public interface Int32Array extends IntArray<Int32>
 		@Override
 		public void set(int[] pos, Int32 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(value.getValue(), pos);
 		}
 
         @Override
@@ -363,9 +363,9 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(int[] pos, double value)
+        public void setValue(double value, int... pos)
         {
-            array.setValue(coordsMapping.apply(pos), value);
+            array.setValue(value, coordsMapping.apply(pos));
         }
 
         /* (non-Javadoc)

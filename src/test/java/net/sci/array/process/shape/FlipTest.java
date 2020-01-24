@@ -30,13 +30,7 @@ public class FlipTest
 		int sizeX = 6;
 		int sizeY = 4;
 		UInt8Array2D array = new BufferedUInt8Array2D(sizeX, sizeY);
-		for (int y = 0; y < sizeY; y++)
-		{
-			for (int x = 0; x < sizeX; x++)
-			{
-				array.setInt(x, y, x + y * 10);
-			}
-		}
+		array.populateValues((x,y) -> x + y * 10);
 		
 		Flip flipX = new Flip(0);
 		Array<?> resFlip= flipX.process(array);
@@ -57,13 +51,7 @@ public class FlipTest
 		int sizeX = 6;
 		int sizeY = 4;
 		UInt8Array2D array = new BufferedUInt8Array2D(sizeX, sizeY);
-		for (int y = 0; y < sizeY; y++)
-		{
-			for (int x = 0; x < sizeX; x++)
-			{
-				array.setInt(x, y, x + y * 10);
-			}
-		}
+        array.populateValues((x,y) -> x + y * 10);
 		
 		Flip flipX = new Flip(0);
 		UInt8Array2D resFlip = array.duplicate();
@@ -85,13 +73,7 @@ public class FlipTest
         int sizeX = 6;
         int sizeY = 4;
         UInt8Array2D array = new BufferedUInt8Array2D(sizeX, sizeY);
-        for (int y = 0; y < sizeY; y++)
-        {
-            for (int x = 0; x < sizeX; x++)
-            {
-                array.setInt(x, y, x + y * 10);
-            }
-        }
+        array.populateValues((x,y) -> x + y * 10);
         
         Flip flipY = new Flip(1);
         Array<?> resFlip = flipY.process(array);
@@ -120,7 +102,7 @@ public class FlipTest
             {
                 value += pos[d] * Math.pow(10, d);
             }
-            array.setValue(pos, value);
+            array.setValue(value, pos);
         }
         
         Flip flip = new Flip(0);
@@ -151,7 +133,7 @@ public class FlipTest
             {
                 value += pos[d] * Math.pow(10, d);
             }
-            array.setValue(pos, value);
+            array.setValue(value, pos);
         }
         
         Flip flip = new Flip(2);
@@ -176,13 +158,7 @@ public class FlipTest
 		int sizeX = 6;
 		int sizeY = 4;
 		UInt8Array2D array = new BufferedUInt8Array2D(sizeX, sizeY);
-		for (int y = 0; y < sizeY; y++)
-		{
-			for (int x = 0; x < sizeX; x++)
-			{
-				array.setInt(x, y, x + y * 10);
-			}
-		}
+        array.populateValues((x,y) -> x + y * 10);
 		
 		Flip flipY = new Flip(1);
 		UInt8Array2D resFlip = array.duplicate();
@@ -192,7 +168,7 @@ public class FlipTest
 		assertEquals(sizeX, resFlip.size(0));
 		assertEquals(sizeY, resFlip.size(1));
 		
-		assertEquals(35, resFlip.getValue(new int[]{5, 0}), .1);
+		assertEquals(35, resFlip.getValue(5, 0), .1);
 	}
 
     /**
@@ -204,13 +180,7 @@ public class FlipTest
         int sizeX = 6;
         int sizeY = 4;
         UInt8Array2D array = UInt8Array2D.create(sizeX, sizeY);
-        for (int y = 0; y < sizeY; y++)
-        {
-            for (int x = 0; x < sizeX; x++)
-            {
-                array.setInt(x, y, x + y * 10);
-            }
-        }
+        array.populateValues((x,y) -> x + y * 10);
         
         Flip flipX = new Flip(0);
         Array<?> resFlip = flipX.createView(array);

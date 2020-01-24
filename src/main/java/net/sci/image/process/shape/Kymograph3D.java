@@ -89,7 +89,7 @@ public class Kymograph3D implements ImageArrayOperator
             {
                 Point2D pos = curve.vertexPosition(iv);
                 double value = interp.evaluate(pos.getX(), pos.getY());
-                target.setValue(iv, z, value);
+                target.setValue(value, iv, z);
             }
         }
     }

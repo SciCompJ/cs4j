@@ -124,7 +124,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 			}
 			
 			// compute variance value
-			target.setValue(pos, variance(values));
+			target.setValue(variance(values), pos);
 		}
 	}
 	
@@ -184,7 +184,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 				}
 				
 				// compute variance value
-				target.setValue(x, y, variance(values));
+				target.setValue(variance(values), x, y);
 			}
 		}
 	}
@@ -254,7 +254,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 					}
 					
 					// compute variance value
-					target.setValue(x, y, z, variance(values));
+					target.setValue(variance(values), x, y, z);
 				}
 			}
 		}

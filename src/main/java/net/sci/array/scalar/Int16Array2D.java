@@ -79,9 +79,9 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	 * @see net.sci.array.data.Array2D#getValue(int, int)
 	 */
 	@Override
-	public double getValue(int x, int y)
+	public double getValue(int... pos)
 	{
-		return getShort(x, y);
+		return getShort(pos);
 	}
 
 	/**
@@ -91,9 +91,9 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	 * @see net.sci.array.Array2D#setValue(int, int, double)
 	 */
 	@Override
-	public void setValue(int x, int y, double value)
+	public void setValue(double value, int... pos)
 	{
-		setShort((short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE), x, y);
+		setShort((short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE), pos);
 	}
 
 
