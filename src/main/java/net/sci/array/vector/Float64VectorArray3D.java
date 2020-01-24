@@ -180,15 +180,15 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
-        public Float64Vector get(int x, int y)
+        public Float64Vector get(int... pos)
         {
-            return Float64VectorArray3D.this.get(x, y, sliceIndex);
+            return Float64VectorArray3D.this.get(pos[0], pos[1], sliceIndex);
         }
 
         @Override
-        public void set(int x, int y, Float64Vector value)
+        public void set(Float64Vector value, int... pos)
         {
-            Float64VectorArray3D.this.set(x, y, sliceIndex, value);
+            Float64VectorArray3D.this.set(value, pos[0], pos[1], sliceIndex);
         }
 
         @Override
@@ -260,7 +260,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
             @Override
             public void set(Float64Vector value)
             {
-                Float64VectorArray3D.this.set(indX, indY, sliceIndex, value);
+                Float64VectorArray3D.this.set(value, indX, indY, sliceIndex);
             }
 
             @Override

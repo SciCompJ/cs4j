@@ -112,14 +112,14 @@ public class BufferedUInt16ArrayND extends UInt16ArrayND
 	}
 
 	@Override
-	public UInt16 get(int[] pos)
+	public UInt16 get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return new UInt16(this.buffer[index]);	
 	}
 
 	@Override
-	public void set(int[] pos, UInt16 value)
+	public void set(UInt16 value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getShort();

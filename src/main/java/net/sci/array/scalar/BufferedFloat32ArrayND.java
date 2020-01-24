@@ -69,14 +69,14 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
     }
 
 	@Override
-	public Float32 get(int[] pos)
+	public Float32 get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return new Float32(this.buffer[index]);	
 	}
 
 	@Override
-	public void set(int[] pos, Float32 value)
+	public void set(Float32 value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = (float) value.getValue();

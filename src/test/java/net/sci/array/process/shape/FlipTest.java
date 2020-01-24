@@ -124,10 +124,9 @@ public class FlipTest
     {
         int[] dims = new int[] {5, 4, 3, 2};
         UInt16Array array = UInt16Array.create(dims);
-        Array.PositionIterator iter = array.positionIterator();
-        while(iter.hasNext())
+        
+        for (int[] pos : array.positions())
         {
-            int[] pos = iter.next();
             int value = 0;
             for (int d = 0; d < 4; d++)
             {
@@ -145,8 +144,8 @@ public class FlipTest
         assertEquals(dims[2], resFlip.size(2));
         assertEquals(dims[3], resFlip.size(3));
         
-        assertEquals(array.get(new int[] {4, 3, 2, 1}), resFlip.get(new int[] {4, 3, 0, 1}));
-        assertEquals(array.get(new int[] {2, 3, 2, 0}), resFlip.get(new int[] {2, 3, 0, 0}));
+        assertEquals(array.get(4, 3, 2, 1), resFlip.get(4, 3, 0, 1));
+        assertEquals(array.get(2, 3, 2, 0), resFlip.get(2, 3, 0, 0));
     }
     
 	/**
@@ -189,7 +188,7 @@ public class FlipTest
         assertEquals(sizeX, resFlip.size(0));
         assertEquals(sizeY, resFlip.size(1));
         
-        assertEquals(new UInt8(35), resFlip.get(new int[]{0, 3}));
+        assertEquals(new UInt8(35), resFlip.get(0, 3));
     }
 
     /**
@@ -207,7 +206,7 @@ public class FlipTest
             for (int x = 0; x < sizeX; x++)
             {
                 String str = digits[y] + digits[x];
-                array.set(new int[]{x, y}, str);
+                array.set(str, x, y);
             }
         }
         
@@ -218,8 +217,8 @@ public class FlipTest
         assertEquals(sizeX, resFlip.size(0));
         assertEquals(sizeY, resFlip.size(1));
         
-        assertEquals("DF", resFlip.get(new int[]{0, 3}));
-        assertEquals("DA", resFlip.get(new int[]{5, 3}));
+        assertEquals("DF", resFlip.get(0, 3));
+        assertEquals("DA", resFlip.get(5, 3));
     }
 
 }

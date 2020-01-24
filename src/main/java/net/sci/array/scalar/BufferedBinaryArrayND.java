@@ -91,14 +91,14 @@ public class BufferedBinaryArrayND extends BinaryArrayND
 	}
 
 	@Override
-	public Binary get(int[] pos)
+	public Binary get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return new Binary(this.buffer[index]);	
 	}
 
 	@Override
-	public void set(int[] pos, Binary value)
+	public void set(Binary value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getBoolean();

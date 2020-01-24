@@ -66,7 +66,7 @@ public class ScalarArrayThresholdView implements BinaryArray
 	 * @see net.sci.array.Array#get(int[])
 	 */
 	@Override
-	public Binary get(int[] pos)
+	public Binary get(int... pos)
 	{
 		return new Binary(this.array.getValue(pos) > this.value);
 	}
@@ -75,7 +75,7 @@ public class ScalarArrayThresholdView implements BinaryArray
 	 * @see net.sci.array.Array#set(int[], java.lang.Object)
 	 */
 	@Override
-	public void set(int[] pos, Binary value)
+	public void set(Binary value, int... pos)
 	{
 		throw new RuntimeException("Unauthorized operation exception");
 	}

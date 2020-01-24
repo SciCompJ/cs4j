@@ -118,50 +118,9 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Specialization of Array3D interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#get(int, int, int)
-	 */
-	@Override
-	public UInt8 get(int x, int y, int z)
-	{
-		return new UInt8(getByte(x, y, z));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
-	 */
-	public void set(int x, int y, int z, UInt8 value)
-	{
-		setByte(value.getByte(), x, y, z);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#getValue(int, int, int)
-	 */
-	@Override
-	public double getValue(int... pos)
-	{
-		return getByte(pos) & 0x00FF;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#setValue(int, int, int, double)
-	 */
-	@Override
-	public void setValue(double value, int... pos)
-	{
-		setByte((byte) value, pos);
-	}
-
-	
 	// =============================================================
 	// Specialization of Array interface
 	
-	@Override
-	public UInt8Array newInstance(int... dims)
-	{
-		return UInt8Array.create(dims);
-	}
 
     @Override
     public UInt8Array3D duplicate()
@@ -179,23 +138,6 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         }
         return res;
     }
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#get(int[])
-	 */
-	@Override
-	public UInt8 get(int[] pos)
-	{
-		return new UInt8(getByte(pos));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#set(int[], java.lang.Object)
-	 */
-	public void set(int[] pos, UInt8 value)
-	{
-		setByte(value.getByte(), pos);
-	}
 
 	
     private class SliceView extends UInt8Array2D

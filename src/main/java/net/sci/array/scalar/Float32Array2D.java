@@ -44,24 +44,6 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
 
 	// =============================================================
 	// Specialization of Array2D 
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#get(int, int)
-	 */
-	@Override
-	public Float32 get(int x, int y)
-	{
-		return new Float32((float) getValue(x, y));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
-	 */
-	@Override
-	public void set(int x, int y, Float32 value)
-	{
-		setValue(value.getValue(), x, y);
-	}
 	
 	// =============================================================
 	// Specialization of Array 

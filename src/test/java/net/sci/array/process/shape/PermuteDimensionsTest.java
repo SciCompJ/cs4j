@@ -70,7 +70,7 @@ public class PermuteDimensionsTest
         assertEquals(array.get(3, 2, 1), view.get(new int[]{1, 3, 2}));
         
         // modifies value in array and check equality
-        array.set(3, 2, 1, "Hello!");
+        array.set("Hello!", 3, 2, 1);
         assertEquals(array.get(3, 2, 1), view.get(new int[]{1, 3, 2}));
     }
 
@@ -85,7 +85,7 @@ public class PermuteDimensionsTest
                 for (int x = 0; x < 5; x++)
                 {
                     String str = digits[z] + digits[y] + digits[x];
-                    array.set(x, y, z, str);
+                    array.set(str, x, y, z);
                 }
             }
         }

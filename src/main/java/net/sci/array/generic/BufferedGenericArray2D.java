@@ -76,9 +76,9 @@ public class BufferedGenericArray2D<T> extends GenericArray2D<T>
      * @see net.sci.array.data.Array2D#get(int, int)
      */
     @Override
-    public T get(int x, int y)
+    public T get(int... pos)
     {
-        int index = x + y * this.size0;
+        int index = pos[0] + pos[1] * this.size0;
         return (T) this.buffer[index];
     }
 
@@ -86,9 +86,9 @@ public class BufferedGenericArray2D<T> extends GenericArray2D<T>
      * @see net.sci.array.data.Array2D#set(int, int, T)
      */
     @Override
-    public void set(int x, int y, T value)
+    public void set(T value, int... pos)
     {
-        int index = x + y * this.size0;
+        int index = pos[0] + pos[1] * this.size0;
         this.buffer[index] = value;
     }
 

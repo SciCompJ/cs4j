@@ -179,15 +179,15 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         }
 
         @Override
-        public Float32Vector get(int x, int y)
+        public Float32Vector get(int... pos)
         {
-            return Float32VectorArray3D.this.get(x, y, sliceIndex);
+            return Float32VectorArray3D.this.get(pos[0], pos[1], sliceIndex);
         }
 
         @Override
-        public void set(int x, int y, Float32Vector value)
+        public void set(Float32Vector value, int... pos)
         {
-            Float32VectorArray3D.this.set(x, y, sliceIndex, value);
+            Float32VectorArray3D.this.set(value, pos[0], pos[1], sliceIndex);
         }
 
         @Override
@@ -259,7 +259,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
             @Override
             public void set(Float32Vector value)
             {
-                Float32VectorArray3D.this.set(indX, indY, sliceIndex, value);
+                Float32VectorArray3D.this.set(value, indX, indY, sliceIndex);
             }
 
             @Override

@@ -37,7 +37,7 @@ public class Array2DTest
 			for (int x = 0; x < 5; x++)
 			{
 				int[] pos = new int[]{x, y};
-				array.set(pos, new UInt8(y * 10 + x));
+				array.set(new UInt8(y * 10 + x), pos);
 			}
 		}
 		
@@ -62,16 +62,17 @@ public class Array2DTest
 				for (int x = 0; x < 5; x++)
 				{
 					int[] pos = new int[]{x, y, z};
-					array.set(pos, new UInt8(z * 100 + y * 10 + x));
+					array.set(new UInt8(z * 100 + y * 10 + x), pos);
 				}
 			}
 		}
 		
-		Array2D<UInt8> res = Array2D.wrap(array);
+		Array3D<UInt8> res = Array3D.wrap(array);
 		assertEquals(5, res.size(0));
-		assertEquals(4, res.size(1));
+        assertEquals(4, res.size(1));
+        assertEquals(3, res.size(2));
 		
-		assertEquals(new UInt8(34), res.get(4, 3));
+		assertEquals(new UInt8(234), res.get(4, 3, 2));
 	}
 	
     /**

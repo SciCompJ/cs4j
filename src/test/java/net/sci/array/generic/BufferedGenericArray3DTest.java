@@ -48,7 +48,7 @@ public class BufferedGenericArray3DTest
     public final void testSetIntIntT()
     {
         Array3D<String> array = createStringArray();
-        array.set(0, 0, 0, "Hello");
+        array.set("Hello", 0, 0, 0);
         assertTrue("Hello".equals(array.get(0, 0, 0)));
     }
     
@@ -93,7 +93,7 @@ public class BufferedGenericArray3DTest
             {
                 for (int x = 0; x < 10; x++)
                 {
-                    array.set(x, y, z, digits[x] + digits[y] + digits[z]);
+                    array.set(digits[x] + digits[y] + digits[z], x, y, z);
                 }
             }
         }

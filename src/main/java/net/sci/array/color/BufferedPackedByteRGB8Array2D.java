@@ -144,8 +144,10 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public RGB8 get(int x, int y)
+	public RGB8 get(int... pos)
 	{
+        int x = pos[0];
+        int y = pos[1];
 		int r = this.buffer.getInt(x, y, 0);
 		int g = this.buffer.getInt(x, y, 1);
 		int b = this.buffer.getInt(x, y, 2);
@@ -156,8 +158,10 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, RGB8 rgb)
+	public void set(RGB8 rgb, int... pos)
 	{
+        int x = pos[0];
+        int y = pos[1];
 		this.buffer.setInt(rgb.getSample(0), x, y, 0);
 		this.buffer.setInt(rgb.getSample(1), x, y, 1);
 		this.buffer.setInt(rgb.getSample(2), x, y, 2);

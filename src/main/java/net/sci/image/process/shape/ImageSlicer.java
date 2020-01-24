@@ -91,7 +91,7 @@ public class ImageSlicer
                 pos[0] = x;
                 
                 // copy value of selected position
-                resArray.set(pos, array.get(srcPos));
+                resArray.set(array.get(srcPos), pos);
             }
         }
      

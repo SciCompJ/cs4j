@@ -114,15 +114,6 @@ public interface Int16Array extends IntArray<Int16>
 	// =============================================================
 	// Specialization of the Array interface
 
-	/**
-     * Sets the value at the specified position, by clamping the value between
-     * min and max admissible values.
-     */
-	public default void setValue(double value, int... pos)
-    {
-    	setInt((int) value, pos);
-    }
-
     @Override
 	public default Int16Array newInstance(int... dims)
 	{
@@ -136,13 +127,13 @@ public interface Int16Array extends IntArray<Int16>
 	}
 
     @Override
-    public default Int16 get(int[] pos)
+    public default Int16 get(int... pos)
     {
         return new Int16(getShort(pos)); 
     }
 
     @Override
-    public default void set(int[] pos, Int16 value)
+    public default void set(Int16 value, int... pos)
     {
         setShort(value.getShort(), pos);
     }
@@ -270,7 +261,7 @@ public interface Int16Array extends IntArray<Int16>
 		@Override
 		public void setShort(short value, int... pos)
 		{
-			set(pos, new Int16(value));
+			set(new Int16(value), pos);
 		}
 
 		
@@ -296,13 +287,13 @@ public interface Int16Array extends IntArray<Int16>
 		}
 
 		@Override
-		public Int16 get(int[] pos)
+		public Int16 get(int... pos)
 		{
 			return new Int16(Int16.clamp(array.getValue(pos)));
 		}
 
 		@Override
-		public void set(int[] pos, Int16 value)
+		public void set(Int16 value, int... pos)
 		{
 			array.setValue(value.getValue(), pos);
 		}

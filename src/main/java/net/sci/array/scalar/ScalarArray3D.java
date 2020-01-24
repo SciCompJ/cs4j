@@ -210,18 +210,18 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
          * return value from specified position 
          * */
         @Override
-        public T get(int x, int y, int z)
+        public T get(int... pos)
         {
-            return this.array.get(new int[]{x, y, z});
+            return this.array.get(pos);
         }
 
         /**
          * set value at specified position
          */
         @Override
-        public void set(int x, int y, int z, T value)
+        public void set(T value, int... pos)
         {
-            this.array.set(new int[]{x, y, z}, value);
+            this.array.set(value, pos);
         }
 
         // =============================================================
@@ -323,7 +323,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             @Override
             public void set(T value)
             {
-                Wrapper.this.set(x, y, z, value);
+                Wrapper.this.set(value, x, y, z);
             }
             
             @Override
@@ -375,15 +375,15 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
 
 
             @Override
-            public T get(int x, int y)
+            public T get(int... pos)
             {
-                return Wrapper.this.get(x, y, this.sliceIndex);
+                return Wrapper.this.get(pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
-            public void set(int x, int y, T value)
+            public void set(T value, int... pos)
             {
-                Wrapper.this.set(x, y, this.sliceIndex, value);            
+                Wrapper.this.set(value, pos[0], pos[1], this.sliceIndex);            
             }
 
             @Override
@@ -483,7 +483,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
                 @Override
                 public void set(T value)
                 {
-                    Wrapper.this.set(indX, indY, sliceIndex, value);
+                    Wrapper.this.set(value, indX, indY, sliceIndex);
                 }
             }
         }

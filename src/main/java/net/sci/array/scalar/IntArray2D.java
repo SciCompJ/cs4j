@@ -162,15 +162,15 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         }
         
         @Override
-        public T get(int x, int y)
+        public T get(int... pos)
         {
-            return array.get(new int[] { x, y });
+            return array.get(pos);
         }
 
         @Override
-        public void set(int x, int y, T value)
+        public void set(T value, int... pos)
         {
-            array.set(new int[] { x, y }, value);
+            array.set(value, pos);
         }
     }
 }

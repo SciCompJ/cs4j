@@ -300,17 +300,17 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
-        public T get(int x, int y)
+        public T get(int... pos)
         {
             // return value from specified position
-            return this.array.get(new int[]{x, y});
+            return this.array.get(pos);
         }
 
         @Override
-        public void set(int x, int y, T value)
+        public void set(T value, int... pos)
         {
             // set value at specified position
-            this.array.set(new int[]{x, y}, value);
+            this.array.set(value, pos);
         }
 
         @Override

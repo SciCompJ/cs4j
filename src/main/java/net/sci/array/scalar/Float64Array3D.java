@@ -86,25 +86,6 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
 	// =============================================================
 	// Specialization of Array3D 
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#get(int, int, int)
-	 */
-	@Override
-	public Float64 get(int x, int y, int z)
-	{
-		return new Float64(getValue(x, y, z));
-	}
-
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
-	 */
-	@Override
-	public void set(int x, int y, int z, Float64 value)
-	{
-		setValue(value.getValue(), x, y, z);
-	}
-
 	
 	// =============================================================
 	// Implementation of Array interface

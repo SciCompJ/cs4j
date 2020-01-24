@@ -178,7 +178,7 @@ public class FloodFill
 		}
 	
 		for (int x = x1; x <= x2; x++)
-			array.set(x, y, value);
+			array.set(value, x, y);
 	}
 
 

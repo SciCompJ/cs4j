@@ -145,8 +145,11 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	 * @see net.sci.array.data.Array3D#get(int, int, int)
 	 */
 	@Override
-	public RGB16 get(int x, int y, int z)
+	public RGB16 get(int... pos)
 	{
+        int x = pos[0];
+        int y = pos[1];
+        int z = pos[2];
 		int r = this.buffer.getInt(x, y, z, 0);
 		int g = this.buffer.getInt(x, y, z, 1);
 		int b = this.buffer.getInt(x, y, z, 2);
@@ -157,8 +160,11 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	 * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, int z, RGB16 rgb)
+	public void set(RGB16 rgb, int... pos)
 	{
+        int x = pos[0];
+        int y = pos[1];
+        int z = pos[2];
         this.buffer.setInt(rgb.getSample(0), x, y, z, 0);
         this.buffer.setInt(rgb.getSample(1), x, y, z, 1);
         this.buffer.setInt(rgb.getSample(2), x, y, z, 2);

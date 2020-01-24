@@ -110,14 +110,14 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	}
 
 	@Override
-	public UInt8 get(int[] pos)
+	public UInt8 get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return new UInt8(this.buffer[index]);	
 	}
 
 	@Override
-	public void set(int[] pos, UInt8 value)
+	public void set(UInt8 value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getByte();

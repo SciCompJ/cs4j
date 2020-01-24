@@ -108,13 +108,13 @@ public interface Int32Array extends IntArray<Int32>
 	}
 
     @Override
-    public default Int32 get(int[] pos)
+    public default Int32 get(int... pos)
     {
         return new Int32(getInt(pos)); 
     }
 
     @Override
-    public default void set(int[] pos, Int32 value)
+    public default void set(Int32 value, int... pos)
     {
         setInt(value.getInt(), pos);
     }
@@ -250,13 +250,13 @@ public interface Int32Array extends IntArray<Int32>
 		}
 
 		@Override
-		public Int32 get(int[] pos)
+		public Int32 get(int... pos)
 		{
 			return new Int32((int) array.getValue(pos));
 		}
 
 		@Override
-		public void set(int[] pos, Int32 value)
+		public void set(Int32 value, int... pos)
 		{
 			array.setValue(value.getValue(), pos);
 		}

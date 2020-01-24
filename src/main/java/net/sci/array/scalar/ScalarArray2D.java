@@ -169,17 +169,17 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 		}
 
 		@Override
-		public T get(int x, int y)
+		public T get(int... pos)
 		{
 			// return value from specified position
-			return this.array.get(new int[]{x, y});
+			return this.array.get(pos);
 		}
 
 		@Override
-		public void set(int x, int y, T value)
+		public void set(T value, int... pos)
 		{
 			// set value at specified position
-			this.array.set(new int[]{x, y}, value);
+			this.array.set(value, pos);
 		}
 
 		@Override
@@ -193,17 +193,12 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 			
 			ScalarArray2D<T> result = (ScalarArray2D <T>) tmp;
 			
-			int nd = this.array.dimensionality();
-			int[] pos = new int[nd];
-
 			// Fill new array with input array
 			for (int y = 0; y < this.size1; y++)
 			{
-				pos[1] = y;
 				for (int x = 0; x < this.size0; x++)
 				{
-					pos[0] = x;
-					result.set(x, y, this.array.get(pos));
+					result.setValue(this.array.getValue(x, y), x, y);
 				}
 			}
 

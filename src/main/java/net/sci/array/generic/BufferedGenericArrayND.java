@@ -88,14 +88,14 @@ public class BufferedGenericArrayND<T> extends GenericArrayND<T>
 
 	@Override
 	@SuppressWarnings("unchecked")
-    public T get(int[] pos)
+    public T get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return (T) this.buffer[index];	
 	}
 
 	@Override
-	public void set(int[] pos, T value)
+	public void set(T value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = (T) value;

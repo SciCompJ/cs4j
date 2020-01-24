@@ -32,9 +32,5 @@ public abstract class GenericArray2D<T> extends Array2D<T> implements GenericArr
     {
         return GenericArray.create(dims, iterator().next());
     }
-
-    public abstract T get(int x, int y);
-    
-    public abstract void set(int x, int y, T value);
     
 }

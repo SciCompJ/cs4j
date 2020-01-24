@@ -112,17 +112,17 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	 * @see net.sci.array.data.Array3D#get(int, int, int)
 	 */
 	@Override
-	public Binary get(int x, int y, int z)
+	public Binary get(int... pos)
 	{
-		return new Binary(getBoolean(x, y, z));
+		return new Binary(getBoolean(pos));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
 	 */
-	public void set(int x, int y, int z, Binary value)
+	public void set(Binary value, int... pos)
 	{
-		setBoolean(value.getBoolean(), x, y, z);
+		setBoolean(value.getBoolean(), pos);
 	}
 
 	/* (non-Javadoc)
@@ -264,7 +264,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
             @Override
             public void set(Binary value)
             {
-                Wrapper.this.set(x, y, z, value);
+                Wrapper.this.set(value, x, y, z);
             }
 
             @Override

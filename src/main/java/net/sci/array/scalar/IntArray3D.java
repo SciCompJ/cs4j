@@ -130,15 +130,15 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
         }
         
         @Override
-        public T get(int x, int y, int z)
+        public T get(int... pos)
         {
-            return array.get(new int[] { x, y, z });
+            return array.get(pos);
         }
 
         @Override
-        public void set(int x, int y, int z, T value)
+        public void set(T value, int... pos)
         {
-            array.set(new int[] { x, y, z }, value);
+            array.set(value, pos);
         }
 
         @Override
@@ -250,15 +250,15 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
             }
 
             @Override
-            public T get(int x, int y)
+            public T get(int... pos)
             {
-                return array.get(new int[] {x, y, this.sliceIndex});
+                return array.get(new int[] {pos[0], pos[1], this.sliceIndex});
             }
 
             @Override
-            public void set(int x, int y, T value)
+            public void set(T value, int... pos)
             {
-                array.set(new int[] {x, y, this.sliceIndex}, value);
+                array.set(value, new int[] {pos[0], pos[1], this.sliceIndex});
             }
 
             @Override
@@ -315,13 +315,13 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
                 @Override
                 public T get()
                 {
-                    return array.get(new int[] {indX, indY, sliceIndex});
+                    return array.get(indX, indY, sliceIndex);
                 }
             
                 @Override
                 public void set(T value)
                 {
-                    array.set(new int[] {indX, indY, sliceIndex}, value);
+                    array.set(value, indX, indY, sliceIndex);
                 }
             }
         }

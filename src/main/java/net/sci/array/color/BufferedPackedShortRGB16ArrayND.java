@@ -124,7 +124,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
      * @see net.sci.array.Array#get(int[])
      */
     @Override
-    public RGB16 get(int[] pos)
+    public RGB16 get(int... pos)
     {
         int nd = this.dimensionality();
         int[] pos2 = new int[nd+1];
@@ -142,7 +142,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
      * @see net.sci.array.Array#set(int[], java.lang.Object)
      */
     @Override
-    public void set(int[] pos, RGB16 rgb)
+    public void set(RGB16 rgb, int... pos)
     {
         int nd = this.dimensionality();
         int[] pos2 = new int[nd+1];
@@ -228,7 +228,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
         @Override
         public void set(RGB16 rgb16)
         {
-            BufferedPackedShortRGB16ArrayND.this.set(iter.get(), rgb16);
+            BufferedPackedShortRGB16ArrayND.this.set(rgb16, iter.get());
         }
     }
 }

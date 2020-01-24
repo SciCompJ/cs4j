@@ -62,7 +62,7 @@ public class BoxFilterTest
 		{
 			for (int x = 0; x < 6; x++)
 			{
-				array.set(x, y, new RGB8(x * 5, y * 5, 0));
+				array.set(new RGB8(x * 5, y * 5, 0), x, y);
 			}
 		}
 		

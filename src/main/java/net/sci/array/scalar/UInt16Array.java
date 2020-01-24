@@ -128,24 +128,37 @@ public interface UInt16Array extends IntArray<UInt16>
 	}
 
     @Override
-    public default UInt16 get(int[] pos)
+    public default UInt16 get(int... pos)
     {
         return new UInt16(getShort(pos)); 
     }
 
     @Override
-    public default void set(int[] pos, UInt16 value)
+    public default void set(UInt16 value, int... pos)
     {
         setShort(value.getShort(), pos);
     }
 
-	/**
+
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array2D#getValue(int, int)
+     */
+    @Override
+    public default double getValue(int... pos)
+    {
+        return getShort(pos) & 0x00FFFF;
+    }
+
+    /**
      * Sets the value at the specified position, by clamping the value between 0
      * and 2^16-1.
+     * 
+     * @see net.sci.array.Array2D#setValue(int, int, double)
      */
+    @Override
     public default void setValue(double value, int... pos)
     {
-    	setInt((int) UInt16.clamp(value), pos);
+        setInt(UInt16.clamp(value), pos);
     }
 
     @Override
@@ -271,7 +284,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		@Override
 		public void setShort(short value, int... pos)
 		{
-			set(pos, new UInt16(value));
+			set(new UInt16(value), pos);
 		}
 
 		
@@ -297,13 +310,13 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 
 		@Override
-		public UInt16 get(int[] pos)
+		public UInt16 get(int... pos)
 		{
 			return new UInt16(UInt16.clamp(array.getValue(pos)));
 		}
 
 		@Override
-		public void set(int[] pos, UInt16 value)
+		public void set(UInt16 value, int... pos)
 		{
 			array.setValue(value.getValue(), pos);
 		}

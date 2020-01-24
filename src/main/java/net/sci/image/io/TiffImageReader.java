@@ -714,7 +714,7 @@ public class TiffImageReader implements ImageReader
 					int r = buffer[index++] & 0x00FF;
 					int g = buffer[index++] & 0x00FF;
 					int b = buffer[index++] & 0x00FF;
-					rgb2d.set(x, y, new RGB8(r, g, b));
+					rgb2d.set(new RGB8(r, g, b), x, y);
 				}
 			}
 			return rgb2d;
@@ -734,7 +734,7 @@ public class TiffImageReader implements ImageReader
                     int r = convertBytesToShort(buffer[index++], buffer[index++], order) & 0x00FFFF;
                     int g = convertBytesToShort(buffer[index++], buffer[index++], order) & 0x00FFFF;
                     int b = convertBytesToShort(buffer[index++], buffer[index++], order) & 0x00FFFF;
-		            rgb2d.set(x, y, new RGB16(r, g, b));
+		            rgb2d.set(new RGB16(r, g, b), x, y);
 		        }
 		    }
 		    return rgb2d;

@@ -118,13 +118,13 @@ public interface Float32Array extends ScalarArray<Float32>
 	}
 
     @Override
-    public default Float32 get(int[] pos)
+    public default Float32 get(int... pos)
     {
         return new Float32(getFloat(pos)); 
     }
 
     @Override
-    public default void set(int[] pos, Float32 value)
+    public default void set(Float32 value, int... pos)
     {
         setFloat(value.getFloat(), pos);
     }
@@ -271,13 +271,13 @@ public interface Float32Array extends ScalarArray<Float32>
 
 
 		@Override
-		public Float32 get(int[] pos)
+		public Float32 get(int... pos)
 		{
 			return new Float32((float) array.getValue(pos));
 		}
 
 		@Override
-		public void set(int[] pos, Float32 value)
+		public void set(Float32 value, int... pos)
 		{
 			array.setValue(value.getValue(), pos);
 		}

@@ -128,15 +128,31 @@ public interface UInt8Array extends IntArray<UInt8>
 		setByte((byte) Math.min(Math.max(value, 0), 255), pos);
 	}
 
-	
-	/**
+
+    // =============================================================
+    // Specialization of the ScalarArray interface
+
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array2D#getValue(int, int)
+     */
+    @Override
+    public default double getValue(int... pos)
+    {
+        return getByte(pos) & 0x00FF;
+    }
+
+    /**
      * Sets the value at the specified position, by clamping the value between 0
      * and 255.
+     * 
+     * @see net.sci.array.Array2D#setValue(int, int, double)
      */
+    @Override
     public default void setValue(double value, int... pos)
     {
-    	setByte((byte) UInt8.clamp(value), pos);
+        setByte((byte) UInt8.clamp(value), pos);
     }
+
 
     // =============================================================
 	// Specialization of the Array interface
@@ -154,13 +170,13 @@ public interface UInt8Array extends IntArray<UInt8>
 	}
 
     @Override
-    public default UInt8 get(int[] pos)
+    public default UInt8 get(int... pos)
     {
         return new UInt8(getByte(pos)); 
     }
 
     @Override
-    public default void set(int[] pos, UInt8 value)
+    public default void set(UInt8 value, int... pos)
     {
         setByte(value.getByte(), pos);
     }
@@ -298,7 +314,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		@Override
 		public void setByte(byte value, int... pos)
 		{
-			set(pos, new UInt8(value & 0x00FF));
+			set(new UInt8(value & 0x00FF), pos);
 		}
 
 		
@@ -324,13 +340,13 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 
 		@Override
-		public UInt8 get(int[] pos)
+		public UInt8 get(int... pos)
 		{
 			return new UInt8(UInt8.clamp(array.getValue(pos)));
 		}
 
 		@Override
-		public void set(int[] pos, UInt8 value)
+		public void set(UInt8 value, int... pos)
 		{
 			array.setValue(value.getValue(), pos);
 		}

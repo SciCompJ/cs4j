@@ -92,14 +92,14 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 	}
 
 	@Override
-	public Int32 get(int[] pos)
+	public Int32 get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return new Int32(this.buffer[index]);	
 	}
 
 	@Override
-	public void set(int[] pos, Int32 value)
+	public void set(Int32 value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getInt();

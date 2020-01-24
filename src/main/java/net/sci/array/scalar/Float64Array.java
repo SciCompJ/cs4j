@@ -94,13 +94,13 @@ public interface Float64Array extends ScalarArray<Float64>
 	}
 
     @Override
-    public default Float64 get(int[] pos)
+    public default Float64 get(int... pos)
     {
         return new Float64(getValue(pos)); 
     }
 
     @Override
-    public default void set(int[] pos, Float64 value)
+    public default void set(Float64 value, int... pos)
     {
         setValue(value.getValue(), pos);
     }
@@ -240,13 +240,13 @@ public interface Float64Array extends ScalarArray<Float64>
 
 
 		@Override
-		public Float64 get(int[] pos)
+		public Float64 get(int... pos)
 		{
 			return new Float64(array.getValue(pos));
 		}
 
 		@Override
-		public void set(int[] pos, Float64 value)
+		public void set(Float64 value, int... pos)
 		{
 			array.setValue(value.getValue(), pos);
 		}

@@ -298,7 +298,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 	    ScalarArray<T> dup = newInstance(size());
 	    for (int[] pos : positions())
 	    {
-	        dup.set(pos, get(pos));
+	        dup.setValue(getValue(pos), pos);
 	    }
 	    return dup;
 	}
@@ -478,15 +478,15 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
         }
 
         @Override
-        public T get(int[] pos)
+        public T get(int... pos)
         {
             return array.get(coordsMapping.apply(pos));
         }
 
         @Override
-        public void set(int[] pos, T value)
+        public void set(T value, int... pos)
         {
-            array.set(coordsMapping.apply(pos), value);
+            array.set(value, coordsMapping.apply(pos));
         }
 
         @Override
@@ -536,7 +536,7 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
                 @Override
                 public void set(T value)
                 {
-                    View.this.set(iter.get(), value);
+                    View.this.set(value, iter.get());
                 }
             };
         }

@@ -38,25 +38,6 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 	// =============================================================
 	// Specialization of Array2D interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#get(int, int)
-	 */
-	@Override
-	public Int32 get(int x, int y)
-	{
-		return new Int32(getInt(x, y));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
-	 */
-	@Override
-	public void set(int x, int y, Int32 value)
-	{
-		setInt(value.getInt(), x, y);
-	}
-
-
 	// =============================================================
 	// Specialization of Array interface
 	
@@ -77,22 +58,4 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
         return res;
     }
 
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#get(int[])
-	 */
-	@Override
-	public Int32 get(int[] pos)
-	{
-		return new Int32(getInt(pos[0], pos[1]));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#set(int[], java.lang.Object)
-	 */
-	@Override
-	public void set(int[] pos, Int32 value)
-	{
-		setInt(value.getInt(), pos);
-	}
 }

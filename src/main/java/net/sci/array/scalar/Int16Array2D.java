@@ -57,44 +57,6 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	// =============================================================
 	// Specialization of Array2D interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#get(int, int)
-	 */
-	@Override
-	public Int16 get(int x, int y)
-	{
-		return new Int16(getShort(x, y));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
-	 */
-	@Override
-	public void set(int x, int y, Int16 value)
-	{
-		setShort(value.getShort(), x, y);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#getValue(int, int)
-	 */
-	@Override
-	public double getValue(int... pos)
-	{
-		return getShort(pos);
-	}
-
-	/**
-	 * Sets the value at the specified position, by clamping the value between 0
-	 * and 255.
-	 * 
-	 * @see net.sci.array.Array2D#setValue(int, int, double)
-	 */
-	@Override
-	public void setValue(double value, int... pos)
-	{
-		setShort((short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE), pos);
-	}
 
 
 	// =============================================================

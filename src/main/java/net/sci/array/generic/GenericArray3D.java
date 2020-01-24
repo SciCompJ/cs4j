@@ -32,10 +32,4 @@ public abstract class GenericArray3D<T> extends Array3D<T> implements GenericArr
     {
         return GenericArray.create(dims, iterator().next());
     }
-    
-
-    public abstract T get(int x, int y, int z);
-    
-    public abstract void set(int x, int y, int z, T value);
-    
 }

@@ -86,18 +86,18 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public Binary get(int x, int y)
+	public Binary get(int... pos)
 	{
-		return new Binary(getBoolean(x, y));
+		return new Binary(getBoolean(pos));
 	}
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(int x, int y, Binary value)
+	public void set(Binary value, int... pos)
 	{
-		setBoolean(value.getBoolean(), x, y);
+		setBoolean(value.getBoolean(), pos);
 	}
 
 	/* (non-Javadoc)

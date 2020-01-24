@@ -117,13 +117,13 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 	// Implementation of the Array interface
 
 	@Override
-	public RGB8 get(int[] pos)
+	public RGB8 get(int... pos)
 	{
 		return new RGB8(this.buffer.getInt(pos));
 	}
 
 	@Override
-	public void set(int[] pos, RGB8 rgb)
+	public void set(RGB8 rgb, int... pos)
 	{
 		this.buffer.setInt(rgb.getIntCode(), pos);
 	}

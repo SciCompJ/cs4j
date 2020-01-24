@@ -95,7 +95,7 @@ public class PermuteDimensions implements ArrayOperator
             {
                 newPos[d] = pos[dimOrder[d]];
             }
-            result.set(newPos, array.get(pos));
+            result.set(array.get(pos), newPos);
         }
         
         return result;

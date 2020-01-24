@@ -87,7 +87,7 @@ public class Downsampler implements ArrayOperator
 	            pos2[d] = pos[d] * k[d];
 	        }
 	        
-	        result.set(pos, array.get(pos2));
+	        result.set(array.get(pos2), pos);
 	    }
         
         return result;

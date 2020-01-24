@@ -177,6 +177,19 @@ public interface BinaryArray extends IntArray<Binary>
 		return BinaryArray.create(dims);
 	}
 
+    @Override
+    public default Binary get(int... pos)
+    {
+        return new Binary(getBoolean(pos));
+    }
+
+    @Override
+    public default void set(Binary value, int... pos)
+    {
+        setBoolean(value.getBoolean(), pos);
+    }
+
+
 	@Override
 	public default IntArray.Factory<Binary> getFactory()
 	{
@@ -421,13 +434,13 @@ public interface BinaryArray extends IntArray<Binary>
         @Override
         public boolean getBoolean(int... pos)
         {
-            return get(pos).getBoolean();
+            return array.getValue(pos) > 0;
         }
 
         @Override
         public void setBoolean(boolean value, int... pos)
         {
-            set(pos, new Binary(value));
+            array.setValue(value ? 1.0 : 0.0, pos);
         }
 
         
@@ -465,13 +478,13 @@ public interface BinaryArray extends IntArray<Binary>
         }
 
         @Override
-        public Binary get(int[] pos)
+        public Binary get(int... pos)
         {
             return new Binary(array.getValue(pos) > 0);
         }
 
         @Override
-        public void set(int[] pos, Binary value)
+        public void set(Binary value, int... pos)
         {
             array.setValue(value.getValue(), pos);
         }

@@ -84,50 +84,10 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
 	@Override
 	public abstract Int32Array3D duplicate();
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#get(int, int, int)
-	 */
-	@Override
-	public Int32 get(int x, int y, int z)
-	{
-		return new Int32(getInt(x, y, z));
-	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
-	 */
-	public void set(int x, int y, int z, Int32 value)
-	{
-		setInt(value.getInt(), x, y, z);
-	}
-
-	
 	// =============================================================
 	// Specialization of Array interface
-	
-	@Override
-	public Int32Array newInstance(int... dims)
-	{
-		return Int32Array.create(dims);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#get(int[])
-	 */
-	@Override
-	public Int32 get(int[] pos)
-	{
-		return new Int32(getInt(pos[0], pos[1], pos[2]));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#set(int[], java.lang.Object)
-	 */
-	public void set(int[] pos, Int32 value)
-	{
-		setInt(value.getInt(), pos);
-	}
-    
+	   
     private class SliceView extends Int32Array2D
     {
         int sliceIndex;

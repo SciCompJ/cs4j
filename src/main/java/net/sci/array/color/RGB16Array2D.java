@@ -74,7 +74,7 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RG
     @Override
     public void setSamples(int x, int y, int[] values)
     {
-        set(x, y, new RGB16(values));
+        set(new RGB16(values), x, y);
     }
 
     
@@ -100,7 +100,7 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RG
 		int r = UInt16.clamp(values[0]);
 		int g = UInt16.clamp(values[1]);
 		int b = UInt16.clamp(values[2]);
-		set(x, y, new RGB16(r, g, b));
+		set(new RGB16(r, g, b), x, y);
 	}
 
 

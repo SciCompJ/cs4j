@@ -36,7 +36,7 @@ public class VectorArrayRGB8ViewDemo
         RGB8Array2D rgb2d = RGB8Array2D.create(sizeX, sizeY);
         for (int[] pos : rgb2d.positions())
         {
-            rgb2d.set(pos, view.get(pos));
+            rgb2d.set(view.get(pos), pos);
         }
         
         Image img = new Image(rgb2d);

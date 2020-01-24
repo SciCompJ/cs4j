@@ -105,32 +105,10 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	@Override
 	public abstract Int16Array3D duplicate();
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#get(int, int, int)
-	 */
-	@Override
-	public Int16 get(int x, int y, int z)
-	{
-		return new Int16(getShort(x, y, z));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
-	 */
-	public void set(int x, int y, int z, Int16 value)
-	{
-		setShort(value.getShort(), x, y, z);
-	}
-
 	
 	// =============================================================
 	// Specialization of Array interface
 	
-	@Override
-	public Int16Array newInstance(int... dims)
-	{
-		return Int16Array.create(dims);
-	}
 	
     private class SliceView extends Int16Array2D
     {

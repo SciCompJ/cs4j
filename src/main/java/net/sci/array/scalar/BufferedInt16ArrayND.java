@@ -119,14 +119,14 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	}
 
 	@Override
-	public Int16 get(int[] pos)
+	public Int16 get(int... pos)
 	{
 		int index = subsToInd(pos);
 		return new Int16(this.buffer[index]);	
 	}
 
 	@Override
-	public void set(int[] pos, Int16 value)
+	public void set(Int16 value, int... pos)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getShort();

@@ -58,44 +58,6 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	// =============================================================
 	// Specialization of Array2D interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#get(int, int)
-	 */
-	@Override
-	public UInt16 get(int x, int y)
-	{
-		return new UInt16(getShort(x, y));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
-	 */
-	@Override
-	public void set(int x, int y, UInt16 value)
-	{
-		setShort(value.getShort(), x, y);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#getValue(int, int)
-	 */
-	@Override
-	public double getValue(int... pos)
-	{
-		return getShort(pos) & 0x00FFFF;
-	}
-
-	/**
-	 * Sets the value at the specified position, by clamping the value between 0
-	 * and 2^16-1.
-	 * 
-	 * @see net.sci.array.Array2D#setValue(int, int, double)
-	 */
-	@Override
-	public void setValue(double value, int... pos)
-	{
-		setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE), pos);
-	}
 
 	
 	// =============================================================
@@ -124,21 +86,4 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
         return res;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#get(int[])
-	 */
-	@Override
-	public UInt16 get(int[] pos)
-	{
-		return new UInt16(getShort(pos));
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#set(int[], java.lang.Object)
-	 */
-	@Override
-	public void set(int[] pos, UInt16 value)
-	{
-		setShort(value.getShort(), pos[0], pos[1]);
-	}
 }

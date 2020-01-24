@@ -108,7 +108,7 @@ public class ImageIOImageReader implements ImageReader
 					int r = raster.getSample(x, y, 0);
 					int g = raster.getSample(x, y, 1);
 					int b = raster.getSample(x, y, 2);
-					rgbArray.set(x, y, new RGB8(r, g, b));
+					rgbArray.set(new RGB8(r, g, b), x, y);
 				}
 			}
 			array = rgbArray;

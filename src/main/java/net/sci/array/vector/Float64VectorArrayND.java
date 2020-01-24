@@ -75,17 +75,17 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
         }
 
         @Override
-        public Float64 get(int[] pos)
+        public Float64 get(int... pos)
         {
             return Float64VectorArrayND.this.get(pos).get(channel);
         }
 
         @Override
-        public void set(int[] pos, Float64 value)
+        public void set(Float64 value, int... pos)
         {
             Float64Vector vect = Float64VectorArrayND.this.get(pos);
             vect.data[channel] = value.getValue();
-            Float64VectorArrayND.this.set(pos, vect);
+            Float64VectorArrayND.this.set(vect, pos);
         }
 
         @Override
@@ -99,7 +99,7 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
         {
             Float64Vector vect = Float64VectorArrayND.this.get(pos);
             vect.data[channel] = value;
-            Float64VectorArrayND.this.set(pos, vect);
+            Float64VectorArrayND.this.set(vect, pos);
         }
 
         @Override
@@ -173,7 +173,7 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
                 System.arraycopy(this.pos, 0, res, 0, nd);
                 Float64Vector vect = Float64VectorArrayND.this.get(pos);
                 vect.data[channel] = value;
-                Float64VectorArrayND.this.set(pos, vect);
+                Float64VectorArrayND.this.set(vect, pos);
             }
         }
 
