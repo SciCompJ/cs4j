@@ -237,7 +237,7 @@ public class TiffFileInfo
 	public int width; 
 	public int height; 
 	
-	public int nImages = 1;
+//	public int nImages = 1;
 
 	public SubFileType subFileType;
 	

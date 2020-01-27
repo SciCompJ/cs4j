@@ -9,6 +9,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.sci.array.Array;
@@ -19,6 +20,7 @@ import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array2D;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array2D;
+import net.sci.array.process.shape.Reshape;
 import net.sci.array.scalar.BufferedFloat32Array2D;
 import net.sci.array.scalar.BufferedFloat32Array3D;
 import net.sci.array.scalar.BufferedInt32Array2D;
@@ -191,11 +193,14 @@ public class TiffImageReader implements ImageReader
 
 		// Read File information of the first image stored in the file
 		TiffFileInfo info = this.fileInfoList.get(0);
-
-		if (info.pixelType == TiffFileInfo.PixelType.BITMAP)
-		{
-		    throw new RuntimeException("Reading Bitmap Tiff files not supported");
-		}
+        
+		// Attempts to read
+		// Check if the file was saved by ImageJ software
+		if (hasImageJDescription(info))
+        {
+		    return readImageJImage(info);
+        }
+		
 		
 		// Read image data
 		Array<?> data = readImageData();
@@ -216,15 +221,202 @@ public class TiffImageReader implements ImageReader
 			image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
 		}
 		
-		// Check if ImageJ Tags exist within image
-		processImageJTags(image, info);
-		
 		return image;
 	}
 
-	private Array<?> readImageData() throws IOException
+	private boolean hasImageJDescription(TiffFileInfo info)
+    {
+        // Get the  description tag, or null if not initialized
+        TiffTag tag = info.tags.get(270);
+        if (tag == null)
+        {
+            return false;
+        }
+    
+        // extract description string
+        String description = (String) tag.content;
+        if (!description.startsWith("ImageJ"))
+        {
+            return false;
+        }
+        
+        Map<String,String> imagejTokens = parseImageJTokens(description);
+        return imagejTokens.containsKey("slices");
+    }
+
+	/**
+     * If one of the Tiff Tags has a description beginning with "ImageJ", this
+     * method use a specific process to extract image data as saved by ImageJ.
+     * 
+     * @param info
+     *            The set of Tiff Tags of the image
+     * @param description
+     *            the content of the tag 270, as a String
+     * @return the Image stored within the file
+     * @throws IOException
+     *             if an I/O error occurred
+     */
+	private Image readImageJImage(TiffFileInfo info) throws IOException
 	{
-	    // Read image data
+	    // Get the  description tag, or null if not initialized
+	    TiffTag tag = info.tags.get(270);
+	    if (tag == null)
+	    {
+	        throw new IllegalArgumentException("Requires a description TiffTag with index 270");
+	    }
+	    
+	    // extract description string
+	    String description = (String) tag.content; 
+	    if (!description.startsWith("ImageJ"))
+	    {
+	        throw new IllegalArgumentException("Description tag must start with \"ImageJ\"");
+	    }
+	    
+	    System.out.println("import ImageJ Tiff Image");
+	    
+        // iterate over the different tokens stored in description
+	    System.out.println(description);
+
+	    // iterate over the different tokens stored in description and convert into a map
+	    Map<String,String> imagejTokens = parseImageJTokens(description);
+        
+	    int nImages = 1;
+        if (imagejTokens.containsKey("images"))
+        {
+            nImages = Integer.parseInt(imagejTokens.get("images"));
+            System.out.println(String.format("Should read %d images", nImages));
+        }
+
+        // determine the size along each of the five dimensions
+        int sizeZ = 1;
+        int sizeC = 1;
+        int sizeT = 1;
+        if (imagejTokens.containsKey("slices"))
+        {
+            sizeZ = Integer.parseInt(imagejTokens.get("slices"));
+        }
+        if (imagejTokens.containsKey("channels"))
+        {
+            sizeC = Integer.parseInt(imagejTokens.get("channels"));
+        }
+        if (imagejTokens.containsKey("frames"))
+        {
+            sizeT = Integer.parseInt(imagejTokens.get("frames"));
+        }
+        if (sizeZ * sizeC * sizeT != nImages)
+        {
+            throw new RuntimeException(String.format(
+                    "Number of images (%d) does not match image dimensions (%dx%dx%d)", nImages,
+                    sizeZ, sizeC, sizeT));
+        }
+        
+        boolean hyperstack = false;
+        if (imagejTokens.containsKey("hyperstack"))
+        {
+            hyperstack = Boolean.parseBoolean(imagejTokens.get("hyperstack"));
+        }
+        
+	    
+	    Image image;
+	    if (hyperstack)
+	    {
+	        System.out.println("read hyperstack data");
+	        // Read image data
+            Array<?> data = readImageData();
+            
+            // reshape to comply with input dimensions
+            int sizeX = info.width;
+            int sizeY = info.height;
+            int[] dims = new int[] {sizeX, sizeY, sizeZ, sizeC, sizeT};
+            data = new Reshape(dims).process(data);
+            
+            // Create new Image
+            image = new Image(data);
+	    }
+	    else
+	    {
+	        // Read image data
+	        Array<?> data = readImageData();
+	        
+	        // Create new Image
+	        image = new Image(data);
+	    }
+	    image.tiffTags = info.tags;
+	    
+	    // setup the file related to the image
+	    image.setFilePath(this.filePath);
+	    
+	    // Setup spatial calibration
+	    setupSpatialCalibration(image, info);
+	    
+	    // setup LUT
+	    if (info.lut != null)
+	    {
+	        image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
+	    }
+	    
+	    
+	    // get image calibration
+	    Calibration calib = image.getCalibration();
+	    
+        if (imagejTokens.containsKey("unit"))
+        {
+            String value = imagejTokens.get("unit");
+            for (ImageAxis axis : calib.getAxes())
+            {
+                if (axis instanceof NumericalAxis)
+                {
+                    ((NumericalAxis) axis).setUnitName(value);
+                }
+                
+            }
+        }
+        if (imagejTokens.containsKey("spacing") && image.getDimension() > 2)
+        {
+            String value = imagejTokens.get("spacing");
+            ImageAxis zAxis = calib.getAxis(2);
+            if (zAxis instanceof NumericalAxis)
+            {
+                ((NumericalAxis) zAxis).setSpacing(Double.parseDouble(value));
+            }
+        }
+	    
+	    return image;
+	}
+	
+	private Map<String,String> parseImageJTokens(String description)
+	{
+	       // iterate over the different tokens stored in description and convert into a map
+        Map<String,String> imagejTokens = new HashMap<>();
+        String[] items = description.split("\n");
+        for (String item : items)
+        {
+            // split key and value, separated by "="
+            String[] tokens = item.split("=");
+            if (tokens.length < 2)
+            {
+                continue;
+            }
+            imagejTokens.put(tokens[0], tokens[1]);
+        }
+        
+        return imagejTokens;
+	}
+	
+	/**
+     * The function called by the "readImage()" or by the "readImageJImage()"
+     * method, that reads the image data and returns either an instance of
+     * Array2D or Array3D.
+     * 
+     * @see #isStackImage()
+     * 
+     * @return an instance of Array (2D or 3D) containing image data.
+     * @throws IOException
+     *             if an I/O error occurred.
+     */
+    private Array<?> readImageData() throws IOException
+    {
+        // Read image data
         if (isStackImage())
         {
             // Read all images and return a 3D array
@@ -236,43 +428,43 @@ public class TiffImageReader implements ImageReader
             TiffFileInfo info0 = this.fileInfoList.get(0);
             return readImageData(info0);
         }
-	}
-	
+    }
+
     /**
-     * @return true if the list of FileInfo stored within this reader can be
-     *         seen as a 3D stack
-     */
-	private boolean isStackImage()
-	{
-		// single image is not stack by definition
-		if (fileInfoList.size() == 1)
-		{
-			return false;
-		}
-		
-		// Read File information of the first image stored in the file
-		TiffFileInfo info0 = fileInfoList.iterator().next();
-				
-		// If file contains several images, check if we should read a stack
-		// Condition: all images must have same size
-		// TODO: detect multi-channel images
-		for (TiffFileInfo info : fileInfoList)
-		{
-		    if (info.width != info0.width || info.height != info0.height)
-			{
-				return false;
-			}
-//		    if (!info.hasSameTags(info0))
-//		    {
-//		        return false;
-//		    }
-		}
-		
-		// if all items declare the same size, we can load a stack
-		return true;
-	}
-	
-	private void setupSpatialCalibration(Image image, TiffFileInfo info)
+         * @return true if the list of FileInfo stored within this reader can be
+         *         seen as a 3D stack
+         */
+    	private boolean isStackImage()
+    	{
+    		// single image is not stack by definition
+    		if (fileInfoList.size() == 1)
+    		{
+    			return false;
+    		}
+    		
+    		// Read File information of the first image stored in the file
+    		TiffFileInfo info0 = fileInfoList.iterator().next();
+    				
+    		// If file contains several images, check if we should read a stack
+    		// Condition: all images must have same size
+    		// TODO: detect multi-channel images
+    		for (TiffFileInfo info : fileInfoList)
+    		{
+    		    if (info.width != info0.width || info.height != info0.height)
+    			{
+    				return false;
+    			}
+    //		    if (!info.hasSameTags(info0))
+    //		    {
+    //		        return false;
+    //		    }
+    		}
+    		
+    		// if all items declare the same size, we can load a stack
+    		return true;
+    	}
+
+    private void setupSpatialCalibration(Image image, TiffFileInfo info)
 	{
 	    String unit = info.unit;
 	    int nd = image.getDimension();
@@ -285,60 +477,6 @@ public class TiffImageReader implements ImageReader
 	    }
 	    
 	    image.setCalibration(new Calibration(axes));
-	}
-	
-	private void processImageJTags(Image image, TiffFileInfo info)
-	{
-	    // Get the  description tag, or null if not initialized
-	    TiffTag tag = info.tags.get(270);
-	    if (tag == null)
-	    {
-	        return;
-	    }
-
-	    // extract description string
-	    String description = (String) tag.content; 
-	    if (!description.startsWith("ImageJ"))
-	    {
-	        return;
-	    }
-
-	    // get image calibration
-	    Calibration calib = image.getCalibration();
-	    
-	    // iterate over the different tokens stored in description
-	    String[] items = description.split("\n");
-	    for (String item : items)
-	    {
-	        // split key and value, separated by "="
-	        String[] tokens = item.split("=");
-	        if (tokens.length < 2)
-	        {
-	            continue;
-	        }
-            String key = tokens[0];
-            String valueString = tokens[1];
-            
-            if ("unit".compareToIgnoreCase(key) == 0)
-            {
-                for (ImageAxis axis : calib.getAxes())
-                {
-                    if (axis instanceof NumericalAxis)
-                    {
-                        ((NumericalAxis) axis).setUnitName(valueString);
-                    }
-                        
-                }
-            }
-            else if ("spacing".compareToIgnoreCase(key) == 0 && image.getDimension() > 2)
-            {
-                ImageAxis zAxis = calib.getAxis(2);
-                if (zAxis instanceof NumericalAxis)
-                {
-                    ((NumericalAxis) zAxis).setSpacing(Double.parseDouble(valueString));
-                }
-            }
-	    }
 	}
 	
     /**
@@ -499,7 +637,14 @@ public class TiffImageReader implements ImageReader
 		return value;
 	}
 
-
+	/**
+     * Reads all the image into this file as a single 3D array. All images must
+     * have the same dimensions.
+     * 
+     * @return an instance of Array3D containing all image data within the file.
+     * @throws IOException
+     *             if an error occurs.
+     */
 	public Array3D<?> readImageStack()
 			throws IOException
 	{
@@ -569,14 +714,12 @@ public class TiffImageReader implements ImageReader
 			throw new IOException("Could read only " + nRead
 					+ " bytes over the " + nBytes + " expected");
 		}
-
+        
 		// Transform raw buffer into interpreted buffer
 		switch (info0.pixelType) {
 		case GRAY8:
 		case COLOR8:
-		case BITMAP:
 			return new BufferedUInt8Array3D(sizeX, sizeY, sizeZ, buffer);
-			
 		case GRAY16_UNSIGNED:
 		case GRAY12_UNSIGNED:
 		{
@@ -590,6 +733,10 @@ public class TiffImageReader implements ImageReader
 		    float[] floatBuffer = convertToFloatArray(buffer, this.byteOrder);
 		    return new BufferedFloat32Array3D(sizeX, sizeY, sizeZ, floatBuffer);
 		}
+
+		case BITMAP:
+            throw new RuntimeException("Reading Bitmap Tiff files not supported");
+            
 		default:
 			throw new IOException("Can not read stack with data type "
 					+ info0.pixelType);
@@ -650,12 +797,14 @@ public class TiffImageReader implements ImageReader
 		switch (info.pixelType) {
 		case GRAY8:
 		case COLOR8:
-		case BITMAP:
 		{
 			// Case of data coded with 8 bits
 			return new BufferedUInt8Array2D(info.width, info.height, buffer);
 		}
-		
+
+		case BITMAP:
+            throw new RuntimeException("Reading Bitmap Tiff files not supported");
+        
 		case GRAY16_UNSIGNED:
 		case GRAY12_UNSIGNED:
 		{
@@ -686,7 +835,6 @@ public class TiffImageReader implements ImageReader
 			
 			return new BufferedInt32Array2D(info.width, info.height, intBuffer);
 		}	
-		
 		
 		case GRAY32_FLOAT:
 		{

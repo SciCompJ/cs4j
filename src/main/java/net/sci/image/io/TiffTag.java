@@ -54,9 +54,9 @@ public class TiffTag
 	// static methods
 
 	/**
-	 * Returns a set of know tags indexed by their code.
+	 * Returns a map of all known tags, indexed by their code.
 	 * 
-	 * @return
+	 * @return a map of known tags, using tag code as key and tag instance as values.
 	 */
 	static final Map<Integer, TiffTag> getAllTags()
 	{
