@@ -15,6 +15,14 @@ import net.sci.geom.geom3d.Vector3D;
 /**
  * A simple class for representing immutable triangular meshes in 3D.
  * 
+ * Specificities of this implementation:
+ * <ul>
+ * <li>All faces are triangles.</li>
+ * <li>Limited edition possibilities. Vertices and faces can be added, but not removed.</li>
+ * <li>No management of edges.</li>
+ * <li>Vertices and faces are indexed.</li>
+ * </ul>
+ * 
  * Vertices are stored in an ArrayList. Faces are stored in an ArrayList of integer triplets.
  * 
  * @author dlegland
@@ -251,6 +259,28 @@ public class SimpleTriMesh3D implements Mesh3D
     {
         return new Vertex(index);
     }
+    
+    /**
+	 * Returns the index of the specified vertex.
+	 * 
+	 * @param vertex
+	 *            a vertex belonging to this mesh.
+	 * @return the index of the vertex in the vertex array.
+	 * @throws RuntimeException if the vertex does not belong to the mesh.
+	 */
+    public int indexOf(Mesh3D.Vertex vertex)
+    {
+    	if (vertex instanceof Vertex)
+    	{
+    		Vertex vertex2 = (Vertex) vertex;
+            if (vertex2.mesh() == this)
+            {
+    			return vertex2.index;		
+            }
+    	}
+
+    	throw new RuntimeException("vertex does not belong to mesh");
+    }
 
     public Point3D vertexPosition(int index)
     {
@@ -387,6 +417,28 @@ public class SimpleTriMesh3D implements Mesh3D
     }
 
     /**
+	 * Returns the index of the specified vertex.
+	 * 
+	 * @param face
+	 *            a face belonging to this mesh.
+	 * @return the index of the face in the face array.
+	 * @throws RuntimeException if the face does not belong to the mesh.
+	 */
+    public int indexOf(Mesh3D.Face face)
+    {
+    	if (face instanceof Face)
+    	{
+    		Face face2 = (Face) face;
+            if (face2.mesh() == this)
+            {
+    			return face2.index;		
+            }
+    	}
+
+    	throw new RuntimeException("vertex does not belong to mesh");
+    }
+
+    /**
      * Cast to local Face class
      * 
      * @param face
@@ -513,19 +565,29 @@ public class SimpleTriMesh3D implements Mesh3D
             return normal.normalize();
         }
 
+        @Override
+        public Mesh3D mesh()
+        {
+        	return SimpleTriMesh3D.this;
+        }
+
        
         // ===================================================================
         // Override equals and hashcode to allow indexing
-        
-        @Override
+
+		@Override
         public boolean equals(Object obj)
         {
             if (!(obj instanceof Vertex))
             {
                 return false;
             }
-            
             Vertex that = (Vertex) obj;
+            
+            if (this.mesh() != that.mesh())
+            {
+            	return false;
+            }
             return this.index == that.index;
         }
         
@@ -586,6 +648,13 @@ public class SimpleTriMesh3D implements Mesh3D
             return Vector3D.crossProduct(v12, v13);
         }
         
+        @Override
+        public Mesh3D mesh()
+        {
+        	return SimpleTriMesh3D.this;
+        }
+
+
         // ===================================================================
         // Override equals and hashcode to allow indexing
         
@@ -599,6 +668,10 @@ public class SimpleTriMesh3D implements Mesh3D
             
             Face that = (Face) obj;
             if (this.index != that.index) return false;
+            if (this.mesh() != that.mesh())
+            {
+            	return false;
+            }
             return true;
         }
         

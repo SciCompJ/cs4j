@@ -4,6 +4,7 @@
 package net.sci.geom.mesh;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 
@@ -21,6 +22,39 @@ import net.sci.geom.mesh.Mesh3D.Vertex;
  */
 public class SimpleTriMesh3DTest
 {
+    @Test
+    public final void testIndoxOf_Vertex()
+    {
+        SimpleTriMesh3D mesh1 = createTetrahedron();
+        Mesh3D.Vertex v1 = mesh1.getVertex(0);
+        
+        int ind = mesh1.indexOf(v1);
+        
+        assertEquals(0, ind);
+    }
+    
+    @Test
+    public final void testIndoxOf_Vertex_DifferentMesh()
+    {
+        SimpleTriMesh3D mesh1 = createTetrahedron();
+        Mesh3D.Vertex v1 = mesh1.getVertex(0);
+        SimpleTriMesh3D mesh2 = createTetrahedron();
+        
+        boolean flag = false;
+        try
+        {
+        	@SuppressWarnings("unused")
+			int ind = mesh2.indexOf(v1);
+        }
+        catch(Exception ex)
+        {
+        	flag = true;
+        }
+        
+        assertTrue(flag);
+    }
+    
+	
     @Test
     public final void testVertices_Iterator_tetrahedron()
     {

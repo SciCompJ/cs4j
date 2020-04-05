@@ -628,6 +628,28 @@ public class DefaultTriMesh3D implements Mesh3D
         return new Face(index);
     }
     
+    /**
+	 * Returns the index of the specified face.
+	 * 
+	 * @param face
+	 *            a face belonging to this mesh.
+	 * @return the index of the face in the face array.
+	 * @throws RuntimeException if the face does not belong to the mesh.
+	 */
+    public int indexOf(Mesh3D.Face face)
+    {
+    	if (face instanceof Face)
+    	{
+    		Face face2 = (Face) face;
+            if (face2.mesh() == this)
+            {
+    			return face2.index;		
+            }
+    	}
+
+    	throw new RuntimeException("face does not belong to mesh");
+    }
+
     @Override
     public void removeFace(Mesh3D.Face face)
     {
@@ -762,6 +784,13 @@ public class DefaultTriMesh3D implements Mesh3D
             return normal.normalize();
         }
         
+        @Override
+        public Mesh3D mesh()
+        {
+        	return DefaultTriMesh3D.this;
+        }
+
+
         // ===================================================================
         // Override equals and hashcode to allow indexing
         
@@ -774,7 +803,9 @@ public class DefaultTriMesh3D implements Mesh3D
             }
             
             Vertex that = (Vertex) obj;
-            return this.index == that.index;
+            if (this.index != that.index) return false;
+            if (this.mesh() != that.mesh()) return false;
+            return true;
         }
         
         @Override
@@ -834,6 +865,13 @@ public class DefaultTriMesh3D implements Mesh3D
             return Vector3D.crossProduct(v12, v13);
         }
         
+        @Override
+        public Mesh3D mesh()
+        {
+        	return DefaultTriMesh3D.this;
+        }
+
+
         // ===================================================================
         // Override equals and hashcode to allow indexing
         
@@ -847,6 +885,7 @@ public class DefaultTriMesh3D implements Mesh3D
             
             Face that = (Face) obj;
             if (this.index != that.index) return false;
+            if (this.mesh() != that.mesh()) return false;
             return true;
         }
         
@@ -935,6 +974,13 @@ public class DefaultTriMesh3D implements Mesh3D
             return this.iv2 - that.iv2;
         }
 
+        @Override
+        public Mesh3D mesh()
+        {
+        	return DefaultTriMesh3D.this;
+        }
+
+
         // ===================================================================
         // Override equals and hashcode to allow indexing
         
@@ -949,6 +995,7 @@ public class DefaultTriMesh3D implements Mesh3D
             Edge that = (Edge) obj;
             if (this.iv1 != that.iv1) return false;
             if (this.iv2 != that.iv2) return false;
+            if (this.mesh() != that.mesh()) return false;
             return true;
         }
         
