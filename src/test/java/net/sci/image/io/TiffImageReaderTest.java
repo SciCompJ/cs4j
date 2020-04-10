@@ -247,4 +247,24 @@ public class TiffImageReaderTest
         assertEquals(51, array.size(4));
     }
 
+    // The following code depends on local configuration. It is kept as comment intentionally.
+//    /**
+//     * Read a Tiff file larger than 4GB as saved by ImageJ.
+//     * 
+//     * @throws IOException
+//     */
+//    @Test
+//    public void testReadImage_3D_MoreThan4GB() throws IOException
+//    {
+//        File file = new File("D:/images/wheat/perigrain/Psiche_2018/LR/gray8/images/L_200_1.tif");
+//        System.out.println(file.exists());
+//        
+//        TiffImageReader reader = new TiffImageReader(file.getAbsolutePath());
+//        Image image = reader.readImage();
+//        
+//        Array<?> array = image.getData();
+//        assertEquals(3, array.dimensionality());
+//    }
+
+
 }

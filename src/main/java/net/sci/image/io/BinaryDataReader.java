@@ -72,36 +72,38 @@ public class BinaryDataReader implements Closeable
 	// Read arrays
     
 	/**
-	 * Reads up to len bytes of data from this file into an array of bytes.
-	 * 
-	 * @param b
-	 *            the buffer into which the data is read.
-	 * @param off
-	 *            the start offset in array b at which the data is written.
-	 * @param len
-	 *            the start offset in array b at which the data is written.
-	 * @return the total number of bytes read into the buffer, or -1 if there is
-	 *         no more data because the end of the file has been reached.
-	 * @throws IOException
-	 *             If the first byte cannot be read for any reason other than
-	 *             end of file
-	 */
+     * Reads up to <code>len</code> bytes of data from this reader into an array
+     * of bytes.
+     * 
+     * @param b
+     *            the buffer into which the data is read.
+     * @param off
+     *            the start offset in array b at which the data is written.
+     * @param len
+     *            the start offset in array b at which the data is written.
+     * @return the total number of bytes read into the buffer, or -1 if there is
+     *         no more data because the end of the file has been reached.
+     * @throws IOException
+     *             If the first byte cannot be read for any reason other than
+     *             end of file
+     */
 	public int readByteArray(byte[] b, int off, int len) throws IOException
 	{
 		return this.inputStream.read(b, off, len);
 	}
 
 	/**
-	 * Reads up to b.length bytes of data from this file into an array of bytes.
-	 * 
-	 * @param buffer
-	 *            the buffer into which the data is read.
-	 * @return the total number of bytes read into the buffer, or -1 if there is
-	 *         no more data because the end of this file has been reached.
-	 * @throws IOException
-	 *             If the first byte cannot be read for any reason other than
-	 *             end of file
-	 */
+     * Reads up to <code>buffer.length</code> bytes of data from this reader
+     * into an array of bytes.
+     * 
+     * @param buffer
+     *            the buffer into which the data is read.
+     * @return the total number of bytes read into the buffer, or -1 if there is
+     *         no more data because the end of this file has been reached.
+     * @throws IOException
+     *             If the first byte cannot be read for any reason other than
+     *             end of file
+     */
 	public int readByteArray(byte[] buffer) throws IOException
 	{
 		return this.inputStream.read(buffer);

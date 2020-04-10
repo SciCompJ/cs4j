@@ -288,6 +288,8 @@ public class TiffImageReader implements ImageReader
         }
 
         // determine the size along each of the five dimensions
+        int sizeX = info.width;
+        int sizeY = info.height;
         int sizeZ = 1;
         int sizeC = 1;
         int sizeT = 1;
@@ -310,25 +312,64 @@ public class TiffImageReader implements ImageReader
                     sizeZ, sizeC, sizeT));
         }
         
-        boolean hyperstack = false;
-        if (imagejTokens.containsKey("hyperstack"))
-        {
-            hyperstack = Boolean.parseBoolean(imagejTokens.get("hyperstack"));
-        }
+//        boolean hyperstack = false;
+//        if (imagejTokens.containsKey("hyperstack"))
+//        {
+//            hyperstack = Boolean.parseBoolean(imagejTokens.get("hyperstack"));
+//        }
         
-	    
 	    Image image;
-	    if (hyperstack)
+	    if (nImages > 1)
 	    {
 	        System.out.println("read hyperstack data");
-	        // Read image data
-            Array<?> data = readImageData();
+            
+            @SuppressWarnings("resource")
+            ImageBinaryDataReader imageReader = new ImageBinaryDataReader(this.dataReader.inputStream, this.dataReader.byteOrder);
+            imageReader.seek(info.stripOffsets[0]);
+            
+            Array<?> data;
+            switch(info.pixelType)
+            {
+            case GRAY8:
+            case COLOR8:
+                data = imageReader.readUInt8Array3D(sizeX, sizeY, nImages);
+                break;
+
+            case BITMAP:
+                throw new RuntimeException("Reading Bitmap Tiff files not supported");
+            
+            case GRAY16_UNSIGNED:
+            case GRAY12_UNSIGNED:
+                data = imageReader.readUInt16Array3D(sizeX, sizeY, nImages);
+                break;
+                
+            case GRAY32_INT:
+                data = imageReader.readInt32Array3D(sizeX, sizeY, nImages);
+                break;
+            
+            case GRAY32_FLOAT:
+                data = imageReader.readFloat32Array3D(sizeX, sizeY, nImages);
+                break;
+
+            case RGB:
+            case BGR:
+            case ARGB:
+            case ABGR:
+            case BARG:
+            case RGB_PLANAR:
+                
+            case RGB48:
+
+            default:
+                throw new IOException("Can not read stack with data type " + info.pixelType);
+            }
             
             // reshape to comply with input dimensions
-            int sizeX = info.width;
-            int sizeY = info.height;
-            int[] dims = new int[] {sizeX, sizeY, sizeZ, sizeC, sizeT};
-            data = new Reshape(dims).process(data);
+            if (sizeC > 1 || sizeT > 1)
+            {
+                int[] dims = new int[] {sizeX, sizeY, sizeZ, sizeC, sizeT};
+                data = new Reshape(dims).process(data);
+            }
             
             // Create new Image
             image = new Image(data);
@@ -380,7 +421,7 @@ public class TiffImageReader implements ImageReader
                 ((NumericalAxis) zAxis).setSpacing(Double.parseDouble(value));
             }
         }
-	    
+        
 	    return image;
 	}
 	
@@ -744,9 +785,9 @@ public class TiffImageReader implements ImageReader
 	}
 	
     /**
-     * Reads the image data for the specified index.
+     * Reads the image data for the specified IFD (Image File Directory) index.
      * 
-     * @param idnex
+     * @param index
      *            the index of image data to read
      * @return the data array corresponding to the specified index
      * @throws IOException
@@ -761,7 +802,8 @@ public class TiffImageReader implements ImageReader
                     + this.fileInfoList.size() + ")");
         }
         
-        return readImageData(this.fileInfoList.get(index));
+        TiffFileInfo info = this.fileInfoList.get(index);
+        return readImageData(info);
     }
     
 	/**
@@ -904,6 +946,152 @@ public class TiffImageReader implements ImageReader
 			throw new IOException("Can not process file info of type " + info.pixelType);
 		}
 	}
+	
+//	/**
+//     * Reads the next slice / image from the reader, by specifying image type
+//     * and dimension.
+//     * 
+//     * @param pixelType
+//     *            the type of the data.
+//     * @param sizeX
+//     *            the size of the image in the X direction.
+//     * @param sizeY
+//     *            the size of the image in the Y direction.
+//     * @return a new instance of Array whose type depends on specified pixel
+//     *         type.
+//	 * @throws IOException if an I/O error occurred.
+//     */
+//	private Array<?> readNextData2D(TiffFileInfo.PixelType pixelType, int sizeX, int sizeY) throws IOException
+//	{
+//        // Information necessary to read image data
+//        int pixelsPerPlane = sizeX * sizeY;
+//        int bytesPerPlane  = pixelsPerPlane * pixelType.getByteNumber();
+//        
+//        // switch depending on pixel type
+//        switch (pixelType)
+//        {
+//        case GRAY8:
+//        case COLOR8:
+//        {
+//            // Case of data coded with 8 bits
+//            byte[] buffer = new byte[bytesPerPlane];
+//            int nRead = dataReader.readByteArray(buffer, 0, pixelsPerPlane);
+//            
+//            // Check the whole buffer has been read
+//            if (nRead != pixelsPerPlane)
+//            {
+//                throw new IOException("Could read only " + nRead
+//                        + " pixels over the " + pixelsPerPlane + " expected");
+//            }
+//            return new BufferedUInt8Array2D(sizeX, sizeY, buffer);
+//        }
+//
+//        case BITMAP:
+//            throw new RuntimeException("Reading Bitmap Tiff files not supported");
+//        
+//        case GRAY16_UNSIGNED:
+//        case GRAY12_UNSIGNED:
+//        {
+//            // Store data as short array
+//            short[] buffer = new short[bytesPerPlane];
+//            int nRead = dataReader.readShortArray(buffer, 0, pixelsPerPlane);
+//            
+//            // Check the whole buffer has been read
+//            if (nRead != pixelsPerPlane)
+//            {
+//                throw new IOException("Could read only " + nRead
+//                        + " pixels over the " + pixelsPerPlane + " expected");
+//            }
+//            return new BufferedUInt16Array2D(sizeX, sizeY, buffer);
+//        }   
+//
+//        default:
+//            throw new RuntimeException("Unable to process data with pixel type: " + pixelType);
+//        }
+//	}
+
+//    /**
+//     * Reads the next slice / image from the reader, by specifying image
+//     * dimension.
+//     * 
+//     * @param sizeX
+//     *            the size of the image in the X direction.
+//     * @param sizeY
+//     *            the size of the image in the Y direction.
+//     * @return a new instance of UInt8Array2D
+//     * @throws IOException
+//     *             if an I/O error occurred.
+//     */
+//    private UInt8Array2D readUInt8Array2D(int sizeX, int sizeY) throws IOException
+//    {
+//        // Information necessary to read image data
+//        int pixelsPerPlane = sizeX * sizeY;
+//        
+//        // Case of data coded with 8 bits
+//        byte[] buffer = new byte[pixelsPerPlane];
+//        int nRead = dataReader.readByteArray(buffer, 0, pixelsPerPlane);
+//        
+//        // Check the whole buffer has been read
+//        if (nRead != pixelsPerPlane)
+//        {
+//            throw new IOException("Could read only " + nRead
+//                    + " pixels over the " + pixelsPerPlane + " expected");
+//        }
+//        return new BufferedUInt8Array2D(sizeX, sizeY, buffer);
+//    }
+//
+//    /**
+//     * Reads the next slice / image from the reader, by specifying image
+//     * dimension.
+//     * 
+//     * @param sizeX
+//     *            the size of the image in the X direction.
+//     * @param sizeY
+//     *            the size of the image in the Y direction.
+//     * @return a new instance of UInt16Array2D
+//     * @throws IOException
+//     *             if an I/O error occurred.
+//     */
+//    private UInt16Array2D readUInt16Array2D(int sizeX, int sizeY) throws IOException
+//    {
+//        // Information necessary to read image data
+//        int pixelsPerPlane = sizeX * sizeY;
+//        
+//        // Case of data coded with 8 bits
+//        byte[] buffer = new byte[pixelsPerPlane];
+//        int nRead = dataReader.readByteArray(buffer, 0, pixelsPerPlane);
+//        
+//        // Check the whole buffer has been read
+//        if (nRead != pixelsPerPlane)
+//        {
+//            throw new IOException("Could read only " + nRead
+//                    + " pixels over the " + pixelsPerPlane + " expected");
+//        }
+//        return new BufferedUInt8Array2D(sizeX, sizeY, buffer);
+//    }
+//        case BITMAP:
+//            throw new RuntimeException("Reading Bitmap Tiff files not supported");
+//        
+//        case GRAY16_UNSIGNED:
+//        case GRAY12_UNSIGNED:
+//        {
+//            // Store data as short array
+//            short[] buffer = new short[bytesPerPlane];
+//            int nRead = dataReader.readShortArray(buffer, 0, pixelsPerPlane);
+//            
+//            // Check the whole buffer has been read
+//            if (nRead != pixelsPerPlane)
+//            {
+//                throw new IOException("Could read only " + nRead
+//                        + " pixels over the " + pixelsPerPlane + " expected");
+//            }
+//            return new BufferedUInt16Array2D(sizeX, sizeY, buffer);
+//        }   
+//
+//        default:
+//            throw new RuntimeException("Unable to process data with pixel type: " + pixelType);
+//        }
+//    }
 
     private final static short[] convertToShortArray(byte[] byteBuffer, ByteOrder order)
     {
@@ -951,7 +1139,7 @@ public class TiffImageReader implements ImageReader
         return floatBuffer;
     }
 
-	private static short convertBytesToShort(byte b1, byte b2, ByteOrder order)
+	private static final short convertBytesToShort(byte b1, byte b2, ByteOrder order)
 	{
         int v1 = b1 & 0x00FF;
         int v2 = b2 & 0x00FF;

@@ -43,7 +43,7 @@ import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
 
 /**
- * Read data with various formats taking into account endianness.
+ * Read image data with various formats taking into account endianness.
  * 
  * @see java.io.DataInput
  * 
