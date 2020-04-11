@@ -11,7 +11,7 @@ import org.junit.runners.Suite;
     MetaImageReaderTest.class,
     PgmImageReaderTest.class,
     RawImageReaderTest.class,
-	TiffImageReaderTest.class,
+    TiffImageReaderTest.class,
 	})
 public class AllTests {
   //nothing

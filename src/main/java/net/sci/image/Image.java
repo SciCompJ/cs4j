@@ -30,7 +30,7 @@ import net.sci.axis.CategoricalAxis;
 import net.sci.image.io.ImageIOImageReader;
 import net.sci.image.io.MetaImageReader;
 import net.sci.image.io.TiffImageReader;
-import net.sci.image.io.TiffTag;
+import net.sci.image.io.tiff.TiffTag;
 
 /**
  * A multi-dimensional image, represented by a multi-dimensional array together

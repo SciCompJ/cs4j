@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.io;
+package net.sci.image.io.tiff;
 
 import java.io.PrintStream;
 import java.util.Map;
@@ -14,7 +14,11 @@ public class TiffFileInfo
 {
     // =============================================================
     // Public enumerations
-
+    
+    /**
+     * The type of pixel within the file. Each type contains information about
+     * number of bytes and number of channels of the type.
+     */
     public enum PixelType 
 	{
         // ---------------------------------------------------------
@@ -23,18 +27,13 @@ public class TiffFileInfo
         /** 8-bit unsigned integer (0-255). */
         GRAY8(1, 1, false),
         
-        /**
-         * 16-bit signed integer (-32768-32767). Imported signed images are
-         * converted to unsigned by adding 32768.
-         */
+        /** 16-bit signed integer (-32768-32767). */
         GRAY16_SIGNED(2, 1, false),
         
 		/** 16-bit unsigned integer (0-65535). */
 		GRAY16_UNSIGNED(2, 1, false),
-		/**
-		 * 32-bit signed integer. Imported 32-bit integer images are converted
-		 * to floating-point.
-		 */
+		
+		/** 32-bit signed integer. */
 		GRAY32_INT(4, 1, false),
 
 		/** 32-bit floating-point. */
@@ -43,61 +42,73 @@ public class TiffFileInfo
 		/** 8-bit unsigned integer with color lookup table. */
 		COLOR8(1, 1, true),
 		
-		/** 24-bit interleaved RGB. Import/export only. */
+		/** 24-bit interleaved RGB. */
 		RGB(3, 3, true),
 		
-		/** 24-bit planer RGB. Import only. */
+		/** 24-bit planer RGB. */
 		RGB_PLANAR(3, 3, true),
 		
-		/** 1-bit black and white. Import only. */
+		/** 1-bit black and white. */
 		BITMAP(1, 1, false), 
 		
-		/** 32-bit interleaved ARGB. Import only. */
+		/** 32-bit interleaved ARGB. */
 		ARGB(4, 4, true), 
 		
-		/** 24-bit interleaved BGR. Import only. */
+		/** 24-bit interleaved BGR. */
 		BGR(3, 3, true),
-		/**
-		 * 32-bit unsigned integer. Imported 32-bit integer images are converted
-		 * to floating-point.
-		 */
+		
+		/** 32-bit unsigned integer. */
 		GRAY32_UNSIGNED(4, 1, false),
 		
 		/** 48-bit interleaved RGB. */
 		RGB48(6, 3, true),
 		
-		/** 12-bit unsigned integer (0-4095). Import only. */
+		/** 12-bit unsigned integer (0-4095). */
 		GRAY12_UNSIGNED(2, 1, false), 
 		
-		/** 24-bit unsigned integer. Import only. */
+		/** 24-bit unsigned integer. */
 		GRAY24_UNSIGNED(3, 1, false), 
 		
-		/** 32-bit interleaved BARG (MCID). Import only. */
+		/** 32-bit interleaved BARG (MCID). */
 		BARG(4, 4, true), 
 		
-		/** 64-bit floating-point. Import only.*/
+		/** 64-bit floating-point. */
 		GRAY64_FLOAT(8, 1, false), 
 		
-		/** 48-bit planar RGB. Import only. */
+		/** 48-bit planar RGB. */
 		RGB48_PLANAR(6, 3, true), 
 		
-		/** 32-bit interleaved ABGR. Import only. */
+		/** 32-bit interleaved ABGR. */
 		ABGR(4, 4, true);
 		
         
         // ---------------------------------------------------------
         // enumeration variables
         
+        /** The total number of bytes used to represent this type.*/
         private int byteNumber;
         
+        /** The number of samples this type contains.*/
         private int sampleNumber;
         
+        /** A logical flag indicating whether this type represents a color. */
         private boolean color;
         
         
         // ---------------------------------------------------------
         // Constructors
-
+        
+        /**
+         * Creates a new type, by specifying information on how to retrieve
+         * pixel info from type.
+         * 
+         * @param byteNumber
+         *            the total number of bytes used to represent this type.
+         * @param sampleNumber
+         *            the number of samples this type contains.
+         * @param color
+         *            true is represents a color type.
+         */
         private PixelType(int byteNumber, int sampleNumber, boolean color)
         {
             this.byteNumber = byteNumber;
@@ -124,7 +135,10 @@ public class TiffFileInfo
         }
 	};
 	
-	// Compression modes
+    /**
+     * The different compression modes used in TIFF files. Note that all
+     * compression decoders are not necessarily implemented.
+     */
 	public enum Compression 
 	{
 		UNKNOWN,
@@ -162,21 +176,9 @@ public class TiffFileInfo
 		}
 	};
 	
-	// File formats
-	public enum FileFormat
-	{
-		UNKNOWN, 
-		RAW, 
-		TIFF, 
-		GIF_OR_JPG,
-		FITS,
-		BMP, 
-		DICOM, 
-		ZIP_ARCHIVE,
-		PGM,
-		IMAGIO;
-	};
-
+	/**
+	 * The type of subfile, used to identify the type of image.
+	 */
 	public enum SubFileType 
 	{
 		IMAGE,
@@ -199,6 +201,9 @@ public class TiffFileInfo
 		}
 	}
 	
+    /**
+     * The orientation of the image.
+     */
 	public enum Orientation
 	{
 		TOPLEFT,
@@ -237,8 +242,6 @@ public class TiffFileInfo
 	public int width; 
 	public int height; 
 	
-//	public int nImages = 1;
-
 	public SubFileType subFileType;
 	
 	/**
@@ -248,27 +251,27 @@ public class TiffFileInfo
 	public double pixelHeight = 1;
 	public String unit = "";
 		
-	Compression compression = Compression.NONE;
+	public Compression compression = Compression.NONE;
 	
-	Orientation orientation = Orientation.TOPLEFT;
+	public Orientation orientation = Orientation.TOPLEFT;
 	
-	String imageDescription;
+	public String imageDescription;
 	
 	/** Info for reading image buffer */
-	int[] stripOffsets;
-	int[] stripLengths;
-	int rowsPerStrip;
+	public int[] stripOffsets;
+	public int[] stripLengths;
+	public int rowsPerStrip;
 	
-	PixelType pixelType;
+	public PixelType pixelType;
 	
-	boolean whiteIsZero; 
-	int photometricInterpretation;
-	int[][] lut = null;
+	public boolean whiteIsZero; 
+	public int photometricInterpretation;
+	public int[][] lut = null;
 	
 	/**
 	 * A list of TiffTag for the additional tags that may be provided in files.
 	 */
-    Map<Integer,TiffTag> tags = new TreeMap<Integer,TiffTag>();
+	public Map<Integer,TiffTag> tags = new TreeMap<Integer,TiffTag>();
 	
 	
     // =============================================================
@@ -331,7 +334,9 @@ public class TiffFileInfo
 	        }
 	        
 	        // do not compare the tags corresponding to the way the data are stored in the file
-	        if (key == 273 || key == 278 || key == 279 || key == 288 || key == 289)
+            if (key == BaselineTags.STRIP_OFFSETS || key == BaselineTags.ROWS_PER_STRIP
+                    || key == BaselineTags.STRIP_BYTE_COUNTS || key == BaselineTags.FREE_OFFSETS
+                    || key == BaselineTags.FREE_BYTE_COUNTS)
 	        {
 	            continue;
 	        }

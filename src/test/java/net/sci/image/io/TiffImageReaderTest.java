@@ -17,6 +17,7 @@ import net.sci.array.scalar.UInt16Array2D;
 import net.sci.axis.NumericalAxis;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
+import net.sci.image.io.TiffImageReader;
 
 public class TiffImageReaderTest
 {

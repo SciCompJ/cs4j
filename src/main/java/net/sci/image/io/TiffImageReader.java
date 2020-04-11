@@ -35,6 +35,9 @@ import net.sci.image.Calibration;
 import net.sci.image.DefaultColorMap;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
+import net.sci.image.io.tiff.BaselineTags;
+import net.sci.image.io.tiff.TiffFileInfo;
+import net.sci.image.io.tiff.TiffTag;
 
 /**
  * Provides methods for reading Image files in TIFF Format.
@@ -227,7 +230,7 @@ public class TiffImageReader implements ImageReader
 	private boolean hasImageJDescription(TiffFileInfo info)
     {
         // Get the  description tag, or null if not initialized
-        TiffTag tag = info.tags.get(270);
+        TiffTag tag = info.tags.get(BaselineTags.IMAGE_DESCRIPTION);
         if (tag == null)
         {
             return false;
@@ -259,7 +262,7 @@ public class TiffImageReader implements ImageReader
 	private Image readImageJImage(TiffFileInfo info) throws IOException
 	{
 	    // Get the  description tag, or null if not initialized
-	    TiffTag tag = info.tags.get(270);
+	    TiffTag tag = info.tags.get(BaselineTags.IMAGE_DESCRIPTION);
 	    if (tag == null)
 	    {
 	        throw new IllegalArgumentException("Requires a description TiffTag with index 270");
@@ -322,47 +325,56 @@ public class TiffImageReader implements ImageReader
 	    if (nImages > 1)
 	    {
 	        System.out.println("read hyperstack data");
-            
-            @SuppressWarnings("resource")
-            ImageBinaryDataReader imageReader = new ImageBinaryDataReader(this.dataReader.inputStream, this.dataReader.byteOrder);
-            imageReader.seek(info.stripOffsets[0]);
-            
-            Array<?> data;
-            switch(info.pixelType)
-            {
-            case GRAY8:
-            case COLOR8:
-                data = imageReader.readUInt8Array3D(sizeX, sizeY, nImages);
-                break;
 
-            case BITMAP:
-                throw new RuntimeException("Reading Bitmap Tiff files not supported");
+	        Array<?> data;
             
-            case GRAY16_UNSIGNED:
-            case GRAY12_UNSIGNED:
-                data = imageReader.readUInt16Array3D(sizeX, sizeY, nImages);
-                break;
-                
-            case GRAY32_INT:
-                data = imageReader.readInt32Array3D(sizeX, sizeY, nImages);
-                break;
-            
-            case GRAY32_FLOAT:
-                data = imageReader.readFloat32Array3D(sizeX, sizeY, nImages);
-                break;
+	        // Use try-with-resource, closing the reader at the end of the try block
+            try (ImageBinaryDataReader imageReader = new ImageBinaryDataReader(
+                    new File(this.filePath), this.byteOrder))
+	        {
+	            imageReader.seek(info.stripOffsets[0]);
 
-            case RGB:
-            case BGR:
-            case ARGB:
-            case ABGR:
-            case BARG:
-            case RGB_PLANAR:
-                
-            case RGB48:
+	            switch(info.pixelType)
+	            {
+	            case GRAY8:
+	            case COLOR8:
+	                data = imageReader.readUInt8Array3D(sizeX, sizeY, nImages);
+	                break;
 
-            default:
-                throw new IOException("Can not read stack with data type " + info.pixelType);
-            }
+	            case BITMAP:
+	                throw new RuntimeException("Reading Bitmap Tiff files not supported");
+	            
+	            case GRAY16_UNSIGNED:
+	            case GRAY12_UNSIGNED:
+	                data = imageReader.readUInt16Array3D(sizeX, sizeY, nImages);
+	                break;
+	                
+	            case GRAY32_INT:
+	                data = imageReader.readInt32Array3D(sizeX, sizeY, nImages);
+	                break;
+	            
+	            case GRAY32_FLOAT:
+	                data = imageReader.readFloat32Array3D(sizeX, sizeY, nImages);
+	                break;
+
+	            case RGB:
+	            case BGR:
+	            case ARGB:
+	            case ABGR:
+	            case BARG:
+	            case RGB_PLANAR:
+	                
+	            case RGB48:
+
+	            default:
+	                throw new IOException("Can not read stack with data type " + info.pixelType);
+	            }
+	            
+	        }
+	        catch(IOException ex)
+	        {
+	            throw(ex);
+	        }
             
             // reshape to comply with input dimensions
             if (sizeC > 1 || sizeT > 1)
