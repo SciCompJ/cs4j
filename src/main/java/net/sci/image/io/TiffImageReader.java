@@ -30,7 +30,7 @@ import net.sci.array.scalar.BufferedUInt8Array2D;
 import net.sci.array.scalar.BufferedUInt8Array3D;
 import net.sci.array.scalar.SlicedUInt8Array3D;
 import net.sci.array.scalar.UInt8Array;
-import net.sci.axis.NumericalAxis;
+import net.sci.axis.Axis;
 import net.sci.image.Calibration;
 import net.sci.image.DefaultColorMap;
 import net.sci.image.Image;
@@ -281,52 +281,37 @@ public class TiffImageReader implements ImageReader
 	    System.out.println(description);
 
 	    // iterate over the different tokens stored in description and convert into a map
-	    Map<String,String> imagejTokens = parseImageJTokens(description);
+	    Map<String, String> tokens = parseImageJTokens(description);
         
 	    int nImages = 1;
-        if (imagejTokens.containsKey("images"))
+        if (tokens.containsKey("images"))
         {
-            nImages = Integer.parseInt(imagejTokens.get("images"));
+            nImages = Integer.parseInt(tokens.get("images"));
             System.out.println(String.format("Should read %d images", nImages));
         }
 
         // determine the size along each of the five dimensions
         int sizeX = info.width;
         int sizeY = info.height;
-        int sizeZ = 1;
-        int sizeC = 1;
-        int sizeT = 1;
-        if (imagejTokens.containsKey("slices"))
-        {
-            sizeZ = Integer.parseInt(imagejTokens.get("slices"));
-        }
-        if (imagejTokens.containsKey("channels"))
-        {
-            sizeC = Integer.parseInt(imagejTokens.get("channels"));
-        }
-        if (imagejTokens.containsKey("frames"))
-        {
-            sizeT = Integer.parseInt(imagejTokens.get("frames"));
-        }
-        if (sizeZ * sizeC * sizeT != nImages)
+        int sizeC = getIntValue(tokens, "channels", 1);
+        int sizeZ = getIntValue(tokens, "slices", 1);
+        int sizeT = getIntValue(tokens, "frames", 1);
+        if (sizeC * sizeZ * sizeT != nImages)
         {
             throw new RuntimeException(String.format(
                     "Number of images (%d) does not match image dimensions (%dx%dx%d)", nImages,
                     sizeZ, sizeC, sizeT));
         }
-        
-//        boolean hyperstack = false;
-//        if (imagejTokens.containsKey("hyperstack"))
-//        {
-//            hyperstack = Boolean.parseBoolean(imagejTokens.get("hyperstack"));
-//        }
-        
-	    Image image;
-	    if (nImages > 1)
+
+        Array<?> data;
+	    if (nImages == 1)
+	    {
+	        // Read image data
+	        data = readImageData(info);
+	    }
+	    else
 	    {
 	        System.out.println("read hyperstack data");
-
-	        Array<?> data;
             
 	        // Use try-with-resource, closing the reader at the end of the try block
             try (ImageBinaryDataReader imageReader = new ImageBinaryDataReader(
@@ -369,38 +354,82 @@ public class TiffImageReader implements ImageReader
 	            default:
 	                throw new IOException("Can not read stack with data type " + info.pixelType);
 	            }
-	            
 	        }
 	        catch(IOException ex)
 	        {
 	            throw(ex);
 	        }
-            
-            // reshape to comply with input dimensions
-            if (sizeC > 1 || sizeT > 1)
-            {
-                int[] dims = new int[] {sizeX, sizeY, sizeZ, sizeC, sizeT};
-                data = new Reshape(dims).process(data);
-            }
-            
-            // Create new Image
-            image = new Image(data);
 	    }
-	    else
-	    {
-	        // Read image data
-	        Array<?> data = readImageData();
-	        
-	        // Create new Image
-	        image = new Image(data);
-	    }
-	    image.tiffTags = info.tags;
+
+	    // number of dimensions of final array
+	    int nd = 2;
+	    if (sizeZ > 1) nd++;
+	    if (sizeC > 1) nd++;
+	    if (sizeT > 1) nd++;
 	    
-	    // setup the file related to the image
-	    image.setFilePath(this.filePath);
-	    
-	    // Setup spatial calibration
-	    setupSpatialCalibration(image, info);
+	    // initialize dimensions and calibration
+	    int[] dims = new int[nd];
+	    ImageAxis[] axes = new ImageAxis[nd];
+        
+	    // Initialize mandatory X and Y axes
+	    dims[0] = sizeX;
+        double xOrigin = getDoubleValue(tokens, "xorigin", 0.0);
+        String unitName = getToken(tokens, "unit", "");
+        axes[0] = new ImageAxis.X(info.pixelWidth, xOrigin, unitName);
+        dims[1] = sizeY;
+        double yOrigin = getDoubleValue(tokens, "yorigin", 0.0);
+        String yUnitName = getToken(tokens, "yunit", unitName);
+        axes[1] = new ImageAxis.Y(info.pixelHeight, yOrigin, yUnitName);
+        
+        // Initialize optional C, Z and T axes
+        int d = 2;
+        if (sizeC > 1)
+        {
+            dims[d] = sizeC;
+            axes[d++] = new ImageAxis("Channel", Axis.Type.CHANNEL, 1, 0, "");
+        }
+        if (sizeZ > 1)
+        {
+            dims[d] = sizeZ;
+            double spacing = getDoubleValue(tokens, "spacing", 1.0);
+            double origin = getDoubleValue(tokens, "zorigin", 0.0);
+            String zUnitName = getToken(tokens, "zunit", unitName);
+            axes[d++] = new ImageAxis.Z(spacing, origin, zUnitName);
+        }
+        if (sizeT > 1)
+        {
+            dims[d] = sizeT;
+            double timeStep = getDoubleValue(tokens, "finterval", 1.0);
+            String tUnitName = getToken(tokens, "tunit", "sec");
+            axes[d++] = new ImageAxis.T(timeStep, 0, tUnitName);
+        }
+        
+        // Additional ImageJ tokens are not managed:
+        // info
+        // fps
+        // loop 
+        // mode -> {color} 
+        // hyperstack -> boolean
+        
+        // reshape data array if necessary
+        if (sizeC > 1 || sizeT > 1)
+        {
+            data = new Reshape(dims).process(data);
+        }
+      
+         // Create new Image
+        Image image = new Image(data);
+        image.setCalibration(new Calibration(axes));
+        
+        // calibrate display range if information exists
+        if (tokens.containsKey("min") && tokens.containsKey("max"))
+        {
+            double min = getDoubleValue(tokens, "min", 0.0);
+            double max = getDoubleValue(tokens, "max", 1.0);
+            image.getDisplaySettings().setDisplayRange(new double[] {min, max});
+        }
+        
+        image.tiffTags = info.tags;
 	    
 	    // setup LUT
 	    if (info.lut != null)
@@ -408,40 +437,17 @@ public class TiffImageReader implements ImageReader
 	        image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
 	    }
 	    
-	    
-	    // get image calibration
-	    Calibration calib = image.getCalibration();
-	    
-        if (imagejTokens.containsKey("unit"))
-        {
-            String value = imagejTokens.get("unit");
-            for (ImageAxis axis : calib.getAxes())
-            {
-                if (axis instanceof NumericalAxis)
-                {
-                    ((NumericalAxis) axis).setUnitName(value);
-                }
-                
-            }
-        }
-        if (imagejTokens.containsKey("spacing") && image.getDimension() > 2)
-        {
-            String value = imagejTokens.get("spacing");
-            ImageAxis zAxis = calib.getAxis(2);
-            if (zAxis instanceof NumericalAxis)
-            {
-                ((NumericalAxis) zAxis).setSpacing(Double.parseDouble(value));
-            }
-        }
+        // setup the file related to the image
+        image.setFilePath(this.filePath);
         
 	    return image;
 	}
 	
-	private Map<String,String> parseImageJTokens(String description)
+	private Map<String, String> parseImageJTokens(String description)
 	{
-	       // iterate over the different tokens stored in description and convert into a map
-        Map<String,String> imagejTokens = new HashMap<>();
-        String[] items = description.split("\n");
+	    // iterate over the different tokens stored in description and convert into a map
+	    Map<String, String> imagejTokens = new HashMap<>();
+	    String[] items = description.split("\n");
         for (String item : items)
         {
             // split key and value, separated by "="
@@ -456,10 +462,36 @@ public class TiffImageReader implements ImageReader
         return imagejTokens;
 	}
 	
+    private String getToken(Map<String, String> tokens, String tokenName, String defaultValue)
+    {
+        if (tokens.containsKey(tokenName))
+        {
+            return tokens.get(tokenName);
+        }
+        return defaultValue;
+    }
+    
+    private int getIntValue(Map<String, String> tokens, String tokenName, int defaultValue)
+    {
+        if (tokens.containsKey(tokenName))
+        {
+            return Integer.parseInt(tokens.get(tokenName));
+        }
+        return defaultValue;
+    }
+    
+    private double getDoubleValue(Map<String, String> tokens, String tokenName, double defaultValue)
+    {
+        if (tokens.containsKey(tokenName))
+        {
+            return Double.parseDouble(tokens.get(tokenName));
+        }
+        return defaultValue;
+    }
+    
 	/**
-     * The function called by the "readImage()" or by the "readImageJImage()"
-     * method, that reads the image data and returns either an instance of
-     * Array2D or Array3D.
+     * The function called by the "readImage()" method, that reads the image
+     * data and returns either an instance of Array2D or Array3D.
      * 
      * @see #isStackImage()
      * 
@@ -482,41 +514,41 @@ public class TiffImageReader implements ImageReader
             return readImageData(info0);
         }
     }
-
+    
     /**
-         * @return true if the list of FileInfo stored within this reader can be
-         *         seen as a 3D stack
-         */
-    	private boolean isStackImage()
-    	{
-    		// single image is not stack by definition
-    		if (fileInfoList.size() == 1)
-    		{
-    			return false;
-    		}
-    		
-    		// Read File information of the first image stored in the file
-    		TiffFileInfo info0 = fileInfoList.iterator().next();
-    				
-    		// If file contains several images, check if we should read a stack
-    		// Condition: all images must have same size
-    		// TODO: detect multi-channel images
-    		for (TiffFileInfo info : fileInfoList)
-    		{
-    		    if (info.width != info0.width || info.height != info0.height)
-    			{
-    				return false;
-    			}
-    //		    if (!info.hasSameTags(info0))
-    //		    {
-    //		        return false;
-    //		    }
-    		}
-    		
-    		// if all items declare the same size, we can load a stack
-    		return true;
-    	}
-
+     * @return true if the list of FileInfo stored within this reader can be
+     *         seen as a 3D stack
+     */
+    private boolean isStackImage()
+    {
+        // single image is not stack by definition
+        if (fileInfoList.size() == 1)
+        {
+            return false;
+        }
+        
+        // Read File information of the first image stored in the file
+        TiffFileInfo info0 = fileInfoList.iterator().next();
+        
+        // If file contains several images, check if we should read a stack
+        // Condition: all images must have same size
+        // TODO: detect multi-channel images
+        for (TiffFileInfo info : fileInfoList)
+        {
+            if (info.width != info0.width || info.height != info0.height)
+            {
+                return false;
+            }
+            //		    if (!info.hasSameTags(info0))
+            //		    {
+            //		        return false;
+            //		    }
+        }
+        
+        // if all items declare the same size, we can load a stack
+        return true;
+    }
+    
     private void setupSpatialCalibration(Image image, TiffFileInfo info)
 	{
 	    String unit = info.unit;
@@ -829,10 +861,10 @@ public class TiffImageReader implements ImageReader
      */
 	public Array<?> readImageData(TiffFileInfo info) throws IOException
 	{
-		// Size of image and of buffer buffer
+		// Size of image
 		int nPixels = info.width * info.height;
 
-		// compute size of buffer
+		// size of buffer
 		int nBytes = nPixels * info.pixelType.getByteNumber();
 
 		// Read the byte array
@@ -869,25 +901,9 @@ public class TiffImageReader implements ImageReader
 
 		case GRAY32_INT:
 		{
-			// Store data as short array
-			int[] intBuffer = new int[nPixels];
-			
-			// convert byte array into sort array
-			for (int i = 0; i < nPixels; i++)
-			{
-				int b1 = buffer[4 * i] & 0x00FF;
-				int b2 = buffer[4 * i + 1] & 0x00FF;
-				int b3 = buffer[4 * i + 2] & 0x00FF;
-				int b4 = buffer[4 * i + 3] & 0x00FF;
-				
-				// encode bytes to short
-				if (this.byteOrder == ByteOrder.LITTLE_ENDIAN)
-					intBuffer[i] = ((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
-				else
-					intBuffer[i] = ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
-			}
-			
-			return new BufferedInt32Array2D(info.width, info.height, intBuffer);
+			// Store data as int array
+			int[] intBuffer = convertToIntArray(buffer, this.byteOrder);
+            return new BufferedInt32Array2D(info.width, info.height, intBuffer);
 		}	
 		
 		case GRAY32_FLOAT:
@@ -941,226 +957,10 @@ public class TiffImageReader implements ImageReader
 		    }
 		    return rgb2d;
 		}
-		
-//			case GRAY16_SIGNED:
-//			case GRAY24_UNSIGNED:
-			
-//			case GRAY32_UNSIGNED:
-			
-//			case GRAY64_FLOAT:
-//				pixels = readPixels(info);
-//				if (pixels == null)
-//					return null;
-//				ip = new FloatProcessor(size0, size1, (float[]) pixels, cm);
-//				imp = new ImagePlus(fi.fileName, ip);
-//				break;
+
 		default:
 			throw new IOException("Can not process file info of type " + info.pixelType);
 		}
-	}
-	
-//	/**
-//     * Reads the next slice / image from the reader, by specifying image type
-//     * and dimension.
-//     * 
-//     * @param pixelType
-//     *            the type of the data.
-//     * @param sizeX
-//     *            the size of the image in the X direction.
-//     * @param sizeY
-//     *            the size of the image in the Y direction.
-//     * @return a new instance of Array whose type depends on specified pixel
-//     *         type.
-//	 * @throws IOException if an I/O error occurred.
-//     */
-//	private Array<?> readNextData2D(TiffFileInfo.PixelType pixelType, int sizeX, int sizeY) throws IOException
-//	{
-//        // Information necessary to read image data
-//        int pixelsPerPlane = sizeX * sizeY;
-//        int bytesPerPlane  = pixelsPerPlane * pixelType.getByteNumber();
-//        
-//        // switch depending on pixel type
-//        switch (pixelType)
-//        {
-//        case GRAY8:
-//        case COLOR8:
-//        {
-//            // Case of data coded with 8 bits
-//            byte[] buffer = new byte[bytesPerPlane];
-//            int nRead = dataReader.readByteArray(buffer, 0, pixelsPerPlane);
-//            
-//            // Check the whole buffer has been read
-//            if (nRead != pixelsPerPlane)
-//            {
-//                throw new IOException("Could read only " + nRead
-//                        + " pixels over the " + pixelsPerPlane + " expected");
-//            }
-//            return new BufferedUInt8Array2D(sizeX, sizeY, buffer);
-//        }
-//
-//        case BITMAP:
-//            throw new RuntimeException("Reading Bitmap Tiff files not supported");
-//        
-//        case GRAY16_UNSIGNED:
-//        case GRAY12_UNSIGNED:
-//        {
-//            // Store data as short array
-//            short[] buffer = new short[bytesPerPlane];
-//            int nRead = dataReader.readShortArray(buffer, 0, pixelsPerPlane);
-//            
-//            // Check the whole buffer has been read
-//            if (nRead != pixelsPerPlane)
-//            {
-//                throw new IOException("Could read only " + nRead
-//                        + " pixels over the " + pixelsPerPlane + " expected");
-//            }
-//            return new BufferedUInt16Array2D(sizeX, sizeY, buffer);
-//        }   
-//
-//        default:
-//            throw new RuntimeException("Unable to process data with pixel type: " + pixelType);
-//        }
-//	}
-
-//    /**
-//     * Reads the next slice / image from the reader, by specifying image
-//     * dimension.
-//     * 
-//     * @param sizeX
-//     *            the size of the image in the X direction.
-//     * @param sizeY
-//     *            the size of the image in the Y direction.
-//     * @return a new instance of UInt8Array2D
-//     * @throws IOException
-//     *             if an I/O error occurred.
-//     */
-//    private UInt8Array2D readUInt8Array2D(int sizeX, int sizeY) throws IOException
-//    {
-//        // Information necessary to read image data
-//        int pixelsPerPlane = sizeX * sizeY;
-//        
-//        // Case of data coded with 8 bits
-//        byte[] buffer = new byte[pixelsPerPlane];
-//        int nRead = dataReader.readByteArray(buffer, 0, pixelsPerPlane);
-//        
-//        // Check the whole buffer has been read
-//        if (nRead != pixelsPerPlane)
-//        {
-//            throw new IOException("Could read only " + nRead
-//                    + " pixels over the " + pixelsPerPlane + " expected");
-//        }
-//        return new BufferedUInt8Array2D(sizeX, sizeY, buffer);
-//    }
-//
-//    /**
-//     * Reads the next slice / image from the reader, by specifying image
-//     * dimension.
-//     * 
-//     * @param sizeX
-//     *            the size of the image in the X direction.
-//     * @param sizeY
-//     *            the size of the image in the Y direction.
-//     * @return a new instance of UInt16Array2D
-//     * @throws IOException
-//     *             if an I/O error occurred.
-//     */
-//    private UInt16Array2D readUInt16Array2D(int sizeX, int sizeY) throws IOException
-//    {
-//        // Information necessary to read image data
-//        int pixelsPerPlane = sizeX * sizeY;
-//        
-//        // Case of data coded with 8 bits
-//        byte[] buffer = new byte[pixelsPerPlane];
-//        int nRead = dataReader.readByteArray(buffer, 0, pixelsPerPlane);
-//        
-//        // Check the whole buffer has been read
-//        if (nRead != pixelsPerPlane)
-//        {
-//            throw new IOException("Could read only " + nRead
-//                    + " pixels over the " + pixelsPerPlane + " expected");
-//        }
-//        return new BufferedUInt8Array2D(sizeX, sizeY, buffer);
-//    }
-//        case BITMAP:
-//            throw new RuntimeException("Reading Bitmap Tiff files not supported");
-//        
-//        case GRAY16_UNSIGNED:
-//        case GRAY12_UNSIGNED:
-//        {
-//            // Store data as short array
-//            short[] buffer = new short[bytesPerPlane];
-//            int nRead = dataReader.readShortArray(buffer, 0, pixelsPerPlane);
-//            
-//            // Check the whole buffer has been read
-//            if (nRead != pixelsPerPlane)
-//            {
-//                throw new IOException("Could read only " + nRead
-//                        + " pixels over the " + pixelsPerPlane + " expected");
-//            }
-//            return new BufferedUInt16Array2D(sizeX, sizeY, buffer);
-//        }   
-//
-//        default:
-//            throw new RuntimeException("Unable to process data with pixel type: " + pixelType);
-//        }
-//    }
-
-    private final static short[] convertToShortArray(byte[] byteBuffer, ByteOrder order)
-    {
-        // Store data as short array
-        int nPixels = byteBuffer.length / 2;
-        short[] shortBuffer = new short[nPixels];
-        
-        // convert byte array into sort array
-        for (int i = 0; i < nPixels; i++)
-        {
-            int b1 = byteBuffer[2 * i] & 0x00FF;
-            int b2 = byteBuffer[2 * i + 1] & 0x00FF;
-
-            // encode bytes to short
-            if (order == ByteOrder.LITTLE_ENDIAN)
-                shortBuffer[i] = (short) ((b2 << 8) | b1);
-            else
-                shortBuffer[i] = (short) ((b1 << 8) | b2);
-        }
-        
-        return shortBuffer;
-    }
-
-    private final static float[] convertToFloatArray(byte[] byteBuffer, ByteOrder order)
-    {
-        // Store data as short array
-        int nFloats = byteBuffer.length / 4;
-        float[] floatBuffer = new float[nFloats];
-        
-        // convert byte array into sort array
-        for (int i = 0; i < nFloats; i++)
-        {
-            int b1 = byteBuffer[4 * i + 0] & 0x00FF;
-            int b2 = byteBuffer[4 * i + 1] & 0x00FF;
-            int b3 = byteBuffer[4 * i + 2] & 0x00FF;
-            int b4 = byteBuffer[4 * i + 3] & 0x00FF;
-
-            // encode bytes to short
-            if (order == ByteOrder.LITTLE_ENDIAN)
-                floatBuffer[i] = Float.intBitsToFloat((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
-            else
-                floatBuffer[i] = Float.intBitsToFloat((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
-        }
-        
-        return floatBuffer;
-    }
-
-	private static final short convertBytesToShort(byte b1, byte b2, ByteOrder order)
-	{
-        int v1 = b1 & 0x00FF;
-        int v2 = b2 & 0x00FF;
-        
-        // encode bytes to short
-        if (order == ByteOrder.LITTLE_ENDIAN)
-            return (short) ((v2 << 8) | v1);
-        else
-            return (short) ((v1 << 8) | v2);
 	}
 	
 	/**
@@ -1295,4 +1095,87 @@ public class TiffImageReader implements ImageReader
 		int nRead = PackBits.uncompressPackBits(compressedBytes, buffer, offset);
 		return nRead;
 	}
+    
+    private final static short[] convertToShortArray(byte[] byteBuffer, ByteOrder order)
+    {
+        // Store data as short array
+        int nPixels = byteBuffer.length / 2;
+        short[] shortBuffer = new short[nPixels];
+        
+        // convert byte array into short array
+        for (int i = 0; i < nPixels; i++)
+        {
+            int b1 = byteBuffer[2 * i] & 0x00FF;
+            int b2 = byteBuffer[2 * i + 1] & 0x00FF;
+
+            // encode bytes to short
+            if (order == ByteOrder.LITTLE_ENDIAN)
+                shortBuffer[i] = (short) ((b2 << 8) | b1);
+            else
+                shortBuffer[i] = (short) ((b1 << 8) | b2);
+        }
+        
+        return shortBuffer;
+    }
+
+    private final static int[] convertToIntArray(byte[] byteBuffer, ByteOrder order)
+    {
+        // Store data as short array
+        int nPixels = byteBuffer.length / 4;
+        int[] intBuffer = new int[nPixels];
+        
+        // convert byte array into int array
+        for (int i = 0; i < nPixels; i++)
+        {
+            int b1 = byteBuffer[4 * i + 0] & 0x00FF;
+            int b2 = byteBuffer[4 * i + 1] & 0x00FF;
+            int b3 = byteBuffer[4 * i + 2] & 0x00FF;
+            int b4 = byteBuffer[4 * i + 3] & 0x00FF;
+
+            // encode bytes to short
+            if (order == ByteOrder.LITTLE_ENDIAN)
+                intBuffer[i] = (b4 << 24) | (b3 << 16) | (b2 << 8) | b1;
+            else
+                intBuffer[i] = (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
+        }
+        
+        return intBuffer;
+    }
+
+    private final static float[] convertToFloatArray(byte[] byteBuffer, ByteOrder order)
+    {
+        // Store data as short array
+        int nFloats = byteBuffer.length / 4;
+        float[] floatBuffer = new float[nFloats];
+        
+        // convert byte array into float array
+        for (int i = 0; i < nFloats; i++)
+        {
+            int b1 = byteBuffer[4 * i + 0] & 0x00FF;
+            int b2 = byteBuffer[4 * i + 1] & 0x00FF;
+            int b3 = byteBuffer[4 * i + 2] & 0x00FF;
+            int b4 = byteBuffer[4 * i + 3] & 0x00FF;
+
+            // encode bytes to float
+            if (order == ByteOrder.LITTLE_ENDIAN)
+                floatBuffer[i] = Float.intBitsToFloat((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
+            else
+                floatBuffer[i] = Float.intBitsToFloat((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
+        }
+        
+        return floatBuffer;
+    }
+
+    private static final short convertBytesToShort(byte b1, byte b2, ByteOrder order)
+    {
+        int v1 = b1 & 0x00FF;
+        int v2 = b2 & 0x00FF;
+        
+        // encode bytes to short
+        if (order == ByteOrder.LITTLE_ENDIAN)
+            return (short) ((v2 << 8) | v1);
+        else
+            return (short) ((v1 << 8) | v2);
+    }
+
 }
