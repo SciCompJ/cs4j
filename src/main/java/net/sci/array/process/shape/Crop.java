@@ -23,6 +23,59 @@ import net.sci.array.ArrayOperator;
  */
 public class Crop extends AlgoStub implements ArrayOperator
 {
+    // =============================================================
+    // Static factories
+    
+    /**
+     * Creates a new Crop operator by specifying the min and max bounds along
+     * each dimension. The bounds are inclusive in the direction of the minimum,
+     * and exclusive in the direction of the maximum.
+     * 
+     * @param minIndices
+     *            the minimum index to keep (inclusive) for each dimension
+     * @param maxIndices
+     *            the maximum index to keep (exclusive) for each dimension
+     */
+    public final static  Crop fromMinMax(int[] minIndices, int[] maxIndices)
+    {
+        if (minIndices.length != maxIndices.length)
+        {
+            throw new IllegalArgumentException("both arrays must have same length");
+        }
+        int[] sizes = computeSizes(minIndices, maxIndices);
+        return new Crop(minIndices, sizes);
+    }
+    
+    /**
+     * Utility function that computes the value of the size of a Crop operator
+     * based on the minimal and maximal indices.
+     * 
+     * @param minIndices
+     *            the minimum index to keep (inclusive) for each dimension
+     * @param maxIndices
+     *            the maximum index to keep (exclusive) for each dimension
+     * @return the size of the Crop operator along each dimension.
+     */
+    public final static int[] computeSizes(int[] minIndices, int[] maxIndices)
+    {
+        int nd = minIndices.length;
+        int[] sizes = new int[nd];
+        for (int d = 0; d < nd; d++)
+        {
+            int siz = maxIndices[d] - minIndices[d];
+            if (siz < 1)
+            {
+                throw new IllegalArgumentException("size of crop array must be Greater that 0");
+            }
+            sizes[d] = siz;
+        }
+        return sizes;
+    }
+
+    
+    // =============================================================
+    // Class members
+    
     /**
      * The minimum index to keep (inclusive) for each dimension
      */
@@ -33,6 +86,10 @@ public class Crop extends AlgoStub implements ArrayOperator
      */
     int[] sizes;
     
+    
+    // =============================================================
+    // Constructors
+    
     /**
      * 
      * @param minIndices
@@ -40,33 +97,19 @@ public class Crop extends AlgoStub implements ArrayOperator
      * @param maxIndices
      *            the maximum index to keep (exclusive) for each dimension
      */
-    //TODO: change for minIndices and sizes?
-    public Crop(int[] minIndices, int[] maxIndices)
+    private Crop(int[] minIndices, int[] sizes)
     {
-        if (minIndices.length != maxIndices.length)
+        if (minIndices.length != sizes.length)
         {
-            throw new IllegalArgumentException("both rrays mus have same length");
+            throw new IllegalArgumentException("both arrays must have same length");
         }
         this.minIndices = minIndices;
-
-        this.sizes = computeSizes(minIndices, maxIndices);
+        this.sizes = sizes;
     }
     
-    private int[] computeSizes(int[] minIndices, int[] maxIndices)
-    {
-        int nd = minIndices.length;
-        int[] sizes = new int[nd];
-        for (int d = 0; d < nd; d++)
-        {
-            int siz = maxIndices[d] - minIndices[d];
-            if (siz < 1)
-            {
-                throw new IllegalArgumentException("size of crop array must be reater that 0");
-            }
-            sizes[d] = siz;
-        }
-        return sizes;
-    }
+    
+    // =============================================================
+    // Implementation of the  ArrayOperator interface
 
     @Override
     public <T> Array<?> process(Array<T> array)
@@ -78,7 +121,7 @@ public class Crop extends AlgoStub implements ArrayOperator
     }
 
     /**
-     * Specific implementation for 2D arrays
+     * Specific implementation for 2D arrays.
      * 
      * @param array
      *            the input array
@@ -116,7 +159,7 @@ public class Crop extends AlgoStub implements ArrayOperator
         int nd = array.dimensionality();
         if (minIndices.length != nd || sizes.length != nd)
         {
-            throw new RuntimeException("min and max indices arrays must have length of " + nd);
+            throw new RuntimeException("min indices and size arrays must have length of " + nd);
         }
 
         // create result array
@@ -139,7 +182,7 @@ public class Crop extends AlgoStub implements ArrayOperator
         }
 
         // Check target array dimensions
-        for (int d = 0;d < nd; d++)
+        for (int d = 0; d < nd; d++)
         {
             if (target.size(d) != sizes[d])
             {

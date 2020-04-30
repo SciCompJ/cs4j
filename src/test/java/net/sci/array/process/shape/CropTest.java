@@ -26,7 +26,7 @@ public class CropTest
     {
         UInt8Array2D array = createUInt8Array2D();
         
-        Crop crop = new Crop(new int[]{2, 3}, new int[]{8,7});
+        Crop crop = Crop.fromMinMax(new int[]{2, 3}, new int[]{8,7});
         Array<?> res = crop.process(array);
         
         assertTrue(res instanceof UInt8Array);
@@ -42,7 +42,7 @@ public class CropTest
     @Test
     public final void testProcessArrayArray()
     {
-        Crop crop = new Crop(new int[]{2, 3}, new int[]{8,7});
+        Crop crop = Crop.fromMinMax(new int[]{2, 3}, new int[]{8,7});
         
         UInt8Array2D array = createUInt8Array2D();
         UInt8Array2D output = UInt8Array2D.create(6, 4);
@@ -59,7 +59,7 @@ public class CropTest
     {
         Array3D<String> array = createStringArray3D();
 
-        Crop crop = new Crop(new int[] {1, 1, 1}, new int[] {4, 3, 2});
+        Crop crop = Crop.fromMinMax(new int[] {1, 1, 1}, new int[] {4, 3, 2});
         Array<?> view = crop.createView(array);
         
         assertEquals(3, view.dimensionality());

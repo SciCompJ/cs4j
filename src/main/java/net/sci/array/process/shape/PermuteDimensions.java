@@ -9,14 +9,33 @@ import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 
 /**
+ * Permutes the dimensions of the array to process.
+ * 
+ * <p>Example:
+ * <pre>{@code
+    // create input 5x4x3 array
+    int[] dims = new int[] {5, 4, 3};
+    Array<?> array = UInt8Array.create(dims);
+    // create permute dimensions operator 
+    int[] newOrder = new int[] {2, 0, 1};
+    PermuteDimensions op = new PermuteDimensions(newOrder);
+    // apply operator to array
+    Array<?> result = op.process(array);
+    // resulting dimensions should be: int[] {3, 5, 4};
+    int[] newDims = result.size(); 
+ * }</pre>
  * @author dlegland
  *
  */
 public class PermuteDimensions implements ArrayOperator
 {
+    /** 
+     * The indices of the dimensions in the new array. Shoud be a permutation of the integers between 0 and nd.
+     */
     int[] dimOrder;
 
     /**
+     * Creates a new instance of the PermuteDimensions operator.
      * 
      * @param dimOrder the new order of dimensions 
      */
@@ -101,6 +120,13 @@ public class PermuteDimensions implements ArrayOperator
         return result;
     }
     
+    /**
+     * Creates a view on the given array that permutes the dimensions.
+     * 
+     * @param array
+     *            the reference array.
+     * @return a view on the reference array with permuted dimensions.
+     */
     public <T> Array<?> createView(Array<T> array)
     {
         if (array.dimensionality() > dimOrder.length)
