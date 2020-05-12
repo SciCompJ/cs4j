@@ -1,13 +1,12 @@
 package net.sci.geom.geom2d;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import net.sci.geom.UnboundedGeometryException;
-import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.StraightLine2D;
-import net.sci.geom.geom2d.Vector2D;
 
 public class StraightLine2DTest
 {

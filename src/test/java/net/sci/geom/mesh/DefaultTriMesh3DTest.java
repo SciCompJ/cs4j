@@ -13,9 +13,6 @@ import org.junit.Test;
 import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
-import net.sci.geom.mesh.DefaultTriMesh3D;
-import net.sci.geom.mesh.Mesh3D;
-import net.sci.geom.mesh.Meshes3D;
 
 /**
  * @author dlegland

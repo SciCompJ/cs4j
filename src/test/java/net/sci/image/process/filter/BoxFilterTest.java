@@ -11,7 +11,6 @@ import net.sci.array.color.RGB8Array2D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
-import net.sci.image.process.filter.BoxFilter;
 
 public class BoxFilterTest
 {

@@ -3,6 +3,8 @@
  */
 package net.sci.geom.geom3d;
 
+import java.util.Locale;
+
 import net.sci.geom.Point;
 
 /**
@@ -206,5 +208,15 @@ public class Point3D implements Point, Geometry3D
     public Box3D boundingBox()
     {
         return new Box3D(this.x, this.x, this.y, this.y, this.z, this.z);
+    }
+    
+    
+    // ===================================================================
+    // Override Object's methods
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.ENGLISH, "Point3D(%f, %f, %f)", x, y, z);
     }
 }

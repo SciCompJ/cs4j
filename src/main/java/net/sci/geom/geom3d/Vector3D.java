@@ -4,6 +4,9 @@
 package net.sci.geom.geom3d;
 
 import static java.lang.Math.abs;
+
+import java.util.Locale;
+
 import net.sci.array.Dimensional;
 
 /**
@@ -324,4 +327,12 @@ public class Vector3D implements Dimensional
         return 3;
     }
 	
+    // ===================================================================
+    // Override Object's methods
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.ENGLISH, "Vector3D(%f, %f, %f)", x, y, z);
+    }
 }

@@ -1,10 +1,8 @@
 package net.sci.array.scalar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import net.sci.array.scalar.Binary;
 
 public class BooleanTest
 {

@@ -2,11 +2,6 @@ package net.sci.array.scalar;
 
 import static org.junit.Assert.assertEquals;
 
-import net.sci.array.scalar.BufferedUInt8Array2D;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
-
 import org.junit.Test;
 
 public class UInt8ArrayWrapperTest

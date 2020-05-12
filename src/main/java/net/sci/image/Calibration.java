@@ -341,7 +341,7 @@ public class Calibration
         Calibration res = new Calibration(nd);
         
         // duplicate direction axes
-        for (int d = 0; d <nd; d++)
+        for (int d = 0; d < nd; d++)
         {
             res.axes[d] = this.axes[d].duplicate();
         }

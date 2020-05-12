@@ -3,13 +3,12 @@
  */
 package net.sci.image.morphology.strel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.image.morphology.strel.NaiveDiskStrel;
 
 /**
  * @author dlegland

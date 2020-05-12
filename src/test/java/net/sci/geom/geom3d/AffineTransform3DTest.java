@@ -5,9 +5,6 @@ package net.sci.geom.geom3d;
 
 import static org.junit.Assert.assertEquals;
 
-import net.sci.geom.geom3d.AffineTransform3D;
-import net.sci.geom.geom3d.Point3D;
-
 import org.junit.Test;
 
 /**

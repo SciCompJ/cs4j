@@ -3,11 +3,9 @@
  */
 package net.sci.geom.geom2d;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import net.sci.geom.geom2d.AffineTransform2D;
 
 /**
  * @author dlegland

@@ -3,13 +3,13 @@
  */
 package net.sci.image.morphology.strel;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.array.scalar.UInt8Array3D;
-import net.sci.image.morphology.strel.CubeStrel3D;
 
 /**
  * @author dlegland

@@ -3,13 +3,9 @@
  */
 package net.sci.array.scalar;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-
-import net.sci.array.scalar.Float32;
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.ScalarArray;
 
 /**
  * @author dlegland

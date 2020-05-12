@@ -1,11 +1,11 @@
 package net.sci.array.scalar;
 
-import static org.junit.Assert.*;
-import net.sci.array.Array;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array3D;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
+
+import net.sci.array.Array;
 
 public class BufferedUInt8Array3DTest
 {
