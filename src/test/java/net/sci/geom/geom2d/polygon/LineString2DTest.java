@@ -59,7 +59,27 @@ public class LineString2DTest
         assertTrue(p21.distance(10, 40) < 0.001);
     }
     
-	/**
+    /**
+     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#asPolyline(int)}.
+     */
+    @Test
+    public final void testAsPolyline_Int()
+    {
+        // line string with edge lengths 40, 20, and 40.
+        LineString2D poly = new LineString2D(
+                new Point2D(10, 20),
+                new Point2D(50, 20),
+                new Point2D(50, 40),
+                new Point2D(10, 40));
+        
+        Polyline2D poly2 = poly.asPolyline(16);
+        assertEquals(16, poly2.vertexNumber());
+        
+        double refLength = poly.length();
+        assertEquals(refLength, poly2.length(), 0.1);
+    }
+
+    /**
      * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#length()}.
      */
     @Test

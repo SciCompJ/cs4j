@@ -3,6 +3,7 @@
  */
 package net.sci.geom.geom2d.polygon;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.sci.geom.geom2d.AffineTransform2D;
@@ -23,6 +24,22 @@ import net.sci.geom.geom2d.Point2D;
  */
 public interface Polyline2D extends Curve2D
 {
+    // ===================================================================
+    // Static factories
+    
+    public static Polyline2D create(ArrayList<Point2D> vertices, boolean closed)
+    {
+        if (closed)
+        {
+            return new LinearRing2D(vertices);
+        }
+        else
+        {
+            return new LineString2D(vertices);
+        }
+    }
+    
+    
     // ===================================================================
     // New methods
     

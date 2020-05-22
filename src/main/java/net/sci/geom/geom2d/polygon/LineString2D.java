@@ -152,7 +152,7 @@ public class LineString2D implements Polyline2D
         ArrayList<Point2D> vertices2 = new ArrayList<Point2D>(nv);
         for (int i = 0; i < nv - 1; i++)
         {
-            double pos = Math.min(i * spacing2, nv - 1);
+            double pos = Math.min(i * spacing2, length);
             vertices2.add(getPointAtLength(pos));
         }
         vertices2.add(this.vertices.get(this.vertices.size() - 1));

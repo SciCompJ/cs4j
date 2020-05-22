@@ -428,8 +428,8 @@ public class LinearRing2D implements Polyline2D, Contour2D
         ArrayList<Point2D> vertices2 = new ArrayList<Point2D>(nv);
         for (int i = 0; i < nv; i++)
         {
-            double pos = Math.min(i * spacing2, nv);
-            vertices2.add(this.getPoint(pos));
+            double pos = Math.min(i * spacing2, length);
+            vertices2.add(this.getPointAtLength(pos));
         }
         
         return new LinearRing2D(vertices2);
@@ -454,24 +454,20 @@ public class LinearRing2D implements Polyline2D, Contour2D
     @Override
     public Point2D getPoint(double t)
     {
-        t = Math.min(Math.max(t, 0), 1);
-        int n = vertices.size();
+        int nv = vertices.size();
+        t = Math.min(Math.max(t, 0), nv);
 
         // index of vertex before point
         int ind0 = (int) Math.floor(t + Double.MIN_VALUE);
         double tl = t - ind0;
 
-        if (ind0 == n)
+        if (ind0 == nv)
             ind0 = 0;
         Point2D p0 = vertices.get(ind0);
 
-//        // check if equal to a vertex
-//        if (Math.abs(t - ind0) < Shape2D.ACCURACY)
-//            return p0;
-
         // index of vertex after point
         int ind1 = ind0 + 1;
-        if (ind1 == n)
+        if (ind1 == nv)
             ind1 = 0;
         Point2D p1 = vertices.get(ind1);
 

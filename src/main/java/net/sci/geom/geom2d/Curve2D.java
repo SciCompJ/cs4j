@@ -6,8 +6,6 @@ package net.sci.geom.geom2d;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.sci.geom.geom2d.polygon.LineString2D;
-import net.sci.geom.geom2d.polygon.LinearRing2D;
 import net.sci.geom.geom2d.polygon.Polyline2D;
 
 /**
@@ -33,18 +31,16 @@ public interface Curve2D extends CurveShape2D
     {
         double t0 = getT0();
         double t1 = getT1();
-        double dt = (t1 - t0) / (isClosed() ? nVertices : nVertices + 1);
+        double dt = (t1 - t0) / (isClosed() ? nVertices : nVertices - 1);
         
         ArrayList<Point2D> vertices = new ArrayList<>(nVertices);
+        
         for (int i = 0; i < nVertices; i++)
         {
             vertices.add(getPoint(t0 + i * dt));
         }
         
-        if (isClosed())
-            return new LinearRing2D(vertices);
-        else
-            return new LineString2D(vertices);
+        return Polyline2D.create(vertices, this.isClosed());
     }
 
     public abstract Point2D getPoint(double t);

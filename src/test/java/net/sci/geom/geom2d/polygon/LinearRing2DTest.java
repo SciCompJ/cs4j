@@ -18,6 +18,38 @@ import org.junit.Test;
  */
 public class LinearRing2DTest
 {
+    /**
+     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#resampleBySpacing(double)}.
+     */
+    @Test
+    public final void testResampleBySpacing()
+    {
+        LinearRing2D ring = new LinearRing2D(
+                new Point2D(00, 00),
+                new Point2D(60, 00),
+                new Point2D(60, 40),
+                new Point2D(00, 40));
+        LinearRing2D ring2 = ring.resampleBySpacing(10.0);
+        assertEquals(20, ring2.vertexNumber());
+    }
+    
+    /**
+     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#asPolyline(int)}.
+     */
+    @Test
+    public final void testAsPolyline_Int()
+    {
+        LinearRing2D ring = new LinearRing2D(
+                new Point2D(00, 00),
+                new Point2D(60, 00),
+                new Point2D(60, 40),
+                new Point2D(00, 40));
+        Polyline2D poly2 = ring.asPolyline(20);
+        assertEquals(20, poly2.vertexNumber());
+        
+        double refLength = ring.length();
+        assertEquals(refLength, poly2.length(), .1);
+    }
     
 	/**
 	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#signedArea()}.
