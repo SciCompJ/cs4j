@@ -58,29 +58,34 @@ public class LineSegment2D implements LinearGeometry2D
     
     // ===================================================================
     // Implementation of the LinearGeometry interface 
-
-//    public double projectedPosition(Point2D point)
-//    {
-//        return projectedPosition(point.getX(), point.getY());
-//    }
-//    
-//    public double projectedPosition(double x, double y)
-//    {
-//        double dx = x2 - x1;
-//        double dy = y2 - y1;
-//        if (Math.hypot(dx, dy) < Geometry2D.MIN_VECTOR_NORM)
-//        {
-//            throw new RuntimeException("The direction vector of the line hastoo small norm");
-//        }
-//
-//        double denom = dx * dx + dy * dy;
-//        double pos = ((y - y1) * dy + (x - x1) * dx) / denom;
-//        
-//        // clamp between 0 and 1
-//        return Math.min(Math.max(pos, 0), 1);
-//    }
     
-    @Override
+    /**
+	 * Compute the orthogonal projection of the input point onto this line segment.
+	 * 
+	 * @param point
+	 *            the point to project.
+	 * @return the position of the projected point.
+	 */
+    public Point2D projection(Point2D point)
+	{
+      double dx = x2 - x1;
+      double dy = y2 - y1;
+      if (Math.hypot(dx, dy) < Geometry2D.MIN_VECTOR_NORM)
+      {
+          throw new RuntimeException("The direction vector of the line has too small norm.");
+      }
+
+      double denom = dx * dx + dy * dy;
+      double t = ((point.y - y1) * dy + (point.x - x1) * dx) / denom;
+      
+      // clamp between 0 and 1
+      t = Math.min(Math.max(t, 0), 1);
+      
+      return new Point2D(x1 + t * dx, y1 + t * dy);
+	}
+
+
+	@Override
     public boolean containsProjection(Point2D point, double tol)
     {
         double pos = supportingLine().projectedPosition(point);

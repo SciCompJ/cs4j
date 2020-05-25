@@ -41,6 +41,30 @@ public interface Polyline2D extends Curve2D
     
     
     // ===================================================================
+    // Inner interfaces 
+    
+    /**
+     * A vertex of the polyline, used to encapsulate the position.
+     */
+    public interface Vertex
+    {
+    	public Point2D position();
+    }
+
+    /**
+     * An edge of the polyline, defined by the source and target vertices.
+     */
+    public interface Edge
+    {
+    	public Vertex source();
+    	
+    	public Vertex target();
+    	
+    	public LineSegment2D curve(); 
+    }
+
+    
+    // ===================================================================
     // New methods
     
     /**
@@ -91,7 +115,9 @@ public interface Polyline2D extends Curve2D
     public Iterable<Point2D> vertexPositions();
     
 
-    public Iterator<LineSegment2D> edgeIterator();
+    public Iterable<? extends Edge> edges();
+    
+    public Iterator<? extends Edge> edgeIterator();
 
 
     // ===================================================================
@@ -104,6 +130,34 @@ public interface Polyline2D extends Curve2D
      */
     public Polyline2D reverse();
     
+    /**
+	 * Compute the orthogonal projection of the input point onto this polyline.
+	 * 
+	 * @param point
+	 *            the point to project.
+	 * @return the position of the projected point.
+	 */
+	public default Point2D projection(Point2D point)
+	{
+		double dist, minDist = Double.POSITIVE_INFINITY;
+		double x = point.getX();
+		double y = point.getY();
+		Point2D proj = vertexPosition(0);
+
+		for (Edge edge : edges())
+		{
+			LineSegment2D seg = edge.curve();
+			dist = seg.distance(x, y);
+			if (dist < minDist)
+			{
+				minDist = dist;
+				proj = seg.projection(point);
+			}
+		}
+
+		return proj;
+	}
+
 
     // ===================================================================
     // Geometry methods 
@@ -125,36 +179,34 @@ public interface Polyline2D extends Curve2D
     public default boolean contains(Point2D point, double eps)
     {
         // Iterate on the line segments forming the polyline
-        Iterator<LineSegment2D> iter = edgeIterator();
-        while(iter.hasNext())
-        {
-            if (iter.next().contains(point, eps))
-            {
-                return true;
-            }
-        }
+    	for (Edge edge : edges())
+    	{
+    		if (edge.curve().contains(point, eps)) 
+    		{
+    			return true;
+    		}
+    	}
         return false;
     }
 
     /**
-     * Iterate over edges to find the minimal distance between the test point
+     * Iterates over edges to find the minimal distance between the test point
      * and this polyline.
      * 
      * @param x
-     *            the x-coordinate of the point to test
+     *            the x-coordinate of the point to test.
      * @param y
-     *            the y-coordinate of the point to test
-     * @return the distance to the polyline
+     *            the y-coordinate of the point to test.
+     * @return the distance to the polyline.
      */
     public default double distance(double x, double y)
     {
         double minDist = Double.POSITIVE_INFINITY;
         
         // Iterate on the line segments forming the polyline
-        Iterator<LineSegment2D> iter = edgeIterator();
-        while(iter.hasNext())
+        for (Edge edge : edges())
         {
-            minDist = Math.min(minDist, iter.next().distance(x, y));
+            minDist = Math.min(minDist, edge.curve().distance(x, y));
         }
         return minDist;
     }

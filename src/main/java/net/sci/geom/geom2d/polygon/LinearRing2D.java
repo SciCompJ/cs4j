@@ -22,8 +22,8 @@ import net.sci.geom.geom2d.curve.Contour2D;
  * The name 'LinearRing2D' was used for 2 reasons:
  * <ul>
  * <li>it is short</li>
- *  <li>it is consistent with the JTS name</li>
- *  </ul>
+ * <li>it is consistent with the JTS name</li>
+ * </ul>
  * </p>
  * @author dlegland
  */
@@ -81,7 +81,36 @@ public class LinearRing2D implements Polyline2D, Contour2D
     
     // ===================================================================
     // Methods specific to LinearRing2D
+    
+    public LinearRing2D smooth(int smoothingSize)
+    {
+    	// compute the number of elements before and after central vertex
+    	// (ensuring M1+M2 = smoothingSize)
+    	int M1 = (int) Math.floor((smoothingSize - 1) / 2);
+    	int M2 = (int) Math.ceil((smoothingSize - 1) / 2);
+    	
+    	int nv = this.vertices.size();
+    	LinearRing2D res = new LinearRing2D(nv);
+    	
+    	for (int i = 0; i < nv; i++)
+    	{
+    		double x = 0;
+    		double y = 0;
+    		for (int i2 = i - M1; i2 <= i + M2; i2++)
+    		{
+    			Point2D v = vertices.get((i2 % nv + nv) % nv);
+    			x += v.getX();
+    			y += v.getY();
+    		}
+    		x /= smoothingSize;
+    		y /= smoothingSize;
+    		
+    		res.addVertex(new Point2D(x, y));
+    	}
 
+    	return res;
+    }
+    
     /**
      * Computes the index of the closest vertex to the input point.
      * 
@@ -171,36 +200,10 @@ public class LinearRing2D implements Polyline2D, Contour2D
         return this.vertices.get(vertexIndex);
     }
     
-    public Iterator<LineSegment2D> edgeIterator()
-    {
-    	return new EdgeIterator();
-    }
-    
+
     // ===================================================================
     // Methods implementing the Polyline2D interface
     
-    /**
-     * Transforms this geometry with the specified affine transform.
-     * 
-     * @param trans
-     *            an affine transform
-     * @return the transformed line string
-     */
-    public LinearRing2D transform(AffineTransform2D trans)
-    {
-        int n = this.vertexNumber();
-        ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
-        for (int i = 0; i < n; i++)
-        {
-            newVertices.add(this.vertices.get(i).transform(trans));
-        }
-        
-        LinearRing2D res = new LinearRing2D(0);
-        res.vertices = newVertices;
-        return res;
-    }
-
-
     // ===================================================================
     // Methods implementing the Boundary2D interface
     
@@ -413,6 +416,29 @@ public class LinearRing2D implements Polyline2D, Contour2D
 
     
     // ===================================================================
+    // Management of edges
+    
+    @Override
+	public Iterable<? extends Polyline2D.Edge> edges()
+	{
+		return new Iterable<Polyline2D.Edge>() 
+		{
+
+			@Override
+			public Iterator<Polyline2D.Edge> iterator()
+			{
+				return new EdgeIterator();
+			}
+		};
+	}
+
+	public Iterator<? extends Polyline2D.Edge> edgeIterator()
+    {
+    	return new EdgeIterator();
+    }
+    
+
+    // ===================================================================
     // Methods implementing the Curve2D interface
     
     public LinearRing2D resampleBySpacing(double spacing)
@@ -500,9 +526,85 @@ public class LinearRing2D implements Polyline2D, Contour2D
     
     
     // ===================================================================
+    // Geometry interface implementation
+    
+    /**
+     * Transforms this geometry with the specified affine transform.
+     * 
+     * @param trans
+     *            an affine transform
+     * @return the transformed line string
+     */
+    public LinearRing2D transform(AffineTransform2D trans)
+    {
+        int n = this.vertexNumber();
+        ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
+        for (int i = 0; i < n; i++)
+        {
+            newVertices.add(this.vertices.get(i).transform(trans));
+        }
+        
+        LinearRing2D res = new LinearRing2D(0);
+        res.vertices = newVertices;
+        return res;
+    }
+
+
+	
+    // ===================================================================
+    // Inner class implementations
+    
+	private class Vertex implements Polyline2D.Vertex
+    {
+    	int index;
+    	
+    	public Vertex(int index)
+    	{
+    		this.index = index;
+    	}
+
+		@Override
+		public Point2D position()
+		{
+			return vertices.get(this.index);
+		}
+    }
+    
+    public class Edge implements Polyline2D.Edge
+    {
+    	int index;
+
+    	public Edge(int index)
+    	{
+    		this.index = index;
+    	}
+    	
+		@Override
+		public Polyline2D.Vertex source()
+		{
+			return new Vertex(this.index);
+		}
+
+		@Override
+		public Polyline2D.Vertex target()
+		{
+			return new Vertex((this.index + 1) % vertices.size());
+		}
+
+		@Override
+		public LineSegment2D curve()
+		{
+			Point2D v1 = vertices.get(this.index);
+			Point2D v2 = vertices.get((this.index + 1) % vertices.size());
+			return new LineSegment2D(v1, v2);
+		}
+    }
+    
+    
+    // ===================================================================
     // Edge iterator implementation
     
-    class EdgeIterator implements Iterator<LineSegment2D>
+    class EdgeIterator implements Iterator<Polyline2D.Edge>
     {
     	/**
     	 * Index of the first vertex of current edge
@@ -516,10 +618,10 @@ public class LinearRing2D implements Polyline2D, Contour2D
 		}
 
 		@Override
-		public LineSegment2D next()
+		public Edge next()
 		{
-			int index2 = (index + 1) % vertices.size();
-			return new LineSegment2D(vertices.get(index++), vertices.get(index2));
+			return new Edge(this.index++);
 		}
     }
+    
 }

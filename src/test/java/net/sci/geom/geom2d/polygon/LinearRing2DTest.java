@@ -3,14 +3,14 @@
  */
 package net.sci.geom.geom2d.polygon;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 
-import net.sci.geom.geom2d.LineSegment2D;
-import net.sci.geom.geom2d.Point2D;
-
 import org.junit.Test;
+
+import net.sci.geom.geom2d.Point2D;
 
 /**
  * @author dlegland
@@ -136,7 +136,7 @@ public class LinearRing2DTest
 				new Point2D(50, 20),
 				new Point2D(50, 40),
 				new Point2D(10, 40));
-		Iterator<LineSegment2D> iter = poly.edgeIterator();
+		Iterator<? extends Polyline2D.Edge> iter = poly.edgeIterator();
 		
 		int count = 0;
 		while(iter.hasNext())

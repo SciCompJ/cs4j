@@ -17,8 +17,9 @@ import net.sci.geom.geom2d.Point2D;
  * first one.
  * </p>
  * 
- * @author dlegland
  * @see LinearRing2D
+ * 
+ * @author dlegland
  */
 public class LineString2D implements Polyline2D
 {
@@ -161,27 +162,6 @@ public class LineString2D implements Polyline2D
     }
     
     /**
-     * Transforms this geometry with the specified affine transform.
-     * 
-     * @param trans
-     *            an affine transform
-     * @return the transformed line string
-     */
-    public LineString2D transform(AffineTransform2D trans)
-    {
-        int n = this.vertexNumber();
-        ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
-        for (int i = 0; i < n; i++)
-        {
-            newVertices.add(this.vertices.get(i).transform(trans));
-        }
-        
-        LineString2D res = new LineString2D(0);
-        res.vertices = newVertices;
-        return res;
-    }
-
-    /**
      * Returns a new linear ring with same vertices but in reverse order. The
      * first vertex of the new line string is the last vertex of this line
      * string.
@@ -200,12 +180,6 @@ public class LineString2D implements Polyline2D
         reverse.vertices = newVertices;
         return reverse;
     }
-
-    public Iterator<LineSegment2D> edgeIterator()
-    {
-    	return new EdgeIterator();
-    }
-    
 
     public Point2D getPointAtLength(double pos)
     {
@@ -231,6 +205,30 @@ public class LineString2D implements Polyline2D
         }
         return prev;
     }
+
+
+    // ===================================================================
+    // Management of edges
+    
+    @Override
+	public Iterable<? extends Polyline2D.Edge> edges()
+	{
+		return new Iterable<Polyline2D.Edge>() 
+		{
+
+			@Override
+			public Iterator<Polyline2D.Edge> iterator()
+			{
+				return new EdgeIterator();
+			}
+		};
+	}
+
+	public Iterator<? extends Polyline2D.Edge> edgeIterator()
+    {
+    	return new EdgeIterator();
+    }
+    
 
     // ===================================================================
     // Methods implementing the Curve2D interface
@@ -299,9 +297,84 @@ public class LineString2D implements Polyline2D
     
 
     // ===================================================================
+    // Implementation of Geometry methods
+    
+    /**
+	 * Transforms this geometry with the specified affine transform.
+	 * 
+	 * @param trans
+	 *            an affine transform
+	 * @return the transformed line string
+	 */
+	public LineString2D transform(AffineTransform2D trans)
+	{
+	    int n = this.vertexNumber();
+	    ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
+	    for (int i = 0; i < n; i++)
+	    {
+	        newVertices.add(this.vertices.get(i).transform(trans));
+	    }
+	    
+	    LineString2D res = new LineString2D(0);
+	    res.vertices = newVertices;
+	    return res;
+	}
+
+	
+    // ===================================================================
+    // Inner class implementations
+    
+	private class Vertex implements Polyline2D.Vertex
+    {
+    	int index;
+    	
+    	public Vertex(int index)
+    	{
+    		this.index = index;
+    	}
+
+		@Override
+		public Point2D position()
+		{
+			return vertices.get(this.index);
+		}
+    }
+    
+    public class Edge implements Polyline2D.Edge
+    {
+    	int index;
+
+    	public Edge(int index)
+    	{
+    		this.index = index;
+    	}
+    	
+		@Override
+		public Polyline2D.Vertex source()
+		{
+			return new Vertex(this.index);
+		}
+
+		@Override
+		public Polyline2D.Vertex target()
+		{
+			return new Vertex(this.index + 1);
+		}
+
+		@Override
+		public LineSegment2D curve()
+		{
+			Point2D v1 = vertices.get(this.index);
+			Point2D v2 = vertices.get(this.index + 1);
+			return new LineSegment2D(v1, v2);
+		}
+    }
+    
+    
+    // ===================================================================
     // Edge iterator implementation
     
-    class EdgeIterator implements Iterator<LineSegment2D>
+    class EdgeIterator implements Iterator<Polyline2D.Edge>
     {
     	/**
     	 * Index of the first vertex of current edge
@@ -315,10 +388,10 @@ public class LineString2D implements Polyline2D
 		}
 
 		@Override
-		public LineSegment2D next()
+		public Edge next()
 		{
-			int index2 = (index + 1) % vertices.size();
-			return new LineSegment2D(vertices.get(index++), vertices.get(index2));
+			return new Edge(this.index++);
 		}
     }
+    
 }
