@@ -242,8 +242,8 @@ public class TiffImageReaderTest
         Array<?> array = image.getData();
         assertEquals(5, array.dimensionality());
         
-        assertEquals(5, array.size(2));
-        assertEquals(2, array.size(3));
+        assertEquals(2, array.size(2));
+        assertEquals(5, array.size(3));
         assertEquals(51, array.size(4));
     }
 

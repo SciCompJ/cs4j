@@ -277,10 +277,8 @@ public class TiffImageReader implements ImageReader
 	    
 	    System.out.println("import ImageJ Tiff Image");
 	    
-        // iterate over the different tokens stored in description
-	    System.out.println(description);
-
 	    // iterate over the different tokens stored in description and convert into a map
+//	    System.out.println(description);
 	    Map<String, String> tokens = parseImageJTokens(description);
         
 	    int nImages = 1;
