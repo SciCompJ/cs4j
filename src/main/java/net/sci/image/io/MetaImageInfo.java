@@ -13,18 +13,21 @@ public final class MetaImageInfo
 	 */
 	public enum ElementType 
 	{
-		UINT8(1),
-		UINT16(2),
-        INT16(2),
-        INT32(4),
-		FLOAT32(4),
-		FLOAT64(8);
+		UINT8(1, "MET_UCHAR"),
+		UINT16(2, "MET_USHORT"),
+        INT16(2, "MET_SHORT"),
+        INT32(4, "MET_INT"),
+		FLOAT32(4, "MET_FLOAT"),
+		FLOAT64(8, "MET_DOUBLE");
 		
 		int bytesPerElement;
 		
-		private ElementType(int bytesPerElement)
+		String metString;
+		
+		private ElementType(int bytesPerElement, String metString)
 		{
 			this.bytesPerElement = bytesPerElement;
+			this.metString = metString;
 		}
 		
 		/**
@@ -79,6 +82,11 @@ public final class MetaImageInfo
 		{
 			return this.bytesPerElement;
 		}
+		
+		public String getMetString()
+		{
+			return this.metString;
+		}
 	}
 
 	public String ObjectTypeName = "";
@@ -96,6 +104,7 @@ public final class MetaImageInfo
 	/** the name of the file containing the data */
 	public String elementDataFile = null;
 
+	/** the size of the header (determined only when reading files). */
 	public int headerSize = 0;
 
 	// values for spatial calibration

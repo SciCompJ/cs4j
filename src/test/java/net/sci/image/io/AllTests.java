@@ -9,6 +9,7 @@ import org.junit.runners.Suite;
     BinaryDataReaderTest.class,
     ImageBinaryDataReaderTest.class,
     MetaImageReaderTest.class,
+    MetaImageWriterTest.class,
     PgmImageReaderTest.class,
     RawImageReaderTest.class,
     TiffImageReaderTest.class,
