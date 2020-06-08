@@ -40,7 +40,11 @@ public class MetaImageReader implements ImageReader
 
 		Array<?> data = readImageData(info);
 
-		return new Image(data);
+		Image image = new Image(data);
+		image.setNameFromFileName(file.getName());
+		image.setFilePath(file.getPath());
+		return image;
+
 	}
 
 	public MetaImageInfo readInfo(File file) throws IOException 

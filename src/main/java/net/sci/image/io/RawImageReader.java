@@ -114,7 +114,10 @@ public class RawImageReader implements ImageReader
     @Override
     public Image readImage() throws IOException
     {
-        return new Image(readImageData());
+		Image image = new Image(readImageData());
+		image.setNameFromFileName(file.getName());
+		image.setFilePath(file.getPath());
+		return image;
     }
     
     public Array<?> readImageData() throws IOException 

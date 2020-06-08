@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.Reader;
 import java.util.Scanner;
 
 import net.sci.array.scalar.Int;
@@ -21,18 +20,16 @@ import net.sci.image.Image;
  */
 public class PgmImageReader implements ImageReader
 {
-    
-    Reader reader;
+    File file;
     
     public PgmImageReader(File file) throws FileNotFoundException
     {
-        this.reader = new BufferedReader(new FileReader(file));
+    	this.file = file;
     }
     
     public PgmImageReader(String fileName) throws FileNotFoundException
     {
-        this.reader = new BufferedReader(new FileReader(fileName));
-        ;
+    	this.file = new File(fileName);
     }
     
     /*
@@ -44,7 +41,7 @@ public class PgmImageReader implements ImageReader
     public Image readImage() throws FileNotFoundException
     {
         // open a buffered text reader on the file
-        Scanner scanner = new Scanner(this.reader);
+        Scanner scanner = new Scanner(new BufferedReader(new FileReader(file)));
         
         String magicCode = readNextLine(scanner);
         if (!magicCode.equalsIgnoreCase("P2"))
@@ -78,7 +75,10 @@ public class PgmImageReader implements ImageReader
             }
         }
         
-        return new Image(array);
+		Image image = new Image(array);
+		image.setNameFromFileName(file.getName());
+		image.setFilePath(file.getPath());
+		return image;
     }
     
     private String readNextLine(Scanner scanner)

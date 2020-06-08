@@ -95,11 +95,12 @@ public class Image
 			image = reader.readImage();
 		}
 		
-		image.setName(file.getName());
+		image.setNameFromFileName(file.getName());
+		image.setFilePath(file.getPath());
+
 		return image;
 	}
 	
-
 
 	// =============================================================
 	// Class fields
@@ -123,6 +124,11 @@ public class Image
 	 * The name of the image, used to identify it and populate GUI widgets.
 	 */
 	String name = "";
+	
+	/**
+	 * The extension of the image when it was read from a file, or an empty String otherwise.
+	 */
+	String extension = "";
 	
     /**
      * The name of the full path to the image file, if loaded from a file.
@@ -309,6 +315,7 @@ public class Image
 	private void copySettings(Image parent)
 	{
 		this.name = parent.name;
+		this.extension = parent.extension;
 		
 		// duplicate the spatial calibration
 		this.calibration = parent.calibration.duplicate(); 
@@ -447,14 +454,40 @@ public class Image
     // =============================================================
     // Identification meta-data
 
+    /**
+     * @return the name of this image (without the file name extension).
+     */
     public String getName()
 	{
 		return this.name;
 	}
 
+    /**
+     * @return the extension associated to this image, or an empty String.
+     */
+    public String getExtension()
+	{
+		return this.extension;
+	}
+
+    /**
+     * @return the name of this image together with the extension, if it is not null.
+     */
+    public String getFullName()
+	{
+    	if (this.extension.isEmpty())
+    		return this.name;
+    	return this.name + "." + this.extension;
+	}
+
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+	
+	public void setExtension(String extension)
+	{
+		this.extension = extension;
 	}
 	
     public String getFilePath()
@@ -467,6 +500,61 @@ public class Image
         this.filePath = path;
     }
     
+    /**
+	 * Initializes the name and the extension from the file name.
+	 * 
+	 * @param fileName
+	 *            the name of the file used to load this image.
+	 */
+    public void setNameFromFileName(String fileName)
+    {
+		String[] fileParts = splitFileName(fileName);
+		if (!fileParts[0].isEmpty())
+		{
+			this.name = fileParts[0];
+			this.extension = fileParts[1];
+		}
+		else
+		{
+			// special case of a file name starting with a dot -> keep the full name.
+			this.name = fileName;
+		}
+    }
+    
+	/**
+	 * Converts a file name (or a file path) into a String array containing the
+	 * base file name and the extension. Either the base name or the extension
+	 * may be empty.
+	 * 
+	 * @param fileName
+	 *            the original file name
+	 * @return a String array containing the base file name and the extension
+	 */
+	private static final String[] splitFileName(String fileName)
+	{
+	    // Remove the path up to the last separator
+	    String separator = System.getProperty("file.separator");
+	    int sepIndex = fileName.lastIndexOf(separator);
+	    String baseName = sepIndex == -1 ? fileName : fileName.substring(sepIndex + 1);
+
+	    // find extension index
+	    int extIndex = baseName.lastIndexOf(".");
+	    if (extIndex == -1)
+	    {
+	    	// no extension
+		    return new String[] {baseName, ""};
+	    }
+	    else
+	    {
+	    	// split before and after extension
+			return new String[] { 
+					baseName.substring(0, extIndex),
+					baseName.substring(extIndex + 1) };
+	    }
+	}
+	
+
+
 
 	// =============================================================
 	// Basic accessors

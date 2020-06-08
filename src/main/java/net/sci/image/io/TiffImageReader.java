@@ -213,6 +213,7 @@ public class TiffImageReader implements ImageReader
         image.tiffTags = info.tags;
 		
         // setup the file related to the image
+		image.setNameFromFileName(filePath);
         image.setFilePath(this.filePath);
 
         // Setup spatial calibration

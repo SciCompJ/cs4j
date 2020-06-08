@@ -142,7 +142,8 @@ public class VgiImageReader implements ImageReader
         
         // Create new image
         Image image = new Image(array);
-        image.setFilePath(file.getPath());
+		image.setNameFromFileName(file.getName());
+		image.setFilePath(file.getPath());
         
         // setup spatial resolution
         image.setCalibration(new Calibration(resol, unitName));
