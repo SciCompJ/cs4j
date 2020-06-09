@@ -437,6 +437,7 @@ public class TiffImageReader implements ImageReader
 	    }
 	    
         // setup the file related to the image
+		image.setNameFromFileName(filePath);
         image.setFilePath(this.filePath);
         
 	    return image;
