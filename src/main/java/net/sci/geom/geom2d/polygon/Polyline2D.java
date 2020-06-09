@@ -4,12 +4,14 @@
 package net.sci.geom.geom2d.polygon;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Box2D;
 import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.LineSegment2D;
+import net.sci.geom.geom2d.LinearGeometry2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
@@ -128,6 +130,21 @@ public interface Polyline2D extends Curve2D
     // ===================================================================
     // Methods related to Curve2D 
 
+	public default Collection<Point2D> intersections(LinearGeometry2D line)
+	{
+		ArrayList<Point2D> inters = new ArrayList<Point2D>();
+		for (Edge edge : edges())
+		{
+			Point2D point = edge.curve().intersection(line);
+			if (point != null)
+			{
+				inters.add(point);
+			}
+		}
+		return inters;
+	}
+	
+	
     /**
      * Returns the polyline composed with the same vertices, but in reverse order.
      * 

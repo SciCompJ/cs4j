@@ -6,11 +6,14 @@ package net.sci.geom.geom2d.polygon;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.junit.Test;
 
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.StraightLine2D;
+import net.sci.geom.geom2d.Vector2D;
 
 /**
  * @author dlegland
@@ -145,6 +148,92 @@ public class LinearRing2DTest
 			count++;
 		}
 		assertEquals(4, count);
+	}
+
+	@Test
+    public final void testIntersectionsStraightLine2D_square_LineH()
+	{
+		LinearRing2D ring = new LinearRing2D(
+				new Point2D(10, 20),
+				new Point2D(50, 20),
+				new Point2D(50, 40),
+				new Point2D(10, 40));
+		
+		StraightLine2D line = new StraightLine2D(new Point2D(0, 30), new Vector2D(3.3, 0));
+		Collection<Point2D> intersections = ring.intersections(line);
+		
+		assertEquals(2, intersections.size());
+		assertTrue(containsPoint(intersections, new Point2D(10, 30), 0.01));
+		assertTrue(containsPoint(intersections, new Point2D(50, 30), 0.01));
+	}
+	
+	@Test
+    public final void testIntersectionsStraightLine2D_square_LineV()
+	{
+		LinearRing2D ring = new LinearRing2D(
+				new Point2D(10, 20),
+				new Point2D(50, 20),
+				new Point2D(50, 40),
+				new Point2D(10, 40));
+		
+		StraightLine2D line = new StraightLine2D(new Point2D(20, 0), new Vector2D(0.0, 3.3));
+		Collection<Point2D> intersections = ring.intersections(line);
+		
+		assertEquals(2, intersections.size());
+		assertTrue(containsPoint(intersections, new Point2D(20, 20), 0.01));
+		assertTrue(containsPoint(intersections, new Point2D(20, 40), 0.01));
+	}
+	
+	@Test
+    public final void testIntersectionsStraightLine2D_polygon_LineH()
+	{
+		LinearRing2D ring = new LinearRing2D(
+				new Point2D(10, 20),
+				new Point2D(30, 60),
+				new Point2D(40, 40),
+				new Point2D(70, 70),
+				new Point2D(90, 20));
+		
+		StraightLine2D line = new StraightLine2D(new Point2D(4.5, 50), new Vector2D(1.3, 0));
+		Collection<Point2D> intersections = ring.intersections(line);
+		
+		assertEquals(4, intersections.size());
+		assertTrue(containsPoint(intersections, new Point2D(25, 50), 0.01));
+		assertTrue(containsPoint(intersections, new Point2D(35, 50), 0.01));
+		assertTrue(containsPoint(intersections, new Point2D(50, 50), 0.01));
+		assertTrue(containsPoint(intersections, new Point2D(78, 50), 0.01));
+	}
+	
+	@Test
+    public final void testIntersectionsStraightLine2D_polygon_LineH2()
+	{
+		LinearRing2D ring = new LinearRing2D(
+				new Point2D(10, 20),
+				new Point2D(30, 60),
+				new Point2D(40, 40),
+				new Point2D(70, 70),
+				new Point2D(90, 20));
+		
+		StraightLine2D line = new StraightLine2D(new Point2D(4.5, 40), new Vector2D(1.3, 0));
+		Collection<Point2D> intersections = ring.intersections(line);
+		
+		assertEquals(4, intersections.size());
+//		assertTrue(containsPoint(intersections, new Point2D(25, 50), 0.01));
+//		assertTrue(containsPoint(intersections, new Point2D(35, 50), 0.01));
+//		assertTrue(containsPoint(intersections, new Point2D(50, 50), 0.01));
+//		assertTrue(containsPoint(intersections, new Point2D(78, 50), 0.01));
+	}
+	
+	private boolean containsPoint(Collection<Point2D> points, Point2D q, double eps)
+	{
+		for (Point2D p : points)
+		{
+			if (p.almostEquals(q, eps))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
     /**
