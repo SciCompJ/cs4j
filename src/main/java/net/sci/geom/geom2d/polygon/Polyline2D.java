@@ -115,6 +115,11 @@ public interface Polyline2D extends Curve2D
     public Iterable<Point2D> vertexPositions();
     
 
+    // ===================================================================
+    // Management of edges 
+
+    public Edge edge(int edgeIndex);
+    
     public Iterable<? extends Edge> edges();
     
     public Iterator<? extends Edge> edgeIterator();

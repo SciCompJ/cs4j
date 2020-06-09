@@ -35,6 +35,23 @@ public interface Polygon2D extends PolygonalDomain2D
     }
 
     /**
+     * Converts a polyline into a polygon.
+     * 
+     * @param polyline
+     *            the polyline to convert
+     * @return a new polygon formed by the vertices of the original polyline.
+     */
+    public static Polygon2D convert(Polyline2D polyline)
+    {
+    	DefaultPolygon2D poly = new DefaultPolygon2D(polyline.vertexNumber());
+    	for (Point2D p : polyline.vertexPositions())
+    	{
+    		poly.addVertex(p);
+    	}
+    	return poly;
+    }
+
+    /**
      * Creates a new instance of Polygon2D from a collection of vertices.
      * 
      * @param vertices

@@ -160,6 +160,27 @@ public class Vector2D implements Dimensional
 	// ===================================================================
     // Methods specific to Vector2D
 
+	/**
+	 * Applies <em> rotations</em> by 90 degrees in counter-clockwise
+	 * orientation.
+	 * 
+	 * @param n
+	 *            the number of 90-degrees rotations to apply.
+	 * @return the rotated vector.
+	 */
+    public Vector2D rotate90(int n)
+    {
+    	n = ((n % 4) + 4) % 4;
+    	switch(n)
+    	{
+    	case 0: return this;
+    	case 1: return new Vector2D( y, -x);
+    	case 2: return new Vector2D(-x, -y);
+    	case 3: return new Vector2D(-y,  x);
+    	default: return this; // should never happen...
+    	}
+    }
+
     /**
      * Returns the result of the given transformation applied to this vector.
      * 

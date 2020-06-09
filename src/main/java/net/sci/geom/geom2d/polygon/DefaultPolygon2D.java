@@ -75,10 +75,13 @@ public class DefaultPolygon2D implements Polygon2D
     }
     
     /**
-     * Ensures the polygon has enough memory for storing the required number of
-     * vertices.
-     */
-    private DefaultPolygon2D(int nVertices)
+	 * Ensures the polygon has enough memory for storing the required number of
+	 * vertices.
+	 * 
+	 * @param nVertices
+	 *            the estimated number of vertices the polygon will contain.
+	 */
+    public DefaultPolygon2D(int nVertices)
     {
         this.vertices = new ArrayList<Point2D>(nVertices);
     }

@@ -418,12 +418,20 @@ public class LinearRing2D implements Polyline2D, Contour2D
     // ===================================================================
     // Management of edges
     
+    public Polyline2D.Edge edge(int edgeIndex)
+    {
+    	if (edgeIndex < 0 || edgeIndex >= vertices.size())
+    	{
+    		throw new RuntimeException("Edge index out of bounds: " + edgeIndex);
+    	}
+    	return new Edge(edgeIndex);
+    }
+    
     @Override
 	public Iterable<? extends Polyline2D.Edge> edges()
 	{
 		return new Iterable<Polyline2D.Edge>() 
 		{
-
 			@Override
 			public Iterator<Polyline2D.Edge> iterator()
 			{

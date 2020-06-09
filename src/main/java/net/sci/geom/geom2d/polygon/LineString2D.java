@@ -210,6 +210,15 @@ public class LineString2D implements Polyline2D
     // ===================================================================
     // Management of edges
     
+    public Polyline2D.Edge edge(int edgeIndex)
+    {
+    	if (edgeIndex < 0 || edgeIndex >= vertices.size()-1)
+    	{
+    		throw new RuntimeException("Edge index out of bounds: " + edgeIndex);
+    	}
+    	return new Edge(edgeIndex);
+    }
+    
     @Override
 	public Iterable<? extends Polyline2D.Edge> edges()
 	{
