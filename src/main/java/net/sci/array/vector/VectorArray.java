@@ -24,7 +24,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	// Static methods
 	
 	/**
-	 * Computes the norm of each element of the given vector array.
+	 * Computes the L2-norm of each element of the given vector array.
 	 * 
 	 * Current implementation returns the result in a new instance of
 	 * Float32Array.
@@ -42,12 +42,49 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
         double[] values = new double[array.channelNumber()];
         for(int[] pos : array.positions())
         {
-            result.setValue(norm(array.getValues(pos, values)), pos);
+            result.setValue(Vector.norm(array.getValues(pos, values)), pos);
         }
 
 		return result;
 	}
 	
+    /**
+     * Computes the max-norm (or infinity norm) of each element of the given
+     * vector array. This corresponds to computing the maximum of the absolute
+     * values of elements of each vector.
+     * 
+     * Current implementation returns the result in a new instance of
+     * Float32Array.
+     * 
+     * @param array
+     *            a vector array
+     * @return a scalar array with the same size at the input array
+     */
+    public static ScalarArray<?> maxNorm(VectorArray<? extends Vector<?>> array)
+    {
+        // allocate memory for result
+        Float32Array result = Float32Array.create(array.size());
+        
+        // iterate over both arrays in parallel
+        double[] values = new double[array.channelNumber()];
+        for(int[] pos : array.positions())
+        {
+            array.getValues(pos, values);
+            result.setValue(Vector.maxNorm(values), pos);
+        }
+
+        return result;
+    }
+
+    
+    /**
+     * Splits the vector array into a collection of scalar arrays, corresponding
+     * to each component.
+     * 
+     * @param array
+     *            the vector array to split.
+     * @return collection of scalar arrays, corresponding to each component.
+     */
 	public static Collection<ScalarArray<?>> splitChannels(VectorArray<? extends Vector<?>> array)
 	{
 	    int nc = array.channelNumber();
@@ -60,25 +97,6 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 	    return channels;
 	}
 	
-    /**
-     * Computes the norm of the vector represented by given values
-     * 
-     * @param values
-     *            the values of the vector
-     * @return the norm of the vector
-     */
-    public static double norm(double[] values)
-    {
-        // compute norm of current vector
-        double norm = 0;
-        for (double d : values)
-        {
-            norm += d * d;
-        }
-        return Math.sqrt(norm);
-    }
-    
-
 
 	// =============================================================
 	// New methods
@@ -100,7 +118,7 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
         double[] values = new double[channelNumber()];
         for (int[] pos : this.positions())
         {
-            result.setValue(norm(getValues(pos, values)), pos);
+            result.setValue(Vector.norm(getValues(pos, values)), pos);
         }
         
         return result;

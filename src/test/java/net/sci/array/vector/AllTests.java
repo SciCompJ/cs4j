@@ -12,6 +12,7 @@ import org.junit.runners.Suite;
     Float64VectorArray3DTest.class,
     Float64VectorArray2DChannelViewTest.class,
     Float64VectorArray3DChannelViewTest.class,
+    VectorTest.class,
 	})
 public class AllTests {
   //nothing

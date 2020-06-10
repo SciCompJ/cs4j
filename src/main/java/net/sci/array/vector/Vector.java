@@ -13,6 +13,50 @@ import net.sci.array.scalar.Scalar;
  */
 public abstract class Vector<T extends Scalar>
 {
+    // =============================================================
+    // Static methods
+    
+    /**
+     * Computes the norm of the vector represented by given values
+     * 
+     * @param values
+     *            the values of the vector
+     * @return the norm of the vector
+     */
+    public static double norm(double[] values)
+    {
+        // compute norm of current vector
+        double norm = 0;
+        for (double d : values)
+        {
+            norm += d * d;
+        }
+        return Math.sqrt(norm);
+    }
+    
+    /**
+     * Computes the max norm, or infinity norm, of the vector represented by
+     * given values.
+     * 
+     * @param values
+     *            the values of the vector
+     * @return the maximum of the absolute values of the elements in the vector.
+     */
+    public static double maxNorm(double[] values)
+    {
+        // compute max-norm of current vector
+        double max = 0;
+        for (double v : values)
+        {
+            max = Math.max(max, Math.abs(v));
+        }
+        return max;
+    }
+    
+    
+    // =============================================================
+    // Interface methods
+    
     /**
      * Returns the set of values that constitutes this vector.
      * 
