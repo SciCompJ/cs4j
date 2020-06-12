@@ -3,7 +3,6 @@
  */
 package net.sci.image.morphology.strel;
 
-import net.sci.algo.Algo;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.morphology.Strel;
 
@@ -13,7 +12,7 @@ import net.sci.image.morphology.Strel;
  * @author David Legland
  *
  */
-public interface Strel3D extends Strel, Algo 
+public interface Strel3D extends Strel
 {
     // ===================================================================
     // Static methods

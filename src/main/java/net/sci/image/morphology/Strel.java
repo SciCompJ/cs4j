@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology;
 
+import net.sci.algo.Algo;
 import net.sci.image.morphology.strel.Strel2D;
 import net.sci.image.morphology.strel.Strel3D;
 
@@ -15,7 +16,7 @@ import net.sci.image.morphology.strel.Strel3D;
  * @author dlegland
  *
  */
-public interface Strel
+public interface Strel extends Algo
 {
     /**
      * Returns a reversed (i.e. symmetric wrt the origin) version of this

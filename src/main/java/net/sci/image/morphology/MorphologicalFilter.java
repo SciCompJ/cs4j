@@ -109,7 +109,7 @@ public abstract class MorphologicalFilter
             if (this == GRADIENT)
                 return new Gradient(strel).process(array);
             if (this == LAPLACIAN)
-                return new Laplacian(strel, 128.0).process(array);
+                return new Laplacian(strel, 128.0).process(array);// TODO: adapt middle value to array type
 //            if (this == INTERNAL_GRADIENT)
 //                return internalGradient(array, strel);
 //            if (this == EXTERNAL_GRADIENT)

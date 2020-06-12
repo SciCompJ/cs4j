@@ -3,7 +3,6 @@
  */
 package net.sci.image.morphology.strel;
 
-import net.sci.algo.Algo;
 import net.sci.array.Array2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.morphology.Strel;
@@ -31,7 +30,7 @@ import net.sci.image.morphology.Strel;
  * @author David Legland
  *
  */
-public interface Strel2D extends Strel, Algo
+public interface Strel2D extends Strel
 {
     // ===================================================================
     // Enumeration
