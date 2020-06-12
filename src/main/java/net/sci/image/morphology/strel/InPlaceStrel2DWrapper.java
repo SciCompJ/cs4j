@@ -24,8 +24,10 @@ public class InPlaceStrel2DWrapper extends Strel2DWrapper implements InPlaceStre
         for (int z = 0; z < sizeZ; z++)
         {
             // perform operation on current slice
+            this.fireProgressChanged(this, z, sizeZ);
             ((InPlaceStrel2D) this.strel2d).inPlaceDilation(array.slice(z));
         }
+        this.fireProgressChanged(this, 1, 1);
     }
 
 
@@ -36,8 +38,10 @@ public class InPlaceStrel2DWrapper extends Strel2DWrapper implements InPlaceStre
         for (int z = 0; z < sizeZ; z++)
         {
             // perform operation on current slice
+            this.fireProgressChanged(this, z, sizeZ);
             ((InPlaceStrel2D) this.strel2d).inPlaceErosion(array.slice(z));
         }
+        this.fireProgressChanged(this, 1, 1);
     }
 
 
@@ -46,5 +50,4 @@ public class InPlaceStrel2DWrapper extends Strel2DWrapper implements InPlaceStre
     {
         return new InPlaceStrel2DWrapper(((InPlaceStrel2D) strel2d).reverse());
     }
-
 }

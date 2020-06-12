@@ -90,6 +90,7 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
         for (int z = 0; z < sizeZ; z++)
         {
             // perform operation on current slice
+            this.fireProgressChanged(this, z, sizeZ);
             ScalarArray2D<?> resZ = strel2d.dilation(array.slice(z));
             
             // copy 2D result into 3D array
@@ -102,6 +103,7 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
             }
         }
         
+        this.fireProgressChanged(this, 1, 1);
         return result;
     }
 
@@ -115,6 +117,7 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
         for (int z = 0; z < sizeZ; z++)
         {
             // perform operation on current slice
+            this.fireProgressChanged(this, z, sizeZ);
             ScalarArray2D<?> resZ = strel2d.erosion(array.slice(z));
             
             // copy 2D result into 3D array
@@ -127,7 +130,7 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
             }
         }
         
+        this.fireProgressChanged(this, 1, 1);
         return result;
     }
-
 }
