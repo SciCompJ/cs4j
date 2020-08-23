@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.scalar.BinaryArray;
 import net.sci.array.scalar.Int;
@@ -243,11 +244,15 @@ public class Image
 		else if (this.data instanceof ScalarArray) 
 		{
 			this.type = Type.INTENSITY;
-		} 
-		else if (this.data instanceof RGB8Array)
-		{
-			this.type = Type.COLOR;
-		} 
+		}
+        else if (this.data instanceof RGB8Array)
+        {
+            this.type = Type.COLOR;
+        } 
+        else if (this.data instanceof RGB16Array)
+        {
+            this.type = Type.COLOR;
+        } 
 		else if (this.data instanceof VectorArray) 
 		{
 			this.type = Type.VECTOR;
