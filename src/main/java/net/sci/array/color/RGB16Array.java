@@ -187,6 +187,27 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	 */
 	public UInt16Array convertToUInt16();
 	
+    /**
+     * Converts this RGB16 array into a new RGB8 Array, by dividing the values
+     * within each channel by 256.
+     * 
+     * @return an RGB8 version of this RGB16 array
+     */
+    public default RGB8Array convertToRGB8()
+    {
+        RGB8Array res = RGB8Array.create(this.size());
+        int[] rgb16 = new int[3];
+        int[] rgb8 = new int[3];
+        for (int[] pos : res.positions())
+        {
+            getSamples(pos, rgb16);
+            rgb8[0] = rgb16[0] / 256; 
+            rgb8[1] = rgb16[1] / 256; 
+            rgb8[2] = rgb16[2] / 256;
+            res.setSamples(pos, rgb8);
+        }
+        return res;
+    }
 
     // =============================================================
     // Implementation of VectorArray interface
