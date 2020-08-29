@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
 	// generic classes
     ConcatenateTest.class,
     CropTest.class,
+    DownSamplerTest.class,
     FlipTest.class,
 	OrthogonalProjectionTest.class,
 	PermuteDimensionsTest.class,
