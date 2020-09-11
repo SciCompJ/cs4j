@@ -302,6 +302,20 @@ public class Image
 				throw new RuntimeException("Grayscale or intensity images require scalar array for data");
 			}
 		}
+        else if (this.type == Type.COLOR)
+        {
+            // For color images, display range is applied to each channel identically.
+            if (this.data instanceof RGB8Array)
+            {
+                // (in theory not used)
+                this.displaySettings.displayRange = new double[]{0, 255};
+            }
+            else if (this.data instanceof RGB16Array)
+            {
+                // can be later adjusted
+                this.displaySettings.displayRange = new double[]{0, 65535};
+            }
+        }
 		else if (this.type == Type.LABEL)
 		{
 			// check array type
@@ -325,10 +339,25 @@ public class Image
 		// duplicate the spatial calibration
 		this.calibration = parent.calibration.duplicate(); 
 
-		// copy display settings only if same type
+		// copy display settings only if same data type
 		if (this.type == parent.type)
 		{
-		    this.displaySettings = parent.displaySettings.duplicate();
+		    if (this.type == Type.COLOR)
+		    {
+		        // Additional processing to propagate settings only if same data type
+		        if (this.data instanceof RGB8Array && parent.data instanceof RGB8Array)
+		        {
+		            this.displaySettings = parent.displaySettings.duplicate();
+		        }
+                if (this.data instanceof RGB16Array && parent.data instanceof RGB16Array)
+                {
+                    this.displaySettings = parent.displaySettings.duplicate();
+                }
+		    }
+		    else
+		    {
+		        this.displaySettings = parent.displaySettings.duplicate();
+		    }
 		}
 		
         // copy meta-data if any (may be obsolete...)

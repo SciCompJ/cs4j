@@ -88,8 +88,9 @@ public class BufferedImageUtils
             } 
             else if (array instanceof RGB16Array)
             {
-                // call the standard way for converting planar RGB16 images
-                return createAwtImageRGB16((RGB16Array) array);
+                // convert RBG16 image to AWT image, using display range
+                double[] displayRange = image.getDisplaySettings().getDisplayRange();
+                return createAwtImageRGB16((RGB16Array) array, displayRange);
             }
             else
             {
@@ -485,6 +486,67 @@ public class BufferedImageUtils
         
         return bufImg;
     }
+    
+    
+    /**
+     * Converts the RGB16 array into an instance of BufferedImage, by converting all
+     * color components into 0 and 255, taking into account the specified display
+     * range.
+     * 
+     * @param array        the array to convert, only the first two dimensions are
+     *                     processed.
+     * @param displayRange the values that will be mapped to 0 and 255 in each
+     *                     channel.
+     * @return an instance of BufferedImage that can be easily displayed.
+     */
+    public static final java.awt.image.BufferedImage createAwtImageRGB16(RGB16Array array, double displayRange[])
+    {
+        // get array dimensions
+        if (array.dimensionality() < 2)
+        {
+            throw new IllegalArgumentException("Expect an array with two dimensions");
+        }
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        
+        // compute coefficients of correction
+        if (displayRange.length < 2)
+        {
+            throw new IllegalArgumentException("Display range must have two elements");
+        }
+        double v0 = displayRange[0];
+        double k = 255.0 / (displayRange[1] - v0);
+ 
+        // allocate memory for result AWT image
+        int type = java.awt.image.BufferedImage.TYPE_INT_RGB;
+        BufferedImage bufImg = new BufferedImage(sizeX, sizeY, type);
+        WritableRaster raster = bufImg.getRaster();
+        
+        // prepare for iteration
+        int[] pos = new int[2];
+        int[] samples = new int[3];
+        
+        // iterate over positions within array
+        for (int y = 0; y < sizeY; y++)
+        {
+            pos[1] = y;
+            for (int x = 0; x < sizeX; x++)
+            {
+                pos[0] = x;
+                array.getSamples(pos, samples);
+
+                // process each channel of current pixel
+                for (int c = 0; c < 3; c++)
+                {
+                    int v = (int) Math.min(Math.max((samples[c] - v0) * k, 0), 255);
+                    raster.setSample(x, y, c, v);
+                }
+            }
+        }
+        
+        return bufImg;
+    }
+    
 //	public static final java.awt.image.BufferedImage convertImageSlice(Image image, int sliceIndex)
 //	{
 //		// extract LUT from image, or create one otherwise

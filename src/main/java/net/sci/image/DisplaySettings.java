@@ -20,6 +20,9 @@ public class DisplaySettings
 
     /**
      * The min and max displayable values of scalar images. Default is [0, 255].
+     * 
+     * Can be used for color images as well. In that case, display range is applied
+     * to each channel identically.
      */
     double[] displayRange = new double[]{0, 255};
 
