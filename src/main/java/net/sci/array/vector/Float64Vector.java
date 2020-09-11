@@ -13,14 +13,35 @@ import net.sci.array.scalar.Float64;
  */
 public class Float64Vector extends Vector<Float64>
 {
+    // =============================================================
+    // Class variables
+    
 	double[] data;
 	
+	
+    // =============================================================
+    // Constructors
+    
+    public Float64Vector(int nChannels)
+    {
+        this.data = new double[nChannels];
+    }
+
 	public Float64Vector(double[] array)
 	{
 		this.data = new double[array.length];
 		System.arraycopy(array, 0, this.data, 0, array.length);
 	}
 	
+    // =============================================================
+    // Implementation of Vector interface
+    
+    @Override
+    public int size()
+    {
+        return this.data.length;
+    }
+
 	/**
 	 * Returns a defensive copy of the inner array.
 	 */
@@ -58,12 +79,6 @@ public class Float64Vector extends Vector<Float64>
 	public Float64 get(int i)
 	{
 		return new Float64(this.data[i]);
-	}
-
-	@Override
-	public int size()
-	{
-		return this.data.length;
 	}
 	
 

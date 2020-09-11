@@ -424,7 +424,8 @@ public class RGB16 extends IntVector<UInt16> implements Color
 	{
 		return 3;
 	}
-	
+
+    
     // =============================================================
     // Override Object methods
     

@@ -20,9 +20,14 @@ public class Float32Vector extends Vector<Float32>
 	
 	
 	// =============================================================
-	// Constructor
+	// Constructors
 	
-	public Float32Vector(float[] array)
+    public Float32Vector(int nChannels)
+    {
+        this.data = new float[nChannels];
+    }
+
+    public Float32Vector(float[] array)
 	{
 		this.data = new float[array.length];
 		System.arraycopy(array, 0, this.data, 0, array.length);
@@ -64,9 +69,16 @@ public class Float32Vector extends Vector<Float32>
 		return this.data[c];
 	}
 
+	
 	// =============================================================
 	// Implementation of Vector interface
 	
+    @Override
+    public int size()
+    {
+    	return this.data.length;
+    }
+
     /**
      * Returns a defensive copy of the inner array.
      */
@@ -109,11 +121,7 @@ public class Float32Vector extends Vector<Float32>
 		return new Float32(this.data[c]);
 	}
 
-	@Override
-	public int size()
-	{
-		return this.data.length;
-	}
+	
 	
 
 	// =============================================================

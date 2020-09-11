@@ -79,8 +79,22 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	 *            the new integer value
 	 */
 	public void setInt(int value, int... pos);
-    
-	
+
+
+    // =============================================================
+    // Specialization of the ScalarArray interface
+
+    /**
+     * Fills the array with the specified double value.
+     * 
+     * @param value the value to fill the array with
+     */
+    public default void fillValue(double value)
+    {
+        int intValue = (int) value;
+        this.fillInt(intValue);
+    }
+
 	// =============================================================
 	// Specialization of the Array interface
 

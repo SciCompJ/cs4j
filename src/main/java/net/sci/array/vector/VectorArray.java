@@ -5,9 +5,11 @@ package net.sci.array.vector;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
+import net.sci.array.NumericArray;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
@@ -18,7 +20,7 @@ import net.sci.array.scalar.ScalarArray;
  * @author dlegland
  *
  */
-public interface VectorArray<V extends Vector<?>> extends Array<V>
+public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
 {
 	// =============================================================
 	// Static methods
@@ -243,8 +245,241 @@ public interface VectorArray<V extends Vector<?>> extends Array<V>
 
     
     // =============================================================
+    // Implementation of comparison with scalar
+
+    public default VectorArray<V> min(double v)
+    {
+        // create result array
+        VectorArray<V> res = newInstance(size());
+        
+        // prepare iteration
+        int nc = channelNumber();
+        double[] values = new double[nc];
+        
+        // iterate over positions
+        for (int[] pos : positions())
+        {
+            this.getValues(pos, values);
+            for (int c = 0; c < nc; c++)
+            {
+                values[c] = Math.min(values[c], v);
+            }
+            res.setValues(pos, values);
+        }
+        
+        // return result
+        return res;
+    }
+    
+    public default VectorArray<V> max(double v)
+    {
+        // create result array
+        VectorArray<V> res = newInstance(size());
+        
+        // prepare iteration
+        int nc = channelNumber();
+        double[] values = new double[nc];
+        
+        // iterate over positions
+        for (int[] pos : positions())
+        {
+            this.getValues(pos, values);
+            for (int c = 0; c < nc; c++)
+            {
+                values[c] = Math.max(values[c], v);
+            }
+            res.setValues(pos, values);
+        }
+        
+        // return result
+        return res;
+    }
+    
+
+    // =============================================================
+    // Implementation of NumericArray interface
+    
+    public default VectorArray<V> plus(double v)
+    {
+        VectorArray<V> res = newInstance(size());
+        
+        int nc = channelNumber();
+        double[] values = new double[nc];
+        
+        for (int[] pos : positions())
+        {
+            this.getValues(pos, values);
+            for (int c = 0; c < nc; c++)
+            {
+                values[c] += v;
+            }
+            res.setValues(pos, values);
+        }
+        return res;
+    }
+
+    public default VectorArray<V> minus(double v)
+    {
+        VectorArray<V> res = newInstance(size());
+        
+        int nc = channelNumber();
+        double[] values = new double[nc];
+        
+        for (int[] pos : positions())
+        {
+            this.getValues(pos, values);
+            for (int c = 0; c < nc; c++)
+            {
+                values[c] -= v;
+            }
+            res.setValues(pos, values);
+        }
+        return res;
+    }
+
+    public default VectorArray<V> times(double v)
+    {
+        VectorArray<V> res = newInstance(size());
+        
+        int nc = channelNumber();
+        double[] values = new double[nc];
+        
+        for (int[] pos : positions())
+        {
+            this.getValues(pos, values);
+            for (int c = 0; c < nc; c++)
+            {
+                values[c] *= v;
+            }
+            res.setValues(pos, values);
+        }
+        return res;
+    }
+
+    public default VectorArray<V> divideBy(double v)
+    {
+        VectorArray<V> res = newInstance(size());
+        
+        int nc = channelNumber();
+        double[] values = new double[nc];
+        
+        for (int[] pos : positions())
+        {
+            this.getValues(pos, values);
+            for (int c = 0; c < nc; c++)
+            {
+                values[c] /= v;
+            }
+            res.setValues(pos, values);
+        }
+        return res;
+    }
+
+    /**
+     * Applies the given function to each element of each channel the array, and
+     * return a new Array with the same class.
+     * 
+     * @param fun the function to apply
+     * @return the result array
+     */
+    public default VectorArray<V> apply(UnaryOperator<Double> fun)
+    {
+        VectorArray<V> res = newInstance(size());
+        apply(fun, res);
+        return res;
+    }
+
+    /**
+     * Applies the given function to each element of each channel the array, and
+     * return a reference to the output array.
+     * 
+     * @param fun
+     *            the function to apply
+     * @param output
+     *            the array to put the result in
+     * @return the result array
+     */
+    public default VectorArray<V> apply(UnaryOperator<Double> fun, VectorArray<V> output)
+    {
+        if (!Arrays.isSameSize(this, output))
+        {
+            throw new IllegalArgumentException("Output array must have same size as input array");
+        }
+        
+        // prepare iteration
+        int nc = channelNumber();
+        double[] values = new double[nc];
+
+        for (int[] pos : positions())
+        {
+            // get values from source
+            this.getValues(pos, values);
+            
+            // apply function to each value
+            for (int c = 0; c < nc; c++)
+            {
+                values[c] = fun.apply(values[c]);
+            }
+            
+            // put result in target at current position
+            output.setValues(pos, values);
+        }
+        return output;
+    }
+    
+
+    // =============================================================
     // Specialization of Array interface
     
+//    /**
+//     * Creates a new vector array with new dimensions and containing the same
+//     * elements.
+//     * 
+//     * This method overrides the default behavior of the Array interface to
+//     * simply manipulate double values.
+//     * 
+//     * </pre>{@code
+//     * UInt8Array array = UInt8Array2D.create(6, 4);
+//     * array.populateValues((x,y) -> x + 10 * y);
+//     * ScalarArray<?> reshaped = array.reshape(4, 3, 2);
+//     * double last = reshaped.getValue(new int[]{3, 2, 1}); // equals 35
+//     * }
+//     * 
+//     * @param newDims
+//     *            the dimensions of the new array
+//     * @return a new array with same type and containing the same values
+//     */
+//    @Override
+//    public default VectorArray<V> reshape(int... newDims)
+//    {
+//        // check dimension consistency
+//        int n2 = 1;
+//        for (int dim : newDims)
+//        {
+//            n2 *= dim;
+//        }
+//        if (n2 != this.elementNumber())
+//        {
+//            throw new IllegalArgumentException("The element number should not change after reshape.");
+//        }
+//        
+//        // allocate memory
+//        VectorArray<V> res = this.newInstance(newDims);
+//        
+//        // iterate using a pair of Iterator instances
+//        Iterator<V> iter1 = this.iterator();
+//        Iterator<V> iter2 = res.iterator();
+//        while(iter1.hasNext())
+//        {
+//            iter1.forward();
+//            iter2.forward();
+//            iter2.siter1.getValues(values);
+//            iter2.setNextValue(iter1.nextValues());
+//        }
+//        
+//        return res;
+//    }
+   
 	@Override
 	public VectorArray<V> newInstance(int... dims);
 	

@@ -460,7 +460,8 @@ public class RGB8 extends IntVector<UInt8> implements Color
 		return new UInt8(getSample(c));
 	}
 
-	@Override
+    
+    @Override
 	public int size()
 	{
 		return 3;

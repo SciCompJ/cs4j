@@ -9,6 +9,7 @@ import java.util.function.UnaryOperator;
 import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.DefaultPositionIterator;
+import net.sci.array.NumericArray;
 
 /**
  * Specialization of the Array interface that contains Scalar values. 
@@ -18,92 +19,8 @@ import net.sci.array.DefaultPositionIterator;
  * @author dlegland
  *
  */
-public interface ScalarArray<T extends Scalar> extends Array<T>
+public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 {
-	// =============================================================
-	// Default methods for arithmetic on arrays
-	
-
-	public default ScalarArray<T> plus(double v)
-	{
-        ScalarArray<T> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(this.getValue(pos) + v, pos);
-        }
-		return res;
-	}
-
-	public default ScalarArray<T> minus(double v)
-	{
-        ScalarArray<T> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(this.getValue(pos) - v, pos);
-        }
-		return res;
-	}
-
-	public default ScalarArray<T> times(double k)
-	{
-        ScalarArray<T> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(this.getValue(pos) * k, pos);
-        }
-		return res;
-	}
-
-	public default ScalarArray<T> divideBy(double k)
-	{
-        ScalarArray<T> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(this.getValue(pos) / k, pos);
-        }
-		return res;
-	}
-
-	/**
-     * Applies the given function to each element of the array, and return a new
-     * Array with the same class.
-     * 
-     * @param fun
-     *            the function to apply
-     * @return the result array
-     */
-    public default ScalarArray<T> apply(UnaryOperator<Double> fun)
-    {
-        ScalarArray<T> res = newInstance(size());
-        apply(fun, res);
-        return res;
-    }
-
-    /**
-     * Applies the given function to each element of the array, and return a
-     * reference to the output array.
-     * 
-     * @param fun
-     *            the function to apply
-     * @param output
-     *            the array to put the result in
-     * @return the result array
-     */
-    public default ScalarArray<?> apply(UnaryOperator<Double> fun, ScalarArray<?> output)
-    {
-        if (!Arrays.isSameSize(this, output))
-        {
-            throw new IllegalArgumentException("Output array must have same size as input array");
-        }
-        
-        for (int[] pos : positions())
-        {
-            output.setValue(fun.apply(this.getValue(pos)), pos);
-        }
-        return output;
-    }
-
-	
 	// =============================================================
 	// New default methods 
 
@@ -199,15 +116,14 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 				vMax = Math.max(vMax, value);
 			}
 		}
-		return vMax;
-	}
+        return vMax;
+    }
 
-
-	/**
-	 * Fills the array with the specified double value.
-	 * 
-	 * @param value the value to fill the array with
-	 */
+    /**
+     * Fills the array with the specified double value.
+     * 
+     * @param value the value to fill the array with
+     */
 	public default void fillValue(double value)
 	{
 		Iterator<? extends Scalar> iter = iterator();
@@ -218,8 +134,9 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
 		}
 	}
 	
+	
     // =============================================================
-    // New abstract classes
+    // New abstract methods
 
     /**
      * Gets the value at the given position as a numeric double.
@@ -238,8 +155,119 @@ public interface ScalarArray<T extends Scalar> extends Array<T>
      */
     public void setValue(double value, int... pos);
 
+    
+    // =============================================================
+    // Apply arbitrary functions
 
-	// =============================================================
+    /**
+     * Applies the given function to each element of the array, and return a new
+     * Array with the same class.
+     * 
+     * @param fun
+     *            the function to apply
+     * @return the result array
+     */
+    public default ScalarArray<T> apply(UnaryOperator<Double> fun)
+    {
+        ScalarArray<T> res = newInstance(size());
+        apply(fun, res);
+        return res;
+    }
+
+    /**
+     * Applies the given function to each element of the array, and return a
+     * reference to the output array.
+     * 
+     * @param fun
+     *            the function to apply
+     * @param output
+     *            the array to put the result in
+     * @return the result array
+     */
+    public default ScalarArray<?> apply(UnaryOperator<Double> fun, ScalarArray<?> output)
+    {
+        if (!Arrays.isSameSize(this, output))
+        {
+            throw new IllegalArgumentException("Output array must have same size as input array");
+        }
+        
+        for (int[] pos : positions())
+        {
+            output.setValue(fun.apply(this.getValue(pos)), pos);
+        }
+        return output;
+    }
+    
+    
+    // =============================================================
+    // Implementation of comparison with scalar
+
+    public default ScalarArray<T> min(double v)
+    {
+        ScalarArray<T> res = newInstance(size());
+        for (int[] pos : positions())
+        {
+            res.setValue(Math.min(this.getValue(pos), v), pos);
+        }
+        return res;
+    }
+    
+    public default ScalarArray<T> max(double v)
+    {
+        ScalarArray<T> res = newInstance(size());
+        for (int[] pos : positions())
+        {
+            res.setValue(Math.max(this.getValue(pos), v), pos);
+        }
+        return res;
+    }
+    
+
+    // =============================================================
+    // Implementation of NumericArray interface
+
+    public default ScalarArray<T> plus(double v)
+    {
+        ScalarArray<T> res = newInstance(size());
+        for (int[] pos : positions())
+        {
+            res.setValue(this.getValue(pos) + v, pos);
+        }
+        return res;
+    }
+
+    public default ScalarArray<T> minus(double v)
+    {
+        ScalarArray<T> res = newInstance(size());
+        for (int[] pos : positions())
+        {
+            res.setValue(this.getValue(pos) - v, pos);
+        }
+        return res;
+    }
+
+    public default ScalarArray<T> times(double k)
+    {
+        ScalarArray<T> res = newInstance(size());
+        for (int[] pos : positions())
+        {
+            res.setValue(this.getValue(pos) * k, pos);
+        }
+        return res;
+    }
+
+    public default ScalarArray<T> divideBy(double k)
+    {
+        ScalarArray<T> res = newInstance(size());
+        for (int[] pos : positions())
+        {
+            res.setValue(this.getValue(pos) / k, pos);
+        }
+        return res;
+    }
+
+    
+    // =============================================================
 	// Specialization of the Array interface
 
     /**
