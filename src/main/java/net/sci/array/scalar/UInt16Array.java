@@ -21,7 +21,7 @@ public interface UInt16Array extends IntArray<UInt16>
     public static final IntArray.Factory<UInt16> factory = new IntArray.Factory<UInt16>()
     {
         @Override
-        public IntArray<UInt16> create(int[] dims)
+        public IntArray<UInt16> create(int... dims)
         {
             return UInt16Array.create(dims);
         }

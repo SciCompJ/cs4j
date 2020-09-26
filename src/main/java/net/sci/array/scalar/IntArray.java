@@ -133,7 +133,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
          *            the dimensions of the new array
          * @return a new scalar array initialized with zeros
          */
-        public IntArray<T> create(int[] dims);
+        public IntArray<T> create(int... dims);
 
         /**
          * Creates a new Int array with the specified dimensions, filled with

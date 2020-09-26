@@ -20,7 +20,7 @@ public interface BinaryArray extends IntArray<Binary>
     public static final IntArray.Factory<Binary> factory = new IntArray.Factory<Binary>()
     {
         @Override
-        public IntArray<Binary> create(int[] dims)
+        public IntArray<Binary> create(int... dims)
         {
             return BinaryArray.create(dims);
         }

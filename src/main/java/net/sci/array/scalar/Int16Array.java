@@ -20,7 +20,7 @@ public interface Int16Array extends IntArray<Int16>
     public static final IntArray.Factory<Int16> factory = new IntArray.Factory<Int16>()
     {
         @Override
-        public IntArray<Int16> create(int[] dims)
+        public IntArray<Int16> create(int... dims)
         {
             return Int16Array.create(dims);
         }

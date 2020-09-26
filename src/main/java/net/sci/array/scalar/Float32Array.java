@@ -21,7 +21,7 @@ public interface Float32Array extends ScalarArray<Float32>
     public static final ScalarArray.Factory<Float32> factory = new ScalarArray.Factory<Float32>()
     {
         @Override
-        public ScalarArray<Float32> create(int[] dims)
+        public ScalarArray<Float32> create(int... dims)
         {
             return Float32Array.create(dims);
         }
@@ -35,10 +35,11 @@ public interface Float32Array extends ScalarArray<Float32>
         }
     };
 
+    
 	// =============================================================
 	// Static methods
 
-	public static Float32Array create(int[] dims)
+	public static Float32Array create(int... dims)
 	{
 		switch (dims.length)
 		{

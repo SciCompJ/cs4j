@@ -20,7 +20,7 @@ public interface Int32Array extends IntArray<Int32>
     public static final IntArray.Factory<Int32> factory = new IntArray.Factory<Int32>()
     {
         @Override
-        public IntArray<Int32> create(int[] dims)
+        public IntArray<Int32> create(int... dims)
         {
             return Int32Array.create(dims);
         }

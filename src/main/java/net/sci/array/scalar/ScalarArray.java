@@ -355,7 +355,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
          *            the dimensions of the new array
          * @return a new scalar array initialized with zeros
          */
-	    public ScalarArray<T> create(int[] dims);
+	    public ScalarArray<T> create(int... dims);
 
         /**
          * Creates a new scalar array with the specified dimensions, filled with
@@ -367,7 +367,12 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
          *            an instance of the initial value
          * @return a new instance of ScalarArray
          */
-        public ScalarArray<T> create(int[] dims, T value);
+        public default ScalarArray<T> create(int[] dims, T value)
+        {
+            ScalarArray<T> res = create(dims);
+            res.fill(value);
+            return res;
+        }
 	}
 	
 	

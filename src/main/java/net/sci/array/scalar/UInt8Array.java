@@ -22,7 +22,7 @@ public interface UInt8Array extends IntArray<UInt8>
     public static final IntArray.Factory<UInt8> factory = new IntArray.Factory<UInt8>()
     {
         @Override
-        public IntArray<UInt8> create(int[] dims)
+        public IntArray<UInt8> create(int... dims)
         {
             return UInt8Array.create(dims);
         }

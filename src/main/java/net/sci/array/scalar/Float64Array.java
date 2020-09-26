@@ -21,7 +21,7 @@ public interface Float64Array extends ScalarArray<Float64>
     public static final ScalarArray.Factory<Float64> factory = new ScalarArray.Factory<Float64>()
     {
         @Override
-        public ScalarArray<Float64> create(int[] dims)
+        public ScalarArray<Float64> create(int... dims)
         {
             return Float64Array.create(dims);
         }
