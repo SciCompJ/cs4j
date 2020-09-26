@@ -3,6 +3,7 @@
  */
 package net.sci.table.cluster;
 
+import net.sci.table.NumericTable;
 import net.sci.table.Table;
 import net.sci.table.TableOperator;
 import net.sci.util.RandomUtils;
@@ -16,23 +17,43 @@ import net.sci.util.RandomUtils;
  */
 public class KMeans implements TableOperator
 {
+    // =============================================================
+    // Settings for computing KMeans
+    
     /**
      * Number of classes / clusters to create.
      */
 	int nClasses;
 
     /**
-     * The centroid of each class. Stored as a k-by-p array, where k is the
-     * number of classes and p is the number of features.
-     */
-    double[][] centroids;
-
-    /**
      * Number of iterations used to fit class centroids. Default is 10.
      */
     int nIters= 10;
-	
+    
 
+    // =============================================================
+    // Inner data
+    
+    /**
+     * The centroid of each class. Stored as a k-by-p array, where k is the
+     * number of classes and p is the number of features.
+     */
+    double[][] centroids = null;
+    
+    /**
+     * The names of features of original table.
+     */
+    String[] featureNames = null;
+    
+    /**
+     * The name of the table used to fit the centroids (for building table names).
+     */
+    String baseName;
+
+
+    // =============================================================
+    // Constructor
+    
 	/**
 	 * Creates a new KMeans classifier with a given number of classes.
      * 
@@ -44,12 +65,50 @@ public class KMeans implements TableOperator
 		this.nClasses = nClasses;
 	}
 
-	@Override
-	public Table process(Table table)
-	{
-	    return this.fit(table).predict(table);
-	}
 
+    // =============================================================
+    // New methods specific to KMeans
+    
+    /**
+     * @return a table instance containing coordinates of class centroids.
+     */
+    public Table centroids()
+    {
+        // check centroids are initialized
+        if (centroids == null)
+        {
+            throw new RuntimeException("KMeans class must be initialized using the fit(...) method.");
+        }
+        
+        // get table dimensions
+        int nc = this.nClasses;
+        int nf = this.centroids[0].length;
+        
+        // pattern for row names
+        int nDigits = (int) (Math.floor(Math.log10(nc)) + 1);
+        String pattern = "Class%0" + nDigits + "d";
+
+        // create table
+        NumericTable res = NumericTable.create(nc, nf);
+        res.setColumnNames(this.featureNames);
+        res.setName(baseName + "-KM" + this.nClasses + "_centroids");
+        
+        // fill with centroid coordinates
+        for (int c = 0; c < nc; c++)
+        {
+            for (int f = 0; f < nf; f++)
+            {
+                res.setValue(c, f, this.centroids[c][f]);
+            }
+
+            // annotate table
+            res.setRowName(c, String.format(pattern, c));
+        }
+        
+        return res;
+    }
+
+    
 	/***
 	 * Initializes this KMeans based on the input table.
 	 * 
@@ -71,8 +130,10 @@ public class KMeans implements TableOperator
 	    
 	    // allocated the centroid array: nClasses * nParams array
 	    this.centroids = new double[nClasses][np];
+	    this.featureNames = table.getColumnNames();
+	    this.baseName = table.getName();
 
-	     int[] indices = RandomUtils.randomSubsetIndices(nr, nClasses);
+	    int[] indices = RandomUtils.randomSubsetIndices(nr, nClasses);
 
 	    // compute initial centroids
 	    for (int k = 0; k < nClasses; k++)
@@ -95,7 +156,7 @@ public class KMeans implements TableOperator
 
 	    return this;
 	}
-
+	
 	/**
 	 * Identifies class index of each observation in input table, based on this
 	 * (initialized) KMeans.
@@ -130,6 +191,7 @@ public class KMeans implements TableOperator
         // Create result table
         Table res = Table.create(nr, 1);
         res.setColumnNames(new String[]{"Class"});
+        res.setName(table.getName() + "-KM" + this.nClasses + "_predict");
         for (int i = 0; i < nr; i++)
         {
             res.setValue(i, 0, classes[i]);
@@ -216,4 +278,14 @@ public class KMeans implements TableOperator
 		
 		return cumsum;
 	}
+
+	
+	// =============================================================
+    // Implementation of TableOperator interface
+    
+    @Override
+    public Table process(Table table)
+    {
+        return this.fit(table).predict(table);
+    }
 }
