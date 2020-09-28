@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
 	// generic classes
     net.sci.array.process.AllTests.class,
     net.sci.array.process.math.AllTests.class,
+    net.sci.array.process.numeric.AllTests.class,
     net.sci.array.process.shape.AllTests.class,
 	})
 public class AllTestsRecurse {

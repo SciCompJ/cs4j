@@ -9,13 +9,16 @@ import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
 /**
- * Interface for Array operators that operate on a Scalar Array instance and
+ * Interface for Array operators that operate on a ScalarArray instance and
  * returns a ScalarArray instance.
  * 
  * @author dlegland
  */
 public interface ScalarArrayOperator extends ArrayOperator
 {
+    // =============================================================
+    // New methods
+    
     /**
      * Process the input scalar array and return the result in a new ScalarArray.
      * 
@@ -25,6 +28,10 @@ public interface ScalarArrayOperator extends ArrayOperator
      */
 	public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array);
 
+	
+    // =============================================================
+    // Specialize methods from ArrayOperator interface
+	
     /**
      * Process the input scalar array and return the result in a new array.
      * 

@@ -4,7 +4,8 @@
 package net.sci.array;
 
 /**
- * Specialization of Array interface that supports elementary arithmetic operations (plus, minus...).
+ * Specialization of Array interface that supports elementary arithmetic
+ * operations (plus, minus...).
  * 
  * Main sub-interfaces are ScalarArray and VectorArray.
  * 
@@ -15,7 +16,6 @@ public interface NumericArray<N> extends Array<N>
     // =============================================================
     // Default methods for arithmetic on arrays
     
-
     public NumericArray<N> plus(double v);
 
     public NumericArray<N> minus(double v);
