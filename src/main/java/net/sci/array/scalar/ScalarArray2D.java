@@ -57,13 +57,13 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	// =============================================================
 	// Methods specific to ScalarArray2D
 
-    public void populateValues(Function<Double[],Double> fun)
+    public void populateValues(Function<Integer[], Double> fun)
     {
-        Double[] input = new Double[2];
+        Integer[] input = new Integer[2];
         for (int[] pos : this.positions())
         {
-            input[0] = (double) pos[0];
-            input[1] = (double) pos[1];
+            input[0] = pos[0];
+            input[1] = pos[1];
             this.setValue(fun.apply(input), pos[0], pos[1]);
         }
     }
@@ -84,11 +84,11 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
      *            a function of two variables that returns a double. The two
      *            input variables correspond to the x and y coordinates.
      */
-    public void populateValues(BiFunction<Double,Double,Double> fun)
+    public void populateValues(BiFunction<Integer,Integer,Double> fun)
     {
         for (int[] pos : this.positions())
         {
-            this.setValue(fun.apply((double) pos[0], (double) pos[1]), pos[0], pos[1]);
+            this.setValue(fun.apply(pos[0], pos[1]), pos[0], pos[1]);
         }
     }
 

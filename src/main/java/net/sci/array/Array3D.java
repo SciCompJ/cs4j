@@ -71,7 +71,7 @@ public abstract class Array3D<T> implements Array<T>
      * {@code
      * Array3D<String> array = Array3D.create(5, 4, 3, null); 
      * String[] digits = {"A", "B", "C", "D", "E", "F"}; 
-     * array.populate((x,y,z) -> digits[z.intValue()] + digits[y.intValue()] + digits[x.intValue()]); 
+     * array.populate((x,y,z) -> digits[z] + digits[y] + digits[x]); 
      * String res432 = array.get(4, 3, 2); // returns "CDE". 
      * }
      * 
@@ -80,11 +80,11 @@ public abstract class Array3D<T> implements Array<T>
      *            T. The three input variables correspond to the x, y, and z
      *            coordinates.
      */
-    public void populate(TriFunction<Double,Double,Double,T> fun)
+    public void populate(TriFunction<Integer,Integer,Integer,T> fun)
     {
         for (int[] pos : this.positions())
         {
-            this.set(fun.apply((double) pos[0], (double) pos[1], (double) pos[2]), pos);
+            this.set(fun.apply(pos[0], pos[1], pos[2]), pos);
         }
     }
     

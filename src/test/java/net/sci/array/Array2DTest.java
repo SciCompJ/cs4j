@@ -81,10 +81,10 @@ public class Array2DTest
     @Test
     public final void testPopulate()
     {
-        Array2D<String> array = Array2D.create(5, 4, null);
+        Array2D<String> array = Array2D.create(5, 4, "");
         String[] digits = {"A", "B", "C", "D", "E", "F"};  
         
-        array.populate((x,y) -> digits[x.intValue()] + digits[y.intValue()]);
+        array.populate((x,y) -> digits[x] + digits[y]);
         
         assertEquals(array.get(0, 0), "AA");
         assertEquals(array.get(4, 3), "ED");
