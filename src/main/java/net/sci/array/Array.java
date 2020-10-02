@@ -351,6 +351,13 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	    
 	}
 	
+    /**
+     * Utility class to create a generic view on an array using arbitrary
+     * coordinate mapping.
+     *
+     * @param <T>
+     *            The type of the array, that is kept after computing the view.
+     */
     static class View<T> implements Array<T>
     {
         Array<T> array;
@@ -360,7 +367,15 @@ public interface Array<T> extends Iterable<T>, Dimensional
         Function<int[], int[]> coordsMapping;
 
         /**
+         * Creates a generic view on the specified array.
          * 
+         * @param array
+         *            the array to create a view on.
+         * @param newDims
+         *            the dimensions of the view.
+         * @param coordsMapping
+         *            the mapping from coordinate in view to the coordinates in
+         *            the original array.
          */
         public View(Array<T> array, int[] newDims, Function<int[], int[]> coordsMapping)
         {

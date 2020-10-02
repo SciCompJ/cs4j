@@ -10,6 +10,7 @@ public class OrthogonalProjectionTest
 {
 
 	@Test
+	@Deprecated
 	public final void testProcess_Array()
 	{
         UInt8Array3D array = UInt8Array3D.create(5, 4, 3);

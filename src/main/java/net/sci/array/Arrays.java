@@ -15,6 +15,8 @@ public class Arrays
     /**
      * Static factory for creating generic arrays.
      * 
+     * @param T
+     *            the type of the array.
      * @param sizes
      *            the dimensions of the array
      * @param initValue

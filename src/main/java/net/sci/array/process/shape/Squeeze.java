@@ -10,7 +10,7 @@ import net.sci.array.ArrayOperator;
 
 
 /**
- * Remove array dimensions whose size is 1.
+ * Removes array dimensions whose size is 1.
  * 
  * <pre>{@code
  *    // create an empty array with only one non-unit dimension
@@ -36,7 +36,7 @@ public class Squeeze implements ArrayOperator
     }
 
     /**
-     * Remove array dimensions whose size is 1. If there is no dimension to
+     * Removes array dimensions whose size is 1. If there is no dimension to
      * remove, returns the input array.
      * 
      * @see net.sci.array.ArrayOperator#process(net.sci.array.Array)

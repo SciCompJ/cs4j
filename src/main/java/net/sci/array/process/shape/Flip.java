@@ -12,6 +12,9 @@ import net.sci.array.Array3D;
 import net.sci.array.ArrayOperator;
 
 /**
+ * Flips the content of an array along the specified dimension.
+ * 
+ * 
  * @author dlegland
  *
  */
@@ -33,7 +36,7 @@ public class Flip extends AlgoStub implements ArrayOperator
 	}
 
 	@Override
-	public <T> Array<?> process(Array<T> array)
+	public <T> Array<T> process(Array<T> array)
 	{
 		Array<T> output = array.newInstance(array.size());
 		process(array, output);

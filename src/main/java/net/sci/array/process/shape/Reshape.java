@@ -7,7 +7,7 @@ import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 
 /**
- * Reshape the dimension of an array, initialized with values of input array.
+ * Reshapes the dimension of an array, initialized with values of input array.
  * 
  * The product of dimensions of both arrays should be the same.
  * 
@@ -19,7 +19,7 @@ public class Reshape implements ArrayOperator
 	int[] newDims;
 	
 	/**
-	 * Create a reshape operator.
+	 * Creates a reshape operator.
 	 * 
 	 *  @param newDims the dimensions of the array after reshaping
 	 */
@@ -32,7 +32,7 @@ public class Reshape implements ArrayOperator
 	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array)
 	 */
 	@Override
-	public <T> Array<?> process(Array<T> array)
+	public <T> Array<T> process(Array<T> array)
 	{
 	    // compute element number of input array
 	    int prodDims = cumProd(array.size());
@@ -60,6 +60,15 @@ public class Reshape implements ArrayOperator
         return result;
 	}
 
+    /**
+     * Checks if the operator can be applied to the specified array, by
+     * comparing the number of elements before and after reshape.
+     * 
+     * @param array
+     *            the array to reshape
+     * @return true if array as same number of elements as the number of
+     *         dimensions stored in this operator.
+     */
 	@Override
 	public boolean canProcess(Array<?> array)
 	{

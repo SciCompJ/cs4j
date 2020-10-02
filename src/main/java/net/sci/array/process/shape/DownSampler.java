@@ -9,7 +9,7 @@ import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 
 /**
- * Compute a crude down-sampled (decimated) version of the input array, by
+ * Computes a crude down-sampled (decimated) version of the input array, by
  * retaining only one element over k in each dimension.
  * 
  * @author dlegland
@@ -20,7 +20,7 @@ public class DownSampler implements ArrayOperator
 	int[] ratios;
 	
     /**
-     * Create a resampler operator with a given sampling ratio.
+     * Creates a resampler operator with a given sampling ratio.
      * 
      *  @param ratio the sampling ratio
      */
@@ -30,7 +30,7 @@ public class DownSampler implements ArrayOperator
     }
 
     /**
-     * Create a resampler operator with different sampling ratio depending on the dimension 
+     * Creates a resampler operator with different sampling ratio depending on the dimension 
      * 
      *  @param ratios the sampling ratio along each dimension
      */
@@ -43,35 +43,9 @@ public class DownSampler implements ArrayOperator
 	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array)
 	 */
 	@Override
-	public <T> Array<?> process(Array<T> array)
+	public <T> Array<T> process(Array<T> array)
 	{
 	    int nd = array.dimensionality();
-//        int[] newDims = new int[nd];
-//	    
-//        // ensure we have as many ratios as the number of dimensions
-//        int[] k = new int[nd];
-//	    if (this.ratios.length == 1)
-//	    {
-//	        // Same ratio for all dimensions
-//            for (int d = 0; d < nd; d++)
-//            {
-//                k[d] = ratios[0]; 
-//            }
-//	    }
-//	    else
-//	    {
-//            // Can have different ratios depending on dimensions
-//	        for (int d = 0; d < nd; d++)
-//	        {
-//	            k[d] = ratios[d]; 
-//	        }
-//	    }
-//	    
-//        // Compute dimension of result array
-//        for (int d = 0; d < nd; d++)
-//        {
-//            newDims[d] = dims[d] / k[d]; 
-//        }
         int[] newDims = outputArraySize(array);
 	    
 	    // allocate memory

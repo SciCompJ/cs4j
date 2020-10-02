@@ -74,6 +74,7 @@ public abstract class Array3D<T> implements Array<T>
      * array.populate((x,y,z) -> digits[z] + digits[y] + digits[x]); 
      * String res432 = array.get(4, 3, 2); // returns "CDE". 
      * }
+     * </pre>
      * 
      * @param fun
      *            a function of three variables that returns an instance of type

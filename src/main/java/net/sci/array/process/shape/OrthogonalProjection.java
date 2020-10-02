@@ -10,10 +10,13 @@ import net.sci.array.scalar.ScalarArray;
 /**
  * Computes maximum intensity projection along a specified dimension. Returns an
  * array with one dimension less than the input array.
+ *
+ * @deprecated replaced by net.sci.array.process.numeric.MaxProjection.
  * 
  * @author dlegland
- *
+ * 
  */
+@Deprecated
 public class OrthogonalProjection implements ArrayOperator
 {
 	int dim;

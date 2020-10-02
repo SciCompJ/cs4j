@@ -67,6 +67,7 @@ public abstract class Array2D<T> implements Array<T>
      * array.populate((x,y) -> digits[y] + digits[x]);
      * String res43 = array.get(4, 3); // returns "CD". 
      * }
+     * </pre>
      * 
      * @param fun
      *            a function of two variables that returns an instance of type
