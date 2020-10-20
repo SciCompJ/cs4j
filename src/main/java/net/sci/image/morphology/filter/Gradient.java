@@ -56,7 +56,8 @@ public class Gradient extends MorphologicalFilterAlgo
     private ScalarArray2D<?> processScalar2d(ScalarArray2D<?> array)
     {
         Strel2D strel2d = Strel2D.wrap(this.strel);
-
+        strel2d.addAlgoListener(this);
+        
         // First performs elementary operations
         ScalarArray2D<?> result = strel2d.dilation(array);
         ScalarArray2D<?> eroded = strel2d.erosion(array);
@@ -77,7 +78,8 @@ public class Gradient extends MorphologicalFilterAlgo
     private ScalarArray3D<?> processScalar3d(ScalarArray3D<?> array)
     {
         Strel3D strel3d = Strel3D.wrap(this.strel);
-
+        strel3d.addAlgoListener(this);
+        
         // First performs elementary operations
         ScalarArray3D<?> result = strel3d.dilation(array);
         ScalarArray3D<?> eroded = strel3d.erosion(array);

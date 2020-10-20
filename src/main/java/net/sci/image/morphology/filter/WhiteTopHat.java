@@ -55,7 +55,8 @@ public class WhiteTopHat extends MorphologicalFilterAlgo
     private ScalarArray2D<?> processScalar2d(ScalarArray2D<?> array)
     {
         Strel2D strel2d = Strel2D.wrap(this.strel);
-
+        strel2d.addAlgoListener(this);
+        
         // First performs opening
         ScalarArray2D<?> result = strel2d.opening(array);
         
@@ -75,7 +76,8 @@ public class WhiteTopHat extends MorphologicalFilterAlgo
     private ScalarArray3D<?> processScalar3d(ScalarArray3D<?> array)
     {
         Strel3D strel3d = Strel3D.wrap(this.strel);
-
+        strel3d.addAlgoListener(this);
+        
         // First performs opening
         ScalarArray3D<?> result = strel3d.opening(array);
         

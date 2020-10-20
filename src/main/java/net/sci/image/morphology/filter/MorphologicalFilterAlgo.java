@@ -3,6 +3,8 @@
  */
 package net.sci.image.morphology.filter;
 
+import net.sci.algo.AlgoEvent;
+import net.sci.algo.AlgoListener;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
@@ -18,7 +20,7 @@ import net.sci.image.morphology.Strel;
  * @author dlegland
  *
  */
-public abstract class MorphologicalFilterAlgo extends AlgoStub implements ArrayOperator
+public abstract class MorphologicalFilterAlgo extends AlgoStub implements ArrayOperator, AlgoListener
 {
     /**
      * The structuring element used by concrete implementations.
@@ -77,5 +79,18 @@ public abstract class MorphologicalFilterAlgo extends AlgoStub implements ArrayO
                     "Requires an instance of ScalarArray");
         }
     }
+
+    @Override
+    public void algoProgressChanged(AlgoEvent evt)
+    {
+        fireProgressChanged(evt);
+    }
+
+    @Override
+    public void algoStatusChanged(AlgoEvent evt)
+    {
+        fireStatusChanged(evt);
+    }
     
+
 }

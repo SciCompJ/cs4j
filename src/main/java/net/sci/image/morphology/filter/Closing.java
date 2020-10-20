@@ -40,11 +40,13 @@ public class Closing extends MorphologicalFilterAlgo
         if (nd == 2)
         {
             Strel2D strel2d = Strel2D.wrap(this.strel);
+            strel2d.addAlgoListener(this);
             return strel2d.closing(ScalarArray2D.wrapScalar2d(array));
         }
         else if (nd == 3)
         {
             Strel3D strel3d = Strel3D.wrap(this.strel);
+            strel3d.addAlgoListener(this);
             return strel3d.closing(ScalarArray3D.wrapScalar3d(array));
         }
         else
@@ -52,5 +54,4 @@ public class Closing extends MorphologicalFilterAlgo
             throw new IllegalArgumentException("Requires an array of dimensionality 2 or 3, not " + nd);
         }
     }
-    
 }

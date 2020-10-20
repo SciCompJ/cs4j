@@ -40,11 +40,13 @@ public class Dilation extends MorphologicalFilterAlgo
         if (nd == 2)
         {
             Strel2D strel2d = Strel2D.wrap(this.strel);
+            strel2d.addAlgoListener(this);
             return strel2d.dilation(ScalarArray2D.wrapScalar2d(array));
         }
         else if (nd == 3)
         {
             Strel3D strel3d = Strel3D.wrap(this.strel);
+            strel3d.addAlgoListener(this);
             return strel3d.dilation(ScalarArray3D.wrapScalar3d(array));
         }
         else
