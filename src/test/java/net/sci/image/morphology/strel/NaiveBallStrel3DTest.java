@@ -24,7 +24,7 @@ public class NaiveBallStrel3DTest
     public final void testDilation()
     {
         UInt8Array3D array = UInt8Array3D.create(11, 11, 11);
-        array.setInt(255, 5, 5, 5);
+        array.setInt(5, 5, 5, 255);
         Strel3D strel = new NaiveBallStrel3D(3);
        
         UInt8Array3D res = UInt8Array3D.wrap(UInt8Array.wrap(strel.dilation(array)));
@@ -67,7 +67,7 @@ public class NaiveBallStrel3DTest
     {
         UInt8Array3D array = UInt8Array3D.create(11, 11, 11);
         array.fillValue(255);
-        array.setInt(0, 5, 5, 5);
+        array.setInt(5, 5, 5, 0);
         Strel3D strel = new NaiveBallStrel3D(3);
        
         UInt8Array3D res = UInt8Array3D.wrap(UInt8Array.wrap(strel.erosion(array)));

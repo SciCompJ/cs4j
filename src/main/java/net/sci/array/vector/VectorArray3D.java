@@ -250,6 +250,13 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         // Implementation of Array3D interface
 
         @Override
+        public void set(int x, int y, int z, T value)
+        {
+            // set value at specified position
+            this.array.set(new int[] {x, y, z}, value);
+        }
+
+        @Override
         public VectorArray2D<T> slice(int sliceIndex)
         {
             return new SliceView(sliceIndex);
@@ -282,10 +289,10 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         }
 
         @Override
-        public void set(T value, int... pos)
+        public void set(int[] pos, T value)
         {
             // set value at specified position
-            this.array.set(value, pos);
+            this.array.set(pos, value);
         }
 
         
@@ -466,17 +473,10 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             // Implements Array2D
 
             @Override
-            public T get(int... pos)
+            public void set(int x, int y, T value)
             {
-                return Wrapper.this.get(pos[0], pos[1], this.sliceIndex);
+                Wrapper.this.set(x, y, this.sliceIndex, value);            
             }
-
-            @Override
-            public void set(T value, int... pos)
-            {
-                Wrapper.this.set(value, pos[0], pos[1], this.sliceIndex);            
-            }
-
 
             // --------------------------------------------------------
             // Implements Array
@@ -517,6 +517,19 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
                 return Wrapper.this.getFactory();
             }
 
+            @Override
+            public T get(int... pos)
+            {
+                return Wrapper.this.get(pos[0], pos[1], this.sliceIndex);
+            }
+
+            @Override
+            public void set(int[] pos, T value)
+            {
+                Wrapper.this.set(pos[0], pos[1], this.sliceIndex, value);            
+            }
+
+            
             // --------------------------------------------------------
             // Inner Array2D iterator implementation
 
@@ -601,7 +614,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
                 @Override
                 public void set(T value)
                 {
-                    Wrapper.this.set(value, indX, indY, sliceIndex);
+                    Wrapper.this.set(indX, indY, sliceIndex, value);
                 }
 
             }

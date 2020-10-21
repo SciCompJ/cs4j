@@ -74,7 +74,8 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	// =============================================================
 	// New methods
 
-	
+	public abstract void setByte(int x, int y, int z, byte b);
+
 	
     // =============================================================
     // Management of slices
@@ -106,17 +107,49 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         return new SliceIterator();
     }
 
+    
+    // =============================================================
+    // Implementation of the UInt8Array3D interface
+
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.UInt8Array#setByte(int[], byte)
+     */
+    @Override
+    public void setByte(int[] pos, byte b)
+    {
+        setByte(pos[0], pos[1], pos[2], b);
+    }
+    
+    
+    // =============================================================
+    // Specialization of the IntArray3D interface
+
+    @Override
+    public void setInt(int x, int y, int z, int value)
+    {
+        setByte(x, y, z, (byte) UInt8.clamp(value));
+    }
+
 
     // =============================================================
-	// Specialization of the UInt8Array interface
+	// Specialization of the ScalarArray3D interface
 
-
-	// =============================================================
-	// Specialization of IntArrayND interface
-
+    @Override
+    public void setValue(int x, int y, int z, double value)
+    {
+        setByte(x, y, z, (byte) UInt8.clamp(value));
+    }
+    
 
 	// =============================================================
 	// Specialization of Array3D interface
+
+    @Override
+    public void set(int x, int y, int z, UInt8 value)
+    {
+        setByte(x, y, z, value.value);
+    }
+    
 
 	// =============================================================
 	// Specialization of Array interface
@@ -132,7 +165,7 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
             {
                 for (int x = 0; x < size0; x++)
                 {
-                    res.setByte(getByte(x, y, z), x, y, z);
+                    res.setByte(x, y, z, getByte(x, y, z));
                 }
             }
         }
@@ -156,15 +189,21 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         }
 
         @Override
+        public void setByte(int x, int y, byte b)
+        {
+            UInt8Array3D.this.setByte(x, y, this.sliceIndex, b);
+        }
+
+        @Override
         public byte getByte(int... pos)
         {
             return UInt8Array3D.this.getByte(pos[0], pos[1], this.sliceIndex);
         }
 
         @Override
-        public void setByte(byte value, int... pos)
+        public void setByte(int[] pos, byte b)
         {
-            UInt8Array3D.this.setByte(value, pos[0], pos[1], this.sliceIndex);            
+            UInt8Array3D.this.setByte(pos[0], pos[1], this.sliceIndex, b);
         }
 
         @Override
@@ -215,7 +254,7 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
             @Override
             public void setByte(byte b)
             {
-                UInt8Array3D.this.setByte(b, indX, indY, sliceIndex);
+                UInt8Array3D.this.setByte(indX, indY, sliceIndex, b);
             }
         }
     }
@@ -256,6 +295,12 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
             this.size2 = array.size(2);
             this.array = array;
         }
+        
+        @Override
+        public void setByte(int x, int y, int z, byte b)
+        {
+            this.array.setByte(new int[] {x, y, z}, b);
+        }
 
         @Override
         public byte getByte(int... pos)
@@ -264,9 +309,9 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         }
 
         @Override
-        public void setByte(byte value, int... pos)
+        public void setByte(int[] pos, byte value)
         {
-            this.array.setByte(value, pos);
+            this.array.setByte(pos, value);
         }
 
         @Override

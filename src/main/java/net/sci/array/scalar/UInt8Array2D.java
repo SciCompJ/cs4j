@@ -83,20 +83,53 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 			ps.println();
 		}
 	}
-		
+	
+	public abstract void setByte(int x, int y, byte b);
+	
 	
 	// =============================================================
 	// Specialization of the UInt8Array interface
+    
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.UInt8Array#setByte(int[], byte)
+     */
+    @Override
+    public void setByte(int[] pos, byte b)
+    {
+        setByte(pos[0], pos[1], b);
+    }
 
+    
+    // =============================================================
+    // Specialization of the IntArray2D interface
+
+    @Override
+    public void setInt(int x, int y, int value)
+    {
+        setByte(x, y, (byte) UInt8.clamp(value));
+    }
 
 
 	// =============================================================
-	// Specialization of IntArray2D interface
+	// Specialization of ScalarArray2D interface
+
+
+    @Override
+    public void setValue(int x, int y, double value)
+    {
+        setByte(x, y, (byte) UInt8.clamp(value));
+    }
 
 
 	// =============================================================
 	// Specialization of Array2D interface
 
+    @Override
+    public void set(int x, int y, UInt8 value)
+    {
+        setByte(x, y, value.value);
+    }
+    
 	
 	// =============================================================
 	// Specialization of Array interface
@@ -109,7 +142,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setByte(getByte(x, y), x, y);
+                res.setByte(x, y, getByte(x, y));
             }
         }
         return res;
@@ -135,15 +168,21 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
         }
 
         @Override
+        public void setByte(int x, int y, byte b)
+        {
+            this.array.setByte(new int[] {x, y}, b);
+        }
+
+        @Override
         public byte getByte(int... pos)
         {
             return this.array.getByte(pos);
         }
 
         @Override
-        public void setByte(byte value, int... pos)
+        public void setByte(int[] pos, byte b)
         {
-            this.array.setByte(value, pos);
+            this.array.setByte(pos, b);
         }
 
         @Override

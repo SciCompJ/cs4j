@@ -31,7 +31,7 @@ public class ChamferDistanceTransform2DUInt16Test
 		{
 			for (int x = 2; x < 10; x++)
 			{
-				image.setBoolean(true, x, y);
+				image.setBoolean( x, y, true);
 			}
 		}
 
@@ -53,7 +53,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	{
 		BinaryArray2D image = BinaryArray2D.create(7, 7);
         image.fill(Binary.TRUE);
-        image.setBoolean(false, 4, 4);
+        image.setBoolean(4, 4, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.CITY_BLOCK;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);
@@ -75,7 +75,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	{
 		BinaryArray2D image = BinaryArray2D.create(7, 7);
         image.fill(Binary.TRUE);
-        image.setBoolean(false, 4, 4);
+        image.setBoolean(4, 4, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.CHESSBOARD;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);
@@ -95,7 +95,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	{
 		BinaryArray2D image = BinaryArray2D.create(7, 7);
         image.fill(Binary.TRUE);
-        image.setBoolean(false, 4, 4);
+        image.setBoolean(4, 4, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.WEIGHTS_23;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);
@@ -115,7 +115,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	{
 		BinaryArray2D image = BinaryArray2D.create(7, 7);
         image.fill(Binary.TRUE);
-        image.setBoolean(false, 4, 4);
+        image.setBoolean(4, 4, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.BORGEFORS;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);
@@ -135,7 +135,7 @@ public class ChamferDistanceTransform2DUInt16Test
 	{
 		BinaryArray2D image = BinaryArray2D.create(9, 9);
         image.fill(Binary.TRUE);
-        image.setBoolean(false, 6, 6);
+        image.setBoolean(6, 6, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.CHESSKNIGHT;
 		DistanceTransform2D algo = new ChamferDistanceTransform2DUInt16(weights, false);

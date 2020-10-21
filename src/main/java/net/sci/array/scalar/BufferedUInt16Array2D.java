@@ -55,7 +55,17 @@ public class BufferedUInt16Array2D extends UInt16Array2D
 	// =============================================================
 	// Implementation of the UInt16Array2D interface
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
+     * @see net.sci.array.data.scalar2d.UInt16Array2D#setShort(int, int, short)
+     */
+    @Override
+    public void setShort(int x, int y, short s)
+    {
+        int index = x + y * this.size0;
+        this.buffer[index] = s;
+    }
+    
+    /* (non-Javadoc)
 	 * @see net.sci.array.data.scalar2d.UInt16Array2D#getShort(int, int)
 	 */
 	@Override
@@ -66,10 +76,10 @@ public class BufferedUInt16Array2D extends UInt16Array2D
 	}
 	
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt16Array2D#setShort(int, int, short)
+	 * @see net.sci.array.data.scalar2d.UInt16Array2D#setShort(int[], short)
 	 */
 	@Override
-	public void setShort(short s, int... pos)
+	public void setShort(int[] pos, short s)
 	{
 		int index = pos[0] + pos[1] * this.size0;
 		this.buffer[index] = s;

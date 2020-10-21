@@ -76,7 +76,7 @@ public class MinProjection extends ProjectionOperator
             }
             
             // copy value of selected position
-            target.set(min, pos);
+            target.set(pos, min);
         }
     }
 
@@ -108,7 +108,7 @@ public class MinProjection extends ProjectionOperator
             }
             
             // copy value of selected position
-            target.setValue(minValue, pos);
+            target.setValue(pos, minValue);
         }
     }
     

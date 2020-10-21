@@ -94,7 +94,7 @@ public class Rotate90 implements ArrayOperator
                 for(int x = 0; x < size0; x++)
                 {
                     int y2 = size0 - 1 - x;
-                    output.set(array.get(x, y), x2, y2);
+                    output.set(x2, y2, array.get(x, y));
                 }
 			}
 			return output;
@@ -109,7 +109,7 @@ public class Rotate90 implements ArrayOperator
 				for(int x = 0; x < size0; x++)
 				{
 					int x2 = size0 - 1 - x;
-					output.set(array.get(x, y), x2, y2);
+					output.set(x2, y2, array.get(x, y));
 				}
 			}
 			return output;
@@ -124,7 +124,7 @@ public class Rotate90 implements ArrayOperator
                 for(int x = 0; x < size0; x++)
                 {
                     int y2 = x;
-                    output.set(array.get(x, y), x2, y2);
+                    output.set(x2, y2, array.get(x, y));
                 }
 			}
 			return output;

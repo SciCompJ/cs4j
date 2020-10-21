@@ -52,7 +52,7 @@ public class SimpleSlicer implements ArrayOperator
             System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
             
             // copy value of selected position
-            target.set(source.get(srcPos), pos);
+            target.set(pos, source.get(srcPos));
         }
 	}
 	
@@ -96,7 +96,7 @@ public class SimpleSlicer implements ArrayOperator
 				pos[0] = x;
 				
 				// copy value of selected position
-				result.set(array.get(srcPos), pos);
+				result.set(pos, array.get(srcPos));
 			}
 		}
 		
@@ -229,7 +229,7 @@ public class SimpleSlicer implements ArrayOperator
 			System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
 			
 			// copy value of selected position
-			target.setValue(source.getValue(srcPos), pos);
+			target.setValue(pos, source.getValue(srcPos));
 		}
 	}
 	
@@ -250,7 +250,7 @@ public class SimpleSlicer implements ArrayOperator
 			System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
 			
 			// copy value of selected position
-			target.set(source.get(srcPos), pos);
+			target.set(pos, source.get(srcPos));
 		}
 	}
 

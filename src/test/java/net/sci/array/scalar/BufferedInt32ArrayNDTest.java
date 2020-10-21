@@ -12,16 +12,7 @@ public class BufferedInt32ArrayNDTest
 	{
 		// create array with 2*3*4 = 24 elements 
 		Int32Array array = Int32ArrayND.create(4, 3, 2);
-		for (int z = 0; z < 2; z++)
-		{
-			for (int y = 0; y < 3; y++)
-			{
-				for (int x = 0; x < 4; x++)
-				{
-					array.setInt(10, x, y, z);
-				}
-			}
-		}
+		array.fillInt(10);
 
 		// iterate over elements, count and sum them
 		int count = 0;

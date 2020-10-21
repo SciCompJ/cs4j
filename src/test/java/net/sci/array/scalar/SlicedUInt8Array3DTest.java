@@ -14,16 +14,7 @@ public class SlicedUInt8Array3DTest
 	{
 		// create array with 2*3*4 = 24 elements 
 		SlicedUInt8Array3D array = new SlicedUInt8Array3D(4, 3, 2);
-		for (int z = 0; z < 2; z++)
-		{
-			for (int y = 0; y < 3; y++)
-			{
-				for (int x = 0; x < 4; x++)
-				{
-					array.setValue(10, x, y, z);
-				}
-			}
-		}
+		array.fillInt(10);
 
 		assertEquals(4, array.size(0));
 		assertEquals(3, array.size(1));
@@ -35,14 +26,8 @@ public class SlicedUInt8Array3DTest
 	{
 		UInt8Array2D slice0 = UInt8Array2D.create(4, 3);
 		UInt8Array2D slice1 = UInt8Array2D.create(4, 3);
-		for (int y = 0; y < 3; y++)
-		{
-			for (int x = 0; x < 4; x++)
-			{
-				slice0.setValue(10, x, y);
-				slice1.setValue(10, x, y);
-			}
-		}
+        slice0.fillInt(10);
+        slice1.fillInt(10);
 		
 		// create array with 2*3*4 = 24 elements 
 		ArrayList<UInt8Array2D> slices = new ArrayList<UInt8Array2D>(2);
@@ -60,14 +45,8 @@ public class SlicedUInt8Array3DTest
 	{
 		UInt8Array2D slice0 = UInt8Array2D.create(4, 3);
 		UInt8Array2D slice1 = UInt8Array2D.create(4, 3);
-		for (int y = 0; y < 3; y++)
-		{
-			for (int x = 0; x < 4; x++)
-			{
-				slice0.setValue(10, x, y);
-				slice1.setValue(10, x, y);
-			}
-		}
+        slice0.fillInt(10);
+        slice1.fillInt(10);
 		
 		// create array with 2*3*4 = 24 elements 
 		ArrayList<UInt8Array2D> slices = new ArrayList<UInt8Array2D>(2);

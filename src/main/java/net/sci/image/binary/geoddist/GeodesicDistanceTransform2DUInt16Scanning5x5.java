@@ -166,7 +166,7 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 	        for (int x = 0; x < sizeX; x++) 
 	        {
 	            int val = marker.getInt(x, y);
-	            buffer.setInt(val == 0 ? backgroundValue : 0, x, y);
+	            buffer.setInt(x, y, val == 0 ? backgroundValue : 0);
 	        }
 	    }
 	}
@@ -285,7 +285,7 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 		if (newVal < value) 
 		{
 			modif = true;
-			buffer.setInt(newVal, x, y);
+			buffer.setInt(x, y, newVal);
 		}
 	}
 
@@ -298,7 +298,7 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
                 int val = buffer.getInt(x, y);
                 if (val != this.backgroundValue)
                 {
-                    buffer.setInt(val / this.weights[0], x, y);
+                    buffer.setInt(x, y, val / this.weights[0]);
                 }
             }
         }

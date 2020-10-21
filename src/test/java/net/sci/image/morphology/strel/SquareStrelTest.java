@@ -270,7 +270,7 @@ public class SquareStrelTest
         {
             for (int x = 3; x < 7; x++)
             {
-                array.setValue(255, x, y);
+                array.setValue(x, y, 255);
             }
         }
         
@@ -289,7 +289,7 @@ public class SquareStrelTest
         {
             for (int x = 10; x < 20; x++)
             {
-                array.setValue(255, x, y);
+                array.setValue(x, y, 255);
             }
         }
         

@@ -83,8 +83,23 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
     }
 
 
-	// =============================================================
-	// Specialization of Array3D 
+    // =============================================================
+    // Specialization of Array3D 
+
+    @Override
+    public void set(int x, int y, int z, Float64 value)
+    {
+        setValue(x, y, z, value.value);
+    }
+    
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.ScalarArray3D#setValue(int, int, int, double)
+     */
+    @Override
+    public void setValue(int[] pos, double value)
+    {
+       setValue(pos[0], pos[1], pos[2], value);
+    }
 
 	
 	// =============================================================
@@ -112,7 +127,7 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
             {
                 for (int x = 0; x < size0; x++)
                 {
-                    res.setValue(getValue(x, y, z), x, y, z);
+                    res.setValue(x, y, z, getValue(x, y, z));
                 }
             }
         }
@@ -136,15 +151,27 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
         }
 
         @Override
+        public void setValue(int x, int y, double value)
+        {
+            Float64Array3D.this.setValue(x, y, this.sliceIndex, value);
+        }
+        
+        @Override
+        public void set(int x, int y, Float64 value)
+        {
+            Float64Array3D.this.set(x, y, this.sliceIndex, value);
+        }
+
+        @Override
         public double getValue(int... pos)
         {
             return Float64Array3D.this.getValue(pos[0], pos[1], this.sliceIndex);
         }
 
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
-            Float64Array3D.this.setValue(value, pos[0], pos[1], this.sliceIndex);            
+            Float64Array3D.this.setValue(pos[0], pos[1], this.sliceIndex, value);
         }
 
         @Override
@@ -195,7 +222,7 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
             @Override
             public void setValue(double value)
             {
-                Float64Array3D.this.setValue(value, indX, indY, sliceIndex);
+                Float64Array3D.this.setValue(indX, indY, sliceIndex, value);
             }
         }
     }

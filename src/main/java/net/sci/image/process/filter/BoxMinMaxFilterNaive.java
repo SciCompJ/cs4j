@@ -140,7 +140,7 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 			}
 			
 			// setup result in target array
-			target.setValue(localMax * sign, pos);
+			target.setValue(pos, localMax * sign);
 		}
 	}
 	
@@ -197,7 +197,7 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 					}
 				}
 
-				target.setValue(localMax * sign, x, y);
+				target.setValue(x, y, localMax * sign);
 			}
 		}
 		
@@ -266,7 +266,7 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 						}
 					}
 
-					target.setValue(localMax * sign, x, y, z);
+					target.setValue(x, y, z, localMax * sign);
 				}
 			}
 		}

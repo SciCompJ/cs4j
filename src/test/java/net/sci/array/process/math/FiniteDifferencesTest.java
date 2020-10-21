@@ -26,7 +26,7 @@ public class FiniteDifferencesTest
         {
             for (int x = 2; x < 8; x++)
             {
-                array.setValue(1.0, x, y);
+                array.setValue(x, y, 1.0);
             }
         }
 
@@ -50,7 +50,7 @@ public class FiniteDifferencesTest
         {
             for (int x = 2; x < 8; x++)
             {
-                array.setValue(1.0, x, y);
+                array.setValue(x, y, 1.0);
             }
         }
         

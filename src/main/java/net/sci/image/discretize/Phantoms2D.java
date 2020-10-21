@@ -37,7 +37,7 @@ public class Phantoms2D
             {
                 if (Math.hypot(x - xc, y - yc) <= radius)
                 {
-                    array.setValue(value, x, y);
+                    array.setValue(x, y, value);
                 }
             }
         }
@@ -55,7 +55,7 @@ public class Phantoms2D
             {
                 if (poly.contains(x, y))
                 {
-                    array.setValue(value, x, y);
+                    array.setValue(x, y, value);
                 }
             }
         }
@@ -73,7 +73,7 @@ public class Phantoms2D
             {
                 if (domain.contains(x, y))
                 {
-                    array.setValue(value, x, y);
+                    array.setValue(x, y, value);
                 }
             }
         }

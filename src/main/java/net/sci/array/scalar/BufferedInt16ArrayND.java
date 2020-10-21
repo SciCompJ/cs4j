@@ -77,10 +77,10 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	}
 
 	@Override
-	public void setShort(short value, int... pos)
+	public void setShort(int[] pos, short s)
 	{
 		int index = subsToInd(pos);
-		this.buffer[index] = value;	
+		this.buffer[index] = s;	
 	}
 
 	// =============================================================
@@ -100,7 +100,7 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	 * @see net.sci.array.data.IntArray#setInt(int[], int)
 	 */
 	@Override
-	public void setInt(int intValue, int... pos)
+	public void setInt(int[] pos, int intValue)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = (short) Int16.clamp(intValue);
@@ -126,7 +126,7 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	}
 
 	@Override
-	public void set(Int16 value, int... pos)
+	public void set(int[] pos, Int16 value)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getShort();

@@ -4,7 +4,6 @@
 package net.sci.array.color;
 
 import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt16ArrayND;
 import net.sci.array.vector.VectorArrayND;
 
@@ -35,21 +34,6 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
 	// =============================================================
 	// Implementation of the RGB16Array interface
 
-	@Override
-	public UInt16Array convertToUInt16()
-	{
-		int[] sizes = this.size();
-		UInt16Array result = UInt16Array.create(sizes);
-		
-		PositionIterator iter = positionIterator();
-		while(iter.hasNext())
-		{
-		    int[] pos = iter.next();
-		    result.setInt(get(pos).getInt(), pos);
-		}
-		
-		return result;
-	}
 
 
     // =============================================================
@@ -137,7 +121,7 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
         }
 
         @Override
-        public void setShort(short value, int... pos)
+        public void setShort(int[] pos, short value)
         {
             int[] samples = RGB16ArrayND.this.getSamples(pos);
             samples[channel] = value & 0x00FFFF;

@@ -95,7 +95,7 @@ public class BufferedGenericArrayND<T> extends GenericArrayND<T>
 	}
 
 	@Override
-	public void set(T value, int... pos)
+	public void set(int[] pos, T value)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = (T) value;

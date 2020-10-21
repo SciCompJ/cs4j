@@ -197,21 +197,21 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 			// process first pixel independently
 			valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1],
 					buffer[2][0], Double.NEGATIVE_INFINITY);
-			image.setValue(valMax, 0, y);
+			image.setValue(0, y, valMax);
 
 			// Iterate over pixel of the line
 			for (int x = 1; x < sizeX - 1; x++)
 			{
 				valMax = max5(buffer[0][x], buffer[1][x - 1], buffer[1][x],
 						buffer[1][x + 1], buffer[2][x]);
-				image.setValue(valMax, x, y);
+				image.setValue(x, y, valMax);
 			}
 
 			// process last pixel independently
 			valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 					buffer[1][sizeX - 1], buffer[2][sizeX - 1],
 					Double.NEGATIVE_INFINITY);
-			image.setValue(valMax, sizeX - 1, y);
+			image.setValue(sizeX - 1, y, valMax);
 		}
 
 		// clear the progress bar
@@ -360,21 +360,21 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 			// process first pixel independently
 			valMin = min5(buffer[0][0], buffer[1][0], buffer[1][1],
 					buffer[2][0], Double.MAX_VALUE);
-			image.setValue(valMin, 0, y);
+			image.setValue(0, y, valMin);
 
 			// Iterate over pixel of the line
 			for (int x = 1; x < sizeX - 1; x++)
 			{
 				valMin = min5(buffer[0][x], buffer[1][x - 1], buffer[1][x],
 						buffer[1][x + 1], buffer[2][x]);
-				image.setValue(valMin, x, y);
+				image.setValue(x, y, valMin);
 			}
 
 			// process last pixel independently
 			valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 					buffer[1][sizeX - 1], buffer[2][sizeX - 1],
 					Double.MAX_VALUE);
-			image.setValue(valMin, sizeX - 1, y);
+			image.setValue(sizeX - 1, y, valMin);
 		}
 
 		// clear the progress bar

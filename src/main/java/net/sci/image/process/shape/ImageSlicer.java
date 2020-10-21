@@ -4,6 +4,7 @@
 package net.sci.image.process.shape;
 
 import net.sci.array.Array;
+import net.sci.array.Array2D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 
@@ -69,29 +70,24 @@ public class ImageSlicer
         // create position pointer for source image
         int[] srcPos = new int[nd];
         System.arraycopy(refPos, 0, srcPos, 0, nd);
-        
-        // create position pointer for target image
-        int[] pos = new int[2];
 
         // create output
         int sizeX = image.getSize(dim1);
         int sizeY = image.getSize(dim2);
         
-        Array<T> resArray = array.newInstance(new int[]{sizeX, sizeY});
+        Array2D<T> resArray = Array2D.wrap(array.newInstance(new int[]{sizeX, sizeY}));
         
         // iterate over position in target image
         for (int y = 0; y < sizeY; y++)
         {
             srcPos[dim2] = y;
-            pos[1] = y;
             
             for (int x = 0; x < sizeX; x++)
             {
                 srcPos[dim1] = x;
-                pos[0] = x;
                 
                 // copy value of selected position
-                resArray.set(array.get(srcPos), pos);
+                resArray.set(x, y, array.get(srcPos));
             }
         }
      

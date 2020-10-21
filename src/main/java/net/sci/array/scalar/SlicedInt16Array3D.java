@@ -97,7 +97,13 @@ public class SlicedInt16Array3D extends Int16Array3D
 	// =============================================================
 	// Specialization of the UInt8Array3D interface
 
-	/* (non-Javadoc)
+    @Override
+    public void setShort(int x, int y, int z, short s)
+    {
+        this.slices.get(z).setShort(new int[]{x, y}, s);
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.scalar.Int16Array3D#getShort(int, int, int)
 	 */
 	@Override
@@ -110,9 +116,9 @@ public class SlicedInt16Array3D extends Int16Array3D
 	 * @see net.sci.array.scalar.Int16Array3D#setShort(int, int, int, short)
 	 */
 	@Override
-	public void setShort(short s, int... pos)
+	public void setShort(int[] pos, short s)
 	{
-		this.slices.get(pos[2]).setShort(s, new int[]{pos[0], pos[1]});
+		this.slices.get(pos[2]).setShort(new int[]{pos[0], pos[1]}, s);
 	}
 
 	

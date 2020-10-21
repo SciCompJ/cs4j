@@ -98,31 +98,14 @@ public class DownSamplerTest
     private UInt8Array2D createUInt8Array2D()
     {
         UInt8Array2D array = UInt8Array2D.create(10, 10);
-
-        for (int y = 0; y < 10; y++)
-        {
-            for (int x = 0; x < 10; x++)
-            {
-                array.setValue(y * 10 + x, x, y);
-            }
-        }
+        array.populateValues((x, y) -> (y * 10.0 + x));
         return array;
     }
 
     private UInt16Array3D createUInt16Array3D()
     {
         UInt16Array3D array = UInt16Array3D.create(10, 8, 6);
-
-        for (int z = 0; z < 6; z++)
-        {
-            for (int y = 0; y < 8; y++)
-            {
-                for (int x = 0; x < 10; x++)
-                {
-                    array.setValue(z*10000 + y * 100 + x, x, y, z);
-                }
-            }
-        }
+        array.populateValues((x, y, z) -> (z*10000 + y * 100 + x));
         return array;
     }
 }

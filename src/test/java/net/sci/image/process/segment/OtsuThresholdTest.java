@@ -34,7 +34,7 @@ public class OtsuThresholdTest
 		{
 			for (int x = 3; x < 7; x++)
 			{
-				array.setValue(150, x, y);
+				array.setValue(x, y, 150);
 			}
 		}
 

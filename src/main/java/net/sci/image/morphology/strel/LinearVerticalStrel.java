@@ -153,14 +153,14 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
 			for (int y = 0; y < height - shift; y++)
 			{
 				localMax.add(image.getInt(x, y + shift));
-				image.setInt(localMax.getMax(), x, y);
+				image.setInt(x, y, localMax.getMax());
 			}
 
 			// process pixels at the end of the line
 			for (int y = Math.max(0, height - shift); y < height; y++)
 			{
 				localMax.add(UInt8.MIN_VALUE);
-				image.setInt(localMax.getMax(), x, y);
+				image.setInt(x, y, localMax.getMax());
 			}
 		}
 
@@ -199,14 +199,14 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
 			for (int y = 0; y < height - shift; y++)
 			{
 				localMax.add(image.getValue(x, y + shift));
-				image.setValue(localMax.getMax(), x, y);
+				image.setValue(x, y, localMax.getMax());
 			}
 
 			// process pixels at the end of the line
 			for (int y = Math.max(0, height - shift); y < height; y++)
 			{
 				localMax.add(Double.NEGATIVE_INFINITY);
-				image.setValue(localMax.getMax(), x, y);
+				image.setValue(x, y, localMax.getMax());
 			}
 		}
 
@@ -265,14 +265,14 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
 			for (int y = 0; y < height - shift; y++)
 			{
 				localMin.add(image.getInt(x, y + shift));
-				image.setInt(localMin.getMax(), x, y);
+				image.setInt(x, y, localMin.getMax());
 			}
 
 			// process pixels at the end of the line
 			for (int y = Math.max(0, height - shift); y < height; y++)
 			{
 				localMin.add(UInt8.MAX_VALUE);
-				image.setInt(localMin.getMax(), x, y);
+				image.setInt(x, y, localMin.getMax());
 			}
 		}
 
@@ -311,14 +311,14 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
 			for (int y = 0; y < height - shift; y++)
 			{
 				localMin.add(image.getValue(x, y + shift));
-				image.setValue(localMin.getMax(), x, y);
+				image.setValue(x, y, localMin.getMax());
 			}
 
 			// process pixels at the end of the line
 			for (int y = Math.max(0, height - shift); y < height; y++)
 			{
 				localMin.add(Double.POSITIVE_INFINITY);
-				image.setValue(localMin.getMax(), x, y);
+				image.setValue(x, y, localMin.getMax());
 			}
 		}
 

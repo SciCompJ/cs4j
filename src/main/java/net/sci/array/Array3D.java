@@ -85,7 +85,7 @@ public abstract class Array3D<T> implements Array<T>
     {
         for (int[] pos : this.positions())
         {
-            this.set(fun.apply(pos[0], pos[1], pos[2]), pos);
+            this.set(pos, fun.apply(pos[0], pos[1], pos[2]));
         }
     }
     
@@ -115,7 +115,22 @@ public abstract class Array3D<T> implements Array<T>
 
     // =============================================================
     // New getter / setter
-
+    
+    /**
+     * Changes the value of an element in the array at the position given by
+     * three integer indices.
+     * 
+     * @param x
+     *            index over the first array dimension
+     * @param y
+     *            index over the second array dimension
+     * @param z
+     *            index over the third array dimension
+     * @param value
+     *            the new value at the specified index
+     */
+	public abstract void set(int x, int y, int z, T value);
+	
 	
 	// =============================================================
 	// Specialization of the Array interface
@@ -281,6 +296,14 @@ public abstract class Array3D<T> implements Array<T>
         }
 
         @Override
+        public void set(int x, int y, int z, T value)
+        {
+            // set value at specified position
+            this.array.set(new int[] {x, y, z}, value);
+        }
+
+
+        @Override
         public Array<T> newInstance(int... dims)
         {
             return this.array.newInstance(dims);
@@ -300,10 +323,10 @@ public abstract class Array3D<T> implements Array<T>
         }
 
         @Override
-        public void set(T value, int... pos)
+        public void set(int[] pos, T value)
         {
             // set value at specified position
-            this.array.set(value, pos);
+            this.array.set(pos, value);
         }
 
         @Override
@@ -320,7 +343,7 @@ public abstract class Array3D<T> implements Array<T>
             // Fill new array with input array
             for (int[] pos : result.positions())
             {
-                result.set(this.array.get(pos), pos);
+                result.set(pos, this.array.get(pos));
             }
             return result;
         }
@@ -353,15 +376,21 @@ public abstract class Array3D<T> implements Array<T>
             }
 
             @Override
+            public void set(int x, int y, T value)
+            {
+                Wrapper.this.set(x, y, this.sliceIndex, value);
+            }
+
+            @Override
             public T get(int... pos)
             {
                 return Wrapper.this.get(pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
-            public void set(T value, int... pos)
+            public void set(int[] pos, T value)
             {
-                Wrapper.this.set(value, pos[0], pos[1], this.sliceIndex);
+                Wrapper.this.set(pos[0], pos[1], this.sliceIndex, value);
             }
 
             @Override
@@ -387,7 +416,7 @@ public abstract class Array3D<T> implements Array<T>
                 {
                     for (int x = 0; x < Wrapper.this.size0; x++)
                     {
-                        result.set(Wrapper.this.get(x, y, sliceIndex), x, y);
+                        result.set(x, y, Wrapper.this.get(x, y, sliceIndex));
                     }
                 }
                                 
@@ -448,7 +477,7 @@ public abstract class Array3D<T> implements Array<T>
                 @Override
                 public void set(T value)
                 {
-                    Wrapper.this.set(value, indX, indY, sliceIndex);
+                    Wrapper.this.set(indX, indY, sliceIndex, value);
                 }
             }
         }

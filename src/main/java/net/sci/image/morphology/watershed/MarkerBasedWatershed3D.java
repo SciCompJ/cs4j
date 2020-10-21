@@ -124,12 +124,12 @@ public class MarkerBasedWatershed3D
             // all have the same label, then the pixel is labeled with their label
             if (labels.size() == 1)
             {
-                labelArray.setInt(labels.get(0), x, y, z);
+                labelArray.setInt(x, y, z, labels.get(0));
                 
                 // now that we know the pixel is labeled, add unlabeled neighbors to list
                 for (Voxel neighbor : neighbors)
                 {   
-                    labelArray.setInt(INQUEUE,  neighbor.x, neighbor.y, neighbor.z);
+                    labelArray.setInt(neighbor.x, neighbor.y, neighbor.z, INQUEUE);
                     queue.add(neighbor);
                 }
             }
@@ -137,7 +137,7 @@ public class MarkerBasedWatershed3D
             {
                 // If neighbors have more than two labels, then the current
                 // pixel is set to watershed
-                labelArray.setInt(WATERSHED, x, y, z);
+                labelArray.setInt(x, y, z, WATERSHED);
             }   
         }
         
@@ -190,11 +190,11 @@ public class MarkerBasedWatershed3D
                                     && result.getInt(x2, y2, z2) != INQUEUE)
                             {
                                 queue.add(new Voxel(x2, y2, z2, array.getValue(x2, y2, z2), timeStamp++));
-                                result.setInt(INQUEUE, x2, y2, z2);
+                                result.setInt(x2, y2, z2, INQUEUE);
                             }
                         }
                         
-                        result.setInt(label, x, y, z);
+                        result.setInt(x, y, z, label);
                     }
                 }
             }

@@ -76,7 +76,7 @@ public interface BinaryArray extends IntArray<Binary>
 	    BinaryArray result = BinaryArray.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setBoolean(array.getValue(pos) > 0, pos);
+	    	result.setBoolean(pos, array.getValue(pos) > 0);
 	    }
 	    return result;
 	}
@@ -96,7 +96,7 @@ public interface BinaryArray extends IntArray<Binary>
 
 	public boolean getBoolean(int... pos);
 	
-	public void setBoolean(boolean state, int... pos);
+	public void setBoolean(int[] pos, boolean state);
 
 	/**
 	 * @return an Iterable over the positions of only true elements within the
@@ -130,7 +130,7 @@ public interface BinaryArray extends IntArray<Binary>
 	    BinaryArray result = BinaryArray.create(this.size());
 	    for (int[] pos : positions())
 	    {
-	    	result.setBoolean(!getBoolean(pos), pos);
+	    	result.setBoolean(pos, !getBoolean(pos));
 	    }
         return result;
 	}
@@ -146,12 +146,15 @@ public interface BinaryArray extends IntArray<Binary>
 	}
 
 	@Override
-	public default void setInt(int value, int... pos)
+	public default void setInt(int[] pos, int value)
 	{
-		setBoolean(value > 0, pos);
+		setBoolean(pos, value > 0);
 	}
 
 	
+    // =============================================================
+    // Specialization of the ScalarArray interface
+
     /**
      * Sets the value at the specified position, using true if value is greater
      * than zero.
@@ -163,11 +166,12 @@ public interface BinaryArray extends IntArray<Binary>
      *            greater than zero, and to false otherwise.
      * 
      */
-    public default void setValue(double value, int... pos)
+    public default void setValue(int[] pos, double value)
     {
-    	setBoolean(value > 0, pos);
+    	setBoolean(pos, value > 0);
     }
 
+    
     // =============================================================
 	// Specialization of the Array interface
 
@@ -184,9 +188,9 @@ public interface BinaryArray extends IntArray<Binary>
     }
 
     @Override
-    public default void set(Binary value, int... pos)
+    public default void set(int[] pos, Binary value)
     {
-        setBoolean(value.getBoolean(), pos);
+        setBoolean(pos, value.getBoolean());
     }
 
 
@@ -205,7 +209,7 @@ public interface BinaryArray extends IntArray<Binary>
 		// copy values into output array
 		for(int[] pos : positions())
 		{
-			result.setBoolean(this.getBoolean(pos), pos);
+			result.setBoolean(pos, this.getBoolean(pos));
 		}
 		
 		// return output
@@ -246,7 +250,7 @@ public interface BinaryArray extends IntArray<Binary>
             @Override
             public void setValue(double value)
             {
-                BinaryArray.this.setBoolean(value > 0, iter.get());
+                BinaryArray.this.setBoolean(iter.get(), value > 0);
             }
 
             @Override
@@ -258,7 +262,7 @@ public interface BinaryArray extends IntArray<Binary>
             @Override
             public void setBoolean(boolean b)
             {
-                BinaryArray.this.setBoolean(b, iter.get());
+                BinaryArray.this.setBoolean(iter.get(), b);
             }
         };
     }
@@ -438,9 +442,9 @@ public interface BinaryArray extends IntArray<Binary>
         }
 
         @Override
-        public void setBoolean(boolean value, int... pos)
+        public void setBoolean(int[] pos, boolean value)
         {
-            array.setValue(value ? 1.0 : 0.0, pos);
+            array.setValue(pos, value ? 1.0 : 0.0);
         }
 
         
@@ -484,9 +488,9 @@ public interface BinaryArray extends IntArray<Binary>
         }
 
         @Override
-        public void set(Binary value, int... pos)
+        public void set(int[] pos, Binary value)
         {
-            array.setValue(value.getValue(), pos);
+            array.setValue(pos, value.getValue());
         }
 
         @Override

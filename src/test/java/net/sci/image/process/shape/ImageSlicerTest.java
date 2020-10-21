@@ -84,10 +84,10 @@ public class ImageSlicerTest
     {
         // create  a basic array with some labels on the 10-th slice
         UInt8Array3D array = UInt8Array3D.create(50, 40, 30);
-        array.setInt(10, 10, 10, 20);
-        array.setInt(20, 20, 10, 20);
-        array.setInt(30, 10, 20, 20);
-        array.setInt(40, 20, 20, 20);
+        array.setInt(10, 10, 10, 10);
+        array.setInt(20, 10, 10, 20);
+        array.setInt(10, 20, 10, 30);
+        array.setInt(20, 20, 10, 40);
         Image image = new Image(array, Image.Type.LABEL);
 
         Image slice = ImageSlicer.slice2d(image, 10);

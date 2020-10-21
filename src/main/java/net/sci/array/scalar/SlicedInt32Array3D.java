@@ -97,7 +97,13 @@ public class SlicedInt32Array3D extends Int32Array3D
 	// =============================================================
 	// Specialization of the UInt8Array3D interface
 
-	/* (non-Javadoc)
+	@Override
+    public void setInt(int x, int y, int z, int value)
+    {
+	    this.slices.get(z).setInt(new int[] {x, y}, value);
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.scalar.Int32Array3D#getInt(int, int, int)
 	 */
 	@Override
@@ -110,9 +116,9 @@ public class SlicedInt32Array3D extends Int32Array3D
 	 * @see net.sci.array.scalar.Int32Array3D#setInt(int, int, int, short)
 	 */
 	@Override
-	public void setInt(int intValue, int... pos)
+	public void setInt(int[] pos, int intValue)
 	{
-		this.slices.get(pos[2]).setInt(intValue, pos[0], pos[1]);
+		this.slices.get(pos[2]).setInt(new int[] {pos[0], pos[1]}, intValue);
 	}
 
 	

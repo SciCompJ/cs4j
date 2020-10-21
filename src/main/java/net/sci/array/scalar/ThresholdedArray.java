@@ -26,6 +26,7 @@ package net.sci.array.scalar;
  *   view2d.print(System.out);
  * }</pre>
  * 
+ * @see ScalarArrayUInt8View
  * @author dlegland
  */
 public class ThresholdedArray implements BinaryArray
@@ -75,7 +76,7 @@ public class ThresholdedArray implements BinaryArray
      * @see net.sci.array.scalar.BinaryArray#setBoolean(boolean, int[])
      */
     @Override
-    public void setBoolean(boolean state, int... pos)
+    public void setBoolean(int[] pos, boolean state)
     {
         throw new RuntimeException("Unauthorized operation: can not modify a type conversion view");
     }

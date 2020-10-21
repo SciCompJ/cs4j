@@ -57,6 +57,13 @@ public class BufferedFloat64Array3D extends Float64Array3D
 	// =============================================================
 	// Implementation of the Array3D class
 
+    @Override
+    public void setValue(int x, int y, int z, double value)
+    {
+        int index = (z * this.size1 + y) * this.size0 + x;
+        this.buffer[index] = value;
+    }
+
 	@Override
 	public double getValue(int... pos)
 	{
@@ -65,7 +72,7 @@ public class BufferedFloat64Array3D extends Float64Array3D
 	}
 
 	@Override
-	public void setValue(double value, int... pos)
+	public void setValue(int[] pos, double value)
     {
 	    int index = (pos[2] * this.size1 + pos[1]) * this.size0 + pos[0];
         this.buffer[index] = value;

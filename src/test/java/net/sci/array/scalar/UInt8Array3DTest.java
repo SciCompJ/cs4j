@@ -28,7 +28,7 @@ public class UInt8Array3DTest
         UInt8Array2D slice = array.slice(1);
         assertEquals(slice.getValue(3, 2), 123, .01);
 
-        slice.setValue(200, 3, 2);
+        slice.setValue(3, 2, 200);
         assertEquals(array.getValue(3, 2, 1), 200, .01);
     }
 

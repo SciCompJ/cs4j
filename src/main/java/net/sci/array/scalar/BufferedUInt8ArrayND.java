@@ -67,7 +67,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	}
 
 	@Override
-	public void setByte(byte value, int... pos)
+	public void setByte(int[] pos, byte value)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value;	
@@ -90,7 +90,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	 * @see net.sci.array.data.IntArray#setInt(int[], int)
 	 */
 	@Override
-	public void setInt(int intValue, int... pos)
+	public void setInt(int[] pos, int intValue)
 	{
 		int index = subsToInd(pos);
 		intValue = Math.min(Math.max(intValue, 0), 255);
@@ -117,7 +117,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	}
 
 	@Override
-	public void set(UInt8 value, int... pos)
+	public void set(int[] pos, UInt8 value)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getByte();

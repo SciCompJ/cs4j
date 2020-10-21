@@ -43,20 +43,47 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 
 	// =============================================================
 	// New methods
+	
+    public abstract void setShort(int x, int y, short s);
 
 	
 	// =============================================================
 	// Specialization of the Int16Array interface
 
-	
+    public void setShort(int [] pos, short s)
+    {
+        setShort(pos[0], pos[1], s);
+    }
+    
+    
+    // =============================================================
+    // Specialization of the IntArray2D interface
 
+    @Override
+    public void setInt(int x, int y, int value)
+    {
+        setShort(x, y, (short) Int16.clamp(value));
+    }
+
+    
 	// =============================================================
-	// Specialization of the IntArray2D interface
+	// Specialization of the ScalarArray2D interface
 
+    @Override
+    public void setValue(int x, int y, double value)
+    {
+        setShort(x, y, (short) Int16.clamp(value));
+    }
 
+    
 	// =============================================================
 	// Specialization of Array2D interface
 
+    @Override
+    public void set(int x, int y, Int16 value)
+    {
+        setShort(x, y, value.value);
+    }
 
 
 	// =============================================================
@@ -72,7 +99,7 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setShort(getShort(x, y), x, y);
+                res.setShort(x, y, getShort(x, y));
             }
         }
         

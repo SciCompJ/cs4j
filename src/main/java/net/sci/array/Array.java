@@ -134,7 +134,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	    Array<T> dup = newInstance(size());
 	    for (int[] pos : positions())
 	    {
-	        dup.set(get(pos), pos);
+	        dup.set(pos, get(pos));
 	    }
 	    return dup;
 	}
@@ -171,12 +171,12 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	/**
 	 * Sets the value at the given position.
 	 * 
-     * @param value
-     *            the new value for the given position
 	 * @param pos
 	 *            the position, as an array of indices
+     * @param value
+     *            the new value for the given position
 	 */
-	public void set(T value, int... pos);
+	public void set(int[] pos, T value);
 
 	public default Iterable<int[]> positions()
 	{
@@ -445,9 +445,9 @@ public interface Array<T> extends Iterable<T>, Dimensional
         }
 
         @Override
-        public void set(T value, int... pos)
+        public void set(int[] pos, T value)
         {
-            array.set(value, coordsMapping.apply(pos));
+            array.set(coordsMapping.apply(pos), value);
         }
 
         @Override
@@ -485,7 +485,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
                 @Override
                 public void set(T value)
                 {
-                    View.this.set(value, iter.get());
+                    View.this.set(iter.get(), value);
                 }
             };
         }

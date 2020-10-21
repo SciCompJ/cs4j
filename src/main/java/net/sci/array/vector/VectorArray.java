@@ -44,7 +44,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         double[] values = new double[array.channelNumber()];
         for(int[] pos : array.positions())
         {
-            result.setValue(Vector.norm(array.getValues(pos, values)), pos);
+            result.setValue(pos, Vector.norm(array.getValues(pos, values)));
         }
 
 		return result;
@@ -72,7 +72,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         for(int[] pos : array.positions())
         {
             array.getValues(pos, values);
-            result.setValue(Vector.maxNorm(values), pos);
+            result.setValue(pos, Vector.maxNorm(values));
         }
 
         return result;
@@ -120,7 +120,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         double[] values = new double[channelNumber()];
         for (int[] pos : this.positions())
         {
-            result.setValue(Vector.norm(getValues(pos, values)), pos);
+            result.setValue(pos, Vector.norm(getValues(pos, values)));
         }
         
         return result;

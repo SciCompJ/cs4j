@@ -43,7 +43,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 		
 		for (int[] pos : positions())
 		{
-		    result.setInt(this.get(pos).getInt(), pos);
+		    result.setInt(pos, this.get(pos).getInt());
 		}
 		
 		return result;
@@ -67,7 +67,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
     @Override
     public void setSamples(int x, int y, int[] values)
     {
-        set(new RGB8(values), x, y);
+        set(x, y, new RGB8(values));
     }
 
     
@@ -121,7 +121,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 		int r = UInt8.clamp(values[0]);
 		int g = UInt8.clamp(values[1]);
 		int b = UInt8.clamp(values[2]);
-		set(new RGB8(r, g, b), x, y);
+		set(x, y, new RGB8(r, g, b));
 	}
 
 
@@ -134,13 +134,26 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 	@Override
 	public abstract RGB8Array2D duplicate();
 
-	/* (non-Javadoc)
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
+     */
+    @Override
+    public void set(int[] pos, RGB8 rgb)
+    {
+        set(pos[0], pos[1], rgb);
+    }
+    
+    /* (non-Javadoc)
 	 * @see net.sci.array.color.RGB8Array#iterator()
 	 */
 	@Override
 	public abstract RGB8Array.Iterator iterator();
 
-    private class ChannelView extends UInt8Array2D
+
+    // =============================================================
+    // View implementations
+
+	private class ChannelView extends UInt8Array2D
     {
         int channel;
         
@@ -157,13 +170,19 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
         }
 
         @Override
+        public void setByte(int x, int y, byte byteValue)
+        {
+            RGB8Array2D.this.setSample(x, y, channel, byteValue & 0x00FF);
+        }
+
+        @Override
         public byte getByte(int... pos)
         {
             return (byte) RGB8Array2D.this.getSample(pos[0], pos[1], channel);
         }
 
         @Override
-        public void setByte(byte byteValue, int... pos)
+        public void setByte(int[] pos, byte byteValue)
         {
             RGB8Array2D.this.setSample(pos[0], pos[1], channel, byteValue & 0x00FF);
         }

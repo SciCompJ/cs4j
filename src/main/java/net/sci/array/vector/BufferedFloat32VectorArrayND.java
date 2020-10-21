@@ -113,7 +113,7 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
     }
 
     @Override
-    public void set(Float32Vector vect, int... pos)
+    public void set(int[] pos, Float32Vector vect)
     {
         setValues(pos, vect.getValues());
     }

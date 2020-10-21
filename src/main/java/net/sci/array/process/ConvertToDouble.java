@@ -27,7 +27,7 @@ public class ConvertToDouble implements ArrayOperator
         
         for(int[] pos : result.positions())
         {
-            result.setValue(((ScalarArray<?>) array).getValue(pos), pos);
+            result.setValue(pos, ((ScalarArray<?>) array).getValue(pos));
         }
 
         return result;
@@ -48,7 +48,7 @@ public class ConvertToDouble implements ArrayOperator
         // iterate over positions
         for(int[] pos : target.positions())
         {
-            target.setValue(((ScalarArray<?>) source).getValue(pos), pos);
+            target.setValue(pos, ((ScalarArray<?>) source).getValue(pos));
         }
 
         // return reference to target

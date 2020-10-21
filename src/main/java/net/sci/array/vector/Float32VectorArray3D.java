@@ -98,13 +98,19 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
     public Iterable<Float32Array3D> channels()
     {
         return new Iterable<Float32Array3D>()
-                {
-                    @Override
-                    public java.util.Iterator<Float32Array3D> iterator()
-                    {
-                        return new ChannelIterator();
-                    }
-                };
+        {
+            @Override
+            public java.util.Iterator<Float32Array3D> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
+    }
+
+    @Override
+    public void set(int x, int y, int z, Float32Vector vect)
+    {
+        setValues(x, y, z, vect.getValues());
     }
 
     public java.util.Iterator<Float32Array3D> channelIterator()
@@ -185,9 +191,9 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         }
 
         @Override
-        public void set(Float32Vector value, int... pos)
+        public void set(int[] pos, Float32Vector value)
         {
-            Float32VectorArray3D.this.set(value, pos[0], pos[1], sliceIndex);
+            Float32VectorArray3D.this.set(pos[0], pos[1], sliceIndex, value);
         }
 
         @Override
@@ -259,7 +265,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
             @Override
             public void set(Float32Vector value)
             {
-                Float32VectorArray3D.this.set(value, indX, indY, sliceIndex);
+                Float32VectorArray3D.this.set(indX, indY, sliceIndex, value);
             }
 
             @Override
@@ -314,9 +320,15 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         }
 
         @Override
-        public net.sci.array.scalar.Float32Array.Iterator iterator()
+        public void setFloat(int x, int y, int z, float f)
         {
-            return new Iterator();
+            Float32VectorArray3D.this.setValue(x, y, z, channel, f);
+        }
+
+       @Override
+        public void setValue(int x, int y, int z, double value)
+        {
+            Float32VectorArray3D.this.setValue(x, y, z, channel, value);
         }
 
         @Override
@@ -326,11 +338,23 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         }
 
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
             Float32VectorArray3D.this.setValue(pos[0], pos[1], pos[2], channel, value);
         }
         
+        @Override
+        public void set(int x, int y, int z, Float32 f)
+        {
+            Float32VectorArray3D.this.setValue(x, y, z, channel, f.getValue());
+        }
+
+        @Override
+        public net.sci.array.scalar.Float32Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
         class Iterator implements net.sci.array.scalar.Float32Array.Iterator
         {
             int indX = -1;

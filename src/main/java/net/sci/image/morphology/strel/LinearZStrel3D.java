@@ -127,14 +127,14 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
                 for (int z = 0; z < sizeZ - shift; z++) 
                 {
                     localMax.add(array.getValue(x, y, z + shift));
-                    array.setValue(localMax.getMax(), x, y, z);
+                    array.setValue(x, y, z, localMax.getMax());
                 }
 
                 // process pixels at the end of the line
                 for (int z = Math.max(0, sizeZ - shift); z < sizeZ; z++) 
                 {
                     localMax.add(Double.NEGATIVE_INFINITY);
-                    array.setValue(localMax.getMax(), x, y, z);
+                    array.setValue(x, y, z, localMax.getMax());
                 }
             }
         }
@@ -177,14 +177,14 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
                 for (int z = 0; z < sizeZ - shift; z++) 
                 {
                     localMin.add(array.getValue(x, y, z + shift));
-                    array.setValue(localMin.getMax(), x, y, z);
+                    array.setValue(x, y, z, localMin.getMax());
                 }
 
                 // process pixels at the end of the line
                 for (int z = Math.max(0, sizeZ - shift); z < sizeZ; z++) 
                 {
                     localMin.add(Double.POSITIVE_INFINITY);
-                    array.setValue(localMin.getMax(), x, y, z);
+                    array.setValue(x, y, z, localMin.getMax());
                 }
             }
         }

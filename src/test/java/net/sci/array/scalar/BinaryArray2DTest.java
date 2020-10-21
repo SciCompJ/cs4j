@@ -55,10 +55,10 @@ public class BinaryArray2DTest
 	public void testFind()
 	{
 		BinaryArray2D array = BinaryArray2D.create(5, 4);
-		array.setBoolean(true, 1, 1);
-		array.setBoolean(true, 2, 1);
-		array.setBoolean(true, 3, 1);
-		array.setBoolean(true, 1, 2);
+		array.setBoolean(1, 1, true);
+		array.setBoolean(2, 1, true);
+		array.setBoolean(3, 1, true);
+		array.setBoolean(1, 2, true);
 		int n = 0;
 		for(@SuppressWarnings("unused") int[] pos : array.trueElementPositions())
 		{

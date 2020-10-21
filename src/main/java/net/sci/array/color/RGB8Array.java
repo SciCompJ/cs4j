@@ -273,7 +273,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         
         for(int[] pos : this.positions())
         {
-            result.setInt(get(pos).getInt(), pos);
+            result.setInt(pos, get(pos).getInt());
         }
         
         return result;
@@ -302,7 +302,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
     @Override
     public default void setSamples(int[] pos, int[] intValues)
     {
-        set(new RGB8(intValues), pos);
+        set(pos, new RGB8(intValues));
     }
 
     @Override
@@ -316,7 +316,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
     {
         int[] samples = get(pos).getSamples();
         samples[channel] = UInt8.clamp(intValue);
-        set(new RGB8(samples), pos);
+        set(pos, new RGB8(samples));
     }
     
 
@@ -365,7 +365,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 		int r = UInt8.clamp(values[0]);
 		int g = UInt8.clamp(values[1]);
 		int b = UInt8.clamp(values[2]);
-		set(new RGB8(r, g, b), pos);
+		set(pos, new RGB8(r, g, b));
 	}
 
 
@@ -474,10 +474,10 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         }
 
         @Override
-        public void set(UInt8 value, int... pos)
+        public void set(int[] pos, UInt8 value)
         {
             RGB8 rgb = new RGB8(value.getInt());
-            parent.set(rgb, pos);
+            parent.set(pos, rgb);
         }
 
         @Override
@@ -487,10 +487,10 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         }
 
         @Override
-        public void setByte(byte value, int... pos)
+        public void setByte(int[] pos, byte b)
         {
-            RGB8 rgb = new RGB8(value & 0x00FF);
-            parent.set(rgb, pos);
+            RGB8 rgb = new RGB8(b & 0x00FF);
+            parent.set(pos, rgb);
         }
 
         @Override

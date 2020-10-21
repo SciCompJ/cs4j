@@ -72,7 +72,7 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
     {
         for (int c = 0; c < 3; c++)
         {
-            this.buffer.setInt(intValues[c], x, y, c);
+            this.buffer.setInt(x, y, c, intValues[c]);
         }
     }
 
@@ -85,7 +85,7 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
     @Override
     public void setSample(int x, int y, int c, int intValue)
     {
-        this.buffer.setInt(intValue, x, y, c);
+        this.buffer.setInt(x, y, c, intValue);
     }
 
     
@@ -114,7 +114,7 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 	{
 		for (int c = 0; c < 3; c++)
 		{
-			this.buffer.setValue(values[c], x, y, c);
+			this.buffer.setValue(x, y, c, values[c]);
 		}
 	}
 
@@ -133,14 +133,22 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 	@Override
 	public void setValue(int x, int y, int c, double value)
 	{
-		this.buffer.setValue(value, x, y, c);
+		this.buffer.setValue(x, y, c, value);
 	}
 
 	
 	// =============================================================
 	// Implementation of the Array2D interface
 
-	/* (non-Javadoc)
+	@Override
+    public void set(int x, int y, RGB16 rgb)
+    {
+        this.buffer.setInt(x, y, 0, rgb.getSample(0));
+        this.buffer.setInt(x, y, 1, rgb.getSample(1));
+        this.buffer.setInt(x, y, 2, rgb.getSample(2));
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
@@ -152,19 +160,6 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 		int g = this.buffer.getInt(x, y, 1);
 		int b = this.buffer.getInt(x, y, 2);
 		return new RGB16(r, g, b);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
-	 */
-	@Override
-	public void set(RGB16 rgb, int... pos)
-	{
-        int x = pos[0];
-        int y = pos[1];
-		this.buffer.setInt(rgb.getSample(0), x, y, 0);
-		this.buffer.setInt(rgb.getSample(1), x, y, 1);
-		this.buffer.setInt(rgb.getSample(2), x, y, 2);
 	}
 
 
@@ -256,9 +251,9 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 		{
 			switch(c)
 			{
-			case 0: buffer.setInt(UInt16.clamp(value), posX, posY, 0);
-			case 1: buffer.setInt(UInt16.clamp(value), posX, posY, 1);
-			case 2: buffer.setInt(UInt16.clamp(value), posX, posY, 2);
+			case 0: buffer.setInt(posX, posY, 0, UInt16.clamp(value));
+			case 1: buffer.setInt(posX, posY, 1, UInt16.clamp(value));
+			case 2: buffer.setInt(posX, posY, 2, UInt16.clamp(value));
 			default: new IllegalArgumentException(
 					"Channel index must be comprised between 0 and 2, not " + c);
 			}
@@ -276,9 +271,9 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 		@Override
 		public void set(RGB16 rgb)
 		{
-			buffer.setInt(rgb.getSample(0), posX, posY, 0);
-			buffer.setInt(rgb.getSample(1), posX, posY, 1);
-			buffer.setInt(rgb.getSample(2), posX, posY, 2);
+			buffer.setInt(posX, posY, 0, rgb.getSample(0));
+			buffer.setInt(posX, posY, 1, rgb.getSample(1));
+			buffer.setInt(posX, posY, 2, rgb.getSample(2));
 		}
 	}
 }

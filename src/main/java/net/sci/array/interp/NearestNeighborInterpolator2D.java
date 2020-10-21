@@ -107,7 +107,7 @@ public class NearestNeighborInterpolator2D implements ScalarFunction2D
 				double y2 = -xc * sinTheta + yc * cosTheta + 4.5;
 				
 				double val = interp.evaluate(x2, y2); 
-				array2.setValue(val, x, y);
+				array2.setValue(x, y, val);
 			}
 		}
 		

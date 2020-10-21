@@ -4,7 +4,6 @@
 package net.sci.array.color;
 
 import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8ArrayND;
 import net.sci.array.vector.VectorArrayND;
 
@@ -31,27 +30,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 		super(sizes);
 	}
 
-
-	// =============================================================
-	// Implementation of the RGB8Array interface
-
-	@Override
-	public UInt8Array convertToUInt8()
-	{
-		int[] sizes = this.size();
-		UInt8Array result = UInt8Array.create(sizes);
-		
-		PositionIterator iter = positionIterator();
-		while(iter.hasNext())
-		{
-		    int[] pos = iter.next();
-		    result.setInt(get(pos).getInt(), pos);
-		}
-		
-		return result;
-	}
-
-
+	
     // =============================================================
     // Implementation of VectorArray interface
 
@@ -137,7 +116,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
         }
 
         @Override
-        public void setByte(byte value, int... pos)
+        public void setByte(int[] pos, byte value)
         {
             int[] samples = RGB8ArrayND.this.getSamples(pos);
             samples[channel] = value & 0x00FF;

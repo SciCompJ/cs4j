@@ -69,7 +69,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		Float64Array result = Float64Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setValue(array.getValue(pos), pos);
+	    	result.setValue(pos, array.getValue(pos));
 	    }
 		return result;
 	}
@@ -100,9 +100,9 @@ public interface Float64Array extends ScalarArray<Float64>
     }
 
     @Override
-    public default void set(Float64 value, int... pos)
+    public default void set(int[] pos, Float64 value)
     {
-        setValue(value.getValue(), pos);
+        setValue(pos, value.getValue());
     }
 
 	@Override
@@ -112,7 +112,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		Float64Array result = Float64Array.create(this.size());
 	    for (int[] pos : positions())
 	    {
-	    	result.setValue(this.getValue(pos), pos);
+	    	result.setValue(pos, this.getValue(pos));
 	    }
 
         // return output
@@ -170,7 +170,7 @@ public interface Float64Array extends ScalarArray<Float64>
             @Override
             public void setValue(double value)
             {
-                Float64Array.this.setValue(value, iter.get());
+                Float64Array.this.setValue(iter.get(), value);
             }
         };
     }
@@ -233,9 +233,9 @@ public interface Float64Array extends ScalarArray<Float64>
 
 
 		@Override
-		public void setValue(double value, int... pos)
+		public void setValue(int[] pos, double value)
 		{
-			array.setValue(value, pos);
+			array.setValue(pos, value);
 		}
 
 
@@ -246,9 +246,9 @@ public interface Float64Array extends ScalarArray<Float64>
 		}
 
 		@Override
-		public void set(Float64 value, int... pos)
+		public void set(int[] pos, Float64 value)
 		{
-			array.setValue(value.getValue(), pos);
+			array.setValue(pos, value.getValue());
 		}
 
         @Override
@@ -335,9 +335,9 @@ public interface Float64Array extends ScalarArray<Float64>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
-            array.setValue(value, coordsMapping.apply(pos));
+            array.setValue(coordsMapping.apply(pos), value);
         }
 
         /* (non-Javadoc)

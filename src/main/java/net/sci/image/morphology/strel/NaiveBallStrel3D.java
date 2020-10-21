@@ -137,7 +137,7 @@ public class NaiveBallStrel3D extends AlgoStub implements Strel3D
                         value = Math.max(value, array.getValue(x2, y2, z2));
                     }
                     
-                    res.setValue(value, x, y, z);
+                    res.setValue(x, y, z, value);
                 }
             }
         }
@@ -178,7 +178,7 @@ public class NaiveBallStrel3D extends AlgoStub implements Strel3D
                         value = Math.min(value, array.getValue(x2, y2, z2));
                     }
                     
-                    res.setValue(value, x, y, z);
+                    res.setValue(x, y, z, value);
                 }
             }
         }

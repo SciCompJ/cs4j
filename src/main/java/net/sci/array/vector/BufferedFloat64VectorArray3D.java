@@ -161,7 +161,7 @@ public class BufferedFloat64VectorArray3D extends Float64VectorArray3D
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(Float64Vector vect, int... pos)
+	public void set(int[] pos, Float64Vector vect)
 	{
 		setValues(pos, vect.getValues());
 	}

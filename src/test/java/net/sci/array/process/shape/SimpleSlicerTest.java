@@ -136,7 +136,7 @@ public class SimpleSlicerTest
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
         
         // modifies value in array and check equality
-        array.setValue(25.0, 3, 2, 1);
+        array.setValue(3, 2, 1, 25.0);
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
     }
 
@@ -158,7 +158,7 @@ public class SimpleSlicerTest
                 for (int x = 0; x < 5; x++)
                 {
                     String str = digits[z] + digits[y] + digits[x];
-                    array.set(str, x, y, z);
+                    array.set(x, y, z, str);
                 }
             }
         }
@@ -180,7 +180,7 @@ public class SimpleSlicerTest
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
         
         // modifies value in array and check equality
-        array.set("Hello!", 3, 2, 1);
+        array.set(3, 2, 1, "Hello!");
         assertEquals(array.get(3, 2, 1), view.get(new int[]{3, 2}));
     }
 

@@ -138,15 +138,15 @@ public class MorphologicalReconstructionTest
         {
             for (int ix = 0; ix <  2; ix++)
             {
-                array.setBoolean(true, ix,     iy);
-                array.setBoolean(true, ix + 4, iy);
-                array.setBoolean(true, ix + 8, iy);
-                array.setBoolean(true, ix,     iy + 4);
-                array.setBoolean(true, ix + 4, iy + 4);
-                array.setBoolean(true, ix + 8, iy + 4);
-                array.setBoolean(true, ix,     iy + 8);
-                array.setBoolean(true, ix + 4, iy + 8);
-                array.setBoolean(true, ix + 8, iy + 8);
+                array.setBoolean(ix,     iy, true);
+                array.setBoolean(ix + 4, iy, true);
+                array.setBoolean(ix + 8, iy, true);
+                array.setBoolean(ix,     iy + 4, true);
+                array.setBoolean(ix + 4, iy + 4, true);
+                array.setBoolean(ix + 8, iy + 4, true);
+                array.setBoolean(ix,     iy + 8, true);
+                array.setBoolean(ix + 4, iy + 8, true);
+                array.setBoolean(ix + 8, iy + 8, true);
             }
         }
         return array;
@@ -168,15 +168,15 @@ public class MorphologicalReconstructionTest
         {
             for (int ix = 0; ix <  2; ix++)
             {
-                array.setInt(1, ix,     iy    );
-                array.setInt(2, ix + 4, iy    );
-                array.setInt(3, ix + 8, iy    );
-                array.setInt(4, ix,     iy + 4);
-                array.setInt(5, ix + 4, iy + 4);
-                array.setInt(6, ix + 8, iy + 4);
-                array.setInt(7, ix,     iy + 8);
-                array.setInt(8, ix + 4, iy + 8);
-                array.setInt(9, ix + 8, iy + 8);
+                array.setInt(ix,     iy    , 1);
+                array.setInt(ix + 4, iy    , 2);
+                array.setInt(ix + 8, iy    , 3);
+                array.setInt(ix,     iy + 4, 4);
+                array.setInt(ix + 4, iy + 4, 5);
+                array.setInt(ix + 8, iy + 4, 6);
+                array.setInt(ix,     iy + 8, 7);
+                array.setInt(ix + 4, iy + 8, 8);
+                array.setInt(ix + 8, iy + 8, 9);
             }
         }
         return array;

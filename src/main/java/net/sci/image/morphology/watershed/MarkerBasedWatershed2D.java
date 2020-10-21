@@ -120,12 +120,12 @@ public class MarkerBasedWatershed2D
             // all have the same label, then the pixel is labeled with their label
             if (labels.size() == 1)
             {
-                labelArray.setInt(labels.get(0), x, y);
+                labelArray.setInt(x, y, labels.get(0));
                 
                 // now that we know the pixel is labeled, add unlabeled neighbors to list
                 for (Pixel neighbor : neighbors)
                 {   
-                    labelArray.setInt(INQUEUE, neighbor.x, neighbor.y);
+                    labelArray.setInt(neighbor.x, neighbor.y, INQUEUE);
                     queue.add(neighbor);
                 }
             }
@@ -133,7 +133,7 @@ public class MarkerBasedWatershed2D
             {
                 // If neighbors have more than two labels, then the current
                 // pixel is set to watershed
-                labelArray.setInt(WATERSHED, x, y);
+                labelArray.setInt(x, y, WATERSHED);
             }   
         }
         
@@ -182,11 +182,11 @@ public class MarkerBasedWatershed2D
                                 && result.getInt(x2, y2) != INQUEUE)
                         {
                             queue.add(new Pixel(x2, y2, array.getValue(x2, y2), timeStamp));
-                            result.setInt(INQUEUE, x2, y2);
+                            result.setInt(x2, y2, INQUEUE);
                         }
                     }
                     
-                    result.setInt(label, x, y);
+                    result.setInt(x, y, label);
                 }
             }
         }

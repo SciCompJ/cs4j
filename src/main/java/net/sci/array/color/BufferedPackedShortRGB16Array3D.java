@@ -73,7 +73,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
     {
         for (int c = 0; c < 3; c++)
         {
-            this.buffer.setInt(intValues[c], x, y, z, c);
+            this.buffer.setInt(new int[] {x, y, z, c}, intValues[c]);
         }
     }
 
@@ -86,7 +86,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
     @Override
     public void setSample(int x, int y, int z, int c, int intValue)
     {
-        this.buffer.setInt(intValue, x, y, z, c);
+        this.buffer.setInt(new int[] {x, y, z, c}, intValue);
     }
 
     
@@ -115,7 +115,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	{
 		for (int c = 0; c < 3; c++)
 		{
-			this.buffer.setValue(values[c], x, y, z, c);
+			this.buffer.setValue(new int[] {x, y, z, c}, values[c]);
 		}
 	}
 
@@ -134,14 +134,24 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	@Override
 	public void setValue(int x, int y, int z, int c, double value)
 	{
-		this.buffer.setValue(value, x, y, z, c);
+		this.buffer.setValue(new int[] {x, y, z, c}, value);
 	}
 
 	
 	// =============================================================
 	// Implementation of the Array3D interface
 
-	/* (non-Javadoc)
+	@Override
+    public void set(int x, int y, int z, RGB16 rgb)
+    {
+	    int[] pos = new int[] {x, y, z, 0};
+	    for (int c = 0; c < 3; c++)
+	    {
+	        pos[3] = c; this.buffer.setInt(pos, rgb.getSample(c));
+	    }
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#get(int, int, int)
 	 */
 	@Override
@@ -154,20 +164,6 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 		int g = this.buffer.getInt(x, y, z, 1);
 		int b = this.buffer.getInt(x, y, z, 2);
 		return new RGB16(r, g, b);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
-	 */
-	@Override
-	public void set(RGB16 rgb, int... pos)
-	{
-        int x = pos[0];
-        int y = pos[1];
-        int z = pos[2];
-        this.buffer.setInt(rgb.getSample(0), x, y, z, 0);
-        this.buffer.setInt(rgb.getSample(1), x, y, z, 1);
-        this.buffer.setInt(rgb.getSample(2), x, y, z, 2);
 	}
 
 
@@ -241,14 +237,12 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 		@Override
 		public double getValue(int c)
 		{
-			switch(c)
-			{
-			case 0: return buffer.getInt(posX, posY, posZ, 0);
-			case 1: return buffer.getInt(posX, posY, posZ, 1);
-			case 2: return buffer.getInt(posX, posY, posZ, 2);
-			default: throw new IllegalArgumentException(
-					"Channel index must be comprised between 0 and 2, not " + c);
-			}
+            if (c < 0 || c > 2)
+            {
+                throw new IllegalArgumentException(
+                        "Channel index must be comprised between 0 and 2, not " + c);
+            }
+			return buffer.getInt(posX, posY, posZ, c);
 		}
 
         @Override
@@ -263,14 +257,12 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
         @Override
 		public void setValue(int c, double value)
 		{
-			switch(c)
-			{
-			case 0: buffer.setInt(UInt16.clamp(value), posX, posY, posZ, 0);
-			case 1: buffer.setInt(UInt16.clamp(value), posX, posY, posZ, 1);
-			case 2: buffer.setInt(UInt16.clamp(value), posX, posY, posZ, 2);
-			default: new IllegalArgumentException(
-					"Channel index must be comprised between 0 and 2, not " + c);
-			}
+            if (c < 0 || c > 2)
+            {
+                throw new IllegalArgumentException(
+                        "Channel index must be comprised between 0 and 2, not " + c);
+            }
+            buffer.setInt(new int[] { posX, posY, posZ, c}, UInt16.clamp(value));
 		}
 
 		@Override
@@ -285,9 +277,9 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 		@Override
 		public void set(RGB16 rgb)
 		{
-			buffer.setInt(rgb.getSample(0), posX, posY, posZ, 0);
-			buffer.setInt(rgb.getSample(1), posX, posY, posZ, 1);
-			buffer.setInt(rgb.getSample(2), posX, posY, posZ, 2);
+			buffer.setInt(new int[] {posX, posY, posZ, 0}, rgb.getSample(0));
+			buffer.setInt(new int[] {posX, posY, posZ, 1}, rgb.getSample(1));
+			buffer.setInt(new int[] {posX, posY, posZ, 2}, rgb.getSample(2));
 		}
 	}
 }

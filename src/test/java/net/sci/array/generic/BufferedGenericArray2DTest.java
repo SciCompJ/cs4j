@@ -47,7 +47,7 @@ public class BufferedGenericArray2DTest
     public final void testSetIntIntT()
     {
         Array2D<String> array = createStringArray();
-        array.set("Hello", 0, 0);
+        array.set(0, 0, "Hello");
         assertTrue("Hello".equals(array.get(0, 0)));
     }
     
@@ -89,7 +89,7 @@ public class BufferedGenericArray2DTest
         {
             for (int x = 0; x < 10; x++)
             {
-                array.set(digits[x] + digits[y], x, y);
+                array.set(x, y, digits[x] + digits[y]);
             }
         }
         return array;

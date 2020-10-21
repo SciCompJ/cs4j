@@ -64,7 +64,7 @@ public class ScalarArrayUInt8View implements UInt8Array
      * @see net.sci.array.scalar.UInt8Array#setByte(int[], byte)
      */
     @Override
-    public void setByte(byte value, int... pos)
+    public void setByte(int[] pos, byte value)
     {
         throw new RuntimeException("Can not modify a type conversion view");
     }

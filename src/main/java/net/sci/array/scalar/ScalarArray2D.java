@@ -64,7 +64,7 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
         {
             input[0] = pos[0];
             input[1] = pos[1];
-            this.setValue(fun.apply(input), pos[0], pos[1]);
+            this.setValue(pos, fun.apply(input));
         }
     }
 
@@ -88,7 +88,7 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
     {
         for (int[] pos : this.positions())
         {
-            this.setValue(fun.apply(pos[0], pos[1]), pos[0], pos[1]);
+            this.setValue(pos, fun.apply(pos[0], pos[1]));
         }
     }
 
@@ -111,7 +111,20 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	}
 
     // =============================================================
-    // New abstract methods
+    // New getter / setter
+    
+    /**
+     * Changes the value of an element in the array at the position given by
+     * two integer indices.
+     * 
+     * @param x
+     *            index over the first array dimension
+     * @param y
+     *            index over the second array dimension
+     * @param value
+     *            the new value at the specified index
+     */
+    public abstract void setValue(int x, int y, double value);
 	    
 
     // =============================================================
@@ -145,15 +158,28 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 		}
 
         @Override
+        public void setValue(int x, int y, double value)
+        {
+            array.setValue(new int[] {x, y}, value);
+        }
+
+        @Override
+        public void set(int x, int y, T value)
+        {
+            // set value at specified position
+            this.array.set(new int[] {x, y}, value);
+        }
+
+        @Override
         public double getValue(int... pos)
         {
             return array.getValue(pos);
         }
 
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
-            array.setValue(value, pos);
+            array.setValue(pos, value);
         }
 
         @Override
@@ -175,11 +201,11 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 			return this.array.get(pos);
 		}
 
-		@Override
-		public void set(T value, int... pos)
+        @Override
+		public void set(int[] pos, T value)
 		{
 			// set value at specified position
-			this.array.set(value, pos);
+			this.array.set(pos, value);
 		}
 
 		@Override
@@ -198,7 +224,7 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 			{
 				for (int x = 0; x < this.size0; x++)
 				{
-					result.setValue(this.array.getValue(x, y), x, y);
+					result.setValue(x, y, this.array.getValue(x, y));
 				}
 			}
 

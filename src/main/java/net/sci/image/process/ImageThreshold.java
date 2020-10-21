@@ -35,7 +35,7 @@ public class ImageThreshold implements ImageArrayOperator, ScalarArrayOperator
 	{
 		for (int[] pos : source.positions())
 		{
-			target.setBoolean(source.getValue(pos) > this.value, pos);
+			target.setBoolean(pos, source.getValue(pos) > this.value);
 		}
 	}
 	

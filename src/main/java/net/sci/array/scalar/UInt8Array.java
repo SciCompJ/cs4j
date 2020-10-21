@@ -70,7 +70,7 @@ public interface UInt8Array extends IntArray<UInt8>
         UInt8Array result = UInt8Array.create(array.size());
         for (int[] pos : array.positions())
         {
-            result.setValue(array.getValue(pos), pos);
+            result.setValue(pos, array.getValue(pos));
         }
         return result;
     }
@@ -81,7 +81,7 @@ public interface UInt8Array extends IntArray<UInt8>
         UInt8Array result = UInt8Array.create(array.size());
         for (int[] pos : array.positions())
         {
-            result.setValue((array.getValue(pos) - minValue) * k, pos);
+            result.setValue(pos, (array.getValue(pos) - minValue) * k);
         }
         return result;
     }
@@ -110,7 +110,7 @@ public interface UInt8Array extends IntArray<UInt8>
 
 	public byte getByte(int... pos);
 	
-	public void setByte(byte value, int... pos);
+	public void setByte(int[] pos, byte value);
 	
 	
 	// =============================================================
@@ -123,9 +123,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	}
 
 	@Override
-	public default void setInt(int value, int... pos)
+	public default void setInt(int[] pos, int value)
 	{
-		setByte((byte) Math.min(Math.max(value, 0), 255), pos);
+		setByte(pos, (byte) Math.min(Math.max(value, 0), 255));
 	}
 
 
@@ -148,9 +148,9 @@ public interface UInt8Array extends IntArray<UInt8>
      * @see net.sci.array.Array2D#setValue(int, int, double)
      */
     @Override
-    public default void setValue(double value, int... pos)
+    public default void setValue(int[] pos, double value)
     {
-        setByte((byte) UInt8.clamp(value), pos);
+        setByte(pos, (byte) UInt8.clamp(value));
     }
 
 
@@ -176,9 +176,9 @@ public interface UInt8Array extends IntArray<UInt8>
     }
 
     @Override
-    public default void set(UInt8 value, int... pos)
+    public default void set(int[] pos, UInt8 value)
     {
-        setByte(value.getByte(), pos);
+        setByte(pos, value.getByte());
     }
 
     @Override
@@ -190,7 +190,7 @@ public interface UInt8Array extends IntArray<UInt8>
         // copy values into output array
 	    for (int[] pos : positions())
 	    {
-	    	result.setByte(getByte(pos), pos);
+	    	result.setByte(pos, getByte(pos));
 	    }
 				
 		// return result
@@ -243,7 +243,7 @@ public interface UInt8Array extends IntArray<UInt8>
             @Override
             public void setByte(byte b)
             {
-                UInt8Array.this.setByte(b, iter.get());
+                UInt8Array.this.setByte(iter.get(), b);
             }
         };
     }
@@ -312,9 +312,9 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 
 		@Override
-		public void setByte(byte value, int... pos)
+		public void setByte(int[] pos, byte value)
 		{
-			set(new UInt8(value & 0x00FF), pos);
+			set(pos, new UInt8(value & 0x00FF));
 		}
 
 		
@@ -346,9 +346,9 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 
 		@Override
-		public void set(UInt8 value, int... pos)
+		public void set(int[] pos, UInt8 value)
 		{
-			array.setValue(value.getValue(), pos);
+			array.setValue(pos, value.getValue());
 		}
 
         @Override
@@ -435,9 +435,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.UInt8Array#setByte(int[], byte)
 	     */
 	    @Override
-	    public void setByte(byte value, int... pos)
+	    public void setByte(int[] pos, byte value)
 	    {
-	        array.setByte(value, coordsMapping.apply(pos));
+	        array.setByte(coordsMapping.apply(pos), value);
 	    }
 
 	    /* (non-Javadoc)
@@ -453,9 +453,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.IntArray#setInt(int[], int)
 	     */
 	    @Override
-	    public void setInt(int value, int... pos)
+	    public void setInt(int[] pos, int value)
 	    {
-	        array.setInt(value, coordsMapping.apply(pos));
+	        array.setInt(coordsMapping.apply(pos), value);
 	    }
 
 	    /* (non-Javadoc)
@@ -471,9 +471,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
 	     */
 	    @Override
-	    public void setValue(double value, int... pos)
+	    public void setValue(int[] pos, double value)
 	    {
-	        array.setValue(value, coordsMapping.apply(pos));
+	        array.setValue(coordsMapping.apply(pos), value);
 	    }
 
 	    /* (non-Javadoc)

@@ -145,7 +145,7 @@ public class VectorArrayRGB8View implements RGB8Array
      * @see net.sci.array.Array#set(int[], java.lang.Object)
      */
     @Override
-    public void set(RGB8 value, int... pos)
+    public void set(int[] pos, RGB8 value)
     {
         throw new RuntimeException("Can not modify values");
     }

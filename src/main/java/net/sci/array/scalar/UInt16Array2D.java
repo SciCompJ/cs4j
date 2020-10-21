@@ -43,21 +43,50 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 	}
 
 	
-	// =============================================================
-	// New methods
+    // =============================================================
+    // New methods
+    
+    public abstract void setShort(int x, int y, short s);
 
-	
-	// =============================================================
-	// Specialization of the UInt16Array interface
+    
+    
+    // =============================================================
+    // Specialization of the IntArray2D interface
+
+    @Override
+    public void setInt(int x, int y, int value)
+    {
+        setShort(x, y, (short) UInt16.clamp(value));
+    }
+
+    
+    // =============================================================
+    // Specialization of the Int16Array interface
+
+    public void setShort(int [] pos, short s)
+    {
+        setShort(pos[0], pos[1], s);
+    }
 
 
-	// =============================================================
-	// Specialization of IntArray2D interface
+    // =============================================================
+    // Specialization of the ScalarArray2D interface
 
 
-	// =============================================================
-	// Specialization of Array2D interface
+    @Override
+    public void setValue(int x, int y, double value)
+    {
+        setShort(x, y, (short) UInt16.clamp(value));
+    }
 
+    // =============================================================
+    // Specialization of Array2D interface
+
+    @Override
+    public void set(int x, int y, UInt16 value)
+    {
+        setShort(x, y, value.value);
+    }
 
 	
 	// =============================================================
@@ -79,7 +108,7 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setShort(getShort(x, y), x, y);
+                res.setShort(x, y, getShort(x, y));
             }
         }
         

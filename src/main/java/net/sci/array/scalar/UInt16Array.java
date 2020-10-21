@@ -69,7 +69,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		UInt16Array result = UInt16Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setValue(array.getValue(pos), pos);
+	    	result.setValue(pos, array.getValue(pos));
 	    }
 		return result;
 	}
@@ -89,7 +89,7 @@ public interface UInt16Array extends IntArray<UInt16>
 
 	public short getShort(int... pos);
 	
-	public void setShort(short value, int... pos);
+	public void setShort(int[] pos, short value);
 	
 	
 	// =============================================================
@@ -106,9 +106,9 @@ public interface UInt16Array extends IntArray<UInt16>
 	 * and 2^16-1.
 	 */
 	@Override
-	public default void setInt(int value, int... pos)
+	public default void setInt(int[] pos, int value)
 	{
-		setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE), pos);
+		setShort(pos, (short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
 	}
 
 	
@@ -134,9 +134,9 @@ public interface UInt16Array extends IntArray<UInt16>
     }
 
     @Override
-    public default void set(UInt16 value, int... pos)
+    public default void set(int[] pos, UInt16 value)
     {
-        setShort(value.getShort(), pos);
+        setShort(pos, value.getShort());
     }
 
 
@@ -156,9 +156,9 @@ public interface UInt16Array extends IntArray<UInt16>
      * @see net.sci.array.Array2D#setValue(int, int, double)
      */
     @Override
-    public default void setValue(double value, int... pos)
+    public default void setValue(int[] pos, double value)
     {
-        setInt(UInt16.clamp(value), pos);
+        setInt(pos, UInt16.clamp(value));
     }
 
     @Override
@@ -169,7 +169,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		
 	    for (int[] pos : positions())
 	    {
-	    	result.setShort(getShort(pos), pos);
+	    	result.setShort(pos, getShort(pos));
 	    }
 
 		// return output
@@ -222,7 +222,7 @@ public interface UInt16Array extends IntArray<UInt16>
             @Override
             public void setShort(short s)
             {
-                UInt16Array.this.setShort(s, iter.get());
+                UInt16Array.this.setShort(iter.get(), s);
             }
         };
     }
@@ -282,9 +282,9 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 
 		@Override
-		public void setShort(short value, int... pos)
+		public void setShort(int[] pos, short value)
 		{
-			set(new UInt16(value), pos);
+			set(pos, new UInt16(value));
 		}
 
 		
@@ -316,9 +316,9 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 
 		@Override
-		public void set(UInt16 value, int... pos)
+		public void set(int[] pos, UInt16 value)
 		{
-			array.setValue(value.getValue(), pos);
+			array.setValue(pos, value.getValue());
 		}
 
         @Override
@@ -405,9 +405,9 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.UInt16Array#setShort(int[], short)
          */
         @Override
-        public void setShort(short shortValue, int... pos)
+        public void setShort(int[] pos, short shortValue)
         {
-            array.setShort(shortValue, coordsMapping.apply(pos));
+            array.setShort(coordsMapping.apply(pos), shortValue);
         }
 
         /* (non-Javadoc)
@@ -423,9 +423,9 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.IntArray#setInt(int[], int)
          */
         @Override
-        public void setInt(int value, int... pos)
+        public void setInt(int[] pos, int value)
         {
-            array.setInt(value, coordsMapping.apply(pos));
+            array.setInt(coordsMapping.apply(pos), value);
         }
 
         /* (non-Javadoc)
@@ -441,9 +441,9 @@ public interface UInt16Array extends IntArray<UInt16>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
-            array.setValue(value, coordsMapping.apply(pos));
+            array.setValue(coordsMapping.apply(pos), value);
         }
 
         /* (non-Javadoc)

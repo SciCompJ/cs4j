@@ -36,14 +36,37 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
 
     // =============================================================
     // New methods
-    
+	
+    public abstract void setFloat(int x, int y, float value);
+
 
     // =============================================================
-    // Specialization of Float32Array
-    
+    // Specialization of ScalarArray3D 
 
-	// =============================================================
-	// Specialization of Array2D 
+    @Override
+    public void setValue(int x, int y, double value)
+    {
+        setFloat(x, y, (float) value);
+    }
+
+    // =============================================================
+    // Specialization of Array3D 
+
+    @Override
+    public void set(int x, int y, Float32 value)
+    {
+        setFloat(x, y, value.value);
+    }
+    
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array2D#setValue(int, int, double)
+     */
+    @Override
+    public void setValue(int[] pos, double value)
+    {
+        setValue(pos[0], pos[1], value);
+    }
+    
 	
 	// =============================================================
 	// Specialization of Array 
@@ -58,11 +81,15 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
     public Float32Array2D duplicate()
     {
         Float32Array2D res = Float32Array2D.create(size0, size1);
+        for (int[] pos : res.positions())
+        {
+            res.setValue(pos,  this.getValue(pos));
+        }
         for (int y = 0; y < size1; y++)
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setValue(getValue(x, y), x, y);
+                res.setValue(x, y, getValue(x, y));
             }
         }
         return res;

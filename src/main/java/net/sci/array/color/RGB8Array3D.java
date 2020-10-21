@@ -97,7 +97,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
     @Override
     public void setSamples(int x, int y, int z, int[] values)
     {
-        set(new RGB8(values), x, y, z);
+        set(x, y, z, new RGB8(values));
     }
 
 
@@ -119,13 +119,13 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
     public Iterable<UInt8Array3D> channels()
     {
         return new Iterable<UInt8Array3D>()
-                {
-                    @Override
-                    public java.util.Iterator<UInt8Array3D> iterator()
-                    {
-                        return new ChannelIterator();
-                    }
-                };
+        {
+            @Override
+            public java.util.Iterator<UInt8Array3D> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
     }
 
     public java.util.Iterator<UInt8Array3D> channelIterator()
@@ -155,7 +155,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 		int r = UInt8.clamp(values[0]);
 		int g = UInt8.clamp(values[1]);
 		int b = UInt8.clamp(values[2]);
-		set(new RGB8(r, g, b), x, y, z);
+		set(x, y, z, new RGB8(r, g, b));
 	}
 
 
@@ -168,6 +168,15 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 	@Override
 	public abstract RGB8Array3D duplicate();
 
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
+     */
+    @Override
+    public void set(int[] pos, RGB8 rgb)
+    {
+        set(pos[0], pos[1], pos[2], rgb);
+    }
+    
 	/* (non-Javadoc)
 	 * @see net.sci.array.color.RGB8Array#iterator()
 	 */
@@ -212,7 +221,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
             {
                 for (int x = 0; x < size0; x++)
                 {
-                    res.set(RGB8Array3D.this.get(x, y, sliceIndex), x, y);
+                    res.set(x, y, RGB8Array3D.this.get(x, y, sliceIndex));
                 }
             }
             
@@ -232,6 +241,13 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
             RGB8Array3D.this.setSample(x, y, sliceIndex, c, intValue);
         }
 
+
+        @Override
+        public void set(int x, int y, RGB8 value)
+        {
+            RGB8Array3D.this.set(x, y, sliceIndex, value);
+        }
+
         @Override
         public RGB8 get(int... pos)
         {
@@ -239,9 +255,9 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
         }
 
         @Override
-        public void set(RGB8 value, int... pos)
+        public void set(int[] pos, RGB8 value)
         {
-            RGB8Array3D.this.set(value, pos[0], pos[1], sliceIndex);
+            RGB8Array3D.this.set(pos[0], pos[1], sliceIndex, value);
         }
 
         class Iterator implements RGB8Array.Iterator
@@ -286,7 +302,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
             @Override
             public void set(RGB8 value)
             {
-                RGB8Array3D.this.set(value, indX, indY, sliceIndex);
+                RGB8Array3D.this.set(indX, indY, sliceIndex, value);
             }
         }
     }
@@ -328,13 +344,19 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
         }
 
         @Override
+        public void setByte(int x, int y, int z, byte byteValue)
+        {
+            RGB8Array3D.this.setSample(x, y, z, channel, byteValue & 0x00FF);
+        }
+
+        @Override
         public byte getByte(int... pos)
         {
             return (byte) RGB8Array3D.this.getSample(pos[0], pos[1], pos[2], channel);
         }
 
         @Override
-        public void setByte(byte byteValue, int... pos)
+        public void setByte(int[] pos, byte byteValue)
         {
             RGB8Array3D.this.setSample(pos[0], pos[1], pos[2], channel, byteValue);
         }

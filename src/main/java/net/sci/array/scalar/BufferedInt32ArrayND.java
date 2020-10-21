@@ -73,7 +73,7 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 	 * @see net.sci.array.data.IntArray#setInt(int[], int)
 	 */
 	@Override
-	public void setInt(int intValue, int... pos)
+	public void setInt(int[] pos, int intValue)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = intValue;
@@ -99,7 +99,7 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 	}
 
 	@Override
-	public void set(Int32 value, int... pos)
+	public void set(int[] pos, Int32 value)
 	{
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getInt();

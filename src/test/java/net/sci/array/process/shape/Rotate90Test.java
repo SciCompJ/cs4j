@@ -61,7 +61,7 @@ public class Rotate90Test
             for (int x = 0; x < 5; x++)
             {
                 String str = digits[y] + digits[x];
-                array.set(str, x, y);
+                array.set(x, y, str);
             }
         }
         return array;

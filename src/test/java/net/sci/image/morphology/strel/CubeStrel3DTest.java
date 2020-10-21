@@ -65,7 +65,7 @@ public class CubeStrel3DTest
     private final static UInt8Array3D createSingleVoxelArray()
     {
         UInt8Array3D array = UInt8Array3D.create(21,  21,  21);
-        array.setValue(255, 10, 10, 10);
+        array.setValue(10, 10, 10, 255);
         return array;
     }
     
@@ -74,7 +74,7 @@ public class CubeStrel3DTest
         UInt8Array3D result = array.duplicate();
         for (int[] pos : result.positions())
         {
-            result.setInt(255 - array.getInt(pos), pos);
+            result.setInt(pos, 255 - array.getInt(pos));
         }
         return result;
     }

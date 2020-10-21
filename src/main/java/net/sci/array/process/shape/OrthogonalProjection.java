@@ -57,7 +57,7 @@ public class OrthogonalProjection implements ArrayOperator
 			}
 			
 			// copy value of selected position
-			target.setValue(maxValue, pos);
+			target.setValue(pos, maxValue);
 		}
 	}
 

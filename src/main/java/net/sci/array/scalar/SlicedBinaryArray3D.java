@@ -18,7 +18,7 @@ public class SlicedBinaryArray3D extends BinaryArray3D
 	// =============================================================
 	// Class fields
 
-	ArrayList<BinaryArray> slices;
+	ArrayList<BinaryArray2D> slices;
 
 	
 	// =============================================================
@@ -89,7 +89,7 @@ public class SlicedBinaryArray3D extends BinaryArray3D
 		this.slices = new ArrayList<>(size2);
 		for (BinaryArray slice : slices)
 		{
-			this.slices.add(slice);
+			this.slices.add(BinaryArray2D.wrap(slice));
 		}
 	}
 
@@ -97,7 +97,13 @@ public class SlicedBinaryArray3D extends BinaryArray3D
 	// =============================================================
 	// Specialization of the BinaryArray3D interface
 
-	/* (non-Javadoc)
+	@Override
+    public void setBoolean(int x, int y, int z, boolean b)
+    {
+        this.slices.get(z).setBoolean(x, y, b);
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.scalar.BinaryArray3D#getBoolean(int, int, int)
 	 */
 	@Override
@@ -110,9 +116,9 @@ public class SlicedBinaryArray3D extends BinaryArray3D
 	 * @see net.sci.array.scalar.BinaryArray3D#setBoolean(int, int, int, boolean)
 	 */
 	@Override
-	public void setBoolean(boolean b, int... pos)
+	public void setBoolean(int[] pos, boolean b)
 	{
-		this.slices.get(pos[2]).setBoolean(b, new int[]{pos[0], pos[1]});
+		
 	}
 
 	

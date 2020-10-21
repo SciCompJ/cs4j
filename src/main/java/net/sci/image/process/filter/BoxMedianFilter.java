@@ -129,7 +129,7 @@ public final class BoxMedianFilter extends AlgoStub implements ImageArrayOperato
 			
 			// sort neighborhood values and keep the median value
 			Arrays.parallelSort(values);
-			target.setValue(values[medianCount], pos);
+			target.setValue(pos, values[medianCount]);
 		}
 	}
 	
@@ -192,7 +192,7 @@ public final class BoxMedianFilter extends AlgoStub implements ImageArrayOperato
 				
 				// sort neighborhood values and keep the median value
 				Arrays.parallelSort(values);
-				target.setValue(values[medianCount], x, y);
+				target.setValue(x, y, values[medianCount]);
 			}
 		}
 	}
@@ -266,7 +266,7 @@ public final class BoxMedianFilter extends AlgoStub implements ImageArrayOperato
 					
 					// sort neighborhood values and keep the median value
 					Arrays.parallelSort(values);
-					target.setValue(values[medianCount], x, y, z);
+					target.setValue(x, y, z, values[medianCount]);
 				}
 			}
 		}

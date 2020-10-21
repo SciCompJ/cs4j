@@ -58,4 +58,10 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
         return res;
     }
 
+    @Override
+    public void set(int x, int y, Int32 value)
+    {
+        setInt(x, y, value.value);
+    }
+    
 }

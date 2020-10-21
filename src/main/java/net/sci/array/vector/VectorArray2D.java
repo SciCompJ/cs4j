@@ -93,7 +93,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
                 for (int x = 0; x < sizeX; x++)
                 {
                     pos[0] = x;
-                    result.setValue(array.get(pos).getValue(c), x, y, c);
+                    result.setValue(x, y, c, array.get(pos).getValue(c));
                 }
             }
         }
@@ -288,6 +288,13 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
+        public void set(int x, int y, T value)
+        {
+            // set value at specified position
+            this.array.set(new int[] {x, y}, value);
+        }
+
+        @Override
         public VectorArray<T> newInstance(int... dims)
         {
             return this.array.newInstance(dims);
@@ -307,10 +314,10 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
-        public void set(T value, int... pos)
+        public void set(int[] pos, T value)
         {
             // set value at specified position
-            this.array.set(value, pos);
+            this.array.set(pos, value);
         }
 
         @Override

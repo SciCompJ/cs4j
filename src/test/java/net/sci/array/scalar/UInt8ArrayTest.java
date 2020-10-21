@@ -40,10 +40,10 @@ public class UInt8ArrayTest
 		UInt8Array array8 = UInt8Array.wrap(array);
 		assertEquals(255, array8.getInt(new int[]{5, 5}));
 		
-		array.setValue(100, 5, 5);
+		array.setValue(5, 5, 100);
 		assertEquals(100, array8.getInt(5, 5));
 		
-		array.setValue(-10, 5, 5);
+		array.setValue(5, 5, -10);
 		assertEquals(0, array8.getInt(5, 5));
 	}
 

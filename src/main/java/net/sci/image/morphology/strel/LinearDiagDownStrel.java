@@ -172,7 +172,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 			{
 				localMax.add(image.getInt(t, t + d));
 				int t2 = t - this.offset;
-				image.setInt(localMax.getMax(), t2, t2 + d);
+				image.setInt(t2, t2 + d, localMax.getMax());
 				t++;
 			}
 
@@ -184,7 +184,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 				int x = t - this.offset;
 				int y = t + d - this.offset;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-					image.setInt(localMax.getMax(), x, y);
+					image.setInt(x, y, localMax.getMax());
 				t++;
 			}
 		}
@@ -242,7 +242,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 			{
 				localMax.add(image.getValue(t, t + d));
 				int t2 = t - this.offset;
-				image.setValue(localMax.getMax(), t2, t2 + d);
+				image.setValue(t2, t2 + d, localMax.getMax());
 				t++;
 			}
 
@@ -254,7 +254,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 				int x = t - this.offset;
 				int y = t + d - this.offset;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-					image.setValue(localMax.getMax(), x, y);
+					image.setValue(x, y, localMax.getMax());
 				t++;
 			}
 		}
@@ -334,7 +334,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 			while (t < tmax)
 			{
 				localMin.add(image.getInt(t, t + d));
-				image.setInt(localMin.getMax(), t - dt0, t + d - dt0);
+				image.setInt(t - dt0, t + d - dt0, localMin.getMax());
 				t++;
 			}
 
@@ -346,7 +346,9 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 				int x = t - dt0;
 				int y = t + d - dt0;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-					image.setInt(localMin.getMax(), x, y);
+				{
+					image.setInt(x, y, localMin.getMax());
+				}
 				t++;
 			}
 		}
@@ -406,7 +408,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 			while (t < tmax)
 			{
 				localMin.add(image.getValue(t, t + d));
-				image.setValue(localMin.getMax(), t - dt0, t + d - dt0);
+				image.setValue(t - dt0, t + d - dt0, localMin.getMax());
 				t++;
 			}
 
@@ -418,7 +420,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 				int x = t - dt0;
 				int y = t + d - dt0;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-					image.setValue(localMin.getMax(), x, y);
+					image.setValue(x, y, localMin.getMax());
 				t++;
 			}
 		}

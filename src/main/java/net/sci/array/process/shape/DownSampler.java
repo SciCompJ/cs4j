@@ -66,7 +66,7 @@ public class DownSampler implements ArrayOperator
     	            pos2[d] = pos[d] * this.ratios[0];
     	        }
     	        
-    	        result.set(array.get(pos2), pos);
+    	        result.set(pos, array.get(pos2));
     	    }
 	    }
 	    else
@@ -79,7 +79,7 @@ public class DownSampler implements ArrayOperator
                     pos2[d] = pos[d] * this.ratios[d];
                 }
                 
-                result.set(array.get(pos2), pos);
+                result.set(pos, array.get(pos2));
             }
 	    }
 	    

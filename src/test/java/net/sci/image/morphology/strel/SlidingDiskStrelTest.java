@@ -28,7 +28,7 @@ public class SlidingDiskStrelTest
         
         // Creates a simple array with white dot in the middle
         UInt8Array2D array = UInt8Array2D.create(5, 5);
-        array.setValue(255, 2, 2);
+        array.setValue(2, 2, 255);
         
         // applies dilation on array
         ScalarArray2D<?> dilated = strel.dilation(array);
@@ -51,7 +51,7 @@ public class SlidingDiskStrelTest
         // Creates a simple array with white dot in the middle
         UInt8Array2D array = UInt8Array2D.create(5, 5);
         array.fillValue(255.0);
-        array.setValue(0.0, 2, 2);
+        array.setValue(2, 2, 0.0);
         
         // applies dilation on array
         ScalarArray2D<?> eroded = strel.erosion(array);

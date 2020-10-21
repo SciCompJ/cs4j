@@ -147,7 +147,7 @@ public class Crop extends AlgoStub implements ArrayOperator
             int y0 = this.minIndices[1];
             for (int x = 0; x < size0; x++)
             {
-                res.set(array.get(x + minIndices[0], y + y0), x, y);
+                res.set(x, y, array.get(x + minIndices[0], y + y0));
             }
         }
         
@@ -199,7 +199,7 @@ public class Crop extends AlgoStub implements ArrayOperator
             {
                 pos2[d] = minIndices[d] + pos[d];
             }
-            target.set(source.get(pos2), pos);
+            target.set(pos, source.get(pos2));
         }
         
         return target;

@@ -65,16 +65,25 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		return this.buffer[index];
 	}
 	
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array2D#setByte(int, int, byte)
-	 */
-	@Override
-	public void setByte(byte b, int... pos)
-	{
-		int index = pos[0] + pos[1] * this.size0;
-		this.buffer[index] = b;
-	}
-
+    /* (non-Javadoc)
+     * @see net.sci.array.data.scalar2d.UInt8Array2D#setByte(int, int, byte)
+     */
+    @Override
+    public void setByte(int x, int y, byte b)
+    {
+        int index = x + y * this.size0;
+        this.buffer[index] = b;
+    }
+    
+    /* (non-Javadoc)
+     * @see net.sci.array.data.scalar2d.UInt8Array2D#setByte(int[], byte)
+     */
+    @Override
+    public void setByte(int[] pos, byte b)
+    {
+        int index = pos[0] + pos[1] * this.size0;
+        this.buffer[index] = b;
+    }
 
 	// =============================================================
 	// Implementation of the Array interface

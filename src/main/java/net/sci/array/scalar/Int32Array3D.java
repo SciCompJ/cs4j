@@ -84,6 +84,12 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
 	@Override
 	public abstract Int32Array3D duplicate();
 
+    @Override
+    public void set(int x, int y, int z, Int32 value)
+    {
+        setInt(x, y, z, value.value);
+    }
+    
 
 	// =============================================================
 	// Specialization of Array interface
@@ -104,15 +110,21 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
         }
 
         @Override
+        public void setInt(int x, int y, int value)
+        {
+            Int32Array3D.this.setInt(x, y, this.sliceIndex, value);            
+        }
+
+        @Override
         public int getInt(int... pos)
         {
             return Int32Array3D.this.getInt(pos[0], pos[1], this.sliceIndex);
         }
 
         @Override
-        public void setInt(int value, int... pos)
+        public void setInt(int[] pos, int value)
         {
-            Int32Array3D.this.setInt(value, pos[0], pos[1], this.sliceIndex);            
+            Int32Array3D.this.setInt(pos[0], pos[1], this.sliceIndex, value);            
         }
 
         @Override

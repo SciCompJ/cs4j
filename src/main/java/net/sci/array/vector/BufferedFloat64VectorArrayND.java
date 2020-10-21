@@ -107,18 +107,6 @@ public class BufferedFloat64VectorArrayND extends Float64VectorArrayND
     // =============================================================
     // Implementation of the Array interface
     
-    @Override
-    public Float64Vector get(int... pos)
-    {
-        return new Float64Vector(getValues(pos, new double[vectorLength]));
-    }
-
-    @Override
-    public void set(Float64Vector vect, int... pos)
-    {
-        setValues(pos, vect.getValues());
-    }
-
     /* (non-Javadoc)
 	 * @see net.sci.array.data.vector.VectorArray2D#duplicate()
 	 */

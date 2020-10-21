@@ -53,8 +53,49 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
 	}
 
 	
-	// =============================================================
-	// New methods
+    // =============================================================
+    // New methods
+    
+    public abstract void setShort(int x, int y, int z, short s);
+
+    
+    // =============================================================
+    // Specialization of the IntArray3D interface
+
+    @Override
+    public void setInt(int x, int y, int z, int value)
+    {
+        setShort(x, y, z, (short) UInt16.clamp(value));
+    }
+
+
+    // =============================================================
+    // Specialization of the ScalarArray3D interface
+
+
+    @Override
+    public void setValue(int x, int y, int z, double value)
+    {
+        setShort(x, y, z, (short) UInt16.clamp(value));
+    }
+
+    // =============================================================
+    // Specialization of Array3D interface
+
+    @Override
+    public void set(int x, int y, int z, UInt16 value)
+    {
+        setShort(x, y, z, value.value);
+    }
+
+
+    // =============================================================
+    // Specialization of the UInt16Array interface
+
+    public void setShort(int [] pos, short s)
+    {
+        setShort(pos[0], pos[1], pos[2], s);
+    }
 
 	
     // =============================================================
@@ -110,7 +151,7 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
             {
                 for (int x = 0; x < size0; x++)
                 {
-                    res.setShort(getShort(x, y, z), x, y, z);
+                    res.setShort(x, y, z, getShort(x, y, z));
                 }
             }
         }
@@ -142,16 +183,17 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
             this.sliceIndex = slice;
         }
 
+
+        @Override
+        public void setShort(int x, int y, short s)
+        {
+            UInt16Array3D.this.setShort(x, y, this.sliceIndex, s);
+        }
+        
         @Override
         public short getShort(int... pos)
         {
             return UInt16Array3D.this.getShort(pos[0], pos[1], this.sliceIndex);
-        }
-
-        @Override
-        public void setShort(short value, int... pos)
-        {
-            UInt16Array3D.this.setShort(value, pos[0], pos[1], this.sliceIndex);            
         }
 
         @Override
@@ -202,9 +244,10 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
             @Override
             public void setShort(short s)
             {
-                UInt16Array3D.this.setShort(s, indX, indY, sliceIndex);
+                UInt16Array3D.this.setShort(indX, indY, sliceIndex, s);
             }
         }
+
     }
     
     private class SliceIterator implements java.util.Iterator<UInt16Array2D> 

@@ -15,7 +15,7 @@ public class BufferedInt16Array2DTest
 		{
 			for (int x = 0; x < 6; x++)
 			{
-				array.setInt(1000, x, y);
+				array.setInt(x, y, 1000);
 			}
 		}
 		

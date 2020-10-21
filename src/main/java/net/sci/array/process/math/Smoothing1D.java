@@ -133,7 +133,7 @@ public class Smoothing1D implements ArrayOperator
             }
             
             // compute local finite difference value
-            target.setValue(acc / this.size, pos);
+            target.setValue(pos, acc / this.size);
         }
     }
     

@@ -56,12 +56,14 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	// =============================================================
 	// New methods
 
+	public abstract void setBoolean(int x, int y, boolean b);
+	
 	
 	// =============================================================
-	// Specialization of the BooleanArray interface
+	// Specialization of the BinaryArray interface
 	
     /* (non-Javadoc)
-     * @see net.sci.array.data.BooleanArray#complement()
+     * @see net.sci.array.scalar.BinaryArray#complement()
      */
     @Override
     public BinaryArray2D complement()
@@ -69,15 +71,30 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         BinaryArray2D result = BinaryArray2D.create(size(0), size(1));
 	    for (int[] pos : positions())
 	    {
-	    	result.setBoolean(!getBoolean(pos), pos);
+	    	result.setBoolean(pos, !getBoolean(pos));
 	    }
         return result;
     }
   
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.BinaryArray#setBoolean(int[], boolean)
+     */
+    @Override
+    public void setBoolean(int[] pos, boolean state)
+    {
+        setBoolean(pos[0], pos[1], state);
+    }
     
+
     // =============================================================
 	// Specialization of IntArray2D interface
 
+    @Override
+    public void setInt(int x, int y, int value)
+    {
+        setBoolean(x, y, value > 0);
+    }
+    
 
 	// =============================================================
 	// Specialization of Array2D interface
@@ -95,9 +112,9 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
-	public void set(Binary value, int... pos)
+	public void set(int[] pos, Binary value)
 	{
-		setBoolean(value.getBoolean(), pos);
+		setBoolean(pos, value.getBoolean());
 	}
 
 	/* (non-Javadoc)
@@ -115,13 +132,33 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 * @see net.sci.array.Array2D#setValue(int, int, double)
 	 */
 	@Override
-	public void setValue(double value, int... pos)
+	public void setValue(int[] pos, double value)
 	{
-		setBoolean(value > 0, pos);
+		setBoolean(pos, value > 0);
 	}
-
 	
-	// =============================================================
+	
+    // =============================================================
+    // Implementation of the ScalarArray2D interface
+    
+    @Override
+    public void setValue(int x, int y, double value)
+    {
+        setBoolean(x, y, value > 0);
+    }
+    
+    
+    // =============================================================
+    // Implementation of the Array2D interface
+    
+    @Override
+    public void set(int x, int y, Binary value)
+    {
+        setBoolean(x, y, value.state);
+    }
+
+    
+    // =============================================================
 	// Specialization of Array interface
 	
 	@Override
@@ -138,13 +175,13 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setBoolean(getBoolean(x, y), x, y);
+                res.setBoolean(x, y, getBoolean(x, y));
             }
         }
         return res;
     }
 
-
+    
     // =============================================================
     // Inner Wrapper class
 
@@ -165,15 +202,21 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         }
 
         @Override
+        public void setBoolean(int x, int y, boolean state)
+        {
+            this.array.setBoolean(new int[] {x, y}, state);
+        }
+
+        @Override
         public boolean getBoolean(int... pos)
         {
             return this.array.getBoolean(pos);
         }
 
         @Override
-        public void setBoolean(boolean state, int... pos)
+        public void setBoolean(int[] pos, boolean state)
         {
-            this.array.setBoolean(state, pos);
+            this.array.setBoolean(pos, state);
         }
 
         @Override
@@ -198,7 +241,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
                 for (int x = 0; x < this.size0; x++)
                 {
                     pos[0] = x;
-                    result.setBoolean(this.array.getBoolean(pos), x, y);
+                    result.setBoolean(x, y, this.array.getBoolean(pos));
                 }
             }
 

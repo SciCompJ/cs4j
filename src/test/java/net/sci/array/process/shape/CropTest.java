@@ -70,7 +70,7 @@ public class CropTest
         assertEquals(array.get(1, 1, 1), view.get(new int[]{0, 0, 0}));
         
         // modifies value in array and check equality
-        array.set("Hello!", 1, 1, 1);
+        array.set(1, 1, 1, "Hello!");
         assertEquals(array.get(1, 1, 1), view.get(new int[]{0, 0, 0}));
     }
 
@@ -85,7 +85,7 @@ public class CropTest
                 for (int x = 0; x < 5; x++)
                 {
                     String str = digits[z] + digits[y] + digits[x];
-                    array.set(str, x, y, z);
+                    array.set(x, y, z, str);
                 }
             }
         }
@@ -96,14 +96,7 @@ public class CropTest
     private UInt8Array2D createUInt8Array2D()
     {
         UInt8Array2D array = UInt8Array2D.create(10, 10);
-
-        for (int y = 0; y < 10; y++)
-        {
-            for (int x = 0; x < 10; x++)
-            {
-                array.setValue(y * 10 + x, x, y);
-            }
-        }
+        array.populateValues((x, y) -> (y * 10.0 + x));
         return array;
     }
 }

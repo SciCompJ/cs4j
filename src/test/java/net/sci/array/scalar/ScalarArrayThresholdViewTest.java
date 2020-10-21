@@ -59,13 +59,7 @@ public class ScalarArrayThresholdViewTest
 	private UInt8Array2D createTestArray()
 	{
 		UInt8Array2D array = UInt8Array2D.create(5, 4);
-		for (int y = 0; y  < 4; y++)
-		{
-			for (int x = 0; x < 5; x++)
-			{
-				array.setValue(y * 10 + x, x, y);
-			}
-		}
+		array.populateValues((x, y) -> (y * 10.0 + x));
 		return array;
 	}
 }

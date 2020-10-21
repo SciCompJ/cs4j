@@ -36,7 +36,7 @@ public class ChamferDistanceTransform3DUInt16Test
 			{
 				for (int x = 2; x < 19; x++)
 				{
-					image.setValue(1, x, y, z);
+					image.setValue(x, y, z, 1.0);
 				}
 			}
 		}
@@ -66,7 +66,7 @@ public class ChamferDistanceTransform3DUInt16Test
 		// create 3D image filled with white containing a black dot in the middle
 		BinaryArray3D image = BinaryArray3D.create(21, 21, 21);
 		image.fill(Binary.TRUE);
-		image.setBoolean(false, 10, 10, 10);
+		image.setBoolean(10, 10, 10, false);
 
 		ChamferWeights3D weights = ChamferWeights3D.BORGEFORS;
 		DistanceTransform3D algo = new ChamferDistanceTransform3DUInt16(weights, false);

@@ -78,7 +78,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	 * @param value
 	 *            the new integer value
 	 */
-	public void setInt(int value, int... pos);
+	public void setInt(int[] pos, int value);
 
 
     // =============================================================
@@ -104,14 +104,16 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	@Override
 	public IntArray<T> duplicate();
 
+    @Override
     public default double getValue(int... pos)
     {
         return getInt(pos);
     }
 
-    public default void setValue(double value, int... pos)
+    @Override
+    public default void setValue(int[] pos, double value)
     {
-        setInt((int) value, pos);
+        setInt(pos, (int) value);
     }
 
     @Override

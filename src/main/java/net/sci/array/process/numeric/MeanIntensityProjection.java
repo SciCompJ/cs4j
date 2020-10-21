@@ -62,7 +62,7 @@ public class MeanIntensityProjection extends ProjectionOperator
             mean /= indMax;
             
             // copy value of selected position
-            target.setValue(mean, pos);
+            target.setValue(pos, mean);
         }
     }
 }

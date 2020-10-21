@@ -185,8 +185,19 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	 * 
 	 * @return an UInt16 version of this RGB16 array
 	 */
-	public UInt16Array convertToUInt16();
-	
+    public default UInt16Array convertToUInt16()
+    {
+        int[] sizes = this.size();
+        UInt16Array result = UInt16Array.create(sizes);
+        
+        for (int[] pos : result.positions())
+        {
+            result.setInt(pos, this.get(pos).getInt());
+        }
+        
+        return result;
+    }
+
     /**
      * Converts this RGB16 array into a new RGB8 Array, by dividing the values
      * within each channel by 256.
@@ -255,7 +266,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 		int r = UInt16.clamp(values[0]);
 		int g = UInt16.clamp(values[1]);
 		int b = UInt16.clamp(values[2]);
-		set(new RGB16(r, g, b), pos);
+		set(pos, new RGB16(r, g, b));
 	}
 
 

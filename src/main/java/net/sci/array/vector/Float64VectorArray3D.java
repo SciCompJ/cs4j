@@ -51,6 +51,13 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         };
     }
 
+
+    @Override
+    public void set(int x, int y, int z, Float64Vector vect)
+    {
+        setValues(x, y, z, vect.getValues());
+    }
+    
     @Override
     public java.util.Iterator<? extends Float64VectorArray2D> sliceIterator()
     {
@@ -155,6 +162,13 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
             return Float64VectorArray3D.this.getValues(x, y, sliceIndex);
         }
 
+
+        @Override
+        public void set(int x, int y, Float64Vector value)
+        {
+            Float64VectorArray3D.this.set(x, y, sliceIndex, value);
+        }
+        
         @Override
         public double[] getValues(int x, int y, double[] values)
         {
@@ -186,9 +200,9 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
-        public void set(Float64Vector value, int... pos)
+        public void set(int[] pos, Float64Vector value)
         {
-            Float64VectorArray3D.this.set(value, pos[0], pos[1], sliceIndex);
+            Float64VectorArray3D.this.set(pos[0], pos[1], sliceIndex, value);
         }
 
         @Override
@@ -260,7 +274,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
             @Override
             public void set(Float64Vector value)
             {
-                Float64VectorArray3D.this.set(value, indX, indY, sliceIndex);
+                Float64VectorArray3D.this.set(indX, indY, sliceIndex, value);
             }
 
             @Override
@@ -315,6 +329,19 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
+        public void setValue(int x, int y, int z, double value)
+        {
+            Float64VectorArray3D.this.setValue(x, y, z, channel, value);
+        }
+
+        @Override
+        public void set(int x, int y, int z, Float64 value)
+        {
+            Float64VectorArray3D.this.setValue(x, y, z, channel, value.getValue());
+        }
+
+
+        @Override
         public net.sci.array.scalar.Float64Array.Iterator iterator()
         {
             return new Iterator();
@@ -327,7 +354,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
             Float64VectorArray3D.this.setValue(pos[0], pos[1], pos[2], channel, value);
         }

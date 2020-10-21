@@ -195,11 +195,11 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
                     if (mask.getBoolean(x, y, z))
                     {
                         double val = marker.getValue(x, y, z);
-                        buffer.setValue(val == 0 ? backgroundValue : 0, x, y, z);
+                        buffer.setValue(x, y, z, val == 0 ? backgroundValue : 0);
                     }
                     else
                     {
-                        buffer.setValue(Double.NaN, x, y, z);
+                        buffer.setValue(x, y, z, Double.NaN);
                     }
                 }
             }
@@ -276,7 +276,7 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
                    // modify current pixel if needed
                    if (newVal < value) 
                    {
-                       buffer.setValue(newVal, x, y, z);
+                       buffer.setValue(x, y, z, newVal);
                    }
                }
            }
@@ -359,7 +359,7 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
                     }
                     
                     // modify current pixel
-                    buffer.setValue(newVal, x, y, z);
+                    buffer.setValue(x, y, z, newVal);
                     
                     // eventually add lower-right neighbors to queue
                     for (int i = 0; i < offsetList.length; i++)
@@ -385,7 +385,7 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
                         // update neighbor and add to the queue
                         if (newVal + ws[i] < buffer.getValue(x2, y2, z2))
                         {
-                            buffer.setValue(newVal + ws[i], x2, y2, z2);
+                            buffer.setValue(x2, y2, z2, newVal + ws[i]);
                             queue.add(new Cursor3D(x2, y2, z2));
                         }
                     }
@@ -493,7 +493,7 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
                 if (newVal < buffer.getValue(x2, y2, z2))
                 {
                     // update result for current position
-                    buffer.setValue(newVal, x2, y2, z2);
+                    buffer.setValue(x2, y2, z2, newVal);
                     
                     // add the new modified position to the queue 
                     queue.add(new Cursor3D(x2, y2, z2));
@@ -513,7 +513,7 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
                     double val = buffer.getValue(x, y, z);
                     if (Double.isFinite(val))
                     {
-                        buffer.setValue(val / this.weights[0], x, y, z);
+                        buffer.setValue(x, y, z, val / this.weights[0]);
                     }
                 }
             }

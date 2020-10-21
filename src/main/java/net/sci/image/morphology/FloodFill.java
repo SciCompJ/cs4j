@@ -178,7 +178,7 @@ public class FloodFill
 		}
 	
 		for (int x = x1; x <= x2; x++)
-			array.set(value, x, y);
+			array.set(x, y, value);
 	}
 
 
@@ -346,7 +346,7 @@ public class FloodFill
 		}
 	
 		for (int x = x1; x <= x2; x++)
-			array.setValue(value, x, y);
+			array.setValue(x, y, value);
 	}
 
 	/**
@@ -525,7 +525,7 @@ public class FloodFill
 		}
 		
 		for (int x = x1; x <= x2; x++)
-			array.setInt(value, x, y);
+			array.setInt(x, y, value);
 	}
 
 	/**
@@ -881,7 +881,7 @@ public class FloodFill
     private final static void fillLine(ScalarArray3D<?> array, int x1, int x2, int y, int z, double value)
 	{
 		for (int x = x1; x <= x2; x++)
-			array.setValue(value, x, y, z);
+			array.setValue(x, y, z, value);
 	}
 
 //	/**
@@ -1223,7 +1223,7 @@ public class FloodFill
             int value)
 	{
 		for (int x = x1; x <= x2; x++)
-			array.setInt(value, x, y, z);
+			array.setInt(x, y, z, value);
 	}
 
 	/**

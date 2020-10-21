@@ -161,15 +161,6 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
-	 */
-	@Override
-	public void set(Float32Vector vect, int... pos)
-	{
-		setValues(pos, vect.getValues());
-	}
-
-	/* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#iterator()
 	 */
 	@Override

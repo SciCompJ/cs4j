@@ -63,6 +63,16 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
         };
     }
 
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array3D#set(int, int, int, T)
+     */
+    @Override
+    public void set(int x, int y, int z, T value)
+    {
+        int index = x + this.size0 * (y + this.size1 * z);
+        this.buffer[index] = value;
+    }
+
     @Override
     public java.util.Iterator<? extends GenericArray2D<T>> sliceIterator()
     {
@@ -115,7 +125,7 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
      * @see net.sci.array.data.Array3D#set(int, int, int, T)
      */
     @Override
-    public void set(T value, int... pos)
+    public void set(int[] pos, T value)
     {
         int index = pos[0] + this.size0 * (pos[1] + this.size1 * pos[2]);
         this.buffer[index] = value;
@@ -186,6 +196,12 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
             this.sliceIndex = slice;
         }
     
+        
+        @Override
+        public void set(int x, int y, T value)
+        {
+            BufferedGenericArray3D.this.set(x, y, sliceIndex, value);
+        }
 
         @Override
         public T get(int... pos)
@@ -194,9 +210,9 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
         }
 
         @Override
-        public void set(T value, int... pos)
+        public void set(int[] pos, T value)
         {
-            BufferedGenericArray3D.this.set(value, pos[0], pos[1], sliceIndex);
+            BufferedGenericArray3D.this.set(pos[0], pos[1], sliceIndex, value);
         }
 
         @Override
@@ -210,7 +226,7 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
             {
                 for (int x = 0; x < size0; x++)
                 {
-                    res.set(BufferedGenericArray3D.this.get(x, y, sliceIndex), x, y);
+                    res.set(x, y, BufferedGenericArray3D.this.get(x, y, sliceIndex));
                 }
             }
             
@@ -273,7 +289,7 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
             @Override
             public void set(T value)
             {
-                BufferedGenericArray3D.this.set(value, indX, indY, sliceIndex);
+                BufferedGenericArray3D.this.set(indX, indY, sliceIndex, value);
             }
         }
     }

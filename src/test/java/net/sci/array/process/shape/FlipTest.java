@@ -102,7 +102,7 @@ public class FlipTest
             {
                 value += pos[d] * Math.pow(10, d);
             }
-            array.setValue(value, pos);
+            array.setValue(pos, value);
         }
         
         Flip flip = new Flip(0);
@@ -132,7 +132,7 @@ public class FlipTest
             {
                 value += pos[d] * Math.pow(10, d);
             }
-            array.setValue(value, pos);
+            array.setValue(pos, value);
         }
         
         Flip flip = new Flip(2);
@@ -206,7 +206,7 @@ public class FlipTest
             for (int x = 0; x < sizeX; x++)
             {
                 String str = digits[y] + digits[x];
-                array.set(str, x, y);
+                array.set(new int[] {x, y}, str);
             }
         }
         

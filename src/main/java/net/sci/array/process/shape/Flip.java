@@ -70,10 +70,10 @@ public class Flip extends AlgoStub implements ArrayOperator
 				switch(dim)
 				{
 				case 0: 
-					output.set(input.get(sizeX-1-x, y), x, y);
+					output.set(x, y, input.get(sizeX-1-x, y));
 					break;
 				case 1: 
-					output.set(input.get(x, sizeY-1-y), x, y);
+					output.set(x, y, input.get(x, sizeY-1-y));
 					break;
 				}
 			}
@@ -110,13 +110,13 @@ public class Flip extends AlgoStub implements ArrayOperator
 					switch(dim)
 					{
 					case 0: 
-						output.set(input.get(sizeX-1-x, y, z), x, y, z);
+						output.set(x, y, z, input.get(sizeX-1-x, y, z));
 						break;
 					case 1: 
-						output.set(input.get(x, sizeY-1-y, z), x, y, z);
+						output.set(x, y, z, input.get(x, sizeY-1-y, z));
 						break;
 					case 2: 
-						output.set(input.get(x, y, sizeZ-1-z), x, y, z);
+						output.set(x, y, z, input.get(x, y, sizeZ-1-z));
 						break;
 					}
 				}
@@ -135,7 +135,7 @@ public class Flip extends AlgoStub implements ArrayOperator
         {
             System.arraycopy(pos, 0, pos2, 0, nd);
             pos2[dim] = sizeDim - 1 - pos[dim];
-            output.set(input.get(pos), pos2);
+            output.set(pos2, input.get(pos));
         }
     }
     

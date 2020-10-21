@@ -8,9 +8,10 @@ package net.sci.array.scalar;
  * binary array.
  * 
  * @see ScalarArrayUInt8View
- * 
+ * @deprecated use ThresholdedArray instead
  * @author dlegland
  */
+@Deprecated
 public class ScalarArrayThresholdView implements BinaryArray
 {
 	// =============================================================
@@ -57,7 +58,7 @@ public class ScalarArrayThresholdView implements BinaryArray
 	 * @see net.sci.array.scalar.BinaryArray#setBoolean(int[], boolean)
 	 */
 	@Override
-	public void setBoolean(boolean state, int... pos)
+	public void setBoolean(int[] pos, boolean state)
 	{
 		throw new RuntimeException("Unauthorized operation exception");
 	}
@@ -75,7 +76,7 @@ public class ScalarArrayThresholdView implements BinaryArray
 	 * @see net.sci.array.Array#set(int[], java.lang.Object)
 	 */
 	@Override
-	public void set(Binary value, int... pos)
+	public void set(int[] pos, Binary value)
 	{
 		throw new RuntimeException("Unauthorized operation exception");
 	}

@@ -140,7 +140,7 @@ public class SlicerTest
                 for (int x = 0; x < 5; x++)
                 {
                     String str = digits[z] + digits[y] + digits[x];
-                    array.set(str, x, y, z);
+                    array.set(x, y, z, str);
                 }
             }
         }

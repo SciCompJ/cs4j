@@ -113,7 +113,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 			}
 			
 			// setup result in target array
-			target.setValue(sum / boxSize, pos);
+			target.setValue(pos, sum / boxSize);
 		}
 	}
 	
@@ -169,7 +169,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 						sum += source.getValue(x2r, y2r);
 					}
 				}
-				target.setValue(sum / boxSize, x, y);
+				target.setValue(x, y, sum / boxSize);
 			}
 		}
 		
@@ -239,7 +239,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 							}
 						}
 					}
-					target.setValue(sum / boxSize, x, y, z);
+					target.setValue(x, y, z, sum / boxSize);
 				}
 			}
 		}

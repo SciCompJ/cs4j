@@ -20,20 +20,20 @@ public class FloodFillComponentsLabeling3DTest
 			{
 				for (int x = 0; x < 2; x++)
 				{
-					image.setBoolean(true, x + 1, y + 1, z + 1);
-					image.setBoolean(true, x + 5, y + 1, z + 1);
-					image.setBoolean(true, x + 1, y + 5, z + 1);
-					image.setBoolean(true, x + 5, y + 5, z + 1);
-					image.setBoolean(true, x + 1, y + 1, z + 5);
-					image.setBoolean(true, x + 5, y + 1, z + 5);
-					image.setBoolean(true, x + 1, y + 5, z + 5);
-					image.setBoolean(true, x + 5, y + 5, z + 5);
+					image.setBoolean(x + 1, y + 1, z + 1, true);
+					image.setBoolean(x + 5, y + 1, z + 1, true);
+					image.setBoolean(x + 1, y + 5, z + 1, true);
+					image.setBoolean(x + 5, y + 5, z + 1, true);
+					image.setBoolean(x + 1, y + 1, z + 5, true);
+					image.setBoolean(x + 5, y + 1, z + 5, true);
+					image.setBoolean(x + 1, y + 5, z + 5, true);
+					image.setBoolean(x + 5, y + 5, z + 5, true);
 				}
 			}
 		}
 		
 		// compute labels of the binary image
-		FloodFillComponentsLabeling3D algo = new FloodFillComponentsLabeling3D(6, 8); 
+		FloodFillComponentsLabeling3D algo = new FloodFillComponentsLabeling3D(6, 8); //TODO: use int cast?
 		ScalarArray3D<?> labels = (ScalarArray3D<?>) algo.process(image);
 		
 		// check labels and empty regions

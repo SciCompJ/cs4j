@@ -44,6 +44,16 @@ public class BufferedGenericArray2D<T> extends GenericArray2D<T>
     // =============================================================
     // Methods implementing the Array interface
 
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array2D#set(int, int, T)
+     */
+    @Override
+    public void set(int x, int y, T value)
+    {
+        int index = x + this.size0 * y;
+        this.buffer[index] = value;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public Array2D<T> duplicate()
@@ -86,7 +96,7 @@ public class BufferedGenericArray2D<T> extends GenericArray2D<T>
      * @see net.sci.array.data.Array2D#set(int, int, T)
      */
     @Override
-    public void set(T value, int... pos)
+    public void set(int[] pos, T value)
     {
         int index = pos[0] + pos[1] * this.size0;
         this.buffer[index] = value;

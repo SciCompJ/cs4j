@@ -29,17 +29,17 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
 	}
 	
 	public Iterable<Float64ArrayND> channels()
-	{
-	    return new Iterable<Float64ArrayND>()
-	            {
-                    @Override
-                    public java.util.Iterator<Float64ArrayND> iterator()
-                    {
-                        return new ChannelIterator();
-                    }
-	            };
-	}
-	
+    {
+        return new Iterable<Float64ArrayND>()
+        {
+            @Override
+            public java.util.Iterator<Float64ArrayND> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
+    }
+
     /**
      * Returns a view on the channel specified by the given index.
      * 
@@ -81,11 +81,11 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
         }
 
         @Override
-        public void set(Float64 value, int... pos)
+        public void set(int[] pos, Float64 value)
         {
             Float64Vector vect = Float64VectorArrayND.this.get(pos);
             vect.data[channel] = value.getValue();
-            Float64VectorArrayND.this.set(vect, pos);
+            Float64VectorArrayND.this.set(pos, vect);
         }
 
         @Override
@@ -95,11 +95,11 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
         }
 
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
             Float64Vector vect = Float64VectorArrayND.this.get(pos);
             vect.data[channel] = value;
-            Float64VectorArrayND.this.set(vect, pos);
+            Float64VectorArrayND.this.set(pos, vect);
         }
 
         @Override
@@ -173,7 +173,7 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector> 
                 System.arraycopy(this.pos, 0, res, 0, nd);
                 Float64Vector vect = Float64VectorArrayND.this.get(pos);
                 vect.data[channel] = value;
-                Float64VectorArrayND.this.set(vect, pos);
+                Float64VectorArrayND.this.set(pos, vect);
             }
         }
 

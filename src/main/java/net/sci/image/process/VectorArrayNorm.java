@@ -62,7 +62,7 @@ public class VectorArrayNorm implements ImageArrayOperator
 				}
 
 				// set up value of gradient norm
-				target.setValue(Math.sqrt(norm), x, y);
+				target.setValue(x, y, Math.sqrt(norm));
 			}
 		}
 	}
@@ -90,7 +90,7 @@ public class VectorArrayNorm implements ImageArrayOperator
 					}
 
 					// set up value of gradient norm
-					target.setValue(Math.sqrt(norm), x, y, z);
+					target.setValue(x, y, z, Math.sqrt(norm));
 				}
 			}
 		}
@@ -101,7 +101,7 @@ public class VectorArrayNorm implements ImageArrayOperator
 		// iterate over vector pixels
 		for (int[] pos : target.positions())
 		{
-		    target.setValue(computeNorm(source.getValues(pos)), pos);
+		    target.setValue(pos, computeNorm(source.getValues(pos)));
 		}
 	}
 

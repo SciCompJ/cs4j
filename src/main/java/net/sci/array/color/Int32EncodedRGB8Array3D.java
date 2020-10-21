@@ -83,7 +83,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
     @Override
     public void setSamples(int x, int y, int z, int[] rgb)
     {
-        this.buffer.setInt(RGB8.intCode(rgb), x, y, z);
+        this.buffer.setInt(new int[] {x, y, z}, RGB8.intCode(rgb));
     }
 
 
@@ -109,15 +109,21 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 		int g = UInt8.clamp(values[1]);
 		int b = UInt8.clamp(values[2]);
 		int intCode = b << 16 | g << 8 | r;
-		this.buffer.setInt(intCode, x, y, z);
+		this.buffer.setInt(new int[] {x, y, z}, intCode);
 	}
 
 	
 	// =============================================================
-	// Implementation of the Array2D interface
+	// Implementation of the Array3D interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#get(int, int)
+	@Override
+    public void set(int x, int y, int z, RGB8 rgb)
+    {
+	    this.buffer.setInt(x, y, z, rgb.getIntCode());
+    }
+
+    /* (non-Javadoc)
+	 * @see net.sci.array.Array3D#get(int, int, int)
 	 */
 	@Override
 	public RGB8 get(int... pos)
@@ -126,12 +132,12 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
+	 * @see net.sci.array.Array#set(int[], java.lang.Object)
 	 */
 	@Override
-	public void set(RGB8 rgb, int... pos)
+	public void set(int[] pos, RGB8 rgb)
 	{
-		this.buffer.setInt(rgb.getIntCode(), pos);
+		this.buffer.setInt(pos[0], pos[1], pos[2], rgb.getIntCode());
 	}
 
 

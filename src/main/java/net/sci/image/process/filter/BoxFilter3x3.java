@@ -70,7 +70,7 @@ public final class BoxFilter3x3 extends AlgoStub implements ImageArrayOperator, 
 					}
 				}
 				
-				target.setValue(sum / 9, x, y);
+				target.setValue(x, y, sum / 9);
 			}
 		}
 		

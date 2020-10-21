@@ -77,7 +77,7 @@ public abstract class Array2D<T> implements Array<T>
     {
         for (int[] pos : this.positions())
         {
-            this.set(fun.apply(pos[0], pos[1]), pos[0], pos[1]);
+            this.set(pos, fun.apply(pos[0], pos[1]));
         }
     }
     
@@ -109,7 +109,21 @@ public abstract class Array2D<T> implements Array<T>
 
     
     // =============================================================
-    // New abstract methods
+    // New getter / setter
+    
+    /**
+     * Changes the value of an element in the array at the position given by
+     * two integer indices.
+     * 
+     * @param x
+     *            index over the first array dimension
+     * @param y
+     *            index over the second array dimension
+     * @param value
+     *            the new value at the specified index
+     */
+    public abstract void set(int x, int y, T value);
+    
 
 	
 	// =============================================================
@@ -240,6 +254,13 @@ public abstract class Array2D<T> implements Array<T>
 			this.size1 = array.size(1);
 		}
 
+        @Override
+        public void set(int x, int y, T value)
+        {
+            // set value at specified position
+            this.array.set(new int[] {x, y}, value);
+        }
+
 		@Override
 		public Array<T> newInstance(int... dims)
 		{
@@ -260,10 +281,10 @@ public abstract class Array2D<T> implements Array<T>
 		}
 
 		@Override
-		public void set(T value, int... pos)
+		public void set(int[] pos, T value)
 		{
 			// set value at specified position
-			this.array.set(value, pos);
+			this.array.set(pos, value);
 		}
 
 		@Override
@@ -280,7 +301,7 @@ public abstract class Array2D<T> implements Array<T>
 			// Fill new array with input array
 			for (int[] pos : result.positions())
             {
-                result.set(this.array.get(pos), pos);
+                result.set(pos, this.array.get(pos));
             }
             
 			return result;

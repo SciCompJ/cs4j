@@ -54,7 +54,7 @@ public class Math
         // iterate over elements of each array
         for (int[] pos : result.positions())
         {
-            result.setValue(array.getValue(pos) + value, pos);
+            result.setValue(pos, array.getValue(pos) + value);
         }
         
         // returns the created array
@@ -94,7 +94,7 @@ public class Math
         // iterate over elements of each array
         for (int[] pos : result.positions())
         {
-            result.setValue(array.getValue(pos) - value, pos);
+            result.setValue(pos, array.getValue(pos) - value);
         }
 		
 		// returns the created array
@@ -131,7 +131,7 @@ public class Math
         // iterate over elements of each array
         for (int[] pos : result.positions())
         {
-            result.setValue(array.getValue(pos) * value, pos);
+            result.setValue(pos, array.getValue(pos) * value);
         }
         
         // returns the created array
@@ -168,7 +168,7 @@ public class Math
         // iterate over elements of each array
         for (int[] pos : result.positions())
         {
-            result.setValue(array.getValue(pos) / value, pos);
+            result.setValue(pos, array.getValue(pos) / value);
         }
         
 		// returns the created array
@@ -208,7 +208,7 @@ public class Math
         // iterate over elements of each array
         for (int[] pos : result.positions())
         {
-            result.setValue(java.lang.Math.min(array.getValue(pos), value), pos);
+            result.setValue(pos, java.lang.Math.min(array.getValue(pos), value));
         }
         
         // returns the created array
@@ -247,7 +247,7 @@ public class Math
         // iterate over elements of each array
         for (int[] pos : result.positions())
         {
-            result.setValue(java.lang.Math.min(array.getValue(pos), value), pos);
+            result.setValue(pos, java.lang.Math.min(array.getValue(pos), value));
         }
         
         // returns the created array
@@ -267,7 +267,7 @@ public class Math
         
         for (int[] pos : array1.positions())
         {
-              output.setValue(array1.getValue(pos) + array2.getValue(pos), pos);
+              output.setValue(pos, array1.getValue(pos) + array2.getValue(pos));
         }
         
         return output;
@@ -282,7 +282,7 @@ public class Math
         
         for (int[] pos : array1.positions())
         {
-              output.setValue(array1.getValue(pos) - array2.getValue(pos), pos);
+              output.setValue(pos, array1.getValue(pos) - array2.getValue(pos));
         }
         
         return output;
@@ -297,7 +297,7 @@ public class Math
         
         for (int[] pos : array1.positions())
         {
-              output.setValue(array1.getValue(pos) * array2.getValue(pos), pos);
+              output.setValue(pos, array1.getValue(pos) * array2.getValue(pos));
         }
         
         return output;
@@ -312,7 +312,7 @@ public class Math
         
         for (int[] pos : array1.positions())
         {
-              output.setValue(array1.getValue(pos) / array2.getValue(pos), pos);
+              output.setValue(pos, array1.getValue(pos) / array2.getValue(pos));
         }
         
         return output;
@@ -327,7 +327,7 @@ public class Math
         
         for (int[] pos : array1.positions())
         {
-              output.setValue(array1.getValue(pos) % array2.getValue(pos), pos);
+              output.setValue(pos, array1.getValue(pos) % array2.getValue(pos));
         }
         
         return output;
@@ -342,7 +342,7 @@ public class Math
         
         for (int[] pos : array1.positions())
         {
-              output.setValue(java.lang.Math.min(array1.getValue(pos), array2.getValue(pos)), pos);
+              output.setValue(pos, java.lang.Math.min(array1.getValue(pos), array2.getValue(pos)));
         }
         
         return output;
@@ -357,7 +357,7 @@ public class Math
         
         for (int[] pos : array1.positions())
         {
-            output.setValue(java.lang.Math.max(array1.getValue(pos), array2.getValue(pos)), pos);
+            output.setValue(pos, java.lang.Math.max(array1.getValue(pos), array2.getValue(pos)));
         }
         
         return output;
@@ -386,7 +386,7 @@ public class Math
         
         for (int[] pos : array1.positions())
         {
-            output.setValue(fun.apply(array1.getValue(pos), array2.getValue(pos)), pos);
+            output.setValue(pos, fun.apply(array1.getValue(pos), array2.getValue(pos)));
         }
         
         return output;

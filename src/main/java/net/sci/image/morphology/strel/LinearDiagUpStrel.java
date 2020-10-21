@@ -170,7 +170,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 			{
 				localMax.add(image.getInt(t, d - t));
 				int t2 = t - this.offset;
-				image.setInt(localMax.getMax(), t2, d - t2);
+				image.setInt(t2, d - t2, localMax.getMax());
 				t++;
 			}
 
@@ -183,7 +183,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 				int x = t2;
 				int y = d - t2;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-					image.setInt(localMax.getMax(), x, y);
+					image.setInt(x, y,localMax.getMax());
 				t++;
 			}
 		}
@@ -238,7 +238,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 			{
 				localMax.add(image.getValue(t, d - t));
 				int t2 = t - this.offset;
-				image.setValue(localMax.getMax(), t2, d - t2);
+				image.setValue(t2, d - t2, localMax.getMax());
 				t++;
 			}
 
@@ -251,7 +251,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 				int x = t2;
 				int y = d - t2;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-					image.setValue(localMax.getMax(), x, y);
+					image.setValue(x, y, localMax.getMax());
 				t++;
 			}
 		}
@@ -326,7 +326,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 			{
 				localMin.add(image.getInt(t, d - t));
 				int t2 = t - this.offset;
-				image.setInt(localMin.getMax(), t2, d - t2);
+				image.setInt(t2, d - t2, localMin.getMax());
 				t++;
 			}
 
@@ -339,7 +339,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 				int x = t2;
 				int y = d - t2;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-					image.setInt(localMin.getMax(), x, y);
+					image.setInt(x, y, localMin.getMax());
 				t++;
 			}
 		}
@@ -394,7 +394,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 			{
 				localMin.add(image.getValue(t, d - t));
 				int t2 = t - this.offset;
-				image.setValue(localMin.getMax(), t2, d - t2);
+				image.setValue(t2, d - t2, localMin.getMax());
 				t++;
 			}
 
@@ -407,7 +407,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 				int x = t2;
 				int y = d - t2;
 				if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-					image.setValue(localMin.getMax(), x, y);
+					image.setValue(x, y, localMin.getMax());
 				t++;
 			}
 		}

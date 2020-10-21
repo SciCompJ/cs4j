@@ -89,15 +89,15 @@ public class ImageJSkeleton extends AlgoStub
         // clear left and right borders
         for (int y = 0; y < sizeY; y++)
         {
-            array.setBoolean(false, 0, y);
-            array.setBoolean(false, sizeX-1, y);
+            array.setBoolean(0, y, false);
+            array.setBoolean(sizeX-1, y, false);
         }
 
         // clear top and bottom borders
         for (int x = 0; x < sizeX; x++)
         {
-            array.setBoolean(false, x, 0);
-            array.setBoolean(false, x, sizeY-1);
+            array.setBoolean(x, 0, false);
+            array.setBoolean(x, sizeY-1, false);
         }
     }
     
@@ -135,7 +135,7 @@ public class ImageJSkeleton extends AlgoStub
                 int code = table[index];
                 if ((code & pass) > 0)
                 {
-                    array.setBoolean(false, x, y);
+                    array.setBoolean(x, y, false);
                     removedPixels++;
                 }
             }

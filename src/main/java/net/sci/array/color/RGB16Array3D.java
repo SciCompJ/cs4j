@@ -96,7 +96,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
     @Override
     public void setSamples(int x, int y, int z, int[] values)
     {
-        set(new RGB16(values), x, y, z);
+        set(x, y, z, new RGB16(values));
     }
 
     
@@ -124,7 +124,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
 		int r = UInt16.clamp(values[0]);
 		int g = UInt16.clamp(values[1]);
 		int b = UInt16.clamp(values[2]);
-		set(new RGB16(r, g, b), x, y, z);
+		set(x, y, z, new RGB16(r, g, b));
 	}
 
     
@@ -170,6 +170,15 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
 	@Override
 	public abstract RGB16Array3D duplicate();
 
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
+     */
+    @Override
+    public void set(int[] pos, RGB16 rgb)
+    {
+        set(pos[0], pos[1], pos[2], rgb);
+    }
+
 	/* (non-Javadoc)
 	 * @see net.sci.array.color.RGB16Array#iterator()
 	 */
@@ -214,7 +223,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
             {
                 for (int x = 0; x < size0; x++)
                 {
-                    res.set(RGB16Array3D.this.get(x, y, sliceIndex), x, y);
+                    res.set(x, y, RGB16Array3D.this.get(x, y, sliceIndex));
                 }
             }
             
@@ -235,15 +244,21 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
         }
 
         @Override
+        public void set(int x, int y, RGB16 value)
+        {
+            RGB16Array3D.this.set(x, y, sliceIndex, value);
+        }
+
+        @Override
         public RGB16 get(int... pos)
         {
             return RGB16Array3D.this.get(pos[0], pos[1], sliceIndex);
         }
 
         @Override
-        public void set(RGB16 value, int... pos)
+        public void set(int[] pos, RGB16 value)
         {
-            RGB16Array3D.this.set(value, pos[0], pos[1], sliceIndex);
+            RGB16Array3D.this.set(pos[0], pos[1], sliceIndex, value);
         }
 
         class Iterator implements RGB16Array.Iterator
@@ -288,7 +303,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
             @Override
             public void set(RGB16 value)
             {
-                RGB16Array3D.this.set(value, indX, indY, sliceIndex);
+                RGB16Array3D.this.set(indX, indY, sliceIndex, value);
             }
         }
     }
@@ -331,15 +346,21 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
         }
 
         @Override
+        public void setShort(int x, int y, int z, short s)
+        {
+            RGB16Array3D.this.setSample(x, y, z, channel, s & 0x00FFFF);
+        }
+
+        @Override
         public short getShort(int... pos)
         {
             return (short) RGB16Array3D.this.getSample(pos[0], pos[1], pos[2], channel);
         }
 
         @Override
-        public void setShort(short shortValue, int... pos)
+        public void setShort(int[] pos, short s)
         {
-            RGB16Array3D.this.setSample(pos[0], pos[1], pos[2], channel, shortValue & 0x00FFFF);
+            RGB16Array3D.this.setSample(pos[0], pos[1], pos[2], channel, s & 0x00FFFF);
         }
 
         @Override

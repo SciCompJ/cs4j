@@ -13,7 +13,7 @@ public class BoxMinMaxFilterNaiveTest
 	public void testDilateDotRadius3()
 	{
 		UInt8Array2D image = UInt8Array2D.create(10, 10);
-		image.setInt(200, 4, 4);
+		image.setInt(4, 4, 200);
 	
 		BoxMinMaxFilterNaive dil = new BoxMinMaxFilterNaive(BoxMinMaxFilterNaive.Type.MAX, new int[]{7, 7});
 		UInt8Array2D result = (UInt8Array2D) dil.process(image);
@@ -61,7 +61,7 @@ public class BoxMinMaxFilterNaiveTest
 	{
 		UInt8Array2D array = UInt8Array2D.create(10, 10);
 		array.fillInt(200);
-		array.setInt(50, 4, 4);
+		array.setInt(4, 4, 50);
 //		System.out.println("Input image:");
 //		image.print(System.out);
 

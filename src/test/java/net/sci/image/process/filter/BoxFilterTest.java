@@ -23,7 +23,7 @@ public class BoxFilterTest
 		{
 			for (int x = 2; x < 5; x++)
 			{
-				array.setInt(10, x, y);
+				array.setInt(x, y, 10);
 			}
 		}
 		
@@ -61,7 +61,7 @@ public class BoxFilterTest
 		{
 			for (int x = 0; x < 6; x++)
 			{
-				array.set(new RGB8(x * 5, y * 5, 0), x, y);
+				array.set(x, y, new RGB8(x * 5, y * 5, 0));
 			}
 		}
 		

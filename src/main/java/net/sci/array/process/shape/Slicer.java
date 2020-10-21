@@ -142,7 +142,7 @@ public class Slicer implements ArrayOperator
             }
 			
 			// copy value of selected position
-			target.setValue(source.getValue(srcPos), pos);
+			target.setValue(pos, source.getValue(srcPos));
 		}
 	}
 	
@@ -167,7 +167,7 @@ public class Slicer implements ArrayOperator
             }
 			
 			// copy value of selected position
-			target.set(source.get(srcPos), pos);
+			target.set(pos, source.get(srcPos));
 		}
 	}
 

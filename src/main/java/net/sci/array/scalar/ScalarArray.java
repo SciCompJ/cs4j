@@ -153,7 +153,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
      * @param pos
      *            the position, as an array of indices
      */
-    public void setValue(double value, int... pos);
+    public void setValue(int[] pos, double value);
 
     
     // =============================================================
@@ -193,7 +193,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         
         for (int[] pos : positions())
         {
-            output.setValue(fun.apply(this.getValue(pos)), pos);
+            output.setValue(pos, fun.apply(this.getValue(pos)));
         }
         return output;
     }
@@ -207,7 +207,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
-            res.setValue(Math.min(this.getValue(pos), v), pos);
+            res.setValue(pos, Math.min(this.getValue(pos), v));
         }
         return res;
     }
@@ -217,7 +217,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
-            res.setValue(Math.max(this.getValue(pos), v), pos);
+            res.setValue(pos, Math.max(this.getValue(pos), v));
         }
         return res;
     }
@@ -231,7 +231,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
-            res.setValue(this.getValue(pos) + v, pos);
+            res.setValue(pos, this.getValue(pos) + v);
         }
         return res;
     }
@@ -241,7 +241,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
-            res.setValue(this.getValue(pos) - v, pos);
+            res.setValue(pos, this.getValue(pos) - v);
         }
         return res;
     }
@@ -251,7 +251,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
-            res.setValue(this.getValue(pos) * k, pos);
+            res.setValue(pos, this.getValue(pos) * k);
         }
         return res;
     }
@@ -261,7 +261,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         ScalarArray<T> res = newInstance(size());
         for (int[] pos : positions())
         {
-            res.setValue(this.getValue(pos) / k, pos);
+            res.setValue(pos, this.getValue(pos) / k);
         }
         return res;
     }
@@ -326,7 +326,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 	    ScalarArray<T> dup = newInstance(size());
 	    for (int[] pos : positions())
 	    {
-	        dup.setValue(getValue(pos), pos);
+	        dup.setValue(pos, getValue(pos));
 	    }
 	    return dup;
 	}
@@ -439,7 +439,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 
 
         // =============================================================
-        // Implementation of the Array interface
+        // Specialization of the Array interface
 
         @Override
         public double getValue(int... pos)
@@ -448,9 +448,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         }
 
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
-            array.setValue(value, coordsMapping.apply(pos));
+            array.setValue(coordsMapping.apply(pos), value);
         }
 
         // =============================================================
@@ -517,9 +517,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         }
 
         @Override
-        public void set(T value, int... pos)
+        public void set(int[] pos, T value)
         {
-            array.set(value, coordsMapping.apply(pos));
+            array.set(coordsMapping.apply(pos), value);
         }
 
         @Override
@@ -538,7 +538,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
                 @Override
                 public void setValue(double value)
                 {
-                    View.this.setValue(value, iter.get());
+                    View.this.setValue(iter.get(), value);
                 }
 
                 @Override
@@ -569,7 +569,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
                 @Override
                 public void set(T value)
                 {
-                    View.this.set(value, iter.get());
+                    View.this.set(iter.get(), value);
                 }
             };
         }

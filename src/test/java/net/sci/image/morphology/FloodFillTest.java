@@ -39,7 +39,7 @@ public class FloodFillTest
         {
             for (int x = 0; x < sizeX; x++)
             {
-                image.setInt(data[y][x], x, y);
+                image.setInt(x, y, data[y][x]);
             }
         }
 
@@ -87,7 +87,7 @@ public class FloodFillTest
         {
             for (int x = 0; x < sizeX; x++)
             {
-                image.setInt(data[y][x], x, y);
+                image.setInt(x, y, data[y][x]);
             }
         }
 
@@ -151,23 +151,23 @@ public class FloodFillTest
         // Center voxel
         image.setInt(val0, 4, 4, 4);
         // eight corners
-        image.setInt(val0, 3, 3, 3);
-        image.setInt(val0, 3, 3, 5);
-        image.setInt(val0, 3, 5, 3);
-        image.setInt(val0, 3, 5, 5);
-        image.setInt(val0, 5, 3, 3);
-        image.setInt(val0, 5, 3, 5);
-        image.setInt(val0, 5, 5, 3);
-        image.setInt(val0, 5, 5, 5);
+        image.setInt(3, 3, 3, val0);
+        image.setInt(3, 3, 5, val0);
+        image.setInt(3, 5, 3, val0);
+        image.setInt(3, 5, 5, val0);
+        image.setInt(5, 3, 3, val0);
+        image.setInt(5, 3, 5, val0);
+        image.setInt(5, 5, 3, val0);
+        image.setInt(5, 5, 5, val0);
         // six branches
         for (int i = 0; i < 3; i++)
         {
-            image.setInt(val0, i, 4, 4);
-            image.setInt(val0, i + 6, 4, 4);
-            image.setInt(val0, 4, i, 4);
-            image.setInt(val0, 4, i + 6, 4);
-            image.setInt(val0, 4, 4, i);
-            image.setInt(val0, 4, 4, i + 6);
+            image.setInt(i, 4, 4, val0);
+            image.setInt(i + 6, 4, 4, val0);
+            image.setInt(4, i, 4, val0);
+            image.setInt(4, i + 6, 4, val0);
+            image.setInt(4, 4, i, val0);
+            image.setInt(4, 4, i + 6, val0);
         }
 
         return image;

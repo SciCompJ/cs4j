@@ -73,15 +73,31 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
 			System.out.println();
 		}
 	}
-
-	// =============================================================
-	// New methods
-
 	
+
     // =============================================================
-    // Specialization of IntArray interface
+    // New methods
+    
+    public abstract void setInt(int x, int y, int value);
 
 
+    // =============================================================
+    // Specialization of IntArray 
+
+    @Override
+    public void setInt(int[] pos, int intValue)
+    {
+        setInt(pos[0], pos[1], intValue);
+    }
+
+    
+    @Override
+    public void setValue(int x, int y, double value)
+    {
+        setInt(x, y, (int) value);
+    }
+
+    
 	// =============================================================
 	// Specialization of Array interface
 
@@ -122,6 +138,18 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
             return new Wrapper<T>(this.array.duplicate());
         }
 
+        @Override
+        public void setInt(int x, int y, int value)
+        {
+            this.array.setInt(new int[] {x, y}, value);
+        }
+
+        @Override
+        public void set(int x, int y, T value)
+        {
+            array.set(new int[] {x, y}, value);
+        }
+
         /**
          * Simply returns an iterator on the original array.
          */
@@ -154,13 +182,13 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         {
             return array.getInt(pos);
         }
-        
+
         @Override
-        public void setInt(int value, int... pos)
+        public void setInt(int[] pos, int value)
         {
-            array.setInt(value, pos);
+            array.setInt(pos, value);
         }
-        
+
         @Override
         public T get(int... pos)
         {
@@ -168,9 +196,9 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         }
 
         @Override
-        public void set(T value, int... pos)
+        public void set(int[] pos, T value)
         {
-            array.set(value, pos);
+            array.set(pos, value);
         }
     }
 }

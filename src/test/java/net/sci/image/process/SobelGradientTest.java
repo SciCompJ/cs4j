@@ -37,7 +37,7 @@ public class SobelGradientTest
         {
             for (int x = 3; x < 7; x++)
             {
-                array.setValue(100.0, x, y);
+                array.setValue(x, y, 100.0);
             }
         }
         Float32VectorArray2D grad = Float32VectorArray2D.create(10, 10, 2);
@@ -49,9 +49,9 @@ public class SobelGradientTest
 //        grad.channel(0).print(System.out);
 //        System.out.println("Gradient Y:");
 //        grad.channel(1).print(System.out);
-        assertEquals(50.0, grad.getValue(3, 5, 0), .1);
+        assertEquals( 50.0, grad.getValue(3, 5, 0), .1);
         assertEquals(-50.0, grad.getValue(7, 5, 0), .1);
-        assertEquals(50.0, grad.getValue(5, 3, 1), .1);
+        assertEquals( 50.0, grad.getValue(5, 3, 1), .1);
         assertEquals(-50.0, grad.getValue(5, 7, 1), .1);
     }
 
@@ -68,7 +68,7 @@ public class SobelGradientTest
             {
                 for (int x = 3; x < 7; x++)
                 {
-                    array.setValue(100.0, x, y, z);
+                    array.setValue(x, y, z, 100.0);
                 }
             }
         }

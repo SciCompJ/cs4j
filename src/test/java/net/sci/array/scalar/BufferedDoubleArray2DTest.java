@@ -11,13 +11,7 @@ public class BufferedDoubleArray2DTest
 	public final void testIterator()
 	{
 		Float64Array2D array = new BufferedFloat64Array2D(5, 5);
-		for (int y = 0; y < 5; y++)
-		{
-			for (int x = 0;x < 5;x++)
-			{
-				array.setValue(10, x, y);
-			}
-		}
+		array.fillValue(10.0);
 		
 		int count = 0;
 		double sum = 0;

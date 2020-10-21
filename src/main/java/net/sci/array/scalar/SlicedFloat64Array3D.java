@@ -97,7 +97,13 @@ public class SlicedFloat64Array3D extends Float64Array3D
 	// =============================================================
 	// Specialization of the ScalarArray3D interface
 
-	/* (non-Javadoc)
+	@Override
+    public void setValue(int x, int y, int z, double value)
+    {
+	    this.slices.get(z).setValue(new int[] {x, y}, value);
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.scalar.Float64Array3D#getDouble(int, int, int)
 	 */
 	@Override
@@ -106,15 +112,7 @@ public class SlicedFloat64Array3D extends Float64Array3D
 	    return this.slices.get(pos[2]).getValue(pos[0], pos[1]);
 	}
 		
-	/* (non-Javadoc)
-	 * @see net.sci.array.scalar.ScalarArray3D#setValue(int, int, int, double)
-	 */
-	@Override
-	public void setValue(double value, int... pos)
-	{
-		this.slices.get(pos[2]).setValue(value, pos[0], pos[1]);
-	}
-
+	
 	// =============================================================
 	// Specialization of the Array interface
 

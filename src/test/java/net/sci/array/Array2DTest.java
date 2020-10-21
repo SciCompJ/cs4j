@@ -37,7 +37,7 @@ public class Array2DTest
 			for (int x = 0; x < 5; x++)
 			{
 				int[] pos = new int[]{x, y};
-				array.set(new UInt8(y * 10 + x), pos);
+				array.set(pos, new UInt8(y * 10 + x));
 			}
 		}
 		
@@ -62,7 +62,7 @@ public class Array2DTest
 				for (int x = 0; x < 5; x++)
 				{
 					int[] pos = new int[]{x, y, z};
-					array.set(new UInt8(z * 100 + y * 10 + x), pos);
+					array.set(pos, new UInt8(z * 100 + y * 10 + x));
 				}
 			}
 		}

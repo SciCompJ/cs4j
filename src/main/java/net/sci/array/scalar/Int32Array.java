@@ -68,7 +68,7 @@ public interface Int32Array extends IntArray<Int32>
 		Int32Array result = Int32Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {
-	    	result.setValue(array.getValue(pos), pos);
+	    	result.setValue(pos, array.getValue(pos));
 	    }
 		return result;
 	}
@@ -90,9 +90,9 @@ public interface Int32Array extends IntArray<Int32>
      * Sets the value at the specified position, by clamping the value between 0
      * and 255.
      */
-	public default void setValue(double value, int... pos)
+	public default void setValue(int[] pos, double value)
     {
-    	setInt((int) value, pos);
+    	setInt(pos, (int) value);
     }
 
     @Override
@@ -114,9 +114,9 @@ public interface Int32Array extends IntArray<Int32>
     }
 
     @Override
-    public default void set(Int32 value, int... pos)
+    public default void set(int[] pos, Int32 value)
     {
-        setInt(value.getInt(), pos);
+        setInt(pos, value.getInt());
     }
 
 	@Override
@@ -126,7 +126,7 @@ public interface Int32Array extends IntArray<Int32>
 		Int32Array result = Int32Array.create(this.size());
 	    for (int[] pos : positions())
 	    {
-	    	result.setInt(getInt(pos), pos);
+	    	result.setInt(pos, getInt(pos));
 	    }
 		
 		// return output
@@ -178,7 +178,7 @@ public interface Int32Array extends IntArray<Int32>
             @Override
             public void setInt(int intValue)
             {
-                Int32Array.this.setInt(intValue, iter.get());
+                Int32Array.this.setInt(iter.get(), intValue);
             }
         };
     }
@@ -222,9 +222,9 @@ public interface Int32Array extends IntArray<Int32>
 		}
 
 		@Override
-		public void setInt(int value, int... pos)
+		public void setInt(int[] pos, int value)
 		{
-			setValue(value, pos);
+			setValue(pos, value);
 		}
 
 		
@@ -256,9 +256,9 @@ public interface Int32Array extends IntArray<Int32>
 		}
 
 		@Override
-		public void set(Int32 value, int... pos)
+		public void set(int[] pos, Int32 value)
 		{
-			array.setValue(value.getValue(), pos);
+			array.setValue(pos, value.getValue());
 		}
 
         @Override
@@ -345,9 +345,9 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.IntArray#setInt(int[], int)
          */
         @Override
-        public void setInt(int value, int... pos)
+        public void setInt(int[] pos, int value)
         {
-            array.setInt(value, coordsMapping.apply(pos));
+            array.setInt(coordsMapping.apply(pos), value);
         }
 
         /* (non-Javadoc)
@@ -363,9 +363,9 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
-            array.setValue(value, coordsMapping.apply(pos));
+            array.setValue(coordsMapping.apply(pos), value);
         }
 
         /* (non-Javadoc)

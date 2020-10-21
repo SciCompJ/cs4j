@@ -15,16 +15,7 @@ public class BufferedUInt8Array3DTest
 	{
 		// create array with 2*3*4 = 24 elements 
 		UInt8Array3D array = UInt8Array3D.create(4, 3, 2);
-		for (int z = 0; z < 2; z++)
-		{
-			for (int y = 0; y < 3; y++)
-			{
-				for (int x = 0; x < 4; x++)
-				{
-					array.setValue(10, x, y, z);
-				}
-			}
-		}
+		array.populateValues((x,y,z) -> 10.0);
 		
 		Array<?> array2 = array.newInstance(new int[]{2, 3, 4});
 		assertNotNull(array2);
@@ -38,16 +29,7 @@ public class BufferedUInt8Array3DTest
 	{
 		// create array with 2*3*4 = 24 elements 
 		UInt8Array3D array = UInt8Array3D.create(4, 3, 2);
-		for (int z = 0; z < 2; z++)
-		{
-			for (int y = 0; y < 3; y++)
-			{
-				for (int x = 0; x < 4; x++)
-				{
-					array.setValue(10, x, y, z);
-				}
-			}
-		}
+        array.populateValues((x,y,z) -> 10.0);
 
 		// iterate over elements, count and sum them
 		int count = 0;

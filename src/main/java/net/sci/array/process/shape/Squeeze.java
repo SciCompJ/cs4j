@@ -87,7 +87,7 @@ public class Squeeze implements ArrayOperator
             {
                 srcPos[dimsToKeep.get(d)] = pos[d];
             }
-            target.set(array.get(srcPos), pos);
+            target.set(pos, array.get(srcPos));
         }
         
         return target;

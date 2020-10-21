@@ -293,7 +293,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 		        {
 		            double v1 = marker.getValue(x, y, z) * this.sign;
 		            double v2 = mask.getValue(x, y, z) * this.sign;
-		            result.setValue(min(v1, v2)  * this.sign, x, y, z);
+		            result.setValue(x, y, z, min(v1, v2)  * this.sign);
 		            
 		        }
 		    }
@@ -349,7 +349,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 					maxValue = min(maxValue, mask.getValue(x, y, z) * this.sign);
 					if (maxValue > currentValue) 
 					{
-						result.setValue(maxValue * this.sign, x, y, z);
+						result.setValue(x, y, z, maxValue * this.sign);
 					}
 				}
 			}
@@ -405,7 +405,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 					maxValue = min(maxValue, mask.getValue(x, y, z) * sign);
 					if (maxValue > currentValue)
 					{
-						result.setValue(maxValue * this.sign, x, y, z);
+						result.setValue(x, y, z, maxValue * this.sign);
 					}
 				}
 			}
@@ -470,7 +470,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 						continue;
 
 					// update value of current voxel
-					result.setValue(maxValue * this.sign, x, y, z);
+					result.setValue(x, y, z, maxValue * this.sign);
 					
 					// eventually add lower-right neighbors to queue
 					if (x < sizeX - 1) 
@@ -537,7 +537,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 						continue;
 
 					// update value of current voxel
-					result.setValue(maxValue * this.sign, x, y, z);
+					result.setValue(x, y, z, maxValue * this.sign);
 					
 					// eventually add lower-right neighbors to queue
 					for (int z2 = min(z + 1, sizeZ - 1); z2 >= z; z2--) 
@@ -613,7 +613,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 				continue;
 			
 			// update result for current position
-			result.setValue(value * this.sign, x, y, z);
+			result.setValue(x, y, z, value * this.sign);
 
 			// Eventually add each neighbor
 			if (x > 0)
@@ -677,7 +677,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 				continue;
 			
 			// update result for current position
-			result.setValue(value * this.sign, x, y, z);
+			result.setValue(x, y, z, value * this.sign);
 
 			// compare with each one of the neighbors
 			for (int z2 = zmin; z2 <= zmax; z2++) 

@@ -27,7 +27,7 @@ public class ImageJSkeletonTest
         {
             for (int x = 1; x < 9; x++)
             {
-                array.setBoolean(true, x, y);
+                array.setBoolean(x, y, true);
             }
         }
         System.out.println("Input:");

@@ -72,7 +72,7 @@ public class Laplacian extends MorphologicalFilterAlgo
             for (int x = 0; x < array.size(0); x++)
             {
                 double val = (dil.getValue(x, y) + ero.getValue(x, y)) / 2 - array.getValue(x, y);
-                dil.setValue(val + this.shift, x, y);
+                dil.setValue(x, y, val + this.shift);
             }
         }
 
@@ -96,7 +96,7 @@ public class Laplacian extends MorphologicalFilterAlgo
                 for (int x = 0; x < array.size(0); x++)
                 {
                     double val = (dil.getValue(x, y, z) + ero.getValue(x, y, z)) / 2 - array.getValue(x, y, z);
-                    dil.setValue(val + this.shift, x, y, z);
+                    dil.setValue(x, y, z, val + this.shift);
                 }
             }
         }

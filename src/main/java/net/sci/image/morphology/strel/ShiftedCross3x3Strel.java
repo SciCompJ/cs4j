@@ -257,17 +257,17 @@ public class ShiftedCross3x3Strel
 
 				// process first two pixels independently
 				valMax = Math.max(buffer[1][0], Double.NEGATIVE_INFINITY);
-				image.setValue(valMax, 0, y);
+				image.setValue(0, y, valMax);
 				valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1],
 						buffer[2][0], Double.NEGATIVE_INFINITY);
-				image.setValue(valMax, 1, y);
+				image.setValue(1, y, valMax);
 
 				// Iterate over pixel of the line, starting from the third one
 				for (int x = 2; x < sizeX; x++)
 				{
 					valMax = max5(buffer[0][x - 1], buffer[1][x - 2],
 							buffer[1][x - 1], buffer[1][x], buffer[2][x - 1]);
-					image.setValue(valMax, x, y);
+					image.setValue(x, y, valMax);
 				}
 			}
 
@@ -389,17 +389,17 @@ public class ShiftedCross3x3Strel
 
 				// process first pixel independently
 				valMin = Math.min(buffer[1][0], Double.POSITIVE_INFINITY);
-				image.setValue(valMin, 0, y);
+				image.setValue(0, y, valMin);
 				valMin = min5(buffer[0][0], buffer[1][0], buffer[1][1],
 						buffer[2][0], Double.POSITIVE_INFINITY);
-				image.setValue(valMin, 1, y);
+				image.setValue(1, y, valMin);
 
 				// Iterate over pixel of the line
 				for (int x = 2; x < sizeX; x++)
 				{
 					valMin = min5(buffer[0][x - 1], buffer[1][x - 2],
 							buffer[1][x - 1], buffer[1][x], buffer[2][x - 1]);
-					image.setValue(valMin, x, y);
+					image.setValue(x, y, valMin);
 				}
 			}
 
@@ -613,17 +613,17 @@ public class ShiftedCross3x3Strel
 					valMax = max5(buffer[0][x + 1], buffer[1][x],
 							buffer[1][x + 1], buffer[1][x + 2],
 							buffer[2][x + 1]);
-					image.setValue(valMax, x, y);
+					image.setValue(x, y, valMax);
 				}
 
 				// process last two pixels independently
 				valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 						buffer[1][sizeX - 1], buffer[2][sizeX - 1],
 						Double.NEGATIVE_INFINITY);
-				image.setValue(valMax, sizeX - 2, y);
+				image.setValue(sizeX - 2, y, valMax);
 				valMax = Math.max(buffer[1][sizeX - 1],
 						Double.NEGATIVE_INFINITY);
-				image.setValue(valMax, sizeX - 1, y);
+				image.setValue(sizeX - 1, y, valMax);
 			}
 
 			// clear the progress bar
@@ -750,17 +750,17 @@ public class ShiftedCross3x3Strel
 					valMin = min5(buffer[0][x + 1], buffer[1][x],
 							buffer[1][x + 1], buffer[1][x + 2],
 							buffer[2][x + 1]);
-					image.setValue(valMin, x, y);
+					image.setValue(x, y, valMin);
 				}
 
 				// process last two pixels independently
 				valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 						buffer[1][sizeX - 1], buffer[2][sizeX - 1],
 						Double.POSITIVE_INFINITY);
-				image.setValue(valMin, sizeX - 2, y);
+				image.setValue(sizeX - 2, y, valMin);
 				valMin = Math.min(buffer[1][sizeX - 1],
 						Double.POSITIVE_INFINITY);
-				image.setValue(valMin, sizeX - 1, y);
+				image.setValue(sizeX - 1, y, valMin);
 			}
 
 			// clear the progress bar

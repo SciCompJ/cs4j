@@ -39,27 +39,7 @@ public abstract class BinaryArrayND extends IntArrayND<Binary> implements Binary
 		super(sizes);
 	}
 
-	
-    // =============================================================
-    // Implementation of the IntArray interface
-    
-    /* (non-Javadoc)
-     * @see net.sci.array.data.IntArray#getInt(int[])
-     */
-    @Override
-    public int getInt(int... pos)
-    {
-        return getBoolean(pos) ? 1 : 0;
-    }
 
-    /* (non-Javadoc)
-     * @see net.sci.array.data.IntArray#setInt(int[], int)
-     */
-    @Override
-    public void setInt(int intValue, int... pos)
-    {
-        setBoolean(intValue > 0, pos);
-    }
 
 	// =============================================================
 	// Specialization of Array interface

@@ -80,11 +80,17 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
 	
 	public abstract void setValue(int x, int y, int c, double value);
 
+    @Override
+    public void set(int x, int y, Float64Vector vect)
+    {
+        setValues(x, y, vect.getValues());
+    }
+
 
 	// =============================================================
 	// Specialization of VectorArray interface
 	
-	public double[] getValues(int[] pos)
+    public double[] getValues(int[] pos)
 	{
 		return getValues(pos[0], pos[1]);
 	}
@@ -126,6 +132,20 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
             this.channel = channel;
         }
 
+
+        @Override
+        public void setValue(int x, int y, double value)
+        {
+            Float64VectorArray2D.this.setValue(x, y, channel, value);
+        }
+
+        @Override
+        public void set(int x, int y, Float64 value)
+        {
+            Float64VectorArray2D.this.setValue(x, y, channel, value.getValue());
+        }
+
+
         @Override
         public net.sci.array.scalar.Float64Array.Iterator iterator()
         {
@@ -139,7 +159,7 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
         }
 
         @Override
-        public void setValue(double value, int... pos)
+        public void setValue(int[] pos, double value)
         {
             Float64VectorArray2D.this.setValue(pos[0], pos[1], channel, value);
         }

@@ -67,6 +67,18 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
     // =============================================================
 	// Specialization of Array interface
 
+    @Override
+    public default Float64Vector get(int... pos)
+    {
+        return new Float64Vector(getValues(pos, new double[channelNumber()]));
+    }
+
+    @Override
+    public default void set(int[] pos, Float64Vector vect)
+    {
+        setValues(pos, vect.getValues());
+    }
+
 	@Override
 	public default Float64VectorArray newInstance(int... dims)
 	{

@@ -41,7 +41,7 @@ public class ValueRangeThreshold
         for (int[] pos : source.positions())
         {
             double value = source.getValue(pos);
-            target.setBoolean(value >= this.minValue && value <= this.maxValue, pos);
+            target.setBoolean(pos, value >= this.minValue && value <= this.maxValue);
         }
     }
     

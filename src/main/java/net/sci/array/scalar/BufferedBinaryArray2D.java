@@ -52,8 +52,18 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 	// =============================================================
 	// Implementation of the BooleanArray2D interface
 
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.BinaryArray2D#setBoolean(int, int, boolean)
+     */
+    @Override
+    public void setBoolean(int x, int y, boolean state)
+    {
+        int index = x + y * this.size0;
+        buffer[index] = state;
+    }
+
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.BooleanArray2D#getState(int, int)
+	 * @see net.sci.array.scalar.BinaryArray#getBoolean(int[])
 	 */
 	@Override
 	public boolean getBoolean(int... pos)
@@ -62,15 +72,6 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 		return buffer[index];
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.BooleanArray2D#setState(int, int, boolean)
-	 */
-	@Override
-	public void setBoolean(boolean state, int... pos)
-	{
-		int index = pos[0] + pos[1] * this.size0;
-		buffer[index] = state;
-	}
 
 	// =============================================================
 	// Implementation of the Array interface

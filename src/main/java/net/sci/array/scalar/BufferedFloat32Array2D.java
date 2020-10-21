@@ -50,13 +50,19 @@ public class BufferedFloat32Array2D extends Float32Array2D
     // =============================================================
     // Specialization of FloatArray2D
 
+    public void setFloat(int x, int y, float value)
+    {
+        int index = x + y * this.size0;
+        this.buffer[index] = value;
+    }
+    
     public float getFloat(int... pos)
     {
         int index = pos[0] + pos[1] * this.size0;
         return this.buffer[index];
     }
 
-    public void setFloat(float value, int... pos)
+    public void setFloat(int[] pos, float value)
     {
         int index = pos[0] + pos[1] * this.size0;
         this.buffer[index] = value;
@@ -80,7 +86,7 @@ public class BufferedFloat32Array2D extends Float32Array2D
 	 * @see net.sci.array.data.Array2D#setValue(int, int, double)
 	 */
 	@Override
-	public void setValue(double value, int... pos)
+	public void setValue(int[] pos, double value)
 	{
         int index = pos[0] + pos[1] * this.size0;
 		this.buffer[index] = (float) value;

@@ -15,7 +15,7 @@ public class UInt8ArrayWrapperTest
 		{
 			for (int x = 1; x < 7; x++)
 			{
-				array.setInt(100, x, y);
+				array.setInt(x, y, 100);
 			}
 		}
 		
@@ -34,7 +34,7 @@ public class UInt8ArrayWrapperTest
 		{
 			for (int x = 1; x < 7; x++)
 			{
-				array.setInt(100, x, y);
+				array.setInt(x, y, 100);
 			}
 		}
 		

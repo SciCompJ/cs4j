@@ -118,7 +118,7 @@ public class LinearInterpolator2D implements ScalarFunction2D
 				double y2 = -xc * sinTheta + yc * cosTheta + 4.5;
 				
 				double val = interp.evaluate(x2, y2); 
-				image2.setValue(val, x, y);
+				image2.setValue(x, y, val);
 			}
 		}
 		

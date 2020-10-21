@@ -18,7 +18,7 @@ public class SlicedUInt8Array3D extends UInt8Array3D
 	// =============================================================
 	// Class fields
 
-	ArrayList<UInt8Array> slices;
+	ArrayList<UInt8Array2D> slices;
 
 	
 	// =============================================================
@@ -89,7 +89,7 @@ public class SlicedUInt8Array3D extends UInt8Array3D
 		this.slices = new ArrayList<>(size2);
 		for (UInt8Array slice : slices)
 		{
-			this.slices.add(slice);
+			this.slices.add(UInt8Array2D.wrap(slice));
 		}
 	}
 
@@ -97,22 +97,19 @@ public class SlicedUInt8Array3D extends UInt8Array3D
 	// =============================================================
 	// Specialization of the UInt8Array3D interface
 
-	/* (non-Javadoc)
+	@Override
+    public void setByte(int x, int y, int z, byte b)
+    {
+	    this.slices.get(z).setByte(x, y, b);
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.scalar.UInt8Array3D#getByte(int, int, int)
 	 */
 	@Override
 	public byte getByte(int... pos)
 	{
 		return this.slices.get(pos[2]).getByte(new int[]{pos[0], pos[1]});
-	}
-		
-	/* (non-Javadoc)
-	 * @see net.sci.array.scalar.UInt8Array3D#setByte(int, int, int, byte)
-	 */
-	@Override
-	public void setByte(byte b, int... pos)
-	{
-		this.slices.get(pos[2]).setByte(b, pos[0], pos[1]);
 	}
 
 	

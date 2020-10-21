@@ -136,7 +136,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 				for (int x = 0; x < sizeX; x++) 
 				{
 					boolean b = array.getBoolean(x, y, z);
-					distMap.setValue(b ? Float.MAX_VALUE : 0, x, y, z);
+					distMap.setValue(x, y, z, b ? Float.MAX_VALUE : 0);
 				}
 			}
 		}
@@ -161,7 +161,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 						if (array.getBoolean(x, y, z))
 						{
 							double value = distMap.getValue(x, y, z) / weights[0];
-							distMap.setValue(value, x, y, z);
+							distMap.setValue(x, y, z, value);
 						}
 					}
 				}
@@ -379,7 +379,7 @@ public class ChamferDistanceTransform3DFloat extends AlgoStub implements Distanc
 		double value = distMap.getValue(x, y, z);
 		if (newVal < value) 
 		{
-			distMap.setValue(newVal, x, y, z);
+			distMap.setValue(x, y, z, newVal);
 		}
 	}
 }

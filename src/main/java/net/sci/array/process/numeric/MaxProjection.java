@@ -74,7 +74,7 @@ public class MaxProjection extends ProjectionOperator
             }
             
             // copy value of selected position
-            target.set(max, pos);
+            target.set(pos, max);
         }
     }
 
@@ -106,7 +106,7 @@ public class MaxProjection extends ProjectionOperator
             }
             
             // copy value of selected position
-            target.setValue(maxValue, pos);
+            target.setValue(pos, maxValue);
         }
     }
 }
