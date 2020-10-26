@@ -37,17 +37,6 @@ import net.sci.image.data.Connectivity3D;
 public class BinaryImages
 {
 	// ==============================================================
-	// Constructors
-	
-	/**
-	 * Private constructor to prevent instantiation
-	 */
-	private BinaryImages()
-	{
-	}
-
-	
-	// ==============================================================
 	// Connected Components Labeling
 	
 	/**
@@ -617,4 +606,15 @@ public class BinaryImages
 
 		return (BinaryArray) array;
 	}
+	
+	
+    // ==============================================================
+    // Constructors
+    
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private BinaryImages()
+    {
+    }    
 }

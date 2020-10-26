@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	ConvexHullTest.class,
+    ConvexHullTest.class,
+    GeodesicDiameterTest.class,
 	RegionBoundariesTest.class,
 	})
 public class AllTests {
