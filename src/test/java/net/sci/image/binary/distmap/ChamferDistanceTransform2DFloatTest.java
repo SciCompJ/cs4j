@@ -21,7 +21,7 @@ public class ChamferDistanceTransform2DFloatTest
 {
 
 	/**
-	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat#process2d(net.sci.array.scalar.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat32#process2d(net.sci.array.scalar.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess2d()
@@ -37,7 +37,7 @@ public class ChamferDistanceTransform2DFloatTest
 		}
 
 		ChamferWeights2D weights = ChamferWeights2D.CHESSBOARD;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat(weights, true);
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, true);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 //		result.print(System.out);
@@ -56,7 +56,7 @@ public class ChamferDistanceTransform2DFloatTest
         image.setBoolean(4, 4, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.CITY_BLOCK;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat(weights, false);
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 //		result.print(System.out);
@@ -78,7 +78,7 @@ public class ChamferDistanceTransform2DFloatTest
         image.setBoolean(4, 4, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.CHESSBOARD;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat(weights, false);
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
@@ -98,7 +98,7 @@ public class ChamferDistanceTransform2DFloatTest
         image.setBoolean(4, 4, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.WEIGHTS_23;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat(weights, false);
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
@@ -118,7 +118,7 @@ public class ChamferDistanceTransform2DFloatTest
         image.setBoolean(4, 4, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.BORGEFORS;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat(weights, false);
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
@@ -138,7 +138,7 @@ public class ChamferDistanceTransform2DFloatTest
         image.setBoolean(6, 6, false);
 		
 		ChamferWeights2D weights = ChamferWeights2D.CHESSKNIGHT;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat(weights, false);
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);

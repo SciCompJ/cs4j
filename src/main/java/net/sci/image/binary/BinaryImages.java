@@ -15,9 +15,9 @@ import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.Image;
-import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat;
+import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat32;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16;
-import net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat;
+import net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat32;
 import net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16;
 import net.sci.image.binary.distmap.DistanceTransform3D;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform2D;
@@ -322,7 +322,7 @@ public class BinaryImages
 	public static final Float32Array2D distanceMap(BinaryArray2D array,
 			float[] weights, boolean normalize) 
 	{
-		ChamferDistanceTransform2DFloat algo = new ChamferDistanceTransform2DFloat(weights, normalize);
+		ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(weights, normalize);
 		return algo.process2d(array);
 	}
 
@@ -338,7 +338,7 @@ public class BinaryImages
 	public static final ScalarArray3D<?> distanceMap(BinaryArray3D array)
 	{
 		float[] weights = new float[]{3.0f, 4.0f, 5.0f};
-		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat(weights);
+		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat32(weights);
 		return algo.process3d(array);
 	}
 	
@@ -380,7 +380,7 @@ public class BinaryImages
 	public static final ScalarArray3D<?> distanceMap(BinaryArray3D array, 
 			float[] weights, boolean normalize)
 	{
-		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat(weights, normalize);
+		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat32(weights, normalize);
 		return algo.process3d(array);
 	}
 	

@@ -19,11 +19,11 @@ import org.junit.Test;
  * @author dlegland
  *
  */
-public class ChamferDistanceTransform3DFloatTest
+public class ChamferDistanceTransform3DFloat32Test
 {
 
 	/**
-	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat#process3d(net.sci.array.scalar.BinaryArray3D)}.
+	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat32#process3d(net.sci.array.scalar.BinaryArray3D)}.
 	 */
 	@Test
 	public final void testProcess3d_Cuboid()
@@ -36,13 +36,13 @@ public class ChamferDistanceTransform3DFloatTest
 			{
 				for (int x = 2; x < 19; x++)
 				{
-					image.setValue(x, y, z, 1.0);
+					image.setBoolean(x, y, z, true);
 				}
 			}
 		}
 
 		ChamferWeights3D weights = ChamferWeights3D.BORGEFORS;
-		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat(weights, true);
+		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat32(weights, true);
 		
 		ScalarArray3D<?> result = algo.process3d(image);
 		assertNotNull(result);
@@ -69,7 +69,7 @@ public class ChamferDistanceTransform3DFloatTest
         image.setBoolean(10, 10, 10, false);
 
 		ChamferWeights3D weights = ChamferWeights3D.BORGEFORS;
-		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat(weights, true);
+		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat32(weights, true);
 		
 		ScalarArray3D<?> result = algo.process3d(image);
 		assertNotNull(result);

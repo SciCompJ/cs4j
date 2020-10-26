@@ -8,7 +8,7 @@ import org.junit.runners.Suite;
 	// generic classes
 	ChamferDistanceTransform2DFloatTest.class,
 	ChamferDistanceTransform2DUInt16Test.class,
-	ChamferDistanceTransform3DFloatTest.class,
+	ChamferDistanceTransform3DFloat32Test.class,
 	ChamferDistanceTransform3DUInt16Test.class,
 	})
 public class AllTests {

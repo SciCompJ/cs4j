@@ -36,7 +36,7 @@ public class ChamferDistanceTransform3DUInt16Test
 			{
 				for (int x = 2; x < 19; x++)
 				{
-					image.setValue(x, y, z, 1.0);
+					image.setBoolean(x, y, z, true);
 				}
 			}
 		}
