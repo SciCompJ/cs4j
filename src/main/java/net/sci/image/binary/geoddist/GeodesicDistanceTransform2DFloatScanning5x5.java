@@ -25,21 +25,6 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 	 */
 	boolean normalizeMap = true;
 
-	int sizeX;
-	int sizeY;
-
-	BinaryArray2D mask;
-
-	/** 
-	 * The value assigned to result pixels that do not belong to the mask. 
-	 * Default is Short.MAX_VALUE.
-	 */
-	double backgroundValue = Double.POSITIVE_INFINITY;
-	
-	Float32Array2D buffer;
-	
-	boolean modif;
-
 
 	// ==================================================
     // Constructors 
@@ -120,7 +105,6 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
         this.normalizeMap = normalizeMap;
     }
 
-
 	
     // ==================================================
     // General Methods 
@@ -135,33 +119,24 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 	 */
 	public Float32Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
 	{
-		// TODO: could use hybrid algorithm
-		// TODO: check int overflow?
-		
-		// size of image
-		sizeX = mask.size(0);
-		sizeY = mask.size(1);
-		
-		// update mask
-		this.mask = mask;
-
-		// create new empty image, and fill it with black
-		fireStatusChanged(this, "Initialization..."); 
-		initializeResult(marker, mask);
+        // create new empty image, and fill it with black
+        fireStatusChanged(this, "Initialization..."); 
+        Float32Array2D distMap = initializeResult(marker, mask);
 
 		// Performs forward and backward scanning until stabilization
+		boolean modif = false;
 		int iter = 0;
-		do 
+        do 
 		{
 			modif = false;
 
 			// forward iteration
 			fireStatusChanged(this, "Forward iteration " + iter);
-			forwardIteration();
+			modif = modif || forwardIteration(distMap, mask);
 
 			// backward iteration
 			fireStatusChanged(this, "Backward iteration " + iter); 
-			backwardIteration();
+			modif = modif || backwardIteration(distMap, mask);
 
 			// Iterate while pixels have been modified
 			iter++;
@@ -172,17 +147,19 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 		if (this.normalizeMap) 
 		{
 			fireStatusChanged(this, "Normalize map");
-			normalizeMap();
+			normalizeMap(distMap);
 		}
 				
-		return buffer;
+		return distMap;
 	}
 
-	private void initializeResult(BinaryArray2D marker, BinaryArray2D mask)
+	private Float32Array2D initializeResult(BinaryArray2D marker, BinaryArray2D mask)
 	{
+        int sizeX = marker.size(0);
+        int sizeY = marker.size(1);
+
 	    // Allocate memory
-	    buffer = Float32Array2D.create(sizeX, sizeY);
-	    buffer.fillValue(0);
+	    Float32Array2D distMap = Float32Array2D.create(sizeX, sizeY);
 	    
 	    // initialize empty image with either 0 (in marker), Inf (outside marker), or NaN (not in the mask)
 	    for (int y = 0; y < sizeY; y++) 
@@ -191,18 +168,20 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 	        {
 	            if (mask.getBoolean(x, y))
 	            {
-    	            double val = marker.getValue(x, y);
-    	            buffer.setValue(x, y, val == 0 ? backgroundValue : 0);
+                    boolean val = marker.getBoolean(x, y);
+                    distMap.setFloat(x, y, val ? 0 : Float.POSITIVE_INFINITY);
 	            }
 	            else
 	            {
-	                buffer.setValue(x, y, Double.NaN);
+	                distMap.setFloat(x, y, Float.NaN);
 	            }
 	        }
 	    }
+	    
+	    return distMap;
 	}
 	
-	private void forwardIteration() 
+	private boolean forwardIteration(Float32Array2D distMap, BinaryArray2D mask) 
 	{
 		// create array of offsets relative to current pixel
 		int[] dx = new int[]{-1, +1, -2, -1, +0, +1, +2, -1};
@@ -214,7 +193,11 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 		double w2 = weights[2];
 		double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0};
 
+        int sizeX = distMap.size(0);
+        int sizeY = distMap.size(1);
+
 		// iterate over pixels
+		boolean modif = false;
 		for (int y = 0; y < sizeY; y++)
 		{
 			fireProgressChanged(this, y, sizeY); 
@@ -224,8 +207,11 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 				if (!mask.getBoolean(x, y))
 					continue;
 				
-				// iterate over neighbor pixels
-				double newVal = buffer.getValue(x, y);
+                // get value of current pixel
+                double value = distMap.getValue(x, y);
+
+                // iterate over neighbor pixels
+                double newVal = value;
 				for(int i = 0; i < dx.length; i++)
 				{
 					// coordinates of neighbor pixel
@@ -243,19 +229,24 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 						continue;
 
 					// update minimum value
-					newVal = Math.min(newVal, buffer.getValue(x2, y2) + ws[i]);
+					newVal = Math.min(newVal, distMap.getValue(x2, y2) + ws[i]);
 				}
 				
-				// modify current pixel if needed
-				updateIfNeeded(x, y, newVal);
+                // modify current pixel if needed
+                if (newVal < value) 
+                {
+                    modif = true;
+                    distMap.setValue(x, y, newVal);
+                }
 			}
 		}
 		
 
-		fireProgressChanged(this, 1, 1); 
+		fireProgressChanged(this, 1, 1);
+		return modif;
 	}
 
-	private void backwardIteration()
+	private boolean backwardIteration(Float32Array2D distMap, BinaryArray2D mask)
 	{
 		// create array of offsets relative to current pixel
 		int[] dx = new int[]{+1, -1, +2, +1, +0, -1, -2, +1};
@@ -267,7 +258,11 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 		double w2 = weights[2];
 		double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0};
 
+        int sizeX = distMap.size(0);
+        int sizeY = distMap.size(1);
+
 		// iterate over pixels
+		boolean modif = false;
 		for (int y = sizeY - 1; y >= 0; y--)
 		{
 			fireProgressChanged(this, sizeY - 1 - y, sizeY); 
@@ -277,8 +272,11 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 				if (!mask.getBoolean(x, y))
 					continue;
 				
-				// iterate over neighbor pixels
-				double newVal = buffer.getValue(x, y);
+                // get value of current pixel
+                double value = distMap.getValue(x, y);
+
+                // iterate over neighbor pixels
+				double newVal = value;
 				for(int i = 0; i < dx.length; i++)
 				{
 					// coordinates of neighbor pixel
@@ -296,41 +294,35 @@ public class GeodesicDistanceTransform2DFloatScanning5x5 extends AlgoStub implem
 						continue;
 
 					// update minimum value
-					newVal = Math.min(newVal, buffer.getValue(x2, y2) + ws[i]);
+					newVal = Math.min(newVal, distMap.getValue(x2, y2) + ws[i]);
 				}
 				
-				// modify current pixel if needed
-				updateIfNeeded(x, y, newVal);
+                // modify current pixel if needed
+                if (newVal < value) 
+                {
+                    modif = true;
+                    distMap.setValue(x, y, newVal);
+                }
 			}
 		}
 		
-		fireProgressChanged(this, 1, 1); 
-	}
-		
-	/**
-	 * Updates the pixel at position (x,y) with the value newVal. If newVal is
-	 * greater or equal to current value at position (x,y), do nothing.
-	 */
-	private void updateIfNeeded(int x, int y, double newVal) 
-	{
-		double value = buffer.getValue(x, y);
-		if (newVal < value) 
-		{
-			modif = true;
-			buffer.setValue(x, y, newVal);
-		}
+		fireProgressChanged(this, 1, 1);
+		return modif;
 	}
 
-	private void normalizeMap()
+	private void normalizeMap(Float32Array2D distMap)
 	{
+        int sizeX = distMap.size(0);
+        int sizeY = distMap.size(1);
+
         for (int y = 0; y < sizeY; y++)
         {
             for (int x = 0; x < sizeX; x++) 
             {
-                double val = buffer.getValue(x, y);
+                double val = distMap.getValue(x, y);
                 if (Double.isFinite(val))
                 {
-                    buffer.setValue(x, y, val / this.weights[0]);
+                    distMap.setValue(x, y, val / this.weights[0]);
                 }
             }
         }

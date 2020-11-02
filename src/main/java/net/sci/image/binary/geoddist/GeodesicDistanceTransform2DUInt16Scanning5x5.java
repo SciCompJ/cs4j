@@ -29,22 +29,7 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 	 * This results in distance map values closer to Euclidean distance. 
 	 */
 	boolean normalizeMap = true;
-
-	int sizeX;
-	int sizeY;
-
-	BinaryArray2D mask;
-
-	/** 
-	 * The value assigned to result pixels that do not belong to the mask. 
-	 * Default is Short.MAX_VALUE.
-	 */
-	short backgroundValue = Short.MAX_VALUE;
 	
-	UInt16Array2D buffer;
-	
-	boolean modif;
-
 
 	// ==================================================
     // Constructors 
@@ -111,33 +96,26 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 	 */
 	public UInt16Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
 	{
-		// TODO: could use hybrid algorithm
 		// TODO: check int overflow?
-		
-		// size of image
-		sizeX = mask.size(0);
-		sizeY = mask.size(1);
-		
-		// update mask
-		this.mask = mask;
 
 		// create new empty image, and fill it with black
 		fireStatusChanged(this, "Initialization..."); 
-		initializeResult(marker, mask);
+		UInt16Array2D distMap = initializeResult(marker, mask);
 
 		// Performs forward and backward scanning until stabilization
+		boolean modif = false;
 		int iter = 0;
 		do 
 		{
 			modif = false;
 
-			// forward iteration
-			fireStatusChanged(this, "Forward iteration " + iter);
-			forwardIteration();
+            // forward iteration
+            fireStatusChanged(this, "Forward iteration " + iter);
+            modif = modif || forwardIteration(distMap, mask);
 
-			// backward iteration
-			fireStatusChanged(this, "Backward iteration " + iter); 
-			backwardIteration();
+            // backward iteration
+            fireStatusChanged(this, "Backward iteration " + iter); 
+            modif = modif || backwardIteration(distMap, mask);
 
 			// Iterate while pixels have been modified
 			iter++;
@@ -148,30 +126,33 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 		if (this.normalizeMap) 
 		{
 			fireStatusChanged(this, "Normalize map");
-			normalizeMap();
+			normalizeMap(distMap);
 		}
 				
-		return buffer;
+		return distMap;
 	}
 
-	private void initializeResult(BinaryArray2D marker, BinaryArray2D mask)
+	private UInt16Array2D initializeResult(BinaryArray2D marker, BinaryArray2D mask)
 	{
+        int sizeX = marker.size(0);
+        int sizeY = marker.size(1);
+
 	    // Allocate memory
-	    buffer = UInt16Array2D.create(sizeX, sizeY);
-	    buffer.fillValue(0);
+	    UInt16Array2D distMap = UInt16Array2D.create(sizeX, sizeY);
 	    
 	    // initialize empty image with either 0 (foreground) or Inf (background)
 	    for (int y = 0; y < sizeY; y++) 
 	    {
 	        for (int x = 0; x < sizeX; x++) 
 	        {
-	            int val = marker.getInt(x, y);
-	            buffer.setInt(x, y, val == 0 ? backgroundValue : 0);
+	            distMap.setInt(x, y, marker.getBoolean(x, y) ? 0 : Short.MAX_VALUE);
 	        }
 	    }
+	    
+	    return distMap;
 	}
 	
-	private void forwardIteration() 
+	private boolean forwardIteration(UInt16Array2D distMap, BinaryArray2D mask) 
 	{
 		// create array of offsets relative to current pixel
 		int[] dx = new int[]{-1, +1, -2, -1, +0, +1, +2, -1};
@@ -183,8 +164,12 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 		int w2 = weights[2];
 		int[] ws = new int[]{w2, w2, w2, w1, w0, w1, w2, w0};
 
+        int sizeX = distMap.size(0);
+        int sizeY = distMap.size(1);
+
 		// iterate over pixels
-		for (int y = 0; y < sizeY; y++)
+        boolean modif = false;
+        for (int y = 0; y < sizeY; y++)
 		{
 			fireProgressChanged(this, y, sizeY); 
 
@@ -193,8 +178,11 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 				if (!mask.getBoolean(x, y))
 					continue;
 				
-				// iterate over neighbor pixels
-				int newVal = buffer.getInt(x, y);
+                // get value of current pixel
+                int value = distMap.getInt(x, y);
+
+                // iterate over neighbor pixels
+                int newVal = value;
 				for(int i = 0; i < dx.length; i++)
 				{
 					// coordinates of neighbor pixel
@@ -212,18 +200,23 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 						continue;
 
 					// update minimum value
-					newVal = Math.min(newVal, buffer.getInt(x2, y2) + ws[i]);
+					newVal = Math.min(newVal, distMap.getInt(x2, y2) + ws[i]);
 				}
 				
-				// modify current pixel if needed
-				updateIfNeeded(x, y, newVal);
+                // modify current pixel if needed
+                if (newVal < value) 
+                {
+                    modif = true;
+                    distMap.setInt(x, y, newVal);
+                }
 			}
 		}
 		
 		fireProgressChanged(this, 1, 1); 
+        return modif;
 	}
 
-	private void backwardIteration()
+	private boolean backwardIteration(UInt16Array2D distMap, BinaryArray2D mask)
 	{
 		// create array of offsets relative to current pixel
 		int[] dx = new int[]{+1, -1, +2, +1, +0, -1, -2, +1};
@@ -235,8 +228,12 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 		int w2 = weights[2];
 		int[] ws = new int[]{w2, w2, w2, w1, w0, w1, w2, w0};
 
+        int sizeX = distMap.size(0);
+        int sizeY = distMap.size(1);
+
 		// iterate over pixels
-		for (int y = sizeY - 1; y >= 0; y--)
+        boolean modif = false;
+        for (int y = sizeY - 1; y >= 0; y--)
 		{
 			fireProgressChanged(this, sizeY - 1 - y, sizeY); 
 
@@ -245,8 +242,11 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 				if (!mask.getBoolean(x, y))
 					continue;
 				
-				// iterate over neighbor pixels
-				int newVal = buffer.getInt(x, y);
+				// get value of current pixel
+                int value = distMap.getInt(x, y);
+
+                // iterate over neighbor pixels
+                int newVal = value;
 				for(int i = 0; i < dx.length; i++)
 				{
 					// coordinates of neighbor pixel
@@ -264,41 +264,35 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 						continue;
 
 					// update minimum value
-					newVal = Math.min(newVal, buffer.getInt(x2, y2) + ws[i]);
+					newVal = Math.min(newVal, distMap.getInt(x2, y2) + ws[i]);
 				}
 				
 				// modify current pixel if needed
-				updateIfNeeded(x, y, newVal);
+		        if (newVal < value) 
+		        {
+		            modif = true;
+		            distMap.setInt(x, y, newVal);
+		        }
 			}
 		}
 		
 		fireProgressChanged(this, 1, 1); 
-	}
-		
-	/**
-	 * Updates the pixel at position (x,y) with the value newVal. If newVal is
-	 * greater or equal to current value at position (x,y), do nothing.
-	 */
-	private void updateIfNeeded(int x, int y, int newVal) 
-	{
-		int value = buffer.getInt(x, y);
-		if (newVal < value) 
-		{
-			modif = true;
-			buffer.setInt(x, y, newVal);
-		}
+        return modif;
 	}
 
-	private void normalizeMap()
+	private void normalizeMap(UInt16Array2D distMap)
 	{
+        int sizeX = distMap.size(0);
+        int sizeY = distMap.size(1);
+
         for (int y = 0; y < sizeY; y++)
         {
             for (int x = 0; x < sizeX; x++) 
             {
-                int val = buffer.getInt(x, y);
-                if (val != this.backgroundValue)
+                int val = distMap.getInt(x, y);
+                if (val != Short.MAX_VALUE)
                 {
-                    buffer.setInt(x, y, val / this.weights[0]);
+                    distMap.setInt(x, y, val / this.weights[0]);
                 }
             }
         }
