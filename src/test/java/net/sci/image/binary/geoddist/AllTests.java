@@ -10,7 +10,8 @@ import org.junit.runners.Suite;
     GeodesicDistanceTransform2DUInt16Scanning5x5Test.class,
     GeodesicDistanceTransform2DFloatHybrid5x5Test.class,
     GeodesicDistanceTransform2DFloatScanning5x5Test.class,
-	})
+    GeodesicDistanceTransform3DFloatHybrid3x3Test.class,
+    })
 public class AllTests {
   //nothing
 }
