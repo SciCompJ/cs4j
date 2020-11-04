@@ -12,7 +12,7 @@ import org.junit.runners.Suite;
     net.sci.image.analyze.AllTestsRecurse.class,
 	net.sci.image.binary.AllTestsRecurse.class,
     net.sci.image.io.AllTests.class,
-    net.sci.image.label.AllTests.class,
+    net.sci.image.label.AllTestsRecurse.class,
 	net.sci.image.morphology.AllTestsRecurse.class,
 	net.sci.image.process.AllTestsRecurse.class,
 	})
