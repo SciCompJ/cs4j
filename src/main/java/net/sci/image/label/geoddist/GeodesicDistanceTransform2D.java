@@ -1,10 +1,11 @@
 /**
  * 
  */
-package net.sci.image.binary.geoddist;
+package net.sci.image.label.geoddist;
 
 import net.sci.algo.Algo;
 import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 
 /**
@@ -22,9 +23,9 @@ public interface GeodesicDistanceTransform2D extends Algo
 	 * 
 	 * @param marker
 	 *            the binary image of markers.
-	 * @param mask
-	 *            the binary image of mask, the same size as the marker image.
+	 * @param labelMap
+	 *            the integer array of labels, the same size as the marker image.
 	 * @return the geodesic distance map in a new ScalarArray.
 	 */
-	public ScalarArray2D<?> process2d(BinaryArray2D marker, BinaryArray2D mask);
+	public ScalarArray2D<?> process2d(BinaryArray2D marker, IntArray2D<?> labelMap);
 }

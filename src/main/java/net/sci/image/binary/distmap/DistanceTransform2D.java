@@ -54,8 +54,8 @@ public interface DistanceTransform2D extends Algo, ArrayOperator
      * The input array must be an instance of BinaryArray.
      * 
      * @param array
-     *            the input array
-     * @return the operator result as a new instance of ScalarArray
+     *            the input array, must be 2D and be instance of BinaryArray. 
+     * @return the operator result as a new instance of ScalarArray.
      * @throws IllegalArgumentException
      *             if the input array is not an instance of BinaryArray
      */

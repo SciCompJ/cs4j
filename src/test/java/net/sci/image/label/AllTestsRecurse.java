@@ -10,6 +10,7 @@ import org.junit.runners.Suite;
 	// generic classes
 	AllTests.class,
     net.sci.image.label.distmap.AllTests.class,
+    net.sci.image.label.geoddist.AllTests.class,
 	})
 public class AllTestsRecurse {
   //nothing
