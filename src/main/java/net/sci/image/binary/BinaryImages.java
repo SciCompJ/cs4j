@@ -412,7 +412,7 @@ public class BinaryImages
             // process planar image
             distMap = geodesicDistanceMap2d((BinaryArray2D) markerArray, (BinaryArray2D) maskArray);
         } 
-        if (markerArray instanceof BinaryArray3D && maskArray instanceof BinaryArray3D) 
+        else if (markerArray instanceof BinaryArray3D && maskArray instanceof BinaryArray3D) 
         {
             // process 3D image
             distMap = geodesicDistanceMap3d((BinaryArray3D) markerArray, (BinaryArray3D) maskArray);
@@ -446,7 +446,7 @@ public class BinaryImages
             // process planar image
             distMap = geodesicDistanceMap2d((BinaryArray2D) marker, (BinaryArray2D) mask);
         } 
-        if (marker instanceof BinaryArray3D && mask instanceof BinaryArray3D) 
+        else if (marker instanceof BinaryArray3D && mask instanceof BinaryArray3D) 
         {
             // process 3D image
             distMap = geodesicDistanceMap3d((BinaryArray3D) marker, (BinaryArray3D) mask);

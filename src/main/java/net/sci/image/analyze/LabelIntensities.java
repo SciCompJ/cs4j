@@ -8,7 +8,7 @@ import java.util.HashMap;
 import net.sci.array.Arrays;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.ScalarArray;
-import net.sci.image.morphology.LabelImages;
+import net.sci.image.label.LabelImages;
 
 /**
  * Collection of static methods for computing descriptive statistics on

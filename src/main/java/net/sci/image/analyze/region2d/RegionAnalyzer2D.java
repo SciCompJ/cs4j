@@ -11,7 +11,7 @@ import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
-import net.sci.image.morphology.LabelImages;
+import net.sci.image.label.LabelImages;
 import net.sci.table.Table;
 
 

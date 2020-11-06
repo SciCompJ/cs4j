@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.morphology;
+package net.sci.image.label;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,12 +18,9 @@ import net.sci.array.scalar.IntArray;
  */
 public class LabelImages
 {
-    /**
-     * Private constructor to avoid instantiation.
-     */
-    private LabelImages()
-    {
-    }
+    
+    // ==============================================================
+    // Utility methods
     
     /**
      * Returns the set of unique labels existing in the given image, excluding 
@@ -87,5 +84,16 @@ public class LabelImages
 
         return labelIndices;
     }
+
+    
+    // ==============================================================
+    // Constructor
+    
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private LabelImages()
+    {
+    }    
 
 }

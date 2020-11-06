@@ -8,7 +8,7 @@ import java.util.HashMap;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.geom.geom3d.Box3D;
 import net.sci.geom.geom3d.Point3D;
-import net.sci.image.morphology.LabelImages;
+import net.sci.image.label.LabelImages;
 
 /**
  * A collections of static methods for the analysis of 3D regions.

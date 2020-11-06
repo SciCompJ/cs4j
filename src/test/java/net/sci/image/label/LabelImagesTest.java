@@ -1,4 +1,4 @@
-package net.sci.image.morphology;
+package net.sci.image.label;
 
 import static org.junit.Assert.*;
 

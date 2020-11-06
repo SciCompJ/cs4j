@@ -9,7 +9,7 @@ import java.util.TreeMap;
 
 import net.sci.array.scalar.IntArray2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.image.morphology.LabelImages;
+import net.sci.image.label.LabelImages;
 
 /**
  * Utility functions for computing position of boundary points/corners of
