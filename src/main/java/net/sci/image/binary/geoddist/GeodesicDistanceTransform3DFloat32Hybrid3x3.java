@@ -17,7 +17,7 @@ import net.sci.image.data.Cursor3D;
  * @author David Legland
  * 
  */
-public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implements GeodesicDistanceTransform3D
+public class GeodesicDistanceTransform3DFloat32Hybrid3x3 extends AlgoStub implements GeodesicDistanceTransform3D
 {
     // ==================================================
     // Class variables 
@@ -37,23 +37,23 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
 	/**
 	 * Use default weights, and normalize map.
 	 */
-	public GeodesicDistanceTransform3DFloatHybrid3x3()
+	public GeodesicDistanceTransform3DFloat32Hybrid3x3()
 	{
 		this(ChamferWeights3D.BORGEFORS.getFloatWeights(), true);
 	}
 
-	public GeodesicDistanceTransform3DFloatHybrid3x3(ChamferWeights3D weights)
+	public GeodesicDistanceTransform3DFloat32Hybrid3x3(ChamferWeights3D weights)
 	{
 		this(weights.getFloatWeights(), true);
 	}
 
-	public GeodesicDistanceTransform3DFloatHybrid3x3(ChamferWeights3D weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform3DFloat32Hybrid3x3(ChamferWeights3D weights, boolean normalizeMap) 
 	{
 		this(weights.getFloatWeights(), normalizeMap);
 	}
 
 
-	public GeodesicDistanceTransform3DFloatHybrid3x3(float[] weights)
+	public GeodesicDistanceTransform3DFloat32Hybrid3x3(float[] weights)
 	{
 		this(weights, true);
 	}
@@ -67,7 +67,7 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
 	 * @param normalizeMap
 	 *            the flag for normalizing result
 	 */
-	public GeodesicDistanceTransform3DFloatHybrid3x3(float[] weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform3DFloat32Hybrid3x3(float[] weights, boolean normalizeMap) 
 	{
 		this.weights = new double[3];
         this.weights[0] = weights[0];
@@ -95,7 +95,7 @@ public class GeodesicDistanceTransform3DFloatHybrid3x3 extends AlgoStub implemen
      * @param normalizeMap
      *            the flag for normalizing result
      */
-    public GeodesicDistanceTransform3DFloatHybrid3x3(double[] weights, boolean normalizeMap) 
+    public GeodesicDistanceTransform3DFloat32Hybrid3x3(double[] weights, boolean normalizeMap) 
     {
         this.weights = weights;
         

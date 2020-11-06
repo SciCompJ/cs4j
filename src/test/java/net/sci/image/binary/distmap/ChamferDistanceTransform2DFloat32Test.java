@@ -17,7 +17,7 @@ import org.junit.Test;
  * @author dlegland
  *
  */
-public class ChamferDistanceTransform2DFloatTest
+public class ChamferDistanceTransform2DFloat32Test
 {
 
 	/**

@@ -8,9 +8,9 @@ import org.junit.runners.Suite;
 	// generic classes
     GeodesicDistanceTransform2DUInt16Hybrid5x5Test.class,
     GeodesicDistanceTransform2DUInt16Scanning5x5Test.class,
-    GeodesicDistanceTransform2DFloatHybrid5x5Test.class,
-    GeodesicDistanceTransform2DFloatScanning5x5Test.class,
-    GeodesicDistanceTransform3DFloatHybrid3x3Test.class,
+    GeodesicDistanceTransform2DFloat32Hybrid5x5Test.class,
+    GeodesicDistanceTransform2DFloat32Scanning5x5Test.class,
+    GeodesicDistanceTransform3DFloat32Hybrid3x3Test.class,
     })
 public class AllTests {
   //nothing

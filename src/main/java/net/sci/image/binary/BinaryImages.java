@@ -21,10 +21,10 @@ import net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat32;
 import net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16;
 import net.sci.image.binary.distmap.DistanceTransform3D;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform2D;
-import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloatHybrid5x5;
+import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloat32Hybrid5x5;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Hybrid5x5;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform3D;
-import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloatHybrid3x3;
+import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.data.Connectivity3D;
 
@@ -522,7 +522,7 @@ public class BinaryImages
             BinaryArray2D mask, float[] weights, boolean normalize) 
     {
         GeodesicDistanceTransform2D algo;
-        algo = new GeodesicDistanceTransform2DFloatHybrid5x5(weights, normalize);
+        algo = new GeodesicDistanceTransform2DFloat32Hybrid5x5(weights, normalize);
         return algo.process2d(marker, mask);
     }
     
@@ -586,7 +586,7 @@ public class BinaryImages
             BinaryArray3D mask, float[] weights, boolean normalize) 
     {
         GeodesicDistanceTransform3D algo;
-        algo = new GeodesicDistanceTransform3DFloatHybrid3x3(weights, normalize);
+        algo = new GeodesicDistanceTransform3DFloat32Hybrid3x3(weights, normalize);
         return algo.process3d(marker, mask);
     }
     

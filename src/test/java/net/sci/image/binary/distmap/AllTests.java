@@ -6,7 +6,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	ChamferDistanceTransform2DFloatTest.class,
+	ChamferDistanceTransform2DFloat32Test.class,
 	ChamferDistanceTransform2DUInt16Test.class,
 	ChamferDistanceTransform3DFloat32Test.class,
 	ChamferDistanceTransform3DUInt16Test.class,

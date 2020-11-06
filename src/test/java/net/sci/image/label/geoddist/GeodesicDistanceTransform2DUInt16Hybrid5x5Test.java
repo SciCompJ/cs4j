@@ -104,7 +104,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5Test
     }
     
     /**
-     * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloatHybrid5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+     * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
      * @throws IOException 
      */
     @Test

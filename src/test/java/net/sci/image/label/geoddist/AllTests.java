@@ -7,7 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     GeodesicDistanceTransform2DUInt16Hybrid5x5Test.class,
-    GeodesicDistanceTransform2DFloatHybrid5x5Test.class,
+    GeodesicDistanceTransform2DFloat32Hybrid5x5Test.class,
     })
 public class AllTests {
   //nothing

@@ -16,7 +16,7 @@ import net.sci.image.data.Cursor2D;
  * @author David Legland
  * 
  */
-public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implements GeodesicDistanceTransform2D
+public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implements GeodesicDistanceTransform2D
 {
     // ==================================================
     // Class variables 
@@ -36,23 +36,23 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 	/**
 	 * Use default weights, and normalize map.
 	 */
-	public GeodesicDistanceTransform2DFloatHybrid5x5()
+	public GeodesicDistanceTransform2DFloat32Hybrid5x5()
 	{
 		this(ChamferWeights2D.CHESSKNIGHT.getFloatWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DFloatHybrid5x5(ChamferWeights2D weights)
+	public GeodesicDistanceTransform2DFloat32Hybrid5x5(ChamferWeights2D weights)
 	{
 		this(weights.getFloatWeights(), true);
 	}
 
-	public GeodesicDistanceTransform2DFloatHybrid5x5(ChamferWeights2D weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DFloat32Hybrid5x5(ChamferWeights2D weights, boolean normalizeMap) 
 	{
 		this(weights.getFloatWeights(), normalizeMap);
 	}
 
 
-	public GeodesicDistanceTransform2DFloatHybrid5x5(float[] weights)
+	public GeodesicDistanceTransform2DFloat32Hybrid5x5(float[] weights)
 	{
 		this(weights, true);
 	}
@@ -66,7 +66,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
 	 * @param normalizeMap
 	 *            the flag for normalizing result
 	 */
-	public GeodesicDistanceTransform2DFloatHybrid5x5(float[] weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DFloat32Hybrid5x5(float[] weights, boolean normalizeMap) 
 	{
 		this.weights = new double[3];
         this.weights[0] = weights[0];
@@ -94,7 +94,7 @@ public class GeodesicDistanceTransform2DFloatHybrid5x5 extends AlgoStub implemen
      * @param normalizeMap
      *            the flag for normalizing result
      */
-    public GeodesicDistanceTransform2DFloatHybrid5x5(double[] weights, boolean normalizeMap) 
+    public GeodesicDistanceTransform2DFloat32Hybrid5x5(double[] weights, boolean normalizeMap) 
     {
         this.weights = weights;
         

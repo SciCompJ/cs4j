@@ -14,10 +14,10 @@ import org.junit.Test;
  * @author dlegland
  *
  */
-public class GeodesicDistanceTransform2DFloatScanning5x5Test
+public class GeodesicDistanceTransform2DFloat32Scanning5x5Test
 {
 	/**
-	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloatScanning5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloat32Scanning5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess_LineSegment()
@@ -29,7 +29,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5Test
         mask.setBoolean(2, 1, true);
         mask.setBoolean(3, 1, true);
 		
-		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DFloatScanning5x5(new double[]{1,2,12}, false);
+		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DFloat32Scanning5x5(new double[]{1,2,12}, false);
 		ScalarArray2D<?> res = (ScalarArray2D<?>) op.process2d(marker, mask);
 		
 		assertEquals(0, res.getValue(1, 1), 1e-6);
@@ -37,7 +37,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5Test
 	}
 
 	/**
-	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloatScanning5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloat32Scanning5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess_CShape()
@@ -53,7 +53,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5Test
         mask.setBoolean(2, 3, true);
         mask.setBoolean(3, 3, true);
 		
-		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DFloatScanning5x5(new double[]{1,2,12}, false);
+		GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DFloat32Scanning5x5(new double[]{1,2,12}, false);
 		ScalarArray2D<?> res = (ScalarArray2D<?>) op.process2d(marker, mask);
 		
 		assertEquals(0, res.getValue(3, 3), 1e-6);
@@ -63,7 +63,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5Test
 	}
 
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloatScanning5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloat32Scanning5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
      */
     @Test
     public final void testProcess_CShape_TwoBlobs()
@@ -86,7 +86,7 @@ public class GeodesicDistanceTransform2DFloatScanning5x5Test
         mask.setBoolean(6, 3, true);
         mask.setBoolean(7, 3, true);
 
-        GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DFloatScanning5x5(new double[]{1,2,12}, false);
+        GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DFloat32Scanning5x5(new double[]{1,2,12}, false);
         ScalarArray2D<?> res = (ScalarArray2D<?>) op.process2d(marker, mask);
         
         assertEquals(0, res.getValue(3, 3), 1e-6);
