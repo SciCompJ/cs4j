@@ -74,7 +74,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3 extends AlgoStub implem
         this.weights[1] = weights[1];
 		
 		// ensure weight array has minimum size 3
-		if (this.weights.length < 3)
+		if (weights.length < 3)
 		{
 			this.weights[2] = weights[0] + weights[1];
 		}

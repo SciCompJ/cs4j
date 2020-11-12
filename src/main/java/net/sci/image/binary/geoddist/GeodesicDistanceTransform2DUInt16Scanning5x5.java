@@ -72,7 +72,7 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 		this.weights = weights;
 		
 		// ensure weight array has minimum size 3
-		if (this.weights.length < 3)
+		if (weights.length < 3)
 		{
 			this.weights = new short[3];
 			this.weights[0] = weights[0];
