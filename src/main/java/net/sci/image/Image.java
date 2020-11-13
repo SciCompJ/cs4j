@@ -424,6 +424,14 @@ public class Image
     /**
      * Creates default calibration using spatial axis for each dimension.
      */
+    public void clearCalibration()
+    {
+        initCalibration();
+    }
+    
+    /**
+     * Creates default calibration using spatial axis for each dimension.
+     */
     private void initCalibration()
     {
         int nd = this.getDimension();

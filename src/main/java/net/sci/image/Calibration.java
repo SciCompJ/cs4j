@@ -53,7 +53,10 @@ public class Calibration
     {
         this.axes = new ImageAxis[nDims];
         double[] spacing = new double[nDims];
-        for (int d = 0; d < nDims; d++) spacing[d] = 1.0;
+        for (int d = 0; d < nDims; d++) 
+        {
+            spacing[d] = 1.0;
+        }
         setSpatialCalibration(spacing, "");
     }
  
@@ -200,6 +203,8 @@ public class Calibration
      * present.
      * 
      * @return the first instance of ImageAxis.X class, if it exists
+     * @throws RuntimeException
+     *             if this Calibration does not contain any ImageAxis.X axis.
      */
     public ImageAxis getXAxis()
     {
@@ -218,6 +223,8 @@ public class Calibration
      * present.
      * 
      * @return the first instance of ImageAxis.Y class, if it exists
+     * @throws RuntimeException
+     *             if this Calibration does not contain any ImageAxis.Y axis.
      */
     public ImageAxis getYAxis()
     {
@@ -236,6 +243,8 @@ public class Calibration
      * present.
      * 
      * @return the first instance of ImageAxis.Z class, if it exists
+     * @throws RuntimeException
+     *             if this Calibration does not contain any ImageAxis.Z axis.
      */
     public ImageAxis getZAxis()
     {
@@ -280,6 +289,8 @@ public class Calibration
      * present.
      * 
      * @return the first instance of ImageAxis.T class, if it exists
+     * @throws RuntimeException
+     *             if this Calibration does not contain any ImageAxis.T axis.
      */
     public ImageAxis getTimeAxis()
     {
@@ -329,7 +340,18 @@ public class Calibration
     {
         this.axes[dim] = axis;
     }
-
+    
+    public boolean isCalibrated()
+    {
+        for (ImageAxis axis : this.axes)
+        {
+            if (axis.isCalibrated())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     // =============================================================
     // generic methods

@@ -64,6 +64,20 @@ public class ImageAxis extends NumericalAxis
 
     
     // =============================================================
+    // New methods
+    
+    
+    public boolean isCalibrated()
+    {
+        if (this.name != null) return true;
+        if (this.spacing != 1.0) return true;
+        if (this.origin != 0.0) return true;
+        if (this.unitName != null) return true;
+        return false;
+    }
+    
+    
+    // =============================================================
     // Specialize Axis interface methods
     
     @Override
