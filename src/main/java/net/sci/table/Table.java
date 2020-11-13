@@ -55,8 +55,9 @@ public interface Table
     	
     	// TODO: choose type depending on parent table. Use "newInstance"-like strategy?
 		Table result = Table.create(nr, nc2);
-		String[] colNames = new String[nc2];
-		
+
+		// Copy values and extract name of each column
+        String[] colNames = new String[nc2];
 		for (int c = 0; c < nc2; c++)
 		{
 			// check validity of column index
@@ -78,8 +79,15 @@ public interface Table
 			colNames[c] = table.getColumnNames()[index];
 		}
 		
-		result.setRowNames(table.getRowNames());
-		result.setColumnNames(colNames);
+		// setup column names
+        result.setColumnNames(colNames);
+
+        // setup row names
+        String[] rowNames = table.getRowNames(); 
+		if (rowNames != null)
+		{
+		    result.setRowNames(rowNames);
+		}
 
 		return result;
     }

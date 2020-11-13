@@ -388,9 +388,14 @@ public class DefaultTable implements Table
 
     public void setRowNames(String[] names)
     {
-        if (names.length != this.nRows)
-            throw new IllegalArgumentException(
-                    "String array must have same length as the number of rows.");
+        if (names != null)
+        {
+            if (names.length != this.nRows)
+            {
+                throw new IllegalArgumentException(
+                        "String array must have same length as the number of rows.");
+            }
+        }
         this.rowNames = names;
     }
 
