@@ -79,6 +79,12 @@ public interface Polygon2D extends PolygonalDomain2D
     
     
     // ===================================================================
+    // New methods 
+    
+    public void addVertex(Point2D vertexPosition);
+    
+    
+    // ===================================================================
     // Default implementations 
     
     public default Point2D centroid()

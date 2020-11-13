@@ -6,9 +6,10 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
+    DefaultPolygon2DTest.class,
     LinearRing2DTest.class,
     LineString2DTest.class,
-    DefaultPolygon2DTest.class,
+    Polygons2DTest.class,
     })
 public class AllTests {
   //nothing
