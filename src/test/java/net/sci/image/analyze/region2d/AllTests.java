@@ -8,7 +8,8 @@ import org.junit.runners.Suite;
 	// generic classes
     ConvexHullTest.class,
     GeodesicDiameterTest.class,
-	RegionBoundariesTest.class,
+    MaxFeretDiameterTest.class,
+    RegionBoundariesTest.class,
 	})
 public class AllTests {
   //nothing
