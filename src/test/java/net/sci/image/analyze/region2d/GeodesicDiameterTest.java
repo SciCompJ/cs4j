@@ -61,7 +61,8 @@ public class GeodesicDiameterTest
     {
         String fileName = getClass().getResource("/files/binary/circles.tif").getFile();
         Image image = Image.readImage(new File(fileName));
-    
+        image.clearCalibration();
+        
         GeodesicDiameter algo = new GeodesicDiameter(ChamferWeights2D.CHESSKNIGHT);
         Map<Integer, GeodesicDiameter.Result> geodDiams = algo.analyzeRegions(image);
         

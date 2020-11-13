@@ -14,6 +14,7 @@ import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;
+import net.sci.image.ImageAxis;
 import net.sci.image.binary.ChamferWeights2D;
 import net.sci.image.data.Cursor2D;
 import net.sci.image.label.LabelImages;
@@ -257,16 +258,16 @@ public class GeodesicDiameter extends  RegionAnalyzer2D<GeodesicDiameter.Result>
                 result[i].path = path;
             }
         }
-        // TODO: manage calibration
-//        // calibrate the results
-//        if (calib.scaled())
-//        {
-//            this.fireStatusChanged(this, "Re-calibrating results");
-//            for (int i = 0; i < nLabels; i++)
-//            {
-//                result[i] = result[i].recalibrate(calib);
-//            }
-//        }
+        
+        // calibrate the results
+        if (calib.isCalibrated())
+        {
+            this.fireStatusChanged(this, "Re-calibrating results");
+            for (int i = 0; i < nLabels; i++)
+            {
+                result[i] = result[i].recalibrate(calib);
+            }
+        }
         
         // returns the results
         return result;
@@ -417,50 +418,52 @@ public class GeodesicDiameter extends  RegionAnalyzer2D<GeodesicDiameter.Result>
          */
         public List<Point2D> path = null;
 
-//        /**
-//         * Computes the result corresponding to the spatial calibration. The
-//         * current result instance is not modified.
-//         * 
-//         * @param calib
-//         *            the spatial calibration of an image
-//         * @return the result after applying the spatial calibration
-//         */
-//        public Result recalibrate(Calibration calib)
-//        {
-//            double size = calib.pixelWidth;
-//            Result res = new Result();
-//            
-//            // calibrate the diameter
-//            res.diameter = this.diameter * size;
-//
-//            // calibrate inscribed disk
-//            res.initialPoint = calibrate(this.initialPoint, calib); 
-//            res.innerRadius = this.innerRadius * size;
-//
-//            // calibrate geodesic extremities
-//            res.firstExtremity = calibrate(this.firstExtremity, calib); 
-//            res.secondExtremity = calibrate(this.secondExtremity, calib);
-//            
-//            // calibrate the geodesic path if any
-//            if (this.path != null)
-//            {
-//                List<Point2D> newPath = new ArrayList<Point2D>(this.path.size());
-//                for (Point2D point : this.path)
-//                {
-//                    newPath.add(calibrate(point, calib));
-//                }
-//                res.path = newPath;
-//            }
-//            
-//            // return the calibrated result
-//            return res;
-//        }
+        /**
+         * Computes the result corresponding to the spatial calibration. The
+         * current result instance is not modified.
+         * 
+         * @param calib
+         *            the spatial calibration of an image
+         * @return the result after applying the spatial calibration
+         */
+        public Result recalibrate(Calibration calib)
+        {
+            double sx = calib.getXAxis().getSpacing();
+            Result res = new Result();
+            
+            // calibrate the diameter
+            res.diameter = this.diameter * sx;
+
+            // calibrate inscribed disk
+            res.initialPoint = calibrate(this.initialPoint, calib); 
+            res.innerRadius = this.innerRadius * sx;
+
+            // calibrate geodesic extremities
+            res.firstExtremity = calibrate(this.firstExtremity, calib); 
+            res.secondExtremity = calibrate(this.secondExtremity, calib);
+            
+            // calibrate the geodesic path if any
+            if (this.path != null)
+            {
+                List<Point2D> newPath = new ArrayList<Point2D>(this.path.size());
+                for (Point2D point : this.path)
+                {
+                    newPath.add(calibrate(point, calib));
+                }
+                res.path = newPath;
+            }
+            
+            // return the calibrated result
+            return res;
+        }
         
-//        private Point2D calibrate(Point2D point, Calibration calib)
-//        {
-//            return new Point2D.Double(
-//                    point.getX() * calib.pixelWidth + calib.xOrigin, 
-//                    point.getY() * calib.pixelHeight + calib.yOrigin);
-//        }
+        private Point2D calibrate(Point2D point, Calibration calib)
+        {
+            ImageAxis xAxis = calib.getXAxis();
+            ImageAxis yAxis = calib.getYAxis();
+            return new Point2D(
+                    point.getX() * xAxis.getSpacing() + xAxis.getOrigin(), 
+                    point.getY() * yAxis.getSpacing() + yAxis.getOrigin());
+        }
     }
 }
