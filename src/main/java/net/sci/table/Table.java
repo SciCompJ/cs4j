@@ -30,6 +30,23 @@ public interface Table
         return new DefaultTable(nRows, nColumns);
     }
     
+    /**
+     * Creates a new data table with the given number of rows the specified
+     * column names.
+     * 
+     * @param nRows
+     *            the number of rows
+     * @param columnNames
+     *            the names of the columns
+     * @return a new Table instance
+     */
+    public static Table create(int nRows, String[] columnNames)
+    {
+        DefaultTable table = new DefaultTable(nRows, columnNames.length);
+        table.setColumnNames(columnNames);
+        return table;
+    }
+    
     public static Table selectColumns(Table table, int[] columnIndices)
     {
     	int nr = table.rowNumber();
