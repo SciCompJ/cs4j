@@ -38,7 +38,6 @@ import org.junit.runners.Suite;
     // Wrappers and views
     UInt8ArrayWrapperTest.class,
     ScalarArrayUInt8ViewTest.class,
-    ScalarArrayThresholdViewTest.class,
     ThresholdedArrayTest.class,
 	})
 public class AllTests {
