@@ -18,8 +18,24 @@ import net.sci.table.Table;
  */
 public class DelimitedTableWriter implements TableWriter
 {
-	String delim = "\t";
+    // =============================================================
+    // Class members
+
+    /**
+     * The delimiter to print between tokens in the file. Can be "\t", " ",
+     * ";"... Default is "\t" (tab character).
+     */
+    String delimiter = "\t";
 	
+    /**
+     * The pattern used to print floating point values. Default is "%7.3f".
+     */
+	String floatPattern = "%7.3f";
+	
+	
+    // =============================================================
+    // Constructors
+
 	/**
 	 * Creates a new instance with default delimiter set as tabulation.
 	 */
@@ -35,10 +51,50 @@ public class DelimitedTableWriter implements TableWriter
      */
 	public DelimitedTableWriter(String delim)
 	{
-		this.delim = delim;
+		this.delimiter = delim;
 	}
 
-	/* (non-Javadoc)
+
+	// =============================================================
+    // Getters and setters
+
+	/**
+     * @return the delimiter
+     */
+    public String getDelimiter()
+    {
+        return delimiter;
+    }
+
+    /**
+     * @param delimiter the delimiter to set
+     */
+    public void setDelimiter(String delimiter)
+    {
+        this.delimiter = delimiter;
+    }
+
+    /**
+     * @return the floatPattern
+     */
+    public String getFloatPattern()
+    {
+        return floatPattern;
+    }
+
+    /**
+     * @param floatPattern the floatPattern to set
+     */
+    public void setFloatPattern(String floatPattern)
+    {
+        this.floatPattern = floatPattern;
+    }
+
+    
+    // =============================================================
+    // Implementation of TableWriter interface
+
+    /* (non-Javadoc)
 	 * @see net.sci.table.io.TableWriter#writeTable(net.sci.table.Table)
 	 */
 	@Override
@@ -53,34 +109,40 @@ public class DelimitedTableWriter implements TableWriter
 			throw new RuntimeException("Could not open file: " + file, ex);
 		}
 		
+		// retrieve table size
 		int nc = table.columnNumber();
 		int nr = table.rowNumber();
-		
+
+		// retrieve column and row names
 		String[] colNames = table.getColumnNames();
-		String[] rowNames = table.getRowNames();
-		
+        String[] rowNames = table.getRowNames();
+        
+        // print header if appropriate
 		if (colNames != null)
 		{
-			writer.print("name");
+		    if (rowNames != null)
+		    {
+	            writer.print("name");
+		    }
 			for (int c = 0; c < nc; c++)
 			{
-				writer.print(this.delim + colNames[c]);
+				writer.print(this.delimiter + colNames[c]);
 			}
 			writer.println("");
 		}
 		
-		
+		// print the content of each regular row
 		for (int r = 0; r < nr; r++)
 		{
 			if (rowNames != null)
 			{
-				writer.print(rowNames[r] + delim);
+				writer.print(rowNames[r] + delimiter);
 			}
 			
 			writer.print(createToken(table, r, 0));
 			for (int c = 1; c < nc; c++)
 			{
-				writer.print(delim + createToken(table, r, c));
+				writer.print(delimiter + createToken(table, r, c));
 			}
 
 			writer.println("");
@@ -89,7 +151,7 @@ public class DelimitedTableWriter implements TableWriter
 		writer.close();
 	}
 	
-	private static final String createToken(Table table, int row, int col)
+	private String createToken(Table table, int row, int col)
 	{
 	    Object obj = table.get(row, col);
 	    if (obj instanceof String)
@@ -97,7 +159,7 @@ public class DelimitedTableWriter implements TableWriter
 	        return (String) obj;
 	    }
 	    
-	    return String.format(Locale.ENGLISH, "%7.2f", table.getValue(row, col));
+	    return String.format(Locale.ENGLISH, floatPattern, table.getValue(row, col));
 	}
 
 }
