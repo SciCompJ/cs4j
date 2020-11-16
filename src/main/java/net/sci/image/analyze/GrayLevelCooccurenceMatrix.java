@@ -77,7 +77,7 @@ public class GrayLevelCooccurenceMatrix extends AlgoStub implements ArrayOperato
                 int v1 = (int) Math.min(Math.max(array.getValue(x, y), 0), 255);
                 int v2 = (int) Math.min(Math.max(array.getValue(x + dx, y + dy), 0), 255);
                 
-                result.setInt(result.getInt(v1, v2) + 1, v1, v2);
+                result.setInt(v1, v2, result.getInt(v1, v2) + 1);
             }
         }
             
