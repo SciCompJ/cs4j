@@ -7,11 +7,13 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 
 import net.sci.array.scalar.UInt8Array2D;
+import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.binary.ChamferWeights2D;
@@ -53,7 +55,7 @@ public class GeodesicDiameterTest
     }
 
     /**
-     * Test method for {@link inra.ijpb.label.geodesic.GeodesicDiameter#analyzeRegions(ij.process.ImageProcessor)}.
+     * Test method for {@link net.sci.image.analyze.region2d.RegionAnalyzer2D#analyzeRegions(net.sci.array.scalar.IntArray2D, net.sci.image.Calibration)}.
      * @throws IOException 
      */
     @Test
@@ -73,5 +75,29 @@ public class GeodesicDiameterTest
         // check value of first result
         GeodesicDiameter.Result res1 = geodDiams.get(255);
         assertEquals(280.0, res1.diameter, 1.0); // use a rather large tolerance
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.analyze.region2d.RegionAnalyzer2D#analyzeRegions(net.sci.array.scalar.IntArray2D, net.sci.image.Calibration)}.
+     */
+    @Test
+    public void testLongestGeodesicPaths_Rect()
+    {
+        UInt8Array2D image = UInt8Array2D.create(10, 3);
+        for (int x = 1; x < 8; x++)
+        {
+            image.setInt(x, 1, 4);
+        }
+
+        GeodesicDiameter algo = new GeodesicDiameter(ChamferWeights2D.BORGEFORS);
+        algo.setComputePaths(true);
+        
+        int[] labels = new int[]{4};
+        Calibration calib = new Calibration(2);
+        GeodesicDiameter.Result[] geodDiams = algo.analyzeRegions(image, labels, calib);
+
+        assertEquals(1, geodDiams.length);
+        List<Point2D> path1 = geodDiams[0].path;
+        assertEquals(4, path1.size());
     }
 }

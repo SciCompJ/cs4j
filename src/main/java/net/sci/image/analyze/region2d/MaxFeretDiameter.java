@@ -59,8 +59,7 @@ public class MaxFeretDiameter extends RegionAnalyzer2D<PointPair2D>
 		// Create data table
         Table table = Table.create(results.size(),
                 new String[] { "Label", "FeretDiameter.Max", "Orientation",
-                        "Extremity1.X", "Extremity1.Y", "Extremity2.X",
-                        "Extremity2.Y" });
+                        "P1.X", "P1.Y", "P2.X", "P2.Y" });
 
 		// compute ellipse parameters for each region
 	    int iRow = 0;
@@ -73,10 +72,13 @@ public class MaxFeretDiameter extends RegionAnalyzer2D<PointPair2D>
 			PointPair2D maxDiam = results.get(label);
 			table.setValue(iRow, "FeretDiameter.Max", maxDiam.diameter());
 			table.setValue(iRow, "Orientation", Math.toDegrees(maxDiam.angle()));
-			table.setValue(iRow, "Extremity1.X", maxDiam.p1.getX());
-			table.setValue(iRow, "Extremity1.Y", maxDiam.p1.getY());
-			table.setValue(iRow, "Extremity2.X", maxDiam.p2.getX());
-			table.setValue(iRow, "Extremity2.Y", maxDiam.p2.getY());
+			table.setValue(iRow, "P1.X", maxDiam.p1.getX());
+			table.setValue(iRow, "P1.Y", maxDiam.p1.getY());
+			table.setValue(iRow, "P2.X", maxDiam.p2.getX());
+			table.setValue(iRow, "P2.Y", maxDiam.p2.getY());
+			
+			// update for next row
+			iRow++;
 		}
 		
 		// return the created array

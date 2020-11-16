@@ -6,6 +6,7 @@ package net.sci.geom.geom2d.polygon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Box2D;
@@ -29,7 +30,7 @@ public interface Polyline2D extends Curve2D
     // ===================================================================
     // Static factories
     
-    public static Polyline2D create(ArrayList<Point2D> vertices, boolean closed)
+    public static Polyline2D create(List<Point2D> vertices, boolean closed)
     {
         if (closed)
         {

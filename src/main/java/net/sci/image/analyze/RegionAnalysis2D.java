@@ -135,7 +135,7 @@ public class RegionAnalysis2D
     }
     
     /**
-     * Computes inertia ellipse of each region in input label image.
+     * Computes equivalent ellipse of each region in input label image.
      * 
      * @param labelMap
      *            the input image containing label of particles
@@ -143,7 +143,7 @@ public class RegionAnalysis2D
      *            the list of labels to process
      * @return the inertia ellipsoids corresponding to each label, in pixel coordinates
      */
-    public final static Ellipse2D[] inertiaEllipses(IntArray2D<?> labelMap, int[] labels)
+    public final static Ellipse2D[] equivalentEllipses(IntArray2D<?> labelMap, int[] labels)
     {
         // Check validity of parameters
         if (labelMap == null)

@@ -228,7 +228,7 @@ public class GeodesicDiameter extends  RegionAnalyzer2D<GeodesicDiameter.Result>
                 // Current first geodesic extremity 
                 // (corresponding to the minimum of the geodesic distance map)
                 Point2D ext = result[i].firstExtremity;
-                Cursor2D pos1 = new Cursor2D((int) ext.getX(), (int) ext.getX()) ;
+                Cursor2D pos1 = new Cursor2D((int) ext.getX(), (int) ext.getY()) ;
                 
                 // Create new path
                 List<Point2D> path = new ArrayList<Point2D>();
@@ -386,7 +386,7 @@ public class GeodesicDiameter extends  RegionAnalyzer2D<GeodesicDiameter.Result>
      * 
      * @author dlegland
      */
-    class Result
+    public class Result
     {
         /** The geodesic diameter of the region. */
         public double diameter;
