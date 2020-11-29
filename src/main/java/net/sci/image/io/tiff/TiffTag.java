@@ -138,13 +138,13 @@ public class TiffTag
 		switch (this.type)
 		{
 		case BYTE:
-			this.content = new Integer(value);
+			this.content = Integer.valueOf(value);
 			break;
 		case SHORT:
-			this.content = new Integer(value);
+			this.content = Integer.valueOf(value);
 			break;
 		case LONG:
-			this.content = new Integer(value);
+			this.content = Integer.valueOf(value);
 			break;
 		case ASCII:
 			this.content = readAscii(dataReader);
