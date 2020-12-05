@@ -18,17 +18,17 @@ import net.sci.array.scalar.UInt8Array2D;
  * @author dlegland
  *
  */
-public class DownSamplerTest
+public class SubSamplerTest
 {
 
     /**
-     * Test method for {@link net.sci.array.process.shape.DownSampler#process(net.sci.array.Array)}.
+     * Test method for {@link net.sci.array.process.shape.SubSampler#process(net.sci.array.Array)}.
      */
     @Test
     public void testProcess_2d()
     {
         UInt8Array2D array = createUInt8Array2D();
-        DownSampler sampler = new DownSampler(2);
+        SubSampler sampler = new SubSampler(2);
         
         Array<?> res = sampler.process(array);
         
@@ -40,13 +40,13 @@ public class DownSamplerTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.shape.DownSampler#process(net.sci.array.Array)}.
+     * Test method for {@link net.sci.array.process.shape.SubSampler#process(net.sci.array.Array)}.
      */
     @Test
     public void testProcess_3d()
     {
         UInt16Array3D array = createUInt16Array3D();
-        DownSampler sampler = new DownSampler(2);
+        SubSampler sampler = new SubSampler(2);
         
         Array<?> res = sampler.process(array);
         
@@ -59,13 +59,13 @@ public class DownSamplerTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.shape.DownSampler#createView(net.sci.array.Array)}.
+     * Test method for {@link net.sci.array.process.shape.SubSampler#createView(net.sci.array.Array)}.
      */
     @Test
     public void testCreateView_2d()
     {
         UInt8Array2D array = createUInt8Array2D();
-        DownSampler sampler = new DownSampler(2);
+        SubSampler sampler = new SubSampler(2);
         
         Array<?> res = sampler.createView(array);
         
@@ -77,13 +77,13 @@ public class DownSamplerTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.shape.DownSampler#createView(net.sci.array.Array)}.
+     * Test method for {@link net.sci.array.process.shape.SubSampler#createView(net.sci.array.Array)}.
      */
     @Test
     public void testCreateView_3d()
     {
         UInt16Array3D array = createUInt16Array3D();
-        DownSampler sampler = new DownSampler(2);
+        SubSampler sampler = new SubSampler(2);
         
         Array<?> res = sampler.createView(array);
         

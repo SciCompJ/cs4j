@@ -22,19 +22,34 @@ public class Shape
      * Decimates the number of elements of the input array, by retaining only
      * one element over k in each dimension.
      * 
+     * <pre>{@code
+     *    // create an empty array with only one non-unit dimension
+     *    UInt8Array2D array = new BufferedUInt8Array2D(64, 64);
+     *    array.populateValues((x,y) -> (double) x + y * 10.0);
+     *        
+     *    // apply flip operation
+     *    Array<?> resFlip= Shape.flip(array, 0);
+     *    
+     *    // apply squeeze operation
+     *    UInt8Array res = (UInt8Array) Shape.squeeze(array);
+     *    
+     *    // the following should equal 1
+     *    int newDim = res.dimensionality();
+     * }</pre>
+     * 
      * @param <T>
      *            The type of the input array
      * @param array
      *            the array to down-sample
      * @param ratio
      *            the decimation ratio
-     * @return the result of down sampling applied to input array.
+     * @return the result of sub sampling applied to input array.
      * 
-     * @see net.sci.array.process.shape.DownSampler
+     * @see net.sci.array.process.shape.SubSampler
      */
-    public static final <T> Array<T> downSample(Array<T> array, int ratio)
+    public static final <T> Array<T> subSample(Array<T> array, int ratio)
     {
-        return new DownSampler(ratio).process(array);
+        return new SubSampler(ratio).process(array);
     }
     
     /**
