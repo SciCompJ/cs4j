@@ -3,7 +3,6 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.color.RGB8Array;
 import net.sci.array.scalar.Int32Array;
 import net.sci.array.scalar.UInt8;
 
