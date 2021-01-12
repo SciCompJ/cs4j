@@ -479,4 +479,17 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	    return String.format("RGB8(%d,%d,%d)", r, g, b);
 	}
     
+    @Override
+	public boolean equals(Object obj)
+	{
+	    if (!(obj instanceof RGB8)) return false;
+	    RGB8 that = (RGB8) obj;
+	    return this.intCode == that.intCode;
+	}
+    
+	@Override
+	public int hashCode()
+	{
+	    return this.intCode;
+	}
 }
