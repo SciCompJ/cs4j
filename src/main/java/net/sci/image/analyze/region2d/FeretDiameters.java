@@ -1,9 +1,12 @@
 /**
  * 
  */
-package net.sci.geom.geom2d;
+package net.sci.image.analyze.region2d;
 
 import java.util.ArrayList;
+
+import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.StraightLine2D;
 
 /**
  * Utility methods for computing Feret diameters

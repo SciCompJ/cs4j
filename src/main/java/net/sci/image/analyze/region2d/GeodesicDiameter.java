@@ -26,10 +26,17 @@ import net.sci.table.Table;
 
 
 /**
- * @author dlegland
+ * Computes the geodesic Diameter for each region of a binary or label image.
+ * 
+ * Computation is based on the geodesic propagation of a marker within each
+ * region. Chamfer distances are used for propagating distances.
  *
+ * @see net.sci.image.binary.ChamferWeights2D
+ * @see net.sci.image.label.geoddist.GeodesicDistanceTransform2D
+ * 
+ * @author dlegland
  */
-public class GeodesicDiameter extends  RegionAnalyzer2D<GeodesicDiameter.Result>
+public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
 {
     // ==================================================
     // Class variables 

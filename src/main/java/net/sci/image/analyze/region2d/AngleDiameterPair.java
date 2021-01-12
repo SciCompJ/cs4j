@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom2d;
+package net.sci.image.analyze.region2d;
 
 /**
  * Data structure used to return result of Feret diameters computation. Can be

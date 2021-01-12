@@ -1,7 +1,9 @@
 /**
  * 
  */
-package net.sci.geom.geom2d;
+package net.sci.image.analyze.region2d;
+
+import net.sci.geom.geom2d.Point2D;
 
 /**
  * A pair of points in the plane, useful for representing result of Max Feret
