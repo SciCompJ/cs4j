@@ -11,9 +11,11 @@ import org.junit.Test;
 import net.sci.array.Array;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array2D;
+import net.sci.array.scalar.FileMappedUInt8Array3D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt16Array2D;
+import net.sci.array.scalar.UInt8Array3D;
 import net.sci.axis.NumericalAxis;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
@@ -266,5 +268,27 @@ public class TiffImageReaderTest
 //        assertEquals(3, array.dimensionality());
 //    }
 
-
+    /**
+     * Read a 3D Tiff image as saved by ImageJ.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testReadImage_3D_Virtual_mri() throws IOException
+    {
+        String fileName = getClass().getResource("/files/imagej/mri_ij.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readVirtualImage3D();
+        
+        assertEquals(128, image.getSize(0));
+        assertEquals(128, image.getSize(1));
+        assertEquals(27, image.getSize(2));
+        
+        UInt8Array3D array = (UInt8Array3D ) image.getData();
+        assertTrue(array instanceof FileMappedUInt8Array3D);
+        
+        Image sliceImage = new Image(array.slice(13));
+        sliceImage.show();
+    }
 }

@@ -28,6 +28,7 @@ import net.sci.array.scalar.BufferedUInt16Array2D;
 import net.sci.array.scalar.BufferedUInt16Array3D;
 import net.sci.array.scalar.BufferedUInt8Array2D;
 import net.sci.array.scalar.BufferedUInt8Array3D;
+import net.sci.array.scalar.FileMappedUInt8Array3D;
 import net.sci.array.scalar.SlicedUInt8Array3D;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.axis.Axis;
@@ -228,7 +229,64 @@ public class TiffImageReader implements ImageReader
 		return image;
 	}
 
-	private boolean hasImageJDescription(TiffFileInfo info)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jipl.io.ImageReader#readImage()
+     */
+    public Image readVirtualImage3D() throws IOException
+    {
+        // Read the set of image information in the file
+        if (this.fileInfoList.size() == 0)
+        {
+            throw new RuntimeException("Could not read any meta-information from file");
+        }
+
+        // Read File information of the first image stored in the file
+        TiffFileInfo info = this.fileInfoList.get(0);
+        
+        // Attempts to read
+        // Check if the file was saved by ImageJ software
+        if (hasImageJDescription(info))
+        {
+            return readImageJVirtualImage(info);
+        }
+        
+        if (info.pixelType != TiffFileInfo.PixelType.GRAY8)
+        {
+            throw new RuntimeException("Virtual stacks are available only for UInt8 arrays.");
+        }
+        if (info.compression != TiffFileInfo.Compression.NONE)
+        {
+            throw new RuntimeException("Virtual stacks not implemented for TIFF files compressed with mode " + info.compression);
+        }
+        
+       
+        // Read (virtual) image data
+        System.out.println("create file-mapped uint8 array");
+        Array<?> data = new FileMappedUInt8Array3D(this.filePath, info.stripOffsets[0], info.width, info.height, this.fileInfoList.size());
+
+        // Create new Image
+        Image image = new Image(data);
+        image.tiffTags = info.tags;
+        
+        // setup the file related to the image
+        image.setNameFromFileName(filePath);
+        image.setFilePath(this.filePath);
+
+        // Setup spatial calibration
+        setupSpatialCalibration(image, info);
+        
+        // setup LUT
+        if (info.lut != null)
+        {
+            image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
+        }
+        
+        return image;
+    }
+    
+    private boolean hasImageJDescription(TiffFileInfo info)
     {
         // Get the  description tag, or null if not initialized
         TiffTag tag = info.tags.get(BaselineTags.IMAGE_DESCRIPTION);
@@ -443,7 +501,203 @@ public class TiffImageReader implements ImageReader
 	    return image;
 	}
 	
-	private Map<String, String> parseImageJTokens(String description)
+    /**
+     * If one of the Tiff Tags has a description beginning with "ImageJ", this
+     * method use a specific process to extract image data as saved by ImageJ.
+     * 
+     * @param info
+     *            The set of Tiff Tags of the image
+     * @return the Image stored within the file
+     * @throws IOException
+     *             if an I/O error occurred
+     */
+    private Image readImageJVirtualImage(TiffFileInfo info) throws IOException
+    {
+        // Get the  description tag, or null if not initialized
+        TiffTag tag = info.tags.get(BaselineTags.IMAGE_DESCRIPTION);
+        if (tag == null)
+        {
+            throw new IllegalArgumentException("Requires a description TiffTag with index 270");
+        }
+        
+        // extract description string
+        String description = (String) tag.content; 
+        if (!description.startsWith("ImageJ"))
+        {
+            throw new IllegalArgumentException("Description tag must start with \"ImageJ\"");
+        }
+        
+        System.out.println("import ImageJ Tiff Image");
+        
+        // iterate over the different tokens stored in description and convert into a map
+//      System.out.println(description);
+        Map<String, String> tokens = parseImageJTokens(description);
+        
+        int nImages = 1;
+        if (tokens.containsKey("images"))
+        {
+            nImages = Integer.parseInt(tokens.get("images"));
+            System.out.println(String.format("Should read %d images", nImages));
+        }
+
+        // determine the size along each of the five dimensions
+        int sizeX = info.width;
+        int sizeY = info.height;
+        int sizeC = getIntValue(tokens, "channels", 1);
+        int sizeZ = getIntValue(tokens, "slices", 1);
+        int sizeT = getIntValue(tokens, "frames", 1);
+        if (sizeC * sizeZ * sizeT != nImages)
+        {
+            throw new RuntimeException(String.format(
+                    "Number of images (%d) does not match image dimensions (%dx%dx%d)", nImages,
+                    sizeZ, sizeC, sizeT));
+        }
+
+        Array<?> data;
+        if (nImages == 1)
+        {
+            // Read image data
+            data = readImageData(info);
+        }
+        else
+        {
+            System.out.println("read virtual hyperstack data");
+            
+            // Use try-with-resource, closing the reader at the end of the try block
+//            try (ImageBinaryDataReader imageReader = new ImageBinaryDataReader(
+//                    new File(this.filePath), this.byteOrder))
+//            {
+//                imageReader.seek(info.stripOffsets[0]);
+
+                switch(info.pixelType)
+                {
+                case GRAY8:
+                case COLOR8:
+                    System.out.println("create file-mapped uint8 array");
+                    data = new FileMappedUInt8Array3D(this.filePath, info.stripOffsets[0], sizeX, sizeY, nImages);
+                    
+//                    data = imageReader.readUInt8Array3D(sizeX, sizeY, nImages);
+                    break;
+
+//                case BITMAP:
+//                    throw new RuntimeException("Reading Bitmap Tiff files not supported");
+//                
+//                case GRAY16_UNSIGNED:
+//                case GRAY12_UNSIGNED:
+//                    data = imageReader.readUInt16Array3D(sizeX, sizeY, nImages);
+//                    break;
+//                    
+//                case GRAY32_INT:
+//                    data = imageReader.readInt32Array3D(sizeX, sizeY, nImages);
+//                    break;
+//                
+//                case GRAY32_FLOAT:
+//                    data = imageReader.readFloat32Array3D(sizeX, sizeY, nImages);
+//                    break;
+
+                case RGB:
+                case BGR:
+                case ARGB:
+                case ABGR:
+                case BARG:
+                case RGB_PLANAR:
+                    
+                case RGB48:
+
+                default:
+                    throw new IOException("Can not read stack with data type " + info.pixelType);
+                }
+//            }
+//            catch(IOException ex)
+//            {
+//                throw(ex);
+//            }
+        }
+
+        // number of dimensions of final array
+        int nd = 2;
+        if (sizeZ > 1) nd++;
+        if (sizeC > 1) nd++;
+        if (sizeT > 1) nd++;
+        
+        // initialize dimensions and calibration
+        int[] dims = new int[nd];
+        ImageAxis[] axes = new ImageAxis[nd];
+        
+        // Initialize mandatory X and Y axes
+        dims[0] = sizeX;
+        double xOrigin = getDoubleValue(tokens, "xorigin", 0.0);
+        String unitName = getToken(tokens, "unit", "");
+        axes[0] = new ImageAxis.X(info.pixelWidth, xOrigin, unitName);
+        dims[1] = sizeY;
+        double yOrigin = getDoubleValue(tokens, "yorigin", 0.0);
+        String yUnitName = getToken(tokens, "yunit", unitName);
+        axes[1] = new ImageAxis.Y(info.pixelHeight, yOrigin, yUnitName);
+        
+        // Initialize optional C, Z and T axes
+        int d = 2;
+        if (sizeC > 1)
+        {
+            dims[d] = sizeC;
+            axes[d++] = new ImageAxis("Channel", Axis.Type.CHANNEL, 1, 0, "");
+        }
+        if (sizeZ > 1)
+        {
+            dims[d] = sizeZ;
+            double spacing = getDoubleValue(tokens, "spacing", 1.0);
+            double origin = getDoubleValue(tokens, "zorigin", 0.0);
+            String zUnitName = getToken(tokens, "zunit", unitName);
+            axes[d++] = new ImageAxis.Z(spacing, origin, zUnitName);
+        }
+        if (sizeT > 1)
+        {
+            dims[d] = sizeT;
+            double timeStep = getDoubleValue(tokens, "finterval", 1.0);
+            String tUnitName = getToken(tokens, "tunit", "sec");
+            axes[d++] = new ImageAxis.T(timeStep, 0, tUnitName);
+        }
+        
+        // Additional ImageJ tokens are not managed:
+        // info
+        // fps
+        // loop 
+        // mode -> {color} 
+        // hyperstack -> boolean
+        
+        // reshape data array if necessary
+        if (sizeC > 1 || sizeT > 1)
+        {
+            data = new Reshape(dims).process(data);
+        }
+      
+         // Create new Image
+        Image image = new Image(data);
+        image.setCalibration(new Calibration(axes));
+        
+        // calibrate display range if information exists
+        if (tokens.containsKey("min") && tokens.containsKey("max"))
+        {
+            double min = getDoubleValue(tokens, "min", 0.0);
+            double max = getDoubleValue(tokens, "max", 1.0);
+            image.getDisplaySettings().setDisplayRange(new double[] {min, max});
+        }
+        
+        image.tiffTags = info.tags;
+        
+        // setup LUT
+        if (info.lut != null)
+        {
+            image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
+        }
+        
+        // setup the file related to the image
+        image.setNameFromFileName(filePath);
+        image.setFilePath(this.filePath);
+        
+        return image;
+    }
+    
+    private Map<String, String> parseImageJTokens(String description)
 	{
 	    // iterate over the different tokens stored in description and convert into a map
 	    Map<String, String> imagejTokens = new HashMap<>();
@@ -642,6 +896,9 @@ public class TiffImageReader implements ImageReader
 
 		// create a new FileInfo instance
 		TiffFileInfo info = new TiffFileInfo();
+		info.byteOrder = this.byteOrder;
+		
+		// retrieve the list of Tiff Tags that can be interpreted
 		Map<Integer, TiffTag> tagMap = TiffTag.getAllTags();
 
 		// Read each entry

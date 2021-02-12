@@ -4,6 +4,7 @@
 package net.sci.image.io.tiff;
 
 import java.io.PrintStream;
+import java.nio.ByteOrder;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -237,11 +238,23 @@ public class TiffFileInfo
     // Class variables
 	
 	/**
-	 * Size of the image
+	 * The width of the image (X-size).
 	 */
 	public int width; 
+
+	/**
+     * The height of the image (Y-size).
+     */
 	public int height; 
 	
+    /**
+     * The byte order used within the data stream.
+     */
+    public ByteOrder byteOrder;
+
+    /**
+	 * The type of subfile, used to identify the type of image.
+	 */
 	public SubFileType subFileType;
 	
 	/**
@@ -251,10 +264,19 @@ public class TiffFileInfo
 	public double pixelHeight = 1;
 	public String unit = "";
 		
+    /**
+     * The compression mode of the data stored within the file.
+     */
 	public Compression compression = Compression.NONE;
 	
+	/**
+	 * The orientation of the image.
+	 */
 	public Orientation orientation = Orientation.TOPLEFT;
 	
+	/**
+	 * An optional description for the image.
+	 */
 	public String imageDescription;
 	
 	/** Info for reading image buffer */
