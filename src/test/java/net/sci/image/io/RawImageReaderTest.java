@@ -284,6 +284,11 @@ public class RawImageReaderTest
         assertEquals(3, data.size(2));
         
         assertTrue(data instanceof UInt8Array);
+        assertEquals(  0.0, data.getValue(0, 0, 0), .01);
+        assertEquals(  4.0, data.getValue(4, 0, 0), .01);
+        assertEquals( 30.0, data.getValue(0, 3, 0), .01);
+        assertEquals(200.0, data.getValue(0, 0, 2), .01);
+        assertEquals( 34.0, data.getValue(4, 3, 0), .01);
         assertEquals(234.0, data.getValue(4, 3, 2), .01);
     }
 
