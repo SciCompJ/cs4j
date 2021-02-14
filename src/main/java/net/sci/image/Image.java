@@ -83,7 +83,6 @@ public class Image
 		{
 			TiffImageReader reader = new TiffImageReader(file);
 			image = reader.readImage();
-			reader.close();
 		} 
 		else if (file.getName().endsWith(".mhd"))
 		{
