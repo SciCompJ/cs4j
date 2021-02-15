@@ -12,6 +12,7 @@ import org.junit.runners.Suite;
     RGB16ArrayTest.class,
     RGB16Array3DTest.class,
     RGB16ArrayChannelViewTest.class,
+    ScalarArraysDifferenceViewTest.class,
     VectorArrayRGB8ViewTest.class,
     })
 public class AllTests {
