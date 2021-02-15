@@ -16,7 +16,7 @@ public class PgmImageReaderTest
     @Test
     public void testReadImage() throws FileNotFoundException
     {
-        String fileName = getClass().getResource("/files/feep.pgm").getFile();
+        String fileName = getClass().getResource("/images/feep.pgm").getFile();
         PgmImageReader reader = new PgmImageReader(fileName);
         Image image = null;
         try

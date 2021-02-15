@@ -18,7 +18,7 @@ public class MetaImageReaderTest
 	@Test
 	public void testReadImage_2D_UInt8() throws IOException
 	{
-		String fileName = getClass().getResource("/files/mhd/img_15x10_gray8.mhd").getFile();
+		String fileName = getClass().getResource("/images/mhd/img_15x10_gray8.mhd").getFile();
 		
 		MetaImageReader reader = new MetaImageReader(fileName);
 		Image image = reader.readImage();
@@ -33,7 +33,7 @@ public class MetaImageReaderTest
 	@Test
 	public void testReadImage_3D_UInt16() throws IOException
 	{
-		String fileName = getClass().getResource("/files/mhd/img_10x15x20_gray16.mhd").getFile();
+		String fileName = getClass().getResource("/images/mhd/img_10x15x20_gray16.mhd").getFile();
 		
 		MetaImageReader reader = new MetaImageReader(fileName);
 		Image image = reader.readImage();
@@ -51,7 +51,7 @@ public class MetaImageReaderTest
 	@Test
 	public void testReadImage_3D_Int16() throws IOException
 	{
-		String fileName = getClass().getResource("/files/mhd/img_10x15x20_int16.mhd").getFile();
+		String fileName = getClass().getResource("/images/mhd/img_10x15x20_int16.mhd").getFile();
 		
 		MetaImageReader reader = new MetaImageReader(fileName);
 		Image image = reader.readImage();
@@ -69,7 +69,7 @@ public class MetaImageReaderTest
 	@Test
 	public void testReadImage_3D_UInt8_RatBrain() throws IOException
 	{
-		String fileName = getClass().getResource("/files/mhd/rat60_LipNor552.mhd").getFile();
+		String fileName = getClass().getResource("/images/mhd/rat60_LipNor552.mhd").getFile();
 		
 		MetaImageReader reader = new MetaImageReader(fileName);
 		Image image = reader.readImage();

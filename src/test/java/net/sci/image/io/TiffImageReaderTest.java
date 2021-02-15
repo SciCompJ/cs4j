@@ -25,7 +25,7 @@ public class TiffImageReaderTest
 	@Test
 	public void testReadImage_Gray8_2D() throws IOException
 	{
-		String fileName = getClass().getResource("/files/grains.tif").getFile();
+		String fileName = getClass().getResource("/images/grains.tif").getFile();
 		
 		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
@@ -42,7 +42,7 @@ public class TiffImageReaderTest
 	@Test
 	public void testReadImage_Float_2D_grains() throws IOException
 	{
-		String fileName = getClass().getResource("/files/grains_float.tif").getFile();
+		String fileName = getClass().getResource("/images/grains_float.tif").getFile();
 		
 		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
@@ -63,7 +63,7 @@ public class TiffImageReaderTest
 	@Test
 	public void testReadImage_Cameraman() throws IOException
 	{
-		String fileName = getClass().getResource("/files/cameraman.tif").getFile();
+		String fileName = getClass().getResource("/images/cameraman.tif").getFile();
 		
 		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
@@ -78,7 +78,7 @@ public class TiffImageReaderTest
 	@Test
 	public void testReadImage_Gray8_3D_Stack() throws IOException
 	{
-		String fileName = getClass().getResource("/files/mri.tif").getFile();
+		String fileName = getClass().getResource("/images/mri.tif").getFile();
 		
 		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
@@ -94,7 +94,7 @@ public class TiffImageReaderTest
 	@Test
 	public void testReadImage_RGB8_2D() throws IOException
 	{
-		String fileName = getClass().getResource("/files/lena_color_512.tif").getFile();
+		String fileName = getClass().getResource("/images/lena_color_512.tif").getFile();
 		
 		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
@@ -114,7 +114,7 @@ public class TiffImageReaderTest
 	@Test
 	public void testReadImage_UInt16_M51() throws IOException
 	{
-		String fileName = getClass().getResource("/files/m51.tif").getFile();
+		String fileName = getClass().getResource("/images/m51.tif").getFile();
 		
 		TiffImageReader reader = new TiffImageReader(fileName);
 		Image image = reader.readImage();
@@ -143,7 +143,7 @@ public class TiffImageReaderTest
     public void testReadImage_RGB16_2D() throws IOException
     {
         // image size 324x238
-        String fileName = getClass().getResource("/files/imagej/hela-cells-crop.tif").getFile();
+        String fileName = getClass().getResource("/images/imagej/hela-cells-crop.tif").getFile();
         
         TiffImageReader reader = new TiffImageReader(fileName);
         Image image = reader.readImage();
@@ -182,7 +182,7 @@ public class TiffImageReaderTest
     public void testReadImage_SpatialCalibration() throws IOException
     {
         // image size 324x238
-        String fileName = getClass().getResource("/files/arabidopsis_embryo/16c_Col0_PFS_DAPI_015_C2_cropf_z054.tif").getFile();
+        String fileName = getClass().getResource("/images/arabidopsis_embryo/16c_Col0_PFS_DAPI_015_C2_cropf_z054.tif").getFile();
         
         TiffImageReader reader = new TiffImageReader(fileName);
         Image image = reader.readImage();
@@ -207,7 +207,7 @@ public class TiffImageReaderTest
     public void testReadImage_2D_SpatialCalibration() throws IOException
     {
         // image size 109x112
-        String fileName = getClass().getResource("/files/arabidopsis_embryo/31c_Col0_762_crop_z061.tif").getFile();
+        String fileName = getClass().getResource("/images/arabidopsis_embryo/31c_Col0_762_crop_z061.tif").getFile();
         
         TiffImageReader reader = new TiffImageReader(fileName);
         Image image = reader.readImage();
@@ -236,7 +236,7 @@ public class TiffImageReaderTest
     @Test
     public void testReadImage_5D_Mitosis() throws IOException
     {
-        String fileName = getClass().getResource("/files/imagej/mitosis.tif").getFile();
+        String fileName = getClass().getResource("/images/imagej/mitosis.tif").getFile();
         
         TiffImageReader reader = new TiffImageReader(fileName);
         Image image = reader.readImage();
@@ -276,7 +276,7 @@ public class TiffImageReaderTest
     @Test
     public void testReadImage_3D_Virtual_mri() throws IOException
     {
-        String fileName = getClass().getResource("/files/imagej/mri_ij.tif").getFile();
+        String fileName = getClass().getResource("/images/imagej/mri_ij.tif").getFile();
         
         TiffImageReader reader = new TiffImageReader(fileName);
         Image image = reader.readVirtualImage3D();
@@ -288,7 +288,7 @@ public class TiffImageReaderTest
         UInt8Array3D array = (UInt8Array3D ) image.getData();
         assertTrue(array instanceof FileMappedUInt8Array3D);
         
-        Image sliceImage = new Image(array.slice(13));
-        sliceImage.show();
+//        Image sliceImage = new Image(array.slice(13));
+//        sliceImage.show();
     }
 }

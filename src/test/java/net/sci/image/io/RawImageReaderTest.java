@@ -23,7 +23,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_UInt8_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_uint8.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_uint8.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -45,7 +45,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_UInt16_lsb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_uint16_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_uint16_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -67,7 +67,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_UInt16_msb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_uint16_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_uint16_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -89,7 +89,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_Int16_lsb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_int16_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_int16_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -111,7 +111,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_Int16_msb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_int16_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_int16_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -133,7 +133,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_Int32_lsb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_int32_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_int32_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -155,7 +155,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_Int32_msb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_int32_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_int32_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -178,7 +178,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_Float32_lsb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_float32_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_float32_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -200,7 +200,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_Float32_msb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_float32_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_float32_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -223,7 +223,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_Float64_lsb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_float64_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_float64_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -245,7 +245,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_2D_Float64_msb_xyRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyRamp_4x3_float64_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyRamp_4x3_float64_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{4, 3};
@@ -267,7 +267,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_UInt8_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_uint8.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_uint8.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -295,7 +295,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_UInt16_lsb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_uint16_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_uint16_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -318,7 +318,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_UInt16_msb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_uint16_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_uint16_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -341,7 +341,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_Int16_lsb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_int16_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_int16_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -364,7 +364,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_Int16_msb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_int16_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_int16_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -387,7 +387,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_Int32_lsb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_int32_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_int32_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -410,7 +410,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_Int32_msb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_int32_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_int32_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -433,7 +433,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_Float32_lsb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_float32_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_float32_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -456,7 +456,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_Float32_msb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_float32_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_float32_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -481,7 +481,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_Float64_lsb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_float64_lsb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_float64_lsb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};
@@ -504,7 +504,7 @@ public class RawImageReaderTest
     @Test
     public void testReadImage_3D_Float64_msb_xyzRamp() throws IOException
     {
-        String fileName = getClass().getResource("/files/raw/xyzRamp_5x4x3_float64_msb.raw").getFile();
+        String fileName = getClass().getResource("/images/raw/xyzRamp_5x4x3_float64_msb.raw").getFile();
         File file = new File(fileName);
         
         int[] size = new int[]{5, 4, 3};

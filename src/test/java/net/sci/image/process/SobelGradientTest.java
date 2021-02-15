@@ -92,7 +92,7 @@ public class SobelGradientTest
     @Test
     public final void testProcessImage() throws IOException
     {
-        String fileName = getClass().getResource("/files/grains.tif").getFile();
+        String fileName = getClass().getResource("/images/grains.tif").getFile();
         Image image = Image.readImage(new File(fileName));
         
         assertNotNull(image);

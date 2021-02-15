@@ -110,12 +110,12 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5Test
     @Test
     public final void testProcess_Blobs() throws IOException
     {
-        String fileName = getClass().getResource("/files/binary/marker.tif").getFile();
+        String fileName = getClass().getResource("/images/binary/marker.tif").getFile();
         Image markerImage = Image.readImage(new File(fileName));
         UInt8Array2D marker = (UInt8Array2D) markerImage.getData();
         BinaryArray2D marker2d = BinaryArray2D.wrap(BinaryArray.convert(marker));
 
-        fileName = getClass().getResource("/files/binary/mask-lbl.tif").getFile();
+        fileName = getClass().getResource("/images/binary/mask-lbl.tif").getFile();
         Image maskImage = Image.readImage(new File(fileName));
         UInt8Array2D labelMap = (UInt8Array2D) maskImage.getData();
 

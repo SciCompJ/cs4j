@@ -61,7 +61,7 @@ public class GeodesicDiameterTest
     @Test
     public void testAnalyzeRegions_Circles_ChessKnight() throws IOException
     {
-        String fileName = getClass().getResource("/files/binary/circles.tif").getFile();
+        String fileName = getClass().getResource("/images/binary/circles.tif").getFile();
         Image image = Image.readImage(new File(fileName));
         image.clearCalibration();
         
