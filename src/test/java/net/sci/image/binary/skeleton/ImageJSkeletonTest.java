@@ -3,10 +3,6 @@
  */
 package net.sci.image.binary.skeleton;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import net.sci.array.scalar.BinaryArray2D;
 
 /**
@@ -19,7 +15,6 @@ public class ImageJSkeletonTest
     /**
      * Test method for {@link net.sci.image.binary.skeleton.ImageJSkeleton#process2d(net.sci.array.scalar.BinaryArray2D)}.
      */
-    @Test
     public final void testProcess2d()
     {
         BinaryArray2D array = BinaryArray2D.create(10,  6);
@@ -37,8 +32,6 @@ public class ImageJSkeletonTest
         BinaryArray2D res = skel.process2d(array);
         System.out.println("Output:");
         res.print(System.out);
-        
-        fail("Not yet implemented"); // TODO
     }
 
 }

@@ -3,9 +3,10 @@
  */
 package net.sci.array.color;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 import net.sci.array.scalar.UInt8Array2D;
 
@@ -13,14 +14,14 @@ import net.sci.array.scalar.UInt8Array2D;
  * @author dlegland
  *
  */
-class ScalarArraysDifferenceViewTest
+public class ScalarArraysDifferenceViewTest
 {
 
     /**
      * Test method for {@link net.sci.array.color.ScalarArraysDifferenceView#ScalarArraysDifferenceView(net.sci.array.scalar.UInt8Array, net.sci.array.scalar.UInt8Array)}.
      */
     @Test
-    final void testScalarArraysDifferenceView()
+    public final void testScalarArraysDifferenceView()
     {
         UInt8Array2D array1 = UInt8Array2D.create(100, 100);
         UInt8Array2D array2 = UInt8Array2D.create(100, 100);

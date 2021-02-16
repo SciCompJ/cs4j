@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.junit.Test;
-
 import net.sci.array.interp.LinearInterpolator2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.geom.geom2d.Point2D;
@@ -27,7 +25,6 @@ import net.sci.register.image.TransformedImage2d;
  */
 public class TranslationModel2dDemo
 {
-	@Test
 	public void testRegister_Translation_MSD_Simplex_5758() throws IOException
 	{
 //				File file0 = new File(".");

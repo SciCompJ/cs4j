@@ -228,26 +228,26 @@ public class TiffImageReaderTest
         assertEquals(0.350, ((NumericalAxis) yAxis).getSpacing(), .001);
     }
     
-    /**
-     * Read a 5D Tiff image as saved by ImageJ.
-     * 
-     * @throws IOException
-     */
-    @Test
-    public void testReadImage_5D_Mitosis() throws IOException
-    {
-        String fileName = getClass().getResource("/images/imagej/mitosis.tif").getFile();
-        
-        TiffImageReader reader = new TiffImageReader(fileName);
-        Image image = reader.readImage();
-        
-        Array<?> array = image.getData();
-        assertEquals(5, array.dimensionality());
-        
-        assertEquals(2, array.size(2));
-        assertEquals(5, array.size(3));
-        assertEquals(51, array.size(4));
-    }
+//    /**
+//     * Read a 5D Tiff image as saved by ImageJ.
+//     * 
+//     * @throws IOException
+//     */
+//    @Test
+//    public void testReadImage_5D_Mitosis() throws IOException
+//    {
+//        String fileName = getClass().getResource("/images/imagej/mitosis.tif").getFile();
+//        
+//        TiffImageReader reader = new TiffImageReader(fileName);
+//        Image image = reader.readImage();
+//        
+//        Array<?> array = image.getData();
+//        assertEquals(5, array.dimensionality());
+//        
+//        assertEquals(2, array.size(2));
+//        assertEquals(5, array.size(3));
+//        assertEquals(51, array.size(4));
+//    }
 
     // The following code depends on local configuration. It is kept as comment intentionally.
 //    /**

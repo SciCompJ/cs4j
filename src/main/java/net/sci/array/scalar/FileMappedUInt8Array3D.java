@@ -4,11 +4,9 @@
 package net.sci.array.scalar;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 /**
  * Map the content of a binary file onto a 3D array of UInt8.
@@ -39,6 +37,7 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
      * The file channel used to read the data from the file.
      */
     FileChannel fileChannel = null;
+    RandomAccessFile raf = null;
     
     /**
      * The array of byte for the current slice.
@@ -128,8 +127,8 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
     {
         if (this.fileChannel == null)
         {
-            Path path = Paths.get(this.filePath);
-            this.fileChannel = FileChannel.open(path, StandardOpenOption.READ);
+            this.raf = new RandomAccessFile(this.filePath, "r");
+            this.fileChannel = raf.getChannel();
         }
     }
     
@@ -143,6 +142,11 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
         if (this.fileChannel != null)
         {
             this.fileChannel.close();
+        }
+        if (this.raf != null)
+        {
+            this.raf.close();
+            this.raf = null;
         }
     }
     

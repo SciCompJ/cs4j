@@ -11,13 +11,13 @@ import java.io.RandomAccessFile;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 /**
  * @author dlegland
  *
  */
-class FileMappedUInt8Array3DTest
+public class FileMappedUInt8Array3DTest
 {
     /**
      * Check validity of input test file...
@@ -28,7 +28,7 @@ class FileMappedUInt8Array3DTest
     @Test
     public void test_checkData_xyzRamp() throws IOException
     {
-        Path path = Paths.get("src", "test", "resources", "files", "raw", "xyzRamp_5x4x3_uint8.raw");
+        Path path = Paths.get("src", "test", "resources", "images", "raw", "xyzRamp_5x4x3_uint8.raw");
         String fileName = path.toString();
         
         RandomAccessFile raf = new RandomAccessFile(fileName, "r"); 
@@ -55,8 +55,9 @@ class FileMappedUInt8Array3DTest
     @Test
     public void testGetByte_xyzRamp() throws IOException
     {
-        Path path = Paths.get("src", "test", "resources", "files", "raw", "xyzRamp_5x4x3_uint8.raw");
+        Path path = Paths.get("src", "test", "resources", "images", "raw", "xyzRamp_5x4x3_uint8.raw");
         String fileName = path.toString();
+
         FileMappedUInt8Array3D array = new FileMappedUInt8Array3D(fileName, 0L, 5, 4, 3);
         
         assertEquals(5, array.size(0));
@@ -72,9 +73,9 @@ class FileMappedUInt8Array3DTest
      * Test method for {@link net.sci.array.scalar.FileMappedUInt8Array3D#slice(int)}.
      */
     @Test
-    void testSliceInt_xyzRamp()
+    public void testSliceInt_xyzRamp()
     {
-        Path path = Paths.get("src", "test", "resources", "files", "raw", "xyzRamp_5x4x3_uint8.raw");
+        Path path = Paths.get("src", "test", "resources", "images", "raw", "xyzRamp_5x4x3_uint8.raw");
         String fileName = path.toString();
         
         FileMappedUInt8Array3D array = new FileMappedUInt8Array3D(fileName, 0L, 5, 4, 3);
@@ -88,9 +89,9 @@ class FileMappedUInt8Array3DTest
      * Test method for {@link net.sci.array.scalar.FileMappedUInt8Array3D#slice(int)}.
      */
     @Test
-    void testSliceInt_Rat60mhd()
+    public void testSliceInt_Rat60mhd()
     {
-        Path path = Paths.get("src", "test", "resources", "files", "mhd", "rat60_LipNor552.raw");
+        Path path = Paths.get("src", "test", "resources", "images", "mhd", "rat60_LipNor552.raw");
         String fileName = path.toString();
         
         FileMappedUInt8Array3D array = new FileMappedUInt8Array3D(fileName, 0L, 100, 80, 160);

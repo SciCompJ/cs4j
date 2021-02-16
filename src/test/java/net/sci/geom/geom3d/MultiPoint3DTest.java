@@ -3,22 +3,25 @@
  */
 package net.sci.geom.geom3d;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
  * @author dlegland
  *
  */
-class MultiPoint3DTest
+public class MultiPoint3DTest
 {
 
     /**
      * Test method for {@link net.sci.geom.geom3d.MultiPoint3D#contains(net.sci.geom.geom3d.Point3D, double)}.
      */
     @Test
-    void testContains()
+    public void testContains()
     {
         MultiPoint3D points = MultiPoint3D.create(8);
         points.addPoint(new Point3D(20, 20, 20));
@@ -40,7 +43,7 @@ class MultiPoint3DTest
      * Test method for {@link net.sci.geom.geom3d.MultiPoint3D#distance(double, double)}.
      */
     @Test
-    void testDistance()
+    public void testDistance()
     {
         MultiPoint3D points = MultiPoint3D.create(8);
         points.addPoint(new Point3D(20, 20, 20));
