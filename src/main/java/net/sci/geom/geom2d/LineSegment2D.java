@@ -262,8 +262,8 @@ public class LineSegment2D implements LinearGeometry2D
     }
 
     @Override
-    public Box2D boundingBox()
+    public Bounds2D bounds()
     {
-        return new Box2D(getP1(), getP2());
+        return new Bounds2D(getP1(), getP2());
     }
 }

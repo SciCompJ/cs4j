@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
@@ -103,14 +103,14 @@ public class DefaultPolygon2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#boundingBox()}.
+     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#bounds()}.
      */
     @Test
     public final void testBoundingBox()
     {
         DefaultPolygon2D poly = createDiamondPolygon();
-        Box2D box = poly.boundingBox();
-        Box2D exp = new Box2D(10, 30, 10, 30);
+        Bounds2D box = poly.bounds();
+        Bounds2D exp = new Bounds2D(10, 30, 10, 30);
         assertTrue(exp.almostEquals(box, .01));
     }
     

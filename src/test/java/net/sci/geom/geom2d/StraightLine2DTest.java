@@ -139,7 +139,7 @@ public class StraightLine2DTest
     public final void testBoundingBox()
     {
         StraightLine2D line = new StraightLine2D(1, 2, 3, 4);
-        line.boundingBox();
+        line.bounds();
     }
     
     @Test

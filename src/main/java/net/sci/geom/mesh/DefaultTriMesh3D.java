@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import net.sci.geom.geom3d.Box3D;
+import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
@@ -723,7 +723,7 @@ public class DefaultTriMesh3D implements Mesh3D
      * @see net.sci.geom.geom3d.Geometry3D#boundingBox()
      */
     @Override
-    public Box3D boundingBox()
+    public Bounds3D bounds()
     {
         // initialize to extreme values
         double xmin = Double.POSITIVE_INFINITY;
@@ -745,7 +745,7 @@ public class DefaultTriMesh3D implements Mesh3D
         }
         
         // create the resulting box
-        return new Box3D(xmin, xmax, ymin, ymax, zmin, zmax);
+        return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
     }
     
     /* (non-Javadoc)

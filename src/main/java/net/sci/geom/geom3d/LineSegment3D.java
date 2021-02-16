@@ -264,8 +264,8 @@ public class LineSegment3D implements LinearGeometry3D
     }
 
     @Override
-    public Box3D boundingBox()
+    public Bounds3D bounds()
     {
-        return new Box3D(getP1(), getP2());
+        return new Bounds3D(getP1(), getP2());
     }
 }

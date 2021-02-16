@@ -3,7 +3,7 @@
  */
 package net.sci.geom.geom2d.curve;
 
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Domain2D;
 import net.sci.geom.geom2d.Point2D;
 
@@ -78,9 +78,9 @@ public class GenericDomain2D implements Domain2D
 	}
 
 	@Override
-	public Box2D boundingBox()
+	public Bounds2D bounds()
 	{
 		// TODO should also manage unbounded domains
-		return boundary.boundingBox();
+		return boundary.bounds();
 	}
 }

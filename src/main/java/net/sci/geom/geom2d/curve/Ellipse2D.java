@@ -13,7 +13,7 @@ import static java.lang.Math.sqrt;
 import java.util.ArrayList;
 
 import net.sci.geom.geom2d.AffineTransform2D;
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
 
@@ -461,9 +461,9 @@ public class Ellipse2D implements Contour2D
      * @see net.sci.geom.geom2d.Geometry2D#boundingBox()
      */
     @Override
-    public Box2D boundingBox()
+    public Bounds2D bounds()
     {
         // TODO could be more precise
-        return asPolyline(200).boundingBox();
+        return asPolyline(200).bounds();
     }
 }

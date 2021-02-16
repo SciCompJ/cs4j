@@ -73,5 +73,5 @@ public interface Geometry3D extends Geometry
         return 3;
     }
     
-    public Box3D boundingBox();
+    public Bounds3D bounds();
 }

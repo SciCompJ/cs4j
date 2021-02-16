@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.geom.geom2d.AffineTransform2D;
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.CurveShape2D;
 import net.sci.geom.geom2d.Point2D;
@@ -97,7 +97,7 @@ public class CurveSet2D implements CurveShape2D
     }
 
     @Override
-    public Box2D boundingBox()
+    public Bounds2D bounds()
     {
         // initialize extreme values
         double xmin = Double.POSITIVE_INFINITY;
@@ -107,14 +107,14 @@ public class CurveSet2D implements CurveShape2D
         
         for (Curve2D curve : curves)
         {
-            Box2D box = curve.boundingBox();
+            Bounds2D box = curve.bounds();
             xmin = Math.min(xmin, box.getXMin());
             xmax = Math.max(xmax, box.getXMax());
             ymin = Math.min(ymin, box.getYMin());
             ymax = Math.max(ymax, box.getYMax());
         }
         
-        return new Box2D(xmin, xmax, ymin, ymax);
+        return new Bounds2D(xmin, xmax, ymin, ymax);
     }
 
     @Override

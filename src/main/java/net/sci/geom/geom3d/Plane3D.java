@@ -301,7 +301,7 @@ public class Plane3D implements Geometry3D
      * @see net.sci.geom.geom3d.Geometry3D#boundingBox()
      */
     @Override
-    public Box3D boundingBox()
+    public Bounds3D bounds()
     {
         throw new UnboundedGeometryException(this);
     }

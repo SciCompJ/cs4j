@@ -6,7 +6,7 @@ package net.sci.geom.graph;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
 
@@ -263,7 +263,7 @@ public class SimpleGraph2D implements Graph2D
 
 
     @Override
-    public Box2D boundingBox()
+    public Bounds2D bounds()
     {
         // initialize with extreme values
         double xmin = Double.POSITIVE_INFINITY;
@@ -283,7 +283,7 @@ public class SimpleGraph2D implements Graph2D
         }
         
         // return new Bounding Box
-        return new Box2D(xmin, xmax, ymin, ymax);
+        return new Bounds2D(xmin, xmax, ymin, ymax);
     }
     
     

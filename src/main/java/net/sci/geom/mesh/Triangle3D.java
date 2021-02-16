@@ -5,7 +5,7 @@ import static net.sci.geom.geom3d.Vector3D.dotProduct;
 import java.util.Arrays;
 import java.util.Collection;
 
-import net.sci.geom.geom3d.Box3D;
+import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Polygon3D;
@@ -309,7 +309,7 @@ public class Triangle3D implements Polygon3D
     }
 
     @Override
-    public Box3D boundingBox()
+    public Bounds3D bounds()
     {
         double xmin = Math.min(Math.min(p1.getX(), p2.getX()), p3.getX());
         double xmax = Math.max(Math.max(p1.getX(), p2.getX()), p3.getX());
@@ -318,7 +318,7 @@ public class Triangle3D implements Polygon3D
         double zmin = Math.min(Math.min(p1.getZ(), p2.getZ()), p3.getZ());
         double zmax = Math.max(Math.max(p1.getZ(), p2.getZ()), p3.getZ());
 
-        return new Box3D(xmin, xmax, ymin, ymax, zmin, zmax);
+        return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
     }
 
     @Override

@@ -9,7 +9,7 @@ package net.sci.geom;
  * @author dlegland
  *
  */
-public interface Box
+public interface Bounds
 {
     /**
      * @param d the dimension index

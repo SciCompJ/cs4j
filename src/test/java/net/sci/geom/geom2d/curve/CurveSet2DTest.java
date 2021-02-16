@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
 
@@ -40,7 +40,7 @@ public class CurveSet2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.curve.CurveSet2D#boundingBox()}.
+     * Test method for {@link net.sci.geom.geom2d.curve.CurveSet2D#bounds()}.
      */
     @Test
     public final void testBoundingBox()
@@ -50,8 +50,8 @@ public class CurveSet2DTest
         LineSegment2D line2 = new LineSegment2D(new Point2D(10, 20), new Point2D(20, 30));
         CurveSet2D cs = new CurveSet2D(line1, line2);
         
-        Box2D box = cs.boundingBox();
-        Box2D exp = new Box2D(10, 30, 10, 30);
+        Bounds2D box = cs.bounds();
+        Bounds2D exp = new Bounds2D(10, 30, 10, 30);
         assertTrue(exp.almostEquals(box, .01));
     }
     

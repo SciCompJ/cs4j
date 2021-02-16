@@ -8,7 +8,7 @@ import java.util.Collection;
 
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.curve.Circle2D;
-import net.sci.geom.geom3d.Box3D;
+import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Geometry3D;
 import net.sci.geom.geom3d.Plane3D;
 import net.sci.geom.geom3d.Point3D;
@@ -212,12 +212,12 @@ public class Sphere3D implements Geometry3D
      * @see net.sci.geom.geom3d.Geometry3D#boundingBox()
      */
     @Override
-    public Box3D boundingBox()
+    public Bounds3D bounds()
     {
         double x = center.getX();
         double y = center.getY();
         double z = center.getZ();
-        return new Box3D(x - radius, x + radius, y - radius, y + radius, z - radius, z + radius);
+        return new Bounds3D(x - radius, x + radius, y - radius, y + radius, z - radius, z + radius);
     }
     
     

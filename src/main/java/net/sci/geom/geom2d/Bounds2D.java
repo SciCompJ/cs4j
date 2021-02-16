@@ -5,7 +5,7 @@ package net.sci.geom.geom2d;
 
 import static java.lang.Double.isInfinite;
 
-import net.sci.geom.Box;
+import net.sci.geom.Bounds;
 import net.sci.geom.geom2d.polygon.Polygon2D;
 
 /**
@@ -14,7 +14,7 @@ import net.sci.geom.geom2d.polygon.Polygon2D;
  * @author dlegland
  *
  */
-public class Box2D implements Box, Geometry2D
+public class Bounds2D implements Bounds, Geometry2D
 {
     // ===================================================================
     // class variables
@@ -29,7 +29,7 @@ public class Box2D implements Box, Geometry2D
     // constructors
 
     /** Empty constructor (size and position zero) */
-    public Box2D()
+    public Bounds2D()
     {
         this(0, 0, 0, 0);
     }
@@ -47,7 +47,7 @@ public class Box2D implements Box, Geometry2D
 	 * @param ymax
 	 *            the maximum value along the second dimension
 	 */
-    public Box2D(double xmin, double xmax, double ymin, double ymax)
+    public Bounds2D(double xmin, double xmax, double ymin, double ymax)
     {
         this.xmin = xmin;
         this.xmax = xmax;
@@ -63,7 +63,7 @@ public class Box2D implements Box, Geometry2D
 	 * @param p2
 	 *            a point corresponding to a corner of the box, opposite of p1
 	 */
-    public Box2D(Point2D p1, Point2D p2)
+    public Bounds2D(Point2D p1, Point2D p2)
     {
         double x1 = p1.getX();
         double y1 = p1.getY();
@@ -222,7 +222,7 @@ public class Box2D implements Box, Geometry2D
         }
     }
     
-    public boolean almostEquals(Box2D box, double eps)
+    public boolean almostEquals(Bounds2D box, double eps)
     {
         if (Math.abs(box.xmin - xmin) > eps) return false;
         if (Math.abs(box.xmax - xmax) > eps) return false;
@@ -246,7 +246,7 @@ public class Box2D implements Box, Geometry2D
     }
 
     @Override
-    public Box2D boundingBox()
+    public Bounds2D bounds()
     {
         return this;
     }

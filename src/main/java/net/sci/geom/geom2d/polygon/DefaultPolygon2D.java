@@ -6,7 +6,7 @@ package net.sci.geom.geom2d.polygon;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
 
@@ -381,10 +381,10 @@ public class DefaultPolygon2D implements Polygon2D
     /**
      * Returns the bounding box of this polygon.
      * 
-     * @see net.sci.geom.geom2d.Geometry2D#boundingBox()
+     * @see net.sci.geom.geom2d.Geometry2D#bounds()
      */
     @Override
-    public Box2D boundingBox()
+    public Bounds2D bounds()
     {
         // initialize with extreme values
         double xmin = Double.POSITIVE_INFINITY;
@@ -404,7 +404,7 @@ public class DefaultPolygon2D implements Polygon2D
         }
         
         // return new Bounding Box
-        return new Box2D(xmin, xmax, ymin, ymax);
+        return new Bounds2D(xmin, xmax, ymin, ymax);
     }
 
 }

@@ -202,9 +202,9 @@ public class Point2D implements Geometry2D, Point
     }
 
     @Override
-    public Box2D boundingBox()
+    public Bounds2D bounds()
     {
-        return new Box2D(this.x, this.x, this.y, this.y);
+        return new Bounds2D(this.x, this.x, this.y, this.y);
     }
 
 

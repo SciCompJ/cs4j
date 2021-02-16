@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.sci.geom.geom3d.AffineTransform3D;
-import net.sci.geom.geom3d.Box3D;
+import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Curve3D;
 import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
@@ -110,7 +110,7 @@ public interface Polyline3D extends Curve3D
         return true;
     }
 
-    public default Box3D boundingBox()
+    public default Bounds3D bounds()
     {
         // initialize with extreme values
         double xmin = Double.POSITIVE_INFINITY;
@@ -135,6 +135,6 @@ public interface Polyline3D extends Curve3D
         }
         
         // return new Bounding Box
-        return new Box3D(xmin, xmax, ymin, ymax, zmin, zmax);
+        return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
     }
 }

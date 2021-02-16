@@ -6,7 +6,7 @@ package net.sci.image.analyze;
 import static org.junit.Assert.*;
 
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
 
 import org.junit.Test;
@@ -45,16 +45,16 @@ public class RegionAnalysis2DTest
 		UInt8Array2D array = createFourRectArray();
 		
 		int[] labels = new int[]{1, 2, 3, 4};
-		Box2D[] boxes = RegionAnalysis2D.boundingBoxes(array, labels);
+		Bounds2D[] boxes = RegionAnalysis2D.boundingBoxes(array, labels);
 		
 		assertEquals(4, boxes.length);
-		Box2D box1 = new Box2D(0.5, 2.5, 0.5, 2.5);
+		Bounds2D box1 = new Bounds2D(0.5, 2.5, 0.5, 2.5);
 		assertTrue(box1.almostEquals(boxes[0], 0.1));
-		Box2D box2 = new Box2D(3.5, 8.5, 0.5, 2.5);
+		Bounds2D box2 = new Bounds2D(3.5, 8.5, 0.5, 2.5);
 		assertTrue(box2.almostEquals(boxes[1], 0.1));
-		Box2D box3 = new Box2D(0.5, 2.5, 3.5, 6.5);
+		Bounds2D box3 = new Bounds2D(0.5, 2.5, 3.5, 6.5);
 		assertTrue(box3.almostEquals(boxes[2], 0.1));
-		Box2D box4 = new Box2D(3.5, 8.5, 3.5, 6.5);
+		Bounds2D box4 = new Bounds2D(3.5, 8.5, 3.5, 6.5);
 		assertTrue(box4.almostEquals(boxes[3], 0.1));
 	}
 

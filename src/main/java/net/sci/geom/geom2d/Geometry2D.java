@@ -78,5 +78,6 @@ public interface Geometry2D extends Geometry
     /**
      * @return the bounds of this geometry.
      */
-    public Box2D boundingBox();
+    @Override
+    public Bounds2D bounds();
 }

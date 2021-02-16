@@ -6,7 +6,7 @@ package net.sci.image.analyze;
 import java.util.HashMap;
 
 import net.sci.array.scalar.IntArray3D;
-import net.sci.geom.geom3d.Box3D;
+import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.image.label.LabelImages;
 
@@ -83,7 +83,7 @@ public class RegionAnalysis3D
         return centroids;
     }
     
-    public final static Box3D[] boundingBoxes(IntArray3D<?> image, int[] labels)
+    public final static Bounds3D[] boundingBoxes(IntArray3D<?> image, int[] labels)
     {
         // create associative array to know index of each label
         int nLabels = labels.length;
@@ -138,10 +138,10 @@ public class RegionAnalysis3D
             }
         }
         
-        Box3D[] boxes = new Box3D[nLabels];
+        Bounds3D[] boxes = new Bounds3D[nLabels];
         for (int i = 0; i < nLabels; i++)
         {
-        	boxes[i] = new Box3D(xmin[i], xmax[i], ymin[i], ymax[i], zmin[i], zmax[i]);
+        	boxes[i] = new Bounds3D(xmin[i], xmax[i], ymin[i], ymax[i], zmin[i], zmax[i]);
         }
         
         return boxes;

@@ -3,7 +3,7 @@
  */
 package net.sci.geom.graph;
 
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Geometry2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
@@ -91,7 +91,7 @@ public interface Graph2D extends Geometry2D
 
 
     @Override
-    public default Box2D boundingBox()
+    public default Bounds2D bounds()
     {
         // initialize with extreme values
         double xmin = Double.POSITIVE_INFINITY;
@@ -112,7 +112,7 @@ public interface Graph2D extends Geometry2D
         }
         
         // return new Bounding Box
-        return new Box2D(xmin, xmax, ymin, ymax);
+        return new Bounds2D(xmin, xmax, ymin, ymax);
     }
     
     // ===================================================================

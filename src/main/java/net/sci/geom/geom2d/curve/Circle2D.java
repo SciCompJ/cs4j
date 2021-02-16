@@ -11,7 +11,7 @@ import static java.lang.Math.sin;
 import java.util.ArrayList;
 
 import net.sci.geom.geom2d.AffineTransform2D;
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
 
@@ -228,8 +228,8 @@ public class Circle2D implements Contour2D
      * @see net.sci.geom.geom2d.Geometry2D#boundingBox()
      */
     @Override
-    public Box2D boundingBox()
+    public Bounds2D bounds()
     {
-        return new Box2D(xc - radius, xc + radius, yc - radius, yc + radius);
+        return new Bounds2D(xc - radius, xc + radius, yc - radius, yc + radius);
     }
 }

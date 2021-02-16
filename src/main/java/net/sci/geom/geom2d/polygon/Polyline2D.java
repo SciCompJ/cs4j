@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sci.geom.geom2d.AffineTransform2D;
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.LinearGeometry2D;
@@ -245,7 +245,7 @@ public interface Polyline2D extends Curve2D
         return true;
     }
 
-    public default Box2D boundingBox()
+    public default Bounds2D bounds()
     {
         // initialize with extreme values
         double xmin = Double.POSITIVE_INFINITY;
@@ -265,6 +265,6 @@ public interface Polyline2D extends Curve2D
         }
         
         // return new Bounding Box
-        return new Box2D(xmin, xmax, ymin, ymax);
+        return new Bounds2D(xmin, xmax, ymin, ymax);
     }
 }

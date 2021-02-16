@@ -21,7 +21,7 @@ public interface Geometry extends Dimensional
     public boolean isBounded();
     
     /**
-     * @return the bounding box of this geometry
+     * @return the bounds of this geometry
      */
-    public Box boundingBox();
+    public Bounds bounds();
 }

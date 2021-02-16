@@ -8,7 +8,7 @@ import static java.lang.Math.sqrt;
 import java.util.HashMap;
 
 import net.sci.array.scalar.IntArray2D;
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.curve.Ellipse2D;
 import net.sci.image.label.LabelImages;
@@ -80,7 +80,7 @@ public class RegionAnalysis2D
         return centroids;
     }
     
-    public final static Box2D[] boundingBoxes(IntArray2D<?> image, int[] labels)
+    public final static Bounds2D[] boundingBoxes(IntArray2D<?> image, int[] labels)
     {
         // create associative array to know index of each label
         int nLabels = labels.length;
@@ -125,10 +125,10 @@ public class RegionAnalysis2D
             }
         }
         
-        Box2D[] boxes = new Box2D[nLabels];
+        Bounds2D[] boxes = new Bounds2D[nLabels];
         for (int i = 0; i < nLabels; i++)
         {
-        	boxes[i] = new Box2D(xmin[i], xmax[i], ymin[i], ymax[i]);
+        	boxes[i] = new Bounds2D(xmin[i], xmax[i], ymin[i], ymax[i]);
         }
         
         return boxes;

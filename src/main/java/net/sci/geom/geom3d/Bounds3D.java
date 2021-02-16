@@ -4,15 +4,15 @@
 package net.sci.geom.geom3d;
 
 import static java.lang.Double.isInfinite;
-import net.sci.geom.Box;
+import net.sci.geom.Bounds;
 
 /**
- * Contains the bounds of a planar geometry.
+ * Contains the bounds of a 3D geometry.
  * 
  * @author dlegland
  *
  */
-public class Box3D implements Box
+public class Bounds3D implements Bounds
 {
     // ===================================================================
     // class variables
@@ -29,7 +29,7 @@ public class Box3D implements Box
     // constructors
 
     /** Empty constructor (size and position zero) */
-    public Box3D()
+    public Bounds3D()
     {
         this(0, 0, 0, 0, 0, 0);
     }
@@ -39,19 +39,19 @@ public class Box3D implements Box
      * bounds for the z coords.
      * 
      * @param xmin
-     *            the minimum value of the x coordinate of the box
+     *            the minimum value of the x coordinate of the bounds
      * @param xmax
-     *            the maximum value of the x coordinate of the box
+     *            the maximum value of the x coordinate of the bounds
      * @param ymin
-     *            the minimum value of the y coordinate of the box
+     *            the minimum value of the y coordinate of the bounds
      * @param ymax
-     *            the maximum value of the y coordinate of the box
+     *            the maximum value of the y coordinate of the bounds
      * @param zmin
-     *            the minimum value of the z coordinate of the box
+     *            the minimum value of the z coordinate of the bounds
      * @param zmax
-     *            the maximum value of the z coordinate of the box
+     *            the maximum value of the z coordinate of the bounds
      */
-    public Box3D(double xmin, double xmax, double ymin, double ymax, double zmin, double zmax)
+    public Bounds3D(double xmin, double xmax, double ymin, double ymax, double zmin, double zmax)
     {
         this.xmin = xmin;
         this.xmax = xmax;
@@ -62,14 +62,14 @@ public class Box3D implements Box
     }
     
     /**
-     * Constructor from 2 points, giving extreme coordinates of the box.
+     * Constructor from 2 points, giving extreme coordinates of the bounds.
      * 
      * @param p1
      *            first corner of the box
      * @param p2
      *            the corner of the box opposite to the first corner
      */
-    public Box3D(Point3D p1, Point3D p2)
+    public Bounds3D(Point3D p1, Point3D p2)
     {
         double x1 = p1.getX();
         double y1 = p1.getY();
@@ -137,7 +137,7 @@ public class Box3D implements Box
     /** 
      * Returns true if all bounds are finite. 
      *
-     * @return true is the box is bounded
+     * @return true is the bounds has finite values.
      */
     public boolean isBounded()
     {
@@ -198,11 +198,11 @@ public class Box3D implements Box
     }
 
     /**
-     * Checks if this box contains the given point.
+     * Checks if this bounds contains the given point.
      * 
      * @param point
      *            the point to evaluate
-     * @return true if the 3D point is within this 3D box
+     * @return true if the 3D point is within this 3D bounds
      */
     public boolean contains(Point3D point)
     {

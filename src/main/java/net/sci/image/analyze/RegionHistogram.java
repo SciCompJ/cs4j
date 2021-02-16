@@ -6,7 +6,7 @@ package net.sci.image.analyze;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array2D;
 import net.sci.array.scalar.ScalarArray2D;
-import net.sci.geom.geom2d.Box2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Domain2D;
 
 /**
@@ -39,7 +39,7 @@ public class RegionHistogram
 		int[] histo = new int[nBins];
 		
 		// compute bounding box f domain to avoid unnecessary computations
-		Box2D bbox = domain.boundingBox();
+		Bounds2D bbox = domain.bounds();
 		int xmin = (int) Math.max(0, Math.floor(bbox.getXMin()));
 		int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.getXMax()));
 		int ymin = (int) Math.max(0, Math.floor(bbox.getYMin()));
@@ -69,7 +69,7 @@ public class RegionHistogram
 		int[][] histo = new int[3][256];
 		
 		// compute bounding box f domain to avoid unnecessary computations
-		Box2D bbox = domain.boundingBox();
+		Bounds2D bbox = domain.bounds();
 		int xmin = (int) Math.max(0, Math.floor(bbox.getXMin()));
 		int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.getXMax()));
 		int ymin = (int) Math.max(0, Math.floor(bbox.getYMin()));
