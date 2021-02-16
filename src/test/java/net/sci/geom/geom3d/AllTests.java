@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     Point3DTest.class,
+    MultiPoint3DTest.class,
     AffineTransform3DTest.class,
     Plane3DTest.class,
 	})
