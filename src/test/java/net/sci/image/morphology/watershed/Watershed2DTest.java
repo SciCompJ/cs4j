@@ -5,12 +5,11 @@ package net.sci.image.morphology.watershed;
 
 import static org.junit.Assert.assertNotEquals;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
 
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.IntArray2D;
+import net.sci.geom.geom2d.MultiPoint2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.data.Connectivity2D;
 
@@ -28,27 +27,16 @@ public class Watershed2DTest
     public final void testProcess()
     {
         // initialize a set of germs
-        ArrayList<Point2D> points = new ArrayList<Point2D>();
-        points.add(new Point2D(20, 20));
-        points.add(new Point2D(20, 80));
-        points.add(new Point2D(80, 20));
-        points.add(new Point2D(80, 80));
-        points.add(new Point2D(50, 50));
+        MultiPoint2D germs = MultiPoint2D.create(5);
+        germs.addPoint(new Point2D(20, 20));
+        germs.addPoint(new Point2D(20, 80));
+        germs.addPoint(new Point2D(80, 20));
+        germs.addPoint(new Point2D(80, 80));
+        germs.addPoint(new Point2D(50, 50));
         
         // compute the distance map to the closest germ
         Float32Array2D array = Float32Array2D.create(100, 100);
-        for (int y = 0; y < 100; y++)
-        {
-            for (int x = 0; x < 100; x++)
-            {
-                double minDist = Double.POSITIVE_INFINITY;
-                for (Point2D p : points)
-                {
-                    minDist = Math.min(minDist, p.distance(x, y));
-                }
-                array.setValue(x, y, minDist);
-            }
-        }
+        array.populateValues((x,y) -> germs.distance(x, y));
 
         // apply watershed
         Watershed2D algo = new Watershed2D(Connectivity2D.C4);
