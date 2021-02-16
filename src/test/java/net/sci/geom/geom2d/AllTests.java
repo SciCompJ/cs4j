@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// 0-dimensional geometric elements
-	Point2DTest.class,
+    Point2DTest.class,
+    MultiPoint2DTest.class,
     Vector2DTest.class,
     AffineTransform2DTest.class,
     
