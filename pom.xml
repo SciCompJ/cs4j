@@ -4,12 +4,27 @@
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
  
-  <groupId>org.codehaus.mojo</groupId>
+  <groupId>net.scicompj</groupId>
   <artifactId>cs4j</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
   
   <dependencies>
 
+    <!-- Add a dependency to JUnit for unit tests -->
+	<!-- https://mvnrepository.com/artifact/junit/junit -->
+	<dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>4.13.2</version>
+	    <scope>test</scope>
+	</dependency>
+
+	
     <!-- https://mvnrepository.com/artifact/gov.nist.math/jama -->
     <dependency>
       <groupId>gov.nist.math</groupId>
@@ -19,4 +34,61 @@
 
   </dependencies>
   
+	<build>
+		
+		<resources>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>${project.build.sourceDirectory}</directory>
+			</resource>
+		</resources>
+		
+		<testResources>
+			<testResource>
+				<directory>${basedir}/src/test/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>${project.build.testSourceDirectory}</directory>
+			</testResource>
+		</testResources>
+		
+		<plugins>
+			<!-- Configure the jar output directory -->
+   			<plugin>
+      			<groupId>org.apache.maven.plugins</groupId>
+      			<artifactId>maven-jar-plugin</artifactId>
+      			<configuration>
+      				<!-- Place the jar in "plugins" directory of current workspace -->
+        			<outputDirectory>${basedir}/target</outputDirectory>
+        			
+        			<!-- Place the jar in "plugins" directory of local ImageJ installation 
+        				(need to be adapted depending on local configuration...) -->
+        			<!-- <outputDirectory>C:/Program Files (x86)/ImageJ/plugins</outputDirectory> -->
+      			</configuration>
+    		</plugin>
+    		
+			<!-- plugin for generating the javadoc.
+				 Output is located in "target/site/apidocs" -->
+    		<plugin>
+        		<groupId>org.apache.maven.plugins</groupId>
+        		<artifactId>maven-javadoc-plugin</artifactId>
+        		<configuration>
+        			<outputDirectory>${project.build.directory}/apidocs</outputDirectory>
+        			<encoding>ISO-8859-1</encoding>
+      			</configuration>
+      			<executions>
+          			<execution>
+            			<goals>
+              				<goal>javadoc</goal>
+            			</goals>
+            			<phase>site</phase>
+          			</execution>
+        		</executions>
+      		</plugin>
+      		
+		</plugins>
+	</build>
+
 </project>
