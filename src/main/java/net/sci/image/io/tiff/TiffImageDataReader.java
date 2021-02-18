@@ -10,6 +10,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.array.color.BufferedPackedByteRGB8Array2D;
@@ -28,6 +29,7 @@ import net.sci.array.scalar.BufferedUInt8Array3D;
 import net.sci.array.scalar.SlicedUInt8Array3D;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.image.io.PackBits;
+import net.sci.image.io.tiff.TiffFileInfo.PixelType;
 
 /**
  * Read the binary data from a TIFF file based on one or several TiffFileInfo
@@ -38,7 +40,7 @@ import net.sci.image.io.PackBits;
  * @author David Legland
  *
  */
-public class TiffImageDataReader
+public class TiffImageDataReader extends AlgoStub
 {
 	// =============================================================
 	// Class variables
@@ -214,9 +216,9 @@ public class TiffImageDataReader
         
         // when number of bytes in larger than Integer.MAXINT, creates a new
         // instance of SlicedUInt8Array3D
-        if (nBytes < 0)
+        if (info0.pixelType == PixelType.GRAY8)
         {
-            System.out.println("Large array! Switch to sliced array...");
+            System.out.println("Choose sliced array data representation...");
             // check type limit
             if(info0.pixelType != TiffFileInfo.PixelType.GRAY8) 
             {
@@ -229,8 +231,12 @@ public class TiffImageDataReader
             RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
 
             // iterate over slices to create each 2D array
+            int nSlices = fileInfoList.size();
+            int currentSliceIndex = 0;
             for (TiffFileInfo info : fileInfoList)
             {
+                this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+                
                 byte[] buffer = new byte[bytesPerPlane];
                 int nRead = readByteArray(stream, info, buffer);
 
@@ -247,6 +253,7 @@ public class TiffImageDataReader
             stream.close();
             
             // create a new instance of 3D array that stores each slice
+            this.fireProgressChanged(this, nSlices, nSlices);
             System.out.println("create 3D array");
             return new SlicedUInt8Array3D(arrayList);
         }

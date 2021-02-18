@@ -10,6 +10,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sci.algo.AlgoEvent;
+import net.sci.algo.AlgoListener;
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.array.process.shape.Reshape;
@@ -36,7 +39,7 @@ import net.sci.image.io.tiff.TiffTag;
  * @author David Legland
  *
  */
-public class TiffImageReader implements ImageReader
+public class TiffImageReader extends AlgoStub implements ImageReader
 {
 	// =============================================================
 	// Class variables
@@ -93,7 +96,7 @@ public class TiffImageReader implements ImageReader
         TiffFileInfo fileInfo = this.fileInfoList.get(index);
         
         // Read image data
-        TiffImageDataReader reader = new TiffImageDataReader(this.filePath);
+        TiffImageDataReader reader = createImageDataReader();
         Array<?> data = reader.readImageData(fileInfo);
 
         // Create new Image
@@ -131,6 +134,7 @@ public class TiffImageReader implements ImageReader
 		// Check if the file was saved by ImageJ software
 		if (hasImageJDescription(info))
         {
+		    System.out.println("read ImageJ Tiff Image");
 		    return readImageJImage(info);
         }
 		
@@ -299,16 +303,32 @@ public class TiffImageReader implements ImageReader
 	        System.out.println("read hyperstack data");
             
 	        // Use try-with-resource, closing the reader at the end of the try block
-            try (ImageBinaryDataReader imageReader = new ImageBinaryDataReader(
+            try (ImageBinaryDataReader reader = new ImageBinaryDataReader(
                     new File(this.filePath), info.byteOrder))
 	        {
-	            imageReader.seek(info.stripOffsets[0]);
+                reader.addAlgoListener(new AlgoListener()
+                {
+                    @Override
+                    public void algoProgressChanged(AlgoEvent evt)
+                    {
+                        TiffImageReader.this.fireProgressChanged(reader, evt.getCurrentProgress(), evt.getTotalProgress());
+                    }
+
+                    @Override
+                    public void algoStatusChanged(AlgoEvent evt)
+                    {
+                        TiffImageReader.this.fireStatusChanged(reader, evt.getStatus());
+                    }
+                });
+                
+                
+	            reader.seek(info.stripOffsets[0]);
 
 	            switch(info.pixelType)
 	            {
 	            case GRAY8:
 	            case COLOR8:
-	                data = imageReader.readUInt8Array3D(sizeX, sizeY, nImages);
+	                data = reader.readUInt8Array3D(sizeX, sizeY, nImages);
 	                break;
 
 	            case BITMAP:
@@ -316,15 +336,15 @@ public class TiffImageReader implements ImageReader
 	            
 	            case GRAY16_UNSIGNED:
 	            case GRAY12_UNSIGNED:
-	                data = imageReader.readUInt16Array3D(sizeX, sizeY, nImages);
+	                data = reader.readUInt16Array3D(sizeX, sizeY, nImages);
 	                break;
 	                
 	            case GRAY32_INT:
-	                data = imageReader.readInt32Array3D(sizeX, sizeY, nImages);
+	                data = reader.readInt32Array3D(sizeX, sizeY, nImages);
 	                break;
 	            
 	            case GRAY32_FLOAT:
-	                data = imageReader.readFloat32Array3D(sizeX, sizeY, nImages);
+	                data = reader.readFloat32Array3D(sizeX, sizeY, nImages);
 	                break;
 
 	            case RGB:
@@ -683,7 +703,7 @@ public class TiffImageReader implements ImageReader
      */
     private Array<?> readImageData() throws IOException
     {
-        TiffImageDataReader reader = new TiffImageDataReader(this.filePath);
+        TiffImageDataReader reader = createImageDataReader();
 
         // Read image data
         if (isStackImage())
@@ -769,8 +789,10 @@ public class TiffImageReader implements ImageReader
 	public Array3D<?> readImageStack()
 			throws IOException
 	{
-	    TiffImageDataReader reader = new TiffImageDataReader(this.filePath);
-	    return reader.readImageStack(this.fileInfoList);
+        TiffImageDataReader reader = createImageDataReader();
+
+        // Read all images and return a 3D array
+        return reader.readImageStack(this.fileInfoList);
 	}
 	
     /**
@@ -790,9 +812,9 @@ public class TiffImageReader implements ImageReader
             throw new IllegalArgumentException("Requires an index below the number of images ("
                     + this.fileInfoList.size() + ")");
         }
-        
         TiffFileInfo info = this.fileInfoList.get(index);
-        TiffImageDataReader reader = new TiffImageDataReader(this.filePath);
+        
+        TiffImageDataReader reader = createImageDataReader();
         return reader.readImageData(info);
     }
     
@@ -807,8 +829,41 @@ public class TiffImageReader implements ImageReader
      */
 	public Array<?> readImageData(TiffFileInfo info) throws IOException
 	{
-        TiffImageDataReader reader = new TiffImageDataReader(this.filePath);
+        TiffImageDataReader reader = createImageDataReader();
         return reader.readImageData(info);
+	}
+	
+	/**
+     * Creates a new TiffImageDataReader initialized with the current file path,
+     * and adds defaults listener that propagate events to the listener(s) of
+     * the TiffImageReader class
+     * 
+     * @return an initialized instance of TiffImageDataReader
+     * @throws IOException
+     *             if a problem occurred
+     */
+	private TiffImageDataReader createImageDataReader() throws IOException
+	{
+        TiffImageDataReader reader = new TiffImageDataReader(this.filePath);
+        
+        // add an algo listener that simply propagates the events to the
+        // listener(s) of the TiffImageReader class
+        reader.addAlgoListener(new AlgoListener()
+        {
+            @Override
+            public void algoProgressChanged(AlgoEvent evt)
+            {
+                TiffImageReader.this.fireProgressChanged(reader, evt.getCurrentProgress(), evt.getTotalProgress());
+            }
+
+            @Override
+            public void algoStatusChanged(AlgoEvent evt)
+            {
+                TiffImageReader.this.fireStatusChanged(reader, evt.getStatus());
+            }
+        });
+        
+        return reader;
 	}
 
 }

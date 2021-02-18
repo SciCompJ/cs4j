@@ -10,6 +10,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.scalar.BufferedFloat32Array2D;
 import net.sci.array.scalar.BufferedFloat64Array2D;
@@ -50,7 +51,7 @@ import net.sci.array.scalar.UInt8Array3D;
  * @author dlegland
  *
  */
-public class ImageBinaryDataReader implements Closeable
+public class ImageBinaryDataReader extends AlgoStub implements Closeable
 {
     /**
      * The set of element types managed by this class.
@@ -179,8 +180,10 @@ public class ImageBinaryDataReader implements Closeable
         
         for (int z = 0; z < sizeZ; z++)
         {
+            this.fireProgressChanged(this, z, sizeZ);
             slices.add(readUInt8Array2D(sizeX, sizeY));
         }
+        this.fireProgressChanged(this, sizeZ, sizeZ);
         
         return new SlicedUInt8Array3D(slices);
     }
