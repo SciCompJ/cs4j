@@ -15,9 +15,10 @@ import net.sci.geom.geom2d.curve.Contour2D;
 /**
  * <p>
  * A LinearRing2D is a polyline whose last point is connected to the first one.
- * This is typically the boundary of a (Simple)Polygon2D.
- * 
+ * This is typically the boundary of a (Simple)Polygon2D. For open polylines,
+ * the class LineString2D may be used.
  * </p>
+ * 
  * <p>
  * The name 'LinearRing2D' was used for 2 reasons:
  * <ul>
@@ -25,6 +26,10 @@ import net.sci.geom.geom2d.curve.Contour2D;
  * <li>it is consistent with the JTS name</li>
  * </ul>
  * </p>
+ * 
+ * @see Polyline2D
+ * @see LineString2D
+ * 
  * @author dlegland
  */
 public class LinearRing2D implements Polyline2D, Contour2D
@@ -35,7 +40,7 @@ public class LinearRing2D implements Polyline2D, Contour2D
     private ArrayList<Point2D> vertices;
     
     // ===================================================================
-    // Contructors
+    // Constructors
 
     public LinearRing2D() 
     {
