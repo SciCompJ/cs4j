@@ -5,6 +5,7 @@ package net.sci.image.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.Array2D;
+import net.sci.array.Array3D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 
@@ -27,9 +28,21 @@ public class ImageSlicer
      *            the index of the slice in the z-direction (0-indexed)
      * @return the corresponding planar slice
      */
-    public static final Image slice2d(Image image, int sliceIndex)
+    public static final <T> Image slice2d(Image image, int sliceIndex)
     {
-        return slice2d(image, 0, 1, new int[]{0, 0, sliceIndex});
+        @SuppressWarnings("unchecked")
+        Array<T> array = (Array<T>) image.getData();
+
+        Array2D<T> resArray = ((Array3D<T>) array).slice(sliceIndex);
+        
+        Image resultImage = new Image(resArray, image.getType(), image);
+        
+        // configure calibration
+        Calibration calib = resultImage.getCalibration();
+        calib.setAxis(0, image.getCalibration().getAxis(0));
+        calib.setAxis(1, image.getCalibration().getAxis(1));
+        
+        return resultImage;
     }
 
     /**
@@ -66,28 +79,38 @@ public class ImageSlicer
         {
             throw new IllegalArgumentException("Reference position must have as many dimension as input image");
         }
-
-        // create position pointer for source image
-        int[] srcPos = new int[nd];
-        System.arraycopy(refPos, 0, srcPos, 0, nd);
-
-        // create output
-        int sizeX = image.getSize(dim1);
-        int sizeY = image.getSize(dim2);
         
-        Array2D<T> resArray = Array2D.wrap(array.newInstance(new int[]{sizeX, sizeY}));
-        
-        // iterate over position in target image
-        for (int y = 0; y < sizeY; y++)
+        Array2D<T> resArray;
+        if (array instanceof Array3D && dim1 == 0 && dim2 == 1)
         {
-            srcPos[dim2] = y;
-            
-            for (int x = 0; x < sizeX; x++)
+            // special case of a 3D array sliced with dimensions X and Y
+            resArray = ((Array3D<T>) array).slice(refPos[2]);
+        }
+        else
+        {
+            // create position pointer for source image
+            int[] srcPos = new int[nd];
+            System.arraycopy(refPos, 0, srcPos, 0, nd);
+
+            // create output
+            int sizeX = image.getSize(dim1);
+            int sizeY = image.getSize(dim2);
+
+            // allocate memory for result
+            resArray = Array2D.wrap(array.newInstance(new int[]{sizeX, sizeY}));
+
+            // iterate over position in target image
+            for (int y = 0; y < sizeY; y++)
             {
-                srcPos[dim1] = x;
-                
-                // copy value of selected position
-                resArray.set(x, y, array.get(srcPos));
+                srcPos[dim2] = y;
+
+                for (int x = 0; x < sizeX; x++)
+                {
+                    srcPos[dim1] = x;
+
+                    // copy value of selected position
+                    resArray.set(x, y, array.get(srcPos));
+                }
             }
         }
      
@@ -100,4 +123,5 @@ public class ImageSlicer
         
         return resultImage;
     }
+
 }
