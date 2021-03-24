@@ -10,7 +10,9 @@ import java.util.Iterator;
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.Vector2D;
 import net.sci.geom.geom2d.curve.Contour2D;
+
 
 /**
  * <p>
@@ -37,7 +39,18 @@ public class LinearRing2D implements Polyline2D, Contour2D
     // ===================================================================
     // Class variables
     
+    /**
+     * The array of coordinates for each vertex.
+     */
     private ArrayList<Point2D> vertices;
+    
+    /**
+     * An optional array of vectors used to store the normal for each vertex.
+     * 
+     * Always initialized, but has a size of zero by default.
+     */
+    private ArrayList<Vector2D> vertexNormals = new ArrayList<Vector2D>(0);
+    
     
     // ===================================================================
     // Constructors
@@ -200,9 +213,57 @@ public class LinearRing2D implements Polyline2D, Contour2D
         this.vertices.remove(vertexIndex);
     }
     
+    /**
+     * Returns the vertex at a given index.
+     * 
+     * @param index
+     *            the vertex index, between 0 and (vertexCount-1)
+     * @return the vertex at the specified index.
+     */
+    public Polyline2D.Vertex vertex(int index)
+    {
+        return new Vertex(index);
+    }
+    
     public Point2D vertexPosition(int vertexIndex)
     {
         return this.vertices.get(vertexIndex);
+    }
+    
+    
+    // ===================================================================
+    // Management of vertex normals
+    
+    public void clearNormals()
+    {
+        this.vertexNormals.clear();
+    }
+    
+    public void computeNormals()
+    {
+        // allocate memory for storing normals
+        this.clearNormals();
+        int nVertices = this.vertices.size();
+        this.vertexNormals.ensureCapacity(nVertices);
+        
+        // compute tangent of last edge
+        Point2D V0 = this.vertices.get(nVertices - 1);
+        Point2D V1 = this.vertices.get(0);
+        Vector2D T0 = new Vector2D(V0, V1).normalize();
+        
+        // process regular vertices
+        final double k = Math.sqrt(2) / 2.0;
+        for (int i = 0; i < nVertices; i++)
+        {
+            V0 = V1;
+            V1 = this.vertices.get((i + 1) % nVertices);
+            Vector2D T1 = new Vector2D(V0, V1).normalize();
+            
+            // compute average of the two normalized tangent vectors, and rotate
+            this.vertexNormals.add(T0.plus(T1).times(k).rotate90(-1));
+            
+            T0 = T1;
+        }
     }
     
 
@@ -581,8 +642,20 @@ public class LinearRing2D implements Polyline2D, Contour2D
 		{
 			return vertices.get(this.index);
 		}
+        
+        @Override
+        public Vector2D normal()
+        {
+            if (vertexNormals.size() > 0)
+            {
+                return vertexNormals.get(this.index);
+            }
+            
+            throw new RuntimeException("Normal vectors have not been computed");
+        }
     }
     
+	
     public class Edge implements Polyline2D.Edge
     {
     	int index;

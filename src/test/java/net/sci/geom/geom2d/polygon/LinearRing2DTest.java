@@ -21,6 +21,37 @@ import net.sci.geom.geom2d.Vector2D;
  */
 public class LinearRing2DTest
 {
+    @Test
+    public final void testVertexNormal()
+    {
+        LinearRing2D poly = new LinearRing2D(
+                new Point2D(10, 20),
+                new Point2D(50, 20),
+                new Point2D(50, 40),
+                new Point2D(10, 40));
+        poly.computeNormals();
+        
+        Polyline2D.Vertex v0 = poly.vertex(0);
+        Vector2D n0 = v0.normal();
+        assertEquals(-0.707, n0.getX(), 0.001);
+        assertEquals(-0.707, n0.getY(), 0.001);
+        
+        Polyline2D.Vertex v1 = poly.vertex(1);
+        Vector2D n1 = v1.normal();
+        assertEquals( 0.707, n1.getX(), 0.001);
+        assertEquals(-0.707, n1.getY(), 0.001);
+        
+        Polyline2D.Vertex v2 = poly.vertex(2);
+        Vector2D n2 = v2.normal();
+        assertEquals( 0.707, n2.getX(), 0.001);
+        assertEquals( 0.707, n2.getY(), 0.001);
+        
+        Polyline2D.Vertex v3 = poly.vertex(3);
+        Vector2D n3 = v3.normal();
+        assertEquals(-0.707, n3.getX(), 0.001);
+        assertEquals( 0.707, n3.getY(), 0.001);
+    }
+
     /**
      * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#resampleBySpacing(double)}.
      */

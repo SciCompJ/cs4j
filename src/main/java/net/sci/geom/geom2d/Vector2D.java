@@ -2,6 +2,8 @@ package net.sci.geom.geom2d;
 
 import static java.lang.Math.abs;
 
+import java.util.Locale;
+
 import net.sci.array.Dimensional;
 
 public class Vector2D implements Dimensional
@@ -174,9 +176,9 @@ public class Vector2D implements Dimensional
     	switch(n)
     	{
     	case 0: return this;
-    	case 1: return new Vector2D( y, -x);
+    	case 1: return new Vector2D(-y,  x);
     	case 2: return new Vector2D(-x, -y);
-    	case 3: return new Vector2D(-y,  x);
+    	case 3: return new Vector2D( y, -x);
     	default: return this; // should never happen...
     	}
     }
@@ -356,5 +358,14 @@ public class Vector2D implements Dimensional
 //	{
 //		return trans.transform(this);
 //	}
+
+    // ===================================================================
+    // Override Object interface
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.ENGLISH, "Point2D(%g,%g)", this.x, this.y);
+    }
 
 }

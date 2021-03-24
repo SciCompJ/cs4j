@@ -10,6 +10,7 @@ import java.util.Iterator;
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.Vector2D;
 
 /**
  * <p>
@@ -26,7 +27,17 @@ public class LineString2D implements Polyline2D
     // ===================================================================
     // Class variables
     
+    /**
+     * The array of coordinates for each vertex.
+     */
     private ArrayList<Point2D> vertices;
+    
+    /**
+     * An optional array of vectors used to store the normal for each vertex.
+     * 
+     * Always initialized, but has a size of zero by default.
+     */
+    private ArrayList<Vector2D> vertexNormals = new ArrayList<Vector2D>(0);
     
     
     // ===================================================================
@@ -106,6 +117,18 @@ public class LineString2D implements Polyline2D
         this.vertices.remove(vertexIndex);
     }
     
+    /**
+     * Returns the vertex at a given index.
+     * 
+     * @param index
+     *            the vertex index, between 0 and (vertexCount-1)
+     * @return the vertex at the specified index.
+     */
+    public Polyline2D.Vertex vertex(int index)
+    {
+        return new Vertex(index);
+    }
+    
     public Point2D vertexPosition(int vertexIndex)
     {
         return this.vertices.get(vertexIndex);
@@ -136,10 +159,86 @@ public class LineString2D implements Polyline2D
         return index;
     }
     
+    
+    // ===================================================================
+    // Management of vertex normals
+    
+    public void clearNormals()
+    {
+        this.vertexNormals.clear();
+    }
+    
+    public void computeNormals()
+    {
+        // allocate memory for storing normals
+        this.clearNormals();
+        int nVertices = this.vertices.size();
+        this.vertexNormals.ensureCapacity(nVertices);
+        
+        // compute tangent of first edge
+        Point2D V0 = this.vertices.get(0);
+        Point2D V1 = this.vertices.get(1);
+        Vector2D T0 = new Vector2D(V0, V1).normalize();
+        
+        // compute normal at first vertex
+        this.vertexNormals.add(T0.rotate90(-1));
+        
+        // process regular vertices
+        final double k = Math.sqrt(2) / 2.0;
+        for (int i = 1; i < nVertices - 1; i++)
+        {
+            V0 = V1;
+            V1 = this.vertices.get(i+1);
+            Vector2D T1 = new Vector2D(V0, V1).normalize();
+            
+            // compute average of the two normalized tangent vectors, and rotate
+            this.vertexNormals.add(T0.plus(T1).times(k).rotate90(-1));
+            
+            T0 = T1;
+        }
+        
+        // compute normal at last vertex
+        this.vertexNormals.add(T0.rotate90(-1));
+    }
+    
 
     // ===================================================================
     // Methods implementing the Polyline2D interface
     
+
+    public LineString2D smooth(int smoothingSize)
+    {
+        // compute the number of elements before and after central vertex
+        // (ensuring M1+M2 = smoothingSize)
+        int M1 = (int) Math.floor((smoothingSize - 1) / 2);
+        int M2 = (int) Math.ceil((smoothingSize - 1) / 2);
+        
+        int nv = this.vertices.size();
+        LineString2D res = new LineString2D(nv);
+        
+        for (int i = 0; i < nv; i++)
+        {
+            double x = 0;
+            double y = 0;
+            for (int i2 = i - M1; i2 <= i + M2; i2++)
+            {
+                // clamp index between 0 and vertex number
+                int i2c = Math.min(Math.max(i2, 0), nv - 1);
+                Point2D v = vertices.get(i2c);
+                x += v.getX();
+                y += v.getY();
+            }
+            x /= smoothingSize;
+            y /= smoothingSize;
+            
+            // add new vertex
+            res.addVertex(new Point2D(x, y));
+        }
+
+        return res;
+    }
+    
+
     public LineString2D resampleBySpacing(double spacing)
     {
         // compute vertex number of resulting curve
@@ -347,6 +446,17 @@ public class LineString2D implements Polyline2D
 		{
 			return vertices.get(this.index);
 		}
+		
+		@Override
+        public Vector2D normal()
+        {
+		    if (vertexNormals.size() > 0)
+		    {
+	            return vertexNormals.get(this.index);
+		    }
+		    
+            throw new RuntimeException("Normal vectors have not been computed");
+        }
     }
     
     public class Edge implements Polyline2D.Edge
@@ -402,5 +512,5 @@ public class LineString2D implements Polyline2D
 			return new Edge(this.index++);
 		}
     }
-    
+
 }

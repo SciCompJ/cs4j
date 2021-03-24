@@ -14,6 +14,7 @@ import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.LinearGeometry2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.Vector2D;
 
 /**
  * <p>
@@ -51,7 +52,21 @@ public interface Polyline2D extends Curve2D
      */
     public interface Vertex
     {
+        /**
+         * @return the position of this vertex, as a Point2D.
+         */
     	public Point2D position();
+    	
+        /**
+         * Returns the normal computed at this vertex (optional operation). 
+         * Default is to throw an Exception.
+         * 
+         * @return the normal computed at this vertex, as a Vector2D.
+         */
+    	public default Vector2D normal()
+    	{
+    	    throw new RuntimeException("Unimplemented operation");
+    	}
     }
 
     /**
@@ -59,10 +74,19 @@ public interface Polyline2D extends Curve2D
      */
     public interface Edge
     {
+        /**
+         * @return the source vertex of this edge.
+         */
     	public Vertex source();
     	
+        /**
+         * @return the targe vertex of this edge.
+         */
     	public Vertex target();
     	
+        /**
+         * @return the line segment geometry corresponding to this edge.
+         */
     	public LineSegment2D curve(); 
     }
 
