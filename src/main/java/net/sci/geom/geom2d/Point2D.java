@@ -3,6 +3,10 @@
  */
 package net.sci.geom.geom2d;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 
 import net.sci.geom.Point;
@@ -29,6 +33,46 @@ public class Point2D implements Geometry2D, Point
         
         return new Point2D(xc / np, yc / np);
     }
+    
+    /**
+     * Returns a new sorted list of the points in the collection given as
+     * parameter. The points are sorted in lexicographic order: first with
+     * increasing X order, and in case of equality by increasing Y order.
+     * 
+     * @param points
+     *            a collection of points to sort
+     * @return a new collection containing points sorted wrt their coordinates.
+     */
+    public static final ArrayList<Point2D> sortPoints(Collection<Point2D> points)
+    {
+        // create result array
+        ArrayList<Point2D> res = new ArrayList<Point2D>(points.size());
+        res.addAll(points);
+        
+        // create the comparator
+        Comparator<Point2D> comparator = new Comparator<Point2D>()
+        {
+            @Override
+            public int compare(Point2D p0, Point2D p1)
+            {
+                // compare X first
+                double dx = p0.getX() - p1.getX();
+                if (dx < 0) return -1;
+                if (dx > 0) return +1;
+                // add Y comparison
+                double dy = p0.getY() - p1.getY();
+                if (dy < 0) return -1;
+                if (dy > 0) return +1;
+                // point with same coordinates
+                return 0;
+            }
+        };
+        
+        // sort the array of points
+        Collections.sort(res, comparator);
+        return res;
+    }
+
 
     // ===================================================================
     // class variables
@@ -101,6 +145,18 @@ public class Point2D implements Geometry2D, Point
 		return new Point2D(this.x - v.getX(), this.y - v.getY());
 	}
 
+	/**
+     * Checks if the two points are equal up to the absolute tolerance value
+     * given as parameter. The tolerance is used for each of the x and y
+     * coordinates.
+     * 
+     * @param point
+     *            the point to compare with
+     * @param eps
+     *            the (absolute) tolerance on coordinates
+     * @return true if all the coordinates of the points are within the
+     *         <code>eps</code> interval.
+     */
 	public boolean almostEquals(Point2D point, double eps)
 	{
         if (Math.abs(point.x - x) > eps) return false;

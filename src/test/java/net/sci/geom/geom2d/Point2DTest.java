@@ -3,6 +3,8 @@ package net.sci.geom.geom2d;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 public class Point2DTest
@@ -62,4 +64,32 @@ public class Point2DTest
         assertEquals(50, centroid.getX(), .01);
         assertEquals(50, centroid.getY(), .01);
     }
+    
+    @Test
+    public void testSortPoints() 
+    {
+        // create points
+        Point2D p1 = new Point2D(60.12, 40.23); 
+        Point2D p2 = new Point2D(20.34, 40.45); 
+        Point2D p3 = new Point2D(40.56, 60.78); 
+        Point2D p4 = new Point2D(40.56, 20.89); // same x-coord as P3
+        
+        // create point list
+        ArrayList<Point2D> points = new ArrayList<Point2D>(4);
+        points.add(p1);
+        points.add(p2);
+        points.add(p3);
+        points.add(p4);
+        
+        // sort
+        ArrayList<Point2D> sortedPoints = Point2D.sortPoints(points);
+        
+        // check points are sorted
+        assertEquals(4, sortedPoints.size());
+        assertEquals(p2, sortedPoints.get(0));
+        assertEquals(p4, sortedPoints.get(1));
+        assertEquals(p3, sortedPoints.get(2));
+        assertEquals(p1, sortedPoints.get(3));
+    }
+    
 }
