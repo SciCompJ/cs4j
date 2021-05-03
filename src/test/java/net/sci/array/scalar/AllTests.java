@@ -20,6 +20,8 @@ import org.junit.runners.Suite;
 	BufferedInt16Array2DTest.class,
 	BufferedUInt16Array2DTest.class,
 	BufferedUInt8Array2DTest.class,
+    FloatBufferFloat32Array2DTest.class,
+    ShortBufferUInt16Array2DTest.class,
     // 3D abstract classes
     ScalarArray3DTest.class,
 	BinaryArray3DTest.class,
@@ -32,6 +34,9 @@ import org.junit.runners.Suite;
     // 3D implementations
     BufferedUInt8Array3DTest.class,
     SlicedUInt8Array3DTest.class,
+    FileMappedUInt8Array3DTest.class,
+    FileMappedUInt16Array3DTest.class,
+    FileMappedFloat32Array3DTest.class,
     // ND implementations
     BufferedInt32ArrayNDTest.class,
     BufferedUInt8ArrayNDTest.class,
