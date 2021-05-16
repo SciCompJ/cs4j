@@ -11,7 +11,7 @@ import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
- * A polygonal region whose boundary is a single linear ring.
+ * A polygonal domain whose boundary is composed by a single linear ring.
  * 
  * @author dlegland
  * 
@@ -43,7 +43,7 @@ public interface Polygon2D extends PolygonalDomain2D
      */
     public static Polygon2D convert(Polyline2D polyline)
     {
-    	DefaultPolygon2D poly = new DefaultPolygon2D(polyline.vertexNumber());
+    	DefaultPolygon2D poly = new DefaultPolygon2D(polyline.vertexCount());
     	for (Point2D p : polyline.vertexPositions())
     	{
     		poly.addVertex(p);
@@ -135,7 +135,7 @@ public interface Polygon2D extends PolygonalDomain2D
     @Override
     public default Polygon2D transform(AffineTransform2D trans)
     {
-        ArrayList<Point2D> newVertices = new ArrayList<>(this.vertexNumber());
+        ArrayList<Point2D> newVertices = new ArrayList<>(this.vertexCount());
         for (Point2D point : this.vertexPositions())
         {
             newVertices.add(point.transform(trans));

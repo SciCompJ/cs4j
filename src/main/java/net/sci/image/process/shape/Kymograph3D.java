@@ -46,7 +46,7 @@ public class Kymograph3D implements ImageArrayOperator
         }
         
         Polyline2D curve2 = curve.resampleBySpacing(stepSize);
-        int nv = curve2.vertexNumber();
+        int nv = curve2.vertexCount();
         
         if (array instanceof ScalarArray<?>)
         {
@@ -64,7 +64,7 @@ public class Kymograph3D implements ImageArrayOperator
     
     private void processScalar3d(ScalarArray3D<?> source, Polyline2D curve, ScalarArray2D<?> target)
     {
-        int nv = curve.vertexNumber();
+        int nv = curve.vertexCount();
         if (target.size(0) != nv)
         {
             throw new IllegalArgumentException(

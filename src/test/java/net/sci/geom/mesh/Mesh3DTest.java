@@ -72,7 +72,7 @@ public class Mesh3DTest
     {
         // Create an octahedron
         Mesh3D mesh = Meshes3D.createOctahedron();
-        assertEquals(12, mesh.edgeNumber());
+        assertEquals(12, mesh.edgeCount());
     }
     
     @Test
@@ -86,7 +86,7 @@ public class Mesh3DTest
         Vector3D v2 = new Vector3D(0, 1, 0);
         Plane3D plane = new Plane3D(p0, v1, v2);
         
-        assertEquals(12, mesh.edgeNumber());
+        assertEquals(12, mesh.edgeCount());
        
         ArrayList<Point3D> intersections = new ArrayList<>();
         for (Edge edge : mesh.edges())

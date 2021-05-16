@@ -57,5 +57,5 @@ public interface PolygonalDomain2D extends Domain2D
     /**
      * @return the number of vertices in this polygon.
      */
-    public int vertexNumber();
+    public int vertexCount();
 }

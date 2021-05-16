@@ -88,7 +88,7 @@ public class LineString2DTest
         
         Point2D p20 = poly2.getPoint(0);
         assertTrue(p20.distance(10, 20) < 0.001);
-        Point2D p21 = poly2.getPoint(poly2.vertexNumber() - 1);
+        Point2D p21 = poly2.getPoint(poly2.vertexCount() - 1);
         assertTrue(p21.distance(10, 40) < 0.001);
     }
     
@@ -106,7 +106,7 @@ public class LineString2DTest
                 new Point2D(10, 40));
         
         Polyline2D poly2 = poly.asPolyline(16);
-        assertEquals(16, poly2.vertexNumber());
+        assertEquals(16, poly2.vertexCount());
         
         double refLength = poly.length();
         assertEquals(refLength, poly2.length(), 0.1);

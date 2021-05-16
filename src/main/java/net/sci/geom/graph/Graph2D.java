@@ -17,7 +17,7 @@ public interface Graph2D extends Geometry2D
     // ===================================================================
     // Vertex management
     
-    public int vertexNumber();
+    public int vertexCount();
     
     public Iterable<? extends Vertex> vertices();
     
@@ -33,7 +33,7 @@ public interface Graph2D extends Geometry2D
     // ===================================================================
     // Edge management
     
-    public int edgeNumber();
+    public int edgeCount();
     
     public Iterable<Edge> edges();
     

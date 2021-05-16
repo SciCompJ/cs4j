@@ -28,8 +28,8 @@ public class OffMeshReaderTest
         Mesh3D mesh = reader.readMesh();
 
         assertNotNull(mesh);
-        assertEquals(6, mesh.vertexNumber());
-        assertEquals(8, mesh.faceNumber());
+        assertEquals(6, mesh.vertexCount());
+        assertEquals(8, mesh.faceCount());
     }
     
 }

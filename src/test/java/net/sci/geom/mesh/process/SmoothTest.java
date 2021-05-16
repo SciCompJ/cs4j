@@ -28,8 +28,8 @@ public class SmoothTest
         Smooth algo = new Smooth();
         Mesh3D result = algo.process(mesh);
         
-        assertEquals(6, result.vertexNumber());
-        assertEquals(8, result.faceNumber());
+        assertEquals(6, result.vertexCount());
+        assertEquals(8, result.faceCount());
     }
     
     /**
@@ -44,8 +44,8 @@ public class SmoothTest
         Mesh3D result = algo.process(mesh);
         result = algo.process(result);
         
-        assertEquals(6, result.vertexNumber());
-        assertEquals(8, result.faceNumber());
+        assertEquals(6, result.vertexCount());
+        assertEquals(8, result.faceCount());
     }
     
 }

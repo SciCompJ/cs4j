@@ -68,7 +68,7 @@ public class DefaultTriMesh3DTest
         // Create an octahedron
         DefaultTriMesh3D mesh = (DefaultTriMesh3D) Meshes3D.createOctahedron();
         
-        assertEquals(12, mesh.edgeNumber());
+        assertEquals(12, mesh.edgeCount());
 //        for (DefaultTriMesh3D.Edge edge : mesh.edges())
 //        {
 //            System.out.println("Edge from " + edge.iv1 + " to " + edge.iv2);
@@ -89,7 +89,7 @@ public class DefaultTriMesh3DTest
         // remove vertex
         mesh.removeVertex(v0);
         
-        assertEquals(3, mesh.vertexNumber());
+        assertEquals(3, mesh.vertexCount());
     }
 
     
@@ -104,7 +104,7 @@ public class DefaultTriMesh3DTest
         Vector3D v2 = new Vector3D(0, 1, 0);
         Plane3D plane = new Plane3D(p0, v1, v2);
         
-        assertEquals(12, mesh.edgeNumber());
+        assertEquals(12, mesh.edgeCount());
        
         ArrayList<Point3D> intersections = new ArrayList<>();
         for (Mesh3D.Edge edge : mesh.edges())

@@ -33,7 +33,7 @@ public interface Polyline3D extends Curve3D
      * 
      * @return the number of vertices
      */
-    public int vertexNumber();
+    public int vertexCount();
 
     public Iterator<LineSegment3D> edgeIterator();
 

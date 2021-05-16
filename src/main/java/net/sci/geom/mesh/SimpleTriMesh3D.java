@@ -217,7 +217,7 @@ public class SimpleTriMesh3D implements Mesh3D
     // Management of vertices
 
     @Override
-    public int vertexNumber()
+    public int vertexCount()
     {
         return vertexPositions.size();
     }
@@ -313,7 +313,7 @@ public class SimpleTriMesh3D implements Mesh3D
     // Management of edges
     
     @Override
-    public int edgeNumber()
+    public int edgeCount()
     {
         return 0;
     }
@@ -352,7 +352,7 @@ public class SimpleTriMesh3D implements Mesh3D
     }
   
     @Override
-    public int faceNumber()
+    public int faceCount()
     {
         return faces.size();
     }

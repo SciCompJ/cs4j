@@ -30,7 +30,7 @@ public class ConvexHullTest
         
         assertEquals(1, hulls.length);
         Polygon2D hull0 = hulls[0];
-        assertEquals(8, hull0.vertexNumber());
+        assertEquals(8, hull0.vertexCount());
     }
     
     /**
@@ -58,16 +58,16 @@ public class ConvexHullTest
         assertEquals(4, hulls.length);
         
         Polygon2D hull2 = hulls[0];
-        assertEquals(8, hull2.vertexNumber());
+        assertEquals(8, hull2.vertexCount());
 
         Polygon2D hull4 = hulls[1];
-        assertEquals(8, hull4.vertexNumber());
+        assertEquals(8, hull4.vertexCount());
 
         Polygon2D hull6 = hulls[2];
-        assertEquals(8, hull6.vertexNumber());
+        assertEquals(8, hull6.vertexCount());
 
         Polygon2D hull8 = hulls[3];
-        assertEquals(8, hull8.vertexNumber());
+        assertEquals(8, hull8.vertexCount());
     }
     
 }

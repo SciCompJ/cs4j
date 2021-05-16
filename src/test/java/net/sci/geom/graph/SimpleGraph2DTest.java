@@ -42,8 +42,8 @@ public class SimpleGraph2DTest
         graph.addEdge(1, 4);
         graph.addEdge(2, 4);
         
-        assertEquals(5, graph.vertexNumber());
-        assertEquals(6, graph.edgeNumber());
+        assertEquals(5, graph.vertexCount());
+        assertEquals(6, graph.edgeCount());
     }
     
 }

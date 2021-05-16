@@ -31,8 +31,8 @@ public class Smooth
     public Mesh3D process(Mesh3D mesh)
     {
         // number of elements in the input mesh
-        int nv = mesh.vertexNumber();
-        int nf = mesh.faceNumber();
+        int nv = mesh.vertexCount();
+        int nf = mesh.faceCount();
 
         // create result mesh (assuming triangular mesh)
         SimpleTriMesh3D result = new SimpleTriMesh3D(nv, nf);

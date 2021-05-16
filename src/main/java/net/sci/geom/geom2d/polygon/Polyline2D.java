@@ -130,7 +130,7 @@ public interface Polyline2D extends Curve2D
      * 
      * @return the number of vertices
      */
-    public int vertexNumber();
+    public int vertexCount();
 
     public Point2D vertexPosition(int vertexIndex);
     

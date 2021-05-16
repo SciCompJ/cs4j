@@ -61,7 +61,7 @@ public class SimpleGraph2D implements Graph2D
     // ===================================================================
     // Vertices management
     
-    public int vertexNumber()
+    public int vertexCount()
     {
         return this.vertices.size();
     }
@@ -119,7 +119,7 @@ public class SimpleGraph2D implements Graph2D
     // ===================================================================
     // Edges management
     
-    public int edgeNumber()
+    public int edgeCount()
     {
         return this.edges.size();
     }
@@ -486,8 +486,8 @@ public class SimpleGraph2D implements Graph2D
         graph.addEdge(1, 4);
         graph.addEdge(2, 4);
         
-        System.out.println("nv = " + graph.vertexNumber());
-        System.out.println("ne = " + graph.edgeNumber());
+        System.out.println("nv = " + graph.vertexCount());
+        System.out.println("ne = " + graph.edgeCount());
     }
 
 }

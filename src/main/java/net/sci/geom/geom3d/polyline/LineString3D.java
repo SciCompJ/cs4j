@@ -90,7 +90,7 @@ public class LineString3D implements Polyline3D
      * 
      * @return the number of vertices
      */
-    public int vertexNumber()
+    public int vertexCount()
     {
         return vertices.size();
     }
@@ -138,7 +138,7 @@ public class LineString3D implements Polyline3D
      */
     public LineString3D transform(AffineTransform3D trans)
     {
-        int n = this.vertexNumber();
+        int n = this.vertexCount();
         ArrayList<Point3D> newVertices = new ArrayList<Point3D>(n);
         for (int i = 0; i < n; i++)
         {
@@ -158,7 +158,7 @@ public class LineString3D implements Polyline3D
     @Override
     public LineString3D reverse()
     {
-        int n = this.vertexNumber();
+        int n = this.vertexCount();
         ArrayList<Point3D> newVertices = new ArrayList<Point3D>(n);
         for (int i = 0; i < n; i++)
         {

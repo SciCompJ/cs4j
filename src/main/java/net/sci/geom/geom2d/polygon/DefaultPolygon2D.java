@@ -102,7 +102,7 @@ public class DefaultPolygon2D implements Polygon2D
     public DefaultPolygon2D complement()
     {
         // create a new collection of vertices in reverse order, keeping first vertex unchanged.
-        int n = this.vertexNumber();
+        int n = this.vertexCount();
         ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
         newVertices.add(this.vertices.get(0));
         for (int i = 1; i < n; i++)
@@ -163,7 +163,7 @@ public class DefaultPolygon2D implements Polygon2D
     /**
      * @return the number of vertices in this polygon.
      */
-    public int vertexNumber()
+    public int vertexCount()
     {
         return this.vertices.size();
     }

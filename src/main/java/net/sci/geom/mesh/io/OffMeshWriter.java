@@ -52,8 +52,8 @@ public class OffMeshWriter implements MeshWriter
         }
         
         // number of element within the mesh
-        int nv = mesh.vertexNumber();
-        int nf = mesh.faceNumber();
+        int nv = mesh.vertexCount();
+        int nf = mesh.faceCount();
         
         // write header
         writer.println("OFF");

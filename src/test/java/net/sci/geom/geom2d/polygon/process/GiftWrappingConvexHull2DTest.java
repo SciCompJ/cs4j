@@ -31,7 +31,7 @@ public class GiftWrappingConvexHull2DTest
         GiftWrappingConvexHull2D algo = new GiftWrappingConvexHull2D();
         Polygon2D hull = algo.process(points);
         
-        assertEquals(4, hull.vertexNumber());
+        assertEquals(4, hull.vertexCount());
     }
     
     @Test
@@ -67,7 +67,7 @@ public class GiftWrappingConvexHull2DTest
 //        {
 //            System.out.println("p: " + p.getX() + " " + p.getY());
 //        }
-        assertEquals(8, hull.vertexNumber());
+        assertEquals(8, hull.vertexCount());
     }
 
     /**
@@ -113,6 +113,6 @@ public class GiftWrappingConvexHull2DTest
 //        {
 //            System.out.println("p: " + p.getX() + " " + p.getY());
 //        }
-        assertEquals(9, hull.vertexNumber());
+        assertEquals(9, hull.vertexCount());
     }
 }

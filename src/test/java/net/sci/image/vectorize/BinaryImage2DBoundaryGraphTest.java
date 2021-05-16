@@ -26,8 +26,8 @@ public class BinaryImage2DBoundaryGraphTest
 		BinaryImage2DBoundaryGraph op = new BinaryImage2DBoundaryGraph();
 		Graph2D graph = op.process(array);
 		
-		assertEquals(4, graph.vertexNumber());
-		assertEquals(4, graph.edgeNumber());
+		assertEquals(4, graph.vertexCount());
+		assertEquals(4, graph.edgeCount());
 	}
 	
 	@Test
@@ -46,8 +46,8 @@ public class BinaryImage2DBoundaryGraphTest
 		BinaryImage2DBoundaryGraph op = new BinaryImage2DBoundaryGraph();
 		Graph2D graph = op.process(array);
 		
-		assertEquals(16, graph.vertexNumber());
-		assertEquals(16, graph.edgeNumber());
+		assertEquals(16, graph.vertexCount());
+		assertEquals(16, graph.edgeCount());
 	}
 	
 	/**

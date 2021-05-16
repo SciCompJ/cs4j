@@ -64,7 +64,7 @@ public class LinearRing2DTest
                 new Point2D(60, 40),
                 new Point2D(00, 40));
         LinearRing2D ring2 = ring.resampleBySpacing(10.0);
-        assertEquals(20, ring2.vertexNumber());
+        assertEquals(20, ring2.vertexCount());
     }
     
     /**
@@ -79,7 +79,7 @@ public class LinearRing2DTest
                 new Point2D(60, 40),
                 new Point2D(00, 40));
         Polyline2D poly2 = ring.asPolyline(20);
-        assertEquals(20, poly2.vertexNumber());
+        assertEquals(20, poly2.vertexCount());
         
         double refLength = ring.length();
         assertEquals(refLength, poly2.length(), .1);

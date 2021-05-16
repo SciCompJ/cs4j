@@ -24,7 +24,7 @@ public class Box2DTest
 		Bounds2D box = new Bounds2D(10, 50, 20, 40);
 		PolygonalDomain2D poly = box.getRectangle();
 		
-		assertEquals(4, poly.vertexNumber());
+		assertEquals(4, poly.vertexCount());
 	}
 
 	/**

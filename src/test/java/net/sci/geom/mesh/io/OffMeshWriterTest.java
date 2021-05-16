@@ -51,7 +51,7 @@ public class OffMeshWriterTest
         
         MeshReader reader = new OffMeshReader(file);
         Mesh3D mesh2 = reader.readMesh();
-        assertEquals(mesh.vertexNumber(), mesh2.vertexNumber());
-        assertEquals(mesh.faceNumber(), mesh2.faceNumber());
+        assertEquals(mesh.vertexCount(), mesh2.vertexCount());
+        assertEquals(mesh.faceCount(), mesh2.faceCount());
     }
 }

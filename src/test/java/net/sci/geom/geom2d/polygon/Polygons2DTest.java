@@ -33,7 +33,7 @@ public class Polygons2DTest
         
         Polygon2D hull = Polygons2D.convexHull(points);
         
-        assertEquals(4, hull.vertexNumber());
+        assertEquals(4, hull.vertexCount());
     }
 
     /**
@@ -66,7 +66,7 @@ public class Polygons2DTest
                         
         Polygon2D hull = Polygons2D.convexHull(points);
         
-        assertEquals(8, hull.vertexNumber());
+        assertEquals(8, hull.vertexCount());
     }
 
     /**
@@ -109,7 +109,7 @@ public class Polygons2DTest
                         
         Polygon2D hull = Polygons2D.convexHull(points);
         
-        assertEquals(9, hull.vertexNumber());
+        assertEquals(9, hull.vertexCount());
     }
 
 }
