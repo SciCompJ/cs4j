@@ -20,6 +20,33 @@ import net.sci.geom.geom2d.Vector2D;
 public class LineString2DTest
 {
     @Test
+    public final void testInterpolate_LineString2D_LineString2D_TwoRectangles()
+    {
+        LineString2D ring1 = new LineString2D(
+                new Point2D(10, 20),
+                new Point2D(40, 20),
+                new Point2D(40, 30),
+                new Point2D(10, 30));
+        LineString2D ring2 = new LineString2D(
+                new Point2D(20, 10),
+                new Point2D(30, 10),
+                new Point2D(30, 40),
+                new Point2D(20, 40));
+        
+        LineString2D res05 = LineString2D.interpolate(ring1, ring2, 0.5);
+        assertTrue(res05.vertexPosition(0).almostEquals(new Point2D(15.0, 15.0), 0.1));
+        assertTrue(res05.vertexPosition(1).almostEquals(new Point2D(35.0, 15.0), 0.1));
+        assertTrue(res05.vertexPosition(2).almostEquals(new Point2D(35.0, 35.0), 0.1));
+        assertTrue(res05.vertexPosition(3).almostEquals(new Point2D(15.0, 35.0), 0.1));
+
+        LineString2D res02 = LineString2D.interpolate(ring1, ring2, 0.2);
+        assertTrue(res02.vertexPosition(0).almostEquals(new Point2D(12.0, 18.0), 0.1));
+        assertTrue(res02.vertexPosition(1).almostEquals(new Point2D(38.0, 18.0), 0.1));
+        assertTrue(res02.vertexPosition(2).almostEquals(new Point2D(38.0, 32.0), 0.1));
+        assertTrue(res02.vertexPosition(3).almostEquals(new Point2D(12.0, 32.0), 0.1));
+    }
+    
+    @Test
     public final void testVertexNormal()
     {
         LineString2D poly = new LineString2D(

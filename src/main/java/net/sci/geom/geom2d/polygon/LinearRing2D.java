@@ -37,6 +37,55 @@ import net.sci.geom.geom2d.curve.Contour2D;
 public class LinearRing2D implements Polyline2D, Contour2D
 {
     // ===================================================================
+    // Static methods
+    
+    /**
+     * Interpolates a new linear ring between two linear rings, assuming the vertices
+     * are in correspondence.
+     * 
+     * @param ring0
+     *            the first linear ring, at position t=0
+     * @param ring1
+     *            the second linear ring, at position t=1
+     * @param t
+     *            the position of the linear ring to interpolate, between 0 and 1
+     * @return the interpolated linear ring
+     */
+    public static final LinearRing2D interpolate(LinearRing2D ring0, LinearRing2D ring1, double t)
+    {
+        // check number of vertices
+        int nv = ring0.vertexCount();
+        if (ring1.vertexCount() != nv)
+        {
+            throw new RuntimeException("Both rings must have same number of vertices");
+        }
+        
+        // check interpolation interval
+        if (t < 0 || t > 1)
+        {
+            throw new RuntimeException("Interpolation value must be comprised between 0 and 1.");
+        }
+        double t0 = t;
+        double t1 = 1 - t0;
+        
+        // allocate memory for result
+        LinearRing2D res = new LinearRing2D(nv);
+        
+        // iterate over vertices
+        for (int iv = 0; iv < nv; iv++)
+        {
+            Point2D p1 = ring0.vertexPosition(iv);
+            Point2D p2 = ring1.vertexPosition(iv);
+            
+            double x = p1.getX() * t1 + p2.getX() * t0;
+            double y = p1.getY() * t1 + p2.getY() * t0;
+            res.addVertex(new Point2D(x, y));
+        }
+
+        return res;
+    }
+    
+    // ===================================================================
     // Class variables
     
     /**

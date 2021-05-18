@@ -25,6 +25,56 @@ import net.sci.geom.geom2d.Vector2D;
 public class LineString2D implements Polyline2D
 {
     // ===================================================================
+    // Static methods
+    
+    /**
+     * Interpolates a new line string between two line strings, assuming the vertices
+     * are in correspondence.
+     * 
+     * @param ring0
+     *            the first line string, at position t=0
+     * @param ring1
+     *            the second line string, at position t=1
+     * @param t
+     *            the position of the line string to interpolate, between 0 and 1
+     * @return the interpolated line string
+     */
+    public static final LineString2D interpolate(LineString2D ring0, LineString2D ring1, double t)
+    {
+        // check number of vertices
+        int nv = ring0.vertexCount();
+        if (ring1.vertexCount() != nv)
+        {
+            throw new RuntimeException("Both rings must have same number of vertices");
+        }
+        
+        // check interpolation interval
+        if (t < 0 || t > 1)
+        {
+            throw new RuntimeException("Interpolation value must be comprised between 0 and 1.");
+        }
+        double t0 = t;
+        double t1 = 1 - t0;
+        
+        // allocate memory for result
+        LineString2D res = new LineString2D(nv);
+        
+        // iterate over vertices
+        for (int iv = 0; iv < nv; iv++)
+        {
+            Point2D p1 = ring0.vertexPosition(iv);
+            Point2D p2 = ring1.vertexPosition(iv);
+            
+            double x = p1.getX() * t1 + p2.getX() * t0;
+            double y = p1.getY() * t1 + p2.getY() * t0;
+            res.addVertex(new Point2D(x, y));
+        }
+
+        return res;
+    }
+    
+    
+    // ===================================================================
     // Class variables
     
     /**
