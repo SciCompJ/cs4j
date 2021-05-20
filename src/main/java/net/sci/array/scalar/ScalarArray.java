@@ -297,7 +297,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         {
             n2 *= dim;
         }
-        if (n2 != this.elementNumber())
+        if (n2 != this.elementCount())
         {
             throw new IllegalArgumentException("The element number should not change after reshape.");
         }

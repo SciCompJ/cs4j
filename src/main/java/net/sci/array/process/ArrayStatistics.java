@@ -137,7 +137,7 @@ public class ArrayStatistics
             sum += v * v;
         }
         
-        return sum / (array.elementNumber() - 1.0);
+        return sum / (array.elementCount() - 1.0);
     }
 
     /**

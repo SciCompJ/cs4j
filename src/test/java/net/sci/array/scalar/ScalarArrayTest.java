@@ -31,7 +31,7 @@ public class ScalarArrayTest
         ScalarArray<?> res = array.reshape(4, 3, 2);
         
         // check element number
-        assertEquals(res.elementNumber(), 24);
+        assertEquals(res.elementCount(), 24);
         
         // check last element
         double lastValue = res.getValue(new int[] {3, 2, 1});
