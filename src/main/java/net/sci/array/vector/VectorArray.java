@@ -41,7 +41,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
 		Float32Array result = Float32Array.create(array.size());
 		
         // iterate over both arrays in parallel
-        double[] values = new double[array.channelNumber()];
+        double[] values = new double[array.channelCount()];
         for(int[] pos : array.positions())
         {
             result.setValue(pos, Vector.norm(array.getValues(pos, values)));
@@ -68,7 +68,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         Float32Array result = Float32Array.create(array.size());
         
         // iterate over both arrays in parallel
-        double[] values = new double[array.channelNumber()];
+        double[] values = new double[array.channelCount()];
         for(int[] pos : array.positions())
         {
             array.getValues(pos, values);
@@ -89,7 +89,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
      */
 	public static Collection<ScalarArray<?>> splitChannels(VectorArray<? extends Vector<?>> array)
 	{
-	    int nc = array.channelNumber();
+	    int nc = array.channelCount();
 	    ArrayList<ScalarArray<?>> channels = new ArrayList<ScalarArray<?>>(nc);
 	    
 	    for (ScalarArray<?> channel : array.channels())
@@ -117,7 +117,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         Float32Array result = Float32Array.create(size());
         
         // iterate over both arrays in parallel
-        double[] values = new double[channelNumber()];
+        double[] values = new double[channelCount()];
         for (int[] pos : this.positions())
         {
             result.setValue(pos, Vector.norm(getValues(pos, values)));
@@ -135,7 +135,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
      * 
      * @return the number of elements used to represent each array element.
      */
-	public int channelNumber();
+	public int channelCount();
 
     /**
      * Returns a view on the channel specified by the given index.
@@ -253,7 +253,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         VectorArray<V> res = newInstance(size());
         
         // prepare iteration
-        int nc = channelNumber();
+        int nc = channelCount();
         double[] values = new double[nc];
         
         // iterate over positions
@@ -277,7 +277,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         VectorArray<V> res = newInstance(size());
         
         // prepare iteration
-        int nc = channelNumber();
+        int nc = channelCount();
         double[] values = new double[nc];
         
         // iterate over positions
@@ -303,7 +303,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
     {
         VectorArray<V> res = newInstance(size());
         
-        int nc = channelNumber();
+        int nc = channelCount();
         double[] values = new double[nc];
         
         for (int[] pos : positions())
@@ -322,7 +322,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
     {
         VectorArray<V> res = newInstance(size());
         
-        int nc = channelNumber();
+        int nc = channelCount();
         double[] values = new double[nc];
         
         for (int[] pos : positions())
@@ -341,7 +341,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
     {
         VectorArray<V> res = newInstance(size());
         
-        int nc = channelNumber();
+        int nc = channelCount();
         double[] values = new double[nc];
         
         for (int[] pos : positions())
@@ -360,7 +360,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
     {
         VectorArray<V> res = newInstance(size());
         
-        int nc = channelNumber();
+        int nc = channelCount();
         double[] values = new double[nc];
         
         for (int[] pos : positions())
@@ -407,7 +407,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         }
         
         // prepare iteration
-        int nc = channelNumber();
+        int nc = channelCount();
         double[] values = new double[nc];
 
         for (int[] pos : positions())
@@ -493,7 +493,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         Array.PositionIterator iter2 = result.positionIterator();
 
         // copy values into output array
-        double[] values = new double[channelNumber()];
+        double[] values = new double[channelCount()];
         while(iter1.hasNext())
         {
             result.setValues(iter2.next(), this.getValues(iter1.next(), values));

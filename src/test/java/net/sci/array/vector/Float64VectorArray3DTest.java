@@ -27,7 +27,7 @@ public class Float64VectorArray3DTest
         {
             assertEquals(5, slice.size(0));
             assertEquals(4, slice.size(1));
-            assertEquals(2, slice.channelNumber());
+            assertEquals(2, slice.channelCount());
             n++;
         }
 

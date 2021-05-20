@@ -53,7 +53,7 @@ public abstract class MorphologicalFilterAlgo extends AlgoStub implements ArrayO
         VectorArray<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             ScalarArray<?> resC = processScalar(array.channel(c));

@@ -69,7 +69,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
     @Override
     public default Float32Vector get(int... pos)
     {
-        return new Float32Vector(getValues(pos, new double[channelNumber()]));
+        return new Float32Vector(getValues(pos, new double[channelCount()]));
     }
 
     @Override
@@ -81,7 +81,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	@Override
 	public default Float32VectorArray newInstance(int... dims)
 	{
-		return Float32VectorArray.create(dims, this.channelNumber());
+		return Float32VectorArray.create(dims, this.channelCount());
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	public default Float32VectorArray duplicate()
 	{
 		// create output array
-		Float32VectorArray result = Float32VectorArray.create(this.size(), this.channelNumber());
+		Float32VectorArray result = Float32VectorArray.create(this.size(), this.channelCount());
 
 		// initialize iterators
         Array.PositionIterator iter1 = this.positionIterator();

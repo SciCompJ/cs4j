@@ -264,7 +264,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(strel.dilation(array.channel(c)), res, c);
@@ -321,7 +321,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(strel.erosion(array.channel(c)), res, c);
@@ -378,7 +378,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(strel.opening(array.channel(c)), res, c);
@@ -434,7 +434,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(strel.closing(array.channel(c)), res, c);
@@ -508,7 +508,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(whiteTopHat_scalar2d(array.channel(c), strel), res, c);
@@ -582,7 +582,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(blackTopHat_scalar2d(array.channel(c), strel), res, c);
@@ -655,7 +655,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(gradient_scalar2d(array.channel(c), strel), res, c);
@@ -738,7 +738,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(laplacian_scalar2d(array.channel(c), strel), res, c);
@@ -812,7 +812,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(internalGradient_scalar2d(array.channel(c), strel), res, c);
@@ -884,7 +884,7 @@ public class MorphologicalFiltering
         VectorArray2D<?> res = array.duplicate();
         
         // iterate over channels
-        for (int c = 0; c < array.channelNumber(); c++)
+        for (int c = 0; c < array.channelCount(); c++)
         {
             // process current channel and copy into result array
             copyChannel(externalGradient_scalar2d(array.channel(c), strel), res, c);

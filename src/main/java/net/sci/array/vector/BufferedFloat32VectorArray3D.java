@@ -72,7 +72,7 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	 * @see net.sci.array.data.VectorArray#getVectorLength()
 	 */
 	@Override
-	public int channelNumber()
+	public int channelCount()
 	{
 		return this.vectorLength;
 	}

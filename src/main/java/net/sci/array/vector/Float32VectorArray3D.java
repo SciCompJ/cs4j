@@ -149,9 +149,9 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
     
 
         @Override
-        public int channelNumber()
+        public int channelCount()
         {
-            return Float32VectorArray3D.this.channelNumber();
+            return Float32VectorArray3D.this.channelCount();
         }
 
         @Override
@@ -200,10 +200,10 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         public Float32VectorArray2D duplicate()
         {
             // allocate
-            Float32VectorArray2D res = Float32VectorArray2D.create(size0, size1, channelNumber());
+            Float32VectorArray2D res = Float32VectorArray2D.create(size0, size1, channelCount());
             
             // fill values
-            double[] buffer = new double[channelNumber()];
+            double[] buffer = new double[channelCount()];
             for (int y = 0; y < size1; y++)
             {
                 for (int x = 0; x < size0; x++)
@@ -310,7 +310,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         protected ChannelView(int channel)
         {
             super(Float32VectorArray3D.this.size0, Float32VectorArray3D.this.size1, Float32VectorArray3D.this.size2);
-            int nChannels = Float32VectorArray3D.this.channelNumber();
+            int nChannels = Float32VectorArray3D.this.channelCount();
             if (channel < 0 || channel >= nChannels)
             {
                 throw new IllegalArgumentException(String.format(
@@ -411,7 +411,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         @Override
         public boolean hasNext()
         {
-            return channel < channelNumber();
+            return channel < channelCount();
         }
 
         @Override

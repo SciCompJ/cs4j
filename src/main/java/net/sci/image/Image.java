@@ -462,7 +462,7 @@ public class Image
         }
         case GRADIENT:
         {
-            int nChannels = ((VectorArray<?>) this.data).channelNumber();
+            int nChannels = ((VectorArray<?>) this.data).channelCount();
             String[] channelNames = new String[nChannels];
             int nDigits = (int) Math.ceil(Math.log10(nChannels));
             String pattern = "G%0" + nDigits + "d";
@@ -475,7 +475,7 @@ public class Image
         }
         case VECTOR:
         {
-            int nChannels = ((VectorArray<?>) this.data).channelNumber();
+            int nChannels = ((VectorArray<?>) this.data).channelCount();
             String[] channelNames = new String[nChannels];
             int nDigits = (int) Math.ceil(Math.log10(nChannels));
             String pattern = "C%0" + nDigits + "d";

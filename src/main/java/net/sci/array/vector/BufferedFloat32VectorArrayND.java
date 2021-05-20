@@ -62,7 +62,7 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
 	// Implementation of the VectorArray interface
 
 	@Override
-    public int channelNumber()
+    public int channelCount()
     {
         return this.vectorLength;
     }

@@ -22,7 +22,7 @@ public interface VectorArrayMarginalOperator extends ScalarArrayOperator
 			VectorArray<? extends Vector<?>> target)
 	{
 		// iterate over channels
-        for (int c = 0; c < source.channelNumber(); c++)
+        for (int c = 0; c < source.channelCount(); c++)
 		{
 			// process current channel
 			ScalarArray<?> resultChannel = processScalar(source.channel(c));

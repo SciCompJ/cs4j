@@ -240,10 +240,10 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	/**
 	 * Always returns 3, as this is the number of components of the RGB16 type.
 	 * 
-	 * @see net.sci.array.vector.VectorArray#channelNumber()
+	 * @see net.sci.array.vector.VectorArray#channelCount()
 	 */
 	@Override
-	public default int channelNumber()
+	public default int channelCount()
 	{
 		return 3;
 	}
