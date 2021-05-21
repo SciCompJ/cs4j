@@ -191,15 +191,15 @@ public class ColorMaps
             ColorMap map = new DefaultColorMap(createColors());
             if (nColors != map.size())
             {
-                map = interpolate(map, nColors);
+                map = periodicMap(map, nColors);
             }
             return map;
         }
 
         private ArrayList<Color> createColors() 
         {
-            // initial values (copied from Fiji's Glasbey LUT)
-            int[] r = { 255, 0, 255, 0, 0, 255, 0, 255, 0, 154, 0, 120, 31, 255, 
+            // initial values (copied from Fiji's Glasbey LUT, removing initial value
+            int[] r = {  0, 255, 0, 0, 255, 0, 255, 0, 154, 0, 120, 31, 255, 
                     177, 241, 254, 221, 32, 114, 118, 2, 200, 136, 255, 133, 161, 
                     20, 0, 220, 147, 0, 0, 57, 238, 0, 171, 161, 164, 255, 71, 212, 
                     251, 171, 117, 166, 0, 165, 98, 0, 0, 86, 159, 66, 255, 0, 252, 
@@ -218,7 +218,7 @@ public class ColorMaps
                     106, 153, 192, 125, 149, 213, 22, 166, 109, 86, 255, 255, 255, 
                     202, 67, 234, 191, 38, 85, 121, 254, 139, 141, 0, 63, 255, 17, 
                     154, 149, 126, 58, 189 };
-            int[] g = { 255, 0, 0, 255, 0, 0, 83, 211, 159, 77, 255, 63, 150, 172, 
+            int[] g = {  0, 0, 255, 0, 0, 83, 211, 159, 77, 255, 63, 150, 172, 
                     204, 8, 143, 0, 26, 0, 108, 173, 255, 108, 183, 133, 3, 249, 71, 
                     94, 212, 76, 66, 167, 112, 0, 245, 146, 255, 206, 0, 173, 118, 
                     188, 0, 0, 115, 93, 132, 121, 255, 53, 0, 45, 242, 93, 255, 191, 
@@ -237,7 +237,7 @@ public class ColorMaps
                     56, 255, 0, 162, 131, 249, 105, 188, 109, 3, 0, 0, 109, 170, 
                     165, 44, 185, 182, 236, 165, 254, 60, 17, 221, 26, 66, 157, 
                     130, 6, 117};
-            int[] b = { 255, 255, 0, 0, 51, 182, 0, 0, 255, 66, 190, 193, 152, 253, 
+            int[] b = { 255, 0, 0, 51, 182, 0, 0, 255, 66, 190, 193, 152, 253, 
                     113, 92, 66, 255, 1, 85, 149, 36, 0, 0, 159, 103, 0, 255, 158, 
                     147, 255, 255, 80, 106, 254, 100, 204, 255, 115, 113, 21, 197, 
                     111, 0, 215, 154, 254, 174, 2, 168, 131, 0, 63, 66, 187, 67, 
@@ -304,6 +304,29 @@ public class ColorMaps
             Color col2 = colorMap.getColor(Math.min(i1 + 1, n0 - 1));
 
             newColors.add(interpolateRGB8(col1, 1-f, col2, f));
+        }
+        return new DefaultColorMap(newColors);
+    }
+    
+    /**
+     * Re-samples a color map to ensure a given number of colors.
+     * 
+     * @param colorMap
+     *            the original color map
+     * @param nColors
+     *            the number of colors of the new color map
+     * @return the interpolated color map
+     */
+    public static final ColorMap periodicMap(ColorMap colorMap, int nColors) 
+    {
+        // allocate memory for new colormap
+        ArrayList<Color> newColors = new ArrayList<Color>(nColors);
+        
+        // pick colors in linear order, starting from beginning if new map is larger
+        int n0 = colorMap.size();
+        for (int i = 0; i < nColors; i++)
+        {
+            newColors.add(colorMap.getColor(i % n0));
         }
         return new DefaultColorMap(newColors);
     }

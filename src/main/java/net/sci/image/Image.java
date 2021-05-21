@@ -3,6 +3,7 @@
  */
 package net.sci.image;
 
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -18,6 +19,7 @@ import javax.swing.JPanel;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.color.RGB16Array;
+import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.scalar.BinaryArray;
 import net.sci.array.scalar.Int;
@@ -325,8 +327,13 @@ public class Image
 		
 			@SuppressWarnings("unchecked")
 			IntArray<? extends Int> array = (IntArray<? extends Int>) this.data;
-			int maxInt = array.maxInt();
-			this.displaySettings.displayRange = new double[]{0, maxInt};
+			int nLabels = array.maxInt();
+			this.displaySettings.displayRange = new double[]{0, nLabels};
+			
+			// default display of label maps: Glasbey LUt and white background
+			this.displaySettings.backgroundColor = RGB8.WHITE;
+			ColorMap colorMap = ColorMaps.GLASBEY.createColorMap(nLabels);
+			this.displaySettings.colorMap = colorMap;
 		}
 	}
 	
