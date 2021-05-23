@@ -43,7 +43,7 @@ public class MaxFeretDiameterTest
         assertEquals(272.7, diam.diameter(), .2);
         
         Table table = algo.createTable(maxFeretDiams);
-        assertEquals(1, table.rowNumber());
+        assertEquals(1, table.rowCount());
     }
 
 }

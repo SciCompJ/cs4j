@@ -37,8 +37,8 @@ public class CovarianceMatrix implements TableOperator
 
     public NumericTable processNumeric(NumericTable table)
     {
-        int nc = table.columnNumber();
-        int nr = table.rowNumber();
+        int nc = table.columnCount();
+        int nr = table.rowCount();
 
         // compute the average value within each column
         double[] means = new double[nc];

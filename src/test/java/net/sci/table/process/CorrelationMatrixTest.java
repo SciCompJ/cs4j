@@ -39,8 +39,8 @@ public class CorrelationMatrixTest
         NumericTable data = NumericTable.keepNumericColumns(table);
         
         NumericTable corrMat = new CorrelationMatrix().process(data);
-        assertEquals(4, corrMat.columnNumber());
-        assertEquals(4, corrMat.rowNumber());
+        assertEquals(4, corrMat.columnCount());
+        assertEquals(4, corrMat.rowCount());
         
         assertEquals(1.0, corrMat.getValue(0, 0), 0.01);
         assertEquals(1.0, corrMat.getValue(1, 1), 0.01);

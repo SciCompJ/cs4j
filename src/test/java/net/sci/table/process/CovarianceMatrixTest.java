@@ -39,8 +39,8 @@ public class CovarianceMatrixTest
         NumericTable data = NumericTable.keepNumericColumns(table);
         
         NumericTable covMat = new CovarianceMatrix().process(data);
-        assertEquals(4, covMat.columnNumber());
-        assertEquals(4, covMat.rowNumber());
+        assertEquals(4, covMat.columnCount());
+        assertEquals(4, covMat.rowCount());
     }
 
 }

@@ -49,8 +49,8 @@ public interface Table
     
     public static Table selectColumns(Table table, int[] columnIndices)
     {
-    	int nr = table.rowNumber();
-    	int nc = table.columnNumber();
+    	int nr = table.rowCount();
+    	int nc = table.columnCount();
     	int nc2 = columnIndices.length;
     	
     	// TODO: choose type depending on parent table. Use "newInstance"-like strategy?
@@ -130,7 +130,7 @@ public interface Table
      * 
      * @return the number of columns in this table
      */
-    public int columnNumber();
+    public int columnCount();
 
     /**
      * Returns a view on the collection of columns contained in this table.
@@ -180,7 +180,7 @@ public interface Table
      * 
      * @return the number of rows in this table
      */
-    public int rowNumber();
+    public int rowCount();
 
 //    public void addRow(String name, double[] values);
     
@@ -286,7 +286,7 @@ public interface Table
         nChars = Math.min(nChars+1, 15);
         
         // create format string
-        int nDigits = columnNumber() > 9 ? 2 : 1;
+        int nDigits = columnCount() > 9 ? 2 : 1;
         String format = " [%" + nDigits + "d] %-" + nChars + "s ";
         
         // iterate over columns
@@ -321,8 +321,8 @@ public interface Table
      */
     public default void print()
     {
-        int nRows = rowNumber();
-        int nCols = columnNumber();
+        int nRows = rowCount();
+        int nCols = columnCount();
         String[] colNames = getColumnNames();
         String[] rowNames = getRowNames();
 

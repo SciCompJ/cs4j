@@ -36,8 +36,8 @@ public class PCA
     public PCA fit(Table table)
     {
         // get table size
-        int nr = table.rowNumber();
-        int nc = table.columnNumber();
+        int nr = table.rowCount();
+        int nc = table.columnCount();
 
         // assumes nr >> nc
         if (nr < nc)
@@ -115,8 +115,8 @@ public class PCA
     
     private Table recenterAndScale(Table table)
     {
-        int nr = table.rowNumber();
-        int nc = table.columnNumber();
+        int nr = table.rowCount();
+        int nc = table.columnCount();
 
         // compute mean values
         this.meanValues = new double[nc];
@@ -185,8 +185,8 @@ public class PCA
     
     private Matrix covarianceMatrix(Table cTable)
     {
-        int nr = cTable.rowNumber();
-        int nc = cTable.columnNumber();
+        int nr = cTable.rowCount();
+        int nc = cTable.columnCount();
         
         // Compute covariance matrix = cData' * cData;
         Matrix covMat = new Matrix(nc, nc);
@@ -296,11 +296,11 @@ public class PCA
     public Table transform(Table table)
     {
         // get table size
-        int nr = table.rowNumber();
-        int nc = table.columnNumber();
+        int nr = table.rowCount();
+        int nc = table.columnCount();
 
         // check table dimension
-        if (nc != this.loadings.rowNumber())
+        if (nc != this.loadings.rowCount())
         {
             throw new IllegalArgumentException("Input table must have " + nc + " columns");
         }

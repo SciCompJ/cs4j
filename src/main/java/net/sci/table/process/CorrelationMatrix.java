@@ -39,7 +39,7 @@ public class CorrelationMatrix implements TableOperator
         NumericTable covMat = new CovarianceMatrix().process(table);
         
         
-        int nc = table.columnNumber();
+        int nc = table.columnCount();
 
         NumericTable corrMat = NumericTable.create(nc, nc);
         

@@ -34,7 +34,7 @@ public interface NumericTable extends Table
     {
         // identifies index of numeric columns
         ArrayList<Integer> indices = new ArrayList<Integer>();
-        for (int c = 0; c < table.columnNumber(); c++)
+        for (int c = 0; c < table.columnCount(); c++)
         {
             if (table.column(c) instanceof NumericColumn)
             {
@@ -43,7 +43,7 @@ public interface NumericTable extends Table
         }
         
         // create the result table
-        int nRows = table.rowNumber();
+        int nRows = table.rowCount();
         NumericTable res = NumericTable.create(nRows, indices.size());
         
         int c2 = 0;

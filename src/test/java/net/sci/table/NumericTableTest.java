@@ -36,8 +36,8 @@ public class NumericTableTest
 
         NumericTable data = NumericTable.keepNumericColumns(table);
         
-        assertEquals(table.rowNumber(), data.rowNumber());
-        assertEquals(4, data.columnNumber());
+        assertEquals(table.rowCount(), data.rowCount());
+        assertEquals(4, data.columnCount());
     }
 
 }

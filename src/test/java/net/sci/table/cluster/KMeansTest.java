@@ -38,7 +38,7 @@ public class KMeansTest
 		KMeans kmeans = new KMeans(3);
 		Table classes = kmeans.process(data);
 		
-		assertEquals(150, classes.rowNumber());
+		assertEquals(150, classes.rowCount());
 		
 //		for (int i = 0; i < 150; i++)
 //		{

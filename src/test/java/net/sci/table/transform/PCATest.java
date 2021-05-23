@@ -38,14 +38,14 @@ public class PCATest
 
         pca.fit(data);
         
-        assertEquals(4, pca.eigenValues.rowNumber());
-        assertEquals(3, pca.eigenValues.columnNumber());
+        assertEquals(4, pca.eigenValues.rowCount());
+        assertEquals(3, pca.eigenValues.columnCount());
         assertEquals(1.0, pca.eigenValues.getValue(3, 2), .01);
 
-        assertEquals(4, pca.loadings.columnNumber());
-        assertEquals(4, pca.loadings.rowNumber());
+        assertEquals(4, pca.loadings.columnCount());
+        assertEquals(4, pca.loadings.rowCount());
 
-        assertEquals(4, pca.scores.columnNumber());
-        assertEquals(150, pca.scores.rowNumber());
+        assertEquals(4, pca.scores.columnCount());
+        assertEquals(150, pca.scores.rowCount());
     }
 }

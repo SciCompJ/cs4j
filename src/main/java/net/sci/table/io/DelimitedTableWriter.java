@@ -110,8 +110,8 @@ public class DelimitedTableWriter implements TableWriter
 		}
 		
 		// retrieve table size
-		int nc = table.columnNumber();
-		int nr = table.rowNumber();
+		int nc = table.columnCount();
+		int nr = table.rowCount();
 
 		// retrieve column and row names
 		String[] colNames = table.getColumnNames();
