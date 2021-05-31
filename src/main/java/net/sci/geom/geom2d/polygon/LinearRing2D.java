@@ -231,6 +231,29 @@ public class LinearRing2D implements Polyline2D, Contour2D
     }
 
  
+    public LinearRing2D mergeMultipleVertices(double minDist)
+    {
+        // Allocate memory for new vertex array
+        int nv = vertexCount();
+        LinearRing2D res = new LinearRing2D(nv);
+        
+        // start with the position of the last vertex
+        Point2D lastPosition = vertexPosition(nv - 1);
+        
+        for (Point2D pos : vertices)
+        {
+            double dist = pos.distance(lastPosition);
+            if (dist > minDist)
+            {
+                res.addVertex(pos);
+                lastPosition = pos;
+            }
+        }
+        
+        return res;
+    }
+
+    
     // ===================================================================
     // Management of vertices
     

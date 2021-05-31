@@ -22,6 +22,25 @@ import net.sci.geom.geom2d.Vector2D;
 public class LinearRing2DTest
 {
     @Test
+    public final void testMergeDuplicateVertices_Double_Rectangle()
+    {
+        LinearRing2D ring = new LinearRing2D(10);
+        ring.addVertex(new Point2D(10.0, 10.0));
+        ring.addVertex(new Point2D(20.0, 10.0));
+        ring.addVertex(new Point2D(20.0, 10.0));
+        ring.addVertex(new Point2D(20.0, 10.0));
+        ring.addVertex(new Point2D(20.0, 20.0));
+        ring.addVertex(new Point2D(10.0, 20.0));
+        ring.addVertex(new Point2D(10.0, 20.0));
+        ring.addVertex(new Point2D(10.0, 20.0));
+        
+        LinearRing2D ring2 = ring.mergeMultipleVertices(0.01);
+        
+        assertEquals(ring2.vertexCount(), 4);
+    }
+    
+    
+    @Test
     public final void testInterpolate_LinearRing2D_LinearRing2D_TwoRectangles()
     {
         LinearRing2D ring1 = new LinearRing2D(

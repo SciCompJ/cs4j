@@ -310,6 +310,28 @@ public class LineString2D implements Polyline2D
         return new LineString2D(vertices2);
     }
     
+    public LineString2D mergeMultipleVertices(double minDist)
+    {
+        // Allocate memory for new vertex array
+        int nv = vertexCount();
+        LineString2D res = new LineString2D(nv);
+        
+        // start with the position of the last vertex
+        Point2D lastPosition = new Point2D(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+        
+        for (Point2D pos : vertices)
+        {
+            double dist = pos.distance(lastPosition);
+            if (dist > minDist)
+            {
+                res.addVertex(pos);
+                lastPosition = pos;
+            }
+        }
+        
+        return res;
+    }
+    
     /**
      * Returns a new linear ring with same vertices but in reverse order. The
      * first vertex of the new line string is the last vertex of this line

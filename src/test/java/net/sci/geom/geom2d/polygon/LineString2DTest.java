@@ -20,6 +20,44 @@ import net.sci.geom.geom2d.Vector2D;
 public class LineString2DTest
 {
     @Test
+    public final void testMergeDuplicateVertices_Double_Rectangle()
+    {
+        LineString2D poly = new LineString2D(10);
+        poly.addVertex(new Point2D(10.0, 10.0));
+        poly.addVertex(new Point2D(20.0, 10.0));
+        poly.addVertex(new Point2D(20.0, 10.0));
+        poly.addVertex(new Point2D(20.0, 10.0));
+        poly.addVertex(new Point2D(20.0, 20.0));
+        poly.addVertex(new Point2D(10.0, 20.0));
+        poly.addVertex(new Point2D(10.0, 20.0));
+        poly.addVertex(new Point2D(10.0, 20.0));
+        
+        LineString2D poly2 = poly.mergeMultipleVertices(0.01);
+        
+        assertEquals(poly2.vertexCount(), 4);
+    }
+
+    @Test
+    public final void testMergeDuplicateVertices_Double_Rectangle_SameExtremity()
+    {
+        LineString2D poly = new LineString2D(10);
+        poly.addVertex(new Point2D(10.0, 10.0));
+        poly.addVertex(new Point2D(20.0, 10.0));
+        poly.addVertex(new Point2D(20.0, 10.0));
+        poly.addVertex(new Point2D(20.0, 10.0));
+        poly.addVertex(new Point2D(20.0, 20.0));
+        poly.addVertex(new Point2D(10.0, 20.0));
+        poly.addVertex(new Point2D(10.0, 20.0));
+        poly.addVertex(new Point2D(10.0, 20.0));
+        poly.addVertex(new Point2D(10.0, 10.0));
+        poly.addVertex(new Point2D(10.0, 10.0));
+        
+        LineString2D poly2 = poly.mergeMultipleVertices(0.01);
+        
+        assertEquals(poly2.vertexCount(), 5);
+    }
+
+    @Test
     public final void testInterpolate_LineString2D_LineString2D_TwoRectangles()
     {
         LineString2D ring1 = new LineString2D(

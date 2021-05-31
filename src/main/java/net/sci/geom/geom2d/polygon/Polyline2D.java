@@ -120,6 +120,16 @@ public interface Polyline2D extends Curve2D
      * @return return the curvilinear length of this polyline, as the sum of edge lengths.
      */
     public double length();
+
+    /**
+     * Merge adjacent vertices that are two close away. Returns a new polyline.
+     * 
+     * @param minDist
+     *            the minimum distance to ensure between vertices.
+     * @return a polyline where consecutive vertices are at least
+     *         <code>minDist</code> apart.
+     */
+    public Polyline2D mergeMultipleVertices(double minDist);
     
     
     // ===================================================================
