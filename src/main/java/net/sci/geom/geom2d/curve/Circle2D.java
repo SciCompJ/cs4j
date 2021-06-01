@@ -8,8 +8,6 @@ import static java.lang.Math.cos;
 import static java.lang.Math.hypot;
 import static java.lang.Math.sin;
 
-import java.util.ArrayList;
-
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
@@ -84,15 +82,15 @@ public class Circle2D implements Contour2D
     {
         double dt = Math.toRadians(360.0 / (nVertices + 1));
         
-        ArrayList<Point2D> vertices = new ArrayList<>(nVertices);
+        LinearRing2D res = LinearRing2D.create(nVertices);
         for (int i = 0; i < nVertices; i++)
         {
             double x = cos(i * dt) * this.radius + this.xc;
             double y = sin(i * dt) * this.radius + this.yc;
-            vertices.add(new Point2D(x, y));
+            res.addVertex(new Point2D(x, y));
         }
         
-        return new LinearRing2D(vertices);
+        return res;
     }
 
     /**

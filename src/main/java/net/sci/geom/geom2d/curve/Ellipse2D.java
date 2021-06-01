@@ -10,8 +10,6 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 
-import java.util.ArrayList;
-
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
@@ -259,17 +257,17 @@ public class Ellipse2D implements Contour2D
         double sint = Math.sin(thetaRad);
         double dt = Math.toRadians(360.0 / nVertices);
         
-        ArrayList<Point2D> vertices = new ArrayList<>(nVertices);
+        LinearRing2D res = LinearRing2D.create(nVertices);
         for (int i = 0; i < nVertices; i++)
         {
             double x = Math.cos(i * dt) * this.r1;
             double y = Math.sin(i * dt) * this.r2;
             double x2 = x * cost - y * sint + this.xc;
             double y2 = x * sint + y * cost + this.yc;
-            vertices.add(new Point2D(x2, y2));
+            res.addVertex(new Point2D(x2, y2));
         }
         
-        return new LinearRing2D(vertices);
+        return res;
     }
 
     /**

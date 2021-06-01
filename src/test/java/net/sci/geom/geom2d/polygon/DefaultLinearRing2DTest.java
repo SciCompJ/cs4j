@@ -18,12 +18,12 @@ import net.sci.geom.geom2d.Vector2D;
  * @author dlegland
  *
  */
-public class LinearRing2DTest
+public class DefaultLinearRing2DTest
 {
     @Test
     public final void testMergeDuplicateVertices_Double_Rectangle()
     {
-        LinearRing2D ring = LinearRing2D.create(10);
+        DefaultLinearRing2D ring = new DefaultLinearRing2D(10);
         ring.addVertex(new Point2D(10.0, 10.0));
         ring.addVertex(new Point2D(20.0, 10.0));
         ring.addVertex(new Point2D(20.0, 10.0));
@@ -38,41 +38,44 @@ public class LinearRing2DTest
         assertEquals(ring2.vertexCount(), 4);
     }
     
-    
     @Test
-    public final void testInterpolate_LinearRing2D_LinearRing2D_TwoRectangles()
+    public final void testVertexNormal()
     {
-        LinearRing2D ring1 = LinearRing2D.create(
+        DefaultLinearRing2D poly = new DefaultLinearRing2D(
                 new Point2D(10, 20),
-                new Point2D(40, 20),
-                new Point2D(40, 30),
-                new Point2D(10, 30));
-        LinearRing2D ring2 = LinearRing2D.create(
-                new Point2D(20, 10),
-                new Point2D(30, 10),
-                new Point2D(30, 40),
-                new Point2D(20, 40));
+                new Point2D(50, 20),
+                new Point2D(50, 40),
+                new Point2D(10, 40));
+        poly.computeNormals();
         
-        LinearRing2D res05 = LinearRing2D.interpolate(ring1, ring2, 0.5);
-        assertTrue(res05.vertexPosition(0).almostEquals(new Point2D(15.0, 15.0), 0.1));
-        assertTrue(res05.vertexPosition(1).almostEquals(new Point2D(35.0, 15.0), 0.1));
-        assertTrue(res05.vertexPosition(2).almostEquals(new Point2D(35.0, 35.0), 0.1));
-        assertTrue(res05.vertexPosition(3).almostEquals(new Point2D(15.0, 35.0), 0.1));
-
-        LinearRing2D res02 = LinearRing2D.interpolate(ring1, ring2, 0.2);
-        assertTrue(res02.vertexPosition(0).almostEquals(new Point2D(12.0, 18.0), 0.1));
-        assertTrue(res02.vertexPosition(1).almostEquals(new Point2D(38.0, 18.0), 0.1));
-        assertTrue(res02.vertexPosition(2).almostEquals(new Point2D(38.0, 32.0), 0.1));
-        assertTrue(res02.vertexPosition(3).almostEquals(new Point2D(12.0, 32.0), 0.1));
+        Polyline2D.Vertex v0 = poly.vertex(0);
+        Vector2D n0 = v0.normal();
+        assertEquals(-0.707, n0.getX(), 0.001);
+        assertEquals(-0.707, n0.getY(), 0.001);
+        
+        Polyline2D.Vertex v1 = poly.vertex(1);
+        Vector2D n1 = v1.normal();
+        assertEquals( 0.707, n1.getX(), 0.001);
+        assertEquals(-0.707, n1.getY(), 0.001);
+        
+        Polyline2D.Vertex v2 = poly.vertex(2);
+        Vector2D n2 = v2.normal();
+        assertEquals( 0.707, n2.getX(), 0.001);
+        assertEquals( 0.707, n2.getY(), 0.001);
+        
+        Polyline2D.Vertex v3 = poly.vertex(3);
+        Vector2D n3 = v3.normal();
+        assertEquals(-0.707, n3.getX(), 0.001);
+        assertEquals( 0.707, n3.getY(), 0.001);
     }
-    
+
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#resampleBySpacing(double)}.
+     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLinearRing2D#resampleBySpacing(double)}.
      */
     @Test
     public final void testResampleBySpacing()
     {
-        LinearRing2D ring = LinearRing2D.create(
+        DefaultLinearRing2D ring = new DefaultLinearRing2D(
                 new Point2D(00, 00),
                 new Point2D(60, 00),
                 new Point2D(60, 40),
@@ -82,12 +85,12 @@ public class LinearRing2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#asPolyline(int)}.
+     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLinearRing2D#asPolyline(int)}.
      */
     @Test
     public final void testAsPolyline_Int()
     {
-        LinearRing2D ring = LinearRing2D.create(
+        DefaultLinearRing2D ring = new DefaultLinearRing2D(
                 new Point2D(00, 00),
                 new Point2D(60, 00),
                 new Point2D(60, 40),
@@ -100,12 +103,12 @@ public class LinearRing2DTest
     }
     
 	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#signedArea()}.
+	 * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLinearRing2D#signedArea()}.
 	 */
 	@Test
 	public final void testSignedArea_CCW()
 	{
-		LinearRing2D polyline = LinearRing2D.create(
+		DefaultLinearRing2D polyline = new DefaultLinearRing2D(
 				new Point2D(20, 10),
 				new Point2D(20, 20),
 				new Point2D(10, 20),
@@ -115,7 +118,7 @@ public class LinearRing2DTest
 	
 	@Test
 	public void testSignedArea_CW(){
-		LinearRing2D invert = LinearRing2D.create(
+		DefaultLinearRing2D invert = new DefaultLinearRing2D(
 				new Point2D(20, 10),
 				new Point2D(10, 10),
 				new Point2D(10, 20),
@@ -124,12 +127,12 @@ public class LinearRing2DTest
 	}
 
 	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#closestVertexIndex(net.sci.geom.geom2d.Point2D)}.
+	 * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLinearRing2D#closestVertexIndex(net.sci.geom.geom2d.Point2D)}.
 	 */
 	@Test
 	public final void testClosestVertexIndex()
 	{
-		LinearRing2D poly = LinearRing2D.create(
+		DefaultLinearRing2D poly = new DefaultLinearRing2D(
 				new Point2D(10, 20),
 				new Point2D(50, 20),
 				new Point2D(50, 40),
@@ -145,7 +148,7 @@ public class LinearRing2DTest
 	}
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#getPoint()}.
+     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLinearRing2D#getPoint()}.
      */
     @Test
     public final void testGetPointAtLength()
@@ -155,7 +158,7 @@ public class LinearRing2DTest
         Point2D p1 = new Point2D(50, 20);
         Point2D p2 = new Point2D(50, 40);
         Point2D p3 = new Point2D(10, 40);
-        LinearRing2D poly = LinearRing2D.create(p0, p1, p2, p3);
+        DefaultLinearRing2D poly = new DefaultLinearRing2D(p0, p1, p2, p3);
         
         // point in the middle of first edge
         Point2D pL20 = poly.getPointAtLength(20);
@@ -173,33 +176,13 @@ public class LinearRing2DTest
         assertTrue(pL100.distance(expL100) < 0.001);
     }
 
-    /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#vertices()}.
-     */
-    @Test
-    public final void testVertices()
-    {
-        LinearRing2D poly = LinearRing2D.create(
-                new Point2D(10, 20),
-                new Point2D(50, 20),
-                new Point2D(50, 40),
-                new Point2D(10, 40));
-        
-        int count = 0;
-        for (@SuppressWarnings("unused") Polyline2D.Vertex v : poly.vertices())
-        {
-            count++;
-        }
-        assertEquals(4, count);
-    }
-
-    /**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#edges()}.
+	/**
+	 * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLinearRing2D#edges()}.
 	 */
 	@Test
 	public final void testEdges()
 	{
-		LinearRing2D poly = LinearRing2D.create(
+		DefaultLinearRing2D poly = new DefaultLinearRing2D(
 				new Point2D(10, 20),
 				new Point2D(50, 20),
 				new Point2D(50, 40),
@@ -216,7 +199,7 @@ public class LinearRing2DTest
 	@Test
     public final void testIntersectionsStraightLine2D_square_LineH()
 	{
-		LinearRing2D ring = LinearRing2D.create(
+		DefaultLinearRing2D ring = new DefaultLinearRing2D(
 				new Point2D(10, 20),
 				new Point2D(50, 20),
 				new Point2D(50, 40),
@@ -233,7 +216,7 @@ public class LinearRing2DTest
 	@Test
     public final void testIntersectionsStraightLine2D_square_LineV()
 	{
-		LinearRing2D ring = LinearRing2D.create(
+		DefaultLinearRing2D ring = new DefaultLinearRing2D(
 				new Point2D(10, 20),
 				new Point2D(50, 20),
 				new Point2D(50, 40),
@@ -250,7 +233,7 @@ public class LinearRing2DTest
 	@Test
     public final void testIntersectionsStraightLine2D_polygon_LineH()
 	{
-		LinearRing2D ring = LinearRing2D.create(
+		DefaultLinearRing2D ring = new DefaultLinearRing2D(
 				new Point2D(10, 20),
 				new Point2D(30, 60),
 				new Point2D(40, 40),
@@ -270,7 +253,7 @@ public class LinearRing2DTest
 	@Test
     public final void testIntersectionsStraightLine2D_polygon_LineH2()
 	{
-		LinearRing2D ring = LinearRing2D.create(
+		DefaultLinearRing2D ring = new DefaultLinearRing2D(
 				new Point2D(10, 20),
 				new Point2D(30, 60),
 				new Point2D(40, 40),
@@ -300,13 +283,13 @@ public class LinearRing2DTest
 	}
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#length()}.
+     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLinearRing2D#length()}.
      */
     @Test
     public final void testLength()
     {
         // line stringwith edge lengths 40, 20, 40, and 20.
-        LinearRing2D poly = LinearRing2D.create(
+        DefaultLinearRing2D poly = new DefaultLinearRing2D(
                 new Point2D(10, 20),
                 new Point2D(50, 20),
                 new Point2D(50, 40),
@@ -317,12 +300,12 @@ public class LinearRing2DTest
     }
     
 	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#distance(net.sci.geom.geom2d.Point2D)}.
+	 * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLinearRing2D#distance(net.sci.geom.geom2d.Point2D)}.
 	 */
 	@Test
 	public final void testDistance()
 	{
-		LinearRing2D poly = LinearRing2D.create(
+		DefaultLinearRing2D poly = new DefaultLinearRing2D(
 				new Point2D(10, 20),
 				new Point2D(50, 20),
 				new Point2D(50, 40),
@@ -334,7 +317,7 @@ public class LinearRing2DTest
 	@Test
 	public final void testSignedDistance()
 	{
-        LinearRing2D poly = LinearRing2D.create(
+        DefaultLinearRing2D poly = new DefaultLinearRing2D(
                 new Point2D(10, 20),
                 new Point2D(50, 20),
                 new Point2D(50, 40),

@@ -94,7 +94,7 @@ public class DefaultPolygon2D implements Polygon2D
     public Iterable<LinearRing2D> rings()
     {
         ArrayList<LinearRing2D> rings = new ArrayList<LinearRing2D>(1); 
-        rings.add(new LinearRing2D(this.vertices));
+        rings.add(LinearRing2D.create(this.vertices));
         return rings;
     }
 
@@ -215,7 +215,7 @@ public class DefaultPolygon2D implements Polygon2D
     @Override
     public LinearRing2D boundary()
     {
-        return new LinearRing2D(this.vertices);
+        return LinearRing2D.create(this.vertices);
     }
     
     /**
@@ -362,7 +362,7 @@ public class DefaultPolygon2D implements Polygon2D
             return 0;
         
         // computes distance to boundary
-        LinearRing2D boundary = new LinearRing2D(this.vertices);
+        LinearRing2D boundary = LinearRing2D.create(this.vertices);
         return boundary.distance(x, y);
     }
     

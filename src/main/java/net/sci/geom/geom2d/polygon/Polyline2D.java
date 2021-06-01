@@ -5,7 +5,6 @@ package net.sci.geom.geom2d.polygon;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import net.sci.geom.geom2d.AffineTransform2D;
@@ -35,64 +34,18 @@ public interface Polyline2D extends Curve2D
     {
         if (closed)
         {
-            return new LinearRing2D(vertices);
+            return LinearRing2D.create(vertices);
         }
         else
         {
-            return new LineString2D(vertices);
+            return LineString2D.create(vertices);
         }
     }
     
     
-    // ===================================================================
-    // Inner interfaces 
-    
-    /**
-     * A vertex of the polyline, used to encapsulate the position.
-     */
-    public interface Vertex
-    {
-        /**
-         * @return the position of this vertex, as a Point2D.
-         */
-    	public Point2D position();
-    	
-        /**
-         * Returns the normal computed at this vertex (optional operation). 
-         * Default is to throw an Exception.
-         * 
-         * @return the normal computed at this vertex, as a Vector2D.
-         */
-    	public default Vector2D normal()
-    	{
-    	    throw new RuntimeException("Unimplemented operation");
-    	}
-    }
-
-    /**
-     * An edge of the polyline, defined by the source and target vertices.
-     */
-    public interface Edge
-    {
-        /**
-         * @return the source vertex of this edge.
-         */
-    	public Vertex source();
-    	
-        /**
-         * @return the targe vertex of this edge.
-         */
-    	public Vertex target();
-    	
-        /**
-         * @return the line segment geometry corresponding to this edge.
-         */
-    	public LineSegment2D curve(); 
-    }
-
     
     // ===================================================================
-    // New methods
+    // New methods for polylines
     
     /**
      * Re-samples the polyline using the specified sampling step. The sampling
@@ -104,7 +57,17 @@ public interface Polyline2D extends Curve2D
      * @return a re-sampled polyline.
      */
     public Polyline2D resampleBySpacing(double spacing);
-
+    
+    /**
+     * Smoothes a polyline by computing for each vertex the average position of
+     * neighbor vertices.
+     * 
+     * @param smoothingSize
+     *            the number of neighbors to consider for smoothing.
+     * @return the smoothed polyline.
+     */
+    public Polyline2D smooth(int smoothingSize);
+    
     /**
      * Returns a point from its curvilinear abscissa, between 0 and
      * polyline.length().
@@ -115,12 +78,65 @@ public interface Polyline2D extends Curve2D
      * @return the coordinates of the point
      */
     public Point2D getPointAtLength(double pos);
-    
+
     /**
      * @return return the curvilinear length of this polyline, as the sum of edge lengths.
      */
     public double length();
 
+    public default Collection<Point2D> intersections(LinearGeometry2D line)
+    {
+    	ArrayList<Point2D> inters = new ArrayList<Point2D>();
+    	for (Edge edge : edges())
+    	{
+    		Point2D point = edge.curve().intersection(line);
+    		if (point != null)
+    		{
+    			inters.add(point);
+    		}
+    	}
+    	return inters;
+    }
+
+    /**
+     * Returns the polyline composed with the same vertices, but in reverse order.
+     * 
+     * @return the polyline with same vertices but in reverse order.
+     */
+    public Polyline2D reverse();
+
+    /**
+     * Compute the orthogonal projection of the input point onto this polyline.
+     * 
+     * @param point
+     *            the point to project.
+     * @return the position of the projected point.
+     */
+    public default Point2D projection(Point2D point)
+    {
+    	double dist, minDist = Double.POSITIVE_INFINITY;
+    	double x = point.getX();
+    	double y = point.getY();
+    	Point2D proj = vertexPosition(0);
+    
+    	for (Edge edge : edges())
+    	{
+    		LineSegment2D seg = edge.curve();
+    		dist = seg.distance(x, y);
+    		if (dist < minDist)
+    		{
+    			minDist = dist;
+    			proj = seg.projection(point);
+    		}
+    	}
+    
+    	return proj;
+    }
+
+
+    // ===================================================================
+    // Global management of vertices
+    
     /**
      * Merge adjacent vertices that are two close away. Returns a new polyline.
      * 
@@ -142,6 +158,20 @@ public interface Polyline2D extends Curve2D
      */
     public int vertexCount();
 
+    /**
+     * Returns an iterable over  the vertices of the polyline.
+     * 
+     * @return the positions of the vertices
+     */
+    public Iterable<? extends Vertex> vertices();
+
+    /**
+     * Adds a new vertex at the specified location.
+     * 
+     * @param pos the location of the new vertex.
+     */
+    public void addVertex(Point2D pos);
+    
     public Point2D vertexPosition(int vertexIndex);
     
     /**
@@ -155,65 +185,18 @@ public interface Polyline2D extends Curve2D
     // ===================================================================
     // Management of edges 
 
-    public Edge edge(int edgeIndex);
+    /**
+     * Returns the number of edges within this polyline. In case of a closed
+     * polyline, this equals the number of vertices. In case of an open
+     * polyline, this equals the number of vertices minus one.
+     * 
+     * @return the number of edges within this polyline.
+     */
+    public int edgeCount();
     
     public Iterable<? extends Edge> edges();
     
-    public Iterator<? extends Edge> edgeIterator();
-
-
-    // ===================================================================
-    // Methods related to Curve2D 
-
-	public default Collection<Point2D> intersections(LinearGeometry2D line)
-	{
-		ArrayList<Point2D> inters = new ArrayList<Point2D>();
-		for (Edge edge : edges())
-		{
-			Point2D point = edge.curve().intersection(line);
-			if (point != null)
-			{
-				inters.add(point);
-			}
-		}
-		return inters;
-	}
-	
-	
-    /**
-     * Returns the polyline composed with the same vertices, but in reverse order.
-     * 
-     * @return the polyline with same vertices but in reverse order.
-     */
-    public Polyline2D reverse();
-    
-    /**
-	 * Compute the orthogonal projection of the input point onto this polyline.
-	 * 
-	 * @param point
-	 *            the point to project.
-	 * @return the position of the projected point.
-	 */
-	public default Point2D projection(Point2D point)
-	{
-		double dist, minDist = Double.POSITIVE_INFINITY;
-		double x = point.getX();
-		double y = point.getY();
-		Point2D proj = vertexPosition(0);
-
-		for (Edge edge : edges())
-		{
-			LineSegment2D seg = edge.curve();
-			dist = seg.distance(x, y);
-			if (dist < minDist)
-			{
-				minDist = dist;
-				proj = seg.projection(point);
-			}
-		}
-
-		return proj;
-	}
+    public Edge edge(int edgeIndex);
 
 
     // ===================================================================
@@ -268,6 +251,7 @@ public interface Polyline2D extends Curve2D
         return minDist;
     }
     
+    
     // ===================================================================
     // Implementation of the Geometry interface 
 
@@ -301,4 +285,58 @@ public interface Polyline2D extends Curve2D
         // return new Bounding Box
         return new Bounds2D(xmin, xmax, ymin, ymax);
     }
+    
+    
+    // ===================================================================
+    // Inner interfaces 
+    
+    /**
+     * A vertex of the polyline, used to encapsulate the position.
+     * 
+     * The normal vector at the vertex may also be defined (optional operation).
+     * 
+     * @see Edge
+     */
+    public interface Vertex
+    {
+        /**
+         * @return the position of this vertex, as a Point2D.
+         */
+        public Point2D position();
+        
+        /**
+         * Returns the normal computed at this vertex (optional operation). 
+         * Default is to throw an Exception.
+         * 
+         * @return the normal computed at this vertex, as a Vector2D.
+         */
+        public default Vector2D normal()
+        {
+            throw new RuntimeException("Unimplemented operation");
+        }
+    }
+
+    /**
+     * An edge of the polyline, defined by the source and target vertices.
+     * 
+     * @see Vertex
+     */
+    public interface Edge
+    {
+        /**
+         * @return the source vertex of this edge.
+         */
+        public Vertex source();
+        
+        /**
+         * @return the targe vertex of this edge.
+         */
+        public Vertex target();
+        
+        /**
+         * @return the line segment geometry corresponding to this edge.
+         */
+        public LineSegment2D curve(); 
+    }
+
 }

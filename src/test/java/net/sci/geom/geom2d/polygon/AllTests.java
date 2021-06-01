@@ -6,6 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
+    DefaultLinearRing2DTest.class,
+    DefaultLineString2DTest.class,
     DefaultPolygon2DTest.class,
     LinearRing2DTest.class,
     LineString2DTest.class,

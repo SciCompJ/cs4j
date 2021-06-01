@@ -6,12 +6,9 @@ package net.sci.geom.geom2d.polygon;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Iterator;
-
 import org.junit.Test;
 
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Vector2D;
 
 /**
  * @author dlegland
@@ -20,52 +17,14 @@ import net.sci.geom.geom2d.Vector2D;
 public class LineString2DTest
 {
     @Test
-    public final void testMergeDuplicateVertices_Double_Rectangle()
-    {
-        LineString2D poly = new LineString2D(10);
-        poly.addVertex(new Point2D(10.0, 10.0));
-        poly.addVertex(new Point2D(20.0, 10.0));
-        poly.addVertex(new Point2D(20.0, 10.0));
-        poly.addVertex(new Point2D(20.0, 10.0));
-        poly.addVertex(new Point2D(20.0, 20.0));
-        poly.addVertex(new Point2D(10.0, 20.0));
-        poly.addVertex(new Point2D(10.0, 20.0));
-        poly.addVertex(new Point2D(10.0, 20.0));
-        
-        LineString2D poly2 = poly.mergeMultipleVertices(0.01);
-        
-        assertEquals(poly2.vertexCount(), 4);
-    }
-
-    @Test
-    public final void testMergeDuplicateVertices_Double_Rectangle_SameExtremity()
-    {
-        LineString2D poly = new LineString2D(10);
-        poly.addVertex(new Point2D(10.0, 10.0));
-        poly.addVertex(new Point2D(20.0, 10.0));
-        poly.addVertex(new Point2D(20.0, 10.0));
-        poly.addVertex(new Point2D(20.0, 10.0));
-        poly.addVertex(new Point2D(20.0, 20.0));
-        poly.addVertex(new Point2D(10.0, 20.0));
-        poly.addVertex(new Point2D(10.0, 20.0));
-        poly.addVertex(new Point2D(10.0, 20.0));
-        poly.addVertex(new Point2D(10.0, 10.0));
-        poly.addVertex(new Point2D(10.0, 10.0));
-        
-        LineString2D poly2 = poly.mergeMultipleVertices(0.01);
-        
-        assertEquals(poly2.vertexCount(), 5);
-    }
-
-    @Test
     public final void testInterpolate_LineString2D_LineString2D_TwoRectangles()
     {
-        LineString2D ring1 = new LineString2D(
+        LineString2D ring1 = LineString2D.create(
                 new Point2D(10, 20),
                 new Point2D(40, 20),
                 new Point2D(40, 30),
                 new Point2D(10, 30));
-        LineString2D ring2 = new LineString2D(
+        LineString2D ring2 = LineString2D.create(
                 new Point2D(20, 10),
                 new Point2D(30, 10),
                 new Point2D(30, 40),
@@ -84,58 +43,6 @@ public class LineString2DTest
         assertTrue(res02.vertexPosition(3).almostEquals(new Point2D(12.0, 32.0), 0.1));
     }
     
-    @Test
-    public final void testVertexNormal()
-    {
-        LineString2D poly = new LineString2D(
-                new Point2D(10, 20),
-                new Point2D(50, 20),
-                new Point2D(50, 40),
-                new Point2D(10, 40));
-        poly.computeNormals();
-        
-        Polyline2D.Vertex v0 = poly.vertex(0);
-        Vector2D n0 = v0.normal();
-        assertEquals( 0.000, n0.getX(), 0.001);
-        assertEquals(-1.000, n0.getY(), 0.001);
-        
-        Polyline2D.Vertex v1 = poly.vertex(1);
-        Vector2D n1 = v1.normal();
-        assertEquals( 0.707, n1.getX(), 0.001);
-        assertEquals(-0.707, n1.getY(), 0.001);
-        
-        Polyline2D.Vertex v2 = poly.vertex(2);
-        Vector2D n2 = v2.normal();
-        assertEquals( 0.707, n2.getX(), 0.001);
-        assertEquals( 0.707, n2.getY(), 0.001);
-        
-        Polyline2D.Vertex v3 = poly.vertex(3);
-        Vector2D n3 = v3.normal();
-        assertEquals( 0.000, n3.getX(), 0.001);
-        assertEquals(+1.000, n3.getY(), 0.001);
-    }
-    
-    
-	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#closestVertexIndex(net.sci.geom.geom2d.Point2D)}.
-	 */
-	@Test
-	public final void testClosestVertexIndex()
-	{
-		LineString2D poly = new LineString2D(
-				new Point2D(10, 20),
-				new Point2D(50, 20),
-				new Point2D(50, 40),
-				new Point2D(10, 40));
-		Point2D p1 = new Point2D(20, 15);
-		assertEquals(0, poly.closestVertexIndex(p1));
-		
-		Point2D p2 = new Point2D(35, 15);
-		assertEquals(1, poly.closestVertexIndex(p2));
-		
-		Point2D p3 = new Point2D(15, 45);
-		assertEquals(3, poly.closestVertexIndex(p3));
-	}
 
     /**
      * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#resampleBySpacing()}.
@@ -144,7 +51,7 @@ public class LineString2DTest
     public final void testResampleBySpacing()
     {
         // line string with edge lengths 40, 20, and 40.
-        LineString2D poly = new LineString2D(
+        LineString2D poly = LineString2D.create(
                 new Point2D(10, 20),
                 new Point2D(50, 20),
                 new Point2D(50, 40),
@@ -164,7 +71,7 @@ public class LineString2DTest
     public final void testAsPolyline_Int()
     {
         // line string with edge lengths 40, 20, and 40.
-        LineString2D poly = new LineString2D(
+        LineString2D poly = LineString2D.create(
                 new Point2D(10, 20),
                 new Point2D(50, 20),
                 new Point2D(50, 40),
@@ -184,7 +91,7 @@ public class LineString2DTest
     public final void testLength()
     {
         // line string with edge lengths 40, 20, and 40.
-        LineString2D poly = new LineString2D(
+        LineString2D poly = LineString2D.create(
                 new Point2D(10, 20),
                 new Point2D(50, 20),
                 new Point2D(50, 40),
@@ -205,7 +112,7 @@ public class LineString2DTest
         Point2D p1 = new Point2D(50, 20);
         Point2D p2 = new Point2D(50, 40);
         Point2D p3 = new Point2D(10, 40);
-        LineString2D poly = new LineString2D(p0, p1, p2, p3);
+        LineString2D poly = LineString2D.create(p0, p1, p2, p3);
         
         // point in the middle of first edge
         Point2D pL20 = poly.getPointAtLength(20);
@@ -230,7 +137,7 @@ public class LineString2DTest
     public final void testGetPoint_lastPoint()
     {
         // line string with edge lengths 40, 20, and 40.
-        LineString2D poly = new LineString2D(
+        LineString2D poly = LineString2D.create(
                 new Point2D(10, 20),
                 new Point2D(50, 20),
                 new Point2D(50, 40),
@@ -239,27 +146,45 @@ public class LineString2DTest
         assertTrue(lastPoint.distance(new Point2D(10, 40)) < 0.001);
     }
     
-	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#edgeIterator()}.
-	 */
-	@Test
-	public final void testEdgeIterator()
-	{
-		LineString2D poly = new LineString2D(
-				new Point2D(10, 20),
-				new Point2D(50, 20),
-				new Point2D(50, 40),
-				new Point2D(10, 40));
-		Iterator<? extends Polyline2D.Edge> iter = poly.edgeIterator();
-		
-		int count = 0;
-		while(iter.hasNext())
-		{
-			iter.next();
-			count++;
-		}
-		assertEquals(3, count);
-	}
+    /**
+     * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#vertices()}.
+     */
+    @Test
+    public final void testVertices()
+    {
+        LineString2D poly = LineString2D.create(
+                new Point2D(10, 20),
+                new Point2D(50, 20),
+                new Point2D(50, 40),
+                new Point2D(10, 40));
+        
+        int count = 0;
+        for (@SuppressWarnings("unused") Polyline2D.Vertex v : poly.vertices())
+        {
+            count++;
+        }
+        assertEquals(4, count);
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.geom2d.polygon.LineString2D#edges()}.
+     */
+    @Test
+    public final void testEdges()
+    {
+        LineString2D poly = LineString2D.create(
+                new Point2D(10, 20),
+                new Point2D(50, 20),
+                new Point2D(50, 40),
+                new Point2D(10, 40));
+        
+        int count = 0;
+        for (@SuppressWarnings("unused") Polyline2D.Edge edge : poly.edges())
+        {
+            count++;
+        }
+        assertEquals(3, count);
+    }
 
 
 	/**
@@ -268,7 +193,7 @@ public class LineString2DTest
 	@Test
 	public final void testDistance()
 	{
-		LineString2D poly = new LineString2D(
+		LineString2D poly = LineString2D.create(
 				new Point2D(10, 20),
 				new Point2D(50, 20),
 				new Point2D(50, 40),
