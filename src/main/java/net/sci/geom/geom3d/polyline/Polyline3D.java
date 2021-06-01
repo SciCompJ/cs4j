@@ -22,19 +22,19 @@ public interface Polyline3D extends Curve3D
     // Methods for managing vertices
     
     /**
-     * Returns a pointer to the vertices.
-     * 
-     * @return a pointer to the collection of vertices
-     */
-    public Collection<Point3D> vertices();
-    
-    /**
      * Returns the number of vertices.
      * 
      * @return the number of vertices
      */
     public int vertexCount();
 
+    /**
+     * Returns a pointer to the vertices.
+     * 
+     * @return a pointer to the collection of vertices
+     */
+    public Collection<Point3D> vertexPositions();
+    
     public Iterator<LineSegment3D> edgeIterator();
 
     /**
@@ -46,7 +46,7 @@ public interface Polyline3D extends Curve3D
     
 
     // ===================================================================
-    // Geoemtry methods 
+    // Specialization of Geometry interface 
 
     /**
      * Transforms this geometry with the specified affine transform.
@@ -99,6 +99,7 @@ public interface Polyline3D extends Curve3D
         return minDist;
     }
     
+    
     // ===================================================================
     // Implementation of the Geometry interface 
 
@@ -121,7 +122,7 @@ public interface Polyline3D extends Curve3D
         double zmax = Double.NEGATIVE_INFINITY;
         
         // compute min/max for each coordinate
-        for (Point3D vertex : this.vertices())
+        for (Point3D vertex : this.vertexPositions())
         {
             double x = vertex.getX();
             double y = vertex.getY();

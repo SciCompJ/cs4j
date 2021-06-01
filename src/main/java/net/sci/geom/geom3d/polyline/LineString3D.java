@@ -17,24 +17,15 @@ import net.sci.geom.geom3d.Point3D;
  * first one.
  * </p>
  * 
+ * @see LinearRing3D
+ * @see net.sci.geom.geom2d.polygon.LineString2D
+ * 
  * @author dlegland
- * @see LinearRing2D
  */
-public class LineString3D implements Polyline3D
+public interface LineString3D extends Polyline3D
 {
     // ===================================================================
-    // Class variables
-    
-    private ArrayList<Point3D> vertices;
-    
-    
-    // ===================================================================
     // Constructors
-
-    public LineString3D() 
-    {
-        this.vertices = new ArrayList<Point3D>();
-    }
 
     /**
      * Creates a new linear curve by allocating enough memory for the specified
@@ -42,59 +33,96 @@ public class LineString3D implements Polyline3D
      * 
      * @param nVertices the number of vertices in this polyline
      */
-    public LineString3D(int nVertices)
+    public static LineString3D create(int nVertices)
     {
-        this.vertices = new ArrayList<Point3D>(nVertices);
+        return new DefaultLineString3D(nVertices);
     }
     
-    public LineString3D(Point3D... vertices)
+    public static LineString3D create(Point3D... vertices)
     {
-        this.vertices = new ArrayList<Point3D>(vertices.length);
-        for (Point3D vertex : vertices)
-        {
-            this.vertices.add(vertex);
-        }
+        return new DefaultLineString3D(vertices);
     }
     
-    public LineString3D(Collection<? extends Point3D> vertices)
+    public static LineString3D create(Collection<? extends Point3D> vertices)
     {
-        this.vertices = new ArrayList<Point3D>(vertices.size());
-        this.vertices.addAll(vertices);
+        return new DefaultLineString3D(vertices);
     }
-    
-    public LineString3D(double[] xcoords, double[] ycoords, double[] zcoords)
-    {
-        this.vertices = new ArrayList<Point3D>(xcoords.length);
-        int n = xcoords.length;
-        this.vertices.ensureCapacity(n);
-        for (int i = 0; i < n; i++)
-        {
-            vertices.add(new Point3D(xcoords[i], ycoords[i], zcoords[i]));
-        }
-    }
+
     
  
+    // ===================================================================
+    // New methods
+    
+    public default LineString3D resampleBySpacing(double spacing)
+    {
+        // compute vertex number of resulting curve
+        double length = this.length();
+        int nv = (int) Math.round(length / spacing);
+        
+        // adjust step length to avoid last edge to have different size
+        double spacing2 = length / nv;
+        
+        // create new vertices
+        LineString3D res = LineString3D.create(nv);
+        for (int i = 0; i < nv - 1; i++)
+        {
+            double pos = Math.min(i * spacing2, length);
+            res.addVertex(getPointAtLength(pos));
+        }
+        
+        // add a vertex corresponding to last vertex of initial polyline
+        res.addVertex(this.vertexPosition(this.vertexCount() - 1));
+        
+        return res;
+    }
+        
+    public default Point3D getPointAtLength(double pos)
+    {
+        double cumSum = 0;
+        Iterator<Point3D> vertexIter = vertexPositions().iterator();
+        Point3D prev = vertexIter.next();
+        while(vertexIter.hasNext())
+        {
+            Point3D vertex = vertexIter.next();
+            double dist = vertex.distance(prev);
+            cumSum += dist;
+            if (cumSum >= pos)
+            {
+                double pos0 = pos - cumSum + dist;
+                double t1 = pos0 / dist;
+                double t0 = 1 - t1;
+                
+                double x = prev.getX() * t0 + vertex.getX() * t1;
+                double y = prev.getY() * t0 + vertex.getY() * t1;
+                double z = prev.getZ() * t0 + vertex.getZ() * t1;
+                
+                return new Point3D(x, y, z);
+            }
+            prev = vertex;
+        }
+        return prev;
+    }
+    
+
     // ===================================================================
     // Management of vertices
     
     /**
      * Returns the inner collection of vertices.
      */
-    public ArrayList<Point3D> vertices()
-    {
-        return vertices;
-    }
+    public ArrayList<Point3D> vertexPositions();
     
     /**
      * Returns the number of vertices.
      * 
      * @return the number of vertices
      */
-    public int vertexCount()
-    {
-        return vertices.size();
-    }
+    public int vertexCount();
 
+    public void addVertex(Point3D vertexPosition);
+
+    public Point3D vertexPosition(int index);
+    
     /**
      * Computes the index of the closest vertex to the input query point.
      * 
@@ -102,14 +130,14 @@ public class LineString3D implements Polyline3D
      *            the query point
      * @return the index of the closest vertex to the query point
      */
-    public int closestVertexIndex(Point3D point)
+    public default int closestVertexIndex(Point3D point)
     {
         double minDist = Double.POSITIVE_INFINITY;
         int index = -1;
         
-        for (int i = 0; i < vertices.size(); i++)
+        for (int i = 0; i < vertexCount(); i++)
         {
-            double dist = vertices.get(i).distance(point);
+            double dist = vertexPosition(i).distance(point);
             if (dist < minDist)
             {
                 index = i;
@@ -120,62 +148,52 @@ public class LineString3D implements Polyline3D
         return index;
     }
     
-    public Iterator<LineSegment3D> edgeIterator()
-    {
-    	return new EdgeIterator();
-    }
+    public Iterator<LineSegment3D> edgeIterator();
     
 
     // ===================================================================
     // Methods implementing the Polyline3D interface
     
     /**
-     * Transforms this geometry with the specified affine transform.
-     * 
-     * @param trans
-     *            an affine transform
-     * @return the transformed line string
-     */
-    public LineString3D transform(AffineTransform3D trans)
-    {
-        int n = this.vertexCount();
-        ArrayList<Point3D> newVertices = new ArrayList<Point3D>(n);
-        for (int i = 0; i < n; i++)
-        {
-            newVertices.add(this.vertices.get(i).transform(trans));
-        }
-        
-        LineString3D res = new LineString3D(0);
-        res.vertices = newVertices;
-        return res;
-    }
-
-    /**
      * Returns a new linear ring with same vertices but in reverse order. The
      * first vertex of the new line string is the last vertex of this line
      * string.
      */
     @Override
-    public LineString3D reverse()
+    public default LineString3D reverse()
     {
         int n = this.vertexCount();
         ArrayList<Point3D> newVertices = new ArrayList<Point3D>(n);
         for (int i = 0; i < n; i++)
         {
-            newVertices.add(this.vertices.get(n-1-i));
+            newVertices.add(this.vertexPosition(n-1-i));
         }
         
-        LineString3D reverse = new LineString3D(0);
-        reverse.vertices = newVertices;
-        return reverse;
+        return LineString3D.create(newVertices);
     }
 
 
     // ===================================================================
     // Methods implementing the Curve2D interface
     
+    public default double length()
+    {
+        double cumSum = 0.0;
+        Iterator<Point3D> vertexIter = vertexPositions().iterator();
+        Point3D prev = vertexIter.next();
+        while(vertexIter.hasNext())
+        {
+            Point3D vertex = vertexIter.next();
+            double dist = vertex.distance(prev);
+            cumSum += dist;
+            prev = vertex;
+        }
+        
+        return cumSum;
+    }
+
     @Override
-    public Point3D getPoint(double t)
+    public default Point3D getPoint(double t)
     {
         // format position to stay between limits
         double t0 = this.getT0();
@@ -185,7 +203,7 @@ public class LineString3D implements Polyline3D
         // index of vertex before point
         int ind0 = (int) Math.floor(t + Double.MIN_VALUE);
         double tl = t - ind0;
-        Point3D p0 = vertices.get(ind0);
+        Point3D p0 = vertexPosition(ind0);
 
 //        // check if equal to a vertex
 //        if (Math.abs(t - ind0) < Shape2D.ACCURACY)
@@ -193,7 +211,7 @@ public class LineString3D implements Polyline3D
 
         // index of vertex after point
         int ind1 = ind0+1;
-        Point3D p1 = vertices.get(ind1);
+        Point3D p1 = vertexPosition(ind1);
 
         // position on line;
         double x0 = p0.getX();
@@ -206,45 +224,42 @@ public class LineString3D implements Polyline3D
     }
 
     @Override
-    public double getT0()
+    public default double getT0()
     {
         return 0;
     }
 
     @Override
-    public double getT1()
+    public default double getT1()
     {
-        return vertices.size();
+        return vertexCount();
     }
+    
     @Override
-    public boolean isClosed()
+    public default boolean isClosed()
     {
         return false;
     }
-    
 
     // ===================================================================
-    // Edge iterator implementation
+    // Methods implementing the Geometry3D interface
     
-    class EdgeIterator implements Iterator<LineSegment3D>
+    /**
+     * Transforms this geometry with the specified affine transform.
+     * 
+     * @param trans
+     *            an affine transform
+     * @return the transformed line string
+     */
+    public default LineString3D transform(AffineTransform3D trans)
     {
-    	/**
-    	 * Index of the first vertex of current edge
-    	 */
-    	int index = -1;
-
-    	@Override
-		public boolean hasNext()
-		{
-			return index < vertices.size() - 2;
-		}
-
-		@Override
-		public LineSegment3D next()
-		{
-			index++;
-			int index2 = (index + 1) % vertices.size();
-			return new LineSegment3D(vertices.get(index), vertices.get(index2));
-		}
+        int nv = this.vertexCount();
+        LineString3D res = LineString3D.create(nv);
+        for (int i = 0; i < nv; i++)
+        {
+            res.addVertex(this.vertexPosition(i).transform(trans));
+        }
+        
+        return res;
     }
 }
