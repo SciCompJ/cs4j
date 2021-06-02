@@ -25,10 +25,10 @@ import net.sci.image.Image;
 public interface ImageWriter
 {
 	/**
-	 * Writes the content of an image into the specified writer.
+	 * Writes the content of an image into the file specified from constructor.
 	 * 
 	 * @param image
-	 *            the image to write
+	 *            the image to write.
 	 * @throws IOException
 	 *             if a problem occurred during image writing
 	 */

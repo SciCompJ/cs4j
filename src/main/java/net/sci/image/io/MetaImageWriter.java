@@ -23,9 +23,26 @@ import net.sci.image.Image;
 /**
  * Writes image data as MetaImage file.
  * 
+ * Example:<pre><code>
+    UInt8Array2D data = UInt8Array2D.create(50, 20);
+    data.populateValues((x,y) -> (double) y * 10.0 + x); 
+    Image image = new Image(res2d);
+        
+    System.out.println("Save image...");
+    MetaImageWriter writer = new MetaImageWriter(outputFileName);
+    try
+    {
+        writer.writeImage(image);
+    }
+    catch(IOException ex)
+    {
+        System.err.println(ex);
+        return;
+    }
+ * </code></pre>
  * References about MetaImage file format:
  * <ul>
- * <li> MetaIO Documentation (http://www.itk.org/Wiki/MetaIO/Documentation) </li>
+ * <li> MetaIO Documentation (<a href="http://www.itk.org/Wiki/MetaIO/Documentation"> http://www.itk.org/Wiki/MetaIO/Documentation</a>) </li>
  * </ul>
  * 
  * @author dlegland
@@ -36,7 +53,11 @@ public class MetaImageWriter implements ImageWriter
 	
 	MetaImageInfo info;
 	
-	
+	/**
+	 * Creates a new class for writing image data using MetaImage file format.
+	 * 
+	 * @param file the file to write the header.
+	 */
 	public MetaImageWriter(File file)
 	{
 		this.headerFile = file;
@@ -57,15 +78,8 @@ public class MetaImageWriter implements ImageWriter
 		if (!info.elementDataFile.equals(this.headerFile.getName()))
 		{
 			stream.close();
-			stream = new FileOutputStream(info.elementDataFile);
-//			try (OutputStream out = new BufferedOutputStream(
-//					Files.newOutputStream(p, CREATE, APPEND)))
-//			{
-//				out.write(data, 0, data.length);
-//			} catch (IOException x)
-//			{
-//				System.err.println(x);
-//			}
+			File dataFile = new File(this.headerFile.getParentFile(), info.elementDataFile);
+			stream = new FileOutputStream(dataFile);
 		}
 		
 		// write data
@@ -75,6 +89,14 @@ public class MetaImageWriter implements ImageWriter
 		stream.close();
 	}
 
+    /**
+     * Computes the meta-data to write into header file from the meta data
+     * stored in the image.
+     * 
+     * @param image
+     *            the image containing meta data.
+     * @return meta-data to write into header file.
+     */
 	public MetaImageInfo computeMetaImageInfo(Image image)
 	{
 		MetaImageInfo info = new MetaImageInfo();
@@ -131,8 +153,16 @@ public class MetaImageWriter implements ImageWriter
         return fileName + ".raw";
 	}
 	
-	
-	public MetaImageInfo writeHeader(OutputStream stream) throws IOException
+	/**
+     * Writes the header into the specified stream.
+     * 
+     * @param stream
+     *            the stream to write in.
+     * @return the metaimage info.
+     * @throws IOException
+     *             if an exception occurs
+     */
+	private MetaImageInfo writeHeader(OutputStream stream) throws IOException
 	{
 		PrintStream ps = new PrintStream(stream);
 		
@@ -153,7 +183,7 @@ public class MetaImageWriter implements ImageWriter
 		return info;
 	}
 	
-	public void writeImageData(Array<?> array, OutputStream stream) throws IOException
+	private void writeImageData(Array<?> array, OutputStream stream) throws IOException
 	{
 		BufferedOutputStream bos = new BufferedOutputStream(stream);
 		if (array instanceof UInt8Array)
