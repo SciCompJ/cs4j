@@ -329,7 +329,7 @@ public interface Polyline2D extends Curve2D
         public Vertex source();
         
         /**
-         * @return the targe vertex of this edge.
+         * @return the target vertex of this edge.
          */
         public Vertex target();
         

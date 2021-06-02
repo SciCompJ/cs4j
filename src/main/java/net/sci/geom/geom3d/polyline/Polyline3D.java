@@ -4,7 +4,6 @@
 package net.sci.geom.geom3d.polyline;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Bounds3D;
@@ -29,14 +28,21 @@ public interface Polyline3D extends Curve3D
     public int vertexCount();
 
     /**
+     * Returns an iterable over  the vertices of the polyline.
+     * 
+     * @return the positions of the vertices
+     */
+    public Iterable<? extends Vertex> vertices();
+    
+    /**
      * Returns a pointer to the vertices.
      * 
      * @return a pointer to the collection of vertices
      */
     public Collection<Point3D> vertexPositions();
     
-    public Iterator<LineSegment3D> edgeIterator();
-
+    public Iterable<? extends Edge> edges();
+    
     /**
      * Returns the polyline composed with the same vertices, but in reverse order.
      * 
@@ -65,10 +71,9 @@ public interface Polyline3D extends Curve3D
     public default boolean contains(Point3D point, double eps)
     {
         // Iterate on the line segments forming the polyline
-        Iterator<LineSegment3D> iter = edgeIterator();
-        while(iter.hasNext())
+        for (Edge edge : edges())
         {
-            if (iter.next().contains(point, eps))
+            if (edge.curve().contains(point, eps))
             {
                 return true;
             }
@@ -91,10 +96,9 @@ public interface Polyline3D extends Curve3D
         double minDist = Double.POSITIVE_INFINITY;
         
         // Iterate on the line segments forming the polyline
-        Iterator<LineSegment3D> iter = edgeIterator();
-        while(iter.hasNext())
+        for (Edge edge : edges())
         {
-            minDist = Math.min(minDist, iter.next().distance(x, y, z));
+            minDist = Math.min(minDist, edge.curve().distance(x, y, z));
         }
         return minDist;
     }
@@ -137,5 +141,47 @@ public interface Polyline3D extends Curve3D
         
         // return new Bounding Box
         return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
+    }
+    
+    
+    // ===================================================================
+    // Inner interfaces 
+    
+    /**
+     * A vertex of a 3D polyline, used to encapsulate the position.
+     * 
+     * @see Edge
+     */
+    public interface Vertex
+    {
+        /**
+         * @return the position of this vertex, as a Point2D.
+         */
+        public Point3D position();
+    }
+
+    /**
+     * An edge of a 3D polyline, defined by the source and target vertices.
+     * 
+     * Can also returns the curve drawn by the edge, as an instance of LineSegment3D.
+     * 
+     * @see Vertex
+     */
+    public interface Edge
+    {
+        /**
+         * @return the source vertex of this edge.
+         */
+        public Vertex source();
+        
+        /**
+         * @return the target vertex of this edge.
+         */
+        public Vertex target();
+        
+        /**
+         * @return the line segment geometry corresponding to this edge.
+         */
+        public LineSegment3D curve(); 
     }
 }

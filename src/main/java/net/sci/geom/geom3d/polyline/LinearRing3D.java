@@ -3,12 +3,9 @@
  */
 package net.sci.geom.geom3d.polyline;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import net.sci.geom.geom3d.AffineTransform3D;
-import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
 
 /**
@@ -65,7 +62,7 @@ public interface LinearRing3D extends Polyline3D
         
         for (int i = 0; i < vertexPositions().size(); i++)
         {
-            double dist = vertexPositions().get(i).distance(point);
+            double dist = vertexPosition(i).distance(point);
             if (dist < minDist)
             {
                 index = i;
@@ -80,22 +77,10 @@ public interface LinearRing3D extends Polyline3D
     // ===================================================================
     // Management of vertices
     
-    /**
-     * Returns the inner collection of vertices.
-     */
-    public ArrayList<Point3D> vertexPositions();
-    
     public void addVertex(Point3D pos);
     
-    /**
-     * Returns the number of vertices.
-     * 
-     * @return the number of vertices
-     */
-    public int vertexCount();
+    public Point3D vertexPosition(int index);
 
-    public Iterator<LineSegment3D> edgeIterator();
-    
     
     // ===================================================================
     // Methods implementing the Polyline3D interface
@@ -114,7 +99,7 @@ public interface LinearRing3D extends Polyline3D
 
         for (int i = 0; i < nv; i++)
         {
-            res.addVertex(this.vertexPositions().get(i).transform(trans));
+            res.addVertex(this.vertexPosition(i).transform(trans));
         }
         
         return res;
@@ -136,10 +121,10 @@ public interface LinearRing3D extends Polyline3D
         int nv = this.vertexCount();
         LinearRing3D res = LinearRing3D.create(nv);
 
-        res.addVertex(this.vertexPositions().get(0));
+        res.addVertex(this.vertexPosition(0));
         for (int i = 1; i < nv; i++)
         {
-            res.addVertex(this.vertexPositions().get(nv-i));
+            res.addVertex(this.vertexPosition(nv-i));
         }
         
         return res;
@@ -153,7 +138,7 @@ public interface LinearRing3D extends Polyline3D
     public default Point3D getPoint(double t)
     {
         t = Math.min(Math.max(t, 0), 1);
-        int n = vertexPositions().size();
+        int n = vertexCount();
 
         // index of vertex before point
         int ind0 = (int) Math.floor(t + Double.MIN_VALUE);
@@ -161,7 +146,7 @@ public interface LinearRing3D extends Polyline3D
 
         if (ind0 == n)
             ind0 = 0;
-        Point3D p0 = vertexPositions().get(ind0);
+        Point3D p0 = vertexPosition(ind0);
 
 //        // check if equal to a vertex
 //        if (Math.abs(t - ind0) < Shape2D.ACCURACY)
@@ -171,7 +156,7 @@ public interface LinearRing3D extends Polyline3D
         int ind1 = ind0 + 1;
         if (ind1 == n)
             ind1 = 0;
-        Point3D p1 = vertexPositions().get(ind1);
+        Point3D p1 = vertexPosition(ind1);
 
         // position on line;
         double x0 = p0.getX();

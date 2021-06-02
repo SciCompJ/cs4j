@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import net.sci.geom.geom3d.AffineTransform3D;
-import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
 
 /**
@@ -147,9 +146,7 @@ public interface LineString3D extends Polyline3D
         
         return index;
     }
-    
-    public Iterator<LineSegment3D> edgeIterator();
-    
+       
 
     // ===================================================================
     // Methods implementing the Polyline3D interface
