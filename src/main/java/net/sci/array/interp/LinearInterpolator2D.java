@@ -3,12 +3,28 @@
  */
 package net.sci.array.interp;
 
-import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.ScalarArray2D;
 
 
 /**
- * Evaluates 2D array. 
+ * Evaluates values within a 2D scalar array using bi-linear interpolation.
+ * 
+ * This implementation allows to specify the value that will be returned when
+ * evaluating outside of array bounds.
+ * 
+ * Example:<pre>{@code
+    // Create a sample array with a single value at position (5,5)
+    Float32Array2D array = Float32Array2D.create(10, 10);
+    array.setValue(5, 5, 100.0);
+    // Create interpolator for input array
+    LinearInterpolator2D interp = new LinearInterpolator2D(array);
+    // evaluate value close to the defined value
+    double value = interp.evaluate(4.6, 4.6);
+    // should obtain 36.0 (equal to 100 * 0.60 * 0.60)
+ * }</pre>
+ * 
+ * @see NearestNeighborInterpolator2D
+ * @see LinearInterpolator3D
  * 
  * @author dlegland
  *
@@ -18,6 +34,9 @@ public class LinearInterpolator2D implements ScalarFunction2D
 	// ===================================================================
 	// class variables
 
+    /**
+     * The array containing values to interpolate.
+     */
 	ScalarArray2D<?> array;
 	
 	/**
@@ -29,14 +48,29 @@ public class LinearInterpolator2D implements ScalarFunction2D
 	// ===================================================================
 	// constructors
 
-	public LinearInterpolator2D(ScalarArray2D<?> image)
+	/**
+     * Creates a new linear interpolator for a 2D scalar array.
+     * 
+     * @param array
+     *            the array containing values to interpolate.
+     */
+	public LinearInterpolator2D(ScalarArray2D<?> array)
 	{
-		this.array = image;
+		this.array = array;
 	}
 	
-	public LinearInterpolator2D(ScalarArray2D<?> image, double padValue)
+    /**
+     * Creates a new linear interpolator for a 2D scalar array.
+     * 
+     * @param array
+     *            the array containing values to interpolate.
+     * @param padValue
+     *            the value returned when interpolating outside of array bounds.
+     *            Default value is 0.0.
+     */
+	public LinearInterpolator2D(ScalarArray2D<?> array, double padValue)
 	{
-		this.array = image;
+		this.array = array;
 		this.padValue = padValue;
 	}
 	
@@ -44,9 +78,16 @@ public class LinearInterpolator2D implements ScalarFunction2D
 	// ===================================================================
 	// implementation of the BivariateFunction interface
 
-	/**
-	 * Evaluates position within a 2D array. Returns stored pad value if evaluation is outside image bounds.
-	 */
+    /**
+     * Evaluates value within a 2D array. Returns stored pad value if
+     * evaluation is outside image bounds.
+     * 
+     * @param x
+     *            the x-coordinate of the position to evaluate
+     * @param y
+     *            the y-coordinate of the position to evaluate
+     * @return the value evaluated at the (x,y) position
+     */
 	public double evaluate(double x, double y)
 	{
 		// select points located inside interpolation area
@@ -67,70 +108,14 @@ public class LinearInterpolator2D implements ScalarFunction2D
 		double dy = (y - j);
 		
 		// values of the 4 pixels around each current point
-		double val11 = this.array.getValue(i, j) 	* (1-dx) * (1-dy);
-		double val12 = this.array.getValue(i+1, j) 	* dx * (1-dy);
-		double val21 = this.array.getValue(i, j+1) 	* (1-dx) * dy;
-		double val22 = this.array.getValue(i+1, j+1) * dx * dy;
+		double val11 = this.array.getValue(i,   j) 	 * (1-dx) * (1-dy);
+		double val12 = this.array.getValue(i+1, j) 	 *    dx  * (1-dy);
+		double val21 = this.array.getValue(i,   j+1) * (1-dx) *    dy;
+		double val22 = this.array.getValue(i+1, j+1) *    dx  *    dy;
 		
 		// compute result values
 		double val = val11 + val12 + val21 + val22;
 
 		return val;
-	}
-	
-	
-	// ===================================================================
-	// local main method for testing
-
-	public static final void main(String[] args)
-	{
-		// Create a demo image
-		Float32Array2D image = Float32Array2D.create(10, 10);
-		for (int y = 2; y < 8; y++)
-		{
-			for (int x = 2; x < 8; x++)
-			{
-				image.setValue(100, x, y);
-			}
-		}
-		
-		// Create interpolator for input image
-		LinearInterpolator2D interp = new LinearInterpolator2D(image);
-		
-		// allocate memory for output image
-		Float32Array2D image2 = Float32Array2D.create(10, 10);
-		
-		// compute transform parameters
-		double angle = Math.toRadians(20);
-		double cosTheta = Math.cos(angle);
-		double sinTheta = Math.sin(angle);
-		
-		// compute interpolated transformed image
-		for (int y = 0; y < 10; y++)
-		{
-			for (int x = 0; x < 10; x++)
-			{
-				double xc = x - 4.5;
-				double yc = y - 4.5;
-				double x2 = xc * cosTheta + yc * sinTheta + 4.5;
-				double y2 = -xc * sinTheta + yc * cosTheta + 4.5;
-				
-				double val = interp.evaluate(x2, y2); 
-				image2.setValue(x, y, val);
-			}
-		}
-		
-		// Display result of interpolation
-		System.out.println("Interpolated image:");
-		for (int y = 0; y < 10; y++)
-		{
-			for (int x = 0; x < 10; x++)
-			{
-				System.out.print(String.format("%4.0f ", image2.getValue(x, y)));
-			}
-			System.out.println("");
-		}
-
-		
 	}
 }
