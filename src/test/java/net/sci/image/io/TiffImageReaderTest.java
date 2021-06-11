@@ -2,6 +2,7 @@ package net.sci.image.io;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import net.sci.array.Array;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array2D;
+import net.sci.array.scalar.BinaryArray2D;
 import net.sci.array.scalar.FileMappedUInt8Array3D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
@@ -38,6 +40,25 @@ public class TiffImageReaderTest
 		
 		assertEquals(193, data.getValue(150, 135), .1);
 	}
+
+    @Test
+    public void testReadImage_Binary_2D_WheatGrain() throws IOException
+    {
+        String fileName = getClass().getResource("/images/binary/L_150_1_segXY_sub20.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(2, image.getDimension());
+
+        BinaryArray2D data = (BinaryArray2D) image.getData();
+        assertEquals(308, data.size(0));
+        assertEquals(247, data.size(1));
+        
+        assertFalse(data.getBoolean(100, 150));
+        assertFalse(data.getBoolean(250, 100));
+        assertTrue(data.getBoolean(250, 200));
+    }
 
 	@Test
 	public void testReadImage_Float_2D_grains() throws IOException

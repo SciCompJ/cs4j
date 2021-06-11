@@ -19,6 +19,8 @@ import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array2D;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array2D;
+import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.scalar.BufferedBinaryArray2D;
 import net.sci.array.scalar.BufferedFloat32Array2D;
 import net.sci.array.scalar.BufferedFloat32Array3D;
 import net.sci.array.scalar.BufferedInt32Array2D;
@@ -80,27 +82,31 @@ public class TiffImageDataReader extends AlgoStub
      */
 	public Array<?> readImageData(TiffFileInfo info) throws IOException
 	{
-        // Size of image
-		int nPixels = info.width * info.height;
+        // special case of binary images
+		if (info.pixelType == PixelType.BITMAP)
+		{
+		    return readBinaryArray2D(info);
+		}
+		
+        // size of buffer is proportional to pixel number
+        int nPixels = info.width * info.height;
+        int nBytes = nPixels * info.pixelType.getByteNumber();
 
-		// size of buffer
-		int nBytes = nPixels * info.pixelType.getByteNumber();
-
-		// allocate memory for image byte data
+        // allocate memory for image byte data
 		byte[] buffer = new byte[nBytes];
 		
         // read data from input stream
         RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-		int nRead = readByteArray(stream, info, buffer);
+		int nRead = readByteBuffer(stream, info, buffer);
+        stream.close();
 
-		// Check all buffer have been read
+		// Check all buffer elements have been read
 		if (nRead != nBytes)
 		{
 			throw new IOException("Could read only " + nRead
 					+ " bytes over the " + nBytes + " expected");
 		}
 
-		
 		// Transform raw buffer into interpreted buffer
 		switch (info.pixelType) {
 		case GRAY8:
@@ -111,7 +117,8 @@ public class TiffImageDataReader extends AlgoStub
 		}
 
 		case BITMAP:
-            throw new RuntimeException("Reading Bitmap Tiff files not supported");
+            boolean[] booleanBuffer = convertToBooleanArray(buffer);
+            return new BufferedBinaryArray2D(info.width, info.height, booleanBuffer);
         
 		case GRAY16_UNSIGNED:
 		case GRAY12_UNSIGNED:
@@ -238,7 +245,7 @@ public class TiffImageDataReader extends AlgoStub
                 this.fireProgressChanged(this, currentSliceIndex++, nSlices);
                 
                 byte[] buffer = new byte[bytesPerPlane];
-                int nRead = readByteArray(stream, info, buffer);
+                int nRead = readByteBuffer(stream, info, buffer);
 
                 // Check the whole buffer has been read
                 if (nRead != bytesPerPlane)
@@ -310,10 +317,63 @@ public class TiffImageDataReader extends AlgoStub
     }
     
 	/**
+     * Reads a boolean array from the stream, using the specified FileInfo.
+     * 
+     */
+    private BinaryArray2D readBinaryArray2D(TiffFileInfo info)
+            throws IOException
+    {
+        // image size
+        int sizeX = info.width;
+        int sizeY = info.height;
+        
+        // need to adapt scan size
+        int scanLength = (int) Math.ceil(sizeX / 8.0);
+        int bufferLength = scanLength * sizeY;
+        byte[] buffer = new byte[bufferLength];
+        
+        // read byte buffer containing binary data
+        File file = new File(this.filePath);
+        RandomAccessFile stream = new RandomAccessFile(file, "r");
+        int nRead = readByteBuffer(stream, info, buffer);
+//        int nRead = stream.read(buffer, 0, bufferLength);
+        stream.close();
+        
+        // Check all buffer elements have been read
+        if (nRead != bufferLength)
+        {
+            throw new IOException("Could read only " + nRead
+                    + " bytes over the " + bufferLength + " expected");
+        }
+    
+        BinaryArray2D res = BinaryArray2D.create(sizeX, sizeY);
+        
+        for (int y = 0; y < sizeY; y++)
+        {
+            int offset = y * scanLength;
+            int index = 0;
+            
+            for (int byteIndex = 0; byteIndex < scanLength; byteIndex++)
+            {
+                int value1 = buffer[offset + byteIndex] & 0xFF;
+                for (int i = 7; i >= 0; i--)
+                {
+                    if (index < sizeX)
+                    {
+                        boolean b = (value1 & (1 << i)) > 0;
+                        res.setBoolean(index++, y, b);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
 	 * Read an array of bytes into a pre-allocated buffer, by iterating over the
 	 * strips, and returns the number of bytes read.
 	 */
-	private int readByteArray(RandomAccessFile stream, TiffFileInfo info, byte[] buffer)
+	private int readByteBuffer(RandomAccessFile stream, TiffFileInfo info, byte[] buffer)
 			throws IOException
 	{
 		switch (info.compression) {
@@ -445,7 +505,10 @@ public class TiffImageDataReader extends AlgoStub
         int nRead = PackBits.uncompressPackBits(compressedBytes, buffer, offset);
         return nRead;
     }
+
     
+
+
 
     // =============================================================
     // Conversion of byte arrays to other arrays
@@ -470,6 +533,27 @@ public class TiffImageDataReader extends AlgoStub
         }
         
         return shortBuffer;
+    }
+
+    private final static boolean[] convertToBooleanArray(byte[] byteBuffer)
+    {
+        // Store data as short array
+        int nPixels = byteBuffer.length * 8;
+        boolean[] booleanBuffer = new boolean[nPixels];
+        
+        // convert byte array into boolean array
+        int index = 0;
+        for (int i = 0; i < byteBuffer.length; i++)
+        {
+            byte currentByte = byteBuffer[i];
+            for (int j = 0; j < 8; j++)
+            {
+                booleanBuffer[index++] = (currentByte & 0x01) > 0;
+                currentByte >>= 1;
+            }
+        }
+        
+        return booleanBuffer;
     }
 
     private final static int[] convertToIntArray(byte[] byteBuffer, ByteOrder order)
