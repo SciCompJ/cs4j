@@ -40,17 +40,11 @@
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
 			</resource>
-			<resource>
-				<directory>${project.build.sourceDirectory}</directory>
-			</resource>
 		</resources>
 		
 		<testResources>
 			<testResource>
 				<directory>${basedir}/src/test/resources</directory>
-			</testResource>
-			<testResource>
-				<directory>${project.build.testSourceDirectory}</directory>
 			</testResource>
 		</testResources>
 		
