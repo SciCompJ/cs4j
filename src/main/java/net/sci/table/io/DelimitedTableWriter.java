@@ -122,9 +122,10 @@ public class DelimitedTableWriter implements TableWriter
 		{
 		    if (rowNames != null)
 		    {
-	            writer.print("name");
+	            writer.print("name" + this.delimiter);
 		    }
-			for (int c = 0; c < nc; c++)
+			writer.print(colNames[0]);
+			for (int c = 1; c < nc; c++)
 			{
 				writer.print(this.delimiter + colNames[c]);
 			}
