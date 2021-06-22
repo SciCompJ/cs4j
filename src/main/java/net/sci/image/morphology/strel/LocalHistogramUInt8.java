@@ -6,13 +6,19 @@ package net.sci.image.morphology.strel;
 /**
  * <p>
  * Keeps an histogram of values within the neighborhood of a position by storing
- * the counts of values within an array of integers.
+ * the counts of values within an array of integers. Local Histogram is used by 
+ * sliding structuring element implementations.
  * </p>
  * s
  * <p>
  * This implementation does not use any buffer, but requires updates to replace
- * old value by new value.
+ * old value by new value. Local histogram is stored in a 256 array, resulting in
+ * constant access time for updating value counts.
  * </p>
+ * 
+ * @see LocalHistogramDouble
+ * @see SlidingDiskStrel
+ * @see SlidingBallStrel3D
  * 
  * @author dlegland
  *
@@ -27,9 +33,24 @@ public class LocalHistogramUInt8
      */
     int[] valueCounts;    
     
+    /**
+     * The current maximum value, updated only when required.
+     */
     int maxValue = 0;
-    int minValue = 255;
+
+    /**
+     * The flag indicating that the maximum value needs to be recomputed.
+     */
     boolean needUpdateMax = false;
+    
+    /**
+     * The current minimum value, updated only when required.
+     */
+    int minValue = 255;
+    
+    /**
+     * The flag indicating that the minimum value needs to be recomputed.
+     */
     boolean needUpdateMin = false;
     
     
@@ -80,7 +101,7 @@ public class LocalHistogramUInt8
         this.needUpdateMin = false;
     }
     
-    public double getMaxValue()
+    public int getMaxInt()
     {
         if (needUpdateMax)
         {
@@ -96,7 +117,7 @@ public class LocalHistogramUInt8
         return maxValue;
     }
 
-    public double getMinValue()
+    public int getMinInt()
     {
         if (needUpdateMin)
         {

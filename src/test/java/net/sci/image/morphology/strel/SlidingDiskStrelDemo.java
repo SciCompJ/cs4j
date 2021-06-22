@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 
@@ -24,13 +25,26 @@ public class SlidingDiskStrelDemo
         
         // Creates a simple array with white dot in the middle
         UInt8Array2D array = UInt8Array2D.create(15, 15);
-        array.setValue(255, 7, 7);
+        array.setInt(7, 7, 255);
         
         // applies dilation on array
         ScalarArray2D<?> dilated = strel.dilation(array);
         
         // display result
+        System.out.println("Dilation of UInt8Array2D:");
         dilated.print(System.out);
+        
+        
+        // Creates a simple array with white dot in the middle
+        Float32Array2D arrayF32 = Float32Array2D.create(15, 15);
+        arrayF32.setValue(7, 7, 0.5);
+        
+        // applies dilation on array
+        ScalarArray2D<?> dilatedF32 = strel.dilation(arrayF32);
+        
+        // display result
+        System.out.println("Dilation of Float32Array2D:");
+        dilatedF32.print(System.out);
     }
     
 }

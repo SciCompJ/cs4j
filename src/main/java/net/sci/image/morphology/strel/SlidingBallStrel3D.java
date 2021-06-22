@@ -338,7 +338,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
                         }
                     }
 
-                    res.setInt(x, y, z, (int) localHisto.getMaxValue()); // TODO: add getMaxInt() method in local histo?
+                    res.setInt(x, y, z, localHisto.getMaxInt());
                 }
             }
         }
@@ -549,7 +549,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
                         }
                     }
 
-                    res.setValue(x, y, z, localHisto.getMinValue()); //TODO: cast to int
+                    res.setInt(x, y, z, localHisto.getMinInt());
                 }
             }
         }

@@ -5,6 +5,7 @@ package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt8Array2D;
 
 /**
  * <pre>{@code
@@ -115,9 +116,96 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
     @Override
     public ScalarArray2D<?> dilation(ScalarArray2D<?> array)
     {
+        if (array instanceof UInt8Array2D)
+        {
+            return slidingDilationUInt8((UInt8Array2D) array);
+        }
         return slidingDilationScalar(array);
     }
 
+    private UInt8Array2D slidingDilationUInt8(UInt8Array2D array)
+    {
+        // get array size
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        
+        // number of non zero elements 
+        int count = elementCount();
+        int nOffsets = this.xOffsets.length;
+        
+        // create local histogram instance
+        final int OUTSIDE = 0;
+        LocalHistogramUInt8 localHisto = new LocalHistogramUInt8(count, OUTSIDE);
+
+        // Allocate result
+        UInt8Array2D res = array.duplicate();
+
+        // temp variables for updating local histogram
+        int vOld, vNew;
+        
+        for (int y = 0; y < sizeY; y++)
+        {
+            // Iterate on image rows indexed by y
+            fireProgressChanged(this, y, sizeY);
+
+            // init local histogram with background values
+            localHisto.reset(count, OUTSIDE);
+
+            // update initialization with visible neighbors
+            for (int x = -intRadius; x < 0; x++)
+            {
+                // iterate over the list of offsets
+                for (int i = 0; i < nOffsets; i++)
+                {
+                    int y2 = y + this.yOffsets[i];
+                    if (y2 < 0 || y2 >= sizeY)
+                    {
+                        continue;
+                    }
+
+                    int x2 = x + this.xOffsets[i];
+                    if (x2 < 0 || x2 >= sizeX)
+                    {
+                        continue;
+                    }
+                    localHisto.replace(OUTSIDE, array.getInt(x2, y2));
+                }
+            }   
+
+            // iterate along "middle" values
+            for (int x = 0; x < sizeX; x++)
+            {
+                // iterate over the list of offsets
+                for (int i = 0; i < nOffsets; i++)
+                {
+                    // current line offset
+                    int y2 = y + this.yOffsets[i];
+
+                    // We need to test values only for lines within array bounds
+                    if (y2 >= 0 && y2 < sizeY)
+                    {
+                        // old value
+                        int x2 = x - this.xOffsets[i] - 1;
+                        vOld = (x2 >= 0 && x2 < sizeX) ? array.getInt(x2, y2) : OUTSIDE;
+
+                        // new value
+                        x2 = x + this.xOffsets[i];
+                        vNew = (x2 >= 0 && x2 < sizeX) ? array.getInt(x2, y2) : OUTSIDE;
+
+                        localHisto.replace(vOld, vNew);
+                    }
+                }
+
+                res.setInt(x, y, localHisto.getMaxInt());
+            }
+        }
+
+        // clear the progress bar
+        fireProgressChanged(this, sizeY, sizeY);
+        
+        return res;
+    }
+    
     private ScalarArray2D<?> slidingDilationScalar(ScalarArray2D<?> array)
     {
         // get array size
@@ -130,7 +218,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
         
         // create local histogram instance
         final double OUTSIDE = Double.NEGATIVE_INFINITY;
-        LocalHistogramDouble localHisto = new LocalHistogramDouble(count, OUTSIDE);
+        LocalHistogramDoubleHashMap localHisto = new LocalHistogramDoubleHashMap(count, OUTSIDE);
 
         // Allocate result
         ScalarArray2D<?> res = array.duplicate();
@@ -205,7 +293,95 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
     @Override
     public ScalarArray2D<?> erosion(ScalarArray2D<?> array)
     {
+        if (array instanceof UInt8Array2D)
+        {
+            return slidingErosionUInt8((UInt8Array2D) array);
+        }
         return slidingErosionScalar(array);
+    }
+
+    private UInt8Array2D slidingErosionUInt8(UInt8Array2D array)
+    {
+        // get array size
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+    
+        // number of non zero elements 
+        int count = elementCount();
+        int nOffsets = this.xOffsets.length;
+    
+        // create local histogram instance
+        final int OUTSIDE = 255;
+        LocalHistogramUInt8 localHisto = new LocalHistogramUInt8(count, OUTSIDE);
+    
+        // Allocate result
+        UInt8Array2D res = array.duplicate();
+    
+        // temp variables for updating local histogram
+        int vOld, vNew;
+    
+        // Iterate on image rows indexed by z and y
+        for (int y = 0; y < sizeY; y++)
+        {
+            fireProgressChanged(this, y, sizeY);
+    
+            // init local histogram with background values
+            localHisto.reset(count, OUTSIDE);
+    
+            // update initialization with visible neighbors
+            for (int x = -intRadius; x < 0; x++)
+            {
+                // iterate over the list of offsets
+                for (int i = 0; i < nOffsets; i++)
+                {
+                    int y2 = y + this.yOffsets[i];
+                    if (y2 < 0 || y2 >= sizeY)
+                    {
+                        continue;
+                    }
+    
+                    int x2 = x + this.xOffsets[i];
+                    if (x2 < 0 || x2 >= sizeX)
+                    {
+                        continue;
+                    }
+                    localHisto.replace(OUTSIDE, array.getInt(x2, y2));
+                }
+            }   
+    
+            // iterate along "middle" values
+            for (int x = 0; x < sizeX; x++)
+            {
+                // iterate over the list of offsets
+                for (int i = 0; i < nOffsets; i++)
+                {
+    
+                    // current line offset
+                    int y2 = y + this.yOffsets[i];
+    
+                    // We need to test values only for lines within array bounds
+                    if (y2 >= 0 && y2 < sizeY)
+                    {
+                        // old value
+                        int x2 = x - this.xOffsets[i] - 1;
+                        vOld = (x2 >= 0 && x2 < sizeX) ? array.getInt(x2, y2) : OUTSIDE;
+    
+                        // new value
+                        x2 = x + this.xOffsets[i];
+                        vNew = (x2 >= 0 && x2 < sizeX) ? array.getInt(x2, y2) : OUTSIDE;
+    
+                        localHisto.replace(vOld, vNew);
+                    }
+                }
+    
+                res.setInt(x, y, localHisto.getMinInt());
+            }
+        }
+    
+        // clear the progress bar
+        fireProgressChanged(this, sizeY, sizeY);
+    
+        return res;
     }
 
     private ScalarArray2D<?> slidingErosionScalar(ScalarArray2D<?> array)
@@ -291,24 +467,6 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
         return res;
     }
     
-    /* (non-Javadoc)
-     * @see net.sci.image.morphology.Strel2D#closing(net.sci.array.scalar.ScalarArray2D)
-     */
-    @Override
-    public ScalarArray2D<?> closing(ScalarArray2D<?> array)
-    {
-        return erosion(dilation(array));
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.image.morphology.Strel2D#opening(net.sci.array.scalar.ScalarArray2D)
-     */
-    @Override
-    public ScalarArray2D<?> opening(ScalarArray2D<?> array)
-    {
-        return dilation(erosion(array));
-    }
-
     /* (non-Javadoc)
      * @see net.sci.image.morphology.Strel2D#reverse()
      */

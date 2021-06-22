@@ -13,8 +13,13 @@ import java.util.TreeMap;
  * 
  * <p>
  * This implementation does not use any buffer, but requires updates to replace
- * old value by new value.
+ * old value by new value. Local histogram is stored in a tree map array,
+ * resulting in O(log n) complexity for retrieving value counts.
  * </p>
+ * 
+ * @see LocalHistogramUInt8
+ * @see SlidingDiskStrel
+ * @see SlidingBallStrel3D
  * 
  * @author dlegland
  *
