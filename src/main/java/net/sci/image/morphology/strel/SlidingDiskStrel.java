@@ -118,12 +118,12 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
     {
         if (array instanceof UInt8Array2D)
         {
-            return slidingDilationUInt8((UInt8Array2D) array);
+            return dilationUInt8((UInt8Array2D) array);
         }
-        return slidingDilationScalar(array);
+        return dilationScalar(array);
     }
 
-    private UInt8Array2D slidingDilationUInt8(UInt8Array2D array)
+    private UInt8Array2D dilationUInt8(UInt8Array2D array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -206,7 +206,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
         return res;
     }
     
-    private ScalarArray2D<?> slidingDilationScalar(ScalarArray2D<?> array)
+    private ScalarArray2D<?> dilationScalar(ScalarArray2D<?> array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -295,12 +295,12 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
     {
         if (array instanceof UInt8Array2D)
         {
-            return slidingErosionUInt8((UInt8Array2D) array);
+            return erosionUInt8((UInt8Array2D) array);
         }
-        return slidingErosionScalar(array);
+        return erosionScalar(array);
     }
 
-    private UInt8Array2D slidingErosionUInt8(UInt8Array2D array)
+    private UInt8Array2D erosionUInt8(UInt8Array2D array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -384,7 +384,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
         return res;
     }
 
-    private ScalarArray2D<?> slidingErosionScalar(ScalarArray2D<?> array)
+    private ScalarArray2D<?> erosionScalar(ScalarArray2D<?> array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -397,7 +397,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
         int nOffsets = this.xOffsets.length;
         
         // create local histogram instance
-        LocalHistogramDouble localHisto = new LocalHistogramDouble(count, OUTSIDE);
+        LocalHistogramDoubleHashMap localHisto = new LocalHistogramDoubleHashMap(count, OUTSIDE);
 
         // Allocate result
         ScalarArray2D<?> res = array.duplicate();

@@ -3,18 +3,18 @@
  */
 package net.sci.image.morphology.strel;
 
-import java.util.TreeMap;
+import java.util.HashMap;
 
 /**
  * <p>
  * Keeps an histogram of values within the neighborhood of a position by storing
- * the counts of values within a map indexed by values.
+ * the counts of floating-point values within a map indexed by values.
  * </p>
  * 
  * <p>
  * This implementation does not use any buffer, but requires updates to replace
- * old value by new value. Local histogram is stored in a tree map array,
- * resulting in O(log n) complexity for retrieving value counts.
+ * old value by new value. Local histogram is stored in a hash map, resulting in
+ * O(n) complexity for retrieving value counts.
  * </p>
  * 
  * @see LocalHistogramUInt8
@@ -24,7 +24,7 @@ import java.util.TreeMap;
  * @author dlegland
  *
  */
-public class LocalHistogramDouble
+public class LocalHistogramDoubleHashMap
 {
     // ==================================================
     // Class variables
@@ -35,8 +35,28 @@ public class LocalHistogramDouble
      * Each count should be strictly greater than 0, and the corresponding key
      * removed if the count is decreased to 0.
      */
-    TreeMap<Double, Integer> valueCounts = new TreeMap<>(); 
+    HashMap<Double, Integer> valueCounts; 
     
+    /**
+     * The current maximum value, updated only when required.
+     */
+    double maxValue = Double.POSITIVE_INFINITY;
+
+    /**
+     * The flag indicating that the maximum value needs to be recomputed.
+     */
+    boolean needUpdateMax = false;
+    
+    /**
+     * The current minimum value, updated only when required.
+     */
+    double minValue = Double.NEGATIVE_INFINITY;
+    
+    /**
+     * The flag indicating that the minimum value needs to be recomputed.
+     */
+    boolean needUpdateMin = false;
+ 
     
     // ==================================================
     // Constructors
@@ -49,9 +69,11 @@ public class LocalHistogramDouble
      * @param value
      *            the value that fills the histogram.
      */
-    public LocalHistogramDouble(int count, double value)
+    public LocalHistogramDoubleHashMap(int count, double value)
     {
-        valueCounts.put(value, count);
+        valueCounts = new HashMap<Double, Integer>((int) (count * 1.4), 0.75f);
+        
+        reset(count, value);
     }
     
     
@@ -71,16 +93,43 @@ public class LocalHistogramDouble
     {
         valueCounts.clear();
         valueCounts.put(value, count);
+        
+        this.maxValue = value;
+        this.minValue = value;
+        this.needUpdateMax = false;
+        this.needUpdateMin = false;
     }
     
     public double getMaxValue()
     {
-        return valueCounts.lastKey();
+        if (needUpdateMax)
+        {
+            this.maxValue = Double.NEGATIVE_INFINITY;
+            for (double key : valueCounts.keySet())
+            {
+                this.maxValue = Math.max(this.maxValue, key);
+            }
+            
+            needUpdateMax = false;
+        }
+        
+        return maxValue;
     }
 
     public double getMinValue()
     {
-        return valueCounts.firstKey();
+        if (needUpdateMin)
+        {
+            this.minValue = Double.POSITIVE_INFINITY;
+            for (double key : valueCounts.keySet())
+            {
+                this.minValue = Math.min(this.minValue, key);
+            }
+            
+            needUpdateMin = false;
+        }
+        
+        return minValue;
     }
     
     public void replace(double oldValue, double newValue)
@@ -102,6 +151,17 @@ public class LocalHistogramDouble
             else
             {
                 valueCounts.remove(value);
+
+                // check if necessary to update min/max values 
+                if (value == maxValue)
+                {
+                    needUpdateMax = true;
+                }
+                if (value == minValue)
+                {
+                    needUpdateMin = true;
+                }
+
             }
         }
         else
@@ -121,6 +181,15 @@ public class LocalHistogramDouble
         {
             // create new count
             valueCounts.put(value, 1);
+        }
+
+        if (value > maxValue)
+        {
+            needUpdateMax = true;
+        }
+        if (value < minValue)
+        {
+            needUpdateMin = true;
         }
     }
 }

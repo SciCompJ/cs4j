@@ -11,16 +11,16 @@ import org.junit.Test;
  * @author dlegland
  *
  */
-public class LocalHistogramDoubleTest
+public class LocalHistogramDoubleHashMapTest
 {
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.LocalHistogramDouble#getMaxValue()}.
+     * Test method for {@link net.sci.image.morphology.strel.LocalHistogramDoubleHashMap#getMaxValue()}.
      */
     @Test
     public final void testGetMaxValue()
     {
-        LocalHistogramDouble localHisto = new LocalHistogramDouble(3, 0.0);
+        LocalHistogramDoubleHashMap localHisto = new LocalHistogramDoubleHashMap(3, 0.0);
         localHisto.replace(0.0, 15.0);
         localHisto.replace(0.0, 5.0);
         localHisto.replace(0.0, 10.0);
@@ -32,12 +32,12 @@ public class LocalHistogramDoubleTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.LocalHistogramDouble#getMinValue()}.
+     * Test method for {@link net.sci.image.morphology.strel.LocalHistogramDoubleHashMap#getMinValue()}.
      */
     @Test
     public final void testGetMinValue()
     {
-        LocalHistogramDouble localHisto = new LocalHistogramDouble(3, 50.0);
+        LocalHistogramDoubleHashMap localHisto = new LocalHistogramDoubleHashMap(3, 50.0);
         localHisto.replace(50.0, 10.0);
         localHisto.replace(50.0, 30.0);
         localHisto.replace(50.0, 20.0);

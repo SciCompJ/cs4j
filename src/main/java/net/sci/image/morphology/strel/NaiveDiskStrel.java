@@ -7,6 +7,12 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.scalar.ScalarArray2D;
 
 /**
+ * Naive implementation of disk structuring element. Used as reference
+ * implementation for evaluating Sliding structuring element.
+ * 
+ * @see SlidingDiskStrel
+ * @see NaiveBallStrel3D
+ *
  * @author dlegland
  *
  */
@@ -164,24 +170,6 @@ public class NaiveDiskStrel extends AlgoStub implements Strel2D
         }
         
         return res;
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.image.morphology.Strel2D#closing(net.sci.array.scalar.ScalarArray2D)
-     */
-    @Override
-    public ScalarArray2D<?> closing(ScalarArray2D<?> array)
-    {
-        return erosion(dilation(array));
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.image.morphology.Strel2D#opening(net.sci.array.scalar.ScalarArray2D)
-     */
-    @Override
-    public ScalarArray2D<?> opening(ScalarArray2D<?> array)
-    {
-        return dilation(erosion(array));
     }
 
     /* (non-Javadoc)

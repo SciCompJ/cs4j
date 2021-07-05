@@ -146,12 +146,12 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
     {
         if (array instanceof UInt8Array3D)
         {
-            return slidingDilationUInt8((UInt8Array3D) array);
+            return dilationUInt8((UInt8Array3D) array);
         }
-        return slidingDilationScalar(array);
+        return dilationScalar(array);
     }
 
-    private ScalarArray3D<?> slidingDilationScalar(ScalarArray3D<?> array)
+    private ScalarArray3D<?> dilationScalar(ScalarArray3D<?> array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -164,7 +164,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         
         // create local histogram instance
         final double OUTSIDE = Double.NEGATIVE_INFINITY;
-        LocalHistogramDouble localHisto = new LocalHistogramDouble(count, OUTSIDE);
+        LocalHistogramDoubleHashMap localHisto = new LocalHistogramDoubleHashMap(count, OUTSIDE);
 
         // Allocate result
         ScalarArray3D<?> res = array.duplicate();
@@ -250,7 +250,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         return res;
     }
     
-    private UInt8Array3D slidingDilationUInt8(UInt8Array3D array)
+    private UInt8Array3D dilationUInt8(UInt8Array3D array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -357,12 +357,12 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
     {
         if (array instanceof UInt8Array3D)
         {
-            return slidingErosionUInt8((UInt8Array3D) array);
+            return erosionUInt8((UInt8Array3D) array);
         }
-        return slidingErosionScalar(array);
+        return erosionScalar(array);
     }
 
-    private ScalarArray3D<?> slidingErosionScalar(ScalarArray3D<?> array)
+    private ScalarArray3D<?> erosionScalar(ScalarArray3D<?> array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -375,7 +375,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         
         // create local histogram instance
         final double OUTSIDE = Double.NEGATIVE_INFINITY;
-        LocalHistogramDouble localHisto = new LocalHistogramDouble(count, OUTSIDE);
+        LocalHistogramDoubleHashMap localHisto = new LocalHistogramDoubleHashMap(count, OUTSIDE);
 
         // Allocate result
         ScalarArray3D<?> res = array.duplicate();
@@ -461,7 +461,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         return res;
     }
     
-    private UInt8Array3D slidingErosionUInt8(UInt8Array3D array)
+    private UInt8Array3D erosionUInt8(UInt8Array3D array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -558,24 +558,6 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         fireProgressChanged(this, sizeZ, sizeZ);
         
         return res;
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.image.morphology.strel.Strel3D#closing(net.sci.array.scalar.ScalarArray3D)
-     */
-    @Override
-    public ScalarArray3D<?> closing(ScalarArray3D<?> array)
-    {
-        return erosion(dilation(array));
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.image.morphology.strel.Strel3D#opening(net.sci.array.scalar.ScalarArray3D)
-     */
-    @Override
-    public ScalarArray3D<?> opening(ScalarArray3D<?> array)
-    {
-        return dilation(erosion(array));
     }
 
     /* (non-Javadoc)

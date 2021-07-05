@@ -16,7 +16,7 @@ package net.sci.image.morphology.strel;
  * constant access time for updating value counts.
  * </p>
  * 
- * @see LocalHistogramDouble
+ * @see LocalHistogramDoubleTreeMap
  * @see SlidingDiskStrel
  * @see SlidingBallStrel3D
  * 

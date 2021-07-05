@@ -7,6 +7,13 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.scalar.ScalarArray3D;
 
 /**
+ * Naive implementation of 3D ball structuring element.
+ * 
+ * Used as reference implementation for evaluating Sliding structuring element.
+ * 
+ * @see SlidingBallStrel3D
+ * @see NaiveDiskStrel
+ * 
  * @author dlegland
  *
  */
@@ -31,6 +38,7 @@ public class NaiveBallStrel3D extends AlgoStub implements Strel3D
      * An array of shifts referring to strel elements, relative to center pixel.
      */
     int[][] shiftArray;
+    
     
     // ==================================================
     // Constructors
@@ -184,24 +192,6 @@ public class NaiveBallStrel3D extends AlgoStub implements Strel3D
         }
         
         return res;
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.image.morphology.Strel3D#closing(net.sci.array.scalar.ScalarArray3D)
-     */
-    @Override
-    public ScalarArray3D<?> closing(ScalarArray3D<?> array)
-    {
-        return erosion(dilation(array));
-    }
-
-    /* (non-Javadoc)
-     * @see net.sci.image.morphology.Strel3D#opening(net.sci.array.scalar.ScalarArray3D)
-     */
-    @Override
-    public ScalarArray3D<?> opening(ScalarArray3D<?> array)
-    {
-        return dilation(erosion(array));
     }
 
     /* (non-Javadoc)

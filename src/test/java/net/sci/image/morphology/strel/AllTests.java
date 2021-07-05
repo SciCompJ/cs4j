@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     // Utility  classes
-    LocalHistogramDoubleTest.class,
+    LocalHistogramDoubleTreeMapTest.class,
+    LocalHistogramDoubleHashMapTest.class,
     
 	// 2D structuring element classes
     BoxDilationNaiveTest.class,
