@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Locale;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Float64Array;
@@ -18,6 +19,8 @@ import net.sci.array.scalar.Int16Array;
 import net.sci.array.scalar.Int32Array;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt8Array;
+import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.scalar.UInt8Array3D;
 import net.sci.image.Image;
 
 /**
@@ -47,7 +50,7 @@ import net.sci.image.Image;
  * 
  * @author dlegland
  */
-public class MetaImageWriter implements ImageWriter
+public class MetaImageWriter extends AlgoStub implements ImageWriter
 {
 	File headerFile;
 	
@@ -188,17 +191,59 @@ public class MetaImageWriter implements ImageWriter
 		BufferedOutputStream bos = new BufferedOutputStream(stream);
 		if (array instanceof UInt8Array)
 		{
-			UInt8Array array8 = (UInt8Array) array;
-			for (int[] pos : array8.positions())
-			{
-				bos.write(array8.getByte(pos));
-			}
+		    writeUInt8Data((UInt8Array) array, bos);
 		}
 		else
 		{
-			throw new RuntimeException("Can not manage arays with class: " + array.getClass()); 
+			throw new RuntimeException("Can not manage arrays with class: " + array.getClass()); 
 		}
 		bos.flush();
 	}
 	
+    private void writeUInt8Data(UInt8Array array, BufferedOutputStream bos) throws IOException
+    {
+        if (array.dimensionality() == 3)
+        {
+            UInt8Array3D array3d = UInt8Array3D.wrap(array);
+            int sizeX = array3d.size(0);
+            int sizeY = array3d.size(1);
+            int sizeZ = array3d.size(2);
+            for (int z = 0; z < sizeZ; z++)
+            {
+                this.fireProgressChanged(this, z, sizeZ);
+                for (int y = 0; y < sizeY; y++)
+                {
+                    for (int x = 0; x < sizeX; x++)
+                    {
+                        bos.write(array3d.getByte(x, y, z));
+                    }
+                }
+                bos.flush();
+            }
+            this.fireProgressChanged(this, 1, 1);
+        }
+        else if (array.dimensionality() == 2)
+        {
+            UInt8Array2D array2d = UInt8Array2D.wrap(array);
+            int sizeX = array2d.size(0);
+            int sizeY = array2d.size(1);
+            for (int y = 0; y < sizeY; y++)
+            {
+                this.fireProgressChanged(this, y, sizeY);
+                for (int x = 0; x < sizeX; x++)
+                {
+                    bos.write(array2d.getByte(x, y));
+                }
+            }
+            this.fireProgressChanged(this, 1, 1);
+        }
+        else
+        {
+            UInt8Array array8 = (UInt8Array) array;
+            for (int[] pos : array8.positions())
+            {
+                bos.write(array8.getByte(pos));
+            }
+        }
+    }
 }
