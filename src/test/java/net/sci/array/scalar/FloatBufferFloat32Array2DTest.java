@@ -70,7 +70,7 @@ public class FloatBufferFloat32Array2DTest
         float[] floatArray = new float[80];
         FloatBuffer buffer = FloatBuffer.wrap(floatArray);
         FloatBufferFloat32Array2D array = new FloatBufferFloat32Array2D(10, 8, buffer);
-        array.populateValues((x,y) -> x + 10.0 * y);
+        array.fillValues((x,y) -> x + 10.0 * y);
         return array;
     }
 

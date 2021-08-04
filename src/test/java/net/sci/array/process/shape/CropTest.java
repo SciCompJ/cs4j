@@ -96,7 +96,7 @@ public class CropTest
     private UInt8Array2D createUInt8Array2D()
     {
         UInt8Array2D array = UInt8Array2D.create(10, 10);
-        array.populateValues((x, y) -> (y * 10.0 + x));
+        array.fillValues((x, y) -> (y * 10.0 + x));
         return array;
     }
 }

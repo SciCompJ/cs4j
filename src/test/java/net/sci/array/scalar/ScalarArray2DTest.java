@@ -30,10 +30,10 @@ public class ScalarArray2DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.scalar.ScalarArray2D#populateValues(java.util.function.Function)}.
+     * Test method for {@link net.sci.array.scalar.ScalarArray2D#fillValues(java.util.function.Function)}.
      */
     @Test
-    public final void testPopulateFunctionOfDoubleDouble()
+    public final void testFillValuesFunction()
     {
         ScalarArray2D<?> array = UInt8Array2D.create(10, 10);
         
@@ -46,14 +46,14 @@ public class ScalarArray2DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.scalar.ScalarArray2D#populateValues(java.util.function.BiFunction)}.
+     * Test method for {@link net.sci.array.scalar.ScalarArray2D#fillValues(java.util.function.BiFunction)}.
      */
     @Test
-    public final void testPopulateBiFunctionOfDoubleDoubleDouble()
+    public final void testFillValuesBiFunction()
     {
         ScalarArray2D<?> array = UInt8Array2D.create(10, 10);
         
-        array.populateValues((x,y) -> (double) x + y);
+        array.fillValues((x,y) -> (double) x + y);
         
         assertEquals(array.getValue(0, 0), 0, .01);
         assertEquals(array.getValue(9, 0), 9, .01);

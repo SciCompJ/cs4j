@@ -31,10 +31,10 @@ public class ScalarArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.scalar.ScalarArray3D#populateValues(java.util.function.Function)}.
+     * Test method for {@link net.sci.array.scalar.ScalarArray3D#fillValues(java.util.function.Function)}.
      */
     @Test
-    public final void testFillValues()
+    public final void testFillValuesFunction()
     {
         ScalarArray3D<?> array = UInt8Array3D.create(5, 4, 3);
         
@@ -51,14 +51,14 @@ public class ScalarArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.scalar.ScalarArray3D#populateValues(java.util.function.TriFunction)}.
+     * Test method for {@link net.sci.array.scalar.ScalarArray3D#fillValues(java.util.function.TriFunction)}.
      */
     @Test
-    public final void testPopulateTriFunctionOfDoubleDoubleDoubleDouble()
+    public final void testFillValuesTriFunction()
     {
         ScalarArray3D<?> array = UInt8Array3D.create(5, 4, 3);
         
-        array.populateValues((x,y,z) -> x + 10 * y + z * 100);
+        array.fillValues((x,y,z) -> x + y * 10.0 + z * 100);
         
         assertEquals(array.getValue(0, 0, 0),   0, .01);
         assertEquals(array.getValue(4, 0, 0),   4, .01);

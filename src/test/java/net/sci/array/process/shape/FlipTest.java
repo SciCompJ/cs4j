@@ -30,7 +30,7 @@ public class FlipTest
 		int sizeX = 6;
 		int sizeY = 4;
 		UInt8Array2D array = new BufferedUInt8Array2D(sizeX, sizeY);
-		array.populateValues((x,y) -> (double) x + y * 10.0);
+		array.fillValues((x,y) -> (double) x + y * 10.0);
 		
 		Flip flipX = new Flip(0);
 		Array<?> resFlip= flipX.process(array);
@@ -51,7 +51,7 @@ public class FlipTest
 		int sizeX = 6;
 		int sizeY = 4;
 		UInt8Array2D array = new BufferedUInt8Array2D(sizeX, sizeY);
-        array.populateValues((x,y) -> (double) x + y * 10.0);
+        array.fillValues((x,y) -> (double) x + y * 10.0);
 		
 		Flip flipX = new Flip(0);
 		UInt8Array2D resFlip = array.duplicate();
@@ -73,7 +73,7 @@ public class FlipTest
         int sizeX = 6;
         int sizeY = 4;
         UInt8Array2D array = new BufferedUInt8Array2D(sizeX, sizeY);
-        array.populateValues((x,y) -> (double) x + y * 10.0);
+        array.fillValues((x,y) -> (double) x + y * 10.0);
         
         Flip flipY = new Flip(1);
         Array<?> resFlip = flipY.process(array);
@@ -157,7 +157,7 @@ public class FlipTest
 		int sizeX = 6;
 		int sizeY = 4;
 		UInt8Array2D array = new BufferedUInt8Array2D(sizeX, sizeY);
-        array.populateValues((x,y) -> (double) x + y * 10.0);
+        array.fillValues((x,y) -> (double) x + y * 10.0);
 		
 		Flip flipY = new Flip(1);
 		UInt8Array2D resFlip = array.duplicate();
@@ -179,7 +179,7 @@ public class FlipTest
         int sizeX = 6;
         int sizeY = 4;
         UInt8Array2D array = UInt8Array2D.create(sizeX, sizeY);
-        array.populateValues((x,y) -> (double) x + y * 10.0);
+        array.fillValues((x,y) -> (double) x + y * 10.0);
         
         Flip flipX = new Flip(0);
         Array<?> resFlip = flipX.createView(array);

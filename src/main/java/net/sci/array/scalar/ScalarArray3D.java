@@ -68,11 +68,11 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
      *            a function of three variables that returns a double. The three
      *            input variables correspond to the x, y, and z coordinates.
      */
-    public void populateValues(TriFunction<Double,Double,Double,Double> fun)
+    public void fillValues(TriFunction<Integer,Integer,Integer,Double> fun)
     {
         for (int[] pos : this.positions())
         {
-            this.setValue(pos[0], pos[1], pos[2], fun.apply((double) pos[0], (double) pos[1], (double) pos[2]));
+            this.setValue(pos[0], pos[1], pos[2], fun.apply(pos[0], pos[1], pos[2]));
         }
     }
     

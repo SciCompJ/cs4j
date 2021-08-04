@@ -115,7 +115,7 @@ public class SliceBufferedUInt8Array3D extends UInt8Array3D
     public static final void main(String... args)
     {
         UInt8Array3D refArray = UInt8Array3D.create(10, 10, 10);
-        refArray.populateValues((x,y,z) -> (double) (x + y * 10.0 + Math.floor(z / 5.0) * 2.0));
+        refArray.fillValues((x,y,z) -> (double) (x + y * 10.0 + Math.floor(z / 5.0) * 2.0));
 
         SliceBufferedUInt8Array3D array = new SliceBufferedUInt8Array3D(refArray, 2);
 

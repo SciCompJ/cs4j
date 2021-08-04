@@ -69,7 +69,7 @@ public class ShortBufferUInt16Array2DTest
         short[] shortArray = new short[80];
         ShortBuffer buffer = ShortBuffer.wrap(shortArray);
         ShortBufferUInt16Array2D array = new ShortBufferUInt16Array2D(10, 8, buffer);
-        array.populateValues((x,y) -> x + 10.0 * y);
+        array.fillValues((x,y) -> x + 10.0 * y);
         return array;
     }
 

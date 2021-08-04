@@ -81,7 +81,7 @@ public abstract class Array3D<T> implements Array<T>
      *            T. The three input variables correspond to the x, y, and z
      *            coordinates.
      */
-    public void populate(TriFunction<Integer,Integer,Integer,T> fun)
+    public void fill(TriFunction<Integer,Integer,Integer,T> fun)
     {
         for (int[] pos : this.positions())
         {

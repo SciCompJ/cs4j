@@ -21,7 +21,7 @@ public class UInt8Array3DTest
     public final void testSlice()
     {
         UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
-        array.populateValues((x, y, z) -> 100 * z + 10 * y + x);
+        array.fillValues((x, y, z) -> 100.0 * z + 10 * y + x);
         
         assertEquals(array.getValue(3, 2, 1), 123, .01);
 

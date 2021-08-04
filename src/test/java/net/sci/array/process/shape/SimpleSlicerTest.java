@@ -143,7 +143,7 @@ public class SimpleSlicerTest
 	private UInt8Array3D createUInt8Array3D()
 	{
 		UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
-		array.populateValues((x, y, z) -> x + y * 10 + z * 100);
+		array.fillValues((x, y, z) -> x + y * 10.0 + z * 100);
 		return array;
 	}
 

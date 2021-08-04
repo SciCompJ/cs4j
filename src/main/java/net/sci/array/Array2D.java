@@ -64,7 +64,7 @@ public abstract class Array2D<T> implements Array<T>
      * {@code
      * Array2D<String> array = Array3D.create(5, 4, null); 
      * String[] digits = {"A", "B", "C", "D", "E", "F"}; 
-     * array.populate((x,y) -> digits[y] + digits[x]);
+     * array.fill((x,y) -> digits[y] + digits[x]);
      * String res43 = array.get(4, 3); // returns "CD". 
      * }
      * </pre>
@@ -73,7 +73,7 @@ public abstract class Array2D<T> implements Array<T>
      *            a function of two variables that returns an instance of type
      *            T. The two input variables correspond to the x and y coordinates.
      */
-    public void populate(BiFunction<Integer,Integer,T> fun)
+    public void fill(BiFunction<Integer,Integer,T> fun)
     {
         for (int[] pos : this.positions())
         {

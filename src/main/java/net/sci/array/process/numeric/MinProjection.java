@@ -116,7 +116,7 @@ public class MinProjection extends ProjectionOperator
     {
         String[] digits = {"A", "B", "C", "D", "E", "F"};
         Array2D<String> array = GenericArray2D.create(6, 4, "");
-        array.populate((x,y) -> digits[y] + digits[x]);
+        array.fill((x,y) -> digits[y] + digits[x]);
         System.out.println("input:");
         array.print(System.out);
         

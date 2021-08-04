@@ -20,7 +20,7 @@ public class ScalarArrayTest
     public final void testReshape()
     {
         UInt8Array2D array = UInt8Array2D.create(6, 4);
-        array.populateValues((x,y) -> (double) x + 10 * y);
+        array.fillValues((x,y) -> (double) x + 10 * y);
         
         double sum0 = 0;
         for (Scalar v : array)

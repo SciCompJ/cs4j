@@ -40,7 +40,7 @@ public class Watershed3DTest
         
         // compute the distance map to the closest germ
         Float32Array3D array = Float32Array3D.create(10, 10, 10);
-        array.populateValues((x,y,z) -> germs.distance(x, y, z));
+        array.fillValues((x,y,z) -> germs.distance(x, y, z));
         
         // apply watershed
         Watershed3D algo = new Watershed3D(Connectivity3D.C6);

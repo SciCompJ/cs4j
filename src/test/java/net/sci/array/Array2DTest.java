@@ -76,7 +76,7 @@ public class Array2DTest
 	}
 	
     /**
-     * Test method for {@link net.sci.array.Array2D#populate(java.util.function.BiFunction)}.
+     * Test method for {@link net.sci.array.Array2D#fill(java.util.function.BiFunction)}.
      */
     @Test
     public final void testPopulate()
@@ -84,7 +84,7 @@ public class Array2DTest
         Array2D<String> array = Array2D.create(5, 4, "");
         String[] digits = {"A", "B", "C", "D", "E", "F"};  
         
-        array.populate((x,y) -> digits[x] + digits[y]);
+        array.fill((x,y) -> digits[x] + digits[y]);
         
         assertEquals(array.get(0, 0), "AA");
         assertEquals(array.get(4, 3), "ED");

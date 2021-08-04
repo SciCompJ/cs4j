@@ -26,7 +26,7 @@ public class BallStrel3DTiming
     {
         // Create a dummy 3D array
         UInt8Array3D array = UInt8Array3D.create(100, 100, 100);
-        array.populateValues((x,y,z) -> {
+        array.fillValues((x,y,z) -> {
             double h = Math.hypot(Math.hypot(z-50.0, y-50.0), x-50.0);
             return h > 40 ? 0.0 : Math.sqrt(30.0*30.0 - h*h);
         });

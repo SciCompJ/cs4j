@@ -98,14 +98,14 @@ public class SubSamplerTest
     private UInt8Array2D createUInt8Array2D()
     {
         UInt8Array2D array = UInt8Array2D.create(10, 10);
-        array.populateValues((x, y) -> (y * 10.0 + x));
+        array.fillValues((x, y) -> (y * 10.0 + x));
         return array;
     }
 
     private UInt16Array3D createUInt16Array3D()
     {
         UInt16Array3D array = UInt16Array3D.create(10, 8, 6);
-        array.populateValues((x, y, z) -> (z*10000 + y * 100 + x));
+        array.fillValues((x, y, z) -> (z*10000.0 + y * 100 + x));
         return array;
     }
 }

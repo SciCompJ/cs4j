@@ -72,7 +72,7 @@ public class ImageSlicerTest
     private UInt8Array3D create543Array()
     {
         UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
-        array.populateValues((x,y,z) -> z * 100 + y * 10 + x);
+        array.fillValues((x,y,z) -> z * 100.0 + y * 10 + x);
         return array;
     }
 

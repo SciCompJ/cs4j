@@ -64,7 +64,7 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
      * <pre>
      * {@code
      * ScalarArray2D<?> array = UInt8Array2D.create(5, 4);
-     * array.populateValues((x, y) -> x + y * 10);
+     * array.fillValues((x, y) -> x + y * 10);
      * }
      * </pre>
      * 
@@ -72,7 +72,7 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
      *            a function of two variables that returns a double. The two
      *            input variables correspond to the x and y coordinates.
      */
-    public void populateValues(BiFunction<Integer,Integer,Double> fun)
+    public void fillValues(BiFunction<Integer,Integer,Double> fun)
     {
         for (int[] pos : this.positions())
         {

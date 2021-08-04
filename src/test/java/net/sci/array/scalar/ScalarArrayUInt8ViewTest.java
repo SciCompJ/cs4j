@@ -18,7 +18,7 @@ public class ScalarArrayUInt8ViewTest
     public final void testConvertFloat32Array()
     {
         ScalarArray2D<?> array = Float32Array2D.create(100, 100);
-        array.populateValues((x, y) -> (x + y + 0.0));
+        array.fillValues((x, y) -> (x + y + 0.0));
         
         UInt8Array res = new ScalarArrayUInt8View(array, 0, 200-2);
         
@@ -34,7 +34,7 @@ public class ScalarArrayUInt8ViewTest
     public final void testConvertFloat32Array2D_Is2D()
     {
         ScalarArray2D<?> array = Float32Array2D.create(100, 100);
-        array.populateValues((x, y) -> (x * 5.0 + y * 2.0));
+        array.fillValues((x, y) -> (x * 5.0 + y * 2.0));
         
         double maxi = array.getValue(99,  99);
         UInt8Array res = new ScalarArrayUInt8View(array, 0, maxi);
@@ -49,7 +49,7 @@ public class ScalarArrayUInt8ViewTest
     public final void testConvertFloat32Array2D_IsScalar2D()
     {
         ScalarArray2D<?> array = Float32Array2D.create(100, 100);
-        array.populateValues((x, y) -> (x * 5.0 + y * 2.0));
+        array.fillValues((x, y) -> (x * 5.0 + y * 2.0));
         
         double maxi = array.getValue(99,  99);
         UInt8Array res = new ScalarArrayUInt8View(array, 0, maxi);

@@ -25,7 +25,7 @@ public class MaxProjectionTest
     {
         // Create array with values within 0 and 79
         UInt8Array2D array = UInt8Array2D.create(10, 8);
-        array.populateValues((x,y) -> (double) y * 10.0 + x);
+        array.fillValues((x,y) -> (double) y * 10.0 + x);
         
         // create operator
         MaxProjection op = new MaxProjection(1);

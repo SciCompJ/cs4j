@@ -36,7 +36,7 @@ public class Watershed2DTest
         
         // compute the distance map to the closest germ
         Float32Array2D array = Float32Array2D.create(100, 100);
-        array.populateValues((x,y) -> germs.distance(x, y));
+        array.fillValues((x,y) -> germs.distance(x, y));
 
         // apply watershed
         Watershed2D algo = new Watershed2D(Connectivity2D.C4);
