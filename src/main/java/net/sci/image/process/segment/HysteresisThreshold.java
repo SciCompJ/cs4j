@@ -78,17 +78,11 @@ public class HysteresisThreshold
     {
         // Compute segmentation based on upper threshold value
         BinaryArray2D upperSeg = BinaryArray2D.create(array.size(0), array.size(1));
-        for(int[] pos : upperSeg.positions())
-        {
-            upperSeg.setBoolean(pos, array.getValue(pos) >= upperValue);
-        }
+        upperSeg.fillBooleans(pos -> array.getValue(pos) >= upperValue);
         
         // Compute segmentation based on lower threshold value
         BinaryArray2D lowerSeg = BinaryArray2D.create(array.size(0), array.size(1));
-        for(int[] pos : lowerSeg.positions())
-        {
-            lowerSeg.setBoolean(pos, array.getValue(pos) >= lowerValue);
-        }
+        lowerSeg.fillBooleans(pos -> array.getValue(pos) >= lowerValue);
 
         return BinaryArray2D.wrap((BinaryArray) MorphologicalReconstruction.reconstructByDilation(upperSeg, lowerSeg));
     }
@@ -97,17 +91,11 @@ public class HysteresisThreshold
     {
         // Compute segmentation based on upper threshold value
         BinaryArray3D upperSeg = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
-        for(int[] pos : upperSeg.positions())
-        {
-            upperSeg.setBoolean(pos, array.getValue(pos) >= upperValue);
-        }
+        upperSeg.fillBooleans(pos -> array.getValue(pos) >= upperValue);
         
         // Compute segmentation based on lower threshold value
         BinaryArray3D lowerSeg = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
-        for(int[] pos : lowerSeg.positions())
-        {
-            lowerSeg.setBoolean(pos, array.getValue(pos) >= lowerValue);
-        }
+        lowerSeg.fillBooleans(pos -> array.getValue(pos) >= lowerValue);
 
         return BinaryArray3D.wrap((BinaryArray) MorphologicalReconstruction.reconstructByDilation(upperSeg, lowerSeg));
     }

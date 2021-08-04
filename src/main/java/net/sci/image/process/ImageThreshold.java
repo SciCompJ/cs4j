@@ -33,10 +33,7 @@ public class ImageThreshold implements ImageArrayOperator, ScalarArrayOperator
 
 	public void processScalar(ScalarArray<?> source, BinaryArray target)
 	{
-		for (int[] pos : source.positions())
-		{
-			target.setBoolean(pos, source.getValue(pos) > this.value);
-		}
+	    target.fillBooleans(pos -> source.getValue(pos) > this.value);
 	}
 	
     @Override

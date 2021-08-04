@@ -15,7 +15,8 @@ import net.sci.array.scalar.UInt8Array;
 import net.sci.image.ImageArrayOperator;
 
 /**
- * An image inverter. 
+ * An image inverter.
+ *  
  * @author dlegland
  *
  */
@@ -39,17 +40,7 @@ public final class ImageInverter implements ImageArrayOperator, ArrayOperator
 	{
 		// determine max value
 		double maxVal = determineUpperValue(source);
-		
-		// create Iterators
-		ScalarArray.Iterator<?> sourceIter = source.iterator(); 
-		ScalarArray.Iterator<?> targetIter = target.iterator();
-		
-		// iterate in parallel over both iterators
-		while(sourceIter.hasNext() && targetIter.hasNext())
-		{
-			targetIter.forward();
-			targetIter.setValue(maxVal - sourceIter.nextValue());
-		}
+		target.fillValues(pos -> maxVal - source.getValue(pos));
 	}
 	
 	/**
@@ -79,21 +70,17 @@ public final class ImageInverter implements ImageArrayOperator, ArrayOperator
 	 */
 	public void processRGB8(RGB8Array source, RGB8Array target)
 	{
-		// create Iterators
-		RGB8Array.Iterator sourceIter = source.iterator(); 
-		RGB8Array.Iterator targetIter = target.iterator();
-
-		// iterate in parallel over both iterators
-		while(sourceIter.hasNext() && targetIter.hasNext())
-		{
-			RGB8 rgb = sourceIter.next();
-			int[] vals = rgb.getSamples();
-			for (int c = 0; c < 3; c++)
-			{
-				vals[c] = 255 - vals[c];
-			}
-			targetIter.set(new RGB8(vals[0], vals[1], vals[2]) );
-		}
+	    target.fill(pos -> invertRGB(source.get(pos)));
+	}
+	
+	private RGB8 invertRGB(RGB8 rgb)
+	{
+	    int[] vals = rgb.getSamples();
+        for (int c = 0; c < 3; c++)
+        {
+            vals[c] = 255 - vals[c];
+        }
+        return new RGB8(vals[0], vals[1], vals[2]);
 	}
 
 	
