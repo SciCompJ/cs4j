@@ -34,11 +34,11 @@ public class ScalarArray3DTest
      * Test method for {@link net.sci.array.scalar.ScalarArray3D#populateValues(java.util.function.Function)}.
      */
     @Test
-    public final void testPopulateFunctionOfDoubleDouble()
+    public final void testFillValues()
     {
         ScalarArray3D<?> array = UInt8Array3D.create(5, 4, 3);
         
-        array.populateValues((Double[] pos) -> pos[0] + 10 * pos[1] + 100 * pos[2]);
+        array.fillValues(pos -> pos[0] + 10.0 * pos[1] + 100.0 * pos[2]);
         
         assertEquals(array.getValue(0, 0, 0),   0, .01);
         assertEquals(array.getValue(4, 0, 0),   4, .01);

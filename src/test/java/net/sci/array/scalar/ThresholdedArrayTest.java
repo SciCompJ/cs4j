@@ -21,7 +21,7 @@ public class ThresholdedArrayTest
     public final void testGetBoolean()
     {
         Float32Array2D array = Float32Array2D.create(10, 10);
-        array.populateValues((pos) -> 7 - Math.hypot(pos[0] - 4, pos[1] - 4));
+        array.fillValues(pos -> 7 - Math.hypot(pos[0] - 4, pos[1] - 4));
         
         ThresholdedArray view = new ThresholdedArray(array, 3.0);
         

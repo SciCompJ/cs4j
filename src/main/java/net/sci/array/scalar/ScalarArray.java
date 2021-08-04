@@ -134,6 +134,14 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 		}
 	}
 	
+    public default void fillValues(Function<int[], Double> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setValue(pos, fun.apply(pos));
+        }
+    }
+
 	
     // =============================================================
     // New abstract methods

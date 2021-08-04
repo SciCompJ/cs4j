@@ -3,8 +3,6 @@
  */
 package net.sci.array.scalar;
 
-import java.util.function.Function;
-
 import net.sci.array.Array3D;
 
 /**
@@ -55,18 +53,6 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
 
     // =============================================================
     // New methods
-
-    public void populateValues(Function<Double[],Double> fun)
-    {
-        Double[] input = new Double[3];
-        for (int[] pos : this.positions())
-        {
-            input[0] = (double) pos[0];
-            input[1] = (double) pos[1];
-            input[2] = (double) pos[2];
-            this.setValue(pos[0], pos[1], pos[2], fun.apply(input));
-        }
-    }
 
     /**
      * Initializes the content of the array by using the specified function of

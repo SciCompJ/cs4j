@@ -3,8 +3,7 @@
  */
 package net.sci.array.scalar;
 
-
-
+import java.util.function.Function;
 
 /**
  * A multidimensional array containing boolean values.
@@ -94,6 +93,14 @@ public interface BinaryArray extends IntArray<Binary>
     // =============================================================
 	// New methods
 
+    public default void fillBooleans(Function<int[], Boolean> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setBoolean(pos, fun.apply(pos));
+        }
+    }
+    
 	public boolean getBoolean(int... pos);
 	
 	public void setBoolean(int[] pos, boolean state);

@@ -37,7 +37,7 @@ public class ScalarArray2DTest
     {
         ScalarArray2D<?> array = UInt8Array2D.create(10, 10);
         
-        array.populateValues((Integer[] pos) -> (double) pos[0] + pos[1]);
+        array.fillValues(pos -> (double) pos[0] + pos[1]);
         
         assertEquals(array.getValue(0, 0), 0, .01);
         assertEquals(array.getValue(9, 0), 9, .01);

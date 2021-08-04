@@ -159,6 +159,33 @@ public interface Array<T> extends Iterable<T>, Dimensional
 		}
 	}
 	
+    /**
+     * Fills the array by using an utility function that computes the value for
+     * each position.
+     * 
+     * <pre>
+     * {@code
+     *     // create an empty array of String
+     *     Array<String> array = GenericArray.create(new int[] { 10, 6 }, " ");
+     *     // populate the array of strings
+     *     String[] digits = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+     *     array.fill(pos -> digits[pos[0]] + digits[pos[1]]);
+     * }
+     * </pre>
+     * 
+     * @param fun
+     *            the function that computes the value at a position from the
+     *            array of position indices.
+     */
+    public default void fill(Function<int[], T> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.set(pos, fun.apply(pos));
+        }
+    }
+
+	
 	/**
 	 * Returns the array element at the given position
 	 * 

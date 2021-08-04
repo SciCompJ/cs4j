@@ -88,6 +88,14 @@ public interface Float32Array extends ScalarArray<Float32>
     // =============================================================
     // New methods
 	
+    public default void fillFloats(Function<int[], Float> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setFloat(pos, fun.apply(pos));
+        }
+    }
+    
     public default float getFloat(int... pos)
     {
         return (float) getValue(pos);

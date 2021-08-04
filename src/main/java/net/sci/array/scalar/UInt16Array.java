@@ -87,6 +87,14 @@ public interface UInt16Array extends IntArray<UInt16>
 	// =============================================================
 	// New methods
 
+    public default void fillShorts(Function<int[], Short> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setShort(pos, fun.apply(pos));
+        }
+    }
+    
 	public short getShort(int... pos);
 	
 	public void setShort(int[] pos, short value);

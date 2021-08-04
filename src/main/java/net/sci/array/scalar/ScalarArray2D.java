@@ -6,7 +6,6 @@ package net.sci.array.scalar;
 import java.io.PrintStream;
 import java.util.Locale;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import net.sci.array.Array2D;
 
@@ -56,18 +55,7 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	
 	// =============================================================
 	// Methods specific to ScalarArray2D
-
-    public void populateValues(Function<Integer[], Double> fun)
-    {
-        Integer[] input = new Integer[2];
-        for (int[] pos : this.positions())
-        {
-            input[0] = pos[0];
-            input[1] = pos[1];
-            this.setValue(pos, fun.apply(input));
-        }
-    }
-
+	
     /**
      * Initializes the content of the array by using the specified function of
      * two variables.

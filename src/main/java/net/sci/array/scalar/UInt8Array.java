@@ -108,6 +108,14 @@ public interface UInt8Array extends IntArray<UInt8>
 	// =============================================================
 	// New methods
 
+    public default void fillBytes(Function<int[], Byte> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setByte(pos, fun.apply(pos));
+        }
+    }
+    
 	public byte getByte(int... pos);
 	
 	public void setByte(int[] pos, byte value);

@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import java.util.function.Function;
+
 /**
  * @author dlegland
  *
@@ -58,6 +60,14 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
         {
             iter.forward();
             iter.setInt(value);
+        }
+    }
+
+    public default void fillInts(Function<int[], Integer> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setInt(pos, fun.apply(pos));
         }
     }
     
