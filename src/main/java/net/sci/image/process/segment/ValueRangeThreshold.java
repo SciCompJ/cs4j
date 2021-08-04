@@ -10,15 +10,23 @@ import net.sci.array.scalar.ScalarArray;
 import net.sci.image.ImageArrayOperator;
 
 /**
+ * Thresholds a scalar image by retaining all elements whose value is withinthe
+ * specified interval.
+ * 
  * @author dlegland
- *
  */
 public class ValueRangeThreshold
         implements ImageArrayOperator, ScalarArrayOperator
 {
 
+    /**
+     * The minimum value of the range, inclusive.
+     */
     double minValue;
 
+    /**
+     * The maximum value of the range, inclusive.
+     */
     double maxValue = Double.POSITIVE_INFINITY;
     
     /**
@@ -28,7 +36,7 @@ public class ValueRangeThreshold
      * @param minValue
      *            the minimum value of the range, inclusive.
      * @param maxValue
-     *            the minimum value of the range, inclusive.
+     *            the maximum value of the range, inclusive.
      */
     public ValueRangeThreshold(double minValue, double maxValue)
     {
@@ -38,7 +46,7 @@ public class ValueRangeThreshold
     
     public void processScalar(ScalarArray<?> source, BinaryArray target)
     {
-        for (int[] pos : source.positions())
+        for (int[] pos : target.positions())
         {
             double value = source.getValue(pos);
             target.setBoolean(pos, value >= this.minValue && value <= this.maxValue);
