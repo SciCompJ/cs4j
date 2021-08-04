@@ -13,13 +13,13 @@ import net.sci.array.scalar.Float32Array3D;
  * @author dlegland
  *
  */
-class NearestNeighborInterpolator3DTest
+public class NearestNeighborInterpolator3DTest
 {
     /**
      * Test method for {@link net.sci.array.interp.LinearInterpolator2D#evaluate(double, double)}.
      */
     @Test
-    final void testEvaluate_simple()
+    public final void testEvaluate_simple()
     {
         // Create a sample array with a single value at position (5,5)
         Float32Array3D array = Float32Array3D.create(10, 10, 10);
@@ -36,7 +36,7 @@ class NearestNeighborInterpolator3DTest
      * Test method for {@link net.sci.array.interp.NearestNeighborInterpolator3D#evaluate(double, double, double)}.
      */
     @Test
-    final void testEvaluate_bounds()
+    public final void testEvaluate_bounds()
     {
         // Create a demo image
         Float32Array3D array = Float32Array3D.create(10, 10, 10);

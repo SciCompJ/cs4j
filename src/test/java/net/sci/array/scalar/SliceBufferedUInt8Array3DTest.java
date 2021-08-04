@@ -11,14 +11,14 @@ import org.junit.Test;
  * @author dlegland
  *
  */
-class SliceBufferedUInt8Array3DTest
+public class SliceBufferedUInt8Array3DTest
 {
 
     /**
      * Test method for {@link net.sci.array.scalar.SliceBufferedUInt8Array3D#getByte(int[])}.
      */
     @Test
-    final void testGetValue()
+    public final void testGetValue()
     {
         UInt8Array3D refArray = UInt8Array3D.create(10, 10, 10);
         refArray.fillValues((x,y,z) -> (double) (x + y * 10.0 + Math.floor(z / 5.0) * 100.0));
