@@ -6,7 +6,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	OtsuThresholdTest.class,
+    HysteresisThresholdTest.class,
+    KMeansSegmentationTest.class,
+    OtsuThresholdTest.class,
 	})
 public class AllTests {
   //nothing
