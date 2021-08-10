@@ -148,4 +148,10 @@ public class MultiPoint3D implements Geometry3D
 
         return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
     }
+
+    @Override
+    public MultiPoint3D duplicate()
+    {
+       return new MultiPoint3D(points);
+    }
 }

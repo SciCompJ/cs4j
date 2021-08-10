@@ -195,6 +195,8 @@ public interface Mesh3D extends Geometry3D
      */
     public void removeFace(Face face);
 
+    @Override
+    public Mesh3D duplicate();
     
     // ===================================================================
     // Inner interfaces
@@ -243,6 +245,9 @@ public interface Mesh3D extends Geometry3D
          * @return the normal of this face.
          */
         public Vector3D normal();
+        
+        
+        public Iterable<Vertex> vertices();
         
         /**
          * @return the parent mesh of this face.

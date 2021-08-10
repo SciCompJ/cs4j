@@ -291,4 +291,10 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     {
         throw new UnboundedGeometryException(this);
     }
+    
+    @Override
+    public StraightLine2D duplicate()
+    {
+        return new StraightLine2D(x0, y0, dx, dy);
+    }
 }

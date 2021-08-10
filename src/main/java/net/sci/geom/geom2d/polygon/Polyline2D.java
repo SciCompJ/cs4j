@@ -286,7 +286,10 @@ public interface Polyline2D extends Curve2D
         return new Bounds2D(xmin, xmax, ymin, ymax);
     }
     
+    @Override
+    public Polyline2D duplicate();
     
+
     // ===================================================================
     // Inner interfaces 
     

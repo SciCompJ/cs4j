@@ -24,4 +24,9 @@ public interface Geometry extends Dimensional
      * @return the bounds of this geometry
      */
     public Bounds bounds();
+    
+    /**
+     * @return a deep-copy of this geometry.
+     */
+    public Geometry duplicate();
 }

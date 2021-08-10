@@ -37,6 +37,15 @@ public class LineSegment3D implements LinearGeometry3D
         this.z2 = p2.getZ();
     }
     
+    private LineSegment3D(double x1, double y1, double z1, double x2, double y2, double z2)
+    {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.z1 = z1;
+        this.x2 = x2;
+        this.y2 = y2;
+        this.z2 = z2;
+    }
     
     // =============================================================
     // General methods
@@ -267,5 +276,11 @@ public class LineSegment3D implements LinearGeometry3D
     public Bounds3D bounds()
     {
         return new Bounds3D(getP1(), getP2());
+    }
+
+    @Override
+    public LineSegment3D duplicate()
+    {
+        return new LineSegment3D(x1, y1, z1, x2, y2, z2);
     }
 }

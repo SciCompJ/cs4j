@@ -230,4 +230,10 @@ public class Circle2D implements Contour2D
     {
         return new Bounds2D(xc - radius, xc + radius, yc - radius, yc + radius);
     }
+    
+    @Override
+    public Circle2D duplicate()
+    {
+        return new Circle2D(xc, yc, radius);
+    }
 }

@@ -406,5 +406,11 @@ public class DefaultPolygon2D implements Polygon2D
         // return new Bounding Box
         return new Bounds2D(xmin, xmax, ymin, ymax);
     }
+    
+    @Override
+    public Polygon2D duplicate()
+    {
+        return new DefaultPolygon2D(this.vertices);
+    }
 
 }

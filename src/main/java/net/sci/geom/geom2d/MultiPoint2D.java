@@ -144,4 +144,12 @@ public class MultiPoint2D implements Geometry2D
 
         return new Bounds2D(xmin, xmax, ymin, ymax);
     }
+
+    @Override
+    public MultiPoint2D duplicate()
+    {
+        MultiPoint2D pts = new MultiPoint2D(points.size());
+        pts.points.addAll(points);
+        return pts;
+    }
 }

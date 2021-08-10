@@ -210,6 +210,10 @@ public class Point3D implements Point, Geometry3D
         return new Bounds3D(this.x, this.x, this.y, this.y, this.z, this.z);
     }
     
+    public Point3D duplicate()
+    {
+        return new Point3D(x, y, z);
+    }
     
     // ===================================================================
     // Override Object's methods

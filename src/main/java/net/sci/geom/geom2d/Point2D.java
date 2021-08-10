@@ -263,6 +263,12 @@ public class Point2D implements Geometry2D, Point
         return new Bounds2D(this.x, this.x, this.y, this.y);
     }
 
+    @Override
+    public Point2D duplicate()
+    {
+        return new Point2D(x, y);
+    }
+
 
 //	public Point2d transform(Transform2d trans) 
 //	{

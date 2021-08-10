@@ -49,4 +49,7 @@ public interface Domain2D extends Geometry2D
      * @return true is the point is located within the domain.
      */
     public boolean contains(double x, double y);
+    
+    @Override
+    public Domain2D duplicate();
 }

@@ -135,11 +135,14 @@ public class DefaultLineString3D implements LineString3D
 
 
     // ===================================================================
-    // Methods implementing the Polyline3D interface
-    
+    // Implementation of the Geometry interface
 
-    // ===================================================================
-    // Edge iterator implementation
+    @Override
+    public LineString3D duplicate()
+    {
+        return new DefaultLineString3D(vertices);
+    }
+
     
     // ===================================================================
     // Inner class implementations

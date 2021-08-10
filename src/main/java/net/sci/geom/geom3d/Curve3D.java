@@ -43,4 +43,7 @@ public interface Curve3D extends CurveShape3D
      * @return the transformed curve
      */
     public Curve3D transform(AffineTransform3D trans);
+    
+    @Override
+    public Curve3D duplicate();
 }

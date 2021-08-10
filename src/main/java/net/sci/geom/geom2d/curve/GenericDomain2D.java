@@ -83,4 +83,10 @@ public class GenericDomain2D implements Domain2D
 		// TODO should also manage unbounded domains
 		return boundary.bounds();
 	}
+	
+    @Override
+    public GenericDomain2D duplicate()
+    {
+        return new GenericDomain2D(this.boundary.duplicate());
+    }
 }

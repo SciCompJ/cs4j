@@ -74,4 +74,7 @@ public interface Curve2D extends CurveShape2D
      * @return the transformed curve
      */
     public Curve2D transform(AffineTransform2D trans);
+    
+    @Override
+    public Curve2D duplicate();
 }

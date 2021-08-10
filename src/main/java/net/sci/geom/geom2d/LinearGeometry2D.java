@@ -205,4 +205,6 @@ public interface LinearGeometry2D extends Curve2D
      */
     public LinearGeometry2D transform(AffineTransform2D trans);
     
+    @Override
+    public LinearGeometry2D duplicate();
 }

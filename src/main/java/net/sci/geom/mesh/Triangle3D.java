@@ -326,5 +326,12 @@ public class Triangle3D implements Polygon3D
     {
         return true;
     }
+
+
+    @Override
+    public Triangle3D duplicate()
+    {
+        return new Triangle3D(p1, p2, p3);
+    }
     
 }

@@ -5,7 +5,9 @@ package net.sci.geom.mesh;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeSet;
 
 import net.sci.geom.geom3d.Bounds3D;
@@ -538,6 +540,34 @@ public class SimpleTriMesh3D implements Mesh3D
         return true;
     }
  
+    @Override
+    public Mesh3D duplicate()
+    {
+        // create new empty graph
+        SimpleTriMesh3D dup = new SimpleTriMesh3D(vertexCount(), faceCount());
+        
+        // copy vertices, keeping mapping between old and new references
+        Map<Mesh3D.Vertex, Mesh3D.Vertex> vertexMap = new HashMap<>();
+        for (Mesh3D.Vertex v : this.vertices())
+        {
+            Mesh3D.Vertex v2 = dup.addVertex(v.position());
+            vertexMap.put(v, v2);
+        }
+        
+        // copy edges using vertex mapping
+        for (Mesh3D.Face face : faces())
+        {
+            Iterator<Mesh3D.Vertex> iter = face.vertices().iterator();
+            Mesh3D.Vertex v1 = vertexMap.get(iter.next());
+            Mesh3D.Vertex v2 = vertexMap.get(iter.next());
+            Mesh3D.Vertex v3 = vertexMap.get(iter.next());
+            dup.addFace(v1, v2, v3);
+        }
+        
+        // return graph
+        return dup;
+    }
+    
     public class Vertex implements Mesh3D.Vertex
     {
         // the index of the vertex
@@ -646,6 +676,16 @@ public class SimpleTriMesh3D implements Mesh3D
             Vector3D v12 = new Vector3D(p1, vertexPosition(indices[1]));
             Vector3D v13 = new Vector3D(p1, vertexPosition(indices[2]));
             return Vector3D.crossProduct(v12, v13);
+        }
+        
+        public Collection<Mesh3D.Vertex> vertices()
+        {
+            int[] indices = faces.get(this.index);
+            ArrayList<Mesh3D.Vertex> faceVertices = new ArrayList<Mesh3D.Vertex>(3);
+            faceVertices.add(new Vertex(indices[0]));
+            faceVertices.add(new Vertex(indices[1]));
+            faceVertices.add(new Vertex(indices[2]));
+            return faceVertices;
         }
         
         @Override

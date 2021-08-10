@@ -333,6 +333,11 @@ public class Vector2D implements Dimensional
         return y;
     }
 
+    public Vector2D duplicate()
+    {
+        return new Vector2D(x, y);
+    }
+    
 
 	// ===================================================================
     // Implements Dimensional interface
@@ -346,18 +351,6 @@ public class Vector2D implements Dimensional
         return 2;
     }
 
-//	/**
-//	 * Transform the vector, by using only the first 4 parameters of the
-//	 * transform. Translation of a vector returns the same vector.
-//	 * 
-//	 * @param trans
-//	 *            an affine transform
-//	 * @return the transformed vector.
-//	 */
-//	public Vector2d transform(AffineTransform2D trans)
-//	{
-//		return trans.transform(this);
-//	}
 
     // ===================================================================
     // Override Object interface

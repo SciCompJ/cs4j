@@ -206,4 +206,10 @@ public class StraightLine3D implements LinearGeometry3D
     {
         return false;
     }
+
+    @Override
+    public LinearGeometry3D duplicate()
+    {
+        return new StraightLine3D(x0, y0, z0, dx, dy, dz);
+    }
 }

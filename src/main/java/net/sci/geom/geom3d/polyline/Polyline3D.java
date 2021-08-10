@@ -143,7 +143,10 @@ public interface Polyline3D extends Curve3D
         return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
     }
     
+    @Override
+    public Polyline3D duplicate();
     
+
     // ===================================================================
     // Inner interfaces 
     

@@ -245,7 +245,16 @@ public class DefaultLinearRing2D implements LinearRing2D
 			}
 		};
 	}
-    
+
+    @Override
+    public LinearRing2D duplicate()
+    {
+        DefaultLinearRing2D dup = new DefaultLinearRing2D(this.vertices.size());
+        dup.vertices.addAll(this.vertices);
+        dup.vertexNormals.addAll(this.vertexNormals);
+        return dup;
+    }
+
 	
     // ===================================================================
     // Inner class implementations

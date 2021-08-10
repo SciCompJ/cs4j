@@ -42,6 +42,11 @@ public class CurveSet2D implements CurveShape2D
             this.curves.add(c);
     }
     
+    private CurveSet2D(int nCurves)
+    {
+        this.curves = new ArrayList<Curve2D>(nCurves);
+    }
+    
     
     // ===================================================================
     // Implementation of CurveShape2D interface
@@ -126,5 +131,13 @@ public class CurveSet2D implements CurveShape2D
                 return false;
         }
         return true;
+    }
+
+    @Override
+    public CurveSet2D duplicate()
+    {
+        CurveSet2D dup = new CurveSet2D(curves.size());
+        dup.curves.addAll(curves);
+        return dup;
     }
 }

@@ -6,7 +6,9 @@ package net.sci.geom.mesh;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -66,6 +68,26 @@ public class DefaultTriMesh3D implements Mesh3D
         this.faces = new ArrayList<int[]>();
     }
     
+    /**
+     * Create a new empty mesh (no vertex, no face), by reserving the amount of
+     * space for storing the required number of vertices and faces.
+     * 
+     * @param nVertices
+     *            the expected number of vertices in the mesh
+     * @param nEdges
+     *            the expected number of edges in the mesh
+     * @param nFaces
+     *            the expected number of faces in the mesh
+     */
+    private DefaultTriMesh3D(int nVertices, int nEdges, int nFaces)
+    {
+        this.vertexPositions = new ArrayList<Point3D>(nVertices);
+        this.edges = new ArrayList<Edge>(nEdges);
+        this.faces = new ArrayList<int[]>(nFaces);
+        this.edgeFaces = new ArrayList<int[]>(nEdges);
+    }
+    
+
     // ===================================================================
     // Methods specific to Mesh3D
     
@@ -757,6 +779,34 @@ public class DefaultTriMesh3D implements Mesh3D
         return true;
     }
  
+    @Override
+    public Mesh3D duplicate()
+    {
+        // create new empty graph
+        DefaultTriMesh3D dup = new DefaultTriMesh3D(vertexCount(), edgeCount(), faceCount());
+        
+        // copy vertices, keeping mapping between old and new references
+        Map<Mesh3D.Vertex, Mesh3D.Vertex> vertexMap = new HashMap<>();
+        for (Mesh3D.Vertex v : this.vertices())
+        {
+            Mesh3D.Vertex v2 = dup.addVertex(v.position());
+            vertexMap.put(v, v2);
+        }
+        
+        // copy edges using vertex mapping
+        for (Mesh3D.Face face : faces())
+        {
+            Iterator<Mesh3D.Vertex> iter = face.vertices().iterator();
+            Mesh3D.Vertex v1 = vertexMap.get(iter.next());
+            Mesh3D.Vertex v2 = vertexMap.get(iter.next());
+            Mesh3D.Vertex v3 = vertexMap.get(iter.next());
+            dup.addFace(v1, v2, v3);
+        }
+        
+        // return graph
+        return dup;
+    }
+
     public class Vertex implements Mesh3D.Vertex
     {
         // the index of the vertex
@@ -865,6 +915,16 @@ public class DefaultTriMesh3D implements Mesh3D
             return Vector3D.crossProduct(v12, v13);
         }
         
+        public Collection<Mesh3D.Vertex> vertices()
+        {
+            int[] indices = faces.get(this.index);
+            ArrayList<Mesh3D.Vertex> faceVertices = new ArrayList<Mesh3D.Vertex>(3);
+            faceVertices.add(new Vertex(indices[0]));
+            faceVertices.add(new Vertex(indices[1]));
+            faceVertices.add(new Vertex(indices[2]));
+            return faceVertices;
+        }
+
         @Override
         public Mesh3D mesh()
         {

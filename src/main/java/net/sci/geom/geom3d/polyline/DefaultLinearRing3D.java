@@ -132,6 +132,16 @@ public class DefaultLinearRing3D implements LinearRing3D
 
 
     // ===================================================================
+    // Implementation of the Geometry interface
+
+    @Override
+    public LinearRing3D duplicate()
+    {
+        return new DefaultLinearRing3D(vertices);
+    }
+    
+
+    // ===================================================================
     // Edge iterator implementation
 
     private class Vertex implements Polyline3D.Vertex

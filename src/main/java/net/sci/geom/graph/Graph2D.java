@@ -3,6 +3,9 @@
  */
 package net.sci.geom.graph;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Geometry2D;
 import net.sci.geom.geom2d.LineSegment2D;
@@ -114,6 +117,34 @@ public interface Graph2D extends Geometry2D
         // return new Bounding Box
         return new Bounds2D(xmin, xmax, ymin, ymax);
     }
+    
+    @Override
+    public default Graph2D duplicate()
+    {
+        // create new empty graph
+        SimpleGraph2D dup = new SimpleGraph2D(vertexCount(), edgeCount());
+        
+        // copy vertices, keeping mapping between old and new references
+        Map<Vertex, Vertex> vertexMap = new HashMap<>();
+        for (Vertex v : this.vertices())
+        {
+            Vertex v2 = dup.addVertex(v.position());
+            vertexMap.put(v, v2);
+        }
+        
+        // copy edges using vertex mapping
+        for (Edge e : edges())
+        {
+            Vertex v1 = vertexMap.get(e.source());
+            Vertex v2 = vertexMap.get(e.target());
+            dup.addEdge(v1, v2);
+        }
+        
+        // return graph
+        return dup;
+    }
+    
+    
     
     // ===================================================================
     // Inner interfaces

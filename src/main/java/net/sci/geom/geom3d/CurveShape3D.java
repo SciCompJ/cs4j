@@ -28,4 +28,6 @@ public interface CurveShape3D extends Curve, Geometry3D
      * @return the transformed geometry
      */
     public CurveShape3D transform(AffineTransform3D trans);
-}
+    
+    @Override
+    public CurveShape3D duplicate();}

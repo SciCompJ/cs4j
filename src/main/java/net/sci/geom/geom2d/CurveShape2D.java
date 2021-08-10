@@ -28,4 +28,7 @@ public interface CurveShape2D extends Curve, Geometry2D
      * @return the transformed geometry
      */
     public CurveShape2D transform(AffineTransform2D trans);
+
+    @Override
+    public CurveShape2D duplicate();
 }

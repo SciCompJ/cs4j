@@ -23,4 +23,11 @@ public interface Polygon3D extends Geometry3D
      * @return the list of vertices that compose this polygon.
      */
     public Collection<Point3D> vertices();
+
+
+    // ===================================================================
+    // Specialization of the Geometry interface
+    
+    @Override
+    public Polygon3D duplicate();
 }

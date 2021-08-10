@@ -312,6 +312,11 @@ public class Vector3D implements Dimensional
 	    return trans.transform(this);
 	}
 	
+    public Vector3D duplicate()
+    {
+        return new Vector3D(x, y, z);
+    }
+    
 
     // ===================================================================
     // Implements Dimensional interface

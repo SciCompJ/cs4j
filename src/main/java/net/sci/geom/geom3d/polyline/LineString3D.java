@@ -259,4 +259,7 @@ public interface LineString3D extends Polyline3D
         
         return res;
     }
+    
+    @Override
+    public LineString3D duplicate();
 }

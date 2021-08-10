@@ -101,6 +101,19 @@ public class Plane3D implements Geometry3D
         dy2 = v2.getY();
         dz2 = v2.getZ();
     }
+    
+    private Plane3D(double x0, double y0, double z0, double dx1, double dy1, double dz1, double dx2, double dy2, double dz2)
+    {
+        this.x0 = x0;
+        this.y0 = y0;
+        this.z0 = z0;
+        this.dx1 = dx1;
+        this.dy1 = dy1;
+        this.dz1 = dz1;
+        this.dx2 = dx2;
+        this.dy2 = dy2;
+        this.dz2 = dz2;
+    }
 
 
     // ===================================================================
@@ -313,5 +326,11 @@ public class Plane3D implements Geometry3D
     public boolean isBounded()
     {
         return false;
+    }
+    
+    @Override
+    public Plane3D duplicate()
+    {
+        return new Plane3D(x0, y0, z0, dx1, dy1, dz1, dx2, dy2, dz2);
     }
 }

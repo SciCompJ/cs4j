@@ -33,4 +33,7 @@ public interface LinearGeometry3D extends Curve3D
     public StraightLine3D supportingLine();
 
     public LinearGeometry3D transform(AffineTransform3D transform);
+
+    @Override
+    public LinearGeometry3D duplicate();
 }

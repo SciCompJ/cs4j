@@ -269,4 +269,7 @@ public interface LineString2D extends Polyline2D
 	    }
 	    return res;
 	}
+
+	@Override
+    public LineString2D duplicate();
 }

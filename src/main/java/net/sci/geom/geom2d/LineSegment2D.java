@@ -266,4 +266,10 @@ public class LineSegment2D implements LinearGeometry2D
     {
         return new Bounds2D(getP1(), getP2());
     }
+    
+    @Override
+    public LineSegment2D duplicate()
+    {
+        return new LineSegment2D(new Point2D(x1, y1), new Point2D(x2, y2));
+    }
 }

@@ -301,6 +301,15 @@ public class DefaultLineString2D implements LineString2D
     }
 
 	
+    @Override
+    public LineString2D duplicate()
+    {
+        DefaultLineString2D dup = new DefaultLineString2D(this.vertices.size());
+        dup.vertices.addAll(this.vertices);
+        dup.vertexNormals.addAll(this.vertexNormals);
+        return dup;
+    }
+
     // ===================================================================
     // Inner class implementations
     

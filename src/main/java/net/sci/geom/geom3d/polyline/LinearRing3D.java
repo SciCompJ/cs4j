@@ -187,4 +187,7 @@ public interface LinearRing3D extends Polyline3D
         return true;
     }
     
+    
+    @Override
+    public LinearRing3D duplicate();
 }

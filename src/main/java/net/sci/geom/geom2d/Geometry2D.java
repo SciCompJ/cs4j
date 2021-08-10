@@ -26,8 +26,9 @@ public interface Geometry2D extends Geometry
      */
     public static final double MIN_VECTOR_NORM = 1e-12;
         
+    
     // ===================================================================
-    // Methods declaration
+    // New methods
     
     /**
 	 * Checks if the geometry contains the given point, with a given precision.
@@ -66,6 +67,23 @@ public interface Geometry2D extends Geometry
      */
     public double distance(double x, double y);
     
+
+    // ===================================================================
+    // Specialization of the Geometry interface
+    
+    /**
+     * @return the bounds of this geometry.
+     */
+    @Override
+    public Bounds2D bounds();
+    
+    @Override
+    public Geometry2D duplicate();
+    
+    
+    // ===================================================================
+    // Default implementation of the Dimensional interface
+    
     /**
      * @return a dimensionality value equals to 2.
      */
@@ -75,9 +93,4 @@ public interface Geometry2D extends Geometry
         return 2;
     }
 
-    /**
-     * @return the bounds of this geometry.
-     */
-    @Override
-    public Bounds2D bounds();
 }

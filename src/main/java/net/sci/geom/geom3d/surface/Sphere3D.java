@@ -235,5 +235,10 @@ public class Sphere3D implements Geometry3D
     public boolean isBounded()
     {
         return true;
-    }    
+    }
+    
+    public Sphere3D duplicate()
+    {
+        return new Sphere3D(center, radius);
+    }
 }

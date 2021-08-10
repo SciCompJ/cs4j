@@ -464,4 +464,10 @@ public class Ellipse2D implements Contour2D
         // TODO could be more precise
         return asPolyline(200).bounds();
     }
+    
+    @Override
+    public Ellipse2D duplicate()
+    {
+        return new Ellipse2D(xc, yc, r1, r2, theta);
+    }
 }

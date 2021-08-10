@@ -565,5 +565,7 @@ public interface LinearRing2D extends Polyline2D, Contour2D
         
         return res;
     }
-    
+
+    @Override
+    public LinearRing2D duplicate();
 }

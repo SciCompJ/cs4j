@@ -30,4 +30,7 @@ public interface Contour2D extends Curve2D, Boundary2D
         res.add(this);
         return res;
     }    
+    
+    @Override
+    public Contour2D duplicate();
 }

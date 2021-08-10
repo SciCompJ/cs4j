@@ -23,7 +23,7 @@ public interface Geometry3D extends Geometry
     
         
     // ===================================================================
-    // Methods declaration
+    // New methods
     
     /**
      * Checks if the geometry contains the given point, with a given precision.
@@ -64,6 +64,20 @@ public interface Geometry3D extends Geometry
      */
     public double distance(double x, double y, double z);
     
+
+    // ===================================================================
+    // Specialization of the Geometry interface
+    
+    @Override
+    public Bounds3D bounds();
+
+    @Override
+    public Geometry3D duplicate();
+    
+
+    // ===================================================================
+    // Default implementation of the Dimensional interface
+    
     /**
      * Returns dimensionality equals to 3.
      */
@@ -72,6 +86,4 @@ public interface Geometry3D extends Geometry
     {
         return 3;
     }
-    
-    public Bounds3D bounds();
 }

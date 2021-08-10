@@ -250,4 +250,10 @@ public class Bounds2D implements Bounds, Geometry2D
     {
         return this;
     }
+
+    @Override
+    public Bounds2D duplicate()
+    {
+        return new Bounds2D(xmin, xmax, ymin, ymax);
+    }
 }
