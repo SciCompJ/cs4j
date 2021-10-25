@@ -5,7 +5,8 @@ package net.sci.image.vectorize;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import net.sci.array.scalar.BinaryArray2D;
+
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.geom.graph.Graph2D;
 import net.sci.image.vectorize.BinaryImage2DBoundaryGraph.IntPoint2D;
 
@@ -51,7 +52,7 @@ public class BinaryImage2DBoundaryGraphTest
 	}
 	
 	/**
-	 * Test method for {@link net.sci.image.vectorize.BinaryImage2DBoundaryGraph#process(net.sci.array.scalar.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.vectorize.BinaryImage2DBoundaryGraph#process(net.sci.array.binary.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testIntPoint2DComparator()

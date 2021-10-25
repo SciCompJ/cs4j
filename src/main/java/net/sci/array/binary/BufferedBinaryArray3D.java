@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
 /**
  * Concrete implementation of BinaryArray3D that stores inner data in a linear

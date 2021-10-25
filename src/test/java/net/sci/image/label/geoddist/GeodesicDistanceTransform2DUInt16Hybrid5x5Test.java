@@ -10,6 +10,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
+import net.sci.array.binary.BinaryArray;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.*;
 import net.sci.image.Image;
 import net.sci.image.binary.ChamferWeights2D;
@@ -21,7 +23,7 @@ import net.sci.image.binary.ChamferWeights2D;
 public class GeodesicDistanceTransform2DUInt16Hybrid5x5Test
 {
 	/**
-	 * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid5x5#process2d(net.sci.array.binary.BinaryArray2D, net.sci.array.binary.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess_LineSegment()
@@ -42,7 +44,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5Test
 	}
 
 	/**
-	 * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid5x5#process2d(net.sci.array.binary.BinaryArray2D, net.sci.array.binary.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess_CShape()
@@ -68,7 +70,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5Test
 	}
 
     /**
-     * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+     * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid5x5#process2d(net.sci.array.binary.BinaryArray2D, net.sci.array.binary.BinaryArray2D)}.
      */
     @Test
     public final void testProcess_CShape_TwoBlobs()
@@ -104,7 +106,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid5x5Test
     }
     
     /**
-     * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+     * Test method for {@link net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid5x5#process2d(net.sci.array.binary.BinaryArray2D, net.sci.array.binary.BinaryArray2D)}.
      * @throws IOException 
      */
     @Test

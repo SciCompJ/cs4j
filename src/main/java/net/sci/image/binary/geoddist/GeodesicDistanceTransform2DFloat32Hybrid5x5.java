@@ -4,7 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.image.binary.ChamferWeights2D;
 import net.sci.image.data.Cursor2D;

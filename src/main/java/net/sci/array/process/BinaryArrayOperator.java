@@ -4,7 +4,7 @@
 package net.sci.array.process;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.BinaryArray;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 

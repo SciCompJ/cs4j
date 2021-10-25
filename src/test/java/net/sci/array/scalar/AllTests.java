@@ -5,14 +5,11 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    // type classes
-    BooleanTest.class,
     // generic array classes
     ScalarArrayTest.class,
     UInt8ArrayTest.class,
     // 2D abstract classes
     ScalarArray2DTest.class,
-    BinaryArray2DTest.class,
     Float32Array2DTest.class,
     UInt8Array2DTest.class,
     // 2D implementations
@@ -24,7 +21,6 @@ import org.junit.runners.Suite;
     ShortBufferUInt16Array2DTest.class,
     // 3D abstract classes
     ScalarArray3DTest.class,
-	BinaryArray3DTest.class,
     UInt8Array3DTest.class,
     UInt16Array3DTest.class,
     Int16Array3DTest.class,
@@ -43,7 +39,6 @@ import org.junit.runners.Suite;
     // Wrappers and views
     UInt8ArrayWrapperTest.class,
     ScalarArrayUInt8ViewTest.class,
-    ThresholdedArrayTest.class,
 	})
 public class AllTests {
   //nothing

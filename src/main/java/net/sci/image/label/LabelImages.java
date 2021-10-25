@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.*;
 import net.sci.image.label.distmap.ChamferDistanceTransform2DFloat32;
 import net.sci.image.label.distmap.ChamferDistanceTransform2DUInt16;

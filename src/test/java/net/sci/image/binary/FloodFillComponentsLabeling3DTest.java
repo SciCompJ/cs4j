@@ -1,7 +1,8 @@
 package net.sci.image.binary;
 
 import static org.junit.Assert.assertEquals;
-import net.sci.array.scalar.BinaryArray3D;
+
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 
 import org.junit.Test;

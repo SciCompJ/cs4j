@@ -1,11 +1,14 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import net.sci.array.scalar.Float32Array2D;
 
 /**
  * @author dlegland
@@ -15,7 +18,7 @@ public class ThresholdedArrayTest
 {
     
     /**
-     * Test method for {@link net.sci.array.scalar.ThresholdedArray#getBoolean(int[])}.
+     * Test method for {@link net.sci.array.binary.ThresholdedArray#getBoolean(int[])}.
      */
     @Test
     public final void testGetBoolean()

@@ -5,9 +5,9 @@ package net.sci.image.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
-import net.sci.array.scalar.BinaryArray;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;

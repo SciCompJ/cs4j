@@ -7,8 +7,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import net.sci.array.scalar.Binary;
-import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.binary.Binary;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.image.binary.ChamferWeights3D;
@@ -23,7 +23,7 @@ public class ChamferDistanceTransform3DUInt16Test
 {
 
 	/**
-	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16#process3d(net.sci.array.scalar.BinaryArray3D)}.
+	 * Test method for {@link net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16#process3d(net.sci.array.binary.BinaryArray3D)}.
 	 */
 	@Test
 	public final void testProcess3d_Cuboid()

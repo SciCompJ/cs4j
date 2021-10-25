@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
 /**
  * @author dlegland

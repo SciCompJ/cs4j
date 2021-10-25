@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
 import java.util.ArrayList;
 import java.util.Collection;

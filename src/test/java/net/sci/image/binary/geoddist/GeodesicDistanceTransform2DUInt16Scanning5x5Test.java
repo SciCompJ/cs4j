@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.IntArray2D;
 
 /**
@@ -17,7 +17,7 @@ import net.sci.array.scalar.IntArray2D;
 public class GeodesicDistanceTransform2DUInt16Scanning5x5Test
 {
 	/**
-	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Scanning5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Scanning5x5#process2d(net.sci.array.binary.BinaryArray2D, net.sci.array.binary.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess_LineSegment()
@@ -37,7 +37,7 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5Test
 	}
 
 	/**
-	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Scanning5x5#process2d(net.sci.array.scalar.BinaryArray2D, net.sci.array.scalar.BinaryArray2D)}.
+	 * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Scanning5x5#process2d(net.sci.array.binary.BinaryArray2D, net.sci.array.binary.BinaryArray2D)}.
 	 */
 	@Test
 	public final void testProcess_CShape()

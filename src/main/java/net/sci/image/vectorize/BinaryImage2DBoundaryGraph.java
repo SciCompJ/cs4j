@@ -6,7 +6,7 @@ package net.sci.image.vectorize;
 import java.util.ArrayList;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.graph.Graph2D;
 import net.sci.geom.graph.SimpleGraph2D;

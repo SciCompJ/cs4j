@@ -1,9 +1,11 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
 import net.sci.array.Array;
+import net.sci.array.scalar.IntArray;
+import net.sci.array.scalar.IntArray3D;
 
 
 /**
@@ -349,7 +351,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         }
 
         @Override
-        public net.sci.array.scalar.BinaryArray.Iterator iterator()
+        public net.sci.array.binary.BinaryArray.Iterator iterator()
         {
             return new Iterator();
         }

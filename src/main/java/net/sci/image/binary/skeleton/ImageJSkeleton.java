@@ -4,7 +4,7 @@
 package net.sci.image.binary.skeleton;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.binary.BinaryArray2D;
 
 /**
  * Adaptation of the skeletonzation code from ImageJ.

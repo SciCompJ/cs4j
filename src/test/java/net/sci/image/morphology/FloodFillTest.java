@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;

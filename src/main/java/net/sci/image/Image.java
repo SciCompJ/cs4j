@@ -18,10 +18,10 @@ import javax.swing.JPanel;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
-import net.sci.array.scalar.BinaryArray;
 import net.sci.array.scalar.Int;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.ScalarArray;

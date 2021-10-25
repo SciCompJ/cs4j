@@ -1,8 +1,9 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
+import net.sci.array.scalar.Int;
 
 /**
  * A binary type that encapsulates a boolean.

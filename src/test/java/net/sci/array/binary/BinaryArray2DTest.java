@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
 import static org.junit.Assert.*;
 
@@ -15,7 +15,7 @@ public class BinaryArray2DTest
 {
 
 	/**
-	 * Test method for {@link net.sci.array.scalar.BinaryArray2D#getBoolean(int[])}.
+	 * Test method for {@link net.sci.array.binary.BinaryArray2D#getBoolean(int[])}.
 	 */
 	@Test
 	public void testGetBooleanIntArray()
@@ -26,7 +26,7 @@ public class BinaryArray2DTest
 	}
 
 	/**
-	 * Test method for {@link net.sci.array.scalar.BinaryArray2D#newInstance(int[])}.
+	 * Test method for {@link net.sci.array.binary.BinaryArray2D#newInstance(int[])}.
 	 */
 	@Test
 	public void testNewInstance()
@@ -37,7 +37,7 @@ public class BinaryArray2DTest
 	}
 
 	/**
-	 * Test method for {@link net.sci.array.scalar.BinaryArray2D#duplicate()}.
+	 * Test method for {@link net.sci.array.binary.BinaryArray2D#duplicate()}.
 	 */
 	@Test
 	public void testDuplicate()
@@ -49,7 +49,7 @@ public class BinaryArray2DTest
 	}
 
 	/**
-	 * Test method for {@link net.sci.array.scalar.BinaryArray2D#trueElementPositions()}.
+	 * Test method for {@link net.sci.array.binary.BinaryArray2D#trueElementPositions()}.
 	 */
 	@Test
 	public void testFind()

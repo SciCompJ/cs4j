@@ -8,12 +8,12 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 
 import net.sci.array.Array;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.color.Color;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
-import net.sci.array.scalar.BinaryArray2D;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;

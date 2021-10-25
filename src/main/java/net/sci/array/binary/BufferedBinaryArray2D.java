@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
 /**
  * Concrete implementation of BinaryArray2D that stores inner data in a linear
@@ -92,7 +92,7 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 	 * @see net.sci.array.data.BooleanArray#iterator()
 	 */
 	@Override
-	public net.sci.array.scalar.BinaryArray.Iterator iterator()
+	public net.sci.array.binary.BinaryArray.Iterator iterator()
 	{
 		return new BooleanIterator();
 	}

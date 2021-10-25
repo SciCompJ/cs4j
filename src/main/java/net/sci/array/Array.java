@@ -5,7 +5,7 @@ package net.sci.array;
 
 import java.util.function.Function;
 
-import net.sci.array.scalar.BinaryArray;
+import net.sci.array.binary.BinaryArray;
 
 /**
  * N-dimensional array with generic type.

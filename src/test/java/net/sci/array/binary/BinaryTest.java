@@ -1,10 +1,10 @@
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class BooleanTest
+public class BinaryTest
 {
 
 	@Test

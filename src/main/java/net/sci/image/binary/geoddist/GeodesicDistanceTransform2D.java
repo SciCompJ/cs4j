@@ -4,7 +4,7 @@
 package net.sci.image.binary.geoddist;
 
 import net.sci.algo.Algo;
-import net.sci.array.scalar.BinaryArray2D;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 
 /**

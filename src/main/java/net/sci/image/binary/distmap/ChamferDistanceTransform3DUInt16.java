@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.*;
 import net.sci.image.binary.ChamferWeights3D;
 

@@ -1,7 +1,10 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
+
+import net.sci.array.scalar.IntArray;
+import net.sci.array.scalar.IntArray2D;
 
 /**
  * A two-dimensional array containing boolean values.

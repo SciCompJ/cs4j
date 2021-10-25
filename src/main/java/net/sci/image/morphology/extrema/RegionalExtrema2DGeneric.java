@@ -4,14 +4,14 @@
 package net.sci.image.morphology.extrema;
 
 import static java.lang.Math.min;
-import static net.sci.array.scalar.Binary.FALSE;
-import static net.sci.array.scalar.Binary.TRUE;
+import static net.sci.array.binary.Binary.FALSE;
+import static net.sci.array.binary.Binary.TRUE;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.binary.BinaryArray;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.BinaryArray;
-import net.sci.array.scalar.BinaryArray2D;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;

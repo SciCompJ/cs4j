@@ -5,8 +5,8 @@ package net.sci.image.binary;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.scalar.BinaryArray;
-import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.binary.BinaryArray;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Int32Array;
 import net.sci.array.scalar.Int32Array3D;
 import net.sci.array.scalar.IntArray;

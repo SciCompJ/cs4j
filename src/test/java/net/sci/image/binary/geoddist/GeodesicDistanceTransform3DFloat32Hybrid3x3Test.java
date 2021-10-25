@@ -7,8 +7,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.Binary;
-import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.binary.Binary;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.binary.ChamferWeights3D;
 
@@ -19,7 +19,7 @@ import net.sci.image.binary.ChamferWeights3D;
 public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
 {
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.scalar.BinaryArray3D, net.sci.array.scalar.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_Cube()
@@ -83,7 +83,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
     }
 
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.scalar.BinaryArray3D, net.sci.array.scalar.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_FullCube()
@@ -138,7 +138,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
     }
     
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.scalar.BinaryArray3D, net.sci.array.scalar.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_HollowCube()
@@ -180,7 +180,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
     }
     
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.scalar.BinaryArray3D, net.sci.array.scalar.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_HollowCube_Normalized()
@@ -222,7 +222,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
     }
     
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.scalar.BinaryArray3D, net.sci.array.scalar.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_HollowCubeReverse()

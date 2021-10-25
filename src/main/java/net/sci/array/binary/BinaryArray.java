@@ -1,9 +1,12 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
 import java.util.function.Function;
+
+import net.sci.array.scalar.IntArray;
+import net.sci.array.scalar.ScalarArray;
 
 /**
  * A multidimensional array containing boolean values.

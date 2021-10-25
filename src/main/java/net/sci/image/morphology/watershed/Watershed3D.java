@@ -3,7 +3,7 @@
  */
 package net.sci.image.morphology.watershed;
 
-import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.binary.BinaryImages;

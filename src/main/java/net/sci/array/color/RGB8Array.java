@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.BinaryArray;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.IntVectorArray;

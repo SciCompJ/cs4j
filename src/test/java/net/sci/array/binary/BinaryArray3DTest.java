@@ -1,9 +1,9 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class BinaryArray3DTest
 {
     
     /**
-     * Test method for {@link net.sci.array.scalar.BinaryArray3D#slices()}.
+     * Test method for {@link net.sci.array.binary.BinaryArray3D#slices()}.
      */
     @Test
     public final void testSlices()

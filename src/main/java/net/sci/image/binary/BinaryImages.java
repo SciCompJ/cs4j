@@ -4,9 +4,9 @@
 package net.sci.image.binary;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.BinaryArray;
-import net.sci.array.scalar.BinaryArray2D;
-import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.binary.BinaryArray;
+import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;

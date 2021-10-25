@@ -10,9 +10,9 @@ import java.io.IOException;
 import org.junit.Test;
 
 import net.sci.array.Array;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array2D;
-import net.sci.array.scalar.BinaryArray2D;
 import net.sci.array.scalar.FileMappedUInt8Array3D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;

@@ -1,7 +1,9 @@
 /**
  * 
  */
-package net.sci.array.scalar;
+package net.sci.array.binary;
+
+import net.sci.array.scalar.IntArrayND;
 
 /**
  * @author dlegland

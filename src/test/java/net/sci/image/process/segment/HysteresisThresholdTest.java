@@ -9,8 +9,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.BinaryArray2D;
-import net.sci.array.scalar.BinaryArray3D;
+import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
 

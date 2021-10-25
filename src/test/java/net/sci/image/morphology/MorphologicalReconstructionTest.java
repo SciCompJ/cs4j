@@ -4,7 +4,8 @@
 package net.sci.image.morphology;
 
 import static org.junit.Assert.*;
-import net.sci.array.scalar.BinaryArray2D;
+
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.Image;
 
