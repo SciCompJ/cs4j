@@ -12,16 +12,57 @@ import java.util.TreeSet;
  */
 public class BinaryRow
 {
+    // =============================================================
+    // Class fields
+
     /**
      * The (sorted) collection of Run instances for this row. 
      */
     TreeSet<Run> runs;
     
-    // TODO: do we need to keep row length?
     
+    // =============================================================
+    // Constructors
+
+    /**
+     * Creates a new empty binary row.
+     */
     public BinaryRow()
     {
         this.runs = new TreeSet<>();
+    }
+    
+    /**
+     * Creates a new binary row by using an existing tree of Runs.
+     * 
+     * @param runs
+     *            the set of runs representing this row.
+     */
+    public BinaryRow(TreeSet<Run> runs)
+    {
+        this.runs = runs;
+    }
+    
+    
+    // =============================================================
+    // Methods
+
+    /**
+     * @return the number of elements with value TRUE within this row.
+     */
+    public int elementCount()
+    {
+        int count = 0;
+        for (Run run : runs)
+        {
+            count += run.length();
+        }
+        return count;
+    }
+    
+    public boolean isEmpty()
+    {
+        return this.runs.isEmpty();
     }
     
     /**
