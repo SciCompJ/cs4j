@@ -14,23 +14,87 @@ import java.util.TreeSet;
  */
 public class BinaryRows
 {
-    public static final BinaryRow union(BinaryRow row1, BinaryRow row2)
+    /**
+     * Computes the dilation of two binary rows.
+     * 
+     * @param row1
+     *            the first row.
+     * @param row2
+     *            the second row.
+     * @param row2Offset
+     *            the index of the origin on the second row.
+     * @return the result of the dilation of the two rows.
+     */
+    public static final BinaryRow dilate(BinaryRow row1, BinaryRow row2, int row2Offset)
     {
-        RunIteratorPair rip = new RunIteratorPair(row1, row2);
-        
+        BinaryRow res = new BinaryRow();
+        for (Run run : row2.runs)
+        {
+            BinaryRow resDil = dilate(row1, row2Offset - run.left, run.right - row2Offset);
+            res = union(res, resDil);
+        }
+        return res;
+    }
+    
+    public static final BinaryRow dilate(BinaryRow row, int leftDilate, int rightDilate)
+    {
         // create result runs
         TreeSet<Run> newRuns = new TreeSet<Run>();
         
-        // main iteration, breaking when both run1 and run2 are null
-        // (assumes we start from background)
-        do
+        Iterator<Run> iter = row.runs.iterator();
+        Run currentRun = iter.hasNext() ? iter.next() : null;
+        
+        while(currentRun != null)
         {
-            // if both rows are empty, return new empty row
-            if (rip.run1 == null && rip.run2 == null)
+            // init extremities of new run
+            int newLeft = currentRun.left - leftDilate;
+            int newRight = currentRun.right + rightDilate;
+            
+            // switch to next run
+            currentRun = iter.hasNext() ? iter.next() : null;
+            
+            // if leftDilate or rightDilate is negative, this may delete some runs
+            // here, we simply iterate
+            if (newLeft > newRight)
             {
+                continue;
+            }
+            
+            // in case of last run, creates new run and finalize 
+            if (currentRun == null)
+            {
+                newRuns.add(new Run(newLeft, newRight));
                 break;
             }
-
+            
+            // iterate while right extremity overlap with left extremity of next run
+            while (currentRun != null && currentRun.left - leftDilate - 1 <= newRight)
+            {
+                // overlap -> need to update right extremity
+                newRight = currentRun.right + rightDilate;
+                // and update current run
+                currentRun = iter.hasNext() ? iter.next() : null;
+            }
+            
+            newRuns.add(new Run(newLeft, newRight));
+        }
+        
+        // create the new row from list of runs
+        return new BinaryRow(newRuns);
+    }
+    
+    public static final BinaryRow union(BinaryRow row1, BinaryRow row2)
+    {
+        // create result runs
+        TreeSet<Run> newRuns = new TreeSet<Run>();
+        
+        // create structure to iterate over both rows in parallel.
+        RunIteratorPair rip = new RunIteratorPair(row1, row2);
+        
+        // main iteration, breaking when both run1 and run2 are null
+        // (assumes we start from background)
+        while(rip.run1 != null || rip.run2 != null)
+        {
             // case of first row with no more runs
             if (rip.run1 == null)
             {
@@ -64,40 +128,19 @@ public class BinaryRows
                 rip.swap();
             }
 
+            // initialize new run with current run1
             int newLeft = rip.run1.left;
             int newRight = rip.run1.right;
             
+            // update right value of new run, and add it to list of runs
             newRight = findRightExtremityOfUnion(rip, rip.run1.right);
-            
             newRuns.add(new Run(newLeft, newRight));
-            continue;
-
-//            //            while 
-//
-//            // identify the next position with 0 value
-//
-//            // identify the next run in row2 with a right extremity greater than current "newRight" value
-//            rip.run2 = findNextRunWithRightExtremityGreaterThanValue(rip.runs2, newRight);
-//            
-//            // case of no more run in row2 with extremity after current run in row1 
-//            if (rip.run2 == null)
-//            {
-//                newRuns.add(new Run(newLeft, newRight));
-//                continue;
-//            }
-//
-//            // if we have found the current extremity, create new run and iterate 
-//            if (rip.run2.left > newRight + 1)
-//            {
-//                newRuns.add(new Run(newLeft, newRight));
-//                continue;
-//            }
-//
-//            // new extremity in run2
-//            newRight = rip.run2.right;
-     
-        } while (true);
+            
+            // process next run 
+            rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
+        }
         
+        // create the new row from list of runs
         return new BinaryRow(newRuns);
     }
     
@@ -123,10 +166,12 @@ public class BinaryRows
 
             // new extremity in run2
             newRight = rip.run2.right;
-            rip.run2 = rip.runs2.hasNext() ? rip.runs2.next() : null;
             
             // as run2 is the new current run, need to swap
             rip.swap();
+            
+            // iterate
+            rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
         }
     }
     
@@ -146,20 +191,6 @@ public class BinaryRows
         }
         
     }
-    
-//
-//    private static final Run findNextRunWithRightExtremityGreaterThanValue(Iterator<Run> iter, int value)
-//    {
-//        while (iter.hasNext())
-//        {
-//            Run run = iter.next();
-//            if (run.right > value)
-//            {
-//                return run;
-//            }
-//        }
-//        return null;
-//    }
     
     /**
      * Computes the complement of the specified row. As row do not keep
@@ -213,6 +244,48 @@ public class BinaryRows
         
         return new BinaryRow(newRuns);
     }
+    
+    /**
+     * Apply crop on the specified row, ensuring the left (resp. right)
+     * extremity of the first (resp. last) run within the row is not lower
+     * (resp. greater) than the limit specified by <code>left</code> (resp.
+     * <code>right</code>).
+     * 
+     * @param row
+     *            the row to crop
+     * @param left
+     *            the left bound of the row
+     * @param right
+     *            the right bound of the row
+     * @return a row with all run elements within the [left, right] interval.
+     */
+    public static final BinaryRow crop(BinaryRow row, int left, int right)
+    {
+        // allocate runs for the new row
+        TreeSet<Run> newRuns = new TreeSet<Run>();
+        
+        for (Run run : row.runs)
+        {
+            // drop the runs totally before the "left" extremity
+            if (run.right < left)
+            {
+                continue;
+            }
+            // stop processing the runs when we find one run totally after the right extremity
+            if (run.left > right)
+            {
+                break;
+            }
+            
+            int newLeft = Math.max(run.left, left);
+            int newRight = Math.min(run.right, right);
+            newRuns.add(new Run(newLeft, newRight));
+        }
+        
+        return new BinaryRow(newRuns);
+    }
+    
+    // TODO: implement a shift(int) method?
     
     /**
      * Private constructor to prevent instantiation.

@@ -18,9 +18,104 @@ import java.util.HashMap;
  */
 public class RunLengthBinaryArray2D extends BinaryArray2D
 {
+    // =============================================================
+    // Static methods
+    
+    /**
+     * Converts the input array into a run-length-based binary array, or returns
+     * the class-casted input array if it is already an instance of
+     * RunLengthBinaryArray2D.
+     * 
+     * @param array
+     *            the input binary array
+     * @return a RunLengthBinaryArray2D instance
+     */
+    public static final RunLengthBinaryArray2D convert(BinaryArray2D array)
+    {
+        if (array instanceof RunLengthBinaryArray2D)
+        {
+            return (RunLengthBinaryArray2D) array;
+        }
+        
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
+        
+        // start with naive algorithm
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                if (array.getBoolean(x, y))
+                {
+                    res.setBoolean(x, y, true);
+                }
+            }
+        }
+        
+        return res;
+    }
+
+    public static final RunLengthBinaryArray2D dilation(RunLengthBinaryArray2D array, RunLengthBinaryArray2D strel, int[] strelOffset)
+    {
+        // array dimensions
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        
+        // create result array
+        RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
+        
+        // iterate over rows of result array
+        for (int yres = 0; yres < sizeY; yres++)
+        {
+            // initialize empty result row
+            BinaryRow resRow = new BinaryRow();
+            
+            // iterate over rows of structuring element
+            for (int yStrel = 0; yStrel < strel.size(1); yStrel++)
+            {
+                int y2 = yres + yStrel - strelOffset[1];
+                // check current row is within the input array
+                if (y2 < 0)
+                {
+                    continue;
+                }
+                if (y2 > sizeY - 1)
+                {
+                    break;
+                }
+                
+                // do not compute dilation if any of the rows is empty
+                if (strel.isEmptyRow(yStrel) || array.isEmptyRow(y2))
+                {
+                    continue;
+                }
+                
+                // retrieve the rows to dilate
+                BinaryRow arrayRow = array.getRow(y2);
+                BinaryRow strelRow = strel.getRow(yStrel);
+                
+                BinaryRow row = BinaryRows.dilate(arrayRow, strelRow, strelOffset[0]);
+                resRow = BinaryRows.union(resRow, row);
+            }
+            
+            if (!resRow.isEmpty())
+            {
+                // TODO: need to crop?
+                res.setRow(yres, resRow);
+            }
+        }
+        
+        return res;
+    }
+
+
 	// =============================================================
 	// Class fields
     
+    /**
+     * The rows representing this binary array. Do not keep empty rows.
+     */
     HashMap<Integer, BinaryRow> rows;
 
 	
@@ -47,6 +142,52 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
 	    return Collections.unmodifiableCollection(rows.values());
 	}
 	
+    // =============================================================
+    // Management of rows
+	
+    /**
+     * @param y
+     *            the index of the row
+     * @return the row at the specified index, or null if the row at specified
+     *         index is empty.
+     */
+	public BinaryRow getRow(int y)
+    {
+	    return rows.containsKey(y) ? rows.get(y) : null;
+    }
+
+    /**
+     * Sets the row at the given y-index.
+     * 
+     * @param y
+     *            the y-index of the row.
+     * @param row
+     *            the row to store within the array, that can be empty.
+     */
+    public void setRow(int y, BinaryRow row)
+    {
+        if (row == null || row.isEmpty())
+        {
+            rows.remove(y);
+        }
+        else
+        {
+            this.rows.put(y, row);
+        }
+    }
+    
+    public boolean isEmptyRow(int y)
+    {
+        return !rows.containsKey(y);
+    }
+    
+    public Collection<Integer> nonEmptyRowIndices()
+    {
+        return Collections.unmodifiableCollection(rows.keySet());
+    }
+    
+    
+
 
 	// =============================================================
 	// Implementation of the BooleanArray2D interface
@@ -94,19 +235,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
 
 	// =============================================================
 	// Implementation of the Array interface
-
-//	/* (non-Javadoc)
-//	 * @see net.sci.array.data.scalar2d.BooleanArray2D#duplicate()
-//	 */
-//	@Override
-//	public BinaryArray2D duplicate()
-//	{
-//		int n = this.size0 * this.size1;
-//		boolean[] buffer2 = new boolean[n];
-//		System.arraycopy(this.buffer, 0, buffer2, 0, n);
-//		return new RunLengthBinaryArray2D(this.size0, this.size1, buffer2);
-//	}
-
+	
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.BooleanArray#iterator()
 	 */
