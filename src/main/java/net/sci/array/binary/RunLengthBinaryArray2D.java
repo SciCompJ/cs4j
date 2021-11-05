@@ -6,6 +6,7 @@ package net.sci.array.binary;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Concrete implementation of BinaryArray2D that stores inner data in a
@@ -65,6 +66,13 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         // create result array
         RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
         
+        // prepare strel array: shift each row
+        RunLengthBinaryArray2D strel2 = new RunLengthBinaryArray2D(strel.size(0), strel.size(1));
+        for (Map.Entry<Integer, BinaryRow> entry : strel.rows.entrySet())
+        {
+            strel2.setRow(entry.getKey(), entry.getValue().shiftToLeft(strelOffset[0]));
+        }
+        
         // iterate over rows of result array
         for (int yres = 0; yres < sizeY; yres++)
         {
@@ -76,33 +84,28 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
             {
                 int y2 = yres + yStrel - strelOffset[1];
                 // check current row is within the input array
-                if (y2 < 0)
+                if (y2 < 0 || y2 > sizeY - 1)
                 {
                     continue;
                 }
-                if (y2 > sizeY - 1)
-                {
-                    break;
-                }
                 
                 // do not compute dilation if any of the rows is empty
-                if (strel.isEmptyRow(yStrel) || array.isEmptyRow(y2))
+                if (strel2.isEmptyRow(yStrel) || array.isEmptyRow(y2))
                 {
                     continue;
                 }
                 
                 // retrieve the rows to dilate
                 BinaryRow arrayRow = array.getRow(y2);
-                BinaryRow strelRow = strel.getRow(yStrel);
+                BinaryRow strelRow = strel2.getRow(yStrel);
                 
-                BinaryRow row = BinaryRows.dilate(arrayRow, strelRow, strelOffset[0]);
-                resRow = BinaryRows.union(resRow, row);
+                BinaryRow row = arrayRow.dilation(strelRow);
+                resRow = resRow.union(row);
             }
             
             if (!resRow.isEmpty())
             {
-                // TODO: need to crop?
-                res.setRow(yres, resRow);
+                res.setRow(yres, resRow.crop(0, sizeY - 1));
             }
         }
         
@@ -136,11 +139,11 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
 	// =============================================================
     // New methods
 
-    // TODO: should return hashmap
 	public Collection<BinaryRow> rows()
 	{
 	    return Collections.unmodifiableCollection(rows.values());
 	}
+	
 	
     // =============================================================
     // Management of rows
@@ -236,7 +239,27 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
 	// =============================================================
 	// Implementation of the Array interface
 	
-	/* (non-Javadoc)
+    /**
+     * @return a new instance of RunLengthBinaryArray2D
+     */
+    @Override
+    public RunLengthBinaryArray2D duplicate()
+    {
+        // retrieve array size
+        int sizeX = this.size(0);
+        int sizeY = this.size(1);
+        RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
+        
+        // add copies of each row
+        for (Map.Entry<Integer, BinaryRow> entry : this.rows.entrySet())
+        {
+            int index = entry.getKey();
+            res.rows.put(index, entry.getValue().duplicate());
+        }
+        return res;
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.data.BooleanArray#iterator()
 	 */
 	@Override
@@ -257,7 +280,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         @Override
         public boolean hasNext()
         {
-            return x < size0 || y < size1;
+            return x < size0 - 1|| y < size1 - 1;
         }
 
         @Override

@@ -3,6 +3,7 @@
  */
 package net.sci.array.binary;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -94,6 +95,33 @@ public class RunLengthBinaryArray2DTest
         }
     }
     
+    /**
+     * Test method for {@link net.sci.array.binary.RunLengthBinaryArray2D#dilation( net.sci.array.binary.RunLengthBinaryArray2D, net.sci.array.binary.RunLengthBinaryArray2D, int[])}.
+     */
+    @Test
+    public final void testIterator()
+    {
+        RunLengthBinaryArray2D array = new RunLengthBinaryArray2D(5, 5);
+        for (int y = 0; y < 5; y++)
+        {
+            for (int x = 0; x < 5; x++)
+            {
+                array.setBoolean(x, y, true);
+            }
+        }
+        
+        int count = 0;
+        for (Binary binary : array)
+        {
+            if (binary.getBoolean())
+            {
+                count++;
+            }
+        }
+        
+        assertEquals(25, count);
+    }
+
     public final static void main(String... args)
     {
         RunLengthBinaryArray2D array = new RunLengthBinaryArray2D(8, 4);
