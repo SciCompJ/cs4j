@@ -10,14 +10,65 @@ import java.util.Collection;
  * A 3D array of Int32 sliced in several planar slices. 
  * Slicing direction is the last one (usually z-slicing).
  * 
+ * This implementation usually allows to represent larger arrays than
+ * BufferedInt32Array3D.
+ * 
+ * @see BufferedInt32Array3D
+ * 
  * @author dlegland
  *
  */
 public class SlicedInt32Array3D extends Int32Array3D
 {
-	// =============================================================
-	// Class fields
+    // =============================================================
+    // Static methods
 
+    /**
+     * Converts the input array into an instance of the SlicedInt32Array3D
+     * class. May return the input array if it is already an instance of
+     * SlicedInt32Array3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of SlicedInt32Array3D containing the same values
+     *         as the input array.
+     */
+    public static final SlicedInt32Array3D convert(Int32Array3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof SlicedInt32Array3D)
+        {
+            return (SlicedInt32Array3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        SlicedInt32Array3D res = new SlicedInt32Array3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setInt(x, y, z, array.getInt(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
+    // =============================================================
+    // Class fields
+
+    /**
+     * The inner array of 2D Int32 arrays.
+     */
 	ArrayList<Int32Array> slices;
 
 	

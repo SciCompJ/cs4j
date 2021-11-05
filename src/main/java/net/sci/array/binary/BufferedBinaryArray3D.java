@@ -4,18 +4,69 @@
 package net.sci.array.binary;
 
 /**
- * Concrete implementation of BinaryArray3D that stores inner data in a linear
- * array of booleans.
+ * Implementation of BinaryArray3D that stores inner data in a linear array of
+ * booleans.
+ * 
+ * This implementation is limited by the total number of elements, that must be
+ * less than maximum array index in java (in the order of 2^31).
+ *
+ * @see SlicedBinaryArray3D
  * 
  * @author dlegland
  *
  */
 public class BufferedBinaryArray3D extends BinaryArray3D
 {
-	// =============================================================
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the BufferedBinaryArray3D
+     * class. May return the input array if it is already an instance of
+     * BufferedBinaryArray3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedBinaryArray3D containing the same values
+     *         as the input array.
+     */
+    public static final BufferedBinaryArray3D convert(BinaryArray3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedBinaryArray3D)
+        {
+            return (BufferedBinaryArray3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        BufferedBinaryArray3D res = new BufferedBinaryArray3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setBoolean(x, y, z, array.getBoolean(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
+ 	// =============================================================
 	// Class fields
 
-	boolean[] buffer;
+    /**
+     * The array of booleans that stores array values.
+     */
+    boolean[] buffer;
 
 	
 	// =============================================================

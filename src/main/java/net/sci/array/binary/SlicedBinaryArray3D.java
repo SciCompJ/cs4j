@@ -7,17 +7,68 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * A 3D array of Binary sliced in several planar slices. 
- * Slicing direction is the last one (usually z-slicing).
+ * A 3D array of Binary sliced in several planar slices. Slicing direction is
+ * the last one (usually z-slicing).
+ * 
+ * This implementation usually allows to represent larger arrays than
+ * BufferedBinaryArray3D.
+ * 
+ * @see BufferedBinaryArray3D
  * 
  * @author dlegland
  *
  */
 public class SlicedBinaryArray3D extends BinaryArray3D
 {
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the SlicedBinaryArray3D
+     * class. May return the input array if it is already an instance of
+     * SlicedBinaryArray3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of SlicedBinaryArray3D containing the same values
+     *         as the input array.
+     */
+    public static final SlicedBinaryArray3D convert(BinaryArray3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof SlicedBinaryArray3D)
+        {
+            return (SlicedBinaryArray3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        SlicedBinaryArray3D res = new SlicedBinaryArray3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setBoolean(x, y, z, array.getBoolean(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
 	// =============================================================
 	// Class fields
 
+    /**
+     * The array of binary arrays that stores array values.
+     */
 	ArrayList<BinaryArray2D> slices;
 
 	

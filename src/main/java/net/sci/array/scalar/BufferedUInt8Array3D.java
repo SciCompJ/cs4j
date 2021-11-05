@@ -3,17 +3,70 @@
  */
 package net.sci.array.scalar;
 
-
 /**
+ * Implementation of UInt8Array3D that stores inner data in a linear array of
+ * bytes.
+ * 
+ * This implementation is limited by the total number of elements, that must be
+ * less than maximum array index in java (in the order of 2^31).
+ *
+ * @see SlicedUInt8Array3D
+ * 
  * @author dlegland
  *
  */
 public class BufferedUInt8Array3D extends UInt8Array3D
 {
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the BufferedUInt8Array3D
+     * class. May return the input array if it is already an instance of
+     * BufferedUInt8Array3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedUInt8Array3D containing the same values
+     *         as the input array.
+     */
+    public static final BufferedUInt8Array3D convert(UInt8Array3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedUInt8Array3D)
+        {
+            return (BufferedUInt8Array3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        BufferedUInt8Array3D res = new BufferedUInt8Array3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setByte(x, y, z, array.getByte(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
 	// =============================================================
 	// Class fields
 
-	byte[] buffer;
+    /**
+     * The array of bytes that stores array values.
+     */
+    byte[] buffer;
 
 	
 	// =============================================================

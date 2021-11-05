@@ -4,14 +4,68 @@
 package net.sci.array.scalar;
 
 /**
+ * Implementation of UInt16Array3D that stores inner data in a linear array of
+ * shorts.
+ * 
+ * This implementation is limited by the total number of elements, that must be
+ * less than maximum array index in java (in the order of 2^31).
+ *
+ * @see SlicedUInt16Array3D
+ * 
  * @author dlegland
  *
  */
 public class BufferedUInt16Array3D extends UInt16Array3D
 {
-	// =============================================================
-	// Class fields
+    // =============================================================
+    // Static methods
 
+    /**
+     * Converts the input array into an instance of the BufferedUInt16Array3D
+     * class. May return the input array if it is already an instance of
+     * BufferedUInt16Array3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedUInt16Array3D containing the same values
+     *         as the input array.
+     */
+    public static final BufferedUInt16Array3D convert(UInt16Array3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedUInt16Array3D)
+        {
+            return (BufferedUInt16Array3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        BufferedUInt16Array3D res = new BufferedUInt16Array3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setShort(x, y, z, array.getShort(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
+    // =============================================================
+    // Class fields
+
+    /**
+     * The array of shorts that stores array values.
+     */
 	short[] buffer;
 
 	

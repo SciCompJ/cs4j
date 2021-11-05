@@ -4,14 +4,68 @@
 package net.sci.array.scalar;
 
 /**
+ * Implementation of Int16Array3D that stores inner data in a linear array of
+ * shorts.
+ * 
+ * This implementation is limited by the total number of elements, that must be
+ * less than maximum array index in java (in the order of 2^31).
+ *
+ * @see SlicedInt16Array3D
+ * 
  * @author dlegland
  *
  */
 public class BufferedInt16Array3D extends Int16Array3D
 {
-	// =============================================================
-	// Class fields
+    // =============================================================
+    // Static methods
 
+    /**
+     * Converts the input array into an instance of the BufferedInt16Array3D
+     * class. May return the input array if it is already an instance of
+     * BufferedInt16Array3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedInt16Array3D containing the same values
+     *         as the input array.
+     */
+    public static final BufferedInt16Array3D convert(Int16Array3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedInt16Array3D)
+        {
+            return (BufferedInt16Array3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        BufferedInt16Array3D res = new BufferedInt16Array3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setShort(x, y, z, array.getShort(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
+    // =============================================================
+    // Class fields
+
+    /**
+     * The array of shorts that stores array values.
+     */
 	short[] buffer;
 
 	
@@ -55,10 +109,10 @@ public class BufferedInt16Array3D extends Int16Array3D
 
 
 	// =============================================================
-	// Specialization of the UInt16Array3D interface
+	// Specialization of the Int16Array3D interface
 
     /* (non-Javadoc)
-     * @see net.sci.array.data.scalar2d.UInt16Array3D#setShort(int, int, int, short)
+     * @see net.sci.array.scalar.Int16Array3D#setShort(int, int, int, short)
      */
     @Override
     public void setShort(int x, int y, int z, short value)
@@ -68,7 +122,7 @@ public class BufferedInt16Array3D extends Int16Array3D
     }
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt16Array3D#getShort(int, int, int)
+	 * @see net.sci.array.scalar.Int16Array3D#getShort(int, int, int)
 	 */
 	@Override
 	public short getShort(int... pos)
@@ -78,7 +132,7 @@ public class BufferedInt16Array3D extends Int16Array3D
 	}
 		
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt16Array3D#setShort(int[], short)
+	 * @see net.sci.array.scalar.Int16Array3D#setShort(int[], short)
 	 */
 	@Override
 	public void setShort(int[] pos, short value)

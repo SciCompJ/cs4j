@@ -4,17 +4,61 @@
 package net.sci.array.scalar;
 
 /**
- * Implements Int16Array by storing data in a linear short buffer.
+ * Implementation of Int16Array that stores inner data in a linear array of
+ * shorts.
  * 
  * @author dlegland
  *
  */
 public class BufferedInt16Array2D extends Int16Array2D
 {
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the BufferedInt16Array2D
+     * class. May return the input array if it already an instance of
+     * BufferedInt16Array2D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedInt16Array2D containing the same values as
+     *         the input array.
+     */
+    public static final BufferedInt16Array2D convert(Int16Array2D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedInt16Array2D)
+        {
+            return (BufferedInt16Array2D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        BufferedInt16Array2D res = new BufferedInt16Array2D(sizeX, sizeY);
+        
+        // copy values
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                res.setShort(x, y, array.getShort(x, y));
+            }
+        }
+        
+        // return converted array
+        return res;
+    }
+    
+    
 	// =============================================================
 	// Class fields
 
-	short[] buffer;
+    /**
+     * The array of shorts that stores array values.
+     */
+    short[] buffer;
 
 	
 	// =============================================================

@@ -4,14 +4,61 @@
 package net.sci.array.scalar;
 
 /**
+ * Implementation of Float64Array2D that stores inner data in a linear array of
+ * doubles.
+ * 
+ * @see BufferedFloat32Array2D
+ * 
  * @author dlegland
- *
  */
 public class BufferedFloat64Array2D extends Float64Array2D
 {
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the BufferedFloat64Array2D
+     * class. May return the input array if it is already an instance of
+     * BufferedFloat64Array2D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedFloat64Array2D containing the same values as
+     *         the input array.
+     */
+    public static final BufferedFloat64Array2D convert(Float64Array2D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedFloat64Array2D)
+        {
+            return (BufferedFloat64Array2D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        BufferedFloat64Array2D res = new BufferedFloat64Array2D(sizeX, sizeY);
+        
+        // copy values
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                res.setValue(x, y, array.getValue(x, y));
+            }
+        }
+        
+        // return converted array
+        return res;
+    }
+
+    
 	// =============================================================
 	// Class fields
 
+    /**
+     * The array of doubles that stores array values.
+     */
 	double[] buffer;
 	
 	// =============================================================

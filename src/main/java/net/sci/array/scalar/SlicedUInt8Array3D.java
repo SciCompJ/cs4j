@@ -10,15 +10,65 @@ import java.util.Collection;
  * A 3D array of UInt8 sliced in several planar slices. 
  * Slicing direction is the last one (usually z-slicing).
  * 
+ * This implementation usually allows to represent larger arrays than
+ * BufferedUInt8Array3D.
+ * 
+ * @see BufferedUInt8Array3D
+ * 
  * @author dlegland
  *
  */
 public class SlicedUInt8Array3D extends UInt8Array3D
 {
-	// =============================================================
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the SlicedUInt8Array3D
+     * class. May return the input array if it is already an instance of
+     * SlicedUInt8Array3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of SlicedUInt8Array3D containing the same values
+     *         as the input array.
+     */
+    public static final SlicedUInt8Array3D convert(UInt8Array3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof SlicedUInt8Array3D)
+        {
+            return (SlicedUInt8Array3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        SlicedUInt8Array3D res = new SlicedUInt8Array3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setByte(x, y, z, array.getByte(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    // =============================================================
 	// Class fields
 
-	ArrayList<UInt8Array2D> slices;
+    /**
+     * The inner array of 2D UInt8 arrays.
+     */
+    ArrayList<UInt8Array2D> slices;
 
 	
 	// =============================================================

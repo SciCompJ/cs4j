@@ -4,16 +4,60 @@
 package net.sci.array.scalar;
 
 /**
- * Implements UInt8Array by storing data in a linear byte buffer.
+ * Implementation of UInt8Array2D that stores inner data in a linear array of
+ * bytes.
  * 
  * @author dlegland
  *
  */
 public class BufferedUInt8Array2D extends UInt8Array2D
 {
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the BufferedUInt8Array2D
+     * class. May return the input array if it is already an instance of
+     * BufferedUInt8Array2D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedUInt8Array2D containing the same values as
+     *         the input array.
+     */
+    public static final BufferedUInt8Array2D convert(UInt8Array2D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedUInt8Array2D)
+        {
+            return (BufferedUInt8Array2D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        BufferedUInt8Array2D res = new BufferedUInt8Array2D(sizeX, sizeY);
+        
+        // copy values
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                res.setByte(x, y, array.getByte(x, y));
+            }
+        }
+        
+        // return converted array
+        return res;
+    }
+    
+    
 	// =============================================================
 	// Class fields
 
+    /**
+     * The array of bytes that stores array values.
+     */
 	byte[] buffer;
 
 	

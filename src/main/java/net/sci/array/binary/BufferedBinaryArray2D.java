@@ -4,17 +4,60 @@
 package net.sci.array.binary;
 
 /**
- * Concrete implementation of BinaryArray2D that stores inner data in a linear
- * array of booleans.
+ * Implementation of BinaryArray2D that stores inner data in a linear array of
+ * booleans.
  * 
  * @author dlegland
  *
  */
 public class BufferedBinaryArray2D extends BinaryArray2D
 {
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the BufferedBinaryArray2D
+     * class. May return the input array if it is already an instance of
+     * BufferedBinaryArray2D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedBinaryArray2D containing the same values
+     *         as the input array.
+     */
+    public static final BufferedBinaryArray2D convert(BinaryArray2D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedBinaryArray2D)
+        {
+            return (BufferedBinaryArray2D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        BufferedBinaryArray2D res = new BufferedBinaryArray2D(sizeX, sizeY);
+        
+        // copy values
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                res.setBoolean(x, y, array.getBoolean(x, y));
+            }
+        }
+        
+        // return converted array
+        return res;
+    }
+    
+    
 	// =============================================================
 	// Class fields
 
+    /**
+     * The array of booleans that stores array values.
+     */
 	boolean[] buffer;
 
 	
@@ -22,9 +65,11 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 	// Constructors
 
 	/**
-	 * @param size0 the size of the array in the first dimension
-	 * @param size1 the size of the array in the second dimension
-	 */
+     * @param size0
+     *            the size of the array in the first dimension
+     * @param size1
+     *            the size of the array in the second dimension
+     */
 	public BufferedBinaryArray2D(int size0, int size1)
 	{
 		super(size0, size1);
@@ -48,6 +93,7 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 		}
 		this.buffer = buffer;
 	}
+	
 
 	// =============================================================
 	// Implementation of the BooleanArray2D interface

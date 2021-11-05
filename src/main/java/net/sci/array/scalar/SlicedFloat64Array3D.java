@@ -10,14 +10,65 @@ import java.util.Collection;
  * A 3D array of Float64 sliced in several planar slices. 
  * Slicing direction is the last one (usually z-slicing).
  * 
+ * This implementation usually allows to represent larger arrays than
+ * BufferedFloat64Array3D.
+ * 
+ * @see BufferedFloat64Array3D
+ * 
  * @author dlegland
  *
  */
 public class SlicedFloat64Array3D extends Float64Array3D
 {
-	// =============================================================
-	// Class fields
+    // =============================================================
+    // Static methods
 
+    /**
+     * Converts the input array into an instance of the SlicedFloat64Array3D
+     * class. May return the input array if it is already an instance of
+     * SlicedFloat64Array3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of SlicedFloat64Array3D containing the same values
+     *         as the input array.
+     */
+    public static final SlicedFloat64Array3D convert(Float64Array3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof SlicedFloat64Array3D)
+        {
+            return (SlicedFloat64Array3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        SlicedFloat64Array3D res = new SlicedFloat64Array3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setValue(x, y, z, array.getValue(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
+    // =============================================================
+    // Class fields
+
+    /**
+     * The inner array of 2D Float64 arrays.
+     */
 	ArrayList<Float64Array> slices;
 
 	

@@ -10,14 +10,65 @@ import java.util.Collection;
  * A 3D array of UInt16 sliced in several planar slices. 
  * Slicing direction is the last one (usually z-slicing).
  * 
+ * This implementation usually allows to represent larger arrays than
+ * BufferedUInt16Array3D.
+ * 
+ * @see BufferedUInt16Array3D
+ * 
  * @author dlegland
  *
  */
 public class SlicedUInt16Array3D extends UInt16Array3D
 {
-	// =============================================================
-	// Class fields
+    // =============================================================
+    // Static methods
 
+    /**
+     * Converts the input array into an instance of the SlicedUInt16Array3D
+     * class. May return the input array if it is already an instance of
+     * SlicedUInt16Array3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of SlicedUInt16Array3D containing the same values
+     *         as the input array.
+     */
+    public static final SlicedUInt16Array3D convert(UInt16Array3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof SlicedUInt16Array3D)
+        {
+            return (SlicedUInt16Array3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        SlicedUInt16Array3D res = new SlicedUInt16Array3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setShort(x, y, z, array.getShort(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
+    // =============================================================
+    // Class fields
+
+    /**
+     * The inner array of 2D UInt16 arrays.
+     */
 	ArrayList<UInt16Array> slices;
 
 	

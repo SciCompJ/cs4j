@@ -10,14 +10,65 @@ import java.util.Collection;
  * A 3D array of Float32 sliced in several planar slices. 
  * Slicing direction is the last one (usually z-slicing).
  * 
+ * This implementation usually allows to represent larger arrays than
+ * BufferedFloat32Array3D.
+ * 
+ * @see BufferedFloat32Array3D
+ * 
  * @author dlegland
  *
  */
 public class SlicedFloat32Array3D extends Float32Array3D
 {
-	// =============================================================
-	// Class fields
+    // =============================================================
+    // Static methods
 
+    /**
+     * Converts the input array into an instance of the SlicedFloat32Array3D
+     * class. May return the input array if it is already an instance of
+     * SlicedFloat32Array3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of SlicedFloat32Array3D containing the same values
+     *         as the input array.
+     */
+    public static final SlicedFloat32Array3D convert(Float32Array3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof SlicedFloat32Array3D)
+        {
+            return (SlicedFloat32Array3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        SlicedFloat32Array3D res = new SlicedFloat32Array3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setFloat(x, y, z, array.getFloat(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
+    // =============================================================
+    // Class fields
+
+    /**
+     * The inner array of 2D Float32 arrays.
+     */
 	ArrayList<Float32Array> slices;
 
 	

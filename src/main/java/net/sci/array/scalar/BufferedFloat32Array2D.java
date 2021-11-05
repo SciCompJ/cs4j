@@ -4,15 +4,62 @@
 package net.sci.array.scalar;
 
 /**
+ * Implementation of Float32Array2D that stores inner data in a linear array of
+ * floats.
+ * 
+ * @see BufferedFloat64Array2D
+ * 
  * @author dlegland
- *
  */
 public class BufferedFloat32Array2D extends Float32Array2D
 {
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the BufferedFloat32Array2D
+     * class. May return the input array if it is already an instance of
+     * BufferedFloat32Array2D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedFloat32Array2D containing the same values as
+     *         the input array.
+     */
+    public static final BufferedFloat32Array2D convert(Float32Array2D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedFloat32Array2D)
+        {
+            return (BufferedFloat32Array2D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        BufferedFloat32Array2D res = new BufferedFloat32Array2D(sizeX, sizeY);
+        
+        // copy values
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                res.setFloat(x, y, array.getFloat(x, y));
+            }
+        }
+        
+        // return converted array
+        return res;
+    }
+    
+    
 	// =============================================================
 	// Class fields
 
-	float[] buffer;
+    /**
+     * The array of floats that stores array values.
+     */
+    float[] buffer;
 	
 	// =============================================================
 	// Constructors

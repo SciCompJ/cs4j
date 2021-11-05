@@ -4,15 +4,61 @@
 package net.sci.array.scalar;
 
 /**
+ * Implementation of Int32Array2D that stores inner data in a linear array of
+ * ints.
+ * 
  * @author dlegland
  *
  */
 public class BufferedInt32Array2D extends Int32Array2D
 {
+    // =============================================================
+    // Static methods
+
+    /**
+     * Converts the input array into an instance of the BufferedInt32Array2D
+     * class. May return the input array if it is already an instance of
+     * BufferedInt32Array2D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedInt32Array2D containing the same values as
+     *         the input array.
+     */
+    public static final BufferedInt32Array2D convert(Int32Array2D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedInt32Array2D)
+        {
+            return (BufferedInt32Array2D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        BufferedInt32Array2D res = new BufferedInt32Array2D(sizeX, sizeY);
+        
+        // copy values
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                res.setInt(x, y, array.getInt(x, y));
+            }
+        }
+        
+        // return converted array
+        return res;
+    }
+    
+    
 	// =============================================================
 	// Class fields
 
-	int[] buffer;
+    /**
+     * The array of ints that stores array values.
+     */
+    int[] buffer;
 
 	
 	// =============================================================

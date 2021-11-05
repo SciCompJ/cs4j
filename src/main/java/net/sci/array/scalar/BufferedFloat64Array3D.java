@@ -4,14 +4,68 @@
 package net.sci.array.scalar;
 
 /**
+ * Implementation of Float64Array3D that stores inner data in a linear array of
+ * int values.
+ * 
+ * This implementation is limited by the total number of elements, that must be
+ * less than maximum array index in java (in the order of 2^31).
+ *
+ * @see SlicedFloat64Array3D
+ * 
  * @author dlegland
  *
  */
 public class BufferedFloat64Array3D extends Float64Array3D
 {
-	// =============================================================
-	// Class fields
+    // =============================================================
+    // Static methods
 
+    /**
+     * Converts the input array into an instance of the BufferedFloat64Array3D
+     * class. May return the input array if it is already an instance of
+     * BufferedFloat64Array3D.
+     * 
+     * @param array
+     *            the array to convert
+     * @return an instance of BufferedFloat64Array3D containing the same values
+     *         as the input array.
+     */
+    public static final BufferedFloat64Array3D convert(Float64Array3D array)
+    {
+        // if array is of correct class, simply use class cast
+        if (array instanceof BufferedFloat64Array3D)
+        {
+            return (BufferedFloat64Array3D) array;
+        }
+        
+        // allocate memory
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        BufferedFloat64Array3D res = new BufferedFloat64Array3D(sizeX, sizeY, sizeZ);
+        
+        // copy values
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setValue(x, y, z, array.getValue(x, y, z));
+                }
+            }
+        }
+        // return converted array
+        return res;
+    }
+    
+    
+    // =============================================================
+    // Class fields
+
+    /**
+     * The array of doubles that stores array values.
+     */
 	double[] buffer;
 
 	
