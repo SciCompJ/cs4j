@@ -16,7 +16,7 @@ import org.junit.Test;
 public class BinaryRowTest
 {
     /**
-     * Test method for {@link net.sci.array.binary.BinaryRow#dilate(net.sci.array.binary.BinaryRow, int)}.
+     * Test method for {@link net.sci.array.binary.BinaryRow#dilation(net.sci.array.binary.BinaryRow, int)}.
      */
     @Test
     public final void test_dilationRows_singleRun_singleRun()
@@ -43,7 +43,7 @@ public class BinaryRowTest
     }
     
     /**
-     * Test method for {@link net.sci.array.binary.BinaryRow#union(net.sci.array.binary.BinaryRow)}.
+     * Test method for {@link net.sci.array.binary.BinaryRow#dilation(net.sci.array.binary.BinaryRow)}.
      */
     @Test
     public final void test_dilation_MergeRuns()
@@ -71,6 +71,65 @@ public class BinaryRowTest
         assertTrue(res.get(8));
         assertTrue(res.get(27));
         assertFalse(res.get(28));
+    }
+
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#erosion(net.sci.array.binary.BinaryRow, int)}.
+     */
+    @Test
+    public final void test_erosion_singleRun_singleRun()
+    {
+        BinaryRow row = new BinaryRow();
+        for (int i = 5; i <= 15; i++)
+        {
+            row.set(i, true);
+        }
+        
+        BinaryRow strel = new BinaryRow();
+        for (int i = -2; i <= 2; i++)
+        {
+            strel.set(i, true);
+        }
+        
+        BinaryRow res = row.erosion(strel);
+        
+        assertEquals(1, res.runs.size());
+        assertFalse(res.get(6));
+        assertTrue(res.get(7));
+        assertTrue(res.get(13));
+        assertFalse(res.get(14));
+    }
+
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#erosion(net.sci.array.binary.BinaryRow, int)}.
+     */
+    @Test
+    public final void test_erosion_TwoRuns_singleRun()
+    {
+        BinaryRow row = new BinaryRow();
+        for (int i = 5; i <= 10; i++)
+        {
+            row.set(i, true);
+            row.set(i + 10, true);
+        }
+        
+        BinaryRow strel = new BinaryRow();
+        for (int i = -2; i <= 2; i++)
+        {
+            strel.set(i, true);
+        }
+        
+        BinaryRow res = row.erosion(strel);
+        
+        assertEquals(2, res.runs.size());
+        assertFalse(res.get(6));
+        assertTrue(res.get(7));
+        assertTrue(res.get(8));
+        assertFalse(res.get(9));
+        assertFalse(res.get(16));
+        assertTrue(res.get(17));
+        assertTrue(res.get(18));
+        assertFalse(res.get(19));
     }
 
     /**
@@ -194,6 +253,98 @@ public class BinaryRowTest
         Run run1 = res.runs.first();
         assertEquals(3, run1.left);
         assertEquals(11, run1.right);
+    }
+
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#intersection(net.sci.array.binary.BinaryRow)}.
+     */
+    @Test
+    public final void testIntersection_TwoEmptyRow()
+    {
+        BinaryRow row1 = new BinaryRow();
+        BinaryRow row2 = new BinaryRow();
+
+        BinaryRow res = row1.intersection(row2);
+        
+        assertTrue(res.isEmpty());
+    }
+
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#intersection(net.sci.array.binary.BinaryRow)}.
+     */
+    @Test
+    public final void testIntersection_SingleIntersect()
+    {
+        BinaryRow row1 = new BinaryRow();
+        for (int i = 2; i <= 5; i++)
+        {
+            row1.set(i, true);
+        }
+        BinaryRow row2 = new BinaryRow();
+        for (int i = 4; i <= 7; i++)
+        {
+            row2.set(i, true);
+        }
+
+        BinaryRow res = row1.intersection(row2);
+        
+        assertEquals(1, res.runs.size());
+        assertFalse(res.get(3));
+        assertTrue(res.get(4));
+        assertTrue(res.get(5));
+        assertFalse(res.get(6));
+    }
+    
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#intersection(net.sci.array.binary.BinaryRow)}.
+     */
+    @Test
+    public final void testIntersection_ComplexIntersect()
+    {
+        BinaryRow row1 = new BinaryRow();
+        for (int i = 2; i <= 5; i++)
+        {
+            row1.set(i, true);
+        }
+        for (int i = 14; i <= 27; i++)
+        {
+            row1.set(i, true);
+        }
+        for (int i = 32; i <= 39; i++)
+        {
+            row1.set(i, true);
+        }
+        BinaryRow row2 = new BinaryRow();
+        for (int i = 8; i <= 11; i++)
+        {
+            row2.set(i, true);
+        }
+        for (int i = 16; i <= 19; i++)
+        {
+            row2.set(i, true);
+        }
+        for (int i = 24; i <= 33; i++)
+        {
+            row2.set(i, true);
+        }
+
+        BinaryRow res = row1.intersection(row2);
+        
+        assertEquals(3, res.runs.size());
+        assertFalse(res.get(15));
+        assertTrue(res.get(16));
+        assertTrue(res.get(19));
+        assertFalse(res.get(20));
+        
+        assertFalse(res.get(23));
+        assertTrue(res.get(24));
+        assertTrue(res.get(27));
+        assertFalse(res.get(28));
+
+        assertFalse(res.get(31));
+        assertTrue(res.get(32));
+        assertTrue(res.get(33));
+        assertFalse(res.get(34));
     }
 
     /**

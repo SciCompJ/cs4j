@@ -84,6 +84,76 @@ public class RunLengthBinaryArray2DTest
         }
     }
     
+    /**
+     * Test method for {@link net.sci.array.binary.RunLengthBinaryArray2D#dilation( net.sci.array.binary.RunLengthBinaryArray2D, net.sci.array.binary.RunLengthBinaryArray2D, int[])}.
+     */
+    @Test
+    public final void testErosion_cross()
+    {
+        BufferedBinaryArray2D array = new BufferedBinaryArray2D(12, 12);
+        
+        // a thick ring-like structure
+        fillRect(array, 1, 9, 1, 9, true);
+        array.setBoolean(5, 5, false);
+        
+        // create a cross-shaped structuring element
+        BufferedBinaryArray2D strel = new BufferedBinaryArray2D(3, 3);
+        strel.setBoolean(1, 0, true);
+        strel.setBoolean(0, 1, true);
+        strel.setBoolean(1, 1, true);
+        strel.setBoolean(2, 1, true);
+        strel.setBoolean(1, 2, true);
+        
+        RunLengthBinaryArray2D array2 = RunLengthBinaryArray2D.convert(array);
+        RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel);
+        
+        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.erosion(array2, strel2, new int[] {1, 1});
+        
+        Strel2D strel2d = new Cross3x3Strel();
+        BinaryArray2D expected = BinaryArray2D.wrap(BinaryArray.wrap(strel2d.erosion(array)));
+        
+        for (int y = 0; y < 12; y++)
+        {
+            for (int x = 0; x < 12; x++)
+            {
+                assertTrue(res.getBoolean(x, y) == expected.getBoolean(x, y));
+            }
+        }
+    }
+
+    /**
+     * Test method for {@link net.sci.array.binary.RunLengthBinaryArray2D#dilation( net.sci.array.binary.RunLengthBinaryArray2D, net.sci.array.binary.RunLengthBinaryArray2D, int[])}.
+     */
+    @Test
+    public final void testErosion_square5x5()
+    {
+        BufferedBinaryArray2D array = new BufferedBinaryArray2D(14, 14);
+        
+        // a thick ring-like structure
+        fillRect(array, 1, 12, 1, 12, true);
+        fillRect(array, 6, 8, 7, 7, false);
+        
+        // create a cross-shaped structuring element
+        BufferedBinaryArray2D strel = new BufferedBinaryArray2D(5, 5);
+        strel.fill(Binary.TRUE);
+        
+        RunLengthBinaryArray2D array2 = RunLengthBinaryArray2D.convert(array);
+        RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel);
+        
+        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.erosion(array2, strel2, new int[] {2, 2});
+        
+        Strel2D strel2d = Strel2D.Shape.SQUARE.fromDiameter(5);
+        BinaryArray2D expected = BinaryArray2D.wrap(BinaryArray.wrap(strel2d.erosion(array)));
+        
+        for (int y = 0; y < 12; y++)
+        {
+            for (int x = 0; x < 12; x++)
+            {
+                assertTrue(res.getBoolean(x, y) == expected.getBoolean(x, y));
+            }
+        }
+    }
+
     private static final void fillRect(BinaryArray2D array, int xmin, int xmax, int ymin, int ymax, boolean state)
     {
         for (int y = ymin; y <= ymax; y++)

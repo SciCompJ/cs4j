@@ -23,7 +23,7 @@ public class Run implements Comparable<Run>
     {
         if (right < left)
         {
-            throw new RuntimeException("Right extremity must be lower than left extremity");
+            throw new RuntimeException("Right extremity must be larger than left extremity");
         }
         this.left = left;
         this.right = right;
@@ -58,5 +58,11 @@ public class Run implements Comparable<Run>
     public int compareTo(Run that)
     {
         return this.left - that.left;
+    }
+    
+    @Override
+    public String toString()
+    {
+        return String.format("Run(%d, %d)", this.left, this.right);
     }
 }

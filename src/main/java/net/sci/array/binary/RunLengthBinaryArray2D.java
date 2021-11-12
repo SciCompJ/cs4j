@@ -105,6 +105,65 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
             
             if (!resRow.isEmpty())
             {
+                res.setRow(yres, resRow.crop(0, sizeX - 1));
+            }
+        }
+        
+        return res;
+    }
+    
+    public static final RunLengthBinaryArray2D erosion(RunLengthBinaryArray2D array, RunLengthBinaryArray2D strel, int[] strelOffset)
+    {
+        // array dimensions
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        
+        // create result array
+        RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
+        
+        // prepare strel array: shift each row
+        RunLengthBinaryArray2D strel2 = new RunLengthBinaryArray2D(strel.size(0), strel.size(1));
+        for (Map.Entry<Integer, BinaryRow> entry : strel.rows.entrySet())
+        {
+            strel2.setRow(entry.getKey(), entry.getValue().shiftToLeft(strelOffset[0]));
+        }
+        
+        // iterate over rows of result array
+        for (int yres = 0; yres < sizeY; yres++)
+        {
+            // initialize full result row
+            BinaryRow resRow = new BinaryRow();
+            resRow.runs.add(new Run(0, sizeX - 1));
+            
+            // iterate over rows of structuring element
+            for (int yStrel = 0; yStrel < strel.size(1); yStrel++)
+            {
+                int y2 = yres + yStrel - strelOffset[1];
+                // check current row is within the input array
+                if (y2 < 0 || y2 > sizeY - 1)
+                {
+                    continue;
+                }
+                
+                // if any of the rows is empty, result of dilation is empty
+                BinaryRow row;
+                if (array.isEmptyRow(y2))
+                {
+                    row = new BinaryRow();
+                }
+                else
+                {
+                    // retrieve the rows to dilate
+                    BinaryRow arrayRow = array.getRow(y2);
+                    BinaryRow strelRow = strel2.getRow(yStrel);
+
+                    row = arrayRow.erosion(strelRow);
+                }
+                resRow = resRow.intersection(row);
+            }
+            
+            if (!resRow.isEmpty())
+            {
                 res.setRow(yres, resRow.crop(0, sizeY - 1));
             }
         }

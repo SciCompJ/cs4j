@@ -56,7 +56,7 @@ public class BinaryRow
     // "High-Level" methods for global processing of rows
 
     /**
-     * Computes the dilation this row using another row as structuring element.
+     * Computes the dilation of this row using another row as structuring element.
      * 
      * @param row
      *            the row to dilate with.
@@ -67,13 +67,31 @@ public class BinaryRow
         BinaryRow res = new BinaryRow();
         for (Run run : row.runs)
         {
-            BinaryRow resDil = this.dilation(-run.left, run.right);
+            BinaryRow resDil = this.dilationLeftRight(-run.left, run.right);
             res = res.union(resDil);
         }
         return res;
     }
     
-    private BinaryRow dilation(int leftDilate, int rightDilate)
+    /**
+     * Computes the erosion of this row using another row as structuring element.
+     * 
+     * @param row
+     *            the row used for erosion.
+     * @return the result of the erosion of the two rows.
+     */
+    public BinaryRow erosion(BinaryRow row)
+    {
+        BinaryRow res = this;
+        for (Run run : row.runs)
+        {
+            BinaryRow resEro = this.dilationLeftRight(run.left, -run.right);
+            res = res.intersection(resEro);
+        }
+        return res;
+    }
+
+    private BinaryRow dilationLeftRight(int leftDilate, int rightDilate)
     {
         // create result runs
         TreeSet<Run> newRuns = new TreeSet<Run>();
@@ -120,6 +138,13 @@ public class BinaryRow
         return new BinaryRow(newRuns);
     }
     
+    /**
+     * Computes the union of this row with the input row.
+     * 
+     * @param row2
+     *            the row to combine with
+     * @return the result if the union of this row and the other row.
+     */
     public BinaryRow union(BinaryRow row2)
     {
         // create result runs
@@ -171,7 +196,6 @@ public class BinaryRow
             
             // update right value of new run, and add it to list of runs
             newRight = rip.findRightExtremityOfUnion(newRight);
-//            newRight = findRightExtremityOfUnion(rip, rip.run1.right);
             newRuns.add(new Run(newLeft, newRight));
             
             // process next run 
@@ -182,54 +206,62 @@ public class BinaryRow
         return new BinaryRow(newRuns);
     }
     
-//    private static final int findRightExtremityOfUnion(RunIteratorPair rip, int newRight)
-//    {
-//        // process the loop until right extremity is found
-//        while (true)
-//        {
-//            // identify the next run in row2 with a right extremity greater than current "newRight" value
-//            findNextRunInRun2WithRightExtremityGreaterThanValue(rip, newRight);
-//
-//            // case of no more run in row2 with extremity after current run in row1 
-//            if (rip.run2 == null)
-//            {
-//                return newRight;
-//            }
-//
-//            // if we have found the current extremity, create new run and iterate 
-//            if (rip.run2.left > newRight + 1)
-//            {
-//                return newRight;
-//            }
-//
-//            // new extremity in run2
-//            newRight = rip.run2.right;
-//            
-//            // as run2 is the new current run, need to swap
-//            rip.swap();
-//            
-//            // iterate
-//            rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
-//        }
-//    }
-    
-//    private static final Run findNextRunInRun2WithRightExtremityGreaterThanValue(RunIteratorPair rip, int value)
-//    {
-//        while (true)
-//        {
-//            if (rip.run2 == null)
-//            {
-//                return null;
-//            }
-//            if (rip.run2.right > value)
-//            {
-//                return rip.run2;
-//            }
-//            rip.run2 = rip.runs2.hasNext() ? rip.runs2.next() : null;
-//        }
-//        
-//    }
-    
+    /**
+     * Computes the intersection of this row with the input row.
+     * 
+     * @param row2
+     *            the row to combine with
+     * @return the result if the intersection of this row and the other row.
+     */
+    public BinaryRow intersection(BinaryRow row2)
+    {
+        // create result runs
+        TreeSet<Run> newRuns = new TreeSet<Run>();
+        
+        // create structure to iterate over both rows in parallel.
+        RunIteratorPair rip = new RunIteratorPair(this, row2);
+        
+        // main iteration, breaking when either run1 or run2 is null
+        while(rip.run1 != null && rip.run2 != null)
+        {
+            // start processing with the run with the lowest left value
+            // -> enforce run1 to have the lowest left value 
+            if (rip.run1.left > rip.run2.left)
+            {
+                rip.swap();
+            }
+            
+            // if the run in row2 start after the end of run1, there is no intersection
+            // and we skip current run1 
+            if (rip.run2.left > rip.run1.right)
+            {
+                // process next run 
+                rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
+                continue;
+            }
+            
+            // we have: run1.left <= run2.left <= run1.right
+            // compute bounds of the new run
+            int newLeft = rip.run2.left;
+            int newRight;
+            if (rip.run1.right < rip.run2.right)
+            {
+                // run1 ends before run2
+                newRight = rip.run1.right;
+                rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
+            }
+            else
+            {
+                // run2 ends before run1
+                newRight = rip.run2.right;
+                rip.run2 = rip.runs2.hasNext() ? rip.runs2.next() : null;
+            }
+            newRuns.add(new Run(newLeft, newRight));
+        }
+        
+        // create the new row from list of runs
+        return new BinaryRow(newRuns);
+    }
     
     /**
      * Computes the complement of this row, assuming it starts at index 0. As
