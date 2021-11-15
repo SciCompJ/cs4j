@@ -96,6 +96,19 @@ public interface BinaryArray extends IntArray<Binary>
     // =============================================================
 	// New methods
 
+    /**
+     * Fills this binary array using a function of the elements coordinates.
+     * 
+     * Example
+     * <pre>{@code
+     * BinaryArray array = BinaryArray.create(50, 50, 50);
+     * array.fillBooleans(pos -> new Boolean(pos[0] < 25 || pos[1] > 30)); 
+     * }
+     * </pre>
+     * 
+     * @param fun
+     *            the function used to populate the array.
+     */
     public default void fillBooleans(Function<int[], Boolean> fun)
     {
         for (int[] pos : this.positions())
@@ -103,6 +116,22 @@ public interface BinaryArray extends IntArray<Binary>
             this.setBoolean(pos, fun.apply(pos));
         }
     }
+    
+    /**
+     * Fills this binary array with the specified boolean value.
+     * 
+     * @param b
+     *            the value to fill the array with.
+     */
+    public default void fill(boolean b)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setBoolean(pos, b);
+        }
+    }
+    
+
     
 	public boolean getBoolean(int... pos);
 	
