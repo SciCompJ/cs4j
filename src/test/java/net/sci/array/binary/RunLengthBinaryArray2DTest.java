@@ -6,9 +6,15 @@ package net.sci.array.binary;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.Test;
 
+import net.sci.array.scalar.ScalarArray;
+import net.sci.image.Image;
+import net.sci.image.io.TiffImageReader;
 import net.sci.image.morphology.strel.Cross3x3Strel;
+import net.sci.image.morphology.strel.SquareStrel;
 import net.sci.image.morphology.strel.Strel2D;
 
 /**
@@ -38,14 +44,115 @@ public class RunLengthBinaryArray2DTest
             }
         }
     }
+    
+    
+    /**
+     * Test method for {@link net.sci.array.binary.RunLengthBinaryArray2D#dilation( net.sci.array.binary.RunLengthBinaryArray2D, net.sci.array.binary.RunLengthBinaryArray2D, int[])}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testDilation_circles_square5x5() throws IOException
+    {
+        String fileName = getClass().getResource("/images/binary/circles.tif").getFile();
+
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(2, image.getDimension());
+        BinaryArray2D array = BinaryArray2D.wrap(BinaryArray.convert((ScalarArray<?>) image.getData()));
+        
+        Strel2D strel = Strel2D.Shape.SQUARE.fromDiameter(5);
+        RunLengthBinaryArray2D strelArray = RunLengthBinaryArray2D.convert(strel.getMask());
+
+        RunLengthBinaryArray2D rleArray = RunLengthBinaryArray2D.convert(array);
+        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.dilation(rleArray, strelArray, new int[] {2, 2});
+        
+        BinaryArray2D expected = BinaryArray2D.wrap(BinaryArray.convert(strel.dilation(array)));
+        
+        for (int y = 0; y < array.size(1); y++)
+        {
+            for (int x = 0; x < array.size(0); x++)
+            {
+                assertTrue(String.format("x=%d, y=%d", x, y), expected.getBoolean(x, y) == res.getBoolean(x, y));
+            }
+        }
+    }
+
+    
+    /**
+     * Test method for {@link net.sci.array.binary.RunLengthBinaryArray2D#dilation( net.sci.array.binary.RunLengthBinaryArray2D, net.sci.array.binary.RunLengthBinaryArray2D, int[])}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testDilation_circles_disk7x7() throws IOException
+    {
+        String fileName = getClass().getResource("/images/binary/circles.tif").getFile();
+
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(2, image.getDimension());
+        BinaryArray2D array = BinaryArray2D.wrap(BinaryArray.convert((ScalarArray<?>) image.getData()));
+        
+        Strel2D strel = Strel2D.Shape.DISK.fromDiameter(7);
+        RunLengthBinaryArray2D strelArray = RunLengthBinaryArray2D.convert(strel.getMask());
+
+        RunLengthBinaryArray2D rleArray = RunLengthBinaryArray2D.convert(array);
+        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.dilation(rleArray, strelArray, new int[] {3, 3});
+        
+        BinaryArray2D expected = BinaryArray2D.wrap(BinaryArray.convert(strel.dilation(array)));
+        
+        for (int y = 0; y < array.size(1); y++)
+        {
+            for (int x = 0; x < array.size(0); x++)
+            {
+                assertTrue(String.format("x=%d, y=%d", x, y), expected.getBoolean(x, y) == res.getBoolean(x, y));
+            }
+        }
+    }
+
+    
+    /**
+     * Test method for {@link net.sci.array.binary.RunLengthBinaryArray2D#dilation( net.sci.array.binary.RunLengthBinaryArray2D, net.sci.array.binary.RunLengthBinaryArray2D, int[])}.
+     */
+    @Test
+    public final void testDilation_twoSquares_Square3x3()
+    {
+        BufferedBinaryArray2D array = new BufferedBinaryArray2D(12, 8);
+        
+        // a ring-like structure
+        fillRect(array, 2, 3, 2, 3, true);
+        fillRect(array, 8, 9, 2, 3, true);
+        
+        // create a square-shaped structuring element
+        BufferedBinaryArray2D strel = new BufferedBinaryArray2D(3, 3);
+        strel.fill(new Binary(true));
+        
+        RunLengthBinaryArray2D array2 = RunLengthBinaryArray2D.convert(array);
+        RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel);
+        
+        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.dilation(array2, strel2, new int[] {1, 1});
+        
+        Strel2D strel2d = new SquareStrel(3);
+        BinaryArray2D expected = BinaryArray2D.wrap(BinaryArray.wrap(strel2d.dilation(array)));
+        
+        for (int y = 0; y < array.size(1); y++)
+        {
+            for (int x = 0; x < array.size(0); x++)
+            {
+                assertTrue(String.format("x=%d, y=%d", x, y), res.getBoolean(x, y) == expected.getBoolean(x, y));
+            }
+        }
+    }
+    
 
     /**
      * Test method for {@link net.sci.array.binary.RunLengthBinaryArray2D#dilation( net.sci.array.binary.RunLengthBinaryArray2D, net.sci.array.binary.RunLengthBinaryArray2D, int[])}.
      */
     @Test
-    public final void testDilation()
+    public final void testDilation_basicShapes_Cross3x3()
     {
-        BufferedBinaryArray2D array = new BufferedBinaryArray2D(12, 12);
+        RunLengthBinaryArray2D array = new RunLengthBinaryArray2D(12, 12);
         // an isolated pixel
         array.setBoolean(2, 2, true);
         
@@ -60,17 +167,14 @@ public class RunLengthBinaryArray2DTest
         array.setBoolean(5, 9, true);
         
         // create a cross-shaped structuring element
-        BufferedBinaryArray2D strel = new BufferedBinaryArray2D(3, 3);
+        RunLengthBinaryArray2D strel = new RunLengthBinaryArray2D(3, 3);
         strel.setBoolean(1, 0, true);
         strel.setBoolean(0, 1, true);
         strel.setBoolean(1, 1, true);
         strel.setBoolean(2, 1, true);
         strel.setBoolean(1, 2, true);
         
-        RunLengthBinaryArray2D array2 = RunLengthBinaryArray2D.convert(array);
-        RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel);
-        
-        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.dilation(array2, strel2, new int[] {1, 1});
+        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.dilation(array, strel, new int[] {1, 1});
         
         Strel2D strel2d = new Cross3x3Strel();
         BinaryArray2D expected = BinaryArray2D.wrap(BinaryArray.wrap(strel2d.dilation(array)));
@@ -90,24 +194,21 @@ public class RunLengthBinaryArray2DTest
     @Test
     public final void testErosion_cross()
     {
-        BufferedBinaryArray2D array = new BufferedBinaryArray2D(12, 12);
+        RunLengthBinaryArray2D array = new RunLengthBinaryArray2D(12, 12);
         
         // a thick ring-like structure
         fillRect(array, 1, 9, 1, 9, true);
         array.setBoolean(5, 5, false);
         
         // create a cross-shaped structuring element
-        BufferedBinaryArray2D strel = new BufferedBinaryArray2D(3, 3);
+        RunLengthBinaryArray2D strel = new RunLengthBinaryArray2D(3, 3);
         strel.setBoolean(1, 0, true);
         strel.setBoolean(0, 1, true);
         strel.setBoolean(1, 1, true);
         strel.setBoolean(2, 1, true);
         strel.setBoolean(1, 2, true);
         
-        RunLengthBinaryArray2D array2 = RunLengthBinaryArray2D.convert(array);
-        RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel);
-        
-        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.erosion(array2, strel2, new int[] {1, 1});
+        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.erosion(array, strel, new int[] {1, 1});
         
         Strel2D strel2d = new Cross3x3Strel();
         BinaryArray2D expected = BinaryArray2D.wrap(BinaryArray.wrap(strel2d.erosion(array)));
@@ -127,20 +228,17 @@ public class RunLengthBinaryArray2DTest
     @Test
     public final void testErosion_square5x5()
     {
-        BufferedBinaryArray2D array = new BufferedBinaryArray2D(14, 14);
+        RunLengthBinaryArray2D array = new RunLengthBinaryArray2D(14, 14);
         
         // a thick ring-like structure
         fillRect(array, 1, 12, 1, 12, true);
         fillRect(array, 6, 8, 7, 7, false);
         
         // create a cross-shaped structuring element
-        BufferedBinaryArray2D strel = new BufferedBinaryArray2D(5, 5);
+        RunLengthBinaryArray2D strel = new RunLengthBinaryArray2D(5, 5);
         strel.fill(Binary.TRUE);
         
-        RunLengthBinaryArray2D array2 = RunLengthBinaryArray2D.convert(array);
-        RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel);
-        
-        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.erosion(array2, strel2, new int[] {2, 2});
+        RunLengthBinaryArray2D res = RunLengthBinaryArray2D.erosion(array, strel, new int[] {2, 2});
         
         Strel2D strel2d = Strel2D.Shape.SQUARE.fromDiameter(5);
         BinaryArray2D expected = BinaryArray2D.wrap(BinaryArray.wrap(strel2d.erosion(array)));
@@ -190,54 +288,5 @@ public class RunLengthBinaryArray2DTest
         }
         
         assertEquals(25, count);
-    }
-
-    public final static void main(String... args)
-    {
-        RunLengthBinaryArray2D array = new RunLengthBinaryArray2D(8, 4);
-        
-        array.setBoolean(2, 1, true);
-        System.out.println("init:");
-        array.print(System.out);
-        
-        array.setBoolean(3, 1, true);
-        System.out.println("add after:");
-        array.print(System.out);
-        
-        array.setBoolean(1, 1, true);
-        System.out.println("add before:");
-        array.print(System.out);
-        
-        array.setBoolean(5, 1, true);
-        System.out.println("add further:");
-        array.print(System.out);
-        
-        array.setBoolean(4, 1, true);
-        System.out.println("add between:");
-        array.print(System.out);
-        
-        System.out.println("number of runs: " + array.rows.get(1).runs.size());
-        
-        
-        
-        array.setBoolean(5, 1, false);
-        System.out.println("remove at the end:");
-        array.print(System.out);
-        
-        array.setBoolean(1, 1, false);
-        System.out.println("remove at start:");
-        array.print(System.out);
-        
-        array.setBoolean(3, 1, false);
-        System.out.println("remove in between:");
-        array.print(System.out);
-        
-        System.out.println("number of runs: " + array.rows.get(1).runs.size());
-
-        array.setBoolean(2, 1, false);
-        System.out.println("remove single run:");
-        array.print(System.out);
-        
-        System.out.println("number of runs: " + array.rows.get(1).runs.size());
     }
 }

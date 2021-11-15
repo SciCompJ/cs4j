@@ -194,12 +194,12 @@ public class BinaryRow
             int newLeft = rip.run1.left;
             int newRight = rip.run1.right;
             
+            // process next run 
+            rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
+            
             // update right value of new run, and add it to list of runs
             newRight = rip.findRightExtremityOfUnion(newRight);
             newRuns.add(new Run(newLeft, newRight));
-            
-            // process next run 
-            rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
         }
         
         // create the new row from list of runs
@@ -544,6 +544,26 @@ public class BinaryRow
         }
         return row;
     }
+    
+    @Override
+    public String toString()
+    {
+        StringBuffer sb = new StringBuffer();
+        sb.append(String.format("BinaryRow with %d run%s: ", runs.size(), runs.size()!=1 ? "s" : ""));
+        Iterator<Run> iter = runs.iterator();
+        if (iter.hasNext())
+        {
+            sb.append("{");
+            sb.append(iter.next().toString());
+            while(iter.hasNext())
+            {
+                sb.append(", ");
+                sb.append(iter.next().toString());
+            }
+            sb.append("}");
+        }
+        return sb.toString();
+    }
 
     /**
      * Keep references to both iterators, as well as references to current runs in
@@ -575,27 +595,43 @@ public class BinaryRow
             }
         }
         
+        /**
+         * Iterates over the runs until we find the right extremity of the
+         * current union of runs, and returns the right extremity if the union.
+         * 
+         * Removes all the runs (in each row) whose right extremity is before or
+         * equal to the returned value.
+         * 
+         * @param newRight
+         *            the initial value for finding right extremity of current
+         *            union
+         * @return the position of the right extremity of the union
+         */
         public int findRightExtremityOfUnion(int newRight)
         {
             // process the loop until right extremity is found
             while (true)
             {
                 // identify the next run in row2 with a right extremity greater than current "newRight" value
-                findNextRunInRun2WithRightExtremityGreaterThanValue(newRight);
-
-                // case of no more run in row2 with extremity after current run in row1 
+                discardAllRunsInRuns2BeforeRightValue(newRight);
+                
+                // if there is no more run in second row, then the current right
+                // is the one from current run
                 if (this.run2 == null)
                 {
                     return newRight;
                 }
 
-                // if we have found the current extremity, create new run and iterate 
+                // if the next run in second row starts *after* the end of
+                // current run (with at least one pixel in between), then we
+                // need to stop iteration to create a new run.
                 if (this.run2.left > newRight + 1)
                 {
                     return newRight;
                 }
-
-                // new extremity in run2
+                
+                // run2 ends after run1. Need to update right extremity and
+                // check other runs in first row.
                 newRight = this.run2.right;
                 
                 // as run2 is the new current run, need to swap
@@ -606,21 +642,20 @@ public class BinaryRow
             }
         }
 
-        private Run findNextRunInRun2WithRightExtremityGreaterThanValue(int value)
+        private void discardAllRunsInRuns2BeforeRightValue(int value)
         {
             while (true)
             {
                 if (this.run2 == null)
                 {
-                    return null;
+                    return;
                 }
                 if (this.run2.right > value)
                 {
-                    return this.run2;
+                    return;
                 }
                 this.run2 = this.runs2.hasNext() ? this.runs2.next() : null;
             }
-            
         }
 
         public void swap()
