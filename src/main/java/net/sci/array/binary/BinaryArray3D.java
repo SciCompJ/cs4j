@@ -416,7 +416,9 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         @Override
         public BinaryArray2D next()
         {
-            return new SliceView(sliceIndex++);
+            // default implementation in BinaryArray3D returns an instance of 
+            // BinaryArray3D.SliceView 
+            return BinaryArray3D.this.slice(sliceIndex++);
         }
     }
 

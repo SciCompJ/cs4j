@@ -67,11 +67,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
         
         // prepare strel array: shift each row
-        RunLengthBinaryArray2D strel2 = new RunLengthBinaryArray2D(strel.size(0), strel.size(1));
-        for (Map.Entry<Integer, BinaryRow> entry : strel.rows.entrySet())
-        {
-            strel2.setRow(entry.getKey(), entry.getValue().shiftToLeft(strelOffset[0]));
-        }
+        RunLengthBinaryArray2D strel2 = shiftToLeft(strel, strelOffset[0]);
         
         // iterate over rows of result array
         for (int yres = 0; yres < sizeY; yres++)
@@ -122,11 +118,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
         
         // prepare strel array: shift each row
-        RunLengthBinaryArray2D strel2 = new RunLengthBinaryArray2D(strel.size(0), strel.size(1));
-        for (Map.Entry<Integer, BinaryRow> entry : strel.rows.entrySet())
-        {
-            strel2.setRow(entry.getKey(), entry.getValue().shiftToLeft(strelOffset[0]));
-        }
+        RunLengthBinaryArray2D strel2 = shiftToLeft(strel, strelOffset[0]);
         
         // iterate over rows of result array
         for (int yres = 0; yres < sizeY; yres++)
@@ -145,33 +137,54 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
                     continue;
                 }
                 
-                // if any of the rows is empty, result of dilation is empty
-                BinaryRow row;
+                // if input row is empty, result of row erosion is empty, and
+                // hence the result of intersection with previous result
                 if (array.isEmptyRow(y2))
                 {
-                    row = new BinaryRow();
+                    resRow = new BinaryRow();
                 }
                 else
                 {
                     // retrieve the rows to dilate
                     BinaryRow arrayRow = array.getRow(y2);
                     BinaryRow strelRow = strel2.getRow(yStrel);
-
-                    row = arrayRow.erosion(strelRow);
+                    BinaryRow row = strelRow != null ? arrayRow.erosion(strelRow) : arrayRow;
+                    
+                    // combine with previous result
+                    resRow = resRow.intersection(row);
                 }
-                resRow = resRow.intersection(row);
             }
             
             if (!resRow.isEmpty())
             {
-                res.setRow(yres, resRow.crop(0, sizeY - 1));
+                res.setRow(yres, resRow.crop(0, sizeX - 1));
             }
         }
         
         return res;
     }
-
-
+    
+    /**
+     * Shifts all the runs within the input array by the given amount to the
+     * left.
+     * 
+     * @param array
+     *            the array to shift.
+     * @param dx
+     *            the shift amount (positive to the left, negative to the right)
+     * @return the new shifted array
+     */
+    private final static RunLengthBinaryArray2D shiftToLeft(RunLengthBinaryArray2D array, int dx)
+    {
+        RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(array.size(0), array.size(1));
+        for (Map.Entry<Integer, BinaryRow> entry : array.rows.entrySet())
+        {
+           res.rows.put(entry.getKey(), entry.getValue().shiftToLeft(dx));
+        }
+        return res;
+    }
+    
+    
 	// =============================================================
 	// Class fields
     
@@ -181,18 +194,29 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     HashMap<Integer, BinaryRow> rows;
 
 	
-	// =============================================================
-	// Constructors
+    // =============================================================
+    // Constructors
 
-	/**
-	 * @param size0 the size of the array in the first dimension
-	 * @param size1 the size of the array in the second dimension
-	 */
-	public RunLengthBinaryArray2D(int size0, int size1)
-	{
-		super(size0, size1);
-		this.rows = new HashMap<>();
-	}
+    /**
+     * @param size0 the size of the array in the first dimension
+     * @param size1 the size of the array in the second dimension
+     */
+    public RunLengthBinaryArray2D(int size0, int size1)
+    {
+        super(size0, size1);
+        this.rows = new HashMap<>();
+    }
+
+    /**
+     * @param size0 the size of the array in the first dimension
+     * @param size1 the size of the array in the second dimension
+     * @param rows the indexed rows populating the new array 
+     */
+    public RunLengthBinaryArray2D(int size0, int size1, HashMap<Integer, BinaryRow> rows)
+    {
+        super(size0, size1);
+        this.rows = rows;
+    }
 
 
 	// =============================================================
