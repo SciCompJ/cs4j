@@ -4,6 +4,8 @@
 package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 
@@ -33,16 +35,16 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
     }
 
     @Override
-    public int[][][] getMask()
+    public BinaryArray3D getMask()
     {
         int[] size = strel2d.size();
-        int[][] mask2d = strel2d.getMask();
-        int[][][] mask = new int[1][size[1]][size[0]];
+        BinaryArray2D mask2d = strel2d.getMask();
+        BinaryArray3D mask = BinaryArray3D.create(size[0], size[1], 1);
         for (int y = 0; y < size[1]; y++)
         {
             for (int x = 0; x < size[0]; x++)
             {
-                mask[0][y][x] = mask2d[y][x];  
+                mask.setBoolean(x, y, 0, mask2d.getBoolean(x,y));
             }
         }
         return mask;

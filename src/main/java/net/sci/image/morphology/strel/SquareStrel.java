@@ -6,6 +6,8 @@ package net.sci.image.morphology.strel;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.array.binary.BinaryArray2D;
+
 /**
  * A square structuring element, obtained by decomposition into horizontal and
  * vertical linear structuring elements with the same size.
@@ -99,7 +101,7 @@ public class SquareStrel extends AbstractSeparableStrel2D
     /*
      * (non-Javadoc)
      * 
-     * @see ijt.morphology.SeparableStrel#separate()
+     * @see net.sci.image.morphology.SeparableStrel#separate()
      */
     @Override
     public Collection<InPlaceStrel2D> decompose()
@@ -113,17 +115,17 @@ public class SquareStrel extends AbstractSeparableStrel2D
     /*
      * (non-Javadoc)
      * 
-     * @see ijt.morphology.Strel#getMask()
+     * @see net.sci.image.morphology.Strel#getMask()
      */
     @Override
-    public int[][] getMask()
+    public BinaryArray2D getMask()
     {
-        int[][] mask = new int[this.size][this.size];
+        BinaryArray2D mask = BinaryArray2D.create(this.size, this.size);
         for (int y = 0; y < this.size; y++)
         {
             for (int x = 0; x < this.size; x++)
             {
-                mask[y][x] = 255;
+                mask.setBoolean(x, y, true);
             }
         }
         
@@ -133,7 +135,7 @@ public class SquareStrel extends AbstractSeparableStrel2D
     /*
      * (non-Javadoc)
      * 
-     * @see ijt.morphology.Strel#getOffset()
+     * @see net.sci.image.morphology.Strel#getOffset()
      */
     @Override
     public int[] getOffset()
@@ -144,7 +146,7 @@ public class SquareStrel extends AbstractSeparableStrel2D
     /*
      * (non-Javadoc)
      * 
-     * @see ijt.morphology.Strel#getShifts()
+     * @see net.sci.image.morphology.Strel#getShifts()
      */
     @Override
     public int[][] getShifts()
@@ -168,7 +170,7 @@ public class SquareStrel extends AbstractSeparableStrel2D
     /*
      * (non-Javadoc)
      * 
-     * @see ijt.morphology.Strel#getSize()
+     * @see net.sci.image.morphology.Strel#getSize()
      */
     @Override
     public int[] size()
@@ -179,7 +181,7 @@ public class SquareStrel extends AbstractSeparableStrel2D
     /*
      * (non-Javadoc)
      * 
-     * @see ijt.morphology.Strel#reverse()
+     * @see net.sci.image.morphology.Strel#reverse()
      */
     @Override
     public SquareStrel reverse()

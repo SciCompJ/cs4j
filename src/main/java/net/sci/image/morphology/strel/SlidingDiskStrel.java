@@ -4,6 +4,7 @@
 package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 
@@ -490,7 +491,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
      * @see net.sci.image.morphology.Strel2D#getMask()
      */
     @Override
-    public int[][] getMask()
+    public BinaryArray2D getMask()
     {
         // convert to "real" radius by taking into account central pixel
         double r2 = this.radius + 0.5;
@@ -499,14 +500,14 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
         int diam = 2 * this.intRadius + 1;
 
         // fill the mask
-        int[][] mask = new int[diam][diam];
+        BinaryArray2D mask = BinaryArray2D.create(diam, diam);
         for (int y = 0; y < diam; y++)
         {
             for (int x = 0; x < diam; x++)
             {
                 if (Math.hypot(x - this.intRadius, y - this.intRadius) <= r2)
                 {
-                    mask[y][x] = 255;
+                    mask.setBoolean(x, y, true);
                 }
             }
         }

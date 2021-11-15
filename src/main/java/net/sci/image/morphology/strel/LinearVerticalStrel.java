@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
@@ -336,12 +337,12 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
 	 * @see net.sci.image.morphology.Strel#getMask()
 	 */
 	@Override
-	public int[][] getMask()
+	public BinaryArray2D getMask()
 	{
-		int[][] mask = new int[this.size][1];
+	    BinaryArray2D mask = BinaryArray2D.create(1, this.size);
 		for (int i = 0; i < this.size; i++)
 		{
-			mask[i][0] = 255;
+		    mask.setBoolean(0, i, true);
 		}
 
 		return mask;
@@ -355,7 +356,7 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
 	@Override
 	public int[] getOffset()
 	{
-		return new int[] { this.offset, this.offset };
+		return new int[] { 0, this.offset };
 	}
 
 	/*

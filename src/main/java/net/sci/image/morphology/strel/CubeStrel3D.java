@@ -6,6 +6,9 @@ package net.sci.image.morphology.strel;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.array.binary.Binary;
+import net.sci.array.binary.BinaryArray3D;
+
 /**
  * A cubic structuring element, obtained by decomposition into linear
  * structuring elements with the same size along each dimension.
@@ -136,19 +139,10 @@ public class CubeStrel3D extends AbstractSeparableStrel3D
      * @see net.sci.image.morphology.Strel3D#getMask3D()
      */
     @Override
-    public int[][][] getMask()
+    public BinaryArray3D getMask()
     {
-        int[][][] mask = new int[this.size][this.size][this.size];
-        for (int z = 0; z < this.size; z++)
-        {
-            for (int y = 0; y < this.size; y++)
-            {
-                for (int x = 0; x < this.size; x++)
-                {
-                    mask[z][y][x] = 255;
-                }
-            }
-        }
+        BinaryArray3D mask = BinaryArray3D.create(this.size, this.size, this.size);
+        mask.fill(Binary.TRUE);
         return mask;
     }
     

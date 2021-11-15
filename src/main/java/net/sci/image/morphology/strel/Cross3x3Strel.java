@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
@@ -20,7 +21,7 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getSize()
+	 * @see net.sci.image.morphology.Strel#getSize()
 	 */
 	@Override
 	public int[] size()
@@ -31,22 +32,24 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getMask()
+	 * @see net.sci.image.morphology.Strel#getMask()
 	 */
 	@Override
-	public int[][] getMask()
+	public BinaryArray2D getMask()
 	{
-		int[][] mask = new int[3][];
-		mask[0] = new int[] { 0, 255, 0 };
-		mask[1] = new int[] { 255, 255, 255 };
-		mask[2] = new int[] { 0, 255, 0 };
+	    BinaryArray2D mask = BinaryArray2D.create(3, 3);
+        mask.setBoolean(0, 1, true);
+        mask.setBoolean(1, 0, true);
+        mask.setBoolean(1, 1, true);
+        mask.setBoolean(1, 2, true);
+        mask.setBoolean(2, 1, true);
 		return mask;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getOffset()
+	 * @see net.sci.image.morphology.Strel#getOffset()
 	 */
 	@Override
 	public int[] getOffset()
@@ -57,7 +60,7 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getShifts()
+	 * @see net.sci.image.morphology.Strel#getShifts()
 	 */
 	@Override
 	public int[][] getShifts()
@@ -244,7 +247,7 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.InPlaceStrel#inPlaceErosion(ij.process.Array2D<?>)
+	 * @see net.sci.image.morphology.strel.InPlaceStrel#inPlaceErosion(ij.process.Array2D<?>)
 	 */
 	@Override
 	public void inPlaceErosion(ScalarArray2D<?> image)

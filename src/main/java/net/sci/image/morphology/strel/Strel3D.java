@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.morphology.Strel;
 
@@ -273,13 +274,13 @@ public interface Strel3D extends Strel
 	public int[] size();
 
 	/**
-	 * Returns the structuring element as a mask. Each value is either 0 or 255.
-	 * The first index corresponds to the z position, the second index to
-	 * the y direction, and the third one to the x position.
+	 * Returns the structuring element as a binary array. The position of
+     * the reference element within the mask can be obtained by the getOffset()
+     * method.
 	 * 
 	 * @return the mask of the structuring element
 	 */
-	public int[][][] getMask();
+	public BinaryArray3D getMask();
 
 	/**
 	 * Returns the offset in the mask for each direction. 

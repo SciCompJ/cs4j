@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 
@@ -40,10 +41,10 @@ public class SquareStrelTest
     public void testGetMask()
     {
         Strel2D strel = new SquareStrel(5);
-        int[][] mask = strel.getMask();
+        BinaryArray2D mask = strel.getMask();
         
-        assertEquals(mask.length, 5);
-        assertEquals(mask[1].length, 5);
+        assertEquals(mask.size(0), 5);
+        assertEquals(mask.size(1), 5);
     }
     
     @Test

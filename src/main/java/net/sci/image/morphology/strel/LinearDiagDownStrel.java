@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
@@ -106,7 +107,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.InPlaceStrel#inPlaceDilation(ij.process.Array2D<?>)
+	 * @see net.sci.image.morphology.InPlaceStrel#inPlaceDilation(ij.process.Array2D<?>)
 	 */
 	@Override
 	public void inPlaceDilation(ScalarArray2D<?> image)
@@ -266,7 +267,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.InPlaceStrel#inPlaceErosion(ij.process.Array2D<?>)
+	 * @see net.sci.image.morphology.InPlaceStrel#inPlaceErosion(ij.process.Array2D<?>)
 	 */
 	@Override
 	public void inPlaceErosion(ScalarArray2D<?> image)
@@ -432,15 +433,15 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getMask()
+	 * @see net.sci.image.morphology.Strel#getMask()
 	 */
 	@Override
-	public int[][] getMask()
+	public BinaryArray2D getMask()
 	{
-		int[][] mask = new int[this.size][this.size];
-		for (int i = 0; i < this.size; i++)
+	    BinaryArray2D mask = BinaryArray2D.create(this.size,  this.size);
+	    for (int i = 0; i < this.size; i++)
 		{
-			mask[i][i] = 255;
+		    mask.setBoolean(i, i, true);
 		}
 
 		return mask;
@@ -449,7 +450,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getOffset()
+	 * @see net.sci.image.morphology.Strel#getOffset()
 	 */
 	@Override
 	public int[] getOffset()
@@ -460,7 +461,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getShifts()
+	 * @see net.sci.image.morphology.Strel#getShifts()
 	 */
 	@Override
 	public int[][] getShifts()

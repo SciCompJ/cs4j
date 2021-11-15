@@ -6,6 +6,9 @@ package net.sci.image.morphology.strel;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.array.binary.Binary;
+import net.sci.array.binary.BinaryArray2D;
+
 /**
  * Structuring element representing a diamond of a given diameter.
  * 
@@ -112,7 +115,7 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getSize()
+	 * @see net.sci.image.morphology.Strel#getSize()
 	 */
 	@Override
 	public int[] size()
@@ -123,32 +126,26 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getMask()
+	 * @see net.sci.image.morphology.Strel#getMask()
 	 */
 	@Override
-	public int[][] getMask()
+	public BinaryArray2D getMask()
 	{
-		int[][] mask = new int[this.size][this.size];
-
+	    BinaryArray2D mask = BinaryArray2D.create(this.size, this.size);
+	    
 		// Fill everything with 255
-		for (int i = 0; i < this.size; i++)
-		{
-			for (int j = 0; j < this.size; j++)
-			{
-				mask[i][j] = 255;
-			}
-		}
-
+	    mask.fill(Binary.TRUE);
+	    
 		// Put zeros at the corners
 		int radius = (this.size - 1) / 2;
 		for (int i = 0; i < radius; i++)
 		{
 			for (int j = 0; j < radius - i; j++)
 			{
-				mask[i][j] = 0;
-				mask[i][this.size - 1 - j] = 0;
-				mask[this.size - 1 - i][j] = 0;
-				mask[this.size - 1 - i][this.size - 1 - j] = 0;
+                mask.setBoolean(i, j, false);
+                mask.setBoolean(i, this.size - 1 - j, false);
+                mask.setBoolean(this.size - 1 - i, j, false);
+                mask.setBoolean(this.size - 1 - i, this.size - 1 - j, false);
 			}
 		}
 
@@ -159,7 +156,7 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getOffset()
+	 * @see net.sci.image.morphology.Strel#getOffset()
 	 */
 	@Override
 	public int[] getOffset()
@@ -170,7 +167,7 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getShifts()
+	 * @see net.sci.image.morphology.Strel#getShifts()
 	 */
 	@Override
 	public int[][] getShifts()
@@ -205,7 +202,7 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.SeparableStrel#reverse()
+	 * @see net.sci.image.morphology.SeparableStrel#reverse()
 	 */
 	@Override
 	public SeparableStrel2D reverse()
@@ -216,7 +213,7 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.SeparableStrel#decompose()
+	 * @see net.sci.image.morphology.SeparableStrel#decompose()
 	 */
 	@Override
 	public Collection<InPlaceStrel2D> decompose()

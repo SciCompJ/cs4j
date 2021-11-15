@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 
 /**
@@ -210,11 +211,12 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
      * @see net.sci.image.morphology.Strel3D#getMask3D()
      */
     @Override
-    public int[][][] getMask()
+    public BinaryArray3D getMask()
     {
-        int[][][] mask = new int[this.size][1][1];
-        for (int i = 0; i < this.size; i++) {
-            mask[i][0][0] = 255;
+        BinaryArray3D mask = BinaryArray3D.create(1, 1, this.size);
+        for (int i = 0; i < this.size; i++) 
+        {
+            mask.setBoolean(0, 0, i, true);
         }
         
         return mask;

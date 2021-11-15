@@ -4,6 +4,7 @@
 package net.sci.image.morphology.strel;
 
 import net.sci.array.Array2D;
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.morphology.Strel;
 
@@ -302,13 +303,13 @@ public interface Strel2D extends Strel
 	public int[] size();
 
 	/**
-	 * Returns the structuring element as a mask. Each value is either 0 or 255.
-	 * The first index corresponds to the y position, and the second index to
-	 * the x direction.
-	 * 
-	 * @return the mask of the structuring element
-	 */
-	public int[][] getMask();
+     * Returns the structuring element mask as a binary array. The position of
+     * the reference element within the mask can be obtained by the getOffset()
+     * method.
+     * 
+     * @return the mask of the structuring element
+     */
+	public BinaryArray2D getMask();
 
 	/**
 	 * Returns the offset in the mask. The first value corresponds to the shift

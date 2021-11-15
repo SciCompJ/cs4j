@@ -6,6 +6,8 @@ package net.sci.image.morphology.strel;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.array.binary.BinaryArray2D;
+
 /**
  * An Octagonal structuring element, obtained by decomposition into horizontal,
  * vertical, and diagonal linear structuring elements.
@@ -211,20 +213,22 @@ public class OctagonStrel extends AbstractSeparableStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getMask()
+	 * @see net.sci.image.morphology.Strel2D#getMask()
 	 */
 	@Override
-	public int[][] getMask()
+	public BinaryArray2D getMask()
 	{
 		// Create array
-		int[][] mask = new int[this.size][this.size];
+	    BinaryArray2D mask = BinaryArray2D.create(this.size, this.size);
+//		int[][] mask = new int[this.size][this.size];
 
 		// Process the center part: the whole line is set to 255
 		for (int y = this.diagSize; y < this.size - this.diagSize; y++)
 		{
 			for (int x = 0; x < this.size; x++)
 			{
-				mask[y][x] = 255;
+			    mask.setBoolean(x, y, true);
+//				mask[y][x] = 255;
 			}
 		}
 
@@ -233,7 +237,8 @@ public class OctagonStrel extends AbstractSeparableStrel2D
 		{
 			for (int y = 0; y < this.size; y++)
 			{
-				mask[y][x] = 255;
+                mask.setBoolean(x, y, true);
+//				mask[y][x] = 255;
 			}
 		}
 
@@ -249,7 +254,7 @@ public class OctagonStrel extends AbstractSeparableStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getShifts()
+	 * @see net.sci.image.morphology.Strel#getShifts()
 	 */
 	@Override
 	public int[][] getShifts()
@@ -271,9 +276,20 @@ public class OctagonStrel extends AbstractSeparableStrel2D
 	}
 
 	/*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.image.morphology.Strel#getOffset()
+     */
+    @Override
+    public int[] getOffset()
+    {
+    	return new int[] { this.offset, this.offset };
+    }
+
+    /*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getSize()
+	 * @see net.sci.image.morphology.Strel#getSize()
 	 */
 	@Override
 	public int[] size()
@@ -284,18 +300,7 @@ public class OctagonStrel extends AbstractSeparableStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getOffset()
-	 */
-	@Override
-	public int[] getOffset()
-	{
-		return new int[] { this.offset, this.offset };
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ijt.morphology.Strel#reverse()
+	 * @see net.sci.image.morphology.Strel#reverse()
 	 */
 	@Override
 	public OctagonStrel reverse()

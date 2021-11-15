@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
@@ -104,7 +105,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.InPlaceStrel#inPlaceDilation(ij.process.ScalarArray2D<?>)
+	 * @see net.sci.image.morphology.InPlaceStrel#inPlaceDilation(ij.process.ScalarArray2D<?>)
 	 */
 	@Override
 	public void inPlaceDilation(ScalarArray2D<?> image)
@@ -260,7 +261,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.InPlaceStrel#inPlaceErosion(ij.process.ScalarArray2D<?>)
+	 * @see net.sci.image.morphology.InPlaceStrel#inPlaceErosion(ij.process.ScalarArray2D<?>)
 	 */
 	@Override
 	public void inPlaceErosion(ScalarArray2D<?> image)
@@ -416,15 +417,15 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getMask()
+	 * @see net.sci.image.morphology.Strel#getMask()
 	 */
 	@Override
-	public int[][] getMask()
+	public BinaryArray2D getMask()
 	{
-		int[][] mask = new int[this.size][this.size];
+	    BinaryArray2D mask = BinaryArray2D.create(this.size, this.size);
 		for (int i = 0; i < this.size; i++)
 		{
-			mask[i][i] = 255;
+		    mask.setBoolean(i, this.size - 1 - i, true);
 		}
 
 		return mask;
@@ -433,7 +434,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getOffset()
+	 * @see net.sci.image.morphology.Strel#getOffset()
 	 */
 	@Override
 	public int[] getOffset()
@@ -444,7 +445,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ijt.morphology.Strel#getShifts()
+	 * @see net.sci.image.morphology.Strel#getShifts()
 	 */
 	@Override
 	public int[][] getShifts()
@@ -452,7 +453,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 		int[][] shifts = new int[this.size][2];
 		for (int i = 0; i < this.size; i++)
 		{
-			shifts[i][0] = i - this.offset;
+			shifts[i][0] = this.size - 1 - i + this.offset;
 			shifts[i][1] = i - this.offset;
 		}
 		return shifts;

@@ -4,6 +4,7 @@
 package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 
 /**
@@ -217,7 +218,7 @@ public class NaiveBallStrel3D extends AlgoStub implements Strel3D
      * @see net.sci.image.morphology.Strel3D#getMask()
      */
     @Override
-    public int[][][] getMask()
+    public BinaryArray3D getMask()
     {
         // convert to "real" radius by taking into account central pixel
         double r2 = this.radius + 0.5;
@@ -226,7 +227,7 @@ public class NaiveBallStrel3D extends AlgoStub implements Strel3D
         int diam = 2 * this.intRadius + 1;
 
         // fill the mask
-        int[][][] mask = new int[diam][diam][diam];
+        BinaryArray3D mask = BinaryArray3D.create(diam, diam, diam);
         for (int z = 0; z < diam; z++)
         {
             for (int y = 0; y < diam; y++)
@@ -236,7 +237,7 @@ public class NaiveBallStrel3D extends AlgoStub implements Strel3D
                 {
                     if (Math.hypot(x - this.intRadius, tmp) <= r2)
                     {
-                        mask[z][y][x] = 255;
+                        mask.setBoolean(x, y, z, true);
                     }
                 }
             }

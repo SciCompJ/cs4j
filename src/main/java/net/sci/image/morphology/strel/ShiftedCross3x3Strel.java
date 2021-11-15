@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
@@ -99,14 +100,16 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getMask()
 		 */
 		@Override
-		public int[][] getMask()
+		public BinaryArray2D getMask()
 		{
-			int[][] mask = new int[3][];
-			mask[0] = new int[] { 0, 255, 0 };
-			mask[1] = new int[] { 255, 255, 255 };
-			mask[2] = new int[] { 0, 255, 0 };
-			return mask;
-		}
+	        BinaryArray2D mask = BinaryArray2D.create(3, 3);
+	        mask.setBoolean(0, 1, true);
+	        mask.setBoolean(1, 0, true);
+	        mask.setBoolean(1, 1, true);
+	        mask.setBoolean(1, 2, true);
+	        mask.setBoolean(2, 1, true);
+	        return mask;
+	    }
 
 		/*
 		 * (non-Javadoc)
@@ -449,13 +452,15 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getMask()
 		 */
 		@Override
-		public int[][] getMask()
+		public BinaryArray2D getMask()
 		{
-			int[][] mask = new int[3][];
-			mask[0] = new int[] { 0, 255, 0 };
-			mask[1] = new int[] { 255, 255, 255 };
-			mask[2] = new int[] { 0, 255, 0 };
-			return mask;
+	        BinaryArray2D mask = BinaryArray2D.create(3, 3);
+	        mask.setBoolean(0, 1, true);
+	        mask.setBoolean(1, 0, true);
+	        mask.setBoolean(1, 1, true);
+	        mask.setBoolean(1, 2, true);
+	        mask.setBoolean(2, 1, true);
+	        return mask;
 		}
 
 		/*
