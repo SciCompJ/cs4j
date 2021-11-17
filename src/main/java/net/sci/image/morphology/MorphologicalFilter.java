@@ -35,7 +35,7 @@ import net.sci.image.morphology.filter.WhiteTopHat;
  * 
  * @author dlegland
  */
-public abstract class MorphologicalFilter
+public class MorphologicalFilter
 {
     /**
      * A pre-defined set of basis morphological operations, that can be easily 
