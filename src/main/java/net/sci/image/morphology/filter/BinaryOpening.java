@@ -3,6 +3,8 @@
  */
 package net.sci.image.morphology.filter;
 
+import net.sci.algo.AlgoEvent;
+import net.sci.algo.AlgoListener;
 import net.sci.array.binary.BinaryArray;
 import net.sci.image.morphology.Strel;
 
@@ -20,7 +22,7 @@ import net.sci.image.morphology.Strel;
  * @author dlegland
  *
  */
-public class BinaryOpening extends BinaryMorphologicalFilterAlgo
+public class BinaryOpening extends BinaryMorphologicalFilterAlgo implements AlgoListener
 {
     public BinaryOpening(Strel strel)
     {
@@ -32,12 +34,26 @@ public class BinaryOpening extends BinaryMorphologicalFilterAlgo
     {
         this.fireStatusChanged(this, "Compute Erosion");
         BinaryErosion erosion = new BinaryErosion(strel);
+        erosion.addAlgoListener(this);
         BinaryArray resEro = erosion.processBinary(array);
         
         this.fireStatusChanged(this, "Compute Dilation");
         BinaryDilation dilation = new BinaryDilation(strel.reverse());
+        dilation.addAlgoListener(this);
         BinaryArray res = dilation.processBinary(resEro);
         
         return res;
+    }
+
+    @Override
+    public void algoProgressChanged(AlgoEvent evt)
+    {
+        this.fireProgressChanged(evt);
+    }
+
+    @Override
+    public void algoStatusChanged(AlgoEvent evt)
+    {
+        this.fireStatusChanged(evt);
     }
 }

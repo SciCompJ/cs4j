@@ -16,9 +16,9 @@ import net.sci.image.morphology.strel.Strel2D;
 import net.sci.image.morphology.strel.Strel3D;
 
 /**
- * Computes dilation of a binary array by using run-length encoding of the arrays.
+ * Computes dilation of a binary array.
  * 
- * Converts the input arrays when necessary.
+ * Converts the input into run-length encoded arrays when necessary.
  * 
  * @see BinaryErosion
  * @see BinaryOpening
@@ -145,6 +145,8 @@ public class BinaryDilation extends BinaryMorphologicalFilterAlgo
         // iterate over rows of result array
         for (int zres = 0; zres < sizeZ; zres++)
         {
+            fireProgressChanged(this, zres, sizeZ);
+            
             for (int yres = 0; yres < sizeY; yres++)
             {
                 // initialize empty result row
@@ -191,6 +193,8 @@ public class BinaryDilation extends BinaryMorphologicalFilterAlgo
                 }
             }
         }
+        
+        fireProgressChanged(this, 1, 1);
         
         return res;
     }

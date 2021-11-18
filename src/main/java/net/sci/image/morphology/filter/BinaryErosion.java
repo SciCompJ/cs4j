@@ -16,9 +16,9 @@ import net.sci.image.morphology.strel.Strel2D;
 import net.sci.image.morphology.strel.Strel3D;
 
 /**
- * Computes erosion of a binary array by using run-length encoding of the arrays.
+ * Computes erosion of a binary array.
  * 
- * Converts the input arrays when necessary.
+ * Converts the input into run-length encoded arrays when necessary.
  * 
  * @see BinaryDilation
  * @see BinaryOpening
@@ -60,6 +60,8 @@ public class BinaryErosion extends BinaryMorphologicalFilterAlgo
         // iterate over rows of result array
         for (int yres = 0; yres < sizeY; yres++)
         {
+            fireProgressChanged(this, yres, sizeY);
+            
             // initialize full result row
             BinaryRow resRow = new BinaryRow().complement(sizeX - 1);
             
@@ -96,6 +98,7 @@ public class BinaryErosion extends BinaryMorphologicalFilterAlgo
             }
         }
 
+        fireProgressChanged(this, 1, 1);
         return res;
     }
     
@@ -146,6 +149,8 @@ public class BinaryErosion extends BinaryMorphologicalFilterAlgo
         // iterate over rows of result array
         for (int zres = 0; zres < sizeZ; zres++)
         {
+            fireProgressChanged(this, zres, sizeZ);
+            
             for (int yres = 0; yres < sizeY; yres++)
             {
                 // initialize full result row
@@ -197,6 +202,7 @@ public class BinaryErosion extends BinaryMorphologicalFilterAlgo
             }
         }
         
+        fireProgressChanged(this, 1, 1);
         return res;
     }
     

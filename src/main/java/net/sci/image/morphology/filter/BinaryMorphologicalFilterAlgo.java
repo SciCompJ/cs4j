@@ -67,7 +67,7 @@ public abstract class BinaryMorphologicalFilterAlgo extends AlgoStub implements 
      *             if the input array is not an instance of BinaryArray
      */
     @Override
-    public <T> Array<?> process(Array<T> array)
+    public <T> BinaryArray process(Array<T> array)
     {
         if (array instanceof BinaryArray)
         {
