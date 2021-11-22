@@ -33,6 +33,9 @@ public class OffMeshWriterTest
         MeshWriter writer = new OffMeshWriter(file);
         
         writer.writeMesh(mesh);
+        
+        // cleanup
+        file.delete();
     }
 
     /**
@@ -53,5 +56,8 @@ public class OffMeshWriterTest
         Mesh3D mesh2 = reader.readMesh();
         assertEquals(mesh.vertexCount(), mesh2.vertexCount());
         assertEquals(mesh.faceCount(), mesh2.faceCount());
+
+        // cleanup
+        file.delete();
     }
 }
