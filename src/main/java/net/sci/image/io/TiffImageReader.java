@@ -235,7 +235,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         }
         
         Map<String,String> imagejTokens = parseImageJTokens(description);
-        return imagejTokens.containsKey("slices");
+        return imagejTokens.containsKey("images");
     }
 
 	/**
