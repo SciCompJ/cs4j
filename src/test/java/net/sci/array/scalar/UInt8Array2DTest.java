@@ -16,6 +16,22 @@ import net.sci.array.binary.BinaryArray2D;
 public class UInt8Array2DTest
 {
     /**
+     * Test method for {@link net.sci.array.scalar.UInt8Array2D#fillInts(BiFunction)}.
+     */
+    @Test
+    public final void testFillInts_BiFunction()
+    {
+        UInt8Array2D array = UInt8Array2D.create(5, 4);
+        
+        array.fillInts((x, y) -> x + y * 10);
+        
+        assertEquals(0, array.getInt(0, 0));
+        assertEquals(4, array.getInt(4, 0));
+        assertEquals(34, array.getInt(4, 3));
+    }
+    
+    
+    /**
      * Test method for {@link net.sci.array.Array#select(BinaryArray)}.
      */
     @Test

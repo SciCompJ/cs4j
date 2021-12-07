@@ -3,6 +3,8 @@
  */
 package net.sci.array.binary;
 
+import java.util.function.BiFunction;
+
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
 
@@ -54,8 +56,37 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	{
 		super(size0, size1);
 	}
-
 	
+	
+	// =============================================================
+    // Methods specific to BooleanArray2D
+
+    /**
+     * Initializes the content of the binary array by using the specified
+     * function of two variables.
+     * 
+     * Example:
+     * 
+     * <pre>
+     * {@code
+     *     BinaryArray2D array = BinaryArray2D.create(5, 4);
+     *     array.fillBooleans((x, y) -> (x + y * 10) > 20);
+     * }
+     * </pre>
+     * 
+     * @param fun
+     *            a function of two variables that returns a boolean. The two
+     *            input variables correspond to the x and y coordinates.
+     */
+    public void fillBooleans(BiFunction<Integer,Integer,Boolean> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setBoolean(pos, fun.apply(pos[0], pos[1]));
+        }
+    }
+    
+
 	// =============================================================
 	// New methods
 

@@ -6,6 +6,7 @@ package net.sci.array.binary;
 import net.sci.array.Array;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray3D;
+import net.sci.array.scalar.TriFunction;
 
 
 /**
@@ -46,6 +47,35 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	}
 
 	
+    // =============================================================
+    // Methods specific to BooleanArray3D
+
+    /**
+     * Initializes the content of the binary array by using the specified
+     * function of two variables.
+     * 
+     * Example:
+     * 
+     * <pre>
+     * {@code
+     *     BinaryArray3D array = BinaryArray3D.create(5, 4, 3);
+     *     array.fillBooleans((x, y, z) -> (x + y * 10 + z) > 120);
+     * }
+     * </pre>
+     * 
+     * @param fun
+     *            a function of two variables that returns a boolean. The two
+     *            input variables correspond to the x and y coordinates.
+     */
+    public void fillBooleans(TriFunction<Integer,Integer,Integer,Boolean> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setBoolean(pos, fun.apply(pos[0], pos[1], pos[2]));
+        }
+    }
+    
+    
     // =============================================================
     // New methods
 

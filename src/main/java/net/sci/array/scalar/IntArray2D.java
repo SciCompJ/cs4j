@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 import java.io.PrintStream;
 import java.util.Locale;
+import java.util.function.BiFunction;
 
 /**
  * @author dlegland
@@ -74,6 +75,30 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
 		}
 	}
 	
+    /**
+     * Initializes the content of the array by using the specified function of
+     * two variables.
+     * 
+     * Example:
+     * <pre>
+     * {@code
+     * ScalarArray2D<?> array = UInt8Array2D.create(5, 4);
+     * array.fillInts((x, y) -> x + y * 10);
+     * }
+     * </pre>
+     * 
+     * @param fun
+     *            a function of two variables that returns an integer. The two
+     *            input variables correspond to the x and y coordinates.
+     */
+    public void fillInts(BiFunction<Integer,Integer,Integer> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setInt(pos, fun.apply(pos[0], pos[1]));
+        }
+    }
+    
 
     // =============================================================
     // New methods

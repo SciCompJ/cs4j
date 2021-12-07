@@ -13,7 +13,22 @@ import org.junit.Test;
  */
 public class UInt8Array3DTest
 {
-
+    /**
+     * Test method for {@link net.sci.array.scalar.UInt8Array3D#fillInts(TriFunction)}.
+     */
+    @Test
+    public final void testFillInts_TriFunction()
+    {
+        UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
+        
+        array.fillInts((x, y, z) -> x + y * 10 + z * 100);
+        
+        assertEquals(0, array.getInt(0, 0, 0));
+        assertEquals(4, array.getInt(4, 0, 0));
+        assertEquals(34, array.getInt(4, 3, 0));
+        assertEquals(234, array.getInt(4, 3, 2));
+    }
+    
     /**
      * Test method for {@link net.sci.array.scalar.UInt8Array3D#slice(int)}.
      */

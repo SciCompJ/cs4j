@@ -18,7 +18,7 @@ public class BinaryArray2DTest
 	 * Test method for {@link net.sci.array.binary.BinaryArray2D#getBoolean(int[])}.
 	 */
 	@Test
-	public void testGetBooleanIntArray()
+	public void testGetBoolean_IntArray()
 	{
 		BinaryArray2D array = BinaryArray2D.create(5, 4);
 		array.fill(new Binary(true));
@@ -36,7 +36,23 @@ public class BinaryArray2DTest
 		assertNotNull(array2);
 	}
 
-	/**
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryArray2D#fillBooleans(BiFunction)}.
+     */
+    @Test
+    public void testFillBooleans_BiFunction()
+    {
+        BinaryArray2D array = BinaryArray2D.create(5, 4);
+
+        array.fillBooleans((x, y) -> (x + y * 10) > 20);
+        
+        assertNotNull(array);
+        assertFalse(array.getBoolean(0, 0));
+        assertTrue(array.getBoolean(4, 3));
+    }
+
+
+    /**
 	 * Test method for {@link net.sci.array.binary.BinaryArray2D#duplicate()}.
 	 */
 	@Test

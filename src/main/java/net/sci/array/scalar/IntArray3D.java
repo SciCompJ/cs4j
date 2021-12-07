@@ -41,7 +41,35 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
 		super(size0, size1, size2);
 	}
 
-	
+
+	// =============================================================
+    // Methods specific to IntArray3D
+
+    /**
+     * Initializes the content of the array by using the specified function of
+     * three variables.
+     * 
+     * Example:
+     * <pre>
+     * {@code
+     * UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
+     * array.fillInts((x, y, z) -> x + y * 10 + z * 100);
+     * }
+     * </pre>
+     * 
+     * @param fun
+     *            a function of two variables that returns an integer. The three
+     *            input variables correspond to the x, y and z coordinates.
+     */
+    public void fillInts(TriFunction<Integer,Integer,Integer,Integer> fun)
+    {
+        for (int[] pos : this.positions())
+        {
+            this.setInt(pos, fun.apply(pos[0], pos[1], pos[2]));
+        }
+    }
+    
+
     // =============================================================
     // New methods
     
