@@ -104,6 +104,31 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
         int intValue = (int) value;
         this.fillInt(intValue);
     }
+    
+    /**
+     * Returns the range of finite values within this scalar array.
+     * 
+     * Does not take into account eventual NaN or infinite values, so the result
+     * array always contains finite values (except if all values within array
+     * are infinite).
+     * 
+     * @return an array with two elements, containing the lowest and the largest
+     *         finite values within this Array instance
+     * @see #valueRange()
+     */
+    @Override
+    public default double[] finiteValueRange()
+    {
+        int vMin = Integer.MAX_VALUE;
+        int vMax = Integer.MIN_VALUE;
+        for (int[] pos : positions())
+        {
+            int value = getInt(pos);
+            vMin = Math.min(vMin, value);
+            vMax = Math.max(vMax, value);
+        }
+        return new double[]{vMin, vMax};
+    }
 
 	// =============================================================
 	// Specialization of the Array interface

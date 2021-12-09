@@ -7,7 +7,6 @@ import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
 /**
@@ -27,9 +26,9 @@ public class Histogram
 		int[] histo = new int[nBins];
 		
 		// iterate over samples to update the histogram
-		for (Scalar scalar : array)
+		for(int[] pos : array.positions())
 		{
-			int binIndex = (int) java.lang.Math.round((scalar.getValue() - range[0] - binWidth / 2) / binWidth);
+			int binIndex = (int) java.lang.Math.round((array.getValue(pos) - range[0] - binWidth / 2) / binWidth);
 			binIndex = java.lang.Math.min(java.lang.Math.max(binIndex, 0), nBins - 1);
 			histo[binIndex]++;
 		}

@@ -65,9 +65,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     {
         double vMin = Double.POSITIVE_INFINITY;
         double vMax = Double.NEGATIVE_INFINITY;
-        for (Scalar scalar : this)
+        for (int[] pos : positions())
         {
-            double value = scalar.getValue();
+            double value = getValue(pos);
             if (Double.isFinite(value))
             {
                 vMin = Math.min(vMin, value);
