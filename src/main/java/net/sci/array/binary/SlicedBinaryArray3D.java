@@ -169,7 +169,7 @@ public class SlicedBinaryArray3D extends BinaryArray3D
 	@Override
 	public void setBoolean(int[] pos, boolean b)
 	{
-		
+	    this.slices.get(pos[2]).setBoolean(pos[0], pos[1], b);
 	}
 
 	
