@@ -15,6 +15,7 @@ import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BufferedBinaryArray2D;
+import net.sci.array.binary.SlicedBinaryArray3D;
 import net.sci.array.color.BufferedPackedByteRGB8Array2D;
 import net.sci.array.color.BufferedPackedShortRGB16Array2D;
 import net.sci.array.color.RGB16;
@@ -218,11 +219,9 @@ public class TiffImageDataReader extends AlgoStub
         int pixelsPerPlane = sizeX * sizeY;
         int bytesPerPlane  = pixelsPerPlane * info0.pixelType.getByteNumber();
         
-        // compute total number of expected bytes
-        int nBytes = bytesPerPlane * sizeZ;
+        // When possible, creates a sliced array instance
         
-        // when number of bytes in larger than Integer.MAXINT, creates a new
-        // instance of SlicedUInt8Array3D
+        // Read 3D UInt8 data as SlicedUInt8Array3D
         if (info0.pixelType == PixelType.GRAY8)
         {
             System.out.println("Choose sliced array data representation...");
@@ -265,7 +264,42 @@ public class TiffImageDataReader extends AlgoStub
             return new SlicedUInt8Array3D(arrayList);
         }
         
-        // Allocate buffer array for the whole image
+        // Read 3D BITMAP data as SlicedBinaryArray3D
+        if (info0.pixelType == PixelType.BITMAP)
+        {
+            System.out.println("Choose sliced binary array data representation...");
+            
+            // create the container
+            ArrayList<BinaryArray2D> arrayList = new ArrayList<>(sizeZ);
+            
+            RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+            // iterate over slices to create each 2D array
+            int nSlices = fileInfoList.size();
+            int currentSliceIndex = 0;
+            for (TiffFileInfo info : fileInfoList)
+            {
+                this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+                BinaryArray2D sliceData = readBinaryArray2D(info);
+                arrayList.add(sliceData);
+            }
+            
+            stream.close();
+            
+            // create a new instance of 3D array that stores each slice
+            this.fireProgressChanged(this, nSlices, nSlices);
+            System.out.println("create 3D array");
+            return new SlicedBinaryArray3D(arrayList);
+        }
+        
+        // compute total number of expected bytes
+        int nBytes = bytesPerPlane * sizeZ;
+        if (nBytes < 0)
+        {
+            throw new RuntimeException("Image data is too large to fit in a single array");
+        }
+        
+        // allocate buffer
         byte[] buffer = new byte[nBytes];
         
         RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
@@ -336,7 +370,6 @@ public class TiffImageDataReader extends AlgoStub
         File file = new File(this.filePath);
         RandomAccessFile stream = new RandomAccessFile(file, "r");
         int nRead = readByteBuffer(stream, info, buffer);
-//        int nRead = stream.read(buffer, 0, bufferLength);
         stream.close();
         
         // Check all buffer elements have been read
@@ -345,27 +378,34 @@ public class TiffImageDataReader extends AlgoStub
             throw new IOException("Could read only " + nRead
                     + " bytes over the " + bufferLength + " expected");
         }
-    
-        BinaryArray2D res = BinaryArray2D.create(sizeX, sizeY);
         
+        // convert byte buffer into boolean buffer
+        boolean[] booleanBuffer = new boolean[sizeX * sizeY];
         for (int y = 0; y < sizeY; y++)
         {
+            // position within byte buffer 
             int offset = y * scanLength;
-            int index = 0;
+            int byteIndex = 0;
             
-            for (int byteIndex = 0; byteIndex < scanLength; byteIndex++)
+            // read current line data
+            for (int scanIndex = 0; scanIndex < scanLength; scanIndex++)
             {
-                int value1 = buffer[offset + byteIndex] & 0xFF;
+                // the byte value encapsulating the eight boolean values
+                int byteValue = buffer[offset + scanIndex] & 0xFF;
+                
                 for (int i = 7; i >= 0; i--)
                 {
-                    if (index < sizeX)
+                    if (byteIndex < sizeX)
                     {
-                        boolean b = (value1 & (1 << i)) > 0;
-                        res.setBoolean(index++, y, b);
+                        boolean b = (byteValue & (1 << i)) > 0;
+                        booleanBuffer[y * sizeX + byteIndex++] = b;
                     }
                 }
             }
         }
+
+        // create result 2D array
+        BinaryArray2D res = new BufferedBinaryArray2D(sizeX, sizeY, booleanBuffer);
         return res;
     }
 
