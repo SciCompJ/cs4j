@@ -192,7 +192,7 @@ public class BinaryRowTest
         BinaryRow res = row1.union(row2);
         
         assertEquals(1, res.runs.size());
-        Run run1 = res.runs.first();
+        Run run1 = res.runs.firstEntry().getValue();
         assertEquals(2, run1.left);
         assertEquals(9, run1.right);
     }
@@ -221,7 +221,7 @@ public class BinaryRowTest
         BinaryRow res = row1.union(row2);
         
         assertEquals(1, res.runs.size());
-        Run run1 = res.runs.first();
+        Run run1 = res.runs.firstEntry().getValue();
         assertEquals(2, run1.left);
         assertEquals(9, run1.right);
     }
@@ -250,7 +250,7 @@ public class BinaryRowTest
         BinaryRow res = row1.union(row2);
         
         assertEquals(1, res.runs.size());
-        Run run1 = res.runs.first();
+        Run run1 = res.runs.firstEntry().getValue();
         assertEquals(3, run1.left);
         assertEquals(11, run1.right);
     }
@@ -362,7 +362,7 @@ public class BinaryRowTest
         BinaryRow res = row.complement(10);
         
         assertEquals(2, res.runs.size());
-        Iterator<Run> runs = res.runs.iterator();
+        Iterator<Run> runs = res.runs.values().iterator();
         Run run1 = runs.next();
         assertEquals(0, run1.left);
         assertEquals(2, run1.right);
@@ -382,7 +382,7 @@ public class BinaryRowTest
         BinaryRow res = row.complement(10);
         
         assertEquals(1, res.runs.size());
-        Iterator<Run> runs = res.runs.iterator();
+        Iterator<Run> runs = res.runs.values().iterator();
         Run run1 = runs.next();
         assertEquals(0, run1.left);
         assertEquals(9, run1.right);
@@ -456,13 +456,264 @@ public class BinaryRowTest
         assertFalse(row2.get(13));
     }
     
+    @Test
+    public final void testCrop_EmptyPortion_BeforeOthers()
+    {
+        // create a binary row with 2 runs:
+        // * one from 8 to 12
+        // * one from 16 to 20
+        BinaryRow row = new BinaryRow();
+        for (int i = 0; i <= 4; i++)
+        {
+            row.set(i + 8, true);
+            row.set(i + 16, true);
+        }
+        
+        // crop the beginning -> should be empty
+        BinaryRow res = row.crop(0, 6);
+        
+        assertTrue(res.isEmpty());
+    }
+    
+    @Test
+    public final void testCrop_EmptyPortion_AfterOthers()
+    {
+        // create a binary row with 2 runs:
+        // * one from 0 to 4
+        // * one from 8 to 12
+        BinaryRow row = new BinaryRow();
+        for (int i = 0; i <= 4; i++)
+        {
+            row.set(i, true);
+            row.set(i + 8, true);
+        }
+        
+        // crop the end -> should be empty
+        BinaryRow res = row.crop(14, 20);
+        
+        assertTrue(res.isEmpty());
+    }
+    
+    @Test
+    public final void testCrop_EmptyPortion_BetweenOthers()
+    {
+        // create a binary row with 2 runs:
+        // * one from 0 to 4
+        // * one from 16 to 20
+        BinaryRow row = new BinaryRow();
+        for (int i = 0; i <= 4; i++)
+        {
+            row.set(i, true);
+            row.set(i + 16, true);
+        }
+        
+        // crop in between -> should be empty
+        BinaryRow res = row.crop(6, 14);
+        
+        assertTrue(res.isEmpty());
+    }
+    
+    @Test
+    public final void testCrop_Head()
+    {
+        // create a row with a single run
+        BinaryRow row = new BinaryRow();
+        for (int i = 8; i <= 12; i++)
+        {
+            row.set(i, true);
+        }
+        
+        // crop-> should be empty
+        BinaryRow res = row.crop(0, 10);
+        
+        assertEquals(1, res.runs.size());
+        assertTrue(res.get(8));
+        assertTrue(res.get(10));    
+    }
+    
+    @Test
+    public final void testCrop_Tail()
+    {
+        // create a row with a single run
+        BinaryRow row = new BinaryRow();
+        for (int i = 8; i <= 12; i++)
+        {
+            row.set(i, true);
+        }
+        
+        // crop-> should obtain a single run
+        BinaryRow res = row.crop(10, 20);
+        
+        assertEquals(1, res.runs.size());
+        assertTrue(res.get(10));
+        assertTrue(res.get(12));    
+    }
+    
+    @Test
+    public final void testCrop_EmptyRow()
+    {
+        // create an empty row
+        BinaryRow row = new BinaryRow();
+        
+        // crop-> should be empty
+        BinaryRow res = row.crop(6, 14);
+        
+        assertTrue(res.isEmpty());
+    }
+    
+    @Test
+    public final void testSetRange_True_EmptyRow()
+    {
+        BinaryRow row = new BinaryRow();
+        
+        row.setRange(5, 15, true);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(1, row.runs.size());
+        assertFalse(row.get(4));
+        assertTrue(row.get(5));
+        assertTrue(row.get(15));
+        assertFalse(row.get(16));
+    }
+    
+    @Test
+    public final void testSetRange_True_EmptyRange()
+    {
+        // Create a new row, with runs before and after
+        BinaryRow row = new BinaryRow();
+        row.set(0, true);
+        row.set(1, true);
+        row.set(20, true);
+        row.set(21, true);
+        
+        row.setRange(5, 15, true);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(3, row.runs.size());
+        assertFalse(row.get(4));
+        assertTrue(row.get(5));
+        assertTrue(row.get(15));
+        assertFalse(row.get(16));
+    }
+    
+    @Test
+    public final void testSetRange_True_SeveralRunsWithin()
+    {
+        // Create a new row, with runs before and after
+        BinaryRow row = new BinaryRow();
+        row.set(0, true);
+        row.set(1, true);
+        row.set(20, true);
+        row.set(21, true);
+        
+        row.setRange(5, 15, true);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(3, row.runs.size());
+        assertFalse(row.get(4));
+        assertTrue(row.get(5));
+        assertTrue(row.get(15));
+        assertFalse(row.get(16));
+    }
+    
+    @Test
+    public final void testSetRange_True_JustAfterAnotherRun()
+    {
+        // Create a new row, with runs before and after
+        BinaryRow row = new BinaryRow();
+        row.set(0, true);
+        row.set(3, true);
+        row.set(4, true);
+        row.set(20, true);
+        row.set(21, true);
+        
+        row.setRange(5, 15, true);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(3, row.runs.size());
+        assertFalse(row.get(2));
+        assertTrue(row.get(3));
+        assertTrue(row.get(15));
+        assertFalse(row.get(16));
+    }
+    
+    @Test
+    public final void testSetRange_True_IntersectFirst()
+    {
+        // Create a new row, with runs before and after
+        BinaryRow row = new BinaryRow();
+        row.set(0, true);
+        row.set(3, true);
+        row.set(4, true);
+        row.set(5, true);
+        row.set(6, true);
+        row.set(20, true);
+        row.set(21, true);
+        
+        row.setRange(5, 15, true);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(3, row.runs.size());
+        assertFalse(row.get(2));
+        assertTrue(row.get(3));
+        assertTrue(row.get(15));
+        assertFalse(row.get(16));
+    }
+    
+    @Test
+    public final void testSetRange_True_IntersectLast()
+    {
+        // Create a new row, with runs before and after
+        BinaryRow row = new BinaryRow();
+        row.set(0, true);
+        row.set(1, true);
+        row.set(14, true);
+        row.set(15, true);
+        row.set(16, true);
+        row.set(17, true);
+        row.set(20, true);
+        row.set(21, true);
+        
+        row.setRange(5, 15, true);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(3, row.runs.size());
+        assertFalse(row.get(4));
+        assertTrue(row.get(5));
+        assertTrue(row.get(17));
+        assertFalse(row.get(18));
+    }
+    
+    @Test
+    public final void testSetRange_True_JustBeforeAnotherRun()
+    {
+        // Create a new row, with runs before and after
+        BinaryRow row = new BinaryRow();
+        row.set(0, true); // run 1
+        row.set(1, true);
+        row.set(16, true); // run 2
+        row.set(17, true);
+        row.set(20, true); // run 3
+        row.set(21, true);
+        
+        row.setRange(5, 15, true);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(3, row.runs.size());
+        assertFalse(row.get(4));
+        assertTrue(row.get(5));
+        assertTrue(row.get(17));
+        assertFalse(row.get(18));
+    }
+    
+
     /**
      * Test method for {@link net.sci.array.binary.BinaryRow#set(int, boolean)}.
      */
     @Test
     public final void testSet_True_Isolated()
     {
-        BinaryRow row = createRow();
+        BinaryRow row = createRow_twoRuns();
         
         row.set(15, true);
         
@@ -476,7 +727,7 @@ public class BinaryRowTest
     @Test
     public final void testSet_True_Left()
     {
-        BinaryRow row = createRow();
+        BinaryRow row = createRow_twoRuns();
         
         row.set(0, true);
         
@@ -490,7 +741,7 @@ public class BinaryRowTest
     @Test
     public final void testSet_True_Right()
     {
-        BinaryRow row = createRow();
+        BinaryRow row = createRow_twoRuns();
         
         row.set(10, true);
         
@@ -501,10 +752,10 @@ public class BinaryRowTest
     /**
      * Test method for {@link net.sci.array.binary.BinaryRow#set(int, boolean)}.
      */
-    @Test
+    @Test 
     public final void testSet_True_Between()
     {
-        BinaryRow row = createRow();
+        BinaryRow row = createRow_twoRuns();
         
         row.set(6, true);
         
@@ -518,7 +769,7 @@ public class BinaryRowTest
     @Test
     public final void testSet_True_Within()
     {
-        BinaryRow row = createRow();
+        BinaryRow row = createRow_twoRuns();
         
         row.set(4, true);
         
@@ -532,7 +783,7 @@ public class BinaryRowTest
     @Test
     public final void testSet_False_Split()
     {
-        BinaryRow row = createRow();
+        BinaryRow row = createRow_twoRuns();
         
         row.set(3, false);
         
@@ -546,7 +797,7 @@ public class BinaryRowTest
     @Test
     public final void testSet_False_Left()
     {
-        BinaryRow row = createRow();
+        BinaryRow row = createRow_twoRuns();
         
         row.set(1, false);
         
@@ -560,12 +811,52 @@ public class BinaryRowTest
     @Test
     public final void testSet_False_Right()
     {
-        BinaryRow row = createRow();
+        BinaryRow row = createRow_twoRuns();
         
         row.set(5, false);
         
         assertFalse(row.get(5));
         assertEquals(2, row.runs.size());
+    }
+    
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#get(int, int)}.
+     */
+    @Test
+    public final void testGet_IntInt()
+    {
+        // use a row with several runs of various length:
+        //  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 
+        //  0  1  0  1  1  0  1  0  1  1  1  0  1  1  0  1  0
+        BinaryRow row = new BinaryRow();
+        row.set( 1, true);
+        row.set( 3, true);
+        row.set( 4, true);
+        row.set( 6, true);
+        row.set( 8, true);
+        row.set( 9, true);
+        row.set(10, true);
+        row.set(12, true);
+        row.set(13, true);
+        row.set(15, true);
+        
+        assertFalse(row.get(0));
+        assertTrue(row.get(1));
+        assertFalse(row.get(2));
+        assertTrue(row.get(3));
+        assertTrue(row.get(4));
+        assertFalse(row.get(5));
+        assertTrue(row.get(6));
+        assertFalse(row.get(7));
+        assertTrue(row.get(8));
+        assertTrue(row.get(9));
+        assertTrue(row.get(10));
+        assertFalse(row.get(11));
+        assertTrue(row.get(12));
+        assertTrue(row.get(13));
+        assertFalse(row.get(14));
+        assertTrue(row.get(15));
+        assertFalse(row.get(16));
     }
 
     
@@ -580,7 +871,7 @@ public class BinaryRowTest
      * 
      * @return the sample row.
      */
-    private BinaryRow createRow()
+    private BinaryRow createRow_twoRuns()
     {
         BinaryRow row = new BinaryRow();
         

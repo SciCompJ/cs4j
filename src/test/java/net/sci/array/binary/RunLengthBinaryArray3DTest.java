@@ -14,6 +14,29 @@ import org.junit.Test;
  */
 public class RunLengthBinaryArray3DTest
 {
+    @Test
+    public final void testGetSet()
+    {
+        RunLengthBinaryArray3D array = new RunLengthBinaryArray3D(5, 4, 3);
+        
+        array.setBoolean(1, 1, 1, true);
+        array.setBoolean(2, 2, 2, true);
+        
+        assertTrue(array.getBoolean(1, 1, 1));
+        assertTrue(array.getBoolean(2, 2, 2));
+    }
+    
+    @Test
+    public final void testUpdatePixelInSlice()
+    {
+        RunLengthBinaryArray3D array = new RunLengthBinaryArray3D(5, 4, 3);
+        BinaryArray2D slice = array.slice(1);
+
+        slice.setBoolean(3, 2, true);
+        
+        assertTrue(array.getBoolean(3, 2, 1));
+    }
+    
     /**
      * Test method for {@link net.sci.array.binary.RunLengthBinaryArray3D#convert(net.sci.array.binary.BinaryArray3D)}.
      */

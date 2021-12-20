@@ -4,6 +4,8 @@
 package net.sci.array.binary;
 
 /**
+ * A one-dimensional interval of integers, defined by its left and right bounds.
+ * 
  * @author dlegland
  *
  */
@@ -12,12 +14,12 @@ public class Run implements Comparable<Run>
     /**
      * The left position of this run.
      */
-    public int left;
+    public final int left;
 
     /**
      * The right position of this run.
      */
-    public int right;
+    public final int right;
     
     public Run(int left, int right)
     {

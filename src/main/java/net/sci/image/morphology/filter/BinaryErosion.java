@@ -48,7 +48,7 @@ public class BinaryErosion extends BinaryMorphologicalFilterAlgo
         RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel2d.getMask());
         
         // work on rows shifted along x axis
-        HashMap<Integer, BinaryRow> strelRows = shiftRowsToLeft(strel2, strelOffset[0]);
+        HashMap<Integer, BinaryRow> strelRows = shiftRows(strel2, -strelOffset[0]);
         
         // array dimensions
         int sizeX = rleArray.size(0);
@@ -109,15 +109,15 @@ public class BinaryErosion extends BinaryMorphologicalFilterAlgo
      * @param array
      *            the array to shift.
      * @param dx
-     *            the shift amount (positive to the left, negative to the right)
+     *            the shift amount (positive to the right)
      * @return the new shifted array
      */
-    private HashMap<Integer, BinaryRow> shiftRowsToLeft(RunLengthBinaryArray2D array, int dx)
+    private HashMap<Integer, BinaryRow> shiftRows(RunLengthBinaryArray2D array, int dx)
     {
         HashMap<Integer, BinaryRow> resRows = new HashMap<Integer, BinaryRow>();
         for (int y : array.nonEmptyRowIndices())
         {
-           resRows.put(y, array.getRow(y).shiftToLeft(dx));
+           resRows.put(y, array.getRow(y).shift(dx));
         }
         return resRows;
     }
@@ -136,7 +136,7 @@ public class BinaryErosion extends BinaryMorphologicalFilterAlgo
         RunLengthBinaryArray3D rleStrel = RunLengthBinaryArray3D.convert(strel3d.getMask());
 
         // prepare strel array: shift each row
-        HashMap<Integer, HashMap<Integer, BinaryRow>> strelRows = shiftRowsToLeft(rleStrel, strelOffset[0]);
+        HashMap<Integer, HashMap<Integer, BinaryRow>> strelRows = shiftRows(rleStrel, -strelOffset[0]);
         
         // array dimensions
         int sizeX = rleArray.size(0);
@@ -213,10 +213,10 @@ public class BinaryErosion extends BinaryMorphologicalFilterAlgo
      * @param array
      *            the array to shift.
      * @param dx
-     *            the shift amount (positive to the left, negative to the right)
+     *            the shift amount (positive to the right)
      * @return the new shifted array
      */
-    private HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRowsToLeft(RunLengthBinaryArray3D array, int dx)
+    private HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
     {
         // create
         HashMap<Integer, HashMap<Integer, BinaryRow>> resRows = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
@@ -227,7 +227,7 @@ public class BinaryErosion extends BinaryMorphologicalFilterAlgo
           HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>();
           for (int y : array.nonEmptySliceRowIndices(z))
           {
-              sliceRows.put(y, array.getRow(y, z).shiftToLeft(dx));
+              sliceRows.put(y, array.getRow(y, z).shift(dx));
           }
           resRows.put(z, sliceRows);
       }

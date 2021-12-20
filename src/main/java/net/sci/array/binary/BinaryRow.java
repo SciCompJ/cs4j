@@ -3,7 +3,13 @@
  */
 package net.sci.array.binary;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 /**
@@ -26,7 +32,7 @@ public class BinaryRow
     /**
      * The (sorted) collection of Run instances for this row. 
      */
-    TreeSet<Run> runs;
+    TreeMap<Integer, Run> runs;
     
     
     // =============================================================
@@ -37,7 +43,7 @@ public class BinaryRow
      */
     public BinaryRow()
     {
-        this.runs = new TreeSet<>();
+        this.runs = new TreeMap<>();
     }
     
     /**
@@ -46,9 +52,22 @@ public class BinaryRow
      * @param runs
      *            the set of runs representing this row.
      */
-    public BinaryRow(TreeSet<Run> runs)
+    public BinaryRow(Collection<Run> runs)
     {
-        this.runs = runs;
+        this.runs = new TreeMap<>();
+        for (Run run : runs)
+        {
+            this.runs.put(run.left, run);
+        }
+    }
+    
+    /**
+     * Creates a new binary row containing a single run.
+     */
+    public BinaryRow(Run run)
+    {
+        this.runs = new TreeMap<>();
+        this.runs.put(run.left, run);
     }
     
     
@@ -65,7 +84,7 @@ public class BinaryRow
     public BinaryRow dilation(BinaryRow row)
     {
         BinaryRow res = new BinaryRow();
-        for (Run run : row.runs)
+        for (Run run : row.runs.values())
         {
             BinaryRow resDil = this.dilationLeftRight(-run.left, run.right);
             res = res.union(resDil);
@@ -83,7 +102,7 @@ public class BinaryRow
     public BinaryRow erosion(BinaryRow row)
     {
         BinaryRow res = this;
-        for (Run run : row.runs)
+        for (Run run : row.runs.values())
         {
             BinaryRow resEro = this.dilationLeftRight(run.left, -run.right);
             res = res.intersection(resEro);
@@ -96,7 +115,7 @@ public class BinaryRow
         // create result runs
         TreeSet<Run> newRuns = new TreeSet<Run>();
         
-        Iterator<Run> iter = this.runs.iterator();
+        Iterator<Run> iter = this.runs.values().iterator();
         Run currentRun = iter.hasNext() ? iter.next() : null;
         
         while(currentRun != null)
@@ -141,17 +160,17 @@ public class BinaryRow
     /**
      * Computes the union of this row with the input row.
      * 
-     * @param row2
+     * @param row
      *            the row to combine with
      * @return the result if the union of this row and the other row.
      */
-    public BinaryRow union(BinaryRow row2)
+    public BinaryRow union(BinaryRow row)
     {
-        // create result runs
-        TreeSet<Run> newRuns = new TreeSet<Run>();
+        // create empty result row
+        BinaryRow resRow = new BinaryRow();
         
         // create structure to iterate over both rows in parallel.
-        RunIteratorPair rip = new RunIteratorPair(this, row2);
+        RunIteratorPair rip = new RunIteratorPair(this, row);
         
         // main iteration, breaking when both run1 and run2 are null
         // (assumes we start from background)
@@ -161,10 +180,10 @@ public class BinaryRow
             if (rip.run1 == null)
             {
                 // add remaining runs of row2
-                newRuns.add(rip.run2.duplicate());
+                resRow.addRun(rip.run2);
                 while (rip.runs2.hasNext())
                 {
-                    newRuns.add(rip.runs2.next().duplicate());
+                    resRow.addRun(rip.runs2.next());
                 }
                 break;
             }
@@ -173,10 +192,11 @@ public class BinaryRow
             if (rip.run2 == null)
             {
                 // add remaining runs of row1
-                newRuns.add(rip.run1.duplicate());
+                resRow.addRun(rip.run1);
+                resRow.runs.put(rip.run1.left, rip.run1);
                 while (rip.runs1.hasNext())
                 {
-                    newRuns.add(rip.runs1.next().duplicate());
+                    resRow.addRun(rip.runs1.next());
                 }
                 break;
             }
@@ -199,11 +219,11 @@ public class BinaryRow
             
             // update right value of new run, and add it to list of runs
             newRight = rip.findRightExtremityOfUnion(newRight);
-            newRuns.add(new Run(newLeft, newRight));
+            resRow.addRun(new Run(newLeft, newRight));
         }
         
         // create the new row from list of runs
-        return new BinaryRow(newRuns);
+        return resRow;
     }
     
     /**
@@ -215,8 +235,8 @@ public class BinaryRow
      */
     public BinaryRow intersection(BinaryRow row2)
     {
-        // create result runs
-        TreeSet<Run> newRuns = new TreeSet<Run>();
+        // create empty result row
+        BinaryRow row = new BinaryRow();
         
         // create structure to iterate over both rows in parallel.
         RunIteratorPair rip = new RunIteratorPair(this, row2);
@@ -256,11 +276,11 @@ public class BinaryRow
                 newRight = rip.run2.right;
                 rip.run2 = rip.runs2.hasNext() ? rip.runs2.next() : null;
             }
-            newRuns.add(new Run(newLeft, newRight));
+            row.runs.put(newLeft, new Run(newLeft, newRight));
         }
         
         // create the new row from list of runs
-        return new BinaryRow(newRuns);
+        return row;
     }
     
     /**
@@ -274,18 +294,17 @@ public class BinaryRow
      */
     public BinaryRow complement(int length)
     {
-        // allocate runs for the new row
-        TreeSet<Run> newRuns = new TreeSet<Run>();
-        
         // case of empty row -> return a new full row
         if (this.isEmpty())
         {
-            newRuns.add(new Run(0, length - 1));
-            return new BinaryRow(newRuns);
+            return new BinaryRow(new Run(0, length - 1));
         }
         
+        // initialize new empty row
+        BinaryRow res = new BinaryRow();
+        
         // prepare iteration on runs of input row
-        Iterator<Run> runIter = this.runs.iterator();
+        Iterator<Run> runIter = this.runs.values().iterator();
         Run nextRun = runIter.next();
         
         // new left is the first element set to false in input row
@@ -300,7 +319,8 @@ public class BinaryRow
         // iterate over intervals between runs
         while (nextRun != null)
         {
-            newRuns.add(new Run(newLeft, nextRun.left - 1));
+            res.runs.put(newLeft, new Run(newLeft, nextRun.left - 1));
+            
             newLeft = nextRun.right + 1;
             nextRun = runIter.hasNext() ? runIter.next() : null;
         }
@@ -308,10 +328,10 @@ public class BinaryRow
         // process interval after the last run
         if (newLeft <= length - 1)
         {
-            newRuns.add(new Run(newLeft, length - 1));
+            res.runs.put(newLeft, new Run(newLeft, length - 1));
         }
         
-        return new BinaryRow(newRuns);
+        return res;
     }
     
     /**
@@ -328,10 +348,39 @@ public class BinaryRow
      */
     public BinaryRow crop(int left, int right)
     {
-        // allocate runs for the new row
-        TreeSet<Run> newRuns = new TreeSet<Run>();
+        // create empty result row
+        BinaryRow res = new BinaryRow();
         
-        for (Run run : this.runs)
+        // identifies the entries (if they exist) containing run with left
+        // extremity before crop bounds
+        Entry<Integer,Run> firstEntry = this.runs.floorEntry(left); 
+        Entry<Integer,Run> lastEntry = this.runs.floorEntry(right);
+        
+        // create sub-map
+        SortedMap<Integer, Run> subMap = null;
+        if (firstEntry == null)
+        {
+            if (lastEntry == null)
+            {
+                // no run within the crop -> return empty row
+                return new BinaryRow();
+            }
+            else
+            {
+                // consider all entries up to "right"
+                subMap = runs.headMap(lastEntry.getKey(), true);
+            }
+        } 
+        else
+        {
+            // consider all entries between left and right
+            // (by construction, lastEntry can not be null if firstEntry is
+            // defined, while they can be equal)
+            subMap = runs.subMap(firstEntry.getKey(), true, lastEntry.getKey(), true);
+        }
+        
+        // iterate over a selection of runs
+        for (Run run : subMap.values())
         {
             // drop the runs totally before the "left" extremity
             if (run.right < left)
@@ -346,27 +395,122 @@ public class BinaryRow
             
             int newLeft = Math.max(run.left, left);
             int newRight = Math.min(run.right, right);
-            newRuns.add(new Run(newLeft, newRight));
+            
+            res.addRun(new Run(newLeft, newRight));
         }
         
-        return new BinaryRow(newRuns);
+        return res;
     }
     
     /**
-     * Creates a new row with all runs shifted to the left by the given amount.
+     * Creates a new row with all runs shifted to the right by the given amount.
+     * The shifted runs are obtained by adding the given amount to the left and
+     * right extremities of the run.
      * 
      * @param shift
      *            the number of elements to shift
      * @return the shifted row
      */
-    public BinaryRow shiftToLeft(int shift)
+    public BinaryRow shift(int shift)
     {
-        TreeSet<Run> newRuns = new TreeSet<Run>();
-        for (Run run : this.runs)
+        BinaryRow row = new BinaryRow();
+        for (Run run : this.runs.values())
         {
-            newRuns.add(new Run(run.left - shift, run.right - shift));
+            row.addRun(new Run(run.left + shift, run.right + shift));
         }
-        return new BinaryRow(newRuns);
+        return row;
+    }
+    
+    
+    // =============================================================
+    // Range management
+
+    /**
+     * Checks if the row contains all the elements between the positions
+     * <code>x1</code> (included) and <code>x2</code> (included).
+     * 
+     * @param x1
+     *            the first element in the range
+     * @param x2
+     *            the last element in the range
+     * @return true is the region contains all the elements
+     */
+    public boolean containsRange(int x1, int x2)
+    {
+        // check if a single run contains both extremities of the range
+        Run run = containingRun(x1);
+        if (run == null)
+        {
+            return false;
+        }
+        return run.right >= x2;
+    }
+    
+    public void setRange(int x1, int x2, boolean state)
+    {
+        if (state)
+        {
+            setRangeTrue(x1, x2);
+        }
+        else
+        {
+            setRangeFalse(x1, x2);
+        }
+    }
+    
+    private void setRangeTrue(int x1, int x2)
+    {
+        int newLeft = x1;
+        int newRight = x2;
+            
+        Run run0 = containingRun(x1 - 1);
+        if (run0 != null)
+        {
+            if (run0.contains(x2)) 
+            {
+                // nothing to do
+                return;
+            }
+
+            // remove the run that contains x1
+            runs.remove(run0.left);
+            // and keep start position of the new run
+            newLeft = run0.left;
+        }
+        
+        // need to remove all the runs that start between x1 and x2
+        Entry<Integer, Run> entry = runs.ceilingEntry(x1 + 1);
+        while(entry != null)
+        {
+            // stop iteration when current run reaches the right extremity of range
+            Run run = entry.getValue();
+            if (run.right > x2 + 1)
+            {
+                // if current run contains the right extremity of range, update the right limit of the new run
+                if (run.left <= x2 + 1)
+                {
+                    newRight = run.right;
+                    runs.remove(run.left);
+                }
+                break;
+            }
+
+            // remove all entries that ends before x2
+            runs.remove(run.left);
+            entry = runs.ceilingEntry(run.right + 1);
+        }
+
+        // add a new run with the new interval
+        addRun(new Run(newLeft, newRight));
+    }
+    
+    private void setRangeFalse(int x1, int x2)
+    {
+        // TODO: can be more efficient
+        for (int x = x1; x <= x2; x++)
+        {
+            set(x, false);
+        }
     }
     
     
@@ -379,7 +523,7 @@ public class BinaryRow
     public int elementCount()
     {
         int count = 0;
-        for (Run run : runs)
+        for (Run run : runs.values())
         {
             count += run.length();
         }
@@ -401,14 +545,14 @@ public class BinaryRow
      */
     public boolean get(int pos)
     {
-        for (Run run : runs)
+        // find the entry with greatest "left" value being lower than or equal to pos
+        Entry<Integer, Run> entry = this.runs.floorEntry(pos);
+        if (entry == null)
         {
-            if (run.contains(pos))
-            {
-                return true;
-            }
+            return false;
         }
-        return false;
+        Run run = entry.getValue();
+        return pos <= run.right;
     }
     
     public void set(int pos, boolean state)
@@ -430,7 +574,7 @@ public class BinaryRow
         Run nextRun = null;
         
         // iterate over runs until we go ahead of last run
-        for (Run run : runs)
+        for (Run run : runs.values())
         {
             if (run.left > pos)
             {
@@ -453,15 +597,19 @@ public class BinaryRow
         {
             if (nextRun != null && nextRun.contains(pos + 1))
             {
-                // merge the two runs separated by the element we just add 
-                prevRun.right = nextRun.right;
-                runs.remove(nextRun);
+                // merge the two runs separated by the element we just added
+                Run newRun = new Run(prevRun.left, nextRun.right);
+                // replace the two runs by the new one
+                runs.remove(prevRun.left);
+                runs.remove(nextRun.left);
+                runs.put(newRun.left, newRun);
                 return;
             }
             else
             {
-                // append the element to the run just before
-                prevRun.right++;
+                // replaces previous run by a new run extended to the right
+                Run newRun = new Run(prevRun.left, prevRun.right + 1);
+                runs.put(prevRun.left, newRun);
                 return;
             }
         }
@@ -469,19 +617,22 @@ public class BinaryRow
         // is there a run just after?
         if (nextRun != null && nextRun.contains(pos + 1))
         {
-            nextRun.left--;
+            // create a new run extended to the left
+            Run newRun = new Run(nextRun.left - 1, nextRun.right);
+            // replace the old run by the new one
+            runs.remove(nextRun.left);
+            runs.put(newRun.left, newRun);
             return;
         }
         
         // otherwise, create a one-length run at specified position 
-        Run run = new Run(pos, pos);
-        this.runs.add(run);
+        this.runs.put(pos, new Run(pos, pos));
     }
 
     private void setFalse(int pos)
     {
         // find the run that contains the position    
-        Run run = findContainingRun(pos);
+        Run run = containingRun(pos);
         
         // case of position outside any run 
         if (run == null)
@@ -493,54 +644,110 @@ public class BinaryRow
         {
             if (run.left != run.right)
             {
-                // remove element at the beginning of a run
-                run.left++;
+                // create a new run eroded from the left
+                Run newRun = new Run(run.left + 1, run.right);
+                // replace the old run by the new one
+                runs.remove(run.left);
+                runs.put(newRun.left, newRun);
             }
             else
             {
                 // case of a one-length run -> remove it
-                runs.remove(run);
+                runs.remove(run.left);
             }
         }
         else if (pos == run.right)
         {
-            // remove element at the end of a run
-            run.right--;
+            // replace the current run by a new one eroded from the right
+            runs.put(run.left, new Run(run.left, run.right - 1));
         }
         else
         {
-            // remove element in the middle of a run
-            runs.add(new Run(pos + 1, run.right));
-            run.right = pos - 1;
+            // Need to split a run in two parts:
+            // 1. replace the current run by a new smaller run
+            runs.put(run.left, new Run(run.left, pos - 1));
+            // 2. add a new run just after the split 
+            runs.put(pos + 1, new Run(pos + 1, run.right));
         }
     }
     
-    // find the first run whose end is strictly after position
-    // or null if there is not.
-    private Run findContainingRun(int pos)
+    public Collection<Run> runs()
     {
-        for (Run run : runs)
+        return Collections.unmodifiableCollection(this.runs.values());
+    }
+    
+    private void addRun(Run run)
+    {
+        this.runs.put(run.left, run);
+    }
+    
+    /**
+     * @param run
+     *            a query run
+     * @return all the runs within the row with an element contained inside the
+     *         query run.
+     */
+    public Collection<Run> intersectingRuns(Run run)
+    {
+        ArrayList<Run> res = new ArrayList<>();
+        
+        for (Run rowRun : runs.values())
         {
-            if (run.left > pos)
+            if ((rowRun.left <= run.left && rowRun.right >= run.left) ||
+                    (rowRun.left >= run.left && rowRun.left <= run.right))
             {
-                // as runs are sorted according to the left coordinate, we know
-                // there is no other run after this one.
-                return null;
-            }
-            if (pos <= run.right)
-            {
-                return run;
+                res.add(rowRun);
             }
         }
-        return null;
+        return res;
+    }
+    
+    /**
+     * @param posMin
+     *            a position within the row
+     * @param posMax
+     *            a position within the row, greater than or equal to posMin
+     * @return all the runs within the row with an element between posMin and
+     *         posMax.
+     */
+    public Collection<Run> containingRuns(int posMin, int posMax)
+    {
+        ArrayList<Run> res = new ArrayList<>();
+        
+        for (Run run : runs.values())
+        {
+            if (run.left >= posMin && run.right <= posMax)
+            {
+                res.add(run);
+            }
+        }
+        return res;
+    }
+    
+    /**
+     * @param pos
+     *            the x-position of an element within the row
+     * @return the Run containing the specified position, or null if there is no
+     *         such Run (the state at the given position is "false").
+     */
+    public Run containingRun(int pos)
+    {
+        // find the entry with greatest "left" value being lower than or equal to pos
+        Entry<Integer, Run> entry = this.runs.floorEntry(pos);
+        if (entry == null)
+        {
+            return null;
+        }
+        Run run = entry.getValue();
+        return pos <= run.right ? run : null;
     }
     
     public BinaryRow duplicate()
     {
         BinaryRow row = new BinaryRow();
-        for (Run run : this.runs)
+        for (Run run : this.runs.values())
         {
-            row.runs.add(run.duplicate());
+            row.runs.put(run.left, run.duplicate());
         }
         return row;
     }
@@ -550,7 +757,7 @@ public class BinaryRow
     {
         StringBuffer sb = new StringBuffer();
         sb.append(String.format("BinaryRow with %d run%s: ", runs.size(), runs.size()!=1 ? "s" : ""));
-        Iterator<Run> iter = runs.iterator();
+        Iterator<Run> iter = runs.values().iterator();
         if (iter.hasNext())
         {
             sb.append("{");
@@ -578,7 +785,7 @@ public class BinaryRow
         
         public RunIteratorPair(BinaryRow row1, BinaryRow row2)
         {
-            this(row1.runs.iterator(), row2.runs.iterator());
+            this(row1.runs.values().iterator(), row2.runs.values().iterator());
         }
         
         public RunIteratorPair(Iterator<Run> runs1, Iterator<Run> runs2)
