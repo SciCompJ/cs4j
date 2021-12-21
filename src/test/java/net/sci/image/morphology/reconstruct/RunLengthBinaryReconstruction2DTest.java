@@ -50,7 +50,7 @@ public class RunLengthBinaryReconstruction2DTest
     @Test
     public final void testProcessBinary2d_SquareRing()
     {
-        RunLengthBinaryArray2D marker = new RunLengthBinaryArray2D(5, 5);
+        RunLengthBinaryArray2D marker = new RunLengthBinaryArray2D(10, 10);
         marker.setBoolean(1, 1, true);
         RunLengthBinaryArray2D array = new RunLengthBinaryArray2D(10, 10);
         fillRect(array, 1, 8, 1, 8, true);
