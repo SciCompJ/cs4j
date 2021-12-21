@@ -13,6 +13,9 @@ import java.util.Locale;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.binary.BinaryArray;
+import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Float64Array;
 import net.sci.array.scalar.Int16Array;
@@ -113,7 +116,7 @@ public class MetaImageWriter extends AlgoStub implements ImageWriter
 		// determine element data type
 		// TODO: include color / multi-channel types
 		Array<?> array = image.getData();
-		if (array instanceof UInt8Array)
+		if (array instanceof UInt8Array || array instanceof BinaryArray)
 		{
 			info.elementType = MetaImageInfo.ElementType.UINT8;
 		}
@@ -189,11 +192,15 @@ public class MetaImageWriter extends AlgoStub implements ImageWriter
 	private void writeImageData(Array<?> array, OutputStream stream) throws IOException
 	{
 		BufferedOutputStream bos = new BufferedOutputStream(stream);
-		if (array instanceof UInt8Array)
-		{
-		    writeUInt8Data((UInt8Array) array, bos);
-		}
-		else
+        if (array instanceof UInt8Array)
+        {
+            writeUInt8Data((UInt8Array) array, bos);
+        }
+        else if (array instanceof BinaryArray)
+        {
+            writeBinaryData((BinaryArray) array, bos);
+        }
+        else
 		{
 			throw new RuntimeException("Can not manage arrays with class: " + array.getClass()); 
 		}
@@ -239,10 +246,66 @@ public class MetaImageWriter extends AlgoStub implements ImageWriter
         }
         else
         {
-            UInt8Array array8 = (UInt8Array) array;
-            for (int[] pos : array8.positions())
+            // process in more general way
+            for (int[] pos : array.positions())
             {
-                bos.write(array8.getByte(pos));
+                bos.write(array.getByte(pos));
+            }
+        }
+    }
+    
+    /**
+     * Writes binary data as byte data.
+     * 
+     * @param array
+     *            te array to writes.
+     * @param bos
+     *            the output stream to populate.
+     * @throws IOException
+     *             if a problem occurs.
+     */
+    private void writeBinaryData(BinaryArray array, BufferedOutputStream bos) throws IOException
+    {
+        if (array.dimensionality() == 3)
+        {
+            BinaryArray3D array3d = BinaryArray3D.wrap(array);
+            int sizeX = array3d.size(0);
+            int sizeY = array3d.size(1);
+            int sizeZ = array3d.size(2);
+            for (int z = 0; z < sizeZ; z++)
+            {
+                this.fireProgressChanged(this, z, sizeZ);
+                for (int y = 0; y < sizeY; y++)
+                {
+                    for (int x = 0; x < sizeX; x++)
+                    {
+                        bos.write(array3d.getBoolean(x, y, z) ? 255 : 0);
+                    }
+                }
+                bos.flush();
+            }
+            this.fireProgressChanged(this, 1, 1);
+        }
+        else if (array.dimensionality() == 2)
+        {
+            BinaryArray2D array2d = BinaryArray2D.wrap(array);
+            int sizeX = array2d.size(0);
+            int sizeY = array2d.size(1);
+            for (int y = 0; y < sizeY; y++)
+            {
+                this.fireProgressChanged(this, y, sizeY);
+                for (int x = 0; x < sizeX; x++)
+                {
+                    bos.write(array2d.getBoolean(x, y) ? 255 : 0);
+                }
+            }
+            this.fireProgressChanged(this, 1, 1);
+        }
+        else
+        {
+            for (int[] pos : array.positions())
+            {
+                bos.write(array.getBoolean(pos) ? 255 : 0);
             }
         }
     }
