@@ -129,6 +129,45 @@ public class BufferedUInt8Array2D extends UInt8Array2D
         this.buffer[index] = b;
     }
 
+    
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
+
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) (buffer[index] & 0x00FF);
+        }
+    }
+    
+    
 	// =============================================================
 	// Implementation of the Array interface
 
@@ -140,7 +179,10 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		return new BufferedUInt8Array2D(size0, size1, buffer2);
 	}
 
-	
+	   
+
+    
+    
 	// =============================================================
 	// Implementation of the Iterable interface
 

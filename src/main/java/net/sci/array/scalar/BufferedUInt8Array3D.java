@@ -3,6 +3,7 @@
  */
 package net.sci.array.scalar;
 
+
 /**
  * Implementation of UInt8Array3D that stores inner data in a linear array of
  * bytes.
@@ -145,6 +146,45 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 	}
 
 	
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
+
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) (buffer[index] & 0x00FF);
+        }
+    }
+    
+    
+
 	// =============================================================
 	// Implementation of the Array interface
 

@@ -97,18 +97,6 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 		this.buffer[index] = (byte) intValue;
 	}
 
-	// =============================================================
-	// Implementation of the Array interface
-	
-	@Override
-	public UInt8Array duplicate()
-	{
-		int n = buffer.length;
-		byte[] buffer2 = new byte[n];
-		System.arraycopy(this.buffer, 0, buffer2, 0, n);
-		return new BufferedUInt8ArrayND(sizes, buffer2);
-	}
-
 	@Override
 	public UInt8 get(int... pos)
 	{
@@ -122,8 +110,59 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 		int index = subsToInd(pos);
 		this.buffer[index] = value.getByte();
 	}
+	
 
-	@Override
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
+
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) (buffer[index] & 0x00FF);
+        }
+    }
+    
+    
+	// =============================================================
+    // Implementation of the Array interface
+    
+    @Override
+    public UInt8Array duplicate()
+    {
+    	int n = buffer.length;
+    	byte[] buffer2 = new byte[n];
+    	System.arraycopy(this.buffer, 0, buffer2, 0, n);
+    	return new BufferedUInt8ArrayND(sizes, buffer2);
+    }
+
+    @Override
 	public UInt8Array.Iterator iterator()
 	{
 		return new UInt8Iterator();

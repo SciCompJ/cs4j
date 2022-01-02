@@ -6,6 +6,24 @@ import org.junit.Test;
 
 public class BufferedInt16Array2DTest
 {
+    @Test
+    public final void testValues()
+    {
+        BufferedInt16Array2D array = new BufferedInt16Array2D(5, 4);
+        array.fillValue(1000);
+        
+        int count = 0; 
+        double sum = 0.0;
+        for (double v : array.values())
+        {
+            count++;
+            sum += v;
+        }
+        
+        assertEquals(20, count);
+        assertEquals(20_000.0, sum, 0.1);
+    }
+    
 
 	@Test
 	public final void testIterator()

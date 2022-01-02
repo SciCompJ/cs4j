@@ -83,15 +83,6 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 	// Implementation of the Array interface
 	
 	@Override
-	public Int32Array duplicate()
-	{
-		int n = buffer.length;
-		int[] buffer2 = new int[n];
-		System.arraycopy(this.buffer, 0, buffer2, 0, n);
-		return new BufferedInt32ArrayND(sizes, buffer2);
-	}
-
-	@Override
 	public Int32 get(int... pos)
 	{
 		int index = subsToInd(pos);
@@ -105,7 +96,58 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 		this.buffer[index] = value.getInt();
 	}
 
-	@Override
+    
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
+
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) buffer[index];
+        }
+    }
+    
+
+    // =============================================================
+    // Implementation of the Array interface
+    
+    @Override
+    public Int32Array duplicate()
+    {
+    	int n = buffer.length;
+    	int[] buffer2 = new int[n];
+    	System.arraycopy(this.buffer, 0, buffer2, 0, n);
+    	return new BufferedInt32ArrayND(sizes, buffer2);
+    }
+
+    @Override
 	public Int32Array.Iterator iterator()
 	{
 		return new Int32Iterator();

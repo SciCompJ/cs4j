@@ -38,13 +38,12 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 	{
 		double vMin = Double.POSITIVE_INFINITY;
 		double vMax = Double.NEGATIVE_INFINITY;
-		for (Scalar scalar : this)
+		for (double v : values())
 		{
-			double value = scalar.getValue();
-			if (!Double.isNaN(value))
+			if (!Double.isNaN(v))
 			{
-				vMin = Math.min(vMin, value);
-				vMax = Math.max(vMax, value);
+				vMin = Math.min(vMin, v);
+				vMax = Math.max(vMax, v);
 			}
 		}
 		return new double[]{vMin, vMax};
@@ -65,13 +64,12 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     {
         double vMin = Double.POSITIVE_INFINITY;
         double vMax = Double.NEGATIVE_INFINITY;
-        for (int[] pos : positions())
+        for (double v : values())
         {
-            double value = getValue(pos);
-            if (Double.isFinite(value))
+            if (Double.isFinite(v))
             {
-                vMin = Math.min(vMin, value);
-                vMax = Math.max(vMax, value);
+                vMin = Math.min(vMin, v);
+                vMax = Math.max(vMax, v);
             }
         }
         return new double[]{vMin, vMax};
@@ -87,12 +85,11 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 	public default double minValue()
 	{
 		double vMin = Double.POSITIVE_INFINITY;
-		for (Scalar scalar : this)
+		for (double v : values())
 		{
-			double value = scalar.getValue();
-			if (!Double.isNaN(value))
+			if (!Double.isNaN(v))
 			{
-				vMin = Math.min(vMin, value);
+				vMin = Math.min(vMin, v);
 			}
 		}
 		return vMin;
@@ -108,12 +105,11 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 	public default double maxValue()
 	{
 		double vMax = Double.NEGATIVE_INFINITY;
-		for (Scalar scalar : this)
+		for (double v : values())
 		{
-			double value = scalar.getValue();
-			if (!Double.isNaN(value))
+			if (!Double.isNaN(v))
 			{
-				vMax = Math.max(vMax, value);
+				vMax = Math.max(vMax, v);
 			}
 		}
         return vMax;
@@ -134,6 +130,16 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 		}
 	}
 	
+	/**
+	 * Fills the values within this array by using a function of the position (given as an integer array).
+	 * 
+	 * <pre>{@code
+	 * Float32Array2D array = Float32Array2D.create(20, 20);
+	 * array.fillValues(pos -> Math.max(Math.hypot(pos[0] - 10.0, pos[1] - 10.0), 0));
+	 * }</pre>
+	 * 
+	 * @param fun the function that computes a value depending on the position.
+	 */
     public default void fillValues(Function<int[], Double> fun)
     {
         for (int[] pos : this.positions())
@@ -141,7 +147,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
             this.setValue(pos, fun.apply(pos));
         }
     }
-
+    
 	
     // =============================================================
     // New abstract methods
@@ -162,6 +168,53 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
      *            the position, as an array of indices
      */
     public void setValue(int[] pos, double value);
+    
+    /**
+     * Returns an Iterable over the (double) values within the array.
+     * This allows to query information about the population of values using constructs like the following:
+     * <pre>{@code
+     * double vMin = Double.POSITIVE_INFINTIY;
+     * for (double v : array.values())
+     * {
+     *    vMin = Math.min(v, vMin);
+     * }
+     * }</pre>
+     * 
+     * Default behaviour is to wrap a position iterator, and return values
+     * according to the <code>getValue(int...)</code> method.
+     * 
+     * @see #positionIterator()
+     * @see #get(int...)
+     * 
+     * @return an Iterable over the (double) values within the array.
+     */
+    public default Iterable<Double> values()
+    {
+        return new Iterable<Double>() 
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new java.util.Iterator<Double>()
+                {
+                    PositionIterator iter = positionIterator();
+
+                    @Override
+                    public boolean hasNext()
+                    {
+                        return iter.hasNext();
+                    }
+
+                    @Override
+                    public Double next()
+                    {
+                        return getValue(iter.next());
+                    }
+                };
+            }
+        };
+    }
+
 
     
     // =============================================================
@@ -210,6 +263,14 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     // =============================================================
     // Implementation of comparison with scalar
 
+    /**
+     * Returns the array containing for each position the minimum of the value
+     * in the array and the specified value.
+     * 
+     * @param v
+     *            the value to compute the min with
+     * @return the result of the min operation on the array.
+     */
     public default ScalarArray<T> min(double v)
     {
         ScalarArray<T> res = newInstance(size());
@@ -220,6 +281,14 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         return res;
     }
     
+    /**
+     * Returns the array containing for each position the maximum of the value
+     * in the array and the specified value.
+     * 
+     * @param v
+     *            the value to compute the max with
+     * @return the result of the max operation on the array.
+     */
     public default ScalarArray<T> max(double v)
     {
         ScalarArray<T> res = newInstance(size());
@@ -285,12 +354,12 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
      * This method overrides the default behavior of the Array interface to
      * simply manipulate double values.
      * 
-     * </pre>{@code
+     * <pre>{@code
      * UInt8Array array = UInt8Array2D.create(6, 4);
-     * array.populateValues((x,y) -> x + 10 * y);
+     * array.fillValues((x,y) -> x + 10 * y);
      * ScalarArray<?> reshaped = array.reshape(4, 3, 2);
      * double last = reshaped.getValue(new int[]{3, 2, 1}); // equals 35
-     * }
+     * }</pre>
      * 
      * @param newDims
      *            the dimensions of the new array
@@ -353,6 +422,11 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     // =============================================================
     // Specialization of the Factory interface
 
+	/**
+	 * A factory for building new ScalarArray instances.
+	 *
+	 * @param <T> the type of Scalar.
+	 */
 	public interface Factory<T extends Scalar> extends Array.Factory<T>
 	{
         /**
@@ -387,6 +461,11 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 	// =============================================================
 	// Inner interface
 
+	/**
+	 * Iterator over the Scalar objects within this array.
+	 *
+	 * @param <T> the type of Scalar elements
+	 */
 	public interface Iterator<T extends Scalar> extends Array.Iterator<T>
 	{
 		/**
@@ -426,17 +505,45 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
          */
         public void setValue(double value);     
 	}
-	
+
+	/**
+     * Utility class that allows to access / modify elements of an array of
+     * scalars using transformation of coordinates (e.g. crop, slice, dimension
+     * permutation...).
+     * 
+     * @see #view(int[], Function)
+     * 
+     * @param <T>
+     *            the type of data within the array
+     */
     static class View<T extends Scalar> implements ScalarArray<T>
     {
+        /** 
+         * The array to synchronize with. /*
+         */
         ScalarArray<T> array;
         
+        /** 
+         * The size of the view. 
+         */
         int[] newDims;
         
+        /**
+         * The mapping between view coordinates and inner array coordinates.
+         */
         Function<int[], int[]> coordsMapping;
 
         /**
+         * Creates a new view over the input array or a subset of the input
+         * array.
          * 
+         * @param array
+         *            the array to synchronize with
+         * @param newDims
+         *            the size of the view
+         * @param coordsMapping
+         *            the mapping between view coordinates and inner array
+         *            coordinates.
          */
         public View(ScalarArray<T> array, int[] newDims, Function<int[], int[]> coordsMapping)
         {

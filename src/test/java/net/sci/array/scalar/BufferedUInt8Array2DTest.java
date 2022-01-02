@@ -8,6 +8,24 @@ import net.sci.array.Array;
 
 public class BufferedUInt8Array2DTest
 {
+    @Test
+    public final void testValues()
+    {
+        BufferedUInt8Array2D array = new BufferedUInt8Array2D(5, 4);
+        array.fillValue(10);
+        
+        int count = 0; 
+        double sum = 0.0;
+        for (double v : array.values())
+        {
+            count++;
+            sum += v;
+        }
+        
+        assertEquals(20, count);
+        assertEquals(200.0, sum, 0.1);
+    }
+    
 
     @Test
     public final void testIterator()

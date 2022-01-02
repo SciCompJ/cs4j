@@ -108,26 +108,70 @@ public class BufferedInt16Array2D extends Int16Array2D
         int index = x + y * this.size0;
         this.buffer[index] = s;
     }
+    
+    
+    // =============================================================
+    // Specialization of the Int16Array interface
+    
+    /* (non-Javadoc)
+     * @see net.sci.array.data.scalar.Int16Array2D#getShort(int...)
+     */
+    @Override
+    public short getShort(int... pos)
+    {
+    	int index = pos[0] + pos[1] * this.size0;
+    	return this.buffer[index];
+    }
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.Int16Array2D#getShort(int, int)
-	 */
-	@Override
-	public short getShort(int... pos)
-	{
-		int index = pos[0] + pos[1] * this.size0;
-		return this.buffer[index];
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.Int16Array2D#setShort(int, int, short)
-	 */
-	@Override
-	public void setShort(int[] pos, short s)
-	{
+    /* (non-Javadoc)
+     * @see net.sci.array.data.scalar.Int16Array2D#setShort(int[], short)
+     */
+    @Override
+    public void setShort(int[] pos, short s)
+    {
         int index = pos[0] + pos[1] * this.size0;
-		this.buffer[index] = s;
-	}
+    	this.buffer[index] = s;
+    }
+
+
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
+
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) buffer[index];
+        }
+    }
+    
+	
 
 
 	// =============================================================

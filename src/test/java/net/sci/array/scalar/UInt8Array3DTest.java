@@ -29,6 +29,25 @@ public class UInt8Array3DTest
         assertEquals(234, array.getInt(4, 3, 2));
     }
     
+    @Test
+    public final void testValues()
+    {
+        UInt8Array3D array = UInt8Array3D.create(5, 4, 3);
+        array.fillValue(10);
+        
+        int count = 0; 
+        double sum = 0.0;
+        for (double v : array.values())
+        {
+            count++;
+            sum += v;
+        }
+        
+        assertEquals(60, count);
+        assertEquals(600.0, sum, 0.1);
+    }
+    
+
     /**
      * Test method for {@link net.sci.array.scalar.UInt8Array3D#slice(int)}.
      */

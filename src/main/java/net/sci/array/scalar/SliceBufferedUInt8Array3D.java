@@ -47,7 +47,7 @@ public class SliceBufferedUInt8Array3D extends UInt8Array3D
     public UInt8Array2D slice(int sliceIndex)
     {
         int index = getSliceBufferIndex(sliceIndex);
-        return this.slices[index].duplicate();
+        return this.slices[index];
     }
     
     @Override
@@ -112,6 +112,58 @@ public class SliceBufferedUInt8Array3D extends UInt8Array3D
         throw new RuntimeException("Unauthorized operation");
     }
     
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new DoubleIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class DoubleIterator implements java.util.Iterator<Double>
+    {
+        int sliceIndex = 0;
+        java.util.Iterator<Double> sliceIterator;
+    
+        public DoubleIterator()
+        {
+            this.sliceIterator = slice(0).values().iterator();
+        }
+    
+        @Override
+        public boolean hasNext()
+        {
+            return this.sliceIndex < size2 - 1 || sliceIterator.hasNext();
+        }
+    
+        @Override
+        public Double next()
+        {
+            if (!sliceIterator.hasNext())
+            {
+                sliceIndex++;
+                if (sliceIndex == size2)
+                {
+                    throw new RuntimeException("can not access slice after the the last one");
+                }
+                sliceIterator = slice(sliceIndex).values().iterator();
+            }
+            return sliceIterator.next();
+        }
+    }
+
+
     public static final void main(String... args)
     {
         UInt8Array3D refArray = UInt8Array3D.create(10, 10, 10);

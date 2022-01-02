@@ -33,6 +33,26 @@ public class Float32Array3DTest
         assertEquals(3, n);
     }
   
+    
+    @Test
+    public final void testValues()
+    {
+        Float32Array3D array = Float32Array3D.create(5, 4, 3);
+        array.fillValue(10.1);
+        
+        int count = 0; 
+        double sum = 0.0;
+        for (double v : array.values())
+        {
+            count++;
+            sum += v;
+        }
+        
+        assertEquals(60, count);
+        assertEquals(606.0, sum, 0.1);
+    }
+    
+    
     /**
      * Test method for {@link net.sci.array.scalar.Float32Array3D#fillValues(net.sci.array.scalar.TriFunction)}.
      */

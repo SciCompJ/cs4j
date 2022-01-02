@@ -52,18 +52,48 @@ public class BufferedFloat64ArrayND extends Float64ArrayND
 	}
 
 
-	// =============================================================
+    
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
+
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) buffer[index];
+        }
+    }
+    
+
+    // =============================================================
 	// Implementation of the Array interface
 	
-	@Override
-	public Float64Array duplicate()
-	{
-		int n = buffer.length;
-		double[] buffer2 = new double[n];
-		System.arraycopy(this.buffer, 0, buffer2, 0, n);
-		return new BufferedFloat64ArrayND(sizes, buffer2);
-	}
-
 	@Override
 	public Float64 get(int... pos)
 	{
@@ -92,7 +122,19 @@ public class BufferedFloat64ArrayND extends Float64ArrayND
 		this.buffer[index] = value;
 	}
 	
-	@Override
+	// =============================================================
+    // Implementation of the Array interface
+    
+    @Override
+    public Float64Array duplicate()
+    {
+    	int n = buffer.length;
+    	double[] buffer2 = new double[n];
+    	System.arraycopy(this.buffer, 0, buffer2, 0, n);
+    	return new BufferedFloat64ArrayND(sizes, buffer2);
+    }
+
+    @Override
 	public Float64Array.Iterator iterator()
 	{
 		return new Float64Iterator();

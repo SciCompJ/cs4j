@@ -139,6 +139,12 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	    return dup;
 	}
 	
+	/**
+	 * Returns a view on this array, by mapping the coordinates of the view to the coordinates of the input array.
+	 * @param newDims the dimensions of the view
+	 * @param coordsMapping the mapping between the coordinates of the view and the coordinates of the input array.
+	 * @return the view on this array
+	 */
     public default Array<T> view(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new View<T>(this, newDims, coordsMapping);

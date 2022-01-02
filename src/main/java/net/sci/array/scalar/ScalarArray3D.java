@@ -125,7 +125,19 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     
     // =============================================================
     // Specialization of the ScalarArray interface
-
+    
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new DoubleIterator();
+            }
+        };
+    }
+    
     
 	// =============================================================
     // Specialization of the Array interface
@@ -134,6 +146,41 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
 	public abstract ScalarArray3D<T> duplicate();
 
 	
+    // =============================================================
+    // Inner implementation of iterator on double values
+    
+    private class DoubleIterator implements java.util.Iterator<Double>
+    {
+        int x = -1;
+        int y = 0;
+        int z = 0;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return x < ScalarArray3D.this.size0 - 1 || y < ScalarArray3D.this.size1 - 1 || z < ScalarArray3D.this.size2 - 1;
+        }
+
+        @Override
+        public Double next()
+        {
+            x++;
+            if (x >= ScalarArray3D.this.size0)
+            {
+                x = 0;
+                y++;
+                if (y >= ScalarArray3D.this.size1)
+                {
+                    y = 0;
+                    z++;
+                }
+            }
+
+            return getValue(x, y, z);
+        }
+    }
+    
+    
     // =============================================================
     // Inner Wrapper class
 

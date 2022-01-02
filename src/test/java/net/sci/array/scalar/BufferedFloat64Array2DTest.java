@@ -4,13 +4,13 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class BufferedUInt16Array2DTest
+public class BufferedFloat64Array2DTest
 {
     @Test
     public final void testValues()
     {
-        BufferedUInt16Array2D array = new BufferedUInt16Array2D(5, 4);
-        array.fillValue(1000);
+        BufferedFloat64Array2D array = new BufferedFloat64Array2D(5, 4);
+        array.fillValue(1000.10);
         
         int count = 0; 
         double sum = 0.0;
@@ -21,31 +21,25 @@ public class BufferedUInt16Array2DTest
         }
         
         assertEquals(20, count);
-        assertEquals(20_000.0, sum, 0.1);
+        assertEquals(20_002.0, sum, 0.1);
     }
     
 
 	@Test
 	public final void testIterator()
 	{
-		UInt16Array2D array = new BufferedUInt16Array2D(6, 5);
-		for (int y = 0; y < 5; y++)
-		{
-			for (int x = 0; x < 6;x++)
-			{
-				array.setInt(x, y, 1000);
-			}
-		}
+		Float64Array2D array = new BufferedFloat64Array2D(5, 4);
+		array.fillValue(1000.10);
 		
 		int count = 0;
 		double sum = 0;
-		for (UInt16 val : array) 
+		for (Float64 val : array) 
 		{
 			sum += val.getValue();
 			count++;
 		}
-		assertEquals(30000, sum, .01);
-		assertEquals(30, count);
+        assertEquals(20, count);
+		assertEquals(20_002.0, sum, .01);
 	}
 
 }

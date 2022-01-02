@@ -172,6 +172,61 @@ public class SlicedInt16Array3D extends Int16Array3D
 		this.slices.get(pos[2]).setShort(new int[]{pos[0], pos[1]}, s);
 	}
 
+    
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new DoubleIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class DoubleIterator implements java.util.Iterator<Double>
+    {
+        int sliceIndex = 0;
+        java.util.Iterator<Double> sliceIterator;
+    
+        public DoubleIterator()
+        {
+            if (slices.size() > 0)
+            {
+                this.sliceIterator = slices.get(0).values().iterator();
+            }
+        }
+    
+        @Override
+        public boolean hasNext()
+        {
+            return this.sliceIndex < size2 - 1 || sliceIterator.hasNext();
+        }
+    
+        @Override
+        public Double next()
+        {
+            if (!sliceIterator.hasNext())
+            {
+                sliceIndex++;
+                if (sliceIndex == size2)
+                {
+                    throw new RuntimeException("can not access slice after the the last one");
+                }
+                sliceIterator = slices.get(sliceIndex).values().iterator();
+            }
+            return sliceIterator.next();
+        }
+    }
+
 	
 	// =============================================================
 	// Specialization of the Array interface

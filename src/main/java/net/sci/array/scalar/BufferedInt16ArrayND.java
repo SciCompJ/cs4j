@@ -106,7 +106,46 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 		this.buffer[index] = (short) Int16.clamp(intValue);
 	}
 
-	// =============================================================
+    
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
+
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) buffer[index];
+        }
+    }
+    
+
+    // =============================================================
 	// Implementation of the Array interface
 	
 	@Override

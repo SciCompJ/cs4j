@@ -109,7 +109,7 @@ public class BufferedFloat64Array3D extends Float64Array3D
 
 
 	// =============================================================
-	// Implementation of the Array3D class
+	// Implementation of the ScalarArray3D class
 
     @Override
     public void setValue(int x, int y, int z, double value)
@@ -118,21 +118,59 @@ public class BufferedFloat64Array3D extends Float64Array3D
         this.buffer[index] = value;
     }
 
-	@Override
-	public double getValue(int... pos)
-	{
-	    int index = (pos[2] * this.size1 + pos[1]) * this.size0 + pos[0];
-        return this.buffer[index];
-	}
-
-	@Override
-	public void setValue(int[] pos, double value)
+    
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
     {
-	    int index = (pos[2] * this.size1 + pos[1]) * this.size0 + pos[0];
-        this.buffer[index] = value;
-	}
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
 
-	
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) buffer[index];
+        }
+    }
+    
+    @Override
+    public double getValue(int... pos)
+    {
+        int index = (pos[2] * this.size1 + pos[1]) * this.size0 + pos[0];
+        return this.buffer[index];
+    }
+
+    @Override
+    public void setValue(int[] pos, double value)
+    {
+        int index = (pos[2] * this.size1 + pos[1]) * this.size0 + pos[0];
+        this.buffer[index] = value;
+    }
+
+    
 	// =============================================================
 	// Specialization of the Array interface
 
@@ -150,14 +188,14 @@ public class BufferedFloat64Array3D extends Float64Array3D
 
 	public Float64Array.Iterator iterator()
 	{
-		return new FloatIterator();
+		return new Float64Iterator();
 	}
 	
-	private class FloatIterator implements Float64Array.Iterator
+	private class Float64Iterator implements Float64Array.Iterator
 	{
 		int index = -1;
 		
-		public FloatIterator() 
+		public Float64Iterator() 
 		{
 		}
 		

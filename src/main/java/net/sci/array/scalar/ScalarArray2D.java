@@ -117,13 +117,54 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 
     // =============================================================
     // Specialization of the ScalarArray interface
-
+    
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new DoubleIterator();
+            }
+        };
+    }
+    
     
 	// =============================================================
 	// Specialization of the Array interface
 
 	@Override
 	public abstract ScalarArray2D<T> duplicate();
+	
+	
+    // =============================================================
+    // Inner implementation of iterator on double values
+	
+	private class DoubleIterator implements java.util.Iterator<Double>
+    {
+        int x = -1;
+        int y = 0;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return x < ScalarArray2D.this.size0 - 1 || y < ScalarArray2D.this.size1 - 1;
+        }
+
+        @Override
+        public Double next()
+        {
+            x++;
+            if (x >= ScalarArray2D.this.size0)
+            {
+                x = 0;
+                y++;
+            }
+
+            return getValue(x, y);
+        }
+    }
 	
 	
 	// =============================================================

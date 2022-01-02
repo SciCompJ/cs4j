@@ -163,10 +163,65 @@ public class SlicedUInt8Array3D extends UInt8Array3D
 	}
 
 	
-	// =============================================================
-	// Specialization of the Array interface
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new DoubleIterator();
+            }
+        };
+    }
+    
+	/**
+	 * Inner implementation of iterator on double values.
+	 */
+    private class DoubleIterator implements java.util.Iterator<Double>
+    {
+        int sliceIndex = 0;
+        java.util.Iterator<Double> sliceIterator;
+    
+        public DoubleIterator()
+        {
+            if (slices.size() > 0)
+            {
+                this.sliceIterator = slices.get(0).values().iterator();
+            }
+        }
+    
+        @Override
+        public boolean hasNext()
+        {
+            return this.sliceIndex < size2 - 1 || sliceIterator.hasNext();
+        }
+    
+        @Override
+        public Double next()
+        {
+            if (!sliceIterator.hasNext())
+            {
+                sliceIndex++;
+                if (sliceIndex == size2)
+                {
+                    throw new RuntimeException("can not access slice after the the last one");
+                }
+                sliceIterator = slices.get(sliceIndex).values().iterator();
+            }
+            return sliceIterator.next();
+        }
+    }
 
-	@Override
+
+    // =============================================================
+    // Specialization of the Array interface
+
+    @Override
 	public UInt8Array3D duplicate()
 	{
 		ArrayList<UInt8Array> newSlices = new ArrayList<UInt8Array>(this.size2);
@@ -245,4 +300,9 @@ public class SlicedUInt8Array3D extends UInt8Array3D
 			sliceIterator.setByte(b);
 		}
 	}
+	
+
+	// =============================================================
+	// Inner implementation of iterator on double values
+
 }

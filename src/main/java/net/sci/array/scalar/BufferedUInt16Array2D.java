@@ -129,6 +129,45 @@ public class BufferedUInt16Array2D extends UInt16Array2D
 		this.buffer[index] = s;
 	}
 
+	
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
+
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) (buffer[index] & 0x00FFFF);
+        }
+    }
+    
+    
 
 	// =============================================================
 	// Implementation of the Array interface

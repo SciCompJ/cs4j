@@ -30,6 +30,24 @@ public class UInt8Array2DTest
         assertEquals(34, array.getInt(4, 3));
     }
     
+    @Test
+    public final void testValues()
+    {
+        UInt8Array2D array = UInt8Array2D.create(10,  5);
+        array.fillValue(10);
+        
+        int count = 0; 
+        double sum = 0.0;
+        for (double v : array.values())
+        {
+            count++;
+            sum += v;
+        }
+        
+        assertEquals(50, count);
+        assertEquals(500.0, sum, 0.1);
+    }
+    
     
     /**
      * Test method for {@link net.sci.array.Array#select(BinaryArray)}.

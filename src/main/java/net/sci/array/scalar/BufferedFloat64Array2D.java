@@ -104,14 +104,44 @@ public class BufferedFloat64Array2D extends Float64Array2D
         this.buffer[index] = value;
     }
 
-	@Override
-	public Float64Array2D duplicate()
-	{
-		double[] buffer2 = new double[size0 * size1];
-		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1);
-		return new BufferedFloat64Array2D(size0, size1, buffer2);
-	}
 	
+    // =============================================================
+    // Specialization of the ScalarArray interface
+    
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public java.util.Iterator<Double> iterator()
+            {
+                return new ValueIterator();
+            }
+        };
+    }
+    
+    /**
+     * Inner implementation of iterator on double values.
+     */
+    private class ValueIterator implements java.util.Iterator<Double>
+    {
+        int index = -1;
+        
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < (buffer.length - 1);
+        }
+
+        @Override
+        public Double next()
+        {
+            this.index++;
+            return (double) buffer[index];
+        }
+    }
+    
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array2D#getValue(int, int)
 	 */
@@ -131,21 +161,33 @@ public class BufferedFloat64Array2D extends Float64Array2D
 		int index = pos[0] + pos[1] * this.size0;
 		this.buffer[index] = value;
 	}
-
-	/* (non-Javadoc)
+	
+	
+    // =============================================================
+    // Specialization of the Array interface
+	
+	@Override
+    public Float64Array2D duplicate()
+    {
+    	double[] buffer2 = new double[size0 * size1];
+    	System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1);
+    	return new BufferedFloat64Array2D(size0, size1, buffer2);
+    }
+	
+    /* (non-Javadoc)
 	 * @see net.sci.array.data.ScalarArray#iterator()
 	 */
 	@Override
 	public Float64Array.Iterator iterator()
 	{
-		return new DoubleIterator();
+		return new Float64Iterator();
 	}
 
-	private class DoubleIterator implements Float64Array.Iterator
+	private class Float64Iterator implements Float64Array.Iterator
 	{
 		int index = -1;
 		
-		public DoubleIterator() 
+		public Float64Iterator() 
 		{
 		}
 		
