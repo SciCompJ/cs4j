@@ -10,6 +10,7 @@ import net.sci.image.morphology.filter.Dilation;
 import net.sci.image.morphology.filter.Erosion;
 import net.sci.image.morphology.filter.Gradient;
 import net.sci.image.morphology.filter.Laplacian;
+import net.sci.image.morphology.filter.MorphologicalFilterAlgo;
 import net.sci.image.morphology.filter.Opening;
 import net.sci.image.morphology.filter.WhiteTopHat;
 
@@ -25,17 +26,16 @@ import net.sci.image.morphology.filter.WhiteTopHat;
  * {@code
  * Array<?> array = ...
  * Strel se = SquareStrel.fromDiameter(5);
- * Array<?> grad = MorphologicalFilter.gradient(array, se);
+ * Array<?> grad = MorphologicalFilters.gradient(array, se);
  * Image res = new Image(grad, "Gradient");
  * res.show(); 
  *  }</pre>
  *
  * 
  * @see Strel
- * 
  * @author dlegland
  */
-public class MorphologicalFilter
+public class MorphologicalFilters
 {
     /**
      * A pre-defined set of basis morphological operations, that can be easily 
@@ -109,7 +109,7 @@ public class MorphologicalFilter
             if (this == GRADIENT)
                 return new Gradient(strel).process(array);
             if (this == LAPLACIAN)
-                return new Laplacian(strel, 128.0).process(array);// TODO: adapt middle value to array type
+                return new Laplacian(strel, 128.0).process(array); // TODO: adapt middle value to array type
 //            if (this == INTERNAL_GRADIENT)
 //                return internalGradient(array, strel);
 //            if (this == EXTERNAL_GRADIENT)
@@ -118,7 +118,23 @@ public class MorphologicalFilter
             throw new RuntimeException(
                     "Unable to process the " + this + " morphological operation");
         }
-
+        
+        public MorphologicalFilterAlgo createOperator(Strel strel)
+        {
+            if (this == DILATION) return new Dilation(strel);
+            if (this == EROSION) return new Erosion(strel);
+            if (this == CLOSING) return new Closing(strel);
+            if (this == OPENING) return new Opening(strel);
+            if (this == TOPHAT) return new WhiteTopHat(strel);
+            if (this == BOTTOMHAT) return new BlackTopHat(strel);
+            if (this == GRADIENT) return new Gradient(strel);
+            if (this == LAPLACIAN) return new Laplacian(strel, 0.0); // TODO: adapt middle value to array type
+//            if (this == INTERNAL_GRADIENT) return new internalGradient(strel);
+//            if (this == EXTERNAL_GRADIENT) return new externalGradient(strel);
+            throw new RuntimeException(
+                    "Unable to process the " + this + " morphological operation");
+        }
+        
         public String toString() 
         {
             return this.label;
@@ -314,14 +330,15 @@ public class MorphologicalFilter
     
     /**
      * Computes the morphological Laplacian of the input array. The
-     * morphological gradient is obtained from the difference of the external
-     * gradient with the internal gradient, both computed with the same
-     * structuring element.
+     * morphological laplacian is obtained by computing the sum of a dilation
+     * and an erosion using the same structuring element, and removing twice the
+     * value of the original array.
      * 
      * Homogeneous regions appear as gray.
      * 
      * @see #erosion(Array, Strel)
      * @see #dilation(Array, Strel)
+     * @see #gradient(Array, Strel)
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
@@ -484,7 +501,7 @@ public class MorphologicalFilter
     /**
      * Makes the default constructor private to avoid creation of instances.
      */
-    private MorphologicalFilter() 
+    private MorphologicalFilters() 
     {
     }
 }

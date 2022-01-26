@@ -15,6 +15,11 @@ import net.sci.image.morphology.Strel;
 /**
  * Base class for morphological filters, based on a structuring element.
  * 
+ * Can process ScalarArray instances, or VectorArray instances, and return array
+ * the same type and the same size as input arrays. In the case of VectorArray
+ * instances the process is applied on each channel / component image of the
+ * vector image).
+ * 
  * @see Strel
  * 
  * @author dlegland
@@ -76,7 +81,7 @@ public abstract class MorphologicalFilterAlgo extends AlgoStub implements ArrayO
         else
         {
             throw new RuntimeException(
-                    "Requires an instance of ScalarArray");
+                    "Requires an instance of ScalarArray or VectorArray");
         }
     }
 

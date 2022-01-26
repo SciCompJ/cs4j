@@ -7,6 +7,15 @@ import net.sci.array.Array2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.VectorArray2D;
+import net.sci.image.morphology.filter.BlackTopHat;
+import net.sci.image.morphology.filter.Closing;
+import net.sci.image.morphology.filter.Dilation;
+import net.sci.image.morphology.filter.Erosion;
+import net.sci.image.morphology.filter.Gradient;
+import net.sci.image.morphology.filter.Laplacian;
+import net.sci.image.morphology.filter.MorphologicalFilterAlgo;
+import net.sci.image.morphology.filter.Opening;
+import net.sci.image.morphology.filter.WhiteTopHat;
 import net.sci.image.morphology.strel.Strel2D;
 
 /**
@@ -19,10 +28,10 @@ import net.sci.image.morphology.strel.Strel2D;
  * Example of use:
  * <pre>
  * {@code
- * Array2D<?> array = IJ.getImage().getProcessor();
+ * Array2D<?> array = ...
  * Strel se = SquareStrel.fromDiameter(5);
- * Array2D<?> grad = Morphology.gradient(array, se);
- * ImagePlus res = new ImagePlus("Gradient", grad);
+ * Array2D<?> grad = MorphologicalFiltering.gradient(array, se);
+ * Image res = new Image(grad);
  * res.show(); 
  *  }</pre>
  *
@@ -30,16 +39,15 @@ import net.sci.image.morphology.strel.Strel2D;
  * Example of use with 3D array (stack):
  * <pre>
  * {@code
- * ImageStack array = IJ.getImage().getStack();
+ * Array3D<?> array = ...
  * Strel3D se = CubeStrel.fromDiameter(3);
- * ImageStack grad = Morphology.gradient(array, se);
+ * Array2D<?>  grad = MorphologicalFiltering.gradient(array, se);
  * ImagePlus res = new ImagePlus("Gradient3D", grad);
  * res.show(); 
  * }</pre>
  * @author David Legland
  *
  */
-//TODO: update code sample
 public class MorphologicalFiltering 
 {
 	// =======================================================================
@@ -91,6 +99,22 @@ public class MorphologicalFiltering
 			this.label = label;
 		}
 		
+		public MorphologicalFilterAlgo createOperator(Strel strel)
+		{
+            if (this == DILATION) return new Dilation(strel);
+            if (this == EROSION) return new Erosion(strel);
+            if (this == CLOSING) return new Closing(strel);
+            if (this == OPENING) return new Opening(strel);
+            if (this == TOPHAT) return new WhiteTopHat(strel);
+            if (this == BOTTOMHAT) return new BlackTopHat(strel);
+            if (this == GRADIENT) return new Gradient(strel);
+            if (this == LAPLACIAN) return new Laplacian(strel, 0.0);
+//            if (this == INTERNAL_GRADIENT) return new Dilation(strel);
+//            if (this == EXTERNAL_GRADIENT) return new Dilation(strel);
+            
+            throw new RuntimeException("Unable to process the " + this + " morphological operation");
+		}
+		
 		/**
 		 * Applies the current operator to the input array.
 		 * 
@@ -102,29 +126,18 @@ public class MorphologicalFiltering
 		 */
 		public Array2D<?> apply(Array2D<?> array, Strel2D strel) 
 		{
-			if (this == DILATION)
-				return dilation(array, strel);
-			if (this == EROSION)
-				return erosion(array, strel);
-			if (this == CLOSING)
-				return closing(array, strel);
-			if (this == OPENING)
-				return opening(array, strel);
-			if (this == TOPHAT)
-				return whiteTopHat(array, strel);
-			if (this == BOTTOMHAT)
-				return blackTopHat(array, strel);
-			if (this == GRADIENT)
-				return gradient(array, strel);
-			if (this == LAPLACIAN)
-				return laplacian(array, strel);
-			if (this == INTERNAL_GRADIENT)
-				return internalGradient(array, strel);
-			if (this == EXTERNAL_GRADIENT)
-				return externalGradient(array, strel);
-			
-			throw new RuntimeException(
-					"Unable to process the " + this + " morphological operation");
+            if (this == DILATION) return dilation(array, strel);
+            if (this == EROSION) return erosion(array, strel);
+            if (this == CLOSING) return closing(array, strel);
+            if (this == OPENING) return opening(array, strel);
+            if (this == TOPHAT) return whiteTopHat(array, strel);
+            if (this == BOTTOMHAT) return blackTopHat(array, strel);
+            if (this == GRADIENT) return gradient(array, strel);
+            if (this == LAPLACIAN) return laplacian(array, strel);
+            if (this == INTERNAL_GRADIENT) return internalGradient(array, strel);
+            if (this == EXTERNAL_GRADIENT) return externalGradient(array, strel);
+
+            throw new RuntimeException("Unable to process the " + this + " morphological operation");
 		}
 		
 //		/**
