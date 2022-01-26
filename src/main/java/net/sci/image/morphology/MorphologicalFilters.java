@@ -10,7 +10,6 @@ import net.sci.image.morphology.filter.Dilation;
 import net.sci.image.morphology.filter.Erosion;
 import net.sci.image.morphology.filter.Gradient;
 import net.sci.image.morphology.filter.Laplacian;
-import net.sci.image.morphology.filter.MorphologicalFilterAlgo;
 import net.sci.image.morphology.filter.Opening;
 import net.sci.image.morphology.filter.WhiteTopHat;
 
@@ -54,33 +53,43 @@ public class MorphologicalFilters
      * op.apply(array, SquareStrel.fromRadius(2));
      * }</pre>
      */
-    public enum Operation 
+    public enum Operation
     {
         /** Morphological erosion (local minima) */
-        EROSION("Erosion"),
+        EROSION("Erosion", "Ero"),
         /** Morphological dilation (local maxima) */
-        DILATION("Dilation"),
+        DILATION("Dilation", "Dil"),
         /** Morphological opening (erosion followed by dilation) */
-        OPENING("Opening"),
+        OPENING("Opening", "Op"),
         /** Morphological closing (dilation followed by erosion) */
-        CLOSING("Closing"),
+        CLOSING("Closing", "Cl"),
         /** White Top-Hat */
-        TOPHAT("White Top Hat"),
+        TOPHAT("White Top Hat", "WTH"),
         /** Black Top-Hat */
-        BOTTOMHAT("Black Top Hat"),
+        BOTTOMHAT("Black Top Hat", "BTH"),
         /** Morphological gradient (difference of dilation with erosion) */
-        GRADIENT("Gradient"),
+        GRADIENT("Gradient", "MGrad"),
         /**
          * Morphological laplacian (difference of external gradient with
          * internal gradient)
          */
-        LAPLACIAN("Laplacian");
+        LAPLACIAN("Laplacian", "MLap");
         
+        /**
+         * A label that can be used for display in graphical widgets.
+         */
         private final String label;
         
-        private Operation(String label) 
+        /**
+         * A suffix intended to be used for creating result image names. 
+         */
+        private String suffix;
+        
+        
+        private Operation(String label, String suffix) 
         {
             this.label = label;
+            this.suffix = suffix;
         }
         
         /**
@@ -119,7 +128,7 @@ public class MorphologicalFilters
                     "Unable to process the " + this + " morphological operation");
         }
         
-        public MorphologicalFilterAlgo createOperator(Strel strel)
+        public MorphologicalFilter createOperator(Strel strel)
         {
             if (this == DILATION) return new Dilation(strel);
             if (this == EROSION) return new Erosion(strel);
@@ -133,6 +142,11 @@ public class MorphologicalFilters
 //            if (this == EXTERNAL_GRADIENT) return new externalGradient(strel);
             throw new RuntimeException(
                     "Unable to process the " + this + " morphological operation");
+        }
+        
+        public String suffix()
+        {
+            return suffix;
         }
         
         public String toString() 

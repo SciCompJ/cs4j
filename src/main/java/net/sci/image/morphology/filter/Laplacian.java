@@ -6,6 +6,7 @@ package net.sci.image.morphology.filter;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
+import net.sci.image.morphology.MorphologicalFilter;
 import net.sci.image.morphology.Strel;
 import net.sci.image.morphology.strel.Strel2D;
 import net.sci.image.morphology.strel.Strel3D;
@@ -30,7 +31,7 @@ import net.sci.image.morphology.strel.Strel3D;
  * @author dlegland
  *
  */
-public class Laplacian extends MorphologicalFilterAlgo
+public class Laplacian extends MorphologicalFilter
 {
     double shift;
     

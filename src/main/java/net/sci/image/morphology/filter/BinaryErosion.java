@@ -11,6 +11,7 @@ import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.binary.BinaryRow;
 import net.sci.array.binary.RunLengthBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray3D;
+import net.sci.image.morphology.BinaryMorphologicalFilter;
 import net.sci.image.morphology.Strel;
 import net.sci.image.morphology.strel.Strel2D;
 import net.sci.image.morphology.strel.Strel3D;
@@ -27,7 +28,7 @@ import net.sci.image.morphology.strel.Strel3D;
  * 
  * @author dlegland
  */
-public class BinaryErosion extends BinaryMorphologicalFilterAlgo
+public class BinaryErosion extends BinaryMorphologicalFilter
 {
     public BinaryErosion(Strel strel)
     {

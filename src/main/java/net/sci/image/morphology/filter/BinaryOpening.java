@@ -6,6 +6,7 @@ package net.sci.image.morphology.filter;
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
 import net.sci.array.binary.BinaryArray;
+import net.sci.image.morphology.BinaryMorphologicalFilter;
 import net.sci.image.morphology.Strel;
 
 /**
@@ -22,7 +23,7 @@ import net.sci.image.morphology.Strel;
  * @author dlegland
  *
  */
-public class BinaryOpening extends BinaryMorphologicalFilterAlgo implements AlgoListener
+public class BinaryOpening extends BinaryMorphologicalFilter implements AlgoListener
 {
     public BinaryOpening(Strel strel)
     {

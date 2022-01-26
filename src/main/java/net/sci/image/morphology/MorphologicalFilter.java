@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.morphology.filter;
+package net.sci.image.morphology;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
@@ -10,7 +10,6 @@ import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.vector.VectorArray;
-import net.sci.image.morphology.Strel;
 
 /**
  * Base class for morphological filters, based on a structuring element.
@@ -25,14 +24,14 @@ import net.sci.image.morphology.Strel;
  * @author dlegland
  *
  */
-public abstract class MorphologicalFilterAlgo extends AlgoStub implements ArrayOperator, AlgoListener
+public abstract class MorphologicalFilter extends AlgoStub implements ArrayOperator, AlgoListener
 {
     /**
      * The structuring element used by concrete implementations.
      */
     protected Strel strel;
     
-    protected MorphologicalFilterAlgo(Strel strel)
+    protected MorphologicalFilter(Strel strel)
     {
         this.strel = strel;
     }

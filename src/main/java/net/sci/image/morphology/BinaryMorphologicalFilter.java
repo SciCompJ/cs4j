@@ -1,13 +1,16 @@
 /**
  * 
  */
-package net.sci.image.morphology.filter;
+package net.sci.image.morphology;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray;
-import net.sci.image.morphology.Strel;
+import net.sci.image.morphology.filter.BinaryClosing;
+import net.sci.image.morphology.filter.BinaryDilation;
+import net.sci.image.morphology.filter.BinaryErosion;
+import net.sci.image.morphology.filter.BinaryOpening;
 
 /**
  * Base class for morphological filter applied on a binary array, based on a
@@ -18,11 +21,11 @@ import net.sci.image.morphology.Strel;
  * @see BinaryErosion
  * @see BinaryOpening
  * @see BinaryClosing
- * @see MorphologicalFilterAlgo
+ * @see MorphologicalFilter
  * 
  * @author dlegland
  */
-public abstract class BinaryMorphologicalFilterAlgo extends AlgoStub implements ArrayOperator
+public abstract class BinaryMorphologicalFilter extends AlgoStub implements ArrayOperator
 {
     /**
      * The structuring element used by concrete implementations.
@@ -35,7 +38,7 @@ public abstract class BinaryMorphologicalFilterAlgo extends AlgoStub implements 
      * @param strel
      *            the structuring element to use for morphological operation.
      */
-    public BinaryMorphologicalFilterAlgo(Strel strel)
+    public BinaryMorphologicalFilter(Strel strel)
     {
         this.strel = strel;
     }

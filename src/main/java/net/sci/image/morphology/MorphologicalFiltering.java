@@ -7,15 +7,6 @@ import net.sci.array.Array2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.VectorArray2D;
-import net.sci.image.morphology.filter.BlackTopHat;
-import net.sci.image.morphology.filter.Closing;
-import net.sci.image.morphology.filter.Dilation;
-import net.sci.image.morphology.filter.Erosion;
-import net.sci.image.morphology.filter.Gradient;
-import net.sci.image.morphology.filter.Laplacian;
-import net.sci.image.morphology.filter.MorphologicalFilterAlgo;
-import net.sci.image.morphology.filter.Opening;
-import net.sci.image.morphology.filter.WhiteTopHat;
 import net.sci.image.morphology.strel.Strel2D;
 
 /**
@@ -45,9 +36,13 @@ import net.sci.image.morphology.strel.Strel2D;
  * ImagePlus res = new ImagePlus("Gradient3D", grad);
  * res.show(); 
  * }</pre>
+ * 
+ * @deprecated replaced by MorphologicalFilters utility class
+ * 
  * @author David Legland
  *
  */
+@Deprecated
 public class MorphologicalFiltering 
 {
 	// =======================================================================
@@ -97,22 +92,6 @@ public class MorphologicalFiltering
 		private Operation(String label) 
 		{
 			this.label = label;
-		}
-		
-		public MorphologicalFilterAlgo createOperator(Strel strel)
-		{
-            if (this == DILATION) return new Dilation(strel);
-            if (this == EROSION) return new Erosion(strel);
-            if (this == CLOSING) return new Closing(strel);
-            if (this == OPENING) return new Opening(strel);
-            if (this == TOPHAT) return new WhiteTopHat(strel);
-            if (this == BOTTOMHAT) return new BlackTopHat(strel);
-            if (this == GRADIENT) return new Gradient(strel);
-            if (this == LAPLACIAN) return new Laplacian(strel, 0.0);
-//            if (this == INTERNAL_GRADIENT) return new Dilation(strel);
-//            if (this == EXTERNAL_GRADIENT) return new Dilation(strel);
-            
-            throw new RuntimeException("Unable to process the " + this + " morphological operation");
 		}
 		
 		/**
