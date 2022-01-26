@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.math;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.Arrays;
@@ -16,7 +17,7 @@ import net.sci.array.scalar.ScalarArray;
  * @author dlegland
  *
  */
-public class Smoothing1D implements ArrayOperator
+public class Smoothing1D extends AlgoStub implements ArrayOperator
 {
     // =============================================================
     // Class variables

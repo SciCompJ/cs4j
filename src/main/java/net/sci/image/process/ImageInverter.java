@@ -3,6 +3,7 @@
  */
 package net.sci.image.process;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray;
@@ -20,7 +21,7 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  */
-public final class ImageInverter implements ImageArrayOperator, ArrayOperator
+public final class ImageInverter extends AlgoStub implements ImageArrayOperator, ArrayOperator
 {
 	/**
 	 */

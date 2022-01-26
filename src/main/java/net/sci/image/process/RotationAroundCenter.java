@@ -3,6 +3,7 @@
  */
 package net.sci.image.process;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.interp.LinearInterpolator2D;
 import net.sci.array.scalar.Float32Array2D;
@@ -16,7 +17,7 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  */
-public class RotationAroundCenter implements ImageArrayOperator
+public class RotationAroundCenter extends AlgoStub implements ImageArrayOperator
 {
 	/**
 	 * The rotation angle, in degrees counter-clockwise.

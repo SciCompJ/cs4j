@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.numeric;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.scalar.Scalar;
@@ -17,7 +18,7 @@ import net.sci.array.scalar.ScalarArray;
  * @author dlegland
  *
  */
-public abstract class ProjectionOperator implements ScalarArrayOperator
+public abstract class ProjectionOperator extends AlgoStub implements ScalarArrayOperator
 {
     // =============================================================
     // Inner members

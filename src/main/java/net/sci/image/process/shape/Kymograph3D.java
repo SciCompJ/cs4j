@@ -3,6 +3,7 @@
  */
 package net.sci.image.process.shape;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.interp.LinearInterpolator2D;
 import net.sci.array.scalar.ScalarArray;
@@ -19,7 +20,7 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  */
-public class Kymograph3D implements ImageArrayOperator
+public class Kymograph3D extends AlgoStub implements ImageArrayOperator
 {
     Polyline2D curve;
     

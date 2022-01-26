@@ -5,6 +5,7 @@ package net.sci.array.process.shape;
 
 import java.util.function.Function;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 
@@ -15,7 +16,7 @@ import net.sci.array.ArrayOperator;
  * @author dlegland
  *
  */
-public class SubSampler implements ArrayOperator
+public class SubSampler extends AlgoStub implements ArrayOperator
 {
 	int[] ratios;
 	

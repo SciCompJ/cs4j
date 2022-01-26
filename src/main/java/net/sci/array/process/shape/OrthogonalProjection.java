@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.shape;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.ScalarArray;
@@ -17,7 +18,7 @@ import net.sci.array.scalar.ScalarArray;
  * 
  */
 @Deprecated
-public class OrthogonalProjection implements ArrayOperator
+public class OrthogonalProjection extends AlgoStub implements ArrayOperator
 {
 	int dim;
 	

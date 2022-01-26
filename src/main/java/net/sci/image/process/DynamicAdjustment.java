@@ -3,6 +3,7 @@
  */
 package net.sci.image.process;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.process.Histogram;
 import net.sci.array.scalar.ScalarArray;
@@ -16,7 +17,7 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  */
-public class DynamicAdjustment implements ImageArrayOperator
+public class DynamicAdjustment extends AlgoStub implements ImageArrayOperator
 {
     /**
      * The proportion of extreme values to drop out.

@@ -3,13 +3,20 @@
  */
 package net.sci.array;
 
+import net.sci.algo.Algo;
+
 /**
- * Apply a process on an array.
+ * General interface for algorithms that take an array as input and return an
+ * array.
+ * 
+ * The main method to implement is the <code>process(Array)</code> method. The
+ * <code>canProcess(Array)</code> can also be re-implemented to check at runtime
+ * if the algorithm is suited for a given array (correct dimensions, type...).
  * 
  * @author dlegland
  *
  */
-public interface ArrayOperator
+public interface ArrayOperator extends Algo
 {
 	/**
      * Processes the given array, and returns a new Array containing the result.

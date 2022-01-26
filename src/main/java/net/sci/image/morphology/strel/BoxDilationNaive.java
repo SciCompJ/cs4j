@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.process.ScalarArrayOperator;
@@ -20,7 +21,7 @@ import net.sci.image.process.filter.Neighborhood;
  * @author dlegland
  *
  */
-public final class BoxDilationNaive implements ImageArrayOperator, ScalarArrayOperator
+public final class BoxDilationNaive extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator
 {
     /** The size of the box in each dimension */
     int[] diameters;

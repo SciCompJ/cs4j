@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.shape;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.array.ArrayOperator;
@@ -13,7 +14,7 @@ import net.sci.array.ArrayOperator;
  * @author dlegland
  *
  */
-public class Rotate3D90 implements ArrayOperator
+public class Rotate3D90 extends AlgoStub implements ArrayOperator
 {
     // =============================================================
     // Class members

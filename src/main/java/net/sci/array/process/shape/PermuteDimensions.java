@@ -5,6 +5,7 @@ package net.sci.array.process.shape;
 
 import java.util.function.Function;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 
@@ -27,7 +28,7 @@ import net.sci.array.ArrayOperator;
  * @author dlegland
  *
  */
-public class PermuteDimensions implements ArrayOperator
+public class PermuteDimensions extends AlgoStub implements ArrayOperator
 {
     /** 
      * The indices of the dimensions in the new array. Shoud be a permutation of the integers between 0 and nd.

@@ -3,6 +3,7 @@
  */
 package net.sci.image.process.segment;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.ScalarArray;
@@ -19,7 +20,7 @@ import net.sci.table.cluster.KMeans;
  * 
  * @author dlegland
  */
-public class KMeansSegmentation implements ImageArrayOperator
+public class KMeansSegmentation extends AlgoStub implements ImageArrayOperator
 {
     int nClasses;
     

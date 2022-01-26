@@ -3,6 +3,7 @@
  */
 package net.sci.image.process;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.ScalarArray;
@@ -19,7 +20,7 @@ import net.sci.image.ImageArrayOperator;
  * @author David Legland
  *
  */
-public class VectorArrayNorm implements ImageArrayOperator
+public class VectorArrayNorm extends AlgoStub implements ImageArrayOperator
 {
 	public void processVector(VectorArray<?> input, ScalarArray<?> output)
 	{

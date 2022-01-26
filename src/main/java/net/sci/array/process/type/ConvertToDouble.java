@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.type;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.Arrays;
@@ -14,7 +15,7 @@ import net.sci.array.scalar.ScalarArray;
  * @author dlegland
  *
  */
-public class ConvertToDouble implements ArrayOperator
+public class ConvertToDouble extends AlgoStub implements ArrayOperator
 {
 	@Override
     public <T> ScalarArray<?> process(Array<T> array)

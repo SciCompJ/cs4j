@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.shape;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.ScalarArray;
@@ -14,7 +15,7 @@ import net.sci.array.scalar.ScalarArray;
  * @author dlegland
  *
  */
-public class Slicer implements ArrayOperator
+public class Slicer extends AlgoStub implements ArrayOperator
 {
  	// =============================================================
     // Class members

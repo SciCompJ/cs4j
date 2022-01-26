@@ -3,6 +3,7 @@
  */
 package net.sci.image.process.segment;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.scalar.ScalarArray;
@@ -14,7 +15,7 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  */
-public abstract class AutoThreshold implements ImageArrayOperator
+public abstract class AutoThreshold extends AlgoStub implements ImageArrayOperator
 {
 	public abstract double computeThresholdValue(ScalarArray<?> array);
 	

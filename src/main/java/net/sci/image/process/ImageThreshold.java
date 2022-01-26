@@ -3,6 +3,7 @@
  */
 package net.sci.image.process;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.scalar.Scalar;
@@ -16,7 +17,7 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  */
-public class ImageThreshold implements ImageArrayOperator, ScalarArrayOperator
+public class ImageThreshold extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator
 {
 	double value;
 	

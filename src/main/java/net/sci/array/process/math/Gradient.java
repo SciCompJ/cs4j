@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.math;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.Arrays;
@@ -14,7 +15,7 @@ import net.sci.array.vector.VectorArray;
  * @author dlegland
  *
  */
-public class Gradient implements ArrayOperator
+public class Gradient extends AlgoStub implements ArrayOperator
 {
 
     /* (non-Javadoc)

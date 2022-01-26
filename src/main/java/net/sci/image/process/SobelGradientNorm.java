@@ -6,6 +6,7 @@ package net.sci.image.process;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.ScalarArray;
@@ -21,7 +22,7 @@ import net.sci.image.ImageArrayOperator;
  * @author David Legland
  *
  */
-public class SobelGradientNorm implements ImageArrayOperator
+public class SobelGradientNorm extends AlgoStub implements ImageArrayOperator
 {
     /**
      * Creates a new instance of Sobel Gradient operator.

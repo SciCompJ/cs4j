@@ -5,6 +5,7 @@ package net.sci.array.process.shape;
 
 import java.util.function.Function;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.ArrayOperator;
@@ -15,7 +16,7 @@ import net.sci.array.ArrayOperator;
  * @author dlegland
  *
  */
-public class Rotate90 implements ArrayOperator
+public class Rotate90 extends AlgoStub implements ArrayOperator
 {
 	int number = 1;
 	

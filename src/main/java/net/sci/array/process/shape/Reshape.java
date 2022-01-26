@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.shape;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 
@@ -14,7 +15,7 @@ import net.sci.array.ArrayOperator;
  * @author dlegland
  *
  */
-public class Reshape implements ArrayOperator
+public class Reshape extends AlgoStub implements ArrayOperator
 {
 	int[] newDims;
 	

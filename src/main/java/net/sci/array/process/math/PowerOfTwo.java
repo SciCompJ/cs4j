@@ -3,6 +3,7 @@
  */
 package net.sci.array.process.math;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
@@ -15,7 +16,7 @@ import net.sci.array.scalar.ScalarArray;
  * @author dlegland
  *
  */
-public class PowerOfTwo implements ScalarArrayOperator
+public class PowerOfTwo extends AlgoStub implements ScalarArrayOperator
 {
 	/**
 	 * Empty constructor.

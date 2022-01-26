@@ -3,6 +3,7 @@
  */
 package net.sci.image.process;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
@@ -20,7 +21,7 @@ import net.sci.image.ImageArrayOperator;
  * 
  * @author dlegland
  */
-public class SobelGradient implements ImageArrayOperator
+public class SobelGradient extends AlgoStub implements ImageArrayOperator
 {
 	/**
 	 * Creates a new instance of Sobel Gradient operator.

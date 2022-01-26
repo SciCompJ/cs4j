@@ -5,6 +5,7 @@ package net.sci.array.process.shape;
 
 import java.util.function.Function;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.ScalarArray;
@@ -16,7 +17,7 @@ import net.sci.array.scalar.ScalarArray;
  * @see Slicer
  * @author dlegland
  */
-public class SimpleSlicer implements ArrayOperator
+public class SimpleSlicer extends AlgoStub implements ArrayOperator
 {
     // =============================================================
     // Static methods

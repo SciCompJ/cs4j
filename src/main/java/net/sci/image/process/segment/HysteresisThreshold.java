@@ -3,6 +3,7 @@
  */
 package net.sci.image.process.segment;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
@@ -22,7 +23,7 @@ import net.sci.image.morphology.MorphologicalReconstruction;
  *
  * @author dlegland
  */
-public class HysteresisThreshold
+public class HysteresisThreshold extends AlgoStub
         implements ImageArrayOperator, ScalarArrayOperator
 {
     // ==================================================
