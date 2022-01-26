@@ -9,8 +9,10 @@ import net.sci.image.morphology.filter.Closing;
 import net.sci.image.morphology.filter.Dilation;
 import net.sci.image.morphology.filter.Erosion;
 import net.sci.image.morphology.filter.Gradient;
+import net.sci.image.morphology.filter.OuterGradient;
 import net.sci.image.morphology.filter.Laplacian;
 import net.sci.image.morphology.filter.Opening;
+import net.sci.image.morphology.filter.InnerGradient;
 import net.sci.image.morphology.filter.WhiteTopHat;
 
 /**
@@ -36,6 +38,9 @@ import net.sci.image.morphology.filter.WhiteTopHat;
  */
 public class MorphologicalFilters
 {
+    // =======================================================================
+    // Inner enumeration
+    
     /**
      * A pre-defined set of basis morphological operations, that can be easily 
      * used with a GenericDialog.</p>
@@ -70,10 +75,15 @@ public class MorphologicalFilters
         /** Morphological gradient (difference of dilation with erosion) */
         GRADIENT("Gradient", "MGrad"),
         /**
-         * Morphological laplacian (difference of external gradient with
-         * internal gradient)
+         * Morphological laplacian (difference of the outer gradient with the
+         * inner gradient, equal to DIL+ERO-2*Img).
          */
-        LAPLACIAN("Laplacian", "MLap");
+        LAPLACIAN("Laplacian", "MLap"),
+        /** Morphological internal gradient (difference of original image with erosion) */
+        INNER_GRADIENT("Inner Gradient", "InnGrad"), 
+        /** Morphological internal gradient (difference of dilation with original image) */
+        OUTER_GRADIENT("Outer Gradient", "OutGrad");
+
         
         /**
          * A label that can be used for display in graphical widgets.
@@ -103,29 +113,7 @@ public class MorphologicalFilters
          */
         public Array<?> process(Array<?> array, Strel strel) 
         {
-            if (this == DILATION)
-                return new Dilation(strel).process(array);
-            if (this == EROSION)
-                return new Erosion(strel).process(array);
-            if (this == CLOSING)
-                return new Closing(strel).process(array);
-            if (this == OPENING)
-                return new Opening(strel).process(array);
-            if (this == TOPHAT)
-                return new WhiteTopHat(strel).process(array);
-            if (this == BOTTOMHAT)
-                return new BlackTopHat(strel).process(array);
-            if (this == GRADIENT)
-                return new Gradient(strel).process(array);
-            if (this == LAPLACIAN)
-                return new Laplacian(strel, 128.0).process(array); // TODO: adapt middle value to array type
-//            if (this == INTERNAL_GRADIENT)
-//                return internalGradient(array, strel);
-//            if (this == EXTERNAL_GRADIENT)
-//                return externalGradient(array, strel);
-            
-            throw new RuntimeException(
-                    "Unable to process the " + this + " morphological operation");
+            return createOperator(strel).process(array);
         }
         
         public MorphologicalFilter createOperator(Strel strel)
@@ -137,9 +125,9 @@ public class MorphologicalFilters
             if (this == TOPHAT) return new WhiteTopHat(strel);
             if (this == BOTTOMHAT) return new BlackTopHat(strel);
             if (this == GRADIENT) return new Gradient(strel);
-            if (this == LAPLACIAN) return new Laplacian(strel, 0.0); // TODO: adapt middle value to array type
-//            if (this == INTERNAL_GRADIENT) return new internalGradient(strel);
-//            if (this == EXTERNAL_GRADIENT) return new externalGradient(strel);
+            if (this == LAPLACIAN) return new Laplacian(strel, 0.0);
+            if (this == INNER_GRADIENT) return new InnerGradient(strel);
+            if (this == OUTER_GRADIENT) return new OuterGradient(strel);
             throw new RuntimeException(
                     "Unable to process the " + this + " morphological operation");
         }
@@ -189,8 +177,9 @@ public class MorphologicalFilters
         }
     }
 
+    
     // =======================================================================
-    // Main morphological operations
+    // Static methods to perform common morphological operations
     
     /**
      * Performs morphological dilation on the input array.
@@ -362,156 +351,52 @@ public class MorphologicalFilters
      */
     public static Array<?> laplacian(Array<?> array, Strel strel) 
     {
-        return new Laplacian(strel, 128.0).process(array);
+        return new Laplacian(strel, 0.0).process(array);
     }
     
- 
+    /** 
+     * Computes the inner morphological gradient of the input array.
+     * The morphological internal gradient is obtained by from the difference 
+     * of original array with the result of an erosion.
+     * 
+     * @see #erosion(Array, Strel)
+     * @see #gradient(Array, Strel)
+     * @see #outerGradient(Array, Strel)
+     * 
+     * @param array
+     *            the input array to process (grayscale or RGB)
+     * @param strel
+     *            the structuring element used for morphological internal gradient
+     * @return the result of the morphological internal gradient
+     */
+    public static Array<?> innerGradient(Array<?> array, Strel strel)
+    {
+        return new InnerGradient(strel).process(array);
+    }
+    
+    /** 
+     * Computes the outer morphological gradient of the input array.
+     * The morphological external gradient is obtained by from the difference 
+     * of the result of a dilation and of the original array .
+     * 
+     * @see #dilation(Array, Strel)
+     * @see #innerGradient(Array, Strel)
+     * 
+     * @param array
+     *            the input array to process (grayscale or RGB)
+     * @param strel
+     *            the structuring element used for morphological external gradient
+     * @return the result of the morphological external gradient
+     */
+    public static Array<?> outerGradient(Array<?> array, Strel strel) 
+    {
+        return new OuterGradient(strel).process(array);
+    }
+    
 
-//    /** 
-//     * Computes the morphological internal gradient of the input array.
-//     * The morphological internal gradient is obtained by from the difference 
-//     * of original array with the result of an erosion.
-//     * 
-//     * @see #erosion(Array, Strel)
-//     * @see #gradient(Array, Strel)
-//     * @see #externalGradient(Array, Strel)
-//     * 
-//     * @param array
-//     *            the input array to process (grayscale or RGB)
-//     * @param strel
-//     *            the structuring element used for morphological internal gradient
-//     * @return the result of the morphological internal gradient
-//     */
-//    public static Array<?> internalGradient(Array<?> array, Strel strel)
-//    {
-//        if (array instanceof ScalarArray2D)
-//        {
-//            return internalGradient_scalar2d((ScalarArray2D<?>) array, strel);
-//        }
-//        else if (array instanceof VectorArray2D<?>)
-//        {
-//            return internalGradient_vector2d((VectorArray2D<?>) array, strel);
-//        }
-//        else
-//        {
-//            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
-//        }
-//    }
-//    
-//    private static ScalarArray2D<?> internalGradient_scalar2d(ScalarArray2D<?> array, Strel strel) 
-//    {
-//        // First performs closing
-//        ScalarArray2D<?> result = strel.erosion(array);
-//        
-//        // Compute subtraction of result from original array
-//        for (int y = 0; y < array.size(1); y++)
-//        {
-//            for (int x = 0; x < array.size(0); x++)
-//            {
-//                double val = array.getValue(x, y) - result.getValue(x, y);
-//                result.setValue(x, y, val);
-//            }
-//        }
-//        
-//        return result;
-//    }
-//
-//    /**
-//     * Computes internal morphological gradient on each channel of a vector
-//     * array, and reconstitutes the resulting vector array.
-//     * 
-//     * @param array
-//     *            the input vector array
-//     * @param strel
-//     *            the structuring element used for gradient
-//     * @return the result of the morphological gradient
-//     */
-//    private static VectorArray2D<?> internalGradient_vector2d(VectorArray2D<?> array, Strel strel)
-//    {
-//        // allocate memory for result
-//        VectorArray2D<?> res = array.duplicate();
-//        
-//        // iterate over channels
-//        for (int c = 0; c < array.channelNumber(); c++)
-//        {
-//            // process current channel and copy into result array
-//            copyChannel(internalGradient_scalar2d(array.channel(c), strel), res, c);
-//        }
-//        return res;
-//    }
-//
-//
-//    /** 
-//     * Computes the morphological external gradient of the input array.
-//     * The morphological external gradient is obtained by from the difference 
-//     * of the result of a dilation and of the original array .
-//     * 
-//     * @see #dilation(Array, Strel)
-//     * 
-//     * @param array
-//     *            the input array to process (grayscale or RGB)
-//     * @param strel
-//     *            the structuring element used for morphological external gradient
-//     * @return the result of the morphological external gradient
-//     */
-//    public static Array<?> externalGradient(Array<?> array, Strel strel) 
-//    {
-//        if (array instanceof ScalarArray2D)
-//        {
-//            return externalGradient_scalar2d((ScalarArray2D<?>) array, strel);
-//        }
-//        else if (array instanceof VectorArray2D<?>)
-//        {
-//            return externalGradient_vector2d((VectorArray2D<?>) array, strel);
-//        }
-//        else
-//        {
-//            throw new RuntimeException("Can not process array of class: " + array.getClass().getName());
-//        }
-//    }
-//    
-//    private static ScalarArray2D<?> externalGradient_scalar2d(ScalarArray2D<?> array, Strel strel) 
-//    {
-//        // First performs closing
-//        ScalarArray2D<?> result = strel.dilation(array);
-//        
-//        // Compute subtraction of result from original array
-//        for (int y = 0; y < array.size(1); y++)
-//        {
-//            for (int x = 0; x < array.size(0); x++)
-//            {
-//                double val = result.getValue(x, y) - array.getValue(x, y);
-//                result.setValue(x, y, val);
-//            }
-//        }
-//        
-//        return result;
-//    }
-//
-//    /**
-//     * Computes external morphological gradient on each channel of a vector
-//     * array, and reconstitutes the resulting vector array.
-//     * 
-//     * @param array
-//     *            the input vector array
-//     * @param strel
-//     *            the structuring element used for gradient
-//     * @return the result of the morphological gradient
-//     */
-//    private static VectorArray2D<?> externalGradient_vector2d(VectorArray2D<?> array, Strel strel)
-//    {
-//        // allocate memory for result
-//        VectorArray2D<?> res = array.duplicate();
-//        
-//        // iterate over channels
-//        for (int c = 0; c < array.channelNumber(); c++)
-//        {
-//            // process current channel and copy into result array
-//            copyChannel(externalGradient_scalar2d(array.channel(c), strel), res, c);
-//        }
-//        return res;
-//    }
-
+    // =======================================================================
+    // Constructor
+    
     /**
      * Makes the default constructor private to avoid creation of instances.
      */

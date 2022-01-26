@@ -12,32 +12,31 @@ import net.sci.image.morphology.strel.Strel2D;
 import net.sci.image.morphology.strel.Strel3D;
 
 /**
- * Morphological gradient, that consists in computing the difference of a
- * morphological dilation with a morphological erosion.
+ * Outer Morphological gradient, that consists in subtracting the original image
+ * from the result of a morphological dilation.
  * </p>
  * 
  * Example of use:
+ * 
  * <pre>
  * {@code
  * Array inputArray = ...
  * Strel strel = SquareStrel.fromRadius(2);
- * MorphologicalFilterAlgo filter = new Opening(strel);
+ * MorphologicalFilter filter = new OuterGradient(strel);
  * Array result = filter.process(inputArray);
  * }
  * </pre>
  * 
- * @see Dilation
- * @see Erosion
- * @see InnerGradient
+ * @see Gradient
  * @see OuterGradient
- * @see Laplacian
+ * @see Dilation
  * 
  * @author dlegland
  *
  */
-public class Gradient extends MorphologicalFilter
+public class OuterGradient extends MorphologicalFilter
 {
-    public Gradient(Strel strel)
+    public OuterGradient(Strel strel)
     {
         super(strel);
     }
@@ -65,20 +64,22 @@ public class Gradient extends MorphologicalFilter
         Strel2D strel2d = Strel2D.wrap(this.strel);
         strel2d.addAlgoListener(this);
         
-        // First performs elementary operations
+        // First performs erosion
         ScalarArray2D<?> result = strel2d.dilation(array);
-        ScalarArray2D<?> eroded = strel2d.erosion(array);
         
         // Compute subtraction of result from original array
+        // (keep same array for storing result)
         for (int y = 0; y < array.size(1); y++)
         {
             for (int x = 0; x < array.size(0); x++)
             {
-                double val = result.getValue(x, y) - eroded.getValue(x, y);
+                
+                double val = result.getValue(x, y) - array.getValue(x, y);
                 result.setValue(x, y, val);
             }
         }
         
+        strel2d.removeAlgoListener(this);
         return result;
     }
 
@@ -89,7 +90,6 @@ public class Gradient extends MorphologicalFilter
         
         // First performs elementary operations
         ScalarArray3D<?> result = strel3d.dilation(array);
-        ScalarArray3D<?> eroded = strel3d.erosion(array);
         
         // Compute subtraction of result from original array
         for (int z = 0; z < array.size(2); z++)
@@ -98,26 +98,31 @@ public class Gradient extends MorphologicalFilter
             {
                 for (int x = 0; x < array.size(0); x++)
                 {
-                    double val = result.getValue(x, y, z) - eroded.getValue(x, y, z);
+                    double val = result.getValue(x, y, z) - array.getValue(x, y, z);
                     result.setValue(x, y, z, val);
                 }
             }
         }
+
+        strel3d.removeAlgoListener(this);
         return result;
     }
     
     private ScalarArray<?> processScalarNd(ScalarArray<?> array)
     {
+        strel.addAlgoListener(this);
+        
         // First performs elementary operations
         ScalarArray<?> result = new Dilation(strel).processScalar(array);
-        ScalarArray<?> eroded = new Erosion(strel).processScalar(array);
         
         // Compute subtraction of result from original array
         for (int[] pos : result.positions())
         {
-            double value = result.getValue(pos) - eroded.getValue(pos);
+            double value = result.getValue(pos) - array.getValue(pos);
             result.setValue(pos, value);
         }
+
+        strel.removeAlgoListener(this);
         return result;
     }
 }

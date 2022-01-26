@@ -28,6 +28,11 @@ import net.sci.image.morphology.strel.Strel3D;
  * }
  * </pre>
  * 
+ * @see Dilation
+ * @see Erosion
+ * @see Gradient
+ * @see Laplacian
+ *
  * @author dlegland
  *
  */
