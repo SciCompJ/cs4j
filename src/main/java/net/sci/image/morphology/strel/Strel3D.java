@@ -48,7 +48,7 @@ public interface Strel3D extends Strel
          * Cube of a given side length.
          * @see CubeStrel3D 
          */
-        CUBE("CUBE"),
+        CUBE("Cube"),
         ;
         
 //        
