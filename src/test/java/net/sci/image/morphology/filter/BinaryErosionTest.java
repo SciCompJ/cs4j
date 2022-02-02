@@ -9,9 +9,12 @@ import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.binary.RunLengthBinaryArray2D;
+import net.sci.array.binary.RunLengthBinaryArray3D;
 import net.sci.image.morphology.strel.Cross3x3Strel;
 import net.sci.image.morphology.strel.Strel2D;
+import net.sci.image.morphology.strel.Strel3D;
 
 /**
  * @author dlegland
@@ -91,4 +94,184 @@ public class BinaryErosionTest
         }
     }
     
+    /**
+     * Test method for {@link net.sci.image.morphology.filter.BinaryErosion#processBinary3d(net.sci.array.binary.BinaryArray3D)}.
+     */
+    @Test
+    public final void erosion_of_black_dot_by_Cube_should_result_in_black_cube()
+    {
+        // create a 3D array containing a black dot within a large (side=30) white cube
+        RunLengthBinaryArray3D array = new RunLengthBinaryArray3D(40, 40, 40);
+        fillRect3d(array, 6, 34, 6, 34, 6, 34, true);
+        array.setBoolean(20, 20, 20, false);
+        
+        // create the structuring element, and the operator
+        Strel3D strel = Strel3D.Shape.CUBE.fromRadius(4);
+        BinaryErosion op = new BinaryErosion(strel);
+        
+        // run the operator
+        BinaryArray3D res = op.processBinary3d(array);
+        
+        // check some specific locations
+        
+        // center
+        assertFalse(res.getBoolean(20, 20, 20));
+        assertFalse(res.getBoolean(19, 20, 20));
+        assertFalse(res.getBoolean(21, 20, 20));
+        assertFalse(res.getBoolean(20, 19, 20));
+        assertFalse(res.getBoolean(20, 21, 20));
+        assertFalse(res.getBoolean(20, 20, 19));
+        assertFalse(res.getBoolean(20, 20, 21));
+
+        // image corners
+        assertFalse(res.getBoolean( 0,  0,  0));
+        assertFalse(res.getBoolean(39,  0,  0));
+        assertFalse(res.getBoolean( 0, 39,  0));
+        assertFalse(res.getBoolean(39, 39,  0));
+        assertFalse(res.getBoolean( 0,  0, 39));
+        assertFalse(res.getBoolean(39,  0, 39));
+        assertFalse(res.getBoolean( 0, 39, 39));
+        assertFalse(res.getBoolean(39, 39, 39));
+
+        // new corners of enclosing cube
+        assertTrue(res.getBoolean(10, 10, 10));
+        assertTrue(res.getBoolean(30, 10, 10));
+        assertTrue(res.getBoolean(10, 30, 10));
+        assertTrue(res.getBoolean(30, 30, 10));
+        assertTrue(res.getBoolean(10, 10, 30));
+        assertTrue(res.getBoolean(30, 10, 30));
+        assertTrue(res.getBoolean(10, 30, 30));
+        assertTrue(res.getBoolean(30, 30, 30));
+
+        // extremity of the inner cube in each direction
+        assertFalse(res.getBoolean(16, 20, 20));
+        assertFalse(res.getBoolean(24, 20, 20));
+        assertFalse(res.getBoolean(20, 16, 20));
+        assertFalse(res.getBoolean(20, 24, 20));
+        assertFalse(res.getBoolean(20, 20, 16));
+        assertFalse(res.getBoolean(20, 20, 24));
+        assertTrue(res.getBoolean(15, 20, 20));
+        assertTrue(res.getBoolean(25, 20, 20));
+        assertTrue(res.getBoolean(20, 15, 20));
+        assertTrue(res.getBoolean(20, 25, 20));
+        assertTrue(res.getBoolean(20, 20, 15));
+        assertTrue(res.getBoolean(20, 20, 25));
+
+        // corners of the inner cube
+        assertFalse(res.getBoolean(16, 16, 16));
+        assertFalse(res.getBoolean(24, 16, 16));
+        assertFalse(res.getBoolean(16, 24, 16));
+        assertFalse(res.getBoolean(24, 24, 16));
+        assertFalse(res.getBoolean(16, 16, 24));
+        assertFalse(res.getBoolean(24, 16, 24));
+        assertFalse(res.getBoolean(16, 24, 24));
+        assertFalse(res.getBoolean(24, 24, 24));
+
+        // middle of edges of inner cube (12 positions)
+        assertFalse(res.getBoolean(20, 16, 16));
+        assertFalse(res.getBoolean(16, 20, 16));
+        assertFalse(res.getBoolean(16, 24, 16));
+        assertFalse(res.getBoolean(24, 16, 16));
+        assertFalse(res.getBoolean(16, 16, 20));
+        assertFalse(res.getBoolean(24, 16, 20));
+        assertFalse(res.getBoolean(16, 24, 20));
+        assertFalse(res.getBoolean(24, 24, 20));
+        assertFalse(res.getBoolean(20, 16, 24));
+        assertFalse(res.getBoolean(16, 20, 24));
+        assertFalse(res.getBoolean(16, 24, 24));
+        assertFalse(res.getBoolean(24, 16, 24));
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.morphology.filter.BinaryErosion#processBinary3d(net.sci.array.binary.BinaryArray3D)}.
+     */
+    @Test
+    public final void erosion_of_black_dot_by_Ball_should_result_in_black_ball()
+    {
+        // create a 3D array containing a black dot within a large (side=30) white cube
+        RunLengthBinaryArray3D array = new RunLengthBinaryArray3D(40, 40, 40);
+        fillRect3d(array, 5, 34, 5, 34, 5, 34, true);
+        array.setBoolean(20, 20, 20, false);
+        
+        // create the structuring element, and the operator
+        Strel3D strel = Strel3D.Shape.BALL.fromRadius(4);
+        BinaryErosion op = new BinaryErosion(strel);
+        
+        // run the operator
+        BinaryArray3D res = op.processBinary3d(array);
+        
+        // check some specific locations
+        
+        // center, and just around center
+        assertFalse(res.getBoolean(20, 20, 20));
+        assertFalse(res.getBoolean(19, 20, 20));
+        assertFalse(res.getBoolean(21, 20, 20));
+        assertFalse(res.getBoolean(20, 19, 20));
+        assertFalse(res.getBoolean(20, 21, 20));
+        assertFalse(res.getBoolean(20, 20, 19));
+        assertFalse(res.getBoolean(20, 20, 21));
+
+        // image corners
+        assertFalse(res.getBoolean( 0,  0,  0));
+        assertFalse(res.getBoolean(39,  0,  0));
+        assertFalse(res.getBoolean( 0, 39,  0));
+        assertFalse(res.getBoolean(39, 39,  0));
+        assertFalse(res.getBoolean( 0,  0, 39));
+        assertFalse(res.getBoolean(39,  0, 39));
+        assertFalse(res.getBoolean( 0, 39, 39));
+        assertFalse(res.getBoolean(39, 39, 39));
+
+        // new corners of enclosing cube
+        assertTrue(res.getBoolean(10, 10, 10));
+        assertTrue(res.getBoolean(30, 10, 10));
+        assertTrue(res.getBoolean(10, 30, 10));
+        assertTrue(res.getBoolean(30, 30, 10));
+        assertTrue(res.getBoolean(10, 10, 30));
+        assertTrue(res.getBoolean(30, 10, 30));
+        assertTrue(res.getBoolean(10, 30, 30));
+        assertTrue(res.getBoolean(30, 30, 30));
+
+        // extremity of the inner ball in each direction
+        assertFalse(res.getBoolean(16, 20, 20));
+        assertFalse(res.getBoolean(24, 20, 20));
+        assertFalse(res.getBoolean(20, 16, 20));
+        assertFalse(res.getBoolean(20, 24, 20));
+        assertFalse(res.getBoolean(20, 20, 16));
+        assertFalse(res.getBoolean(20, 20, 24));
+        assertTrue(res.getBoolean(15, 20, 20));
+        assertTrue(res.getBoolean(25, 20, 20));
+        assertTrue(res.getBoolean(20, 15, 20));
+        assertTrue(res.getBoolean(20, 25, 20));
+        assertTrue(res.getBoolean(20, 20, 15));
+        assertTrue(res.getBoolean(20, 20, 25));
+
+        // middle of edges of inner cube (12 positions)
+        // (here, result is different from cube)
+        assertTrue(res.getBoolean(20, 16, 16));
+        assertTrue(res.getBoolean(16, 20, 16));
+        assertTrue(res.getBoolean(16, 24, 16));
+        assertTrue(res.getBoolean(24, 16, 16));
+        assertTrue(res.getBoolean(16, 16, 20));
+        assertTrue(res.getBoolean(24, 16, 20));
+        assertTrue(res.getBoolean(16, 24, 20));
+        assertTrue(res.getBoolean(24, 24, 20));
+        assertTrue(res.getBoolean(20, 16, 24));
+        assertTrue(res.getBoolean(16, 20, 24));
+        assertTrue(res.getBoolean(16, 24, 24));
+        assertTrue(res.getBoolean(24, 16, 24));
+    }
+    
+    private static final void fillRect3d(BinaryArray3D array, int xmin, int xmax, int ymin, int ymax, int zmin, int zmax, boolean state)
+    {
+        for (int z = zmin; z <= zmax; z++)
+        {
+            for (int y = ymin; y <= ymax; y++)
+            {
+                for (int x = xmin; x <= xmax; x++)
+                {
+                    array.setBoolean(x, y, z, state);
+                }
+            }
+        }
+    }
 }

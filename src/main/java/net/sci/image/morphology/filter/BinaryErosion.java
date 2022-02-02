@@ -64,7 +64,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
             fireProgressChanged(this, yres, sizeY);
             
             // initialize full result row
-            BinaryRow resRow = new BinaryRow().complement(sizeX - 1);
+            BinaryRow resRow = new BinaryRow().complement(sizeX);
             
             // iterate over rows of structuring element
             for (int yStrel = 0; yStrel < strelSize[1]; yStrel++)
@@ -77,20 +77,23 @@ public class BinaryErosion extends BinaryMorphologicalFilter
                 }
                 
                 // if any of the rows is empty, result of dilation is empty
-                BinaryRow row;
                 if (rleArray.isEmptyRow(y2))
                 {
-                    row = new BinaryRow();
+                    resRow = new BinaryRow();
+                    break;
                 }
                 else
                 {
-                    // retrieve the rows to dilate
+                    // retrieve the rows to erode
                     BinaryRow arrayRow = rleArray.getRow(y2);
                     BinaryRow strelRow = strelRows.get(yStrel);
-
-                    row = arrayRow.erosion(strelRow);
+                    
+                    // update result only if necessary
+                    if (strelRow != null)
+                    {
+                        resRow = resRow.intersection(arrayRow.erosion(strelRow));
+                    }
                 }
-                resRow = resRow.intersection(row);
             }
             
             if (!resRow.isEmpty())
@@ -155,7 +158,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
             for (int yres = 0; yres < sizeY; yres++)
             {
                 // initialize full result row
-                BinaryRow resRow = new BinaryRow().complement(sizeX - 1);
+                BinaryRow resRow = new BinaryRow().complement(sizeX);
 
                 // iterate over rows of structuring element
                 for (int zStrel = 0; zStrel < strelSize[2]; zStrel++)
@@ -181,6 +184,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
                         if (rleArray.isEmptyRow(y2, z2))
                         {
                             resRow = new BinaryRow();
+                            break;
                         }
                         else
                         {
@@ -188,10 +192,11 @@ public class BinaryErosion extends BinaryMorphologicalFilter
                             BinaryRow arrayRow = rleArray.getRow(y2, z2);
                             BinaryRow strelRow = strelRows.get(zStrel).get(yStrel);
                             
-                            BinaryRow row = strelRow != null ? arrayRow.erosion(strelRow) : arrayRow;
-                            
-                            // combine with previous result
-                            resRow = resRow.intersection(row);
+                            // update result only if necessary
+                            if (strelRow != null)
+                            {
+                                resRow = resRow.intersection(arrayRow.erosion(strelRow));
+                            }
                         }
                     }
                 }
