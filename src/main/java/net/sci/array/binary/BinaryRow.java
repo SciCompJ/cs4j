@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -47,7 +48,7 @@ public class BinaryRow
     }
     
     /**
-     * Creates a new binary row by using an existing tree of Runs.
+     * Creates a new binary row by using an existing collection of Runs.
      * 
      * @param runs
      *            the set of runs representing this row.
@@ -68,6 +69,18 @@ public class BinaryRow
     {
         this.runs = new TreeMap<>();
         this.runs.put(run.left, run);
+    }
+    
+    /**
+     * Creates a new binary row by using an existing map of Runs.
+     * 
+     * @param runs
+     *            the map of runs representing this row.
+     */
+    public BinaryRow(Map<Integer, Run> runMap)
+    {
+        this.runs = new TreeMap<>();
+        runs.putAll(runMap);
     }
     
     
@@ -284,6 +297,138 @@ public class BinaryRow
     }
     
     /**
+     * Complement the states of the row between the specified (included) bounds.
+     * 
+     * @param leftBound
+     *            the left bound of the range to complement
+     * @param rightBound
+     *            the right bound of the range to complement
+     * @return a new BinaryRow with same values as input row, except within the
+     *         range to complement.
+     */
+    public BinaryRow complement(int leftBound, int rightBound)
+    {
+        // case of empty row -> return a new row with a single run defined by
+        // the argument bounds
+        if (this.isEmpty())
+        {
+            return new BinaryRow(new Run(leftBound, rightBound));
+        }
+        
+        // initialize the map of new runs
+        TreeMap<Integer, Run> resRuns = new TreeMap<>();
+        
+        // the current run
+        Run run = null;
+        
+        // index of the first element set to false in input row
+        // (as a possibly negative integer)
+        int pos = leftBound;
+        
+        // prepare iteration on runs of input row
+        Iterator<Run> runIter = this.runs.values().iterator();
+        
+        // process the runs that start before left bound
+        while (runIter.hasNext())
+        {
+            run = runIter.next();
+            
+            // check if the run is totally before left bound, with an empty
+            // space before the start of the range to complement
+            if (run.right < leftBound - 1)
+            {
+                // simply copy the run
+                resRuns.put(run.left, run);
+                continue;
+            }
+            
+            // special case of a run that ends just before the complement range
+            if (run.right == leftBound - 1)
+            {
+                // need to create a new run with extended length
+                int currentLeft = run.left;
+                // update current run
+                run = runIter.hasNext() ? runIter.next() : null;
+
+                // check if there are other run(s) starting within complement range
+                // (or just after, actually)
+                if (run == null || run.left > rightBound + 1)
+                {
+                    resRuns.put(currentLeft, new Run(currentLeft, rightBound));
+                    pos = rightBound + 1;
+                }
+                else
+                {
+                    // next run start in range to complement;
+                    // first extend result run until beginning of input run,
+                    resRuns.put(currentLeft, new Run(currentLeft, run.left - 1));
+                    // then update current run and current position
+                    pos = run.right + 1;
+                    run = runIter.hasNext() ? runIter.next() : null;
+                }
+                
+                // by definition, we reached the beginning of complement range
+                break;
+            }
+            
+            // case of a run starting before and terminating after the left bound
+            if (run.left < leftBound)
+            {
+                // copy the portion of the run not belonging to bounds
+                resRuns.put(run.left, new Run(run.left, leftBound - 1));
+                // keep the remaining of current run as new current run
+                run = new Run(leftBound, run.right);
+            }
+            
+            break;
+        }
+        
+        // Check the if current run starts at the beginning of the range
+        // (otherwise, pos starts after the end of a run).
+        if (run != null && run.left == pos)
+        {
+            // if input row start with foreground, update beginning of next run 
+            pos = run.right + 1;
+            run = runIter.hasNext() ? runIter.next() : null;
+        }
+        
+        // iterate over intervals between runs
+        while(pos <= rightBound && run != null)
+        {
+            // check if current run reaches right bound
+            if (run.left > rightBound)
+            {
+                break;
+            }
+            
+            // fill he interval between runs
+            resRuns.put(pos, new Run(pos, run.left - 1));
+
+            // update iteration
+            pos = run.right + 1;
+            run = runIter.hasNext() ? runIter.next() : null;
+        }
+        
+        // process interval after the last run
+        if (pos <= rightBound)
+        {
+            resRuns.put(pos, new Run(pos, rightBound));
+        }
+        
+        // add the remaining runs, that start after right bound
+        while (run != null)
+        {
+            // fill he interval between runs
+            resRuns.put(run.left, run);
+
+            // update iteration
+            run = runIter.hasNext() ? runIter.next() : null;
+        }
+
+        return new BinaryRow(resRuns);
+    }
+    
+    /**
      * Computes the complement of this row, assuming it starts at index 0. As
      * row do not keep information about their length, it is necessary to
      * specify it as second argument.
@@ -294,44 +439,7 @@ public class BinaryRow
      */
     public BinaryRow complement(int length)
     {
-        // case of empty row -> return a new full row
-        if (this.isEmpty())
-        {
-            return new BinaryRow(new Run(0, length - 1));
-        }
-        
-        // initialize new empty row
-        BinaryRow res = new BinaryRow();
-        
-        // prepare iteration on runs of input row
-        Iterator<Run> runIter = this.runs.values().iterator();
-        Run nextRun = runIter.next();
-        
-        // new left is the first element set to false in input row
-        int newLeft = 0;
-        if (this.get(0))
-        {
-            // if input row start with foreground, update beginning of next run 
-            newLeft = nextRun.right + 1;
-            nextRun = runIter.hasNext() ? runIter.next() : null;
-        }
-        
-        // iterate over intervals between runs
-        while (nextRun != null)
-        {
-            res.runs.put(newLeft, new Run(newLeft, nextRun.left - 1));
-            
-            newLeft = nextRun.right + 1;
-            nextRun = runIter.hasNext() ? runIter.next() : null;
-        }
-        
-        // process interval after the last run
-        if (newLeft <= length - 1)
-        {
-            res.runs.put(newLeft, new Run(newLeft, length - 1));
-        }
-        
-        return res;
+        return complement(0, length - 1);
     }
     
     /**
