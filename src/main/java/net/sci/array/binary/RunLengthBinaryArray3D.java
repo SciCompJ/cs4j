@@ -77,13 +77,26 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 
 	/**
 	 * @param size0 the size of the array in the first dimension
-	 * @param size1 the size of the array in the second dimension
+     * @param size1 the size of the array in the second dimension
+     * @param size2 the size of the array in the third dimension
 	 */
 	public RunLengthBinaryArray3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
 		this.slices = new HashMap<>();
 	}
+
+	/**
+    * @param size0 the size of the array in the first dimension
+    * @param size1 the size of the array in the second dimension
+    * @param size2 the size of the array in the third dimension
+    * @param slices the indexed rows populating the new array 
+    */
+   public RunLengthBinaryArray3D(int size0, int size1, int size2, HashMap<Integer, HashMap<Integer, BinaryRow>> slices)
+   {
+       super(size0, size1, size2);
+       this.slices = slices;
+   }
 
 
 	// =============================================================

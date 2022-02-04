@@ -35,6 +35,18 @@ public class BinaryDilation extends BinaryMorphologicalFilter
         super(strel);
     }
     
+    /**
+     * Performs morphological dilation on a 2D binary array. The input is
+     * converted into an instance of <code>RunLengthBinaryArray2D</code> when
+     * necessary.
+     * 
+     * @see #processBinary3d(BinaryArray3D)
+     * @see net.sci.array.binary.RunLengthBinaryArray3D
+     * 
+     * @param array
+     *            the array on which dilation should be applied
+     * @return the result of dilation as a new array
+     */
     public BinaryArray2D processBinary2d(BinaryArray2D array)
     {
         // ensure input array uses RLE representation (if not already the case)
@@ -119,6 +131,18 @@ public class BinaryDilation extends BinaryMorphologicalFilter
         return resRows;
     }
 
+    /**
+     * Performs morphological dilation on a 3D binary array. The input is
+     * converted into an instance of <code>RunLengthBinaryArray3D</code> when
+     * necessary.
+     * 
+     * @see #processBinary2d(BinaryArray2D)
+     * @see net.sci.array.binary.RunLengthBinaryArray2D
+     * 
+     * @param array
+     *            the array on which dilation should be applied
+     * @return the result of dilation as a new array
+     */
     public BinaryArray3D processBinary3d(BinaryArray3D array)
     {
         // ensure input array uses RLE representation (if not already the case)
