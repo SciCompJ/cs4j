@@ -5,6 +5,8 @@ package net.sci.array.binary;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
+
 import org.junit.Test;
 
 /**
@@ -692,6 +694,188 @@ public class BinaryRowTest
         assertFalse(row.get(18));
     }
     
+    
+    @Test
+    public final void testSetRange_False_EmptyRow()
+    {
+        BinaryRow row = new BinaryRow();
+        
+        row.setRange(5, 15, false);
+        
+        assertTrue(row.isEmpty());
+    }
+    
+    @Test
+    public final void testSetRange_False_WithinSingleRun()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(5, 15, true);
+        
+        row.setRange(8, 12, false);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(2, row.runs.size());
+        assertTrue(row.get(7));
+        assertFalse(row.get(8));
+        assertFalse(row.get(12));
+        assertTrue(row.get(13));
+    }
+    
+    @Test
+    public final void testSetRange_False_BetweeenTwoRuns()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(5, 8, true);
+        row.setRange(18, 25, true);
+        
+        row.setRange(10, 15, false);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(2, row.runs.size());
+        assertTrue(row.get(8));
+        assertFalse(row.get(9));
+        assertFalse(row.get(17));
+        assertTrue(row.get(18));
+    }
+    
+    
+    @Test
+    public final void testSetRange_False_remainBefore_removeBetween_remainAfter()
+    {
+        // create a row with several runs, before, within and after the range
+        BinaryRow row = new BinaryRow();
+        row.setRange(0, 2, true);
+        row.setRange(5, 8, true);
+        row.setRange(11, 13, true);
+        row.setRange(16, 18, true);
+        row.setRange(22, 25, true);
+        row.setRange(30, 35, true);
+
+        row.setRange(10, 20, false);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(4, row.runs.size());
+        assertTrue(row.get(8));
+        assertFalse(row.get(9));
+        assertFalse(row.get(12));
+        assertFalse(row.get(17));
+        assertFalse(row.get(21));
+        assertTrue(row.get(22));
+    }
+    
+    @Test
+    public final void testSetRange_False_CropExtremityRuns()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(5, 15, true);
+        row.setRange(25, 35, true);
+        
+        row.setRange(10, 30, false);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(2, row.runs.size());
+        assertTrue(row.get(9));
+        assertFalse(row.get(10));
+        assertFalse(row.get(30));
+        assertTrue(row.get(31));
+    }
+    
+    @Test
+    public final void testSetRange_False_CropExtremityRuns_andRemoveWithin()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(5, 12, true);
+        row.setRange(16, 18, true);
+        row.setRange(21, 24, true);
+        row.setRange(28, 35, true);
+        
+        row.setRange(10, 30, false);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(2, row.runs.size());
+        assertTrue(row.get(9));
+        assertFalse(row.get(10));
+        assertFalse(row.get(30));
+        assertTrue(row.get(31));
+    }
+    
+
+    @Test
+    public final void testSetRange_False_CropFirstRun_runsAfterRemain()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(5, 15, true);
+        row.setRange(25, 35, true);
+        
+        row.setRange(10, 20, false);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(2, row.runs.size());
+        assertTrue(row.get(9));
+        assertFalse(row.get(10));
+        assertFalse(row.get(24));
+        assertTrue(row.get(25));
+    }
+    
+
+    @Test
+    public final void testSetRange_False_CropLastRun_runsBeforeRemain()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(5, 8, true);
+        row.setRange(15, 25, true);
+        
+        row.setRange(10, 20, false);
+        
+        assertFalse(row.isEmpty());
+        assertEquals(2, row.runs.size());
+        assertTrue(row.get(8));
+        assertFalse(row.get(9));
+        assertFalse(row.get(20));
+        assertTrue(row.get(21));
+    }
+    
+    @Test
+    public final void testSetRange_False_cropFirst_removeWithin_remainAfter()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(5, 12, true);
+        row.setRange(16, 18, true);
+        row.setRange(25, 30, true);
+        
+        row.setRange(10, 20, false);
+        
+        assertTrue(!row.isEmpty());
+        assertEquals(2, row.runs.size());
+        assertTrue(row.get(9));
+        assertFalse(row.get(10));
+        assertFalse(row.get(24));
+        assertTrue(row.get(25));
+    }
+    
+
+    @Test
+    public final void testSetRange_False_remainBefore_removeWithin_cropLast_remainAfter()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(5, 8, true);
+        row.setRange(12, 15, true);
+        row.setRange(18, 22, true);
+        row.setRange(25, 30, true);
+        
+        row.setRange(10, 20, false);
+        
+        assertTrue(!row.isEmpty());
+        assertEquals(3, row.runs.size());
+        assertTrue(row.get(8));
+        assertFalse(row.get(9));
+        assertFalse(row.get(13));
+        assertFalse(row.get(20));
+        assertTrue(row.get(21));
+        assertTrue(row.get(25));
+    }
+    
+
 
     /**
      * Test method for {@link net.sci.array.binary.BinaryRow#set(int, boolean)}.
@@ -844,6 +1028,49 @@ public class BinaryRowTest
         assertTrue(row.get(15));
         assertFalse(row.get(16));
     }
+    
+    
+    @Test
+    public final void testContainingRuns_emptyRow()
+    {
+        BinaryRow row = new BinaryRow();
+        
+        Collection<Run> runs = row.containingRuns(5, 15);
+        
+        assertTrue(runs.isEmpty());
+    }
+    
+    @Test
+    public final void testContainingRuns_before_within_after()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(0, 5, true);
+        row.setRange(12, 14, true);
+        row.setRange(16, 18, true);
+        row.setRange(25, 30, true);
+        
+        Collection<Run> runs = row.containingRuns(10, 20);
+        
+        assertFalse(runs.isEmpty());
+        assertEquals(2, runs.size());
+    }
+    
+    @Test
+    public final void testContainingRuns_before_cropFirst_within_cropLast_after()
+    {
+        BinaryRow row = new BinaryRow();
+        row.setRange(0, 5, true);
+        row.setRange(8, 12, true);
+        row.setRange(14, 16, true);
+        row.setRange(18, 22, true);
+        row.setRange(25, 30, true);
+        
+        Collection<Run> runs = row.containingRuns(10, 20);
+        
+        assertFalse(runs.isEmpty());
+        assertEquals(3, runs.size());
+    }
+    
     
     /**
      * Returns true if all following conditions are met:
