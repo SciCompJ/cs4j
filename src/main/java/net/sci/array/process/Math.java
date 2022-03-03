@@ -6,6 +6,7 @@ package net.sci.array.process;
 import java.util.function.BiFunction;
 
 import net.sci.array.Arrays;
+import net.sci.array.process.math.MathBinaryOperator;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
@@ -264,12 +265,8 @@ public class Math
             ScalarArray<? extends Scalar> output)
     {
         checkArrays(array1, array2, output);
-        
-        for (int[] pos : array1.positions())
-        {
-              output.setValue(pos, array1.getValue(pos) + array2.getValue(pos));
-        }
-        
+        MathBinaryOperator op = new MathBinaryOperator((a, b) -> a + b);
+        op.process(array1, array2, output);
         return output;
     }
     
@@ -279,12 +276,8 @@ public class Math
             ScalarArray<? extends Scalar> output)
     {
         checkArrays(array1, array2, output);
-        
-        for (int[] pos : array1.positions())
-        {
-              output.setValue(pos, array1.getValue(pos) - array2.getValue(pos));
-        }
-        
+        MathBinaryOperator op = new MathBinaryOperator((a, b) -> a - b);
+        op.process(array1, array2, output);
         return output;
     }
     
@@ -294,12 +287,8 @@ public class Math
             ScalarArray<? extends Scalar> output)
     {
         checkArrays(array1, array2, output);
-        
-        for (int[] pos : array1.positions())
-        {
-              output.setValue(pos, array1.getValue(pos) * array2.getValue(pos));
-        }
-        
+        MathBinaryOperator op = new MathBinaryOperator((a, b) -> a * b);
+        op.process(array1, array2, output);
         return output;
     }
     
@@ -309,12 +298,8 @@ public class Math
             ScalarArray<? extends Scalar> output)
     {
         checkArrays(array1, array2, output);
-        
-        for (int[] pos : array1.positions())
-        {
-              output.setValue(pos, array1.getValue(pos) / array2.getValue(pos));
-        }
-        
+        MathBinaryOperator op = new MathBinaryOperator((a, b) -> a / b);
+        op.process(array1, array2, output);
         return output;
     }
     
@@ -324,12 +309,8 @@ public class Math
             ScalarArray<? extends Scalar> output)
     {
         checkArrays(array1, array2, output);
-        
-        for (int[] pos : array1.positions())
-        {
-              output.setValue(pos, array1.getValue(pos) % array2.getValue(pos));
-        }
-        
+        MathBinaryOperator op = new MathBinaryOperator((a, b) -> a % b);
+        op.process(array1, array2, output);
         return output;
     }
     
@@ -339,12 +320,8 @@ public class Math
             ScalarArray<? extends Scalar> output)
     {
         checkArrays(array1, array2, output);
-        
-        for (int[] pos : array1.positions())
-        {
-              output.setValue(pos, java.lang.Math.min(array1.getValue(pos), array2.getValue(pos)));
-        }
-        
+        MathBinaryOperator op = new MathBinaryOperator(java.lang.Math::min);
+        op.process(array1, array2, output);
         return output;
     }
     
@@ -354,12 +331,8 @@ public class Math
             ScalarArray<? extends Scalar> output)
     {
         checkArrays(array1, array2, output);
-        
-        for (int[] pos : array1.positions())
-        {
-            output.setValue(pos, java.lang.Math.max(array1.getValue(pos), array2.getValue(pos)));
-        }
-        
+        MathBinaryOperator op = new MathBinaryOperator(java.lang.Math::max);
+        op.process(array1, array2, output);
         return output;
     }
     
@@ -383,12 +356,8 @@ public class Math
             ScalarArray<? extends Scalar> output, BiFunction<Double,Double,Double> fun)
     {
         checkArrays(array1, array2, output);
-        
-        for (int[] pos : array1.positions())
-        {
-            output.setValue(pos, fun.apply(array1.getValue(pos), array2.getValue(pos)));
-        }
-        
+        MathBinaryOperator op = new MathBinaryOperator(fun);
+        op.process(array1, array2, output);
         return output;
     }
     
