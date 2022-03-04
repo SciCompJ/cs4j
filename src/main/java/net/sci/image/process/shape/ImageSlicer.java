@@ -30,12 +30,15 @@ public class ImageSlicer
      */
     public static final <T> Image slice2d(Image image, int sliceIndex)
     {
+        // Cast to 3D array
         @SuppressWarnings("unchecked")
-        Array<T> array = (Array<T>) image.getData();
-
-        Array2D<T> resArray = ((Array3D<T>) array).slice(sliceIndex);
+        Array3D<T> array = Array3D.wrap((Array<T>) image.getData());
         
-        Image resultImage = new Image(resArray, image.getType(), image);
+        // extract slice
+        Array2D<T> slice = array.slice(sliceIndex);
+        
+        // convert to an image with same type
+        Image resultImage = new Image(slice, image.getType(), image);
         
         // configure calibration
         Calibration calib = resultImage.getCalibration();
