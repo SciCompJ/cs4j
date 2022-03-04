@@ -8,6 +8,8 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 
 import net.sci.array.Array;
+import net.sci.array.binary.Binary;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.color.Color;
 import net.sci.array.color.RGB16;
@@ -57,19 +59,21 @@ public class BufferedImageUtils
         Array<?> array = image.getData();
         if (array.dimensionality() != 2)
         {
-            throw new RuntimeException("Requires inner array to be 2-dimensional, not " + array.dimensionality());
+            throw new RuntimeException("Requires image data array to have 2 dimensions, not " + array.dimensionality());
         }
         
-        // Displatch process depending on image type
+        // Dispatch process depending on image type
         if (image.isBinaryImage())
         {
-            if (!(array instanceof BinaryArray2D))
+            if (array.dataType().isAssignableFrom(Binary.class))
             {
-                throw new RuntimeException("Binary images assume inner array implements BinaryArray2D");
+                throw new RuntimeException("Binary images must refere to array of Binary");
             }
+            // ensure array is binary class
+            BinaryArray binaryArray = array instanceof BinaryArray ? (BinaryArray) array : BinaryArray.convert(array); 
             
-            // binary images are converted to bi-color images
-            return createAwtImage((BinaryArray2D) array, RGB8.RED, RGB8.WHITE);
+            // convert the binary image to bi-color image
+            return createAwtImage(BinaryArray2D.wrap(binaryArray), RGB8.RED, RGB8.WHITE);
         } 
         else if (image.isLabelImage())
         {
@@ -81,21 +85,26 @@ public class BufferedImageUtils
         }
         else if (image.isColorImage())
         {
+            // call the standard way for converting planar RGB images
             if (array instanceof RGB8Array)
             {
-                // call the standard way for converting planar RGB images
                 return createAwtImageRGB8((RGB8Array) array);
             } 
-            else if (array instanceof RGB16Array)
+            
+            // Also check if the array contains RGB8 without being an instance of RGB8Array
+            if (array.dataType().isAssignableFrom(RGB8.class))
             {
-                // convert RBG16 image to AWT image, using display range
+                 return createAwtImageRGB8(RGB8Array.convert(array));
+            }
+            
+            // convert RBG16 image to AWT image, using display range
+            if (array instanceof RGB16Array)
+            {
                 double[] displayRange = image.getDisplaySettings().getDisplayRange();
                 return createAwtImageRGB16((RGB16Array) array, displayRange);
             }
-            else
-            {
-                throw new RuntimeException("Could not process color image with array of class " + array.getClass().getName());
-            }
+            
+            throw new RuntimeException("Could not process color image with array of class " + array.getClass().getName());
         }
         
         // Process array depending on its data type
@@ -103,29 +112,22 @@ public class BufferedImageUtils
         {
             // scalar images use display range and current LUT
             double[] displayRange = image.getDisplaySettings().getDisplayRange();
+            
             // convert to ScalarArray2D either by class cast or by wrapping
-//            ScalarArray2D<?> array2d = (array instanceof ScalarArray2D) ? (ScalarArray2D<?>) array
-//                    : (ScalarArray2D<?>) ScalarArray2D.wrap(array);
-            ScalarArray2D<?> array2d;
-            if (array instanceof ScalarArray2D)
-            {
-                array2d = (ScalarArray2D<?>) array;
-            }
-            else
-            {
-                array2d = (ScalarArray2D<?>) ScalarArray2D.wrapScalar2d((ScalarArray<?>) array);
-            }
+            ScalarArray2D<?> array2d = ScalarArray2D.wrapScalar2d((ScalarArray<?>) array);
+            
             return createAwtImage(array2d, displayRange, lut);
         }
         else if (array instanceof VectorArray)
         {
             // Compute the norm of the vector
-            ScalarArray<?> norm = VectorArray.norm((VectorArray<?>) array);
+            // (and keep the result as 2D)
+            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?>) array));
             
             // convert image of the norm to AWT image
             double[] valueRange = norm.finiteValueRange();
             double[] displayRange = new double[]{0.0, valueRange[1]};
-            return createAwtImage((ScalarArray2D<?>) norm, displayRange, lut);
+            return createAwtImage(norm, displayRange, lut);
         } 
 
         throw new RuntimeException("Could not process image of type " + image.getType() +
