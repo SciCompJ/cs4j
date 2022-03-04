@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 import java.util.function.Function;
 
+import net.sci.array.Array;
 import net.sci.array.DefaultPositionIterator;
 
 
@@ -64,16 +65,66 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 	}
 	
-	public static UInt16Array convert(ScalarArray<?> array)
-	{
-		UInt16Array result = UInt16Array.create(array.size());
-	    for (int[] pos : array.positions())
-	    {
-	    	result.setValue(pos, array.getValue(pos));
-	    }
-		return result;
-	}
-	
+    /**
+     * Converts the input array into an instance of UInt16Array.
+     * 
+     * Can process the following cases:
+     * <ul>
+     * <li>instances of UInt16Array (through simple class-cast)</li>
+     * <li>instances of Array that contain UInt16 values</li>
+     * <li>instances of ScalarArray</li>
+     * </ul>
+     * 
+     * @see UInt8Array.#convert(Array)
+     * 
+     * @param array
+     *            the array to convert
+     * @return the equivalent UInt16Array
+     * @throws IllegalArgumentException
+     *             if the input array does not comply to the above cases
+     */
+    public static UInt16Array convert(Array<?> array)
+    {
+        // Simply cast instances of UInt16Array
+        if (array instanceof UInt16Array)
+        {
+            return (UInt16Array) array;
+        }
+        // Convert array containing UInt16 values
+        if (array.dataType().isAssignableFrom(UInt16.class)) 
+        {
+            return convertArrayOfUInt16(array);
+        }
+        // convert scalar array
+        if (array instanceof ScalarArray<?>)
+        {
+            convertScalarArray((ScalarArray<?>) array);
+        }
+        
+        throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
+    }
+    
+    private static UInt16Array convertArrayOfUInt16(Array<?> array)
+    {
+        UInt16Array result = UInt16Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setShort(pos, ((UInt16) array.get(pos)).getShort());
+        }
+        return result;
+    }
+    
+    private static UInt16Array convertScalarArray(ScalarArray<?> array)
+    {
+        UInt16Array result = UInt16Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setValue(pos, array.getValue(pos));
+        }
+        return result;
+    }
+        
+
 	public static UInt16Array wrap(ScalarArray<?> array)
 	{
 		if (array instanceof UInt16Array)

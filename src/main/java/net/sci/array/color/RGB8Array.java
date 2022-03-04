@@ -228,32 +228,55 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         // convert UInt8 to RGB8
         if (array instanceof UInt8Array)
         {
-            RGB8Array res = RGB8Array.create(array.size());
-            UInt8Array.Iterator iter1 = ((UInt8Array) array).iterator();
-            RGB8Array.Iterator iter2 = res.iterator();
-            while (iter1.hasNext())
-            {
-                int gray = iter1.nextInt();
-                iter2.setNext(new RGB8(gray, gray, gray));
-            }
-            return res;
+            return convertUInt8Array((UInt8Array) array);
+        }
+        
+        // case of array that contains RGB8 elements without being an instance of RGB8Array
+        if (array.dataType().isAssignableFrom(RGB8.class))
+        {
+            return convertArrayOfRGB8(array);
         }
 
         // convert Binary to RGB8
         if (array instanceof BinaryArray)
         {
-            RGB8Array res = RGB8Array.create(array.size());
-            BinaryArray.Iterator iter1 = ((BinaryArray) array).iterator();
-            RGB8Array.Iterator iter2 = res.iterator();
-            while (iter1.hasNext())
-            {
-                iter2.setNext(iter1.nextBoolean() ? RGB8.WHITE : RGB8.BLACK);
-            }
-            return res;
+            return convertBinaryArray((BinaryArray) array);
         }
 
         throw new RuntimeException("Can not convert to RGB8Array array of class: " + array.getClass());
 	}
+	
+	private static RGB8Array convertArrayOfRGB8(Array<?> array)
+	{
+        RGB8Array res = RGB8Array.create(array.size());
+        for (int[] pos : res.positions())
+        {
+            res.set(pos, (RGB8) array.get(pos));
+        }
+        return res;
+	}
+
+    private static RGB8Array convertUInt8Array(UInt8Array array)
+    {
+        RGB8Array res = RGB8Array.create(array.size());
+        for (int[] pos : res.positions())
+        {
+            int gray = array.getInt(pos);
+            res.set(pos, new RGB8(gray, gray, gray));
+        }
+        return res;
+    }
+    
+	private static RGB8Array convertBinaryArray(BinaryArray array)
+	{
+        RGB8Array res = RGB8Array.create(array.size());
+        for (int[] pos : res.positions())
+        {
+            res.set(pos, array.getBoolean(pos) ? RGB8.WHITE : RGB8.BLACK);
+        }
+        return res;
+	}
+
 	
 	// =============================================================
 	// Methods specific to RGB8Array

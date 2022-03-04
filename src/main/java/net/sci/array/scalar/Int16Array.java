@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 import java.util.function.Function;
 
+import net.sci.array.Array;
 import net.sci.array.DefaultPositionIterator;
 
 
@@ -63,8 +64,57 @@ public interface Int16Array extends IntArray<Int16>
 		}
 	}
 	
-	public static Int16Array convert(ScalarArray<?> array)
-	{
+    /**
+     * Converts the input array into an instance of Int16Array.
+     * 
+     * Can process the following cases:
+     * <ul>
+     * <li>instances of Int16Array (through simple class-cast)</li>
+     * <li>instances of Array that contain Int16 values</li>
+     * <li>instances of ScalarArray</li>
+     * </ul>
+     * 
+     * @see UInt8Array.#convert(Array)
+     * 
+     * @param array
+     *            the array to convert
+     * @return the equivalent Int16Array
+     * @throws IllegalArgumentException
+     *             if the input array does not comply to the above cases
+     */
+    public static Int16Array convert(Array<?> array)
+    {
+        // Simply cast instances of Int16Array
+        if (array instanceof Int16Array)
+        {
+            return (Int16Array) array;
+        }
+        // Convert array containing Int16 values
+        if (array.dataType().isAssignableFrom(Int16.class)) 
+        {
+            return convertArrayOfInt16(array);
+        }
+        // convert scalar array
+        if (array instanceof ScalarArray<?>)
+        {
+            convertScalarArray((ScalarArray<?>) array);
+        }
+        
+        throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
+    }
+    
+    private static Int16Array convertArrayOfInt16(Array<?> array)
+    {
+        Int16Array result = Int16Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setShort(pos, ((Int16) array.get(pos)).getShort());
+        }
+        return result;
+    }
+    
+    private static Int16Array convertScalarArray(ScalarArray<?> array)
+    {
 		Int16Array result = Int16Array.create(array.size());
 	    for (int[] pos : array.positions())
 	    {

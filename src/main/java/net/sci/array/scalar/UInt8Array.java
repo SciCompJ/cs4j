@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 import java.util.function.Function;
 
+import net.sci.array.Array;
 import net.sci.array.DefaultPositionIterator;
 
 
@@ -19,6 +20,11 @@ public interface UInt8Array extends IntArray<UInt8>
     // =============================================================
     // Static variables
 
+    /**
+     * The default factory for UInt8Array instances.
+     * 
+     * @see UInt8Array.#create(int...)
+     */
     public static final IntArray.Factory<UInt8> factory = new IntArray.Factory<UInt8>()
     {
         @Override
@@ -39,6 +45,14 @@ public interface UInt8Array extends IntArray<UInt8>
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new UInt8Array with the specified dimensions. When possible,
+     * the most appropriate implementation class is chosen according to the
+     * dimensionality and the total size (number of elements) of the array.
+     * 
+     * @param dims
+     *            the size of the array to create.
+     */
 	public static UInt8Array create(int... dims)
 	{
 		switch (dims.length)
@@ -52,6 +66,18 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 	}
 	
+	/**
+     * Creates a new UInt8Array based on the specified byte buffer. The byte
+     * buffer is not duplicated during creation of Array instance, so changing
+     * values within buffer will change values within array, and vice-versa.
+     * 
+     * @param dims
+     *            the size of the array to create
+     * @param buffer
+     *            the array of byte containing array values. Length must equal
+     *            product of dimensions.
+     * @return a UInt8Array based on the specified buffer.
+     */
 	public static UInt8Array create(int[] dims, byte[] buffer)
 	{
 		switch (dims.length)
@@ -65,7 +91,56 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 	}
 	
-    public static UInt8Array convert(ScalarArray<?> array)
+	/**
+     * Converts the input array into an instance of UInt8Array.
+     * 
+     * Can process the following cases:
+     * <ul>
+     * <li>instances of UInt8Array (through simple class-cast)</li>
+     * <li>instances of Array that contain UInt8 values</li>
+     * <li>instances of ScalarArray</li>
+     * </ul>
+     * 
+     * @see UInt8Array.#convert(ScalarArray, double, double)
+     * 
+     * @param array
+     *            the array to convert
+     * @return the equivalent UInt8Array
+     * @throws IllegalArgumentException
+     *             if the input array does not comply to the above cases
+     */
+    public static UInt8Array convert(Array<?> array)
+    {
+        // Simply cast instances of UInt8Array
+        if (array instanceof UInt8Array)
+        {
+            return (UInt8Array) array;
+        }
+        // Convert array containing UInt8 values
+        if (array.dataType().isAssignableFrom(UInt8.class)) 
+        {
+            return convertArrayOfUInt8(array);
+        }
+        // convert scalar array
+        if (array instanceof ScalarArray<?>)
+        {
+            return convertScalarArray((ScalarArray<?>) array);
+        }
+        
+        throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
+    }
+    
+    private static UInt8Array convertArrayOfUInt8(Array<?> array)
+    {
+        UInt8Array result = UInt8Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setByte(pos, ((UInt8) array.get(pos)).getByte());
+        }
+        return result;
+    }
+    
+    private static UInt8Array convertScalarArray(ScalarArray<?> array)
     {
         UInt8Array result = UInt8Array.create(array.size());
         for (int[] pos : array.positions())
@@ -75,6 +150,20 @@ public interface UInt8Array extends IntArray<UInt8>
         return result;
     }
     
+    /**
+     * Converts a scalar array into a UInt8Array, by considering a value range
+     * that will be mapped to 0 and 255.
+     * 
+     * @param array
+     *            the array to convert
+     * @param minValue
+     *            the value within input array that will be associated to 0 in
+     *            result array
+     * @param maxValue
+     *            the value within input array that will be associated to 255 in
+     *            result array
+     * @return the converted UInt8Array
+     */
     public static UInt8Array convert(ScalarArray<?> array, double minValue, double maxValue)
     {
         double k = 255 / (maxValue - minValue);

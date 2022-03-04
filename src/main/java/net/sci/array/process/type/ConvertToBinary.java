@@ -6,6 +6,7 @@ package net.sci.array.process.type;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
@@ -30,6 +31,15 @@ public class ConvertToBinary extends AlgoStub implements ArrayOperator
     @Override
     public <T> BinaryArray process(Array<T> array)
     {
+        if (array.dataType().isAssignableFrom(Binary.class))
+        {
+            if (array instanceof BinaryArray)
+            {
+                return (BinaryArray) array;
+            }
+            return convertArrayOfBinary(array);
+        }
+        
         // check class
         if (!(array instanceof ScalarArray))
         {
@@ -51,6 +61,16 @@ public class ConvertToBinary extends AlgoStub implements ArrayOperator
         BinaryArray result = BinaryArray.create(array.size());
         result.fillBooleans(pos -> scalarArray.getValue(pos) > 0);
         return result;
+    }
+    
+    private BinaryArray convertArrayOfBinary(Array<?> array)
+    {
+        BinaryArray res = BinaryArray.create(array.size());
+        for (int[] pos : res.positions())
+        {
+            res.setBoolean(pos, ((Binary) array.get(pos)).getBoolean());
+        }
+        return res;           
     }
     
     /**

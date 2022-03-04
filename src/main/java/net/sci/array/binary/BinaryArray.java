@@ -5,6 +5,7 @@ package net.sci.array.binary;
 
 import java.util.function.Function;
 
+import net.sci.array.Array;
 import net.sci.array.process.type.ConvertToBinary;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.ScalarArray;
@@ -68,16 +69,16 @@ public interface BinaryArray extends IntArray<Binary>
 	}
 
 	/**
-     * Converts a scalar array to a binary array, by thresholding all values
+     * Converts an array to a binary array, by thresholding all values
      * strictly greater than zero.
      *
      * @see net.sci.array.process.type.ConvertToBinary
      * 
      * @param array
-     *            a scalar array
+     *            an array
      * @return the binary array corresponding to values greater than zero.
      */
-	public static BinaryArray convert(ScalarArray<?> array)
+	public static BinaryArray convert(Array<?> array)
 	{
 	    return new ConvertToBinary().process(array);
 	}

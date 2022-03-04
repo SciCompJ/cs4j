@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 import java.util.function.Function;
 
+import net.sci.array.Array;
 import net.sci.array.DefaultPositionIterator;
 
 
@@ -64,16 +65,65 @@ public interface Float64Array extends ScalarArray<Float64>
 		}
 	}
 	
-	public static Float64Array convert(ScalarArray<?> array)
-	{
-		Float64Array result = Float64Array.create(array.size());
-	    for (int[] pos : array.positions())
-	    {
-	    	result.setValue(pos, array.getValue(pos));
-	    }
-		return result;
-	}
-	
+    /**
+     * Converts the input array into an instance of Float64Array.
+     * 
+     * Can process the following cases:
+     * <ul>
+     * <li>instances of Float64Array (through simple class-cast)</li>
+     * <li>instances of Array that contain Float64 values</li>
+     * <li>instances of ScalarArray</li>
+     * </ul>
+     * 
+     * @see UInt8Array.#convert(Array)
+     * 
+     * @param array
+     *            the array to convert
+     * @return the equivalent Float64Array
+     * @throws IllegalArgumentException
+     *             if the input array does not comply to the above cases
+     */
+    public static Float64Array convert(Array<?> array)
+    {
+        // Simply cast instances of Float64Array
+        if (array instanceof Float64Array)
+        {
+            return (Float64Array) array;
+        }
+        // Convert array containing Float64 values
+        if (array.dataType().isAssignableFrom(Float64.class)) 
+        {
+            return convertArrayOfFloat64(array);
+        }
+        // convert scalar array
+        if (array instanceof ScalarArray<?>)
+        {
+            convertScalarArray((ScalarArray<?>) array);
+        }
+        
+        throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
+    }
+    
+    private static Float64Array convertArrayOfFloat64(Array<?> array)
+    {
+        Float64Array result = Float64Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setValue(pos, ((Float64) array.get(pos)).getValue());
+        }
+        return result;
+    }
+    
+    private static Float64Array convertScalarArray(ScalarArray<?> array)
+    {
+        Float64Array result = Float64Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setValue(pos, array.getValue(pos));
+        }
+        return result;
+    }
+    
 	public static Float64Array wrap(ScalarArray<?> array)
 	{
 		if (array instanceof Float64Array)

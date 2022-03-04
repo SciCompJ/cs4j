@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 import java.util.function.Function;
 
+import net.sci.array.Array;
 import net.sci.array.DefaultPositionIterator;
 
 
@@ -63,16 +64,65 @@ public interface Int32Array extends IntArray<Int32>
 		}
 	}
 	
-	public static Int32Array convert(ScalarArray<?> array)
-	{
-		Int32Array result = Int32Array.create(array.size());
-	    for (int[] pos : array.positions())
-	    {
-	    	result.setValue(pos, array.getValue(pos));
-	    }
-		return result;
-	}
-	
+	/**
+     * Converts the input array into an instance of Int32Array.
+     * 
+     * Can process the following cases:
+     * <ul>
+     * <li>instances of Int32Array (through simple class-cast)</li>
+     * <li>instances of Array that contain Int32 values</li>
+     * <li>instances of ScalarArray</li>
+     * </ul>
+     * 
+     * @see UInt8Array.#convert(Array)
+     * 
+     * @param array
+     *            the array to convert
+     * @return the equivalent Int32Array
+     * @throws IllegalArgumentException
+     *             if the input array does not comply to the above cases
+     */
+    public static Int32Array convert(Array<?> array)
+    {
+        // Simply cast instances of Int32Array
+        if (array instanceof Int32Array)
+        {
+            return (Int32Array) array;
+        }
+        // Convert array containing Int32 values
+        if (array.dataType().isAssignableFrom(Int32.class)) 
+        {
+            return convertArrayOfInt32(array);
+        }
+        // convert scalar array
+        if (array instanceof ScalarArray<?>)
+        {
+            convertScalarArray((ScalarArray<?>) array);
+        }
+        
+        throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
+    }
+    
+    private static Int32Array convertArrayOfInt32(Array<?> array)
+    {
+        Int32Array result = Int32Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setInt(pos, ((Int32) array.get(pos)).getInt());
+        }
+        return result;
+    }
+    
+    private static Int32Array convertScalarArray(ScalarArray<?> array)
+    {
+        Int32Array result = Int32Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setValue(pos, array.getValue(pos));
+        }
+        return result;
+    }
+    
 	public static Int32Array wrap(ScalarArray<?> array)
 	{
 		if (array instanceof Int32Array)

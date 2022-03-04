@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 import java.util.function.Function;
 
+import net.sci.array.Array;
 import net.sci.array.DefaultPositionIterator;
 
 
@@ -65,16 +66,65 @@ public interface Float32Array extends ScalarArray<Float32>
 		}
 	}
 	
-	public static Float32Array convert(ScalarArray<?> array)
-	{
-		Float32Array result = Float32Array.create(array.size());
-	    for (int[] pos : array.positions())
-	    {
-	    	result.setValue(pos, array.getValue(pos));
-	    }
-		return result;
-	}
-	
+	/**
+     * Converts the input array into an instance of Float32Array.
+     * 
+     * Can process the following cases:
+     * <ul>
+     * <li>instances of Float32Array (through simple class-cast)</li>
+     * <li>instances of Array that contain Float32 values</li>
+     * <li>instances of ScalarArray</li>
+     * </ul>
+     * 
+     * @see UInt8Array.#convert(Array)
+     * 
+     * @param array
+     *            the array to convert
+     * @return the equivalent Float32Array
+     * @throws IllegalArgumentException
+     *             if the input array does not comply to the above cases
+     */
+    public static Float32Array convert(Array<?> array)
+    {
+        // Simply cast instances of Float32Array
+        if (array instanceof Float32Array)
+        {
+            return (Float32Array) array;
+        }
+        // Convert array containing Float32 values
+        if (array.dataType().isAssignableFrom(Float32.class)) 
+        {
+            return convertArrayOfFloat32(array);
+        }
+        // convert scalar array
+        if (array instanceof ScalarArray<?>)
+        {
+            convertScalarArray((ScalarArray<?>) array);
+        }
+        
+        throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
+    }
+    
+    private static Float32Array convertArrayOfFloat32(Array<?> array)
+    {
+        Float32Array result = Float32Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setFloat(pos, ((Float32) array.get(pos)).getFloat());
+        }
+        return result;
+    }
+    
+    private static Float32Array convertScalarArray(ScalarArray<?> array)
+    {
+        Float32Array result = Float32Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setValue(pos, array.getValue(pos));
+        }
+        return result;
+    }
+    
 	public static Float32Array wrap(ScalarArray<?> array)
 	{
 		if (array instanceof Float32Array)

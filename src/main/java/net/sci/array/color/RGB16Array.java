@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.array.vector.IntVectorArray;
@@ -34,7 +35,8 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
             return array;
         }
     };
-
+    
+    
 	// =============================================================
 	// Static methods
 
@@ -50,7 +52,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 			return RGB16ArrayND.create(dims);
 		}
 	}
-
+	
     /**
      * Splits the three channels of a RGB16 array.
      * 
@@ -173,6 +175,78 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
         }
         
         return result;
+    }
+
+    /**
+     * Convert the given array to a color array. If the input array is already
+     * an instance of RGB16Array, simply returns it.
+     * 
+     * Can process RGB16, UInt16 or Binary arrays.
+     * 
+     * @param array
+     *            the input array to convert
+     * @return a RG16 array with the same size
+     */
+    public static RGB16Array convert(Array<?> array)
+    {
+        // Return input RGB16 array
+        if (array instanceof RGB16Array)
+        {
+            return (RGB16Array) array;
+        }
+        
+        // convert UInt16 to RGB16
+        if (array instanceof UInt16Array)
+        {
+            return convertUInt16Array((UInt16Array) array);
+        }
+        
+        // case of array that contains RGB16 elements without being an instance of RGB16Array
+        if (array.dataType().isAssignableFrom(RGB16.class))
+        {
+            return convertArrayOfRGB16(array);
+        }
+
+        // convert Binary to RGB16
+        if (array instanceof BinaryArray)
+        {
+            return convertBinaryArray((BinaryArray) array);
+        }
+
+        throw new RuntimeException("Can not convert to RGB16Array array of class: " + array.getClass());
+    }
+    
+    private static RGB16Array convertArrayOfRGB16(Array<?> array)
+    {
+        RGB16Array res = RGB16Array.create(array.size());
+        for (int[] pos : res.positions())
+        {
+            res.set(pos, (RGB16) array.get(pos));
+        }
+        return res;
+    }
+
+    private static RGB16Array convertUInt16Array(UInt16Array array)
+    {
+        RGB16Array res = RGB16Array.create(array.size());
+        for (int[] pos : res.positions())
+        {
+            int gray = array.getInt(pos);
+            res.set(pos, new RGB16(gray, gray, gray));
+        }
+        return res;
+    }
+    
+    private static RGB16Array convertBinaryArray(BinaryArray array)
+    {
+        RGB16 white = new RGB16(0x0FFFF, 0x0FFFF, 0x0FFFF);
+        RGB16 black = new RGB16(0, 0, 0);
+        RGB16Array res = RGB16Array.create(array.size());
+        for (int[] pos : res.positions())
+        {
+            res.set(pos, array.getBoolean(pos) ? white : black);
+        }
+        return res;
     }
 
     
