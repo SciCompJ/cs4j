@@ -9,6 +9,8 @@ import net.sci.array.scalar.UInt8Array3D;
 import net.sci.array.vector.IntVectorArray3D;
 
 /**
+ * Base class for implementation of 3D arrays containing colors represented as RGB8.
+ * 
  * @author dlegland
  *
  */
@@ -181,8 +183,59 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 	 * @see net.sci.array.color.RGB8Array#iterator()
 	 */
 	@Override
-	public abstract net.sci.array.color.RGB8Array.Iterator iterator();
+    public RGB8Array.Iterator iterator()
+    {
+        return new RGB8Iterator();
+    }
 
+	
+    // =============================================================
+    // Default implementation of Iterator
+
+    private class RGB8Iterator implements RGB8Array.Iterator
+    {
+        PositionIterator iter = positionIterator();
+        
+        public RGB8Iterator()
+        {
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            return iter.hasNext();
+        }
+
+        @Override
+        public void forward()
+        {
+            iter.forward();
+        }
+
+        @Override
+        public RGB8 get()
+        {
+            return RGB8Array3D.this.get(iter.get());
+        }
+
+        @Override
+        public void set(RGB8 value)
+        {
+            RGB8Array3D.this.set(iter.get(), value);
+        }
+
+        @Override
+        public double getValue(int c)
+        {
+            return RGB8Array3D.this.getValue(iter.get(), c);
+        }
+
+        @Override
+        public void setValue(int c, double value)
+        {
+            RGB8Array3D.this.setValue(iter.get(), c, value);
+        }
+    };
 
 	// =============================================================
     // Inner classes for Array3D

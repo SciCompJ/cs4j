@@ -85,17 +85,17 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
     {
         return new ChannelView(channel);
     }
-    
+
     public Iterable<UInt8Array2D> channels()
     {
         return new Iterable<UInt8Array2D>()
-                {
-                    @Override
-                    public java.util.Iterator<UInt8Array2D> iterator()
-                    {
-                        return new ChannelIterator();
-                    }
-                };
+        {
+            @Override
+            public java.util.Iterator<UInt8Array2D> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
     }
 
     public java.util.Iterator<UInt8Array2D> channelIterator()
@@ -147,8 +147,60 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 	 * @see net.sci.array.color.RGB8Array#iterator()
 	 */
 	@Override
-	public abstract RGB8Array.Iterator iterator();
+	public RGB8Array.Iterator iterator()
+	{
+	    return new RGB8Iterator();
+	}
 
+
+    // =============================================================
+    // Default implementation of Iterator
+
+	private class RGB8Iterator implements RGB8Array.Iterator
+	{
+	    PositionIterator iter = positionIterator();
+	    
+	    public RGB8Iterator()
+	    {
+	    }
+
+	    @Override
+	    public boolean hasNext()
+	    {
+	        return iter.hasNext();
+	    }
+
+	    @Override
+	    public void forward()
+	    {
+	        iter.forward();
+	    }
+
+	    @Override
+	    public RGB8 get()
+	    {
+	        return RGB8Array2D.this.get(iter.get());
+	    }
+
+	    @Override
+	    public void set(RGB8 value)
+	    {
+	        RGB8Array2D.this.set(iter.get(), value);
+	    }
+
+	    @Override
+	    public double getValue(int c)
+	    {
+	        return RGB8Array2D.this.getValue(iter.get(), c);
+	    }
+
+	    @Override
+	    public void setValue(int c, double value)
+	    {
+	        RGB8Array2D.this.setValue(iter.get(), c, value);
+	    }
+	};
+	
 
     // =============================================================
     // View implementations
