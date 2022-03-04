@@ -341,11 +341,52 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
      *            index of the channel to view
      * @return a view on the channel
      */
-    public UInt8Array channel(int channel);
+    public default UInt8Array channel(int channel)
+    {
+        return new RGB8Array.ChannelView(this, channel);
+    }
     
-    public Iterable<? extends UInt8Array> channels();
+    public default Iterable<? extends UInt8Array> channels()
+    {
+        return new Iterable<UInt8Array>()
+        {
+            @SuppressWarnings("unchecked")
+            @Override
+            public java.util.Iterator<UInt8Array> iterator()
+            {
+                return (java.util.Iterator<UInt8Array>) channelIterator();
+            }
+        };
+    }
+    
+    /**
+     * Returns an iterator over the channels within this RGB8 Array, each
+     * channel implementing the UInt8Array interface.
+     * 
+     * A default implementation is provided, but specialized implementations may
+     * provide more efficient or more specific implementations.
+     */
+    public default java.util.Iterator<? extends UInt8Array> channelIterator()
+    {
+        // Create an anonymous class for the channel iterator 
+        return new java.util.Iterator<UInt8Array>()
+        {
+            int channel = -1;
 
-    public java.util.Iterator<? extends UInt8Array> channelIterator();
+            @Override
+            public boolean hasNext()
+            {
+                return channel < 2;
+            }
+
+            @Override
+            public UInt8Array next()
+            {
+                channel++;
+                return new RGB8Array.ChannelView(RGB8Array.this, channel);
+            }
+        };
+    }
 
 	@Override
 	public default double[] getValues(int[] pos)
@@ -389,16 +430,10 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	{
 		// create output array
 		RGB8Array result = RGB8Array.create(this.size());
-
-		// initialize iterators
-		RGB8Array.Iterator iter1 = this.iterator();
-		RGB8Array.Iterator iter2 = result.iterator();
 		
-		// copy values into output array
-		while(iter1.hasNext())
+		for (int[] pos : result.positions())
 		{
-			iter2.forward();
-			iter2.set(iter1.next());
+		    result.set(pos, get(pos));
 		}
 		
 		// return result
@@ -434,7 +469,76 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 		}
 	}
 
+	
+    // =============================================================
+    // Inner classes
+
 	/**
+     * Utility class that implements a view on a channel of a RGB8 array as a
+     * UInt8Array.
+     * 
+     * @see RGB8Array.#channelIterator()
+     */
+    static class ChannelView implements UInt8Array
+    {
+        RGB8Array array;
+        int channel;
+        
+        public ChannelView(RGB8Array array, int channel)
+        {
+            int nChannels = 3;
+            if (channel < 0 || channel >= nChannels)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Channel index %d must be comprised between 0 and %d", channel, nChannels));
+            }
+            
+            this.array = array;
+            this.channel = channel;
+        }
+
+
+        @Override
+        public byte getByte(int... pos)
+        {
+            return (byte) array.getSample(pos, channel);
+        }
+
+
+        @Override
+        public void setByte(int[] pos, byte byteValue)
+        {
+            array.setSample(pos, channel, byteValue & 0x00FF);
+        }
+
+
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+    }
+
+    
+    /**
 	 * 
 	 * @author dlegland
 	 * @see UInt8Array.Wrapper
