@@ -98,7 +98,7 @@ public interface UInt16Array extends IntArray<UInt16>
         // convert scalar array
         if (array instanceof ScalarArray<?>)
         {
-            convertScalarArray((ScalarArray<?>) array);
+            return convertScalarArray((ScalarArray<?>) array);
         }
         
         throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
@@ -124,8 +124,74 @@ public interface UInt16Array extends IntArray<UInt16>
         return result;
     }
         
+    /**
+     * Encapsulates the specified array into a new UInt16Array, by creating a
+     * Wrapper if necessary. If the original array is already an instance of
+     * UInt16Array, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a UInt16 view of the original array
+     */
+    public static UInt16Array wrap(Array<?> array)
+    {
+        if (array instanceof UInt16Array)
+        {
+            return (UInt16Array) array;
+        }
+        if (array instanceof ScalarArray)
+        {
+            return wrapScalar((ScalarArray<?>) array);
+        }
+        
+        if (UInt16.class.isAssignableFrom(array.dataType()))
+        {
+            // create an anonymous class to wrap the instance of Array<UInt16>
+            return new UInt16Array() 
+            {
+                @Override
+                public int dimensionality()
+                {
+                    return array.dimensionality();
+                }
 
-	public static UInt16Array wrap(ScalarArray<?> array)
+                @Override
+                public int[] size()
+                {
+                    return array.size();
+                }
+
+                @Override
+                public int size(int dim)
+                {
+                    return array.size(dim);
+                }
+
+                @Override
+                public PositionIterator positionIterator()
+                {
+                    return array.positionIterator();
+                }
+
+                @Override
+                public short getShort(int... pos)
+                {
+                    return ((UInt16) array.get(pos)).getShort();
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void setShort(int[] pos, short value)
+                {
+                    ((Array<UInt16>) array).set(pos, new UInt16(value));
+                }
+            };
+        }
+        
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
+    
+	public static UInt16Array wrapScalar(ScalarArray<?> array)
 	{
 		if (array instanceof UInt16Array)
 		{

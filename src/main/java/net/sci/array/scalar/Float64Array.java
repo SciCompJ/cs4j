@@ -9,7 +9,6 @@ import net.sci.array.Array;
 import net.sci.array.DefaultPositionIterator;
 
 
-
 /**
  * @author dlegland
  *
@@ -98,7 +97,7 @@ public interface Float64Array extends ScalarArray<Float64>
         // convert scalar array
         if (array instanceof ScalarArray<?>)
         {
-            convertScalarArray((ScalarArray<?>) array);
+            return convertScalarArray((ScalarArray<?>) array);
         }
         
         throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
@@ -124,7 +123,74 @@ public interface Float64Array extends ScalarArray<Float64>
         return result;
     }
     
-	public static Float64Array wrap(ScalarArray<?> array)
+    /**
+     * Encapsulates the specified array into a new Float64Array, by creating a
+     * Wrapper if necessary. If the original array is already an instance of
+     * Float64Array, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Float64 view of the original array
+     */
+    public static Float64Array wrap(Array<?> array)
+    {
+        if (array instanceof Float64Array)
+        {
+            return (Float64Array) array;
+        }
+        if (array instanceof ScalarArray)
+        {
+            return wrapScalar((ScalarArray<?>) array);
+        }
+        
+        if (Float64.class.isAssignableFrom(array.dataType()))
+        {
+            // create an anonymous class to wrap the instance of Array<Float64>
+            return new Float64Array() 
+            {
+                @Override
+                public int dimensionality()
+                {
+                    return array.dimensionality();
+                }
+
+                @Override
+                public int[] size()
+                {
+                    return array.size();
+                }
+
+                @Override
+                public int size(int dim)
+                {
+                    return array.size(dim);
+                }
+
+                @Override
+                public PositionIterator positionIterator()
+                {
+                    return array.positionIterator();
+                }
+
+                @Override
+                public double getValue(int... pos)
+                {
+                    return ((Float64) array.get(pos)).getValue();
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void setValue(int[] pos, double value)
+                {
+                    ((Array<Float64>) array).set(pos, new Float64((float) value));
+                }
+            };
+        }
+        
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
+    
+    public static Float64Array wrapScalar(ScalarArray<?> array)
 	{
 		if (array instanceof Float64Array)
 		{

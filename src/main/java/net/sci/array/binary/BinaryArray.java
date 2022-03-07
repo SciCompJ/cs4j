@@ -83,7 +83,74 @@ public interface BinaryArray extends IntArray<Binary>
 	    return new ConvertToBinary().process(array);
 	}
 
-    public static BinaryArray wrap(ScalarArray<?> array)
+    /**
+     * Encapsulates the specified array into a new BinaryArray, by creating a
+     * Wrapper if necessary. If the original array is already an instance of
+     * BinaryArray, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Binary view of the original array
+     */
+    public static BinaryArray wrap(Array<?> array)
+    {
+        if (array instanceof BinaryArray)
+        {
+            return (BinaryArray) array;
+        }
+        if (array instanceof ScalarArray)
+        {
+            return wrapScalar((ScalarArray<?>) array);
+        }
+        
+        if (Binary.class.isAssignableFrom(array.dataType()))
+        {
+            // create an anonymous class to wrap the instance of Array<Binary>
+            return new BinaryArray() 
+            {
+                @Override
+                public int dimensionality()
+                {
+                    return array.dimensionality();
+                }
+
+                @Override
+                public int[] size()
+                {
+                    return array.size();
+                }
+
+                @Override
+                public int size(int dim)
+                {
+                    return array.size(dim);
+                }
+
+                @Override
+                public PositionIterator positionIterator()
+                {
+                    return array.positionIterator();
+                }
+
+                @Override
+                public boolean getBoolean(int... pos)
+                {
+                    return ((Binary) array.get(pos)).getBoolean();
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void setBoolean(int[] pos, boolean value)
+                {
+                    ((Array<Binary>) array).set(pos, new Binary(value));
+                }
+            };
+        }
+        
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
+    
+    public static BinaryArray wrapScalar(ScalarArray<?> array)
     {
         if (array instanceof BinaryArray)
         {

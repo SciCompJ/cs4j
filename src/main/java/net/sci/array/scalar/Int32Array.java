@@ -8,7 +8,6 @@ import java.util.function.Function;
 import net.sci.array.Array;
 import net.sci.array.DefaultPositionIterator;
 
-
 /**
  * @author dlegland
  *
@@ -97,7 +96,7 @@ public interface Int32Array extends IntArray<Int32>
         // convert scalar array
         if (array instanceof ScalarArray<?>)
         {
-            convertScalarArray((ScalarArray<?>) array);
+            return convertScalarArray((ScalarArray<?>) array);
         }
         
         throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
@@ -123,15 +122,82 @@ public interface Int32Array extends IntArray<Int32>
         return result;
     }
     
-	public static Int32Array wrap(ScalarArray<?> array)
-	{
-		if (array instanceof Int32Array)
-		{
-			return (Int32Array) array;
-		}
-		return new Wrapper(array);
-	}
-	
+    /**
+     * Encapsulates the specified array into a new Int32Array, by creating a
+     * Wrapper if necessary. If the original array is already an instance of
+     * Int32Array, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Int32 view of the original array
+     */
+    public static Int32Array wrap(Array<?> array)
+    {
+        if (array instanceof Int32Array)
+        {
+            return (Int32Array) array;
+        }
+        if (array instanceof ScalarArray)
+        {
+            return wrapScalar((ScalarArray<?>) array);
+        }
+        
+        if (Int32.class.isAssignableFrom(array.dataType()))
+        {
+            // create an anonymous class to wrap the instance of Array<Int32>
+            return new Int32Array() 
+            {
+                @Override
+                public int dimensionality()
+                {
+                    return array.dimensionality();
+                }
+
+                @Override
+                public int[] size()
+                {
+                    return array.size();
+                }
+
+                @Override
+                public int size(int dim)
+                {
+                    return array.size(dim);
+                }
+
+                @Override
+                public PositionIterator positionIterator()
+                {
+                    return array.positionIterator();
+                }
+
+                @Override
+                public int getInt(int... pos)
+                {
+                    return ((Int32) array.get(pos)).getInt();
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void setInt(int[] pos, int value)
+                {
+                    ((Array<Int32>) array).set(pos, new Int32(value));
+                }
+            };
+        }
+        
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
+
+    public static Int32Array wrapScalar(ScalarArray<?> array)
+    {
+        if (array instanceof Int32Array)
+        {
+            return (Int32Array) array;
+        }
+        return new Wrapper(array);
+    }
+
 		
 	// =============================================================
 	// Specialization of the Array interface

@@ -176,6 +176,73 @@ public interface UInt8Array extends IntArray<UInt8>
     }
     
 	/**
+     * Encapsulates the specified array into a new UInt8Array, by creating a
+     * Wrapper if necessary. If the original array is already an instance of
+     * UInt8Array, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a UInt8 view of the original array
+     */
+	public static UInt8Array wrap(Array<?> array)
+	{
+		if (array instanceof UInt8Array)
+		{
+			return (UInt8Array) array;
+		}
+		if (array instanceof ScalarArray)
+        {
+            return wrapScalar((ScalarArray<?>) array);
+        }
+		
+		if (UInt8.class.isAssignableFrom(array.dataType()))
+		{
+		    // create an anonymous class to wrap the instance of Array<UInt8>
+		    return new UInt8Array() 
+		    {
+		        @Override
+		        public int dimensionality()
+		        {
+		            return array.dimensionality();
+		        }
+
+		        @Override
+		        public int[] size()
+		        {
+                    return array.size();
+		        }
+
+		        @Override
+		        public int size(int dim)
+		        {
+                    return array.size(dim);
+		        }
+
+		        @Override
+		        public PositionIterator positionIterator()
+		        {
+                    return array.positionIterator();
+		        }
+
+		        @Override
+		        public byte getByte(int... pos)
+		        {
+		            return ((UInt8) array.get(pos)).getByte();
+		        }
+
+		        @SuppressWarnings("unchecked")
+                @Override
+		        public void setByte(int[] pos, byte value)
+		        {
+		            ((Array<UInt8>) array).set(pos, new UInt8(value));
+		        }
+		    };
+        }
+		
+		throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+	}
+	
+    /**
      * Encapsulates the instance of Scalar array into a new UInt8Array, by
      * creating a Wrapper if necessary. 
      * If the original array is already an instance of UInt8Array, it is returned.  
@@ -184,15 +251,15 @@ public interface UInt8Array extends IntArray<UInt8>
      *            the original array
      * @return a UInt8 view of the original array
      */
-	public static UInt8Array wrap(ScalarArray<?> array)
-	{
-		if (array instanceof UInt8Array)
-		{
-			return (UInt8Array) array;
-		}
-		return new Wrapper(array);
-	}
-	
+    public static UInt8Array wrapScalar(ScalarArray<?> array)
+    {
+        if (array instanceof UInt8Array)
+        {
+            return (UInt8Array) array;
+        }
+        return new Wrapper(array);
+    }
+    
 
 	// =============================================================
 	// New methods
