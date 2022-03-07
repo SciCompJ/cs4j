@@ -86,13 +86,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
 	 */
 	@Override
 	public abstract RGB8ArrayND duplicate();
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.color.RGB8Array#iterator()
-	 */
-	@Override
-	public abstract RGB8Array.Iterator iterator();
-
+	
     private class ChannelView extends UInt8ArrayND
     {
         int channel;

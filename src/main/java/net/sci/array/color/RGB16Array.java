@@ -12,7 +12,6 @@ import net.sci.array.binary.BinaryArray;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.array.vector.IntVectorArray;
-import net.sci.array.vector.VectorArray;
 
 /**
  * An array that contains colors represented as instances of RGB16 type.
@@ -385,14 +384,63 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 		return RGB16.class;
 	}
 
-	public abstract Iterator iterator();
+	/**
+     * Default iterator over RGB16 values of the RGB16Array, based on the
+     * positionIterator.
+     * 
+     * @see #positionIterator()
+     */
+    public default Iterator iterator()
+    {
+        return new Iterator()
+        {
+            PositionIterator iter = positionIterator();
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public RGB16 next()
+            {
+                iter.forward();
+                return RGB16Array.this.get(iter.get());
+            }
+
+            @Override
+            public RGB16 get()
+            {
+                return RGB16Array.this.get(iter.get());
+            }
+
+            @Override
+            public void set(RGB16 value)
+            {
+                RGB16Array.this.set(iter.get(), value);
+            }
+        };
+    }
 
 	
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator extends VectorArray.Iterator<RGB16>
+	public interface Iterator extends IntVectorArray.Iterator<RGB16>
 	{
+        @Override
+        public default int getSample(int c)
+        {
+            return get().getSamples()[c];
+        }
+
         @Override
         public default double getValue(int c)
         {

@@ -84,19 +84,7 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
 
 
 	// =============================================================
-	// Specialization of Array interface
-	
-	/* (non-Javadoc)
-	 * @see net.sci.array.color.RGB16Array#duplicate()
-	 */
-	@Override
-	public abstract RGB16ArrayND duplicate();
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.color.RGB16Array#iterator()
-	 */
-	@Override
-	public abstract RGB16Array.Iterator iterator();
+	// Inner class implementations
 
     private class ChannelView extends UInt16ArrayND
     {

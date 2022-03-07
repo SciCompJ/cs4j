@@ -155,12 +155,6 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RG
         set(pos[0], pos[1], rgb);
     }
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.color.RGB8Array#iterator()
-	 */
-	@Override
-	public abstract RGB16Array.Iterator iterator();
-
 
     // =============================================================
     // Implementation of inner classes

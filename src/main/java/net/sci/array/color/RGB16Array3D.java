@@ -179,12 +179,6 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
         set(pos[0], pos[1], pos[2], rgb);
     }
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.color.RGB16Array#iterator()
-	 */
-	@Override
-	public abstract net.sci.array.color.RGB16Array.Iterator iterator();
-
 	
 	// =============================================================
     // Inner classes for Array3D
@@ -204,7 +198,6 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
             this.sliceIndex = slice;
         }
     
-
         
         @Override
         public net.sci.array.color.RGB16Array.Iterator iterator()

@@ -12,7 +12,6 @@ import net.sci.array.binary.BinaryArray;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.IntVectorArray;
-import net.sci.array.vector.VectorArray;
 
 /**
  * An array that contains colors represented as instances of RGB8 type.
@@ -276,7 +275,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         }
         return res;
 	}
-
+	
 	
 	// =============================================================
 	// Methods specific to RGB8Array
@@ -287,8 +286,6 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	 * 
 	 * @return an UInt8 version of this RGB8 array
 	 */
-//	public UInt8Array convertToUInt8();
-//    @Override
     public default UInt8Array convertToUInt8()
     {
         int[] sizes = this.size();
@@ -463,7 +460,50 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 		return result;
 	}
 
-	public Iterator iterator();
+	/**
+     * Default iterator over RGB8 values of the RGB8Array, based on the
+     * positionIterator.
+     * 
+     * @see #positionIterator()
+     */
+	public default Iterator iterator()
+    {
+        return new Iterator()
+        {
+            PositionIterator iter = positionIterator();
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public RGB8 next()
+            {
+                iter.forward();
+                return RGB8Array.this.get(iter.get());
+            }
+
+            @Override
+            public RGB8 get()
+            {
+                return RGB8Array.this.get(iter.get());
+            }
+
+            @Override
+            public void set(RGB8 value)
+            {
+                RGB8Array.this.set(iter.get(), value);
+            }
+        };
+    }
 
 	
 	// =============================================================
@@ -475,8 +515,14 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 		return RGB8.class;
 	}
 
-	public interface Iterator extends VectorArray.Iterator<RGB8>
+	public interface Iterator extends IntVectorArray.Iterator<RGB8>
 	{
+        @Override
+        public default int getSample(int c)
+        {
+            return get().getSamples()[c];
+        }
+
         @Override
         public default double getValue(int c)
         {
