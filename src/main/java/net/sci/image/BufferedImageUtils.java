@@ -65,15 +65,17 @@ public class BufferedImageUtils
         // Dispatch process depending on image type
         if (image.isBinaryImage())
         {
-            if (array.dataType().isAssignableFrom(Binary.class))
+            // Check adequacy of array type with image type
+            if (array.dataType() != Binary.class)
             {
                 throw new RuntimeException("Binary images must refere to array of Binary");
             }
+            
             // ensure array is binary class
-            BinaryArray binaryArray = array instanceof BinaryArray ? (BinaryArray) array : BinaryArray.convert(array); 
+            BinaryArray2D binaryArray = BinaryArray2D.wrap(BinaryArray.wrap(array)); 
             
             // convert the binary image to bi-color image
-            return createAwtImage(BinaryArray2D.wrap(binaryArray), RGB8.RED, RGB8.WHITE);
+            return createAwtImage(binaryArray, RGB8.RED, RGB8.WHITE);
         } 
         else if (image.isLabelImage())
         {
@@ -85,23 +87,17 @@ public class BufferedImageUtils
         }
         else if (image.isColorImage())
         {
-            // call the standard way for converting planar RGB images
-            if (array instanceof RGB8Array)
+            // Check if the array contains RGB8 data
+            if (array.dataType() == RGB8.class)
             {
-                return createAwtImageRGB8((RGB8Array) array);
-            } 
-            
-            // Also check if the array contains RGB8 without being an instance of RGB8Array
-            if (array.dataType().isAssignableFrom(RGB8.class))
-            {
-                 return createAwtImageRGB8(RGB8Array.convert(array));
+                 return createAwtImageRGB8(RGB8Array.wrap(array));
             }
             
             // convert RBG16 image to AWT image, using display range
-            if (array instanceof RGB16Array)
+            if (array.dataType() == RGB16.class)
             {
                 double[] displayRange = image.getDisplaySettings().getDisplayRange();
-                return createAwtImageRGB16((RGB16Array) array, displayRange);
+                return createAwtImageRGB16(RGB16Array.wrap(array), displayRange);
             }
             
             throw new RuntimeException("Could not process color image with array of class " + array.getClass().getName());
