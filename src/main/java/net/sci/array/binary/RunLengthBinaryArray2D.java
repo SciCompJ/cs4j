@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sci.algo.AlgoStub;
+
 /**
  * Concrete implementation of BinaryArray2D that stores inner data in a
  * collection of "run-lengths", defined by a position and a length. Such a
@@ -37,24 +39,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         {
             return (RunLengthBinaryArray2D) array;
         }
-        
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-        RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
-        
-        // start with naive algorithm
-        for (int y = 0; y < sizeY; y++)
-        {
-            for (int x = 0; x < sizeX; x++)
-            {
-                if (array.getBoolean(x, y))
-                {
-                    res.setBoolean(x, y, true);
-                }
-            }
-        }
-        
-        return res;
+        return new Converter().process(array);
     }
     
     
@@ -272,6 +257,35 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         public void setBoolean(boolean b)
         {
             RunLengthBinaryArray2D.this.setBoolean(x, y, b);
+        }
+    }
+    
+    public static class Converter extends AlgoStub
+    {
+        public RunLengthBinaryArray2D process(BinaryArray2D array)
+        {
+            if (array instanceof RunLengthBinaryArray2D)
+            {
+                return (RunLengthBinaryArray2D) array;
+            }
+            
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
+            RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
+            
+            // start with naive algorithm
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    if (array.getBoolean(x, y))
+                    {
+                        res.setBoolean(x, y, true);
+                    }
+                }
+            }
+            
+            return res;
         }
     }
 }

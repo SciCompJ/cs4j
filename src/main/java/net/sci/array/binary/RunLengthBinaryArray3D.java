@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sci.algo.AlgoStub;
+
 /**
  * Concrete implementation of BinaryArray3D that stores inner data in a
  * collection of "run-lengths", defined by a position and a length. Such a
@@ -38,27 +40,7 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
             return (RunLengthBinaryArray3D) array;
         }
         
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-        int sizeZ = array.size(2);
-        RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
-        
-        // start with naive algorithm
-        for (int z = 0; z < sizeZ; z++)
-        {
-            for (int y = 0; y < sizeY; y++)
-            {
-                for (int x = 0; x < sizeX; x++)
-                {
-                    if (array.getBoolean(x, y, z))
-                    {
-                        res.setBoolean(x, y, z, true);
-                    }
-                }
-            }
-        }
-        
-        return res;
+        return new Converter().process(array);
     }
     
     
@@ -358,6 +340,40 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
         public void setBoolean(boolean b)
         {
             RunLengthBinaryArray3D.this.setBoolean(x, y, z, b);
+        }
+    }
+    
+    
+    public static class Converter extends AlgoStub
+    {
+        public RunLengthBinaryArray3D process(BinaryArray3D array)
+        {
+            if (array instanceof RunLengthBinaryArray3D)
+            {
+                return (RunLengthBinaryArray3D) array;
+            }
+            
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
+            int sizeZ = array.size(2);
+            RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
+            
+            // start with naive algorithm
+            for (int z = 0; z < sizeZ; z++)
+            {
+                for (int y = 0; y < sizeY; y++)
+                {
+                    for (int x = 0; x < sizeX; x++)
+                    {
+                        if (array.getBoolean(x, y, z))
+                        {
+                            res.setBoolean(x, y, z, true);
+                        }
+                    }
+                }
+            }
+            
+            return res;
         }
     }
 }
