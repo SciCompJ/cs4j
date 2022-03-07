@@ -231,7 +231,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         }
         
         // case of array that contains RGB8 elements without being an instance of RGB8Array
-        if (array.dataType().isAssignableFrom(RGB8.class))
+        if (RGB8.class.isAssignableFrom(array.dataType()))
         {
             return convertArrayOfRGB8(array);
         }
@@ -276,7 +276,69 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         return res;
 	}
 	
-	
+	/**
+     * Encapsulates the specified array into a new RGB8Array, by creating a
+     * Wrapper if necessary. If the original array is already an instance of
+     * RGB8Array, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a RGB8 view of the original array
+     */
+    public static RGB8Array wrap(Array<?> array)
+    {
+        if (array instanceof RGB8Array)
+        {
+            return (RGB8Array) array;
+        }
+        
+        if (RGB8.class.isAssignableFrom(array.dataType()))
+        {
+            // create an anonymous class to wrap the instance of Array<RGB8>
+            return new RGB8Array() 
+            {
+                @Override
+                public int dimensionality()
+                {
+                    return array.dimensionality();
+                }
+
+                @Override
+                public int[] size()
+                {
+                    return array.size();
+                }
+
+                @Override
+                public int size(int dim)
+                {
+                    return array.size(dim);
+                }
+
+                @Override
+                public PositionIterator positionIterator()
+                {
+                    return array.positionIterator();
+                }
+
+                @Override
+                public RGB8 get(int... pos)
+                {
+                    return (RGB8) array.get(pos);
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void set(int[] pos, RGB8 rgb)
+                {
+                    ((Array<RGB8>) array).set(pos, rgb);
+                }
+            };
+        }
+        
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
+
 	// =============================================================
 	// Methods specific to RGB8Array
 
@@ -406,6 +468,20 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
                 return new RGB8Array.ChannelView(RGB8Array.this, channel);
             }
         };
+    }
+
+    @Override
+    public default double getValue(int[] pos, int channel)
+    {
+        return get(pos).getValues()[channel];
+    }
+
+    @Override
+    public default void setValue(int[] pos, int channel, double value)
+    {        
+        int[] samples = get(pos).getSamples();
+        samples[channel] = UInt8.clamp(value);
+        set(pos, new RGB8(samples));
     }
 
 	@Override

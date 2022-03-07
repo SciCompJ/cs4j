@@ -248,6 +248,68 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
         return res;
     }
 
+    /**
+     * Encapsulates the specified array into a new RGB16Array, by creating a
+     * Wrapper if necessary. If the original array is already an instance of
+     * RGB16Array, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a RGB16 view of the original array
+     */
+    public static RGB16Array wrap(Array<?> array)
+    {
+        if (array instanceof RGB16Array)
+        {
+            return (RGB16Array) array;
+        }
+        
+        if (RGB16.class.isAssignableFrom(array.dataType()))
+        {
+            // create an anonymous class to wrap the instance of Array<RGB16>
+            return new RGB16Array() 
+            {
+                @Override
+                public int dimensionality()
+                {
+                    return array.dimensionality();
+                }
+
+                @Override
+                public int[] size()
+                {
+                    return array.size();
+                }
+
+                @Override
+                public int size(int dim)
+                {
+                    return array.size(dim);
+                }
+
+                @Override
+                public PositionIterator positionIterator()
+                {
+                    return array.positionIterator();
+                }
+
+                @Override
+                public RGB16 get(int... pos)
+                {
+                    return (RGB16) array.get(pos);
+                }
+
+                @SuppressWarnings("unchecked")
+                @Override
+                public void set(int[] pos, RGB16 rgb)
+                {
+                    ((Array<RGB16>) array).set(pos, rgb);
+                }
+            };
+        }
+        
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
     
 	// =============================================================
 	// New methods specific to RGB16Array
@@ -293,8 +355,45 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
         return res;
     }
 
+    
     // =============================================================
-    // Implementation of VectorArray interface
+    // Default implementations of IntVectorArray interface
+    
+    @Override
+    public default int[] getSamples(int[] pos)
+    {
+        return get(pos).getSamples();
+    }
+
+    @Override
+    public default int[] getSamples(int[] pos, int[] intValues)
+    {
+        return get(pos).getSamples(intValues);
+    }
+
+    @Override
+    public default void setSamples(int[] pos, int[] intValues)
+    {
+        set(pos, new RGB16(intValues));
+    }
+
+    @Override
+    public default int getSample(int[] pos, int channel)
+    {
+        return get(pos).getSample(channel);
+    }
+
+    @Override
+    public default void setSample(int[] pos, int channel, int intValue)
+    {
+        int[] samples = get(pos).getSamples();
+        samples[channel] = UInt16.clamp(intValue);
+        set(pos, new RGB16(samples));
+    }
+    
+
+    // =============================================================
+    // Default implementation of VectorArray interface
 
     /**
      * Returns a view on the channel specified by the given index.
@@ -303,13 +402,53 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
      *            index of the channel to view
      * @return a view on the channel
      */
-    public UInt16Array channel(int channel);
+    public default UInt16Array channel(int channel)
+    {
+        return new RGB16Array.ChannelView(this, channel);
+    }
+  
+    public default Iterable<? extends UInt16Array> channels()
+    {
+        return new Iterable<UInt16Array>()
+        {
+            @SuppressWarnings("unchecked")
+            @Override
+            public java.util.Iterator<UInt16Array> iterator()
+            {
+                return (java.util.Iterator<UInt16Array>) channelIterator();
+            }
+        };
+    }
     
-    public Iterable<? extends UInt16Array> channels();
+    /**
+     * Returns an iterator over the channels within this RGB8 Array, each
+     * channel implementing the UInt8Array interface.
+     * 
+     * A default implementation is provided, but specialized implementations may
+     * provide more efficient or more specific implementations.
+     */
+    public default java.util.Iterator<? extends UInt16Array> channelIterator()
+    {
+        // Create an anonymous class for the channel iterator 
+        return new java.util.Iterator<UInt16Array>()
+        {
+            int channel = -1;
 
-    public java.util.Iterator<? extends UInt16Array> channelIterator();
+            @Override
+            public boolean hasNext()
+            {
+                return channel < 2;
+            }
 
-    
+            @Override
+            public UInt16Array next()
+            {
+                channel++;
+                return new RGB16Array.ChannelView(RGB16Array.this, channel);
+            }
+        };
+    }
+
 	/**
 	 * Always returns 3, as this is the number of components of the RGB16 type.
 	 * 
@@ -320,6 +459,20 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	{
 		return 3;
 	}
+
+    @Override
+    public default double getValue(int[] pos, int channel)
+    {
+        return get(pos).getValues()[channel];
+    }
+
+    @Override
+    public default void setValue(int[] pos, int channel, double value)
+    {        
+        int[] samples = get(pos).getSamples();
+        samples[channel] = UInt16.clamp(value);
+        set(pos, new RGB16(samples));
+    }
 
 	@Override
 	public default double[] getValues(int[] pos)
@@ -344,7 +497,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 
 
 	// =============================================================
-	// Specialization of Array interface
+	// Default implementations for Array interface
 
 	@Override
 	public default RGB16Array newInstance(int... dims)
@@ -429,7 +582,74 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
         };
     }
 
+    // =============================================================
+    // Inner classes
+
+    /**
+     * Utility class that implements a view on a channel of a RGB16 array as a
+     * UInt16Array.
+     * 
+     * @see RGB8Array.#channelIterator()
+     */
+    static class ChannelView implements UInt16Array
+    {
+        RGB16Array array;
+        int channel;
+        
+        public ChannelView(RGB16Array array, int channel)
+        {
+            int nChannels = 3;
+            if (channel < 0 || channel >= nChannels)
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Channel index %d must be comprised between 0 and %d", channel, nChannels));
+            }
+            
+            this.array = array;
+            this.channel = channel;
+        }
+
+
+        @Override
+        public short getShort(int... pos)
+        {
+            return (short) array.getSample(pos, channel);
+        }
+
+
+        @Override
+        public void setShort(int[] pos, short shortValue)
+        {
+            array.setSample(pos, channel, shortValue & 0x00FFFF);
+        }
+
+
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+    }
 	
+    
 	// =============================================================
 	// Inner interface
 
