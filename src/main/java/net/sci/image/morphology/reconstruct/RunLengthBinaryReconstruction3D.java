@@ -4,6 +4,7 @@
 package net.sci.image.morphology.reconstruct;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 
@@ -21,6 +22,33 @@ import net.sci.array.binary.RunLengthBinaryArray3D;
  */
 public class RunLengthBinaryReconstruction3D
 {
+    /** The connectivity to use for reconstruction */
+    int conn = 6;
+    
+    /**
+     * Creates a new reconstruction algorithm with default connectivity equal to 6.
+     */
+    public RunLengthBinaryReconstruction3D()
+    {
+    }
+    
+    /**
+     * Creates a new reconstruction algorithm with the specified connectivity
+     * option.
+     * 
+     * @param conn
+     *            the integer code for the connectivity, that should be either 6
+     *            or 26.
+     */
+    public RunLengthBinaryReconstruction3D(int conn)
+    {
+        if (conn != 6 && conn != 26)
+        {
+            throw new RuntimeException("Connectivty must be either 6 or 26");
+        }
+        this.conn = conn;
+    }
+    
     public BinaryArray3D processBinary3d(BinaryArray3D marker, BinaryArray3D mask)
     {
         // check input sizes, based on the size of the mask
@@ -33,12 +61,9 @@ public class RunLengthBinaryReconstruction3D
         }
         
         // a list of (y,z)-shifts for the neighbor rows.
-        // For each array, first index corresponds to y-shift, second index corresponds to z-shift.
-        final int[][] neighborRowShifts = new int[][] {
-            {-1, -1}, { 0, -1}, {+1, -1},
-            {-1,  0},           {+1,  0},
-            {-1, +1}, { 0, +1}, {+1, +1}
-        };
+        // Shifts contain shifts in the y and z coordinates, as well as two
+        // shifts for the left and end extremities of the current run
+        Collection<RowShift> rowShifts = conn == 6 ? getRowShiftsC6() : getRowShiftsC26();
         
         // Ensure both input arrays are run-length encoded
         RunLengthBinaryArray3D marker2 = RunLengthBinaryArray3D.convert(marker);
@@ -70,7 +95,6 @@ public class RunLengthBinaryReconstruction3D
                     }
                 }
             }
-               
         }
 
         // process the queue of marker
@@ -114,11 +138,11 @@ public class RunLengthBinaryReconstruction3D
                 row.setRange(run.left, run.right, true);
                 
                 // compute intersection with neighbor rows
-                for (int[] shift : neighborRowShifts)
+                for (RowShift shift : rowShifts)
                 {
                     // index of neighbor row
-                    int yn = y + shift[0];
-                    int zn = z + shift[1];
+                    int yn = y + shift.dy;
+                    int zn = z + shift.dz;
                     
                     // retrieve neighbor row within array
                     BinaryRow neighRow = mask2.getRow(yn, zn);
@@ -128,10 +152,11 @@ public class RunLengthBinaryReconstruction3D
                         continue;
                     }
                     
-                    // TODO: should add dilation of current run for 26 connectivity
+                    // dilate current run by the required amount of pixels in each direction
+                    Run run2 = new Run(run.left + shift.xneg, run.right + shift.xpos);
 
                     // find the runs within arrayRow that intersect the current run
-                    for (Run neighRun : neighRow.intersectingRuns(run))
+                    for (Run neighRun : neighRow.intersectingRuns(run2))
                     {
                         BinaryRow row2 = result.getRow(yn, zn);
                         if (row2 != null)
@@ -173,6 +198,47 @@ public class RunLengthBinaryReconstruction3D
         public String toString()
         {
             return "RunHandle(" + y + ", " + z + ", " + run + ")";
+        }
+    }
+    
+    private static Collection<RowShift> getRowShiftsC6()
+    {
+        ArrayList<RowShift> shifts = new ArrayList<RowShift>(4);
+        shifts.add(new RowShift( 0, -1, 0, 0));
+        shifts.add(new RowShift(-1,  0, 0, 0));
+        shifts.add(new RowShift(+1,  0, 0, 0));
+        shifts.add(new RowShift( 0, +1, 0, 0));
+        return shifts;
+    }
+    
+    private static Collection<RowShift> getRowShiftsC26()
+    {
+        ArrayList<RowShift> shifts = new ArrayList<RowShift>(8);
+        shifts.add(new RowShift(-1, -1, -1, +1));
+        shifts.add(new RowShift( 0, -1, -1, +1));
+        shifts.add(new RowShift(+1, -1, -1, +1));
+        shifts.add(new RowShift(-1,  0, -1, +1));
+        shifts.add(new RowShift(+1,  0, -1, +1));
+        shifts.add(new RowShift(-1, +1, -1, +1));
+        shifts.add(new RowShift( 0, +1, -1, +1));
+        shifts.add(new RowShift(+1, +1, -1, +1));
+        return shifts;
+    }
+
+    private static class RowShift
+    {
+        int dy;
+        int dz;
+        
+        int xneg;
+        int xpos;
+        
+        public RowShift(int dy, int dz, int xneg, int xpos)
+        {
+            this.dy = dy;
+            this.dz = dz;
+            this.xneg = xneg;
+            this.xpos = xpos;
         }
     }
 }

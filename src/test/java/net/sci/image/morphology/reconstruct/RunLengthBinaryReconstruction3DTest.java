@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.array.binary.RunLengthBinaryArray3D;
 
 /**
  * @author dlegland
@@ -26,7 +27,25 @@ public class RunLengthBinaryReconstruction3DTest
         BinaryArray3D marker = BinaryArray3D.create(20, 20, 20);
         marker.setBoolean(5, 5, 5, true);
         
-        RunLengthBinaryReconstruction3D algo = new RunLengthBinaryReconstruction3D();
+        RunLengthBinaryReconstruction3D algo = new RunLengthBinaryReconstruction3D(6);
+
+        BinaryArray3D result = algo.processBinary3d(marker, mask);
+        
+        assertBinaryArraysEquals(mask, result);
+    }
+    
+    /**
+     * Test method for
+     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.scalar.ScalarArray3D, net.sci.array.scalar.ScalarArray3D)}.
+     */
+    @Test
+    public final void testProcess_ByDilation_C26_CubicMesh()
+    {
+        BinaryArray3D mask = createCubicMeshImage();
+        BinaryArray3D marker = BinaryArray3D.create(20, 20, 20);
+        marker.setBoolean(5, 5, 5, true);
+        
+        RunLengthBinaryReconstruction3D algo = new RunLengthBinaryReconstruction3D(26);
 
         BinaryArray3D result = algo.processBinary3d(marker, mask);
         
@@ -45,6 +64,50 @@ public class RunLengthBinaryReconstruction3DTest
         marker.setInt(0, 0, 0, 255);
         
         RunLengthBinaryReconstruction3D algo = new RunLengthBinaryReconstruction3D();
+
+        BinaryArray3D result = algo.processBinary3d(marker, mask);
+        
+        assertBinaryArraysEquals(mask, result);
+    }
+    
+    /**
+     * Test method for
+     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.scalar.ScalarArray3D, net.sci.array.scalar.ScalarArray3D)}.
+     */
+    @Test
+    public final void testProcess_ByDilation_C26_ThinCubicMesh()
+    {
+        BinaryArray3D mask = createThinCubicMeshImage();
+        BinaryArray3D marker = BinaryArray3D.create(5, 5, 5);
+        marker.setInt(0, 0, 0, 255);
+        
+        RunLengthBinaryReconstruction3D algo = new RunLengthBinaryReconstruction3D(26);
+
+        BinaryArray3D result = algo.processBinary3d(marker, mask);
+        
+        assertBinaryArraysEquals(mask, result);
+    }
+    
+    /**
+     * Test method for
+     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.scalar.ScalarArray3D, net.sci.array.scalar.ScalarArray3D)}.
+     */
+    @Test
+    public final void testProcess_ByDilation_C26_XShapeC26()
+    {
+        // a marker with a single voxel in the middle
+        BinaryArray3D marker = RunLengthBinaryArray3D.create(7, 7, 7);
+        marker.setBoolean(3, 3, 3, true);
+        // a mask composed of four diagonal lines through the (3,3,3) center
+        BinaryArray3D mask = RunLengthBinaryArray3D.create(7, 7, 7);
+        for (int z = 1; z <= 5; z++)
+        {
+            mask.setBoolean(  z,   z, z, true);
+            mask.setBoolean(6-z,   z, z, true);
+            mask.setBoolean(  z, 6-z, z, true);
+            mask.setBoolean(6-z, 6-z, z, true);
+        }
+        RunLengthBinaryReconstruction3D algo = new RunLengthBinaryReconstruction3D(26);
 
         BinaryArray3D result = algo.processBinary3d(marker, mask);
         
