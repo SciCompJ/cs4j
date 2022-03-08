@@ -21,6 +21,33 @@ import net.sci.array.binary.RunLengthBinaryArray2D;
  */
 public class RunLengthBinaryReconstruction2D
 {
+    /** The connectivity to use for reconstruction */
+    int conn = 4;
+    
+    /**
+     * Creates a new reconstruction algorithm with default connectivity equal to 4.
+     */
+    public RunLengthBinaryReconstruction2D()
+    {
+    }
+    
+    /**
+     * Creates a new reconstruction algorithm with the specified connectivity
+     * option.
+     * 
+     * @param conn
+     *            the integer code for the connectivity, that should be either 4
+     *            or 8.
+     */
+    public RunLengthBinaryReconstruction2D(int connectivity)
+    {
+        if (connectivity != 4 && connectivity != 8)
+        {
+            throw new IllegalArgumentException("Connectivty option must be either 4 or 8");
+        }
+        this.conn = connectivity;
+    }
+    
     public BinaryArray2D processBinary2d(BinaryArray2D marker, BinaryArray2D mask)
     {
         // check input sizes, based on the size of the mask
@@ -101,6 +128,7 @@ public class RunLengthBinaryReconstruction2D
                     continue;
                 }
                 
+                // update row according to current run
                 row.setRange(run.left, run.right, true);
                 
                 // compute intersection with neighbor rows
@@ -117,7 +145,11 @@ public class RunLengthBinaryReconstruction2D
                         continue;
                     }
                     
-                    // TODO: should add dilation of current run for 8 connectivity
+                    // in case of 8-connectivity, add dilation of current run to touch by diagonal
+                    if (conn == 8)
+                    {
+                        run = new Run(run.left - 1, run.right + 1);
+                    }
 
                     // find the runs within arrayRow that intersect the current run
                     for (Run neighRun : neighRow.intersectingRuns(run))

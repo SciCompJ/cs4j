@@ -77,6 +77,64 @@ public class RunLengthBinaryReconstruction2DTest
      * Test method for {@link net.sci.image.morphology.reconstruct.RunLengthBinaryReconstruction2D#reconstructRegion2d(net.sci.array.binary.BinaryArray2D, int, int)}.
      */
     @Test
+    public final void testProcessBinary2d_SquareRing_C8()
+    {
+        RunLengthBinaryArray2D marker = new RunLengthBinaryArray2D(10, 10);
+        marker.setBoolean(1, 1, true);
+        RunLengthBinaryArray2D array = new RunLengthBinaryArray2D(10, 10);
+        fillRect(array, 1, 8, 1, 8, true);
+        fillRect(array, 3, 6, 3, 6, false);
+        
+        RunLengthBinaryReconstruction2D algo = new RunLengthBinaryReconstruction2D(8);
+        BinaryArray2D res = algo.processBinary2d(marker, array);
+        
+        assertTrue(res.getBoolean(1, 1));
+        assertTrue(res.getBoolean(1, 8));
+        assertTrue(res.getBoolean(8, 1));
+        assertTrue(res.getBoolean(8, 8));
+        assertTrue(res.getBoolean(5, 8));
+        assertFalse(res.getBoolean(0, 1));
+        assertFalse(res.getBoolean(1, 0));
+        assertFalse(res.getBoolean(3, 3));
+        assertFalse(res.getBoolean(6, 3));
+        assertFalse(res.getBoolean(3, 6));
+        assertFalse(res.getBoolean(6, 6));
+        assertFalse(res.getBoolean(9, 9));
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.morphology.reconstruct.RunLengthBinaryReconstruction2D#reconstructRegion2d(net.sci.array.binary.BinaryArray2D, int, int)}.
+     */
+    @Test
+    public final void testProcessBinary2d_XShape_C8()
+    {
+        RunLengthBinaryArray2D marker = new RunLengthBinaryArray2D(8, 8);
+        marker.setBoolean(1, 1, true);
+        RunLengthBinaryArray2D mask = new RunLengthBinaryArray2D(8, 8);
+        mask.setBoolean(1, 1, true);
+        mask.setBoolean(5, 1, true);
+        mask.setBoolean(2, 2, true);
+        mask.setBoolean(4, 2, true);
+        mask.setBoolean(3, 3, true);
+        mask.setBoolean(2, 4, true);
+        mask.setBoolean(4, 4, true);
+        mask.setBoolean(1, 5, true);
+        mask.setBoolean(5, 5, true);
+        
+        RunLengthBinaryReconstruction2D algo = new RunLengthBinaryReconstruction2D(8);
+        BinaryArray2D res = algo.processBinary2d(marker, mask);
+        res.print(System.out);
+        
+        assertTrue(res.getBoolean(1, 1));
+        assertTrue(res.getBoolean(5, 1));
+        assertTrue(res.getBoolean(1, 5));
+        assertTrue(res.getBoolean(5, 5));
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.morphology.reconstruct.RunLengthBinaryReconstruction2D#reconstructRegion2d(net.sci.array.binary.BinaryArray2D, int, int)}.
+     */
+    @Test
     public final void test_processBinary2d_Snake()
     {
         RunLengthBinaryArray2D array = new RunLengthBinaryArray2D(16, 10);
