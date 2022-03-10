@@ -6,7 +6,6 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
-import net.sci.array.DefaultPositionIterator;
 
 
 /**
@@ -481,15 +480,6 @@ public interface Float64Array extends ScalarArray<Float64>
         public int size(int dim)
         {
             return newDims[dim];
-        }
-
-        /* (non-Javadoc)
-         * @see net.sci.array.Array#positionIterator()
-         */
-        @Override
-        public net.sci.array.Array.PositionIterator positionIterator()
-        {
-            return new DefaultPositionIterator(newDims);
         }
     }
 }

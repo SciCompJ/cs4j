@@ -6,7 +6,6 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
-import net.sci.array.DefaultPositionIterator;
 
 
 /**
@@ -514,7 +513,8 @@ public interface Float32Array extends ScalarArray<Float32>
          * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
          */
         @Override
-        public void setValue(int[] pos, double value)        {
+        public void setValue(int[] pos, double value)
+        {
             array.setValue(coordsMapping.apply(pos), value);
         }
 
@@ -543,15 +543,6 @@ public interface Float32Array extends ScalarArray<Float32>
         public int size(int dim)
         {
             return newDims[dim];
-        }
-
-        /* (non-Javadoc)
-         * @see net.sci.array.Array#positionIterator()
-         */
-        @Override
-        public net.sci.array.Array.PositionIterator positionIterator()
-        {
-            return new DefaultPositionIterator(newDims);
         }
     }
 }

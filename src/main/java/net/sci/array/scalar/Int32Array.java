@@ -6,7 +6,6 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
-import net.sci.array.DefaultPositionIterator;
 
 /**
  * @author dlegland
@@ -509,15 +508,6 @@ public interface Int32Array extends IntArray<Int32>
         public int size(int dim)
         {
             return newDims[dim];
-        }
-
-        /* (non-Javadoc)
-         * @see net.sci.array.Array#positionIterator()
-         */
-        @Override
-        public net.sci.array.Array.PositionIterator positionIterator()
-        {
-            return new DefaultPositionIterator(newDims);
         }
     }
 }

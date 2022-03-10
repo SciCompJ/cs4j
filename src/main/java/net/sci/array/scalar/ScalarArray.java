@@ -8,7 +8,6 @@ import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
-import net.sci.array.DefaultPositionIterator;
 import net.sci.array.NumericArray;
 
 /**
@@ -596,15 +595,6 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         public int size(int dim)
         {
             return newDims[dim];
-        }
-
-        /* (non-Javadoc)
-         * @see net.sci.array.Array#positionIterator()
-         */
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return new DefaultPositionIterator(newDims);
         }
 
         @Override

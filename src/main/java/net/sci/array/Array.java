@@ -489,15 +489,6 @@ public interface Array<T> extends Iterable<T>, Dimensional
             return newDims[dim];
         }
 
-        /* (non-Javadoc)
-         * @see net.sci.array.Array#positionIterator()
-         */
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return new DefaultPositionIterator(newDims);
-        }
-
         @Override
         public Class<T> dataType()
         {
