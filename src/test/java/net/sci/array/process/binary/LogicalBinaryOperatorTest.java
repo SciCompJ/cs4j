@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.process.math;
+package net.sci.array.process.binary;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +17,7 @@ import net.sci.array.binary.BinaryArray3D;
 public class LogicalBinaryOperatorTest
 {
     /**
-     * Test method for {@link net.sci.array.process.math.LogicalBinaryOperator#process(net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray)}.
+     * Test method for {@link net.sci.array.process.binary.LogicalBinaryOperator#process(net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray)}.
      */
     @Test
     public final void testProcess_2d()
@@ -42,7 +42,7 @@ public class LogicalBinaryOperatorTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.math.LogicalBinaryOperator#process(net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray)}.
+     * Test method for {@link net.sci.array.process.binary.LogicalBinaryOperator#process(net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray)}.
      */
     @Test
     public final void testProcess_3d()
@@ -72,7 +72,7 @@ public class LogicalBinaryOperatorTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.math.LogicalBinaryOperator#process(net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray)}.
+     * Test method for {@link net.sci.array.process.binary.LogicalBinaryOperator#process(net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray)}.
      */
     @Test
     public final void testProcess_2d_output()
@@ -99,7 +99,7 @@ public class LogicalBinaryOperatorTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.math.LogicalBinaryOperator#process(net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray)}.
+     * Test method for {@link net.sci.array.process.binary.LogicalBinaryOperator#process(net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray)}.
      */
     @Test
     public final void testProcess_3d_output()

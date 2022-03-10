@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.process.math;
+package net.sci.array.process.binary;
 
 import java.util.function.BiFunction;
 
@@ -12,8 +12,8 @@ import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 
 /**
- * Base class for operators that combines the values from two scalar arrays the
- * same size, and put the result in a new scalar array.
+ * Base class for operators that combines the values from two binary arrays the
+ * same size, and put the result in a new binary array.
  * 
  * The result scalar array can also be specified. 
  * 
@@ -27,7 +27,7 @@ import net.sci.array.binary.BinaryArray3D;
     BinaryArray2D array2 = BinaryArray2D.create(8, 6);
     array2.fillBooleans((x,y) -> y >= 3);
     // Apply operator and display result
-    BinaryArray2D res = (BinaryArray2D) op.process(array1, array2);
+    BinaryArray2D res = BinaryArray2D.wrap(op.process(array1, array2));
     res.print(System.out);
  * }</pre>
  * 
@@ -42,13 +42,15 @@ public class LogicalBinaryOperator extends AlgoStub
     BiFunction<Boolean, Boolean, Boolean> fun;
     
     /**
-     * Creates a new operator from a function that associates a double to a pair
-     * of double.
+     * Creates a new operator from a function that associates a boolean to a pair
+     * of boolean values.
      * 
      * Example:
      * 
      * <pre>
-     * {@codeMathBinaryOperator op = new MathBinaryOperator((a,b) -> a + b);}
+     * {@code 
+     * LogicalBinaryOperator op = new LogicalBinaryOperator((a,b) -> a | b);
+     * }</pre>
      * 
      * @param fun
      *            the function defining this operator.
@@ -67,7 +69,7 @@ public class LogicalBinaryOperator extends AlgoStub
             BinaryArray2D res = BinaryArray2D.wrap(array1.newInstance(array1.size()));
             return process2d(BinaryArray2D.wrap(array1), BinaryArray2D.wrap(array2), res);
         }
-        else if (array1.dimensionality() == 2)
+        else if (array1.dimensionality() == 3)
         {
             BinaryArray3D res = BinaryArray3D.wrap(array1.newInstance(array1.size()));
             return process3d(BinaryArray3D.wrap(array1), BinaryArray3D.wrap(array2), res);
@@ -75,10 +77,7 @@ public class LogicalBinaryOperator extends AlgoStub
         else
         {
             BinaryArray res = array1.newInstance(array1.size());
-            for (int[] pos : res.positions())
-            {
-                res.setBoolean(pos, fun.apply(array1.getBoolean(pos), array2.getBoolean(pos)));
-            }
+            res.fillBooleans(pos -> fun.apply(array1.getBoolean(pos), array2.getBoolean(pos)));
             return res;
         }
     }
@@ -92,16 +91,13 @@ public class LogicalBinaryOperator extends AlgoStub
         {
             return process2d(BinaryArray2D.wrap(array1), BinaryArray2D.wrap(array2), BinaryArray2D.wrap(output));
         }
-        else if (array1.dimensionality() == 2)
+        else if (array1.dimensionality() == 3)
         {
             return process3d(BinaryArray3D.wrap(array1), BinaryArray3D.wrap(array2), BinaryArray3D.wrap(output));
         }
         else
         {
-            for (int[] pos : output.positions())
-            {
-                output.setBoolean(pos, fun.apply(array1.getBoolean(pos), array2.getBoolean(pos)));
-            }
+            output.fillBooleans(pos -> fun.apply(array1.getBoolean(pos), array2.getBoolean(pos)));
             return output;
         }
     }
