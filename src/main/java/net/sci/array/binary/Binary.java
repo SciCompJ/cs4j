@@ -93,7 +93,14 @@ public class Binary extends Int
 	// =============================================================
 	// Override Object methods
 	
-	public boolean equals(Object that)
+	@Override
+    public String toString()
+	{
+	    return state ? "TRUE" : "FALSE";
+	}
+	
+	@Override
+    public boolean equals(Object that)
 	{
 		// check for self-comparison
 		if (this == that)
@@ -110,7 +117,8 @@ public class Binary extends Int
 	    return this.state == thatBinary.state;
 	}
 	
-	public int hashCode()
+	@Override
+    public int hashCode()
 	{
 		return java.lang.Boolean.hashCode(this.state);
 	}

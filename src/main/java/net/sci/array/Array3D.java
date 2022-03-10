@@ -3,6 +3,9 @@
  */
 package net.sci.array;
 
+import java.io.PrintStream;
+import java.util.Locale;
+
 import net.sci.array.generic.BufferedGenericArray3D;
 import net.sci.array.scalar.TriFunction;
 
@@ -112,6 +115,29 @@ public abstract class Array3D<T> implements Array<T>
      */
     public abstract java.util.Iterator<? extends Array2D<T>> sliceIterator();
 
+    /**
+     * Prints the content of this array on the specified stream.
+     * 
+     * @param stream
+     *            the stream to print on.
+     */
+    public void print(PrintStream stream)
+    {
+        for (int z = 0; z < this.size2; z++)
+        {
+            stream.println(String.format(Locale.ENGLISH, "slice %d/%d:", z, size2));
+            Array2D<T> slice = slice(z);
+            for (int y = 0; y < this.size1; y++)
+            {
+                for (int x = 0; x < this.size0; x++)
+                {
+                    stream.print(String.format(Locale.ENGLISH, " %s", slice.get(x, y)));
+                }
+                stream.println();
+            }
+        }
+    }
+    
 
     // =============================================================
     // New getter / setter

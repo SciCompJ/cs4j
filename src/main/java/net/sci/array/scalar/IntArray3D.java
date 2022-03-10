@@ -3,6 +3,9 @@
  */
 package net.sci.array.scalar;
 
+import java.io.PrintStream;
+import java.util.Locale;
+
 /**
  * @author dlegland
  *
@@ -69,6 +72,28 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
         }
     }
     
+    /**
+     * Prints the content of this array on the specified stream.
+     * 
+     * @param stream
+     *            the stream to print on.
+     */
+    public void print(PrintStream stream)
+    {
+        for (int z = 0; z < this.size2; z++)
+        {
+            stream.println(String.format(Locale.ENGLISH, "slice %d/%d:", z, size2));
+            for (int y = 0; y < this.size1; y++)
+            {
+                for (int x = 0; x < this.size0; x++)
+                {
+                    stream.print(String.format(Locale.ENGLISH, " %s", getInt(x, y, z)));
+                }
+                stream.println();
+            }
+        }
+    }
+
 
     // =============================================================
     // New methods

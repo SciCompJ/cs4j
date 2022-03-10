@@ -101,9 +101,9 @@ public abstract class Array2D<T> implements Array<T>
         {
             for (int x = 0; x < this.size0; x++)
             {
-                System.out.print(String.format(Locale.ENGLISH, " %s", get(x, y)));
+                stream.print(String.format(Locale.ENGLISH, " %s", get(x, y)));
             }
-            System.out.println();
+            stream.println();
         }
     }
 

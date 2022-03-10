@@ -69,9 +69,9 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
 		{
 			for (int x = 0; x < this.size0; x++)
 			{
-				System.out.print(String.format(Locale.ENGLISH, " %3d", getInt(x, y)));
+			    stream.print(String.format(Locale.ENGLISH, " %3d", getInt(x, y)));
 			}
-			System.out.println();
+			stream.println();
 		}
 	}
 	
