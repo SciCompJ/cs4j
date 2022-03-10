@@ -3,12 +3,15 @@
  */
 package net.sci.image.process;
 
+import net.sci.algo.AlgoEvent;
+import net.sci.algo.AlgoListener;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
+import net.sci.array.process.binary.Complement;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
@@ -21,14 +24,14 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  */
-public final class ImageInverter extends AlgoStub implements ImageArrayOperator, ArrayOperator
+public final class ImageInverter extends AlgoStub implements ImageArrayOperator, ArrayOperator, AlgoListener
 {
 	/**
 	 */
 	public ImageInverter()
 	{
 	}
-
+	
     /**
      * Process scalar arrays of any dimension.
      * 
@@ -37,13 +40,13 @@ public final class ImageInverter extends AlgoStub implements ImageArrayOperator,
      * @param target
      *            the target array
      */
-	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
-	{
-		// determine max value
-		double maxVal = determineUpperValue(source);
-		target.fillValues(pos -> maxVal - source.getValue(pos));
-	}
-	
+    public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
+    {
+        // determine max value
+        double maxVal = determineUpperValue(source);
+        target.fillValues(pos -> maxVal - source.getValue(pos));
+    }
+    
 	/**
      * Computes the value used for inverting array.
      * 
@@ -88,6 +91,14 @@ public final class ImageInverter extends AlgoStub implements ImageArrayOperator,
 	@Override
     public <T> Array<?> process(Array<T> array)
     {
+	    // if array is binary, use specific algorithm
+	    if (array instanceof BinaryArray)
+	    {
+	        Complement algo = new Complement();
+	        algo.addAlgoListener(this);
+	        return algo.process((BinaryArray) array);
+	    }
+	    
 	    if (array instanceof ScalarArray)
 	    {
 	        ScalarArray<?> scalar = (ScalarArray<?>) array;
@@ -103,11 +114,23 @@ public final class ImageInverter extends AlgoStub implements ImageArrayOperator,
 	        return result;
 	    }
 	    
-        throw new IllegalArgumentException("Requires either a sclalar or a RGB8 array");
+        throw new IllegalArgumentException("Requires either a scalar or a RGB8 array");
     }
 
     public boolean canProcess(Array<?> array)
 	{
 		return array instanceof ScalarArray || array instanceof RGB8Array;
 	}
+
+    @Override
+    public void algoProgressChanged(AlgoEvent evt)
+    {
+        this.fireProgressChanged(evt);
+    }
+
+    @Override
+    public void algoStatusChanged(AlgoEvent evt)
+    {
+        this.fireStatusChanged(evt);
+    }
 }
