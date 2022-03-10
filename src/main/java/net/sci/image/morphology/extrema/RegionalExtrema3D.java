@@ -8,7 +8,6 @@ import static java.lang.Math.min;
 import static net.sci.array.binary.Binary.TRUE;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.process.ScalarArrayOperator;
@@ -54,8 +53,6 @@ implements ImageArrayOperator, ScalarArrayOperator
 	 */
 	Connectivity3D connectivity = Connectivity3D.C6;
 	
-//	boolean progressVisible = true;
-	
 	
 	// ==============================================================
 	// Constructors
@@ -82,6 +79,7 @@ implements ImageArrayOperator, ScalarArrayOperator
 		this.type = extremaType;
 		this.connectivity = connectivity;
 	}
+	
 
 	// ==============================================================
 	// getter and setters
@@ -162,8 +160,9 @@ implements ImageArrayOperator, ScalarArrayOperator
 			{
 				for (int x = 0; x < sizeX; x++) 
 				{
-					// Check if current voxel was already processed
-					if (target.getValue(x, y, z) == 0)
+                    // If current output voxel is set to false, then it was
+                    // already processed and does not need update
+					if (!target.getBoolean(x, y, z))
 						continue;
 					
 					// current value
@@ -232,8 +231,9 @@ implements ImageArrayOperator, ScalarArrayOperator
 			{
 				for (int x = 0; x < sizeX; x++)
 				{
-					// Check if current voxel was already processed
-					if (target.getValue(x, y, z) == 0)
+                    // If current output voxel is set to false, then it was
+                    // already processed and does not need update
+					if (!target.getBoolean(x, y, z))
 						continue;
 					
 					// current value
@@ -266,29 +266,13 @@ implements ImageArrayOperator, ScalarArrayOperator
 		fireProgressChanged(this, sizeZ, sizeZ);
 	}
 	
-	/**
-	 * Creates a new array that can be used as output for processing the given
-	 * input array.
-	 * 
-	 * @param array
-	 *            the reference array
-	 * @return a new instance of Array that can be used for processing input
-	 *         array.
-	 */
-	public BinaryArray createEmptyOutputArray(Array<?> array)
-	{
-		int[] dims = array.size();
-		return BinaryArray.create(dims);
-	}
-
-    
     // ==============================================================
     // Implementation of ScalarArrayOperator interface
 
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> input)
+    public BinaryArray3D processScalar(ScalarArray<? extends Scalar> input)
     {
-        BinaryArray output = createEmptyOutputArray(input);
+        BinaryArray3D output = BinaryArray3D.create(input.size(0),input.size(1), input.size(2));
         process(input, output);
         return output;
     }

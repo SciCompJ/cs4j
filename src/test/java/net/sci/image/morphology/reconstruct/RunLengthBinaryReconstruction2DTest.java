@@ -123,7 +123,6 @@ public class RunLengthBinaryReconstruction2DTest
         
         RunLengthBinaryReconstruction2D algo = new RunLengthBinaryReconstruction2D(8);
         BinaryArray2D res = algo.processBinary2d(marker, mask);
-        res.print(System.out);
         
         assertTrue(res.getBoolean(1, 1));
         assertTrue(res.getBoolean(5, 1));
