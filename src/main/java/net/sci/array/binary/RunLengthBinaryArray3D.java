@@ -213,6 +213,9 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
     }
     
 
+    // =============================================================
+    // Implementation of the BinaryArray interface
+    
     /* (non-Javadoc)
 	 * @see net.sci.array.scalar.BinaryArray#getBoolean(int[])
 	 */
@@ -235,8 +238,6 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	}
 	
 	
-
-
 	// =============================================================
 	// Implementation of the Array interface
 	
