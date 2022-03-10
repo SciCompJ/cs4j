@@ -24,13 +24,14 @@ public class KMeansSegmentationTest
     public final void testProcess()
     {
         UInt8Array2D array = UInt8Array2D.create(30, 30);
-        array.fillValues((x,y) -> (double) x);
+        array.fillValues((x,y) -> (double) (x + 6 * y));
         
         KMeansSegmentation algo = new KMeansSegmentation(3);
         IntArray<?> labelMap = algo.process(array);
         
         double[] range = labelMap.valueRange();
         assertEquals(range[0], 0.0, 0.01);
+        // difficult to test, as the number of clusters may equal 2 or 3 depending on initial choice of germs
         assertEquals(range[1], 2.0, 0.01);
     }
 }
