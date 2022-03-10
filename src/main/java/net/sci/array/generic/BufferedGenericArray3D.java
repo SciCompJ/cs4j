@@ -234,63 +234,10 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
             return res;
         }
 
-
         @Override
         public Class<T> dataType()
         {
             return BufferedGenericArray3D.this.dataType();
-        }
-
-        @Override
-        public GenericArray.Iterator<T> iterator()
-        {
-            return (GenericArray.Iterator<T>) new Iterator();
-        }
-
-        class Iterator implements GenericArray.Iterator<T>
-        {
-            int indX = -1;
-            int indY = 0;
-            
-            public Iterator() 
-            {
-            }
-            
-            @Override
-            public T next()
-            {
-                forward();
-                return get();
-            }
-    
-            @Override
-            public void forward()
-            {
-                indX++;
-                if (indX >= size0)
-                {
-                    indX = 0;
-                    indY++;
-                }
-            }
-    
-            @Override
-            public boolean hasNext()
-            {
-                return indX < size0 - 1 || indY < size1 - 1;
-            }
-
-            @Override
-            public T get()
-            {
-                return BufferedGenericArray3D.this.get(indX, indY, sliceIndex);
-            }
-
-            @Override
-            public void set(T value)
-            {
-                BufferedGenericArray3D.this.set(indX, indY, sliceIndex, value);
-            }
         }
     }
 

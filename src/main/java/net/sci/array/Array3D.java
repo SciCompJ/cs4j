@@ -353,12 +353,6 @@ public abstract class Array3D<T> implements Array<T>
         {
             return array.dataType();
         }
-
-        @Override
-        public Array.Iterator<T> iterator()
-        {
-            return array.iterator();
-        }
         
         private class SliceView extends Array2D<T>
         {
@@ -427,58 +421,6 @@ public abstract class Array3D<T> implements Array<T>
             public Array.Factory<T> getFactory()
             {
                 return Wrapper.this.getFactory();
-            }
-
-            @Override
-            public Array.Iterator<T> iterator()
-            {
-                return new Iterator();
-            }
-
-            class Iterator implements Array.Iterator<T>
-            {
-                int indX = -1;
-                int indY = 0;
-                
-                public Iterator() 
-                {
-                }
-                
-                @Override
-                public T next()
-                {
-                    forward();
-                    return get();
-                }
-
-                @Override
-                public void forward()
-                {
-                    indX++;
-                    if (indX >= size0)
-                    {
-                        indX = 0;
-                        indY++;
-                    }
-                }
-
-                @Override
-                public boolean hasNext()
-                {
-                    return indX < size0 - 1 || indY < size1 - 1;
-                }
-
-                @Override
-                public T get()
-                {
-                    return Wrapper.this.get(indX, indY, sliceIndex);
-                }
-
-                @Override
-                public void set(T value)
-                {
-                    Wrapper.this.set(indX, indY, sliceIndex, value);
-                }
             }
         }
         

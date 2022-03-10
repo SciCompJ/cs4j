@@ -87,16 +87,7 @@ public class BufferedGenericArray3DTest
     {
         BufferedGenericArray3D<String> array = new BufferedGenericArray3D<String>(10, 6, 4, " ");
         String[] digits = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
-        for (int z = 0; z < 4; z++)
-        {
-            for (int y = 0; y < 6; y++)
-            {
-                for (int x = 0; x < 10; x++)
-                {
-                    array.set(x, y, z, digits[x] + digits[y] + digits[z]);
-                }
-            }
-        }
+        array.fill((x,y,z) -> digits[x] + digits[y] + digits[z]);
         return array;
     }
     
@@ -120,5 +111,29 @@ public class BufferedGenericArray3DTest
         assertEquals(3, n);
     }
     
+    /**
+     * Test method for {@link net.sci.array.generic.GenericArray3D#slices()}.
+     */
+    @Test
+    public final void testSliceView()
+    {
+        String val = "A";
+        String[] digits = {"A", "B", "C", "D", "E"};
+        Array3D<String> array = GenericArray3D.create(5, 4, 3, val);
+        array.fill((x,y,z) -> digits[z] + digits[y] + digits[x]);
+        
+        Array2D<String> slice0 = array.slice(0);
+        assertEquals("AAA", slice0.get(0, 0));
+        assertEquals("AAE", slice0.get(4, 0));
+        assertEquals("ADA", slice0.get(0, 3));
+        assertEquals("ADE", slice0.get(4, 3));
 
+        int count = 0;
+        for(@SuppressWarnings("unused") String s : slice0)
+        {
+            count++;
+        }
+        
+        assertEquals(5*4, count);
+    }
 }

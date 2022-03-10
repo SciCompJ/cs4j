@@ -271,13 +271,58 @@ public interface Array<T> extends Iterable<T>, Dimensional
      * 
      * @return an instance of PositionIterator
      */
-	public PositionIterator positionIterator();
-	
+    public default PositionIterator positionIterator()
+    {
+        return new DefaultPositionIterator(this.size());
+    }
+    
 	/**
-	 * Returns an iterator over the elements of the array, for implementing the
-	 * Iterable interface.
-	 */
-	public Iterator<T> iterator();
+     * Returns an iterator over the elements of the array, for implementing the
+     * Iterable interface.
+     * 
+     * The Array interface provides a default implementation based on the
+     * position iterator.
+     */
+	public default Iterator<T> iterator()
+	{
+        return new Iterator<T>()
+        {
+            PositionIterator iter = positionIterator();
+            // keep an array of coordinates to avoid repetitive allocation of array
+            int[] pos = new int[dimensionality()];
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public T next()
+            {
+                iter.forward();
+                return Array.this.get(iter.get(pos));
+            }
+
+            @Override
+            public T get()
+            {
+                return Array.this.get(iter.get(pos));
+            }
+
+            @Override
+            public void set(T value)
+            {
+                Array.this.set(iter.get(pos), value);
+            }
+        };
+	}
 
     
     // ==================================================
@@ -481,46 +526,6 @@ public interface Array<T> extends Iterable<T>, Dimensional
         public void set(int[] pos, T value)
         {
             array.set(coordsMapping.apply(pos), value);
-        }
-
-        @Override
-        public net.sci.array.Array.Iterator<T> iterator()
-        {
-            return new Iterator<T>()
-            {
-                PositionIterator iter = positionIterator();
-
-                @Override
-                public boolean hasNext()
-                {
-                    return iter.hasNext();
-                }
-
-                @Override
-                public void forward()
-                {
-                    iter.forward();
-                }
-
-                @Override
-                public T next()
-                {
-                    iter.forward();
-                    return View.this.get(iter.get());
-                }
-
-                @Override
-                public T get()
-                {
-                    return View.this.get(iter.get());
-                }
-
-                @Override
-                public void set(T value)
-                {
-                    View.this.set(iter.get(), value);
-                }
-            };
         }
     }
 }

@@ -312,7 +312,7 @@ public abstract class Array2D<T> implements Array<T>
 		{
 			return array.dataType();
 		}
-
+		
 		@Override
 		public Array.Iterator<T> iterator()
 		{

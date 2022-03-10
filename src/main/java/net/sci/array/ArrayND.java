@@ -83,8 +83,9 @@ public abstract class ArrayND<T> implements Array<T>
 	@Override
 	public int[] size()
 	{
+	    // return a defensive copy of the size array
 		int[] res = new int[this.sizes.length];
-		for (int d=0; d < this.sizes.length; d++)
+		for (int d = 0; d < this.sizes.length; d++)
 		{
 			res[d] = this.sizes[d];
 		}
@@ -98,10 +99,5 @@ public abstract class ArrayND<T> implements Array<T>
 	public int size(int dim)
 	{
 		return this.sizes[dim];
-	}
-	
-    public PositionIterator positionIterator()
-	{
-	    return new DefaultPositionIterator(this.sizes);
 	}
 }
