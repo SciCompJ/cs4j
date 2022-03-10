@@ -49,7 +49,8 @@ public class MathBinaryOperator extends AlgoStub
      * Example:
      * 
      * <pre>
-     * {@codeMathBinaryOperator op = new MathBinaryOperator((a,b) -> a + b);}
+     * {@code MathBinaryOperator op = new MathBinaryOperator((a,b) -> a + b);
+     * }</pre>
      * 
      * @param fun
      *            the function defining this operator.
@@ -68,7 +69,7 @@ public class MathBinaryOperator extends AlgoStub
             ScalarArray2D<? extends Scalar> res = ScalarArray2D.wrapScalar2d(array1.newInstance(array1.size()));
             return process2d(ScalarArray2D.wrapScalar2d(array1), ScalarArray2D.wrapScalar2d(array2), res);
         }
-        else if (array1.dimensionality() == 2)
+        else if (array1.dimensionality() == 3)
         {
             ScalarArray3D<? extends Scalar> res = ScalarArray3D.wrapScalar3d(array1.newInstance(array1.size()));
             return process3d(ScalarArray3D.wrapScalar3d(array1), ScalarArray3D.wrapScalar3d(array2), res);
@@ -76,10 +77,7 @@ public class MathBinaryOperator extends AlgoStub
         else
         {
             ScalarArray<? extends Scalar> res = array1.newInstance(array1.size());
-            for (int[] pos : res.positions())
-            {
-                res.setValue(pos, fun.apply(array1.getValue(pos), array2.getValue(pos)));
-            }
+            res.fillValues(pos -> fun.apply(array1.getValue(pos), array2.getValue(pos)));
             return res;
         }
     }
@@ -93,16 +91,13 @@ public class MathBinaryOperator extends AlgoStub
         {
             return process2d(ScalarArray2D.wrapScalar2d(array1), ScalarArray2D.wrapScalar2d(array2), ScalarArray2D.wrapScalar2d(output));
         }
-        else if (array1.dimensionality() == 2)
+        else if (array1.dimensionality() == 3)
         {
             return process3d(ScalarArray3D.wrapScalar3d(array1), ScalarArray3D.wrapScalar3d(array2), ScalarArray3D.wrapScalar3d(output));
         }
         else
         {
-            for (int[] pos : output.positions())
-            {
-                output.setValue(pos, fun.apply(array1.getValue(pos), array2.getValue(pos)));
-            }
+            output.fillValues(pos -> fun.apply(array1.getValue(pos), array2.getValue(pos)));
             return output;
         }
     }
