@@ -159,7 +159,11 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
             HashMap<Integer, BinaryRow> slice = slices.get(z);
             if (slice.containsKey(y))
             {
-                slices.remove(y);
+                slice.remove(y);
+                if (slice.isEmpty())
+                {
+                    slices.remove(z);
+                }
             }
         }
     }
