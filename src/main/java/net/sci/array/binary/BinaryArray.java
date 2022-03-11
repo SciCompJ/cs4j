@@ -301,12 +301,6 @@ public interface BinaryArray extends IntArray<Binary>
 
 
 	@Override
-	public default IntArray.Factory<Binary> getFactory()
-	{
-		return factory;
-	}
-
-	@Override
 	public default BinaryArray duplicate()
 	{
 		// create output array
@@ -321,6 +315,17 @@ public interface BinaryArray extends IntArray<Binary>
 		// return output
 		return result;
 	}
+
+    public default BinaryArray view(int[] newDims, Function<int[], int[]> coordsMapping)
+    {
+        return new View(this, newDims, coordsMapping);
+    }
+
+    @Override
+    public default IntArray.Factory<Binary> getFactory()
+    {
+        return factory;
+    }
 
 	@Override
 	public default Class<Binary> dataType()
@@ -726,6 +731,70 @@ public interface BinaryArray extends IntArray<Binary>
             {
                 return iter.hasNext();
             }
+        }
+    }
+    
+    static class View implements BinaryArray
+    {
+        BinaryArray array;
+        
+        int[] newDims;
+        
+        Function<int[], int[]> coordsMapping;
+
+        /**
+         * 
+         */
+        public View(BinaryArray array, int[] newDims, Function<int[], int[]> coordsMapping)
+        {
+            this.array = array;
+            this.newDims = newDims;
+            this.coordsMapping = coordsMapping;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.binary.BinaryArray#getBoolean(int[])
+         */
+        @Override
+        public boolean getBoolean(int... pos)
+        {
+            return array.getBoolean(coordsMapping.apply(pos));
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.binary.BinaryArray#setBoolean(int[], boolean)
+         */
+        @Override
+        public void setBoolean(int[] pos, boolean bool)
+        {
+            array.setBoolean(coordsMapping.apply(pos), bool);
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#dimensionality()
+         */
+        @Override
+        public int dimensionality()
+        {
+            return newDims.length;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#getSize()
+         */
+        @Override
+        public int[] size()
+        {
+            return newDims;
+        }
+
+        /* (non-Javadoc)
+         * @see net.sci.array.Array#getSize(int)
+         */
+        @Override
+        public int size(int dim)
+        {
+            return newDims[dim];
         }
     }
 }

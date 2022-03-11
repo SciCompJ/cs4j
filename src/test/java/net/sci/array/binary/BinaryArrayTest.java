@@ -20,7 +20,7 @@ public class BinaryArrayTest
 {
 
     /**
-     * Test method for {@link net.sci.array.scalar.BinaryArray#convert(net.sci.array.scalar.ScalarArray)}.
+     * Test method for {@link net.sci.array.binary.BinaryArray#convert(net.sci.array.scalar.ScalarArray)}.
      */
     @Test
     public final void testConvert()
@@ -43,7 +43,7 @@ public class BinaryArrayTest
     }
 
     /**
-     * Test method for {@link net.sci.array.scalar.BinaryArray#wrap(net.sci.array.Array)}.
+     * Test method for {@link net.sci.array.binary.BinaryArray#wrap(net.sci.array.Array)}.
      */
     @Test
     public final void testWrap()
@@ -68,6 +68,32 @@ public class BinaryArrayTest
         binaryArray.setBoolean(new int[] {2, 2}, true);
         assertTrue(array.get(4, 3).getBoolean());
     }
+    
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryArray#view(int[], java.util.function.Function)}.
+     */
+    @Test
+    public final void testView()
+    {
+        BinaryArray2D array = BinaryArray2D.create(8, 6);
+        array.fillBooleans((x,y) -> x >= 4 ^ y >= 3);
+        
+        // create a view corresponding to the transpose of the array
+        BinaryArray view = array.view(new int[] {6, 8}, pos -> new int[] {pos[1], pos[0]});
+        
+        assertEquals(2, view.dimensionality());
+        assertEquals(6, view.size(0));
+        assertEquals(8, view.size(1));
+        
+        assertFalse(view.getBoolean(2, 2));
+        assertFalse(view.getBoolean(4, 6));
+        assertTrue(view.getBoolean(2, 6));
+        assertTrue(view.getBoolean(4, 2));
+        
+        view.setBoolean(new int[] {2, 3}, true);
+        assertTrue(array.getBoolean(3, 2));
+    }
+
 
     /**
      * Test method for {@link net.sci.array.binary.BinaryArray#fillBooleans(java.util.function.Function)}.
