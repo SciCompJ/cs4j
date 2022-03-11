@@ -100,6 +100,33 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
     
     public abstract void setInt(int x, int y, int z, int value);
 
+    
+    // =============================================================
+    // Specialization of Array3D
+
+    /**
+     * Returns a view over the specified slice.
+     * 
+     * @param sliceIndex
+     *            the index of the slice
+     * @return a view on the specific slice, as a 2D array
+     */
+    public abstract IntArray2D<T> slice(int sliceIndex);
+
+    /**
+     * Iterates over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
+    public abstract Iterable<? extends IntArray2D<T>> slices();
+
+    /**
+     * Creates an iterator over the slices
+     * 
+     * @return an iterator over 2D slices
+     */
+    public abstract java.util.Iterator<? extends IntArray2D<T>> sliceIterator();
+    
 
     // =============================================================
     // Specialization of IntArray 
@@ -256,7 +283,7 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
         }
 
         @Override
-        public java.util.Iterator<? extends ScalarArray2D<T>> sliceIterator()
+        public java.util.Iterator<? extends IntArray2D<T>> sliceIterator()
         {
             return new SliceIterator();
         }
