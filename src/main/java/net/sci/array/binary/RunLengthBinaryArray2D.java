@@ -222,66 +222,6 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         }
         return res;
     }
-
-    /* (non-Javadoc)
-	 * @see net.sci.array.data.BooleanArray#iterator()
-	 */
-	@Override
-	public net.sci.array.binary.BinaryArray.Iterator iterator()
-	{
-		return new BooleanIterator();
-	}
-	
-    private class BooleanIterator implements BinaryArray.Iterator
-    {
-        int x = -1;
-        int y = 0;
-        
-        public BooleanIterator() 
-        {
-        }
-        
-        @Override
-        public boolean hasNext()
-        {
-            return x < size0 - 1|| y < size1 - 1;
-        }
-
-        @Override
-        public void forward()
-        {
-            this.x++;
-            if (x == size0)
-            {
-                x = 0;
-                y++;
-            }
-        }
-
-        @Override
-        public Binary get()
-        {
-            return new Binary(RunLengthBinaryArray2D.this.getBoolean(x, y));
-        }
-
-        @Override
-        public void set(Binary b)
-        {
-            RunLengthBinaryArray2D.this.setBoolean(x, y, b.getBoolean());
-        }
-        
-        @Override
-        public boolean getBoolean()
-        {
-            return RunLengthBinaryArray2D.this.getBoolean(x, y);
-        }
-
-        @Override
-        public void setBoolean(boolean b)
-        {
-            RunLengthBinaryArray2D.this.setBoolean(x, y, b);
-        }
-    }
     
     public static class Converter extends AlgoStub
     {

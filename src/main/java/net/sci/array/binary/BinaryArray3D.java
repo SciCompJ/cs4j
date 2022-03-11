@@ -247,7 +247,6 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
             this.size2 = array.size(2);
         }
 
-
         @Override
         public void setBoolean(int x, int y, int z, boolean b)
         {
@@ -281,71 +280,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         @Override
         public BinaryArray.Iterator iterator()
         {
-            return new Iterator3D();
-        }
-        
-        private class Iterator3D implements BinaryArray.Iterator
-        {
-            int x = -1;
-            int y = 0;
-            int z = 0;
-            
-            public Iterator3D() 
-            {
-            }
-            
-            @Override
-            public boolean hasNext()
-            {
-                return this.x < size0 - 1 || this.y < size1 - 1 || this.z < size2 - 1;
-            }
-
-            @Override
-            public Binary next()
-            {
-                forward();
-                return Wrapper.this.get(x, y, z);
-            }
-
-            @Override
-            public void forward()
-            {
-                this.x++;
-                if (this.x == size0)
-                {
-                    this.x = 0;
-                    this.y++;
-                    if (this.y == size1)
-                    {
-                        this.y = 0;
-                        this.z++;
-                    }
-                }
-            }
-
-            @Override
-            public Binary get()
-            {
-                return Wrapper.this.get(x, y, z);
-            }
-
-            @Override
-            public void set(Binary value)
-            {
-                Wrapper.this.set(x, y, z, value);
-            }
-
-            @Override
-            public boolean getBoolean()
-            {
-                return Wrapper.this.getBoolean(x, y, z);
-            }
-
-            @Override
-            public void setBoolean(boolean b)
-            {
-                Wrapper.this.setBoolean(x, y, z, b);
-            }
+            return array.iterator();
         }
     }
     
@@ -380,58 +315,6 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         public void setBoolean(int[] pos, boolean bool)
         {
             BinaryArray3D.this.setBoolean(pos[0], pos[1], this.sliceIndex, bool);            
-        }
-
-        @Override
-        public net.sci.array.binary.BinaryArray.Iterator iterator()
-        {
-            return new Iterator();
-        }
-
-        class Iterator implements BinaryArray.Iterator
-        {
-            int indX = -1;
-            int indY = 0;
-            
-            public Iterator() 
-            {
-            }
-            
-            @Override
-            public Binary next()
-            {
-                forward();
-                return get();
-            }
-
-            @Override
-            public void forward()
-            {
-                indX++;
-                if (indX >= size0)
-                {
-                    indX = 0;
-                    indY++;
-                }
-            }
-
-            @Override
-            public boolean hasNext()
-            {
-                return indX < size0 - 1 || indY < size1 - 1;
-            }
-
-            @Override
-            public boolean getBoolean()
-            {
-                return BinaryArray3D.this.getBoolean(indX, indY, sliceIndex);
-            }
-
-            @Override
-            public void setBoolean(boolean b)
-            {
-                BinaryArray3D.this.setBoolean(indX, indY, sliceIndex, b);
-            }
         }
     }
     

@@ -258,29 +258,6 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         {
             return this.array.getFactory();
         }
-
-        
-        @Override
-        public BinaryArray2D duplicate()
-        {
-            BinaryArray2D result = BinaryArray2D.create(this.size0, this.size1);
-            
-            int nd = this.array.dimensionality();
-            int[] pos = new int[nd];
-
-            // Fill new array with input array
-            for (int y = 0; y < this.size1; y++)
-            {
-                pos[1] = y;
-                for (int x = 0; x < this.size0; x++)
-                {
-                    pos[0] = x;
-                    result.setBoolean(x, y, this.array.getBoolean(pos));
-                }
-            }
-
-            return result;
-        }
         
         @Override
         public Class<Binary> dataType()
