@@ -64,6 +64,20 @@ public class BufferedBinaryArrayND extends BinaryArrayND
 	// =============================================================
 	// Implementation of the BinaryArray interface
 	
+    /**
+     * Fills this binary array with the specified boolean value.
+     * 
+     * @param state
+     *            the value to fill the binary array with.
+     */
+    public void fill(boolean state)
+    {
+        for (int i = 0; i < buffer.length; i++)
+        {
+            buffer[i] = state;
+        }
+    }
+    
 	@Override
 	public boolean getBoolean(int... pos)
 	{

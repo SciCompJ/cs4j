@@ -62,7 +62,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     public RunLengthBinaryArray2D(int size0, int size1)
     {
         super(size0, size1);
-        this.rows = new HashMap<>();
+        this.rows = new HashMap<>(size1);
     }
 
     /**
@@ -130,8 +130,6 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         return Collections.unmodifiableCollection(rows.keySet());
     }
     
-    
-
 
 	// =============================================================
 	// Implementation of the BooleanArray2D interface
@@ -161,8 +159,33 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         // update element at position x
         row.set(x, state);
     }
+    
+    
+    // =============================================================
+    // Specialization of the BinaryArray interface
 
-	/* (non-Javadoc)
+    /**
+     * Fills this binary array with the specified boolean value.
+     * 
+     * @param state
+     *            the value to fill the binary array with.
+     */
+    public void fill(boolean state)
+    {
+        // in any case, clear the inner map
+        this.rows.clear();
+        
+        if (state)
+        {
+            // iterate over rows to create full BinaryRow instances
+            for (int y = 0; y < size1; y++)
+            {
+                this.rows.put(y, new BinaryRow(new Run(0, size0 - 1)));
+            }
+        }
+    }
+    
+    /* (non-Javadoc)
 	 * @see net.sci.array.scalar.BinaryArray#getBoolean(int[])
 	 */
 	@Override

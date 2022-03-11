@@ -109,7 +109,7 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 
 
 	// =============================================================
-	// Implementation of the BooleanArray3D interface
+	// Implementation of the BinaryArray3D interface
 
 
 	/* (non-Javadoc)
@@ -124,9 +124,23 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 
 	
     // =============================================================
-    // Implementation of the BooleanArray3D interface
+    // Implementation of the BinaryArray interface
 
-	/* (non-Javadoc)
+    /**
+     * Fills this binary array with the specified boolean value.
+     * 
+     * @param state
+     *            the value to fill the binary array with.
+     */
+    public void fill(boolean state)
+    {
+        for (int i = 0; i < buffer.length; i++)
+        {
+            buffer[i] = state;
+        }
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.data.scalar2d.BooleanArray3D#getState(int, int, int)
 	 */
 	@Override

@@ -96,8 +96,9 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 	
 
 	// =============================================================
-	// Implementation of the BooleanArray2D interface
+	// Implementation of the BinaryArray2D interface
 
+    
     /* (non-Javadoc)
      * @see net.sci.array.scalar.BinaryArray2D#setBoolean(int, int, boolean)
      */
@@ -106,6 +107,24 @@ public class BufferedBinaryArray2D extends BinaryArray2D
     {
         int index = x + y * this.size0;
         buffer[index] = state;
+    }
+    
+    
+    // =============================================================
+    // Implementation of the BinaryArray2D interface
+
+    /**
+     * Fills this binary array with the specified boolean value.
+     * 
+     * @param state
+     *            the value to fill the binary array with.
+     */
+    public void fill(boolean state)
+    {
+        for (int i = 0; i < buffer.length; i++)
+        {
+            buffer[i] = state;
+        }
     }
 
 	/* (non-Javadoc)

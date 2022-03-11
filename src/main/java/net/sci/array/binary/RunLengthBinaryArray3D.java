@@ -65,7 +65,7 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	public RunLengthBinaryArray3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
-		this.slices = new HashMap<>();
+		this.slices = new HashMap<>(size2);
 	}
 
 	/**
@@ -145,7 +145,7 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
             HashMap<Integer, BinaryRow> slice = slices.get(z);
             if (slice == null)
             {
-                slice = new HashMap<Integer, BinaryRow>();
+                slice = new HashMap<Integer, BinaryRow>(this.size1);
                 slices.put(z, slice);
             }
             slice.put(y, row);
@@ -220,6 +220,33 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
     // =============================================================
     // Implementation of the BinaryArray interface
     
+    /**
+     * Fills this binary array with the specified boolean value.
+     * 
+     * @param state
+     *            the value to fill the binary array with.
+     */
+    public void fill(boolean state)
+    {
+        // in any case, clear the inner map
+        this.slices.clear();
+        
+        if (state)
+        {
+            // iterate over slices
+            for (int z = 0; z < size1; z++)
+            {
+                // fill current slice
+                HashMap<Integer, BinaryRow> slice = new HashMap<>(size1);
+                for (int y = 0; y < size1; y++)
+                {
+                    slice.put(y, new BinaryRow(new Run(0, size0 - 1)));
+                }
+                this.slices.put(z, slice);
+            }
+        }
+    }
+    
     /* (non-Javadoc)
 	 * @see net.sci.array.scalar.BinaryArray#getBoolean(int[])
 	 */
@@ -251,25 +278,21 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
     @Override
     public RunLengthBinaryArray3D duplicate()
     {
-        // retrieve array size
-        int sizeX = this.size(0);
-        int sizeY = this.size(1);
-        int sizeZ = this.size(2);
-        
-        // create array
-        RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
+        HashMap<Integer, HashMap<Integer, BinaryRow>> resSlices = new HashMap<>(size2);
         
         // add copies of each slice
         for (Map.Entry<Integer, HashMap<Integer, BinaryRow>> entry : this.slices.entrySet())
         {
-            res.slices.put(entry.getKey(), duplicate(entry.getValue()));
+            resSlices.put(entry.getKey(), duplicate(entry.getValue()));
         }
-        return res;
+        
+        // create array
+        return new RunLengthBinaryArray3D(size0, size1, size2, resSlices);
     }
     
     private HashMap<Integer, BinaryRow> duplicate(HashMap<Integer, BinaryRow> slice)
     {
-        HashMap<Integer, BinaryRow> res = new HashMap<>(); 
+        HashMap<Integer, BinaryRow> res = new HashMap<>(this.size1); 
         for (Map.Entry<Integer, BinaryRow> entry : slice.entrySet())
         {
             res.put(entry.getKey(), entry.getValue().duplicate());

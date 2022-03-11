@@ -175,7 +175,21 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	// Specialization of the Array interface
 
 	@Override
-	public abstract BinaryArray3D duplicate();
+	public BinaryArray3D duplicate()
+    {
+	    BinaryArray3D res = BinaryArray3D.create(size0, size1, size2);
+        for (int z = 0; z < size2; z++)
+        {
+            for (int y = 0; y < size1; y++)
+            {
+                for (int x = 0; x < size0; x++)
+                {
+                    res.setBoolean(x, y, z, getBoolean(x, y, z));
+                }
+            }
+        }
+        return res;
+    }
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.Array3D#get(int, int, int)
@@ -256,18 +270,6 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         public IntArray.Factory<Binary> getFactory()
         {
             return this.array.getFactory();
-        }
-
-        
-        @Override
-        public BinaryArray3D duplicate()
-        {
-            BinaryArray3D result = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
-    	    for (int[] pos : array.positions())
-    	    {
-    	    	result.setBoolean(pos, array.getBoolean(pos));
-    	    }
-            return result;
         }
         
         @Override
