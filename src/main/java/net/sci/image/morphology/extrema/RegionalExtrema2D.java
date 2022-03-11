@@ -8,7 +8,6 @@ import static net.sci.array.binary.Binary.TRUE;
 
 import net.sci.algo.Algo;
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.process.ScalarArrayOperator;
@@ -230,30 +229,21 @@ public class RegionalExtrema2D extends AlgoStub implements ImageArrayOperator, S
 		this.fireProgressChanged(this, 1, 1);
 	}
 	
-	/**
-	 * Creates a new array that can be used as output for processing the given
-	 * input array.
-	 * 
-	 * @param array
-	 *            the reference array
-	 * @return a new instance of Array that can be used for processing input
-	 *         array.
-	 */
-	public BinaryArray createEmptyOutputArray(Array<?> array)
-	{
-		int[] dims = array.size();
-		return BinaryArray.create(dims);
-	}
-
 	
 	// ==============================================================
     // Implementation of ScalarArrayOperator interface
 
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> input)
+    public BinaryArray2D processScalar(ScalarArray<? extends Scalar> array)
     {
-        BinaryArray output = createEmptyOutputArray(input);
-        process(input, output);
+        // check input validity
+        if (array.dimensionality() != 2)
+        {
+            throw new RuntimeException("Requires a 2-dimensional array as input");
+        }
+        
+        BinaryArray2D output = BinaryArray2D.create(array.size(0), array.size(1));
+        process(array, output);
         return output;
     }
 
