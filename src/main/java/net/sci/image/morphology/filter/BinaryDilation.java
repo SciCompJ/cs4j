@@ -50,6 +50,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
     public BinaryArray2D processBinary2d(BinaryArray2D array)
     {
         // ensure input array uses RLE representation (if not already the case)
+        fireStatusChanged(this, "Prepare input image");
         RunLengthBinaryArray2D rleArray = RunLengthBinaryArray2D.convert(array);
         
         // cast to Strel2D and retrieve size and offset
@@ -71,9 +72,10 @@ public class BinaryDilation extends BinaryMorphologicalFilter
         RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
         
         // iterate over rows of result array
-        for (int yres = 0; yres < sizeY; yres++)
+        fireStatusChanged(this, "Iterate over rows");
+        for (int y = 0; y < sizeY; y++)
         {
-            fireProgressChanged(this, yres, sizeY);
+            fireProgressChanged(this, y, sizeY);
             
             // initialize empty result row
             BinaryRow resRow = new BinaryRow();
@@ -81,7 +83,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
             // iterate over rows of structuring element
             for (int yStrel = 0; yStrel < strelSize[1]; yStrel++)
             {
-                int y2 = yres + yStrel - strelOffset[1];
+                int y2 = y + yStrel - strelOffset[1];
                 // check current row is within the input array
                 if (y2 < 0 || y2 > sizeY - 1)
                 {
@@ -104,7 +106,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
             
             if (!resRow.isEmpty())
             {
-                res.setRow(yres, resRow.crop(0, sizeX - 1));
+                res.setRow(y, resRow.crop(0, sizeX - 1));
             }
         }
         
@@ -154,6 +156,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
         int[] strelOffset = strel3d.getOffset();
         
         // convert to RLE array
+        fireStatusChanged(this, "Prepare input image");
         RunLengthBinaryArray3D strel2 = RunLengthBinaryArray3D.convert(strel3d.getMask());
 
         // prepare strel array: shift each row
@@ -164,15 +167,18 @@ public class BinaryDilation extends BinaryMorphologicalFilter
         int sizeY = rleArray.size(1);
         int sizeZ = rleArray.size(2);
         
-        // create result array
-        RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
+        // create a map of slices for storing result
+        HashMap<Integer, HashMap<Integer, BinaryRow>> slices = new HashMap<>();
         
-        // iterate over rows of result array
-        for (int zres = 0; zres < sizeZ; zres++)
+        // iterate over slices of result array
+        fireStatusChanged(this, "Iterate over z-slices");
+        for (int z = 0; z < sizeZ; z++)
         {
-            fireProgressChanged(this, zres, sizeZ);
+            fireProgressChanged(this, z, sizeZ);
+            HashMap<Integer, BinaryRow> currentSlice = new HashMap<>();
             
-            for (int yres = 0; yres < sizeY; yres++)
+            // iterate over rows of current slice
+            for (int y = 0; y < sizeY; y++)
             {
                 // initialize empty result row
                 BinaryRow resRow = new BinaryRow();
@@ -180,7 +186,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
                 // iterate over rows of structuring element
                 for (int zStrel = 0; zStrel < strelSize[2]; zStrel++)
                 {
-                    int z2 = zres + zStrel - strelOffset[2];
+                    int z2 = z + zStrel - strelOffset[2];
                     // check current slice is within the input array
                     if (z2 < 0 || z2 > sizeZ - 1)
                     {
@@ -189,7 +195,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
                     
                     for (int yStrel = 0; yStrel < strelSize[1]; yStrel++)
                     {
-                        int y2 = yres + yStrel - strelOffset[1];
+                        int y2 = y + yStrel - strelOffset[1];
                         // check current row is within the input array
                         if (y2 < 0 || y2 > sizeY - 1)
                         {
@@ -214,14 +220,20 @@ public class BinaryDilation extends BinaryMorphologicalFilter
                 
                 if (!resRow.isEmpty())
                 {
-                    res.setRow(yres, zres, resRow.crop(0, sizeX - 1));
+                    currentSlice.put(y, resRow.crop(0, sizeX - 1));
                 }
+            }
+            
+            if (!currentSlice.isEmpty())
+            {
+                slices.put(z, currentSlice);
             }
         }
         
         fireProgressChanged(this, 1, 1);
         
-        return res;
+        // create result array
+        return new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ, slices);
     }
     
     /**
@@ -236,20 +248,20 @@ public class BinaryDilation extends BinaryMorphologicalFilter
      */
     private HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
     {
-        // create
+        // create array
         HashMap<Integer, HashMap<Integer, BinaryRow>> resRows = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
-        
-        // iterate 
-      for (int z : array.nonEmptySliceIndices())
-      {
-          HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>();
-          for (int y : array.nonEmptySliceRowIndices(z))
-          {
-              sliceRows.put(y, array.getRow(y, z).shift(dx));
-          }
-          resRows.put(z, sliceRows);
-      }
-        
+
+        // iterate over non-empty slices 
+        for (int z : array.nonEmptySliceIndices())
+        {
+            HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>();
+            for (int y : array.nonEmptySliceRowIndices(z))
+            {
+                sliceRows.put(y, array.getRow(y, z).shift(dx));
+            }
+            resRows.put(z, sliceRows);
+        }
+
         // return
         return resRows;
     }
