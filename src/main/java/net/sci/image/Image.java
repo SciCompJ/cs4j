@@ -18,14 +18,14 @@ import javax.swing.JPanel;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.binary.BinaryArray;
-import net.sci.array.color.RGB16Array;
+import net.sci.array.binary.Binary;
+import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB8;
-import net.sci.array.color.RGB8Array;
 import net.sci.array.scalar.Int;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.UInt16Array;
+import net.sci.array.scalar.UInt16;
+import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.VectorArray;
 import net.sci.axis.Axis;
@@ -230,27 +230,32 @@ public class Image
 	 */
 	private void setImageTypeFromDataType()
 	{
-		if (this.data instanceof BinaryArray)
+		if (this.data.dataType() == Binary.class)
 		{
 			this.type = Type.BINARY;
-		} 
-		else if (this.data instanceof UInt8Array) 
+		}
+		else if (this.data.dataType() == UInt8.class)
+//if (this.data instanceof UInt8Array) 
 		{
 			this.type = Type.GRAYSCALE;
 		} 
-		else if (this.data instanceof UInt16Array) 
+        else if (this.data.dataType() == UInt16.class)
+//		else if (this.data instanceof UInt16Array) 
 		{
 			this.type = Type.GRAYSCALE;
 		}
+//        else if (this.data.dataType() == UInt8.class)
 		else if (this.data instanceof ScalarArray) 
 		{
 			this.type = Type.INTENSITY;
 		}
-        else if (this.data instanceof RGB8Array)
+        else if (this.data.dataType() == RGB8.class)
+//        else if (this.data instanceof RGB8Array)
         {
             this.type = Type.COLOR;
         } 
-        else if (this.data instanceof RGB16Array)
+        else if (this.data.dataType() == RGB16.class)
+//        else if (this.data instanceof RGB16Array)
         {
             this.type = Type.COLOR;
         } 
@@ -306,12 +311,12 @@ public class Image
         else if (this.type == Type.COLOR)
         {
             // For color images, display range is applied to each channel identically.
-            if (this.data instanceof RGB8Array)
+            if (this.data.dataType() == RGB8.class)
             {
                 // (in theory not used)
                 this.displaySettings.displayRange = new double[]{0, 255};
             }
-            else if (this.data instanceof RGB16Array)
+            else if (this.data.dataType() == RGB16.class)
             {
                 // can be later adjusted
                 this.displaySettings.displayRange = new double[]{0, 65535};
@@ -351,11 +356,11 @@ public class Image
 		    if (this.type == Type.COLOR)
 		    {
 		        // Additional processing to propagate settings only if same data type
-		        if (this.data instanceof RGB8Array && parent.data instanceof RGB8Array)
+		        if (this.data.dataType() == RGB8.class && parent.data.dataType() == RGB8.class)
 		        {
 		            this.displaySettings = parent.displaySettings.duplicate();
 		        }
-                if (this.data instanceof RGB16Array && parent.data instanceof RGB16Array)
+                if (this.data.dataType() == RGB16.class && parent.data.dataType() == RGB16.class)
                 {
                     this.displaySettings = parent.displaySettings.duplicate();
                 }
