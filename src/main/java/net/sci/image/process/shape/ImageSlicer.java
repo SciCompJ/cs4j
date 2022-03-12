@@ -34,8 +34,9 @@ public class ImageSlicer
         @SuppressWarnings("unchecked")
         Array3D<T> array = Array3D.wrap((Array<T>) image.getData());
         
-        // extract slice
-        Array2D<T> slice = array.slice(sliceIndex);
+        // extract slice (duplicate it to enforce an array with correct type)
+        Array2D<T> slice = array.slice(sliceIndex).duplicate();
+//        Array2D<T> slice = array.slice(sliceIndex); // TODO: should be able to avoid duplication
         
         // convert to an image with same type
         Image resultImage = new Image(slice, image.getType(), image);
