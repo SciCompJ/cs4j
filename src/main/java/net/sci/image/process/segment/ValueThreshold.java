@@ -19,6 +19,10 @@ import net.sci.image.ImageArrayOperator;
  * Thresholds an image, by retaining only values greater than or equal to a
  * given threshold value.
  * 
+ * Can be replaced by the "ScalarToBinary" operator.
+ * 
+ * @see net.sci.array.process.type.ScalarToBinary
+ * 
  * @author dlegland
  *
  */

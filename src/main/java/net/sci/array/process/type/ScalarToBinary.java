@@ -58,6 +58,55 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
     {
         this.fun = fun;
     }
+    
+    /**
+     * Creates a view on a scalar array by using the inner conversion function.
+     * 
+     * Syntax:
+     * <pre>{@code
+     * ScalarToBinary converter = new ScalarToBinary(fun);
+     * BinaryArray view = converter.createView(array); 
+     * }</pre>
+     * 
+     * @author dlegland
+     *
+     */
+    public BinaryArray createView(ScalarArray<? extends Scalar> array)
+    {
+        return new BinaryArray()
+        {
+
+            @Override
+            public boolean getBoolean(int... pos)
+            {
+                return fun.apply(array.getValue(pos));
+            }
+
+            @Override
+            public void setBoolean(int[] pos, boolean state)
+            {
+                throw new RuntimeException("Can not modify a binary view of a scalar array");
+            }
+            
+            @Override
+            public int dimensionality()
+            {
+                return array.dimensionality();
+            }
+
+            @Override
+            public int[] size()
+            {
+                return array.size();
+            }
+
+            @Override
+            public int size(int dim)
+            {
+                return array.size(dim);
+            }
+        };
+    }
 
     @Override
     public BinaryArray processScalar(ScalarArray<? extends Scalar> array)
@@ -100,7 +149,6 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
     
     private BinaryArray3D processScalar3d(ScalarArray3D<?> source)
     {
-        System.out.println("running upper threshold 3D for RLE binary array");
         // retrieve array size
         int sizeX = source.size(0);
         int sizeY = source.size(1);
