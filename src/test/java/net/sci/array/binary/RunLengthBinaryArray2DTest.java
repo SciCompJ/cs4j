@@ -4,7 +4,6 @@
 package net.sci.array.binary;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -32,12 +31,32 @@ public class RunLengthBinaryArray2DTest
         {
             for (int x = 0; x < 12; x++)
             {
-                assertTrue(array.getBoolean(x, y) == converted.getBoolean(x, y));  
+                assertEquals(array.getBoolean(x, y), converted.getBoolean(x, y));  
             }
         }
     }
     
+    /**
+     * Test method for {@link net.sci.array.binary.RunLengthBinaryArray2D#convert(net.sci.array.binary.BinaryArray2D)}.
+     */
+    @Test
+    public final void testConvert_PixelsAtCorners()
+    {
+        BinaryArray2D array = new BufferedBinaryArray2D(5, 4);
+        array.fillBooleans((x,y) -> (x == 0 || x == 4) && (y == 0 || y == 3));
+        
+        RunLengthBinaryArray2D converted = RunLengthBinaryArray2D.convert(array);
+        
+        for (int y = 0; y < 4; y++)
+        {
+            for (int x = 0; x < 5; x++)
+            {
+                assertEquals(array.getBoolean(x, y), converted.getBoolean(x, y));  
+            }
+        }
+    }
     
+ 
     private static final void fillRect(BinaryArray2D array, int xmin, int xmax, int ymin, int ymax, boolean state)
     {
         for (int y = ymin; y <= ymax; y++)

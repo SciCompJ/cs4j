@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import net.sci.algo.AlgoStub;
@@ -250,19 +251,43 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
             int sizeY = array.size(1);
             RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
             
-            // start with naive algorithm
+            // iterate over rows
             for (int y = 0; y < sizeY; y++)
             {
-                this.fireProgressChanged(this, y, sizeY); 
-                for (int x = 0; x < sizeX; x++)
+                this.fireProgressChanged(this, y, sizeY);
+
+                TreeMap<Integer,Run> runs = new TreeMap<Integer,Run>(); 
+
+                int x1 = 0;
+                currentRow:
+                while (true)
                 {
-                    if (array.getBoolean(x, y))
+                    // find beginning of first run
+                    while(!array.getBoolean(x1, y))
                     {
-                        res.setBoolean(x, y, true);
+                        if (++x1 == sizeX) break currentRow;
                     }
+
+                    // find the end of current run
+                    int x2 = x1;
+                    while (array.getBoolean(x2, y))
+                    {
+                        if (++x2 == sizeX) break;
+                    }
+
+                    // keep current run, and look for next one
+                    runs.put(x1, new Run(x1, x2 - 1));
+                    if (x2 == sizeX) break;
+                    x1 = x2;
+                }
+
+                // put row in target array.
+                if (!runs.isEmpty())
+                {
+                    res.setRow(y, new BinaryRow(runs));
                 }
             }
-            this.fireProgressChanged(this, 1, 1); 
+            this.fireProgressChanged(this, sizeY, sizeY);
             
             return res;
         }

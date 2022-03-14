@@ -56,7 +56,30 @@ public class RunLengthBinaryArray3DTest
             {
                 for (int x = 0; x < 12; x++)
                 {
-                    assertTrue(array.getBoolean(x, y, z) == converted.getBoolean(x, y, z));  
+                    assertEquals(array.getBoolean(x, y, z), converted.getBoolean(x, y, z));  
+                }
+            }
+        }
+    }
+    
+    /**
+     * Test method for {@link net.sci.array.binary.RunLengthBinaryArray3D#convert(net.sci.array.binary.BinaryArray3D)}.
+     */
+    @Test
+    public final void testConvert_VoxelsAtCorners()
+    {
+        BinaryArray3D array = new BufferedBinaryArray3D(5, 4, 3);
+        array.fillBooleans((x,y,z) -> (x == 0 || x == 4) && (y == 0 || y == 3) && (z == 0 || z == 2));
+        
+        RunLengthBinaryArray3D converted = RunLengthBinaryArray3D.convert(array);
+        
+        for (int z = 0; z < 3; z++)
+        {
+            for (int y = 0; y < 4; y++)
+            {
+                for (int x = 0; x < 5; x++)
+                {
+                    assertEquals(array.getBoolean(x, y, z), converted.getBoolean(x, y, z));  
                 }
             }
         }

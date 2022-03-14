@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import net.sci.algo.AlgoStub;
 
@@ -341,22 +342,46 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
             int sizeZ = array.size(2);
             RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
             
-            // start with naive algorithm
+            // iterate over slices
             for (int z = 0; z < sizeZ; z++)
             {
-                this.fireProgressChanged(this, z, sizeZ); 
+                this.fireProgressChanged(this, z, sizeZ);
+                
                 for (int y = 0; y < sizeY; y++)
                 {
-                    for (int x = 0; x < sizeX; x++)
+                    TreeMap<Integer,Run> runs = new TreeMap<Integer,Run>(); 
+                    
+                    int x1 = 0;
+                    currentRow:
+                    while (true)
                     {
-                        if (array.getBoolean(x, y, z))
+                        // find beginning of first run
+                        while(!array.getBoolean(x1, y, z))
                         {
-                            res.setBoolean(x, y, z, true);
+                            if (++x1 == sizeX) break currentRow;
                         }
+                        
+                        // find the end of current run
+                        int x2 = x1;
+                        while (array.getBoolean(x2, y, z))
+                        {
+                            if (++x2 == sizeX) break;
+                        }
+                        
+                        // keep current run, and look for next one
+                        runs.put(x1, new Run(x1, x2 - 1));
+                        if (x2 == sizeX) break;
+                        x1 = x2;
+                    }
+                    
+                    // put row in target array.
+                    if (!runs.isEmpty())
+                    {
+                        res.setRow(y, z, new BinaryRow(runs));
                     }
                 }
             }
-            this.fireProgressChanged(this,  1, 1); 
+            this.fireProgressChanged(this, sizeZ, sizeZ);
             
             return res;
         }
