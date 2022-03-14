@@ -27,7 +27,7 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
      */
 	public static final UInt8Array3D create(int size0, int size1, int size2)
 	{
-        if (Array.countElements(size0, size1, size2) < Integer.MAX_VALUE)
+        if (Array.prod(size0, size1, size2) < Integer.MAX_VALUE - 8)
             return new BufferedUInt8Array3D(size0, size1, size2);
         else 
             return new SlicedUInt8Array3D(size0, size1, size2);

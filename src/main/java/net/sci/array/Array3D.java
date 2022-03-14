@@ -58,6 +58,7 @@ public abstract class Array3D<T> implements Array<T>
 	 */
 	protected Array3D(int size0, int size1, int size2)
 	{
+        // keep array size
 		this.size0 = size0;
 		this.size1 = size1;
 		this.size2 = size2;

@@ -30,7 +30,7 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	 */
 	public static final Int16Array3D create(int size0, int size1, int size2)
 	{
-        if (Array.countElements(size0, size1, size2) < Integer.MAX_VALUE)
+        if (Array.prod(size0, size1, size2) < Integer.MAX_VALUE - 8)
             return new BufferedInt16Array3D(size0, size1, size2);
         else 
             return new SlicedInt16Array3D(size0, size1, size2);

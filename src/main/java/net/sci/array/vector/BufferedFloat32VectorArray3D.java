@@ -3,6 +3,8 @@
  */
 package net.sci.array.vector;
 
+import net.sci.array.Array;
+
 /**
  * @author dlegland
  *
@@ -36,7 +38,16 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	{
 		super(size0, size1, size2);
 		this.vectorLength = sizeV;
-		this.buffer = new float[size0 * size1 * size2 * sizeV];
+        
+        // check validity of input size array
+        long elCount = Array.prod(size0, size1, size2, sizeV);
+        if (elCount > Integer.MAX_VALUE - 8)
+        {
+            throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
+        }
+        
+        // allocate buffer
+		this.buffer = new float[(int) elCount];
 	}
 
 	/**

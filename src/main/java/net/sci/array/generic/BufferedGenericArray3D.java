@@ -28,14 +28,29 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
     public BufferedGenericArray3D(int size0, int size1, int size2, T initValue)
     {
         super(size0, size1, size2);
+        
+        // check validity of input size array
+        long elCount = Array.prod(size0, size1, size2);
+        if (elCount > Integer.MAX_VALUE - 8)
+        {
+            throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
+        }
+        
+        // allocate buffer
         this.buffer = new Object[size0 * size1 * size2];
         this.initValue = initValue;
+        
+        // ensure buffer is initialized
         fill(initValue);
     }
     
     public BufferedGenericArray3D(int size0, int size1, int size2, T[] buffer)
     {
         super(size0, size1, size2);
+        if (buffer.length < Array.prod(size0, size1, size2))
+        {
+            throw new IllegalArgumentException("Buffer size does not match image dimensions");
+        }
         this.buffer = buffer;
         this.initValue = buffer[0];
     }

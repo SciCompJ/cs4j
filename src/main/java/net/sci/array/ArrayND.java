@@ -10,20 +10,7 @@ package net.sci.array;
  * @author dlegland
  */
 public abstract class ArrayND<T> implements Array<T>
-{
-    // =============================================================
-    // Static methods
-
-    protected static int cumProd(int[] dims)
-    {
-        int prod = 1;
-        for (int d : dims)
-        {
-            prod *= d;
-        }
-        return prod;
-    }
-    
+{    
 	// =============================================================
 	// Class fields
 

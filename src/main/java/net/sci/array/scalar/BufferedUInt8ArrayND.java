@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.Array;
+
 /**
  * @author dlegland
  *
@@ -24,7 +26,16 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	public BufferedUInt8ArrayND(int[] sizes)
 	{
 		super(sizes);
-		this.buffer = new byte[cumProd(sizes)]; 
+        
+        // check validity of input size array
+        long elCount = Array.prod(sizes);
+        if (elCount > Integer.MAX_VALUE - 8)
+        {
+            throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
+        }
+        
+        // allocate buffer
+		this.buffer = new byte[(int) elCount]; 
 	}
 
 	/**
@@ -38,12 +49,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	public BufferedUInt8ArrayND(int[] sizes, byte[] buffer)
 	{
 		super(sizes);
-		int bufferSize = 1;
-		for (int i = 0; i < sizes.length; i++)
-		{
-			bufferSize *= sizes[i];
-		}
-		if (buffer.length != bufferSize)
+		if (buffer.length != Array.prod(sizes))
 		{
 			throw new IllegalArgumentException("Size of image and buffer do not match");
 		}
@@ -176,7 +182,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 		public UInt8Iterator()
 		{
             this.index = -1;
-            this.indexMax = cumProd(sizes) - 1;
+            this.indexMax = (int) Array.prod(sizes) - 1;
 		}
 		
 		@Override

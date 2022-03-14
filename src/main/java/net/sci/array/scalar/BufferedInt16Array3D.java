@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.Array;
+
 /**
  * Implementation of Int16Array3D that stores inner data in a linear array of
  * shorts.
@@ -83,6 +85,15 @@ public class BufferedInt16Array3D extends Int16Array3D
 	public BufferedInt16Array3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
+        
+        // check validity of input size array
+        long elCount = Array.prod(size0, size1, size2);
+        if (elCount > Integer.MAX_VALUE - 8)
+        {
+            throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
+        }
+        
+        // allocate buffer
 		this.buffer = new short[size0 * size1 * size2];
 	}
 

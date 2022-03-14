@@ -3,6 +3,8 @@
  */
 package net.sci.array.vector;
 
+import net.sci.array.Array;
+
 /**
  * @author dlegland
  *
@@ -32,7 +34,16 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
 	{
 		super(sizes);
 		this.vectorLength = sizeV;
-		this.buffer = new float[cumProd(sizes) * sizeV];
+        
+        // check validity of input size array
+        long elCount = Array.prod(sizes) * sizeV;
+        if (elCount > Integer.MAX_VALUE - 8)
+        {
+            throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
+        }
+        
+        // allocate buffer
+		this.buffer = new float[(int) elCount];
 	}
 
 	/**
@@ -50,7 +61,7 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
 	{
 		super(sizes);
 		this.vectorLength = sizeV;
-		if (buffer.length < cumProd(sizes) * sizeV)
+		if (buffer.length < Array.prod(sizes) * sizeV)
 		{
 			throw new IllegalArgumentException("Buffer size does not match array dimensions");
 		}
@@ -146,7 +157,7 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
 		
 		public Iterator() 
 		{
-	        maxIndex = cumProd(sizes) - 1;
+	        maxIndex = (int) Array.prod(sizes) - 1;
 		}
 		
 		@Override

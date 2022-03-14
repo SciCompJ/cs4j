@@ -3,6 +3,8 @@
  */
 package net.sci.array.binary;
 
+import net.sci.array.Array;
+
 /**
  * @author dlegland
  *
@@ -24,12 +26,16 @@ public class BufferedBinaryArrayND extends BinaryArrayND
 	public BufferedBinaryArrayND(int[] sizes)
 	{
 		super(sizes);
-		int bufferSize = 1;
-		for (int i = 0; i < sizes.length; i++)
-		{
-			bufferSize *= sizes[i];
-		}
-		this.buffer = new boolean[bufferSize]; 
+        
+        // check validity of input size array
+        long elCount = Array.prod(sizes);
+        if (elCount > Integer.MAX_VALUE - 8)
+        {
+            throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
+        }
+        
+        // allocate buffer
+		this.buffer = new boolean[(int) elCount]; 
 	}
 
 	/**

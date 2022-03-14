@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.Array;
+
 /**
  * @author dlegland
  *
@@ -26,7 +28,16 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 	public BufferedFloat32ArrayND(int[] sizes)
 	{
 		super(sizes);
-		this.buffer = new float[cumProd(sizes)]; 
+        
+        // check validity of input size array
+        long elCount = Array.prod(sizes);
+        if (elCount > Integer.MAX_VALUE - 8)
+        {
+            throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
+        }
+        
+        // allocate buffer
+		this.buffer = new float[(int) elCount]; 
 	}
 
 	/**
@@ -161,7 +172,7 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 		public Float32Iterator()
 		{
             this.index = -1;
-            this.indexMax = cumProd(sizes) - 1;
+            this.indexMax = (int) Array.prod(sizes) - 1;
 		}
 		
 		@Override

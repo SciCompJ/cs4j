@@ -27,7 +27,7 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
 	 */
 	public static final Float64Array3D create(int size0, int size1, int size2)
 	{
-        if (Array.countElements(size0, size1, size2) < Integer.MAX_VALUE)
+        if (Array.prod(size0, size1, size2) < Integer.MAX_VALUE - 8)
             return new BufferedFloat64Array3D(size0, size1, size2);
         else 
             return new SlicedFloat64Array3D(size0, size1, size2);

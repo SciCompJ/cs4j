@@ -16,7 +16,18 @@ import net.sci.array.binary.BinaryArray;
  */
 public interface Array<T> extends Iterable<T>, Dimensional
 {
-    static long countElements(int... dims)
+    /**
+     * Utility method that computes the product of several integer values. The
+     * typical usage is to count elements in arrays based on the array of sizes
+     * along each dimensions.
+     * 
+     * @see #elementCount()
+     * 
+     * @param dims
+     *            the values to multiply
+     * @return the product of the input values
+     */
+    static long prod(int... dims)
     {
         long n = 1;
         for (int dim : dims) 
