@@ -136,7 +136,8 @@ public class RunLengthBinaryReconstruction2D
                 {
                     // index of neighbor row
                     int yn = y + dy;
-                    
+                    if (yn < 0 || yn > sizeY - 1) continue;
+                        
                     // retrieve neighbor row within array
                     BinaryRow neighRow = mask2.getRow(yn);
                     if (neighRow == null)

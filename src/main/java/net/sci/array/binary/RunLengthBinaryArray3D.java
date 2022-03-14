@@ -3,10 +3,11 @@
  */
 package net.sci.array.binary;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sci.algo.AlgoStub;
 
@@ -51,7 +52,7 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
      * The rows representing this binary array. Index first by z, then by y. 
      * Do not keep empty rows.
      */
-    HashMap<Integer, HashMap<Integer, BinaryRow>> slices;
+    BinaryRow[][] slices;
 
 	
 	// =============================================================
@@ -65,7 +66,7 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	public RunLengthBinaryArray3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
-		this.slices = new HashMap<>(size2);
+		this.slices = new BinaryRow[size2][];
 	}
 
 	/**
@@ -77,7 +78,16 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
    public RunLengthBinaryArray3D(int size0, int size1, int size2, HashMap<Integer, HashMap<Integer, BinaryRow>> slices)
    {
        super(size0, size1, size2);
-       this.slices = slices;
+       this.slices = new BinaryRow[size2][];
+       for (Entry<Integer, HashMap<Integer, BinaryRow>> entry : slices.entrySet())
+       {
+           BinaryRow[] slice = new BinaryRow[size1];
+           for (Entry<Integer, BinaryRow> rowEntry : entry.getValue().entrySet())
+           {
+               slice[rowEntry.getKey()] = rowEntry.getValue();
+           }
+           this.slices[entry.getKey()] = slice;
+       }
    }
 
 
@@ -86,20 +96,34 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	
     public Collection<Integer> nonEmptySliceIndices()
     {
-        return Collections.unmodifiableCollection(slices.keySet());
+        ArrayList<Integer> list = new ArrayList<>(size2);
+        for (int z = 0; z < size2; z++)
+        {
+            if (this.slices[z] != null)
+            {
+                list.add(z);
+            }
+        }
+        return list;
     }
     
     public Collection<Integer> nonEmptySliceRowIndices(int sliceIndex)
     {
-        if (this.slices.containsKey(sliceIndex))
-        {
-            return Collections.unmodifiableCollection(slices.get(sliceIndex).keySet());
-        }
-        else
+        if (this.slices[sliceIndex] == null)
         {
             // return an empty collection
             return Collections.emptySet();
         }
+        
+        ArrayList<Integer> list = new ArrayList<>(size1);
+        for (int y = 0; y < size1; y++)
+        {
+            if (this.slices[sliceIndex][y] != null)
+            {
+                list.add(y);
+            }
+        }
+        return list;
     }
     
 	
@@ -116,12 +140,8 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
      */
 	public BinaryRow getRow(int y, int z)
     {
-	    if (!slices.containsKey(z))
-	    {
-	        return null;
-	    }
-	    HashMap<Integer, BinaryRow> slice = slices.get(z);
-	    return slice.containsKey(y) ? slice.get(y) : null;
+	    if (slices[z] == null) return null;
+	    return slices[z][y];
     }
 
     /**
@@ -142,41 +162,38 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
         }
         else
         {
-            HashMap<Integer, BinaryRow> slice = slices.get(z);
+            BinaryRow[] slice = slices[z];
             if (slice == null)
             {
-                slice = new HashMap<Integer, BinaryRow>(this.size1);
-                slices.put(z, slice);
+                slice = new BinaryRow[this.size1];
+                slices[z] = slice;
             }
-            slice.put(y, row);
+            slice[y] = row;
         }
     }
     
     private void removeRow(int y, int z)
     {
-        if (slices.containsKey(z))
+        BinaryRow[] slice = slices[z];
+        if (slice != null)
         {
-            HashMap<Integer, BinaryRow> slice = slices.get(z);
-            if (slice.containsKey(y))
+            if (slice[y] != null)
             {
-                slice.remove(y);
-                if (slice.isEmpty())
-                {
-                    slices.remove(z);
-                }
+                slice[y] = null;
             }
         }
     }
     
     public boolean isEmptyRow(int y, int z)
     {
-        if (!slices.containsKey(z))
+        BinaryRow[] slice = slices[z];
+        if (slice == null)
         {
             return true;
         }
-        HashMap<Integer, BinaryRow> slice = slices.get(z);
         // as we do not allow empty rows, it is enough to check the existence of the key
-        return !slice.containsKey(y);
+        if (slice[y] == null) return true;
+        return slice[y].isEmpty();
     }
     
     
@@ -189,13 +206,7 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
     @Override
     public void setBoolean(int x, int y, int z, boolean state)
     {
-        BinaryRow row = null;
-        
-        HashMap<Integer, BinaryRow> slice = slices.get(z);
-        if (slice != null)
-        {
-            row = slice.get(y);
-        }
+        BinaryRow row = getRow(y, z);
         
         if (row == null)
         {
@@ -228,21 +239,30 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
      */
     public void fill(boolean state)
     {
-        // in any case, clear the inner map
-        this.slices.clear();
-        
         if (state)
+        {
+            // iterate over slices
+            for (int z = 0; z < size2; z++)
+            {
+                // ensure current slice is not empty
+                if (slices[z] == null) 
+                {
+                    slices[z] = new BinaryRow[size1];
+                }
+                
+                // fill current slice
+                for (int y = 0; y < size1; y++)
+                {
+                    slices[z][y] = new BinaryRow(new Run(0, size0 - 1));
+                }
+            }
+        }
+        else
         {
             // iterate over slices
             for (int z = 0; z < size1; z++)
             {
-                // fill current slice
-                HashMap<Integer, BinaryRow> slice = new HashMap<>(size1);
-                for (int y = 0; y < size1; y++)
-                {
-                    slice.put(y, new BinaryRow(new Run(0, size0 - 1)));
-                }
-                this.slices.put(z, slice);
+                slices[z] = null;
             }
         }
     }
@@ -253,13 +273,13 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	@Override
 	public boolean getBoolean(int... pos)
 	{
-        HashMap<Integer, BinaryRow> slice = slices.get(pos[2]);
+        BinaryRow[] slice = slices[pos[2]];
 	    if (slice == null)
 	    {
 	        return false;
 	    }
 	    
-        BinaryRow row = slice.get(pos[1]);
+        BinaryRow row = slice[pos[1]];
         if (row == null)
         {
             return false;
@@ -278,28 +298,35 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
     @Override
     public RunLengthBinaryArray3D duplicate()
     {
-        HashMap<Integer, HashMap<Integer, BinaryRow>> resSlices = new HashMap<>(size2);
-        
-        // add copies of each slice
-        for (Map.Entry<Integer, HashMap<Integer, BinaryRow>> entry : this.slices.entrySet())
-        {
-            resSlices.put(entry.getKey(), duplicate(entry.getValue()));
-        }
-        
         // create array
-        return new RunLengthBinaryArray3D(size0, size1, size2, resSlices);
-    }
-    
-    private HashMap<Integer, BinaryRow> duplicate(HashMap<Integer, BinaryRow> slice)
-    {
-        HashMap<Integer, BinaryRow> res = new HashMap<>(this.size1); 
-        for (Map.Entry<Integer, BinaryRow> entry : slice.entrySet())
+        RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(size0, size1, size2);
+        
+        // iterate over slices
+        for (int z = 0; z < size2; z++)
         {
-            res.put(entry.getKey(), entry.getValue().duplicate());
+            // duplicate only non empty slices
+            if (slices[z] != null)
+            {
+                res.slices[z] = duplicate(slices[z]);
+            }
         }
+        
         return res;
     }
     
+    private BinaryRow[] duplicate(BinaryRow[] slice)
+    {
+        BinaryRow[] res = new BinaryRow[slice.length];
+        for (int y = 0; y < slice.length; y++)
+        {
+            if (slice[y] != null)
+            {
+                res[y] = slice[y].duplicate();
+            }
+        }
+        return res;
+    }
+     
     public static class Converter extends AlgoStub
     {
         public RunLengthBinaryArray3D process(BinaryArray3D array)
@@ -317,6 +344,7 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
             // start with naive algorithm
             for (int z = 0; z < sizeZ; z++)
             {
+                this.fireProgressChanged(this, z, sizeZ); 
                 for (int y = 0; y < sizeY; y++)
                 {
                     for (int x = 0; x < sizeX; x++)
@@ -328,6 +356,7 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
                     }
                 }
             }
+            this.fireProgressChanged(this,  1, 1); 
             
             return res;
         }

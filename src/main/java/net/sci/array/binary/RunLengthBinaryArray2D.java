@@ -3,10 +3,12 @@
  */
 package net.sci.array.binary;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Map.Entry;
 
 import net.sci.algo.AlgoStub;
 
@@ -49,7 +51,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     /**
      * The rows representing this binary array. Do not keep empty rows.
      */
-    HashMap<Integer, BinaryRow> rows;
+    BinaryRow[] rows;
 
 	
     // =============================================================
@@ -62,7 +64,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     public RunLengthBinaryArray2D(int size0, int size1)
     {
         super(size0, size1);
-        this.rows = new HashMap<>(size1);
+        this.rows = new BinaryRow[size1];
     }
 
     /**
@@ -73,7 +75,11 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     public RunLengthBinaryArray2D(int size0, int size1, HashMap<Integer, BinaryRow> rows)
     {
         super(size0, size1);
-        this.rows = rows;
+        this.rows = new BinaryRow[size1];
+        for (Entry<Integer, BinaryRow> entry : rows.entrySet())
+        {
+            this.rows[entry.getKey()] = entry.getValue();
+        }
     }
 
 
@@ -82,7 +88,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
 
 	public Collection<BinaryRow> rows()
 	{
-	    return Collections.unmodifiableCollection(rows.values());
+	    return Collections.unmodifiableCollection(Arrays.asList(this.rows));
 	}
 	
 	
@@ -97,7 +103,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
      */
 	public BinaryRow getRow(int y)
     {
-	    return rows.containsKey(y) ? rows.get(y) : null;
+	    return rows[y];
     }
 
     /**
@@ -110,24 +116,36 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
      */
     public void setRow(int y, BinaryRow row)
     {
-        if (row == null || row.isEmpty())
+        if (row != null)
         {
-            rows.remove(y);
+            if (!row.isEmpty())
+            {
+                rows[y] = row;
+                return;
+            }
         }
-        else
-        {
-            this.rows.put(y, row);
-        }
+        
+        // if row is null OR is empty, do not keep reference
+        rows[y] = null;
     }
     
     public boolean isEmptyRow(int y)
     {
-        return !rows.containsKey(y);
+        if (rows[y] == null) return true;
+        return rows[y].isEmpty();
     }
     
     public Collection<Integer> nonEmptyRowIndices()
     {
-        return Collections.unmodifiableCollection(rows.keySet());
+        ArrayList<Integer> list = new ArrayList<>(size1);
+        for (int y = 0; y < size1; y++)
+        {
+            if (this.rows[y] != null)
+            {
+                list.add(y);
+            }
+        }
+        return list;
     }
     
 
@@ -141,7 +159,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     public void setBoolean(int x, int y, boolean state)
     {
         // get row corresponding to current y, or create one if it does not exist
-        BinaryRow row = this.rows.get(y);
+        BinaryRow row = this.rows[y];
         if (row == null)
         {
             if (state)
@@ -149,7 +167,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
                 // create empty row 
                 row = new BinaryRow();
                 row.set(x, true);
-                this.rows.put(y, row);
+                this.rows[y] = row;
             }
             
             // if state is false, nothing to do
@@ -172,16 +190,10 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
      */
     public void fill(boolean state)
     {
-        // in any case, clear the inner map
-        this.rows.clear();
-        
-        if (state)
+        // iterate over rows
+        for (int y = 0; y < size1; y++)
         {
-            // iterate over rows to create full BinaryRow instances
-            for (int y = 0; y < size1; y++)
-            {
-                this.rows.put(y, new BinaryRow(new Run(0, size0 - 1)));
-            }
+            this.rows[y] = state ? new BinaryRow(new Run(0, size0 - 1)) : null;
         }
     }
     
@@ -191,7 +203,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
 	@Override
 	public boolean getBoolean(int... pos)
 	{
-	    BinaryRow row = this.rows.get(pos[1]);
+	    BinaryRow row = this.rows[pos[1]];
 	    if (row == null)
 	    {
 	        return false;
@@ -214,11 +226,13 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         int sizeY = this.size(1);
         RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
         
-        // add copies of each row
-        for (Map.Entry<Integer, BinaryRow> entry : this.rows.entrySet())
+        for (int y = 0; y < sizeY; y++)
         {
-            int index = entry.getKey();
-            res.rows.put(index, entry.getValue().duplicate());
+            BinaryRow row = this.rows[y]; 
+            if (row != null)
+            {
+                res.rows[y] = row.duplicate();
+            }
         }
         return res;
     }
@@ -239,6 +253,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
             // start with naive algorithm
             for (int y = 0; y < sizeY; y++)
             {
+                this.fireProgressChanged(this, y, sizeY); 
                 for (int x = 0; x < sizeX; x++)
                 {
                     if (array.getBoolean(x, y))
@@ -247,6 +262,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
                     }
                 }
             }
+            this.fireProgressChanged(this, 1, 1); 
             
             return res;
         }

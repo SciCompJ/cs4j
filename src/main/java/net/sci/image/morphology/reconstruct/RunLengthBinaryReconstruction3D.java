@@ -142,7 +142,9 @@ public class RunLengthBinaryReconstruction3D
                 {
                     // index of neighbor row
                     int yn = y + shift.dy;
+                    if (yn < 0 || yn > sizeY - 1) continue;
                     int zn = z + shift.dz;
+                    if (zn < 0 || zn > sizeZ - 1) continue;
                     
                     // retrieve neighbor row within array
                     BinaryRow neighRow = mask2.getRow(yn, zn);
