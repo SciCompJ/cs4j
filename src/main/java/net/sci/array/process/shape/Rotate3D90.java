@@ -124,9 +124,14 @@ public class Rotate3D90 extends AlgoStub implements ArrayOperator
         case 1:
         {
             // one rotation -> swap Y and Z coords and reverse Y
+            this.fireStatusChanged(this, "Create result array");
             Array3D<T> output = (Array3D<T>) array.newInstance(new int[]{sizeX, sizeZ, sizeY});
+            
+            // iterate over slices
+            this.fireStatusChanged(this, "Processing values");
             for(int z = 0; z < sizeZ; z++)
             {
+                this.fireProgressChanged(this, z, sizeZ);
                 int y2 = sizeZ - 1 - z;
                 for(int y = 0; y < sizeY; y++)
                 {
@@ -143,9 +148,14 @@ public class Rotate3D90 extends AlgoStub implements ArrayOperator
         case 2:
         {
             // two rotations -> reverse Y and Z coordinates
-            Array3D<T> output = array.duplicate();
+            this.fireStatusChanged(this, "Create result array");
+            Array3D<T> output = (Array3D<T>) array.newInstance(new int[]{sizeX, sizeY, sizeZ});
+            
+            // iterate over slices
+            this.fireStatusChanged(this, "Processing values");
             for(int z = 0; z < sizeZ; z++)
             {
+                this.fireProgressChanged(this, z, sizeZ);
                 int z2 = sizeZ - 1 - z;
                 for(int y = 0; y < sizeY; y++)
                 {
@@ -162,9 +172,14 @@ public class Rotate3D90 extends AlgoStub implements ArrayOperator
         case 3:
         {
             // three rotations -> swap Y and Z coords and reverse Z
+            this.fireStatusChanged(this, "Create result array");
             Array3D<T> output = (Array3D<T>) array.newInstance(new int[]{sizeX, sizeZ, sizeY});
+            
+            // iterate over slices
+            this.fireStatusChanged(this, "Processing values");
             for(int z = 0; z < sizeZ; z++)
             {
+                this.fireProgressChanged(this, z, sizeZ);
                 int y2 = z;
                 for(int y = 0; y < sizeY; y++)
                 {
@@ -199,9 +214,14 @@ public class Rotate3D90 extends AlgoStub implements ArrayOperator
         case 1:
         {
             // one rotation -> swap X and Z and reverse Z
+            this.fireStatusChanged(this, "Create result array");
             Array3D<T> output = (Array3D<T>) array.newInstance(new int[]{sizeZ, sizeY, sizeX});
+            
+            // iterate over slices
+            this.fireStatusChanged(this, "Processing values");
             for(int z = 0; z < sizeZ; z++)
             {
+                this.fireProgressChanged(this, z, sizeZ);
                 int x2 = z;
                 for(int y = 0; y < sizeY; y++)
                 {
@@ -218,9 +238,14 @@ public class Rotate3D90 extends AlgoStub implements ArrayOperator
         case 2:
         {
             // two rotations -> reverse X and Z coordinates
-            Array3D<T> output = array.duplicate();
+            this.fireStatusChanged(this, "Create result array");
+            Array3D<T> output = (Array3D<T>) array.newInstance(new int[]{sizeX, sizeY, sizeZ});
+            
+            // iterate over slices
+            this.fireStatusChanged(this, "Processing values");
             for(int z = 0; z < sizeZ; z++)
             {
+                this.fireProgressChanged(this, z, sizeZ);
                 int z2 = sizeZ - 1 - z;
                 for(int y = 0; y < sizeY; y++)
                 {
@@ -237,9 +262,14 @@ public class Rotate3D90 extends AlgoStub implements ArrayOperator
         case 3:
         {
             // three rotations -> swap X and Z coords and reverse X
+            this.fireStatusChanged(this, "Create result array");
             Array3D<T> output = (Array3D<T>) array.newInstance(new int[]{sizeZ, sizeY, sizeX});
+            
+            // iterate over slices
+            this.fireStatusChanged(this, "Processing values");
             for(int z = 0; z < sizeZ; z++)
             {
+                this.fireProgressChanged(this, z, sizeZ);
                 int x2 = sizeZ - 1 - z;
                 for(int y = 0; y < sizeY; y++)
                 {
@@ -286,6 +316,7 @@ public class Rotate3D90 extends AlgoStub implements ArrayOperator
 		    Array3D<T> output = (Array3D<T>) array.newInstance(new int[]{sizeY, sizeX, sizeZ});
 		    for(int z = 0; z < sizeZ; z++)
 		    {
+                this.fireProgressChanged(this, z, sizeZ);
 		        int z2 = z;
 		        for(int y = 0; y < sizeY; y++)
 		        {
@@ -305,6 +336,7 @@ public class Rotate3D90 extends AlgoStub implements ArrayOperator
 		    Array3D<T> output = array.duplicate();
 		    for(int z = 0; z < sizeZ; z++)
 		    {
+                this.fireProgressChanged(this, z, sizeZ);
 		        int z2 = z;
 		        for(int y = 0; y < sizeY; y++)
 		        {
@@ -324,6 +356,7 @@ public class Rotate3D90 extends AlgoStub implements ArrayOperator
 		    Array3D<T> output = (Array3D<T>) array.newInstance(new int[]{sizeY, sizeX, sizeZ});
             for(int z = 0; z < sizeZ; z++)
             {
+                this.fireProgressChanged(this, z, sizeZ);
                 int z2 = z;
                 for(int y = 0; y < sizeY; y++)
                 {
