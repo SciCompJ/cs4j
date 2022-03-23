@@ -16,11 +16,35 @@ import java.util.Map;
  */
 public class TagSetManager
 {
+    // =============================================================
+    // Singleton management
+
+    /** Returns the unique instance of TagSetManager */
+    public static TagSetManager getInstance()
+    {
+        return SingletonHolder.instance;
+    }
+
+    /** Singleton Holder, to be thread-safe. */
+    private static class SingletonHolder
+    {
+        /** Unique instance. */
+        private final static TagSetManager instance = new TagSetManager();
+    }
+    
+    
+    // =============================================================
+    // Instance variable
+
     /**
      * The inner collection of tag sets.
      */
     ArrayList<TagSet> tagSets = new ArrayList<TagSet>();
     
+
+    // =============================================================
+    // Public methods
+
     /**
      * Adds a new tag set to the list of tag sets.
      * 
@@ -45,6 +69,8 @@ public class TagSetManager
         
         for (TagSet tagSet : tagSets)
         {
+            // use explicit loop over the tags within the set to allow checking
+            // for duplicate tags
             for(TiffTag tag : tagSet.getTags().values())
             {
                 if (!map.containsKey(tag.code))
@@ -53,8 +79,8 @@ public class TagSetManager
                 }
                 else
                 {
-                    System.err.println("TagSetManager already contains a tag entry with code: "
-                            + tag.code + "(" + tag.name + ")");
+                    String pattern = "TagSetManager already contains a tag entry with code: %d (%s)";
+                    System.err.println(String.format(pattern, tag.code, tag.name));
                 }
             }
         }
@@ -63,6 +89,9 @@ public class TagSetManager
     }
     
     
+    // =============================================================
+    // Constructor
+
     /**
      * Private constructor to prevent instantiation.
      */
@@ -84,18 +113,5 @@ public class TagSetManager
         addTagSet(new LsmTags());
 
         // Some other tag collections may be added in the future.
-    }
-    
-    /** Singleton Holder, to be thread-safe. */
-    private static class SingletonHolder
-    {
-        /** Unique instance. */
-        private final static TagSetManager instance = new TagSetManager();
-    }
-    
-    /** Returns the unique instance of TagSetManager */
-    public static TagSetManager getInstance()
-    {
-        return SingletonHolder.instance;
     }
 }

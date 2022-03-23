@@ -17,12 +17,26 @@ public class ImageJTags implements TagSet
     /**
      * 50838 - ImageJ Metadata counts.
      */
-    public static final int IMAGEJ_METADATA_COUNTS = 50838;
+    public static final class ImageJMetaDataCounts extends TiffTag
+    {
+        public static final int CODE = 50838;
+        public ImageJMetaDataCounts()
+        {
+            super(CODE, "ImageJMetaDataCounts", "ImageJ Metadata counts");
+        }
+    }
 
     /**
      * 50839 - ImageJ Metadata.
      */
-    public static final int IMAGEJ_METADATA = 50839;
+    public static final class ImageJMetaData extends TiffTag
+    {
+        public static final int CODE = 50839;
+        public ImageJMetaData()
+        {
+            super(CODE, "ImageJMetaData", "ImageJ Metadata");
+        }
+    }
 
 
     /* (non-Javadoc)
@@ -32,8 +46,8 @@ public class ImageJTags implements TagSet
 	public Map<Integer, TiffTag> getTags()
 	{
 	    Map<Integer, TiffTag> tags = new HashMap<Integer, TiffTag>(2);
-	    add(tags, new TiffTag(IMAGEJ_METADATA_COUNTS, "ImageJMetaDataCounts"));
-	    add(tags, new TiffTag(IMAGEJ_METADATA, "ImageJMetaData"));
+	    add(tags, new ImageJMetaDataCounts());
+	    add(tags, new ImageJMetaData());
 		return tags;
 	}
 

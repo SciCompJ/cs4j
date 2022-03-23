@@ -23,9 +23,45 @@ import net.sci.image.io.BinaryDataReader;
 public class LsmTags implements TagSet
 {
     /**
-     * 34412 - LSM Infos.
+     * 34412 - LSM Info.
      */
-    public static final int LSM_INFO = 34412;
+    public static final class LSMInfo extends TiffTag
+    {
+        public static final int CODE = 34412;
+        
+        public LSMInfo()
+        {
+            super(CODE, "LSMInfo", "LSM Info");
+        }
+        
+        public void init(BinaryDataReader dataReader) throws IOException
+        {
+            Map<String, Object> map = new TreeMap<>();
+            
+            // keep reader pointer
+            long pos0 = dataReader.getFilePointer();
+
+            // convert tag value to long offset for reading large buffer
+            long offset = ((long) this.value) & 0xffffffffL;
+            dataReader.seek(offset+8);
+
+            map.put("dimX", dataReader.readInt());
+            map.put("dimY", dataReader.readInt());
+            map.put("dimZ", dataReader.readInt());
+            map.put("dimC", dataReader.readInt());
+            map.put("dimT", dataReader.readInt());
+            dataReader.seek(dataReader.getFilePointer() + 12);
+            map.put("voxelSizeX", dataReader.readDouble());
+            map.put("voxelSizeY", dataReader.readDouble());
+            map.put("voxelSizeZ", dataReader.readDouble());
+            map.put("specScan", dataReader.readShort() & 0x00FFFF);
+            
+            // revert reader to initial position
+            dataReader.seek(pos0);
+            
+            this.content = map;
+        }           
+    }
 
 
     /* (non-Javadoc)
@@ -36,36 +72,7 @@ public class LsmTags implements TagSet
     {
         Map<Integer, TiffTag> tags = new HashMap<Integer, TiffTag>(1);
 
-        add(tags, new TiffTag(LSM_INFO, "LSMInfo")
-        {
-            public void init(BinaryDataReader dataReader) throws IOException
-            {
-                Map<String, Object> map = new TreeMap<>();
-                
-                // keep reader pointer
-                long pos0 = dataReader.getFilePointer();
-
-                // convert tag value to long offset for reading large buffer
-                long offset = ((long) this.value) & 0xffffffffL;
-                dataReader.seek(offset+8);
-
-                map.put("dimX", dataReader.readInt());
-                map.put("dimY", dataReader.readInt());
-                map.put("dimZ", dataReader.readInt());
-                map.put("dimC", dataReader.readInt());
-                map.put("dimT", dataReader.readInt());
-                dataReader.seek(dataReader.getFilePointer() + 12);
-                map.put("voxelSizeX", dataReader.readDouble());
-                map.put("voxelSizeY", dataReader.readDouble());
-                map.put("voxelSizeZ", dataReader.readDouble());
-                map.put("specScan", dataReader.readShort() & 0x00FFFF);
-                
-                // revert reader to initial position
-                dataReader.seek(pos0);
-                
-                this.content = map;
-            }           
-        });
+        add(tags, new LSMInfo());
 
         return tags;
     }

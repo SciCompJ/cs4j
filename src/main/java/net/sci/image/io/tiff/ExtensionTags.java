@@ -18,22 +18,50 @@ public class ExtensionTags implements TagSet
     /**
      * 269 - The name of the document from which this image was scanned.
      */
-    public static final int DOCUMENT_NAME = 269;
+    public static final class DocumentName extends TiffTag
+    {
+        public static final int CODE = 269;
+        public DocumentName()
+        {
+            super(CODE, "DocumentName", "The name of the document from which this image was scanned");
+        }
+    }
 
     /**
      * 285 - The name of the page from which this image was scanned.
      */
-    public static final int PAGE_NAME = 285;
+    public static final class PageName extends TiffTag
+    {
+        public static final int CODE = 285;
+        public PageName()
+        {
+            super(CODE, "PageName", "The name of the page from which this image was scanned");
+        }
+    }
 
     /**
      * 317 - A mathematical operator that is applied to the image data before an encoding scheme is applied.
      */
-    public static final int PREDICTOR = 317;
+    public static final class Predictor extends TiffTag
+    {
+        public static final int CODE = 317;
+        public Predictor()
+        {
+            super(CODE, "Predictor", "A mathematical operator that is applied to the image data before an encoding scheme is applied");
+        }
+    }
 
     /**
      * 339 - Specifies how to interpret each data sample in a pixel.
      */
-    public static final int SAMPLE_FORMAT = 339;
+    public static final class SampleFormat extends TiffTag
+    {
+        public static final int CODE = 339;
+        public SampleFormat()
+        {
+            super(CODE, "SampleFormat", "Specifies how to interpret each data sample in a pixel");
+        }
+    }
 
 
     /* (non-Javadoc)
@@ -42,18 +70,13 @@ public class ExtensionTags implements TagSet
     @Override
     public  Map<Integer, TiffTag> getTags()
     {
-        Map<Integer, TiffTag> tags = new HashMap<Integer, TiffTag>(2);
+        Map<Integer, TiffTag> tags = new HashMap<Integer, TiffTag>(4);
         
-        add(tags, new TiffTag(DOCUMENT_NAME, "DocumentName", 
-                "The name of the document from which this image was scanned"));
-        add(tags, new TiffTag(PAGE_NAME, "PageName", 
-                "The name of the page from which this image was scanned"));
-        
-        add(tags, new TiffTag(PREDICTOR, "Predictor", 
-                "A mathematical operator that is applied to the image data before an encoding scheme is applied"));
-        add(tags, new TiffTag(SAMPLE_FORMAT, "SampleFormat", 
-                "Specifies how to interpret each data sample in a pixel"));
-        
+        add(tags, new DocumentName()); 
+        add(tags, new PageName()); 
+        add(tags, new Predictor()); 
+        add(tags, new SampleFormat()); 
+       
         return tags;
     }
 

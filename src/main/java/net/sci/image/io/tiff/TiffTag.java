@@ -12,9 +12,15 @@ import net.sci.image.io.BinaryDataReader;
 /**
  * Manages tag information in TIFF files.
  * 
- * For complete Tiff Tag list, see http://www.awaresystems.be/imaging/tiff/tifftags.html  
+ * For complete Tiff Tag list, see:
+ * http://www.awaresystems.be/imaging/tiff/tifftags.html
+ * 
+ * Tags are gathered within "TagSets". Additional tag sets can be provided by
+ * user to manage additional features or formats.
+ * 
+ * @see TagSet
+ * 
  * @author dlegland
- *
  */
 public class TiffTag
 {

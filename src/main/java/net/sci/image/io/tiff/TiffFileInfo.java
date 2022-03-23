@@ -356,9 +356,9 @@ public class TiffFileInfo
 	        }
 	        
 	        // do not compare the tags corresponding to the way the data are stored in the file
-            if (key == BaselineTags.STRIP_OFFSETS || key == BaselineTags.ROWS_PER_STRIP
-                    || key == BaselineTags.STRIP_BYTE_COUNTS || key == BaselineTags.FREE_OFFSETS
-                    || key == BaselineTags.FREE_BYTE_COUNTS)
+            if (key == BaselineTags.StripOffsets.CODE || key == BaselineTags.RowsPerStrip.CODE
+                    || key == BaselineTags.StripByteCounts.CODE || key == BaselineTags.FreeOffsets.CODE
+                    || key == BaselineTags.FreeByteCounts.CODE)
 	        {
 	            continue;
 	        }

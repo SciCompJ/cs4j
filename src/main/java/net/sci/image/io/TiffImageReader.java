@@ -221,7 +221,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     private boolean hasImageJDescription(TiffFileInfo info)
     {
         // Get the  description tag, or null if not initialized
-        TiffTag tag = info.tags.get(BaselineTags.IMAGE_DESCRIPTION);
+        TiffTag tag = info.tags.get(BaselineTags.ImageDescription.CODE);
         if (tag == null)
         {
             return false;
@@ -253,7 +253,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
 	private Image readImageJImage(TiffFileInfo info) throws IOException
 	{
 	    // Get the  description tag, or null if not initialized
-	    TiffTag tag = info.tags.get(BaselineTags.IMAGE_DESCRIPTION);
+	    TiffTag tag = info.tags.get(BaselineTags.ImageDescription.CODE);
 	    if (tag == null)
 	    {
 	        throw new IllegalArgumentException("Requires a description TiffTag with index 270");
@@ -470,7 +470,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     private Image readImageJVirtualImage(TiffFileInfo info) throws IOException
     {
         // Get the  description tag, or null if not initialized
-        TiffTag tag = info.tags.get(BaselineTags.IMAGE_DESCRIPTION);
+        TiffTag tag = info.tags.get(BaselineTags.ImageDescription.CODE);
         if (tag == null)
         {
             throw new IllegalArgumentException("Requires a description TiffTag with index 270");
