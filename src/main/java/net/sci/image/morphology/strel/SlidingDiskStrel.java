@@ -5,6 +5,7 @@ package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 
@@ -117,14 +118,14 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
     @Override
     public ScalarArray2D<?> dilation(ScalarArray2D<?> array)
     {
-        if (array instanceof UInt8Array2D)
+        if (array instanceof UInt8Array2D || array instanceof BinaryArray2D)
         {
-            return dilationUInt8((UInt8Array2D) array);
+            return dilationUInt8((IntArray2D<?>) array);
         }
         return dilationScalar(array);
     }
 
-    private UInt8Array2D dilationUInt8(UInt8Array2D array)
+    private IntArray2D<?> dilationUInt8(IntArray2D<?> array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -139,7 +140,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
         LocalHistogramUInt8 localHisto = new LocalHistogramUInt8(count, OUTSIDE);
 
         // Allocate result
-        UInt8Array2D res = array.duplicate();
+        IntArray2D<?> res = array.duplicate();
 
         // temp variables for updating local histogram
         int vOld, vNew;
@@ -294,14 +295,14 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
     @Override
     public ScalarArray2D<?> erosion(ScalarArray2D<?> array)
     {
-        if (array instanceof UInt8Array2D)
+        if (array instanceof UInt8Array2D || array instanceof BinaryArray2D)
         {
-            return erosionUInt8((UInt8Array2D) array);
+            return erosionUInt8((IntArray2D<?>) array);
         }
         return erosionScalar(array);
     }
 
-    private UInt8Array2D erosionUInt8(UInt8Array2D array)
+    private IntArray2D<?> erosionUInt8(IntArray2D<?> array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -316,7 +317,7 @@ public class SlidingDiskStrel extends AlgoStub implements Strel2D
         LocalHistogramUInt8 localHisto = new LocalHistogramUInt8(count, OUTSIDE);
     
         // Allocate result
-        UInt8Array2D res = array.duplicate();
+        IntArray2D<?> res = array.duplicate();
     
         // temp variables for updating local histogram
         int vOld, vNew;

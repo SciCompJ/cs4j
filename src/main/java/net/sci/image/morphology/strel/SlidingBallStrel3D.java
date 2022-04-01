@@ -5,6 +5,7 @@ package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.array.scalar.UInt8Array3D;
 
@@ -145,9 +146,9 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
     @Override
     public ScalarArray3D<?> dilation(ScalarArray3D<?> array)
     {
-        if (array instanceof UInt8Array3D)
+        if (array instanceof UInt8Array3D || array instanceof BinaryArray3D)
         {
-            return dilationUInt8((UInt8Array3D) array);
+            return dilationUInt8((IntArray3D<?>) array);
         }
         return dilationScalar(array);
     }
@@ -251,7 +252,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         return res;
     }
     
-    private UInt8Array3D dilationUInt8(UInt8Array3D array)
+    private IntArray3D<?> dilationUInt8(IntArray3D<?> array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -267,7 +268,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         LocalHistogramUInt8 localHisto = new LocalHistogramUInt8(count, OUTSIDE);
 
         // Allocate result
-        UInt8Array3D res = array.duplicate();
+        IntArray3D<?> res = array.duplicate();
 
         // temp variables for updating local histogram
         int vOld, vNew;
@@ -356,9 +357,9 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
     @Override
     public ScalarArray3D<?> erosion(ScalarArray3D<?> array)
     {
-        if (array instanceof UInt8Array3D)
+        if (array instanceof UInt8Array3D || array instanceof BinaryArray3D)
         {
-            return erosionUInt8((UInt8Array3D) array);
+            return erosionUInt8((IntArray3D<?>) array);
         }
         return erosionScalar(array);
     }
@@ -462,7 +463,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         return res;
     }
     
-    private UInt8Array3D erosionUInt8(UInt8Array3D array)
+    private IntArray3D<?> erosionUInt8(IntArray3D<?> array)
     {
         // get array size
         int sizeX = array.size(0);
@@ -478,7 +479,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
         LocalHistogramUInt8 localHisto = new LocalHistogramUInt8(count, OUTSIDE);
 
         // Allocate result
-        UInt8Array3D res = array.duplicate();
+        IntArray3D<?> res = array.duplicate();
 
         // temp variables for updating local histogram
         int vOld, vNew;
