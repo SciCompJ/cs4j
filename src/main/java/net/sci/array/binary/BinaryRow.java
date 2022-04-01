@@ -821,6 +821,14 @@ public class BinaryRow
         }
     }
     
+    /**
+     * @return the number of runs within this row.
+     */
+    public int runCount()
+    {
+        return runs.size();
+    }
+    
     public Collection<Run> runs()
     {
         return Collections.unmodifiableCollection(this.runs.values());

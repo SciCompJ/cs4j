@@ -127,6 +127,35 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
         return list;
     }
     
+    
+    // =============================================================
+    // New methods
+    
+    /**
+     * Counts the number of runs within this array.
+     * 
+     * @return the number of runs within this array.
+     */
+    public int runCount()
+    {
+        int count = 0;
+        for (int z = 0; z < size2; z++)
+        {
+            BinaryRow[] slice = slices[z];
+            if (slice == null) continue;
+            
+            for (int y = 0; y < size1; y++)
+            {
+                BinaryRow row = slice[y];
+                if (row != null)
+                {
+                    count += row.runCount();
+                }
+            }
+        }
+        return count;
+    }
+    
 	
     // =============================================================
     // Management of rows
