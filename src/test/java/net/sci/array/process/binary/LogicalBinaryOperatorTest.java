@@ -24,13 +24,13 @@ public class LogicalBinaryOperatorTest
      * Test method for {@link net.sci.array.process.binary.LogicalBinaryOperator#process(net.sci.array.binary.BinaryArray, net.sci.array.binary.BinaryArray)}.
      */
     @Test
-    public final void testProcess_2d()
+    public final void testProcess_XOR_2d()
     {
         // initialize demo arrays
         BinaryArray2D array1 = BinaryArray2D.create(8, 6);
-        array1.fillBooleans((x,y) -> x >= 4);
+        array1.fillBooleans((x,y) -> x >=1 && x <= 4 && y >= 1 && y <= 3);
         BinaryArray2D array2 = BinaryArray2D.create(8, 6);
-        array2.fillBooleans((x,y) -> y >= 3);
+        array2.fillBooleans((x,y) -> x >=3 && x <= 6 && y >= 2 && y <= 4);
         // create operator to compute exclusive or from two arrays 
         LogicalBinaryOperator op = new LogicalBinaryOperator((a,b) -> a ^ b);
         
@@ -40,9 +40,11 @@ public class LogicalBinaryOperatorTest
         assertEquals(res.size(0), res.size(0));
         assertEquals(res.size(1), res.size(1));
         assertFalse(res.getBoolean(0, 0));
-        assertTrue(res.getBoolean(7, 0));
-        assertTrue(res.getBoolean(0, 5));
         assertFalse(res.getBoolean(7, 5));
+        assertTrue(res.getBoolean(1, 1));
+        assertTrue(res.getBoolean(6, 4));
+        assertFalse(res.getBoolean(3, 2));
+        assertFalse(res.getBoolean(4, 3));
     }
 
     /**
@@ -141,9 +143,9 @@ public class LogicalBinaryOperatorTest
     {
         // initialize demo arrays
         BinaryArray2D array1 = new BufferedBinaryArray2D(8, 6);
-        array1.fillBooleans((x,y) -> x >= 4);
+        array1.fillBooleans((x,y) -> x >=1 && x <= 4 && y >= 1 && y <= 3);
         BinaryArray2D array2 = new BufferedBinaryArray2D(8, 6);
-        array2.fillBooleans((x,y) -> y >= 3);
+        array2.fillBooleans((x,y) -> x >=3 && x <= 6 && y >= 2 && y <= 4);
         // create operator to compute exclusive or from two arrays 
         LogicalBinaryOperator op = LogicalBinaryOperator.AND;
         
@@ -153,9 +155,11 @@ public class LogicalBinaryOperatorTest
         assertEquals(res.size(0), res.size(0));
         assertEquals(res.size(1), res.size(1));
         assertFalse(res.getBoolean(0, 0));
-        assertFalse(res.getBoolean(7, 0));
-        assertFalse(res.getBoolean(0, 5));
-        assertTrue(res.getBoolean(7, 5));
+        assertFalse(res.getBoolean(7, 5));
+        assertFalse(res.getBoolean(1, 1));
+        assertFalse(res.getBoolean(6, 4));
+        assertTrue(res.getBoolean(3, 2));
+        assertTrue(res.getBoolean(4, 3));
     }
 
     /**
@@ -166,9 +170,9 @@ public class LogicalBinaryOperatorTest
     {
         // initialize demo arrays
         BinaryArray2D array1 = new RunLengthBinaryArray2D(8, 6);
-        array1.fillBooleans((x,y) -> x >= 4);
+        array1.fillBooleans((x,y) -> x >=1 && x <= 4 && y >= 1 && y <= 3);
         BinaryArray2D array2 = new RunLengthBinaryArray2D(8, 6);
-        array2.fillBooleans((x,y) -> y >= 3);
+        array2.fillBooleans((x,y) -> x >=3 && x <= 6 && y >= 2 && y <= 4);
         // create operator to compute exclusive or from two arrays 
         LogicalBinaryOperator op = LogicalBinaryOperator.AND;
         
@@ -178,9 +182,11 @@ public class LogicalBinaryOperatorTest
         assertEquals(res.size(0), res.size(0));
         assertEquals(res.size(1), res.size(1));
         assertFalse(res.getBoolean(0, 0));
-        assertFalse(res.getBoolean(7, 0));
-        assertFalse(res.getBoolean(0, 5));
-        assertTrue(res.getBoolean(7, 5));
+        assertFalse(res.getBoolean(7, 5));
+        assertFalse(res.getBoolean(1, 1));
+        assertFalse(res.getBoolean(6, 4));
+        assertTrue(res.getBoolean(3, 2));
+        assertTrue(res.getBoolean(4, 3));
     }
 
     /**
@@ -251,9 +257,9 @@ public class LogicalBinaryOperatorTest
     {
         // initialize demo arrays
         BinaryArray2D array1 = new BufferedBinaryArray2D(8, 6);
-        array1.fillBooleans((x,y) -> x >= 4);
+        array1.fillBooleans((x,y) -> x >=1 && x <= 4 && y >= 1 && y <= 3);
         BinaryArray2D array2 = new BufferedBinaryArray2D(8, 6);
-        array2.fillBooleans((x,y) -> y >= 3);
+        array2.fillBooleans((x,y) -> x >=3 && x <= 6 && y >= 2 && y <= 4);
         // create operator to compute exclusive or from two arrays 
         LogicalBinaryOperator op = LogicalBinaryOperator.OR;
         
@@ -263,9 +269,11 @@ public class LogicalBinaryOperatorTest
         assertEquals(res.size(0), res.size(0));
         assertEquals(res.size(1), res.size(1));
         assertFalse(res.getBoolean(0, 0));
-        assertTrue(res.getBoolean(7, 0));
-        assertTrue(res.getBoolean(0, 5));
-        assertTrue(res.getBoolean(7, 5));
+        assertFalse(res.getBoolean(7, 5));
+        assertTrue(res.getBoolean(1, 1));
+        assertTrue(res.getBoolean(6, 4));
+        assertTrue(res.getBoolean(3, 2));
+        assertTrue(res.getBoolean(4, 3));
     }
 
     /**
@@ -276,9 +284,9 @@ public class LogicalBinaryOperatorTest
     {
         // initialize demo arrays
         BinaryArray2D array1 = new RunLengthBinaryArray2D(8, 6);
-        array1.fillBooleans((x,y) -> x >= 4);
+        array1.fillBooleans((x,y) -> x >=1 && x <= 4 && y >= 1 && y <= 3);
         BinaryArray2D array2 = new RunLengthBinaryArray2D(8, 6);
-        array2.fillBooleans((x,y) -> y >= 3);
+        array2.fillBooleans((x,y) -> x >=3 && x <= 6 && y >= 2 && y <= 4);
         // create operator to compute exclusive or from two arrays 
         LogicalBinaryOperator op = LogicalBinaryOperator.OR;
         
@@ -288,9 +296,11 @@ public class LogicalBinaryOperatorTest
         assertEquals(res.size(0), res.size(0));
         assertEquals(res.size(1), res.size(1));
         assertFalse(res.getBoolean(0, 0));
-        assertTrue(res.getBoolean(7, 0));
-        assertTrue(res.getBoolean(0, 5));
-        assertTrue(res.getBoolean(7, 5));
+        assertFalse(res.getBoolean(7, 5));
+        assertTrue(res.getBoolean(1, 1));
+        assertTrue(res.getBoolean(6, 4));
+        assertTrue(res.getBoolean(3, 2));
+        assertTrue(res.getBoolean(4, 3));
     }
 
     /**

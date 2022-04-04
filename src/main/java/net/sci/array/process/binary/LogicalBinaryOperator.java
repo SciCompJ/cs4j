@@ -46,93 +46,14 @@ public class LogicalBinaryOperator extends AlgoStub
      * Specialization of the logical AND operator, that provides specialized
      * implementations for Run-Length encoded binary arrays.
      */
-    public static final LogicalBinaryOperator AND = new LogicalBinaryOperator((a,b) -> a && b)
+    public static final LogicalBinaryOperator AND = new RunLengthLogicalBinaryOperatorStub((a,b) -> a && b)
     {
-        public BinaryArray process(BinaryArray array1, BinaryArray array2)
+        @Override
+        protected BinaryRow processRowPair(BinaryRow row1, BinaryRow row2, int rowLength)
         {
-            checkSameSize(array1, array2);
-            
-            if (array1.dimensionality() == 2)
-            {
-                return process2d(BinaryArray2D.wrap(array1), BinaryArray2D.wrap(array2));
-            }
-            else if (array1.dimensionality() == 3)
-            {
-                return process3d(BinaryArray3D.wrap(array1), BinaryArray3D.wrap(array2));
-            }
-            else
-            {
-                return super.process(array1, array2);
-            }
-            
-        }
-
-        private BinaryArray2D process2d(BinaryArray2D array1, BinaryArray2D array2)
-        {
-            if (array1 instanceof RunLengthBinaryArray2D && array2 instanceof RunLengthBinaryArray2D)
-            {
-                return process2d_rle((RunLengthBinaryArray2D) array1, (RunLengthBinaryArray2D) array2);
-            }
-            else
-            {
-                BinaryArray2D res = BinaryArray2D.create(array1.size(0), array1.size(1));
-                return super.process2d(array1, array2, res);
-            }
-        }
-
-        private BinaryArray2D process2d_rle(RunLengthBinaryArray2D array1, RunLengthBinaryArray2D array2)
-        {
-            int sizeX = array1.size(0); 
-            int sizeY = array1.size(1);
-            RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
-            for (int y = 0; y < sizeY; y++)
-            {
-                this.fireProgressChanged(this, y, sizeY);
-                
-                BinaryRow row1 = array1.getRow(y);
-                BinaryRow row2 = array2.getRow(y);
-                // for AND operator, do not need to process empty rows
-                if (row1 == null || row2 == null) continue;
-                res.setRow(y, row1.intersection(row2));
-            }
-            this.fireProgressChanged(this, 1, 1);
-            return res;
-        }
-        
-        private BinaryArray3D process3d(BinaryArray3D array1, BinaryArray3D array2)
-        {
-            if (array1 instanceof RunLengthBinaryArray3D && array2 instanceof RunLengthBinaryArray3D)
-            {
-                return process3d_rle((RunLengthBinaryArray3D) array1, (RunLengthBinaryArray3D) array2);
-            }
-            else
-            {
-                BinaryArray3D res = BinaryArray3D.create(array1.size(0), array1.size(1), array1.size(2));
-                return super.process3d(array1, array2, res);
-            }
-        }
-
-        private BinaryArray3D process3d_rle(RunLengthBinaryArray3D array1, RunLengthBinaryArray3D array2)
-        {
-            int sizeX = array1.size(0); 
-            int sizeY = array1.size(1);
-            int sizeZ = array1.size(2);
-            RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
-            for (int z = 0; z < sizeZ; z++)
-            {
-                this.fireProgressChanged(this, z, sizeZ);
-                for (int y = 0; y < sizeY; y++)
-                {
-                
-                BinaryRow row1 = array1.getRow(y, z);
-                BinaryRow row2 = array2.getRow(y, z);
-                // for AND operator, do not need to process empty rows
-                if (row1 == null || row2 == null) continue;
-                res.setRow(y, z, row1.intersection(row2));
-            }
-            }
-            this.fireProgressChanged(this, 1, 1);
-            return res;
+            if (row1 == null) return null; 
+            if (row2 == null) return null; 
+            return row1.intersection(row2);
         }
     };
 
@@ -140,125 +61,14 @@ public class LogicalBinaryOperator extends AlgoStub
      * Specialization of the logical OR operator, that provides specialized
      * implementations for Run-Length encoded binary arrays.
      */
-    public static final LogicalBinaryOperator OR = new LogicalBinaryOperator((a,b) -> a || b)
+    public static final LogicalBinaryOperator OR = new RunLengthLogicalBinaryOperatorStub((a,b) -> a || b)
     {
-        public BinaryArray process(BinaryArray array1, BinaryArray array2)
+        @Override
+        protected BinaryRow processRowPair(BinaryRow row1, BinaryRow row2, int rowLength)
         {
-            checkSameSize(array1, array2);
-            
-            if (array1.dimensionality() == 2)
-            {
-                return process2d(BinaryArray2D.wrap(array1), BinaryArray2D.wrap(array2));
-            }
-            else if (array1.dimensionality() == 3)
-            {
-                return process3d(BinaryArray3D.wrap(array1), BinaryArray3D.wrap(array2));
-            }
-            else
-            {
-                return super.process(array1, array2);
-            }
-            
-        }
-
-        private BinaryArray2D process2d(BinaryArray2D array1, BinaryArray2D array2)
-        {
-            if (array1 instanceof RunLengthBinaryArray2D && array2 instanceof RunLengthBinaryArray2D)
-            {
-                return process2d_rle((RunLengthBinaryArray2D) array1, (RunLengthBinaryArray2D) array2);
-            }
-            else
-            {
-                BinaryArray2D res = BinaryArray2D.create(array1.size(0), array1.size(1));
-                return super.process2d(array1, array2, res);
-            }
-        }
-
-        private BinaryArray2D process2d_rle(RunLengthBinaryArray2D array1, RunLengthBinaryArray2D array2)
-        {
-            int sizeX = array1.size(0); 
-            int sizeY = array1.size(1);
-            RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
-            for (int y = 0; y < sizeY; y++)
-            {
-                this.fireProgressChanged(this, y, sizeY);
-                
-                BinaryRow row1 = array1.getRow(y);
-                BinaryRow row2 = array2.getRow(y);
-                if (row1 != null)
-                {
-                    if (row2 != null)
-                    {
-                        res.setRow(y, row1.union(row2));
-                    }
-                    else
-                    {
-                        res.setRow(y, row1.duplicate());
-                    }
-                }
-                else
-                {
-                    if (row2 != null)
-                    {
-                        res.setRow(y, row2.duplicate());
-                    }
-                    // else: no need to work
-                }
-            }
-            this.fireProgressChanged(this, 1, 1);
-            return res;
-        }
-        
-        private BinaryArray3D process3d(BinaryArray3D array1, BinaryArray3D array2)
-        {
-            if (array1 instanceof RunLengthBinaryArray3D && array2 instanceof RunLengthBinaryArray3D)
-            {
-                return process3d_rle((RunLengthBinaryArray3D) array1, (RunLengthBinaryArray3D) array2);
-            }
-            else
-            {
-                BinaryArray3D res = BinaryArray3D.create(array1.size(0), array1.size(1), array1.size(2));
-                return super.process3d(array1, array2, res);
-            }
-        }
-
-        private BinaryArray3D process3d_rle(RunLengthBinaryArray3D array1, RunLengthBinaryArray3D array2)
-        {
-            int sizeX = array1.size(0); 
-            int sizeY = array1.size(1);
-            int sizeZ = array1.size(2);
-            RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
-            for (int z = 0; z < sizeZ; z++)
-            {
-                this.fireProgressChanged(this, z, sizeZ);
-                for (int y = 0; y < sizeY; y++)
-                {
-
-                    BinaryRow row1 = array1.getRow(y, z);
-                    BinaryRow row2 = array2.getRow(y, z);
-                    if (row1 != null)
-                    {
-                        if (row2 != null)
-                        {
-                            res.setRow(y, z, row1.union(row2));
-                        }
-                        else
-                        {
-                            res.setRow(y, z, row1.duplicate());
-                        }
-                    }
-                    else
-                    {
-                        if (row2 != null)
-                        {
-                            res.setRow(y, z, row2.duplicate());
-                        }
-                        // else: no need to work
-                    }
-                }
-            }
-            this.fireProgressChanged(this, 1, 1);
-            return res;
+            return row1 != null 
+                    ? row2 != null ? row1.union(row2) : row1.duplicate() 
+                    : row2 != null ? row2.duplicate() : null;
         }
     };
 
@@ -283,7 +93,7 @@ public class LogicalBinaryOperator extends AlgoStub
      * 
      * <pre>
      * {@code 
-     * LogicalBinaryOperator op = new LogicalBinaryOperator((a,b) -> a | b);
+     * LogicalBinaryOperator op = new LogicalBinaryOperator((a,b) -> a || b);
      * }</pre>
      * 
      * @param fun
@@ -304,13 +114,11 @@ public class LogicalBinaryOperator extends AlgoStub
         
         if (array1.dimensionality() == 2)
         {
-            BinaryArray2D res = BinaryArray2D.wrap(array1.newInstance(array1.size()));
-            return process2d(BinaryArray2D.wrap(array1), BinaryArray2D.wrap(array2), res);
+            return process2d(BinaryArray2D.wrap(array1), BinaryArray2D.wrap(array2));
         }
         else if (array1.dimensionality() == 3)
         {
-            BinaryArray3D res = BinaryArray3D.wrap(array1.newInstance(array1.size()));
-            return process3d(BinaryArray3D.wrap(array1), BinaryArray3D.wrap(array2), res);
+            return process3d(BinaryArray3D.wrap(array1), BinaryArray3D.wrap(array2));
         }
         else
         {
@@ -340,6 +148,12 @@ public class LogicalBinaryOperator extends AlgoStub
         }
     }
 
+    protected BinaryArray2D process2d(BinaryArray2D array1, BinaryArray2D array2)
+    {
+        BinaryArray2D res = BinaryArray2D.create(array1.size(0), array1.size(1));
+        return process2d(array1, array2, res);
+    }
+
     private BinaryArray2D process2d(BinaryArray2D array1, BinaryArray2D array2, BinaryArray2D res)
     {
         int sizeX = array1.size(0);
@@ -357,6 +171,12 @@ public class LogicalBinaryOperator extends AlgoStub
         return res;
     }
     
+    protected BinaryArray3D process3d(BinaryArray3D array1, BinaryArray3D array2)
+    {
+        BinaryArray3D res = BinaryArray3D.create(array1.size(0), array1.size(1), array1.size(2));
+        return process3d(array1, array2, res);
+    }
+
     private BinaryArray3D process3d(BinaryArray3D array1, BinaryArray3D array2, BinaryArray3D res)
     {
         int sizeX = array1.size(0);
@@ -389,4 +209,87 @@ public class LogicalBinaryOperator extends AlgoStub
             throw new IllegalArgumentException("Arrays must have same size");
         }
     }
+    
+    /**
+     * Base implementation for processing logical operators on binary arrays
+     * that can optimize processing for run-length encoded arrays.
+     * 
+     * Sub-classes need to implement the "processRowPair()" method.
+     */
+    private abstract static class RunLengthLogicalBinaryOperatorStub extends LogicalBinaryOperator
+    {
+        public RunLengthLogicalBinaryOperatorStub(BiFunction<Boolean, Boolean, Boolean> fun)
+        {
+            super(fun);
+        }
+
+        @Override
+        protected BinaryArray2D process2d(BinaryArray2D array1, BinaryArray2D array2)
+        {
+            if (array1 instanceof RunLengthBinaryArray2D && array2 instanceof RunLengthBinaryArray2D)
+            {
+                return process2d_rle((RunLengthBinaryArray2D) array1, (RunLengthBinaryArray2D) array2);
+            }
+            else
+            {
+                return super.process2d(array1, array2);
+            }
+        }
+
+        private BinaryArray2D process2d_rle(RunLengthBinaryArray2D array1, RunLengthBinaryArray2D array2)
+        {
+            int sizeX = array1.size(0); 
+            int sizeY = array1.size(1);
+            RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
+            for (int y = 0; y < sizeY; y++)
+            {
+                this.fireProgressChanged(this, y, sizeY);
+                
+                BinaryRow row = processRowPair(array1.getRow(y), array2.getRow(y), sizeX);
+                if (row != null)
+                {
+                    res.setRow(y, row);
+                }
+            }
+            this.fireProgressChanged(this, 1, 1);
+            return res;
+        }
+        
+        @Override
+        protected BinaryArray3D process3d(BinaryArray3D array1, BinaryArray3D array2)
+        {
+            if (array1 instanceof RunLengthBinaryArray3D && array2 instanceof RunLengthBinaryArray3D)
+            {
+                return process3d_rle((RunLengthBinaryArray3D) array1, (RunLengthBinaryArray3D) array2);
+            }
+            else
+            {
+                return super.process3d(array1, array2);
+            }
+        }
+
+        private BinaryArray3D process3d_rle(RunLengthBinaryArray3D array1, RunLengthBinaryArray3D array2)
+        {
+            int sizeX = array1.size(0); 
+            int sizeY = array1.size(1);
+            int sizeZ = array1.size(2);
+            RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
+            for (int z = 0; z < sizeZ; z++)
+            {
+                this.fireProgressChanged(this, z, sizeZ);
+                for (int y = 0; y < sizeY; y++)
+                {
+                    BinaryRow row = processRowPair(array1.getRow(y, z), array2.getRow(y, z), sizeX);
+                    if (row != null)
+                    {
+                        res.setRow(y, z, row);
+                    }
+                }
+            }
+            this.fireProgressChanged(this, 1, 1);
+            return res;
+        }
+        
+        protected abstract BinaryRow processRowPair(BinaryRow row1, BinaryRow row2, int rowLength);
+    };    
 }
