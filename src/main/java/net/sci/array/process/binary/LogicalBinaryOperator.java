@@ -3,6 +3,8 @@
  */
 package net.sci.array.process.binary;
 
+import java.util.Iterator;
+import java.util.TreeMap;
 import java.util.function.BiFunction;
 
 import net.sci.algo.AlgoStub;
@@ -11,6 +13,7 @@ import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.binary.BinaryRow;
+import net.sci.array.binary.Run;
 import net.sci.array.binary.RunLengthBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray3D;
 
@@ -44,7 +47,7 @@ public class LogicalBinaryOperator extends AlgoStub
     
     /**
      * Specialization of the logical AND operator, that provides specialized
-     * implementations for Run-Length encoded binary arrays.
+     * implementation for Run-Length encoded binary arrays.
      */
     public static final LogicalBinaryOperator AND = new RunLengthLogicalBinaryOperatorStub((a,b) -> a && b)
     {
@@ -59,7 +62,7 @@ public class LogicalBinaryOperator extends AlgoStub
 
     /**
      * Specialization of the logical OR operator, that provides specialized
-     * implementations for Run-Length encoded binary arrays.
+     * implementation for Run-Length encoded binary arrays.
      */
     public static final LogicalBinaryOperator OR = new RunLengthLogicalBinaryOperatorStub((a,b) -> a || b)
     {
@@ -72,7 +75,94 @@ public class LogicalBinaryOperator extends AlgoStub
         }
     };
 
-    
+    /**
+     * Specialization of the logical "AND NOT" operator, that provides specialized
+     * implementation for Run-Length encoded binary arrays.
+     */
+    public static final LogicalBinaryOperator AND_NOT = new RunLengthLogicalBinaryOperatorStub((a,b) -> a && !b)
+    {
+        @Override
+        protected BinaryRow processRowPair(BinaryRow row1, BinaryRow row2, int rowLength)
+        {
+            if (row1 == null) return null;
+            if (row2 == null) return row1.duplicate();
+            
+            // create iterators
+            Iterator<Run> iter1 = row1.iterator();
+            Iterator<Run> iter2 = row2.iterator();
+            Run run1 = iter1.hasNext() ? iter1.next() : null;
+            Run run2 = iter2.hasNext() ? iter2.next() : null;
+            
+            // initialize result tree of runs
+            TreeMap<Integer, Run> resRuns = new TreeMap<Integer, Run>();
+            
+            // add the runs of first row that do not intersect runs of second row
+            while (run1 != null & run2 != null)
+            {
+                // run2 completely before run1
+                if (run2.right < run1.left)
+                {
+                    run2 = iter2.hasNext() ? iter2.next() : null;
+                    continue;
+                }
+                
+                // run1 completely before run2
+                if (run1.right < run2.left)
+                {
+                    resRuns.put(run1.left, run1);
+                    run1 = iter1.hasNext() ? iter1.next() : null;
+                    continue;
+                }
+                
+                if (run1.left < run2.left)
+                {
+                    resRuns.put(run1.left, new Run(run1.left, run2.left - 1));
+                    if (run1.right > run2.right)
+                    {
+                        // create new run with the remaining of run1
+                        run1 = new Run(run2.right + 1, run1.right);
+                    }
+                    else
+                    {
+                        // run1 ends within run2 -> switch to next run1
+                        run1 = iter1.hasNext() ? iter1.next() : null;
+                    }
+                    continue;
+                }
+                
+                if (run2.left <= run1.left)
+                {
+                    if (run2.right < run1.right)
+                    {
+                        // create new run with the remaining of run1
+                        run1 = new Run(run2.right + 1, run1.right);
+                        run2 = iter2.hasNext() ? iter2.next() : null;
+                    }
+                    else
+                    {
+                        // run1 ends within run2 -> switch to next run1
+                        run1 = iter1.hasNext() ? iter1.next() : null;
+                    }
+                    continue;
+                }
+                
+                System.err.println("arg, should not reach this line...");
+                break;
+            }
+            
+            // add the remaining runs of first row
+            while (run1 != null)
+            {
+                resRuns.put(run1.left, run1);
+                run1 = iter1.hasNext() ? iter1.next() : null;
+            }
+            
+            // return the result row
+            return new BinaryRow(resRuns);
+        }
+    };
+
+   
     // =============================================================
     // Inner class members
     

@@ -25,7 +25,7 @@ import java.util.TreeSet;
  * 
  * @author dlegland
  */
-public class BinaryRow
+public class BinaryRow implements Iterable<Run>
 {
     // =============================================================
     // Class fields
@@ -930,6 +930,12 @@ public class BinaryRow
         return row;
     }
     
+    @Override
+    public Iterator<Run> iterator()
+    {
+        return this.runs.values().iterator();
+    }
+
     @Override
     public String toString()
     {
