@@ -28,7 +28,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	 */
 	public static final BinaryArray2D create(int size0, int size1)
 	{
-		return new BufferedBinaryArray2D(size0, size1);
+        return new RunLengthBinaryArray2D(size0, size1);
 	}
 
     public final static BinaryArray2D wrap(BinaryArray array)
