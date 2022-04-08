@@ -30,6 +30,11 @@ public class BinaryClosing extends BinaryMorphologicalFilter implements AlgoList
         super(strel);
     }
         
+    public BinaryClosing(Strel strel, boolean padding)
+    {
+        super(strel, padding);
+    }
+        
     @Override
     public BinaryArray processBinary(BinaryArray array)
     {
@@ -39,7 +44,7 @@ public class BinaryClosing extends BinaryMorphologicalFilter implements AlgoList
         BinaryArray resDil = dilation.processBinary(array);
         
         this.fireStatusChanged(this, "Compute Erosion");
-        BinaryErosion erosion = new BinaryErosion(strel.reverse());
+        BinaryErosion erosion = new BinaryErosion(strel.reverse(), padding);
         erosion.addAlgoListener(this);
         BinaryArray res = erosion.processBinary(resDil);
         

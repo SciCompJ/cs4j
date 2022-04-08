@@ -32,11 +32,16 @@ public class BinaryGradient extends BinaryMorphologicalFilter implements AlgoLis
         super(strel);
     }
     
+    public BinaryGradient(Strel strel, boolean padding)
+    {
+        super(strel);
+    }
+        
     @Override
     public BinaryArray processBinary(BinaryArray array)
     {
         this.fireStatusChanged(this, "Compute Erosion");
-        BinaryErosion erosion = new BinaryErosion(strel);
+        BinaryErosion erosion = new BinaryErosion(strel, padding);
         erosion.addAlgoListener(this);
         BinaryArray resEro = erosion.processBinary(array);
         

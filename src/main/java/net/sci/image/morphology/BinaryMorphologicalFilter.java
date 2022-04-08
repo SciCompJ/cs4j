@@ -31,6 +31,12 @@ public abstract class BinaryMorphologicalFilter extends AlgoStub implements Arra
      * The structuring element used by concrete implementations.
      */
     protected Strel strel;
+    
+    /**
+     * Indicates if the binary array must be padded before performing an
+     * erosion.
+     */
+    protected boolean padding = true;
 
     /**
      * Initializes the inner structuring element.
@@ -41,6 +47,21 @@ public abstract class BinaryMorphologicalFilter extends AlgoStub implements Arra
     public BinaryMorphologicalFilter(Strel strel)
     {
         this.strel = strel;
+    }
+
+    /**
+     * Initializes the inner structuring element.
+     * 
+     * @param strel
+     *            the structuring element to use for morphological operation.
+     * @param padding
+     *            boolean flag for padding array before performing an
+     *            erosion-based operation
+     */
+    public BinaryMorphologicalFilter(Strel strel, boolean padding)
+    {
+        this.strel = strel;
+        this.padding = padding;
     }
 
     /**

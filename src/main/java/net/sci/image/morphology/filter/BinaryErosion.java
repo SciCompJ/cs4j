@@ -37,6 +37,11 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         super(strel);
     }
     
+    public BinaryErosion(Strel strel, boolean padding)
+    {
+        super(strel, padding);
+    }
+    
     /**
      * Performs morphological erosion on a 2D binary array. The input is
      * converted into an instance of <code>RunLengthBinaryArray2D</code> when
@@ -55,8 +60,6 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         Strel2D strel2d = Strel2D.wrap(strel);
         int[] strelSize = strel2d.size();
         int[] strelOffset = strel2d.getOffset();
-        int padLeft = strelSize[0] - strelOffset[0];
-        int padRight = strelOffset[0];
         
         // convert structuring element to RLE array
         RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel2d.getMask());
@@ -67,7 +70,15 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         // ensure input array uses RLE representation (if not already the case)
         fireStatusChanged(this, "Prepare input image");
         RunLengthBinaryArray2D rleArray = RunLengthBinaryArray2D.convert(array);
-        rleArray = pad(rleArray, padLeft, padRight);
+        
+        // Optionally expand the binary rows to better manage borders
+        if (this.padding)
+        {
+            fireStatusChanged(this, "Pad array");
+            int padLeft = strelSize[0] - strelOffset[0];
+            int padRight = strelOffset[0];
+            rleArray = pad(rleArray, padLeft, padRight);
+        }
         
         // array dimensions
         int sizeX = rleArray.size(0);
@@ -191,8 +202,6 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         Strel3D strel3d = Strel3D.wrap(strel);
         int[] strelSize = strel3d.size();
         int[] strelOffset = strel3d.getOffset();
-        int padLeft = strelSize[0] - strelOffset[0];
-        int padRight = strelOffset[0];
         
         // convert structuring element to RLE array
         RunLengthBinaryArray3D rleStrel = RunLengthBinaryArray3D.convert(strel3d.getMask());
@@ -203,7 +212,15 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         // ensure input array uses RLE representation (if not already the case)
         this.fireStatusChanged(this, "Prepare input image");
         RunLengthBinaryArray3D rleArray = RunLengthBinaryArray3D.convert(array);
-        rleArray = pad(rleArray, padLeft, padRight);
+        
+        // Optionally expand the binary rows to better manage borders
+        if (this.padding)
+        {
+            fireStatusChanged(this, "Pad array");
+            int padLeft = strelSize[0] - strelOffset[0];
+            int padRight = strelOffset[0];
+            rleArray = pad(rleArray, padLeft, padRight);
+        }
         
         // array dimensions
         int sizeX = rleArray.size(0);

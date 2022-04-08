@@ -30,11 +30,16 @@ public class BinaryOpening extends BinaryMorphologicalFilter implements AlgoList
         super(strel);
     }
     
+    public BinaryOpening(Strel strel, boolean padding)
+    {
+        super(strel, padding);
+    }
+    
     @Override
     public BinaryArray processBinary(BinaryArray array)
     {
         this.fireStatusChanged(this, "Compute Erosion");
-        BinaryErosion erosion = new BinaryErosion(strel);
+        BinaryErosion erosion = new BinaryErosion(strel, padding);
         erosion.addAlgoListener(this);
         BinaryArray resEro = erosion.processBinary(array);
         
