@@ -141,11 +141,11 @@ public class DelimitedTableReader implements TableReader
 		if (readHeader)
 		{
 			// first line is the header
-			nCols = tokens.length - 1;
+			nCols = tokens.length - (readRowNames ? 1 : 0);
 			colNames = new String[nCols];
 			for (int i = 0; i < nCols; i++)
 			{
-				colNames[i] = tokens[i + 1];
+				colNames[i] = tokens[i + (readRowNames ? 1 : 0)];
 			}
 		}
 		else
