@@ -3,6 +3,7 @@
  */
 package net.sci.array.binary;
 
+import net.sci.array.Array;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.TriFunction;
@@ -21,7 +22,10 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 
 	public static final BinaryArray3D create(int size0, int size1, int size2)
 	{
-	    return new RunLengthBinaryArray3D(size0, size1, size2);
+	    if (Array.prod(size0, size1, size2) < Integer.MAX_VALUE - 8)
+	        return new BufferedBinaryArray3D(size0, size1, size2);
+	    else 
+	        return new SlicedBinaryArray3D(size0, size1, size2);
 	}
 	
     public final static BinaryArray3D wrap(BinaryArray array)
