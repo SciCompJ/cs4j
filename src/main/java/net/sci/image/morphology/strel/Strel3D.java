@@ -42,60 +42,37 @@ public interface Strel3D extends Strel
          * Ball of a given radius
          * @see SlidingBallStrel3D 
          */
-        BALL("Ball"),
+        BALL("Ball", "Bll"),
 
         /** 
          * Cube of a given side length.
          * @see CubeStrel3D 
          */
-        CUBE("Cube"),
+        CUBE("Cube", "Cb"),
         ;
-        
-//        
-//        /** 
-//         * Diamond of a given diameter
-//         * @see DiamondStrel
-//         * @see Cross3x3Strel 
-//         */
-//        DIAMOND("Diamond"),
-//        
-//        /** 
-//         * Octagon of a given diameter
-//         * @see OctagonStrel
-//         */
-//        OCTAGON("Octagon"),
-//        
-//        /**
-//         * Horizontal line of a given length 
-//         * @see LinearHorizontalStrel
-//         */
-//        LINE_HORIZ("Horizontal Line"),
-//        
-//        /** 
-//         * Vertical line of a given length 
-//         * @see LinearVerticalStrel
-//         */
-//        LINE_VERT("Vertical Line"),
-//        
-//        /**
-//         * Diagonal line of a given length 
-//         * @see LinearDiagUpStrel
-//         */
-//        LINE_DIAG_UP("Line 45 degrees"),
-//        
-//        /** 
-//         * Diagonal line of a given length 
-//         * @see LinearDiagDownStrel
-//         */
-//        LINE_DIAG_DOWN("Line 135 degrees");
-        
+                
         private final String label;
         
-        private Shape(String label) 
+        private final String suffix;
+        
+        private Shape(String label, String suffix) 
         {
             this.label = label;
+            this.suffix = suffix;
         }
         
+        /**
+         * Returns the suffix associated to this Strel shape. The suffix is a
+         * short (2-3 characters) string used to identify the shape and that can
+         * be used to create the name of result images.
+         * 
+         * @return the suffix associated to this Strel shape.
+         */
+        public String suffix()
+        {
+            return suffix;
+        }
+                
         /**
          * @return the label associated to this shape.
          */
@@ -115,8 +92,10 @@ public interface Strel3D extends Strel
          */
         public Strel3D fromRadius(int radius)
         {
-            if (this == BALL) 
+            if (this == BALL)
+            {
                 return new SlidingBallStrel3D(radius);
+            }
             return fromDiameter(2 * radius + 1);
         }
         

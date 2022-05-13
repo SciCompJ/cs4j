@@ -47,64 +47,100 @@ public interface Strel2D extends Strel
 		 * Disk of a given radius
 		 * @see NaiveDiskStrel 
 		 */
-		DISK("Disk"),
+		DISK("Disk", "Dsk"),
 
 		/** 
 		 * Square of a given side
 		 * @see SquareStrel 
 		 */
-		SQUARE("Square"),
+		SQUARE("Square", "Sq"),
 		
 		/** 
 		 * Diamond of a given diameter
 		 * @see DiamondStrel
 		 * @see Cross3x3Strel 
 		 */
-		DIAMOND("Diamond"),
+		DIAMOND("Diamond", "Dmd"),
 		
 		/** 
 		 * Octagon of a given diameter
 		 * @see OctagonStrel
 		 */
-		OCTAGON("Octagon"),
+		OCTAGON("Octagon", "Oct"),
 		
 		/**
 		 * Horizontal line of a given length 
 		 * @see LinearHorizontalStrel
 		 */
-		LINE_HORIZ("Horizontal Line"),
+		LINE_HORIZ("Horizontal Line", "Hl"),
 		
 		/** 
 		 * Vertical line of a given length 
 		 * @see LinearVerticalStrel
 		 */
-		LINE_VERT("Vertical Line"),
+		LINE_VERT("Vertical Line", "Vl"),
 		
 		/**
 		 * Diagonal line of a given length 
 		 * @see LinearDiagUpStrel
 		 */
-		LINE_DIAG_UP("Line 45 degrees"),
+		LINE_DIAG_UP("Line 45 degrees", "Upl"),
 		
 		/** 
 		 * Diagonal line of a given length 
 		 * @see LinearDiagDownStrel
 		 */
-		LINE_DIAG_DOWN("Line 135 degrees");
+		LINE_DIAG_DOWN("Line 135 degrees", "Dnl");
 		
-		private final String label;
-		
-		private Shape(String label) 
+        /**
+         * Returns a set of labels for most of classical structuring elements.
+         * 
+         * @return a list of labels
+         */
+        public static String[] getAllLabels()
+        {
+        	// array of all Strel types
+        	Shape[] values = Shape.values();
+        	int n = values.length;
+        	
+        	// keep all values but the last one ("Custom")
+        	String[] result = new String[n];
+        	for (int i = 0; i < n; i++)
+        		result[i] = values[i].label;
+        	
+        	return result;
+        }
+
+        /**
+         * Determines the strel shape from its label.
+         * 
+         * @param label
+         *            the shape name of the structuring element
+         * @return a new Shape instance that can be used to create structuring
+         *         elements
+         * @throws IllegalArgumentException
+         *             if label is not recognized.
+         */
+        public static Shape fromLabel(String label)
+        {
+        	if (label != null)
+        		label = label.toLowerCase();
+        	for (Shape s : Shape.values()) 
+        	{
+        		if (s.label.toLowerCase().equals(label))
+        			return s;
+        	}
+        	throw new IllegalArgumentException("Unable to parse Strel.Shape with label: " + label);
+        }
+
+        private final String label;
+        
+        private final String suffix;
+        
+		private Shape(String label, String suffix) 
 		{
 			this.label = label;
-		}
-		
-		/**
-		 * @return the label associated to this shape.
-		 */
-		public String toString()
-		{
-			return this.label;
+			this.suffix = suffix;
 		}
 		
 		/**
@@ -157,46 +193,25 @@ public interface Strel2D extends Strel
 			throw new IllegalArgumentException("No default method for creating element of type " + this.label);
 		}
 		
+        /**
+         * Returns the suffix associated to this Strel shape. The suffix is a
+         * short (2-3 characters) string used to identify the shape and that can
+         * be used to create the name of result images.
+         * 
+         * @return the suffix associated to this Strel shape.
+         */
+        public String suffix()
+        {
+            return suffix;
+        }
+        
 		/**
-		 * Returns a set of labels for most of classical structuring elements.
-		 * 
-		 * @return a list of labels
-		 */
-		public static String[] getAllLabels()
-		{
-			// array of all Strel types
-			Shape[] values = Shape.values();
-			int n = values.length;
-			
-			// keep all values but the last one ("Custom")
-			String[] result = new String[n];
-			for (int i = 0; i < n; i++)
-				result[i] = values[i].label;
-			
-			return result;
-		}
-		
-		/**
-		 * Determines the strel shape from its label.
-		 * 
-		 * @param label
-		 *            the shape name of the structuring element
-		 * @return a new Shape instance that can be used to create structuring
-		 *         elements
-		 * @throws IllegalArgumentException
-		 *             if label is not recognized.
-		 */
-		public static Shape fromLabel(String label)
-		{
-			if (label != null)
-				label = label.toLowerCase();
-			for (Shape s : Shape.values()) 
-			{
-				if (s.label.toLowerCase().equals(label))
-					return s;
-			}
-			throw new IllegalArgumentException("Unable to parse Strel.Shape with label: " + label);
-		}
+         * @return the label associated to this shape.
+         */
+        public String toString()
+        {
+        	return this.label;
+        }
 	}
 	
     // ===================================================================
