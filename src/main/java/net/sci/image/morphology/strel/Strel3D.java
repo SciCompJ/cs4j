@@ -42,13 +42,13 @@ public interface Strel3D extends Strel
          * Ball of a given radius
          * @see SlidingBallStrel3D 
          */
-        BALL("Ball", "Bll"),
+        BALL("Ball", "Ball"),
 
         /** 
          * Cube of a given side length.
          * @see CubeStrel3D 
          */
-        CUBE("Cube", "Cb"),
+        CUBE("Cube", "Cube"),
         ;
                 
         private final String label;

@@ -47,13 +47,13 @@ public interface Strel2D extends Strel
 		 * Disk of a given radius
 		 * @see NaiveDiskStrel 
 		 */
-		DISK("Disk", "Dsk"),
+		DISK("Disk", "Disk"),
 
 		/** 
 		 * Square of a given side
 		 * @see SquareStrel 
 		 */
-		SQUARE("Square", "Sq"),
+		SQUARE("Square", "Sqr"),
 		
 		/** 
 		 * Diamond of a given diameter
@@ -72,25 +72,25 @@ public interface Strel2D extends Strel
 		 * Horizontal line of a given length 
 		 * @see LinearHorizontalStrel
 		 */
-		LINE_HORIZ("Horizontal Line", "Hl"),
+		LINE_HORIZ("Horizontal Line", "LineH"),
 		
 		/** 
 		 * Vertical line of a given length 
 		 * @see LinearVerticalStrel
 		 */
-		LINE_VERT("Vertical Line", "Vl"),
+		LINE_VERT("Vertical Line", "LineV"),
 		
 		/**
 		 * Diagonal line of a given length 
 		 * @see LinearDiagUpStrel
 		 */
-		LINE_DIAG_UP("Line 45 degrees", "Upl"),
+		LINE_DIAG_UP("Line 45 degrees", "Line045"),
 		
 		/** 
 		 * Diagonal line of a given length 
 		 * @see LinearDiagDownStrel
 		 */
-		LINE_DIAG_DOWN("Line 135 degrees", "Dnl");
+		LINE_DIAG_DOWN("Line 135 degrees", "Line135");
 		
         /**
          * Returns a set of labels for most of classical structuring elements.
