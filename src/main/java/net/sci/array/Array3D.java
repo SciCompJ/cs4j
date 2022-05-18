@@ -337,9 +337,9 @@ public abstract class Array3D<T> implements Array<T>
         }
 
         @Override
-        public Factory<T> getFactory()
+        public Factory<T> factory()
         {
-            return this.array.getFactory();
+            return this.array.factory();
         }
 
         @Override
@@ -445,9 +445,9 @@ public abstract class Array3D<T> implements Array<T>
             }
 
             @Override
-            public Array.Factory<T> getFactory()
+            public Array.Factory<T> factory()
             {
-                return Wrapper.this.getFactory();
+                return Wrapper.this.factory();
             }
         }
         

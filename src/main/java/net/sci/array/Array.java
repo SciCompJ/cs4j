@@ -5,6 +5,7 @@ package net.sci.array;
 
 import java.util.function.Function;
 
+import net.sci.algo.Algo;
 import net.sci.array.binary.BinaryArray;
 
 /**
@@ -132,7 +133,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 * Returns the factory of this array.
 	 * @return the factory of this array
 	 */
-	public Factory<T> getFactory();
+	public Factory<T> factory();
 	
 	/**
 	 * Creates a new writable array with same size as this array and containing
@@ -348,7 +349,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
      * @param <T>
      *            the type of the arrays created by this factory.
      */
-	public interface Factory<T>
+	public interface Factory<T> extends Algo
 	{
 	    /**
 	     * Creates a new array with the specified dimensions, filled with the
@@ -513,9 +514,9 @@ public interface Array<T> extends Iterable<T>, Dimensional
         }
 
         @Override
-        public net.sci.array.Array.Factory<T> getFactory()
+        public net.sci.array.Array.Factory<T> factory()
         {
-            return array.getFactory();
+            return array.factory();
         }
 
         @Override

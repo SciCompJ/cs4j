@@ -5,6 +5,7 @@ package net.sci.array.scalar;
 
 import java.util.function.Function;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 
 
@@ -23,22 +24,8 @@ public interface UInt8Array extends IntArray<UInt8>
      * 
      * @see UInt8Array.#create(int...)
      */
-    public static final IntArray.Factory<UInt8> factory = new IntArray.Factory<UInt8>()
-    {
-        @Override
-        public IntArray<UInt8> create(int... dims)
-        {
-            return UInt8Array.create(dims);
-        }
-
-        @Override
-        public UInt8Array create(int[] dims, UInt8 value)
-        {
-            UInt8Array array = UInt8Array.create(dims);
-            array.fill(value);
-            return array;
-        }
-    };
+    public static final Factory factory = new DefaultFactory();
+    
 
 	// =============================================================
 	// Static methods
@@ -53,15 +40,7 @@ public interface UInt8Array extends IntArray<UInt8>
      */
 	public static UInt8Array create(int... dims)
 	{
-		switch (dims.length)
-		{
-		case 2:
-			return UInt8Array2D.create(dims[0], dims[1]);
-		case 3:
-			return UInt8Array3D.create(dims[0], dims[1], dims[2]);
-		default:
-			return UInt8ArrayND.create(dims);
-		}
+		return factory.create(dims);
 	}
 	
 	/**
@@ -326,7 +305,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	}
 
 	@Override
-	public default IntArray.Factory<UInt8> getFactory()
+	public default IntArray.Factory<UInt8> factory()
 	{
 		return factory;
 	}
@@ -665,4 +644,64 @@ public interface UInt8Array extends IntArray<UInt8>
 	        return newDims[dim];
 	    }
 	}
+	
+	
+    // =============================================================
+    // Specialization of the Factory interface
+
+	/**
+	 * Specialization of the ArrayFactory for generating instances of UInt8Array.
+	 */
+    public interface Factory extends IntArray.Factory<UInt8>
+    {
+        /**
+         * Creates a new UInt8Array of the specified dimensions, initialized
+         * with zeros.
+         * 
+         * @param dims
+         *            the dimensions of the new array
+         * @return a new UInt8Array initialized with zeros
+         */
+        public UInt8Array create(int... dims);
+
+        /**
+         * Creates a new UInt8Array with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial integer value
+         * @return a new instance of IntArray
+         */
+        public UInt8Array create(int[] dims, UInt8 value);
+    }
+
+    /**
+	 * The default factory for generation of UInt8Array instances.
+	 */
+	public static class DefaultFactory extends AlgoStub implements Factory
+    {
+        @Override
+        public UInt8Array create(int... dims)
+        {
+            switch (dims.length)
+            {
+            case 2:
+                return UInt8Array2D.create(dims[0], dims[1]);
+            case 3:
+                return UInt8Array3D.create(dims[0], dims[1], dims[2]);
+            default:
+                return UInt8ArrayND.create(dims);
+            }
+        }
+
+        @Override
+        public UInt8Array create(int[] dims, UInt8 value)
+        {
+            UInt8Array array = create(dims);
+            array.fillInt(value.getInt());
+            return array;
+        }
+    };
 }

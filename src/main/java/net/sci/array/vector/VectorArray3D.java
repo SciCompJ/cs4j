@@ -341,9 +341,9 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         }
 
         @Override
-        public Array.Factory<T> getFactory()
+        public Array.Factory<T> factory()
         {
-            return this.array.getFactory();
+            return this.array.factory();
         }
 
         @Override
@@ -512,9 +512,9 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             }
 
             @Override
-            public VectorArray.Factory<T> getFactory()
+            public VectorArray.Factory<T> factory()
             {
-                return Wrapper.this.getFactory();
+                return Wrapper.this.factory();
             }
 
             @Override

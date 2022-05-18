@@ -301,9 +301,9 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
-        public Array.Factory<T> getFactory()
+        public Array.Factory<T> factory()
         {
-            return this.array.getFactory();
+            return this.array.factory();
         }
 
         @Override

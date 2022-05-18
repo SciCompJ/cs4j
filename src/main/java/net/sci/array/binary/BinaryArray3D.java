@@ -4,7 +4,6 @@
 package net.sci.array.binary;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.TriFunction;
 
@@ -266,9 +265,9 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         }
 
         @Override
-        public IntArray.Factory<Binary> getFactory()
+        public BinaryArray.Factory factory()
         {
-            return this.array.getFactory();
+            return this.array.factory();
         }
         
         @Override

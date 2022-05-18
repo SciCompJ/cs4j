@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.scalar.UInt16;
@@ -24,16 +25,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
     // =============================================================
     // Static variables
 
-    public static final Array.Factory<RGB16> factory = new Array.Factory<RGB16>()
-    {
-        @Override
-        public RGB16Array create(int[] dims, RGB16 value)
-        {
-            RGB16Array array = RGB16Array.create(dims);
-            array.fill(value);
-            return array;
-        }
-    };
+    public static final Factory factory = new DefaultFactory();
     
     
 	// =============================================================
@@ -41,15 +33,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 
 	public static RGB16Array create(int... dims)
 	{
-		switch (dims.length)
-		{
-		case 2:
-			return RGB16Array2D.create(dims[0], dims[1]);
-		case 3:
-			return RGB16Array3D.create(dims[0], dims[1], dims[2]);
-		default:
-			return RGB16ArrayND.create(dims);
-		}
+		return factory.create(dims);
 	}
 	
     /**
@@ -506,7 +490,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	}
 
 	@Override
-	public default Array.Factory<RGB16> getFactory()
+	public default Array.Factory<RGB16> factory()
 	{
 		return factory;
 	}
@@ -676,4 +660,63 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 		}
 	}
 
+    
+    // =============================================================
+    // Specialization of the Factory interface
+
+    /**
+     * Specialization of the ArrayFactory for generating instances of RGB16Array.
+     */
+    public interface Factory extends IntVectorArray.Factory<RGB16>
+    {
+        /**
+         * Creates a new RGB16Array of the specified dimensions, initialized
+         * with zeros.
+         * 
+         * @param dims
+         *            the dimensions of the new array
+         * @return a new RGB16Array initialized with zeros
+         */
+        public RGB16Array create(int... dims);
+
+        /**
+         * Creates a new RGB16Array with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial integer value
+         * @return a new instance of IntArray
+         */
+        public RGB16Array create(int[] dims, RGB16 value);
+    }
+
+    /**
+     * The default factory for generation of RGB16Array instances.
+     */
+    public static class DefaultFactory extends AlgoStub implements Factory
+    {
+        @Override
+        public RGB16Array create(int... dims)
+        {
+            switch (dims.length)
+            {
+            case 2:
+                return RGB16Array2D.create(dims[0], dims[1]);
+            case 3:
+                return RGB16Array3D.create(dims[0], dims[1], dims[2]);
+            default:
+                return RGB16ArrayND.create(dims);
+            }
+        }
+
+        @Override
+        public RGB16Array create(int[] dims, RGB16 value)
+        {
+            RGB16Array array = create(dims);
+            array.fill(value);
+            return array;
+        }
+    };
 }

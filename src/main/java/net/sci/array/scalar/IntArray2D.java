@@ -197,9 +197,9 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         }
 
         @Override
-        public IntArray.Factory<T> getFactory()
+        public IntArray.Factory<T> factory()
         {
-            return array.getFactory();
+            return array.factory();
         }
 
         @Override

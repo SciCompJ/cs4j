@@ -332,9 +332,9 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
         }
 
         @Override
-        public ScalarArray.Factory<T> getFactory()
+        public ScalarArray.Factory<T> factory()
         {
-            return this.array.getFactory();
+            return this.array.factory();
         }
 
         @Override
@@ -497,9 +497,9 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             }
 
             @Override
-            public ScalarArray.Factory<T> getFactory()
+            public ScalarArray.Factory<T> factory()
             {
-                return Wrapper.this.getFactory();
+                return Wrapper.this.factory();
             }
 
             @Override

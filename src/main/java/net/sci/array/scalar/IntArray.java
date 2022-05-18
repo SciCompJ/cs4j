@@ -152,7 +152,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
     }
 
     @Override
-    public IntArray.Factory<T> getFactory();
+    public IntArray.Factory<T> factory();
 
 	public Iterator<T> iterator();	
 	

@@ -221,9 +221,9 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
         }
 
         @Override
-        public IntArray.Factory<T> getFactory()
+        public IntArray.Factory<T> factory()
         {
-            return array.getFactory();
+            return array.factory();
         }
 
         @Override
@@ -354,9 +354,9 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
             }
 
             @Override
-            public net.sci.array.scalar.IntArray.Factory<T> getFactory()
+            public net.sci.array.scalar.IntArray.Factory<T> factory()
             {
-                return array.getFactory();
+                return array.factory();
             }
 
             @Override
