@@ -4,6 +4,7 @@
 package net.sci.image;
 
 import net.sci.array.color.Color;
+import net.sci.array.color.ColorMap;
 import net.sci.array.color.RGB8;
 
 /**

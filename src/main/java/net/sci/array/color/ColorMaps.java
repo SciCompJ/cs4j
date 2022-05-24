@@ -1,12 +1,9 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.array.color;
 
 import java.util.ArrayList;
-
-import net.sci.array.color.Color;
-import net.sci.array.color.RGB8;
 
 /**
  * A collection of color maps.

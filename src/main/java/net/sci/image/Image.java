@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.Binary;
+import net.sci.array.color.ColorMap;
+import net.sci.array.color.ColorMaps;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB8;
 import net.sci.array.scalar.Int;

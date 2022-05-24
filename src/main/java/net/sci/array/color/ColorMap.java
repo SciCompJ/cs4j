@@ -1,9 +1,7 @@
 /**
  * 
  */
-package net.sci.image;
-
-import net.sci.array.color.Color;
+package net.sci.array.color;
 
 /**
  * Color map definition for intensity or label images.

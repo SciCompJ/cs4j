@@ -12,6 +12,8 @@ import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.color.Color;
+import net.sci.array.color.ColorMap;
+import net.sci.array.color.ColorMaps;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;

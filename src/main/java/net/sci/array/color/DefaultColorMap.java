@@ -1,12 +1,9 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.array.color;
 
 import java.util.ArrayList;
-
-import net.sci.array.color.Color;
-import net.sci.array.color.RGB8;
 
 /**
  * Color map that stores color in a fixed-size RGB8 Array.

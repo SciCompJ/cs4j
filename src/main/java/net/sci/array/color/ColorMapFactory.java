@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.array.color;
 
 /**
  * A factory for color maps, using the number of colors as parameter
