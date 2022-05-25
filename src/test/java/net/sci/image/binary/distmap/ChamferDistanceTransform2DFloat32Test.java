@@ -9,7 +9,6 @@ import static org.junit.Assert.assertNotNull;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.ScalarArray2D;
-import net.sci.image.binary.ChamferWeights2D;
 
 import org.junit.Test;
 
@@ -36,8 +35,8 @@ public class ChamferDistanceTransform2DFloat32Test
 			}
 		}
 
-		ChamferWeights2D weights = ChamferWeights2D.CHESSBOARD;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, true);
+		ChamferMask2D mask = ChamferMask2D.CHESSBOARD;
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(mask, true);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 //		result.print(System.out);
@@ -55,8 +54,8 @@ public class ChamferDistanceTransform2DFloat32Test
         image.fill(Binary.TRUE);
         image.setBoolean(4, 4, false);
 		
-		ChamferWeights2D weights = ChamferWeights2D.CITY_BLOCK;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = ChamferMask2D.CITY_BLOCK;
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 //		result.print(System.out);
@@ -77,8 +76,8 @@ public class ChamferDistanceTransform2DFloat32Test
         image.fill(Binary.TRUE);
         image.setBoolean(4, 4, false);
 		
-		ChamferWeights2D weights = ChamferWeights2D.CHESSBOARD;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = ChamferMask2D.CHESSBOARD;
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
@@ -91,14 +90,14 @@ public class ChamferDistanceTransform2DFloat32Test
 	}
 
 	@Test
-	public final void testDistanceMap_UntilCorners_Weights_23() 
+	public final void testDistanceMap_UntilCorners_Mask_23() 
 	{
 		BinaryArray2D image = BinaryArray2D.create(7, 7);
         image.fill(Binary.TRUE);
         image.setBoolean(4, 4, false);
 		
-		ChamferWeights2D weights = ChamferWeights2D.WEIGHTS_23;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = new ChamferMask2DW2(2, 3);
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
@@ -117,8 +116,8 @@ public class ChamferDistanceTransform2DFloat32Test
         image.fill(Binary.TRUE);
         image.setBoolean(4, 4, false);
 		
-		ChamferWeights2D weights = ChamferWeights2D.BORGEFORS;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = ChamferMask2D.BORGEFORS;
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);
@@ -137,8 +136,8 @@ public class ChamferDistanceTransform2DFloat32Test
         image.fill(Binary.TRUE);
         image.setBoolean(6, 6, false);
 		
-		ChamferWeights2D weights = ChamferWeights2D.CHESSKNIGHT;
-		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT;
+		DistanceTransform2D algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		ScalarArray2D<?> result = algo.process2d(image);
 
 		assertNotNull(result);

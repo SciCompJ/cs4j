@@ -11,7 +11,6 @@ import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.array.scalar.UInt16Array;
-import net.sci.image.binary.ChamferWeights3D;
 
 import org.junit.Test;
 
@@ -41,8 +40,8 @@ public class ChamferDistanceTransform3DUInt16Test
 			}
 		}
 
-		ChamferWeights3D weights = ChamferWeights3D.BORGEFORS;
-		DistanceTransform3D algo = new ChamferDistanceTransform3DUInt16(weights, true);
+		ChamferMask3D mask = ChamferMask3D.BORGEFORS;
+		DistanceTransform3D algo = new ChamferDistanceTransform3DUInt16(mask, true);
 		
 		ScalarArray3D<?> result = algo.process3d(image);
 		assertNotNull(result);
@@ -68,8 +67,8 @@ public class ChamferDistanceTransform3DUInt16Test
 		image.fill(Binary.TRUE);
 		image.setBoolean(10, 10, 10, false);
 
-		ChamferWeights3D weights = ChamferWeights3D.BORGEFORS;
-		DistanceTransform3D algo = new ChamferDistanceTransform3DUInt16(weights, false);
+		ChamferMask3D mask = ChamferMask3D.BORGEFORS;
+		DistanceTransform3D algo = new ChamferDistanceTransform3DUInt16(mask, false);
 		
 		ScalarArray3D<?> result = algo.process3d(image);
 		assertNotNull(result);

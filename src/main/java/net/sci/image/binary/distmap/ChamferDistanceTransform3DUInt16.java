@@ -23,13 +23,13 @@ package net.sci.image.binary.distmap;
 
 import static java.lang.Math.min;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.*;
-import net.sci.image.binary.ChamferWeights3D;
+import net.sci.image.binary.distmap.ChamferMask3D.ShortOffset;
 
 
 /**
@@ -41,12 +41,12 @@ import net.sci.image.binary.ChamferWeights3D;
  * @author David Legland
  * @see ChamferDistanceTransform3DFloat32
  */
-public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements DistanceTransform3D
+public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements ChamferDistanceTransform3D
 {
 	// ==============================================================
 	// class members
 
-	private short[] weights;
+	private ChamferMask3D mask;
 
 	/**
 	 * Flag for dividing final distance map by the value first weight. 
@@ -63,15 +63,15 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 	 * Constructor specifying the chamfer weights and the optional
 	 * normalization option.
 	 * 
-	 * @param weights
+	 * @param mask
 	 *            an instance of ChamferWeights3D specifying the weights
 	 * @param normalize
 	 *            flag indicating whether the final distance map should be
 	 *            normalized by the first weight
 	 */
-	public ChamferDistanceTransform3DUInt16(ChamferWeights3D weights, boolean normalize)
+	public ChamferDistanceTransform3DUInt16(ChamferMask3D mask, boolean normalize)
 	{
-		this.weights = weights.getShortWeights();
+		this.mask = mask;
 		this.normalizeMap = normalize;
 	}
 
@@ -79,26 +79,28 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 	 * Default constructor that specifies the chamfer weights.
 	 * @param weights an array of two weights for orthogonal and diagonal directions
 	 */
-	public ChamferDistanceTransform3DUInt16(short[] weights)
+	public ChamferDistanceTransform3DUInt16(ChamferMask3D mask)
 	{
-		this.weights = weights;
+        this.mask = mask;
 	}
-
-	/**
-	 * Constructor specifying the chamfer weights and the optional normalization.
-	 * @param weights
-	 *            an array of two weights for orthogonal and diagonal directions
-	 * @param normalize
-	 *            flag indicating whether the final distance map should be
-	 *            normalized by the first weight
-	 */
-	public ChamferDistanceTransform3DUInt16(short[] weights, boolean normalize)
-	{
-		this.weights = weights;
-		this.normalizeMap = normalize;
-	}
-
 	
+	/**
+     * Constructor specifying the weights of the chamfer mask and the optional
+     * normalization option.
+     * 
+     * @param weights
+     *            an array of weights used to build the chamfer mask.
+     * @param normalize
+     *            flag indicating whether the final distance map should be
+     *            normalized by the first weight
+     */
+    public ChamferDistanceTransform3DUInt16(short[] weights, boolean normalize)
+    {
+        this.mask = ChamferMask3D.fromWeights(weights);
+        this.normalizeMap = normalize;
+    }
+    
+    
     // ==============================================================
     // Implementation of computation methods
 
@@ -173,35 +175,18 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
     }
 
     //	private void forwardIteration() 
-    private void forwardIteration(UInt16Array3D distMap, BinaryArray3D mask)
+    private void forwardIteration(UInt16Array3D distMap, BinaryArray3D maskImage)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Forward Scan"));
 
-        // create array of forward shifts
-        ArrayList<WeightedOffset> offsets = new ArrayList<WeightedOffset>(13);
-
-        // offsets in the z-1 plane
-        offsets.add(new WeightedOffset(-1, -1, -1, weights[2]));
-        offsets.add(new WeightedOffset( 0, -1, -1, weights[1]));
-        offsets.add(new WeightedOffset(+1, -1, -1, weights[2]));
-        offsets.add(new WeightedOffset(-1,  0, -1, weights[1]));
-        offsets.add(new WeightedOffset( 0,  0, -1, weights[0]));
-        offsets.add(new WeightedOffset(+1,  0, -1, weights[1]));
-        offsets.add(new WeightedOffset(-1, +1, -1, weights[2]));
-        offsets.add(new WeightedOffset( 0, +1, -1, weights[1]));
-        offsets.add(new WeightedOffset(+1, +1, -1, weights[2]));
-        
-        // offsets in the current plane
-        offsets.add(new WeightedOffset(-1, -1, 0, weights[1]));
-        offsets.add(new WeightedOffset( 0, -1, 0, weights[0]));
-        offsets.add(new WeightedOffset(+1, -1, 0, weights[1]));
-        offsets.add(new WeightedOffset(-1,  0, 0, weights[0]));
-
         // size of image
-        int sizeX = mask.size(0);
-        int sizeY = mask.size(1);
-        int sizeZ = mask.size(2);
-
+        int sizeX = maskImage.size(0);
+        int sizeY = maskImage.size(1);
+        int sizeZ = maskImage.size(2);
+        
+        // create array of forward shifts
+        Collection<ShortOffset> offsets = this.mask.getForwardOffsets();
+        
         // iterate on image voxels
 		for (int z = 0; z < sizeZ; z++)
 		{
@@ -211,14 +196,14 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 				for (int x = 0; x < sizeX; x++)
 				{
                     // process only pixels within the mask
-                    if (!mask.getBoolean(x, y, z))
+                    if (!maskImage.getBoolean(x, y, z))
                         continue;
 
                     // current distance value
                     int currentDist = distMap.getInt(x, y, z);
                     int newDist = currentDist;
 
-                    for (WeightedOffset offset : offsets)
+                    for (ShortOffset offset : offsets)
                     {
                         int x2 = x + offset.dx;
                         int y2 = y + offset.dy;
@@ -241,34 +226,17 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
 		fireProgressChanged(this, 1, 1); 
 	}
 
-    private void backwardIteration(UInt16Array3D distMap, BinaryArray3D mask)
+    private void backwardIteration(UInt16Array3D distMap, BinaryArray3D maskImage)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
-
-        // create array of backward shifts
-        ArrayList<WeightedOffset> offsets = new ArrayList<WeightedOffset>(13);
         
-        // offsets in the z+1 plane
-        offsets.add(new WeightedOffset(-1, -1, +1, weights[2]));
-        offsets.add(new WeightedOffset( 0, -1, +1, weights[1]));
-        offsets.add(new WeightedOffset(+1, -1, +1, weights[2]));
-        offsets.add(new WeightedOffset(-1,  0, +1, weights[1]));
-        offsets.add(new WeightedOffset( 0,  0, +1, weights[0]));
-        offsets.add(new WeightedOffset(+1,  0, +1, weights[1]));
-        offsets.add(new WeightedOffset(-1, +1, +1, weights[2]));
-        offsets.add(new WeightedOffset( 0, +1, +1, weights[1]));
-        offsets.add(new WeightedOffset(+1, +1, +1, weights[2]));
-        
-        // offsets in the current plane
-        offsets.add(new WeightedOffset(-1, +1, 0, weights[1]));
-        offsets.add(new WeightedOffset( 0, +1, 0, weights[0]));
-        offsets.add(new WeightedOffset(+1, +1, 0, weights[1]));
-        offsets.add(new WeightedOffset(+1,  0, 0, weights[0]));
-
         // size of image
-        int sizeX = mask.size(0);
-        int sizeY = mask.size(1);
-        int sizeZ = mask.size(2);
+        int sizeX = maskImage.size(0);
+        int sizeY = maskImage.size(1);
+        int sizeZ = maskImage.size(2);
+        
+        // create array of forward shifts
+        Collection<ShortOffset> offsets = this.mask.getBackwardOffsets();
 
         // Iterate over pixels
         for (int z = sizeZ - 1; z >= 0; z--)
@@ -279,14 +247,14 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
                 for (int x = sizeX - 1; x >= 0; x--)
                 {
                     // process only pixels within the mask
-                    if (!mask.getBoolean(x, y, z))
+                    if (!maskImage.getBoolean(x, y, z))
                         continue;
 
                     // current distance value
                     int currentDist = distMap.getInt(x, y, z);
                     int newDist = currentDist;
 
-                    for (WeightedOffset offset : offsets)
+                    for (ShortOffset offset : offsets)
                     {
                         int x2 = x + offset.dx;
                         int y2 = y + offset.dy;
@@ -319,6 +287,9 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
         int sizeY = array.size(1);
         int sizeZ = array.size(2);
         
+        // retrieve the minimum weight
+        double w0 = mask.getShortNormalizationWeight();
+                
         for (int z = 0; z < sizeZ; z++)
         {
             for (int y = 0; y < sizeY; y++)
@@ -327,26 +298,20 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Distan
                 {
                     if (array.getBoolean(x, y, z)) 
                     {
-                        distMap.setInt(x, y, z, distMap.getInt(x, y, z) / weights[0]);
+                        distMap.setInt(x, y, z, (int) (distMap.getInt(x, y, z) / w0));
                     }
                 }
             }
         }
     }
+
     
-    private class WeightedOffset
+    // ==================================================
+    // Implementation of the ChamferDistanceTransform3D interface
+    
+    @Override
+    public ChamferMask3D mask()
     {
-        int dx;
-        int dy;
-        int dz;
-        short weight;
-        
-        public WeightedOffset(int dx, int dy, int dz, short weight)
-        {
-            this.dx = dx;
-            this.dy = dy;
-            this.dz = dz;
-            this.weight = weight;
-        }
+        return this.mask;
     }
 }

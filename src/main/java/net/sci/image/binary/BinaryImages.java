@@ -19,6 +19,9 @@ import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat32;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16;
 import net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat32;
 import net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16;
+import net.sci.image.binary.distmap.ChamferMask2D;
+import net.sci.image.binary.distmap.ChamferMask3D;
+import net.sci.image.binary.distmap.DistanceTransform2D;
 import net.sci.image.binary.distmap.DistanceTransform3D;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform2D;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloat32Hybrid5x5;
@@ -259,7 +262,40 @@ public class BinaryImages
 		return distanceMap(array, new short[]{5, 7, 11}, true);
 	}
 	
-	/**
+    /**
+     * <p>
+     * Computes the distance map from a boolean 2D array, by specifying the
+     * weights and the normalization option.
+     * </p>
+     * 
+     * <p>
+     * Distance is computed for each foreground (white) pixel, as the chamfer
+     * distance to the nearest background (black) pixel. Result is given as a
+     * new instance of IntArray2D.
+     * </p>
+     * 
+     * @param array
+     *            the input binary image
+     * @param mask
+     *            the chamfer mask used to propagate distances
+     * @param floatingPoint
+     *            indicates if the computation should be performed using
+     *            floating point computation
+     * @param normalize
+     *            indicates whether the resulting distance map should be
+     *            normalized (divide distances by the first chamfer weight)
+     * @return the distance map obtained after applying the distance transform
+     */
+    public static final ScalarArray2D<?> distanceMap(BinaryArray2D array,
+            ChamferMask2D mask, boolean floatingPoint, boolean normalize)
+    {
+        DistanceTransform2D algo = floatingPoint 
+                ? new ChamferDistanceTransform2DFloat32(mask, normalize)
+                : new ChamferDistanceTransform2DUInt16(mask, normalize);
+        return algo.process2d(array);
+    }
+    
+    /**
 	 * <p>
 	 * Computes the distance map from a boolean 2D array, by specifying
 	 * weights and normalization.
@@ -283,8 +319,9 @@ public class BinaryImages
 	public static final IntArray2D<?> distanceMap(BinaryArray2D array,
 			short[] weights, boolean normalize)
 	{
-		ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(weights, normalize);
-		return algo.process2d(array);
+	    ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
+	    ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask, normalize);
+	    return algo.process2d(array);
 	}
 
 	/**
@@ -311,11 +348,44 @@ public class BinaryImages
 	public static final Float32Array2D distanceMap(BinaryArray2D array,
 			float[] weights, boolean normalize) 
 	{
-		ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(weights, normalize);
-		return algo.process2d(array);
+        ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
+        ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(mask, normalize);
+        return algo.process2d(array);
 	}
 
-	/**
+    /**
+     * <p>
+     * Computes the distance map from a boolean 3D array, by specifying the
+     * chamfer mask and the normalization option.
+     * </p>
+     * 
+     * <p>
+     * Distance is computed for each foreground (white) voxel, as the chamfer
+     * distance to the nearest background (black) voxel. 
+     * </p>
+     * 
+     * @param array
+     *            the input binary image
+     * @param mask
+     *            the chamfer mask used to propagate distances
+     * @param floatingPoint
+     *            indicates if the computation should be performed using
+     *            floating point computation
+     * @param normalize
+     *            indicates whether the resulting distance map should be
+     *            normalized (divide distances by the first chamfer weight)
+     * @return the distance map obtained after applying the distance transform
+     */
+    public static final ScalarArray3D<?> distanceMap(BinaryArray3D array,
+            ChamferMask3D mask, boolean floatingPoint, boolean normalize)
+    {
+        DistanceTransform3D algo = floatingPoint 
+                ? new ChamferDistanceTransform3DFloat32(mask, normalize)
+                : new ChamferDistanceTransform3DUInt16(mask, normalize);
+        return algo.process3d(array);
+    }
+    
+    /**
 	 * Computes the distance map from a boolean 3D array. 
 	 * Distance is computed for each foreground (white) pixel, as the 
 	 * chamfer distance to the nearest background (black) pixel.
@@ -326,9 +396,9 @@ public class BinaryImages
 	 */
 	public static final ScalarArray3D<?> distanceMap(BinaryArray3D array)
 	{
-		float[] weights = new float[]{3.0f, 4.0f, 5.0f};
-		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat32(weights);
-		return algo.process3d(array);
+        ChamferMask3D mask = ChamferMask3D.BORGEFORS;
+        ChamferDistanceTransform3DUInt16 algo = new ChamferDistanceTransform3DUInt16(mask);
+        return algo.process3d(array);
 	}
 	
 	/**
@@ -348,8 +418,9 @@ public class BinaryImages
 	public static final ScalarArray3D<?> distanceMap(BinaryArray3D array,
 			short[] weights, boolean normalize)
 	{
-		DistanceTransform3D algo = new ChamferDistanceTransform3DUInt16(weights, normalize);
-		return algo.process3d(array);
+        ChamferMask3D mask = ChamferMask3D.fromWeights(weights);
+        ChamferDistanceTransform3DUInt16 algo = new ChamferDistanceTransform3DUInt16(mask, normalize);
+        return algo.process3d(array);
 	}
 	
 	/**
@@ -369,7 +440,8 @@ public class BinaryImages
 	public static final ScalarArray3D<?> distanceMap(BinaryArray3D array, 
 			float[] weights, boolean normalize)
 	{
-		DistanceTransform3D algo = new ChamferDistanceTransform3DFloat32(weights, normalize);
+        ChamferMask3D mask = ChamferMask3D.fromWeights(weights);
+        ChamferDistanceTransform3DFloat32 algo = new ChamferDistanceTransform3DFloat32(mask, normalize);
 		return algo.process3d(array);
 	}
 	

@@ -23,14 +23,14 @@ package net.sci.image.binary.distmap;
 
 import static java.lang.Math.min;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Float32Array3D;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.binary.ChamferWeights3D;
+import net.sci.image.binary.distmap.ChamferMask3D.FloatOffset;
 
 /**
  * Computes Chamfer distances in a 3x3x3 neighborhood using floating point 
@@ -39,12 +39,12 @@ import net.sci.image.binary.ChamferWeights3D;
  * @author David Legland
  * @see ChamferDistanceTransform3DUInt16
  */
-public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements DistanceTransform3D
+public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements ChamferDistanceTransform3D
 {
     // ==============================================================
     // class members
 
-	private float[] weights;
+    private ChamferMask3D mask;
 
 	/**
 	 * Flag for dividing final distance map by the value first weight. 
@@ -67,9 +67,9 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
 	 *            flag indicating whether the final distance map should be
 	 *            normalized by the first weight
 	 */
-	public ChamferDistanceTransform3DFloat32(ChamferWeights3D weights, boolean normalize)
+	public ChamferDistanceTransform3DFloat32(ChamferMask3D mask, boolean normalize)
 	{
-		this.weights = weights.getFloatWeights();
+        this.mask = mask;
 		this.normalizeMap = normalize;
 	}
 
@@ -77,24 +77,24 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
 	 * Default constructor that specifies the chamfer weights.
 	 * @param weights an array of two weights for orthogonal and diagonal directions
 	 */
-	public ChamferDistanceTransform3DFloat32(float[] weights)
+	public ChamferDistanceTransform3DFloat32(ChamferMask3D mask)
 	{
-		this.weights = weights;
+		this.mask = mask;
 	}
 
 	/**
-	 * Constructor specifying the chamfer weights and the optional
-	 * normalization option.
-	 * 
-	 * @param weights
-	 *            an array of two weights for orthogonal and diagonal directions
+     * Constructor specifying the weights of the chamfer mask and the optional
+     * normalization option.
+     * 
+     * @param weights
+     *            an array of weights used to build the chamfer mask.
 	 * @param normalize
 	 *            flag indicating whether the final distance map should be
 	 *            normalized by the first weight
 	 */
 	public ChamferDistanceTransform3DFloat32(float[] weights, boolean normalize)
 	{
-		this.weights = weights;
+		this.mask = ChamferMask3D.fromWeights(weights);
 		this.normalizeMap = normalize;
 	}
 
@@ -173,35 +173,18 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
         return result;
     }
 
-    private void forwardIteration(Float32Array3D distMap, BinaryArray3D mask) 
+    private void forwardIteration(Float32Array3D distMap, BinaryArray3D maskImage) 
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Forward Scan"));
 
-        // create array of forward shifts
-        ArrayList<WeightedOffset> offsets = new ArrayList<WeightedOffset>(13);
-
-        // offsets in the z-1 plane
-        offsets.add(new WeightedOffset(-1, -1, -1, weights[2]));
-        offsets.add(new WeightedOffset( 0, -1, -1, weights[1]));
-        offsets.add(new WeightedOffset(+1, -1, -1, weights[2]));
-        offsets.add(new WeightedOffset(-1,  0, -1, weights[1]));
-        offsets.add(new WeightedOffset( 0,  0, -1, weights[0]));
-        offsets.add(new WeightedOffset(+1,  0, -1, weights[1]));
-        offsets.add(new WeightedOffset(-1, +1, -1, weights[2]));
-        offsets.add(new WeightedOffset( 0, +1, -1, weights[1]));
-        offsets.add(new WeightedOffset(+1, +1, -1, weights[2]));
-        
-        // offsets in the current plane
-        offsets.add(new WeightedOffset(-1, -1, 0, weights[1]));
-        offsets.add(new WeightedOffset( 0, -1, 0, weights[0]));
-        offsets.add(new WeightedOffset(+1, -1, 0, weights[1]));
-        offsets.add(new WeightedOffset(-1,  0, 0, weights[0]));
-
         // size of image
-        int sizeX = mask.size(0);
-        int sizeY = mask.size(1);
-        int sizeZ = mask.size(2);
+        int sizeX = maskImage.size(0);
+        int sizeY = maskImage.size(1);
+        int sizeZ = maskImage.size(2);
 
+        // create array of forward shifts
+        Collection<FloatOffset> offsets = this.mask.getForwardFloatOffsets();
+        
         // iterate on image voxels
         for (int z = 0; z < sizeZ; z++)
         {
@@ -211,14 +194,14 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
                 for (int x = 0; x < sizeX; x++)
                 {
                     // process only pixels within the mask
-                    if (!mask.getBoolean(x, y, z))
+                    if (!maskImage.getBoolean(x, y, z))
                         continue;
 
                     // current distance value
                     float currentDist = distMap.getFloat(x, y, z);
                     float newDist = currentDist;
 
-                    for (WeightedOffset offset : offsets)
+                    for (FloatOffset offset : offsets)
                     {
                         int x2 = x + offset.dx;
                         int y2 = y + offset.dy;
@@ -241,35 +224,18 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
         fireProgressChanged(this, 1, 1);
 	}
 
-	private void backwardIteration(Float32Array3D distMap, BinaryArray3D mask) 
+	private void backwardIteration(Float32Array3D distMap, BinaryArray3D maskImage) 
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
 
-        // create array of backward shifts
-        ArrayList<WeightedOffset> offsets = new ArrayList<WeightedOffset>(13);
-        
-        // offsets in the z+1 plane
-        offsets.add(new WeightedOffset(-1, -1, +1, weights[2]));
-        offsets.add(new WeightedOffset( 0, -1, +1, weights[1]));
-        offsets.add(new WeightedOffset(+1, -1, +1, weights[2]));
-        offsets.add(new WeightedOffset(-1,  0, +1, weights[1]));
-        offsets.add(new WeightedOffset( 0,  0, +1, weights[0]));
-        offsets.add(new WeightedOffset(+1,  0, +1, weights[1]));
-        offsets.add(new WeightedOffset(-1, +1, +1, weights[2]));
-        offsets.add(new WeightedOffset( 0, +1, +1, weights[1]));
-        offsets.add(new WeightedOffset(+1, +1, +1, weights[2]));
-        
-        // offsets in the current plane
-        offsets.add(new WeightedOffset(-1, +1, 0, weights[1]));
-        offsets.add(new WeightedOffset( 0, +1, 0, weights[0]));
-        offsets.add(new WeightedOffset(+1, +1, 0, weights[1]));
-        offsets.add(new WeightedOffset(+1,  0, 0, weights[0]));
-
         // size of image
-        int sizeX = mask.size(0);
-        int sizeY = mask.size(1);
-        int sizeZ = mask.size(2);
+        int sizeX = maskImage.size(0);
+        int sizeY = maskImage.size(1);
+        int sizeZ = maskImage.size(2);
 
+        // create array of forward shifts
+        Collection<FloatOffset> offsets = this.mask.getBackwardFloatOffsets();
+        
         // Iterate over pixels
         for (int z = sizeZ - 1; z >= 0; z--)
         {
@@ -279,14 +245,14 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
                 for (int x = sizeX - 1; x >= 0; x--)
                 {
                     // process only pixels within the mask
-                    if (!mask.getBoolean(x, y, z))
+                    if (!maskImage.getBoolean(x, y, z))
                         continue;
 
                     // current distance value
                     float currentDist = distMap.getFloat(x, y, z);
                     float newDist = currentDist;
 
-                    for (WeightedOffset offset : offsets)
+                    for (FloatOffset offset : offsets)
                     {
                         int x2 = x + offset.dx;
                         int y2 = y + offset.dy;
@@ -319,6 +285,9 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
         int sizeY = array.size(1);
         int sizeZ = array.size(2);
         
+        // retrieve the minimum weight
+        float w0 = (float) mask.getNormalizationWeight();
+                
         for (int z = 0; z < sizeZ; z++)
         {
             for (int y = 0; y < sizeY; y++)
@@ -327,27 +296,20 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
                 {
                     if (array.getBoolean(x, y, z)) 
                     {
-                        distMap.setFloat(x, y, z, distMap.getFloat(x, y, z) / weights[0]);
+                        distMap.setFloat(x, y, z, distMap.getFloat(x, y, z) / w0);
                     }
                 }
             }
         }
     }
     
-    private class WeightedOffset
-    {
-        int dx;
-        int dy;
-        int dz;
-        float weight;
-        
-        public WeightedOffset(int dx, int dy, int dz, float weight)
-        {
-            this.dx = dx;
-            this.dy = dy;
-            this.dz = dz;
-            this.weight = weight;
-        }
-    }
     
+    // ==================================================
+    // Implementation of the ChamferDistanceTransform3D interface
+    
+    @Override
+    public ChamferMask3D mask()
+    {
+        return this.mask;
+    }
 }
