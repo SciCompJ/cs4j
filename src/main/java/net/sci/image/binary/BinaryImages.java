@@ -24,10 +24,11 @@ import net.sci.image.binary.distmap.ChamferMask3D;
 import net.sci.image.binary.distmap.DistanceTransform2D;
 import net.sci.image.binary.distmap.DistanceTransform3D;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform2D;
-import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloat32Hybrid5x5;
-import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Hybrid5x5;
+import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloat32Hybrid;
+import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Hybrid;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform3D;
-import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3;
+import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid;
+import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DUInt16Hybrid;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.data.Connectivity3D;
 
@@ -504,7 +505,7 @@ public class BinaryImages
         ScalarArray<?> distMap;
         if (marker instanceof BinaryArray2D && mask instanceof BinaryArray2D) 
         {
-            // process planar image
+            // process 2D image
             distMap = geodesicDistanceMap2d((BinaryArray2D) marker, (BinaryArray2D) mask);
         } 
         else if (marker instanceof BinaryArray3D && mask instanceof BinaryArray3D) 
@@ -536,7 +537,37 @@ public class BinaryImages
      */
     public static final ScalarArray<?> geodesicDistanceMap2d(BinaryArray2D marker, BinaryArray2D mask) 
     {
-        return geodesicDistanceMap2d(marker, mask, new float[]{5, 7, 11}, true);
+        return geodesicDistanceMap2d(marker, mask, ChamferMask2D.CHESSKNIGHT, false, true);
+    }
+    
+    /**
+     * Computes the geodesic distance transform (or geodesic distance map) of a
+     * binary image of marker, constrained to a binary mask. Returns the result
+     * in a new instance of Float32Array2D.
+     * 
+     * @param marker
+     *            the binary image of marker
+     * @param mask
+     *            the binary image of mask
+     * @param chamferMask
+     *            the 2D chamfer mask to use for propagating distances
+     * @param floatingPoint
+     *            boolean flag indicating whether result should be provided as
+     *            <code>Float32</code> (if true) or as <code>UInt16</code> (if
+     *            false).
+     * @param normalize
+     *            indicates whether the resulting distance map should be
+     *            normalized (divide distances by the first chamfer weight)
+     * @return the geodesic distance map in a new ScalarArray2D
+     */
+    public static final ScalarArray2D<?> geodesicDistanceMap2d(BinaryArray2D marker,
+            BinaryArray2D mask, ChamferMask2D chamferMask, boolean floatingPoint, boolean normalize) 
+    {
+        GeodesicDistanceTransform2D algo;
+        algo = floatingPoint
+                ? new GeodesicDistanceTransform2DFloat32Hybrid(chamferMask, normalize)
+                : new GeodesicDistanceTransform2DUInt16Hybrid(chamferMask, normalize);
+        return algo.process2d(marker, mask);
     }
     
     /**
@@ -559,7 +590,7 @@ public class BinaryImages
             BinaryArray2D mask, short[] weights, boolean normalize) 
     {
         GeodesicDistanceTransform2D algo;
-        algo = new GeodesicDistanceTransform2DUInt16Hybrid5x5(weights, normalize);
+        algo = new GeodesicDistanceTransform2DUInt16Hybrid(weights, normalize);
         return algo.process2d(marker, mask);
     }
     
@@ -577,13 +608,13 @@ public class BinaryImages
      * @param normalize
      *            indicates whether the resulting distance map should be
      *            normalized (divide distances by the first chamfer weight)
-     * @return the geodesic distance map in a new ImageProcessor
+     * @return the geodesic distance map in a new ScalarArray2D
      */
     public static final ScalarArray2D<?> geodesicDistanceMap2d(BinaryArray2D marker,
             BinaryArray2D mask, float[] weights, boolean normalize) 
     {
         GeodesicDistanceTransform2D algo;
-        algo = new GeodesicDistanceTransform2DFloat32Hybrid5x5(weights, normalize);
+        algo = new GeodesicDistanceTransform2DFloat32Hybrid(weights, normalize);
         return algo.process2d(marker, mask);
     }
     
@@ -603,29 +634,36 @@ public class BinaryImages
         return geodesicDistanceMap3d(marker, mask, new float[]{3, 4, 5}, true);
     }
     
-//    /**
-//     * Computes the geodesic distance transform (or geodesic distance map) of a
-//     * binary image of marker, constrained to a binary mask.
-//     * Returns the result in a new instance of ScalarArray2D.
-//     * 
-//     * @param marker
-//     *            the binary image of marker
-//     * @param mask
-//     *            the binary image of mask
-//     * @param weights
-//     *            an array of chamfer weights, with at least two values
-//     * @param normalize
-//     *            indicates whether the resulting distance map should be
-//     *            normalized (divide distances by the first chamfer weight)
-//     * @return the geodesic distance map in a new ScalarArray
-//     */
-//    public static final ScalarArray2D<?> geodesicDistanceMap2d(BinaryArray2D marker,
-//            BinaryArray2D mask, short[] weights, boolean normalize) 
-//    {
-//        GeodesicDistanceTransform2D algo;
-//        algo = new GeodesicDistanceTransform2DShortScanning5x5(weights, normalize);
-//        return algo.process2d(marker, mask);
-//    }
+    /**
+     * Computes the geodesic distance transform (or geodesic distance map) of a
+     * binary image of marker, constrained to a binary mask. Returns the result
+     * in a new instance of Float32Array3D.
+     * 
+     * @param marker
+     *            the binary image of marker
+     * @param mask
+     *            the binary image of mask
+     * @param chamferMask
+     *            the 3D chamfer mask to use for propagating distances
+     * @param floatingPoint
+     *            boolean flag indicating whether result should be provided as
+     *            <code>Float32</code> (if true) or as <code>UInt16</code> (if
+     *            false).
+     * @param normalize
+     *            indicates whether the resulting distance map should be
+     *            normalized (divide distances by the first chamfer weight)
+     * @return the geodesic distance map in a new ScalarArray3D
+     */
+    public static final ScalarArray3D<?> geodesicDistanceMap3d(BinaryArray3D marker,
+            BinaryArray3D mask, ChamferMask3D chamferMask, boolean floatingPoint, boolean normalize) 
+    {
+        GeodesicDistanceTransform3D algo;
+        algo = floatingPoint
+                ? new GeodesicDistanceTransform3DFloat32Hybrid(chamferMask, normalize)
+                : new GeodesicDistanceTransform3DUInt16Hybrid(chamferMask, normalize);
+        return algo.process3d(marker, mask);
+    }
+
     
     /**
      * Computes the geodesic distance transform (or geodesic distance map) of a
@@ -647,7 +685,7 @@ public class BinaryImages
             BinaryArray3D mask, float[] weights, boolean normalize) 
     {
         GeodesicDistanceTransform3D algo;
-        algo = new GeodesicDistanceTransform3DFloat32Hybrid3x3(weights, normalize);
+        algo = new GeodesicDistanceTransform3DFloat32Hybrid(weights, normalize);
         return algo.process3d(marker, mask);
     }
     

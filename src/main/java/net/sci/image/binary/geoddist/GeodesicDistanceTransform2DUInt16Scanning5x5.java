@@ -2,6 +2,7 @@ package net.sci.image.binary.geoddist;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array2D;
 import net.sci.image.binary.ChamferWeights2D;
 
@@ -145,7 +146,7 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
 	    {
 	        for (int x = 0; x < sizeX; x++) 
 	        {
-	            distMap.setInt(x, y, marker.getBoolean(x, y) ? 0 : Short.MAX_VALUE);
+	            distMap.setInt(x, y, marker.getBoolean(x, y) ? 0 : UInt16.MAX_VALUE);
 	        }
 	    }
 	    
@@ -290,7 +291,7 @@ public class GeodesicDistanceTransform2DUInt16Scanning5x5 extends AlgoStub imple
             for (int x = 0; x < sizeX; x++) 
             {
                 int val = distMap.getInt(x, y);
-                if (val != Short.MAX_VALUE)
+                if (val != UInt16.MAX_VALUE)
                 {
                     distMap.setInt(x, y, val / this.weights[0]);
                 }

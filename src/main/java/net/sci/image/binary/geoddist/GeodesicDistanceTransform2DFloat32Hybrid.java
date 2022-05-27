@@ -1,31 +1,33 @@
 package net.sci.image.binary.geoddist;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.Float32Array2D;
-import net.sci.image.binary.ChamferWeights2D;
+import net.sci.image.binary.distmap.ChamferMask2D;
+import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 import net.sci.image.data.Cursor2D;
 
 /**
  * Computation of Chamfer geodesic distances using floating point integer array
  * for storing result, and 5-by-5 chamfer masks.
  * 
- * @deprecated replaced by GeodesicDistanceTransform2DFloat32Hybrid
- * 
  * @author David Legland
  * 
  */
-@Deprecated
-public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implements GeodesicDistanceTransform2D
+public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implements GeodesicDistanceTransform2D
 {
     // ==================================================
     // Class variables 
     
-	double[] weights = new double[]{5, 7, 11};
-
+    /**
+     * The chamfer mask used to propagate distances to neighbor pixels.
+     */
+    ChamferMask2D mask;
+    
 	/**
 	 * Flag for dividing final distance map by the value first weight. 
 	 * This results in distance map values closer to Euclidean distance. 
@@ -39,23 +41,24 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
 	/**
 	 * Use default weights, and normalize map.
 	 */
-	public GeodesicDistanceTransform2DFloat32Hybrid5x5()
+	public GeodesicDistanceTransform2DFloat32Hybrid()
 	{
-		this(ChamferWeights2D.CHESSKNIGHT.getFloatWeights(), true);
+		this(ChamferMask2D.CHESSKNIGHT, true);
 	}
 
-	public GeodesicDistanceTransform2DFloat32Hybrid5x5(ChamferWeights2D weights)
+	public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask)
 	{
-		this(weights.getFloatWeights(), true);
+        this(mask, true);
 	}
 
-	public GeodesicDistanceTransform2DFloat32Hybrid5x5(ChamferWeights2D weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask, boolean normalizeMap) 
 	{
-		this(weights.getFloatWeights(), normalizeMap);
+        this.mask = mask;
+        this.normalizeMap = normalizeMap;
 	}
 
 
-	public GeodesicDistanceTransform2DFloat32Hybrid5x5(float[] weights)
+	public GeodesicDistanceTransform2DFloat32Hybrid(float[] weights)
 	{
 		this(weights, true);
 	}
@@ -69,49 +72,12 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
 	 * @param normalizeMap
 	 *            the flag for normalizing result
 	 */
-	public GeodesicDistanceTransform2DFloat32Hybrid5x5(float[] weights, boolean normalizeMap) 
+	public GeodesicDistanceTransform2DFloat32Hybrid(float[] weights, boolean normalizeMap) 
 	{
-		this.weights = new double[3];
-        this.weights[0] = weights[0];
-        this.weights[1] = weights[1];
-		
-		// ensure weight array has minimum size 3
-		if (weights.length < 3)
-		{
-			this.weights[2] = weights[0] + weights[1];
-		}
-		else
-		{
-		    this.weights[2] = weights[2];
-		}
-		
-		this.normalizeMap = normalizeMap;
+        this.mask = ChamferMask2D.fromWeights(weights);
+        this.normalizeMap = normalizeMap;
 	}
 	
-    /**
-     * Low-level constructor.
-     * 
-     * @param weights
-     *            the array of weights for orthogonal, diagonal, and eventually
-     *            2-by-1 moves
-     * @param normalizeMap
-     *            the flag for normalizing result
-     */
-    public GeodesicDistanceTransform2DFloat32Hybrid5x5(double[] weights, boolean normalizeMap) 
-    {
-        this.weights = weights;
-        
-        // ensure weight array has minimum size 3
-        if (weights.length < 3)
-        {
-            this.weights = new double[3];
-            this.weights[0] = weights[0];
-            this.weights[1] = weights[1];
-            this.weights[2] = weights[0] + weights[1];
-        }
-        this.normalizeMap = normalizeMap;
-    }
-
 
     // ==================================================
     // General Methods 
@@ -123,6 +89,12 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
 	 * 
 	 * The function returns a new Float32Array2D the same size as the input, with
 	 * values greater than or equal to zero.
+     * 
+     * @param marker
+     *            the marker image to initialize the reconstruction from
+     * @param maskImage
+     *            the binary image that will constrain the reconstruction
+     * @return the reconstructed image as a new instance of Float32Array2D
 	 */
 	public Float32Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
 	{
@@ -157,6 +129,7 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
 	
     private Float32Array2D initializeResult(BinaryArray2D marker, BinaryArray2D mask)
     {
+        // retrieve image size
         int sizeX = marker.size(0);
         int sizeY = marker.size(1);
         
@@ -183,20 +156,12 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
         return distMap;
     }
     
-    private void forwardIteration(Float32Array2D distMap, BinaryArray2D mask) 
+    private void forwardIteration(Float32Array2D distMap, BinaryArray2D maskImage) 
     {
-        // create array of offsets relative to current pixel
-        int[] dx = new int[]{-1, +1, -2, -1, +0, +1, +2, -1};
-        int[] dy = new int[]{-2, -2, -1, -1, -1, -1, -1, +0};
-
-        // also create corresponding array of weights
-        double w0 = weights[0];
-        double w1 = weights[1];
-        double w2 = weights[2];
-        double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0};
-
+        // retrieve image size
         int sizeX = distMap.size(0);
         int sizeY = distMap.size(1);
+        Collection<Offset> offsets = mask.getForwardOffsets();
 
         // iterate over pixels
         for (int y = 0; y < sizeY; y++)
@@ -205,38 +170,40 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
 
             for (int x = 0; x < sizeX; x++)
             {
-                if (!mask.getBoolean(x, y))
+                if (!maskImage.getBoolean(x, y))
                     continue;
 
                 // get value of current pixel
-                double value = distMap.getValue(x, y);
-
-                // update value with value of neighbors
-                double newVal = value;
-                for(int i = 0; i < dx.length; i++)
+                double dist = distMap.getValue(x, y);
+                double newDist = dist;
+                
+                // iterate over neighbors
+                for (Offset offset : offsets)
                 {
-                    // coordinates of neighbor pixel
-                    int x2 = x + dx[i];
-                    int y2 = y + dy[i];
-
-                    // check image bounds
-                    if (x2 < 0 || x2 > sizeX - 1)
+                    // compute neighbor coordinates
+                    int x2 = x + offset.dx;
+                    int y2 = y + offset.dy;
+                    
+                    // check bounds
+                    if (x2 < 0 || x2 >= sizeX)
                         continue;
-                    if (y2 < 0 || y2 > sizeY - 1)
+                    if (y2 < 0 || y2 >= sizeY)
                         continue;
-
-                    // process only pixels inside structure
-                    if (!mask.getBoolean(x2, y2))
+                    
+                    // process only pixels within mask
+                    if (!maskImage.getBoolean(x2, y2))
+                    {
                         continue;
-
-                    // update minimum value
-                    newVal = Math.min(newVal, distMap.getValue(x2, y2) + ws[i]);
+                    }
+                    
+                    // if pixel is within mask, update the distance
+                    newDist = Math.min(newDist, distMap.getValue(x2, y2) + offset.weight);
                 }
-
+                
                 // modify current pixel if needed
-                if (newVal < value) 
+                if (newDist < dist) 
                 {
-                    distMap.setValue(x, y, newVal);
+                    distMap.setValue(x, y, newDist);
                 }
             }
         }
@@ -244,20 +211,13 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
         fireProgressChanged(this, 1, 1); 
     }
 
-    private void backwardIteration(Float32Array2D distMap, BinaryArray2D mask, Deque<Cursor2D> queue)
+    private void backwardIteration(Float32Array2D distMap, BinaryArray2D maskImage, Deque<Cursor2D> queue)
     {
-        // create array of offsets relative to current pixel
-        int[] dx = new int[]{+1, -1, +2, +1, +0, -1, -2, +1};
-        int[] dy = new int[]{+2, +2, +1, +1, +1, +1, +1, +0};
-
-        // also create corresponding array of weights
-        double w0 = weights[0];
-        double w1 = weights[1];
-        double w2 = weights[2];
-        double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0};
-
+        // retrieve image size
         int sizeX = distMap.size(0);
         int sizeY = distMap.size(1);
+        Collection<Offset> offsets = mask.getBackwardOffsets();
+
 
         // iterate over pixels
         for (int y = sizeY - 1; y >= 0; y--)
@@ -266,64 +226,72 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
 
             for (int x = sizeX - 1; x >= 0; x--)
             {
-                if (!mask.getBoolean(x, y))
+                if (!maskImage.getBoolean(x, y))
                     continue;
 
                 // get value of current pixel
-                double value = distMap.getValue(x, y);
-
-                // update value with value of neighbors
-                double newVal = value;
-                for(int i = 0; i < dx.length; i++)
+                double dist = distMap.getValue(x, y);
+                double newDist = dist;
+                
+                // iterate over neighbors
+                for (Offset offset : offsets)
                 {
-                    // coordinates of neighbor pixel
-                    int x2 = x + dx[i];
-                    int y2 = y + dy[i];
-
-                    // check image bounds
-                    if (x2 < 0 || x2 > sizeX - 1)
+                    // compute neighbor coordinates
+                    int x2 = x + offset.dx;
+                    int y2 = y + offset.dy;
+                    
+                    // check bounds
+                    if (x2 < 0 || x2 >= sizeX)
                         continue;
-                    if (y2 < 0 || y2 > sizeY - 1)
+                    if (y2 < 0 || y2 >= sizeY)
                         continue;
-
-                    // process only pixels inside structure
-                    if (!mask.getBoolean(x2, y2))
+                    
+                    // process only pixels within mask
+                    if (!maskImage.getBoolean(x2, y2))
+                    {
                         continue;
-
-                    // update minimum value
-                    newVal = Math.min(newVal, distMap.getValue(x2, y2) + ws[i]);
+                    }
+                    
+                    // if pixel is within mask, update the distance
+                    newDist = Math.min(newDist, distMap.getValue(x2, y2) + offset.weight);
                 }
-
+                
+                // modify current pixel if needed
+                if (newDist < dist) 
+                {
+                    distMap.setValue(x, y, newDist);
+                }
+                
                 // check if update is necessary
-                if (value < newVal)
+                if (dist <= newDist)
                 {
                     continue;
                 }
 
                 // modify current pixel
-                distMap.setValue(x, y, newVal);
+                distMap.setValue(x, y, newDist);
 
                 // eventually add lower-right neighbors to queue
-                for(int i = 0; i < dx.length; i++)
+                for (Offset offset : offsets)
                 {
-                    // coordinates of neighbor pixel
-                    int x2 = x + dx[i];
-                    int y2 = y + dy[i];
-
+                    // compute neighbor coordinates
+                    int x2 = x + offset.dx;
+                    int y2 = y + offset.dy;
+                    
                     // check image bounds
                     if (x2 < 0 || x2 > sizeX - 1)
                         continue;
                     if (y2 < 0 || y2 > sizeY - 1)
                         continue;
-
-                    // process only pixels inside structure
-                    if (!mask.getBoolean(x2, y2))
+                    
+                    // process only pixels within mask
+                    if (!maskImage.getBoolean(x2, y2))
                         continue;
 
                     // update neighbor and add to the queue
-                    if (newVal + ws[i] < distMap.getValue(x2, y2)) 
+                    if (newDist + offset.weight < distMap.getValue(x2, y2)) 
                     {
-                        distMap.setValue(x2, y2, newVal + ws[i]);
+                        distMap.setValue(x2, y2, newDist + offset.weight);
                         queue.add(new Cursor2D(x2, y2));
                     }
                 }
@@ -337,20 +305,12 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
      * For each element in the queue, get neighbors, try to update them, and
      * eventually add them to the queue.
      */
-    private void processQueue(Float32Array2D distMap, BinaryArray2D mask, Deque<Cursor2D> queue)
+    private void processQueue(Float32Array2D distMap, BinaryArray2D maskImage, Deque<Cursor2D> queue)
     {
-        // create array of offsets relative to current pixel
-        int[] dx = new int[]{-1, +1, -2, -1, +0, +1, +2, -1, +1, -1, +2, +1, +0, -1, -2, +1};
-        int[] dy = new int[]{-2, -2, -1, -1, -1, -1, -1, +0, +2, +2, +1, +1, +1, +1, +1, +0};
-
-        // also create corresponding array of weights
-        double w0 = weights[0];
-        double w1 = weights[1];
-        double w2 = weights[2];
-        double[] ws = new double[]{w2, w2, w2, w1, w0, w1, w2, w0, w2, w2, w2, w1, w0, w1, w2, w0};
-
+        // retrieve image size
         int sizeX = distMap.size(0);
         int sizeY = distMap.size(1);
+        Collection<Offset> offsets = mask.getOffsets();
 
         // Process elements in queue until it is empty
         while (!queue.isEmpty()) 
@@ -360,34 +320,34 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
             int y = p.getY();
 
             // get geodesic distance value for current pixel
-            double value = distMap.getValue(x, y);
+            double dist = distMap.getValue(x, y);
 
             // iterate over neighbor pixels
-            for(int i = 0; i < dx.length; i++)
+            for (Offset offset : offsets)
             {
-                // coordinates of neighbor pixel
-                int x2 = x + dx[i];
-                int y2 = y + dy[i];
-
+                // compute neighbor coordinates
+                int x2 = x + offset.dx;
+                int y2 = y + offset.dy;
+                
                 // check image bounds
                 if (x2 < 0 || x2 > sizeX - 1)
                     continue;
                 if (y2 < 0 || y2 > sizeY - 1)
                     continue;
-
-                // process only pixels inside structure
-                if (!mask.getBoolean(x2, y2))
+                
+                // process only pixels within mask
+                if (!maskImage.getBoolean(x2, y2))
                     continue;
 
                 // update minimum value
-                double newVal = value + ws[i];
-
+                double newDist = dist + offset.weight;
+                
                 // if no update is needed, continue to next item in queue
-                if (newVal < distMap.getValue(x2, y2))
+                if (newDist < distMap.getValue(x2, y2))
                 {
                     // update result for current position
-                    distMap.setValue(x2, y2, newVal);
-
+                    distMap.setValue(x2, y2, newDist);
+                    
                     // add the new modified position to the queue 
                     queue.add(new Cursor2D(x2, y2));
                 }
@@ -397,17 +357,19 @@ public class GeodesicDistanceTransform2DFloat32Hybrid5x5 extends AlgoStub implem
 
     private void normalizeMap(Float32Array2D distMap)
     {
+        // retrieve image size
         int sizeX = distMap.size(0);
         int sizeY = distMap.size(1);
+        double w0 = mask.getNormalizationWeight();
 
         for (int y = 0; y < sizeY; y++)
         {
             for (int x = 0; x < sizeX; x++) 
             {
-                double val = distMap.getValue(x, y);
-                if (Double.isFinite(val))
+                double dist = distMap.getValue(x, y);
+                if (Double.isFinite(dist))
                 {
-                    distMap.setValue(x, y, val / weights[0]);
+                    distMap.setValue(x, y, dist / w0);
                 }
             }
         }

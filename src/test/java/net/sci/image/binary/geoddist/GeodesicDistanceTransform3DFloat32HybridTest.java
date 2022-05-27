@@ -10,17 +10,16 @@ import org.junit.Test;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.binary.ChamferWeights3D;
+import net.sci.image.binary.distmap.ChamferMask3D;
 
 /**
  * @author dlegland
  *
  */
-@Deprecated
-public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
+public class GeodesicDistanceTransform3DFloat32HybridTest
 {
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_Cube()
@@ -49,8 +48,8 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
             }
         }
         
-        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid3x3(ChamferWeights3D.BORGEFORS, false);
-        ScalarArray3D<?> res = (ScalarArray3D<?>) op.process3d(marker, mask);
+        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid(ChamferMask3D.BORGEFORS, false);
+        ScalarArray3D<?> res = op.process3d(marker, mask);
         
         // distance equals 0 within marker
         assertEquals(0, res.getValue(4, 4, 4), 0.001);
@@ -84,7 +83,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
     }
 
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_FullCube()
@@ -104,8 +103,8 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
             }
         }
         
-        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid3x3(ChamferWeights3D.BORGEFORS, false);
-        ScalarArray3D<?> res = (ScalarArray3D<?>) op.process3d(marker, mask);
+        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid(ChamferMask3D.BORGEFORS, false);
+        ScalarArray3D<?> res = op.process3d(marker, mask);
         
         // distance equals 0 within marker
         assertEquals(0, res.getValue(4, 4, 4), 0.001);
@@ -139,7 +138,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
     }
     
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_HollowCube()
@@ -160,8 +159,8 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
         BinaryArray3D marker = BinaryArray3D.create(6, 6, 6);
         marker.setBoolean(0, 0, 0, true);
         
-        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid3x3(ChamferWeights3D.BORGEFORS, false);
-        ScalarArray3D<?> res = (ScalarArray3D<?>) op.process3d(marker, mask);
+        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid(ChamferMask3D.BORGEFORS, false);
+        ScalarArray3D<?> res = op.process3d(marker, mask);
         
         // distance equals 0 within marker
         assertEquals(0, res.getValue(0, 0, 0), 0.001);
@@ -181,7 +180,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
     }
     
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_HollowCube_Normalized()
@@ -202,8 +201,8 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
         BinaryArray3D marker = BinaryArray3D.create(6, 6, 6);
         marker.setBoolean(0, 0, 0, true);
         
-        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid3x3(ChamferWeights3D.BORGEFORS, true);
-        ScalarArray3D<?> res = (ScalarArray3D<?>) op.process3d(marker, mask);
+        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid(ChamferMask3D.BORGEFORS, true);
+        ScalarArray3D<?> res = op.process3d(marker, mask);
         
         // distance equals 0 within marker
         assertEquals(0, res.getValue(0, 0, 0), 0.001);
@@ -223,7 +222,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
     }
     
     /**
-     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid3x3#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid#process3d(net.sci.array.binary.BinaryArray3D, net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
     public void testProcess3d_HollowCubeReverse()
@@ -244,8 +243,8 @@ public class GeodesicDistanceTransform3DFloat32Hybrid3x3Test
         BinaryArray3D marker = BinaryArray3D.create(6, 6, 6);
         marker.setBoolean(5, 5, 5, true);
         
-        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid3x3(ChamferWeights3D.BORGEFORS, false);
-        ScalarArray3D<?> res = (ScalarArray3D<?>) op.process3d(marker, mask);
+        GeodesicDistanceTransform3D op = new GeodesicDistanceTransform3DFloat32Hybrid(ChamferMask3D.BORGEFORS, false);
+        ScalarArray3D<?> res = op.process3d(marker, mask);
         
         // distance equals 0 within marker
         assertEquals(0, res.getValue(5, 5, 5), 0.001);

@@ -13,9 +13,11 @@ import net.sci.image.data.Cursor2D;
  * Computation of Chamfer geodesic distances using floating point integer array
  * for storing result, and 5-by-5 chamfer masks.
  * 
+ * @deprecated replaced by GeodesicDistanceTransform2DUInt16Hybrid
  * @author David Legland
  * 
  */
+@Deprecated
 public class GeodesicDistanceTransform2DUInt16Hybrid5x5 extends AlgoStub implements GeodesicDistanceTransform2D
 {
     // ==================================================

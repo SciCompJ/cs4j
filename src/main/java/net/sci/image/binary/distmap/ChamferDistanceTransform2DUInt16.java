@@ -10,6 +10,7 @@ import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 
@@ -104,7 +105,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
             for (int x = 0; x < sizeX; x++)
             {
                 boolean inside = array.getBoolean(x, y);
-                result.setInt(x, y, inside ? Short.MAX_VALUE : 0);
+                result.setInt(x, y, inside ? UInt16.MAX_VALUE : 0);
             }
         }
         
