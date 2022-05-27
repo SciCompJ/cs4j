@@ -244,7 +244,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 	        {
 	            if (array.getBoolean(x, y)) 
 	            {
-	                distMap.setInt(x, y, (int) (distMap.getInt(x, y) / w0));
+	                distMap.setInt(x, y, (int) Math.round(distMap.getInt(x, y) / w0));
 	            }
 	        }
 	    }

@@ -298,7 +298,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
                 {
                     if (array.getBoolean(x, y, z)) 
                     {
-                        distMap.setInt(x, y, z, (int) (distMap.getInt(x, y, z) / w0));
+                        distMap.setInt(x, y, z, (int) Math.round(distMap.getInt(x, y, z) / w0));
                     }
                 }
             }
