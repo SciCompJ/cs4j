@@ -30,7 +30,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Float32Array3D;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.binary.distmap.ChamferMask3D.FloatOffset;
+import net.sci.image.binary.distmap.ChamferMask3D.Offset;
 
 /**
  * Computes Chamfer distances in a 3x3x3 neighborhood using floating point 
@@ -183,7 +183,7 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
         int sizeZ = maskImage.size(2);
 
         // create array of forward shifts
-        Collection<FloatOffset> offsets = this.mask.getForwardFloatOffsets();
+        Collection<Offset> offsets = this.mask.getForwardOffsets();
         
         // iterate on image voxels
         for (int z = 0; z < sizeZ; z++)
@@ -201,7 +201,7 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
                     float currentDist = distMap.getFloat(x, y, z);
                     float newDist = currentDist;
 
-                    for (FloatOffset offset : offsets)
+                    for (Offset offset : offsets)
                     {
                         int x2 = x + offset.dx;
                         int y2 = y + offset.dy;
@@ -210,7 +210,7 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
                         // check that current neighbor is within image
                         if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY && z2 >= 0 && z2 < sizeZ)
                         {
-                            newDist = min(newDist, distMap.getFloat(x2, y2, z2) + offset.weight);
+                            newDist = min(newDist, distMap.getFloat(x2, y2, z2) + (float) offset.weight);
                         }
                     }
 
@@ -234,7 +234,7 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
         int sizeZ = maskImage.size(2);
 
         // create array of forward shifts
-        Collection<FloatOffset> offsets = this.mask.getBackwardFloatOffsets();
+        Collection<Offset> offsets = this.mask.getBackwardOffsets();
         
         // Iterate over pixels
         for (int z = sizeZ - 1; z >= 0; z--)
@@ -252,7 +252,7 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
                     float currentDist = distMap.getFloat(x, y, z);
                     float newDist = currentDist;
 
-                    for (FloatOffset offset : offsets)
+                    for (Offset offset : offsets)
                     {
                         int x2 = x + offset.dx;
                         int y2 = y + offset.dy;
@@ -261,7 +261,7 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
                         // check that current neighbor is within image
                         if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY && z2 >= 0 && z2 < sizeZ)
                         {
-                            newDist = min(newDist, distMap.getFloat(x2, y2, z2) + offset.weight);
+                            newDist = min(newDist, distMap.getFloat(x2, y2, z2) + (float) offset.weight);
                         }
                     }
 

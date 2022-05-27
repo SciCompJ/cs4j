@@ -54,60 +54,30 @@ public class ChamferMask2DW2Float extends ChamferMask2D
 	}
 
 	@Override
-	public Collection<ShortOffset> getForwardOffsets()
+	public Collection<Offset> getForwardOffsets()
 	{
 		// create array of forward shifts
-		ArrayList<ShortOffset> offsets = new ArrayList<ShortOffset>();
+		ArrayList<Offset> offsets = new ArrayList<Offset>();
 	
-		offsets.add(new ShortOffset(-1, -1, shortWeights[1]));
-		offsets.add(new ShortOffset( 0, -1, shortWeights[0]));
-		offsets.add(new ShortOffset(+1, -1, shortWeights[1]));
-		offsets.add(new ShortOffset(-1,  0, shortWeights[0]));
+		offsets.add(new Offset(-1, -1, floatWeights[1], shortWeights[1]));
+		offsets.add(new Offset( 0, -1, floatWeights[0], shortWeights[0]));
+		offsets.add(new Offset(+1, -1, floatWeights[1], shortWeights[1]));
+		offsets.add(new Offset(-1,  0, floatWeights[0], shortWeights[0]));
 	
 		return offsets;
 	}
 
 	@Override
-	public Collection<ShortOffset> getBackwardOffsets()
+	public Collection<Offset> getBackwardOffsets()
 	{
 		// create array of backward shifts
-		ArrayList<ShortOffset> offsets = new ArrayList<ShortOffset>();
+		ArrayList<Offset> offsets = new ArrayList<Offset>();
 
 		// offsets in the current plane
-		offsets.add(new ShortOffset(-1, +1, shortWeights[1]));
-		offsets.add(new ShortOffset( 0, +1, shortWeights[0]));
-		offsets.add(new ShortOffset(+1, +1, shortWeights[1]));
-		offsets.add(new ShortOffset(+1,  0, shortWeights[0]));
-
-		return offsets;
-	}
-
-	@Override
-	public Collection<FloatOffset> getForwardFloatOffsets()
-	{
-		// create array of forward shifts
-		ArrayList<FloatOffset> offsets = new ArrayList<FloatOffset>();
-	
-		// offsets in the current plane
-		offsets.add(new FloatOffset(-1, -1, floatWeights[1]));
-		offsets.add(new FloatOffset( 0, -1, floatWeights[0]));
-		offsets.add(new FloatOffset(+1, -1, floatWeights[1]));
-		offsets.add(new FloatOffset(-1,  0, floatWeights[0]));
-	
-		return offsets;
-	}
-
-	@Override
-	public Collection<FloatOffset> getBackwardFloatOffsets()
-	{
-		// create array of backward shifts
-		ArrayList<FloatOffset> offsets = new ArrayList<FloatOffset>();
-
-		// offsets in the current plane
-		offsets.add(new FloatOffset(-1, +1, floatWeights[1]));
-		offsets.add(new FloatOffset( 0, +1, floatWeights[0]));
-		offsets.add(new FloatOffset(+1, +1, floatWeights[1]));
-		offsets.add(new FloatOffset(+1,  0, floatWeights[0]));
+		offsets.add(new Offset(-1, +1, floatWeights[1], shortWeights[1]));
+		offsets.add(new Offset( 0, +1, floatWeights[0], shortWeights[0]));
+		offsets.add(new Offset(+1, +1, floatWeights[1], shortWeights[1]));
+		offsets.add(new Offset(+1,  0, floatWeights[0], shortWeights[0]));
 
 		return offsets;
 	}
@@ -119,7 +89,7 @@ public class ChamferMask2DW2Float extends ChamferMask2D
 	}
 
 	@Override
-	public short getShortNormalizationWeight()
+	public int getIntegerNormalizationWeight()
 	{
 		return shortWeights[0];
 	}

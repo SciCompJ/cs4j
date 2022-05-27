@@ -24,7 +24,7 @@ package net.sci.image.binary.distmap;
 
 /**
  * <p>
- * A pre-defined set of weights that can be used to compute 3D distance 
+ * A pre-defined set of masks that can be used to compute 3D distance 
  * transform using chamfer approximations of euclidean metric.
  * </p>
  * 

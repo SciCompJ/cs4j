@@ -29,7 +29,7 @@ import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.*;
-import net.sci.image.binary.distmap.ChamferMask3D.ShortOffset;
+import net.sci.image.binary.distmap.ChamferMask3D.Offset;
 
 
 /**
@@ -185,7 +185,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
         int sizeZ = maskImage.size(2);
         
         // create array of forward shifts
-        Collection<ShortOffset> offsets = this.mask.getForwardOffsets();
+        Collection<Offset> offsets = this.mask.getForwardOffsets();
         
         // iterate on image voxels
 		for (int z = 0; z < sizeZ; z++)
@@ -203,7 +203,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
                     int currentDist = distMap.getInt(x, y, z);
                     int newDist = currentDist;
 
-                    for (ShortOffset offset : offsets)
+                    for (Offset offset : offsets)
                     {
                         int x2 = x + offset.dx;
                         int y2 = y + offset.dy;
@@ -212,7 +212,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
                         // check that current neighbor is within image
                         if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY && z2 >= 0 && z2 < sizeZ)
                         {
-                            newDist = min(newDist, distMap.getInt(x2, y2, z2) + offset.weight);
+                            newDist = min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
                         }
                     }
 
@@ -236,7 +236,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
         int sizeZ = maskImage.size(2);
         
         // create array of forward shifts
-        Collection<ShortOffset> offsets = this.mask.getBackwardOffsets();
+        Collection<Offset> offsets = this.mask.getBackwardOffsets();
 
         // Iterate over pixels
         for (int z = sizeZ - 1; z >= 0; z--)
@@ -254,7 +254,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
                     int currentDist = distMap.getInt(x, y, z);
                     int newDist = currentDist;
 
-                    for (ShortOffset offset : offsets)
+                    for (Offset offset : offsets)
                     {
                         int x2 = x + offset.dx;
                         int y2 = y + offset.dy;
@@ -263,7 +263,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
                         // check that current neighbor is within image
                         if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY && z2 >= 0 && z2 < sizeZ)
                         {
-                            newDist = min(newDist, distMap.getInt(x2, y2, z2) + offset.weight);
+                            newDist = min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
                         }
                     }
 
@@ -288,7 +288,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
         int sizeZ = array.size(2);
         
         // retrieve the minimum weight
-        double w0 = mask.getShortNormalizationWeight();
+        double w0 = mask.getIntegerNormalizationWeight();
                 
         for (int z = 0; z < sizeZ; z++)
         {

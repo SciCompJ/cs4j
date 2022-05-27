@@ -54,37 +54,37 @@ public class ChamferMask2DW2 extends ChamferMask2D
 	}
 
 	@Override
-	public Collection<ShortOffset> getForwardOffsets()
+	public Collection<Offset> getForwardOffsets()
 	{
 		// create array of forward shifts
-		ArrayList<ShortOffset> offsets = new ArrayList<ShortOffset>();
+		ArrayList<Offset> offsets = new ArrayList<Offset>();
 	
 		// offsets in the current plane
-		offsets.add(new ShortOffset(-1, -1, b));
-		offsets.add(new ShortOffset( 0, -1, a));
-		offsets.add(new ShortOffset(+1, -1, b));
-		offsets.add(new ShortOffset(-1,  0, a));
+		offsets.add(new Offset(-1, -1, b));
+		offsets.add(new Offset( 0, -1, a));
+		offsets.add(new Offset(+1, -1, b));
+		offsets.add(new Offset(-1,  0, a));
 	
 		return offsets;
 	}
 
 	@Override
-	public Collection<ShortOffset> getBackwardOffsets()
+	public Collection<Offset> getBackwardOffsets()
 	{
 		// create array of backward shifts
-		ArrayList<ShortOffset> offsets = new ArrayList<ShortOffset>();
+		ArrayList<Offset> offsets = new ArrayList<Offset>();
 
 		// offsets in the current plane
-		offsets.add(new ShortOffset(-1, +1, b));
-		offsets.add(new ShortOffset( 0, +1, a));
-		offsets.add(new ShortOffset(+1, +1, b));
-		offsets.add(new ShortOffset(+1,  0, a));
+		offsets.add(new Offset(-1, +1, b));
+		offsets.add(new Offset( 0, +1, a));
+		offsets.add(new Offset(+1, +1, b));
+		offsets.add(new Offset(+1,  0, a));
 
 		return offsets;
 	}
 
 	@Override
-	public short getShortNormalizationWeight()
+	public int getIntegerNormalizationWeight()
 	{
 		return a;
 	}

@@ -11,14 +11,14 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.UInt16Array2D;
-import net.sci.image.binary.distmap.ChamferMask2D.ShortOffset;
+import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 
 /**
  * <p>Computes 2D Chamfer distance maps using in a 3x3 or 5x5 neighborhood of each
  * pixel, and storing result in a 2D UInt16 array.</p>
  * 
  * <p>
- * Uses 5x5 chamfer map, with two passes (one forward, one backward). Three
+ * Uses 5x5 chamfer mask, with two passes (one forward, one backward). Three
  * different weights are provided for orthogonal, diagonal, and "chess-knight"
  * moves. Weights equal to (5,7,11) usually give nice results.
  * </p>
@@ -119,7 +119,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         // size of image
         int sizeX = maskImage.size(0);
         int sizeY = maskImage.size(1);
-        Collection<ShortOffset> offsets = mask.getForwardOffsets();
+        Collection<Offset> offsets = mask.getForwardOffsets();
         
         // Iterate over pixels
         for (int y = 0; y < sizeY; y++)
@@ -135,7 +135,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                 int newDist = currentDist;
                 
                 // iterate over neighbors
-                for (ShortOffset offset : offsets)
+                for (Offset offset : offsets)
                 {
                     // compute neighbor coordinates
                     int x2 = x + offset.dx;
@@ -150,12 +150,12 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                     if (maskImage.getBoolean(x2, y2))
                     {
                         // Foreground pixel: increment distance
-                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.weight);
+                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.intWeight);
                     }
                     else
                     {
                         // Background pixel: init with first weight
-                        newDist = Math.min(newDist, offset.weight);
+                        newDist = Math.min(newDist, offset.intWeight);
                     }
                 }
                 
@@ -177,7 +177,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         // size of image
         int sizeX = maskImage.size(0);
         int sizeY = maskImage.size(1);
-        Collection<ShortOffset> offsets = mask.getBackwardOffsets();
+        Collection<Offset> offsets = mask.getBackwardOffsets();
         
         // Iterate over pixels
         for (int y = sizeY - 1; y >= 0; y--)
@@ -193,7 +193,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                 int newDist = currentDist;
                 
                 // iterate over neighbors
-                for (ShortOffset offset : offsets)
+                for (Offset offset : offsets)
                 {
                     // compute neighbor coordinates
                     int x2 = x + offset.dx;
@@ -208,12 +208,12 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                     if (maskImage.getBoolean(x2, y2))
                     {
                         // Foreground pixel: increment distance
-                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.weight);
+                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.intWeight);
                     }
                     else
                     {
                         // Background pixel: init with first weight
-                        newDist = Math.min(newDist, offset.weight);
+                        newDist = Math.min(newDist, offset.intWeight);
                     }
                 }
                 
@@ -236,7 +236,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         int sizeY = array.size(1);
         
         // retrieve the minimum weight
-        double w0 = mask.getShortNormalizationWeight();
+        double w0 = mask.getIntegerNormalizationWeight();
         
 	    for (int y = 0; y < sizeY; y++)
 	    {

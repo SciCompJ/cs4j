@@ -15,6 +15,7 @@ import java.util.Collection;
  * 
  * The weights may be defined either as integers or as floating point values.
  * 
+ * @see ChamferMasks2D
  * @see ChamferMask3D
  * @see ChamferDistanceTransform2D
  * 
@@ -195,23 +196,11 @@ public abstract class ChamferMask2D
 	/**
 	 * @return the whole collection of offsets defined by this ChamferMask2D.
 	 */
-	public Collection<ShortOffset> getOffsets()
+	public Collection<Offset> getOffsets()
 	{
-		ArrayList<ShortOffset> offsets = new ArrayList<ShortOffset>();
+		ArrayList<Offset> offsets = new ArrayList<Offset>();
 		offsets.addAll(getForwardOffsets());
 		offsets.addAll(getBackwardOffsets());
-		return offsets;
-	}
-	
-	/**
-	 * @return the whole collection of offsets using floating-point weights
-	 *         defined by this ChamferMask2D.
-	 */
-	public Collection<FloatOffset> getFloatOffsets()
-	{
-		ArrayList<FloatOffset> offsets = new ArrayList<FloatOffset>();
-		offsets.addAll(getForwardFloatOffsets());
-		offsets.addAll(getBackwardFloatOffsets());
 		return offsets;
 	}
 	
@@ -221,44 +210,15 @@ public abstract class ChamferMask2D
 	
 	/**
 	 * @return the set of offsets defined by this ChamferMask2D for forward
-	 *         iteration using integer weights.
+	 *         iteration.
 	 */
-	public abstract Collection<ShortOffset> getForwardOffsets();
+	public abstract Collection<Offset> getForwardOffsets();
 
 	/**
 	 * @return the set of offsets defined by this ChamferMask2D for backward
-	 *         iteration using integer weights.
+	 *         iteration.
 	 */
-	public abstract Collection<ShortOffset> getBackwardOffsets();
-	
-	/**
-	 * @return the set of offsets defined by this ChamferMask2D for forward
-	 *         iteration using floating-point weights.
-	 */
-	public Collection<FloatOffset> getForwardFloatOffsets()
-	{
-		return convertToFloat(getForwardOffsets());
-	}
-	
-	/**
-	 * @return the set of offsets defined by this ChamferMask2D for backward
-	 *         iteration using floating-point weights.
-	 */
-	public Collection<FloatOffset> getBackwardFloatOffsets()
-	{
-		return convertToFloat(getBackwardOffsets());
-	}
-	
-	private static final Collection<FloatOffset> convertToFloat(Collection<ShortOffset> shortOffsets)
-	{
-		ArrayList<FloatOffset> offsets = new ArrayList<FloatOffset>(shortOffsets.size());
-		
-		for (ShortOffset offset : shortOffsets)
-		{
-			offsets.add(new FloatOffset(offset.dx, offset.dy, offset.weight));
-		}
-		return offsets;
-	}
+	public abstract Collection<Offset> getBackwardOffsets();
 	
 	/**
 	 * @return the weight associated to orthogonal offsets, that can be used to
@@ -266,78 +226,90 @@ public abstract class ChamferMask2D
 	 */
 	public double getNormalizationWeight()
 	{
-		return getShortNormalizationWeight();
+		return getIntegerNormalizationWeight();
 	}
 
 	/**
 	 * @return the weight associated to orthogonal offsets, that can be used to
 	 *         normalize the distance map.
 	 */
-	public abstract short getShortNormalizationWeight();
+	public abstract int getIntegerNormalizationWeight();
 
 	
 	// ==================================================
 	// Inner classes declaration
 	
-	/**
-	 * The shift to a neighbor of a reference pixel, as a pair (dx,dy),
-	 * and the associated weights given as a short.
-	 */
-	public static class ShortOffset
-	{
-		/** The offset along the X-axis */
-		public final int dx;
-		/** The offset along the Y-axis */
-		public final int dy;
-		/** The weight associated to this offset */
-		public final short weight;
+    /**
+     * The shift to a neighbor of a reference pixel, as a pair (dx,dy),
+     * and the associated weights given both as an int and as a float.
+     */
+    public static class Offset
+    {
+        /** The offset along the X-axis */
+        public final int dx;
+        /** The offset along the Y-axis */
+        public final int dy;
+        
+        /** The weight associated to this offset, as floating-point value. */
+        public final double weight;
+        
+        /** The weight associated to this offset, as integer value. */
+        public final int intWeight;
 
-		/**
-		 * Creates a new Offset using a 16-bits integer weight.
-		 * 
-		 * @param dx
-		 *            the offset along the X-axis
-		 * @param dy
-		 *            the offset along the Y-axis
-		 * @param weight
-		 *            the weight of the offset
-		 */
-		public ShortOffset(int dx, int dy, short weight)
-		{
-			this.dx = dx;
-			this.dy = dy;
-			this.weight = weight;
-		}
-	}
-
-	/**
-	 * The shift to a neighbor of a reference pixel, as a pair (dx,dy),
-	 * and the associated weights given as a float.
-	 */
-	public static class FloatOffset
-	{
-		/** The offset along the X-axis */
-		public final int dx;
-		/** The offset along the Y-axis */
-		public final int dy;
-		/** The weight associated to this offset */
-		public final float weight;
-
-		/**
-		 * Creates a new Offset using a floating point weight.
-		 * 
-		 * @param dx
-		 *            the offset along the X-axis
-		 * @param dy
-		 *            the offset along the Y-axis
-		 * @param weight
-		 *            the weight of the offset
-		 */		public FloatOffset(int dx, int dy, float weight)
-		{
-			this.dx = dx;
-			this.dy = dy;
-			this.weight = weight;
-		}
-	}
-
+        /**
+         * Creates a new Offset using a 16-bits integer weight.
+         * 
+         * @param dx
+         *            the offset along the X-axis
+         * @param dy
+         *            the offset along the Y-axis
+         * @param weight
+         *            the weight of the offset
+         */
+        public Offset(int dx, int dy, int weight)
+        {
+            this.dx = dx;
+            this.dy = dy;
+            this.weight = weight;
+            this.intWeight = weight;
+        }
+        
+        /**
+         * Creates a new Offset using a 16-bits integer weight.
+         * 
+         * @param dx
+         *            the offset along the X-axis
+         * @param dy
+         *            the offset along the Y-axis
+         * @param weight
+         *            the weight of the offset
+         */
+        public Offset(int dx, int dy, double weight)
+        {
+            this.dx = dx;
+            this.dy = dy;
+            this.weight = weight;
+            this.intWeight = (int) weight;
+        }
+        
+        /**
+         * Creates a new Offset using a 16-bits integer weight.
+         * 
+         * @param dx
+         *            the offset along the X-axis
+         * @param dy
+         *            the offset along the Y-axis
+         * @param weight
+         *            the weight of the offset
+         * @param intWeight
+         *            the integer approximation of the weight of the offset
+         */
+        public Offset(int dx, int dy, double weight, int intWeight)
+        {
+            this.dx = dx;
+            this.dy = dy;
+            this.weight = weight;
+            this.intWeight = intWeight;
+        }
+    }
 }

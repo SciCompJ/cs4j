@@ -71,66 +71,66 @@ public class ChamferMask2DW4 extends ChamferMask2D
 	}
 
 	@Override
-	public Collection<ShortOffset> getForwardOffsets()
+	public Collection<Offset> getForwardOffsets()
 	{
 		// create array of forward shifts
-		ArrayList<ShortOffset> offsets = new ArrayList<ShortOffset>(12);
+		ArrayList<Offset> offsets = new ArrayList<Offset>(12);
 	
 		// offsets in the (y-3)-line
-		offsets.add(new ShortOffset(-1, -3, d));
-		offsets.add(new ShortOffset(+1, -3, d));
+		offsets.add(new Offset(-1, -3, d));
+		offsets.add(new Offset(+1, -3, d));
 
 		// offsets in the (y-2)-line
-		offsets.add(new ShortOffset(-1, -2, c));
-		offsets.add(new ShortOffset(+1, -2, c));
+		offsets.add(new Offset(-1, -2, c));
+		offsets.add(new Offset(+1, -2, c));
 		
 		// offsets in the (y-1)-line
-		offsets.add(new ShortOffset(-3, -1, d));
-		offsets.add(new ShortOffset(-2, -1, c));
-		offsets.add(new ShortOffset(-1, -1, b));
-		offsets.add(new ShortOffset( 0, -1, a));
-		offsets.add(new ShortOffset(+1, -1, b));
-		offsets.add(new ShortOffset(+2, -1, c));
-		offsets.add(new ShortOffset(+3, -1, d));
+		offsets.add(new Offset(-3, -1, d));
+		offsets.add(new Offset(-2, -1, c));
+		offsets.add(new Offset(-1, -1, b));
+		offsets.add(new Offset( 0, -1, a));
+		offsets.add(new Offset(+1, -1, b));
+		offsets.add(new Offset(+2, -1, c));
+		offsets.add(new Offset(+3, -1, d));
 		
 		// offsets in the current line
-		offsets.add(new ShortOffset(-1,  0, a));
+		offsets.add(new Offset(-1,  0, a));
 	
 		return offsets;
 	}
 
 	@Override
-	public Collection<ShortOffset> getBackwardOffsets()
+	public Collection<Offset> getBackwardOffsets()
 	{
 		// create array of backward shifts
-		ArrayList<ShortOffset> offsets = new ArrayList<ShortOffset>(12);
+		ArrayList<Offset> offsets = new ArrayList<Offset>(12);
 
 		// offsets in the (y-3)-line
-		offsets.add(new ShortOffset(-1, +3, d));
-		offsets.add(new ShortOffset(+1, +3, d));
+		offsets.add(new Offset(-1, +3, d));
+		offsets.add(new Offset(+1, +3, d));
 		
 		// offsets in the (y+2)-line
-		offsets.add(new ShortOffset(-1, +2, c));
-		offsets.add(new ShortOffset(+1, +2, c));
+		offsets.add(new Offset(-1, +2, c));
+		offsets.add(new Offset(+1, +2, c));
 		
 		// offsets in the (y+1)-line
-		offsets.add(new ShortOffset(-3, +1, d));
-		offsets.add(new ShortOffset(-2, +1, c));
-		offsets.add(new ShortOffset(-1, +1, b));
-		offsets.add(new ShortOffset( 0, +1, a));
-		offsets.add(new ShortOffset(+1, +1, b));
-		offsets.add(new ShortOffset(+2, +1, c));
-		offsets.add(new ShortOffset(+3, +1, d));
+		offsets.add(new Offset(-3, +1, d));
+		offsets.add(new Offset(-2, +1, c));
+		offsets.add(new Offset(-1, +1, b));
+		offsets.add(new Offset( 0, +1, a));
+		offsets.add(new Offset(+1, +1, b));
+		offsets.add(new Offset(+2, +1, c));
+		offsets.add(new Offset(+3, +1, d));
 		
 		// offsets in the current line
-		offsets.add(new ShortOffset(+1,  0, a));
+		offsets.add(new Offset(+1,  0, a));
 		
 
 		return offsets;
 	}
 
 	@Override
-	public short getShortNormalizationWeight()
+	public int getIntegerNormalizationWeight()
 	{
 		return a;
 	}

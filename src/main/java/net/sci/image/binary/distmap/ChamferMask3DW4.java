@@ -74,92 +74,92 @@ public class ChamferMask3DW4 extends ChamferMask3D
 	}
 
 	@Override
-	public Collection<ShortOffset> getForwardOffsets()
+	public Collection<Offset> getForwardOffsets()
 	{
 		// create array of forward shifts
-		ArrayList<ShortOffset> offsets = new ArrayList<ShortOffset>();
+		ArrayList<Offset> offsets = new ArrayList<Offset>();
 	
 		// offsets in the z-2 plane
-		offsets.add(new ShortOffset(-1, -1, -2, e));
-		offsets.add(new ShortOffset(+1, -1, -2, e));
-		offsets.add(new ShortOffset(-1, +1, -2, e));
-		offsets.add(new ShortOffset(+1, +1, -2, e));
+		offsets.add(new Offset(-1, -1, -2, e));
+		offsets.add(new Offset(+1, -1, -2, e));
+		offsets.add(new Offset(-1, +1, -2, e));
+		offsets.add(new Offset(+1, +1, -2, e));
 
 		// offsets in the z-1 plane
-		offsets.add(new ShortOffset(-1, -1, -1, c));
-		offsets.add(new ShortOffset( 0, -1, -1, b));
-		offsets.add(new ShortOffset(+1, -1, -1, c));
-		offsets.add(new ShortOffset(-1,  0, -1, b));
-		offsets.add(new ShortOffset( 0,  0, -1, a));
-		offsets.add(new ShortOffset(+1,  0, -1, b));
-		offsets.add(new ShortOffset(-1, +1, -1, c));
-		offsets.add(new ShortOffset( 0, +1, -1, b));
-		offsets.add(new ShortOffset(+1, +1, -1, c));
+		offsets.add(new Offset(-1, -1, -1, c));
+		offsets.add(new Offset( 0, -1, -1, b));
+		offsets.add(new Offset(+1, -1, -1, c));
+		offsets.add(new Offset(-1,  0, -1, b));
+		offsets.add(new Offset( 0,  0, -1, a));
+		offsets.add(new Offset(+1,  0, -1, b));
+		offsets.add(new Offset(-1, +1, -1, c));
+		offsets.add(new Offset( 0, +1, -1, b));
+		offsets.add(new Offset(+1, +1, -1, c));
 		
 		// "type e" offsets in z-1 plane
-		offsets.add(new ShortOffset(-1, -2, -1, e));
-		offsets.add(new ShortOffset(+1, -2, -1, e));
-		offsets.add(new ShortOffset(-2, -1, -1, e));
-		offsets.add(new ShortOffset(+2, -1, -1, e));
-		offsets.add(new ShortOffset(-2, +1, -1, e));
-		offsets.add(new ShortOffset(+2, +1, -1, e));
-		offsets.add(new ShortOffset(-1, +2, -1, e));
-		offsets.add(new ShortOffset(+1, +2, -1, e));
+		offsets.add(new Offset(-1, -2, -1, e));
+		offsets.add(new Offset(+1, -2, -1, e));
+		offsets.add(new Offset(-2, -1, -1, e));
+		offsets.add(new Offset(+2, -1, -1, e));
+		offsets.add(new Offset(-2, +1, -1, e));
+		offsets.add(new Offset(+2, +1, -1, e));
+		offsets.add(new Offset(-1, +2, -1, e));
+		offsets.add(new Offset(+1, +2, -1, e));
 
 	
 		// offsets in the current plane
-		offsets.add(new ShortOffset(-1, -1,  0, b));
-		offsets.add(new ShortOffset( 0, -1,  0, a));
-		offsets.add(new ShortOffset(+1, -1,  0, b));
-		offsets.add(new ShortOffset(-1,  0,  0, a));
+		offsets.add(new Offset(-1, -1,  0, b));
+		offsets.add(new Offset( 0, -1,  0, a));
+		offsets.add(new Offset(+1, -1,  0, b));
+		offsets.add(new Offset(-1,  0,  0, a));
 	
 		return offsets;
 	}
 
 	@Override
-	public Collection<ShortOffset> getBackwardOffsets()
+	public Collection<Offset> getBackwardOffsets()
 	{
 		// create array of backward shifts
-		ArrayList<ShortOffset> offsets = new ArrayList<ShortOffset>();
+		ArrayList<Offset> offsets = new ArrayList<Offset>();
 
 		// offsets in the z+2 plane
-		offsets.add(new ShortOffset(-1, -1, +2, e));
-		offsets.add(new ShortOffset(+1, -1, +2, e));
-		offsets.add(new ShortOffset(-1, +1, +2, e));
-		offsets.add(new ShortOffset(+1, +1, +2, e));
+		offsets.add(new Offset(-1, -1, +2, e));
+		offsets.add(new Offset(+1, -1, +2, e));
+		offsets.add(new Offset(-1, +1, +2, e));
+		offsets.add(new Offset(+1, +1, +2, e));
 
 		// offsets in the z+1 plane
-		offsets.add(new ShortOffset(-1, -1, +1, c));
-		offsets.add(new ShortOffset( 0, -1, +1, b));
-		offsets.add(new ShortOffset(+1, -1, +1, c));
-		offsets.add(new ShortOffset(-1,  0, +1, b));
-		offsets.add(new ShortOffset( 0,  0, +1, a));
-		offsets.add(new ShortOffset(+1,  0, +1, b));
-		offsets.add(new ShortOffset(-1, +1, +1, c));
-		offsets.add(new ShortOffset( 0, +1, +1, b));
-		offsets.add(new ShortOffset(+1, +1, +1, c));
+		offsets.add(new Offset(-1, -1, +1, c));
+		offsets.add(new Offset( 0, -1, +1, b));
+		offsets.add(new Offset(+1, -1, +1, c));
+		offsets.add(new Offset(-1,  0, +1, b));
+		offsets.add(new Offset( 0,  0, +1, a));
+		offsets.add(new Offset(+1,  0, +1, b));
+		offsets.add(new Offset(-1, +1, +1, c));
+		offsets.add(new Offset( 0, +1, +1, b));
+		offsets.add(new Offset(+1, +1, +1, c));
 		
 		// "type e" offsets in z+1 plane
-		offsets.add(new ShortOffset(-1, -2, +1, e));
-		offsets.add(new ShortOffset(+1, -2, +1, e));
-		offsets.add(new ShortOffset(-2, -1, +1, e));
-		offsets.add(new ShortOffset(+2, -1, +1, e));
-		offsets.add(new ShortOffset(-2, +1, +1, e));
-		offsets.add(new ShortOffset(+2, +1, +1, e));
-		offsets.add(new ShortOffset(-1, +2, +1, e));
-		offsets.add(new ShortOffset(+1, +2, +1, e));
+		offsets.add(new Offset(-1, -2, +1, e));
+		offsets.add(new Offset(+1, -2, +1, e));
+		offsets.add(new Offset(-2, -1, +1, e));
+		offsets.add(new Offset(+2, -1, +1, e));
+		offsets.add(new Offset(-2, +1, +1, e));
+		offsets.add(new Offset(+2, +1, +1, e));
+		offsets.add(new Offset(-1, +2, +1, e));
+		offsets.add(new Offset(+1, +2, +1, e));
 
 		// offsets in the current plane
-		offsets.add(new ShortOffset(-1, +1,  0, b));
-		offsets.add(new ShortOffset( 0, +1,  0, a));
-		offsets.add(new ShortOffset(+1, +1,  0, b));
-		offsets.add(new ShortOffset(+1,  0,  0, a));
+		offsets.add(new Offset(-1, +1,  0, b));
+		offsets.add(new Offset( 0, +1,  0, a));
+		offsets.add(new Offset(+1, +1,  0, b));
+		offsets.add(new Offset(+1,  0,  0, a));
 
 		return offsets;
 	}
 
 	@Override
-	public short getShortNormalizationWeight()
+	public int getIntegerNormalizationWeight()
 	{
 		return a;
 	}
