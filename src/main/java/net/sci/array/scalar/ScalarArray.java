@@ -9,7 +9,6 @@ import java.util.function.UnaryOperator;
 import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.NumericArray;
-import net.sci.array.binary.BinaryArray;
 
 /**
  * Specialization of the Array interface that contains Scalar values. 
@@ -170,60 +169,21 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     public void setValue(int[] pos, double value);
     
     /**
-     * Iterates over numerical values of this scalar array that correspond to a
-     * true value in the mask array.
+     * Returns an <code>Iterable</code> over the (double) values within the
+     * array. This allows to query information about the population of values
+     * using constructs like the following:
      * 
-     * @param mask
-     *            a binary array the same size as this array that specifies the
-     *            values to iterate
-     * @return the selected values
-     */
-    public default Iterable<Double> selectValues(BinaryArray mask)
-    {
-        // check array dimensions
-        if (!Arrays.isSameSize(this, mask))
-        {
-            throw new IllegalArgumentException("Mask array must have same size as input array");
-        }
-        
-        // create new iterable
-        return new Iterable<Double>()
-        {
-            public java.util.Iterator<Double> iterator()
-            {
-                return new java.util.Iterator<Double>()
-                {
-                    PositionIterator iter = mask.trueElementPositionIterator();
-                    
-                    @Override
-                    public boolean hasNext()
-                    {
-                        return iter.hasNext();
-                    }
-
-                    @Override
-                    public Double next()
-                    {
-                        int[] pos = iter.next();
-                        return ScalarArray.this.getValue(pos);
-                    }
-                };
-            }
-        };
-    }
-    
-    /**
-     * Returns an Iterable over the (double) values within the array.
-     * This allows to query information about the population of values using constructs like the following:
-     * <pre>{@code
-     * double vMin = Double.POSITIVE_INFINTIY;
-     * for (double v : array.values())
-     * {
-     *    vMin = Math.min(v, vMin);
+     * <pre>
+     * {@code
+     *     double vMin = Double.POSITIVE_INFINTIY;
+     *     for (double v : array.values())
+     *     {
+     *         vMin = Math.min(v, vMin);
+     *     }
      * }
-     * }</pre>
+     * </pre>
      * 
-     * Default behaviour is to wrap a position iterator, and return values
+     * Default behavior is to wrap a position iterator, and return values
      * according to the <code>getValue(int...)</code> method.
      * 
      * @see #positionIterator()

@@ -11,6 +11,8 @@ import net.sci.array.Array2D;
 import net.sci.array.generic.GenericArray2D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt8;
+import net.sci.array.scalar.UInt8Array2D;
 
 /**
  * @author dlegland
@@ -69,6 +71,28 @@ public class BinaryArrayTest
         assertTrue(array.get(4, 3).getBoolean());
     }
     
+    
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryArray#selectElements(Array)}.
+     */
+    @Test
+    public final void testSelect()
+    {
+        UInt8Array2D array = UInt8Array2D.create(6,  4);
+        array.fillInts((x,y) -> y * 10 + x);
+        BinaryArray2D mask = BinaryArray2D.create(6,  4);
+        mask.fillBooleans((x,y) -> x >= 1 && x <= 4 && y >= 1 && y <= 2);
+        
+        double acc = 0;
+        for (UInt8 val : mask.selectElements(array))
+        {
+            acc += val.getValue();
+        }
+        
+        assertEquals(30*4+10*2, acc, 0.01);
+    }
+
+
     /**
      * Test method for {@link net.sci.array.binary.BinaryArray#view(int[], java.util.function.Function)}.
      */

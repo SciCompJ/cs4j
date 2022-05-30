@@ -5,9 +5,6 @@ package net.sci.array.scalar;
 
 import java.util.function.Function;
 
-import net.sci.array.Arrays;
-import net.sci.array.binary.BinaryArray;
-
 /**
  * @author dlegland
  *
@@ -46,50 +43,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 		}
 		return vMax;
 	}
-
-    /**
-     * Iterates over numerical values of this scalar array that correspond to a
-     * true value in the mask array.
-     * 
-     * @param mask
-     *            a binary array the same size as this array that specifies the
-     *            values to iterate
-     * @return the selected values
-     */
-    public default Iterable<Integer> selectInts(BinaryArray mask)
-    {
-        // check array dimensions
-        if (!Arrays.isSameSize(this, mask))
-        {
-            throw new IllegalArgumentException("Mask array must have same size as input array");
-        }
-        
-        // create new iterable
-        return new Iterable<Integer>()
-        {
-            public java.util.Iterator<Integer> iterator()
-            {
-                return new java.util.Iterator<Integer>()
-                {
-                    PositionIterator iter = mask.trueElementPositionIterator();
-                    
-                    @Override
-                    public boolean hasNext()
-                    {
-                        return iter.hasNext();
-                    }
-
-                    @Override
-                    public Integer next()
-                    {
-                        int[] pos = iter.next();
-                        return IntArray.this.getInt(pos);
-                    }
-                };
-            }
-        };
-    }
-    
+	
     
 	// =============================================================
 	// New methods

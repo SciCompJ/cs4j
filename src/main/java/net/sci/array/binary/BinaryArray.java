@@ -6,6 +6,7 @@ package net.sci.array.binary;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.Arrays;
 import net.sci.array.process.type.ConvertToBinary;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.ScalarArray;
@@ -163,6 +164,136 @@ public interface BinaryArray extends IntArray<Binary>
     // =============================================================
 	// New methods
 
+    /**
+     * Iterates over elements of the array that correspond to a true value in
+     * this binary array, used as a selection mask.
+     * 
+     * @param array
+     *            the array containing the elements to select
+     * @return the selected elements
+     */
+    public default <T> Iterable<T> selectElements(Array<T> array)
+    {
+        // check array dimensions
+        if (!Arrays.isSameSize(this, array))
+        {
+            throw new IllegalArgumentException("Mask array must have same size as input array");
+        }
+        
+        // create new iterable
+        return new Iterable<T>()
+        {
+            public java.util.Iterator<T> iterator()
+            {
+                return new java.util.Iterator<T>()
+                {
+                    PositionIterator iter = trueElementPositionIterator();
+                    
+                    @Override
+                    public boolean hasNext()
+                    {
+                        return iter.hasNext();
+                    }
+
+                    @Override
+                    public T next()
+                    {
+                        int[] pos = iter.next();
+                        return array.get(pos);
+                    }
+                };
+            }
+        };
+    }
+    
+    /**
+     * Iterates over numerical elements of the specified scalar array that
+     * correspond to a true value in this binary array, used as a selection
+     * mask.
+     * 
+     * @param array
+     *            the array containing the values to select
+     * @return the selected numerical values
+     */
+    public default Iterable<Double> selectValues(ScalarArray<?> array)
+    {
+        // check array dimensions
+        if (!Arrays.isSameSize(this, array))
+        {
+            throw new IllegalArgumentException("Mask array must have same size as input array");
+        }
+        
+        // create new iterable
+        return new Iterable<Double>()
+        {
+            public java.util.Iterator<Double> iterator()
+            {
+                return new java.util.Iterator<Double>()
+                {
+                    PositionIterator iter = trueElementPositionIterator();
+                    
+                    @Override
+                    public boolean hasNext()
+                    {
+                        return iter.hasNext();
+                    }
+
+                    @Override
+                    public Double next()
+                    {
+                        int[] pos = iter.next();
+                        return array.getValue(pos);
+                    }
+                };
+            }
+        };
+    }
+    
+    /**
+     * Iterates over integere values within the specified int array by retaining
+     * only values that correspond to a true value within this binary array,
+     * used as a mask;
+     * 
+     * @param array
+     *            the array containing the integer values to select
+     * @return the selected integer values
+     */
+    public default Iterable<Integer> selectInts(IntArray<?> array)
+    {
+        // check array dimensions
+        if (!Arrays.isSameSize(this, array))
+        {
+            throw new IllegalArgumentException("Mask array must have same size as input array");
+        }
+        
+        // create new iterable
+        return new Iterable<Integer>()
+        {
+            public java.util.Iterator<Integer> iterator()
+            {
+                return new java.util.Iterator<Integer>()
+                {
+                    PositionIterator iter = trueElementPositionIterator();
+                    
+                    @Override
+                    public boolean hasNext()
+                    {
+                        return iter.hasNext();
+                    }
+
+                    @Override
+                    public Integer next()
+                    {
+                        int[] pos = iter.next();
+                        return array.getInt(pos);
+                    }
+                };
+            }
+        };
+    }
+    
+    
+    
     /**
      * Fills this binary array using a function of the elements coordinates.
      * 

@@ -5,8 +5,6 @@ package net.sci.array;
 
 import java.util.function.Function;
 
-import net.sci.array.binary.BinaryArray;
-
 /**
  * N-dimensional array with generic type.
  *
@@ -233,49 +231,6 @@ public interface Array<T> extends Iterable<T>, Dimensional
 		};
 	}
 
-	/**
-	 * Iterates over elements of the array that correspond to a true value in
-	 * the mask array.
-	 * 
-	 * @param mask
-	 *            a binary array the same size as this array that specifies the
-	 *            elements to iterate
-	 * @return the selected elements
-	 */
-	public default Iterable<T> select(BinaryArray mask)
-	{
-		// check array dimensions
-		if (!Arrays.isSameSize(this, mask))
-		{
-			throw new IllegalArgumentException("Mask array must have same size as input array");
-		}
-		
-		// create new iterable
-		return new Iterable<T>()
-		{
-			public java.util.Iterator<T> iterator()
-			{
-				return new java.util.Iterator<T>()
-				{
-					PositionIterator iter = mask.trueElementPositionIterator();
-					
-					@Override
-					public boolean hasNext()
-					{
-						return iter.hasNext();
-					}
-
-					@Override
-					public T next()
-					{
-						int[] pos = iter.next();
-						return Array.this.get(pos);
-					}
-				};
-			}
-		};
-	}
-	
 	/**
      * Return an instance if PositionIterator that allows to iterate over the
      * positions of a multi-dimensional array.
