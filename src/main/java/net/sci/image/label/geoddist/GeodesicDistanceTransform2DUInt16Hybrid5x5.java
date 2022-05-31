@@ -17,6 +17,7 @@ import net.sci.image.data.Cursor2D;
  * @author David Legland
  * 
  */
+@Deprecated
 public class GeodesicDistanceTransform2DUInt16Hybrid5x5 extends AlgoStub implements GeodesicDistanceTransform2D
 {
     // ==================================================

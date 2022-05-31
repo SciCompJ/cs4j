@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import net.sci.array.scalar.UInt16Array2D;
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.image.binary.ChamferWeights2D;
+import net.sci.image.binary.distmap.ChamferMask2D;
 
 public class ChamferDistanceTransform2DUInt16Test
 {
@@ -45,9 +45,8 @@ public class ChamferDistanceTransform2DUInt16Test
             }
         }
 
-        short[] weights = ChamferWeights2D.CHESSBOARD.getShortWeights();
-        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(
-                weights, true);
+        ChamferMask2D mask = ChamferMask2D.CHESSBOARD;
+        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask, true);
         UInt16Array2D result = algo.process2d(image);
 
         assertNotNull(result);
@@ -63,9 +62,8 @@ public class ChamferDistanceTransform2DUInt16Test
         image.fillInt(255);
         image.setInt(4, 4, 0);
 
-        short[] weights = ChamferWeights2D.CITY_BLOCK.getShortWeights();
-        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(
-                weights, false);
+        ChamferMask2D mask = ChamferMask2D.CITY_BLOCK;
+        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask, false);
         UInt16Array2D result = algo.process2d(image);
 
         assertNotNull(result);
@@ -86,9 +84,8 @@ public class ChamferDistanceTransform2DUInt16Test
         image.fillInt(255);
         image.setInt(4, 4, 0);
 
-        short[] weights = ChamferWeights2D.CHESSBOARD.getShortWeights();
-        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(
-                weights, false);
+        ChamferMask2D mask = ChamferMask2D.CHESSBOARD;
+        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask, false);
         UInt16Array2D result = algo.process2d(image);
 
         assertNotNull(result);
@@ -109,9 +106,8 @@ public class ChamferDistanceTransform2DUInt16Test
         image.fillInt(255);
         image.setInt(4, 4, 0);
 
-        short[] weights = ChamferWeights2D.WEIGHTS_23.getShortWeights();
-        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(
-                weights, false);
+        ChamferMask2D mask = ChamferMask2D.fromWeights(new int[] {2, 3});
+        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask, false);
         UInt16Array2D result = algo.process2d(image);
 
         assertNotNull(result);
@@ -132,9 +128,8 @@ public class ChamferDistanceTransform2DUInt16Test
         image.fillInt(255);
         image.setInt(4, 4, 0);
 
-        short[] weights = ChamferWeights2D.BORGEFORS.getShortWeights();
-        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(
-                weights, false);
+        ChamferMask2D mask = ChamferMask2D.BORGEFORS;
+        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask, false);
         UInt16Array2D result = algo.process2d(image);
 
         assertNotNull(result);
@@ -155,9 +150,8 @@ public class ChamferDistanceTransform2DUInt16Test
         image.fillInt(255);
         image.setInt(4, 4, 0);
 
-        short[] weights = ChamferWeights2D.CHESSKNIGHT.getShortWeights();
-        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(
-                weights, false);
+        ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT;
+        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask, false);
         UInt16Array2D result = algo.process2d(image);
 
         assertNotNull(result);
@@ -182,9 +176,8 @@ public class ChamferDistanceTransform2DUInt16Test
         image.fillInt(255);
         image.setInt(6, 6, 0);
 
-        short[] weights = ChamferWeights2D.CHESSKNIGHT.getShortWeights();
-        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(
-                weights, false);
+        ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT;
+        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask, false);
         UInt16Array2D result = algo.process2d(image);
 
         assertNotNull(result);
@@ -213,9 +206,9 @@ public class ChamferDistanceTransform2DUInt16Test
             }
         }
 
-        ChamferDistanceTransform2DUInt16 dt = new ChamferDistanceTransform2DUInt16(
-                ChamferWeights2D.CHESSKNIGHT, true);
-        UInt16Array2D distMap = dt.process2d(image);
+        ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT;
+        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask, true);
+        UInt16Array2D distMap = algo.process2d(image);
 
         // value 0 in background
         assertEquals(0, distMap.getValue(0, 0), .1);

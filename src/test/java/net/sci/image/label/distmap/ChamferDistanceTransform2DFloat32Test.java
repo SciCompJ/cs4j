@@ -28,7 +28,7 @@ import org.junit.Test;
 
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.image.binary.ChamferWeights2D;
+import net.sci.image.binary.distmap.ChamferMask2D;
 
 public class ChamferDistanceTransform2DFloat32Test {
 
@@ -43,8 +43,8 @@ public class ChamferDistanceTransform2DFloat32Test {
 			}
 		}
 		
-		float[] weights = ChamferWeights2D.CHESSBOARD.getFloatWeights();
-		ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(weights, true);
+		ChamferMask2D mask = ChamferMask2D.CHESSBOARD;
+		ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(mask, true);
 		Float32Array2D result = algo.process2d(image);
 		
 		assertNotNull(result);
@@ -60,8 +60,8 @@ public class ChamferDistanceTransform2DFloat32Test {
 		image.fillInt(255);
 		image.setInt(4, 4, 0);
 		
-		float[] weights = ChamferWeights2D.CITY_BLOCK.getFloatWeights();
-		ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = ChamferMask2D.CITY_BLOCK;
+        ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		Float32Array2D result = algo.process2d(image);
 		
 		assertNotNull(result);
@@ -81,8 +81,8 @@ public class ChamferDistanceTransform2DFloat32Test {
 		image.fillInt(255);
 		image.setInt(4, 4, 0);
 		
-		float[] weights = ChamferWeights2D.CHESSBOARD.getFloatWeights();
-		ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = ChamferMask2D.CHESSBOARD;
+        ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		Float32Array2D result = algo.process2d(image);
 		
 		assertNotNull(result);
@@ -103,8 +103,8 @@ public class ChamferDistanceTransform2DFloat32Test {
         image.fillInt(255);
 		image.setInt(4, 4, 0);
 		
-		float[] weights = ChamferWeights2D.WEIGHTS_23.getFloatWeights();
-		ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = ChamferMask2D.fromWeights(new int[] {2, 3});
+        ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		Float32Array2D result = algo.process2d(image);
 		
 		assertNotNull(result);
@@ -125,8 +125,8 @@ public class ChamferDistanceTransform2DFloat32Test {
 		image.fillInt(255);
 		image.setInt(4, 4, 0);
 		
-		float[] weights = ChamferWeights2D.BORGEFORS.getFloatWeights();
-		ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = ChamferMask2D.BORGEFORS;
+        ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		Float32Array2D result = algo.process2d(image);
 		
 		assertNotNull(result);
@@ -151,8 +151,8 @@ public class ChamferDistanceTransform2DFloat32Test {
         image.fillInt(255);
 		image.setInt(6, 6, 0);
 		
-		float[] weights = ChamferWeights2D.CHESSKNIGHT.getFloatWeights();
-		ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(weights, false);
+		ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT;
+        ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(mask, false);
 		Float32Array2D result = algo.process2d(image);
 		
 		assertNotNull(result);
@@ -184,7 +184,8 @@ public class ChamferDistanceTransform2DFloat32Test {
 			}
 		}
 		
-		ChamferDistanceTransform2DFloat32 ldt = new ChamferDistanceTransform2DFloat32(ChamferWeights2D.CHESSKNIGHT, true);
+		ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT;
+        ChamferDistanceTransform2DFloat32 ldt = new ChamferDistanceTransform2DFloat32(mask, true);
 		Float32Array2D distMap = ldt.process2d(image);
 
 		// value 0 in backgrounf

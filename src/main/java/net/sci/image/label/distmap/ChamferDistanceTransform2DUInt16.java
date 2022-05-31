@@ -4,12 +4,16 @@
 package net.sci.image.label.distmap;
 
 
+import java.util.Collection;
+
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.IntArray2D;
+import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array2D;
-import net.sci.image.binary.ChamferWeights2D;
+import net.sci.image.binary.distmap.ChamferMask2D;
+import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 
 /**
  * <p>Computes 2D Chamfer distance maps using in a 3x3 or 5x5 neighborhood of each
@@ -31,7 +35,11 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
     // ==================================================
     // Class variables
 
-    private short[] weights = new short[]{3, 4, 5};
+    /**
+     * The chamfer mask used to propagate distances to neighbor pixels.
+     */
+    ChamferMask2D mask;
+
 
 	/**
 	 * Flag for dividing final distance map by the value first weight. 
@@ -44,23 +52,20 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
     // ==================================================
     // Constructors 
     
-	public ChamferDistanceTransform2DUInt16(ChamferWeights2D weights, boolean normalize)
-	{
-		this(weights.getShortWeights(), normalize);
-	}
+    public ChamferDistanceTransform2DUInt16(ChamferMask2D mask)
+    {
+        this.mask = mask;
+    }
+
+    public ChamferDistanceTransform2DUInt16(ChamferMask2D mask, boolean normalize)
+    {
+        this.mask = mask;
+        this.normalizeMap = normalize;
+    }
 
 	public ChamferDistanceTransform2DUInt16(short[] weights, boolean normalize)
 	{
-		this.weights = weights;
-		
-		// ensure array of weights is long enough
-		if (weights.length < 3) 
-		{
-			this.weights = new short[3];
-			this.weights[0] = weights[0];
-			this.weights[1] = weights[1];
-			this.weights[2] = (short) (weights[0] + weights[1]);
-		}
+		this.mask = ChamferMask2D.fromWeights(weights);
 		this.normalizeMap = normalize;
 	}
 
@@ -107,7 +112,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         {
             for (int x = 0; x < sizeX; x++)
             {
-                distMap.setInt(x, y, labelMap.getInt(x, y) > 0 ? Short.MAX_VALUE : 0);
+                distMap.setInt(x, y, labelMap.getInt(x, y) > 0 ? UInt16.MAX_VALUE : 0);
             }
         }
         
@@ -119,18 +124,11 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Forward Scan"));
 
-        // Initialize pairs of offset and weights
-        int[] dx = new int[]{-1, +1,  -2, -1,  0, +1, +2,  -1};
-        int[] dy = new int[]{-2, -2,  -1, -1, -1, -1, -1,   0};
-        short[] dw = new short[] { 
-                weights[2], weights[2], 
-                weights[2], weights[1], weights[0], weights[1], weights[2], 
-                weights[0] };
-
         // size of image
         int sizeX = labelMap.size(0);
         int sizeY = labelMap.size(1);
-
+        Collection<Offset> offsets = mask.getForwardOffsets();
+        
         // Iterate over pixels
         for (int y = 0; y < sizeY; y++)
 		{
@@ -148,11 +146,11 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                 int newDist = currentDist;
                 
                 // iterate over neighbors
-                for (int i = 0; i < dx.length; i++)
+                for (Offset offset : offsets)
                 {
                     // compute neighbor coordinates
-                    int x2 = x + dx[i];
-                    int y2 = y + dy[i];
+                    int x2 = x + offset.dx;
+                    int y2 = y + offset.dy;
                     
                     // check bounds
                     if (x2 < 0 || x2 >= sizeX)
@@ -163,12 +161,12 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                     if (labelMap.getInt(x2, y2) == label)
                     {
                         // Foreground pixel: increment distance
-                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + dw[i]);
+                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.intWeight);
                     }
                     else
                     {
                         // Background pixel: init with first weight
-                        newDist = Math.min(newDist, dw[i]);
+                        newDist = Math.min(newDist, offset.intWeight);
                     }
                 }
                 
@@ -187,18 +185,11 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
 
-        // Initialize pairs of offset and weights
-        int[] dx = new int[]{+1, -1,  +2, +1,  0, -1, -2,  +1};
-        int[] dy = new int[]{+2, +2,  +1, +1, +1, +1, +1,   0};
-        short[] dw = new short[] { 
-                weights[2], weights[2], 
-                weights[2], weights[1], weights[0], weights[1], weights[2], 
-                weights[0] };
-        
         // size of image
         int sizeX = labelMap.size(0);
         int sizeY = labelMap.size(1);
-
+        Collection<Offset> offsets = mask.getBackwardOffsets();
+        
         // Iterate over pixels
         for (int y = sizeY - 1; y >= 0; y--)
 		{
@@ -216,11 +207,11 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                 int newDist = currentDist;
                 
                 // iterate over neighbors
-                for (int i = 0; i < dx.length; i++)
+                for (Offset offset : offsets)
                 {
                     // compute neighbor coordinates
-                    int x2 = x + dx[i];
-                    int y2 = y + dy[i];
+                    int x2 = x + offset.dx;
+                    int y2 = y + offset.dy;
                     
                     // check bounds
                     if (x2 < 0 || x2 >= sizeX)
@@ -231,12 +222,12 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                     if (labelMap.getInt(x2, y2) == label)
                     {
                         // Foreground pixel: increment distance
-                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + dw[i]);
+                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.intWeight);
                     }
                     else
                     {
                         // Background pixel: init with first weight
-                        newDist = Math.min(newDist, dw[i]);
+                        newDist = Math.min(newDist, offset.intWeight);
                     }
                 }
                 
@@ -258,13 +249,16 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         int sizeX = labelMap.size(0);
         int sizeY = labelMap.size(1);
         
-	    for (int y = 0; y < sizeY; y++)
+        // retrieve the minimum weight
+        double w0 = mask.getIntegerNormalizationWeight();
+        
+        for (int y = 0; y < sizeY; y++)
 	    {
 	        for (int x = 0; x < sizeX; x++) 
 	        {
 	            if (labelMap.getInt(x, y) > 0) 
 	            {
-	                distMap.setInt(x, y, distMap.getInt(x, y) / weights[0]);
+	                distMap.setInt(x, y, (int) Math.round(distMap.getInt(x, y) / w0));
 	            }
 	        }
 	    }

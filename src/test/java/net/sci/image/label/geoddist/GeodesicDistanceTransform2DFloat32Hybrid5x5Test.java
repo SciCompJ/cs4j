@@ -20,6 +20,7 @@ import net.sci.image.binary.ChamferWeights2D;
  * @author dlegland
  *
  */
+@Deprecated
 public class GeodesicDistanceTransform2DFloat32Hybrid5x5Test
 {
 	/**

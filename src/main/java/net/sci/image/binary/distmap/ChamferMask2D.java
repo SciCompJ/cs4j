@@ -30,8 +30,7 @@ public abstract class ChamferMask2D
 	public final static ChamferMask2D CHESSBOARD = new ChamferMask2DW2(1, 1);
 	
 	/**
-	 * Use weights 1 for orthogonal neighbors and 2 for diagonal neighbors,
-	 * and 3 for cube-diagonals.
+	 * Use weights 1 for orthogonal neighbors and 2 for diagonal neighbors.
 	 */
 	public final static ChamferMask2D CITY_BLOCK = new ChamferMask2DW2(1, 2);
 	
@@ -56,10 +55,11 @@ public abstract class ChamferMask2D
 	public final static ChamferMask2D CHESSKNIGHT = new ChamferMask2DW3(5, 7, 11);
 
 	/**
-	 * Chamfer mask in the 7-by-7 neighborhood defined using four weights.
-	 * Weights are 12, 17, 27, and 38. The "sixth" is approximated by 17+27=44,
-	 * very close from the value proposed by Borgefors (1986).
-	 */
+     * Chamfer mask in the 7-by-7 neighborhood defined using four weights.
+     * Weights are 12, 17, 27, and 38. The "fifth" one (shift 3,2) is
+     * approximated by weights 17+27=44, very close from the value proposed by
+     * Borgefors (1986).
+     */
 	public final static ChamferMask2D VERWER = new ChamferMask2DW4(12, 17, 27, 38);
 	
 	

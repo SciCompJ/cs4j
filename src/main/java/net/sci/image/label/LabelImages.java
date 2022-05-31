@@ -9,11 +9,13 @@ import java.util.TreeSet;
 
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.*;
+import net.sci.image.binary.distmap.ChamferMask2D;
+import net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid;
 import net.sci.image.label.distmap.ChamferDistanceTransform2DFloat32;
 import net.sci.image.label.distmap.ChamferDistanceTransform2DUInt16;
+import net.sci.image.label.distmap.DistanceTransform2D;
 import net.sci.image.label.geoddist.GeodesicDistanceTransform2D;
-import net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid5x5;
-import net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid5x5;
+import net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid;
 
 /**
  * A collection of static methods for processing label images.
@@ -129,6 +131,40 @@ public class LabelImages
      * 
      * @param labelMap
      *            the input array of labels
+     * @param chamferMask
+     *            the 2D chamfer mask to use for propagating distances
+     * @param floatingPoint
+     *            boolean flag indicating whether result should be provided as
+     *            <code>Float32</code> (if true) or as <code>UInt16</code> (if
+     *            false).
+     * @param normalize
+     *            indicates whether the resulting distance map should be
+     *            normalized (divide distances by the first chamfer weight)
+     * @return the distance map obtained after applying the distance transform
+     */
+    public static final ScalarArray2D<?> distanceMap2d(IntArray2D<?> labelMap,
+            ChamferMask2D chamferMask, boolean floatingPoint, boolean normalize)
+    {
+        DistanceTransform2D algo = floatingPoint
+                ? new ChamferDistanceTransform2DFloat32(chamferMask, normalize)
+                : new ChamferDistanceTransform2DUInt16(chamferMask, normalize);
+        return algo.process2d(labelMap);
+    }
+
+    /**
+     * <p>
+     * Computes the distance map from a boolean 2D array, by specifying
+     * weights and normalization.
+     * </p>
+     * 
+     * <p>
+     * Distance is computed for each foreground (white) pixel, as the chamfer
+     * distance to the nearest background (black) pixel. Result is given as a
+     * new instance of IntArray2D.
+     * </p>
+     * 
+     * @param labelMap
+     *            the input array of labels
      * @param weights
      *            an array of chamfer weights, with at least two values
      * @param normalize
@@ -189,7 +225,38 @@ public class LabelImages
      */
     public static final ScalarArray<?> geodesicDistanceMap2d(BinaryArray2D marker, IntArray2D<?> labelMap) 
     {
-        return geodesicDistanceMap2d(marker, labelMap, new float[]{5, 7, 11}, true);
+        return geodesicDistanceMap2d(marker, labelMap, ChamferMask2D.CHESSKNIGHT, true, true);
+    }
+    
+    /**
+     * Computes the geodesic distance transform (or geodesic distance map) of a
+     * binary image of marker, constrained to a mask of labels. Returns the
+     * result in a new instance of Float32Array2D or Int16Array2D, depending on
+     * the value of the <code>floatingPoint</code> option.
+     * 
+     * @param marker
+     *            the binary image of marker
+     * @param mask
+     *            the array of labels used as masks
+     * @param chamferMask
+     *            the 2D chamfer mask to use for propagating distances
+     * @param floatingPoint
+     *            boolean flag indicating whether result should be provided as
+     *            <code>Float32</code> (if true) or as <code>UInt16</code> (if
+     *            false).
+     * @param normalize
+     *            indicates whether the resulting distance map should be
+     *            normalized (divide distances by the first chamfer weight)
+     * @return the geodesic distance map in a new ScalarArray2D
+     */
+    public static final ScalarArray2D<?> geodesicDistanceMap2d(BinaryArray2D marker,
+            IntArray2D<?> mask, ChamferMask2D chamferMask, boolean floatingPoint, boolean normalize) 
+    {
+        GeodesicDistanceTransform2D algo;
+        algo = floatingPoint
+                ? new GeodesicDistanceTransform2DFloat32Hybrid(chamferMask, normalize)
+                : new GeodesicDistanceTransform2DUInt16Hybrid(chamferMask, normalize);
+        return algo.process2d(marker, mask);
     }
     
     /**
@@ -211,8 +278,8 @@ public class LabelImages
     public static final ScalarArray2D<?> geodesicDistanceMap2d(BinaryArray2D marker,
             IntArray2D<?> labelMap, short[] weights, boolean normalize) 
     {
-        GeodesicDistanceTransform2D algo;
-        algo = new GeodesicDistanceTransform2DUInt16Hybrid5x5(weights, normalize);
+        ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
+        GeodesicDistanceTransform2D algo = new GeodesicDistanceTransform2DFloat32Hybrid(mask, normalize);
         return algo.process2d(marker, labelMap);
     }
     
@@ -235,8 +302,8 @@ public class LabelImages
     public static final ScalarArray2D<?> geodesicDistanceMap2d(BinaryArray2D marker,
             IntArray2D<?> labelMap, float[] weights, boolean normalize) 
     {
-        GeodesicDistanceTransform2D algo;
-        algo = new GeodesicDistanceTransform2DFloat32Hybrid5x5(weights, normalize);
+        ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
+        GeodesicDistanceTransform2D algo = new GeodesicDistanceTransform2DFloat32Hybrid(mask, normalize);
         return algo.process2d(marker, labelMap);
     }
    
