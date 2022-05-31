@@ -16,7 +16,7 @@ import net.sci.array.scalar.UInt8Array2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
-import net.sci.image.binary.ChamferWeights2D;
+import net.sci.image.binary.distmap.ChamferMask2D;
 
 /**
  * @author dlegland
@@ -44,7 +44,7 @@ public class GeodesicDiameterTest
             }
         }
         
-        GeodesicDiameter algo = new GeodesicDiameter(ChamferWeights2D.BORGEFORS);
+        GeodesicDiameter algo = new GeodesicDiameter(ChamferMask2D.BORGEFORS);
         int[] labels = new int[]{1, 2, 3, 4, 5};
         GeodesicDiameter.Result[] geodDiams = algo.analyzeRegions(labelImage, labels, new Calibration(2));
         
@@ -65,7 +65,7 @@ public class GeodesicDiameterTest
         Image image = Image.readImage(new File(fileName));
         image.clearCalibration();
         
-        GeodesicDiameter algo = new GeodesicDiameter(ChamferWeights2D.CHESSKNIGHT);
+        GeodesicDiameter algo = new GeodesicDiameter(ChamferMask2D.CHESSKNIGHT);
         Map<Integer, GeodesicDiameter.Result> geodDiams = algo.analyzeRegions(image);
         
         // check result size
@@ -89,7 +89,7 @@ public class GeodesicDiameterTest
             image.setInt(x, 1, 4);
         }
 
-        GeodesicDiameter algo = new GeodesicDiameter(ChamferWeights2D.BORGEFORS);
+        GeodesicDiameter algo = new GeodesicDiameter(ChamferMask2D.CHESSKNIGHT);
         algo.setComputePaths(true);
         
         int[] labels = new int[]{4};
@@ -98,6 +98,6 @@ public class GeodesicDiameterTest
 
         assertEquals(1, geodDiams.length);
         List<Point2D> path1 = geodDiams[0].path;
-        assertEquals(4, path1.size());
+        assertEquals(7, path1.size());
     }
 }

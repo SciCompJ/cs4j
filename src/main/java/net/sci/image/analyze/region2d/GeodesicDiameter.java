@@ -15,13 +15,13 @@ import net.sci.array.scalar.ScalarArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;
 import net.sci.image.ImageAxis;
-import net.sci.image.binary.ChamferWeights2D;
+import net.sci.image.binary.distmap.ChamferMask2D;
 import net.sci.image.data.Cursor2D;
 import net.sci.image.label.LabelImages;
 import net.sci.image.label.LabelValues;
 import net.sci.image.label.LabelValues.PositionValuePair2D;
-import net.sci.image.label.geoddist.GeodesicDistanceTransform2D;
-import net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid5x5;
+import net.sci.image.label.geoddist.ChamferGeodesicDistanceTransform2D;
+import net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid;
 import net.sci.table.Table;
 
 
@@ -31,7 +31,7 @@ import net.sci.table.Table;
  * Computation is based on the geodesic propagation of a marker within each
  * region. Chamfer distances are used for propagating distances.
  *
- * @see net.sci.image.binary.ChamferWeights2D
+ * @see net.sci.image.binary.distmap.ChamferMask2D
  * @see net.sci.image.label.geoddist.GeodesicDistanceTransform2D
  * 
  * @author dlegland
@@ -44,7 +44,7 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
     /**
      * The algorithm used for computing geodesic distances.
      */
-    GeodesicDistanceTransform2D geodesicDistanceTransform;
+    ChamferGeodesicDistanceTransform2D geodesicDistanceTransform;
 
     boolean computePaths = false;
     
@@ -71,7 +71,7 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
      */
     public GeodesicDiameter()
     {
-        this(new GeodesicDistanceTransform2DFloat32Hybrid5x5(ChamferWeights2D.CHESSKNIGHT.getFloatWeights(), true));
+        this(new GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D.CHESSKNIGHT, true));
     }
     
     /**
@@ -81,9 +81,9 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
      *            the array of weights for orthogonal, diagonal, and eventually
      *            chess-knight moves neighbors
      */
-    public GeodesicDiameter(ChamferWeights2D weights) 
+    public GeodesicDiameter(ChamferMask2D mask) 
     {
-        this(new GeodesicDistanceTransform2DFloat32Hybrid5x5(weights, true));
+        this(new GeodesicDistanceTransform2DFloat32Hybrid(mask, true));
     }
     
     /**
@@ -95,7 +95,7 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
      */
     public GeodesicDiameter(float[] weights) 
     {
-        this(new GeodesicDistanceTransform2DFloat32Hybrid5x5(weights, true));
+        this(new GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D.fromWeights(weights), true));
     }
     
     /**
@@ -105,7 +105,7 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
      *            the instance of Geodesic Distance Transform calculator used
      *            for propagating distances
      */
-    public GeodesicDiameter(GeodesicDistanceTransform2D gdt) 
+    public GeodesicDiameter(ChamferGeodesicDistanceTransform2D gdt) 
     {
         this.geodesicDistanceTransform = gdt;
     }
@@ -126,7 +126,8 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
 
     public void setChamferWeights(float[] weights)
     {
-        this.geodesicDistanceTransform = new GeodesicDistanceTransform2DFloat32Hybrid5x5(weights, true);
+        ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
+        this.geodesicDistanceTransform = new GeodesicDistanceTransform2DFloat32Hybrid(mask, true);
     }
 
 
@@ -154,8 +155,8 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
         // Compute distance map from label borders to identify centers
         // (The distance map correctly processes adjacent borders)
         this.fireStatusChanged(this, "Initializing pseudo geodesic centers...");
-        float[] weights = ChamferWeights2D.CHESSKNIGHT.getFloatWeights();
-        ScalarArray2D<?> distanceMap = LabelImages.distanceMap2d(labelMap, weights, true);
+        ChamferMask2D mask = ChamferMask2D.CHESSKNIGHT;
+        ScalarArray2D<?> distanceMap = LabelImages.distanceMap2d(labelMap, mask, true, true);
     
         // Extract position of maxima
         PositionValuePair2D[] innerCircles = LabelValues.findMaxValues2d(labelMap, labels, distanceMap);
