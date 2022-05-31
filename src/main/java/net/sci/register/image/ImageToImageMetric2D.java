@@ -14,7 +14,7 @@ import net.sci.geom.geom2d.Point2D;
  * @author dlegland
  *
  */
-public abstract class ImageToImageMetric2d
+public abstract class ImageToImageMetric2D
 {
 	
 //	BivariateFunction img1;

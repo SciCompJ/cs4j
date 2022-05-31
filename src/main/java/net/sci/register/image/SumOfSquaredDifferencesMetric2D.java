@@ -12,7 +12,7 @@ import net.sci.geom.geom2d.Point2D;
  * @author dlegland
  *
  */
-public class SumOfSquaredDifferencesMetric2d extends ImageToImageMetric2d
+public class SumOfSquaredDifferencesMetric2D extends ImageToImageMetric2D
 {
 
 	/* (non-Javadoc)

@@ -15,9 +15,9 @@ import net.sci.geom.geom2d.Point2D;
  * @author dlegland
  *
  */
-public class MeanSquaredDifferencesMetric2d extends ImageToImageMetric2d
+public class MeanSquaredDifferencesMetric2D extends ImageToImageMetric2D
 {
-	public MeanSquaredDifferencesMetric2d()
+	public MeanSquaredDifferencesMetric2D()
 	{
 		
 	}

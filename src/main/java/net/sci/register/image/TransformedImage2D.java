@@ -13,19 +13,19 @@ import net.sci.array.scalar.ScalarArray2D;
  * @author dlegland
  *
  */
-public class TransformedImage2d implements ScalarFunction2D
+public class TransformedImage2D implements ScalarFunction2D
 {
 	Transform2D transform;
 	
 	ScalarFunction2D image;
 	
-	public TransformedImage2d(ScalarArray2D<?> image, Transform2D transform)
+	public TransformedImage2D(ScalarArray2D<?> image, Transform2D transform)
 	{
 		this.image = new LinearInterpolator2D(image);
 		this.transform = transform;
 	}
 
-	public TransformedImage2d(ScalarFunction2D image, Transform2D transform)
+	public TransformedImage2D(ScalarFunction2D image, Transform2D transform)
 	{
 		this.image = image;
 		this.transform = transform;

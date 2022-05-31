@@ -18,14 +18,14 @@ public class SimpleImageRegistrationEvaluator implements ScalarFunction
 {
 	ScalarFunction2D refImage;
 
-	TransformedImage2d transformedImage;
+	TransformedImage2D transformedImage;
 	
-	ImageToImageMetric2d metric;
+	ImageToImageMetric2D metric;
 	
 	Collection<Point2D> points;
 	
 	public SimpleImageRegistrationEvaluator(ScalarFunction2D refImage,
-			TransformedImage2d transformedImage, ImageToImageMetric2d metric,
+			TransformedImage2D transformedImage, ImageToImageMetric2D metric,
 			Collection<Point2D> points)
 	{
 		this.refImage = refImage;
