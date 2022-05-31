@@ -23,10 +23,12 @@ package net.sci.image.binary;
  * ScalarArray3D result = algo.process3d(inputArray);
  * </code></pre>
  *
+ * @deprecated replaced by  net.sci.image.binary.distmap.ChamferMask3D
  * 
  * @see net.sci.image.binary.distmap.DistanceTransform3D
  * @see net.sci.image.binary.BinaryImages#distanceMap(net.sci.array.data.scalar3d.BooleanArray3D)
  */
+@Deprecated
 public enum ChamferWeights3D
 {
 	/** Use weight equal to 1 for all neighbors */

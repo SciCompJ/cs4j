@@ -14,6 +14,7 @@ import org.junit.Test;
  * @author dlegland
  *
  */
+@Deprecated
 public class GeodesicDistanceTransform2DFloat32Scanning5x5Test
 {
 	/**

@@ -12,6 +12,7 @@ import net.sci.image.binary.ChamferWeights2D;
  * @author David Legland
  * 
  */
+@Deprecated
 public class GeodesicDistanceTransform2DFloat32Scanning5x5 extends AlgoStub implements GeodesicDistanceTransform2D
 {
     // ==================================================

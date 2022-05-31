@@ -14,6 +14,7 @@ import net.sci.array.scalar.IntArray2D;
  * @author dlegland
  *
  */
+@Deprecated
 public class GeodesicDistanceTransform2DUInt16Scanning5x5Test
 {
 	/**

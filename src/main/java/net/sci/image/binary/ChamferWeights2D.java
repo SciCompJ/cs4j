@@ -25,9 +25,12 @@ package net.sci.image.binary;
  *	ImagePlus resultPlus = BinaryImages.distanceMap(image, shortWeights, normalize);
  * }</pre>
  * 
+ * @deprecated replaced by  net.sci.image.binary.distmap.ChamferMask2D
+ * 
  * @see net.sci.image.binary.distmap.DistanceTransform2D
  * @see net.sci.image.binary.BinaryImages#distanceMap(net.sci.array.data.scalar2d.BooleanArray2D)
  */
+@Deprecated
 public enum ChamferWeights2D
 {
 	/** Use weight equal to 1 for all neighbors */
