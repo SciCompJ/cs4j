@@ -5,6 +5,11 @@ package net.sci.array;
 
 import java.util.function.Function;
 
+import net.sci.array.process.shape.Flip;
+import net.sci.array.process.shape.PermuteDimensions;
+import net.sci.array.process.shape.Reshape;
+import net.sci.array.process.shape.Squeeze;
+
 /**
  * N-dimensional array with generic type.
  *
@@ -40,37 +45,59 @@ public interface Array<T> extends Iterable<T>, Dimensional
     /**
      * Creates a new array with new dimensions and containing the same elements.
      * 
+     * @see net.sci.array.process.shape.Reshape;
+     * 
      * @param newDims
      *            the dimensions of the new array
      * @return a new array with same type and containing the same elements
      */
     public default Array<T> reshape(int... newDims)
     {
-        // check dimension consistency
-        int n2 = 1;
-        for (int dim : newDims)
-        {
-            n2 *= dim;
-        }
-        if (n2 != this.elementCount())
-        {
-            throw new IllegalArgumentException("The element number should not change after reshape.");
-        }
-        
-        // allocate memory
-        Array<T> res = this.newInstance(newDims);
-        
-        // iterate using a pair of Iterator instances
-        Iterator<T> iter1 = this.iterator();
-        Iterator<T> iter2 = res.iterator();
-        while(iter1.hasNext())
-        {
-            iter2.setNext(iter1.next());
-        }
-        
-        return res;
+        return new Reshape(newDims).process(this);
     }
-   
+    
+    /**
+     * Flips the content of an array along the specified dimension.
+     *
+     * @see net.sci.array.process.shape.Flip
+     * 
+     * @param dim
+     *            the dimension to flip along
+     * @return the array after flip
+     */
+    public default Array<T> flip(int dim)
+    {
+        return new Flip(dim).process(this);
+    }
+    
+    /**
+     * Permutes the dimensions of the array.
+     * 
+     * @see net.sci.array.process.shape.PermuteDimensions
+     * 
+     * @param dimOrder
+     *            the indices of the dimensions in the new array. Should be a
+     *            permutation of the integers between 0 and nd.
+     * @return a new array of same type with permuted dimensions.
+     */
+    public default Array<T> permuteDimensions(int[] dimOrder)
+    {
+        return new PermuteDimensions(dimOrder).process(this);
+    }
+    
+    /**
+     * Removes array dimensions whose size is 1.
+     * 
+     * @see net.sci.array.process.shape.Squeeze
+     * 
+     * @return an array with same type and same number of elements, without any
+     *         dimension with size equal to 1.
+     */
+    public default Array<T> squeeze()
+    {
+        return new Squeeze().process(this);
+    }
+    
     
     // ==================================================
     // Interface declaration
@@ -102,9 +129,9 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	/**
 	 * @return the number of elements within this array.
 	 */
-	public default int elementCount()
+	public default long elementCount()
 	{
-	    int n = 1;
+	    long n = 1;
 	    for (int dim : size())
 	        n *= dim;
 	    return n;

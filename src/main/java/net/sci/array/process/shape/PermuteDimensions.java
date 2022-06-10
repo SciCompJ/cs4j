@@ -30,8 +30,9 @@ import net.sci.array.ArrayOperator;
  */
 public class PermuteDimensions extends AlgoStub implements ArrayOperator
 {
-    /** 
-     * The indices of the dimensions in the new array. Shoud be a permutation of the integers between 0 and nd.
+    /**
+     * The indices of the dimensions in the new array. Should be a permutation
+     * of the integers between 0 and nd-1.
      */
     int[] dimOrder;
 

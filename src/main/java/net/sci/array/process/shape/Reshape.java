@@ -36,10 +36,10 @@ public class Reshape extends AlgoStub implements ArrayOperator
 	public <T> Array<T> process(Array<T> array)
 	{
 	    // compute element number of input array
-	    int prodDims = cumProd(array.size());
+	    long prodDims = array.elementCount();
 	    
         // compute element number of output array
-	    int prodDims2 = cumProd(newDims);
+	    long prodDims2 = Array.prod(newDims);
 	    
 	    // check element numbers are the same
 	    if (prodDims != prodDims2)
@@ -74,22 +74,12 @@ public class Reshape extends AlgoStub implements ArrayOperator
 	public boolean canProcess(Array<?> array)
 	{
         // compute element number of input array
-        int prodDims = cumProd(array.size());
+        long prodDims = array.elementCount();
         
         // compute element number of output array
-        int prodDims2 = cumProd(newDims);
+        long prodDims2 = Array.prod(newDims);
         
         // check element numbers are the same
         return prodDims == prodDims2;
-	}
-	
-	private static final int cumProd(int[] dims)
-	{
-	    int prod = 1;
-	    for (int d : dims)
-        {
-            prod *= d;
-        }
-	    return prod;
 	}
 }
