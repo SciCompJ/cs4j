@@ -32,10 +32,15 @@ public class KMeansSegmentation extends AlgoStub implements ImageArrayOperator
     @Override
     public <T> IntArray<?> process(Array<T> array)
     {
-        Table table;
+        // check table can be created
+        long nElems = array.elementCount();
+        if (nElems > Integer.MAX_VALUE)
+        {
+            throw new RuntimeException("Array has too many elements to be transformed as Table");
+        }
+        int nRows = (int) nElems;
         
-        // get size of table
-        int nRows = array.elementCount();
+        Table table;
         if (array instanceof ScalarArray)
         {
             // type cast
