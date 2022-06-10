@@ -3,6 +3,7 @@
  */
 package net.sci.array.vector;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.scalar.Float32Array;
 
@@ -18,7 +19,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
     // =============================================================
     // Static variables
 
-    public static final Array.Factory<Float32Vector> factory = new Array.Factory<Float32Vector>()
+    public static final Array.Factory<Float32Vector> factory = new DefaultFactory()
     {
         @Override
         public Float32VectorArray create(int[] dims, Float32Vector value)
@@ -85,7 +86,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	}
 
 	@Override
-	public default Array.Factory<Float32Vector> getFactory()
+	public default Array.Factory<Float32Vector> factory()
 	{
 		return factory;
 	}
@@ -125,4 +126,40 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	public interface Iterator extends VectorArray.Iterator<Float32Vector>
 	{
 	}
+    
+	
+    // =============================================================
+    // Specialization of the Factory interface
+
+    /**
+     * Specialization of the ArrayFactory for generating instances of Float32VectorArray.
+     */
+    public interface Factory extends VectorArray.Factory<Float32Vector>
+    {
+        /**
+         * Creates a new Float32VectorArray with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial integer value
+         * @return a new instance of Float32VectorArray
+         */
+        public Float32VectorArray create(int[] dims, Float32Vector value);
+    }
+
+    /**
+     * The default factory for generation of Float32VectorArray instances.
+     */
+    public static class DefaultFactory extends AlgoStub implements Factory
+    {
+        @Override
+        public Float32VectorArray create(int[] dims, Float32Vector value)
+        {
+            Float32VectorArray array = Float32VectorArray.create(dims, value.size());
+            array.fill(value);
+            return array;
+        }
+    };
 }

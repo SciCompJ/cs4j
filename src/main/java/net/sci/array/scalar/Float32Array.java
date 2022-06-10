@@ -9,6 +9,10 @@ import net.sci.array.Array;
 
 
 /**
+ * An array containing 32-bits floating point values.
+ * 
+ * @see Float64Array
+ * 
  * @author dlegland
  *
  */
@@ -17,22 +21,7 @@ public interface Float32Array extends ScalarArray<Float32>
     // =============================================================
     // Static variables
 
-    public static final ScalarArray.Factory<Float32> factory = new ScalarArray.Factory<Float32>()
-    {
-        @Override
-        public ScalarArray<Float32> create(int... dims)
-        {
-            return Float32Array.create(dims);
-        }
-
-        @Override
-        public Float32Array create(int[] dims, Float32 value)
-        {
-            Float32Array array = Float32Array.create(dims);
-            array.fill(value);
-            return array;
-        }
-    };
+    public static final Factory defaultFactory = new DenseFloat32ArrayFactory();
 
     
 	// =============================================================
@@ -246,9 +235,9 @@ public interface Float32Array extends ScalarArray<Float32>
 	}
 	
 	@Override
-	public default ScalarArray.Factory<Float32> getFactory()
+	public default ScalarArray.Factory<Float32> factory()
 	{
-		return factory;
+		return defaultFactory;
 	}
 
     @Override
@@ -558,5 +547,37 @@ public interface Float32Array extends ScalarArray<Float32>
         {
             return newDims[dim];
         }
+    }
+    
+    
+    // =============================================================
+    // Specialization of the Factory interface
+
+    /**
+     * Specialization of the ArrayFactory for generating instances of Float32Array.
+     */
+    public interface Factory extends ScalarArray.Factory<Float32>
+    {
+        /**
+         * Creates a new Float32Array of the specified dimensions, initialized
+         * with zeros.
+         * 
+         * @param dims
+         *            the dimensions of the new array
+         * @return a new Float32Array initialized with zeros
+         */
+        public Float32Array create(int... dims);
+
+        /**
+         * Creates a new Float32Array with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial integer value
+         * @return a new instance of IntArray
+         */
+        public Float32Array create(int[] dims, Float32 value);
     }
 }

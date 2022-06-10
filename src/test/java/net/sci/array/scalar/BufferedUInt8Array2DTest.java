@@ -84,7 +84,7 @@ public class BufferedUInt8Array2DTest
 	{
 		UInt8Array2D array = new BufferedUInt8Array2D(6, 5);
 		
-		Array.Factory<UInt8> factory = array.getFactory();
+		Array.Factory<UInt8> factory = array.factory();
 		int[] dims = new int[]{4, 3, 2};
 		Array<UInt8> array2 = factory.create(dims, new UInt8(10));
 		

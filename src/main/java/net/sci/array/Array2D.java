@@ -268,9 +268,9 @@ public abstract class Array2D<T> implements Array<T>
 		}
 
 		@Override
-		public Factory<T> getFactory()
+		public Factory<T> factory()
 		{
-			return this.array.getFactory();
+			return this.array.factory();
 		}
 
 		@Override

@@ -8,6 +8,10 @@ import java.util.function.Function;
 import net.sci.array.Array;
 
 /**
+ * An array containing 32-bits signed integers.
+ * 
+ * @see Int16Array
+ * 
  * @author dlegland
  *
  */
@@ -16,37 +20,15 @@ public interface Int32Array extends IntArray<Int32>
     // =============================================================
     // Static variables
 
-    public static final IntArray.Factory<Int32> factory = new IntArray.Factory<Int32>()
-    {
-        @Override
-        public IntArray<Int32> create(int... dims)
-        {
-            return Int32Array.create(dims);
-        }
+    public static final Factory defaultFactory = new DenseInt32ArrayFactory();
 
-        @Override
-        public Int32Array create(int[] dims, Int32 value)
-        {
-            Int32Array array = Int32Array.create(dims);
-            array.fill(value);
-            return array;
-        }
-    };
-
+    
 	// =============================================================
 	// Static methods
 
 	public static Int32Array create(int... dims)
 	{
-		switch (dims.length)
-		{
-		case 2:
-			return Int32Array2D.create(dims[0], dims[1]);
-		case 3:
-			return Int32Array3D.create(dims[0], dims[1], dims[2]);
-		default:
-			return Int32ArrayND.create(dims);
-		}
+	    return defaultFactory.create(dims);
 	}
 	
 	public static Int32Array create(int[] dims, int[] buffer)
@@ -217,9 +199,9 @@ public interface Int32Array extends IntArray<Int32>
 	}
 
 	@Override
-	public default IntArray.Factory<Int32> getFactory()
+	public default Factory factory()
 	{
-		return factory;
+		return defaultFactory;
 	}
 
     @Override
@@ -524,5 +506,37 @@ public interface Int32Array extends IntArray<Int32>
         {
             return newDims[dim];
         }
+    }
+    
+    
+    // =============================================================
+    // Specialization of the Factory interface
+
+    /**
+     * Specialization of the ArrayFactory for generating instances of Int32Array.
+     */
+    public interface Factory extends IntArray.Factory<Int32>
+    {
+        /**
+         * Creates a new Int32Array of the specified dimensions, initialized
+         * with zeros.
+         * 
+         * @param dims
+         *            the dimensions of the new array
+         * @return a new Int32Array initialized with zeros
+         */
+        public Int32Array create(int... dims);
+
+        /**
+         * Creates a new Int32Array with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial integer value
+         * @return a new instance of IntArray
+         */
+        public Int32Array create(int[] dims, Int32 value);
     }
 }

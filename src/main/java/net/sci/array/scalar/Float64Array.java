@@ -9,6 +9,10 @@ import net.sci.array.Array;
 
 
 /**
+ * An array containing 64-bits floating point values.
+ * 
+ * @see Float32Array
+ * 
  * @author dlegland
  *
  */
@@ -17,23 +21,9 @@ public interface Float64Array extends ScalarArray<Float64>
     // =============================================================
     // Static variables
 
-    public static final ScalarArray.Factory<Float64> factory = new ScalarArray.Factory<Float64>()
-    {
-        @Override
-        public ScalarArray<Float64> create(int... dims)
-        {
-            return Float64Array.create(dims);
-        }
+    public static final Factory defaultFactory = new DenseFloat64ArrayFactory();
 
-        @Override
-        public Float64Array create(int[] dims, Float64 value)
-        {
-            Float64Array array = Float64Array.create(dims);
-            array.fill(value);
-            return array;
-        }
-    };
-
+    
 	// =============================================================
 	// Static methods
 
@@ -240,9 +230,9 @@ public interface Float64Array extends ScalarArray<Float64>
     }
 
     @Override
-    public default ScalarArray.Factory<Float64> getFactory()
+    public default ScalarArray.Factory<Float64> factory()
     {
-        return factory;
+        return defaultFactory;
     }
 
 	@Override
@@ -496,5 +486,37 @@ public interface Float64Array extends ScalarArray<Float64>
         {
             return newDims[dim];
         }
+    }
+    
+
+    // =============================================================
+    // Specialization of the Factory interface
+
+    /**
+     * Specialization of the ArrayFactory for generating instances of Float64Array.
+     */
+    public interface Factory extends ScalarArray.Factory<Float64>
+    {
+        /**
+         * Creates a new Float64Array of the specified dimensions, initialized
+         * with zeros.
+         * 
+         * @param dims
+         *            the dimensions of the new array
+         * @return a new Float64Array initialized with zeros
+         */
+        public Float64Array create(int... dims);
+
+        /**
+         * Creates a new Float64Array with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial integer value
+         * @return a new instance of IntArray
+         */
+        public Float64Array create(int[] dims, Float64 value);
     }
 }

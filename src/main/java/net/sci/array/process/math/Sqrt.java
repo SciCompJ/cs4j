@@ -19,7 +19,7 @@ import net.sci.array.scalar.ScalarArray;
  */
 public class Sqrt extends AlgoStub implements ScalarArrayOperator
 {
-    ScalarArray.Factory<? extends Scalar> factory = Float32Array.factory;
+    ScalarArray.Factory<? extends Scalar> factory = Float32Array.defaultFactory;
 
 	/**
 	 * Empty constructor

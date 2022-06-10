@@ -3,6 +3,7 @@
  */
 package net.sci.array.generic;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 
 /**
@@ -37,14 +38,29 @@ public interface GenericArray<T> extends Array<T>
     }
     
     @Override
-    public default Array.Factory<T> getFactory()
+    public default Array.Factory<T> factory()
     {
-        return new Array.Factory<T>()
+        return new DefaultFactory<T>();
+    }
+    
+    /**
+     * The default factory for generation of GenericArray instances containing
+     * values with type T.
+     */
+    public static class DefaultFactory<T> extends AlgoStub implements Array.Factory<T>
+    {
+        @Override
+        public GenericArray<T> create(int[] dims, T value)
         {
-            public GenericArray<T> create(int[] dims, T value)
+            switch (dims.length)
             {
-                return GenericArray.create(dims, value);
+            case 2:
+                return new BufferedGenericArray2D<T>(dims[0], dims[1], value);
+            case 3:
+                return new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], value);
+            default:
+                return new BufferedGenericArrayND<T>(dims, value);
             }
-        };
-    }    
+        }
+    };
 }

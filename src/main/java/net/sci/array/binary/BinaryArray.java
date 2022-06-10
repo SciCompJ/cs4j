@@ -22,22 +22,7 @@ public interface BinaryArray extends IntArray<Binary>
     // =============================================================
     // Static variables
 
-    public static final IntArray.Factory<Binary> factory = new IntArray.Factory<Binary>()
-    {
-        @Override
-        public IntArray<Binary> create(int... dims)
-        {
-            return BinaryArray.create(dims);
-        }
-
-        @Override
-        public BinaryArray create(int[] dims, Binary value)
-        {
-            BinaryArray array = BinaryArray.create(dims);
-            array.fill(value);
-            return array;
-        }
-    };
+    public static final Factory defaultFactory = new RunLengthBinaryArrayFactory();
     
     
 	// =============================================================
@@ -45,15 +30,7 @@ public interface BinaryArray extends IntArray<Binary>
 
 	public static BinaryArray create(int... dims)
 	{
-		switch (dims.length)
-		{
-		case 2:
-			return BinaryArray2D.create(dims[0], dims[1]);
-		case 3:
-			return BinaryArray3D.create(dims[0], dims[1], dims[2]);
-		default:
-			return BinaryArrayND.create(dims);
-		}
+		return defaultFactory.create(dims);
 	}
 	
 	public static BinaryArray create(int[] dims, boolean[] buffer)
@@ -453,9 +430,9 @@ public interface BinaryArray extends IntArray<Binary>
     }
 
     @Override
-    public default IntArray.Factory<Binary> getFactory()
+    public default Factory factory()
     {
-        return factory;
+        return defaultFactory;
     }
 
 	@Override
@@ -942,5 +919,36 @@ public interface BinaryArray extends IntArray<Binary>
         {
             return newDims[dim];
         }
+    }
+    
+    // =============================================================
+    // Specialization of the Factory interface
+
+    /**
+     * Specialization of the ArrayFactory for generating instances of BinaryArray.
+     */
+    public interface Factory extends IntArray.Factory<Binary>
+    {
+        /**
+         * Creates a new BinaryArray of the specified dimensions, initialized
+         * with zeros.
+         * 
+         * @param dims
+         *            the dimensions of the new array
+         * @return a new BinaryArray initialized with zeros
+         */
+        public BinaryArray create(int... dims);
+
+        /**
+         * Creates a new BinaryArray with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial integer value
+         * @return a new instance of IntArray
+         */
+        public BinaryArray create(int[] dims, Binary value);
     }
 }

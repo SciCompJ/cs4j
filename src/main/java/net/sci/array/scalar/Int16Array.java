@@ -9,6 +9,11 @@ import net.sci.array.Array;
 
 
 /**
+ * An array containing 16-bits signed integers.
+ * 
+ * @see Int32Array
+ * @see UInt16Array
+ * 
  * @author dlegland
  *
  */
@@ -17,37 +22,15 @@ public interface Int16Array extends IntArray<Int16>
     // =============================================================
     // Static variables
 
-    public static final IntArray.Factory<Int16> factory = new IntArray.Factory<Int16>()
-    {
-        @Override
-        public IntArray<Int16> create(int... dims)
-        {
-            return Int16Array.create(dims);
-        }
+    public static final Factory defaultFactory = new DenseInt16ArrayFactory();
 
-        @Override
-        public Int16Array create(int[] dims, Int16 value)
-        {
-            Int16Array array = Int16Array.create(dims);
-            array.fill(value);
-            return array;
-        }
-    };
-
+    
 	// =============================================================
 	// Static methods
 
 	public static Int16Array create(int... dims)
 	{
-		switch (dims.length)
-		{
-		case 2:
-			return Int16Array2D.create(dims[0], dims[1]);
-		case 3:
-			return Int16Array3D.create(dims[0], dims[1], dims[2]);
-		default:
-			return Int16ArrayND.create(dims);
-		}
+	    return defaultFactory.create(dims);
 	}
 	
 	public static Int16Array create(int[] dims, short[] buffer)
@@ -245,9 +228,9 @@ public interface Int16Array extends IntArray<Int16>
 	}
 
 	@Override
-	public default IntArray.Factory<Int16> getFactory()
+	public default Factory factory()
 	{
-		return factory;
+		return defaultFactory;
 	}
 
     @Override
@@ -588,5 +571,36 @@ public interface Int16Array extends IntArray<Int16>
         {
             return newDims[dim];
         }
+    }
+    
+    // =============================================================
+    // Specialization of the Factory interface
+
+    /**
+     * Specialization of the ArrayFactory for generating instances of Int16Array.
+     */
+    public interface Factory extends IntArray.Factory<Int16>
+    {
+        /**
+         * Creates a new Int16Array of the specified dimensions, initialized
+         * with zeros.
+         * 
+         * @param dims
+         *            the dimensions of the new array
+         * @return a new Int16Array initialized with zeros
+         */
+        public Int16Array create(int... dims);
+
+        /**
+         * Creates a new Int16Array with the specified dimensions, filled with
+         * the specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial integer value
+         * @return a new instance of IntArray
+         */
+        public Int16Array create(int[] dims, Int16 value);
     }
 }

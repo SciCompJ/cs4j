@@ -5,7 +5,6 @@ package net.sci.array.binary;
 
 import java.util.function.BiFunction;
 
-import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
 
 /**
@@ -254,9 +253,9 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         }
 
         @Override
-        public IntArray.Factory<Binary> getFactory()
+        public BinaryArray.Factory factory()
         {
-            return this.array.getFactory();
+            return this.array.factory();
         }
         
         @Override

@@ -417,7 +417,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     }
 
     @Override
-    public ScalarArray.Factory<T> getFactory();
+    public ScalarArray.Factory<T> factory();
 
 	public ScalarArray.Iterator<T> iterator();
 	
@@ -614,9 +614,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         }
 
         @Override
-        public Factory<T> getFactory()
+        public Factory<T> factory()
         {
-            return array.getFactory();
+            return array.factory();
         }
 
         @Override
