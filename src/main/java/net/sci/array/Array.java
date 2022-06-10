@@ -183,7 +183,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
     public default Array<T> view(int[] newDims, Function<int[], int[]> coordsMapping)
     {
-        return new View<T>(this, newDims, coordsMapping);
+        return new ReshapeView<T>(this, newDims, coordsMapping);
     }
 
     /**
@@ -423,19 +423,21 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	}
 	
     /**
-     * Utility class to create a generic view on an array using arbitrary
+     * Utility class for creating a reshape view on an array using arbitrary
      * coordinate mapping.
+     *
+     * @see Array#view(int[], Function)
      *
      * @param <T>
      *            The type of the array, that is kept after computing the view.
      */
-    static class View<T> implements Array<T>
+    static class ReshapeView<T> implements Array<T>
     {
-        Array<T> array;
+        protected Array<T> array;
         
-        int[] newDims;
+        protected int[] newDims;
         
-        Function<int[], int[]> coordsMapping;
+        protected Function<int[], int[]> coordsMapping;
 
         /**
          * Creates a generic view on the specified array.
@@ -448,7 +450,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
          *            the mapping from coordinate in view to the coordinates in
          *            the original array.
          */
-        public View(Array<T> array, int[] newDims, Function<int[], int[]> coordsMapping)
+        public ReshapeView(Array<T> array, int[] newDims, Function<int[], int[]> coordsMapping)
         {
             this.array = array;
             this.newDims = newDims;

@@ -279,7 +279,7 @@ public interface Float32Array extends ScalarArray<Float32>
 
     public default Float32Array view(int[] newDims, Function<int[], int[]> coordsMapping)
     {
-        return new View(this, newDims, coordsMapping);
+        return new ReshapeView(this, newDims, coordsMapping);
     }
 
 	@Override
@@ -469,7 +469,13 @@ public interface Float32Array extends ScalarArray<Float32>
 		}
 	}
 
-    static class View implements Float32Array
+    /**
+     * Utility class for creating a reshape view on an array using arbitrary
+     * coordinate mapping.
+     *
+     * @see Float32Array#view(int[], Function)
+     */
+    static class ReshapeView implements Float32Array
     {
         Float32Array array;
         
@@ -478,9 +484,18 @@ public interface Float32Array extends ScalarArray<Float32>
         Function<int[], int[]> coordsMapping;
 
         /**
+         * Creates a reshape view on the specified array that keeps the type of
+         * the original array.
          * 
+         * @param array
+         *            the array to create a view on.
+         * @param newDims
+         *            the dimensions of the view.
+         * @param coordsMapping
+         *            the mapping from coordinate in view to the coordinates in
+         *            the original array.
          */
-        public View(Float32Array array, int[] newDims, Function<int[], int[]> coordsMapping)
+        public ReshapeView(Float32Array array, int[] newDims, Function<int[], int[]> coordsMapping)
         {
             this.array = array;
             this.newDims = newDims;
@@ -492,7 +507,6 @@ public interface Float32Array extends ScalarArray<Float32>
         {
             return array.getFloat(coordsMapping.apply(pos));
         }
-
 
         @Override
         public void setFloat(int[] pos, float value)

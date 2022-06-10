@@ -302,7 +302,7 @@ public interface UInt16Array extends IntArray<UInt16>
 
     public default UInt16Array view(int[] newDims, Function<int[], int[]> coordsMapping)
     {
-        return new View(this, newDims, coordsMapping);
+        return new ReshapeView(this, newDims, coordsMapping);
     }
 
 
@@ -498,7 +498,13 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 	}
 	
-    static class View implements UInt16Array
+    /**
+     * Utility class for creating a reshape view on an array using arbitrary
+     * coordinate mapping.
+     *
+     * @see UInt16Array#view(int[], Function)
+     */
+    static class ReshapeView implements UInt16Array
     {
         UInt16Array array;
         
@@ -507,9 +513,18 @@ public interface UInt16Array extends IntArray<UInt16>
         Function<int[], int[]> coordsMapping;
 
         /**
+         * Creates a reshape view on the specified array that keeps the type of
+         * the original array.
          * 
+         * @param array
+         *            the array to create a view on.
+         * @param newDims
+         *            the dimensions of the view.
+         * @param coordsMapping
+         *            the mapping from coordinate in view to the coordinates in
+         *            the original array.
          */
-        public View(UInt16Array array, int[] newDims, Function<int[], int[]> coordsMapping)
+        public ReshapeView(UInt16Array array, int[] newDims, Function<int[], int[]> coordsMapping)
         {
             this.array = array;
             this.newDims = newDims;
