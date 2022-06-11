@@ -33,8 +33,8 @@ public class MarchingCubesTest
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        assertEquals(6, mesh.vertexNumber());
-        assertEquals(8, mesh.faceNumber());
+        assertEquals(6, mesh.vertexCount());
+        assertEquals(8, mesh.faceCount());
     }
     
     /**
@@ -54,8 +54,8 @@ public class MarchingCubesTest
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        assertEquals(14, mesh.vertexNumber());
-        assertEquals(24, mesh.faceNumber());
+        assertEquals(14, mesh.vertexCount());
+        assertEquals(24, mesh.faceCount());
     }
 
     /**
@@ -75,8 +75,8 @@ public class MarchingCubesTest
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        assertEquals(14, mesh.vertexNumber());
-        assertEquals(24, mesh.faceNumber());
+        assertEquals(14, mesh.vertexCount());
+        assertEquals(24, mesh.faceCount());
     }
 
     /**
@@ -96,8 +96,8 @@ public class MarchingCubesTest
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        assertEquals(14, mesh.vertexNumber());
-        assertEquals(24, mesh.faceNumber());
+        assertEquals(14, mesh.vertexCount());
+        assertEquals(24, mesh.faceCount());
     }
 
     /**
@@ -119,8 +119,8 @@ public class MarchingCubesTest
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        assertEquals(3*14, mesh.vertexNumber());
-        assertEquals(3*24, mesh.faceNumber());
+        assertEquals(3*14, mesh.vertexCount());
+        assertEquals(3*24, mesh.faceCount());
     }
     
     /**
@@ -146,8 +146,8 @@ public class MarchingCubesTest
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        assertEquals(54, mesh.vertexNumber());
-        assertEquals(104, mesh.faceNumber());
+        assertEquals(54, mesh.vertexCount());
+        assertEquals(104, mesh.faceCount());
     }
 
     /**
@@ -169,8 +169,8 @@ public class MarchingCubesTest
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        assertEquals(54, mesh.vertexNumber());
-        assertEquals(104, mesh.faceNumber());
+        assertEquals(54, mesh.vertexCount());
+        assertEquals(104, mesh.faceCount());
     }
 
     /**
@@ -195,8 +195,8 @@ public class MarchingCubesTest
         
         new OffMeshWriter(new File("ringXYMarchingCube.off")).writeMesh(mesh);
         
-        assertEquals(48, mesh.vertexNumber());
-        assertEquals(96, mesh.faceNumber());
+        assertEquals(48, mesh.vertexCount());
+        assertEquals(96, mesh.faceCount());
     }
 
     /**
@@ -221,8 +221,8 @@ public class MarchingCubesTest
         
         new OffMeshWriter(new File("ringXZMarchingCube.off")).writeMesh(mesh);
         
-        assertEquals(48, mesh.vertexNumber());
-        assertEquals(96, mesh.faceNumber());
+        assertEquals(48, mesh.vertexCount());
+        assertEquals(96, mesh.faceCount());
     }
 
     /**
@@ -247,8 +247,8 @@ public class MarchingCubesTest
         
         new OffMeshWriter(new File("ringYZMarchingCube.off")).writeMesh(mesh);
         
-        assertEquals(48, mesh.vertexNumber());
-        assertEquals(96, mesh.faceNumber());
+        assertEquals(48, mesh.vertexCount());
+        assertEquals(96, mesh.faceCount());
     }
 
     /**
@@ -286,8 +286,8 @@ public class MarchingCubesTest
         
         new OffMeshWriter(new File("cubeWithoutCornersMarchingCube.off")).writeMesh(mesh);
         
-        assertEquals(96, mesh.vertexNumber());
-        assertEquals(188, mesh.faceNumber());
+        assertEquals(96, mesh.vertexCount());
+        assertEquals(188, mesh.faceCount());
     }
 
     /**
@@ -332,7 +332,7 @@ public class MarchingCubesTest
         
         new OffMeshWriter(new File("cubeWithoutEdgesMarchingCube.off")).writeMesh(mesh);
         
-        assertEquals(126, mesh.vertexNumber());
-        assertEquals(248, mesh.faceNumber());
+        assertEquals(126, mesh.vertexCount());
+        assertEquals(248, mesh.faceCount());
     }
 }

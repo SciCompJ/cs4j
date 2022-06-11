@@ -632,8 +632,8 @@ public class MarchingCubes extends AlgoStub
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        System.out.println("Vertices: " + mesh.vertexNumber());
-        System.out.println("Faces:    " + mesh.faceNumber());
+        System.out.println("Vertices: " + mesh.vertexCount());
+        System.out.println("Faces:    " + mesh.faceCount());
         
         new OffMeshWriter(new File("singleVertexMarchingCube.off")).writeMesh(mesh);
     }
