@@ -335,4 +335,27 @@ public class MarchingCubesTest
         assertEquals(126, mesh.vertexCount());
         assertEquals(248, mesh.faceCount());
     }
+    
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_Config029() throws IOException
+    {
+        UInt8Array3D array = UInt8Array3D.create(4, 4, 4);
+        array.fillValue(0);
+        array.setInt(1, 1, 1, 10);
+        array.setInt(1, 2, 1, 10);
+        array.setInt(2, 2, 1, 10);
+        array.setInt(1, 1, 2, 10);
+        
+        MarchingCubes mc = new MarchingCubes(5.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("config029.off")).writeMesh(mesh);
+//        
+//        assertEquals(126, mesh.vertexCount());
+//        assertEquals(248, mesh.faceCount());
+    }
 }
