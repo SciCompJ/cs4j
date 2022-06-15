@@ -11,6 +11,7 @@ import java.io.IOException;
 import org.junit.Test;
 
 import net.sci.array.scalar.UInt8Array3D;
+import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.mesh.Mesh3D;
 import net.sci.geom.mesh.io.OffMeshWriter;
 
@@ -343,19 +344,82 @@ public class MarchingCubesTest
     @Test
     public final void testProcess_Config029() throws IOException
     {
-        UInt8Array3D array = UInt8Array3D.create(4, 4, 4);
-        array.fillValue(0);
-        array.setInt(1, 1, 1, 10);
-        array.setInt(1, 2, 1, 10);
-        array.setInt(2, 2, 1, 10);
-        array.setInt(1, 1, 2, 10);
+        UInt8Array3D array = createConfigurationImage_4x4x4(29, 10);
         
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
         new OffMeshWriter(new File("config029.off")).writeMesh(mesh);
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_Config092() throws IOException
+    {
+        UInt8Array3D array = createConfigurationImage_4x4x4(92, 10);
+        
+        MarchingCubes mc = new MarchingCubes(5.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("config092.off")).writeMesh(mesh);
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_Config011() throws IOException
+    {
+        UInt8Array3D array = UInt8Array3D.create(4, 4, 4);
+        array.fillValue(0);
+        array.setInt(1, 1, 1, 10);
+        array.setInt(2, 1, 1, 10);
+        array.setInt(2, 2, 1, 10);
+        
+        MarchingCubes mc = new MarchingCubes(5.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("config011.off")).writeMesh(mesh);
 //        
 //        assertEquals(126, mesh.vertexCount());
 //        assertEquals(248, mesh.faceCount());
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_Ball_R8() throws IOException
+    {
+        UInt8Array3D array = UInt8Array3D.create(20, 20, 20);
+        Point3D center = new Point3D(9.3, 9.4, 9.5);
+        array.fillValues((x,y,z) -> center.distance(x, y, z));
+                
+        MarchingCubes mc = new MarchingCubes(8.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("sphere_R08.off")).writeMesh(mesh);
+    }
+    
+    
+    private static final UInt8Array3D createConfigurationImage_4x4x4(int configIndex, int fillValue)
+    {
+        UInt8Array3D array = UInt8Array3D.create(4, 4, 4);
+        array.fillValue(0);
+        if ((configIndex & 0b0000_0001) > 0) array.setInt(1, 1, 1, fillValue);
+        if ((configIndex & 0b0000_0010) > 0) array.setInt(2, 1, 1, fillValue);
+        if ((configIndex & 0b0000_0100) > 0) array.setInt(1, 2, 1, fillValue);
+        if ((configIndex & 0b0000_1000) > 0) array.setInt(2, 2, 1, fillValue);
+        if ((configIndex & 0b0001_0000) > 0) array.setInt(1, 1, 2, fillValue);
+        if ((configIndex & 0b0010_0000) > 0) array.setInt(2, 1, 2, fillValue);
+        if ((configIndex & 0b0100_0000) > 0) array.setInt(1, 2, 2, fillValue);
+        if ((configIndex & 0b1000_0000) > 0) array.setInt(2, 2, 2, fillValue);
+        
+        return array;
     }
 }
