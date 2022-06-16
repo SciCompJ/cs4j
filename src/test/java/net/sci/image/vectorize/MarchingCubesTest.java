@@ -394,6 +394,36 @@ public class MarchingCubesTest
      * @throws IOException 
      */
     @Test
+    public final void testProcess_Config063() throws IOException
+    {
+        UInt8Array3D array = createConfigurationImage_4x4x4(63, 10);
+        
+        MarchingCubes mc = new MarchingCubes(5.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("config063.off")).writeMesh(mesh);
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_Config253() throws IOException
+    {
+        UInt8Array3D array = createConfigurationImage_4x4x4(253, 10);
+        
+        MarchingCubes mc = new MarchingCubes(5.0);
+        Mesh3D mesh = mc.process(array);
+        
+        new OffMeshWriter(new File("config253.off")).writeMesh(mesh);
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
+     * @throws IOException 
+     */
+    @Test
     public final void testProcess_Ball_R8() throws IOException
     {
         UInt8Array3D array = UInt8Array3D.create(20, 20, 20);
