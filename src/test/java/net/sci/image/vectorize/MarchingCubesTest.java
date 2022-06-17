@@ -394,14 +394,14 @@ public class MarchingCubesTest
      * @throws IOException 
      */
     @Test
-    public final void testProcess_Config063() throws IOException
+    public final void testProcess_Config107() throws IOException
     {
-        UInt8Array3D array = createConfigurationImage_4x4x4(63, 10);
+        UInt8Array3D array = createConfigurationImage_4x4x4(107, 10);
         
         MarchingCubes mc = new MarchingCubes(5.0);
         Mesh3D mesh = mc.process(array);
         
-        new OffMeshWriter(new File("config063.off")).writeMesh(mesh);
+        new OffMeshWriter(new File("config107.off")).writeMesh(mesh);
     }
     
     /**
