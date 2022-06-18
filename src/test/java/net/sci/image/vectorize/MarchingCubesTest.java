@@ -365,59 +365,7 @@ public class MarchingCubesTest
         Mesh3D mesh = mc.process(array);
         
         new OffMeshWriter(new File("config092.off")).writeMesh(mesh);
-    }
-    
-    /**
-     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
-     * @throws IOException 
-     */
-    @Test
-    public final void testProcess_Config011() throws IOException
-    {
-        UInt8Array3D array = UInt8Array3D.create(4, 4, 4);
-        array.fillValue(0);
-        array.setInt(1, 1, 1, 10);
-        array.setInt(2, 1, 1, 10);
-        array.setInt(2, 2, 1, 10);
-        
-        MarchingCubes mc = new MarchingCubes(5.0);
-        Mesh3D mesh = mc.process(array);
-        
-        new OffMeshWriter(new File("config011.off")).writeMesh(mesh);
-//        
-//        assertEquals(126, mesh.vertexCount());
-//        assertEquals(248, mesh.faceCount());
-    }
-    
-    /**
-     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
-     * @throws IOException 
-     */
-    @Test
-    public final void testProcess_Config107() throws IOException
-    {
-        UInt8Array3D array = createConfigurationImage_4x4x4(107, 10);
-        
-        MarchingCubes mc = new MarchingCubes(5.0);
-        Mesh3D mesh = mc.process(array);
-        
-        new OffMeshWriter(new File("config107.off")).writeMesh(mesh);
-    }
-    
-    /**
-     * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
-     * @throws IOException 
-     */
-    @Test
-    public final void testProcess_Config253() throws IOException
-    {
-        UInt8Array3D array = createConfigurationImage_4x4x4(253, 10);
-        
-        MarchingCubes mc = new MarchingCubes(5.0);
-        Mesh3D mesh = mc.process(array);
-        
-        new OffMeshWriter(new File("config253.off")).writeMesh(mesh);
-    }
+    }  
     
     /**
      * Test method for {@link net.sci.image.vectorize.MarchingCubes#process(net.sci.array.scalar.ScalarArray3D)}.
