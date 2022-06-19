@@ -31,10 +31,9 @@ public class Centroid extends RegionAnalyzer2D<Point2D>
 	 * an array of double for each label.
 	 * 
 	 * @param labelImage
-	 *            the input image containing label of particles
+	 *            the input image containing label of regions
 	 * @param labels
-	 *            the array of unique labels in image the number of directions
-	 *            to process, either 2 or 4
+	 *            the array of labels to process within image
 	 * @param calib
 	 *            the calibration of the image
 	 * @return an array containing for each label, the coordinates of the
@@ -52,10 +51,9 @@ public class Centroid extends RegionAnalyzer2D<Point2D>
 	 * coordinates.
 	 * 
 	 * @param labelArray
-	 *            the input image containing label of particles
+	 *            the input image containing label of regions
 	 * @param labels
-	 *            the array of unique labels in image the number of directions
-	 *            to process, either 2 or 4
+     *            the array of labels to process within image
 	 * @return an array containing for each label, the coordinates of the
 	 *         centroid, in pixel coordinates
 	 */
