@@ -107,7 +107,25 @@ public class Vector3D implements Dimensional
                 v1.x * v2.y - v1.y * v2.x);
     }
     
-
+    /**
+     * Computes the angle between two 3D vectors. The result is given between 0
+     * and PI.  
+     *
+     * @param v1 the first vector
+     * @param v2 the second vector
+     * @return the angle between the two vectors, in radians
+     */
+    public static final double angle(Vector3D v1, Vector3D v2)
+    {
+        // compute angle using arc-tangent to get better precision for angles
+        // near zero, see the discussion in: 
+        // http://www.mathworks.com/matlabcentral/newsreader/view_thread/151925#381952
+        double norm = Vector3D.crossProduct(v1, v2).norm();
+        double denom = Vector3D.dotProduct(v1, v2);
+        return Math.atan2(norm, denom);
+    }
+    
+    
     // ===================================================================
 	// class variables
 
