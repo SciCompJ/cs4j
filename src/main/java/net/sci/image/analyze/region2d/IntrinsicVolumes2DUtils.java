@@ -5,6 +5,7 @@ package net.sci.image.analyze.region2d;
 
 import net.sci.image.Calibration;
 import net.sci.image.analyze.region2d.IntrinsicVolumesAnalyzer2D.Result;
+import net.sci.image.data.Connectivity2D;
 
 /**
  * Utility functions for classes that compute 2D intrinsic volumes measures.
@@ -185,6 +186,27 @@ public class IntrinsicVolumes2DUtils
      * binary 2-by-2 configuration of pixels.
      * 
      * @param conn
+     *            the connectivity to use (C4 or C8)
+     * @return an array containing for each 2-by-2 configuration index, the
+     *         corresponding contribution to euler number estimate
+     */
+    public static final double[] eulerNumberLut(Connectivity2D conn)
+    {
+        if(conn == Connectivity2D.C4)
+            return eulerNumberLutC4();
+        else if(conn == Connectivity2D.C8)
+            return eulerNumberLutC8();
+        else
+            throw new IllegalArgumentException("Connectivity must be C4 or C8, not " + conn);
+    }
+    
+    
+    /**
+     * Computes the Look-up table that is used to compute Euler number density.
+     * The result is an array with 16 entries, each entry corresponding to a
+     * binary 2-by-2 configuration of pixels.
+     * 
+     * @param conn
      *            the connectivity to use (4 or 8)
      * @return an array containing for each 2-by-2 configuration index, the
      *         corresponding contribution to euler number estimate
@@ -222,9 +244,29 @@ public class IntrinsicVolumes2DUtils
      * binary 2-by-2 configuration of pixels.
      * 
      * @param conn
+     *            the connectivity to use (C4 or C8)
+     * @return an array containing for each 2-by-2 configuration index, the
+     *         corresponding contribution to Euler number estimate
+     */
+    public static final int[] eulerNumberIntLut(Connectivity2D conn)
+    {
+        if(conn == Connectivity2D.C4)
+            return eulerNumberIntLutC4();
+        else if(conn == Connectivity2D.C8)
+            return eulerNumberIntLutC8();
+        else
+            throw new IllegalArgumentException("Connectivity must be C4 or C8, not " + conn);
+    }
+    
+    /**
+     * Computes the Look-up table that is used to compute Euler number density.
+     * The result is an array with 16 entries, each entry corresponding to a
+     * binary 2-by-2 configuration of pixels.
+     * 
+     * @param conn
      *            the connectivity to use (4 or 8)
      * @return an array containing for each 2-by-2 configuration index, the
-     *         corresponding contribution to euler number estimate
+     *         corresponding contribution to Euler number estimate
      */
     public static final int[] eulerNumberIntLut(int conn)
     {
