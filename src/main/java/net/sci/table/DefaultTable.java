@@ -68,6 +68,8 @@ public class DefaultTable implements Table
 	public DefaultTable(int nRows, int nCols)
 	{
 		this(new double[nCols][nRows]);
+        this.nCols = nCols;
+        this.nRows = nRows;
 	}
 
 	public DefaultTable(double[][] data, String[] colNames, String[] rowNames)
@@ -266,29 +268,28 @@ public class DefaultTable implements Table
 	    }
 	    
 	    // create new data array
-	    double[][] data = new double[nCols+1][nRows];
+	    double[][] newData = new double[nCols+1][nRows];
 	    
-	    // duplicate existing columns
-	    for (int c = 0; c < nCols; c++)
-	    {
-	        System.arraycopy(data[c], 0, this.data[c], 0, nRows);
-	    }
+        // copy columns
+	    System.arraycopy(this.data, 0, newData, 0, nCols);
 	    
 	    // copy new values
-        System.arraycopy(data[nCols], 0, values, 0, nRows);
-        this.data = data;
+        System.arraycopy(values, 0, newData[nCols], 0, nRows);
+        this.data = newData;
         
         // add empty level array
         this.levels.add(null);
         
         // copy column names
-        String[] colNames = new String[nCols+1];
+        String[] newColNames = new String[nCols+1];
         if (this.colNames != null)
         {
-            System.arraycopy(this.colNames, 0, colNames, 0, nCols);
+            System.arraycopy(this.colNames, 0, newColNames, 0, nCols);
         }
-        colNames[nCols] = name;
-        this.colNames = colNames;
+        newColNames[nCols] = name;
+        this.colNames = newColNames;
+        
+        this.nCols++;
 	}
 	
     @Override
