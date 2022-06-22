@@ -69,44 +69,7 @@ public class DefaultAffineTransform3D implements AffineTransform3D
 
 	// ===================================================================
 	// general methods
-
-//	/**
-//	 * Returns the affine transform created by applying first the affine
-//	 * transform given by <code>that</code>, then this affine transform.
-//	 * 
-//	 * @param that
-//	 *            the transform to apply first
-//	 * @return the composition this * that
-//	 */
-//	public MatrixAffineTransform2d concatenate(MatrixAffineTransform2d that)
-//	{
-//		double n00 = this.m00 * that.m00 + this.m01 * that.m10;
-//		double n01 = this.m00 * that.m01 + this.m01 * that.m11;
-//		double n02 = this.m00 * that.m02 + this.m01 * that.m12 + this.m02;
-//		double n10 = this.m10 * that.m00 + this.m11 * that.m10;
-//		double n11 = this.m10 * that.m01 + this.m11 * that.m11;
-//		double n12 = this.m10 * that.m02 + this.m11 * that.m12 + this.m12;
-//		return new MatrixAffineTransform2d(n00, n01, n02, n10, n11, n12);
-//	}
-//
-//	/**
-//	 * Return the affine transform created by applying first this affine
-//	 * transform, then the affine transform given by <code>that</code>.
-//	 * 
-//	 * @param that
-//	 *            the transform to apply in a second step
-//	 * @return the composition that * this
-//	 */
-//	public MatrixAffineTransform2d preConcatenate(MatrixAffineTransform2d that)
-//	{
-//		return new MatrixAffineTransform2d(that.m00 * this.m00 + that.m01 * this.m10,
-//				that.m00 * this.m01 + that.m01 * this.m11, that.m00 * this.m02
-//						+ that.m01 * this.m12 + that.m02, that.m10 * this.m00
-//						+ that.m11 * this.m10, that.m10 * this.m01 + that.m11
-//						* this.m11, that.m10 * this.m02 + that.m11 * this.m12
-//						+ that.m12);
-//	}
-
+   
 	public Point3D transform(Point3D p)
 	{
 		double x = p.getX();

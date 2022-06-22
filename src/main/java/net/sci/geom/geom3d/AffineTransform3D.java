@@ -9,9 +9,15 @@ package net.sci.geom.geom3d;
  */
 public interface AffineTransform3D extends Transform3D
 {
+    // ===================================================================
+    // static members
+    
+    public static AffineTransform3D IDENTITY = new DefaultAffineTransform3D(1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0);
+    
+
 	// ===================================================================
 	// static methods
-
+    
 	/**
 	 * Creates a translation by the given vector.
 	 * 
@@ -168,14 +174,14 @@ public interface AffineTransform3D extends Transform3D
         double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1] + m1[0][2] * m2[2][1];
         double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2] * m2[2][2];
         double n03 = m1[0][0] * m2[0][3] + m1[0][1] * m2[1][3] + m1[0][2] * m2[2][3] + m1[0][3];
-        double n10 = m1[1][0] * m2[1][0] + m1[1][1] * m2[1][0] + m1[1][2] * m2[2][0];
-        double n11 = m1[1][0] * m2[1][1] + m1[1][1] * m2[1][1] + m1[1][2] * m2[2][1];
-        double n12 = m1[1][0] * m2[1][2] + m1[1][1] * m2[1][2] + m1[1][2] * m2[2][2];
-        double n13 = m1[1][0] * m2[1][3] + m1[1][1] * m2[1][3] + m1[1][2] * m2[2][3] + m1[1][3];
-        double n20 = m1[2][0] * m2[1][0] + m1[2][1] * m2[1][0] + m1[2][2] * m2[2][0];
-        double n21 = m1[2][0] * m2[1][1] + m1[2][1] * m2[1][1] + m1[2][2] * m2[2][1];
-        double n22 = m1[2][0] * m2[1][2] + m1[2][1] * m2[1][2] + m1[2][2] * m2[2][2];
-        double n23 = m1[2][0] * m2[1][3] + m1[2][1] * m2[1][3] + m1[2][2] * m2[2][3] + m1[2][3];
+        double n10 = m1[1][0] * m2[0][0] + m1[1][1] * m2[1][0] + m1[1][2] * m2[2][0];
+        double n11 = m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1] + m1[1][2] * m2[2][1];
+        double n12 = m1[1][0] * m2[0][2] + m1[1][1] * m2[1][2] + m1[1][2] * m2[2][2];
+        double n13 = m1[1][0] * m2[0][3] + m1[1][1] * m2[1][3] + m1[1][2] * m2[2][3] + m1[1][3];
+        double n20 = m1[2][0] * m2[0][0] + m1[2][1] * m2[1][0] + m1[2][2] * m2[2][0];
+        double n21 = m1[2][0] * m2[0][1] + m1[2][1] * m2[1][1] + m1[2][2] * m2[2][1];
+        double n22 = m1[2][0] * m2[0][2] + m1[2][1] * m2[1][2] + m1[2][2] * m2[2][2];
+        double n23 = m1[2][0] * m2[0][3] + m1[2][1] * m2[1][3] + m1[2][2] * m2[2][3] + m1[2][3];
         return new DefaultAffineTransform3D(n00, n01, n02, n03, n10, n11, n12, n13, n20, n21, n22, n23);
     }
 
@@ -203,14 +209,14 @@ public interface AffineTransform3D extends Transform3D
         double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1] + m1[0][2] * m2[2][1];
         double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2] * m2[2][2];
         double n03 = m1[0][0] * m2[0][3] + m1[0][1] * m2[1][3] + m1[0][2] * m2[2][3] + m1[0][3];
-        double n10 = m1[1][0] * m2[1][0] + m1[1][1] * m2[1][0] + m1[1][2] * m2[2][0];
-        double n11 = m1[1][0] * m2[1][1] + m1[1][1] * m2[1][1] + m1[1][2] * m2[2][1];
-        double n12 = m1[1][0] * m2[1][2] + m1[1][1] * m2[1][2] + m1[1][2] * m2[2][2];
-        double n13 = m1[1][0] * m2[1][3] + m1[1][1] * m2[1][3] + m1[1][2] * m2[2][3] + m1[1][3];
-        double n20 = m1[2][0] * m2[1][0] + m1[2][1] * m2[1][0] + m1[2][2] * m2[2][0];
-        double n21 = m1[2][0] * m2[1][1] + m1[2][1] * m2[1][1] + m1[2][2] * m2[2][1];
-        double n22 = m1[2][0] * m2[1][2] + m1[2][1] * m2[1][2] + m1[2][2] * m2[2][2];
-        double n23 = m1[2][0] * m2[1][3] + m1[2][1] * m2[1][3] + m1[2][2] * m2[2][3] + m1[2][3];
+        double n10 = m1[1][0] * m2[0][0] + m1[1][1] * m2[1][0] + m1[1][2] * m2[2][0];
+        double n11 = m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1] + m1[1][2] * m2[2][1];
+        double n12 = m1[1][0] * m2[0][2] + m1[1][1] * m2[1][2] + m1[1][2] * m2[2][2];
+        double n13 = m1[1][0] * m2[0][3] + m1[1][1] * m2[1][3] + m1[1][2] * m2[2][3] + m1[1][3];
+        double n20 = m1[2][0] * m2[0][0] + m1[2][1] * m2[1][0] + m1[2][2] * m2[2][0];
+        double n21 = m1[2][0] * m2[0][1] + m1[2][1] * m2[1][1] + m1[2][2] * m2[2][1];
+        double n22 = m1[2][0] * m2[0][2] + m1[2][1] * m2[1][2] + m1[2][2] * m2[2][2];
+        double n23 = m1[2][0] * m2[0][3] + m1[2][1] * m2[1][3] + m1[2][2] * m2[2][3] + m1[2][3];
         return new DefaultAffineTransform3D(n00, n01, n02, n03, n10, n11, n12, n13, n20, n21, n22, n23);
     }
 
@@ -267,5 +273,31 @@ public interface AffineTransform3D extends Transform3D
                 vx * mat[1][0] + vy * mat[1][1] + vz * mat[1][2], 
                 vx * mat[2][0] + vy * mat[2][1] + vz * mat[2][2]);
 	}
-
+	
+	/**
+     * Compares the matrix elements of this affine transform those of the
+     * specified transform, and returns true if all elements are equals up to
+     * the specified tolerance.
+     * 
+     * @param other
+     *            the affine transform to compare with
+     * @param tol
+     *            the absolute tolerance for comparing elements
+     * @return true if the two transforms are similar
+     */
+	public default boolean almostEquals(AffineTransform3D other, double tol)
+	{
+        double[][] m1 = this.affineMatrix();
+        double[][] m2 = other.affineMatrix();
+        
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (Math.abs(m1[i][j] - m2[i][j]) > tol) return false;
+            }
+        }
+        
+        return true;
+	}
 }

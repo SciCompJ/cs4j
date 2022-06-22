@@ -3,7 +3,7 @@
  */
 package net.sci.geom.geom3d;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -26,16 +26,7 @@ public class AffineTransform3DTest
         
         AffineTransform3D trans = tra.concatenate(rot.concatenate(tra.inverse()));
                
-        double[][] mat = trans.affineMatrix();
-        double[][] expMat = exp.affineMatrix();
-        
-        for(int i = 0; i < 3; i++)
-        {
-            for(int j = 0; j < 4; j++)
-            {
-                assertEquals(expMat[i][j], mat[i][j], .01);
-            }
-        }
+        assertTrue(exp.almostEquals(trans, 0.01));
     }
 
     /**
@@ -50,16 +41,44 @@ public class AffineTransform3DTest
         
         AffineTransform3D trans = tra.inverse().preConcatenate(rot).preConcatenate(tra);
                
-        double[][] mat = trans.affineMatrix();
-        double[][] expMat = exp.affineMatrix();
+        assertTrue(exp.almostEquals(trans, 0.01));
+    }
+    
+    
+    /**
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#concatenate(net.sci.geom.geom3d.AffineTransform3D)}.
+     */
+    @Test
+    public final void testConcatenate_RotationsZXYX()
+    {
+        AffineTransform3D rot1 = AffineTransform3D.createRotationOz(Math.PI/2);
+        AffineTransform3D rot2 = AffineTransform3D.createRotationOx(Math.PI/2);
+        AffineTransform3D rot3 = AffineTransform3D.createRotationOy(Math.PI/2);
+        AffineTransform3D rot4 = AffineTransform3D.createRotationOx(-Math.PI/2);
         
-        for(int i = 0; i < 3; i++)
-        {
-            for(int j = 0; j < 4; j++)
-            {
-                assertEquals(expMat[i][j], mat[i][j], .01);
-            }
-        }
+        AffineTransform3D trans = rot4.concatenate(rot3).concatenate(rot2).concatenate(rot1);
+        
+        AffineTransform3D exp = AffineTransform3D.IDENTITY;
+        assertTrue(exp.almostEquals(trans, 0.01));
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#concatenate(net.sci.geom.geom3d.AffineTransform3D)}.
+     */
+    @Test
+    public final void testConcatenate_RotationsYZXZ()
+    {
+        // dummy angle
+        double alpha = 0.20;
+        AffineTransform3D rot1 = AffineTransform3D.createRotationOy(-alpha);
+        AffineTransform3D rot2 = AffineTransform3D.createRotationOz(Math.PI/2);
+        AffineTransform3D rot3 = AffineTransform3D.createRotationOx(-alpha);
+        AffineTransform3D rot4 = AffineTransform3D.createRotationOz(-Math.PI/2);
+        
+        AffineTransform3D trans = rot4.concatenate(rot3).concatenate(rot2).concatenate(rot1);
+        
+        AffineTransform3D exp = AffineTransform3D.IDENTITY;
+        assertTrue(exp.almostEquals(trans, 0.01));
     }
 
 }
