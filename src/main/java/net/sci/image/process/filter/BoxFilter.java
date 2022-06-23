@@ -5,7 +5,6 @@ package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.process.VectorArrayMarginalOperator;
-import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
@@ -26,6 +25,12 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
     /** The size of the box in each dimension */
 	int[] diameters;
 	
+    /**
+     * The factory used to create output array. If set to null (the default), use the factory
+     * of the input array.
+     */
+    ScalarArray.Factory<? extends Scalar> factory = null;
+    
 	/**
 	 * Creates a new instance of box filter by specifying the list of diameters in
 	 * each dimension.
@@ -105,7 +110,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 				// clamp neighbor position to array bounds
 				for (int d = 0; d < nd; d++)
 				{
-					neighPos[d] = Math.min(Math.max(neighPos[d], 0), sizes[d]-1);
+				    neighPos[d] = clamp(neighPos[d], 0, sizes[d] - 1);
 				}
 								
 				// get value of "clamped" neighbor
@@ -162,10 +167,10 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 				// iterate over neighbors
 				for (int y2 = y - ry1; y2 < y + ry2; y2++)
 				{
-					int y2r = Math.min(Math.max(y2, 0), sizeY - 1);
+				    int y2r = clamp(y2, 0, sizeY - 1);
 					for (int x2 = x - rx1; x2 < x + rx2; x2++)
 					{
-						int x2r = Math.min(Math.max(x2, 0), sizeX - 1);
+						int x2r = clamp(x2, 0, sizeX - 1);
 						sum += source.getValue(x2r, y2r);
 					}
 				}
@@ -228,14 +233,14 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 					// iterate over neighbors
 					for (int z2 = z - rz1; z2 < z + rz2; z2++)
 					{
-						int z2r = Math.min(Math.max(z2, 0), sizeZ - 1);
+	                    int z2r = clamp(z2, 0, sizeZ - 1);
 						for (int y2 = y - ry1; y2 < y + ry2; y2++)
 						{
-							int y2r = Math.min(Math.max(y2, 0), sizeY - 1);
+		                    int y2r = clamp(y2, 0, sizeY - 1);
 							for (int x2 = x - rx1; x2 < x + rx2; x2++)
 							{
-								int x2r = Math.min(Math.max(x2, 0), sizeX - 1);
-								sum += source.getValue(x2r, y2r, z2r);
+			                    int x2r = clamp(x2, 0, sizeX - 1);
+			                    sum += source.getValue(x2r, y2r, z2r);
 							}
 						}
 					}
@@ -247,17 +252,38 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 		this.fireProgressChanged(this, 0, sizeZ);
 	}
 	
+	private static final int clamp(int value, int min, int max)
+	{
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
+	}
+	
 	@Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-	    // TODO: choose the class of the output array
-        ScalarArray<?> output = Float32Array.create(array.size());
+	    // choose the ScalarArray factory for creating result
+	    ScalarArray.Factory<? extends Scalar> factory = this.factory;
+	    if (factory == null)
+	    {
+	        factory = array.factory();
+	    }
+	    
+	    // create the output array
+        ScalarArray<?> output = factory.create(array.size());
+        
+        // call the processing method
         processScalar(array, output);
         return output;
     }
 
-//    public boolean canProcess(Array<?> array)
-//	{
-//		return array instanceof ScalarArray;
-//	}
+    /**
+     * Sets up the factory used to create output arrays.
+     * 
+     * @param factory the factory to set
+     */
+    public void setFactory(ScalarArray.Factory<? extends Scalar> factory)
+    {
+        this.factory = factory;
+    }
 }
