@@ -25,6 +25,12 @@ public abstract class ProjectionOperator extends AlgoStub implements ScalarArray
     
     protected int dim;
     
+    /**
+     * The factory used to create output array. If set to null (the default), use the factory
+     * of the input array.
+     */
+    protected ScalarArray.Factory<? extends Scalar> factory = null;
+    
     
     // =============================================================
     // Constructor
@@ -101,10 +107,31 @@ public abstract class ProjectionOperator extends AlgoStub implements ScalarArray
     // Implementation of ScalarArrayOperator interface
     
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> input)
+    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {
-        ScalarArray<?> output = createEmptyOutputArray(input);
-        processScalar(input, output);
+        // choose the ScalarArray factory for creating result
+        ScalarArray.Factory<? extends Scalar> factory = this.factory;
+        if (factory == null)
+        {
+            factory = array.factory();
+        }
+        
+        // create the output array
+        ScalarArray<?> output = factory.create(array.size());
+        
+        // call the processing method
+        processScalar(array, output);
         return output;
+    }
+
+
+    /**
+     * Sets up the factory used to create output arrays.
+     * 
+     * @param factory the factory to set
+     */
+    public void setFactory(ScalarArray.Factory<? extends Scalar> factory)
+    {
+        this.factory = factory;
     }
 }
