@@ -137,27 +137,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	 */
 	public static RGB8Array mergeChannels(UInt8Array redChannel, UInt8Array greenChannel, UInt8Array blueChannel)
 	{
-		// create result array
-		int[] dims = redChannel.size();
-		RGB8Array result = create(dims);
-		
-		// get iterators
-		Iterator rgbIter = result.iterator();
-		UInt8Array.Iterator rIter = redChannel.iterator();
-		UInt8Array.Iterator gIter = greenChannel.iterator();
-		UInt8Array.Iterator bIter = blueChannel.iterator();
-		
-		// iterate over elements of all arrays simultaneously
-		while (rgbIter.hasNext())
-		{
-			int r = rIter.next().getInt();
-			int g = gIter.next().getInt();
-			int b = bIter.next().getInt();
-			rgbIter.forward();
-			rgbIter.set(new RGB8(r, g, b));
-		}
-		
-		return result;
+	    return new MergeChannelsRGB8Array(redChannel, greenChannel, blueChannel);
 	}
 
 	/**
