@@ -7,6 +7,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.Arrays;
+import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
 /**
@@ -28,6 +29,12 @@ public class FiniteDifferences extends AlgoStub implements ArrayOperator
      */
     double spacing = 1.0;
    
+    /**
+     * The factory used to create output array. If set to null (the default), use the factory
+     * of the input array.
+     */
+    protected ScalarArray.Factory<? extends Scalar> factory = null;
+    
     
     // =============================================================
     // Constructors
@@ -87,9 +94,17 @@ public class FiniteDifferences extends AlgoStub implements ArrayOperator
         // class cast source 
         ScalarArray<?> source = (ScalarArray<?>) array;
 
-        // allocate memory for result
-        ScalarArray<?> target = source.newInstance(source.size());
+        // choose the ScalarArray factory for creating result
+        ScalarArray.Factory<? extends Scalar> factory = this.factory;
+        if (factory == null)
+        {
+            factory = source.factory();
+        }
         
+        // create the output array
+        ScalarArray<?> target = factory.create(array.size());
+        
+        // call the processing method        
         processScalar(source, target);
         
         return target;
@@ -139,5 +154,15 @@ public class FiniteDifferences extends AlgoStub implements ArrayOperator
         {
             throw new IllegalArgumentException("Source and Target arrays must have same dimensions");
         }
+    }
+    
+    /**
+     * Sets up the factory used to create output arrays.
+     * 
+     * @param factory the factory to set
+     */
+    public void setFactory(ScalarArray.Factory<? extends Scalar> factory)
+    {
+        this.factory = factory;
     }
 }
