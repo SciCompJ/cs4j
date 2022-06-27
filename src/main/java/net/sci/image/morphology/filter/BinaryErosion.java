@@ -121,7 +121,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
                     // update result only if necessary
                     if (strelRow != null)
                     {
-                        resRow = resRow.intersection(arrayRow.erosion(strelRow));
+                        resRow = BinaryRow.intersection(resRow, arrayRow.erosion(strelRow));
                     }
                 }
             }
@@ -277,7 +277,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
                             // update result only if necessary
                             if (strelRow != null)
                             {
-                                resRow = resRow.intersection(arrayRow.erosion(strelRow));
+                                resRow = BinaryRow.intersection(resRow, arrayRow.erosion(strelRow));
                             }
                         }
                     }
@@ -392,13 +392,13 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         if (row.get(0))
         {
             Run run = new Run(-leftPad, -1);
-            row = row.union(new BinaryRow(run));
+            row = BinaryRow.union(row, new BinaryRow(run));
         }
 
         if (row.get(length - 1))
         {
             Run run = new Run(length, length + rightPad - 1);
-            row = row.union(new BinaryRow(run));
+            row = BinaryRow.union(row, new BinaryRow(run));
         }
         
         return row;

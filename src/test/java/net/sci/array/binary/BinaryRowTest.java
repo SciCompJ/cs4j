@@ -145,7 +145,7 @@ public class BinaryRowTest
         }
         BinaryRow row2 = new BinaryRow();
         
-        BinaryRow res = row1.union(row2);
+        BinaryRow res = BinaryRow.union(row1, row2);
         
         assertEquals(1, res.runs.size());
     }
@@ -163,7 +163,7 @@ public class BinaryRowTest
             row2.set(i, true);
         }
         
-        BinaryRow res = row1.union(row2);
+        BinaryRow res = BinaryRow.union(row1, row2);
         
         assertEquals(1, res.runs.size());
     }
@@ -189,7 +189,7 @@ public class BinaryRowTest
             row2.set(i, true);
         }
         
-        BinaryRow res = row1.union(row2);
+        BinaryRow res = BinaryRow.union(row1, row2);
         
         assertEquals(1, res.runs.size());
         Run run1 = res.runs.firstEntry().getValue();
@@ -218,7 +218,7 @@ public class BinaryRowTest
             row2.set(i, true);
         }
 
-        BinaryRow res = row1.union(row2);
+        BinaryRow res = BinaryRow.union(row1, row2);
         
         assertEquals(1, res.runs.size());
         Run run1 = res.runs.firstEntry().getValue();
@@ -247,7 +247,7 @@ public class BinaryRowTest
             row2.set(i, true);
         }
 
-        BinaryRow res = row1.union(row2);
+        BinaryRow res = BinaryRow.union(row1, row2);
         
         assertEquals(1, res.runs.size());
         Run run1 = res.runs.firstEntry().getValue();
@@ -264,7 +264,7 @@ public class BinaryRowTest
         BinaryRow row1 = new BinaryRow();
         BinaryRow row2 = new BinaryRow();
 
-        BinaryRow res = row1.intersection(row2);
+        BinaryRow res = BinaryRow.intersection(row1, row2);
         
         assertTrue(res.isEmpty());
     }
@@ -280,7 +280,7 @@ public class BinaryRowTest
         BinaryRow row2 = new BinaryRow();
         row2.setRange(4, 7, true);
 
-        BinaryRow res = row1.intersection(row2);
+        BinaryRow res = BinaryRow.intersection(row1, row2);
         
         assertEquals(1, res.runs.size());
         assertTrue(containsRun(res, 4, 5));
@@ -302,7 +302,7 @@ public class BinaryRowTest
         row2.setRange(16, 19, true);
         row2.setRange(24, 33, true);
 
-        BinaryRow res = row1.intersection(row2);
+        BinaryRow res = BinaryRow.intersection(row1, row2);
         
         assertEquals(3, res.runs.size());
         assertTrue(containsRun(res, 16, 19));

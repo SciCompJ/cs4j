@@ -88,7 +88,7 @@ public class RunLengthBinaryReconstruction3D
                 BinaryRow row2 = mask2.getRow(y, z);
                 if (row2 != null)
                 {
-                    row = row.intersection(row2);
+                    row = BinaryRow.intersection(row, row2);
                     for (Run run : row.runs())
                     {
                         markers.add(new RunHandle3D(run, y, z));

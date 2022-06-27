@@ -56,7 +56,7 @@ public class LogicalBinaryOperator extends AlgoStub
         {
             if (row1 == null) return null; 
             if (row2 == null) return null; 
-            return row1.intersection(row2);
+            return BinaryRow.intersection(row1, row2);
         }
     };
 
@@ -70,7 +70,7 @@ public class LogicalBinaryOperator extends AlgoStub
         protected BinaryRow processRowPair(BinaryRow row1, BinaryRow row2, int rowLength)
         {
             return row1 != null 
-                    ? row2 != null ? row1.union(row2) : row1.duplicate() 
+                    ? row2 != null ? BinaryRow.union(row1, row2) : row1.duplicate() 
                     : row2 != null ? row2.duplicate() : null;
         }
     };
@@ -146,8 +146,7 @@ public class LogicalBinaryOperator extends AlgoStub
                     continue;
                 }
                 
-                System.err.println("arg, should not reach this line...");
-                break;
+                throw new RuntimeException("Algorithmic error in computation of AND_NOT operator for binary rows");
             }
             
             // add the remaining runs of first row

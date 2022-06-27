@@ -28,6 +28,138 @@ import java.util.TreeSet;
 public class BinaryRow implements Iterable<Run>
 {
     // =============================================================
+    // Static methods
+
+    /**
+     * Computes the union of two rows.
+     * 
+     * @param row1
+     *            the first row
+     * @param row2
+     *            the second row
+     * @return the result if the union of the two rows
+     */
+    public static final BinaryRow union(BinaryRow row1, BinaryRow row2)
+    {
+        // create empty result row
+        BinaryRow resRow = new BinaryRow();
+        
+        // create structure to iterate over both rows in parallel.
+        RunIteratorPair rip = new RunIteratorPair(row1, row2);
+        
+        // main iteration, breaking when both run1 and run2 are null
+        // (assumes we start from background)
+        while(rip.run1 != null || rip.run2 != null)
+        {
+            // case of first row with no more runs
+            if (rip.run1 == null)
+            {
+                // add remaining runs of row2
+                resRow.addRun(rip.run2);
+                while (rip.runs2.hasNext())
+                {
+                    resRow.addRun(rip.runs2.next());
+                }
+                break;
+            }
+            
+            // case of second row with no more runs
+            if (rip.run2 == null)
+            {
+                // add remaining runs of row1
+                resRow.addRun(rip.run1);
+                resRow.runs.put(rip.run1.left, rip.run1);
+                while (rip.runs1.hasNext())
+                {
+                    resRow.addRun(rip.runs1.next());
+                }
+                break;
+            }
+            
+            // From here, there are remaining runs in both row1 and row2 
+            
+            // start processing with the run with the lowest left value
+            // -> enforce run1 to have the lowest left value 
+            if (rip.run1.left > rip.run2.left)
+            {
+                rip.swap();
+            }
+
+            // initialize new run with current run1
+            int newLeft = rip.run1.left;
+            int newRight = rip.run1.right;
+            
+            // process next run 
+            rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
+            
+            // update right value of new run, and add it to list of runs
+            newRight = rip.findRightExtremityOfUnion(newRight);
+            resRow.addRun(new Run(newLeft, newRight));
+        }
+        
+        // create the new row from list of runs
+        return resRow;
+    }
+    
+    /**
+     * Computes the intersection of this row with the input row.
+     * 
+     * @param row2
+     *            the row to combine with
+     * @return the result if the intersection of this row and the other row.
+     */
+    public static final BinaryRow intersection(BinaryRow row1, BinaryRow row2)
+    {
+        // create empty result row
+        BinaryRow row = new BinaryRow();
+        
+        // create structure to iterate over both rows in parallel.
+        RunIteratorPair rip = new RunIteratorPair(row1, row2);
+        
+        // main iteration, breaking when either run1 or run2 is null
+        while(rip.run1 != null && rip.run2 != null)
+        {
+            // start processing with the run with the lowest left value
+            // -> enforce run1 to have the lowest left value 
+            if (rip.run1.left > rip.run2.left)
+            {
+                rip.swap();
+            }
+            
+            // if the run in row2 start after the end of run1, there is no intersection
+            // and we skip current run1 
+            if (rip.run2.left > rip.run1.right)
+            {
+                // process next run 
+                rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
+                continue;
+            }
+            
+            // we have: run1.left <= run2.left <= run1.right
+            // compute bounds of the new run
+            int newLeft = rip.run2.left;
+            int newRight;
+            if (rip.run1.right < rip.run2.right)
+            {
+                // run1 ends before run2
+                newRight = rip.run1.right;
+                rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
+            }
+            else
+            {
+                // run2 ends before run1
+                newRight = rip.run2.right;
+                rip.run2 = rip.runs2.hasNext() ? rip.runs2.next() : null;
+            }
+            row.runs.put(newLeft, new Run(newLeft, newRight));
+        }
+        
+        // create the new row from list of runs
+        return row;
+    }
+    
+    
+    // =============================================================
     // Class fields
 
     /**
@@ -100,7 +232,7 @@ public class BinaryRow implements Iterable<Run>
         for (Run run : row.runs.values())
         {
             BinaryRow resDil = this.dilationLeftRight(-run.left, run.right);
-            res = res.union(resDil);
+            res = union(res, resDil);
         }
         return res;
     }
@@ -118,7 +250,7 @@ public class BinaryRow implements Iterable<Run>
         for (Run run : row.runs.values())
         {
             BinaryRow resEro = this.dilationLeftRight(run.left, -run.right);
-            res = res.intersection(resEro);
+            res = intersection(res, resEro);
         }
         return res;
     }
@@ -168,132 +300,6 @@ public class BinaryRow implements Iterable<Run>
         
         // create the new row from list of runs
         return new BinaryRow(newRuns);
-    }
-    
-    /**
-     * Computes the union of this row with the input row.
-     * 
-     * @param row
-     *            the row to combine with
-     * @return the result if the union of this row and the other row.
-     */
-    public BinaryRow union(BinaryRow row)
-    {
-        // create empty result row
-        BinaryRow resRow = new BinaryRow();
-        
-        // create structure to iterate over both rows in parallel.
-        RunIteratorPair rip = new RunIteratorPair(this, row);
-        
-        // main iteration, breaking when both run1 and run2 are null
-        // (assumes we start from background)
-        while(rip.run1 != null || rip.run2 != null)
-        {
-            // case of first row with no more runs
-            if (rip.run1 == null)
-            {
-                // add remaining runs of row2
-                resRow.addRun(rip.run2);
-                while (rip.runs2.hasNext())
-                {
-                    resRow.addRun(rip.runs2.next());
-                }
-                break;
-            }
-            
-            // case of second row with no more runs
-            if (rip.run2 == null)
-            {
-                // add remaining runs of row1
-                resRow.addRun(rip.run1);
-                resRow.runs.put(rip.run1.left, rip.run1);
-                while (rip.runs1.hasNext())
-                {
-                    resRow.addRun(rip.runs1.next());
-                }
-                break;
-            }
-            
-            // From here, there are remaining runs in both row1 and row2 
-            
-            // start processing with the run with the lowest left value
-            // -> enforce run1 to have the lowest left value 
-            if (rip.run1.left > rip.run2.left)
-            {
-                rip.swap();
-            }
-
-            // initialize new run with current run1
-            int newLeft = rip.run1.left;
-            int newRight = rip.run1.right;
-            
-            // process next run 
-            rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
-            
-            // update right value of new run, and add it to list of runs
-            newRight = rip.findRightExtremityOfUnion(newRight);
-            resRow.addRun(new Run(newLeft, newRight));
-        }
-        
-        // create the new row from list of runs
-        return resRow;
-    }
-    
-    /**
-     * Computes the intersection of this row with the input row.
-     * 
-     * @param row2
-     *            the row to combine with
-     * @return the result if the intersection of this row and the other row.
-     */
-    public BinaryRow intersection(BinaryRow row2)
-    {
-        // create empty result row
-        BinaryRow row = new BinaryRow();
-        
-        // create structure to iterate over both rows in parallel.
-        RunIteratorPair rip = new RunIteratorPair(this, row2);
-        
-        // main iteration, breaking when either run1 or run2 is null
-        while(rip.run1 != null && rip.run2 != null)
-        {
-            // start processing with the run with the lowest left value
-            // -> enforce run1 to have the lowest left value 
-            if (rip.run1.left > rip.run2.left)
-            {
-                rip.swap();
-            }
-            
-            // if the run in row2 start after the end of run1, there is no intersection
-            // and we skip current run1 
-            if (rip.run2.left > rip.run1.right)
-            {
-                // process next run 
-                rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
-                continue;
-            }
-            
-            // we have: run1.left <= run2.left <= run1.right
-            // compute bounds of the new run
-            int newLeft = rip.run2.left;
-            int newRight;
-            if (rip.run1.right < rip.run2.right)
-            {
-                // run1 ends before run2
-                newRight = rip.run1.right;
-                rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
-            }
-            else
-            {
-                // run2 ends before run1
-                newRight = rip.run2.right;
-                rip.run2 = rip.runs2.hasNext() ? rip.runs2.next() : null;
-            }
-            row.runs.put(newLeft, new Run(newLeft, newRight));
-        }
-        
-        // create the new row from list of runs
-        return row;
     }
     
     /**
