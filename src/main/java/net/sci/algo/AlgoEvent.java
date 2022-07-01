@@ -17,11 +17,36 @@ public class AlgoEvent
 	 */
 	private Object source;
 	
+	/**
+     * The status of the algorithm. Can be used to describe the current step of
+     * the worflow.
+     */
 	private String status;
 	
+	/**
+     * The progression of the algorithm. Should be between 0 and the
+     * <code>total</code> variable.
+     */
 	private double step;
+	
+	/**
+	 * The largest value that can be reached by the step variable.
+	 */
 	private double total;
 	
+	/**
+     * Creates a new AlgoEvent with all the event information.
+     * 
+     * @param source
+     *            the source of the event, usually an instance of the Algo
+     *            interface
+     * @param status
+     *            the new status of the algorithm
+     * @param step
+     *            the new progression step of the algorithm
+     * @param total
+     *            the new number of steps of the algorithm
+     */
 	public AlgoEvent(Object source, String status, double step, double total) 
 	{
 		this.source = source;
@@ -29,6 +54,15 @@ public class AlgoEvent
 		this.total = total;
 	}
 	
+    /**
+     * Creates a new AlgoEvent with the status.
+     * 
+     * @param source
+     *            the source of the event, usually an instance of the Algo
+     *            interface
+     * @param status
+     *            the new status of the algorithm
+     */
 	public AlgoEvent(Object source, String status) 
 	{
 		this.source = source;
@@ -37,6 +71,17 @@ public class AlgoEvent
 		this.total = 0;
 	}
 	
+    /**
+     * Creates a new AlgoEvent from the progression.
+     * 
+     * @param source
+     *            the source of the event, usually an instance of the Algo
+     *            interface
+     * @param step
+     *            the new progression step of the algorithm
+     * @param total
+     *            the new number of steps of the algorithm
+     */
 	public AlgoEvent(Object source, double step, double total) 
 	{
 		this.source = source;
@@ -76,7 +121,10 @@ public class AlgoEvent
 	{
 		return total;
 	}
-
+	
+	/**
+	 * @return the progression ratio of the algorithm.
+	 */
 	public double getProgressRatio() 
 	{
 		return this.step / this.total;

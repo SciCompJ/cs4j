@@ -31,7 +31,7 @@ public class ConsoleAlgoListener implements AlgoListener
      * add it to the given algorithm.
      * 
      * 
-     * <pre><code>
+     * <pre>{@code
      * // read demo image
      * String imageURL = "http://imagej.nih.gov/ij/images/NileBend.jpg";
      * Array array = Image.read(imageURL).getData();
@@ -41,7 +41,7 @@ public class ConsoleAlgoListener implements AlgoListener
      * ConsoleAlgoListener.monitor(closing);
      * // run process. The standard output will display progress
      * Array<?> result = op.process(array);
-     * </code></pre>
+     * }</pre>
      * 
      * @param algo the algorithm to monitor
      */
