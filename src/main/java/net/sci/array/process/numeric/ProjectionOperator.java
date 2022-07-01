@@ -117,7 +117,8 @@ public abstract class ProjectionOperator extends AlgoStub implements ScalarArray
         }
         
         // create the output array
-        ScalarArray<?> output = factory.create(array.size());
+        int[] dims = computeOutputArrayDimensions(array);
+        ScalarArray<?> output = factory.create(dims);
         
         // call the processing method
         processScalar(array, output);
