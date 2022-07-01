@@ -100,7 +100,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
                 BinaryRow arrayRow = rleArray.getRow(y2);
                 BinaryRow strelRow = strelRows.get(yStrel);
                 
-                BinaryRow row = arrayRow.dilation(strelRow);
+                BinaryRow row = BinaryRow.dilation(arrayRow, strelRow);
                 resRow = BinaryRow.union(resRow, row);
             }
             
@@ -213,7 +213,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
                         BinaryRow strelRow = strelRows.get(zStrel).get(yStrel);
                         
                         // apply row dilation and combine with result of current row
-                        BinaryRow row = arrayRow.dilation(strelRow);
+                        BinaryRow row = BinaryRow.dilation(arrayRow, strelRow);
                         resRow = BinaryRow.union(resRow, row);
                     }
                 }

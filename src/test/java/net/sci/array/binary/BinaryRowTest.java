@@ -33,7 +33,7 @@ public class BinaryRowTest
             row2.set(i, true);
         }
         
-        BinaryRow res = row1.dilation(row2);
+        BinaryRow res = BinaryRow.dilation(row1, row2);
         
         assertEquals(1, res.runs.size());
         assertFalse(res.get(3));
@@ -64,8 +64,8 @@ public class BinaryRowTest
         {
             row2.set(i, true);
         }
-        BinaryRow res = row.dilation(row2);
-                
+        BinaryRow res = BinaryRow.dilation(row, row2);
+        
         assertEquals(1, res.runs.size());
         assertFalse(res.get(7));
         assertTrue(res.get(8));
@@ -91,7 +91,7 @@ public class BinaryRowTest
             strel.set(i, true);
         }
         
-        BinaryRow res = row.erosion(strel);
+        BinaryRow res = BinaryRow.erosion(row, strel);
         
         assertEquals(1, res.runs.size());
         assertFalse(res.get(6));
@@ -119,7 +119,7 @@ public class BinaryRowTest
             strel.set(i, true);
         }
         
-        BinaryRow res = row.erosion(strel);
+        BinaryRow res = BinaryRow.erosion(row, strel);
         
         assertEquals(2, res.runs.size());
         assertFalse(res.get(6));
