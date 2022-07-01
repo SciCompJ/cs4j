@@ -81,7 +81,7 @@ public class GeodesicDiameterTest
      * Test method for {@link net.sci.image.analyze.region2d.RegionAnalyzer2D#analyzeRegions(net.sci.array.scalar.IntArray2D, net.sci.image.Calibration)}.
      */
     @Test
-    public void testLongestGeodesicPaths_Rect()
+    public void testLongestGeodesicPaths_HLine()
     {
         UInt8Array2D image = UInt8Array2D.create(10, 3);
         for (int x = 1; x < 8; x++)

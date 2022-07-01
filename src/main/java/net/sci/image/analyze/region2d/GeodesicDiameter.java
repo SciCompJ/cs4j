@@ -48,20 +48,6 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
 
     boolean computePaths = false;
     
-    /**
-     * An array of shifts corresponding to the weights, for computing geodesic
-     * longest paths.
-     * 
-     * Assumes computation of distance in a 5-by-5 neighborhood.
-     */
-    int[][] shifts = new int[][]{
-                  {-1, -2}, {0, -2}, {+1, -2},  
-        {-2, -1}, {-1, -1}, {0, -1}, {+1, -1}, {+2, -1}, 
-        {-2,  0}, {-1,  0},          {+1,  0}, {+2,  0},  
-        {-2, +1}, {-1, +1}, {0, +1}, {+1, +1}, {+2, +1},  
-                  {-1, +2}, {0, +2}, {+1, +2},  
-    };
-
     
     // ==================================================
     // Constructors 
@@ -84,18 +70,6 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
     public GeodesicDiameter(ChamferMask2D mask) 
     {
         this(new GeodesicDistanceTransform2DFloat32Hybrid(mask, true));
-    }
-    
-    /**
-     * Creates a new geodesic diameter computation operator.
-     * 
-     * @param weights
-     *            the array of weights for orthogonal, diagonal, and eventually
-     *            chess-knight moves neighbors
-     */
-    public GeodesicDiameter(float[] weights) 
-    {
-        this(new GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D.fromWeights(weights), true));
     }
     
     /**
@@ -336,20 +310,21 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
      */
     private Cursor2D findLowestNeighborPosition(IntArray2D<?> labelImage, ScalarArray2D<?> distanceMap, Cursor2D pos)
     {
+        // retrieve image size
+        int sizeX = distanceMap.size(0);
+        int sizeY = distanceMap.size(1);
+        
+        // retrieve current label and associated distance 
         int refLabel = labelImage.getInt(pos.getX(), pos.getY());
         double minDist = distanceMap.getValue(pos.getX(), pos.getY());
 
-        // size of image
-        int sizeX = distanceMap.size(0);
-        int sizeY = distanceMap.size(1);
-
         // iterate over neighbors of current pixel
         Cursor2D nextPos = pos;
-        for (int[] shift : shifts)
+        for (ChamferMask2D.Offset offset : this.geodesicDistanceTransform.mask().getOffsets())
         {
             // Compute neighbor coordinates
-            int x = pos.getX() + shift[0];
-            int y = pos.getY() + shift[1];
+            int x = pos.getX() + offset.dx;
+            int y = pos.getY() + offset.dy;
 
             // check neighbor is within image bounds
             if (x < 0 || x >= sizeX)
