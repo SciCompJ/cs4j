@@ -59,11 +59,17 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	// =============================================================
 	// Constructors
 
-	/**
-	 * @param size0 the size of the array in the first dimension
-     * @param size1 the size of the array in the second dimension
-     * @param size2 the size of the array in the third dimension
-	 */
+    /**
+     * Creates a new 3D binary array using run-length encoding. All elements are
+     * set to <code>false</code>.
+     * 
+     * @param size0
+     *            the size of the array in the first dimension
+     * @param size1
+     *            the size of the array in the second dimension
+     * @param size2
+     *            the size of the array in the third dimension
+     */
 	public RunLengthBinaryArray3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
@@ -71,11 +77,18 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	}
 
 	/**
-    * @param size0 the size of the array in the first dimension
-    * @param size1 the size of the array in the second dimension
-    * @param size2 the size of the array in the third dimension
-    * @param slices the indexed rows populating the new array 
-    */
+     * Creates a new 3D binary array using run-length encoding, initialized with
+     * the specified set of binary rows.
+     * 
+     * @param size0
+     *            the size of the array in the first dimension
+     * @param size1
+     *            the size of the array in the second dimension
+     * @param size2
+     *            the size of the array in the third dimension
+     * @param slices
+     *            the indexed rows populating the new array
+     */
    public RunLengthBinaryArray3D(int size0, int size1, int size2, HashMap<Integer, HashMap<Integer, BinaryRow>> slices)
    {
        super(size0, size1, size2);
@@ -261,6 +274,49 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
     // =============================================================
     // Implementation of the BinaryArray interface
     
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.BinaryArray#complement()
+     */
+    @Override
+    public RunLengthBinaryArray3D complement()
+    {
+        RunLengthBinaryArray3D result = new RunLengthBinaryArray3D(size(0), size(1), size(2));
+        
+        // process each slice, and store null when the slice is empty
+        for (int z = 0; z < size2; z++)
+        {
+            BinaryRow[] slice = this.slices[z];
+            BinaryRow[] resSlice = new BinaryRow[size1];
+            
+            // ensure valid slice
+            if (slice == null)
+            {
+                slice = new BinaryRow[size1];
+            }
+            
+            boolean emptySlice = true;
+            for (int y = 0; y < size1; y++)
+            {
+                BinaryRow row = slice[y];
+                resSlice[y] = row == null ? new BinaryRow(new Run(0, size0 - 1)) : row.complement(size0);
+                if (resSlice[y].isEmpty())
+                {
+                    resSlice[y] = null;
+                }
+                else
+                {
+                    emptySlice = false;
+                }
+            }
+            
+            if (!emptySlice)
+            {
+                result.slices[z] = resSlice;
+            }
+        }
+        return result;
+    }
+    
     /**
      * Fills this binary array with the specified boolean value.
      * 
@@ -337,14 +393,14 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
             // duplicate only non empty slices
             if (slices[z] != null)
             {
-                res.slices[z] = duplicate(slices[z]);
+                res.slices[z] = duplicateSlice(slices[z]);
             }
         }
         
         return res;
     }
     
-    private BinaryRow[] duplicate(BinaryRow[] slice)
+    private BinaryRow[] duplicateSlice(BinaryRow[] slice)
     {
         BinaryRow[] res = new BinaryRow[slice.length];
         for (int y = 0; y < slice.length; y++)
@@ -357,6 +413,12 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
         return res;
     }
      
+    /**
+     * Utility class that converts a 3D binary array into an instance of
+     * RunLengthBinaryArray3D.
+     * 
+     * @see RunLengthBinaryArray3D.#convert(BinaryArray3D)
+     */
     public static class Converter extends AlgoStub
     {
         public RunLengthBinaryArray3D process(BinaryArray3D array)

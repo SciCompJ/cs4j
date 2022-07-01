@@ -48,7 +48,8 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
 	// Class fields
     
     /**
-     * The rows representing this binary array. Do not keep empty rows.
+     * The rows representing this binary array. Does not keep empty rows, and
+     * stores a null instead.
      */
     BinaryRow[] rows;
 
@@ -57,8 +58,13 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     // Constructors
 
     /**
-     * @param size0 the size of the array in the first dimension
-     * @param size1 the size of the array in the second dimension
+     * Creates a new 2D binary array using run-length encoding. All elements are
+     * set to <code>false</code>.
+     * 
+     * @param size0
+     *            the size of the array in the first dimension
+     * @param size1
+     *            the size of the array in the second dimension
      */
     public RunLengthBinaryArray2D(int size0, int size1)
     {
@@ -67,9 +73,15 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     }
 
     /**
-     * @param size0 the size of the array in the first dimension
-     * @param size1 the size of the array in the second dimension
-     * @param rows the indexed rows populating the new array 
+     * Creates a new 2D binary array using run-length encoding, initialized with
+     * the specified set of rows.
+     * 
+     * @param size0
+     *            the size of the array in the first dimension
+     * @param size1
+     *            the size of the array in the second dimension
+     * @param rows
+     *            the indexed rows populating the new array
      */
     public RunLengthBinaryArray2D(int size0, int size1, HashMap<Integer, BinaryRow> rows)
     {
@@ -163,7 +175,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     
 
 	// =============================================================
-	// Implementation of the BooleanArray2D interface
+	// Implementation of the BinaryArray interface
 
     /* (non-Javadoc)
      * @see net.sci.array.scalar.BinaryArray2D#setBoolean(int, int, boolean)
@@ -195,6 +207,25 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     // =============================================================
     // Specialization of the BinaryArray interface
 
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.BinaryArray#complement()
+     */
+    @Override
+    public RunLengthBinaryArray2D complement()
+    {
+        RunLengthBinaryArray2D result = new RunLengthBinaryArray2D(size(0), size(1));
+        for (int y = 0; y < size1; y++)
+        {
+            BinaryRow row = this.rows[y];
+            result.rows[y] = row == null ? new BinaryRow(new Run(0, size0 - 1)) : row.complement(size0);
+            if (result.rows[y].isEmpty())
+            {
+                result.rows[y] = null;
+            }
+        }
+        return result;
+    }
+    
     /**
      * Fills this binary array with the specified boolean value.
      * 
@@ -250,6 +281,12 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         return res;
     }
     
+    /**
+     * Utility class that converts a 2D binary array into an instance of
+     * RunLengthBinaryArray2D.
+     * 
+     * @see RunLengthBinaryArray2D.#convert(BinaryArray2D)
+     */
     public static class Converter extends AlgoStub
     {
         public RunLengthBinaryArray2D process(BinaryArray2D array)
