@@ -13,6 +13,7 @@ import static java.lang.Math.sqrt;
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.PrincipalAxes2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
 
 /**
@@ -26,6 +27,27 @@ public class Ellipse2D implements Contour2D
 {
     // ===================================================================
     // Static methods
+    
+    /**
+     * Reduces the parameters of a PrincipalAxes instances into an Ellipse2D.
+     * 
+     * @param axes
+     *            the instance of PrincipalAxes2D to convert
+     * @return the equivalent Ellipse
+     */
+    public Ellipse2D convert(PrincipalAxes2D axes)
+    {
+        double[][] rotMat = axes.rotationMatrix();
+        
+        double xx = rotMat[0][0];
+        double xy = rotMat[0][1];
+        double yy = rotMat[1][1];
+        double theta = Math.toDegrees(Math.atan2(2 * xy, xx - yy) / 2);
+        
+        double[] sca = axes.scalings();
+        
+        return new Ellipse2D(axes.center(), sca[0], sca[1], theta);
+    }
     
     /**
      * Transform an ellipse, by supposing both the ellipse is centered and the

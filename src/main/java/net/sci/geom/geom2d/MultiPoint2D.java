@@ -6,6 +6,9 @@ package net.sci.geom.geom2d;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
+
 /**
  * The geometry obtained by the union of several points.
  * 
@@ -65,6 +68,77 @@ public class MultiPoint2D implements Geometry2D
     }
 
 
+    // ===================================================================
+    // New methods
+    
+    public Point2D centroid()
+    {
+        double sx = 0;
+        double sy = 0;
+        int n = 0;
+        for (Point2D p : points)
+        {
+            sx += p.x;
+            sy += p.y;
+            n++;
+        }
+        return new Point2D(sx / n, sy / n);
+    }
+    
+    public PrincipalAxes2D principalAxes()
+    {
+        // compute points centroid
+        Point2D center = centroid();
+        double xc = center.x;
+        double yc = center.y;
+        
+        // compute inertia matrix
+        double Ixx = 0, Ixy = 0, Iyy = 0;
+        for (Point2D p : points)
+        {
+            double x = p.x - xc;
+            double y = p.y - yc;
+            Ixx += x * x;
+            Ixy += x * y;
+            Iyy += y * y;
+        }
+        
+        // normalize
+        int n = points.size();
+        Ixx /= n;
+        Ixy /= n;
+        Iyy /= n;
+
+        // Perform singular-Value Decomposition
+        SingularValueDecomposition svd = computeSVD(Ixx, Ixy, Iyy);
+
+        // Extract singular values
+        Matrix values = svd.getS();
+        double[] scalings = new double[2];
+        scalings[0] = values.get(0, 0);
+        scalings[1] = values.get(1, 1);
+        
+        // retrieve rotation matrix
+        double[][] rotMat = svd.getU().getArray();
+
+        // concatenate
+        return new PrincipalAxes2D(center, rotMat, scalings);
+    }
+    
+    private SingularValueDecomposition computeSVD(double Ixx, double Ixy, double Iyy)
+    {
+        // create the matrix
+        Matrix matrix = new Matrix(2, 2);
+        matrix.set(0, 0, Ixx);
+        matrix.set(0, 1, Ixy);
+        matrix.set(1, 0, Ixy);
+        matrix.set(1, 1, Iyy);
+
+        // Extract singular values
+        return new SingularValueDecomposition(matrix);
+    }
+
+    
     // ===================================================================
     // Methods
     
