@@ -10,6 +10,7 @@ import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.Image;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.data.Connectivity3D;
+import net.sci.image.morphology.reconstruct.KillBorders;
 import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid;
 import net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid;
 
@@ -122,34 +123,7 @@ public class MorphologicalReconstruction
 	 */
 	public static final ScalarArray2D<?> killBorders(ScalarArray2D<?> array) 
 	{
-		// Image size
-		int sizeX = array.size(0);
-		int sizeY = array.size(1);
-
-		// Initialize marker image with zeros everywhere except at borders
-		ScalarArray2D<?> marker = array.duplicate();
-		for (int y = 1; y < sizeY - 1; y++)
-		{
-			for (int x = 1; x < sizeX - 1; x++)
-			{
-				marker.setValue(x, y, Double.NEGATIVE_INFINITY);
-			}
-		}
-		
-		// Reconstruct image from borders to find touching structures
-		ScalarArray2D<?> result = reconstructByDilation(marker, array);
-		
-		// removes result from original image
-		for (int y = 0; y < sizeY; y++) 
-		{
-			for (int x = 0; x < sizeX; x++) 
-			{
-				double val = array.getValue(x, y) - result.getValue(x, y);
-				result.setValue(x, y, Math.max(val, 0));
-			}
-		}
-		
-		return result;
+        return new KillBorders().processScalar2d(array);
 	}
 
 	/**
@@ -165,40 +139,7 @@ public class MorphologicalReconstruction
 	 */
 	public static final ScalarArray3D<?> killBorders(ScalarArray3D<?> array) 
 	{
-		// Image size
-		int sizeX = array.size(0);
-		int sizeY = array.size(1);
-		int sizeZ = array.size(2);
-
-		// Initialize marker image with zeros everywhere except at borders
-		ScalarArray3D<?> marker = array.duplicate();
-		for (int z = 1; z < sizeZ-1; z++) 
-		{
-			for (int y = 1; y < sizeY-1; y++) 
-			{
-				for (int x = 1; x < sizeX-1; x++) 
-				{
-					marker.setValue(x, y, z, Double.NEGATIVE_INFINITY);
-				}
-			}
-		}
-		
-		// Reconstruct image from borders to find touching structures
-		ScalarArray3D<?> result = reconstructByDilation(marker, array);
-		
-		// removes result from original image
-		for (int z = 0; z < sizeZ; z++) 
-		{
-			for (int y = 0; y < sizeY; y++) 
-			{
-				for (int x = 0; x < sizeX; x++) 
-				{
-					double val = array.getValue(x, y, z) - result.getValue(x, y, z);
-					result.setValue(x, y, z, Math.max(val, 0));
-				}
-			}
-		}		
-		return result;
+		return new KillBorders().processScalar3d(array);
 	}
 
 

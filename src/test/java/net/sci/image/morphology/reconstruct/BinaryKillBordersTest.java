@@ -54,8 +54,6 @@ public class BinaryKillBordersTest
         BinaryKillBorders algo = new BinaryKillBorders();
         BinaryArray3D res = algo.processBinary3d(array);
         
-        res.print(System.out);
-        
         assertEquals(array.size(0), res.size(0));
         assertEquals(array.size(1), res.size(1));
         assertEquals(array.size(2), res.size(2));

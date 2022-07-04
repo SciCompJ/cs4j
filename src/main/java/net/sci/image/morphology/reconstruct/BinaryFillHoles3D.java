@@ -103,7 +103,7 @@ public class BinaryFillHoles3D extends AlgoStub implements ArrayOperator
     }
 
     @Override
-    public <T> Array<?> process(Array<T> array)
+    public <T> BinaryArray process(Array<T> array)
     {
         if (array instanceof BinaryArray)
         {
@@ -112,7 +112,7 @@ public class BinaryFillHoles3D extends AlgoStub implements ArrayOperator
         else
         {
             throw new RuntimeException(
-                    "Requires an instance of BinaryArray3D");
+                    "Requires an instance of BinaryArray");
         }
     }
     

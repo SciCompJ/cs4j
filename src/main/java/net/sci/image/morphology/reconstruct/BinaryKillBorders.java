@@ -13,6 +13,8 @@ import net.sci.array.binary.BinaryArray3D;
 /**
  * Specialization of KillBorders algorithm for binary images.
  * 
+ * @see KillBorders
+ * 
  * @author dlegland
  *
  */
