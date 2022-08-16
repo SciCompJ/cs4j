@@ -129,6 +129,26 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
 	@Override
 	public abstract IntArray2D<T> duplicate();
 	
+    
+	// =============================================================
+	// Override Object methods
+
+	@Override
+    public String toString()
+    {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(String.format(Locale.ENGLISH, "(%d x %d) Int array with values:", this.size0, this.size1));
+        for (int y = 0; y < this.size1; y++)
+        {
+            buffer.append("\n");
+            for (int x = 0; x < this.size0; x++)
+            {
+                buffer.append(String.format(Locale.ENGLISH, " %3d", getInt(x, y)));
+            }
+        }
+        return buffer.toString();
+    }
+
 
 	// =============================================================
     // Inner wrapper class

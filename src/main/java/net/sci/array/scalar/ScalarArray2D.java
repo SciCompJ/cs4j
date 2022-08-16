@@ -139,6 +139,31 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	
 	
     // =============================================================
+    // Override Object methods
+
+    /**
+     * Overrides the method to display a String representation of this values
+     * within the array.
+     * 
+     * @return a String representation of the inner values of the array.
+     */
+    @Override
+    public String toString()
+    {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(String.format(Locale.ENGLISH, "(%d x %d) Scalar array with values:", this.size0, this.size1));
+        for (int y = 0; y < this.size1; y++)
+        {
+            buffer.append("\n");
+            for (int x = 0; x < this.size0; x++)
+            {
+                buffer.append(String.format(Locale.ENGLISH, " %g", getValue(x, y)));
+            }
+        }
+        return buffer.toString();
+    }
+    
+    // =============================================================
     // Inner implementation of iterator on double values
 	
 	private class DoubleIterator implements java.util.Iterator<Double>
