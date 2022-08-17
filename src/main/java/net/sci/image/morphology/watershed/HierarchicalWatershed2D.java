@@ -3,7 +3,6 @@
  */
 package net.sci.image.morphology.watershed;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,18 +12,12 @@ import java.util.Locale;
 import java.util.PriorityQueue;
 
 import net.sci.algo.AlgoStub;
-import net.sci.algo.ConsoleAlgoListener;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.image.Image;
 import net.sci.image.binary.BinaryImages;
 import net.sci.image.data.Connectivity2D;
-import net.sci.image.io.TiffImageReader;
 import net.sci.image.morphology.MinimaAndMaxima;
 import net.sci.image.morphology.extrema.RegionalExtrema2D;
 
@@ -34,6 +27,22 @@ import net.sci.image.morphology.extrema.RegionalExtrema2D;
  * within a catchment basin, or the value of the contour dynamic of the pixel 
  * is a watershed pixel.
  * 
+ * Example:
+ * <pre>{@code
+ *  // requires a scalar array as input (can be floating point as well) 
+ *  UInt8Array2D array = ...;
+ *  
+ *  // create the operator, and display steps on console
+ *  HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
+ *  ConsoleAlgoListener.monitor(algo);
+ *  
+ *  // process the array
+ *  ScalarArray2D<?> result = algo.process(array);
+ *
+ *  // display the result
+ *  Image resultImage = new Image(result);
+ *  resultImage.show();
+ * }</pre>
  * @author dlegland
  *
  */
@@ -77,7 +86,7 @@ public class HierarchicalWatershed2D extends AlgoStub
         fireStatusChanged(this, "Process Queue");
         processor.processQueue();
         
-        System.out.println("After Watershed:\n" + processor.labelMap);
+        System.out.println("  number of boundaries: " + processor.boundaries.size());
         
         fireStatusChanged(this, "Merge basins");
         processor.mergeRegions();
@@ -92,6 +101,9 @@ public class HierarchicalWatershed2D extends AlgoStub
     // ==============================================================
     // Inner classes
     
+    /**
+     * The processing class of the algorithm.
+     */
     public class Processor
     {
         // ==============================================================
@@ -112,13 +124,6 @@ public class HierarchicalWatershed2D extends AlgoStub
          */
         IntArray2D<?> labelMap = null;
         
-//        /**
-//         * The array of regions, initialized with minima, then updated during
-//         * flooding process when new boundaries are created.
-//         */
-//        HashMap<Integer, Region> regions = new HashMap<Integer, Region>();
-        
-//        ArrayList<Basin> basins;
         HashMap<Integer, Basin> basins = new HashMap<Integer, Basin>();
         
         HashMap<Integer, Boundary> boundaries = new HashMap<Integer, Boundary>();
@@ -143,6 +148,12 @@ public class HierarchicalWatershed2D extends AlgoStub
         // ==============================================================
         // Constructor
         
+        /**
+         * Creates a new instance from the array.
+         * 
+         * @param array
+         *            the array to process.
+         */
         public Processor(ScalarArray2D<?> array)
         {
             this.array = array;
@@ -164,14 +175,11 @@ public class HierarchicalWatershed2D extends AlgoStub
             fireStatusChanged(this, "Connected component labeling of minima");
             this.labelMap = BinaryImages.componentsLabeling(minima, connectivity, 32);
             
-            System.out.println("Initial Labels:\n" + this.labelMap);
-//            UInt8Array2D label8 = UInt8Array2D.wrap(UInt8Array.wrapScalar(this.labelMap));
-//            label8.print(System.out);
-            
             // create basin regions
             // TODO: merge labeling and region creation into a single pass algorithm
             fireStatusChanged(this, "Create basin regions");
             createBasinRegions();
+            System.out.println("  number of basins: " + labelCount);
         }
         
         private void createBasinRegions()
@@ -196,14 +204,6 @@ public class HierarchicalWatershed2D extends AlgoStub
                             
                             labelCount++;
                         }
-//                        if (!regions.containsKey(label))
-//                        {
-//                            double value = array.getValue(x, y);
-//                            Basin basin = new Basin(label, value);
-//                            regions.put(label, basin);
-//                            
-//                            labelCount++;
-//                        }
                     }
                 }
             }
@@ -258,21 +258,26 @@ public class HierarchicalWatershed2D extends AlgoStub
             final int sizeX = array.size(0);
             final int sizeY = array.size(1);
 
+            // the list of regions of all types (Basin or Boundary) around current pixel
+            HashSet<Region> regions = new HashSet<Region>();
             // the list of basins around current pixel
             HashSet<Basin> basins = new HashSet<Basin>();
+            HashSet<Boundary> boundaries = new HashSet<Boundary>();
             // the list of new records to create around current pixel
             ArrayList<Record> neighbors = new ArrayList<Record>();
             
             // Process pixels and eventually add neighbors until the queue is empty 
             while (!floodingQueue.isEmpty())
             {
-//                if (Thread.currentThread().isInterrupted())
-//                {
-//                    return;
-//                }
+                if (Thread.currentThread().isInterrupted())
+                {
+                    return;
+                }
                 
                 // reset state
+                regions.clear();
                 basins.clear();
+                boundaries.clear();
                 neighbors.clear();
                 
                 // get next record
@@ -307,18 +312,42 @@ public class HierarchicalWatershed2D extends AlgoStub
                             // If pixel belongs to a region, update the list of neighbor basins
                             // In case the pixel is a boundary, the basins it bounds are considered.
                             Region region = getRegion(label);
+                            regions.add(region);
                             if (region instanceof Basin)
                             {
                                 basins.add((Basin) region);
                             }
-//                            addBasins(region, basins);
+                            else
+                            {
+                                boundaries.add((Boundary) region);
+                            }
                         }
                         // the remaining case is "in queue", but we do not need to process
                     }
                 }
                 
                 // detects if the current pixel belongs to a basin or a boundary.
+                // the pixel should have only one neighbor basin, and if a
+                // boundary is present, it should contain the basin.
+                boolean isBasin = false;
                 if (basins.size() == 1)
+                {
+                    Basin theBasin = basins.iterator().next();
+                    if (boundaries.size() == 0)
+                    {
+                        isBasin = true;
+                    }
+                    else if (boundaries.size() == 1)
+                    {
+                        Boundary theBoundary = boundaries.iterator().next();
+                        if (theBoundary.regions.contains(theBasin))
+                        {
+                            isBasin = true;
+                        }
+                    }
+                }
+                
+                if (isBasin)
                 {
                     // if all the neighbors belong to the same basin,
                     // propagate its label to the current pixel
@@ -331,12 +360,13 @@ public class HierarchicalWatershed2D extends AlgoStub
                         floodingQueue.add(neighbor);
                     }
                 }
-                else if (basins.size() > 1)
+                else
                 {
                     // If neighbors have more than two labels, then the pixel belongs to a boundary region.
                     
                     // we first need to check if such boundary exists
-                    Boundary boundary = getBoundary(basins);
+                    Collection<Basin> allBasins = findAllBasins(regions);
+                    Boundary boundary = getBoundary(allBasins);
 
                     // otherwise, create the new region (boundaries of specified
                     // regions are updated during boundary creation)
@@ -344,17 +374,17 @@ public class HierarchicalWatershed2D extends AlgoStub
                     {
                         // create a new boundary region
                         double value = pixelRecord.value;
-                        boundary = createBoundary(++labelCount, value, basins);
+                        boundary = createBoundary(++labelCount, value, allBasins);
                     }
                     labelMap.setInt(x, y, boundary.label);
                     
-//                    // also add the neighbors without labels to the queue
-//                    // (note: this behavior depends on the the algorithms)
-//                    for (Record neighbor : neighbors)
-//                    {   
-//                        labelMap.setInt(neighbor.x, neighbor.y, INQUEUE);
-//                        floodingQueue.add(neighbor);
-//                    }
+                    // also add the neighbors without labels to the queue
+                    // (note: this behavior depends on the the algorithms)
+                    for (Record neighbor : neighbors)
+                    {   
+                        labelMap.setInt(neighbor.x, neighbor.y, INQUEUE);
+                        floodingQueue.add(neighbor);
+                    }
                 }   
             }
         }
@@ -380,25 +410,6 @@ public class HierarchicalWatershed2D extends AlgoStub
             return adjRegions.iterator().next().findBoundary(adjRegions);
         }
         
-//        private void addBasins(Region region, ArrayList<Basin> basins)
-//        {
-//            if (region instanceof Basin)
-//            {
-//                // store labels of neighbor in a list without duplicates
-//                if (!basins.contains(region))
-//                {
-//                    basins.add((Basin) region);
-//                }
-//            }
-//            else if (region instanceof Boundary)
-//            {
-//                for (Region reg : ((Boundary) region).regions)
-//                {
-//                    addBasins(reg, basins);
-//                }
-//            }
-//        }
-        
         private Region getRegion(int label)
         {
             if (this.basins.containsKey(label))
@@ -416,7 +427,7 @@ public class HierarchicalWatershed2D extends AlgoStub
         {
             // create a new boundary instance, leaving dynamic not yet initialized
             Boundary boundary = new Boundary(label, minValue, basins);
-            System.out.println("Create boundary " + label + " between basins: " + regionLabelsString(basins));
+//            System.out.println("Create boundary " + label + " between basins: " + regionLabelsString(basins));
             this.boundaries.put(label, boundary);
             
             // compute the dynamic of the new boundary, using the minimum value
@@ -425,50 +436,8 @@ public class HierarchicalWatershed2D extends AlgoStub
             boundary.dynamic = minValue - highestBasin.minValue;
             highestBasin.dynamic = boundary.dynamic;
             
-          
-//            // retrieve flooding region from each adjacent region
-//            ArrayList<Basin> floodingBasins = floodingBasins(basins);
-//            System.out.println(" ; flooding basins: " + regionLabelsString(floodingBasins));
-//            
-//            if (floodingBasins.size() > 1)
-//            {
-//                // compute dynamic of boundary, 
-//                // as the difference between the minimum value along the
-//                // boundary and the largest minimum value of flooding regions
-//                double maxDepth = largestMinValue(floodingBasins);
-//                boundary.dynamic = minValue - maxDepth;
-//                
-//                // identify the main flooding region as the flooding region from
-//                // adjacent regions with the lowest value
-//                Basin floodingRegion = findLowestRegion(floodingBasins);
-//                
-//                // keep boundary dynamic as current dynamic of flooding region
-//                // (keep previous value if greater)
-//                floodingRegion.dynamic = Math.max(floodingRegion.dynamic, boundary.dynamic);
-//                
-//                // update the flooding region of adjacent regions
-//                for (Basin basin : basins)
-//                {
-//                    // identifies the flooding basin
-//                    basin = basin.globalFloodingBasin();
-//                    if (basin != floodingRegion)
-//                    {
-//                        basin.floodingBasin = floodingRegion;
-//                        basin.dynamic = boundary.dynamic;
-//                    }
-//                }
-//            }
-//            else
-//            {
-//                // all regions are flooded by the same region
-//                // -> use the dynamic from the flooding region
-//                Region floodingRegion = floodingBasins.get(0);
-//                boundary.dynamic = floodingRegion.dynamic;
-//            }
-            
             return boundary;
         }
-
         
         private void mergeRegions()
         {
@@ -483,23 +452,12 @@ public class HierarchicalWatershed2D extends AlgoStub
             while (mergeQueue.size() > 1)
             {
                 Region region = mergeQueue.poll();
-                System.out.println("Process region: " + region);
+//                System.out.println("Process region: " + region);
                 
                 // get the pass value, as the lowest value along boundaries of current region
                 double minValue = lowestMinValue(region.boundaries);
-                
                 double dynamic = region.dynamic; 
                 
-                // find all connected regions, by retrieving all boundaries with
-                // dynamic equal to the smallest dynamic
-                // TODO: should check complex case of several regions connected by triple boundaries...
-//                double minDyn = Double.POSITIVE_INFINITY;
-//                double minValue = Double.POSITIVE_INFINITY;
-//                for (Boundary boundary : region.boundaries)
-//                {
-////                    minDyn = Math.min(minDyn, boundary.dynamic);
-//                    minValue = Math.min(minValue, boundary.minValue);
-//                }
                 // identifies the set of region to merge, as the set of regions connected to the
                 // initial region with a boundary whose min value is the current min value.
                 HashSet<Region> regions = new HashSet<>();
@@ -557,11 +515,7 @@ public class HierarchicalWatershed2D extends AlgoStub
             
             // compute the dynamic of the new region, by finding the minimum
             // value along boundaries
-            double minPassValue = Double.POSITIVE_INFINITY;
-            for (Boundary boundary : merge.boundaries)
-            {
-                minPassValue = Math.min(minPassValue, boundary.minValue);
-            }
+            double minPassValue = lowestMinValue(merge.boundaries);
             merge.dynamic = minPassValue - merge.minValue;
             
             // return the new region
@@ -596,7 +550,7 @@ public class HierarchicalWatershed2D extends AlgoStub
         }
     }
     
-/**
+    /**
      * @param regions
      *            a set of regions
      * @return the set of boundaries that are adjacent to at least one of
@@ -612,35 +566,21 @@ public class HierarchicalWatershed2D extends AlgoStub
         return boundaries;
     }
 
-//    /**
-//     * Retrieve the unique flooding regions from the collection of regions.
-//     * 
-//     * @param regions
-//     *            a list of regions
-//     * @return the list if unique global flooding regions from the regions
-//     */
-//    private static final ArrayList<Basin> floodingBasins(ArrayList<Basin> regions)
-//    {
-//        ArrayList<Basin> floodingRegions = new ArrayList<>(regions.size());
-//        for (Basin region : regions)
-//        {
-//            Basin flooding = region.globalFloodingBasin();
-//            if (!floodingRegions.contains(flooding))
-//            {
-//                floodingRegions.add(flooding);
-//            }
-//        }
-//        return floodingRegions;
-//    }
-    
-    private static final double largestMinValue(Collection<? extends Region> regions)
+    private static final Collection<Basin> findAllBasins(Collection<Region> regions)
     {
-        double maxDepth = Double.NEGATIVE_INFINITY;
+        HashSet<Basin> basins = new HashSet<>();
         for (Region region : regions)
         {
-            maxDepth = Math.max(maxDepth, region.minValue);
+            if (region instanceof Basin)
+            {
+                basins.add((Basin) region);
+            }
+            else if (region instanceof Boundary)
+            {
+                basins.addAll(findAllBasins(((Boundary) region).regions));
+            }
         }
-        return maxDepth;
+        return basins;
     }
     
     private static final double lowestMinValue(Collection<? extends Region> regions)
@@ -674,22 +614,6 @@ public class HierarchicalWatershed2D extends AlgoStub
         }
         return highestBasin;
     }
-    
-//    private static final Basin findLowestRegion(ArrayList<Basin> regions)
-//    {
-//        double minDepth = Double.MAX_VALUE;
-//        Basin lowestRegion = null;
-//        for (Basin region : regions)
-//        {
-//            double depth = region.minValue;
-//            if (depth < minDepth)
-//            {
-//                minDepth = depth;
-//                lowestRegion = region;
-//            }
-//        }
-//        return lowestRegion;
-//    }
     
     private static final String regionLabelsString(Collection<? extends Region> regions)
     {
@@ -763,6 +687,14 @@ public class HierarchicalWatershed2D extends AlgoStub
     }
     
     
+    /**
+     * A Region of the watershed. Each region is characterized by its label, its
+     * minimum value, its dynamic, and other fileds depending on concrete classes.
+     * 
+     * During flooding process, a region can be either a Basin or a Boundary.
+     * During merge process, basins are hierarchically aggregated into
+     * MergeRegion instances.
+     */
     public abstract class Region implements Comparable<Region>
     {
         /** The label associated to this region. Initialized at creation. */
@@ -781,11 +713,6 @@ public class HierarchicalWatershed2D extends AlgoStub
          * regions (for boundary regions)
          */
         double dynamic = Double.POSITIVE_INFINITY;
-        
-//        /**
-//         * The Basin that floods this region. Updated during "merge" process.
-//         */
-//        Basin floodingBasin = null;
         
         /**
          * @return the list of basins this region contains.
@@ -815,8 +742,7 @@ public class HierarchicalWatershed2D extends AlgoStub
             // if no boundary was found, return null
             return null;
         }
-
-
+        
         @Override
         public int compareTo(Region region)
         {
@@ -830,6 +756,14 @@ public class HierarchicalWatershed2D extends AlgoStub
      */
     public class Basin extends Region
     {
+        /**
+         * Creates a new Basin
+         * 
+         * @param label
+         *            the label associated to this basin
+         * @param value
+         *            the minimum value within the basin
+         */
         public Basin(int label, double value)
         {
             this.label = label;
@@ -839,11 +773,13 @@ public class HierarchicalWatershed2D extends AlgoStub
             this.boundaries = new ArrayList<Boundary>(6);
         }
         
-        public double recomputeDynamic()
+        /**
+         * Recomputes the dynamic associated to this basin.
+         */
+        public void recomputeDynamic()
         {
             double maxPass = lowestMinValue(this.boundaries);
             this.dynamic = maxPass - this.minValue;
-            return this.dynamic;
         }
         
         public Collection<Basin> basins()
@@ -868,6 +804,16 @@ public class HierarchicalWatershed2D extends AlgoStub
     {
         ArrayList<Region> regions;
         
+        /**
+         * Creates a new Boundary.
+         * 
+         * @param label
+         *            the label associated to this basin
+         * @param minValue
+         *            the minimum value within the basin
+         * @param adjacentRegions
+         *            the set of regions the boundary bounds.
+         */
         public Boundary(int label, double minValue, Collection<? extends Region> adjacentRegions)
         {
             this.label = label;
@@ -885,13 +831,12 @@ public class HierarchicalWatershed2D extends AlgoStub
             }
         }
         
-        public double recomputeDynamic()
-        {
-            double maxDepth = largestMinValue(this.regions);
-            this.dynamic = this.minValue - maxDepth;
-            return this.dynamic;
-        }
-        
+        /**
+         * @param basinList
+         *            a list of basins
+         * @return true if this boundary bounds exactly the same basins as the
+         *         ones specified in the list
+         */
         public boolean hasSameBasins(Collection<Basin> basinList)
         {
             if (this.regions.size() != basinList.size())
@@ -935,18 +880,6 @@ public class HierarchicalWatershed2D extends AlgoStub
             for (Region region : this.regions)
             {
                 if (!regions.contains(region))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-        
-        public boolean containsAll(Collection<Region> regions)
-        {
-            for (Region region : regions)
-            {
-                if (!this.regions.contains(region))
                 {
                     return false;
                 }
@@ -1023,55 +956,11 @@ public class HierarchicalWatershed2D extends AlgoStub
             return res;
         }
         
-//        public boolean containsAll(ArrayList<Basin> basins)
-//        {
-//            for (Basin basin : basins)
-//            {
-//                if (!containsBasin(basin))
-//                {
-//                    return false;
-//                }
-//            }
-//            return true;
-//        }
-        
-//        public boolean containsBasin(Basin basin)
-//        {
-//            for (Region region : regions)
-//            {
-//                if (region.containsBasin(basin))
-//                {
-//                    return true;
-//                }
-//            }
-//            return false;
-//        }
-        
         @Override
         public String toString()
         {
             String regionString = regionLabelsString(this.regions);
             return String.format(Locale.ENGLISH, "MergeRegion(label=%d, minValue=%f, dynamic=%f, regions={%s})", this.label, this.minValue, this.dynamic, regionString);
         }
-    }
-    
-    public static final void main(String... args) throws IOException
-    {
-        String fileName = HierarchicalWatershed2D.class.getResource("/appleCells_crop_smooth_sub05.tif").getFile();
-        
-        TiffImageReader reader = new TiffImageReader(fileName);
-        Image image = reader.readImage();
-        
-        UInt8Array2D array = UInt8Array2D.wrap(UInt8Array.wrap((ScalarArray<?>) image.getData()));
-
-        HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
-        ConsoleAlgoListener.monitor(algo);
-        
-        UInt8Array2D result = UInt8Array2D.wrap(UInt8Array.wrap(algo.process(array)));
-        
-        Image resultImage = new Image(result, image);
-        resultImage.show();
-        
-        System.out.println("finish.");
     }
 }
