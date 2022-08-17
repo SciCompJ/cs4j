@@ -27,6 +27,65 @@ public class HierarchicalWatershed2DTest
      * Test method for {@link net.sci.image.morphology.watershed.HierarchicWatershed2D#process(net.sci.array.scalar.ScalarArray2D)}.
      */
     @Test
+    public final void testProcess_four_regions_very_simple()
+    {
+        int[][] buffer = new int[][] {
+            { 10,  50,  21,  20,  22},
+            {250, 250, 200, 250, 100},
+            { 32,  30,  31,  60,  40},
+        };
+        UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
+        System.out.println(array);
+        
+        HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
+        ConsoleAlgoListener.monitor(algo);
+        
+        ScalarArray2D<?> result = algo.process(array);
+        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
+    }
+
+    /**
+     * Test method for {@link net.sci.image.morphology.watershed.HierarchicWatershed2D#process(net.sci.array.scalar.ScalarArray2D)}.
+     */
+    @Test
+    public final void testProcess_four_regions_with_triple_boundaries()
+    {
+        int[][] buffer = new int[][] {
+            { 50,  21,  20,  22, 100},
+            { 10, 250, 200, 250,  40},
+            {250,  31,  30,  32,  60},
+        };
+        UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
+        System.out.println(array);
+        
+        HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
+        ConsoleAlgoListener.monitor(algo);
+        
+        ScalarArray2D<?> result = algo.process(array);
+        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
+        
+        // check size
+        assertEquals(array.size(0), result.size(0));
+        assertEquals(array.size(1), result.size(1));
+        // check region have dynamic equal to zero
+        assertEquals(0.0, result.getValue(2, 0), 0.01);
+        assertEquals(0.0, result.getValue(0, 1), 0.01);
+        assertEquals(0.0, result.getValue(4, 1), 0.01);
+        assertEquals(0.0, result.getValue(2, 2), 0.01);
+        // check the dynamic of the boundaries
+        assertEquals(20.0, result.getValue(4, 2), 0.01);
+        assertEquals(30.0, result.getValue(0, 0), 0.01);
+        assertEquals(70.0, result.getValue(4, 0), 0.01);
+        assertEquals(70.0, result.getValue(3, 1), 0.01);
+        assertEquals(70.0, result.getValue(2, 1), 0.01);
+        assertEquals(70.0, result.getValue(1, 1), 0.01);
+        assertEquals(70.0, result.getValue(0, 2), 0.01);
+    }
+
+    /**
+     * Test method for {@link net.sci.image.morphology.watershed.HierarchicWatershed2D#process(net.sci.array.scalar.ScalarArray2D)}.
+     */
+    @Test
     public final void testProcess_four_region_simple()
     {
         int[][] buffer = new int[][] {
@@ -46,7 +105,8 @@ public class HierarchicalWatershed2DTest
                 array.setInt(x, y, buffer[y][x]);
             }
         }
-        array.print(System.out);
+        System.out.println(array);
+//        array.print(System.out);
         
         HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
         ConsoleAlgoListener.monitor(algo);
