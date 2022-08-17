@@ -17,7 +17,33 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
 		return new BufferedFloat64Array2D(size0, size1);
 	}
 	
-	
+    /**
+     * Creates a new Float64Array2D from a two-dimensional array of double. The
+     * first index of the double array is the second dimension of the result array,
+     * i.e. <code>doubleArray[y][x]</code> is the same value as
+     * <code>array.getValue(x,y)</code>.
+     * 
+     * @param floatArray
+     *            the array of floats containing the values.
+     * @return a new instance of Float64Array2D initialized with the values of
+     *         <code>floatArray</code>
+     */
+    public static final Float64Array2D fromDoubleArray(double[][] doubleArray)
+    {
+        int size1 = doubleArray.length;
+        int size0 = doubleArray[0].length;
+        Float64Array2D res = Float64Array2D.create(size0, size1);
+        for (int y = 0; y < size1; y++)
+        {
+            for (int x = 0; x < size0; x++)
+            {
+                res.setValue(x, y, doubleArray[y][x]);
+            }
+        }
+        return res;
+    }
+    
+
 	// =============================================================
 	// Constructor
 

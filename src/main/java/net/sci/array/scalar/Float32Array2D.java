@@ -17,7 +17,33 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
 		return new BufferedFloat32Array2D(size0, size1);
 	}
 	
-	
+    /**
+     * Creates a new Float32Array2D from a two-dimensional array of floats. The
+     * first index of the float array is the second dimension of the result array,
+     * i.e. <code>floatArray[y][x]</code> is the same value as
+     * <code>array.getFloat(x,y)</code>.
+     * 
+     * @param floatArray
+     *            the array of floats containing the values.
+     * @return a new instance of Float32Array2D initialized with the values of
+     *         <code>floatArray</code>
+     */
+    public static final Float32Array2D fromFloatArray(float[][] floatArray)
+    {
+        int size1 = floatArray.length;
+        int size0 = floatArray[0].length;
+        Float32Array2D res = Float32Array2D.create(size0, size1);
+        for (int y = 0; y < size1; y++)
+        {
+            for (int x = 0; x < size0; x++)
+            {
+                res.setFloat(x, y, floatArray[y][x]);
+            }
+        }
+        return res;
+    }
+    
+    
 	// =============================================================
 	// Constructor
 
