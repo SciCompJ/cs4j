@@ -13,6 +13,21 @@ import org.junit.Test;
  */
 public class Float32Array2DTest
 {
+    /**
+     * Test method for {@link net.sci.array.scalar.Float32Array2D#fromFloatArray(float[][])}.
+     */
+    @Test
+    public final void testFromFloatArray()
+    {
+        float[][] values = new float[][] {{1.0f, 1.1f, 1.2f, 1.3f}, {2.0f, 2.1f, 2.2f, 2.3f}, {3.0f, 3.1f, 3.2f, 3.3f}};
+        
+        Float32Array2D array = Float32Array2D.fromFloatArray(values);
+        
+        assertEquals(4, array.size(0));
+        assertEquals(3, array.size(1));
+        assertEquals(1.0, array.getFloat(0, 0), 0.01);
+        assertEquals(3.3, array.getFloat(3, 2), 0.01);
+    }
     
     /**
      * Test method for {@link net.sci.array.scalar.Float32Array2D#fillValues(java.util.function.BiFunction)}.

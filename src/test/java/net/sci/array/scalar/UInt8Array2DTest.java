@@ -4,6 +4,7 @@
 package net.sci.array.scalar;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.function.BiFunction;
 
@@ -15,6 +16,22 @@ import org.junit.Test;
  */
 public class UInt8Array2DTest
 {
+    /**
+     * Test method for {@link net.sci.array.scalar.UInt8Array2D#fromIntArray(int[][])}.
+     */
+    @Test
+    public final void testFromIntArray()
+    {
+        int[][] values = new int[][] {{10, 11, 12, 13}, {20, 21, 22, 23}, {30, 31, 32, 33}};
+        
+        UInt8Array2D array = UInt8Array2D.fromIntArray(values);
+        
+        assertEquals(4, array.size(0));
+        assertEquals(3, array.size(1));
+        assertEquals(10, array.getInt(0, 0));
+        assertEquals(33, array.getInt(3, 2));
+    }
+
     /**
      * Test method for {@link net.sci.array.scalar.UInt8Array2D#fillInts(BiFunction)}.
      */
@@ -54,7 +71,7 @@ public class UInt8Array2DTest
         IntArray2D<?> array = UInt8Array2D.create(5, 4);
         array.fillInts((x, y) -> x + y * 10);
         
-        System.out.println(array);
+        assertFalse(array.toString().isEmpty());
     }
     
 }
