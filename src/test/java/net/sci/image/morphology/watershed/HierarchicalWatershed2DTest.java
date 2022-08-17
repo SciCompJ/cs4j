@@ -145,6 +145,27 @@ public class HierarchicalWatershed2DTest
 
     /**
      * Test method for {@link net.sci.image.morphology.watershed.HierarchicWatershed2D#process(net.sci.array.scalar.ScalarArray2D)}.
+     */
+    @Test
+    public final void testProcess_merge_basin_and_two_boundaries()
+    {
+        int[][] buffer = new int[][] {
+            {250, 200,  10, 200, 250}, 
+            { 20,  40, 100,  50,  30}, 
+            {250,  30, 250,  40, 250}, 
+        };
+        UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
+        System.out.println(array);
+        
+        HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
+        ConsoleAlgoListener.monitor(algo);
+        
+        ScalarArray2D<?> result = algo.process(array);
+        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
+    }
+
+    /**
+     * Test method for {@link net.sci.image.morphology.watershed.HierarchicWatershed2D#process(net.sci.array.scalar.ScalarArray2D)}.
      * @throws IOException 
      */
     @Test
@@ -169,31 +190,4 @@ public class HierarchicalWatershed2DTest
         
         System.out.println("finish.");
     }
-
-    /**
-     * Test method for {@link net.sci.image.morphology.watershed.HierarchicWatershed2D#process(net.sci.array.scalar.ScalarArray2D)}.
-     * @throws IOException 
-     */
-    @Test
-    public final void testProcess_appleCells_sub10() throws IOException
-    {
-        String fileName = getClass().getResource("/images/plant_tissues/appleCells_crop_smooth_sub10.tif").getFile();
-        
-        TiffImageReader reader = new TiffImageReader(fileName);
-        Image image = reader.readImage();
-        
-        assertEquals(2, image.getDimension());
-        UInt8Array2D array = UInt8Array2D.wrap(UInt8Array.wrap((ScalarArray<?>) image.getData()));
-
-        HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
-        ConsoleAlgoListener.monitor(algo);
-        
-        UInt8Array2D result = UInt8Array2D.wrap(UInt8Array.wrap(algo.process(array)));
-        
-        Image resultImage = new Image(result, image);
-        resultImage.show();
-        
-        System.out.println("finish.");
-    }
-
 }
