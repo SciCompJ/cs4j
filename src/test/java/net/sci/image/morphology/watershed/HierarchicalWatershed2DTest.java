@@ -9,7 +9,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import net.sci.algo.ConsoleAlgoListener;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array;
@@ -35,13 +34,27 @@ public class HierarchicalWatershed2DTest
             { 32,  30,  31,  60,  40},
         };
         UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
-        System.out.println(array);
+//        System.out.println(array);
         
         HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
-        ConsoleAlgoListener.monitor(algo);
+//        ConsoleAlgoListener.monitor(algo);
         
         ScalarArray2D<?> result = algo.process(array);
-        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
+//        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
+        
+        // check size
+        assertEquals(array.size(0), result.size(0));
+        assertEquals(array.size(1), result.size(1));
+        // check basins have dynamic equal to zero
+        assertEquals(0.0, result.getValue(0, 0), 0.01);
+        assertEquals(0.0, result.getValue(4, 0), 0.01);
+        assertEquals(0.0, result.getValue(0, 2), 0.01);
+        assertEquals(0.0, result.getValue(4, 2), 0.01);
+        // check the dynamic of the boundaries
+        assertEquals(30.0, result.getValue(1, 0), 0.01); // boundary (1, 2)
+        assertEquals(20.0, result.getValue(3, 2), 0.01); // boundary (3, 4)
+        assertEquals(70.0, result.getValue(4, 1), 0.01); // boundary (1, 2 vs 3 ,4)
+        assertEquals(70.0, result.getValue(0, 1), 0.01);
     }
 
     /**
@@ -56,18 +69,18 @@ public class HierarchicalWatershed2DTest
             {250,  31,  30,  32,  60},
         };
         UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
-        System.out.println(array);
+//        System.out.println(array);
         
         HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
-        ConsoleAlgoListener.monitor(algo);
+//        ConsoleAlgoListener.monitor(algo);
         
         ScalarArray2D<?> result = algo.process(array);
-        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
+//        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
         
         // check size
         assertEquals(array.size(0), result.size(0));
         assertEquals(array.size(1), result.size(1));
-        // check region have dynamic equal to zero
+        // check basins have dynamic equal to zero
         assertEquals(0.0, result.getValue(2, 0), 0.01);
         assertEquals(0.0, result.getValue(0, 1), 0.01);
         assertEquals(0.0, result.getValue(4, 1), 0.01);
@@ -97,22 +110,30 @@ public class HierarchicalWatershed2DTest
             { 31, 220,  71,  64,  52,  40,  54,  67,  72, 150,  51}, 
             {250,  72,  65,  51,  41,  10,  42,  55,  66,  73, 250}, 
         };
-        UInt8Array2D array = UInt8Array2D.create(11, 7);
-        for (int y = 0; y < 7; y++)
-        {
-            for (int x = 0; x < 11; x++)
-            {
-                array.setInt(x, y, buffer[y][x]);
-            }
-        }
-        System.out.println(array);
+        UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
+//        System.out.println(array);
 //        array.print(System.out);
         
         HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
-        ConsoleAlgoListener.monitor(algo);
+//        ConsoleAlgoListener.monitor(algo);
         
         ScalarArray2D<?> result = algo.process(array);
-        UInt8Array2D.wrap(UInt8Array.wrap(result)).print(System.out);
+//        UInt8Array2D.wrap(UInt8Array.wrap(result)).print(System.out);
+        
+        // check size
+        assertEquals(array.size(0), result.size(0));
+        assertEquals(array.size(1), result.size(1));
+        // check basins have dynamic equal to zero
+        assertEquals(0.0, result.getValue( 5, 0), 0.01);
+        assertEquals(0.0, result.getValue( 0, 3), 0.01);
+        assertEquals(0.0, result.getValue(10, 3), 0.01);
+        assertEquals(0.0, result.getValue( 5, 6), 0.01);
+        // check the dynamic of the boundaries
+        assertEquals(130.0, result.getValue( 0, 0), 0.01); // (1, 2)
+        assertEquals(200.0, result.getValue(10, 0), 0.01); // (global)
+        assertEquals(200.0, result.getValue( 0, 6), 0.01); // (global)
+        assertEquals(120.0, result.getValue(10, 6), 0.01); // (3, 4)
+        assertEquals(200.0, result.getValue( 5, 3), 0.01); // (global)
     }
 
     /**
@@ -126,21 +147,28 @@ public class HierarchicalWatershed2DTest
             { 20,  30,  60,  40}, 
             { 10,  11, 110,  55}, 
         };
-        UInt8Array2D array = UInt8Array2D.create(4, 3);
-        for (int y = 0; y < 3; y++)
-        {
-            for (int x = 0; x < 4; x++)
-            {
-                array.setInt(x, y, buffer[y][x]);
-            }
-        }
-        array.print(System.out);
+        UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
+//        array.print(System.out);
         
         HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
-        ConsoleAlgoListener.monitor(algo);
+//        ConsoleAlgoListener.monitor(algo);
         
         ScalarArray2D<?> result = algo.process(array);
-        UInt8Array2D.wrap(UInt8Array.wrap(result)).print(System.out);
+//        UInt8Array2D.wrap(UInt8Array.wrap(result)).print(System.out);
+        
+        // check size
+        assertEquals(array.size(0), result.size(0));
+        assertEquals(array.size(1), result.size(1));
+        // check basins have dynamic equal to zero
+        assertEquals(0.0, result.getValue(0, 0), 0.01);
+        assertEquals(0.0, result.getValue(3, 0), 0.01);
+        assertEquals(0.0, result.getValue(0, 2), 0.01);
+        // check the dynamic of the boundaries
+        assertEquals( 10.0, result.getValue( 0, 1), 0.01); // (1, 3)
+        assertEquals( 10.0, result.getValue( 1, 1), 0.01); // (1, 3)
+        assertEquals( 20.0, result.getValue( 2, 0), 0.01); // (global)
+        assertEquals( 20.0, result.getValue( 2, 1), 0.01); // (global)
+        assertEquals( 20.0, result.getValue( 2, 2), 0.01); // (global)
     }
 
     /**
@@ -151,17 +179,35 @@ public class HierarchicalWatershed2DTest
     {
         int[][] buffer = new int[][] {
             {250, 200,  10, 200, 250}, 
-            { 20,  40, 100,  50,  30}, 
+            { 20,  40, 100,  60,  30}, 
             {250,  30, 250,  40, 250}, 
         };
         UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
-        System.out.println(array);
+//        System.out.println(array);
         
         HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
-        ConsoleAlgoListener.monitor(algo);
+//        ConsoleAlgoListener.monitor(algo);
         
         ScalarArray2D<?> result = algo.process(array);
-        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
+//        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
+        
+        // check size
+        assertEquals(array.size(0), result.size(0));
+        assertEquals(array.size(1), result.size(1));
+        // check basins have dynamic equal to zero
+        assertEquals(0.0, result.getValue(2, 0), 0.01);
+        assertEquals(0.0, result.getValue(0, 1), 0.01);
+        assertEquals(0.0, result.getValue(4, 1), 0.01);
+        assertEquals(0.0, result.getValue(1, 2), 0.01);
+        assertEquals(0.0, result.getValue(3, 2), 0.01);
+        // check the dynamic of the boundaries
+        assertEquals( 10.0, result.getValue( 1, 1), 0.01); // (2, 4)
+        assertEquals( 10.0, result.getValue( 0, 2), 0.01); // (2, 4)
+        assertEquals( 20.0, result.getValue( 3, 1), 0.01); // (3, 5)
+        assertEquals( 20.0, result.getValue( 4, 2), 0.01); // (3, 5)
+        assertEquals( 70.0, result.getValue( 1, 0), 0.01); // (global)
+        assertEquals( 70.0, result.getValue( 3, 0), 0.01); // (global)
+        assertEquals( 70.0, result.getValue( 2, 1), 0.01); // (global)    
     }
 
     /**
@@ -180,14 +226,12 @@ public class HierarchicalWatershed2DTest
         UInt8Array2D array = UInt8Array2D.wrap(UInt8Array.wrap((ScalarArray<?>) image.getData()));
 
         HierarchicalWatershed2D algo = new HierarchicalWatershed2D();
-        ConsoleAlgoListener.monitor(algo);
+//        ConsoleAlgoListener.monitor(algo);
         
         ScalarArray2D<?> res = algo.process(array);
         UInt8Array2D res8 = UInt8Array2D.wrap(UInt8Array.wrap(res));
         
         Image resultImage = new Image(res8, image);
         resultImage.show();
-        
-        System.out.println("finish.");
     }
 }
