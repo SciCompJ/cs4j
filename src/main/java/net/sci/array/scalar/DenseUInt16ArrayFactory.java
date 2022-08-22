@@ -22,7 +22,7 @@ public class DenseUInt16ArrayFactory extends AlgoStub implements UInt16Array.Fac
         switch (dims.length)
         {
         case 2:
-            return UInt16Array2D.create(dims[0], dims[1]);
+            return new BufferedUInt16Array2D(dims[0], dims[1]);
         case 3:
         {
             fireStatusChanged(this, "Allocating memory");

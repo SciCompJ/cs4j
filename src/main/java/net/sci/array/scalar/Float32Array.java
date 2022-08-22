@@ -29,15 +29,7 @@ public interface Float32Array extends ScalarArray<Float32>
 
 	public static Float32Array create(int... dims)
 	{
-		switch (dims.length)
-		{
-		case 2:
-			return Float32Array2D.create(dims[0], dims[1]);
-		case 3:
-			return Float32Array3D.create(dims[0], dims[1], dims[2]);
-		default:
-			return Float32ArrayND.create(dims);
-		}
+	    return defaultFactory.create(dims);
 	}
 
 	public static Float32Array create(int[] dims, float[] buffer)
@@ -224,6 +216,22 @@ public interface Float32Array extends ScalarArray<Float32>
         setValue(pos, value);
     }
 
+
+    // =============================================================
+    // Specialization of ScalarArray interface
+
+    @Override
+    public default double getValue(int... pos)
+    {
+        return getFloat(pos);
+    }
+    
+    @Override
+    public default void setValue(int[] pos, double value)
+    {
+        setFloat(pos, (float) value);
+    }
+    
     
 	// =============================================================
 	// Specialization of Array interface

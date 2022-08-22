@@ -22,7 +22,7 @@ public class DenseInt16ArrayFactory extends AlgoStub implements Int16Array.Facto
         switch (dims.length)
         {
         case 2:
-            return Int16Array2D.create(dims[0], dims[1]);
+            return new BufferedInt16Array2D(dims[0], dims[1]);
         case 3:
         {
             fireStatusChanged(this, "Allocating memory");

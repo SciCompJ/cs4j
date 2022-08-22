@@ -3,7 +3,6 @@
  */
 package net.sci.array.scalar;
 
-
 /**
  * @author dlegland
  *
@@ -51,7 +50,26 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
         return res;
     }
     
-	
+    
+    /**
+     * Encapsulates the specified instance of UInt16Array into a new
+     * UInt16Array2D, by creating a Wrapper if necessary. If the original array
+     * is already an instance of UInt16Array2D, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a UInt16Array2D view of the original array
+     */
+    public static UInt16Array2D wrap(UInt16Array array)
+    {
+        if (array instanceof UInt16Array2D)
+        { 
+            return (UInt16Array2D) array; 
+        }
+        return new Wrapper(array);
+    }
+    
+    
 	// =============================================================
 	// Constructor
 
@@ -141,4 +159,56 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
         return res;
 	}
 
+    /**
+     * Wraps a UInt16 array with two dimensions into a UInt16Array2D.
+     */
+    private static class Wrapper extends UInt16Array2D
+    {
+        UInt16Array array;
+
+        public Wrapper(UInt16Array array)
+        {
+            super(0, 0);
+            if (array.dimensionality() != 2)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 2.");
+            }
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.array = array;
+        }
+
+        @Override
+        public void setShort(int x, int y, short b)
+        {
+            this.array.setShort(new int[] {x, y}, b);
+        }
+
+        @Override
+        public short getShort(int... pos)
+        {
+            return this.array.getShort(pos);
+        }
+
+        @Override
+        public void setShort(int[] pos, short b)
+        {
+            this.array.setShort(pos, b);
+        }
+
+        @Override
+        public UInt16Array2D duplicate()
+        {
+            return new Wrapper(this.array.duplicate());
+        }
+
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.scalar.UInt16Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
 }

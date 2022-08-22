@@ -22,7 +22,7 @@ public class DenseFloat64ArrayFactory extends AlgoStub implements Float64Array.F
         switch (dims.length)
         {
         case 2:
-            return Float64Array2D.create(dims[0], dims[1]);
+            return new BufferedFloat64Array2D(dims[0], dims[1]);
         case 3:
         {
             fireStatusChanged(this, "Allocating memory");

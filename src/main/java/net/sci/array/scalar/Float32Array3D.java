@@ -3,8 +3,6 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.Array;
-
 /**
  * @author dlegland
  *
@@ -27,12 +25,28 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
 	 */
 	public static final Float32Array3D create(int size0, int size1, int size2)
 	{
-        if (Array.prod(size0, size1, size2) < Integer.MAX_VALUE - 8)
-            return new BufferedFloat32Array3D(size0, size1, size2);
-        else 
-            return new SlicedFloat32Array3D(size0, size1, size2);
+        return wrap(Float32Array.create(size0, size1, size2));
 	}
 	
+    /**
+     * Encapsulates the specified instance of Float32Array into a new
+     * Float32Array3D, by creating a Wrapper if necessary. If the original array
+     * is already an instance of Float32Array3D, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Float32Array2D view of the original array
+     */
+    public static Float32Array3D wrap(Float32Array array)
+    {
+        if (array instanceof Float32Array3D)
+        { 
+            return (Float32Array3D) array; 
+        }
+        return new Wrapper(array);
+    }
+    
+
 	
 	// =============================================================
 	// Constructor
@@ -158,6 +172,64 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
         return res;
     }
 
+    // =============================================================
+    // Implementation of inner classes
+    
+    /**
+     * Wraps a Float32 array with three dimensions into a Float32Array3D.
+     */
+    private static class Wrapper extends Float32Array3D
+    {
+        Float32Array array;
+
+        public Wrapper(Float32Array array)
+        {
+            super(0, 0, 0);
+            if (array.dimensionality() != 3)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 3.");
+            }
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.size2 = array.size(2);
+            this.array = array;
+        }
+        
+        @Override
+        public void setFloat(int x, int y, int z, float f)
+        {
+            this.array.setFloat(new int[] {x, y, z}, f);
+        }
+
+        @Override
+        public float getFloat(int... pos)
+        {
+            return this.array.getFloat(pos);
+        }
+
+        @Override
+        public void setFloat(int[] pos, float value)
+        {
+            this.array.setFloat(pos, value);
+        }
+
+        @Override
+        public Float32Array3D duplicate()
+        {
+            return new Wrapper(this.array.duplicate());
+        }
+
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.scalar.Float32Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
+    
+    
     private class SliceView extends Float32Array2D
     {
         int sliceIndex;

@@ -22,7 +22,7 @@ public class DenseBinaryArrayFactory extends AlgoStub implements BinaryArray.Fac
         switch (dims.length)
         {
         case 2:
-            return BufferedBinaryArray2D.create(dims[0], dims[1]);
+            return new BufferedBinaryArray2D(dims[0], dims[1]);
         case 3:
         {
             if (Array.prod(dims[0], dims[1], dims[2]) < Integer.MAX_VALUE - 8)

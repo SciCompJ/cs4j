@@ -29,15 +29,7 @@ public interface Float64Array extends ScalarArray<Float64>
 
 	public static Float64Array create(int... dims)
 	{
-		switch (dims.length)
-		{
-		case 2:
-			return Float64Array2D.create(dims[0], dims[1]);
-		case 3:
-			return Float64Array3D.create(dims[0], dims[1], dims[2]);
-		default:
-			return Float64ArrayND.create(dims);
-		}
+	    return defaultFactory.create(dims);
 	}
 
 	public static Float64Array create(int[] dims, double[] buffer)

@@ -22,7 +22,7 @@ public class DenseUInt8ArrayFactory extends AlgoStub implements UInt8Array.Facto
         switch (dims.length)
         {
         case 2:
-            return UInt8Array2D.create(dims[0], dims[1]);
+            return new BufferedUInt8Array2D(dims[0], dims[1]);
         case 3:
         {
             fireStatusChanged(this, "Allocating memory");
