@@ -311,6 +311,19 @@ public interface BinaryArray extends IntArray<Binary>
 	public boolean getBoolean(int... pos);
 	
 	public void setBoolean(int[] pos, boolean state);
+	
+	public default long trueElementCount()
+	{
+	    long count = 0;
+	    for (int[] pos : positions())
+	    {
+	        if (getBoolean(pos))
+	        {
+	            count++;
+	        }
+	    }
+	    return count;
+	}
 
 	/**
 	 * @return an Iterable over the positions of only true elements within the
