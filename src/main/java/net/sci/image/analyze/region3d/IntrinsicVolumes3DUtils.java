@@ -71,19 +71,13 @@ public class IntrinsicVolumes3DUtils
      */
     public final static double[] surfaceAreaLut(Calibration calib, int nDirs) 
     {
-        if (nDirs == 3)
+        return switch(nDirs)
         {
-            return surfaceAreaLutD3(calib);
-        }
-        else if (nDirs == 13)
-        {
-            return surfaceAreaLutD13(calib);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Number of directions should be either 3 or 13, not " + nDirs);
-        }
-
+            case 3 -> surfaceAreaLutD3(calib);
+            case 13 -> surfaceAreaLutD13(calib);
+            default -> throw new IllegalArgumentException(
+                    "Number of directions should be either 3 or 13, not " + nDirs);
+        };
     }
     
     /**
@@ -237,18 +231,13 @@ public class IntrinsicVolumes3DUtils
      */
     public static final double[] meanBreadthLut(Calibration calib, int nDirs, int conn2d)
     {
-        if (nDirs == 3)
+        return switch(nDirs)
         {
-            return meanBreadthLutD3(calib, conn2d);
-        }
-        else if (nDirs == 13)
-        {
-            return meanBreadthLutD13(calib, conn2d);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Number of directions should be either 3 or 13, not " + nDirs);
-        }
+            case 3 -> meanBreadthLutD3(calib, conn2d);
+            case 13 -> meanBreadthLutD13(calib, conn2d);
+            default -> throw new IllegalArgumentException(
+                    "Number of directions should be either 3 or 13, not " + nDirs);
+        };
     }
     
     /**
@@ -444,18 +433,13 @@ public class IntrinsicVolumes3DUtils
     
     private static final double eulerContribTile2d(boolean[] face, int conn2d, double d1, double d2)
     {
-        if (conn2d == 4)
+        return switch(conn2d)
         {
-            return eulerContribTile2dC4(face, d1, d2);
-        }
-        else if (conn2d == 8)
-        {
-            return eulerContribTile2dC8(face, d1, d2);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Connectivity mustbe either 4 or 8");
-        }
+            case 4 -> eulerContribTile2dC4(face, d1, d2);
+            case 8 -> eulerContribTile2dC8(face, d1, d2);
+            default -> throw new IllegalArgumentException(
+                    "2D Connectivity mustbe either 4 or 8, not " + conn2d);
+        };
     }
     
     /**
@@ -788,18 +772,13 @@ public class IntrinsicVolumes3DUtils
      */
     public static final double[] eulerNumberLut(int conn)
     {
-        if (conn == 6)
+        return switch(conn)
         {
-            return eulerNumberLutC6();          
-        }
-        else if (conn == 26)
-        {
-            return eulerNumberLutC26();
-        }
-        else
-        {
-            throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + conn);
-        }
+            case 6 -> eulerNumberLutC6();
+            case 26 -> eulerNumberLutC26();
+            default -> throw new IllegalArgumentException(
+                    "Connectivity must be either 6 or 26, not " + conn);
+        };
     }
 
     /**
