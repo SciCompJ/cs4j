@@ -99,10 +99,10 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
             // shift buffer by using row at index y+sizeY-1-offset
             int index = y + strelSizeY - 1 - strelOffsetY;
             BinaryRow bufferRow = rleArray.getRow(Math.min(index, sizeY - 1));
-            buffer.update(bufferRow, BinaryRow::dilation);
+            buffer.update(bufferRow, BinaryRow::erosion);
             
-            // initialize empty result row
-            BinaryRow resRow = new BinaryRow();
+            // initialize full result row
+            BinaryRow resRow = new BinaryRow().complement(sizeX);
             
             // iterate over rows of structuring element
             for (int yStrel = 0; yStrel < strelSizeY; yStrel++)
