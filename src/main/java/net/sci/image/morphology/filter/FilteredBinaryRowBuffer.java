@@ -3,6 +3,8 @@
  */
 package net.sci.image.morphology.filter;
 
+import java.util.function.BiFunction;
+
 import net.sci.array.binary.BinaryRow;
 
 /**
@@ -14,7 +16,6 @@ import net.sci.array.binary.BinaryRow;
  */
 public class FilteredBinaryRowBuffer
 {
-    int[] indices;
     BinaryRow[] filters;
     
     int nFilters;
@@ -26,30 +27,25 @@ public class FilteredBinaryRowBuffer
     BinaryRow[][] buffer;
 
     
-    public FilteredBinaryRowBuffer(int[] indices, BinaryRow[] filters)
+    public FilteredBinaryRowBuffer(int bufferSize, BinaryRow[] filters)
     {
         // keep processing information
         this.filters = filters;
-        this.indices = indices;
         this.nFilters = filters.length;
         
         // allocate buffer
-        this.buffer = new BinaryRow[indices.length][nFilters];
+        this.buffer = new BinaryRow[bufferSize][nFilters];
     }
     
-    public BinaryRow getFilteredRow(int iRow)
-    {
-        return buffer[iRow][indices[iRow]];
-    }
-    
-    public BinaryRow get(int iRow, int iFilter)
+    public BinaryRow getFilteredRow(int iRow, int iFilter)
     {
         return buffer[iRow][iFilter];
     }
-    
-    public void shiftAndAdd(BinaryRow[] filteredRows)
+        
+    public void update(BinaryRow row, BiFunction<BinaryRow, BinaryRow, BinaryRow> operator)
     {
-        this.buffer[0] = null;
+        // keep first row
+        BinaryRow[] rows = this.buffer[0];
         
         // shift all row arrays 
         int lastRow = this.buffer.length-1;
@@ -58,7 +54,23 @@ public class FilteredBinaryRowBuffer
             this.buffer[iRow] = this.buffer[iRow+1];
         }
         
+        // update first row
+        if (row == null)
+        {
+            for (int i = 0; i < nFilters; i++)
+            {
+                rows[i] = new BinaryRow(); // TODO could avoid creation
+            }
+        }
+        else
+        {
+            for (int i = 0; i < nFilters; i++)
+            {
+                rows[i] = operator.apply(row, filters[i]);
+            }
+        }
+        
         // append new array with the selected filters 
-        this.buffer[lastRow] = filteredRows;
+        this.buffer[lastRow] = rows;
     }
 }

@@ -3,6 +3,8 @@
  */
 package net.sci.image.morphology.filter;
 
+import java.util.function.BiFunction;
+
 import net.sci.array.binary.BinaryRow;
 
 /**
@@ -19,6 +21,7 @@ public class FilteredBinaryRowBuffer2D
      */
     int[] size;
     
+    BinaryRow[] filters;
     int nFilters;
     
     /**
@@ -28,11 +31,12 @@ public class FilteredBinaryRowBuffer2D
     BinaryRow[][][] buffer;
 
     
-    public FilteredBinaryRowBuffer2D(int[] size, int nFilters)
+    public FilteredBinaryRowBuffer2D(int[] size, BinaryRow[] filters)
     {
         // keep processing information
         this.size = size;
-        this.nFilters = nFilters;
+        this.filters = filters;
+        this.nFilters = filters.length;
         
         // allocate buffer
         this.buffer = new BinaryRow[size[1]][size[0]][nFilters];
@@ -43,19 +47,39 @@ public class FilteredBinaryRowBuffer2D
         return buffer[z][y][iStrel];
     }
     
-   
-    public void shiftAndAdd(BinaryRow[][] filteredSliceRows)
+    public void update(BinaryRow[] slice, BiFunction<BinaryRow, BinaryRow, BinaryRow> operator)
     {
-        this.buffer[0] = null;
+        // keep first row
+        BinaryRow[][] slice0 = this.buffer[0];
         
-        // shift all slice arrays 
-        int lastRow = this.buffer.length - 1;
+        // shift all row arrays 
+        int lastRow = this.buffer.length-1;
         for (int iRow = 0; iRow < lastRow; iRow++)
         {
             this.buffer[iRow] = this.buffer[iRow+1];
         }
         
+        // iterate over rows of the slice
+        for (int iRow = 0; iRow < slice.length; iRow++)
+        {
+            BinaryRow row = slice[iRow];
+            if (row == null)
+            {
+                for (int iFilt = 0; iFilt < nFilters; iFilt++)
+                {
+                    slice0[iRow][iFilt] = new BinaryRow(); // TODO could avoid creation
+                }
+            }
+            else
+            {
+                for (int iFilt = 0; iFilt < nFilters; iFilt++)
+                {
+                    slice0[iRow][iFilt] = operator.apply(row, filters[iFilt]);
+                }
+            }
+        }
+        
         // append new array with the selected filters 
-        this.buffer[lastRow] = filteredSliceRows;
+        this.buffer[lastRow] = slice0;
     }
 }

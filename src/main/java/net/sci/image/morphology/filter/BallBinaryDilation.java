@@ -64,28 +64,25 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
         RunLengthBinaryArray2D rleArray = RunLengthBinaryArray2D.convert(array);
         
         // create data structure for retrieving rows from rowindex (0 -> N-1)
-        IndexedRowsStrel2D strelRows = IndexedRowsStrel2D.createDisk(radius);
-        BinaryRow[] uniqueRows = strelRows.uniqueRows();
+        IndexedRowsStrel2D strel = IndexedRowsStrel2D.createDisk(radius);
         
         // Initialize data related to strel
         int intRadius = (int) Math.floor(this.radius + 0.5);
-        int nStrelRows = 2 * intRadius + 1;
         
-        int strelSizeY = nStrelRows;
+        int strelSizeY = 2 * intRadius + 1;
         int strelOffsetY = intRadius;
         
-         // initialize row buffer with first rows
-        FilteredBinaryRowBuffer rowBuffer = new FilteredBinaryRowBuffer(strelRows.indices, uniqueRows);
-        BinaryRow[] row0Dilations = applyRowDilations(rleArray.getRow(0), uniqueRows); 
+        // initialize a buffer of filtered rows
+        FilteredBinaryRowBuffer buffer = new FilteredBinaryRowBuffer(strelSizeY, strel.rows);
+        BinaryRow row0 = rleArray.getRow(0);
         for (int iRow = 0; iRow < strelOffsetY + 2; iRow++)
         {
-            rowBuffer.shiftAndAdd(row0Dilations);
+            buffer.update(row0, BinaryRow::dilation);
         }
         for (int iRow = 1 ; iRow < strelSizeY - strelOffsetY - 1; iRow++)
         {
-            rowBuffer.shiftAndAdd(applyRowDilations(rleArray.getRow(iRow), uniqueRows));
+            buffer.update(rleArray.getRow(iRow), BinaryRow::dilation);
         }
-        
         
         // create result array
         int sizeX = rleArray.size(0);
@@ -102,7 +99,7 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
             // shift buffer by using row at index y+sizeY-1-offset
             int index = y + strelSizeY - 1 - strelOffsetY;
             BinaryRow bufferRow = rleArray.getRow(Math.min(index, sizeY - 1));
-            rowBuffer.shiftAndAdd(applyRowDilations(bufferRow, uniqueRows));
+            buffer.update(bufferRow, BinaryRow::dilation);
             
             // initialize empty result row
             BinaryRow resRow = new BinaryRow();
@@ -111,7 +108,8 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
             for (int yStrel = 0; yStrel < strelSizeY; yStrel++)
             {
                 // retrieve the result of row dilation with appropriate strel row
-                BinaryRow row = rowBuffer.getFilteredRow(yStrel);
+                int strelRowIndex = strel.indices[yStrel];
+                BinaryRow row = buffer.getFilteredRow(yStrel, strelRowIndex);
                 
                 // combine result with current result row
                 resRow = BinaryRow.union(resRow, row);
@@ -126,20 +124,6 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
         return res;
     }
     
-    private BinaryRow[] applyRowDilations(BinaryRow row, BinaryRow[] strels)
-    {
-        if (row == null)
-        {
-            row = new BinaryRow();
-        }
-        BinaryRow[] filteredRows = new BinaryRow[strels.length];
-        for (int i = 0; i < strels.length; i++)
-        {
-            filteredRows[i] = BinaryRow.dilation(row, strels[i]);
-        }
-        return filteredRows;
-    }
-
     /**
      * Performs morphological dilation on a 3D binary array. The input is
      * converted into an instance of <code>RunLengthBinaryArray3D</code> when
@@ -163,10 +147,7 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
         int strelOffsetZ = intRadius;
 
         // Create data structure to index strel rows
-        IndexedRowsStrel3D strelRows = IndexedRowsStrel3D.createBall(radius);
-        HashMap<Integer, HashMap<Integer, Integer>> indices = strelRows.indices;
-        BinaryRow[] uniqueRows = strelRows.rows;
-        int nFilters = uniqueRows.length;
+        IndexedRowsStrel3D strel = IndexedRowsStrel3D.createBall(radius);
 
         // array dimensions
         int sizeX = rleArray.size(0);
@@ -176,19 +157,19 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
 
         // create buffer
         int[] bufferSize = new int[] {sizeY, strelSizeZ};
-        FilteredBinaryRowBuffer2D buffer = new FilteredBinaryRowBuffer2D(bufferSize, nFilters);
+        FilteredBinaryRowBuffer2D buffer = new FilteredBinaryRowBuffer2D(bufferSize, strel.rows);
         
         // initialize buffer with upper slices of array
-        BinaryRow[] slice0 = getSliceRows(rleArray, 0);
-        BinaryRow[][] dilatedRows = applySliceRowsDilations(slice0, uniqueRows);
+        BinaryRow[] sliceRows = new BinaryRow[sizeY];
+        copySliceRows(rleArray, 0, sliceRows);
         for (int iSlice = 0; iSlice < strelOffsetZ + 2; iSlice++)
         {
-            buffer.shiftAndAdd(dilatedRows);
+            buffer.update(sliceRows, BinaryRow::dilation);
         }
         for (int iSlice = 1 ; iSlice < strelSizeZ - strelOffsetZ - 1; iSlice++)
         {
-            BinaryRow[] slice = getSliceRows(rleArray, iSlice);
-            buffer.shiftAndAdd(applySliceRowsDilations(slice, uniqueRows));
+            copySliceRows(rleArray, iSlice, sliceRows);
+            buffer.update(sliceRows, BinaryRow::dilation);
         }
 
         
@@ -203,9 +184,9 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
             HashMap<Integer, BinaryRow> currentSlice = new HashMap<>();
             
             // shift buffer by using row at index z+sizeZ-1-offsetZ
-            int zNextSlice = z + + strelSizeZ - 1 - strelOffsetZ;
-            BinaryRow[] sliceRows = getSliceRows(rleArray, Math.min(zNextSlice, sizeZ - 1));
-            buffer.shiftAndAdd(applySliceRowsDilations(sliceRows, uniqueRows));
+            int zNextSlice = Math.min(z + strelSizeZ - 1 - strelOffsetZ, sizeZ - 1);
+            copySliceRows(rleArray, zNextSlice, sliceRows);
+            buffer.update(sliceRows, BinaryRow::dilation);
             
             // iterate over rows of current slice
             for (int y = 0; y < sizeY; y++)
@@ -213,9 +194,8 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
                 // initialize empty result row
                 BinaryRow resRow = new BinaryRow();
                 
-                
                 // iterate over rows of structuring element
-                for (int zStrel : indices.keySet())
+                for (int zStrel : strel.indices.keySet())
                 {
                     int z2 = z + zStrel;
                     // check current slice is within the input array
@@ -224,7 +204,7 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
                         continue;
                     }
                     
-                    HashMap<Integer, Integer> strelSlice = indices.get(zStrel); 
+                    HashMap<Integer, Integer> strelSlice = strel.indices.get(zStrel); 
                     for (int yStrel : strelSlice.keySet())
                     {
                         int y2 = y + yStrel;
@@ -241,7 +221,6 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
                         // combine result with current result row
                         resRow = BinaryRow.union(resRow, row);
                     }
-                    
                 }
                 
                 if (!resRow.isEmpty())
@@ -262,58 +241,14 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
         return new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ, slices);
     }
     
-    private static final BinaryRow[] getSliceRows(RunLengthBinaryArray3D array, int sliceIndex)
+    private static final void copySliceRows(RunLengthBinaryArray3D array, int sliceIndex, BinaryRow[] rows)
     {
         int sizeY = array.size(1);
-        BinaryRow[] res = new BinaryRow[sizeY];
         for (int y = 0; y < sizeY; y++)
         {
-            res[y] = array.getRow(y, sliceIndex);
+            rows[y] = array.getRow(y, sliceIndex);
         }
-        
-        return res;
     }
-    
-    private BinaryRow[][] applySliceRowsDilations(BinaryRow[] slice, BinaryRow[] strels)
-    {
-        BinaryRow[][] sliceRes = new BinaryRow[slice.length][strels.length];
-        for (int y = 0; y < slice.length; y++)
-        {
-            BinaryRow row = slice[y];
-            sliceRes[y] = applyRowDilations(row, strels);
-        }
-        return sliceRes;
-    }
-    
-//    /**
-//     * Shifts all the runs within the 3D input array by the given amount to the
-//     * left.
-//     * 
-//     * @param array
-//     *            the array to shift.
-//     * @param dx
-//     *            the shift amount (positive to the right)
-//     * @return the new shifted array
-//     */
-//    private HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
-//    {
-//        // create array
-//        HashMap<Integer, HashMap<Integer, BinaryRow>> resRows = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
-//
-//        // iterate over non-empty slices 
-//        for (int z : array.nonEmptySliceIndices())
-//        {
-//            HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>();
-//            for (int y : array.nonEmptySliceRowIndices(z))
-//            {
-//                sliceRows.put(y, array.getRow(y, z).shift(dx));
-//            }
-//            resRows.put(z, sliceRows);
-//        }
-//
-//        // return
-//        return resRows;
-//    }
     
     public BinaryArray processBinary(BinaryArray array)
     {
@@ -322,7 +257,7 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
         return switch (nd)
         {
             case 2 -> processBinary2d(BinaryArray2D.wrap(array));
-//            case 3 -> processBinary3d(BinaryArray3D.wrap(array));
+            case 3 -> processBinary3d(BinaryArray3D.wrap(array));
             default -> throw new IllegalArgumentException(
                     "Requires an array of dimensionality 2, not " + nd);
         };
@@ -355,21 +290,19 @@ public class BallBinaryDilation extends AlgoStub implements ArrayOperator
     {
         System.out.println("hi!");
         
-        BinaryArray2D array = BinaryArray2D.create(9, 9);
-        array.setBoolean(0,  0, true);
-        array.setBoolean(8,  0, true);
-        array.setBoolean(4,  4, true);
-        array.setBoolean(0,  8, true);
-        array.setBoolean(8,  8, true);
+        BinaryArray2D array = BinaryArray2D.create(20, 20);
+        array.setBoolean( 0,  0, true);
+        array.setBoolean(19,  0, true);
+        array.setBoolean( 9,  9, true);
+        array.setBoolean( 0, 19, true);
+        array.setBoolean(19, 19, true);
         
-        double radius = 2;
+        double radius = 5.0;
         IndexedRowsStrel2D strelRows = IndexedRowsStrel2D.createDisk(radius);
         System.out.println(strelRows);
         
         BallBinaryDilation op = new BallBinaryDilation(radius);
         BinaryArray2D res = op.processBinary2d(array);
         System.out.println(res);
-        
-        
     }
 }
