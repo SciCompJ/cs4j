@@ -29,6 +29,7 @@ public class BallBinaryDilationTest
         BallBinaryDilation op = new BallBinaryDilation(radius);
         
         BinaryArray2D res = op.processBinary2d(array);
+//        System.out.println(res);
         
         assertEquals(array.size(0), res.size(0));
         assertEquals(array.size(1), res.size(1));
@@ -129,6 +130,7 @@ public class BallBinaryDilationTest
         BallBinaryDilation op = new BallBinaryDilation(radius);
         
         BinaryArray3D res = op.processBinary3d(array);
+//        res.print(System.out);
         
         assertEquals(array.size(0), res.size(0));
         assertEquals(array.size(1), res.size(1));

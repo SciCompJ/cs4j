@@ -78,12 +78,48 @@ public class IndexedRowsStrel2D
      */
     public BinaryRow[] rows;
     
+    int[] size;
+    int[] offset;
+
     
     public IndexedRowsStrel2D(int[] rowIndices, BinaryRow[] uniqueRows)
     {
         this.indices = rowIndices;
         this.rows = uniqueRows;
+        
+        initSizeAndOffset();
     }
+    
+    private void initSizeAndOffset()
+    {
+        int xMin = Integer.MAX_VALUE;
+        int xMax = Integer.MIN_VALUE;
+        
+        for (BinaryRow row : rows)
+        {
+            Run run = row.runs().iterator().next();
+            xMin = Math.min(xMin, run.left);
+            xMax = Math.max(xMax, run.right);
+        }
+        
+        int offsetY = (indices.length - 1) / 2;
+
+        
+        this.size = new int[] {xMax - xMin + 1, indices.length};
+        this.offset = new int[] {-xMin, offsetY};
+    }
+    
+    
+    public int[] size()
+    {
+        return this.size;
+    }
+
+    public int[] offset()
+    {
+        return this.offset;
+    }
+    
     
     /**
      * Returns the binary row that correspond to a given index.

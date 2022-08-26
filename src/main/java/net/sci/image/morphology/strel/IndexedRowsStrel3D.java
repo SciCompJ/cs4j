@@ -117,10 +117,57 @@ public class IndexedRowsStrel3D
     public BinaryRow[] rows;
     
     
+    int[] size;
+    int[] offset;
+    
+    
     public IndexedRowsStrel3D(HashMap<Integer, HashMap<Integer, Integer>> rowIndices, BinaryRow[] uniqueRows)
     {
         this.indices = rowIndices;
         this.rows = uniqueRows;
+        
+        initSizeAndOffset();
+    }
+    
+    private void initSizeAndOffset()
+    {
+        int xMin = Integer.MAX_VALUE;
+        int xMax = Integer.MIN_VALUE;
+        int yMin = Integer.MAX_VALUE;
+        int yMax = Integer.MIN_VALUE;
+        int zMin = Integer.MAX_VALUE;
+        int zMax = Integer.MIN_VALUE;
+        
+        for (int z : indices.keySet())
+        {
+            zMin = Math.min(zMin, z);
+            zMax = Math.max(zMax, z);
+            
+            var slice = indices.get(z);
+            for (int y : slice.values())
+            {
+                yMin = Math.min(yMin, y);
+                yMax = Math.max(yMax, y);
+                
+                BinaryRow row = rows[slice.get(y)];
+                Run run = row.runs().iterator().next();
+                xMin = Math.min(xMin, run.left);
+                xMax = Math.max(xMax, run.right);
+            }
+        }
+        
+        this.size = new int[] {xMax - xMin + 1, yMax - yMin + 1, zMax - zMin + 1};
+        this.offset = new int[] {-xMin, -yMin, -zMin};
+    }
+    
+    public int[] size()
+    {
+        return this.size;
+    }
+
+    public int[] offset()
+    {
+        return this.offset;
     }
     
     @Override

@@ -65,22 +65,11 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
      */
     public BinaryArray2D processBinary2d(BinaryArray2D array)
     {
-//        // cast to Strel2D and retrieve size and offset
-//        Strel2D strel2d = Strel2D.wrap(strel);
-//        int[] strelSize = strel2d.size();
-//        int[] strelOffset = strel2d.getOffset();
-//        
-//        // convert structuring element to RLE array
-//        RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel2d.getMask());
-//        
-//        // work on rows shifted along x axis
-//        HashMap<Integer, BinaryRow> strelRows = shiftRows(strel2, -strelOffset[0]);
-        
         // ensure input array uses RLE representation (if not already the case)
         fireStatusChanged(this, "Prepare input image");
         RunLengthBinaryArray2D rleArray = RunLengthBinaryArray2D.convert(array);
         
-        // create data structure for retrieving rows from rowindex (0 -> N-1)
+        // create data structure for retrieving rows from row index (0 -> N-1)
         IndexedRowsStrel2D strel = IndexedRowsStrel2D.createDisk(radius);
         
         // Initialize data related to strel
@@ -96,16 +85,7 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
         }
         
         // initialize a buffer of filtered rows
-        FilteredBinaryRowBuffer buffer = new FilteredBinaryRowBuffer(strelSizeY, strel.rows);
-        BinaryRow row0 = rleArray.getRow(0);
-        for (int iRow = 0; iRow < strelOffsetY + 2; iRow++)
-        {
-            buffer.update(row0, BinaryRow::erosion);
-        }
-        for (int iRow = 1 ; iRow < strelSizeY - strelOffsetY - 1; iRow++)
-        {
-            buffer.update(rleArray.getRow(iRow), BinaryRow::erosion);
-        }
+        FilteredBinaryRowBuffer buffer = FilteredBinaryRowBuffer.create(rleArray, strel, BinaryRow::erosion);
         
         // array dimensions
         int sizeX = rleArray.size(0);
@@ -121,9 +101,8 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
             fireProgressChanged(this, y, sizeY);
             
             // shift buffer by using row at index y+sizeY-1-offset
-            int index = y + strelSizeY - 1 - strelOffsetY;
-            BinaryRow bufferRow = rleArray.getRow(Math.min(index, sizeY - 1));
-            buffer.update(bufferRow, BinaryRow::erosion);
+            int index = Math.min(y + strelSizeY - 1 - strelOffsetY, sizeY - 1);
+            buffer.update(rleArray.getRow(index));
             
             // initialize full result row
             BinaryRow resRow = new BinaryRow().complement(sizeX);
@@ -148,11 +127,8 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
                 int strelRowIndex = strel.indices[yStrel];
                 BinaryRow row = buffer.getFilteredRow(yStrel, strelRowIndex);
                 
-//                // update result only if necessary
-//                if (row != null)
-//                {
-                    resRow = BinaryRow.intersection(resRow, row);
-//                }
+                // update result
+                resRow = BinaryRow.intersection(resRow, row);
             }
             
             if (!resRow.isEmpty())
@@ -207,28 +183,17 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
      */
     public BinaryArray3D processBinary3d(BinaryArray3D array)
     {
-//        // cast to Strel2D and retrieve size and offset
-//        Strel3D strel3d = Strel3D.wrap(strel);
-//        int[] strelSize = strel3d.size();
-//        int[] strelOffset = strel3d.getOffset();
-//        
-//        // convert structuring element to RLE array
-//        RunLengthBinaryArray3D rleStrel = RunLengthBinaryArray3D.convert(strel3d.getMask());
-//
-//        // prepare strel array: shift each row
-//        HashMap<Integer, HashMap<Integer, BinaryRow>> strelRows = shiftRows(rleStrel, -strelOffset[0]);
-        
         // ensure input array uses RLE representation (if not already the case)
         this.fireStatusChanged(this, "Prepare input image");
         RunLengthBinaryArray3D rleArray = RunLengthBinaryArray3D.convert(array);
         
+        // Create data structure to index strel rows
+        IndexedRowsStrel3D strel = IndexedRowsStrel3D.createBall(radius);
+
         // Initialize data related to strel
         int intRadius = (int) Math.floor(this.radius + 0.5);
         int strelSizeZ = 2 * intRadius + 1;
         int strelOffsetZ = intRadius;
-
-        // Create data structure to index strel rows
-        IndexedRowsStrel3D strel = IndexedRowsStrel3D.createBall(radius);
 
         // Optionally expand the binary rows to better manage borders
         if (this.padding)
@@ -243,22 +208,7 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
         int sizeZ = rleArray.size(2);
         
         // create buffer
-        int[] bufferSize = new int[] {sizeY, strelSizeZ};
-        FilteredBinaryRowBuffer2D buffer = new FilteredBinaryRowBuffer2D(bufferSize, strel.rows);
-        
-        // initialize buffer with upper slices of array
-        BinaryRow[] sliceRows = new BinaryRow[sizeY];
-        copySliceRows(rleArray, 0, sliceRows);
-        for (int iSlice = 0; iSlice < strelOffsetZ + 2; iSlice++)
-        {
-            buffer.update(sliceRows, BinaryRow::erosion);
-        }
-        for (int iSlice = 1 ; iSlice < strelSizeZ - strelOffsetZ - 1; iSlice++)
-        {
-            copySliceRows(rleArray, iSlice, sliceRows);
-            buffer.update(sliceRows, BinaryRow::erosion);
-        }
-        
+        FilteredBinaryRowBuffer2D buffer = FilteredBinaryRowBuffer2D.create(rleArray, strel, BinaryRow::erosion);
         
         // create a map of slices for storing result
         HashMap<Integer, HashMap<Integer, BinaryRow>> slices = new HashMap<>();
@@ -272,8 +222,7 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
             
             // shift buffer by using row at index z+sizeZ-1-offsetZ
             int zNextSlice = Math.min(z + strelSizeZ - 1 - strelOffsetZ, sizeZ - 1);
-            copySliceRows(rleArray, zNextSlice, sliceRows);
-            buffer.update(sliceRows, BinaryRow::dilation);
+            buffer.update(rleArray, zNextSlice);
             
             for (int y = 0; y < sizeY; y++)
             {
@@ -312,73 +261,12 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
                             int index = strelSlice.get(yStrel);
                             int zBuffer = zStrel + intRadius;
                             BinaryRow row = buffer.getFilteredRow(y2, zBuffer, index);
-
-//                            // update result only if necessary
-//                            if (row != null)
-//                            {
-                                resRow = BinaryRow.intersection(resRow, row);
-//                            }
+                            
+                            // update result
+                            resRow = BinaryRow.intersection(resRow, row);
                         }
-//                        // retrieve the result of row dilation with appropriate strel row
-//                        int index = strelSlice.get(yStrel);
-//                        int zBuffer = zStrel + intRadius;
-//                        BinaryRow row = buffer.getFilteredRow(y2, zBuffer, index);
-//                        
-//                        // combine result with current result row
-//                        resRow = BinaryRow.union(resRow, row);
-//                        
-//                        // update result only if necessary
-//                        if (row != null)
-//                        {
-//                            resRow = BinaryRow.intersection(resRow, row);
-//                        }
-//                        else
-//                        {
-//                            resRow = new BinaryRow();
-//                        }
                     }
                 }
-                
-//                // iterate over rows of structuring element
-//                for (int zStrel = 0; zStrel < strelSize[2]; zStrel++)
-//                {
-//                    int z2 = z + zStrel - strelOffset[2];
-//                    // check current row is within the input array
-//                    if (z2 < 0 || z2 > sizeZ - 1)
-//                    {
-//                        continue;
-//                    }
-//
-//                    for (int yStrel = 0; yStrel < strelSize[1]; yStrel++)
-//                    {
-//                        int y2 = y + yStrel - strelOffset[1];
-//                        // check current row is within the input array
-//                        if (y2 < 0 || y2 > sizeY - 1)
-//                        {
-//                            continue;
-//                        }
-//
-//                        // if input row is empty, result of row erosion is empty, and
-//                        // hence the result of intersection with previous result
-//                        if (rleArray.isEmptyRow(y2, z2))
-//                        {
-//                            resRow = new BinaryRow();
-//                            break;
-//                        }
-//                        else
-//                        {
-//                            // retrieve the rows to dilate
-//                            BinaryRow arrayRow = rleArray.getRow(y2, z2);
-//                            BinaryRow strelRow = strelRows.get(zStrel).get(yStrel);
-//                            
-//                            // update result only if necessary
-//                            if (strelRow != null)
-//                            {
-//                                resRow = BinaryRow.intersection(resRow, BinaryRow.erosion(arrayRow, strelRow));
-//                            }
-//                        }
-//                    }
-//                }
                 
                 if (!resRow.isEmpty())
                 {
@@ -436,46 +324,7 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
         RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ, resSlices);
         return res;
     }
-    
-    private static final void copySliceRows(RunLengthBinaryArray3D array, int sliceIndex, BinaryRow[] rows)
-    {
-        int sizeY = array.size(1);
-        for (int y = 0; y < sizeY; y++)
-        {
-            rows[y] = array.getRow(y, sliceIndex);
-        }
-    }
-    
-//    /**
-//     * Shifts all the runs within the 3D input array by the given amount to the
-//     * left.
-//     * 
-//     * @param array
-//     *            the array to shift.
-//     * @param dx
-//     *            the shift amount (positive to the right)
-//     * @return the new shifted array
-//     */
-//    private HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
-//    {
-//        // create
-//        HashMap<Integer, HashMap<Integer, BinaryRow>> resRows = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
-//
-//        // iterate over non-empty slices 
-//        for (int z : array.nonEmptySliceIndices())
-//        {
-//            HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>();
-//            for (int y : array.nonEmptySliceRowIndices(z))
-//            {
-//              sliceRows.put(y, array.getRow(y, z).shift(dx));
-//          }
-//          resRows.put(z, sliceRows);
-//      }
-//        
-//        // return
-//        return resRows;
-//    }
-    
+        
     /**
      * Ensures the input row can be considered as larger row, by optionally
      * adding <code>true</code> elements before first element and after first
@@ -543,5 +392,4 @@ public class BallBinaryErosion extends AlgoStub implements ArrayOperator
                     "Requires an instance of BinaryArray");
         }
     }
-    
 }
