@@ -316,7 +316,7 @@ public interface Table
         }
     }
 
-   /**
+    /**
      * Display the content of the data table to standard output.
      */
     public default void print()

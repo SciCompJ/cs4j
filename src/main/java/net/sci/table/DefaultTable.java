@@ -548,19 +548,126 @@ public class DefaultTable implements Table
 		return frame;
 	}
 
-	/**
+	@Override
+    public String toString()
+    {
+        // retrieve general info
+        int nRows = rowCount();
+        int nCols = columnCount();
+        String[] colNames = getColumnNames();
+        String[] rowNames = getRowNames();
+        
+        // compute column sizes
+        int rowNamesSize = 0;
+        if (this.rowNames != null)
+        {
+            for (String name : rowNames)
+            {
+                rowNamesSize = Math.max(rowNamesSize, name.length());  
+            }
+        }
+        int[] colSizes = computeColSizes();
+        
+        
+        StringBuilder sb = new StringBuilder();
+
+        // First display column headers
+        if (colNames != null)
+        {
+            if (rowNames != null)
+            {
+                sb.append(spaces(rowNamesSize + 1));
+            }
+            for (int c = 0; c < nCols; c++)
+            {
+                String pattern = "%" + colSizes[c] + "s ";
+                sb.append(String.format(pattern, colNames[c]));
+            }
+            sb.append("\n");
+        }
+
+        // Then display content of each row
+        for (int r = 0; r < nRows; r++)
+        {
+            // row header
+            if (rowNames != null)
+            {
+                String pattern = "%-" + rowNamesSize + "s ";
+                sb.append(String.format(pattern, rowNames[r]));
+            }
+            
+            // row data
+            for (int c = 0; c < nCols; c++)
+            {
+                String pattern = "%" + colSizes[c] + "s ";
+                sb.append(String.format(pattern, "" + this.get(r, c)));
+            }
+            sb.append("\n");
+        }
+        
+        return sb.toString();
+    }
+	
+	private int[] computeColSizes()
+	{
+	    int SIZE_MAX = 16;
+	    
+	    int[] colSizes = new int[nCols];
+	    for (int c = 0; c <nCols; c++)
+	    {
+	        // default size
+	        int size = 10;
+	        
+	        // use specific processing for factor columns with levels
+	        if (!isNumericColumn(c))
+	        {
+	            String[] colLevels = this.levels.get(c);
+	            if (colLevels != null)
+	            {
+	                for (String s : colLevels)
+	                {
+	                    size = Math.max(size, s.length());
+	                }
+	            }
+	        }
+	        
+	        // include size of column name
+	        if (colNames != null)
+	        {
+	            size = Math.max(size, colNames[c].length());
+	        }
+	        
+	        // avoid too long sizes
+	        colSizes[c] = Math.min(size, SIZE_MAX);
+	    }
+	    return colSizes;
+	}
+    
+	private static final String spaces(int nSpaces)
+	{
+	    StringBuilder sb = new StringBuilder(nSpaces);
+	    for (int i = 0; i < nSpaces; i++)
+	    {
+	        sb.append(" ");
+	    }
+	    return sb.toString();
+	}
+
+    /**
 	 * Small demonstration of the usage of the DefaultNumericTable class.
 	 * 
-	 * @param args optiojnal arguments, not used
+	 * @param args optional arguments, not used
 	 */
 	public final static void main(String[] args)
 	{
 		DefaultTable tbl = new DefaultTable(15, 5);
         tbl.setColumnNames(new String[] { "Length", "Area", "Diam.",
                 "Number", "Density" });
-//		tbl.print();
 		
         tbl.printInfo(System.out);
+        
+        System.out.println(tbl);
+//      tbl.print();
         
 //		JFrame frame = tbl.show();
 //		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -694,13 +801,6 @@ public class DefaultTable implements Table
         {
             return nCols;
         }
-
-//        @Override
-//        public Table.Columns<Column> select(int[] indices)
-//        {
-//            // TODO Auto-generated method stub
-//            return null;
-//        }
 
         @Override
         public Iterator<Column> iterator()
