@@ -196,12 +196,6 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
             this.array.setShort(pos, b);
         }
 
-        @Override
-        public UInt16Array2D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-
         /**
          * Simply returns an iterator on the original array.
          */

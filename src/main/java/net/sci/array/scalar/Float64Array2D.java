@@ -161,17 +161,11 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
             this.array.setValue(pos, value);
         }
 
-        @Override
-        public Float64Array2D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-
         /**
          * Simply returns an iterator on the original array.
          */
         @Override
-        public net.sci.array.scalar.Float64Array.Iterator iterator()
+        public Float64Array.Iterator iterator()
         {
             return this.array.iterator();
         }

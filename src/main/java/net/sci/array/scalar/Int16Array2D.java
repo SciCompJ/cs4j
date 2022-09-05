@@ -191,17 +191,11 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
             this.array.setShort(pos, value);
         }
 
-        @Override
-        public Int16Array2D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-
         /**
          * Simply returns an iterator on the original array.
          */
         @Override
-        public net.sci.array.scalar.Int16Array.Iterator iterator()
+        public Int16Array.Iterator iterator()
         {
             return this.array.iterator();
         }

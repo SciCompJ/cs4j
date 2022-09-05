@@ -210,12 +210,6 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
             this.array.setByte(pos, value);
         }
     
-        @Override
-        public UInt8Array3D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-    
         /**
          * Simply returns an iterator on the original array.
          */

@@ -149,12 +149,6 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
             this.array.setInt(pos, value);
         }
 
-        @Override
-        public Int32Array2D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-
         /**
          * Simply returns an iterator on the original array.
          */

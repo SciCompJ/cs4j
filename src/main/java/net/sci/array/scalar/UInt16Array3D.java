@@ -227,12 +227,6 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
             this.array.setShort(pos, value);
         }
 
-        @Override
-        public UInt16Array3D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-
         /**
          * Simply returns an iterator on the original array.
          */

@@ -193,12 +193,6 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
             this.array.setByte(pos, b);
         }
 
-        @Override
-        public UInt8Array2D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-
         /**
          * Simply returns an iterator on the original array.
          */

@@ -130,15 +130,9 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         {
             res.setValue(pos,  this.getValue(pos));
         }
-        for (int y = 0; y < size1; y++)
-        {
-            for (int x = 0; x < size0; x++)
-            {
-                res.setValue(x, y, getValue(x, y));
-            }
-        }
         return res;
     }
+	
 
     // =============================================================
     // Implementation of inner classes
@@ -191,13 +185,7 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         {
             this.array.setValue(pos, value);
         }
-
-        @Override
-        public Float32Array2D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-
+        
         /**
          * Simply returns an iterator on the original array.
          */

@@ -213,17 +213,11 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
             this.array.setFloat(pos, value);
         }
 
-        @Override
-        public Float32Array3D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-
         /**
          * Simply returns an iterator on the original array.
          */
         @Override
-        public net.sci.array.scalar.Float32Array.Iterator iterator()
+        public Float32Array.Iterator iterator()
         {
             return this.array.iterator();
         }

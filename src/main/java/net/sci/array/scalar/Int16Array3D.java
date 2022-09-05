@@ -150,7 +150,12 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	// Specialization of Array interface
 	
     @Override
-    public abstract Int16Array3D duplicate();
+    public Int16Array3D duplicate()
+    {
+        Int16Array3D res = Int16Array3D.create(this.size0, this.size1, this.size2);
+        res.fillInts(pos -> this.getInt(pos));
+        return res;
+    }
 
     
     // =============================================================
@@ -192,12 +197,6 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
         public void setShort(int[] pos, short value)
         {
             this.array.setShort(pos, value);
-        }
-
-        @Override
-        public Int16Array3D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
         }
 
         /**
