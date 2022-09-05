@@ -16,11 +16,20 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 	// =============================================================
 	// Static methods
 
-	public static final RGB8Array2D create(int size0, int size1)
-	{
-		return new Int32EncodedRGB8Array2D(size0, size1);
-	}
-	
+    public static final RGB8Array2D create(int size0, int size1)
+    {
+        return new Int32EncodedRGB8Array2D(size0, size1);
+    }
+    
+    public static final RGB8Array2D wrap(RGB8Array array)
+    {
+        if (array instanceof RGB8Array2D)
+        {
+            return (RGB8Array2D) array;
+        }
+        return new Wrapper(array);
+    }
+    
 
 	// =============================================================
 	// Constructor
@@ -132,7 +141,12 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 	 * @see net.sci.array.color.RGB8Array#duplicate()
 	 */
 	@Override
-	public abstract RGB8Array2D duplicate();
+	public RGB8Array2D duplicate()
+	{
+	    RGB8Array2D res = RGB8Array2D.create(size0, size1);
+	    res.fill(pos -> this.get(pos));
+	    return res;
+	}
 
     /* (non-Javadoc)
      * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
@@ -271,4 +285,60 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
             return new ChannelView(channel);
         }
     }
+    
+    /**
+     * Wraps a RGB8 array into a RGB8Array2D, with two dimensions.
+     */
+    private static class Wrapper extends RGB8Array2D
+    {
+        RGB8Array array;
+
+        public Wrapper(RGB8Array array)
+        {
+            super(0, 0);
+            if (array.dimensionality() != 2)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 2.");
+            }
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.array = array;
+        }
+        
+        @Override
+        public int getSample(int x, int y, int c)
+        {
+            return array.getSample(new int[] {x, y}, c);
+        }
+
+
+        @Override
+        public void setSample(int x, int y, int c, int intValue)
+        {
+            array.setSample(new int[] {x, y}, c, intValue);
+        }
+
+
+        @Override
+        public RGB8 get(int... pos)
+        {
+            return array.get(pos);
+        }
+
+        @Override
+        public void set(int x, int y, RGB8 value)
+        {
+            array.set(new int[] {x, y}, value);
+        }
+
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.color.RGB8Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
+
 }
