@@ -8,19 +8,54 @@ import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.UInt8Array;
 
 import static java.lang.Math.min;
 import static java.lang.Math.max;
 
 /**
- * Computes histograms of values from arrays.
+ * A collection of static methods for computing histograms from arrays.
  * 
  * @author dlegland
  *
  */
-public class Histogram
+public class Histograms
 {
-	public static final int[] histogram(ScalarArray<?> array, double[] range, int nBins)
+    /**
+     * Computes the histogram of an array containing UInt8 values.
+     * 
+     * @param array
+     *            the input array.
+     * @return the histogram of the UInt8 values, as an array with 256 entries.
+     */
+    public static final int[] histogramUInt8(UInt8Array array)
+    {
+        // allocate memory for result
+        int[] histo = new int[256];
+        
+        // iterate over samples to update the histogram
+        for(int[] pos : array.positions())
+        {
+            int value = array.getInt(pos);
+            histo[value]++;
+        }
+        
+        return histo;
+    }
+    
+    /**
+     * Computes the histogram of an array containing scalar values.
+     * 
+     * @param array
+     *            the input array.
+     * @param range
+     *            the range of values for computing histogram.
+     * @param nBins
+     *            the number of bins of the output histogram.
+     * @return the histogram of the scalar values, as an array with
+     *         <code>nBins</code> entries.
+     */
+	public static final int[] histogramScalar(ScalarArray<?> array, double[] range, int nBins)
 	{
 		// compute the width of an individual bin
 		double binWidth = (range[1] - range[0]) / (nBins - 1);
@@ -41,7 +76,16 @@ public class Histogram
 		return histo;
 	}
 	
-    public static final int[][] histogram(RGB8Array array)
+    /**
+     * Computes the histogram of an array containing RGB8 values. One histogram
+     * is computed for each channel. The histogram of each channel contains 256
+     * entries.
+     * 
+     * @param array
+     *            the input array.
+     * @return the histogram of the RGB8 values, as a 3-by-256 integer array.
+     */
+    public static final int[][] histogramRGB8(RGB8Array array)
     {
         // allocate memory for result
         int[][] histo = new int[3][256];
@@ -60,6 +104,17 @@ public class Histogram
         return histo;
     }
     
+    /**
+     * Computes the histogram of an array containing RGB16 values. One histogram
+     * is computed for each channel. The histogram of each channel contains 256
+     * entries. The bins are distributed between 0 and the maximum value within
+     * the channels (the same max value is used for all channels).
+     * 
+     * @param array
+     *            the input array.
+     * @return the histogram of the RGB16 values, as a 4-by-256 integer array.
+     *         The first array contains value of bin centers.
+     */
     public static final int[][] histogramRGB16(RGB16Array array)
     {
         // determines max red, green and blue values
@@ -106,5 +161,12 @@ public class Histogram
 			levels[i] = range[0] + i * levelStep; 
 		}
 		return levels;
+	}
+	
+	/**
+	 * Private constructor to avoid instantiation.
+	 */
+	private Histograms()
+	{
 	}
 }

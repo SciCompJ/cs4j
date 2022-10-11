@@ -5,7 +5,7 @@ package net.sci.image.process;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.process.Histogram;
+import net.sci.array.process.Histograms;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.image.ImageArrayOperator;
@@ -72,8 +72,8 @@ public class DynamicAdjustment extends AlgoStub implements ImageArrayOperator
         double[] valueRange = array.valueRange();
         
         int nBins = 200;
-        int[] histo = Histogram.histogram(array, valueRange, nBins);
-        double[] bins = Histogram.computeBinPositions(valueRange, nBins);
+        int[] histo = Histograms.histogramScalar(array, valueRange, nBins);
+        double[] bins = Histograms.computeBinPositions(valueRange, nBins);
         
         int totalCount = 0;
         for (int count : histo)
