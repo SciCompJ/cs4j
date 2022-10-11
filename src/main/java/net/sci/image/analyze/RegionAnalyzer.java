@@ -3,6 +3,7 @@
  */
 package net.sci.image.analyze;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.sci.image.Image;
@@ -21,6 +22,33 @@ import net.sci.table.Table;
  */
 public interface RegionAnalyzer<T>
 {
+    /**
+     * Converts a pair of array, containing region labels and region data, into
+     * a map that index data with region label.
+     * 
+     * @param <T>
+     *            the type of data computed for each region
+     * @param labels
+     *            the array of region labels
+     * @param data
+     *            the array of region data (same size as <code>labels</code>
+     *            array)
+     * @return a map that index each region data with the region label
+     */
+    public static <T> Map<Integer, T> createMap(int[] labels,  T[] data)
+    {
+        // allocate result
+        int nLabels = labels.length;
+        Map<Integer, T> map = new HashMap<Integer, T>(nLabels);
+        
+        // populate data
+        for (int i = 0; i < labels.length; i++)
+        {
+            map.put(labels[i], data[i]);
+        } 
+        return map;
+    }
+    
 	/**
 	 * Generic method to compute the result of an analysis on each region of a
 	 * label or binary image.
