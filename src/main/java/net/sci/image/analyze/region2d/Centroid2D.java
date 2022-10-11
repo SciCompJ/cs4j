@@ -21,7 +21,7 @@ import net.sci.table.Table;
  * @author dlegland
  *
  */
-public class Centroid extends RegionAnalyzer2D<Point2D>
+public class Centroid2D extends RegionAnalyzer2D<Point2D>
 {
 	// ==================================================
 	// Static methods
@@ -34,14 +34,15 @@ public class Centroid extends RegionAnalyzer2D<Point2D>
 	 *            the input image containing label of regions
 	 * @param labels
 	 *            the array of labels to process within image
-	 * @param calib
-	 *            the calibration of the image
+     * @param calib
+     *            the (spatial) calibration of the image. Can be null, in that
+     *            case default calibration will be used.
 	 * @return an array containing for each label, the coordinates of the
 	 *         centroid, in calibrated coordinates
 	 */
 	public static final Point2D[] centroids(IntArray2D<?> labelImage, int[] labels, Calibration calib) 
 	{
-		return new Centroid().analyzeRegions(labelImage, labels, calib);
+		return new Centroid2D().analyzeRegions(labelImage, labels, calib);
 	}
 	
 	/**
@@ -106,7 +107,7 @@ public class Centroid extends RegionAnalyzer2D<Point2D>
 	/**
 	 * Default constructor
 	 */
-	public Centroid()
+	public Centroid2D()
 	{
 	}
 
@@ -128,19 +129,19 @@ public class Centroid extends RegionAnalyzer2D<Point2D>
 		DefaultTable table = new DefaultTable(map.size(), 2);
 		table.setColumnNames(new String[] {"Centroid.X", "Centroid.Y"});
 	
-		// Convert all results that were computed during execution of the
-		// "computeGeodesicDistanceMap()" method into rows of the results table
-		int i = 0;
+        // convert the (key, value) pairs in the map into a table with one row
+        // per label
+		int row = 0;
 		for (int label : map.keySet())
 		{
-            table.setRowName(i, Integer.toString(label));
+            table.setRowName(row, Integer.toString(label));
 
             // current diameter
 			Point2D point = map.get(label);
 			
-            table.setValue(i, 0, point.getX());
-            table.setValue(i, 1, point.getY());
-            i++;
+            table.setValue(row, 0, point.getX());
+            table.setValue(row, 1, point.getY());
+            row++;
 		}
 	
 		return table;
@@ -148,16 +149,18 @@ public class Centroid extends RegionAnalyzer2D<Point2D>
 
 	
 	/**
-	 * Computes centroid of each region in input label image.
-	 * 
-	 * @param image
-	 *            the input image containing label of particles
-	 * @param labels
-	 *            the array of labels within the image
-	 * @param calib
-	 *            the calibration of the image
-	 * @return an array of Point2D representing the calibrated centroid coordinates 
-	 */
+     * Computes centroid of each region in input label image.
+     * 
+     * @param image
+     *            the input image containing label of particles
+     * @param labels
+     *            the array of labels within the image
+     * @param calib
+     *            the (spatial) calibration of the image. Can be null, in that
+     *            case default calibration will be used.
+     * @return an array of Point2D representing the calibrated centroid
+     *         coordinates
+     */
 	public Point2D[] analyzeRegions(IntArray2D<?> image, int[] labels, Calibration calib)
 	{
 		// size of image

@@ -27,7 +27,7 @@ public class RegionAnalysis2DTest
 		UInt8Array2D array = createFourRectArray();
 		
 		int[] labels = new int[]{1, 2, 3, 4};
-		Point2D[] centroids = RegionAnalysis2D.centroids(array, labels);
+		Point2D[] centroids = RegionAnalysis2D.centroids(array, labels, null);
 		
 		assertEquals(4, centroids.length);
 		assertTrue(new Point2D(1.5, 1.5).almostEquals(centroids[0], .1));
@@ -45,7 +45,7 @@ public class RegionAnalysis2DTest
 		UInt8Array2D array = createFourRectArray();
 		
 		int[] labels = new int[]{1, 2, 3, 4};
-		Bounds2D[] boxes = RegionAnalysis2D.boundingBoxes(array, labels);
+		Bounds2D[] boxes = RegionAnalysis2D.boundingBoxes(array, labels, null);
 		
 		assertEquals(4, boxes.length);
 		Bounds2D box1 = new Bounds2D(0.5, 2.5, 0.5, 2.5);

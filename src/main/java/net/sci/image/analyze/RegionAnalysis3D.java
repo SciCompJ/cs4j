@@ -13,6 +13,8 @@ import net.sci.image.label.LabelImages;
 /**
  * A collections of static methods for the analysis of 3D regions.
  * 
+ * @see RegionAnalysis2D
+ * 
  * @author dlegland
  *
  */
@@ -145,5 +147,12 @@ public class RegionAnalysis3D
         }
         
         return boxes;
+    }
+    
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private RegionAnalysis3D()
+    {
     }
 }
