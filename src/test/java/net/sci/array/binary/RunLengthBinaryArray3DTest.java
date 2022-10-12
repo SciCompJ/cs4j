@@ -93,6 +93,17 @@ public class RunLengthBinaryArray3DTest
     }
 
     @Test
+    public final void testFill_false()
+    {
+        RunLengthBinaryArray3D array = new RunLengthBinaryArray3D(5, 4, 3);
+        
+        array.fill(false);
+        
+        assertFalse(array.getBoolean(0, 0, 0));
+        assertFalse(array.getBoolean(4, 3, 2));
+    }
+    
+    @Test
     public final void testGetSet()
     {
         RunLengthBinaryArray3D array = new RunLengthBinaryArray3D(5, 4, 3);

@@ -345,8 +345,8 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
         }
         else
         {
-            // iterate over slices
-            for (int z = 0; z < size1; z++)
+            // iterate over slices: reset the slice row array
+            for (int z = 0; z < size2; z++)
             {
                 slices[z] = null;
             }
