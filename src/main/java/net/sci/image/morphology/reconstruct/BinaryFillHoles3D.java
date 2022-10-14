@@ -13,6 +13,7 @@ import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.binary.BinaryRow;
 import net.sci.array.binary.Run;
 import net.sci.array.binary.RunLengthBinaryArray3D;
+import net.sci.image.data.Connectivity3D;
 
 /**
  * Fill holes algorithm, based on morphological reconstruction, but
@@ -25,6 +26,31 @@ public class BinaryFillHoles3D extends AlgoStub implements ArrayOperator
 {
     int conn = 6;
     
+    public BinaryFillHoles3D()
+    {
+    }
+    
+    public BinaryFillHoles3D(int conn)
+    {
+        this.conn = conn;
+    }
+    
+    public BinaryFillHoles3D(Connectivity3D conn)
+    {
+        if (conn == Connectivity3D.C6)
+        {
+            this.conn = 6;
+        }
+        else if (conn == Connectivity3D.C26)
+        {
+            this.conn = 26;
+        }
+        else
+        {
+            throw new RuntimeException("Can only manage connectivities 6 or 26");
+        }
+    }
+    
     public BinaryArray3D processBinary3d(BinaryArray3D mask)
     {
         // Ensure input array is run-length encoded
@@ -36,7 +62,7 @@ public class BinaryFillHoles3D extends AlgoStub implements ArrayOperator
         RunLengthBinaryArray3D marker= createMarkerImage(mask.size());
         
         this.fireStatusChanged(this, "reconstruct background");
-        BinaryArray3D res = new RunLengthBinaryReconstruction3D().processBinary3d(marker, mask2);
+        BinaryArray3D res = new RunLengthBinaryReconstruction3D(conn).processBinary3d(marker, mask2);
         
         this.fireStatusChanged(this, "complement");
         return res.complement();
