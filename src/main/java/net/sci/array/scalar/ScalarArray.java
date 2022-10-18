@@ -306,6 +306,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     // =============================================================
     // Implementation of NumericArray interface
 
+    @Override
     public default ScalarArray<T> plus(double v)
     {
         ScalarArray<T> res = newInstance(size());
@@ -316,6 +317,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         return res;
     }
 
+    @Override
     public default ScalarArray<T> minus(double v)
     {
         ScalarArray<T> res = newInstance(size());
@@ -326,6 +328,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         return res;
     }
 
+    @Override
     public default ScalarArray<T> times(double k)
     {
         ScalarArray<T> res = newInstance(size());
@@ -336,6 +339,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         return res;
     }
 
+    @Override
     public default ScalarArray<T> divideBy(double k)
     {
         ScalarArray<T> res = newInstance(size());
@@ -411,6 +415,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 	    return dup;
 	}
 	
+	@Override
     public default ScalarArray<T> view(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new View<T>(this, newDims, coordsMapping);
@@ -419,7 +424,8 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     @Override
     public ScalarArray.Factory<T> factory();
 
-	public ScalarArray.Iterator<T> iterator();
+    @Override
+    public ScalarArray.Iterator<T> iterator();
 	
 	
     // =============================================================

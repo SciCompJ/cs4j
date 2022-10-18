@@ -24,16 +24,29 @@ public class UInt8 extends Int
      */
     public static final int MAX_VALUE = 255;
     
+    
     // =============================================================
     // Static methods
     
-	/**
-	 * Computes the integer value between 0 and 255 closest to the specified
-	 * value.
+    /**
+     * Computes the integer value between 0 and 255 closest to the specified
+     * value.
+     * 
+     * @param value
+     *            a double value
+     * @return the closest corresponding integer between 0 and 255
+     */
+    public final static int convert(double value)
+    {
+        return (int) Math.min(Math.max(0, value + 0.5), 255);
+    }
+
+    /**
+	 * Forces the input integer value to stay within the [0;255] interval. 
 	 * 
 	 * @param value
-	 *            a double value
-	 * @return the closest corresponding integer between 0 and 255
+	 *            an integer value
+	 * @return the closest integer value between 0 and 255.
 	 */
 	public final static int clamp(double value)
 	{

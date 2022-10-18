@@ -114,7 +114,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
     @Override
     public void setInt(int x, int y, int value)
     {
-        setByte(x, y, (byte) UInt8.clamp(value));
+        setByte(x, y, (byte) UInt8.convert(value));
     }
 
 
@@ -125,7 +125,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
     @Override
     public void setValue(int x, int y, double value)
     {
-        setByte(x, y, (byte) UInt8.clamp(value));
+        setByte(x, y, (byte) UInt8.convert(value));
     }
 
 

@@ -6,6 +6,7 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.process.type.ConvertToUInt8;
 
 
 /**
@@ -94,38 +95,9 @@ public interface UInt8Array extends IntArray<UInt8>
         {
             return (UInt8Array) array;
         }
-        // Convert array containing UInt8 values
-        if (array.dataType().isAssignableFrom(UInt8.class)) 
-        {
-            return convertArrayOfUInt8(array);
-        }
-        // convert scalar array
-        if (array instanceof ScalarArray<?>)
-        {
-            return convertScalarArray((ScalarArray<?>) array);
-        }
         
-        throw new IllegalArgumentException("Can not convert array with class: " + array.getClass());
-    }
-    
-    private static UInt8Array convertArrayOfUInt8(Array<?> array)
-    {
-        UInt8Array result = UInt8Array.create(array.size());
-        for (int[] pos : array.positions())
-        {
-            result.setByte(pos, ((UInt8) array.get(pos)).getByte());
-        }
-        return result;
-    }
-    
-    private static UInt8Array convertScalarArray(ScalarArray<?> array)
-    {
-        UInt8Array result = UInt8Array.create(array.size());
-        for (int[] pos : array.positions())
-        {
-            result.setValue(pos, array.getValue(pos));
-        }
-        return result;
+        // otherwise, call the converter class
+        return new ConvertToUInt8().process(array);
     }
     
     /**
@@ -267,7 +239,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	@Override
 	public default void setInt(int[] pos, int value)
 	{
-		setByte(pos, (byte) Math.min(Math.max(value, 0), 255));
+		setByte(pos, (byte) UInt8.clamp(value));
 	}
 
 
@@ -284,15 +256,15 @@ public interface UInt8Array extends IntArray<UInt8>
     }
 
     /**
-     * Sets the value at the specified position, by clamping the value between 0
+     * Sets the value at the specified position, by converting the value between 0
      * and 255.
      * 
-     * @see net.sci.array.Array2D#setValue(int, int, double)
+     * @see net.sci.array.scalar.ScalarArray2D#setValue(int, int, double)
      */
     @Override
     public default void setValue(int[] pos, double value)
     {
-        setByte(pos, (byte) UInt8.clamp(value));
+        setByte(pos, (byte) UInt8.convert(value));
     }
 
 
@@ -412,7 +384,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		@Override
 		public default void setInt(int value)
 		{
-			setByte((byte) Math.min(Math.max(value, 0), 255));
+			setByte((byte) UInt8.clamp(value));
 		}
 
 		@Override
@@ -484,7 +456,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		@Override
 		public UInt8 get(int... pos)
 		{
-			return new UInt8(UInt8.clamp(array.getValue(pos)));
+			return new UInt8(UInt8.convert(array.getValue(pos)));
 		}
 
 		@Override
@@ -535,7 +507,7 @@ public interface UInt8Array extends IntArray<UInt8>
 			@Override
 			public UInt8 next()
 			{
-				return new UInt8(UInt8.clamp(iter.nextValue()));
+				return new UInt8(UInt8.convert(iter.nextValue()));
 			}
 
 			@Override
