@@ -16,7 +16,7 @@ import org.junit.runners.Suite;
     SimpleSlicerTest.class,
     SlicerTest.class,
     SqueezeTest.class,
-    SubSamplerTest.class,
+    SubSampleTest.class,
 	})
 public class AllTests {
   //nothing

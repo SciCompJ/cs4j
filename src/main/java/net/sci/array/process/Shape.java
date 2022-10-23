@@ -45,11 +45,11 @@ public class Shape
      *            the decimation ratio
      * @return the result of sub sampling applied to input array.
      * 
-     * @see net.sci.array.process.shape.SubSampler
+     * @see net.sci.array.process.shape.SubSample
      */
     public static final <T> Array<T> subSample(Array<T> array, int ratio)
     {
-        return new SubSampler(ratio).process(array);
+        return new SubSample(ratio).process(array);
     }
     
     /**
