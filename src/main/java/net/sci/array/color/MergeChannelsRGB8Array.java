@@ -54,6 +54,19 @@ public class MergeChannelsRGB8Array implements RGB8Array
 
     
     // =============================================================
+    // Implementation of the RGB8Array interface
+
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        int r = this.redChannel.getInt(pos);
+        int g = this.greenChannel.getInt(pos);
+        int b = this.blueChannel.getInt(pos);
+        return RGB8.intCode(r, g, b);
+    }
+    
+
+    // =============================================================
     // Implementation of the VectorArray interface
 
     /**

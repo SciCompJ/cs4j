@@ -37,6 +37,17 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 		super(buffer.size(0), buffer.size(1));
 		this.buffer = buffer;
 	}
+	
+	
+    // =============================================================
+    // Implementation of the RGB8Array interface
+
+	@Override
+	public int getIntCode(int[] pos)
+	{
+	    return this.buffer.getInt(pos[0], pos[1]);
+	}
+	
 
     // =============================================================
     // Implementation of the IntVectorArray2D interface

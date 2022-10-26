@@ -76,7 +76,36 @@ public class BinaryOverlayRGB8Array implements RGB8Array
         if (array instanceof BinaryArray) return true;
         return false;
     }
-
+    
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        if (binaryArray.getBoolean(pos))
+        {
+            return overlayColor.intCode;
+        }
+        return getBaseArrayIntCode(pos);
+    }
+    
+    private int getBaseArrayIntCode(int... pos)
+    {
+        if (this.baseArray instanceof UInt8Array)
+        {
+            int val = ((UInt8Array) this.baseArray).getInt(pos);
+            return RGB8.intCode(val, val, val);
+        }
+        else if (this.baseArray instanceof RGB8Array)
+        {
+            return ((RGB8Array) this.baseArray).getIntCode(pos);
+        }
+        else if (this.baseArray instanceof BinaryArray)
+        {
+            return ((BinaryArray) this.baseArray).getBoolean(pos) ? RGB8.WHITE.intCode : RGB8.BLACK.intCode;
+        }
+        throw new RuntimeException("Can not process array with class: " + this.baseArray.getClass());
+    }
+    
+    
     @Override
     public double getValue(int[] pos, int channel)
     {

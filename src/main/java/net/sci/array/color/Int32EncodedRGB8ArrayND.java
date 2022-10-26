@@ -38,6 +38,16 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 		this.buffer = buffer;
 	}
 
+    
+    // =============================================================
+    // Implementation of the RGB8Array interface
+
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        return this.buffer.getInt(pos);
+    }
+    
 	
     // =============================================================
     // Implementation of the IntVectorArray interface

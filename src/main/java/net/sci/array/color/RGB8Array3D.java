@@ -4,7 +4,6 @@
 package net.sci.array.color;
 
 import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array3D;
 import net.sci.array.vector.IntVectorArray3D;
 
@@ -54,11 +53,10 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 		int size2 = this.size(2);
 		UInt8Array3D result = UInt8Array3D.create(size0, size1, size2);
 		
-		RGB8Array.Iterator rgb8Iter = iterator();
-		UInt8Array.Iterator uint8Iter = result.iterator();
-		while(rgb8Iter.hasNext() && uint8Iter.hasNext())
+		for (int[] pos : positions())
 		{
-			uint8Iter.setNextInt(rgb8Iter.next().getInt());
+            // TODO: could avoid RGB8 creation
+            result.setInt(pos, this.get(pos).maxSample());
 		}
 		
 		return result;

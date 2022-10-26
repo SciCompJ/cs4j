@@ -140,30 +140,51 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	    return new MergeChannelsRGB8Array(redChannel, greenChannel, blueChannel);
 	}
 
-	/**
-     * Computes a binary overlay over a color or grayscale image.
+    /**
+     * Computes the color images that corresponds to overlay of a binary mask
+     * onto a scalar array.
      * 
      * @param baseArray
      *            the array to use as base
-     * @param overlay
+     * @param binaryMask
+     *            the binary array that specifies the array elements to colorize.
+     * @param overlayColor
+     *            the overlay color
+     * @return a new color array corresponding to the overlay.
+     */
+    public static RGB8Array binaryOverlay(UInt8Array baseArray, BinaryArray binaryMask, RGB8 overlayColor)
+    {
+        RGB8Array res = convert(baseArray);
+        
+        for (int[] pos : res.positions())
+        {
+            if (binaryMask.getBoolean(pos))
+            {
+                res.set(pos, overlayColor);
+            }
+        }
+
+        return res;
+    }
+    
+	/**
+     * Applies a binary overlay over a color image (updates the reference image).
+     * 
+     * @param baseArray
+     *            the array to use as base
+     * @param binaryMask
      *            the binary array that specifies the pixels to colorize
-     * @param color
+     * @param overlayColor
      *            the overlay color
      * @return the reference to the baseArray
      */
-	public static RGB8Array binaryOverlay(RGB8Array baseArray, BinaryArray overlay, RGB8 color)
+	public static RGB8Array overlayBinary(RGB8Array baseArray, BinaryArray binaryMask, RGB8 overlayColor)
 	{
-	    RGB8Array.Iterator iter1 = baseArray.iterator();
-	    BinaryArray.Iterator iter2 = overlay.iterator();
-	    
-	    while (iter1.hasNext() && iter2.hasNext())
+	    for (int[] pos : baseArray.positions())
 	    {
-	        iter1.forward();
-	        iter2.forward();
-            
-	        if (iter2.getBoolean())
+	        if (binaryMask.getBoolean(pos))
 	        {
-	            iter1.set(color);
+	            baseArray.set(pos, overlayColor);
 	        }
 	    }
 
@@ -319,7 +340,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         
         for(int[] pos : this.positions())
         {
-            result.setInt(pos, get(pos).getInt());
+            result.setInt(pos, get(pos).maxSample());
         }
         
         return result;
@@ -328,6 +349,18 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	public default UInt8Array createUInt8View()
 	{
 	    return new UInt8View(this);
+	}
+	
+	/**
+     * Returns the intcode of the RGB8 value at specified position.
+     * 
+     * @param pos
+     *            the position within array
+     * @return the intcode representing the RGB value
+     */
+	public default int getIntCode(int[] pos)
+	{
+	    return get(pos).intCode;
 	}
 
     // =============================================================
@@ -682,8 +715,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         @Override
         public UInt8 get(int... pos)
         {
-            RGB8 rgb = parent.get(pos);
-            return new UInt8(UInt8.clamp(rgb.getValue()));
+            return new UInt8(parent.get(pos).maxSample());
         }
 
         @Override
@@ -770,8 +802,8 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
             }
         }
 	}
-    
 	
+    
     // =============================================================
     // Specialization of the Factory interface
 
