@@ -167,6 +167,93 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         return res;
     }
     
+    /**
+     * Computes the color images that corresponds to overlay of a binary mask
+     * onto a scalar array.
+     * 
+     * @param baseArray
+     *            the array to use as base
+     * @param binaryMask
+     *            the binary array that specifies the array elements to colorize.
+     * @param overlayColor
+     *            the overlay color
+     * @return a new color array corresponding to the overlay.
+     */
+    public static RGB8Array binaryOverlay(Array<?> baseArray, BinaryArray binaryMask, RGB8 overlayColor, double overlayOpacity)
+    {
+        if (baseArray.dataType() == UInt8.class)
+        {
+            return binaryOverlay_uint8(UInt8Array.wrap(baseArray), binaryMask, overlayColor, overlayOpacity);
+        }
+        
+        // create result array
+        RGB8Array res = (baseArray instanceof RGB8Array) 
+                ? ((RGB8Array) baseArray).duplicate() 
+                : convert(baseArray);
+        
+        // pre-compute opacity weights for gray and overlay
+        final double op0 = overlayOpacity;
+        final double op1 = 1.0 - op0;
+        
+        final double rOvr = op0 * overlayColor.red();
+        final double gOvr = op0 * overlayColor.green();
+        final double bOvr = op0 * overlayColor.blue();
+        
+        for (int[] pos : res.positions())
+        {
+            if (binaryMask.getBoolean(pos))
+            {
+                res.setSample(pos, 0, (int) (res.getSample(pos, 0) * op1 + rOvr));
+                res.setSample(pos, 1, (int) (res.getSample(pos, 1) * op1 + gOvr));
+                res.setSample(pos, 2, (int) (res.getSample(pos, 2) * op1 + bOvr));
+            }
+        }
+
+        return res;
+    }
+    
+    /**
+     * Computes the color images that corresponds to overlay of a binary mask
+     * onto a scalar array.
+     * 
+     * @param baseArray
+     *            the array to use as base
+     * @param binaryMask
+     *            the binary array that specifies the array elements to colorize.
+     * @param overlayColor
+     *            the overlay color
+     * @return a new color array corresponding to the overlay.
+     */
+    private static RGB8Array binaryOverlay_uint8(UInt8Array baseArray, BinaryArray binaryMask, RGB8 overlayColor, double overlayOpacity)
+    {
+        // pre-compute opacity weights for gray and overlay
+        final double op0 = overlayOpacity;
+        final double op1 = 1.0 - op0;
+        
+        final double rOvr = op0 * overlayColor.red();
+        final double gOvr = op0 * overlayColor.green();
+        final double bOvr = op0 * overlayColor.blue();
+        
+        RGB8Array res = RGB8Array.create(baseArray.size());
+        for (int[] pos : res.positions())
+        {
+            int gray = baseArray.getInt(pos);
+            if (binaryMask.getBoolean(pos))
+            {
+                
+                res.setSample(pos, 0, (int) (gray * op1 + rOvr));
+                res.setSample(pos, 1, (int) (gray * op1 + gOvr));
+                res.setSample(pos, 2, (int) (gray * op1 + bOvr));
+            }
+            else
+            {
+                res.setSamples(pos, new int[] {gray, gray, gray});
+            }
+        }
+
+        return res;
+    }
+    
 	/**
      * Applies a binary overlay over a color image (updates the reference image).
      * 
