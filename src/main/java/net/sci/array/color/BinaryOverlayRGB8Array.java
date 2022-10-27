@@ -5,7 +5,9 @@ package net.sci.array.color;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
+import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 
 /**
@@ -23,20 +25,53 @@ import net.sci.array.scalar.UInt8Array;
  */
 public class BinaryOverlayRGB8Array implements RGB8Array
 {
+    // =============================================================
+    // class members
+
     /**
      * The reference array to overlay.
      */
-    Array<?> baseArray;
+//    Array<?> baseArray;
+    
+    /**
+     * The reference array of the overlay wrapped to a RGB8 array in order to
+     * facilitate on the fly conversions.
+     */
+    RGB8Array wrappedArray;
     
     /**
      * The binary mask defining the overlay.
      */
-    BinaryArray binaryArray;
+    BinaryArray binaryMask;
     
     /**
      * The Overlay color. Default is red.
      */
     RGB8 overlayColor = RGB8.RED;
+    
+    double opacity;
+    
+    
+    // =============================================================
+    // Constructor
+    
+    /**
+     * Creates an RGB8 view that combines original values of the reference array
+     * with a color overlay defined by the binary mask and the specified color.
+     * 
+     * @param baseArray
+     *            the reference array to overlay. Can be an instance of
+     *            UInt8Array, BinaryArray, or RGB8Array.
+     * @param binaryMask
+     *            the binary mask defining the overlay. Should be the same size
+     *            as the reference array.
+     * @param overlayColor
+     *            the overlay color.
+     */
+    public BinaryOverlayRGB8Array(Array<?> baseArray, BinaryArray binaryMask, RGB8 overlayColor)
+    {
+        this(baseArray, binaryMask, overlayColor, 1.0);
+    }
 
     /**
      * Creates an RGB8 view that combines original values of the reference array
@@ -45,82 +80,121 @@ public class BinaryOverlayRGB8Array implements RGB8Array
      * @param baseArray
      *            the reference array to overlay. Can be an instance of
      *            UInt8Array, BinaryArray, or RGB8Array.
-     * @param binaryArray
+     * @param binaryMask
      *            the binary mask defining the overlay. Should be the same size
      *            as the reference array.
      * @param overlayColor
      *            the overlay color.
+     * @param opacity
+     *            the overlay opacity.
      */
-    public BinaryOverlayRGB8Array(Array<?> baseArray, BinaryArray binaryArray, RGB8 overlayColor)
+    public BinaryOverlayRGB8Array(Array<?> baseArray, BinaryArray binaryMask, RGB8 overlayColor, double opacity)
     {
         // check input validity
-        if (!Arrays.isSameSize(baseArray, binaryArray))
+        if (!Arrays.isSameSize(baseArray, binaryMask))
         {
             throw new IllegalArgumentException("Input arrays must have same size"); 
         }
-        if (!isAllowedType(baseArray))
+        
+        // wrap the base array into a RGB8 array
+        if (RGB8.class.isAssignableFrom(baseArray.dataType())) 
+        {
+            this.wrappedArray = RGB8Array.wrap(baseArray);
+        }
+        else if (UInt8.class.isAssignableFrom(baseArray.dataType()))
+        {
+            this.wrappedArray = new UInt8ArrayRGB8View(UInt8Array.wrap(baseArray));
+        }
+        else if (Binary.class.isAssignableFrom(baseArray.dataType()))
+        {
+            this.wrappedArray = new BinaryArrayRGB8View(BinaryArray.wrap(baseArray));
+        }
+        else
         {
             throw new IllegalArgumentException("Reference array must be an instance of UInt8Array, RGB8Array, or BinaryArray"); 
         }
         
-        // copy values
-        this.baseArray = baseArray;
-        this.binaryArray = binaryArray;
+        // keep also other variables
+        this.binaryMask = binaryMask;
         this.overlayColor = overlayColor;
+        this.opacity = opacity;
     }
     
-    private boolean isAllowedType(Array<?> array)
-    {
-        if (array instanceof UInt8Array) return true;
-        if (array instanceof RGB8Array) return true;
-        if (array instanceof BinaryArray) return true;
-        return false;
-    }
     
+    // =============================================================
+    // Implementation of RGB8Array interface
+
     @Override
     public int getIntCode(int[] pos)
     {
-        if (binaryArray.getBoolean(pos))
+        if (binaryMask.getBoolean(pos))
         {
-            return overlayColor.intCode();
+            if (opacity == 1.0)
+            {
+                return this.overlayColor.intCode();
+            }
+            return RGB8.interp(wrappedArray.get(pos), overlayColor, opacity).intCode();
         }
-        return getBaseArrayIntCode(pos);
+        
+        // return background array value
+        return wrappedArray.getIntCode(pos);
     }
     
-    private int getBaseArrayIntCode(int... pos)
+    @Override
+    public void setIntCode(int[] pos, int intCode)
     {
-        if (this.baseArray instanceof UInt8Array)
-        {
-            int val = ((UInt8Array) this.baseArray).getInt(pos);
-            return RGB8.intCode(val, val, val);
-        }
-        else if (this.baseArray instanceof RGB8Array)
-        {
-            return ((RGB8Array) this.baseArray).getIntCode(pos);
-        }
-        else if (this.baseArray instanceof BinaryArray)
-        {
-            return ((BinaryArray) this.baseArray).getBoolean(pos) ? RGB8.WHITE.intCode() : RGB8.BLACK.intCode();
-        }
-        throw new RuntimeException("Can not process array with class: " + this.baseArray.getClass());
+        throw new RuntimeException("Can not modify values of a view class");
     }
     
+    
+    // =============================================================
+    // Implementation of IntVectorArray interface
+
+    @Override
+    public int getSample(int[] pos, int channel)
+    {
+        if (binaryMask.getBoolean(pos))
+        {
+            if (binaryMask.getBoolean(pos))
+            {
+                return overlayColor.getSample(channel);
+            }
+            return (int) interp(wrappedArray.getSample(pos, channel), overlayColor.getSample(channel), opacity);
+        }
+        
+        // return background array value
+        return wrappedArray.getSample(pos, channel);
+    }
+
     @Override
     public void setSample(int[] pos, int channel, int value)
     {
         throw new RuntimeException("Can not modify values of a view class");
     }
-
     
+    
+    // =============================================================
+    // Implementation of VectorArray interface
+
     @Override
     public double getValue(int[] pos, int channel)
     {
-        if (binaryArray.getBoolean(pos))
+        if (binaryMask.getBoolean(pos))
         {
-            return overlayColor.getSample(channel);
+            if (binaryMask.getBoolean(pos))
+            {
+                return overlayColor.getValue(channel);
+            }
+            return interp(wrappedArray.getValue(pos, channel), overlayColor.getValue(channel), opacity);
         }
         
-        return getBaseArrayColor(pos).getSample(channel);
+        // return background array value
+        return wrappedArray.getValue(pos, channel);
+    }
+    
+    private double interp(double v0, double v1, double t)
+    {
+        return v0 * (1.0 - t) + v1 * t;
     }
 
     @Override
@@ -128,34 +202,25 @@ public class BinaryOverlayRGB8Array implements RGB8Array
     {
         throw new RuntimeException("Can not modify values of a view class");
     }
+    
+    
+    // =============================================================
+    // Implementation of Array interface
 
     @Override
     public RGB8 get(int... pos)
     {
-        if (binaryArray.getBoolean(pos))
+        if (binaryMask.getBoolean(pos))
         {
-            return overlayColor;
+            if (opacity == 1.0)
+            {
+                return this.overlayColor;
+            }
+            return RGB8.interp(wrappedArray.get(pos), overlayColor, opacity);
         }
         
-        return getBaseArrayColor(pos);
-    }
-
-    private RGB8 getBaseArrayColor(int... pos)
-    {
-        if (this.baseArray instanceof UInt8Array)
-        {
-            int val = ((UInt8Array) this.baseArray).getInt(pos);
-            return new RGB8(val, val, val);
-        }
-        else if (this.baseArray instanceof RGB8Array)
-        {
-            return ((RGB8Array) this.baseArray).get(pos);
-        }
-        else if (this.baseArray instanceof BinaryArray)
-        {
-            return ((BinaryArray) this.baseArray).getBoolean(pos) ? RGB8.WHITE : RGB8.BLACK;
-        }
-        throw new RuntimeException("Can not process array with class: " + this.baseArray.getClass());
+        // return background array value
+        return wrappedArray.get(pos);
     }
 
     @Override
@@ -167,24 +232,24 @@ public class BinaryOverlayRGB8Array implements RGB8Array
     @Override
     public int dimensionality()
     {
-        return baseArray.dimensionality();
+        return wrappedArray.dimensionality();
     }
 
     @Override
     public int[] size()
     {
-        return baseArray.size();
+        return wrappedArray.size();
     }
 
     @Override
     public int size(int dim)
     {
-        return baseArray.size(dim);
+        return wrappedArray.size(dim);
     }
 
     @Override
     public PositionIterator positionIterator()
     {
-        return baseArray.positionIterator();
+        return wrappedArray.positionIterator();
     }
 }

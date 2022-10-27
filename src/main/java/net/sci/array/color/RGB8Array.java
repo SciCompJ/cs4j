@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
+import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
@@ -365,49 +366,65 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         
         if (RGB8.class.isAssignableFrom(array.dataType()))
         {
-            // create an anonymous class to wrap the instance of Array<RGB8>
-            return new RGB8Array() 
-            {
-                @Override
-                public int dimensionality()
-                {
-                    return array.dimensionality();
-                }
-
-                @Override
-                public int[] size()
-                {
-                    return array.size();
-                }
-
-                @Override
-                public int size(int dim)
-                {
-                    return array.size(dim);
-                }
-
-                @Override
-                public PositionIterator positionIterator()
-                {
-                    return array.positionIterator();
-                }
-
-                @Override
-                public RGB8 get(int... pos)
-                {
-                    return (RGB8) array.get(pos);
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void set(int[] pos, RGB8 rgb)
-                {
-                    ((Array<RGB8>) array).set(pos, rgb);
-                }
-            };
+            return wrapRGB8(array);
+        }
+        
+        if (UInt8.class.isAssignableFrom(array.dataType()))
+        {
+            return new UInt8ArrayRGB8View(UInt8Array.wrap(array));
+        }
+        
+        if (Binary.class.isAssignableFrom(array.dataType()))
+        {
+            return new BinaryArrayRGB8View(BinaryArray.wrap(array));
         }
         
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
+    
+    private static RGB8Array wrapRGB8(Array<?> array)
+    {
+        // create an anonymous class to wrap the instance of Array<RGB8>
+        return new RGB8Array() 
+        {
+            @Override
+            public int dimensionality()
+            {
+                return array.dimensionality();
+            }
+
+            @Override
+            public int[] size()
+            {
+                return array.size();
+            }
+
+            @Override
+            public int size(int dim)
+            {
+                return array.size(dim);
+            }
+
+            @Override
+            public PositionIterator positionIterator()
+            {
+                return array.positionIterator();
+            }
+
+            @Override
+            public RGB8 get(int... pos)
+            {
+                return (RGB8) array.get(pos);
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void set(int[] pos, RGB8 rgb)
+            {
+                ((Array<RGB8>) array).set(pos, rgb);
+            }
+        };
+        
     }
 
 	// =============================================================
