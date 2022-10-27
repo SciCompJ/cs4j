@@ -163,10 +163,10 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
                 res.set(pos, overlayColor);
             }
         }
-
+    
         return res;
     }
-    
+
     /**
      * Computes the color images that corresponds to overlay of a binary mask
      * onto a scalar array.
@@ -192,8 +192,8 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
                 : convert(baseArray);
         
         // pre-compute opacity weights for gray and overlay
-        final double op0 = overlayOpacity;
-        final double op1 = 1.0 - op0;
+        final double op0 = 1.0 - overlayOpacity;
+        final double op1 = overlayOpacity;
         
         final double rOvr = op0 * overlayColor.red();
         final double gOvr = op0 * overlayColor.green();
@@ -227,12 +227,12 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
     private static RGB8Array binaryOverlay_uint8(UInt8Array baseArray, BinaryArray binaryMask, RGB8 overlayColor, double overlayOpacity)
     {
         // pre-compute opacity weights for gray and overlay
-        final double op0 = overlayOpacity;
-        final double op1 = 1.0 - op0;
+        final double op0 = 1.0 - overlayOpacity;
+        final double op1 = overlayOpacity;
         
-        final double rOvr = op0 * overlayColor.red();
-        final double gOvr = op0 * overlayColor.green();
-        final double bOvr = op0 * overlayColor.blue();
+        final double rOvr = op1 * overlayColor.intRed();
+        final double gOvr = op1 * overlayColor.intGreen();
+        final double bOvr = op1 * overlayColor.intBlue();
         
         RGB8Array res = RGB8Array.create(baseArray.size());
         for (int[] pos : res.positions())
@@ -240,10 +240,9 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
             int gray = baseArray.getInt(pos);
             if (binaryMask.getBoolean(pos))
             {
-                
-                res.setSample(pos, 0, (int) (gray * op1 + rOvr));
-                res.setSample(pos, 1, (int) (gray * op1 + gOvr));
-                res.setSample(pos, 2, (int) (gray * op1 + bOvr));
+                res.setSample(pos, 0, (int) (gray * op0 + rOvr));
+                res.setSample(pos, 1, (int) (gray * op0 + gOvr));
+                res.setSample(pos, 2, (int) (gray * op0 + bOvr));
             }
             else
             {
@@ -441,14 +440,35 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	/**
      * Returns the intcode of the RGB8 value at specified position.
      * 
+     * @see #setIntCode(int[], int)
+     * 
      * @param pos
      *            the position within array
      * @return the intcode representing the RGB value
      */
-	public default int getIntCode(int[] pos)
-	{
-	    return get(pos).intCode;
-	}
+    public default int getIntCode(int[] pos)
+    {
+        return get(pos).intCode();
+    }
+    
+    /**
+     * Default implementation for setting the intcode of an element of the
+     * array.
+     * 
+     * @see #getIntCode(int[])
+     * 
+     * @param pos
+     *            the position of the element to set
+     * @param intCode
+     *            the integer code of the RGB8 value
+     */
+    public default void setIntCode(int[] pos, int intCode)
+    {
+        setSample(pos, 0, intCode & 0x00FF);
+        setSample(pos, 1, (intCode >> 8) & 0x00FF);
+        setSample(pos, 2, (intCode >> 16) & 0x00FF);
+    }
+
 
     // =============================================================
     // Default Implementation of the IntVectorArray interface

@@ -117,6 +117,6 @@ public class Int32ArrayRGB8Iterator implements RGB8Array.Iterator
     @Override
     public void set(RGB8 rgb)
     {
-        intIterator.setInt(rgb.getIntCode());
+        intIterator.setInt(rgb.intCode());
     }
 }

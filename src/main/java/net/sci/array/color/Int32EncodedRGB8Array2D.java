@@ -42,12 +42,18 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
     // =============================================================
     // Implementation of the RGB8Array interface
 
-	@Override
-	public int getIntCode(int[] pos)
-	{
-	    return this.buffer.getInt(pos[0], pos[1]);
-	}
-	
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        return this.buffer.getInt(pos[0], pos[1]);
+    }
+    
+    @Override
+    public void setIntCode(int[] pos, int intCode)
+    {
+        this.buffer.setInt(pos[0], pos[1], intCode);
+    }
+    
 
     // =============================================================
     // Implementation of the IntVectorArray2D interface
@@ -114,7 +120,7 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
     @Override
     public void set(int x, int y, RGB8 rgb)
     {
-        this.buffer.setInt(x, y, rgb.getIntCode());
+        this.buffer.setInt(x, y, rgb.intCode());
     }
 
     /* (non-Javadoc)
@@ -132,7 +138,7 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 	@Override
 	public void set(int[] pos, RGB8 rgb)
 	{
-		this.buffer.setInt(pos[0], pos[1], rgb.getIntCode());
+		this.buffer.setInt(pos[0], pos[1], rgb.intCode());
 	}
 
 

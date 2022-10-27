@@ -44,6 +44,27 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 
 
     // =============================================================
+    // Implementation of the RGB8Array interface
+
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        int r = this.buffer.getInt(pos[0], pos[1], 0);
+        int g = this.buffer.getInt(pos[0], pos[1], 1);
+        int b = this.buffer.getInt(pos[0], pos[1], 2);
+        return RGB8.intCode(r, g, b);
+    }
+    
+    @Override
+    public void setIntCode(int[] pos, int intCode)
+    {
+        this.buffer.setInt(pos[0], pos[1], 0, intCode & 0x00FF);
+        this.buffer.setInt(pos[0], pos[1], 1, (intCode >> 8) & 0x00FF);
+        this.buffer.setInt(pos[0], pos[1], 2, (intCode >> 16) & 0x00FF);
+    }
+        
+    
+    // =============================================================
     // Implementation of the IntVectorArray2D interface
 
     @Override

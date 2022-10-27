@@ -178,7 +178,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
     // =============================================================
 	// Class variables
 	
-	final int intCode;
+	private final int intCode;
 	
 	
 	// =============================================================
@@ -274,7 +274,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	 * 
 	 * @return an int-based representation of this RGB8 color.
 	 */
-	public int getIntCode()
+	public int intCode()
 	{
 		return this.intCode;
 	}

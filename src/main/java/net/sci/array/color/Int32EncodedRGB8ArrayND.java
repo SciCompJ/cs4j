@@ -48,6 +48,12 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
         return this.buffer.getInt(pos);
     }
     
+    @Override
+    public void setIntCode(int[] pos, int intCode)
+    {
+        this.buffer.setInt(pos, intCode);
+    }
+        
 	
     // =============================================================
     // Implementation of the IntVectorArray interface
@@ -135,7 +141,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 	@Override
 	public void set(int[] pos, RGB8 rgb)
 	{
-		this.buffer.setInt(pos, rgb.getIntCode());
+		this.buffer.setInt(pos, rgb.intCode());
 	}
 
 	@Override

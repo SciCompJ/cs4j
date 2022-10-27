@@ -82,7 +82,7 @@ public class BinaryOverlayRGB8Array implements RGB8Array
     {
         if (binaryArray.getBoolean(pos))
         {
-            return overlayColor.intCode;
+            return overlayColor.intCode();
         }
         return getBaseArrayIntCode(pos);
     }
@@ -100,11 +100,17 @@ public class BinaryOverlayRGB8Array implements RGB8Array
         }
         else if (this.baseArray instanceof BinaryArray)
         {
-            return ((BinaryArray) this.baseArray).getBoolean(pos) ? RGB8.WHITE.intCode : RGB8.BLACK.intCode;
+            return ((BinaryArray) this.baseArray).getBoolean(pos) ? RGB8.WHITE.intCode() : RGB8.BLACK.intCode();
         }
         throw new RuntimeException("Can not process array with class: " + this.baseArray.getClass());
     }
     
+    @Override
+    public void setSample(int[] pos, int channel, int value)
+    {
+        throw new RuntimeException("Can not modify values of a view class");
+    }
+
     
     @Override
     public double getValue(int[] pos, int channel)

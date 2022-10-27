@@ -47,6 +47,13 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
     {
         return this.buffer.getInt(pos[0], pos[1], pos[2]);
     }
+    
+    @Override
+    public void setIntCode(int[] pos, int intCode)
+    {
+        this.buffer.setInt(pos[0], pos[1], pos[2], intCode);
+    }
+    
 
     // =============================================================
     // Implementation of the IntVectorArray3D interface
@@ -128,7 +135,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
     public void set(int x, int y, int z, RGB8 rgb)
     {
-	    this.buffer.setInt(x, y, z, rgb.getIntCode());
+	    this.buffer.setInt(x, y, z, rgb.intCode());
     }
 
     /* (non-Javadoc)
@@ -146,7 +153,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
 	public void set(int[] pos, RGB8 rgb)
 	{
-		this.buffer.setInt(pos[0], pos[1], pos[2], rgb.getIntCode());
+		this.buffer.setInt(pos[0], pos[1], pos[2], rgb.intCode());
 	}
 
 
