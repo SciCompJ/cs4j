@@ -387,6 +387,8 @@ public class MorphologicalMarchingCubes extends AlgoStub
         // iterate over 2-by-2-by-2 configurations
         for (int z = 0; z < sizeZ - 1; z++)
         {
+            this.fireProgressChanged(this, z, sizeZ);
+            
             // update the lists of edges
             edgesX0 = edgesX1;
             edgesY0 = edgesY1;
@@ -500,6 +502,8 @@ public class MorphologicalMarchingCubes extends AlgoStub
                     }
                 }
             }
+            
+            this.fireProgressChanged(this, 1, 1);
         }
         
         return mesh;
