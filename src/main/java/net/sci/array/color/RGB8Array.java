@@ -10,6 +10,7 @@ import java.util.HashMap;
 import net.sci.array.Array;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.process.type.ConvertToUInt8;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.IntVectorArray;
@@ -438,15 +439,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	 */
     public default UInt8Array convertToUInt8()
     {
-        int[] sizes = this.size();
-        UInt8Array result = UInt8Array.create(sizes);
-        
-        for(int[] pos : this.positions())
-        {
-            result.setInt(pos, get(pos).maxSample());
-        }
-        
-        return result;
+        return new ConvertToUInt8().processRGB8(this);
     }
 	
 	public default UInt8Array createUInt8View()
@@ -454,6 +447,24 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	    return new UInt8View(this);
 	}
 	
+    /**
+     * Returns the largest value within the samples of the RGB8 element at the
+     * specified position.
+     * 
+     * The aim of this method is to facilitate the conversion of RGB8 arrays
+     * into grayscale (UInt8) arrays.
+     * 
+     * @see RGB8.maxSample()
+     * 
+     * @param pos
+     *            the position within array
+     * @return largest value within the samples, as an integer.
+     */
+    public default int getMaxSample(int[] pos)
+    {
+        return get(pos).maxSample();
+    }
+    
 	/**
      * Returns the intcode of the RGB8 value at specified position.
      * 

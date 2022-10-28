@@ -3,6 +3,7 @@
  */
 package net.sci.array.color;
 
+import net.sci.array.process.type.ConvertToUInt8;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array3D;
 import net.sci.array.vector.IntVectorArray3D;
@@ -42,25 +43,63 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 	}
 
 
+    // =============================================================
+    // Implementation of new methods
+
+    /**
+     * Returns the largest value within the samples of the RGB8 element at the
+     * specified position.
+     * 
+     * The aim of this method is to facilitate the conversion of RGB8 arrays
+     * into grayscale (UInt8) arrays.
+     * 
+     * @see RGB8.maxSample()
+     * 
+     * @param pos
+     *            the position within array
+     * @return largest value within the samples, as an integer.
+     */
+    public int getMaxSample(int x, int y, int z)
+    {
+        return get(x, y, z).maxSample();
+    }
+    
+    /**
+     * Returns the intcode of the RGB8 value at specified position.
+     * 
+     * @see #setIntCode(int[], int)
+     * 
+     * @param pos
+     *            the position within array
+     * @return the intcode representing the RGB value
+     */
+    public int getIntCode(int x, int y, int z)
+    {
+        return get(x, y, z).intCode();
+    }
+    
+    
 	// =============================================================
 	// Implementation of the RGB8Array interface
 
 	@Override
 	public UInt8Array3D convertToUInt8()
 	{
-		int size0 = this.size(0);
-		int size1 = this.size(1);
-		int size2 = this.size(2);
-		UInt8Array3D result = UInt8Array3D.create(size0, size1, size2);
-		
-		for (int[] pos : positions())
-		{
-            // TODO: could avoid RGB8 creation
-            result.setInt(pos, this.get(pos).maxSample());
-		}
-		
-		return result;
+	    return UInt8Array3D.wrap(new ConvertToUInt8().processRGB8(this));
 	}
+	
+    @Override
+    public int getMaxSample(int[] pos)
+    {
+        return getMaxSample(pos[0], pos[1], pos[2]);
+    }
+    
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        return getIntCode(pos[0], pos[1], pos[2]);
+    }
+    
 
     // =============================================================
     // Specialization of IntVectorArray3D interface

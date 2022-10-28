@@ -14,11 +14,35 @@ import net.sci.array.scalar.UInt8Array;
  */
 public class UInt8ArrayRGB8View implements RGB8Array
 {
+    // =============================================================
+    // Class variables
+    
     UInt8Array baseArray;
     
+    
+    // =============================================================
+    // Constructors
+
+    /**
+     * Creates a new view on the UInt8Array ,by converting each UInt8 element
+     * into a RGB8 color representing the gray value of the element.
+     * 
+     * @param array
+     *            the array to wrap.
+     */
     public UInt8ArrayRGB8View(UInt8Array array)
     {
         this.baseArray = array;
+    }
+    
+    
+    // =============================================================
+    // Methods implementing the RGB8Array interface
+
+    @Override
+    public int getMaxSample(int[] pos)
+    {
+        return baseArray.getInt(pos);
     }
     
     @Override
@@ -27,6 +51,10 @@ public class UInt8ArrayRGB8View implements RGB8Array
         int gray = baseArray.getInt(pos);
         return RGB8.intCode(gray, gray, gray);
     }
+
+    
+    // =============================================================
+    // Methods implementing the VectorArray and IntVectorArray interfaces
 
     @Override
     public int getSample(int[] pos, int channel)
@@ -39,6 +67,10 @@ public class UInt8ArrayRGB8View implements RGB8Array
     {
         return baseArray.getInt(pos);
     }
+    
+
+    // =============================================================
+    // Methods implementing the Array interface
 
     @Override
     public RGB8 get(int... pos)

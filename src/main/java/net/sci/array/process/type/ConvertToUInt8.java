@@ -249,7 +249,8 @@ public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
      */
     public UInt8Array processRGB8(RGB8Array array)
     {
-        // dispatch processing according to dimensionality
+        // dispatch processing according to dimensionality, allowing to monitor
+        // the progression of the conversion
         int nd = array.dimensionality();
         if (nd == 2)
         {
@@ -264,8 +265,7 @@ public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
         UInt8Array result = UInt8Array.create(array.size());
         for (int[] pos : array.positions())
         {
-            // TODO: could avoid UInt8 creation
-            result.setInt(pos, array.get(pos).maxSample());
+            result.setInt(pos, array.getMaxSample(pos));
         }
         return result;
     }
@@ -283,8 +283,7 @@ public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
             this.fireProgressChanged(this, y, sizeY);
             for (int x = 0; x < sizeX; x++)
             {
-                // TODO: could avoid UInt8 creation
-                result.setInt(x, y, array.get(x, y).maxSample());
+                result.setInt(x, y, array.getMaxSample(x, y));
             }
         }
         
@@ -308,8 +307,7 @@ public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
             {
                 for (int x = 0; x < sizeX; x++)
                 {
-                    // TODO: could avoid UInt8 creation
-                    result.setInt(x, y, z, array.get(x, y, z).maxSample());
+                    result.setInt(x, y, z, array.getMaxSample(x, y, z));
                 }
             }
         }

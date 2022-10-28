@@ -47,6 +47,15 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
     // Implementation of the RGB8Array interface
 
     @Override
+    public int getMaxSample(int[] pos)
+    {
+        int r = this.buffer.getInt(pos[0], pos[1], 0);
+        int g = this.buffer.getInt(pos[0], pos[1], 1);
+        int b = this.buffer.getInt(pos[0], pos[1], 2);
+        return Math.max(Math.max(r, g), b);
+    }
+    
+    @Override
     public int getIntCode(int[] pos)
     {
         int r = this.buffer.getInt(pos[0], pos[1], 0);

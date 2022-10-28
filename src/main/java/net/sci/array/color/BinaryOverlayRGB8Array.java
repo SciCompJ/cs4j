@@ -29,11 +29,6 @@ public class BinaryOverlayRGB8Array implements RGB8Array
     // class members
 
     /**
-     * The reference array to overlay.
-     */
-//    Array<?> baseArray;
-    
-    /**
      * The reference array of the overlay wrapped to a RGB8 array in order to
      * facilitate on the fly conversions.
      */
@@ -45,10 +40,13 @@ public class BinaryOverlayRGB8Array implements RGB8Array
     BinaryArray binaryMask;
     
     /**
-     * The Overlay color. Default is red.
+     * The overlay color. Default is red.
      */
     RGB8 overlayColor = RGB8.RED;
     
+    /**
+     * The overlay opacity, as a double value between 0 and 1.
+     */
     double opacity;
     
     
@@ -58,6 +56,8 @@ public class BinaryOverlayRGB8Array implements RGB8Array
     /**
      * Creates an RGB8 view that combines original values of the reference array
      * with a color overlay defined by the binary mask and the specified color.
+     * A default opacity of 1.0 (fully opaque) is used as default for the binary
+     * overlay.
      * 
      * @param baseArray
      *            the reference array to overlay. Can be an instance of
@@ -86,7 +86,8 @@ public class BinaryOverlayRGB8Array implements RGB8Array
      * @param overlayColor
      *            the overlay color.
      * @param opacity
-     *            the overlay opacity.
+     *            the overlay opacity, as a double value between 0 (fully
+     *            transparent) and 1 (fully opaque).
      */
     public BinaryOverlayRGB8Array(Array<?> baseArray, BinaryArray binaryMask, RGB8 overlayColor, double opacity)
     {
@@ -111,7 +112,7 @@ public class BinaryOverlayRGB8Array implements RGB8Array
         }
         else
         {
-            throw new IllegalArgumentException("Reference array must be an instance of UInt8Array, RGB8Array, or BinaryArray"); 
+            throw new IllegalArgumentException("Reference array must be an instance of UInt8Array, RGB8Array, or BinaryArray");
         }
         
         // keep also other variables

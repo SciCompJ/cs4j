@@ -37,8 +37,28 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 		super(buffer.size(0), buffer.size(1));
 		this.buffer = buffer;
 	}
+
 	
+    // =============================================================
+    // Override some methods of the RGB8Array2D class
 	
+    @Override
+    public int getMaxSample(int x, int y)
+    {
+        int intCode = this.buffer.getInt(x, y);
+        int r = intCode & 0x00FF;
+        int g = (intCode >> 8) & 0x00FF;
+        int b = (intCode >> 16) & 0x00FF;
+        return Math.max(Math.max(r, g), b);
+    }
+    
+    @Override
+    public int getIntCode(int x, int y)
+    {
+        return this.buffer.getInt(x, y);
+    }
+    
+    
     // =============================================================
     // Implementation of the RGB8Array interface
 
