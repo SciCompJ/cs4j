@@ -10,6 +10,10 @@ import java.util.function.BiFunction;
 import net.sci.array.generic.BufferedGenericArray2D;
 
 /**
+ * Base implementation for 2D arrays.
+ * 
+ * Provides implementation for array interface, some of them relying on newly defined methods.
+ * 
  * @author dlegland
  *
  */
@@ -35,13 +39,18 @@ public abstract class Array2D<T> implements Array<T>
 	// =============================================================
 	// class members
 
+	/** the size of the array along the first dimension */
 	protected int size0;
+	
+    /** the size of the array along the second dimension */
 	protected int size1;
 	
 	// =============================================================
 	// Constructors
 
 	/**
+     * Main constructor used to setup the size.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 * @param size1
@@ -124,7 +133,6 @@ public abstract class Array2D<T> implements Array<T>
      */
     public abstract void set(int x, int y, T value);
     
-
 	
 	// =============================================================
 	// Specialization of the Array interface

@@ -10,6 +10,8 @@ import java.util.function.BiFunction;
 import net.sci.array.Array2D;
 
 /**
+ * Specialization of Array for 2D arrays of scalar values.
+ * 
  * @author dlegland
  *
  */
@@ -135,8 +137,20 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	// Specialization of the Array interface
 
 	@Override
-	public abstract ScalarArray2D<T> duplicate();
-	
+	public ScalarArray2D<T> duplicate()
+	{
+	    ScalarArray2D<T> res = ScalarArray2D.wrapScalar2d(this.factory().create(this.size()));
+	    for (int y = 0; y < this.size1; y++)
+	    {
+	        for (int x = 0; x < this.size0; x++)
+	        {
+	            res.setValue(x, y, this.getValue(x, y));
+	        }
+	    }
+	    return res;
+	}
+	    
+
 	
     // =============================================================
     // Override Object methods
@@ -262,29 +276,6 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 			this.array.set(pos, value);
 		}
 
-		@Override
-		public ScalarArray2D<T> duplicate()
-		{
-			ScalarArray<T> tmp = this.array.newInstance(this.size0, this.size1);
-			if (!(tmp instanceof ScalarArray2D))
-			{
-				throw new RuntimeException("Can not create Array2D instance from " + this.array.getClass().getName() + " class.");
-			}
-			
-			ScalarArray2D<T> result = (ScalarArray2D <T>) tmp;
-			
-			// Fill new array with input array
-			for (int y = 0; y < this.size1; y++)
-			{
-				for (int x = 0; x < this.size0; x++)
-				{
-					result.setValue(x, y, this.array.getValue(x, y));
-				}
-			}
-
-			return result;
-		}
-		
 		@Override
 		public Class<T> dataType()
 		{

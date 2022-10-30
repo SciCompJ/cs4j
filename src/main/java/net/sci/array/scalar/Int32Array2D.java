@@ -4,6 +4,8 @@
 package net.sci.array.scalar;
 
 /**
+ * Specialization of Array for 2D arrays of Int32 values.
+ * 
  * @author dlegland
  *
  */
@@ -95,7 +97,7 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setInt(getInt(x, y), x, y);
+                res.setInt(x, y, getInt(x, y));
             }
         }
         
