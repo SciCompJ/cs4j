@@ -21,18 +21,20 @@ public class DenseInt32ArrayFactory extends AlgoStub implements Int32Array.Facto
     {
         switch (dims.length)
         {
-        case 2:
-            return new BufferedInt32Array2D(dims[0], dims[1]);
-        case 3:
-        {
-            fireStatusChanged(this, "Allocating memory");
-            if (Array.prod(dims[0], dims[1], dims[2]) < Integer.MAX_VALUE - 8)
-                return new BufferedInt32Array3D(dims[0], dims[1], dims[2]);
-            else 
-                return new SlicedInt32Array3D(dims[0], dims[1], dims[2]);
-        }
-        default:
-            return Int32ArrayND.create(dims);
+            case 1:
+                return new BufferedInt32Array1D(dims[0]);
+            case 2:
+                return new BufferedInt32Array2D(dims[0], dims[1]);
+            case 3:
+            {
+                fireStatusChanged(this, "Allocating memory");
+                if (Array.prod(dims[0], dims[1], dims[2]) < Integer.MAX_VALUE - 8)
+                    return new BufferedInt32Array3D(dims[0], dims[1], dims[2]);
+                else 
+                    return new SlicedInt32Array3D(dims[0], dims[1], dims[2]);
+            }
+            default:
+                return Int32ArrayND.create(dims);
         }
     }
 
