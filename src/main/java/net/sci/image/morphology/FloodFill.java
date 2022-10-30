@@ -57,10 +57,10 @@ public class FloodFill
 	 *            the type of the target array
 	 * @param source
 	 *            original image to read the pixel values from
-	 * @param x
-	 *            x- coordinate of the seed pixel
-	 * @param y
-	 *            y- coordinate of the seed pixel
+	 * @param x0
+	 *            x-coordinate of the seed pixel
+	 * @param y0
+	 *            y-coordinate of the seed pixel
 	 * @param target
 	 *            the label image to fill in
 	 * @param value
@@ -68,7 +68,7 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (4 or 8)
 	 */
-	public final static <S, T> void floodFill(Array2D<S> source, int x, int y,
+	public final static <S, T> void floodFill(Array2D<S> source, int x0, int y0,
 			Array2D<T> target, T value, Connectivity2D conn)
 	{
 		// initialize the shifts to look for new markers to start lines
@@ -86,11 +86,11 @@ public class FloodFill
 		int sizeY = source.size(1);
 		
 		// get old value
-		S oldValue = source.get(x, y);
+		S oldValue = source.get(x0, y0);
 		
 		// initialize the stack with original pixel
 		ArrayList<Cursor2D> stack = new ArrayList<Cursor2D>();
-		stack.add(new Cursor2D(x, y));
+		stack.add(new Cursor2D(x0, y0));
 				
 		boolean inScanLine;
 		
@@ -99,39 +99,39 @@ public class FloodFill
 		{
 			// Extract current position
 			Cursor2D p = stack.remove(stack.size()-1);
-			x = p.x;
-			y = p.y;
+			x0 = p.x;
+			y0 = p.y;
 			
 			// process only pixel of the same value
-			if (!source.get(x, y).equals(oldValue))
+			if (!source.get(x0, y0).equals(oldValue))
 				continue;
 			
 			// x extremities of scan-line
-			int x1 = x; 
-			int x2 = x;
+			int x1 = x0; 
+			int x2 = x0;
 			
 			// find start of scan-line
-			while (x1 > 0 && source.get(x1-1, y).equals(oldValue))
+			while (x1 > 0 && source.get(x1-1, y0).equals(oldValue))
 				x1--;
 			
 			// find end of scan-line
-			while (x2 < sizeX - 1 && source.get(x2+1, y).equals(oldValue))
+			while (x2 < sizeX - 1 && source.get(x2+1, y0).equals(oldValue))
 				x2++;
 			
 			// fill current scan-line
-			fillLine(target, y, x1, x2, value);
+			fillLine(target, y0, x1, x2, value);
 			
 			// find scan-lines above the current one
-			if (y > 0)
+			if (y0 > 0)
 			{
 				inScanLine = false;
 				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
 				{
-					S val = source.get(i, y - 1);
-					T lab = target.get(i, y - 1);
+					S val = source.get(i, y0 - 1);
+					T lab = target.get(i, y0 - 1);
 					if (!inScanLine && val.equals(oldValue) && !lab.equals(value))
 					{
-						stack.add(new Cursor2D(i, y - 1));
+						stack.add(new Cursor2D(i, y0 - 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && !val.equals(oldValue))
@@ -142,16 +142,16 @@ public class FloodFill
 			}
 
 			// find scan-lines below the current one
-			if (y < sizeY - 1)
+			if (y0 < sizeY - 1)
 			{
 				inScanLine = false;
 				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
 				{
-					S val = source.get(i, y + 1);
-					T lab = target.get(i, y + 1);
+					S val = source.get(i, y0 + 1);
+					T lab = target.get(i, y0 + 1);
 					if (!inScanLine && val.equals(oldValue) && !lab.equals(value))
 					{
-						stack.add(new Cursor2D(i, y + 1));
+						stack.add(new Cursor2D(i, y0 + 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && !val.equals(oldValue))
@@ -190,10 +190,10 @@ public class FloodFill
 	 * 
 	 * @param input
 	 *            original image to read the pixel values from
-	 * @param x
-	 *            x- coordinate of the seed pixel
-	 * @param y
-	 *            y- coordinate of the seed pixel
+	 * @param x0
+	 *            x-coordinate of the seed pixel
+	 * @param y0
+	 *            y-coordinate of the seed pixel
 	 * @param output
 	 *            the label image to fill in
 	 * @param value
@@ -201,16 +201,16 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (C4 or C8)
 	 */
-	public final static void floodFill(ScalarArray2D<?> input, int x, int y,
+	public final static void floodFill(ScalarArray2D<?> input, int x0, int y0,
 			ScalarArray2D<?> output, double value, Connectivity2D conn)
 	{
 		if (conn == Connectivity2D.C4)
 		{
-			floodFill(input, x, y, output, value, 4);
+			floodFill(input, x0, y0, output, value, 4);
 		}
 		else if (conn == Connectivity2D.C8)
 		{
-			floodFill(input, x, y, output, value, 8);
+			floodFill(input, x0, y0, output, value, 8);
 		}
 		else
 		{
@@ -225,10 +225,10 @@ public class FloodFill
 	 * 
 	 * @param input
 	 *            original image to read the pixel values from
-	 * @param x
-	 *            x- coordinate of the seed pixel
-	 * @param y
-	 *            y- coordinate of the seed pixel
+	 * @param x0
+	 *            x-coordinate of the seed pixel
+	 * @param y0
+	 *            y-coordinate of the seed pixel
 	 * @param output
 	 *            the label image to fill in
 	 * @param value
@@ -236,7 +236,7 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (4 or 8)
 	 */
-	public final static void floodFill(ScalarArray2D<?> input, int x, int y,
+	public final static void floodFill(ScalarArray2D<?> input, int x0, int y0,
 			ScalarArray2D<?> output, double value, int conn)
 	{
 		// the shifts to look for new markers to start lines
@@ -253,11 +253,11 @@ public class FloodFill
 		int sizeY = input.size(1);
 		
 		// get old value
-		double oldValue = input.getValue(x, y);
+		double oldValue = input.getValue(x0, y0);
 		
 		// initialize the stack with original pixel
 		ArrayList<Cursor2D> stack = new ArrayList<Cursor2D>();
-		stack.add(new Cursor2D(x, y));
+		stack.add(new Cursor2D(x0, y0));
 		
 		
 		boolean inScanLine;
@@ -267,39 +267,42 @@ public class FloodFill
 		{
 			// Extract current position
 			Cursor2D p = stack.remove(stack.size()-1);
-			x = p.x;
-			y = p.y;
+			x0 = p.x;
+			y0 = p.y;
 			
 			// process only pixel of the same value
-			if (input.getValue(x, y) != oldValue) 
+			if (input.getValue(x0, y0) != oldValue) 
 				continue;
 			
 			// x extremities of scan-line
-			int x1 = x; 
-			int x2 = x;
+			int x1 = x0; 
+			int x2 = x0;
 			
 			// find start of scan-line
-			while (x1 > 0 && input.getValue(x1-1, y) == oldValue)
+			while (x1 > 0 && input.getValue(x1-1, y0) == oldValue)
 				x1--;
 			
 			// find end of scan-line
-			while (x2 < sizeX - 1 && input.getValue(x2+1, y) == oldValue)
+			while (x2 < sizeX - 1 && input.getValue(x2+1, y0) == oldValue)
 				x2++;
 			
 			// fill current scan-line
-			fillLine(output, y, x1, x2, value);
-			
+	        for (int x = x1; x <= x2; x++)
+	        {
+	            output.setValue(x, y0, value);
+	        }
+	        
 			// find scan-lines above the current one
-			if (y > 0)
+			if (y0 > 0)
 			{
 				inScanLine = false;
 				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
 				{
-					double val = input.getValue(i, y - 1);
-					double lab = output.getValue(i, y - 1);
+					double val = input.getValue(i, y0 - 1);
+					double lab = output.getValue(i, y0 - 1);
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Cursor2D(i, y - 1));
+						stack.add(new Cursor2D(i, y0 - 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -310,16 +313,16 @@ public class FloodFill
 			}
 
 			// find scan-lines below the current one
-			if (y < sizeY - 1)
+			if (y0 < sizeY - 1)
 			{
 				inScanLine = false;
 				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
 				{
-					double val = input.getValue(i, y + 1);
-					double lab = output.getValue(i, y + 1);
+					double val = input.getValue(i, y0 + 1);
+					double lab = output.getValue(i, y0 + 1);
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Cursor2D(i, y + 1));
+						stack.add(new Cursor2D(i, y0 + 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -332,34 +335,16 @@ public class FloodFill
 	}
 
 	/**
-	 * Fill in the horizontal line define by y-coordinate and the two x 
-	 * coordinate extremities (inclusive), with the specified integer value.
-	 * the value x1 must be lower than or equal the value x2. 
-	 */
-    private final static void fillLine(ScalarArray2D<?> array, int y, int x1, int x2, double value)
-	{
-		if (x1 > x2)
-		{
-			int t = x1;
-			x1 = x2;
-			x2 = t;
-		}
-	
-		for (int x = x1; x <= x2; x++)
-			array.setValue(x, y, value);
-	}
-
-	/**
 	 * Assigns in <code>labelImage</code> all the neighbor pixels of (x,y) that
 	 * have the same pixel value in <code>image</code>, the specified new label
 	 * value (<code>value</code>), using the specified connectivity.
 	 * 
 	 * @param input
 	 *            original image to read the pixel values from
-	 * @param x
-	 *            x- coordinate of the seed pixel
-	 * @param y
-	 *            y- coordinate of the seed pixel
+	 * @param x0
+	 *            x-coordinate of the seed pixel
+	 * @param y0
+	 *            y-coordinate of the seed pixel
 	 * @param output
 	 *            the label image to fill in
 	 * @param value
@@ -367,16 +352,16 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (4 or 8)
 	 */
-	public final static void floodFillInt(IntArray2D<?> input, int x, int y,
+	public final static void floodFillInt(IntArray2D<?> input, int x0, int y0,
 			IntArray2D<?> output, int value, Connectivity2D conn)
 	{
 		if (conn == Connectivity2D.C4)
 		{
-			floodFillInt(input, x, y, output, value, 4);
+			floodFillInt(input, x0, y0, output, value, 4);
 		}
 		else if (conn == Connectivity2D.C8)
 		{
-			floodFillInt(input, x, y, output, value, 8);
+			floodFillInt(input, x0, y0, output, value, 8);
 		}
 		else
 		{
@@ -392,10 +377,10 @@ public class FloodFill
 	 * 
 	 * @param input
 	 *            original image to read the pixel values from
-	 * @param x
-	 *            x- coordinate of the seed pixel
-	 * @param y
-	 *            y- coordinate of the seed pixel
+	 * @param x0
+	 *            x-coordinate of the seed pixel
+	 * @param y0
+	 *            y-coordinate of the seed pixel
 	 * @param output
 	 *            the label image to fill in
 	 * @param value
@@ -403,7 +388,7 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (4 or 8)
 	 */
-    public final static void floodFillInt(IntArray2D<?> input, int x, int y, IntArray2D<?> output,
+    public final static void floodFillInt(IntArray2D<?> input, int x0, int y0, IntArray2D<?> output,
             int value, int conn)
 	{
 	
@@ -421,11 +406,11 @@ public class FloodFill
 		int sizeY = input.size(1);
 		
 		// get old value
-		int oldValue = input.getInt(x, y);
+		int oldValue = input.getInt(x0, y0);
 				
 		// initialize the stack with original pixel
 		ArrayList<Cursor2D> stack = new ArrayList<Cursor2D>();
-		stack.add(new Cursor2D(x, y));
+		stack.add(new Cursor2D(x0, y0));
 		
 		boolean inScanLine;
 		
@@ -434,40 +419,42 @@ public class FloodFill
 		{
 			// Extract current position
 			Cursor2D p = stack.remove(stack.size()-1);
-			x = p.x;
-			y = p.y;
+			x0 = p.x;
+			y0 = p.y;
 			
 			// process only pixel of the same value
-			if (input.getInt(x, y) != oldValue) 
+			if (input.getInt(x0, y0) != oldValue) 
 				continue;
 			
 			// x extremities of scan-line
-			int x1 = x; 
-			int x2 = x;
+			int x1 = x0; 
+			int x2 = x0;
 			
 			// find start of scan-line
-			while (x1 > 0 && input.getInt(x1-1, y) == oldValue)
+			while (x1 > 0 && input.getInt(x1-1, y0) == oldValue)
 				x1--;
 			
 			// find end of scan-line
-			while (x2 < sizeX - 1 && input.getInt(x2+1, y) == oldValue)
+			while (x2 < sizeX - 1 && input.getInt(x2+1, y0) == oldValue)
 				x2++;
 			
 			// fill current scan-line
-			fillLineInt(output, y, x1, x2, value);
-			
-			
+			for (int x = x1; x <= x2; x++)
+			{
+			    output.setInt(x, y0, value);
+			}
+
 			// find scan-lines above the current one
-			if (y > 0)
+			if (y0 > 0)
 			{
 				inScanLine = false;
 				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
 				{
-					int val = input.getInt(i, y - 1);
-					int lab = output.getInt(i, y - 1);
+					int val = input.getInt(i, y0 - 1);
+					int lab = output.getInt(i, y0 - 1);
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Cursor2D(i, y - 1));
+						stack.add(new Cursor2D(i, y0 - 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -478,16 +465,16 @@ public class FloodFill
 			}
 	
 			// find scan-lines below the current one
-			if (y < sizeY - 1)
+			if (y0 < sizeY - 1)
 			{
 				inScanLine = false;
 				for (int i = max(x1 + dx1, 0); i <= min(x2 + dx2, sizeX - 1); i++)
 				{
-					int val = input.getInt(i, y + 1);
-					int lab = output.getInt(i, y + 1);
+					int val = input.getInt(i, y0 + 1);
+					int lab = output.getInt(i, y0 + 1);
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Cursor2D(i, y + 1));
+						stack.add(new Cursor2D(i, y0 + 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -497,35 +484,6 @@ public class FloodFill
 				}
 			}
 		}
-	}
-
-	/**
-	 * In the input array, replaces all pixels in row <code>y</code> located
-	 * between <code>x1</code> and <code>x2</code> (inclusive) by the given
-	 * value.
-	 * 
-	 * @param ip
-	 *            the input image to modify
-	 * @param y
-	 *            the index of the row to modify
-	 * @param x1
-	 *            the column index of the first pixel to modify
-	 * @param x2
-	 *            the column index of the first pixel to modify
-	 * @param value
-	 *            the new value of the pixels
-	 */
-    private final static void fillLineInt(IntArray2D<?> array, int y, int x1, int x2, int value)
-	{
-		if (x1 > x2)
-		{
-			int t = x1;
-			x1 = x2;
-			x2 = t;
-		}
-		
-		for (int x = x1; x <= x2; x++)
-			array.setInt(x, y, value);
 	}
 
 	/**
@@ -590,12 +548,12 @@ public class FloodFill
 	 * 
 	 * @param inputArray
 	 *            original image to read the voxel values from
-	 * @param x
-	 *            x- coordinate of the seed voxel
-	 * @param y
-	 *            y- coordinate of the seed voxel
-	 * @param z
-	 *            z- coordinate of the seed voxel
+	 * @param x0
+	 *            x-coordinate of the seed voxel
+	 * @param y0
+	 *            y-coordinate of the seed voxel
+	 * @param z0
+	 *            z-coordinate of the seed voxel
 	 * @param outputArray
 	 *            output label image (to fill)
 	 * @param value
@@ -603,16 +561,16 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (C6 or C26)
 	 */
-    public final static void floodFill(ScalarArray3D<?> inputArray, int x, int y, int z,
+    public final static void floodFill(ScalarArray3D<?> inputArray, int x0, int y0, int z0,
             ScalarArray3D<?> outputArray, double value, Connectivity3D conn)
 	{
 		if (conn == Connectivity3D.C6)
 		{
-			floodFillC6(inputArray, x, y, z, outputArray, value);
+			floodFillC6(inputArray, x0, y0, z0, outputArray, value);
 		}
 		else if (conn == Connectivity3D.C26)
 		{
-			floodFillC26(inputArray, x, y, z, outputArray, value);
+			floodFillC26(inputArray, x0, y0, z0, outputArray, value);
 		}
 		else
 		{
@@ -628,18 +586,18 @@ public class FloodFill
 	 * 
 	 * @param inputImage
 	 *            original image to read the voxel values from
-	 * @param x
-	 *            x- coordinate of the seed voxel
-	 * @param y
-	 *            y- coordinate of the seed voxel
-	 * @param z
-	 *            z- coordinate of the seed voxel
+	 * @param x0
+	 *            x-coordinate of the seed voxel
+	 * @param y0
+	 *            y-coordinate of the seed voxel
+	 * @param z0
+	 *            z-coordinate of the seed voxel
 	 * @param outputImage
 	 *            output label image (to fill)
 	 * @param value
 	 *            filling value
 	 */
-    private final static void floodFillC6(ScalarArray3D<?> inputArray, int x, int y, int z,
+    private final static void floodFillC6(ScalarArray3D<?> inputArray, int x0, int y0, int z0,
             ScalarArray3D<?> outputArray, double value)
 	{
 		// get image size
@@ -648,11 +606,11 @@ public class FloodFill
 		int sizeZ = inputArray.size(2);
 
 		// get old value
-		double oldValue = inputArray.getValue(x, y, z);
+		double oldValue = inputArray.getValue(x0, y0, z0);
 
 		// initialize the stack with original pixel
 		ArrayList<Cursor3D> stack = new ArrayList<Cursor3D>();
-		stack.add(new Cursor3D(x, y, z));
+		stack.add(new Cursor3D(x0, y0, z0));
 
 		boolean inScanLine;
 
@@ -661,45 +619,48 @@ public class FloodFill
 		{
 			// Extract current position
 			Cursor3D p = stack.remove(stack.size()-1);
-			x = p.x;
-			y = p.y;
-			z = p.z;
+			x0 = p.x;
+			y0 = p.y;
+			z0 = p.z;
 
 			// process only pixel of the same value
-			if (inputArray.getValue(x, y, z) != oldValue)
+			if (inputArray.getValue(x0, y0, z0) != oldValue)
 				continue;
 
 			// x extremities of scan-line
-			int x1 = x; 
-			int x2 = x;
+			int x1 = x0; 
+			int x2 = x0;
 
 			// find start of scan-line
-			while (x1 > 0 && inputArray.getValue(x1 - 1, y, z) == oldValue)
+			while (x1 > 0 && inputArray.getValue(x1 - 1, y0, z0) == oldValue)
 				x1--;
 
 			// find end of scan-line
-			while (x2 < sizeX - 1 && inputArray.getValue(x2 + 1, y, z) == oldValue)
+			while (x2 < sizeX - 1 && inputArray.getValue(x2 + 1, y0, z0) == oldValue)
 				x2++;
 
 			// fill current scan-line
-			fillLine(outputArray, x1, x2, y, z, value);
+            for (int x = x1; x <= x2; x++)
+            {
+                outputArray.setValue(x, y0, z0, value);
+            }
 
 			// search bounds on x axis for neighbor lines
 			int x1l = max(x1, 0);
 			int x2l = min(x2, sizeX - 1);
 
 			// find scan-lines above the current one
-			if (y > 0) 
+			if (y0 > 0) 
 			{
 				inScanLine = false;
 				for (int i = x1l; i <= x2l; i++)
 				{
-					double val = inputArray.getValue(i, y - 1, z);
-					double lab = outputArray.getValue(i, y - 1, z);
+					double val = inputArray.getValue(i, y0 - 1, z0);
+					double lab = outputArray.getValue(i, y0 - 1, z0);
 
 					if (!inScanLine && val == oldValue && lab != value) 
 					{
-						stack.add(new Cursor3D(i, y - 1, z));
+						stack.add(new Cursor3D(i, y0 - 1, z0));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -710,17 +671,17 @@ public class FloodFill
 			}
 
 			// find scan-lines below the current one
-			if (y < sizeY - 1) 
+			if (y0 < sizeY - 1) 
 			{
 				inScanLine = false;
 				for (int i = x1l; i <= x2l; i++) 
 				{
-					double val = inputArray.getValue(i, y + 1, z);
-					double lab = outputArray.getValue(i, y + 1, z);
+					double val = inputArray.getValue(i, y0 + 1, z0);
+					double lab = outputArray.getValue(i, y0 + 1, z0);
 
 					if (!inScanLine && val == oldValue && lab != value) 
 					{
-						stack.add(new Cursor3D(i, y + 1, z));
+						stack.add(new Cursor3D(i, y0 + 1, z0));
 						inScanLine = true;
 					}
 					else if (inScanLine && val != oldValue)
@@ -731,17 +692,17 @@ public class FloodFill
 			}
 
 			// find scan-lines in front of the current one
-			if (z > 0)
+			if (z0 > 0)
 			{
 				inScanLine = false;
 				for (int i = x1l; i <= x2l; i++) 
 				{
-					double val = inputArray.getValue(i, y, z - 1);
-					double lab = outputArray.getValue(i, y, z - 1);
+					double val = inputArray.getValue(i, y0, z0 - 1);
+					double lab = outputArray.getValue(i, y0, z0 - 1);
 
 					if (!inScanLine && val == oldValue && lab != value) 
 					{
-						stack.add(new Cursor3D(i, y, z - 1));
+						stack.add(new Cursor3D(i, y0, z0 - 1));
 						inScanLine = true;
 					}
 					else if (inScanLine && val != oldValue)
@@ -752,17 +713,17 @@ public class FloodFill
 			}
 
 			// find scan-lines behind the current one
-			if (z < sizeZ - 1)
+			if (z0 < sizeZ - 1)
 			{
 				inScanLine = false;
 				for (int i = x1l; i <= x2l; i++)
 				{
-					double val = inputArray.getValue(i, y, z + 1);
-					double lab = outputArray.getValue(i, y, z + 1);
+					double val = inputArray.getValue(i, y0, z0 + 1);
+					double lab = outputArray.getValue(i, y0, z0 + 1);
 
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Cursor3D(i, y, z + 1));
+						stack.add(new Cursor3D(i, y0, z0 + 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -782,18 +743,18 @@ public class FloodFill
 	 * 
 	 * @param inputImage
 	 *            original image to read the voxel values from
-	 * @param x
-	 *            x- coordinate of the seed voxel
-	 * @param y
-	 *            y- coordinate of the seed voxel
-	 * @param z
-	 *            z- coordinate of the seed voxel
+	 * @param x0
+	 *            x-coordinate of the seed voxel
+	 * @param y0
+	 *            y-coordinate of the seed voxel
+	 * @param z0
+	 *            z-coordinate of the seed voxel
 	 * @param outputImage
 	 *            output label image (to fill)
 	 * @param value
 	 *            filling value
 	 */
-    private final static void floodFillC26(ScalarArray3D<?> inputArray, int x, int y, int z,
+    private final static void floodFillC26(ScalarArray3D<?> inputArray, int x0, int y0, int z0,
             ScalarArray3D<?> outputArray, double value)
 	{
 		// get image size
@@ -802,11 +763,11 @@ public class FloodFill
 		int sizeZ = inputArray.size(2);
 		
 		// get old value
-		double oldValue = inputArray.getValue(x, y, z);
+		double oldValue = inputArray.getValue(x0, y0, z0);
 				
 		// initialize the stack with original pixel
 		ArrayList<Cursor3D> stack = new ArrayList<Cursor3D>();
-		stack.add(new Cursor3D(x, y, z));
+		stack.add(new Cursor3D(x0, y0, z0));
 		
 		boolean inScanLine;
 		
@@ -815,40 +776,43 @@ public class FloodFill
 		{
 			// Extract current position
 			Cursor3D p = stack.remove(stack.size()-1);
-			x = p.x;
-			y = p.y;
-			z = p.z;
+			x0 = p.x;
+			y0 = p.y;
+			z0 = p.z;
 			
 			// process only pixel of the same value
-			if (inputArray.getValue(x, y, z) != oldValue)
+			if (inputArray.getValue(x0, y0, z0) != oldValue)
 				continue;
 			
 			// x extremities of scan-line
-			int x1 = x; 
-			int x2 = x;
+			int x1 = x0; 
+			int x2 = x0;
 			
 			// find start of scan-line
-			while (x1 > 0 && inputArray.getValue(x1-1, y, z) == oldValue)
+			while (x1 > 0 && inputArray.getValue(x1-1, y0, z0) == oldValue)
 				x1--;
 			
 			// find end of scan-line
-			while (x2 < sizeX - 1 && inputArray.getValue(x2+1, y, z) == oldValue)
+			while (x2 < sizeX - 1 && inputArray.getValue(x2+1, y0, z0) == oldValue)
 				x2++;
 		
 			// fill current scan-line
-			fillLine(outputArray, x1, x2, y, z, value);
-			
+			for (int x = x1; x <= x2; x++)
+			{
+			    outputArray.setValue(x, y0, z0, value);
+			}
+
 			// search bounds on x axis for neighbor lines
 			int x1l = max(x1 - 1, 0);
 			int x2l = min(x2 + 1, sizeX - 1);
 
 			// check the eight X-lines around the current one
-			for (int z2 = max(z - 1, 0); z2 <= min(z + 1, sizeZ - 1); z2++) 
+			for (int z2 = max(z0 - 1, 0); z2 <= min(z0 + 1, sizeZ - 1); z2++) 
 			{
-				for (int y2 = max(y - 1, 0); y2 <= min(y + 1, sizeY - 1); y2++) 
+				for (int y2 = max(y0 - 1, 0); y2 <= min(y0 + 1, sizeY - 1); y2++) 
 				{
 					// do not process the middle line
-					if (z2 == z && y2 == y)
+					if (z2 == z0 && y2 == y0)
 						continue;
 					
 					inScanLine = false;
@@ -871,17 +835,6 @@ public class FloodFill
 				}
 			} // end of iteration on neighbor lines
 		}
-	}
-
-	/**
-	 * Fill in the horizontal line define by y-coordinate and the two x
-	 * coordinate extremities (inclusive), with the specified integer value. the
-	 * value x1 must be lower than or equal the value x2.
-	 */
-    private final static void fillLine(ScalarArray3D<?> array, int x1, int x2, int y, int z, double value)
-	{
-		for (int x = x1; x <= x2; x++)
-			array.setValue(x, y, z, value);
 	}
 
 //	/**
@@ -931,12 +884,12 @@ public class FloodFill
 	 * 
 	 * @param inputArray
 	 *            original image to read the voxel values from
-	 * @param x
-	 *            x- coordinate of the seed voxel
-	 * @param y
-	 *            y- coordinate of the seed voxel
-	 * @param z
-	 *            z- coordinate of the seed voxel
+	 * @param x0
+	 *            x-coordinate of the seed voxel
+	 * @param y0
+	 *            y-coordinate of the seed voxel
+	 * @param z0
+	 *            z-coordinate of the seed voxel
 	 * @param outputArray
 	 *            output label image (to fill)
 	 * @param value
@@ -944,16 +897,16 @@ public class FloodFill
 	 * @param conn
 	 *            connectivity to use (6 or 26)
 	 */
-    public final static void floodFillInt(IntArray3D<?> inputArray, int x, int y, int z,
+    public final static void floodFillInt(IntArray3D<?> inputArray, int x0, int y0, int z0,
             IntArray3D<?> outputArray, int value, Connectivity3D conn)
 	{
 		if (conn == Connectivity3D.C6)
 		{
-			floodFillIntC6(inputArray, x, y, z, outputArray, value);
+			floodFillIntC6(inputArray, x0, y0, z0, outputArray, value);
 		}
 		else if (conn == Connectivity3D.C26)
 		{
-			floodFillIntC26(inputArray, x, y, z, outputArray, value);
+			floodFillIntC26(inputArray, x0, y0, z0, outputArray, value);
 		}
 		else
 		{
@@ -969,18 +922,18 @@ public class FloodFill
 	 * 
 	 * @param inputImage
 	 *            original image to read the voxel values from
-	 * @param x
-	 *            x- coordinate of the seed voxel
-	 * @param y
-	 *            y- coordinate of the seed voxel
-	 * @param z
-	 *            z- coordinate of the seed voxel
+	 * @param x0
+	 *            x-coordinate of the seed voxel
+	 * @param y0
+	 *            y-coordinate of the seed voxel
+	 * @param z0
+	 *            z-coordinate of the seed voxel
 	 * @param outputImage
 	 *            output label image (to fill)
 	 * @param value
 	 *            filling value
 	 */
-    private final static void floodFillIntC6(IntArray3D<?> inputArray, int x, int y, int z,
+    private final static void floodFillIntC6(IntArray3D<?> inputArray, int x0, int y0, int z0,
             IntArray3D<?> outputArray, int value)
 	{
 		// get image size
@@ -989,11 +942,11 @@ public class FloodFill
 		int sizeZ = inputArray.size(2);
 
 		// get old value
-		int oldValue = inputArray.getInt(x, y, z);
+		int oldValue = inputArray.getInt(x0, y0, z0);
 
 		// initialize the stack with original position
 		ArrayList<Cursor3D> stack = new ArrayList<Cursor3D>();
-		stack.add(new Cursor3D(x, y, z));
+		stack.add(new Cursor3D(x0, y0, z0));
 
 		boolean inScanLine;
 
@@ -1002,45 +955,48 @@ public class FloodFill
 		{
 			// Extract current position
 			Cursor3D p = stack.remove(stack.size()-1);
-			x = p.x;
-			y = p.y;
-			z = p.z;
+			x0 = p.x;
+			y0 = p.y;
+			z0 = p.z;
 
 			// process only pixel of the same value
-			if (inputArray.getInt(x, y, z) != oldValue)
+			if (inputArray.getInt(x0, y0, z0) != oldValue)
 				continue;
 
 			// x extremities of scan-line
-			int x1 = x; 
-			int x2 = x;
+			int x1 = x0; 
+			int x2 = x0;
 
 			// find start of scan-line
-			while (x1 > 0 && inputArray.getInt(x1 - 1, y, z) == oldValue)
+			while (x1 > 0 && inputArray.getInt(x1 - 1, y0, z0) == oldValue)
 				x1--;
 
 			// find end of scan-line
-			while (x2 < sizeX - 1 && inputArray.getInt(x2 + 1, y, z) == oldValue)
+			while (x2 < sizeX - 1 && inputArray.getInt(x2 + 1, y0, z0) == oldValue)
 				x2++;
 
 			// fill current scan-line
-			fillLineInt(outputArray, x1, x2, y, z, value);
+            for (int x = x1; x <= x2; x++)
+            {
+                outputArray.setInt(x, y0, z0, value);
+            }
 
 			// search bounds on x axis for neighbor lines
 			int x1l = max(x1, 0);
 			int x2l = min(x2, sizeX - 1);
 
 			// find scan-lines above the current one
-			if (y > 0) 
+			if (y0 > 0) 
 			{
 				inScanLine = false;
 				for (int i = x1l; i <= x2l; i++)
 				{
-					int val = inputArray.getInt(i, y - 1, z);
-					int lab = outputArray.getInt(i, y - 1, z);
+					int val = inputArray.getInt(i, y0 - 1, z0);
+					int lab = outputArray.getInt(i, y0 - 1, z0);
 
 					if (!inScanLine && val == oldValue && lab != value) 
 					{
-						stack.add(new Cursor3D(i, y - 1, z));
+						stack.add(new Cursor3D(i, y0 - 1, z0));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -1051,17 +1007,17 @@ public class FloodFill
 			}
 
 			// find scan-lines below the current one
-			if (y < sizeY - 1) 
+			if (y0 < sizeY - 1) 
 			{
 				inScanLine = false;
 				for (int i = x1l; i <= x2l; i++) 
 				{
-					int val = inputArray.getInt(i, y + 1, z);
-					int lab = outputArray.getInt(i, y + 1, z);
+					int val = inputArray.getInt(i, y0 + 1, z0);
+					int lab = outputArray.getInt(i, y0 + 1, z0);
 
 					if (!inScanLine && val == oldValue && lab != value) 
 					{
-						stack.add(new Cursor3D(i, y + 1, z));
+						stack.add(new Cursor3D(i, y0 + 1, z0));
 						inScanLine = true;
 					}
 					else if (inScanLine && val != oldValue)
@@ -1072,17 +1028,17 @@ public class FloodFill
 			}
 
 			// find scan-lines in front of the current one
-			if (z > 0)
+			if (z0 > 0)
 			{
 				inScanLine = false;
 				for (int i = x1l; i <= x2l; i++) 
 				{
-					int val = inputArray.getInt(i, y, z - 1);
-					int lab = outputArray.getInt(i, y, z - 1);
+					int val = inputArray.getInt(i, y0, z0 - 1);
+					int lab = outputArray.getInt(i, y0, z0 - 1);
 
 					if (!inScanLine && val == oldValue && lab != value) 
 					{
-						stack.add(new Cursor3D(i, y, z - 1));
+						stack.add(new Cursor3D(i, y0, z0 - 1));
 						inScanLine = true;
 					}
 					else if (inScanLine && val != oldValue)
@@ -1093,17 +1049,17 @@ public class FloodFill
 			}
 
 			// find scan-lines behind the current one
-			if (z < sizeZ - 1)
+			if (z0 < sizeZ - 1)
 			{
 				inScanLine = false;
 				for (int i = x1l; i <= x2l; i++)
 				{
-					int val = inputArray.getInt(i, y, z + 1);
-					int lab = outputArray.getInt(i, y, z + 1);
+					int val = inputArray.getInt(i, y0, z0 + 1);
+					int lab = outputArray.getInt(i, y0, z0 + 1);
 
 					if (!inScanLine && val == oldValue && lab != value)
 					{
-						stack.add(new Cursor3D(i, y, z + 1));
+						stack.add(new Cursor3D(i, y0, z0 + 1));
 						inScanLine = true;
 					} 
 					else if (inScanLine && val != oldValue)
@@ -1123,18 +1079,18 @@ public class FloodFill
      * 
      * @param inputImage
      *            original image to read the voxel values from
-     * @param x
-     *            x- coordinate of the seed voxel
-     * @param y
-     *            y- coordinate of the seed voxel
-     * @param z
-     *            z- coordinate of the seed voxel
+     * @param x0
+     *            x-coordinate of the seed voxel
+     * @param y0
+     *            y-coordinate of the seed voxel
+     * @param z0
+     *            z-coordinate of the seed voxel
      * @param outputImage
      *            output label image (to fill)
      * @param value
      *            filling value
      */
-    private final static void floodFillIntC26(IntArray3D<?> inputArray, int x, int y, int z,
+    private final static void floodFillIntC26(IntArray3D<?> inputArray, int x0, int y0, int z0,
             IntArray3D<?> outputArray, int value)
 	{
 		// get image size
@@ -1143,11 +1099,11 @@ public class FloodFill
 		int sizeZ = inputArray.size(2);
 		
 		// get old value
-		int oldValue = inputArray.getInt(x, y, z);
+		int oldValue = inputArray.getInt(x0, y0, z0);
 				
 		// initialize the stack with original pixel
 		ArrayList<Cursor3D> stack = new ArrayList<Cursor3D>();
-		stack.add(new Cursor3D(x, y, z));
+		stack.add(new Cursor3D(x0, y0, z0));
 		
 		boolean inScanLine;
 		
@@ -1156,40 +1112,43 @@ public class FloodFill
 		{
 			// Extract current position
 			Cursor3D p = stack.remove(stack.size()-1);
-			x = p.x;
-			y = p.y;
-			z = p.z;
+			x0 = p.x;
+			y0 = p.y;
+			z0 = p.z;
 			
 			// process only pixel of the same value
-			if (inputArray.getValue(x, y, z) != oldValue)
+			if (inputArray.getValue(x0, y0, z0) != oldValue)
 				continue;
 			
 			// x extremities of scan-line
-			int x1 = x; 
-			int x2 = x;
+			int x1 = x0; 
+			int x2 = x0;
 			
 			// find start of scan-line
-			while (x1 > 0 && inputArray.getValue(x1-1, y, z) == oldValue)
+			while (x1 > 0 && inputArray.getValue(x1-1, y0, z0) == oldValue)
 				x1--;
 			
 			// find end of scan-line
-			while (x2 < sizeX - 1 && inputArray.getValue(x2+1, y, z) == oldValue)
+			while (x2 < sizeX - 1 && inputArray.getValue(x2+1, y0, z0) == oldValue)
 				x2++;
 		
 			// fill current scan-line
-			fillLine(outputArray, x1, x2, y, z, value);
-			
+			for (int x = x1; x <= x2; x++)
+			{
+			    outputArray.setInt(x, y0, z0, value);
+			}
+
 			// search bounds on x axis for neighbor lines
 			int x1l = max(x1 - 1, 0);
 			int x2l = min(x2 + 1, sizeX - 1);
 
 			// check the eight X-lines around the current one
-			for (int z2 = max(z - 1, 0); z2 <= min(z + 1, sizeZ - 1); z2++) 
+			for (int z2 = max(z0 - 1, 0); z2 <= min(z0 + 1, sizeZ - 1); z2++) 
 			{
-				for (int y2 = max(y - 1, 0); y2 <= min(y + 1, sizeY - 1); y2++) 
+				for (int y2 = max(y0 - 1, 0); y2 <= min(y0 + 1, sizeY - 1); y2++) 
 				{
 					// do not process the middle line
-					if (z2 == z && y2 == y)
+					if (z2 == z0 && y2 == y0)
 						continue;
 					
 					inScanLine = false;
@@ -1212,18 +1171,6 @@ public class FloodFill
 				}
 			} // end of iteration on neighbor lines
 		}
-	}
-
-	/**
-	 * Fill in the horizontal line define by y-coordinate and the two x
-	 * coordinate extremities (inclusive), with the specified integer value. the
-	 * value x1 must be lower than or equal the value x2.
-	 */
-    private final static void fillLineInt(IntArray3D<?> array, int x1, int x2, int y, int z,
-            int value)
-	{
-		for (int x = x1; x <= x2; x++)
-			array.setInt(x, y, z, value);
 	}
 
 	/**
