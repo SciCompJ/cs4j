@@ -302,11 +302,16 @@ public class BufferedImageUtils
         
         // Populate the raster
         WritableRaster raster = bufImg.getRaster();
+        int nLabels = colormap.size() - 1;
         for (int y = 0; y < sizeY; y++)
         {
             for (int x = 0; x < sizeX; x++)
             {
-                int index = Math.min(array.getInt(x, y), 255);
+                int index = array.getInt(x, y);
+                if (index > 0)
+                {
+                    index = ((index - 1) % nLabels) + 1;
+                }
                 raster.setSample(x, y, 0, index); 
             }
         }
