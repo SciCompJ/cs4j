@@ -660,6 +660,7 @@ public class Image
 	public void setType(Type type)
 	{
 		this.type = type;
+		setupDisplayRange();
 	}
 	
     public boolean isScalarImage()
