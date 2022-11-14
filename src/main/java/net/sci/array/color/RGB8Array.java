@@ -612,7 +612,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
     public default void setValue(int[] pos, int channel, double value)
     {        
         int[] samples = get(pos).getSamples();
-        samples[channel] = UInt8.clamp(value);
+        samples[channel] = UInt8.convert(value);
         set(pos, new RGB8(samples));
     }
 
@@ -631,9 +631,9 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	@Override
 	public default void setValues(int[] pos, double[] values)
 	{
-		int r = UInt8.clamp(values[0]);
-		int g = UInt8.clamp(values[1]);
-		int b = UInt8.clamp(values[2]);
+		int r = UInt8.convert(values[0]);
+		int g = UInt8.convert(values[1]);
+		int b = UInt8.convert(values[2]);
 		set(pos, new RGB8(r, g, b));
 	}
 
@@ -741,7 +741,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 		public default void setValue(int c, double value)
 		{
 			int[] samples = get().getSamples();
-			samples[c] = UInt8.clamp(value);
+			samples[c] = UInt8.convert(value);
 			set(new RGB8(samples[0], samples[1], samples[2]));
 		}
 	}

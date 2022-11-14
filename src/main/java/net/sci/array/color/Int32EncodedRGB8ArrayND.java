@@ -134,7 +134,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
     public void setValue(int[] pos, int channel, double value)
     {
         int[] samples = getSamples(pos);
-        samples[channel] = UInt8.clamp(value);
+        samples[channel] = UInt8.convert(value);
         this.buffer.setInt(pos, RGB8.intCode(samples));
     }
 

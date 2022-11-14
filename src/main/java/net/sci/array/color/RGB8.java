@@ -46,16 +46,6 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	// =============================================================
 	// Static methods
 	
-	private final static int clamp255(int value)
-	{
-		return value & 0x00FF;
-	}
-	
-	private final static int clamp255(double value)
-	{
-		return (int) Math.min(Math.max(value, 0), 255);
-	}
-	
 	/**
 	 * Creates a new RGB8 from grayscale value
 	 * 
@@ -66,7 +56,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	 */
 	public final static RGB8 fromValue(double value)
 	{
-		int val = clamp255(value);
+		int val = UInt8.convert(value);
 		return new RGB8(val << 16 | val << 8 | val);
 	}
 	
@@ -78,7 +68,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
     
     public final static RGB8 fromUInt8(UInt8 value)
 	{
-	    int val = clamp255(value.getInt());
+	    int val = UInt8.clamp(value.getInt());
 	    return new RGB8(val << 16 | val << 8 | val);
 	}
     
@@ -208,9 +198,9 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	 */
 	public RGB8(int red, int green, int blue)
 	{
-		int r = clamp255(red);
-		int g = clamp255(green);
-		int b = clamp255(blue);
+		int r = UInt8.clamp(red);
+		int g = UInt8.clamp(green);
+		int b = UInt8.clamp(blue);
 		this.intCode = b << 16 | g << 8 | r;   
 	}	
 	
@@ -226,9 +216,9 @@ public class RGB8 extends IntVector<UInt8> implements Color
      */
     public RGB8(int[] rgb)
     {
-        int r = clamp255(rgb[0]);
-        int g = clamp255(rgb[1]);
-        int b = clamp255(rgb[2]);
+        int r = UInt8.clamp(rgb[0]);
+        int g = UInt8.clamp(rgb[1]);
+        int b = UInt8.clamp(rgb[2]);
         this.intCode = b << 16 | g << 8 | r;   
     }   
     
@@ -244,9 +234,9 @@ public class RGB8 extends IntVector<UInt8> implements Color
 	 */
 	public RGB8(double red, double green, double blue)
 	{
-		int r = clamp255(red);
-		int g = clamp255(green);
-		int b = clamp255(blue);
+		int r = UInt8.convert(red);
+		int g = UInt8.convert(green);
+		int b = UInt8.convert(blue);
 		this.intCode = b << 16 | g << 8 | r;   
 	}
 
@@ -259,9 +249,9 @@ public class RGB8 extends IntVector<UInt8> implements Color
      */
 	public RGB8(Color color)
 	{
-        int r = (int) Math.floor(color.red() * 255 + .5);
-        int g = (int) Math.floor(color.green() * 255 + .5);
-        int b = (int) Math.floor(color.blue() * 255 + .5);
+        int r = UInt8.convert(color.red() * 255 + 0.5);
+        int g = UInt8.convert(color.green() * 255 + 0.5);
+        int b = UInt8.convert(color.blue() * 255 + 0.5);
         this.intCode = b << 16 | g << 8 | r;   
 	}
 
@@ -314,7 +304,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
     }
     
     /**
-     * @return the red component of this color, as integer between 0 and 255.
+     * @return the red component of this color, as an integer between 0 and 255.
      */
     public double intRed()
     {
@@ -332,7 +322,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
     }
     
     /**
-     * @return the green component of this color, as integer between 0 and 255.
+     * @return the green component of this color, as an integer between 0 and 255.
      */
     public double intGreen()
     {
@@ -349,7 +339,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
     }
     
     /**
-     * @return the blue component of this color, as integer between 0 and 255.
+     * @return the blue component of this color, as an integer between 0 and 255.
      */
     public double intBlue()
     {
@@ -422,11 +412,7 @@ public class RGB8 extends IntVector<UInt8> implements Color
         double cmax = Math.max(Math.max(r, g), b);
         double cmin = Math.min(Math.min(r, g), b);
         
-        if (cmax == 0)
-        {
-            return 0;
-        }
-        return (cmax - cmin) / cmax;
+        return cmax > 0 ? (cmax - cmin) / cmax : 0.0;
     }
     
     /**

@@ -48,9 +48,9 @@ public class UInt8 extends Int
 	 *            an integer value
 	 * @return the closest integer value between 0 and 255.
 	 */
-	public final static int clamp(double value)
+	public final static int clamp(int value)
 	{
-		return (int) Math.min(Math.max(0, value), 255);
+		return Math.min(Math.max(0, value), 255);
 	}
 	
 	

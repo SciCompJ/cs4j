@@ -294,9 +294,9 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 		{
 			switch(c)
 			{
-			case 0: buffer.setInt(posX, posY, 0, UInt8.clamp(value));
-			case 1: buffer.setInt(posX, posY, 1, UInt8.clamp(value));
-			case 2: buffer.setInt(posX, posY, 2, UInt8.clamp(value));
+			case 0: buffer.setInt(posX, posY, 0, UInt8.convert(value));
+			case 1: buffer.setInt(posX, posY, 1, UInt8.convert(value));
+			case 2: buffer.setInt(posX, posY, 2, UInt8.convert(value));
 			default: new IllegalArgumentException(
 					"Channel index must be comprised between 0 and 2, not " + c);
 			}

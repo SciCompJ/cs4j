@@ -133,7 +133,7 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
     @Override
     public void setValue(int x, int y, int z, double value)
     {
-        setByte(x, y, z, (byte) UInt8.clamp(value));
+        setByte(x, y, z, (byte) UInt8.convert(value));
     }
     
 

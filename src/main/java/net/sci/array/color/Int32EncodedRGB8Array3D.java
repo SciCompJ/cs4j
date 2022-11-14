@@ -141,9 +141,9 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
 	public void setValues(int x, int y, int z, double[] values)
 	{
-		int r = UInt8.clamp(values[0]);
-		int g = UInt8.clamp(values[1]);
-		int b = UInt8.clamp(values[2]);
+		int r = UInt8.convert(values[0]);
+		int g = UInt8.convert(values[1]);
+		int b = UInt8.convert(values[2]);
 		int intCode = b << 16 | g << 8 | r;
 		this.buffer.setInt(new int[] {x, y, z}, intCode);
 	}

@@ -168,9 +168,9 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
     @Override
 	public void setValues(int x, int y, double[] values)
 	{
-		int r = UInt8.clamp(values[0]);
-		int g = UInt8.clamp(values[1]);
-		int b = UInt8.clamp(values[2]);
+		int r = UInt8.convert(values[0]);
+		int g = UInt8.convert(values[1]);
+		int b = UInt8.convert(values[2]);
 		set(x, y, new RGB8(r, g, b));
 	}
 

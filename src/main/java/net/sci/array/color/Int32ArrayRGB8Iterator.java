@@ -84,7 +84,7 @@ public class Int32ArrayRGB8Iterator implements RGB8Array.Iterator
         int b = intCode & 0x00FF0000;
         
         // convert the specified value to the UInt8 range
-        int intValue = UInt8.clamp(value);
+        int intValue = UInt8.convert(value);
         
         // update the specified component with the given value
         switch (c)
