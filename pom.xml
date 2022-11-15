@@ -9,8 +9,11 @@
   <version>0.0.1-SNAPSHOT</version>
 
   <properties>
+    <!-- Use a LTS to facilitate protability -->
     <maven.compiler.source>1.17</maven.compiler.source>
-    <maven.compiler.target>1.11</maven.compiler.target>
+    <maven.compiler.target>1.17</maven.compiler.target>
+    <!-- Generic source encoding -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   
   <dependencies>
@@ -23,8 +26,9 @@
 	    <version>4.13.2</version>
 	    <scope>test</scope>
 	</dependency>
-
 	
+    <!-- Jama is used for matrix operations (SVD)-->
+    <!-- e. g. in ellipsoid reduction, or PCA computation -->
     <!-- https://mvnrepository.com/artifact/gov.nist.math/jama -->
     <dependency>
       <groupId>gov.nist.math</groupId>
