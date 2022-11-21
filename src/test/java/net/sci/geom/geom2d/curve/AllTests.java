@@ -6,7 +6,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-    CurveSet2DTest.class,
+    MultiCurve2DTest.class,
     Ellipse2DTest.class,
 	})
 public class AllTests {

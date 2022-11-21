@@ -18,7 +18,7 @@ import net.sci.geom.geom2d.Point2D;
  * @author dlegland
  *
  */
-public class CurveSet2D implements CurveShape2D
+public class MultiCurve2D implements CurveShape2D
 {
     // ===================================================================
     // Class variables
@@ -29,22 +29,19 @@ public class CurveSet2D implements CurveShape2D
     // ===================================================================
     // Constructors
     
-    public CurveSet2D(Collection<? extends Curve2D> curves)
+    public MultiCurve2D(Collection<? extends Curve2D> curves)
     {
         this.curves = new ArrayList<Curve2D>(curves.size());
         this.curves.addAll(curves);
     }
     
-    public CurveSet2D(Curve2D... curves)
+    public MultiCurve2D(Curve2D... curves)
     {
         this.curves = new ArrayList<Curve2D>(curves.length);
         for (Curve2D c : curves)
+        {
             this.curves.add(c);
-    }
-    
-    private CurveSet2D(int nCurves)
-    {
-        this.curves = new ArrayList<Curve2D>(nCurves);
+        }
     }
     
     
@@ -64,14 +61,14 @@ public class CurveSet2D implements CurveShape2D
      *            the transformation to apply
      * @return the transformed geometry
      */
-    public CurveSet2D transform(AffineTransform2D trans)
+    public MultiCurve2D transform(AffineTransform2D trans)
     {
         ArrayList<Curve2D> newCurves = new ArrayList<Curve2D>(this.curves.size());
         for (Curve2D curve : this.curves)
         {
             newCurves.add(curve.transform(trans));
         }
-        return new CurveSet2D(newCurves);
+        return new MultiCurve2D(newCurves);
     }
 
     
@@ -122,6 +119,10 @@ public class CurveSet2D implements CurveShape2D
         return new Bounds2D(xmin, xmax, ymin, ymax);
     }
 
+    /**
+     * @return true only if all the curves contained within this MultiCurve2D
+     *         instance are unbounded.
+     */
     @Override
     public boolean isBounded()
     {
@@ -133,11 +134,20 @@ public class CurveSet2D implements CurveShape2D
         return true;
     }
 
+    /**
+     * Duplicates this MultiCurve2D by creating a new multi curve with all the
+     * duplicated curves.
+     * 
+     * @return a deep copy of this MultiCurve2D.
+     */
     @Override
-    public CurveSet2D duplicate()
+    public MultiCurve2D duplicate()
     {
-        CurveSet2D dup = new CurveSet2D(curves.size());
-        dup.curves.addAll(curves);
-        return dup;
+        ArrayList<Curve2D> curves2 = new ArrayList<>(curves.size());
+        for (Curve2D curve : curves)
+        {
+            curves2.add(curve.duplicate());
+        }
+        return new MultiCurve2D(curves2);
     }
 }
