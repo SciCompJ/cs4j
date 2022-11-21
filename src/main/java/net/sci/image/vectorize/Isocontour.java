@@ -4,14 +4,19 @@
 package net.sci.image.vectorize;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.geom.geom2d.Geometry2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.curve.MultiCurve2D;
+import net.sci.geom.geom2d.polygon.LineString2D;
+import net.sci.geom.geom2d.polygon.LinearRing2D;
+import net.sci.geom.geom2d.polygon.Polyline2D;
+import net.sci.geom.graph.AdjListGraph2D;
 import net.sci.geom.graph.Graph2D;
-import net.sci.geom.graph.SimpleGraph2D;
 
 /**
  * Computes the set of curves (polylines) corresponding to isocontour of a
@@ -26,6 +31,122 @@ public class Isocontour extends AlgoStub
 {
     // =============================================================
     // Static declarations
+    
+    
+    public static final MultiCurve2D convertContourGraphToPolylines(AdjListGraph2D graph)
+    {
+        int nv = graph.vertexCount();
+        
+        // initialize lists of vertices to process
+        ArrayList<Graph2D.Vertex> verticesToProcess = new ArrayList<>(nv); // TODO: replace by HashSet
+        ArrayList<Graph2D.Vertex> endVertices = new ArrayList<>(nv);
+        for (Graph2D.Vertex vertex : graph.vertices())
+        {
+            verticesToProcess.add(vertex);
+            int nn = graph.adjacentEdges(vertex).size();
+            switch(nn)
+            {
+                case 0 -> System.out.println("isolated vertex!");
+                case 1 -> endVertices.add(vertex);
+                case 2 -> {}
+                default -> throw new RuntimeException("Do not expect vertices with number of adjacent edges equal to " + nn);
+            }
+        }
+        
+        // small checkup
+        if (endVertices.size() % 2 > 0)
+        {
+            throw new RuntimeException("Number of 1-degree vertices must be even");
+        }
+        
+        ArrayList<Polyline2D> allPolylines = new ArrayList<>();
+        
+        // start by processing open polylines
+        while(!endVertices.isEmpty())
+        {
+            // retrieve a vertex from the pool
+            Graph2D.Vertex currentVertex = endVertices.remove(endVertices.size() - 1);
+            verticesToProcess.remove(currentVertex);
+            
+            // initialize with first vertex
+            ArrayList<Point2D> positions = new ArrayList<Point2D>();
+            positions.add(currentVertex.position());
+            
+            // switch to next vertex (the unique neighbor)
+            Graph2D.Vertex previousVertex = currentVertex;
+            currentVertex = graph.adjacentVertices(currentVertex).iterator().next();
+            
+            // iterate until we find extremity
+            while (true)
+            {
+                verticesToProcess.remove(currentVertex);
+                positions.add(currentVertex.position());
+                
+                // check end of iteration
+                Collection<Graph2D.Vertex> adjVertices = graph.adjacentVertices(currentVertex);
+                if (adjVertices.size() == 1)
+                {
+                    endVertices.remove(currentVertex);
+                    break;
+                }
+
+                // identify next vertex
+                for (Graph2D.Vertex v : adjVertices)
+                {
+                    if (v != previousVertex)
+                    {
+                        previousVertex = currentVertex;
+                        currentVertex = v;
+                        break;
+                    }
+                }
+            }
+            
+            // can create a polyline from the list of positions
+            allPolylines.add(LineString2D.create(positions));
+        }
+        
+        
+        // process remaining vertices, that form closed polylines
+        while(!verticesToProcess.isEmpty())
+        {
+            // retrieve a vertex from the pool
+            Graph2D.Vertex currentVertex = verticesToProcess.remove(verticesToProcess.size() - 1);
+            Graph2D.Vertex initialVertex = currentVertex;
+            
+            // initialize with first vertex
+            ArrayList<Point2D> positions = new ArrayList<Point2D>();
+            positions.add(currentVertex.position());
+            
+            // switch to next vertex (one of the two neighbors)
+            Graph2D.Vertex previousVertex = currentVertex;
+            currentVertex = graph.adjacentVertices(currentVertex).iterator().next();
+            
+            // iterate until we come back at initial vertex
+            while (currentVertex != initialVertex)
+            {
+                verticesToProcess.remove(currentVertex);
+                positions.add(currentVertex.position());
+                
+                // identify next vertex
+                for (Graph2D.Vertex v : graph.adjacentVertices(currentVertex))
+                {
+                    if (v != previousVertex)
+                    {
+                        previousVertex = currentVertex;
+                        currentVertex = v;
+                        break;
+                    }
+                }
+            }
+            
+            // can create a polyline from the list of positions
+            allPolylines.add(LinearRing2D.create(positions));
+        }
+        
+        return new MultiCurve2D(allPolylines);
+    }
+    // TODO: rename CurveSet2D to MultiCurve2D
 
     /**
      * The location of a grid edge with respect to the current 2-by-2 pixel
@@ -68,7 +189,7 @@ public class Isocontour extends AlgoStub
         { EdgeLocation.E0, EdgeLocation.E1 }, 
         {}, 
     };
-
+    
     
     // =============================================================
     // class variables
@@ -96,13 +217,13 @@ public class Isocontour extends AlgoStub
 
     public Geometry2D processScalar2d(ScalarArray2D<? extends Scalar> array)
     {
-        return computeGraph(array);
+        return convertContourGraphToPolylines(computeGraph(array));
     }
 
-    public Graph2D computeGraph(ScalarArray2D<? extends Scalar> array)
+    public AdjListGraph2D computeGraph(ScalarArray2D<? extends Scalar> array)
     {
         // create intermediate data structure
-        ArrayList<EdgeVertex> vertices = new ArrayList<EdgeVertex>();
+        ArrayList<EdgeVertex> edgeVertices = new ArrayList<EdgeVertex>();
         ArrayList<int[]> adjacencies = new ArrayList<int[]>();
 
         // size of array
@@ -155,25 +276,24 @@ public class Isocontour extends AlgoStub
 
                     // retrieve index of first vertex, or create a new one if it
                     // does not exist
-                    int indV1 = findVertexIndex(vertices, ix, iy, edge1);
+                    int indV1 = findVertexIndex(edgeVertices, ix, iy, edge1);
                     if (indV1 == -1)
                     {
                         EdgeVertex vertex = createVertex(ix, iy, edge1);
                         vertex.position = computeVertexPosition(vertex, edge1, v00, v01, v10, v11);
-                        indV1 = vertices.size();
-                        vertices.add(vertex);
+                        indV1 = edgeVertices.size();
+                        edgeVertices.add(vertex);
                     }
 
                     // retrieve index of second vertex, or create a new one if
-                    // it
-                    // does not exist
-                    int indV2 = findVertexIndex(vertices, ix, iy, edge2);
+                    // it does not exist
+                    int indV2 = findVertexIndex(edgeVertices, ix, iy, edge2);
                     if (indV2 == -1)
                     {
                         EdgeVertex vertex = createVertex(ix, iy, edge2);
                         vertex.position = computeVertexPosition(vertex, edge2, v00, v01, v10, v11);
-                        indV2 = vertices.size();
-                        vertices.add(vertex);
+                        indV2 = edgeVertices.size();
+                        edgeVertices.add(vertex);
                     }
 
                     adjacencies.add(new int[] { indV1, indV2 });
@@ -182,14 +302,20 @@ public class Isocontour extends AlgoStub
         }
 
         // create the graph
-        SimpleGraph2D graph = new SimpleGraph2D();
-        for (EdgeVertex v : vertices)
+        AdjListGraph2D graph = new AdjListGraph2D();
+        
+        // populate with vertices
+        Graph2D.Vertex[] vertices = new Graph2D.Vertex[edgeVertices.size()];
+        int iv = 0;
+        for (EdgeVertex v : edgeVertices)
         {
-            graph.addVertex(v.getPosition());
+            vertices[iv++] = graph.addVertex(v.getPosition());
         }
+        
+        // populate with edges
         for (int[] adj : adjacencies)
         {
-            graph.addEdge(adj[0], adj[1]);
+            graph.addEdge(vertices[adj[0]], vertices[adj[1]]);
         }
 
         return graph;
@@ -197,12 +323,19 @@ public class Isocontour extends AlgoStub
 
     private int findVertexIndex(ArrayList<EdgeVertex> vertices, int x, int y, EdgeLocation edge)
     {
+        int x2 = x;
+        int y2 = y;
+        if (edge == EdgeLocation.E2) x2++;
+        if (edge == EdgeLocation.E3) y2++;
+        
         boolean horiz = edge == EdgeLocation.E0 || edge == EdgeLocation.E3;
         int index = 0;
         for (EdgeVertex vertex : vertices)
         {
-            if (vertex.ix == x && vertex.iy == y && vertex.horiz == horiz)
-            { return index; }
+            if (vertex.ix == x2 && vertex.iy == y2 && vertex.horiz == horiz)
+            { 
+                return index; 
+            }
             index++;
         }
         // could not find vertex within array
@@ -296,6 +429,15 @@ public class Isocontour extends AlgoStub
             return this.horiz ? +1 : -1;
         }
 
+        // ===================================================================
+        // Update display
+        
+        @Override
+        public String toString()
+        {
+            return "EdgeVertex(" + this.ix + ", " + this.iy + ", " + this.horiz + ")";
+        }
+        
         @Override
         public int hashCode()
         {
@@ -318,4 +460,5 @@ public class Isocontour extends AlgoStub
             return false;
         }
     }
+    
 }
