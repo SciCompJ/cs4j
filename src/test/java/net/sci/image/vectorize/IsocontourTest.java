@@ -3,7 +3,9 @@
  */
 package net.sci.image.vectorize;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -14,7 +16,8 @@ import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.curve.MultiCurve2D;
 import net.sci.geom.geom2d.polygon.LineString2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
-import net.sci.geom.graph.AdjListGraph2D;
+import net.sci.geom.graph.AdjListDirectedGraph2D;
+import net.sci.geom.graph.DirectedGraph2D;
 import net.sci.geom.graph.Graph2D;
 
 /**
@@ -29,7 +32,7 @@ public class IsocontourTest
     @Test
     public final void testConvertContourGraphToPolylines_openPolyline()
     {
-        AdjListGraph2D graph = new AdjListGraph2D();
+        AdjListDirectedGraph2D graph = new AdjListDirectedGraph2D();
         Graph2D.Vertex v1 = graph.addVertex(new Point2D(10, 10));
         Graph2D.Vertex v2 = graph.addVertex(new Point2D(20, 10));
         Graph2D.Vertex v3 = graph.addVertex(new Point2D(20, 20));
@@ -50,15 +53,15 @@ public class IsocontourTest
     @Test
     public final void testConvertContourGraphToPolylines_closedPolyline()
     {
-        AdjListGraph2D graph = new AdjListGraph2D();
-        Graph2D.Vertex v1 = graph.addVertex(new Point2D(10, 10));
-        Graph2D.Vertex v2 = graph.addVertex(new Point2D(20, 10));
-        Graph2D.Vertex v3 = graph.addVertex(new Point2D(20, 10));
-        Graph2D.Vertex v4 = graph.addVertex(new Point2D(20, 20));
+        AdjListDirectedGraph2D graph = new AdjListDirectedGraph2D();
+        DirectedGraph2D.Vertex v1 = graph.addVertex(new Point2D(10, 10));
+        DirectedGraph2D.Vertex v2 = graph.addVertex(new Point2D(20, 10));
+        DirectedGraph2D.Vertex v3 = graph.addVertex(new Point2D(20, 10));
+        DirectedGraph2D.Vertex v4 = graph.addVertex(new Point2D(20, 20));
         graph.addEdge(v1, v2);
-        graph.addEdge(v1, v3);
+        graph.addEdge(v3, v1);
         graph.addEdge(v2, v4);
-        graph.addEdge(v3, v4);
+        graph.addEdge(v4, v3);
         
         MultiCurve2D curveSet = Isocontour.convertContourGraphToPolylines(graph);
         

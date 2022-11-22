@@ -4,7 +4,7 @@
 package net.sci.image.vectorize;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.scalar.Scalar;
@@ -15,7 +15,8 @@ import net.sci.geom.geom2d.curve.MultiCurve2D;
 import net.sci.geom.geom2d.polygon.LineString2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
 import net.sci.geom.geom2d.polygon.Polyline2D;
-import net.sci.geom.graph.AdjListGraph2D;
+import net.sci.geom.graph.AdjListDirectedGraph2D;
+import net.sci.geom.graph.DirectedGraph2D;
 import net.sci.geom.graph.Graph2D;
 
 /**
@@ -33,111 +34,83 @@ public class Isocontour extends AlgoStub
     // Static declarations
     
     
-    public static final MultiCurve2D convertContourGraphToPolylines(AdjListGraph2D graph)
+    public static final MultiCurve2D convertContourGraphToPolylines(AdjListDirectedGraph2D graph)
     {
         int nv = graph.vertexCount();
         
         // initialize lists of vertices to process
-        ArrayList<Graph2D.Vertex> verticesToProcess = new ArrayList<>(nv); // TODO: replace by HashSet
-        ArrayList<Graph2D.Vertex> endVertices = new ArrayList<>(nv);
-        for (Graph2D.Vertex vertex : graph.vertices())
+        HashSet<DirectedGraph2D.Vertex> verticesToProcess = new HashSet<>(nv);
+        HashSet<DirectedGraph2D.Vertex> initialVertices = new HashSet<>(nv);
+        for (DirectedGraph2D.Vertex vertex : graph.vertices())
         {
             verticesToProcess.add(vertex);
-            int nn = graph.adjacentEdges(vertex).size();
-            switch(nn)
+            switch (vertex.inDegree())
             {
-                case 0 -> System.out.println("isolated vertex!");
-                case 1 -> endVertices.add(vertex);
-                case 2 -> {}
-                default -> throw new RuntimeException("Do not expect vertices with number of adjacent edges equal to " + nn);
+                case 0 -> initialVertices.add(vertex);
+                case 1 ->
+                {
+                    // check validity of total degree
+                    if (vertex.outDegree() > 1)
+                    {
+                        throw new RuntimeException("Do not expect vertices with more than one outgoing edge");
+                    }
+                }
+                default -> throw new RuntimeException("Do not expect vertices with more than one incoming edge");
             }
         }
         
-        // small checkup
-        if (endVertices.size() % 2 > 0)
-        {
-            throw new RuntimeException("Number of 1-degree vertices must be even");
-        }
-        
+        // allocate array for storing result polylines
         ArrayList<Polyline2D> allPolylines = new ArrayList<>();
         
         // start by processing open polylines
-        while(!endVertices.isEmpty())
+        while(!initialVertices.isEmpty())
         {
             // retrieve a vertex from the pool
-            Graph2D.Vertex currentVertex = endVertices.remove(endVertices.size() - 1);
+            DirectedGraph2D.Vertex currentVertex = initialVertices.iterator().next();
+            initialVertices.remove(currentVertex);
             verticesToProcess.remove(currentVertex);
             
             // initialize with first vertex
             ArrayList<Point2D> positions = new ArrayList<Point2D>();
             positions.add(currentVertex.position());
             
-            // switch to next vertex (the unique neighbor)
-            Graph2D.Vertex previousVertex = currentVertex;
-            currentVertex = graph.adjacentVertices(currentVertex).iterator().next();
-            
             // iterate until we find extremity
-            while (true)
+            while (currentVertex.outDegree() > 0)
             {
+                // switch to next vertex (the unique neighbor)
+                currentVertex = currentVertex.outEdges().iterator().next().target();
                 verticesToProcess.remove(currentVertex);
-                positions.add(currentVertex.position());
                 
-                // check end of iteration
-                Collection<Graph2D.Vertex> adjVertices = graph.adjacentVertices(currentVertex);
-                if (adjVertices.size() == 1)
-                {
-                    endVertices.remove(currentVertex);
-                    break;
-                }
-
-                // identify next vertex
-                for (Graph2D.Vertex v : adjVertices)
-                {
-                    if (v != previousVertex)
-                    {
-                        previousVertex = currentVertex;
-                        currentVertex = v;
-                        break;
-                    }
-                }
+                positions.add(currentVertex.position());
             }
             
-            // can create a polyline from the list of positions
+            // create an open polyline from the list of positions
             allPolylines.add(LineString2D.create(positions));
         }
-        
         
         // process remaining vertices, that form closed polylines
         while(!verticesToProcess.isEmpty())
         {
             // retrieve a vertex from the pool
-            Graph2D.Vertex currentVertex = verticesToProcess.remove(verticesToProcess.size() - 1);
-            Graph2D.Vertex initialVertex = currentVertex;
+            DirectedGraph2D.Vertex currentVertex = verticesToProcess.iterator().next();
+            verticesToProcess.remove(currentVertex);
+            DirectedGraph2D.Vertex initialVertex = currentVertex;
             
             // initialize with first vertex
             ArrayList<Point2D> positions = new ArrayList<Point2D>();
             positions.add(currentVertex.position());
             
             // switch to next vertex (one of the two neighbors)
-            Graph2D.Vertex previousVertex = currentVertex;
-            currentVertex = graph.adjacentVertices(currentVertex).iterator().next();
+            currentVertex = currentVertex.outEdges().iterator().next().target();
             
             // iterate until we come back at initial vertex
             while (currentVertex != initialVertex)
             {
-                verticesToProcess.remove(currentVertex);
                 positions.add(currentVertex.position());
                 
                 // identify next vertex
-                for (Graph2D.Vertex v : graph.adjacentVertices(currentVertex))
-                {
-                    if (v != previousVertex)
-                    {
-                        previousVertex = currentVertex;
-                        currentVertex = v;
-                        break;
-                    }
-                }
+                verticesToProcess.remove(currentVertex);
+                currentVertex = currentVertex.outEdges().iterator().next().target();
             }
             
             // can create a polyline from the list of positions
@@ -146,7 +119,6 @@ public class Isocontour extends AlgoStub
         
         return new MultiCurve2D(allPolylines);
     }
-    // TODO: rename CurveSet2D to MultiCurve2D
 
     /**
      * The location of a grid edge with respect to the current 2-by-2 pixel
@@ -195,7 +167,7 @@ public class Isocontour extends AlgoStub
     // class variables
     
     /**
-     * The threshold value
+     * The threshold value.
      */
     double value;
 
@@ -220,7 +192,7 @@ public class Isocontour extends AlgoStub
         return convertContourGraphToPolylines(computeGraph(array));
     }
 
-    public AdjListGraph2D computeGraph(ScalarArray2D<? extends Scalar> array)
+    public AdjListDirectedGraph2D computeGraph(ScalarArray2D<? extends Scalar> array)
     {
         // create intermediate data structure
         ArrayList<EdgeVertex> edgeVertices = new ArrayList<EdgeVertex>();
@@ -302,7 +274,7 @@ public class Isocontour extends AlgoStub
         }
 
         // create the graph
-        AdjListGraph2D graph = new AdjListGraph2D();
+        AdjListDirectedGraph2D graph = new AdjListDirectedGraph2D();
         
         // populate with vertices
         Graph2D.Vertex[] vertices = new Graph2D.Vertex[edgeVertices.size()];
