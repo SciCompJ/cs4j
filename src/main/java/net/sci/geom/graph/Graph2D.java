@@ -12,11 +12,41 @@ import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
- * @author dlegland
+ * Interface for Graph geometry in 2D plane.
  *
+ * The interface try not to depend on vertex or edge indices.
+ * 
+ * @author dlegland
  */
 public interface Graph2D extends Geometry2D
 {
+    // ===================================================================
+    // Geometric queries
+    
+    /**
+     * Finds the closest vertex to the input point.
+     * 
+     * @param point
+     *            a query point
+     * @return the index of the vertex the closest to query point
+     */
+    public default Vertex findClosestVertex(Point2D point)
+    {
+        double minDist = Double.POSITIVE_INFINITY;
+        Vertex closest = null;
+        for (Vertex v : vertices())
+        {
+            double dist = v.position().distance(point);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closest = v;
+            }
+        }
+        return closest;
+    }
+    
+    
     // ===================================================================
     // Vertex management
     
@@ -38,7 +68,7 @@ public interface Graph2D extends Geometry2D
     
     public int edgeCount();
     
-    public Iterable<Edge> edges();
+    public Iterable<? extends Edge> edges();
     
     public Edge addEdge(Vertex source, Vertex target);
 

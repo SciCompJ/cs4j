@@ -173,7 +173,7 @@ public class SimpleGraph2D implements Graph2D
     public Graph2D.Edge addEdge(int indV1, int indV2)
     {
         int nv = this.vertices.size();
-        if (indV1 >= nv || indV1 >= nv)
+        if (indV1 >= nv || indV2 >= nv)
         {
             throw new IllegalArgumentException("Vertex indices greated than the number of vertices");
         }
@@ -290,23 +290,6 @@ public class SimpleGraph2D implements Graph2D
     // ===================================================================
     // Inner class
     
-    /**
-     * A pair of indices representing an adjacency between two vertices.
-     * 
-     * @author dlegland
-     */
-    class Adjacency 
-    {
-        int v1;
-        int v2;
-        
-        public Adjacency(int v1, int v2)
-        {
-            this.v1 = v1;
-            this.v2 = v2;
-        }
-    }
-
     public class Vertex implements Graph2D.Vertex
     {
         // the index of the vertex
@@ -470,7 +453,7 @@ public class SimpleGraph2D implements Graph2D
         Point2D p2 = new Point2D(20, 10);
         Point2D p3 = new Point2D(20, 20);
         Point2D p4 = new Point2D(10, 20);
-        Point2D p5 = new Point2D(17, 15);
+        Point2D p5 = new Point2D(27, 15);
         
         SimpleGraph2D graph = new SimpleGraph2D();
         graph.addVertex(p1);
