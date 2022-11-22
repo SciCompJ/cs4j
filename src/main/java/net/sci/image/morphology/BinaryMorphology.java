@@ -7,11 +7,15 @@ import net.sci.array.Arrays;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.image.morphology.filter.BinaryBlackTopHat;
 import net.sci.image.morphology.filter.BinaryClosing;
 import net.sci.image.morphology.filter.BinaryDilation;
 import net.sci.image.morphology.filter.BinaryErosion;
 import net.sci.image.morphology.filter.BinaryGradient;
+import net.sci.image.morphology.filter.BinaryInnerGradient;
 import net.sci.image.morphology.filter.BinaryOpening;
+import net.sci.image.morphology.filter.BinaryOuterGradient;
+import net.sci.image.morphology.filter.BinaryWhiteTopHat;
 import net.sci.image.morphology.reconstruct.BinaryFillHoles3D;
 import net.sci.image.morphology.reconstruct.BinaryKillBorders;
 import net.sci.image.morphology.reconstruct.RunLengthBinaryReconstruction2D;
@@ -114,6 +118,80 @@ public class BinaryMorphology
     public static final BinaryArray gradient(BinaryArray array, Strel strel)
     {
         return new BinaryGradient(strel).process(array);
+    }
+    
+    /**
+     * Computes morphological inner gradient on the input binary array. The
+     * inner gradient is obtained by computing the set-difference between the
+     * results of the array and of the erosion.
+     * 
+     * @see net.sci.image.morphology.filter.BinaryInnerGradient
+     * 
+     * @param array
+     *            the binary input array to process
+     * @param strel
+     *            the structuring element used for gradient
+     * @return the result of the inner gradient.
+     */
+    public static final BinaryArray innerGradient(BinaryArray array, Strel strel)
+    {
+        return new BinaryInnerGradient(strel).process(array);
+    }
+    
+    /**
+     * Computes morphological outer gradient on the input binary array. The
+     * outer gradient is obtained by computing the set-difference between the
+     * result of the dilation and the original array.
+     * 
+     * @see net.sci.image.morphology.filter.BinaryOuterGradient
+     * 
+     * @param array
+     *            the binary input array to process
+     * @param strel
+     *            the structuring element used for gradient
+     * @return the result of the outer gradient.
+     */
+    public static final BinaryArray outerGradient(BinaryArray array, Strel strel)
+    {
+        return new BinaryOuterGradient(strel).process(array);
+    }
+    
+    /**
+     * Computes White Top-Hat of the binary array, by performing morphological
+     * opening, and retaining elements from original array that do not belong to
+     * opening. The effect is to retain foreground elements smaller than the
+     * structuring element.
+     * 
+     * @see net.sci.image.morphology.filter.BinaryWhiteTopHat
+     * 
+     * @param array
+     *            the binary input array to process
+     * @param strel
+     *            the structuring element used for top hat
+     * @return the result of the white top hat.
+     */
+    public static final BinaryArray whiteTophHat(BinaryArray array, Strel strel)
+    {
+        return new BinaryWhiteTopHat(strel).process(array);
+    }
+    
+    /**
+     * Computes Black Top-Hat of the binary array, by performing morphological
+     * closing, and retaining elements that do not belong to original array. The
+     * effect is to retain background elements smaller than the structuring
+     * element.
+     * 
+     * @see net.sci.image.morphology.filter.BinaryBlackTopHat
+     * 
+     * @param array
+     *            the binary input array to process
+     * @param strel
+     *            the structuring element used for top hat
+     * @return the result of the black top hat.
+     */
+    public static final BinaryArray blakTophHat(BinaryArray array, Strel strel)
+    {
+        return new BinaryBlackTopHat(strel).process(array);
     }
     
     /**

@@ -7,20 +7,16 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray;
-import net.sci.image.morphology.filter.BinaryClosing;
-import net.sci.image.morphology.filter.BinaryDilation;
-import net.sci.image.morphology.filter.BinaryErosion;
-import net.sci.image.morphology.filter.BinaryOpening;
 
 /**
  * Base class for morphological filter applied on a binary array, based on a
  * structuring element.
  * 
  * @see net.sci.image.morphology.Strel
- * @see BinaryDilation
- * @see BinaryErosion
- * @see BinaryOpening
- * @see BinaryClosing
+ * @see net.sci.image.morphology.filter.BinaryDilation
+ * @see net.sci.image.morphology.filter.BinaryErosion
+ * @see net.sci.image.morphology.filter.BinaryOpening
+ * @see net.sci.image.morphology.filter.BinaryClosing
  * @see MorphologicalFilter
  * 
  * @author dlegland
