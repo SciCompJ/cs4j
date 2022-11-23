@@ -120,7 +120,7 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
     @Override
     public void setValue(int x, int y, double value)
     {
-        setShort(x, y, (short) UInt16.clamp(value));
+        setShort(x, y, (short) UInt16.convert(value));
     }
 
     // =============================================================

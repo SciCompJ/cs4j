@@ -251,9 +251,9 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 		{
 			switch(c)
 			{
-			case 0: buffer.setInt(posX, posY, 0, UInt16.clamp(value));
-			case 1: buffer.setInt(posX, posY, 1, UInt16.clamp(value));
-			case 2: buffer.setInt(posX, posY, 2, UInt16.clamp(value));
+			case 0: buffer.setInt(posX, posY, 0, UInt16.convert(value));
+			case 1: buffer.setInt(posX, posY, 1, UInt16.convert(value));
+			case 2: buffer.setInt(posX, posY, 2, UInt16.convert(value));
 			default: new IllegalArgumentException(
 					"Channel index must be comprised between 0 and 2, not " + c);
 			}

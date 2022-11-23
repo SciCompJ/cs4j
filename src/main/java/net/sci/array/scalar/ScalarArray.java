@@ -18,7 +18,7 @@ import net.sci.array.NumericArray;
  * @author dlegland
  *
  */
-public interface ScalarArray<T extends Scalar> extends NumericArray<T>
+public interface ScalarArray<S extends Scalar> extends NumericArray<S>
 {
 	// =============================================================
 	// New default methods 
@@ -231,9 +231,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
      *            the function to apply
      * @return the result array
      */
-    public default ScalarArray<T> apply(UnaryOperator<Double> fun)
+    public default ScalarArray<S> apply(UnaryOperator<Double> fun)
     {
-        ScalarArray<T> res = newInstance(size());
+        ScalarArray<S> res = newInstance(size());
         apply(fun, res);
         return res;
     }
@@ -274,9 +274,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
      *            the value to compute the min with
      * @return the result of the min operation on the array.
      */
-    public default ScalarArray<T> min(double v)
+    public default ScalarArray<S> min(double v)
     {
-        ScalarArray<T> res = newInstance(size());
+        ScalarArray<S> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, Math.min(this.getValue(pos), v));
@@ -292,9 +292,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
      *            the value to compute the max with
      * @return the result of the max operation on the array.
      */
-    public default ScalarArray<T> max(double v)
+    public default ScalarArray<S> max(double v)
     {
-        ScalarArray<T> res = newInstance(size());
+        ScalarArray<S> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, Math.max(this.getValue(pos), v));
@@ -307,9 +307,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     // Implementation of NumericArray interface
 
     @Override
-    public default ScalarArray<T> plus(double v)
+    public default ScalarArray<S> plus(double v)
     {
-        ScalarArray<T> res = newInstance(size());
+        ScalarArray<S> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, this.getValue(pos) + v);
@@ -318,9 +318,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     }
 
     @Override
-    public default ScalarArray<T> minus(double v)
+    public default ScalarArray<S> minus(double v)
     {
-        ScalarArray<T> res = newInstance(size());
+        ScalarArray<S> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, this.getValue(pos) - v);
@@ -329,9 +329,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     }
 
     @Override
-    public default ScalarArray<T> times(double k)
+    public default ScalarArray<S> times(double k)
     {
-        ScalarArray<T> res = newInstance(size());
+        ScalarArray<S> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, this.getValue(pos) * k);
@@ -340,9 +340,9 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
     }
 
     @Override
-    public default ScalarArray<T> divideBy(double k)
+    public default ScalarArray<S> divideBy(double k)
     {
-        ScalarArray<T> res = newInstance(size());
+        ScalarArray<S> res = newInstance(size());
         for (int[] pos : positions())
         {
             res.setValue(pos, this.getValue(pos) / k);
@@ -373,7 +373,7 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
      * @return a new array with same type and containing the same values
      */
     @Override
-    public default ScalarArray<T> reshape(int... newDims)
+    public default ScalarArray<S> reshape(int... newDims)
     {
         // check dimension consistency
         int n2 = 1;
@@ -387,11 +387,11 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
         }
         
         // allocate memory
-        ScalarArray<T> res = this.newInstance(newDims);
+        ScalarArray<S> res = this.newInstance(newDims);
         
         // iterate using a pair of Iterator instances
-        Iterator<T> iter1 = this.iterator();
-        Iterator<T> iter2 = res.iterator();
+        Iterator<S> iter1 = this.iterator();
+        Iterator<S> iter2 = res.iterator();
         while(iter1.hasNext())
         {
             iter2.setNextValue(iter1.nextValue());
@@ -402,12 +402,12 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
    
     
 	@Override
-	public ScalarArray<T> newInstance(int... dims);
+	public ScalarArray<S> newInstance(int... dims);
 
 	@Override
-	public default ScalarArray<T> duplicate()
+	public default ScalarArray<S> duplicate()
 	{
-	    ScalarArray<T> dup = newInstance(size());
+	    ScalarArray<S> dup = newInstance(size());
 	    for (int[] pos : positions())
 	    {
 	        dup.setValue(pos, getValue(pos));
@@ -416,16 +416,16 @@ public interface ScalarArray<T extends Scalar> extends NumericArray<T>
 	}
 	
 	@Override
-    public default ScalarArray<T> view(int[] newDims, Function<int[], int[]> coordsMapping)
+    public default ScalarArray<S> view(int[] newDims, Function<int[], int[]> coordsMapping)
     {
-        return new View<T>(this, newDims, coordsMapping);
+        return new View<S>(this, newDims, coordsMapping);
     }
 
     @Override
-    public ScalarArray.Factory<T> factory();
+    public ScalarArray.Factory<S> factory();
 
     @Override
-    public ScalarArray.Iterator<T> iterator();
+    public ScalarArray.Iterator<S> iterator();
 	
 	
     // =============================================================

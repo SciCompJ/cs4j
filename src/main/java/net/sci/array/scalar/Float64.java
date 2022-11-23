@@ -53,6 +53,12 @@ public class Float64 extends Scalar
 		return value;
 	}
 
+    @Override
+    public Float64 fromValue(double v)
+    {
+        return new Float64(v);
+    }
+
 
 	// =============================================================
 	// Override Object methods

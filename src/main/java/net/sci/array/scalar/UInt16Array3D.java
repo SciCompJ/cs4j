@@ -93,7 +93,7 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
     @Override
     public void setValue(int x, int y, int z, double value)
     {
-        setShort(x, y, z, (short) UInt16.clamp(value));
+        setShort(x, y, z, (short) UInt16.convert(value));
     }
 
     // =============================================================

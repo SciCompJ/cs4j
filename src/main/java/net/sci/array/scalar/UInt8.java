@@ -105,7 +105,13 @@ public class UInt8 extends Int
 	{
 		return value & 0x00FF;
 	}
-
+	
+    @Override
+    public UInt8 fromValue(double v)
+    {
+        return new UInt8(convert(v));
+    }
+    
 
 	// =============================================================
 	// Override Object methods

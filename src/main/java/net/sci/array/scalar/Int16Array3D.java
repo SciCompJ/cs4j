@@ -92,7 +92,7 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
     @Override
     public void setValue(int x, int y, int z, double value)
     {
-        setShort(x, y, z, (short) Int16.clamp(value));
+        setShort(x, y, z, (short) Int16.convert(value));
     }
     
     

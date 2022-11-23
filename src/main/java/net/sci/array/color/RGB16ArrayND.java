@@ -73,7 +73,7 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
     public void setValue(int[] pos, int channel, double value)
     {
         int[] samples = getSamples(pos);
-        samples[channel] = UInt16.clamp(value);
+        samples[channel] = UInt16.convert(value);
         setSamples(pos, samples);
     }
 

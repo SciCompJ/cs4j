@@ -61,10 +61,11 @@ public class Float32 extends Scalar
 		return value;
 	}
 
-	public Float32Array createArray(int[] dims)
-	{
-		return Float32Array.create(dims);
-	}
+	@Override
+    public Float32 fromValue(double v)
+    {
+        return new Float32((float) v);
+    }
 
 
 	// =============================================================

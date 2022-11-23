@@ -453,7 +453,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
     public default void setValue(int[] pos, int channel, double value)
     {        
         int[] samples = get(pos).getSamples();
-        samples[channel] = UInt16.clamp(value);
+        samples[channel] = UInt16.convert(value);
         set(pos, new RGB16(samples));
     }
 
@@ -472,9 +472,9 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	@Override
 	public default void setValues(int[] pos, double[] values)
 	{
-		int r = UInt16.clamp(values[0]);
-		int g = UInt16.clamp(values[1]);
-		int b = UInt16.clamp(values[2]);
+		int r = UInt16.convert(values[0]);
+		int g = UInt16.convert(values[1]);
+		int b = UInt16.convert(values[2]);
 		set(pos, new RGB16(r, g, b));
 	}
 
@@ -654,7 +654,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 		public default void setValue(int c, double value)
 		{
 			int[] samples = get().getSamples();
-			samples[c] = UInt16.clamp(value);
+			samples[c] = UInt16.convert(value);
 			set(new RGB16(samples[0], samples[1], samples[2]));
 		}
 	}

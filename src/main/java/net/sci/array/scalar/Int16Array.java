@@ -396,7 +396,7 @@ public interface Int16Array extends IntArray<Int16>
 		@Override
 		public Int16 get(int... pos)
 		{
-			return new Int16(Int16.clamp(array.getValue(pos)));
+			return new Int16(Int16.convert(array.getValue(pos)));
 		}
 
 		@Override
@@ -447,7 +447,7 @@ public interface Int16Array extends IntArray<Int16>
 			@Override
 			public Int16 next()
 			{
-				return new Int16(Int16.clamp(iter.nextValue()));
+				return new Int16(Int16.convert(iter.nextValue()));
 			}
 
 			@Override

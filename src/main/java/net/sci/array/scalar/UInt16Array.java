@@ -263,7 +263,7 @@ public interface UInt16Array extends IntArray<UInt16>
     @Override
     public default void setValue(int[] pos, double value)
     {
-        setInt(pos, UInt16.clamp(value));
+        setInt(pos, UInt16.convert(value));
     }
 
     @Override
@@ -417,7 +417,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		@Override
 		public UInt16 get(int... pos)
 		{
-			return new UInt16(UInt16.clamp(array.getValue(pos)));
+			return new UInt16(UInt16.convert(array.getValue(pos)));
 		}
 
 		@Override
@@ -468,7 +468,7 @@ public interface UInt16Array extends IntArray<UInt16>
 			@Override
 			public UInt16 next()
 			{
-				return new UInt16(UInt16.clamp(iter.nextValue()));
+				return new UInt16(UInt16.convert(iter.nextValue()));
 			}
 
 			@Override
