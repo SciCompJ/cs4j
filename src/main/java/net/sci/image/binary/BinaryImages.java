@@ -5,10 +5,12 @@ package net.sci.image.binary;
 
 import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.binary.BinaryArray1D;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.IntArray;
+import net.sci.array.scalar.IntArray1D;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.ScalarArray;
@@ -29,6 +31,9 @@ import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Hybrid;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform3D;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DUInt16Hybrid;
+import net.sci.image.binary.labeling.FloodFillComponentsLabeling1D;
+import net.sci.image.binary.labeling.FloodFillComponentsLabeling2D;
+import net.sci.image.binary.labeling.FloodFillComponentsLabeling3D;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.data.Connectivity3D;
 
@@ -63,8 +68,7 @@ public class BinaryImages
 	 * 
 	 * @see FloodFillComponentsLabeling2D
 	 * @see FloodFillComponentsLabeling3D
-	 * @see net.sci.image.morphology.FloodFill2D
-	 * @see net.sci.image.morphology.FloodFill3D
+	 * @see net.sci.image.morphology.FloodFill
 	 */
 	public final static Image componentsLabeling(Image image, 
 			int conn, int bitDepth)
@@ -93,6 +97,30 @@ public class BinaryImages
 		return labelImage;
 	}
 
+	/**
+     * Computes the labels of the connected components in the given 1D
+     * binary image. The type of result is controlled by the bitDepth option.
+     * 
+     * Uses a Flood-fill type algorithm.
+     * 
+     * @param array
+     *            contains the binary data
+     * @param bitDepth
+     *            the number of bits used to create the result image (8, 16 or 32)
+     * @return a new instance of Array1D containing the label of each connected
+     *         component.
+     * @throws RuntimeException
+     *             if the number of labels reaches the maximum number that can
+     *             be represented with this bitDepth
+     * 
+     * @see FloodFillConnectedComponentsLabeling1D
+     */
+    public final static IntArray1D<?> componentsLabeling(BinaryArray1D array, int bitDepth)
+    {
+        FloodFillComponentsLabeling1D algo = new FloodFillComponentsLabeling1D(bitDepth);
+        return algo.processBinary1d(array);
+    }
+    
     /**
      * Computes the labels of the connected components in the given planar
      * binary image. The type of result is controlled by the bitDepth option.
@@ -194,7 +222,7 @@ public class BinaryImages
 	 *             if the number of labels reaches the maximum number that can
 	 *             be represented with this bitDepth
 	 *             
-	 * @see inra.ijpb.binary.conncomp.ConnectedComponentsLabeling3D     
+	 * @see FloodFillConnectedComponentsLabeling3D
 	 */
 	public final static IntArray3D<?> componentsLabeling(BinaryArray3D image,
 			int conn, int bitDepth)

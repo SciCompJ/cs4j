@@ -1,4 +1,4 @@
-package net.sci.image.binary;
+package net.sci.image.binary.labeling;
 
 import static org.junit.Assert.assertEquals;
 

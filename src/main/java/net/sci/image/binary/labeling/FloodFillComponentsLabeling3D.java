@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.binary;
+package net.sci.image.binary.labeling;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;

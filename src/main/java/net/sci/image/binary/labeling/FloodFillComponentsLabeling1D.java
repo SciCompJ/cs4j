@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.binary;
+package net.sci.image.binary.labeling;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
@@ -13,7 +13,9 @@ import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray1D;
 import net.sci.array.scalar.ScalarArray1D;
 import net.sci.array.scalar.UInt16Array;
+import net.sci.array.scalar.UInt16Array1D;
 import net.sci.array.scalar.UInt8Array;
+import net.sci.array.scalar.UInt8Array1D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayOperator;
 
@@ -25,7 +27,7 @@ import net.sci.image.ImageArrayOperator;
  * time a foreground pixel not yet associated with a label is encountered, its
  * connected component is associated with a new label.
  *
- * @see net.sci.image.morphology.FloodFill2D
+ * @see net.sci.image.morphology.FloodFill
  * 
  * @author dlegland
  *
@@ -89,14 +91,14 @@ public class FloodFillComponentsLabeling1D extends AlgoStub implements ImageArra
 		// number
 		IntArray1D<?> labels;
 		switch (this.bitDepth) {
-//		case 8: 
-//			labels = UInt8Array2D.create(sizeX, sizeY);
-//			maxLabel = 255;
-//			break; 
-//		case 16: 
-//			labels = UInt16Array2D.create(sizeX, sizeY);
-//			maxLabel = 65535;
-//			break;
+		case 8: 
+			labels = UInt8Array1D.create(sizeX);
+			maxLabel = 255;
+			break; 
+		case 16: 
+			labels = UInt16Array1D.create(sizeX);
+			maxLabel = 65535;
+			break;
 		case 32:
 			labels = Int32Array1D.create(sizeX);
 			maxLabel = 0x01 << 31 - 1;
@@ -134,7 +136,7 @@ public class FloodFillComponentsLabeling1D extends AlgoStub implements ImageArra
 		return labels;
 	}
 	
-	   /**
+	/**
      * Assigns in <code>labelImage</code> all the neighbor pixels of (x) that
      * have the same value in <code>image</code>, the specified new label value
      * (<code>value</code>), using the specified connectivity.
@@ -231,9 +233,9 @@ public class FloodFillComponentsLabeling1D extends AlgoStub implements ImageArra
         {
             throw new IllegalArgumentException("Requires a BinaryArray instance");
         }
-        if (array.dimensionality() != 2)
+        if (array.dimensionality() != 1)
         {
-            throw new IllegalArgumentException("Requires a BinaryArray of dimensionality 2");
+            throw new IllegalArgumentException("Requires a BinaryArray of dimensionality 1");
         }
         return processBinary1d(BinaryArray1D.wrap((BinaryArray) array));
     }
@@ -242,7 +244,7 @@ public class FloodFillComponentsLabeling1D extends AlgoStub implements ImageArra
     {
         if (!(array instanceof BinaryArray)) 
             return false;
-        if (array.dimensionality() != 2)
+        if (array.dimensionality() != 1)
             return false;
         return true;
     }
