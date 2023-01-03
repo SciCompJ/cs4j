@@ -19,22 +19,22 @@ public class DenseBinaryArrayFactory extends AlgoStub implements BinaryArray.Fac
     @Override
     public BinaryArray create(int... dims)
     {
-        switch (dims.length)
+        return switch (dims.length)
         {
-            case 1:
-                return new BufferedBinaryArray1D(dims[0]);
-            case 2:
-                return new BufferedBinaryArray2D(dims[0], dims[1]);
-            case 3:
-            {
-                if (Array.prod(dims[0], dims[1], dims[2]) < Integer.MAX_VALUE - 8)
-                    return new BufferedBinaryArray3D(dims[0], dims[1], dims[2]);
-                else 
-                    return new SlicedBinaryArray3D(dims[0], dims[1], dims[2]);
-            }
-            default:
-                return BufferedBinaryArrayND.create(dims);
-        }
+            case 1 -> new BufferedBinaryArray1D(dims[0]);
+            case 2 -> new BufferedBinaryArray2D(dims[0], dims[1]);
+            case 3 -> create3d(dims[0], dims[1], dims[2]);
+            default -> BufferedBinaryArrayND.create(dims);
+        };
+    }
+    
+    private BinaryArray3D create3d(int dim0, int dim1, int dim2)
+    {
+        fireStatusChanged(this, "Allocating memory");
+        if (Array.prod(dim0, dim1, dim2) < Integer.MAX_VALUE - 8)
+            return new BufferedBinaryArray3D(dim0, dim1, dim2);
+        else
+            return new SlicedBinaryArray3D(dim0, dim1, dim2);
     }
 
     @Override

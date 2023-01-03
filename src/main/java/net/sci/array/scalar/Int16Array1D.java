@@ -4,33 +4,33 @@
 package net.sci.array.scalar;
 
 /**
- * Specialization of Array for 1D arrays of Int32 values.
+ * Specialization of Array for 1D arrays of Int16 values.
  * 
  * @author dlegland
  *
  */
-public abstract class Int32Array1D extends IntArray1D<Int32> implements Int32Array
+public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Array
 {
 	// =============================================================
 	// Static methods
 
-	public static final Int32Array1D create(int size0)
+	public static final Int16Array1D create(int size0)
 	{
-	    return wrap(Int32Array.create(size0));
+	    return wrap(Int16Array.create(size0));
 	}
 	
     /**
-     * Creates a new Int32Array1D from an array of integers.
+     * Creates a new Int16Array1D from an array of integers. 
      * 
      * @param intArray
      *            the array of integers containing the values.
-     * @return a new instance of Int32Array1D initialized with the values of
+     * @return a new instance of Int16Array1D initialized with the values of
      *         <code>intArray</code>
      */
-    public static final Int32Array1D fromIntArray(int[] intArray)
+    public static final Int16Array1D fromIntArray(int[] intArray)
     {
         int size0 = intArray.length;
-        Int32Array1D res = Int32Array1D.create(size0);
+        Int16Array1D res = Int16Array1D.create(size0);
         for (int x = 0; x < size0; x++)
         {
             res.setInt(x, intArray[x]);
@@ -39,19 +39,19 @@ public abstract class Int32Array1D extends IntArray1D<Int32> implements Int32Arr
     }
     
     /**
-     * Encapsulates the specified instance of Int32Array into a new
-     * Int32Array1D, by creating a Wrapper if necessary. If the original array
-     * is already an instance of Int32Array1D, it is returned.
+     * Encapsulates the specified instance of Int16Array into a new
+     * Int16Array1D, by creating a Wrapper if necessary. If the original array
+     * is already an instance of Int16Array1D, it is returned.
      * 
      * @param array
      *            the original array
-     * @return a Int32Array1D view of the original array
+     * @return a Int16Array1D view of the original array
      */
-    public static Int32Array1D wrap(Int32Array array)
+    public static Int16Array1D wrap(Int16Array array)
     {
-        if (array instanceof Int32Array1D)
+        if (array instanceof Int16Array1D)
         { 
-            return (Int32Array1D) array; 
+            return (Int16Array1D) array; 
         }
         return new Wrapper(array);
     }
@@ -68,20 +68,26 @@ public abstract class Int32Array1D extends IntArray1D<Int32> implements Int32Arr
 	 * @param size1
 	 *            the size of the array along the second dimension
 	 */
-	protected Int32Array1D(int size0)
+	protected Int16Array1D(int size0)
 	{
 		super(size0);
 	}
-
+	
+	
+    // =============================================================
+    // New method(s)
+    
+	public abstract void setShort(int pos, short value);
+	
 	
 	// =============================================================
-	// Specialization of Array interface
+	// Specialization of Array[1D] interfaces
 	
     @Override
-    public Int32Array1D duplicate()
+    public Int16Array1D duplicate()
     {
         // create output array
-        Int32Array1D res = Int32Array1D.wrap(this.factory().create(this.size0));
+        Int16Array1D res = Int16Array1D.wrap(this.factory().create(this.size0));
         for (int x = 0; x < size0; x++)
         {
             res.setInt(x, getInt(x));
@@ -90,7 +96,7 @@ public abstract class Int32Array1D extends IntArray1D<Int32> implements Int32Arr
     }
 
     @Override
-    public void set(int x, Int32 value)
+    public void set(int x, Int16 value)
     {
         setInt(x, value.value);
     }
@@ -100,19 +106,37 @@ public abstract class Int32Array1D extends IntArray1D<Int32> implements Int32Arr
     // Implementation of inner classes
     
     /**
-     * Wraps a Int32 array with two dimensions into a Int32Array1D.
+     * Wraps a Int16 array with two dimensions into a Int16Array1D.
      */
-    private static class Wrapper extends Int32Array1D
+    private static class Wrapper extends Int16Array1D
     {
-        Int32Array array;
+        Int16Array array;
 
-        public Wrapper(Int32Array array)
+        public Wrapper(Int16Array array)
         {
             super(0);
             this.size0 = array.size(0);
             this.array = array;
         }
         
+        @Override
+        public void setShort(int pos, short value)
+        {
+            this.array.setShort(new int[pos], value);
+        }
+
+        @Override
+        public short getShort(int... pos)
+        {
+            return this.array.getShort(pos);
+        }
+
+        @Override
+        public void setShort(int[] pos, short value)
+        {
+            this.array.setShort(pos, value);
+        }
+
         @Override
         public void setInt(int x, int intValue)
         {
@@ -135,7 +159,7 @@ public abstract class Int32Array1D extends IntArray1D<Int32> implements Int32Arr
          * Simply returns an iterator on the original array.
          */
         @Override
-        public net.sci.array.scalar.Int32Array.Iterator iterator()
+        public net.sci.array.scalar.Int16Array.Iterator iterator()
         {
             return this.array.iterator();
         }

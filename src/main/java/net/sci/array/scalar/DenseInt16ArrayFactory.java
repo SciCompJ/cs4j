@@ -19,21 +19,22 @@ public class DenseInt16ArrayFactory extends AlgoStub implements Int16Array.Facto
     @Override
     public Int16Array create(int... dims)
     {
-        switch (dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return new BufferedInt16Array2D(dims[0], dims[1]);
-        case 3:
-        {
-            fireStatusChanged(this, "Allocating memory");
-            if (Array.prod(dims[0], dims[1], dims[2]) < Integer.MAX_VALUE - 8)
-                return new BufferedInt16Array3D(dims[0], dims[1], dims[2]);
-            else 
-                return new SlicedInt16Array3D(dims[0], dims[1], dims[2]);
-        }
-        default:
-            return Int16ArrayND.create(dims);
-        }
+            case 1 -> new BufferedInt16Array1D(dims[0]);
+            case 2 -> new BufferedInt16Array2D(dims[0], dims[1]);
+            case 3 -> create3d(dims[0], dims[1], dims[2]);
+            default -> Int16ArrayND.create(dims);
+        };
+    }
+    
+    private Int16Array3D create3d(int dim0, int dim1, int dim2)
+    {
+        fireStatusChanged(this, "Allocating memory");
+        if (Array.prod(dim0, dim1, dim2) < Integer.MAX_VALUE - 8)
+            return new BufferedInt16Array3D(dim0, dim1, dim2);
+        else
+            return new SlicedInt16Array3D(dim0, dim1, dim2);
     }
 
     @Override
