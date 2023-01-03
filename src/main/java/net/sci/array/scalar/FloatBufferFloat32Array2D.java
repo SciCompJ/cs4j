@@ -117,6 +117,36 @@ public class FloatBufferFloat32Array2D extends Float32Array2D
 		}
 		
 		@Override
+        public float getFloat()
+        {
+            return buffer.get(index);
+        }
+
+        @Override
+        public void setFloat(float value)
+        {
+            buffer.put(index, value);
+        }
+
+        @Override
+        public double getValue()
+        {
+        	return buffer.get(index);
+        }
+
+        @Override
+        public void setValue(double value)
+        {
+        	buffer.put(index, (float) value);
+        }
+
+        @Override
+        public Float32 get()
+        {
+        	return new Float32(buffer.get(index));
+        }
+
+        @Override
 		public boolean hasNext()
 		{
 			return this.index < (size0 * size1 - 1);
@@ -133,24 +163,6 @@ public class FloatBufferFloat32Array2D extends Float32Array2D
 		public void forward()
 		{
 			this.index++;
-		}
-
-		@Override
-		public Float32 get()
-		{
-			return new Float32(buffer.get(index));
-		}
-
-		@Override
-		public double getValue()
-		{
-			return buffer.get(index);
-		}
-
-		@Override
-		public void setValue(double value)
-		{
-			buffer.put(index, (float) value);
 		}
 	}
 }

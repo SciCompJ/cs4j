@@ -385,6 +385,18 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
             }
 
             @Override
+            public float getFloat()
+            {
+                return (float) Float32VectorArray3D.this.getValue(indX, indY, indZ, channel);
+            }
+
+            @Override
+            public void setFloat(float value)
+            {
+                Float32VectorArray3D.this.setValue(indX, indY, indZ, channel, value);
+            }
+
+            @Override
             public double getValue()
             {
                 return Float32VectorArray3D.this.getValue(indX, indY, indZ, channel);

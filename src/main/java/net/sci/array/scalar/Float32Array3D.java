@@ -319,7 +319,19 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
             {
                 return indX < size0 - 1 || indY < size1 - 1;
             }
+            
+            @Override
+            public float getFloat()
+            {
+                return Float32Array3D.this.getFloat(indX, indY, sliceIndex);
+            }
 
+            @Override
+            public void setFloat(float value)
+            {
+                Float32Array3D.this.setFloat(indX, indY, sliceIndex, value);
+            }
+            
             @Override
             public double getValue()
             {
