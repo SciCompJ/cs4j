@@ -31,26 +31,64 @@ import net.sci.image.morphology.extrema.RegionalExtrema1D;
  */
 public class HierarchicalWatershed1D extends AlgoStub
 {
+//    public static final String printRegionChildrenRecurse(Region region)
+//    {
+//        StringBuilder sb = new StringBuilder();
+//        appendRegionChildren(sb, region);
+//        return sb.toString();
+//    }
+//    
+//    private static final void appendRegionChildren(StringBuilder sb, Region region)
+//    {
+//        if (region instanceof Basin)
+//        {
+//            sb.append(region.label);
+//        }
+//        else if (region instanceof MergeRegion)
+//        {
+//            sb.append(region.label);
+//
+//            MergeRegion merge = (MergeRegion) region;
+//            sb.append("=(");
+//            boolean first = true;
+//            for (Region child : merge.regions)
+//            {
+//                if (!first)
+//                {
+//                    sb.append(", ");
+//                }
+//                first = false;
+//                
+//                appendRegionChildren(sb, child);
+//            }
+//            sb.append(")");
+//        }
+//    }
+        
     public static final String printRegionTree(Region region)
     {
         StringBuilder sb = new StringBuilder();
-        
-//        sb.append("tree = (");
-        sb.append(region.label);
-        if (region instanceof Basin)
-        {
-            
-        }
-        else if (region instanceof MergeRegion)
-        {
-            
-        }
-        
+        appendRegionTree(sb, region, 0);
         return sb.toString();
     }
     
-    
-    
+    private static final void appendRegionTree(StringBuilder sb, Region region, int indentLevel)
+    {
+        if (indentLevel > 0)
+        {
+            sb.append(". ".repeat(indentLevel));
+        }
+        
+        sb.append("+ " + region.toString() + "\n");
+        if (region instanceof MergeRegion)
+        {
+            for (Region child : ((MergeRegion) region).regions)
+            {
+                appendRegionTree(sb, child, indentLevel+1);
+            }
+        }
+    }
+        
     
     // ==============================================================
     // Methods
@@ -952,6 +990,7 @@ public class HierarchicalWatershed1D extends AlgoStub
         
         System.out.println(res.saliencyMap);
         
+        System.out.println(res.root);
         System.out.println(printRegionTree(res.root));
     }
 }
