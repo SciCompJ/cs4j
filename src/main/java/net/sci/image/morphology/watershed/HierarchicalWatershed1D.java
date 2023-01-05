@@ -150,7 +150,7 @@ public class HierarchicalWatershed1D extends AlgoStub
         
         HashMap<Integer, Boundary> boundaries = new HashMap<Integer, Boundary>();
         
-        Region root = null;
+        public Region root = null;
         
         private Region getRegion(int label)
         {
