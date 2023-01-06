@@ -3,6 +3,7 @@
  */
 package net.sci.geom.geom2d.polygon;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -110,6 +111,68 @@ public interface LinearRing2D extends Polyline2D, Contour2D
         }
 
         return res;
+    }
+    
+    
+    /**
+     * Computes the list of x-coordinates of intersection points of the input
+     * linear ring with a horizontal line of a given height. Specific care is taken
+     * for intersection points located at the extremity of edges.
+     * 
+     * For references about the algorithm: <a href=
+     * "https://web.cs.ucdavis.edu/~ma/ECS175_S00/Notes/0411_b.pdf">Scanline
+     * Fill Algorithm (pdf)</a>.
+     * 
+     * Implementation based on the following page:
+     * <a href= "https://alienryderflex.com/polygon_fill/"> Efficient Polygon
+     * Fill Algorithm With C Code Sample</a>, by Darel Rex Finley.
+     * 
+     * @param ring
+     *            the polygon, as a linear ring
+     * @param yLine
+     *            the y-coordinate of the intersection line
+     * @return the (unsorted) list of x-coordinates of the intersection points.
+     *         Order corresponds to iteration order along polygon.
+     */
+    public static ArrayList<Double> xIntersectionsWithHorizontalLine(LinearRing2D ring, double yLine)
+    {
+        // number of vertices in polygon
+        int nVertices = ring.vertexCount();
+
+        //  create an array for storing x-coordinates of intersections
+        ArrayList<Double> xNodes = new ArrayList<>();
+
+        // initialize data for previous vertex
+        Point2D prevPos = ring.vertexPosition(nVertices - 1);
+        double yvp = prevPos.getY();
+
+        // iterate over indices of first edge vertex
+        for (Point2D pos : ring.vertexPositions())
+        {
+            // y-coordinate of current vertex
+            double yv = pos.getY();
+            
+            // check conditions for intersection
+            // either if:
+            // 1) previous vertex is above or on, and current vertex is strictly below
+            // 2) previous vertex is strictly below, and current vertex is above or on
+            if  (yvp >= yLine && yv < yLine || yvp < yLine && yv >= yLine)
+            {
+                // slope of current edge (dy cannot be zero due to above condition)
+                double edgeDx = pos.getX() - prevPos.getX();
+                double edgeDy = pos.getY() - prevPos.getY();
+                // x-coordinate of intersection
+                double xNewNode = pos.getX() + (yLine - yv) * edgeDx / edgeDy ;
+                // add to list of intersections
+                xNodes.add(xNewNode);
+            }
+            
+            // switch current vertex to previous vertex
+            prevPos = pos;
+            yvp = yv;
+        }
+        
+        return xNodes;
     }
     
     

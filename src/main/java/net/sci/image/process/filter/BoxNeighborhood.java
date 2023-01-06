@@ -80,7 +80,7 @@ public class BoxNeighborhood implements Neighborhood
 		{
 			double radius = ((double) diameters[d]) / 2;
 			this.offsets1[d] = (int) Math.floor(radius);
-			this.offsets2[d] = (int) Math.ceil(radius);
+			this.offsets2[d] = (int) Math.ceil(radius) - 1;
 		}
 	}
 	

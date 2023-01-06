@@ -38,6 +38,42 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 		this.buffer = buffer;
 	}
 
+    
+    // =============================================================
+    // Override some methods of the RGB8Array2D class
+    
+    @Override
+    public int getMaxSample(int x, int y, int z)
+    {
+        int intCode = this.buffer.getInt(x, y, z);
+        int r = intCode & 0x00FF;
+        int g = (intCode >> 8) & 0x00FF;
+        int b = (intCode >> 16) & 0x00FF;
+        return Math.max(Math.max(r, g), b);
+    }
+    
+    @Override
+    public int getIntCode(int x, int y, int z)
+    {
+        return this.buffer.getInt(x, y, z);
+    }
+    
+    
+    // =============================================================
+    // Implementation of the RGB8Array interface
+
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        return this.buffer.getInt(pos[0], pos[1], pos[2]);
+    }
+    
+    @Override
+    public void setIntCode(int[] pos, int intCode)
+    {
+        this.buffer.setInt(pos[0], pos[1], pos[2], intCode);
+    }
+    
 
     // =============================================================
     // Implementation of the IntVectorArray3D interface
@@ -105,9 +141,9 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
 	public void setValues(int x, int y, int z, double[] values)
 	{
-		int r = UInt8.clamp(values[0]);
-		int g = UInt8.clamp(values[1]);
-		int b = UInt8.clamp(values[2]);
+		int r = UInt8.convert(values[0]);
+		int g = UInt8.convert(values[1]);
+		int b = UInt8.convert(values[2]);
 		int intCode = b << 16 | g << 8 | r;
 		this.buffer.setInt(new int[] {x, y, z}, intCode);
 	}
@@ -119,7 +155,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
     public void set(int x, int y, int z, RGB8 rgb)
     {
-	    this.buffer.setInt(x, y, z, rgb.getIntCode());
+	    this.buffer.setInt(x, y, z, rgb.intCode());
     }
 
     /* (non-Javadoc)
@@ -137,7 +173,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	@Override
 	public void set(int[] pos, RGB8 rgb)
 	{
-		this.buffer.setInt(pos[0], pos[1], pos[2], rgb.getIntCode());
+		this.buffer.setInt(pos[0], pos[1], pos[2], rgb.intCode());
 	}
 
 

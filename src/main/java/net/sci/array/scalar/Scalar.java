@@ -16,4 +16,13 @@ public abstract class Scalar
 	 * @return the value as a double
 	 */
 	public abstract double getValue();
+	
+	/**
+     * Creates a new Scalar from the specified double value.
+     * 
+     * @param v
+     *            the value
+     * @return the Scalar corresponding to the input value.
+     */
+	public abstract Scalar fromValue(double v);
 }

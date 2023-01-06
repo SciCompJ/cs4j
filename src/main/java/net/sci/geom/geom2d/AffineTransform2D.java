@@ -15,17 +15,29 @@ public interface AffineTransform2D extends Transform2D
 	// ===================================================================
 	// Static Factories
 
-	/**
-	 * Creates a translation by the given vector.
-	 * 
-	 * @param vect
-	 *            the vector of the translation transform
-	 * @return a new instance of AffineTransform2D representing a translation
-	 */
-	public static AffineTransform2D createTranslation(Vector2D vect)
-	{
-		return new MatrixAffineTransform2D(1, 0, vect.getX(), 0, 1, vect.getY());
-	}
+    /**
+     * Creates a translation by the given vector.
+     * 
+     * @param vect
+     *            the vector of the translation transform
+     * @return a new instance of AffineTransform2D representing a translation
+     */
+    public static AffineTransform2D createTranslation(Vector2D vect)
+    {
+        return new MatrixAffineTransform2D(1, 0, vect.getX(), 0, 1, vect.getY());
+    }
+
+    /**
+     * Creates a translation by the given point.
+     * 
+     * @param point
+     *            the point generating the translation
+     * @return a new instance of AffineTransform2D representing a translation
+     */
+    public static AffineTransform2D createTranslation(Point2D point)
+    {
+        return new MatrixAffineTransform2D(1, 0, point.getX(), 0, 1, point.getY());
+    }
 
 	/**
 	 * Creates a translation by the given vector.
@@ -356,4 +368,31 @@ public interface AffineTransform2D extends Transform2D
 				vx * mat[1][0] + vy * mat[1][1]);
 	}
 
+    
+    /**
+     * Compares the matrix elements of this affine transform those of the
+     * specified transform, and returns true if all elements are equals up to
+     * the specified tolerance.
+     * 
+     * @param other
+     *            the affine transform to compare with
+     * @param tol
+     *            the absolute tolerance for comparing elements
+     * @return true if the two transforms are similar
+     */
+    public default boolean almostEquals(AffineTransform2D other, double tol)
+    {
+        double[][] m1 = this.affineMatrix();
+        double[][] m2 = other.affineMatrix();
+        
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (Math.abs(m1[i][j] - m2[i][j]) > tol) return false;
+            }
+        }
+        
+        return true;
+    }
 }

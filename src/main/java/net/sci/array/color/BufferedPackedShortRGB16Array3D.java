@@ -262,7 +262,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
                 throw new IllegalArgumentException(
                         "Channel index must be comprised between 0 and 2, not " + c);
             }
-            buffer.setInt(new int[] { posX, posY, posZ, c}, UInt16.clamp(value));
+            buffer.setInt(new int[] { posX, posY, posZ, c}, UInt16.convert(value));
 		}
 
 		@Override

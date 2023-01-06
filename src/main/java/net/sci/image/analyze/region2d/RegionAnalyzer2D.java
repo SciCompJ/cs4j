@@ -4,13 +4,13 @@
 package net.sci.image.analyze.region2d;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 import net.sci.array.Array;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
+import net.sci.image.analyze.RegionAnalyzer;
 import net.sci.image.label.LabelImages;
 import net.sci.table.Table;
 
@@ -56,7 +56,6 @@ public abstract class RegionAnalyzer2D<T> extends net.sci.algo.AlgoStub implemen
 		// extract region labels
 		fireStatusChanged(this, "Find Labels");
 		int[] labels = LabelImages.findAllLabels(array);
-		int nLabels = labels.length;
 		
 		// compute analysis result for each label
 		fireStatusChanged(this, "Analyze regions");
@@ -64,13 +63,7 @@ public abstract class RegionAnalyzer2D<T> extends net.sci.algo.AlgoStub implemen
 
 		// encapsulate into map
 		fireStatusChanged(this, "Convert to map");
-		Map<Integer, T> map = new TreeMap<Integer, T>();
-		for (int i = 0; i < nLabels; i++)
-		{
-			map.put(labels[i], results[i]);
-		}
-
-        return map;
+		return RegionAnalyzer.createMap(labels, results);
 	}
 	
 
@@ -99,13 +92,7 @@ public abstract class RegionAnalyzer2D<T> extends net.sci.algo.AlgoStub implemen
 		T[] results = analyzeRegions(array2d, labels, labelImage.getCalibration());
 		
 		// convert the arrays into a map of index-value pairs
-		Map<Integer, T> map = new TreeMap<Integer, T>();
-		for (int i = 0; i < labels.length; i++)
-		{
-			map.put(labels[i], results[i]);
-		}
-		
-		return map;
+		return RegionAnalyzer.createMap(labels, results);
 	}
 
 

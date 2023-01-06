@@ -14,7 +14,7 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
 
 	public static final Float32Array2D create(int size0, int size1)
 	{
-		return new BufferedFloat32Array2D(size0, size1);
+		return wrap(Float32Array.create(size0, size1));
 	}
 	
     /**
@@ -43,7 +43,25 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         return res;
     }
     
+    /**
+     * Encapsulates the specified instance of Float32Array into a new
+     * Float32Array2D, by creating a Wrapper if necessary. If the original array
+     * is already an instance of Float32Array2D, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Float32Array2D view of the original array
+     */
+    public static Float32Array2D wrap(Float32Array array)
+    {
+        if (array instanceof Float32Array2D)
+        { 
+            return (Float32Array2D) array; 
+        }
+        return new Wrapper(array);
+    }
     
+
 	// =============================================================
 	// Constructor
 
@@ -59,6 +77,7 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
 	{
 		super(size0, size1);
 	}
+	
 
     // =============================================================
     // New methods
@@ -111,14 +130,69 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         {
             res.setValue(pos,  this.getValue(pos));
         }
-        for (int y = 0; y < size1; y++)
-        {
-            for (int x = 0; x < size0; x++)
-            {
-                res.setValue(x, y, getValue(x, y));
-            }
-        }
         return res;
     }
+	
 
+    // =============================================================
+    // Implementation of inner classes
+    
+    /**
+     * Wraps a Float32 array with two dimensions into a Float32Array2D.
+     */
+    private static class Wrapper extends Float32Array2D
+    {
+        Float32Array array;
+
+        public Wrapper(Float32Array array)
+        {
+            super(0, 0);
+            if (array.dimensionality() != 2)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 2.");
+            }
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.array = array;
+        }
+        
+        @Override
+        public float getFloat(int... pos)
+        {
+            return this.array.getFloat(pos);
+        }
+
+        @Override
+        public void setFloat(int x, int y, float floatValue)
+        {
+            this.array.setFloat(new int[] {x, y}, floatValue);
+        }
+
+        @Override
+        public void setFloat(int[] pos, float floatValue)
+        {
+            this.array.setFloat(pos, floatValue);
+        }
+
+        @Override
+        public double getValue(int... pos)
+        {
+            return this.array.getValue(pos);
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            this.array.setValue(pos, value);
+        }
+        
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.scalar.Float32Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
 }

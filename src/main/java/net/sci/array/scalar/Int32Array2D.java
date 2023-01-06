@@ -4,6 +4,8 @@
 package net.sci.array.scalar;
 
 /**
+ * Specialization of Array for 2D arrays of Int32 values.
+ * 
  * @author dlegland
  *
  */
@@ -14,7 +16,7 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 
 	public static final Int32Array2D create(int size0, int size1)
 	{
-		return new BufferedInt32Array2D(size0, size1);
+	    return wrap(Int32Array.create(size0, size1));
 	}
 	
     /**
@@ -43,7 +45,25 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
         return res;
     }
     
-	
+    /**
+     * Encapsulates the specified instance of Int32Array into a new
+     * Int32Array2D, by creating a Wrapper if necessary. If the original array
+     * is already an instance of Int32Array3D, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Int32Array2D view of the original array
+     */
+    public static Int32Array2D wrap(Int32Array array)
+    {
+        if (array instanceof Int32Array2D)
+        { 
+            return (Int32Array2D) array; 
+        }
+        return new Wrapper(array);
+    }
+    
+    
 	// =============================================================
 	// Constructor
 
@@ -77,7 +97,7 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
         {
             for (int x = 0; x < size0; x++)
             {
-                res.setInt(getInt(x, y), x, y);
+                res.setInt(x, y, getInt(x, y));
             }
         }
         
@@ -90,4 +110,54 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
         setInt(x, y, value.value);
     }
     
+    
+    // =============================================================
+    // Implementation of inner classes
+    
+    /**
+     * Wraps a Int32 array with two dimensions into a Int32Array2D.
+     */
+    private static class Wrapper extends Int32Array2D
+    {
+        Int32Array array;
+
+        public Wrapper(Int32Array array)
+        {
+            super(0, 0);
+            if (array.dimensionality() != 2)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 2.");
+            }
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.array = array;
+        }
+        
+        @Override
+        public void setInt(int x, int y, int intValue)
+        {
+            this.array.setInt(new int[] {x, y}, intValue);
+        }
+
+        @Override
+        public int getInt(int... pos)
+        {
+            return this.array.getInt(pos);
+        }
+
+        @Override
+        public void setInt(int[] pos, int value)
+        {
+            this.array.setInt(pos, value);
+        }
+
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.scalar.Int32Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
 }

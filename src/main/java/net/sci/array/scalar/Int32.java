@@ -13,6 +13,22 @@ package net.sci.array.scalar;
 public class Int32 extends Int
 {
     // =============================================================
+    // Static methods
+    
+    /**
+     * Computes the integer value between MIN_VALUE and MAX_VALUE closest to the
+     * specified double value.
+     * 
+     * @param value
+     *            a double value
+     * @return the closest corresponding integer between MIN_VALUE and MAX_VALUE
+     */
+    public final static int convert(double value)
+    {
+        return (int) (value + 0.5);
+    }
+
+    // =============================================================
     // Class members
     
 	int value;
@@ -47,6 +63,12 @@ public class Int32 extends Int
 	{
 		return value;
 	}
+
+    @Override
+    public Int32 fromValue(double v)
+    {
+        return new Int32((int) (v + 0.5));
+    }
 
 
 	// =============================================================

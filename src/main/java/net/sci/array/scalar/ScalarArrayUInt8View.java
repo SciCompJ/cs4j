@@ -56,7 +56,7 @@ public class ScalarArrayUInt8View implements UInt8Array
     {
         double value = array.getValue(pos);
         value = 255.0 * (value - minValue) / diff;
-        return (byte) UInt8.clamp(value);
+        return (byte) UInt8.convert(value);
     }
 
 

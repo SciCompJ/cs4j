@@ -68,7 +68,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
     public void setValue(int[] pos, int channel, double value)
     {
         int[] samples = getSamples(pos);
-        samples[channel] = UInt8.clamp(value);
+        samples[channel] = UInt8.convert(value);
         setSamples(pos, samples);
     }
 

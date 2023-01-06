@@ -23,6 +23,9 @@ import net.sci.array.scalar.ScalarArray3D;
     ConvertToBinary algo = new ConvertToBinary();
     BinaryArray result = algo.process(array);
  * }</pre>
+ * 
+ * @see ConvertToUInt8
+ * 
  * @author dlegland
  *
  */

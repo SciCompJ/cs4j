@@ -3,8 +3,6 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.Array;
-
 
 /**
  * @author dlegland
@@ -28,13 +26,28 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
      */
 	public static final Int32Array3D create(int size0, int size1, int size2)
 	{
-        if (Array.prod(size0, size1, size2) < Integer.MAX_VALUE - 8)
-            return new BufferedInt32Array3D(size0, size1, size2);
-        else 
-            return new SlicedInt32Array3D(size0, size1, size2);
+        return wrap(Int32Array.create(size0, size1, size2));
 	}
 	
-	
+    /**
+     * Encapsulates the specified instance of Int32Array into a new
+     * Int32Array3D, by creating a Wrapper if necessary. If the original array
+     * is already an instance of Int32Array3D, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Int32Array3D view of the original array
+     */
+    public static Int32Array3D wrap(Int32Array array)
+    {
+        if (array instanceof Int32Array3D)
+        { 
+            return (Int32Array3D) array; 
+        }
+        return new Wrapper(array);
+    }
+    
+    
 	// =============================================================
 	// Constructor
 
@@ -42,9 +55,10 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
 	{
 		super(size0, size1, size2);
 	}
+	
 
     // =============================================================
-    // Management of slices
+    // Specialization of the Array3D interface
 
     public Int32Array2D slice(int sliceIndex)
     {
@@ -73,17 +87,6 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
         return new SliceIterator();
     }
 
-    
-	// =============================================================
-	// Specialization of the IntArray interface
-
-
-	// =============================================================
-	// Specialization of the Array3D interface
-
-	@Override
-	public abstract Int32Array3D duplicate();
-
     @Override
     public void set(int x, int y, int z, Int32 value)
     {
@@ -91,9 +94,69 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
     }
     
 
-	// =============================================================
-	// Specialization of Array interface
-	   
+    // =============================================================
+    // Specialization of Array interface
+       
+	@Override
+	public Int32Array3D duplicate()
+	{
+	    Int32Array3D res = Int32Array3D.create(this.size0, this.size1, this.size2);
+	    res.fillInts(pos -> this.getInt(pos));
+	    return res;
+	}
+	
+
+    // =============================================================
+    // Implementation of inner classes
+    
+    /**
+     * Wraps a Int32 array with three dimensions into a Int32Array3D.
+     */
+    private static class Wrapper extends Int32Array3D
+    {
+        Int32Array array;
+
+        public Wrapper(Int32Array array)
+        {
+            super(0, 0, 0);
+            if (array.dimensionality() != 3)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 3.");
+            }
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.size2 = array.size(2);
+            this.array = array;
+        }
+        
+        @Override
+        public void setInt(int x, int y, int z, int s)
+        {
+            this.array.setInt(new int[] {x, y, z}, s);
+        }
+
+        @Override
+        public int getInt(int... pos)
+        {
+            return this.array.getInt(pos);
+        }
+
+        @Override
+        public void setInt(int[] pos, int value)
+        {
+            this.array.setInt(pos, value);
+        }
+
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.scalar.Int32Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
+
     private class SliceView extends Int32Array2D
     {
         int sliceIndex;

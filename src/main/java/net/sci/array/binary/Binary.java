@@ -89,6 +89,12 @@ public class Binary extends Int
 		return state ? 1 : 0;
 	}
 
+    @Override
+    public Binary fromValue(double v)
+    {
+        return v > 0.0 ? TRUE : FALSE;
+    }
+
 
 	// =============================================================
 	// Override Object methods

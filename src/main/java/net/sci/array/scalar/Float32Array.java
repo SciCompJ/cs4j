@@ -29,15 +29,7 @@ public interface Float32Array extends ScalarArray<Float32>
 
 	public static Float32Array create(int... dims)
 	{
-		switch (dims.length)
-		{
-		case 2:
-			return Float32Array2D.create(dims[0], dims[1]);
-		case 3:
-			return Float32Array3D.create(dims[0], dims[1], dims[2]);
-		default:
-			return Float32ArrayND.create(dims);
-		}
+	    return defaultFactory.create(dims);
 	}
 
 	public static Float32Array create(int[] dims, float[] buffer)
@@ -224,6 +216,22 @@ public interface Float32Array extends ScalarArray<Float32>
         setValue(pos, value);
     }
 
+
+    // =============================================================
+    // Specialization of ScalarArray interface
+
+    @Override
+    public default double getValue(int... pos)
+    {
+        return getFloat(pos);
+    }
+    
+    @Override
+    public default void setValue(int[] pos, double value)
+    {
+        setFloat(pos, (float) value);
+    }
+    
     
 	// =============================================================
 	// Specialization of Array interface
@@ -303,6 +311,18 @@ public interface Float32Array extends ScalarArray<Float32>
             }
 
             @Override
+            public float getFloat()
+            {
+                return Float32Array.this.getFloat(iter.get());
+            }
+
+            @Override
+            public void setFloat(float value)
+            {
+                Float32Array.this.setFloat(iter.get(), value);
+            }
+
+            @Override
             public double getValue()
             {
                 return Float32Array.this.getValue(iter.get());
@@ -322,16 +342,32 @@ public interface Float32Array extends ScalarArray<Float32>
 
 	public interface Iterator extends ScalarArray.Iterator<Float32>
 	{
+        public float getFloat();
+
+        public void setFloat(float value);
+        
+        @Override
+        public default double getValue()
+        {
+            return getFloat();
+        }
+        
+        @Override
+        public default void setValue(double value)
+        {
+            setFloat((float) value);
+        }
+        
 		@Override
 		public default Float32 get()
 		{
-			return new Float32((float) getValue());
+			return new Float32(getFloat());
 		}
 		
 		@Override
 		public default void set(Float32 value)
 		{
-			setValue(value.getValue());
+			setFloat(value.getFloat());
 		}
 	}
 	
@@ -426,6 +462,30 @@ public interface Float32Array extends ScalarArray<Float32>
 				this.iter = iter;
 			}
 
+            @Override
+            public float getFloat()
+            {
+                return (float) getValue();
+            }
+
+            @Override
+            public void setFloat(float value)
+            {
+                iter.setValue(value);
+            }
+
+            @Override
+            public double getValue()
+            {
+                return iter.getValue();
+            }
+
+            @Override
+            public void setValue(double value)
+            {
+                iter.setValue(value);
+            }
+
 			@Override
 			public void forward()
 			{
@@ -442,18 +502,6 @@ public interface Float32Array extends ScalarArray<Float32>
 			public boolean hasNext()
 			{
 				return iter.hasNext();
-			}
-
-			@Override
-			public double getValue()
-			{
-				return iter.getValue();
-			}
-
-			@Override
-			public void setValue(double value)
-			{
-				iter.setValue(value);
 			}
 		}
 	}

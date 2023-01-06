@@ -44,6 +44,36 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 
 
     // =============================================================
+    // Implementation of the RGB8Array interface
+
+    @Override
+    public int getMaxSample(int[] pos)
+    {
+        int r = this.buffer.getInt(pos[0], pos[1], 0);
+        int g = this.buffer.getInt(pos[0], pos[1], 1);
+        int b = this.buffer.getInt(pos[0], pos[1], 2);
+        return Math.max(Math.max(r, g), b);
+    }
+    
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        int r = this.buffer.getInt(pos[0], pos[1], 0);
+        int g = this.buffer.getInt(pos[0], pos[1], 1);
+        int b = this.buffer.getInt(pos[0], pos[1], 2);
+        return RGB8.intCode(r, g, b);
+    }
+    
+    @Override
+    public void setIntCode(int[] pos, int intCode)
+    {
+        this.buffer.setInt(pos[0], pos[1], 0, intCode & 0x00FF);
+        this.buffer.setInt(pos[0], pos[1], 1, (intCode >> 8) & 0x00FF);
+        this.buffer.setInt(pos[0], pos[1], 2, (intCode >> 16) & 0x00FF);
+    }
+        
+    
+    // =============================================================
     // Implementation of the IntVectorArray2D interface
 
     @Override
@@ -264,9 +294,9 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 		{
 			switch(c)
 			{
-			case 0: buffer.setInt(posX, posY, 0, UInt8.clamp(value));
-			case 1: buffer.setInt(posX, posY, 1, UInt8.clamp(value));
-			case 2: buffer.setInt(posX, posY, 2, UInt8.clamp(value));
+			case 0: buffer.setInt(posX, posY, 0, UInt8.convert(value));
+			case 1: buffer.setInt(posX, posY, 1, UInt8.convert(value));
+			case 2: buffer.setInt(posX, posY, 2, UInt8.convert(value));
 			default: new IllegalArgumentException(
 					"Channel index must be comprised between 0 and 2, not " + c);
 			}

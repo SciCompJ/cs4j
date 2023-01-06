@@ -3,7 +3,7 @@
  */
 package net.sci.image.process.segment;
 
-import net.sci.array.process.Histogram;
+import net.sci.array.process.Histograms;
 import net.sci.array.scalar.ScalarArray;
 
 /**
@@ -34,10 +34,10 @@ public class OtsuThreshold extends AutoThreshold
 	public double computeThresholdValue(ScalarArray<?> array, double[] range, int nLevels)
     {
         // compute the array of possible thresholds
-        double[] levels = Histogram.computeBinPositions(range, nLevels);
+        double[] levels = Histograms.computeBinPositions(range, nLevels);
         
         // Compute count histogram
-        int[] histo = Histogram.histogram(array, range, nLevels);
+        int[] histo = Histograms.histogramScalar(array, range, nLevels);
         
         // compute total number of elements from the histogram
         int nElements = 0;

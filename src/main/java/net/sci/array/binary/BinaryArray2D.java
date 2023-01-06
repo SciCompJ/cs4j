@@ -18,16 +18,19 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	// =============================================================
 	// Static methods
 
-	/**
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @return a new instance of BooleanArray2D
-	 */
+    /**
+     * Creates a new empty 2D binary array. Uses the default factory, using a
+     * wrapper to BinaryArray2D if necessary.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new BinaryArray2D with the requested size.
+     */
 	public static final BinaryArray2D create(int size0, int size1)
 	{
-		return new BufferedBinaryArray2D(size0, size1);
+		return wrap(BinaryArray.create(size0, size1));
 	}
 
     public final static BinaryArray2D wrap(BinaryArray array)

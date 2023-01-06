@@ -39,8 +39,7 @@ public class TransformedImage3D implements ScalarFunction3D
 	@Override
 	public double evaluate(double x, double y, double z)
 	{
-		Point3D p = new Point3D(x, y, z);
-		p = transform.transform(p);
+		Point3D p = transform.transform(x, y, z);
 		return this.image.evaluate(p.getX(), p.getY(), p.getZ());
 	}
 

@@ -19,21 +19,22 @@ public class DenseUInt8ArrayFactory extends AlgoStub implements UInt8Array.Facto
     @Override
     public UInt8Array create(int... dims)
     {
-        switch (dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return UInt8Array2D.create(dims[0], dims[1]);
-        case 3:
-        {
-            fireStatusChanged(this, "Allocating memory");
-            if (Array.prod(dims[0], dims[1], dims[2]) < Integer.MAX_VALUE - 8)
-                return new BufferedUInt8Array3D(dims[0], dims[1], dims[2]);
-            else 
-                return new SlicedUInt8Array3D(dims[0], dims[1], dims[2]);
-        }
-        default:
-            return UInt8ArrayND.create(dims);
-        }
+            case 1 -> new BufferedUInt8Array1D(dims[0]);
+            case 2 -> new BufferedUInt8Array2D(dims[0], dims[1]);
+            case 3-> create3d(dims[0], dims[1], dims[2]);
+            default -> UInt8ArrayND.create(dims);
+        };
+    }
+
+    private UInt8Array3D create3d(int dim0, int dim1, int dim2)
+    {
+        fireStatusChanged(this, "Allocating memory");
+        if (Array.prod(dim0, dim1, dim2) < Integer.MAX_VALUE - 8)
+            return new BufferedUInt8Array3D(dim0, dim1, dim2);
+        else
+            return new SlicedUInt8Array3D(dim0, dim1, dim2);
     }
 
     @Override

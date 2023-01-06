@@ -18,6 +18,7 @@ import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
+import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
@@ -81,11 +82,12 @@ public class BufferedImageUtils
         } 
         else if (image.isLabelImage())
         {
-            if (!(array instanceof IntArray2D))
+            if (!(array instanceof IntArray))
             {
-                throw new RuntimeException("Label images assume inner array implements IntArray2D");
+                throw new RuntimeException("Label images assume inner array implements IntArray");
             }
-            return labelToAwtImage((IntArray2D<?>) array, lut, image.getDisplaySettings().getBackgroundColor());
+            IntArray2D<?> intArray = IntArray2D.wrap((IntArray<?>) array);
+            return labelToAwtImage(intArray, lut, image.getDisplaySettings().getBackgroundColor());
         }
         else if (image.isColorImage())
         {
@@ -300,11 +302,16 @@ public class BufferedImageUtils
         
         // Populate the raster
         WritableRaster raster = bufImg.getRaster();
+        int nLabels = colormap.size() - 1;
         for (int y = 0; y < sizeY; y++)
         {
             for (int x = 0; x < sizeX; x++)
             {
-                int index = Math.min(array.getInt(x, y), 255);
+                int index = array.getInt(x, y);
+                if (index > 0)
+                {
+                    index = ((index - 1) % nLabels) + 1;
+                }
                 raster.setSample(x, y, 0, index); 
             }
         }

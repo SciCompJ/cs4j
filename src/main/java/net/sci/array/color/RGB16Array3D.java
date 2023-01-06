@@ -121,9 +121,9 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
     @Override
 	public void setValues(int x, int y, int z, double[] values)
 	{
-		int r = UInt16.clamp(values[0]);
-		int g = UInt16.clamp(values[1]);
-		int b = UInt16.clamp(values[2]);
+		int r = UInt16.convert(values[0]);
+		int g = UInt16.convert(values[1]);
+		int b = UInt16.convert(values[2]);
 		set(x, y, z, new RGB16(r, g, b));
 	}
 

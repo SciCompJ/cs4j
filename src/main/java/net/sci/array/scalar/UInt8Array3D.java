@@ -3,8 +3,6 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.Array;
-
 /**
  * @author dlegland
  *
@@ -15,7 +13,8 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	// Static methods
 
     /**
-     * Creates a new 3D array containing UInt8 values.
+     * Creates a new 3D array containing UInt8 values. Uses the default factory,
+     * and a wrapper to UInt8Array3D if necessary.
      * 
      * @param size0
      *            the size of the array along the first dimension
@@ -27,10 +26,7 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
      */
 	public static final UInt8Array3D create(int size0, int size1, int size2)
 	{
-        if (Array.prod(size0, size1, size2) < Integer.MAX_VALUE - 8)
-            return new BufferedUInt8Array3D(size0, size1, size2);
-        else 
-            return new SlicedUInt8Array3D(size0, size1, size2);
+        return wrap(UInt8Array.create(size0, size1, size2));
 	}
 	
     /**
@@ -137,7 +133,7 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
     @Override
     public void setValue(int x, int y, int z, double value)
     {
-        setByte(x, y, z, (byte) UInt8.clamp(value));
+        setByte(x, y, z, (byte) UInt8.convert(value));
     }
     
 
@@ -171,8 +167,59 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         }
         return res;
     }
-
+    
 	
+    // =============================================================
+    // Implementation of inner classes
+    
+    /**
+     * Wraps a UInt8 array with three dimensions into a UInt8Array3D.
+     */
+    private static class Wrapper extends UInt8Array3D
+    {
+        UInt8Array array;
+    
+        public Wrapper(UInt8Array array)
+        {
+            super(0, 0, 0);
+            if (array.dimensionality() != 3)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 3.");
+            }
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.size2 = array.size(2);
+            this.array = array;
+        }
+        
+        @Override
+        public void setByte(int x, int y, int z, byte b)
+        {
+            this.array.setByte(new int[] {x, y, z}, b);
+        }
+    
+        @Override
+        public byte getByte(int... pos)
+        {
+            return this.array.getByte(pos);
+        }
+    
+        @Override
+        public void setByte(int[] pos, byte value)
+        {
+            this.array.setByte(pos, value);
+        }
+    
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.scalar.UInt8Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
+
     private class SliceView extends UInt8Array2D
     {
         int sliceIndex;
@@ -273,60 +320,6 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         public UInt8Array2D next()
         {
             return new SliceView(sliceIndex++);
-        }
-    }
-
-    /**
-     * Wraps a UInt8 array into a UInt8Array3D, with three dimensions.
-     */
-    private static class Wrapper extends UInt8Array3D
-    {
-        UInt8Array array;
-
-        public Wrapper(UInt8Array array)
-        {
-            super(0, 0, 0);
-            if (array.dimensionality() != 3)
-            {
-                throw new IllegalArgumentException("Requires an array of dimensionality equal to 3.");
-            }
-            this.size0 = array.size(0);
-            this.size1 = array.size(1);
-            this.size2 = array.size(2);
-            this.array = array;
-        }
-        
-        @Override
-        public void setByte(int x, int y, int z, byte b)
-        {
-            this.array.setByte(new int[] {x, y, z}, b);
-        }
-
-        @Override
-        public byte getByte(int... pos)
-        {
-            return this.array.getByte(pos);
-        }
-
-        @Override
-        public void setByte(int[] pos, byte value)
-        {
-            this.array.setByte(pos, value);
-        }
-
-        @Override
-        public UInt8Array3D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
-        }
-
-        /**
-         * Simply returns an iterator on the original array.
-         */
-        @Override
-        public net.sci.array.scalar.UInt8Array.Iterator iterator()
-        {
-            return this.array.iterator();
         }
     }
 }

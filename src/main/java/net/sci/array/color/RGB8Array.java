@@ -8,7 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
+import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.process.type.ConvertToUInt8;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.IntVectorArray;
@@ -140,30 +142,137 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	    return new MergeChannelsRGB8Array(redChannel, greenChannel, blueChannel);
 	}
 
-	/**
-     * Computes a binary overlay over a color or grayscale image.
+    /**
+     * Computes the color images that corresponds to overlay of a binary mask
+     * onto a scalar array.
      * 
      * @param baseArray
      *            the array to use as base
-     * @param overlay
+     * @param binaryMask
+     *            the binary array that specifies the array elements to colorize.
+     * @param overlayColor
+     *            the overlay color
+     * @return a new color array corresponding to the overlay.
+     */
+    public static RGB8Array binaryOverlay(UInt8Array baseArray, BinaryArray binaryMask, RGB8 overlayColor)
+    {
+        RGB8Array res = convert(baseArray);
+        
+        for (int[] pos : res.positions())
+        {
+            if (binaryMask.getBoolean(pos))
+            {
+                res.set(pos, overlayColor);
+            }
+        }
+    
+        return res;
+    }
+
+    /**
+     * Computes the color images that corresponds to overlay of a binary mask
+     * onto a scalar array.
+     * 
+     * @param baseArray
+     *            the array to use as base
+     * @param binaryMask
+     *            the binary array that specifies the array elements to colorize.
+     * @param overlayColor
+     *            the overlay color
+     * @return a new color array corresponding to the overlay.
+     */
+    public static RGB8Array binaryOverlay(Array<?> baseArray, BinaryArray binaryMask, RGB8 overlayColor, double overlayOpacity)
+    {
+        if (baseArray.dataType() == UInt8.class)
+        {
+            return binaryOverlay_uint8(UInt8Array.wrap(baseArray), binaryMask, overlayColor, overlayOpacity);
+        }
+        
+        // create result array
+        RGB8Array res = (baseArray instanceof RGB8Array) 
+                ? ((RGB8Array) baseArray).duplicate() 
+                : convert(baseArray);
+        
+        // pre-compute opacity weights for gray and overlay
+        final double op0 = 1.0 - overlayOpacity;
+        final double op1 = overlayOpacity;
+        
+        final double rOvr = op0 * overlayColor.red();
+        final double gOvr = op0 * overlayColor.green();
+        final double bOvr = op0 * overlayColor.blue();
+        
+        for (int[] pos : res.positions())
+        {
+            if (binaryMask.getBoolean(pos))
+            {
+                res.setSample(pos, 0, (int) (res.getSample(pos, 0) * op1 + rOvr));
+                res.setSample(pos, 1, (int) (res.getSample(pos, 1) * op1 + gOvr));
+                res.setSample(pos, 2, (int) (res.getSample(pos, 2) * op1 + bOvr));
+            }
+        }
+
+        return res;
+    }
+    
+    /**
+     * Computes the color images that corresponds to overlay of a binary mask
+     * onto a scalar array.
+     * 
+     * @param baseArray
+     *            the array to use as base
+     * @param binaryMask
+     *            the binary array that specifies the array elements to colorize.
+     * @param overlayColor
+     *            the overlay color
+     * @return a new color array corresponding to the overlay.
+     */
+    private static RGB8Array binaryOverlay_uint8(UInt8Array baseArray, BinaryArray binaryMask, RGB8 overlayColor, double overlayOpacity)
+    {
+        // pre-compute opacity weights for gray and overlay
+        final double op0 = 1.0 - overlayOpacity;
+        final double op1 = overlayOpacity;
+        
+        final double rOvr = op1 * overlayColor.intRed();
+        final double gOvr = op1 * overlayColor.intGreen();
+        final double bOvr = op1 * overlayColor.intBlue();
+        
+        RGB8Array res = RGB8Array.create(baseArray.size());
+        for (int[] pos : res.positions())
+        {
+            int gray = baseArray.getInt(pos);
+            if (binaryMask.getBoolean(pos))
+            {
+                res.setSample(pos, 0, (int) (gray * op0 + rOvr));
+                res.setSample(pos, 1, (int) (gray * op0 + gOvr));
+                res.setSample(pos, 2, (int) (gray * op0 + bOvr));
+            }
+            else
+            {
+                res.setSamples(pos, new int[] {gray, gray, gray});
+            }
+        }
+
+        return res;
+    }
+    
+	/**
+     * Applies a binary overlay over a color image (updates the reference image).
+     * 
+     * @param baseArray
+     *            the array to use as base
+     * @param binaryMask
      *            the binary array that specifies the pixels to colorize
-     * @param color
+     * @param overlayColor
      *            the overlay color
      * @return the reference to the baseArray
      */
-	public static RGB8Array binaryOverlay(RGB8Array baseArray, BinaryArray overlay, RGB8 color)
+	public static RGB8Array overlayBinary(RGB8Array baseArray, BinaryArray binaryMask, RGB8 overlayColor)
 	{
-	    RGB8Array.Iterator iter1 = baseArray.iterator();
-	    BinaryArray.Iterator iter2 = overlay.iterator();
-	    
-	    while (iter1.hasNext() && iter2.hasNext())
+	    for (int[] pos : baseArray.positions())
 	    {
-	        iter1.forward();
-	        iter2.forward();
-            
-	        if (iter2.getBoolean())
+	        if (binaryMask.getBoolean(pos))
 	        {
-	            iter1.set(color);
+	            baseArray.set(pos, overlayColor);
 	        }
 	    }
 
@@ -258,49 +367,65 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         
         if (RGB8.class.isAssignableFrom(array.dataType()))
         {
-            // create an anonymous class to wrap the instance of Array<RGB8>
-            return new RGB8Array() 
-            {
-                @Override
-                public int dimensionality()
-                {
-                    return array.dimensionality();
-                }
-
-                @Override
-                public int[] size()
-                {
-                    return array.size();
-                }
-
-                @Override
-                public int size(int dim)
-                {
-                    return array.size(dim);
-                }
-
-                @Override
-                public PositionIterator positionIterator()
-                {
-                    return array.positionIterator();
-                }
-
-                @Override
-                public RGB8 get(int... pos)
-                {
-                    return (RGB8) array.get(pos);
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void set(int[] pos, RGB8 rgb)
-                {
-                    ((Array<RGB8>) array).set(pos, rgb);
-                }
-            };
+            return wrapRGB8(array);
+        }
+        
+        if (UInt8.class.isAssignableFrom(array.dataType()))
+        {
+            return new UInt8ArrayRGB8View(UInt8Array.wrap(array));
+        }
+        
+        if (Binary.class.isAssignableFrom(array.dataType()))
+        {
+            return new BinaryArrayRGB8View(BinaryArray.wrap(array));
         }
         
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
+    
+    private static RGB8Array wrapRGB8(Array<?> array)
+    {
+        // create an anonymous class to wrap the instance of Array<RGB8>
+        return new RGB8Array() 
+        {
+            @Override
+            public int dimensionality()
+            {
+                return array.dimensionality();
+            }
+
+            @Override
+            public int[] size()
+            {
+                return array.size();
+            }
+
+            @Override
+            public int size(int dim)
+            {
+                return array.size(dim);
+            }
+
+            @Override
+            public PositionIterator positionIterator()
+            {
+                return array.positionIterator();
+            }
+
+            @Override
+            public RGB8 get(int... pos)
+            {
+                return (RGB8) array.get(pos);
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            public void set(int[] pos, RGB8 rgb)
+            {
+                ((Array<RGB8>) array).set(pos, rgb);
+            }
+        };
+        
     }
 
 	// =============================================================
@@ -314,21 +439,64 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	 */
     public default UInt8Array convertToUInt8()
     {
-        int[] sizes = this.size();
-        UInt8Array result = UInt8Array.create(sizes);
-        
-        for(int[] pos : this.positions())
-        {
-            result.setInt(pos, get(pos).getInt());
-        }
-        
-        return result;
+        return new ConvertToUInt8().processRGB8(this);
     }
 	
 	public default UInt8Array createUInt8View()
 	{
 	    return new UInt8View(this);
 	}
+	
+    /**
+     * Returns the largest value within the samples of the RGB8 element at the
+     * specified position.
+     * 
+     * The aim of this method is to facilitate the conversion of RGB8 arrays
+     * into grayscale (UInt8) arrays.
+     * 
+     * @see RGB8.maxSample()
+     * 
+     * @param pos
+     *            the position within array
+     * @return largest value within the samples, as an integer.
+     */
+    public default int getMaxSample(int[] pos)
+    {
+        return get(pos).maxSample();
+    }
+    
+	/**
+     * Returns the intcode of the RGB8 value at specified position.
+     * 
+     * @see #setIntCode(int[], int)
+     * 
+     * @param pos
+     *            the position within array
+     * @return the intcode representing the RGB value
+     */
+    public default int getIntCode(int[] pos)
+    {
+        return get(pos).intCode();
+    }
+    
+    /**
+     * Default implementation for setting the intcode of an element of the
+     * array.
+     * 
+     * @see #getIntCode(int[])
+     * 
+     * @param pos
+     *            the position of the element to set
+     * @param intCode
+     *            the integer code of the RGB8 value
+     */
+    public default void setIntCode(int[] pos, int intCode)
+    {
+        setSample(pos, 0, intCode & 0x00FF);
+        setSample(pos, 1, (intCode >> 8) & 0x00FF);
+        setSample(pos, 2, (intCode >> 16) & 0x00FF);
+    }
+
 
     // =============================================================
     // Default Implementation of the IntVectorArray interface
@@ -444,7 +612,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
     public default void setValue(int[] pos, int channel, double value)
     {        
         int[] samples = get(pos).getSamples();
-        samples[channel] = UInt8.clamp(value);
+        samples[channel] = UInt8.convert(value);
         set(pos, new RGB8(samples));
     }
 
@@ -463,9 +631,9 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 	@Override
 	public default void setValues(int[] pos, double[] values)
 	{
-		int r = UInt8.clamp(values[0]);
-		int g = UInt8.clamp(values[1]);
-		int b = UInt8.clamp(values[2]);
+		int r = UInt8.convert(values[0]);
+		int g = UInt8.convert(values[1]);
+		int b = UInt8.convert(values[2]);
 		set(pos, new RGB8(r, g, b));
 	}
 
@@ -573,7 +741,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 		public default void setValue(int c, double value)
 		{
 			int[] samples = get().getSamples();
-			samples[c] = UInt8.clamp(value);
+			samples[c] = UInt8.convert(value);
 			set(new RGB8(samples[0], samples[1], samples[2]));
 		}
 	}
@@ -682,8 +850,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         @Override
         public UInt8 get(int... pos)
         {
-            RGB8 rgb = parent.get(pos);
-            return new UInt8(UInt8.clamp(rgb.getValue()));
+            return new UInt8(parent.get(pos).maxSample());
         }
 
         @Override
@@ -770,8 +937,8 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
             }
         }
 	}
-    
 	
+    
     // =============================================================
     // Specialization of the Factory interface
 

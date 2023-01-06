@@ -38,6 +38,43 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 		this.buffer = buffer;
 	}
 
+	
+    // =============================================================
+    // Override some methods of the RGB8Array2D class
+	
+    @Override
+    public int getMaxSample(int x, int y)
+    {
+        int intCode = this.buffer.getInt(x, y);
+        int r = intCode & 0x00FF;
+        int g = (intCode >> 8) & 0x00FF;
+        int b = (intCode >> 16) & 0x00FF;
+        return Math.max(Math.max(r, g), b);
+    }
+    
+    @Override
+    public int getIntCode(int x, int y)
+    {
+        return this.buffer.getInt(x, y);
+    }
+    
+    
+    // =============================================================
+    // Implementation of the RGB8Array interface
+
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        return this.buffer.getInt(pos[0], pos[1]);
+    }
+    
+    @Override
+    public void setIntCode(int[] pos, int intCode)
+    {
+        this.buffer.setInt(pos[0], pos[1], intCode);
+    }
+    
+
     // =============================================================
     // Implementation of the IntVectorArray2D interface
 
@@ -103,7 +140,7 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
     @Override
     public void set(int x, int y, RGB8 rgb)
     {
-        this.buffer.setInt(x, y, rgb.getIntCode());
+        this.buffer.setInt(x, y, rgb.intCode());
     }
 
     /* (non-Javadoc)
@@ -121,7 +158,7 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 	@Override
 	public void set(int[] pos, RGB8 rgb)
 	{
-		this.buffer.setInt(pos[0], pos[1], rgb.getIntCode());
+		this.buffer.setInt(pos[0], pos[1], rgb.intCode());
 	}
 
 

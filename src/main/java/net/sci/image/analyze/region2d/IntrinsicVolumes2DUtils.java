@@ -213,15 +213,13 @@ public class IntrinsicVolumes2DUtils
      */
     public static final double[] eulerNumberLut(int conn)
     {
-        switch(conn)
+        return switch(conn)
         {
-        case 4:
-            return eulerNumberLutC4();
-        case 8:
-            return eulerNumberLutC8();
-        default:
-            throw new IllegalArgumentException("Connectivity must be 4 or 8, not " + conn);
-        }
+            case 4 -> eulerNumberLutC4();
+            case 8 -> eulerNumberLutC8();
+            default -> throw new IllegalArgumentException(
+                    "Connectivity must be C4 or C8, not " + conn);
+        };
     }
     
     private final static double[] eulerNumberLutC4()

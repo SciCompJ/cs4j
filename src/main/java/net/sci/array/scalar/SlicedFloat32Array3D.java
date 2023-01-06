@@ -265,6 +265,36 @@ public class SlicedFloat32Array3D extends Float32Array3D
 		}
 		
 		@Override
+        public float getFloat()
+        {
+            return sliceIterator.getFloat();
+        }
+
+        @Override
+        public void setFloat(float value)
+        {
+            sliceIterator.setFloat(value);
+        }
+
+        @Override
+        public double getValue()
+        {
+        	return sliceIterator.getValue();
+        }
+
+        @Override
+        public void setValue(double value)
+        {
+        	sliceIterator.setValue(value);
+        }
+
+        @Override
+        public Float32 get()
+        {
+        	return sliceIterator.get();
+        }
+
+        @Override
 		public boolean hasNext()
 		{
 			return this.sliceIndex < size2 - 1 || sliceIterator.hasNext();
@@ -290,24 +320,6 @@ public class SlicedFloat32Array3D extends Float32Array3D
 				sliceIterator = slices.get(sliceIndex).iterator();
 			}
 			sliceIterator.forward();
-		}
-
-		@Override
-		public Float32 get()
-		{
-			return sliceIterator.get();
-		}
-		
-		@Override
-		public double getValue()
-		{
-			return sliceIterator.getValue();
-		}
-
-		@Override
-		public void setValue(double value)
-		{
-			sliceIterator.setValue(value);
 		}
 	}
 }

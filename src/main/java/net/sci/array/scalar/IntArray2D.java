@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.function.BiFunction;
 
 /**
+ * Specialization of Array for 2D arrays of integer values.
+ * 
  * @author dlegland
  *
  */
@@ -126,8 +128,19 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
 	// =============================================================
 	// Specialization of Array interface
 
-	@Override
-	public abstract IntArray2D<T> duplicate();
+    @Override
+    public IntArray2D<T> duplicate()
+    {
+        IntArray2D<T> res = IntArray2D.wrap(this.factory().create(this.size()));
+        for (int y = 0; y < this.size1; y++)
+        {
+            for (int x = 0; x < this.size0; x++)
+            {
+                res.setInt(x, y, this.getInt(x, y));
+            }
+        }
+        return res;
+    }
 	
     
 	// =============================================================
@@ -170,17 +183,6 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
             this.size0 = array.size(0);
             this.size1 = array.size(1);
             this.array = array;
-        }
-
-        @Override
-        public IntArray2D<T> duplicate()
-        {
-            IntArray<T> dup = this.array.duplicate();
-            if (dup instanceof IntArray2D)
-            {
-                return (IntArray2D<T>) dup;
-            }
-            return new Wrapper<T>(this.array.duplicate());
         }
 
         @Override

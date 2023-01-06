@@ -9,8 +9,11 @@
   <version>0.0.1-SNAPSHOT</version>
 
   <properties>
-    <maven.compiler.source>1.11</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
+    <!-- Use a LTS to facilitate protability -->
+    <maven.compiler.source>1.17</maven.compiler.source>
+    <maven.compiler.target>1.17</maven.compiler.target>
+    <!-- Generic source encoding -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   
   <dependencies>
@@ -23,8 +26,9 @@
 	    <version>4.13.2</version>
 	    <scope>test</scope>
 	</dependency>
-
 	
+    <!-- Jama is used for matrix operations (SVD)-->
+    <!-- e. g. in ellipsoid reduction, or PCA computation -->
     <!-- https://mvnrepository.com/artifact/gov.nist.math/jama -->
     <dependency>
       <groupId>gov.nist.math</groupId>
@@ -49,39 +53,6 @@
 		</testResources>
 		
 		<plugins>
-			<!-- Configure the jar output directory -->
-   			<plugin>
-      			<groupId>org.apache.maven.plugins</groupId>
-      			<artifactId>maven-jar-plugin</artifactId>
-      			<configuration>
-      				<!-- Place the jar in "plugins" directory of current workspace -->
-        			<outputDirectory>${basedir}/target</outputDirectory>
-        			
-        			<!-- Place the jar in "plugins" directory of local ImageJ installation 
-        				(need to be adapted depending on local configuration...) -->
-        			<!-- <outputDirectory>C:/Program Files (x86)/ImageJ/plugins</outputDirectory> -->
-      			</configuration>
-    		</plugin>
-    		
-			<!-- plugin for generating the javadoc.
-				 Output is located in "target/site/apidocs" -->
-    		<plugin>
-        		<groupId>org.apache.maven.plugins</groupId>
-        		<artifactId>maven-javadoc-plugin</artifactId>
-        		<configuration>
-        			<outputDirectory>${project.build.directory}/apidocs</outputDirectory>
-        			<encoding>ISO-8859-1</encoding>
-      			</configuration>
-      			<executions>
-          			<execution>
-            			<goals>
-              				<goal>javadoc</goal>
-            			</goals>
-            			<phase>site</phase>
-          			</execution>
-        		</executions>
-      		</plugin>
-      		
 		</plugins>
 	</build>
 

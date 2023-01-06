@@ -28,4 +28,17 @@ public class Int32Array2DTest
         assertEquals(10, array.getInt(0, 0));
         assertEquals(33, array.getInt(3, 2));
     }
+    
+
+    /**
+     * Test method for {@link net.sci.array.scalar.IntArray2D#getInt(int, int)}.
+     */
+    @Test
+    public final void testGetInt_IntInt()
+    {
+        Int32Array2D array = Int32Array2D.create(4, 3);
+        array.fillInts((x,y) -> y * 10 + x);
+        
+        assertEquals(23, array.getInt(3, 2));
+    }
 }

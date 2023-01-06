@@ -38,6 +38,32 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 		this.buffer = buffer;
 	}
 
+    
+    // =============================================================
+    // Implementation of the RGB8Array interface
+
+    @Override
+    public int getMaxSample(int[] pos)
+    {
+        int intCode = this.buffer.getInt(pos);
+        int r = intCode & 0x00FF;
+        int g = (intCode >> 8) & 0x00FF;
+        int b = (intCode >> 16) & 0x00FF;
+        return Math.max(Math.max(r, g), b);
+    }
+    
+    @Override
+    public int getIntCode(int[] pos)
+    {
+        return this.buffer.getInt(pos);
+    }
+    
+    @Override
+    public void setIntCode(int[] pos, int intCode)
+    {
+        this.buffer.setInt(pos, intCode);
+    }
+        
 	
     // =============================================================
     // Implementation of the IntVectorArray interface
@@ -108,7 +134,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
     public void setValue(int[] pos, int channel, double value)
     {
         int[] samples = getSamples(pos);
-        samples[channel] = UInt8.clamp(value);
+        samples[channel] = UInt8.convert(value);
         this.buffer.setInt(pos, RGB8.intCode(samples));
     }
 
@@ -125,7 +151,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 	@Override
 	public void set(int[] pos, RGB8 rgb)
 	{
-		this.buffer.setInt(pos, rgb.getIntCode());
+		this.buffer.setInt(pos, rgb.intCode());
 	}
 
 	@Override

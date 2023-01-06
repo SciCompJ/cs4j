@@ -176,6 +176,49 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 		}
 		
 		@Override
+        public float getFloat()
+        {
+            return buffer[index];
+        }
+
+        @Override
+        public void setFloat(float value)
+        {
+            buffer[index] = value;
+        }
+
+        @Override
+        public double nextValue()
+        {
+        	forward();
+        	return buffer[index];
+        }
+
+        @Override
+        public double getValue()
+        {
+        	return buffer[index];
+        }
+
+        @Override
+        public void setValue(double value)
+        {
+        	buffer[index] = (float) value;
+        }
+
+        @Override
+        public Float32 get()
+        {
+        	return new Float32(buffer[index]);
+        }
+
+        @Override
+        public void set(Float32 value)
+        {
+        	buffer[index] = (float) value.getValue();
+        }
+
+        @Override
 		public boolean hasNext()
 		{
 			return index < indexMax;
@@ -191,37 +234,6 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 		public void forward()
 		{
 			++index;
-		}
-
-		@Override
-		public Float32 get()
-		{
-			return new Float32(buffer[index]);
-		}
-
-		@Override
-		public void set(Float32 value)
-		{
-			buffer[index] = (float) value.getValue();
-		}
-
-		@Override
-		public double nextValue()
-		{
-			forward();
-			return buffer[index];
-		}
-
-		@Override
-		public double getValue()
-		{
-			return buffer[index];
-		}
-
-		@Override
-		public void setValue(double value)
-		{
-			buffer[index] = (float) value;
 		}
 	}
 }

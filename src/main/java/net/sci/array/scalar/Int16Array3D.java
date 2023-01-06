@@ -3,8 +3,6 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.Array;
-
 
 /**
  * Base implementation for 3D arrays containing Int16 values.
@@ -30,12 +28,27 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 	 */
 	public static final Int16Array3D create(int size0, int size1, int size2)
 	{
-        if (Array.prod(size0, size1, size2) < Integer.MAX_VALUE - 8)
-            return new BufferedInt16Array3D(size0, size1, size2);
-        else 
-            return new SlicedInt16Array3D(size0, size1, size2);
+        return wrap(Int16Array.create(size0, size1, size2));
 	}
 	
+    /**
+     * Encapsulates the specified instance of Int16Array into a new
+     * Int16Array3D, by creating a Wrapper if necessary. If the original array
+     * is already an instance of Int16Array3D, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Int16Array3D view of the original array
+     */
+    public static Int16Array3D wrap(Int16Array array)
+    {
+        if (array instanceof Int16Array3D)
+        { 
+            return (Int16Array3D) array; 
+        }
+        return new Wrapper(array);
+    }
+    
 	
 	// =============================================================
 	// Constructor
@@ -79,9 +92,10 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
     @Override
     public void setValue(int x, int y, int z, double value)
     {
-        setShort(x, y, z, (short) Int16.clamp(value));
+        setShort(x, y, z, (short) Int16.convert(value));
     }
-
+    
+    
     // =============================================================
     // Specialization of Array3D interface
 
@@ -91,7 +105,7 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
         setShort(x, y, z, value.value);
     }
 
-
+    
     // =============================================================
     // Specialization of the Int16Array interface
 
@@ -99,10 +113,10 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
     {
         setShort(pos[0], pos[1], pos[2], s);
     }
-
-
+    
+    
     // =============================================================
-    // Management of slices
+    // Specialization of Array3D interface
 
     public Int16Array2D slice(int sliceIndex)
     {
@@ -125,7 +139,7 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
             }
         };
     }
-
+    
     public java.util.Iterator<? extends Int16Array2D> sliceIterator()
     {
         return new SliceIterator();
@@ -133,19 +147,68 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
 
 	
 	// =============================================================
-	// Specialization of IntArrayND interface
-
-
-	// =============================================================
-	// Specialization of Array3D interface
-
-	@Override
-	public abstract Int16Array3D duplicate();
-
-	
-	// =============================================================
 	// Specialization of Array interface
 	
+    @Override
+    public Int16Array3D duplicate()
+    {
+        Int16Array3D res = Int16Array3D.create(this.size0, this.size1, this.size2);
+        res.fillInts(pos -> this.getInt(pos));
+        return res;
+    }
+
+    
+    // =============================================================
+    // Implementation of inner classes
+    
+    /**
+     * Wraps a Int16 array with three dimensions into a Int16Array3D.
+     */
+    private static class Wrapper extends Int16Array3D
+    {
+        Int16Array array;
+
+        public Wrapper(Int16Array array)
+        {
+            super(0, 0, 0);
+            if (array.dimensionality() != 3)
+            {
+                throw new IllegalArgumentException("Requires an array of dimensionality equal to 3.");
+            }
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+            this.size2 = array.size(2);
+            this.array = array;
+        }
+        
+        @Override
+        public void setShort(int x, int y, int z, short s)
+        {
+            this.array.setShort(new int[] {x, y, z}, s);
+        }
+
+        @Override
+        public short getShort(int... pos)
+        {
+            return this.array.getShort(pos);
+        }
+
+        @Override
+        public void setShort(int[] pos, short value)
+        {
+            this.array.setShort(pos, value);
+        }
+
+        /**
+         * Simply returns an iterator on the original array.
+         */
+        @Override
+        public net.sci.array.scalar.Int16Array.Iterator iterator()
+        {
+            return this.array.iterator();
+        }
+    }
+
 	
     private class SliceView extends Int16Array2D
     {

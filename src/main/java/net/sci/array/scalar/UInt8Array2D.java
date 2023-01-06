@@ -13,15 +13,18 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	// Static methods
 
 	/**
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @return a new instance of UInt16Array2D
-	 */
+     * Creates a new 2D array containing UInt8 values. Uses the default factory,
+     * and a wrapper to UInt8Array2D if necessary.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of UInt8Array2D
+     */
 	public static final UInt8Array2D create(int size0, int size1)
 	{
-		return new BufferedUInt8Array2D(size0, size1);
+		return wrap(UInt8Array.create(size0, size1));
 	}
 	
 	/**
@@ -111,7 +114,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
     @Override
     public void setInt(int x, int y, int value)
     {
-        setByte(x, y, (byte) UInt8.clamp(value));
+        setByte(x, y, (byte) UInt8.convert(value));
     }
 
 
@@ -122,7 +125,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
     @Override
     public void setValue(int x, int y, double value)
     {
-        setByte(x, y, (byte) UInt8.clamp(value));
+        setByte(x, y, (byte) UInt8.convert(value));
     }
 
 
@@ -188,12 +191,6 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
         public void setByte(int[] pos, byte b)
         {
             this.array.setByte(pos, b);
-        }
-
-        @Override
-        public UInt8Array2D duplicate()
-        {
-            return new Wrapper(this.array.duplicate());
         }
 
         /**

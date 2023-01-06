@@ -170,6 +170,18 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
             }
 
             @Override
+            public float getFloat()
+            {
+                return (float) Float32VectorArray2D.this.getValue(indX, indY, channel);
+            }
+
+            @Override
+            public void setFloat(float value)
+            {
+                Float32VectorArray2D.this.setValue(indX, indY, channel, value);
+            }
+
+            @Override
             public double getValue()
             {
                 return Float32VectorArray2D.this.getValue(indX, indY, channel);

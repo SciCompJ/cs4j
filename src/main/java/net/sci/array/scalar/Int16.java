@@ -37,11 +37,23 @@ public class Int16 extends Int
 	 *            a double value
 	 * @return the closest corresponding integer between MIN_VALUE and MAX_VALUE
 	 */
-	public final static int clamp(double value)
+	public final static int convert(double value)
 	{
-		return (int) Math.min(Math.max(value, MIN_VALUE), MAX_VALUE);
+		return (int) Math.min(Math.max(value + 0.5, MIN_VALUE), MAX_VALUE);
 	}
 
+    /**
+     * Computes the integer value between MIN_VALUE and MAX_VALUE closest to the
+     * specified double value.
+     * 
+     * @param value
+     *            a double value
+     * @return the closest corresponding integer between MIN_VALUE and MAX_VALUE
+     */
+    public final static int clamp(int value)
+    {
+        return (int) Math.min(Math.max(value, MIN_VALUE), MAX_VALUE);
+    }
 	
     // =============================================================
     // Class members
@@ -83,6 +95,12 @@ public class Int16 extends Int
 	{
 		return value;
 	}
+
+    @Override
+    public Int16 fromValue(double v)
+    {
+        return new Int16(convert(v));
+    }
 
 
 	// =============================================================
