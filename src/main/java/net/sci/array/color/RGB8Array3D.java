@@ -55,8 +55,12 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
      * 
      * @see RGB8.maxSample()
      * 
-     * @param pos
-     *            the position within array
+     * @param x
+     *            the x-coordinate of the array element
+     * @param y
+     *            the y-coordinate of the array element
+     * @param z
+     *            the z-coordinate of the array element
      * @return largest value within the samples, as an integer.
      */
     public int getMaxSample(int x, int y, int z)
@@ -69,9 +73,13 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
      * 
      * @see #setIntCode(int[], int)
      * 
-     * @param pos
-     *            the position within array
-     * @return the intcode representing the RGB value
+     * @param x
+     *            the x-coordinate of the array element
+     * @param y
+     *            the y-coordinate of the array element
+     * @param z
+     *            the z-coordinate of the array element
+     * @return the intcode representing the RGB value at position (x,y,z)
      */
     public int getIntCode(int x, int y, int z)
     {
