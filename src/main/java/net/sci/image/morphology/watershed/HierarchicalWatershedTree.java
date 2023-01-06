@@ -6,16 +6,10 @@ package net.sci.image.morphology.watershed;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import net.sci.array.scalar.UInt8Array1D;
 import net.sci.image.morphology.watershed.HierarchicalWatershed.Basin;
@@ -64,8 +58,8 @@ public class HierarchicalWatershedTree
         private BasinNode createBasinNode(Basin basin)
         {
             BasinNode node = new BasinNode(basin);
-            node.x = nextFreePos++;
-            node.y = 0;
+            node.pos = nextFreePos++;
+            node.height = 0;
             return node;
         }
         
@@ -103,7 +97,7 @@ public class HierarchicalWatershedTree
             sb.append(". ".repeat(indentLevel));
         }
         
-        String nodeString = String.format(Locale.ENGLISH, "(x=%5.2f, y=%5.2f) label = %2d", node.x, node.y, node.getRegion().label);
+        String nodeString = String.format(Locale.ENGLISH, "(x=%5.2f, y=%5.2f) label = %2d", node.pos, node.height, node.getRegion().label);
         sb.append("+ " + nodeString + "\n");
         if (node instanceof MergeNode)
         {
@@ -117,19 +111,31 @@ public class HierarchicalWatershedTree
 
     public abstract static class Node
     {
-        /** The x-position of this node, between 0 and the total number of nodes */ 
-        public double x;
+        /** The position of this node, between 0 and the total number of nodes */ 
+        public double pos;
         
         /**
-         * The y-position of this node, corresponding to the "height" which is
-         * computed from the dynamic values.
+         * The "height" of this node, that is usually computed from the dynamic
+         * values.
          */
-        public double y;
+        public double height;
         
+        /**
+         * @return the region associated to this node.
+         */
         public abstract Region getRegion();
         
+        /**
+         * @return the range of positions of the children of this node, or a
+         *         singleton range if this node is a leaf (Basin node).
+         */
         public abstract double[] getChildrenRange();
         
+        /**
+         * @return the full range of positions of the children of this node
+         *         (recursively computed), or a singleton range if this node is
+         *         a leaf (Basin node).
+         */
         public abstract double[] getFullRange();
     }
 
@@ -152,13 +158,13 @@ public class HierarchicalWatershedTree
         @Override
         public double[] getChildrenRange()
         {
-            return new double[] {this.x, this.x};
+            return new double[] {this.pos, this.pos};
         }
         
         @Override
         public double[] getFullRange()
         {
-            return new double[] {this.x, this.x};
+            return new double[] {this.pos, this.pos};
         }
     }
     
@@ -175,7 +181,7 @@ public class HierarchicalWatershedTree
             
             // x position is middle of range interval
             double[] xRange = getChildrenRange();
-            this.x = (xRange[0] + xRange[1]) * 0.5;
+            this.pos = (xRange[0] + xRange[1]) * 0.5;
             
             // uses a height equal to the minimum of the dynamic values obtained
             // from the basins.
@@ -184,7 +190,7 @@ public class HierarchicalWatershedTree
             {
                 yMin = Math.min(yMin, region.dynamic);
             }
-            this.y = yMin;
+            this.height = yMin;
         }
 
         @Override
@@ -200,8 +206,8 @@ public class HierarchicalWatershedTree
             double xMax = Double.NEGATIVE_INFINITY;
             for (Node child : children)
             {
-                xMin = Math.min(xMin, child.x);
-                xMax = Math.max(xMax, child.x);
+                xMin = Math.min(xMin, child.pos);
+                xMax = Math.max(xMax, child.pos);
             }
             return new double[] {xMin, xMax};        }
         
@@ -217,77 +223,6 @@ public class HierarchicalWatershedTree
                 xMax = Math.max(xMax, posRange[1]);
             }
             return new double[] {xMin, xMax};
-        }
-    }
-    
-    private static class TreeDisplay extends JPanel
-    {
-        /**
-         * To comply with AWT conventions
-         */
-        private static final long serialVersionUID = 1L;
-        
-        private static final int xShift = 50;
-        private static final int yShift = 50;
-        
-        private static final int xScale = 50;
-        private static final int yScale = 50;
-        
-        private static final int radius = 15;
-        
-        HierarchicalWatershedTree tree;
-        
-        public TreeDisplay(HierarchicalWatershedTree tree)
-        {
-            this.tree = tree;
-        }
-        public void paintComponent(Graphics g) 
-        {
-            super.paintComponent(g);
-            
-            Graphics2D g2 = (Graphics2D) g;
-            drawNodeTree(g2, tree.root);
-        }
-        
-        public void drawNodeTree(Graphics2D g2, Node node)
-        {
-            double[] xRange = node.getChildrenRange();
-            g2.setColor(Color.BLACK);
-            double x0 = xRange[0] * xScale + xShift;
-            double x1 = xRange[1] * xScale + xShift;
-            double yNode = node.y * yScale + yShift; 
-            g2.draw(new Line2D.Double(x0, yNode, x1, yNode));
-            
-            
-            drawNodeLabel(g2, node);
-            
-            if (node instanceof MergeNode)
-            {
-                for (Node child : ((MergeNode) node).children)
-                {
-                    double xChild = child.x * xScale + xShift;
-                    double yChild = child.y * yScale + yShift; 
-                    g2.setColor(Color.BLACK);
-                    g2.draw(new Line2D.Double(xChild, yNode, xChild, yChild));
-
-                    drawNodeTree(g2, child);
-                }
-            }
-        }
-        
-        private void drawNodeLabel(Graphics2D g2, Node node)
-        {
-            double x = node.x * xScale + xShift;
-            double y = node.y * yScale + yShift;
-            
-            Shape oval = new Ellipse2D.Double(x - radius, y - radius, 2 * radius, 2 * radius);
-            g2.setPaint(new Color(200, 200, 50));
-            g2.fill(oval);
-            g2.setColor(Color.BLACK);
-            g2.draw(oval);
-            
-//            System.out.println("Draw node with region label = " + node.getRegion().label);
-            g2.drawString(Integer.toString(node.getRegion().label), (float) (x-4), (float) (y+4));
         }
     }
     
@@ -317,7 +252,7 @@ public class HierarchicalWatershedTree
         System.out.println(tree);
         
         JFrame frame = new JFrame("Watershed Tree");
-        TreeDisplay mainPanel = new TreeDisplay(tree);
+        HierarchicalWatershedTreeDisplayPanel mainPanel = new HierarchicalWatershedTreeDisplayPanel(tree);
         mainPanel.setBackground(Color.WHITE);
         mainPanel.setPreferredSize(new Dimension(600,400));
         
