@@ -72,6 +72,12 @@ public class HierarchicalWatershed2D extends AlgoStub
      */
     public ScalarArray2D<?> process(ScalarArray2D<?> array)
     {
+        WatershedGraph2D data = computeResult(array);
+        return data.saliencyMap;
+    }
+    
+    public WatershedGraph2D computeResult(ScalarArray2D<?> array)
+    {
         fireStatusChanged(this, "Compute Basin Adjacencies");
         WatershedGraph2D data = new GraphBuilder().compute(array);
         
@@ -79,14 +85,16 @@ public class HierarchicalWatershed2D extends AlgoStub
         new RegionMerger().mergeRegions(data);
         
         fireStatusChanged(this, "Compute Saliency Map");
-        return computeSaliencyMap(data);
+        computeSaliencyMap(data);
+        
+        return data;
     }
     
     private ScalarArray2D<?> computeSaliencyMap(WatershedGraph2D data)
     {
         int sizeX = data.labelMap.size(0);
         int sizeY = data.labelMap.size(1);
-        ScalarArray2D<?> saliencyMap = Float32Array2D.create(sizeX, sizeY);
+        data.saliencyMap = Float32Array2D.create(sizeX, sizeY);
         
         for (int y = 0; y < sizeY; y++)
         {
@@ -103,12 +111,12 @@ public class HierarchicalWatershed2D extends AlgoStub
                 if (region instanceof Boundary)
                 {
                     Boundary boundary = (Boundary) region;
-                    saliencyMap.setValue(x, y, boundary.dynamic);
+                    data.saliencyMap.setValue(x, y, boundary.dynamic);
                 }
             }
         }
         
-        return saliencyMap;
+        return data.saliencyMap;
     }
 
     
@@ -133,10 +141,13 @@ public class HierarchicalWatershed2D extends AlgoStub
          */
         IntArray2D<?> labelMap = null;
         
+        ScalarArray2D<?> saliencyMap = null;
+        
         HashMap<Integer, Basin> basins = new HashMap<Integer, Basin>();
         
         HashMap<Integer, Boundary> boundaries = new HashMap<Integer, Boundary>();
         
+        public Region root = null;
         
         private Region getRegion(int label)
         {
@@ -514,7 +525,8 @@ public class HierarchicalWatershed2D extends AlgoStub
                 mergeQueue.add(mergeRegion);
             }
             
-            return mergeQueue.poll();
+            data.root = mergeQueue.poll();
+            return data.root;
         }
 
         /**
