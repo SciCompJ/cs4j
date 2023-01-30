@@ -46,12 +46,13 @@ public abstract class AutoThreshold extends AlgoStub implements ImageArrayOperat
         {
             applyThreshold_2d(ScalarArray2D.wrapScalar2d(source), threshold, BinaryArray2D.wrap(target));
         }
-        else if (source.dimensionality() == 2 && target.dimensionality() == 2)
+        else if (source.dimensionality() == 3 && target.dimensionality() == 3)
         {
             applyThreshold_3d(ScalarArray3D.wrapScalar3d(source), threshold, BinaryArray3D.wrap(target));
         }
         else
         {
+            // use generic iterator over positions, that does not track progress
             target.fillBooleans(pos -> source.getValue(pos) >= threshold);
         }
     }
