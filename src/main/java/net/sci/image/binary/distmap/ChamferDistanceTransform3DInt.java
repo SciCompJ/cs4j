@@ -35,7 +35,7 @@ import net.sci.image.binary.distmap.ChamferMask3D.Offset;
 /**
  * <p>
  * Computes 3D Chamfer distance maps using an arbitrary chamfer mask, and
- * storing result in a 3D array UInt16.
+ * storing result in a 3D array of Integer values with arbitrary type.
  * </p>
  * 
  * <p>
@@ -46,25 +46,31 @@ import net.sci.image.binary.distmap.ChamferMask3D.Offset;
  * </p>
  * 
  * <p>
- * The resulting map is stored within an instance of UInt16Array3D, usually a
- * good compromise between largest possible distance and memory occupation. The
- * <code>ChamferDistanceTransform3DInt</code> class allows for choosing other
- * data types for storing the result maps.
+ * The resulting map is stored within a 3D integer array. This implementation
+ * allows to choose the type of the result by specifying the factory to use for
+ * creating the result array.
  * </p>
  * 
  * @author David Legland
  * 
- * @see ChamferDistanceTransform3DInt
+ * @see ChamferDistanceTransform2DInt
  * @see ChamferDistanceTransform3DFloat32
- * @see ChamferDistanceTransform2DUInt16
  */
-public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements ChamferDistanceTransform3D
+public class ChamferDistanceTransform3DInt extends AlgoStub implements ChamferDistanceTransform3D
 {
 	// ==============================================================
 	// class members
 
+    /**
+     * The chamfer mask used to propagate distances to neighbor voxels.
+     */
 	private ChamferMask3D mask;
 
+    /** 
+     * The factory to use for creating the result array.
+     */
+    private IntArray.Factory<?> factory = UInt16Array.defaultFactory;
+    
 	/**
 	 * Flag for dividing final distance map by the value first weight. 
 	 * This results in distance map values closer to euclidean, but with 
@@ -77,46 +83,43 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
 	// Constructors
 
 	/**
-	 * Constructor specifying the chamfer weights and the optional
+     * Default constructor that specifies the chamfer mask.
+     * 
+     * @param mask
+     *            the chamfer mask to use for propagating distances.
+     */
+    public ChamferDistanceTransform3DInt(ChamferMask3D mask)
+    {
+        this.mask = mask;
+    }
+
+    /**
+	 * Constructor specifying the chamfer mask and the optional
 	 * normalization option.
 	 * 
-	 * @param mask
-	 *            an instance of ChamferWeights3D specifying the weights
+     * @param mask
+     *            the chamfer mask to use for propagating distances.
 	 * @param normalize
 	 *            flag indicating whether the final distance map should be
 	 *            normalized by the first weight
 	 */
-	public ChamferDistanceTransform3DUInt16(ChamferMask3D mask, boolean normalize)
+	public ChamferDistanceTransform3DInt(ChamferMask3D mask, boolean normalize)
 	{
 		this.mask = mask;
 		this.normalizeMap = normalize;
 	}
 
 	/**
-	 * Default constructor that specifies the chamfer weights.
-	 * @param weights an array of two weights for orthogonal and diagonal directions
-	 */
-	public ChamferDistanceTransform3DUInt16(ChamferMask3D mask)
-	{
-        this.mask = mask;
-	}
-	
-	/**
-     * Constructor specifying the weights of the chamfer mask and the optional
-     * normalization option.
+     * Set the factory for creating the result array.
      * 
-     * @param weights
-     *            an array of weights used to build the chamfer mask.
-     * @param normalize
-     *            flag indicating whether the final distance map should be
-     *            normalized by the first weight
+     * @param factory
+     *            the factory for creating the result array.
      */
-    public ChamferDistanceTransform3DUInt16(short[] weights, boolean normalize)
+	public void setFactory(IntArray.Factory<?> factory)
     {
-        this.mask = ChamferMask3D.fromWeights(weights);
-        this.normalizeMap = normalize;
+        this.factory = factory;
     }
-    
+
     
     // ==============================================================
     // Implementation of computation methods
@@ -135,7 +138,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
 	public ScalarArray3D<?> process3d(BinaryArray3D array) 
 	{
 		// create new empty image, and fill it with black
-		UInt16Array3D distMap = initializeResult(array);
+		IntArray3D<?> distMap = initializeResult(array);
 
 		// Two iterations are enough to compute distance map to boundary
 		forwardIteration(distMap, array);
@@ -162,7 +165,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
      * @return an empty distance map, containing either 0 (for background) or
      *         integer max value.
      */
-    private UInt16Array3D initializeResult(BinaryArray3D array)
+    private IntArray3D<?> initializeResult(BinaryArray3D array)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Initialization"));
 
@@ -172,7 +175,8 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
         int sizeZ = array.size(2);
         
         // create new empty image, and fill it with black
-        UInt16Array3D result = UInt16Array3D.create(sizeX, sizeY, sizeZ);
+        IntArray3D<?> result = IntArray3D.wrap(factory.create(sizeX, sizeY, sizeZ));
+        int maxValue = largestPossibleInt(result);
         
         // initialize empty image with either 0 (background) or Inf (foreground)
         for (int z = 0; z < sizeZ; z++)
@@ -183,7 +187,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
                 for (int x = 0; x < sizeX; x++)
                 {
                     boolean inside = array.getBoolean(x, y, z);
-                    result.setInt(x, y, z, inside ? UInt16.MAX_VALUE : 0);
+                    result.setInt(x, y, z, inside ? maxValue : 0);
                 }
             }
         }
@@ -192,7 +196,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
     }
 
     //	private void forwardIteration() 
-    private void forwardIteration(UInt16Array3D distMap, BinaryArray3D maskImage)
+    private void forwardIteration(IntArray3D<?> distMap, BinaryArray3D maskImage)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Forward Scan"));
 
@@ -243,7 +247,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
 		fireProgressChanged(this, 1, 1); 
 	}
 
-    private void backwardIteration(UInt16Array3D distMap, BinaryArray3D maskImage)
+    private void backwardIteration(IntArray3D<?> distMap, BinaryArray3D maskImage)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
         
@@ -295,7 +299,7 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
         this.fireProgressChanged(this, sizeZ, sizeZ);
     } // end of backward iteration
 
-	private void normalizeResult(UInt16Array3D distMap, BinaryArray3D array)
+	private void normalizeResult(IntArray3D<?> distMap, BinaryArray3D array)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Normalization"));
 
@@ -330,5 +334,18 @@ public class ChamferDistanceTransform3DUInt16 extends AlgoStub implements Chamfe
     public ChamferMask3D mask()
     {
         return this.mask;
+    }
+    
+    
+    // ==================================================
+    // Utility method
+    
+    private static final int largestPossibleInt(IntArray<?> array)
+    {
+        if (array instanceof UInt8Array) return UInt8.MAX_VALUE;
+        if (array instanceof UInt16Array) return UInt16.MAX_VALUE;
+        if (array instanceof Int16Array) return Int16.MAX_VALUE;
+        if (array instanceof Int32Array) return Integer.MAX_VALUE;
+        throw new RuntimeException("Unknown integer array type");
     }
 }

@@ -10,14 +10,21 @@ import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.scalar.Int16;
+import net.sci.array.scalar.Int16Array;
+import net.sci.array.scalar.Int32Array;
+import net.sci.array.scalar.IntArray;
+import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array2D;
+import net.sci.array.scalar.UInt16Array;
+import net.sci.array.scalar.UInt8;
+import net.sci.array.scalar.UInt8Array;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 
 /**
  * <p>
  * Computes 2D Chamfer distance maps using an arbitrary chamfer mask, and
- * storing result in a 2D array UInt16.
+ * storing result in a 2D array of Integer values with arbitrary type.
  * </p>
  * 
  * <p>
@@ -28,18 +35,17 @@ import net.sci.image.binary.distmap.ChamferMask2D.Offset;
  * </p>
  * 
  * <p>
- * The resulting map is stored within an instance of UInt16Array2D, usually a
- * good compromise between largest possible distance and memory occupation. The
- * <code>ChamferDistanceTransform2DInt</code> class allows for choosing other
- * data types for storing the result maps.
+ * The resulting map is stored within a 2D integer array. This implementation
+ * allows to choose the type of the result by specifying the factory to use for
+ * creating the result array.
  * </p>
  * 
  * @author David Legland
  * 
- * @see ChamferDistanceTransform2DInt
+ * @see ChamferDistanceTransform3DInt
  * @see ChamferDistanceTransform2DFloat32
  */
-public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
+public class ChamferDistanceTransform2DInt extends AlgoStub implements
 		ArrayOperator, ChamferDistanceTransform2D
 {
     // ==================================================
@@ -50,6 +56,11 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
      */
     ChamferMask2D mask;
 
+    /** 
+     * The factory to use for creating the result array.
+     */
+    private IntArray.Factory<?> factory = UInt16Array.defaultFactory;
+    
 	/**
 	 * Flag for dividing final distance map by the value first weight. 
 	 * This results in distance map values closer to Euclidean, but with 
@@ -61,25 +72,52 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
     // ==================================================
     // Constructors 
     
-	public ChamferDistanceTransform2DUInt16(ChamferMask2D mask)
+    /**
+     * Default constructor that specifies the chamfer mask.
+     * 
+     * @param mask
+     *            the chamfer mask to use for propagating distances.
+     */
+	public ChamferDistanceTransform2DInt(ChamferMask2D mask)
 	{
 		this.mask = mask;
 	}
 
-	public ChamferDistanceTransform2DUInt16(ChamferMask2D mask, boolean normalize)
+    /**
+     * Constructor specifying the chamfer mask and the optional
+     * normalization option.
+     * 
+     * @param mask
+     *            the chamfer mask to use for propagating distances.
+     * @param normalize
+     *            flag indicating whether the final distance map should be
+     *            normalized by the first weight
+     */
+	public ChamferDistanceTransform2DInt(ChamferMask2D mask, boolean normalize)
 	{
         this.mask = mask;
 		this.normalizeMap = normalize;
+	}
+	
+    /**
+     * Set the factory for creating the result array.
+     * 
+     * @param factory
+     *            the factory for creating the result array.
+     */
+	public void setFactory(IntArray.Factory<?> factory)
+	{
+	    this.factory = factory;
 	}
 
 	
     // ==================================================
     // Computation methods 
 
-	public UInt16Array2D process2d(BinaryArray2D array)
+	public IntArray2D<?> process2d(BinaryArray2D array)
 	{
 	    // Allocate result array
-        UInt16Array2D distMap = initializeResult(array);
+	    IntArray2D<?> distMap = initializeResult(array);
 		
 		// Two iterations are enough to compute distance map to boundary
 		forwardIteration(distMap, array);
@@ -98,7 +136,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
     // ==================================================
     // Inner computation methods 
     
-	private UInt16Array2D initializeResult(BinaryArray2D array)
+	private IntArray2D<?> initializeResult(BinaryArray2D array)
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Initialization"));
 
@@ -107,7 +145,8 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         int sizeY = array.size(1);
         
         // create new empty image, and fill it with black
-        UInt16Array2D result = UInt16Array2D.create(sizeX, sizeY);
+        IntArray2D<?> result = IntArray2D.wrap(factory.create(sizeX, sizeY));
+        int maxValue = largestPossibleInt(result);
         
         // initialize empty image with either 0 (background) or Inf (foreground)
         for (int y = 0; y < sizeY; y++)
@@ -115,7 +154,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
             for (int x = 0; x < sizeX; x++)
             {
                 boolean inside = array.getBoolean(x, y);
-                result.setInt(x, y, inside ? UInt16.MAX_VALUE : 0);
+                result.setInt(x, y, inside ? maxValue : 0);
             }
         }
         
@@ -123,7 +162,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 	}
 	
 	
-	private void forwardIteration(UInt16Array2D distMap, BinaryArray2D maskImage)
+	private void forwardIteration(IntArray2D<?> distMap, BinaryArray2D maskImage)
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Forward Scan"));
         
@@ -181,7 +220,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 
 	} // end of forward iteration
 
-	private void backwardIteration(UInt16Array2D distMap, BinaryArray2D maskImage)
+	private void backwardIteration(IntArray2D<?> distMap, BinaryArray2D maskImage)
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
         
@@ -238,7 +277,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
 		this.fireProgressChanged(this, sizeY, sizeY);
 	} // end of backward iteration
 
-	private void normalizeResult(UInt16Array2D distMap, BinaryArray2D array)
+	private void normalizeResult(IntArray2D<?> distMap, BinaryArray2D array)
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Normalization"));
 
@@ -270,4 +309,19 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
     {
         return this.mask;
     }
+    
+    
+    // ==================================================
+    // Utility method
+    
+    private static final int largestPossibleInt(IntArray<?> array)
+    {
+        if (array instanceof UInt8Array) return UInt8.MAX_VALUE;
+        if (array instanceof UInt16Array) return UInt16.MAX_VALUE;
+        if (array instanceof Int16Array) return Int16.MAX_VALUE;
+        if (array instanceof Int32Array) return Integer.MAX_VALUE;
+        throw new RuntimeException("Unknown integer array type");
+    }
+    
+    
 }
