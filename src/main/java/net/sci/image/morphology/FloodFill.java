@@ -6,6 +6,7 @@ package net.sci.image.morphology;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import net.sci.array.Array2D;
@@ -41,6 +42,238 @@ public class FloodFill
 	private FloodFill()
 	{
 	}
+
+    /**
+     * Replaces all the neighbor pixels of (x,y) that have the same values by
+     * the specified integer value, using the specified connectivity.
+     * 
+     * @param image
+     *            the image in which floodfill will be propagated
+     * @param x0
+     *            the x-coordinate of the seed pixel
+     * @param y0
+     *            the y-coordinate of the seed pixel
+     * @param value
+     *            the new value of the connected component at (x,y)
+     * @param conn
+     *            the connectivity to use, either 4 or 8
+     */
+    public final static void floodFill(ScalarArray2D<?> image, int x0, int y0,
+            double value, int conn)
+    {
+        if (conn == 4)
+            floodFillC4(image, x0, y0, value);
+        else if (conn == 8)
+            floodFillC8(image, x0, y0, value);
+        else
+            throw new IllegalArgumentException("Connectivity must be either 4 or 8, not " + conn);
+    }
+    
+    /**
+     * Replaces all the pixels in the 4-neighborhood of (x,y) that have the same
+     * values as the pixel in (x,y) by the specified floating point value.
+     * Should work the same way for all type of (scalar) arrays.
+     * 
+     * @param array
+     *            the array in which floodfill will be propagated
+     * @param x0
+     *            the x-coordinate of the seed pixel
+     * @param y0
+     *            the y-coordinate of the seed pixel
+     * @param value
+     *            the new value of the connected component at (x,y)
+     */
+    private final static void floodFillC4(ScalarArray2D<?> array, int x0, int y0,
+            double value)
+    {
+        // retrieve size of array
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        
+        // get old value
+        double oldValue = array.getValue(x0, y0);
+        
+        // test if already the right value 
+        if (oldValue == value) 
+            return ;
+        
+        // initialize the stack with original pixel
+        ArrayList<Point> stack = new ArrayList<Point>();
+        stack.add(new Point(x0, y0));
+        
+        // process all items in stack
+        while (!stack.isEmpty())
+        {
+            // Extract current position
+            Point p = stack.remove(stack.size() - 1);
+            x0 = p.x;
+            y0 = p.y;
+
+            // process only pixel of the same value
+            if (array.getValue(x0, y0) != oldValue)
+                continue;
+
+            // x extremities of scan-line
+            int x1 = x0;
+            int x2 = x0;
+
+            // find start of scan-line
+            while (x1 > 0 && array.getValue(x1 - 1, y0) == oldValue)
+                x1--;
+
+            // find end of scan-line
+            while (x2 < sizeX - 1 && array.getValue(x2 + 1, y0) == oldValue)
+                x2++;
+
+            // fill current scan-line
+            for (int x = x1; x <= x2; x++)
+            {
+                array.setValue(x, y0, value);
+            }
+
+            // find scan-lines above the current one
+            if (y0 > 0)
+            {
+                boolean inScanLine = false;
+                for (int i = x1; i <= x2; i++)
+                {
+                    double val = array.getValue(i, y0 - 1);
+                    if (!inScanLine && val == oldValue)
+                    {
+                        stack.add(new Point(i, y0 - 1));
+                        inScanLine = true;
+                    }
+                    else if (inScanLine && val != oldValue)
+                    {
+                        inScanLine = false;
+                    }
+                }
+            }
+
+            // find scan-lines below the current one
+            if (y0 < sizeY - 1)
+            {
+                boolean inScanLine = false;
+                for (int i = x1; i <= x2; i++)
+                {
+                    double val = array.getValue(i, y0 + 1);
+                    if (!inScanLine && val == oldValue)
+                    {
+                        stack.add(new Point(i, y0 + 1));
+                        inScanLine = true;
+                    } 
+                    else if (inScanLine && val != oldValue)
+                    {
+                        inScanLine = false;
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Replaces all the pixels in the 8-neighborhood of (x,y) that have the same
+     * values as the pixel in (x,y) by the specified floating point value.
+     * Should work the same way for all type of (scalar) arrays.
+     * 
+     * 
+     * @param image
+     *            the image in which floodfill will be propagated
+     * @param x0
+     *            the x-coordinate of the seed pixel
+     * @param y0
+     *            the y-coordinate of the seed pixel
+     * @param value
+     *            the new value of the connected component at (x,y)
+     */
+    private final static void floodFillC8(ScalarArray2D<?> image, int x0, int y0,
+            double value)
+    {
+        // retrieve size of array
+        int sizeX = image.size(0);
+        int sizeY = image.size(1);
+
+        // get old value
+        double oldValue = image.getValue(x0, y0);
+
+        // test if already the right value
+        if (oldValue == value)
+            return;
+
+        // initialize the stack with original pixel
+        ArrayList<Point> stack = new ArrayList<Point>();
+        stack.add(new Point(x0, y0));
+
+        // process all items in stack
+        while (!stack.isEmpty())
+        {
+            // Extract current position
+            Point p = stack.remove(stack.size() - 1);
+            x0 = p.x;
+            y0 = p.y;
+
+            // process only pixel with the same value
+            if (image.getValue(x0, y0) != oldValue)
+                continue;
+
+            // x extremities of scan-line
+            int x1 = x0;
+            int x2 = x0;
+
+            // find start of scan-line
+            while (x1 > 0 && image.getValue(x1 - 1, y0) == oldValue)
+                x1--;
+
+            // find end of scan-line
+            while (x2 < sizeX - 1 && image.getValue(x2 + 1, y0) == oldValue)
+                x2++;
+
+            // fill current scan-line
+            for (int x = x1; x <= x2; x++)
+            {
+                image.setValue(x, y0, value);
+            }
+
+            // find scan-lines above the current one
+            if (y0 > 0)
+            {
+                boolean inScanLine = false;
+                for (int i = Math.max(x1 - 1, 0); i <= Math.min(x2 + 1, sizeX - 1); i++)
+                {
+                    double val = image.getValue(i, y0 - 1);
+                    if (!inScanLine && val == oldValue)
+                    {
+                        stack.add(new Point(i, y0 - 1));
+                        inScanLine = true;
+                    } 
+                    else if (inScanLine && val != oldValue)
+                    {
+                        inScanLine = false;
+                    }
+                }
+            }
+
+            // find scan-lines below the current one
+            if (y0 < sizeY - 1)
+            {
+                boolean inScanLine = false;
+                for (int i = Math.max(x1 - 1, 0); i <= Math.min(x2 + 1, sizeX - 1); i++)
+                {
+                    double val = image.getValue(i, y0 + 1);
+                    if (!inScanLine && val == oldValue)
+                    {
+                        stack.add(new Point(i, y0 + 1));
+                        inScanLine = true;
+                    } 
+                    else if (inScanLine && val != oldValue)
+                    {
+                        inScanLine = false;
+                    }
+                }
+            }
+        }
+    }
 
 	/**
 	 * Assigns in <code>labelImage</code> all the neighbor pixels of (x,y) that
@@ -502,43 +735,274 @@ public class FloodFill
 		}
 	}
 	
-//	/**
-//	 * Assigns to all the neighbor voxels of (x,y,z) that have the same voxel
-//	 * value in <code>image</code>, the specified new label value (
-//	 * <code>value</code>) in <code>labelImage</code>, using the specified
-//	 * connectivity.
-//	 * 
-//	 * @param inputImage
-//	 *            original image to read the voxel values from
-//	 * @param x
-//	 *            x- coordinate of the seed voxel
-//	 * @param y
-//	 *            y- coordinate of the seed voxel
-//	 * @param z
-//	 *            z- coordinate of the seed voxel
-//	 * @param outputImage
-//	 *            output label image (to fill)
-//	 * @param value
-//	 *            filling value
-//	 * @param conn
-//	 *            connectivity to use (6 or 26)
-//	 */
-//	public final static void floodFillFloat(Array3D<?> inputArray, int x,
-//			int y, int z, Array3D<?> outputArray, double value, int conn)
-//	{
-//		switch (conn)
-//		{
-//		case 6:
-//			floodFillFloatC6(inputArray, x, y, z, outputArray, value);
-//			return;
-//		case 26:
-//			floodFillFloatC26(inputArray, x, y, z, outputArray, value);
-//			return;
-//		default:
-//			throw new IllegalArgumentException(
-//					"Connectivity must be either 6 or 26, not " + conn);
-//		}
-//	}
+    /**
+     * Replaces all the pixels in the 6-neighborhood of (x0,y0,z0) that have the
+     * same values as the pixel in (x0,y0,z0) by the specified value. Should work
+     * for all integer based 3D images.
+     * 
+     * @param array
+     *            the 3D image in which floodfill will be propagated
+     * @param x0
+     *            the x-coordinate of the seed voxel
+     * @param y0
+     *            the y-coordinate of the seed voxel
+     * @param z0
+     *            the z-coordinate of the seed voxel
+     * @param value
+     *            the new value of the connected component at (x,y,z)
+     * @param conn
+     *            the connectivity to use, either 6 or 26
+     */
+    public final static void floodFill(ScalarArray3D<?> array, int x0, int y0, int z0,
+            double value, int conn)
+    {
+        if (conn == 6)
+            floodFillC6(array, x0, y0, z0, value);
+        else if (conn == 26)
+            floodFillC26(array, x0, y0, z0, value);
+        else
+            throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + conn);
+    }
+    
+    /**
+     * Replaces all the pixels in the 6-neighborhood of (x0,y0,z0) that have the
+     * same values as the pixel in (x0,y0,z0) by the specified value. Should work
+     * for all integer based 3D images.
+     * 
+     * @param array
+     *            the 3D image in which floodfill will be propagated
+     * @param x0
+     *            the x-coordinate of the seed voxel
+     * @param y0
+     *            the y-coordinate of the seed voxel
+     * @param z0
+     *            the z-coordinate of the seed voxel
+     * @param value
+     *            the new value of the connected component at (x,y,z)
+     */
+    private final static void floodFillC6(ScalarArray3D<?> array, int x0, int y0, int z0,
+            double value)
+    {
+        // get image size
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        
+        // get old value
+        double oldValue = array.getValue(x0, y0, z0);
+        
+        // test if already the right value 
+        if (oldValue == value) 
+            return ;
+        
+        // initialize the stack with original pixel
+        ArrayList<Cursor3D> stack = new ArrayList<Cursor3D>();
+        stack.add(new Cursor3D(x0, y0, z0));
+        
+        // process all items in stack
+        while (!stack.isEmpty()) 
+        {
+            // Extract current position
+            Cursor3D p = stack.remove(stack.size() - 1);
+            int px = p.x;
+            int py = p.y;
+            int pz = p.z;
+            
+            // process only pixel of the same value
+            if (array.getValue(px, py, pz) != oldValue) 
+                continue;
+            
+            // x extremities of scan-line
+            int x1 = px; 
+            int x2 = px;
+            
+            // find start of scan-line
+            while (x1 > 0 && array.getValue(x1-1, py, pz) == oldValue)
+                x1--;
+            
+            // find end of scan-line
+            while (x2 < sizeX - 1 && array.getValue(x2+1, py, pz) == oldValue)
+                x2++;
+            
+            // fill current scan-line
+            for (int x = x1; x <= x2; x++)
+            {
+                array.setValue(x, py, pz, value);
+            }
+            
+            // find scan-lines above the current one
+            if (py > 0)
+            {
+                boolean inScanLine = false;
+                for (int i = x1; i <= x2; i++)
+                {
+                    double val = array.getValue(i, py - 1, pz);
+                    if (!inScanLine && val == oldValue)
+                    {
+                        stack.add(new Cursor3D(i, py - 1, pz));
+                        inScanLine = true;
+                    } 
+                    else if (inScanLine && val != oldValue)
+                    {
+                        inScanLine = false;
+                    }
+                }
+            }
+            
+            // find scan-lines below the current one
+            if (py < sizeY - 1)
+            {
+                boolean inScanLine = false;
+                for (int i = x1; i <= x2; i++)
+                {
+                    double val = array.getValue(i, py + 1, pz);
+                    if (!inScanLine && val == oldValue)
+                    {
+                        stack.add(new Cursor3D(i, py + 1, pz));
+                        inScanLine = true;
+                    } 
+                    else if (inScanLine && val != oldValue)
+                    {
+                        inScanLine = false;
+                    }
+                }
+            }
+
+            // find scan-lines in front of the current one
+            if (pz > 0)
+            {
+                boolean inScanLine = false;
+                for (int i = x1; i <= x2; i++)
+                {
+                    double val = array.getValue(i, py, pz - 1);
+                    if (!inScanLine && val == oldValue)
+                    {
+                        stack.add(new Cursor3D(i, py, pz - 1));
+                        inScanLine = true;
+                    } 
+                    else if (inScanLine && val != oldValue)
+                    {
+                        inScanLine = false;
+                    }
+                }
+            }
+
+            // find scan-lines behind the current one
+            if (pz < sizeZ - 1)
+            {
+                boolean inScanLine = false;
+                for (int i = x1; i <= x2; i++)
+                {
+                    double val = array.getValue(i, py, pz + 1);
+                    if (!inScanLine && val == oldValue)
+                    {
+                        stack.add(new Cursor3D(i, py, pz + 1));
+                        inScanLine = true;
+                    }
+                    else if (inScanLine && val != oldValue)
+                    {
+                        inScanLine = false;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Replaces all the pixels in the 26-neighborhood of (x0,y0,z0) that have the
+     * same values as the pixel in (x0,y0,z0) by the specified value. Should work
+     * for all integer based 3D images.
+     * 
+     * @param array
+     *            the 3D image in which floodfill will be propagated
+     * @param x0
+     *            the x-coordinate of the seed voxel
+     * @param y0
+     *            the y-coordinate of the seed voxel
+     * @param z0
+     *            the z-coordinate of the seed voxel
+     * @param value
+     *            the new value of the connected component at (x,y,z)
+     */
+    private final static void floodFillC26(ScalarArray3D<?> array, int x0, int y0,
+            int z0, double value)
+    {
+        // get image size
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        
+        // get old value
+        double oldValue = array.getValue(x0, y0, z0);
+        
+        // test if already the right value 
+        if (oldValue == value) 
+            return ;
+        
+        // initialize the stack with original pixel
+        ArrayList<Cursor3D> stack = new ArrayList<Cursor3D>();
+        stack.add(new Cursor3D(x0, y0, z0));
+        
+        // process all items in stack
+        while (!stack.isEmpty())
+        {
+            // Extract current position
+            Cursor3D p = stack.remove(stack.size()-1);
+            int px = p.x;
+            int py = p.y;
+            int pz = p.z;
+            
+            // process only pixel with the same value
+            if (array.getValue(px, py, pz) != oldValue) 
+                continue;
+            
+            // x extremities of scan-line
+            int x1 = px; 
+            int x2 = px;
+            
+            // find start of scan-line
+            while (x1 > 0 && array.getValue(x1-1, py, pz) == oldValue)
+                x1--;
+            
+            // find end of scan-line
+            while (x2 < sizeX - 1 && array.getValue(x2+1, py, pz) == oldValue)
+                x2++;
+            
+            // fill current scan-line
+            for (int x = x1; x <= x2; x++)
+            {
+                array.setValue(x, py, pz, value);
+            }
+            
+            // check the eight X-lines around the current one
+            for (int z2 = max(pz - 1, 0); z2 <= min(pz + 1, sizeZ - 1); z2++)
+            {
+                for (int y2 = max(py - 1, 0); y2 <= min(py + 1, sizeY - 1); y2++)
+                {
+                    // do not process the middle line
+                    if (y2 == pz && y2 == py)
+                        continue;
+
+                    boolean inScanLine = false;
+                    for (int i = max(x1 - 1, 0); i <= min(x2 + 1, sizeX - 1); i++)
+                    {
+                        double val = array.getValue(i, y2, z2);
+                        if (!inScanLine && val == oldValue)
+                        {
+                            stack.add(new Cursor3D(i, y2, z2));
+                            inScanLine = true;
+                        } 
+                        else if (inScanLine && val != oldValue)
+                        {
+                            inScanLine = false;
+                        }
+                    }
+                }
+            } // end of iteration on neighbor lines
+
+        } // end of iteration on position stack
+    }
+
 	
 	/**
 	 * Assigns to all the neighbor voxels of (x,y,z) that have the same voxel
