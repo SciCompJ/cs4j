@@ -6,7 +6,6 @@ package net.sci.image.morphology;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 import net.sci.array.Array2D;
@@ -98,14 +97,14 @@ public class FloodFill
             return ;
         
         // initialize the stack with original pixel
-        ArrayList<Point> stack = new ArrayList<Point>();
-        stack.add(new Point(x0, y0));
+        ArrayList<Cursor2D> stack = new ArrayList<Cursor2D>();
+        stack.add(new Cursor2D(x0, y0));
         
         // process all items in stack
         while (!stack.isEmpty())
         {
             // Extract current position
-            Point p = stack.remove(stack.size() - 1);
+            Cursor2D p = stack.remove(stack.size() - 1);
             x0 = p.x;
             y0 = p.y;
 
@@ -140,7 +139,7 @@ public class FloodFill
                     double val = array.getValue(i, y0 - 1);
                     if (!inScanLine && val == oldValue)
                     {
-                        stack.add(new Point(i, y0 - 1));
+                        stack.add(new Cursor2D(i, y0 - 1));
                         inScanLine = true;
                     }
                     else if (inScanLine && val != oldValue)
@@ -159,7 +158,7 @@ public class FloodFill
                     double val = array.getValue(i, y0 + 1);
                     if (!inScanLine && val == oldValue)
                     {
-                        stack.add(new Point(i, y0 + 1));
+                        stack.add(new Cursor2D(i, y0 + 1));
                         inScanLine = true;
                     } 
                     else if (inScanLine && val != oldValue)
@@ -202,14 +201,14 @@ public class FloodFill
             return;
 
         // initialize the stack with original pixel
-        ArrayList<Point> stack = new ArrayList<Point>();
-        stack.add(new Point(x0, y0));
+        ArrayList<Cursor2D> stack = new ArrayList<Cursor2D>();
+        stack.add(new Cursor2D(x0, y0));
 
         // process all items in stack
         while (!stack.isEmpty())
         {
             // Extract current position
-            Point p = stack.remove(stack.size() - 1);
+            Cursor2D p = stack.remove(stack.size() - 1);
             x0 = p.x;
             y0 = p.y;
 
@@ -244,7 +243,7 @@ public class FloodFill
                     double val = image.getValue(i, y0 - 1);
                     if (!inScanLine && val == oldValue)
                     {
-                        stack.add(new Point(i, y0 - 1));
+                        stack.add(new Cursor2D(i, y0 - 1));
                         inScanLine = true;
                     } 
                     else if (inScanLine && val != oldValue)
@@ -263,7 +262,7 @@ public class FloodFill
                     double val = image.getValue(i, y0 + 1);
                     if (!inScanLine && val == oldValue)
                     {
-                        stack.add(new Point(i, y0 + 1));
+                        stack.add(new Cursor2D(i, y0 + 1));
                         inScanLine = true;
                     } 
                     else if (inScanLine && val != oldValue)
