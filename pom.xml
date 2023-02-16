@@ -6,12 +6,12 @@
  
   <groupId>net.scicompj</groupId>
   <artifactId>cs4j</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.2.0</version>
 
   <properties>
     <!-- Use a LTS to facilitate protability -->
-    <maven.compiler.source>1.17</maven.compiler.source>
-    <maven.compiler.target>1.17</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <!-- Generic source encoding -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -39,21 +39,24 @@
   </dependencies>
   
 	<build>
+	
+      <resources>
+        <resource>
+          <directory>${basedir}/src/main/resources</directory>
+        </resource>
+      </resources>
 		
-		<resources>
-			<resource>
-				<directory>${basedir}/src/main/resources</directory>
-			</resource>
-		</resources>
-		
-		<testResources>
-			<testResource>
-				<directory>${basedir}/src/test/resources</directory>
-			</testResource>
-		</testResources>
-		
-		<plugins>
-		</plugins>
+      <testResources>
+        <testResource>
+          <directory>${basedir}/src/test/resources</directory>
+        </testResource>
+      </testResources>
+        
+      <pluginManagement>
+        <plugins>
+        </plugins>
+      </pluginManagement>
+      
 	</build>
 
 </project>
