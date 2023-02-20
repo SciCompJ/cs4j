@@ -19,6 +19,34 @@ import java.util.Locale;
 public class HierarchicalWatershed
 {
     /**
+     * Creates a new Boundary region with a specified label, a minimum
+     * value, and a set of adjacent regions.
+     * 
+     * @param label
+     *            the label of the new boundary region.
+     * @param minValue
+     *            the minimum value on the boundary, usually found at saddle
+     *            pixels.
+     * @param basins
+     *            the collection of adjacent regions (usually basins, but
+     *            may contain other boundaries as well)
+     * @return the new Boundary
+     */
+    public static final Boundary createBoundary(int label, double minValue, Collection<? extends Region> basins)
+    {
+        // create a new boundary instance, leaving dynamic not yet initialized
+        Boundary boundary = new Boundary(label, minValue, basins);
+        
+        // compute the dynamic of the new boundary, using the minimum value
+        // on the boundary, and the basins with the highest minimum value.
+        Basin highestBasin = highestBasin(boundary.basins());
+        boundary.dynamic = minValue - highestBasin.minValue;
+        highestBasin.dynamic = boundary.dynamic;
+    
+        return boundary;
+    }
+
+    /**
      * Retrieves all the regions that are instances of Basin.
      * 
      * @see Basin
@@ -106,6 +134,45 @@ public class HierarchicalWatershed
             boundaries.addAll(region.boundaries);
         }
         return boundaries;
+    }
+    
+    /**
+     * Utility class that determines if an element belongs to a basin by
+     * considering the list of neighbor basins and boundaries.
+     * 
+     * Conditions for belonging to a basin:
+     * <ul>
+     * <li>number of neighbor basins equal to one,</li>
+     * <li>if a boundary is present, it should be adjacent to the basin.</li>
+     * </ul>
+     */
+    public static final boolean isBasinElement(Collection<Basin> basins, Collection<Boundary> boundaries)
+    {
+        // the pixel should have only one neighbor basin
+        if (basins.size() != 1)
+        {
+            return false;
+        }
+        Basin theBasin = basins.iterator().next();
+        
+        // if no boundary, pixel is basin
+        if (boundaries.size() == 0)
+        {
+            return true;
+        }
+        
+        // if a boundary is present, it should contain the basin.
+        if (boundaries.size() == 1)
+        {
+            Boundary theBoundary = boundaries.iterator().next();
+            if (theBoundary.regions.contains(theBasin))
+            {
+                return true;
+            }
+        }
+        
+        // if two boundaries are present, the new element is boundary.
+        return false;
     }
 
     /**
@@ -303,7 +370,6 @@ public class HierarchicalWatershed
      */
     public static class Boundary extends Region
     {
-        
         /**
          * The collection of regions adjacent to this boundary. Contains usually
          * basins, but may contain other boundaries as well (case of multiple

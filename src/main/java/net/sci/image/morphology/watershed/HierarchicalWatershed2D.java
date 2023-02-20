@@ -92,8 +92,6 @@ public class HierarchicalWatershed2D extends AlgoStub
         fireStatusChanged(this, "Compute Basin Adjacencies");
         WatershedGraph2D data = new GraphBuilder().compute(array);
         
-        //TODO: compute minimum spanning tree
-        
         fireStatusChanged(this, "Merge basins");
         new RegionMerger().mergeRegions(data);
         
@@ -404,7 +402,7 @@ public class HierarchicalWatershed2D extends AlgoStub
                 }
                 
                 // detects if the current pixel belongs to a basin or a boundary.
-                if (isBasinPixel(basins, boundaries))
+                if (HierarchicalWatershed.isBasinElement(basins, boundaries))
                 {
                     // if all the neighbors belong to the same basin,
                     // propagate its label to the current pixel
@@ -422,7 +420,7 @@ public class HierarchicalWatershed2D extends AlgoStub
                     if (boundary == null)
                     {
                         // create a new boundary region
-                        boundary = createBoundary(++labelCount, pixelRecord.value, allBasins);
+                        boundary = HierarchicalWatershed.createBoundary(++labelCount, pixelRecord.value, allBasins);
                         data.boundaries.put(boundary.label, boundary);
                     }
                     data.labelMap.setInt(x, y, boundary.label);
@@ -438,64 +436,6 @@ public class HierarchicalWatershed2D extends AlgoStub
             }
         }
         
-        // detects if the current pixel belongs to a basin or a boundary.
-        // the pixel should have only one neighbor basin, and if a
-        // boundary is present, it should contain the basin.
-        private boolean isBasinPixel(Collection<Basin> basins, Collection<Boundary> boundaries)
-        {
-            // the pixel should have only one neighbor basin
-            if (basins.size() != 1)
-            {
-                return false;
-            }
-            Basin theBasin = basins.iterator().next();
-            
-            // if no boundary, pixel is basin
-            if (boundaries.size() == 0)
-            {
-                return true;
-            }
-            
-            // if a boundary is present, it should contain the basin.
-            if (boundaries.size() == 1)
-            {
-                Boundary theBoundary = boundaries.iterator().next();
-                if (theBoundary.regions.contains(theBasin))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /**
-         * Creates a new Boundary region with a specified label, a minimum
-         * value, and a set of adjacent regions.
-         * 
-         * @param label
-         *            the label of the new boundary region.
-         * @param minValue
-         *            the minimum value on the boundary, usually found at saddle
-         *            pixels.
-         * @param basins
-         *            the collection of adjacent regions (usually basins, but
-         *            may contain other boundaries as well)
-         * @return the new Boundary
-         */
-        private Boundary createBoundary(int label, double minValue, Collection<? extends Region> basins)
-        {
-            // create a new boundary instance, leaving dynamic not yet initialized
-            Boundary boundary = new Boundary(label, minValue, basins);
-            
-            // compute the dynamic of the new boundary, using the minimum value
-            // on the boundary, and the basins with the highest minimum value.
-            Basin highestBasin = HierarchicalWatershed.highestBasin(boundary.basins());
-            boundary.dynamic = minValue - highestBasin.minValue;
-            highestBasin.dynamic = boundary.dynamic;
-
-            return boundary;
-        }
-
         /**
          * Stores the coordinates of a pixel together with its value and a unique
          * identifier.
