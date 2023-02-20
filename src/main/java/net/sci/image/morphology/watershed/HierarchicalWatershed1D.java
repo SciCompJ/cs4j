@@ -356,8 +356,8 @@ public class HierarchicalWatershed1D extends AlgoStub
                 {
                     // If pixel belongs to a boundary region,                     
                     // we first need to check if such boundary exists
-                    Collection<Basin> allBasins = Basin.findAllBasins(regions);
-                    Boundary boundary = Boundary.getBoundary(allBasins);
+                    Collection<Basin> allBasins = HierarchicalWatershed.findAllBasins(regions);
+                    Boundary boundary = HierarchicalWatershed.getBoundary(allBasins);
 
                     // otherwise, create the new boundary (boundaries of specified
                     // regions are updated during boundary creation)
@@ -414,11 +414,10 @@ public class HierarchicalWatershed1D extends AlgoStub
         {
             // create a new boundary instance, leaving dynamic not yet initialized
             Boundary boundary = new Boundary(label, minValue, basins);
-            //            System.out.println("Create boundary " + label + " between basins: " + regionLabelsString(basins));
-
+            
             // compute the dynamic of the new boundary, using the minimum value
             // on the boundary, and the basins with the highest minimum value.
-            Basin highestBasin = Basin.highestBasin(boundary.basins());
+            Basin highestBasin = HierarchicalWatershed.highestBasin(boundary.basins());
             boundary.dynamic = minValue - highestBasin.minValue;
             highestBasin.dynamic = boundary.dynamic;
 
@@ -519,7 +518,7 @@ public class HierarchicalWatershed1D extends AlgoStub
         private Collection<Region> findRegionsToMerge(Region region)
         {
             // get the pass / saddle value, as the lowest value along boundaries of current region
-            double minValue = Region.lowestMinValue(region.boundaries);
+            double minValue = HierarchicalWatershed.lowestMinValue(region.boundaries);
             
             // collect regions with same boundary saddle value
             HashSet<Region> regions = new HashSet<>();
@@ -554,7 +553,7 @@ public class HierarchicalWatershed1D extends AlgoStub
             // (1) remove boundaries whose basins are within the merge
             // (2) replace boundaries with basins outside and inside the merge, 
             //      taking into account the possible duplicates
-            for (Boundary boundary : Boundary.adjacentBoundaries(regions))
+            for (Boundary boundary : HierarchicalWatershed.adjacentBoundaries(regions))
             {
                 if (boundary.hasNoOtherRegionThan(regions))
                 {
@@ -574,7 +573,7 @@ public class HierarchicalWatershed1D extends AlgoStub
             
             // compute the dynamic of the new region, by finding the minimum
             // value along boundaries
-            double minPassValue = Region.lowestMinValue(merge.boundaries);
+            double minPassValue = HierarchicalWatershed.lowestMinValue(merge.boundaries);
             merge.dynamic = minPassValue - merge.minValue;
             
             // return the new region

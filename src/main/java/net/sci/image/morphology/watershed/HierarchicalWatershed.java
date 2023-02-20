@@ -18,6 +18,146 @@ import java.util.Locale;
  */
 public class HierarchicalWatershed
 {
+    /**
+     * Retrieves all the regions that are instances of Basin.
+     * 
+     * @see Basin
+     * 
+     * @param regions
+     *            a collection of regions, that should be instances of either
+     *            Basin or Boundary.
+     * @return the regions within the collection that are instances of Basin.
+     */
+    public static final Collection<Basin> findAllBasins(Collection<Region> regions)
+    {
+        HashSet<Basin> basins = new HashSet<>();
+        for (Region region : regions)
+        {
+            if (region instanceof Basin)
+            {
+                basins.add((Basin) region);
+            }
+            else if (region instanceof Boundary)
+            {
+                basins.addAll(findAllBasins(((Boundary) region).regions));
+            }
+            else
+            {
+                throw new IllegalArgumentException("Input regions must be Basin or Boundary instances only.");
+            }
+        }
+        return basins;
+    }
+
+    /***
+     * Finds the basin with the highest minimum value.
+     * 
+     * @param basins
+     *            the list of basins
+     * @return the basin within the list with the highest minimum value
+     */
+    public static final Basin highestBasin(Collection<Basin> basins)
+    {
+        double maxDepth = Double.NEGATIVE_INFINITY;
+        Basin highestBasin = null;
+        for (Basin basin : basins)
+        {
+            if (basin.minValue > maxDepth)
+            {
+                highestBasin = basin;
+                maxDepth = basin.minValue;
+            }
+        }
+        return highestBasin;
+    }
+
+    /**
+     * Returns the boundary that bounds the specified regions, or null if no
+     * such boundary exist. The search is performed on the boundary of an
+     * arbitrary region from the specified collection.
+     * 
+     * @param adjRegions
+     *            a list of regions (two or more) that define a boundary
+     * @return the boundary that bounds the given regions, or null if no
+     *         such boundary exist
+     */
+    public static final Boundary getBoundary(Collection<Basin> adjRegions)
+    {
+        if (adjRegions.isEmpty())
+        {
+            return null;
+        }
+        
+        // check the boundaries of an arbitrary region
+        return adjRegions.iterator().next().findBoundary(adjRegions);
+    }
+
+    /**
+     * @param regions
+     *            a set of regions
+     * @return the set of boundaries that are adjacent to at least one of
+     *         the regions within the list.
+     */
+    public static final Collection<Boundary> adjacentBoundaries(Collection<Region> regions)
+    {
+        HashSet<Boundary> boundaries = new HashSet<>();
+        for (Region region : regions)
+        {
+            boundaries.addAll(region.boundaries);
+        }
+        return boundaries;
+    }
+
+    /**
+     * Returns the lowest minimal value among the collection of regions.
+     * Corresponds to the global minimum of the set of regions.
+     * 
+     * @param regions
+     *            a collection of regions.
+     * @return the lowest minimal value among the collection of regions.
+     */
+    public static final double lowestMinValue(Collection<? extends Region> regions)
+    {
+        double minDepth = Double.POSITIVE_INFINITY;
+        for (Region region : regions)
+        {
+            minDepth = Math.min(minDepth, region.minValue);
+        }
+        return minDepth;
+    }
+    
+    /**
+     * Computes a string representation of the list of label of the regions
+     * within the input collection.
+     * 
+     * @param regions
+     *            a list of regions
+     * @return a string representation of region labels, separated by commas.
+     */
+    public static final String regionLabelsString(Collection<? extends Region> regions)
+    {
+        StringBuilder sb = new StringBuilder();
+        Iterator<? extends Region> iter = regions.iterator();
+        if (iter.hasNext())
+        {
+            sb.append(iter.next().label);
+        }
+        while (iter.hasNext())
+        {
+            sb.append(", ").append(iter.next().label);
+        }
+        return sb.toString();
+    }
+    
+    /**
+     * Computes a string-based representation of the merge tree based on an
+     * initial region.
+     * 
+     * @param region
+     *            the initial region for computing the tree.
+     * @return a string-based representation of the merge tree from the input
+     *         region.
+     */
     public static final String printRegionTree(Region region)
     {
         StringBuilder sb = new StringBuilder();
@@ -52,31 +192,6 @@ public class HierarchicalWatershed
      */
     public static abstract class Region implements Comparable<Region>
     {
-        public static final double lowestMinValue(Collection<? extends Region> regions)
-        {
-            double minDepth = Double.POSITIVE_INFINITY;
-            for (Region region : regions)
-            {
-                minDepth = Math.min(minDepth, region.minValue);
-            }
-            return minDepth;
-        }
-
-        public static final String regionLabelsString(Collection<? extends Region> regions)
-        {
-            String res = "";
-            Iterator<? extends Region> iter = regions.iterator();
-            if (iter.hasNext())
-            {
-                res += iter.next().label;
-            }
-            while (iter.hasNext())
-            {
-                res += ", " + iter.next().label;
-            }
-            return res;
-        }
-
         /** The label associated to this region. Initialized at creation. */
         int label;
         
@@ -136,45 +251,6 @@ public class HierarchicalWatershed
      */
     public static class Basin extends Region
     {
-        public static final Collection<Basin> findAllBasins(Collection<Region> regions)
-        {
-            HashSet<Basin> basins = new HashSet<>();
-            for (Region region : regions)
-            {
-                if (region instanceof Basin)
-                {
-                    basins.add((Basin) region);
-                }
-                else if (region instanceof Boundary)
-                {
-                    basins.addAll(findAllBasins(((Boundary) region).regions));
-                }
-            }
-            return basins;
-        }
-
-        /***
-         * Finds the basin with the highest minimum value.
-         * 
-         * @param basins
-         *            the list of basins
-         * @return the basin within the list with the highest minimum value
-         */
-        public static final Basin highestBasin(Collection<Basin> basins)
-        {
-            double maxDepth = Double.NEGATIVE_INFINITY;
-            Basin highestBasin = null;
-            for (Basin basin : basins)
-            {
-                if (basin.minValue > maxDepth)
-                {
-                    highestBasin = basin;
-                    maxDepth = basin.minValue;
-                }
-            }
-            return highestBasin;
-        }
-
         /**
          * Creates a new Basin
          * 
@@ -201,6 +277,12 @@ public class HierarchicalWatershed
             this.dynamic = maxPass - this.minValue;
         }
         
+        /**
+         * As this instance is a basin, returns a collection containing only
+         * this basin.
+         * 
+         * @return a collection containing only this basin.
+         */
         public Collection<Basin> basins()
         {
             return java.util.Arrays.asList(this);
@@ -223,42 +305,10 @@ public class HierarchicalWatershed
     {
         
         /**
-         * Returns the boundary that bounds the specified regions, or null if no
-         * such boundary exist. The search is performed on the boundary of an
-         * arbitrary region from the specified collection.
-         * 
-         * @param adjRegions
-         *            a list of regions (two or more) that define a boundary
-         * @return the boundary that bounds the given regions, or null if no
-         *         such boundary exist
+         * The collection of regions adjacent to this boundary. Contains usually
+         * basins, but may contain other boundaries as well (case of multiple
+         * boundary points).
          */
-        public static final Boundary getBoundary(Collection<Basin> adjRegions)
-        {
-            if (adjRegions.isEmpty())
-            {
-                return null;
-            }
-            
-            // check the boundaries of an arbitrary region
-            return adjRegions.iterator().next().findBoundary(adjRegions);
-        }
-        
-        /**
-         * @param regions
-         *            a set of regions
-         * @return the set of boundaries that are adjacent to at least one of
-         *         the regions within the list.
-         */
-        public static final Collection<Boundary> adjacentBoundaries(Collection<Region> regions)
-        {
-            HashSet<Boundary> boundaries = new HashSet<>();
-            for (Region region : regions)
-            {
-                boundaries.addAll(region.boundaries);
-            }
-            return boundaries;
-        }
-
         ArrayList<Region> regions;
         
         /**
@@ -346,18 +396,8 @@ public class HierarchicalWatershed
         @Override
         public String toString()
         {
-            String regionString = "{";
-            Iterator<Region> iter = this.regions.iterator();
-            if (iter.hasNext()) 
-            {
-                regionString += iter.next().label;
-            }
-            while (iter.hasNext())
-            {
-                regionString += ", " + iter.next().label;
-            }
-            regionString += "}";
-            return String.format(Locale.ENGLISH, "Boundary(%d, %f, %s)", this.label, this.minValue, regionString);
+            String regionString = regionLabelsString(this.regions);
+            return String.format(Locale.ENGLISH, "Boundary(label=%d, minValue=%f, regions={%s})", this.label, this.minValue, regionString);
         }
     }
     
@@ -388,7 +428,7 @@ public class HierarchicalWatershed
             this.boundaries = new ArrayList<Boundary>();
             
             // compute min value of the merge from min value of its regions
-            this.minValue = Region.lowestMinValue(regions);
+            this.minValue = HierarchicalWatershed.lowestMinValue(regions);
         }
         
         public Collection<Basin> basins()
