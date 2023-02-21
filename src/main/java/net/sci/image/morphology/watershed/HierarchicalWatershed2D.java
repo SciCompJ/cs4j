@@ -13,6 +13,7 @@ import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.binary.BinaryImages;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.MinimaAndMaxima;
@@ -91,8 +92,15 @@ public class HierarchicalWatershed2D extends AlgoStub
         fireStatusChanged(this, "Compute Basin Adjacencies");
         WatershedGraph2D data = new GraphBuilder().compute(array);
         
+        System.out.println("Initial graph:");
+        System.out.println(data.graph);
+        
+        HierarchicalWatershed.Graph tree = data.graph.minimumSpanningTree();
+        System.out.println("MST:");
+        System.out.println(tree);
+       
         fireStatusChanged(this, "Merge basins");
-        new RegionMerger().mergeRegions(data);
+        new RegionMerger(data).mergeRegions();
         
         fireStatusChanged(this, "Compute Saliency Map");
         computeSaliencyMap(data);
@@ -170,7 +178,7 @@ public class HierarchicalWatershed2D extends AlgoStub
      * Inner processing class that computes the WetershedGraph2D data structure
      * associated to an input array of scalar values.
      */
-    private class GraphBuilder
+    public class GraphBuilder
     {
         // ==============================================================
         // Static Constants
@@ -461,7 +469,14 @@ public class HierarchicalWatershed2D extends AlgoStub
     
     private class RegionMerger
     {
-        public Region mergeRegions(WatershedGraph2D data)
+        WatershedGraph2D data;
+        
+        public RegionMerger(WatershedGraph2D data)
+        {
+            this.data = data;
+        }
+        
+        public Region mergeRegions()
         {
             PriorityQueue<Region> mergeQueue = new PriorityQueue<>();
             for (Basin basin : data.graph.basins.values())
@@ -540,6 +555,7 @@ public class HierarchicalWatershed2D extends AlgoStub
             // (1) remove boundaries whose basins are within the merge
             // (2) replace boundaries with basins outside and inside the merge, 
             //      taking into account the possible duplicates
+//            for (Boundary boundary : data.graph.adjacentBoundaries(regions))
             for (Boundary boundary : HierarchicalWatershed.adjacentBoundaries(regions))
             {
                 if (boundary.hasNoOtherRegionThan(regions))
@@ -566,5 +582,36 @@ public class HierarchicalWatershed2D extends AlgoStub
             // return the new region
             return merge;
         }
+    }
+    
+    public static final void main(String... args)
+    {
+//        int[][] buffer = new int[][] {
+//            {  5,   6,  60,  50}, 
+//            { 20,  30, 100,  40}, 
+//            { 10,  11,  80,  55}, 
+//        };
+        int[][] buffer = new int[][] {
+            {250,  70,  60,  50,  40,   0,  40,  50,  60,  73, 250}, 
+            { 35, 150,  71,  60,  50,  40,  50,  60,  74, 210,  55}, 
+            { 21,  34, 250,  72,  60,  73,  60,  75, 250,  54,  41}, 
+            { 20,  22,  33, 250, 260, 240, 260, 250,  53,  42,  30}, 
+            { 23,  32, 250,  70,  61,  53,  62,  71, 250,  52,  43}, 
+            { 31, 220,  71,  64,  52,  40,  54,  67,  72, 150,  51}, 
+            {250,  72,  65,  51,  41,  10,  42,  55,  66,  73, 250}, 
+        };
+        UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
+        System.out.println(array);
+
+        HierarchicalWatershed2D ws = new HierarchicalWatershed2D();
+        WatershedGraph2D data = ws.new GraphBuilder().compute(array);
+        
+        System.out.println("Initial graph:");
+        System.out.println(data.graph);
+        
+        HierarchicalWatershed.Graph tree = data.graph.minimumSpanningTree();
+        System.out.println("Spanning tree:");
+        System.out.println(tree);
+
     }
 }

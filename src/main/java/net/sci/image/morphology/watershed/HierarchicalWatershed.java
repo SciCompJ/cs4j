@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.PriorityQueue;
 
 /**
  * Static class whose purpose is to encapsulate the classes used by
@@ -47,6 +48,7 @@ public class HierarchicalWatershed
      * @return the set of boundaries that are adjacent to at least one of
      *         the regions within the list.
      */
+    @Deprecated
     public static final Collection<Boundary> adjacentBoundaries(Collection<Region> regions)
     {
         HashSet<Boundary> boundaries = new HashSet<>();
@@ -205,6 +207,132 @@ public class HierarchicalWatershed
         
         
         // ==============================================================
+        // General methods
+        
+        /**
+         * Computes the minimum spanning tree of this watershed graph, used as
+         * weights the dynamic associated to each boundary.
+         * 
+         * @return a new Graph with same basins and the boundaries that span the
+         *         original graph with minimum weight
+         */
+        public Graph minimumSpanningTree()
+        {
+            Graph tree = new Graph();
+            
+            // initialize with an arbitrary basin
+            Basin firstBasin = this.basins.values().iterator().next();
+//            tree.basins.put(firstBasin.label, firstBasin);
+            tree.addBasin(firstBasin);
+//            // keep list of remaining basins (?)
+//            HashSet<Integer> remainingBasinLabels = new HashSet<Integer>(this.basins.size()-1);
+//            for (int label : this.basins.keySet())
+//            {
+//                if (label != firstBasin.label)
+//                {
+//                    remainingBasinLabels.add(label);
+//                }
+//            }
+            
+            // Create list of candidate edges / boundaries:
+            // they must link at least one basin from the tree and one remaining basin
+            PriorityQueue<Boundary> boundaryQueue = new PriorityQueue<Boundary>();
+            
+            for (Boundary boundary : getRegionBoundaries(firstBasin.label))
+            {
+                boundaryQueue.add(boundary);
+            }
+            System.out.println("initial queue size: " + boundaryQueue.size());
+            
+            
+            while (tree.basins.size() < this.basins.size())
+            {
+                // choose candidate boundary with lowest dynamic
+                Boundary boundary = boundaryQueue.poll();
+                
+                // identifies a basin not yet in tree
+                Basin nextBasin = null;
+                for (Basin basin : boundary.basins())
+                {
+                    if (!tree.basins.containsKey(basin.label))
+                    {
+                        nextBasin = basin;
+                        break;
+                    }
+                }
+                
+                // if all basins were already processed, the boundary does not belong to the tree
+                if (nextBasin == null)
+                {
+                    continue;
+                }
+                
+                // otherwise we can add the basin
+                //                tree.basins.put(nextBasin.label, nextBasin);
+                tree.addBasin(nextBasin);
+
+                // also add the boundary to the tree
+                //              tree.boundaries.put(boundary.label, boundary);
+                tree.addBoundary(boundary);
+              
+                
+                // and we can enqueue all the boundaries that refer to a remaining basin
+                for (Boundary bnd : getRegionBoundaries(nextBasin.label))
+                {
+                    for (Basin basin : bnd.basins())
+                    {
+                        if (!tree.basins.containsKey(basin.label))
+                        {
+                            boundaryQueue.add(bnd);
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            return tree;
+        }
+        
+        /**
+         * Adds a boundary, by updating the necessary hashmaps.
+         * 
+         * @param boundary
+         *            the boundary to add. The basins are supposed to already
+         *            belong to the graph.
+         */
+        private void addBoundary(Boundary boundary)
+        {
+            this.boundaries.put(boundary.label, boundary);
+            Collection<Basin> basins = boundary.basins(); 
+            this.boundaryRegions.put(boundary.label, new ArrayList<Integer>(basins.size()));
+            
+            for (Basin basin : basins)
+            {
+                if (!this.basins.containsKey(basin.label))
+                {
+                    System.err.println("Adding boundary #" + boundary.label + ", but basin #" + basin.label + " do not belong to graph...");
+                    continue;
+                }
+                
+                regionBoundaries.get(basin.label).add(boundary.label);
+                boundaryRegions.get(boundary.label).add(basin.label);
+            }
+        }
+        
+        /**
+         * Adds the basin, and initializes corresponding hashmap.
+         * 
+         * @param basin
+         *            the basin to add
+         */
+        private void addBasin(Basin basin)
+        {
+            this.basins.put(basin.label, basin);
+            this.regionBoundaries.put(basin.label, new ArrayList<Integer>(4));
+        }
+        
+        
+        // ==============================================================
         // General management of regions
         
         /**
@@ -259,6 +387,14 @@ public class HierarchicalWatershed
             
             this.boundaries.put(label, boundary);
             
+            // update the basins->boundary mapping
+            // for each region bounded by this boundary, add a reference to this
+            // boundary label.
+            for (Region region : basins)
+            {
+                this.regionBoundaries.get(region.label).add(label);
+            }
+            
             // also update the boundary->basins mapping
             ArrayList<Integer> basinIndices = new ArrayList<Integer>(boundary.basins().size());
             for (Basin basin : boundary.basins())
@@ -270,6 +406,23 @@ public class HierarchicalWatershed
             return boundary;
         }
         
+        /**
+         * @param regions
+         *            a set of regions
+         * @return the set of boundaries that are adjacent to at least one of
+         *         the regions within the list.
+         */
+        public Collection<Boundary> adjacentBoundaries(Collection<Region> regions)
+        {
+            HashSet<Boundary> boundaries = new HashSet<>();
+            for (Region region : regions)
+            {
+                boundaries.addAll(getRegionBoundaries(region.label));
+            }
+            return boundaries;
+        }
+
+
         /**
          * Returns the boundary that bounds the specified regions, or null if no
          * such boundary exist. The search is performed on the boundary of an
@@ -287,8 +440,9 @@ public class HierarchicalWatershed
                 return null;
             }
             
-            // check the boundaries of an arbitrary region
+            // retrieve the boundaries of an arbitrary basin
             Basin basin = basins.iterator().next();
+            
             // for each boundary, check if regions match the specified ones
             for (Boundary boundary : getRegionBoundaries(basin.label))
             {
@@ -300,8 +454,6 @@ public class HierarchicalWatershed
             
             // if no boundary was found, return null
             return null;
-//
-//            return adjRegions.iterator().next().findBoundary(adjRegions);
         }
         
         private Collection<Boundary> getRegionBoundaries(int regionLabel)
@@ -325,7 +477,6 @@ public class HierarchicalWatershed
             }
             return regions;
         }
-
 
         // ==============================================================
         // Management of basins
@@ -384,6 +535,24 @@ public class HierarchicalWatershed
         {
             double maxPass = lowestMinValue(basin.boundaries);
             basin.dynamic = maxPass - basin.minValue;
+        }
+        
+         @Override
+        public String toString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.append(String.format("Watershed graph with %d basin and %d boundaries\n", basins.size(), boundaries.size()));
+            sb.append("Basins:\n");
+            for (Basin basin : this.basins.values())
+            {
+                sb.append("  " + basin.toString() + "\n");
+            }
+            sb.append("Boundaries:\n");
+            for (Boundary boundary : this.boundaries.values())
+            {
+                sb.append("  " + boundary.toString() + "\n");
+            }
+            return sb.toString();
         }
     }
         
