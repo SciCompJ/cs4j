@@ -92,12 +92,12 @@ public class HierarchicalWatershed2D extends AlgoStub
         fireStatusChanged(this, "Compute Basin Adjacencies");
         WatershedGraph2D data = new GraphBuilder().compute(array);
         
-        System.out.println("Initial graph:");
-        System.out.println(data.graph);
+//        System.out.println("Initial graph:");
+//        System.out.println(data.graph);
         
-        HierarchicalWatershed.Graph tree = data.graph.minimumSpanningTree();
-        System.out.println("MST:");
-        System.out.println(tree);
+//        HierarchicalWatershed.Graph tree = data.graph.minimumSpanningTree();
+//        System.out.println("MST:");
+//        System.out.println(tree);
        
         fireStatusChanged(this, "Merge basins");
         new RegionMerger(data).mergeRegions();

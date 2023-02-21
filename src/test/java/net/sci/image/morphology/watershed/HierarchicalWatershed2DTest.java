@@ -225,7 +225,7 @@ public class HierarchicalWatershed2DTest
 //        ConsoleAlgoListener.monitor(algo);
         
         ScalarArray2D<?> result = algo.process(array);
-//        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
+        System.out.println(UInt8Array2D.wrap(UInt8Array.wrap(result)));
         
         // check size
         assertEquals(array.size(0), result.size(0));

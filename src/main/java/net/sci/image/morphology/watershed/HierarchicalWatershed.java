@@ -42,6 +42,28 @@ public class HierarchicalWatershed
         return highestBasin;
     }
 
+    /***
+     * Finds the basin with the lowest minimum value.
+     * 
+     * @param basins
+     *            the list of basins
+     * @return the basin within the list with the lowest minimum value
+     */
+    public static final Basin lowestBasin(Collection<Basin> basins)
+    {
+        double maxDepth = Double.POSITIVE_INFINITY;
+        Basin lowestBasin = null;
+        for (Basin basin : basins)
+        {
+            if (basin.minValue < maxDepth)
+            {
+                lowestBasin = basin;
+                maxDepth = basin.minValue;
+            }
+        }
+        return lowestBasin;
+    }
+
     /**
      * @param regions
      *            a set of regions
@@ -222,17 +244,7 @@ public class HierarchicalWatershed
             
             // initialize with an arbitrary basin
             Basin firstBasin = this.basins.values().iterator().next();
-//            tree.basins.put(firstBasin.label, firstBasin);
             tree.addBasin(firstBasin);
-//            // keep list of remaining basins (?)
-//            HashSet<Integer> remainingBasinLabels = new HashSet<Integer>(this.basins.size()-1);
-//            for (int label : this.basins.keySet())
-//            {
-//                if (label != firstBasin.label)
-//                {
-//                    remainingBasinLabels.add(label);
-//                }
-//            }
             
             // Create list of candidate edges / boundaries:
             // they must link at least one basin from the tree and one remaining basin
@@ -383,7 +395,16 @@ public class HierarchicalWatershed
             // on the boundary, and the basins with the highest minimum value.
             Basin highestBasin = highestBasin(boundary.basins());
             boundary.dynamic = minValue - highestBasin.minValue;
-            highestBasin.dynamic = boundary.dynamic;
+            // update dynamic of neighbor basins
+            Basin lowestBasin = lowestBasin(boundary.basins());
+            for (Basin basin : boundary.basins())
+            {
+                if (basin != lowestBasin)
+                {
+                    basin.dynamic = Math.min(basin.dynamic, boundary.dynamic);
+                }
+            }
+//            highestBasin.dynamic = boundary.dynamic;
             
             this.boundaries.put(label, boundary);
             
@@ -770,7 +791,7 @@ public class HierarchicalWatershed
         public String toString()
         {
             String regionString = regionLabelsString(this.regions);
-            return String.format(Locale.ENGLISH, "Boundary(label=%d, minValue=%f, regions={%s})", this.label, this.minValue, regionString);
+            return String.format(Locale.ENGLISH, "Boundary(label=%d, minValue=%f, dynamic=%f, regions={%s})", this.label, this.minValue, this.dynamic, regionString);
         }
     }
     
