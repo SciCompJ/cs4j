@@ -5,6 +5,7 @@ package net.sci.image.morphology.watershed;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
@@ -18,65 +19,6 @@ import java.util.Locale;
  */
 public class HierarchicalWatershed
 {
-    /**
-     * Creates a new Boundary region with a specified label, a minimum
-     * value, and a set of adjacent regions.
-     * 
-     * @param label
-     *            the label of the new boundary region.
-     * @param minValue
-     *            the minimum value on the boundary, usually found at saddle
-     *            pixels.
-     * @param basins
-     *            the collection of adjacent regions (usually basins, but
-     *            may contain other boundaries as well)
-     * @return the new Boundary
-     */
-    public static final Boundary createBoundary(int label, double minValue, Collection<? extends Region> basins)
-    {
-        // create a new boundary instance, leaving dynamic not yet initialized
-        Boundary boundary = new Boundary(label, minValue, basins);
-        
-        // compute the dynamic of the new boundary, using the minimum value
-        // on the boundary, and the basins with the highest minimum value.
-        Basin highestBasin = highestBasin(boundary.basins());
-        boundary.dynamic = minValue - highestBasin.minValue;
-        highestBasin.dynamic = boundary.dynamic;
-    
-        return boundary;
-    }
-
-    /**
-     * Retrieves all the regions that are instances of Basin.
-     * 
-     * @see Basin
-     * 
-     * @param regions
-     *            a collection of regions, that should be instances of either
-     *            Basin or Boundary.
-     * @return the regions within the collection that are instances of Basin.
-     */
-    public static final Collection<Basin> findAllBasins(Collection<Region> regions)
-    {
-        HashSet<Basin> basins = new HashSet<>();
-        for (Region region : regions)
-        {
-            if (region instanceof Basin)
-            {
-                basins.add((Basin) region);
-            }
-            else if (region instanceof Boundary)
-            {
-                basins.addAll(findAllBasins(((Boundary) region).regions));
-            }
-            else
-            {
-                throw new IllegalArgumentException("Input regions must be Basin or Boundary instances only.");
-            }
-        }
-        return basins;
-    }
-
     /***
      * Finds the basin with the highest minimum value.
      * 
@@ -97,27 +39,6 @@ public class HierarchicalWatershed
             }
         }
         return highestBasin;
-    }
-
-    /**
-     * Returns the boundary that bounds the specified regions, or null if no
-     * such boundary exist. The search is performed on the boundary of an
-     * arbitrary region from the specified collection.
-     * 
-     * @param adjRegions
-     *            a list of regions (two or more) that define a boundary
-     * @return the boundary that bounds the given regions, or null if no
-     *         such boundary exist
-     */
-    public static final Boundary getBoundary(Collection<Basin> adjRegions)
-    {
-        if (adjRegions.isEmpty())
-        {
-            return null;
-        }
-        
-        // check the boundaries of an arbitrary region
-        return adjRegions.iterator().next().findBoundary(adjRegions);
     }
 
     /**
@@ -246,6 +167,223 @@ public class HierarchicalWatershed
             {
                 appendRegionTree(sb, child, indentLevel+1);
             }
+        }
+    }
+    
+    /**
+     * The adjacency graph of regions within the watershed.
+     * 
+     * Nodes correspond to basins. Edges correspond to boundaries, but
+     * boundaries may be adjacent to more than two basins. This structure
+     * therefore corresponds to a Hypergraph.
+     */
+    public static class Graph
+    {
+        /**
+         * The basins of the watershed, indexed by an integer label.
+         */
+        HashMap<Integer, Basin> basins = new HashMap<Integer, Basin>();
+        
+        /**
+         * The boundaries of the watershed, indexed by an integer label. As
+         * boundaries are processed after initialization of basins, the first
+         * boundary label is larger than the last basin label.
+         */
+        HashMap<Integer, Boundary> boundaries = new HashMap<Integer, Boundary>();
+        
+        /**
+         * Map the index of a region (basin or boundary) to the list of indices
+         * of its boundary regions.
+         */
+        HashMap<Integer, ArrayList<Integer>> regionBoundaries = new HashMap<>();
+        
+        /**
+         * Map the index of a boundary to the list of indices of the regions it
+         * is adjacent to.
+         */
+        HashMap<Integer, ArrayList<Integer>> boundaryRegions = new HashMap<>();
+        
+        
+        // ==============================================================
+        // General management of regions
+        
+        /**
+         * Retrieve a region from its label. The result may be either a Basin
+         * region or a Boundary region.
+         * 
+         * @param label
+         *            the label of the region
+         * @return the region corresponding to the label.
+         */
+        public Region getRegion(int label)
+        {
+            if (this.basins.containsKey(label))
+            {
+                return this.basins.get(label);
+            }
+            if (this.boundaries.containsKey(label))
+            {
+                return this.boundaries.get(label);
+            }
+            return null;
+        }
+        
+        
+        // ==============================================================
+        // Management of boundaries
+        
+        /**
+         * Creates a new Boundary region with a specified label, a minimum
+         * value, and a set of adjacent regions.
+         * 
+         * @param label
+         *            the label of the new boundary region.
+         * @param minValue
+         *            the minimum value on the boundary, usually found at saddle
+         *            pixels.
+         * @param basins
+         *            the collection of adjacent regions (usually basins, but
+         *            may contain other boundaries as well)
+         * @return the new Boundary
+         */
+        public Boundary createBoundary(int label, double minValue, Collection<? extends Region> basins)
+        {
+            // create a new boundary instance, leaving dynamic not yet initialized
+            Boundary boundary = new Boundary(label, minValue, basins);
+            
+            // compute the dynamic of the new boundary, using the minimum value
+            // on the boundary, and the basins with the highest minimum value.
+            Basin highestBasin = highestBasin(boundary.basins());
+            boundary.dynamic = minValue - highestBasin.minValue;
+            highestBasin.dynamic = boundary.dynamic;
+            
+            this.boundaries.put(label, boundary);
+            
+            // also update the boundary->basins mapping
+            ArrayList<Integer> basinIndices = new ArrayList<Integer>(boundary.basins().size());
+            for (Basin basin : boundary.basins())
+            {
+                basinIndices.add(basin.label);
+            }
+            this.boundaryRegions.put(label, basinIndices);
+        
+            return boundary;
+        }
+        
+        /**
+         * Returns the boundary that bounds the specified regions, or null if no
+         * such boundary exist. The search is performed on the boundary of an
+         * arbitrary region from the specified collection.
+         * 
+         * @param basins
+         *            a list of regions (two or more) that define a boundary
+         * @return the boundary that bounds the given regions, or null if no
+         *         such boundary exist
+         */
+        public Boundary getBoundary(Collection<Basin> basins)
+        {
+            if (basins.isEmpty())
+            {
+                return null;
+            }
+            
+            // check the boundaries of an arbitrary region
+            Basin basin = basins.iterator().next();
+            // for each boundary, check if regions match the specified ones
+            for (Boundary boundary : getRegionBoundaries(basin.label))
+            {
+                if (boundary.hasSameBasins(basins))
+                {
+                    return boundary;
+                }
+            }
+            
+            // if no boundary was found, return null
+            return null;
+//
+//            return adjRegions.iterator().next().findBoundary(adjRegions);
+        }
+        
+        private Collection<Boundary> getRegionBoundaries(int regionLabel)
+        {
+            ArrayList<Integer> labels = regionBoundaries.get(regionLabel);
+            ArrayList<Boundary> res = new ArrayList<Boundary>(labels.size());
+            for (int label : labels)
+            {
+                res.add(boundaries.get(label));
+            }
+            return res;
+        }
+        
+        public Collection<Region> getBoundaryRegions(Boundary boundary)
+        {
+            ArrayList<Integer> labels = boundaryRegions.get(boundary.label);
+            ArrayList<Region> regions = new ArrayList<>(labels.size());
+            for (int label : labels)
+            {
+                regions.add(getRegion(label));
+            }
+            return regions;
+        }
+
+
+        // ==============================================================
+        // Management of basins
+       
+        /**
+         * Retrieves all the regions that are instances of Basin.
+         * 
+         * @see Basin
+         * 
+         * @param regions
+         *            a collection of regions, that should be instances of either
+         *            Basin or Boundary.
+         * @return the regions within the collection that are instances of Basin.
+         */
+        public Collection<Basin> findAllBasins(Collection<Region> regions)
+        {
+            HashSet<Basin> basins = new HashSet<>();
+            for (Region region : regions)
+            {
+                if (region instanceof Basin)
+                {
+                    basins.add((Basin) region);
+                }
+                else if (region instanceof Boundary)
+                {
+                    basins.addAll(findAllBasins(getBoundaryRegions((Boundary) region)));
+                }
+                else
+                {
+                    throw new IllegalArgumentException("Input regions must be Basin or Boundary instances only.");
+                }
+            }
+            return basins;
+        }
+
+        public boolean hasBasin(int label)
+        {
+            return this.basins.containsKey(label);
+        }
+        
+        public Basin createNewBasin(int label, double minValue)
+        {
+            Basin basin = new Basin(label, minValue);
+            this.basins.put(label, basin);
+            this.regionBoundaries.put(label, new ArrayList<Integer>(4));
+            return basin;
+        }
+
+        /**
+         * Recomputes the dynamic associated to this basin.
+         * 
+         * @param basin
+         *            the basin to update
+         */
+        public void recomputeDynamic(Basin basin)
+        {
+            double maxPass = lowestMinValue(basin.boundaries);
+            basin.dynamic = maxPass - basin.minValue;
         }
     }
         

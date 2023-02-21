@@ -5,7 +5,6 @@ package net.sci.image.morphology.watershed;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
@@ -118,7 +117,7 @@ public class HierarchicalWatershed2D extends AlgoStub
                     continue;
                 }
                 
-                Region region = data.getRegion(label);
+                Region region = data.graph.getRegion(label);
                 if (region instanceof Boundary)
                 {
                     Boundary boundary = (Boundary) region;
@@ -159,43 +158,12 @@ public class HierarchicalWatershed2D extends AlgoStub
          */
         ScalarArray2D<?> saliencyMap = null;
         
-        /**
-         * The basins of the watershed, indexed by an integer label.
-         */
-        HashMap<Integer, Basin> basins = new HashMap<Integer, Basin>();
-        
-        /**
-         * The boundaries of the watershed, indexed by an integer label. As
-         * boundaries are processed after initialization of basins, the first
-         * boundary label is larger than the last basin label.
-         */
-        HashMap<Integer, Boundary> boundaries = new HashMap<Integer, Boundary>();
+        HierarchicalWatershed.Graph graph;
         
         /**
          * The basin region with the largest dynamic value.
          */
         public Region root = null;
-        
-        /**
-         * Retrieve a region from its label. The result may be either a Basin
-         * region or a Boundary region.
-         * 
-         * @param label
-         *            the label of the region
-         * @return the region corresponding to the label.
-         */
-        private Region getRegion(int label)
-        {
-            if (this.basins.containsKey(label))
-            {
-                return this.basins.get(label);
-            }
-            if (this.boundaries.containsKey(label))
-            {
-                return this.boundaries.get(label);
-            }
-            return null;
-        }
     }
     
     /**
@@ -222,6 +190,7 @@ public class HierarchicalWatershed2D extends AlgoStub
         public WatershedGraph2D compute(ScalarArray2D<?> array)
         {
             WatershedGraph2D data = new WatershedGraph2D();
+            data.graph = new HierarchicalWatershed.Graph();
             
             fireStatusChanged(this, "Init label map");
             initLabelMap(array, data);
@@ -266,11 +235,10 @@ public class HierarchicalWatershed2D extends AlgoStub
                     int label = data.labelMap.getInt(x, y);
                     if (label > 0)
                     {
-                        if (!data.basins.containsKey(label))
+                        if (!data.graph.hasBasin(label))
                         {
                             double value = array.getValue(x, y);
-                            Basin basin = new Basin(label, value);
-                            data.basins.put(label, basin);
+                            data.graph.createNewBasin(label, value);
                             labelCount++;
                         }
                     }
@@ -386,7 +354,7 @@ public class HierarchicalWatershed2D extends AlgoStub
                         {
                             // If pixel belongs to a region, update the list of neighbor basins
                             // In case the pixel is a boundary, the basins it bounds are considered.
-                            Region region = data.getRegion(label);
+                            Region region = data.graph.getRegion(label);
                             regions.add(region);
                             if (region instanceof Basin)
                             {
@@ -412,16 +380,15 @@ public class HierarchicalWatershed2D extends AlgoStub
                 {
                     // If pixel belongs to a boundary region,                     
                     // we first need to check if such boundary exists
-                    Collection<Basin> allBasins = HierarchicalWatershed.findAllBasins(regions);
-                    Boundary boundary = HierarchicalWatershed.getBoundary(allBasins);
+                    Collection<Basin> allBasins = data.graph.findAllBasins(regions);
+                    Boundary boundary = data.graph.getBoundary(allBasins);
 
                     // otherwise, create the new boundary (boundaries of specified
                     // regions are updated during boundary creation)
                     if (boundary == null)
                     {
                         // create a new boundary region
-                        boundary = HierarchicalWatershed.createBoundary(++labelCount, pixelRecord.value, allBasins);
-                        data.boundaries.put(boundary.label, boundary);
+                        boundary = data.graph.createBoundary(++labelCount, pixelRecord.value, allBasins);
                     }
                     data.labelMap.setInt(x, y, boundary.label);
                 }   
@@ -497,14 +464,14 @@ public class HierarchicalWatershed2D extends AlgoStub
         public Region mergeRegions(WatershedGraph2D data)
         {
             PriorityQueue<Region> mergeQueue = new PriorityQueue<>();
-            for (Basin basin : data.basins.values())
+            for (Basin basin : data.graph.basins.values())
             {
                 basin.recomputeDynamic();
                 mergeQueue.add(basin);
             }
             
             // restart labeling from the number of regions
-            int nodeCount = data.basins.size();
+            int nodeCount = data.graph.basins.size();
             
             // merge until only one region remains
             while (mergeQueue.size() > 1)
@@ -523,6 +490,7 @@ public class HierarchicalWatershed2D extends AlgoStub
             data.root = mergeQueue.poll();
             return data.root;
         }
+        
 
         /**
          * Identifies the set of region to merge, as the set of regions
