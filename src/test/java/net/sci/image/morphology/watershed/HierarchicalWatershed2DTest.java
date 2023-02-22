@@ -138,6 +138,20 @@ public class HierarchicalWatershed2DTest
 
     /**
      * Test method for {@link net.sci.image.morphology.watershed.HierarchicWatershed2D#process(net.sci.array.scalar.ScalarArray2D)}.
+     * 
+     * Considers three regions with minima 5, 40 and 10.
+     * Initial labeling will create basins:
+     * <ul>
+     * <li>label 1 for minima 5,</li>
+     * <li>label 2 for minima 40,</li>
+     * <li>label 3 for minima 10.</li>
+     * </ul>
+     * 
+     * Flooding will occur in following order:
+     * <ul>
+     * <li>merge labels 1 and 2 (height 60),</li>
+     * <li>merge labels (1,2) and 3 (height 80).</li>
+     * </ul>
      */
     @Test
     public final void testProcess_three_regions_simple()

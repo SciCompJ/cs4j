@@ -44,7 +44,7 @@ public class HierarchicalWatershed2DDemo_AppleCells05
         
         
 //        ScalarArray2D<?> res = algo.process(array);
-        HierarchicalWatershed2D.WatershedGraph2D res = algo.computeResult(array);
+        HierarchicalWatershed2D.Results res = algo.computeResult(array);
         
 //        UInt8Array2D res8 = UInt8Array2D.wrap(UInt8Array.wrap(res.saliencyMap));
 //        Image resultImage = new Image(res8, image);

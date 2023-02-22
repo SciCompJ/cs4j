@@ -74,7 +74,7 @@ public class HierarchicalWatershed2D extends AlgoStub
      */
     public ScalarArray2D<?> process(ScalarArray2D<?> array)
     {
-        WatershedGraph2D data = computeResult(array);
+        Results data = computeResult(array);
         return data.saliencyMap;
     }
     
@@ -87,10 +87,10 @@ public class HierarchicalWatershed2D extends AlgoStub
      * @return the <code>WatershedGraph2D</code> corresponding to the input
      *         array.
      */
-    public WatershedGraph2D computeResult(ScalarArray2D<?> array)
+    public Results computeResult(ScalarArray2D<?> array)
     {
         fireStatusChanged(this, "Compute Basin Adjacencies");
-        WatershedGraph2D data = new GraphBuilder().compute(array);
+        Results data = new GraphBuilder().compute(array);
         
 //        System.out.println("Initial graph:");
 //        System.out.println(data.graph);
@@ -108,7 +108,7 @@ public class HierarchicalWatershed2D extends AlgoStub
         return data;
     }
     
-    private ScalarArray2D<?> computeSaliencyMap(WatershedGraph2D data)
+    private ScalarArray2D<?> computeSaliencyMap(Results data)
     {
         int sizeX = data.labelMap.size(0);
         int sizeY = data.labelMap.size(1);
@@ -142,10 +142,10 @@ public class HierarchicalWatershed2D extends AlgoStub
     // Inner classes
     
     /**
-     * The data representing the hierarchical watershed, incrementally build
-     * during computation.
+     * Contains the results of the computation: the watershed graph, the label
+     * map, the saliency map.
      */
-    public class WatershedGraph2D
+    public class Results
     {
         // ==============================================================
         // Class members
@@ -166,7 +166,11 @@ public class HierarchicalWatershed2D extends AlgoStub
          */
         ScalarArray2D<?> saliencyMap = null;
         
-        HierarchicalWatershed.Graph graph;
+        /**
+         * The data representing the hierarchical watershed, incrementally build
+         * during computation.
+         */
+        HierarchicalWatershed graph;
         
         /**
          * The basin region with the largest dynamic value.
@@ -195,10 +199,10 @@ public class HierarchicalWatershed2D extends AlgoStub
         /** Used to setup pixel timestamps. */
         long timeStamp = Long.MIN_VALUE;
 
-        public WatershedGraph2D compute(ScalarArray2D<?> array)
+        public Results compute(ScalarArray2D<?> array)
         {
-            WatershedGraph2D data = new WatershedGraph2D();
-            data.graph = new HierarchicalWatershed.Graph();
+            Results data = new Results();
+            data.graph = new HierarchicalWatershed();
             
             fireStatusChanged(this, "Init label map");
             initLabelMap(array, data);
@@ -210,7 +214,7 @@ public class HierarchicalWatershed2D extends AlgoStub
             return data;
         }
         
-        private void initLabelMap(ScalarArray2D<?> array, WatershedGraph2D data)
+        private void initLabelMap(ScalarArray2D<?> array, Results data)
         {
             // compute regional minima within image
             fireStatusChanged(this, "Compute regional minima");
@@ -229,7 +233,7 @@ public class HierarchicalWatershed2D extends AlgoStub
 //            System.out.println("  number of basins: " + labelCount);
         }
         
-        private void createBasinRegions(ScalarArray2D<?> array, WatershedGraph2D data)
+        private void createBasinRegions(ScalarArray2D<?> array, Results data)
         {
             // retrieve image size
             final int sizeX = array.size(0);
@@ -254,7 +258,20 @@ public class HierarchicalWatershed2D extends AlgoStub
             }
         }
         
-        private PriorityQueue<Record> initQueue(ScalarArray2D<?> array, WatershedGraph2D data)
+        /**
+         * Creates the queue that contains all candidate pixels for flooding.
+         * Initial candidates are neighbors of basin pixels.
+         * 
+         * Pixels are stored with their value, and a time stamps that allows to
+         * order them.
+         * 
+         * @param array
+         *            the array containing intensity values
+         * @param data
+         *            the waterhsed data, containing the array of basin labels.
+         * @return the initial queue of pixel records
+         */
+        private PriorityQueue<Record> initQueue(ScalarArray2D<?> array, Results data)
         {
             // retrieve image size
             final int sizeX = array.size(0);
@@ -303,7 +320,7 @@ public class HierarchicalWatershed2D extends AlgoStub
             return floodingQueue;
         }
         
-        private void processQueue(PriorityQueue<Record> floodingQueue, ScalarArray2D<?> array, WatershedGraph2D data)
+        private void processQueue(PriorityQueue<Record> floodingQueue, ScalarArray2D<?> array, Results data)
         {
             // retrieve image size
             final int sizeX = array.size(0);
@@ -469,9 +486,9 @@ public class HierarchicalWatershed2D extends AlgoStub
     
     private class RegionMerger
     {
-        WatershedGraph2D data;
+        Results data;
         
-        public RegionMerger(WatershedGraph2D data)
+        public RegionMerger(Results data)
         {
             this.data = data;
         }
@@ -586,32 +603,32 @@ public class HierarchicalWatershed2D extends AlgoStub
     
     public static final void main(String... args)
     {
-//        int[][] buffer = new int[][] {
-//            {  5,   6,  60,  50}, 
-//            { 20,  30, 100,  40}, 
-//            { 10,  11,  80,  55}, 
-//        };
         int[][] buffer = new int[][] {
-            {250,  70,  60,  50,  40,   0,  40,  50,  60,  73, 250}, 
-            { 35, 150,  71,  60,  50,  40,  50,  60,  74, 210,  55}, 
-            { 21,  34, 250,  72,  60,  73,  60,  75, 250,  54,  41}, 
-            { 20,  22,  33, 250, 260, 240, 260, 250,  53,  42,  30}, 
-            { 23,  32, 250,  70,  61,  53,  62,  71, 250,  52,  43}, 
-            { 31, 220,  71,  64,  52,  40,  54,  67,  72, 150,  51}, 
-            {250,  72,  65,  51,  41,  10,  42,  55,  66,  73, 250}, 
+            {  5,   6,  60,  50}, 
+            { 20,  30, 100,  40}, 
+            { 10,  11,  80,  55}, 
         };
+//        int[][] buffer = new int[][] {
+//            {250,  70,  60,  50,  40,   0,  40,  50,  60,  73, 250}, 
+//            { 35, 150,  71,  60,  50,  40,  50,  60,  74, 210,  55}, 
+//            { 21,  34, 250,  72,  60,  73,  60,  75, 250,  54,  41}, 
+//            { 20,  22,  33, 250, 260, 240, 260, 250,  53,  42,  30}, 
+//            { 23,  32, 250,  70,  61,  53,  62,  71, 250,  52,  43}, 
+//            { 31, 220,  71,  64,  52,  40,  54,  67,  72, 150,  51}, 
+//            {250,  72,  65,  51,  41,  10,  42,  55,  66,  73, 250}, 
+//        };
         UInt8Array2D array = UInt8Array2D.fromIntArray(buffer);
         System.out.println(array);
 
         HierarchicalWatershed2D ws = new HierarchicalWatershed2D();
-        WatershedGraph2D data = ws.new GraphBuilder().compute(array);
+        Results data = ws.new GraphBuilder().compute(array);
         
         System.out.println("Initial graph:");
         System.out.println(data.graph);
         
-        HierarchicalWatershed.Graph tree = data.graph.minimumSpanningTree();
-        System.out.println("Spanning tree:");
-        System.out.println(tree);
+//        HierarchicalWatershed.Graph tree = data.graph.minimumSpanningTree();
+//        System.out.println("Spanning tree:");
+//        System.out.println(tree);
 
     }
 }

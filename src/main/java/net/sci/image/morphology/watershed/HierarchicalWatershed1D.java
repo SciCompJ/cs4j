@@ -91,7 +91,8 @@ public class HierarchicalWatershed1D extends AlgoStub
     // Inner classes
     
     /**
-     * The data necessary to compute the (1D) hierarchical watershed.
+     * Contains the results of the computation: the watershed graph, the label
+     * map, the saliency map.
      */
     public class WatershedGraph
     {
@@ -110,7 +111,11 @@ public class HierarchicalWatershed1D extends AlgoStub
         
         ScalarArray1D<?> saliencyMap = null;
         
-        HierarchicalWatershed.Graph graph;
+        /**
+         * The data representing the hierarchical watershed, incrementally build
+         * during computation.
+         */
+        HierarchicalWatershed graph;
         
         public Region root = null;
     }
@@ -134,7 +139,7 @@ public class HierarchicalWatershed1D extends AlgoStub
         public WatershedGraph compute(ScalarArray1D<?> array)
         {
             WatershedGraph data = new WatershedGraph();
-            data.graph = new HierarchicalWatershed.Graph();
+            data.graph = new HierarchicalWatershed();
             
             fireStatusChanged(this, "Init label map");
             initLabelMap(array, data);
