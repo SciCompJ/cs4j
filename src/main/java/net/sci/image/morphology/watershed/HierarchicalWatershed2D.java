@@ -100,7 +100,7 @@ public class HierarchicalWatershed2D extends AlgoStub
 //        System.out.println(tree);
        
         fireStatusChanged(this, "Merge basins");
-        new RegionMerger(data).mergeRegions();
+        data.root = new RegionMerger(data.graph).mergeRegions();
         
         fireStatusChanged(this, "Compute Saliency Map");
         computeSaliencyMap(data);
@@ -373,7 +373,9 @@ public class HierarchicalWatershed2D extends AlgoStub
                         if (label == 0)
                         {
                             // If pixel was not yet considered, add it to the queue
-                            neighbors.add(new Record(x2, y2, array.getValue(x2, y2), timeStamp++));
+                            // (note: we also add neighbors of boundary pixels, contrary to most algorithms)
+                            floodingQueue.add(new Record(x2, y2, array.getValue(x2, y2), timeStamp++));
+                            data.labelMap.setInt(x2, y2, INQUEUE);
                         }
                         else if (label > 0)
                         {
@@ -416,14 +418,6 @@ public class HierarchicalWatershed2D extends AlgoStub
                         boundary = data.graph.createBoundary(++labelCount, pixelRecord.value, allBasins);
                     }
                     data.labelMap.setInt(x, y, boundary.label);
-                }   
-                
-                // also add the neighbors without labels to the queue
-                // (note: we also add neighbors of boundary pixels, contrary to most algorithms)
-                for (Record neighbor : neighbors)
-                {   
-                    data.labelMap.setInt(neighbor.x, neighbor.y, INQUEUE);
-                    floodingQueue.add(neighbor);
                 }
             }
         }
@@ -484,26 +478,30 @@ public class HierarchicalWatershed2D extends AlgoStub
         }
     }
     
+    
+    /**
+     * Old version of the class.
+     */
     private class RegionMerger
     {
-        Results data;
+        HierarchicalWatershed graph;
         
-        public RegionMerger(Results data)
+        public RegionMerger(HierarchicalWatershed graph)
         {
-            this.data = data;
+            this.graph = graph;
         }
         
         public Region mergeRegions()
         {
             PriorityQueue<Region> mergeQueue = new PriorityQueue<>();
-            for (Basin basin : data.graph.basins.values())
+            for (Basin basin : graph.basins.values())
             {
-                basin.recomputeDynamic();
+                graph.recomputeDynamic(basin);
                 mergeQueue.add(basin);
             }
             
             // restart labeling from the number of regions
-            int nodeCount = data.graph.basins.size();
+            int nodeCount = graph.basins.size();
             
             // merge until only one region remains
             while (mergeQueue.size() > 1)
@@ -519,10 +517,8 @@ public class HierarchicalWatershed2D extends AlgoStub
                 mergeQueue.add(mergeRegion);
             }
             
-            data.root = mergeQueue.poll();
-            return data.root;
+            return mergeQueue.poll();
         }
-        
 
         /**
          * Identifies the set of region to merge, as the set of regions
@@ -537,6 +533,8 @@ public class HierarchicalWatershed2D extends AlgoStub
         private Collection<Region> findRegionsToMerge(Region region)
         {
             // get the pass / saddle value, as the lowest value along boundaries of current region
+//            Collection<Boundary> boundaries = graph.regionBoundaries.get(region.label);
+//            double minValue = HierarchicalWatershed.lowestMinValue(boundaries);
             double minValue = HierarchicalWatershed.lowestMinValue(region.boundaries);
             
             // collect regions with same boundary saddle value
@@ -572,7 +570,7 @@ public class HierarchicalWatershed2D extends AlgoStub
             // (1) remove boundaries whose basins are within the merge
             // (2) replace boundaries with basins outside and inside the merge, 
             //      taking into account the possible duplicates
-//            for (Boundary boundary : data.graph.adjacentBoundaries(regions))
+//            for (Boundary boundary : graph.adjacentBoundaries2(regions))
             for (Boundary boundary : HierarchicalWatershed.adjacentBoundaries(regions))
             {
                 if (boundary.hasNoOtherRegionThan(regions))
@@ -625,6 +623,9 @@ public class HierarchicalWatershed2D extends AlgoStub
         
         System.out.println("Initial graph:");
         System.out.println(data.graph);
+        
+        MergeTreeBuilder builder = new MergeTreeBuilder(data.graph);
+        builder.mergeAllRegions();
         
 //        HierarchicalWatershed.Graph tree = data.graph.minimumSpanningTree();
 //        System.out.println("Spanning tree:");

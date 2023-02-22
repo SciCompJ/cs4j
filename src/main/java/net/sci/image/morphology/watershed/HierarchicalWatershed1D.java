@@ -53,7 +53,7 @@ public class HierarchicalWatershed1D extends AlgoStub
         WatershedGraph data = new GraphBuilder().compute(array);
         
         fireStatusChanged(this, "Merge basins");
-        new RegionMerger().mergeRegions(data);
+        data.root = new RegionMerger().mergeRegions(data.graph);
         
         fireStatusChanged(this, "Compute Saliency Map");
         computeSaliencyMap(data);
@@ -278,7 +278,8 @@ public class HierarchicalWatershed1D extends AlgoStub
                         if (label == 0)
                         {
                             // If pixel was not yet considered, add it to the queue
-                            neighbors.add(new Record(x2, array.getValue(x2), timeStamp++));
+                            floodingQueue.add(new Record(x2, array.getValue(x2), timeStamp++));
+                            data.labelMap.setInt(x2, INQUEUE);
                         }
                         else if (label > 0)
                         {
@@ -322,14 +323,6 @@ public class HierarchicalWatershed1D extends AlgoStub
                     }
                     data.labelMap.setInt(x, boundary.label);
                 }   
-                
-                // also add the neighbors without labels to the queue
-                // (note: we also add neighbors of boundary pixels, contrary to most algorithms)
-                for (Record neighbor : neighbors)
-                {   
-                    data.labelMap.setInt(neighbor.x, INQUEUE);
-                    floodingQueue.add(neighbor);
-                }
             }
         }
         
@@ -384,17 +377,18 @@ public class HierarchicalWatershed1D extends AlgoStub
     
     private class RegionMerger
     {
-        public Region mergeRegions(WatershedGraph data)
+        public Region mergeRegions(HierarchicalWatershed graph)
         {
             PriorityQueue<Region> mergeQueue = new PriorityQueue<>();
-            for (Basin basin : data.graph.basins.values())
+            for (Basin basin : graph.basins.values())
             {
-                basin.recomputeDynamic();
+//                basin.recomputeDynamic();
+                graph.recomputeDynamic(basin);
                 mergeQueue.add(basin);
             }
             
             // restart labeling from the number of regions
-            int nodeCount = data.graph.basins.size();
+            int nodeCount = graph.basins.size();
             
             // merge until only one region remains
             while (mergeQueue.size() > 1)
@@ -410,8 +404,7 @@ public class HierarchicalWatershed1D extends AlgoStub
                 mergeQueue.add(mergeRegion);
             }
             
-            data.root = mergeQueue.poll();
-            return data.root;
+            return mergeQueue.poll();
         }
 
         /**
