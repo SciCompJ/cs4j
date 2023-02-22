@@ -20,7 +20,8 @@ import net.sci.image.morphology.MinimaAndMaxima;
 import net.sci.image.morphology.extrema.RegionalExtrema2D;
 import net.sci.image.morphology.watershed.HierarchicalWatershed.Basin;
 import net.sci.image.morphology.watershed.HierarchicalWatershed.Boundary;
-import net.sci.image.morphology.watershed.HierarchicalWatershed.MergeRegion;
+import net.sci.image.morphology.watershed.HierarchicalWatershed.MergeBasin;
+import net.sci.image.morphology.watershed.HierarchicalWatershed.MergeBoundary;
 import net.sci.image.morphology.watershed.HierarchicalWatershed.Region;
 
 /**
@@ -100,7 +101,8 @@ public class HierarchicalWatershed2D extends AlgoStub
 //        System.out.println(tree);
        
         fireStatusChanged(this, "Merge basins");
-        data.root = new RegionMerger(data.graph).mergeRegions();
+//        data.root = new RegionMerger(data.graph).mergeRegions();
+        // TODO: update here...
         
         fireStatusChanged(this, "Compute Saliency Map");
         computeSaliencyMap(data);
@@ -478,126 +480,317 @@ public class HierarchicalWatershed2D extends AlgoStub
         }
     }
     
-    
-    /**
-     * Old version of the class.
-     */
-    private class RegionMerger
+    public static class MergeTreeBuilder
     {
         HierarchicalWatershed graph;
         
-        public RegionMerger(HierarchicalWatershed graph)
+        PriorityQueue<Boundary> boundaryQueue;
+        
+        int basinCount;
+        int boundaryCount;
+        
+        public MergeTreeBuilder(HierarchicalWatershed graph)
         {
             this.graph = graph;
-        }
-        
-        public Region mergeRegions()
-        {
-            PriorityQueue<Region> mergeQueue = new PriorityQueue<>();
-            for (Basin basin : graph.basins.values())
-            {
-                graph.recomputeDynamic(basin);
-                mergeQueue.add(basin);
-            }
+            
+            // initialize queue
+            this.boundaryQueue = new PriorityQueue<Boundary>();
+            this.boundaryQueue.addAll(graph.boundaries.values());
             
             // restart labeling from the number of regions
-            int nodeCount = graph.basins.size();
-            
-            // merge until only one region remains
-            while (mergeQueue.size() > 1)
-            {
-                Region region = mergeQueue.poll();
-                Collection<Region> regions = findRegionsToMerge(region);
-                
-                // create the merge region
-                MergeRegion mergeRegion = mergeRegions(++nodeCount, region.dynamic, regions);
-                
-                // update queue
-                mergeQueue.removeAll(regions);
-                mergeQueue.add(mergeRegion);
-            }
-            
-            return mergeQueue.poll();
-        }
-
-        /**
-         * Identifies the set of region to merge, as the set of regions
-         * connected to the initial region with a boundary whose min value is
-         * the current min value.
-         * 
-         * @param region
-         *            the region that initiates the merge
-         * @return a collection of regions connected with boundaries with the
-         *         same saddle value
-         */
-        private Collection<Region> findRegionsToMerge(Region region)
-        {
-            // get the pass / saddle value, as the lowest value along boundaries of current region
-//            Collection<Boundary> boundaries = graph.regionBoundaries.get(region.label);
-//            double minValue = HierarchicalWatershed.lowestMinValue(boundaries);
-            double minValue = HierarchicalWatershed.lowestMinValue(region.boundaries);
-            
-            // collect regions with same boundary saddle value
-            HashSet<Region> regions = new HashSet<>();
-            for (Boundary boundary : region.boundaries)
-            {
-                if (boundary.minValue == minValue)
-                {
-                    regions.addAll(boundary.regions);
-                }
-            }
-            return regions;
+            this.basinCount = graph.basins.size();
+            this.boundaryCount = basinCount + graph.boundaries.size();
         }
         
-        /**
-         * Merges the specified regions and returns the newly created region.
-         * The boundaries are updated.
-         * 
-         * @param label
-         *            the label of the new region
-         * @param dynamic
-         *            the dynamic of the boundary that will be merged
-         * @param regions
-         *            the regions to merge
-         * @return the result of the merge, as a MergeRegion instance
-         */
-        private MergeRegion mergeRegions(int label, double dynamic, Collection<Region> regions)
+        public Region mergeAllRegions()
         {
-            // create the merge
-            MergeRegion merge = new MergeRegion(label, regions);
+            Region root =  null;
             
-            // need to update the references between basins and boundaries
-            // (1) remove boundaries whose basins are within the merge
-            // (2) replace boundaries with basins outside and inside the merge, 
-            //      taking into account the possible duplicates
-//            for (Boundary boundary : graph.adjacentBoundaries2(regions))
-            for (Boundary boundary : HierarchicalWatershed.adjacentBoundaries(regions))
+            // merge until no more boundary
+            while (!boundaryQueue.isEmpty())
             {
-                if (boundary.hasNoOtherRegionThan(regions))
+                Boundary boundary = boundaryQueue.poll();
+                
+                System.out.println("merge boundary #" + boundary.label + " with dynamic " + boundary.dynamic);
+                root = mergeBoundary(boundary);
+            }
+            
+            return root;
+        }
+        
+        public Region mergeBoundary(Boundary boundary)
+        {
+            // retrieve regions managed by this boundary (may contains other boundaries)
+            Collection<Region> regions = retrieveAllRegions(boundary);
+            
+            // create the result of the merge
+            double minValue = HierarchicalWatershed.lowestMinValue(regions);
+            MergeBasin mergeBasin = new MergeBasin(++basinCount, minValue, regions);
+            
+            // initialize the collection of new boundaries
+            ArrayList<Boundary> newBoundaries = new ArrayList<Boundary>();
+            
+            // Retrieve all the boundaries that contain at least one of the merged regions
+            Collection<Boundary> boundaries = retrieveBoundaries(regions);
+            
+            // remove boundaries from the graph
+            for (Boundary bnd : boundaries)
+            {
+                // TODO: update boundary mergeBoundary (except if belongs to regions)
+                removeBoundaryFromGraph(bnd);
+                
+                if (regions.containsAll(bnd.regions))
                 {
-                    // the boundary has to be merged within the new region.
-                    // just need to update its dynamic
-                    boundary.dynamic = dynamic;
+                    // all the regions of the boundary are merged
+                    // -> just need to update the "merge" region and to remove from graph
+                    bnd.merge = mergeBasin;
                 }
                 else
                 {
-                    // need to update references to inner regions into reference
-                    // to the merge region
-                    boundary.regions.removeAll(regions);
-                    boundary.regions.add(merge);
-                    merge.boundaries.add(boundary);
+                    // need to create (or retrieve) a boundary between merged basin and remaining basins
+                    // TODO: continue...
                 }
             }
             
-            // compute the dynamic of the new region, by finding the minimum
-            // value along boundaries
-            double minPassValue = HierarchicalWatershed.lowestMinValue(merge.boundaries);
-            merge.dynamic = minPassValue - merge.minValue;
+            // remove all regions that will be merged
+            // flooding basin can be Basin or MergeBasin
+            Region floodingBasin = removeRegionsFromGraph(regions);
             
-            // return the new region
-            return merge;
+            // update dynamic of removed regions with dynamic of the boundary,
+            // except for the flooding region
+            for (Region region : regions)
+            {
+//                if (region)
+                region.dynamic = boundary.dynamic;
+            }
+            
+            // add new region
+            graph.regionBoundaries.put(mergeBasin, new ArrayList<>(newBoundaries.size()));
+            
+            // add new boundaries
+            for (Boundary bnd : newBoundaries)
+            {
+                graph.boundaryRegions.put(bnd, bnd.regions);
+                for (Region reg : bnd.regions)
+                {
+                    graph.regionBoundaries.get(reg).add(bnd);
+                }
+            }
+           
+            
+            
+            return mergeBasin;
+        }
+        
+        private Collection<Region> retrieveAllRegions(Boundary boundary)
+        {
+            HashSet<Region> res = new HashSet<>();
+            for (Region region : graph.boundaryRegions.get(boundary))
+            {
+                res.add(region);
+                if (region instanceof Boundary)
+                {
+                    res.addAll(retrieveAllRegions((Boundary) region));
+                }
+            }
+            return res;
+        }
+        
+//        private Collection<Region> retrieveBasins(Collection<Region> regions)
+//        {
+//            HashSet<Region> basins = new HashSet<>();
+//            for (Region region : regions)
+//            {
+//                if (region instanceof Boundary)
+//                {
+//                    basins.addAll(retrieveBasins(graph.boundaryRegions.get(region.label)));
+////                    basins.addAll(retrieveBasins(((Boundary) region).regions));
+//                }
+//                else
+//                {
+//                    basins.add(region);
+//                }
+//            }
+//            
+//            return basins;
+//        }
+        
+        /**
+         * Retrieve all the boundaries that contain one the regions.
+         * @param regions
+         * @return
+         */
+        private Collection<Boundary> retrieveBoundaries(Collection<Region> regions)
+        {
+            HashSet<Boundary> boundaries = new HashSet<>();
+            for (Region region : regions)
+            {
+                boundaries.addAll(retrieveBoundaries(region));
+            }
+            
+            return boundaries;
+        }
+        
+        private Collection<Boundary> retrieveBoundaries(Region region)
+        {
+            if (region instanceof Basin)
+            {
+                return graph.regionBoundaries.get(region);
+            }
+            else
+            {
+                throw new RuntimeException("Can not manage Region of class: " + region.getClass());
+            }
+        }
+        
+        private void removeBoundaryFromGraph(Boundary boundary)
+        {
+            graph.boundaries.remove(boundary.label);
+            for (Region region : graph.boundaryRegions.get(boundary))
+            {
+                graph.regionBoundaries.get(region).remove(boundary);
+            }
+            graph.boundaryRegions.remove(boundary);
+        }
+        
+        private Region removeRegionsFromGraph(Collection<Region> regions)
+        {
+            Region floodingBasin = null;
+            double minValue = Double.POSITIVE_INFINITY;
+            for (Region region : regions)
+            {
+                if (region.minValue < minValue)
+                {
+                    floodingBasin = (Basin) region;
+                    minValue = region.minValue;
+                }
+                
+                // remove only the region->boundary mapping
+                graph.regionBoundaries.remove(region);
+            }
+            return floodingBasin;
         }
     }
+
+//    /**
+//     * Old version of the class.
+//     */
+//    private class RegionMerger
+//    {
+//        HierarchicalWatershed graph;
+//        
+//        public RegionMerger(HierarchicalWatershed graph)
+//        {
+//            this.graph = graph;
+//        }
+//        
+//        public Region mergeRegions()
+//        {
+//            PriorityQueue<Region> mergeQueue = new PriorityQueue<>();
+//            for (Basin basin : graph.basins.values())
+//            {
+//                graph.recomputeDynamic(basin);
+//                mergeQueue.add(basin);
+//            }
+//            
+//            // restart labeling from the number of regions
+//            int nodeCount = graph.basins.size();
+//            
+//            // merge until only one region remains
+//            while (mergeQueue.size() > 1)
+//            {
+//                Region region = mergeQueue.poll();
+//                Collection<Region> regions = findRegionsToMerge(region);
+//                
+//                // create the merge region
+//                MergeRegion mergeRegion = mergeRegions(++nodeCount, region.dynamic, regions);
+//                
+//                // update queue
+//                mergeQueue.removeAll(regions);
+//                mergeQueue.add(mergeRegion);
+//            }
+//            
+//            return mergeQueue.poll();
+//        }
+//
+//        /**
+//         * Identifies the set of region to merge, as the set of regions
+//         * connected to the initial region with a boundary whose min value is
+//         * the current min value.
+//         * 
+//         * @param region
+//         *            the region that initiates the merge
+//         * @return a collection of regions connected with boundaries with the
+//         *         same saddle value
+//         */
+//        private Collection<Region> findRegionsToMerge(Region region)
+//        {
+//            // get the pass / saddle value, as the lowest value along boundaries of current region
+////            Collection<Boundary> boundaries = graph.regionBoundaries.get(region.label);
+////            double minValue = HierarchicalWatershed.lowestMinValue(boundaries);
+//            double minValue = HierarchicalWatershed.lowestMinValue(region.boundaries);
+//            
+//            // collect regions with same boundary saddle value
+//            HashSet<Region> regions = new HashSet<>();
+//            for (Boundary boundary : region.boundaries)
+//            {
+//                if (boundary.minValue == minValue)
+//                {
+//                    regions.addAll(boundary.regions);
+//                }
+//            }
+//            return regions;
+//        }
+//        
+//        /**
+//         * Merges the specified regions and returns the newly created region.
+//         * The boundaries are updated.
+//         * 
+//         * @param label
+//         *            the label of the new region
+//         * @param dynamic
+//         *            the dynamic of the boundary that will be merged
+//         * @param regions
+//         *            the regions to merge
+//         * @return the result of the merge, as a MergeRegion instance
+//         */
+//        private MergeRegion mergeRegions(int label, double dynamic, Collection<Region> regions)
+//        {
+//            // create the merge
+//            MergeRegion merge = new MergeRegion(label, regions);
+//            
+//            // need to update the references between basins and boundaries
+//            // (1) remove boundaries whose basins are within the merge
+//            // (2) replace boundaries with basins outside and inside the merge, 
+//            //      taking into account the possible duplicates
+////            for (Boundary boundary : graph.adjacentBoundaries2(regions))
+//            for (Boundary boundary : HierarchicalWatershed.adjacentBoundaries(regions))
+//            {
+//                if (boundary.hasNoOtherRegionThan(regions))
+//                {
+//                    // the boundary has to be merged within the new region.
+//                    // just need to update its dynamic
+//                    boundary.dynamic = dynamic;
+//                }
+//                else
+//                {
+//                    // need to update references to inner regions into reference
+//                    // to the merge region
+//                    boundary.regions.removeAll(regions);
+//                    boundary.regions.add(merge);
+//                    merge.boundaries.add(boundary);
+//                }
+//            }
+//            
+//            // compute the dynamic of the new region, by finding the minimum
+//            // value along boundaries
+//            double minPassValue = HierarchicalWatershed.lowestMinValue(merge.boundaries);
+//            merge.dynamic = minPassValue - merge.minValue;
+//            
+//            // return the new region
+//            return merge;
+//        }
+//    }
     
     public static final void main(String... args)
     {

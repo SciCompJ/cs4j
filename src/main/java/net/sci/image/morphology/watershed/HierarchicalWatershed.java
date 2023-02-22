@@ -65,22 +65,22 @@ public class HierarchicalWatershed
         return lowestBasin;
     }
 
-    /**
-     * @param regions
-     *            a set of regions
-     * @return the set of boundaries that are adjacent to at least one of
-     *         the regions within the list.
-     */
-    @Deprecated
-    public static final Collection<Boundary> adjacentBoundaries(Collection<Region> regions)
-    {
-        HashSet<Boundary> boundaries = new HashSet<>();
-        for (Region region : regions)
-        {
-            boundaries.addAll(region.boundaries);
-        }
-        return boundaries;
-    }
+//    /**
+//     * @param regions
+//     *            a set of regions
+//     * @return the set of boundaries that are adjacent to at least one of
+//     *         the regions within the list.
+//     */
+//    @Deprecated
+//    public static final Collection<Boundary> adjacentBoundaries(Collection<Region> regions)
+//    {
+//        HashSet<Boundary> boundaries = new HashSet<>();
+//        for (Region region : regions)
+//        {
+//            boundaries.addAll(region.boundaries);
+//        }
+//        return boundaries;
+//    }
     
     /**
      * Utility class that determines if an element belongs to a basin by
@@ -215,13 +215,13 @@ public class HierarchicalWatershed
      * Map the index of a region (basin or boundary) to the list of indices
      * of its boundary regions.
      */
-    HashMap<Integer, ArrayList<Boundary>> regionBoundaries = new HashMap<>();
+    HashMap<Region, ArrayList<Boundary>> regionBoundaries = new HashMap<>();
     
     /**
      * Map the index of a boundary to the list of indices of the regions it
      * is adjacent to. Adjacent regions may be basin or other boundaries.
      */
-    HashMap<Integer, ArrayList<Region>> boundaryRegions = new HashMap<>();
+    HashMap<Boundary, ArrayList<Region>> boundaryRegions = new HashMap<>();
     
     
     // ==============================================================
@@ -237,6 +237,7 @@ public class HierarchicalWatershed
      */
     public Region getRegion(int label)
     {
+        // TODO: could use basin count instead of using hashset
         if (this.basins.containsKey(label))
         {
             return this.basins.get(label);
@@ -272,7 +273,6 @@ public class HierarchicalWatershed
         Boundary boundary = new Boundary(label, minValue, regions);
 
         Basin lowestBasin = lowestBasin(boundary.basins());
-        boundary.floodingBasin = lowestBasin;
         
         // compute the dynamic of the new boundary, using the minimum value
         // on the boundary, and the basins with the highest minimum value.
@@ -283,14 +283,7 @@ public class HierarchicalWatershed
         {
             if (basin != lowestBasin)
             {
-                // TODO: in fact, corresponds to the same test, as both
-                // dynamic and flooding are initialized at creation of
-                // lowest boundary around basin?
                 basin.dynamic = Math.min(basin.dynamic, boundary.dynamic);
-                if (basin.floodingBoundary == null)
-                {
-                    basin.floodingBoundary = boundary;
-                }
             }
         }
         
@@ -301,13 +294,13 @@ public class HierarchicalWatershed
         // boundary label.
         for (Region region : regions)
         {
-            this.regionBoundaries.get(region.label).add(boundary);
+            this.regionBoundaries.get(region).add(boundary);
         }
         
         // also update the boundary->basins mapping
         ArrayList<Region> adjRegions = new ArrayList<Region>(regions.size());
         adjRegions.addAll(regions);
-        this.boundaryRegions.put(label, adjRegions);
+        this.boundaryRegions.put(boundary, adjRegions);
     
         return boundary;
     }
@@ -323,7 +316,7 @@ public class HierarchicalWatershed
         HashSet<Boundary> boundaries = new HashSet<>();
         for (Region region : regions)
         {
-            boundaries.addAll(regionBoundaries.get(region.label));
+            boundaries.addAll(regionBoundaries.get(region));
         }
         return boundaries;
     }
@@ -349,7 +342,7 @@ public class HierarchicalWatershed
         Basin basin = basins.iterator().next();
         
         // for each boundary, check if regions match the specified ones
-        for (Boundary boundary : regionBoundaries.get(basin.label))
+        for (Boundary boundary : regionBoundaries.get(basin))
         {
             if (boundary.hasSameBasins(basins))
             {
@@ -386,7 +379,7 @@ public class HierarchicalWatershed
             }
             else if (region instanceof Boundary)
             {
-                basins.addAll(findAllBasins(boundaryRegions.get(region.label)));
+                basins.addAll(findAllBasins(boundaryRegions.get(region)));
             }
             else
             {
@@ -405,7 +398,7 @@ public class HierarchicalWatershed
     {
         Basin basin = new Basin(label, minValue);
         this.basins.put(label, basin);
-        this.regionBoundaries.put(label, new ArrayList<Boundary>(4));
+        this.regionBoundaries.put(basin, new ArrayList<Boundary>(4));
         return basin;
     }
 
@@ -417,9 +410,9 @@ public class HierarchicalWatershed
      */
     public void recomputeDynamic(Basin basin)
     {
-//        double maxPass = lowestMinValue(regionBoundaries.get(basin.label));
-        double maxPass = lowestMinValue(basin.boundaries);
-        basin.dynamic = maxPass - basin.minValue;
+        double saddleValue = lowestMinValue(regionBoundaries.get(basin));
+//        double maxPass = lowestMinValue(basin.boundaries);
+        basin.dynamic = saddleValue - basin.minValue;
     }
     
      @Override
@@ -457,9 +450,6 @@ public class HierarchicalWatershed
         /** The label associated to this region. Initialized at creation. */
         int label;
         
-        /** The list of boundaries around this region. */
-        ArrayList<Boundary> boundaries; 
-        
         /** The minimum value within the region. Initialized at creation. */
         double minValue;
         
@@ -470,6 +460,8 @@ public class HierarchicalWatershed
          * regions (for boundary regions)
          */
         double dynamic = Double.POSITIVE_INFINITY;
+        
+        Region merge = null;
         
         /**
          * @return the list of basins this region contains.
@@ -490,12 +482,6 @@ public class HierarchicalWatershed
     public static class Basin extends Region
     {
         /**
-         * The boundary that floods this basin. Note that this is not
-         * necessarily a boundary of this basin.
-         */
-        Boundary floodingBoundary = null;
-        
-        /**
          * Creates a new Basin
          * 
          * @param label
@@ -507,25 +493,6 @@ public class HierarchicalWatershed
         {
             this.label = label;
             this.minValue = value;
-            
-            // average number of neighbor regions is 6
-            this.boundaries = new ArrayList<Boundary>(6);
-        }
-        
-        /**
-         * Returns the basin that floods this basin, or null if the basin is the
-         * root basin with minimum depth.
-         * 
-         * @return the basin that floods this basin, or null if this basin is
-         *         the root basin.
-         */
-        public Basin floodingBasin()
-        {
-            if (floodingBoundary == null)
-            {
-                return null;
-            }
-            return floodingBoundary.floodingBasin;
         }
         
         /**
@@ -562,13 +529,6 @@ public class HierarchicalWatershed
         ArrayList<Region> regions;
         
         /**
-         * The basin that floods this boundary.
-         * 
-         * Should be the basin from the adjacent basins with the lowest value.
-         */
-        Basin floodingBasin = null;
-        
-        /**
          * Creates a new Boundary.
          * 
          * @param label
@@ -585,14 +545,6 @@ public class HierarchicalWatershed
             
             this.regions = new ArrayList<>(adjacentRegions.size());
             this.regions.addAll(adjacentRegions);
-            
-            // we expect at most two boundaries, one for each extremity
-            this.boundaries = new ArrayList<Boundary>(2);
-            
-            for (Region region : this.regions)
-            {
-                region.boundaries.add(this);
-            }
         }
         
         /**
@@ -659,6 +611,83 @@ public class HierarchicalWatershed
     }
     
     /**
+     * The result of the merge of several (usually two) basins. Corresponds to
+     * the union of the pixels of the basins, and of the pixels of the mutual
+     * boundaries of enclosed basins.
+     */
+    public static class MergeBasin extends Basin
+    {
+        ArrayList<Region> mergedRegions;
+        
+        /**
+         * Creates a new MergeBasin.
+         * 
+         * @param label
+         *            the label of the region (used for debug)
+         * @param minValue
+         *            the minimum value within the merged regions. Usually the
+         *            minimum value within the flooding region.
+         * @param regions
+         *            the regions to merge.
+         */
+        public MergeBasin(int label, double minValue, Collection<Region> regions)
+        {
+            super(label, minValue);
+            this.mergedRegions = new ArrayList<>(regions.size());
+            this.mergedRegions.addAll(regions);
+        }
+        
+        public Collection<Basin> basins()
+        {
+            HashSet<Basin> res = new HashSet<Basin>();
+            for (Region region : this.mergedRegions)
+            {
+                res.addAll(region.basins());
+            }
+            return res;
+        }
+        
+        @Override
+        public String toString()
+        {
+            String regionString = HierarchicalWatershed.regionLabelsString(this.mergedRegions);
+            return String.format(Locale.ENGLISH, "MergeBasin(label=%d, minValue=%f, dynamic=%f, regions={%s})", this.label, this.minValue, this.dynamic, regionString);
+        }
+    }
+
+    /**
+     * The result of the merge of several (usually two) basins. Corresponds to
+     * the union of the pixels of the basins, and of the pixels of the mutual
+     * boundaries of enclosed basins.
+     */
+    public static class MergeBoundary extends Boundary
+    {
+        ArrayList<Region> mergedBoundaries;
+        
+        /**
+         * Creates a new MergeBasin. The value of minValue is initialized at
+         * creation from the minValue of the lowest basin.
+         * 
+         * @param label
+         *            the label of the region (used for debug)
+         * @param mergedRegions
+         *            the regions to merge.
+         */
+        public MergeBoundary(int label, double minValue, Collection<? extends Region> adjacentRegions)
+        {
+            super(label, minValue, adjacentRegions);
+        }
+        
+        @Override
+        public String toString()
+        {
+            String regionString = HierarchicalWatershed.regionLabelsString(this.regions);
+            return String.format(Locale.ENGLISH, "MergeBoundary(label=%d, minValue=%f, dynamic=%f, regions={%s})", this.label, this.minValue, this.dynamic, regionString);
+        }
+    }
+
+
+    /**
      * The result of the merge of several regions. Comprises the pixels of the
      * enclosed basins, as well as the pixels on their mutual boundaries.
      */
@@ -681,8 +710,6 @@ public class HierarchicalWatershed
             
             this.regions = new ArrayList<>(regions.size());
             this.regions.addAll(regions);
-            
-            this.boundaries = new ArrayList<Boundary>();
             
             // compute min value of the merge from min value of its regions
             this.minValue = HierarchicalWatershed.lowestMinValue(regions);
