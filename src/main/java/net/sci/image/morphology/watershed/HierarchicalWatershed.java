@@ -64,23 +64,6 @@ public class HierarchicalWatershed
         }
         return lowestBasin;
     }
-
-//    /**
-//     * @param regions
-//     *            a set of regions
-//     * @return the set of boundaries that are adjacent to at least one of
-//     *         the regions within the list.
-//     */
-//    @Deprecated
-//    public static final Collection<Boundary> adjacentBoundaries(Collection<Region> regions)
-//    {
-//        HashSet<Boundary> boundaries = new HashSet<>();
-//        for (Region region : regions)
-//        {
-//            boundaries.addAll(region.boundaries);
-//        }
-//        return boundaries;
-//    }
     
     /**
      * Utility class that determines if an element belongs to a basin by
@@ -553,6 +536,7 @@ public class HierarchicalWatershed
          * @return true if this boundary bounds exactly the same basins as the
          *         ones specified in the list
          */
+        //TODO: same code as hasSameRegions, possible duplicate.
         public boolean hasSameBasins(Collection<Basin> basinList)
         {
             if (this.regions.size() != basinList.size())
@@ -582,6 +566,29 @@ public class HierarchicalWatershed
                 res.addAll(region.basins());
             }
             return res;
+        }
+        
+        /**
+         * @param otherRegions
+         *            a list of regions
+         * @return true if this boundary bounds exactly the same regions as the
+         *         ones specified in the list
+         */
+        public boolean hasSameRegions(Collection<Region> otherRegions)
+        {
+            if (this.regions.size() != otherRegions.size())
+            {
+                return false;
+            }
+            
+            for (Region region : this.regions)
+            {
+                if (!otherRegions.contains(region))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
         
         /**
@@ -662,7 +669,7 @@ public class HierarchicalWatershed
      */
     public static class MergeBoundary extends Boundary
     {
-        ArrayList<Region> mergedBoundaries;
+        ArrayList<Boundary> mergedBoundaries;
         
         /**
          * Creates a new MergeBasin. The value of minValue is initialized at
@@ -676,6 +683,31 @@ public class HierarchicalWatershed
         public MergeBoundary(int label, double minValue, Collection<? extends Region> adjacentRegions)
         {
             super(label, minValue, adjacentRegions);
+            mergedBoundaries = new ArrayList<>(2);
+        }
+        
+        /**
+         * Updates the dynamic of this boundary, and recursively updates the
+         * dynamic of the merged boundaries.
+         * 
+         * @param dyn
+         *            the new dynamic value of this boundary
+         */
+        //TODO: call it only once at the end of processing?
+        public void updateDynamic(double dyn)
+        {
+            this.dynamic = dyn;
+            for (Boundary boundary : mergedBoundaries)
+            {
+                if (boundary instanceof MergeBoundary)
+                {
+                    ((MergeBoundary) boundary).updateDynamic(dyn);
+                }
+                else
+                {
+                    boundary.dynamic = dyn;
+                }
+            }
         }
         
         @Override
