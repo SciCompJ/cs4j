@@ -106,6 +106,11 @@ public class BufferedImageUtils
             
             throw new RuntimeException("Could not process color image with array of class " + array.getClass().getName());
         }
+        else if (image.getType() == Image.Type.DISTANCE)
+        {
+            DisplaySettings settings = image.getDisplaySettings();
+            return distanceMapToAwtImage((ScalarArray2D<?>) array, settings.displayRange[1], lut, settings.getBackgroundColor());
+        }
         
         // Process array depending on its data type
         if (array instanceof ScalarArray)
@@ -312,6 +317,34 @@ public class BufferedImageUtils
                 {
                     index = ((index - 1) % nLabels) + 1;
                 }
+                raster.setSample(x, y, 0, index); 
+            }
+        }
+
+        return bufImg;
+    }
+    
+    public static final java.awt.image.BufferedImage distanceMapToAwtImage(
+            ScalarArray2D<?> array, double distMax, ColorMap colormap, Color backgroundColor)
+    {
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        
+        // Computes the color model
+        IndexColorModel cm = createIndexColorModel(colormap, backgroundColor);  
+        
+        // Create the AWT image
+        int type = java.awt.image.BufferedImage.TYPE_BYTE_INDEXED ;
+        BufferedImage bufImg = new BufferedImage(sizeX, sizeY, type, cm);
+        
+        // Populate the raster
+        WritableRaster raster = bufImg.getRaster();
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                double value = array.getValue(x, y);
+                int index = (value == 0) ? 0 : (int) Math.floor((value * 254 / (distMax+0.001)) + 1);
                 raster.setSample(x, y, 0, index); 
             }
         }

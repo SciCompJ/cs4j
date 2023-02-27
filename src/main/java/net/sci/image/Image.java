@@ -61,6 +61,7 @@ public class Image
 		UNKNOWN, 
 		GRAYSCALE,
 		INTENSITY,
+		DISTANCE,
 		BINARY,
 		LABEL,
 		COLOR,
@@ -502,6 +503,8 @@ public class Image
         }
         case UNKNOWN:
             break;
+        default:
+            this.calibration.setChannelAxis(new CategoricalAxis("Value", Axis.Type.CHANNEL, new String[]{"Value"}));
         }
     }
     
@@ -665,7 +668,7 @@ public class Image
 	
     public boolean isScalarImage()
     {
-        return isGrayscaleImage() || isLabelImage() || this.type == Type.INTENSITY;
+        return isGrayscaleImage() || isLabelImage() || this.type == Type.INTENSITY || this.type == Type.DISTANCE;
     }
 
     public boolean isLabelImage()
