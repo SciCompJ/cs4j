@@ -18,6 +18,7 @@ import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
+import net.sci.array.scalar.Int;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.Scalar;
@@ -38,6 +39,9 @@ import net.sci.axis.CategoricalAxis;
  */
 public interface ImageType
 {
+    // =============================================================
+    // Implementation of global constants
+
     public final static ImageType GRAYSCALE = new ImageType()
     {
         @Override
@@ -99,12 +103,28 @@ public interface ImageType
             Class<?> dataClass = array.dataType();
             return dataClass == UInt8.class || dataClass == UInt8.class;
         }
+        
+        @Override
+        public void setupCalibration(Image image)
+        {
+            image.calibration.channelAxis = new CategoricalAxis("Grayscale", Axis.Type.CHANNEL, new String[] { "Value" });
+        }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupDisplaySettings(Image image)
         {
-            return new Calibration(array.dimensionality(), 
-                    new CategoricalAxis("Value", Axis.Type.CHANNEL, new String[] { "Value" }));
+            if (image.data instanceof UInt8Array)
+            {
+                image.displaySettings.displayRange = new double[]{0, 255};
+            }
+            else if (image.data instanceof ScalarArray)
+            {
+                image.displaySettings.displayRange = ((ScalarArray<?>) image.data).finiteValueRange();
+            }
+            else
+            {
+                throw new RuntimeException("Grayscale or intensity images require scalar array for data");
+            }        
         }
 
         @Override
@@ -112,6 +132,7 @@ public interface ImageType
         {
             return "Grayscale";
         }
+
     };
 
     public final static ImageType INTENSITY = new ImageType()
@@ -141,10 +162,15 @@ public interface ImageType
         }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupCalibration(Image image)
         {
-            return new Calibration(array.dimensionality(), 
-                    new CategoricalAxis("Value", Axis.Type.CHANNEL, new String[] { "Value" }));
+            image.calibration.channelAxis = new CategoricalAxis("Intensity", Axis.Type.CHANNEL, new String[] { "Value" });
+        }
+
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
+            image.displaySettings.displayRange = ((ScalarArray<?>) image.data).finiteValueRange();
         }
 
         @Override
@@ -212,12 +238,24 @@ public interface ImageType
         }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupCalibration(Image image)
         {
-            return new Calibration(array.dimensionality(), 
-                    new CategoricalAxis("Distance", Axis.Type.CHANNEL, new String[] { "Distance" }));
+            image.calibration.channelAxis = new CategoricalAxis("Distance", Axis.Type.CHANNEL, new String[] { "Distance" });
         }
         
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
+            DisplaySettings settings = image.getDisplaySettings();
+            
+            // updates display range
+            settings.displayRange = ((ScalarArray<?>) image.data).finiteValueRange();
+            
+            // compute JET lut by default
+            settings.setColorMap(ColorMaps.JET.createColorMap(255));
+            settings.setBackgroundColor(RGB8.WHITE);
+        }
+
         @Override
         public String toString()
         {
@@ -284,10 +322,15 @@ public interface ImageType
         }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupCalibration(Image image)
         {
-            return new Calibration(array.dimensionality(), 
-                    new CategoricalAxis("Value", Axis.Type.CHANNEL, new String[] { "Value" }));
+            image.calibration.channelAxis = new CategoricalAxis("Value", Axis.Type.CHANNEL, new String[] { "Value" });
+        }
+
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
+            image.displaySettings.displayRange = new double[]{0, 1};
         }
 
         @Override
@@ -354,10 +397,29 @@ public interface ImageType
         }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupCalibration(Image image)
         {
-            return new Calibration(array.dimensionality(), 
-                    new CategoricalAxis("Label", Axis.Type.CHANNEL, new String[] { "Label" }));
+            image.calibration.channelAxis = new CategoricalAxis("Label", Axis.Type.CHANNEL, new String[] { "Label" });
+        }
+
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
+            // check array type
+            if (!(image.data instanceof IntArray))
+            {
+                throw new RuntimeException("Label images require int array for data");
+            }
+        
+            @SuppressWarnings("unchecked")
+            IntArray<? extends Int> array = (IntArray<? extends Int>) image.data;
+            int nLabels = array.maxInt();
+            image.displaySettings.displayRange = new double[]{0, nLabels};
+            
+            // default display of label maps: Glasbey LUt and white background
+            image.displaySettings.backgroundColor = RGB8.WHITE;
+            ColorMap colorMap = ColorMaps.GLASBEY.createColorMap(nLabels);
+            image.displaySettings.colorMap = colorMap;
         }
 
         @Override
@@ -481,17 +543,33 @@ public interface ImageType
         }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupCalibration(Image image)
         {
+            // update calibration
             String[] channelNames = new String[]{"Red", "Green", "Blue"};
-            return new Calibration(array.dimensionality(), 
-                    new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames));
+            image.calibration.channelAxis = new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames);
         }
-
+        
         @Override
         public String toString()
         {
             return "Color";
+        }
+
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
+            // For color images, display range is applied to each channel identically.
+            if (image.data.dataType() == RGB8.class)
+            {
+                // (in theory not used)
+                image.displaySettings.displayRange = new double[]{0, 255};
+            }
+            else if (image.data.dataType() == RGB16.class)
+            {
+                // can be later adjusted
+                image.displaySettings.displayRange = new double[]{0, 65535};
+            }
         }
     };
     
@@ -520,11 +598,18 @@ public interface ImageType
         }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupCalibration(Image image)
         {
+            // update calibration
             String[] channelNames = new String[]{"Real", "Imag"};
-            return new Calibration(array.dimensionality(), 
-                    new CategoricalAxis("Parts", Axis.Type.CHANNEL, channelNames));
+            image.calibration.channelAxis = new CategoricalAxis("Parts", Axis.Type.CHANNEL, channelNames);
+        }
+        
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
+            ScalarArray<?> norm = VectorArray.norm((VectorArray<?>) image.data);
+            image.displaySettings.displayRange = norm.finiteValueRange();
         }
         
         @Override
@@ -559,9 +644,10 @@ public interface ImageType
         }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupCalibration(Image image)
         {
             // check image data type
+            Array<?> array = image.getData();
             if (!(array instanceof VectorArray))
             {
                 throw new RuntimeException("Image to calibrate must refer to an array of Vector");
@@ -578,8 +664,14 @@ public interface ImageType
             }
             
             // update calibration
-            return new Calibration(array.dimensionality(), 
-                    new CategoricalAxis("Dimensions", Axis.Type.CHANNEL, channelNames));
+            image.calibration.channelAxis = new CategoricalAxis("Dimensions", Axis.Type.CHANNEL, channelNames);
+        }
+        
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
+            ScalarArray<?> norm = VectorArray.norm((VectorArray<?>) image.data);
+            image.displaySettings.displayRange = norm.finiteValueRange();
         }
         
         @Override
@@ -608,15 +700,23 @@ public interface ImageType
         }
         
         @Override
+        public void setupDisplaySettings(Image image)
+        {
+            ScalarArray<?> norm = VectorArray.norm((VectorArray<?>) image.data);
+            image.displaySettings.displayRange = norm.finiteValueRange();
+        }
+        
+        @Override
         public boolean isCompatibleWith(Array<?> array)
         {
             return array instanceof VectorArray; 
         }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupCalibration(Image image)
         {
             // check image data type
+            Array<?> array = image.getData();
             if (!(array instanceof VectorArray))
             {
                 throw new RuntimeException("Image to calibrate must refer to an array of Vector");
@@ -633,8 +733,7 @@ public interface ImageType
             }
             
             // update calibration
-            return new Calibration(array.dimensionality(), 
-                    new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames));
+            image.calibration.channelAxis = new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames);
         }
         
         @Override
@@ -685,9 +784,13 @@ public interface ImageType
         }
 
         @Override
-        public Calibration createCalibration(Array<?> array)
+        public void setupCalibration(Image image)
         {
-            return new Calibration(array.dimensionality());
+        }
+        
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
         }
         
         @Override
@@ -696,7 +799,11 @@ public interface ImageType
             return "Unknown";
         }
     };
+    
         
+    // =============================================================
+    // Declaration of interface methods
+
     /**
      * Converts the input (2D) image into an instance of AWT BufferedImage that
      * can be easily displayed. The type and representation of the raster are
@@ -711,17 +818,27 @@ public interface ImageType
     public boolean isCompatibleWith(Array<?> array);
     
     /**
-     * Creates an initial image calibration from array size and data type. This
+     * Updates the image calibration from array size and data type. This
      * method is intended to be called during initialization of Image class.
      * Updates some settings such as channel names.
      * 
      * @param array
      *            the image data
-     * @return an initial calibration for the image containing the data.
      */
-    public Calibration createCalibration(Array<?> array);
+    public void setupCalibration(Image image);
+    
+    /**
+     * Setup some default settings for the display of the image. Could iterate
+     * over image values to determine value range.
+     * 
+     * @param image the image whose display settings need update
+     */
+    public void setupDisplaySettings(Image image);
     
     
+    // =============================================================
+    // Static utility methods
+
     private static void checkDimensionalityIs2(Array<?> array)
     {
         if (array.dimensionality() != 2)

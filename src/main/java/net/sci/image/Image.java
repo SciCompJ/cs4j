@@ -20,16 +20,11 @@ import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.Arrays;
 import net.sci.array.binary.Binary;
-import net.sci.array.color.ColorMap;
-import net.sci.array.color.ColorMaps;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB8;
-import net.sci.array.scalar.Int;
-import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.VectorArray;
 import net.sci.image.io.ImageIOImageReader;
 import net.sci.image.io.MetaImageReader;
@@ -264,57 +259,7 @@ public class Image
 
 	private void setupDisplayRange()
 	{
-	    if (this.type == ImageType.BINARY)
-		{
-			this.displaySettings.displayRange = new double[]{0, 1};
-		}
-		else if (this.type == ImageType.GRAYSCALE || this.type == ImageType.INTENSITY)
-		{
-			if (this.data instanceof UInt8Array)
-			{
-				this.displaySettings.displayRange = new double[]{0, 255};
-			}
-			else if (this.data instanceof ScalarArray)
-			{
-				this.displaySettings.displayRange = ((ScalarArray<?>) this.data).finiteValueRange();
-			}
-			else
-			{
-				throw new RuntimeException("Grayscale or intensity images require scalar array for data");
-			}
-		}
-        else if (this.type == ImageType.COLOR)
-        {
-            // For color images, display range is applied to each channel identically.
-            if (this.data.dataType() == RGB8.class)
-            {
-                // (in theory not used)
-                this.displaySettings.displayRange = new double[]{0, 255};
-            }
-            else if (this.data.dataType() == RGB16.class)
-            {
-                // can be later adjusted
-                this.displaySettings.displayRange = new double[]{0, 65535};
-            }
-        }
-		else if (this.type == ImageType.LABEL)
-		{
-			// check array type
-			if (!(this.data instanceof IntArray))
-			{
-				throw new RuntimeException("Label images require int array for data");
-			}
-		
-			@SuppressWarnings("unchecked")
-			IntArray<? extends Int> array = (IntArray<? extends Int>) this.data;
-			int nLabels = array.maxInt();
-			this.displaySettings.displayRange = new double[]{0, nLabels};
-			
-			// default display of label maps: Glasbey LUt and white background
-			this.displaySettings.backgroundColor = RGB8.WHITE;
-			ColorMap colorMap = ColorMaps.GLASBEY.createColorMap(nLabels);
-			this.displaySettings.colorMap = colorMap;
-		}
+	    this.type.setupDisplaySettings(this);
 	}
 	
 	private void copySettings(Image parent)
@@ -327,7 +272,7 @@ public class Image
 		{
 		    // update type and refresh calibration
 		    this.type = parent.type;
-		    this.calibration = this.type.createCalibration(data);
+		    this.type.setupCalibration(this);
 		    
 		    if (this.type == ImageType.COLOR)
 		    {
@@ -368,11 +313,7 @@ public class Image
 	 */
 	public Image duplicate()
 	{
-	    Image res = new Image(this.data.duplicate(), this);
-	    
-	    // some fields are not copied by constructor
-	    res.type = this.type;
-	    return res;
+	    return new Image(this.data.duplicate(), this.type, this);
 	}
 	
 	
@@ -427,7 +368,8 @@ public class Image
      */
     private void initCalibration()
     {
-        this.calibration = this.type.createCalibration(this.data);
+        this.calibration = new Calibration(this.getDimension());
+        this.type.setupCalibration(this);
     }
     
     
@@ -585,7 +527,7 @@ public class Image
 	public void setType(ImageType type)
 	{
 		this.type = type;
-		setupDisplayRange();
+		this.type.setupDisplaySettings(this);
 	}
 	
     public boolean isScalarImage()
