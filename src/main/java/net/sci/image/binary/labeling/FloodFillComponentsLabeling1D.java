@@ -18,6 +18,7 @@ import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array1D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayOperator;
+import net.sci.image.ImageType;
 
 /**
  * Computes the labels of the connected components in a binary image. The type
@@ -190,7 +191,7 @@ public class FloodFillComponentsLabeling1D extends AlgoStub implements ImageArra
 		Array<?> array = image.getData();
 		Array<?> newArray = createEmptyOutputArray(array);
 		Image result = new Image(newArray, image);
-		result.setType(Image.Type.LABEL);
+		result.setType(ImageType.LABEL);
 		return result;
 	}
 
@@ -223,7 +224,7 @@ public class FloodFillComponentsLabeling1D extends AlgoStub implements ImageArra
 	public Image process(Image image)
 	{
 	    Array<?> result = process(image.getData());
-	    return new Image(result, Image.Type.LABEL, image);
+	    return new Image(result, ImageType.LABEL, image);
 	}
 	
     @Override

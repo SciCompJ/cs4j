@@ -10,7 +10,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import net.sci.array.Array;
-import net.sci.image.BufferedImageUtils;
 import net.sci.image.Image;
 
 /**
@@ -45,7 +44,7 @@ public class ImageIOImageWriter implements ImageWriter
 		}
 		
 		// convert to buffered image
-		BufferedImage bufImg = BufferedImageUtils.createAwtImage(image);
+		BufferedImage bufImg = image.getType().createAwtImage(image);
 		
 		String format = formatFromFile(file);
 		ImageIO.write(bufImg, format, file);

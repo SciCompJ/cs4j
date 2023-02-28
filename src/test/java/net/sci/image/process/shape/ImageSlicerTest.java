@@ -11,6 +11,7 @@ import net.sci.array.scalar.UInt8Array3D;
 import net.sci.axis.NumericalAxis;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
+import net.sci.image.ImageType;
 
 /**
  * @author dlegland
@@ -88,7 +89,7 @@ public class ImageSlicerTest
         array.setInt(20, 10, 10, 20);
         array.setInt(10, 20, 10, 30);
         array.setInt(20, 20, 10, 40);
-        Image image = new Image(array, Image.Type.LABEL);
+        Image image = new Image(array, ImageType.LABEL);
 
         Image slice = ImageSlicer.slice2d(image, 10);
         assertEquals(50, slice.getSize(0));

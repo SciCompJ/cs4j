@@ -17,6 +17,7 @@ import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.Image;
+import net.sci.image.ImageType;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat32;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16;
 import net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat32;
@@ -92,7 +93,7 @@ public class BinaryImages
 			throw new RuntimeException("Can not manage binary array of class: " + array.getClass());
 		}
 
-		labelImage = new Image(labels, Image.Type.LABEL, image);
+		labelImage = new Image(labels, ImageType.LABEL, image);
 
 		return labelImage;
 	}

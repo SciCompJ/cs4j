@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.Image;
+import net.sci.image.ImageType;
 
 import org.junit.Test;
 
@@ -25,11 +26,11 @@ public class MorphologicalReconstructionTest
     public final void testKillBordersImage_Binary()
     {
         BinaryArray2D array = create_BinaryArray2D_NineSquares();
-        Image image = new Image(array, Image.Type.BINARY);
+        Image image = new Image(array, ImageType.BINARY);
         
         Image res = MorphologicalReconstruction.killBorders(image);
 
-        assertTrue(res.getType() == Image.Type.BINARY);
+        assertTrue(res.getType() == ImageType.BINARY);
     }
 
     /**
@@ -39,11 +40,11 @@ public class MorphologicalReconstructionTest
     public final void testKillBordersImage_Label()
     {
         UInt8Array2D array = create_UInt8Array2D_NineSquares();
-        Image image = new Image(array, Image.Type.LABEL);
+        Image image = new Image(array, ImageType.LABEL);
         
         Image res = MorphologicalReconstruction.killBorders(image);
 
-        assertTrue(res.getType() == Image.Type.LABEL);
+        assertTrue(res.getType() == ImageType.LABEL);
     }
 
     /**
@@ -95,11 +96,11 @@ public class MorphologicalReconstructionTest
     public final void testFillHolesImage_Binary()
     {
         BinaryArray2D array = create_BinaryArray2D_NineSquares();
-        Image image = new Image(array, Image.Type.BINARY);
+        Image image = new Image(array, ImageType.BINARY);
         
         Image res = MorphologicalReconstruction.fillHoles(image);
 
-        assertTrue(res.getType() == Image.Type.BINARY);
+        assertTrue(res.getType() == ImageType.BINARY);
     }
 
     /**

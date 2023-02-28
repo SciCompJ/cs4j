@@ -24,7 +24,7 @@ public class CalibrationTest
     public final void channelAxis_ColorImage()
     {
         RGB8Array2D array = RGB8Array2D.create(8, 6);
-        Image image = new Image(array, Image.Type.COLOR);
+        Image image = new Image(array, ImageType.COLOR);
         
         Calibration calib = image.getCalibration();
         
@@ -48,7 +48,7 @@ public class CalibrationTest
     public final void testGetChannelAxis()
     {
         double[] resol = new double[] {2.5, 2.5, 2.8};
-        Calibration calib = new Calibration(resol, "µm");
+        Calibration calib = new Calibration(resol, "ï¿½m");
         
         Axis axis = calib.getChannelAxis();
         assertNotNull(axis);
@@ -62,7 +62,7 @@ public class CalibrationTest
     public final void testGetXAxis()
     {
         double[] resol = new double[] {2.5, 2.5, 2.8};
-        Calibration calib = new Calibration(resol, "µm");
+        Calibration calib = new Calibration(resol, "ï¿½m");
         
         Axis axis = calib.getXAxis();
         assertNotNull(axis);
@@ -76,7 +76,7 @@ public class CalibrationTest
     public final void testGetYAxis()
     {
         double[] resol = new double[] {2.5, 2.5, 2.8};
-        Calibration calib = new Calibration(resol, "µm");
+        Calibration calib = new Calibration(resol, "ï¿½m");
         
         Axis axis = calib.getYAxis();
         assertNotNull(axis);
@@ -90,7 +90,7 @@ public class CalibrationTest
     public final void testGetZAxis()
     {
         double[] resol = new double[] {2.5, 2.5, 2.8};
-        Calibration calib = new Calibration(resol, "µm");
+        Calibration calib = new Calibration(resol, "ï¿½m");
         
         Axis axis = calib.getZAxis();
         assertNotNull(axis);
@@ -105,7 +105,7 @@ public class CalibrationTest
     {
         double[] resol = new double[] {2.0, 2.0};
         double[] origin = new double[] {0.0, 0.0};
-        Calibration calib = new Calibration(resol, origin, "µm");
+        Calibration calib = new Calibration(resol, origin, "ï¿½m");
         
         int[] dims = new int[] {300, 200};
         double[] sizes = calib.physicalSize(dims);
@@ -123,7 +123,7 @@ public class CalibrationTest
     {
         double[] resol = new double[] {2.0, 2.0};
         double[] origin = new double[] {0.0, 0.0};
-        Calibration calib = new Calibration(resol, origin, "µm");
+        Calibration calib = new Calibration(resol, origin, "ï¿½m");
         
         int[] dims = new int[] {300, 200};
         double[][] extents = calib.physicalExtent(dims);

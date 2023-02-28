@@ -38,12 +38,27 @@ public class Calibration
     // =============================================================
     // Constructors
 
-   /**
+    /**
      * Creates default numerical axes for each image dimension.
      */
     public Calibration(int nDims)
     {
         setupAxes(nDims);
+    }
+    
+    /**
+     * Creates default numerical axes for each image dimension, and initializes
+     * channel axis.
+     * 
+     * @param nDims
+     *            the number of dimension of the image
+     * @param channelAxis
+     *            description of channel(s)
+     */
+    public Calibration(int nDims, CategoricalAxis channelAxis)
+    {
+        setupAxes(nDims);
+        setChannelAxis(channelAxis);
     }
     
     /**
@@ -375,6 +390,22 @@ public class Calibration
         return res;
     }
     
+    public ImageAxis[] duplicateAxes()
+    {
+        // create new Calibration object
+        int nd = this.axes.length;
+        ImageAxis[] res = new ImageAxis[nd];
+        
+        // duplicate direction axes
+        for (int d = 0; d < nd; d++)
+        {
+            res[d] = this.axes[d].duplicate();
+        }
+        
+        // return duplicated axes
+        return res;
+    }
+    
     // =============================================================
     // debug methods
 
@@ -397,7 +428,7 @@ public class Calibration
     public static final void main(String... args)
     {
         double[] resol = new double[] {2.5, 2.5, 2.8};
-        Calibration calib = new Calibration(resol, "µm");
+        Calibration calib = new Calibration(resol, "\u00B5m");
         calib.print(System.out);
     }
 }

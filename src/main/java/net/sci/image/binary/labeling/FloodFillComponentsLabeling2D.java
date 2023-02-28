@@ -17,6 +17,7 @@ import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayOperator;
+import net.sci.image.ImageType;
 import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.FloodFill;
 
@@ -266,7 +267,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 		Array<?> array = image.getData();
 		Array<?> newArray = createEmptyOutputArray(array);
 		Image result = new Image(newArray, image);
-		result.setType(Image.Type.LABEL);
+		result.setType(ImageType.LABEL);
 		return result;
 	}
 
@@ -299,7 +300,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 	public Image process(Image image)
 	{
 	    Array<?> result = process(image.getData());
-	    return new Image(result, Image.Type.LABEL, image);
+	    return new Image(result, ImageType.LABEL, image);
 	}
 	
     @Override

@@ -31,9 +31,12 @@ import net.sci.image.process.shape.ImageSlicer;
  * Collection of methods for managing conversion to java BufferedImage
  * class.
  * 
+ * @deprecated conversion to BufferedImage is now managed by ImageType instances
+ * 
  * @author dlegland
  *
  */
+@Deprecated
 public class BufferedImageUtils
 {
 	/**
@@ -106,7 +109,7 @@ public class BufferedImageUtils
             
             throw new RuntimeException("Could not process color image with array of class " + array.getClass().getName());
         }
-        else if (image.getType() == Image.Type.DISTANCE)
+        else if (image.getType() == ImageType.DISTANCE)
         {
             DisplaySettings settings = image.getDisplaySettings();
             return distanceMapToAwtImage((ScalarArray2D<?>) array, settings.displayRange[1], lut, settings.getBackgroundColor());

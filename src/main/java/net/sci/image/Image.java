@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.Arrays;
 import net.sci.array.binary.Binary;
 import net.sci.array.color.ColorMap;
 import net.sci.array.color.ColorMaps;
@@ -30,8 +31,6 @@ import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.VectorArray;
-import net.sci.axis.Axis;
-import net.sci.axis.CategoricalAxis;
 import net.sci.image.io.ImageIOImageReader;
 import net.sci.image.io.MetaImageReader;
 import net.sci.image.io.TiffImageReader;
@@ -48,28 +47,6 @@ import net.sci.image.io.tiff.TiffTag;
  */
 public class Image
 {
-	// =============================================================
-	// Public enumerations
-
-	/**
-	 * The different types of images.
-	 * @author dlegland
-	 *
-	 */
-	public enum Type
-	{
-		UNKNOWN, 
-		GRAYSCALE,
-		INTENSITY,
-		DISTANCE,
-		BINARY,
-		LABEL,
-		COLOR,
-		COMPLEX,
-		GRADIENT,
-		VECTOR	
-	}
-	
 	// =============================================================
 	// Static methods
 
@@ -123,7 +100,7 @@ public class Image
 	/**
 	 * The type of image, giving information on how to interpret image element.
 	 */
-	Type type;
+	ImageType type;
 	
 	/**
 	 * The name of the image, used to identify it and populate GUI widgets.
@@ -185,7 +162,7 @@ public class Image
      * @param type
      *            the type of image (Intensity, label, binary...)
 	 */
-	public Image(Array<?> data, Type type)
+	public Image(Array<?> data, ImageType type)
 	{
 		this.data = data;
 		this.type = type;
@@ -220,7 +197,7 @@ public class Image
      * @param parent
      *            the parent image used for inferring meta data
      */
-	public Image(Array<?> data, Type type, Image parent)
+	public Image(Array<?> data, ImageType type, Image parent)
 	{
 		this(data, type);
 		
@@ -235,41 +212,36 @@ public class Image
 	{
 		if (this.data.dataType() == Binary.class)
 		{
-			this.type = Type.BINARY;
+			this.type = ImageType.BINARY;
 		}
 		else if (this.data.dataType() == UInt8.class)
-//if (this.data instanceof UInt8Array) 
 		{
-			this.type = Type.GRAYSCALE;
+			this.type = ImageType.GRAYSCALE;
 		} 
         else if (this.data.dataType() == UInt16.class)
-//		else if (this.data instanceof UInt16Array) 
 		{
-			this.type = Type.GRAYSCALE;
+			this.type = ImageType.GRAYSCALE;
 		}
-//        else if (this.data.dataType() == UInt8.class)
 		else if (this.data instanceof ScalarArray) 
 		{
-			this.type = Type.INTENSITY;
+			this.type = ImageType.INTENSITY;
 		}
         else if (this.data.dataType() == RGB8.class)
-//        else if (this.data instanceof RGB8Array)
         {
-            this.type = Type.COLOR;
+            this.type = ImageType.COLOR;
         } 
         else if (this.data.dataType() == RGB16.class)
-//        else if (this.data instanceof RGB16Array)
         {
-            this.type = Type.COLOR;
+            this.type = ImageType.COLOR;
         } 
 		else if (this.data instanceof VectorArray) 
 		{
-			this.type = Type.VECTOR;
+			this.type = ImageType.VECTOR;
 		}
 		else
 		{
 			System.out.println("Could not determine image type for data of class " + this.data.getClass());
-			this.type = Type.UNKNOWN;
+			this.type = ImageType.UNKNOWN;
 		}
 	}
 
@@ -292,11 +264,11 @@ public class Image
 
 	private void setupDisplayRange()
 	{
-	    if (this.type == Type.BINARY)
+	    if (this.type == ImageType.BINARY)
 		{
 			this.displaySettings.displayRange = new double[]{0, 1};
 		}
-		else if (this.type == Type.GRAYSCALE || this.type == Type.INTENSITY)
+		else if (this.type == ImageType.GRAYSCALE || this.type == ImageType.INTENSITY)
 		{
 			if (this.data instanceof UInt8Array)
 			{
@@ -311,7 +283,7 @@ public class Image
 				throw new RuntimeException("Grayscale or intensity images require scalar array for data");
 			}
 		}
-        else if (this.type == Type.COLOR)
+        else if (this.type == ImageType.COLOR)
         {
             // For color images, display range is applied to each channel identically.
             if (this.data.dataType() == RGB8.class)
@@ -325,7 +297,7 @@ public class Image
                 this.displaySettings.displayRange = new double[]{0, 65535};
             }
         }
-		else if (this.type == Type.LABEL)
+		else if (this.type == ImageType.LABEL)
 		{
 			// check array type
 			if (!(this.data instanceof IntArray))
@@ -350,13 +322,14 @@ public class Image
 		this.name = parent.name;
 		this.extension = parent.extension;
 		
-		// duplicate the spatial calibration
-		this.calibration = parent.calibration.duplicate(); 
-
-		// copy display settings only if same data type
-		if (this.type == parent.type)
+		// Check if parent type is compatible with data
+		if (parent.type.isCompatibleWith(this.data))
 		{
-		    if (this.type == Type.COLOR)
+		    // update type and refresh calibration
+		    this.type = parent.type;
+		    this.calibration = this.type.createCalibration(data);
+		    
+		    if (this.type == ImageType.COLOR)
 		    {
 		        // Additional processing to propagate settings only if same data type
 		        if (this.data.dataType() == RGB8.class && parent.data.dataType() == RGB8.class)
@@ -374,6 +347,12 @@ public class Image
 		    }
 		}
 		
+        // duplicate the spatial calibration if appropriate
+        if (Arrays.isSameSize(this.data, parent.data))
+        {
+            this.calibration.axes = parent.calibration.duplicateAxes(); 
+        }
+        
         // copy meta-data if any (may be obsolete...)
         this.tiffTags = parent.tiffTags;
 	}
@@ -448,64 +427,7 @@ public class Image
      */
     private void initCalibration()
     {
-        int nd = this.getDimension();
-        this.calibration = new Calibration(nd);
-        
-        // initialize channel axis depending on image type
-        switch (type)
-        {
-        case GRAYSCALE:
-        case INTENSITY:
-        case BINARY:
-            this.calibration.setChannelAxis(new CategoricalAxis("Value", Axis.Type.CHANNEL, new String[]{"Value"}));
-            break;
-        case LABEL:
-            this.calibration.setChannelAxis(new CategoricalAxis("Label", new String[]{"Label"}));
-            break;
-            
-        case COLOR:
-        {
-            String[] channelNames = new String[]{"Red", "Green", "Blue"};
-            this.calibration.setChannelAxis(new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames));
-            break;
-        }
-        case COMPLEX:
-        {
-            String[] channelNames = new String[]{"Real", "Imag"};
-            this.calibration.setChannelAxis(new CategoricalAxis("Parts", Axis.Type.CHANNEL, channelNames));
-            break;
-        }
-        case GRADIENT:
-        {
-            int nChannels = ((VectorArray<?>) this.data).channelCount();
-            String[] channelNames = new String[nChannels];
-            int nDigits = (int) Math.ceil(Math.log10(nChannels));
-            String pattern = "G%0" + nDigits + "d";
-            for (int c = 0; c < nChannels; c++)
-            {
-                channelNames[c] = String.format(pattern, c);
-            }
-            this.calibration.setChannelAxis(new CategoricalAxis("Dimensions", Axis.Type.CHANNEL, channelNames));
-            break;
-        }
-        case VECTOR:
-        {
-            int nChannels = ((VectorArray<?>) this.data).channelCount();
-            String[] channelNames = new String[nChannels];
-            int nDigits = (int) Math.ceil(Math.log10(nChannels));
-            String pattern = "C%0" + nDigits + "d";
-            for (int c = 0; c < nChannels; c++)
-            {
-                channelNames[c] = String.format(pattern, c);
-            }
-            this.calibration.setChannelAxis(new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames));
-            break;
-        }
-        case UNKNOWN:
-            break;
-        default:
-            this.calibration.setChannelAxis(new CategoricalAxis("Value", Axis.Type.CHANNEL, new String[]{"Value"}));
-        }
+        this.calibration = this.type.createCalibration(this.data);
     }
     
     
@@ -649,7 +571,7 @@ public class Image
 	/**
 	 * @return the image type
 	 */
-	public Type getType()
+	public ImageType getType()
 	{
 		return type;
 	}
@@ -660,7 +582,7 @@ public class Image
      * @param type
      *            the type of data within this image
      */
-	public void setType(Type type)
+	public void setType(ImageType type)
 	{
 		this.type = type;
 		setupDisplayRange();
@@ -668,32 +590,32 @@ public class Image
 	
     public boolean isScalarImage()
     {
-        return isGrayscaleImage() || isLabelImage() || this.type == Type.INTENSITY || this.type == Type.DISTANCE;
+        return isGrayscaleImage() || isLabelImage() || this.type == ImageType.INTENSITY || this.type == ImageType.DISTANCE;
     }
 
     public boolean isLabelImage()
     {
-        return this.type == Type.LABEL || this.type == Type.BINARY;
+        return this.type == ImageType.LABEL || this.type == ImageType.BINARY;
     }
 
 	public boolean isGrayscaleImage()
 	{
-		return this.type == Type.GRAYSCALE || this.type == Type.BINARY;
+		return this.type == ImageType.GRAYSCALE || this.type == ImageType.BINARY;
 	}
 
     public boolean isBinaryImage()
     {
-        return this.type == Type.BINARY;
+        return this.type == ImageType.BINARY;
     }
 
 	public boolean isVectorImage()
 	{
-		return this.type == Type.COLOR || this.type == Type.VECTOR || this.type == Type.COMPLEX || this.type == Type.GRADIENT;
+		return this.type == ImageType.COLOR || this.type == ImageType.VECTOR || this.type == ImageType.COMPLEX || this.type == ImageType.GRADIENT;
 	}
 
     public boolean isColorImage()
     {
-        return this.type == Type.COLOR;
+        return this.type == ImageType.COLOR;
     }
 
 	/**
@@ -712,7 +634,7 @@ public class Image
 
 	public void show()
 	{
-	    BufferedImage bImg = BufferedImageUtils.createAwtImage(this);
+	    BufferedImage bImg = this.type.createAwtImage(this);
 	    
 	    JFrame frame = new JFrame(this.name);
 	    frame.setTitle(this.name);
