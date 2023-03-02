@@ -164,6 +164,24 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
     @Override
     public String toString()
     {
+        return this.toString("%g");
+    }
+    
+    /**
+     * Overrides the method to display a String representation of this values
+     * within the array, specifying the format used to display numeric values.
+     * 
+     * Example:
+     * <pre>{@code System.out.println(array.toString("%7.2f"));}</pre>
+     * 
+     * @param numberFormat
+     *            the pattern used to convert values to string, e.g. "%5.2f",
+     *            "%g"...
+     * @return a String representation of the inner values of the array.
+     */
+    public String toString(String numberFormat)
+    {
+        String format = " " + numberFormat;
         StringBuffer buffer = new StringBuffer();
         buffer.append(String.format(Locale.ENGLISH, "(%d x %d) Scalar array with values:", this.size0, this.size1));
         for (int y = 0; y < this.size1; y++)
@@ -171,12 +189,13 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
             buffer.append("\n");
             for (int x = 0; x < this.size0; x++)
             {
-                buffer.append(String.format(Locale.ENGLISH, " %g", getValue(x, y)));
+                buffer.append(String.format(Locale.ENGLISH, format, getValue(x, y)));
             }
         }
         return buffer.toString();
     }
     
+
     // =============================================================
     // Inner implementation of iterator on double values
 	
