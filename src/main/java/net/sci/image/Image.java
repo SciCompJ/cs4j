@@ -267,8 +267,9 @@ public class Image
 		this.name = parent.name;
 		this.extension = parent.extension;
 		
-		// Check if parent type is compatible with data
-		if (parent.type.isCompatibleWith(this.data))
+        // Check if parent type is compatible with data
+        // (escape the case of binary images, that should not be considered as intensity nor distance)
+        if (parent.type.isCompatibleWith(this.data) && this.data.dataType() != Binary.class)
 		{
 		    // update type and refresh calibration
 		    this.type = parent.type;
