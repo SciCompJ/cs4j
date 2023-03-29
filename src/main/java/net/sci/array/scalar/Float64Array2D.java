@@ -78,22 +78,41 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
 	}
 
 
-	// =============================================================
-	// Specialization of Array2D 
+    // =============================================================
+    // Specialization of ScalarArray 
 
-    @Override
-    public void set(int x, int y, Float64 value)
-    {
-        setValue(x, y, value.value);
-    }
-    
     /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#setValue(int, int, double)
+     * @see net.sci.array.scalar.ScalarArray#getValue(int[])
+     */
+    @Override
+    public double getValue(int[] pos)
+    {
+       return getValue(pos[0], pos[1]);
+    }
+
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
      */
     @Override
     public void setValue(int[] pos, double value)
     {
         setValue(pos[0], pos[1], value);
+    }
+    
+    
+    // =============================================================
+    // Specialization of Array2D 
+
+    @Override
+    public Float64 get(int x, int y)
+    {
+        return new Float64(getValue(x, y));
+    }
+    
+    @Override
+    public void set(int x, int y, Float64 value)
+    {
+        setValue(x, y, value.value);
     }
     
 
@@ -144,13 +163,19 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
         }
         
         @Override
+        public double getValue(int x, int y)
+        {
+            return this.array.getValue(new int[] {x, y});
+        }
+
+        @Override
         public void setValue(int x, int y, double floatValue)
         {
             this.array.setValue(new int[] {x, y}, floatValue);
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return this.array.getValue(pos);
         }

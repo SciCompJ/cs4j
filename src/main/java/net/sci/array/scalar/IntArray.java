@@ -78,7 +78,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	 *            the position
 	 * @return the integer value
 	 */
-	public int getInt(int... pos);
+	public int getInt(int[] pos);
 	
 	/**
 	 * Sets the value at the specified position as an integer.
@@ -140,7 +140,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	public IntArray<T> duplicate();
 
     @Override
-    public default double getValue(int... pos)
+    public default double getValue(int[] pos)
     {
         return getInt(pos);
     }

@@ -170,7 +170,16 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	// =============================================================
 	// Implementation of the Array2D interface
 
-	@Override
+    @Override
+    public RGB8 get(int x, int y)
+    {
+        int r = this.buffer.getInt(x, y, 0);
+        int g = this.buffer.getInt(x, y, 1);
+        int b = this.buffer.getInt(x, y, 2);
+        return new RGB8(r, g, b);
+    }
+
+    @Override
     public void set(int x, int y, RGB8 rgb)
     {
         this.buffer.setInt(x, y, 0, rgb.getSample(0));
@@ -182,14 +191,9 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public RGB8 get(int... pos)
+	public RGB8 get(int[] pos)
 	{
-        int x = pos[0];
-        int y = pos[1];
-		int r = this.buffer.getInt(x, y, 0);
-		int g = this.buffer.getInt(x, y, 1);
-		int b = this.buffer.getInt(x, y, 2);
-		return new RGB8(r, g, b);
+	    return get(pos[0], pos[1]);
 	}
 
 	/* (non-Javadoc)

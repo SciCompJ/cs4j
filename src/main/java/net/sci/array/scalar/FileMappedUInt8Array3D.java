@@ -168,10 +168,10 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
     }
     
     @Override
-    public byte getByte(int... pos)
+    public byte getByte(int x, int y, int z)
     {
-        ensureCurrentSliceIndex(pos[2]);
-        return this.currentSlice.getByte(pos[0], pos[1]);
+        ensureCurrentSliceIndex(z);
+        return this.currentSlice.getByte(x, y);
     }
 
     @Override

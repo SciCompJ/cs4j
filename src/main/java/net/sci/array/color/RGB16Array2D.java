@@ -176,13 +176,19 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RG
         }
 
         @Override
+        public short getShort(int x, int y)
+        {
+            return (short) RGB16Array2D.this.getSample(x, y, channel);
+        }
+
+        @Override
         public void setShort(int x, int y, short s)
         {
             RGB16Array2D.this.setSample(x, y, channel, s & 0x00FFFF);
         }
 
         @Override
-        public short getShort(int... pos)
+        public short getShort(int[] pos)
         {
             return (short) RGB16Array2D.this.getSample(pos[0], pos[1], channel);
         }

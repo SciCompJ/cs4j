@@ -154,7 +154,7 @@ public interface Float64Array extends ScalarArray<Float64>
                 }
 
                 @Override
-                public double getValue(int... pos)
+                public double getValue(int[] pos)
                 {
                     return ((Float64) array.get(pos)).getValue();
                 }
@@ -191,7 +191,7 @@ public interface Float64Array extends ScalarArray<Float64>
 	}
 
     @Override
-    public default Float64 get(int... pos)
+    public default Float64 get(int[] pos)
     {
         return new Float64(getValue(pos)); 
     }
@@ -323,7 +323,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		}
 
 		@Override
-		public double getValue(int... position)
+		public double getValue(int[] position)
 		{
 			return array.getValue(position);
 		}
@@ -337,7 +337,7 @@ public interface Float64Array extends ScalarArray<Float64>
 
 
 		@Override
-		public Float64 get(int... pos)
+		public Float64 get(int[] pos)
 		{
 			return new Float64(array.getValue(pos));
 		}
@@ -438,7 +438,7 @@ public interface Float64Array extends ScalarArray<Float64>
          * @see net.sci.array.scalar.ScalarArray#getValue(int[])
          */
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return array.getValue(coordsMapping.apply(pos));
         }

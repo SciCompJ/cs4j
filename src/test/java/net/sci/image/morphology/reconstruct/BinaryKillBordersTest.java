@@ -7,7 +7,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 
@@ -98,7 +97,7 @@ public class BinaryKillBordersTest
         BinaryArray2D array = createBlocksArray2d();
         
         BinaryKillBorders algo = new BinaryKillBorders();
-        BinaryArray res = algo.process(array);
+        BinaryArray2D res = BinaryArray2D.wrap(algo.process(array));
         
         assertEquals(array.size(0), res.size(0));
         assertEquals(array.size(1), res.size(1));

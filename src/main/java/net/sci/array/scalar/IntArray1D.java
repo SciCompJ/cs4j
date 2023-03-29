@@ -77,18 +77,35 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
     // =============================================================
     // New methods
     
-    public abstract void setInt(int x, int value);
+    public abstract int getInt(int x);
 
+    public abstract void setInt(int x, int value);
+    
 
     // =============================================================
     // Specialization of IntArray 
 
+    @Override
+    public int getInt(int[] pos)
+    {
+        return getInt(pos[0]);
+    }
+    
     @Override
     public void setInt(int[] pos, int intValue)
     {
         setInt(pos[0], intValue);
     }
 
+    
+    // =============================================================
+    // Specialization of ScalarArray1D 
+
+    @Override
+    public double getValue(int x)
+    {
+        return getInt(x);
+    }
     
     @Override
     public void setValue(int x, double value)
@@ -146,9 +163,21 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
         }
 
         @Override
+        public int getInt(int x)
+        {
+            return this.array.getInt(new int[] {x});
+        }
+
+        @Override
         public void setInt(int x, int value)
         {
             this.array.setInt(new int[] {x}, value);
+        }
+
+        @Override
+        public T get(int x)
+        {
+            return array.get(new int[] {x});
         }
 
         @Override
@@ -185,7 +214,7 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
         }
 
         @Override
-        public int getInt(int... pos)
+        public int getInt(int[] pos)
         {
             return array.getInt(pos);
         }
@@ -197,7 +226,7 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
         }
 
         @Override
-        public T get(int... pos)
+        public T get(int[] pos)
         {
             return array.get(pos);
         }

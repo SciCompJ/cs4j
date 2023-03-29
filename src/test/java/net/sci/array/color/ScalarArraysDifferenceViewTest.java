@@ -49,11 +49,11 @@ public class ScalarArraysDifferenceViewTest
         
         RGB8Array rgb = new ScalarArraysDifferenceView(array1, array2);
         
-        assertEquals(RGB8.BLACK, rgb.get(10, 10));
-        assertEquals(RGB8.BLACK, rgb.get(90, 90));
-        assertEquals(RGB8.WHITE, rgb.get(50, 50));
-        assertEquals(RGB8.MAGENTA, rgb.get(70, 30));
-        assertEquals(RGB8.GREEN, rgb.get(30, 70));
+        assertEquals(RGB8.BLACK, rgb.get(new int[] {10, 10}));
+        assertEquals(RGB8.BLACK, rgb.get(new int[] {90, 90}));
+        assertEquals(RGB8.WHITE, rgb.get(new int[] {50, 50}));
+        assertEquals(RGB8.MAGENTA, rgb.get(new int[] {70, 30}));
+        assertEquals(RGB8.GREEN, rgb.get(new int[] {30, 70}));
     }
 
 }

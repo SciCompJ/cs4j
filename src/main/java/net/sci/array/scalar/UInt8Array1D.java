@@ -77,8 +77,26 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
     // =============================================================
     // New method(s)
     
+    public abstract byte getByte(int pos);
+
     public abstract void setByte(int pos, byte value);
+
     
+    // =============================================================
+    // Specialization of IntArray1D interface
+    
+    @Override
+    public int getInt(int x)
+    {
+        return getByte(x) & 0x0FF;
+    }
+
+    @Override
+    public void setInt(int x, int intValue)
+    {
+        setByte(x, (byte) UInt8.clamp(intValue));
+    }
+
 	
 	// =============================================================
 	// Specialization of Array interface
@@ -95,6 +113,12 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
         return res;
     }
 
+    @Override
+    public UInt8 get(int x)
+    {
+        return new UInt8(getByte(x));
+    }
+    
     @Override
     public void set(int x, UInt8 value)
     {
@@ -120,13 +144,19 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
         }
 
         @Override
+        public byte getByte(int pos)
+        {
+            return this.array.getByte(new int[pos]);
+        }
+
+        @Override
         public void setByte(int pos, byte value)
         {
             this.array.setByte(new int[pos], value);
         }
 
         @Override
-        public byte getByte(int... pos)
+        public byte getByte(int[] pos)
         {
             return this.array.getByte(pos);
         }
@@ -138,13 +168,19 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
         }
 
         @Override
+        public int getInt(int x)
+        {
+            return this.array.getInt(new int[] {x});
+        }
+
+        @Override
         public void setInt(int x, int intValue)
         {
             this.array.setInt(new int[] {x}, intValue);
         }
 
         @Override
-        public int getInt(int... pos)
+        public int getInt(int[] pos)
         {
             return this.array.getInt(pos);
         }

@@ -29,23 +29,23 @@ public class ThresholdedArrayTest
         ThresholdedArray view = new ThresholdedArray(array, 3.0);
         
         // the four corners should be false
-        assertFalse(view.getBoolean(0, 0));
-        assertFalse(view.getBoolean(9, 0));
-        assertFalse(view.getBoolean(0, 9));
-        assertFalse(view.getBoolean(9, 9));
+        assertFalse(view.getBoolean(new int[] {0, 0}));
+        assertFalse(view.getBoolean(new int[] {9, 0}));
+        assertFalse(view.getBoolean(new int[] {0, 9}));
+        assertFalse(view.getBoolean(new int[] {9, 9}));
         
         // The value in the middle should be true
-        assertTrue(view.getBoolean(5, 5));
-        assertTrue(view.getBoolean(5, 2));
-        assertTrue(view.getBoolean(5, 6));
-        assertTrue(view.getBoolean(2, 5));
-        assertTrue(view.getBoolean(6, 5));
+        assertTrue(view.getBoolean(new int[] {5, 5}));
+        assertTrue(view.getBoolean(new int[] {5, 2}));
+        assertTrue(view.getBoolean(new int[] {5, 6}));
+        assertTrue(view.getBoolean(new int[] {2, 5}));
+        assertTrue(view.getBoolean(new int[] {6, 5}));
 
         // the middle of image edges should be false
-        assertFalse(view.getBoolean(5, 0));
-        assertFalse(view.getBoolean(0, 5));
-        assertFalse(view.getBoolean(9, 5));
-        assertFalse(view.getBoolean(5, 9));
+        assertFalse(view.getBoolean(new int[] {5, 0}));
+        assertFalse(view.getBoolean(new int[] {0, 5}));
+        assertFalse(view.getBoolean(new int[] {9, 5}));
+        assertFalse(view.getBoolean(new int[] {5, 9}));
     }
     
 }

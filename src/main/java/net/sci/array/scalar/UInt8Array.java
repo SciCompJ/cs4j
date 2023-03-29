@@ -175,7 +175,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		        }
 
 		        @Override
-		        public byte getByte(int... pos)
+		        public byte getByte(int[] pos)
 		        {
 		            return ((UInt8) array.get(pos)).getByte();
 		        }
@@ -222,7 +222,7 @@ public interface UInt8Array extends IntArray<UInt8>
         }
     }
     
-	public byte getByte(int... pos);
+	public byte getByte(int[] pos);
 	
 	public void setByte(int[] pos, byte value);
 	
@@ -231,7 +231,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	// Specialization of the IntArray interface
 
 	@Override
-	public default int getInt(int... pos)
+	public default int getInt(int[] pos)
 	{
 		return getByte(pos) & 0x00FF; 
 	}
@@ -250,7 +250,7 @@ public interface UInt8Array extends IntArray<UInt8>
      * @see net.sci.array.data.Array2D#getValue(int, int)
      */
     @Override
-    public default double getValue(int... pos)
+    public default double getValue(int[] pos)
     {
         return getByte(pos) & 0x00FF;
     }
@@ -284,9 +284,9 @@ public interface UInt8Array extends IntArray<UInt8>
 	}
 
     @Override
-    public default UInt8 get(int... pos)
+    public default UInt8 get(int[] pos)
     {
-        return new UInt8(getByte(pos)); 
+        return new UInt8(getByte(pos));
     }
 
     @Override
@@ -420,7 +420,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		// Implementation of the UInt8Array interface
 
 		@Override
-		public byte getByte(int... pos)
+		public byte getByte(int[] pos)
 		{
 			return get(pos).getByte();
 		}
@@ -454,7 +454,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 
 		@Override
-		public UInt8 get(int... pos)
+		public UInt8 get(int[] pos)
 		{
 			return new UInt8(UInt8.convert(array.getValue(pos)));
 		}
@@ -555,7 +555,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.UInt8Array#getByte(int[])
 	     */
 	    @Override
-	    public byte getByte(int... pos)
+	    public byte getByte(int[] pos)
 	    {
 	        return array.getByte(coordsMapping.apply(pos));
 	    }
@@ -573,7 +573,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.IntArray#getInt(int[])
 	     */
 	    @Override
-	    public int getInt(int... pos)
+	    public int getInt(int[] pos)
 	    {
 	        return array.getInt(coordsMapping.apply(pos));
 	    }
@@ -591,7 +591,7 @@ public interface UInt8Array extends IntArray<UInt8>
 	     * @see net.sci.array.scalar.ScalarArray#getValue(int[])
 	     */
 	    @Override
-	    public double getValue(int... pos)
+	    public double getValue(int[] pos)
 	    {
 	        return array.getValue(coordsMapping.apply(pos));
 	    }

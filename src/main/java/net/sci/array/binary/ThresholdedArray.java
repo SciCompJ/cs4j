@@ -70,7 +70,7 @@ public class ThresholdedArray implements BinaryArray
      * @see net.sci.array.scalar.BinaryArray#getBoolean(int[])
      */
     @Override
-    public boolean getBoolean(int... pos)
+    public boolean getBoolean(int[] pos)
     {
         return array.getValue(pos) > this.thresholdValue;
     }

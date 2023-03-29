@@ -79,7 +79,21 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
         }
 
         @Override
-        public Float32 get(int... pos)
+        public float getFloat(int[] pos)
+        {
+            return Float32VectorArrayND.this.get(pos).getFloat(channel);
+        }
+
+        @Override
+        public void setFloat(int[] pos, float value)
+        {
+            Float32Vector vect = Float32VectorArrayND.this.get(pos);
+            vect.data[channel] = value;
+            Float32VectorArrayND.this.set(pos, vect);
+        }
+
+        @Override
+        public Float32 get(int[] pos)
         {
             return Float32VectorArrayND.this.get(pos).get(channel);
         }
@@ -93,7 +107,7 @@ public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> 
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return Float32VectorArrayND.this.get(pos).getValue(channel);
         }

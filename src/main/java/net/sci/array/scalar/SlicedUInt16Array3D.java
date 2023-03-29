@@ -69,8 +69,8 @@ public class SlicedUInt16Array3D extends UInt16Array3D
     /**
      * The inner array of 2D UInt16 arrays.
      */
-	ArrayList<UInt16Array> slices;
-
+	ArrayList<UInt16Array2D> slices;
+	
 	
 	// =============================================================
 	// Constructors
@@ -140,7 +140,7 @@ public class SlicedUInt16Array3D extends UInt16Array3D
 		this.slices = new ArrayList<>(size2);
 		for (UInt16Array slice : slices)
 		{
-			this.slices.add(slice);
+			this.slices.add(UInt16Array2D.wrap(slice));
 		}
 	}
 
@@ -148,23 +148,31 @@ public class SlicedUInt16Array3D extends UInt16Array3D
 	// =============================================================
 	// Specialization of the UInt16Array3D interface
 
-
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.UInt16Array3D#getShort(int, int, int)
+     */
+    @Override
+    public short getShort(int x, int y, int z)
+    {
+        return this.slices.get(z).getShort(x, y);
+    }
+        
 	/* (non-Javadoc)
 	 * @see net.sci.array.scalar.UInt16Array3D#setShort(int, int, int, short)
 	 */
 	@Override
 	public void setShort(int x, int y, int z, short s)
 	{
-	    this.slices.get(z).setShort(new int[]{x, y}, s);
+	    this.slices.get(z).setShort(x, y, s);
 	}
 	
 	/* (non-Javadoc)
 	 * @see net.sci.array.scalar.UInt16Array3D#getShort(int, int, int)
 	 */
 	@Override
-	public short getShort(int... pos)
+	public short getShort(int[] pos)
 	{
-		return this.slices.get(pos[2]).getShort(new int[]{pos[0], pos[1]});
+		return this.slices.get(pos[2]).getShort(pos[0], pos[1]);
 	}
 		
 	/* (non-Javadoc)
@@ -173,7 +181,7 @@ public class SlicedUInt16Array3D extends UInt16Array3D
 	@Override
 	public void setShort(int[] pos, short s)
 	{
-		this.slices.get(pos[2]).setShort(new int[]{pos[0], pos[1]}, s);
+		this.slices.get(pos[2]).setShort(pos[0], pos[1], s);
 	}
 
 	   

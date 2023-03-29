@@ -73,8 +73,10 @@ public abstract class Float64Array1D extends ScalarArray1D<Float64> implements F
 		super(size0);
 	}
 
-	public abstract double getValue(int x);
-	
+    public abstract double getValue(int x);
+    
+    public abstract void setValue(int x, double value);
+    
     
 	// =============================================================
 	// Specialization of Array interface
@@ -91,6 +93,12 @@ public abstract class Float64Array1D extends ScalarArray1D<Float64> implements F
         return res;
     }
 
+    @Override
+    public Float64 get(int x)
+    {
+        return new Float64(getValue(x));
+    }
+    
     @Override
     public void set(int x, Float64 value)
     {
@@ -118,7 +126,7 @@ public abstract class Float64Array1D extends ScalarArray1D<Float64> implements F
         @Override
         public double getValue(int x)
         {
-            return this.array.getValue(x);
+            return this.array.getValue(new int[] {x});
         }
 
         @Override
@@ -128,7 +136,7 @@ public abstract class Float64Array1D extends ScalarArray1D<Float64> implements F
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return this.array.getValue(pos);
         }

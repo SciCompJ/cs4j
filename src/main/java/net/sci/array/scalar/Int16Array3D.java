@@ -72,11 +72,19 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
     // =============================================================
     // New methods
     
+    public abstract short getShort(int x, int y, int z);
+
     public abstract void setShort(int x, int y, int z, short s);
 
 
     // =============================================================
     // Specialization of the IntArray3D interface
+
+    @Override
+    public int getInt(int x, int y, int z)
+    {
+        return getShort(x, y, z);
+    }
 
     @Override
     public void setInt(int x, int y, int z, int value)
@@ -100,6 +108,12 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
     // Specialization of Array3D interface
 
     @Override
+    public Int16 get(int x, int y, int z)
+    {
+        return new Int16(getShort(x, y, z));
+    }
+    
+    @Override
     public void set(int x, int y, int z, Int16 value)
     {
         setShort(x, y, z, value.value);
@@ -109,6 +123,11 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
     // =============================================================
     // Specialization of the Int16Array interface
 
+    public short getShort(int [] pos)
+    {
+        return getShort(pos[0], pos[1], pos[2]);
+    }
+    
     public void setShort(int [] pos, short s)
     {
         setShort(pos[0], pos[1], pos[2], s);
@@ -182,13 +201,19 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
         }
         
         @Override
+        public short getShort(int x, int y, int z)
+        {
+            return this.array.getShort(new int[] {x, y, z});
+        }
+
+        @Override
         public void setShort(int x, int y, int z, short s)
         {
             this.array.setShort(new int[] {x, y, z}, s);
         }
 
         @Override
-        public short getShort(int... pos)
+        public short getShort(int[] pos)
         {
             return this.array.getShort(pos);
         }
@@ -226,15 +251,15 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
         }
 
         @Override
-        public void setShort(int x, int y, short value)
+        public short getShort(int x, int y)
         {
-            Int16Array3D.this.setShort(x, y, this.sliceIndex, value);            
+            return Int16Array3D.this.getShort(x, y, this.sliceIndex);            
         }
 
         @Override
-        public short getShort(int... pos)
+        public void setShort(int x, int y, short value)
         {
-            return Int16Array3D.this.getShort(pos[0], pos[1], this.sliceIndex);
+            Int16Array3D.this.setShort(x, y, this.sliceIndex, value);            
         }
 
         @Override

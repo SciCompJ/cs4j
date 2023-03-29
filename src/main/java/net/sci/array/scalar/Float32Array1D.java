@@ -82,6 +82,40 @@ public abstract class Float32Array1D extends ScalarArray1D<Float32> implements F
     public abstract void setFloat(int x, float value);
     
     
+    // =============================================================
+    // Specialization of FloatArray 
+
+    @Override
+    public float getFloat(int[] pos)
+    {
+        return getFloat(pos[0]);
+    }
+
+    @Override
+    public void setFloat(int[] pos, float floatValue)
+    {
+        setFloat(pos[0], floatValue);
+    }
+
+    @Override
+    public Float32 get(int x)
+    {
+        return new Float32(getFloat(x));
+    }
+    
+    @Override
+    public double getValue(int x)
+    {
+        return getFloat(x);
+    }
+
+    @Override
+    public void setValue(int x, double value)
+    {
+        setFloat(x, (float) value);
+    }
+
+
 	// =============================================================
 	// Specialization of Array interface
 	
@@ -124,7 +158,7 @@ public abstract class Float32Array1D extends ScalarArray1D<Float32> implements F
         @Override
         public float getFloat(int x)
         {
-            return this.array.getFloat(x);
+            return this.array.getFloat(new int[] {x});
         }
 
         @Override

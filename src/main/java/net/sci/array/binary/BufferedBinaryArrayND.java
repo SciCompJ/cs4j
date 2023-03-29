@@ -85,7 +85,7 @@ public class BufferedBinaryArrayND extends BinaryArrayND
     }
     
 	@Override
-	public boolean getBoolean(int... pos)
+	public boolean getBoolean(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
@@ -111,7 +111,7 @@ public class BufferedBinaryArrayND extends BinaryArrayND
 	}
 
 	@Override
-	public Binary get(int... pos)
+	public Binary get(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return new Binary(this.buffer[index]);	

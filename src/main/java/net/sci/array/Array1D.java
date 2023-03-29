@@ -86,6 +86,16 @@ public abstract class Array1D<T> implements Array<T>
     // New getter / setter
     
     /**
+     * Retrieves the value of an element in the array at the position given by
+     * the integer index.
+     * 
+     * @param x
+     *            index over the array dimension
+     * @return the value at the specified index
+     */
+    public abstract T get(int x);
+    
+    /**
      * Changes the value of an element in the array at the position given by
      * the integer index.
      * 
@@ -96,11 +106,22 @@ public abstract class Array1D<T> implements Array<T>
      */
     public abstract void set(int x, T value);
     
+    
+    // =============================================================
+    // Specialization of the Array interface
 
-	
-	// =============================================================
-	// Specialization of the Array interface
-
+    @Override
+    public T get(int[] pos)
+    {
+        return get(pos[0]);
+    }
+    
+    @Override
+    public void set(int[] pos, T value)
+    {
+        set(pos[0], value);
+    }
+    
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#dimensionality()
 	 */
@@ -213,6 +234,13 @@ public abstract class Array1D<T> implements Array<T>
 		}
 
         @Override
+        public T get(int x)
+        {
+            // get value at specified position
+            return this.array.get(new int[] {x});
+        }
+
+        @Override
         public void set(int x, T value)
         {
             // set value at specified position
@@ -232,7 +260,7 @@ public abstract class Array1D<T> implements Array<T>
 		}
 
 		@Override
-		public T get(int... pos)
+		public T get(int[] pos)
 		{
 			// return value from specified position
 			return this.array.get(pos);

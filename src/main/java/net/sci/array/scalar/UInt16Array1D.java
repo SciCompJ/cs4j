@@ -77,9 +77,41 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
     // =============================================================
     // New method(s)
     
+    public abstract short getShort(int pos);
+    
     public abstract void setShort(int pos, short value);
     
-	
+    
+    // =============================================================
+    // Specialization of UInt16Array interface
+    
+    public short getShort(int[] pos)
+    {
+        return getShort(pos[0]);
+    }
+    
+    public void setShort(int pos[], short value)
+    {
+        setShort(pos[0], value);
+    }
+    
+    
+    // =============================================================
+    // Specialization of the IntArray1D interface
+
+    @Override
+    public int getInt(int x)
+    {
+        return getShort(x) & 0x00FFFF;
+    }
+
+    @Override
+    public void setInt(int x, int value)
+    {
+        setShort(x, (short) UInt16.clamp(value));
+    }
+
+    
 	// =============================================================
 	// Specialization of Array interface
 	
@@ -93,6 +125,12 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
             res.setInt(x, getInt(x));
         }
         return res;
+    }
+    
+    @Override
+    public UInt16 get(int x)
+    {
+        return new UInt16(getShort(x));
     }
 
     @Override
@@ -120,13 +158,19 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
         }
         
         @Override
+        public short getShort(int pos)
+        {
+            return this.array.getShort(new int[pos]);
+        }
+
+        @Override
         public void setShort(int pos, short value)
         {
             this.array.setShort(new int[pos], value);
         }
 
         @Override
-        public short getShort(int... pos)
+        public short getShort(int[] pos)
         {
             return this.array.getShort(pos);
         }
@@ -144,7 +188,7 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
         }
 
         @Override
-        public int getInt(int... pos)
+        public int getInt(int[] pos)
         {
             return this.array.getInt(pos);
         }

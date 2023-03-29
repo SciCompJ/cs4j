@@ -105,11 +105,19 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
     // =============================================================
     // New methods
     
-    public abstract void setInt(int x, int y, int value);
+    public abstract int getInt(int x, int y);
 
+    public abstract void setInt(int x, int y, int value);
+    
 
     // =============================================================
     // Specialization of IntArray 
+
+    @Override
+    public int getInt(int[] pos)
+    {
+        return getInt(pos[0], pos[1]);
+    }
 
     @Override
     public void setInt(int[] pos, int intValue)
@@ -117,6 +125,15 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         setInt(pos[0], pos[1], intValue);
     }
 
+    
+    // =============================================================
+    // Specialization of ScalarArray2D 
+
+    @Override
+    public double getValue(int x, int y)
+    {
+        return getInt(x, y);
+    }
     
     @Override
     public void setValue(int x, int y, double value)
@@ -186,9 +203,21 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         }
 
         @Override
+        public int getInt(int x, int y)
+        {
+            return this.array.getInt(new int[] {x, y});
+        }
+
+        @Override
         public void setInt(int x, int y, int value)
         {
             this.array.setInt(new int[] {x, y}, value);
+        }
+
+        @Override
+        public T get(int x, int y)
+        {
+            return array.get(new int[] {x, y});
         }
 
         @Override
@@ -225,7 +254,7 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         }
 
         @Override
-        public int getInt(int... pos)
+        public int getInt(int[] pos)
         {
             return array.getInt(pos);
         }
@@ -237,7 +266,7 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         }
 
         @Override
-        public T get(int... pos)
+        public T get(int[] pos)
         {
             return array.get(pos);
         }

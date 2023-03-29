@@ -104,7 +104,7 @@ public class BufferedFloat64Array1D extends Float64Array1D
     // Specialization of the Float64Array interface
 
 	@Override
-	public double getValue(int... pos)
+	public double getValue(int[] pos)
 	{
 		return buffer[pos[0]];
 	}

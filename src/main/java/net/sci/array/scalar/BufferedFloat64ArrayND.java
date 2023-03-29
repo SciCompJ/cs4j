@@ -105,7 +105,7 @@ public class BufferedFloat64ArrayND extends Float64ArrayND
 	// Implementation of the Array interface
 	
 	@Override
-	public Float64 get(int... pos)
+	public Float64 get(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return new Float64(this.buffer[index]);	
@@ -119,7 +119,7 @@ public class BufferedFloat64ArrayND extends Float64ArrayND
 	}
 
 	@Override
-	public double getValue(int... pos)
+	public double getValue(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];

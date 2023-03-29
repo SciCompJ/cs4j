@@ -52,7 +52,7 @@ public class ScalarArrayUInt8View implements UInt8Array
      * @see net.sci.array.scalar.UInt8Array#getByte(int[])
      */
     @Override
-    public byte getByte(int... pos)
+    public byte getByte(int[] pos)
     {
         double value = array.getValue(pos);
         value = 255.0 * (value - minValue) / diff;

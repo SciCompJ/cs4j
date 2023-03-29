@@ -35,17 +35,17 @@ public class GradientTest
         VectorArray<?> grad = (VectorArray<?>) op0.process(array);
 
         ScalarArray<?> diff0 = grad.channel(0);
-        assertEquals(diff0.getValue(0, 5),  0.0, .001);
-        assertEquals(diff0.getValue(2, 5),  0.5, .001);
-        assertEquals(diff0.getValue(5, 5),  0.0, .001);
-        assertEquals(diff0.getValue(7, 5), -0.5, .001);
-        assertEquals(diff0.getValue(9, 5),  0.0, .001);
+        assertEquals(diff0.getValue(new int[] {0, 5}),  0.0, .001);
+        assertEquals(diff0.getValue(new int[] {2, 5}),  0.5, .001);
+        assertEquals(diff0.getValue(new int[] {5, 5}),  0.0, .001);
+        assertEquals(diff0.getValue(new int[] {7, 5}), -0.5, .001);
+        assertEquals(diff0.getValue(new int[] {9, 5}),  0.0, .001);
 
         ScalarArray<?> diff1 = grad.channel(1);
-        assertEquals(diff1.getValue(5, 0),  0.0, .001);
-        assertEquals(diff1.getValue(5, 2),  0.5, .001);
-        assertEquals(diff1.getValue(5, 5),  0.0, .001);
-        assertEquals(diff1.getValue(5, 7), -0.5, .001);
-        assertEquals(diff1.getValue(5, 9),  0.0, .001);
+        assertEquals(diff1.getValue(new int[] {5, 0}),  0.0, .001);
+        assertEquals(diff1.getValue(new int[] {5, 2}),  0.5, .001);
+        assertEquals(diff1.getValue(new int[] {5, 5}),  0.0, .001);
+        assertEquals(diff1.getValue(new int[] {5, 7}), -0.5, .001);
+        assertEquals(diff1.getValue(new int[] {5, 9}),  0.0, .001);
     }
 }

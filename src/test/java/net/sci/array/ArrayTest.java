@@ -29,8 +29,8 @@ public class ArrayTest
         String[] digits = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
         array.fill((int[] pos) -> digits[pos[0]] + digits[pos[1]]);
         
-        assertEquals("AA", array.get(0, 0));
-        assertEquals("JF", array.get(9, 5));
+        assertEquals("AA", array.get(new int[] {0, 0}));
+        assertEquals("JF", array.get(new int[] {9, 5}));
     }
 
 }

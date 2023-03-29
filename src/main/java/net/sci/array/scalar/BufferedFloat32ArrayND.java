@@ -67,20 +67,20 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
     // =============================================================
     // Specialization of FloatArray3D
 
-    public float getFloat(int... pos)
+    public float getFloat(int[] pos)
     {
         int index = subsToInd(pos);
         return this.buffer[index];
     }
 
-    public void setFloat(float value, int... pos)
+    public void setFloat(int[] pos, float val)
     {
         int index = subsToInd(pos);
-        this.buffer[index] = value;
+        this.buffer[index] = val;
     }
 
-	@Override
-	public Float32 get(int... pos)
+    @Override
+	public Float32 get(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return new Float32(this.buffer[index]);	
@@ -94,7 +94,7 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 	}
 
 	@Override
-	public double getValue(int... pos)
+	public double getValue(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];

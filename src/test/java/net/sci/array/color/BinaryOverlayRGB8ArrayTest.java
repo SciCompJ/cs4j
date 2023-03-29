@@ -27,15 +27,15 @@ public class BinaryOverlayRGB8ArrayTest
         BinaryOverlayRGB8Array array = createSampleArray_2d();
         
         // check image four corners
-        assertEquals(new RGB8(  0,   0,   0), array.get(0, 0));
-        assertEquals(new RGB8(  9,   9,   9), array.get(9, 0));
-        assertEquals(new RGB8( 70,  70,  70), array.get(0, 7));
-        assertEquals(new RGB8( 79,  79,  79), array.get(9, 7));
+        assertEquals(new RGB8(  0,   0,   0), array.get(new int[] {0, 0}));
+        assertEquals(new RGB8(  9,   9,   9), array.get(new int[] {9, 0}));
+        assertEquals(new RGB8( 70,  70,  70), array.get(new int[] {0, 7}));
+        assertEquals(new RGB8( 79,  79,  79), array.get(new int[] {9, 7}));
         // check four corners or the region in binary image
-        assertEquals(RGB8.RED, array.get(2, 2));
-        assertEquals(RGB8.RED, array.get(7, 2));
-        assertEquals(RGB8.RED, array.get(2, 5));
-        assertEquals(RGB8.RED, array.get(7, 5));
+        assertEquals(RGB8.RED, array.get(new int[] {2, 2}));
+        assertEquals(RGB8.RED, array.get(new int[] {7, 2}));
+        assertEquals(RGB8.RED, array.get(new int[] {2, 5}));
+        assertEquals(RGB8.RED, array.get(new int[] {7, 5}));
     }
 
     /**
@@ -153,19 +153,19 @@ public class BinaryOverlayRGB8ArrayTest
         BinaryOverlayRGB8Array array = createSampleArray_3d();
         
         // check image eight corners
-        assertEquals(new RGB8(  0,   0,   0), array.get(0, 0, 0));
-        assertEquals(new RGB8(  4,   4,   4), array.get(4, 0, 0));
-        assertEquals(new RGB8( 30,  30,  30), array.get(0, 3, 0));
-        assertEquals(new RGB8( 34,  34,  34), array.get(4, 3, 0));
-        assertEquals(new RGB8(200, 200, 200), array.get(0, 0, 2));
-        assertEquals(new RGB8(204, 204, 204), array.get(4, 0, 2));
-        assertEquals(new RGB8(230, 230, 230), array.get(0, 3, 2));
-        assertEquals(new RGB8(234, 234, 234), array.get(4, 3, 2));
+        assertEquals(new RGB8(  0,   0,   0), array.get(new int[] {0, 0, 0}));
+        assertEquals(new RGB8(  4,   4,   4), array.get(new int[] {4, 0, 0}));
+        assertEquals(new RGB8( 30,  30,  30), array.get(new int[] {0, 3, 0}));
+        assertEquals(new RGB8( 34,  34,  34), array.get(new int[] {4, 3, 0}));
+        assertEquals(new RGB8(200, 200, 200), array.get(new int[] {0, 0, 2}));
+        assertEquals(new RGB8(204, 204, 204), array.get(new int[] {4, 0, 2}));
+        assertEquals(new RGB8(230, 230, 230), array.get(new int[] {0, 3, 2}));
+        assertEquals(new RGB8(234, 234, 234), array.get(new int[] {4, 3, 2}));
         // check four corners of the region in binary image
-        assertEquals(RGB8.RED, array.get(1, 1, 1));
-        assertEquals(RGB8.RED, array.get(3, 1, 1));
-        assertEquals(RGB8.RED, array.get(1, 2, 1));
-        assertEquals(RGB8.RED, array.get(3, 2, 1));
+        assertEquals(RGB8.RED, array.get(new int[] {1, 1, 1}));
+        assertEquals(RGB8.RED, array.get(new int[] {3, 1, 1}));
+        assertEquals(RGB8.RED, array.get(new int[] {1, 2, 1}));
+        assertEquals(RGB8.RED, array.get(new int[] {3, 2, 1}));
     }
 
     /**

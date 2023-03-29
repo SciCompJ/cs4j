@@ -98,6 +98,16 @@ public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> impleme
     // New getter / setter
     
     /**
+     * Returns the value of an element in the array at the position given by the
+     * integer index.
+     * 
+     * @param x
+     *            index over the first array dimension
+     * @return the double value at the specified position
+     */
+    public abstract double getValue(int x);
+
+    /**
      * Changes the value of an element in the array at the position given by
      * an integer index.
      * 
@@ -199,9 +209,22 @@ public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> impleme
 		}
 
         @Override
+        public double getValue(int x)
+        {
+            return array.getValue(new int[] {x});
+        }
+
+        @Override
         public void setValue(int x, double value)
         {
             array.setValue(new int[] {x}, value);
+        }
+
+        @Override
+        public T get(int x)
+        {
+            // get value at specified position
+            return this.array.get(new int[] {x});
         }
 
         @Override
@@ -212,7 +235,7 @@ public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> impleme
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return array.getValue(pos);
         }
@@ -236,7 +259,7 @@ public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> impleme
 		}
 
 		@Override
-		public T get(int... pos)
+		public T get(int[] pos)
 		{
 			// return value from specified position
 			return this.array.get(pos);

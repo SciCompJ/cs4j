@@ -122,13 +122,20 @@ public class BufferedFloat32Array3D extends Float32Array3D
     // Specialization of FloatArray3D
 
     @Override
+    public float getFloat(int x, int y, int z)
+    {
+        int index = x + this.size0 * (y + z * this.size1);
+        return this.buffer[index];
+    }
+
+    @Override
     public void setFloat(int x, int y, int z, float f)
     {
         int index = x + this.size0 * (y + z * this.size1);
         this.buffer[index] = f;
     }
 
-    public float getFloat(int... pos)
+    public float getFloat(int[] pos)
     {
         int index = pos[0] + this.size0 * (pos[1] + pos[2] * this.size1);
         return this.buffer[index];
@@ -145,7 +152,7 @@ public class BufferedFloat32Array3D extends Float32Array3D
     // Specialization of the Array3D class
 
 	@Override
-	public double getValue(int... pos)
+	public double getValue(int[] pos)
 	{
 		int index = pos[0] + this.size0 * (pos[1] + pos[2] * this.size1);
 		return this.buffer[index];

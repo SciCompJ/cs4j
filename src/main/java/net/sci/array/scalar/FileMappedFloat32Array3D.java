@@ -189,10 +189,10 @@ public class FileMappedFloat32Array3D extends Float32Array3D
     }
     
     @Override
-    public float getFloat(int... pos)
+    public float getFloat(int x, int y, int z)
     {
-        ensureCurrentSliceIndex(pos[2]);
-        return this.currentSlice.getFloat(pos[0], pos[1]);
+        ensureCurrentSliceIndex(z);
+        return this.currentSlice.getFloat(x, y);
     }
 
     @Override
@@ -202,7 +202,7 @@ public class FileMappedFloat32Array3D extends Float32Array3D
     }
 
     @Override
-    public double getValue(int... pos)
+    public double getValue(int[] pos)
     {
         ensureCurrentSliceIndex(pos[2]);
         return this.currentSlice.getFloat(pos[0], pos[1]);

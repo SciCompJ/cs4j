@@ -45,9 +45,9 @@ public class ShortBufferUInt16Array2D extends UInt16Array2D
     // =============================================================
     // Specialization of ShortArray2D
 
-    public short getShort(int... pos)
+    public short getShort(int x, int y)
     {
-        int index = pos[0] + pos[1] * this.size0;
+        int index = x + y * this.size0;
         return this.buffer.get(index);
     }
 
@@ -57,6 +57,12 @@ public class ShortBufferUInt16Array2D extends UInt16Array2D
         this.buffer.put(index, value);
     }
     
+    public short getShort(int[] pos)
+    {
+        int index = pos[0] + pos[1] * this.size0;
+        return this.buffer.get(index);
+    }
+
     public void setShort(int[] pos, short value)
     {
         int index = pos[0] + pos[1] * this.size0;
@@ -71,7 +77,7 @@ public class ShortBufferUInt16Array2D extends UInt16Array2D
 	 * @see net.sci.array.data.Array2D#getValue(int, int)
 	 */
 	@Override
-	public double getValue(int... pos)
+	public double getValue(int[] pos)
 	{
 		int index = pos[0] + pos[1] * this.size0;
 		return this.buffer.get(index);

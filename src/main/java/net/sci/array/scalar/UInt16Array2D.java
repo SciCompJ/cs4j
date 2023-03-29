@@ -90,12 +90,19 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
     // =============================================================
     // New methods
     
+    public abstract short getShort(int x, int y);
+
     public abstract void setShort(int x, int y, short s);
 
     
-    
     // =============================================================
     // Specialization of the IntArray2D interface
+
+    @Override
+    public int getInt(int x, int y)
+    {
+        return getShort(x, y) & 0x00FFFF;
+    }
 
     @Override
     public void setInt(int x, int y, int value)
@@ -107,6 +114,11 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
     // =============================================================
     // Specialization of the Int16Array interface
 
+    public short getShort(int [] pos)
+    {
+        return getShort(pos[0], pos[1]);
+    }
+
     public void setShort(int [] pos, short s)
     {
         setShort(pos[0], pos[1], s);
@@ -114,18 +126,14 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
 
 
     // =============================================================
-    // Specialization of the ScalarArray2D interface
-
-
-    @Override
-    public void setValue(int x, int y, double value)
-    {
-        setShort(x, y, (short) UInt16.convert(value));
-    }
-
-    // =============================================================
     // Specialization of Array2D interface
 
+    @Override
+    public UInt16 get(int x, int y)
+    {
+        return new UInt16(getShort(x, y));
+    }
+    
     @Override
     public void set(int x, int y, UInt16 value)
     {
@@ -179,13 +187,19 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
         }
 
         @Override
+        public short getShort(int x, int y)
+        {
+            return this.array.getShort(new int[] {x, y});
+        }
+
+        @Override
         public void setShort(int x, int y, short b)
         {
             this.array.setShort(new int[] {x, y}, b);
         }
 
         @Override
-        public short getShort(int... pos)
+        public short getShort(int[] pos)
         {
             return this.array.getShort(pos);
         }

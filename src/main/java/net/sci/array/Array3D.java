@@ -144,6 +144,20 @@ public abstract class Array3D<T> implements Array<T>
     // New getter / setter
     
     /**
+     * Retrieves the value of an element in the array at the position given by
+     * three integer indices.
+     * 
+     * @param x
+     *            index over the first array dimension
+     * @param y
+     *            index over the second array dimension
+     * @param z
+     *            index over the third array dimension
+     * @return the new value at the specified index
+     */
+    public abstract T get(int x, int y, int z);
+    
+    /**
      * Changes the value of an element in the array at the position given by
      * three integer indices.
      * 
@@ -162,6 +176,18 @@ public abstract class Array3D<T> implements Array<T>
 	// =============================================================
 	// Specialization of the Array interface
 
+    @Override
+    public T get(int[] pos)
+    {
+        return get(pos[0], pos[1], pos[2]);
+    }
+    
+    @Override
+    public void set(int[] pos, T value)
+    {
+        set(pos[0], pos[1], pos[2], value);
+    }
+    
     @Override
     public abstract Array3D<T> duplicate();
 
@@ -323,6 +349,13 @@ public abstract class Array3D<T> implements Array<T>
         }
 
         @Override
+        public T get(int x, int y, int z)
+        {
+            // set value at specified position
+            return this.array.get(new int[] {x, y, z});
+        }
+
+        @Override
         public void set(int x, int y, int z, T value)
         {
             // set value at specified position
@@ -343,7 +376,7 @@ public abstract class Array3D<T> implements Array<T>
         }
 
         @Override
-        public T get(int... pos)
+        public T get(int[] pos)
         {
             // return value from specified position
             return this.array.get(pos);
@@ -397,13 +430,19 @@ public abstract class Array3D<T> implements Array<T>
             }
 
             @Override
+            public T get(int x, int y)
+            {
+                return Wrapper.this.get(x, y, this.sliceIndex);
+            }
+
+            @Override
             public void set(int x, int y, T value)
             {
                 Wrapper.this.set(x, y, this.sliceIndex, value);
             }
 
             @Override
-            public T get(int... pos)
+            public T get(int[] pos)
             {
                 return Wrapper.this.get(pos[0], pos[1], this.sliceIndex);
             }

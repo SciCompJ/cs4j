@@ -51,12 +51,10 @@ public class SliceBufferedUInt8Array3D extends UInt8Array3D
     }
     
     @Override
-    public byte getByte(int... pos)
+    public byte getByte(int x, int y, int z)
     {
-        int sliceIndex = pos[2];
-        int index = getSliceBufferIndex(sliceIndex);
-        
-        return this.slices[index].getByte(pos[0], pos[1]);
+        int index = getSliceBufferIndex(z);
+        return this.slices[index].getByte(x, y);
     }
     
     /**

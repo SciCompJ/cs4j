@@ -122,7 +122,17 @@ public class BufferedUInt8Array3D extends UInt8Array3D
 	// Implementation of the UInt8Array3D interface
 
     /* (non-Javadoc)
-     * @see net.sci.array.data.scalar2d.UInt8Array3D#setByte(int, int, int, byte)
+     * @see net.sci.array.scalar.UInt8Array3D#getByte(int, int, int)
+     */
+    @Override
+    public byte getByte(int x, int y, int z)
+    {
+        int index = x + this.size0 * (y + z * this.size1);
+        return this.buffer[index];
+    }
+
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.UInt8Array3D#setByte(int, int, int, byte)
      */
     @Override
     public void setByte(int x, int y, int z, byte b)
@@ -136,17 +146,17 @@ public class BufferedUInt8Array3D extends UInt8Array3D
     // Implementation of the UInt8Array interface
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array3D#getByte(int, int, int)
+	 * @see net.sci.array.scalar.UInt8Array3D#getByte(int, int, int)
 	 */
 	@Override
-	public byte getByte(int... pos)
+	public byte getByte(int[] pos)
 	{
 		int index = pos[0] + this.size0 * (pos[1] + pos[2] * this.size1);
 		return this.buffer[index];
 	}
 		
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array3D#setByte(int, int, int, byte)
+	 * @see net.sci.array.scalar.UInt8Array3D#setByte(int, int, int, byte)
 	 */
 	@Override
 	public void setByte(int[] pos, byte b)

@@ -156,7 +156,7 @@ public class FileMappedUInt16Array3D extends UInt16Array3D
     }
     
     // =============================================================
-    // Implementation of the Float32Array3D interface
+    // Implementation of the UInt16Array3D interface
     
     /**
      * Updates the cache data with that of the selected slice index, and returns
@@ -173,10 +173,10 @@ public class FileMappedUInt16Array3D extends UInt16Array3D
     }
     
     @Override
-    public short getShort(int... pos)
+    public short getShort(int x, int y, int z)
     {
-        ensureCurrentSliceIndex(pos[2]);
-        return this.currentSlice.getShort(pos[0], pos[1]);
+        ensureCurrentSliceIndex(z);
+        return this.currentSlice.getShort(x, y);
     }
 
     @Override
@@ -184,9 +184,10 @@ public class FileMappedUInt16Array3D extends UInt16Array3D
     {
         throw new RuntimeException("Modification of data in FileMappedUInt16Array3D is not available");
     }
+    
 
     @Override
-    public double getValue(int... pos)
+    public double getValue(int[] pos)
     {
         ensureCurrentSliceIndex(pos[2]);
         return this.currentSlice.getShort(pos[0], pos[1]);

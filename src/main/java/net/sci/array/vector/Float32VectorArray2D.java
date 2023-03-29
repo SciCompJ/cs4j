@@ -58,6 +58,12 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
 
 
     @Override
+    public Float32Vector get(int x, int y)
+    {
+        return new Float32Vector(getValues(x, y));
+    }
+
+    @Override
     public void set(int x, int y, Float32Vector vect)
     {
         setValues(x, y, vect.getValues());
@@ -111,6 +117,13 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
         }
 
         @Override
+        public float getFloat(int x, int y)
+        {
+            //TODO: avoid cast?
+            return (float) Float32VectorArray2D.this.getValue(x, y, channel);
+        }
+        
+        @Override
         public void setFloat(int x, int y, float f)
         {
             Float32VectorArray2D.this.setValue(x, y, channel, f);
@@ -129,7 +142,7 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return Float32VectorArray2D.this.getValue(pos[0], pos[1], channel);
         }

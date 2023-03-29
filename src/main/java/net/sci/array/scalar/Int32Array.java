@@ -153,7 +153,7 @@ public interface Int32Array extends IntArray<Int32>
                 }
 
                 @Override
-                public int getInt(int... pos)
+                public int getInt(int[] pos)
                 {
                     return ((Int32) array.get(pos)).getInt();
                 }
@@ -205,7 +205,7 @@ public interface Int32Array extends IntArray<Int32>
 	}
 
     @Override
-    public default Int32 get(int... pos)
+    public default Int32 get(int[] pos)
     {
         return new Int32(getInt(pos)); 
     }
@@ -313,7 +313,7 @@ public interface Int32Array extends IntArray<Int32>
 		// Implementation of the Int32Array interface
 
 		@Override
-		public int getInt(int... pos)
+		public int getInt(int[] pos)
 		{
 			return (int) array.getValue(pos);
 		}
@@ -347,7 +347,7 @@ public interface Int32Array extends IntArray<Int32>
 		}
 
 		@Override
-		public Int32 get(int... pos)
+		public Int32 get(int[] pos)
 		{
 			return new Int32((int) array.getValue(pos));
 		}
@@ -448,7 +448,7 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.IntArray#getInt(int[])
          */
         @Override
-        public int getInt(int... pos)
+        public int getInt(int[] pos)
         {
             return array.getInt(coordsMapping.apply(pos));
         }
@@ -466,7 +466,7 @@ public interface Int32Array extends IntArray<Int32>
          * @see net.sci.array.scalar.ScalarArray#getValue(int[])
          */
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return array.getValue(coordsMapping.apply(pos));
         }

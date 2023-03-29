@@ -34,10 +34,10 @@ public class Int16ArrayTest
         assertEquals(6, array16.size(1));
         
         // array content should be the same 
-        assertEquals(   0, array16.getInt(0, 0));
-        assertEquals(  70, array16.getInt(7, 0));
-        assertEquals(5000, array16.getInt(0, 5));
-        assertEquals(5070, array16.getInt(7, 5));
+        assertEquals(   0, array16.getInt(new int[] {0, 0}));
+        assertEquals(  70, array16.getInt(new int[] {7, 0}));
+        assertEquals(5000, array16.getInt(new int[] {0, 5}));
+        assertEquals(5070, array16.getInt(new int[] {7, 5}));
     }
 
     /**
@@ -57,10 +57,10 @@ public class Int16ArrayTest
         assertEquals(6, array16.size(1));
         
         // array content should be the same 
-        assertEquals(   0, array16.getInt(0, 0));
-        assertEquals(  70, array16.getInt(7, 0));
-        assertEquals(5000, array16.getInt(0, 5));
-        assertEquals(5070, array16.getInt(7, 5));
+        assertEquals(   0, array16.getInt(new int[] {0, 0}));
+        assertEquals(  70, array16.getInt(new int[] {7, 0}));
+        assertEquals(5000, array16.getInt(new int[] {0, 5}));
+        assertEquals(5070, array16.getInt(new int[] {7, 5}));
         
         // changing the view should change original array
         array16.setInt(new int[] {4, 3}, 9999);

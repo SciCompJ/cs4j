@@ -147,20 +147,20 @@ public class SlicedUInt8Array3D extends UInt8Array3D
 	// =============================================================
 	// Specialization of the UInt8Array3D interface
 
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.UInt8Array3D#getByte(int, int, int)
+     */
+    @Override
+    public byte getByte(int x, int y, int z)
+    {
+        return this.slices.get(z).getByte(x, y);
+    }
+
 	@Override
     public void setByte(int x, int y, int z, byte b)
     {
 	    this.slices.get(z).setByte(x, y, b);
     }
-
-    /* (non-Javadoc)
-	 * @see net.sci.array.scalar.UInt8Array3D#getByte(int, int, int)
-	 */
-	@Override
-	public byte getByte(int... pos)
-	{
-		return this.slices.get(pos[2]).getByte(new int[]{pos[0], pos[1]});
-	}
 
 	
     // =============================================================

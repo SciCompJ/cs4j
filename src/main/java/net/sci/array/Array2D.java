@@ -121,6 +121,18 @@ public abstract class Array2D<T> implements Array<T>
     // New getter / setter
     
     /**
+     * Retrieves the value of an element in the array at the position given by
+     * two integer indices.
+     * 
+     * @param x
+     *            index over the first array dimension
+     * @param y
+     *            index over the second array dimension
+     * @return the new value at the specified index
+     */
+    public abstract T get(int x, int y);
+    
+    /**
      * Changes the value of an element in the array at the position given by
      * two integer indices.
      * 
@@ -137,6 +149,18 @@ public abstract class Array2D<T> implements Array<T>
 	// =============================================================
 	// Specialization of the Array interface
 
+    @Override
+    public T get(int[] pos)
+    {
+        return get(pos[0], pos[1]);
+    }
+    
+    @Override
+    public void set(int[] pos, T value)
+    {
+        set(pos[0], pos[1], value);
+    }
+    
 	/* (non-Javadoc)
 	 * @see net.sci.array.Array#dimensionality()
 	 */
@@ -263,6 +287,13 @@ public abstract class Array2D<T> implements Array<T>
 		}
 
         @Override
+        public T get(int x, int y)
+        {
+            // set value at specified position
+            return this.array.get(new int[] {x, y});
+        }
+
+        @Override
         public void set(int x, int y, T value)
         {
             // set value at specified position
@@ -282,7 +313,7 @@ public abstract class Array2D<T> implements Array<T>
 		}
 
 		@Override
-		public T get(int... pos)
+		public T get(int[] pos)
 		{
 			// return value from specified position
 			return this.array.get(pos);

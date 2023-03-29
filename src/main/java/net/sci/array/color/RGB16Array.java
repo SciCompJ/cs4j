@@ -277,7 +277,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
                 }
 
                 @Override
-                public RGB16 get(int... pos)
+                public RGB16 get(int[] pos)
                 {
                     return (RGB16) array.get(pos);
                 }
@@ -594,7 +594,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 
 
         @Override
-        public short getShort(int... pos)
+        public short getShort(int[] pos)
         {
             return (short) array.getSample(pos, channel);
         }

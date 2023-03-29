@@ -77,7 +77,7 @@ public class BinaryArrayRGB8View implements RGB8Array
     // Methods implementing the Array interface
 
     @Override
-    public RGB8 get(int... pos)
+    public RGB8 get(int[] pos)
     {
         return baseArray.getBoolean(pos) ? fgColor : bgColor;
     }

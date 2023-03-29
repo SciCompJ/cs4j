@@ -237,13 +237,20 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
         }
 
         @Override
+        public RGB16 get(int x, int y)
+        {
+            return RGB16Array3D.this.get(new int[] {x, y, sliceIndex});
+        }
+
+
+        @Override
         public void set(int x, int y, RGB16 value)
         {
             RGB16Array3D.this.set(x, y, sliceIndex, value);
         }
 
         @Override
-        public RGB16 get(int... pos)
+        public RGB16 get(int[] pos)
         {
             return RGB16Array3D.this.get(pos[0], pos[1], sliceIndex);
         }
@@ -339,13 +346,19 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RG
         }
 
         @Override
+        public short getShort(int x, int y, int z)
+        {
+            return (short) RGB16Array3D.this.getSample(x, y, z, channel);
+        }
+
+        @Override
         public void setShort(int x, int y, int z, short s)
         {
             RGB16Array3D.this.setSample(x, y, z, channel, s & 0x00FFFF);
         }
 
         @Override
-        public short getShort(int... pos)
+        public short getShort(int[] pos)
         {
             return (short) RGB16Array3D.this.getSample(pos[0], pos[1], pos[2], channel);
         }

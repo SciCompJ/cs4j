@@ -152,6 +152,12 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	// =============================================================
 	// Implementation of the Array3D interface
 
+    @Override
+    public RGB8 get(int x, int y, int z)
+    {
+        return new RGB8(this.buffer.getInt(x, y, z));
+    }
+
 	@Override
     public void set(int x, int y, int z, RGB8 rgb)
     {
@@ -162,7 +168,7 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
 	 * @see net.sci.array.Array3D#get(int, int, int)
 	 */
 	@Override
-	public RGB8 get(int... pos)
+	public RGB8 get(int[] pos)
 	{
 		return new RGB8(this.buffer.getInt(pos));
 	}

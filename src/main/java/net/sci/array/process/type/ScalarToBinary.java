@@ -77,7 +77,7 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
         {
 
             @Override
-            public boolean getBoolean(int... pos)
+            public boolean getBoolean(int[] pos)
             {
                 return fun.apply(array.getValue(pos));
             }

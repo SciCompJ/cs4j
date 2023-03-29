@@ -34,10 +34,10 @@ public class Float64ArrayTest
         assertEquals(6, array64.size(1));
         
         // array content should be the same 
-        assertEquals(   0.0, array64.getValue(0, 0), 0.1);
-        assertEquals(  70.0, array64.getValue(7, 0), 0.1);
-        assertEquals(5000.0, array64.getValue(0, 5), 0.1);
-        assertEquals(5070.0, array64.getValue(7, 5), 0.1);
+        assertEquals(   0.0, array64.getValue(new int[] {0, 0}), 0.1);
+        assertEquals(  70.0, array64.getValue(new int[] {7, 0}), 0.1);
+        assertEquals(5000.0, array64.getValue(new int[] {0, 5}), 0.1);
+        assertEquals(5070.0, array64.getValue(new int[] {7, 5}), 0.1);
     }
 
     /**
@@ -57,10 +57,10 @@ public class Float64ArrayTest
         assertEquals(6, array64.size(1));
         
         // array content should be the same 
-        assertEquals(   0.0, array64.getValue(0, 0), 0.1);
-        assertEquals(  70.0, array64.getValue(7, 0), 0.1);
-        assertEquals(5000.0, array64.getValue(0, 5), 0.1);
-        assertEquals(5070.0, array64.getValue(7, 5), 0.1);
+        assertEquals(   0.0, array64.getValue(new int[] {0, 0}), 0.1);
+        assertEquals(  70.0, array64.getValue(new int[] {7, 0}), 0.1);
+        assertEquals(5000.0, array64.getValue(new int[] {0, 5}), 0.1);
+        assertEquals(5070.0, array64.getValue(new int[] {7, 5}), 0.1);
         
         // changing the view should change original array
         array64.setValue(new int[] {4, 3}, 9999.9);

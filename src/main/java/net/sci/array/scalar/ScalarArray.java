@@ -157,7 +157,7 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
      *            the position, as an array of indices
      * @return the double value at the given position
      */
-    public double getValue(int... pos);
+    public double getValue(int[] pos);
     
     /**
      * Sets the value at the given position as a numeric double.
@@ -566,7 +566,7 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
         // Specialization of the Array interface
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return array.getValue(coordsMapping.apply(pos));
         }
@@ -626,7 +626,7 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
         }
 
         @Override
-        public T get(int... pos)
+        public T get(int[] pos)
         {
             return array.get(coordsMapping.apply(pos));
         }

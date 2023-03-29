@@ -76,7 +76,7 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	// Implementation of the Int16Array interface
 	
 	@Override
-	public short getShort(int... pos)
+	public short getShort(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
@@ -96,7 +96,7 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	 * @see net.sci.array.data.IntArray#getInt(int[])
 	 */
 	@Override
-	public int getInt(int... pos)
+	public int getInt(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
@@ -164,7 +164,7 @@ public class BufferedInt16ArrayND extends Int16ArrayND
 	}
 
 	@Override
-	public Int16 get(int... pos)
+	public Int16 get(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return new Int16(this.buffer[index]);	

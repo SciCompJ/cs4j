@@ -103,7 +103,7 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16
         }
 
         @Override
-        public short getShort(int... pos)
+        public short getShort(int[] pos)
         {
             return (short) RGB16ArrayND.this.get(pos).getSample(channel);
         }

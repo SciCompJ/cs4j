@@ -105,6 +105,12 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
     }
 
     @Override
+    public Int32 get(int x, int y)
+    {
+        return new Int32(getInt(x, y));
+    }
+    
+    @Override
     public void set(int x, int y, Int32 value)
     {
         setInt(x, y, value.value);
@@ -134,13 +140,19 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
         }
         
         @Override
+        public int getInt(int x, int y)
+        {
+            return this.array.getInt(new int[] {x, y});
+        }
+
+        @Override
         public void setInt(int x, int y, int intValue)
         {
             this.array.setInt(new int[] {x, y}, intValue);
         }
 
         @Override
-        public int getInt(int... pos)
+        public int getInt(int[] pos)
         {
             return this.array.getInt(pos);
         }

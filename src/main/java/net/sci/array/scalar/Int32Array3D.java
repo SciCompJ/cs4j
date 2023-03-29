@@ -88,6 +88,12 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
     }
 
     @Override
+    public Int32 get(int x, int y, int z)
+    {
+        return new Int32(getInt(x, y, z));
+    }
+    
+    @Override
     public void set(int x, int y, int z, Int32 value)
     {
         setInt(x, y, z, value.value);
@@ -130,13 +136,19 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
         }
         
         @Override
-        public void setInt(int x, int y, int z, int s)
+        public int getInt(int x, int y, int z)
         {
-            this.array.setInt(new int[] {x, y, z}, s);
+            return this.array.getInt(new int[] {x, y, z});
         }
 
         @Override
-        public int getInt(int... pos)
+        public void setInt(int x, int y, int z, int intVal)
+        {
+            this.array.setInt(new int[] {x, y, z}, intVal);
+        }
+
+        @Override
+        public int getInt(int[] pos)
         {
             return this.array.getInt(pos);
         }
@@ -173,13 +185,19 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
         }
 
         @Override
+        public int getInt(int x, int y)
+        {
+            return Int32Array3D.this.getInt(x, y, this.sliceIndex);            
+        }
+
+        @Override
         public void setInt(int x, int y, int value)
         {
             Int32Array3D.this.setInt(x, y, this.sliceIndex, value);            
         }
 
         @Override
-        public int getInt(int... pos)
+        public int getInt(int[] pos)
         {
             return Int32Array3D.this.getInt(pos[0], pos[1], this.sliceIndex);
         }

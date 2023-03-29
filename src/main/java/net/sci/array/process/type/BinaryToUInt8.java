@@ -136,7 +136,7 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
         }
 
         @Override
-        public byte getByte(int... pos)
+        public byte getByte(int[] pos)
         {
             return array.getBoolean(pos) ? (byte) 255 : (byte) 0;
         }

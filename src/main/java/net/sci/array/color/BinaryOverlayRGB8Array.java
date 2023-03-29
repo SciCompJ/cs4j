@@ -209,7 +209,7 @@ public class BinaryOverlayRGB8Array implements RGB8Array
     // Implementation of Array interface
 
     @Override
-    public RGB8 get(int... pos)
+    public RGB8 get(int[] pos)
     {
         if (binaryMask.getBoolean(pos))
         {

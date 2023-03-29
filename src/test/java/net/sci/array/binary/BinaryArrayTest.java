@@ -38,10 +38,10 @@ public class BinaryArrayTest
         assertEquals(6, binaryArray.size(1));
         
         // array content should be the same 
-        assertFalse(binaryArray.getBoolean(0, 0));
-        assertTrue( binaryArray.getBoolean(7, 0));
-        assertTrue( binaryArray.getBoolean(0, 5));
-        assertFalse(binaryArray.getBoolean(7, 5));
+        assertFalse(binaryArray.getBoolean(new int[] {0, 0}));
+        assertTrue( binaryArray.getBoolean(new int[] {7, 0}));
+        assertTrue( binaryArray.getBoolean(new int[] {0, 5}));
+        assertFalse(binaryArray.getBoolean(new int[] {7, 5}));
     }
 
     /**
@@ -61,10 +61,10 @@ public class BinaryArrayTest
         assertEquals(6, binaryArray.size(1));
         
         // array content should be the same
-        assertFalse(binaryArray.getBoolean(0, 0));
-        assertTrue( binaryArray.getBoolean(7, 0));
-        assertTrue( binaryArray.getBoolean(0, 5));
-        assertFalse(binaryArray.getBoolean(7, 5));
+        assertFalse(binaryArray.getBoolean(new int[] {0, 0}));
+        assertTrue( binaryArray.getBoolean(new int[] {7, 0}));
+        assertTrue( binaryArray.getBoolean(new int[] {0, 5}));
+        assertFalse(binaryArray.getBoolean(new int[] {7, 5}));
         
         // changing the view should change original array
         binaryArray.setBoolean(new int[] {2, 2}, true);
@@ -109,10 +109,10 @@ public class BinaryArrayTest
         assertEquals(6, view.size(0));
         assertEquals(8, view.size(1));
         
-        assertFalse(view.getBoolean(2, 2));
-        assertFalse(view.getBoolean(4, 6));
-        assertTrue(view.getBoolean(2, 6));
-        assertTrue(view.getBoolean(4, 2));
+        assertFalse(view.getBoolean(new int[] {2, 2}));
+        assertFalse(view.getBoolean(new int[] {4, 6}));
+        assertTrue(view.getBoolean(new int[] {2, 6}));
+        assertTrue(view.getBoolean(new int[] {4, 2}));
         
         view.setBoolean(new int[] {2, 3}, true);
         assertTrue(array.getBoolean(3, 2));
@@ -130,10 +130,10 @@ public class BinaryArrayTest
         
         array.fillBooleans(pos -> pos[0] >= 10 ^ pos[1] >= 5);
         
-        assertFalse(array.getBoolean(5, 2));
-        assertTrue(array.getBoolean(15, 2));
-        assertTrue(array.getBoolean(5, 7));
-        assertFalse(array.getBoolean(15, 7));
+        assertFalse(array.getBoolean(new int[] {5, 2}));
+        assertTrue(array.getBoolean(new int[] {15, 2}));
+        assertTrue(array.getBoolean(new int[] {5, 7}));
+        assertFalse(array.getBoolean(new int[] {15, 7}));
     }
 
     /**

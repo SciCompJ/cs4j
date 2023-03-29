@@ -82,20 +82,45 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
     // =============================================================
     // New methods
 	
+    public abstract float getFloat(int x, int y);
+
     public abstract void setFloat(int x, int y, float value);
 
 
     // =============================================================
-    // Specialization of ScalarArray3D 
+    // Specialization of FloatArray 
+
+    @Override
+    public float getFloat(int[] pos)
+    {
+        return getFloat(pos[0], pos[1]);
+    }
+
+    @Override
+    public void setFloat(int[] pos, float floatValue)
+    {
+        setFloat(pos[0], pos[1], floatValue);
+    }
+
+    
+    // =============================================================
+    // Specialization of ScalarArray2D 
+
+    @Override
+    public double getValue(int x, int y)
+    {
+        return getFloat(x, y);
+    }
 
     @Override
     public void setValue(int x, int y, double value)
     {
         setFloat(x, y, (float) value);
     }
+    
 
     // =============================================================
-    // Specialization of Array3D 
+    // Specialization of Array2D 
 
     @Override
     public void set(int x, int y, Float32 value)
@@ -103,8 +128,23 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         setFloat(x, y, value.value);
     }
     
+    @Override
+    public Float32 get(int x, int y)
+    {
+        return new Float32(getFloat(x, y));
+    }
+    
     /* (non-Javadoc)
-     * @see net.sci.array.data.Array2D#setValue(int, int, double)
+     * @see net.sci.array.scalar.ScalarArray#getValue(int[])
+     */
+    @Override
+    public double getValue(int[] pos)
+    {
+        return getValue(pos[0], pos[1]);
+    }
+    
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.ScalarArray#setValue(int[], double)
      */
     @Override
     public void setValue(int[] pos, double value)
@@ -157,9 +197,9 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         }
         
         @Override
-        public float getFloat(int... pos)
+        public float getFloat(int x, int y)
         {
-            return this.array.getFloat(pos);
+            return this.array.getFloat(new int[] {x, y});
         }
 
         @Override
@@ -169,13 +209,19 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         }
 
         @Override
+        public float getFloat(int[] pos)
+        {
+            return this.array.getFloat(pos);
+        }
+
+        @Override
         public void setFloat(int[] pos, float floatValue)
         {
             this.array.setFloat(pos, floatValue);
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return this.array.getValue(pos);
         }

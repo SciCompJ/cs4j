@@ -100,6 +100,13 @@ public class BufferedInt32Array2D extends Int32Array2D
 	// Implementation of the IntArray2D interface
 
     @Override
+    public int getInt(int x, int y)
+    {
+        int index = x + this.size0 * y;
+        return this.buffer[index];
+    }
+
+    @Override
     public void setInt(int x, int y, int value)
     {
         int index = y * size0 + x;
@@ -107,7 +114,7 @@ public class BufferedInt32Array2D extends Int32Array2D
     }
 
 	@Override
-	public int getInt(int... pos)
+	public int getInt(int[] pos)
 	{
 		int index = pos[1] * size0 + pos[0];
 		return buffer[index];

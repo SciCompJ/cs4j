@@ -154,7 +154,7 @@ public interface Float32Array extends ScalarArray<Float32>
                 }
 
                 @Override
-                public float getFloat(int... pos)
+                public float getFloat(int[] pos)
                 {
                     return ((Float32) array.get(pos)).getFloat();
                 }
@@ -167,7 +167,7 @@ public interface Float32Array extends ScalarArray<Float32>
                 }
 
                 @Override
-                public double getValue(int... pos)
+                public double getValue(int[] pos)
                 {
                     return ((Float32) array.get(pos)).getValue();
                 }
@@ -205,23 +205,16 @@ public interface Float32Array extends ScalarArray<Float32>
         }
     }
     
-    public default float getFloat(int... pos)
-    {
-        return (float) getValue(pos);
-    }
-
+    public float getFloat(int[] pos);
     
-    public default void setFloat(int[] pos, float value)
-    {
-        setValue(pos, value);
-    }
+    public void setFloat(int[] pos, float value);
 
 
     // =============================================================
     // Specialization of ScalarArray interface
 
     @Override
-    public default double getValue(int... pos)
+    public default double getValue(int[] pos)
     {
         return getFloat(pos);
     }
@@ -249,7 +242,7 @@ public interface Float32Array extends ScalarArray<Float32>
 	}
 
     @Override
-    public default Float32 get(int... pos)
+    public default Float32 get(int[] pos)
     {
         return new Float32(getFloat(pos)); 
     }
@@ -381,7 +374,7 @@ public interface Float32Array extends ScalarArray<Float32>
 		}
 
         @Override
-        public float getFloat(int... position)
+        public float getFloat(int[] position)
         {
             return (float) array.getValue(position);
         }
@@ -416,7 +409,7 @@ public interface Float32Array extends ScalarArray<Float32>
 		}
 
 		@Override
-		public double getValue(int... position)
+		public double getValue(int[] position)
 		{
 			return array.getValue(position);
 		}
@@ -430,7 +423,7 @@ public interface Float32Array extends ScalarArray<Float32>
 
 
 		@Override
-		public Float32 get(int... pos)
+		public Float32 get(int[] pos)
 		{
 			return new Float32((float) array.getValue(pos));
 		}
@@ -540,7 +533,7 @@ public interface Float32Array extends ScalarArray<Float32>
         }
 
         @Override
-        public float getFloat(int... pos)
+        public float getFloat(int[] pos)
         {
             return array.getFloat(coordsMapping.apply(pos));
         }
@@ -555,7 +548,7 @@ public interface Float32Array extends ScalarArray<Float32>
          * @see net.sci.array.scalar.ScalarArray#getValue(int[])
          */
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return array.getValue(coordsMapping.apply(pos));
         }

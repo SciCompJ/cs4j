@@ -37,8 +37,8 @@ public class MaxProjectionTest
         assertEquals(1, res.size(1));
 
         // Check content
-        assertEquals(70.0, res.getValue(0,0), 0.01);
-        assertEquals(79.0, res.getValue(9,0), 0.01);
+        assertEquals(70.0, res.getValue(new int[] {0,0}), 0.01);
+        assertEquals(79.0, res.getValue(new int[] {9,0}), 0.01);
     }
 
 }

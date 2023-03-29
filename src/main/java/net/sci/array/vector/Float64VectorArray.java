@@ -69,7 +69,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector>
 	// Specialization of Array interface
 
     @Override
-    public default Float64Vector get(int... pos)
+    public default Float64Vector get(int[] pos)
     {
         return new Float64Vector(getValues(pos, new double[channelCount()]));
     }

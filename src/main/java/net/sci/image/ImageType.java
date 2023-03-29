@@ -855,7 +855,7 @@ public interface ImageType
      *            the image to convert
      * @return and instance of awt BufferedImage that can be displayed
      */
-    private static BufferedImage createAwtImage_scalar(ScalarArray<?> array, DisplaySettings settings)
+    private static BufferedImage createAwtImage_scalar(ScalarArray2D<?> array, DisplaySettings settings)
     {
         // extract LUT from image, or create one otherwise
         ColorMap lut = settings.getColorMap();

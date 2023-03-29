@@ -118,7 +118,7 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
     // Implementation of the Array interface
     
     @Override
-    public Float32Vector get(int... pos)
+    public Float32Vector get(int[] pos)
     {
         return new Float32Vector(getValues(pos, new double[vectorLength]));
     }

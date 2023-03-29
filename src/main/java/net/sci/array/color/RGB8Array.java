@@ -413,7 +413,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
             }
 
             @Override
-            public RGB8 get(int... pos)
+            public RGB8 get(int[] pos)
             {
                 return (RGB8) array.get(pos);
             }
@@ -776,7 +776,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 
 
         @Override
-        public byte getByte(int... pos)
+        public byte getByte(int[] pos)
         {
             return (byte) array.getSample(pos, channel);
         }
@@ -848,7 +848,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         }
 
         @Override
-        public UInt8 get(int... pos)
+        public UInt8 get(int[] pos)
         {
             return new UInt8(parent.get(pos).maxSample());
         }
@@ -861,7 +861,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
         }
 
         @Override
-        public byte getByte(int... pos)
+        public byte getByte(int[] pos)
         {
             return get(pos).getByte();
         }

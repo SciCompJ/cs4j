@@ -124,7 +124,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
      * @see net.sci.array.Array#get(int[])
      */
     @Override
-    public RGB16 get(int... pos)
+    public RGB16 get(int[] pos)
     {
         int nd = this.dimensionality();
         int[] pos2 = new int[nd+1];

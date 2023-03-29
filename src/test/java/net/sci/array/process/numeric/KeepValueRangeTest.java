@@ -34,12 +34,12 @@ public class KeepValueRangeTest
         assertEquals(array.size(0), res.size(0));
         assertEquals(array.size(1), res.size(1));
         
-        assertEquals(  0.0, res.getValue( 0, 0), 0.0);
-        assertEquals(  0.0, res.getValue( 4, 0), 0.0);
-        assertEquals( 50.0, res.getValue( 5, 0), 0.0);
-        assertEquals(150.0, res.getValue(15, 0), 0.0);
-        assertEquals(  0.0, res.getValue(16, 0), 0.0);
-        assertEquals(  0.0, res.getValue(19, 0), 0.0);
+        assertEquals(  0.0, res.getValue(new int[] { 0, 0}), 0.0);
+        assertEquals(  0.0, res.getValue(new int[] { 4, 0}), 0.0);
+        assertEquals( 50.0, res.getValue(new int[] { 5, 0}), 0.0);
+        assertEquals(150.0, res.getValue(new int[] {15, 0}), 0.0);
+        assertEquals(  0.0, res.getValue(new int[] {16, 0}), 0.0);
+        assertEquals(  0.0, res.getValue(new int[] {19, 0}), 0.0);
     }
 
 
@@ -60,12 +60,12 @@ public class KeepValueRangeTest
         assertEquals(array.size(1), res.size(1));
         assertEquals(array.size(2), res.size(2));
         
-        assertEquals(  0.0, res.getValue( 0, 0, 0), 0.0);
-        assertEquals(  0.0, res.getValue( 4, 0, 0), 0.0);
-        assertEquals( 50.0, res.getValue( 5, 0, 0), 0.0);
-        assertEquals(150.0, res.getValue(15, 0, 0), 0.0);
-        assertEquals(  0.0, res.getValue(16, 0, 0), 0.0);
-        assertEquals(  0.0, res.getValue(19, 0, 0), 0.0);
+        assertEquals(  0.0, res.getValue(new int[] { 0, 0, 0}), 0.0);
+        assertEquals(  0.0, res.getValue(new int[] { 4, 0, 0}), 0.0);
+        assertEquals( 50.0, res.getValue(new int[] { 5, 0, 0}), 0.0);
+        assertEquals(150.0, res.getValue(new int[] {15, 0, 0}), 0.0);
+        assertEquals(  0.0, res.getValue(new int[] {16, 0, 0}), 0.0);
+        assertEquals(  0.0, res.getValue(new int[] {19, 0, 0}), 0.0);
     }
 
 }

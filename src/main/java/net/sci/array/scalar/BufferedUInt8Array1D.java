@@ -93,6 +93,12 @@ public class BufferedUInt8Array1D extends UInt8Array1D
         buffer[pos] = value;
     }
     
+    @Override
+    public byte getByte(int pos)
+    {
+        return buffer[pos];
+    }
+    
     
     // =============================================================
     // Implementation of the IntArray1D interface
@@ -108,7 +114,7 @@ public class BufferedUInt8Array1D extends UInt8Array1D
     // Implementation of the UInt8Array interface
 
     @Override
-    public byte getByte(int... pos)
+    public byte getByte(int[] pos)
     {
         return buffer[pos[0]];
     }
@@ -124,7 +130,7 @@ public class BufferedUInt8Array1D extends UInt8Array1D
     // Implementation of the IntArray interface
 
 	@Override
-	public int getInt(int... pos)
+	public int getInt(int[] pos)
 	{
 		return buffer[pos[0]];
 	}

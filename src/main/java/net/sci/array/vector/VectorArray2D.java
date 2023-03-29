@@ -288,6 +288,12 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
+        public T get(int x, int y)
+        {
+            return this.array.get(new int[] {x, y});
+        }
+        
+        @Override
         public void set(int x, int y, T value)
         {
             // set value at specified position
@@ -307,7 +313,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
-        public T get(int... pos)
+        public T get(int[] pos)
         {
             // return value from specified position
             return this.array.get(pos);

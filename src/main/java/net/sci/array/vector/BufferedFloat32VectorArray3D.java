@@ -166,7 +166,7 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public Float32Vector get(int... pos)
+	public Float32Vector get(int[] pos)
 	{
 		return new Float32Vector(getValues(pos));
 	}

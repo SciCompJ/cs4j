@@ -88,13 +88,19 @@ public class BufferedInt32Array1D extends Int32Array1D
 	// Implementation of the IntArray2D interface
 
     @Override
+    public int getInt(int x)
+    {
+        return buffer[x];
+    }
+
+    @Override
     public void setInt(int x, int value)
     {
         buffer[x] = value;
     }
 
 	@Override
-	public int getInt(int... pos)
+	public int getInt(int[] pos)
 	{
 		return buffer[pos[0]];
 	}

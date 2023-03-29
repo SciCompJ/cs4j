@@ -88,27 +88,23 @@ public class BufferedInt16Array1D extends Int16Array1D
     // Implementation of the Int16Array1D interface
 
     @Override
+    public short getShort(int pos)
+    {
+        return buffer[pos];
+    }
+    
+    @Override
     public void setShort(int pos, short value)
     {
         buffer[pos] = value;
     }
     
-    
-    // =============================================================
-    // Implementation of the IntArray1D interface
-
-    @Override
-    public void setInt(int x, int value)
-    {
-        buffer[x] = (short) Int16.clamp(value);
-    }
-    
-    
+        
     // =============================================================
     // Implementation of the Int16Array interface
 
     @Override
-    public short getShort(int... pos)
+    public short getShort(int[] pos)
     {
         return buffer[pos[0]];
     }
@@ -124,7 +120,7 @@ public class BufferedInt16Array1D extends Int16Array1D
     // Implementation of the IntArray interface
 
 	@Override
-	public int getInt(int... pos)
+	public int getInt(int[] pos)
 	{
 		return buffer[pos[0]];
 	}

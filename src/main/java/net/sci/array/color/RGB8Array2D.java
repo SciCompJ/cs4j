@@ -177,7 +177,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 		int b = UInt8.convert(values[2]);
 		set(x, y, new RGB8(r, g, b));
 	}
-
+    
 
 	// =============================================================
 	// Specialization of Array interface
@@ -223,13 +223,19 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
         }
 
         @Override
+        public byte getByte(int x, int y)
+        {
+            return (byte) RGB8Array2D.this.getSample(x, y, channel);
+        }
+        
+        @Override
         public void setByte(int x, int y, byte byteValue)
         {
             RGB8Array2D.this.setSample(x, y, channel, byteValue & 0x00FF);
         }
 
         @Override
-        public byte getByte(int... pos)
+        public byte getByte(int[] pos)
         {
             return (byte) RGB8Array2D.this.getSample(pos[0], pos[1], channel);
         }
@@ -365,9 +371,15 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
 
 
         @Override
-        public RGB8 get(int... pos)
+        public RGB8 get(int[] pos)
         {
             return array.get(pos);
+        }
+
+        @Override
+        public RGB8 get(int x, int y)
+        {
+            return array.get(new int[] {x, y});
         }
 
         @Override

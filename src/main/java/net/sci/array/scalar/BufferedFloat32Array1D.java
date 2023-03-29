@@ -110,7 +110,7 @@ public class BufferedFloat32Array1D extends Float32Array1D
     // Specialization of the Float32Array interface
 
 	@Override
-	public float getFloat(int... pos)
+	public float getFloat(int[] pos)
 	{
 		return buffer[pos[0]];
 	}

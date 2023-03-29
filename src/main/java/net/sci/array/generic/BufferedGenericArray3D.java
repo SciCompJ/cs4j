@@ -79,6 +79,17 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
     }
 
     /* (non-Javadoc)
+     * @see net.sci.array.data.Array3D#get(int, int, int)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public T get(int x, int y, int z)
+    {
+        int index = x + this.size0 * (y + this.size1 * z);
+        return (T) this.buffer[index];
+    }
+
+    /* (non-Javadoc)
      * @see net.sci.array.data.Array3D#set(int, int, int, T)
      */
     @Override
@@ -130,7 +141,7 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
      * @see net.sci.array.data.Array3D#get(int, int, int)
      */
     @Override
-    public T get(int... pos)
+    public T get(int[] pos)
     {
         int index = pos[0] + this.size0 * (pos[1] + this.size1 * pos[2]);
         return (T) this.buffer[index];
@@ -213,13 +224,20 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
     
         
         @Override
+        public T get(int x, int y)
+        {
+            return BufferedGenericArray3D.this.get(x, y, sliceIndex);
+        }
+
+
+        @Override
         public void set(int x, int y, T value)
         {
             BufferedGenericArray3D.this.set(x, y, sliceIndex, value);
         }
 
         @Override
-        public T get(int... pos)
+        public T get(int[] pos)
         {
             return BufferedGenericArray3D.this.get(pos[0], pos[1], sliceIndex);
         }

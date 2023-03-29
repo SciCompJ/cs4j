@@ -108,6 +108,12 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
     }
 
     @Override
+    public Float32Vector get(int x, int y, int z)
+    {
+        return new Float32Vector(getValues(x, y, z));
+    }
+
+    @Override
     public void set(int x, int y, int z, Float32Vector vect)
     {
         setValues(x, y, z, vect.getValues());
@@ -185,7 +191,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         }
 
         @Override
-        public Float32Vector get(int... pos)
+        public Float32Vector get(int[] pos)
         {
             return Float32VectorArray3D.this.get(pos[0], pos[1], sliceIndex);
         }
@@ -320,6 +326,13 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         }
 
         @Override
+        public float getFloat(int x, int y, int z)
+        {
+            //TODO: avoid cast?
+            return (float) Float32VectorArray3D.this.getValue(x, y, z, channel);
+        }
+
+        @Override
         public void setFloat(int x, int y, int z, float f)
         {
             Float32VectorArray3D.this.setValue(x, y, z, channel, f);
@@ -332,7 +345,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return Float32VectorArray3D.this.getValue(pos[0], pos[1], pos[2], channel);
         }

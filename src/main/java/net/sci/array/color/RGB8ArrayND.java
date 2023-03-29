@@ -104,7 +104,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Arr
         }
 
         @Override
-        public byte getByte(int... pos)
+        public byte getByte(int[] pos)
         {
             return (byte) RGB8ArrayND.this.get(pos).getSample(channel);
         }

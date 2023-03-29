@@ -123,6 +123,13 @@ public class BufferedFloat64Array3D extends Float64Array3D
 	// Implementation of the ScalarArray3D class
 
     @Override
+    public double getValue(int x, int y, int z)
+    {
+        int index = (z * this.size1 + y) * this.size0 + x;
+        return this.buffer[index];
+    }
+
+    @Override
     public void setValue(int x, int y, int z, double value)
     {
         int index = (z * this.size1 + y) * this.size0 + x;
@@ -168,7 +175,7 @@ public class BufferedFloat64Array3D extends Float64Array3D
     }
     
     @Override
-    public double getValue(int... pos)
+    public double getValue(int[] pos)
     {
         int index = (pos[2] * this.size1 + pos[1]) * this.size0 + pos[0];
         return this.buffer[index];

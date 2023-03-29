@@ -69,7 +69,7 @@ public class SlicedFloat32Array3D extends Float32Array3D
     /**
      * The inner array of 2D Float32 arrays.
      */
-	ArrayList<Float32Array> slices;
+	ArrayList<Float32Array2D> slices;
 
 	
 	// =============================================================
@@ -140,7 +140,7 @@ public class SlicedFloat32Array3D extends Float32Array3D
 		this.slices = new ArrayList<>(size2);
 		for (Float32Array slice : slices)
 		{
-			this.slices.add(slice);
+			this.slices.add(Float32Array2D.wrap(slice));
 		}
 	}
 
@@ -148,17 +148,23 @@ public class SlicedFloat32Array3D extends Float32Array3D
 	// =============================================================
 	// Specialization of the ScalarArray3D interface
 
-	@Override
+    @Override
+    public float getFloat(int x, int y, int z)
+    {
+        return this.slices.get(z).getFloat(x, y);
+    }
+
+    @Override
     public void setFloat(int x, int y, int z, float value)
     {
-	    this.slices.get(z).setValue(new int[] {x, y}, value);
+        this.slices.get(z).setFloat(x, y, value);
     }
 
     /* (non-Javadoc)
 	 * @see net.sci.array.scalar.Float32Array3D#getDouble(int, int, int)
 	 */
 	@Override
-	public double getValue(int... pos)
+	public double getValue(int[] pos)
 	{
 		return this.slices.get(pos[2]).getValue(pos[0], pos[1]);
 	}

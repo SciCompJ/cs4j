@@ -99,24 +99,38 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 	// =============================================================
 	// Implementation of the UInt8Array2D interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.scalar2d.UInt8Array2D#getByte(int, int)
-	 */
-	@Override
-	public byte getByte(int... pos)
-	{
-		int index = pos[0] + pos[1] * this.size0;
-		return this.buffer[index];
-	}
-	
     /* (non-Javadoc)
-     * @see net.sci.array.data.scalar2d.UInt8Array2D#setByte(int, int, byte)
+     * @see net.sci.array.scalar.UInt8Array2D#getByte(int, int)
+     */
+    @Override
+    public byte getByte(int x, int y)
+    {
+        int index = x + y * this.size0;
+        return this.buffer[index];
+    }
+    
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.UInt8Array2D#setByte(int, int, byte)
      */
     @Override
     public void setByte(int x, int y, byte b)
     {
         int index = x + y * this.size0;
         this.buffer[index] = b;
+    }
+    
+    
+    // =============================================================
+    // Implementation of the UInt8Array interface
+
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.UInt8Array2D#getByte(int[])
+     */
+    @Override
+    public byte getByte(int[] pos)
+    {
+        int index = pos[0] + pos[1] * this.size0;
+        return this.buffer[index];
     }
     
     /* (non-Javadoc)
@@ -178,9 +192,6 @@ public class BufferedUInt8Array2D extends UInt8Array2D
 		System.arraycopy(this.buffer, 0, buffer2, 0, size0 * size1);
 		return new BufferedUInt8Array2D(size0, size1, buffer2);
 	}
-
-	   
-
     
     
 	// =============================================================

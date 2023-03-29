@@ -70,8 +70,10 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	// =============================================================
 	// New methods
 
-	public abstract void setByte(int x, int y, int z, byte b);
+	public abstract byte getByte(int x, int y, int z);
 
+    public abstract void setByte(int x, int y, int z, byte b);
+    
 	
     // =============================================================
     // Management of slices
@@ -111,14 +113,29 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
      * @see net.sci.array.scalar.UInt8Array#setByte(int[], byte)
      */
     @Override
+    public byte getByte(int[] pos)
+    {
+        return getByte(pos[0], pos[1], pos[2]);
+    }
+    
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.UInt8Array#setByte(int[], byte)
+     */
+    @Override
     public void setByte(int[] pos, byte b)
     {
         setByte(pos[0], pos[1], pos[2], b);
     }
     
-    
+   
     // =============================================================
     // Specialization of the IntArray3D interface
+
+    @Override
+    public int getInt(int x, int y, int z)
+    {
+        return getByte(x, y, z) & 0x00FF;
+    }
 
     @Override
     public void setInt(int x, int y, int z, int value)
@@ -140,6 +157,12 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Specialization of Array3D interface
 
+    @Override
+    public UInt8 get(int x, int y, int z)
+    {
+        return new UInt8(getByte(x, y, z));
+    }
+    
     @Override
     public void set(int x, int y, int z, UInt8 value)
     {
@@ -193,13 +216,19 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         }
         
         @Override
+        public byte getByte(int x, int y, int z)
+        {
+            return this.array.getByte(new int[] {x, y, z});
+        }
+    
+        @Override
         public void setByte(int x, int y, int z, byte b)
         {
             this.array.setByte(new int[] {x, y, z}, b);
         }
     
         @Override
-        public byte getByte(int... pos)
+        public byte getByte(int[] pos)
         {
             return this.array.getByte(pos);
         }
@@ -236,13 +265,19 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         }
 
         @Override
+        public byte getByte(int x, int y)
+        {
+            return UInt8Array3D.this.getByte(x, y, this.sliceIndex);
+        }
+
+        @Override
         public void setByte(int x, int y, byte b)
         {
             UInt8Array3D.this.setByte(x, y, this.sliceIndex, b);
         }
 
         @Override
-        public byte getByte(int... pos)
+        public byte getByte(int[] pos)
         {
             return UInt8Array3D.this.getByte(pos[0], pos[1], this.sliceIndex);
         }

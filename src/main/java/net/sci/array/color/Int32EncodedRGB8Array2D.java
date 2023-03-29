@@ -134,6 +134,12 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 	// =============================================================
 	// Implementation of the Array2D interface
 
+    @Override
+    public RGB8 get(int x, int y)
+    {
+        return new RGB8(this.buffer.getInt(x, y));
+    }
+
     /* (non-Javadoc)
      * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
      */
@@ -147,7 +153,7 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public RGB8 get(int... pos)
+	public RGB8 get(int[] pos)
 	{
 		return new RGB8(this.buffer.getInt(pos));
 	}

@@ -68,7 +68,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	// Specialization of Array interface
 
     @Override
-    public default Float32Vector get(int... pos)
+    public default Float32Vector get(int[] pos)
     {
         return new Float32Vector(getValues(pos, new double[channelCount()]));
     }

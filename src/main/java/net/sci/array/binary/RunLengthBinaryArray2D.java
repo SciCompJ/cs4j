@@ -178,7 +178,21 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
 	// Implementation of the BinaryArray interface
 
     /* (non-Javadoc)
-     * @see net.sci.array.scalar.BinaryArray2D#setBoolean(int, int, boolean)
+     * @see net.sci.array.binary.BinaryArray2D#getBoolean(int, int)
+     */
+    @Override
+    public boolean getBoolean(int x, int y)
+    {
+        BinaryRow row = this.rows[y];
+        if (row == null)
+        {
+            return false;
+        }
+        return row.get(x);
+    }
+
+    /* (non-Javadoc)
+     * @see net.sci.array.binary.BinaryArray2D#setBoolean(int, int, boolean)
      */
     @Override
     public void setBoolean(int x, int y, boolean state)
@@ -241,19 +255,7 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         }
     }
     
-    /* (non-Javadoc)
-	 * @see net.sci.array.scalar.BinaryArray#getBoolean(int[])
-	 */
-	@Override
-	public boolean getBoolean(int... pos)
-	{
-	    BinaryRow row = this.rows[pos[1]];
-	    if (row == null)
-	    {
-	        return false;
-	    }
-	    return row.get(pos[0]);
-	}
+    
 
 
 	// =============================================================

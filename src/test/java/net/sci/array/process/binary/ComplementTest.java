@@ -38,11 +38,10 @@ public class ComplementTest
         array.setBoolean(5, 3, true);
         array.setBoolean(2, 5, true);
 
-        BinaryArray res = new Complement().process(array);
-        BinaryArray2D res2d = BinaryArray2D.wrap(res);
+        BinaryArray2D res = BinaryArray2D.wrap(new Complement().process(array));
         
-        assertEquals(8, res2d.size(0));
-        assertEquals(6, res2d.size(1));
+        assertEquals(8, res.size(0));
+        assertEquals(6, res.size(1));
         
         for (int y = 0; y < 6; y++)
         {
@@ -80,7 +79,7 @@ public class ComplementTest
         {
             for (int x = 0; x < 8; x++)
             {
-                assertNotEquals(res.getBoolean(x, y), array.getBoolean(x, y));
+                assertNotEquals(res2d.getBoolean(x, y), array.getBoolean(x, y));
             }
         }
     }
@@ -107,7 +106,7 @@ public class ComplementTest
             {
                 for (int x = 0; x < 8; x++)
                 {
-                    assertNotEquals(res.getBoolean(x, y, z), array.getBoolean(x, y, z));
+                    assertNotEquals(res2d.getBoolean(x, y, z), array.getBoolean(x, y, z));
                 }
             }
         }
@@ -135,7 +134,7 @@ public class ComplementTest
             {
                 for (int x = 0; x < 8; x++)
                 {
-                    assertNotEquals(res.getBoolean(x, y, z), array.getBoolean(x, y, z));
+                    assertNotEquals(res2d.getBoolean(x, y, z), array.getBoolean(x, y, z));
                 }
             }
         }

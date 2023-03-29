@@ -34,10 +34,10 @@ public class Float32ArrayTest
         assertEquals(6, array32.size(1));
         
         // array content should be the same 
-        assertEquals(   0.0f, array32.getFloat(0, 0), 0.1f);
-        assertEquals(  70.0f, array32.getFloat(7, 0), 0.1f);
-        assertEquals(5000.0f, array32.getFloat(0, 5), 0.1f);
-        assertEquals(5070.0f, array32.getFloat(7, 5), 0.1f);
+        assertEquals(   0.0f, array32.getFloat(new int[] {0, 0}), 0.1f);
+        assertEquals(  70.0f, array32.getFloat(new int[] {7, 0}), 0.1f);
+        assertEquals(5000.0f, array32.getFloat(new int[] {0, 5}), 0.1f);
+        assertEquals(5070.0f, array32.getFloat(new int[] {7, 5}), 0.1f);
     }
 
     /**
@@ -57,10 +57,10 @@ public class Float32ArrayTest
         assertEquals(6, array32.size(1));
         
         // array content should be the same 
-        assertEquals(   0.0f, array32.getFloat(0, 0), 0.1f);
-        assertEquals(  70.0f, array32.getFloat(7, 0), 0.1f);
-        assertEquals(5000.0f, array32.getFloat(0, 5), 0.1f);
-        assertEquals(5070.0f, array32.getFloat(7, 5), 0.1f);
+        assertEquals(   0.0f, array32.getFloat(new int[] {0, 0}), 0.1f);
+        assertEquals(  70.0f, array32.getFloat(new int[] {7, 0}), 0.1f);
+        assertEquals(5000.0f, array32.getFloat(new int[] {0, 5}), 0.1f);
+        assertEquals(5070.0f, array32.getFloat(new int[] {7, 5}), 0.1f);
         
         // changing the view should change original array
         array32.setFloat(new int[] {4, 3}, 9999.9f);

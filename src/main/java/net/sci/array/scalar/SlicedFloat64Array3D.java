@@ -69,7 +69,7 @@ public class SlicedFloat64Array3D extends Float64Array3D
     /**
      * The inner array of 2D Float64 arrays.
      */
-	ArrayList<Float64Array> slices;
+	ArrayList<Float64Array2D> slices;
 
 	
 	// =============================================================
@@ -140,7 +140,7 @@ public class SlicedFloat64Array3D extends Float64Array3D
 		this.slices = new ArrayList<>(size2);
 		for (Float64Array slice : slices)
 		{
-			this.slices.add(slice);
+			this.slices.add(Float64Array2D.wrap(slice));
 		}
 	}
 
@@ -148,17 +148,23 @@ public class SlicedFloat64Array3D extends Float64Array3D
 	// =============================================================
 	// Specialization of the ScalarArray3D interface
 
-	@Override
+    @Override
+    public double getValue(int x, int y, int z)
+    {
+        return this.slices.get(z).getValue(x, y);
+    }
+
+    @Override
     public void setValue(int x, int y, int z, double value)
     {
-	    this.slices.get(z).setValue(new int[] {x, y}, value);
+        this.slices.get(z).setValue(x, y, value);
     }
 
     /* (non-Javadoc)
 	 * @see net.sci.array.scalar.Float64Array3D#getDouble(int, int, int)
 	 */
 	@Override
-	public double getValue(int... pos)
+	public double getValue(int[] pos)
 	{
 	    return this.slices.get(pos[2]).getValue(pos[0], pos[1]);
 	}

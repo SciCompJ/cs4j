@@ -111,7 +111,7 @@ public interface BinaryArray extends IntArray<Binary>
                 }
 
                 @Override
-                public boolean getBoolean(int... pos)
+                public boolean getBoolean(int[] pos)
                 {
                     return ((Binary) array.get(pos)).getBoolean();
                 }
@@ -308,7 +308,7 @@ public interface BinaryArray extends IntArray<Binary>
     
 
     
-	public boolean getBoolean(int... pos);
+	public boolean getBoolean(int[] pos);
 	
 	public void setBoolean(int[] pos, boolean state);
 	
@@ -367,7 +367,7 @@ public interface BinaryArray extends IntArray<Binary>
 	// Specialization of the IntArray interface
 
 	@Override
-	public default int getInt(int... pos)
+	public default int getInt(int[] pos)
 	{
 		return getBoolean(pos) ? 1 : 0; 
 	}
@@ -382,6 +382,15 @@ public interface BinaryArray extends IntArray<Binary>
     // =============================================================
     // Specialization of the ScalarArray interface
 
+    /* (non-Javadoc)
+     * @see net.sci.array.Array2D#getValue(int, int)
+     */
+    @Override
+    public default double getValue(int[] pos)
+    {
+        return getBoolean(pos) ? 1 : 0;
+    }
+
     /**
      * Sets the value at the specified position, using true if value is greater
      * than zero.
@@ -393,10 +402,12 @@ public interface BinaryArray extends IntArray<Binary>
      *            greater than zero, and to false otherwise.
      * 
      */
+    @Override
     public default void setValue(int[] pos, double value)
     {
-    	setBoolean(pos, value > 0);
+        setBoolean(pos, value > 0);
     }
+    
 
     
     // =============================================================
@@ -409,7 +420,7 @@ public interface BinaryArray extends IntArray<Binary>
 	}
 
     @Override
-    public default Binary get(int... pos)
+    public default Binary get(int[] pos)
     {
         return new Binary(getBoolean(pos));
     }
@@ -668,7 +679,7 @@ public interface BinaryArray extends IntArray<Binary>
         // Specialization of the Array interface
         
         @Override
-        public boolean getBoolean(int... pos)
+        public boolean getBoolean(int[] pos)
         {
             return array.getValue(pos) > 0;
         }
@@ -714,7 +725,7 @@ public interface BinaryArray extends IntArray<Binary>
         }
 
         @Override
-        public Binary get(int... pos)
+        public Binary get(int[] pos)
         {
             return new Binary(array.getValue(pos) > 0);
         }
@@ -892,7 +903,7 @@ public interface BinaryArray extends IntArray<Binary>
          * @see net.sci.array.binary.BinaryArray#getBoolean(int[])
          */
         @Override
-        public boolean getBoolean(int... pos)
+        public boolean getBoolean(int[] pos)
         {
             return array.getBoolean(coordsMapping.apply(pos));
         }

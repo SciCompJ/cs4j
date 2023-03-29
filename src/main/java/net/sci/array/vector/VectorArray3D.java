@@ -250,6 +250,12 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         // Implementation of Array3D interface
 
         @Override
+        public T get(int x, int y, int z)
+        {
+            return this.array.get(new int[] {x, y, z});
+        }
+        
+        @Override
         public void set(int x, int y, int z, T value)
         {
             // set value at specified position
@@ -282,7 +288,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         }
 
         @Override
-        public T get(int... pos)
+        public T get(int[] pos)
         {
             // return value from specified position
             return this.array.get(pos);
@@ -473,10 +479,17 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             // Implements Array2D
 
             @Override
+            public T get(int x, int y)
+            {
+                return Wrapper.this.get(x, y, this.sliceIndex);
+            }
+            
+            @Override
             public void set(int x, int y, T value)
             {
-                Wrapper.this.set(x, y, this.sliceIndex, value);            
+                Wrapper.this.set(x, y, this.sliceIndex, value);
             }
+            
 
             // --------------------------------------------------------
             // Implements Array
@@ -518,7 +531,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             }
 
             @Override
-            public T get(int... pos)
+            public T get(int[] pos)
             {
                 return Wrapper.this.get(pos[0], pos[1], this.sliceIndex);
             }

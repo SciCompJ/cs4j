@@ -99,7 +99,7 @@ public class KillBordersTest
         UInt8Array2D array = createBlocksArray2d();
         
         KillBorders algo = new KillBorders();
-        UInt8Array res = UInt8Array.wrap(algo.process(array));
+        UInt8Array2D res = UInt8Array2D.wrap(UInt8Array.wrap(algo.process(array)));
         
         assertEquals(array.size(0), res.size(0));
         assertEquals(array.size(1), res.size(1));

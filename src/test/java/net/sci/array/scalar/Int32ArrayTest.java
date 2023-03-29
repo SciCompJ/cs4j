@@ -34,10 +34,10 @@ public class Int32ArrayTest
         assertEquals(6, array32.size(1));
         
         // array content should be the same 
-        assertEquals(   0, array32.getInt(0, 0));
-        assertEquals(  70, array32.getInt(7, 0));
-        assertEquals(5000, array32.getInt(0, 5));
-        assertEquals(5070, array32.getInt(7, 5));
+        assertEquals(   0, array32.getInt(new int[] {0, 0}));
+        assertEquals(  70, array32.getInt(new int[] {7, 0}));
+        assertEquals(5000, array32.getInt(new int[] {0, 5}));
+        assertEquals(5070, array32.getInt(new int[] {7, 5}));
     }
 
     /**
@@ -57,10 +57,10 @@ public class Int32ArrayTest
         assertEquals(6, array32.size(1));
         
         // array content should be the same 
-        assertEquals(   0, array32.getInt(0, 0));
-        assertEquals(  70, array32.getInt(7, 0));
-        assertEquals(5000, array32.getInt(0, 5));
-        assertEquals(5070, array32.getInt(7, 5));
+        assertEquals(   0, array32.getInt(new int[] {0, 0}));
+        assertEquals(  70, array32.getInt(new int[] {7, 0}));
+        assertEquals(5000, array32.getInt(new int[] {0, 5}));
+        assertEquals(5070, array32.getInt(new int[] {7, 5}));
         
         // changing the view should change original array
         array32.setInt(new int[] {4, 3}, 9999);

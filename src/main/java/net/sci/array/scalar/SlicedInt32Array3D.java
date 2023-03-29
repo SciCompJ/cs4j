@@ -69,7 +69,7 @@ public class SlicedInt32Array3D extends Int32Array3D
     /**
      * The inner array of 2D Int32 arrays.
      */
-	ArrayList<Int32Array> slices;
+	ArrayList<Int32Array2D> slices;
 
 	
 	// =============================================================
@@ -140,25 +140,34 @@ public class SlicedInt32Array3D extends Int32Array3D
 		this.slices = new ArrayList<>(size2);
 		for (Int32Array slice : slices)
 		{
-			this.slices.add(slice);
+			this.slices.add(Int32Array2D.wrap(slice));
 		}
 	}
 
 
 	// =============================================================
-	// Specialization of the UInt8Array3D interface
+	// Specialization of the UInt32Array3D interface
 
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.Int32Array3D#getInt(int, int, int)
+     */
+    @Override
+    public int getInt(int x, int y, int z)
+    {
+        return this.slices.get(z).getInt(x, y);
+    }
+        
 	@Override
     public void setInt(int x, int y, int z, int value)
     {
-	    this.slices.get(z).setInt(new int[] {x, y}, value);
+	    this.slices.get(z).setInt(x, y, value);
     }
 
     /* (non-Javadoc)
 	 * @see net.sci.array.scalar.Int32Array3D#getInt(int, int, int)
 	 */
 	@Override
-	public int getInt(int... pos)
+	public int getInt(int[] pos)
 	{
 		return this.slices.get(pos[2]).getInt(pos[0], pos[1]);
 	}
@@ -169,7 +178,7 @@ public class SlicedInt32Array3D extends Int32Array3D
 	@Override
 	public void setInt(int[] pos, int intValue)
 	{
-		this.slices.get(pos[2]).setInt(new int[] {pos[0], pos[1]}, intValue);
+		this.slices.get(pos[2]).setInt(pos[0], pos[1], intValue);
 	}
 
 	   

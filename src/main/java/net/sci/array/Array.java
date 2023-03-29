@@ -236,7 +236,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 *            the position, as an array of indices
 	 * @return the element at the given position
 	 */
-	public T get(int... pos);
+	public T get(int[] pos);
 
 	/**
 	 * Sets the value at the given position.
@@ -504,7 +504,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
         }
 
         @Override
-        public T get(int... pos)
+        public T get(int[] pos)
         {
             return array.get(coordsMapping.apply(pos));
         }

@@ -244,7 +244,28 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	// Implementation of the BinaryArray3D interface
 
     /* (non-Javadoc)
-     * @see net.sci.array.scalar.BinaryArray3D#setBoolean(int, int, boolean)
+     * @see net.sci.array.binary.BinaryArray3D#getBoolean(int, int)
+     */
+    @Override
+    public boolean getBoolean(int x, int y, int z)
+    {
+        BinaryRow[] slice = slices[z];
+        if (slice == null)
+        {
+            return false;
+        }
+        
+        BinaryRow row = slice[y];
+        if (row == null)
+        {
+            return false;
+        }
+        
+        return row.get(x);
+    }
+
+    /* (non-Javadoc)
+     * @see net.sci.array.binary.BinaryArray3D#setBoolean(int, int, boolean)
      */
     @Override
     public void setBoolean(int x, int y, int z, boolean state)
@@ -353,26 +374,7 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
         }
     }
     
-    /* (non-Javadoc)
-	 * @see net.sci.array.scalar.BinaryArray#getBoolean(int[])
-	 */
-	@Override
-	public boolean getBoolean(int... pos)
-	{
-        BinaryRow[] slice = slices[pos[2]];
-	    if (slice == null)
-	    {
-	        return false;
-	    }
-	    
-        BinaryRow row = slice[pos[1]];
-        if (row == null)
-        {
-            return false;
-        }
-	    
-	    return row.get(pos[0]);
-	}
+    
 	
 	
 	// =============================================================

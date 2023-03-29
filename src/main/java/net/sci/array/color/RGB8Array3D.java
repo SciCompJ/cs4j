@@ -228,16 +228,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
         res.fill(pos -> this.get(pos));
         return res;
 	}
-
-    /* (non-Javadoc)
-     * @see net.sci.array.data.Array3D#set(int, int, int, java.lang.Object)
-     */
-    @Override
-    public void set(int[] pos, RGB8 rgb)
-    {
-        set(pos[0], pos[1], pos[2], rgb);
-    }
-    
+	
 
 	// =============================================================
     // Inner classes for Array3D
@@ -297,13 +288,19 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 
 
         @Override
+        public RGB8 get(int x, int y)
+        {
+            return RGB8Array3D.this.get(x, y, sliceIndex);
+        }
+
+        @Override
         public void set(int x, int y, RGB8 value)
         {
             RGB8Array3D.this.set(x, y, sliceIndex, value);
         }
 
         @Override
-        public RGB8 get(int... pos)
+        public RGB8 get(int[] pos)
         {
             return RGB8Array3D.this.get(pos[0], pos[1], sliceIndex);
         }
@@ -398,13 +395,19 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
         }
 
         @Override
+        public byte getByte(int x, int y, int z)
+        {
+            return (byte) RGB8Array3D.this.getSample(x, y, z, channel);
+        }
+
+        @Override
         public void setByte(int x, int y, int z, byte byteValue)
         {
             RGB8Array3D.this.setSample(x, y, z, channel, byteValue & 0x00FF);
         }
 
         @Override
-        public byte getByte(int... pos)
+        public byte getByte(int[] pos)
         {
             return (byte) RGB8Array3D.this.getSample(pos[0], pos[1], pos[2], channel);
         }
@@ -547,9 +550,15 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8
 
 
         @Override
-        public RGB8 get(int... pos)
+        public RGB8 get(int[] pos)
         {
             return array.get(pos);
+        }
+
+        @Override
+        public RGB8 get(int x, int y, int z)
+        {
+            return array.get(new int[] {x, y, z});
         }
 
         @Override

@@ -148,23 +148,29 @@ public class SlicedBinaryArray3D extends BinaryArray3D
 	// =============================================================
 	// Specialization of the BinaryArray3D interface
 
-	@Override
+    @Override
+    public boolean getBoolean(int x, int y, int z)
+    {
+        return this.slices.get(z).getBoolean(x, y);
+    }
+
+    @Override
     public void setBoolean(int x, int y, int z, boolean b)
     {
         this.slices.get(z).setBoolean(x, y, b);
     }
 
     /* (non-Javadoc)
-	 * @see net.sci.array.scalar.BinaryArray3D#getBoolean(int, int, int)
+	 * @see net.sci.array.binary.BinaryArray3D#getBoolean(int, int, int)
 	 */
 	@Override
-	public boolean getBoolean(int... pos)
+	public boolean getBoolean(int[] pos)
 	{
 		return this.slices.get(pos[2]).getBoolean(new int[]{pos[0], pos[1]});
 	}
 		
 	/* (non-Javadoc)
-	 * @see net.sci.array.scalar.BinaryArray3D#setBoolean(int, int, int, boolean)
+	 * @see net.sci.array.binary.BinaryArray3D#setBoolean(int, int, int, boolean)
 	 */
 	@Override
 	public void setBoolean(int[] pos, boolean b)

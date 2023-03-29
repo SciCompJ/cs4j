@@ -140,6 +140,15 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 	// =============================================================
 	// Implementation of the Array2D interface
 
+    @Override
+    public RGB16 get(int x, int y)
+    {
+        int r = this.buffer.getInt(x, y, 0);
+        int g = this.buffer.getInt(x, y, 1);
+        int b = this.buffer.getInt(x, y, 2);
+        return new RGB16(r, g, b);
+    }
+
 	@Override
     public void set(int x, int y, RGB16 rgb)
     {
@@ -152,7 +161,7 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public RGB16 get(int... pos)
+	public RGB16 get(int[] pos)
 	{
         int x = pos[0];
         int y = pos[1];

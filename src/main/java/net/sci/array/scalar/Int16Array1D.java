@@ -77,8 +77,26 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
     // =============================================================
     // New method(s)
     
-	public abstract void setShort(int pos, short value);
+    public abstract short getShort(int pos);
+    
+    public abstract void setShort(int pos, short value);
+    
 	
+    // =============================================================
+    // Specialization of the IntArray1D interface
+
+    @Override
+    public int getInt(int x)
+    {
+        return getShort(x);
+    }
+
+    @Override
+    public void setInt(int x, int value)
+    {
+        setShort(x, (short) Int16.clamp(value));
+    }
+
 	
 	// =============================================================
 	// Specialization of Array[1D] interfaces
@@ -95,6 +113,12 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
         return res;
     }
 
+    @Override
+    public Int16 get(int x)
+    {
+        return new Int16(getShort(x));
+    }
+    
     @Override
     public void set(int x, Int16 value)
     {
@@ -120,13 +144,19 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
         }
         
         @Override
+        public short getShort(int pos)
+        {
+            return this.array.getShort(new int[pos]);
+        }
+
+        @Override
         public void setShort(int pos, short value)
         {
             this.array.setShort(new int[pos], value);
         }
 
         @Override
-        public short getShort(int... pos)
+        public short getShort(int[] pos)
         {
             return this.array.getShort(pos);
         }
@@ -144,7 +174,7 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
         }
 
         @Override
-        public int getInt(int... pos)
+        public int getInt(int[] pos)
         {
             return this.array.getInt(pos);
         }

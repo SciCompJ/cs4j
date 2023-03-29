@@ -73,7 +73,7 @@ public class UInt8ArrayRGB8View implements RGB8Array
     // Methods implementing the Array interface
 
     @Override
-    public RGB8 get(int... pos)
+    public RGB8 get(int[] pos)
     {
         int gray = baseArray.getInt(pos);
         return new RGB8(gray, gray, gray);

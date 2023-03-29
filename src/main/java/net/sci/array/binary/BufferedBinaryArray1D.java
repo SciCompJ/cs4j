@@ -92,7 +92,16 @@ public class BufferedBinaryArray1D extends BinaryArray1D
 
     
     /* (non-Javadoc)
-     * @see net.sci.array.scalar.BinaryArray1D#setBoolean(int, int, boolean)
+     * @see net.sci.array.binary.BinaryArray1D#getBoolean(int)
+     */
+    @Override
+    public boolean getBoolean(int x)
+    {
+        return buffer[x];
+    }
+
+    /* (non-Javadoc)
+     * @see net.sci.array.binary.BinaryArray1D#setBoolean(int, int, boolean)
      */
     @Override
     public void setBoolean(int x, boolean state)
@@ -117,15 +126,6 @@ public class BufferedBinaryArray1D extends BinaryArray1D
             buffer[i] = state;
         }
     }
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.scalar.BinaryArray#getBoolean(int[])
-	 */
-	@Override
-	public boolean getBoolean(int... pos)
-	{
-		return buffer[pos[0]];
-	}
 
 
 	// =============================================================

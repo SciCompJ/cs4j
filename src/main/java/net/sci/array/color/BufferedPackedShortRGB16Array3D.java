@@ -7,11 +7,10 @@ import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
 
 /**
- * Implementation of 2D array of RGB16, by keeping value in a buffer of short
- * values, with packed channels.
+ * Implementation of 3D array of RGB16, by keeping value in a 4D array of
+ * UInt16.
  * 
- * The buffer contains first all values for red, then all values for green, then
- * all values for blue.
+ * The inner array is indexed in (x, y, z, c) order.
  * 
  * @author dlegland
  *
@@ -20,7 +19,11 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 {
 	// =============================================================
 	// Class variables
-
+    
+    /**
+     * The inner array for storing underlying UInt16 values.
+     * Indexed in (x, y, z, c) order.
+     */
 	UInt16Array buffer;
 	
 	// =============================================================
@@ -53,7 +56,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
         int[] values = new int[3];
         for (int c = 0; c < 3; c++)
         {
-            values[c] = this.buffer.getInt(x, y, z, c);
+            values[c] = this.buffer.getInt(new int[] {x, y, z, c});
         }
         return values;
     }
@@ -63,7 +66,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
     {
         for (int c = 0; c < 3; c++)
         {
-            values[c] = this.buffer.getInt(x, y, z, c);
+            values[c] = this.buffer.getInt(new int[] {x, y, z, c});
         }
         return values;
     }
@@ -80,7 +83,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
     @Override
     public int getSample(int x, int y, int z, int c)
     {
-        return this.buffer.getInt(x, y, z, c);
+        return this.buffer.getInt(new int[] {x, y, z, c});
     }
 
     @Override
@@ -102,7 +105,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 		double[] values = new double[3];
 		for (int c = 0; c < 3; c++)
 		{
-			values[c] = this.buffer.getInt(x, y, z, c);
+			values[c] = this.buffer.getInt(new int[] {x, y, z, c});
 		}
 		return values;
 	}
@@ -125,7 +128,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	@Override
 	public double getValue(int x, int y, int z, int c)
 	{
-		return this.buffer.getValue(x, y, z, c);
+		return this.buffer.getValue(new int[] {x, y, z, c});
 	}
 
 	/* (non-Javadoc)
@@ -141,6 +144,15 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	// =============================================================
 	// Implementation of the Array3D interface
 
+    @Override
+    public RGB16 get(int x, int y, int z)
+    {
+        int r = this.buffer.getInt(new int[] {x, y, z, 0});
+        int g = this.buffer.getInt(new int[] {x, y, z, 1});
+        int b = this.buffer.getInt(new int[] {x, y, z, 2});
+        return new RGB16(r, g, b);
+    }
+
 	@Override
     public void set(int x, int y, int z, RGB16 rgb)
     {
@@ -155,14 +167,14 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	 * @see net.sci.array.data.Array3D#get(int, int, int)
 	 */
 	@Override
-	public RGB16 get(int... pos)
+	public RGB16 get(int[] pos)
 	{
         int x = pos[0];
         int y = pos[1];
         int z = pos[2];
-		int r = this.buffer.getInt(x, y, z, 0);
-		int g = this.buffer.getInt(x, y, z, 1);
-		int b = this.buffer.getInt(x, y, z, 2);
+		int r = this.buffer.getInt(new int[] {x, y, z, 0});
+		int g = this.buffer.getInt(new int[] {x, y, z, 1});
+		int b = this.buffer.getInt(new int[] {x, y, z, 2});
 		return new RGB16(r, g, b);
 	}
 
@@ -242,15 +254,15 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
                 throw new IllegalArgumentException(
                         "Channel index must be comprised between 0 and 2, not " + c);
             }
-			return buffer.getInt(posX, posY, posZ, c);
+			return buffer.getInt(new int[] {posX, posY, posZ, c});
 		}
 
         @Override
         public double[] getValues(double[] values)
         {
-            values[0] = buffer.getInt(posX, posY, posZ, 0);
-            values[1] = buffer.getInt(posX, posY, posZ, 1);
-            values[2] = buffer.getInt(posX, posY, posZ, 2);
+            values[0] = buffer.getInt(new int[] {posX, posY, posZ, 0});
+            values[1] = buffer.getInt(new int[] {posX, posY, posZ, 1});
+            values[2] = buffer.getInt(new int[] {posX, posY, posZ, 2});
             return values;
         }
 
@@ -268,9 +280,9 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 		@Override
 		public RGB16 get()
 		{
-			int r = buffer.getInt(posX, posY, posZ, 0);
-			int g = buffer.getInt(posX, posY, posZ, 1);
-			int b = buffer.getInt(posX, posY, posZ, 2);
+			int r = buffer.getInt(new int[] {posX, posY, posZ, 0});
+			int g = buffer.getInt(new int[] {posX, posY, posZ, 1});
+			int b = buffer.getInt(new int[] {posX, posY, posZ, 2});
 			return new RGB16(r, g, b);
 		}
 

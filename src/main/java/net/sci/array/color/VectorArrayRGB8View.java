@@ -130,7 +130,7 @@ public class VectorArrayRGB8View implements RGB8Array
      * @see net.sci.array.Array#get(int[])
      */
     @Override
-    public RGB8 get(int... pos)
+    public RGB8 get(int[] pos)
     {
         double red   = array.getValue(pos, channels[0]);
         double green = array.getValue(pos, channels[1]);

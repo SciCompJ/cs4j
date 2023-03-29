@@ -81,6 +81,12 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
 	public abstract void setValue(int x, int y, int c, double value);
 
     @Override
+    public Float64Vector get(int x, int y)
+    {
+        return new Float64Vector(getValues(x, y));
+    }
+
+    @Override
     public void set(int x, int y, Float64Vector vect)
     {
         setValues(x, y, vect.getValues());
@@ -134,6 +140,12 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
 
 
         @Override
+        public double getValue(int x, int y)
+        {
+            return Float64VectorArray2D.this.getValue(x, y, channel);
+        }
+
+        @Override
         public void setValue(int x, int y, double value)
         {
             Float64VectorArray2D.this.setValue(x, y, channel, value);
@@ -153,7 +165,7 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> 
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return Float64VectorArray2D.this.getValue(pos[0], pos[1], channel);
         }

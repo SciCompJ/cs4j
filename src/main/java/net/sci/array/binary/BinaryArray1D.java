@@ -59,14 +59,16 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
 	// =============================================================
 	// New methods
 
-	public abstract void setBoolean(int x, boolean b);
+	public abstract boolean getBoolean(int x);
 	
+    public abstract void setBoolean(int x, boolean b);
+    
 	
 	// =============================================================
 	// Specialization of the BinaryArray interface
 	
     /* (non-Javadoc)
-     * @see net.sci.array.scalar.BinaryArray#complement()
+     * @see net.sci.array.binary.BinaryArray#complement()
      */
     @Override
     public BinaryArray1D complement()
@@ -80,7 +82,16 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
     }
   
     /* (non-Javadoc)
-     * @see net.sci.array.scalar.BinaryArray#setBoolean(int[], boolean)
+     * @see net.sci.array.binary.BinaryArray#getBoolean(int[])
+     */
+    @Override
+    public boolean getBoolean(int[] pos)
+    {
+        return getBoolean(pos[0]);
+    }
+    
+    /* (non-Javadoc)
+     * @see net.sci.array.binary.BinaryArray#setBoolean(int[], boolean)
      */
     @Override
     public void setBoolean(int[] pos, boolean state)
@@ -93,6 +104,12 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
 	// Specialization of IntArray1D interface
 
     @Override
+    public int getInt(int x)
+    {
+        return getBoolean(x) ? 1 : 0;
+    }
+    
+    @Override
     public void setInt(int x, int value)
     {
         setBoolean(x, value > 0);
@@ -100,19 +117,19 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
     
 
 	// =============================================================
-	// Specialization of Array2D interface
+	// Specialization of Array1D interface
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#get(int, int)
+	 * @see net.sci.array.Array2D#get(int, int)
 	 */
 	@Override
-	public Binary get(int... pos)
+	public Binary get(int[] pos)
 	{
 		return new Binary(getBoolean(pos));
 	}
 
 	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#set(int, int, java.lang.Object)
+	 * @see net.sci.array.Array2D#set(int, int, java.lang.Object)
 	 */
 	@Override
 	public void set(int[] pos, Binary value)
@@ -120,39 +137,15 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
 		setBoolean(pos, value.getBoolean());
 	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.Array2D#getValue(int, int)
-	 */
-	@Override
-	public double getValue(int... pos)
-	{
-		return getBoolean(pos) ? 1 : 0;
-	}
-
-	/**
-	 * Sets the logical state at the specified position.
-	 * 
-	 * @see net.sci.array.Array2D#setValue(int, int, double)
-	 */
-	@Override
-	public void setValue(int[] pos, double value)
-	{
-		setBoolean(pos, value > 0);
-	}
-	
-	
+	    
     // =============================================================
-    // Implementation of the ScalarArray2D interface
+    // Implementation of the Array1D interface
     
     @Override
-    public void setValue(int x, double value)
+    public Binary get(int x)
     {
-        setBoolean(x, value > 0);
+        return new Binary(getBoolean(x));
     }
-    
-    
-    // =============================================================
-    // Implementation of the Array2D interface
     
     @Override
     public void set(int x, Binary value)
@@ -197,13 +190,19 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
         }
 
         @Override
+        public boolean getBoolean(int x)
+        {
+            return this.array.getBoolean(new int[] {x});
+        }
+
+        @Override
         public void setBoolean(int x, boolean state)
         {
             this.array.setBoolean(new int[] {x}, state);
         }
 
         @Override
-        public boolean getBoolean(int... pos)
+        public boolean getBoolean(int[] pos)
         {
             return this.array.getBoolean(pos);
         }

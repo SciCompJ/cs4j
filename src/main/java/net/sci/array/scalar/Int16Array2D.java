@@ -88,12 +88,21 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	// =============================================================
 	// New methods
 	
-    public abstract void setShort(int x, int y, short s);
+    public abstract short getShort(int x, int y);
 
+    public abstract void setShort(int x, int y, short s);
+    
 	
 	// =============================================================
 	// Specialization of the Int16Array interface
 
+    @Override
+    public short getShort(int [] pos)
+    {
+        return getShort(pos[0], pos[1]);
+    }
+    
+    @Override
     public void setShort(int [] pos, short s)
     {
         setShort(pos[0], pos[1], s);
@@ -102,6 +111,12 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
     
     // =============================================================
     // Specialization of the IntArray2D interface
+
+    @Override
+    public int getInt(int x, int y)
+    {
+        return getShort(x, y);
+    }
 
     @Override
     public void setInt(int x, int y, int value)
@@ -123,6 +138,12 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	// =============================================================
 	// Specialization of Array2D interface
 
+    @Override
+    public Int16 get(int x, int y)
+    {
+        return new Int16(getShort(x, y));
+    }
+    
     @Override
     public void set(int x, int y, Int16 value)
     {
@@ -174,13 +195,19 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
         }
         
         @Override
+        public short getShort(int x, int y)
+        {
+            return this.array.getShort(new int[] {x, y});
+        }
+        
+        @Override
         public void setShort(int x, int y, short s)
         {
             this.array.setShort(new int[] {x, y}, s);
         }
 
         @Override
-        public short getShort(int... pos)
+        public short getShort(int[] pos)
         {
             return this.array.getShort(pos);
         }

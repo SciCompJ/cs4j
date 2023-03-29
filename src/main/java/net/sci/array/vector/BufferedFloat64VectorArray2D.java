@@ -145,7 +145,7 @@ public class BufferedFloat64VectorArray2D extends Float64VectorArray2D
 	 * @see net.sci.array.data.Array2D#get(int, int)
 	 */
 	@Override
-	public Float64Vector get(int... pos)
+	public Float64Vector get(int[] pos)
 	{
 		return new Float64Vector(getValues(pos));
 	}

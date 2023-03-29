@@ -98,6 +98,16 @@ public class BufferedFloat64Array2D extends Float64Array2D
      * @see net.sci.array.data.Array2D#setValue(int, int, double)
      */
     @Override
+    public double getValue(int x, int y)
+    {
+        int index = x + y * this.size0;
+        return this.buffer[index];
+    }
+
+    /* (non-Javadoc)
+     * @see net.sci.array.data.Array2D#setValue(int, int, double)
+     */
+    @Override
     public void setValue(int x, int y, double value)
     {
         int index = x + y * this.size0;
@@ -146,7 +156,7 @@ public class BufferedFloat64Array2D extends Float64Array2D
 	 * @see net.sci.array.data.Array2D#getValue(int, int)
 	 */
 	@Override
-	public double getValue(int... pos)
+	public double getValue(int[] pos)
 	{
         int index = pos[0] + pos[1] * this.size0;
 		return this.buffer[index];

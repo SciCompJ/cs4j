@@ -66,7 +66,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	// Implementation of the UInt8Array interface
 	
 	@Override
-	public byte getByte(int... pos)
+	public byte getByte(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
@@ -86,7 +86,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	 * @see net.sci.array.data.IntArray#getInt(int[])
 	 */
 	@Override
-	public int getInt(int... pos)
+	public int getInt(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index] & 0x00FF;	
@@ -104,7 +104,7 @@ public class BufferedUInt8ArrayND extends UInt8ArrayND
 	}
 
 	@Override
-	public UInt8 get(int... pos)
+	public UInt8 get(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return new UInt8(this.buffer[index]);	

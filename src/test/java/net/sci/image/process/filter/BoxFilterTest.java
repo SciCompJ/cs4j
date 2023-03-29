@@ -35,7 +35,7 @@ public class BoxFilterTest
 		assertTrue(result instanceof ScalarArray);
 		assertEquals(2, result.dimensionality());
 		
-		assertEquals(10, result.getValue(3, 3), .01);
+		assertEquals(10, result.getValue(new int[] {3, 3}), .01);
 	}
 
 	@Test

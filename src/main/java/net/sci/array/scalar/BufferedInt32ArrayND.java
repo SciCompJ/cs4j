@@ -74,7 +74,7 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 	 * @see net.sci.array.data.IntArray#getInt(int[])
 	 */
 	@Override
-	public int getInt(int... pos)
+	public int getInt(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return this.buffer[index];	
@@ -94,7 +94,7 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 	// Implementation of the Array interface
 	
 	@Override
-	public Int32 get(int... pos)
+	public Int32 get(int[] pos)
 	{
 		int index = subsToInd(pos);
 		return new Int32(this.buffer[index]);	

@@ -42,7 +42,7 @@ public class OtsuThresholdTest
         BinaryArray segStem = new OtsuThreshold().processScalar(array);
         
         // assert
-        assertFalse(segStem.getBoolean(0, 0));
-        assertTrue(segStem.getBoolean(5, 5));
+        assertFalse(segStem.getBoolean(new int[] {0, 0}));
+        assertTrue(segStem.getBoolean(new int[] {5, 5}));
 	}
 }

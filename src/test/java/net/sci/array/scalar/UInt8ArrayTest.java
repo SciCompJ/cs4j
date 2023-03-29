@@ -35,13 +35,13 @@ public class UInt8ArrayTest
         assertEquals(6, array8.size(1));
         
         // array content should be the same 
-        assertEquals( 0, array8.getInt(0, 0));
-        assertEquals( 7, array8.getInt(7, 0));
-        assertEquals(50, array8.getInt(0, 5));
-        assertEquals(57, array8.getInt(7, 5));
+        assertEquals( 0, array8.getInt(new int[] {0, 0}));
+        assertEquals( 7, array8.getInt(new int[] {7, 0}));
+        assertEquals(50, array8.getInt(new int[] {0, 5}));
+        assertEquals(57, array8.getInt(new int[] {7, 5}));
         
         // conversion from large value should clamp to range 
-        assertEquals(255, array8.getInt(4, 3));
+        assertEquals(255, array8.getInt(new int[] {4, 3}));
  	}
 
     /**
@@ -61,10 +61,10 @@ public class UInt8ArrayTest
         assertEquals(6, array8.size(1));
         
         // array content should be the same 
-        assertEquals(0, array8.getInt(0, 0));
-        assertEquals(7, array8.getInt(7, 0));
-        assertEquals(50, array8.getInt(0, 5));
-        assertEquals(57, array8.getInt(7, 5));
+        assertEquals(0, array8.getInt(new int[] {0, 0}));
+        assertEquals(7, array8.getInt(new int[] {7, 0}));
+        assertEquals(50, array8.getInt(new int[] {0, 5}));
+        assertEquals(57, array8.getInt(new int[] {7, 5}));
         
         // changing the view should change original array
         array8.setInt(new int[] {4, 3}, 99);
@@ -84,10 +84,10 @@ public class UInt8ArrayTest
 		assertEquals(255, array8.getInt(new int[]{5, 5}));
 		
 		array.setValue(5, 5, 100);
-		assertEquals(100, array8.getInt(5, 5));
+		assertEquals(100, array8.getInt(new int[] {5, 5}));
 		
 		array.setValue(5, 5, -10);
-		assertEquals(0, array8.getInt(5, 5));
+		assertEquals(0, array8.getInt(new int[] {5, 5}));
 	}
 
 }

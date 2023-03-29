@@ -99,11 +99,26 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
     // Specialization of Array3D 
 
     @Override
+    public Float64 get(int x, int y, int z)
+    {
+        return new Float64(getValue(x, y, z));
+    }
+    
+    @Override
     public void set(int x, int y, int z, Float64 value)
     {
         setValue(x, y, z, value.value);
     }
     
+    /* (non-Javadoc)
+     * @see net.sci.array.scalar.ScalarArray3D#getValue(int, int, int)
+     */
+    @Override
+    public double getValue(int[] pos)
+    {
+       return getValue(pos[0], pos[1], pos[2]);
+    }
+
     /* (non-Javadoc)
      * @see net.sci.array.scalar.ScalarArray3D#setValue(int, int, int, double)
      */
@@ -171,13 +186,19 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
         }
         
         @Override
+        public double getValue(int x, int y, int z)
+        {
+            return this.array.getValue(new int[] {x, y, z});
+        }
+
+        @Override
         public void setValue(int x, int y, int z, double value)
         {
             this.array.setValue(new int[] {x, y, z}, value);
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return this.array.getValue(pos);
         }
@@ -215,6 +236,12 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
         }
 
         @Override
+        public double getValue(int x, int y)
+        {
+            return Float64Array3D.this.getValue(x, y, this.sliceIndex);
+        }
+        
+        @Override
         public void setValue(int x, int y, double value)
         {
             Float64Array3D.this.setValue(x, y, this.sliceIndex, value);
@@ -227,7 +254,7 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return Float64Array3D.this.getValue(pos[0], pos[1], this.sliceIndex);
         }

@@ -184,7 +184,7 @@ import net.sci.array.scalar.UInt8Array;
       * @see net.sci.array.Array#get(int[])
       */
      @Override
-     public RGB8 get(int... pos)
+     public RGB8 get(int[] pos)
      {
          int v1 = convertUInt8(array1.getValue(pos), vmin1, vmax1);
          int v2 = convertUInt8(array2.getValue(pos), vmin2, vmax2);

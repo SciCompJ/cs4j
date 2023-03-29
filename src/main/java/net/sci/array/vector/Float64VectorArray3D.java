@@ -51,6 +51,12 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         };
     }
 
+    
+    @Override
+    public Float64Vector get(int x, int y, int z)
+    {
+        return new Float64Vector(getValues(x, y, z));
+    }
 
     @Override
     public void set(int x, int y, int z, Float64Vector vect)
@@ -194,7 +200,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
-        public Float64Vector get(int... pos)
+        public Float64Vector get(int[] pos)
         {
             return Float64VectorArray3D.this.get(pos[0], pos[1], sliceIndex);
         }
@@ -329,6 +335,12 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
+        public double getValue(int x, int y, int z)
+        {
+            return Float64VectorArray3D.this.getValue(x, y, z, channel);
+        }
+
+        @Override
         public void setValue(int x, int y, int z, double value)
         {
             Float64VectorArray3D.this.setValue(x, y, z, channel, value);
@@ -348,7 +360,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> 
         }
 
         @Override
-        public double getValue(int... pos)
+        public double getValue(int[] pos)
         {
             return Float64VectorArray3D.this.getValue(pos[0], pos[1], pos[2], channel);
         }
