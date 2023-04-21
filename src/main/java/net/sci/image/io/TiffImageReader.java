@@ -272,11 +272,11 @@ public class TiffImageReader extends AlgoStub implements ImageReader
 //	    System.out.println(description);
 	    Map<String, String> tokens = parseImageJTokens(description);
         
+	    // retrieve number of images within file
 	    int nImages = 1;
         if (tokens.containsKey("images"))
         {
             nImages = Integer.parseInt(tokens.get("images"));
-            System.out.println(String.format("Should read %d images", nImages));
         }
 
         // determine the size along each of the five dimensions
@@ -285,6 +285,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         int sizeC = getIntValue(tokens, "channels", 1);
         int sizeZ = getIntValue(tokens, "slices", 1);
         int sizeT = getIntValue(tokens, "frames", 1);
+        
+        // manages case of sizeZ not specified.
+        if (sizeC * sizeZ * sizeT == 1 && nImages > 1)
+        {
+            sizeZ = nImages;
+        }
+        
+        // check consistency
         if (sizeC * sizeZ * sizeT != nImages)
         {
             throw new RuntimeException(String.format(
@@ -478,7 +486,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         System.out.println("import ImageJ Tiff Image");
         
         // iterate over the different tokens stored in description and convert into a map
-//      System.out.println(description);
+        System.out.println(description);
         Map<String, String> tokens = parseImageJTokens(description);
         
         int nImages = 1;
@@ -494,6 +502,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         int sizeC = getIntValue(tokens, "channels", 1);
         int sizeZ = getIntValue(tokens, "slices", 1);
         int sizeT = getIntValue(tokens, "frames", 1);
+        if (sizeC * sizeZ * sizeT == 1 && nImages > 1)
+        {
+            sizeZ = nImages;
+        }
         if (sizeC * sizeZ * sizeT != nImages)
         {
             throw new RuntimeException(String.format(
@@ -658,7 +670,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             {
                 continue;
             }
-            imagejTokens.put(tokens[0], tokens[1]);
+            imagejTokens.put(tokens[0].trim(), tokens[1].trim());
         }
         
         return imagejTokens;
