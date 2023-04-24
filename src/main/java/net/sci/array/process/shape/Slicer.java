@@ -9,19 +9,29 @@ import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.ScalarArray;
 
 /**
- * Extract a slice from an array, by specifying dimension and slice index along
- * this dimension.
+ * Extracts a k-dimensional slice from a n-dimensional array by specifying the
+ * indices of the dimensions to keep, and the position of an element belonging
+ * to the result array. The dimensionality of the output array corresponds to
+ * the number of dimensions provided for slicing.
+ * 
+ * @see SimpleSlicer
  * 
  * @author dlegland
- *
  */
 public class Slicer extends AlgoStub implements ArrayOperator
 {
  	// =============================================================
     // Class members
 
+    /**
+     * The dimensions used for slicing, as an array of dimensions indices.
+     */
 	int[] dims;
 	
+	/**
+     * The position of an element in input array that will be kept in output
+     * array.
+     */
 	int[] refPos;
 	
 	
@@ -29,14 +39,17 @@ public class Slicer extends AlgoStub implements ArrayOperator
     // Constructors
 
 	/**
-	 * Creates a new instance of Slicer operator, that specifies the dimension
-	 * of slicing and the reference slice along that dimension.
-	 * 
-	 * @param dim
-	 *            the dimensions of slicing, 0-indexed. Ex.: <code>new int[]{0, 1}</code>.
-	 * @param pos
-	 *            the position of point belonging to the sliced array. 
-	 */
+     * Extracts a k-dimensional slice from a n-dimensional array, by specifying
+     * the indices of the dimensions to keep, and the position of an element
+     * belonging to the result array.
+     * 
+     * @param dim
+     *            the dimensions of slicing, 0-indexed. Ex.:
+     *            <code>new int[]{0, 1}</code>.
+     * @param pos
+     *            the position (within the original array) of an element
+     *            belonging to the sliced array.
+     */
 	public Slicer(int[] dims, int[] pos)
 	{
 		this.dims = dims;
@@ -68,23 +81,6 @@ public class Slicer extends AlgoStub implements ArrayOperator
 	        processNd((Array<? extends T>) source, (Array<? super T>) target);
 	    }
 	}
-	
-//	public <T> Array<T> createView(Array<T> array)
-//	{
-//	    int[] newDims = computeOutputArraySize(array);
-//	    int nd = newDims.length;
-//        
-//        // convert position in view to position in source image
-//	    Function<int[], int[]> mapping = (int[] pos) -> {
-//	        int[] srcPos = new int[nd+1];
-//	        System.arraycopy(pos, 0, srcPos, 0, dim);
-//            srcPos[dim] = index;
-//	        System.arraycopy(pos, dim, srcPos, dim + 1, nd - dim);
-//	        return srcPos;
-//	    };
-//	    
-//	    return array.view(newDims, mapping);
-//	}
 	
 	/**
 	 * Creates a new array that can be used as output for processing the given

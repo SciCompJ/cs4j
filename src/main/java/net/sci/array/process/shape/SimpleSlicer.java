@@ -7,14 +7,18 @@ import java.util.function.Function;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.Array2D;
 import net.sci.array.ArrayOperator;
 import net.sci.array.scalar.ScalarArray;
 
 /**
  * Extract a (nd-1)-dimensional slice from a n-dimensional array, by specifying
- * the dimension to slice and the slice index along this dimension.
- *
+ * (1) the dimension to slice and (2) the slice index along this dimension.
+ * 
+ * This operator is useful for extracting 2D slices from 3D images.
+ * 
  * @see Slicer
+ * 
  * @author dlegland
  */
 public class SimpleSlicer extends AlgoStub implements ArrayOperator
@@ -57,7 +61,7 @@ public class SimpleSlicer extends AlgoStub implements ArrayOperator
         }
 	}
 	
-	public static final <T> Array<T> slice2d(Array<T> array,
+	public static final <T> Array2D<T> slice2d(Array<T> array,
 			int dim1, int dim2, int[] refPos)
 	{
 		// check dimensionality
@@ -83,7 +87,7 @@ public class SimpleSlicer extends AlgoStub implements ArrayOperator
 		// create output
 		int sizeX = array.size(dim1);
 		int sizeY = array.size(dim2);
-		Array<T> result = array.newInstance(new int[]{sizeX, sizeY});
+		Array2D<T> result = Array2D.wrap(array.newInstance(new int[]{sizeX, sizeY}));
 		
 		// iterate over position in target image
 		for (int y = 0; y < sizeY; y++)
@@ -108,8 +112,15 @@ public class SimpleSlicer extends AlgoStub implements ArrayOperator
     // =============================================================
     // Class members
 
+	/**
+	 * The slicing dimension, between 0 and nd-1.
+	 */
 	int dim;
 	
+    /**
+     * The slice index along the slicing dimension, between 0 and array size in
+     * slicing dimension minus 1.
+     */
 	int index;
 	
 	

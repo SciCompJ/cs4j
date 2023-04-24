@@ -23,9 +23,9 @@ public class Montage
      * @param <T>
      *            the type of the arrays to process
      * @param nCols
-     *            the number of arrays to use as columns
+     *            the number of arrays to use as columns.
      * @param nRows
-     *            the number of arrays to use as columns
+     *            the number of arrays to use as rows.
      * @param arrays
      *            the arrays that will populate the result array
      * @return a montage of the input arrays organized as a 2D matrix
