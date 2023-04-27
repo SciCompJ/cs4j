@@ -21,13 +21,13 @@ public class BoxFilterTest
 		UInt8Array2D array = UInt8Array2D.create(8, 7);
 		for (int y = 2; y < 6; y++)
 		{
-			for (int x = 2; x < 5; x++)
+			for (int x = 2; x < 7; x++)
 			{
 				array.setInt(x, y, 10);
 			}
 		}
 		
-		int[] diameters = new int[]{3, 3};
+		int[] diameters = new int[] {3, 3};
 		BoxFilter filter = new BoxFilter(diameters);
 		
 		ScalarArray<?> result = (ScalarArray<?>) filter.process(array);
