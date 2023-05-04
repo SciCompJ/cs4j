@@ -16,6 +16,7 @@ import net.sci.image.morphology.filter.BinaryInnerGradient;
 import net.sci.image.morphology.filter.BinaryOpening;
 import net.sci.image.morphology.filter.BinaryOuterGradient;
 import net.sci.image.morphology.filter.BinaryWhiteTopHat;
+import net.sci.image.morphology.reconstruct.BinaryFillHoles2D;
 import net.sci.image.morphology.reconstruct.BinaryFillHoles3D;
 import net.sci.image.morphology.reconstruct.BinaryKillBorders;
 import net.sci.image.morphology.reconstruct.RunLengthBinaryReconstruction2D;
@@ -220,7 +221,12 @@ public class BinaryMorphology
      */
     public static final BinaryArray fillHoles(BinaryArray array)
     {
-        return new BinaryFillHoles3D().process(array);
+        switch(array.dimensionality())
+        {
+            case 2: return new BinaryFillHoles2D().processBinary2d(BinaryArray2D.wrap(array));
+            case 3: return new BinaryFillHoles3D().processBinary3d(BinaryArray3D.wrap(array));
+            default: throw new IllegalArgumentException("Can only process array with dimension 2 or 3");
+        }
     }
     
     /**
