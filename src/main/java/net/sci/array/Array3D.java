@@ -103,6 +103,38 @@ public abstract class Array3D<T> implements Array<T>
     public abstract Array2D<T> slice(int sliceIndex);
 
     /**
+     * Replaces the elements of the specified slice by the elements contained in
+     * the specified 2D array.
+     * 
+     * @param sliceIndex
+     *            the slice index of elements to replace
+     * @param slice
+     *            the 2D array containing elements to replace.
+     */
+    public void setSlice(int sliceIndex, Array2D<T> slice)
+    {
+        // check validity of input arguments
+        if (sliceIndex < 0 || sliceIndex >= this.size2)
+        {
+            final String pattern = "Slice index (%d) out of bound (%d ; %d)";
+            throw new IllegalArgumentException(String.format(Locale.ENGLISH, pattern, sliceIndex, 0, this.size2));
+        }
+        if (this.size0 != slice.size0 || this.size1 != slice.size1)
+        {
+            throw new IllegalArgumentException("Slice dimensions must be compatible with array dimensions");
+        }
+        
+        // iterate over elements of selected slice
+        for (int y = 0; y < this.size1; y++)
+        {
+            for (int x = 0; x < this.size0; x++)
+            {
+                this.set(x, y, sliceIndex, slice.get(x, y));
+            }
+        }
+    }
+    
+    /**
      * Iterates over the slices
      * 
      * @return an iterator over 2D slices
