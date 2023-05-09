@@ -5,6 +5,8 @@ package net.sci.array.scalar;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.function.Function;
+
 import org.junit.Test;
 
 /**
@@ -58,5 +60,27 @@ public class ScalarArrayTest
         assertEquals(50, result.getValue(new int[] {49, 49}), .001);
     }
     
+    /**
+     * Test method for {@link net.sci.array.Array#view(int[], java.util.function.Function)}.
+     */
+    @Test
+    public final void test_view_FlipFloat32Array()
+    {
+        // create an empty array of Float32
+        Float32Array2D array = Float32Array2D.create(10, 6);
+        
+        // populate the array of strings
+        array.fillValues((x,y) -> (y * 1.0 + x * 0.1));
+        
+        int[] dims2 = new int[] {10, 6};
+        Function<int[], int[]> fun = pos -> new int[] {9-pos[0], 5-pos[1]};
+        ScalarArray<Float32> res = array.view(dims2, fun);
+        
+        assertEquals(10, res.size(0));
+        assertEquals(6, res.size(1));
+        assertEquals(0.0, res.getValue(new int[] {9, 5}), 0.01);
+        assertEquals(5.9, res.getValue(new int[] {0, 0}), 0.01);
+    }
+
     
 }

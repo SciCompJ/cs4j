@@ -418,7 +418,7 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
 	@Override
     public default ScalarArray<S> view(int[] newDims, Function<int[], int[]> coordsMapping)
     {
-        return new View<S>(this, newDims, coordsMapping);
+        return new ReshapeView<S>(this, newDims, coordsMapping);
     }
 
     @Override
@@ -516,32 +516,17 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
 	}
 
 	/**
-     * Utility class that allows to access / modify elements of an array of
-     * scalars using transformation of coordinates (e.g. crop, slice, dimension
-     * permutation...).
+     * Specialization of the Array.ReshapeView class that allows to access /
+     * modify elements of an array of scalars using transformation of
+     * coordinates (e.g. crop, slice, dimension permutation...).
      * 
      * @see #view(int[], Function)
      * 
      * @param <T>
-     *            the type of data within the array
+     *            the type of (scalar) data within the array
      */
-    static class View<T extends Scalar> implements ScalarArray<T>
+    static class ReshapeView<T extends Scalar> extends Array.ReshapeView<T> implements ScalarArray<T>
     {
-        /** 
-         * The array to synchronize with. /*
-         */
-        ScalarArray<T> array;
-        
-        /** 
-         * The size of the view. 
-         */
-        int[] newDims;
-        
-        /**
-         * The mapping between view coordinates and inner array coordinates.
-         */
-        Function<int[], int[]> coordsMapping;
-
         /**
          * Creates a new view over the input array or a subset of the input
          * array.
@@ -554,11 +539,9 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
          *            the mapping between view coordinates and inner array
          *            coordinates.
          */
-        public View(ScalarArray<T> array, int[] newDims, Function<int[], int[]> coordsMapping)
+        public ReshapeView(ScalarArray<T> array, int[] newDims, Function<int[], int[]> coordsMapping)
         {
-            this.array = (ScalarArray<T>) array;
-            this.newDims = newDims;
-            this.coordsMapping = coordsMapping;
+            super(array, newDims, coordsMapping);
         }
 
 
@@ -568,92 +551,48 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
         @Override
         public double getValue(int[] pos)
         {
-            return array.getValue(coordsMapping.apply(pos));
+            return ((ScalarArray<?>) array).getValue(coordsMapping.apply(pos));
         }
 
         @Override
         public void setValue(int[] pos, double value)
         {
-            array.setValue(coordsMapping.apply(pos), value);
+            ((ScalarArray<?>) array).setValue(coordsMapping.apply(pos), value);
         }
 
+        
         // =============================================================
-        // Implementation  of the Array interface
-
-        /* (non-Javadoc)
-         * @see net.sci.array.Array#dimensionality()
-         */
-        @Override
-        public int dimensionality()
-        {
-            return newDims.length;
-        }
-
-        /* (non-Javadoc)
-         * @see net.sci.array.Array#getSize()
-         */
-        @Override
-        public int[] size()
-        {
-            return newDims;
-        }
-
-        /* (non-Javadoc)
-         * @see net.sci.array.Array#getSize(int)
-         */
-        @Override
-        public int size(int dim)
-        {
-            return newDims[dim];
-        }
-
-        @Override
-        public Class<T> dataType()
-        {
-            return array.dataType();
-        }
+        // Specialization of the Array interface
 
         @Override
         public ScalarArray<T> newInstance(int... dims)
         {
-            return array.newInstance(dims);
+            return ((ScalarArray<T>) array).newInstance(dims);
         }
 
         @Override
-        public Factory<T> factory()
+        public ScalarArray.Factory<T> factory()
         {
-            return array.factory();
+            return ((ScalarArray<T>) array).factory();
         }
 
         @Override
-        public T get(int[] pos)
+        public ScalarArray.Iterator<T> iterator()
         {
-            return array.get(coordsMapping.apply(pos));
-        }
-
-        @Override
-        public void set(int[] pos, T value)
-        {
-            array.set(coordsMapping.apply(pos), value);
-        }
-
-        @Override
-        public Iterator<T> iterator()
-        {
-            return new Iterator<T>()
+            return new ScalarArray.Iterator<T>()
             {
                 PositionIterator iter = positionIterator();
 
                 @Override
                 public double getValue()
                 {
-                    return View.this.getValue(iter.get());
+                    return ScalarArray.ReshapeView.this.getValue(iter.get());
                 }
 
                 @Override
                 public void setValue(double value)
                 {
-                    View.this.setValue(iter.get(), value);
+                    ScalarArray.ReshapeView.this.setValue(iter.get(), value);
                 }
 
                 @Override
@@ -672,19 +611,19 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
                 public T next()
                 {
                     iter.forward();
-                    return View.this.get(iter.get());
+                    return ScalarArray.ReshapeView.this.get(iter.get());
                 }
 
                 @Override
                 public T get()
                 {
-                    return View.this.get(iter.get());
+                    return ScalarArray.ReshapeView.this.get(iter.get());
                 }
 
                 @Override
                 public void set(T value)
                 {
-                    View.this.set(iter.get(), value);
+                    ScalarArray.ReshapeView.this.set(iter.get(), value);
                 }
             };
         }

@@ -434,10 +434,19 @@ public interface Array<T> extends Iterable<T>, Dimensional
      */
     static class ReshapeView<T> implements Array<T>
     {
+        /** 
+         * The array to synchronize with. /*
+         */
         protected Array<T> array;
         
+        /** 
+         * The size of the view. 
+         */
         protected int[] newDims;
         
+        /**
+         * The mapping between view coordinates and inner array coordinates.
+         */
         protected Function<int[], int[]> coordsMapping;
 
         /**
