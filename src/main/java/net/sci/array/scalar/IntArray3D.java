@@ -114,7 +114,7 @@ public abstract class IntArray3D<T extends Int> extends ScalarArray3D<T> impleme
      * @return a view on the specific slice, as a 2D array
      */
     public abstract IntArray2D<T> slice(int sliceIndex);
-
+    
     /**
      * Iterates over the slices
      * 

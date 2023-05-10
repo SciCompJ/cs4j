@@ -3,6 +3,10 @@
  */
 package net.sci.array.scalar;
 
+import java.util.Locale;
+
+import net.sci.array.Array2D;
+
 /**
  * @author dlegland
  *
@@ -83,6 +87,42 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         return new SliceView(sliceIndex);
     }
 
+    /**
+     * Overrides the default implementation for <code>setSlice</code> by relying
+     * on the lowest level data access and modifier methods.
+     *
+     * @param sliceIndex
+     *            the slice index of elements to replace
+     * @param slice
+     *            the 2D array containing (UInt8) elements to replace.
+     */
+    @Override
+    public void setSlice(int sliceIndex, Array2D<UInt8> slice)
+    {
+        // check validity of input arguments
+        if (sliceIndex < 0 || sliceIndex >= this.size2)
+        {
+            final String pattern = "Slice index (%d) out of bound (%d ; %d)";
+            throw new IllegalArgumentException(String.format(Locale.ENGLISH, pattern, sliceIndex, 0, this.size2));
+        }
+        if (this.size0 != slice.size(0) || this.size1 != slice.size(1))
+        {
+            throw new IllegalArgumentException("Slice dimensions must be compatible with array dimensions");
+        }
+        
+        // wraps slice array into a Int32Array
+        UInt8Array2D slice2 = UInt8Array2D.wrap(UInt8Array.wrap(slice));
+        
+        // iterate over elements of selected slice
+        for (int y = 0; y < this.size1; y++)
+        {
+            for (int x = 0; x < this.size0; x++)
+            {
+                this.setByte(x, y, sliceIndex, slice2.getByte(x, y));
+            }
+        }
+    }
+    
     /**
      * Iterates over the slices
      * 

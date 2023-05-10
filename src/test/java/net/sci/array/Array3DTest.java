@@ -45,6 +45,32 @@ public class Array3DTest
      * Test method for {@link net.sci.array.Array3D#setSlice(int, net.sci.array.Array2D)}.
      */
     @Test
+    public final void test_setSlice_ArrayOfString()
+    {
+        Array3D<String> array = Array3D.create(5, 4, 3, "");
+        String[] digits = {"A", "B", "C", "D", "E", "F"};  
+        array.fill((x,y,z) -> digits[z] + digits[y] + digits[x]);
+        
+        Array2D<String> slice = Array2D.create(5, 4, "");
+        slice.fill("ZZZ");
+        
+        array.setSlice(1, slice);
+        
+        // out of slice
+        assertEquals("AAA", array.get(0, 0, 0));
+        assertEquals("CDE", array.get(4, 3, 2));
+        
+        // within slice
+        assertEquals("ZZZ", array.get(0, 0, 1));
+        assertEquals("ZZZ", array.get(4, 0, 1));
+        assertEquals("ZZZ", array.get(0, 3, 1));
+        assertEquals("ZZZ", array.get(4, 3, 1));
+    }
+
+    /**
+     * Test method for {@link net.sci.array.Array3D#setSlice(int, net.sci.array.Array2D)}.
+     */
+    @Test
     public final void test_setSlice_UInt8Array()
     {
         UInt8Array3D array = UInt8Array3D.create(10, 8, 6);

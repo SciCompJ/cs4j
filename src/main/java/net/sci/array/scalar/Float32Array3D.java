@@ -3,6 +3,10 @@
  */
 package net.sci.array.scalar;
 
+import java.util.Locale;
+
+import net.sci.array.Array2D;
+
 /**
  * @author dlegland
  *
@@ -97,6 +101,42 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
     public Float32Array2D slice(int sliceIndex)
     {
         return new SliceView(sliceIndex);
+    }
+    
+    /**
+     * Overrides the default implementation for <code>setSlice</code> by relying
+     * on the lowest level data access and modifier methods.
+     *
+     * @param sliceIndex
+     *            the slice index of elements to replace
+     * @param slice
+     *            the 2D array containing (Float32) elements to replace.
+     */
+    @Override
+    public void setSlice(int sliceIndex, Array2D<Float32> slice)
+    {
+        // check validity of input arguments
+        if (sliceIndex < 0 || sliceIndex >= this.size2)
+        {
+            final String pattern = "Slice index (%d) out of bound (%d ; %d)";
+            throw new IllegalArgumentException(String.format(Locale.ENGLISH, pattern, sliceIndex, 0, this.size2));
+        }
+        if (this.size0 != slice.size(0) || this.size1 != slice.size(1))
+        {
+            throw new IllegalArgumentException("Slice dimensions must be compatible with array dimensions");
+        }
+        
+        // wraps slice array into a Float32Array
+        Float32Array2D slice2 = Float32Array2D.wrap(Float32Array.wrap(slice));
+        
+        // iterate over elements of selected slice
+        for (int y = 0; y < this.size1; y++)
+        {
+            for (int x = 0; x < this.size0; x++)
+            {
+                this.setFloat(x, y, sliceIndex, slice2.getFloat(x, y));
+            }
+        }
     }
 
     /**

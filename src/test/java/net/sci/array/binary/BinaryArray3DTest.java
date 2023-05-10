@@ -10,6 +10,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import net.sci.array.scalar.TriFunction;
+
 /**
  * @author dlegland
  *
@@ -51,4 +53,33 @@ public class BinaryArray3DTest
         assertEquals(3, n);
     }
     
-}
+    
+    /**
+     * Test method for {@link net.sci.array.Array3D#setSlice(int, net.sci.array.Array2D)}.
+     */
+    @Test
+    public final void test_setSlice()
+    {
+        BinaryArray3D array = BinaryArray3D.create(10, 8, 6);
+        array.fillBooleans((x,y,z) -> x >= 5 ^ y >= 4);
+        BinaryArray2D slice = BinaryArray2D.create(10, 8);
+        slice.fillBooleans((x,y) -> x < 5 ^ y >= 4);
+        
+        array.setSlice(3, slice);
+        
+        // out of slice
+        assertFalse(array.getBoolean(0, 0, 0));
+        assertTrue(array.getBoolean(9, 0, 0));
+        assertTrue(array.getBoolean(0, 7, 0));
+        assertFalse(array.getBoolean(9, 7, 0));
+        assertFalse(array.getBoolean(0, 0, 5));
+        assertTrue(array.getBoolean(9, 0, 5));
+        assertTrue(array.getBoolean(0, 7, 5));
+        assertFalse(array.getBoolean(9, 7, 5));
+        
+        // within slice
+        assertTrue(array.getBoolean(0, 0, 3));
+        assertFalse(array.getBoolean(9, 0, 3));
+        assertFalse(array.getBoolean(0, 7, 3));
+        assertTrue(array.getBoolean(9, 7, 3));
+    }}

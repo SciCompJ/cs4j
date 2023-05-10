@@ -33,7 +33,30 @@ public class Float32Array3DTest
         assertEquals(3, n);
     }
   
-    
+    /**
+     * Test method for {@link net.sci.array.Array3D#setSlice(int, net.sci.array.Array2D)}.
+     */
+    @Test
+    public final void test_setSlice()
+    {
+        Float32Array3D array = Float32Array3D.create(10, 8, 6);
+        array.fillValues((x,y,z) -> (x+y+z+0.0));
+        Float32Array2D slice = Float32Array2D.create(10, 8);
+        slice.fillValues((x,y) -> (y*100.0 + x));
+        
+        array.setSlice(3, slice);
+        
+        // out of slice
+        assertEquals(  0, array.getValue(0, 0, 0), 0.01);
+        assertEquals( 21, array.getValue(9, 7, 5), 0.01);
+        
+        // within slice
+        assertEquals(  0, array.getValue(0, 0, 3), 0.01);
+        assertEquals(  9, array.getValue(9, 0, 3), 0.01);
+        assertEquals(700, array.getValue(0, 7, 3), 0.01);
+        assertEquals(709, array.getValue(9, 7, 3), 0.01);
+    }
+
     @Test
     public final void testValues()
     {
@@ -57,7 +80,7 @@ public class Float32Array3DTest
      * Test method for {@link net.sci.array.scalar.Float32Array3D#fillValues(net.sci.array.scalar.TriFunction)}.
      */
     @Test
-    public final void testPopulate()
+    public final void test_fillValues_distanceToPoint()
     {
         Float32Array3D array = Float32Array3D.create(5, 5, 5);
         array.fillValues((x, y, z) -> Math.hypot(Math.hypot(x - 2, y - 2), z - 2));

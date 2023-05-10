@@ -3,6 +3,9 @@
  */
 package net.sci.array.binary;
 
+import java.util.Locale;
+
+import net.sci.array.Array2D;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.TriFunction;
 
@@ -99,6 +102,42 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         return new SliceView(sliceIndex);
     }
 
+    /**
+     * Overrides the default implementation for <code>setSlice</code> by relying
+     * on the lowest level data access and modifier methods.
+     *
+     * @param sliceIndex
+     *            the slice index of elements to replace
+     * @param slice
+     *            the 2D array containing (Binary) elements to replace.
+     */
+    @Override
+    public void setSlice(int sliceIndex, Array2D<Binary> slice)
+    {
+        // check validity of input arguments
+        if (sliceIndex < 0 || sliceIndex >= this.size2)
+        {
+            final String pattern = "Slice index (%d) out of bound (%d ; %d)";
+            throw new IllegalArgumentException(String.format(Locale.ENGLISH, pattern, sliceIndex, 0, this.size2));
+        }
+        if (this.size0 != slice.size(0) || this.size1 != slice.size(1))
+        {
+            throw new IllegalArgumentException("Slice dimensions must be compatible with array dimensions");
+        }
+        
+        // wraps slice array into a BinaryArray2D
+        BinaryArray2D slice2 = BinaryArray2D.wrap(BinaryArray.wrap(slice));
+        
+        // iterate over elements of selected slice
+        for (int y = 0; y < this.size1; y++)
+        {
+            for (int x = 0; x < this.size0; x++)
+            {
+                this.setBoolean(x, y, sliceIndex, slice2.getBoolean(x, y));
+            }
+        }
+    }
+    
     /**
      * Iterates over the slices
      * 

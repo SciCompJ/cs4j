@@ -91,6 +91,30 @@ public class UInt8Array3DTest
     }
 
     /**
+     * Test method for {@link net.sci.array.Array3D#setSlice(int, net.sci.array.Array2D)}.
+     */
+    @Test
+    public final void test_setSlice()
+    {
+        UInt8Array3D array = UInt8Array3D.create(10, 8, 6);
+        array.fillInts((x,y,z) -> (x+y+z));
+        UInt8Array2D slice = UInt8Array2D.create(10, 8);
+        slice.fillInts((x,y) -> (y*10 + x));
+        
+        array.setSlice(3, slice);
+        
+        // out of slice
+        assertEquals( 0, array.getInt(0,0,0));
+        assertEquals(21, array.getInt(9, 7, 5));
+        
+        // within slice
+        assertEquals( 0, array.getInt(0, 0, 3));
+        assertEquals( 9, array.getInt(9, 0, 3));
+        assertEquals(70, array.getInt(0, 7, 3));
+        assertEquals(79, array.getInt(9, 7, 3));
+    }
+    
+    /**
      * Test method for {@link net.sci.array.scalar.UInt8Array3D#sliceIterator()}.
      */
     @Test
