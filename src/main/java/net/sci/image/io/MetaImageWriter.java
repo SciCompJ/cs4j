@@ -9,6 +9,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
 import java.util.Locale;
 
 import net.sci.algo.AlgoStub;
@@ -75,16 +77,17 @@ public class MetaImageWriter extends AlgoStub implements ImageWriter
 		// prepare data
 		this.info = computeMetaImageInfo(image);
 		info.elementDataFile = computeElementDataFileName(this.headerFile.getName());
-
+		
 		// print header into header file
 		FileOutputStream stream = new FileOutputStream(this.headerFile);
 		writeHeader(stream);
 		
 		// if element data file is different, switch to the new file
+		File dataFile = null;
 		if (!info.elementDataFile.equals(this.headerFile.getName()))
 		{
 			stream.close();
-			File dataFile = new File(this.headerFile.getParentFile(), info.elementDataFile);
+			dataFile = new File(this.headerFile.getParentFile(), info.elementDataFile);
 			stream = new FileOutputStream(dataFile);
 		}
 		
@@ -93,6 +96,13 @@ public class MetaImageWriter extends AlgoStub implements ImageWriter
 		
 		// close stream
 		stream.close();
+		
+        // update last modification date of header (and optionally data) file(s) 
+        touchFile(this.headerFile);
+        if (dataFile != null)
+        {
+            touchFile(this.headerFile);
+        }
 	}
 
     /**
@@ -308,5 +318,17 @@ public class MetaImageWriter extends AlgoStub implements ImageWriter
                 bos.write(array.getBoolean(pos) ? 255 : 0);
             }
         }
+    }
+    
+    /**
+     * Sets the last modification date of an existing file to the current time.
+     * 
+     * @param file
+     *            the file to update, that must exist
+     * @throws IOException 
+     */
+    private static final void touchFile(File file) throws IOException
+    {
+        Files.setLastModifiedTime(file.toPath(), FileTime.fromMillis(System.currentTimeMillis()));
     }
 }
