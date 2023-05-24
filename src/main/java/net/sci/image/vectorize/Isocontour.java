@@ -23,6 +23,7 @@ import net.sci.geom.graph.Graph2D;
  * Computes the set of curves (polylines) corresponding to isocontour of a
  * scalar 2D image, using marching squares algorithm.
  * 
+ * @see LabelMapBoundaryPolygons
  * @see MorphologicalMarchingCubes
  * 
  * @author dlegland

@@ -12,8 +12,10 @@ import net.sci.geom.graph.Graph2D;
 import net.sci.geom.graph.SimpleGraph2D;
 
 /**
+ * 
+ * @see LabelMapBoundaryPolygons
+ * 
  * @author dlegland
- *
  */
 public class BinaryImage2DBoundaryGraph extends AlgoStub
 {
