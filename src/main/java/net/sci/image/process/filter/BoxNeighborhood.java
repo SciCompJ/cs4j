@@ -5,6 +5,8 @@ package net.sci.image.process.filter;
 
 import java.util.Iterator;
 
+import net.sci.array.Array;
+
 /**
  * A rectangular neighborhood defined by the diameter in each dimension.
  * 
@@ -52,6 +54,12 @@ public class BoxNeighborhood implements Neighborhood
 	/** The radius in the positive direction */
 	int[] offsets2;
 	
+	/**
+     * The list of shifts around the reference position. Each element of the
+     * array has <code>nd</code> elements.
+     */
+	int[][] shifts;
+	
     /**
      * Creates a new rectangular neighborhood around a specific position.
      * 
@@ -62,22 +70,56 @@ public class BoxNeighborhood implements Neighborhood
      */
 	public BoxNeighborhood(int[] diameters)
 	{
-		computeOffsets(diameters);
+	    initShifts(diameters);
 	}
 	
-	private void computeOffsets(int[] diameters)
+	private void initShifts(int[] diameters)
 	{
-		int nd = diameters.length;
-		this.offsets1 = new int[nd];
-		this.offsets2 = new int[nd];
-		
-		for (int d = 0; d < nd; d++)
-		{
-			double radius = ((double) diameters[d]) / 2;
-			this.offsets1[d] = (int) Math.floor(radius);
-			this.offsets2[d] = (int) Math.ceil(radius) - 1;
-		}
+	    // first compute offsets
+        int nd = diameters.length;
+        this.offsets1 = new int[nd];
+        this.offsets2 = new int[nd];
+        
+        for (int d = 0; d < nd; d++)
+        {
+            double radius = ((double) diameters[d]) / 2;
+            this.offsets1[d] = (int) Math.floor(radius);
+            this.offsets2[d] = (int) Math.ceil(radius) - 1;
+        }
+
+        // allocate array of shifts
+        int nShifts = (int) Array.prod(diameters);
+        this.shifts = new int[nShifts][nd];
+        
+        // initialize first shift
+        int[] shift = new int[nd];
+        for (int d = 0; d < nd; d++)
+        {
+            shift[d] = -this.offsets1[d];
+        }
+        
+        // iterate over elements of shift array
+        for (int i = 0; i < nShifts; i++)
+        {
+            for (int d = 0; d < nd; d++)
+            {
+                this.shifts[i][d] = shift[d];
+            }
+            
+            incrementShift(shift, 0);
+        }
 	}
+
+    private void incrementShift(int[] shift, int d)
+    {
+        shift[d]++;
+        if (shift[d] > offsets2[d] && d < shift.length - 1)
+        {
+            shift[d] = -offsets1[d];
+            incrementShift(shift, d + 1);
+        }
+    }
+
 	
 	@Override
     public Iterable<int[]> neighbors(int[] pos)
@@ -95,64 +137,42 @@ public class BoxNeighborhood implements Neighborhood
     private class CursorIterator implements Iterator<int[]>
 	{
 	    /** The position of neighborhood center in original array */
-	    int[] refPos;
+	    final int[] refPos;
 	    
-		/** 
-		 * Each index in pos iterates between -offset1[d] and +offset1[d], including both.
-		 */
-		int[] shift;
+		int shiftIndex = -1;
 		
 		/**
-		 * number of dimension of this iterator
+		 * The current position.
 		 */
-		int nd;
-
+		int[] pos;
+		
 		public CursorIterator(int[] refPos)
 		{
-	        this.refPos = new int[refPos.length];
-	        System.arraycopy(refPos, 0, this.refPos, 0, refPos.length);
-	        
-			// initialize current position before the first position in neighborhood
-			this.nd = offsets1.length;
-			this.shift = new int[nd];
-			this.shift[0] = -offsets1[0] - 1;
-			for (int d = 1; d < nd; d++)
-			{
-				this.shift[d] = -offsets1[d];
-			}
+            int nd = refPos.length;
+            
+	        this.refPos = new int[nd];
+	        System.arraycopy(refPos, 0, this.refPos, 0, nd);
+			
+			// initialize position
+			this.pos = new int[nd];
 		}
 		
 		@Override
 		public boolean hasNext()
 		{
-			for (int d = 0; d < nd; d++)
-			{
-				if (this.shift[d] < offsets2[d])
-					return true;
-			}
-			return false;
+		    return shiftIndex < shifts.length - 1;
 		}
 
 		@Override
 		public int[] next()
 		{
-			incrementDim(0);
-			int[] coords = new int[nd];
-			for (int d = 0; d < nd; d++)
+		    shiftIndex++;
+		    
+			for (int d = 0; d < refPos.length; d++)
 			{
-				coords[d] = refPos[d] + shift[d];
+				pos[d] = refPos[d] + shifts[shiftIndex][d];
 			}
-			return coords;	
-		}
-
-		private void incrementDim(int d)
-		{
-			this.shift[d]++;
-			if (this.shift[d] > offsets2[d] && d < nd - 1)
-			{
-				this.shift[d] = -offsets1[d];
-				incrementDim(d + 1);
-			}
+			return pos;	
 		}
 	}
 }
