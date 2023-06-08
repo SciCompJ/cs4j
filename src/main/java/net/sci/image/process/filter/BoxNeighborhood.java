@@ -46,9 +46,6 @@ import java.util.Iterator;
  */
 public class BoxNeighborhood implements Neighborhood
 {
-	/** The position of neighborhood center in original array */
-	int[] refPos;
-	
 	/** The radius in the negative direction */
 	int[] offsets1;
 
@@ -63,10 +60,8 @@ public class BoxNeighborhood implements Neighborhood
      * @param diameters
      *            the side length of the neighborhood along each dimension
      */
-	public BoxNeighborhood(int[] refPos, int[] diameters)
+	public BoxNeighborhood(int[] diameters)
 	{
-		this.refPos = new int[refPos.length];
-		System.arraycopy(refPos, 0, this.refPos, 0, refPos.length);
 		computeOffsets(diameters);
 	}
 	
@@ -84,17 +79,24 @@ public class BoxNeighborhood implements Neighborhood
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Iterable#iterator()
-	 */
 	@Override
-	public Iterator<int[]> iterator()
-	{
-		return new CursorIterator();
-	}
+    public Iterable<int[]> neighbors(int[] pos)
+    {
+        return new Iterable<int[]>() {
 
-	private class CursorIterator implements Iterator<int[]>
+            @Override
+            public Iterator<int[]> iterator()
+            {
+                return new CursorIterator(pos);
+            }
+        };
+    }
+
+    private class CursorIterator implements Iterator<int[]>
 	{
+	    /** The position of neighborhood center in original array */
+	    int[] refPos;
+	    
 		/** 
 		 * Each index in pos iterates between -offset1[d] and +offset1[d], including both.
 		 */
@@ -105,8 +107,11 @@ public class BoxNeighborhood implements Neighborhood
 		 */
 		int nd;
 
-		public CursorIterator()
+		public CursorIterator(int[] refPos)
 		{
+	        this.refPos = new int[refPos.length];
+	        System.arraycopy(refPos, 0, this.refPos, 0, refPos.length);
+	        
 			// initialize current position before the first position in neighborhood
 			this.nd = offsets1.length;
 			this.shift = new int[nd];
@@ -149,6 +154,5 @@ public class BoxNeighborhood implements Neighborhood
 				incrementDim(d + 1);
 			}
 		}
-		
 	}
 }

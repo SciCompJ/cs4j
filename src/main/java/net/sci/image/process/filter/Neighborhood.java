@@ -10,10 +10,16 @@ package net.sci.image.process.filter;
  * respect to an element.
  * 
  * @author dlegland
- *
  */
-//TODO: need to choose between "neighborhood of an element", or "factory for accessing the neighborhood of an element"
-// -> for the moment, the first one was chosen
-public interface Neighborhood extends Iterable<int[]>
+public interface Neighborhood
 {
+    /**
+     * Returns an Iterable on the neighbors of a given position.
+     * 
+     * @param pos
+     *            the reference position
+     * @return the neighbors of the position (may contain the original position,
+     *         depending on neighborhood definition).
+     */
+    public Iterable<int[]> neighbors(int[] pos);
 }

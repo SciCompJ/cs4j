@@ -23,11 +23,11 @@ public class BoxNeighborhoodTest
         // create neighborhood
         int[] sizes = new int[] {7, 5};
         int[] pos = new int[] {10, 10};
-        Neighborhood nbg = new BoxNeighborhood(pos, sizes);
+        Neighborhood nbg = new BoxNeighborhood(sizes);
         
         // iterate over neighbors
         int count = 0;
-        for (@SuppressWarnings("unused") int[] pos2 : nbg)
+        for (@SuppressWarnings("unused") int[] pos2 : nbg.neighbors(pos))
         {
             count++;
         }
@@ -44,11 +44,11 @@ public class BoxNeighborhoodTest
         // create neighborhood
         int[] sizes = new int[] {7, 5, 3};
         int[] pos = new int[] {10, 10, 10};
-        Neighborhood nbg = new BoxNeighborhood(pos, sizes);
+        Neighborhood nbg = new BoxNeighborhood(sizes);
         
         // iterate over neighbors
         int count = 0;
-        for (@SuppressWarnings("unused") int[] pos2 : nbg)
+        for (@SuppressWarnings("unused") int[] pos2 : nbg.neighbors(pos))
         {
             count++;
         }

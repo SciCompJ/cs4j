@@ -98,14 +98,14 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 		}
 		
 		// iterate over positions of target array
-		for (int[] pos : target.positions())
+		Neighborhood nbg = new BoxNeighborhood(boxSizes);
+        for (int[] pos : target.positions())
 		{
 			// init result
 			double sum = 0;
 			
 			// iterate over neighbors
-			Neighborhood nbg = new BoxNeighborhood(pos, boxSizes);
-			for (int[] neighPos : nbg)
+			for (int[] neighPos : nbg.neighbors(pos))
 			{
 				// clamp neighbor position to array bounds
 				for (int d = 0; d < nd; d++)

@@ -32,6 +32,15 @@ public class LabelMapBoundaryPolygons
      */
     Connectivity2D conn = Connectivity2D.C4;
     
+    enum VertexLocation
+    {
+        CORNER,
+        EDGE_CENTER,
+        PIXEL;
+    }
+    
+    VertexLocation vertex = VertexLocation.EDGE_CENTER;
+    
     /**
      * The tracking directions.
      */
@@ -237,6 +246,26 @@ public class LabelMapBoundaryPolygons
             return this.direction.getVertex(this);
         }
         
+        public Point2D getVertex(Position pos, VertexLocation vertex)
+        {
+            switch (vertex)
+            {
+                case CORNER: 
+                    return this.direction.getVertex(this);
+                case EDGE_CENTER: 
+                    switch(direction)
+                    {
+                        case DOWN: return new Point2D(this.x - 0.5, this.y);
+                        case UP:   return new Point2D(this.x + 0.5, this.y);
+                        case LEFT: return new Point2D(this.x, this.y - 0.5);
+                        case RIGHT: return new Point2D(this.x, this.y + 0.5);
+                    }
+                case PIXEL: 
+                    return new Point2D(this.x, this.y);
+                default: throw new IllegalArgumentException("Unexpected value: " + vertex);
+            }
+        }
+        
         @Override
         public boolean equals(Object obj)
         {
@@ -319,7 +348,7 @@ public class LabelMapBoundaryPolygons
         // iterate over boundary until we come back at initial position
         do
         {
-            vertices.add(pos.getVertex(pos));
+            vertices.add(pos.getVertex(pos, vertex));
             
             // compute position of the two other points in current 2-by-2 configuration
             int[][] shifts = pos.direction.coordsShifts();
@@ -487,7 +516,7 @@ public class LabelMapBoundaryPolygons
         do
         {
             // update vertices
-            vertices.add(pos.getVertex(pos));
+            vertices.add(pos.getVertex(pos, vertex));
             
             // mark the current pixel with integer that depends on position
             int mask = maskArray.getInt(pos.x, pos.y);

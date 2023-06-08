@@ -260,20 +260,18 @@ public final class BinaryBoxMedianFilter extends AlgoStub implements ImageArrayO
     		totalCount *= d;
     	}
     	
+    	
+    	Neighborhood nbg = new BoxNeighborhood(diameters);
+    		
     	// the position of the median value within the sorted array
     	int medianCount = (totalCount - 1) / 2;
     	
     	// iterate over positions
-        Array.PositionIterator iter = source.positionIterator();
-        while (iter.hasNext())
+        for (int[] pos : target.positions())
         {
-            // iterate position cursor
-            int[] pos = iter.next();
-    		
     		// iterate over neighbors
-    		Neighborhood nbg = new BoxNeighborhood(pos, diameters);
     		int count = 0;
-    		for (int[] neighPos : nbg)
+    		for (int[] neighPos : nbg.neighbors(pos))
     		{
     			// clamp neighbor position to array bounds
     			for (int d = 0; d < nd; d++)

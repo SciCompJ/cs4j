@@ -4,7 +4,6 @@
 package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.process.VectorArrayMarginalOperator;
@@ -107,19 +106,16 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
 			throw new RuntimeException("Requires at least as many diameters as array dimensionality");
 		}
 		
+        Neighborhood nbg = new BoxNeighborhood(diameters);
+        
 		// iterate over positions
-        Array.PositionIterator iter = source.positionIterator();
-        while (iter.hasNext())
+        for (int[] pos : target.positions())
         {
-            // iterate position cursor
-            int[] pos = iter.next();
-			
 			// init result
 			double localMax = Double.NEGATIVE_INFINITY;
 			
 			// iterate over neighbors
-			Neighborhood nbg = new BoxNeighborhood(pos, diameters);
-			for (int[] neighPos : nbg)
+			for (int[] neighPos : nbg.neighbors(pos))
 			{
 				// clamp neighbor position to array bounds
 				boolean inside = true;

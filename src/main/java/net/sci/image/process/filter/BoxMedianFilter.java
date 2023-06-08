@@ -6,7 +6,6 @@ package net.sci.image.process.filter;
 import java.util.Arrays;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.process.VectorArrayMarginalOperator;
 import net.sci.array.scalar.Scalar;
@@ -105,17 +104,14 @@ public final class BoxMedianFilter extends AlgoStub implements ImageArrayOperato
 		int medianCount = (totalCount - 1) / 2;
 		double[] values = new double[totalCount];
 		
+        Neighborhood nbg = new BoxNeighborhood(diameters);
+        
 		// iterate over positions
-        Array.PositionIterator iter = source.positionIterator();
-        while (iter.hasNext())
+        for (int[] pos : target.positions())
         {
-            // iterate position cursor
-            int[] pos = iter.next();
-			
 			// iterate over neighbors
-			Neighborhood nbg = new BoxNeighborhood(pos, diameters);
 			int count = 0;
-			for (int[] neighPos : nbg)
+			for (int[] neighPos : nbg.neighbors(pos))
 			{
 				// clamp neighbor position to array bounds
 				for (int d = 0; d < nd; d++)
