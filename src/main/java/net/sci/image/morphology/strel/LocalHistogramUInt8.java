@@ -105,32 +105,42 @@ public class LocalHistogramUInt8
     {
         if (needUpdateMax)
         {
-            for (maxValue = 255; maxValue > 0; maxValue--)
-            {
-                if (valueCounts[maxValue] > 0)
-                {
-                    break;
-                }
-            }
-            needUpdateMax = false;
+            recomputeMaxValue();
         }
         return maxValue;
+    }
+    
+    private void recomputeMaxValue()
+    {
+        for (maxValue = 255; maxValue > 0; maxValue--)
+        {
+            if (valueCounts[maxValue] > 0)
+            {
+                break;
+            }
+        }
+        needUpdateMax = false;
     }
 
     public int getMinInt()
     {
         if (needUpdateMin)
         {
-            for (minValue = 0; minValue < 256; minValue++)
-            {
-                if (valueCounts[minValue] > 0)
-                {
-                    break;
-                }
-            }
-            needUpdateMin = false;
+            recomputeMinValue();
         }
         return minValue;
+    }
+    
+    private void recomputeMinValue()
+    {
+        for (minValue = 0; minValue < 256; minValue++)
+        {
+            if (valueCounts[minValue] > 0)
+            {
+                break;
+            }
+        }
+        needUpdateMin = false;
     }
     
     public void replace(int oldValue, int newValue)
@@ -147,6 +157,8 @@ public class LocalHistogramUInt8
             int count = valueCounts[value] - 1;
             valueCounts[value] = count;
             
+            // when extreme bin count reaches zero, min or max value need to
+            // be recomputed
             if (count == 0)
             {
                 if (value == maxValue)
@@ -168,13 +180,18 @@ public class LocalHistogramUInt8
     private void increaseCount(int value)
     {
         valueCounts[value] = valueCounts[value] + 1;
+        
+        // when new value is outside current bounds, it can be automatically
+        // updated
         if (value > maxValue)
         {
-            needUpdateMax = true;
+            maxValue = value;
+            needUpdateMax = false;
         }
         if (value < minValue)
         {
-            needUpdateMin = true;
+            minValue = value;
+            needUpdateMin = false;
         }
     }
 }

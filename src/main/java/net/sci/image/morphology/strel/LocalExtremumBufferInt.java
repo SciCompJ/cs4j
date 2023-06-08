@@ -131,6 +131,7 @@ public class LocalExtremumBufferInt implements LocalExtremum
 		if (value * sign > this.maxValue * sign) 
 		{
 			this.maxValue = value;
+			updateNeeded = false;
 		}
 	}
 	

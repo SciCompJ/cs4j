@@ -183,13 +183,17 @@ public class LocalHistogramDoubleHashMap
             valueCounts.put(value, 1);
         }
 
+        // when new value is outside current bounds, it can be automatically
+        // updated
         if (value > maxValue)
         {
-            needUpdateMax = true;
+            maxValue = value;
+            needUpdateMax = false;
         }
         if (value < minValue)
         {
-            needUpdateMin = true;
+            minValue = value;
+            needUpdateMin = false;
         }
     }
 }
