@@ -24,6 +24,17 @@ public abstract class Array1D<T> implements Array<T>
 //        return new BufferedGenericArray2D<T>(sizeX, sizeY, init);
 //    }
     
+    /**
+     * Wraps the specified array into an instance of Array1D containing the same
+     * data.
+     * 
+     * @param <T>
+     *            the type of data within the array
+     * @param array
+     *            the input array
+     * @return an instance of Array1D with the same data. Can be the original
+     *         array if it is already a subclass of Array1D.
+     */
 	public static final <T> Array1D<T> wrap(Array<T> array)
 	{
 		if (array instanceof Array1D)
@@ -59,6 +70,13 @@ public abstract class Array1D<T> implements Array<T>
 	// =============================================================
 	// New methods
     
+	/**
+     * Checks if the array contains the specified position.
+     * 
+     * @param x
+     *            the position to check
+     * @return true if the array contains the specified position.
+     */
 	public boolean containsPosition(int x)
 	{
         if (x < 0) return false;

@@ -15,7 +15,7 @@ public class Arrays
     /**
      * Static factory for creating generic arrays.
      * 
-     * @param T
+     * @param <T>
      *            the type of the array.
      * @param sizes
      *            the dimensions of the array
@@ -76,14 +76,29 @@ public class Arrays
         return array1.dimensionality() == array2.dimensionality();
     }
     
+    /**
+     * Copy the contents of the source array into the target array, with an
+     * optional offset. Both array must have same dimensionality, but target
+     * array may have a larger size.
+     * 
+     * @param <T>
+     *            the type of the data to copy.
+     * @param source
+     *            the source array.
+     * @param target
+     *            the target array.
+     * @param offset
+     *            the position of the first element to copy in the target array.
+     *            Must have a length equal to dimensionality of input arrays.
+     */
     public static <T> void copy(Array<? extends T> source, Array<? super T> target, int[] offset)
     {
         // dimensionality of source array
         int nd = source.dimensionality();
         
         // initializes a default target position from the offset
-        int[] pos2 = new int[offset.length];
-        System.arraycopy(offset, 0, pos2, 0, offset.length);
+        int[] pos2 = new int[nd];
+        System.arraycopy(offset, 0, pos2, 0, nd);
         
         for (int[] pos : source.positions())
         {

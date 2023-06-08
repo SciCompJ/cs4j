@@ -22,11 +22,36 @@ public abstract class Array2D<T> implements Array<T>
 	// =============================================================
 	// static methods
 
+    /**
+     * Creates a new array with the specified size, containing the specified
+     * initial value.
+     * 
+     * @param <T>
+     *            the type of data
+     * @param sizeX
+     *            the size of the array to create in the first direction
+     * @param sizeY
+     *            the size of the array to create in the second direction
+     * @param init
+     *            the initial value within the array (repeated within the array)
+     * @return a new array initialized with the default value.
+     */
     public static <T> Array2D<T> create(int sizeX, int sizeY, T init)
     {
         return new BufferedGenericArray2D<T>(sizeX, sizeY, init);
     }
     
+    /**
+     * Wraps the specified array into an instance of Array2D containing the same
+     * data.
+     * 
+     * @param <T>
+     *            the type of data within the array
+     * @param array
+     *            the input array
+     * @return an instance of Array2D with the same data. Can be the original
+     *         array if it is already a subclass of Array2D.
+     */
 	public static final <T> Array2D<T> wrap(Array<T> array)
 	{
 		if (array instanceof Array2D)
@@ -90,6 +115,17 @@ public abstract class Array2D<T> implements Array<T>
         }
     }
     
+    /**
+     * Checks if the array contains the specified position, i.e. if all
+     * coordinates are comprised between 0 and the size minus one in the
+     * corresponding dimension.
+     * 
+     * @param x
+     *            the first coordinate of the position to check
+     * @param y
+     *            the second coordinate of the position to check
+     * @return true if the array contains the specified position.
+     */
 	public boolean containsPosition(int x, int y)
 	{
         if (x < 0 || y < 0) return false;

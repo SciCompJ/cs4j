@@ -1,9 +1,5 @@
 /**
- * File: DegeneratedLine2DException.java Project: javaGeom
  * 
- * Distributed under the LGPL License.
- *
- * Created: 19 août 2010
  */
 package net.sci.geom.geom2d;
 
@@ -18,9 +14,8 @@ package net.sci.geom.geom2d;
  */
 public class DegeneratedLine2DException extends RuntimeException
 {
-    
     /**
-     * 
+     * Serial version ID.
      */
     private static final long serialVersionUID = 1L;
     

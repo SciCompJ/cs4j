@@ -46,7 +46,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
     /**
      * Creates a new array with new dimensions and containing the same elements.
      * 
-     * @see net.sci.array.process.shape.Reshape;
+     * @see net.sci.array.process.shape.Reshape
      * 
      * @param newDims
      *            the dimensions of the new array
@@ -128,14 +128,16 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	public int size(int dim);
 
 	/**
-	 * @return the number of elements within this array.
-	 */
+     * Counts the elements within the array.
+     * 
+     * @see #size()
+     * @see #prod(int...)
+     * 
+     * @return the number of elements within this array.
+     */
 	public default long elementCount()
 	{
-	    long n = 1;
-	    for (int dim : size())
-	        n *= dim;
-	    return n;
+	    return prod(size());
 	}
 	
 	/**
@@ -248,6 +250,20 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
 	public void set(int[] pos, T value);
 
+	/**
+	 * Allows to iterate over positions in array.
+	 * 
+	 * <pre>{@code
+	 * for (int[] pos : array.positions())
+	 * {
+	 *     doProcessing(array.get(pos));
+	 * }
+	 * }</pre>
+	 * 
+	 * @see #iterator()
+	 * 
+	 * @return an Iterable over array positions.
+	 */
 	public default Iterable<int[]> positions()
 	{
 		return new Iterable<int[]>()
@@ -374,6 +390,8 @@ public interface Array<T> extends Iterable<T>, Dimensional
 		public void forward();
 		
 		/**
+		 * Returns the current value pointed by this iterator.
+		 * 
 		 * @return the current value pointed by this iterator
 		 */
 		public T get();
@@ -410,11 +428,30 @@ public interface Array<T> extends Iterable<T>, Dimensional
      */
 	public interface PositionIterator extends java.util.Iterator<int[]>
 	{
-	    public void forward();
+	    /**
+         * Moves this iterator to the next position.
+         */
+        public void forward();
+        
+        /**
+         * Returns the current position.
+         * 
+         * @return the current position.
+         */
 	    public int[] get();
+	    
+	    /**
+         * Returns a specific coordinate from the current position.
+         * 
+         * @param dim
+         *            the dimension, between 0 and dimensionality - 1
+         * @return the specified coordinate
+         */
 	    public int get(int dim);
 	    
         /**
+         * Returns the current position in a pre-allocated array.
+         * 
          * @param pos
          *            the pre-allocated array for storing current position
          * @return the current position
