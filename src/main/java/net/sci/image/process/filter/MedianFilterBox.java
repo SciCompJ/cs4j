@@ -3,6 +3,8 @@
  */
 package net.sci.image.process.filter;
 
+import java.util.Arrays;
+
 import net.sci.algo.AlgoStub;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.process.VectorArrayMarginalOperator;
@@ -13,14 +15,14 @@ import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.ImageArrayOperator;
 
 /**
- * Computes the variance in a box neighborhood around each array element.
+ * Computes the median value in a box neighborhood around each array element.
  * 
  * @author dlegland
  *
- * @see BoxMedianFilter
- * @see BoxVarianceFilter
+ * @see BoxFilter
+ * @see VarianceFilterBox
  */
-public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator, VectorArrayMarginalOperator
+public final class MedianFilterBox extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator, VectorArrayMarginalOperator
 {
     /** The size of the box in each dimension */
 	int[] diameters;
@@ -32,7 +34,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 	 * @param diameters
 	 *            the box diameter in each dimension
 	 */
-	public BoxVarianceFilter(int[] diameters)
+	public MedianFilterBox(int[] diameters)
 	{
 		this.diameters = new int[diameters.length];
 		for (int i = 0; i < diameters.length; i++)
@@ -41,8 +43,8 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 		}
 	}
 
-    public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
-    {
+	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
+	{
         int nd1 = source.dimensionality();
         int nd2 = target.dimensionality();
         if (nd1 != nd2)
@@ -69,7 +71,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
             // use the most generic implementation, also slower
             processScalarNd(source, target);
         }
-    }
+	}
 
 	/**
 	 * Process scalar arrays of any dimension.
@@ -85,7 +87,7 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 		int nd = source.dimensionality();
 		int[] sizes = source.size();
 		
-		// get first two radiuses
+		// check dimensions
 		if (this.diameters.length < source.dimensionality())
 		{
 			throw new RuntimeException("Requires at least as many diameters as array dimensionality");
@@ -93,15 +95,17 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 		
 		// compute the normalization constant
 		int totalCount = 1;
-		for (int diam : this.diameters)
+		for (int d : this.diameters)
 		{
-			totalCount *= diam;
+			totalCount *= d;
 		}
 		
-		Neighborhood nbg = new BoxNeighborhood(diameters);
-        
+		// the position of the median value within the sorted array
+		int medianCount = (totalCount - 1) / 2;
 		double[] values = new double[totalCount];
 		
+        Neighborhood nbg = new BoxNeighborhood(diameters);
+        
 		// iterate over positions
         for (int[] pos : target.positions())
         {
@@ -119,14 +123,15 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 				values[count++] = source.getValue(neighPos); 
 			}
 			
-			// compute variance value
-			target.setValue(pos, variance(values));
+			// sort neighborhood values and keep the median value
+			Arrays.parallelSort(values);
+			target.setValue(pos, values[medianCount]);
 		}
 	}
 	
 	/**
-	 * Process the specific case of 2D arrays.
-	 * 
+	 * Process the specific case of 2D scalar arrays.
+     * 
      * @param source
      *            the source array
      * @param target
@@ -138,11 +143,12 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 		int sizeX = source.size(0);
 		int sizeY = source.size(1);
 		
-		// get first two radiuses
+		// check dimensions
 		if (this.diameters.length < 2)
 		{
 			throw new RuntimeException("Can not process 2D array with less than two diameters.");
 		}
+		
 		// compute the radius extent in each direction
 		double diamX = (double) this.diameters[0];
 		int rx1 = (int) Math.floor(diamX / 2.0);
@@ -152,13 +158,15 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 		int ry2 = (int) Math.ceil(diamY / 2.0);
 		
 		// compute the normalization constant
-		int boxSize = 1;
+		int totalCount = 1;
 		for (int d : this.diameters)
 		{
-			boxSize *= d;
+			totalCount *= d;
 		}
-		
-		double[] values = new double[boxSize];
+				
+		// the position of the median value within the sorted array
+		int medianCount = (totalCount - 1) / 2;
+		double[] values = new double[totalCount];
 		
 		for(int y = 0; y < sizeY; y++)
 		{
@@ -168,7 +176,6 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 			{
 				// iterate over neighbors of current pixel
 				int count = 0;
-				// iterate over neighbors
 				for (int y2 = y - ry1; y2 < y + ry2; y2++)
 				{
 					int y2r = Math.min(Math.max(y2, 0), sizeY - 1);
@@ -179,20 +186,21 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 					}
 				}
 				
-				// compute variance value
-				target.setValue(x, y, variance(values));
+				// sort neighborhood values and keep the median value
+				Arrays.parallelSort(values);
+				target.setValue(x, y, values[medianCount]);
 			}
 		}
 	}
 
 	/**
-     * Process the specific case of 3D arrays.
+	 * Process the specific case of 3D arrays.
      * 
      * @param source
      *            the source array
      * @param target
      *            the target array
-     */
+	 */
 	public void processScalar3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
 	{
 		// get size of input array
@@ -200,11 +208,12 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 		int sizeY = source.size(1);
 		int sizeZ = source.size(2);
 		
-		// get first three radiuses
+		// check dimensions
 		if (this.diameters.length < 3)
 		{
-			throw new RuntimeException("Can not process 3D array with less than three radiuses.");
+			throw new RuntimeException("Can not process 3D array with less than three diameters.");
 		}
+
 		// compute the radius extent in each direction
 		double diamX = (double) this.diameters[0];
 		int rx1 = (int) Math.floor(diamX / 2.0);
@@ -218,11 +227,13 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 		
 		// compute the normalization constant
 		int totalCount = 1;
-		for (int r : this.diameters)
+		for (int diam : this.diameters)
 		{
-			totalCount *= (2 * r + 1);
+			totalCount *= diam;
 		}
 		
+		// the position of the median value within the sorted array
+		int medianCount = (totalCount - 1) / 2;
 		double[] values = new double[totalCount];
 		
 		for(int z = 0; z < sizeZ; z++)
@@ -249,43 +260,14 @@ public final class BoxVarianceFilter extends AlgoStub implements ImageArrayOpera
 						}
 					}
 					
-					// compute variance value
-					target.setValue(x, y, z, variance(values));
+					// sort neighborhood values and keep the median value
+					Arrays.parallelSort(values);
+					target.setValue(x, y, z, values[medianCount]);
 				}
 			}
 		}
 	}
 
-	/**
-	 * Computes the variance of the values within the input array.
-	 * 
-	 * @param values an array of values
-	 * @return the variance of the values in the array
-	 */
-	private double variance(double[] values)
-	{
-		int n = values.length;
-		
-		// compute mean
-		double mean = 0;
-		for (double v : values)
-		{
-			mean += v;
-		}
-		mean /= n;
-		
-		// compute variance
-		double var = 0;
-		for (double v : values)
-		{
-			v = v - mean;
-			var += v * v;
-		}
-		var /= n;
-		
-		return var;
-	}
-	
     @Override
     public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
     {

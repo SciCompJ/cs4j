@@ -40,8 +40,8 @@ import net.sci.array.Array;
  * </pre>
  * 
  * @see BoxFilter
- * @see BoxMedianFilter
- * @see BoxVarianceFilter
+ * @see MedianFilterBox
+ * @see VarianceFilterBox
  * 
  * @author dlegland
  *

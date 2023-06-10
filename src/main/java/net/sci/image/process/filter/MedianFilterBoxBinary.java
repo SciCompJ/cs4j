@@ -21,9 +21,9 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  * @see BoxFilter
- * @see BoxVarianceFilter
+ * @see VarianceFilterBox
  */
-public final class BinaryBoxMedianFilter extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator, VectorArrayMarginalOperator
+public final class MedianFilterBoxBinary extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator, VectorArrayMarginalOperator
 {
     /** The size of the box in each dimension */
 	int[] diameters;
@@ -35,7 +35,7 @@ public final class BinaryBoxMedianFilter extends AlgoStub implements ImageArrayO
 	 * @param diameters
 	 *            the box diameter in each dimension
 	 */
-	public BinaryBoxMedianFilter(int[] diameters)
+	public MedianFilterBoxBinary(int[] diameters)
 	{
 		this.diameters = new int[diameters.length];
 		for (int i = 0; i < diameters.length; i++)

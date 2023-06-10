@@ -20,9 +20,9 @@ import net.sci.image.ImageArrayOperator;
  * @author dlegland
  *
  * @see BoxFilter
- * @see BoxMedianFilter
+ * @see MedianFilterBox
  */
-public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator, VectorArrayMarginalOperator
+public final class MinMaxFilterBoxNaive extends AlgoStub implements ImageArrayOperator, ScalarArrayOperator, VectorArrayMarginalOperator
 {
 	public enum Type 
 	{
@@ -45,7 +45,7 @@ public final class BoxMinMaxFilterNaive extends AlgoStub implements ImageArrayOp
      * @param type
      *            filter (MAX or MIN)
      */
-	public BoxMinMaxFilterNaive(Type type, int[] diameters)
+	public MinMaxFilterBoxNaive(Type type, int[] diameters)
 	{
 		this.type = type;
 		

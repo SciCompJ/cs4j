@@ -17,8 +17,8 @@ import net.sci.image.ImageArrayOperator;
  * 
  * @author dlegland
  *
- * @see BoxMedianFilter
- * @see BoxVarianceFilter
+ * @see MedianFilterBox
+ * @see VarianceFilterBox
 */
 public final class BoxFilter extends AlgoStub implements ImageArrayOperator, VectorArrayMarginalOperator
 {

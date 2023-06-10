@@ -7,7 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
 	BoxFilterTest.class,
-	BoxMinMaxFilterNaiveTest.class,
+	MinMaxFilterBoxNaiveTest.class,
 	})
 public class AllTests {
   //nothing
