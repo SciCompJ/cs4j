@@ -91,6 +91,27 @@ public class LineSegment3D implements LinearGeometry3D
         return inter;
     }
     
+    public boolean intersects(Plane3D plane)
+    {
+        // plane normal
+        Vector3D n = plane.normal();
+
+        // difference between origins of line segment and plane
+        Vector3D dp = new Vector3D(this.origin(), plane.origin()); 
+
+        // dot product of line segment direction with plane normal
+        double denom = Vector3D.dotProduct(n, this.direction());
+
+        // relative position of the intersection point on supporting line
+        // (can be inf in case of a line parallel to the plane)
+        double pos = Vector3D.dotProduct(n, dp) / denom;
+
+        // check whether intersection lies within [0 1] interval, with tolerance
+        double eps = 1e-12;
+        return pos >= -eps && pos < 1+eps;
+    }
+
+    
     // ===================================================================
     // Implementation of the LinearGeometry interface 
 
