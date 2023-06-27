@@ -25,7 +25,7 @@ import net.sci.geom.geom3d.Vector3D;
  * @author dlegland
  *
  */
-public class DefaultTriMesh3D implements Mesh3D
+public class DefaultTriMesh3D implements TriMesh3D
 {
     // ===================================================================
     // Class variables
@@ -226,7 +226,10 @@ public class DefaultTriMesh3D implements Mesh3D
     {
         ensureValidEdgeFaces();
         int[] inds = edgeFaces.get(edgeIndices.get(getEdge(edge)));
-        return Arrays.asList(new Face(inds[0]), new Face(inds[1]), new Face(inds[2]));
+        if (inds.length == 1)
+            return Arrays.asList(new Face(inds[0]));
+        else
+            return Arrays.asList(new Face(inds[0]), new Face(inds[1]));
     }
 
     @Override

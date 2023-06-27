@@ -30,7 +30,7 @@ import net.sci.geom.geom3d.Vector3D;
  * @author dlegland
  *
  */
-public class SimpleTriMesh3D implements Mesh3D
+public class SimpleTriMesh3D implements TriMesh3D
 {
     // ===================================================================
     // Class variables

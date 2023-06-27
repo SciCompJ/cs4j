@@ -26,7 +26,7 @@ public class Meshes3D
      * 
      * @return a Mesh instance representing a tetrahedron
      */
-    public static final Mesh3D createTetrahedron()
+    public static final TriMesh3D createTetrahedron()
     {
         DefaultTriMesh3D mesh = new DefaultTriMesh3D();
         mesh.addVertex(new Point3D(0, 0, 0));
@@ -41,11 +41,12 @@ public class Meshes3D
     }
 
     /**
-     * Creates a basic Octahedron 
+     * Creates a basic Octahedron, with eight faces, and six vertices located at
+     * extremity of one of the unit vectors (in each direction).
      * 
      * @return a Mesh instance representing an octahedron
      */
-    public static final Mesh3D createOctahedron()
+    public static final TriMesh3D createOctahedron()
     {
         DefaultTriMesh3D mesh = new DefaultTriMesh3D();
         mesh.addVertex(new Point3D( 1,  0,  0));
