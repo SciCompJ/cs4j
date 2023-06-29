@@ -6,6 +6,7 @@ package net.sci.geom.geom3d;
 import java.util.Locale;
 
 import net.sci.geom.Point;
+import net.sci.geom.geom2d.Point2D;
 
 /**
  * A three-dimensional point.
@@ -34,6 +35,22 @@ public class Point3D implements Point, Geometry3D
         return new Point3D(xc / np, yc / np, zc / np);
     }
 
+    /**
+     * Converts a 2D point into a 3D point by adding a z-coordinate
+     * 
+     * @see #projectXY()
+     * 
+     * @param point
+     *            the point to convert
+     * @param z
+     *            the amount of translation in the z direction
+     * @return the new 3D point
+     */
+    public static final Point3D from2d(Point2D point, double z)
+    {
+        return new Point3D(point.getX(), point.getY(), z);
+    }
+    
     
 	// ===================================================================
 	// class variables
@@ -140,6 +157,18 @@ public class Point3D implements Point, Geometry3D
 	public Point3D minus(Vector3D v)
 	{
 		return new Point3D(this.x - v.getX(), this.y - v.getY(), this.z - v.getZ());
+	}
+	
+    /**
+     * Projects this point onto the XY plane and converts into a 2D point.
+     * 
+     * @see #projectXY()
+     * 
+     * @return the 2D projection of the point onto the XY plane.
+     */
+	public Point2D projectXY()
+	{
+	    return new Point2D(this.x, this.y);
 	}
 
 	public Point3D transform(AffineTransform3D trans)

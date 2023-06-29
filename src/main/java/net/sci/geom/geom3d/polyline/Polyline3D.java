@@ -5,6 +5,8 @@ package net.sci.geom.geom3d.polyline;
 
 import java.util.Collection;
 
+import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.polygon.Polyline2D;
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Curve3D;
@@ -17,6 +19,33 @@ import net.sci.geom.geom3d.Point3D;
  */
 public interface Polyline3D extends Curve3D
 {
+    // ===================================================================
+    // Static factories
+    
+    /**
+     * Converts a 2D polyline into a 3D polyline by translating vertices in the
+     * z direction.
+     * 
+     * @see #projectXY()
+     * 
+     * @param poly
+     *            the polyline to convert
+     * @param z
+     *            the amount of translation in the z direction
+     * @return the new 3D polyline
+     */
+    public static Polyline3D from2d(Polyline2D poly, double z)
+    {
+        int n = poly.vertexCount();
+        Polyline3D res = poly.isClosed() ? LinearRing3D.create(n) : LineString3D.create(n);
+        for (Point2D v : poly.vertexPositions())
+        {
+            res.addVertex(Point3D.from2d(v, z));
+        }
+        return res;
+    }
+    
+    
     // ===================================================================
     // Methods for managing vertices
     
@@ -41,6 +70,16 @@ public interface Polyline3D extends Curve3D
      */
     public Collection<Point3D> vertexPositions();
     
+    /**
+     * Adds a vertex (optional operation).
+     * 
+     * @param vertexPosition the position of the vertex to add.
+     */
+    public void addVertex(Point3D vertexPosition);
+
+    public Point3D vertexPosition(int index);
+
+    
     public Iterable<? extends Edge> edges();
     
     /**
@@ -50,9 +89,18 @@ public interface Polyline3D extends Curve3D
      */
     public Polyline3D reverse();
     
-
+    /**
+     * Projects this polyline onto the XY plane and converts into a 2D polyline.
+     * 
+     * @see #from2d(Polyline2D, double)
+     * 
+     * @return the 2D projection of the polyline onto the XY plane.
+     */
+    public Polyline2D projectXY();
+    
+    
     // ===================================================================
-    // Specialization of Geometry interface 
+    // Specialization of Geometry3D interface 
 
     /**
      * Transforms this geometry with the specified affine transform.
@@ -65,7 +113,7 @@ public interface Polyline3D extends Curve3D
 
     
     // ===================================================================
-    // Implementation of the Geometry2D interface 
+    // Implementation of the Geometry3D interface 
 
     @Override
     public default boolean contains(Point3D point, double eps)

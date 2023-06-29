@@ -5,6 +5,8 @@ package net.sci.geom.geom3d.polyline;
 
 import java.util.Collection;
 
+import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.polygon.LinearRing2D;
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Point3D;
 
@@ -73,15 +75,7 @@ public interface LinearRing3D extends Polyline3D
         return index;
     }
 
- 
-    // ===================================================================
-    // Management of vertices
-    
-    public void addVertex(Point3D pos);
-    
-    public Point3D vertexPosition(int index);
-
-    
+     
     // ===================================================================
     // Methods implementing the Polyline3D interface
     
@@ -130,6 +124,17 @@ public interface LinearRing3D extends Polyline3D
         return res;
     }
     
+    @Override
+    public default LinearRing2D projectXY()
+    {
+        LinearRing2D res = LinearRing2D.create(vertexCount());
+        for(Point3D pos : vertexPositions())
+        {
+            res.addVertex(new Point2D(pos.getX(), pos.getY()));
+        }
+        return res;
+    }
+
 
     // ===================================================================
     // Methods implementing the Curve3D interface

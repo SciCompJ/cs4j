@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.polygon.LineString2D;
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Point3D;
 
@@ -104,23 +106,6 @@ public interface LineString3D extends Polyline3D
     
 
     // ===================================================================
-    // Management of vertices
-    
-    /**
-     * Returns the inner collection of vertices.
-     */
-    public ArrayList<Point3D> vertexPositions();
-    
-    /**
-     * Returns the number of vertices.
-     * 
-     * @return the number of vertices
-     */
-    public int vertexCount();
-
-    public void addVertex(Point3D vertexPosition);
-
-    public Point3D vertexPosition(int index);
     
     /**
      * Computes the index of the closest vertex to the input query point.
@@ -169,7 +154,18 @@ public interface LineString3D extends Polyline3D
         return LineString3D.create(newVertices);
     }
 
+    @Override
+    public default LineString2D projectXY()
+    {
+        LineString2D res = LineString2D.create(vertexCount());
+        for(Point3D pos : vertexPositions())
+        {
+            res.addVertex(new Point2D(pos.getX(), pos.getY()));
+        }
+        return res;
+    }
 
+    
     // ===================================================================
     // Methods implementing the Curve2D interface
     
