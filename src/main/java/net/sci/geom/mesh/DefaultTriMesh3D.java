@@ -1,6 +1,3 @@
-/**
- * 
- */
 package net.sci.geom.mesh;
 
 import java.util.ArrayList;
@@ -52,6 +49,7 @@ public class DefaultTriMesh3D implements TriMesh3D
 
     /**
      * Indices of faces associated to each edge.
+     * Each int array has size 2.
      */
     ArrayList<int[]> edgeFaces = null;
     
@@ -226,7 +224,9 @@ public class DefaultTriMesh3D implements TriMesh3D
     {
         ensureValidEdgeFaces();
         int[] inds = edgeFaces.get(edgeIndices.get(getEdge(edge)));
-        if (inds.length == 1)
+        if (inds[0] == -1)
+            return Arrays.asList(new Face(inds[1]));
+        if (inds[1] == -1)
             return Arrays.asList(new Face(inds[0]));
         else
             return Arrays.asList(new Face(inds[0]), new Face(inds[1]));
