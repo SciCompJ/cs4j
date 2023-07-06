@@ -25,6 +25,52 @@ import net.sci.geom.geom3d.Vector3D;
 public class DefaultTriMesh3D implements TriMesh3D
 {
     // ===================================================================
+    // Static factories
+    
+    /**
+     * Converts the input mesh into an instance of DefaultTriMesh3D, or returns
+     * the input mesh if it is already an instance of DefaultTriMesh3D.
+     * 
+     * @param mesh
+     *            the mesh to convert
+     * @return an instance of DefaultTriMesh3D with same vertices and faces as
+     *         the input mesh.
+     */
+    public static final DefaultTriMesh3D convert(TriMesh3D mesh)
+    {
+        // do not need to convert if mesh is already a DefaultTriMesh3D instance
+        if (mesh instanceof DefaultTriMesh3D)
+        {
+            return (DefaultTriMesh3D) mesh;
+        }
+        
+        DefaultTriMesh3D res = new DefaultTriMesh3D();
+        
+        // add vertices in new mesh, by keeping the correspondence between
+        // original vertex and vertex index in new mesh
+        Map<Mesh3D.Vertex, Integer> vertexIndex = new HashMap<Mesh3D.Vertex, Integer>(mesh.vertexCount());
+        int index = 0;
+        for (Mesh3D.Vertex v : mesh.vertices())
+        {
+            res.addVertex(v.position());
+            vertexIndex.put(v, index++);
+        }
+        
+        // add faces
+        for (Mesh3D.Face face : mesh.faces())
+        {
+            Iterator<? extends Mesh3D.Vertex> iter = mesh.faceVertices(face).iterator();
+            int v1 = vertexIndex.get(iter.next());
+            int v2 = vertexIndex.get(iter.next());
+            int v3 = vertexIndex.get(iter.next());
+            res.addFace(v1, v2, v3);
+        }
+        
+        return res;
+    }
+    
+
+    // ===================================================================
     // Class variables
 
     /**
@@ -557,7 +603,7 @@ public class DefaultTriMesh3D implements TriMesh3D
                     // current face on the left side of the edge
                     if (faces[0] != -1)
                     {
-                        throw new RuntimeException(String.format("Tow faces were found on left side of edge %d (%d;%d)", edgeIndex, iv1, iv2));
+                        throw new RuntimeException(String.format("Two faces were found on left side of edge %d (%d;%d)", edgeIndex, iv1, iv2));
                     }
                     faces[0] = iFace;
                 }
@@ -566,7 +612,7 @@ public class DefaultTriMesh3D implements TriMesh3D
                     // current face on the right side of the edge
                     if (faces[1] != -1)
                     {
-                        throw new RuntimeException(String.format("Tow faces were found on right side of edge %d (%d;%d)", edgeIndex, iv1, iv2));
+                        throw new RuntimeException(String.format("Two faces were found on right side of edge %d (%d;%d)", edgeIndex, iv1, iv2));
                     }
                     faces[1] = iFace;
                 }
@@ -608,6 +654,7 @@ public class DefaultTriMesh3D implements TriMesh3D
      *            the third face vertex
      * @return the newly created face
      */
+    @Override
     public Face addFace(Mesh3D.Vertex v1, Mesh3D.Vertex v2, Mesh3D.Vertex v3)
     {
         int iv1 = ((Vertex) v1).index;

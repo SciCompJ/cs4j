@@ -370,13 +370,14 @@ public class SimpleTriMesh3D implements TriMesh3D
      *            reference to the third face vertex
      * @return the index of the newly created face
      */
-    public int addFace(Mesh3D.Vertex v1, Mesh3D.Vertex v2, Mesh3D.Vertex v3)
+    @Override
+    public Mesh3D.Face addFace(Mesh3D.Vertex v1, Mesh3D.Vertex v2, Mesh3D.Vertex v3)
     {
         int iv1 = getVertex(v1).index;
         int iv2 = getVertex(v2).index;
         int iv3 = getVertex(v3).index;
         int index = addFace(iv1, iv2, iv3);
-        return index;
+        return new Face(index);
     }
 
     /**
