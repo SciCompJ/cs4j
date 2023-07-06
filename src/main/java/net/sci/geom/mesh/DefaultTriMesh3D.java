@@ -15,9 +15,11 @@ import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Vector3D;
 
 /**
- * Default class for representing triangular meshes in 3D.
+ * Default class for representing triangular meshes in 3D. Mesh is not
+ * necessarily a manifold.
  * 
- * Vertices are stored in an ArrayList. Faces are stored in an ArrayList of integer triplets.
+ * Vertices are stored in an ArrayList. Faces are stored in an ArrayList of
+ * integer triplets.
  * 
  * @author dlegland
  *
@@ -95,7 +97,10 @@ public class DefaultTriMesh3D implements TriMesh3D
 
     /**
      * Indices of faces associated to each edge.
-     * Each int array has size 2.
+     * 
+     * When initialized, each array contains at least two indices. Indices are
+     * set to -1 by default. In case of non manifold meshes, array may contain
+     * more than two indices.
      */
     ArrayList<int[]> edgeFaces = null;
     
@@ -270,12 +275,15 @@ public class DefaultTriMesh3D implements TriMesh3D
     {
         ensureValidEdgeFaces();
         int[] inds = edgeFaces.get(edgeIndices.get(getEdge(edge)));
-        if (inds[0] == -1)
-            return Arrays.asList(new Face(inds[1]));
-        if (inds[1] == -1)
-            return Arrays.asList(new Face(inds[0]));
-        else
-            return Arrays.asList(new Face(inds[0]), new Face(inds[1]));
+        ArrayList<Mesh3D.Face> res = new ArrayList<>(inds.length);
+        for (int index : inds)
+        {
+            if (index != -1)
+            {
+                res.add(new Face(index));
+            }
+        }
+        return res;
     }
 
     @Override
@@ -341,15 +349,16 @@ public class DefaultTriMesh3D implements TriMesh3D
     @Override
     public void removeVertex(Mesh3D.Vertex vertex)
     {
-        int index = getVertex(vertex).index;
-        for (int[] inds : faces)
-        {
-            if (inds[0] == index || inds[1] == index || inds[2] == index)
-            {
-                throw new RuntimeException("Can not remove a vertex if it belongs to a face");
-            }
-        }
-        vertexPositions.remove(index);
+        throw new UnsupportedOperationException("This implementation does not support vertex removal");
+//        int index = getVertex(vertex).index;
+//        for (int[] inds : faces)
+//        {
+//            if (inds[0] == index || inds[1] == index || inds[2] == index)
+//            {
+//                throw new RuntimeException("Can not remove a vertex if it belongs to a face");
+//            }
+//        }
+//        vertexPositions.set(index, null);
     }
 
     /* (non-Javadoc)
@@ -357,7 +366,7 @@ public class DefaultTriMesh3D implements TriMesh3D
      */
     public Collection<Point3D> vertexPositions()
     {
-        return this.vertexPositions();
+        return this.vertexPositions;
     }
 
     public Vertex getVertex(int index)
@@ -470,7 +479,7 @@ public class DefaultTriMesh3D implements TriMesh3D
      * Ensures the "edges" information is created, and recomputes edge array if
      * it is null.
      */
-    private void ensureValidEdges()
+    public void ensureValidEdges()
     {
         if (edges == null)
         {
@@ -541,7 +550,7 @@ public class DefaultTriMesh3D implements TriMesh3D
      * Ensures the "edgeFaces" information is created, and recomputes edgeFaces
      * array if it is null.
      */
-    private void ensureValidEdgeFaces()
+    public void ensureValidEdgeFaces()
     {
         if (edgeFaces == null)
         {
@@ -562,11 +571,10 @@ public class DefaultTriMesh3D implements TriMesh3D
         int nEdges = edges.size();
         this.edgeFaces = new ArrayList<>(nEdges);
         
-        // populate face array for each edge
+        // initialize face array for each edge
         for (int iEdge = 0; iEdge < nEdges; iEdge++)
         {
-            int[] inds = new int[] {-1, -1};
-            this.edgeFaces.add(inds);
+            this.edgeFaces.add(new int[] {-1, -1});
         }
         
         // Iterate over faces
@@ -584,43 +592,47 @@ public class DefaultTriMesh3D implements TriMesh3D
                 
                 // identify edge index
                 Edge edge = new Edge(iv1, iv2);
-                int edgeIndex = -1;
-                if(edgeIndices.containsKey(edge))
-                {
-                    edgeIndex = edgeIndices.get(edge); 
-                }
-                else
-                {
-                    throw new RuntimeException(String.format("Could not find index of edge with vertex indices (%d;%d)", iv1, iv2));
-                }
+                int edgeIndex = findEdgeIndex(edge);
                 
                 // get indices of adjacent faces associated to current edge
                 int[] faces = edgeFaces.get(edgeIndex);
                 
-                // Switch processing depending on face side
-                if (edge.iv1 == iv1)
-                {
-                    // current face on the left side of the edge
-                    if (faces[0] != -1)
-                    {
-                        throw new RuntimeException(String.format("Two faces were found on left side of edge %d (%d;%d)", edgeIndex, iv1, iv2));
-                    }
-                    faces[0] = iFace;
-                }
-                else
-                {
-                    // current face on the right side of the edge
-                    if (faces[1] != -1)
-                    {
-                        throw new RuntimeException(String.format("Two faces were found on right side of edge %d (%d;%d)", edgeIndex, iv1, iv2));
-                    }
-                    faces[1] = iFace;
-                }
-                
+                faces = addFaceIndex(faces, iFace);
                 edgeFaces.set(edgeIndex, faces);
             }
         }
     }
+    
+    private int findEdgeIndex(Edge edge)
+    {
+        if(edgeIndices.containsKey(edge))
+        {
+            return edgeIndices.get(edge); 
+        }
+        
+        throw new RuntimeException(String.format("Could not find index of edge with vertex indices (%d;%d)", edge.iv1, edge.iv2));
+    }
+    
+    private static final int[] addFaceIndex(int[] faceIndices, int faceIndex)
+    {
+        // first, we try to replace an existing '-1' value by the index of the
+        // new face
+        for (int i = 0; i < faceIndices.length; i++)
+        {
+            if (faceIndices[i] == -1)
+            {
+                faceIndices[i] = faceIndex;
+                return faceIndices;
+            }
+        }
+        
+        // if two indices are set, append the new index at the end of the array
+        int[] res = new int[faceIndices.length+1];
+        System.arraycopy(faceIndices, 0, res, 0, faceIndices.length);
+        res[faceIndices.length] = faceIndex;
+        return res;
+    }
+    
     
     // ===================================================================
     // Management of faces
@@ -728,6 +740,10 @@ public class DefaultTriMesh3D implements TriMesh3D
         // Cast to local Face class
         Face face2 = getFace(face);
         this.faces.remove(face2.index);
+        
+        this.edges = null;
+        this.edgeIndices = null;
+        this.edgeFaces = null;
     }
 
     /**
