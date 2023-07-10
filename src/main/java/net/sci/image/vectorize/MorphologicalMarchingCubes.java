@@ -10,6 +10,7 @@ import net.sci.array.scalar.ScalarArray3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.mesh.Mesh3D;
 import net.sci.geom.mesh.SimpleTriMesh3D;
+import net.sci.geom.mesh.TriMesh3D;
 
 /**
  * Marching cubes algorithm based on a connectivity option for foreground /
@@ -364,7 +365,7 @@ public class MorphologicalMarchingCubes extends AlgoStub
      *            the array containing scalar 3D data
      * @return a triangular mesh representing the isosurface.
      */
-    public Mesh3D process(ScalarArray3D<?> array)
+    public TriMesh3D process(ScalarArray3D<?> array)
     {
         // retrieve array size
         int sizeX = array.size(0);
@@ -535,27 +536,18 @@ public class MorphologicalMarchingCubes extends AlgoStub
     
     private Point3D createVertex(int x, int y, int z, int index)
     {
-        switch (index)
+        return switch (index)
         {
-        case 0:
-            return new Point3D(x, y, z);
-        case 1:
-            return new Point3D(x + 1, y, z);
-        case 2:
-            return new Point3D(x, y + 1, z);
-        case 3:
-            return new Point3D(x + 1, y + 1, z);
-        case 4:
-            return new Point3D(x, y, z + 1);
-        case 5:
-            return new Point3D(x + 1, y, z + 1);
-        case 6:
-            return new Point3D(x, y + 1, z + 1);
-        case 7:
-            return new Point3D(x + 1, y + 1, z + 1);
-        default:
-            throw new IllegalArgumentException("Index must be comprised between 0 and 7");
-        }
+            case 0 -> new Point3D(x, y, z);
+            case 1 -> new Point3D(x + 1, y, z);
+            case 2 -> new Point3D(x, y + 1, z);
+            case 3 -> new Point3D(x + 1, y + 1, z);
+            case 4 -> new Point3D(x, y, z + 1);
+            case 5 -> new Point3D(x + 1, y, z + 1);
+            case 6 -> new Point3D(x, y + 1, z + 1);
+            case 7 -> new Point3D(x + 1, y + 1, z + 1);
+            default -> throw new IllegalArgumentException("Index must be comprised between 0 and 7");
+        };
     }
    
     private Point3D interpolatePosition(Point3D p1, double v1, Point3D p2, double v2)
