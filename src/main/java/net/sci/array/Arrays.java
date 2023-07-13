@@ -95,9 +95,10 @@ public class Arrays
     {
         // dimensionality of source array
         int nd = source.dimensionality();
+        int nd2 = target.dimensionality();
         
         // initializes a default target position from the offset
-        int[] pos2 = new int[nd];
+        int[] pos2 = new int[nd2];
         System.arraycopy(offset, 0, pos2, 0, nd);
         
         for (int[] pos : source.positions())
