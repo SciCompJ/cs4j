@@ -4,6 +4,8 @@
 package net.sci.array.vector;
 
 /**
+ * Implementation of Float32VectorArray2D based on an inner buffer of float.
+ * 
  * @author dlegland
  *
  */
@@ -61,7 +63,21 @@ public class BufferedFloat32VectorArray2D extends Float32VectorArray2D
 	// =============================================================
 	// Implementation of the VectorArray interface
 
-	/* (non-Javadoc)
+	@Override
+    public float getFloat(int x, int y, int c)
+    {
+        int offset = (y * this.size0 + x) * this.vectorLength;
+        return this.buffer[offset + c];
+    }
+
+    @Override
+    public void setFloat(int x, int y, int c, float value)
+    {
+        int offset = (y * this.size0 + x) * this.vectorLength;
+        this.buffer[offset + c] = value;
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#getVectorLength()
 	 */
 	@Override

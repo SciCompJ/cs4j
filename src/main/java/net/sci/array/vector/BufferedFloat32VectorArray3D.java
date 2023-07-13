@@ -6,6 +6,8 @@ package net.sci.array.vector;
 import net.sci.array.Array;
 
 /**
+ * Implementation of Float32VectorArray3D based on an inner buffer of float.
+ * 
  * @author dlegland
  *
  */
@@ -79,7 +81,21 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 	// =============================================================
 	// Implementation of the VectorArray interface
 
-	/* (non-Javadoc)
+	@Override
+    public float getFloat(int x, int y, int z, int channel)
+    {
+        int offset = ((z * this.size1 + y) * this.size0 + x) * this.vectorLength;
+        return this.buffer[offset + channel];
+    }
+
+    @Override
+    public void setFloat(int x, int y, int z, int channel, float value)
+    {
+        int offset = ((z * this.size1 + y) * this.size0 + x) * this.vectorLength;
+        this.buffer[offset + channel] = value;
+    }
+
+    /* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#getVectorLength()
 	 */
 	@Override

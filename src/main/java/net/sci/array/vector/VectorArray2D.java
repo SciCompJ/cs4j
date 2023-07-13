@@ -5,7 +5,6 @@ package net.sci.array.vector;
 
 import net.sci.array.Array;
 import net.sci.array.Array2D;
-import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.Float32Array3D;
 import net.sci.array.scalar.ScalarArray2D;
@@ -127,17 +126,11 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         // allocate memory for result
         Float32Array2D result = Float32Array2D.create(size(0), size(1));
         
-        // create array iterators
-        VectorArray.Iterator<? extends Vector<?>> iter1 = iterator();
-        Float32Array.Iterator iter2 = result.iterator();
-        
         // iterate over both arrays in parallel
-        double[] values = new double[channelCount()]; 
-        while (iter1.hasNext() && iter2.hasNext())
+        double[] values = new double[channelCount()];
+        for (int[] pos : result.positions())
         {
-            // get current vector
-            iter1.forward();
-            iter1.getValues(values);
+            this.getValues(pos, values);
             
             // compute norm of current vector
             double norm = 0;
@@ -148,8 +141,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
             norm = Math.sqrt(norm);
             
             // allocate result
-            iter2.forward();
-            iter2.setValue(norm);
+            result.setValue(pos, norm);
         }
         
         return result;
@@ -245,13 +237,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
     @Override
     public VectorArray2D<V> duplicate()
     {
-        VectorArray<V> tmp = this.newInstance(this.size0, this.size1);
-        if (!(tmp instanceof VectorArray2D))
-        {
-            throw new RuntimeException("Can not create VectorArray2D instance from " + this.getClass().getName() + " class.");
-        }
-        
-        VectorArray2D<V> result = (VectorArray2D <V>) tmp;
+        VectorArray2D<V> result = VectorArray2D.wrap(newInstance(this.size0, this.size1));
         
         double[] buf = new double[this.channelCount()];
 

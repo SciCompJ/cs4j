@@ -226,7 +226,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
      * @param pos
      *            the n-dimensional position
      * @param channel
-     *            index of channel (from 0)
+     *            index of channel (starting from 0)
      * @return the scalar value at specified position of specified channel
      */
 	public double getValue(int[] pos, int channel);
@@ -430,56 +430,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
 
     // =============================================================
     // Specialization of Array interface
-    
-//    /**
-//     * Creates a new vector array with new dimensions and containing the same
-//     * elements.
-//     * 
-//     * This method overrides the default behavior of the Array interface to
-//     * simply manipulate double values.
-//     * 
-//     * </pre>{@code
-//     * UInt8Array array = UInt8Array2D.create(6, 4);
-//     * array.populateValues((x,y) -> x + 10 * y);
-//     * ScalarArray<?> reshaped = array.reshape(4, 3, 2);
-//     * double last = reshaped.getValue(new int[]{3, 2, 1}); // equals 35
-//     * }
-//     * 
-//     * @param newDims
-//     *            the dimensions of the new array
-//     * @return a new array with same type and containing the same values
-//     */
-//    @Override
-//    public default VectorArray<V> reshape(int... newDims)
-//    {
-//        // check dimension consistency
-//        int n2 = 1;
-//        for (int dim : newDims)
-//        {
-//            n2 *= dim;
-//        }
-//        if (n2 != this.elementNumber())
-//        {
-//            throw new IllegalArgumentException("The element number should not change after reshape.");
-//        }
-//        
-//        // allocate memory
-//        VectorArray<V> res = this.newInstance(newDims);
-//        
-//        // iterate using a pair of Iterator instances
-//        Iterator<V> iter1 = this.iterator();
-//        Iterator<V> iter2 = res.iterator();
-//        while(iter1.hasNext())
-//        {
-//            iter1.forward();
-//            iter2.forward();
-//            iter2.siter1.getValues(values);
-//            iter2.setNextValue(iter1.nextValues());
-//        }
-//        
-//        return res;
-//    }
-   
+       
 	@Override
 	public VectorArray<V> newInstance(int... dims);
 	
@@ -488,22 +439,19 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
     {
         VectorArray<V> result = this.newInstance(this.size());
         
-        // initialize iterators
-        Array.PositionIterator iter1 = this.positionIterator();
-        Array.PositionIterator iter2 = result.positionIterator();
-
         // copy values into output array
         double[] values = new double[channelCount()];
-        while(iter1.hasNext())
+        for (int[] pos : result.positions())
         {
-            result.setValues(iter2.next(), this.getValues(iter1.next(), values));
+            result.setValues(pos, this.getValues(pos, values));
         }
-
+        
         // return output
         return result;
     }
    
 	public VectorArray.Iterator<V> iterator();
+	
 	
 	// =============================================================
 	// Inner interface
@@ -511,16 +459,16 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
 	public interface Iterator<V extends Vector<? extends Scalar>> extends Array.Iterator<V>
 	{
 		/**
-		 * Returns the value of the c-th component of the current vector.
+		 * Returns the value of the i-th component of the current vector.
 		 * 
 		 * Index must be comprised between 0 and the number of components of
 		 * this vector array.
 		 * 
-		 * @param c
+		 * @param i
 		 *            the component / channel index
 		 * @return the value of the specified component
 		 */
-		public double getValue(int c);
+		public double getValue(int i);
 		
         /**
          * Returns the values at current position of the iterator into a

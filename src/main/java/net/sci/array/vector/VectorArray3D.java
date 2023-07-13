@@ -156,13 +156,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
     @Override
     public VectorArray3D<V> duplicate()
     {
-        VectorArray<V> tmp = this.newInstance(this.size0, this.size1, this.size2);
-        if (!(tmp instanceof VectorArray3D))
-        {
-            throw new RuntimeException("Can not create VectorArray3D instance from " + this.getClass().getName() + " class.");
-        }
-        
-        VectorArray3D<V> result = (VectorArray3D <V>) tmp;
+        VectorArray3D<V> result = VectorArray3D.wrap(newInstance(this.size0, this.size1));
         
         double[] buf = new double[this.channelCount()];
         

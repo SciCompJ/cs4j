@@ -7,6 +7,9 @@ import net.sci.array.scalar.Float32;
 import net.sci.array.scalar.Float32ArrayND;
 
 /**
+ * Multi-dimensional implementation of arrays of vector that contains 32-bits
+ * floating point values.
+ * 
  * @author dlegland
  *
  */

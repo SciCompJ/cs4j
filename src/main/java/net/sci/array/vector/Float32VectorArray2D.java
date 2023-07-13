@@ -7,6 +7,9 @@ import net.sci.array.scalar.Float32;
 import net.sci.array.scalar.Float32Array2D;
 
 /**
+ * Specialization of the interface VectorArray for 2D arrays of vectors that
+ * contains 32-bits floating point values.
+ * 
  * @author dlegland
  *
  */
@@ -27,7 +30,15 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
 	{
 		super(size0, size1);
 	}
+	
+	
+    // =============================================================
+    // Declaration of new methods
 
+    public abstract float getFloat(int x, int y, int channel);
+
+    public abstract void setFloat(int x, int y, int channel, float f);
+    
 
     // =============================================================
     // Implementation of VectorArray interface

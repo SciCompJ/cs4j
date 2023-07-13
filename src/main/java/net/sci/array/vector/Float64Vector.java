@@ -8,6 +8,10 @@ import static java.lang.Double.doubleToLongBits;
 import net.sci.array.scalar.Float64;
 
 /**
+ * A vector containing 64-bits floating point values (doubles).
+ *
+ * @see Float32Vector
+ * 
  * @author dlegland
  *
  */

@@ -7,6 +7,9 @@ import net.sci.array.scalar.Float64;
 import net.sci.array.scalar.Float64ArrayND;
 
 /**
+ * Multi-dimensional implementation of arrays of vector that contains double
+ * values.
+ * 
  * @author dlegland
  *
  */

@@ -6,8 +6,12 @@ package net.sci.array.vector;
 import net.sci.array.scalar.Int;
 
 /**
- * @author dlegland
+ * A vector containing only integer values.
  *
+ * @see net.sci.array.color.RGB8
+ * @see net.sci.array.color.RGB16
+ * 
+ * @author dlegland
  */
 public abstract class IntVector<T extends Int> extends Vector<T>
 {

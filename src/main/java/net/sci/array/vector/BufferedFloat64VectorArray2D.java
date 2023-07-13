@@ -4,6 +4,8 @@
 package net.sci.array.vector;
 
 /**
+ * Implementation of Float64VectorArray2D based on an inner buffer of double.
+ * 
  * @author dlegland
  *
  */

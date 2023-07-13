@@ -8,6 +8,10 @@ import static java.lang.Float.floatToRawIntBits;
 import net.sci.array.scalar.Float32;
 
 /**
+ * A vector containing 32-bits floating point values (floats).
+ *
+ * @see Float64Vector
+ * 
  * @author dlegland
  *
  */

@@ -6,7 +6,8 @@ package net.sci.array.vector;
 import net.sci.array.scalar.Int;
 
 /**
- * An array containing vectors of integers, use as basis for RGB8 and RGB16 color arrays.
+ * An array containing vectors of integers, use as basis for RGB8 and RGB16
+ * color arrays.
  * 
  * @author dlegland
  *

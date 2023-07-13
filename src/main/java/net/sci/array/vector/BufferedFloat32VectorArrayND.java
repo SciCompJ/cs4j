@@ -6,6 +6,8 @@ package net.sci.array.vector;
 import net.sci.array.Array;
 
 /**
+ * Implementation of Float32VectorArrayND based on an inner buffer of float.
+ * 
  * @author dlegland
  *
  */

@@ -6,6 +6,8 @@ package net.sci.array.vector;
 import net.sci.array.Array;
 
 /**
+ * Implementation of Float64VectorArray3D based on an inner buffer of double.
+ * 
  * @author dlegland
  *
  */

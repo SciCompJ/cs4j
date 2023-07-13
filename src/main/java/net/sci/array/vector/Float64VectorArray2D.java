@@ -7,6 +7,9 @@ import net.sci.array.scalar.Float64;
 import net.sci.array.scalar.Float64Array2D;
 
 /**
+ * Specialization of the interface VectorArray for 2D arrays of vectors that
+ * contains double values.
+ * 
  * @author dlegland
  *
  */

@@ -7,6 +7,9 @@ import net.sci.array.scalar.Float32;
 import net.sci.array.scalar.Float32Array3D;
 
 /**
+ * Specialization of the interface VectorArray for 3D arrays of vectors that
+ * contains 32-bits floating point values.
+ * 
  * @author dlegland
  *
  */
@@ -29,6 +32,14 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
 	}
 	
 	
+    // =============================================================
+    // Declaration of new methods
+
+    public abstract float getFloat(int x, int y, int z, int channel);
+
+    public abstract void setFloat(int x, int y, int z, int channel, float f);
+    
+    
     // =============================================================
     // Specialization of VectorArray3D interface
 
@@ -153,6 +164,20 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
             this.sliceIndex = slice;
         }
     
+
+        @Override
+        public float getFloat(int x, int y, int channel)
+        {
+            return Float32VectorArray3D.this.getFloat(x, y, sliceIndex, channel);
+        }
+
+
+        @Override
+        public void setFloat(int x, int y, int channel, float value)
+        {
+            Float32VectorArray3D.this.setValue(x, y, sliceIndex, channel, value);
+        }
+
 
         @Override
         public int channelCount()
@@ -328,8 +353,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         @Override
         public float getFloat(int x, int y, int z)
         {
-            //TODO: avoid cast?
-            return (float) Float32VectorArray3D.this.getValue(x, y, z, channel);
+            return Float32VectorArray3D.this.getFloat(x, y, z, channel);
         }
 
         @Override
