@@ -163,6 +163,22 @@ public interface AffineTransform3D extends Transform3D
         return new MatrixAffineTransform3D(cot, -sit, 0, 0, sit, cot, 0, 0, 0, 0, 1,
                 0);
     }
+    
+    /**
+     * Converts a 3-by-4 or 4-by-4 numeric array containing coefficients of the
+     * affine transform into an instance of AffineTransform3D.
+     * 
+     * @param mat
+     *            the array containing transform coefficients.
+     * @return the corresponding AffineTransform3D
+     */
+    public static AffineTransform3D fromMatrix(double[][] mat)
+    {
+        return new MatrixAffineTransform3D(
+                mat[0][0], mat[0][1], mat[0][2], 0, 
+                mat[1][0], mat[1][1], mat[1][2], 0, 
+                mat[2][0], mat[2][1], mat[2][2], 0);
+    }
 
 
     // ===================================================================

@@ -92,7 +92,7 @@ public class Rotation3D
      * Creates a new Rotation3D from an axis the rotation angle around that axis.
      * 
      * @return a new Rotation3D corresponding to the rotation by angle
-     *         "angleInnRAdians" around the axis specified by input vector.
+     *         "angleInRadians" around the axis specified by input vector.
      */
     public static final Rotation3D fromAxisAngle(Vector3D axis, double angleInRadians)
     {
@@ -141,12 +141,17 @@ public class Rotation3D
     }
 
     /**
-     * Initialization constructor from the four quaternion components. Components are expected to be normalized.
+     * Initialization constructor from the four quaternion components.
+     * Components are expected to be normalized.
      * 
-     * @param q0 the scalar coordinate of the quaternion
-     * @param q1 the first coordinate of the vectorial part of the quaternion
-     * @param q2 the second coordinate of the vectorial part of the quaternion
-     * @param q3 the third coordinate of the vectorial part of the quaternion
+     * @param q0
+     *            the scalar coordinate of the quaternion
+     * @param q1
+     *            the first coordinate of the vectorial part of the quaternion
+     * @param q2
+     *            the second coordinate of the vectorial part of the quaternion
+     * @param q3
+     *            the third coordinate of the vectorial part of the quaternion
      */
     private Rotation3D(double q0, double q1, double q2, double q3)
     {
@@ -161,7 +166,7 @@ public class Rotation3D
     // Methods
     
     /**
-     * Apples the 3D rotation to a vector.
+     * Applies this 3D rotation to a vector.
      * 
      * @param v
      *            the vector to rotate

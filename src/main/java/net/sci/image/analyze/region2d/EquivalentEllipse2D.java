@@ -88,16 +88,16 @@ public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
         int sizeY = array.size(1);
 
         // Extract spatial calibration
-        double sx = 1, sy = 1;
-        double ox = 0, oy = 0;
+        double ox = 0.0, sx = 1.0;
+        double oy = 0.0, sy = 1.0;
         if (calib != null)
         {
             NumericalAxis xAxis = calib.getXAxis(); 
-            NumericalAxis yAxis = calib.getYAxis(); 
-            sx = xAxis.getSpacing();
-            sy = yAxis.getSpacing();
             ox = xAxis.getOrigin();
+            sx = xAxis.getSpacing();
+            NumericalAxis yAxis = calib.getYAxis(); 
             oy = yAxis.getOrigin();
+            sy = yAxis.getSpacing();
         }
         
         // create associative array to know index of each label
@@ -183,7 +183,7 @@ public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
             // compute ellipse angle and convert into degrees
             double theta = Math.toDegrees(Math.atan2(2 * xy, xx - yy) / 2);
 
-            Point2D center = new Point2D(cx[i] + sx / 2 + ox, cy[i] + sy / 2 + oy);
+            Point2D center = new Point2D(cx[i] + ox, cy[i] + oy);
             ellipses[i] = new Ellipse2D(center, ra, rb, theta);
         }
 
