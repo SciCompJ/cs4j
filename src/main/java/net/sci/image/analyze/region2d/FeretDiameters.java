@@ -3,7 +3,7 @@
  */
 package net.sci.image.analyze.region2d;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.StraightLine2D;
@@ -25,7 +25,7 @@ public class FeretDiameters
 	 *            a collection of planar points
 	 * @return the maximum Feret diameter of the point set
 	 */
-	public final static PointPair2D maxFeretDiameter(ArrayList<? extends Point2D> points)
+	public final static PointPair2D maxFeretDiameter(List<? extends Point2D> points)
 	{
 		double distMax = Double.NEGATIVE_INFINITY;
 		PointPair2D maxDiam = null;
@@ -49,7 +49,8 @@ public class FeretDiameters
 	
 		return maxDiam;
 	}
-	
+    
+    
 	/**
 	 * Computes Minimum Feret diameter of a set of points and returns both the
 	 * diameter and the corresponding angle. 
@@ -63,7 +64,7 @@ public class FeretDiameters
 	 *            a collection of planar points
 	 * @return the minimum Feret diameter of the point set
 	 */
-	public final static AngleDiameterPair minFeretDiameter(ArrayList<? extends Point2D> points)
+	public final static AngleDiameterPair minFeretDiameter(List<? extends Point2D> points)
 	{
 		// first compute convex hull to simplify
 		int n = points.size();
