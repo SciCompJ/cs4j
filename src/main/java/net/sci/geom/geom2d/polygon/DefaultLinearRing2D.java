@@ -158,7 +158,7 @@ public class DefaultLinearRing2D implements LinearRing2D
     /**
      * Returns the inner collection of vertices.
      */
-    public Iterable<Point2D> vertexPositions()
+    public Collection<Point2D> vertexPositions()
     {
         return vertices;
     }

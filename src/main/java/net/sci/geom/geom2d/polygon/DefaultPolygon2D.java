@@ -155,7 +155,7 @@ public class DefaultPolygon2D implements Polygon2D
      * 
      * @return a reference to the inner vertex positions array
      */
-    public Iterable<Point2D> vertexPositions() 
+    public Collection<Point2D> vertexPositions() 
     {
         return vertices;
     }

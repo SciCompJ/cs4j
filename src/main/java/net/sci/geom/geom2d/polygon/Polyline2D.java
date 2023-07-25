@@ -179,7 +179,7 @@ public interface Polyline2D extends Curve2D
      * 
      * @return the positions of the vertices
      */
-    public Iterable<Point2D> vertexPositions();
+    public Collection<Point2D> vertexPositions();
     
 
     // ===================================================================

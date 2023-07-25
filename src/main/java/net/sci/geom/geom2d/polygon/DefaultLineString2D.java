@@ -116,7 +116,7 @@ public class DefaultLineString2D implements LineString2D
     /**
      * Returns the inner collection of vertices.
      */
-    public Iterable<Point2D> vertexPositions()
+    public Collection<Point2D> vertexPositions()
     {
         return vertices;
     }
