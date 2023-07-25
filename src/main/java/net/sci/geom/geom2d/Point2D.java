@@ -122,6 +122,21 @@ public class Point2D implements Geometry2D, Point
 	}
 	
 	/**
+     * Applies the translation defined by the two components to this point and
+     * returns the translated point.
+     * 
+     * @param dx
+     *            the x-component of the translation
+     * @param dy
+     *            the y-component of the translation
+     * @return the translated point
+     */
+	public Point2D translate(double dx, double dy)
+	{
+	    return new Point2D(this.x + dx, this.y + dy);
+	}
+	
+	/**
 	 * Adds the specified vector to the point, and returns the result.
 	 * 
 	 * @param v

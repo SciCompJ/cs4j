@@ -134,6 +134,23 @@ public class Point3D implements Point, Geometry3D
 	// ===================================================================
 	// Methods specific to Point3D
 
+    /**
+     * Applies the translation defined by the three components to this point and
+     * returns the translated point.
+     * 
+     * @param dx
+     *            the x-component of the translation
+     * @param dy
+     *            the y-component of the translation
+     * @param dz
+     *            the z-component of the translation
+     * @return the translated point
+     */
+    public Point3D translate(double dx, double dy, double dz)
+    {
+        return new Point3D(this.x + dx, this.y + dy, this.z + dz);
+    }
+    
 	/**
      * Adds the specified vector to the point, and returns the new point.
      * 
