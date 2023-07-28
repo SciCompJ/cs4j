@@ -41,12 +41,12 @@ public class TransformedImage2D implements ScalarFunction2D
 	{
 		Point2D p = new Point2D(x, y);
 		p = transform.transform(p);
-		return this.image.evaluate(p.getX(), p.getY());
+		return this.image.evaluate(p.x(), p.y());
 	}
 
 	public double evaluate(Point2D p)
 	{
 		p = transform.transform(p);
-		return this.image.evaluate(p.getX(), p.getY());
+		return this.image.evaluate(p.x(), p.y());
 	}
 }

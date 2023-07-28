@@ -214,9 +214,9 @@ public class Sphere3D implements Geometry3D
     @Override
     public Bounds3D bounds()
     {
-        double x = center.getX();
-        double y = center.getY();
-        double z = center.getZ();
+        double x = center.x();
+        double y = center.y();
+        double z = center.z();
         return new Bounds3D(x - radius, x + radius, y - radius, y + radius, z - radius, z + radius);
     }
     

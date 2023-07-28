@@ -65,10 +65,10 @@ public class Bounds2D implements Bounds, Geometry2D
 	 */
     public Bounds2D(Point2D p1, Point2D p2)
     {
-        double x1 = p1.getX();
-        double y1 = p1.getY();
-        double x2 = p2.getX();
-        double y2 = p2.getY();
+        double x1 = p1.x();
+        double y1 = p1.y();
+        double x2 = p2.x();
+        double y2 = p2.y();
         this.xmin = Math.min(x1, x2);
         this.xmax = Math.max(x1, x2);
         this.ymin = Math.min(y1, y2);
@@ -107,8 +107,8 @@ public class Bounds2D implements Bounds, Geometry2D
 	 */
     public boolean contains(Point2D point)
     {
-        double x = point.getX();
-        double y = point.getY();
+        double x = point.x();
+        double y = point.y();
         if (x < xmin)
             return false;
         if (y < ymin)

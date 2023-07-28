@@ -556,9 +556,9 @@ public class MorphologicalMarchingCubes extends AlgoStub
         if (t <= 0) return p1;
         if (t >= 1) return p2;
         
-        double x = p1.getX() * (1 - t) + p2.getX() * t;
-        double y = p1.getY() * (1 - t) + p2.getY() * t;
-        double z = p1.getZ() * (1 - t) + p2.getZ() * t;
+        double x = p1.x() * (1 - t) + p2.x() * t;
+        double y = p1.y() * (1 - t) + p2.y() * t;
+        double z = p1.z() * (1 - t) + p2.z() * t;
         return new Point3D(x, y, z);
     }
     

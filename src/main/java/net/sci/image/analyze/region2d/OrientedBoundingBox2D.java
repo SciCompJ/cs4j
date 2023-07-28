@@ -41,8 +41,8 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
         
         // compute convex hull centroid
         Point2D center = convexHull.centroid();
-        double cx = center.getX();
-        double cy = center.getY();
+        double cx = center.x();
+        double cy = center.y();
         
         List<Point2D> vertices = List.copyOf(convexHull.vertexPositions());
         AngleDiameterPair minFeret = FeretDiameters.minFeretDiameter(vertices);
@@ -67,8 +67,8 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
         for (Point2D p : centeredHull)
         {
             // coordinates of current point
-            double x = p.getX(); 
-            double y = p.getY();
+            double x = p.x(); 
+            double y = p.y();
             
             // compute rotated coordinates
             double x2 = x * cot + y * sit; 
@@ -125,8 +125,8 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
                 
         // compute convex hull centroid
         Point2D center = calibratedHull.centroid();
-        double cx = center.getX();
-        double cy = center.getY();
+        double cx = center.x();
+        double cy = center.y();
         
         // coordinates of convex hull after spatial calibration and recentering
         ArrayList<Point2D> centeredHull = new ArrayList<Point2D>(convexHull.vertexCount());
@@ -150,8 +150,8 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
         for (Point2D p : centeredHull)
         {
             // coordinates of current point
-            double x = p.getX(); 
-            double y = p.getY();
+            double x = p.x(); 
+            double y = p.y();
             
             // compute rotated coordinates
             double x2 = x * cot + y * sit; 
@@ -204,8 +204,8 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
         ArrayList<Point2D> res = new ArrayList<Point2D>(points.size());
         for (Point2D point : points)
         {
-            double x = point.getX() * sx + ox;
-            double y = point.getY() * sy + oy;
+            double x = point.x() * sx + ox;
+            double y = point.y() * sy + oy;
             res.add(new Point2D(x, y));
         }
         return res;
@@ -239,8 +239,8 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
             // add coordinates of origin pixel (IJ coordinate system)
             OrientedBox2D box = results.get(label);
             Point2D center = box.center();
-            table.setValue(iRow, c++, center.getX());
-            table.setValue(iRow, c++, center.getY());
+            table.setValue(iRow, c++, center.x());
+            table.setValue(iRow, c++, center.y());
             table.setValue(iRow, c++, box.size1());
             table.setValue(iRow, c++, box.size2());
             table.setValue(iRow, c++, box.orientation());

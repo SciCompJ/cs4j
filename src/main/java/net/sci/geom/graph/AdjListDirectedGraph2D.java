@@ -307,7 +307,7 @@ public class AdjListDirectedGraph2D implements DirectedGraph2D
         @Override
         public String toString()
         {
-            return "Vertex(" + this.position.getX() + ", " + this.position.getY() + ")";
+            return "Vertex(" + this.position.x() + ", " + this.position.y() + ")";
         }
         
         // ===================================================================

@@ -136,8 +136,8 @@ public interface Graph2D extends Geometry2D
         for (Vertex v : this.vertices())
         {
             Point2D p = v.position();
-            double x = p.getX();
-            double y = p.getY();
+            double x = p.x();
+            double y = p.y();
             xmin = Math.min(xmin, x);
             xmax = Math.max(xmax, x);
             ymin = Math.min(ymin, y);
@@ -223,8 +223,8 @@ public interface Graph2D extends Geometry2D
         {
             Point2D p1 = source().position();
             Point2D p2 = target().position();
-            double x = p1.getX() + p2.getX();
-            double y = p1.getY() + p2.getY();
+            double x = p1.x() + p2.x();
+            double y = p1.y() + p2.y();
             return new Point2D(x, y);
         }
 

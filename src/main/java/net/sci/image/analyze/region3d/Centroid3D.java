@@ -135,9 +135,9 @@ public class Centroid3D extends RegionAnalyzer3D<Point3D>
             // current diameter
 			Point3D point = map.get(label);
 			
-            table.setValue(i, 0, point.getX());
-            table.setValue(i, 1, point.getY());
-            table.setValue(i, 2, point.getZ());
+            table.setValue(i, 0, point.x());
+            table.setValue(i, 1, point.y());
+            table.setValue(i, 2, point.z());
             i++;
 		}
 	

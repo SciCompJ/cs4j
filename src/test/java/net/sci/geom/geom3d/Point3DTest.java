@@ -23,9 +23,9 @@ public class Point3DTest
         Point3D p4 = new Point3D(40, 70, 70);
         Point3D centroid = Point3D.centroid(p1, p2, p3, p4);
         
-        assertEquals(50, centroid.getX(), .01);
-        assertEquals(50, centroid.getY(), .01);
-        assertEquals(50, centroid.getZ(), .01);
+        assertEquals(50, centroid.x(), .01);
+        assertEquals(50, centroid.y(), .01);
+        assertEquals(50, centroid.z(), .01);
     }
     
     /**

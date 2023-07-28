@@ -61,8 +61,8 @@ public class Point2DTest
         Point2D p4 = new Point2D(40, 70);
         Point2D centroid = Point2D.centroid(p1, p2, p3, p4);
         
-        assertEquals(50, centroid.getX(), .01);
-        assertEquals(50, centroid.getY(), .01);
+        assertEquals(50, centroid.x(), .01);
+        assertEquals(50, centroid.y(), .01);
     }
     
     @Test

@@ -86,9 +86,9 @@ public class EquivalentEllipsoid3D extends RegionAnalyzer3D<Ellipsoid3D>
             
             // coordinates of centroid
             Point3D center = elli.center();
-            table.setValue(row, 1, center.getX());
-            table.setValue(row, 2, center.getY());
-            table.setValue(row, 3, center.getZ());
+            table.setValue(row, 1, center.x());
+            table.setValue(row, 2, center.y());
+            table.setValue(row, 3, center.z());
             
             // ellipse size
             double[] radList = elli.radiusList();

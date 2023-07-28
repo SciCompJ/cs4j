@@ -65,7 +65,7 @@ public class OffMeshWriter implements MeshWriter
         for (Vertex vertex : mesh.vertices())
         {
             Point3D pos = vertex.position();
-            writer.printf(Locale.ENGLISH, "%f %f %f\n", pos.getX(), pos.getY(), pos.getZ());
+            writer.printf(Locale.ENGLISH, "%f %f %f\n", pos.x(), pos.y(), pos.z());
             
             vertexIndices.put(vertex, index++);
         }

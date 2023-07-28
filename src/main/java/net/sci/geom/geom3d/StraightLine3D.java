@@ -32,22 +32,22 @@ public class StraightLine3D implements LinearGeometry3D
 
     public StraightLine3D(Point3D p1, Point3D p2)
     {
-        this.x0 = p1.getX();
-        this.y0 = p1.getY();
-        this.z0 = p1.getZ();
-        this.dx = p2.getX() - this.x0;
-        this.dy = p2.getY() - this.y0;
-        this.dz = p2.getZ() - this.z0;
+        this.x0 = p1.x();
+        this.y0 = p1.y();
+        this.z0 = p1.z();
+        this.dx = p2.x() - this.x0;
+        this.dy = p2.y() - this.y0;
+        this.dz = p2.z() - this.z0;
     }
     
     public StraightLine3D(Point3D origin, Vector3D direction)
     {
-        this.x0 = origin.getX();
-        this.y0 = origin.getY();
-        this.z0 = origin.getZ();
-        this.dx = direction.getX();
-        this.dy = direction.getY();
-        this.dz = direction.getZ();
+        this.x0 = origin.x();
+        this.y0 = origin.y();
+        this.z0 = origin.z();
+        this.dx = direction.x();
+        this.dy = direction.y();
+        this.dz = direction.z();
     }
     
     public StraightLine3D(double x0, double y0, double z0, double dx, double dy, double dz)
@@ -86,7 +86,7 @@ public class StraightLine3D implements LinearGeometry3D
         double denom = dx * dx + dy * dy + dz * dz;
 //        if (Math.abs(denom) < Shape2D.ACCURACY)
 //            throw new DegeneratedLine2DException(this);
-        return ((point.getY() - y0) * dy + (point.getX() - x0) * dx + (point.getZ() - z0) * dz) / denom;
+        return ((point.y() - y0) * dy + (point.x() - x0) * dx + (point.z() - z0) * dz) / denom;
     }
     
     public double projectedPosition(double x, double y, double z)

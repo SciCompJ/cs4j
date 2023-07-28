@@ -53,8 +53,8 @@ public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
             
             // coordinates of centroid
             Point2D center = ellipse.center();
-            table.setValue(row, "Ellipse.Center.X", center.getX());
-            table.setValue(row, "Ellipse.Center.Y", center.getY());
+            table.setValue(row, "Ellipse.Center.X", center.x());
+            table.setValue(row, "Ellipse.Center.Y", center.y());
             
             // ellipse size
             table.setValue(row, "Ellipse.Radius1", ellipse.semiMajorAxisLength());

@@ -39,10 +39,10 @@ public class MeanSquaredDifferencesMetric2D extends ImageToImageMetric2D
 		
 		for (Point2D p : points)
 		{
-			double v1 = img1.evaluate(p.getX(), p.getY());
+			double v1 = img1.evaluate(p.x(), p.y());
 			if (Double.isNaN(v1))
 				v1 = 0;
-			double v2 = img2.evaluate(p.getX(), p.getY());
+			double v2 = img2.evaluate(p.x(), p.y());
 			if (Double.isNaN(v2))
 				v1 = 0;
 			

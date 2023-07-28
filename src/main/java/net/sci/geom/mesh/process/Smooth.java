@@ -45,16 +45,16 @@ public class Smooth
         {
             // initialize average with position of current vertex
             Point3D pos = vertex.position();
-            double xm = pos.getX(), ym = pos.getY(), zm = pos.getZ();
+            double xm = pos.x(), ym = pos.y(), zm = pos.z();
             int nn = 1;
             
             // iterate over neighbors
             for (Vertex neigh : mesh.vertexNeighbors(vertex))
             {
                 pos = neigh.position();
-                xm += pos.getX(); 
-                ym += pos.getY(); 
-                zm += pos.getZ();
+                xm += pos.x(); 
+                ym += pos.y(); 
+                zm += pos.z();
                 nn++;
             }
             

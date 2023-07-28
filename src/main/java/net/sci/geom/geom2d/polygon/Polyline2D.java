@@ -115,8 +115,8 @@ public interface Polyline2D extends Curve2D
     public default Point2D projection(Point2D point)
     {
     	double dist, minDist = Double.POSITIVE_INFINITY;
-    	double x = point.getX();
-    	double y = point.getY();
+    	double x = point.x();
+    	double y = point.y();
     	Point2D proj = vertexPosition(0);
     
     	for (Edge edge : edges())
@@ -274,8 +274,8 @@ public interface Polyline2D extends Curve2D
         // compute min/max for each coordinate
         for (Point2D vertex : this.vertexPositions())
         {
-            double x = vertex.getX();
-            double y = vertex.getY();
+            double x = vertex.x();
+            double y = vertex.y();
             xmin = Math.min(xmin, x);
             xmax = Math.max(xmax, x);
             ymin = Math.min(ymin, y);

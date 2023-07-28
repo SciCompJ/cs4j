@@ -71,12 +71,12 @@ public class Bounds3D implements Bounds
      */
     public Bounds3D(Point3D p1, Point3D p2)
     {
-        double x1 = p1.getX();
-        double y1 = p1.getY();
-        double z1 = p1.getZ();
-        double x2 = p2.getX();
-        double y2 = p2.getY();
-        double z2 = p2.getZ();
+        double x1 = p1.x();
+        double y1 = p1.y();
+        double z1 = p1.z();
+        double x2 = p2.x();
+        double y2 = p2.y();
+        double z2 = p2.z();
         this.xmin = Math.min(x1, x2);
         this.xmax = Math.max(x1, x2);
         this.ymin = Math.min(y1, y2);
@@ -206,9 +206,9 @@ public class Bounds3D implements Bounds
      */
     public boolean contains(Point3D point)
     {
-        double x = point.getX();
-        double y = point.getY();
-        double z = point.getZ();
+        double x = point.x();
+        double y = point.y();
+        double z = point.z();
         
         if (x < xmin)
             return false;

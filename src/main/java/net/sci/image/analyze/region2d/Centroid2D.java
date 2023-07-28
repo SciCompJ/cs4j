@@ -139,8 +139,8 @@ public class Centroid2D extends RegionAnalyzer2D<Point2D>
             // current diameter
 			Point2D point = map.get(label);
 			
-            table.setValue(row, 0, point.getX());
-            table.setValue(row, 1, point.getY());
+            table.setValue(row, 0, point.x());
+            table.setValue(row, 1, point.y());
             row++;
 		}
 	

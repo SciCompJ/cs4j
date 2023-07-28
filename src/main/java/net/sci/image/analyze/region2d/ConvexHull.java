@@ -119,8 +119,8 @@ public class ConvexHull extends RegionAnalyzer2D<Polygon2D>
             // current diameter
             Polygon2D poly = map.get(label);
             Point2D centroid = poly.centroid();
-            table.setValue(i, 0, centroid.getX());
-            table.setValue(i, 1, centroid.getY());
+            table.setValue(i, 0, centroid.x());
+            table.setValue(i, 1, centroid.y());
             table.setValue(i, 2, Math.abs(poly.signedArea()));
             i++;
         }

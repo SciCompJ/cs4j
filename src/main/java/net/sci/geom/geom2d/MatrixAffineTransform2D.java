@@ -54,8 +54,8 @@ public class MatrixAffineTransform2D implements AffineTransform2D
 
 	public Point2D transform(Point2D p)
 	{
-		double x = p.getX();
-		double y = p.getY();
+		double x = p.x();
+		double y = p.y();
 		return new Point2D(
 				x * m00 + y * m01 + m02, 
 				x * m10 + y * m11 + m12);
@@ -79,8 +79,8 @@ public class MatrixAffineTransform2D implements AffineTransform2D
 	 */
 	public Vector2D transform(Vector2D v)
 	{
-		double vx = v.getX();
-		double vy = v.getY();
+		double vx = v.x();
+		double vy = v.y();
 		return new Vector2D(
 				vx * m00 + vy * m01, 
 				vx * m10 + vy * m11);

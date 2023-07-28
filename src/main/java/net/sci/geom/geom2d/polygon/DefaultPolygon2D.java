@@ -139,7 +139,7 @@ public class DefaultPolygon2D implements Polygon2D
         // iterate on edges
         for (Point2D point : vertices)
         {
-            area += prev.getX() * point.getY() - prev.getY() * point.getX();
+            area += prev.x() * point.y() - prev.y() * point.x();
             prev = point;
         }
         
@@ -225,7 +225,7 @@ public class DefaultPolygon2D implements Polygon2D
     @Override
     public boolean contains(Point2D point)
     {
-        return contains(point.getX(), point.getY());
+        return contains(point.x(), point.y());
     }
     
     /**
@@ -250,15 +250,15 @@ public class DefaultPolygon2D implements Polygon2D
     
         // initialize with the last vertex
         Point2D previous = this.vertices.get(vertices.size() - 1);
-        double xprev = previous.getX();
-        double yprev = previous.getY();
+        double xprev = previous.x();
+        double yprev = previous.y();
     
         // iterate on vertices, keeping coordinates of previous vertex in memory
         for (Point2D current : vertices)
         {
             // coordinates of current vertex
-            double xcurr = current.getX();
-            double ycurr = current.getY();
+            double xcurr = current.x();
+            double ycurr = current.y();
     
             // update area computation
             area += xprev * ycurr - yprev * xcurr;
@@ -321,7 +321,7 @@ public class DefaultPolygon2D implements Polygon2D
     @Override
     public boolean contains(Point2D point, double eps)
     {
-        if (this.contains(point.getX(), point.getY()))
+        if (this.contains(point.x(), point.y()))
             return true;
         if (this.boundaryContains(point, eps))
             return true;
@@ -395,8 +395,8 @@ public class DefaultPolygon2D implements Polygon2D
         // compute min/max for each coordinate
         for (Point2D vertex : this.vertices)
         {
-            double x = vertex.getX();
-            double y = vertex.getY();
+            double x = vertex.x();
+            double y = vertex.y();
             xmin = Math.min(xmin, x);
             xmax = Math.max(xmax, x);
             ymin = Math.min(ymin, y);

@@ -824,12 +824,12 @@ public class DefaultTriMesh3D implements TriMesh3D
         // compute min max in each direction
         for (Point3D vertex : this.vertexPositions)
         {
-            xmin = Math.min(xmin, vertex.getX());
-            xmax = Math.max(xmax, vertex.getX());
-            ymin = Math.min(ymin, vertex.getY());
-            ymax = Math.max(ymax, vertex.getY());
-            zmin = Math.min(zmin, vertex.getZ());
-            zmax = Math.max(zmax, vertex.getZ());
+            xmin = Math.min(xmin, vertex.x());
+            xmax = Math.max(xmax, vertex.x());
+            ymin = Math.min(ymin, vertex.y());
+            ymax = Math.max(ymax, vertex.y());
+            zmin = Math.min(zmin, vertex.z());
+            zmax = Math.max(zmax, vertex.z());
         }
         
         // create the resulting box

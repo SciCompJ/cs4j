@@ -48,7 +48,7 @@ public class Point3D implements Point, Geometry3D
      */
     public static final Point3D from2d(Point2D point, double z)
     {
-        return new Point3D(point.getX(), point.getY(), z);
+        return new Point3D(point.x(), point.y(), z);
     }
     
     
@@ -99,7 +99,7 @@ public class Point3D implements Point, Geometry3D
      */
     public Point3D(Vector3D vect)
     {
-        this(vect.getX(), vect.getY(), vect.getZ());
+        this(vect.x(), vect.y(), vect.z());
     }
 
 	
@@ -109,7 +109,7 @@ public class Point3D implements Point, Geometry3D
 	/**
      * @return the x coordinate of this point
      */
-    public double getX()
+    public double x()
     {
         return x;
     }
@@ -117,7 +117,7 @@ public class Point3D implements Point, Geometry3D
     /**
      * @return the y coordinate of this point
      */
-    public double getY()
+    public double y()
     {
         return y;
     }
@@ -125,7 +125,7 @@ public class Point3D implements Point, Geometry3D
     /**
      * @return the z coordinate of this point
      */
-    public double getZ()
+    public double z()
     {
         return z;
 	}
@@ -160,7 +160,7 @@ public class Point3D implements Point, Geometry3D
      */
 	public Point3D plus(Vector3D v)
 	{
-		return new Point3D(this.x + v.getX(), this.y + v.getY(), this.z + v.getZ());
+		return new Point3D(this.x + v.x(), this.y + v.y(), this.z + v.z());
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class Point3D implements Point, Geometry3D
      */
 	public Point3D minus(Vector3D v)
 	{
-		return new Point3D(this.x - v.getX(), this.y - v.getY(), this.z - v.getZ());
+		return new Point3D(this.x - v.x(), this.y - v.y(), this.z - v.z());
 	}
 	
     /**

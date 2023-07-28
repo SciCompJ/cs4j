@@ -213,12 +213,12 @@ public class Ellipsoid3D implements Geometry3D
             for (int j = 0; j < verts[i].length; j++)
             {
                 Point3D p = verts[i][j];
-                xmin = Math.min(xmin, p.getX());
-                xmax = Math.max(xmax, p.getX());
-                ymin = Math.min(ymin, p.getY());
-                ymax = Math.max(ymax, p.getY());
-                zmin = Math.min(zmin, p.getZ());
-                zmax = Math.max(zmax, p.getZ());
+                xmin = Math.min(xmin, p.x());
+                xmax = Math.max(xmax, p.x());
+                ymin = Math.min(ymin, p.y());
+                ymax = Math.max(ymax, p.y());
+                zmin = Math.min(zmin, p.z());
+                zmax = Math.max(zmax, p.z());
             }
         }
         
@@ -314,7 +314,7 @@ public class Ellipsoid3D implements Geometry3D
     
     private AffineTransform3D globalToLocalTransform()
     {
-        AffineTransform3D tra = AffineTransform3D.createTranslation(-center.getX(), -center.getY(), -center.getZ());
+        AffineTransform3D tra = AffineTransform3D.createTranslation(-center.x(), -center.y(), -center.z());
         AffineTransform3D rot = AffineTransform3D.fromMatrix(orient.inverse().affineMatrix());
         AffineTransform3D sca = AffineTransform3D.createScaling(1.0 / r1, 1.0 / r2, 1.0 / r3);
         return sca.concatenate(rot).concatenate(tra);

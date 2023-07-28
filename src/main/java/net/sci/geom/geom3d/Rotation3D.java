@@ -103,9 +103,9 @@ public class Rotation3D
         
         // compute coefficients
         double q0 = Math.cos(halfAngle);
-        double q1 = axis.getX() * sinHalf;
-        double q2 = axis.getY() * sinHalf;
-        double q3 = axis.getZ() * sinHalf;
+        double q1 = axis.x() * sinHalf;
+        double q2 = axis.y() * sinHalf;
+        double q3 = axis.z() * sinHalf;
         return new Rotation3D(q0, q1, q2, q3);
     }
     
@@ -176,9 +176,9 @@ public class Rotation3D
     {
         double[][] mat = affineMatrix();
         
-        double x2 = mat[0][0] * v.getX() + mat[0][1] * v.getY() + mat[0][2] * v.getZ();
-        double y2 = mat[1][0] * v.getX() + mat[1][1] * v.getY() + mat[1][2] * v.getZ();
-        double z2 = mat[2][0] * v.getX() + mat[2][1] * v.getY() + mat[2][2] * v.getZ();
+        double x2 = mat[0][0] * v.x() + mat[0][1] * v.y() + mat[0][2] * v.z();
+        double y2 = mat[1][0] * v.x() + mat[1][1] * v.y() + mat[1][2] * v.z();
+        double z2 = mat[2][0] * v.x() + mat[2][1] * v.y() + mat[2][2] * v.z();
         
         return new Vector3D(x2, y2, z2);
     }

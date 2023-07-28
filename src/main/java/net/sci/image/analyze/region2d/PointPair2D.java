@@ -27,15 +27,15 @@ public class PointPair2D
 
 	public double diameter()
 	{
-		double dx = p2.getX() - p1.getX();
-		double dy = p2.getY() - p1.getY();
+		double dx = p2.x() - p1.x();
+		double dy = p2.y() - p1.y();
 		return Math.hypot(dx,  dy);
 	}
 
 	public double angle()
 	{
-		double dx = p2.getX() - p1.getX();
-		double dy = p2.getY() - p1.getY();
+		double dx = p2.x() - p1.x();
+		double dy = p2.y() - p1.y();
 		return Math.atan2(dy, dx);
 	}
 

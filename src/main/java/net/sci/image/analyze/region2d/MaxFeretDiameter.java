@@ -73,10 +73,10 @@ public class MaxFeretDiameter extends RegionAnalyzer2D<PointPair2D>
 			PointPair2D maxDiam = results.get(label);
 			table.setValue(iRow, "FeretDiameter.Max", maxDiam.diameter());
 			table.setValue(iRow, "Orientation", Math.toDegrees(maxDiam.angle()));
-			table.setValue(iRow, "P1.X", maxDiam.p1.getX());
-			table.setValue(iRow, "P1.Y", maxDiam.p1.getY());
-			table.setValue(iRow, "P2.X", maxDiam.p2.getX());
-			table.setValue(iRow, "P2.Y", maxDiam.p2.getY());
+			table.setValue(iRow, "P1.X", maxDiam.p1.x());
+			table.setValue(iRow, "P1.Y", maxDiam.p1.y());
+			table.setValue(iRow, "P2.X", maxDiam.p2.x());
+			table.setValue(iRow, "P2.Y", maxDiam.p2.y());
 			
 			// update for next row
 			iRow++;
@@ -143,7 +143,7 @@ public class MaxFeretDiameter extends RegionAnalyzer2D<PointPair2D>
         	corners.clear();
     		for (Point2D vertex : convHull.vertexPositions())
     		{
-    			corners.add(new Point2D(vertex.getX() * sx + ox, vertex.getY() * sy + oy));
+    			corners.add(new Point2D(vertex.x() * sx + ox, vertex.y() * sy + oy));
     		}
 
     		// compute Feret diameter of calibrated hull

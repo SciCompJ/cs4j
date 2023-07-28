@@ -52,8 +52,8 @@ public class MultiPoint2DTest
         double[][] rotMat = axes.rotationMatrix();
         double[] scalings = axes.scalings();
         
-        assertEquals(8.0, center.getX(), 0.01);
-        assertEquals(6.0, center.getY(), 0.01);
+        assertEquals(8.0, center.x(), 0.01);
+        assertEquals(6.0, center.y(), 0.01);
         
         assertEquals(Math.atan(0.5), Math.atan2(rotMat[0][1], rotMat[0][0]), 0.1);
         

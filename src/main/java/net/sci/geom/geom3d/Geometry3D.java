@@ -46,7 +46,7 @@ public interface Geometry3D extends Geometry
      */
     public default double distance(Point3D point)
     {
-        return distance(point.getX(), point.getY(), point.getZ());
+        return distance(point.x(), point.y(), point.z());
     }
     
     /**

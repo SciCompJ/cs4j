@@ -28,8 +28,8 @@ public class Phantoms2D
         int sizeY = array.size(1);
         
         // get disk center
-        double xc = center.getX();
-        double yc = center.getY();
+        double xc = center.x();
+        double yc = center.y();
         
         for (int y = 0; y < sizeY; y++)
         {

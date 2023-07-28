@@ -33,18 +33,18 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
 
     public StraightLine2D(Point2D p1, Point2D p2)
     {
-        this.x0 = p1.getX();
-        this.y0 = p1.getY();
-        this.dx = p2.getX() - this.x0;
-        this.dy = p2.getY() - this.y0;
+        this.x0 = p1.x();
+        this.y0 = p1.y();
+        this.dx = p2.x() - this.x0;
+        this.dy = p2.y() - this.y0;
     }
     
     public StraightLine2D(Point2D origin, Vector2D direction)
     {
-        this.x0 = origin.getX();
-        this.y0 = origin.getY();
-        this.dx = direction.getX();
-        this.dy = direction.getY();
+        this.x0 = origin.x();
+        this.y0 = origin.y();
+        this.dx = direction.x();
+        this.dy = direction.y();
         
     }
     
@@ -89,7 +89,7 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
         }
 
         double denom = dx * dx + dy * dy;
-        return ((point.getY() - y0) * dy + (point.getX() - x0) * dx) / denom;
+        return ((point.y() - y0) * dy + (point.x() - x0) * dx) / denom;
     }
     
     public double projectedPosition(double x, double y)
@@ -143,7 +143,7 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     @Override
     public double signedDistance(Point2D point)
     {
-        return signedDistance(point.getX(), point.getY());
+        return signedDistance(point.x(), point.y());
     }
     
     public double signedDistance(double x, double y)
@@ -162,7 +162,7 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     @Override
     public boolean isInside(Point2D point)
     {
-    	return isInside(point.getX(), point.getY());
+    	return isInside(point.x(), point.y());
     }
     
     @Override
@@ -241,8 +241,8 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
         {
             throw new DegeneratedLine2DException(this);
         }
-        double x = point.getX();
-        double y = point.getY();
+        double x = point.x();
+        double y = point.y();
         return Math.sqrt(Math.abs((x - x0) * dy - (y - y0) * dx)) / denom < eps;
 
     }

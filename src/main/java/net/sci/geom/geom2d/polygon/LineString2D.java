@@ -89,8 +89,8 @@ public interface LineString2D extends Polyline2D
             Point2D p1 = ring0.vertexPosition(iv);
             Point2D p2 = ring1.vertexPosition(iv);
             
-            double x = p1.getX() * t1 + p2.getX() * t0;
-            double y = p1.getY() * t1 + p2.getY() * t0;
+            double x = p1.x() * t1 + p2.x() * t0;
+            double y = p1.y() * t1 + p2.y() * t0;
             res.addVertex(new Point2D(x, y));
         }
 
@@ -121,8 +121,8 @@ public interface LineString2D extends Polyline2D
                 // clamp index between 0 and vertex number
                 int i2c = Math.min(Math.max(i2, 0), nv - 1);
                 Point2D v = vertexPosition(i2c);
-                x += v.getX();
-                y += v.getY();
+                x += v.x();
+                y += v.y();
             }
             x /= smoothingSize;
             y /= smoothingSize;
@@ -213,8 +213,8 @@ public interface LineString2D extends Polyline2D
                 double t1 = pos0 / dist;
                 double t0 = 1 - t1;
                 
-                double x = prev.getX() * t0 + vertex.getX() * t1;
-                double y = prev.getY() * t0 + vertex.getY() * t1;
+                double x = prev.x() * t0 + vertex.x() * t1;
+                double y = prev.y() * t0 + vertex.y() * t1;
                 return new Point2D(x, y);
             }
             prev = vertex;

@@ -29,8 +29,8 @@ public class DefaultPolygon2DTest
         
         Point2D centroid = poly.centroid();
         
-        assertEquals(exp.getX(), centroid.getX(), .01);
-        assertEquals(exp.getY(), centroid.getY(), .01);
+        assertEquals(exp.x(), centroid.x(), .01);
+        assertEquals(exp.y(), centroid.y(), .01);
     }
     
     

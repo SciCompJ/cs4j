@@ -109,19 +109,19 @@ public interface LinearGeometry2D extends Curve2D
         }
         
         // extract direction vector components
-        double dx1 = v1.getX();
-        double dy1 = v1.getY();
+        double dx1 = v1.x();
+        double dy1 = v1.y();
 
-        double dx2 = v2.getX();
-        double dy2 = v2.getY();
+        double dx2 = v2.x();
+        double dy2 = v2.y();
 
 
         Point2D origin1 = line1.origin();
-        double x1 = origin1.getX();
-        double y1 = origin1.getY();
+        double x1 = origin1.x();
+        double y1 = origin1.y();
         Point2D origin2 = line2.origin();
-        double x2 = origin2.getX();
-        double y2 = origin2.getY();
+        double x2 = origin2.x();
+        double y2 = origin2.y();
         
         // compute position on the lines
         double denom = dx1 * dy2 - dy1 * dx2;

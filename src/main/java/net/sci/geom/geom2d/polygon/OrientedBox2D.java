@@ -61,7 +61,7 @@ public class OrientedBox2D implements Polygon2D
      */
     public OrientedBox2D(Point2D center, double length, double width, double orientInDegrees)
     {
-        this(center.getX(), center.getY(), length, width, orientInDegrees);
+        this(center.x(), center.y(), length, width, orientInDegrees);
     }
     
     /**

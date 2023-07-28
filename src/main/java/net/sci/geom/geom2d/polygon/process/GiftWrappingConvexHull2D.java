@@ -79,16 +79,16 @@ public class GiftWrappingConvexHull2D
         // If two points have same y coord, the one with largest x coord is kept.
         for (Point2D point : points)
         {
-            double y = point.getY();
+            double y = point.y();
             if (y < ymin)
             {
                 ymin = y;
-                xmax = point.getX();
+                xmax = point.x();
                 lowestPoint = point;
             }
             else if (y == ymin)
             {
-                double x = point.getX();
+                double x = point.x();
                 if (x > xmax)
                 {
                     xmax = x;
@@ -147,7 +147,7 @@ public class GiftWrappingConvexHull2D
      */
     private double computeAngle(Point2D p1, Point2D p2)
     {
-        return (Math.atan2(p2.getY() - p1.getY(), p2.getX() - p1.getX()) + TWO_PI) % TWO_PI;
+        return (Math.atan2(p2.y() - p1.y(), p2.x() - p1.x()) + TWO_PI) % TWO_PI;
     }
     
     private double diffAngle(double startAngle, double endAngle)

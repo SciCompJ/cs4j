@@ -288,9 +288,9 @@ public interface Mesh3D extends Geometry3D
         {
             Point3D p1 = source().position();
             Point3D p2 = target().position();
-            double x = p1.getX() + p2.getX();
-            double y = p1.getY() + p2.getY();
-            double z = p1.getZ() + p2.getZ();
+            double x = p1.x() + p2.x();
+            double y = p1.y() + p2.y();
+            double z = p1.z() + p2.z();
             return new Point3D(x, y, z);
         }
 

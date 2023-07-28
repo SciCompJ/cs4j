@@ -89,7 +89,7 @@ public class Kymograph3D extends AlgoStub implements ImageArrayOperator
             for (int iv = 0; iv < nv; iv++)
             {
                 Point2D pos = curve.vertexPosition(iv);
-                double value = interp.evaluate(pos.getX(), pos.getY());
+                double value = interp.evaluate(pos.x(), pos.y());
                 target.setValue(iv, z, value);
             }
         }

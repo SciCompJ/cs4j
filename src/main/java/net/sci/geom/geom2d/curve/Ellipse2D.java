@@ -234,7 +234,7 @@ public class Ellipse2D implements Contour2D
      */
     public Ellipse2D(Point2D center, double r1, double r2, double theta)
     {
-        this(center.getX(), center.getY(), r1, r2, theta);
+        this(center.x(), center.y(), r1, r2, theta);
     }
     
     /**
@@ -342,7 +342,7 @@ public class Ellipse2D implements Contour2D
     public double signedDistance(Point2D point)
     {
         // TODO: use exact computation 
-        return this.asPolyline(200).signedDistance(point.getX(), point.getY());
+        return this.asPolyline(200).signedDistance(point.x(), point.y());
     }
 
     public double signedDistance(double x, double y)
@@ -353,7 +353,7 @@ public class Ellipse2D implements Contour2D
 
     public boolean isInside(Point2D point)
     {
-    	return isInside(point.getX(), point.getY());
+    	return isInside(point.x(), point.y());
     }
 
     public boolean isInside(double x, double y)
@@ -407,8 +407,8 @@ public class Ellipse2D implements Contour2D
     {
         Ellipse2D result = Ellipse2D.transformCentered(this, trans);
         Point2D center = this.center().transform(trans);
-        result.xc = center.getX();
-        result.yc = center.getY();
+        result.xc = center.x();
+        result.yc = center.y();
         return result;
     }
 
@@ -422,7 +422,7 @@ public class Ellipse2D implements Contour2D
     @Override
     public boolean contains(Point2D point, double eps)
     {
-    	double rho = quasiDistanceToCenter(point.getX(), point.getY());    	
+    	double rho = quasiDistanceToCenter(point.x(), point.y());    	
         return Math.abs(rho - 1) <= eps;
     }
     

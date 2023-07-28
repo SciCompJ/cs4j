@@ -101,8 +101,8 @@ public interface Polygon2D extends PolygonalDomain2D
         {
             p0 = iter.next();
         }
-        double x0 = p0.getX();
-        double y0 = p0.getY();
+        double x0 = p0.x();
+        double y0 = p0.y();
         
         // iterate over edges
         iter = vertexPositions().iterator();
@@ -110,8 +110,8 @@ public interface Polygon2D extends PolygonalDomain2D
         {
             // coordinates of current vertex
             Point2D p1 = iter.next();
-            double x1 = p1.getX();
-            double y1 = p1.getY();
+            double x1 = p1.x();
+            double y1 = p1.y();
             
             // update accumulators
             double common = x0 * y1 - x1 * y0;

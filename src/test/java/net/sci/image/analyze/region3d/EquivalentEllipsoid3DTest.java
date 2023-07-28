@@ -34,9 +34,9 @@ public class EquivalentEllipsoid3DTest
         Ellipsoid3D elli = EquivalentEllipsoid3D.equivalentEllipsoids(array, new int[] {10}, calib)[0];
         
         double expectedRadius = Math.sqrt(5.0 / 12.0);
-        assertEquals(5.0, elli.center().getX(), 0.1);
-        assertEquals(4.0, elli.center().getY(), 0.1);
-        assertEquals(3.0, elli.center().getZ(), 0.1);
+        assertEquals(5.0, elli.center().x(), 0.1);
+        assertEquals(4.0, elli.center().y(), 0.1);
+        assertEquals(3.0, elli.center().z(), 0.1);
         assertEquals(expectedRadius, elli.radiusList()[0], 0.1);
         assertEquals(expectedRadius, elli.radiusList()[1], 0.1);
         assertEquals(expectedRadius, elli.radiusList()[2], 0.1);
@@ -82,9 +82,9 @@ public class EquivalentEllipsoid3DTest
         Calibration calib = new Calibration(3);
         Ellipsoid3D elli = EquivalentEllipsoid3D.equivalentEllipsoids(array, new int[] {1}, calib)[0];
         
-        assertEquals(center.getX(), elli.center().getX(), 0.1);
-        assertEquals(center.getY(), elli.center().getY(), 0.1);
-        assertEquals(center.getZ(), elli.center().getZ(), 0.1);
+        assertEquals(center.x(), elli.center().x(), 0.1);
+        assertEquals(center.y(), elli.center().y(), 0.1);
+        assertEquals(center.z(), elli.center().z(), 0.1);
         assertEquals(radList[0], elli.radiusList()[0], 0.1);
         assertEquals(radList[1], elli.radiusList()[1], 0.1);
         assertEquals(radList[2], elli.radiusList()[2], 0.1);

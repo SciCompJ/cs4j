@@ -33,8 +33,8 @@ public class TranslationModel2D extends ParametricTransform2D implements AffineT
 	public Point2D transform(Point2D point)
 	{
 		return new Point2D(
-				point.getX() + this.parameters[0], 
-				point.getY() + this.parameters[1]);
+				point.x() + this.parameters[0], 
+				point.y() + this.parameters[1]);
 	}
 
 	@Override

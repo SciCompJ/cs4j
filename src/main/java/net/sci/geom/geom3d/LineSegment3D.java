@@ -29,12 +29,12 @@ public class LineSegment3D implements LinearGeometry3D
     
     public LineSegment3D(Point3D p1, Point3D p2)
     {
-        this.x1 = p1.getX();
-        this.y1 = p1.getY();
-        this.z1 = p1.getZ();
-        this.x2 = p2.getX();
-        this.y2 = p2.getY();
-        this.z2 = p2.getZ();
+        this.x1 = p1.x();
+        this.y1 = p1.y();
+        this.z1 = p1.z();
+        this.x2 = p2.x();
+        this.y2 = p2.y();
+        this.z2 = p2.z();
     }
     
     private LineSegment3D(double x1, double y1, double z1, double x2, double y2, double z2)
@@ -83,7 +83,7 @@ public class LineSegment3D implements LinearGeometry3D
             return null;
         }
         Point3D inter = plane.intersection(this.supportingLine());
-        double pos = positionOnLine(inter.getX(), inter.getY(), inter.getZ());
+        double pos = positionOnLine(inter.x(), inter.y(), inter.z());
         
         double eps = 1e-12;
         if (pos <  -eps || pos > 1+eps)
@@ -206,7 +206,7 @@ public class LineSegment3D implements LinearGeometry3D
             return false;
 
         // compute position on the support line
-        double t = positionOnLine(point.getX(), point.getY(), point.getZ());
+        double t = positionOnLine(point.x(), point.y(), point.z());
 
         if (t < -eps)
             return false;

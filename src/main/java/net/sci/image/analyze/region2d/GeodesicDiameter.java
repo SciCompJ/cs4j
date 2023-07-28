@@ -210,7 +210,7 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
                 // Current first geodesic extremity 
                 // (corresponding to the minimum of the geodesic distance map)
                 Point2D ext = result[i].firstExtremity;
-                Cursor2D pos1 = new Cursor2D((int) ext.getX(), (int) ext.getY()) ;
+                Cursor2D pos1 = new Cursor2D((int) ext.x(), (int) ext.y()) ;
                 
                 // Create new path
                 List<Point2D> path = new ArrayList<Point2D>();
@@ -230,7 +230,7 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
                 path.add(ext);
                 
                 // iterate over neighbors of current position until we reach the minimum value
-                Cursor2D pos = new Cursor2D((int) ext.getX(), (int) ext.getY());
+                Cursor2D pos = new Cursor2D((int) ext.x(), (int) ext.y());
                 while (!pos.equals(pos1))
                 {
                     pos = findLowestNeighborPosition(labelMap, distanceMap, pos);
@@ -284,15 +284,15 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
             
             // coordinates of max inscribed circle
             table.setValue(iRow, "Radius", res.innerRadius);
-            table.setValue(iRow, "InitPoint.X", res.initialPoint.getX());
-            table.setValue(iRow, "InitPoint.Y", res.initialPoint.getY());
+            table.setValue(iRow, "InitPoint.X", res.initialPoint.x());
+            table.setValue(iRow, "InitPoint.Y", res.initialPoint.y());
             table.setValue(iRow, "GeodesicElongation", Math.max(res.diameter / (res.innerRadius * 2), 1.0));
             
             // coordinate of first and second geodesic extremities 
-            table.setValue(iRow, "Extremity1.X", res.firstExtremity.getX());
-            table.setValue(iRow, "Extremity1.Y", res.firstExtremity.getY());
-            table.setValue(iRow, "Extremity2.X", res.secondExtremity.getX());
-            table.setValue(iRow, "Extremity2.Y", res.secondExtremity.getY());
+            table.setValue(iRow, "Extremity1.X", res.firstExtremity.x());
+            table.setValue(iRow, "Extremity1.Y", res.firstExtremity.y());
+            table.setValue(iRow, "Extremity2.X", res.secondExtremity.x());
+            table.setValue(iRow, "Extremity2.Y", res.secondExtremity.y());
             
             iRow++;
         }
@@ -445,8 +445,8 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
             ImageAxis xAxis = calib.getXAxis();
             ImageAxis yAxis = calib.getYAxis();
             return new Point2D(
-                    point.getX() * xAxis.getSpacing() + xAxis.getOrigin(), 
-                    point.getY() * yAxis.getSpacing() + yAxis.getOrigin());
+                    point.x() * xAxis.getSpacing() + xAxis.getOrigin(), 
+                    point.y() * yAxis.getSpacing() + yAxis.getOrigin());
         }
     }
 }

@@ -26,8 +26,8 @@ public class SumOfSquaredDifferencesMetric2D extends ImageToImageMetric2D
 		
 		for (Point2D p : points)
 		{
-			double v1 = img1.evaluate(p.getX(), p.getY());
-			double v2 = img2.evaluate(p.getX(), p.getY());
+			double v1 = img1.evaluate(p.x(), p.y());
+			double v2 = img2.evaluate(p.x(), p.y());
 			double d = v1 - v2;
 			accum += d*d;
 		}

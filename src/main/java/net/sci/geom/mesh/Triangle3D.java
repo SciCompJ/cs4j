@@ -114,9 +114,9 @@ public class Triangle3D implements Polygon3D
     public double distance(double x, double y, double z)
     {
         // triangle origin and direction vectors
-        double x1 = p1.getX();
-        double y1 = p1.getY();
-        double z1 = p1.getZ();
+        double x1 = p1.x();
+        double y1 = p1.y();
+        double z1 = p1.z();
         Vector3D v12 = new Vector3D(p1, p2);
         Vector3D v13 = new Vector3D(p1, p3);
 
@@ -311,12 +311,12 @@ public class Triangle3D implements Polygon3D
     @Override
     public Bounds3D bounds()
     {
-        double xmin = Math.min(Math.min(p1.getX(), p2.getX()), p3.getX());
-        double xmax = Math.max(Math.max(p1.getX(), p2.getX()), p3.getX());
-        double ymin = Math.min(Math.min(p1.getY(), p2.getY()), p3.getY());
-        double ymax = Math.max(Math.max(p1.getY(), p2.getY()), p3.getY());
-        double zmin = Math.min(Math.min(p1.getZ(), p2.getZ()), p3.getZ());
-        double zmax = Math.max(Math.max(p1.getZ(), p2.getZ()), p3.getZ());
+        double xmin = Math.min(Math.min(p1.x(), p2.x()), p3.x());
+        double xmax = Math.max(Math.max(p1.x(), p2.x()), p3.x());
+        double ymin = Math.min(Math.min(p1.y(), p2.y()), p3.y());
+        double ymax = Math.max(Math.max(p1.y(), p2.y()), p3.y());
+        double zmin = Math.min(Math.min(p1.z(), p2.z()), p3.z());
+        double zmax = Math.max(Math.max(p1.z(), p2.z()), p3.z());
 
         return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
     }

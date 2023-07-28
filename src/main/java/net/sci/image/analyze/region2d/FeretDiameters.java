@@ -98,8 +98,8 @@ public class FeretDiameters
 			if (width < widthMin)
 			{
 				widthMin = width;
-				double dx = p2.getX() - p1.getX();
-				double dy = p2.getY() - p1.getY();
+				double dx = p2.x() - p1.x();
+				double dy = p2.y() - p1.y();
 				angleMin = Math.atan2(dy, dx);
 			}
 		}

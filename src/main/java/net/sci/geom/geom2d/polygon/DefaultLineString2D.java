@@ -293,10 +293,10 @@ public class DefaultLineString2D implements LineString2D
         Point2D p1 = vertices.get(ind1);
 
         // position on line;
-        double x0 = p0.getX();
-        double y0 = p0.getY();
-        double dx = p1.getX() - x0;
-        double dy = p1.getY() - y0;
+        double x0 = p0.x();
+        double y0 = p0.y();
+        double dx = p1.x() - x0;
+        double dy = p1.y() - y0;
         return new Point2D(x0 + tl * dx, y0 + tl * dy);
     }
 

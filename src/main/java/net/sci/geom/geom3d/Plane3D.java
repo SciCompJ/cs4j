@@ -56,15 +56,15 @@ public class Plane3D implements Geometry3D
      */
     public Plane3D(Point3D origin, Vector3D v1, Vector3D v2)
     {
-        x0 = origin.getX();
-        y0 = origin.getY();
-        z0 = origin.getZ();
-        dx1 = v1.getX();
-        dy1 = v1.getY();
-        dz1 = v1.getZ();
-        dx2 = v2.getX();
-        dy2 = v2.getY();
-        dz2 = v2.getZ();
+        x0 = origin.x();
+        y0 = origin.y();
+        z0 = origin.z();
+        dx1 = v1.x();
+        dy1 = v1.y();
+        dz1 = v1.z();
+        dx2 = v2.x();
+        dy2 = v2.y();
+        dz2 = v2.z();
     }
 
     /**
@@ -78,9 +78,9 @@ public class Plane3D implements Geometry3D
     public Plane3D(Point3D origin, Vector3D normal)
     {
         // setup origin
-        x0 = origin.getX();
-        y0 = origin.getY();
-        z0 = origin.getZ();
+        x0 = origin.x();
+        y0 = origin.y();
+        z0 = origin.z();
         
         // find a vector not colinear to the normal
         Vector3D v0 = new Vector3D(1, 0, 0);
@@ -94,12 +94,12 @@ public class Plane3D implements Geometry3D
         Vector3D v2 = Vector3D.crossProduct(normal, v1).normalize();
 
         // setup direction
-        dx1 = v1.getX();
-        dy1 = v1.getY();
-        dz1 = v1.getZ();
-        dx2 = v2.getX();
-        dy2 = v2.getY();
-        dz2 = v2.getZ();
+        dx1 = v1.x();
+        dy1 = v1.y();
+        dz1 = v1.z();
+        dx2 = v2.x();
+        dy2 = v2.y();
+        dz2 = v2.z();
     }
     
     private Plane3D(double x0, double y0, double z0, double dx1, double dy1, double dz1, double dx2, double dy2, double dz2)

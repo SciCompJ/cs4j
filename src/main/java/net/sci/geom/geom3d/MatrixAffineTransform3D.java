@@ -73,9 +73,9 @@ public class MatrixAffineTransform3D implements AffineTransform3D
 	@Override
 	public Point3D transform(Point3D p)
 	{
-		double x = p.getX();
-        double y = p.getY();
-        double z = p.getZ();
+		double x = p.x();
+        double y = p.y();
+        double z = p.z();
 		return new Point3D(
                 x * m00 + y * m01 + z * m02 + m03, 
                 x * m10 + y * m11 + z * m12 + m13, 
@@ -100,9 +100,9 @@ public class MatrixAffineTransform3D implements AffineTransform3D
 	 */
 	public Vector3D transform(Vector3D v)
 	{
-		double vx = v.getX();
-		double vy = v.getY();
-		double vz = v.getZ();
+		double vx = v.x();
+		double vy = v.y();
+		double vz = v.z();
 		return new Vector3D(
 				vx * m00 + vy * m01 + vz * m02, 
 				vx * m10 + vy * m11 + vz * m12, 

@@ -49,8 +49,8 @@ public class Sphere3DTest
         
         assertEquals(2, inters.size());
         
-        Point3D p1 = new Point3D(center.getX()-radius, center.getY(), center.getZ());
-        Point3D p2 = new Point3D(center.getX()+radius, center.getY(), center.getZ());
+        Point3D p1 = new Point3D(center.x()-radius, center.y(), center.z());
+        Point3D p2 = new Point3D(center.x()+radius, center.y(), center.z());
         assertContainsPoint(inters, p1, .001);
         assertContainsPoint(inters, p2, .001);
     }

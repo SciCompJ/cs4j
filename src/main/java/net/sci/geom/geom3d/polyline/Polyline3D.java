@@ -176,9 +176,9 @@ public interface Polyline3D extends Curve3D
         // compute min/max for each coordinate
         for (Point3D vertex : this.vertexPositions())
         {
-            double x = vertex.getX();
-            double y = vertex.getY();
-            double z = vertex.getZ();
+            double x = vertex.x();
+            double y = vertex.y();
+            double z = vertex.z();
             xmin = Math.min(xmin, x);
             xmax = Math.max(xmax, x);
             ymin = Math.min(ymin, y);

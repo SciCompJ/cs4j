@@ -26,10 +26,10 @@ public class LineSegment2D implements LinearGeometry2D
     
     public LineSegment2D(Point2D p1, Point2D p2)
     {
-        this.x1 = p1.getX();
-        this.y1 = p1.getY();
-        this.x2 = p2.getX();
-        this.y2 = p2.getY();
+        this.x1 = p1.x();
+        this.y1 = p1.y();
+        this.x2 = p2.x();
+        this.y2 = p2.y();
     }
     
     
@@ -176,7 +176,7 @@ public class LineSegment2D implements LinearGeometry2D
             return false;
 
         // compute position on the support line
-        double t = positionOnLine(point.getX(), point.getY());
+        double t = positionOnLine(point.x(), point.y());
 
         if (t < -eps)
             return false;
@@ -203,8 +203,8 @@ public class LineSegment2D implements LinearGeometry2D
             throw new DegeneratedLine2DException(this);
         }
         
-        double x = point.getX();
-        double y = point.getY();
+        double x = point.x();
+        double y = point.y();
         return Math.sqrt(Math.abs((x - this.x1) * dy - (y - this.y1) * dx)) / denom < eps;
     }
 

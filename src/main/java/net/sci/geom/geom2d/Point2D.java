@@ -56,11 +56,11 @@ public class Point2D implements Geometry2D, Point
             public int compare(Point2D p0, Point2D p1)
             {
                 // compare X first
-                double dx = p0.getX() - p1.getX();
+                double dx = p0.x() - p1.x();
                 if (dx < 0) return -1;
                 if (dx > 0) return +1;
                 // add Y comparison
-                double dy = p0.getY() - p1.getY();
+                double dy = p0.y() - p1.y();
                 if (dy < 0) return -1;
                 if (dy > 0) return +1;
                 // point with same coordinates
@@ -145,7 +145,7 @@ public class Point2D implements Geometry2D, Point
 	 */
 	public Point2D plus(Vector2D v)
 	{
-		return new Point2D(this.x + v.getX(), this.y + v.getY());
+		return new Point2D(this.x + v.x(), this.y + v.y());
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class Point2D implements Geometry2D, Point
 	 */
 	public Point2D minus(Vector2D v)
 	{
-		return new Point2D(this.x - v.getX(), this.y - v.getY());
+		return new Point2D(this.x - v.x(), this.y - v.y());
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class Point2D implements Geometry2D, Point
     /**
      * @return the x coordinate of this point
      */
-    public double getX()
+    public double x()
     {
         return x;
     }
@@ -194,7 +194,7 @@ public class Point2D implements Geometry2D, Point
     /**
      * @return the y coordinate of this point
      */
-    public double getY()
+    public double y()
     {
         return y;
     }
