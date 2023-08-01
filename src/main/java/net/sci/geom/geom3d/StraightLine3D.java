@@ -143,13 +143,13 @@ public class StraightLine3D implements LinearGeometry3D
     }
 
     @Override
-    public double getT0()
+    public double t0()
     {
         return Double.NEGATIVE_INFINITY;
     }
 
     @Override
-    public double getT1()
+    public double t1()
     {
         return Double.POSITIVE_INFINITY;
     }

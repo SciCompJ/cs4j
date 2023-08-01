@@ -163,13 +163,13 @@ public interface LinearRing3D extends Polyline3D
     }
 
     @Override
-    public default double getT0()
+    public default double t0()
     {
         return 0;
     }
 
     @Override
-    public default double getT1()
+    public default double t1()
     {
         return vertexPositions().size();
     }

@@ -196,13 +196,13 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     }
 
     @Override
-    public double getT0()
+    public double t0()
     {
         return Double.NEGATIVE_INFINITY;
     }
 
     @Override
-    public double getT1()
+    public double t1()
     {
         return Double.POSITIVE_INFINITY;
     }

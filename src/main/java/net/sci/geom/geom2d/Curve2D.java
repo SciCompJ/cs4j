@@ -29,8 +29,8 @@ public interface Curve2D extends CurveShape2D
      */
     public default Polyline2D asPolyline(int nVertices)
     {
-        double t0 = getT0();
-        double t1 = getT1();
+        double t0 = t0();
+        double t1 = t1();
         double dt = (t1 - t0) / (isClosed() ? nVertices : nVertices - 1);
         
         ArrayList<Point2D> vertices = new ArrayList<>(nVertices);
@@ -43,10 +43,29 @@ public interface Curve2D extends CurveShape2D
         return Polyline2D.create(vertices, this.isClosed());
     }
 
+    /**
+     * Computes the position of the point located at the specified value of
+     * <code>t</code>.
+     * 
+     * @param t
+     *            the parameterization value of the point
+     * @return the position of the point
+     */
     public abstract Point2D getPoint(double t);
 
-    public abstract double getT0();
-    public abstract double getT1();
+    /**
+     * Returns the lower bound of the parameterization range.
+     * 
+     * @return the lower bound of the parameterization range.
+     */
+    public abstract double t0();
+    
+    /**
+     * Returns the upper bound of the parameterization range.
+     * 
+     * @return the upper bound of the parameterization range.
+     */
+    public abstract double t1();
 
     /**
      * @return true if this curve is closed.

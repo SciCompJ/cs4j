@@ -149,13 +149,13 @@ public class LineSegment2D implements LinearGeometry2D
     }
 
     @Override
-    public double getT0()
+    public double t0()
     {
         return 0;
     }
 
     @Override
-    public double getT1()
+    public double t1()
     {
         return 1;
     }

@@ -14,10 +14,29 @@ import java.util.Collection;
  */
 public interface Curve3D extends CurveShape3D
 {
+    /**
+     * Computes the position of the point located at the specified value of
+     * <code>t</code>.
+     * 
+     * @param t
+     *            the parameterization value of the point
+     * @return the position of the point
+     */
     public abstract Point3D getPoint(double t);
 
-    public abstract double getT0();
-    public abstract double getT1();
+    /**
+     * Returns the lower bound of the parameterization range.
+     * 
+     * @return the lower bound of the parameterization range.
+     */
+    public abstract double t0();
+    
+    /**
+     * Returns the upper bound of the parameterization range.
+     * 
+     * @return the upper bound of the parameterization range.
+     */
+    public abstract double t1();
     
     /**
      * @return true if this curve is closed.

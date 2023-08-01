@@ -196,8 +196,8 @@ public interface LineString2D extends Polyline2D
     public default Point2D getPoint(double t)
     {
         // format position to stay between limits
-        double t0 = this.getT0();
-        double t1 = this.getT1();
+        double t0 = this.t0();
+        double t1 = this.t1();
         t = Math.max(Math.min(t, t1), t0);
 
         // index of vertex before point
@@ -247,13 +247,13 @@ public interface LineString2D extends Polyline2D
     // Methods implementing the Curve2D interface
     
     @Override
-    public default double getT0()
+    public default double t0()
     {
         return 0;
     }
 
     @Override
-    public default double getT1()
+    public default double t1()
     {
         return vertexCount() - 1;
     }

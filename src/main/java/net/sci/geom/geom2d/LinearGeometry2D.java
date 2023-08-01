@@ -126,12 +126,12 @@ public interface LinearGeometry2D extends Curve2D
         // compute position on the lines
         double denom = dx1 * dy2 - dy1 * dx2;
         double t1 = ((y1 - y2) * dx2 - (x1 - x2) * dy2) / denom;
-        if (t1 < line1.getT0() || t1 > line1.getT1())
+        if (t1 < line1.t0() || t1 > line1.t1())
         {
             return null;
         }
         double t2 = ((y1 - y2) * dx1 - (x1 - x2) * dy1) / denom;
-        if (t2 < line2.getT0() || t2 > line2.getT1())
+        if (t2 < line2.t0() || t2 > line2.t1())
         {
             return null;
         }
