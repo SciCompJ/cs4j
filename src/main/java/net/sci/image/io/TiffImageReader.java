@@ -266,10 +266,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
 	        throw new IllegalArgumentException("Description tag must start with \"ImageJ\"");
 	    }
 	    
-	    System.out.println("import ImageJ Tiff Image");
-	    
 	    // iterate over the different tokens stored in description and convert into a map
-//	    System.out.println(description);
 	    Map<String, String> tokens = parseImageJTokens(description);
         
 	    // retrieve number of images within file
@@ -286,13 +283,13 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         int sizeZ = getIntValue(tokens, "slices", 1);
         int sizeT = getIntValue(tokens, "frames", 1);
         
-        // manages case of sizeZ not specified.
+        // The number of slices is sometimes replaced by image count
         if (sizeC * sizeZ * sizeT == 1 && nImages > 1)
         {
             sizeZ = nImages;
         }
         
-        // check consistency
+        // check consistency of parameters
         if (sizeC * sizeZ * sizeT != nImages)
         {
             throw new RuntimeException(String.format(
@@ -308,8 +305,6 @@ public class TiffImageReader extends AlgoStub implements ImageReader
 	    }
 	    else
 	    {
-	        System.out.println("read hyperstack data");
-            
 	        // Use try-with-resource, closing the reader at the end of the try block
             try (ImageBinaryDataReader reader = new ImageBinaryDataReader(
                     new File(this.filePath), info.byteOrder))
@@ -483,17 +478,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             throw new IllegalArgumentException("Description tag must start with \"ImageJ\"");
         }
         
-        System.out.println("import ImageJ Tiff Image");
-        
         // iterate over the different tokens stored in description and convert into a map
-        System.out.println(description);
         Map<String, String> tokens = parseImageJTokens(description);
         
+        // identify number of images to read
         int nImages = 1;
         if (tokens.containsKey("images"))
         {
             nImages = Integer.parseInt(tokens.get("images"));
-            System.out.println(String.format("Should read %d images", nImages));
         }
 
         // determine the size along each of the five dimensions
@@ -502,10 +494,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         int sizeC = getIntValue(tokens, "channels", 1);
         int sizeZ = getIntValue(tokens, "slices", 1);
         int sizeT = getIntValue(tokens, "frames", 1);
+        
+        // The number of slices is sometimes replaced by image count
         if (sizeC * sizeZ * sizeT == 1 && nImages > 1)
         {
             sizeZ = nImages;
         }
+        
+        // check consistency of parameters
         if (sizeC * sizeZ * sizeT != nImages)
         {
             throw new RuntimeException(String.format(
@@ -521,7 +517,6 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         }
         else
         {
-            System.out.println("read virtual hyperstack data");
             
             // Use try-with-resource, closing the reader at the end of the try block
 //            try (ImageBinaryDataReader imageReader = new ImageBinaryDataReader(
@@ -533,7 +528,6 @@ public class TiffImageReader extends AlgoStub implements ImageReader
                 {
                 case GRAY8:
                 case COLOR8:
-                    System.out.println("create file-mapped uint8 array");
                     data = new FileMappedUInt8Array3D(this.filePath, info.stripOffsets[0], sizeX, sizeY, nImages);
                     
 //                    data = imageReader.readUInt8Array3D(sizeX, sizeY, nImages);

@@ -224,7 +224,7 @@ public class TiffImageDataReader extends AlgoStub
         // Read 3D UInt8 data as SlicedUInt8Array3D
         if (info0.pixelType == PixelType.GRAY8)
         {
-            System.out.println("Choose sliced array data representation...");
+            // System.out.println("Choose sliced array data representation...");
             // check type limit
             if(info0.pixelType != TiffFileInfo.PixelType.GRAY8) 
             {
@@ -260,15 +260,12 @@ public class TiffImageDataReader extends AlgoStub
             
             // create a new instance of 3D array that stores each slice
             this.fireProgressChanged(this, nSlices, nSlices);
-            System.out.println("create 3D array");
             return new SlicedUInt8Array3D(arrayList);
         }
         
         // Read 3D BITMAP data as SlicedBinaryArray3D
         if (info0.pixelType == PixelType.BITMAP)
         {
-            System.out.println("Choose sliced binary array data representation...");
-            
             // create the container
             ArrayList<BinaryArray2D> arrayList = new ArrayList<>(sizeZ);
             
@@ -288,7 +285,6 @@ public class TiffImageDataReader extends AlgoStub
             
             // create a new instance of 3D array that stores each slice
             this.fireProgressChanged(this, nSlices, nSlices);
-            System.out.println("create 3D array");
             return new SlicedBinaryArray3D(arrayList);
         }
         
