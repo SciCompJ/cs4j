@@ -265,25 +265,7 @@ public interface Polyline2D extends Curve2D
 
     public default Bounds2D bounds()
     {
-        // initialize with extreme values
-        double xmin = Double.POSITIVE_INFINITY;
-        double xmax = Double.NEGATIVE_INFINITY;
-        double ymin = Double.POSITIVE_INFINITY;
-        double ymax = Double.NEGATIVE_INFINITY;
-        
-        // compute min/max for each coordinate
-        for (Point2D vertex : this.vertexPositions())
-        {
-            double x = vertex.x();
-            double y = vertex.y();
-            xmin = Math.min(xmin, x);
-            xmax = Math.max(xmax, x);
-            ymin = Math.min(ymin, y);
-            ymax = Math.max(ymax, y);
-        }
-        
-        // return new Bounding Box
-        return new Bounds2D(xmin, xmax, ymin, ymax);
+        return Bounds2D.of(this.vertexPositions());
     }
     
     @Override

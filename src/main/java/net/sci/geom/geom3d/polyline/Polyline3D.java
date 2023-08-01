@@ -165,30 +165,7 @@ public interface Polyline3D extends Curve3D
 
     public default Bounds3D bounds()
     {
-        // initialize with extreme values
-        double xmin = Double.POSITIVE_INFINITY;
-        double xmax = Double.NEGATIVE_INFINITY;
-        double ymin = Double.POSITIVE_INFINITY;
-        double ymax = Double.NEGATIVE_INFINITY;
-        double zmin = Double.POSITIVE_INFINITY;
-        double zmax = Double.NEGATIVE_INFINITY;
-        
-        // compute min/max for each coordinate
-        for (Point3D vertex : this.vertexPositions())
-        {
-            double x = vertex.x();
-            double y = vertex.y();
-            double z = vertex.z();
-            xmin = Math.min(xmin, x);
-            xmax = Math.max(xmax, x);
-            ymin = Math.min(ymin, y);
-            ymax = Math.max(ymax, y);
-            zmin = Math.min(zmin, z);
-            zmax = Math.max(zmax, z);
-        }
-        
-        // return new Bounding Box
-        return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
+        return Bounds3D.of(vertexPositions());
     }
     
     @Override

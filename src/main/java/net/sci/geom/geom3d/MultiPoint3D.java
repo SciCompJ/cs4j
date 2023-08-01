@@ -210,31 +210,7 @@ public class MultiPoint3D implements Geometry3D
     @Override
     public Bounds3D bounds()
     {
-        if (this.points.isEmpty())
-        {
-            return new Bounds3D();
-        }
-        
-        // init bounds
-        double xmin = Double.POSITIVE_INFINITY;
-        double xmax = Double.NEGATIVE_INFINITY;
-        double ymin = Double.POSITIVE_INFINITY;
-        double ymax = Double.NEGATIVE_INFINITY;
-        double zmin = Double.POSITIVE_INFINITY;
-        double zmax = Double.NEGATIVE_INFINITY;
-        
-        // compute bounds by iterating over points
-        for (Point3D p : this.points)
-        {
-            xmin = Math.min(p.x, xmin);
-            ymin = Math.min(p.y, ymin);
-            zmin = Math.min(p.z, zmin);
-            xmax = Math.max(p.x, xmax);
-            ymax = Math.max(p.y, ymax);
-            zmax = Math.max(p.z, zmax);
-        }
-
-        return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
+        return Bounds3D.of(points);
     }
 
     @Override

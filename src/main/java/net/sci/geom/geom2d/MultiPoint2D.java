@@ -196,27 +196,7 @@ public class MultiPoint2D implements Geometry2D
     @Override
     public Bounds2D bounds()
     {
-        if (this.points.isEmpty())
-        {
-            return new Bounds2D();
-        }
-        
-        // init bounds
-        double xmin = Double.POSITIVE_INFINITY;
-        double xmax = Double.NEGATIVE_INFINITY;
-        double ymin = Double.POSITIVE_INFINITY;
-        double ymax = Double.NEGATIVE_INFINITY;
-        
-        // compute bounds by iterating over points
-        for (Point2D p : this.points)
-        {
-            xmin = Math.min(p.x, xmin);
-            ymin = Math.min(p.y, ymin);
-            xmax = Math.max(p.x, xmax);
-            ymax = Math.max(p.y, ymax);
-        }
-
-        return new Bounds2D(xmin, xmax, ymin, ymax);
+        return Bounds2D.of(points);
     }
 
     @Override

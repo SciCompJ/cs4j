@@ -17,6 +17,38 @@ import net.sci.geom.geom2d.polygon.Polygon2D;
 public class Bounds2D implements Bounds, Geometry2D
 {
     // ===================================================================
+    // Static factories
+    
+    /**
+     * Computes the bounds of a collection of points. If the collection is
+     * empty, returns infinite bounds.
+     * 
+     * @param points
+     *            the bounds to bound
+     * @return the bounds of the points.
+     */
+    public static final Bounds2D of(Iterable<Point2D> points)
+    {
+        // init bounds
+        double xmin = Double.POSITIVE_INFINITY;
+        double xmax = Double.NEGATIVE_INFINITY;
+        double ymin = Double.POSITIVE_INFINITY;
+        double ymax = Double.NEGATIVE_INFINITY;
+        
+        // compute bounds by iterating over points
+        for (Point2D p : points)
+        {
+            xmin = Math.min(p.x, xmin);
+            ymin = Math.min(p.y, ymin);
+            xmax = Math.max(p.x, xmax);
+            ymax = Math.max(p.y, ymax);
+        }
+
+        return new Bounds2D(xmin, xmax, ymin, ymax);        
+    }
+    
+
+    // ===================================================================
     // class variables
 
     double xmin;

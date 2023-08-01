@@ -509,27 +509,7 @@ public class SimpleTriMesh3D implements TriMesh3D
     @Override
     public Bounds3D bounds()
     {
-        // initialize to extreme values
-        double xmin = Double.POSITIVE_INFINITY;
-        double ymin = Double.POSITIVE_INFINITY;
-        double zmin = Double.POSITIVE_INFINITY;
-        double xmax = Double.NEGATIVE_INFINITY;
-        double ymax = Double.NEGATIVE_INFINITY;
-        double zmax = Double.NEGATIVE_INFINITY;
-        
-        // compute min max in each direction
-        for (Point3D vertex : this.vertexPositions)
-        {
-            xmin = Math.min(xmin, vertex.x());
-            xmax = Math.max(xmax, vertex.x());
-            ymin = Math.min(ymin, vertex.y());
-            ymax = Math.max(ymax, vertex.y());
-            zmin = Math.min(zmin, vertex.z());
-            zmax = Math.max(zmax, vertex.z());
-        }
-        
-        // create the resulting box
-        return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
+        return Bounds3D.of(vertexPositions);
     }
     
     /* (non-Javadoc)

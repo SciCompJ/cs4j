@@ -15,6 +15,42 @@ import net.sci.geom.Bounds;
 public class Bounds3D implements Bounds
 {
     // ===================================================================
+    // Static factories
+    
+    /**
+     * Computes the bounds of a collection of points. If the collection is
+     * empty, returns infinite bounds.
+     * 
+     * @param points
+     *            the bounds to bound
+     * @return the bounds of the points.
+     */
+    public static final Bounds3D of(Iterable<Point3D> points)
+    {
+        // init bounds
+        double xmin = Double.POSITIVE_INFINITY;
+        double xmax = Double.NEGATIVE_INFINITY;
+        double ymin = Double.POSITIVE_INFINITY;
+        double ymax = Double.NEGATIVE_INFINITY;
+        double zmin = Double.POSITIVE_INFINITY;
+        double zmax = Double.NEGATIVE_INFINITY;
+        
+        // compute bounds by iterating over points
+        for (Point3D p : points)
+        {
+            xmin = Math.min(p.x, xmin);
+            xmax = Math.max(p.x, xmax);
+            ymin = Math.min(p.y, ymin);
+            ymax = Math.max(p.y, ymax);
+            zmin = Math.min(p.z, zmin);
+            zmax = Math.max(p.z, zmax);
+        }
+
+        return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);        
+    }
+    
+    
+    // ===================================================================
     // class variables
 
     double xmin;
