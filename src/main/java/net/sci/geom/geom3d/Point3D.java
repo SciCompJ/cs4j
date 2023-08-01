@@ -51,6 +51,29 @@ public class Point3D implements Point, Geometry3D
         return new Point3D(point.x(), point.y(), z);
     }
     
+    /**
+     * Interpolates the position of a new Point3D between the two points.
+     * 
+     * @param p1
+     *            the first point to interpolate
+     * @param p2
+     *            the second point to interpolate
+     * @param t
+     *            the relative position of the new point, between 0 and 1. If t
+     *            is outside the [0,1] range, its value is clamped to enforce
+     *            the resulting point to be between the two extremity points.
+     * @return the interpolated point
+     */
+    public static final Point3D interpolate(Point3D p1, Point3D p2, double t)
+    {
+        if (t <= 0) return p1;
+        if (t >= 1) return p2;
+        double x = p1.x() * (1.0 - t) + p2.x() * t;
+        double y = p1.y() * (1.0 - t) + p2.y() * t;
+        double z = p1.z() * (1.0 - t) + p2.z() * t;
+        return new Point3D(x, y, z);
+    }
+    
     
 	// ===================================================================
 	// class variables

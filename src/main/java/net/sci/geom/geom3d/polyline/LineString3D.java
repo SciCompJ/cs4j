@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.LineString2D;
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Point3D;
@@ -91,13 +90,7 @@ public interface LineString3D extends Polyline3D
             {
                 double pos0 = pos - cumSum + dist;
                 double t1 = pos0 / dist;
-                double t0 = 1 - t1;
-                
-                double x = prev.x() * t0 + vertex.x() * t1;
-                double y = prev.y() * t0 + vertex.y() * t1;
-                double z = prev.z() * t0 + vertex.z() * t1;
-                
-                return new Point3D(x, y, z);
+                return Point3D.interpolate(prev, vertex, t1);
             }
             prev = vertex;
         }
@@ -160,7 +153,7 @@ public interface LineString3D extends Polyline3D
         LineString2D res = LineString2D.create(vertexCount());
         for(Point3D pos : vertexPositions())
         {
-            res.addVertex(new Point2D(pos.x(), pos.y()));
+            res.addVertex(pos.projectXY());
         }
         return res;
     }
@@ -198,22 +191,16 @@ public interface LineString3D extends Polyline3D
         double tl = t - ind0;
         Point3D p0 = vertexPosition(ind0);
 
-//        // check if equal to a vertex
-//        if (Math.abs(t - ind0) < Shape2D.ACCURACY)
-//            return p0;
+        // check if equal to last vertex
+        if (t == t1)
+            return p0;
 
         // index of vertex after point
         int ind1 = ind0+1;
         Point3D p1 = vertexPosition(ind1);
 
-        // position on line;
-        double x0 = p0.x();
-        double y0 = p0.y();
-        double z0 = p0.z();
-        double dx = p1.x() - x0;
-        double dy = p1.y() - y0;
-        double dz = p1.z() - z0;
-        return new Point3D(x0 + tl * dx, y0 + tl * dy, z0 + tl * dz);
+        // interpolate on current line;
+        return Point3D.interpolate(p0, p1, tl);
     }
 
     @Override

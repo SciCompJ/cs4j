@@ -5,7 +5,6 @@ package net.sci.geom.geom3d.polyline;
 
 import java.util.Collection;
 
-import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Point3D;
@@ -130,7 +129,7 @@ public interface LinearRing3D extends Polyline3D
         LinearRing2D res = LinearRing2D.create(vertexCount());
         for(Point3D pos : vertexPositions())
         {
-            res.addVertex(new Point2D(pos.x(), pos.y()));
+            res.addVertex(pos.projectXY());
         }
         return res;
     }
@@ -152,26 +151,15 @@ public interface LinearRing3D extends Polyline3D
         if (ind0 == n)
             ind0 = 0;
         Point3D p0 = vertexPosition(ind0);
-
-//        // check if equal to a vertex
-//        if (Math.abs(t - ind0) < Shape2D.ACCURACY)
-//            return p0;
-
+        
         // index of vertex after point
         int ind1 = ind0 + 1;
         if (ind1 == n)
             ind1 = 0;
         Point3D p1 = vertexPosition(ind1);
 
-        // position on line;
-        double x0 = p0.x();
-        double y0 = p0.y();
-        double z0 = p0.z();
-        double dx = p1.x() - x0;
-        double dy = p1.y() - y0;
-        double dz = p1.z() - z0;
-
-        return new Point3D(x0 + tl * dx, y0 + tl *dy, z0 + tl *dz);
+        // interpolate on current line;
+        return Point3D.interpolate(p0, p1, tl);
     }
 
     @Override
