@@ -270,37 +270,7 @@ public class DefaultLineString2D implements LineString2D
         
         return cumSum;
     }
-    
-    @Override
-    public Point2D getPoint(double t)
-    {
-        // format position to stay between limits
-        double t0 = this.getT0();
-        double t1 = this.getT1();
-        t = Math.max(Math.min(t, t1), t0);
-
-        // index of vertex before point
-        int ind0 = (int) Math.floor(t + Double.MIN_VALUE);
-        double tl = t - ind0;
-        Point2D p0 = vertices.get(ind0);
-
-        // check if equal to last vertex
-        if (t == t1)
-            return p0;
-
-        // index of vertex after point
-        int ind1 = ind0+1;
-        Point2D p1 = vertices.get(ind1);
-
-        // position on line;
-        double x0 = p0.x();
-        double y0 = p0.y();
-        double dx = p1.x() - x0;
-        double dy = p1.y() - y0;
-        return new Point2D(x0 + tl * dx, y0 + tl * dy);
-    }
-
-	
+    	
     @Override
     public LineString2D duplicate()
     {
@@ -309,6 +279,7 @@ public class DefaultLineString2D implements LineString2D
         dup.vertexNormals.addAll(this.vertexNormals);
         return dup;
     }
+    
 
     // ===================================================================
     // Inner class implementations

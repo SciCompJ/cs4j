@@ -93,8 +93,6 @@ public interface LinearRing2D extends Polyline2D, Contour2D
         {
             throw new RuntimeException("Interpolation value must be comprised between 0 and 1.");
         }
-        double t0 = t;
-        double t1 = 1 - t0;
         
         // allocate memory for result
         LinearRing2D res = LinearRing2D.create(nv);
@@ -104,10 +102,7 @@ public interface LinearRing2D extends Polyline2D, Contour2D
         {
             Point2D p1 = ring0.vertexPosition(iv);
             Point2D p2 = ring1.vertexPosition(iv);
-            
-            double x = p1.x() * t1 + p2.x() * t0;
-            double y = p1.y() * t1 + p2.y() * t0;
-            res.addVertex(new Point2D(x, y));
+            res.addVertex(Point2D.interpolate(p1, p2, t));
         }
 
         return res;
@@ -478,12 +473,8 @@ public interface LinearRing2D extends Polyline2D, Contour2D
             if (cumSum >= pos)
             {
                 double pos0 = pos - cumSum + dist;
-                double t1 = pos0 / dist;
-                double t0 = 1 - t1;
-                
-                double x = prev.x() * t0 + vertex.x() * t1;
-                double y = prev.y() * t0 + vertex.y() * t1;
-                return new Point2D(x, y);
+                double t = pos0 / dist;
+                return Point2D.interpolate(prev, vertex, t);
             }
             prev = vertex;
         }
@@ -495,12 +486,8 @@ public interface LinearRing2D extends Polyline2D, Contour2D
         if (cumSum >= pos)
         {
             double pos0 = pos - cumSum + dist;
-            double t1 = pos0 / dist;
-            double t0 = 1 - t1;
-            
-            double x = prev.x() * t0 + vertex.x() * t1;
-            double y = prev.y() * t0 + vertex.y() * t1;
-            return new Point2D(x, y);
+            double t = pos0 / dist;
+            return Point2D.interpolate(prev, vertex, t);
         }
         
         // otherwise return the first/last vertex
@@ -579,13 +566,8 @@ public interface LinearRing2D extends Polyline2D, Contour2D
             ind1 = 0;
         Point2D p1 = vertexPosition(ind1);
 
-        // position on line;
-        double x0 = p0.x();
-        double y0 = p0.y();
-        double dx = p1.x() - x0;
-        double dy = p1.y() - y0;
-
-        return new Point2D(x0 + tl * dx, y0 + tl *dy);
+        // interpolate on current line;
+        return Point2D.interpolate(p0, p1, tl);
     }
 
     @Override

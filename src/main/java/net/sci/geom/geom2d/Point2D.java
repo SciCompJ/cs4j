@@ -12,6 +12,8 @@ import java.util.Locale;
 import net.sci.geom.Point;
 
 /**
+ * A point in the two-dimensional plane. 
+ * 
  * @author dlegland
  *
  */
@@ -20,6 +22,11 @@ public class Point2D implements Geometry2D, Point
     // ===================================================================
     // Static methods
     
+    /**
+     * Computes the centroid of a collection of points.
+     * @param points the points to consider.
+     * @return the centroid of the input points.
+     */
     public static final Point2D centroid(Point2D... points)
     {
         double xc = 0;
@@ -32,6 +39,28 @@ public class Point2D implements Geometry2D, Point
         }
         
         return new Point2D(xc / np, yc / np);
+    }
+    
+    /**
+     * Interpolates the position of a new Point2D between the two points.
+     * 
+     * @param p1
+     *            the first point to interpolate
+     * @param p2
+     *            the second point to interpolate
+     * @param t
+     *            the relative position of the new point, between 0 and 1. If t
+     *            is outside the [0,1] range, its value is clamped to enforce
+     *            the resulting point to be between the two extremity points.
+     * @return the interpolated point
+     */
+    public static final Point2D interpolate(Point2D p1, Point2D p2, double t)
+    {
+        if (t <= 0) return p1;
+        if (t >= 1) return p2;
+        double x = p1.x() * (1.0 - t) + p2.x() * t;
+        double y = p1.y() * (1.0 - t) + p2.y() * t;
+        return new Point2D(x, y);
     }
     
     /**

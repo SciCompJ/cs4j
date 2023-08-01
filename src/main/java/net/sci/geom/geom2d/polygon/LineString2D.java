@@ -77,8 +77,6 @@ public interface LineString2D extends Polyline2D
         {
             throw new RuntimeException("Interpolation value must be comprised between 0 and 1.");
         }
-        double t0 = t;
-        double t1 = 1 - t0;
         
         // allocate memory for result
         LineString2D res = LineString2D.create(nv);
@@ -88,10 +86,7 @@ public interface LineString2D extends Polyline2D
         {
             Point2D p1 = ring0.vertexPosition(iv);
             Point2D p2 = ring1.vertexPosition(iv);
-            
-            double x = p1.x() * t1 + p2.x() * t0;
-            double y = p1.y() * t1 + p2.y() * t0;
-            res.addVertex(new Point2D(x, y));
+            res.addVertex(Point2D.interpolate(p1, p2, t));
         }
 
         return res;
@@ -197,6 +192,31 @@ public interface LineString2D extends Polyline2D
         return reverse;
     }
 
+    @Override
+    public default Point2D getPoint(double t)
+    {
+        // format position to stay between limits
+        double t0 = this.getT0();
+        double t1 = this.getT1();
+        t = Math.max(Math.min(t, t1), t0);
+
+        // index of vertex before point
+        int ind0 = (int) Math.floor(t + Double.MIN_VALUE);
+        double tl = t - ind0;
+        Point2D p0 = vertexPosition(ind0);
+
+        // check if equal to last vertex
+        if (t == t1)
+            return p0;
+
+        // index of vertex after point
+        int ind1 = ind0+1;
+        Point2D p1 = vertexPosition(ind1);
+
+        // interpolate on current line;
+        return Point2D.interpolate(p0, p1, tl);
+    }
+
     public default Point2D getPointAtLength(double pos)
     {
         double cumSum = 0;
@@ -210,12 +230,8 @@ public interface LineString2D extends Polyline2D
             if (cumSum >= pos)
             {
                 double pos0 = pos - cumSum + dist;
-                double t1 = pos0 / dist;
-                double t0 = 1 - t1;
-                
-                double x = prev.x() * t0 + vertex.x() * t1;
-                double y = prev.y() * t0 + vertex.y() * t1;
-                return new Point2D(x, y);
+                double t = pos0 / dist;
+                return Point2D.interpolate(prev, vertex, t);
             }
             prev = vertex;
         }
