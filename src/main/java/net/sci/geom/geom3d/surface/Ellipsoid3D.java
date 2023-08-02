@@ -31,33 +31,141 @@ public class Ellipsoid3D implements Geometry3D
     final double r2;
     final double r3;
 
-    final Rotation3D orient;
+    /**
+     * The first rotation applied to the ellipsoid, around the X-axis, in degrees.
+     */
+    final double eulerAngleX; 
+    /**
+     * The second  rotation applied to the ellipsoid, around the Y-axis, in degrees.
+     */
+    final double eulerAngleY; 
+    /**
+     * The third rotation applied to the ellipsoid, around the Z-axis, in degrees.
+     */
+    final double eulerAngleZ;
     
     
     // ===================================================================
     // Constructors
 
+    /**
+     * Creates a new ellipsoid aligned with the main axes.
+     * 
+     * @param center
+     *            the center of the ellipsoid
+     * @param r1
+     *            the length of the first ellipsoid semi-axis
+     * @param r2
+     *            the length of the second ellipsoid semi-axis
+     * @param r3
+     *            the length of the third ellipsoid semi-axis
+     */
     public Ellipsoid3D(Point3D center, double r1, double r2, double r3)
     {
-        this(center, r1, r2, r3, new Rotation3D());
+        this.center = center;
+        this.r1 = r1;
+        this.r2 = r2;
+        this.r3 = r3;
+        this.eulerAngleX = 0.0;
+        this.eulerAngleY = 0.0;
+        this.eulerAngleZ = 0.0;
     }
 
+    /**
+     * Creates a new ellipsoid with a specific orientation given by a Rotation3D
+     * instance.
+     * 
+     * @param center
+     *            the center of the ellipsoid
+     * @param r1
+     *            the length of the first ellipsoid semi-axis
+     * @param r2
+     *            the length of the second ellipsoid semi-axis
+     * @param r3
+     *            the length of the third ellipsoid semi-axis
+     * @param orientation
+     *            the 3D orientation of the ellipsoid around its center
+     */
     public Ellipsoid3D(Point3D center, double r1, double r2, double r3, Rotation3D orientation)
     {
         this.center = center;
         this.r1 = r1;
         this.r2 = r2;
         this.r3 = r3;
-        this.orient = orientation;
+        double[] angles = orientation.eulerAngles();
+        this.eulerAngleX = Math.toDegrees(angles[0]);
+        this.eulerAngleY = Math.toDegrees(angles[0]);
+        this.eulerAngleZ = Math.toDegrees(angles[0]);
     }
 
+    /**
+     * Creates a new ellipsoid with a specific orientation given by three Euler
+     * angles (in degrees).
+     * 
+     * @param center
+     *            the center of the ellipsoid
+     * @param r1
+     *            the length of the first ellipsoid semi-axis
+     * @param r2
+     *            the length of the second ellipsoid semi-axis
+     * @param r3
+     *            the length of the third ellipsoid semi-axis
+     * @param eulerAngleX
+     *            the first rotation applied to the ellipsoid, around the
+     *            X-axis, in degrees.
+     * @param eulerAngleY
+     *            the second rotation applied to the ellipsoid, around the
+     *            Y-axis, in degrees.
+     * @param eulerAngleZ
+     *            the third rotation applied to the ellipsoid, around the
+     *            Z-axis, in degrees.
+     */
+    public Ellipsoid3D(Point3D center, double r1, double r2, double r3, double eulerAngleX, double eulerAngleY, double eulerAngleZ)
+    {
+        this.center = center;
+        this.r1 = r1;
+        this.r2 = r2;
+        this.r3 = r3;
+        this.eulerAngleX = eulerAngleX;
+        this.eulerAngleY = eulerAngleY;
+        this.eulerAngleZ = eulerAngleZ;
+    }
+    
+    /**
+     * Creates a new ellipsoid with a specific orientation given by three Euler
+     * angles (in degrees).
+     * 
+     * @param centerX
+     *            the x-coordinate of ellipsoid center
+     * @param centerY
+     *            the y-coordinate of ellipsoid center
+     * @param centerZ
+     *            the z-coordinate of ellipsoid center
+     * @param r1
+     *            the length of the first ellipsoid semi-axis
+     * @param r2
+     *            the length of the second ellipsoid semi-axis
+     * @param r3
+     *            the length of the third ellipsoid semi-axis
+     * @param eulerAngleX
+     *            the first rotation applied to the ellipsoid, around the
+     *            X-axis, in degrees.
+     * @param eulerAngleY
+     *            the second rotation applied to the ellipsoid, around the
+     *            Y-axis, in degrees.
+     * @param eulerAngleZ
+     *            the third rotation applied to the ellipsoid, around the
+     *            Z-axis, in degrees.
+     */
     public Ellipsoid3D(double centerX, double centerY, double centerZ, double r1, double r2, double r3, double eulerAngleX, double eulerAngleY, double eulerAngleZ)
     {
         this.center = new Point3D(centerX, centerY, centerZ);
         this.r1 = r1;
         this.r2 = r2;
         this.r3 = r3;
-        this.orient = Rotation3D.fromEulerAngles(Math.toRadians(eulerAngleX), Math.toRadians(eulerAngleY), Math.toRadians(eulerAngleZ));
+        this.eulerAngleX = eulerAngleX;
+        this.eulerAngleY = eulerAngleY;
+        this.eulerAngleZ = eulerAngleZ;
     }
 
     
@@ -86,7 +194,7 @@ public class Ellipsoid3D implements Geometry3D
      */
     public Rotation3D orientation()
     {
-        return this.orient;
+        return Rotation3D.fromEulerAngles(Math.toRadians(eulerAngleX), Math.toRadians(eulerAngleY), Math.toRadians(eulerAngleZ));
     }
     
 
@@ -240,7 +348,7 @@ public class Ellipsoid3D implements Geometry3D
     @Override
     public Geometry3D duplicate()
     {
-        return new Ellipsoid3D(center, r1, r2, r3, orient);
+        return new Ellipsoid3D(center, r1, r2, r3, eulerAngleX, eulerAngleY, eulerAngleZ);
     }
 
     /**
@@ -307,7 +415,7 @@ public class Ellipsoid3D implements Geometry3D
     private AffineTransform3D localToGlobalTransform()
     {
         AffineTransform3D sca = AffineTransform3D.createScaling(r1, r2, r3);
-        AffineTransform3D rot = AffineTransform3D.fromMatrix(orient.affineMatrix());
+        AffineTransform3D rot = AffineTransform3D.fromMatrix(orientation().affineMatrix());
         AffineTransform3D tra = AffineTransform3D.createTranslation(center);
         return tra.concatenate(rot).concatenate(sca);
     }
@@ -315,7 +423,7 @@ public class Ellipsoid3D implements Geometry3D
     private AffineTransform3D globalToLocalTransform()
     {
         AffineTransform3D tra = AffineTransform3D.createTranslation(-center.x(), -center.y(), -center.z());
-        AffineTransform3D rot = AffineTransform3D.fromMatrix(orient.inverse().affineMatrix());
+        AffineTransform3D rot = AffineTransform3D.fromMatrix(orientation().inverse().affineMatrix());
         AffineTransform3D sca = AffineTransform3D.createScaling(1.0 / r1, 1.0 / r2, 1.0 / r3);
         return sca.concatenate(rot).concatenate(tra);
     }
