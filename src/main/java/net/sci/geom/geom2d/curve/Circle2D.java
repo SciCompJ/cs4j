@@ -3,7 +3,6 @@
  */
 package net.sci.geom.geom2d.curve;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.cos;
 import static java.lang.Math.hypot;
 import static java.lang.Math.sin;
@@ -71,46 +70,11 @@ public class Circle2D implements Contour2D
     // Specific methods
     
     /**
-     * Converts this circle into a new LinearRing2D with the specified number of
-     * vertices.
-     * 
-     * @param nVertices
-     *            the number of vertices of the created linear ring
-     * @return a new instance of LinearRing2D
-     */
-    public LinearRing2D asPolyline(int nVertices)
-    {
-        double dt = Math.toRadians(360.0 / (nVertices + 1));
-        
-        LinearRing2D res = LinearRing2D.create(nVertices);
-        for (int i = 0; i < nVertices; i++)
-        {
-            double x = cos(i * dt) * this.radius + this.xc;
-            double y = sin(i * dt) * this.radius + this.yc;
-            res.addVertex(new Point2D(x, y));
-        }
-        
-        return res;
-    }
-
-    /**
      * @return an ellipse that can be super-imposed on this circle 
      */
     public Ellipse2D asEllipse()
     {
         return new Ellipse2D(xc, yc, radius, radius, 0);
-    }
-    
-    /**
-     * Computes the area of this circle, by multiplying the squared radius by
-     * PI.
-     * 
-     * @see net.sci.geom.geom2d.curve.Ellipse2D#area()
-     * @return the area of this circle.
-     */
-    public double area()
-    {
-        return this.radius * this.radius * Math.PI;
     }
     
     public Point2D center()
@@ -126,6 +90,29 @@ public class Circle2D implements Contour2D
         return radius;
     }
     
+    /**
+     * Computes the area of this circle, by multiplying the squared radius by
+     * PI.
+     * 
+     * @see net.sci.geom.geom2d.curve.Ellipse2D#area()
+     * @return the area of this circle.
+     */
+    public double area()
+    {
+        return this.radius * this.radius * Math.PI;
+    }
+    
+    /**
+     * Computes the perimeter of this circle, by multiplying the radius by 2*PI.
+     * 
+     * @see #area()
+     * @return the perimeter of this circle.
+     */
+    public double perimeter()
+    {
+        return 2 * Math.PI * this.radius;
+    }
+
     
     // ===================================================================
     // Methods implementing the Boundary2D interface
@@ -149,13 +136,36 @@ public class Circle2D implements Contour2D
 
     public boolean isInside(double x, double y)
     {
-    	return abs(hypot(x - this.xc, y - this.yc) - this.radius) <= 1;
+    	return hypot(x - this.xc, y - this.yc) <= this.radius;
     }
 
     
     // ===================================================================
     // Methods implementing the Curve2D interface
     
+    /**
+     * Converts this circle into a new LinearRing2D with the specified number of
+     * vertices.
+     * 
+     * @param nVertices
+     *            the number of vertices of the created linear ring
+     * @return a new instance of LinearRing2D
+     */
+    public LinearRing2D asPolyline(int nVertices)
+    {
+        double dt = Math.toRadians(360.0 / (nVertices + 1));
+        
+        LinearRing2D res = LinearRing2D.create(nVertices);
+        for (int i = 0; i < nVertices; i++)
+        {
+            double x = cos(i * dt) * this.radius + this.xc;
+            double y = sin(i * dt) * this.radius + this.yc;
+            res.addVertex(new Point2D(x, y));
+        }
+        
+        return res;
+    }
+
     @Override
     public Point2D getPoint(double t)
     {
