@@ -22,7 +22,7 @@ public interface Curve3D extends CurveShape3D
      *            the parameterization value of the point
      * @return the position of the point
      */
-    public abstract Point3D getPoint(double t);
+    public abstract Point3D point(double t);
 
     /**
      * Returns the lower bound of the parameterization range.

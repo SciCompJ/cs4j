@@ -137,7 +137,7 @@ public class StraightLine3D implements LinearGeometry3D
      *            the position on the line
      * @return the point located at specified position
      */
-    public Point3D getPoint(double t)
+    public Point3D point(double t)
     {
         return new Point3D(x0 + dx * t, y0 + dy * t, z0 + dz * t);
     }

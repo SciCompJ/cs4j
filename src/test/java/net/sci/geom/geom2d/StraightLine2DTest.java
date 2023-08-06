@@ -17,7 +17,7 @@ public class StraightLine2DTest
         StraightLine2D line = new StraightLine2D(1, 2, 3, 4);
         double eps = 1e-12;
         
-        Point2D point = line.getPoint(3);
+        Point2D point = line.point(3);
         Point2D exp = new Point2D(10, 14);
         assertTrue(exp.almostEquals(point, eps));
     }

@@ -366,7 +366,7 @@ public class Ellipse2D implements Contour2D
     // Methods implementing the Curve2D interface
     
     @Override
-    public Point2D getPoint(double t)
+    public Point2D point(double t)
     {
         // pre-copute rotation coefficients
         double thetaRad = Math.toRadians(this.theta);

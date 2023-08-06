@@ -179,7 +179,7 @@ public interface LineString3D extends Polyline3D
     }
 
     @Override
-    public default Point3D getPoint(double t)
+    public default Point3D point(double t)
     {
         // format position to stay between limits
         double t0 = this.t0();

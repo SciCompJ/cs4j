@@ -547,7 +547,7 @@ public interface LinearRing2D extends Polyline2D, Contour2D
     }
     
     @Override
-    public default Point2D getPoint(double t)
+    public default Point2D point(double t)
     {
         int nv = vertexCount();
         t = Math.min(Math.max(t, 0), nv);

@@ -140,7 +140,7 @@ public class LineSegment2D implements LinearGeometry2D
      * @return the point located at specified position
      */
     @Override
-    public Point2D getPoint(double t)
+    public Point2D point(double t)
     {
         t = Math.min(Math.max(t, 0), 1);
         double x = this.x1 + t * (this.x2 - this.x1);
@@ -243,7 +243,7 @@ public class LineSegment2D implements LinearGeometry2D
         t = Math.max(Math.min(t, 1), 0);
         
         // compute position of projected point on the edge
-        Point2D proj = line.getPoint(t);
+        Point2D proj = line.point(t);
         
         // return distance to projected point
         return proj.distance(x, y);

@@ -188,7 +188,7 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
      * @return the point located at specified position
      */
     @Override
-    public Point2D getPoint(double t)
+    public Point2D point(double t)
     {
         double x = this.x0 + t * this.dx;
         double y = this.y0 + t * this.dy;

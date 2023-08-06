@@ -58,9 +58,9 @@ public class LineString2DTest
                 new Point2D(10, 40));
         LineString2D poly2 = poly.resampleBySpacing(20);
         
-        Point2D p20 = poly2.getPoint(0);
+        Point2D p20 = poly2.point(0);
         assertTrue(p20.distance(10, 20) < 0.001);
-        Point2D p21 = poly2.getPoint(poly2.vertexCount() - 1);
+        Point2D p21 = poly2.point(poly2.vertexCount() - 1);
         assertTrue(p21.distance(10, 40) < 0.001);
     }
     
@@ -142,7 +142,7 @@ public class LineString2DTest
                 new Point2D(50, 20),
                 new Point2D(50, 40),
                 new Point2D(10, 40));
-        Point2D lastPoint = poly.getPoint(3);
+        Point2D lastPoint = poly.point(3);
         assertTrue(lastPoint.distance(new Point2D(10, 40)) < 0.001);
     }
     

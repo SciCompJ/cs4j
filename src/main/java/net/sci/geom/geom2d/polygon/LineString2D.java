@@ -193,7 +193,7 @@ public interface LineString2D extends Polyline2D
     }
 
     @Override
-    public default Point2D getPoint(double t)
+    public default Point2D point(double t)
     {
         // format position to stay between limits
         double t0 = this.t0();

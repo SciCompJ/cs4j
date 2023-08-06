@@ -37,7 +37,7 @@ public interface Curve2D extends CurveShape2D
         
         for (int i = 0; i < nVertices; i++)
         {
-            vertices.add(getPoint(t0 + i * dt));
+            vertices.add(point(t0 + i * dt));
         }
         
         return Polyline2D.create(vertices, this.isClosed());
@@ -51,7 +51,7 @@ public interface Curve2D extends CurveShape2D
      *            the parameterization value of the point
      * @return the position of the point
      */
-    public abstract Point2D getPoint(double t);
+    public abstract Point2D point(double t);
 
     /**
      * Returns the lower bound of the parameterization range.

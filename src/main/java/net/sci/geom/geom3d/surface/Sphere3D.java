@@ -149,8 +149,8 @@ public class Sphere3D implements Geometry3D
         
         // add the two points on the line
         ArrayList<Point3D> result = new ArrayList<Point3D>(2);
-        result.add(line.getPoint(t1));
-        result.add(line.getPoint(t2));
+        result.add(line.point(t1));
+        result.add(line.point(t2));
         return result;
     }
 

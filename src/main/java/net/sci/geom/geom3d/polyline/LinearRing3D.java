@@ -139,7 +139,7 @@ public interface LinearRing3D extends Polyline3D
     // Methods implementing the Curve3D interface
     
     @Override
-    public default Point3D getPoint(double t)
+    public default Point3D point(double t)
     {
         t = Math.min(Math.max(t, 0), 1);
         int n = vertexCount();
