@@ -5,6 +5,9 @@ package net.sci.geom.geom3d.surface;
 
 import static java.lang.Math.sqrt;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Bounds3D;
@@ -356,18 +359,15 @@ public class Ellipsoid3D implements Geometry3D
     public double distance(double x, double y, double z)
     {
         // use a discrete approximation of the ellipsoid
-        Point3D[][] verts = surfaceVertices(240, 120);
+        Collection<Point3D> verts = surfaceVertices(240, 120);
         
         // initialize distance
         double dist = Double.POSITIVE_INFINITY;
         
         // iterate over vertices
-        for (int i = 0; i < verts.length; i++)
+        for (Point3D point : verts)
         {
-            for (int j = 0; j < verts[i].length; j++)
-            {
-                dist = Math.min(dist, verts[i][j].distance(x, y, z));
-            }
+            dist = Math.min(dist, point.distance(x, y, z));
         }
         
         // concatenate into a new Bounds3D object
@@ -378,33 +378,7 @@ public class Ellipsoid3D implements Geometry3D
     public Bounds3D bounds()
     {
         // use a discrete approximation of the ellipsoid
-        Point3D[][] verts = surfaceVertices(240, 120);
-        
-        // initialize bounds
-        double xmin = Double.POSITIVE_INFINITY;
-        double xmax = Double.NEGATIVE_INFINITY;
-        double ymin = Double.POSITIVE_INFINITY;
-        double ymax = Double.NEGATIVE_INFINITY;
-        double zmin = Double.POSITIVE_INFINITY;
-        double zmax = Double.NEGATIVE_INFINITY;
-        
-        // iterate over vertices
-        for (int i = 0; i < verts.length; i++)
-        {
-            for (int j = 0; j < verts[i].length; j++)
-            {
-                Point3D p = verts[i][j];
-                xmin = Math.min(xmin, p.x());
-                xmax = Math.max(xmax, p.x());
-                ymin = Math.min(ymin, p.y());
-                ymax = Math.max(ymax, p.y());
-                zmin = Math.min(zmin, p.z());
-                zmax = Math.max(zmax, p.z());
-            }
-        }
-        
-        // concatenate into a new Bounds3D object
-        return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
+        return Bounds3D.of(surfaceVertices(240, 120));
     }
 
     @Override
@@ -441,7 +415,7 @@ public class Ellipsoid3D implements Geometry3D
     // ===================================================================
     // Private computation methods
     
-    private Point3D[][] surfaceVertices(int nPhi, int nTheta)
+    private Collection<Point3D> surfaceVertices(int nPhi, int nTheta)
     {
         // pre-compute angle values for phi
         double[] phiList = new double[nPhi+1];
@@ -464,7 +438,7 @@ public class Ellipsoid3D implements Geometry3D
         AffineTransform3D transfo = localToGlobalTransform();
         
         // allocate memory
-        Point3D[][] res = new Point3D[nTheta+1][nPhi+1];
+        ArrayList<Point3D> res = new ArrayList<Point3D>((nTheta+1) * (nPhi+1));
         
         // iterate over pairs of spherical coordinates
         for (int iPhi = 0; iPhi <= nPhi; iPhi++)
@@ -478,7 +452,7 @@ public class Ellipsoid3D implements Geometry3D
             {
                 double sit = sinTheta[iTheta];
                 double cot = cosTheta[iTheta];
-                res[iTheta][iPhi] = transfo.transform(new Point3D(cosPhi * sit, sinPhi * sit, cot));
+                res.add(transfo.transform(new Point3D(cosPhi * sit, sinPhi * sit, cot)));
             }
         }
         
