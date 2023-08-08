@@ -26,26 +26,55 @@ import net.sci.geom.geom2d.polygon.LinearRing2D;
 public class Ellipse2D implements Contour2D
 {
     // ===================================================================
+    // Constants
+    
+    private static final double SQRT_2 = Math.sqrt(2);
+    
+    
+    // ===================================================================
     // Static methods
+    
+    /**
+     * Creates a new Ellipse2D instance from a center and the unique
+     * coefficients of the inertia matrix. The diagonal coefficients of the
+     * inertia matrix are provided first.
+     * 
+     * @param center
+     *            the center of the ellipse
+     * @param Ixx
+     *            the second-order inertia coefficient along the x axis
+     * @param Iyy
+     *            the second-order inertia coefficient along the y axis
+     * @param Ixy
+     *            the second-order inertia coefficient along the (xy) diagonal
+     *            axis
+     * @return the corresponding Ellipse2D
+     */
+    public static final Ellipse2D fromInertiaCoefficients(Point2D center, double Ixx, double Iyy, double Ixy)
+    {
+        // compute ellipse semi-axis lengths
+        double common = sqrt((Ixx - Iyy) * (Ixx - Iyy) + 4 * Ixy * Ixy);
+        double ra = SQRT_2 * sqrt(Ixx + Iyy + common);
+        double rb = SQRT_2 * sqrt(Ixx + Iyy - common);
+
+        // compute ellipse angle and convert into degrees
+        double theta = Math.toDegrees(atan2(2 * Ixy, Ixx - Iyy) / 2);
+        
+        // concatenate into an instance of Ellipse2D
+        return new Ellipse2D(center, ra, rb, theta);
+    }
     
     /**
      * Reduces the parameters of a PrincipalAxes instances into an Ellipse2D.
      * 
      * @param axes
      *            the instance of PrincipalAxes2D to convert
-     * @return the equivalent Ellipse
+     * @return the equivalent ellipse
      */
-    public Ellipse2D convert(PrincipalAxes2D axes)
+    public Ellipse2D fromAxes(PrincipalAxes2D axes)
     {
-        double[][] rotMat = axes.rotationMatrix();
-        
-        double xx = rotMat[0][0];
-        double xy = rotMat[0][1];
-        double yy = rotMat[1][1];
-        double theta = Math.toDegrees(Math.atan2(2 * xy, xx - yy) / 2);
-        
         double[] sca = axes.scalings();
-        
+        double theta = Math.toDegrees(axes.rotationAngle());
         return new Ellipse2D(axes.center(), sca[0], sca[1], theta);
     }
     
@@ -110,14 +139,14 @@ public class Ellipse2D implements Contour2D
 
         // compute matrix determinant
         double delta = a * d - b * c;
-        delta = delta * delta;
+        double denom = 1.0 / ( delta * delta);
 
-        double A2 = (A * d * d + C * b * b - B * b * d) / delta;
-        double B2 = (B * (a * d + b * c) - 2 * (A * c * d + C * a * b)) / delta;
-        double C2 = (A * c * c + C * a * a - B * a * c) / delta;
+        double A2 = (A * d * d + C * b * b - B * b * d) * denom;
+        double B2 = (B * (a * d + b * c) - 2 * (A * c * d + C * a * b)) * denom;
+        double C2 = (A * c * c + C * a * a - B * a * c) * denom;
 
         // return only 3 parameters if needed
-        if (coefs.length==3)
+        if (coefs.length == 3)
             return new double[] { A2, B2, C2 };
 
         // Compute other coefficients
@@ -137,7 +166,7 @@ public class Ellipse2D implements Contour2D
      *            coefficients for x^2, x*y, and y^2 factors.
      * @return the Ellipse2D corresponding to given coefficients
      */
-    private static Ellipse2D reduceCentered(double[] coefs)
+    private static final Ellipse2D reduceCentered(double[] coefs)
     {
         double A = coefs[0];
         double B = coefs[1];
@@ -275,15 +304,15 @@ public class Ellipse2D implements Contour2D
     public LinearRing2D asPolyline(int nVertices)
     {
         double thetaRad = Math.toRadians(this.theta);
-        double cost = Math.cos(thetaRad);
-        double sint = Math.sin(thetaRad);
+        double cost = cos(thetaRad);
+        double sint = sin(thetaRad);
         double dt = Math.toRadians(360.0 / nVertices);
         
         LinearRing2D res = LinearRing2D.create(nVertices);
         for (int i = 0; i < nVertices; i++)
         {
-            double x = Math.cos(i * dt) * this.r1;
-            double y = Math.sin(i * dt) * this.r2;
+            double x = cos(i * dt) * this.r1;
+            double y = sin(i * dt) * this.r2;
             double x2 = x * cost - y * sint + this.xc;
             double y2 = x * sint + y * cost + this.yc;
             res.addVertex(new Point2D(x2, y2));
@@ -370,8 +399,8 @@ public class Ellipse2D implements Contour2D
     {
         // pre-copute rotation coefficients
         double thetaRad = Math.toRadians(this.theta);
-        double cot = Math.cos(thetaRad);
-        double sit = Math.sin(thetaRad);
+        double cot = cos(thetaRad);
+        double sit = sin(thetaRad);
 
         // position for a centered and axis-aligned ellipse
         double x0 = this.r1 * cos(t);
@@ -444,8 +473,8 @@ public class Ellipse2D implements Contour2D
     	
     	// pre-computes trigonometric values
     	double thetaRad = Math.toRadians(this.theta);
-        double cost = Math.cos(thetaRad);
-        double sint = Math.sin(thetaRad);
+        double cost = cos(thetaRad);
+        double sint = sin(thetaRad);
         
         // orient along main axes
     	double x2 = x * cost + y * sint;

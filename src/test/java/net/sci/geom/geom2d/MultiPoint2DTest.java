@@ -57,7 +57,7 @@ public class MultiPoint2DTest
         
         assertEquals(Math.atan(0.5), Math.atan2(rotMat[0][1], rotMat[0][0]), 0.1);
         
-        assertEquals(3.0, Math.sqrt(scalings[0] / scalings[1]), 0.1);
+        assertEquals(3.0, scalings[0] / scalings[1], 0.1);
     }
 
     /**
