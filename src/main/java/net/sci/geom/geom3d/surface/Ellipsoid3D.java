@@ -3,12 +3,16 @@
  */
 package net.sci.geom.geom3d.surface;
 
+import static java.lang.Math.sqrt;
+
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Geometry3D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.geom3d.PrincipalAxes3D;
 import net.sci.geom.geom3d.Rotation3D;
+
 
 /**
  * A 3D ellipsoid, defined by a center, three semi-axis lengths, and a 3D
@@ -20,15 +24,84 @@ import net.sci.geom.geom3d.Rotation3D;
 public class Ellipsoid3D implements Geometry3D
 {
     // ===================================================================
+    // Static methods
+    
+    /**
+     * Creates a new Ellipsoid3D instance from a center and the unique
+     * coefficients of the inertia matrix. The diagonal coefficients of the
+     * inertia matrix are provided first.
+     * 
+     * Internally rely on a conversion into a PrincipalAxes instance, then from
+     * principal axes to ellipsoid.
+     * 
+     * @param center
+     *            the center of the ellipsoid
+     * @param Ixx
+     *            the second-order inertia coefficient along the x axis
+     * @param Iyy
+     *            the second-order inertia coefficient along the y axis
+     * @param Izz
+     *            the second-order inertia coefficient along the z axis
+     * @param Ixy
+     *            the second-order inertia coefficient along the (xy) diagonal
+     *            axis
+     * @param Ixz
+     *            the second-order inertia coefficient along the (xz) diagonal
+     *            axis
+     * @param Iyz
+     *            the second-order inertia coefficient along the (yz) diagonal
+     *            axis
+     * @return the corresponding Ellipsoid3D
+     */
+    public static final Ellipsoid3D fromInertiaCoefficients(Point3D center, double Ixx, double Iyy, double Izz, double Ixy, double Ixz, double Iyz)
+    {
+        return fromAxes(PrincipalAxes3D.fromInertiaCoefficients(center, Ixx, Iyy, Izz, Ixy, Ixz, Iyz));
+    }
+    
+    /**
+     * Creates the Ellipsoid3D with parameters that corresponds to that of the
+     * specified PrincipalAxes object.
+     * 
+     * @param axes
+     *            an instance of PrincipalAxes3D
+     * @return the corresponding ellipsoid
+     */
+    public static final Ellipsoid3D fromAxes(PrincipalAxes3D axes)
+    {
+        // retrieve and convert features
+        Point3D center = axes.center();
+        Rotation3D orient = Rotation3D.fromMatrix(axes.rotationMatrix());
+        
+        // convert axis scalings to ellipsoid radii 
+        double[] values = axes.scalings();
+        double r1 = sqrt(5) * values[0];
+        double r2 = sqrt(5) * values[1];
+        double r3 = sqrt(5) * values[2];
+
+        // concatenate into a new ellipsoid
+        return new Ellipsoid3D(center, r1, r2, r3, orient);
+    }
+    
+    
+    // ===================================================================
     // Class variables
 
     /**
      * The center of the ellipsoid.
      */
     final Point3D center;
-
+    
+    /**
+     * The length of the first ellipsoid semi-axis.
+     */
     final double r1;
+    /**
+     * The length of the second ellipsoid semi-axis.
+     */
     final double r2;
+    /**
+     * The length of the third ellipsoid semi-axis.
+     */
     final double r3;
 
     /**
@@ -94,8 +167,8 @@ public class Ellipsoid3D implements Geometry3D
         this.r3 = r3;
         double[] angles = orientation.eulerAngles();
         this.eulerAngleX = Math.toDegrees(angles[0]);
-        this.eulerAngleY = Math.toDegrees(angles[0]);
-        this.eulerAngleZ = Math.toDegrees(angles[0]);
+        this.eulerAngleY = Math.toDegrees(angles[1]);
+        this.eulerAngleZ = Math.toDegrees(angles[2]);
     }
 
     /**
