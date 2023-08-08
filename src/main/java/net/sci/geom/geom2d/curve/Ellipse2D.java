@@ -244,6 +244,12 @@ public class Ellipse2D implements Contour2D
     /** Orientation of major semi-axis, in degrees, between 0 and 180. */
     protected double  theta  = 0;
 
+    /**
+     * Private instance of Polyline2D used to approximate computation of
+     * distances, insideness... Lazy loading.
+     */
+    private LinearRing2D ring = null;
+    
     
     // ===================================================================
     // Constructors
@@ -370,14 +376,16 @@ public class Ellipse2D implements Contour2D
     
     public double signedDistance(Point2D point)
     {
-        // TODO: use exact computation 
-        return this.asPolyline(200).signedDistance(point.x(), point.y());
+        // TODO: could be more precise
+        ensurePolylineExist();
+        return ring.signedDistance(point.x(), point.y());
     }
 
     public double signedDistance(double x, double y)
     {
-        // TODO: use exact computation 
-        return this.asPolyline(200).signedDistance(x, y);
+        // TODO: could be more precise
+        ensurePolylineExist();
+        return ring.signedDistance(x, y);
     }
 
     public boolean isInside(Point2D point)
@@ -493,8 +501,9 @@ public class Ellipse2D implements Contour2D
     @Override
     public double distance(double x, double y)
     {
-        // TODO Auto-generated method stub
-        return asPolyline(200).distance(x, y);
+        // TODO could be more precise
+        ensurePolylineExist();
+        return ring.distance(x, y);
     }
     
     /* (non-Javadoc)
@@ -513,12 +522,21 @@ public class Ellipse2D implements Contour2D
     public Bounds2D bounds()
     {
         // TODO could be more precise
-        return asPolyline(200).bounds();
+        ensurePolylineExist();
+        return ring.bounds();
     }
     
     @Override
     public Ellipse2D duplicate()
     {
         return new Ellipse2D(xc, yc, r1, r2, theta);
+    }
+    
+    private void ensurePolylineExist()
+    {
+        if (this.ring == null)
+        {
+            ring = asPolyline(120);
+        }
     }
 }
