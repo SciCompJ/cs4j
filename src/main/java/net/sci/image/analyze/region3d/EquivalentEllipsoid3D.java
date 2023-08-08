@@ -3,19 +3,12 @@
  */
 package net.sci.image.analyze.region3d;
 
-import static java.lang.Math.sqrt;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import Jama.Matrix;
-import Jama.SingularValueDecomposition;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.axis.NumericalAxis;
 import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.geom3d.Rotation3D;
-import net.sci.geom.geom3d.Vector3D;
 import net.sci.geom.geom3d.surface.Ellipsoid3D;
 import net.sci.image.Calibration;
 import net.sci.image.label.LabelImages;
@@ -68,7 +61,7 @@ public class EquivalentEllipsoid3D extends RegionAnalyzer3D<Ellipsoid3D>
         // Initialize a new result table
         String[] colNames = new String[] {
                 "Label", 
-                "Ellipsoid.Center.X", "Ellipsoid.Center.Y", "Ellipsoid.Center.Z", 
+                "Ellipsoid.CenterX", "Ellipsoid.CenterY", "Ellipsoid.CenterZ", 
                 "Ellipsoid.Radius1", "Ellipsoid.Radius2", "Ellipsoid.Radius3", 
                 "Ellipsoid.EulerAngleX", "Ellipsoid.EulerAngleY", "Ellipsoid.EulerAngleZ"};
         Table table = Table.create(map.size(), colNames);
@@ -342,7 +335,7 @@ public class EquivalentEllipsoid3D extends RegionAnalyzer3D<Ellipsoid3D>
          */
         public Ellipsoid3D equivalentEllipsoid()
         {
-            // special case of one-voxeL regions (and also empty regions)
+            // special case of one-voxel regions (and also empty regions)
             if (count <= 1)
             {
                 double r1 = Math.sqrt(5 * Ixx);
@@ -352,70 +345,9 @@ public class EquivalentEllipsoid3D extends RegionAnalyzer3D<Ellipsoid3D>
                 return new Ellipsoid3D(this.cx, this.cy, this.cz, r1, r2, r3, 0.0, 0.0, 0.0);
             }
     
-            // Extract singular values
-            SingularValueDecomposition svd = computeSVD();
-            Matrix values = svd.getS();
-    
-            // convert singular values to ellipsoid radii 
-            double r1 = sqrt(5) * sqrt(values.get(0, 0));
-            double r2 = sqrt(5) * sqrt(values.get(1, 1));
-            double r3 = sqrt(5) * sqrt(values.get(2, 2));
-    
-            // Perform singular-Value Decomposition
-            Matrix mat = svd.getU();
-            
-            // Ensure (0,0) coefficient is positive, to enforce azimut angle (Phi) > 0
-            if (mat.get(0, 0) < 0)
-            {
-                for(int c = 0; c < 2; c++)
-                {
-                    for (int r = 0; r < 3; r++)
-                    {
-                        mat.set(r, c, -mat.get(r, c));
-                    }
-                }
-            }
-    
             // create the new ellipsoid
-            Rotation3D orient = Rotation3D.fromMatrix(mat.getArray());
-            return new Ellipsoid3D(new Point3D(this.cx, this.cy, this.cz), r1, r2, r3, orient);
-        }
-    
-        /**
-         * Return the eigen vector of the moments. Uses a singular value
-         * decomposition of the matrix of moments.
-         * 
-         * @return the eigen vector of the moments
-         */
-        public ArrayList<Vector3D> eigenVectors()
-        {
-            // Extract singular values
-            Matrix mat = computeSVD().getU();
-            
-            ArrayList<Vector3D> res = new ArrayList<Vector3D>(3);
-            for (int i = 0; i < 3; i++)
-            {
-                res.add(new Vector3D(mat.get(0, i), mat.get(1, i), mat.get(2, i)));
-            }
-            return res;
-        }
-        
-        private SingularValueDecomposition computeSVD()
-        {
-            // create the matrix
-            Matrix matrix = new Matrix(3, 3);
-            matrix.set(0, 0, this.Ixx);
-            matrix.set(0, 1, this.Ixy);
-            matrix.set(0, 2, this.Ixz);
-            matrix.set(1, 0, this.Ixy);
-            matrix.set(1, 1, this.Iyy);
-            matrix.set(1, 2, this.Iyz);
-            matrix.set(2, 0, this.Ixz);
-            matrix.set(2, 1, this.Iyz);
-            matrix.set(2, 2, this.Izz);
-    
-            // Extract singular values
-            return new SingularValueDecomposition(matrix);
+            Point3D center = new Point3D(this.cx, this.cy, this.cz);
+            return Ellipsoid3D.fromInertiaCoefficients(center, Ixx, Iyy, Izz, Ixy, Ixz, Iyz);
         }
     }
 }

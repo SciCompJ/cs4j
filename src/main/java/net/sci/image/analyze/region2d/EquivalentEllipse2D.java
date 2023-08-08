@@ -3,8 +3,6 @@
  */
 package net.sci.image.analyze.region2d;
 
-import static java.lang.Math.sqrt;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +36,11 @@ public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
     {
         // Initialize a new result table
         Table table = Table.create(map.size(), 6);
-        table.setColumnNames(new String[] {"Label", "Ellipse.Center.X", "Ellipse.Center.Y", "Ellipse.Radius1", "Ellipse.Radius2", "Ellipse.Orientation"});
+        table.setColumnNames(new String[] {
+                "Label", 
+                "Ellipse.CenterX", "Ellipse.CenterY", 
+                "Ellipse.Radius1", "Ellipse.Radius2", 
+                "Ellipse.Orientation"});
     
         // convert the (key, value) pairs in the map into a table with one row
         // per label
@@ -53,8 +55,8 @@ public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
             
             // coordinates of centroid
             Point2D center = ellipse.center();
-            table.setValue(row, "Ellipse.Center.X", center.x());
-            table.setValue(row, "Ellipse.Center.Y", center.y());
+            table.setValue(row, "Ellipse.CenterX", center.x());
+            table.setValue(row, "Ellipse.CenterY", center.y());
             
             // ellipse size
             table.setValue(row, "Ellipse.Radius1", ellipse.semiMajorAxisLength());
@@ -168,23 +170,10 @@ public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
         
         // compute ellipse parameters for each region
         fireStatusChanged(this, "Compute Ellipses");
-        final double sqrt2 = sqrt(2);
         for (int i = 0; i < nLabels; i++) 
         {
-            double xx = Ixx[i];
-            double xy = Ixy[i];
-            double yy = Iyy[i];
-
-            // compute ellipse semi-axes lengths
-            double common = sqrt((xx - yy) * (xx - yy) + 4 * xy * xy);
-            double ra = sqrt2 * sqrt(xx + yy + common);
-            double rb = sqrt2 * sqrt(xx + yy - common);
-
-            // compute ellipse angle and convert into degrees
-            double theta = Math.toDegrees(Math.atan2(2 * xy, xx - yy) / 2);
-
             Point2D center = new Point2D(cx[i] + ox, cy[i] + oy);
-            ellipses[i] = new Ellipse2D(center, ra, rb, theta);
+            ellipses[i] = Ellipse2D.fromInertiaCoefficients(center, Ixx[i], Iyy[i], Ixy[i]);
         }
 
         return ellipses;
