@@ -223,7 +223,7 @@ public class Crop extends AlgoStub implements ArrayOperator
             return srcPos;
         };
         
-        return array.view(this.sizes, mapping);
+        return array.reshapeView(this.sizes, mapping);
     }
    
 

@@ -267,7 +267,7 @@ public interface Float32Array extends ScalarArray<Float32>
 		return result;
 	}
 
-    public default Float32Array view(int[] newDims, Function<int[], int[]> coordsMapping)
+    public default Float32Array reshapeView(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new ReshapeView(this, newDims, coordsMapping);
     }
@@ -503,7 +503,7 @@ public interface Float32Array extends ScalarArray<Float32>
      * Utility class for creating a reshape view on an array using arbitrary
      * coordinate mapping.
      *
-     * @see Float32Array#view(int[], Function)
+     * @see Float32Array#reshapeView(int[], Function)
      */
     static class ReshapeView implements Float32Array
     {

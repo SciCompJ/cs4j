@@ -259,7 +259,7 @@ public interface Int16Array extends IntArray<Int16>
 		return result;
 	}
 
-    public default Int16Array view(int[] newDims, Function<int[], int[]> coordsMapping)
+    public default Int16Array reshapeView(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new ReshapeView(this, newDims, coordsMapping);
     }
@@ -462,7 +462,7 @@ public interface Int16Array extends IntArray<Int16>
      * Utility class for creating a reshape view on an array using arbitrary
      * coordinate mapping.
      *
-     * @see Int16Array#view(int[], Function)
+     * @see Int16Array#reshapeView(int[], Function)
      */
     static class ReshapeView implements Int16Array
     {

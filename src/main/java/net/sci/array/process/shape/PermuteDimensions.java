@@ -151,7 +151,7 @@ public class PermuteDimensions extends AlgoStub implements ArrayOperator
             return srcPos;
         };
         
-        return array.view(newDims, mapping);
+        return array.reshapeView(newDims, mapping);
     }
 
     private int[] computeOutputArraySize(Array<?> inputArray)

@@ -311,7 +311,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		return result;
 	}
 
-    public default UInt8Array view(int[] newDims, Function<int[], int[]> coordsMapping)
+    public default UInt8Array reshapeView(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new ReshapeView(this, newDims, coordsMapping);
     }
@@ -522,7 +522,7 @@ public interface UInt8Array extends IntArray<UInt8>
      * Utility class for creating a reshape view on an array using arbitrary
      * coordinate mapping.
      *
-     * @see UInt8Array#view(int[], Function)
+     * @see UInt8Array#reshapeView(int[], Function)
      */
 	static class ReshapeView implements UInt8Array
 	{

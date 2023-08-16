@@ -102,7 +102,7 @@ public class SubSample extends AlgoStub implements ArrayOperator
             return pos2;
         };
         
-        return array.view(dims, mapping);
+        return array.reshapeView(dims, mapping);
     }
     
     /* (non-Javadoc)

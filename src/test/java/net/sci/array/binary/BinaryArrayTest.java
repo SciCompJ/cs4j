@@ -94,7 +94,7 @@ public class BinaryArrayTest
 
 
     /**
-     * Test method for {@link net.sci.array.binary.BinaryArray#view(int[], java.util.function.Function)}.
+     * Test method for {@link net.sci.array.binary.BinaryArray#reshapeView(int[], java.util.function.Function)}.
      */
     @Test
     public final void testView()
@@ -103,7 +103,7 @@ public class BinaryArrayTest
         array.fillBooleans((x,y) -> x >= 4 ^ y >= 3);
         
         // create a view corresponding to the transpose of the array
-        BinaryArray view = array.view(new int[] {6, 8}, pos -> new int[] {pos[1], pos[0]});
+        BinaryArray view = array.reshapeView(new int[] {6, 8}, pos -> new int[] {pos[1], pos[0]});
         
         assertEquals(2, view.dimensionality());
         assertEquals(6, view.size(0));

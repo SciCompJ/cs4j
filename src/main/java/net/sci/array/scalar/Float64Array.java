@@ -216,7 +216,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		return result;
 	}
 
-    public default Float64Array view(int[] newDims, Function<int[], int[]> coordsMapping)
+    public default Float64Array reshapeView(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new ReshapeView(this, newDims, coordsMapping);
     }
@@ -405,7 +405,7 @@ public interface Float64Array extends ScalarArray<Float64>
      * Utility class for creating a reshape view on an array using arbitrary
      * coordinate mapping.
      *
-     * @see Float64Array#view(int[], Function)
+     * @see Float64Array#reshapeView(int[], Function)
      */
     static class ReshapeView implements Float64Array
     {

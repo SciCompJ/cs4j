@@ -173,7 +173,7 @@ public class Rotate90 extends AlgoStub implements ArrayOperator
             }
         };
         
-        return array.view(newDims, mapping);
+        return array.reshapeView(newDims, mapping);
     }
 
 

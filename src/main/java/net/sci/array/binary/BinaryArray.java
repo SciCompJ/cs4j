@@ -448,7 +448,7 @@ public interface BinaryArray extends IntArray<Binary>
 		return result;
 	}
 
-    public default BinaryArray view(int[] newDims, Function<int[], int[]> coordsMapping)
+    public default BinaryArray reshapeView(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new ReshapeView(this, newDims, coordsMapping);
     }
@@ -870,7 +870,7 @@ public interface BinaryArray extends IntArray<Binary>
      * Utility class for creating a reshape view on an array using arbitrary
      * coordinate mapping.
      *
-     * @see BinaryArray#view(int[], Function)
+     * @see BinaryArray#reshapeView(int[], Function)
      */
     static class ReshapeView implements BinaryArray
     {

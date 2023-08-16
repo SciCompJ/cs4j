@@ -61,7 +61,7 @@ public class ScalarArrayTest
     }
     
     /**
-     * Test method for {@link net.sci.array.Array#view(int[], java.util.function.Function)}.
+     * Test method for {@link net.sci.array.Array#reshapeView(int[], java.util.function.Function)}.
      */
     @Test
     public final void test_view_FlipFloat32Array()
@@ -74,7 +74,7 @@ public class ScalarArrayTest
         
         int[] dims2 = new int[] {10, 6};
         Function<int[], int[]> fun = pos -> new int[] {9-pos[0], 5-pos[1]};
-        ScalarArray<Float32> res = array.view(dims2, fun);
+        ScalarArray<Float32> res = array.reshapeView(dims2, fun);
         
         assertEquals(10, res.size(0));
         assertEquals(6, res.size(1));

@@ -416,7 +416,7 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
 	}
 	
 	@Override
-    public default ScalarArray<S> view(int[] newDims, Function<int[], int[]> coordsMapping)
+    public default ScalarArray<S> reshapeView(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new ReshapeView<S>(this, newDims, coordsMapping);
     }
@@ -520,7 +520,7 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
      * modify elements of an array of scalars using transformation of
      * coordinates (e.g. crop, slice, dimension permutation...).
      * 
-     * @see #view(int[], Function)
+     * @see #reshapeView(int[], Function)
      * 
      * @param <T>
      *            the type of (scalar) data within the array

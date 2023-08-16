@@ -230,7 +230,7 @@ public interface Int32Array extends IntArray<Int32>
 		return result;
 	}
 
-    public default Int32Array view(int[] newDims, Function<int[], int[]> coordsMapping)
+    public default Int32Array reshapeView(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new ReshapeView(this, newDims, coordsMapping);
     }
@@ -415,7 +415,7 @@ public interface Int32Array extends IntArray<Int32>
      * Utility class for creating a reshape view on an array using arbitrary
      * coordinate mapping.
      *
-     * @see Int32Array#view(int[], Function)
+     * @see Int32Array#reshapeView(int[], Function)
      */
     static class ReshapeView implements Int32Array
     {
