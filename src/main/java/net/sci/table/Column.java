@@ -4,7 +4,9 @@
 package net.sci.table;
 
 /**
- * The values in a Table column.
+ * A column within a table, containing values and identified by a name.
+ * 
+ * A column do not carry any information about row names.
  * 
  * @author dlegland
  *

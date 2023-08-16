@@ -4,6 +4,7 @@
 package net.sci.table;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 
 /**
  * Defines the interface for storing measurements.
@@ -47,41 +48,100 @@ public interface Table
         return table;
     }
     
+    /**
+     * Creates a new data table from a series of columns.
+     * 
+     * @param columns
+     *            the columns
+     * @return a new Table instance            
+     */
+    public static Table create(Column... columns)
+    {
+        int nRows = columns[0].length();
+        int nCols = columns.length;
+
+        // If all columns are numeric, should return a numeric table
+        if (Arrays.stream(columns).allMatch(col -> (col instanceof NumericColumn)))
+        {
+            NumericTable table = new DefaultNumericTable(nRows, nCols);
+            for (int c = 0; c < nCols; c++)
+            {
+                table.setColumn(c, columns[c]);
+            }
+            return table;
+        }
+        
+        Table table = new DefaultTable(nRows, nCols);
+        for (int c = 0; c < nCols; c++)
+        {
+            table.setColumn(c, columns[c]);
+        }
+        return table;
+    }
+    
+    /**
+     * Creates a new data table from a series of columns.
+     * 
+     * @param rowNames
+     *            the names of the rows
+     * @param columns
+     *            the columns
+     * @return a new Table instance            
+     */
+    public static Table create(String[] rowNames, Column... columns)
+    {
+        int nRows = rowNames.length;
+        int nCols = columns.length;
+
+        // If all columns are numeric, should return a numeric table
+        if (Arrays.stream(columns).allMatch(col -> (col instanceof NumericColumn)))
+        {
+            NumericTable table = new DefaultNumericTable(nRows, 0);
+            for (int c = 0; c < nCols; c++)
+            {
+                table.setColumn(c, columns[c]);
+            }
+            return table;
+        }
+        
+        Table table = new DefaultTable(nRows, 0);
+        for (int c = 0; c < nCols; c++)
+        {
+            table.setColumn(c, columns[c]);
+        }
+        
+        table.setRowNames(rowNames);
+        return table;
+    }
+    
     public static Table selectColumns(Table table, int[] columnIndices)
     {
-    	int nr = table.rowCount();
+        // get column counts
     	int nc = table.columnCount();
     	int nc2 = columnIndices.length;
     	
-    	// TODO: choose type depending on parent table. Use "newInstance"-like strategy?
-		Table result = Table.create(nr, nc2);
-
-		// Copy values and extract name of each column
-        String[] colNames = new String[nc2];
-		for (int c = 0; c < nc2; c++)
-		{
-			// check validity of column index
-			int index = columnIndices[c];
-			if (index < 0)
-			{
-				throw new IllegalArgumentException("Column indices must be positive");
-			}
-			if (index >= nc)
-			{
-				throw new IllegalArgumentException("Column index greater than column number: " + nc);
-			}
-			
-			// copy column values
-			for (int i = 0; i < nr; i++)
-			{
-				result.setValue(i, c, table.getValue(i, index));
-			}
-			colNames[c] = table.getColumnNames()[index];
-		}
-		
-		// setup column names
-        result.setColumnNames(colNames);
-
+    	// create array of columns
+    	Column[] cols = new Column[nc2];
+    	for (int ic = 0; ic < nc2; ic++)
+    	{
+            // check validity of column index
+            int index = columnIndices[ic];
+            if (index < 0)
+            {
+                throw new IllegalArgumentException("Column indices must be positive");
+            }
+            if (index >= nc)
+            {
+                throw new IllegalArgumentException("Column index greater than column number: " + nc);
+            }
+            
+            // keep reference to column
+    	    cols[ic] = table.column(index);
+    	}
+    	
+    	// create table from column array
+        Table result = Table.create(cols);
+        
         // setup row names
         String[] rowNames = table.getRowNames(); 
 		if (rowNames != null)
@@ -184,6 +244,11 @@ public interface Table
 
 //    public void addRow(String name, double[] values);
     
+    /**
+     * Returns the array of row names of the table. May be null.
+     * 
+     * @return the array of row names of the table.
+     */
     public String[] getRowNames();
 
     public void setRowNames(String[] names);
@@ -358,7 +423,7 @@ public interface Table
      * A container of columns.
      *
      */
-    public interface Columns<T extends Column> extends Iterable<T>
+    public interface Columns<C extends Column> extends Iterable<C>
     {
         public int size();
         
