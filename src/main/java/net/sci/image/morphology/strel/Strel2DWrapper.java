@@ -10,6 +10,10 @@ import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 
 /**
+ * Utility class to wrap a 2D structuring element into a 2D structuring element.
+ * This allows to apply morphological operations based on 2D structuring
+ * elements also on 3D images.
+ * 
  * @author dlegland
  *
  */

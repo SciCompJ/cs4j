@@ -9,27 +9,29 @@ import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.morphology.Strel;
 
 /**
- * Interface for planar structuring elements. 
+ * Interface for planar structuring elements.
  * 
  * <pre>
  * {@code
-    // Creates a 5x5 square structuring element
-    Strel2D strel = Strel2D.Shape.SQUARE.fromDiameter(5);
-    
-    // Creates a simple array with white dot in the middle
-    UInt8Array2D array = UInt8Array2D.create(9, 9);
-    array.setValue(4, 4, 255);
-    
-    // applies dilation on array
-    ScalarArray2D<?> dilated = strel.dilation(array);
-    
-    // display result
-    dilated.print(System.out);
- *  
+ * // Creates a 5x5 square structuring element
+ * Strel2D strel = Strel2D.Shape.SQUARE.fromDiameter(5);
+ * 
+ * // Creates a simple array with white dot in the middle
+ * UInt8Array2D array = UInt8Array2D.create(9, 9);
+ * array.setValue(4, 4, 255);
+ * 
+ * // applies dilation on array
+ * ScalarArray2D<?> dilated = strel.dilation(array);
+ * 
+ * // display result
+ * System.out.println(dilated);
+ * 
  * }
  * </pre>
- * @author David Legland
  *
+ * @see Strel2D
+ * 
+ * @author David Legland
  */
 public interface Strel2D extends Strel
 {
@@ -214,9 +216,19 @@ public interface Strel2D extends Strel
         }
 	}
 	
+	
     // ===================================================================
     // Static methods
     
+    /**
+     * Ensures the specified structuring element is seen as an instance of
+     * Strel2D.
+     * 
+     * @param strel
+     *            a structuring element
+     * @return the instance of Strel2D that corresponds to the specified
+     *         structuring element
+     */
     public static Strel2D wrap(Strel strel)
     {
         if (strel instanceof Strel2D)
@@ -226,6 +238,7 @@ public interface Strel2D extends Strel
         throw new RuntimeException("Unable to wrap a strel with class: " + strel.getClass());
     }
 	
+    
     // ===================================================================
     // High-level operations
     

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.morphology.strel;
+package net.sci.image.morphology.filter;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
@@ -16,6 +16,13 @@ import net.sci.image.process.filter.Neighborhood;
 
 /**
  * Naive implementation of morphological dilation within a n-dimensional box.
+ * 
+ * This class is mostly used for comparing performance of various algorithms.
+ * The "Dilation" or "BinaryDilation" classes have to be preferred over this
+ * implementation.
+ * 
+ * @see Dilation
+ * @see BinaryDilation
  * 
  * @author dlegland
  *
@@ -160,6 +167,7 @@ public final class BoxDilationNaive extends AlgoStub implements ImageArrayOperat
 		// iterate over image pixels
 		for(int y = 0; y < sizeY; y++)
 		{
+		    this.fireProgressChanged(this, y, sizeY);
 			for(int x = 0; x < sizeX; x++)
 			{
 				// init result
@@ -218,6 +226,7 @@ public final class BoxDilationNaive extends AlgoStub implements ImageArrayOperat
 		// iterate over image voxels
 		for(int z = 0; z < sizeZ; z++)
 		{
+            this.fireProgressChanged(this, z, sizeZ);
 			for(int y = 0; y < sizeY; y++)
 			{
 				for(int x = 0; x < sizeX; x++)

@@ -1,4 +1,4 @@
-package net.sci.image.morphology.strel;
+package net.sci.image.morphology.filter;
 
 import static org.junit.Assert.assertEquals;
 
@@ -55,23 +55,4 @@ public class BoxDilationNaiveTest
 			}
 		}
 	}
-
-//	/**
-//	 * Creates a 10-by-10 image with a 4-by-4 square in the middle.
-//	 */
-//	private UInt8Array2D createImage_Square4x4 () 
-//	{
-//		UInt8Array2D image = UInt8Array2D.create(10, 10);
-//		image.fill(0);
-//		
-//		for (int y = 3; y < 7; y++)
-//		{
-//			for (int x = 3; x < 7; x++)
-//			{
-//				image.setValue(x, y, 255);
-//			}
-//		}
-//		
-//		return image;
-//	}
 }

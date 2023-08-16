@@ -10,6 +10,8 @@ import net.sci.image.morphology.Strel;
 /**
  * Structuring element for processing 3D arrays.
  * 
+ * @see Strel2D
+ * 
  * @author David Legland
  *
  */
@@ -18,6 +20,18 @@ public interface Strel3D extends Strel
     // ===================================================================
     // Static methods
     
+    /**
+     * Ensures the specified structuring element is seen as an instance of
+     * Strel3D.
+     * 
+     * If the specified structuring is an instance of Strel2D, it is wrapped
+     * into a Strel3D.
+     * 
+     * @param strel
+     *            a structuring element
+     * @return the instance of Strel3D that corresponds to the specified
+     *         structuring element
+     */
     public static Strel3D wrap(Strel strel)
     {
         if (strel instanceof Strel3D)
