@@ -49,17 +49,24 @@ public interface Table
     }
     
     /**
-     * Creates a new data table from a series of columns.
+     * Creates a new data table from a series of columns. If all columns are
+     * instances of NumericColumn, returns a NumericTable.
      * 
      * @param columns
-     *            the columns
-     * @return a new Table instance            
+     *            the columns that will constitute the table
+     * @return a new Table instance
      */
     public static Table create(Column... columns)
     {
-        int nRows = columns[0].length();
+        if (columns.length == 0)
+        {
+            throw new RuntimeException("Requires at least one column to create a table");
+        }
+        
+        // retrieve table size
         int nCols = columns.length;
-
+        int nRows = columns[0].length();
+        
         // If all columns are numeric, should return a numeric table
         if (Arrays.stream(columns).allMatch(col -> (col instanceof NumericColumn)))
         {
@@ -90,26 +97,10 @@ public interface Table
      */
     public static Table create(String[] rowNames, Column... columns)
     {
-        int nRows = rowNames.length;
-        int nCols = columns.length;
-
-        // If all columns are numeric, should return a numeric table
-        if (Arrays.stream(columns).allMatch(col -> (col instanceof NumericColumn)))
-        {
-            NumericTable table = new DefaultNumericTable(nRows, 0);
-            for (int c = 0; c < nCols; c++)
-            {
-                table.setColumn(c, columns[c]);
-            }
-            return table;
-        }
+        // initialize table
+        Table table = create(columns);
         
-        Table table = new DefaultTable(nRows, 0);
-        for (int c = 0; c < nCols; c++)
-        {
-            table.setColumn(c, columns[c]);
-        }
-        
+        // setup meta-data
         table.setRowNames(rowNames);
         return table;
     }
