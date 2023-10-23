@@ -6,13 +6,15 @@ package net.sci.geom.geom2d;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.geom.MultiPoint;
+
 /**
  * The geometry obtained by the union of several points.
  * 
  * @author dlegland
  *
  */
-public class MultiPoint2D implements Geometry2D
+public class MultiPoint2D implements MultiPoint, Geometry2D
 {
     // ===================================================================
     // Static factories
@@ -32,10 +34,16 @@ public class MultiPoint2D implements Geometry2D
         return new MultiPoint2D(initialCapacity);
     }
     
-    /** Creates a new MultiPoint2D from a collection of points. */
+    /**
+     * Creates a new MultiPoint2D from a collection of points.
+     *
+     * @param points
+     *            the collection of points that compose the geometry
+     * @return a new instance of MultiPoint2D
+     */
     public static final MultiPoint2D create(Collection<Point2D> points)
     {
-        return new MultiPoint2D(10);
+        return new MultiPoint2D(points);
     }
 
     
@@ -57,7 +65,12 @@ public class MultiPoint2D implements Geometry2D
         this.points = new ArrayList<Point2D>(initialCapacity);
     }
 
-    /** Constructor from a collection of points. */
+    /**
+     * Constructor from a collection of points.
+     * 
+     * @param points
+     *            the collection of points that compose the geometry
+     */
     private MultiPoint2D(Collection<Point2D> points)
     {
         this.points = new ArrayList<Point2D>(points.size());

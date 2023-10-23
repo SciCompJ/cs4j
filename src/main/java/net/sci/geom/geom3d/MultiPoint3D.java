@@ -6,6 +6,8 @@ package net.sci.geom.geom3d;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.sci.geom.MultiPoint;
+
 
 /**
  * The geometry obtained by the union of several points.
@@ -13,7 +15,7 @@ import java.util.Collection;
  * @author dlegland
  *
  */
-public class MultiPoint3D implements Geometry3D
+public class MultiPoint3D implements MultiPoint, Geometry3D
 {
     // ===================================================================
     // Static factories
@@ -33,10 +35,16 @@ public class MultiPoint3D implements Geometry3D
         return new MultiPoint3D(initialCapacity);
     }
     
-    /** Creates a new MultiPoint3D from a collection of points. */
+    /**
+     * Creates a new MultiPoint3D from a collection of points.
+     *
+     * @param points
+     *            the collection of points that compose the geometry
+     * @return a new instance of MultiPoint3D
+     */
     public static final MultiPoint3D create(Collection<Point3D> points)
     {
-        return new MultiPoint3D(10);
+        return new MultiPoint3D(points);
     }
 
     
@@ -58,7 +66,12 @@ public class MultiPoint3D implements Geometry3D
         this.points = new ArrayList<Point3D>(initialCapacity);
     }
 
-    /** Constructor from a collection of points. */
+    /**
+     * Constructor from a collection of points.
+     * 
+     * @param points
+     *            the collection of points that compose the geometry
+     */
     private MultiPoint3D(Collection<Point3D> points)
     {
         this.points = new ArrayList<Point3D>(points.size());
