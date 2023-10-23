@@ -95,7 +95,7 @@ public class OrientedBox2D implements Polygon2D
         // create the "local to global" affine transform
         AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(this.theta));
         AffineTransform2D tra = AffineTransform2D.createTranslation(xc, yc);
-        AffineTransform2D transfo = tra.concatenate(rot);
+        AffineTransform2D transfo = tra.compose(rot);
         
         // create vertex array
         ArrayList<Point2D> vertices = new ArrayList<>(4);
@@ -157,7 +157,7 @@ public class OrientedBox2D implements Polygon2D
         // create the "local to global" affine transform
         AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(this.theta));
         AffineTransform2D tra = AffineTransform2D.createTranslation(xc, yc);
-        AffineTransform2D transfo = tra.concatenate(rot);
+        AffineTransform2D transfo = tra.compose(rot);
         
         // create vertex array
         ArrayList<Point2D> vertices = new ArrayList<>(4);

@@ -32,7 +32,7 @@ public class PrincipalAxes2DTest
         AffineTransform2D tra = AffineTransform2D.createTranslation(xc, yc);
         AffineTransform2D sca = AffineTransform2D.createScaling(r1, r2);
         AffineTransform2D rot = AffineTransform2D.createRotation(angle);
-        AffineTransform2D transfo = tra.concatenate(rot).concatenate(sca);
+        AffineTransform2D transfo = tra.compose(rot).compose(sca);
         
         // generate a series of points regularly sampled within the unit circle
         // and transform them into ellipse basis

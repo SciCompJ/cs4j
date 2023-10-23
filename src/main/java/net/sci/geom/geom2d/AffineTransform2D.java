@@ -7,8 +7,11 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 
 /**
+ * General interface for affine transforms in the plane. Contains the definition
+ * of affine transform methods, as well as a collection of static methods for
+ * creating affine transforms.
+ * 
  * @author dlegland
- *
  */
 public interface AffineTransform2D extends Transform2D
 {
@@ -261,24 +264,63 @@ public interface AffineTransform2D extends Transform2D
 		return createScaling(center, -1, -1);
 	}
 
+	/**
+     * Creates a new Affine transform instance based on the coefficients stored
+     * in the 3x3 or 2x3 array of coefficients. First index dimension of the
+     * array corresponds to rows, second dimension to columns, i.e.
+     * <code>matrix[1][2]</code> corresponds to the value at second row and
+     * third column.
+     * 
+     * @param matrix
+     *            the array of matrix elements corresponding to the affine
+     *            transform
+     * @return the affine transform that corresponds to the coefficients in the
+     *         matrix
+     */
+	public static AffineTransform2D fromMatrix(double[][] matrix)
+	{
+        if (matrix.length < 2) throw new IllegalArgumentException("Transform matrix must have at least two rows");
+        if (matrix[0].length < 3) throw new IllegalArgumentException("Transform matrix must have at least three columns");
+        return new MatrixAffineTransform2D(matrix[0][0], matrix[0][1], matrix[0][2], matrix[1][0], matrix[1][1], matrix[1][2]);
+	}
+	
 	
 	// ===================================================================
 	// New methods declaration
 
 	/**
-	 * @return the affine matrix of the coefficients corresponding to this transform 
-	 */
+     * Returns the affine matrix of the coefficients corresponding to this
+     * transform. First index dimension of the array corresponds to rows, second
+     * dimension to columns, i.e. <code>matrix[1][2]</code> corresponds to the
+     * value at second row and third column.
+     * 
+     * @return the affine matrix of the coefficients corresponding to this
+     *         transform
+     */
 	public double[][] affineMatrix();
 
 	/**
-	 * @return the inverse affine transform of this transform.
-	 */
-	public AffineTransform2D inverse();
-	
-	
-    // ===================================================================
-    // Default methods
+     * Returns the inverse transform. If the transform is not invertible, throws
+     * a new NonInvertibleTransform2DException.
+     * @return the inverse of this affine transform.
+     */
+    public default AffineTransform2D inverse()
+    {
+        // compute determinant
+        double[][] mat = affineMatrix();
+        double det = mat[0][0] * mat[1][1] - mat[1][0] * mat[0][1];
 
+        // check invertibility
+        if (Math.abs(det) < 1e-12)
+            throw new RuntimeException("Non-invertible matrix");
+
+        // create matrix
+        return new MatrixAffineTransform2D(
+                 mat[1][1] / det, -mat[0][1] / det, (mat[0][1] * mat[1][2] - mat[0][2] * mat[1][1]) / det, 
+                -mat[1][0] / det,  mat[0][0] / det, (mat[0][2] * mat[1][0] - mat[0][0] * mat[1][2]) / det);
+    }
+    
+	
 	/**
      * Returns the affine transform created by applying first the affine
      * transform given by <code>that</code>, then this affine transform. 
@@ -289,7 +331,7 @@ public interface AffineTransform2D extends Transform2D
      *            the transform to apply first
      * @return the composition this * that
      */
-    public default AffineTransform2D concatenate(AffineTransform2D that)
+    public default AffineTransform2D compose(AffineTransform2D that)
     {
         double[][] m1 = this.affineMatrix();
         double[][] m2 = that.affineMatrix();
@@ -302,35 +344,9 @@ public interface AffineTransform2D extends Transform2D
         return new MatrixAffineTransform2D(n00, n01, n02, n10, n11, n12);
     }
 
-    /**
-     * Returns the affine transform created by applying first this affine
-     * transform, then the affine transform given by <code>that</code>. This the
-     * equivalent method of the 'preConcatenate' method in
-     * java.awt.geom.AffineTransform. <code><pre>
-     * shape = shape.transform(T1.preConcatenate(T2).preConcatenate(T3));
-     * </pre></code> is equivalent to the sequence: <code><pre>
-     * shape = shape.transform(T1);
-     * shape = shape.transform(T2);
-     * shape = shape.transform(T3);
-     * </pre></code>
-     * 
-     * @param that
-     *            the transform to apply in a second step
-     * @return the composition that * this
-     */
-    public default AffineTransform2D preConcatenate(AffineTransform2D that) 
-    {
-        double[][] m1 = that.affineMatrix();
-        double[][] m2 = this.affineMatrix();
-        double n00 = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0];
-        double n01 = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1];
-        double n02 = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2];
-        double n10 = m1[1][0] * m2[0][0] + m1[1][1] * m2[1][0];
-        double n11 = m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1];
-        double n12 = m1[1][0] * m2[0][2] + m1[1][1] * m2[1][2] + m1[1][2];
-        return new MatrixAffineTransform2D(n00, n01, n02, n10, n11, n12);
-    }
-
+    
+    // ===================================================================
+    // Specialization of the Transform interface
 
 	/**
 	 * Applies this transformation to the given point.

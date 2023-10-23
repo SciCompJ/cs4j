@@ -3,7 +3,7 @@
  */
 package net.sci.geom.geom2d;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -13,53 +13,33 @@ import org.junit.Test;
  */
 public class AffineTransform2DTest
 {
-
     /**
-     * Test method for {@link net.sci.geom.geom2d.AffineTransform2D#concatenate(net.sci.geom.geom2d.AffineTransform2D)}.
+     * Test method for {@link net.sci.geom.geom2d.AffineTransform2D#compose(net.sci.geom.geom2d.AffineTransform2D)}.
      */
     @Test
-    public final void testConcatenate_TraRotTra()
+    public final void test_compose_TraRotTra()
     {
         AffineTransform2D tra = AffineTransform2D.createTranslation(10, 20);
         AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(30));
         AffineTransform2D exp = AffineTransform2D.createRotation(10, 20, Math.toRadians(30));
         
-        AffineTransform2D trans = tra.concatenate(rot.concatenate(tra.inverse()));
+        AffineTransform2D trans = tra.compose(rot.compose(tra.inverse()));
                
-        double[][] mat = trans.affineMatrix();
-        double[][] expMat = exp.affineMatrix();
-        
-        for(int i = 0; i < 2; i++)
-        {
-            for(int j = 0; j < 3; j++)
-            {
-                assertEquals(expMat[i][j], mat[i][j], .01);
-            }
-        }
+        assertTrue(trans.almostEquals(exp, 0.011));
     }
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.AffineTransform2D#preConcatenate(net.sci.geom.geom2d.AffineTransform2D)}.
+     * Test method for {@link net.sci.geom.geom2d.AffineTransform2D#compose(net.sci.geom.geom2d.AffineTransform2D)}.
      */
     @Test
-    public final void testPreConcatenate_TraRotTra()
+    public final void test_compose_associative_TraRotTra()
     {
         AffineTransform2D tra = AffineTransform2D.createTranslation(10, 20);
         AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(30));
-        AffineTransform2D exp = AffineTransform2D.createRotation(10, 20, Math.toRadians(30));
         
-        AffineTransform2D trans = tra.inverse().preConcatenate(rot).preConcatenate(tra); 
-                
-        double[][] mat = trans.affineMatrix();
-        double[][] expMat = exp.affineMatrix();
-        
-        for(int i = 0; i < 2; i++)
-        {
-            for(int j = 0; j < 3; j++)
-            {
-                assertEquals(expMat[i][j], mat[i][j], .01);
-            }
-        }
+        AffineTransform2D trans1 = tra.compose(rot.compose(tra.inverse()));
+        AffineTransform2D trans2 = tra.compose(rot).compose(tra.inverse());
+               
+        assertTrue(trans1.almostEquals(trans2, 0.01));
     }
-
 }

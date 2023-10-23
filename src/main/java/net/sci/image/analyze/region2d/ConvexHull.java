@@ -167,7 +167,7 @@ public class ConvexHull extends RegionAnalyzer2D<Polygon2D>
             
             AffineTransform2D sca = AffineTransform2D.createScaling(sx, sy);
             AffineTransform2D tra = AffineTransform2D.createTranslation(ox, oy);
-            AffineTransform2D transfo = tra.concatenate(sca);
+            AffineTransform2D transfo = tra.compose(sca);
             
             for (int i = 0; i < labels.length; i++)
             {
