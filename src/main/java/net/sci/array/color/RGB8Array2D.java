@@ -3,6 +3,8 @@
  */
 package net.sci.array.color;
 
+import java.util.Locale;
+
 import net.sci.array.process.type.ConvertToUInt8;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array2D;
@@ -200,6 +202,33 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8> implements RGB8
     public void set(int[] pos, RGB8 rgb)
     {
         set(pos[0], pos[1], rgb);
+    }
+    
+    // =============================================================
+    // Override Object methods
+
+    /**
+     * Overrides the method to display a String representation of the RGB8 values
+     * within the array.
+     * 
+     * @return a String representation of the inner values of the array.
+     */
+    @Override
+    public String toString()
+    {
+        String format = " (%3d,%3d,%3d)";
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(String.format(Locale.ENGLISH, "(%d x %d) RGB8 array with values:", this.size0, this.size1));
+        for (int y = 0; y < this.size1; y++)
+        {
+            buffer.append("\n");
+            for (int x = 0; x < this.size0; x++)
+            {
+                int[] samples = getSamples(x, y); 
+                buffer.append(String.format(Locale.ENGLISH, format, samples[0], samples[1], samples[2]));
+            }
+        }
+        return buffer.toString();
     }
     
 
