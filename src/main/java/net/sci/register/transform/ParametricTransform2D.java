@@ -7,6 +7,8 @@ import net.sci.geom.geom2d.Transform2D;
 import net.sci.register.ParametricObject;
 
 /**
+ * Base class for parametric transforms in two dimensions.
+ * 
  * @author dlegland
  *
  */

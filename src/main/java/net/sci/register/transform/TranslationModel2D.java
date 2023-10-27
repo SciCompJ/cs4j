@@ -7,25 +7,39 @@ import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
+ * Parametric model for a translation in two dimensions.
+ * 
  * @author dlegland
  *
  */
 public class TranslationModel2D extends ParametricTransform2D implements AffineTransform2D
 {
+    // ===================================================================
+    // Constructors
+    
 	public TranslationModel2D()
 	{
 		super(new double[]{0, 0});
 	}
 	
+    public TranslationModel2D(double tx, double ty)
+    {
+        super(new double[]{tx, ty});
+    }
+    
 	public TranslationModel2D(double[] params)
 	{
 		super(params);
 		if (params.length != 2)
 		{
-			throw new IllegalArgumentException("Requires an image oflength 2");
+			throw new IllegalArgumentException("Requires an input vector with length 2");
 		}
 	}
 	
+	
+    // ===================================================================
+    // Implementation of the AffineTransform2D interface
+    
 	/* (non-Javadoc)
 	 * @see net.sci.geom.geom2d.Transform2d#transform(net.sci.geom.geom2d.Point2d)
 	 */
