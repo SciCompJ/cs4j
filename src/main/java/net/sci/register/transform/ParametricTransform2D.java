@@ -15,10 +15,15 @@ import net.sci.register.ParametricObject;
 public abstract class ParametricTransform2D extends ParametricObject implements
 		Transform2D
 {
-	protected ParametricTransform2D(double[] params)
-	{
-		super(params);
-	}
+    protected ParametricTransform2D(int nParams)
+    {
+        super(nParams);
+    }
+
+    protected ParametricTransform2D(double[] params)
+    {
+        super(params);
+    }
 
 //	getDimension;
 //
@@ -26,5 +31,5 @@ public abstract class ParametricTransform2D extends ParametricObject implements
 //
 //	transformVector;
 //
-//	getJacobian;
+//	jacobian();
 }
