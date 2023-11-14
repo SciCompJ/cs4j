@@ -112,6 +112,23 @@ public class Bounds2D implements Bounds, Geometry2D
     // General methods
     
     /**
+     * Computes the bounds corresponding to the union of this bounds and the
+     * input bounds. The maximal extend in each direction is kept.
+     * 
+     * @param that
+     *            the Bounds2D to combine with
+     * @return the union of the two bounds
+     */
+    public Bounds2D union(Bounds2D that)
+    {
+        double xmin = Math.min(this.xmin, that.xmin);
+        double xmax = Math.max(this.xmax, that.xmax);
+        double ymin = Math.min(this.ymin, that.ymin);
+        double ymax = Math.max(this.ymax, that.ymax);
+        return new Bounds2D(xmin, xmax, ymin, ymax);
+    }
+    
+    /**
 	 * Converts this bounding box to a rectangular polyon.
 	 * 
 	 * @return the polygon corresponding to this bounding box
