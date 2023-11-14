@@ -9,12 +9,24 @@ import static java.lang.Math.sin;
 /**
  * General interface for affine transforms in the plane. Contains the definition
  * of affine transform methods, as well as a collection of static methods for
- * creating affine transforms.
+ * creating common affine transforms.
+ * 
+ * @see net.sci.geom.geom3d.AffineTransform3D
  * 
  * @author dlegland
  */
 public interface AffineTransform2D extends Transform2D
 {
+    // ===================================================================
+    // Public constants
+    
+    /**
+     * An instance of AffineTransform2D that corresponds to the identity
+     * transform.
+     */
+    public static final AffineTransform2D IDENTITY = new MatrixAffineTransform2D(1, 0, 0,  0, 1, 0);
+    
+    
 	// ===================================================================
 	// Static Factories
 

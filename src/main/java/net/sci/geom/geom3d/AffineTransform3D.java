@@ -4,15 +4,24 @@
 package net.sci.geom.geom3d;
 
 /**
+ * General interface for affine transforms in the 3D space. Contains the
+ * definition of affine transform methods, as well as a collection of static
+ * methods for creating common 3D affine transforms.
+ * 
+ * @see net.sci.geom.geom2d.AffineTransform2D
+ * 
  * @author dlegland
- *
  */
 public interface AffineTransform3D extends Transform3D
 {
     // ===================================================================
-    // static members
+    // Public constants
     
-    public static AffineTransform3D IDENTITY = new MatrixAffineTransform3D(1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0);
+    /**
+     * An instance of AffineTransform3D that corresponds to the identity
+     * transform.
+     */
+    public static final AffineTransform3D IDENTITY = new MatrixAffineTransform3D(1, 0, 0, 0,  0, 1, 0, 0,  0, 0, 1, 0);
     
 
 	// ===================================================================
