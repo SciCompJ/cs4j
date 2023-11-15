@@ -3,7 +3,7 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 /**
  * Implementation of Float64Array3D that stores inner data in a linear array of
@@ -87,7 +87,7 @@ public class BufferedFloat64Array3D extends Float64Array3D
 		super(size0, size1, size2);
         
         // check validity of input size array
-        long elCount = Array.prod(size0, size1, size2);
+        long elCount = MathUtils.prod(size0, size1, size2);
         if (elCount > Integer.MAX_VALUE - 8)
         {
             throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");

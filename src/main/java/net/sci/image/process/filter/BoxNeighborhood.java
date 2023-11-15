@@ -5,7 +5,7 @@ package net.sci.image.process.filter;
 
 import java.util.Iterator;
 
-import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 /**
  * A rectangular neighborhood defined by the diameter in each dimension.
@@ -88,7 +88,7 @@ public class BoxNeighborhood implements Neighborhood
         }
 
         // allocate array of shifts
-        int nShifts = (int) Array.prod(diameters);
+        int nShifts = (int) MathUtils.prod(diameters);
         this.shifts = new int[nShifts][nd];
         
         // initialize first shift

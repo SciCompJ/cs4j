@@ -3,7 +3,7 @@
  */
 package net.sci.array.scalar;
 
-import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 /**
  * @author dlegland
@@ -28,7 +28,7 @@ public class BufferedUInt16ArrayND extends UInt16ArrayND
 		super(sizes);
         
         // check validity of input size array
-        long elCount = Array.prod(sizes);
+        long elCount = MathUtils.prod(sizes);
         if (elCount > Integer.MAX_VALUE - 8)
         {
             throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
@@ -49,7 +49,7 @@ public class BufferedUInt16ArrayND extends UInt16ArrayND
 	public BufferedUInt16ArrayND(int[] sizes, short[] buffer)
 	{
 		super(sizes);
-		if (buffer.length != Array.prod(sizes))
+		if (buffer.length != MathUtils.prod(sizes))
 		{
 			throw new IllegalArgumentException("Size of image and buffer do not match");
 		}
@@ -183,7 +183,7 @@ public class BufferedUInt16ArrayND extends UInt16ArrayND
 		public UInt16Iterator()
 		{
             this.index = -1;
-            this.indexMax = (int) Array.prod(sizes) - 1;
+            this.indexMax = (int) MathUtils.prod(sizes) - 1;
 		}
 		
 		@Override

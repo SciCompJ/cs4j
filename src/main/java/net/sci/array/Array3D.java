@@ -100,7 +100,7 @@ public abstract class Array3D<T> implements Array<T>
      * 
      * <pre>
      * {@code
-     * Array3D<String> array = Array3D.create(5, 4, 3, null); 
+     * Array3D<String> array = Array3D.create(5, 4, 3, ""); 
      * String[] digits = {"A", "B", "C", "D", "E", "F"}; 
      * array.populate((x,y,z) -> digits[z] + digits[y] + digits[x]); 
      * String res432 = array.get(4, 3, 2); // returns "CDE". 

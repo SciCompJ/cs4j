@@ -3,7 +3,7 @@
  */
 package net.sci.array.binary;
 
-import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 /**
  * Implementation of BinaryArray3D that stores inner data in a linear array of
@@ -87,7 +87,7 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 		super(size0, size1, size2);
         
         // check validity of input size array
-        long elCount = Array.prod(size0, size1, size2);
+        long elCount = MathUtils.prod(size0, size1, size2);
         if (elCount > Integer.MAX_VALUE - 8)
         {
             throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
@@ -111,7 +111,7 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 	public BufferedBinaryArray3D(int size0, int size1, int size2, boolean[] buffer)
 	{
 		super(size0, size1, size2);
-		if (buffer.length < Array.prod(size0, size1, size2))
+		if (buffer.length < MathUtils.prod(size0, size1, size2))
 		{
 			throw new IllegalArgumentException("Buffer size does not match image dimensions");
 		}

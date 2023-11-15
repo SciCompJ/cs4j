@@ -96,7 +96,7 @@ public abstract class Array2D<T> implements Array<T>
      * 
      * <pre>
      * {@code
-     * Array2D<String> array = Array3D.create(5, 4, null); 
+     * Array2D<String> array = Array3D.create(5, 4, ""); 
      * String[] digits = {"A", "B", "C", "D", "E", "F"}; 
      * array.fill((x,y) -> digits[y] + digits[x]);
      * String res43 = array.get(4, 3); // returns "CD". 

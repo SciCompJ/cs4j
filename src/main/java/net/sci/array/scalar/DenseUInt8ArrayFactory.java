@@ -4,7 +4,7 @@
 package net.sci.array.scalar;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 /**
  * A factory for UInt8 arrays that generates dense representation of arrays.
@@ -23,7 +23,7 @@ public class DenseUInt8ArrayFactory extends AlgoStub implements UInt8Array.Facto
         {
             case 1 -> new BufferedUInt8Array1D(dims[0]);
             case 2 -> new BufferedUInt8Array2D(dims[0], dims[1]);
-            case 3-> create3d(dims[0], dims[1], dims[2]);
+            case 3 -> create3d(dims[0], dims[1], dims[2]);
             default -> UInt8ArrayND.create(dims);
         };
     }
@@ -31,7 +31,7 @@ public class DenseUInt8ArrayFactory extends AlgoStub implements UInt8Array.Facto
     private UInt8Array3D create3d(int dim0, int dim1, int dim2)
     {
         fireStatusChanged(this, "Allocating memory");
-        if (Array.prod(dim0, dim1, dim2) < Integer.MAX_VALUE - 8)
+        if (MathUtils.prod(dim0, dim1, dim2) < Integer.MAX_VALUE - 8)
             return new BufferedUInt8Array3D(dim0, dim1, dim2);
         else
             return new SlicedUInt8Array3D(dim0, dim1, dim2);

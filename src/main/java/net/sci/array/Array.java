@@ -6,10 +6,12 @@ package net.sci.array;
 import java.util.function.Function;
 
 import net.sci.algo.Algo;
+import net.sci.array.generic.GenericArray;
 import net.sci.array.process.shape.Flip;
 import net.sci.array.process.shape.PermuteDimensions;
 import net.sci.array.process.shape.Reshape;
 import net.sci.array.process.shape.Squeeze;
+import net.sci.util.MathUtils;
 
 /**
  * N-dimensional array with generic type.
@@ -20,23 +22,24 @@ import net.sci.array.process.shape.Squeeze;
  */
 public interface Array<T> extends Iterable<T>, Dimensional
 {
+    // ==================================================
+    // Static factory
+    
     /**
-     * Utility method that computes the product of several integer values. The
-     * typical usage is to count elements in arrays based on the array of sizes
-     * along each dimensions.
+     * Creates a new array based on its dimensions and an initialization value
+     * that will be used to determine the type of the array.
      * 
-     * @see #elementCount()
-     * 
+     * @param <T>
+     *            the type of data contained within the array
      * @param dims
-     *            the values to multiply
-     * @return the product of the input values
+     *            the dimension of the array along each dimension
+     * @param initValue
+     *            the initialization value
+     * @return a new instance of Array<T>
      */
-    static long prod(int... dims)
+    public static <T> Array<T> create(int[] dims, T initValue)
     {
-        long n = 1;
-        for (int dim : dims) 
-            n *= dim;
-        return n;
+        return GenericArray.create(dims, initValue);
     }
     
     
@@ -137,7 +140,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
      */
 	public default long elementCount()
 	{
-	    return prod(size());
+	    return MathUtils.prod(size());
 	}
 	
 	/**
@@ -156,11 +159,13 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	 */
 	public Array<T> newInstance(int... dims);
 
-	/**
-	 * Returns the factory of this array.
-	 * @return the factory of this array
-	 */
-	public Factory<T> factory();
+    /**
+     * Returns the factory of this array. The factory can be used to create new
+     * arrays with the same type, without having to know the type of the array.
+     * 
+     * @return the factory of this array
+     */
+    public Factory<T> factory();
 	
 	/**
 	 * Creates a new writable array with same size as this array and containing

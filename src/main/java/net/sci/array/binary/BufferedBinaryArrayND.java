@@ -3,7 +3,7 @@
  */
 package net.sci.array.binary;
 
-import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 /**
  * @author dlegland
@@ -28,7 +28,7 @@ public class BufferedBinaryArrayND extends BinaryArrayND
 		super(sizes);
         
         // check validity of input size array
-        long elCount = Array.prod(sizes);
+        long elCount = MathUtils.prod(sizes);
         if (elCount > Integer.MAX_VALUE - 8)
         {
             throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");

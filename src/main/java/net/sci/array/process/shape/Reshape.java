@@ -6,6 +6,7 @@ package net.sci.array.process.shape;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.util.MathUtils;
 
 /**
  * Reshapes the dimension of an array, initialized with values of input array.
@@ -36,13 +37,13 @@ public class Reshape extends AlgoStub implements ArrayOperator
 	public <T> Array<T> process(Array<T> array)
 	{
 	    // compute element number of input array
-	    long prodDims = array.elementCount();
+	    long count = array.elementCount();
 	    
         // compute element number of output array
-	    long prodDims2 = Array.prod(newDims);
+	    long count2 = MathUtils.prod(newDims);
 	    
 	    // check element numbers are the same
-	    if (prodDims != prodDims2)
+	    if (count != count2)
 	    {
 	        throw new IllegalArgumentException("Input array should have same number of elements as product of dimensions");
 	    }
@@ -77,7 +78,7 @@ public class Reshape extends AlgoStub implements ArrayOperator
         long prodDims = array.elementCount();
         
         // compute element number of output array
-        long prodDims2 = Array.prod(newDims);
+        long prodDims2 = MathUtils.prod(newDims);
         
         // check element numbers are the same
         return prodDims == prodDims2;

@@ -3,7 +3,7 @@
  */
 package net.sci.array.vector;
 
-import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 /**
  * Implementation of Float64VectorArrayND based on an inner buffer of double.
@@ -39,7 +39,7 @@ public class BufferedFloat64VectorArrayND extends Float64VectorArrayND
 		this.vectorLength = sizeV;
         
         // check validity of input size array
-        long elCount = Array.prod(sizes) * sizeV;
+        long elCount = MathUtils.prod(sizes) * sizeV;
         if (elCount > Integer.MAX_VALUE - 8)
         {
             throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");
@@ -64,7 +64,7 @@ public class BufferedFloat64VectorArrayND extends Float64VectorArrayND
 	{
 		super(sizes);
 		this.vectorLength = sizeV;
-		if (buffer.length < Array.prod(sizes) * sizeV)
+		if (buffer.length < MathUtils.prod(sizes) * sizeV)
 		{
 			throw new IllegalArgumentException("Buffer size does not match array dimensions");
 		}
@@ -148,7 +148,7 @@ public class BufferedFloat64VectorArrayND extends Float64VectorArrayND
 		
 		public Iterator() 
 		{
-	        maxIndex = (int) Array.prod(sizes) - 1;
+	        maxIndex = (int) MathUtils.prod(sizes) - 1;
 		}
 		
 		@Override

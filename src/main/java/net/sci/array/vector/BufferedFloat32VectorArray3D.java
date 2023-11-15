@@ -3,7 +3,7 @@
  */
 package net.sci.array.vector;
 
-import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 /**
  * Implementation of Float32VectorArray3D based on an inner buffer of float.
@@ -42,7 +42,7 @@ public class BufferedFloat32VectorArray3D extends Float32VectorArray3D
 		this.vectorLength = sizeV;
         
         // check validity of input size array
-        long elCount = Array.prod(size0, size1, size2, sizeV);
+        long elCount = MathUtils.prod(size0, size1, size2, sizeV);
         if (elCount > Integer.MAX_VALUE - 8)
         {
             throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");

@@ -4,7 +4,6 @@
 package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
@@ -13,6 +12,7 @@ import net.sci.array.scalar.ScalarArray3D;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
+import net.sci.util.MathUtils;
 
 /**
  * Computes the median value in a box neighborhood around each array element,
@@ -105,7 +105,7 @@ public class MedianFilterBoxSliding extends AlgoStub implements ScalarArrayOpera
         int ry2 = this.diameters[1] / 2 + 1;
         
         // compute the normalization constant
-        int totalCount = (int) Array.prod(diameters);
+        int totalCount = (int) MathUtils.prod(diameters);
         
         // create Local Histogram
         MedianLocalHistogramUInt8 histo = new MedianLocalHistogramUInt8(totalCount, 0);
@@ -183,7 +183,7 @@ public class MedianFilterBoxSliding extends AlgoStub implements ScalarArrayOpera
         int rz2 = this.diameters[2] / 2 + 1;
         
         // compute the normalization constant
-        int totalCount = (int) Array.prod(diameters);
+        int totalCount = (int) MathUtils.prod(diameters);
         
         // create Local Histogram
         MedianLocalHistogramUInt8 histo = new MedianLocalHistogramUInt8(totalCount, 0);

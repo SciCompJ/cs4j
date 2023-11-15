@@ -4,7 +4,7 @@
 package net.sci.array.scalar;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 /**
  * A factory for Float32 arrays that generates dense representation of arrays.
@@ -31,7 +31,7 @@ public class DenseFloat32ArrayFactory extends AlgoStub implements Float32Array.F
     private Float32Array3D create3d(int dim0, int dim1, int dim2)
     {
         fireStatusChanged(this, "Allocating memory");
-        if (Array.prod(dim0, dim1, dim2) < Integer.MAX_VALUE - 8)
+        if (MathUtils.prod(dim0, dim1, dim2) < Integer.MAX_VALUE - 8)
             return new BufferedFloat32Array3D(dim0, dim1, dim2);
         else
             return new SlicedFloat32Array3D(dim0, dim1, dim2);

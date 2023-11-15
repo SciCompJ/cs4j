@@ -4,6 +4,7 @@
 package net.sci.array.generic;
 
 import net.sci.array.Array;
+import net.sci.util.MathUtils;
 
 
 /**
@@ -39,7 +40,7 @@ public class BufferedGenericArrayND<T> extends GenericArrayND<T>
 		super(sizes);
         
         // check validity of input size array
-        long elCount = Array.prod(sizes);
+        long elCount = MathUtils.prod(sizes);
         if (elCount > Integer.MAX_VALUE - 8)
         {
             throw new IllegalArgumentException("Total element count is larger than maximal size for java arays");

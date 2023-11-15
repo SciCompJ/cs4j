@@ -5,8 +5,8 @@ package net.sci.array.scalar;
 
 import java.util.Locale;
 
-import net.sci.array.Array;
 import net.sci.array.Array2D;
+import net.sci.util.MathUtils;
 
 /**
  * Base implementation for 3D arrays containing Int16 values.
@@ -32,7 +32,7 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
      */
 	public static final UInt16Array3D create(int size0, int size1, int size2)
 	{
-        if (Array.prod(size0, size1, size2) < Integer.MAX_VALUE)
+        if (MathUtils.prod(size0, size1, size2) < Integer.MAX_VALUE)
             return new BufferedUInt16Array3D(size0, size1, size2);
         else 
             return new SlicedUInt16Array3D(size0, size1, size2);
