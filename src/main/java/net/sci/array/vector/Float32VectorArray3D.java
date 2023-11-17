@@ -35,8 +35,36 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
     // =============================================================
     // Declaration of new methods
 
+    /**
+     * Returns the float value at the specified position and for the specified
+     * channel.
+     * 
+     * @param x
+     *            the x-coordinate of the element
+     * @param y
+     *            the y-coordinate of the element
+     * @param z
+     *            the z-coordinate of the element
+     * @param channel
+     *            the channel index
+     * @return the channel value at the (x,y,z) position
+     */
     public abstract float getFloat(int x, int y, int z, int channel);
 
+    /**
+     * Changes the float value at the specified position and for the specified
+     * channel.
+     * 
+     * @param x
+     *            the x-coordinate of the element
+     * @param y
+     *            the y-coordinate of the element
+     * @param z
+     *            the z-coordinate of the element
+     * @param channel
+     *            the channel index
+     * @param f the new value of the specified channel at the (x,y,z) position
+     */
     public abstract void setFloat(int x, int y, int z, int channel, float f);
     
     
@@ -83,11 +111,26 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
 	 * @param z
 	 *            the z-position of the vector
 	 * @param c
-	 *            the component to investigate
+	 *            the component index
 	 * @return the value of the given component at the given position
 	 */
 	public abstract double getValue(int x, int y, int z, int c);
 	
+    /**
+     * Changes the scalar value for the specified position and the specified
+     * component.
+     * 
+     * @param x
+     *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
+     * @param z
+     *            the z-position of the vector
+     * @param c
+     *            the component index
+     * @param value
+     *            the new value at the specified position and component index
+     */
 	public abstract void setValue(int x, int y, int z, int c, double value);
 
 	
@@ -359,7 +402,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         @Override
         public void setFloat(int x, int y, int z, float f)
         {
-            Float32VectorArray3D.this.setValue(x, y, z, channel, f);
+            Float32VectorArray3D.this.setFloat(x, y, z, channel, f);
         }
 
        @Override
@@ -383,7 +426,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
         @Override
         public void set(int x, int y, int z, Float32 f)
         {
-            Float32VectorArray3D.this.setValue(x, y, z, channel, f.getValue());
+            Float32VectorArray3D.this.setFloat(x, y, z, channel, f.getFloat());
         }
 
         @Override
@@ -424,13 +467,13 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector> 
             @Override
             public float getFloat()
             {
-                return (float) Float32VectorArray3D.this.getValue(indX, indY, indZ, channel);
+                return Float32VectorArray3D.this.getFloat(indX, indY, indZ, channel);
             }
 
             @Override
             public void setFloat(float value)
             {
-                Float32VectorArray3D.this.setValue(indX, indY, indZ, channel, value);
+                Float32VectorArray3D.this.setFloat(indX, indY, indZ, channel, value);
             }
 
             @Override

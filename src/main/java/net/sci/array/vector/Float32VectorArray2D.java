@@ -15,28 +15,52 @@ import net.sci.array.scalar.Float32Array2D;
  */
 public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> implements Float32VectorArray
 {
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
-	public static final Float32VectorArray2D create(int size0, int size1, int sizeV)
-	{
-		return new BufferedFloat32VectorArray2D(size0, size1, sizeV);
-	}
-	
-	// =============================================================
-	// Constructors
+    public static final Float32VectorArray2D create(int size0, int size1, int sizeV)
+    {
+        return new BufferedFloat32VectorArray2D(size0, size1, sizeV);
+    }
 
-	protected Float32VectorArray2D(int size0, int size1)
-	{
-		super(size0, size1);
-	}
-	
-	
+    // =============================================================
+    // Constructors
+
+    protected Float32VectorArray2D(int size0, int size1)
+    {
+        super(size0, size1);
+    }
+
+
     // =============================================================
     // Declaration of new methods
-
+    
+    /**
+     * Returns the float value at the specified position and for the specified
+     * channel.
+     * 
+     * @param x
+     *            the x-coordinate of the element
+     * @param y
+     *            the y-coordinate of the element
+     * @param channel
+     *            the channel index
+     * @return the channel value at the (x,y) position
+     */
     public abstract float getFloat(int x, int y, int channel);
 
+    /**
+     * Changes the float value at the specified position and for the specified
+     * channel.
+     * 
+     * @param x
+     *            the x-coordinate of the element
+     * @param y
+     *            the y-coordinate of the element
+     * @param channel
+     *            the channel index
+     * @param f the new value of the specified channel at the (x,y) position
+     */
     public abstract void setFloat(int x, int y, int channel, float f);
     
 
@@ -58,13 +82,13 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
     public Iterable<Float32Array2D> channels()
     {
         return new Iterable<Float32Array2D>()
-                {
-                    @Override
-                    public java.util.Iterator<Float32Array2D> iterator()
-                    {
-                        return new ChannelIterator();
-                    }
-                };
+        {
+            @Override
+            public java.util.Iterator<Float32Array2D> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
     }
 
 
@@ -130,14 +154,13 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
         @Override
         public float getFloat(int x, int y)
         {
-            //TODO: avoid cast?
-            return (float) Float32VectorArray2D.this.getValue(x, y, channel);
+            return Float32VectorArray2D.this.getFloat(x, y, channel);
         }
         
         @Override
         public void setFloat(int x, int y, float f)
         {
-            Float32VectorArray2D.this.setValue(x, y, channel, f);
+            Float32VectorArray2D.this.setFloat(x, y, channel, f);
         }
         
         @Override
@@ -149,7 +172,7 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
         @Override
         public void set(int x, int y, Float32 value)
         {
-            Float32VectorArray2D.this.setValue(x, y, channel, value.getValue());
+            Float32VectorArray2D.this.setFloat(x, y, channel, value.getFloat());
         }
 
         @Override
@@ -196,13 +219,13 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
             @Override
             public float getFloat()
             {
-                return (float) Float32VectorArray2D.this.getValue(indX, indY, channel);
+                return Float32VectorArray2D.this.getFloat(indX, indY, channel);
             }
 
             @Override
             public void setFloat(float value)
             {
-                Float32VectorArray2D.this.setValue(indX, indY, channel, value);
+                Float32VectorArray2D.this.setFloat(indX, indY, channel, value);
             }
 
             @Override
@@ -228,7 +251,7 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
     private class ChannelIterator implements java.util.Iterator<Float32Array2D> 
     {
         int channel = 0;
-
+        
         @Override
         public boolean hasNext()
         {
@@ -240,7 +263,5 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector> 
         {
             return new ChannelView(channel++);
         }
-        
     }
-	
 }
