@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
+import net.sci.array.process.binary.BinaryMask;
 import net.sci.array.process.type.ConvertToBinary;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.ScalarArray;
@@ -44,6 +45,36 @@ public interface BinaryArray extends IntArray<Binary>
 		default:
             return new BufferedBinaryArrayND(dims, buffer);
 		}
+	}
+	
+	/**
+     * Returns an array with same size and type as the input array, but
+     * containing non zero values only for the elements of this binary array
+     * that are set to <code>true</code>.
+     * 
+     * The value of the "zero" element (returned for <code>false</code> elements
+     * of the mask) is left to array implementations.
+     * 
+     * Example:
+     * <pre>{@code
+        UInt8Array2D array = UInt8Array2D.create(8, 6);
+        array.fillInts((x,y) -> y * 10 + x);
+        BinaryArray2D binaryArray = BinaryArray2D.create(8, 6);
+        binaryArray.fillBooleans((x,y) -> x > 3 && y > 2);
+        UInt8Array2D masked = UInt8Array2D.wrap2d(UInt8Array.wrap(binaryArray.mask(array)));
+     * }</pre>
+     * 
+     * @param <T>
+     *            the type of data contained within array
+     * @param array
+     *            the array to mask
+     * @return an array containing either the same element of the array, or a
+     *         zero value, depending on the state of the corresponding element
+     *         in this binary mask
+     */
+	public default <T> Array<T> mask(Array<T> array)
+	{
+	    return BinaryMask.createView(array, this);
 	}
 
 	/**
@@ -145,6 +176,8 @@ public interface BinaryArray extends IntArray<Binary>
      * Iterates over elements of the array that correspond to a true value in
      * this binary array, used as a selection mask.
      * 
+     * @param <T>
+     *            the type of the elements in the array
      * @param array
      *            the array containing the elements to select
      * @return the selected elements
@@ -227,7 +260,7 @@ public interface BinaryArray extends IntArray<Binary>
     }
     
     /**
-     * Iterates over integere values within the specified int array by retaining
+     * Iterates over integer values within the specified int array by retaining
      * only values that correspond to a true value within this binary array,
      * used as a mask;
      * 
@@ -326,9 +359,11 @@ public interface BinaryArray extends IntArray<Binary>
 	}
 
 	/**
-	 * @return an Iterable over the positions of only true elements within the
-	 *         array.
-	 */
+     * Iterates of the positions that correspond to a <code>true</code> element.
+     * 
+     * @return an Iterable over the positions of only <code>true</code> elements
+     *         within the array.
+     */
 	public default Iterable<int[]> trueElementPositions()
 	{
 		return new Iterable<int[]>()
@@ -588,7 +623,12 @@ public interface BinaryArray extends IntArray<Binary>
 
 	// =============================================================
 	// Inner interface
-
+	
+	/**
+	 * Iterator over the elements of a binary array.
+	 * 
+	 * Provides nextBoolean() method to avoid class casts.
+	 */
 	public interface Iterator extends IntArray.Iterator<Binary>
 	{
 		/**
@@ -662,7 +702,7 @@ public interface BinaryArray extends IntArray<Binary>
      * <li>scalar value &lt; or = 0: binary value FALSE</li>
      * </ul>
      * 
-     * @see BinaryArray#wrap(ScalarArray)
+     * @see BinaryArray#wrap(net.sci.array.Array)
      */
     static class Wrapper implements BinaryArray
     {

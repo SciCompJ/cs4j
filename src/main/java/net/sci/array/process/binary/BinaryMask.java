@@ -9,13 +9,19 @@ import net.sci.array.Arrays;
 import net.sci.array.binary.BinaryArray;
 
 /**
- * Creates new array by keeping only values for which binary mask is set to TRUE.
+ * Creates new array by keeping only values for which binary mask is set to
+ * <code>true</code>.
  * 
  * @author dlegland
  *
  */
 public class BinaryMask extends AlgoStub
 {
+    public static final <T> Array<T> createView(Array<T> array, BinaryArray mask)
+    {
+        return new View<T>(array, mask);
+    }
+    
     public <T> Array<T> process(Array<T> array, BinaryArray mask)
     {
         // check input validity
@@ -116,5 +122,88 @@ public class BinaryMask extends AlgoStub
         // return result array
         return res;
     }
+    
+    static class View<T> implements Array<T>
+    {
+        /**
+         * The array containing the original values.
+         */
+        Array<T> array;
+        
+        /**
+         * The binary mask, the same size as the array, used to select which
+         * elements of the array must be returned.
+         */
+        BinaryArray mask;
+        
+        /**
+         * The value returned when the corresponding mask element is set to
+         * <code>false</code>.
+         */
+        T zero;
+        
+        public View(Array<T> array, BinaryArray mask)
+        {
+            // check same size
+            if (!Arrays.isSameSize(array, mask))
+            {
+                throw new IllegalArgumentException("Both arrays must have same size");
+            }
+            
+            // keep references 
+            this.array = array;
+            this.mask = mask;
+            
+            // initialize "zero" element
+            zero = array.newInstance(new int[] {1,1}).get(new int[] {0, 0});
+        }
 
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public Class<T> dataType()
+        {
+            return array.dataType();
+        }
+
+        @Override
+        public Array<T> newInstance(int... dims)
+        {
+            return array.newInstance(dims);
+        }
+
+        @Override
+        public Factory<T> factory()
+        {
+            return array.factory();
+        }
+
+        @Override
+        public T get(int[] pos)
+        {
+            return mask.getBoolean(pos) ? array.get(pos) : zero;
+        }
+
+        @Override
+        public void set(int[] pos, T value)
+        {
+            throw new RuntimeException("Can not modify values of a View Array");
+        }
+    }
 }
