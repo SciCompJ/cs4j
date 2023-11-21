@@ -8,7 +8,6 @@ import java.util.Arrays;
 import net.sci.algo.AlgoStub;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.process.VectorArrayMarginalOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -269,7 +268,7 @@ public final class MedianFilterBox extends AlgoStub implements ImageArrayOperato
 	}
 
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
         ScalarArray<?> result = array.newInstance(array.size());
         processScalar(array, result);

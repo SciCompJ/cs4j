@@ -5,7 +5,6 @@ package net.sci.array.process.numeric;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -35,8 +34,7 @@ public class KeepValueRange extends AlgoStub implements ScalarArrayOperator
      * @param output
      *            the output array
      */
-    public void processScalar(ScalarArray<? extends Scalar> input,
-            ScalarArray<? extends Scalar> output)
+    public void processScalar(ScalarArray<?> input, ScalarArray<?> output)
     {
         int nd = input.dimensionality();
         if (output.dimensionality() != nd)
@@ -58,8 +56,7 @@ public class KeepValueRange extends AlgoStub implements ScalarArrayOperator
         }
     }
     
-    public void processScalarNd(ScalarArray<? extends Scalar> input,
-            ScalarArray<? extends Scalar> output)
+    public void processScalarNd(ScalarArray<?> input, ScalarArray<?> output)
     {
         for (int[] pos : output.positions())
         {
@@ -67,8 +64,7 @@ public class KeepValueRange extends AlgoStub implements ScalarArrayOperator
         }
     }
     
-    private void processScalar2d(ScalarArray2D<? extends Scalar> input,
-            ScalarArray2D<? extends Scalar> output)
+    private void processScalar2d(ScalarArray2D<?> input, ScalarArray2D<?> output)
     {
         int sizeX = input.size(0);
         int sizeY = input.size(1);
@@ -83,8 +79,7 @@ public class KeepValueRange extends AlgoStub implements ScalarArrayOperator
         }
     }
     
-    private void processScalar3d(ScalarArray3D<? extends Scalar> input,
-            ScalarArray3D<? extends Scalar> output)
+    private void processScalar3d(ScalarArray3D<?> input, ScalarArray3D<?> output)
     {
         int sizeX = input.size(0);
         int sizeY = input.size(1);
@@ -119,9 +114,9 @@ public class KeepValueRange extends AlgoStub implements ScalarArrayOperator
     }
     
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
-        ScalarArray<? extends Scalar> output = array.newInstance(array.size());
+        ScalarArray<?> output = array.newInstance(array.size());
         processScalar(array, output);
         return output;
     }

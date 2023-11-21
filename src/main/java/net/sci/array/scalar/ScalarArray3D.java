@@ -6,21 +6,25 @@ package net.sci.array.scalar;
 import net.sci.array.Array3D;
 
 /**
+ * Specialization of Array for 3D arrays of scalar values.
+ * 
+ * @param <S>
+ *            the type of Scalar.
  * @author dlegland
  *
  */
-public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> implements ScalarArray<T>
+public abstract class ScalarArray3D<S extends Scalar<S>> extends Array3D<S> implements ScalarArray<S>
 {
     // =============================================================
     // Static methods
 
-    public final static <T extends Scalar> ScalarArray3D<T> wrap(ScalarArray<T> array)
+    public final static <S extends Scalar<S>> ScalarArray3D<S> wrap(ScalarArray<S> array)
     {
         if (array instanceof ScalarArray3D)
         {
-            return (ScalarArray3D<T>) array;
+            return (ScalarArray3D<S>) array;
         }
-        return new Wrapper<T>(array);
+        return new Wrapper<S>(array);
     }
     
     /**
@@ -30,16 +34,16 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
      * @param T
      *            the type of data within the array
      * @param array
-     *            an instance of ScalarArray with two dimensions
+     *            an instance of ScalarArray with three dimensions
      * @return an instance of ScalarArray2D
      */
-   public final static <T extends Scalar> ScalarArray3D<T> wrapScalar3d(ScalarArray<T> array)
+   public final static <S extends Scalar<S>> ScalarArray3D<S> wrapScalar3d(ScalarArray<S> array)
     {
         if (array instanceof ScalarArray3D)
         {
-            return (ScalarArray3D<T>) array;
+            return (ScalarArray3D<S>) array;
         }
-        return new Wrapper<T>(array);
+        return new Wrapper<S>(array);
     }
 
     // =============================================================
@@ -120,21 +124,21 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
      *            the index of the slice
      * @return a view on the specific slice, as a 2D array
      */
-    public abstract ScalarArray2D<T> slice(int sliceIndex);
+    public abstract ScalarArray2D<S> slice(int sliceIndex);
 
     /**
      * Iterates over the slices
      * 
      * @return an iterator over 2D slices
      */
-    public abstract Iterable<? extends ScalarArray2D<T>> slices();
+    public abstract Iterable<? extends ScalarArray2D<S>> slices();
 
     /**
      * Creates an iterator over the slices
      * 
      * @return an iterator over 2D slices
      */
-    public abstract java.util.Iterator<? extends ScalarArray2D<T>> sliceIterator();
+    public abstract java.util.Iterator<? extends ScalarArray2D<S>> sliceIterator();
 
     
     // =============================================================
@@ -157,7 +161,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     // Specialization of the Array interface
 
 	@Override
-	public abstract ScalarArray3D<T> duplicate();
+	public abstract ScalarArray3D<S> duplicate();
 
 	
     // =============================================================
@@ -198,11 +202,11 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
     // =============================================================
     // Inner Wrapper class
 
-    private static class Wrapper<T extends Scalar> extends ScalarArray3D<T>
+    private static class Wrapper<S extends Scalar<S>> extends ScalarArray3D<S>
     {
-        private ScalarArray<T> array;
+        private ScalarArray<S> array;
         
-        protected Wrapper(ScalarArray<T> array)
+        protected Wrapper(ScalarArray<S> array)
         {
             super(0, 0, 0);
             if (array.dimensionality() < 3)
@@ -218,7 +222,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
         // =============================================================
         // Management of slices
 
-        public ScalarArray2D<T> slice(int sliceIndex)
+        public ScalarArray2D<S> slice(int sliceIndex)
         {
             return new SliceView(sliceIndex);
         }
@@ -228,19 +232,19 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
          * 
          * @return an iterator over 2D slices
          */
-        public Iterable<? extends ScalarArray2D<T>> slices()
+        public Iterable<? extends ScalarArray2D<S>> slices()
         {
-            return new Iterable<ScalarArray2D<T>>()
+            return new Iterable<ScalarArray2D<S>>()
             {
                 @Override
-                public java.util.Iterator<ScalarArray2D<T>> iterator()
+                public java.util.Iterator<ScalarArray2D<S>> iterator()
                 {
                     return new SliceIterator();
                 }
             };
         }
 
-        public java.util.Iterator<? extends ScalarArray2D<T>> sliceIterator()
+        public java.util.Iterator<? extends ScalarArray2D<S>> sliceIterator()
         {
             return new SliceIterator();
         }
@@ -291,7 +295,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
          * return value from specified position 
          * */
         @Override
-        public T get(int[] pos)
+        public S get(int[] pos)
         {
             return this.array.get(pos);
         }
@@ -300,20 +304,20 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
          * set value at specified position
          */
         @Override
-        public void set(int[] pos, T value)
+        public void set(int[] pos, S value)
         {
             this.array.set(pos, value);
         }
 
         @Override
-        public T get(int x, int y, int z)
+        public S get(int x, int y, int z)
         {
             // get value at specified position
             return this.array.get(new int[] {x, y, z});
         }
 
         @Override
-        public void set(int x, int y, int z, T value)
+        public void set(int x, int y, int z, S value)
         {
             Wrapper.this.set(new int[] {x, y, z}, value);            
         }
@@ -323,19 +327,19 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
         // Implements the Array interface
 
         @Override
-        public ScalarArray3D<T> duplicate()
+        public ScalarArray3D<S> duplicate()
         {
-            ScalarArray<T> tmp = this.array.newInstance(this.size0, this.size1, this.size2);
+            ScalarArray<S> tmp = this.array.newInstance(this.size0, this.size1, this.size2);
             if (!(tmp instanceof ScalarArray3D))
             {
                 // ensure result is instance of ScalarArray3D
-                tmp = new Wrapper<T>(tmp);
+                tmp = new Wrapper<S>(tmp);
             }
             
-            ScalarArray3D<T> result = (ScalarArray3D <T>) tmp;
+            ScalarArray3D<S> result = (ScalarArray3D <S>) tmp;
             
-            ScalarArray.Iterator<T> iter1 = this.array.iterator();
-            ScalarArray.Iterator<T> iter2 = result.iterator();
+            ScalarArray.Iterator<S> iter1 = this.array.iterator();
+            ScalarArray.Iterator<S> iter2 = result.iterator();
             
             // Fill new array with input array
             while(iter1.hasNext() && iter2.hasNext())
@@ -347,30 +351,30 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
         }
         
         @Override
-        public Class<T> dataType()
+        public Class<S> dataType()
         {
             return array.dataType();
         }
 
         @Override
-        public ScalarArray<T> newInstance(int... dims)
+        public ScalarArray<S> newInstance(int... dims)
         {
             return this.array.newInstance(dims);
         }
 
         @Override
-        public ScalarArray.Factory<T> factory()
+        public ScalarArray.Factory<S> factory()
         {
             return this.array.factory();
         }
 
         @Override
-        public ScalarArray.Iterator<T> iterator()
+        public ScalarArray.Iterator<S> iterator()
         {
             return new Iterator3D();
         }
         
-        private class Iterator3D implements ScalarArray.Iterator<T>
+        private class Iterator3D implements ScalarArray.Iterator<S>
         {
             int x = -1;
             int y = 0;
@@ -387,7 +391,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             }
 
             @Override
-            public T next()
+            public S next()
             {
                 forward();
                 return Wrapper.this.get(x, y, z);
@@ -410,13 +414,13 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             }
 
             @Override
-            public T get()
+            public S get()
             {
                 return Wrapper.this.get(x, y, z);
             }
 
             @Override
-            public void set(T value)
+            public void set(S value)
             {
                 Wrapper.this.set(x, y, z, value);
             }
@@ -441,7 +445,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             }
         }
         
-        private class SliceView extends ScalarArray2D<T>
+        private class SliceView extends ScalarArray2D<S>
         {
             int sliceIndex;
             
@@ -469,13 +473,13 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             }
 
             @Override
-            public T get(int x, int y)
+            public S get(int x, int y)
             {
                 return Wrapper.this.get(x, y, this.sliceIndex);            
             }
 
             @Override
-            public void set(int x, int y, T value)
+            public void set(int x, int y, S value)
             {
                 Wrapper.this.set(x, y, this.sliceIndex, value);            
             }
@@ -494,34 +498,34 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
 
 
             @Override
-            public T get(int[] pos)
+            public S get(int[] pos)
             {
                 return Wrapper.this.get(pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
-            public void set(int[] pos, T value)
+            public void set(int[] pos, S value)
             {
                 Wrapper.this.set(pos[0], pos[1], this.sliceIndex, value);            
             }
 
             @Override
-            public ScalarArray<T> newInstance(int... dims)
+            public ScalarArray<S> newInstance(int... dims)
             {
                 return Wrapper.this.array.newInstance(dims);
             }
 
             @Override
-            public Class<T> dataType()
+            public Class<S> dataType()
             {
                 return Wrapper.this.array.dataType();
             }
 
             @Override
-            public ScalarArray2D<T> duplicate()
+            public ScalarArray2D<S> duplicate()
             {
                 // create a new array, and ensure type is 2D
-                ScalarArray2D<T> result = ScalarArray2D.wrap(Wrapper.this.array.newInstance(this.size0, this.size1));
+                ScalarArray2D<S> result = ScalarArray2D.wrap(Wrapper.this.array.newInstance(this.size0, this.size1));
                 
                 // Fill new array with input slice
                 for (int y = 0; y < Wrapper.this.size1; y++)
@@ -536,18 +540,18 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             }
 
             @Override
-            public ScalarArray.Factory<T> factory()
+            public ScalarArray.Factory<S> factory()
             {
                 return Wrapper.this.factory();
             }
 
             @Override
-            public net.sci.array.scalar.ScalarArray.Iterator<T> iterator()
+            public net.sci.array.scalar.ScalarArray.Iterator<S> iterator()
             {
                 return new Iterator();
             }
 
-            class Iterator implements ScalarArray.Iterator<T>
+            class Iterator implements ScalarArray.Iterator<S>
             {
                 int indX = -1;
                 int indY = 0;
@@ -557,7 +561,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
                 }
                 
                 @Override
-                public T next()
+                public S next()
                 {
                     forward();
                     return get();
@@ -594,20 +598,20 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
                 }
 
                 @Override
-                public T get()
+                public S get()
                 {
                     return Wrapper.this.get(indX, indY, sliceIndex);
                 }
 
                 @Override
-                public void set(T value)
+                public void set(S value)
                 {
                     Wrapper.this.set(indX, indY, sliceIndex, value);
                 }
             }
         }
         
-        private class SliceIterator implements java.util.Iterator<ScalarArray2D<T>> 
+        private class SliceIterator implements java.util.Iterator<ScalarArray2D<S>> 
         {
             int sliceIndex = -1;
 
@@ -618,7 +622,7 @@ public abstract class ScalarArray3D<T extends Scalar> extends Array3D<T> impleme
             }
 
             @Override
-            public ScalarArray2D<T> next()
+            public ScalarArray2D<S> next()
             {
                 sliceIndex++;
                 return new SliceView(sliceIndex);

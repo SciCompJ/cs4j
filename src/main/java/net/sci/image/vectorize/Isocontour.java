@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.geom.geom2d.Geometry2D;
 import net.sci.geom.geom2d.Point2D;
@@ -188,12 +187,12 @@ public class Isocontour extends AlgoStub
     // =============================================================
     // Methods
 
-    public Geometry2D processScalar2d(ScalarArray2D<? extends Scalar> array)
+    public Geometry2D processScalar2d(ScalarArray2D<?> array)
     {
         return convertContourGraphToPolylines(computeGraph(array));
     }
 
-    public AdjListDirectedGraph2D computeGraph(ScalarArray2D<? extends Scalar> array)
+    public AdjListDirectedGraph2D computeGraph(ScalarArray2D<?> array)
     {
         // create intermediate data structure
         ArrayList<EdgeVertex> edgeVertices = new ArrayList<EdgeVertex>();

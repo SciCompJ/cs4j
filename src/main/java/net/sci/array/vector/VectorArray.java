@@ -456,7 +456,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator<V extends Vector<? extends Scalar>> extends Array.Iterator<V>
+	public interface Iterator<V extends Vector<? extends Scalar<?>>> extends Array.Iterator<V>
 	{
 		/**
 		 * Returns the value of the i-th component of the current vector.

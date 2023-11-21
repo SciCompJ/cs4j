@@ -10,7 +10,7 @@ package net.sci.array.scalar;
  * @author dlegland
  *
  */
-public class Float64 extends Scalar
+public class Float64 extends Scalar<Float64>
 {
     // =============================================================
     // Class member

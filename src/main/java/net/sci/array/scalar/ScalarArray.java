@@ -11,14 +11,16 @@ import net.sci.array.Arrays;
 import net.sci.array.NumericArray;
 
 /**
- * Specialization of the Array interface that contains Scalar values. 
+ * Specialization of the Array interface that contains Scalar values.
  * 
  * Provides methods for accessing and modifying values as double.
  * 
+ * @param <S>
+ *            the type of Scalar.
  * @author dlegland
  *
  */
-public interface ScalarArray<S extends Scalar> extends NumericArray<S>
+public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
 {
 	// =============================================================
 	// New default methods 
@@ -121,7 +123,7 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
      */
 	public default void fillValue(double value)
 	{
-		Iterator<? extends Scalar> iter = iterator();
+		Iterator<S> iter = iterator();
 		while(iter.hasNext())
 		{
 			iter.forward();
@@ -434,9 +436,9 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
 	/**
 	 * A factory for building new ScalarArray instances.
 	 *
-	 * @param <T> the type of Scalar.
+	 * @param <S> the type of Scalar.
 	 */
-	public interface Factory<T extends Scalar> extends Array.Factory<T>
+	public interface Factory<S extends Scalar<S>> extends Array.Factory<S>
 	{
         /**
          * Creates a new scalar array of the specified dimensions, initialized
@@ -446,7 +448,7 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
          *            the dimensions of the new array
          * @return a new scalar array initialized with zeros
          */
-	    public ScalarArray<T> create(int... dims);
+	    public ScalarArray<S> create(int... dims);
 
         /**
          * Creates a new scalar array with the specified dimensions, filled with
@@ -458,9 +460,9 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
          *            an instance of the initial value
          * @return a new instance of ScalarArray
          */
-        public default ScalarArray<T> create(int[] dims, T value)
+        public default ScalarArray<S> create(int[] dims, S value)
         {
-            ScalarArray<T> res = create(dims);
+            ScalarArray<S> res = create(dims);
             res.fill(value);
             return res;
         }
@@ -473,9 +475,9 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
 	/**
 	 * Iterator over the Scalar objects within this array.
 	 *
-	 * @param <T> the type of Scalar elements
+	 * @param <S> the type of Scalar elements
 	 */
-	public interface Iterator<T extends Scalar> extends Array.Iterator<T>
+	public interface Iterator<S extends Scalar<S>> extends Array.Iterator<S>
 	{
 		/**
 		 * Moves this iterator to the next element and updates the value with
@@ -522,10 +524,10 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
      * 
      * @see #reshapeView(int[], Function)
      * 
-     * @param <T>
+     * @param <S>
      *            the type of (scalar) data within the array
      */
-    static class ReshapeView<T extends Scalar> extends Array.ReshapeView<T> implements ScalarArray<T>
+    static class ReshapeView<S extends Scalar<S>> extends Array.ReshapeView<S> implements ScalarArray<S>
     {
         /**
          * Creates a new view over the input array or a subset of the input
@@ -539,7 +541,7 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
          *            the mapping between view coordinates and inner array
          *            coordinates.
          */
-        public ReshapeView(ScalarArray<T> array, int[] newDims, Function<int[], int[]> coordsMapping)
+        public ReshapeView(ScalarArray<S> array, int[] newDims, Function<int[], int[]> coordsMapping)
         {
             super(array, newDims, coordsMapping);
         }
@@ -565,21 +567,21 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
         // Specialization of the Array interface
 
         @Override
-        public ScalarArray<T> newInstance(int... dims)
+        public ScalarArray<S> newInstance(int... dims)
         {
-            return ((ScalarArray<T>) array).newInstance(dims);
+            return ((ScalarArray<S>) array).newInstance(dims);
         }
 
         @Override
-        public ScalarArray.Factory<T> factory()
+        public ScalarArray.Factory<S> factory()
         {
-            return ((ScalarArray<T>) array).factory();
+            return ((ScalarArray<S>) array).factory();
         }
 
         @Override
-        public ScalarArray.Iterator<T> iterator()
+        public ScalarArray.Iterator<S> iterator()
         {
-            return new ScalarArray.Iterator<T>()
+            return new ScalarArray.Iterator<S>()
             {
                 PositionIterator iter = positionIterator();
 
@@ -608,20 +610,20 @@ public interface ScalarArray<S extends Scalar> extends NumericArray<S>
                 }
 
                 @Override
-                public T next()
+                public S next()
                 {
                     iter.forward();
                     return ScalarArray.ReshapeView.this.get(iter.get());
                 }
 
                 @Override
-                public T get()
+                public S get()
                 {
                     return ScalarArray.ReshapeView.this.get(iter.get());
                 }
 
                 @Override
-                public void set(T value)
+                public void set(S value)
                 {
                     ScalarArray.ReshapeView.this.set(iter.get(), value);
                 }

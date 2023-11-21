@@ -31,7 +31,7 @@ public class Math
 	 *            the value to add
      * @return the result of the element-wise addition
 	 */
-	public static final ScalarArray<? extends Scalar> add(ScalarArray<? extends Scalar> array, double value)
+	public static final ScalarArray<? extends Scalar<?>> add(ScalarArray<? extends Scalar<?>> array, double value)
 	{
 	    return add(array, value, array.newInstance(array.size()));
 	}
@@ -48,9 +48,9 @@ public class Math
      *            the output array
      * @return the result of the element-wise addition
      */
-    public static final ScalarArray<? extends Scalar> add(
-            ScalarArray<? extends Scalar> array, double value,
-            ScalarArray<? extends Scalar> result)
+    public static final ScalarArray<? extends Scalar<?>> add(
+            ScalarArray<? extends Scalar<?>> array, double value,
+            ScalarArray<? extends Scalar<?>> result)
     {
         // iterate over elements of each array
         for (int[] pos : result.positions())
@@ -72,8 +72,8 @@ public class Math
      *            the value to subtract
      * @return the result of the element-wise subtraction
      */
-    public static final ScalarArray<? extends Scalar> subtract(
-            ScalarArray<? extends Scalar> array, double value)
+    public static final ScalarArray<? extends Scalar<?>> subtract(
+            ScalarArray<? extends Scalar<?>> array, double value)
     {
         return subtract(array, value, array.newInstance(array.size()));
     }
@@ -88,9 +88,9 @@ public class Math
 	 *            the value to subtract
      * @return the result of the element-wise subtraction
 	 */
-    public static final ScalarArray<? extends Scalar> subtract(
-            ScalarArray<? extends Scalar> array, double value,
-            ScalarArray<? extends Scalar> result)
+    public static final ScalarArray<? extends Scalar<?>> subtract(
+            ScalarArray<? extends Scalar<?>> array, double value,
+            ScalarArray<? extends Scalar<?>> result)
 	{
         // iterate over elements of each array
         for (int[] pos : result.positions())
@@ -112,7 +112,7 @@ public class Math
 	 *            the value to multiply by
      * @return the result of the element-wise multiplication
 	 */
-	public static final ScalarArray<? extends Scalar> multiply(ScalarArray<? extends Scalar> array, double value)
+	public static final ScalarArray<? extends Scalar<?>> multiply(ScalarArray<? extends Scalar<?>> array, double value)
 	{
 		return multiply(array, value, array.newInstance(array.size()));
 	}
@@ -127,7 +127,7 @@ public class Math
      *            the value to multiply by
      * @return the result of the element-wise multiplication
      */
-    public static final ScalarArray<? extends Scalar> multiply(ScalarArray<? extends Scalar> array, double value, ScalarArray<? extends Scalar> result)
+    public static final ScalarArray<? extends Scalar<?>> multiply(ScalarArray<? extends Scalar<?>> array, double value, ScalarArray<? extends Scalar<?>> result)
     {
         // iterate over elements of each array
         for (int[] pos : result.positions())
@@ -149,7 +149,7 @@ public class Math
      *            the value to divide by
      * @return the result of the element-wise division
      */
-    public static final ScalarArray<? extends Scalar> divide(ScalarArray<? extends Scalar> array, double value)
+    public static final ScalarArray<? extends Scalar<?>> divide(ScalarArray<? extends Scalar<?>> array, double value)
     {
         return divide(array, value, array.newInstance(array.size()));
     }
@@ -164,7 +164,7 @@ public class Math
 	 *            the value to divide by
 	 * @return the result of the element-wise division
 	 */
-	public static final ScalarArray<? extends Scalar> divide(ScalarArray<? extends Scalar> array, double value, ScalarArray<? extends Scalar> result)
+	public static final ScalarArray<? extends Scalar<?>> divide(ScalarArray<? extends Scalar<?>> array, double value, ScalarArray<? extends Scalar<?>> result)
 	{
         // iterate over elements of each array
         for (int[] pos : result.positions())
@@ -186,7 +186,7 @@ public class Math
      *            the value to compare with
      * @return the result of the element-wise comparison
      */
-    public static final ScalarArray<? extends Scalar> min(ScalarArray<? extends Scalar> array, double value)
+    public static final ScalarArray<? extends Scalar<?>> min(ScalarArray<? extends Scalar<?>> array, double value)
     {
         return add(array, value, array.newInstance(array.size()));
     }
@@ -202,9 +202,9 @@ public class Math
      *            the output array
      * @return the result of the element-wise comparison
      */
-    public static final ScalarArray<? extends Scalar> min(
-            ScalarArray<? extends Scalar> array, double value,
-            ScalarArray<? extends Scalar> result)
+    public static final ScalarArray<? extends Scalar<?>> min(
+            ScalarArray<? extends Scalar<?>> array, double value,
+            ScalarArray<? extends Scalar<?>> result)
     {
         // iterate over elements of each array
         for (int[] pos : result.positions())
@@ -225,7 +225,7 @@ public class Math
      *            the value to compare with
      * @return the result of the element-wise comparison
      */
-    public static final ScalarArray<? extends Scalar> max(ScalarArray<? extends Scalar> array, double value)
+    public static final ScalarArray<? extends Scalar<?>> max(ScalarArray<? extends Scalar<?>> array, double value)
     {
         return max(array, value, array.newInstance(array.size()));
     }
@@ -241,9 +241,9 @@ public class Math
      *            the output array
      * @return the result of the element-wise comparison
      */
-    public static final ScalarArray<? extends Scalar> max(
-            ScalarArray<? extends Scalar> array, double value,
-            ScalarArray<? extends Scalar> result)
+    public static final ScalarArray<? extends Scalar<?>> max(
+            ScalarArray<? extends Scalar<?>> array, double value,
+            ScalarArray<? extends Scalar<?>> result)
     {
         // iterate over elements of each array
         for (int[] pos : result.positions())
@@ -259,10 +259,10 @@ public class Math
     // =============================================================
     // Operations involving two arrays
 
-    public static final ScalarArray<? extends Scalar> add(
-            ScalarArray<? extends Scalar> array1,
-            ScalarArray<? extends Scalar> array2,
-            ScalarArray<? extends Scalar> output)
+    public static final ScalarArray<? extends Scalar<?>> add(
+            ScalarArray<? extends Scalar<?>> array1,
+            ScalarArray<? extends Scalar<?>> array2,
+            ScalarArray<? extends Scalar<?>> output)
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a + b);
@@ -270,10 +270,10 @@ public class Math
         return output;
     }
     
-    public static final ScalarArray<? extends Scalar> subtract(
-            ScalarArray<? extends Scalar> array1,
-            ScalarArray<? extends Scalar> array2,
-            ScalarArray<? extends Scalar> output)
+    public static final ScalarArray<? extends Scalar<?>> subtract(
+            ScalarArray<? extends Scalar<?>> array1,
+            ScalarArray<? extends Scalar<?>> array2,
+            ScalarArray<? extends Scalar<?>> output)
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a - b);
@@ -281,10 +281,10 @@ public class Math
         return output;
     }
     
-    public static final ScalarArray<? extends Scalar> multiply(
-            ScalarArray<? extends Scalar> array1,
-            ScalarArray<? extends Scalar> array2,
-            ScalarArray<? extends Scalar> output)
+    public static final ScalarArray<? extends Scalar<?>> multiply(
+            ScalarArray<? extends Scalar<?>> array1,
+            ScalarArray<? extends Scalar<?>> array2,
+            ScalarArray<? extends Scalar<?>> output)
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a * b);
@@ -292,10 +292,10 @@ public class Math
         return output;
     }
     
-    public static final ScalarArray<? extends Scalar> divide(
-            ScalarArray<? extends Scalar> array1,
-            ScalarArray<? extends Scalar> array2,
-            ScalarArray<? extends Scalar> output)
+    public static final ScalarArray<? extends Scalar<?>> divide(
+            ScalarArray<? extends Scalar<?>> array1,
+            ScalarArray<? extends Scalar<?>> array2,
+            ScalarArray<? extends Scalar<?>> output)
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a / b);
@@ -303,10 +303,10 @@ public class Math
         return output;
     }
     
-    public static final ScalarArray<? extends Scalar> modulo(
-            ScalarArray<? extends Scalar> array1,
-            ScalarArray<? extends Scalar> array2,
-            ScalarArray<? extends Scalar> output)
+    public static final ScalarArray<? extends Scalar<?>> modulo(
+            ScalarArray<? extends Scalar<?>> array1,
+            ScalarArray<? extends Scalar<?>> array2,
+            ScalarArray<? extends Scalar<?>> output)
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a % b);
@@ -314,10 +314,10 @@ public class Math
         return output;
     }
     
-    public static final ScalarArray<? extends Scalar> min(
-            ScalarArray<? extends Scalar> array1,
-            ScalarArray<? extends Scalar> array2,
-            ScalarArray<? extends Scalar> output)
+    public static final ScalarArray<? extends Scalar<?>> min(
+            ScalarArray<? extends Scalar<?>> array1,
+            ScalarArray<? extends Scalar<?>> array2,
+            ScalarArray<? extends Scalar<?>> output)
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator(java.lang.Math::min);
@@ -325,10 +325,10 @@ public class Math
         return output;
     }
     
-    public static final ScalarArray<? extends Scalar> max(
-            ScalarArray<? extends Scalar> array1,
-            ScalarArray<? extends Scalar> array2,
-            ScalarArray<? extends Scalar> output)
+    public static final ScalarArray<? extends Scalar<?>> max(
+            ScalarArray<? extends Scalar<?>> array1,
+            ScalarArray<? extends Scalar<?>> array2,
+            ScalarArray<? extends Scalar<?>> output)
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator(java.lang.Math::max);
@@ -350,10 +350,10 @@ public class Math
      *            the function to apply
      * @return the reference to the output array.
      */
-    public static final ScalarArray<? extends Scalar> apply(
-            ScalarArray<? extends Scalar> array1,
-            ScalarArray<? extends Scalar> array2,
-            ScalarArray<? extends Scalar> output, BiFunction<Double,Double,Double> fun)
+    public static final ScalarArray<? extends Scalar<?>> apply(
+            ScalarArray<? extends Scalar<?>> array1,
+            ScalarArray<? extends Scalar<?>> array2,
+            ScalarArray<? extends Scalar<?>> output, BiFunction<Double,Double,Double> fun)
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator(fun);
@@ -361,9 +361,9 @@ public class Math
         return output;
     }
     
-    private static final void checkArrays(ScalarArray<? extends Scalar> array1,
-            ScalarArray<? extends Scalar> array2,
-            ScalarArray<? extends Scalar> output)
+    private static final void checkArrays(ScalarArray<? extends Scalar<?>> array1,
+            ScalarArray<? extends Scalar<?>> array2,
+            ScalarArray<? extends Scalar<?>> output)
     {
         if (!Arrays.isSameDimensionality(array1, array2) || !Arrays.isSameDimensionality(array1, output))
         {

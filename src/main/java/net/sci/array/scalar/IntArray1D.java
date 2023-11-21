@@ -12,7 +12,7 @@ import java.util.Locale;
  * @author dlegland
  *
  */
-public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> implements IntArray<T>
+public abstract class IntArray1D<I extends Int<I>> extends ScalarArray1D<I> implements IntArray<I>
 {
     // =============================================================
     // Static method
@@ -22,19 +22,19 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
      * a Wrapper if necessary. If the original array is already an instance of
      * IntArray1D, it is returned.
      *
-     * @param <T>
+     * @param <I>
      *            the type of the input array
      * @param array
      *            the original array
      * @return a Int view of the original array
      */
-    public final static <T extends Int> IntArray1D<T> wrap(IntArray<T> array)
+    public final static <I extends Int<I>> IntArray1D<I> wrap(IntArray<I> array)
     {
         if (array instanceof IntArray1D)
         {
-            return (IntArray1D<T>) array;
+            return (IntArray1D<I>) array;
         }
-        return new Wrapper<T>(array);
+        return new Wrapper<I>(array);
     }
     
 
@@ -118,9 +118,9 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
     // Specialization of Array interface
 
     @Override
-    public IntArray1D<T> duplicate()
+    public IntArray1D<I> duplicate()
     {
-        IntArray1D<T> res = IntArray1D.wrap(this.factory().create(this.size()));
+        IntArray1D<I> res = IntArray1D.wrap(this.factory().create(this.size()));
         for (int x = 0; x < this.size0; x++)
         {
             res.setInt(x, this.getInt(x));
@@ -151,11 +151,11 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
     /**
      * Wraps an integer array into a IntArray1D, with two dimensions.
      */
-    private static class Wrapper<T extends Int> extends IntArray1D<T>
+    private static class Wrapper<I extends Int<I>> extends IntArray1D<I>
     {
-        IntArray<T> array;
+        IntArray<I> array;
 
-        public Wrapper(IntArray<T> array)
+        public Wrapper(IntArray<I> array)
         {
             super(0);
             this.size0 = array.size(0);
@@ -175,13 +175,13 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
         }
 
         @Override
-        public T get(int x)
+        public I get(int x)
         {
             return array.get(new int[] {x});
         }
 
         @Override
-        public void set(int x, T value)
+        public void set(int x, I value)
         {
             array.set(new int[] {x}, value);
         }
@@ -190,25 +190,25 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
          * Simply returns an iterator on the original array.
          */
         @Override
-        public net.sci.array.scalar.IntArray.Iterator<T> iterator()
+        public net.sci.array.scalar.IntArray.Iterator<I> iterator()
         {
             return this.array.iterator();
         }
 
         @Override
-        public IntArray<T> newInstance(int... dims)
+        public IntArray<I> newInstance(int... dims)
         {
             return array.newInstance(dims);
         }
 
         @Override
-        public Class<T> dataType()
+        public Class<I> dataType()
         {
             return array.dataType();
         }
 
         @Override
-        public IntArray.Factory<T> factory()
+        public IntArray.Factory<I> factory()
         {
             return array.factory();
         }
@@ -226,13 +226,13 @@ public abstract class IntArray1D<T extends Int> extends ScalarArray1D<T> impleme
         }
 
         @Override
-        public T get(int[] pos)
+        public I get(int[] pos)
         {
             return array.get(pos);
         }
 
         @Override
-        public void set(int[] pos, T value)
+        public void set(int[] pos, I value)
         {
             array.set(pos, value);
         }

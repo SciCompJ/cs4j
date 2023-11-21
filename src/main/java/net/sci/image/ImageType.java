@@ -18,7 +18,6 @@ import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
-import net.sci.array.scalar.Int;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.Scalar;
@@ -411,8 +410,7 @@ public interface ImageType
                 throw new RuntimeException("Label images require int array for data");
             }
         
-            @SuppressWarnings("unchecked")
-            IntArray<? extends Int> array = (IntArray<? extends Int>) image.data;
+            IntArray<?> array = (IntArray<?>) image.data;
             int nLabels = array.maxInt();
             image.displaySettings.displayRange = new double[]{0, nLabels};
             

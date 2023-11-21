@@ -11,7 +11,6 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.ImageArrayOperator;
@@ -234,7 +233,7 @@ public class RegionalExtrema2D extends AlgoStub implements ImageArrayOperator, S
     // Implementation of ScalarArrayOperator interface
 
     @Override
-    public BinaryArray2D processScalar(ScalarArray<? extends Scalar> array)
+    public BinaryArray2D processScalar(ScalarArray<?> array)
     {
         // check input validity
         if (array.dimensionality() != 2)

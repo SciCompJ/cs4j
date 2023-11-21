@@ -9,7 +9,6 @@ import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -182,7 +181,7 @@ public class ValueThreshold extends AlgoStub implements ImageArrayOperator, Scal
     }
 
     @Override
-    public BinaryArray processScalar(ScalarArray<? extends Scalar> array)
+    public BinaryArray processScalar(ScalarArray<?> array)
     {
         BinaryArray result = BinaryArray.create(array.size());
         processScalar(array, result);

@@ -11,7 +11,7 @@ import net.sci.array.scalar.Scalar;
  * @author dlegland
  *
  */
-public abstract class Vector<T extends Scalar>
+public abstract class Vector<T extends Scalar<?>>
 {
     // =============================================================
     // Static methods

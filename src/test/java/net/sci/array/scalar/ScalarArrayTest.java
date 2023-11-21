@@ -25,7 +25,7 @@ public class ScalarArrayTest
         array.fillValues((x,y) -> (double) x + 10 * y);
         
         double sum0 = 0;
-        for (Scalar v : array)
+        for (Scalar<?> v : array)
         {
             sum0 += v.getValue();
         }
@@ -41,7 +41,7 @@ public class ScalarArrayTest
         
         // check content
         double sum2 = 0;
-        for (Scalar v : res)
+        for (Scalar<?> v : res)
         {
             sum2 += v.getValue();
         }

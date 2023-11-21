@@ -5,7 +5,6 @@ package net.sci.array.process;
 
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
 /**
@@ -26,7 +25,7 @@ public interface ScalarArrayOperator extends ArrayOperator
      *            the input array
      * @return the operator result as a new Scalar Array
      */
-	public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array);
+	public ScalarArray<?> processScalar(ScalarArray<?> array);
 
 	
     // =============================================================

@@ -10,15 +10,14 @@ import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
 
 /**
- * Converts a Binary array into a UInt8 array, by converting FALSE values to 0
- * and TRUE values to 255.
+ * Converts a Binary array into a UInt8 array, by converting <code>false</code>
+ * values to 0 and <code>true</code>values to 255.
  * 
  * @author dlegland
  */
@@ -29,7 +28,7 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
     }
     
     @Override
-    public UInt8Array processScalar(ScalarArray<? extends Scalar> array)
+    public UInt8Array processScalar(ScalarArray<?> array)
     {
         if (array.dataType() != Binary.class)
         {

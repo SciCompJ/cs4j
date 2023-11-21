@@ -5,7 +5,6 @@ package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.ImageArrayOperator;
@@ -25,7 +24,7 @@ public class GaussianFilter3x3 extends AlgoStub
     }
     
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
         if (array.dimensionality() != 2)
         {

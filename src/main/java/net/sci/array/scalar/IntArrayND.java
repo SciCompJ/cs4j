@@ -7,7 +7,7 @@ package net.sci.array.scalar;
  * @author dlegland
  *
  */
-public abstract class IntArrayND<T extends Int> extends ScalarArrayND<T> implements IntArray<T>
+public abstract class IntArrayND<I extends Int<I>> extends ScalarArrayND<I> implements IntArray<I>
 {
 
 	protected IntArrayND(int[] sizes)

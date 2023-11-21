@@ -7,7 +7,6 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.Arrays;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
 /**
@@ -33,7 +32,7 @@ public class FiniteDifferences extends AlgoStub implements ArrayOperator
      * The factory used to create output array. If set to null (the default), use the factory
      * of the input array.
      */
-    protected ScalarArray.Factory<? extends Scalar> factory = null;
+    protected ScalarArray.Factory<?> factory = null;
     
     
     // =============================================================
@@ -95,7 +94,7 @@ public class FiniteDifferences extends AlgoStub implements ArrayOperator
         ScalarArray<?> source = (ScalarArray<?>) array;
 
         // choose the ScalarArray factory for creating result
-        ScalarArray.Factory<? extends Scalar> factory = this.factory;
+        ScalarArray.Factory<?> factory = this.factory;
         if (factory == null)
         {
             factory = source.factory();
@@ -161,7 +160,7 @@ public class FiniteDifferences extends AlgoStub implements ArrayOperator
      * 
      * @param factory the factory to set
      */
-    public void setFactory(ScalarArray.Factory<? extends Scalar> factory)
+    public void setFactory(ScalarArray.Factory<?> factory)
     {
         this.factory = factory;
     }

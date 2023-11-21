@@ -5,7 +5,6 @@ package net.sci.array.process.math;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
 /**
@@ -33,8 +32,7 @@ public class PowerOfTwo extends AlgoStub implements ScalarArrayOperator
      * @param output
      *            the output array
      */
-	public void processScalar(ScalarArray<? extends Scalar> input,
-			ScalarArray<? extends Scalar> output)
+    public void processScalar(ScalarArray<?> input, ScalarArray<?> output)
 	{
 	    for (int[] pos : output.positions())
 	    {
@@ -43,9 +41,9 @@ public class PowerOfTwo extends AlgoStub implements ScalarArrayOperator
 	}
 
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
-        ScalarArray<? extends Scalar> output = array.newInstance(array.size());
+        ScalarArray<?> output = array.newInstance(array.size());
         processScalar(array, output);
         return output;
     }

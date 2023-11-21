@@ -6,7 +6,6 @@ package net.sci.array.process.numeric;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -59,7 +58,7 @@ public class DownSample extends AlgoStub implements ScalarArrayOperator
     }
     
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
         if (array.dimensionality() == 2)
         {
@@ -75,7 +74,7 @@ public class DownSample extends AlgoStub implements ScalarArrayOperator
         }
     }
     
-    public ScalarArray3D<?> processScalar3d(ScalarArray3D<? extends Scalar> array)
+    public ScalarArray3D<?> processScalar3d(ScalarArray3D<?> array)
     {
         int sizeZ = array.size(2);
         int[] dims2 = outputArraySize(array);
@@ -123,7 +122,7 @@ public class DownSample extends AlgoStub implements ScalarArrayOperator
         return res;
     }
     
-    private double[][] smoothAndResampleSlice(ScalarArray2D<? extends Scalar> array)
+    private double[][] smoothAndResampleSlice(ScalarArray2D<?> array)
     {
         int[] dims2 = outputArraySize(array);
         
@@ -167,7 +166,7 @@ public class DownSample extends AlgoStub implements ScalarArrayOperator
         return res;
     }
 
-    public ScalarArray2D<?> processScalar2d(ScalarArray2D<? extends Scalar> array)
+    public ScalarArray2D<?> processScalar2d(ScalarArray2D<?> array)
     {
         int sizeY = array.size(1);
         int[] dims2 = outputArraySize(array);
@@ -212,7 +211,7 @@ public class DownSample extends AlgoStub implements ScalarArrayOperator
         return res;
     }
     
-    private double[] smoothAndResampleRow(ScalarArray2D<? extends Scalar> array, int y)
+    private double[] smoothAndResampleRow(ScalarArray2D<?> array, int y)
     {
         int sizeX = array.size(0);
         double[] buffer = new double[sizeX];
@@ -221,7 +220,7 @@ public class DownSample extends AlgoStub implements ScalarArrayOperator
         return smoothAndSubsample(buffer, factor);
     }
 
-    private void copyRowValues(ScalarArray2D<? extends Scalar> array, int y, double[] buffer)
+    private void copyRowValues(ScalarArray2D<?> array, int y, double[] buffer)
     {
         int sizeX = array.size(0);
         for (int x = 0; x < sizeX; x++)

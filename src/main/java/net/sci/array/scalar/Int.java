@@ -7,7 +7,7 @@ package net.sci.array.scalar;
  * @author dlegland
  *
  */
-public abstract class Int extends Scalar
+public abstract class Int<I extends Int<I>> extends Scalar<I>
 {
     /**
      * @return the int value corresponding to this Int.
@@ -15,5 +15,5 @@ public abstract class Int extends Scalar
 	public abstract int getInt();
 	
 	@Override
-	public abstract Int fromValue(double v);
+	public abstract I fromValue(double v);
 }

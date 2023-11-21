@@ -63,7 +63,7 @@ public class HysteresisThreshold extends AlgoStub
     // Processing methods
     
     @Override
-    public BinaryArray processScalar(ScalarArray<? extends Scalar> array)
+    public BinaryArray processScalar(ScalarArray<?> array)
     {
         // switch processing depending on input array dimensionality
         switch(array.dimensionality())
@@ -75,7 +75,7 @@ public class HysteresisThreshold extends AlgoStub
         }
     }
     
-    private BinaryArray2D processScalar2d(ScalarArray2D<? extends Scalar> array)
+    private <S extends Scalar<S>> BinaryArray2D processScalar2d(ScalarArray2D<S> array)
     {
         // Compute segmentation based on upper threshold value
         BinaryArray2D upperSeg = BinaryArray2D.create(array.size(0), array.size(1));
@@ -88,7 +88,7 @@ public class HysteresisThreshold extends AlgoStub
         return BinaryArray2D.wrap((BinaryArray) MorphologicalReconstruction.reconstructByDilation(upperSeg, lowerSeg));
     }
 
-    private BinaryArray3D processScalar3d(ScalarArray3D<? extends Scalar> array)
+    private BinaryArray3D processScalar3d(ScalarArray3D<?> array)
     {
         // Compute segmentation based on upper threshold value
         BinaryArray3D upperSeg = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));

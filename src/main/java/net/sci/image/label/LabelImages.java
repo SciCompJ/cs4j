@@ -33,18 +33,20 @@ public class LabelImages
      * Returns the set of unique labels existing in the given image, excluding 
      * the value zero (used for background).
      * 
-     * @param image
+     * @param labelMap
      *            a label image
      * @return the list of unique labels present in image (without background)
      */
-    public final static int[] findAllLabels(IntArray<?> image)
+    public final static int[] findAllLabels(IntArray<?> labelMap)
     {
         TreeSet<Integer> labels = new TreeSet<Integer> ();
         
-        // for integer-based images, simply use integer result
-        for (Int value : image)
+        // for integer arrays, uses an instance of IntArray.Iterator to avoid
+        // creation of many Int instances
+        IntArray.Iterator<?> iter = labelMap.iterator();
+        while (iter.hasNext())
         {
-            labels.add(value.getInt());
+            labels.add(iter.nextInt());
         }
         
         // remove 0 if it exists

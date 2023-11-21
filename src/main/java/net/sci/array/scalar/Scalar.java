@@ -4,12 +4,15 @@
 package net.sci.array.scalar;
 
 /**
- * Top-level definition of scalar value. Can represent any double or integer value. 
+ * Top-level definition of scalar value. Can represent any double or integer
+ * value.
  * 
- * @author dlegland
+ * @param <S>
+ *            the type of Scalar.
  *
+ * @author dlegland
  */
-public abstract class Scalar
+public abstract class Scalar<S extends Scalar<S>>
 {
 	/**
 	 * Returns the value of this scalar element as a double.
@@ -24,5 +27,5 @@ public abstract class Scalar
      *            the value
      * @return the Scalar corresponding to the input value.
      */
-	public abstract Scalar fromValue(double v);
+	public abstract S fromValue(double v);
 }

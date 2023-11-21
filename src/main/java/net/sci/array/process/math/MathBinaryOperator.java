@@ -7,7 +7,6 @@ import java.util.function.BiFunction;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -60,29 +59,29 @@ public class MathBinaryOperator extends AlgoStub
         this.fun = fun;
     }
     
-    public ScalarArray<? extends Scalar> process(ScalarArray<? extends Scalar> array1, ScalarArray<? extends Scalar> array2)
+    public ScalarArray<?> process(ScalarArray<?> array1, ScalarArray<?> array2)
     {
         checkSameSize(array1, array2);
         
         if (array1.dimensionality() == 2)
         {
-            ScalarArray2D<? extends Scalar> res = ScalarArray2D.wrapScalar2d(array1.newInstance(array1.size()));
+            ScalarArray2D<?> res = ScalarArray2D.wrapScalar2d(array1.newInstance(array1.size()));
             return process2d(ScalarArray2D.wrapScalar2d(array1), ScalarArray2D.wrapScalar2d(array2), res);
         }
         else if (array1.dimensionality() == 3)
         {
-            ScalarArray3D<? extends Scalar> res = ScalarArray3D.wrapScalar3d(array1.newInstance(array1.size()));
+            ScalarArray3D<?> res = ScalarArray3D.wrapScalar3d(array1.newInstance(array1.size()));
             return process3d(ScalarArray3D.wrapScalar3d(array1), ScalarArray3D.wrapScalar3d(array2), res);
         }
         else
         {
-            ScalarArray<? extends Scalar> res = array1.newInstance(array1.size());
+            ScalarArray<?> res = array1.newInstance(array1.size());
             res.fillValues(pos -> fun.apply(array1.getValue(pos), array2.getValue(pos)));
             return res;
         }
     }
     
-    public ScalarArray<? extends Scalar> process(ScalarArray<? extends Scalar> array1, ScalarArray<? extends Scalar> array2, ScalarArray<? extends Scalar> output)
+    public ScalarArray<?> process(ScalarArray<?> array1, ScalarArray<?> array2, ScalarArray<?> output)
     {
         checkSameSize(array1, array2);
         checkSameSize(array1, output);
@@ -102,7 +101,7 @@ public class MathBinaryOperator extends AlgoStub
         }
     }
 
-    private ScalarArray2D<? extends Scalar> process2d(ScalarArray2D<? extends Scalar> array1, ScalarArray2D<? extends Scalar> array2, ScalarArray2D<? extends Scalar> res)
+    private ScalarArray2D<?> process2d(ScalarArray2D<?> array1, ScalarArray2D<?> array2, ScalarArray2D<?> res)
     {
         int sizeX = array1.size(0);
         int sizeY = array1.size(1);
@@ -119,7 +118,7 @@ public class MathBinaryOperator extends AlgoStub
         return res;
     }
     
-    private ScalarArray3D<? extends Scalar> process3d(ScalarArray3D<? extends Scalar> array1, ScalarArray3D<? extends Scalar> array2, ScalarArray3D<? extends Scalar> res)
+    private ScalarArray3D<?> process3d(ScalarArray3D<?> array1, ScalarArray3D<?> array2, ScalarArray3D<?> res)
     {
         int sizeX = array1.size(0);
         int sizeY = array1.size(1);
@@ -140,7 +139,7 @@ public class MathBinaryOperator extends AlgoStub
         return res;
     }
     
-    private static final void checkSameSize(ScalarArray<? extends Scalar> array1, ScalarArray<? extends Scalar> array2)
+    private static final void checkSameSize(ScalarArray<?> array1, ScalarArray<?> array2)
     {
         if (!Arrays.isSameDimensionality(array1, array2))
         {

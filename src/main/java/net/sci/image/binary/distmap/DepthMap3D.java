@@ -10,7 +10,6 @@ import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Float32Array;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 
@@ -25,7 +24,7 @@ public class DepthMap3D extends AlgoStub implements ArrayOperator
     /**
      * The factory used to create output array. Initialized with a Float32 array factory.
      */
-    ScalarArray.Factory<? extends Scalar> factory = Float32Array.defaultFactory;
+    ScalarArray.Factory<?> factory = Float32Array.defaultFactory;
 
     
     public DepthMap3D()

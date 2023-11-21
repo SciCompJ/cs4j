@@ -13,7 +13,7 @@ import java.util.function.BiFunction;
  * @author dlegland
  *
  */
-public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> implements IntArray<T>
+public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> implements IntArray<I>
 {
     // =============================================================
     // Static method
@@ -23,19 +23,19 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
      * a Wrapper if necessary. If the original array is already an instance of
      * IntArray2D, it is returned.
      *
-     * @param <T>
+     * @param <I>
      *            the type of the input array
      * @param array
      *            the original array
      * @return a Int view of the original array
      */
-    public final static <T extends Int> IntArray2D<T> wrap(IntArray<T> array)
+    public final static <I extends Int<I>> IntArray2D<I> wrap(IntArray<I> array)
     {
         if (array instanceof IntArray2D)
         {
-            return (IntArray2D<T>) array;
+            return (IntArray2D<I>) array;
         }
-        return new Wrapper<T>(array);
+        return new Wrapper<I>(array);
     }
     
 
@@ -146,9 +146,9 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
 	// Specialization of Array interface
 
     @Override
-    public IntArray2D<T> duplicate()
+    public IntArray2D<I> duplicate()
     {
-        IntArray2D<T> res = IntArray2D.wrap(this.factory().create(this.size()));
+        IntArray2D<I> res = IntArray2D.wrap(this.factory().create(this.size()));
         for (int y = 0; y < this.size1; y++)
         {
             for (int x = 0; x < this.size0; x++)
@@ -186,11 +186,11 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
 	/**
      * Wraps an integer array into a IntArray2D, with two dimensions.
      */
-    private static class Wrapper<T extends Int> extends IntArray2D<T>
+    private static class Wrapper<I extends Int<I>> extends IntArray2D<I>
     {
-        IntArray<T> array;
+        IntArray<I> array;
 
-        public Wrapper(IntArray<T> array)
+        public Wrapper(IntArray<I> array)
         {
             super(0, 0);
             if (array.dimensionality() != 2)
@@ -215,13 +215,13 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         }
 
         @Override
-        public T get(int x, int y)
+        public I get(int x, int y)
         {
             return array.get(new int[] {x, y});
         }
 
         @Override
-        public void set(int x, int y, T value)
+        public void set(int x, int y, I value)
         {
             array.set(new int[] {x, y}, value);
         }
@@ -230,25 +230,25 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
          * Simply returns an iterator on the original array.
          */
         @Override
-        public net.sci.array.scalar.IntArray.Iterator<T> iterator()
+        public net.sci.array.scalar.IntArray.Iterator<I> iterator()
         {
             return this.array.iterator();
         }
 
         @Override
-        public IntArray<T> newInstance(int... dims)
+        public IntArray<I> newInstance(int... dims)
         {
             return array.newInstance(dims);
         }
 
         @Override
-        public Class<T> dataType()
+        public Class<I> dataType()
         {
             return array.dataType();
         }
 
         @Override
-        public IntArray.Factory<T> factory()
+        public IntArray.Factory<I> factory()
         {
             return array.factory();
         }
@@ -266,13 +266,13 @@ public abstract class IntArray2D<T extends Int> extends ScalarArray2D<T> impleme
         }
 
         @Override
-        public T get(int[] pos)
+        public I get(int[] pos)
         {
             return array.get(pos);
         }
 
         @Override
-        public void set(int[] pos, T value)
+        public void set(int[] pos, I value)
         {
             array.set(pos, value);
         }

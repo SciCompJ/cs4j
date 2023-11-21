@@ -26,7 +26,8 @@ public class ArrayStatistics
     {
         double max = Double.NEGATIVE_INFINITY;
         
-        ScalarArray.Iterator<? extends Scalar> iter = array.iterator();
+        // uses ScalarArray.Iterator to avoid creating Scalar instances
+        ScalarArray.Iterator<? extends Scalar<?>> iter = array.iterator();
         while(iter.hasNext())
         {
             max = java.lang.Math.max(max, iter.nextValue());
@@ -46,7 +47,8 @@ public class ArrayStatistics
     {
         double min = Double.POSITIVE_INFINITY;
         
-        ScalarArray.Iterator<? extends Scalar> iter = array.iterator();
+        // uses ScalarArray.Iterator to avoid creating Scalar instances
+        ScalarArray.Iterator<? extends Scalar<?>> iter = array.iterator();
         while(iter.hasNext())
         {
             min = java.lang.Math.min(min, iter.nextValue());
@@ -65,10 +67,11 @@ public class ArrayStatistics
 	 */
 	public static final double mean(ScalarArray<?> array)
 	{
-		int count = 0;
+		long count = 0;
 		double sum = 0.0;
 		
-		ScalarArray.Iterator<? extends Scalar> iter = array.iterator();
+        // uses ScalarArray.Iterator to avoid creating Scalar instances
+		ScalarArray.Iterator<? extends Scalar<?>> iter = array.iterator();
 		while(iter.hasNext())
 		{
 			count++;
@@ -91,7 +94,7 @@ public class ArrayStatistics
      */
     public static final double std(ScalarArray<?> array)
     {
-        return java.lang.Math.sqrt(std(array));
+        return java.lang.Math.sqrt(var(array));
     }
 
 	/**
@@ -105,7 +108,8 @@ public class ArrayStatistics
 	{
 		double sum = 0.0;
 		
-		ScalarArray.Iterator<? extends Scalar> iter = array.iterator();
+        // uses ScalarArray.Iterator to avoid creating Scalar instances
+		ScalarArray.Iterator<? extends Scalar<?>> iter = array.iterator();
 		while(iter.hasNext())
 		{
 			sum += iter.nextValue();
@@ -130,7 +134,8 @@ public class ArrayStatistics
         double mean = mean(array);
         double sum = 0.0;
         
-        ScalarArray.Iterator<? extends Scalar> iter = array.iterator();
+        // uses ScalarArray.Iterator to avoid creating Scalar instances
+        ScalarArray.Iterator<? extends Scalar<?>> iter = array.iterator();
         while(iter.hasNext())
         {
             double v = iter.nextValue() - mean;

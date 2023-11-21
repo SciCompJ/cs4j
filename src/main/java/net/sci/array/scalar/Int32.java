@@ -10,7 +10,7 @@ package net.sci.array.scalar;
  * @author dlegland
  *
  */
-public class Int32 extends Int
+public class Int32 extends Int<Int32>
 {
     // =============================================================
     // Static methods

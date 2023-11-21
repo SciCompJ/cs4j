@@ -13,7 +13,7 @@ import net.sci.array.scalar.Int;
  * 
  * @author dlegland
  */
-public abstract class IntVector<T extends Int> extends Vector<T>
+public abstract class IntVector<T extends Int<?>> extends Vector<T>
 {
     /**
      * Returns the sample values into an integer array.

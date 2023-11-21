@@ -11,7 +11,7 @@ import net.sci.array.scalar.Int;
  * @author dlegland
  *
  */
-public class Binary extends Int
+public class Binary extends Int<Binary>
 {
 	// =============================================================
 	// Constants

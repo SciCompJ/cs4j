@@ -10,7 +10,6 @@ import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.process.VectorArrayMarginalOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.image.ImageArrayOperator;
 
@@ -299,7 +298,7 @@ public final class MedianFilterBoxBinary extends AlgoStub implements ImageArrayO
     }
     
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
         if (array instanceof BinaryArray)
         {

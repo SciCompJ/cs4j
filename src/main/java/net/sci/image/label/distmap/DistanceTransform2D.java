@@ -60,7 +60,7 @@ public interface DistanceTransform2D extends Algo, ArrayOperator
      *             if the input array is not an instance of BinaryArray
      */
     @Override
-    public default <T> ScalarArray<? extends Scalar> process(Array<T> array)
+    public default <T> ScalarArray<?> process(Array<T> array)
     {
         if (!(array instanceof IntArray2D))
         {

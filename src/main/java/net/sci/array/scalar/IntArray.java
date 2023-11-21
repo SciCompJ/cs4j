@@ -9,7 +9,7 @@ import java.util.function.Function;
  * @author dlegland
  *
  */
-public interface IntArray<T extends Int> extends ScalarArray<T>
+public interface IntArray<I extends Int<I>> extends ScalarArray<I>
 {
 	// =============================================================
 	// New default methods
@@ -22,7 +22,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	public default int minInt()
 	{
 		int vMin = Integer.MIN_VALUE;
-		for (Int i : this)
+		for (I i : this)
 		{
 			vMin = Math.min(vMin, i.getInt());
 		}
@@ -37,7 +37,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	public default int maxInt()
 	{
 		int vMax = Integer.MIN_VALUE;
-		for (Int i : this)
+		for (I i : this)
 		{
 			vMax = Math.max(vMax, i.getInt());
 		}
@@ -55,7 +55,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
      */
     public default void fillInt(int value)
     {
-        Iterator<? extends Scalar> iter = iterator();
+        Iterator<I> iter = iterator();
         while(iter.hasNext())
         {
             iter.forward();
@@ -134,10 +134,10 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	// Specialization of the Array interface
 
 	@Override
-	public IntArray<T> newInstance(int... dims);
+	public IntArray<I> newInstance(int... dims);
 
 	@Override
-	public IntArray<T> duplicate();
+	public IntArray<I> duplicate();
 
     @Override
     public default double getValue(int[] pos)
@@ -152,15 +152,15 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
     }
 
     @Override
-    public IntArray.Factory<T> factory();
+    public IntArray.Factory<I> factory();
 
-	public Iterator<T> iterator();	
+	public Iterator<I> iterator();	
 	
     
     // =============================================================
     // Specialization of the Factory interface
 
-    public interface Factory<T extends Int> extends ScalarArray.Factory<T>
+    public interface Factory<T extends Int<T>> extends ScalarArray.Factory<T>
     {
         /**
          * Creates a new int array of the specified dimensions, initialized
@@ -189,7 +189,7 @@ public interface IntArray<T extends Int> extends ScalarArray<T>
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator<T extends Int> extends ScalarArray.Iterator<T>
+	public interface Iterator<T extends Int<T>> extends ScalarArray.Iterator<T>
 	{
 		public int getInt();
 		public void setInt(int value);

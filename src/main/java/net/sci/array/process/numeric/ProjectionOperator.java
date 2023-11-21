@@ -6,7 +6,6 @@ package net.sci.array.process.numeric;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
 /**
@@ -29,7 +28,7 @@ public abstract class ProjectionOperator extends AlgoStub implements ScalarArray
      * The factory used to create output array. If set to null (the default), use the factory
      * of the input array.
      */
-    protected ScalarArray.Factory<? extends Scalar> factory = null;
+    protected ScalarArray.Factory<?> factory = null;
     
     
     // =============================================================
@@ -107,10 +106,10 @@ public abstract class ProjectionOperator extends AlgoStub implements ScalarArray
     // Implementation of ScalarArrayOperator interface
     
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
         // choose the ScalarArray factory for creating result
-        ScalarArray.Factory<? extends Scalar> factory = this.factory;
+        ScalarArray.Factory<?> factory = this.factory;
         if (factory == null)
         {
             factory = array.factory();
@@ -131,7 +130,7 @@ public abstract class ProjectionOperator extends AlgoStub implements ScalarArray
      * 
      * @param factory the factory to set
      */
-    public void setFactory(ScalarArray.Factory<? extends Scalar> factory)
+    public void setFactory(ScalarArray.Factory<?> factory)
     {
         this.factory = factory;
     }

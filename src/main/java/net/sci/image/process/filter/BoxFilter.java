@@ -5,7 +5,6 @@ package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.process.VectorArrayMarginalOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -29,7 +28,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
      * The factory used to create output array. If set to null (the default), use the factory
      * of the input array.
      */
-    ScalarArray.Factory<? extends Scalar> factory = null;
+    ScalarArray.Factory<?> factory = null;
     
 	/**
 	 * Creates a new instance of box filter by specifying the list of diameters in
@@ -47,7 +46,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 	/* (non-Javadoc)
 	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
 	 */
-	public void processScalar(ScalarArray<? extends Scalar> source, ScalarArray<? extends Scalar> target)
+	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
 	{
 		// Choose the best possible implementation, depending on array dimensions
 		if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
@@ -78,7 +77,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
      * @param target
      *            the target array
 	 */
-	public void processScalarNd(ScalarArray<? extends Scalar> source, ScalarArray<? extends Scalar> target)
+	public void processScalarNd(ScalarArray<?> source, ScalarArray<?> target)
 	{
 		// get array size (for cropping)
 		int nd = source.dimensionality();
@@ -554,10 +553,10 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
 	}
 	
 	@Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
 	    // choose the ScalarArray factory for creating result
-	    ScalarArray.Factory<? extends Scalar> factory = this.factory;
+	    ScalarArray.Factory<?> factory = this.factory;
 	    if (factory == null)
 	    {
 	        factory = array.factory();
@@ -576,7 +575,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
      * 
      * @param factory the factory to set
      */
-    public void setFactory(ScalarArray.Factory<? extends Scalar> factory)
+    public void setFactory(ScalarArray.Factory<?> factory)
     {
         this.factory = factory;
     }

@@ -12,21 +12,23 @@ import net.sci.array.Array2D;
 /**
  * Specialization of Array for 2D arrays of scalar values.
  * 
+ * @param <S>
+ *            the type of Scalar.
  * @author dlegland
  *
  */
-public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> implements ScalarArray<T>
+public abstract class ScalarArray2D<S extends Scalar<S>> extends Array2D<S> implements ScalarArray<S>
 {
 	// =============================================================
 	// Static methods
 
-    public final static <T extends Scalar> ScalarArray2D<T> wrap(ScalarArray<T> array)
+    public final static <S extends Scalar<S>> ScalarArray2D<S> wrap(ScalarArray<S> array)
     {
         if (array instanceof ScalarArray2D)
         {
-            return (ScalarArray2D<T>) array;
+            return (ScalarArray2D<S>) array;
         }
-        return new Wrapper<T>(array);
+        return new Wrapper<S>(array);
     }
 
     /**
@@ -37,13 +39,13 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
      *            an instance of ScalarArray with two dimensions
      * @return an instance of ScalarArray2D
      */
-    public final static <T extends Scalar> ScalarArray2D<T> wrapScalar2d(ScalarArray<T> array)
+    public final static <S extends Scalar<S>> ScalarArray2D<S> wrapScalar2d(ScalarArray<S> array)
     {
         if (array instanceof ScalarArray2D)
         {
-            return (ScalarArray2D<T>) array;
+            return (ScalarArray2D<S>) array;
         }
-        return new Wrapper<T>(array);
+        return new Wrapper<S>(array);
     }
 
 	// =============================================================
@@ -149,9 +151,9 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	// Specialization of the Array interface
 
 	@Override
-	public ScalarArray2D<T> duplicate()
+	public ScalarArray2D<S> duplicate()
 	{
-	    ScalarArray2D<T> res = ScalarArray2D.wrapScalar2d(this.factory().create(this.size()));
+	    ScalarArray2D<S> res = ScalarArray2D.wrapScalar2d(this.factory().create(this.size()));
 	    for (int y = 0; y < this.size1; y++)
 	    {
 	        for (int x = 0; x < this.size0; x++)
@@ -240,11 +242,11 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
 	// =============================================================
 	// Inner Wrapper class
 
-	private static class Wrapper<T extends Scalar> extends ScalarArray2D<T>
+	private static class Wrapper<S extends Scalar<S>> extends ScalarArray2D<S>
 	{
-		private ScalarArray<T> array;
+		private ScalarArray<S> array;
 		
-		protected Wrapper(ScalarArray<T> array)
+		protected Wrapper(ScalarArray<S> array)
 		{
 			super(0, 0);
 			if (array.dimensionality() < 2)
@@ -269,14 +271,14 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
         }
 
         @Override
-        public T get(int x, int y)
+        public S get(int x, int y)
         {
             // get value at specified position
             return this.array.get(new int[] {x, y});
         }
 
         @Override
-        public void set(int x, int y, T value)
+        public void set(int x, int y, S value)
         {
             // set value at specified position
             this.array.set(new int[] {x, y}, value);
@@ -295,39 +297,39 @@ public abstract class ScalarArray2D<T extends Scalar> extends Array2D<T> impleme
         }
 
         @Override
-		public ScalarArray<T> newInstance(int... dims)
+		public ScalarArray<S> newInstance(int... dims)
 		{
 			return this.array.newInstance(dims);
 		}
 
 		@Override
-		public ScalarArray.Factory<T> factory()
+		public ScalarArray.Factory<S> factory()
 		{
 			return this.array.factory();
 		}
 
 		@Override
-		public T get(int[] pos)
+		public S get(int[] pos)
 		{
 			// return value from specified position
 			return this.array.get(pos);
 		}
 
         @Override
-		public void set(int[] pos, T value)
+		public void set(int[] pos, S value)
 		{
 			// set value at specified position
 			this.array.set(pos, value);
 		}
 
 		@Override
-		public Class<T> dataType()
+		public Class<S> dataType()
 		{
 			return array.dataType();
 		}
 
 		@Override
-		public ScalarArray.Iterator<T> iterator()
+		public ScalarArray.Iterator<S> iterator()
 		{
 			return array.iterator();
 		}

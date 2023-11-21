@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
-import net.sci.array.scalar.Int;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.Image;
@@ -66,7 +65,7 @@ public class PgmImageReader implements ImageReader
         height = Integer.parseInt(heightString);
         Integer.parseInt(maxValString);
         
-        IntArray2D<? extends Int> array = UInt8Array2D.create(width, height);
+        IntArray2D<?> array = UInt8Array2D.create(width, height);
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)

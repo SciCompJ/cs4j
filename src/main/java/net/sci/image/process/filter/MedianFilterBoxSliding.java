@@ -5,7 +5,6 @@ package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -244,7 +243,7 @@ public class MedianFilterBoxSliding extends AlgoStub implements ScalarArrayOpera
     }
 
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
         ScalarArray<?> result = array.newInstance(array.size());
         processScalar(array, result);

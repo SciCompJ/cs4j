@@ -10,7 +10,7 @@ package net.sci.array.scalar;
  * @author dlegland
  *
  */
-public class Float32 extends Scalar
+public class Float32 extends Scalar<Float32>
 {
     // =============================================================
     // Class member

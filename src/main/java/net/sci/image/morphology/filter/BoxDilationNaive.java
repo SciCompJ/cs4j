@@ -6,7 +6,6 @@ package net.sci.image.morphology.filter;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -257,7 +256,7 @@ public final class BoxDilationNaive extends AlgoStub implements ImageArrayOperat
 	}
 
     @Override
-    public ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
         ScalarArray<?> output = array.newInstance(array.size());
         processScalar(array, output);

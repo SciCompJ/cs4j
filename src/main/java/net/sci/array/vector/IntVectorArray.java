@@ -12,7 +12,7 @@ import net.sci.array.scalar.Int;
  * @author dlegland
  *
  */
-public interface IntVectorArray<V extends IntVector<? extends Int>> extends VectorArray<V>
+public interface IntVectorArray<V extends IntVector<? extends Int<?>>> extends VectorArray<V>
 {
     // =============================================================
     // New abstract methods

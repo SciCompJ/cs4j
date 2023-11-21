@@ -11,10 +11,12 @@ import net.sci.array.Array1D;
 /**
  * Specialization of Array for 1D arrays of scalar values.
  * 
+ * @param <S>
+ *            the type of Scalar.
  * @author dlegland
  *
  */
-public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> implements ScalarArray<T>
+public abstract class ScalarArray1D<S extends Scalar<S>> extends Array1D<S> implements ScalarArray<S>
 {
 	// =============================================================
 	// Static methods
@@ -27,13 +29,13 @@ public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> impleme
      *            an instance of ScalarArray with two dimensions
      * @return an instance of ScalarArray2D
      */
-    public final static <T extends Scalar> ScalarArray1D<T> wrapScalar1d(ScalarArray<T> array)
+    public final static <S extends Scalar<S>> ScalarArray1D<S> wrapScalar1d(ScalarArray<S> array)
     {
         if (array instanceof ScalarArray1D)
         {
-            return (ScalarArray1D<T>) array;
+            return (ScalarArray1D<S>) array;
         }
-        return new Wrapper<T>(array);
+        return new Wrapper<S>(array);
     }
 
 	// =============================================================
@@ -139,9 +141,9 @@ public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> impleme
 	// Specialization of the Array interface
 
 	@Override
-	public ScalarArray1D<T> duplicate()
+	public ScalarArray1D<S> duplicate()
 	{
-	    ScalarArray1D<T> res = ScalarArray1D.wrapScalar1d(this.factory().create(this.size()));
+	    ScalarArray1D<S> res = ScalarArray1D.wrapScalar1d(this.factory().create(this.size()));
 	    for (int x = 0; x < this.size0; x++)
 	    {
 	        res.setValue(x, this.getValue(x));
@@ -197,11 +199,11 @@ public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> impleme
 	// =============================================================
 	// Inner Wrapper class
 
-	private static class Wrapper<T extends Scalar> extends ScalarArray1D<T>
+	private static class Wrapper<S extends Scalar<S>> extends ScalarArray1D<S>
 	{
-		private ScalarArray<T> array;
+		private ScalarArray<S> array;
 		
-		protected Wrapper(ScalarArray<T> array)
+		protected Wrapper(ScalarArray<S> array)
 		{
 			super(0);
 			this.array = array;
@@ -221,14 +223,14 @@ public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> impleme
         }
 
         @Override
-        public T get(int x)
+        public S get(int x)
         {
             // get value at specified position
             return this.array.get(new int[] {x});
         }
 
         @Override
-        public void set(int x, T value)
+        public void set(int x, S value)
         {
             // set value at specified position
             this.array.set(new int[] {x}, value);
@@ -247,39 +249,39 @@ public abstract class ScalarArray1D<T extends Scalar> extends Array1D<T> impleme
         }
 
         @Override
-		public ScalarArray<T> newInstance(int... dims)
+		public ScalarArray<S> newInstance(int... dims)
 		{
 			return this.array.newInstance(dims);
 		}
 
 		@Override
-		public ScalarArray.Factory<T> factory()
+		public ScalarArray.Factory<S> factory()
 		{
 			return this.array.factory();
 		}
 
 		@Override
-		public T get(int[] pos)
+		public S get(int[] pos)
 		{
 			// return value from specified position
 			return this.array.get(pos);
 		}
 
         @Override
-		public void set(int[] pos, T value)
+		public void set(int[] pos, S value)
 		{
 			// set value at specified position
 			this.array.set(pos, value);
 		}
         
 		@Override
-		public Class<T> dataType()
+		public Class<S> dataType()
 		{
 			return array.dataType();
 		}
 
 		@Override
-		public ScalarArray.Iterator<T> iterator()
+		public ScalarArray.Iterator<S> iterator()
 		{
 			return array.iterator();
 		}

@@ -11,7 +11,6 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.ImageArrayOperator;
@@ -270,7 +269,7 @@ implements ImageArrayOperator, ScalarArrayOperator
     // Implementation of ScalarArrayOperator interface
 
     @Override
-    public BinaryArray3D processScalar(ScalarArray<? extends Scalar> input)
+    public BinaryArray3D processScalar(ScalarArray<?> input)
     {
         BinaryArray3D output = BinaryArray3D.create(input.size(0),input.size(1), input.size(2));
         process(input, output);

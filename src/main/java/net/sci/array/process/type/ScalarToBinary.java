@@ -15,7 +15,6 @@ import net.sci.array.binary.Run;
 import net.sci.array.binary.RunLengthBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray3D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -71,7 +70,7 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
      * @author dlegland
      *
      */
-    public BinaryArray createView(ScalarArray<? extends Scalar> array)
+    public BinaryArray createView(ScalarArray<?> array)
     {
         return new BinaryArray()
         {
@@ -109,7 +108,7 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
     }
 
     @Override
-    public BinaryArray processScalar(ScalarArray<? extends Scalar> array)
+    public BinaryArray processScalar(ScalarArray<?> array)
     {
         // Dispatch to specialized methods depending on array dimensionality
         switch (array.dimensionality())

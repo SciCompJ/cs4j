@@ -10,7 +10,7 @@ package net.sci.array.scalar;
  * @author dlegland
  *
  */
-public class Int16 extends Int
+public class Int16 extends Int<Int16>
 {
     // =============================================================
     // Constants

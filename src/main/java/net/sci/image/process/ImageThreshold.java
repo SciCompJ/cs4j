@@ -6,7 +6,6 @@ package net.sci.image.process;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.image.ImageArrayOperator;
 
@@ -38,7 +37,7 @@ public class ImageThreshold extends AlgoStub implements ImageArrayOperator, Scal
 	}
 	
     @Override
-    public BinaryArray processScalar(ScalarArray<? extends Scalar> array)
+    public BinaryArray processScalar(ScalarArray<?> array)
     {
         BinaryArray result = BinaryArray.create(array.size());
         processScalar(array, result);

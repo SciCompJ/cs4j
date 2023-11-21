@@ -21,7 +21,7 @@ public class ScalarArray3DTest
     public final void testWrapScalarArrayOfT()
     {
         UInt8Array array0 = BufferedUInt8ArrayND.create(5, 4, 3);
-        ScalarArray3D<?> array = ScalarArray3D.wrap(array0);
+        ScalarArray3D<?> array = ScalarArray3D.wrapScalar3d(array0);
         
         assertTrue(array instanceof ScalarArray3D);
         assertEquals(array.dimensionality(), 3);

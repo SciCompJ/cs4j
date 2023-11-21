@@ -5,7 +5,6 @@ package net.sci.array.process;
 
 import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
-import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
 /**
@@ -34,7 +33,7 @@ public interface BinaryArrayOperator extends ScalarArrayOperator
      * @return the operator result as a new Scalar Array
      */
 	@Override
-	public default ScalarArray<?> processScalar(ScalarArray<? extends Scalar> array)
+	public default ScalarArray<?> processScalar(ScalarArray<?> array)
 	{
         if (!(array instanceof BinaryArray))
         {
@@ -56,7 +55,7 @@ public interface BinaryArrayOperator extends ScalarArrayOperator
      *             if the input array is not an instance of BinaryArray
      */
     @Override
-    public default <T> ScalarArray<? extends Scalar> process(Array<T> array)
+    public default <T> ScalarArray<?> process(Array<T> array)
     {
         if (!(array instanceof BinaryArray))
         {
