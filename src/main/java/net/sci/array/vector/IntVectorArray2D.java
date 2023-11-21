@@ -3,12 +3,13 @@
  */
 package net.sci.array.vector;
 
+import net.sci.array.scalar.Int;
 
 /**
  * @author dlegland
  *
  */
-public abstract class IntVectorArray2D<V extends IntVector<?>> extends VectorArray2D<V> implements IntVectorArray<V>
+public abstract class IntVectorArray2D<V extends IntVector<V,I>, I extends Int<I>> extends VectorArray2D<V,I> implements IntVectorArray<V,I>
 {
 	// =============================================================
 	// Constructors
@@ -115,9 +116,9 @@ public abstract class IntVectorArray2D<V extends IntVector<?>> extends VectorArr
      * @see net.sci.array.data.VectorArray#duplicate()
      */
     @Override
-    public abstract IntVectorArray2D<V> duplicate();
+    public abstract IntVectorArray2D<V,I> duplicate();
     
-    public interface Iterator<V extends IntVector<?>> extends IntVectorArray.Iterator<V>
+    public interface Iterator<V extends IntVector<V,I>, I extends Int<I>> extends IntVectorArray.Iterator<V,I>
     {
     }
 }

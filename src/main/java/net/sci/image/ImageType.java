@@ -584,7 +584,7 @@ public interface ImageType
             {
                 throw new RuntimeException("Vector images must refer to a VectorArray");
             }
-            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?>) array));
+            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?,?>) array));
             
             return createAwtImage_scalar(norm, image.getDisplaySettings());
         }
@@ -606,7 +606,7 @@ public interface ImageType
         @Override
         public void setupDisplaySettings(Image image)
         {
-            ScalarArray<?> norm = VectorArray.norm((VectorArray<?>) image.data);
+            ScalarArray<?> norm = VectorArray.norm((VectorArray<?,?>) image.data);
             image.displaySettings.displayRange = norm.finiteValueRange();
         }
         
@@ -630,7 +630,7 @@ public interface ImageType
             {
                 throw new RuntimeException("Vector images must refer to a VectorArray");
             }
-            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?>) array));
+            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?,?>) array));
             
             return createAwtImage_scalar(norm, image.getDisplaySettings());
         }
@@ -652,7 +652,7 @@ public interface ImageType
             }
             
             // compute name of channels
-            int nChannels = ((VectorArray<?>) array).channelCount();
+            int nChannels = ((VectorArray<?,?>) array).channelCount();
             String[] channelNames = new String[nChannels];
             int nDigits = (int) Math.ceil(Math.log10(nChannels));
             String pattern = "G%0" + nDigits + "d";
@@ -668,7 +668,7 @@ public interface ImageType
         @Override
         public void setupDisplaySettings(Image image)
         {
-            ScalarArray<?> norm = VectorArray.norm((VectorArray<?>) image.data);
+            ScalarArray<?> norm = VectorArray.norm((VectorArray<?,?>) image.data);
             image.displaySettings.displayRange = norm.finiteValueRange();
         }
         
@@ -692,7 +692,7 @@ public interface ImageType
             {
                 throw new RuntimeException("Vector images must refer to a VectorArray");
             }
-            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?>) array));
+            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?,?>) array));
             
             return createAwtImage_scalar(norm, image.getDisplaySettings());
         }
@@ -700,7 +700,7 @@ public interface ImageType
         @Override
         public void setupDisplaySettings(Image image)
         {
-            ScalarArray<?> norm = VectorArray.norm((VectorArray<?>) image.data);
+            ScalarArray<?> norm = VectorArray.norm((VectorArray<?,?>) image.data);
             image.displaySettings.displayRange = norm.finiteValueRange();
         }
         
@@ -721,7 +721,7 @@ public interface ImageType
             }
             
             // compute name of channels
-            int nChannels = ((VectorArray<?>) array).channelCount();
+            int nChannels = ((VectorArray<?,?>) array).channelCount();
             String[] channelNames = new String[nChannels];
             int nDigits = (int) Math.ceil(Math.log10(nChannels));
             String pattern = "C%0" + nDigits + "d";

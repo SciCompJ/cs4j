@@ -7,6 +7,7 @@ import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.Float32Array3D;
+import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 
@@ -14,18 +15,18 @@ import net.sci.array.scalar.ScalarArray3D;
  * @author dlegland
  *
  */
-public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> implements VectorArray<V>
+public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>> extends Array2D<V> implements VectorArray<V,S>
 {
     // =============================================================
     // Static methods
 
-    public final static <T extends Vector<?>> VectorArray2D<T> wrap(VectorArray<T> array)
+    public final static <V extends Vector<V, S>, S extends Scalar<S>> VectorArray2D<V, S> wrap(VectorArray<V,S> array)
     {
         if (array instanceof VectorArray2D)
         {
-            return (VectorArray2D<T>) array;
+            return (VectorArray2D<V, S>) array;
         }
-        return new Wrapper<T>(array);
+        return new Wrapper<V, S>(array);
     }
 
     /**
@@ -36,7 +37,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
      * @return a new instance of vector array, with the one dimension less than
      *         original array
      */
-    public static VectorArray2D<?> fromStack(ScalarArray3D<?> array)
+    public static VectorArray2D<?,?> fromStack(ScalarArray3D<?> array)
     {
         // size and dimension of input array
         int sizeX = array.size(0);
@@ -44,7 +45,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         int sizeZ = array.size(2);
     
         // create output array
-        VectorArray2D<? extends Vector<?>> result = Float64VectorArray2D.create(sizeX, sizeY, sizeZ);
+        VectorArray2D<?,?> result = Float64VectorArray2D.create(sizeX, sizeY, sizeZ);
         int[] pos = new int[3];
         for (int c = 0; c < sizeZ; c++)
         {
@@ -74,7 +75,7 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
      *            a vector array with two dimensions
      * @return a scalar array with three dimensions
      */
-    public static ScalarArray3D<?> convertToStack(VectorArray2D<?> array)
+    public static ScalarArray3D<?> convertToStack(VectorArray2D<?,?> array)
     {
         // size and dimension of input array
         int sizeX = array.size(0);
@@ -235,9 +236,9 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
      * @see net.sci.array.data.VectorArray#duplicate()
      */
     @Override
-    public VectorArray2D<V> duplicate()
+    public VectorArray2D<V,S> duplicate()
     {
-        VectorArray2D<V> result = VectorArray2D.wrap(newInstance(this.size0, this.size1));
+        VectorArray2D<V,S> result = VectorArray2D.wrap(newInstance(this.size0, this.size1));
         
         double[] buf = new double[this.channelCount()];
 
@@ -257,11 +258,11 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
     // =============================================================
     // Inner Wrapper class
 
-    private static class Wrapper<T extends Vector<?>> extends VectorArray2D<T>
+    private static class Wrapper<V extends Vector<V,S>, S extends Scalar<S>> extends VectorArray2D<V,S>
     {
-        private VectorArray<T> array;
+        private VectorArray<V,S> array;
         
-        protected Wrapper(VectorArray<T> array)
+        protected Wrapper(VectorArray<V,S> array)
         {
             super(0, 0);
             if (array.dimensionality() < 2)
@@ -274,52 +275,52 @@ public abstract class VectorArray2D<V extends Vector<?>> extends Array2D<V> impl
         }
 
         @Override
-        public T get(int x, int y)
+        public V get(int x, int y)
         {
             return this.array.get(new int[] {x, y});
         }
         
         @Override
-        public void set(int x, int y, T value)
+        public void set(int x, int y, V value)
         {
             // set value at specified position
             this.array.set(new int[] {x, y}, value);
         }
 
         @Override
-        public VectorArray<T> newInstance(int... dims)
+        public VectorArray<V,S> newInstance(int... dims)
         {
             return this.array.newInstance(dims);
         }
 
         @Override
-        public Array.Factory<T> factory()
+        public Array.Factory<V> factory()
         {
             return this.array.factory();
         }
 
         @Override
-        public T get(int[] pos)
+        public V get(int[] pos)
         {
             // return value from specified position
             return this.array.get(pos);
         }
 
         @Override
-        public void set(int[] pos, T value)
+        public void set(int[] pos, V value)
         {
             // set value at specified position
             this.array.set(pos, value);
         }
 
         @Override
-        public Class<T> dataType()
+        public Class<V> dataType()
         {
             return array.dataType();
         }
 
         @Override
-        public VectorArray.Iterator<T> iterator()
+        public VectorArray.Iterator<V,S> iterator()
         {
             return array.iterator();
         }

@@ -19,7 +19,7 @@ import net.sci.array.vector.IntVectorArray;
  * @author dlegland
  *
  */
-public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
+public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB16>
 {
     // =============================================================
     // Static variables
@@ -636,7 +636,7 @@ public interface RGB16Array extends IntVectorArray<RGB16>, ColorArray<RGB16>
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator extends IntVectorArray.Iterator<RGB16>
+	public interface Iterator extends IntVectorArray.Iterator<RGB16,UInt16>
 	{
         @Override
         public default int getSample(int c)

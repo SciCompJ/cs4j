@@ -51,10 +51,10 @@ public abstract class MorphologicalFilter extends AlgoStub implements ArrayOpera
      *            the input vector array
      * @return a vector array with as many channels as original array.
      */
-    protected VectorArray<?> processVector(VectorArray<?> array)
+    protected VectorArray<?,?> processVector(VectorArray<?,?> array)
     {
         // allocate memory for result
-        VectorArray<?> res = array.duplicate();
+        VectorArray<?,?> res = array.duplicate();
         
         // iterate over channels
         for (int c = 0; c < array.channelCount(); c++)
@@ -75,7 +75,7 @@ public abstract class MorphologicalFilter extends AlgoStub implements ArrayOpera
         }
         else if (array instanceof VectorArray)
         {
-            return processVector((VectorArray<?>) array);
+            return processVector((VectorArray<?,?>) array);
         }
         else
         {

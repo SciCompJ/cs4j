@@ -27,7 +27,7 @@ public class VectorArrayRGB8ViewDemo
         Image image = reader.readImage();
         
         ScalarArray3D<?> array = (ScalarArray3D<?>) image.getData();
-        VectorArray<?> vectArray = VectorArray2D.fromStack(array);
+        VectorArray<?,?> vectArray = VectorArray2D.fromStack(array);
         
         RGB8Array view = new VectorArrayRGB8View(vectArray, 1, 4, 7);
         

@@ -6,7 +6,6 @@ package net.sci.array.process;
 import net.sci.array.Array;
 import net.sci.array.Array.PositionIterator;
 import net.sci.array.scalar.ScalarArray;
-import net.sci.array.vector.Vector;
 import net.sci.array.vector.VectorArray;
 
 /**
@@ -18,8 +17,7 @@ import net.sci.array.vector.VectorArray;
  */
 public interface VectorArrayMarginalOperator extends ScalarArrayOperator
 {
-	public default void processVector(VectorArray<? extends Vector<?>> source,
-			VectorArray<? extends Vector<?>> target)
+    public default void processVector(VectorArray<?, ?> source, VectorArray<?, ?> target)
 	{
 		// iterate over channels
         for (int c = 0; c < source.channelCount(); c++)
@@ -48,7 +46,6 @@ public interface VectorArrayMarginalOperator extends ScalarArrayOperator
      * @throws IllegalArgumentException
      *             if the input array is not an instance of ScalarArray or VectorArray
      */
-    @SuppressWarnings("unchecked")
     @Override
     public default <T> Array<?> process(Array<T> array)
     {
@@ -58,8 +55,8 @@ public interface VectorArrayMarginalOperator extends ScalarArrayOperator
         }
         if (array instanceof VectorArray)
         {
-            VectorArray<?> output = (VectorArray<? extends Vector<?>>) array.duplicate();
-            processVector((VectorArray<? extends Vector<?>>) array, output);
+            VectorArray<?,?> output = (VectorArray<?,?>) array.duplicate();
+            processVector((VectorArray<?,?>) array, output);
             return output;
         }
 

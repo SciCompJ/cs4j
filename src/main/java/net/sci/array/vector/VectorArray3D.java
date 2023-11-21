@@ -5,6 +5,7 @@ package net.sci.array.vector;
 
 import net.sci.array.Array;
 import net.sci.array.Array3D;
+import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 
@@ -12,18 +13,18 @@ import net.sci.array.scalar.ScalarArray3D;
  * @author dlegland
  *
  */
-public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> implements VectorArray<V>
+public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>> extends Array3D<V> implements VectorArray<V,S>
 {
     // =============================================================
     // Static methods
 
-    public final static <T extends Vector<?>> VectorArray3D<T> wrap(VectorArray<T> array)
+    public final static <V extends Vector<V, S>, S extends Scalar<S>> VectorArray3D<V,S> wrap(VectorArray<V,S> array)
     {
         if (array instanceof VectorArray3D)
         {
-            return (VectorArray3D<T>) array;
+            return (VectorArray3D<V,S>) array;
         }
-        return new Wrapper<T>(array);
+        return new Wrapper<V,S>(array);
     }
 
 	
@@ -46,21 +47,21 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
      *            the index of the slice
      * @return a view on the specific slice, as a 2D array
      */
-    public abstract VectorArray2D<V> slice(int sliceIndex);
+    public abstract VectorArray2D<V,S> slice(int sliceIndex);
 
     /**
      * Iterates over the slices
      * 
      * @return an iterator over 2D slices
      */
-    public abstract Iterable<? extends VectorArray2D<V>> slices();
+    public abstract Iterable<? extends VectorArray2D<V,S>> slices();
 
     /**
      * Creates an iterator over the slices
      * 
      * @return an iterator over 2D slices
      */
-    public abstract java.util.Iterator<? extends VectorArray2D<V>> sliceIterator();
+    public abstract java.util.Iterator<? extends VectorArray2D<V,S>> sliceIterator();
 
 
     // =============================================================
@@ -154,9 +155,9 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
 	 * @see net.sci.array.data.VectorArray#duplicate()
 	 */
     @Override
-    public VectorArray3D<V> duplicate()
+    public VectorArray3D<V,S> duplicate()
     {
-        VectorArray3D<V> result = VectorArray3D.wrap(newInstance(this.size0, this.size1));
+        VectorArray3D<V,S> result = VectorArray3D.wrap(newInstance(this.size0, this.size1));
         
         double[] buf = new double[this.channelCount()];
         
@@ -179,18 +180,18 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
     // =============================================================
     // Inner Wrapper class
 
-    private static class Wrapper<T extends Vector<?>> extends VectorArray3D<T>
+    private static class Wrapper<V extends Vector<V,S>, S extends Scalar<S>> extends VectorArray3D<V,S>
     {
         // --------------------------------------------------------
         // class variable
 
-        private VectorArray<T> array;
+        private VectorArray<V,S> array;
         
         
         // --------------------------------------------------------
         // Constructor
 
-        protected Wrapper(VectorArray<T> array)
+        protected Wrapper(VectorArray<V,S> array)
         {
             super(0, 0, 0);
             if (array.dimensionality() < 3)
@@ -244,31 +245,31 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         // Implementation of Array3D interface
 
         @Override
-        public T get(int x, int y, int z)
+        public V get(int x, int y, int z)
         {
             return this.array.get(new int[] {x, y, z});
         }
         
         @Override
-        public void set(int x, int y, int z, T value)
+        public void set(int x, int y, int z, V value)
         {
             // set value at specified position
             this.array.set(new int[] {x, y, z}, value);
         }
 
         @Override
-        public VectorArray2D<T> slice(int sliceIndex)
+        public VectorArray2D<V,S> slice(int sliceIndex)
         {
             return new SliceView(sliceIndex);
         }
 
         @Override
-        public Iterable<? extends VectorArray2D<T>> slices()
+        public Iterable<? extends VectorArray2D<V,S>> slices()
         {
-            return new Iterable<VectorArray2D<T>>()
+            return new Iterable<VectorArray2D<V,S>>()
             {
                 @Override
-                public java.util.Iterator<VectorArray2D<T>> iterator()
+                public java.util.Iterator<VectorArray2D<V,S>> iterator()
                 {
                     return new SliceIterator();
                 }
@@ -276,20 +277,20 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         }
 
         @Override
-        public java.util.Iterator<? extends VectorArray2D<T>> sliceIterator()
+        public java.util.Iterator<? extends VectorArray2D<V,S>> sliceIterator()
         {
             return new SliceIterator();
         }
 
         @Override
-        public T get(int[] pos)
+        public V get(int[] pos)
         {
             // return value from specified position
             return this.array.get(pos);
         }
 
         @Override
-        public void set(int[] pos, T value)
+        public void set(int[] pos, V value)
         {
             // set value at specified position
             this.array.set(pos, value);
@@ -335,25 +336,25 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         // Implementation of Array interface
 
         @Override
-        public VectorArray<T> newInstance(int... dims)
+        public VectorArray<V,S> newInstance(int... dims)
         {
             return this.array.newInstance(dims);
         }
 
         @Override
-        public Array.Factory<T> factory()
+        public Array.Factory<V> factory()
         {
             return this.array.factory();
         }
 
         @Override
-        public Class<T> dataType()
+        public Class<V> dataType()
         {
             return array.dataType();
         }
 
         @Override
-        public VectorArray.Iterator<T> iterator()
+        public VectorArray.Iterator<V,S> iterator()
         {
             return array.iterator();
         }
@@ -362,7 +363,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         // --------------------------------------------------------
         // Inner Array2D iterator implementation
 
-        private class SliceIterator implements java.util.Iterator<VectorArray2D<T>> 
+        private class SliceIterator implements java.util.Iterator<VectorArray2D<V,S>> 
         {
             int sliceIndex = -1;
 
@@ -373,7 +374,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             }
 
             @Override
-            public VectorArray2D<T> next()
+            public VectorArray2D<V,S> next()
             {
                 sliceIndex++;
                 return new SliceView(sliceIndex);
@@ -384,7 +385,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
         // --------------------------------------------------------
         // View on a specific slice of the Vector array
 
-        private class SliceView extends VectorArray2D<T>
+        private class SliceView extends VectorArray2D<V,S>
         {
             int sliceIndex;
             
@@ -473,13 +474,13 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             // Implements Array2D
 
             @Override
-            public T get(int x, int y)
+            public V get(int x, int y)
             {
                 return Wrapper.this.get(x, y, this.sliceIndex);
             }
             
             @Override
-            public void set(int x, int y, T value)
+            public void set(int x, int y, V value)
             {
                 Wrapper.this.set(x, y, this.sliceIndex, value);
             }
@@ -489,22 +490,22 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             // Implements Array
 
             @Override
-            public VectorArray<T> newInstance(int... dims)
+            public VectorArray<V,S> newInstance(int... dims)
             {
                 return Wrapper.this.array.newInstance(dims);
             }
 
             @Override
-            public Class<T> dataType()
+            public Class<V> dataType()
             {
                 return Wrapper.this.array.dataType();
             }
 
             @Override
-            public VectorArray2D<T> duplicate()
+            public VectorArray2D<V,S> duplicate()
             {
                 // create a new array, and ensure type is 2D
-                VectorArray2D<T> result = VectorArray2D.wrap(Wrapper.this.array.newInstance(this.size0, this.size1));
+                VectorArray2D<V,S> result = VectorArray2D.wrap(Wrapper.this.array.newInstance(this.size0, this.size1));
                 
                 // Fill new array with input slice
                 for (int y = 0; y < Wrapper.this.size1; y++)
@@ -519,19 +520,19 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             }
 
             @Override
-            public VectorArray.Factory<T> factory()
+            public VectorArray.Factory<V> factory()
             {
                 return Wrapper.this.factory();
             }
 
             @Override
-            public T get(int[] pos)
+            public V get(int[] pos)
             {
                 return Wrapper.this.get(pos[0], pos[1], this.sliceIndex);
             }
 
             @Override
-            public void set(int[] pos, T value)
+            public void set(int[] pos, V value)
             {
                 Wrapper.this.set(pos[0], pos[1], this.sliceIndex, value);            
             }
@@ -562,12 +563,12 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
             }
 
             @Override
-            public net.sci.array.vector.VectorArray.Iterator<T> iterator()
+            public VectorArray.Iterator<V,S> iterator()
             {
                 return new Iterator();
             }
 
-            class Iterator implements VectorArray.Iterator<T>
+            class Iterator implements VectorArray.Iterator<V,S>
             {
                 int indX = -1;
                 int indY = 0;
@@ -577,7 +578,7 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
                 }
                 
                 @Override
-                public T next()
+                public V next()
                 {
                     forward();
                     return get();
@@ -613,13 +614,13 @@ public abstract class VectorArray3D<V extends Vector<?>> extends Array3D<V> impl
                 }
 
                 @Override
-                public T get()
+                public V get()
                 {
                     return Wrapper.this.get(indX, indY, sliceIndex);
                 }
 
                 @Override
-                public void set(T value)
+                public void set(V value)
                 {
                     Wrapper.this.set(indX, indY, sliceIndex, value);
                 }

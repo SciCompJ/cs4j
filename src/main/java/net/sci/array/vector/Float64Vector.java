@@ -15,7 +15,7 @@ import net.sci.array.scalar.Float64;
  * @author dlegland
  *
  */
-public class Float64Vector extends Vector<Float64>
+public class Float64Vector extends Vector<Float64Vector, Float64>
 {
     // =============================================================
     // Class variables

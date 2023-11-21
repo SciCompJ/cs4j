@@ -11,7 +11,7 @@ import net.sci.array.vector.IntVectorArray2D;
  * @author dlegland
  *
  */
-public abstract class RGB16Array2D extends IntVectorArray2D<RGB16> implements RGB16Array
+public abstract class RGB16Array2D extends IntVectorArray2D<RGB16,UInt16> implements RGB16Array
 {
 	// =============================================================
 	// Static methods

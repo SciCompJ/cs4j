@@ -11,7 +11,7 @@ import net.sci.array.vector.VectorArrayND;
  * @author dlegland
  *
  */
-public abstract class RGB8ArrayND extends VectorArrayND<RGB8> implements RGB8Array
+public abstract class RGB8ArrayND extends VectorArrayND<RGB8,UInt8> implements RGB8Array
 {
 	// =============================================================
 	// Static methods

@@ -100,7 +100,7 @@ public class SobelGradientTest
         SobelGradient algo = new SobelGradient();
         Image gradImage = algo.process(image);
         
-        VectorArray<?> vectorArray = (VectorArray<?>) gradImage.getData();
+        VectorArray<?,?> vectorArray = (VectorArray<?,?>) gradImage.getData();
         ScalarArray<?> channelArray = vectorArray.channel(0);
         Image resultImage = new Image(channelArray, gradImage);
         

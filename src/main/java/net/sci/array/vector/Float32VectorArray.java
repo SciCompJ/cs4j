@@ -5,6 +5,7 @@ package net.sci.array.vector;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.scalar.Float32;
 import net.sci.array.scalar.Float32Array;
 
 /**
@@ -14,7 +15,7 @@ import net.sci.array.scalar.Float32Array;
  * @author dlegland
  *
  */
-public interface Float32VectorArray extends VectorArray<Float32Vector>
+public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
 {
     // =============================================================
     // Static variables
@@ -123,7 +124,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector>
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator extends VectorArray.Iterator<Float32Vector>
+	public interface Iterator extends VectorArray.Iterator<Float32Vector,Float32>
 	{
 	}
     

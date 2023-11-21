@@ -8,12 +8,12 @@ import net.sci.array.scalar.Float64Array2D;
 
 /**
  * Specialization of the interface VectorArray for 2D arrays of vectors that
- * contains double values.
+ * contains 64-bits floating point ("double") values.
  * 
  * @author dlegland
  *
  */
-public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector> implements Float64VectorArray
+public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector,Float64> implements Float64VectorArray
 {
 	// =============================================================
 	// Static methods

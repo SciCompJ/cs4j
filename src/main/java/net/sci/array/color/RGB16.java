@@ -13,7 +13,7 @@ import net.sci.array.vector.IntVector;
  * @author dlegland
  *
  */
-public class RGB16 extends IntVector<UInt16> implements Color
+public class RGB16 extends IntVector<RGB16,UInt16> implements Color
 {
     private static final double MAX_UINT16_FLOAT = 0X00FFFF; 
     

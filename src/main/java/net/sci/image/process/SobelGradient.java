@@ -30,7 +30,7 @@ public class SobelGradient extends AlgoStub implements ImageArrayOperator
 	{
 	}
 
-    public void processScalar(ScalarArray<?> source, VectorArray<?> target)
+    public void processScalar(ScalarArray<?> source, VectorArray<?,?> target)
     {
         int nd1 = source.dimensionality();
         int nd2 = target.dimensionality();
@@ -60,7 +60,7 @@ public class SobelGradient extends AlgoStub implements ImageArrayOperator
     }
 
 
-	public void processScalar2d(ScalarArray2D<?> source, VectorArray2D<?> target)
+	public void processScalar2d(ScalarArray2D<?> source, VectorArray2D<?,?> target)
 	{
 		int sizeX = source.size(0);
 		int sizeY = source.size(1);
@@ -101,7 +101,7 @@ public class SobelGradient extends AlgoStub implements ImageArrayOperator
 		}
 	}
 	
-	public void processScalar3d(ScalarArray3D<?> source, VectorArray3D<?> target)
+	public void processScalar3d(ScalarArray3D<?> source, VectorArray3D<?,?> target)
 	{
 		int sizeX = source.size(0);
 		int sizeY = source.size(1);
@@ -172,12 +172,12 @@ public class SobelGradient extends AlgoStub implements ImageArrayOperator
 	    {
 	        throw new IllegalArgumentException("Requires a scalar array as input");
 	    }
-        VectorArray<?> result = createEmptyOutputArray(array);
+        VectorArray<?,?> result = createEmptyOutputArray(array);
         processScalar((ScalarArray<?>) array, result);
         return result;
     }
 
-    private VectorArray<?> createEmptyOutputArray(Array<?> array)
+    private VectorArray<?,?> createEmptyOutputArray(Array<?> array)
     {
         if (array instanceof ScalarArray2D)
         {

@@ -21,7 +21,7 @@ import net.sci.array.vector.IntVectorArray;
  * @author dlegland
  *
  */
-public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
+public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
 {
     // =============================================================
     // Static variables
@@ -723,7 +723,7 @@ public interface RGB8Array extends IntVectorArray<RGB8>, ColorArray<RGB8>
 		return RGB8.class;
 	}
 
-	public interface Iterator extends IntVectorArray.Iterator<RGB8>
+	public interface Iterator extends IntVectorArray.Iterator<RGB8,UInt8>
 	{
         @Override
         public default int getSample(int c)

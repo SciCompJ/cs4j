@@ -3,11 +3,13 @@
  */
 package net.sci.array.vector;
 
+import net.sci.array.scalar.Int;
+
 /**
  * @author dlegland
  *
  */
-public abstract class IntVectorArray3D<V extends IntVector<?>> extends VectorArray3D<V> implements IntVectorArray<V>
+public abstract class IntVectorArray3D<V extends IntVector<V,I>, I extends Int<I>> extends VectorArray3D<V,I> implements IntVectorArray<V,I>
 {
 	// =============================================================
 	// Constructors
@@ -79,21 +81,21 @@ public abstract class IntVectorArray3D<V extends IntVector<?>> extends VectorArr
      *            the index of the slice
      * @return a view on the specific slice, as a 2D array
      */
-    public abstract IntVectorArray2D<V> slice(int sliceIndex);
+    public abstract IntVectorArray2D<V,I> slice(int sliceIndex);
 
     /**
      * Iterates over the slices
      * 
      * @return an iterator over 2D slices
      */
-    public abstract Iterable<? extends IntVectorArray2D<V>> slices();
+    public abstract Iterable<? extends IntVectorArray2D<V,I>> slices();
 
     /**
      * Creates an iterator over the slices
      * 
      * @return an iterator over 2D slices
      */
-    public abstract java.util.Iterator<? extends IntVectorArray2D<V>> sliceIterator();
+    public abstract java.util.Iterator<? extends IntVectorArray2D<V,I>> sliceIterator();
 
     
     public double getValue(int x, int y, int z, int c)
@@ -148,9 +150,9 @@ public abstract class IntVectorArray3D<V extends IntVector<?>> extends VectorArr
 	 * @see net.sci.array.data.VectorArray#duplicate()
 	 */
     @Override
-    public abstract IntVectorArray3D<V> duplicate();
+    public abstract IntVectorArray3D<V,I> duplicate();
 
-    public interface Iterator<V extends IntVector<?>> extends IntVectorArray.Iterator<V>
+    public interface Iterator<V extends IntVector<V,I>, I extends Int<I>> extends IntVectorArray.Iterator<V,I>
     {
     }
 }

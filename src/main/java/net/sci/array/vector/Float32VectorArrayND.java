@@ -13,7 +13,7 @@ import net.sci.array.scalar.Float32ArrayND;
  * @author dlegland
  *
  */
-public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector> implements Float32VectorArray
+public abstract class Float32VectorArrayND extends VectorArrayND<Float32Vector, Float32> implements Float32VectorArray
 {
 	// =============================================================
 	// Static methods

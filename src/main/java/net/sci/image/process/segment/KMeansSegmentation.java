@@ -59,7 +59,7 @@ public class KMeansSegmentation extends AlgoStub implements ImageArrayOperator
         else if (array instanceof VectorArray)
         {
             // type cast
-            VectorArray<?> array2 = (VectorArray<?>) array;
+            VectorArray<?,?> array2 = (VectorArray<?,?>) array;
             int nCols = array2.channelCount();
             
             // create table

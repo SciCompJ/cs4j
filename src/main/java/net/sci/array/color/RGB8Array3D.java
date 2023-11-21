@@ -14,7 +14,7 @@ import net.sci.array.vector.IntVectorArray3D;
  * @author dlegland
  *
  */
-public abstract class RGB8Array3D extends IntVectorArray3D<RGB8> implements RGB8Array
+public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implements RGB8Array
 {
 	// =============================================================
 	// Static methods

@@ -11,7 +11,7 @@ import net.sci.array.scalar.Scalar;
  * @author dlegland
  *
  */
-public abstract class Vector<T extends Scalar<?>>
+public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>>
 {
     // =============================================================
     // Static methods
@@ -98,6 +98,6 @@ public abstract class Vector<T extends Scalar<?>>
 	 * @param i the index of element
 	 * @return the value at the specified index.
 	 */
-	public abstract T get(int i);
+	public abstract S get(int i);
 	
 }

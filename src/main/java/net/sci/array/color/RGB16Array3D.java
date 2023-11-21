@@ -12,7 +12,7 @@ import net.sci.array.vector.IntVectorArray3D;
  * @author dlegland
  *
  */
-public abstract class RGB16Array3D extends IntVectorArray3D<RGB16> implements RGB16Array
+public abstract class RGB16Array3D extends IntVectorArray3D<RGB16,UInt16> implements RGB16Array
 {
 	// =============================================================
 	// Static methods

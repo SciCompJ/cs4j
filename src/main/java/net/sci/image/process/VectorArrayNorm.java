@@ -22,11 +22,11 @@ import net.sci.image.ImageArrayOperator;
  */
 public class VectorArrayNorm extends AlgoStub implements ImageArrayOperator
 {
-	public void processVector(VectorArray<?> input, ScalarArray<?> output)
+	public void processVector(VectorArray<?,?> input, ScalarArray<?> output)
 	{
 //		if (input instanceof VectorArray && output instanceof ScalarArray)
 //		{
-			processVectorNd((VectorArray<?>) input, (ScalarArray<?>) output);
+			processVectorNd((VectorArray<?,?>) input, (ScalarArray<?>) output);
 //		}
 //		if (input instanceof VectorArray2D && output instanceof ScalarArray2D)
 //		{
@@ -44,7 +44,7 @@ public class VectorArrayNorm extends AlgoStub implements ImageArrayOperator
 //		}
 	}
 
-	public void processVector2d(VectorArray2D<?> source, ScalarArray2D<?> target)
+	public void processVector2d(VectorArray2D<?,?> source, ScalarArray2D<?> target)
 	{
 		int sizeX = source.size(0);
 		int sizeY = source.size(1);
@@ -68,7 +68,7 @@ public class VectorArrayNorm extends AlgoStub implements ImageArrayOperator
 		}
 	}
 
-	public void processVector3d(VectorArray3D<?> source, ScalarArray3D<?> target)
+	public void processVector3d(VectorArray3D<?,?> source, ScalarArray3D<?> target)
 	{
 		// get array size
 		int sizeX = source.size(0);
@@ -97,7 +97,7 @@ public class VectorArrayNorm extends AlgoStub implements ImageArrayOperator
 		}
 	}
 
-	public void processVectorNd(VectorArray<?> source, ScalarArray<?> target)
+	public void processVectorNd(VectorArray<?,?> source, ScalarArray<?> target)
 	{
 		// iterate over vector pixels
 		for (int[] pos : target.positions())
@@ -125,7 +125,7 @@ public class VectorArrayNorm extends AlgoStub implements ImageArrayOperator
 	    }
 	            
 	    ScalarArray<?> norm = Float32Array.create(array.size());
-	    processVector((VectorArray<?>) array, norm);
+	    processVector((VectorArray<?,?>) array, norm);
 	    return norm;
     }
 

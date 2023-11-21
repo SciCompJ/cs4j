@@ -20,7 +20,7 @@ import net.sci.array.scalar.ScalarArray;
  * @author dlegland
  *
  */
-public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
+public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extends NumericArray<V>
 {
 	// =============================================================
 	// Static methods
@@ -35,7 +35,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
 	 *            a vector array
 	 * @return a scalar array with the same size at the input array
 	 */
-	public static ScalarArray<?> norm(VectorArray<? extends Vector<?>> array)
+	public static ScalarArray<?> norm(VectorArray<?, ?> array)
 	{
 		// allocate memory for result
 		Float32Array result = Float32Array.create(array.size());
@@ -62,7 +62,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
      *            a vector array
      * @return a scalar array with the same size at the input array
      */
-    public static ScalarArray<?> maxNorm(VectorArray<? extends Vector<?>> array)
+    public static ScalarArray<?> maxNorm(VectorArray<?, ?> array)
     {
         // allocate memory for result
         Float32Array result = Float32Array.create(array.size());
@@ -87,7 +87,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
      *            the vector array to split.
      * @return collection of scalar arrays, corresponding to each component.
      */
-	public static Collection<ScalarArray<?>> splitChannels(VectorArray<? extends Vector<?>> array)
+	public static Collection<ScalarArray<?>> splitChannels(VectorArray<?, ?> array)
 	{
 	    int nc = array.channelCount();
 	    ArrayList<ScalarArray<?>> channels = new ArrayList<ScalarArray<?>>(nc);
@@ -247,10 +247,10 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
     // =============================================================
     // Implementation of comparison with scalar
 
-    public default VectorArray<V> min(double v)
+    public default VectorArray<V,S> min(double v)
     {
         // create result array
-        VectorArray<V> res = newInstance(size());
+        VectorArray<V,S> res = newInstance(size());
         
         // prepare iteration
         int nc = channelCount();
@@ -271,10 +271,10 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         return res;
     }
     
-    public default VectorArray<V> max(double v)
+    public default VectorArray<V,S> max(double v)
     {
         // create result array
-        VectorArray<V> res = newInstance(size());
+        VectorArray<V,S> res = newInstance(size());
         
         // prepare iteration
         int nc = channelCount();
@@ -299,9 +299,9 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
     // =============================================================
     // Implementation of NumericArray interface
     
-    public default VectorArray<V> plus(double v)
+    public default VectorArray<V,S> plus(double v)
     {
-        VectorArray<V> res = newInstance(size());
+        VectorArray<V,S> res = newInstance(size());
         
         int nc = channelCount();
         double[] values = new double[nc];
@@ -318,9 +318,9 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         return res;
     }
 
-    public default VectorArray<V> minus(double v)
+    public default VectorArray<V,S> minus(double v)
     {
-        VectorArray<V> res = newInstance(size());
+        VectorArray<V,S> res = newInstance(size());
         
         int nc = channelCount();
         double[] values = new double[nc];
@@ -337,9 +337,9 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         return res;
     }
 
-    public default VectorArray<V> times(double v)
+    public default VectorArray<V,S> times(double v)
     {
-        VectorArray<V> res = newInstance(size());
+        VectorArray<V,S> res = newInstance(size());
         
         int nc = channelCount();
         double[] values = new double[nc];
@@ -356,9 +356,9 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         return res;
     }
 
-    public default VectorArray<V> divideBy(double v)
+    public default VectorArray<V,S> divideBy(double v)
     {
-        VectorArray<V> res = newInstance(size());
+        VectorArray<V,S> res = newInstance(size());
         
         int nc = channelCount();
         double[] values = new double[nc];
@@ -382,9 +382,9 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
      * @param fun the function to apply
      * @return the result array
      */
-    public default VectorArray<V> apply(UnaryOperator<Double> fun)
+    public default VectorArray<V,S> apply(UnaryOperator<Double> fun)
     {
-        VectorArray<V> res = newInstance(size());
+        VectorArray<V,S> res = newInstance(size());
         apply(fun, res);
         return res;
     }
@@ -399,7 +399,7 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
      *            the array to put the result in
      * @return the result array
      */
-    public default VectorArray<V> apply(UnaryOperator<Double> fun, VectorArray<V> output)
+    public default VectorArray<V,S> apply(UnaryOperator<Double> fun, VectorArray<V,S> output)
     {
         if (!Arrays.isSameSize(this, output))
         {
@@ -432,12 +432,12 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
     // Specialization of Array interface
        
 	@Override
-	public VectorArray<V> newInstance(int... dims);
+	public VectorArray<V,S> newInstance(int... dims);
 	
     @Override
-    public default VectorArray<V> duplicate()
+    public default VectorArray<V,S> duplicate()
     {
-        VectorArray<V> result = this.newInstance(this.size());
+        VectorArray<V,S> result = this.newInstance(this.size());
         
         // copy values into output array
         double[] values = new double[channelCount()];
@@ -450,13 +450,13 @@ public interface VectorArray<V extends Vector<?>> extends NumericArray<V>
         return result;
     }
    
-	public VectorArray.Iterator<V> iterator();
+	public VectorArray.Iterator<V,S> iterator();
 	
 	
 	// =============================================================
 	// Inner interface
 
-	public interface Iterator<V extends Vector<? extends Scalar<?>>> extends Array.Iterator<V>
+	public interface Iterator<V extends Vector<V, S>, S extends Scalar<S>> extends Array.Iterator<V>
 	{
 		/**
 		 * Returns the value of the i-th component of the current vector.

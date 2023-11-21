@@ -22,7 +22,7 @@ public class Gradient extends AlgoStub implements ArrayOperator
      * @see net.sci.array.ArrayOperator#process(net.sci.array.Array)
      */
     @Override
-    public <T> VectorArray<?> process(Array<T> array)
+    public <T> VectorArray<?,?> process(Array<T> array)
     {
         // check validity of input
         if (!(array instanceof ScalarArray))
@@ -32,14 +32,14 @@ public class Gradient extends AlgoStub implements ArrayOperator
         
         // allocate memory for result
         ScalarArray<?> source = (ScalarArray<?>) array;
-        VectorArray<?> target = Float32VectorArray.create(source.size(), source.dimensionality());
+        VectorArray<?,?> target = Float32VectorArray.create(source.size(), source.dimensionality());
         
         processScalar(source, target);
         
         return target;
     }
 
-    public void processScalar(ScalarArray<?> source, VectorArray<?> target)
+    public void processScalar(ScalarArray<?> source, VectorArray<?,?> target)
     {
         // check dimensionality of inputs
         checkArrayDimensions(source, target);
@@ -52,7 +52,7 @@ public class Gradient extends AlgoStub implements ArrayOperator
         }
     }
     
-    private void checkArrayDimensions(ScalarArray<?> source, VectorArray<?> target)
+    private void checkArrayDimensions(ScalarArray<?> source, VectorArray<?,?> target)
     {
         if (target.channelCount() != source.dimensionality())
         {

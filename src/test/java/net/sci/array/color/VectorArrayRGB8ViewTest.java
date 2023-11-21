@@ -19,7 +19,7 @@ public class VectorArrayRGB8ViewTest
     @Test
     public final void test()
     {
-        VectorArray2D<?> array = createTestArray();
+        VectorArray2D<?,?> array = createTestArray();
         RGB8Array view = new VectorArrayRGB8View(array, 3, 0, 255, 6, 0, 255, 9, 0, 255);
         
         assertEquals(2, view.dimensionality());
@@ -33,9 +33,9 @@ public class VectorArrayRGB8ViewTest
         assertEquals(180, samples[2]);
     }
     
-    private VectorArray2D<?> createTestArray()
+    private VectorArray2D<?,?> createTestArray()
     {
-        VectorArray2D<?> array = Float32VectorArray2D.create(20, 15, 10);
+        VectorArray2D<?,?> array = Float32VectorArray2D.create(20, 15, 10);
         
         for (int y = 0; y < 15; y++)
         {

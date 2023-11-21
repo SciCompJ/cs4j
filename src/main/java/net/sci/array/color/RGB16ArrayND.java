@@ -11,7 +11,7 @@ import net.sci.array.vector.VectorArrayND;
  * @author dlegland
  *
  */
-public abstract class RGB16ArrayND extends VectorArrayND<RGB16> implements RGB16Array
+public abstract class RGB16ArrayND extends VectorArrayND<RGB16,UInt16> implements RGB16Array
 {
 	// =============================================================
 	// Static methods

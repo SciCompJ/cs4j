@@ -41,7 +41,7 @@ public class RotationAroundCenter extends AlgoStub implements ImageArrayOperator
 		}
 		else if (source instanceof VectorArray2D && target instanceof VectorArray2D)
 		{
-			processVector2d((VectorArray2D<?>) source, (VectorArray2D<?>) target);
+			processVector2d((VectorArray2D<?,?>) source, (VectorArray2D<?,?>) target);
 		}
 		else
 		{
@@ -87,7 +87,7 @@ public class RotationAroundCenter extends AlgoStub implements ImageArrayOperator
 		}
 	}
 	
-	public void processVector2d(VectorArray2D<?> source, VectorArray2D<?> target)
+	public void processVector2d(VectorArray2D<?,?> source, VectorArray2D<?,?> target)
 	{
 		// input array size
 		int sourceSizeX = target.size(0);
@@ -108,7 +108,7 @@ public class RotationAroundCenter extends AlgoStub implements ImageArrayOperator
 		}
 	}
 	
-	private void copyToChannel(VectorArray2D<?> source, int channelIndex, ScalarArray2D<?> channel)
+	private void copyToChannel(VectorArray2D<?,?> source, int channelIndex, ScalarArray2D<?> channel)
 	{
 		int sizeX = source.size(0);
 		int sizeY = source.size(1);
@@ -122,7 +122,7 @@ public class RotationAroundCenter extends AlgoStub implements ImageArrayOperator
 		}
 	}
 	
-	private void copyFromChannel(ScalarArray2D<?> channel, VectorArray2D<?> target, int channelIndex)
+	private void copyFromChannel(ScalarArray2D<?> channel, VectorArray2D<?,?> target, int channelIndex)
 	{
 		int sizeX = channel.size(0);
 		int sizeY = channel.size(1);
@@ -151,10 +151,10 @@ public class RotationAroundCenter extends AlgoStub implements ImageArrayOperator
             processScalar2d(scalar2d, result);
             return result;
         }
-        else if (array instanceof VectorArray<?>)
+        else if (array instanceof VectorArray<?,?>)
         {
-            VectorArray2D<?> vector2d = VectorArray2D.wrap((VectorArray<?>) array);
-            VectorArray2D<?> result = VectorArray2D.wrap(vector2d.newInstance(vector2d.size())); 
+            VectorArray2D<?,?> vector2d = VectorArray2D.wrap((VectorArray<?,?>) array);
+            VectorArray2D<?,?> result = VectorArray2D.wrap(vector2d.newInstance(vector2d.size())); 
             processVector2d(vector2d, result);
             return result;
         }

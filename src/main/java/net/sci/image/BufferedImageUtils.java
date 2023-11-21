@@ -130,7 +130,7 @@ public class BufferedImageUtils
         {
             // Compute the norm of the vector
             // (and keep the result as 2D)
-            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?>) array));
+            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?,?>) array));
             
             // convert image of the norm to AWT image
             double[] valueRange = norm.finiteValueRange();

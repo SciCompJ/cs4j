@@ -19,7 +19,7 @@ public class VectorArrayRGB8View implements RGB8Array
     // =============================================================
     // Class variables
 
-    VectorArray<?> array;
+    VectorArray<?,?> array;
     
     int[] channels;
     double[][] extents;
@@ -28,7 +28,7 @@ public class VectorArrayRGB8View implements RGB8Array
     // =============================================================
     // Constructors
 
-    public VectorArrayRGB8View(VectorArray<?> array, int c1, double[] extent1,
+    public VectorArrayRGB8View(VectorArray<?,?> array, int c1, double[] extent1,
             int c2, double[] extent2, int c3, double[] extent3)
     {
         this.array = array;
@@ -36,7 +36,7 @@ public class VectorArrayRGB8View implements RGB8Array
         this.extents = new double[][]{extent1, extent2, extent3};
     }
     
-    public VectorArrayRGB8View(VectorArray<?> array, 
+    public VectorArrayRGB8View(VectorArray<?,?> array, 
             int c1, double min1, double max1, 
             int c2, double min2, double max2, 
             int c3, double min3, double max3)
@@ -46,7 +46,7 @@ public class VectorArrayRGB8View implements RGB8Array
         this.extents = new double[][]{{min1, max1}, {min2, max2}, {min3, max3}};
     }
     
-    public VectorArrayRGB8View(VectorArray<?> array, int c1, int c2, int c3)
+    public VectorArrayRGB8View(VectorArray<?,?> array, int c1, int c2, int c3)
     {
         this.array = array;
         this.channels = new int[] { c1, c2, c3 };

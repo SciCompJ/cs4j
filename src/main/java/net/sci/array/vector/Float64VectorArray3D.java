@@ -13,7 +13,7 @@ import net.sci.array.scalar.Float64Array3D;
  * @author dlegland
  *
  */
-public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector> implements Float64VectorArray
+public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector,Float64> implements Float64VectorArray
 {
 	// =============================================================
 	// Static methods

@@ -12,7 +12,7 @@ import net.sci.array.scalar.Int;
  * @author dlegland
  *
  */
-public interface IntVectorArray<V extends IntVector<? extends Int<?>>> extends VectorArray<V>
+public interface IntVectorArray<V extends IntVector<V, I>, I extends Int<I>> extends VectorArray<V,I>
 {
     // =============================================================
     // New abstract methods
@@ -35,9 +35,9 @@ public interface IntVectorArray<V extends IntVector<? extends Int<?>>> extends V
     // =============================================================
     // Specialization of Array interface
 
-    public IntVectorArray<V> duplicate();
+    public IntVectorArray<V,I> duplicate();
     
-    public interface Iterator<V extends IntVector<?>> extends VectorArray.Iterator<V>
+    public interface Iterator<V extends IntVector<V,I>, I extends Int<I>> extends VectorArray.Iterator<V,I>
     {
         public default int getSample(int c)
         {

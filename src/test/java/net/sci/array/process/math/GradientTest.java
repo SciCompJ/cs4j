@@ -32,7 +32,7 @@ public class GradientTest
         }
 
         Gradient op0 = new Gradient();
-        VectorArray<?> grad = (VectorArray<?>) op0.process(array);
+        VectorArray<?,?> grad = (VectorArray<?,?>) op0.process(array);
 
         ScalarArray<?> diff0 = grad.channel(0);
         assertEquals(diff0.getValue(new int[] {0, 5}),  0.0, .001);
