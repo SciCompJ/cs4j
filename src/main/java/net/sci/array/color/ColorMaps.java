@@ -167,6 +167,22 @@ public class ColorMaps
         }
     };
     
+    public static final ColorMapFactory BLUE_WHITE_RED = new ColorMapFactory()
+    {
+        @Override
+        public ColorMap createColorMap(int nColors)
+        {
+            ArrayList<Color> baseColors = new ArrayList<Color>(5);
+            baseColors.add(new RGB8(0, 0, 127));
+            baseColors.add(RGB8.BLUE);
+            baseColors.add(RGB8.WHITE);
+            baseColors.add(RGB8.RED);
+            baseColors.add(new RGB8(127, 0, 0));
+            ColorMap map = new DefaultColorMap(baseColors);
+            return interpolate(map, nColors);
+        }
+    };
+    
     /**
      * Create lookup table with a  maximally distinct sets of colors (copied
      * from Fiji's Glasbey LUT).
@@ -291,7 +307,7 @@ public class ColorMaps
         int n0 = colorMap.size();
         for (int i = 0; i < nColors; i++) {
             // compute color index in original colormap
-            float i0 = ((float) i) * n0 / nColors;
+            float i0 = ((float) i) * (n0 - 1) / (nColors - 1);
             int i1 = (int) Math.floor(i0);
             // the ratio between the two surrounding colors
             float f = i0 - i1;
