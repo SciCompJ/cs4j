@@ -14,6 +14,9 @@ package net.sci.register.transform;
  */
 public class BSplines
 {
+    // =============================================================
+    // Interpolation functions
+
     public static final double beta3_0(double u)
     {
         return cube(1.0 - u) / 6.0;
@@ -34,11 +37,39 @@ public class BSplines
         return cube(u) / 6.0;
     }
     
-    private static final double cube(double u)
+    
+    // =============================================================
+    // Derivative functions
+
+    public static final double beta3_0d(double u)
     {
-        return u*u*u;
+        return -(1.0 - u) * (1.0 - u) / 2.0;
     }
     
+    public static final double beta3_1d(double u)
+    {
+        return 3 * u * u / 2.0 - 2 * u;
+    }
+    
+    public static final double beta3_2d(double u)
+    {
+        return (-3 * u * u + 2 * u + 1) / 2.0;
+    }
+    
+    public static final double beta3_3d(double u)
+    {
+        return u * u / 2.0;
+    }
+    
+    
+    // =============================================================
+    // Local utility functions
+
+    private static final double cube(double u)
+    {
+        return u * u * u;
+    }
+
     /** 
      * Private constructor to prevent instantiation.
      */

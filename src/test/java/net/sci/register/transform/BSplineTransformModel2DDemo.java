@@ -6,6 +6,8 @@ package net.sci.register.transform;
 import java.io.File;
 import java.io.IOException;
 
+import net.sci.array.color.ColorMap;
+import net.sci.array.color.ColorMaps;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.geom.geom2d.Point2D;
@@ -58,6 +60,20 @@ public class BSplineTransformModel2DDemo
         
         Image image2 = new Image(array2, image1);
         image2.show();
+        
+        // Compute Map of Jacobian
+        UInt8Array2D jacArray = UInt8Array2D.create(array1.size(0), array1.size(1));
+        for (int[] pos : jacArray.positions())
+        {
+            double jac = transfo.detJacobian(new Point2D(pos[0], pos[1]));
+            // convert to log, and rescale
+            double jac2 = 64.0 * Math.log(jac) / Math.log(2.0) + 127.0;
+            jacArray.setValue(pos, jac2);
+        }
+        
+        Image image3 = new Image(jacArray, image1);
+        ColorMap colormap = ColorMaps.BLUE_WHITE_RED.createColorMap(256);
+        image3.getDisplaySettings().setColorMap(colormap);
+        image3.show();
     }
-
 }
