@@ -11,6 +11,7 @@ import net.sci.array.Array;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.process.type.ConvertToUInt8;
+import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.IntVectorArray;
@@ -316,6 +317,40 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         }
 
         throw new RuntimeException("Can not convert to RGB8Array array of class: " + array.getClass());
+	}
+	
+	/**
+     * Converts the specified scalar array into a color RGB8 array, by mapping
+     * the range of values within <code>bounds</code> into the colors specified
+     * by <code>colorMap</code>.
+     * 
+     * @param array
+     *            the array to convert
+     * @param bounds
+     *            the range of values to map to extreme colors of the color map
+     * @param colorMap
+     *            the colormap
+     * @return the result of conversion to RGB8Array
+     */
+	public static RGB8Array convert(ScalarArray<?> array, double[] bounds, ColorMap colorMap)
+	{
+        // compute slope for intensity conversions
+        double extent = bounds[1] - bounds[0];
+        int nColors = colorMap.size();
+        
+        // allocate result array
+        RGB8Array res = RGB8Array.create(array.size());
+        
+        // iterate over elements of result array
+        for (int[] pos : res.positions())
+        {
+            double value = array.getValue(pos);
+            int index = (int) Math.min(Math.max((nColors - 1) * (value - bounds[0]) / extent, 0), (nColors - 1));
+            RGB8 rgb8 = RGB8.fromColor(colorMap.getColor(index));
+            res.set(pos, rgb8);
+        }
+
+        return res;
 	}
 	
 	private static RGB8Array convertArrayOfRGB8(Array<?> array)

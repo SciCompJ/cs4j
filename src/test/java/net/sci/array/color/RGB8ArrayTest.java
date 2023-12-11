@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
+import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
@@ -31,6 +32,30 @@ public class RGB8ArrayTest
         assertEquals(5, array.size(0));
         assertEquals(4, array.size(1));
         assertEquals(3, array.size(2));
+    }
+    
+    /**
+     * Test method for {@link net.sci.array.color.RGB8Array#convert(net.sci.array.scalar.ScalarArray, double[], ColorMap)}.
+     */
+    @Test
+    public final void test_convert_ScalarArray_Range_Colormap()
+    {
+        // create scalar array to convert
+        Float32Array2D array = Float32Array2D.create(20, 20);
+        array.fillValues((x,y) -> x * 10.0); // linear ramp
+        
+        // conversion settings
+        double[] range = new double[] {0, 190};
+        ColorMap colormap = ColorMaps.JET.createColorMap(256);
+        
+        // convert
+        RGB8Array res = RGB8Array.convert(array, range, colormap);
+        
+        // check colors
+        assertEquals(res.get(new int[] { 0,  0}), new RGB8(  0, 0, 127));
+        assertEquals(res.get(new int[] { 0, 19}), new RGB8(  0, 0, 127));
+        assertEquals(res.get(new int[] {19,  0}), new RGB8(131, 0,   0));
+        assertEquals(res.get(new int[] {19, 19}), new RGB8(131, 0,   0));
     }
 
     /**
@@ -66,6 +91,7 @@ public class RGB8ArrayTest
         }
         assertEquals(60, count);
     }
+    
     @Test
     public final void testSetChannel()
     {

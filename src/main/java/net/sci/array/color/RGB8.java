@@ -60,6 +60,24 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
 		return new RGB8(val << 16 | val << 8 | val);
 	}
 	
+	/**
+     * Converts the specified color into an instance of RGB8, or returns the
+     * color instance if it is already a RGB8 instance.
+     * 
+     * @param color
+     *            the color to convert
+     * @return the RGB8 color corresponding to the input color
+     */
+	public static final RGB8 fromColor(Color color)
+	{
+	    if (color instanceof RGB8) return (RGB8) color;
+        int r = UInt8.convert(color.red() * 255 + 0.5);
+        int g = UInt8.convert(color.green() * 255 + 0.5);
+        int b = UInt8.convert(color.blue() * 255 + 0.5);
+        int intCode = b << 16 | g << 8 | r;   
+	    return new RGB8(intCode);
+	}
+	
     public static final RGB8 fromIntCode(int intCode)
     {
         return new RGB8(intCode);
