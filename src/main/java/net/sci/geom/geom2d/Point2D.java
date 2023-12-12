@@ -139,18 +139,6 @@ public class Point2D implements Geometry2D, Point
 	// Specific methods
 
 	/**
-     * Returns the result of the given transformation applied to this point.
-     * 
-     * @param trans
-     *            the transformation to apply
-     * @return the transformed point
-     */
-	public Point2D transform(AffineTransform2D trans)
-	{
-	    return trans.transform(this);
-	}
-	
-	/**
      * Applies the translation defined by the two components to this point and
      * returns the translated point.
      * 
@@ -188,8 +176,81 @@ public class Point2D implements Geometry2D, Point
 	{
 		return new Point2D(this.x - v.x(), this.y - v.y());
 	}
+	
 
-	/**
+    // ===================================================================
+    // Implements vector space structure for Point2D
+
+    /**
+     * Adds the coordinates of the specified point to those of this point, and
+     * returns the point with new coordinates
+     * 
+     * @param p
+     *            the 2D point to add
+     * @return the result of the translation of this point by the given vector
+     */
+    public Point2D plus(Point2D p)
+    {
+        return new Point2D(this.x + p.x(), this.y + p.y());
+    }
+
+    /**
+     * Subtracts the coordinates of the specified point from those of this
+     * point, and returns the point with new coordinates
+     * 
+     * @param p
+     *            the 2D point to subtract
+     * @return the result of the translation of this point by the opposite of
+     *         the given vector
+     */
+    public Point2D minus(Point2D p)
+    {
+        return new Point2D(this.x - p.x(), this.y - p.y());
+    }
+
+    /**
+     * Multiplies the coordinates of this point by the given factor, and returns
+     * the point with new coordinates.
+     * 
+     * @param k
+     *            the scaling factor
+     * @return the point with new coordinates
+     */
+    public Point2D times(double k)
+    {
+        return new Point2D(this.x * k, this.y * k);
+    }
+
+    /**
+     * Divides the coordinates of this point by the given factor, and returns
+     * the point with new coordinates.
+     * 
+     * @param k
+     *            the scaling factor
+     * @return the point with new coordinates
+     */
+    public Point2D divideBy(double k)
+    {
+        return new Point2D(this.x / k, this.y / k);
+    }
+    
+    
+	// ===================================================================
+    // Specific methods
+    
+    /**
+     * Returns the result of the given transformation applied to this point.
+     * 
+     * @param trans
+     *            the transformation to apply
+     * @return the transformed point
+     */
+    public Point2D transform(AffineTransform2D trans)
+    {
+        return trans.transform(this);
+    }
+
+    /**
      * Checks if the two points are equal up to the absolute tolerance value
      * given as parameter. The tolerance is used for each of the x and y
      * coordinates.

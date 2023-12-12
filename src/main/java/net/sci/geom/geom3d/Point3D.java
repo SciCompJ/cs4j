@@ -18,7 +18,7 @@ public class Point3D implements Point, Geometry3D
 {
     // ===================================================================
     // Static methods
-    
+
     public static final Point3D centroid(Point3D... points)
     {
         double xc = 0;
@@ -31,7 +31,7 @@ public class Point3D implements Point, Geometry3D
             yc += p.y;
             zc += p.z;
         }
-        
+
         return new Point3D(xc / np, yc / np, zc / np);
     }
 
@@ -50,7 +50,7 @@ public class Point3D implements Point, Geometry3D
     {
         return new Point3D(point.x(), point.y(), z);
     }
-    
+
     /**
      * Interpolates the position of a new Point3D between the two points.
      * 
@@ -74,31 +74,31 @@ public class Point3D implements Point, Geometry3D
         return new Point3D(x, y, z);
     }
     
+
+    // ===================================================================
+    // class variables
+
+    /** x coordinate of the point */
+    final double x;
+
+    /** y coordinate of the point */
+    final double y;
+
+    /** z coordinate of the point */
+    final double z;
+
     
-	// ===================================================================
-	// class variables
+    // ===================================================================
+    // constructors
 
-	/** x coordinate of the point */
-	final double x;
+    /** Empty constructor, similar to Point(0,0,0) */
+    public Point3D()
+    {
+        this(0, 0, 0);
+    }
 
-	/** y coordinate of the point */
-	final double y;
-
-	/** z coordinate of the point */
-	final double z;
-
-	
-	// ===================================================================
-	// constructors
-
-	/** Empty constructor, similar to Point(0,0,0) */
-	public Point3D()
-	{
-		this(0, 0, 0);
-	}
-
-	/**
-     * New point given by its coordinates
+    /**
+     * Creates a new point from its coordinates.
      * 
      * @param x
      *            the x coordinate of the new point
@@ -107,15 +107,15 @@ public class Point3D implements Point, Geometry3D
      * @param z
      *            the z coordinate of the new point
      */
-	public Point3D(double x, double y, double z)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
-	
+    public Point3D(double x, double y, double z)
+    {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     /**
-     * Convert a vector to a point
+     * Convert a vector to a point.
      *
      * @param vect
      *            the vector to convert
@@ -124,19 +124,19 @@ public class Point3D implements Point, Geometry3D
     {
         this(vect.x(), vect.y(), vect.z());
     }
+    
 
-	
-	// ===================================================================
-	// accessors
+    // ===================================================================
+    // Accessors
 
-	/**
+    /**
      * @return the x coordinate of this point
      */
     public double x()
     {
         return x;
     }
-    
+
     /**
      * @return the y coordinate of this point
      */
@@ -144,18 +144,18 @@ public class Point3D implements Point, Geometry3D
     {
         return y;
     }
-    
+
     /**
      * @return the z coordinate of this point
      */
     public double z()
     {
         return z;
-	}
-	
-	
-	// ===================================================================
-	// Methods specific to Point3D
+    }
+    
+
+    // ===================================================================
+    // Methods specific to Point3D
 
     /**
      * Applies the translation defined by the three components to this point and
@@ -173,32 +173,93 @@ public class Point3D implements Point, Geometry3D
     {
         return new Point3D(this.x + dx, this.y + dy, this.z + dz);
     }
-    
-	/**
+
+    /**
      * Adds the specified vector to the point, and returns the new point.
      * 
      * @param v
      *            the 3D vector to add
      * @return the result of the translation of this point by the given vector
      */
-	public Point3D plus(Vector3D v)
-	{
-		return new Point3D(this.x + v.x(), this.y + v.y(), this.z + v.z());
-	}
+    public Point3D plus(Vector3D v)
+    {
+        return new Point3D(this.x + v.x(), this.y + v.y(), this.z + v.z());
+    }
 
-	/**
+    /**
      * Subtracts the specified vector from the point, and returns the new point.
      * 
      * @param v
-     *            the 3D vector to subtract
+     *            the 3D point to subtract
      * @return the result of the translation of this point by the opposite of
      *         the given vector
      */
-	public Point3D minus(Vector3D v)
-	{
-		return new Point3D(this.x - v.x(), this.y - v.y(), this.z - v.z());
-	}
-	
+    public Point3D minus(Vector3D v)
+    {
+        return new Point3D(this.x - v.x(), this.y - v.y(), this.z - v.z());
+    }
+    
+
+    // ===================================================================
+    // Implements vector space structure for Point3D
+
+    /**
+     * Adds the coordinates of the specified point to those of this point, and
+     * returns the point with new coordinates
+     * 
+     * @param p
+     *            the 3D point to add
+     * @return the result of the translation of this point by the given vector
+     */
+    public Point3D plus(Point3D p)
+    {
+        return new Point3D(this.x + p.x(), this.y + p.y(), this.z + p.z());
+    }
+
+    /**
+     * Subtracts the coordinates of the specified point from those of this
+     * point, and returns the point with new coordinates
+     * 
+     * @param p
+     *            the 3D point to subtract
+     * @return the result of the translation of this point by the opposite of
+     *         the given vector
+     */
+    public Point3D minus(Point3D p)
+    {
+        return new Point3D(this.x - p.x(), this.y - p.y(), this.z - p.z());
+    }
+
+    /**
+     * Multiplies the coordinates of this point by the given factor, and returns
+     * the point with new coordinates.
+     * 
+     * @param k
+     *            the scaling factor
+     * @return the point with new coordinates
+     */
+    public Point3D times(double k)
+    {
+        return new Point3D(this.x * k, this.y * k, this.z * k);
+    }
+
+    /**
+     * Divides the coordinates of this point by the given factor, and returns
+     * the point with new coordinates.
+     * 
+     * @param k
+     *            the scaling factor
+     * @return the point with new coordinates
+     */
+    public Point3D divideBy(double k)
+    {
+        return new Point3D(this.x / k, this.y / k, this.z / k);
+    }
+    
+
+    // ===================================================================
+    // Methods that may be included in Geometry3D in the future
+
     /**
      * Projects this point onto the XY plane and converts into a 2D point.
      * 
@@ -206,24 +267,24 @@ public class Point3D implements Point, Geometry3D
      * 
      * @return the 2D projection of the point onto the XY plane.
      */
-	public Point2D projectXY()
-	{
-	    return new Point2D(this.x, this.y);
-	}
+    public Point2D projectXY()
+    {
+        return new Point2D(this.x, this.y);
+    }
 
-	public Point3D transform(AffineTransform3D trans)
+    public Point3D transform(AffineTransform3D trans)
     {
         return trans.transform(this);
     }
-    
-	public boolean almostEquals(Point3D point, double eps)
-	{
-	    if (Math.abs(point.x - x) > eps) return false;
+
+    public boolean almostEquals(Point3D point, double eps)
+    {
+        if (Math.abs(point.x - x) > eps) return false;
         if (Math.abs(point.y - y) > eps) return false;
         if (Math.abs(point.z - z) > eps) return false;
-	    return true;
-	}
-	
+        return true;
+    }
+    
 
     // ===================================================================
     // Implements Geometry3D methods
@@ -243,7 +304,7 @@ public class Point3D implements Point, Geometry3D
     {
         return Math.hypot(Math.hypot(this.x - x, this.y - y), this.z - z);
     }
-
+    
 
     // ===================================================================
     // Implements Point interface
@@ -251,16 +312,19 @@ public class Point3D implements Point, Geometry3D
     @Override
     public double get(int dim)
     {
-        switch(dim)
+        switch (dim)
         {
-        case 0: return this.x;
-        case 1: return this.y;
-        case 2: return this.z;
-        default:
-            throw new IllegalArgumentException("Dimension should be comprised between 0 and 2");
+            case 0:
+                return this.x;
+            case 1:
+                return this.y;
+            case 2:
+                return this.z;
+            default:
+                throw new IllegalArgumentException("Dimension should be comprised between 0 and 2");
         }
     }
-
+    
 
     // ===================================================================
     // Implements Geometry interface
@@ -278,12 +342,13 @@ public class Point3D implements Point, Geometry3D
     {
         return new Bounds3D(this.x, this.x, this.y, this.y, this.z, this.z);
     }
-    
+
     public Point3D duplicate()
     {
         return new Point3D(x, y, z);
     }
     
+
     // ===================================================================
     // Override Object's methods
 
