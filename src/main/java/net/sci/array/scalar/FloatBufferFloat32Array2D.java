@@ -101,6 +101,7 @@ public class FloatBufferFloat32Array2D extends Float32Array2D
     public Float32Array2D duplicate()
     {
         float[] buffer2 = new float[size0 * size1];
+        this.buffer.position(0);
         this.buffer.get(buffer2);
         return new BufferedFloat32Array2D(size0, size1, buffer2);
     }
