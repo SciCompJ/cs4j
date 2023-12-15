@@ -17,6 +17,7 @@ import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.array.color.DefaultColorMap;
 import net.sci.array.process.shape.Reshape;
+import net.sci.array.scalar.FileMappedFloat32Array3D;
 import net.sci.array.scalar.FileMappedUInt8Array3D;
 import net.sci.axis.Axis;
 import net.sci.image.Calibration;
@@ -147,6 +148,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     	// in that case, use specific processing
     	if (hasImageJDescription(info))
         {
+    	    System.out.println("Found ImageJ description, use special processing");
     	    return readImageJImage(info, false);
         }
     	
@@ -192,6 +194,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         // Check if the file was saved by ImageJ software
         if (hasImageJDescription(info))
         {
+            System.out.println("Found ImageJ description, use special processing");
             return readImageJImage(info, true);
         }
         
@@ -315,7 +318,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         else if (!virtual)
         {
             // Read the totality of image data as a 3D array stored in memory
-            data = readImageData(info, nImages);
+            data = readImage3DData(info, nImages);
         }
         else
         {
@@ -493,7 +496,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
 	}
 	
 	/**
-     * Reads the buffer from the current stream and specified info.
+     * Reads the whole image data array from the chosen file, and the specified info.
      * 
      * @param info
      *            an instance of TiffFileInfo
@@ -504,11 +507,12 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      * @throws IOException
      *             if an error occurs
      */
-    private Array<?> readImageData(TiffFileInfo info, int nImages) throws IOException
+    private Array<?> readImage3DData(TiffFileInfo info, int nImages) throws IOException
     {
         // Use try-with-resource, closing the reader at the end of the try block
         try (ImageBinaryDataReader reader = new ImageBinaryDataReader(new File(this.filePath), info.byteOrder))
         {
+            // Catch algorithm events of the data reader and propagate them to the TiffImageReader listeners
             reader.addAlgoListener(new AlgoListener()
             {
                 @Override
@@ -571,12 +575,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             case GRAY8:
             case COLOR8:
                 return new FileMappedUInt8Array3D(this.filePath, info.stripOffsets[0], info.width, info.height, nImages);
-
+                
+            case GRAY32_FLOAT:
+                return new FileMappedFloat32Array3D(this.filePath, info.stripOffsets[0], info.width, info.height, nImages);
+                
             case BITMAP:
             case GRAY16_UNSIGNED:
             case GRAY12_UNSIGNED:
             case GRAY32_INT:
-            case GRAY32_FLOAT:
                 throw new IOException("Virtual images not supported for data type: " + info.pixelType);
 
             case RGB:

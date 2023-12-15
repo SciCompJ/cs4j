@@ -193,7 +193,7 @@ public class TiffImageDataReader extends AlgoStub
 		}
 	}
 	
-	   /**
+	/**
      * Reads all the image into this file as a single 3D array. All images must
      * have the same dimensions.
      * 
