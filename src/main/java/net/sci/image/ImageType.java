@@ -114,11 +114,15 @@ public interface ImageType
         {
             if (image.data instanceof UInt8Array)
             {
-                image.displaySettings.displayRange = new double[]{0, 255};
+                image.displaySettings.displayRange = new double[] { 0, 255 };
             }
             else if (image.data instanceof ScalarArray)
             {
-                image.displaySettings.displayRange = ((ScalarArray<?>) image.data).finiteValueRange();
+                image.displaySettings.displayRange = new double[] { 0, 65535 };
+            }
+            else if (image.data instanceof ScalarArray)
+            {
+                image.displaySettings.displayRange = new double[] { 0, 1.0 };
             }
             else
             {
@@ -169,7 +173,7 @@ public interface ImageType
         @Override
         public void setupDisplaySettings(Image image)
         {
-            image.displaySettings.displayRange = ((ScalarArray<?>) image.data).finiteValueRange();
+            image.displaySettings.displayRange = new double[] { 0.0, 1.0};
         }
 
         @Override
@@ -248,7 +252,7 @@ public interface ImageType
             DisplaySettings settings = image.getDisplaySettings();
             
             // updates display range
-            settings.displayRange = ((ScalarArray<?>) image.data).finiteValueRange();
+            settings.displayRange = new double[] {0.0, 255.0};
             
             // compute JET lut by default
             settings.setColorMap(ColorMaps.JET.createColorMap(255));
@@ -410,13 +414,11 @@ public interface ImageType
                 throw new RuntimeException("Label images require int array for data");
             }
         
-            IntArray<?> array = (IntArray<?>) image.data;
-            int nLabels = array.maxInt();
-            image.displaySettings.displayRange = new double[]{0, nLabels};
+            image.displaySettings.displayRange = new double[]{0, 255};
             
             // default display of label maps: Glasbey LUt and white background
             image.displaySettings.backgroundColor = RGB8.WHITE;
-            ColorMap colorMap = ColorMaps.GLASBEY.createColorMap(nLabels);
+            ColorMap colorMap = ColorMaps.GLASBEY.createColorMap(255);
             image.displaySettings.colorMap = colorMap;
         }
 
@@ -561,12 +563,12 @@ public interface ImageType
             if (image.data.dataType() == RGB8.class)
             {
                 // (in theory not used)
-                image.displaySettings.displayRange = new double[]{0, 255};
+                image.displaySettings.displayRange = new double[] { 0, 255 };
             }
             else if (image.data.dataType() == RGB16.class)
             {
                 // can be later adjusted
-                image.displaySettings.displayRange = new double[]{0, 65535};
+                image.displaySettings.displayRange = new double[] { 0, 65535 };
             }
         }
     };
@@ -606,8 +608,7 @@ public interface ImageType
         @Override
         public void setupDisplaySettings(Image image)
         {
-            ScalarArray<?> norm = VectorArray.norm((VectorArray<?,?>) image.data);
-            image.displaySettings.displayRange = norm.finiteValueRange();
+            image.displaySettings.displayRange = new double[] { 0.0, 1.0 };
         }
         
         @Override
@@ -668,8 +669,7 @@ public interface ImageType
         @Override
         public void setupDisplaySettings(Image image)
         {
-            ScalarArray<?> norm = VectorArray.norm((VectorArray<?,?>) image.data);
-            image.displaySettings.displayRange = norm.finiteValueRange();
+            image.displaySettings.displayRange = new double[] { 0.0, 1.0 };
         }
         
         @Override
@@ -700,8 +700,7 @@ public interface ImageType
         @Override
         public void setupDisplaySettings(Image image)
         {
-            ScalarArray<?> norm = VectorArray.norm((VectorArray<?,?>) image.data);
-            image.displaySettings.displayRange = norm.finiteValueRange();
+            image.displaySettings.displayRange = new double[] { 0.0, 1.0 };
         }
         
         @Override
