@@ -315,6 +315,7 @@ public interface Strel2D extends Strel
      * 
      * @return the reversed structuring element
      */
+    @Override
     public Strel2D reverse();
 
 
@@ -328,15 +329,17 @@ public interface Strel2D extends Strel
 	 * 
 	 * @return the size of the structuring element
 	 */
+    @Override
 	public int[] size();
 
 	/**
-     * Returns the structuring element mask as a binary array. The position of
-     * the reference element within the mask can be obtained by the getOffset()
-     * method.
+     * Returns the structuring element as a binary array. The position of the
+     * reference element within the mask can be obtained by the
+     * <code>maskOffset()</code> method.
      * 
      * @return the mask of the structuring element
      */
+    @Override
 	public BinaryArray2D binaryMask();
 
 	/**
@@ -345,6 +348,7 @@ public interface Strel2D extends Strel
 	 * 
 	 * @return the offset in the mask
 	 */
+    @Override
 	public int[] maskOffset();
 
 	/**
@@ -354,8 +358,10 @@ public interface Strel2D extends Strel
 	 * 
 	 * @return a set of shifts
 	 */
+    @Override
 	public int[][] shifts();
 	
+	@Override
 	public default int dimensionality()
 	{
 	    return 2;

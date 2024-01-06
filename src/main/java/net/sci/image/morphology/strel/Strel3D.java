@@ -251,6 +251,7 @@ public interface Strel3D extends Strel
      * 
      * @return the reversed structuring element
      */
+    @Override
     public Strel3D reverse();
     
 
@@ -258,22 +259,24 @@ public interface Strel3D extends Strel
     // Low-level operations
     
     /**
-	 * Returns the size of the structuring element, as an array of size in each
-	 * direction. The first index corresponds to the number of pixels in the x
-	 * direction.
-	 * 
-	 * @return the size of the structuring element
-	 */
-	public int[] size();
+     * Returns the size of the structuring element, as an array of size in each
+     * direction. The first index corresponds to the number of pixels in the x
+     * direction.
+     * 
+     * @return the size of the structuring element
+     */
+    @Override
+    public int[] size();
 
-	/**
-	 * Returns the structuring element as a binary array. The position of
-     * the reference element within the mask can be obtained by the getOffset()
-     * method.
-	 * 
-	 * @return the mask of the structuring element
-	 */
-	public BinaryArray3D binaryMask();
+    /**
+     * Returns the structuring element as a binary array. The position of the
+     * reference element within the mask can be obtained by the
+     * <code>maskOffset()</code> method.
+     * 
+     * @return the mask of the structuring element
+     */
+    @Override
+    public BinaryArray3D binaryMask();
 
 	/**
 	 * Returns the offset in the mask for each direction. 
@@ -281,6 +284,7 @@ public interface Strel3D extends Strel
 	 * 
 	 * @return the offset in the mask
 	 */
+    @Override
 	public int[] maskOffset();
 
 	/**
@@ -290,8 +294,10 @@ public interface Strel3D extends Strel
 	 * 
 	 * @return a set of shifts
 	 */
+    @Override
 	public int[][] shifts();
 
+    @Override
     public default int dimensionality()
     {
         return 3;
