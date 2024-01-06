@@ -211,7 +211,7 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
      * @see net.sci.image.morphology.Strel3D#getMask3D()
      */
     @Override
-    public BinaryArray3D getMask()
+    public BinaryArray3D binaryMask()
     {
         BinaryArray3D mask = BinaryArray3D.create(1, 1, this.size);
         for (int i = 0; i < this.size; i++) 
@@ -226,7 +226,7 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
      * @see net.sci.image.morphology.Strel3D#getOffset()
      */
     @Override
-    public int[] getOffset()
+    public int[] maskOffset()
     {
         return new int[]{0, 0, this.offset};
     }
@@ -235,7 +235,7 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
      * @see net.sci.image.morphology.Strel3D#getShifts3D()
      */
     @Override
-    public int[][] getShifts()
+    public int[][] shifts()
     {
         int[][] shifts = new int[this.size][3];
         for (int i = 0; i < this.size; i++) {

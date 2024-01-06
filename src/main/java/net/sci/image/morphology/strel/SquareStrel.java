@@ -118,7 +118,7 @@ public class SquareStrel extends AbstractSeparableStrel2D
      * @see net.sci.image.morphology.Strel#getMask()
      */
     @Override
-    public BinaryArray2D getMask()
+    public BinaryArray2D binaryMask()
     {
         BinaryArray2D mask = BinaryArray2D.create(this.size, this.size);
         for (int y = 0; y < this.size; y++)
@@ -138,7 +138,7 @@ public class SquareStrel extends AbstractSeparableStrel2D
      * @see net.sci.image.morphology.Strel#getOffset()
      */
     @Override
-    public int[] getOffset()
+    public int[] maskOffset()
     {
         return new int[] { this.offset, this.offset };
     }
@@ -149,7 +149,7 @@ public class SquareStrel extends AbstractSeparableStrel2D
      * @see net.sci.image.morphology.Strel#getShifts()
      */
     @Override
-    public int[][] getShifts()
+    public int[][] shifts()
     {
         int n = this.size * this.size;
         int[][] shifts = new int[n][2];

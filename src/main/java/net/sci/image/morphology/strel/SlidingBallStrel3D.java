@@ -585,7 +585,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
      * @see net.sci.image.morphology.Strel2D#getMask()
      */
     @Override
-    public BinaryArray3D getMask()
+    public BinaryArray3D binaryMask()
     {
         // convert to "real" radius by taking into account central pixel
         double r2 = this.radius + 0.5;
@@ -616,7 +616,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
      * @see net.sci.image.morphology.Strel2D#getOffset()
      */
     @Override
-    public int[] getOffset()
+    public int[] maskOffset()
     {
         return new int[] {this.intRadius, this.intRadius, this.intRadius};
     }
@@ -625,7 +625,7 @@ public class SlidingBallStrel3D extends AlgoStub implements Strel3D
      * @see net.sci.image.morphology.Strel2D#getShifts()
      */
     @Override
-    public int[][] getShifts()
+    public int[][] shifts()
     {
         if (this.shiftArray == null)
         {

@@ -216,7 +216,7 @@ public class OctagonStrel extends AbstractSeparableStrel2D
 	 * @see net.sci.image.morphology.Strel2D#getMask()
 	 */
 	@Override
-	public BinaryArray2D getMask()
+	public BinaryArray2D binaryMask()
 	{
 		// Create array
 	    BinaryArray2D mask = BinaryArray2D.create(this.size, this.size);
@@ -257,7 +257,7 @@ public class OctagonStrel extends AbstractSeparableStrel2D
 	 * @see net.sci.image.morphology.Strel#getShifts()
 	 */
 	@Override
-	public int[][] getShifts()
+	public int[][] shifts()
 	{
 		int n = this.size * this.size;
 		int[][] shifts = new int[n][2];
@@ -281,7 +281,7 @@ public class OctagonStrel extends AbstractSeparableStrel2D
      * @see net.sci.image.morphology.Strel#getOffset()
      */
     @Override
-    public int[] getOffset()
+    public int[] maskOffset()
     {
     	return new int[] { this.offset, this.offset };
     }

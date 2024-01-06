@@ -129,7 +129,7 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	 * @see net.sci.image.morphology.Strel#getMask()
 	 */
 	@Override
-	public BinaryArray2D getMask()
+	public BinaryArray2D binaryMask()
 	{
 	    BinaryArray2D mask = BinaryArray2D.create(this.size, this.size);
 	    
@@ -159,7 +159,7 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	 * @see net.sci.image.morphology.Strel#getOffset()
 	 */
 	@Override
-	public int[] getOffset()
+	public int[] maskOffset()
 	{
 		return new int[] { this.offset, this.offset };
 	}
@@ -170,7 +170,7 @@ public class DiamondStrel extends AbstractSeparableStrel2D
 	 * @see net.sci.image.morphology.Strel#getShifts()
 	 */
 	@Override
-	public int[][] getShifts()
+	public int[][] shifts()
 	{
 		// Put zeros at the corners
 		int radius = (this.size - 1) / 2;

@@ -35,7 +35,7 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 	 * @see net.sci.image.morphology.Strel#getMask()
 	 */
 	@Override
-	public BinaryArray2D getMask()
+	public BinaryArray2D binaryMask()
 	{
 	    BinaryArray2D mask = BinaryArray2D.create(3, 3);
         mask.setBoolean(0, 1, true);
@@ -52,7 +52,7 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 	 * @see net.sci.image.morphology.Strel#getOffset()
 	 */
 	@Override
-	public int[] getOffset()
+	public int[] maskOffset()
 	{
 		return new int[] { 1, 1 };
 	}
@@ -63,7 +63,7 @@ public class Cross3x3Strel extends AbstractStrel2D implements InPlaceStrel2D
 	 * @see net.sci.image.morphology.Strel#getShifts()
 	 */
 	@Override
-	public int[][] getShifts()
+	public int[][] shifts()
 	{
 		int[][] shifts = new int[][] { { 0, -1 }, { -1, 0 }, { 0, 0 },	{ +1, 0 }, { 0, +1 } };
 		return shifts;

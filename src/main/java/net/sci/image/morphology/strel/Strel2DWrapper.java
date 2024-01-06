@@ -39,10 +39,10 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
     }
 
     @Override
-    public BinaryArray3D getMask()
+    public BinaryArray3D binaryMask()
     {
         int[] size = strel2d.size();
-        BinaryArray2D mask2d = strel2d.getMask();
+        BinaryArray2D mask2d = strel2d.binaryMask();
         BinaryArray3D mask = BinaryArray3D.create(size[0], size[1], 1);
         for (int y = 0; y < size[1]; y++)
         {
@@ -55,9 +55,9 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
     }
 
     @Override
-    public int[] getOffset()
+    public int[] maskOffset()
     {
-        int[] offset2d = strel2d.getOffset();
+        int[] offset2d = strel2d.maskOffset();
         int[] offset = new int[3];
         offset[0] = offset2d[0];
         offset[1] = offset2d[1];
@@ -66,9 +66,9 @@ public class Strel2DWrapper extends AlgoStub implements Strel3D
     }
 
     @Override
-    public int[][] getShifts()
+    public int[][] shifts()
     {
-        int[][] shifts2d = strel2d.getShifts();
+        int[][] shifts2d = strel2d.shifts();
         int n = shifts2d.length;
         int[][] shifts = new int[n][3];
         for (int i = 0; i < n; i++)

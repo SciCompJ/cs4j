@@ -139,7 +139,7 @@ public class CubeStrel3D extends AbstractSeparableStrel3D
      * @see net.sci.image.morphology.Strel3D#getMask3D()
      */
     @Override
-    public BinaryArray3D getMask()
+    public BinaryArray3D binaryMask()
     {
         BinaryArray3D mask = BinaryArray3D.create(this.size, this.size, this.size);
         mask.fill(Binary.TRUE);
@@ -150,7 +150,7 @@ public class CubeStrel3D extends AbstractSeparableStrel3D
      * @see net.sci.image.morphology.Strel3D#getOffset()
      */
     @Override
-    public int[] getOffset()
+    public int[] maskOffset()
     {
         return new int[]{this.offset, this.offset, this.offset};
     }
@@ -159,7 +159,7 @@ public class CubeStrel3D extends AbstractSeparableStrel3D
      * @see net.sci.image.morphology.Strel3D#getShifts3D()
      */
     @Override
-    public int[][] getShifts()
+    public int[][] shifts()
     {
         int n = this.size * this.size * this.size;
         int[][] shifts = new int[n][3];

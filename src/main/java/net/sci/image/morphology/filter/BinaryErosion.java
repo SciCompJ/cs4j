@@ -59,10 +59,10 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         // cast to Strel2D and retrieve size and offset
         Strel2D strel2d = Strel2D.wrap(strel);
         int[] strelSize = strel2d.size();
-        int[] strelOffset = strel2d.getOffset();
+        int[] strelOffset = strel2d.maskOffset();
         
         // convert structuring element to RLE array
-        RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel2d.getMask());
+        RunLengthBinaryArray2D strel2 = RunLengthBinaryArray2D.convert(strel2d.binaryMask());
         
         // work on rows shifted along x axis
         HashMap<Integer, BinaryRow> strelRows = shiftRows(strel2, -strelOffset[0]);
@@ -201,10 +201,10 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         // cast to Strel2D and retrieve size and offset
         Strel3D strel3d = Strel3D.wrap(strel);
         int[] strelSize = strel3d.size();
-        int[] strelOffset = strel3d.getOffset();
+        int[] strelOffset = strel3d.maskOffset();
         
         // convert structuring element to RLE array
-        RunLengthBinaryArray3D rleStrel = RunLengthBinaryArray3D.convert(strel3d.getMask());
+        RunLengthBinaryArray3D rleStrel = RunLengthBinaryArray3D.convert(strel3d.binaryMask());
 
         // prepare strel array: shift each row
         HashMap<Integer, HashMap<Integer, BinaryRow>> strelRows = shiftRows(rleStrel, -strelOffset[0]);

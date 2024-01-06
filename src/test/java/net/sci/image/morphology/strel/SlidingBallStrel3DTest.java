@@ -26,7 +26,7 @@ public class SlidingBallStrel3DTest
     public final void testSlidingBallStrel3D_R1()
     {
         Strel3D strel = new SlidingBallStrel3D(1.0);
-        assertEquals(strel.getShifts().length, 19);
+        assertEquals(strel.shifts().length, 19);
     }
     
     /**

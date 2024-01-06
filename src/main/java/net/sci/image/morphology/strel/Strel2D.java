@@ -337,7 +337,7 @@ public interface Strel2D extends Strel
      * 
      * @return the mask of the structuring element
      */
-	public BinaryArray2D getMask();
+	public BinaryArray2D binaryMask();
 
 	/**
 	 * Returns the offset in the mask. The first value corresponds to the shift
@@ -345,7 +345,7 @@ public interface Strel2D extends Strel
 	 * 
 	 * @return the offset in the mask
 	 */
-	public int[] getOffset();
+	public int[] maskOffset();
 
 	/**
 	 * Returns the structuring element as a set of shifts. The size of the
@@ -354,7 +354,7 @@ public interface Strel2D extends Strel
 	 * 
 	 * @return a set of shifts
 	 */
-	public int[][] getShifts();
+	public int[][] shifts();
 	
 	public default int dimensionality()
 	{

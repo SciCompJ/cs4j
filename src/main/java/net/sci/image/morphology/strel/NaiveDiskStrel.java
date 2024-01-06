@@ -196,7 +196,7 @@ public class NaiveDiskStrel extends AlgoStub implements Strel2D
      * @see net.sci.image.morphology.Strel2D#getMask()
      */
     @Override
-    public BinaryArray2D getMask()
+    public BinaryArray2D binaryMask()
     {
         // convert to "real" radius by taking into account central pixel
         double r2 = this.radius + 0.5;
@@ -223,7 +223,7 @@ public class NaiveDiskStrel extends AlgoStub implements Strel2D
      * @see net.sci.image.morphology.Strel2D#getOffset()
      */
     @Override
-    public int[] getOffset()
+    public int[] maskOffset()
     {
         return new int[] {this.intRadius, this.intRadius};
     }
@@ -232,7 +232,7 @@ public class NaiveDiskStrel extends AlgoStub implements Strel2D
      * @see net.sci.image.morphology.Strel2D#getShifts()
      */
     @Override
-    public int[][] getShifts()
+    public int[][] shifts()
     {
         return this.shiftArray;
     }

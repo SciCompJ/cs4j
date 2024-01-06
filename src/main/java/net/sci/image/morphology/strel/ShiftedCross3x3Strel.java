@@ -100,7 +100,7 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getMask()
 		 */
 		@Override
-		public BinaryArray2D getMask()
+		public BinaryArray2D binaryMask()
 		{
 	        BinaryArray2D mask = BinaryArray2D.create(3, 3);
 	        mask.setBoolean(0, 1, true);
@@ -117,7 +117,7 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getOffset()
 		 */
 		@Override
-		public int[] getOffset()
+		public int[] maskOffset()
 		{
 			return new int[] { 2, 1 };
 		}
@@ -128,7 +128,7 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getShifts()
 		 */
 		@Override
-		public int[][] getShifts()
+		public int[][] shifts()
 		{
 			int[][] shifts = new int[][] { { -1, -1 }, { -2, 0 }, { -1, 0 },
 					{ 0, 0 }, { -1, +1 } };
@@ -452,7 +452,7 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getMask()
 		 */
 		@Override
-		public BinaryArray2D getMask()
+		public BinaryArray2D binaryMask()
 		{
 	        BinaryArray2D mask = BinaryArray2D.create(3, 3);
 	        mask.setBoolean(0, 1, true);
@@ -469,7 +469,7 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getOffset()
 		 */
 		@Override
-		public int[] getOffset()
+		public int[] maskOffset()
 		{
 			return new int[] { 0, 1 };
 		}
@@ -480,7 +480,7 @@ public class ShiftedCross3x3Strel
 		 * @see Strel#getShifts()
 		 */
 		@Override
-		public int[][] getShifts()
+		public int[][] shifts()
 		{
 			int[][] shifts = new int[][] { { +1, -1 }, { 0, 0 }, { +1, 0 },
 					{ +2, 0 }, { +1, +1 } };

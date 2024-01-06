@@ -41,7 +41,7 @@ public class SquareStrelTest
     public void testGetMask()
     {
         Strel2D strel = new SquareStrel(5);
-        BinaryArray2D mask = strel.getMask();
+        BinaryArray2D mask = strel.binaryMask();
         
         assertEquals(mask.size(0), 5);
         assertEquals(mask.size(1), 5);
@@ -51,7 +51,7 @@ public class SquareStrelTest
     public void testGetShifts()
     {
         Strel2D strel = new SquareStrel(5);
-        int[][] shifts = strel.getShifts();
+        int[][] shifts = strel.shifts();
         
         assertEquals(shifts.length, 5 * 5);
         assertEquals(shifts[1].length, 2);

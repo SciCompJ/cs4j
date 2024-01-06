@@ -420,7 +420,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 	 * @see net.sci.image.morphology.Strel#getMask()
 	 */
 	@Override
-	public BinaryArray2D getMask()
+	public BinaryArray2D binaryMask()
 	{
 	    BinaryArray2D mask = BinaryArray2D.create(this.size, this.size);
 		for (int i = 0; i < this.size; i++)
@@ -437,7 +437,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 	 * @see net.sci.image.morphology.Strel#getOffset()
 	 */
 	@Override
-	public int[] getOffset()
+	public int[] maskOffset()
 	{
 		return new int[] { this.offset, this.offset };
 	}
@@ -448,7 +448,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 	 * @see net.sci.image.morphology.Strel#getShifts()
 	 */
 	@Override
-	public int[][] getShifts()
+	public int[][] shifts()
 	{
 		int[][] shifts = new int[this.size][2];
 		for (int i = 0; i < this.size; i++)
