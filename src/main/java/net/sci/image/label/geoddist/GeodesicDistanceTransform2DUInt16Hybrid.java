@@ -11,7 +11,6 @@ import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
-import net.sci.image.data.Cursor2D;
 
 /**
  * Computation of Chamfer geodesic distances using 16-bits integer array
@@ -100,7 +99,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
         forwardIteration(distMap, labelMap);
         
         // Create the queue containing the positions that need update.
-        Deque<Cursor2D> queue = new ArrayDeque<Cursor2D>();;
+        Deque<int[]> queue = new ArrayDeque<int[]>();;
 
         // backward iteration
         fireStatusChanged(this, "Backward iteration "); 
@@ -195,7 +194,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
 		fireProgressChanged(this, 1, 1); 
 	}
 
-	private void backwardIteration(UInt16Array2D distMap, IntArray2D<?> labelMap, Deque<Cursor2D> queue)
+	private void backwardIteration(UInt16Array2D distMap, IntArray2D<?> labelMap, Deque<int[]> queue)
 	{
         // retrieve image size
         int sizeX = distMap.size(0);
@@ -268,7 +267,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
                     if (newDist + offset.weight < distMap.getInt(x2, y2))
                     {
                         distMap.setInt(x2, y2, newDist + offset.intWeight);
-                        queue.add(new Cursor2D(x2, y2));
+                        queue.add(new int[] { x2, y2 });
                     }
                 }
 			}
@@ -281,7 +280,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
      * For each element in the queue, get neighbors, try to update them, and
      * eventually add them to the queue.
      */
-	private void processQueue(UInt16Array2D distMap, IntArray2D<?> labelMap, Deque<Cursor2D> queue)
+	private void processQueue(UInt16Array2D distMap, IntArray2D<?> labelMap, Deque<int[]> queue)
 	{
 	    // retrieve image size
         int sizeX = distMap.size(0);
@@ -291,9 +290,9 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
         // Process elements in queue until it is empty
         while (!queue.isEmpty()) 
         {
-            Cursor2D p = queue.removeFirst();
-            int x = p.getX();
-            int y = p.getY();
+            int[] p = queue.removeFirst();
+            int x = p[0];
+            int y = p[1];
             
             int label = labelMap.getInt(x, y);
 
@@ -327,7 +326,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
                     distMap.setInt(x2, y2, newDist);
                     
                     // add the new modified position to the queue 
-                    queue.add(new Cursor2D(x2, y2));
+                    queue.add(new int[] {x2, y2});
                 }
             }
         }

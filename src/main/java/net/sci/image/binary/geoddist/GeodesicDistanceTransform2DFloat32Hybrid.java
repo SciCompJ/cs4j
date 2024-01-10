@@ -9,7 +9,6 @@ import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
-import net.sci.image.data.Cursor2D;
 
 /**
  * Computation of Chamfer geodesic distances using floating point integer array
@@ -28,76 +27,73 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
      */
     ChamferMask2D mask;
     
-	/**
-	 * Flag for dividing final distance map by the value first weight. 
-	 * This results in distance map values closer to Euclidean distance. 
-	 */
-	boolean normalizeMap = true;
-
-
-	// ==================================================
-    // Constructors 
-    
-	/**
-	 * Use default weights, and normalize map.
-	 */
-	public GeodesicDistanceTransform2DFloat32Hybrid()
-	{
-		this(ChamferMask2D.CHESSKNIGHT, true);
-	}
-
-	public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask)
-	{
-        this(mask, true);
-	}
-
-	public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask, boolean normalizeMap) 
-	{
-        this.mask = mask;
-        this.normalizeMap = normalizeMap;
-	}
-
-
-	public GeodesicDistanceTransform2DFloat32Hybrid(float[] weights)
-	{
-		this(weights, true);
-	}
-
-	/**
-	 * Low-level constructor.
-	 * 
-	 * @param weights
-	 *            the array of weights for orthogonal, diagonal, and eventually
-	 *            2-by-1 moves
-	 * @param normalizeMap
-	 *            the flag for normalizing result
-	 */
-	public GeodesicDistanceTransform2DFloat32Hybrid(float[] weights, boolean normalizeMap) 
-	{
-        this.mask = ChamferMask2D.fromWeights(weights);
-        this.normalizeMap = normalizeMap;
-	}
-	
+    /**
+     * Flag for dividing final distance map by the value first weight. This
+     * results in distance map values closer to Euclidean distance.
+     */
+    boolean normalizeMap = true;
 
     // ==================================================
-    // General Methods 
-    
-	/**
-	 * Computes the geodesic distance function for each pixel in mask, using the
-	 * given mask. Mask and marker should be BinaryArray2D the same size and
-	 * containing binary values.
-	 * 
-	 * The function returns a new Float32Array2D the same size as the input, with
-	 * values greater than or equal to zero.
+    // Constructors
+
+    /**
+     * Use default weights, and normalize map.
+     */
+    public GeodesicDistanceTransform2DFloat32Hybrid()
+    {
+        this(ChamferMask2D.CHESSKNIGHT, true);
+    }
+
+    public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask)
+    {
+        this(mask, true);
+    }
+
+    public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask, boolean normalizeMap)
+    {
+        this.mask = mask;
+        this.normalizeMap = normalizeMap;
+    }
+
+    public GeodesicDistanceTransform2DFloat32Hybrid(float[] weights)
+    {
+        this(weights, true);
+    }
+
+    /**
+     * Low-level constructor.
+     * 
+     * @param weights
+     *            the array of weights for orthogonal, diagonal, and eventually
+     *            2-by-1 moves
+     * @param normalizeMap
+     *            the flag for normalizing result
+     */
+    public GeodesicDistanceTransform2DFloat32Hybrid(float[] weights, boolean normalizeMap)
+    {
+        this.mask = ChamferMask2D.fromWeights(weights);
+        this.normalizeMap = normalizeMap;
+    }
+
+    // ==================================================
+    // General Methods
+
+    /**
+     * Computes the geodesic distance function for each pixel in mask, using the
+     * given mask. Mask and marker should be BinaryArray2D the same size and
+     * containing binary values.
+     * 
+     * The function returns a new Float32Array2D the same size as the input,
+     * with values greater than or equal to zero.
      * 
      * @param marker
      *            the marker image to initialize the reconstruction from
      * @param maskImage
      *            the binary image that will constrain the reconstruction
      * @return the reconstructed image as a new instance of Float32Array2D
-	 */
-	public Float32Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
-	{
+     */
+    public Float32Array2D process2d(BinaryArray2D marker, BinaryArray2D mask)
+    {
         // create new empty image, and fill it with black
         fireStatusChanged(this, "Initialization..."); 
         Float32Array2D distMap = initializeResult(marker, mask);
@@ -107,7 +103,7 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
         forwardIteration(distMap, mask);
         
         // Create the queue containing the positions that need update.
-        Deque<Cursor2D> queue = new ArrayDeque<Cursor2D>();;
+        Deque<int[]> queue = new ArrayDeque<int[]>();;
 
         // backward iteration
         fireStatusChanged(this, "Backward iteration "); 
@@ -211,7 +207,7 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
         fireProgressChanged(this, 1, 1); 
     }
 
-    private void backwardIteration(Float32Array2D distMap, BinaryArray2D maskImage, Deque<Cursor2D> queue)
+    private void backwardIteration(Float32Array2D distMap, BinaryArray2D maskImage, Deque<int[]> queue)
     {
         // retrieve image size
         int sizeX = distMap.size(0);
@@ -292,7 +288,7 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
                     if (newDist + offset.weight < distMap.getValue(x2, y2)) 
                     {
                         distMap.setValue(x2, y2, newDist + offset.weight);
-                        queue.add(new Cursor2D(x2, y2));
+                        queue.add(new int[] { x2, y2 });
                     }
                 }
             }
@@ -305,7 +301,7 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
      * For each element in the queue, get neighbors, try to update them, and
      * eventually add them to the queue.
      */
-    private void processQueue(Float32Array2D distMap, BinaryArray2D maskImage, Deque<Cursor2D> queue)
+    private void processQueue(Float32Array2D distMap, BinaryArray2D maskImage, Deque<int[]> queue)
     {
         // retrieve image size
         int sizeX = distMap.size(0);
@@ -315,9 +311,9 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
         // Process elements in queue until it is empty
         while (!queue.isEmpty()) 
         {
-            Cursor2D p = queue.removeFirst();
-            int x = p.getX();
-            int y = p.getY();
+            int[] p = queue.removeFirst();
+            int x = p[0];
+            int y = p[1];
 
             // get geodesic distance value for current pixel
             double dist = distMap.getValue(x, y);
@@ -349,7 +345,7 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
                     distMap.setValue(x2, y2, newDist);
                     
                     // add the new modified position to the queue 
-                    queue.add(new Cursor2D(x2, y2));
+                    queue.add(new int[] { x2, y2 });
                 }
             }
         }

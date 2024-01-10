@@ -10,7 +10,6 @@ import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Float32Array3D;
 import net.sci.image.binary.distmap.ChamferMask3D;
 import net.sci.image.binary.distmap.ChamferMask3D.Offset;
-import net.sci.image.data.Cursor3D;
 
 /**
  * Computation of Chamfer geodesic distances using floating point integer array
@@ -29,107 +28,107 @@ public class GeodesicDistanceTransform3DFloat32Hybrid extends AlgoStub implement
      */
     ChamferMask3D mask;
 
-	/**
-	 * Flag for dividing final distance map by the value first weight. 
-	 * This results in distance map values closer to Euclidean distance. 
-	 */
-	boolean normalizeMap = true;
-
-
-	// ==================================================
-    // Constructors 
-    
-	/**
-	 * Use default weights, and normalize map.
-	 */
-	public GeodesicDistanceTransform3DFloat32Hybrid()
-	{
-		this(ChamferMask3D.BORGEFORS, true);
-	}
-
-	public GeodesicDistanceTransform3DFloat32Hybrid(ChamferMask3D mask)
-	{
-		this(mask, true);
-	}
-
-	public GeodesicDistanceTransform3DFloat32Hybrid(ChamferMask3D mask, boolean normalizeMap) 
-	{
-        this.mask = mask;
-        this.normalizeMap = normalizeMap;
-	}
-
-	/**
-	 * Low-level constructor.
-	 * 
-	 * @param weights
-	 *            the array of weights for orthogonal, diagonal, and cube-diagonal offsets
-	 * @param normalizeMap
-	 *            the flag for normalizing result
-	 */
-	public GeodesicDistanceTransform3DFloat32Hybrid(float[] weights, boolean normalizeMap) 
-	{
-        this.mask = ChamferMask3D.fromWeights(weights);
-        this.normalizeMap = normalizeMap;
-	}
-	
+    /**
+     * Flag for dividing final distance map by the value first weight. This
+     * results in distance map values closer to Euclidean distance.
+     */
+    boolean normalizeMap = true;
 
     // ==================================================
-    // General Methods 
-    
-	/**
-	 * Computes the geodesic distance function for each pixel in mask, using the
-	 * given mask. Mask and marker should be BinaryArray3D the same size and
-	 * containing binary values.
-	 * 
-	 * The function returns a new Float32Array3D the same size as the input, with
-	 * values greater or equal to zero.
-	 */
-	public Float32Array3D process3d(BinaryArray3D marker, BinaryArray3D maskImage)
-	{
-	    if (!Arrays.isSameSize(marker, maskImage))
-	    {
-	        throw new IllegalArgumentException("Marker and mask arrays must have same dimensions.");
-	    }
-	    
-		// create new empty image, and fill it with black
-		fireStatusChanged(this, "Initialization..."); 
-		Float32Array3D distMap = initializeResult(marker, maskImage);
-		
-		// forward iteration
-		fireStatusChanged(this, "Forward iteration ");
-		forwardIteration(distMap, maskImage);
-		
-        // initialize queue
-		Deque<Cursor3D> queue = new ArrayDeque<Cursor3D>();
-        
-		// backward iteration
-		fireStatusChanged(this, "Backward iteration "); 
-		backwardIteration(distMap, maskImage, queue);
-		
-        // Process queue
-		fireStatusChanged(this, "Process queue "); 
-		processQueue(distMap, maskImage, queue);
-		
-		// Normalize values by the first weight
-		if (this.normalizeMap) 
-		{
-		    fireStatusChanged(this, "Normalize map");
-		    normalizeMap(distMap);
-		}
-		
-		return distMap;
-	}
+    // Constructors
 
-	private Float32Array3D initializeResult(BinaryArray3D marker, BinaryArray3D maskImage)
-	{
+    /**
+     * Use default weights, and normalize map.
+     */
+    public GeodesicDistanceTransform3DFloat32Hybrid()
+    {
+        this(ChamferMask3D.BORGEFORS, true);
+    }
+
+    public GeodesicDistanceTransform3DFloat32Hybrid(ChamferMask3D mask)
+    {
+        this(mask, true);
+    }
+
+    public GeodesicDistanceTransform3DFloat32Hybrid(ChamferMask3D mask, boolean normalizeMap)
+    {
+        this.mask = mask;
+        this.normalizeMap = normalizeMap;
+    }
+
+    /**
+     * Low-level constructor.
+     * 
+     * @param weights
+     *            the array of weights for orthogonal, diagonal, and
+     *            cube-diagonal offsets
+     * @param normalizeMap
+     *            the flag for normalizing result
+     */
+    public GeodesicDistanceTransform3DFloat32Hybrid(float[] weights, boolean normalizeMap)
+    {
+        this.mask = ChamferMask3D.fromWeights(weights);
+        this.normalizeMap = normalizeMap;
+    }
+
+    // ==================================================
+    // General Methods
+
+    /**
+     * Computes the geodesic distance function for each pixel in mask, using the
+     * given mask. Mask and marker should be BinaryArray3D the same size and
+     * containing binary values.
+     * 
+     * The function returns a new Float32Array3D the same size as the input,
+     * with values greater or equal to zero.
+     */
+    public Float32Array3D process3d(BinaryArray3D marker, BinaryArray3D maskImage)
+    {
+        if (!Arrays.isSameSize(marker, maskImage))
+        {
+            throw new IllegalArgumentException("Marker and mask arrays must have same dimensions.");
+        }
+
+        // create new empty image, and fill it with black
+        fireStatusChanged(this, "Initialization...");
+        Float32Array3D distMap = initializeResult(marker, maskImage);
+
+        // forward iteration
+        fireStatusChanged(this, "Forward iteration ");
+        forwardIteration(distMap, maskImage);
+
+        // initialize queue
+        Deque<int[]> queue = new ArrayDeque<int[]>();
+
+        // backward iteration
+        fireStatusChanged(this, "Backward iteration ");
+        backwardIteration(distMap, maskImage, queue);
+
+        // Process queue
+        fireStatusChanged(this, "Process queue ");
+        processQueue(distMap, maskImage, queue);
+
+        // Normalize values by the first weight
+        if (this.normalizeMap)
+        {
+            fireStatusChanged(this, "Normalize map");
+            normalizeMap(distMap);
+        }
+
+        return distMap;
+    }
+
+    private Float32Array3D initializeResult(BinaryArray3D marker, BinaryArray3D maskImage)
+    {
         int sizeX = marker.size(0);
         int sizeY = marker.size(1);
         int sizeZ = marker.size(2);
-        
-	    // Allocate memory
+
+        // Allocate memory
         Float32Array3D distMap = Float32Array3D.create(sizeX, sizeY, sizeZ);
-	    
-	    // initialize empty image with either 0 (in marker), Inf (outside marker), or NaN (not in the mask)
+
+        // initialize empty image with either 0 (in marker), Inf (outside
+        // marker), or NaN (not in the mask)
         for (int z = 0; z < sizeZ; z++) 
         {
             for (int y = 0; y < sizeY; y++) 
@@ -150,10 +149,10 @@ public class GeodesicDistanceTransform3DFloat32Hybrid extends AlgoStub implement
 	    }
         
         return distMap;
-	}
-	
-	private void forwardIteration(Float32Array3D distMap, BinaryArray3D maskImage) 
-	{
+    }
+
+    private void forwardIteration(Float32Array3D distMap, BinaryArray3D maskImage)
+    {
        // retrieve image size
        int sizeX = distMap.size(0);
        int sizeY = distMap.size(1);
@@ -213,7 +212,7 @@ public class GeodesicDistanceTransform3DFloat32Hybrid extends AlgoStub implement
         fireProgressChanged(this, 1, 1);
 	}
 
-	private void backwardIteration(Float32Array3D distMap, BinaryArray3D maskImage, Deque<Cursor3D> queue)
+	private void backwardIteration(Float32Array3D distMap, BinaryArray3D maskImage, Deque<int[]> queue)
 	{
 	    // retrieve image size
         int sizeX = distMap.size(0);
@@ -294,37 +293,37 @@ public class GeodesicDistanceTransform3DFloat32Hybrid extends AlgoStub implement
                         if (newDist + offset.weight < distMap.getValue(x2, y2, z2)) 
                         {
                             distMap.setValue(x2, y2, z2, newDist + offset.weight);
-                            queue.add(new Cursor3D(x2, y2, z2));
+                            queue.add(new int[] {x2, y2, z2});
                         }
                     }
                 }
             }
         }
-		fireProgressChanged(this, 1, 1); 
-	}
-	
-	/**
+        fireProgressChanged(this, 1, 1);
+    }
+
+    /**
      * For each element in the queue, get neighbors, try to update them, and
      * eventually add them to the queue.
      */
-	private void processQueue(Float32Array3D distMap, BinaryArray3D maskImage, Deque<Cursor3D> queue)
-	{
-	    // retrieve image size
+    private void processQueue(Float32Array3D distMap, BinaryArray3D maskImage, Deque<int[]> queue)
+    {
+        // retrieve image size
         int sizeX = distMap.size(0);
-	    int sizeY = distMap.size(1);
-	    int sizeZ = distMap.size(2);
-	    Collection<Offset> offsets = mask.getOffsets();
+        int sizeY = distMap.size(1);
+        int sizeZ = distMap.size(2);
+        Collection<Offset> offsets = mask.getOffsets();
 
-	    // Process elements in queue until it is empty
-	    while (!queue.isEmpty()) 
-	    {
-	        Cursor3D p = queue.removeFirst();
-	        int x = p.getX();
-	        int y = p.getY();
-	        int z = p.getZ();
+        // Process elements in queue until it is empty
+        while (!queue.isEmpty())
+        {
+            int[] p = queue.removeFirst();
+            int x = p[0];
+            int y = p[1];
+            int z = p[2];
 
-	        // get geodesic distance value for current pixel
-	        double dist = distMap.getValue(x, y, z);
+            // get geodesic distance value for current pixel
+            double dist = distMap.getValue(x, y, z);
 
             // iterate over neighbor pixels
             for (Offset offset : offsets)
@@ -356,27 +355,27 @@ public class GeodesicDistanceTransform3DFloat32Hybrid extends AlgoStub implement
                     distMap.setValue(x2, y2, z2, newDist);
                     
                     // add the new modified position to the queue 
-                    queue.add(new Cursor3D(x2, y2, z2));
+                    queue.add(new int[] {x2, y2, z2});
                 }
             }
-	    }
-	}
+        }
+    }
 
-	private void normalizeMap(Float32Array3D distMap)
-	{
-	    // retrieve image size
+    private void normalizeMap(Float32Array3D distMap)
+    {
+        // retrieve image size
         int sizeX = distMap.size(0);
         int sizeY = distMap.size(1);
         int sizeZ = distMap.size(2);
         double w0 = mask.getNormalizationWeight();
 
-	    for (int z = 0; z < sizeZ; z++)
-	    {
-	        for (int y = 0; y < sizeY; y++)
-	        {
-	            for (int x = 0; x < sizeX; x++) 
-	            {
-	                float dist = distMap.getFloat(x, y, z);
+        for (int z = 0; z < sizeZ; z++)
+        {
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    float dist = distMap.getFloat(x, y, z);
                     if (Float.isFinite(dist))
                     {
                         distMap.setValue(x, y, z, dist / w0);

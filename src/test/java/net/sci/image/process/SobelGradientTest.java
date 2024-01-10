@@ -3,10 +3,14 @@
  */
 package net.sci.image.process;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+
+import org.junit.Test;
 
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.Float32Array3D;
@@ -14,10 +18,7 @@ import net.sci.array.scalar.ScalarArray;
 import net.sci.array.vector.Float32VectorArray2D;
 import net.sci.array.vector.Float32VectorArray3D;
 import net.sci.array.vector.VectorArray;
-import net.sci.image.DisplaySettings;
 import net.sci.image.Image;
-
-import org.junit.Test;
 
 /**
  * @author dlegland
@@ -102,10 +103,8 @@ public class SobelGradientTest
         
         VectorArray<?,?> vectorArray = (VectorArray<?,?>) gradImage.getData();
         ScalarArray<?> channelArray = vectorArray.channel(0);
-        Image resultImage = new Image(channelArray, gradImage);
         
-        DisplaySettings settings = resultImage.getDisplaySettings();
-        double[] range = settings.getDisplayRange();
+        double[] range = channelArray.finiteValueRange();
         assertTrue(range[0] < 0);
     }
 }

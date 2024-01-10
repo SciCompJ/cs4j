@@ -9,7 +9,6 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.data.Connectivity3D;
-import net.sci.image.data.Cursor3D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 
 import java.util.ArrayDeque;
@@ -64,7 +63,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 	int sizeZ = 0;
 
 	/** the queue containing the positions that need update */
-	Deque<Cursor3D> queue;
+	Deque<int[]> queue;
 
 	/**
 	 * Boolean flag for the display of debugging infos.
@@ -208,7 +207,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 							+ connectivity);
 		}
 
-		queue = new ArrayDeque<Cursor3D>();
+		queue = new ArrayDeque<int[]>();
 		
 		long t0 = System.currentTimeMillis();
 		trace("Initialize result ");
@@ -585,10 +584,10 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 		
 		while (!queue.isEmpty()) 
 		{
-			Cursor3D p = queue.removeFirst();
-			int x = p.getX();
-			int y = p.getY();
-			int z = p.getZ();
+			int[] p = queue.removeFirst();
+			int x = p[0];
+			int y = p[1];
+			int z = p[2];
 			value = result.getValue(x, y, z) * this.sign;
 			
 			// compare with each one of the neighbors
@@ -643,10 +642,10 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 		
 		while (!queue.isEmpty()) 
 		{
-			Cursor3D p = queue.removeFirst();
-			int x = p.getX();
-			int y = p.getY();
-			int z = p.getZ();
+			int[] p = queue.removeFirst();
+            int x = p[0];
+            int y = p[1];
+            int z = p[2];
 			value = result.getValue(x, y, z) * this.sign;
 			
 			// compute bounds of neighborhood
@@ -716,7 +715,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
 		double resultValue = result.getValue(x, y, z) * this.sign; 
 		if (value > resultValue) 
 		{
-			Cursor3D position = new Cursor3D(x, y, z);
+			int[] position = new int[] {x, y, z};
 			queue.add(position);
 		}
 	}

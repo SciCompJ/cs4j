@@ -11,7 +11,6 @@ import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array3D;
 import net.sci.image.binary.distmap.ChamferMask3D;
 import net.sci.image.binary.distmap.ChamferMask3D.Offset;
-import net.sci.image.data.Cursor3D;
 
 /**
  * Computation of Chamfer geodesic distances using integer array
@@ -30,61 +29,61 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
      */
     ChamferMask3D mask;
 
-	/**
-	 * Flag for dividing final distance map by the value first weight. 
-	 * This results in distance map values closer to Euclidean distance. 
-	 */
-	boolean normalizeMap = true;
+    /**
+     * Flag for dividing final distance map by the value first weight. This
+     * results in distance map values closer to Euclidean distance.
+     */
+    boolean normalizeMap = true;
 
 
 	// ==================================================
     // Constructors 
     
-	/**
-	 * Use default weights, and normalize map.
-	 */
-	public GeodesicDistanceTransform3DUInt16Hybrid()
-	{
-		this(ChamferMask3D.BORGEFORS, true);
-	}
+    /**
+     * Use default weights, and normalize map.
+     */
+    public GeodesicDistanceTransform3DUInt16Hybrid()
+    {
+        this(ChamferMask3D.BORGEFORS, true);
+    }
 
-	public GeodesicDistanceTransform3DUInt16Hybrid(ChamferMask3D mask)
-	{
-		this(mask, true);
-	}
+    public GeodesicDistanceTransform3DUInt16Hybrid(ChamferMask3D mask)
+    {
+        this(mask, true);
+    }
 
-	public GeodesicDistanceTransform3DUInt16Hybrid(ChamferMask3D mask, boolean normalizeMap) 
-	{
+    public GeodesicDistanceTransform3DUInt16Hybrid(ChamferMask3D mask, boolean normalizeMap)
+    {
         this.mask = mask;
         this.normalizeMap = normalizeMap;
-	}
+    }
 
-	/**
-	 * Low-level constructor.
-	 * 
-	 * @param weights
-	 *            the array of weights for orthogonal, diagonal, and cube-diagonal offsets
-	 * @param normalizeMap
-	 *            the flag for normalizing result
-	 */
-	public GeodesicDistanceTransform3DUInt16Hybrid(short[] weights, boolean normalizeMap) 
-	{
+    /**
+     * Low-level constructor.
+     * 
+     * @param weights
+     *            the array of weights for orthogonal, diagonal, and
+     *            cube-diagonal offsets
+     * @param normalizeMap
+     *            the flag for normalizing result
+     */
+    public GeodesicDistanceTransform3DUInt16Hybrid(short[] weights, boolean normalizeMap)
+    {
         this.mask = ChamferMask3D.fromWeights(weights);
         this.normalizeMap = normalizeMap;
-	}
-	
+    }
 
     // ==================================================
     // General Methods 
     
-	/**
-	 * Computes the geodesic distance function for each pixel in mask, using the
-	 * given mask. Mask and marker should be BinaryArray3D the same size and
-	 * containing binary values.
-	 * 
-	 * The function returns a new Float32Array3D the same size as the input, with
-	 * values greater or equal to zero.
-	 */
+    /**
+     * Computes the geodesic distance function for each pixel in mask, using the
+     * given mask. Mask and marker should be BinaryArray3D the same size and
+     * containing binary values.
+     * 
+     * The function returns a new Float32Array3D the same size as the input,
+     * with values greater or equal to zero.
+     */
 	public UInt16Array3D process3d(BinaryArray3D marker, BinaryArray3D maskImage)
 	{
 	    if (!Arrays.isSameSize(marker, maskImage))
@@ -101,7 +100,7 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
 		forwardIteration(distMap, maskImage);
 		
         // initialize queue
-		Deque<Cursor3D> queue = new ArrayDeque<Cursor3D>();
+		Deque<int[]> queue = new ArrayDeque<int[]>();
         
 		// backward iteration
 		fireStatusChanged(this, "Backward iteration "); 
@@ -197,7 +196,7 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
         fireProgressChanged(this, 1, 1);
 	}
 
-	private void backwardIteration(UInt16Array3D distMap, BinaryArray3D maskImage, Deque<Cursor3D> queue)
+	private void backwardIteration(UInt16Array3D distMap, BinaryArray3D maskImage, Deque<int[]> queue)
 	{
 	    // retrieve image size
         int sizeX = distMap.size(0);
@@ -278,7 +277,7 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
                         if (newDist + offset.intWeight < distMap.getInt(x2, y2, z2)) 
                         {
                             distMap.setInt(x2, y2, z2, newDist + offset.intWeight);
-                            queue.add(new Cursor3D(x2, y2, z2));
+                            queue.add(new int[] {x2, y2, z2});
                         }
                     }
                 }
@@ -291,7 +290,7 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
      * For each element in the queue, get neighbors, try to update them, and
      * eventually add them to the queue.
      */
-	private void processQueue(UInt16Array3D distMap, BinaryArray3D maskImage, Deque<Cursor3D> queue)
+	private void processQueue(UInt16Array3D distMap, BinaryArray3D maskImage, Deque<int[]> queue)
 	{
 	    // retrieve image size
         int sizeX = distMap.size(0);
@@ -302,10 +301,10 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
 	    // Process elements in queue until it is empty
 	    while (!queue.isEmpty()) 
 	    {
-	        Cursor3D p = queue.removeFirst();
-	        int x = p.getX();
-	        int y = p.getY();
-	        int z = p.getZ();
+	        int[] p = queue.removeFirst();
+            int x = p[0];
+            int y = p[1];
+            int z = p[2];
 
 	        // get geodesic distance value for current pixel
 	        int dist = distMap.getInt(x, y, z);
@@ -340,7 +339,7 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
                     distMap.setInt(x2, y2, z2, newDist);
                     
                     // add the new modified position to the queue 
-                    queue.add(new Cursor3D(x2, y2, z2));
+                    queue.add(new int[] {x2, y2, z2});
                 }
             }
 	    }

@@ -5,6 +5,7 @@ package net.sci.image.data;
  * coordinates.
  *
  */
+@Deprecated
 public class Cursor2D implements Cursor
 {
 	private int x = 0;

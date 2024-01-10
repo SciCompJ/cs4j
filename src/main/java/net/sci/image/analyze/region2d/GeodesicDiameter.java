@@ -16,10 +16,9 @@ import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;
 import net.sci.image.ImageAxis;
 import net.sci.image.binary.distmap.ChamferMask2D;
-import net.sci.image.data.Cursor2D;
 import net.sci.image.label.LabelImages;
 import net.sci.image.label.LabelValues;
-import net.sci.image.label.LabelValues.PositionValuePair2D;
+import net.sci.image.label.LabelValues.PositionValuePair;
 import net.sci.image.label.geoddist.ChamferGeodesicDistanceTransform2D;
 import net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid;
 import net.sci.table.Table;
@@ -133,20 +132,20 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
         ScalarArray2D<?> distanceMap = LabelImages.distanceMap2d(labelMap, mask, true, true);
     
         // Extract position of maxima
-        PositionValuePair2D[] innerCircles = LabelValues.findMaxValues2d(labelMap, labels, distanceMap);
+        PositionValuePair[] innerCircles = LabelValues.findMaxValues2d(labelMap, labels, distanceMap);
         
         // initialize marker image with position of maxima
         marker.fillValue(0);
         for (int i = 0; i < nLabels; i++) 
         {
-            Cursor2D pos = innerCircles[i].getPosition();
-            if (pos.getX() == -1)
+            int[] pos = innerCircles[i].getPosition();
+            if (pos[0] == -1)
             {
                 System.err.println(
                         "Could not find maximum for particle label " + labels[i]);
                 continue;
             }
-            marker.setBoolean(pos.getX(), pos.getY(), true);
+            marker.setBoolean(pos[0], pos[1], true);
         }
     
         this.fireStatusChanged(this, "Computing first geodesic extremities...");
@@ -156,19 +155,19 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
         
         // find position of maximal value for each label
         // this is expected to correspond to a geodesic extremity 
-        Cursor2D[] firstGeodesicExtremities = LabelValues.maxValuePositions2d(labelMap, labels, distanceMap);
+        int[][] firstGeodesicExtremities = LabelValues.maxValuePositions2d(labelMap, labels, distanceMap);
         
         // Create new marker image with position of maxima
         marker.fill(new Binary(false));
         for (int i = 0; i < nLabels; i++)
         {
-            if (firstGeodesicExtremities[i].getX() == -1) 
+            if (firstGeodesicExtremities[i][0] == -1) 
             {
                 System.err.println(
                         "Could not find maximum for particle label " + labels[i]);
                 continue;
             }
-            marker.setBoolean(firstGeodesicExtremities[i].getX(), firstGeodesicExtremities[i].getY(), true);
+            marker.setBoolean(firstGeodesicExtremities[i][0], firstGeodesicExtremities[i][1], true);
         }
         
         this.fireStatusChanged(this, "Computing second geodesic extremities...");
@@ -177,7 +176,7 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
         distanceMap = geodesicDistanceTransform.process2d(marker, labelMap);
         
         // also computes position of maxima
-        PositionValuePair2D[] secondGeodesicExtremities = LabelValues.findMaxValues2d(labelMap, labels, distanceMap);
+        PositionValuePair[] secondGeodesicExtremities = LabelValues.findMaxValues2d(labelMap, labels, distanceMap);
         
         // Create array of results and populate with computed values
         GeodesicDiameter.Result[] result = new GeodesicDiameter.Result[nLabels];
@@ -210,7 +209,7 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
                 // Current first geodesic extremity 
                 // (corresponding to the minimum of the geodesic distance map)
                 Point2D ext = result[i].firstExtremity;
-                Cursor2D pos1 = new Cursor2D((int) ext.x(), (int) ext.y()) ;
+                int[] pos1 = new int[] {(int) ext.x(), (int) ext.y()};
                 
                 // Create new path
                 List<Point2D> path = new ArrayList<Point2D>();
@@ -230,8 +229,8 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
                 path.add(ext);
                 
                 // iterate over neighbors of current position until we reach the minimum value
-                Cursor2D pos = new Cursor2D((int) ext.x(), (int) ext.y());
-                while (!pos.equals(pos1))
+                int[] pos = new int[] {(int) ext.x(), (int) ext.y()};
+                while (!(pos[0] == pos1[0] && pos[1] == pos1[1]))
                 {
                     pos = findLowestNeighborPosition(labelMap, distanceMap, pos);
                     path.add(point(pos));
@@ -255,9 +254,9 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
         return result;
     }
     
-    private Point2D point(Cursor2D cursor)
+    private Point2D point(int[] pos)
     {
-        return new Point2D(cursor.getX(), cursor.getY());
+        return new Point2D(pos[0], pos[1]);
     }
 
     @Override
@@ -308,33 +307,27 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
      *            the position of the reference pixel
      * @return the position of the neighbor with smallest value
      */
-    private Cursor2D findLowestNeighborPosition(IntArray2D<?> labelImage, ScalarArray2D<?> distanceMap, Cursor2D pos)
+    private int[] findLowestNeighborPosition(IntArray2D<?> labelImage, ScalarArray2D<?> distanceMap, int[] pos)
     {
         // retrieve image size
         int sizeX = distanceMap.size(0);
         int sizeY = distanceMap.size(1);
         
         // retrieve current label and associated distance 
-        int refLabel = labelImage.getInt(pos.getX(), pos.getY());
-        double minDist = distanceMap.getValue(pos.getX(), pos.getY());
+        int refLabel = labelImage.getInt(pos[0], pos[1]);
+        double minDist = distanceMap.getValue(pos[0], pos[1]);
 
         // iterate over neighbors of current pixel
-        Cursor2D nextPos = pos;
+        int[] nextPos = pos;
         for (ChamferMask2D.Offset offset : this.geodesicDistanceTransform.mask().getOffsets())
         {
             // Compute neighbor coordinates
-            int x = pos.getX() + offset.dx;
-            int y = pos.getY() + offset.dy;
+            int x = pos[0] + offset.dx;
+            int y = pos[1] + offset.dy;
 
             // check neighbor is within image bounds
-            if (x < 0 || x >= sizeX)
-            {
-                continue;
-            }
-            if (y < 0 || y >= sizeY)
-            {
-                continue;
-            }
+            if (x < 0 || x >= sizeX) continue;
+            if (y < 0 || y >= sizeY) continue;
 
             // ensure we stay within the same label
             if (labelImage.getInt(x, y) != refLabel)
@@ -347,13 +340,13 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
             if (dist < minDist)
             {
                 minDist = dist;
-                nextPos = new Cursor2D(x, y);
+                nextPos = new int[] {x, y};
             }
         }
 
         if (nextPos.equals(pos))
         {
-            throw new RuntimeException("Could not find a neighbor with smaller value at (" + pos.getX() + "," + pos.getY() + ")");
+            throw new RuntimeException("Could not find a neighbor with smaller value at (" + pos[0] + "," + pos[1] + ")");
         }
 
         return nextPos;

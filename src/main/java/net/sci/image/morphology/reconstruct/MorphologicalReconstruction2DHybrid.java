@@ -12,7 +12,6 @@ import java.util.Deque;
 import net.sci.algo.AlgoStub;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.image.data.Connectivity2D;
-import net.sci.image.data.Cursor2D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 import net.sci.image.morphology.MorphologicalReconstruction.Type;
 
@@ -79,7 +78,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 	int sizeY = 0;
 
 	/** the queue containing the positions that need update */
-	Deque<Cursor2D> queue;
+	Deque<int[]> queue;
 
 
 	// ==================================================
@@ -219,7 +218,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 							+ connectivity);
 		}
 
-		queue = new ArrayDeque<Cursor2D>();
+		queue = new ArrayDeque<int[]>();
 		
 		// Initialize the result image with the minimum value of marker and mask
 		// images
@@ -547,9 +546,9 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		
 		while (!queue.isEmpty())
 		{
-			Cursor2D p = queue.removeFirst();
-			int x = p.getX();
-			int y = p.getY();
+		    int[] p = queue.removeFirst();
+			int x = p[0];
+			int y = p[1];
 			value = result.getValue(x, y) * sign;
 			
 			// compare with each one of the four neighbors
@@ -598,9 +597,9 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		
 		while (!queue.isEmpty()) 
 		{
-			Cursor2D p = queue.removeFirst();
-			int x = p.getX();
-			int y = p.getY();
+		    int[] p = queue.removeFirst();
+            int x = p[0];
+            int y = p[1];
 			value = result.getValue(x, y) * sign;
 			
 			// compute bounds of neighborhood
@@ -659,9 +658,7 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
 		double resultValue = result.getValue(x, y) * this.sign; 
 		if (value > resultValue) 
 		{
-			Cursor2D position = new Cursor2D(x, y);
-			queue.add(position);
+            queue.add(new int[] { x, y });
 		}
 	}
-
 }
