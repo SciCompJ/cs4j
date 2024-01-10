@@ -145,7 +145,7 @@ public class LabelValues
      *            the list of labels in the label image
      * @return the position of maximum value in intensity image for each label
      */
-    public static final PositionValuePair3D[] findMaxValues3d(IntArray3D<?> labelImage, int[] labels, ScalarArray3D<?> valueImage)
+    public static final PositionValuePair[] findMaxValues3d(IntArray3D<?> labelImage, int[] labels, ScalarArray3D<?> valueImage)
     {
         // get image size
         int sizeX = labelImage.size(0);
@@ -163,10 +163,10 @@ public class LabelValues
 
         // Init Position and value of maximum for each label
         int nLabels = labels.length;
-        PositionValuePair3D[] pairs = new PositionValuePair3D[nLabels];
+        PositionValuePair[] pairs = new PositionValuePair[nLabels];
         for (int i = 0; i < nLabels; i++)
         {
-            pairs[i] = new PositionValuePair3D(new int[] { -1, -1, -1 }, Double.NEGATIVE_INFINITY);
+            pairs[i] = new PositionValuePair(new int[] { -1, -1, -1 }, Double.NEGATIVE_INFINITY);
         }
 
         // iterate on image pixels
@@ -184,7 +184,7 @@ public class LabelValues
 
                     // get position-value pair corresponding to current label
                     int index = labelIndices.get(label);
-                    PositionValuePair3D pair = pairs[index];
+                    PositionValuePair pair = pairs[index];
 
                     // update values and positions
                     double value = valueImage.getValue(x, y, z);
@@ -269,7 +269,7 @@ public class LabelValues
      *            the list of labels in the label image
      * @return the position of minimum value in intensity image for each label
      */
-    public static final PositionValuePair3D[] findMinValues3d(IntArray3D<?> labelImage, int[] labels, ScalarArray3D<?> valueImage)
+    public static final PositionValuePair[] findMinValues3d(IntArray3D<?> labelImage, int[] labels, ScalarArray3D<?> valueImage)
     {
         // get image size
         int sizeX = labelImage.size(0);
@@ -287,10 +287,10 @@ public class LabelValues
 
         // Init Position and value of maximum for each label
         int nLabels = labels.length;
-        PositionValuePair3D[] pairs = new PositionValuePair3D[nLabels];
+        PositionValuePair[] pairs = new PositionValuePair[nLabels];
         for (int i = 0; i < nLabels; i++)
         {
-            pairs[i] = new PositionValuePair3D(new int[] { -1, -1, -1 }, Double.POSITIVE_INFINITY);
+            pairs[i] = new PositionValuePair(new int[] { -1, -1, -1 }, Double.POSITIVE_INFINITY);
         }
 
         // iterate on image voxels
@@ -308,7 +308,7 @@ public class LabelValues
 
                     // get position-value pair corresponding to current label
                     int index = labelIndices.get(label);
-                    PositionValuePair3D pair = pairs[index];
+                    PositionValuePair pair = pairs[index];
 
                     // update values and positions
                     double value = valueImage.getValue(x, y, z);
@@ -603,34 +603,12 @@ public class LabelValues
             this.value = value;
         }
 
-        public int[] getPosition()
+        public int[] position()
         {
             return position;
         }
 
-        public double getValue()
-        {
-            return value;
-        }
-    }
-
-    public static class PositionValuePair3D
-    {
-        int[] position;
-        double value;
-
-        public PositionValuePair3D(int[] position, double value)
-        {
-            this.position = position;
-            this.value = value;
-        }
-
-        public int[] getPosition()
-        {
-            return position;
-        }
-
-        public double getValue()
+        public double value()
         {
             return value;
         }

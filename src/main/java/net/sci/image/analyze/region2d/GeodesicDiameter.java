@@ -138,7 +138,7 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
         marker.fillValue(0);
         for (int i = 0; i < nLabels; i++) 
         {
-            int[] pos = innerCircles[i].getPosition();
+            int[] pos = innerCircles[i].position();
             if (pos[0] == -1)
             {
                 System.err.println(
@@ -186,13 +186,13 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
                     
             // Get the maximum distance within each label, 
             // and add sqrt(2) to take into account maximum pixel thickness.
-            res.diameter = secondGeodesicExtremities[i].getValue() + Math.sqrt(2);
+            res.diameter = secondGeodesicExtremities[i].value() + Math.sqrt(2);
 
             // also keep references to characteristic points
-            res.initialPoint = point(innerCircles[i].getPosition());
-            res.innerRadius = innerCircles[i].getValue();
+            res.initialPoint = point(innerCircles[i].position());
+            res.innerRadius = innerCircles[i].value();
             res.firstExtremity = point(firstGeodesicExtremities[i]);
-            res.secondExtremity = point(secondGeodesicExtremities[i].getPosition());
+            res.secondExtremity = point(secondGeodesicExtremities[i].position());
             
             // store the result
             result[i] = res;
