@@ -8,7 +8,7 @@ import net.sci.array.Array2D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
-import net.sci.image.data.Connectivity2D;
+import net.sci.image.Connectivity2D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 
 public class MorphologicalReconstruction2DHybridTest

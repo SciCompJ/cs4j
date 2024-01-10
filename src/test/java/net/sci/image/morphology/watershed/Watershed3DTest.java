@@ -12,8 +12,8 @@ import net.sci.array.scalar.Float32Array3D;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.geom.geom3d.MultiPoint3D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.image.Connectivity3D;
 import net.sci.image.binary.BinaryImages;
-import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.extrema.RegionalExtrema3D;
 
 /**

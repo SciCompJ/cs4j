@@ -16,6 +16,8 @@ import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
+import net.sci.image.Connectivity2D;
+import net.sci.image.Connectivity3D;
 import net.sci.image.Image;
 import net.sci.image.ImageType;
 import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat32;
@@ -35,8 +37,6 @@ import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DUInt16Hybrid;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling1D;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling2D;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling3D;
-import net.sci.image.data.Connectivity2D;
-import net.sci.image.data.Connectivity3D;
 
 /**
  * A collection of static methods for operating on binary images (2D/3D).

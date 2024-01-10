@@ -7,7 +7,7 @@ import net.sci.array.Arrays;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.data.Connectivity3D;
+import net.sci.image.Connectivity3D;
 
 /**
  * Tentative implementation of Watershed algorithm for 3D scalar images.

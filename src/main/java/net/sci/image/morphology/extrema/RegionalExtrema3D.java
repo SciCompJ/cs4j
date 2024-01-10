@@ -13,8 +13,8 @@ import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray3D;
+import net.sci.image.Connectivity3D;
 import net.sci.image.ImageArrayOperator;
-import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.FloodFill;
 import net.sci.image.morphology.MinimaAndMaxima;
 

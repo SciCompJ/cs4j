@@ -11,7 +11,7 @@ import net.sci.array.scalar.Float32Array2D;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.geom.geom2d.MultiPoint2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.image.data.Connectivity2D;
+import net.sci.image.Connectivity2D;
 
 /**
  * @author dlegland

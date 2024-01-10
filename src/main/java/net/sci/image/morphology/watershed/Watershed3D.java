@@ -7,8 +7,8 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.ScalarArray3D;
+import net.sci.image.Connectivity3D;
 import net.sci.image.binary.BinaryImages;
-import net.sci.image.data.Connectivity3D;
 import net.sci.image.morphology.MinimaAndMaxima;
 import net.sci.image.morphology.extrema.RegionalExtrema3D;
 

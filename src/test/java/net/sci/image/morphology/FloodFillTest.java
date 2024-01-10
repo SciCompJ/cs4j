@@ -12,7 +12,7 @@ import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
-import net.sci.image.data.Connectivity3D;
+import net.sci.image.Connectivity3D;
 
 /**
  * @author dlegland

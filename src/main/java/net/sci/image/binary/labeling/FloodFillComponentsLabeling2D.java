@@ -15,10 +15,10 @@ import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt16Array2D;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
+import net.sci.image.Connectivity2D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayOperator;
 import net.sci.image.ImageType;
-import net.sci.image.data.Connectivity2D;
 import net.sci.image.morphology.FloodFill;
 
 /**

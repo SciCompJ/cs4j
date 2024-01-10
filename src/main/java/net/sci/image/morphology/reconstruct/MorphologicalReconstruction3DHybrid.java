@@ -8,7 +8,7 @@ import static java.lang.Math.min;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.data.Connectivity3D;
+import net.sci.image.Connectivity3D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 
 import java.util.ArrayDeque;

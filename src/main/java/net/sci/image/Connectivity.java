@@ -1,4 +1,4 @@
-package net.sci.image.data;
+package net.sci.image;
 
 import java.util.Collection;
 

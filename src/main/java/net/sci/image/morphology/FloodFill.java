@@ -13,8 +13,8 @@ import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
-import net.sci.image.data.Connectivity2D;
-import net.sci.image.data.Connectivity3D;
+import net.sci.image.Connectivity2D;
+import net.sci.image.Connectivity3D;
 
 /**
  * <p>
