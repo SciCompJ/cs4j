@@ -13,10 +13,10 @@ public interface Connectivity extends Dimensional
      *            the position of the pixel/voxel
      * @return the list of neighbors of specified pixel/voxel
      */
-    public Collection<int[]> getNeighbors(int[] pos);
+    public Collection<int[]> neighbors(int[] pos);
     
     /**
      * @return the list of offsets computed relative to the center pixel.
      */
-    public Collection<int[]> getOffsets();
+    public Collection<int[]> offsets();
 }

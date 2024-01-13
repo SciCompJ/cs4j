@@ -92,7 +92,7 @@ public class MarkerBasedWatershed2D
             int y = pixelRecord.y;
 
             // Iterate over neighbors of current pixel
-            for (int[] pos : connectivity.getNeighbors(x, y))
+            for (int[] pos : connectivity.neighbors(x, y))
             {                                       
                 // Look in neighborhood for labeled pixels with
                 // smaller or equal original value
@@ -170,7 +170,7 @@ public class MarkerBasedWatershed2D
                 if (label > 0)
                 {
                     // Iterate over neighbors of current pixel
-                    for (int[] pos : connectivity.getNeighbors(x, y))
+                    for (int[] pos : connectivity.neighbors(x, y))
                     {
                         // coordinates of neighbor pixel
                         int x2 = pos[0];

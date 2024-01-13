@@ -95,7 +95,7 @@ public class MarkerBasedWatershed3D
             int z = voxel.z;
             
             // Iterate over neighbors of current pixel
-            for (int[] pos : connectivity.getNeighbors(x, y, z))
+            for (int[] pos : connectivity.neighbors(x, y, z))
             {                                       
                 // Look in neighborhood for labeled pixels with
                 // smaller or equal original value
@@ -177,7 +177,7 @@ public class MarkerBasedWatershed3D
                     if (label > 0)
                     {
                         // Iterate over neighbors of current voxel
-                        for (int[] pos : connectivity.getNeighbors(x, y, z))
+                        for (int[] pos : connectivity.neighbors(x, y, z))
                         {
                             // coordinates of neighbor voxel
                             int x2 = pos[0];
