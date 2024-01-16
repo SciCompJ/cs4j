@@ -13,6 +13,14 @@ package net.sci.array.scalar;
 public class Float32 extends Scalar<Float32>
 {
     // =============================================================
+    // Public constants
+    
+    public final static Float32 ONE = new Float32(1.0f);
+    
+    public final static Float32 ZERO = new Float32(0.0f);
+    
+    
+    // =============================================================
     // Class member
     
     float value;
@@ -72,7 +80,47 @@ public class Float32 extends Scalar<Float32>
         return new Float32((float) v);
     }
     
+
+    // =============================================================
+    // Implementation of the Numeric interface
     
+    @Override
+    public Float32 one()
+    {
+        return ONE;
+    }
+
+    @Override
+    public Float32 zero()
+    {
+        return ZERO;
+    }
+
+    @Override
+    public Float32 plus(Float32 other)
+    {
+        return new Float32(this.value + other.value);
+    }
+
+    @Override
+    public Float32 minus(Float32 other)
+    {
+        return new Float32(this.value - other.value);
+    }
+
+    @Override
+    public Float32 times(double k)
+    {
+        return new Float32((float) (this.value * k));
+    }
+
+    @Override
+    public Float32 divideBy(double k)
+    {
+        return new Float32((float) (this.value / k));
+    }    
+    
+
     // =============================================================
     // Override Object methods
 

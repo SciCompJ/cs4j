@@ -27,7 +27,17 @@ public class Int16 extends Int<Int16>
      */
     public final static int MIN_VALUE = Short.MIN_VALUE;
     
-    
+    /**
+     * The INT16 value that corresponds to one.
+     */
+    public final static Int16 ONE = new Int16(1);
+
+    /**
+     * The INT16 value that corresponds to zero.
+     */
+    public final static Int16 ZERO = new Int16(0);
+
+
     // =============================================================
     // Static methods
 
@@ -103,6 +113,46 @@ public class Int16 extends Int<Int16>
     public Int16 fromValue(double v)
     {
         return new Int16(convert(v));
+    }
+    
+
+    // =============================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public Int16 one()
+    {
+        return ONE;
+    }
+
+    @Override
+    public Int16 zero()
+    {
+        return ZERO;
+    }
+
+    @Override
+    public Int16 plus(Int16 other)
+    {
+        return new Int16(this.value + other.value);
+    }
+
+    @Override
+    public Int16 minus(Int16 other)
+    {
+        return new Int16(this.value - other.value);
+    }
+
+    @Override
+    public Int16 times(double k)
+    {
+        return new Int16(Int16.convert(this.value * k));
+    }
+
+    @Override
+    public Int16 divideBy(double k)
+    {
+        return new Int16(Int16.convert(this.value / k));
     }
     
 

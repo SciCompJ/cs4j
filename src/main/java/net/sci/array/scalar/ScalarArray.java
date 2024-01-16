@@ -8,7 +8,7 @@ import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
-import net.sci.array.NumericArray;
+import net.sci.array.numeric.NumericArray;
 
 /**
  * Specialization of the Array interface that contains Scalar values.

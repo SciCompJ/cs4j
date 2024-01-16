@@ -3,6 +3,8 @@
  */
 package net.sci.array.scalar;
 
+import net.sci.array.numeric.Numeric;
+
 /**
  * Top-level definition of scalar value. Can represent any double or integer
  * value.
@@ -12,7 +14,7 @@ package net.sci.array.scalar;
  *
  * @author dlegland
  */
-public abstract class Scalar<S extends Scalar<S>>
+public abstract class Scalar<S extends Scalar<S>> implements Numeric<S>
 {
     /**
      * Returns the value of this scalar element as a double.

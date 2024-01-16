@@ -23,4 +23,73 @@ public class UInt16Test
         assertEquals(0, data.getInt());
     }
 
+    /**
+     * Test method for {@link net.sci.array.scalar.UInt16#plus(net.sci.array.scalar.UInt16)}.
+     */
+    @Test
+    public final void testPlus()
+    {
+        UInt16 v1 = new UInt16(30_000);
+        UInt16 v2 = new UInt16(40_000);
+        
+        UInt16 res = v1.plus(v2);
+        
+        assertEquals(UInt16.MAX_VALUE, res.getInt());
+    }
+
+    /**
+     * Test method for {@link net.sci.array.scalar.UInt16#minus(net.sci.array.scalar.UInt16)}.
+     */
+    @Test
+    public final void testMinus()
+    {
+        UInt16 v1 = new UInt16(50_000);
+        UInt16 v2 = new UInt16(30_000);
+        
+        UInt16 res = v1.minus(v2);
+        
+        assertEquals(20_000, res.getInt());
+    }
+
+    /**
+     * Test method for {@link net.sci.array.scalar.UInt16#minus(net.sci.array.scalar.UInt16)}.
+     */
+    @Test
+    public final void testMinus_clamp()
+    {
+        UInt16 v1 = new UInt16(120);
+        UInt16 v2 = new UInt16(150);
+        
+        UInt16 res = v1.minus(v2);
+        
+        assertEquals(0, res.getInt());
+    }
+
+    /**
+     * Test method for {@link net.sci.array.scalar.UInt16#times(double)}.
+     */
+    @Test
+    public final void testTimes()
+    {
+        UInt16 v1 = new UInt16(50_000);
+        
+        UInt16 res = v1.times(2);
+        
+        assertEquals(UInt16.MAX_VALUE, res.getInt());
+    }
+
+    /**
+     * Test method for {@link net.sci.array.scalar.UInt16#divideBy(double)}.
+     */
+    @Test
+    public final void testDivideBy()
+    {
+        UInt16 v1 = new UInt16(40_000);
+        
+        UInt16 res = v1.divideBy(2);
+        
+        assertEquals(20_000, res.getInt());
+    }
+
+
 }

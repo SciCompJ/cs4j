@@ -1,7 +1,9 @@
 /**
  * 
  */
-package net.sci.array;
+package net.sci.array.numeric;
+
+import net.sci.array.Array;
 
 /**
  * Specialization of Array interface that supports elementary arithmetic
@@ -11,7 +13,7 @@ package net.sci.array;
  * 
  * @author dlegland
  */
-public interface NumericArray<N> extends Array<N>
+public interface NumericArray<N extends Numeric<N>> extends Array<N>
 {
     // =============================================================
     // Default methods for arithmetic on arrays

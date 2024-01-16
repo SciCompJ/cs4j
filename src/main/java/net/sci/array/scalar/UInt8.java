@@ -24,6 +24,16 @@ public class UInt8 extends Int<UInt8>
      */
     public static final int MAX_VALUE = 255;
     
+    /**
+     * The UInt8 value that corresponds to one.
+     */
+    public final static UInt8 ONE = new UInt8(1);
+
+    /**
+     * The UInt8 value that corresponds to zero.
+     */
+    public final static UInt8 ZERO = new UInt8(0);
+    
     
     // =============================================================
     // Static methods
@@ -110,6 +120,46 @@ public class UInt8 extends Int<UInt8>
     public UInt8 fromValue(double v)
     {
         return new UInt8(convert(v));
+    }
+    
+    
+    // =============================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public UInt8 one()
+    {
+        return ONE;
+    }
+
+    @Override
+    public UInt8 zero()
+    {
+        return ZERO;
+    }
+
+    @Override
+    public UInt8 plus(UInt8 other)
+    {
+        return new UInt8((this.value & 0x00FF) + (other.value & 0x00FF));
+    }
+
+    @Override
+    public UInt8 minus(UInt8 other)
+    {
+        return new UInt8((this.value & 0x00FF) - (other.value & 0x00FF));
+    }
+
+    @Override
+    public UInt8 times(double k)
+    {
+        return new UInt8((int) ((this.value & 0x00FF) * k));
+    }
+
+    @Override
+    public UInt8 divideBy(double k)
+    {
+        return new UInt8((int) ((this.value & 0x00FF) / k));
     }
     
     

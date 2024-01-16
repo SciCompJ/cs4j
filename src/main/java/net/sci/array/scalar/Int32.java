@@ -13,6 +13,20 @@ package net.sci.array.scalar;
 public class Int32 extends Int<Int32>
 {
     // =============================================================
+    // Public constants
+    
+    /**
+     * The Int32 value that corresponds to one.
+     */
+    public final static Int32 ONE = new Int32(1);
+
+    /**
+     * The Int32 value that corresponds to zero.
+     */
+    public final static Int32 ZERO = new Int32(0);
+    
+
+    // =============================================================
     // Static methods
     
     /**
@@ -71,7 +85,47 @@ public class Int32 extends Int<Int32>
         return new Int32((int) (v + 0.5));
     }
     
+
+    // =============================================================
+    // Implementation of the Numeric interface
     
+    @Override
+    public Int32 one()
+    {
+        return ONE;
+    }
+
+    @Override
+    public Int32 zero()
+    {
+        return ZERO;
+    }
+
+    @Override
+    public Int32 plus(Int32 other)
+    {
+        return new Int32(this.value + other.value);
+    }
+
+    @Override
+    public Int32 minus(Int32 other)
+    {
+        return new Int32(this.value - other.value);
+    }
+
+    @Override
+    public Int32 times(double k)
+    {
+        return new Int32((int) (this.value * k));
+    }
+
+    @Override
+    public Int32 divideBy(double k)
+    {
+        return new Int32((int) (this.value / k));
+    }
+    
+
     // =============================================================
     // Override Object methods
 

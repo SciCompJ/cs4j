@@ -111,7 +111,7 @@ public class RGB16 extends IntVector<RGB16,UInt16> implements Color
      * color.
      * 
      * @param intCode
-     *            the integer code of the RGB8 value
+     *            the integer code of the RGB16 value
      */
     public RGB16(long intCode)
     {
@@ -427,6 +427,57 @@ public class RGB16 extends IntVector<RGB16,UInt16> implements Color
     {
         return 3;
     }
+    // =============================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public RGB16 one()
+    {
+        return new RGB16(1,0,0);
+    }
+
+    @Override
+    public RGB16 zero()
+    {
+        return new RGB16(0,0,0);
+    }
+
+    @Override
+    public RGB16 plus(RGB16 other)
+    {
+        int r = this.getSample(0) + other.getSample(0);
+        int g = this.getSample(1) + other.getSample(1);
+        int b = this.getSample(2) + other.getSample(2);
+        return new RGB16(r, g, b);
+    }
+
+    @Override
+    public RGB16 minus(RGB16 other)
+    {
+        int r = this.getSample(0) - other.getSample(0);
+        int g = this.getSample(1) - other.getSample(1);
+        int b = this.getSample(2) - other.getSample(2);
+        return new RGB16(r, g, b);
+    }
+
+    @Override
+    public RGB16 times(double k)
+    {
+        int r = (int) (this.getSample(0) * k);
+        int g = (int) (this.getSample(1) * k);
+        int b = (int) (this.getSample(2) * k);
+        return new RGB16(r, g, b);
+    }
+
+    @Override
+    public RGB16 divideBy(double k)
+    {
+        int r = (int) (this.getSample(0) / k);
+        int g = (int) (this.getSample(1) / k);
+        int b = (int) (this.getSample(2) / k);
+        return new RGB16(r, g, b);
+    }    
+    
     
     // =============================================================
     // Override Object methods

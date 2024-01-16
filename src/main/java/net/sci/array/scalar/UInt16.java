@@ -25,8 +25,18 @@ public class UInt16 extends Int<UInt16>
      * corresponding to 2^16-1.
      */
     public final static int MAX_VALUE = 0x0FFFF;
-    
-    
+
+    /**
+     * The UInt16 value that corresponds to one.
+     */
+    public final static UInt16 ONE = new UInt16(1);
+
+    /**
+     * The UInt16 value that corresponds to zero.
+     */
+    public final static UInt16 ZERO = new UInt16(0);
+
+
     // =============================================================
     // Static methods
     
@@ -104,6 +114,46 @@ public class UInt16 extends Int<UInt16>
         return new UInt16(convert(v));
     }
 
+
+    // =============================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public UInt16 one()
+    {
+        return ONE;
+    }
+
+    @Override
+    public UInt16 zero()
+    {
+        return ZERO;
+    }
+
+    @Override
+    public UInt16 plus(UInt16 other)
+    {
+        return new UInt16((this.value & 0x00FFFF) + (other.value & 0x00FFFF));
+    }
+
+    @Override
+    public UInt16 minus(UInt16 other)
+    {
+        return new UInt16((this.value & 0x00FFFF) - (other.value & 0x00FFFF));
+    }
+
+    @Override
+    public UInt16 times(double k)
+    {
+        return new UInt16((int) ((this.value & 0x00FFFF) * k));
+    }
+
+    @Override
+    public UInt16 divideBy(double k)
+    {
+        return new UInt16((int) ((this.value & 0x00FFFF) / k));
+    }    
+    
 
     // =============================================================
     // Override Object methods

@@ -13,6 +13,14 @@ package net.sci.array.scalar;
 public class Float64 extends Scalar<Float64>
 {
     // =============================================================
+    // Public constants
+    
+    public final static Float64 ONE = new Float64(1.0);
+    
+    public final static Float64 ZERO = new Float64(0.0);
+    
+    
+    // =============================================================
     // Class member
 
     double value;
@@ -60,6 +68,46 @@ public class Float64 extends Scalar<Float64>
     {
         return new Float64(v);
     }
+    
+
+    // =============================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public Float64 one()
+    {
+        return ONE;
+    }
+
+    @Override
+    public Float64 zero()
+    {
+        return ZERO;
+    }
+
+    @Override
+    public Float64 plus(Float64 other)
+    {
+        return new Float64(this.value + other.value);
+    }
+
+    @Override
+    public Float64 minus(Float64 other)
+    {
+        return new Float64(this.value - other.value);
+    }
+
+    @Override
+    public Float64 times(double k)
+    {
+        return new Float64(this.value * k);
+    }
+
+    @Override
+    public Float64 divideBy(double k)
+    {
+        return new Float64(this.value / k);
+    }    
     
 
     // =============================================================

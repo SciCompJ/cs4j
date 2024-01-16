@@ -9,7 +9,7 @@ import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
-import net.sci.array.NumericArray;
+import net.sci.array.numeric.NumericArray;
 import net.sci.array.scalar.Float32Array;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;

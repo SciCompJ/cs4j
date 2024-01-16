@@ -3,6 +3,7 @@
  */
 package net.sci.array.vector;
 
+import net.sci.array.numeric.Numeric;
 import net.sci.array.scalar.Scalar;
 
 /**
@@ -11,7 +12,7 @@ import net.sci.array.scalar.Scalar;
  * @author dlegland
  *
  */
-public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>>
+public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>> implements Numeric<V>
 {
     // =============================================================
     // Static methods

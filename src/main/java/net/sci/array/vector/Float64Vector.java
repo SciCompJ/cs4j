@@ -40,7 +40,7 @@ public class Float64Vector extends Vector<Float64Vector, Float64>
     
     // =============================================================
     // Implementation of Vector interface
-    
+
     @Override
     public int size()
     {
@@ -86,6 +86,60 @@ public class Float64Vector extends Vector<Float64Vector, Float64>
         return new Float64(this.data[i]);
     }
     
+    // =============================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public Float64Vector one()
+    {
+        double[] vals = new double[this.data.length];
+        vals[0] = 1;
+        return new Float64Vector(vals);
+    }
+
+    @Override
+    public Float64Vector zero()
+    {
+        double[] vals = new double[this.data.length];
+        return new Float64Vector(vals);
+    }
+
+    @Override
+    public Float64Vector plus(Float64Vector other)
+    {
+        double[] vals = new double[this.data.length];
+        for (int i = 0; i < this.data.length; i++)
+            vals[i] = this.data[i] + other.data[i];
+        return new Float64Vector(vals);
+    }
+    
+    @Override
+    public Float64Vector minus(Float64Vector other)
+    {
+        double[] vals = new double[this.data.length];
+        for (int i = 0; i < this.data.length; i++)
+            vals[i] = this.data[i] - other.data[i];
+        return new Float64Vector(vals);
+    }
+
+    @Override
+    public Float64Vector times(double k)
+    {
+        double[] vals = new double[this.data.length];
+        for (int i = 0; i < this.data.length; i++)
+            vals[i] = this.data[i] * k;
+        return new Float64Vector(vals);
+    }
+
+    @Override
+    public Float64Vector divideBy(double k)
+    {
+        double[] vals = new double[this.data.length];
+        for (int i = 0; i < this.data.length; i++)
+            vals[i] = this.data[i] / k;
+        return new Float64Vector(vals);
+    }    
+    
 
     // =============================================================
     // Override Object methods
@@ -108,7 +162,7 @@ public class Float64Vector extends Vector<Float64Vector, Float64>
         }
         return false;
     }
-    
+
     public int hashCode()
     {
         int code = 23;

@@ -104,7 +104,7 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
         int b = (intCode >> 16) & 0x00FF;
         return Math.max(Math.max(r, g), b);
     }
-	
+    
     /**
      * Computes the RGB8 color resulting from the merge of two colors.
      * 
@@ -142,7 +142,7 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
         int b = rgb[2] & 0x00FF;
         return b << 16 | g << 8 | r;   
     }
-	
+    
     public static final int intCode(int r, int g, int b)
     {
         return (b & 0x00FF) << 16 | (g & 0x00FF) << 8 | (r & 0x00FF);   
@@ -308,8 +308,8 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
     {
         return maxSampleFromIntCode(this.intCode);
     }
+    
 
-	
     // =============================================================
     // Extraction of color components
     
@@ -530,7 +530,59 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
     {
         return 3;
     }
+    
+    
+    // =============================================================
+    // Implementation of the Numeric interface
+    
+    public RGB8 one()
+    {
+        return new RGB8(1,0,0);
+    }
 
+    @Override
+    public RGB8 zero()
+    {
+        return new RGB8(0,0,0);
+    }
+
+    @Override
+    public RGB8 plus(RGB8 other)
+    {
+        int r = this.getSample(0) + other.getSample(0);
+        int g = this.getSample(1) + other.getSample(1);
+        int b = this.getSample(2) + other.getSample(2);
+        return new RGB8(r, g, b);
+    }
+
+    @Override
+    public RGB8 minus(RGB8 other)
+    {
+        int r = this.getSample(0) - other.getSample(0);
+        int g = this.getSample(1) - other.getSample(1);
+        int b = this.getSample(2) - other.getSample(2);
+        return new RGB8(r, g, b);
+    }
+
+    @Override
+    public RGB8 times(double k)
+    {
+        int r = (int) (this.getSample(0) * k);
+        int g = (int) (this.getSample(1) * k);
+        int b = (int) (this.getSample(2) * k);
+        return new RGB8(r, g, b);
+    }
+
+    @Override
+    public RGB8 divideBy(double k)
+    {
+        int r = (int) (this.getSample(0) / k);
+        int g = (int) (this.getSample(1) / k);
+        int b = (int) (this.getSample(2) / k);
+        return new RGB8(r, g, b);
+    }
+    
+    
     // =============================================================
     // Override Object methods
 

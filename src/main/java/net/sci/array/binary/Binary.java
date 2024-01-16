@@ -95,7 +95,46 @@ public class Binary extends Int<Binary>
         return v > 0.0 ? TRUE : FALSE;
     }
     
+    // =============================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public Binary one()
+    {
+        return TRUE;
+    }
 
+    @Override
+    public Binary zero()
+    {
+        return FALSE;
+    }
+
+    @Override
+    public Binary plus(Binary other)
+    {
+        return new Binary((this.state ? 1 : 0) + (other.state ? 1 : 0) > 0);
+    }
+
+    @Override
+    public Binary minus(Binary other)
+    {
+        return new Binary((this.state ? 1 : 0) - (other.state ? 1 : 0) > 0);
+    }
+
+    @Override
+    public Binary times(double k)
+    {
+        return new Binary((this.state ? 1 : 0) * k > 0);
+    }
+
+    @Override
+    public Binary divideBy(double k)
+    {
+        return new Binary((this.state ? 1 : 0) / k > 0);
+    }
+    
+    
     // =============================================================
     // Override Object methods
 

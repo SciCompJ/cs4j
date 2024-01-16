@@ -125,6 +125,61 @@ public class Float32Vector extends Vector<Float32Vector, Float32>
         return new Float32(this.data[c]);
     }
     
+    
+    // =============================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public Float32Vector one()
+    {
+        float[] vals = new float[this.data.length];
+        vals[0] = 1;
+        return new Float32Vector(vals);
+    }
+
+    @Override
+    public Float32Vector zero()
+    {
+        float[] vals = new float[this.data.length];
+        return new Float32Vector(vals);
+    }
+
+    @Override
+    public Float32Vector plus(Float32Vector other)
+    {
+        float[] vals = new float[this.data.length];
+        for (int i = 0; i < this.data.length; i++)
+            vals[i] = this.data[i] + other.data[i];
+        return new Float32Vector(vals);
+    }
+
+    @Override
+    public Float32Vector minus(Float32Vector other)
+    {
+        float[] vals = new float[this.data.length];
+        for (int i = 0; i < this.data.length; i++)
+            vals[i] = this.data[i] - other.data[i];
+        return new Float32Vector(vals);
+    }
+
+    @Override
+    public Float32Vector times(double k)
+    {
+        float[] vals = new float[this.data.length];
+        for (int i = 0; i < this.data.length; i++)
+            vals[i] = (float) (this.data[i] * k);
+        return new Float32Vector(vals);
+    }
+
+    @Override
+    public Float32Vector divideBy(double k)
+    {
+        float[] vals = new float[this.data.length];
+        for (int i = 0; i < this.data.length; i++)
+            vals[i] = (float) (this.data[i] / k);
+        return new Float32Vector(vals);
+    }    
+    
 
     // =============================================================
     // Override Object methods
@@ -147,7 +202,7 @@ public class Float32Vector extends Vector<Float32Vector, Float32>
         }
         return false;
     }
-
+    
     public int hashCode()
     {
         int code = 23;
