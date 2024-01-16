@@ -12,7 +12,7 @@ package net.sci.array.scalar;
 public class UInt8 extends Int<UInt8>
 {
     // =============================================================
-    // Constants
+    // Public constants
     
     /**
      * The minimum value that can be stored in a UInt8 instance, equal to 0.
@@ -42,24 +42,24 @@ public class UInt8 extends Int<UInt8>
     }
 
     /**
-	 * Forces the input integer value to stay within the [0;255] interval. 
-	 * 
-	 * @param value
-	 *            an integer value
-	 * @return the closest integer value between 0 and 255.
-	 */
-	public final static int clamp(int value)
-	{
-		return Math.min(Math.max(0, value), 255);
-	}
-	
-	
+     * Forces the input integer value to stay within the [0;255] interval.
+     * 
+     * @param value
+     *            an integer value
+     * @return the closest integer value between 0 and 255.
+     */
+    public final static int clamp(int value)
+    {
+        return Math.min(Math.max(0, value), 255);
+    }
+    
+
     // =============================================================
     // Class variables
+
+    byte value;
     
-	byte value;
-	
-	
+
     // =============================================================
     // Constructors
     
@@ -71,7 +71,7 @@ public class UInt8 extends Int<UInt8>
      */
     public UInt8(int value)
     {
-        this.value = (byte) value;
+        this.value = (byte) clamp(value);
     }
     
     /**
@@ -89,55 +89,53 @@ public class UInt8 extends Int<UInt8>
     // =============================================================
     // Methods
     
-	public byte getByte()
-	{
-		return value;
-	}
+    public byte getByte()
+    {
+        return value;
+    }
 
-	@Override
-	public int getInt()
-	{
-		return value & 0x00FF;
-	}
-	
-	@Override
-	public double getValue()
-	{
-		return value & 0x00FF;
-	}
-	
+    @Override
+    public int getInt()
+    {
+        return value & 0x00FF;
+    }
+
+    @Override
+    public double getValue()
+    {
+        return value & 0x00FF;
+    }
+
     @Override
     public UInt8 fromValue(double v)
     {
         return new UInt8(convert(v));
     }
     
+    
+    // =============================================================
+    // Override Object methods
 
-	// =============================================================
-	// Override Object methods
-	
-	public boolean equals(Object that)
-	{
-		// check for self-comparison
-		if (this == that)
-			return true;
+    public boolean equals(Object that)
+    {
+        // check for self-comparison
+        if (this == that) return true;
 
-		// check for class
-		if (!(that instanceof UInt8))
-			return false;
+        // check for class
+        if (!(that instanceof UInt8)) return false;
 
-		// cast to native object is now safe
-		UInt8 thatInt = (UInt8) that;
+        // cast to native object is now safe
+        UInt8 thatInt = (UInt8) that;
 
-	    // now a proper field-by-field evaluation can be made
-	    return this.value == thatInt.value;
-	}
-	
-	public int hashCode()
-	{
-		return java.lang.Byte.hashCode(this.value);
-	}
-	
+        // now a proper field-by-field evaluation can be made
+        return this.value == thatInt.value;
+    }
+
+    public int hashCode()
+    {
+        return java.lang.Byte.hashCode(this.value);
+    }
+
     @Override
     public String toString()
     {

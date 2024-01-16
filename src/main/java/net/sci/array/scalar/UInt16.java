@@ -13,18 +13,20 @@ public class UInt16 extends Int<UInt16>
 {
     // =============================================================
     // Constants
-    
+
     /**
-     * The minimum value that can be stored in a UInt16 instance, corresponding to 0.
+     * The minimum integer value that can be stored in a UInt16 instance,
+     * corresponding to 0.
      */
     public final static int MIN_VALUE = 0;
 
-	/**
-	 * The maximum value that can be stored in a UInt16 instance, corresponding to 2^16-1.
-	 */
-	public final static int MAX_VALUE = 0x0FFFF;
-
-	
+    /**
+     * The maximum integer value that can be stored in a UInt16 instance,
+     * corresponding to 2^16-1.
+     */
+    public final static int MAX_VALUE = 0x0FFFF;
+    
+    
     // =============================================================
     // Static methods
     
@@ -41,60 +43,60 @@ public class UInt16 extends Int<UInt16>
         return (int) Math.min(Math.max(value + 0.5, MIN_VALUE), MAX_VALUE);
     }
 
-	/**
-	 * Computes the integer value between 0 and MAX_VALUE closest to the specified
-	 * double value.
-	 * 
-	 * @param value
-	 *            a double value
-	 * @return the closest corresponding integer between 0 and MAX_VALUE
-	 */
-	public final static int clamp(int value)
-	{
-		return (int) Math.min(Math.max(0, value), MAX_VALUE);
-	}
+    /**
+     * Computes the integer value between 0 and MAX_VALUE closest to the
+     * specified double value.
+     * 
+     * @param value
+     *            a double value
+     * @return the closest corresponding integer between 0 and MAX_VALUE
+     */
+    public final static int clamp(int value)
+    {
+        return (int) Math.min(Math.max(0, value), MAX_VALUE);
+    }
+    
 
-
-	// =============================================================
+    // =============================================================
     // Class members
     
-	short value;
-	
+    short value;
+    
 
-	// =============================================================
+    // =============================================================
     // Constructor
     
-	/**
-	 * Creates a new instance of UInt16 using the specified value.
-	 * 
-	 * @param value
-	 *            the value stored within this UInt16
-	 */
-	public UInt16(int value)
-	{
-		this.value =  (short) value;
-	}
-	
-
-	// =============================================================
-    // Class methods
+    /**
+     * Creates a new instance of UInt16 using the specified value.
+     * 
+     * @param value
+     *            the value stored within this UInt16
+     */
+    public UInt16(int value)
+    {
+        this.value = (short) clamp(value);
+    }
     
-	public short getShort()
-	{
-		return value;
-	}
 
-	@Override
-	public int getInt()
-	{
-		return value & 0x00FFFF;
-	}
-	
-	@Override
-	public double getValue()
-	{
-		return value & 0x00FFFF;
-	}
+    // =============================================================
+    // Class methods
+
+    public short getShort()
+    {
+        return value;
+    }
+
+    @Override
+    public int getInt()
+    {
+        return value & 0x00FFFF;
+    }
+
+    @Override
+    public double getValue()
+    {
+        return value & 0x00FFFF;
+    }
 
     @Override
     public UInt16 fromValue(double v)
@@ -103,31 +105,29 @@ public class UInt16 extends Int<UInt16>
     }
 
 
-	// =============================================================
-	// Override Object methods
-	
-	public boolean equals(Object that)
-	{
-		// check for self-comparison
-		if (this == that)
-			return true;
+    // =============================================================
+    // Override Object methods
 
-		// check for class
-		if (!(that instanceof UInt16))
-			return false;
+    public boolean equals(Object that)
+    {
+        // check for self-comparison
+        if (this == that) return true;
 
-		// cast to native object is now safe
-		UInt16 thatInt = (UInt16) that;
+        // check for class
+        if (!(that instanceof UInt16)) return false;
 
-	    // now a proper field-by-field evaluation can be made
-	    return this.value == thatInt.value;
-	}
-	
-	public int hashCode()
-	{
-		return java.lang.Short.hashCode(this.value);
-	}
-    
+        // cast to native object is now safe
+        UInt16 thatInt = (UInt16) that;
+
+        // now a proper field-by-field evaluation can be made
+        return this.value == thatInt.value;
+    }
+
+    public int hashCode()
+    {
+        return java.lang.Short.hashCode(this.value);
+    }
+
     @Override
     public String toString()
     {
