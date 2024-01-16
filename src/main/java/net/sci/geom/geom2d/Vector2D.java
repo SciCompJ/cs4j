@@ -5,8 +5,9 @@ import static java.lang.Math.abs;
 import java.util.Locale;
 
 import net.sci.array.Dimensional;
+import net.sci.array.numeric.Numeric;
 
-public class Vector2D implements Dimensional
+public class Vector2D implements Dimensional, Numeric<Vector2D>
 {
     // ===================================================================
     // constants
@@ -184,56 +185,6 @@ public class Vector2D implements Dimensional
     }
 
     /**
-     * Returns the result of the given transformation applied to this vector.
-     * 
-     * @param trans
-     *            the transformation to apply
-     * @return the transformed vector
-     */
-    public Vector2D transform(AffineTransform2D trans)
-    {
-        return trans.transform(this);
-    }
-    
-	/**
-	 * Returns the sum of current vector with vector given as parameter. Inner
-	 * fields are not modified.
-	 * 
-	 * @param v
-	 *            the vector to add
-	 * @return the result of the addition of this vector with <code>v</code>
-	 */
-	public Vector2D plus(Vector2D v)
-	{
-		return new Vector2D(this.x + v.x, this.y + v.y);
-	}
-
-	/**
-	 * Returns the subtraction of current vector with vector given as parameter.
-	 * Inner fields are not modified.
-	 * 
-	 * @param v
-	 *            the vector to subtract
-	 * @return the result of the subtraction of this vector with <code>v</code>
-	 */
-	public Vector2D minus(Vector2D v)
-	{
-		return new Vector2D(this.x - v.x, this.y - v.y);
-	}
-
-	/**
-	 * Multiplies the vector by a scalar amount. Inner fields are not
-	 * 
-	 * @param k
-	 *            the scale factor
-	 * @return the scaled vector
-	 */
-	public Vector2D times(double k)
-	{
-		return new Vector2D(this.x * k, this.y * k);
-	}
-
-	/**
 	 * Returns the opposite vector v2 of this, such that the sum of this and v2
 	 * equals the null vector.
 	 * 
@@ -306,17 +257,9 @@ public class Vector2D implements Dimensional
 		return x * v.y - v.x * y;
 	}
 
-    public boolean almostEquals(Vector2D vect, double eps)
-    {
-        if (Math.abs(vect.x - x) > eps) return false;
-        if (Math.abs(vect.y - y) > eps) return false;
-        return true;
-    }
-    
-    
     // ===================================================================
     // Accessors
-
+    
     /**
      * @return the x coordinate of this vector
      */
@@ -333,6 +276,95 @@ public class Vector2D implements Dimensional
         return y;
     }
 
+    // ===================================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public Vector2D one()
+    {
+        return new Vector2D(1, 0);
+    }
+
+    @Override
+    public Vector2D zero()
+    {
+        return new Vector2D(0, 0);
+    }
+
+    /**
+     * Returns the sum of current vector with vector given as parameter. Inner
+     * fields are not modified.
+     * 
+     * @param v
+     *            the vector to add
+     * @return the result of the addition of this vector with <code>v</code>
+     */
+    public Vector2D plus(Vector2D v)
+    {
+        return new Vector2D(this.x + v.x, this.y + v.y);
+    }
+
+    /**
+     * Returns the subtraction of current vector with vector given as parameter.
+     * Inner fields are not modified.
+     * 
+     * @param v
+     *            the vector to subtract
+     * @return the result of the subtraction of this vector with <code>v</code>
+     */
+    public Vector2D minus(Vector2D v)
+    {
+        return new Vector2D(this.x - v.x, this.y - v.y);
+    }
+
+    /**
+     * Multiplies the vector by a scalar amount. Inner fields are not
+     * 
+     * @param k
+     *            the scale factor
+     * @return the scaled vector
+     */
+    public Vector2D times(double k)
+    {
+        return new Vector2D(this.x * k, this.y * k);
+    }
+
+    /**
+     * Divides the vector by a scalar amount. Inner fields are not
+     * 
+     * @param k
+     *            the scale factor
+     * @return the scaled vector
+     */
+    @Override
+    public Vector2D divideBy(double k)
+    {
+        return new Vector2D(this.x / k, this.y / k);
+    }
+
+    // ===================================================================
+    // Geometry methods
+    
+    /**
+     * Returns the result of the given transformation applied to this vector.
+     * 
+     * @param trans
+     *            the transformation to apply
+     * @return the transformed vector
+     */
+    public Vector2D transform(AffineTransform2D trans)
+    {
+        return trans.transform(this);
+    }
+
+    public boolean almostEquals(Vector2D vect, double eps)
+    {
+        if (Math.abs(vect.x - x) > eps) return false;
+        if (Math.abs(vect.y - y) > eps) return false;
+        return true;
+    }
+    
+    
     public Vector2D duplicate()
     {
         return new Vector2D(x, y);

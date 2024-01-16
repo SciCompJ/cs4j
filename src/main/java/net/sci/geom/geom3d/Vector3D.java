@@ -8,12 +8,13 @@ import static java.lang.Math.abs;
 import java.util.Locale;
 
 import net.sci.array.Dimensional;
+import net.sci.array.numeric.Numeric;
 
 /**
  * @author dlegland
  *
  */
-public class Vector3D implements Dimensional
+public class Vector3D implements Dimensional, Numeric<Vector3D>
 {
     // ===================================================================
     // Private constants
@@ -244,44 +245,6 @@ public class Vector3D implements Dimensional
 	}
 
 	/**
-     * Returns the sum of current vector with vector given as parameter. Inner
-     * fields are not modified.
-     * 
-     * @param v
-     *            the vector to add
-     * @return the result of the addition of the two vectors
-     */
-	public Vector3D plus(Vector3D v)
-	{
-		return new Vector3D(this.x + v.x, this.y + v.y, this.z + v.z);
-	}
-
-	/**
-	 * Returns the subtraction of current vector with vector given as parameter.
-	 * Inner fields are not modified.
-     * 
-     * @param v
-     *            the vector to subtract
-     * @return the result of the subtraction of the two vectors
-	 */
-	public Vector3D minus(Vector3D v)
-	{
-		return new Vector3D(this.x - v.x, this.y - v.y, this.z - v.z);
-	}
-
-	/**
-	 * Multiplies the vector by a scalar amount. Inner fields are not
-	 * 
-	 * @param k
-	 *            the scale factor
-	 * @return the scaled vector
-	 */
-	public Vector3D times(double k)
-	{
-		return new Vector3D(this.x * k, this.y * k, this.z * k);
-	}
-
-	/**
 	 * Returns the opposite vector v2 of this, such that the sum of this and v2
 	 * equals the null vector.
 	 * 
@@ -331,30 +294,102 @@ public class Vector3D implements Dimensional
      *            the vector to process
      * @return the dot product of the two vectors
      */
-	public double dotProduct(Vector3D v)
-	{
-		return x * v.x + y * v.y + z * v.z;
-	}
+    public double dotProduct(Vector3D v)
+    {
+        return x * v.x + y * v.y + z * v.z;
+    }
 
     /**
-     * Computes the cross product with vector <code>v</code>. 
+     * Computes the cross product with vector <code>v</code>.
+     * 
      * @param v
      *            the vector to process
      * @return the cross product of the two vectors
      */
-	public Vector3D crossProduct(Vector3D v)
-	{
-		return new Vector3D(
-				this.y * v.z - this.z * v.y, 
-				this.z * v.x - this.x * v.z, 
-				this.x * v.y - this.y * v.x);
-	}
-	
-	public Vector3D transform(AffineTransform3D trans)
-	{
-	    return trans.transform(this);
-	}
-	
+    public Vector3D crossProduct(Vector3D v)
+    {
+        return new Vector3D(
+                this.y * v.z - this.z * v.y, 
+                this.z * v.x - this.x * v.z, 
+                this.x * v.y - this.y * v.x);
+    }
+
+    
+    // ===================================================================
+    // Implementation of the Numeric interface
+    
+    @Override
+    public Vector3D one()
+    {
+        return E_1;
+    }
+
+    @Override
+    public Vector3D zero()
+    {
+        return new Vector3D(0, 0, 0);
+    }
+
+    /**
+     * Returns the sum of current vector with vector given as parameter. Inner
+     * fields are not modified.
+     * 
+     * @param v
+     *            the vector to add
+     * @return the result of the addition of the two vectors
+     */
+    public Vector3D plus(Vector3D v)
+    {
+        return new Vector3D(this.x + v.x, this.y + v.y, this.z + v.z);
+    }
+
+    /**
+     * Returns the subtraction of current vector with vector given as parameter.
+     * Inner fields are not modified.
+     * 
+     * @param v
+     *            the vector to subtract
+     * @return the result of the subtraction of the two vectors
+     */
+    public Vector3D minus(Vector3D v)
+    {
+        return new Vector3D(this.x - v.x, this.y - v.y, this.z - v.z);
+    }
+
+    /**
+     * Multiplies the vector by a scalar amount. Inner fields are not
+     * 
+     * @param k
+     *            the scale factor
+     * @return the scaled vector
+     */
+    public Vector3D times(double k)
+    {
+        return new Vector3D(this.x * k, this.y * k, this.z * k);
+    }
+
+    /**
+     * Divides the vector by a scalar amount. Inner fields are not
+     * 
+     * @param k
+     *            the scale factor
+     * @return the scaled vector
+     */
+    @Override
+    public Vector3D divideBy(double k)
+    {
+        return new Vector3D(this.x / k, this.y / k, this.z / k);
+    }
+    
+
+    // ===================================================================
+    // General geometry methods
+
+    public Vector3D transform(AffineTransform3D trans)
+    {
+        return trans.transform(this);
+    }
+
     public Vector3D duplicate()
     {
         return new Vector3D(x, y, z);
