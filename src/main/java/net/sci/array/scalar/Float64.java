@@ -69,15 +69,13 @@ public class Float64 extends Scalar<Float64>
     {
         // check for self-comparison
         if (this == that) return true;
-
-        // check for class
-        if (!(that instanceof Float64)) return false;
-
-        // cast to native object is now safe
-        Float64 thatDouble = (Float64) that;
-
-        // now a proper field-by-field evaluation can be made
-        return this.value == thatDouble.value;
+        
+        // Check class internal values, using pattern matching
+        if (that instanceof Float64 thatFloat)
+        {
+            return this.value == thatFloat.value;
+        }
+        return false;
     }
 
     public int hashCode()

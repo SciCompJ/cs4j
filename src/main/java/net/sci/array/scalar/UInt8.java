@@ -121,14 +121,12 @@ public class UInt8 extends Int<UInt8>
         // check for self-comparison
         if (this == that) return true;
 
-        // check for class
-        if (!(that instanceof UInt8)) return false;
-
-        // cast to native object is now safe
-        UInt8 thatInt = (UInt8) that;
-
-        // now a proper field-by-field evaluation can be made
-        return this.value == thatInt.value;
+        // Check class internal values, using pattern matching
+        if (that instanceof UInt8 thatInt)
+        {
+            return this.value == thatInt.value;
+        }
+        return false;
     }
 
     public int hashCode()

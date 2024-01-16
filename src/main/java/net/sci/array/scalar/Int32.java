@@ -79,15 +79,13 @@ public class Int32 extends Int<Int32>
     {
         // check for self-comparison
         if (this == that) return true;
-
-        // check for class
-        if (!(that instanceof Int32)) return false;
-
-        // cast to native object is now safe
-        Int32 thatInt = (Int32) that;
-
-        // now a proper field-by-field evaluation can be made
-        return this.value == thatInt.value;
+        
+        // Check class internal values, using pattern matching
+        if (that instanceof Int32 thatInt)
+        {
+            return this.value == thatInt.value;
+        }
+        return false;
     }
 
     public int hashCode()

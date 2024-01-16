@@ -17,66 +17,66 @@ import net.sci.array.scalar.Float32;
  */
 public class Float32Vector extends Vector<Float32Vector, Float32>
 {
-	// =============================================================
-	// Class variables
-	
-	float[] data;
-	
-	
-	// =============================================================
-	// Constructors
-	
+    // =============================================================
+    // Class variables
+
+    float[] data;
+    
+
+    // =============================================================
+    // Constructors
+
     public Float32Vector(int nChannels)
     {
         this.data = new float[nChannels];
     }
 
     public Float32Vector(float[] array)
-	{
-		this.data = new float[array.length];
-		System.arraycopy(array, 0, this.data, 0, array.length);
-	}
-	
-	public Float32Vector(double[] array)
-	{
-		this.data = new float[array.length];
-		for (int c = 0; c < array.length; c++)
-		{
-			this.data[c] = (float) array[c];
-		}
-	}
-	
+    {
+        this.data = new float[array.length];
+        System.arraycopy(array, 0, this.data, 0, array.length);
+    }
 
-	// =============================================================
-	// New methods
-	
-	/**
-	 * @return a defensive copy of the inner float data.
-	 */
-	public float[] getFloats()
-	{
-		float[] res = new float[this.data.length];
-		System.arraycopy(this.data, 0, res, 0, this.data.length);
-		return res;
-	}
-	
-	/**
-	 * Returns the specified component of the float vector. No bound checking is
-	 * performed.
-	 * 
-	 * @param c
-	 *            the index of the component
-	 * @return the specified component of the vector.
-	 */
-	public float getFloat(int c)
-	{
-		return this.data[c];
-	}
+    public Float32Vector(double[] array)
+    {
+        this.data = new float[array.length];
+        for (int c = 0; c < array.length; c++)
+        {
+            this.data[c] = (float) array[c];
+        }
+    }
+    
 
-	
-	// =============================================================
-	// Implementation of Vector interface
-	
+    // =============================================================
+    // New methods
+
+    /**
+     * @return a defensive copy of the inner float data.
+     */
+    public float[] getFloats()
+    {
+        float[] res = new float[this.data.length];
+        System.arraycopy(this.data, 0, res, 0, this.data.length);
+        return res;
+    }
+
+    /**
+     * Returns the specified component of the float vector. No bound checking is
+     * performed.
+     * 
+     * @param c
+     *            the index of the component
+     * @return the specified component of the vector.
+     */
+    public float getFloat(int c)
+    {
+        return this.data[c];
+    }
+    
+
+    // =============================================================
+    // Implementation of Vector interface
+
     @Override
     public int size()
     {
@@ -110,72 +110,65 @@ public class Float32Vector extends Vector<Float32Vector, Float32>
         return values;
     }
 
-	/**
-	 * Returns the value at the specified position.
-	 */
-	@Override
-	public double getValue(int c)
-	{
-		return this.data[c];
-	}
+    /**
+     * Returns the value at the specified position.
+     */
+    @Override
+    public double getValue(int c)
+    {
+        return this.data[c];
+    }
 
-	@Override
-	public Float32 get(int c)
-	{
-		return new Float32(this.data[c]);
-	}
+    @Override
+    public Float32 get(int c)
+    {
+        return new Float32(this.data[c]);
+    }
+    
 
-	
-	
+    // =============================================================
+    // Override Object methods
 
-	// =============================================================
-	// Override Object methods
+    public boolean equals(Object that)
+    {
+        // check for self-comparison
+        if (this == that) return true;
+        
+        // check for class
+        if (that instanceof Float32Vector thatVector)
+        {
+            // now a proper field-by-field evaluation can be made
+            if (this.data.length != thatVector.data.length) return false;
+            for (int i = 0; i < this.data.length; i++)
+            {
+                if (floatToRawIntBits(this.data[i]) != floatToRawIntBits(thatVector.data[i])) return false;
+            }
+            return true;
+        }
+        return false;
+    }
 
-	public boolean equals(Object that)
-	{
-		// check for self-comparison
-		if (this == that)
-			return true;
+    public int hashCode()
+    {
+        int code = 23;
+        for (float f : this.data)
+        {
+            code = hash(code, floatToRawIntBits(f));
+        }
+        return code;
+    }
 
-		// check for class
-		if (!(that instanceof Float32Vector))
-			return false;
+    /** longs. */
+    private static int hash(int aSeed, int anInt)
+    {
+        return firstTerm(aSeed) + (int) (anInt ^ (anInt >>> 16));
+    }
 
-		// cast to native object is now safe
-		Float32Vector thatVector = (Float32Vector) that;
+    // PRIVATE
+    private static final int ODD_PRIME_NUMBER = 37;
 
-	    // now a proper field-by-field evaluation can be made
-		if (this.data.length != thatVector.data.length)
-			return false;
-		for (int i = 0; i < this.data.length; i++)
-		{
-			if (floatToRawIntBits(this.data[i]) != floatToRawIntBits(thatVector.data[i]))
-				return false;
-		}
-	    return true;
-	}
-	
-	public int hashCode()
-	{
-		int code = 23;
-		for (float f : this.data)
-		{
-			code = hash(code, floatToRawIntBits(f));
-		}
-		return code;
-	}
-	
-	/** longs. */
-	private static int hash(int aSeed, int anInt)
-	{
-		return firstTerm(aSeed) + (int) (anInt ^ (anInt >>> 16));
-	}
-
-	// PRIVATE
-	private static final int fODD_PRIME_NUMBER = 37;
-
-	private static int firstTerm(int aSeed)
-	{
-		return fODD_PRIME_NUMBER * aSeed;
-	}
+    private static int firstTerm(int aSeed)
+    {
+        return ODD_PRIME_NUMBER * aSeed;
+    }
 }

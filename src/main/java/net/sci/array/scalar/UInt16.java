@@ -112,15 +112,13 @@ public class UInt16 extends Int<UInt16>
     {
         // check for self-comparison
         if (this == that) return true;
-
-        // check for class
-        if (!(that instanceof UInt16)) return false;
-
-        // cast to native object is now safe
-        UInt16 thatInt = (UInt16) that;
-
-        // now a proper field-by-field evaluation can be made
-        return this.value == thatInt.value;
+        
+        // Check class internal values, using pattern matching
+        if (that instanceof UInt16 thatInt)
+        {
+            return this.value == thatInt.value;
+        }
+        return false;
     }
 
     public int hashCode()

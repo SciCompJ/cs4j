@@ -42,25 +42,27 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
     public static final RGB8 DARK_GRAY = new RGB8(63, 63, 63);
     /** The dark gray color (all sample values equal to 191). */
     public static final RGB8 LIGHT_GRAY = new RGB8(191, 191, 191);
+    
 
-	// =============================================================
-	// Static methods
-	
-	/**
-	 * Creates a new RGB8 from grayscale value
-	 * 
-	 * @param value
-	 *            a double value corresponding to grayscale value, between 0 and 255
-	 * @return the corresponding RGB8 instance
-	 * @see #getValue()
-	 */
-	public final static RGB8 fromValue(double value)
-	{
-		int val = UInt8.convert(value);
-		return new RGB8(val << 16 | val << 8 | val);
-	}
-	
-	/**
+    // =============================================================
+    // Static methods
+
+    /**
+     * Creates a new RGB8 from grayscale value
+     * 
+     * @param value
+     *            a double value corresponding to grayscale value, between 0 and
+     *            255
+     * @return the corresponding RGB8 instance
+     * @see #getValue()
+     */
+    public final static RGB8 fromValue(double value)
+    {
+        int val = UInt8.convert(value);
+        return new RGB8(val << 16 | val << 8 | val);
+    }
+
+    /**
      * Converts the specified color into an instance of RGB8, or returns the
      * color instance if it is already a RGB8 instance.
      * 
@@ -68,28 +70,27 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
      *            the color to convert
      * @return the RGB8 color corresponding to the input color
      */
-	public static final RGB8 fromColor(Color color)
-	{
-	    if (color instanceof RGB8) return (RGB8) color;
+    public static final RGB8 fromColor(Color color)
+    {
+        if (color instanceof RGB8) return (RGB8) color;
         int r = UInt8.convert(color.red() * 255 + 0.5);
         int g = UInt8.convert(color.green() * 255 + 0.5);
         int b = UInt8.convert(color.blue() * 255 + 0.5);
-        int intCode = b << 16 | g << 8 | r;   
-	    return new RGB8(intCode);
-	}
-	
+        int intCode = b << 16 | g << 8 | r;
+        return new RGB8(intCode);
+    }
+
     public static final RGB8 fromIntCode(int intCode)
     {
         return new RGB8(intCode);
     }
 
-    
     public final static RGB8 fromUInt8(UInt8 value)
-	{
-	    int val = UInt8.clamp(value.getInt());
-	    return new RGB8(val << 16 | val << 8 | val);
-	}
-    
+    {
+        int val = UInt8.clamp(value.getInt());
+        return new RGB8(val << 16 | val << 8 | val);
+    }
+
     /**
      * @param intCode
      *            an RGB8 value encoded into an integer.
@@ -181,47 +182,47 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
         rgb[2] = (intCode >> 16) & 0x00FF;
         return rgb;
     }
-
     
+
     // =============================================================
-	// Class variables
-	
-	private final int intCode;
-	
-	
-	// =============================================================
-	// Constructors
-	
-	/**
-	 * Creates a new color by specifying the integer code representing this
-	 * color.
-	 * 
-	 * @param intCode
-	 *            the integer code of the RGB8 value
-	 */
-	public RGB8(int intCode)
-	{
-		this.intCode = intCode;
-	}
-	
-	/**
-	 * Creates a new color by specifying the int value of each component.
-	 * 
-	 * @param red
-	 *            the value of the red component, between 0 and 255
-	 * @param green
-	 *            the value of the green component, between 0 and 255
-	 * @param blue
-	 *            the value of the blue component, between 0 and 255
-	 */
-	public RGB8(int red, int green, int blue)
-	{
-		int r = UInt8.clamp(red);
-		int g = UInt8.clamp(green);
-		int b = UInt8.clamp(blue);
-		this.intCode = b << 16 | g << 8 | r;   
-	}	
-	
+    // Class variables
+
+    private final int intCode;
+    
+
+    // =============================================================
+    // Constructors
+
+    /**
+     * Creates a new color by specifying the integer code representing this
+     * color.
+     * 
+     * @param intCode
+     *            the integer code of the RGB8 value
+     */
+    public RGB8(int intCode)
+    {
+        this.intCode = intCode;
+    }
+
+    /**
+     * Creates a new color by specifying the int value of each component.
+     * 
+     * @param red
+     *            the value of the red component, between 0 and 255
+     * @param green
+     *            the value of the green component, between 0 and 255
+     * @param blue
+     *            the value of the blue component, between 0 and 255
+     */
+    public RGB8(int red, int green, int blue)
+    {
+        int r = UInt8.clamp(red);
+        int g = UInt8.clamp(green);
+        int b = UInt8.clamp(blue);
+        this.intCode = b << 16 | g << 8 | r;
+    }
+
     /**
      * Creates a new color by specifying the int value of each component.
      * 
@@ -240,53 +241,53 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
         this.intCode = b << 16 | g << 8 | r;   
     }   
     
-	/**
-	 * Creates a new color by specifying the double value of each component.
-	 * 
-	 * @param red
-	 *            the value of the red component, between 0 and 255
-	 * @param green
-	 *            the value of the green component, between 0 and 255
-	 * @param blue
-	 *            the value of the blue component, between 0 and 255
-	 */
-	public RGB8(double red, double green, double blue)
-	{
-		int r = UInt8.convert(red);
-		int g = UInt8.convert(green);
-		int b = UInt8.convert(blue);
-		this.intCode = b << 16 | g << 8 | r;   
-	}
+    /**
+     * Creates a new color by specifying the double value of each component.
+     * 
+     * @param red
+     *            the value of the red component, between 0 and 255
+     * @param green
+     *            the value of the green component, between 0 and 255
+     * @param blue
+     *            the value of the blue component, between 0 and 255
+     */
+    public RGB8(double red, double green, double blue)
+    {
+        int r = UInt8.convert(red);
+        int g = UInt8.convert(green);
+        int b = UInt8.convert(blue);
+        this.intCode = b << 16 | g << 8 | r;
+    }
 
-	/**
+    /**
      * Conversion constructor from another color, that can use another
      * representation format.
      * 
      * @param color
      *            the other color
      */
-	public RGB8(Color color)
-	{
+    public RGB8(Color color)
+    {
         int r = UInt8.convert(color.red() * 255 + 0.5);
         int g = UInt8.convert(color.green() * 255 + 0.5);
         int b = UInt8.convert(color.blue() * 255 + 0.5);
-        this.intCode = b << 16 | g << 8 | r;   
-	}
+        this.intCode = b << 16 | g << 8 | r;
+    }
+    
 
+    // =============================================================
+    // General methods
 
-	// =============================================================
-	// General methods
-	
-	/**
-	 * Returns the int-based representation of this RGB8 element.
-	 * 
-	 * @return an int-based representation of this RGB8 color.
-	 */
-	public int intCode()
-	{
-		return this.intCode;
-	}
-	
+    /**
+     * Returns the int-based representation of this RGB8 element.
+     * 
+     * @return an int-based representation of this RGB8 color.
+     */
+    public int intCode()
+    {
+        return this.intCode;
+    }
+
     /**
      * Converts this RGB8 value into an instance of UInt8.
      * 
@@ -472,19 +473,21 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
         rgb[2] = (this.intCode >> 16) & 0x00FF;
         return rgb;
     }
-    
-	public int getSample(int channel)
-	{
-		switch (channel)
-		{
-		case 0: return this.intCode & 0x00FF;
-		case 1: return (this.intCode >> 8) & 0x00FF;
-		case 2: return (this.intCode >> 16) & 0x00FF;
-		}
-		throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
-	}
 
-    /* (non-Javadoc)
+    public int getSample(int channel)
+    {
+        return switch (channel)
+        {
+            case 0 -> this.intCode & 0x00FF;
+            case 1 -> (this.intCode >> 8) & 0x00FF;
+            case 2 -> (this.intCode >> 16) & 0x00FF;
+            default -> throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
+        };
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.array.type.Vector#getValues()
      */
     @Override
@@ -505,51 +508,53 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
         return values;
     }
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.type.Vector#getValue(int)
-	 */
-	@Override
-	public double getValue(int c)
-	{
-		return getSample(c);
-	}
-
-	@Override
-	public UInt8 get(int c)
-	{
-		return new UInt8(getSample(c));
-	}
-
-    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.type.Vector#getValue(int)
+     */
     @Override
-	public int size()
-	{
-		return 3;
-	}
+    public double getValue(int c)
+    {
+        return getSample(c);
+    }
 
-	// =============================================================
+    @Override
+    public UInt8 get(int c)
+    {
+        return new UInt8(getSample(c));
+    }
+
+    @Override
+    public int size()
+    {
+        return 3;
+    }
+
+    // =============================================================
     // Override Object methods
-	
-	@Override
-	public String toString()
-	{
+
+    @Override
+    public String toString()
+    {
         int r = this.intCode & 0x00FF;
         int g = (this.intCode >> 8) & 0x00FF;
         int b = (this.intCode >> 16) & 0x00FF;
-	    return String.format("RGB8(%d,%d,%d)", r, g, b);
-	}
-    
+        return String.format("RGB8(%d,%d,%d)", r, g, b);
+    }
+
     @Override
-	public boolean equals(Object obj)
-	{
-	    if (!(obj instanceof RGB8)) return false;
-	    RGB8 that = (RGB8) obj;
-	    return this.intCode == that.intCode;
-	}
-    
-	@Override
-	public int hashCode()
-	{
-	    return this.intCode;
-	}
+    public boolean equals(Object obj)
+    {
+        if (obj == this) return true;
+        if (obj instanceof RGB8 that)
+        { return this.intCode == that.intCode; }
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Integer.hashCode(intCode);
+    }
 }

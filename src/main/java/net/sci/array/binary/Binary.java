@@ -110,15 +110,13 @@ public class Binary extends Int<Binary>
     {
         // check for self-comparison
         if (this == that) return true;
-
-        // check for class
-        if (!(that instanceof Binary)) return false;
-
-        // cast to native object is now safe
-        Binary thatBinary = (Binary) that;
-
-        // now a proper field-by-field evaluation can be made
-        return this.state == thatBinary.state;
+        
+        // Check class internal values, using pattern matching
+        if (that instanceof Binary thatBinary)
+        {
+            return this.state == thatBinary.state;
+        }
+        return false;
     }
 
     @Override
