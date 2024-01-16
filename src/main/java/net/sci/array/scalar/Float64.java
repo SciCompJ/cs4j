@@ -20,72 +20,72 @@ public class Float64 extends Scalar<Float64>
 
     // =============================================================
     // Constructors
+
+    /**
+     * Creates new double with default value 0.
+     */
+    public Float64()
+    {
+        value = 0;
+    }
+
+    /**
+     * Creates new double with specified value.
+     * 
+     * @param value
+     *            the value stored within this Float64
+     */
+    public Float64(double value)
+    {
+        this.value = value;
+    }
     
-	/**
-	 * Creates new double with default value 0.
-	 */
-	public Float64()
-	{
-		value = 0;
-	}
-	
-	/**
-	 * Creates new double with specified value.
-	 * 
-	 * @param value
-	 *            the value stored within this Float64
-	 */
-	public Float64(double value)
-	{
-		this.value = value;
-	}
 
-
-	// =============================================================
-    // Class methods
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.type.Scalar#getValue()
-	 */
-	@Override
-	public double getValue()
-	{
-		return value;
-	}
+    // =============================================================
+    // Implementation of the Scalar interface
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.type.Scalar#getValue()
+     */
+    @Override
+    public double getValue()
+    {
+        return value;
+    }
 
     @Override
     public Float64 fromValue(double v)
     {
         return new Float64(v);
     }
+    
 
+    // =============================================================
+    // Override Object methods
 
-	// =============================================================
-	// Override Object methods
-	
-	public boolean equals(Object that)
-	{
-		// check for self-comparison
-		if (this == that)
-			return true;
+    public boolean equals(Object that)
+    {
+        // check for self-comparison
+        if (this == that) return true;
 
-		// check for class
-		if (!(that instanceof Float64))
-			return false;
+        // check for class
+        if (!(that instanceof Float64)) return false;
 
-		// cast to native object is now safe
-		Float64 thatDouble = (Float64) that;
+        // cast to native object is now safe
+        Float64 thatDouble = (Float64) that;
 
-	    // now a proper field-by-field evaluation can be made
-	    return this.value == thatDouble.value;
-	}
-	
-	public int hashCode()
-	{
-		return java.lang.Double.hashCode(this.value);
-	}
+        // now a proper field-by-field evaluation can be made
+        return this.value == thatDouble.value;
+    }
 
-	@Override
+    public int hashCode()
+    {
+        return java.lang.Double.hashCode(this.value);
+    }
+
+    @Override
     public String toString()
     {
         return String.format("Float64(%f)", this.value);
