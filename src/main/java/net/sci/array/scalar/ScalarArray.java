@@ -306,29 +306,25 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     
 
     // =============================================================
-    // Implementation of NumericArray interface
+    // Extends NumericArray interface to work with double values
 
-    @Override
     public default ScalarArray<S> plus(double v)
     {
         ScalarArray<S> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(pos, this.getValue(pos) + v);
-        }
+        res.fillValues(pos -> this.getValue(pos) + v);
         return res;
     }
 
-    @Override
     public default ScalarArray<S> minus(double v)
     {
         ScalarArray<S> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(pos, this.getValue(pos) - v);
-        }
+        res.fillValues(pos -> this.getValue(pos) - v);
         return res;
     }
+    
+
+    // =============================================================
+    // Implementation of NumericArray interface
 
     @Override
     public default ScalarArray<S> times(double k)

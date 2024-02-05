@@ -18,13 +18,66 @@ public interface NumericArray<N extends Numeric<N>> extends Array<N>
     // =============================================================
     // Default methods for arithmetic on arrays
     
-    public NumericArray<N> plus(double v);
+    /**
+     * Adds a numeric value to each element of this numeric array, and returns
+     * the result array.
+     * 
+     * @param v
+     *            the value to add
+     * @return a new array with the value added
+     */
+    public default NumericArray<N> plus(N v)
+    {
+        NumericArray<N> res = this.newInstance(this.size());
+        res.fill(pos -> this.get(pos).plus(v));
+        return res;
+    }
 
-    public NumericArray<N> minus(double v);
+    /**
+     * Subtracts a numeric value from each element of this numeric array, and
+     * returns the result array.
+     * 
+     * @param v
+     *            the value to subtract
+     * @return a new array with the value subtracted
+     */
+    public default NumericArray<N> minus(N v)
+    {
+        NumericArray<N> res = this.newInstance(this.size());
+        res.fill(pos -> this.get(pos).minus(v));
+        return res;        
+    }
 
-    public NumericArray<N> times(double k);
+    /**
+     * Applies a multiplication with a scalar value to each element of this
+     * numeric array, and returns the result array.
+     * 
+     * @param k
+     *            the factor to multiply by
+     * @return a new array with the elements multiplied
+     */
+    public default NumericArray<N> times(double k)
+    {
+        NumericArray<N> res = this.newInstance(this.size());
+        res.fill(pos -> this.get(pos).times(k));
+        return res;        
+    }
+    
+    /**
+     * Applies a division by a scalar value to each element of this numeric
+     * array, and returns the result array.
+     * 
+     * @param k
+     *            the factor to divide by
+     * @return a new array with the elements divided
+     */
+    public default NumericArray<N> divideBy(double k)
+    {
+        NumericArray<N> res = this.newInstance(this.size());
+        res.fill(pos -> this.get(pos).divideBy(k));
+        return res;        
+    }
 
-    public NumericArray<N> divideBy(double k);
 
     
     // =============================================================
