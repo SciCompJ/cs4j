@@ -35,17 +35,17 @@ public abstract class IntArray3D<I extends Int<I>> extends ScalarArray3D<I> impl
         return new Wrapper<I>(array);
     }
     
-
+    
     // =============================================================
     // Constructor
 
-	protected IntArray3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-	}
+    protected IntArray3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+    }
 
-
-	// =============================================================
+    
+    // =============================================================
     // Methods specific to IntArray3D
 
     /**
@@ -164,10 +164,34 @@ public abstract class IntArray3D<I extends Int<I>> extends ScalarArray3D<I> impl
     // =============================================================
     // Specialization of Array interface
 
-	@Override
-	public abstract IntArray3D<I> duplicate();
+    @Override
+    public abstract IntArray3D<I> duplicate();
 
-	
+    
+    // =============================================================
+    // Override Object methods
+
+    @Override
+    public String toString()
+    {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(String.format(Locale.ENGLISH, "(%d x %d x %d) Int array;", this.size0, this.size1, this.size2));
+        for (int z = 0; z < this.size2; z++)
+        {
+            buffer.append(String.format(Locale.ENGLISH, "\nslice %d/%d (pos[2]=%d):", z+1, this.size2, z));
+            for (int y = 0; y < this.size1; y++)
+            {
+                buffer.append("\n");
+                for (int x = 0; x < this.size0; x++)
+                {
+                    buffer.append(String.format(Locale.ENGLISH, " %3d", getInt(x, y, z)));
+                }
+            }
+        }
+        return buffer.toString();
+    }
+
+
     // =============================================================
     // Inner wrapper class
 
