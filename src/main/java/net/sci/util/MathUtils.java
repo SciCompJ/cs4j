@@ -26,6 +26,27 @@ public class MathUtils
     }
     
     /**
+     * Computes the cumulative products of the values within specified array,
+     * and returns the result as an array of long values the same size as the
+     * input array. The first values equals the first value of input array. The
+     * last value is to product of all values within input array.
+     * 
+     * @param dims
+     *            the array of values to multiply
+     * @return the array of cumulative products.
+     */
+    public static final long[] cumProdLong(int[] dims)
+    {
+        long[] res = new long[dims.length];
+        res[0] = dims[0];
+        for (int d = 1; d < dims.length; d++)
+        {
+            res[d] = res[d - 1] * dims[d];
+        }
+        return res;
+    }
+    
+    /**
      * Distributes scalar values evenly between two bounds. If the second bound
      * is smaller than the first bound, then the result array contains
      * descending values.
