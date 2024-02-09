@@ -69,6 +69,22 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector, 
     
     
     // =============================================================
+    // Implementation of VectorArray interface
+
+    @Override
+    public float getFloat(int[] pos, int channel)
+    {
+        return getFloat(pos[0], pos[1], pos[2], channel);
+    }
+
+    @Override
+    public void setFloat(int[] pos, int channel, float value)
+    {
+        setFloat(pos[0], pos[1], pos[2], channel, value);
+    }
+    
+    
+    // =============================================================
     // Specialization of VectorArray3D interface
 
     @Override

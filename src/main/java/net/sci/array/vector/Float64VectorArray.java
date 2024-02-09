@@ -59,7 +59,10 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
      *            index of the channel to view
      * @return a view on the channel
      */
-    public Float64Array channel(int channel);
+    public default Float64Array channel(int channel)
+    {
+        return new ChannelView(this, channel);
+    }
 
     public Iterable<? extends Float64Array> channels();
 
@@ -225,4 +228,72 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
             return array;
         }
     };
+    
+    /**
+     * Utility class that implements a view on a channel of a
+     * <code>Float64VectorArray</code> array as a an instance of
+     * <code>Float64Array</code>.
+     * 
+     * @see Float64VectorArray.#channel(int)
+     * @see Float64VectorArray.#channelIterator()
+     */
+    static class ChannelView implements Float64Array
+    {
+        Float64VectorArray array;
+        int channel;
+        
+        public ChannelView(Float64VectorArray array, int channel)
+        {
+            if (channel < 0 || channel >= array.channelCount())
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Channel index %d must be comprised between 0 and %d", channel, array.channelCount()));
+            }
+            
+            this.array = array;
+            this.channel = channel;
+        }
+
+        @Override
+        public Float64 get(int[] pos)
+        {
+            return array.get(pos).get(channel);
+        }
+
+        @Override
+        public void set(int[] pos, Float64 value)
+        {
+            array.setValue(pos, channel, value.getValue());
+        }
+
+        @Override
+        public double getValue(int[] pos)
+        {
+            return array.getValue(pos, channel);
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            array.setValue(pos, channel, value);
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+    }
 }

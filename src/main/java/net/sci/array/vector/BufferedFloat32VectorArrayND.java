@@ -69,7 +69,25 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
 		}
 		this.buffer = buffer;
 	}
+	
 
+    // =============================================================
+    // Implementation of Float32VectorArray interface
+
+    @Override
+    public float getFloat(int[] pos, int channel)
+    {
+        int index = subsToInd(pos) * vectorLength + channel;
+        return this.buffer[index];
+    }
+
+    @Override
+    public void setFloat(int[] pos, int channel, float value)
+    {
+        int index = subsToInd(pos) * vectorLength + channel;
+        this.buffer[index] = value;
+    }
+    
 	
 	// =============================================================
 	// Implementation of the VectorArray interface

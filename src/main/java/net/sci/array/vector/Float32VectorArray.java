@@ -50,6 +50,14 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
     
     
     // =============================================================
+    // New methods
+
+    public float getFloat(int[] pos, int channel);
+    
+    public void setFloat(int[] pos, int channel, float value);
+    
+    
+    // =============================================================
     // Specialization of VectorArray interface
 
     /**
@@ -59,7 +67,10 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
      *            index of the channel to view
      * @return a view on the channel
      */
-    public Float32Array channel(int channel);
+    public default Float32Array channel(int channel)
+    {
+        return new ChannelView(this, channel);
+    }
 
     public Iterable<? extends Float32Array> channels();
 
@@ -224,4 +235,84 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
             return array;
         }
     };
+    
+    /**
+     * Utility class that implements a view on a channel of a
+     * <code>Float32VectorArray</code> array as a an instance of
+     * <code>Float32Array</code>.
+     * 
+     * @see Float32VectorArray.#channel(int)
+     * @see Float32VectorArray.#channelIterator()
+     */
+    static class ChannelView implements Float32Array
+    {
+        Float32VectorArray array;
+        int channel;
+        
+        public ChannelView(Float32VectorArray array, int channel)
+        {
+            if (channel < 0 || channel >= array.channelCount())
+            {
+                throw new IllegalArgumentException(String.format(
+                        "Channel index %d must be comprised between 0 and %d", channel, array.channelCount()));
+            }
+            
+            this.array = array;
+            this.channel = channel;
+        }
+
+        @Override
+        public float getFloat(int[] pos)
+        {
+            return array.getFloat(pos, channel);
+        }
+
+        @Override
+        public void setFloat(int[] pos, float value)
+        {
+            array.setFloat(pos, channel, value);
+        }
+
+        @Override
+        public Float32 get(int[] pos)
+        {
+            return array.get(pos).get(channel);
+        }
+
+        @Override
+        public void set(int[] pos, Float32 value)
+        {
+            array.setFloat(pos, channel, value.getFloat());
+        }
+
+        @Override
+        public double getValue(int[] pos)
+        {
+            return array.getValue(pos, channel);
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            array.setFloat(pos, channel, (float) value);
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+    }
 }

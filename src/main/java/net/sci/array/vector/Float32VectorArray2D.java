@@ -67,6 +67,18 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector, 
     // =============================================================
     // Implementation of VectorArray interface
 
+    @Override
+    public float getFloat(int[] pos, int channel)
+    {
+        return getFloat(pos[0], pos[1], channel);
+    }
+
+    @Override
+    public void setFloat(int[] pos, int channel, float value)
+    {
+        setFloat(pos[0], pos[1], channel, value);
+    }
+    
     /**
      * Returns a view on the channel specified by the given index.
      * 

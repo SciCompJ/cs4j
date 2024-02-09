@@ -61,7 +61,7 @@ public class BufferedFloat32VectorArray2D extends Float32VectorArray2D
 
 	
 	// =============================================================
-	// Implementation of the VectorArray interface
+	// Implementation of the VectorArray2D interface
 
 	@Override
     public float getFloat(int x, int y, int c)
@@ -76,6 +76,25 @@ public class BufferedFloat32VectorArray2D extends Float32VectorArray2D
         int offset = (y * this.size0 + x) * this.vectorLength;
         this.buffer[offset + c] = value;
     }
+    
+    @Override
+    public double getValue(int x, int y, int c)
+    {
+        int offset = (y * this.size0 + x) * this.vectorLength;
+        return this.buffer[offset + c];
+    }
+
+
+    @Override
+    public void setValue(int x, int y, int c, double value)
+    {
+        int offset = (y * this.size0 + x) * this.vectorLength;
+        this.buffer[offset + c] = (float) value;
+    }
+
+
+    // =============================================================
+    // Implementation of the VectorArray interface
 
     /* (non-Javadoc)
 	 * @see net.sci.array.data.VectorArray#getVectorLength()
@@ -84,21 +103,6 @@ public class BufferedFloat32VectorArray2D extends Float32VectorArray2D
 	public int channelCount()
 	{
 		return this.vectorLength;
-	}
-
-	@Override
-	public double getValue(int x, int y, int c)
-	{
-		int offset = (y * this.size0 + x) * this.vectorLength;
-		return this.buffer[offset + c];
-	}
-
-
-	@Override
-	public void setValue(int x, int y, int c, double value)
-	{
-		int offset = (y * this.size0 + x) * this.vectorLength;
-		this.buffer[offset + c] = (float) value;
 	}
 
 	

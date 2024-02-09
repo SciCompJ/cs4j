@@ -572,7 +572,8 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
      * Utility class that implements a view on a channel of a RGB16 array as a
      * UInt16Array.
      * 
-     * @see RGB8Array.#channelIterator()
+     * @see RGB16Array.#channel(int)
+     * @see RGB16Array.#channelIterator()
      */
     static class ChannelView implements UInt16Array
     {
