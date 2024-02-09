@@ -30,25 +30,25 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
             return array;
         }
     };
-
+    
 
     // =============================================================
-	// Static methods
+    // Static methods
 
-	public static Float64VectorArray create(int[] dims, int sizeV)
-	{
-		switch (dims.length)
-		{
-		case 2:
-			return Float64VectorArray2D.create(dims[0], dims[1], sizeV);
-		case 3:
-			return Float64VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
-		default:
-		    return Float64VectorArrayND.create(dims, sizeV);
-		}
-	}
+    public static Float64VectorArray create(int[] dims, int sizeV)
+    {
+        switch (dims.length)
+        {
+            case 2:
+                return Float64VectorArray2D.create(dims[0], dims[1], sizeV);
+            case 3:
+                return Float64VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
+            default:
+                return Float64VectorArrayND.create(dims, sizeV);
+        }
+    }
+    
 
-	
     // =============================================================
     // Specialization of VectorArray interface
 
@@ -64,10 +64,10 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
     public Iterable<? extends Float64Array> channels();
 
     public java.util.Iterator<? extends Float64Array> channelIterator();
-
+    
 
     // =============================================================
-	// Specialization of Array interface
+    // Specialization of Array interface
 
     @Override
     public default Float64Vector get(int[] pos)
@@ -81,23 +81,23 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         setValues(pos, vect.getValues());
     }
 
-	@Override
-	public default Float64VectorArray newInstance(int... dims)
-	{
-		return Float64VectorArray.create(dims, this.channelCount());
-	}
+    @Override
+    public default Float64VectorArray newInstance(int... dims)
+    {
+        return Float64VectorArray.create(dims, this.channelCount());
+    }
 
-	@Override
-	public default Array.Factory<Float64Vector> factory()
-	{
-		return factory;
-	}
+    @Override
+    public default Array.Factory<Float64Vector> factory()
+    {
+        return factory;
+    }
 
-	@Override
-	public default Float64VectorArray duplicate()
-	{
-		// create output array
-		Float64VectorArray result = Float64VectorArray.create(this.size(), this.channelCount());
+    @Override
+    public default Float64VectorArray duplicate()
+    {
+        // create output array
+        Float64VectorArray result = Float64VectorArray.create(this.size(), this.channelCount());
 
         // initialize iterators
         Array.PositionIterator iter1 = this.positionIterator();
@@ -119,15 +119,77 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
 		return Float64Vector.class;
 	}
 
-	public Iterator iterator();
 
-	
-	// =============================================================
-	// Inner interface
+    /**
+     * Creates a default iterator over the <code>Float64Vector</code> elements
+     * stored within this array.  
+     * Default iterator is based on position iterator.
+     * 
+     * @return an iterator of the elements stored in the array.
+     */
+    public default Iterator iterator()
+    {
+        return new Iterator()
+        {
+            PositionIterator iter = positionIterator();
 
-	public interface Iterator extends VectorArray.Iterator<Float64Vector,Float64>
-	{
-	}
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public Float64Vector next()
+            {
+                iter.forward();
+                return Float64VectorArray.this.get(iter.get());
+            }
+
+            @Override
+            public double getValue(int c)
+            {
+                return Float64VectorArray.this.getValue(iter.get(), c);
+            }
+            
+            @Override
+            public void setValue(int c, double value)
+            {
+                Float64VectorArray.this.setValue(iter.get(), c, value);
+            }
+            
+            @Override
+            public Float64Vector get()
+            {
+                return Float64VectorArray.this.get(iter.get());
+            }
+            
+            @Override
+            public void set(Float64Vector value)
+            {
+                Float64VectorArray.this.set(iter.get(), value);
+            }
+        };
+    }
+    
+
+    // =============================================================
+    // Inner interface
+
+    /**
+     * An interface for iterating over the <code>Float64Vector</code> elements
+     * stored within this array.
+     */
+    public interface Iterator extends VectorArray.Iterator<Float64Vector, Float64>
+    {
+    }
+    
     
     // =============================================================
     // Specialization of the Factory interface
