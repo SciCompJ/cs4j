@@ -48,6 +48,20 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         }
     }
     
+    @SuppressWarnings("unchecked")
+    public static Float32VectorArray wrap(Array<?> array)
+    {
+        if (array instanceof Float32VectorArray)
+        {
+            return (Float32VectorArray) array;
+        }
+        if (Float32Vector.class.isAssignableFrom(array.dataType()))
+        {
+            return new Wrapper((Array<Float32Vector>) array);
+        }
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
+    
     
     // =============================================================
     // New methods
@@ -235,6 +249,132 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
             return array;
         }
     };
+    
+    /**
+     * Wraps an array containing <code>Float32Vector</code> instances into an
+     * explicit instance of <code>Float32VectorArray</code>.
+     * 
+     * Assumes all vectors have the same size and that the array is not empty.
+     */
+    static class Wrapper implements Float32VectorArray
+    {
+        Array<Float32Vector> array;
+        int channelCount;
+        
+        public Wrapper(Array<Float32Vector> array)
+        {
+            this.array = array;
+            this.channelCount = array.iterator().next().size();
+        }
+
+        @Override
+        public int channelCount()
+        {
+            return channelCount;
+        }
+
+        @Override
+        public float getFloat(int[] pos, int channel)
+        {
+            return array.get(pos).getFloat(channel);
+        }
+
+        @Override
+        public void setFloat(int[] pos, int channel, float value)
+        {
+            float[] values = array.get(pos).getFloats();
+            values[channel] = value;
+            array.set(pos, new Float32Vector(values));
+        }
+
+        @Override
+        public Iterable<Float32Array> channels()
+        {
+            return new Iterable<Float32Array>()
+            {
+
+                @Override
+                public java.util.Iterator<Float32Array> iterator()
+                {
+                    return channelIterator();
+                }
+            };
+        }
+
+        @Override
+        public java.util.Iterator<Float32Array> channelIterator()
+        {
+            return new ChannelIterator();
+        }
+
+        @Override
+        public double[] getValues(int[] pos)
+        {
+            return array.get(pos).getValues();
+        }
+
+        @Override
+        public double[] getValues(int[] pos, double[] values)
+        {
+            return array.get(pos).getValues(values);
+        }
+
+        @Override
+        public void setValues(int[] pos, double[] values)
+        {
+            array.set(pos, new Float32Vector(values));
+        }
+
+        @Override
+        public double getValue(int[] pos, int channel)
+        {
+            return array.get(pos).getValue(channel);
+        }
+
+        @Override
+        public void setValue(int[] pos, int channel, double value)
+        {
+            float[] values = array.get(pos).getFloats();
+            values[channel] = (float) value;
+            array.set(pos, new Float32Vector(values));
+        }
+
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        private class ChannelIterator implements java.util.Iterator<Float32Array> 
+        {
+            int channel = 0;
+
+            @Override
+            public boolean hasNext()
+            {
+                return channel < channelCount();
+            }
+
+            @Override
+            public Float32Array next()
+            {
+                return new ChannelView(Float32VectorArray.Wrapper.this, channel++);
+            }
+        }
+    }
+    
     
     /**
      * Utility class that implements a view on a channel of a

@@ -48,6 +48,20 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         }
     }
     
+    @SuppressWarnings("unchecked")
+    public static Float64VectorArray wrap(Array<?> array)
+    {
+        if (array instanceof Float64VectorArray)
+        {
+            return (Float64VectorArray) array;
+        }
+        if (Float64Vector.class.isAssignableFrom(array.dataType()))
+        {
+            return new Wrapper((Array<Float64Vector>) array);
+        }
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+    }
+    
 
     // =============================================================
     // Specialization of VectorArray interface
@@ -229,6 +243,116 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         }
     };
     
+    /**
+     * Wraps an array containing <code>Float64Vector</code> instances into an
+     * explicit instance of <code>Float64VectorArray</code>.
+     * 
+     * Assumes all vectors have the same size and that the array is not empty.
+     */
+    static class Wrapper implements Float64VectorArray
+    {
+        Array<Float64Vector> array;
+        int channelCount;
+        
+        public Wrapper(Array<Float64Vector> array)
+        {
+            this.array = array;
+            this.channelCount = array.iterator().next().size();
+        }
+
+        @Override
+        public int channelCount()
+        {
+            return channelCount;
+        }
+
+        @Override
+        public Iterable<Float64Array> channels()
+        {
+            return new Iterable<Float64Array>()
+            {
+                @Override
+                public java.util.Iterator<Float64Array> iterator()
+                {
+                    return channelIterator();
+                }
+            };
+        }
+
+        @Override
+        public java.util.Iterator<Float64Array> channelIterator()
+        {
+            return new ChannelIterator();
+        }
+
+        @Override
+        public double[] getValues(int[] pos)
+        {
+            return array.get(pos).getValues();
+        }
+
+        @Override
+        public double[] getValues(int[] pos, double[] values)
+        {
+            return array.get(pos).getValues(values);
+        }
+
+        @Override
+        public void setValues(int[] pos, double[] values)
+        {
+            array.set(pos, new Float64Vector(values));
+        }
+
+        @Override
+        public double getValue(int[] pos, int channel)
+        {
+            return array.get(pos).getValue(channel);
+        }
+
+        @Override
+        public void setValue(int[] pos, int channel, double value)
+        {
+            double[] values = array.get(pos).getValues();
+            values[channel] = (float) value;
+            array.set(pos, new Float64Vector(values));
+        }
+
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        private class ChannelIterator implements java.util.Iterator<Float64Array> 
+        {
+            int channel = 0;
+
+            @Override
+            public boolean hasNext()
+            {
+                return channel < channelCount();
+            }
+
+            @Override
+            public Float64Array next()
+            {
+                return new ChannelView(Float64VectorArray.Wrapper.this, channel++);
+            }
+        }
+    }
+
     /**
      * Utility class that implements a view on a channel of a
      * <code>Float64VectorArray</code> array as a an instance of
