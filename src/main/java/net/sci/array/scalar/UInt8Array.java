@@ -207,7 +207,7 @@ public interface UInt8Array extends IntArray<UInt8>
         {
             return (UInt8Array) array;
         }
-        return new Wrapper(array);
+        return new ScalarArrayWrapper(array);
     }
     
 
@@ -400,17 +400,19 @@ public interface UInt8Array extends IntArray<UInt8>
 		}
 	}
 	
-	/**
-	 * Wraps a scalar array into a UInt8Array with same dimension.
-	 * 
-	 * @see UInt8Array#wrap(ScalarArray)
-	 */
-	static class Wrapper implements UInt8Array
+    /**
+     * Wraps an instance of <code>ScalarArray</code> into an instance of
+     * <code>UInt8Array</code> by converting performing class cast on the fly.
+     * The wrapper has same size as the inner array.
+     *  
+     * @see UInt8Array#wrap(net.sci.array.Array)
+     */
+	static class ScalarArrayWrapper implements UInt8Array
 	{
 	    /** The parent array */
 		ScalarArray<?> array;
 		
-		public Wrapper(ScalarArray<?> array)
+		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
 			this.array = array;
 		}

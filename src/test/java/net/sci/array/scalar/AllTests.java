@@ -37,7 +37,7 @@ import org.junit.runners.Suite;
     BufferedInt32ArrayNDTest.class,
     BufferedUInt8ArrayNDTest.class,
     // Wrappers and views
-    UInt8ArrayWrapperTest.class,
+    UInt8Array_ScalarArrayWrapperTest.class,
     ScalarArrayUInt8ViewTest.class,
 	})
 public class AllTests {
