@@ -241,8 +241,8 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
      * <code>Float32VectorArray</code> array as a an instance of
      * <code>Float32Array</code>.
      * 
-     * @see Float32VectorArray.#channel(int)
-     * @see Float32VectorArray.#channelIterator()
+     * @see Float32VectorArray#channel(int)
+     * @see Float32VectorArray#channelIterator()
      */
     static class ChannelView implements Float32Array
     {

@@ -10,8 +10,15 @@ import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 
 /**
+ * Base implementation of <code>VectorArray</code> interface for 3D arrays.
+ * 
+ * @see VectorArray
+ * 
+ * @param <V>
+ *            the type of the vector contained within the array
+ * @param <S>
+ *            the type of the elements contained by the vector
  * @author dlegland
- *
  */
 public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>> extends Array3D<V> implements VectorArray<V,S>
 {
@@ -26,20 +33,20 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
         }
         return new Wrapper<V,S>(array);
     }
-
-	
+    
+    
     // =============================================================
-	// Constructors
-
-	protected VectorArray3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-	}
-	
-	
-	// =============================================================
-	// New methods for VectorArray3D
-
+    // Constructors
+    
+    protected VectorArray3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+    }
+    
+    
+    // =============================================================
+    // New methods for VectorArray3D
+    
     /**
      * Returns a view over the specified slice.
      * 
@@ -61,14 +68,14 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
      * 
      * @return an iterator over 2D slices
      */
-    public abstract java.util.Iterator<? extends VectorArray2D<V,S>> sliceIterator();
-
-
+    public abstract java.util.Iterator<? extends VectorArray2D<V, S>> sliceIterator();
+    
+    
     // =============================================================
     // New getter / setter methods
-
-	public abstract double[] getValues(int x, int y, int z);
-	
+    
+    public abstract double[] getValues(int x, int y, int z);
+    
     /**
      * Returns the values at a given location in the specified pre-allocated
      * array.
@@ -84,80 +91,82 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
      * @return a reference to the pre-allocated array
      */
     public abstract double[] getValues(int x, int y, int z, double[] values);
-
+    
     public abstract void setValues(int x, int y, int z, double[] values);
-	
-	/**
-	 * Returns the scalar value for the specified position and the specified
-	 * component.
-	 * 
-	 * @param x
-	 *            the x-position of the vector
-	 * @param y
-	 *            the y-position of the vector
-	 * @param z
-	 *            the z-position of the vector
-	 * @param c
-	 *            the component to investigate
-	 * @return the value of the given component at the given position
-	 */
-	public abstract double getValue(int x, int y, int z, int c);
-	
-	public abstract void setValue(int x, int y, int z, int c, double value);
-
-
-	// =============================================================
-	// Specialization of VectorArray interface
-	
+    
+    /**
+     * Returns the scalar value for the specified position and the specified
+     * component.
+     * 
+     * @param x
+     *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
+     * @param z
+     *            the z-position of the vector
+     * @param c
+     *            the component to investigate
+     * @return the value of the given component at the given position
+     */
+    public abstract double getValue(int x, int y, int z, int c);
+    
+    public abstract void setValue(int x, int y, int z, int c, double value);
+    
+    
+    // =============================================================
+    // Specialization of VectorArray interface
+    
     public abstract ScalarArray3D<?> channel(int channel);
-
+    
     /**
      * ITerates over the channels
      * @return
      */
     public abstract Iterable<? extends ScalarArray3D<?>> channels();
-
+    
     public abstract java.util.Iterator<? extends ScalarArray3D<?>> channelIterator();
-
+    
     public double[] getValues(int[] pos)
-	{
-		return getValues(pos[0], pos[1], pos[2]);
-	}
-	
+    {
+        return getValues(pos[0], pos[1], pos[2]);
+    }
+    
     @Override
     public double[] getValues(int[] pos, double[] values)
     {
         return getValues(pos[0], pos[1], pos[2], values);
     }
-
-	public void setValues(int[] pos, double[] values)
-	{
-		setValues(pos[0], pos[1], pos[2], values);
-	}
-	
+    
+    public void setValues(int[] pos, double[] values)
+    {
+        setValues(pos[0], pos[1], pos[2], values);
+    }
+    
     @Override
     public double getValue(int[] pos, int channel)
     {
         return getValue(pos[0], pos[1], pos[2], channel);
     }
-
+    
     @Override
     public void setValue(int[] pos, int channel, double value)
     {
         setValue(pos[0], pos[1], pos[2], channel, channel);
     }
-
-
-	// =============================================================
-	// Specialization of Array3D interface
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.VectorArray#duplicate()
-	 */
+    
+    
+    // =============================================================
+    // Specialization of Array3D interface
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.data.VectorArray#duplicate()
+     */
     @Override
-    public VectorArray3D<V,S> duplicate()
+    public VectorArray3D<V, S> duplicate()
     {
-        VectorArray3D<V,S> result = VectorArray3D.wrap(newInstance(this.size0, this.size1));
+        VectorArray3D<V, S> result = VectorArray3D.wrap(newInstance(this.size0, this.size1));
         
         double[] buf = new double[this.channelCount()];
         
@@ -172,25 +181,24 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
                 }
             }
         }
-
+        
         return result;
     }
     
-	
+    
     // =============================================================
     // Inner Wrapper class
-
-    private static class Wrapper<V extends Vector<V,S>, S extends Scalar<S>> extends VectorArray3D<V,S>
+    
+    private static class Wrapper<V extends Vector<V, S>, S extends Scalar<S>> extends VectorArray3D<V, S>
     {
         // --------------------------------------------------------
         // class variable
-
-        private VectorArray<V,S> array;
         
+        private VectorArray<V, S> array;
         
         // --------------------------------------------------------
         // Constructor
-
+        
         protected Wrapper(VectorArray<V,S> array)
         {
             super(0, 0, 0);

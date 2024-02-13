@@ -233,9 +233,9 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
      * Utility class that implements a view on a channel of a
      * <code>Float64VectorArray</code> array as a an instance of
      * <code>Float64Array</code>.
-     * 
-     * @see Float64VectorArray.#channel(int)
-     * @see Float64VectorArray.#channelIterator()
+     *
+     * @see Float64VectorArray#channel(int)
+     * @see Float64VectorArray#channelIterator()
      */
     static class ChannelView implements Float64Array
     {

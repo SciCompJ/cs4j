@@ -9,8 +9,12 @@ import net.sci.array.scalar.Scalar;
 /**
  * A vector of numeric values.
  * 
- * @author dlegland
+ * @param <V>
+ *            the type of the vector
+ * @param <S>
+ *            the type of the elements contained by this vector
  *
+ * @author dlegland
  */
 public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>> implements Numeric<V>
 {
@@ -75,30 +79,32 @@ public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>> impleme
      * @return the set of values that constitutes this vector.
      */
     public abstract double[] getValues();
-    
+
     /**
-	 * Returns the set of values that constitutes this vector.
-	 * 
-	 * @param values
-	 *            an array used to store the result
-	 * @return the set of values that constitutes this vector.
-	 */
+     * Returns the set of values that constitutes this vector.
+     * 
+     * @param values
+     *            an array used to store the result
+     * @return the set of values that constitutes this vector.
+     */
     public abstract double[] getValues(double[] values);
-    
-	/**
-	 * Returns the value at the specified index as a double.
-	 * 
-	 * @param i the index of element
-	 * @return the value at the specified index.
-	 */
-	public abstract double getValue(int i);
-	
-	/**
-	 * Returns the value at the specified index.
-	 * 
-	 * @param i the index of element
-	 * @return the value at the specified index.
-	 */
-	public abstract S get(int i);
-	
+
+    /**
+     * Returns the value at the specified index as a double.
+     * 
+     * @param i
+     *            the index of element
+     * @return the value at the specified index.
+     */
+    public abstract double getValue(int i);
+
+    /**
+     * Returns the value at the specified index.
+     * 
+     * @param i
+     *            the index of element
+     * @return the value at the specified index.
+     */
+    public abstract S get(int i);
+
 }

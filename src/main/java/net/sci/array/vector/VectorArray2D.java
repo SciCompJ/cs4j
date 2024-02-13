@@ -12,8 +12,15 @@ import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 
 /**
+ * Base implementation of <code>VectorArray</code> interface for 2D arrays.
+ * 
+ * @see VectorArray
+ * 
+ * @param <V>
+ *            the type of the vector contained within the array
+ * @param <S>
+ *            the type of the elements contained by the vector
  * @author dlegland
- *
  */
 public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>> extends Array2D<V> implements VectorArray<V,S>
 {

@@ -17,29 +17,33 @@ import net.sci.array.scalar.ScalarArray;
 /**
  * Arrays containing vector of floating-point values.
  *
- * @author dlegland
+ * @param <V>
+ *            the type of the vector
+ * @param <S>
+ *            the type of the elements contained by this vector
  *
+ * @author dlegland
  */
 public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extends NumericArray<V>
 {
-	// =============================================================
-	// Static methods
-	
-	/**
-	 * Computes the L2-norm of each element of the given vector array.
-	 * 
-	 * Current implementation returns the result in a new instance of
-	 * Float32Array.
-	 * 
-	 * @param array
-	 *            a vector array
-	 * @return a scalar array with the same size at the input array
-	 */
-	public static ScalarArray<?> norm(VectorArray<?, ?> array)
-	{
-		// allocate memory for result
-		Float32Array result = Float32Array.create(array.size());
-		
+    // =============================================================
+    // Static methods
+
+    /**
+     * Computes the L2-norm of each element of the given vector array.
+     * 
+     * Current implementation returns the result in a new instance of
+     * Float32Array.
+     * 
+     * @param array
+     *            a vector array
+     * @return a scalar array with the same size at the input array
+     */
+    public static ScalarArray<?> norm(VectorArray<?, ?> array)
+    {
+        // allocate memory for result
+        Float32Array result = Float32Array.create(array.size());
+
         // iterate over both arrays in parallel
         double[] values = new double[array.channelCount()];
         for(int[] pos : array.positions())
@@ -47,9 +51,9 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
             result.setValue(pos, Vector.norm(array.getValues(pos, values)));
         }
 
-		return result;
-	}
-	
+        return result;
+    }
+
     /**
      * Computes the max-norm (or infinity norm) of each element of the given
      * vector array. This corresponds to computing the maximum of the absolute
@@ -87,23 +91,22 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      *            the vector array to split.
      * @return collection of scalar arrays, corresponding to each component.
      */
-	public static Collection<ScalarArray<?>> splitChannels(VectorArray<?, ?> array)
-	{
-	    int nc = array.channelCount();
-	    ArrayList<ScalarArray<?>> channels = new ArrayList<ScalarArray<?>>(nc);
-	    
-	    for (ScalarArray<?> channel : array.channels())
-	    {
-	        channels.add(channel.duplicate());
-	    }
-	    return channels;
-	}
-	
+    public static Collection<ScalarArray<?>> splitChannels(VectorArray<?, ?> array)
+    {
+        int nc = array.channelCount();
+        ArrayList<ScalarArray<?>> channels = new ArrayList<ScalarArray<?>>(nc);
 
-	// =============================================================
-	// New methods
-		
-	/**
+        for (ScalarArray<?> channel : array.channels())
+        {
+            channels.add(channel.duplicate());
+        }
+        return channels;
+    }
+
+    // =============================================================
+    // New methods
+
+    /**
      * Computes the norm of each element of the given vector array.
      * 
      * Current implementation returns the result in a new instance of
@@ -152,9 +155,9 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * @return an iterator over the (scalar) channels
      */
     public Iterable<? extends ScalarArray<?>> channels();
-
+    
     public java.util.Iterator<? extends ScalarArray<?>> channelIterator();
-	
+    
     /**
      * Copies the values of the specified scalar array at the specified channel
      * index.
@@ -166,23 +169,22 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      */
     public default void setChannel(int c, ScalarArray<?> channel)
     {
-    	// check dims
-    	if (!Arrays.isSameDimensionality(this, channel))
-    	{
-    		throw new IllegalArgumentException("Vector array and channel array must have same dimensonality");
-    	}
-    	if (!Arrays.isSameSize(this, channel))
-    	{
-    		throw new IllegalArgumentException("Vector array and channel array must have same size");
-    	}
-    	
-    	// iterate over positions
-    	for (int[] pos : positions())
-    	{
-    		this.setValue(pos, c, channel.getValue(pos));
-    	}
+        // check dims
+        if (!Arrays.isSameDimensionality(this, channel))
+        {
+            throw new IllegalArgumentException("Vector array and channel array must have same dimensonality");
+        }
+        if (!Arrays.isSameSize(this, channel))
+        {
+            throw new IllegalArgumentException("Vector array and channel array must have same size");
+        }
+        
+        // iterate over positions
+        for (int[] pos : positions())
+        {
+            this.setValue(pos, c, channel.getValue(pos));
+        }
     }
-
 
     // =============================================================
     // Management of values as double arrays
@@ -199,27 +201,27 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
     public double[] getValues(int[] pos);
     
     /**
-	 * Returns the set of values corresponding to the array element for the
-	 * given position.
-	 * 
-	 * @param pos
-	 *            the position as a list of indices in each dimension
-	 * @param values
-	 *            the new set of values corresponding for the given position
-	 * @return a reference to the array of values at the given position
-	 */
+     * Returns the set of values corresponding to the array element for the
+     * given position.
+     * 
+     * @param pos
+     *            the position as a list of indices in each dimension
+     * @param values
+     *            the new set of values corresponding for the given position
+     * @return a reference to the array of values at the given position
+     */
     public double[] getValues(int[] pos, double[] values);
     
-	/**
-	 * Sets of values corresponding to the array element for the given position.
-	 * 
-	 * @param pos
-	 *            list of indices in each dimension
-	 * @param values
-	 *            the new set of values to assign to the array
-	 */
-	public void setValues(int[] pos, double[] values);
-	
+    /**
+     * Sets of values corresponding to the array element for the given position.
+     * 
+     * @param pos
+     *            list of indices in each dimension
+     * @param values
+     *            the new set of values to assign to the array
+     */
+    public void setValues(int[] pos, double[] values);
+    
     /**
      * Returns the value corresponding to a position and a channel index.
      * 
@@ -427,13 +429,13 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
         return output;
     }
     
-
+    
     // =============================================================
     // Specialization of Array interface
        
-	@Override
-	public VectorArray<V,S> newInstance(int... dims);
-	
+    @Override
+    public VectorArray<V, S> newInstance(int... dims);
+    
     @Override
     public default VectorArray<V,S> duplicate()
     {
@@ -449,33 +451,33 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
         // return output
         return result;
     }
-   
-	public VectorArray.Iterator<V,S> iterator();
-	
-	
-	// =============================================================
-	// Inner interface
-
-	public interface Iterator<V extends Vector<V, S>, S extends Scalar<S>> extends Array.Iterator<V>
-	{
-		/**
-		 * Returns the value of the i-th component of the current vector.
-		 * 
-		 * Index must be comprised between 0 and the number of components of
-		 * this vector array.
-		 * 
-		 * @param i
-		 *            the component / channel index
-		 * @return the value of the specified component
-		 */
-		public double getValue(int i);
-		
+    
+    public VectorArray.Iterator<V, S> iterator();
+    
+    
+    // =============================================================
+    // Inner interface
+    
+    public interface Iterator<V extends Vector<V, S>, S extends Scalar<S>> extends Array.Iterator<V>
+    {
+        /**
+         * Returns the value of the i-th component of the current vector.
+         * 
+         * Index must be comprised between 0 and the number of components of
+         * this vector array.
+         * 
+         * @param i
+         *            the component / channel index
+         * @return the value of the specified component
+         */
+        public double getValue(int i);
+        
         /**
          * Returns the values at current position of the iterator into a
          * pre-allocated array.
          * 
-         * Default implementation uses the <code>getValues(double[])</code> of a new
-         * <code>Vector</code> instance. Subclasses may use a more efficient
+         * Default implementation uses the <code>getValues(double[])</code> of a
+         * new <code>Vector</code> instance. Subclasses may use a more efficient
          * implementation.
          * 
          * @param values
@@ -487,19 +489,18 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
         {
             return get().getValues(values);
         }
-
-		/**
-		 * Changes the value of the c-th component of the current vector.
-		 * 
-		 * Index must be comprised between 0 and the number of components of
-		 * this vector array.
-		 * 
-		 * @param c
-		 *            the component / channel index
-		 * @param value
-		 *            the new value of the specified component
-		 */
-		public void setValue(int c, double value);
-	}
-
+        
+        /**
+         * Changes the value of the c-th component of the current vector.
+         * 
+         * Index must be comprised between 0 and the number of components of
+         * this vector array.
+         * 
+         * @param c
+         *            the component / channel index
+         * @param value
+         *            the new value of the specified component
+         */
+        public void setValue(int c, double value);
+    }
 }

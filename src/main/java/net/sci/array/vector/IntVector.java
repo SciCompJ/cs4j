@@ -11,6 +11,11 @@ import net.sci.array.scalar.Int;
  * @see net.sci.array.color.RGB8
  * @see net.sci.array.color.RGB16
  * 
+ * @param <V>
+ *            the type of the vector
+ * @param <I>
+ *            the type of the elements contained by this vector, that must be a subclass of Int
+ *
  * @author dlegland
  */
 public abstract class IntVector<V extends Vector<V, I>, I extends Int<I>> extends Vector<V, I>
