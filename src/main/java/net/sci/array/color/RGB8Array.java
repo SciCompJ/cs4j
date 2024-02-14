@@ -29,37 +29,37 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
 
     public static final Factory factory = new DenseRGB8ArrayFactory();
     
+    
+    // =============================================================
+    // Static methods
 
-	// =============================================================
-	// Static methods
+    public static RGB8Array create(int... dims)
+    {
+        return factory.create(dims);
+    }
 
-	public static RGB8Array create(int... dims)
-	{
-		return factory.create(dims);
-	}
+    /**
+     * Splits the three channels of a RGB8 array.
+     * 
+     * @param array
+     *            the RGB8 array
+     * @return a collection containing the three channels
+     */
+    public static Collection<UInt8Array> splitChannels(RGB8Array array)
+    {
+        // create result arrays
+        int[] dims = array.size();
+        UInt8Array redChannel = UInt8Array.create(dims);
+        UInt8Array greenChannel = UInt8Array.create(dims);
+        UInt8Array blueChannel = UInt8Array.create(dims);
 
-	/**
-	 * Splits the three channels of a RGB8 array.
-	 * 
-	 * @param array
-	 *            the RGB8 array
-	 * @return a collection containing the three channels
-	 */
-	public static Collection<UInt8Array> splitChannels(RGB8Array array)
-	{
-		// create result arrays
-		int[] dims = array.size();
-		UInt8Array redChannel = UInt8Array.create(dims);
-		UInt8Array greenChannel = UInt8Array.create(dims);
-		UInt8Array blueChannel = UInt8Array.create(dims);
-		
-		// create iterators
-		Iterator rgbIter = array.iterator();
-		UInt8Array.Iterator rIter = redChannel.iterator();
-		UInt8Array.Iterator gIter = greenChannel.iterator();
-		UInt8Array.Iterator bIter = blueChannel.iterator();
-		
-		// iterate over elements of all arrays simultaneously
+        // create iterators
+        Iterator rgbIter = array.iterator();
+        UInt8Array.Iterator rIter = redChannel.iterator();
+        UInt8Array.Iterator gIter = greenChannel.iterator();
+        UInt8Array.Iterator bIter = blueChannel.iterator();
+
+        // iterate over elements of all arrays simultaneously
         while (rgbIter.hasNext())
         {
             RGB8 rgb = rgbIter.next();
@@ -67,81 +67,81 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
             gIter.setNextInt(rgb.getSample(1));
             bIter.setNextInt(rgb.getSample(2));
         }
-		
-		// create the collection of channels
-		Collection<UInt8Array> channels = new ArrayList<>(3);
-		channels.add(redChannel);
-		channels.add(greenChannel);
-		channels.add(blueChannel);
-		
-		return channels;
-	}
-	
-	/**
-	 * Splits the channels of the color image and returns the new ByteImages
-	 * into a Map, using channel names as key.
-	 * 
-	 * Example:
-	 * 
-	 * <pre>
-	 * <code>
-	 * ColorProcessor colorImage = ...
-	 * HashMap&lt;String, ByteProcessor&gt; channels = mapChannels(colorImage);
-	 * ByteProcessor blue = channels.get("blue");
-	 * </code>
-	 * </pre>
-	 * 
-	 * @param array
-	 *            the original color array
-	 * @return a hashmap indexing the three channels by their names
-	 */
-	public static HashMap<String, UInt8Array> mapChannels(RGB8Array array)
-	{
-		// create result arrays
-		int[] dims = array.size();
-		UInt8Array redChannel = UInt8Array.create(dims);
-		UInt8Array greenChannel = UInt8Array.create(dims);
-		UInt8Array blueChannel = UInt8Array.create(dims);
-		
-		// create iterators
-		Iterator rgbIter = array.iterator();
-		UInt8Array.Iterator rIter = redChannel.iterator();
-		UInt8Array.Iterator gIter = greenChannel.iterator();
-		UInt8Array.Iterator bIter = blueChannel.iterator();
-		
-		// iterate over elements of all arrays simultaneously
-		while (rgbIter.hasNext())
+
+        // create the collection of channels
+        Collection<UInt8Array> channels = new ArrayList<>(3);
+        channels.add(redChannel);
+        channels.add(greenChannel);
+        channels.add(blueChannel);
+
+        return channels;
+    }
+
+    /**
+     * Splits the channels of the color image and returns the new ByteImages
+     * into a Map, using channel names as key.
+     * 
+     * Example:
+     * 
+     * <pre>
+     * <code>
+     * ColorProcessor colorImage = ...
+     * HashMap&lt;String, ByteProcessor&gt; channels = mapChannels(colorImage);
+     * ByteProcessor blue = channels.get("blue");
+     * </code>
+     * </pre>
+     * 
+     * @param array
+     *            the original color array
+     * @return a hashmap indexing the three channels by their names
+     */
+    public static HashMap<String, UInt8Array> mapChannels(RGB8Array array)
+    {
+        // create result arrays
+        int[] dims = array.size();
+        UInt8Array redChannel = UInt8Array.create(dims);
+        UInt8Array greenChannel = UInt8Array.create(dims);
+        UInt8Array blueChannel = UInt8Array.create(dims);
+
+        // create iterators
+        Iterator rgbIter = array.iterator();
+        UInt8Array.Iterator rIter = redChannel.iterator();
+        UInt8Array.Iterator gIter = greenChannel.iterator();
+        UInt8Array.Iterator bIter = blueChannel.iterator();
+
+        // iterate over elements of all arrays simultaneously
+        while (rgbIter.hasNext())
         {
             RGB8 rgb = rgbIter.next();
             rIter.setNextInt(rgb.getSample(0));
             gIter.setNextInt(rgb.getSample(1));
             bIter.setNextInt(rgb.getSample(2));
         }
-		
-		// concatenate channels into a new collection
-		HashMap<String, UInt8Array> map = new HashMap<String, UInt8Array>(3);
-		map.put("red", redChannel);
-		map.put("green", greenChannel);
-		map.put("blue", blueChannel);
 
-		return map;
-	}
-	
-	/**
-	 * Creates a new RGB8 array by concatenating the specified channels.
-	 * 
-	 * @param redChannel
-	 *            an instance of UInt8Array representing the red channel
-	 * @param greenChannel
-	 *            an instance of UInt8Array representing the green channel
-	 * @param blueChannel
-	 *            an instance of UInt8Array representing the blue channel
-	 * @return a new instance of RGB8 array
-	 */
-	public static RGB8Array mergeChannels(UInt8Array redChannel, UInt8Array greenChannel, UInt8Array blueChannel)
-	{
-	    return new MergeChannelsRGB8Array(redChannel, greenChannel, blueChannel);
-	}
+        // concatenate channels into a new collection
+        HashMap<String, UInt8Array> map = new HashMap<String, UInt8Array>(3);
+        map.put("red", redChannel);
+        map.put("green", greenChannel);
+        map.put("blue", blueChannel);
+
+        return map;
+    }
+
+    /**
+     * Creates a new RGB8 array by concatenating the specified channels.
+     * 
+     * @param redChannel
+     *            an instance of UInt8Array representing the red channel
+     * @param greenChannel
+     *            an instance of UInt8Array representing the green channel
+     * @param blueChannel
+     *            an instance of UInt8Array representing the blue channel
+     * @return a new instance of RGB8 array
+     */
+    public static RGB8Array mergeChannels(UInt8Array redChannel, UInt8Array greenChannel, UInt8Array blueChannel)
+    {
+        return new MergeChannelsRGB8Array(redChannel, greenChannel, blueChannel);
+    }
 
     /**
      * Computes the color images that corresponds to overlay of a binary mask
@@ -150,7 +150,8 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      * @param baseArray
      *            the array to use as base
      * @param binaryMask
-     *            the binary array that specifies the array elements to colorize.
+     *            the binary array that specifies the array elements to
+     *            colorize.
      * @param overlayColor
      *            the overlay color
      * @return a new color array corresponding to the overlay.
@@ -257,7 +258,8 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     }
     
 	/**
-     * Applies a binary overlay over a color image (updates the reference image).
+     * Applies a binary overlay over a color image (updates the reference
+     * image).
      * 
      * @param baseArray
      *            the array to use as base
@@ -267,20 +269,20 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      *            the overlay color
      * @return the reference to the baseArray
      */
-	public static RGB8Array overlayBinary(RGB8Array baseArray, BinaryArray binaryMask, RGB8 overlayColor)
-	{
-	    for (int[] pos : baseArray.positions())
-	    {
-	        if (binaryMask.getBoolean(pos))
-	        {
-	            baseArray.set(pos, overlayColor);
-	        }
-	    }
+    public static RGB8Array overlayBinary(RGB8Array baseArray, BinaryArray binaryMask, RGB8 overlayColor)
+    {
+        for (int[] pos : baseArray.positions())
+        {
+            if (binaryMask.getBoolean(pos))
+            {
+                baseArray.set(pos, overlayColor);
+            }
+        }
 
-	    return baseArray;
-	}
+        return baseArray;
+    }
 
-	/**
+    /**
      * Convert the given array to a color array. If the input array is already
      * an instance of RGB8Array, simply returns it.
      * 
@@ -290,26 +292,27 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      *            the input array to convert
      * @return a RG8 array with the same size
      */
-	public static RGB8Array convert(Array<?> array)
-	{
-	    // Return input RGB8 array
-	    if (array instanceof RGB8Array)
-	    {
-	        return (RGB8Array) array;
-	    }
-	    
+    public static RGB8Array convert(Array<?> array)
+    {
+        // Return input RGB8 array
+        if (array instanceof RGB8Array)
+        {
+            return (RGB8Array) array;
+        }
+
+        // case of array that contains RGB8 elements without being an instance
+        // of RGB8Array
+        if (RGB8.class.isAssignableFrom(array.dataType()))
+        {
+            return convertArrayOfRGB8(array);
+        }
+
         // convert UInt8 to RGB8
         if (array instanceof UInt8Array)
         {
             return convertUInt8Array((UInt8Array) array);
         }
         
-        // case of array that contains RGB8 elements without being an instance of RGB8Array
-        if (RGB8.class.isAssignableFrom(array.dataType()))
-        {
-            return convertArrayOfRGB8(array);
-        }
-
         // convert Binary to RGB8
         if (array instanceof BinaryArray)
         {
@@ -317,9 +320,9 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         }
 
         throw new RuntimeException("Can not convert to RGB8Array array of class: " + array.getClass());
-	}
-	
-	/**
+    }
+
+    /**
      * Converts the specified scalar array into a color RGB8 array, by mapping
      * the range of values within <code>bounds</code> into the colors specified
      * by <code>colorMap</code>.
@@ -332,15 +335,15 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      *            the colormap
      * @return the result of conversion to RGB8Array
      */
-	public static RGB8Array convert(ScalarArray<?> array, double[] bounds, ColorMap colorMap)
-	{
+    public static RGB8Array convert(ScalarArray<?> array, double[] bounds, ColorMap colorMap)
+    {
         // compute slope for intensity conversions
         double extent = bounds[1] - bounds[0];
         int nColors = colorMap.size();
-        
+
         // allocate result array
         RGB8Array res = RGB8Array.create(array.size());
-        
+
         // iterate over elements of result array
         for (int[] pos : res.positions())
         {
@@ -351,17 +354,17 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         }
 
         return res;
-	}
-	
-	private static RGB8Array convertArrayOfRGB8(Array<?> array)
-	{
+    }
+
+    private static RGB8Array convertArrayOfRGB8(Array<?> array)
+    {
         RGB8Array res = RGB8Array.create(array.size());
         for (int[] pos : res.positions())
         {
             res.set(pos, (RGB8) array.get(pos));
         }
         return res;
-	}
+    }
 
     private static RGB8Array convertUInt8Array(UInt8Array array)
     {
@@ -377,14 +380,11 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
 	private static RGB8Array convertBinaryArray(BinaryArray array)
 	{
         RGB8Array res = RGB8Array.create(array.size());
-        for (int[] pos : res.positions())
-        {
-            res.set(pos, array.getBoolean(pos) ? RGB8.WHITE : RGB8.BLACK);
-        }
+        res.fill(pos -> array.getBoolean(pos) ? RGB8.WHITE : RGB8.BLACK);
         return res;
-	}
-	
-	/**
+    }
+
+    /**
      * Encapsulates the specified array into a new RGB8Array, by creating a
      * Wrapper if necessary. If the original array is already an instance of
      * RGB8Array, it is returned.
@@ -393,6 +393,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      *            the original array
      * @return a RGB8 view of the original array
      */
+    @SuppressWarnings("unchecked")
     public static RGB8Array wrap(Array<?> array)
     {
         if (array instanceof RGB8Array)
@@ -402,7 +403,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         
         if (RGB8.class.isAssignableFrom(array.dataType()))
         {
-            return wrapRGB8(array);
+            return new Wrapper((Array<RGB8>) array);
         }
         
         if (UInt8.class.isAssignableFrom(array.dataType()))
@@ -418,70 +419,26 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
     }
     
-    private static RGB8Array wrapRGB8(Array<?> array)
-    {
-        // create an anonymous class to wrap the instance of Array<RGB8>
-        return new RGB8Array() 
-        {
-            @Override
-            public int dimensionality()
-            {
-                return array.dimensionality();
-            }
+    
+    // =============================================================
+    // Methods specific to RGB8Array
 
-            @Override
-            public int[] size()
-            {
-                return array.size();
-            }
-
-            @Override
-            public int size(int dim)
-            {
-                return array.size(dim);
-            }
-
-            @Override
-            public PositionIterator positionIterator()
-            {
-                return array.positionIterator();
-            }
-
-            @Override
-            public RGB8 get(int[] pos)
-            {
-                return (RGB8) array.get(pos);
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public void set(int[] pos, RGB8 rgb)
-            {
-                ((Array<RGB8>) array).set(pos, rgb);
-            }
-        };
-        
-    }
-
-	// =============================================================
-	// Methods specific to RGB8Array
-
-	/**
-	 * Converts this RGB8 array into a new UInt8Array, by computing the
-	 * maximum channel value for each element.
-	 * 
-	 * @return an UInt8 version of this RGB8 array
-	 */
+    /**
+     * Converts this RGB8 array into a new UInt8Array, by computing the maximum
+     * channel value for each element.
+     * 
+     * @return an UInt8 version of this RGB8 array
+     */
     public default UInt8Array convertToUInt8()
     {
         return new ConvertToUInt8().processRGB8(this);
     }
-	
-	public default UInt8Array createUInt8View()
-	{
-	    return new UInt8View(this);
-	}
-	
+
+    public default UInt8Array createUInt8View()
+    {
+        return new UInt8View(this);
+    }
+
     /**
      * Returns the largest value within the samples of the RGB8 element at the
      * specified position.
@@ -568,9 +525,9 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         set(pos, new RGB8(samples));
     }
     
-
-	// =============================================================
-	// Specialization of VectorArray interface
+    
+    // =============================================================
+    // Specialization of VectorArray interface
 
     /**
      * Always returns 3, as this is the number of components of the RGB8 type.
@@ -651,11 +608,11 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         set(pos, new RGB8(samples));
     }
 
-	@Override
-	public default double[] getValues(int[] pos)
-	{
-		return get(pos).getValues();
-	}
+    @Override
+    public default double[] getValues(int[] pos)
+    {
+        return get(pos).getValues();
+    }
 
     @Override
     public default double[] getValues(int[] pos, double[] values)
@@ -663,47 +620,47 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         return get(pos).getValues(values);
     }
 
-	@Override
-	public default void setValues(int[] pos, double[] values)
-	{
-		int r = UInt8.convert(values[0]);
-		int g = UInt8.convert(values[1]);
-		int b = UInt8.convert(values[2]);
-		set(pos, new RGB8(r, g, b));
-	}
+    @Override
+    public default void setValues(int[] pos, double[] values)
+    {
+        int r = UInt8.convert(values[0]);
+        int g = UInt8.convert(values[1]);
+        int b = UInt8.convert(values[2]);
+        set(pos, new RGB8(r, g, b));
+    }
+    
 
+    // =============================================================
+    // Specialization of Array interface
 
-	// =============================================================
-	// Specialization of Array interface
+    @Override
+    public default RGB8Array newInstance(int... dims)
+    {
+        return RGB8Array.create(dims);
+    }
 
-	@Override
-	public default RGB8Array newInstance(int... dims)
-	{
-		return RGB8Array.create(dims);
-	}
+    @Override
+    public default Array.Factory<RGB8> factory()
+    {
+        return factory;
+    }
 
-	@Override
-	public default Array.Factory<RGB8> factory()
-	{
-		return factory;
-	}
+    @Override
+    public default RGB8Array duplicate()
+    {
+        // create output array
+        RGB8Array result = RGB8Array.create(this.size());
 
-	@Override
-	public default RGB8Array duplicate()
-	{
-		// create output array
-		RGB8Array result = RGB8Array.create(this.size());
-		
-		for (int[] pos : result.positions())
-		{
-		    result.set(pos, get(pos));
-		}
-		
-		// return result
-		return result;
-	}
+        for (int[] pos : result.positions())
+        {
+            result.set(pos, get(pos));
+        }
 
-	/**
+        // return result
+        return result;
+    }
+
+    /**
      * Default iterator over RGB8 values of the RGB8Array, based on the
      * positionIterator.
      * 
@@ -849,6 +806,51 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         }
     }
 
+    static class Wrapper implements RGB8Array
+    {
+        Array<RGB8> array;
+        
+        public Wrapper(Array<RGB8> array)
+        {
+            this.array = array;
+        }
+        
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
+        public RGB8 get(int[] pos)
+        {
+            return array.get(pos);
+        }
+
+        @Override
+        public void set(int[] pos, RGB8 rgb)
+        {
+            array.set(pos, rgb);
+        }        
+    }
     
     /**
 	 * 

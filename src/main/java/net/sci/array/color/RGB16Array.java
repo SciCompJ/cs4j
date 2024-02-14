@@ -27,14 +27,14 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     public static final Factory factory = new DenseRGB16ArrayFactory();
     
     
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
-	public static RGB16Array create(int... dims)
-	{
-		return factory.create(dims);
-	}
-	
+    public static RGB16Array create(int... dims)
+    {
+        return factory.create(dims);
+    }
+
     /**
      * Splits the three channels of a RGB16 array.
      * 
@@ -240,6 +240,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
      *            the original array
      * @return a RGB16 view of the original array
      */
+    @SuppressWarnings("unchecked")
     public static RGB16Array wrap(Array<?> array)
     {
         if (array instanceof RGB16Array)
@@ -249,60 +250,22 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         
         if (RGB16.class.isAssignableFrom(array.dataType()))
         {
-            // create an anonymous class to wrap the instance of Array<RGB16>
-            return new RGB16Array() 
-            {
-                @Override
-                public int dimensionality()
-                {
-                    return array.dimensionality();
-                }
-
-                @Override
-                public int[] size()
-                {
-                    return array.size();
-                }
-
-                @Override
-                public int size(int dim)
-                {
-                    return array.size(dim);
-                }
-
-                @Override
-                public PositionIterator positionIterator()
-                {
-                    return array.positionIterator();
-                }
-
-                @Override
-                public RGB16 get(int[] pos)
-                {
-                    return (RGB16) array.get(pos);
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void set(int[] pos, RGB16 rgb)
-                {
-                    ((Array<RGB16>) array).set(pos, rgb);
-                }
-            };
+            return new Wrapper((Array<RGB16>) array);
         }
         
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
     }
     
-	// =============================================================
-	// New methods specific to RGB16Array
+    
+    // =============================================================
+    // New methods specific to RGB16Array
 
-	/**
-	 * Converts this RGB16 array into a new UInt16Array, by computing the
-	 * maximum channel value for each element.
-	 * 
-	 * @return an UInt16 version of this RGB16 array
-	 */
+    /**
+     * Converts this RGB16 array into a new UInt16Array, by computing the
+     * maximum channel value for each element.
+     * 
+     * @return an UInt16 version of this RGB16 array
+     */
     public default UInt16Array convertToUInt16()
     {
         int[] sizes = this.size();
@@ -432,16 +395,16 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         };
     }
 
-	/**
-	 * Always returns 3, as this is the number of components of the RGB16 type.
-	 * 
-	 * @see net.sci.array.vector.VectorArray#channelCount()
-	 */
-	@Override
-	public default int channelCount()
-	{
-		return 3;
-	}
+    /**
+     * Always returns 3, as this is the number of components of the RGB16 type.
+     * 
+     * @see net.sci.array.vector.VectorArray#channelCount()
+     */
+    @Override
+    public default int channelCount()
+    {
+        return 3;
+    }
 
     @Override
     public default double getValue(int[] pos, int channel)
@@ -457,11 +420,11 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         set(pos, new RGB16(samples));
     }
 
-	@Override
-	public default double[] getValues(int[] pos)
-	{
-		return get(pos).getValues();
-	}
+    @Override
+    public default double[] getValues(int[] pos)
+    {
+        return get(pos).getValues();
+    }
 
     @Override
     public default double[] getValues(int[] pos, double[] values)
@@ -469,58 +432,58 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         return get(pos).getValues(values);
     }
 
-	@Override
-	public default void setValues(int[] pos, double[] values)
-	{
-		int r = UInt16.convert(values[0]);
-		int g = UInt16.convert(values[1]);
-		int b = UInt16.convert(values[2]);
-		set(pos, new RGB16(r, g, b));
-	}
+    @Override
+    public default void setValues(int[] pos, double[] values)
+    {
+        int r = UInt16.convert(values[0]);
+        int g = UInt16.convert(values[1]);
+        int b = UInt16.convert(values[2]);
+        set(pos, new RGB16(r, g, b));
+    }
+    
+    
+    // =============================================================
+    // Default implementations for Array interface
 
+    @Override
+    public default RGB16Array newInstance(int... dims)
+    {
+        return RGB16Array.create(dims);
+    }
 
-	// =============================================================
-	// Default implementations for Array interface
+    @Override
+    public default Array.Factory<RGB16> factory()
+    {
+        return factory;
+    }
 
-	@Override
-	public default RGB16Array newInstance(int... dims)
-	{
-		return RGB16Array.create(dims);
-	}
+    @Override
+    public default RGB16Array duplicate()
+    {
+        // create output array
+        RGB16Array result = RGB16Array.create(this.size());
 
-	@Override
-	public default Array.Factory<RGB16> factory()
-	{
-		return factory;
-	}
+        // initialize iterators
+        RGB16Array.Iterator iter1 = this.iterator();
+        RGB16Array.Iterator iter2 = result.iterator();
 
-	@Override
-	public default RGB16Array duplicate()
-	{
-		// create output array
-		RGB16Array result = RGB16Array.create(this.size());
+        // copy values into output array
+        while (iter1.hasNext())
+        {
+            iter2.setNext(iter1.next());
+        }
 
-		// initialize iterators
-		RGB16Array.Iterator iter1 = this.iterator();
-		RGB16Array.Iterator iter2 = result.iterator();
-		
-		// copy values into output array
-		while(iter1.hasNext())
-		{
-			iter2.setNext(iter1.next());
-		}
-		
-		// return result
-		return result;
-	}
+        // return result
+        return result;
+    }
 
-	@Override
-	public default Class<RGB16> dataType()
-	{
-		return RGB16.class;
-	}
+    @Override
+    public default Class<RGB16> dataType()
+    {
+        return RGB16.class;
+    }
 
-	/**
+    /**
      * Default iterator over RGB16 values of the RGB16Array, based on the
      * positionIterator.
      * 
@@ -633,12 +596,58 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         }
     }
 	
-    
-	// =============================================================
-	// Inner interface
+    static class Wrapper implements RGB16Array
+    {
+        Array<RGB16> array;
+        
+        public Wrapper(Array<RGB16> array)
+        {
+            this.array = array;
+        }
+        
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
 
-	public interface Iterator extends IntVectorArray.Iterator<RGB16,UInt16>
-	{
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
+        public RGB16 get(int[] pos)
+        {
+            return array.get(pos);
+        }
+
+        @Override
+        public void set(int[] pos, RGB16 rgb)
+        {
+            array.set(pos, rgb);
+        }        
+    }
+    
+
+    // =============================================================
+    // Inner interface
+
+    public interface Iterator extends IntVectorArray.Iterator<RGB16, UInt16>
+    {
         @Override
         public default int getSample(int c)
         {
@@ -651,16 +660,16 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
             return get().getValues()[c];
         }
 
-		@Override
-		public default void setValue(int c, double value)
-		{
-			int[] samples = get().getSamples();
-			samples[c] = UInt16.convert(value);
-			set(new RGB16(samples[0], samples[1], samples[2]));
-		}
-	}
-
+        @Override
+        public default void setValue(int c, double value)
+        {
+            int[] samples = get().getSamples();
+            samples[c] = UInt16.convert(value);
+            set(new RGB16(samples[0], samples[1], samples[2]));
+        }
+    }
     
+
     // =============================================================
     // Specialization of the Factory interface
 
