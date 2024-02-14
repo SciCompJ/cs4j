@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-public class UInt8ArrayWrapperTest
+public class UInt8Array_ScalarArrayWrapperTest
 {
 	@Test
 	public final void testCreate()
@@ -19,7 +19,7 @@ public class UInt8ArrayWrapperTest
 			}
 		}
 		
-		UInt8Array wrap = UInt8Array.wrap(array);
+		UInt8Array wrap = new UInt8Array.ScalarArrayWrapper(array);
 		assertEquals(2, wrap.dimensionality());
 		assertEquals(8, wrap.size(0));
 		assertEquals(6, wrap.size(1));
@@ -38,7 +38,7 @@ public class UInt8ArrayWrapperTest
 			}
 		}
 		
-		UInt8Array wrap = UInt8Array.wrap(array);
+		UInt8Array wrap = new UInt8Array.ScalarArrayWrapper(array);
 		assertEquals(2, wrap.dimensionality());
 		assertEquals(8, wrap.size(0));
 		assertEquals(6, wrap.size(1));
@@ -59,7 +59,7 @@ public class UInt8ArrayWrapperTest
 	{
 		// create base empty 6x5 array, containing 30 elements
 		IntArray2D<?> array = new BufferedUInt8Array2D(6, 5);
-		UInt8Array wrap = UInt8Array.wrap(array);
+		UInt8Array wrap = new UInt8Array.ScalarArrayWrapper(array);
 		
 		wrap.fill(new UInt8(100));
 		

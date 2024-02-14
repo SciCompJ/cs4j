@@ -165,7 +165,7 @@ public interface BinaryArray extends IntArray<Binary>
         {
             return (BinaryArray) array;
         }
-        return new Wrapper(array);
+        return new ScalarArrayWrapper(array);
     }
     
 
@@ -702,14 +702,14 @@ public interface BinaryArray extends IntArray<Binary>
      * <li>scalar value &lt; or = 0: binary value FALSE</li>
      * </ul>
      * 
-     * @see BinaryArray#wrap(net.sci.array.Array)
+     * @see BinaryArray#wrap(net.sci.array.scalar.ScalarArray)
      */
-    static class Wrapper implements BinaryArray
+    static class ScalarArrayWrapper implements BinaryArray
     {
         /** The parent array */
         ScalarArray<?> array;
         
-        public Wrapper(ScalarArray<?> array)
+        public ScalarArrayWrapper(ScalarArray<?> array)
         {
             this.array = array;
         }

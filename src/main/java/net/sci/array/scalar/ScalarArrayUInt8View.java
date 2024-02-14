@@ -7,7 +7,7 @@ package net.sci.array.scalar;
  * Conversion from a scalar array to an UInt8 array taking into account min and
  * max values for conversion.
  * 
- * @see UInt8Array.Wrapper
+ * @see UInt8Array.ScalarArrayWrapper
  * @see ScalarArrayThresholdView
  * 
  * @author dlegland

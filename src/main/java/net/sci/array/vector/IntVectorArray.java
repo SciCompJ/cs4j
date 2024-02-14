@@ -9,6 +9,11 @@ import net.sci.array.scalar.Int;
  * An array containing vectors of integers, use as basis for RGB8 and RGB16
  * color arrays.
  * 
+ * @param <V>
+ *            the type of the vector contained within this array
+ * @param <I>
+ *            the type of the elements contained by the vector, that must be a subclass of Int
+ *
  * @author dlegland
  *
  */

@@ -853,7 +853,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     /**
 	 * 
 	 * @author dlegland
-	 * @see UInt8Array.Wrapper
+	 * @see UInt8Array.ScalarArrayWrapper
 	 */
 	class UInt8View implements UInt8Array
 	{

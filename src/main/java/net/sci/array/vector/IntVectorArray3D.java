@@ -6,28 +6,37 @@ package net.sci.array.vector;
 import net.sci.array.scalar.Int;
 
 /**
+ * Base implementation of the <code>IntVectorArray</code> interface for 3D arrays.
+ * 
+ * @param <V>
+ *            the type of the vector contained within this array
+ * @param <I>
+ *            the type of the elements contained by the vector, that must be a subclass of Int
+ *
  * @author dlegland
  *
  */
 public abstract class IntVectorArray3D<V extends IntVector<V,I>, I extends Int<I>> extends VectorArray3D<V,I> implements IntVectorArray<V,I>
 {
-	// =============================================================
-	// Constructors
-
-	protected IntVectorArray3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-	}
-
-	
+    // =============================================================
+    // Constructors
+    
+    protected IntVectorArray3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+    }
+    
+    
     // =============================================================
     // New abstract methods
-
+    
     /**
      * Returns the values at a given location.
      * 
      * @param x
      *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
      * @param z
      *            the z-position of the vector
      * @return the array of integer values for the specified position
@@ -50,6 +59,18 @@ public abstract class IntVectorArray3D<V extends IntVector<V,I>, I extends Int<I
      */
     public abstract int[] getSamples(int x, int y, int z, int[] values);
     
+    /**
+     * Sets the values at a given location.
+     * 
+     * @param x
+     *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
+     * @param z
+     *            the z-position of the vector
+     * @param values
+     *            the array of integer values to put into the array
+     */
     public abstract void setSamples(int x, int y, int z, int [] values);
     
     /**
@@ -68,12 +89,26 @@ public abstract class IntVectorArray3D<V extends IntVector<V,I>, I extends Int<I
      */
     public abstract int getSample(int x, int y, int z, int c);
     
+    /**
+     * Sets a value at a given location and channel.
+     * 
+     * @param x
+     *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
+     * @param z
+     *            the z-position of the vector
+     * @param c
+     *            the channel of the element to set
+     * @param intValue
+     *            the integer value to put into the array
+     */
     public abstract void setSample(int x, int y, int z, int c, int intValue);
-
-
+    
+    
     // =============================================================
     // Specialization of VectorArray3D interface
-
+    
     /**
      * Returns a view over the specified slice.
      * 
@@ -142,16 +177,18 @@ public abstract class IntVectorArray3D<V extends IntVector<V,I>, I extends Int<I
         setSample(pos[0], pos[1], pos[2], channel, intValues);
     }
     
-
-	// =============================================================
-	// Specialization of Array interface
-
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.VectorArray#duplicate()
-	 */
+    
+    // =============================================================
+    // Specialization of Array interface
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.data.VectorArray#duplicate()
+     */
     @Override
-    public abstract IntVectorArray3D<V,I> duplicate();
-
+    public abstract IntVectorArray3D<V, I> duplicate();
+    
     public interface Iterator<V extends IntVector<V,I>, I extends Int<I>> extends IntVectorArray.Iterator<V,I>
     {
     }

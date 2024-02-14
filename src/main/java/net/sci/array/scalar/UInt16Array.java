@@ -177,7 +177,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		{
 			return (UInt16Array) array;
 		}
-		return new Wrapper(array);
+		return new ScalarArrayWrapper(array);
 	}
 	
 
@@ -367,11 +367,18 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 	}
 	
-	class Wrapper implements UInt16Array
+    /**
+     * Wraps an instance of <code>ScalarArray</code> into an instance of
+     * <code>UInt16Array</code> by converting performing class cast on the fly.
+     * The wrapper has same size as the inner array.
+     * 
+     * @see UInt16Array#wrap(net.sci.array.Array)
+     */
+	class ScalarArrayWrapper implements UInt16Array
 	{
 		ScalarArray<?> array;
 		
-		public Wrapper(ScalarArray<?> array)
+		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
 			this.array = array;
 		}

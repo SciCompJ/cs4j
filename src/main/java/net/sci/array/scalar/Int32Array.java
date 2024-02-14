@@ -176,7 +176,7 @@ public interface Int32Array extends IntArray<Int32>
         {
             return (Int32Array) array;
         }
-        return new Wrapper(array);
+        return new ScalarArrayWrapper(array);
     }
 
 		
@@ -299,11 +299,15 @@ public interface Int32Array extends IntArray<Int32>
 		}
 	}
 
-	class Wrapper implements Int32Array
+    /**
+     * Wraps an instance of <code>ScalarArray</code> into an instance of
+     * <code>Int32Array</code> by converting performing class cast on the fly.
+     */
+	class ScalarArrayWrapper implements Int32Array
 	{
 		ScalarArray<?> array;
 		
-		public Wrapper(ScalarArray<?> array)
+		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
 			this.array = array;
 		}

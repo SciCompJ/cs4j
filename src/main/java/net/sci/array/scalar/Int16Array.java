@@ -178,7 +178,7 @@ public interface Int16Array extends IntArray<Int16>
 		{
 			return (Int16Array) array;
 		}
-		return new Wrapper(array);
+		return new ScalarArrayWrapper(array);
 	}
 	
 
@@ -346,11 +346,18 @@ public interface Int16Array extends IntArray<Int16>
 		}
 	}
 	
-	class Wrapper implements Int16Array
+	/**
+     * Wraps an instance of <code>ScalarArray</code> into an instance of
+     * <code>Int16Array</code> by converting performing class cast on the fly.
+     * The wrapper has same size as the inner array.
+     *  
+     * @see Int16Array#wrap(net.sci.array.Array)
+     */
+	class ScalarArrayWrapper implements Int16Array
 	{
 		ScalarArray<?> array;
 		
-		public Wrapper(ScalarArray<?> array)
+		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
 			this.array = array;
 		}

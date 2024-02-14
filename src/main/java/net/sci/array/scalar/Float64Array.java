@@ -177,7 +177,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		{
 			return (Float64Array) array;
 		}
-		return new Wrapper(array);
+		return new ScalarArrayWrapper(array);
 	}
 	
 
@@ -291,11 +291,18 @@ public interface Float64Array extends ScalarArray<Float64>
 		}
 	}
 
-	class Wrapper implements Float64Array
+	/**
+     * Wraps an instance of <code>ScalarArray</code> into an instance of
+     * <code>Float64Array</code> by converting performing class cast on the fly.
+     * The wrapper has same size as the inner array.
+     *  
+     * @see Float64Array#wrap(net.sci.array.Array)
+     */
+	class ScalarArrayWrapper implements Float64Array
 	{
 		ScalarArray<?> array;
 		
-		public Wrapper(ScalarArray<?> array)
+		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
 			this.array = array;
 		}
