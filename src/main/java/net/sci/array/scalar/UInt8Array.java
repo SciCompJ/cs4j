@@ -134,61 +134,22 @@ public interface UInt8Array extends IntArray<UInt8>
      *            the original array
      * @return a UInt8 view of the original array
      */
-	public static UInt8Array wrap(Array<?> array)
+	@SuppressWarnings("unchecked")
+    public static UInt8Array wrap(Array<?> array)
 	{
 		if (array instanceof UInt8Array)
 		{
 			return (UInt8Array) array;
 		}
-		if (array instanceof ScalarArray)
+		if (UInt8.class.isAssignableFrom(array.dataType()))
+		{
+		    return new Wrapper((Array<UInt8>) array);
+        }
+        if (array instanceof ScalarArray)
         {
             return wrapScalar((ScalarArray<?>) array);
         }
-		
-		if (UInt8.class.isAssignableFrom(array.dataType()))
-		{
-		    // create an anonymous class to wrap the instance of Array<UInt8>
-		    return new UInt8Array() 
-		    {
-		        @Override
-		        public int dimensionality()
-		        {
-		            return array.dimensionality();
-		        }
-
-		        @Override
-		        public int[] size()
-		        {
-                    return array.size();
-		        }
-
-		        @Override
-		        public int size(int dim)
-		        {
-                    return array.size(dim);
-		        }
-
-		        @Override
-		        public PositionIterator positionIterator()
-		        {
-                    return array.positionIterator();
-		        }
-
-		        @Override
-		        public byte getByte(int[] pos)
-		        {
-		            return ((UInt8) array.get(pos)).getByte();
-		        }
-
-		        @SuppressWarnings("unchecked")
-                @Override
-		        public void setByte(int[] pos, byte value)
-		        {
-		            ((Array<UInt8>) array).set(pos, new UInt8(value));
-		        }
-		    };
-        }
-		
+        
 		throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
 	}
 	
@@ -398,6 +359,65 @@ public interface UInt8Array extends IntArray<UInt8>
 		{
 			setByte(value.getByte());
 		}
+	}
+	
+    /**
+     * Wraps explicitly an array containing <code>UInt8</code> elements into an
+     * instance of <code>UInt8Array</code>.
+     * 
+     * Usage:
+     * <pre>
+     * {@code
+     * Array<UInt8> array = ...
+     * UInt8Array newArray = new UInt8Array.Wrapper(array);
+     * newArray.getInt(...);  
+     * }
+     * </pre>
+     */
+	static class Wrapper implements UInt8Array
+	{
+	    Array<UInt8> array;
+	    
+	    public Wrapper(Array<UInt8> array)
+	    {
+	        this.array = array;
+	    }
+	    
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
+        public byte getByte(int[] pos)
+        {
+            return array.get(pos).getByte();
+        }
+
+        @Override
+        public void setByte(int[] pos, byte value)
+        {
+            array.set(pos, new UInt8(value));
+        }
 	}
 	
     /**

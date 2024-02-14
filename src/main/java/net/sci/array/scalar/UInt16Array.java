@@ -7,7 +7,6 @@ import java.util.function.Function;
 
 import net.sci.array.Array;
 
-
 /**
  * An array containing 16-bits unsigned integers.
  * 
@@ -113,61 +112,22 @@ public interface UInt16Array extends IntArray<UInt16>
      *            the original array
      * @return a UInt16 view of the original array
      */
+    @SuppressWarnings("unchecked")
     public static UInt16Array wrap(Array<?> array)
     {
         if (array instanceof UInt16Array)
         {
             return (UInt16Array) array;
         }
+        if (UInt16.class.isAssignableFrom(array.dataType()))
+        {
+            return new Wrapper((Array<UInt16>) array);
+        }
         if (array instanceof ScalarArray)
         {
             return wrapScalar((ScalarArray<?>) array);
         }
-        
-        if (UInt16.class.isAssignableFrom(array.dataType()))
-        {
-            // create an anonymous class to wrap the instance of Array<UInt16>
-            return new UInt16Array() 
-            {
-                @Override
-                public int dimensionality()
-                {
-                    return array.dimensionality();
-                }
-
-                @Override
-                public int[] size()
-                {
-                    return array.size();
-                }
-
-                @Override
-                public int size(int dim)
-                {
-                    return array.size(dim);
-                }
-
-                @Override
-                public PositionIterator positionIterator()
-                {
-                    return array.positionIterator();
-                }
-
-                @Override
-                public short getShort(int[] pos)
-                {
-                    return ((UInt16) array.get(pos)).getShort();
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void setShort(int[] pos, short value)
-                {
-                    ((Array<UInt16>) array).set(pos, new UInt16(value));
-                }
-            };
-        }
-        
+                
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
     }
     
@@ -367,6 +327,65 @@ public interface UInt16Array extends IntArray<UInt16>
 		}
 	}
 	
+    /**
+     * Wraps explicitly an array containing <code>UInt16</code> elements into an
+     * instance of <code>UInt16Array</code>.
+     * 
+     * Usage:
+     * <pre>
+     * {@code
+     * Array<UInt16> array = ...
+     * UInt16Array newArray = new UInt16Array.Wrapper(array);
+     * newArray.getInt(...);  
+     * }
+     * </pre>
+     */
+    static class Wrapper implements UInt16Array
+    {
+        Array<UInt16> array;
+        
+        public Wrapper(Array<UInt16> array)
+        {
+            this.array = array;
+        }
+        
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
+        public short getShort(int[] pos)
+        {
+            return array.get(pos).getShort();
+        }
+
+        @Override
+        public void setShort(int[] pos, short value)
+        {
+            array.set(pos, new UInt16(value));
+        }
+    }
+    
     /**
      * Wraps an instance of <code>ScalarArray</code> into an instance of
      * <code>UInt16Array</code> by converting performing class cast on the fly.

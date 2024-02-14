@@ -87,20 +87,14 @@ public interface Float32Array extends ScalarArray<Float32>
     private static Float32Array convertArrayOfFloat32(Array<?> array)
     {
         Float32Array result = Float32Array.create(array.size());
-        for (int[] pos : array.positions())
-        {
-            result.setFloat(pos, ((Float32) array.get(pos)).getFloat());
-        }
+        result.fillFloats(pos -> ((Float32) array.get(pos)).getFloat());
         return result;
     }
     
     private static Float32Array convertScalarArray(ScalarArray<?> array)
     {
         Float32Array result = Float32Array.create(array.size());
-        for (int[] pos : array.positions())
-        {
-            result.setValue(pos, array.getValue(pos));
-        }
+        result.fillValues(pos -> ((Scalar<?>) array.get(pos)).getValue());
         return result;
     }
     
@@ -113,6 +107,7 @@ public interface Float32Array extends ScalarArray<Float32>
      *            the original array
      * @return a Float32 view of the original array
      */
+    @SuppressWarnings("unchecked")
     public static Float32Array wrap(Array<?> array)
     {
         if (array instanceof Float32Array)
@@ -126,59 +121,7 @@ public interface Float32Array extends ScalarArray<Float32>
         
         if (Float32.class.isAssignableFrom(array.dataType()))
         {
-            // create an anonymous class to wrap the instance of Array<Float32>
-            return new Float32Array() 
-            {
-                @Override
-                public int dimensionality()
-                {
-                    return array.dimensionality();
-                }
-
-                @Override
-                public int[] size()
-                {
-                    return array.size();
-                }
-
-                @Override
-                public int size(int dim)
-                {
-                    return array.size(dim);
-                }
-
-                @Override
-                public PositionIterator positionIterator()
-                {
-                    return array.positionIterator();
-                }
-
-                @Override
-                public float getFloat(int[] pos)
-                {
-                    return ((Float32) array.get(pos)).getFloat();
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void setFloat(int[] pos, float value)
-                {
-                    ((Array<Float32>) array).set(pos, new Float32(value));
-                }
-
-                @Override
-                public double getValue(int[] pos)
-                {
-                    return ((Float32) array.get(pos)).getValue();
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void setValue(int[] pos, double value)
-                {
-                    ((Array<Float32>) array).set(pos, new Float32((float) value));
-                }
-            };
+            return new Wrapper((Array<Float32>) array);
         }
         
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
@@ -364,6 +307,77 @@ public interface Float32Array extends ScalarArray<Float32>
 		}
 	}
 	
+    /**
+     * Wraps explicitly an array containing <code>Float32</code> elements into an
+     * instance of <code>Float32Array</code>.
+     * 
+     * Usage:
+     * <pre>
+     * {@code
+     * Array<Float32> array = ...
+     * Float32Array newArray = new Float32Array.Wrapper(array);
+     * newArray.getFloat(...);  
+     * }
+     * </pre>
+     */
+    static class Wrapper implements Float32Array
+    {
+        Array<Float32> array;
+        
+        public Wrapper(Array<Float32> array)
+        {
+            this.array = array;
+        }
+        
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
+        public float getFloat(int[] pos)
+        {
+            return array.get(pos).getFloat();
+        }
+
+        @Override
+        public void setFloat(int[] pos, float value)
+        {
+            array.set(pos, new Float32(value));
+        }
+
+        @Override
+        public double getValue(int[] pos)
+        {
+            return array.get(pos).getValue();
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            array.set(pos, new Float32((float) value));
+        }
+    }
+    
 	/**
      * Wraps an instance of <code>ScalarArray</code> into an instance of
      * <code>Float32Array</code> by converting performing class cast on the fly.

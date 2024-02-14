@@ -112,6 +112,7 @@ public interface Int32Array extends IntArray<Int32>
      *            the original array
      * @return a Int32 view of the original array
      */
+    @SuppressWarnings("unchecked")
     public static Int32Array wrap(Array<?> array)
     {
         if (array instanceof Int32Array)
@@ -125,46 +126,7 @@ public interface Int32Array extends IntArray<Int32>
         
         if (Int32.class.isAssignableFrom(array.dataType()))
         {
-            // create an anonymous class to wrap the instance of Array<Int32>
-            return new Int32Array() 
-            {
-                @Override
-                public int dimensionality()
-                {
-                    return array.dimensionality();
-                }
-
-                @Override
-                public int[] size()
-                {
-                    return array.size();
-                }
-
-                @Override
-                public int size(int dim)
-                {
-                    return array.size(dim);
-                }
-
-                @Override
-                public PositionIterator positionIterator()
-                {
-                    return array.positionIterator();
-                }
-
-                @Override
-                public int getInt(int[] pos)
-                {
-                    return ((Int32) array.get(pos)).getInt();
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void setInt(int[] pos, int value)
-                {
-                    ((Array<Int32>) array).set(pos, new Int32(value));
-                }
-            };
+            return new Wrapper((Array<Int32>) array);
         }
         
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
@@ -299,6 +261,65 @@ public interface Int32Array extends IntArray<Int32>
 		}
 	}
 
+    /**
+     * Wraps explicitly an array containing <code>Int32</code> elements into an
+     * instance of <code>Int32Array</code>.
+     * 
+     * Usage:
+     * <pre>
+     * {@code
+     * Array<Int32> array = ...
+     * Int32Array newArray = new Int32Array.Wrapper(array);
+     * newArray.getInt(...);  
+     * }
+     * </pre>
+     */
+    static class Wrapper implements Int32Array
+    {
+        Array<Int32> array;
+        
+        public Wrapper(Array<Int32> array)
+        {
+            this.array = array;
+        }
+        
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
+        public int getInt(int[] pos)
+        {
+            return array.get(pos).getInt();
+        }
+
+        @Override
+        public void setInt(int[] pos, int value)
+        {
+            array.set(pos, new Int32(value));
+        }
+    }
+    
     /**
      * Wraps an instance of <code>ScalarArray</code> into an instance of
      * <code>Int32Array</code> by converting performing class cast on the fly.

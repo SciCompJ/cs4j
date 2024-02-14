@@ -101,6 +101,7 @@ public interface BinaryArray extends IntArray<Binary>
      *            the original array
      * @return a Binary view of the original array
      */
+    @SuppressWarnings("unchecked")
     public static BinaryArray wrap(Array<?> array)
     {
         if (array instanceof BinaryArray)
@@ -114,46 +115,7 @@ public interface BinaryArray extends IntArray<Binary>
         
         if (Binary.class.isAssignableFrom(array.dataType()))
         {
-            // create an anonymous class to wrap the instance of Array<Binary>
-            return new BinaryArray() 
-            {
-                @Override
-                public int dimensionality()
-                {
-                    return array.dimensionality();
-                }
-
-                @Override
-                public int[] size()
-                {
-                    return array.size();
-                }
-
-                @Override
-                public int size(int dim)
-                {
-                    return array.size(dim);
-                }
-
-                @Override
-                public PositionIterator positionIterator()
-                {
-                    return array.positionIterator();
-                }
-
-                @Override
-                public boolean getBoolean(int[] pos)
-                {
-                    return ((Binary) array.get(pos)).getBoolean();
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void setBoolean(int[] pos, boolean value)
-                {
-                    ((Array<Binary>) array).set(pos, new Binary(value));
-                }
-            };
+            return new Wrapper((Array<Binary>) array);
         }
         
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
@@ -693,7 +655,66 @@ public interface BinaryArray extends IntArray<Binary>
 		}
 	}
 	
-	/**
+    /**
+     * Wraps explicitly an array containing <code>Binary</code> elements into an
+     * instance of <code>BinaryArray</code>.
+     * 
+     * Usage:
+     * <pre>
+     * {@code
+     * Array<Binary> array = ...
+     * BinaryArray newArray = new BinaryArray.Wrapper(array);
+     * newArray.getBoolean(...);  
+     * }
+     * </pre>
+     */
+    static class Wrapper implements BinaryArray
+    {
+        Array<Binary> array;
+        
+        public Wrapper(Array<Binary> array)
+        {
+            this.array = array;
+        }
+        
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
+        public boolean getBoolean(int[] pos)
+        {
+            return array.get(pos).getBoolean();
+        }
+
+        @Override
+        public void setBoolean(int[] pos, boolean value)
+        {
+            array.set(pos, new Binary(value));
+        }
+    }
+    
+    /**
      * Wraps a scalar array into a BinaryArray with same dimension.
      * 
      * Conversion between scalar and binary:

@@ -113,59 +113,21 @@ public interface Float64Array extends ScalarArray<Float64>
      *            the original array
      * @return a Float64 view of the original array
      */
+    @SuppressWarnings("unchecked")
     public static Float64Array wrap(Array<?> array)
     {
         if (array instanceof Float64Array)
         {
             return (Float64Array) array;
         }
+        if (Float64.class.isAssignableFrom(array.dataType()))
+        {
+            return new Wrapper((Array<Float64>) array);
+        }
+        
         if (array instanceof ScalarArray)
         {
             return wrapScalar((ScalarArray<?>) array);
-        }
-        
-        if (Float64.class.isAssignableFrom(array.dataType()))
-        {
-            // create an anonymous class to wrap the instance of Array<Float64>
-            return new Float64Array() 
-            {
-                @Override
-                public int dimensionality()
-                {
-                    return array.dimensionality();
-                }
-
-                @Override
-                public int[] size()
-                {
-                    return array.size();
-                }
-
-                @Override
-                public int size(int dim)
-                {
-                    return array.size(dim);
-                }
-
-                @Override
-                public PositionIterator positionIterator()
-                {
-                    return array.positionIterator();
-                }
-
-                @Override
-                public double getValue(int[] pos)
-                {
-                    return ((Float64) array.get(pos)).getValue();
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void setValue(int[] pos, double value)
-                {
-                    ((Array<Float64>) array).set(pos, new Float64((float) value));
-                }
-            };
         }
         
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
@@ -291,6 +253,65 @@ public interface Float64Array extends ScalarArray<Float64>
 		}
 	}
 
+    /**
+     * Wraps explicitly an array containing <code>Float64</code> elements into an
+     * instance of <code>Float64Array</code>.
+     * 
+     * Usage:
+     * <pre>
+     * {@code
+     * Array<Float64> array = ...
+     * Float64Array newArray = new Float64Array.Wrapper(array);
+     * newArray.getValue(...);  
+     * }
+     * </pre>
+     */
+    static class Wrapper implements Float64Array
+    {
+        Array<Float64> array;
+        
+        public Wrapper(Array<Float64> array)
+        {
+            this.array = array;
+        }
+        
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
+        public double getValue(int[] pos)
+        {
+            return array.get(pos).getValue();
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            array.set(pos, new Float64(value));
+        }
+    }
+    
 	/**
      * Wraps an instance of <code>ScalarArray</code> into an instance of
      * <code>Float64Array</code> by converting performing class cast on the fly.
@@ -306,7 +327,6 @@ public interface Float64Array extends ScalarArray<Float64>
 		{
 			this.array = array;
 		}
-
 		
 		// =============================================================
 		// Specialization of the Array interface
@@ -335,13 +355,11 @@ public interface Float64Array extends ScalarArray<Float64>
 			return array.getValue(position);
 		}
 
-
 		@Override
 		public void setValue(int[] pos, double value)
 		{
 			array.setValue(pos, value);
 		}
-
 
 		@Override
 		public Float64 get(int[] pos)

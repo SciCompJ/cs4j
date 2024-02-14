@@ -114,60 +114,22 @@ public interface Int16Array extends IntArray<Int16>
      *            the original array
      * @return a Int16 view of the original array
      */
+    @SuppressWarnings("unchecked")
     public static Int16Array wrap(Array<?> array)
     {
         if (array instanceof Int16Array)
         {
             return (Int16Array) array;
         }
+        if (Int16.class.isAssignableFrom(array.dataType()))
+        {
+            return new Wrapper((Array<Int16>) array);
+        }
         if (array instanceof ScalarArray)
         {
             return wrapScalar((ScalarArray<?>) array);
         }
         
-        if (Int16.class.isAssignableFrom(array.dataType()))
-        {
-            // create an anonymous class to wrap the instance of Array<Int16>
-            return new Int16Array() 
-            {
-                @Override
-                public int dimensionality()
-                {
-                    return array.dimensionality();
-                }
-
-                @Override
-                public int[] size()
-                {
-                    return array.size();
-                }
-
-                @Override
-                public int size(int dim)
-                {
-                    return array.size(dim);
-                }
-
-                @Override
-                public PositionIterator positionIterator()
-                {
-                    return array.positionIterator();
-                }
-
-                @Override
-                public short getShort(int[] pos)
-                {
-                    return ((Int16) array.get(pos)).getShort();
-                }
-
-                @SuppressWarnings("unchecked")
-                @Override
-                public void setShort(int[] pos, short value)
-                {
-                    ((Array<Int16>) array).set(pos, new Int16(value));
-                }
-            };
-        }
         
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
     }
@@ -346,6 +308,65 @@ public interface Int16Array extends IntArray<Int16>
 		}
 	}
 	
+    /**
+     * Wraps explicitly an array containing <code>Int16</code> elements into an
+     * instance of <code>Int16Array</code>.
+     * 
+     * Usage:
+     * <pre>
+     * {@code
+     * Array<Int16> array = ...
+     * Int16Array newArray = new Int16Array.Wrapper(array);
+     * newArray.getInt(...);  
+     * }
+     * </pre>
+     */
+    static class Wrapper implements Int16Array
+    {
+        Array<Int16> array;
+        
+        public Wrapper(Array<Int16> array)
+        {
+            this.array = array;
+        }
+        
+        @Override
+        public int dimensionality()
+        {
+            return array.dimensionality();
+        }
+
+        @Override
+        public int[] size()
+        {
+            return array.size();
+        }
+
+        @Override
+        public int size(int dim)
+        {
+            return array.size(dim);
+        }
+
+        @Override
+        public PositionIterator positionIterator()
+        {
+            return array.positionIterator();
+        }
+
+        @Override
+        public short getShort(int[] pos)
+        {
+            return array.get(pos).getShort();
+        }
+
+        @Override
+        public void setShort(int[] pos, short value)
+        {
+            array.set(pos, new Int16(value));
+        }
+    }
+    
 	/**
      * Wraps an instance of <code>ScalarArray</code> into an instance of
      * <code>Int16Array</code> by converting performing class cast on the fly.
