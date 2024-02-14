@@ -577,19 +577,19 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         // Create an anonymous class for the channel iterator 
         return new java.util.Iterator<UInt8Array>()
         {
-            int channel = -1;
+            int index = -1;
 
             @Override
             public boolean hasNext()
             {
-                return channel < 2;
+                return index < 2;
             }
 
             @Override
             public UInt8Array next()
             {
-                channel++;
-                return new RGB8Array.ChannelView(RGB8Array.this, channel);
+                index++;
+                return RGB8Array.this.channel(index);
             }
         };
     }
@@ -720,13 +720,13 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         @Override
         public default int getSample(int c)
         {
-            return get().getSamples()[c];
+            return get().getSample(c);
         }
 
         @Override
         public default double getValue(int c)
         {
-            return get().getValues()[c];
+            return get().getValue(c);
         }
 
 		@Override

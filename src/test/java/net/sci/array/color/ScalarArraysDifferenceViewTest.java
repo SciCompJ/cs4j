@@ -5,9 +5,12 @@ package net.sci.array.color;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import net.sci.array.scalar.ScalarArrayUInt8View;
+import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
 
 /**
@@ -16,7 +19,6 @@ import net.sci.array.scalar.UInt8Array2D;
  */
 public class ScalarArraysDifferenceViewTest
 {
-
     /**
      * Test method for {@link net.sci.array.color.ScalarArraysDifferenceView#ScalarArraysDifferenceView(net.sci.array.scalar.UInt8Array, net.sci.array.scalar.UInt8Array)}.
      */
@@ -56,4 +58,21 @@ public class ScalarArraysDifferenceViewTest
         assertEquals(RGB8.GREEN, rgb.get(new int[] {30, 70}));
     }
 
-}
+    @Test
+    public final void test_channel_method_return_ScalarArrayUInt8View()
+    {
+        UInt8Array2D array1 = UInt8Array2D.create(100, 100);
+        array1.fillInts((x, y) -> 2 * x);
+        UInt8Array2D array2 = UInt8Array2D.create(100, 100);
+        array2.fillInts((x, y) -> 2 * y);
+        
+        RGB8Array rgb = new ScalarArraysDifferenceView(array1, array2);
+        UInt8Array channel0 = rgb.channel(0);
+        UInt8Array channel1 = rgb.channel(1);
+        UInt8Array channel2 = rgb.channel(2);
+        
+        assertTrue(channel0 instanceof ScalarArrayUInt8View);
+        assertTrue(channel1 instanceof ScalarArrayUInt8View);
+        assertTrue(channel2 instanceof ScalarArrayUInt8View);
+    }
+ }
