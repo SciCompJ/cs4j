@@ -5,6 +5,7 @@ package net.sci.array.process.binary;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 import net.sci.array.Arrays;
 import net.sci.array.binary.BinaryArray;
 
@@ -123,7 +124,7 @@ public class BinaryMask extends AlgoStub
         return res;
     }
     
-    static class View<T> implements Array<T>
+    static class View<T> extends ArrayWrapperStub<T>
     {
         /**
          * The array containing the original values.
@@ -144,6 +145,8 @@ public class BinaryMask extends AlgoStub
         
         public View(Array<T> array, BinaryArray mask)
         {
+            super(array);
+            
             // check same size
             if (!Arrays.isSameSize(array, mask))
             {
@@ -156,24 +159,6 @@ public class BinaryMask extends AlgoStub
             
             // initialize "zero" element
             zero = array.newInstance(new int[] {1,1}).get(new int[] {0, 0});
-        }
-
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
         }
 
         @Override

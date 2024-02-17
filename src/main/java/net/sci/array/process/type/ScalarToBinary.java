@@ -7,6 +7,8 @@ import java.util.TreeMap;
 import java.util.function.Function;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.ArrayWrapperStub;
+import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
@@ -72,39 +74,7 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
      */
     public BinaryArray createView(ScalarArray<?> array)
     {
-        return new BinaryArray()
-        {
-
-            @Override
-            public boolean getBoolean(int[] pos)
-            {
-                return fun.apply(array.getValue(pos));
-            }
-
-            @Override
-            public void setBoolean(int[] pos, boolean state)
-            {
-                throw new RuntimeException("Can not modify a binary view of a scalar array");
-            }
-            
-            @Override
-            public int dimensionality()
-            {
-                return array.dimensionality();
-            }
-
-            @Override
-            public int[] size()
-            {
-                return array.size();
-            }
-
-            @Override
-            public int size(int dim)
-            {
-                return array.size(dim);
-            }
-        };
+        return new View(array);
     }
 
     @Override
@@ -200,5 +170,25 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
         BinaryArray res = BinaryArray.create(array.size());
         res.fillBooleans(pos -> fun.apply(array.getValue(pos)));
         return res;
+    }
+    
+    private class View extends ArrayWrapperStub<Binary> implements BinaryArray
+    {
+        protected View(ScalarArray<?> array)
+        {
+            super(array);
+        }
+
+        @Override
+        public boolean getBoolean(int[] pos)
+        {
+            return fun.apply(((ScalarArray<?>) array).getValue(pos));
+        }
+
+        @Override
+        public void setBoolean(int[] pos, boolean state)
+        {
+            throw new RuntimeException("Can not modify a binary view of a scalar array");
+        }
     }
 }

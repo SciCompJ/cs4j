@@ -6,6 +6,7 @@ package net.sci.array.binary;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 import net.sci.array.Arrays;
 import net.sci.array.process.binary.BinaryMask;
 import net.sci.array.process.type.ConvertToBinary;
@@ -668,39 +669,16 @@ public interface BinaryArray extends IntArray<Binary>
      * }
      * </pre>
      */
-    static class Wrapper implements BinaryArray
+    static class Wrapper extends ArrayWrapperStub<Binary> implements BinaryArray
     {
         Array<Binary> array;
         
         public Wrapper(Array<Binary> array)
         {
+            super(array);
             this.array = array;
         }
         
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
         @Override
         public boolean getBoolean(int[] pos)
         {
@@ -725,13 +703,14 @@ public interface BinaryArray extends IntArray<Binary>
      * 
      * @see BinaryArray#wrap(net.sci.array.scalar.ScalarArray)
      */
-    static class ScalarArrayWrapper implements BinaryArray
+    static class ScalarArrayWrapper extends ArrayWrapperStub<Binary> implements BinaryArray
     {
         /** The parent array */
         ScalarArray<?> array;
         
         public ScalarArrayWrapper(ScalarArray<?> array)
         {
+            super(array);
             this.array = array;
         }
         
@@ -768,24 +747,6 @@ public interface BinaryArray extends IntArray<Binary>
     	}
     	
         @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
-        @Override
         public Binary get(int[] pos)
         {
             return new Binary(array.getValue(pos) > 0);
@@ -798,18 +759,11 @@ public interface BinaryArray extends IntArray<Binary>
         }
 
         @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
-        @Override
         public Iterator iterator()
         {
             return new Iterator(array.iterator());
         }
         
-
     	private class ItemPositionIterator implements PositionIterator
     	{
     		PositionIterator iter;

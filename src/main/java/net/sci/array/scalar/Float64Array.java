@@ -6,6 +6,7 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 
 
 /**
@@ -266,39 +267,16 @@ public interface Float64Array extends ScalarArray<Float64>
      * }
      * </pre>
      */
-    static class Wrapper implements Float64Array
+    static class Wrapper extends ArrayWrapperStub<Float64> implements Float64Array
     {
         Array<Float64> array;
         
         public Wrapper(Array<Float64> array)
         {
+            super(array);
             this.array = array;
         }
         
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
         @Override
         public double getValue(int[] pos)
         {
@@ -319,35 +297,18 @@ public interface Float64Array extends ScalarArray<Float64>
      *  
      * @see Float64Array#wrap(net.sci.array.Array)
      */
-	class ScalarArrayWrapper implements Float64Array
+	class ScalarArrayWrapper extends ArrayWrapperStub<Float64> implements Float64Array
 	{
 		ScalarArray<?> array;
 		
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
+		    super(array);
 			this.array = array;
 		}
 		
 		// =============================================================
 		// Specialization of the Array interface
-
-		@Override
-		public int dimensionality()
-		{
-			return array.dimensionality();
-		}
-
-		@Override
-		public int[] size()
-		{
-			return array.size();
-		}
-
-		@Override
-		public int size(int dim)
-		{
-			return array.size(dim);
-		}
 
 		@Override
 		public double getValue(int[] position)
@@ -371,58 +332,6 @@ public interface Float64Array extends ScalarArray<Float64>
 		public void set(int[] pos, Float64 value)
 		{
 			array.setValue(pos, value.getValue());
-		}
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
-		@Override
-		public Iterator iterator()
-		{
-			return new Iterator(array.iterator());
-		}
-		
-		class Iterator implements Float64Array.Iterator
-		{
-			ScalarArray.Iterator<?> iter;
-			
-			public Iterator(ScalarArray.Iterator<?> iter)
-			{
-				this.iter = iter;
-			}
-
-			@Override
-			public void forward()
-			{
-				this.iter.forward();
-			}
-
-			@Override
-			public Float64 next()
-			{
-				return new Float64(iter.nextValue());
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				return iter.hasNext();
-			}
-
-			@Override
-			public double getValue()
-			{
-				return iter.getValue();
-			}
-
-			@Override
-			public void setValue(double value)
-			{
-				iter.setValue(value);
-			}
 		}
 	}
 

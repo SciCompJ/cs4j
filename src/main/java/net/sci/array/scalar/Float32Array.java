@@ -6,6 +6,7 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 
 
 /**
@@ -320,39 +321,16 @@ public interface Float32Array extends ScalarArray<Float32>
      * }
      * </pre>
      */
-    static class Wrapper implements Float32Array
+    static class Wrapper extends ArrayWrapperStub<Float32> implements Float32Array
     {
         Array<Float32> array;
         
         public Wrapper(Array<Float32> array)
         {
+            super(array);
             this.array = array;
         }
         
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
         @Override
         public float getFloat(int[] pos)
         {
@@ -385,12 +363,13 @@ public interface Float32Array extends ScalarArray<Float32>
      *  
      * @see Float32Array#wrap(net.sci.array.Array)
      */
-	class ScalarArrayWrapper implements Float32Array
+	class ScalarArrayWrapper extends ArrayWrapperStub<Float32> implements Float32Array
 	{
 		ScalarArray<?> array;
 		
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
+		    super(array);
 			this.array = array;
 		}
 
@@ -399,7 +378,6 @@ public interface Float32Array extends ScalarArray<Float32>
         {
             return (float) array.getValue(position);
         }
-
 
         @Override
         public void setFloat(int[] pos, float value)
@@ -410,31 +388,6 @@ public interface Float32Array extends ScalarArray<Float32>
 
 	    // =============================================================
 		// Specialization of the Array interface
-
-		@Override
-		public int dimensionality()
-		{
-			return array.dimensionality();
-		}
-
-		@Override
-		public int[] size()
-		{
-			return array.size();
-		}
-
-		@Override
-		public int size(int dim)
-		{
-			return array.size(dim);
-		}
-
-		@Override
-		public double getValue(int[] position)
-		{
-			return array.getValue(position);
-		}
-
 
 		@Override
 		public void setValue(int[] pos, double value)
@@ -453,70 +406,6 @@ public interface Float32Array extends ScalarArray<Float32>
 		public void set(int[] pos, Float32 value)
 		{
 			array.setValue(pos, value.getValue());
-		}
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
-		@Override
-		public Iterator iterator()
-		{
-			return new Iterator(array.iterator());
-		}
-		
-		class Iterator implements Float32Array.Iterator
-		{
-			ScalarArray.Iterator<?> iter;
-			
-			public Iterator(ScalarArray.Iterator<?> iter)
-			{
-				this.iter = iter;
-			}
-
-            @Override
-            public float getFloat()
-            {
-                return (float) getValue();
-            }
-
-            @Override
-            public void setFloat(float value)
-            {
-                iter.setValue(value);
-            }
-
-            @Override
-            public double getValue()
-            {
-                return iter.getValue();
-            }
-
-            @Override
-            public void setValue(double value)
-            {
-                iter.setValue(value);
-            }
-
-			@Override
-			public void forward()
-			{
-				this.iter.forward();
-			}
-
-			@Override
-			public Float32 next()
-			{
-				return new Float32((float) iter.nextValue());
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				return iter.hasNext();
-			}
 		}
 	}
 

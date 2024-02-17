@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
@@ -596,39 +597,16 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         }
     }
 	
-    static class Wrapper implements RGB16Array
+    static class Wrapper extends ArrayWrapperStub<RGB16> implements RGB16Array
     {
         Array<RGB16> array;
         
         public Wrapper(Array<RGB16> array)
         {
+            super(array);
             this.array = array;
         }
         
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
         @Override
         public RGB16 get(int[] pos)
         {

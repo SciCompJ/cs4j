@@ -6,6 +6,7 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 
 /**
  * An array containing 16-bits unsigned integers.
@@ -340,33 +341,16 @@ public interface UInt16Array extends IntArray<UInt16>
      * }
      * </pre>
      */
-    static class Wrapper implements UInt16Array
+    static class Wrapper extends ArrayWrapperStub<UInt16> implements UInt16Array
     {
         Array<UInt16> array;
         
         public Wrapper(Array<UInt16> array)
         {
+            super(array);
             this.array = array;
         }
         
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
         @Override
         public PositionIterator positionIterator()
         {
@@ -393,12 +377,13 @@ public interface UInt16Array extends IntArray<UInt16>
      * 
      * @see UInt16Array#wrap(net.sci.array.Array)
      */
-	class ScalarArrayWrapper implements UInt16Array
+	class ScalarArrayWrapper extends ArrayWrapperStub<UInt16> implements UInt16Array
 	{
 		ScalarArray<?> array;
 		
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
+		    super(array);
 			this.array = array;
 		}
 		
@@ -423,24 +408,6 @@ public interface UInt16Array extends IntArray<UInt16>
 		// Specialization of the Array interface
 
 		@Override
-		public int dimensionality()
-		{
-			return array.dimensionality();
-		}
-
-		@Override
-		public int[] size()
-		{
-			return array.size();
-		}
-
-		@Override
-		public int size(int dim)
-		{
-			return array.size(dim);
-		}
-
-		@Override
 		public UInt16 get(int[] pos)
 		{
 			return new UInt16(UInt16.convert(array.getValue(pos)));
@@ -450,58 +417,6 @@ public interface UInt16Array extends IntArray<UInt16>
 		public void set(int[] pos, UInt16 value)
 		{
 			array.setValue(pos, value.getValue());
-		}
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
-		@Override
-		public Iterator iterator()
-		{
-			return new Iterator(array.iterator());
-		}
-		
-		class Iterator implements UInt16Array.Iterator
-		{
-			ScalarArray.Iterator<?> iter;
-			
-			public Iterator(ScalarArray.Iterator<?> iter)
-			{
-				this.iter = iter;
-			}
-
-			@Override
-			public short getShort()
-			{
-				return get().getShort();
-			}
-
-			@Override
-			public void setShort(short b)
-			{
-				iter.setValue(new UInt16(b).getValue());
-			}
-
-			@Override
-			public void forward()
-			{
-				this.iter.forward();
-			}
-
-			@Override
-			public UInt16 next()
-			{
-				return new UInt16(UInt16.convert(iter.nextValue()));
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				return iter.hasNext();
-			}
 		}
 	}
 	

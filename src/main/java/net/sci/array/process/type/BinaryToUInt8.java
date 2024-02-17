@@ -5,12 +5,14 @@ package net.sci.array.process.type;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.scalar.ScalarArray;
+import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
@@ -107,31 +109,14 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
         return res;
     }
     
-    public static class View implements UInt8Array
+    public static class View extends ArrayWrapperStub<UInt8> implements UInt8Array
     {
         BinaryArray array;
         
         public View(Array<?> array)
         {
+            super(array);
             this.array = BinaryArray.wrap(array);
-        }
-
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
         }
 
         @Override

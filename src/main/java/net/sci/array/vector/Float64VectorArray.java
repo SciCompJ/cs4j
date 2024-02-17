@@ -5,6 +5,7 @@ package net.sci.array.vector;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 import net.sci.array.scalar.Float64;
 import net.sci.array.scalar.Float64Array;
 
@@ -249,13 +250,14 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
      * 
      * Assumes all vectors have the same size and that the array is not empty.
      */
-    static class Wrapper implements Float64VectorArray
+    static class Wrapper extends ArrayWrapperStub<Float64Vector> implements Float64VectorArray
     {
         Array<Float64Vector> array;
         int channelCount;
         
         public Wrapper(Array<Float64Vector> array)
         {
+            super(array);
             this.array = array;
             this.channelCount = array.iterator().next().size();
         }
@@ -316,25 +318,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
             values[channel] = (float) value;
             array.set(pos, new Float64Vector(values));
         }
-
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
+        
         private class ChannelIterator implements java.util.Iterator<Float64Array> 
         {
             int channel = 0;

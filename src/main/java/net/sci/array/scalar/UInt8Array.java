@@ -6,6 +6,7 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 import net.sci.array.process.type.ConvertToUInt8;
 
 
@@ -374,39 +375,16 @@ public interface UInt8Array extends IntArray<UInt8>
      * }
      * </pre>
      */
-	static class Wrapper implements UInt8Array
+	static class Wrapper extends ArrayWrapperStub<UInt8> implements UInt8Array
 	{
 	    Array<UInt8> array;
 	    
 	    public Wrapper(Array<UInt8> array)
 	    {
+	        super(array);
 	        this.array = array;
 	    }
 	    
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
         @Override
         public byte getByte(int[] pos)
         {
@@ -427,13 +405,14 @@ public interface UInt8Array extends IntArray<UInt8>
      *  
      * @see UInt8Array#wrap(net.sci.array.Array)
      */
-	static class ScalarArrayWrapper implements UInt8Array
+	static class ScalarArrayWrapper  extends ArrayWrapperStub<UInt8> implements UInt8Array
 	{
 	    /** The parent array */
 		ScalarArray<?> array;
 		
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
+		    super(array);
 			this.array = array;
 		}
 		
@@ -458,24 +437,6 @@ public interface UInt8Array extends IntArray<UInt8>
 		// Specialization of the Array interface
 
 		@Override
-		public int dimensionality()
-		{
-			return array.dimensionality();
-		}
-
-		@Override
-		public int[] size()
-		{
-			return array.size();
-		}
-
-		@Override
-		public int size(int dim)
-		{
-			return array.size(dim);
-		}
-
-		@Override
 		public UInt8 get(int[] pos)
 		{
 			return new UInt8(UInt8.convert(array.getValue(pos)));
@@ -485,58 +446,6 @@ public interface UInt8Array extends IntArray<UInt8>
 		public void set(int[] pos, UInt8 value)
 		{
 			array.setValue(pos, value.getValue());
-		}
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
-		@Override
-		public Iterator iterator()
-		{
-			return new Iterator(array.iterator());
-		}
-		
-		class Iterator implements UInt8Array.Iterator
-		{
-			ScalarArray.Iterator<?> iter;
-			
-			public Iterator(ScalarArray.Iterator<?> iter)
-			{
-				this.iter = iter;
-			}
-
-			@Override
-			public byte getByte()
-			{
-				return get().getByte();
-			}
-
-			@Override
-			public void setByte(byte b)
-			{
-				iter.setValue(new UInt8(b).getValue());
-			}
-
-			@Override
-			public void forward()
-			{
-				this.iter.forward();
-			}
-
-			@Override
-			public UInt8 next()
-			{
-				return new UInt8(UInt8.convert(iter.nextValue()));
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				return iter.hasNext();
-			}
 		}
 	}
 	

@@ -6,6 +6,7 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 
 
 /**
@@ -321,39 +322,16 @@ public interface Int16Array extends IntArray<Int16>
      * }
      * </pre>
      */
-    static class Wrapper implements Int16Array
+    static class Wrapper extends ArrayWrapperStub<Int16> implements Int16Array
     {
         Array<Int16> array;
         
         public Wrapper(Array<Int16> array)
         {
+            super(array);
             this.array = array;
         }
         
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
         @Override
         public short getShort(int[] pos)
         {
@@ -374,12 +352,13 @@ public interface Int16Array extends IntArray<Int16>
      *  
      * @see Int16Array#wrap(net.sci.array.Array)
      */
-	class ScalarArrayWrapper implements Int16Array
+	class ScalarArrayWrapper extends ArrayWrapperStub<Int16> implements Int16Array
 	{
 		ScalarArray<?> array;
 		
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
+		    super(array);
 			this.array = array;
 		}
 		
@@ -404,24 +383,6 @@ public interface Int16Array extends IntArray<Int16>
 		// Specialization of the Array interface
 
 		@Override
-		public int dimensionality()
-		{
-			return array.dimensionality();
-		}
-
-		@Override
-		public int[] size()
-		{
-			return array.size();
-		}
-
-		@Override
-		public int size(int dim)
-		{
-			return array.size(dim);
-		}
-
-		@Override
 		public Int16 get(int[] pos)
 		{
 			return new Int16(Int16.convert(array.getValue(pos)));
@@ -431,58 +392,6 @@ public interface Int16Array extends IntArray<Int16>
 		public void set(int[] pos, Int16 value)
 		{
 			array.setValue(pos, value.getValue());
-		}
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
-		@Override
-		public Iterator iterator()
-		{
-			return new Iterator(array.iterator());
-		}
-		
-		class Iterator implements Int16Array.Iterator
-		{
-			ScalarArray.Iterator<?> iter;
-			
-			public Iterator(ScalarArray.Iterator<?> iter)
-			{
-				this.iter = iter;
-			}
-
-			@Override
-			public short getShort()
-			{
-				return get().getShort();
-			}
-
-			@Override
-			public void setShort(short b)
-			{
-				iter.setValue(new Int16(b).getValue());
-			}
-
-			@Override
-			public void forward()
-			{
-				this.iter.forward();
-			}
-
-			@Override
-			public Int16 next()
-			{
-				return new Int16(Int16.convert(iter.nextValue()));
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				return iter.hasNext();
-			}
 		}
 	}
 	

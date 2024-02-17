@@ -6,6 +6,7 @@ package net.sci.array.scalar;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 
 /**
  * An array containing 32-bits signed integers.
@@ -274,39 +275,16 @@ public interface Int32Array extends IntArray<Int32>
      * }
      * </pre>
      */
-    static class Wrapper implements Int32Array
+    static class Wrapper extends ArrayWrapperStub<Int32> implements Int32Array
     {
         Array<Int32> array;
         
         public Wrapper(Array<Int32> array)
         {
+            super(array);
             this.array = array;
         }
         
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
         @Override
         public int getInt(int[] pos)
         {
@@ -324,12 +302,13 @@ public interface Int32Array extends IntArray<Int32>
      * Wraps an instance of <code>ScalarArray</code> into an instance of
      * <code>Int32Array</code> by converting performing class cast on the fly.
      */
-	class ScalarArrayWrapper implements Int32Array
+	class ScalarArrayWrapper extends ArrayWrapperStub<Int32> implements Int32Array
 	{
 		ScalarArray<?> array;
 		
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
+		    super(array);
 			this.array = array;
 		}
 		
@@ -354,24 +333,6 @@ public interface Int32Array extends IntArray<Int32>
 		// Specialization of the Array interface
 
 		@Override
-		public int dimensionality()
-		{
-			return array.dimensionality();
-		}
-
-		@Override
-		public int[] size()
-		{
-			return array.size();
-		}
-
-		@Override
-		public int size(int dim)
-		{
-			return array.size(dim);
-		}
-
-		@Override
 		public Int32 get(int[] pos)
 		{
 			return new Int32((int) array.getValue(pos));
@@ -381,58 +342,6 @@ public interface Int32Array extends IntArray<Int32>
 		public void set(int[] pos, Int32 value)
 		{
 			array.setValue(pos, value.getValue());
-		}
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
-		@Override
-		public Iterator iterator()
-		{
-			return new Iterator(array.iterator());
-		}
-		
-		class Iterator implements Int32Array.Iterator
-		{
-			ScalarArray.Iterator<?> iter;
-			
-			public Iterator(ScalarArray.Iterator<?> iter)
-			{
-				this.iter = iter;
-			}
-
-			@Override
-			public int getInt()
-			{
-				return (int) getValue();
-			}
-
-			@Override
-			public void setInt(int value)
-			{
-				iter.setValue(value);
-			}
-
-			@Override
-			public void forward()
-			{
-				this.iter.forward();
-			}
-
-			@Override
-			public Int32 next()
-			{
-				return new Int32((int) iter.nextValue());
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				return iter.hasNext();
-			}
 		}
 	}
 

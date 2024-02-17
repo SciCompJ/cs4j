@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.process.type.ConvertToUInt8;
@@ -806,39 +807,16 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         }
     }
 
-    static class Wrapper implements RGB8Array
+    static class Wrapper  extends ArrayWrapperStub<RGB8> implements RGB8Array
     {
         Array<RGB8> array;
         
         public Wrapper(Array<RGB8> array)
         {
+            super(array);
             this.array = array;
         }
         
-        @Override
-        public int dimensionality()
-        {
-            return array.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return array.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return array.size(dim);
-        }
-
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
         @Override
         public RGB8 get(int[] pos)
         {
@@ -857,32 +835,15 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
 	 * @author dlegland
 	 * @see UInt8Array.ScalarArrayWrapper
 	 */
-	class UInt8View implements UInt8Array
+	class UInt8View extends ArrayWrapperStub<UInt8> implements UInt8Array
 	{
 	    RGB8Array parent;
 	    
 	    UInt8View(RGB8Array parent)
 	    {
+	        super(parent);
 	        this.parent = parent;
 	    }
-
-        @Override
-        public int dimensionality()
-        {
-            return parent.dimensionality();
-        }
-
-        @Override
-        public int[] size()
-        {
-            return parent.size();
-        }
-
-        @Override
-        public int size(int dim)
-        {
-            return parent.size(dim);
-        }
 
         @Override
         public UInt8 get(int[] pos)
@@ -910,69 +871,6 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
             parent.set(pos, rgb);
         }
 
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return parent.positionIterator();
-        }
-
-        @Override
-        public Iterator iterator()
-        {
-            return new Iterator(parent.iterator());
-        }
-        
-        private class Iterator implements UInt8Array.Iterator
-        {
-            RGB8Array.Iterator parentIter;
-            
-            public Iterator(RGB8Array.Iterator parentIter) 
-            {
-                this.parentIter = parentIter;
-            }
-            
-            @Override
-            public boolean hasNext()
-            {
-                return parentIter.hasNext();
-            }
-
-            @Override
-            public UInt8 next()
-            {
-                return parentIter.next().toUInt8();
-            }
-
-            @Override
-            public void forward()
-            {
-                parentIter.forward();
-            }
-
-            @Override
-            public UInt8 get()
-            {
-                return parentIter.get().toUInt8();
-            }
-
-            @Override
-            public void set(UInt8 value)
-            {
-                parentIter.set(RGB8.fromUInt8(value));
-            }
-            
-            @Override
-            public byte getByte()
-            {
-                return parentIter.get().toUInt8().getByte();
-            }
-
-            @Override
-            public void setByte(byte b)
-            {
-                parentIter.set(new RGB8(b & 0x00FF, b & 0x00FF, b & 0x00FF));
-            }
-        }
 	}
 	
     
