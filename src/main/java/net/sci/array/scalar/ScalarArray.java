@@ -279,10 +279,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     public default ScalarArray<S> min(double v)
     {
         ScalarArray<S> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(pos, Math.min(this.getValue(pos), v));
-        }
+        res.fillValues(pos -> Math.min(this.getValue(pos), v));
         return res;
     }
     
@@ -297,10 +294,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     public default ScalarArray<S> max(double v)
     {
         ScalarArray<S> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(pos, Math.max(this.getValue(pos), v));
-        }
+        res.fillValues(pos -> Math.max(this.getValue(pos), v));
         return res;
     }
     
@@ -330,10 +324,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     public default ScalarArray<S> times(double k)
     {
         ScalarArray<S> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(pos, this.getValue(pos) * k);
-        }
+        res.fillValues(pos -> this.getValue(pos) * k);
         return res;
     }
 
@@ -341,10 +332,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     public default ScalarArray<S> divideBy(double k)
     {
         ScalarArray<S> res = newInstance(size());
-        for (int[] pos : positions())
-        {
-            res.setValue(pos, this.getValue(pos) / k);
-        }
+        res.fillValues(pos -> this.getValue(pos) / k);
         return res;
     }
 
