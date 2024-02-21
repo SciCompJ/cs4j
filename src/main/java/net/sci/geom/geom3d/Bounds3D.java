@@ -4,6 +4,7 @@
 package net.sci.geom.geom3d;
 
 import static java.lang.Double.isInfinite;
+
 import net.sci.geom.Bounds;
 
 /**
@@ -121,6 +122,29 @@ public class Bounds3D implements Bounds
         this.zmax = Math.max(z1, z2);
     }
     
+    
+    // ===================================================================
+    // General methods
+    
+    /**
+     * Computes the bounds corresponding to the union of this bounds and the
+     * input bounds. The maximal extend in each direction is kept.
+     * 
+     * @param that
+     *            the Bounds3D to combine with
+     * @return the union of the two bounds
+     */
+    public Bounds3D union(Bounds3D that)
+    {
+        double xmin = Math.min(this.xmin, that.xmin);
+        double xmax = Math.max(this.xmax, that.xmax);
+        double ymin = Math.min(this.ymin, that.ymin);
+        double ymax = Math.max(this.ymax, that.ymax);
+        double zmin = Math.min(this.zmin, that.zmin);
+        double zmax = Math.max(this.zmax, that.zmax);
+        return new Bounds3D(xmin, xmax, ymin, ymax, zmin, zmax);
+    }
+    
 
     // ===================================================================
     // Accessors to Box2D fields
@@ -170,12 +194,12 @@ public class Bounds3D implements Bounds
         return zmax - zmin;
     }
     
-    /** 
-     * Returns true if all bounds are finite. 
+    /**
+     * Checks if the bounds are finite.
      *
-     * @return true is the bounds has finite values.
+     * @return true if all the bounding limits have finite values.
      */
-    public boolean isBounded()
+    public boolean isFinite()
     {
         if (isInfinite(xmin))
             return false;
