@@ -14,7 +14,7 @@ import net.sci.geom.geom2d.polygon.Polygon2D;
  * @author dlegland
  *
  */
-public class Bounds2D implements Bounds, Geometry2D
+public class Bounds2D implements Bounds
 {
     // ===================================================================
     // Static factories
@@ -223,8 +223,12 @@ public class Bounds2D implements Bounds, Geometry2D
         return ymax - ymin;
     }
     
-    /** @return true if all bounds are finite. */
-    public boolean isBounded()
+    /**
+     * Checks if the bounds are finite.
+     *
+     * @return true if all the bounding limits have finite values.
+     */
+    public boolean isFinite()
     {
         if (isInfinite(xmin))
             return false;
@@ -240,6 +244,17 @@ public class Bounds2D implements Bounds, Geometry2D
 
     // ===================================================================
     // generic accessors
+    
+    public boolean contains(Point2D point, double eps)
+    {
+        if (point.x < xmin || point.x > xmax) return false;
+        if (point.y < ymin || point.y > ymax) return false;
+        return true;
+    }
+    
+    
+    // ===================================================================
+    // Implementation of the Bounds interface
     
     public double getMin(int d)
     {
@@ -270,7 +285,7 @@ public class Bounds2D implements Bounds, Geometry2D
         default: throw new IllegalArgumentException("Dimension index must be either 0 or 1, not " + d);
         }
     }
-    
+
     public boolean almostEquals(Bounds2D box, double eps)
     {
         if (Math.abs(box.xmin - xmin) > eps) return false;
@@ -278,31 +293,5 @@ public class Bounds2D implements Bounds, Geometry2D
         if (Math.abs(box.ymin - ymin) > eps) return false;
         if (Math.abs(box.ymax - ymax) > eps) return false;
         return true;
-    }
-
-    @Override
-    public boolean contains(Point2D point, double eps)
-    {
-        if (point.x < xmin || point.x > xmax) return false;
-        if (point.y < ymin || point.y > ymax) return false;
-        return true;
-    }
-
-    @Override
-    public double distance(double x, double y)
-    {
-        return getRectangle().distance(x, y);
-    }
-
-    @Override
-    public Bounds2D bounds()
-    {
-        return this;
-    }
-
-    @Override
-    public Bounds2D duplicate()
-    {
-        return new Bounds2D(xmin, xmax, ymin, ymax);
     }
 }
