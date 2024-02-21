@@ -190,6 +190,14 @@ public class Bounds2D implements Bounds
         return true;
     }
 
+    public boolean contains(Point2D point, double eps)
+    {
+        if (point.x < xmin || point.x > xmax) return false;
+        if (point.y < ymin || point.y > ymax) return false;
+        return true;
+    }
+
+    
     // ===================================================================
     // Accessors to Box2D fields
     
@@ -223,11 +231,16 @@ public class Bounds2D implements Bounds
         return ymax - ymin;
     }
     
+    
+    // ===================================================================
+    // Implementation of the Bounds interface
+    
     /**
      * Checks if the bounds are finite.
      *
      * @return true if all the bounding limits have finite values.
      */
+    @Override
     public boolean isFinite()
     {
         if (isInfinite(xmin))
@@ -240,23 +253,9 @@ public class Bounds2D implements Bounds
             return false;
         return true;
     }
-    
 
-    // ===================================================================
-    // generic accessors
-    
-    public boolean contains(Point2D point, double eps)
-    {
-        if (point.x < xmin || point.x > xmax) return false;
-        if (point.y < ymin || point.y > ymax) return false;
-        return true;
-    }
-    
-    
-    // ===================================================================
-    // Implementation of the Bounds interface
-    
-    public double getMin(int d)
+    @Override
+    public double minCoord(int d)
     {
         switch(d)
         {
@@ -266,7 +265,8 @@ public class Bounds2D implements Bounds
         }
     }
     
-    public double getMax(int d)
+    @Override
+    public double maxCoord(int d)
     {
         switch(d)
         {
@@ -276,7 +276,8 @@ public class Bounds2D implements Bounds
         }
     }
     
-    public double getSize(int d)
+    @Override
+    public double size(int d)
     {
         switch(d)
         {
@@ -293,5 +294,11 @@ public class Bounds2D implements Bounds
         if (Math.abs(box.ymin - ymin) > eps) return false;
         if (Math.abs(box.ymax - ymax) > eps) return false;
         return true;
+    }
+
+    @Override
+    public int dimensionality()
+    {
+        return 2;
     }
 }

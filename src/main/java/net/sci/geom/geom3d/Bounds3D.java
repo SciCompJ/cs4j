@@ -195,69 +195,6 @@ public class Bounds3D implements Bounds
     }
     
     /**
-     * Checks if the bounds are finite.
-     *
-     * @return true if all the bounding limits have finite values.
-     */
-    public boolean isFinite()
-    {
-        if (isInfinite(xmin))
-            return false;
-        if (isInfinite(ymin))
-            return false;
-        if (isInfinite(zmin))
-            return false;
-        if (isInfinite(xmax))
-            return false;
-        if (isInfinite(ymax))
-            return false;
-        if (isInfinite(zmax))
-            return false;
-        return true;
-    }
-    
-
-    // ===================================================================
-    // generic accessors
-    
-    public double getMin(int d)
-    {
-        switch(d)
-        {
-        case 0: return this.xmin;
-        case 1: return this.ymin;
-        case 2: return this.zmin;
-        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
-        }
-    }
-    
-    public double getMax(int d)
-    {
-        switch(d)
-        {
-        case 0: return this.xmax;
-        case 1: return this.ymax;
-        case 2: return this.zmax;
-        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
-        }
-    }
-    
-
-    // ===================================================================
-    // tests of inclusion
-    
-    public double getSize(int d)
-    {
-        switch(d)
-        {
-        case 0: return this.xmax - this.xmin;
-        case 1: return this.ymax - this.ymin;
-        case 2: return this.zmax - this.zmin;
-        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
-        }
-    }
-
-    /**
      * Checks if this bounds contains the given point.
      * 
      * @param point
@@ -283,5 +220,73 @@ public class Bounds3D implements Bounds
         if (z > zmax)
             return false;
         return true;
+    }
+
+
+    // ===================================================================
+    // Implementation of the Bounds interface
+    
+    /**
+     * Checks if the bounds are finite.
+     *
+     * @return true if all the bounding limits have finite values.
+     */
+    public boolean isFinite()
+    {
+        if (isInfinite(xmin))
+            return false;
+        if (isInfinite(ymin))
+            return false;
+        if (isInfinite(zmin))
+            return false;
+        if (isInfinite(xmax))
+            return false;
+        if (isInfinite(ymax))
+            return false;
+        if (isInfinite(zmax))
+            return false;
+        return true;
+    }
+    
+    @Override
+    public double minCoord(int d)
+    {
+        switch(d)
+        {
+        case 0: return this.xmin;
+        case 1: return this.ymin;
+        case 2: return this.zmin;
+        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
+        }
+    }
+    
+    @Override
+    public double maxCoord(int d)
+    {
+        switch(d)
+        {
+        case 0: return this.xmax;
+        case 1: return this.ymax;
+        case 2: return this.zmax;
+        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
+        }
+    }
+    
+    @Override
+    public double size(int d)
+    {
+        switch(d)
+        {
+        case 0: return this.xmax - this.xmin;
+        case 1: return this.ymax - this.ymin;
+        case 2: return this.zmax - this.zmin;
+        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
+        }
+    }
+
+    @Override
+    public int dimensionality()
+    {
+        return 3;
     }
 }
