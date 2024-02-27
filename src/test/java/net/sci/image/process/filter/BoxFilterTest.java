@@ -6,11 +6,14 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import net.sci.array.Array;
+import net.sci.array.Array2D;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array2D;
+import net.sci.array.generic.GenericArray2D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.array.scalar.UInt8Array3D;
+import net.sci.geom.geom2d.Vector2D;
 
 public class BoxFilterTest
 {
@@ -44,8 +47,8 @@ public class BoxFilterTest
 		UInt8Array3D array = UInt8Array3D.create(6, 5, 4);
 		array.fillInt(10);
 		
-		int[] radiusList = new int[]{2, 2, 1};
-		BoxFilter filter = new BoxFilter(radiusList);
+		int[] diameterList = new int[]{5, 5, 3};
+		BoxFilter filter = new BoxFilter(diameterList);
 		
 		Array<?> result = filter.process(array);
 		
@@ -65,8 +68,8 @@ public class BoxFilterTest
 			}
 		}
 		
-		int[] radiusList = new int[]{1,1};
-		BoxFilter filter = new BoxFilter(radiusList);
+		int[] diameterList = new int[]{3, 3};
+		BoxFilter filter = new BoxFilter(diameterList);
 		
 		Array<?> result = filter.process(array);
 		
@@ -74,4 +77,19 @@ public class BoxFilterTest
 		assertEquals(2, result.dimensionality());
 	}
 
+    @Test
+    public void testProcessNumeric2D()
+    {
+        GenericArray2D<Vector2D> array = GenericArray2D.create(8, 6, new Vector2D());
+        array.set(4, 3, new Vector2D(18, -9));
+        
+        int[] diameters = new int[] {3, 3};
+        BoxFilter filter = new BoxFilter(diameters);
+        
+        Array2D<Vector2D> result = Array2D.wrap(filter.processNumeric(array));
+        
+        assertEquals(2, result.dimensionality());
+        Vector2D v_4_3 = result.get(4, 3);
+        assertTrue(new Vector2D(2, -1).almostEquals(v_4_3, 0.01));
+    }
 }

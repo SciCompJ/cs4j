@@ -4,11 +4,14 @@
 package net.sci.image.process.filter;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.Array;
+import net.sci.array.numeric.Numeric;
 import net.sci.array.process.VectorArrayMarginalOperator;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.ImageArrayOperator;
+import net.sci.util.MathUtils;
 
 /**
  * Box filter for multidimensional arrays. Considers a rectangular box, with
@@ -21,6 +24,9 @@ import net.sci.image.ImageArrayOperator;
 */
 public final class BoxFilter extends AlgoStub implements ImageArrayOperator, VectorArrayMarginalOperator
 {
+    // =============================================================
+    // class variables
+
     /** The size of the box in each dimension */
 	int[] boxSizes;
 	
@@ -30,129 +36,131 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
      */
     ScalarArray.Factory<?> factory = null;
     
-	/**
-	 * Creates a new instance of box filter by specifying the list of diameters in
-	 * each dimension.
-	 * 
-	 * @param diameters
-	 *            the box diameter in each dimension
-	 */
-	public BoxFilter(int[] diameters)
-	{
-		this.boxSizes = new int[diameters.length];
-		System.arraycopy(diameters, 0, this.boxSizes, 0, diameters.length);
-	}
+    
+    // =============================================================
+    // Constructors
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.ArrayOperator#process(net.sci.array.Array, net.sci.array.Array)
-	 */
-	public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
-	{
-		// Choose the best possible implementation, depending on array dimensions
-		if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
-		{
-			processScalar2d((ScalarArray2D<?>) source, (ScalarArray2D<?>) target);
-		}
-		else if (source instanceof ScalarArray3D && target instanceof ScalarArray3D)
-		{
-			processScalar3d((ScalarArray3D<?>) source, (ScalarArray3D<?>) target);
-		}
-		else if (source instanceof ScalarArray && target instanceof ScalarArray)
-		{
-			// most generic implementation, slow...
-			processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Can not process array of class " + source.getClass());
-		}
+    /**
+     * Creates a new instance of box filter by specifying the list of diameters
+     * in each dimension.
+     * 
+     * @param diameters
+     *            the box diameter in each dimension
+     */
+    public BoxFilter(int[] diameters)
+    {
+        this.boxSizes = new int[diameters.length];
+        System.arraycopy(diameters, 0, this.boxSizes, 0, diameters.length);
+    }
+    
 
-	}
+    // =============================================================
+    // Methods specific to BoxFilter
 
-	/**
-	 * Process scalar arrays of any dimension.
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.ArrayOperator#process(net.sci.array.Array,
+     * net.sci.array.Array)
+     */
+    public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
+    {
+        // Choose the best possible implementation, depending on array
+        // dimensions
+        if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
+        {
+            processScalar2d((ScalarArray2D<?>) source, (ScalarArray2D<?>) target);
+        }
+        else if (source instanceof ScalarArray3D && target instanceof ScalarArray3D)
+        {
+            processScalar3d((ScalarArray3D<?>) source, (ScalarArray3D<?>) target);
+        }
+        else if (source instanceof ScalarArray && target instanceof ScalarArray)
+        {
+            // most generic implementation, slow...
+            processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Can not process array of class " + source.getClass());
+        }
+    }
+
+    /**
+     * Process scalar arrays of any dimension.
      * 
      * @param source
      *            the source array
      * @param target
      *            the target array
-	 */
-	public void processScalarNd(ScalarArray<?> source, ScalarArray<?> target)
-	{
-		// get array size (for cropping)
-		int nd = source.dimensionality();
-		int[] sizes = source.size();
-		
-		// get first two radiuses
-		if (this.boxSizes.length < source.dimensionality())
-		{
-			throw new RuntimeException("Requires at least as many diameters as array dimensionality");
-		}
-		
-		// compute the normalization constant
-		int boxSize = 1;
-		for (int diam : this.boxSizes)
-		{
-			boxSize *= diam;
-		}
-		
-		// iterate over positions of target array
-		Neighborhood nbg = new BoxNeighborhood(boxSizes);
+     */
+    public void processScalarNd(ScalarArray<?> source, ScalarArray<?> target)
+    {
+        // get array size (for cropping)
+        int nd = source.dimensionality();
+        int[] sizes = source.size();
+        
+        // ensure box filter size is large enough 
+        checkBoxDimensionality(nd);
+
+        // compute the normalization constant
+        int boxSize = (int) MathUtils.prod(this.boxSizes);
+
+        // iterate over positions of target array
+        Neighborhood nbg = new BoxNeighborhood(boxSizes);
         for (int[] pos : target.positions())
-		{
-			// init result
-			double sum = 0;
-			
-			// iterate over neighbors
-			for (int[] neighPos : nbg.neighbors(pos))
-			{
-				// clamp neighbor position to array bounds
-				for (int d = 0; d < nd; d++)
-				{
-				    neighPos[d] = clamp(neighPos[d], 0, sizes[d] - 1);
-				}
-								
-				// get value of "clamped" neighbor
-				sum += source.getValue(neighPos);
-			}
-			
-			// setup result in target array
-			target.setValue(pos, sum / boxSize);
-		}
-	}
-	
-	/**
-	 * Process the specific case of 2D arrays.
+        {
+            // init result
+            double sum = 0;
+
+            // iterate over neighbors
+            for (int[] neighPos : nbg.neighbors(pos))
+            {
+                // clamp neighbor position to array bounds
+                for (int d = 0; d < nd; d++)
+                {
+                    neighPos[d] = clamp(neighPos[d], 0, sizes[d] - 1);
+                }
+
+                // get value of "clamped" neighbor
+                sum += source.getValue(neighPos);
+            }
+
+            // setup result in target array
+            target.setValue(pos, sum / boxSize);
+        }
+    }
+
+    /**
+     * Process the specific case of 2D arrays.
      * 
      * @param source
      *            the source array
      * @param target
      *            the target array
-	 */
-	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
-	{
-		// get size of input array
-		int sizeX = source.size(0);
-		int sizeY = source.size(1);
-		
-		// check dimensions
-		if (this.boxSizes.length < 2)
-		{
-			throw new RuntimeException("Can not process 2D array with less than two diameters.");
-		}
+     */
+    public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
+    {
+        // get size of input array
+        int sizeX = source.size(0);
+        int sizeY = source.size(1);
 
-		// compute the padding before and after center element in each direction.
-		// For each direction, we have:
-		//     boxSize = pad0 + pad1 + 1
-		int boxSizeX = this.boxSizes[0];
-		int padX0 = (boxSizeX - 1) / 2;
-		int padX1 = boxSizeX - 1 - padX0;
+        // ensure box filter size is large enough 
+        checkBoxDimensionality(2);
+
+        // compute the padding before and after center element in each
+        // direction.
+        // For each direction, we have:
+        // boxSize = pad0 + pad1 + 1
+        int boxSizeX = this.boxSizes[0];
+        int padX0 = (boxSizeX - 1) / 2;
+        int padX1 = boxSizeX - 1 - padX0;
         int boxSizeY = this.boxSizes[1];
         int padY0 = (boxSizeY - 1) / 2;
         int padY1 = boxSizeY - 1 - padY0;
-		
+
         this.fireStatusChanged(this, "1D box filter in X-direction");
-        
+
         // Compute 1D filter in the X-direction
         double[] values = new double[sizeX];
         double[] padded = new double[sizeX + boxSizeX];
@@ -202,7 +210,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
                 target.setValue(x, y, values[y]);
             }
         }
-	}
+    }
 
     /**
      * Process the specific case of 2D arrays, using slower but more accurate
@@ -219,11 +227,8 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
         int sizeX = source.size(0);
         int sizeY = source.size(1);
         
-        // check dimensions
-        if (this.boxSizes.length < 2)
-        {
-            throw new RuntimeException("Can not process 2D array with less than two diameters.");
-        }
+        // ensure box filter size is large enough 
+        checkBoxDimensionality(2);
 
         // compute the radius extent in each direction
         double diamX = (double) this.boxSizes[0];
@@ -234,11 +239,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
         int ry2 = (int) Math.ceil(diamY / 2.0);
         
         // compute the normalization constant
-        int boxSize = 1;
-        for (int d : this.boxSizes)
-        {
-            boxSize *= d;
-        }
+        int boxSize = this.boxSizes[0] * this.boxSizes[1];
 
         for(int y = 0; y < sizeY; y++)
         {
@@ -274,17 +275,14 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
      */
     public void processScalar3d(ScalarArray3D<?> source, ScalarArray3D<?> target)
     {
+        // ensure box filter size is large enough 
+        checkBoxDimensionality(3);
+
         // get size of input array
         int sizeX = source.size(0);
         int sizeY = source.size(1);
         int sizeZ = source.size(2);
         
-        // check dimensions
-        if (this.boxSizes.length < 3)
-        {
-            throw new RuntimeException("Can not process 3D array with less than three diameters.");
-        }
-
         // compute the padding before and after center element in each direction.
         // For each direction, we have:
         //     boxSize = pad0 + pad1 + 1
@@ -399,17 +397,14 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
      */
     public void processScalar3d_exact(ScalarArray3D<?> source, ScalarArray3D<?> target)
     {
+        // ensure box filter size is large enough 
+        checkBoxDimensionality(3);
+
         // get size of input array
         int sizeX = source.size(0);
         int sizeY = source.size(1);
         int sizeZ = source.size(2);
         
-        // check dimensions
-        if (this.boxSizes.length < 3)
-        {
-            throw new RuntimeException("Can not process 3D array with less than three diameters.");
-        }
-
         // compute the radius extent in each direction
         double diamX = (double) this.boxSizes[0];
         int rx1 = (int) Math.floor(diamX / 2.0);
@@ -422,11 +417,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
         int rz2 = (int) Math.ceil(diamZ / 2.0);
         
         // compute the normalization constant
-        int boxSize = 1;
-        for (int d : this.boxSizes)
-        {
-            boxSize *= d;
-        }
+        int boxSize = this.boxSizes[0] * this.boxSizes[1] * this.boxSizes[2];
         
         for(int z = 0; z < sizeZ; z++)
         {
@@ -482,25 +473,25 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
      * @return the padded array
      */
     private double[] pad_repeat(double[] array, double[] res, int m1, int m2)
-	{
-	    int n = array.length;
-	    
-	    for (int i = 0; i < m1; i++)
-	    {
-	        res[i] = array[0];
-	    }
+    {
+        int n = array.length;
+
+        for (int i = 0; i < m1; i++)
+        {
+            res[i] = array[0];
+        }
         for (int i = 0; i < array.length; i++)
         {
             res[i + m1] = array[i];
         }
         for (int i = 0; i < m2; i++)
         {
-            res[i + m1 + n] = array[n-1];
+            res[i + m1 + n] = array[n - 1];
         }
         return res;
-	}
-	
-	/**
+    }
+    
+    /**
      * Computes 1D box filter on padded source array, and writing results into
      * the target array. The length of the source array must be the length of
      * the target array plus (M+1), where M is the length of the box. The
@@ -522,47 +513,101 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
      * @param m2
      *            the padding to add after center box element
      */
-	private void filter1d(double[] source, double[] target, int m)
-	{
-	    int n = target.length;
-	    
-	    // The sum of values within the moving frame, updated at each iteration.
-	    double sum = 0;
-        // Initialize the sum to the sum of box values at output position (-1). 
-	    // Obtained as the sum of the (M2) first input values, 
-	    // plus (M1+1) times the first value (for padding)
-	    // Using padded array, this corresponds to the sum of the M first values...
-	    for (int i = 0; i < m; i++)
-	    {
-	        sum += source[i];
-	    }
-	    
-	    // iterate over target values
-	    for (int i = 0; i < n; i++)
-	    {
-	        sum = sum - source[i] + source[i + m];
-	        target[i] = sum / m;
-	    }
-	}
-	
-	private static final int clamp(int value, int min, int max)
-	{
-        if (value < min) return min;
-        if (value > max) return max;
-        return value;
-	}
-	
-	@Override
+    private void filter1d(double[] source, double[] target, int m)
+    {
+        int n = target.length;
+
+        // The sum of values within the moving frame, updated at each iteration.
+        double sum = 0;
+        // Initialize the sum to the sum of box values at output position (-1).
+        // Obtained as the sum of the (M2) first input values,
+        // plus (M1+1) times the first value (for padding)
+        // Using padded array, this corresponds to the sum of the M first
+        // values...
+        for (int i = 0; i < m; i++)
+        {
+            sum += source[i];
+        }
+
+        // iterate over target values
+        for (int i = 0; i < n; i++)
+        {
+            sum = sum - source[i] + source[i + m];
+            target[i] = sum / m;
+        }
+    }
+
+    public <N extends Numeric<N>> Array<N> processNumeric(Array<N> array)
+    {
+        // create the output array
+        Array<N> output = array.newInstance(array.size());
+
+        // call the processing method
+        processNumericNd(array, output);
+
+        return output;
+    }
+
+    /**
+     * Process scalar arrays of any dimension.
+     * 
+     * @param source
+     *            the source array
+     * @param target
+     *            the target array
+     */
+    private <N extends Numeric<N>> void processNumericNd(Array<N> source, Array<N> target)
+    {
+        // get array size (for cropping)
+        int nd = source.dimensionality();
+        int[] sizes = source.size();
+        
+        // ensure box filter size is large enough 
+        checkBoxDimensionality(nd);
+
+        // compute the normalization constant
+        int boxSize = (int) MathUtils.prod(this.boxSizes);
+        
+        // iterate over positions of target array
+        Neighborhood nbg = new BoxNeighborhood(boxSizes);
+        for (int[] pos : target.positions())
+        {
+            // init result
+            N sum = source.sampleElement().zero();
+            
+            // iterate over neighbors
+            for (int[] neighPos : nbg.neighbors(pos))
+            {
+                // clamp neighbor position to array bounds
+                for (int d = 0; d < nd; d++)
+                {
+                    neighPos[d] = clamp(neighPos[d], 0, sizes[d] - 1);
+                }
+                                
+                // get value of "clamped" neighbor
+                sum = sum.plus(source.get(neighPos));
+            }
+            
+            // setup result in target array
+            target.set(pos, sum.divideBy(boxSize));
+        }
+    }
+    
+    
+    // =============================================================
+    // Implementation of interface
+
+    @Override
     public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
-	    // choose the ScalarArray factory for creating result
-	    ScalarArray.Factory<?> factory = this.factory;
-	    if (factory == null)
-	    {
-	        factory = array.factory();
-	    }
-	    
-	    // create the output array
+        // choose the ScalarArray factory for creating result
+        ScalarArray.Factory<?> factory = this.factory;
+        if (factory == null)
+        {
+            factory = array.factory();
+        }
+
+        // create the output array
         ScalarArray<?> output = factory.create(array.size());
         
         // call the processing method
@@ -578,5 +623,33 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
     public void setFactory(ScalarArray.Factory<?> factory)
     {
         this.factory = factory;
+    }
+    
+    
+    // =============================================================
+    // Utility computation methods
+
+    /**
+     * Checks that this instance of BoxFilters stores enough diameters to
+     * process an array with the specified dimensionality.
+     * 
+     * @param nd
+     *            the dimensionality of the array to process
+     * @throws RuntimeException
+     *             if the number of box diameters is smaller than dimensionality
+     */
+    private final void checkBoxDimensionality(int nd)
+    {
+        if (this.boxSizes.length < nd)
+        {
+            throw new RuntimeException("BoxFilter requires at least as many diameters as array dimensionality: " + nd);
+        }
+    }
+    
+    private static final int clamp(int value, int min, int max)
+    {
+        if (value < min) return min;
+        if (value > max) return max;
+        return value;
     }
 }
