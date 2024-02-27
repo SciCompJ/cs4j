@@ -95,6 +95,19 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
     // =============================================================
     // Specialization of Array interface
 
+    /**
+     * Override default behavior of Array interface to return a Float32Vector
+     * element.
+     * 
+     * @return a Float32Vector instance with as many elements as the number of
+     *         channels.
+     */
+    @Override
+    public default Float32Vector sampleElement()
+    {
+        return new Float32Vector(channelCount());
+    }
+    
     @Override
     public default Float32Vector get(int[] pos)
     {

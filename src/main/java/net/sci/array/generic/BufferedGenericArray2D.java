@@ -92,6 +92,18 @@ public class BufferedGenericArray2D<T> extends GenericArray2D<T>
     // =============================================================
     // Accessors and mutators
 
+    /**
+     * Override default behavior to return the initialization value that as used
+     * to construct this array.
+     * 
+     * @return the initialization value that as used to construct this array
+     */
+    @Override
+    public T sampleElement()
+    {
+        return initValue;
+    }
+    
     /*
      * (non-Javadoc)
      * 

@@ -185,6 +185,18 @@ public interface Float32Array extends ScalarArray<Float32>
 		return defaultFactory;
 	}
 
+    /**
+     * Override default behavior of Array interface to return the value
+     * Float32.ZERO.
+     * 
+     * @return a default Float32 value.
+     */
+    @Override
+    public default Float32 sampleElement()
+    {
+        return Float32.ZERO;
+    }
+    
     @Override
     public default Float32 get(int[] pos)
     {

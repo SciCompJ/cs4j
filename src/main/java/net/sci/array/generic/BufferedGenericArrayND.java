@@ -93,6 +93,18 @@ public class BufferedGenericArrayND<T> extends GenericArrayND<T>
         return new BufferedGenericArrayND<T>(this.sizes, (T[]) newBuffer);
 	}
 
+    /**
+     * Override default behavior to return the initialization value that as used
+     * to construct this array.
+     * 
+     * @return the initialization value that as used to construct this array
+     */
+    @Override
+    public T sampleElement()
+    {
+        return initValue;
+    }
+    
 	@Override
 	@SuppressWarnings("unchecked")
     public T get(int[] pos)

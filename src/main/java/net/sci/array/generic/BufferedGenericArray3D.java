@@ -137,6 +137,18 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
     // =============================================================
     // Accessors and mutators
 
+    /**
+     * Override default behavior to return the initialization value that as used
+     * to construct this array.
+     * 
+     * @return the initialization value that as used to construct this array
+     */
+    @Override
+    public T sampleElement()
+    {
+        return initValue;
+    }
+    
     @SuppressWarnings("unchecked")
     /* (non-Javadoc)
      * @see net.sci.array.data.Array3D#get(int, int, int)

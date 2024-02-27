@@ -446,6 +446,17 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     // =============================================================
     // Default implementations for Array interface
 
+    /**
+     * Override default behavior of Array interface to return a RGB16 element.
+     * 
+     * @return a RGB16 instance corresponding to a black color.
+     */
+    @Override
+    public default RGB16 sampleElement()
+    {
+        return new RGB16(0, 0, 0);
+    }
+    
     @Override
     public default RGB16Array newInstance(int... dims)
     {

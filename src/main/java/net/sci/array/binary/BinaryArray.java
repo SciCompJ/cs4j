@@ -417,6 +417,18 @@ public interface BinaryArray extends IntArray<Binary>
 		return BinaryArray.create(dims);
 	}
 
+    /**
+     * Override default behavior of Array interface to return the value
+     * Binary.FALSE.
+     * 
+     * @return a default Binary value.
+     */
+    @Override
+    public default Binary sampleElement()
+    {
+        return Binary.FALSE;
+    }
+    
     @Override
     public default Binary get(int[] pos)
     {

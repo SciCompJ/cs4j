@@ -634,6 +634,17 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     // =============================================================
     // Specialization of Array interface
 
+    /**
+     * Override default behavior of Array interface to return a RGB8 element.
+     * 
+     * @return the RGB8 element corresponding to RGB8.BLACK.
+     */
+    @Override
+    public default RGB8 sampleElement()
+    {
+        return RGB8.BLACK;
+    }
+    
     @Override
     public default RGB8Array newInstance(int... dims)
     {

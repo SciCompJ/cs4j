@@ -193,6 +193,18 @@ public interface UInt16Array extends IntArray<UInt16>
 		return defaultFactory;
 	}
 
+    /**
+     * Override default behavior of Array interface to return the value
+     * UInt16.ZERO.
+     * 
+     * @return a default UInt16 value.
+     */
+    @Override
+    public default UInt16 sampleElement()
+    {
+        return UInt16.ZERO;
+    }
+    
     @Override
     public default UInt16 get(int[] pos)
     {

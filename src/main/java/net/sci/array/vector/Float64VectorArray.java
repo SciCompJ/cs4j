@@ -87,6 +87,19 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
     // =============================================================
     // Specialization of Array interface
 
+    /**
+     * Override default behavior of Array interface to return a Float64Vector
+     * element.
+     * 
+     * @return a Float64Vector instance with as many elements as the number of
+     *         channels.
+     */
+    @Override
+    public default Float64Vector sampleElement()
+    {
+        return new Float64Vector(channelCount());
+    }
+    
     @Override
     public default Float64Vector get(int[] pos)
     {

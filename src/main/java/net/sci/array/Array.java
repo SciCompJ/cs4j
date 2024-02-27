@@ -240,6 +240,20 @@ public interface Array<T> extends Iterable<T>, Dimensional
         }
     }
 
+    /**
+     * Returns a sample element with the same type as the elements in the array.
+     * The returned element is not necessarily stored in the array.
+     * 
+     * @return a sample element of type T
+     */
+    public default T sampleElement()
+    {
+        for (T element : this)
+        {
+            if (element != null) return element;
+        }
+        throw new RuntimeException("Input array contains only null values");
+    }
 	
 	/**
 	 * Returns the array element at the given position

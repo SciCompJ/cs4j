@@ -167,6 +167,18 @@ public interface Int32Array extends IntArray<Int32>
 		return defaultFactory;
 	}
 
+    /**
+     * Override default behavior of Array interface to return the value
+     * Int32.ZERO.
+     * 
+     * @return a default Int32 value.
+     */
+    @Override
+    public default Int32 sampleElement()
+    {
+        return Int32.ZERO;
+    }
+    
     @Override
     public default Int32 get(int[] pos)
     {

@@ -196,6 +196,18 @@ public interface Int16Array extends IntArray<Int16>
 		return defaultFactory;
 	}
 
+    /**
+     * Override default behavior of Array interface to return the value
+     * Int16.ZERO.
+     * 
+     * @return a default Int16 value.
+     */
+    @Override
+    public default Int16 sampleElement()
+    {
+        return Int16.ZERO;
+    }
+    
     @Override
     public default Int16 get(int[] pos)
     {

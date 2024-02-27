@@ -245,6 +245,18 @@ public interface UInt8Array extends IntArray<UInt8>
 		return defaultFactory;
 	}
 
+    /**
+     * Override default behavior of Array interface to return the value
+     * UInt8.ZERO.
+     * 
+     * @return a default UInt8 value.
+     */
+    @Override
+    public default UInt8 sampleElement()
+    {
+        return UInt8.ZERO;
+    }
+    
     @Override
     public default UInt8 get(int[] pos)
     {

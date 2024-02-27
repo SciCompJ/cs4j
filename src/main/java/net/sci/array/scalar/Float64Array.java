@@ -153,6 +153,18 @@ public interface Float64Array extends ScalarArray<Float64>
 		return Float64Array.create(dims);
 	}
 
+    /**
+     * Override default behavior of Array interface to return the value
+     * Float64.ZERO.
+     * 
+     * @return a default Float64 value.
+     */
+    @Override
+    public default Float64 sampleElement()
+    {
+        return Float64.ZERO;
+    }
+    
     @Override
     public default Float64 get(int[] pos)
     {
