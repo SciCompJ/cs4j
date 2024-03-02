@@ -410,8 +410,59 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     @Override
     public ScalarArray.Factory<S> factory();
 
+    /**
+     * Returns an iterator over the elements of the array, for implementing the
+     * Iterable interface.
+     * 
+     * Provides a default implementation based on the
+     * position iterator.
+     */
     @Override
-    public ScalarArray.Iterator<S> iterator();
+    public default ScalarArray.Iterator<S> iterator()
+    {
+        return new Iterator<S>()
+        {
+            PositionIterator iter = positionIterator();
+            // keep an array of coordinates to avoid repetitive allocation of array
+            int[] pos = new int[dimensionality()];
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public S get()
+            {
+                return ScalarArray.this.get(iter.get(pos));
+            }
+
+            @Override
+            public void set(S value)
+            {
+                ScalarArray.this.set(iter.get(pos), value);
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public double getValue()
+            {
+                return ScalarArray.this.getValue(iter.get(pos));
+            }
+
+            @Override
+            public void setValue(double value)
+            {
+                ScalarArray.this.setValue(iter.get(pos), value);
+            }
+        };
+    }
 	
 	
     // =============================================================
@@ -560,58 +611,6 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
         public ScalarArray.Factory<S> factory()
         {
             return ((ScalarArray<S>) array).factory();
-        }
-
-        @Override
-        public ScalarArray.Iterator<S> iterator()
-        {
-            return new ScalarArray.Iterator<S>()
-            {
-                PositionIterator iter = positionIterator();
-
-                @Override
-                public double getValue()
-                {
-                    return ScalarArray.ReshapeView.this.getValue(iter.get());
-                }
-
-                @Override
-                public void setValue(double value)
-                {
-                    ScalarArray.ReshapeView.this.setValue(iter.get(), value);
-                }
-
-                @Override
-                public boolean hasNext()
-                {
-                    return iter.hasNext();
-                }
-
-                @Override
-                public void forward()
-                {
-                    iter.forward();
-                }
-
-                @Override
-                public S next()
-                {
-                    iter.forward();
-                    return ScalarArray.ReshapeView.this.get(iter.get());
-                }
-
-                @Override
-                public S get()
-                {
-                    return ScalarArray.ReshapeView.this.get(iter.get());
-                }
-
-                @Override
-                public void set(S value)
-                {
-                    ScalarArray.ReshapeView.this.set(iter.get(), value);
-                }
-            };
         }
     }
 }
