@@ -168,6 +168,12 @@ public interface Float32Array extends ScalarArray<Float32>
     {
         setFloat(pos, (float) value);
     }
+
+    @Override
+    public default Float32 createElement(double value)
+    {
+        return new Float32((float) value);
+    }
     
     
 	// =============================================================

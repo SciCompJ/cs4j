@@ -287,6 +287,12 @@ public abstract class ScalarArray3D<S extends Scalar<S>> extends Array3D<S> impl
             this.array.setValue(pos, value);
         }
 
+        @Override
+        public S createElement(double value)
+        {
+            return array.createElement(value);
+        }
+        
         
         // =============================================================
         // Implements the Array3D interface
@@ -496,7 +502,12 @@ public abstract class ScalarArray3D<S extends Scalar<S>> extends Array3D<S> impl
                 Wrapper.this.setValue(pos[0], pos[1], this.sliceIndex, value);            
             }
 
-
+            @Override
+            public S createElement(double value)
+            {
+                return array.createElement(value);
+            }
+            
             @Override
             public S get(int[] pos)
             {

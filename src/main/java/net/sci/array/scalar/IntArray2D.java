@@ -215,6 +215,12 @@ public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> impl
         }
 
         @Override
+        public I createElement(double value)
+        {
+            return array.createElement(value);
+        }
+        
+        @Override
         public I get(int x, int y)
         {
             return array.get(new int[] {x, y});

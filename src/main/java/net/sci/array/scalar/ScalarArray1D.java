@@ -249,6 +249,12 @@ public abstract class ScalarArray1D<S extends Scalar<S>> extends Array1D<S> impl
         }
 
         @Override
+        public S createElement(double value)
+        {
+            return array.createElement(value);
+        }
+        
+        @Override
 		public ScalarArray<S> newInstance(int... dims)
 		{
 			return this.array.newInstance(dims);

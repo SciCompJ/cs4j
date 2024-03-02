@@ -143,17 +143,27 @@ public interface Int32Array extends IntArray<Int32>
     }
 
 		
-	// =============================================================
-	// Specialization of the Array interface
+    // =============================================================
+    // Specialization of the ScalarArray interface
 
-	/**
+    /**
      * Sets the value at the specified position, by clamping the value between 0
      * and 255.
      */
-	public default void setValue(int[] pos, double value)
+    public default void setValue(int[] pos, double value)
     {
-    	setInt(pos, (int) value);
+        setInt(pos, Int32.convert(value));
     }
+
+    @Override
+    public default Int32 createElement(double value)
+    {
+        return new Int32(Int32.convert(value));
+    }
+    
+    
+	// =============================================================
+	// Specialization of the Array interface
 
     @Override
 	public default Int32Array newInstance(int... dims)

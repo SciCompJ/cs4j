@@ -226,6 +226,12 @@ public abstract class IntArray1D<I extends Int<I>> extends ScalarArray1D<I> impl
         }
 
         @Override
+        public I createElement(double value)
+        {
+            return array.createElement(value);
+        }
+        
+        @Override
         public I get(int[] pos)
         {
             return array.get(pos);

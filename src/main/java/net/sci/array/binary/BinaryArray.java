@@ -406,7 +406,12 @@ public interface BinaryArray extends IntArray<Binary>
         setBoolean(pos, value > 0);
     }
     
-
+    @Override
+    public default Binary createElement(double value)
+    {
+        return new Binary(value > 0);
+    }
+    
     
     // =============================================================
 	// Specialization of the Array interface

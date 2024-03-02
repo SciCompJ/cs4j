@@ -316,7 +316,12 @@ public abstract class IntArray3D<I extends Int<I>> extends ScalarArray3D<I> impl
             array.setValue(pos, value);
         }
         
-
+        @Override
+        public I createElement(double value)
+        {
+            return array.createElement(value);
+        }
+        
         @Override
         public IntArray2D<I> slice(int sliceIndex)
         {
@@ -413,6 +418,12 @@ public abstract class IntArray3D<I extends Int<I>> extends ScalarArray3D<I> impl
                 array.setValue(pos, value);
             }
 
+            @Override
+            public I createElement(double value)
+            {
+                return array.createElement(value);
+            }
+            
             @Override
             public IntArray<I> newInstance(int... dims)
             {

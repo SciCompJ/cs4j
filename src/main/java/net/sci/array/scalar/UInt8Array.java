@@ -229,6 +229,12 @@ public interface UInt8Array extends IntArray<UInt8>
         setByte(pos, (byte) UInt8.convert(value));
     }
 
+    @Override
+    public default UInt8 createElement(double value)
+    {
+        return new UInt8(UInt8.convert(value));
+    }
+    
 
     // =============================================================
 	// Specialization of the Array interface

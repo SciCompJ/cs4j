@@ -181,6 +181,16 @@ public interface Int16Array extends IntArray<Int16>
 	}
 
 		
+    // =============================================================
+    // Specialization of the ScalarArray interface
+
+    @Override
+    public default Int16 createElement(double value)
+    {
+        return new Int16(Int16.convert(value));
+    }
+    
+    
 	// =============================================================
 	// Specialization of the Array interface
 

@@ -316,6 +316,20 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
         return res;
     }
     
+    /**
+     * Create a new element compatible with elements within this array, from a
+     * floating point value.
+     * 
+     * @param value
+     *            the numeric value of the new element
+     * @return an instance of the element type of the array corresponding to the
+     *         specified value.
+     */
+    public default S createElement(double value)
+    {
+        return sampleElement().fromValue(value);
+    }
+    
 
     // =============================================================
     // Implementation of NumericArray interface
@@ -583,7 +597,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
 
 
         // =============================================================
-        // Specialization of the Array interface
+        // Specialization of the ScalarArray interface
 
         @Override
         public double getValue(int[] pos)
@@ -597,6 +611,12 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
             ((ScalarArray<?>) array).setValue(coordsMapping.apply(pos), value);
         }
 
+        @Override
+        public S createElement(double value)
+        {
+            return ((ScalarArray<S>) array).createElement(value);
+        }
+        
         
         // =============================================================
         // Specialization of the Array interface
