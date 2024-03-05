@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * A single row within a multidimensional binary array, using run-length
@@ -158,92 +157,92 @@ public class BinaryRow implements Iterable<Run>
         return row;
     }
     
-    /**
-     * Computes the dilation of a row using another row as structuring element.
-     * 
-     * @param row1
-     *            the row to dilate.
-     * @param row2
-     *            the row to dilate with.
-     * @return the result of the dilation of the two rows.
-     */
-    public static final BinaryRow dilation(BinaryRow row1, BinaryRow row)
-    {
-        BinaryRow res = row1.duplicate();
-        for (Run run : row)
-        {
-            BinaryRow resDil = dilationLeftRight(row1, -run.left, run.right);
-            res = union(res, resDil);
-        }
-        return res;
-    }
-    
-    /**
-     * Computes the erosion of a row using another row as structuring element.
-     * 
-     * @param row1
-     *            the row to erode.
-     * @param row2
-     *            the row used for erosion.
-     * @return the result of the erosion of the two rows.
-     */
-    public static final BinaryRow erosion(BinaryRow row1, BinaryRow row2)
-    {
-        BinaryRow res = row1.duplicate();
-        for (Run run : row2)
-        {
-            BinaryRow resEro = dilationLeftRight(row1, run.left, -run.right);
-            res = intersection(res, resEro);
-        }
-        return res;
-    }
-
-    private static final BinaryRow dilationLeftRight(BinaryRow row, int leftDilate, int rightDilate)
-    {
-        // create result runs
-        TreeSet<Run> newRuns = new TreeSet<Run>();
-        
-        Iterator<Run> iter = row.iterator();
-        Run currentRun = iter.hasNext() ? iter.next() : null;
-        
-        while(currentRun != null)
-        {
-            // init extremities of new run
-            int newLeft = currentRun.left - leftDilate;
-            int newRight = currentRun.right + rightDilate;
-            
-            // switch to next run
-            currentRun = iter.hasNext() ? iter.next() : null;
-            
-            // if leftDilate or rightDilate is negative, this may delete some runs
-            // here, we simply iterate
-            if (newLeft > newRight)
-            {
-                continue;
-            }
-            
-            // in case of last run, creates new run and finalize 
-            if (currentRun == null)
-            {
-                newRuns.add(new Run(newLeft, newRight));
-                break;
-            }
-            
-            // iterate while right extremity overlap with left extremity of next run
-            while (currentRun != null && currentRun.left - leftDilate - 1 <= newRight)
-            {
-                // overlap -> need to update right extremity
-                newRight = currentRun.right + rightDilate;
-                // and update current run
-                currentRun = iter.hasNext() ? iter.next() : null;
-            }
-            
-            newRuns.add(new Run(newLeft, newRight));
-        }
-        
-        // create the new row from list of runs
-        return new BinaryRow(newRuns);
-    }
+//    /**
+//     * Computes the dilation of a row using another row as structuring element.
+//     * 
+//     * @param row1
+//     *            the row to dilate.
+//     * @param row2
+//     *            the row to dilate with.
+//     * @return the result of the dilation of the two rows.
+//     */
+//    public static final BinaryRow dilation(BinaryRow row1, BinaryRow row)
+//    {
+//        BinaryRow res = row1.duplicate();
+//        for (Run run : row)
+//        {
+//            BinaryRow resDil = dilationLeftRight(row1, -run.left, run.right);
+//            res = union(res, resDil);
+//        }
+//        return res;
+//    }
+//    
+//    /**
+//     * Computes the erosion of a row using another row as structuring element.
+//     * 
+//     * @param row1
+//     *            the row to erode.
+//     * @param row2
+//     *            the row used for erosion.
+//     * @return the result of the erosion of the two rows.
+//     */
+//    public static final BinaryRow erosion(BinaryRow row1, BinaryRow row2)
+//    {
+//        BinaryRow res = row1.duplicate();
+//        for (Run run : row2)
+//        {
+//            BinaryRow resEro = dilationLeftRight(row1, run.left, -run.right);
+//            res = intersection(res, resEro);
+//        }
+//        return res;
+//    }
+//
+//    private static final BinaryRow dilationLeftRight(BinaryRow row, int leftDilate, int rightDilate)
+//    {
+//        // create result runs
+//        TreeSet<Run> newRuns = new TreeSet<Run>();
+//        
+//        Iterator<Run> iter = row.iterator();
+//        Run currentRun = iter.hasNext() ? iter.next() : null;
+//        
+//        while(currentRun != null)
+//        {
+//            // init extremities of new run
+//            int newLeft = currentRun.left - leftDilate;
+//            int newRight = currentRun.right + rightDilate;
+//            
+//            // switch to next run
+//            currentRun = iter.hasNext() ? iter.next() : null;
+//            
+//            // if leftDilate or rightDilate is negative, this may delete some runs
+//            // here, we simply iterate
+//            if (newLeft > newRight)
+//            {
+//                continue;
+//            }
+//            
+//            // in case of last run, creates new run and finalize 
+//            if (currentRun == null)
+//            {
+//                newRuns.add(new Run(newLeft, newRight));
+//                break;
+//            }
+//            
+//            // iterate while right extremity overlap with left extremity of next run
+//            while (currentRun != null && currentRun.left - leftDilate - 1 <= newRight)
+//            {
+//                // overlap -> need to update right extremity
+//                newRight = currentRun.right + rightDilate;
+//                // and update current run
+//                currentRun = iter.hasNext() ? iter.next() : null;
+//            }
+//            
+//            newRuns.add(new Run(newLeft, newRight));
+//        }
+//        
+//        // create the new row from list of runs
+//        return new BinaryRow(newRuns);
+//    }
     
     
     // =============================================================

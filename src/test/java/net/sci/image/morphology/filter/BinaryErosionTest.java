@@ -10,6 +10,7 @@ import org.junit.Test;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.array.binary.BinaryRow;
 import net.sci.array.binary.RunLengthBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray3D;
 import net.sci.image.morphology.strel.Cross3x3Strel;
@@ -22,6 +23,65 @@ import net.sci.image.morphology.strel.Strel3D;
  */
 public class BinaryErosionTest
 {
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#erosion(net.sci.array.binary.BinaryRow, int)}.
+     */
+    @Test
+    public final void test_erosion_singleRun_singleRun()
+    {
+        BinaryRow row = new BinaryRow();
+        for (int i = 5; i <= 15; i++)
+        {
+            row.set(i, true);
+        }
+        
+        BinaryRow strel = new BinaryRow();
+        for (int i = -2; i <= 2; i++)
+        {
+            strel.set(i, true);
+        }
+        
+        BinaryRow res = BinaryErosion.erosion(row, strel);
+        
+        assertEquals(1, res.runCount());
+        assertFalse(res.get(6));
+        assertTrue(res.get(7));
+        assertTrue(res.get(13));
+        assertFalse(res.get(14));
+    }
+
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#erosion(net.sci.array.binary.BinaryRow, int)}.
+     */
+    @Test
+    public final void test_erosion_TwoRuns_singleRun()
+    {
+        BinaryRow row = new BinaryRow();
+        for (int i = 5; i <= 10; i++)
+        {
+            row.set(i, true);
+            row.set(i + 10, true);
+        }
+        
+        BinaryRow strel = new BinaryRow();
+        for (int i = -2; i <= 2; i++)
+        {
+            strel.set(i, true);
+        }
+        
+        BinaryRow res = BinaryErosion.erosion(row, strel);
+        
+        assertEquals(2, res.runCount());
+        assertFalse(res.get(6));
+        assertTrue(res.get(7));
+        assertTrue(res.get(8));
+        assertFalse(res.get(9));
+        assertFalse(res.get(16));
+        assertTrue(res.get(17));
+        assertTrue(res.get(18));
+        assertFalse(res.get(19));
+    }
+
     /**
      * Test method for {@link net.sci.image.morphology.filter.BinaryErosion#processBinary2d(net.sci.array.binary.BinaryArray2D)}.
      */

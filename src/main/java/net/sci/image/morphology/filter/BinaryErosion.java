@@ -32,6 +32,26 @@ import net.sci.image.morphology.strel.Strel3D;
  */
 public class BinaryErosion extends BinaryMorphologicalFilter
 {
+    /**
+     * Computes the erosion of a row using another row as structuring element.
+     * 
+     * @param row1
+     *            the row to erode.
+     * @param row2
+     *            the row used for erosion.
+     * @return the result of the erosion of the two rows.
+     */
+    public static final BinaryRow erosion(BinaryRow row1, BinaryRow row2)
+    {
+        BinaryRow res = row1.duplicate();
+        for (Run run : row2)
+        {
+            BinaryRow resEro = BinaryDilation.dilationLeftRight(row1, run.left, -run.right);
+            res = BinaryRow.intersection(res, resEro);
+        }
+        return res;
+    }
+    
     public BinaryErosion(Strel strel)
     {
         super(strel);
@@ -121,7 +141,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
                     // update result only if necessary
                     if (strelRow != null)
                     {
-                        resRow = BinaryRow.intersection(resRow, BinaryRow.erosion(arrayRow, strelRow));
+                        resRow = BinaryRow.intersection(resRow, erosion(arrayRow, strelRow));
                     }
                 }
             }
@@ -277,7 +297,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
                             // update result only if necessary
                             if (strelRow != null)
                             {
-                                resRow = BinaryRow.intersection(resRow, BinaryRow.erosion(arrayRow, strelRow));
+                                resRow = BinaryRow.intersection(resRow, erosion(arrayRow, strelRow));
                             }
                         }
                     }

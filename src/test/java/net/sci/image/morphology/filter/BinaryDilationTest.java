@@ -12,6 +12,7 @@ import org.junit.Test;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.array.binary.BinaryRow;
 import net.sci.array.binary.BufferedBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray3D;
@@ -29,6 +30,64 @@ import net.sci.image.morphology.strel.Strel3D;
  */
 public class BinaryDilationTest
 {
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#dilation(net.sci.array.binary.BinaryRow, int)}.
+     */
+    @Test
+    public final void test_dilationRows_singleRun_singleRun()
+    {
+        BinaryRow row1 = new BinaryRow();
+        for (int i = 5; i < 10; i++)
+        {
+            row1.set(i, true);
+        }
+        // 
+        BinaryRow row2 = new BinaryRow();
+        for (int i = -1; i <= 1; i++)
+        {
+            row2.set(i, true);
+        }
+        
+        BinaryRow res = BinaryDilation.dilation(row1, row2);
+        
+        assertEquals(1, res.runCount());
+        assertFalse(res.get(3));
+        assertTrue(res.get(4));
+        assertTrue(res.get(10));
+        assertFalse(res.get(11));
+    }
+    
+    /**
+     * Test method for {@link net.sci.array.binary.BinaryRow#dilation(net.sci.array.binary.BinaryRow)}.
+     */
+    @Test
+    public final void test_dilation_MergeRuns()
+    {
+        BinaryRow row = new BinaryRow();
+        for (int i = 0; i <= 5; i++)
+        {
+            row.set(i + 10, true);
+            row.set(i + 20, true);
+        }
+        assertEquals(2, row.runCount());
+        assertFalse(row.get(16));
+       
+        // dilation should fill indices 16 and 17 from the left, 
+        // and indices 18 and 19 from the right
+        BinaryRow row2 = new BinaryRow();
+        for (int i = -2; i <= 2; i++)
+        {
+            row2.set(i, true);
+        }
+        BinaryRow res = BinaryDilation.dilation(row, row2);
+        
+        assertEquals(1, res.runCount());
+        assertFalse(res.get(7));
+        assertTrue(res.get(8));
+        assertTrue(res.get(27));
+        assertFalse(res.get(28));
+    }
+
     /**
      * Test method for {@link net.sci.image.morphology.filter.BinaryDilation#processBinary2d(net.sci.array.binary.BinaryArray2D)}.
      * @throws IOException 
