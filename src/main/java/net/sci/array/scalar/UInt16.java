@@ -101,6 +101,22 @@ public class UInt16 extends Int<UInt16>
     {
         return value & 0x00FFFF;
     }
+    
+
+    // =============================================================
+    // Implementation of the Scalar interface
+    
+    @Override
+    public UInt16 typeMin()
+    {
+        return new UInt16(MIN_VALUE);
+    }
+
+    @Override
+    public UInt16 typeMax()
+    {
+        return new UInt16(MAX_VALUE);
+    }
 
     @Override
     public double getValue()

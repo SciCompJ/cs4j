@@ -73,6 +73,21 @@ public class Int32 extends Int<Int32>
         return value;
     }
 
+    // =============================================================
+    // Implementation of the Scalar interface
+    
+    @Override
+    public Int32 typeMin()
+    {
+        return new Int32(Integer.MAX_VALUE);
+    }
+
+    @Override
+    public Int32 typeMax()
+    {
+        return new Int32(Integer.MIN_VALUE);
+    }
+
     @Override
     public double getValue()
     {

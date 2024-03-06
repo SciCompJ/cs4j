@@ -52,6 +52,18 @@ public class Float64 extends Scalar<Float64>
     // =============================================================
     // Implementation of the Scalar interface
     
+    @Override
+    public Float64 typeMin()
+    {
+        return new Float64(Double.NEGATIVE_INFINITY);
+    }
+
+    @Override
+    public Float64 typeMax()
+    {
+        return new Float64(Double.POSITIVE_INFINITY);
+    }
+
     /*
      * (non-Javadoc)
      * 

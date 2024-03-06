@@ -110,6 +110,21 @@ public class UInt8 extends Int<UInt8>
         return value & 0x00FF;
     }
 
+    // =============================================================
+    // Implementation of the Scalar interface
+    
+    @Override
+    public UInt8 typeMin()
+    {
+        return new UInt8(MIN_VALUE);
+    }
+
+    @Override
+    public UInt8 typeMax()
+    {
+        return new UInt8(MAX_VALUE);
+    }
+
     @Override
     public double getValue()
     {

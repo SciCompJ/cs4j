@@ -82,6 +82,22 @@ public class Binary extends Int<Binary>
     {
         return state ? 1 : 0;
     }
+    
+
+    // =============================================================
+    // Implementation of the Scalar interface
+    
+    @Override
+    public Binary typeMin()
+    {
+        return FALSE;
+    }
+
+    @Override
+    public Binary typeMax()
+    {
+        return TRUE;
+    }
 
     @Override
     public double getValue()
@@ -94,6 +110,7 @@ public class Binary extends Int<Binary>
     {
         return v > 0.0 ? TRUE : FALSE;
     }
+    
     
     // =============================================================
     // Implementation of the Numeric interface

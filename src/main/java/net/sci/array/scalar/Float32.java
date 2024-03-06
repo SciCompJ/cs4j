@@ -60,9 +60,22 @@ public class Float32 extends Scalar<Float32>
         return value;
     }
 
+    
     // =============================================================
     // Implementation of the Scalar interface
     
+    @Override
+    public Float32 typeMin()
+    {
+        return new Float32(Float.NEGATIVE_INFINITY);
+    }
+
+    @Override
+    public Float32 typeMax()
+    {
+        return new Float32(Float.POSITIVE_INFINITY);
+    }
+
     /*
      * (non-Javadoc)
      * 

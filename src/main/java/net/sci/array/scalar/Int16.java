@@ -102,6 +102,22 @@ public class Int16 extends Int<Int16>
     {
         return value;
     }
+    
+
+    // =============================================================
+    // Implementation of the Scalar interface
+    
+    @Override
+    public Int16 typeMin()
+    {
+        return new Int16(MIN_VALUE);
+    }
+
+    @Override
+    public Int16 typeMax()
+    {
+        return new Int16(MAX_VALUE);
+    }
 
     @Override
     public double getValue()
