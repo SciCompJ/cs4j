@@ -8,13 +8,10 @@ import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.Int32Array;
-import net.sci.array.scalar.Int32Array2D;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.UInt16Array;
-import net.sci.array.scalar.UInt16Array2D;
 import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.Connectivity2D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayOperator;
@@ -44,10 +41,9 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 	Connectivity2D connectivity = Connectivity2D.C4;
 
 	/**
-	 * The number of bits for representing the result label image. Can be 8, 16
-	 * (default), or 32.
+	 * The factory of IntArray for creating new label maps.
 	 */
-	int bitDepth = 16;
+    IntArray.Factory<?> factory = UInt16Array.defaultFactory;
 	
 
 	// ==============================================================
@@ -73,6 +69,21 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
     }
     
     /**
+     * Constructor specifying the connectivity and the factory for creating new
+     * empty label maps.
+     * 
+     * @param connectivity
+     *            the connectivity of connected components (4 or 8)
+     * @param labelMapFactory
+     *            the factory used to create new label maps.
+     */
+    public FloodFillComponentsLabeling2D(Connectivity2D connectivity, IntArray.Factory<?> labelMapFactory)
+    {
+        this(connectivity);
+        this.factory = labelMapFactory;
+    }
+    
+    /**
      * Constructor specifying the connectivity and the bitdepth.  
      * 
      * @param connectivity
@@ -83,8 +94,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
     public FloodFillComponentsLabeling2D(Connectivity2D connectivity, int bitDepth)
     {
         this(connectivity);
-        this.bitDepth = bitDepth;
-        checkBitDepth();
+        this.factory = chooseFactory(bitDepth);
     }
     
 	/**
@@ -112,9 +122,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 	public FloodFillComponentsLabeling2D(int connectivity, int bitDepth)
 	{
 		this(connectivity);
-		this.bitDepth = bitDepth;
-
-		checkBitDepth();
+        this.factory = chooseFactory(bitDepth);
 	}
 	
 	/**
@@ -128,76 +136,28 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
         }
 	}
   
-    /**
-     * Throw an exception if bit depth is different from 8, 16 or 32. 
-     */
-    private void checkBitDepth()
+    private static final IntArray.Factory<?> chooseFactory(int bitDepth)
     {
-        if (bitDepth != 8 && bitDepth != 16 && bitDepth != 32)
+        return switch (bitDepth)
         {
-            throw new IllegalArgumentException("Bit depth must be 8, 16 or 32, not " + bitDepth);
-        }
+            case 8 -> UInt8Array.defaultFactory;
+            case 16 -> UInt16Array.defaultFactory;
+            case 32 -> Int32Array.defaultFactory;
+            default -> throw new IllegalArgumentException("Bit Depth should be 8, 16 or 32.");
+        };
     }
 
+    
     // ==============================================================
     // Processing methods
     
-	public IntArray2D<?> processBinary2d(BinaryArray2D image)
+	public IntArray2D<?> processBinary2d(BinaryArray2D array)
 	{
-		// get image size
-		int sizeX = image.size(0);
-		int sizeY = image.size(1);
-		int maxLabel;
-
-		// Depending on bitDepth, create result image, and choose max label 
-		// number
-		IntArray2D<?> labels;
-		switch (this.bitDepth) {
-		case 8: 
-			labels = UInt8Array2D.create(sizeX, sizeY);
-			maxLabel = 255;
-			break; 
-		case 16: 
-			labels = UInt16Array2D.create(sizeX, sizeY);
-			maxLabel = 65535;
-			break;
-		case 32:
-			labels = Int32Array2D.create(sizeX, sizeY);
-			maxLabel = 0x01 << 31 - 1;
-			break;
-		default:
-			throw new IllegalArgumentException(
-					"Bit Depth should be 8, 16 or 32.");
-		}
-
-		// the label counter
-		int nLabels = 0;
-
-		// iterate on image pixels to find new regions
-		for (int y = 0; y < sizeY; y++) 
-		{
-			this.fireProgressChanged(this, y, sizeY);
-			for (int x = 0; x < sizeX; x++) 
-			{
-				if (!image.getBoolean(x,y))
-					continue;
-				if (labels.getInt(x, y) > 0)
-					continue;
-
-				// a new label is found: check current label number  
-				if (nLabels == maxLabel)
-				{
-					throw new RuntimeException("Max number of label reached (" + maxLabel + ")");
-				}
-				
-				// increment label index, and propagate
-				nLabels++;
-				FloodFill.floodFill(image, x, y, labels, nLabels, this.connectivity);
-			}
-		}
-		this.fireProgressChanged(this, 1, 1);
-
-//		labels.setMinAndMax(0, nLabels);
+		// Create result image
+		IntArray2D<?> labels = IntArray2D.wrap(factory.create(array.size()));
+		
+        processBinary2d(array, labels);
+		
 		return labels;
 	}
 	
@@ -206,24 +166,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 		// get image size
 		int sizeX = source.size(0);
 		int sizeY = source.size(1);
-		int maxLabel;
-
-		// Depending on bitDepth, create result image, and choose max label 
-		// number
-		switch (this.bitDepth) {
-		case 8: 
-			maxLabel = 255;
-			break; 
-		case 16: 
-			maxLabel = 65535;
-			break;
-		case 32:
-			maxLabel = (0x01 << 31) - 1;
-			break;
-		default:
-			throw new IllegalArgumentException(
-					"Bit Depth should be 8, 16 or 32.");
-		}
+		int maxLabel = target.sampleElement().typeMax().getInt();
 
 		// the label counter
 		int nLabels = 0;
@@ -282,18 +225,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 	 */
 	public IntArray<?> createEmptyOutputArray(Array<?> array)
 	{
-		int[] dims = array.size();
-		switch (this.bitDepth) {
-		case 8: 
-			return UInt8Array.create(dims);
-		case 16: 
-			return UInt16Array.create(dims);
-		case 32:
-			return Int32Array.create(dims);
-		default:
-			throw new IllegalArgumentException(
-					"Bit Depth should be 8, 16 or 32.");
-		}
+		return this.factory.create(array.size());
 	}
 
 	@Override

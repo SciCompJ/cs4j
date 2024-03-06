@@ -8,13 +8,10 @@ import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Int32Array;
-import net.sci.array.scalar.Int32Array3D;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.UInt16Array;
-import net.sci.array.scalar.UInt16Array3D;
 import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array3D;
 import net.sci.image.Connectivity3D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayOperator;
@@ -43,11 +40,11 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	 */
 	Connectivity3D connectivity = Connectivity3D.C6;
 	
-	/**
-	 * The number of bits for representing the result label image. Can be 8, 16
-	 * (default), or 32.
-	 */
-	int bitDepth = 16;
+    /**
+     * The factory of IntArray for creating new label maps.
+     */
+	IntArray.Factory<?> factory = UInt16Array.defaultFactory;
+	
 	
     // ==============================================================
     // Constructors
@@ -59,44 +56,53 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	{
 	}
 	
-	/**
-	 * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
-	 * 
-	 * @param connectivity
-	 *            the connectivity of connected components (6 or 26)
-	 */
-	public FloodFillComponentsLabeling3D(Connectivity3D connectivity)
-	{
-		this.connectivity = connectivity;
+    /**
+     * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
+     * 
+     * @param connectivity
+     *            the connectivity of connected components (6 or 26)
+     */
+    public FloodFillComponentsLabeling3D(Connectivity3D connectivity)
+    {
+        this.connectivity = connectivity;
 
-		// check validity of input argument
-		if (connectivity != Connectivity3D.C6 && connectivity != Connectivity3D.C26)
-		{
-			throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + connectivity);
-		}
-	}
-	
-	/**
-	 * Constructor specifying the connectivity and the bitdepth of result label
-	 * image
-	 * 
-	 * @param connectivity
-	 *            the connectivity of connected components (6 or 26)
-	 * @param bitDepth
-	 *            the bit depth of the result (8, 16, or 32)
-	 */
-	public FloodFillComponentsLabeling3D(Connectivity3D connectivity, int bitDepth)
-	{
-		this(connectivity);
-		this.bitDepth = bitDepth;
-
-		// check validity of input argument
-		if (bitDepth != 8 && bitDepth != 16 && bitDepth != 32)
-		{
-			throw new IllegalArgumentException("Bit depth must be 8, 16 or 32, not " + bitDepth);
-		}
-	}
-	
+        // check validity of input argument
+        if (connectivity != Connectivity3D.C6 && connectivity != Connectivity3D.C26)
+        {
+            throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + connectivity);
+        }
+    }
+    
+    /**
+     * Constructor specifying the connectivity and the factory for creating new
+     * empty label maps.
+     * 
+     * @param connectivity
+     *            the connectivity of connected components (6 or 26)
+     * @param labelMapFactory
+     *            the factory used to create new label maps.
+     */
+    public FloodFillComponentsLabeling3D(Connectivity3D connectivity, IntArray.Factory<?> labelMapFactory)
+    {
+        this(connectivity);
+        this.factory = labelMapFactory;
+    }
+    
+    /**
+     * Constructor specifying the connectivity and the bitdepth of result label
+     * image
+     * 
+     * @param connectivity
+     *            the connectivity of connected components (6 or 26)
+     * @param bitDepth
+     *            the bit depth of the result (8, 16, or 32)
+     */
+    public FloodFillComponentsLabeling3D(Connectivity3D connectivity, int bitDepth)
+    {
+        this(connectivity);
+        this.factory = chooseFactory(bitDepth);
+    }
+    
 	/**
      * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
      * 
@@ -126,51 +132,33 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	public FloodFillComponentsLabeling3D(int connectivity, int bitDepth)
 	{
 		this(connectivity);
-		this.bitDepth = bitDepth;
-
-		// check validity of input argument
-		if (bitDepth != 8 && bitDepth != 16 && bitDepth != 32)
-		{
-			throw new IllegalArgumentException("Bit depth must be 8, 16 or 32, not " + bitDepth);
-		}
+        this.factory = chooseFactory(bitDepth);
 	}
-	
-	
+
+	private static final IntArray.Factory<?> chooseFactory(int bitDepth)
+	{
+        return switch (bitDepth)
+        {
+            case 8 -> UInt8Array.defaultFactory;
+            case 16 -> UInt16Array.defaultFactory;
+            case 32 -> Int32Array.defaultFactory;
+            default -> throw new IllegalArgumentException("Bit Depth should be 8, 16 or 32.");
+        };
+	}
+
+
     // ==============================================================
     // Processing methods
     
 	public IntArray3D<?> processBinary3d(BinaryArray3D image)
 	{
-		// get image size
-		int sizeX = image.size(0);
-		int sizeY = image.size(1);
-		int sizeZ = image.size(2);
-	
-		// Depending on bitDepth, create result image, and choose max label 
-		// number
-		IntArray3D<?> labels;
-		switch (this.bitDepth) {
-		case 8: 
-			labels = UInt8Array3D.create(sizeX, sizeY, sizeZ);
-			break; 
-		case 16: 
-			labels = UInt16Array3D.create(sizeX, sizeY, sizeZ);
-			break;
-		case 32:
-			labels = Int32Array3D.create(sizeX, sizeY, sizeZ);
-			break;
-		default:
-			throw new IllegalArgumentException(
-					"Bit Depth should be 8, 16 or 32.");
-		}
+		// create result image
+		IntArray3D<?> labels = IntArray3D.wrap(factory.create(image.size()));
 
 		processBinary3d(image, labels);
 		return labels;
 	}
 
-	/* (non-Javadoc)
-	 * @see inra.ijpb.binary.conncomp.ConnectedComponentsLabeling3D#computeLabels(ij.ImageStack)
-	 */
 	public void processBinary3d(BinaryArray3D image, IntArray3D<?> labels)
 	{
 		// get image size
@@ -179,21 +167,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 		int sizeZ = image.size(2);
 	
 		// identify the maximum label index
-		int maxLabel;
-		switch (this.bitDepth) {
-		case 8: 
-			maxLabel = 255;
-			break; 
-		case 16: 
-			maxLabel = 65535;
-			break;
-		case 32:
-			maxLabel = (0x01 << 31) - 1;
-			break;
-		default:
-			throw new IllegalArgumentException(
-					"Bit Depth should be 8, 16 or 32.");
-		}
+		int maxLabel = labels.sampleElement().typeMax().getInt();
 	
 		fireStatusChanged(this, "Compute Labels...");
 		
@@ -257,20 +231,9 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 	 */
 	public IntArray<?> createEmptyOutputArray(Array<?> array)
 	{
-		int[] dims = array.size();
-		switch (this.bitDepth) {
-		case 8: 
-			return UInt8Array.create(dims);
-		case 16: 
-			return UInt16Array.create(dims);
-		case 32:
-			return Int32Array.create(dims);
-		default:
-			throw new IllegalArgumentException(
-					"Bit Depth should be 8, 16 or 32.");
-		}
+        return this.factory.create(array.size());
 	}
-
+	
     @Override
     public Image process(Image image)
     {
