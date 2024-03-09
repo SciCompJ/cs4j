@@ -34,7 +34,7 @@ public class Int16Test
         
         Int16 res = v1.plus(v2);
         
-        assertEquals(Int16.MAX_VALUE, res.getInt());
+        assertEquals(Int16.MAX_INT, res.getInt());
     }
 
     /**
@@ -75,7 +75,7 @@ public class Int16Test
         
         Int16 res = v1.times(2);
         
-        assertEquals(Int16.MAX_VALUE, res.getInt());
+        assertEquals(Int16.MAX_INT, res.getInt());
     }
 
     /**

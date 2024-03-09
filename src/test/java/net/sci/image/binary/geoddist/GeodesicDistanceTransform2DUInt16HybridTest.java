@@ -57,9 +57,9 @@ public class GeodesicDistanceTransform2DUInt16HybridTest
         assertEquals(0, res.getInt(1, 1));
         assertEquals(2, res.getInt(1, 3));
         // in mask background
-        assertEquals(UInt16.MAX_VALUE, res.getInt(5, 3));
+        assertEquals(UInt16.MAX_INT, res.getInt(5, 3));
         // in mask foreground, but unreacheable region
-        assertEquals(UInt16.MAX_VALUE, res.getInt(8, 2));
+        assertEquals(UInt16.MAX_INT, res.getInt(8, 2));
     }
 
     /**
@@ -80,9 +80,9 @@ public class GeodesicDistanceTransform2DUInt16HybridTest
         assertEquals(0, res.getInt(1, 1));
         assertEquals(2, res.getInt(1, 3));
         // in mask background
-        assertEquals(UInt16.MAX_VALUE, res.getInt(5, 3));
+        assertEquals(UInt16.MAX_INT, res.getInt(5, 3));
         // in mask foreground, but unreacheable region
-        assertEquals(UInt16.MAX_VALUE, res.getInt(8, 2));
+        assertEquals(UInt16.MAX_INT, res.getInt(8, 2));
     }
     
     /**

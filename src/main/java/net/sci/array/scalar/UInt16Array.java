@@ -174,7 +174,7 @@ public interface UInt16Array extends IntArray<UInt16>
 	@Override
 	public default void setInt(int[] pos, int value)
 	{
-		setShort(pos, (short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
+		setShort(pos, (short) Math.min(Math.max(value, 0), UInt16.MAX_INT));
 	}
 
 	
@@ -334,7 +334,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		@Override
 		public default void setInt(int value)
 		{
-			setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_VALUE));
+			setShort((short) Math.min(Math.max(value, 0), UInt16.MAX_INT));
 		}
 
 		@Override

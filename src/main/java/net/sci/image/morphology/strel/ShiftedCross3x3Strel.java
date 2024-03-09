@@ -171,8 +171,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = UInt8.MIN_VALUE;
-				buffer[1][x] = UInt8.MIN_VALUE;
+				buffer[0][x] = UInt8.MIN_INT;
+				buffer[1][x] = UInt8.MIN_INT;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -195,15 +195,15 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = UInt8.MIN_VALUE;
+						tmp[x] = UInt8.MIN_INT;
 				}
 				buffer[2] = tmp;
 
 				// process first two pixels independently
-				valMax = Math.max(buffer[1][0], UInt8.MIN_VALUE);
+				valMax = Math.max(buffer[1][0], UInt8.MIN_INT);
 				image.setInt(valMax, 0, y);
 				valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1],
-						buffer[2][0], UInt8.MIN_VALUE);
+						buffer[2][0], UInt8.MIN_INT);
 				image.setInt(valMax, 1, y);
 
 				// Iterate over pixel of the line, starting from the third one
@@ -303,8 +303,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = UInt8.MAX_VALUE;
-				buffer[1][x] = UInt8.MAX_VALUE;
+				buffer[0][x] = UInt8.MAX_INT;
+				buffer[1][x] = UInt8.MAX_INT;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -327,15 +327,15 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = UInt8.MAX_VALUE;
+						tmp[x] = UInt8.MAX_INT;
 				}
 				buffer[2] = tmp;
 
 				// process first pixel independently
-				valMin = Math.min(buffer[1][0], UInt8.MAX_VALUE);
+				valMin = Math.min(buffer[1][0], UInt8.MAX_INT);
 				image.setInt(valMin, 0, y);
 				valMin = min5(buffer[0][0], buffer[1][0], buffer[1][1],
-						buffer[2][0], UInt8.MAX_VALUE);
+						buffer[2][0], UInt8.MAX_INT);
 				image.setInt(valMin, 1, y);
 
 				// Iterate over pixel of the line
@@ -523,8 +523,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = UInt8.MIN_VALUE;
-				buffer[1][x] = UInt8.MIN_VALUE;
+				buffer[0][x] = UInt8.MIN_INT;
+				buffer[1][x] = UInt8.MIN_INT;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -547,7 +547,7 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = UInt8.MIN_VALUE;
+						tmp[x] = UInt8.MIN_INT;
 				}
 				buffer[2] = tmp;
 
@@ -563,9 +563,9 @@ public class ShiftedCross3x3Strel
 				// process last two pixels independently
 				valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 						buffer[1][sizeX - 1], buffer[2][sizeX - 1],
-						UInt8.MIN_VALUE);
+						UInt8.MIN_INT);
 				image.setInt(sizeX - 2, y, valMax);
-				valMax = Math.max(buffer[1][sizeX - 1], UInt8.MIN_VALUE);
+				valMax = Math.max(buffer[1][sizeX - 1], UInt8.MIN_INT);
 				image.setInt(sizeX - 1, y, valMax);
 			}
 
@@ -660,8 +660,8 @@ public class ShiftedCross3x3Strel
 			// init buffer with background and first two lines
 			for (int x = 0; x < sizeX; x++)
 			{
-				buffer[0][x] = UInt8.MAX_VALUE;
-				buffer[1][x] = UInt8.MAX_VALUE;
+				buffer[0][x] = UInt8.MAX_INT;
+				buffer[1][x] = UInt8.MAX_INT;
 				buffer[2][x] = image.getInt(x, 0);
 			}
 
@@ -684,7 +684,7 @@ public class ShiftedCross3x3Strel
 				} else
 				{
 					for (int x = 0; x < sizeX; x++)
-						tmp[x] = UInt8.MAX_VALUE;
+						tmp[x] = UInt8.MAX_INT;
 				}
 				buffer[2] = tmp;
 
@@ -700,9 +700,9 @@ public class ShiftedCross3x3Strel
 				// process last two pixels independently
 				valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2],
 						buffer[1][sizeX - 1], buffer[2][sizeX - 1],
-						UInt8.MAX_VALUE);
+						UInt8.MAX_INT);
 				image.setInt(sizeX - 2, y, valMin);
-				valMin = Math.min(buffer[1][sizeX - 1], UInt8.MAX_VALUE);
+				valMin = Math.min(buffer[1][sizeX - 1], UInt8.MAX_INT);
 				image.setInt(sizeX - 1, y, valMin);
 			}
 

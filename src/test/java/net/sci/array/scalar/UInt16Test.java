@@ -34,7 +34,7 @@ public class UInt16Test
         
         UInt16 res = v1.plus(v2);
         
-        assertEquals(UInt16.MAX_VALUE, res.getInt());
+        assertEquals(UInt16.MAX_INT, res.getInt());
     }
 
     /**
@@ -75,7 +75,7 @@ public class UInt16Test
         
         UInt16 res = v1.times(2);
         
-        assertEquals(UInt16.MAX_VALUE, res.getInt());
+        assertEquals(UInt16.MAX_INT, res.getInt());
     }
 
     /**

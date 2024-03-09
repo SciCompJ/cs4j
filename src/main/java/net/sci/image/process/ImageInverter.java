@@ -57,7 +57,7 @@ public final class ImageInverter extends AlgoStub implements ImageArrayOperator,
 	private double determineUpperValue(ScalarArray<?> array)
 	{
 		if (array instanceof UInt8Array) return 255;
-		if (array instanceof UInt16Array) return UInt16.MAX_VALUE;
+		if (array instanceof UInt16Array) return UInt16.MAX_INT;
 		if (array instanceof BinaryArray) return 1;
 		
 		double[] valueRange = array.valueRange();

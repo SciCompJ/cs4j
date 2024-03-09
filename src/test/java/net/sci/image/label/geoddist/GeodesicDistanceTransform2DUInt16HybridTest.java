@@ -130,7 +130,7 @@ public class GeodesicDistanceTransform2DUInt16HybridTest
         
         assertTrue(distMap instanceof UInt16Array);
         assertEquals(421, distMap.getValue(119, 71), 1e-6);
-        assertEquals(UInt16.MAX_VALUE, distMap.getValue(15, 30), 1e-6);
-        assertEquals(UInt16.MAX_VALUE, distMap.getValue(150, 160), 1e-6);
+        assertEquals(UInt16.MAX_INT, distMap.getValue(15, 30), 1e-6);
+        assertEquals(UInt16.MAX_INT, distMap.getValue(150, 160), 1e-6);
     }
 }

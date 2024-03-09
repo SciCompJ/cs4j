@@ -146,7 +146,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMax.fill(UInt8.MIN_VALUE);
+			localMax.fill(UInt8.MIN_INT);
 
 			int xmin = Math.max(0, d + 1 - sizeY);
 			int xmax = Math.min(sizeX, d + 1);
@@ -179,7 +179,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 			// and that do not touch the upper left image boundary
 			while (t < tmax + this.offset)
 			{
-				localMax.add(UInt8.MIN_VALUE);
+				localMax.add(UInt8.MIN_INT);
 				int t2 = t - this.offset;
 				int x = t2;
 				int y = d - t2;
@@ -302,7 +302,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 			fireProgressChanged(this, d - dmin, dmax - dmin);
 
 			// reset local histogram
-			localMin.fill(UInt8.MAX_VALUE);
+			localMin.fill(UInt8.MAX_INT);
 
 			int xmin = Math.max(0, d - sizeY - 1);
 			int xmax = Math.min(sizeX, d + 1);
@@ -335,7 +335,7 @@ public class LinearDiagUpStrel extends AbstractStrel2D implements InPlaceStrel2D
 			// and that do not touch the upper left image boundary
 			while (t < tmax + this.offset)
 			{
-				localMin.add(UInt8.MAX_VALUE);
+				localMin.add(UInt8.MAX_INT);
 				int t2 = t - this.offset;
 				int x = t2;
 				int y = d - t2;

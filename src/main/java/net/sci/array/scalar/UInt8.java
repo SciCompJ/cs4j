@@ -15,14 +15,28 @@ public class UInt8 extends Int<UInt8>
     // Public constants
     
     /**
-     * The minimum value that can be stored in a UInt8 instance, equal to 0.
+     * The minimum integer value that can be stored in a UInt8 instance, equal
+     * to 0.
      */
-    public static final int MIN_VALUE = 0;
+    public static final int MIN_INT = 0;
     
     /**
-     * The maximum value that can be stored in a UInt8 instance, equal to 255.
+     * The maximum integer value that can be stored in a UInt8 instance, equal
+     * to 255.
      */
-    public static final int MAX_VALUE = 255;
+    public static final int MAX_INT = 255;
+    
+    /**
+     * The UInt8 equal to the smallest value that can be represented with this
+     * type, corresponding to zero.
+     */
+    public static final UInt8 MIN_VALUE = new UInt8(MIN_INT);
+    
+    /**
+     * The UInt8 equal to the largest value that can be represented with this
+     * type, corresponding to 255.
+     */
+    public static final UInt8 MAX_VALUE = new UInt8(MAX_INT);
     
     /**
      * The UInt8 value that corresponds to one.
@@ -116,13 +130,13 @@ public class UInt8 extends Int<UInt8>
     @Override
     public UInt8 typeMin()
     {
-        return new UInt8(MIN_VALUE);
+        return MIN_VALUE;
     }
 
     @Override
     public UInt8 typeMax()
     {
-        return new UInt8(MAX_VALUE);
+        return MAX_VALUE;
     }
 
     @Override

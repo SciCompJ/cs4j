@@ -177,7 +177,7 @@ public interface Int16Array extends IntArray<Int16>
 	@Override
 	public default void setInt(int[] pos, int value)
 	{
-		setShort(pos, (short) Math.min(Math.max(value, Int16.MIN_VALUE), Int16.MAX_VALUE));
+		setShort(pos, (short) Math.min(Math.max(value, Int16.MIN_INT), Int16.MAX_INT));
 	}
 
 		

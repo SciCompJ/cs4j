@@ -115,7 +115,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
             for (int x = 0; x < sizeX; x++)
             {
                 boolean inside = array.getBoolean(x, y);
-                result.setInt(x, y, inside ? UInt16.MAX_VALUE : 0);
+                result.setInt(x, y, inside ? UInt16.MAX_INT : 0);
             }
         }
         

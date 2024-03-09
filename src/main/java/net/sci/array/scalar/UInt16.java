@@ -18,14 +18,26 @@ public class UInt16 extends Int<UInt16>
      * The minimum integer value that can be stored in a UInt16 instance,
      * corresponding to 0.
      */
-    public final static int MIN_VALUE = 0;
+    public final static int MIN_INT = 0;
 
     /**
      * The maximum integer value that can be stored in a UInt16 instance,
      * corresponding to 2^16-1.
      */
-    public final static int MAX_VALUE = 0x0FFFF;
+    public final static int MAX_INT = 0x0FFFF;
 
+    /**
+     * The UInt16 equal to the smallest value that can be represented with this
+     * type, corresponding to zero.
+     */
+    public static final UInt16 MIN_VALUE = new UInt16(MIN_INT);
+    
+    /**
+     * The UInt8 equal to the largest value that can be represented with this
+     * type, corresponding to 255.
+     */
+    public static final UInt16 MAX_VALUE = new UInt16(MAX_INT);
+    
     /**
      * The UInt16 value that corresponds to one.
      */
@@ -50,7 +62,7 @@ public class UInt16 extends Int<UInt16>
      */
     public final static int convert(double value)
     {
-        return (int) Math.min(Math.max(value + 0.5, MIN_VALUE), MAX_VALUE);
+        return (int) Math.min(Math.max(value + 0.5, MIN_INT), MAX_INT);
     }
 
     /**
@@ -63,7 +75,7 @@ public class UInt16 extends Int<UInt16>
      */
     public final static int clamp(int value)
     {
-        return (int) Math.min(Math.max(0, value), MAX_VALUE);
+        return (int) Math.min(Math.max(0, value), MAX_INT);
     }
     
 
@@ -109,13 +121,13 @@ public class UInt16 extends Int<UInt16>
     @Override
     public UInt16 typeMin()
     {
-        return new UInt16(MIN_VALUE);
+        return MIN_VALUE;
     }
 
     @Override
     public UInt16 typeMax()
     {
-        return new UInt16(MAX_VALUE);
+        return MAX_VALUE;
     }
 
     @Override

@@ -327,7 +327,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
             for (int x = 0; x < sizeX; x++)
             {
                 int val = distMap.getInt(x, y);
-                if (maskImage.getBoolean(x, y) && val != UInt16.MAX_VALUE)
+                if (maskImage.getBoolean(x, y) && val != UInt16.MAX_INT)
                 {
                     distMap.setInt(x, y, (int) Math.round(val / w0));
                 }

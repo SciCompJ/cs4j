@@ -16,16 +16,28 @@ public class Int16 extends Int<Int16>
     // Constants
     
     /**
-     * The maximum value that can be stored in a Int16 instance, corresponding
-     * to 2^15-1.
+     * The minimum integer value that can be stored in a Int16 instance,
+     * corresponding to -2^15.
      */
-    public final static int MAX_VALUE = Short.MAX_VALUE;
+    public final static int MIN_INT = Short.MIN_VALUE;
+    
+    /**
+     * The maximum integer value that can be stored in a Int16 instance,
+     * corresponding to 2^15-1.
+     */
+    public final static int MAX_INT = Short.MAX_VALUE;
 
     /**
-     * The minimum value that can be stored in a Int16 instance, corresponding
-     * to -2^15.
+     * The Int16 equal to the smallest value that can be represented with this
+     * type, corresponding to -2^15.
      */
-    public final static int MIN_VALUE = Short.MIN_VALUE;
+    public static final Int16 MIN_VALUE = new Int16(MIN_INT);
+    
+    /**
+     * The UInt8 equal to the largest value that can be represented with this
+     * type, corresponding to 2^15-1.
+     */
+    public static final Int16 MAX_VALUE = new Int16(MAX_INT);
     
     /**
      * The INT16 value that corresponds to one.
@@ -51,7 +63,7 @@ public class Int16 extends Int<Int16>
      */
     public final static int convert(double value)
     {
-        return (int) Math.min(Math.max(value + 0.5, MIN_VALUE), MAX_VALUE);
+        return (int) Math.min(Math.max(value + 0.5, MIN_INT), MAX_INT);
     }
 
     /**
@@ -64,7 +76,7 @@ public class Int16 extends Int<Int16>
      */
     public final static int clamp(int value)
     {
-        return (int) Math.min(Math.max(value, MIN_VALUE), MAX_VALUE);
+        return (int) Math.min(Math.max(value, MIN_INT), MAX_INT);
     }
     
 	
@@ -110,13 +122,13 @@ public class Int16 extends Int<Int16>
     @Override
     public Int16 typeMin()
     {
-        return new Int16(MIN_VALUE);
+        return MIN_VALUE;
     }
 
     @Override
     public Int16 typeMax()
     {
-        return new Int16(MAX_VALUE);
+        return MAX_VALUE;
     }
 
     @Override

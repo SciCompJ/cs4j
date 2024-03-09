@@ -112,7 +112,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         {
             for (int x = 0; x < sizeX; x++)
             {
-                distMap.setInt(x, y, labelMap.getInt(x, y) > 0 ? UInt16.MAX_VALUE : 0);
+                distMap.setInt(x, y, labelMap.getInt(x, y) > 0 ? UInt16.MAX_INT : 0);
             }
         }
         
