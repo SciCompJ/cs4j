@@ -148,6 +148,18 @@ public interface Float64Array extends ScalarArray<Float64>
     // Specialization of ScalarArray interface
 
     @Override
+    public default Float64 typeMin()
+    {
+        return Float64.MIN_VALUE;
+    }
+
+    @Override
+    public default Float64 typeMax()
+    {
+        return Float64.MAX_VALUE;
+    }
+
+    @Override
     public default Float64 createElement(double value)
     {
         return new Float64(value);

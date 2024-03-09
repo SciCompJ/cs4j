@@ -230,6 +230,18 @@ public interface UInt8Array extends IntArray<UInt8>
     }
 
     @Override
+    public default UInt8 typeMin()
+    {
+        return UInt8.MIN_VALUE;
+    }
+
+    @Override
+    public default UInt8 typeMax()
+    {
+        return UInt8.MAX_VALUE;
+    }
+
+    @Override
     public default UInt8 createElement(double value)
     {
         return new UInt8(UInt8.convert(value));

@@ -156,6 +156,18 @@ public interface Int32Array extends IntArray<Int32>
     }
 
     @Override
+    public default Int32 typeMin()
+    {
+        return Int32.MIN_VALUE;
+    }
+
+    @Override
+    public default Int32 typeMax()
+    {
+        return Int32.MAX_VALUE;
+    }
+
+    @Override
     public default Int32 createElement(double value)
     {
         return new Int32(Int32.convert(value));

@@ -15,6 +15,18 @@ public class Float32 extends Scalar<Float32>
     // =============================================================
     // Public constants
     
+    /**
+     * The Float32 instance equal to the smallest value that can be represented
+     * with this type, corresponding to minus infinity.
+     */
+    public static final Float32 MIN_VALUE = new Float32(Float.NEGATIVE_INFINITY);
+    
+    /**
+     * The Float32 instance equal to the largest value that can be represented
+     * with this type, corresponding to plus infinity.
+     */
+    public static final Float32 MAX_VALUE = new Float32(Float.POSITIVE_INFINITY);
+    
     public final static Float32 ONE = new Float32(1.0f);
     
     public final static Float32 ZERO = new Float32(0.0f);

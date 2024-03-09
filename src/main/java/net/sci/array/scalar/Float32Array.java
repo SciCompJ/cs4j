@@ -170,6 +170,18 @@ public interface Float32Array extends ScalarArray<Float32>
     }
 
     @Override
+    public default Float32 typeMin()
+    {
+        return Float32.MIN_VALUE;
+    }
+
+    @Override
+    public default Float32 typeMax()
+    {
+        return Float32.MAX_VALUE;
+    }
+
+    @Override
     public default Float32 createElement(double value)
     {
         return new Float32((float) value);

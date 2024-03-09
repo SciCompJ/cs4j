@@ -407,6 +407,18 @@ public interface BinaryArray extends IntArray<Binary>
     }
     
     @Override
+    public default Binary typeMin()
+    {
+        return Binary.FALSE;
+    }
+
+    @Override
+    public default Binary typeMax()
+    {
+        return Binary.TRUE;
+    }
+
+    @Override
     public default Binary createElement(double value)
     {
         return new Binary(value > 0);

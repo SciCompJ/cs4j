@@ -16,13 +16,13 @@ public class Int32 extends Int<Int32>
     // Public constants
     
     /**
-     * The Int16 equal to the smallest value that can be represented with this
+     * The Int32 equal to the smallest value that can be represented with this
      * type, corresponding to -2^31.
      */
     public static final Int32 MIN_VALUE = new Int32(Integer.MIN_VALUE);
     
     /**
-     * The UInt8 equal to the largest value that can be represented with this
+     * The Int32 equal to the largest value that can be represented with this
      * type, corresponding to 2^31-1.
      */
     public static final Int32 MAX_VALUE = new Int32(Integer.MAX_VALUE);

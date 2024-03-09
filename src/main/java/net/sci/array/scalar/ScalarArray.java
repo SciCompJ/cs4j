@@ -330,6 +330,30 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
         return sampleElement().fromValue(value);
     }
     
+    /**
+     * Returns the smallest value (closest or equal to negative infinity) that
+     * can be represented with the type contained within this array.
+     * 
+     * @return the smallest value that can be represented with the type
+     *         contained within this array
+     */
+    public default S typeMin()
+    {
+        return sampleElement().typeMin();
+    }
+    
+    /**
+     * Returns the largest value (closest or equal to positive infinity) that
+     * can be represented with the type contained within this array.
+     * 
+     * @return the largest value that can be represented with the type contained
+     *         within this array
+     */
+    public default S typeMax()
+    {
+        return sampleElement().typeMax();
+    }
+    
 
     // =============================================================
     // Implementation of NumericArray interface

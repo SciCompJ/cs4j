@@ -185,6 +185,18 @@ public interface Int16Array extends IntArray<Int16>
     // Specialization of the ScalarArray interface
 
     @Override
+    public default Int16 typeMin()
+    {
+        return Int16.MIN_VALUE;
+    }
+
+    @Override
+    public default Int16 typeMax()
+    {
+        return Int16.MAX_VALUE;
+    }
+
+    @Override
     public default Int16 createElement(double value)
     {
         return new Int16(Int16.convert(value));

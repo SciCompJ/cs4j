@@ -182,6 +182,18 @@ public interface UInt16Array extends IntArray<UInt16>
     // Specialization of the ScalarArray interface
 
     @Override
+    public default UInt16 typeMin()
+    {
+        return UInt16.MIN_VALUE;
+    }
+
+    @Override
+    public default UInt16 typeMax()
+    {
+        return UInt16.MAX_VALUE;
+    }
+
+    @Override
     public default UInt16 createElement(double value)
     {
         return new UInt16(UInt16.convert(value));

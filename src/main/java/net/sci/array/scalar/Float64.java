@@ -15,6 +15,18 @@ public class Float64 extends Scalar<Float64>
     // =============================================================
     // Public constants
     
+    /**
+     * The Float64 instance equal to the smallest value that can be represented
+     * with this type, corresponding to minus infinity.
+     */
+    public static final Float64 MIN_VALUE = new Float64(Double.NEGATIVE_INFINITY);
+    
+    /**
+     * The Float64 instance equal to the largest value that can be represented
+     * with this type, corresponding to plus infinity.
+     */
+    public static final Float64 MAX_VALUE = new Float64(Double.POSITIVE_INFINITY);
+    
     public final static Float64 ONE = new Float64(1.0);
     
     public final static Float64 ZERO = new Float64(0.0);
