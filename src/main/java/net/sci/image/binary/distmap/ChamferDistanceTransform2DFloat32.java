@@ -9,6 +9,7 @@ import java.util.Collection;
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.Float32Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
@@ -25,7 +26,7 @@ import net.sci.image.binary.distmap.ChamferMask2D.Offset;
  * @author David Legland
  * @see ChamferDistanceTransform2DUInt16
  */
-public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements ArrayOperator, ChamferDistanceTransform2D
+public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements ArrayOperator, DistanceTransform, ChamferDistanceTransform2D
 {
     // ==================================================
     // Class variables
@@ -35,14 +36,14 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
      */
     ChamferMask2D mask;
 
-	/**
-	 * Flag for dividing final distance map by the value first weight. 
-	 * This results in distance map values closer to Euclidean, but with 
-	 * non integer values. 
-	 */
-	private boolean normalizeMap = true;
-	
-	
+    /**
+     * Flag for dividing final distance map by the value first weight. This
+     * results in distance map values closer to Euclidean, but with non integer
+     * values.
+     */
+    private boolean normalizeMap = true;
+
+    
     // ==================================================
     // Constructors 
     
@@ -59,7 +60,35 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
 
 	
     // ==================================================
-    // Computation methods 
+    // Implementation of the DistanceTransform interface
+
+    @Override
+    public Result computeResult(BinaryArray array)
+    {
+        if (array.dimensionality() != 2) throw new IllegalArgumentException("Requires an array of dimensionity 2");
+        BinaryArray2D array2d = BinaryArray2D.wrap(array);
+        
+        // Allocate result array
+        Float32Array2D distMap = initializeResult(array2d);
+        
+        // Two iterations are enough to compute distance map to boundary
+        forwardIteration(distMap, array2d);
+        double distMax = backwardIteration(distMap, array2d);
+
+        // Normalize values by the first weight
+        if (this.normalizeMap)
+        {
+            normalizeResult(distMap, array2d);
+            double w0 = mask.getNormalizationWeight();
+            distMax = distMax / w0;
+        }
+        
+        return new DistanceTransform.Result(distMap, distMax);
+    }
+    
+
+    // ==================================================
+    // Implementation of the DistanceTransform2D interface
 
 	public Float32Array2D process2d(BinaryArray2D array)
 	{
@@ -164,7 +193,7 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
         this.fireProgressChanged(this, sizeY, sizeY);
 	} // end of forward iteration
 
-	private void backwardIteration(Float32Array2D distMap, BinaryArray2D maskImage)
+	private double backwardIteration(Float32Array2D distMap, BinaryArray2D maskImage)
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
         
@@ -172,6 +201,9 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
         int sizeX = maskImage.size(0);
         int sizeY = maskImage.size(1);
         Collection<Offset> offsets = mask.getBackwardOffsets();
+        
+        // initialize largest distance to 0
+        double distMax = 0;
         
         // Iterate over pixels
         for (int y = sizeY - 1; y >= 0; y--)
@@ -215,10 +247,13 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
                 {
                     distMap.setFloat(x, y, newDist);
                 }
+                
+                distMax = Math.max(distMax, newDist);
             }
         } // end of processing for current line 
         
         this.fireProgressChanged(this, sizeY, sizeY);
+        return distMax;
 	} // end of backward iteration
 	
     private void normalizeResult(Float32Array2D distMap, BinaryArray2D array)

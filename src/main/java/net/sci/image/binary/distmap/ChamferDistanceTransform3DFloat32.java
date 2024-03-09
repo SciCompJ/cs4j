@@ -27,6 +27,7 @@ import java.util.Collection;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.Float32Array3D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -39,7 +40,7 @@ import net.sci.image.binary.distmap.ChamferMask3D.Offset;
  * @author David Legland
  * @see ChamferDistanceTransform3DUInt16
  */
-public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements ChamferDistanceTransform3D
+public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements DistanceTransform, ChamferDistanceTransform3D
 {
     // ==============================================================
     // class members
@@ -99,8 +100,36 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
 	}
 
 	
-    // ==============================================================
-    // Implementation of computation methods
+    // ==================================================
+    // Implementation of the DistanceTransform interface
+
+    @Override
+    public Result computeResult(BinaryArray array)
+    {
+        if (array.dimensionality() != 3) throw new IllegalArgumentException("Requires an array of dimensionity 3");
+        BinaryArray3D array3d = BinaryArray3D.wrap(array);
+        
+        // Allocate result array
+        Float32Array3D distMap = initializeResult(array3d);
+        
+        // Two iterations are enough to compute distance map to boundary
+        forwardIteration(distMap, array3d);
+        double distMax = backwardIteration(distMap, array3d);
+
+        // Normalize values by the first weight
+        if (this.normalizeMap)
+        {
+            normalizeResult(distMap, array3d);
+            double w0 = mask.getIntegerNormalizationWeight();
+            distMax = distMax / w0;
+        }
+        
+        return new DistanceTransform.Result(distMap, distMax);
+    }
+    
+
+    // ==================================================
+    // Implementation of the DistanceTransform3D interface
 
 	/**
 	 * Computes the distance map from a 3D binary image. Distance is computed
@@ -224,7 +253,7 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
         fireProgressChanged(this, 1, 1);
 	}
 
-	private void backwardIteration(Float32Array3D distMap, BinaryArray3D maskImage) 
+	private double backwardIteration(Float32Array3D distMap, BinaryArray3D maskImage) 
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
 
@@ -235,6 +264,9 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
 
         // create array of forward shifts
         Collection<Offset> offsets = this.mask.getBackwardOffsets();
+        
+        // initialize largest distance to 0
+        double distMax = 0;
         
         // Iterate over pixels
         for (int z = sizeZ - 1; z >= 0; z--)
@@ -269,11 +301,14 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Chamf
                     {
                         distMap.setFloat(x, y, z, newDist);
                     }
+                    
+                    distMax = Math.max(distMax, newDist);
                 }
             } 
         }
         
         this.fireProgressChanged(this, sizeZ, sizeZ);
+        return distMax;
 	}
 	
     private void normalizeResult(Float32Array3D distMap, BinaryArray3D array)

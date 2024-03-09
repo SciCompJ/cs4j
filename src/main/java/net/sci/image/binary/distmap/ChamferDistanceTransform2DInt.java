@@ -8,17 +8,11 @@ import java.util.Collection;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
-import net.sci.array.ArrayOperator;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.Int16;
-import net.sci.array.scalar.Int16Array;
-import net.sci.array.scalar.Int32Array;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 
 /**
@@ -46,7 +40,7 @@ import net.sci.image.binary.distmap.ChamferMask2D.Offset;
  * @see ChamferDistanceTransform2DFloat32
  */
 public class ChamferDistanceTransform2DInt extends AlgoStub implements
-		ArrayOperator, ChamferDistanceTransform2D
+DistanceTransform, ChamferDistanceTransform2D
 {
     // ==================================================
     // Class variables
@@ -112,9 +106,37 @@ public class ChamferDistanceTransform2DInt extends AlgoStub implements
 
 	
     // ==================================================
-    // Computation methods 
+    // Implementation of the DistanceTransform interface
 
-	public IntArray2D<?> process2d(BinaryArray2D array)
+    @Override
+    public Result computeResult(BinaryArray array)
+    {
+        if (array.dimensionality() != 2) throw new IllegalArgumentException("Requires an array of dimensionity 2");
+        BinaryArray2D array2d = BinaryArray2D.wrap(array);
+        
+        // Allocate result array
+        IntArray2D<?> distMap = initializeResult(array2d);
+        
+        // Two iterations are enough to compute distance map to boundary
+        forwardIteration(distMap, array2d);
+        int distMax = backwardIteration(distMap, array2d);
+
+        // Normalize values by the first weight
+        if (this.normalizeMap)
+        {
+            normalizeResult(distMap, array2d);
+            double w0 = mask.getIntegerNormalizationWeight();
+            distMax = (int) (distMax / w0);
+        }
+        
+        return new DistanceTransform.Result(distMap, distMax);
+    }
+    
+
+    // ==================================================
+    // Implementation of the DistanceTransform2D interface
+
+    public IntArray2D<?> process2d(BinaryArray2D array)
 	{
 	    // Allocate result array
 	    IntArray2D<?> distMap = initializeResult(array);
@@ -146,7 +168,7 @@ public class ChamferDistanceTransform2DInt extends AlgoStub implements
         
         // create new empty image, and fill it with black
         IntArray2D<?> result = IntArray2D.wrap(factory.create(sizeX, sizeY));
-        int maxValue = largestPossibleInt(result);
+        int maxValue = result.sampleElement().typeMax().getInt();
         
         // initialize empty image with either 0 (background) or Inf (foreground)
         for (int y = 0; y < sizeY; y++)
@@ -220,7 +242,7 @@ public class ChamferDistanceTransform2DInt extends AlgoStub implements
 
 	} // end of forward iteration
 
-	private void backwardIteration(IntArray2D<?> distMap, BinaryArray2D maskImage)
+	private int backwardIteration(IntArray2D<?> distMap, BinaryArray2D maskImage)
 	{
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
         
@@ -228,6 +250,9 @@ public class ChamferDistanceTransform2DInt extends AlgoStub implements
         int sizeX = maskImage.size(0);
         int sizeY = maskImage.size(1);
         Collection<Offset> offsets = mask.getBackwardOffsets();
+        
+        // initialize largest distance to 0
+        int distMax = 0;
         
         // Iterate over pixels
         for (int y = sizeY - 1; y >= 0; y--)
@@ -271,10 +296,13 @@ public class ChamferDistanceTransform2DInt extends AlgoStub implements
                 {
                     distMap.setInt(x, y, newDist);
                 }
+                
+                distMax = Math.max(distMax, newDist);
 			}
 		} // end of processing for current line 
 		
 		this.fireProgressChanged(this, sizeY, sizeY);
+		return distMax;
 	} // end of backward iteration
 
 	private void normalizeResult(IntArray2D<?> distMap, BinaryArray2D array)
@@ -309,19 +337,4 @@ public class ChamferDistanceTransform2DInt extends AlgoStub implements
     {
         return this.mask;
     }
-    
-    
-    // ==================================================
-    // Utility method
-    
-    private static final int largestPossibleInt(IntArray<?> array)
-    {
-        if (array instanceof UInt8Array) return UInt8.MAX_VALUE;
-        if (array instanceof UInt16Array) return UInt16.MAX_VALUE;
-        if (array instanceof Int16Array) return Int16.MAX_VALUE;
-        if (array instanceof Int32Array) return Integer.MAX_VALUE;
-        throw new RuntimeException("Unknown integer array type");
-    }
-    
-    
 }
