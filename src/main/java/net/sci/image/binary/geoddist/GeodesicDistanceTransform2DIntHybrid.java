@@ -5,11 +5,13 @@ import java.util.Collection;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.image.binary.distmap.ChamferMask2D;
+import net.sci.image.binary.distmap.DistanceTransform;
 
 /**
  * Computation of Chamfer geodesic distances using 16-bits unsigned integer
@@ -18,7 +20,7 @@ import net.sci.image.binary.distmap.ChamferMask2D;
  * @author David Legland
  * 
  */
-public class GeodesicDistanceTransform2DIntHybrid extends AlgoStub implements GeodesicDistanceTransform2D
+public class GeodesicDistanceTransform2DIntHybrid extends AlgoStub implements GeodesicDistanceTransform, GeodesicDistanceTransform2D
 {
     // ==================================================
     // Class variables
@@ -107,37 +109,57 @@ public class GeodesicDistanceTransform2DIntHybrid extends AlgoStub implements Ge
      */
     public IntArray2D<?> process2d(BinaryArray2D marker, BinaryArray2D maskImage)
     {
+        return IntArray2D.wrap((IntArray<?>) computeResult(marker, maskImage).distanceMap);
+    }
+
+    
+    // ==================================================
+    // Implementation of the GeodesicDistanceTransform interface
+
+    public DistanceTransform.Result computeResult(BinaryArray marker, BinaryArray maskImage)
+    {
         // TODO: should check int overflow
+        if (marker.dimensionality() != 2)
+        {
+            throw new RuntimeException("Requires marker array with dimensionality 2");
+        }
+        BinaryArray2D marker2d = BinaryArray2D.wrap(marker);
+        if (maskImage.dimensionality() != 2)
+        {
+            throw new RuntimeException("Requires mask array with dimensionality 2");
+        }
+        BinaryArray2D mask2d = BinaryArray2D.wrap(maskImage);
 
         // create new empty image, and fill it with black
         fireStatusChanged(this, "Initialization...");
-        IntArray2D<?> distMap = initializeResult(marker, maskImage);
+        IntArray2D<?> distMap = initializeResult(marker2d, mask2d);
 
         // forward iteration
         fireStatusChanged(this, "Forward iteration ");
-        forwardIteration(distMap, maskImage);
+        forwardIteration(distMap, mask2d);
 
         // Create the queue containing the positions that need update.
         Deque<int[]> queue = new ArrayDeque<int[]>();
 
         // backward iteration
         fireStatusChanged(this, "Backward iteration ");
-        backwardIteration(distMap, maskImage, queue);
+        int maxDist = backwardIteration(distMap, mask2d, queue);
 
         // Process queue
         fireStatusChanged(this, "Process queue ");
-        processQueue(distMap, maskImage, queue);
+        processQueue(distMap, mask2d, queue, maxDist);
 
         // Normalize values by the first weight
         if (normalizeMap)
         {
             fireStatusChanged(this, "Normalize map");
-            normalizeMap(distMap, maskImage);
+            normalizeMap(distMap, mask2d);
+            maxDist = (int) (maxDist / this.mask.getIntegerNormalizationWeight());
         }
 
-        return distMap;
+        return new DistanceTransform.Result(distMap, maxDist);
     }
-
+    
     private IntArray2D<?> initializeResult(BinaryArray2D marker, BinaryArray2D maskImage)
     {
         int sizeX = marker.size(0);
@@ -205,13 +227,16 @@ public class GeodesicDistanceTransform2DIntHybrid extends AlgoStub implements Ge
         fireProgressChanged(this, 1, 1);
     }
 
-    private void backwardIteration(IntArray2D<?> distMap, BinaryArray2D maskImage, Deque<int[]> queue)
+    private int backwardIteration(IntArray2D<?> distMap, BinaryArray2D maskImage, Deque<int[]> queue)
     {
         // retrieve image size
         int sizeX = distMap.size(0);
         int sizeY = distMap.size(1);
         Collection<ChamferMask2D.Offset> offsets = mask.getBackwardOffsets();
 
+        // initialize largest distance to 0
+        int maxDist = 0;
+        
         // iterate over pixels
         for (int y = sizeY - 1; y >= 0; y--)
         {
@@ -254,6 +279,7 @@ public class GeodesicDistanceTransform2DIntHybrid extends AlgoStub implements Ge
 
                 // modify current pixel
                 distMap.setInt(x, y, newDist);
+                maxDist = Math.max(maxDist, newDist);
 
                 // eventually add lower-right neighbors to queue
                 for (ChamferMask2D.Offset offset : offsets)
@@ -280,13 +306,14 @@ public class GeodesicDistanceTransform2DIntHybrid extends AlgoStub implements Ge
         }
 
         fireProgressChanged(this, 1, 1);
+        return maxDist;
     }
 
     /**
      * For each element in the queue, get neighbors, try to update them, and
      * eventually add them to the queue.
      */
-    private void processQueue(IntArray2D<?> distMap, BinaryArray2D maskImage, Deque<int[]> queue)
+    private int processQueue(IntArray2D<?> distMap, BinaryArray2D maskImage, Deque<int[]> queue, int maxDist)
     {
         // retrieve image size
         int sizeX = distMap.size(0);
@@ -325,12 +352,15 @@ public class GeodesicDistanceTransform2DIntHybrid extends AlgoStub implements Ge
                 {
                     // update result for current position
                     distMap.setInt(x2, y2, newDist);
+                    maxDist = Math.max(maxDist, newDist);
 
                     // add the new modified position to the queue
                     queue.add(new int[] { x2, y2 });
                 }
             }
         }
+        
+        return maxDist;
     }
 
     private void normalizeMap(IntArray2D<?> distMap, BinaryArray2D maskImage)

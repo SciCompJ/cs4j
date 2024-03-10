@@ -5,12 +5,13 @@ import java.util.Collection;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.Arrays;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.IntArray3D;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.image.binary.distmap.ChamferMask3D;
+import net.sci.image.binary.distmap.DistanceTransform;
 import net.sci.image.binary.distmap.ChamferMask3D.Offset;
 
 /**
@@ -20,7 +21,7 @@ import net.sci.image.binary.distmap.ChamferMask3D.Offset;
  * @author David Legland
  * 
  */
-public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements GeodesicDistanceTransform3D
+public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements GeodesicDistanceTransform, GeodesicDistanceTransform3D
 {
     // ==================================================
     // Class variables 
@@ -104,39 +105,55 @@ public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements Ge
      */
 	public IntArray3D<?> process3d(BinaryArray3D marker, BinaryArray3D maskImage)
 	{
-	    if (!Arrays.isSameSize(marker, maskImage))
-	    {
-	        throw new IllegalArgumentException("Marker and mask arrays must have same dimensions.");
-	    }
-	    
-		// create new empty image, and fill it with black
-		fireStatusChanged(this, "Initialization..."); 
-		IntArray3D<?> distMap = initializeResult(marker, maskImage);
-		
-		// forward iteration
-		fireStatusChanged(this, "Forward iteration ");
-		forwardIteration(distMap, maskImage);
-		
-        // initialize queue
-		Deque<int[]> queue = new ArrayDeque<int[]>();
-        
-		// backward iteration
-		fireStatusChanged(this, "Backward iteration "); 
-		backwardIteration(distMap, maskImage, queue);
-		
-        // Process queue
-		fireStatusChanged(this, "Process queue "); 
-		processQueue(distMap, maskImage, queue);
-		
-		// Normalize values by the first weight
-		if (this.normalizeMap) 
-		{
-		    fireStatusChanged(this, "Normalize map");
-		    normalizeMap(distMap, maskImage);
-		}
-		
-		return distMap;
+        return IntArray3D.wrap((IntArray<?>) computeResult(marker, maskImage).distanceMap);
 	}
+
+    // ==================================================
+    // Implementation of the GeodesicDistanceTransform interface
+
+    public DistanceTransform.Result computeResult(BinaryArray marker, BinaryArray maskImage)
+    {
+        // TODO: should check int overflow
+        if (marker.dimensionality() != 3)
+        {
+            throw new RuntimeException("Requires marker array with dimensionality 3");
+        }
+        BinaryArray3D marker3d = BinaryArray3D.wrap(marker);
+        if (maskImage.dimensionality() != 3)
+        {
+            throw new RuntimeException("Requires mask array with dimensionality 3");
+        }
+        BinaryArray3D mask3d = BinaryArray3D.wrap(maskImage);
+        
+        // create new empty image, and fill it with black
+        fireStatusChanged(this, "Initialization..."); 
+        IntArray3D<?> distMap = initializeResult(marker3d, mask3d);
+        
+        // forward iteration
+        fireStatusChanged(this, "Forward iteration ");
+        forwardIteration(distMap, mask3d);
+        
+        // initialize queue
+        Deque<int[]> queue = new ArrayDeque<int[]>();
+        
+        // backward iteration
+        fireStatusChanged(this, "Backward iteration "); 
+        int maxDist = backwardIteration(distMap, mask3d, queue);
+        
+        // Process queue
+        fireStatusChanged(this, "Process queue "); 
+        processQueue(distMap, mask3d, queue, maxDist);
+        
+        // Normalize values by the first weight
+        if (this.normalizeMap) 
+        {
+            fireStatusChanged(this, "Normalize map");
+            normalizeMap(distMap, mask3d);
+            maxDist = (int) (maxDist / this.mask.getIntegerNormalizationWeight());
+        }
+        
+        return new DistanceTransform.Result(distMap, maxDist);
+    }
 
 	private IntArray3D<?> initializeResult(BinaryArray3D marker, BinaryArray3D maskImage)
 	{
@@ -215,7 +232,7 @@ public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements Ge
         fireProgressChanged(this, 1, 1);
 	}
 
-	private void backwardIteration(IntArray3D<?> distMap, BinaryArray3D maskImage, Deque<int[]> queue)
+	private int backwardIteration(IntArray3D<?> distMap, BinaryArray3D maskImage, Deque<int[]> queue)
 	{
 	    // retrieve image size
         int sizeX = distMap.size(0);
@@ -223,6 +240,10 @@ public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements Ge
         int sizeZ = distMap.size(2);
         Collection<Offset> offsets = mask.getBackwardOffsets();
 
+        // initialize largest distance to 0
+        int maxDist = 0;
+        
+        // iterate over voxels of distance map
         for (int z = sizeZ - 1; z >= 0; z--)
         {
             fireProgressChanged(this, sizeZ - 1 - z, sizeZ);
@@ -271,6 +292,7 @@ public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements Ge
                     
                     // modify current pixel
                     distMap.setInt(x, y, z, newDist);
+                    maxDist = Math.max(maxDist, newDist);
                     
                     // eventually add lower-right neighbors to queue
                     for (Offset offset : offsets)
@@ -302,14 +324,16 @@ public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements Ge
                 }
             }
         }
-		fireProgressChanged(this, 1, 1); 
+        
+		fireProgressChanged(this, 1, 1);
+        return maxDist;
 	}
 	
 	/**
      * For each element in the queue, get neighbors, try to update them, and
      * eventually add them to the queue.
      */
-	private void processQueue(IntArray3D<?> distMap, BinaryArray3D maskImage, Deque<int[]> queue)
+	private int processQueue(IntArray3D<?> distMap, BinaryArray3D maskImage, Deque<int[]> queue, int maxDist)
 	{
 	    // retrieve image size
         int sizeX = distMap.size(0);
@@ -356,12 +380,15 @@ public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements Ge
                 {
                     // update result for current position
                     distMap.setInt(x2, y2, z2, newDist);
+                    maxDist = Math.max(maxDist, newDist);
                     
                     // add the new modified position to the queue 
                     queue.add(new int[] {x2, y2, z2});
                 }
             }
 	    }
+        
+        return maxDist;
 	}
 
 	private void normalizeMap(IntArray3D<?> distMap, BinaryArray3D maskImage)

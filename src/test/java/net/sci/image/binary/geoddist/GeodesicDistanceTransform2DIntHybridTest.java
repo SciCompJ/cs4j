@@ -4,6 +4,7 @@
 package net.sci.image.binary.geoddist;
 
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array2D;
@@ -33,10 +34,10 @@ public class GeodesicDistanceTransform2DIntHybridTest
         mask.setBoolean(3, 1, true);
         
         GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DIntHybrid(new short[]{1,2,10}, false);
-        ScalarArray2D<?> res = (ScalarArray2D<?>) op.process2d(marker, mask);
+        IntArray2D<?> res = (IntArray2D<?>) op.process2d(marker, mask);
         
-        assertEquals(0, res.getValue(1, 1), 1e-6);
-        assertEquals(2, res.getValue(3, 1), 1e-6);
+        assertEquals(0, res.getInt(1, 1));
+        assertEquals(2, res.getInt(3, 1));
     }
 
     /**
