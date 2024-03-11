@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 import net.sci.array.Arrays;
 import net.sci.array.numeric.NumericArray;
 
@@ -22,6 +23,13 @@ import net.sci.array.numeric.NumericArray;
  */
 public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
 {
+    public static <S extends Scalar<S>> ScalarArray<S> wrap(Array<S> array)
+    {
+        if (array instanceof  ScalarArray) return (ScalarArray<S>) array;
+        
+        return new Wrapper<S>(array);
+    }
+    
 	// =============================================================
 	// New default methods 
 
@@ -432,10 +440,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
 	public default ScalarArray<S> duplicate()
 	{
 	    ScalarArray<S> dup = newInstance(size());
-	    for (int[] pos : positions())
-	    {
-	        dup.setValue(pos, getValue(pos));
-	    }
+	    dup.fillValues(pos -> getValue(pos));
 	    return dup;
 	}
 	
@@ -588,9 +593,93 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
          *            the new value
          */
         public void setValue(double value);     
-	}
+    }
 
-	/**
+	
+	
+	static class Wrapper<S extends Scalar<S>> extends ArrayWrapperStub<S> implements ScalarArray<S>
+	{
+	    Array<S> array;
+	    S sample;
+	    
+        protected Wrapper(Array<S> array)
+        {
+            super(array);
+            this.array = array;
+            this.sample = array.sampleElement();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Class<S> dataType()
+        {
+            return (Class<S>) sample.getClass();
+        }
+
+        @Override
+        public S createElement(double value)
+        {
+            return sample.fromValue(value);
+        }
+        
+        @Override
+        public S typeMin()
+        {
+            return sample.typeMin();
+        }
+        
+        @Override
+        public S typeMax()
+        {
+            return sample.typeMax();
+        }
+        
+        @Override
+        public double getValue(int[] pos)
+        {
+            return array.get(pos).getValue();
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            array.set(pos, sample.fromValue(value));
+        }
+
+        @Override
+        public S get(int[] pos)
+        {
+            return array.get(pos);
+        }
+
+        @Override
+        public void set(int[] pos, S value)
+        {
+            array.set(pos, value);
+        }
+
+        @Override
+        public ScalarArray<S> newInstance(int... dims)
+        {
+            return ScalarArray.wrap(array.newInstance(array.size()));
+        }
+
+        @Override
+        public net.sci.array.scalar.ScalarArray.Factory<S> factory()
+        {
+            return new net.sci.array.scalar.ScalarArray.Factory<S>() 
+            {
+                @Override
+                public ScalarArray<S> create(int... dims)
+                {
+                    return ScalarArray.wrap(array.newInstance(array.size()));
+                }
+            };
+        }
+	    
+	}
+	
+    /**
      * Specialization of the Array.ReshapeView class that allows to access /
      * modify elements of an array of scalars using transformation of
      * coordinates (e.g. crop, slice, dimension permutation...).

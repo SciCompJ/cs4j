@@ -6,6 +6,7 @@ package net.sci.array;
 import java.util.function.Function;
 
 import net.sci.algo.Algo;
+import net.sci.algo.AlgoListener;
 import net.sci.array.generic.GenericArray;
 import net.sci.array.process.shape.Flip;
 import net.sci.array.process.shape.PermuteDimensions;
@@ -373,19 +374,30 @@ public interface Array<T> extends Iterable<T>, Dimensional
      */
 	public interface Factory<T> extends Algo
 	{
-	    /**
-	     * Creates a new array with the specified dimensions, filled with the
-	     * specified initial value.
-	     * 
-	     * @param dims
-	     *            the dimensions of the array to be created
-	     * @param value
-	     *            an instance of the initial value
-	     * @return a new instance of Array
-	     */
-	    public Array<T> create(int[] dims, T value);
-	}
-	
+        @Override
+        public default void addAlgoListener(AlgoListener listener)
+        {
+        }
+
+        @Override
+        public default void removeAlgoListener(AlgoListener listener)
+        {
+        }
+
+        /**
+         * Creates a new array with the specified dimensions, filled with the
+         * specified initial value.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param value
+         *            an instance of the initial value
+         * @return a new instance of Array
+         */
+        public Array<T> create(int[] dims, T value);
+    }
+    
+
     // ==================================================
     // Implementation of an iterator interface
 	

@@ -9,12 +9,33 @@ import java.util.function.Function;
 
 import org.junit.Test;
 
+import net.sci.array.Array2D;
+
 /**
  * @author dlegland
  *
  */
 public class ScalarArrayTest
 {
+    /**
+     * Test method for {@link net.sci.array.scalar.ScalarArray#apply(java.util.function.UnaryOperator)}.
+     */
+    @Test
+    public final void testWrapScalar()
+    {
+        Array2D<Float32> array = Array2D.create(10, 5, new Float32());
+        array.fill((x,y) -> new Float32( x + y*10));
+        
+        ScalarArray<Float32> result = ScalarArray.wrap(array);
+        
+        assertEquals(10, result.size(0));
+        assertEquals( 5, result.size(1));
+        assertEquals( 0.0, result.getValue(new int[] {0, 0}), 0.01);
+        assertEquals( 9.0, result.getValue(new int[] {9, 0}), 0.01);
+        assertEquals(40.0, result.getValue(new int[] {0, 4}), 0.01);
+        assertEquals(49.0, result.getValue(new int[] {9, 4}), 0.01);
+    }
+    
     /**
      * Test method for {@link net.sci.array.scalar.ScalarArray#reshape(int...)}.
      */
