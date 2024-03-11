@@ -172,6 +172,12 @@ public class Int16 extends Int<Int16>
     }
 
     @Override
+    public Int16 opposite()
+    {
+        return new Int16(-this.value);
+    }
+
+    @Override
     public Int16 times(double k)
     {
         return new Int16(Int16.convert(this.value * k));

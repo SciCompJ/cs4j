@@ -41,6 +41,16 @@ public interface Numeric<N extends Numeric<N>>
      * @return the result of subtraction.
      */
     public N minus(N other);
+    
+    /**
+     * Returns the opposite of this value, i.e. the value symmetric to this
+     * value with respect to zero. Note that the result may be truncated
+     * according to the range of values allowed by the data type. For example,
+     * the negative of an unsigned type will result in value zero.
+     * 
+     * @return the opposite of this value.
+     */
+    public N opposite();
 
     /**
      * Multiplies this numeric by a scalar constant, and returns the result of

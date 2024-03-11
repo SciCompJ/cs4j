@@ -163,6 +163,17 @@ public class Float32Vector extends Vector<Float32Vector, Float32>
     }
 
     @Override
+    public Float32Vector opposite()
+    {
+        Float32Vector res = new Float32Vector(data.length);
+        for (int i = 0; i < data.length; i++)
+        {
+            res.data[i] = -this.data[i];
+        }
+        return res;
+    }
+    
+    @Override
     public Float32Vector times(double k)
     {
         float[] vals = new float[this.data.length];

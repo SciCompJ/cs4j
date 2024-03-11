@@ -139,6 +139,17 @@ public class Binary extends Int<Binary>
         return new Binary((this.state ? 1 : 0) - (other.state ? 1 : 0) > 0);
     }
 
+    /**
+     * Always returns the value FALSE.
+     * 
+     * @return the value Binary.FALSE.
+     */
+    @Override
+    public Binary opposite()
+    {
+        return FALSE;
+    }
+
     @Override
     public Binary times(double k)
     {

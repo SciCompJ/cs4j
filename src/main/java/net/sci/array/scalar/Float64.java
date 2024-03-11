@@ -122,6 +122,12 @@ public class Float64 extends Scalar<Float64>
     }
 
     @Override
+    public Float64 opposite()
+    {
+        return new Float64(-this.value);
+    }
+
+    @Override
     public Float64 times(double k)
     {
         return new Float64(this.value * k);

@@ -179,6 +179,19 @@ public class UInt8 extends Int<UInt8>
         return new UInt8((this.value & 0x00FF) - (other.value & 0x00FF));
     }
 
+    /**
+     * Always returns the value zero, as the negative of a positive integer
+     * results in a negative value, that is clamped by the range of the UInt8
+     * type.
+     * 
+     * @return the value UInt8.ZERO
+     */
+    @Override
+    public UInt8 opposite()
+    {
+        return ZERO;
+    }
+
     @Override
     public UInt8 times(double k)
     {

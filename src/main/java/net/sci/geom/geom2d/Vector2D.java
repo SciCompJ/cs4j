@@ -184,17 +184,6 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
     	}
     }
 
-    /**
-	 * Returns the opposite vector v2 of this, such that the sum of this and v2
-	 * equals the null vector.
-	 * 
-	 * @return the vector opposite to <code>this</code>.
-	 */
-	public Vector2D opposite()
-	{
-		return new Vector2D(-x, -y);
-	}
-
 	/**
 	 * @return the norm of this vector
 	 */
@@ -317,6 +306,18 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
         return new Vector2D(this.x - v.x, this.y - v.y);
     }
 
+    /**
+     * Returns the opposite vector v2 of this, such that the sum of this and v2
+     * equals the null vector.
+     * 
+     * @return the vector opposite to <code>this</code>.
+     */
+    @Override
+    public Vector2D opposite()
+    {
+        return new Vector2D(-x, -y); 
+    }
+    
     /**
      * Multiplies the vector by a scalar amount. Inner fields are not
      * 

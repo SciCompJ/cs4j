@@ -245,17 +245,6 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
 	}
 
 	/**
-	 * Returns the opposite vector v2 of this, such that the sum of this and v2
-	 * equals the null vector.
-	 * 
-	 * @return the vector opposite to <code>this</code>.
-	 */
-	public Vector3D opposite()
-	{
-		return new Vector3D(-x, -y, -z);
-	}
-
-	/**
 	 * Computes the norm of the vector.
 	 * 
 	 * @return the norm of this vector
@@ -356,6 +345,18 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
         return new Vector3D(this.x - v.x, this.y - v.y, this.z - v.z);
     }
 
+    /**
+     * Returns the opposite vector v2 of this, such that the sum of this and v2
+     * equals the null vector.
+     * 
+     * @return the vector opposite to <code>this</code>.
+     */
+    @Override
+    public Vector3D opposite()
+    {
+        return new Vector3D(-x, -y, -z); 
+    }
+    
     /**
      * Multiplies the vector by a scalar amount. Inner fields are not
      * 

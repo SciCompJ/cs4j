@@ -15,7 +15,13 @@ import net.sci.array.vector.IntVector;
  */
 public class RGB16 extends IntVector<RGB16,UInt16> implements Color
 {
-    private static final double MAX_UINT16_FLOAT = 0X00FFFF; 
+    // =============================================================
+    // Static constants
+
+    private static final double MAX_UINT16_FLOAT = 0X00FFFF;
+    
+    /** The RGB16 value corresponding to the black color. */
+    public static final RGB16 BLACK = new RGB16(0, 0, 0);
 
     
     // =============================================================
@@ -460,6 +466,17 @@ public class RGB16 extends IntVector<RGB16,UInt16> implements Color
         return new RGB16(r, g, b);
     }
 
+    /**
+     * Always returns the color BLACK, that corresponds to a triplet of negative
+     * values clamped between 0 and 255.
+     * 
+     * @return the color RGB8.BLACK
+     */
+    @Override
+    public RGB16 opposite()
+    {
+        return RGB16.BLACK;
+    }
     @Override
     public RGB16 times(double k)
     {

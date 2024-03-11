@@ -123,6 +123,17 @@ public class Float64Vector extends Vector<Float64Vector, Float64>
     }
 
     @Override
+    public Float64Vector opposite()
+    {
+        Float64Vector res = new Float64Vector(data.length);
+        for (int i = 0; i < data.length; i++)
+        {
+            res.data[i] = -this.data[i];
+        }
+        return res;
+    }
+    
+    @Override
     public Float64Vector times(double k)
     {
         double[] vals = new double[this.data.length];

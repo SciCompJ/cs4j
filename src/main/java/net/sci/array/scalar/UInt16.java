@@ -169,6 +169,19 @@ public class UInt16 extends Int<UInt16>
     {
         return new UInt16((this.value & 0x00FFFF) - (other.value & 0x00FFFF));
     }
+    
+    /**
+     * Always returns the value zero, as the negative of a positive integer
+     * results in a negative value, that is clamped by the range of the UInt16
+     * type.
+     * 
+     * @return the value UInt16.ZERO
+     */
+    @Override
+    public UInt16 opposite()
+    {
+        return ZERO;
+    }
 
     @Override
     public UInt16 times(double k)

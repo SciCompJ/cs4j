@@ -564,6 +564,18 @@ public class RGB8 extends IntVector<RGB8,UInt8> implements Color
         return new RGB8(r, g, b);
     }
 
+    /**
+     * Always returns the color BLACK, that corresponds to a triplet of negative
+     * values clamped between 0 and 255.
+     * 
+     * @return the color RGB8.BLACK
+     */
+    @Override
+    public RGB8 opposite()
+    {
+        return RGB8.BLACK;
+    }
+
     @Override
     public RGB8 times(double k)
     {

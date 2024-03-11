@@ -134,6 +134,12 @@ public class Float32 extends Scalar<Float32>
     }
 
     @Override
+    public Float32 opposite()
+    {
+        return new Float32(-this.value);
+    }
+
+    @Override
     public Float32 times(double k)
     {
         return new Float32((float) (this.value * k));

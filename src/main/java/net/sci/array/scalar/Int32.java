@@ -141,6 +141,12 @@ public class Int32 extends Int<Int32>
     }
 
     @Override
+    public Int32 opposite()
+    {
+        return new Int32(-this.value);
+    }
+
+    @Override
     public Int32 times(double k)
     {
         return new Int32((int) (this.value * k));
