@@ -23,6 +23,9 @@ import net.sci.array.numeric.NumericArray;
  */
 public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
 {
+    // =============================================================
+    // static methods
+
     public static <S extends Scalar<S>> ScalarArray<S> wrap(Array<S> array)
     {
         if (array instanceof  ScalarArray) return (ScalarArray<S>) array;
@@ -594,12 +597,26 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
          */
         public void setValue(double value);     
     }
-
 	
-	
+	/**
+     * Utility class the wraps an array of <code>Scalar</code> into an instance of
+     * <code>ScalarArray</code>.
+     * 
+     * @param <S>
+     *            the type of Scalar contained in array.
+     */
 	static class Wrapper<S extends Scalar<S>> extends ArrayWrapperStub<S> implements ScalarArray<S>
 	{
+        /**
+         * the array to wrap. Already stored in super class, but store it here
+         * as well to keep type of generic.
+         */
 	    Array<S> array;
+	    
+	    /**
+         * Keep a sample element to allow the creation of generic arrays, and to
+         * retrieve type-related information.
+         */
 	    S sample;
 	    
         protected Wrapper(Array<S> array)
@@ -676,7 +693,6 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
                 }
             };
         }
-	    
 	}
 	
     /**

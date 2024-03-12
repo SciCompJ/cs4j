@@ -5,12 +5,26 @@ package net.sci.array.scalar;
 
 import java.util.function.Function;
 
+import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
+
 /**
  * @author dlegland
  *
  */
 public interface IntArray<I extends Int<I>> extends ScalarArray<I>
 {
+    // =============================================================
+    // static methods
+
+    public static <I extends Int<I>> IntArray<I> wrap(Array<I> array)
+    {
+        if (array instanceof IntArray) return (IntArray<I>) array;
+        
+        return new Wrapper<I>(array);
+    }
+    
+    
 	// =============================================================
 	// New default methods
 
@@ -137,7 +151,12 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
 	public IntArray<I> newInstance(int... dims);
 
 	@Override
-	public IntArray<I> duplicate();
+	public default IntArray<I> duplicate()
+	{
+	    IntArray<I> res = this.newInstance(this.size());
+	    res.fillInts(pos -> getInt(pos));
+	    return res;
+	}
 
     @Override
     public default double getValue(int[] pos)
@@ -154,13 +173,78 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
     @Override
     public IntArray.Factory<I> factory();
 
-	public Iterator<I> iterator();	
+    /**
+     * Returns an iterator over the elements of the array, for implementing the
+     * Iterable interface.
+     * 
+     * Provides a default implementation based on the
+     * position iterator.
+     * @param <S>
+     */
+    @Override
+    public default IntArray.Iterator<I> iterator()
+    {
+        return new Iterator<I>()
+        {
+            PositionIterator iter = positionIterator();
+            // keep an array of coordinates to avoid repetitive allocation of array
+            int[] pos = new int[dimensionality()];
+
+            @Override
+            public void forward()
+            {
+                iter.forward();
+            }
+
+            @Override
+            public boolean hasNext()
+            {
+                return iter.hasNext();
+            }
+
+            @Override
+            public int getInt()
+            {
+                return IntArray.this.getInt(iter.get(pos));
+            }
+
+            @Override
+            public void setInt(int value)
+            {
+                IntArray.this.setInt(iter.get(pos), value);
+            }
+            
+            @Override
+            public double getValue()
+            {
+                return IntArray.this.getValue(iter.get(pos));
+            }
+
+            @Override
+            public void setValue(double value)
+            {
+                IntArray.this.setValue(iter.get(pos), value);
+            }
+            
+            @Override
+            public I get()
+            {
+                return IntArray.this.get(iter.get(pos));
+            }
+
+            @Override
+            public void set(I value)
+            {
+                IntArray.this.set(iter.get(pos), value);
+            }
+        };
+    }
 	
     
     // =============================================================
     // Specialization of the Factory interface
 
-    public interface Factory<T extends Int<T>> extends ScalarArray.Factory<T>
+    public interface Factory<I extends Int<I>> extends ScalarArray.Factory<I>
     {
         /**
          * Creates a new int array of the specified dimensions, initialized
@@ -170,7 +254,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
          *            the dimensions of the new array
          * @return a new scalar array initialized with zeros
          */
-        public IntArray<T> create(int... dims);
+        public IntArray<I> create(int... dims);
 
         /**
          * Creates a new Int array with the specified dimensions, filled with
@@ -182,7 +266,12 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
          *            an instance of the initial integer value
          * @return a new instance of IntArray
          */
-        public IntArray<T> create(int[] dims, T value);
+        public default IntArray<I> create(int[] dims, I value)
+        {
+            IntArray<I> res = create(dims);
+            res.fill(value);
+            return res;
+        }
     }
     
 
@@ -231,4 +320,106 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
 		}
 	}
 
+    /**
+     * Utility class the wraps an array of <code>Int</code> into an instance of
+     * <code>IntArray</code>.
+     * 
+     * @param <I>
+     *            the type of Int contained in array.
+     */
+    static class Wrapper<I extends Int<I>> extends ArrayWrapperStub<I> implements IntArray<I>
+    {
+        /**
+         * the array to wrap. Already stored in super class, but store it here
+         * as well to keep type of generic.
+         */
+        Array<I> array;
+        
+        /**
+         * Keep a sample element to allow the creation of generic arrays, and to
+         * retrieve type-related information.
+         */
+        I sample;
+        
+        protected Wrapper(Array<I> array)
+        {
+            super(array);
+            this.array = array;
+            this.sample = array.sampleElement();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Class<I> dataType()
+        {
+            return (Class<I>) sample.getClass();
+        }
+
+        @Override
+        public I createElement(double value)
+        {
+            return sample.fromValue(value);
+        }
+        
+        @Override
+        public I typeMin()
+        {
+            return sample.typeMin();
+        }
+        
+        @Override
+        public I typeMax()
+        {
+            return sample.typeMax();
+        }
+        
+        @Override
+        public int getInt(int[] pos)
+        {
+            return array.get(pos).getInt();
+        }
+
+        @Override
+        public void setInt(int[] pos, int value)
+        {
+            array.set(pos, sample.fromInt(value));
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            array.set(pos, sample.fromValue(value));
+        }
+
+        @Override
+        public I get(int[] pos)
+        {
+            return array.get(pos);
+        }
+
+        @Override
+        public void set(int[] pos, I value)
+        {
+            array.set(pos, value);
+        }
+
+        @Override
+        public IntArray<I> newInstance(int... dims)
+        {
+            return IntArray.wrap(array.newInstance(array.size()));
+        }
+
+        @Override
+        public net.sci.array.scalar.IntArray.Factory<I> factory()
+        {
+            return new net.sci.array.scalar.IntArray.Factory<I>() 
+            {
+                @Override
+                public IntArray<I> create(int... dims)
+                {
+                    return IntArray.wrap(array.newInstance(array.size()));
+                }
+            };
+        }
+    }
 }

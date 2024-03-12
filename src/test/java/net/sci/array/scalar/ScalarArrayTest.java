@@ -4,6 +4,8 @@
 package net.sci.array.scalar;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.function.Function;
 
@@ -18,7 +20,7 @@ import net.sci.array.Array2D;
 public class ScalarArrayTest
 {
     /**
-     * Test method for {@link net.sci.array.scalar.ScalarArray#apply(java.util.function.UnaryOperator)}.
+     * Test method for {@link net.sci.array.scalar.ScalarArray#wrap(net.sci.array.Array)}.
      */
     @Test
     public final void testWrapScalar()
@@ -27,6 +29,28 @@ public class ScalarArrayTest
         array.fill((x,y) -> new Float32( x + y*10));
         
         ScalarArray<Float32> result = ScalarArray.wrap(array);
+        
+        assertEquals(10, result.size(0));
+        assertEquals( 5, result.size(1));
+        assertEquals( 0.0, result.getValue(new int[] {0, 0}), 0.01);
+        assertEquals( 9.0, result.getValue(new int[] {9, 0}), 0.01);
+        assertEquals(40.0, result.getValue(new int[] {0, 4}), 0.01);
+        assertEquals(49.0, result.getValue(new int[] {9, 4}), 0.01);
+    }
+    
+    /**
+     * Test method for {@link net.sci.array.scalar.ScalarArray#wrap(net.sci.array.Array)}.
+     */
+    @Test
+    public final void testWrapArrayOfInt()
+    {
+        Array2D<UInt16> array = Array2D.create(10, 5, UInt16.ZERO);
+        array.fill((x,y) -> new UInt16(x + y*10));
+        
+        ScalarArray<UInt16> result = ScalarArray.wrap(array);
+        
+        assertTrue(result instanceof ScalarArray<?>);
+        assertFalse(result instanceof IntArray<?>);
         
         assertEquals(10, result.size(0));
         assertEquals( 5, result.size(1));
