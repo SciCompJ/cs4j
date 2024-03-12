@@ -115,6 +115,12 @@ public class Int16 extends Int<Int16>
         return value;
     }
     
+    @Override
+    public Int16 fromInt(int value)
+    {
+        return new Int16(clamp(value));
+    }
+
 
     // =============================================================
     // Implementation of the Scalar interface

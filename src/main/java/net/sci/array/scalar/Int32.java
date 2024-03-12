@@ -85,6 +85,13 @@ public class Int32 extends Int<Int32>
         return value;
     }
 
+    @Override
+    public Int32 fromInt(int value)
+    {
+        return new Int32(value);
+    }
+
+    
     // =============================================================
     // Implementation of the Scalar interface
     

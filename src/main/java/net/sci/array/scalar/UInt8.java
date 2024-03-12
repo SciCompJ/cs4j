@@ -124,6 +124,13 @@ public class UInt8 extends Int<UInt8>
         return value & 0x00FF;
     }
 
+    @Override
+    public UInt8 fromInt(int value)
+    {
+        return new UInt8(clamp(value));
+    }
+
+
     // =============================================================
     // Implementation of the Scalar interface
     

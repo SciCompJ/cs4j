@@ -83,6 +83,12 @@ public class Binary extends Int<Binary>
         return state ? 1 : 0;
     }
     
+    @Override
+    public Binary fromInt(int value)
+    {
+        return value > 0.0 ? TRUE : FALSE;
+    }
+
 
     // =============================================================
     // Implementation of the Scalar interface

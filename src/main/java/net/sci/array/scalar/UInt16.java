@@ -114,6 +114,12 @@ public class UInt16 extends Int<UInt16>
         return value & 0x00FFFF;
     }
     
+    @Override
+    public UInt16 fromInt(int value)
+    {
+        return new UInt16(clamp(value));
+    }
+
 
     // =============================================================
     // Implementation of the Scalar interface
