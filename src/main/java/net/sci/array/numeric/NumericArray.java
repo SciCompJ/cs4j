@@ -3,7 +3,9 @@
  */
 package net.sci.array.numeric;
 
+import net.sci.algo.AlgoListener;
 import net.sci.array.Array;
+import net.sci.array.ArrayWrapperStub;
 
 /**
  * Specialization of Array interface that supports elementary arithmetic
@@ -15,6 +17,17 @@ import net.sci.array.Array;
  */
 public interface NumericArray<N extends Numeric<N>> extends Array<N>
 {
+    // =============================================================
+    // static methods
+
+    public static <N extends Numeric<N>> NumericArray<N> wrap(Array<N> array)
+    {
+        if (array instanceof  NumericArray) return (NumericArray<N>) array;
+        
+        return new Wrapper<N>(array);
+    }
+    
+    
     // =============================================================
     // Default methods for arithmetic on arrays
     
@@ -77,8 +90,7 @@ public interface NumericArray<N extends Numeric<N>> extends Array<N>
         res.fill(pos -> this.get(pos).divideBy(k));
         return res;        
     }
-
-
+    
     
     // =============================================================
     // Specialization of the Array interface
@@ -87,5 +99,68 @@ public interface NumericArray<N extends Numeric<N>> extends Array<N>
     public NumericArray<N> newInstance(int... dims);
 
     @Override
-    public NumericArray<N> duplicate();
+    public default NumericArray<N> duplicate()
+    {
+        NumericArray<N> res = newInstance(this.size());
+        res.fill((int[] pos) -> this.get(pos));
+        return res;
+    }
+
+    public static class Wrapper<N extends Numeric<N>> extends ArrayWrapperStub<N> implements NumericArray<N>
+    {
+        Array<N> array;
+        protected Wrapper(Array<N> array)
+        {
+            super(array);
+            this.array = array;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Class<N> dataType()
+        {
+            return (Class<N>) array.sampleElement().getClass();
+        }
+
+        @Override
+        public Factory<N> factory()
+        {
+            return new Array.Factory<N>()
+            {
+                @Override
+                public void addAlgoListener(AlgoListener listener)
+                {
+                }
+
+                @Override
+                public void removeAlgoListener(AlgoListener listener)
+                {
+                }
+
+                @Override
+                public Array<N> create(int[] dims, N value)
+                {
+                    return new Wrapper<N>(array.factory().create(dims, value));
+                }
+            };
+        }
+
+        @Override
+        public N get(int[] pos)
+        {
+            return array.get(pos);
+        }
+
+        @Override
+        public void set(int[] pos, N value)
+        {
+            array.set(pos, value);
+        }
+
+        @Override
+        public NumericArray<N> newInstance(int... dims)
+        {
+            return new Wrapper<N>(array.factory().create(dims, array.sampleElement()));
+        }
+    }
 }
