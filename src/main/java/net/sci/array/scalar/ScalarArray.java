@@ -369,6 +369,32 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     // =============================================================
     // Implementation of NumericArray interface
 
+    /**
+     * Adds a Scalar value to each element of this Scalar array, and returns
+     * the result array.
+     * 
+     * @param v
+     *            the value to add
+     * @return a new array with the value added
+     */
+    public default ScalarArray<S> plus(S v)
+    {
+        return plus(v.getValue());
+    }
+
+    /**
+     * Subtracts a Scalar value from each element of this Scalar array, and
+     * returns the result array.
+     * 
+     * @param v
+     *            the value to subtract
+     * @return a new array with the value subtracted
+     */
+    public default ScalarArray<S> minus(S v)
+    {
+        return minus(v.getValue());
+    }
+    
     @Override
     public default ScalarArray<S> times(double k)
     {
