@@ -63,7 +63,7 @@ public class Int16 extends Int<Int16>
      */
     public final static int convert(double value)
     {
-        return (int) Math.min(Math.max(value + 0.5, MIN_INT), MAX_INT);
+        return clamp((int) (value > 0 ? value + 0.5 : value - 0.5));
     }
 
     /**

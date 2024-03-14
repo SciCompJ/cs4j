@@ -51,7 +51,7 @@ public class Int32 extends Int<Int32>
      */
     public final static int convert(double value)
     {
-        return (int) (value + 0.5);
+        return (int) (value > 0 ? value + 0.5 : value - 0.5);
     }
     
 
@@ -116,7 +116,7 @@ public class Int32 extends Int<Int32>
     @Override
     public Int32 fromValue(double v)
     {
-        return new Int32((int) (v + 0.5));
+        return new Int32(convert(v));
     }
     
 

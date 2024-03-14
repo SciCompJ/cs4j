@@ -24,6 +24,26 @@ public class Int16Test
     }
 
     /**
+     * Test method for {@link net.sci.array.scalar.Int16#convert(double)}.
+     */
+    @Test
+    public final void testConvert()
+    {
+        assertEquals(Int16.convert(3.0), 3);
+        assertEquals(Int16.convert(-3.0), -3);
+    }
+
+    /**
+     * Test method for {@link net.sci.array.scalar.Int16#fromInt(int)}.
+     */
+    @Test
+    public final void testFromIntInt()
+    {
+        assertEquals(new Int16(0).fromValue(3.0), new Int16(3));
+        assertEquals(new Int16(0).fromValue(-3.0), new Int16(-3));
+    }
+
+    /**
      * Test method for {@link net.sci.array.scalar.Int16#plus(net.sci.array.scalar.Int16)}.
      */
     @Test
