@@ -6,8 +6,13 @@ package net.sci.array.process.numeric;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.ArrayWrapperStub;
 import net.sci.array.numeric.Numeric;
 import net.sci.array.numeric.NumericArray;
+import net.sci.array.scalar.Int;
+import net.sci.array.scalar.Int32;
+import net.sci.array.scalar.Int32Array;
+import net.sci.array.scalar.IntArray;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 
@@ -19,6 +24,22 @@ import net.sci.array.scalar.ScalarArray;
  */
 public class AdditiveInverse extends AlgoStub implements ArrayOperator
 {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public <N extends Numeric<N>> Array<N> view(Array<N> array)
+    {
+        if (Int.class.isAssignableFrom(array.dataType()))
+        {
+            return new IntView(IntArray.wrap((Array<Int>) array));
+        }
+        
+        if (Scalar.class.isAssignableFrom(array.dataType()))
+        {
+            return new ScalarView(ScalarArray.wrap((Array<Scalar>) array));
+        }
+        
+        return new NumericView(NumericArray.wrap(array));
+    }
+    
     /**
      * Applies specific processing for scalar arrays.
      * 
@@ -73,5 +94,152 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         
         throw new IllegalArgumentException("Array must contain instances of Numeric");
     }
+    
+    public static class NumericView<N extends Numeric<N>> extends ArrayWrapperStub<N> implements NumericArray<N>
+    {
+        NumericArray<N> array;
+        
+        protected NumericView(NumericArray<N> array)
+        {
+            super(array);
+            this.array = array;
+        }
 
+        @Override
+        public Class<N> dataType()
+        {
+            return array.dataType();
+        }
+
+        @Override
+        public N get(int[] pos)
+        {
+            return array.get(pos).opposite();
+        }
+
+        @Override
+        public void set(int[] pos, N value)
+        {
+            array.set(pos, value.opposite());
+        }
+
+        @Override
+        public NumericArray<N> newInstance(int... dims)
+        {
+            return array.newInstance(dims);
+        }
+
+        @Override
+        public net.sci.array.numeric.NumericArray.Factory<N> factory()
+        {
+            return array.factory();
+        }
+    }
+    
+    public static class ScalarView<S extends Scalar<S>> extends ArrayWrapperStub<S> implements ScalarArray<S>
+    {
+        ScalarArray<S> array;
+        
+        protected ScalarView(ScalarArray<S> array)
+        {
+            super(array);
+            this.array = array;
+        }
+
+        @Override
+        public Class<S> dataType()
+        {
+            return array.dataType();
+        }
+
+        @Override
+        public S get(int[] pos)
+        {
+            return array.createElement(-array.getValue(pos));
+        }
+
+        @Override
+        public void set(int[] pos, S value)
+        {
+            array.setValue(pos, -value.getValue());
+        }
+
+        @Override
+        public double getValue(int[] pos)
+        {
+            return -array.getValue(pos);
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            array.setValue(pos, -value);
+        }
+
+        @Override
+        public ScalarArray<S> newInstance(int... dims)
+        {
+            return array.newInstance(dims);
+        }
+
+        @Override
+        public net.sci.array.scalar.ScalarArray.Factory<S> factory()
+        {
+            return array.factory();
+        }
+    }
+    
+    public static class IntView<I extends Int<I>> extends ArrayWrapperStub<Int32> implements Int32Array
+    {
+        IntArray<I> array;
+        
+        protected IntView(IntArray<I> array)
+        {
+            super(array);
+            this.array = array;
+        }
+
+        @Override
+        public int getInt(int[] pos)
+        {
+            return -array.getInt(pos);
+        }
+
+        @Override
+        public void setInt(int[] pos, int value)
+        {
+            array.setInt(pos, -value);
+        }
+
+        @Override
+        public Int32 get(int[] pos)
+        {
+            return new Int32(-array.getInt(pos));
+        }
+
+        @Override
+        public void set(int[] pos, Int32 value)
+        {
+            int v = -value.getInt();
+            array.set(pos, array.sampleElement().fromInt(v));
+        }
+
+        @Override
+        public Class<Int32> dataType()
+        {
+            return Int32.class;
+        }
+
+        @Override
+        public Int32Array newInstance(int... dims)
+        {
+            return Int32Array.create(dims);
+        }
+
+        @Override
+        public net.sci.array.scalar.Int32Array.Factory factory()
+        {
+            return Int32Array.defaultFactory;
+        }
+    }
 }
