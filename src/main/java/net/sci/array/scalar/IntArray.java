@@ -35,7 +35,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
 	 */
 	public default int minInt()
 	{
-		int vMin = Integer.MIN_VALUE;
+		int vMin = Integer.MAX_VALUE;
 		for (I i : this)
 		{
 			vMin = Math.min(vMin, i.getInt());
