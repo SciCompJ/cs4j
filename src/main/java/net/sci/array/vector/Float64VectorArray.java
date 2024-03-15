@@ -56,11 +56,11 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         {
             return (Float64VectorArray) array;
         }
-        if (Float64Vector.class.isAssignableFrom(array.dataType()))
+        if (Float64Vector.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<Float64Vector>) array);
         }
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
 
@@ -145,7 +145,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
 	}
 
 	@Override
-	public default Class<Float64Vector> dataType()
+	public default Class<Float64Vector> elementClass()
 	{
 		return Float64Vector.class;
 	}

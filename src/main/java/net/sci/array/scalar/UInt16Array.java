@@ -71,7 +71,7 @@ public interface UInt16Array extends IntArray<UInt16>
             return (UInt16Array) array;
         }
         // Convert array containing UInt16 values
-        if (array.dataType().isAssignableFrom(UInt16.class)) 
+        if (array.elementClass().isAssignableFrom(UInt16.class)) 
         {
             return convertArrayOfUInt16(array);
         }
@@ -120,7 +120,7 @@ public interface UInt16Array extends IntArray<UInt16>
         {
             return (UInt16Array) array;
         }
-        if (UInt16.class.isAssignableFrom(array.dataType()))
+        if (UInt16.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<UInt16>) array);
         }
@@ -129,7 +129,7 @@ public interface UInt16Array extends IntArray<UInt16>
             return wrapScalar((ScalarArray<?>) array);
         }
                 
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
 	public static UInt16Array wrapScalar(ScalarArray<?> array)
@@ -283,7 +283,7 @@ public interface UInt16Array extends IntArray<UInt16>
 
 
 	@Override
-	public default Class<UInt16> dataType()
+	public default Class<UInt16> elementClass()
 	{
 		return UInt16.class;
 	}

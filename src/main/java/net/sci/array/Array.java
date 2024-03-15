@@ -145,11 +145,11 @@ public interface Array<T> extends Iterable<T>, Dimensional
 	}
 	
 	/**
-	 * Returns the class of the data type stored in this array.
+	 * Returns the class of the elements stored in this array.
 	 * 
-	 * @return the class of the data type stored in this array.
+	 * @return the class of the elements stored in this array.
 	 */
-	public Class<T> dataType();
+	public Class<T> elementClass();
 	
 	/**
 	 * Creates a new array with same type but with the specified dimensions
@@ -568,9 +568,9 @@ public interface Array<T> extends Iterable<T>, Dimensional
         }
 
         @Override
-        public Class<T> dataType()
+        public Class<T> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override

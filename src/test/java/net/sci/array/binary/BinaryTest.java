@@ -18,6 +18,6 @@ public class BinaryTest
 	public void testIsAssignable()
 	{
 	    BinaryArray array = BinaryArray2D.create(6, 4);
-	    assertTrue(Binary.class.isAssignableFrom(array.dataType()));
+	    assertTrue(Binary.class.isAssignableFrom(array.elementClass()));
 	}
 }

@@ -185,7 +185,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         }
         
         // case of array that contains RGB16 elements without being an instance of RGB16Array
-        if (array.dataType().isAssignableFrom(RGB16.class))
+        if (array.elementClass().isAssignableFrom(RGB16.class))
         {
             return convertArrayOfRGB16(array);
         }
@@ -249,12 +249,12 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
             return (RGB16Array) array;
         }
         
-        if (RGB16.class.isAssignableFrom(array.dataType()))
+        if (RGB16.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<RGB16>) array);
         }
         
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
     
@@ -490,7 +490,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     }
 
     @Override
-    public default Class<RGB16> dataType()
+    public default Class<RGB16> elementClass()
     {
         return RGB16.class;
     }

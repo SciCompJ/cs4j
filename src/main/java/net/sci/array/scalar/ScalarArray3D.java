@@ -357,9 +357,9 @@ public abstract class ScalarArray3D<S extends Scalar<S>> extends Array3D<S> impl
         }
         
         @Override
-        public Class<S> dataType()
+        public Class<S> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override
@@ -527,9 +527,9 @@ public abstract class ScalarArray3D<S extends Scalar<S>> extends Array3D<S> impl
             }
 
             @Override
-            public Class<S> dataType()
+            public Class<S> elementClass()
             {
-                return Wrapper.this.array.dataType();
+                return Wrapper.this.array.elementClass();
             }
 
             @Override

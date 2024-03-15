@@ -27,12 +27,12 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public <N extends Numeric<N>> Array<N> view(Array<N> array)
     {
-        if (Int.class.isAssignableFrom(array.dataType()))
+        if (Int.class.isAssignableFrom(array.elementClass()))
         {
             return new IntView(IntArray.wrap((Array<Int>) array));
         }
         
-        if (Scalar.class.isAssignableFrom(array.dataType()))
+        if (Scalar.class.isAssignableFrom(array.elementClass()))
         {
             return new ScalarView(ScalarArray.wrap((Array<Scalar>) array));
         }
@@ -79,13 +79,13 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
     public <T> Array<?> process(Array<T> array)
     {
         // switch processing depending on data type
-        if (Scalar.class.isAssignableFrom(array.dataType()))
+        if (Scalar.class.isAssignableFrom(array.elementClass()))
         {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             ScalarArray<?> numArray = ScalarArray.wrap((Array<Scalar>) array);
             return processScalar(numArray);
         }
-        else if (Numeric.class.isAssignableFrom(array.dataType()))
+        else if (Numeric.class.isAssignableFrom(array.elementClass()))
         {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             NumericArray<?> numArray = NumericArray.wrap((Array<Numeric>) array);
@@ -106,9 +106,9 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         }
 
         @Override
-        public Class<N> dataType()
+        public Class<N> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override
@@ -147,9 +147,9 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         }
 
         @Override
-        public Class<S> dataType()
+        public Class<S> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override
@@ -225,7 +225,7 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         }
 
         @Override
-        public Class<Int32> dataType()
+        public Class<Int32> elementClass()
         {
             return Int32.class;
         }

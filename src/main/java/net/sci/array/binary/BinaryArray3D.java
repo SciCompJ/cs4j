@@ -353,9 +353,9 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         }
         
         @Override
-        public Class<Binary> dataType()
+        public Class<Binary> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override

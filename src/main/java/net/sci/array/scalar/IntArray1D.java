@@ -202,9 +202,9 @@ public abstract class IntArray1D<I extends Int<I>> extends ScalarArray1D<I> impl
         }
 
         @Override
-        public Class<I> dataType()
+        public Class<I> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override

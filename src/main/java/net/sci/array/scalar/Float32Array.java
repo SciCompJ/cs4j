@@ -72,7 +72,7 @@ public interface Float32Array extends ScalarArray<Float32>
             return (Float32Array) array;
         }
         // Convert array containing Float32 values
-        if (array.dataType().isAssignableFrom(Float32.class)) 
+        if (array.elementClass().isAssignableFrom(Float32.class)) 
         {
             return convertArrayOfFloat32(array);
         }
@@ -120,12 +120,12 @@ public interface Float32Array extends ScalarArray<Float32>
             return wrapScalar((ScalarArray<?>) array);
         }
         
-        if (Float32.class.isAssignableFrom(array.dataType()))
+        if (Float32.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<Float32>) array);
         }
         
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
 	public static Float32Array wrapScalar(ScalarArray<?> array)
@@ -247,7 +247,7 @@ public interface Float32Array extends ScalarArray<Float32>
     }
 
 	@Override
-	public default Class<Float32> dataType()
+	public default Class<Float32> elementClass()
 	{
 		return Float32.class;
 	}

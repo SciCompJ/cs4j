@@ -489,9 +489,9 @@ public abstract class Array3D<T> implements Array<T>
         }
         
         @Override
-        public Class<T> dataType()
+        public Class<T> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
         
         private class SliceView extends Array2D<T>
@@ -540,9 +540,9 @@ public abstract class Array3D<T> implements Array<T>
             }
 
             @Override
-            public Class<T> dataType()
+            public Class<T> elementClass()
             {
-                return Wrapper.this.array.dataType();
+                return Wrapper.this.array.elementClass();
             }
 
             @Override

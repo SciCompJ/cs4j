@@ -329,9 +329,9 @@ public abstract class ScalarArray2D<S extends Scalar<S>> extends Array2D<S> impl
 		}
 
 		@Override
-		public Class<S> dataType()
+		public Class<S> elementClass()
 		{
-			return array.dataType();
+			return array.elementClass();
 		}
 
 		@Override

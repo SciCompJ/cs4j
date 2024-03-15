@@ -98,15 +98,15 @@ public class BinaryOverlayRGB8Array implements RGB8Array
         }
         
         // wrap the base array into a RGB8 array
-        if (RGB8.class.isAssignableFrom(baseArray.dataType())) 
+        if (RGB8.class.isAssignableFrom(baseArray.elementClass())) 
         {
             this.wrappedArray = RGB8Array.wrap(baseArray);
         }
-        else if (UInt8.class.isAssignableFrom(baseArray.dataType()))
+        else if (UInt8.class.isAssignableFrom(baseArray.elementClass()))
         {
             this.wrappedArray = new UInt8ArrayRGB8View(UInt8Array.wrap(baseArray));
         }
-        else if (Binary.class.isAssignableFrom(baseArray.dataType()))
+        else if (Binary.class.isAssignableFrom(baseArray.elementClass()))
         {
             this.wrappedArray = new BinaryArrayRGB8View(BinaryArray.wrap(baseArray));
         }

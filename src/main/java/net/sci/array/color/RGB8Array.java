@@ -186,7 +186,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      */
     public static RGB8Array binaryOverlay(Array<?> baseArray, BinaryArray binaryMask, RGB8 overlayColor, double overlayOpacity)
     {
-        if (baseArray.dataType() == UInt8.class)
+        if (baseArray.elementClass() == UInt8.class)
         {
             return binaryOverlay_uint8(UInt8Array.wrap(baseArray), binaryMask, overlayColor, overlayOpacity);
         }
@@ -303,7 +303,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
 
         // case of array that contains RGB8 elements without being an instance
         // of RGB8Array
-        if (RGB8.class.isAssignableFrom(array.dataType()))
+        if (RGB8.class.isAssignableFrom(array.elementClass()))
         {
             return convertArrayOfRGB8(array);
         }
@@ -402,22 +402,22 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
             return (RGB8Array) array;
         }
         
-        if (RGB8.class.isAssignableFrom(array.dataType()))
+        if (RGB8.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<RGB8>) array);
         }
         
-        if (UInt8.class.isAssignableFrom(array.dataType()))
+        if (UInt8.class.isAssignableFrom(array.elementClass()))
         {
             return new UInt8ArrayRGB8View(UInt8Array.wrap(array));
         }
         
-        if (Binary.class.isAssignableFrom(array.dataType()))
+        if (Binary.class.isAssignableFrom(array.elementClass()))
         {
             return new BinaryArrayRGB8View(BinaryArray.wrap(array));
         }
         
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
     
@@ -722,7 +722,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
 	// Inner interface
 
 	@Override
-	public default Class<RGB8> dataType()
+	public default Class<RGB8> elementClass()
 	{
 		return RGB8.class;
 	}

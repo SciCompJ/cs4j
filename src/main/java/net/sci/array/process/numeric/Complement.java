@@ -70,7 +70,7 @@ public class Complement extends AlgoStub implements ArrayOperator
     public <N extends Numeric<N>> NumericArray<N> processNumeric(NumericArray<N> array)
     {
         // check compatibility with inner complement class
-        if (!array.dataType().isAssignableFrom(complement.getClass()))
+        if (!array.elementClass().isAssignableFrom(complement.getClass()))
         {
             throw new RuntimeException("Requires a numeric array with class compatible to inner complement value: " + complement.getClass().getName());
         }
@@ -95,7 +95,7 @@ public class Complement extends AlgoStub implements ArrayOperator
         if (array instanceof NumericArray)
         {
             // check compatibility with inner complement class
-            if (!array.dataType().isAssignableFrom(complement.getClass()))
+            if (!array.elementClass().isAssignableFrom(complement.getClass()))
             {
                 throw new RuntimeException("Requires a numeric array with class compatible to inner complement value: " + complement.getClass().getName());
             }
@@ -109,6 +109,6 @@ public class Complement extends AlgoStub implements ArrayOperator
     public boolean canProcess(Array<?> array)
     {
         if (!(array instanceof NumericArray)) return false;
-        return array.dataType().isAssignableFrom(complement.getClass());
+        return array.elementClass().isAssignableFrom(complement.getClass());
     }
 }

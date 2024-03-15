@@ -654,7 +654,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
 
         @SuppressWarnings("unchecked")
         @Override
-        public Class<S> dataType()
+        public Class<S> elementClass()
         {
             return (Class<S>) sample.getClass();
         }

@@ -142,7 +142,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		{
 			return (UInt8Array) array;
 		}
-		if (UInt8.class.isAssignableFrom(array.dataType()))
+		if (UInt8.class.isAssignableFrom(array.elementClass()))
 		{
 		    return new Wrapper((Array<UInt8>) array);
         }
@@ -151,7 +151,7 @@ public interface UInt8Array extends IntArray<UInt8>
             return wrapScalar((ScalarArray<?>) array);
         }
         
-		throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+		throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
 	}
 	
     /**
@@ -310,7 +310,7 @@ public interface UInt8Array extends IntArray<UInt8>
 
 
 	@Override
-	public default Class<UInt8> dataType()
+	public default Class<UInt8> elementClass()
 	{
 		return UInt8.class;
 	}

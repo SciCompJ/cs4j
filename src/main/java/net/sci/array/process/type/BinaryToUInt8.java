@@ -32,7 +32,7 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
     @Override
     public UInt8Array processScalar(ScalarArray<?> array)
     {
-        if (array.dataType() != Binary.class)
+        if (array.elementClass() != Binary.class)
         {
             throw new IllegalArgumentException("Requires input array to contains Binary values");
         }

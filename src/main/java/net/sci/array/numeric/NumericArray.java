@@ -117,7 +117,7 @@ public interface NumericArray<N extends Numeric<N>> extends Array<N>
 
         @SuppressWarnings("unchecked")
         @Override
-        public Class<N> dataType()
+        public Class<N> elementClass()
         {
             return (Class<N>) array.sampleElement().getClass();
         }

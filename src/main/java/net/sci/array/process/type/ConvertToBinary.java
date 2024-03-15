@@ -34,7 +34,7 @@ public class ConvertToBinary extends AlgoStub implements ArrayOperator
     @Override
     public <T> BinaryArray process(Array<T> array)
     {
-        if (array.dataType().isAssignableFrom(Binary.class))
+        if (array.elementClass().isAssignableFrom(Binary.class))
         {
             if (array instanceof BinaryArray)
             {

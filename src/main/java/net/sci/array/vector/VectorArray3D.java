@@ -356,9 +356,9 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
         }
 
         @Override
-        public Class<V> dataType()
+        public Class<V> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override
@@ -504,9 +504,9 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
             }
 
             @Override
-            public Class<V> dataType()
+            public Class<V> elementClass()
             {
-                return Wrapper.this.array.dataType();
+                return Wrapper.this.array.elementClass();
             }
 
             @Override

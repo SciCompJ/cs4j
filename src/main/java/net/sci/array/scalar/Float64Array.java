@@ -72,7 +72,7 @@ public interface Float64Array extends ScalarArray<Float64>
             return (Float64Array) array;
         }
         // Convert array containing Float64 values
-        if (array.dataType().isAssignableFrom(Float64.class)) 
+        if (array.elementClass().isAssignableFrom(Float64.class)) 
         {
             return convertArrayOfFloat64(array);
         }
@@ -121,7 +121,7 @@ public interface Float64Array extends ScalarArray<Float64>
         {
             return (Float64Array) array;
         }
-        if (Float64.class.isAssignableFrom(array.dataType()))
+        if (Float64.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<Float64>) array);
         }
@@ -131,7 +131,7 @@ public interface Float64Array extends ScalarArray<Float64>
             return wrapScalar((ScalarArray<?>) array);
         }
         
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
     public static Float64Array wrapScalar(ScalarArray<?> array)
@@ -225,7 +225,7 @@ public interface Float64Array extends ScalarArray<Float64>
     }
 
 	@Override
-	public default Class<Float64> dataType()
+	public default Class<Float64> elementClass()
 	{
 		return Float64.class;
 	}

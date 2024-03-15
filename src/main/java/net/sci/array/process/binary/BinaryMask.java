@@ -162,9 +162,9 @@ public class BinaryMask extends AlgoStub
         }
 
         @Override
-        public Class<T> dataType()
+        public Class<T> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override

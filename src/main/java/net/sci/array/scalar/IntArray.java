@@ -350,7 +350,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
 
         @SuppressWarnings("unchecked")
         @Override
-        public Class<I> dataType()
+        public Class<I> elementClass()
         {
             return (Class<I>) sample.getClass();
         }

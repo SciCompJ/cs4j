@@ -114,12 +114,12 @@ public interface BinaryArray extends IntArray<Binary>
             return wrapScalar((ScalarArray<?>) array);
         }
         
-        if (Binary.class.isAssignableFrom(array.dataType()))
+        if (Binary.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<Binary>) array);
         }
         
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
     public static BinaryArray wrapScalar(ScalarArray<?> array)
@@ -487,7 +487,7 @@ public interface BinaryArray extends IntArray<Binary>
     }
 
 	@Override
-	public default Class<Binary> dataType()
+	public default Class<Binary> elementClass()
 	{
 		return Binary.class;
 	}

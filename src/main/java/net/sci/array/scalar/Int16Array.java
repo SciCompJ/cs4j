@@ -73,7 +73,7 @@ public interface Int16Array extends IntArray<Int16>
             return (Int16Array) array;
         }
         // Convert array containing Int16 values
-        if (array.dataType().isAssignableFrom(Int16.class)) 
+        if (array.elementClass().isAssignableFrom(Int16.class)) 
         {
             return convertArrayOfInt16(array);
         }
@@ -122,7 +122,7 @@ public interface Int16Array extends IntArray<Int16>
         {
             return (Int16Array) array;
         }
-        if (Int16.class.isAssignableFrom(array.dataType()))
+        if (Int16.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<Int16>) array);
         }
@@ -132,7 +132,7 @@ public interface Int16Array extends IntArray<Int16>
         }
         
         
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
 
 	public static Int16Array wrapScalar(ScalarArray<?> array)
@@ -263,7 +263,7 @@ public interface Int16Array extends IntArray<Int16>
 
 
 	@Override
-	public default Class<Int16> dataType()
+	public default Class<Int16> elementClass()
 	{
 		return Int16.class;
 	}

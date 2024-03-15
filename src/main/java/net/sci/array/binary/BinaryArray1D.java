@@ -220,9 +220,9 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
         }
         
         @Override
-        public Class<Binary> dataType()
+        public Class<Binary> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override

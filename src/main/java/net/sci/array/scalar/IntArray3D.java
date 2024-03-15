@@ -269,9 +269,9 @@ public abstract class IntArray3D<I extends Int<I>> extends ScalarArray3D<I> impl
         }
 
         @Override
-        public Class<I> dataType()
+        public Class<I> elementClass()
         {
-            return array.dataType();
+            return array.elementClass();
         }
 
         @Override
@@ -437,9 +437,9 @@ public abstract class IntArray3D<I extends Int<I>> extends ScalarArray3D<I> impl
             }
 
             @Override
-            public Class<I> dataType()
+            public Class<I> elementClass()
             {
-                return array.dataType();
+                return array.elementClass();
             }
 
             @Override

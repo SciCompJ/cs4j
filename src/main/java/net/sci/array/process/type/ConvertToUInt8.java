@@ -39,7 +39,7 @@ public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
         }
         
         // Convert array containing UInt8 values
-        if (array.dataType().isAssignableFrom(UInt8.class)) 
+        if (array.elementClass().isAssignableFrom(UInt8.class)) 
         {
             return processArrayOfUInt8(array);
         }

@@ -71,7 +71,7 @@ public interface Int32Array extends IntArray<Int32>
             return (Int32Array) array;
         }
         // Convert array containing Int32 values
-        if (array.dataType().isAssignableFrom(Int32.class)) 
+        if (array.elementClass().isAssignableFrom(Int32.class)) 
         {
             return convertArrayOfInt32(array);
         }
@@ -125,12 +125,12 @@ public interface Int32Array extends IntArray<Int32>
             return wrapScalar((ScalarArray<?>) array);
         }
         
-        if (Int32.class.isAssignableFrom(array.dataType()))
+        if (Int32.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<Int32>) array);
         }
         
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
 
     public static Int32Array wrapScalar(ScalarArray<?> array)
@@ -233,7 +233,7 @@ public interface Int32Array extends IntArray<Int32>
     }
 
 	@Override
-	public default Class<Int32> dataType()
+	public default Class<Int32> elementClass()
 	{
 		return Int32.class;
 	}

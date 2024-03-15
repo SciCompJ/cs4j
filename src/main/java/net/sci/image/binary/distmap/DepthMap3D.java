@@ -45,7 +45,7 @@ public class DepthMap3D extends AlgoStub implements ArrayOperator
         {
             throw new RuntimeException("Requires array with dimensionality 3");
         }
-        if (array.dataType() != Binary.class)
+        if (array.elementClass() != Binary.class)
         {
             throw new RuntimeException("Requires a binary array");
         }
@@ -132,7 +132,7 @@ public class DepthMap3D extends AlgoStub implements ArrayOperator
     public boolean canProcess(Array<?> array)
     {
         if (array.dimensionality() != 3) return false;
-        if (array.dataType() != Binary.class) return false;
+        if (array.elementClass() != Binary.class) return false;
         return true;
     }
 }

@@ -383,9 +383,9 @@ public abstract class Array2D<T> implements Array<T>
 		}
 		
 		@Override
-		public Class<T> dataType()
+		public Class<T> elementClass()
 		{
-			return array.dataType();
+			return array.elementClass();
 		}
 		
 		@Override

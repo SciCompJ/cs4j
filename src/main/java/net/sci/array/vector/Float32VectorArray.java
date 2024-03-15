@@ -56,11 +56,11 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         {
             return (Float32VectorArray) array;
         }
-        if (Float32Vector.class.isAssignableFrom(array.dataType()))
+        if (Float32Vector.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<Float32Vector>) array);
         }
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.dataType());
+        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
     
@@ -153,7 +153,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
     }
 
     @Override
-    public default Class<Float32Vector> dataType()
+    public default Class<Float32Vector> elementClass()
     {
         return Float32Vector.class;
     }

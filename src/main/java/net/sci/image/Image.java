@@ -205,15 +205,15 @@ public class Image
 	 */
 	private void setImageTypeFromDataType()
 	{
-		if (this.data.dataType() == Binary.class)
+		if (this.data.elementClass() == Binary.class)
 		{
 			this.type = ImageType.BINARY;
 		}
-		else if (this.data.dataType() == UInt8.class)
+		else if (this.data.elementClass() == UInt8.class)
 		{
 			this.type = ImageType.GRAYSCALE;
 		} 
-        else if (this.data.dataType() == UInt16.class)
+        else if (this.data.elementClass() == UInt16.class)
 		{
 			this.type = ImageType.GRAYSCALE;
 		}
@@ -221,11 +221,11 @@ public class Image
 		{
 			this.type = ImageType.INTENSITY;
 		}
-        else if (this.data.dataType() == RGB8.class)
+        else if (this.data.elementClass() == RGB8.class)
         {
             this.type = ImageType.COLOR;
         } 
-        else if (this.data.dataType() == RGB16.class)
+        else if (this.data.elementClass() == RGB16.class)
         {
             this.type = ImageType.COLOR;
         } 
@@ -269,7 +269,7 @@ public class Image
 		
         // Check if parent type is compatible with data
         // (escape the case of binary images, that should not be considered as intensity nor distance)
-        if (parent.type.isCompatibleWith(this.data) && this.data.dataType() != Binary.class)
+        if (parent.type.isCompatibleWith(this.data) && this.data.elementClass() != Binary.class)
 		{
 		    // update type and refresh calibration
 		    this.type = parent.type;
@@ -278,11 +278,11 @@ public class Image
 		    if (this.type == ImageType.COLOR)
 		    {
 		        // Additional processing to propagate settings only if same data type
-		        if (this.data.dataType() == RGB8.class && parent.data.dataType() == RGB8.class)
+		        if (this.data.elementClass() == RGB8.class && parent.data.elementClass() == RGB8.class)
 		        {
 		            this.displaySettings = parent.displaySettings.duplicate();
 		        }
-                if (this.data.dataType() == RGB16.class && parent.data.dataType() == RGB16.class)
+                if (this.data.elementClass() == RGB16.class && parent.data.elementClass() == RGB16.class)
                 {
                     this.displaySettings = parent.displaySettings.duplicate();
                 }

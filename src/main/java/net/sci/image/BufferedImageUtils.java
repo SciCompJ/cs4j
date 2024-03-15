@@ -72,7 +72,7 @@ public class BufferedImageUtils
         if (image.isBinaryImage())
         {
             // Check adequacy of array type with image type
-            if (array.dataType() != Binary.class)
+            if (array.elementClass() != Binary.class)
             {
                 throw new RuntimeException("Binary images must refere to array of Binary");
             }
@@ -95,13 +95,13 @@ public class BufferedImageUtils
         else if (image.isColorImage())
         {
             // Check if the array contains RGB8 data
-            if (array.dataType() == RGB8.class)
+            if (array.elementClass() == RGB8.class)
             {
                  return createAwtImageRGB8(RGB8Array.wrap(array));
             }
             
             // convert RBG16 image to AWT image, using display range
-            if (array.dataType() == RGB16.class)
+            if (array.elementClass() == RGB16.class)
             {
                 double[] displayRange = image.getDisplaySettings().getDisplayRange();
                 return createAwtImageRGB16(RGB16Array.wrap(array), displayRange);

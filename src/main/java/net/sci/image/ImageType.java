@@ -99,7 +99,7 @@ public interface ImageType
         @Override
         public boolean isCompatibleWith(Array<?> array)
         {
-            Class<?> dataClass = array.dataType();
+            Class<?> dataClass = array.elementClass();
             return dataClass == UInt8.class || dataClass == UInt8.class;
         }
         
@@ -161,7 +161,7 @@ public interface ImageType
         @Override
         public boolean isCompatibleWith(Array<?> array)
         {
-            return Scalar.class.isAssignableFrom(array.dataType());
+            return Scalar.class.isAssignableFrom(array.elementClass());
         }
 
         @Override
@@ -237,7 +237,7 @@ public interface ImageType
         @Override
         public boolean isCompatibleWith(Array<?> array)
         {
-            return Scalar.class.isAssignableFrom(array.dataType());
+            return Scalar.class.isAssignableFrom(array.elementClass());
         }
 
         @Override
@@ -274,7 +274,7 @@ public interface ImageType
             // Check adequacy of array type with image type
             Array<?> array = image.getData();
             checkDimensionalityIs2(array);
-            if (array.dataType() != Binary.class)
+            if (array.elementClass() != Binary.class)
             {
                 throw new RuntimeException("Binary images must refere to array of Binary");
             }
@@ -321,7 +321,7 @@ public interface ImageType
         @Override
         public boolean isCompatibleWith(Array<?> array)
         {
-            return array.dataType() == Binary.class;
+            return array.elementClass() == Binary.class;
         }
 
         @Override
@@ -438,13 +438,13 @@ public interface ImageType
             Array<?> array = image.getData();
             checkDimensionalityIs2(array);
             // Check if the array contains RGB8 data
-            if (array.dataType() == RGB8.class)
+            if (array.elementClass() == RGB8.class)
             {
                  return createAwtImageRGB8(RGB8Array.wrap(array));
             }
             
             // convert RBG16 image to AWT image, using display range
-            if (array.dataType() == RGB16.class)
+            if (array.elementClass() == RGB16.class)
             {
                 double[] displayRange = image.getDisplaySettings().getDisplayRange();
                 return createAwtImageRGB16(RGB16Array.wrap(array), displayRange);
@@ -538,7 +538,7 @@ public interface ImageType
         @Override
         public boolean isCompatibleWith(Array<?> array)
         {
-            Class<?> dataClass = array.dataType();
+            Class<?> dataClass = array.elementClass();
             return dataClass == RGB8.class || dataClass == RGB16.class;
         }
 
@@ -560,12 +560,12 @@ public interface ImageType
         public void setupDisplaySettings(Image image)
         {
             // For color images, display range is applied to each channel identically.
-            if (image.data.dataType() == RGB8.class)
+            if (image.data.elementClass() == RGB8.class)
             {
                 // (in theory not used)
                 image.displaySettings.displayRange = new double[] { 0, 255 };
             }
-            else if (image.data.dataType() == RGB16.class)
+            else if (image.data.elementClass() == RGB16.class)
             {
                 // can be later adjusted
                 image.displaySettings.displayRange = new double[] { 0, 65535 };
