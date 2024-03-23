@@ -8,6 +8,7 @@ import static net.sci.array.binary.Binary.TRUE;
 
 import net.sci.algo.Algo;
 import net.sci.algo.AlgoStub;
+import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.process.ScalarArrayOperator;
@@ -138,7 +139,7 @@ public class RegionalExtrema2D extends AlgoStub implements ImageArrayOperator, S
 			for (int x = 0; x < sizeX; x++) 
 			{
 				// Check if current pixel was already processed
-				if (target.getValue(x, y) == 0)
+				if (!target.getBoolean(x, y))
 					continue;
 				
 				// current value
@@ -171,7 +172,7 @@ public class RegionalExtrema2D extends AlgoStub implements ImageArrayOperator, S
 
 	/**
 	 * Computes regional extrema in current input image, using
-	 * flood-filling-like algorithm with 4 connectivity.
+	 * flood-filling-like algorithm with 8 connectivity.
 	 * 
 	 * Computations are made with floating point values.
 	 */
@@ -198,7 +199,7 @@ public class RegionalExtrema2D extends AlgoStub implements ImageArrayOperator, S
 			for (int x = 0; x < sizeX; x++) 
 			{
 				// Check if current pixel was already processed
-				if (target.getValue(x, y) == 0)
+                if (!target.getBoolean(x, y))
 					continue;
 				
 				// current value
@@ -245,5 +246,19 @@ public class RegionalExtrema2D extends AlgoStub implements ImageArrayOperator, S
         process(array, output);
         return output;
     }
+    
 
+    // ==============================================================
+    // Implementation of ArrayOperator interface
+
+    @Override
+    public <T> BinaryArray2D process(Array<T> array)
+    {
+        if (!(array instanceof ScalarArray))
+        {
+            throw new IllegalArgumentException("Requires a scalar array as input");
+        }
+        
+        return processScalar((ScalarArray<?>) array);
+    }
 }

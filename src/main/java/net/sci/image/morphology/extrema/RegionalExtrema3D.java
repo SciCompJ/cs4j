@@ -8,6 +8,7 @@ import static java.lang.Math.min;
 import static net.sci.array.binary.Binary.TRUE;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.process.ScalarArrayOperator;
@@ -128,7 +129,7 @@ implements ImageArrayOperator, ScalarArrayOperator
 
 	/**
 	 * Computes regional extrema in current input image, using
-	 * flood-filling-like algorithm with 4 connectivity.
+	 * flood-filling-like algorithm with 6 connectivity.
 	 * 
 	 * Computations are made with floating point values.
 	 */
@@ -198,7 +199,7 @@ implements ImageArrayOperator, ScalarArrayOperator
 
 	/**
 	 * Computes regional extrema in current input image, using
-	 * flood-filling-like algorithm with 4 connectivity.
+	 * flood-filling-like algorithm with 26 connectivity.
 	 * 
 	 * Computations are made with floating point values.
 	 */
@@ -274,5 +275,19 @@ implements ImageArrayOperator, ScalarArrayOperator
         BinaryArray3D output = BinaryArray3D.create(input.size(0),input.size(1), input.size(2));
         process(input, output);
         return output;
+    }
+    
+    // ==============================================================
+    // Implementation of ArrayOperator interface
+
+    @Override
+    public <T> BinaryArray3D process(Array<T> array)
+    {
+        if (!(array instanceof ScalarArray))
+        {
+            throw new IllegalArgumentException("Requires a scalar array as input");
+        }
+        
+        return processScalar((ScalarArray<?>) array);
     }
 }

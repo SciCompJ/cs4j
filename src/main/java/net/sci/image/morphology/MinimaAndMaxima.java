@@ -3,6 +3,8 @@
  */
 package net.sci.image.morphology;
 
+import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
@@ -95,7 +97,7 @@ public class MinimaAndMaxima
 	 *            the array to process
 	 * @return the regional maxima of input array
 	 */
-	public final static ScalarArray2D<?> regionalMaxima(ScalarArray2D<?> array)
+	public final static BinaryArray2D regionalMaxima(ScalarArray2D<?> array)
 	{
 		return regionalMaxima(array, DEFAULT_CONNECTIVITY_2D);
 	}
@@ -110,14 +112,14 @@ public class MinimaAndMaxima
 	 *            the connectivity for maxima, that should be either 4 or 8
 	 * @return the regional maxima of input array
 	 */
-	public final static ScalarArray2D<?> regionalMaxima(ScalarArray2D<?> array,
+	public final static BinaryArray2D regionalMaxima(ScalarArray2D<?> array,
 			Connectivity2D conn)
 	{
 		RegionalExtrema2D algo = new RegionalExtrema2D();
 		algo.setConnectivity(conn);
 		algo.setExtremaType(Type.MAXIMA);
 		
-		return (ScalarArray2D<?>) algo.process(array);
+		return algo.process(array);
 	}
 	
     /**
@@ -128,7 +130,7 @@ public class MinimaAndMaxima
      *            the array to process
      * @return the regional minima of input array
      */
-    public final static ScalarArray3D<?> regionalMaxima(ScalarArray3D<?> array) 
+    public final static BinaryArray3D regionalMaxima(ScalarArray3D<?> array) 
     {
         return regionalMaxima(array, DEFAULT_CONNECTIVITY_3D);
     }
@@ -142,13 +144,13 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the regional minima of input array
      */
-    public final static ScalarArray3D<?> regionalMaxima(ScalarArray3D<?> array, Connectivity3D conn) 
+    public final static BinaryArray3D regionalMaxima(ScalarArray3D<?> array, Connectivity3D conn) 
     {
         RegionalExtrema3D algo = new RegionalExtrema3D();
         algo.setConnectivity(conn);
         algo.setExtremaType(Type.MAXIMA);
         
-        return (ScalarArray3D<?>) algo.process(array);
+        return algo.process(array);
     }
     
 //	/**
@@ -200,7 +202,7 @@ public class MinimaAndMaxima
 	 *            the array to process
 	 * @return the regional minima of input array
 	 */
-	public final static ScalarArray2D<?> regionalMinima(ScalarArray2D<?> array) 
+	public final static BinaryArray2D regionalMinima(ScalarArray2D<?> array) 
 	{
 		return regionalMinima(array, DEFAULT_CONNECTIVITY_2D);
 	}
@@ -215,13 +217,13 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the regional minima of input array
      */
-    public final static ScalarArray2D<?> regionalMinima(ScalarArray2D<?> array, Connectivity2D conn) 
+    public final static BinaryArray2D regionalMinima(ScalarArray2D<?> array, Connectivity2D conn) 
     {
         RegionalExtrema2D algo = new RegionalExtrema2D();
         algo.setConnectivity(conn);
         algo.setExtremaType(Type.MINIMA);
         
-        return (ScalarArray2D<?>) algo.process(array);
+        return algo.process(array);
     }
     
     /**
@@ -232,7 +234,7 @@ public class MinimaAndMaxima
      *            the array to process
      * @return the regional minima of input array
      */
-    public final static ScalarArray3D<?> regionalMinima(ScalarArray3D<?> array) 
+    public final static BinaryArray3D regionalMinima(ScalarArray3D<?> array) 
     {
         return regionalMinima(array, DEFAULT_CONNECTIVITY_3D);
     }
@@ -247,13 +249,13 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the regional minima of input array
      */
-    public final static ScalarArray3D<?> regionalMinima(ScalarArray3D<?> array, Connectivity3D conn) 
+    public final static BinaryArray3D regionalMinima(ScalarArray3D<?> array, Connectivity3D conn) 
     {
         RegionalExtrema3D algo = new RegionalExtrema3D();
         algo.setConnectivity(conn);
         algo.setExtremaType(Type.MINIMA);
         
-        return (ScalarArray3D<?>) algo.process(array);
+        return algo.process(array);
     }
     
 //	/**
