@@ -14,6 +14,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.binary.BufferedBinaryArray2D;
 import net.sci.array.binary.SlicedBinaryArray3D;
 import net.sci.array.color.BufferedPackedByteRGB8Array2D;
@@ -29,8 +30,12 @@ import net.sci.array.scalar.BufferedUInt16Array2D;
 import net.sci.array.scalar.BufferedUInt16Array3D;
 import net.sci.array.scalar.BufferedUInt8Array2D;
 import net.sci.array.scalar.BufferedUInt8Array3D;
+import net.sci.array.scalar.SlicedUInt16Array3D;
 import net.sci.array.scalar.SlicedUInt8Array3D;
+import net.sci.array.scalar.UInt16Array;
+import net.sci.array.scalar.UInt16Array3D;
 import net.sci.array.scalar.UInt8Array;
+import net.sci.array.scalar.UInt8Array3D;
 import net.sci.image.io.PackBits;
 import net.sci.image.io.tiff.TiffFileInfo.PixelType;
 
@@ -209,8 +214,31 @@ public class TiffImageDataReader extends AlgoStub
             throw new IllegalArgumentException("File info list must contains at least one element.");
         }
         
-        // Compute image size
         TiffFileInfo info0 = fileInfoList.iterator().next();
+        
+        // When possible, calls a specialized method
+        switch (info0.pixelType)
+        {
+            case GRAY8: return readImageStack_Gray8(fileInfoList);
+            case GRAY16_UNSIGNED: return readImageStack_Gray16(fileInfoList);
+            case BITMAP: return readImageStack_Bitmap(fileInfoList);
+            default:
+                // continue processing
+                break;
+        }
+        
+//        if (info0.pixelType == PixelType.GRAY8)
+//        {
+//            // Read 3D UInt8 data as SlicedUInt8Array3D
+//            return readImageStack_Gray8(fileInfoList);
+//        }
+//        else if (info0.pixelType == PixelType.BITMAP)
+//        {
+//            // Read 3D BITMAP data as SlicedBinaryArray3D
+//            return readImageStack_Bitmap(fileInfoList);
+//        }
+        
+        // Compute image size
         int sizeX = info0.width;
         int sizeY = info0.height;
         int sizeZ = fileInfoList.size();
@@ -219,80 +247,11 @@ public class TiffImageDataReader extends AlgoStub
         int pixelsPerPlane = sizeX * sizeY;
         int bytesPerPlane  = pixelsPerPlane * info0.pixelType.getByteNumber();
         
-        // When possible, creates a sliced array instance
-        
-        // Read 3D UInt8 data as SlicedUInt8Array3D
-        if (info0.pixelType == PixelType.GRAY8)
-        {
-            // System.out.println("Choose sliced array data representation...");
-            // check type limit
-            if(info0.pixelType != TiffFileInfo.PixelType.GRAY8) 
-            {
-                throw new RuntimeException("Can only process UInt8 arrays");
-            }
-            
-            // create the container
-            ArrayList<UInt8Array> arrayList = new ArrayList<>(sizeZ);
-            
-            RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-
-            // iterate over slices to create each 2D array
-            int nSlices = fileInfoList.size();
-            int currentSliceIndex = 0;
-            for (TiffFileInfo info : fileInfoList)
-            {
-                this.fireProgressChanged(this, currentSliceIndex++, nSlices);
-                
-                byte[] buffer = new byte[bytesPerPlane];
-                int nRead = readByteBuffer(stream, info, buffer);
-
-                // Check the whole buffer has been read
-                if (nRead != bytesPerPlane)
-                {
-                    throw new IOException("Could read only " + nRead
-                            + " bytes over the " + bytesPerPlane + " expected");
-                }
-                
-                arrayList.add(new BufferedUInt8Array2D(sizeX, sizeY, buffer));
-            }
-            
-            stream.close();
-            
-            // create a new instance of 3D array that stores each slice
-            this.fireProgressChanged(this, nSlices, nSlices);
-            return new SlicedUInt8Array3D(arrayList);
-        }
-        
-        // Read 3D BITMAP data as SlicedBinaryArray3D
-        if (info0.pixelType == PixelType.BITMAP)
-        {
-            // create the container
-            ArrayList<BinaryArray2D> arrayList = new ArrayList<>(sizeZ);
-            
-            RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-
-            // iterate over slices to create each 2D array
-            int nSlices = fileInfoList.size();
-            int currentSliceIndex = 0;
-            for (TiffFileInfo info : fileInfoList)
-            {
-                this.fireProgressChanged(this, currentSliceIndex++, nSlices);
-                BinaryArray2D sliceData = readBinaryArray2D(info);
-                arrayList.add(sliceData);
-            }
-            
-            stream.close();
-            
-            // create a new instance of 3D array that stores each slice
-            this.fireProgressChanged(this, nSlices, nSlices);
-            return new SlicedBinaryArray3D(arrayList);
-        }
-        
         // compute total number of expected bytes
         int nBytes = bytesPerPlane * sizeZ;
         if (nBytes < 0)
         {
-            throw new RuntimeException("Image data is too large to fit in a single array");
+            throw new RuntimeException("Image data is too large to fit in a single java array");
         }
         
         // allocate buffer
@@ -314,8 +273,7 @@ public class TiffImageDataReader extends AlgoStub
         // Check the whole buffer has been read
         if (nRead != nBytes)
         {
-            throw new IOException("Could read only " + nRead
-                    + " bytes over the " + nBytes + " expected");
+            throw new IOException("Could read only " + nRead + " bytes over the " + nBytes + " expected");
         }
         
         // Transform raw buffer into interpreted buffer
@@ -344,6 +302,138 @@ public class TiffImageDataReader extends AlgoStub
             throw new IOException("Can not read stack with data type "
                     + info0.pixelType);
         }
+    }
+    
+    private UInt8Array3D readImageStack_Gray8(Collection<TiffFileInfo> fileInfoList) throws IOException
+    {
+        // check type limit
+        TiffFileInfo info0 = fileInfoList.iterator().next();
+        if(info0.pixelType != TiffFileInfo.PixelType.GRAY8) 
+        {
+            throw new RuntimeException("Can only process UInt8 arrays");
+        }
+        
+        // Compute image size
+        int sizeX = info0.width;
+        int sizeY = info0.height;
+        int sizeZ = fileInfoList.size();
+        
+        // Compute size of buffer buffer for each plane
+        int pixelsPerPlane = sizeX * sizeY;
+        int bytesPerPlane  = pixelsPerPlane * info0.pixelType.getByteNumber();
+
+        // create the container
+        ArrayList<UInt8Array> arrayList = new ArrayList<>(sizeZ);
+        
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+        // iterate over slices to create each 2D array
+        int nSlices = fileInfoList.size();
+        int currentSliceIndex = 0;
+        for (TiffFileInfo info : fileInfoList)
+        {
+            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+            
+            byte[] buffer = new byte[bytesPerPlane];
+            int nRead = readByteBuffer(stream, info, buffer);
+
+            // Check the whole buffer has been read
+            if (nRead != bytesPerPlane)
+            {
+                throw new IOException("Could read only " + nRead + " bytes over the " + bytesPerPlane + " expected");
+            }
+            
+            arrayList.add(new BufferedUInt8Array2D(sizeX, sizeY, buffer));
+        }
+        
+        stream.close();
+        
+        // create a new instance of 3D array that stores each slice
+        this.fireProgressChanged(this, nSlices, nSlices);
+        return new SlicedUInt8Array3D(arrayList);
+    }
+    
+    private UInt16Array3D readImageStack_Gray16(Collection<TiffFileInfo> fileInfoList) throws IOException
+    {
+        // check type limit
+        TiffFileInfo info0 = fileInfoList.iterator().next();
+        if(info0.pixelType != TiffFileInfo.PixelType.GRAY16_UNSIGNED) 
+        {
+            throw new RuntimeException("Can only process UInt16 arrays");
+        }
+        
+        // Compute image size
+        int sizeX = info0.width;
+        int sizeY = info0.height;
+        int sizeZ = fileInfoList.size();
+        
+        // Compute size of buffer buffer for each plane
+        int pixelsPerPlane = sizeX * sizeY;
+        int bytesPerPlane  = pixelsPerPlane * info0.pixelType.getByteNumber();
+
+        // create the container
+        ArrayList<UInt16Array> arrayList = new ArrayList<>(sizeZ);
+        
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+        // iterate over slices to create each 2D array
+        int nSlices = fileInfoList.size();
+        int currentSliceIndex = 0;
+        for (TiffFileInfo info : fileInfoList)
+        {
+            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+            
+            byte[] buffer = new byte[bytesPerPlane];
+            int nRead = readByteBuffer(stream, info, buffer);
+
+            // Check the whole buffer has been read
+            if (nRead != bytesPerPlane)
+            {
+                throw new IOException("Could read only " + nRead + " bytes over the " + bytesPerPlane + " expected");
+            }
+            
+            short[] shortBuffer = convertToShortArray(buffer, info0.byteOrder);
+            arrayList.add(new BufferedUInt16Array2D(sizeX, sizeY, shortBuffer));
+        }
+        
+        stream.close();
+        
+        // create a new instance of 3D array that stores each slice
+        this.fireProgressChanged(this, nSlices, nSlices);
+        return new SlicedUInt16Array3D(arrayList);
+    }
+    
+    private BinaryArray3D readImageStack_Bitmap(Collection<TiffFileInfo> fileInfoList) throws IOException
+    {
+        // check type limit
+        TiffFileInfo info0 = fileInfoList.iterator().next();
+        if(info0.pixelType != TiffFileInfo.PixelType.BITMAP) 
+        {
+            throw new RuntimeException("Can only process BITMAP arrays");
+        }
+        
+        // Compute image size
+        int nSlices = fileInfoList.size();
+        
+        // create the container
+        ArrayList<BinaryArray2D> arrayList = new ArrayList<>(nSlices);
+        
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+        // iterate over slices to create each 2D array
+        int currentSliceIndex = 0;
+        for (TiffFileInfo info : fileInfoList)
+        {
+            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+            BinaryArray2D sliceData = readBinaryArray2D(info);
+            arrayList.add(sliceData);
+        }
+        
+        stream.close();
+        
+        // create a new instance of 3D array that stores each slice
+        this.fireProgressChanged(this, nSlices, nSlices);
+        return new SlicedBinaryArray3D(arrayList);
     }
     
 	/**
