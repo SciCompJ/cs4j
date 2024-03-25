@@ -18,6 +18,7 @@ import net.sci.array.Array3D;
 import net.sci.array.color.DefaultColorMap;
 import net.sci.array.process.shape.Reshape;
 import net.sci.array.scalar.FileMappedFloat32Array3D;
+import net.sci.array.scalar.FileMappedUInt16Array3D;
 import net.sci.array.scalar.FileMappedUInt8Array3D;
 import net.sci.axis.Axis;
 import net.sci.image.Calibration;
@@ -530,37 +531,22 @@ public class TiffImageReader extends AlgoStub implements ImageReader
 
             reader.seek(info.stripOffsets[0]);
 
-            switch(info.pixelType)
+            return switch(info.pixelType)
             {
-                case GRAY8:
-                case COLOR8:
-                    return reader.readUInt8Array3D(info.width, info.height, nImages);
-
-                case BITMAP:
-                    throw new RuntimeException("Reading Bitmap Tiff files not supported");
-
-                case GRAY16_UNSIGNED:
-                case GRAY12_UNSIGNED:
-                    return reader.readUInt16Array3D(info.width, info.height, nImages);
-
-                case GRAY32_INT:
-                    return reader.readInt32Array3D(info.width, info.height, nImages);
-
-                case GRAY32_FLOAT:
-                    return reader.readFloat32Array3D(info.width, info.height, nImages);
-
-                case RGB:
-                case BGR:
-                case ARGB:
-                case ABGR:
-                case BARG:
-                case RGB_PLANAR:
-
-                case RGB48:
-
-                default:
-                    throw new IOException("Can not read stack with data type " + info.pixelType);
-            }
+                case GRAY8, COLOR8 
+                    -> reader.readUInt8Array3D(info.width, info.height, nImages);
+                case BITMAP 
+                    -> throw new RuntimeException("Reading Bitmap Tiff files not supported");
+                case GRAY16_UNSIGNED, GRAY12_UNSIGNED 
+                    -> reader.readUInt16Array3D(info.width, info.height, nImages);
+                case GRAY32_INT 
+                    -> reader.readInt32Array3D(info.width, info.height, nImages);
+                case GRAY32_FLOAT 
+                    -> reader.readFloat32Array3D(info.width, info.height, nImages);
+                case RGB, BGR, ARGB, ABGR, BARG, RGB_PLANAR, RGB48 
+                    -> throw new IOException("Can not read stack with data type " + info.pixelType);
+                default -> throw new IOException("Can not read stack with data type " + info.pixelType);
+            };
         }
         catch(IOException ex)
         {
@@ -570,33 +556,21 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     
     private Array<?> createFileMappedArray(TiffFileInfo info, int nImages) throws IOException
     {
-        switch(info.pixelType)
+        return switch (info.pixelType)
         {
-            case GRAY8:
-            case COLOR8:
-                return new FileMappedUInt8Array3D(this.filePath, info.stripOffsets[0], info.width, info.height, nImages);
-                
-            case GRAY32_FLOAT:
-                return new FileMappedFloat32Array3D(this.filePath, info.stripOffsets[0], info.width, info.height, nImages);
-                
-            case BITMAP:
-            case GRAY16_UNSIGNED:
-            case GRAY12_UNSIGNED:
-            case GRAY32_INT:
-                throw new IOException("Virtual images not supported for data type: " + info.pixelType);
-
-            case RGB:
-            case BGR:
-            case ARGB:
-            case ABGR:
-            case BARG:
-            case RGB_PLANAR:
-
-            case RGB48:
-
-            default:
-                throw new IOException("Can not read stack with data type " + info.pixelType);
-        }
+            case GRAY8, COLOR8 -> new FileMappedUInt8Array3D(this.filePath, info.stripOffsets[0], info.width,
+                    info.height, nImages);
+            case GRAY32_FLOAT -> new FileMappedFloat32Array3D(this.filePath, info.stripOffsets[0], info.width,
+                    info.height, nImages);
+            case GRAY16_UNSIGNED -> new FileMappedUInt16Array3D(this.filePath, info.stripOffsets[0], info.width,
+                    info.height, nImages);
+            case BITMAP, GRAY12_UNSIGNED, GRAY32_INT -> throw new IOException(
+                    "Virtual images not supported for data type: " + info.pixelType);
+            case RGB, BGR, ARGB, ABGR, BARG, RGB_PLANAR, RGB48 -> throw new IOException(
+                    "Virtual images not supported for color type: " + info.pixelType);
+        
+            default -> throw new IOException("Can not read stack with data type " + info.pixelType);
+        };
     }
     
     /**
