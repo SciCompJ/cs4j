@@ -23,6 +23,7 @@ import net.sci.array.scalar.IntArray2D;
 import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt8;
 import net.sci.array.scalar.UInt8Array;
@@ -100,7 +101,7 @@ public interface ImageType
         public boolean isCompatibleWith(Array<?> array)
         {
             Class<?> dataClass = array.elementClass();
-            return dataClass == UInt8.class || dataClass == UInt8.class;
+            return dataClass == UInt8.class || dataClass == UInt16.class;
         }
         
         @Override
@@ -135,7 +136,6 @@ public interface ImageType
         {
             return "Grayscale";
         }
-
     };
 
     public final static ImageType INTENSITY = new ImageType()
@@ -416,7 +416,7 @@ public interface ImageType
         
             image.displaySettings.displayRange = new double[]{0, 255};
             
-            // default display of label maps: Glasbey LUt and white background
+            // default display of label maps: Glasbey LUT and white background
             image.displaySettings.backgroundColor = RGB8.WHITE;
             ColorMap colorMap = ColorMaps.GLASBEY.createColorMap(255);
             image.displaySettings.colorMap = colorMap;
