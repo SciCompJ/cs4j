@@ -25,28 +25,24 @@ public interface Int16Array extends IntArray<Int16>
 
     public static final Factory defaultFactory = new DenseInt16ArrayFactory();
 
+    // =============================================================
+    // Static methods
     
-	// =============================================================
-	// Static methods
-
-	public static Int16Array create(int... dims)
-	{
-	    return defaultFactory.create(dims);
-	}
-	
-	public static Int16Array create(int[] dims, short[] buffer)
-	{
-		switch (dims.length)
-		{
-		case 2:
-			return new BufferedInt16Array2D(dims[0], dims[1], buffer);
-		case 3:
-			return new BufferedInt16Array3D(dims[0], dims[1], dims[2], buffer);
-		default:
-			return new BufferedInt16ArrayND(dims, buffer);
-		}
-	}
-	
+    public static Int16Array create(int... dims)
+    {
+        return defaultFactory.create(dims);
+    }
+    
+    public static Int16Array create(int[] dims, short[] buffer)
+    {
+        return switch (dims.length)
+        {
+            case 2 -> new BufferedInt16Array2D(dims[0], dims[1], buffer);
+            case 3 -> new BufferedInt16Array3D(dims[0], dims[1], dims[2], buffer);
+            default -> new BufferedInt16ArrayND(dims, buffer);
+        };
+    }
+    
     /**
      * Converts the input array into an instance of Int16Array.
      * 
@@ -98,13 +94,13 @@ public interface Int16Array extends IntArray<Int16>
     
     private static Int16Array convertScalarArray(ScalarArray<?> array)
     {
-		Int16Array result = Int16Array.create(array.size());
-	    for (int[] pos : array.positions())
-	    {
-	    	result.setValue(pos, array.getValue(pos));
-	    }
-		return result;
-	}
+        Int16Array result = Int16Array.create(array.size());
+        for (int[] pos : array.positions())
+        {
+            result.setValue(pos, array.getValue(pos));
+        }
+        return result;
+    }
     
     /**
      * Encapsulates the specified array into a new Int16Array, by creating a

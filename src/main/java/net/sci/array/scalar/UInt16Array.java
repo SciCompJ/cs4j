@@ -24,27 +24,24 @@ public interface UInt16Array extends IntArray<UInt16>
     public static final Factory defaultFactory = new DenseUInt16ArrayFactory();
 
     
-	// =============================================================
-	// Static methods
-
-	public static UInt16Array create(int... dims)
-	{
-		return defaultFactory.create(dims);
-	}
-	
-	public static UInt16Array create(int[] dims, short[] buffer)
-	{
-		switch (dims.length)
-		{
-		case 2:
-			return new BufferedUInt16Array2D(dims[0], dims[1], buffer);
-		case 3:
-			return new BufferedUInt16Array3D(dims[0], dims[1], dims[2], buffer);
-		default:
-            return new BufferedUInt16ArrayND(dims, buffer);
-		}
-	}
-	
+    // =============================================================
+    // Static methods
+    
+    public static UInt16Array create(int... dims)
+    {
+        return defaultFactory.create(dims);
+    }
+    
+    public static UInt16Array create(int[] dims, short[] buffer)
+    {
+        return switch (dims.length)
+        {
+            case 2 -> new BufferedUInt16Array2D(dims[0], dims[1], buffer);
+            case 3 -> new BufferedUInt16Array3D(dims[0], dims[1], dims[2], buffer);
+            default -> new BufferedUInt16ArrayND(dims, buffer);
+        };
+    }
+    
     /**
      * Converts the input array into an instance of UInt16Array.
      * 
@@ -132,19 +129,19 @@ public interface UInt16Array extends IntArray<UInt16>
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
-	public static UInt16Array wrapScalar(ScalarArray<?> array)
-	{
-		if (array instanceof UInt16Array)
-		{
-			return (UInt16Array) array;
-		}
-		return new ScalarArrayWrapper(array);
-	}
-	
-
-	// =============================================================
-	// New methods
-
+    public static UInt16Array wrapScalar(ScalarArray<?> array)
+    {
+        if (array instanceof UInt16Array)
+        {
+            return (UInt16Array) array;
+        }
+        return new ScalarArrayWrapper(array);
+    }
+    
+    
+    // =============================================================
+    // New methods
+    
     public default void fillShorts(Function<int[], Short> fun)
     {
         for (int[] pos : this.positions())

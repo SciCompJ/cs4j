@@ -23,7 +23,7 @@ public class DenseUInt16ArrayFactory extends AlgoStub implements UInt16Array.Fac
         {
             case 1 -> new BufferedUInt16Array1D(dims[0]);
             case 2 -> new BufferedUInt16Array2D(dims[0], dims[1]);
-            case 3-> create3d(dims[0], dims[1], dims[2]);
+            case 3 -> create3d(dims[0], dims[1], dims[2]);
             default -> UInt16ArrayND.create(dims);
         };
     }

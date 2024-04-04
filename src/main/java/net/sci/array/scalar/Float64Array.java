@@ -25,27 +25,24 @@ public interface Float64Array extends ScalarArray<Float64>
     public static final Factory defaultFactory = new DenseFloat64ArrayFactory();
 
     
-	// =============================================================
-	// Static methods
-
-	public static Float64Array create(int... dims)
-	{
-	    return defaultFactory.create(dims);
-	}
-
-	public static Float64Array create(int[] dims, double[] buffer)
-	{
-		switch (dims.length)
-		{
-		case 2:
-			return new BufferedFloat64Array2D(dims[0], dims[1], buffer);
-		case 3:
-			return new BufferedFloat64Array3D(dims[0], dims[1], dims[2], buffer);
-		default:
-			return new BufferedFloat64ArrayND(dims, buffer);
-		}
-	}
-	
+    // =============================================================
+    // Static methods
+    
+    public static Float64Array create(int... dims)
+    {
+        return defaultFactory.create(dims);
+    }
+    
+    public static Float64Array create(int[] dims, double[] buffer)
+    {
+        return switch (dims.length)
+        {
+            case 2 -> new BufferedFloat64Array2D(dims[0], dims[1], buffer);
+            case 3 -> new BufferedFloat64Array3D(dims[0], dims[1], dims[2], buffer);
+            default -> new BufferedFloat64ArrayND(dims, buffer);
+        };
+    }
+    
     /**
      * Converts the input array into an instance of Float64Array.
      * 
@@ -131,19 +128,20 @@ public interface Float64Array extends ScalarArray<Float64>
             return wrapScalar((ScalarArray<?>) array);
         }
         
-        throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
+        throw new IllegalArgumentException(
+                "Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
     public static Float64Array wrapScalar(ScalarArray<?> array)
-	{
-		if (array instanceof Float64Array)
-		{
-			return (Float64Array) array;
-		}
-		return new ScalarArrayWrapper(array);
-	}
-	
-
+    {
+        if (array instanceof Float64Array)
+        {
+            return (Float64Array) array;
+        }
+        return new ScalarArrayWrapper(array);
+    }
+    
+    
     // =============================================================
     // Specialization of ScalarArray interface
 

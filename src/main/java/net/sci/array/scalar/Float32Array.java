@@ -25,28 +25,25 @@ public interface Float32Array extends ScalarArray<Float32>
     public static final Factory defaultFactory = new DenseFloat32ArrayFactory();
 
     
-	// =============================================================
-	// Static methods
-
-	public static Float32Array create(int... dims)
-	{
-	    return defaultFactory.create(dims);
-	}
-
-	public static Float32Array create(int[] dims, float[] buffer)
-	{
-		switch (dims.length)
-		{
-		case 2:
-			return new BufferedFloat32Array2D(dims[0], dims[1], buffer);
-		case 3:
-			return new BufferedFloat32Array3D(dims[0], dims[1], dims[2], buffer);
-		default:
-			return new BufferedFloat32ArrayND(dims, buffer);
-		}
-	}
-	
-	/**
+    // =============================================================
+    // Static methods
+    
+    public static Float32Array create(int... dims)
+    {
+        return defaultFactory.create(dims);
+    }
+    
+    public static Float32Array create(int[] dims, float[] buffer)
+    {
+        return switch (dims.length)
+        {
+            case 2 -> new BufferedFloat32Array2D(dims[0], dims[1], buffer);
+            case 3 -> new BufferedFloat32Array3D(dims[0], dims[1], dims[2], buffer);
+            default -> new BufferedFloat32ArrayND(dims, buffer);
+        };
+    }
+    
+    /**
      * Converts the input array into an instance of Float32Array.
      * 
      * Can process the following cases:
@@ -128,16 +125,16 @@ public interface Float32Array extends ScalarArray<Float32>
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
-	public static Float32Array wrapScalar(ScalarArray<?> array)
-	{
-		if (array instanceof Float32Array)
-		{
-			return (Float32Array) array;
-		}
-		return new ScalarArrayWrapper(array);
-	}
-	
-
+    public static Float32Array wrapScalar(ScalarArray<?> array)
+    {
+        if (array instanceof Float32Array)
+        {
+            return (Float32Array) array;
+        }
+        return new ScalarArrayWrapper(array);
+    }
+    
+    
     // =============================================================
     // New methods
 	

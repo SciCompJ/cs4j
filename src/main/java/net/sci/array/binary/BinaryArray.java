@@ -27,28 +27,25 @@ public interface BinaryArray extends IntArray<Binary>
     public static final Factory defaultFactory = new RunLengthBinaryArrayFactory();
     
     
-	// =============================================================
-	// Static methods
-
-	public static BinaryArray create(int... dims)
-	{
-		return defaultFactory.create(dims);
-	}
-	
-	public static BinaryArray create(int[] dims, boolean[] buffer)
-	{
-		switch (dims.length)
-		{
-		case 2:
-			return new BufferedBinaryArray2D(dims[0], dims[1], buffer);
-		case 3:
-			return new BufferedBinaryArray3D(dims[0], dims[1], dims[2], buffer);
-		default:
-            return new BufferedBinaryArrayND(dims, buffer);
-		}
-	}
-	
-	/**
+    // =============================================================
+    // Static methods
+    
+    public static BinaryArray create(int... dims)
+    {
+        return defaultFactory.create(dims);
+    }
+    
+    public static BinaryArray create(int[] dims, boolean[] buffer)
+    {
+        return switch (dims.length)
+        {
+            case 2 -> new BufferedBinaryArray2D(dims[0], dims[1], buffer);
+            case 3 -> new BufferedBinaryArray3D(dims[0], dims[1], dims[2], buffer);
+            default -> new BufferedBinaryArrayND(dims, buffer);
+        };
+    }
+    
+    /**
      * Returns an array with same size and type as the input array, but
      * containing non zero values only for the elements of this binary array
      * that are set to <code>true</code>.
@@ -57,12 +54,13 @@ public interface BinaryArray extends IntArray<Binary>
      * of the mask) is left to array implementations.
      * 
      * Example:
+     * 
      * <pre>{@code
-        UInt8Array2D array = UInt8Array2D.create(8, 6);
-        array.fillInts((x,y) -> y * 10 + x);
-        BinaryArray2D binaryArray = BinaryArray2D.create(8, 6);
-        binaryArray.fillBooleans((x,y) -> x > 3 && y > 2);
-        UInt8Array2D masked = UInt8Array2D.wrap2d(UInt8Array.wrap(binaryArray.mask(array)));
+     * UInt8Array2D array = UInt8Array2D.create(8, 6);
+     * array.fillInts((x, y) -> y * 10 + x);
+     * BinaryArray2D binaryArray = BinaryArray2D.create(8, 6);
+     * binaryArray.fillBooleans((x, y) -> x > 3 && y > 2);
+     * UInt8Array2D masked = UInt8Array2D.wrap2d(UInt8Array.wrap(binaryArray.mask(array)));
      * }</pre>
      * 
      * @param <T>
@@ -265,8 +263,6 @@ public interface BinaryArray extends IntArray<Binary>
         };
     }
     
-    
-    
     /**
      * Fills this binary array using a function of the elements coordinates.
      * 
@@ -302,85 +298,85 @@ public interface BinaryArray extends IntArray<Binary>
         }
     }
     
-
+    public boolean getBoolean(int[] pos);
     
-	public boolean getBoolean(int[] pos);
-	
-	public void setBoolean(int[] pos, boolean state);
-	
-	public default long trueElementCount()
-	{
-	    long count = 0;
-	    for (int[] pos : positions())
-	    {
-	        if (getBoolean(pos))
-	        {
-	            count++;
-	        }
-	    }
-	    return count;
-	}
-
-	/**
+    public void setBoolean(int[] pos, boolean state);
+    
+    public default long trueElementCount()
+    {
+        long count = 0;
+        for (int[] pos : positions())
+        {
+            if (getBoolean(pos))
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    /**
      * Iterates of the positions that correspond to a <code>true</code> element.
      * 
      * @return an Iterable over the positions of only <code>true</code> elements
      *         within the array.
      */
-	public default Iterable<int[]> trueElementPositions()
-	{
-		return new Iterable<int[]>()
-		{
-			@Override
-			public java.util.Iterator<int[]> iterator()
-			{
-				return new TrueElementsPositionIterator(BinaryArray.this);
-			}
-		};
-	}
-
-	public default PositionIterator trueElementPositionIterator()
-	{
-		return new TrueElementsPositionIterator(this);
-	}
-	
-	/**
+    public default Iterable<int[]> trueElementPositions()
+    {
+        return new Iterable<int[]>()
+        {
+            @Override
+            public java.util.Iterator<int[]> iterator()
+            {
+                return new TrueElementsPositionIterator(BinaryArray.this);
+            }
+        };
+    }
+    
+    public default PositionIterator trueElementPositionIterator()
+    {
+        return new TrueElementsPositionIterator(this);
+    }
+    
+    /**
      * Returns the complement of this array. Replaces each 0 by 1, and each 1 by
      * 0.
      * 
      * @return the complement of this array.
      */
-	public default BinaryArray complement()
-	{
-	    BinaryArray result = BinaryArray.create(this.size());
-	    for (int[] pos : positions())
-	    {
-	    	result.setBoolean(pos, !getBoolean(pos));
-	    }
+    public default BinaryArray complement()
+    {
+        BinaryArray result = BinaryArray.create(this.size());
+        for (int[] pos : positions())
+        {
+            result.setBoolean(pos, !getBoolean(pos));
+        }
         return result;
-	}
-	
-	
-	// =============================================================
-	// Specialization of the IntArray interface
-
-	@Override
-	public default int getInt(int[] pos)
-	{
-		return getBoolean(pos) ? 1 : 0; 
-	}
-
-	@Override
-	public default void setInt(int[] pos, int value)
-	{
-		setBoolean(pos, value > 0);
-	}
-
-	
+    }
+    
+    
+    // =============================================================
+    // Specialization of the IntArray interface
+    
+    @Override
+    public default int getInt(int[] pos)
+    {
+        return getBoolean(pos) ? 1 : 0;
+    }
+    
+    @Override
+    public default void setInt(int[] pos, int value)
+    {
+        setBoolean(pos, value > 0);
+    }
+    
+    
     // =============================================================
     // Specialization of the ScalarArray interface
-
-    /* (non-Javadoc)
+    
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.array.Array2D#getValue(int, int)
      */
     @Override
@@ -388,7 +384,7 @@ public interface BinaryArray extends IntArray<Binary>
     {
         return getBoolean(pos) ? 1 : 0;
     }
-
+    
     /**
      * Sets the value at the specified position, using true if value is greater
      * than zero.
@@ -398,7 +394,7 @@ public interface BinaryArray extends IntArray<Binary>
      * @param value
      *            the value to set up. The position is set to true if value is
      *            greater than zero, and to false otherwise.
-     * 
+     *            
      */
     @Override
     public default void setValue(int[] pos, double value)
@@ -426,14 +422,14 @@ public interface BinaryArray extends IntArray<Binary>
     
     
     // =============================================================
-	// Specialization of the Array interface
-
-	@Override
-	public default BinaryArray newInstance(int... dims)
-	{
-		return BinaryArray.create(dims);
-	}
-
+    // Specialization of the Array interface
+    
+    @Override
+    public default BinaryArray newInstance(int... dims)
+    {
+        return BinaryArray.create(dims);
+    }
+    
     /**
      * Override default behavior of Array interface to return the value
      * Binary.FALSE.
@@ -457,24 +453,23 @@ public interface BinaryArray extends IntArray<Binary>
     {
         setBoolean(pos, value.getBoolean());
     }
-
-
-	@Override
-	public default BinaryArray duplicate()
-	{
-		// create output array
-		BinaryArray result = BinaryArray.create(this.size());
-		
-		// copy values into output array
-		for(int[] pos : positions())
-		{
-			result.setBoolean(pos, this.getBoolean(pos));
-		}
-		
-		// return output
-		return result;
-	}
-
+    
+    @Override
+    public default BinaryArray duplicate()
+    {
+        // create output array
+        BinaryArray result = BinaryArray.create(this.size());
+        
+        // copy values into output array
+        for (int[] pos : positions())
+        {
+            result.setBoolean(pos, this.getBoolean(pos));
+        }
+        
+        // return output
+        return result;
+    }
+    
     public default BinaryArray reshapeView(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new ReshapeView(this, newDims, coordsMapping);

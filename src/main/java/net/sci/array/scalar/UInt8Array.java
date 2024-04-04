@@ -29,10 +29,10 @@ public interface UInt8Array extends IntArray<UInt8>
      */
     public static final Factory defaultFactory = new DenseUInt8ArrayFactory();
     
-
-	// =============================================================
-	// Static methods
-
+    
+    // =============================================================
+    // Static methods
+    
     /**
      * Creates a new UInt8Array with the specified dimensions. When possible,
      * the most appropriate implementation class is chosen according to the
@@ -41,12 +41,12 @@ public interface UInt8Array extends IntArray<UInt8>
      * @param dims
      *            the size of the array to create.
      */
-	public static UInt8Array create(int... dims)
-	{
-		return defaultFactory.create(dims);
-	}
-	
-	/**
+    public static UInt8Array create(int... dims)
+    {
+        return defaultFactory.create(dims);
+    }
+    
+    /**
      * Creates a new UInt8Array based on the specified byte buffer. The byte
      * buffer is not duplicated during creation of Array instance, so changing
      * values within buffer will change values within array, and vice-versa.
@@ -58,20 +58,17 @@ public interface UInt8Array extends IntArray<UInt8>
      *            product of dimensions.
      * @return a UInt8Array based on the specified buffer.
      */
-	public static UInt8Array create(int[] dims, byte[] buffer)
-	{
-		switch (dims.length)
-		{
-		case 2:
-			return new BufferedUInt8Array2D(dims[0], dims[1], buffer);
-		case 3:
-			return new BufferedUInt8Array3D(dims[0], dims[1], dims[2], buffer);
-		default:
-			return new BufferedUInt8ArrayND(dims, buffer);
-		}
-	}
-	
-	/**
+    public static UInt8Array create(int[] dims, byte[] buffer)
+    {
+        return switch (dims.length)
+        {
+            case 2 -> new BufferedUInt8Array2D(dims[0], dims[1], buffer);
+            case 3 -> new BufferedUInt8Array3D(dims[0], dims[1], dims[2], buffer);
+            default -> new BufferedUInt8ArrayND(dims, buffer);
+        };
+    }
+    
+    /**
      * Converts the input array into an instance of UInt8Array.
      * 
      * Can process the following cases:
@@ -135,25 +132,26 @@ public interface UInt8Array extends IntArray<UInt8>
      *            the original array
      * @return a UInt8 view of the original array
      */
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public static UInt8Array wrap(Array<?> array)
-	{
-		if (array instanceof UInt8Array)
-		{
-			return (UInt8Array) array;
-		}
-		if (UInt8.class.isAssignableFrom(array.elementClass()))
-		{
-		    return new Wrapper((Array<UInt8>) array);
+    {
+        if (array instanceof UInt8Array)
+        {
+            return (UInt8Array) array;
+        }
+        if (UInt8.class.isAssignableFrom(array.elementClass()))
+        {
+            return new Wrapper((Array<UInt8>) array);
         }
         if (array instanceof ScalarArray)
         {
             return wrapScalar((ScalarArray<?>) array);
         }
         
-		throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
-	}
-	
+        throw new IllegalArgumentException(
+                "Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
+    }
+    
     /**
      * Encapsulates the instance of Scalar array into a new UInt8Array, by
      * creating a Wrapper if necessary. 
@@ -172,10 +170,10 @@ public interface UInt8Array extends IntArray<UInt8>
         return new ScalarArrayWrapper(array);
     }
     
-
-	// =============================================================
-	// New methods
-
+    
+    // =============================================================
+    // New methods
+    
     public default void fillBytes(Function<int[], Byte> fun)
     {
         for (int[] pos : this.positions())
@@ -184,31 +182,33 @@ public interface UInt8Array extends IntArray<UInt8>
         }
     }
     
-	public byte getByte(int[] pos);
-	
-	public void setByte(int[] pos, byte value);
-	
-	
-	// =============================================================
-	// Specialization of the IntArray interface
-
-	@Override
-	public default int getInt(int[] pos)
-	{
-		return getByte(pos) & 0x00FF; 
-	}
-
-	@Override
-	public default void setInt(int[] pos, int value)
-	{
-		setByte(pos, (byte) UInt8.clamp(value));
-	}
-
-
+    public byte getByte(int[] pos);
+    
+    public void setByte(int[] pos, byte value);
+    
+    
+    // =============================================================
+    // Specialization of the IntArray interface
+    
+    @Override
+    public default int getInt(int[] pos)
+    {
+        return getByte(pos) & 0x00FF;
+    }
+    
+    @Override
+    public default void setInt(int[] pos, int value)
+    {
+        setByte(pos, (byte) UInt8.clamp(value));
+    }
+    
+    
     // =============================================================
     // Specialization of the ScalarArray interface
-
-    /* (non-Javadoc)
+    
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.array.data.Array2D#getValue(int, int)
      */
     @Override
@@ -247,22 +247,22 @@ public interface UInt8Array extends IntArray<UInt8>
         return new UInt8(UInt8.convert(value));
     }
     
-
+    
     // =============================================================
-	// Specialization of the Array interface
-
-	@Override
-	public default UInt8Array newInstance(int... dims)
-	{
-		return UInt8Array.create(dims);
-	}
-
-	@Override
-	public default IntArray.Factory<UInt8> factory()
-	{
-		return defaultFactory;
-	}
-
+    // Specialization of the Array interface
+    
+    @Override
+    public default UInt8Array newInstance(int... dims)
+    {
+        return UInt8Array.create(dims);
+    }
+    
+    @Override
+    public default IntArray.Factory<UInt8> factory()
+    {
+        return defaultFactory;
+    }
+    
     /**
      * Override default behavior of Array interface to return the value
      * UInt8.ZERO.
@@ -286,36 +286,35 @@ public interface UInt8Array extends IntArray<UInt8>
     {
         setByte(pos, value.getByte());
     }
-
+    
     @Override
-	public default UInt8Array duplicate()
-	{
-		// create output array
-		UInt8Array result = UInt8Array.create(this.size());
-
+    public default UInt8Array duplicate()
+    {
+        // create output array
+        UInt8Array result = UInt8Array.create(this.size());
+        
         // copy values into output array
-	    for (int[] pos : positions())
-	    {
-	    	result.setByte(pos, getByte(pos));
-	    }
-				
-		// return result
-		return result;
-	}
+        for (int[] pos : positions())
+        {
+            result.setByte(pos, getByte(pos));
+        }
+        
+        // return result
+        return result;
+    }
 
     public default UInt8Array reshapeView(int[] newDims, Function<int[], int[]> coordsMapping)
     {
         return new ReshapeView(this, newDims, coordsMapping);
     }
-
-
-	@Override
-	public default Class<UInt8> elementClass()
-	{
-		return UInt8.class;
-	}
-
-	public default Iterator iterator()
+    
+    @Override
+    public default Class<UInt8> elementClass()
+    {
+        return UInt8.class;
+    }
+    
+    public default Iterator iterator()
     {
         return new Iterator()
         {

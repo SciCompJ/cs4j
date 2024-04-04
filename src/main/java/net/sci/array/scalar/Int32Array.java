@@ -22,30 +22,26 @@ public interface Int32Array extends IntArray<Int32>
     // Static variables
 
     public static final Factory defaultFactory = new DenseInt32ArrayFactory();
-
     
-	// =============================================================
-	// Static methods
-
-	public static Int32Array create(int... dims)
-	{
-	    return defaultFactory.create(dims);
-	}
-	
-	public static Int32Array create(int[] dims, int[] buffer)
-	{
-		switch (dims.length)
-		{
-		case 2:
-			return new BufferedInt32Array2D(dims[0], dims[1], buffer);
-		case 3:
-			return new BufferedInt32Array3D(dims[0], dims[1], dims[2], buffer);
-		default:
-			return new BufferedInt32ArrayND(dims, buffer);
-		}
-	}
-	
-	/**
+    // =============================================================
+    // Static methods
+    
+    public static Int32Array create(int... dims)
+    {
+        return defaultFactory.create(dims);
+    }
+    
+    public static Int32Array create(int[] dims, int[] buffer)
+    {
+        return switch (dims.length)
+        {
+            case 2 -> new BufferedInt32Array2D(dims[0], dims[1], buffer);
+            case 3 -> new BufferedInt32Array3D(dims[0], dims[1], dims[2], buffer);
+            default -> new BufferedInt32ArrayND(dims, buffer);
+        };
+    }
+    
+    /**
      * Converts the input array into an instance of Int32Array.
      * 
      * Can process the following cases:
