@@ -67,23 +67,18 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
     {
         // Choose the best possible implementation, depending on array
         // dimensions
-        if (source instanceof ScalarArray2D && target instanceof ScalarArray2D)
+        int nd = source.dimensionality();
+        if (target.dimensionality() != nd)
         {
-            processScalar2d((ScalarArray2D<?>) source, (ScalarArray2D<?>) target);
+            throw new RuntimeException("Target array must have same dimensionality as source array: " + nd);
         }
-        else if (source instanceof ScalarArray3D && target instanceof ScalarArray3D)
+        
+        switch(nd)
         {
-            processScalar3d((ScalarArray3D<?>) source, (ScalarArray3D<?>) target);
-        }
-        else if (source instanceof ScalarArray && target instanceof ScalarArray)
-        {
-            // most generic implementation, slow...
-            processScalarNd((ScalarArray<?>) source, (ScalarArray<?>) target);
-        }
-        else
-        {
-            throw new IllegalArgumentException("Can not process array of class " + source.getClass());
-        }
+            case 2 -> processScalar2d(ScalarArray2D.wrapScalar2d(source), ScalarArray2D.wrapScalar2d(target));
+            case 3 -> processScalar3d(ScalarArray3D.wrapScalar3d(source), ScalarArray3D.wrapScalar3d(target));
+            default -> processScalarNd(source, target);
+        };
     }
 
     /**
