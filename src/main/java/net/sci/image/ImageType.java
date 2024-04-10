@@ -24,9 +24,7 @@ import net.sci.array.scalar.Scalar;
 import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array;
 import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
 import net.sci.array.vector.VectorArray;
 import net.sci.axis.Axis;
 import net.sci.axis.CategoricalAxis;
@@ -50,12 +48,18 @@ public interface ImageType
             // Check adequacy of array type with image type
             Array<?> array = image.getData();
             checkDimensionalityIs2(array);
-            // Check if the array contains RGB8 data
-            if (!(array instanceof UInt8Array) && !(array instanceof UInt16Array))
+            
+            // Check if the array contains UInt8 or UInt16 data
+            Class<?> dataClass = array.elementClass();
+            if (dataClass != UInt8.class && dataClass != UInt16.class)
             {
-                throw new RuntimeException("Grayscale or intensity images must refer to an array of UInt8");
+                throw new RuntimeException("Grayscale or intensity images must refer to an array of UInt8 or UInt16");
             }
             
+            // convert to ScalarArray2D either by class cast or by wrapping
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            ScalarArray2D<?> array2d = ScalarArray2D.wrapScalar2d(ScalarArray.wrap((Array<Scalar>) array));
+
             // scalar images use display range and current LUT
             DisplaySettings settings = image.getDisplaySettings();
             ColorMap lut = settings.getColorMap();
@@ -72,9 +76,6 @@ public interface ImageType
             double[] displayRange = settings.getDisplayRange();
             double extent = displayRange[1] - displayRange[0];
             double val0 = displayRange[0];
-            
-            // convert to ScalarArray2D either by class cast or by wrapping
-            ScalarArray2D<?> array2d = ScalarArray2D.wrapScalar2d((ScalarArray<?>) array);
             
             int sizeX = array.size(0);
             int sizeY = array.size(1);
@@ -113,15 +114,16 @@ public interface ImageType
         @Override
         public void setupDisplaySettings(Image image)
         {
-            if (image.data instanceof UInt8Array)
+            Class<?> dataClass = image.data.elementClass();
+            if (dataClass == UInt8.class)
             {
                 image.displaySettings.displayRange = new double[] { 0, 255 };
             }
-            else if (image.data instanceof ScalarArray)
+            else if (dataClass == UInt16.class)
             {
                 image.displaySettings.displayRange = new double[] { 0, 65535 };
             }
-            else if (image.data instanceof ScalarArray)
+            else if (ScalarArray.class.isAssignableFrom(dataClass))
             {
                 image.displaySettings.displayRange = new double[] { 0, 1.0 };
             }
@@ -197,7 +199,7 @@ public interface ImageType
             }
             if (!(array instanceof ScalarArray))
             {
-                throw new RuntimeException("Label images assume inner array implements IntArray");
+                throw new RuntimeException("Distance maps requires images containing an array of Scalars");
             }
             ScalarArray2D<?> array2d = ScalarArray2D.wrapScalar2d((ScalarArray<?>) array);
             DisplaySettings settings = image.getDisplaySettings();
@@ -276,7 +278,7 @@ public interface ImageType
             checkDimensionalityIs2(array);
             if (array.elementClass() != Binary.class)
             {
-                throw new RuntimeException("Binary images must refere to array of Binary");
+                throw new RuntimeException("Binary images must refer to an array of Binary");
             }
 
             // ensure array is binary class
