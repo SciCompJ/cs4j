@@ -5,7 +5,7 @@ package net.sci.image.morphology;
 
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.process.numeric.AddValue;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.Connectivity2D;
@@ -76,17 +76,6 @@ public class MinimaAndMaxima
     
 
 	// ==============================================================
-	// Constructor
-	
-	/**
-	 * Private constructor to prevent class instantiation.
-	 */
-	private MinimaAndMaxima()
-	{
-	}
-
-
-	// ==============================================================
 	// Regional Minima and Maxima
 	
 	/**
@@ -153,47 +142,6 @@ public class MinimaAndMaxima
         return algo.process(array);
     }
     
-//	/**
-//	 * Computes the regional maxima in grayscale array <code>array</code>, 
-//	 * using the specified connectivity, and a slower algorithm (used for testing).
-//	 * 
-//	 * @param array
-//	 *            the array to process
-//	 * @param conn
-//	 *            the connectivity for maxima, that should be either 4 or 8
-//	 * @return the regional maxima of input array
-//	 */
-//	public final static ScalarArray2D<?> regionalMaximaByReconstruction(
-//			ScalarArray2D<?> array,
-//			int conn) 
-//	{
-//		// Compute mask array
-//		ScalarArray2D<?> mask = array.duplicate();
-//		mask.add(1);
-//		
-//		// Call geodesic reconstruction algorithm
-//		MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
-//				GeodesicReconstructionType.BY_DILATION, conn);
-//		ScalarArray2D<?> rec = algo.process(array, mask);
-//		
-//		// allocate memory for result
-//		int sizeX = array.getSize(0);
-//		int sizeY = array.getSize(1);
-//		ScalarArray2D<?> result = new ByteProcessor(sizeX, sizeY);
-//		
-//		// create binary result array
-//		for (int y = 0; y < sizeY; y++) {
-//			for (int x = 0; x < sizeX; x++) {
-//				if (mask.get(x, y) > rec.get(x, y)) 
-//					result.set(x,  y, 255);
-//				else
-//					result.set(x,  y, 0);
-//			}
-//		}
-//		
-//		return result;
-//	}
-
 	/**
 	 * Computes the regional minima in grayscale array <code>array</code>, 
 	 * using the default connectivity.
@@ -258,44 +206,6 @@ public class MinimaAndMaxima
         return algo.process(array);
     }
     
-//	/**
-//	 * Computes the regional minima in grayscale array <code>array</code>, 
-//	 * using the specified connectivity, and a slower algorithm (used for testing).
-//	 * 
-//	 * @param array
-//	 *            the array to process
-//	 * @param conn
-//	 *            the connectivity for minima, that should be either 4 or 8
-//	 * @return the regional minima of input array
-//	 */
-//	public final static ScalarArray2D<?> regionalMinimaByReconstruction(ScalarArray2D<?> array,
-//			Connectivity2D conn)
-//	{
-//		ScalarArray2D<?> marker = array.duplicate();
-//		addValue(marker, 1);
-//		
-//		MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
-//				MorphologicalReconstruction.Type.BY_EROSION, conn);
-//		ScalarArray2D<?> rec = algo.process(marker, array);
-//		
-//		int sizeX = array.getSize(0);
-//		int sizeY = array.getSize(1);
-//		ScalarArray2D<?> result = new ByteProcessor(sizeX, sizeY);
-//		
-//		for (int y = 0; y < sizeY; y++)
-//		{
-//			for (int x = 0; x < sizeX; x++)
-//			{
-//				if (marker.getValue(x, y) > rec.getValue(x, y)) 
-//					result.setValue(x,  y, 0);
-//				else
-//					result.setValue(x,  y, 255);
-//			}
-//		}
-//		
-//		return result;
-//	}
-
 
     // ==============================================================
     // Extended Minima and Maxima
@@ -311,7 +221,7 @@ public class MinimaAndMaxima
 	 *            the minimal difference between a maxima and its boundary 
 	 * @return the extended maxima of input array
 	 */
-	public final static ScalarArray2D<?> extendedMaxima(ScalarArray2D<?> array,
+	public final static BinaryArray2D extendedMaxima(ScalarArray2D<?> array,
 			double dynamic)
 	{
 		return extendedMaxima(array, dynamic, DEFAULT_CONNECTIVITY_2D);
@@ -331,11 +241,10 @@ public class MinimaAndMaxima
      *            the connectivity for maxima, that should be either 4 or 8
      * @return the extended maxima of input array
      */
-    public final static ScalarArray2D<?> extendedMaxima(ScalarArray2D<?> array,
+    public final static BinaryArray2D extendedMaxima(ScalarArray2D<?> array,
             double dynamic, Connectivity2D conn)
     {
-        ScalarArray2D<?> mask = array.duplicate();
-        addValue(mask, dynamic);
+        ScalarArray2D<?> mask = ScalarArray2D.wrapScalar2d(new AddValue(dynamic).createView(array));
         
         MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
@@ -355,7 +264,7 @@ public class MinimaAndMaxima
      *            the minimal difference between a maxima and its boundary 
      * @return the extended maxima of input array
      */
-    public final static ScalarArray3D<?> extendedMaxima(ScalarArray3D<?> array,
+    public final static BinaryArray3D extendedMaxima(ScalarArray3D<?> array,
             double dynamic)
     {
         return extendedMaxima(array, dynamic, DEFAULT_CONNECTIVITY_3D);
@@ -374,11 +283,10 @@ public class MinimaAndMaxima
      *            the connectivity for maxima, that should be either 6 or 26
      * @return the extended maxima of input array
      */
-    public final static ScalarArray3D<?> extendedMaxima(ScalarArray3D<?> array,
+    public final static BinaryArray3D extendedMaxima(ScalarArray3D<?> array,
             double dynamic, Connectivity3D conn)
     {
-        ScalarArray3D<?> mask = array.duplicate();
-        addValue(mask, dynamic);
+        ScalarArray3D<?> mask = ScalarArray3D.wrapScalar3d(new AddValue(dynamic).createView(array));
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
@@ -398,7 +306,7 @@ public class MinimaAndMaxima
 	 *            the minimal difference between a minima and its boundary 
 	 * @return the extended minima of input array
 	 */
-	public final static ScalarArray2D<?> extendedMinima(ScalarArray2D<?> array,
+	public final static BinaryArray2D extendedMinima(ScalarArray2D<?> array,
 			double dynamic)
 	{
 		return extendedMinima(array, dynamic, DEFAULT_CONNECTIVITY_2D);
@@ -417,12 +325,12 @@ public class MinimaAndMaxima
 	 *            the connectivity for minima, that should be either 4 or 8
 	 * @return the extended minima of input array
 	 */
-	public final static ScalarArray2D<?> extendedMinima(ScalarArray2D<?> array,
+	public final static BinaryArray2D extendedMinima(ScalarArray2D<?> array,
 			double dynamic, Connectivity2D conn)
 	{
-		ScalarArray2D<?> marker = (ScalarArray2D<?>) array.plus(dynamic);
-		
-		MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
+        ScalarArray2D<?> marker = ScalarArray2D.wrapScalar2d(new AddValue(dynamic).createView(array));
+
+        MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
 				MorphologicalReconstruction.Type.BY_EROSION, conn);
 		ScalarArray2D<?> rec = algo.process(marker, array);
 
@@ -440,7 +348,7 @@ public class MinimaAndMaxima
      *            the minimal difference between a minima and its boundary 
      * @return the extended minima of input array
      */
-    public final static ScalarArray3D<?> extendedMinima(ScalarArray3D<?> array,
+    public final static BinaryArray3D extendedMinima(ScalarArray3D<?> array,
             double dynamic)
     {
         return extendedMinima(array, dynamic, DEFAULT_CONNECTIVITY_3D);
@@ -459,10 +367,10 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 6 or 26
      * @return the extended minima of input array
      */
-    public final static ScalarArray3D<?> extendedMinima(ScalarArray3D<?> array,
+    public final static BinaryArray3D extendedMinima(ScalarArray3D<?> array,
             double dynamic, Connectivity3D conn)
     {
-        ScalarArray3D<?> marker = (ScalarArray3D<?>) array.plus(dynamic);
+        ScalarArray3D<?> marker = ScalarArray3D.wrapScalar3d(new AddValue(dynamic).createView(array));
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(
                 MorphologicalReconstruction.Type.BY_EROSION, conn);
@@ -707,16 +615,13 @@ public class MinimaAndMaxima
 	}
 	
 	
-	// ==============================================================
-	// Private utilities
-
-	private static void addValue(ScalarArray<?> array, double value)
-	{
-		ScalarArray.Iterator<?> iter = array.iterator();
-		while(iter.hasNext())
-		{
-			iter.forward();
-			iter.setValue(iter.getValue() + value);
-		}
-	}
+    // ==============================================================
+    // Constructor
+    
+    /**
+     * Private constructor to prevent class instantiation.
+     */
+    private MinimaAndMaxima()
+    {
+    }
 }
