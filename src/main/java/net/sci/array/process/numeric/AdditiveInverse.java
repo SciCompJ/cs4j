@@ -29,12 +29,12 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
     {
         if (Int.class.isAssignableFrom(array.elementClass()))
         {
-            return new IntView(IntArray.wrap((Array<Int>) array));
+            return new IntView(IntArray.wrap((Array<? extends Int>) array));
         }
         
         if (Scalar.class.isAssignableFrom(array.elementClass()))
         {
-            return new ScalarView(ScalarArray.wrap((Array<Scalar>) array));
+            return new ScalarView(ScalarArray.wrap((Array<? extends Scalar>) array));
         }
         
         return new NumericView(NumericArray.wrap(array));

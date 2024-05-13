@@ -107,14 +107,14 @@ public interface BinaryArray extends IntArray<Binary>
         {
             return (BinaryArray) array;
         }
-        if (array instanceof ScalarArray)
-        {
-            return wrapScalar((ScalarArray<?>) array);
-        }
-        
         if (Binary.class.isAssignableFrom(array.elementClass()))
         {
             return new Wrapper((Array<Binary>) array);
+        }
+        
+        if (array instanceof ScalarArray)
+        {
+            return wrapScalar((ScalarArray<?>) array);
         }
         
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
