@@ -22,7 +22,7 @@ public class ImageAxisZTest
     @Test
     public final void testDuplicate()
     {
-        NumericalAxis axis = new ImageAxis.Z(1.5, 0.5, "µm");
+        NumericalAxis axis = new ImageAxis.Z(1.5, 0.5, "0xB5m");
         NumericalAxis dup = axis.duplicate();
         
         assertTrue(dup.getType() == ImageAxis.Type.SPACE);
