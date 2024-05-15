@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt8Array2D;
 import net.sci.image.Connectivity2D;
 
@@ -191,4 +192,73 @@ public class MinimaAndMaximaTest
         assertFalse(minima.getBoolean(7, 7));
     }
 
+    /**
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.scalar.ScalarArray2D)}.
+     */
+    @Test
+    public final void testExtendedMinima_ScalarArray2D_simpleProfile_H10()
+    {
+        UInt8Array2D array = createSimpleProfileArrray2D();
+        
+        BinaryArray2D minima = MinimaAndMaxima.extendedMinima(array, 10, Connectivity2D.C4);
+        
+        boolean[] expH10 = new boolean[] {false, true, false, false, false, true, false, true, false, false, false};
+        for (int x = 0; x < array.size(0); x++)
+        {
+            assertEquals(minima.getBoolean(x, 2), expH10[x]);
+        }
+    }
+
+    /**
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.scalar.ScalarArray2D)}.
+     */
+    @Test
+    public final void testExtendedMinima_ScalarArray2D_simpleProfile_H20()
+    {
+        UInt8Array2D array = createSimpleProfileArrray2D();
+        
+        BinaryArray2D minima = MinimaAndMaxima.extendedMinima(array, 20, Connectivity2D.C4);
+        
+        boolean[] expH10 = new boolean[] {false, true, false, false, false, false, false, true, false, false, false};
+        for (int x = 0; x < array.size(0); x++)
+        {
+            assertEquals(minima.getBoolean(x, 2), expH10[x]);
+        }
+    }
+    
+    @Test
+    public final void testImposeMinima_ScalarArray2D_simpleProfile()
+    {
+        UInt8Array2D array = createSimpleProfileArrray2D();
+        BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
+        minima.setBoolean(3, 1, true);
+        minima.setBoolean(9, 3, true);
+
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity2D.C4);
+        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima(res, Connectivity2D.C4);
+        System.out.println(minima2);
+
+//        int[] expValues = new int[] {70, 50, 50, 40, 60, 50, 50, 50, 50, 40, 70};
+        boolean[] exp = new boolean[] {false, false, false, true, false, false, false, false, false, true, false};
+        for (int x = 0; x < array.size(0); x++)
+        {
+            assertEquals(minima2.getBoolean(x, 2), exp[x]);
+        }
+    }
+    
+    
+    private UInt8Array2D createSimpleProfileArrray2D()
+    {
+        int[] values = new int[] {70, 20, 50, 40, 60, 30, 50, 10, 50, 40, 70};
+        int nRows = 5;
+        UInt8Array2D array = UInt8Array2D.create(values.length, nRows);
+        for (int y = 0; y < nRows; y++)
+        {
+            for (int x = 0; x < values.length; x++)
+            {
+                array.setInt(x, y, values[x]);
+            }
+        }
+        return array;
+    }
 }
