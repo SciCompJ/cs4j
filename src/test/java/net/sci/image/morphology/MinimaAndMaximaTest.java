@@ -231,15 +231,37 @@ public class MinimaAndMaximaTest
     {
         UInt8Array2D array = createSimpleProfileArrray2D();
         BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
-        minima.setBoolean(3, 1, true);
-        minima.setBoolean(9, 3, true);
+        minima.setBoolean(3, 2, true);
+        minima.setBoolean(9, 2, true);
 
         ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity2D.C4);
         BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima(res, Connectivity2D.C4);
-        System.out.println(minima2);
 
-//        int[] expValues = new int[] {70, 50, 50, 40, 60, 50, 50, 50, 50, 40, 70};
         boolean[] exp = new boolean[] {false, false, false, true, false, false, false, false, false, true, false};
+        for (int x = 0; x < array.size(0); x++)
+        {
+            assertEquals(minima2.getBoolean(x, 2), exp[x]);
+        }
+    }
+    
+    @Test
+    public final void testImposeMinima_ScalarArray2D_MinimaWithinZeroRegion()
+    {
+        UInt8Array2D array = UInt8Array2D.fromIntArray(new int[][] {
+            {50, 0, 0, 0, 0, 0, 50},
+            {50, 0, 0, 0, 0, 0, 50},
+            {50, 0, 0, 0, 0, 0, 50},
+            {50, 0, 0, 0, 0, 0, 50},
+            {50, 0, 0, 0, 0, 0, 50},
+            });
+        BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
+        minima.setBoolean(1, 2, true);
+        minima.setBoolean(5, 2, true);
+
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity2D.C4);
+        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima(res, Connectivity2D.C4);
+
+        boolean[] exp = new boolean[] {false, true, false, false, false, true, false};
         for (int x = 0; x < array.size(0); x++)
         {
             assertEquals(minima2.getBoolean(x, 2), exp[x]);
