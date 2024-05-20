@@ -125,6 +125,68 @@ public interface Connectivity2D extends Connectivity
     // Static methods
 
     /**
+     * Converts a connectivity from any dimensionality into an instance of
+     * Connectivity2D. If the specified connectivity is already an instance of
+     * Connectivity2D, it is simply returned.
+     * 
+     * @param conn
+     *            the connectivity to convert or to cast
+     * @return an instance of Connectivity2D
+     */
+    public static Connectivity2D convert(Connectivity conn)
+    {
+        if (conn instanceof Connectivity2D)
+        {
+            return (Connectivity2D) conn;
+        }
+        
+        int[] offset0 = new int[] {0, 0};
+        
+        ArrayList<int[]> offsets = new ArrayList<int[]>(4);
+        int nd = Math.min(conn.dimensionality(), 2);
+        for (int[] offset : conn.offsets())
+        {
+            // create new 2D offset
+            int[] offset2d = new int[2];
+            System.arraycopy(offset, 0, offset2d, 0, nd);
+            
+            // add offset only if it does not already exist
+            if (!contains(offsets, offset2d) && !equals(offset2d, offset0))
+            {
+                offsets.add(offset2d);
+            }
+        }
+        
+        return new GenericConnectivity2D(offsets);
+    }
+    
+    private static boolean contains(Collection<int[]> list, int[] item)
+    {
+        for(int[] listItem : list)
+        {
+            if (equals(listItem, item))
+            {                
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private static boolean equals(int[] item1, int[] item2)
+    {
+        for (int d = 0; d < item1.length; d++)
+        {
+            if (item1[d] != item2[d])
+            {
+                return false;
+            }
+        }
+        
+        // all int elements are equal -> items are equal
+        return true;
+    }
+    
+    /**
      * Returns a new connectivity object from a connectivity value.
      * 
      * @param conn

@@ -78,6 +78,68 @@ public interface Connectivity3D extends Connectivity
     // Static methods
 
     /**
+     * Converts a connectivity from any dimensionality into an instance of
+     * Connectivity3D. If the specified connectivity is already an instance of
+     * Connectivity3D, it is simply returned.
+     * 
+     * @param conn
+     *            the connectivity to convert or to cast
+     * @return an instance of Connectivity2D
+     */
+    public static Connectivity3D convert(Connectivity conn)
+    {
+        if (conn instanceof Connectivity3D)
+        {
+            return (Connectivity3D) conn;
+        }
+        
+        int[] offset0 = new int[] {0, 0, 0};
+
+        ArrayList<int[]> offsets = new ArrayList<int[]>();
+        int nd = Math.min(conn.dimensionality(), 3);
+        for (int[] offset : conn.offsets())
+        {
+            // create new 3D offset
+            int[] offset3d = new int[3];
+            System.arraycopy(offset, 0, offset3d, 0, nd);
+            
+            // add offset only if it does not already exist
+            if (!contains(offsets, offset3d) && !equals(offset3d, offset0))
+            {
+                offsets.add(offset3d);
+            }
+        }
+        
+        return new GenericConnectivity3D(offsets);
+    }
+    
+    private static boolean contains(Collection<int[]> list, int[] item)
+    {
+        for(int[] listItem : list)
+        {
+            if (equals(listItem, item))
+            {                
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private static boolean equals(int[] item1, int[] item2)
+    {
+        for (int d = 0; d < item1.length; d++)
+        {
+            if (item1[d] != item2[d])
+            {
+                return false;
+            }
+        }
+        
+        // all int elements are equal -> items are equal
+        return true;
+    }
+    
+    /**
      * Returns a new connectivity object from a connectivity value.
      * 
      * @param conn
