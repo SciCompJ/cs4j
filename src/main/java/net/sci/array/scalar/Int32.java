@@ -42,12 +42,11 @@ public class Int32 extends Int<Int32>
     // Static methods
     
     /**
-     * Computes the integer value between MIN_VALUE and MAX_VALUE closest to the
-     * specified double value.
+     * Computes the integer value closest to the specified double value.
      * 
      * @param value
      *            a double value
-     * @return the closest corresponding integer between MIN_VALUE and MAX_VALUE
+     * @return the closest corresponding integer
      */
     public final static int convert(double value)
     {

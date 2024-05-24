@@ -19,8 +19,9 @@ public class FunctionViewUInt8Array implements UInt8Array
     int [] dims;
     
     /**
-     * The function that computes the integer value of an array elements from
-     * its coordinates.
+     * The function that computes the value of an array element from its
+     * coordinates. The value is computed as a double, and is automatically
+     * wrapped into an UInt8 when required.
      */
     Function<int[], Double> fun;
     
@@ -51,7 +52,8 @@ public class FunctionViewUInt8Array implements UInt8Array
     @Override
     public byte getByte(int[] pos)
     {
-        return (byte) UInt8.clamp(this.fun.apply(pos).intValue());
+        // first convert to int, then to byte
+        return (byte) UInt8.convert(this.fun.apply(pos));
     }
 
     @Override

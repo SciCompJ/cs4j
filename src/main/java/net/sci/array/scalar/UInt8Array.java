@@ -68,6 +68,11 @@ public interface UInt8Array extends IntArray<UInt8>
         };
     }
     
+    public static UInt8Array createView(int[] dims, Function<int[], Double> fun)
+    {
+        return new FunctionViewUInt8Array(dims, fun);
+    }
+    
     /**
      * Converts the input array into an instance of UInt8Array.
      * 
