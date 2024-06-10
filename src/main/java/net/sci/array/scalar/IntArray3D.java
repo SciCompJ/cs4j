@@ -78,7 +78,7 @@ public abstract class IntArray3D<I extends Int<I>> extends ScalarArray3D<I> impl
      * @param stream
      *            the stream to print on.
      */
-    public void print(PrintStream stream)
+    public void printContent(PrintStream stream)
     {
         for (int z = 0; z < this.size2; z++)
         {

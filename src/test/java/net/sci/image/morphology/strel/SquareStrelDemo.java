@@ -30,7 +30,7 @@ public class SquareStrelDemo
         ScalarArray2D<?> dilated = strel.dilation(array);
         
         // display result
-        dilated.print(System.out);
+        dilated.printContent(System.out);
     }
     
 }

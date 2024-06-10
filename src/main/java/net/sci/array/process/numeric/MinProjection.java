@@ -118,12 +118,12 @@ public class MinProjection extends ProjectionOperator
         Array2D<String> array = GenericArray2D.create(6, 4, "");
         array.fill((x,y) -> digits[y] + digits[x]);
         System.out.println("input:");
-        array.print(System.out);
+        array.printContent(System.out);
         
         MinProjection proj = new MinProjection(1);
         Array<String> res = proj.process(array, Comparator.comparing((String x) -> x));
         
         System.out.println("output:");
-        Array2D.wrap(res).print(System.out);
+        Array2D.wrap(res).printContent(System.out);
     }
 }

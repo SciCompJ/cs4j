@@ -134,13 +134,29 @@ public abstract class Array2D<T> implements Array<T>
         return true;
 	}
 
+    /**
+     * Prints the content of this array on the default output stream.
+     * 
+     * Default behavior converts each element into a string. Specialized array
+     * classed can use more relevant conversion.
+     * 
+     * @see #printContent(PrintStream)
+     */
+    public void printContent()
+    {
+        printContent(System.out);
+    }
+    
 	/**
      * Prints the content of this array on the specified stream.
+     * 
+     * Default behavior converts each element into a string. Specialized array
+     * classed can use more relevant conversion.
      * 
      * @param stream
      *            the stream to print on.
      */
-    public void print(PrintStream stream)
+    public void printContent(PrintStream stream)
     {
         for (int y = 0; y < this.size1; y++)
         {

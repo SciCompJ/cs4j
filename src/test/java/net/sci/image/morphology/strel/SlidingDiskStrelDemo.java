@@ -32,7 +32,7 @@ public class SlidingDiskStrelDemo
         
         // display result
         System.out.println("Dilation of UInt8Array2D:");
-        dilated.print(System.out);
+        dilated.printContent(System.out);
         
         
         // Creates a simple array with white dot in the middle
@@ -44,7 +44,7 @@ public class SlidingDiskStrelDemo
         
         // display result
         System.out.println("Dilation of Float32Array2D:");
-        dilatedF32.print(System.out);
+        dilatedF32.printContent(System.out);
     }
     
 }

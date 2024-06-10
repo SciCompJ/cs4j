@@ -26,12 +26,12 @@ public class ImageJSkeletonTest
             }
         }
         System.out.println("Input:");
-        array.print(System.out);
+        array.printContent(System.out);
         
         ImageJSkeleton skel = new ImageJSkeleton();
         BinaryArray2D res = skel.process2d(array);
         System.out.println("Output:");
-        res.print(System.out);
+        res.printContent(System.out);
     }
 
 }

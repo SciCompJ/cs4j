@@ -197,25 +197,31 @@ public abstract class Array3D<T> implements Array<T>
     public abstract java.util.Iterator<? extends Array2D<T>> sliceIterator();
 
     /**
+     * Prints the content of this array on the default output stream.
+     * 
+     * Default behavior converts each element into a string. Specialized array
+     * classed can use more relevant conversion.
+     * 
+     * @see #printContent(PrintStream)
+     */
+    public void printContent()
+    {
+        printContent(System.out);
+    }
+    
+    /**
      * Prints the content of this array on the specified stream.
      * 
      * @param stream
      *            the stream to print on.
      */
-    public void print(PrintStream stream)
+    public void printContent(PrintStream stream)
     {
         for (int z = 0; z < this.size2; z++)
         {
             stream.println(String.format(Locale.ENGLISH, "slice %d/%d:", z, size2));
             Array2D<T> slice = slice(z);
-            for (int y = 0; y < this.size1; y++)
-            {
-                for (int x = 0; x < this.size0; x++)
-                {
-                    stream.print(String.format(Locale.ENGLISH, " %s", slice.get(x, y)));
-                }
-                stream.println();
-            }
+            slice.printContent(stream);
         }
     }
     

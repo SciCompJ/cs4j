@@ -3,6 +3,7 @@
  */
 package net.sci.array.binary;
 
+import java.io.PrintStream;
 import java.util.function.BiFunction;
 
 import net.sci.array.scalar.IntArray2D;
@@ -193,6 +194,25 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
 	
     // =============================================================
     // Implementation of the ScalarArray2D interface
+    
+    /**
+     * Prints the content of this array on the specified stream, using a custom
+     * number format.
+     * 
+     * @param stream
+     *            the stream to print on.
+     */
+    public void printContent(PrintStream stream)
+    {
+        for (int y = 0; y < this.size1; y++)
+        {
+            for (int x = 0; x < this.size0; x++)
+            {
+                stream.print(getBoolean(x, y) ? "X" : ".");
+            }
+            stream.println();
+        }
+    }
     
     @Override
     public double getValue(int x, int y)

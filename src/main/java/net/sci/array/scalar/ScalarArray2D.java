@@ -90,17 +90,34 @@ public abstract class ScalarArray2D<S extends Scalar<S>> extends Array2D<S> impl
 	 * @param stream
 	 *            the stream to print on.
 	 */
-	public void print(PrintStream stream)
+	public void printContent(PrintStream stream)
 	{
-		for (int y = 0; y < this.size1; y++)
-		{
-			for (int x = 0; x < this.size0; x++)
-			{
-				System.out.print(String.format(Locale.ENGLISH, " %g", getValue(x, y)));
-			}
-			System.out.println();
-		}
+		printContent(stream, "%g");
 	}
+	
+    /**
+     * Prints the content of this array on the specified stream, using a custom
+     * number format.
+     * 
+     * @param stream
+     *            the stream to print on.
+     * @param numberFormat
+     *            a string indicating the number format for floating point
+     *            value, e.g "%f" or "%g".
+     */
+    public void printContent(PrintStream stream, String numberFormat)
+    {
+        String format = " " + numberFormat;
+        for (int y = 0; y < this.size1; y++)
+        {
+            for (int x = 0; x < this.size0; x++)
+            {
+                stream.print(String.format(Locale.ENGLISH, format, getValue(x, y)));
+            }
+            stream.println();
+        }
+    }
+    
 
     // =============================================================
     // New getter / setter
@@ -178,38 +195,10 @@ public abstract class ScalarArray2D<S extends Scalar<S>> extends Array2D<S> impl
     @Override
     public String toString()
     {
-        return this.toString("%g");
+        return String.format(Locale.ENGLISH, "(%d x %d) Scalar array with values:", this.size0, this.size1);
     }
     
-    /**
-     * Overrides the method to display a String representation of this values
-     * within the array, specifying the format used to display numeric values.
-     * 
-     * Example:
-     * <pre>{@code System.out.println(array.toString("%7.2f"));}</pre>
-     * 
-     * @param numberFormat
-     *            the pattern used to convert values to string, e.g. "%5.2f",
-     *            "%g"...
-     * @return a String representation of the inner values of the array.
-     */
-    public String toString(String numberFormat)
-    {
-        String format = " " + numberFormat;
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(String.format(Locale.ENGLISH, "(%d x %d) Scalar array with values:", this.size0, this.size1));
-        for (int y = 0; y < this.size1; y++)
-        {
-            buffer.append("\n");
-            for (int x = 0; x < this.size0; x++)
-            {
-                buffer.append(String.format(Locale.ENGLISH, format, getValue(x, y)));
-            }
-        }
-        return buffer.toString();
-    }
     
-
     // =============================================================
     // Inner implementation of iterator on double values
 	

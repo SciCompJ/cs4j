@@ -65,7 +65,7 @@ public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> impl
 	 * @param stream
 	 *            the stream to print on.
 	 */
-	public void print(PrintStream stream)
+	public void printContent(PrintStream stream)
 	{
 		for (int y = 0; y < this.size1; y++)
 		{
@@ -129,6 +129,29 @@ public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> impl
     // =============================================================
     // Specialization of ScalarArray2D 
 
+    /**
+     * Prints the content of this array on the specified stream, using a custom
+     * number format.
+     * 
+     * @param stream
+     *            the stream to print on.
+     * @param numberFormat
+     *            a string indicating the number format for floating point
+     *            value, e.g "%f" or "%g".
+     */
+    public void printContent(PrintStream stream, String numberFormat)
+    {
+        String format = " " + numberFormat;
+        for (int y = 0; y < this.size1; y++)
+        {
+            for (int x = 0; x < this.size0; x++)
+            {
+                stream.print(String.format(Locale.ENGLISH, format, getValue(x, y)));
+            }
+            stream.println();
+        }
+    }
+    
     @Override
     public double getValue(int x, int y)
     {
@@ -166,17 +189,7 @@ public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> impl
 	@Override
     public String toString()
     {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(String.format(Locale.ENGLISH, "(%d x %d) Int array with values:", this.size0, this.size1));
-        for (int y = 0; y < this.size1; y++)
-        {
-            buffer.append("\n");
-            for (int x = 0; x < this.size0; x++)
-            {
-                buffer.append(String.format(Locale.ENGLISH, " %3d", getInt(x, y)));
-            }
-        }
-        return buffer.toString();
+	    return String.format(Locale.ENGLISH, "(%d x %d) Int array.", this.size0, this.size1);
     }
 
 
