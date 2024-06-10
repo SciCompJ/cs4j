@@ -13,8 +13,16 @@ import net.sci.image.binary.distmap.ChamferMask3D;
 import net.sci.image.binary.distmap.ChamferMask3D.Offset;
 
 /**
- * Computation of Chamfer geodesic distances using integer array
- * for storing result, and chamfer masks.
+ * Computation of geodesic distances on 3D arrays based on chamfer masks for
+ * propagating distance, and using 16-bits unsigned integer array for storing
+ * result.
+ * 
+ * Implementation based on an "hybrid" algorithm, that uses two raster scans to
+ * initialize distance map, then recursively processes the queue of voxels to
+ * update.
+ * 
+ * @see GeodesicDistanceTransform3DFloat32Hybrid
+ * @see GeodesicDistanceTransform2DUInt16Hybrid
  * 
  * @author David Legland
  * 
@@ -35,16 +43,23 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
      */
     boolean normalizeMap = true;
 
+    /**
+     * The maximum distance that can be computed with the current mask.
+     * Corresponds to the largest possible value of an unsigned short minus the
+     * largest mask offset value.
+     */
+    int maxAllowedDistance;
+    
 
 	// ==================================================
     // Constructors 
     
     /**
-     * Use default weights, and normalize map.
+     * Use default (Svensson's) weights, and normalize map.
      */
     public GeodesicDistanceTransform3DUInt16Hybrid()
     {
-        this(ChamferMask3D.BORGEFORS, true);
+        this(ChamferMask3D.SVENSSON_3_4_5_7, true);
     }
 
     public GeodesicDistanceTransform3DUInt16Hybrid(ChamferMask3D mask)
@@ -56,6 +71,14 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
     {
         this.mask = mask;
         this.normalizeMap = normalizeMap;
+
+        // retrieve the maximum weight to identify the largest possible distance value
+        int maxWeight = Integer.MIN_VALUE;
+        for (Offset offset : mask.getOffsets())
+        {
+            maxWeight = Math.max(maxWeight, offset.intWeight);
+        }
+        this.maxAllowedDistance = UInt16.MAX_INT - maxWeight - 1;
     }
 
     /**
@@ -69,9 +92,9 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
      */
     public GeodesicDistanceTransform3DUInt16Hybrid(short[] weights, boolean normalizeMap)
     {
-        this.mask = ChamferMask3D.fromWeights(weights);
-        this.normalizeMap = normalizeMap;
+        this(ChamferMask3D.fromWeights(weights), normalizeMap);
     }
+    
 
     // ==================================================
     // General Methods 
@@ -175,24 +198,30 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
                        if (z2 < 0 || z2 >= sizeZ)
                            continue;
                        
-                       // process only pixels within mask
-                       if (!maskImage.getBoolean(x2, y2, z2))
-                       {
-                           continue;
-                       }
-                       
                        // if pixel is within mask, update the distance
-                       newDist = Math.min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
+                       if (maskImage.getBoolean(x2, y2, z2))
+                       {
+                           newDist = Math.min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
+                       }
                    }
                    
                    // modify current pixel if needed
                    if (newDist < dist) 
                    {
-                       distMap.setInt(x, y, z, newDist);
+                       if (newDist <= this.maxAllowedDistance)
+                       {
+                           distMap.setInt(x, y, z, newDist);
+                       }
+                       else
+                       {
+                           String posString = String.format("(%d,%d,%d)", x, y, z);
+                           throw new RuntimeException("Maximum allowed distance value reached at " + posString + ". Try using data type with larger dynamic.");
+                       }
                    }
                }
            }
         }
+       
         fireProgressChanged(this, 1, 1);
 	}
 
@@ -227,27 +256,27 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
                         int z2 = z + offset.dz;
                         
                         // check bounds
-                        if (x2 < 0 || x2 >= sizeX)
-                            continue;
-                        if (y2 < 0 || y2 >= sizeY)
-                            continue;
-                        if (z2 < 0 || z2 >= sizeZ)
-                            continue;
+                        if (x2 < 0 || x2 >= sizeX) continue;
+                        if (y2 < 0 || y2 >= sizeY) continue;
+                        if (z2 < 0 || z2 >= sizeZ) continue;
                         
                         // process only pixels within mask
-                        if (!maskImage.getBoolean(x2, y2, z2))
+                        if (maskImage.getBoolean(x2, y2, z2))
                         {
-                            continue;
+                            newDist = Math.min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
                         }
-                        
-                        // if pixel is within mask, update the distance
-                        newDist = Math.min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
                     }                    
                     
                     // check if update is necessary
-                    if (dist < newDist)
+                    if (dist <= newDist)
                     {
                         continue;
+                    }
+                    
+                    if (newDist > this.maxAllowedDistance)
+                    {
+                        String posString = String.format("(%d,%d,%d)", x, y, z);
+                        throw new RuntimeException("Maximum allowed distance value reached at " + posString + ". Try using data type with larger dynamic.");
                     }
                     
                     // modify current pixel
@@ -262,22 +291,26 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
                         int z2 = z + offset.dz;
                         
                         // check image bounds
-                        if (x2 < 0 || x2 > sizeX - 1)
-                            continue;
-                        if (y2 < 0 || y2 > sizeY - 1)
-                            continue;
-                        if (z2 < 0 || z2 > sizeZ - 1)
-                            continue;
+                        if (x2 < 0 || x2 > sizeX - 1) continue;
+                        if (y2 < 0 || y2 > sizeY - 1) continue;
+                        if (z2 < 0 || z2 > sizeZ - 1) continue;
                         
                         // process only pixels within mask
                         if (!maskImage.getBoolean(x2, y2, z2))
                             continue;
 
                         // update neighbor and add to the queue
-                        if (newDist + offset.intWeight < distMap.getInt(x2, y2, z2)) 
+                        int neighDist = newDist + offset.intWeight;
+                        if (neighDist < distMap.getInt(x2, y2, z2))
                         {
-                            distMap.setInt(x2, y2, z2, newDist + offset.intWeight);
-                            queue.add(new int[] {x2, y2, z2});
+                            if (neighDist > this.maxAllowedDistance)
+                            {
+                                String posString = String.format("(%d,%d,%d)", x2, y2, z2);
+                                throw new RuntimeException("Maximum allowed distance value reached at " + posString + ". Try using data type with larger dynamic.");
+                            }
+
+                            distMap.setInt(x2, y2, z2, neighDist);
+                            queue.add(new int[] { x2, y2, z2 });
                         }
                     }
                 }
@@ -318,12 +351,9 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
                 int z2 = z + offset.dz;
                 
                 // check image bounds
-                if (x2 < 0 || x2 > sizeX - 1)
-                    continue;
-                if (y2 < 0 || y2 > sizeY - 1)
-                    continue;
-                if (z2 < 0 || z2 > sizeZ - 1)
-                    continue;
+                if (x2 < 0 || x2 > sizeX - 1) continue;
+                if (y2 < 0 || y2 > sizeY - 1) continue;
+                if (z2 < 0 || z2 > sizeZ - 1) continue;
                 
                 // process only pixels within mask
                 if (!maskImage.getBoolean(x2, y2, z2))
@@ -335,6 +365,12 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
                 // if no update is needed, continue to next item in queue
                 if (newDist < distMap.getInt(x2, y2, z2))
                 {
+                    if (newDist > this.maxAllowedDistance)
+                    {
+                        String posString = String.format("(%d,%d,%d)", x2, y2, z2);
+                        throw new RuntimeException("Maximum allowed distance value reached at " + posString + ". Try using data type with larger dynamic.");
+                    }
+                    
                     // update result for current position
                     distMap.setInt(x2, y2, z2, newDist);
                     
@@ -351,8 +387,11 @@ public class GeodesicDistanceTransform3DUInt16Hybrid extends AlgoStub implements
         int sizeX = distMap.size(0);
         int sizeY = distMap.size(1);
         int sizeZ = distMap.size(2);
+        
+        // normalization factor
         double w0 = mask.getIntegerNormalizationWeight();
 
+        // iterate over voxels
 	    for (int z = 0; z < sizeZ; z++)
 	    {
 	        for (int y = 0; y < sizeY; y++)

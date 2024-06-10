@@ -26,106 +26,106 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
      * The chamfer mask used to propagate distances to neighbor pixels.
      */
     ChamferMask2D mask;
-    
 
-	/**
-	 * Flag for dividing final distance map by the value first weight. 
-	 * This results in distance map values closer to Euclidean distance. 
-	 */
-	boolean normalizeMap = true;
+    /**
+     * Flag for dividing final distance map by the value first weight. This
+     * results in distance map values closer to Euclidean distance.
+     */
+    boolean normalizeMap = true;
 
+    // ==================================================
+    // Constructors
 
-	// ==================================================
-    // Constructors 
-    
-	/**
-	 * Use default weights, and normalize map.
-	 */
-	public GeodesicDistanceTransform2DFloat32Hybrid()
-	{
-	    this.mask = ChamferMask2D.CHESSKNIGHT;
-	}
+    /**
+     * Use default weights, and normalize map.
+     */
+    public GeodesicDistanceTransform2DFloat32Hybrid()
+    {
+        this.mask = ChamferMask2D.CHESSKNIGHT;
+    }
 
-	public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask)
-	{
-	    this.mask = mask;
-	}
+    public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask)
+    {
+        this.mask = mask;
+    }
 
-	public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask, boolean normalizeMap) 
-	{
+    public GeodesicDistanceTransform2DFloat32Hybrid(ChamferMask2D mask, boolean normalizeMap)
+    {
         this.mask = mask;
         this.normalizeMap = normalizeMap;
-	}
+    }
 
-	/**
-	 * Low-level constructor.
-	 * 
-	 * @param weights
-	 *            the array of weights for orthogonal, diagonal, and eventually
-	 *            2-by-1 moves
-	 * @param normalizeMap
-	 *            the flag for normalizing result
-	 */
-	public GeodesicDistanceTransform2DFloat32Hybrid(float[] weights, boolean normalizeMap) 
-	{
+    /**
+     * Low-level constructor.
+     * 
+     * @param weights
+     *            the array of weights for orthogonal, diagonal, and eventually
+     *            2-by-1 moves
+     * @param normalizeMap
+     *            the flag for normalizing result
+     */
+    public GeodesicDistanceTransform2DFloat32Hybrid(float[] weights, boolean normalizeMap)
+    {
         this.mask = ChamferMask2D.fromWeights(weights);
         this.normalizeMap = normalizeMap;
-	}
-	
+    }
+
     // ==================================================
-    // General Methods 
-    
-	/**
-	 * Computes the geodesic distance function for each pixel in mask, using the
-	 * given mask. Mask and marker should be BinaryArray2D the same size and
-	 * containing binary values.
-	 * 
-	 * The function returns a new Float32Array2D the same size as the input, with
-	 * values greater than or equal to zero.
-	 */
-	public Float32Array2D process2d(BinaryArray2D marker, IntArray2D<?> labelMap)
-	{
+    // General Methods
+
+    /**
+     * Computes the geodesic distance function for each pixel in mask, using the
+     * given mask. Mask and marker should be BinaryArray2D the same size and
+     * containing binary values.
+     * 
+     * The function returns a new Float32Array2D the same size as the input,
+     * with values greater than or equal to zero.
+     */
+    public Float32Array2D process2d(BinaryArray2D marker, IntArray2D<?> labelMap)
+    {
         // create new empty image, and fill it with black
-        fireStatusChanged(this, "Initialization..."); 
+        fireStatusChanged(this, "Initialization...");
         Float32Array2D distMap = initializeResult(marker, labelMap);
-        
+
         // forward iteration
         fireStatusChanged(this, "Forward iteration ");
         forwardIteration(distMap, labelMap);
-        
+
         // Create the queue containing the positions that need update.
-        Deque<int[]> queue = new ArrayDeque<int[]>();;
+        Deque<int[]> queue = new ArrayDeque<int[]>();
+        ;
 
         // backward iteration
-        fireStatusChanged(this, "Backward iteration "); 
+        fireStatusChanged(this, "Backward iteration ");
         backwardIteration(distMap, labelMap, queue);
-        
+
         // Process queue
-        fireStatusChanged(this, "Process queue "); 
+        fireStatusChanged(this, "Process queue ");
         processQueue(distMap, labelMap, queue);
-        
+
         // Normalize values by the first weight
-        if (normalizeMap) 
+        if (normalizeMap)
         {
             fireStatusChanged(this, "Normalize map");
             normalizeMap(distMap);
         }
-        
+
         return distMap;
-	}
-	
+    }
+
     private Float32Array2D initializeResult(BinaryArray2D marker, IntArray2D<?> labelMap)
     {
         int sizeX = marker.size(0);
         int sizeY = marker.size(1);
-        
+
         // Allocate memory
         Float32Array2D distMap = Float32Array2D.create(sizeX, sizeY);
 
-        // initialize empty image with either 0 (in marker), Inf (outside marker), or NaN (not in the labelMap)
-        for (int y = 0; y < sizeY; y++) 
+        // initialize empty image with either 0 (in marker), Inf (outside
+        // marker), or NaN (not in the labelMap)
+        for (int y = 0; y < sizeY; y++)
         {
-            for (int x = 0; x < sizeX; x++) 
+            for (int x = 0; x < sizeX; x++)
             {
                 if (labelMap.getInt(x, y) > 0)
                 {
@@ -138,11 +138,11 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
                 }
             }
         }
-        
+
         return distMap;
     }
-    
-    private void forwardIteration(Float32Array2D distMap, IntArray2D<?> labelMap) 
+
+    private void forwardIteration(Float32Array2D distMap, IntArray2D<?> labelMap)
     {
         // retrieve image size
         int sizeX = distMap.size(0);
@@ -152,13 +152,12 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
         // iterate over pixels
         for (int y = 0; y < sizeY; y++)
         {
-            fireProgressChanged(this, y, sizeY); 
+            fireProgressChanged(this, y, sizeY);
 
             for (int x = 0; x < sizeX; x++)
             {
                 int label = labelMap.getInt(x, y);
-                if (label == 0)
-                    continue;
+                if (label == 0) continue;
 
                 // get value of current pixel
                 double dist = distMap.getValue(x, y);
@@ -172,28 +171,25 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
                     int y2 = y + offset.dy;
 
                     // check image bounds
-                    if (x2 < 0 || x2 > sizeX - 1)
-                        continue;
-                    if (y2 < 0 || y2 > sizeY - 1)
-                        continue;
+                    if (x2 < 0 || x2 > sizeX - 1) continue;
+                    if (y2 < 0 || y2 > sizeY - 1) continue;
 
                     // process only pixels inside structure
-                    if (labelMap.getInt(x2, y2) != label)
-                        continue;
+                    if (labelMap.getInt(x2, y2) != label) continue;
 
                     // update minimum value
                     newDist = Math.min(newDist, distMap.getValue(x2, y2) + offset.weight);
                 }
 
                 // modify current pixel if needed
-                if (newDist < dist) 
+                if (newDist < dist)
                 {
                     distMap.setValue(x, y, newDist);
                 }
             }
         }
 
-        fireProgressChanged(this, 1, 1); 
+        fireProgressChanged(this, 1, 1);
     }
 
     private void backwardIteration(Float32Array2D distMap, IntArray2D<?> labelMap, Deque<int[]> queue)
@@ -206,18 +202,17 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
         // iterate over pixels
         for (int y = sizeY - 1; y >= 0; y--)
         {
-            fireProgressChanged(this, sizeY - 1 - y, sizeY); 
+            fireProgressChanged(this, sizeY - 1 - y, sizeY);
 
             for (int x = sizeX - 1; x >= 0; x--)
             {
                 int label = labelMap.getInt(x, y);
-                if (label == 0)
-                    continue;
+                if (label == 0) continue;
 
                 // get value of current pixel
                 double dist = distMap.getValue(x, y);
                 double newDist = dist;
-                
+
                 // iterate over neighbors
                 for (ChamferMask2D.Offset offset : offsets)
                 {
@@ -226,14 +221,11 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
                     int y2 = y + offset.dy;
 
                     // check image bounds
-                    if (x2 < 0 || x2 > sizeX - 1)
-                        continue;
-                    if (y2 < 0 || y2 > sizeY - 1)
-                        continue;
+                    if (x2 < 0 || x2 > sizeX - 1) continue;
+                    if (y2 < 0 || y2 > sizeY - 1) continue;
 
-                    // process only pixels inside structure
-                    if (labelMap.getInt(x2, y2) != label)
-                        continue;
+                    // process only pixels within the same label
+                    if (labelMap.getInt(x2, y2) != label) continue;
 
                     // update minimum value
                     newDist = Math.min(newDist, distMap.getValue(x2, y2) + offset.weight);
@@ -256,26 +248,23 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
                     int y2 = y + offset.dy;
 
                     // check image bounds
-                    if (x2 < 0 || x2 > sizeX - 1)
-                        continue;
-                    if (y2 < 0 || y2 > sizeY - 1)
-                        continue;
+                    if (x2 < 0 || x2 > sizeX - 1) continue;
+                    if (y2 < 0 || y2 > sizeY - 1) continue;
 
                     // process only pixels inside structure
-                    if (labelMap.getInt(x2, y2) != label)
-                        continue;
+                    if (labelMap.getInt(x2, y2) != label) continue;
 
                     // update neighbor and add to the queue
-                    if (newDist + offset.weight < distMap.getValue(x2, y2)) 
+                    if (newDist + offset.weight < distMap.getValue(x2, y2))
                     {
                         distMap.setValue(x2, y2, newDist + offset.weight);
-                        queue.add(new int[] {x2, y2});
+                        queue.add(new int[] { x2, y2 });
                     }
                 }
             }
         }
 
-        fireProgressChanged(this, 1, 1); 
+        fireProgressChanged(this, 1, 1);
     }
 
     /**
@@ -290,7 +279,7 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
         Collection<ChamferMask2D.Offset> offsets = mask.getOffsets();
 
         // Process elements in queue until it is empty
-        while (!queue.isEmpty()) 
+        while (!queue.isEmpty())
         {
             int[] p = queue.removeFirst();
             int x = p[0];
@@ -314,7 +303,7 @@ public class GeodesicDistanceTransform2DFloat32Hybrid extends AlgoStub implement
                 if (y2 < 0 || y2 > sizeY - 1)
                     continue;
 
-                // process only pixels inside structure
+                // process only pixels within the same label
                 if (labelMap.getInt(x2, y2) != label)
                     continue;
 

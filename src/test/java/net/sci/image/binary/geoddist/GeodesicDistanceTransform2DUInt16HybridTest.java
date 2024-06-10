@@ -3,15 +3,22 @@
  */
 package net.sci.image.binary.geoddist;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+
+import org.junit.Test;
+
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.scalar.ScalarArray;
 import net.sci.array.scalar.ScalarArray2D;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array2D;
+import net.sci.image.Image;
 import net.sci.image.binary.distmap.ChamferMask2D;
-
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import net.sci.image.io.ImageIOImageReader;
 
 /**
  * @author dlegland
@@ -143,5 +150,65 @@ public class GeodesicDistanceTransform2DUInt16HybridTest
         assertEquals(6, res.getValue(3, 1), 1e-6);
         
         assertTrue(res.getValue(7,3) > 100);
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Hybrid#process2d(net.sci.array.binary.BinaryArray2D, net.sci.array.binary.BinaryArray2D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_spiral_BorgeforsWeights_mustFail() throws IOException
+    {
+        String fileName = getClass().getResource("/images/binary/tortuousPath_512x512.png").getFile();
+        ImageIOImageReader reader = new ImageIOImageReader(fileName);
+        Image image = reader.readImage();
+        ScalarArray2D<?> array = ScalarArray2D.wrapScalar2d((ScalarArray<?>) image.getData());
+        BinaryArray2D mask = BinaryArray2D.create(array.size(0), array.size(1));
+        mask.fillBooleans((x,y) -> array.getValue(x, y) > 0);
+        
+        BinaryArray2D marker = BinaryArray2D.create(array.size(0), array.size(1));
+        marker.setBoolean(0, marker.size(1)/2-2, true);
+        
+        GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DUInt16Hybrid(ChamferMask2D.BORGEFORS, false);
+        boolean failed = false;
+        try
+        {
+            op.process2d(marker, mask);
+        }
+        catch(Exception ex)
+        {
+            failed = true;
+        }
+        assertTrue(failed);
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Hybrid#process2d(net.sci.array.binary.BinaryArray2D, net.sci.array.binary.BinaryArray2D)}.
+     * @throws IOException 
+     */
+    @Test
+    public final void testProcess_spiral_ChessboardWeights_mustSucceed() throws IOException
+    {
+        String fileName = getClass().getResource("/images/binary/tortuousPath_512x512.png").getFile();
+        ImageIOImageReader reader = new ImageIOImageReader(fileName);
+        Image image = reader.readImage();
+        ScalarArray2D<?> array = ScalarArray2D.wrapScalar2d((ScalarArray<?>) image.getData());
+        BinaryArray2D mask = BinaryArray2D.create(array.size(0), array.size(1));
+        mask.fillBooleans((x,y) -> array.getValue(x, y) > 0);
+        
+        BinaryArray2D marker = BinaryArray2D.create(array.size(0), array.size(1));
+        marker.setBoolean(0, marker.size(1)/2-2, true);
+        
+        GeodesicDistanceTransform2D op = new GeodesicDistanceTransform2DUInt16Hybrid(ChamferMask2D.CHESSBOARD, false);
+        boolean failed = false;
+        try
+        {
+            op.process2d(marker, mask);
+        }
+        catch(Exception ex)
+        {
+            failed = true;
+        }
+        assertFalse(failed);
     }
 }

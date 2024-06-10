@@ -5,17 +5,26 @@ import java.util.Collection;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.Arrays;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.scalar.UInt16;
 import net.sci.array.scalar.UInt16Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D;
+import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 
 /**
- * Computation of Chamfer geodesic distances using 16-bits unsigned integer
- * array for storing result, and chamfer masks.
+ * Computation of geodesic distances on 2D arrays based on chamfer masks for
+ * propagating distance, and using 16-bits unsigned integer array for storing
+ * result.
+ * 
+ * Implementation based on an "hybrid" algorithm, that uses two raster scans to
+ * initialize distance map, then recursively processes the queue of voxels to
+ * update.
+ * 
+ * @see GeodesicDistanceTransform2DFloat32Hybrid
+ * @see GeodesicDistanceTransform3DUInt16Hybrid
  * 
  * @author David Legland
- * 
  */
 public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements GeodesicDistanceTransform2D
 {
@@ -32,6 +41,14 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
      * results in distance map values closer to Euclidean distance.
      */
     boolean normalizeMap = true;
+    
+    /**
+     * The maximum distance that can be computed with the current mask.
+     * Corresponds to the largest possible value of an unsigned short minus the
+     * largest mask offset value.
+     */
+    int maxAllowedDistance;
+    
 
     // ==================================================
     // Constructors
@@ -44,15 +61,40 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
         this(ChamferMask2D.CHESSKNIGHT, true);
     }
 
+    /**
+     * Creates a new geodesic distance transform algorithm using the specified
+     * chamfer mask. The resulting distance map is normalized.
+     * 
+     * @param mask
+     *            the chamfer mask used for propagating distances.
+     */
     public GeodesicDistanceTransform2DUInt16Hybrid(ChamferMask2D mask)
     {
         this(mask, true);
     }
 
+    /**
+     * Creates a new geodesic distance transform algorithm using the specified
+     * options.
+     * 
+     * @param mask
+     *            the chamfer mask used for propagating distances.
+     * @param normalizeMap
+     *            the boolean flag indicating whether the resulting map should
+     *            be normalized.
+     */
     public GeodesicDistanceTransform2DUInt16Hybrid(ChamferMask2D mask, boolean normalizeMap)
     {
         this.mask = mask;
         this.normalizeMap = normalizeMap;
+        
+        // retrieve the maximum weight to identify the largest possible distance value
+        int maxWeight = Integer.MIN_VALUE;
+        for (Offset offset : mask.getOffsets())
+        {
+            maxWeight = Math.max(maxWeight, offset.intWeight);
+        }
+        this.maxAllowedDistance = UInt16.MAX_INT - maxWeight - 1;
     }
 
     /**
@@ -66,9 +108,9 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
      */
     public GeodesicDistanceTransform2DUInt16Hybrid(short[] weights, boolean normalizeMap)
     {
-        this.mask = ChamferMask2D.fromWeights(weights);
-        this.normalizeMap = normalizeMap;
+        this(ChamferMask2D.fromWeights(weights), normalizeMap);
     }
+    
 
     // ==================================================
     // General Methods
@@ -89,8 +131,11 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
      */
     public UInt16Array2D process2d(BinaryArray2D marker, BinaryArray2D maskImage)
     {
-        // TODO: should check int overflow
-
+        if (!Arrays.isSameSize(marker, maskImage))
+        {
+            throw new IllegalArgumentException("Marker and mask arrays must have same dimensions.");
+        }
+        
         // create new empty image, and fill it with black
         fireStatusChanged(this, "Initialization...");
         UInt16Array2D distMap = initializeResult(marker, maskImage);
@@ -122,14 +167,11 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
 
     private UInt16Array2D initializeResult(BinaryArray2D marker, BinaryArray2D maskImage)
     {
-        int sizeX = marker.size(0);
-        int sizeY = marker.size(1);
-
         // Allocate memory
-        UInt16Array2D distMap = UInt16Array2D.create(sizeX, sizeY);
+        UInt16Array2D distMap = UInt16Array2D.create(marker.size(0), marker.size(1));
 
         // initialize empty image with either 0 (in marker), or max int value
-        // (outside marker
+        // (outside marker)
         distMap.fillInts((x, y) -> marker.getBoolean(x, y) ? 0 : Integer.MAX_VALUE);
 
         return distMap;
@@ -166,19 +208,25 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
                     if (x2 < 0 || x2 >= sizeX) continue;
                     if (y2 < 0 || y2 >= sizeY) continue;
 
-                    if (!maskImage.getBoolean(x2, y2))
-                    {
-                        continue;
-                    }
-
                     // if pixel is within mask, update the distance
-                    newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.intWeight);
+                    if (maskImage.getBoolean(x2, y2))
+                    {
+                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.intWeight);
+                    }
                 }
 
                 // modify current pixel if needed
                 if (newDist < dist)
                 {
-                    distMap.setInt(x, y, newDist);
+                    if (newDist <= this.maxAllowedDistance)
+                    {
+                        distMap.setInt(x, y, newDist);
+                    }
+                    else
+                    {
+                        String posString = String.format("(%d,%d)", x, y);
+                        throw new RuntimeException("Maximum allowed distance value reached at " + posString + ". Try using data type with larger dynamic.");
+                    }
                 }
             }
         }
@@ -217,14 +265,11 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
                     if (x2 < 0 || x2 >= sizeX) continue;
                     if (y2 < 0 || y2 >= sizeY) continue;
 
-                    // process only pixels within mask
-                    if (!maskImage.getBoolean(x2, y2))
-                    {
-                        continue;
-                    }
-
                     // if pixel is within mask, update the distance
-                    newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.intWeight);
+                    if (maskImage.getBoolean(x2, y2))
+                    {
+                        newDist = Math.min(newDist, distMap.getInt(x2, y2) + offset.intWeight);
+                    }
                 }
 
                 // check if update is necessary
@@ -233,6 +278,12 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
                     continue;
                 }
 
+                if (newDist > this.maxAllowedDistance)
+                {
+                    String posString = String.format("(%d,%d)", x, y);
+                    throw new RuntimeException("Maximum allowed distance value reached at " + posString + ". Try using data type with larger dynamic.");
+                }
+                
                 // modify current pixel
                 distMap.setInt(x, y, newDist);
 
@@ -251,9 +302,16 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
                     if (!maskImage.getBoolean(x2, y2)) continue;
 
                     // update neighbor and add to the queue
-                    if (newDist + offset.weight < distMap.getInt(x2, y2))
+                    int neighDist = newDist + offset.intWeight;
+                    if (neighDist < distMap.getInt(x2, y2))
                     {
-                        distMap.setInt(x2, y2, newDist + offset.intWeight);
+                        if (neighDist > this.maxAllowedDistance)
+                        {
+                            String posString = String.format("(%d,%d)", x2, y2);
+                            throw new RuntimeException("Maximum allowed distance value reached at " + posString + ". Try using data type with larger dynamic.");
+                        }
+
+                        distMap.setInt(x2, y2, neighDist);
                         queue.add(new int[] { x2, y2 });
                     }
                 }
@@ -264,7 +322,7 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
     }
 
     /**
-     * For each element in the queue, get neighbors, try to update them, and
+     * For each element in the queue, retrieve neighbors, try to update them, and
      * eventually add them to the queue.
      */
     private void processQueue(UInt16Array2D distMap, BinaryArray2D maskImage, Deque<int[]> queue)
@@ -304,6 +362,12 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
                 // if no update is needed, continue to next item in queue
                 if (newDist < distMap.getInt(x2, y2))
                 {
+                    if (newDist > this.maxAllowedDistance)
+                    {
+                        String posString = String.format("(%d,%d)", x2, y2);
+                        throw new RuntimeException("Maximum allowed distance value reached at " + posString + ". Try using data type with larger dynamic.");
+                    }
+                    
                     // update result for current position
                     distMap.setInt(x2, y2, newDist);
 
@@ -319,6 +383,8 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
         // retrieve image size
         int sizeX = distMap.size(0);
         int sizeY = distMap.size(1);
+        
+        // normalization factor
         double w0 = mask.getIntegerNormalizationWeight();
 
         // iterate over pixels
@@ -326,10 +392,10 @@ public class GeodesicDistanceTransform2DUInt16Hybrid extends AlgoStub implements
         {
             for (int x = 0; x < sizeX; x++)
             {
-                int val = distMap.getInt(x, y);
-                if (maskImage.getBoolean(x, y) && val != UInt16.MAX_INT)
+                int dist = distMap.getInt(x, y);
+                if (maskImage.getBoolean(x, y) && dist != UInt16.MAX_INT)
                 {
-                    distMap.setInt(x, y, (int) Math.round(val / w0));
+                    distMap.setInt(x, y, (int) Math.round(dist / w0));
                 }
             }
         }
