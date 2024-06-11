@@ -4,13 +4,20 @@
 package net.sci.array.scalar;
 
 /**
+ * Base class for Integer based types. Final classes should manage integer
+ * values compatible with native java integer type.
+ * 
+ * @param <I>
+ *            The type of Int
+ * 
  * @author dlegland
- *
  */
 public abstract class Int<I extends Int<I>> extends Scalar<I>
 {
     /**
-     * @return the int value corresponding to this Int.
+     * Return the integer value corresponding to this Int instance.
+     * 
+     * @return the integer value corresponding to this Int instance.
      */
 	public abstract int getInt();
 	

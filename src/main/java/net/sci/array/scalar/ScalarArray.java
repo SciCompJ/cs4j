@@ -14,7 +14,8 @@ import net.sci.array.numeric.NumericArray;
 /**
  * Specialization of the Array interface that contains Scalar values.
  * 
- * Provides methods for accessing and modifying values as double.
+ * Provides methods for accessing and modifying values as double, and populating
+ * the array with floating point values.
  * 
  * @param <S>
  *            the type of Scalar.
@@ -26,6 +27,29 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     // =============================================================
     // static methods
 
+    /**
+     * Wraps the specified array containing Scalar data into an instance of
+     * ScalarArray.
+     * 
+     * Example of use:
+     * {@snippet lang="java" :
+     *  if (Scalar.class.isAssignableFrom(array.elementClass()))
+     *  {
+     *      @SuppressWarnings({ "unchecked", "rawtypes" })
+     *      ScalarArray<?> scalarArray = ScalarArray.wrap((Array<? extends Scalar>) array);
+     *      // do something with scalarArray
+     *  }
+     *  else
+     *      throw new RuntimeException("Array does not contain scalar type data");
+     * }
+     * 
+     * @param <S>
+     *            the type of scalar data stored within the array
+     * @param array
+     *            the array to wrap
+     * @return an instance of ScalarArray. If the input array is already an
+     *         instance of ScalarArray, it is returned.
+     */
     public static <S extends Scalar<S>> ScalarArray<S> wrap(Array<S> array)
     {
         if (array instanceof  ScalarArray) return (ScalarArray<S>) array;
@@ -313,7 +337,15 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
 
     // =============================================================
     // Extends NumericArray interface to work with double values
-
+    
+    /**
+     * Adds a floating-point value to each element of this scalar array, and
+     * returns the resulting array.
+     * 
+     * @param v
+     *            the value to add
+     * @return a new array where each element is added the specified value
+     */
     public default ScalarArray<S> plus(double v)
     {
         ScalarArray<S> res = newInstance(size());
@@ -321,6 +353,15 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
         return res;
     }
 
+    /**
+     * Subtracts a floating-point value from each element of this scalar array,
+     * and returns the resulting array.
+     * 
+     * @param v
+     *            the value to subtract
+     * @return a new array where the specified value is subtracted from each
+     *         element
+     */
     public default ScalarArray<S> minus(double v)
     {
         ScalarArray<S> res = newInstance(size());
@@ -611,6 +652,8 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
 		}
     
         /**
+         * Returns the value at the current iterator position as a double value
+         * 
          * @return the value at the current iterator position as a double value
          */
         public double getValue();
