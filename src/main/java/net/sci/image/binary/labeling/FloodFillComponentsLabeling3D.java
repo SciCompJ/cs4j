@@ -159,7 +159,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 		return labels;
 	}
 
-	public void processBinary3d(BinaryArray3D image, IntArray3D<?> labels)
+	public int processBinary3d(BinaryArray3D image, IntArray3D<?> labels)
 	{
 		// get image size
 		int sizeX = image.size(0);
@@ -206,6 +206,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
 		
 		fireStatusChanged(this, "");
 		fireProgressChanged(this, 1, 1);
+		return nLabels;
 	}
 
 	public void process(Array<?> source, Array<?> target)
@@ -237,8 +238,12 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements ImageArra
     @Override
     public Image process(Image image)
     {
-        Array<?> result = process(image.getData());
-        return new Image(result, ImageType.LABEL, image);
+        BinaryArray array = BinaryArray.wrap(image.getData());
+        IntArray<?> result = createEmptyOutputArray(array);
+        int nLabels = processBinary3d(BinaryArray3D.wrap(array), IntArray3D.wrap(result));
+        Image resultImage = new Image(result, ImageType.LABEL, image);
+        resultImage.getDisplaySettings().setDisplayRange(new double[] {0, nLabels});
+        return resultImage;
     }
 
     @Override

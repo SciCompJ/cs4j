@@ -161,7 +161,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 		return labels;
 	}
 	
-	public void processBinary2d(BinaryArray2D source, IntArray2D<?> target)
+	public int processBinary2d(BinaryArray2D source, IntArray2D<?> target)
 	{
 		// get image size
 		int sizeX = source.size(0);
@@ -194,6 +194,8 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 			}
 		}
 		this.fireProgressChanged(this, 1, 1);
+		
+		return nLabels;
 	}
 
 	/**
@@ -207,11 +209,17 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 	 */
 	public Image createEmptyOutputImage(Image image)
 	{
-		Array<?> array = image.getData();
-		Array<?> newArray = createEmptyOutputArray(array);
-		Image result = new Image(newArray, image);
-		result.setType(ImageType.LABEL);
-		return result;
+//		Array<?> array = image.getData();
+//		Array<?> newArray = createEmptyOutputArray(array);
+//		Image result = new Image(newArray, image);
+//		result.setType(ImageType.LABEL);
+//		return result;
+        BinaryArray array = BinaryArray.wrap(image.getData());
+        IntArray<?> result = createEmptyOutputArray(array);
+        int nLabels = processBinary2d(BinaryArray2D.wrap(array), IntArray2D.wrap(result));
+        Image resultImage = new Image(result, ImageType.LABEL, image);
+        resultImage.getDisplaySettings().setDisplayRange(new double[] {0, nLabels});
+        return resultImage;
 	}
 
 	/**
@@ -231,8 +239,15 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
 	@Override
 	public Image process(Image image)
 	{
-	    Array<?> result = process(image.getData());
-	    return new Image(result, ImageType.LABEL, image);
+//	    Array<?> result = process(image.getData());
+//	    return new Image(result, ImageType.LABEL, image);
+        BinaryArray array = BinaryArray.wrap(image.getData());
+        IntArray<?> result = createEmptyOutputArray(array);
+        int nLabels = processBinary2d(BinaryArray2D.wrap(array), IntArray2D.wrap(result));
+        System.out.println("nb labels: " + nLabels); 
+        Image resultImage = new Image(result, ImageType.LABEL, image);
+        resultImage.getDisplaySettings().setDisplayRange(new double[] {0, nLabels});
+        return resultImage;
 	}
 	
     @Override
