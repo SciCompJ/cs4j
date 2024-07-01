@@ -148,7 +148,7 @@ public class MeyerMarkerControlledWatershed3D extends AlgoStub
                     }
                     else if (label > 0)
                     {                    
-                        // if within a minima, iterate over neighbors to add them to the queue
+                        // if within a marker, iterate over neighbors to add them to the queue
                         for (int[] pos2 : connectivity.neighbors(x, y, z))
                         {
                             int x2 = pos2[0];
@@ -170,14 +170,13 @@ public class MeyerMarkerControlledWatershed3D extends AlgoStub
             }
         }
 
-        // list to store position of unlabeled neighbors
-//        ArrayList<int[]> neighbors = new ArrayList<int[]>();
         // initialize an array to store position of neighbors
         int[][] neighbors = new int[connectivity.offsets().size()][];
         int neighborCount = 0; 
                 
-        // Process pixels and eventually add neighbors until the queue is empty 
+        // Process voxels and eventually add neighbors until the queue is empty 
         this.fireStatusChanged(this, "Recursively process Queue");
+        queue:
         while (!queue.isEmpty())
         {
             if (Thread.currentThread().isInterrupted())
@@ -185,10 +184,9 @@ public class MeyerMarkerControlledWatershed3D extends AlgoStub
                 return;
             }
             
-            // reset state
+            // reset state of neighborhood info
             neighborCount = 0;
             int lastLabel = -1;
-            boolean ws = false;
             
             // retrieve the next position from the queue
             int[] pos = queue.remove();
@@ -199,7 +197,7 @@ public class MeyerMarkerControlledWatershed3D extends AlgoStub
             // Iterate over neighbors of current pixel
             for (int[] pos2 : connectivity.neighbors(x, y, z))
             {
-                // Look in neighborhood for labeled pixels with
+                // Look in neighborhood for labeled voxels with
                 // smaller or equal original value
                 int x2 = pos2[0];
                 int y2 = pos2[1];
@@ -215,44 +213,41 @@ public class MeyerMarkerControlledWatershed3D extends AlgoStub
                 {
                     neighbors[neighborCount++] = new int[] {x2, y2, z2}; 
                 }
-                else if (label > 0)  // TODO: and not INQUEUE?
+                else if (label != INQUEUE && label != WSHED)
                 {
-                    // if another label was found, then the current pixel will be labeled WSHED
+                    // if another label is found, then the current pixel will
+                    // have label WSHED, and we can switch to next pixel
                     if (label != lastLabel && lastLabel != -1)
                     {
-                        ws = true;
+                        labelMap.setInt(x, y, z, WSHED);
+                        continue queue;
                     }
+                    
+                    // keep reference to the neighbor label to compare with that
+                    // of other neighbors
                     lastLabel = label;
                 }
             }
             
             
-            if (ws)
-            {
-                // If neighbors have more than two labels, then the current
-                // pixel is set to watershed
-                labelMap.setInt(x, y, z, WSHED);
-            }
-            else
-            {
-                // if the neighbors of the current pixel all have the same
-                // label, then the pixel is labeled with this label
-                labelMap.setInt(x, y, z, lastLabel);
-                
-                // once label of current pixel is known, we can enqueue the
-                // positions of unlabeled neighbor
-                for (int i = 0; i < neighborCount; i++)
-                {   
-                    int[] pos2 = neighbors[i];
-                    labelMap.setInt(pos2[0], pos2[1], pos2[2], INQUEUE);
-                    double value = relief.getValue(pos2[0], pos2[1], pos2[2]);
-                    queue.add(value, pos2);
-                }
+            // If we have not escaped the loop over neighbors, then all
+            // neighbors of the current pixel all have the same
+            // label, and the current voxel is associated to this label
+            labelMap.setInt(x, y, z, lastLabel);
+            
+            // once label of current voxel is known, we can enqueue the
+            // positions of unlabeled neighbor
+            for (int i = 0; i < neighborCount; i++)
+            {   
+                int[] pos2 = neighbors[i];
+                labelMap.setInt(pos2[0], pos2[1], pos2[2], INQUEUE);
+                double value = relief.getValue(pos2[0], pos2[1], pos2[2]);
+                queue.add(value, pos2);
             }
         }
 
         // post-processing:
-        // assign unlabeled pixels the WSHED flag
+        // assign unlabeled voxels the WSHED flag
         IntArray.Iterator<?> iter = labelMap.iterator(); 
         while (iter.hasNext())
         {

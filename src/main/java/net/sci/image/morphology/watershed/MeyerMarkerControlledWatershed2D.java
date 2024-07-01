@@ -145,7 +145,7 @@ public class MeyerMarkerControlledWatershed2D extends AlgoStub
                 }
                 else if (label > 0)
                 {                    
-                    // if within a minima, iterate over neighbors to add them to the queue
+                    // if within a marker, iterate over neighbors to add them to the queue
                     for (int[] pos2 : connectivity.neighbors(x, y))
                     {
                         int x2 = pos2[0];
@@ -164,15 +164,13 @@ public class MeyerMarkerControlledWatershed2D extends AlgoStub
             }
         }
         
-
-        // list to store position of unlabeled neighbors
-//        ArrayList<int[]> neighbors = new ArrayList<int[]>();
         // initialize an array to store position of neighbors
         int[][] neighbors = new int[connectivity.offsets().size()][];
         int neighborCount = 0; 
                 
         // Process pixels and eventually add neighbors until the queue is empty 
         this.fireStatusChanged(this, "Recursively process Queue");
+        queue:
         while (!queue.isEmpty())
         {
             if (Thread.currentThread().isInterrupted())
@@ -180,10 +178,9 @@ public class MeyerMarkerControlledWatershed2D extends AlgoStub
                 return;
             }
             
-            // reset state
+            // reset state of neighborhood info
             neighborCount = 0;
             int lastLabel = -1;
-            boolean ws = false;
             
             // retrieve the next position from the queue
             int[] pos = queue.remove();
@@ -207,39 +204,35 @@ public class MeyerMarkerControlledWatershed2D extends AlgoStub
                 {
                     neighbors[neighborCount++] = new int[] {x2, y2}; 
                 }
-                else if (label > 0)  // TODO: and not INQUEUE?
+                else if (label != INQUEUE && label != WSHED)
                 {
-                    // if another label was found, then the current pixel will be labeled WSHED
+                    // if another label is found, then the current pixel will
+                    // have label WSHED, and we can switch to next pixel
                     if (label != lastLabel && lastLabel != -1)
                     {
-                        ws = true;
+                        labelMap.setInt(x, y, WSHED);
+                        continue queue;
                     }
+                    
+                    // keep reference to the neighbor label to compare with that
+                    // of other neighbors
                     lastLabel = label;
                 }
             }
             
+            // If we have not escaped the loop over neighbors, then all
+            // neighbors of the current pixel all have the same
+            // label, and the current pixel is associated to this label
+            labelMap.setInt(x, y, lastLabel);
             
-            if (ws)
-            {
-                // If neighbors have more than two labels, then the current
-                // pixel is set to watershed
-                labelMap.setInt(x, y, WSHED);
-            }
-            else
-            {
-                // if the neighbors of the current pixel all have the same
-                // label, then the pixel is labeled with this label
-                labelMap.setInt(x, y, lastLabel);
-                
-                // once label of current pixel is known, we can enqueue the
-                // positions of unlabeled neighbor
-                for (int i = 0; i < neighborCount; i++)
-                {   
-                    int[] pos2 = neighbors[i];
-                    labelMap.setInt(pos2[0], pos2[1], INQUEUE);
-                    double value = relief.getValue(pos2[0], pos2[1]);
-                    queue.add(value, pos2);
-                }
+            // once label of current pixel is known, we can enqueue the
+            // positions of unlabeled neighbor
+            for (int i = 0; i < neighborCount; i++)
+            {   
+                int[] pos2 = neighbors[i];
+                labelMap.setInt(pos2[0], pos2[1], INQUEUE);
+                double value = relief.getValue(pos2[0], pos2[1]);
+                queue.add(value, pos2);
             }
         }
 
