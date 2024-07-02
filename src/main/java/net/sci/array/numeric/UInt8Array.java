@@ -12,7 +12,7 @@ import net.sci.array.numeric.impl.BufferedUInt8Array3D;
 import net.sci.array.numeric.impl.BufferedUInt8ArrayND;
 import net.sci.array.numeric.impl.DenseUInt8ArrayFactory;
 import net.sci.array.numeric.impl.FunctionViewUInt8Array;
-import net.sci.array.process.type.ConvertToUInt8;
+import net.sci.array.numeric.process.ConvertToUInt8;
 
 
 /**

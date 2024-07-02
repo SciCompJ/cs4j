@@ -7,7 +7,7 @@ import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
-import net.sci.array.process.numeric.AddValue;
+import net.sci.array.numeric.process.AddValue;
 import net.sci.image.Connectivity2D;
 import net.sci.image.Connectivity3D;
 import net.sci.image.morphology.extrema.RegionalExtrema2D;

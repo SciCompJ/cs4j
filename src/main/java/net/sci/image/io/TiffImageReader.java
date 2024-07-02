@@ -19,7 +19,7 @@ import net.sci.array.color.DefaultColorMap;
 import net.sci.array.numeric.impl.FileMappedFloat32Array3D;
 import net.sci.array.numeric.impl.FileMappedUInt16Array3D;
 import net.sci.array.numeric.impl.FileMappedUInt8Array3D;
-import net.sci.array.process.shape.Reshape;
+import net.sci.array.shape.Reshape;
 import net.sci.axis.Axis;
 import net.sci.image.Calibration;
 import net.sci.image.Image;

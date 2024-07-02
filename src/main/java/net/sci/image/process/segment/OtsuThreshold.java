@@ -3,8 +3,8 @@
  */
 package net.sci.image.process.segment;
 
+import net.sci.array.Histograms;
 import net.sci.array.numeric.ScalarArray;
-import net.sci.array.process.Histograms;
 
 /**
  * Compute threshold value using Otsu's method, that consists in minimizing the

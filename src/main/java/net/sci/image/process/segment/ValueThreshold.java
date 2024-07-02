@@ -11,7 +11,7 @@ import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
-import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.numeric.process.ScalarArrayOperator;
 import net.sci.image.ImageArrayOperator;
 
 /**
@@ -20,7 +20,7 @@ import net.sci.image.ImageArrayOperator;
  * 
  * Can be replaced by the "ScalarToBinary" operator.
  * 
- * @see net.sci.array.process.type.ScalarToBinary
+ * @see net.sci.array.binary.process.ScalarToBinary
  * 
  * @author dlegland
  *

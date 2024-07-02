@@ -13,7 +13,7 @@ import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
-import net.sci.array.process.numeric.AdditiveInverse;
+import net.sci.array.numeric.process.AdditiveInverse;
 import net.sci.image.Connectivity;
 import net.sci.image.Connectivity2D;
 import net.sci.image.Connectivity3D;

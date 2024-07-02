@@ -15,7 +15,7 @@ import net.sci.array.numeric.IntVectorArray;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array;
-import net.sci.array.process.type.ConvertToUInt8;
+import net.sci.array.numeric.process.ConvertToUInt8;
 
 /**
  * An array that contains colors represented as instances of RGB8 type.

@@ -6,7 +6,7 @@ package net.sci.array.color;
 import net.sci.array.numeric.IntVectorArray3D;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array3D;
-import net.sci.array.process.type.ConvertToUInt8;
+import net.sci.array.numeric.process.ConvertToUInt8;
 
 /**
  * Base class for implementation of 3D arrays containing colors represented as RGB8.

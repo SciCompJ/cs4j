@@ -8,7 +8,7 @@ import java.util.Locale;
 import net.sci.array.numeric.IntVectorArray2D;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array2D;
-import net.sci.array.process.type.ConvertToUInt8;
+import net.sci.array.numeric.process.ConvertToUInt8;
 
 /**
  * @author dlegland

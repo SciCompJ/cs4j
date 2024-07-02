@@ -5,10 +5,10 @@ package net.sci.image.process.shape;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.interp.LinearInterpolator2D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.interp.LinearInterpolator2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.Polyline2D;
 import net.sci.image.ImageArrayOperator;

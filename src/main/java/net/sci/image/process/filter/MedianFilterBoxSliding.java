@@ -10,7 +10,7 @@ import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.UInt8Array3D;
-import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.numeric.process.ScalarArrayOperator;
 import net.sci.util.MathUtils;
 
 /**

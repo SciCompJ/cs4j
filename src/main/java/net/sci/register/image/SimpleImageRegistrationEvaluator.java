@@ -5,7 +5,7 @@ package net.sci.register.image;
 
 import java.util.Collection;
 
-import net.sci.array.interp.ScalarFunction2D;
+import net.sci.array.numeric.interp.ScalarFunction2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.optim.ScalarFunction;
 import net.sci.register.transform.ParametricTransform2D;

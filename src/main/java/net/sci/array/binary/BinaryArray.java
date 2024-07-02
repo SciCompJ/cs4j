@@ -7,11 +7,11 @@ import java.util.function.Function;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
+import net.sci.array.binary.process.BinaryMask;
+import net.sci.array.binary.process.ConvertToBinary;
 import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.ScalarArray;
-import net.sci.array.process.binary.BinaryMask;
-import net.sci.array.process.type.ConvertToBinary;
 
 /**
  * A multidimensional array containing boolean values.
@@ -80,7 +80,7 @@ public interface BinaryArray extends IntArray<Binary>
      * Converts an array to a binary array, by thresholding all values
      * strictly greater than zero.
      *
-     * @see net.sci.array.process.type.ConvertToBinary
+     * @see net.sci.array.binary.process.ConvertToBinary
      * 
      * @param array
      *            an array

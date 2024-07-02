@@ -9,10 +9,10 @@ import net.sci.algo.Algo;
 import net.sci.algo.AlgoListener;
 import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.impl.GenericArray;
-import net.sci.array.process.shape.Flip;
-import net.sci.array.process.shape.PermuteDimensions;
-import net.sci.array.process.shape.Reshape;
-import net.sci.array.process.shape.Squeeze;
+import net.sci.array.shape.Flip;
+import net.sci.array.shape.PermuteDimensions;
+import net.sci.array.shape.Reshape;
+import net.sci.array.shape.Squeeze;
 import net.sci.util.MathUtils;
 
 /**
@@ -51,7 +51,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
     /**
      * Creates a new array with new dimensions and containing the same elements.
      * 
-     * @see net.sci.array.process.shape.Reshape
+     * @see net.sci.array.shape.Reshape
      * 
      * @param newDims
      *            the dimensions of the new array
@@ -65,7 +65,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
     /**
      * Flips the content of an array along the specified dimension.
      *
-     * @see net.sci.array.process.shape.Flip
+     * @see net.sci.array.shape.Flip
      * 
      * @param dim
      *            the dimension to flip along
@@ -79,7 +79,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
     /**
      * Permutes the dimensions of the array.
      * 
-     * @see net.sci.array.process.shape.PermuteDimensions
+     * @see net.sci.array.shape.PermuteDimensions
      * 
      * @param dimOrder
      *            the indices of the dimensions in the new array. Should be a
@@ -94,7 +94,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
     /**
      * Removes array dimensions whose size is 1.
      * 
-     * @see net.sci.array.process.shape.Squeeze
+     * @see net.sci.array.shape.Squeeze
      * 
      * @return an array with same type and same number of elements, without any
      *         dimension with size equal to 1.

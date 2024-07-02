@@ -8,8 +8,8 @@ import net.sci.array.Arrays;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
-import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.process.VectorArrayMarginalOperator;
+import net.sci.array.numeric.process.ScalarArrayOperator;
+import net.sci.array.numeric.process.VectorArrayMarginalOperator;
 import net.sci.image.ImageArrayOperator;
 
 /**

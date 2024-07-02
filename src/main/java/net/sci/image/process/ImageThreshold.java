@@ -6,7 +6,7 @@ package net.sci.image.process;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.numeric.ScalarArray;
-import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.numeric.process.ScalarArrayOperator;
 import net.sci.image.ImageArrayOperator;
 
 /**

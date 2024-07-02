@@ -8,7 +8,7 @@ import net.sci.array.Arrays;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
-import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.numeric.process.ScalarArrayOperator;
 import net.sci.image.ImageArrayOperator;
 import net.sci.image.process.filter.BoxNeighborhood;
 import net.sci.image.process.filter.Neighborhood;

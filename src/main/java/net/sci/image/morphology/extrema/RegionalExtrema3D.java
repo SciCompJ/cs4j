@@ -13,7 +13,7 @@ import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray3D;
-import net.sci.array.process.ScalarArrayOperator;
+import net.sci.array.numeric.process.ScalarArrayOperator;
 import net.sci.image.Connectivity3D;
 import net.sci.image.ImageArrayOperator;
 import net.sci.image.morphology.FloodFill;

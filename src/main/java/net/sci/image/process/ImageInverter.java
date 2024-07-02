@@ -9,13 +9,13 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.binary.process.Complement;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt8Array;
-import net.sci.array.process.binary.Complement;
 import net.sci.image.ImageArrayOperator;
 
 /**

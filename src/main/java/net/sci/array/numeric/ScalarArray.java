@@ -266,7 +266,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
      * @param fun
      *            the function to apply
      * @return the result array
-     * @see net.sci.array.process.numeric.ApplyFunction
+     * @see net.sci.array.numeric.process.ApplyFunction
      */
     public default ScalarArray<S> apply(UnaryOperator<Double> fun)
     {

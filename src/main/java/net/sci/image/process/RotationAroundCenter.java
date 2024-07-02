@@ -5,12 +5,12 @@ package net.sci.image.process;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.interp.LinearInterpolator2D;
 import net.sci.array.numeric.Float32Array2D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.VectorArray;
 import net.sci.array.numeric.VectorArray2D;
+import net.sci.array.numeric.interp.LinearInterpolator2D;
 import net.sci.image.ImageArrayOperator;
 
 /**
