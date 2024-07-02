@@ -7,9 +7,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * @author dlegland
@@ -19,7 +19,7 @@ public class SlidingDiskStrelTest
 {
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.SlidingDiskStrel#dilation(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.strel.SlidingDiskStrel#dilation(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testDilation_UInt8()
@@ -41,7 +41,7 @@ public class SlidingDiskStrelTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.SlidingDiskStrel#dilation(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.strel.SlidingDiskStrel#dilation(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testDilation_Float32()
@@ -63,7 +63,7 @@ public class SlidingDiskStrelTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.SlidingDiskStrel#erosion(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.strel.SlidingDiskStrel#erosion(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testErosion_UInt8()
@@ -86,7 +86,7 @@ public class SlidingDiskStrelTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.SlidingDiskStrel#erosion(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.strel.SlidingDiskStrel#erosion(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testErosion_Float32()

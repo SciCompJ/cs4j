@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 
 /**
  * Implementation stub for separable Structuring elements.

@@ -9,9 +9,9 @@ import org.junit.Test;
 
 import net.sci.array.Array3D;
 import net.sci.array.Arrays;
-import net.sci.array.scalar.BufferedUInt8Array3D;
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt8Array3D;
+import net.sci.array.numeric.impl.BufferedUInt8Array3D;
 
 /**
  * @author dlegland

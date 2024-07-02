@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.IntArray3D;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray3D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.label.LabelImages;

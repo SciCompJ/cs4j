@@ -3,7 +3,7 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.UInt16Array;
+import net.sci.array.numeric.UInt16Array;
 
 /**
  * @author dlegland

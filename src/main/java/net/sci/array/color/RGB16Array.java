@@ -10,9 +10,9 @@ import java.util.HashMap;
 import net.sci.array.Array;
 import net.sci.array.ArrayWrapperStub;
 import net.sci.array.binary.BinaryArray;
-import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array;
-import net.sci.array.vector.IntVectorArray;
+import net.sci.array.numeric.IntVectorArray;
+import net.sci.array.numeric.UInt16;
+import net.sci.array.numeric.UInt16Array;
 
 /**
  * An array that contains colors represented as instances of RGB16 type.
@@ -399,7 +399,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     /**
      * Always returns 3, as this is the number of components of the RGB16 type.
      * 
-     * @see net.sci.array.vector.VectorArray#channelCount()
+     * @see net.sci.array.numeric.VectorArray#channelCount()
      */
     @Override
     public default int channelCount()

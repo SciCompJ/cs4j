@@ -5,10 +5,10 @@ package net.sci.image.process.segment;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.vector.VectorArray;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.VectorArray;
 import net.sci.image.ImageArrayOperator;
 import net.sci.table.Table;
 import net.sci.table.cluster.KMeans;

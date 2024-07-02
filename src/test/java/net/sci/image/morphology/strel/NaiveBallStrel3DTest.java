@@ -7,8 +7,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array3D;
 
 /**
  * @author dlegland

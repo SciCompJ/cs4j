@@ -3,8 +3,8 @@
  */
 package net.sci.image.morphology.strel;
 
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * Simple demo file for using square strel.

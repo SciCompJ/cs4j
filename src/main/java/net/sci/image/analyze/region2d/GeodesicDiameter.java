@@ -10,8 +10,8 @@ import java.util.Map;
 
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;
 import net.sci.image.ImageAxis;

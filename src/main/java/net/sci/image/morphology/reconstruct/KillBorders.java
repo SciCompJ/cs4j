@@ -6,9 +6,9 @@ package net.sci.image.morphology.reconstruct;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 
 /**

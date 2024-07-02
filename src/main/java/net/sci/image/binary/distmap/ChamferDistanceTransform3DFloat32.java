@@ -29,8 +29,8 @@ import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.Float32Array3D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.Float32Array3D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.binary.distmap.ChamferMask3D.Offset;
 
 /**

@@ -7,6 +7,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import net.sci.array.numeric.Float32VectorArray2D;
+import net.sci.array.numeric.Float32VectorArray3D;
+
 /**
  * @author dlegland
  *
@@ -15,7 +18,7 @@ public class Float32VectorArray3DTest
 {
     
     /**
-     * Test method for {@link net.sci.array.scalar.Float32VectorArray3D#slices()}.
+     * Test method for {@link net.sci.array.numeric.Float32VectorArray3D#slices()}.
      */
     @Test
     public final void testSlices()

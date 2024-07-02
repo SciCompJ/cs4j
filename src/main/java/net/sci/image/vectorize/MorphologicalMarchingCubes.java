@@ -6,7 +6,7 @@ package net.sci.image.vectorize;
 import java.util.HashMap;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.mesh.Mesh3D;
 import net.sci.geom.mesh.SimpleTriMesh3D;

@@ -6,10 +6,10 @@ package net.sci.image.process.filter;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.numeric.Numeric;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.process.VectorArrayMarginalOperator;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
 import net.sci.image.ImageArrayOperator;
 import net.sci.util.MathUtils;
 

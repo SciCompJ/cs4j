@@ -4,7 +4,7 @@
 package net.sci.image.binary;
 
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.Connectivity3D;
 import net.sci.image.Image;
 import net.sci.image.process.filter.BoxFilter;

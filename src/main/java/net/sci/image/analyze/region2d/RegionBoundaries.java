@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import net.sci.array.scalar.IntArray2D;
+import net.sci.array.numeric.IntArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.label.LabelImages;
 

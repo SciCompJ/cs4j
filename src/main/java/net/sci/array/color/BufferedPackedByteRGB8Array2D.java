@@ -3,8 +3,8 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array3D;
 
 /**
  * Implementation of 2D array of RGB8, by keeping value in a byte buffer, with

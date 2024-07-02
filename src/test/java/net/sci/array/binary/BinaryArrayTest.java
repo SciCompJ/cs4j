@@ -9,10 +9,10 @@ import org.junit.Test;
 
 import net.sci.array.Array2D;
 import net.sci.array.generic.GenericArray2D;
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * @author dlegland

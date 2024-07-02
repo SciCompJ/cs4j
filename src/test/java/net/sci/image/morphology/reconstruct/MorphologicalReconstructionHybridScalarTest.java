@@ -7,10 +7,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.image.Connectivity2D;
 import net.sci.image.Connectivity3D;
 import net.sci.image.morphology.MorphologicalReconstruction;

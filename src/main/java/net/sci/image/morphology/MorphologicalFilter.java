@@ -8,8 +8,8 @@ import net.sci.algo.AlgoListener;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.vector.VectorArray;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.VectorArray;
 
 /**
  * Base class for morphological filters, based on a structuring element.

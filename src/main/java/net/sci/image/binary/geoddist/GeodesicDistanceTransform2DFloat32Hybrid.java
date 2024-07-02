@@ -6,7 +6,7 @@ import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.Float32Array2D;
+import net.sci.array.numeric.Float32Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 

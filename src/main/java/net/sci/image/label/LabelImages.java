@@ -8,7 +8,11 @@ import java.util.Iterator;
 import java.util.TreeSet;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.*;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
 import net.sci.image.binary.distmap.ChamferMask2D;
 import net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid;
 import net.sci.image.label.distmap.ChamferDistanceTransform2DFloat32;

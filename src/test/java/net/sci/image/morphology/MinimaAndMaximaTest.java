@@ -8,8 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.image.Connectivity2D;
 
 /**
@@ -18,7 +18,7 @@ import net.sci.image.Connectivity2D;
 public class MinimaAndMaximaTest
 {
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testRegionalMaxima_ScalarArray2D_C4()
@@ -49,7 +49,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testRegionalMaxima_ScalarArray2D_C8()
@@ -80,7 +80,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMinima(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMinima(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testRegionalMinima_ScalarArray2D_C4()
@@ -107,7 +107,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMinima(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMinima(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testRegionalMinima_ScalarArray2D_C8()
@@ -134,7 +134,7 @@ public class MinimaAndMaximaTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testExtendedMaxima_ScalarArray2D_C4()
@@ -163,7 +163,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testExtendedMinima_ScalarArray2D_C4()
@@ -193,7 +193,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testExtendedMinima_ScalarArray2D_simpleProfile_H10()
@@ -210,7 +210,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testExtendedMinima_ScalarArray2D_simpleProfile_H20()

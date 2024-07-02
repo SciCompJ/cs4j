@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.Float32Array3D;
+import net.sci.array.numeric.Float32Array3D;
 
 /**
  * @author dlegland

@@ -16,10 +16,10 @@ import net.sci.array.binary.BinaryRow;
 import net.sci.array.binary.Run;
 import net.sci.array.binary.RunLengthBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
 
 /**
  * Converts a scalar array into a binary array, by using an inner conversion

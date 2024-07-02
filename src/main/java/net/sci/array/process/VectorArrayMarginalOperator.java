@@ -5,8 +5,8 @@ package net.sci.array.process;
 
 import net.sci.array.Array;
 import net.sci.array.Array.PositionIterator;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.vector.VectorArray;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.VectorArray;
 
 /**
  * An interface that allows instances of ScalarArrayOperator to work on vector

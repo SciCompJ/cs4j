@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.Array2D;
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.image.Connectivity2D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 

@@ -6,7 +6,7 @@ package net.sci.array.binary;
 import java.io.PrintStream;
 import java.util.function.BiFunction;
 
-import net.sci.array.scalar.IntArray2D;
+import net.sci.array.numeric.IntArray2D;
 
 /**
  * A two-dimensional array containing boolean values.

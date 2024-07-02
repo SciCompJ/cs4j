@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.binary.distmap.ChamferMask3D;
 
 /**

@@ -8,10 +8,10 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.IntArray3D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.IntArray3D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.image.Connectivity3D;
 
 /**
@@ -21,7 +21,7 @@ import net.sci.image.Connectivity3D;
 public class FloodFillTest
 {
     /**
-     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.scalar.ScalarArray2D, int, int, double, int)}.
+     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.numeric.ScalarArray2D, int, int, double, int)}.
      */
     @Test
     public final void testFloodFill_InPlace_Square_C4()
@@ -43,7 +43,7 @@ public class FloodFillTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.scalar.ScalarArray2D, int, int, double, int)}.
+     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.numeric.ScalarArray2D, int, int, double, int)}.
      */
     @Test
     public final void testFloodFill_InPlace_Square_C8()
@@ -65,7 +65,7 @@ public class FloodFillTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.scalar.ScalarArray2D, int, int, double, int)}.
+     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.numeric.ScalarArray2D, int, int, double, int)}.
      */
     @Test
     public final void testFloodFill_InPlace_Concave_C4()
@@ -90,7 +90,7 @@ public class FloodFillTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.scalar.ScalarArray2D, int, int, double, int)}.
+     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.numeric.ScalarArray2D, int, int, double, int)}.
      */
     @Test
     public final void testFloodFill_InPlace_Concave_C8()
@@ -115,7 +115,7 @@ public class FloodFillTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.scalar.ScalarArray2D, int, int, double, int)}.
+     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.numeric.ScalarArray2D, int, int, double, int)}.
      */
     @Test
     public final void testFloodFill_InPlace_FullImage_C4()
@@ -137,7 +137,7 @@ public class FloodFillTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.scalar.ScalarArray2D, int, int, double, int)}.
+     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.numeric.ScalarArray2D, int, int, double, int)}.
      */
     @Test
     public final void testFloodFill_InPlace_Cross3d_C6()
@@ -156,7 +156,7 @@ public class FloodFillTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.scalar.ScalarArray2D, int, int, double, int)}.
+     * Test method for {@link net.sci.image.morphology.FloodFill#floodFill(net.sci.array.numeric.ScalarArray2D, int, int, double, int)}.
      */
     @Test
     public final void testFloodFill_InPlace_Cross3d_C26()

@@ -7,9 +7,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array3D;
 
 /**
  * @author dlegland
@@ -19,7 +19,7 @@ public class KeepValueRangeTest
 {
 
     /**
-     * Test method for {@link net.sci.array.process.numeric.KeepValueRange#processScalar(net.sci.array.scalar.ScalarArray, net.sci.array.scalar.ScalarArray)}.
+     * Test method for {@link net.sci.array.process.numeric.KeepValueRange#processScalar(net.sci.array.numeric.ScalarArray, net.sci.array.numeric.ScalarArray)}.
      */
     @Test
     public final void testProcessScalar_2d()
@@ -44,7 +44,7 @@ public class KeepValueRangeTest
 
 
     /**
-     * Test method for {@link net.sci.array.process.numeric.KeepValueRange#processScalar(net.sci.array.scalar.ScalarArray, net.sci.array.scalar.ScalarArray)}.
+     * Test method for {@link net.sci.array.process.numeric.KeepValueRange#processScalar(net.sci.array.numeric.ScalarArray, net.sci.array.numeric.ScalarArray)}.
      */
     @Test
     public final void testProcessScalar_3d()

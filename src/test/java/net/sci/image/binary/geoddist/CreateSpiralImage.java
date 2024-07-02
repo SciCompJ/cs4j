@@ -7,8 +7,8 @@ import java.io.File;
 import java.io.IOException;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.image.Image;
 import net.sci.image.binary.BinaryImages;
 import net.sci.image.binary.distmap.ChamferMask2D;

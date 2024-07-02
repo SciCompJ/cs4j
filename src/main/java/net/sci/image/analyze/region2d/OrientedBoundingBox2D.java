@@ -8,8 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-
-import net.sci.array.scalar.IntArray2D;
+import net.sci.array.numeric.IntArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.OrientedBox2D;
 import net.sci.geom.geom2d.polygon.Polygon2D;

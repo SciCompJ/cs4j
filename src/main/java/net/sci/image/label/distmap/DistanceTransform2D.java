@@ -24,7 +24,9 @@ package net.sci.image.label.distmap;
 import net.sci.algo.Algo;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.scalar.*;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
 
 
 /**

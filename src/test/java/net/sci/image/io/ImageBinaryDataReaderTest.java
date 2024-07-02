@@ -6,12 +6,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteOrder;
 
-import net.sci.array.scalar.Float32Array;
-import net.sci.array.scalar.Float64Array;
-import net.sci.array.scalar.Int16Array;
-import net.sci.array.scalar.Int32Array;
-import net.sci.array.scalar.UInt16Array;
-import net.sci.array.scalar.UInt8Array;
+import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Int16Array;
+import net.sci.array.numeric.Int32Array;
+import net.sci.array.numeric.UInt16Array;
+import net.sci.array.numeric.UInt8Array;
 
 import org.junit.Test;
 

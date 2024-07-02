@@ -4,8 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
-import net.sci.array.scalar.Float32Array3D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.Float32Array3D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.Image;
 import net.sci.image.io.TiffImageReader;
 

@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.geom.mesh.Mesh3D;
 import net.sci.image.analyze.IntrinsicVolumes;
 

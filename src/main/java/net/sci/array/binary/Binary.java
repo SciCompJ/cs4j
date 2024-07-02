@@ -3,7 +3,7 @@
  */
 package net.sci.array.binary;
 
-import net.sci.array.scalar.Int;
+import net.sci.array.numeric.Int;
 
 /**
  * A binary type that encapsulates a boolean.

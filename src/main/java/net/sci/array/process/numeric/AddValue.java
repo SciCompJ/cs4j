@@ -5,9 +5,9 @@ package net.sci.array.process.numeric;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayWrapperStub;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
-import net.sci.array.scalar.ScalarArray;
 
 /**
  * Adds a scalar value to an array containing Scalar value.

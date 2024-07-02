@@ -7,8 +7,8 @@ import java.util.Deque;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array3D;
+import net.sci.array.numeric.UInt16;
+import net.sci.array.numeric.UInt16Array3D;
 import net.sci.image.binary.distmap.ChamferMask3D;
 import net.sci.image.binary.distmap.ChamferMask3D.Offset;
 

@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import java.util.Locale;
 
 import net.sci.array.generic.BufferedGenericArray3D;
-import net.sci.array.scalar.TriFunction;
+import net.sci.array.numeric.TriFunction;
 
 /**
  * Base implementation for three-dimensional array.

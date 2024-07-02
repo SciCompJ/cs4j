@@ -8,13 +8,13 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.vector.Float32Vector;
-import net.sci.array.vector.Float32VectorArray;
-import net.sci.array.vector.Float32VectorArray2D;
+import net.sci.array.numeric.Float32Vector;
+import net.sci.array.numeric.Float32VectorArray;
+import net.sci.array.numeric.Float32VectorArray2D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * 

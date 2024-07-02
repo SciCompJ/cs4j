@@ -11,7 +11,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.Float32Array2D;
+import net.sci.array.numeric.Float32Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 
 /**

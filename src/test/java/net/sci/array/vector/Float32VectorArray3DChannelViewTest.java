@@ -4,10 +4,12 @@
 package net.sci.array.vector;
 
 import static org.junit.Assert.assertEquals;
-import net.sci.array.scalar.Float32Array;
-import net.sci.array.scalar.Float32Array3D;
 
 import org.junit.Test;
+
+import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float32Array3D;
+import net.sci.array.numeric.Float32VectorArray3D;
 
 /**
  * @author dlegland
@@ -17,7 +19,7 @@ public class Float32VectorArray3DChannelViewTest
 {
     
     /**
-     * Test method for {@link net.sci.array.color.Float64VectorArray3D#channel(int)}.
+     * Test method for {@link net.sci.array.numeric.Float64VectorArray3D#channel(int)}.
      */
     @Test
     public final void channel_Iterator()

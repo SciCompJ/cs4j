@@ -8,14 +8,14 @@ import java.util.function.Function;
 import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
 import net.sci.array.ArrayWrapperStub;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Scalar;
-import net.sci.array.scalar.ScalarArray;
 
 /**
  * Applies a scalar function to each element of a scalar array.
  * 
- * @see net.sci.array.scalar.ScalarArray#apply(java.util.function.UnaryOperator)
+ * @see net.sci.array.numeric.ScalarArray#apply(java.util.function.UnaryOperator)
  */
 public class ApplyFunction extends AlgoStub implements ArrayOperator, ScalarArrayOperator
 {
@@ -96,7 +96,7 @@ public class ApplyFunction extends AlgoStub implements ArrayOperator, ScalarArra
         }
 
         @Override
-        public net.sci.array.scalar.ScalarArray.Factory<S> factory()
+        public net.sci.array.numeric.ScalarArray.Factory<S> factory()
         {
             return array.factory();
         }

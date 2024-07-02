@@ -3,8 +3,8 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array3D;
+import net.sci.array.numeric.UInt16;
+import net.sci.array.numeric.UInt16Array3D;
 
 /**
  * Implementation of 2D array of RGB16, by keeping value in a buffer of short

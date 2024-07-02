@@ -9,10 +9,10 @@ import static java.lang.Math.min;
 import java.util.ArrayList;
 
 import net.sci.array.Array2D;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.IntArray3D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.IntArray3D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.Connectivity2D;
 import net.sci.image.Connectivity3D;
 

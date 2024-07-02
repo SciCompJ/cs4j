@@ -7,6 +7,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import net.sci.array.numeric.Float64Vector;
+import net.sci.array.numeric.Vector;
+
 /**
  * @author dlegland
  *
@@ -15,7 +18,7 @@ public class VectorTest
 {
 
     /**
-     * Test method for {@link net.sci.array.vector.Vector#norm(double[])}.
+     * Test method for {@link net.sci.array.numeric.Vector#norm(double[])}.
      */
     @Test
     public void testNormDoubleArray()
@@ -27,7 +30,7 @@ public class VectorTest
     }
 
     /**
-     * Test method for {@link net.sci.array.vector.Vector#maxNorm(double[])}.
+     * Test method for {@link net.sci.array.numeric.Vector#maxNorm(double[])}.
      */
     @Test
     public void testMaxNormDoubleArray()

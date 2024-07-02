@@ -4,10 +4,11 @@
 package net.sci.array.color;
 
 import static org.junit.Assert.*;
-import net.sci.array.vector.Float32VectorArray2D;
-import net.sci.array.vector.VectorArray2D;
 
 import org.junit.Test;
+
+import net.sci.array.numeric.Float32VectorArray2D;
+import net.sci.array.numeric.VectorArray2D;
 
 /**
  * @author dlegland

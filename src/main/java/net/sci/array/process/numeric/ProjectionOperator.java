@@ -5,8 +5,8 @@ package net.sci.array.process.numeric;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.ScalarArray;
 
 /**
  * Computes intensity projection along a specified dimension.

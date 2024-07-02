@@ -3,7 +3,7 @@
  */
 package net.sci.array.binary;
 
-import net.sci.array.scalar.IntArrayND;
+import net.sci.array.numeric.IntArrayND;
 
 /**
  * @author dlegland

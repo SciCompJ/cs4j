@@ -6,8 +6,8 @@ package net.sci.image.morphology.strel;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 
 /**
  * Utility class to wrap a 2D structuring element into a 2D structuring element.

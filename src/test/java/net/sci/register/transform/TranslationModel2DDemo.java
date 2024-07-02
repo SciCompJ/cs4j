@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.array.interp.LinearInterpolator2D;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.io.TiffImageReader;
 import net.sci.optim.NelderMeadSimplexOptimizer;

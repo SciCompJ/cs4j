@@ -4,7 +4,7 @@
 package net.sci.array.color;
 
 import net.sci.array.Arrays;
-import net.sci.array.scalar.UInt8Array;
+import net.sci.array.numeric.UInt8Array;
 
 /**
  * A RGB8Array view that combines three UInt8Array instances.

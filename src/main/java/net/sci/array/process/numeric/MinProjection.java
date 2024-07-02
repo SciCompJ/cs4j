@@ -8,7 +8,7 @@ import java.util.Comparator;
 import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.generic.GenericArray2D;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Computes minimum intensity projection along a specified dimension. 

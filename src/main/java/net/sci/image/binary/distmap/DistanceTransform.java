@@ -6,7 +6,7 @@ package net.sci.image.binary.distmap;
 import net.sci.algo.Algo;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * General interface for operators implementing distance transform.

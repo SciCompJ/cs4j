@@ -6,7 +6,7 @@ package net.sci.array.process.numeric;
 import java.util.Comparator;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Computes maximum intensity projection along a specified dimension.

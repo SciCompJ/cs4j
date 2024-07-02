@@ -4,9 +4,10 @@
 package net.sci.array.color;
 
 import static org.junit.Assert.assertEquals;
-import net.sci.array.scalar.UInt16Array;
 
 import org.junit.Test;
+
+import net.sci.array.numeric.UInt16Array;
 
 /**
  * @author dlegland

@@ -5,7 +5,7 @@ package net.sci.image.binary.geoddist;
 
 import net.sci.algo.Algo;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray3D;
 
 /**
  * Computes the geodesic distance transform (or geodesic distance map) of a

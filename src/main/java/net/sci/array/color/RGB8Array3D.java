@@ -3,10 +3,10 @@
  */
 package net.sci.array.color;
 
+import net.sci.array.numeric.IntVectorArray3D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.array.process.type.ConvertToUInt8;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array3D;
-import net.sci.array.vector.IntVectorArray3D;
 
 /**
  * Base class for implementation of 3D arrays containing colors represented as RGB8.
@@ -419,12 +419,12 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
         }
 
         @Override
-        public net.sci.array.scalar.UInt8Array.Iterator iterator()
+        public net.sci.array.numeric.UInt8Array.Iterator iterator()
         {
             return new Iterator();
         }
 
-        class Iterator implements net.sci.array.scalar.UInt8Array.Iterator
+        class Iterator implements net.sci.array.numeric.UInt8Array.Iterator
         {
             int indX = -1;
             int indY = 0;

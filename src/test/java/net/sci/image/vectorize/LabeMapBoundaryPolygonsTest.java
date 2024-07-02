@@ -12,8 +12,8 @@ import java.util.Map;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.Polygon2D;
 import net.sci.image.Connectivity2D;

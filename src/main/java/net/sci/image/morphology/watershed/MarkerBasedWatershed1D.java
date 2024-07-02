@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 import net.sci.array.Arrays;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.IntArray1D;
-import net.sci.array.scalar.ScalarArray1D;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray1D;
+import net.sci.array.numeric.ScalarArray1D;
 
 /**
  * Tentative implementation of Watershed algorithm for planar scalar images.

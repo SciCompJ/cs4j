@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.Float32Array2D;
+import net.sci.array.numeric.Float32Array2D;
 
 /**
  * @author dlegland

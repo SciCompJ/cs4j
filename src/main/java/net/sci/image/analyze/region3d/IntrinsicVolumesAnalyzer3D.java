@@ -7,7 +7,7 @@ import java.util.Map;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
-import net.sci.array.scalar.IntArray3D;
+import net.sci.array.numeric.IntArray3D;
 import net.sci.image.Calibration;
 import net.sci.table.Table;
 

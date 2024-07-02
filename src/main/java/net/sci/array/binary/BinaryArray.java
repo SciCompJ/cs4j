@@ -8,10 +8,10 @@ import java.util.function.Function;
 import net.sci.array.Array;
 import net.sci.array.ArrayWrapperStub;
 import net.sci.array.Arrays;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.binary.BinaryMask;
 import net.sci.array.process.type.ConvertToBinary;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.ScalarArray;
 
 /**
  * A multidimensional array containing boolean values.
@@ -725,7 +725,7 @@ public interface BinaryArray extends IntArray<Binary>
      * <li>scalar value &lt; or = 0: binary value FALSE</li>
      * </ul>
      * 
-     * @see BinaryArray#wrap(net.sci.array.scalar.ScalarArray)
+     * @see BinaryArray#wrap(net.sci.array.numeric.ScalarArray)
      */
     static class ScalarArrayWrapper extends ArrayWrapperStub<Binary> implements BinaryArray
     {

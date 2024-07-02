@@ -3,7 +3,7 @@
  */
 package net.sci.array.interp;
 
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 
 
 /**

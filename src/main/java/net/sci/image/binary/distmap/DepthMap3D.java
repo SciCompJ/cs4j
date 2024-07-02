@@ -9,9 +9,9 @@ import net.sci.array.ArrayOperator;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.Float32Array;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
 
 /**
  * @author dlegland

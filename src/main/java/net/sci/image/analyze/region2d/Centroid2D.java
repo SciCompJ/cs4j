@@ -6,7 +6,7 @@ package net.sci.image.analyze.region2d;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sci.array.scalar.IntArray2D;
+import net.sci.array.numeric.IntArray2D;
 import net.sci.axis.NumericalAxis;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;

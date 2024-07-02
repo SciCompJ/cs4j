@@ -9,22 +9,22 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.Float32;
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.Int;
-import net.sci.array.scalar.Int32;
-import net.sci.array.scalar.Int32Array2D;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.Scalar;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.vector.Float32Vector;
-import net.sci.array.vector.Float32VectorArray;
-import net.sci.array.vector.Float32VectorArray2D;
-import net.sci.array.vector.VectorArray2D;
+import net.sci.array.numeric.Float32;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.Float32Vector;
+import net.sci.array.numeric.Float32VectorArray;
+import net.sci.array.numeric.Float32VectorArray2D;
+import net.sci.array.numeric.Int;
+import net.sci.array.numeric.Int32;
+import net.sci.array.numeric.Int32Array2D;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.VectorArray2D;
 
 /**
  * 

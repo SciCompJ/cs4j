@@ -10,8 +10,8 @@ import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array2D;
+import net.sci.array.numeric.UInt16;
+import net.sci.array.numeric.UInt16Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 
 /**

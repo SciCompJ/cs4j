@@ -9,7 +9,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.ArrayOperator;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Extract a (nd-1)-dimensional slice from a n-dimensional array, by specifying

@@ -7,9 +7,9 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.Arrays;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.vector.Float32VectorArray;
-import net.sci.array.vector.VectorArray;
+import net.sci.array.numeric.Float32VectorArray;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.VectorArray;
 
 /**
  * @author dlegland

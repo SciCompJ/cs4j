@@ -3,9 +3,9 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8ArrayND;
-import net.sci.array.vector.VectorArrayND;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8ArrayND;
+import net.sci.array.numeric.VectorArrayND;
 
 /**
  * @author dlegland
@@ -118,12 +118,12 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8,UInt8> implements R
         }
 
         @Override
-        public net.sci.array.scalar.UInt8Array.Iterator iterator()
+        public net.sci.array.numeric.UInt8Array.Iterator iterator()
         {
             return new Iterator();
         }
 
-        class Iterator implements net.sci.array.scalar.UInt8Array.Iterator
+        class Iterator implements net.sci.array.numeric.UInt8Array.Iterator
         {
             int[] pos;
             int nd;

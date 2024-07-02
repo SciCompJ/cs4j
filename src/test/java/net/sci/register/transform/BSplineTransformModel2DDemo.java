@@ -8,8 +8,8 @@ import java.io.IOException;
 
 import net.sci.array.color.ColorMap;
 import net.sci.array.color.ColorMaps;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Image;
 import net.sci.image.io.TiffImageReader;

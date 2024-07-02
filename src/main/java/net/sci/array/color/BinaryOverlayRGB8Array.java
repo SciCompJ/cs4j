@@ -7,8 +7,8 @@ import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array;
 
 /**
  * Creates an RGB8 view that combines original values of a reference array with

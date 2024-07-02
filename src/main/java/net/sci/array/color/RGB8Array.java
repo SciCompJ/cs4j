@@ -11,11 +11,11 @@ import net.sci.array.Array;
 import net.sci.array.ArrayWrapperStub;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.numeric.IntVectorArray;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array;
 import net.sci.array.process.type.ConvertToUInt8;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.vector.IntVectorArray;
 
 /**
  * An array that contains colors represented as instances of RGB8 type.
@@ -533,7 +533,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     /**
      * Always returns 3, as this is the number of components of the RGB8 type.
      * 
-     * @see net.sci.array.vector.VectorArray#channelCount()
+     * @see net.sci.array.numeric.VectorArray#channelCount()
      */
     @Override
     public default int channelCount()

@@ -9,8 +9,8 @@ import java.util.Collection;
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.IntArray2D;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.IntArray2D;
 import net.sci.image.binary.distmap.ChamferMask2D;
 import net.sci.image.binary.distmap.ChamferMask2D.Offset;
 

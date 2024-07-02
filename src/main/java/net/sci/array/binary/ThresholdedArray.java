@@ -3,8 +3,8 @@
  */
 package net.sci.array.binary;
 
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArrayUInt8View;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.impl.ScalarArrayUInt8View;
 
 /**
  * A binary array view representing the result of a threshold operation on a

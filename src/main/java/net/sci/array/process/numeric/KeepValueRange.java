@@ -4,10 +4,10 @@
 package net.sci.array.process.numeric;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
 
 /**
  * Keep the values within the specified range, and set all other values to zero.

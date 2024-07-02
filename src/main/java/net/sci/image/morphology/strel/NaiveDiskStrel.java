@@ -5,7 +5,7 @@ package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 
 /**
  * Naive implementation of disk structuring element. Used as reference

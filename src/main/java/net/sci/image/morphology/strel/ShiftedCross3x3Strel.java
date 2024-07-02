@@ -4,9 +4,9 @@
 package net.sci.image.morphology.strel;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * Structuring element representing a 3x3 cross, that considers the reference

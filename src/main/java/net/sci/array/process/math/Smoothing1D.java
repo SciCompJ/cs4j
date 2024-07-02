@@ -7,7 +7,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.Arrays;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Performs smoothing of an array along a single dimension.

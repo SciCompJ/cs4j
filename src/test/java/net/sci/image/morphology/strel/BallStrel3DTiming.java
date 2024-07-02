@@ -6,7 +6,7 @@ package net.sci.image.morphology.strel;
 import java.io.File;
 import java.io.IOException;
 
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.table.Table;
 import net.sci.table.io.DelimitedTableWriter;
 import net.sci.table.io.TableWriter;

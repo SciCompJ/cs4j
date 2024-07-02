@@ -3,8 +3,8 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.Int32Array;
-import net.sci.array.scalar.UInt8;
+import net.sci.array.numeric.Int32Array;
+import net.sci.array.numeric.UInt8;
 
 /**
  * Wraps an Iterator over Int32 values into a <code>RGB8Array.Iterator</code>.

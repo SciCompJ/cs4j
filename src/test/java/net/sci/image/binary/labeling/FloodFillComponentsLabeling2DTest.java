@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.IntArray2D;
+import net.sci.array.numeric.IntArray2D;
 import net.sci.image.Connectivity2D;
 
 public class FloodFillComponentsLabeling2DTest

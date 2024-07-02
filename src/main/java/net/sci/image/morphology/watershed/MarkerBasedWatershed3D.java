@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 
 import net.sci.array.Arrays;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.IntArray3D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray3D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.Connectivity3D;
 
 /**

@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import net.sci.array.Array2D;
 import net.sci.array.generic.GenericArray2D;
+import net.sci.array.numeric.Float64Vector;
+import net.sci.array.numeric.Float64VectorArray;
 
 /**
  * 
@@ -17,7 +19,7 @@ public class Float64VectorArrayWrapperTest
 {
 
     /**
-     * Test method for {@link net.sci.array.vector.Float64VectorArray#wrap(net.sci.array.Array)}.
+     * Test method for {@link net.sci.array.numeric.Float64VectorArray#wrap(net.sci.array.Array)}.
      */
     @Test
     public final void testWrap()

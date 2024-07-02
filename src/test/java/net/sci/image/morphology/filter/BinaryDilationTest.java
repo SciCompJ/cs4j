@@ -16,7 +16,7 @@ import net.sci.array.binary.BinaryRow;
 import net.sci.array.binary.BufferedBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray3D;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.image.Image;
 import net.sci.image.io.TiffImageReader;
 import net.sci.image.morphology.strel.Cross3x3Strel;

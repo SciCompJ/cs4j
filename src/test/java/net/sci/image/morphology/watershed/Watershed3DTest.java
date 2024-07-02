@@ -8,8 +8,8 @@ import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.Float32Array3D;
-import net.sci.array.scalar.IntArray3D;
+import net.sci.array.numeric.Float32Array3D;
+import net.sci.array.numeric.IntArray3D;
 import net.sci.geom.geom3d.MultiPoint3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.image.Connectivity3D;
@@ -67,7 +67,7 @@ public class Watershed3DTest
     
     /**
      * Test method for
-     * {@link net.sci.image.morphology.watershed.Watershed3D#process(net.sci.array.scalar.ScalarArray3D,net.sci.array.scalar.IntArray3D)}.
+     * {@link net.sci.image.morphology.watershed.Watershed3D#process(net.sci.array.scalar.ScalarArray3D,net.sci.array.numeric.IntArray3D)}.
      */
     @Test
     public final void test_process_ArrayWithMarkers()

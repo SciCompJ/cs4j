@@ -3,8 +3,8 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.UInt8;
-import net.sci.array.vector.IntVector;
+import net.sci.array.numeric.IntVector;
+import net.sci.array.numeric.UInt8;
 
 /**
  * A color that is represented by a triplet of red, green and blue components,

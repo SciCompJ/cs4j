@@ -9,8 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Scanner;
 
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.image.Image;
 
 /**

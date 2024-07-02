@@ -8,14 +8,14 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.Float32Array;
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.Float64Array;
-import net.sci.array.scalar.Float64Array2D;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Float64Array2D;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * 
@@ -24,7 +24,7 @@ public class MinimalIncrementTest
 {
 
     /**
-     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#processInt(net.sci.array.scalar.IntArray)}.
+     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#processInt(net.sci.array.numeric.IntArray)}.
      */
     @Test
     public final void testProcessInt()
@@ -54,7 +54,7 @@ public class MinimalIncrementTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#processFloat32(net.sci.array.scalar.Float32Array)}.
+     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#processFloat32(net.sci.array.numeric.Float32Array)}.
      */
     @Test
     public final void testProcessFloat32()
@@ -69,7 +69,7 @@ public class MinimalIncrementTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#createView(net.sci.array.scalar.Float32Array)}.
+     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#createView(net.sci.array.numeric.Float32Array)}.
      */
     @Test
     public final void test_createView_Float32()
@@ -86,7 +86,7 @@ public class MinimalIncrementTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#processFloat32(net.sci.array.scalar.Float32Array)}.
+     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#processFloat32(net.sci.array.numeric.Float32Array)}.
      */
     @Test
     public final void testProcessFloat64()
@@ -101,7 +101,7 @@ public class MinimalIncrementTest
     }
 
     /**
-     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#createView(net.sci.array.scalar.Float32Array)}.
+     * Test method for {@link net.sci.array.process.numeric.MinimalIncrement#createView(net.sci.array.numeric.Float32Array)}.
      */
     @Test
     public final void test_createView_Float64()

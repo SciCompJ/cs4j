@@ -10,7 +10,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 import net.sci.image.Connectivity2D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 import net.sci.image.morphology.MorphologicalReconstruction.Type;

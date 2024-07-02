@@ -6,11 +6,11 @@ package net.sci.array.process.numeric;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.numeric.Float64;
 import net.sci.array.numeric.Numeric;
 import net.sci.array.numeric.NumericArray;
-import net.sci.array.scalar.Float64;
-import net.sci.array.scalar.Scalar;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Compute for each value of a numeric array the complement with respect to

@@ -5,8 +5,8 @@ package net.sci.array.process.shape;
 
 import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
-import net.sci.array.scalar.Scalar;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Pads an array with a number of elements in each direction.

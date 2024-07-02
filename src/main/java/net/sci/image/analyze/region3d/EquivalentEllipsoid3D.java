@@ -6,7 +6,7 @@ package net.sci.image.analyze.region3d;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sci.array.scalar.IntArray3D;
+import net.sci.array.numeric.IntArray3D;
 import net.sci.axis.NumericalAxis;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.surface.Ellipsoid3D;

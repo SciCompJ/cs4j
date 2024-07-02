@@ -3,7 +3,7 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.UInt8Array;
+import net.sci.array.numeric.UInt8Array;
 
 /**
  * Wraps a UInt8 array into a RGB8 array the same size, by associating

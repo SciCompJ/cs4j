@@ -8,8 +8,8 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array3D;
 
 /**
  * @author dlegland
@@ -27,7 +27,7 @@ public class Array3DTest
     }
 
     /**
-     * Test method for {@link net.sci.array.Array3D#fill(net.sci.array.scalar.TriFunction)}.
+     * Test method for {@link net.sci.array.Array3D#fill(net.sci.array.numeric.TriFunction)}.
      */
     @Test
     public final void test_fill_TriFunction_StringArray()

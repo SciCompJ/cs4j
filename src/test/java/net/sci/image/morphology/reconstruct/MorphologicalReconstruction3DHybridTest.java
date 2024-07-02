@@ -7,8 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.image.Connectivity3D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 
@@ -20,7 +20,7 @@ public class MorphologicalReconstruction3DHybridTest
 {
     /**
      * Test method for
-     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.scalar.ScalarArray3D, net.sci.array.scalar.ScalarArray3D)}.
+     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.numeric.ScalarArray3D, net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testProcess_ByDilation_C6_CubicMesh()
@@ -38,7 +38,7 @@ public class MorphologicalReconstruction3DHybridTest
     
     /**
      * Test method for
-     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.scalar.ScalarArray3D, net.sci.array.scalar.ScalarArray3D)}.
+     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.numeric.ScalarArray3D, net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testProcess_ByErosion_C6_CubicMesh()
@@ -59,7 +59,7 @@ public class MorphologicalReconstruction3DHybridTest
 
     /**
      * Test method for
-     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.scalar.ScalarArray3D, net.sci.array.scalar.ScalarArray3D)}.
+     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.numeric.ScalarArray3D, net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testProcess_ByDilation_C6_ThinCubicMesh()
@@ -77,7 +77,7 @@ public class MorphologicalReconstruction3DHybridTest
     
     /**
      * Test method for
-     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.scalar.ScalarArray3D, net.sci.array.scalar.ScalarArray3D)}.
+     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.numeric.ScalarArray3D, net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testProcess_ByDilation_C26_ThinCubicMesh()
@@ -95,7 +95,7 @@ public class MorphologicalReconstruction3DHybridTest
     
     /**
      * Test method for
-     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.scalar.ScalarArray3D, net.sci.array.scalar.ScalarArray3D)}.
+     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.numeric.ScalarArray3D, net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testProcess_ByErosion_C6_ThinCubicMesh()
@@ -116,7 +116,7 @@ public class MorphologicalReconstruction3DHybridTest
 
     /**
      * Test method for
-     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.scalar.ScalarArray3D, net.sci.array.scalar.ScalarArray3D)}.
+     * {@link net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid#process(net.sci.array.numeric.ScalarArray3D, net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testProcess_ByErosion_C26_ThinCubicMesh()

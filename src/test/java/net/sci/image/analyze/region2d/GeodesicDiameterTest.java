@@ -12,7 +12,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;

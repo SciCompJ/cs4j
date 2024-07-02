@@ -8,9 +8,9 @@ import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.ScalarArrayOperator;
 import net.sci.array.process.VectorArrayMarginalOperator;
-import net.sci.array.scalar.ScalarArray;
 import net.sci.image.ImageArrayOperator;
 
 /**

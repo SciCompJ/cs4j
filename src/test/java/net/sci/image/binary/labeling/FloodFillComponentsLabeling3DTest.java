@@ -3,7 +3,7 @@ package net.sci.image.binary.labeling;
 import static org.junit.Assert.assertEquals;
 
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.IntArray3D;
+import net.sci.array.numeric.IntArray3D;
 import net.sci.image.Connectivity3D;
 
 import org.junit.Test;

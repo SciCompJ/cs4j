@@ -6,9 +6,9 @@ package net.sci.array.process;
 import java.util.function.BiFunction;
 
 import net.sci.array.Arrays;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.math.MathBinaryOperator;
-import net.sci.array.scalar.Scalar;
-import net.sci.array.scalar.ScalarArray;
 
 /**
  * Collection of static methods for math operations on scalar arrays.

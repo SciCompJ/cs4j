@@ -5,7 +5,7 @@ package net.sci.array.process.numeric;
 
 import java.util.Arrays;
 
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Computes median intensity projection along a specified dimension.

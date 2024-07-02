@@ -4,8 +4,8 @@
 package net.sci.array.process.math;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.ScalarArray;
 
 /**
  * Sample operator to demonstrate the use of ScalarArrayOperator interface.

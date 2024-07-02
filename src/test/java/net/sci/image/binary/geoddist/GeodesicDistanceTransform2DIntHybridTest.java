@@ -4,10 +4,10 @@
 package net.sci.image.binary.geoddist;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array2D;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt16;
+import net.sci.array.numeric.UInt16Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D;
 
 import static org.junit.Assert.*;

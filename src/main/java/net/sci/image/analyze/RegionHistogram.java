@@ -5,7 +5,7 @@ package net.sci.image.analyze;
 
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array2D;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Domain2D;
 

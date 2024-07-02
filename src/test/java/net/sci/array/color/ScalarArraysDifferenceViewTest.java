@@ -9,9 +9,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.ScalarArrayUInt8View;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.impl.ScalarArrayUInt8View;
 
 /**
  * @author dlegland
@@ -20,7 +20,7 @@ import net.sci.array.scalar.UInt8Array2D;
 public class ScalarArraysDifferenceViewTest
 {
     /**
-     * Test method for {@link net.sci.array.color.ScalarArraysDifferenceView#ScalarArraysDifferenceView(net.sci.array.scalar.UInt8Array, net.sci.array.scalar.UInt8Array)}.
+     * Test method for {@link net.sci.array.color.ScalarArraysDifferenceView#ScalarArraysDifferenceView(net.sci.array.numeric.UInt8Array, net.sci.array.numeric.UInt8Array)}.
      */
     @Test
     public final void testScalarArraysDifferenceView()

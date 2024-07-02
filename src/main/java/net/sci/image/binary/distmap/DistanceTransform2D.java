@@ -25,9 +25,9 @@ import net.sci.algo.Algo;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.Scalar;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
 
 
 /**

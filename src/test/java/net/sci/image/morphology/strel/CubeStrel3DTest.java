@@ -8,8 +8,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt8Array3D;
 
 /**
  * @author dlegland
@@ -19,7 +19,7 @@ public class CubeStrel3DTest
 {
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.AbstractSeparableStrel3D#dilation(net.sci.array.scalar.ScalarArray3D)}.
+     * Test method for {@link net.sci.image.morphology.strel.AbstractSeparableStrel3D#dilation(net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testDilation()
@@ -41,7 +41,7 @@ public class CubeStrel3DTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.strel.AbstractSeparableStrel3D#erosion(net.sci.array.scalar.ScalarArray3D)}.
+     * Test method for {@link net.sci.image.morphology.strel.AbstractSeparableStrel3D#erosion(net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testErosion()

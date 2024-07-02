@@ -7,8 +7,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt8Array3D;
 
 /**
  * @author dlegland
@@ -17,7 +17,7 @@ import net.sci.array.scalar.UInt8Array3D;
 public class LinearZStrel3DTest
 {
     /**
-     * Test method for {@link net.sci.image.morphology.strel.LinearZStrel3D#dilation(net.sci.array.scalar.ScalarArray3D)}.
+     * Test method for {@link net.sci.image.morphology.strel.LinearZStrel3D#dilation(net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public void testDilation() 

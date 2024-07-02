@@ -3,7 +3,7 @@
  */
 package net.sci.array.binary;
 
-import net.sci.array.scalar.IntArray1D;
+import net.sci.array.numeric.IntArray1D;
 
 /**
  * A one-dimensional array containing boolean values.

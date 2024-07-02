@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.*;
+import net.sci.array.numeric.*;
 import net.sci.image.Image;
 import net.sci.image.binary.distmap.ChamferMask2D;
 

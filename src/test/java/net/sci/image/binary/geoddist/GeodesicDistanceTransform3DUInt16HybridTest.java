@@ -13,9 +13,9 @@ import org.junit.Test;
 
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.Image;
 import net.sci.image.binary.distmap.ChamferMask3D;
 import net.sci.image.io.ImageIOImageReader;

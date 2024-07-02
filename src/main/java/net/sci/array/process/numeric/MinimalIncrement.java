@@ -6,14 +6,14 @@ package net.sci.array.process.numeric;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayWrapperStub;
+import net.sci.array.numeric.Float32;
+import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float64;
+import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Int;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.Float32;
-import net.sci.array.scalar.Float32Array;
-import net.sci.array.scalar.Float64;
-import net.sci.array.scalar.Float64Array;
-import net.sci.array.scalar.Int;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.ScalarArray;
 
 /**
  * Increments the values within an array by the smallest possible amount. Can be
@@ -185,7 +185,7 @@ public class MinimalIncrement extends AlgoStub implements ScalarArrayOperator
 
         @SuppressWarnings("unchecked")
         @Override
-        public net.sci.array.scalar.IntArray.Factory<I> factory()
+        public net.sci.array.numeric.IntArray.Factory<I> factory()
         {
             return ((IntArray<I>) array).factory();
         }

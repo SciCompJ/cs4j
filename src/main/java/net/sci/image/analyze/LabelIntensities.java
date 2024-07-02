@@ -6,8 +6,8 @@ package net.sci.image.analyze;
 import java.util.HashMap;
 
 import net.sci.array.Arrays;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.image.label.LabelImages;
 
 /**

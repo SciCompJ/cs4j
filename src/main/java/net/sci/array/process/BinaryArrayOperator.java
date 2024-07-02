@@ -5,7 +5,7 @@ package net.sci.array.process;
 
 import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Interface for Array operators that operate on a Binary Array instance and

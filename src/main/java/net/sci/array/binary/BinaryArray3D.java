@@ -6,8 +6,8 @@ package net.sci.array.binary;
 import java.util.Locale;
 
 import net.sci.array.Array2D;
-import net.sci.array.scalar.IntArray3D;
-import net.sci.array.scalar.TriFunction;
+import net.sci.array.numeric.IntArray3D;
+import net.sci.array.numeric.TriFunction;
 
 
 /**

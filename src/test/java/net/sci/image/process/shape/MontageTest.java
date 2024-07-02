@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import net.sci.array.Array2D;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * @author dlegland

@@ -9,10 +9,10 @@ import static org.junit.Assert.assertNotEquals;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.Int32Array2D;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.Int32Array2D;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.geom.geom2d.MultiPoint2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Connectivity2D;
@@ -25,7 +25,7 @@ import net.sci.image.morphology.MinimaAndMaxima;
 public class MeyerMarkerControlledWatershed2DTest
 {
     /**
-     * Test method for {@link net.sci.image.morphology.watershed.MeyerMarkerControlledWatershed2D#processInPlace(net.sci.array.scalar.ScalarArray2D, net.sci.array.scalar.IntArray2D)}.
+     * Test method for {@link net.sci.image.morphology.watershed.MeyerMarkerControlledWatershed2D#processInPlace(net.sci.array.scalar.ScalarArray2D, net.sci.array.numeric.IntArray2D)}.
      */
     @Test
     public final void testProcessInPlace()
@@ -134,7 +134,7 @@ public class MeyerMarkerControlledWatershed2DTest
     
     
     /**
-     * Test method for {@link net.sci.image.morphology.watershed.MeyerMarkerControlledWatershed2D#processInPlace(net.sci.array.scalar.ScalarArray2D, net.sci.array.scalar.IntArray2D)}.
+     * Test method for {@link net.sci.image.morphology.watershed.MeyerMarkerControlledWatershed2D#processInPlace(net.sci.array.scalar.ScalarArray2D, net.sci.array.numeric.IntArray2D)}.
      */
     @Test
     public final void test_invertedWedge()

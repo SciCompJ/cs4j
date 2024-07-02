@@ -7,8 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.Int32Array1D;
-import net.sci.array.scalar.IntArray1D;
+import net.sci.array.numeric.Int32Array1D;
+import net.sci.array.numeric.IntArray1D;
 
 /**
  * @author dlegland

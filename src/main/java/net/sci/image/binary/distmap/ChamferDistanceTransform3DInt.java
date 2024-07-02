@@ -29,10 +29,10 @@ import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.IntArray3D;
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.scalar.UInt16Array;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray3D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt16Array;
 import net.sci.image.binary.distmap.ChamferMask3D.Offset;
 
 

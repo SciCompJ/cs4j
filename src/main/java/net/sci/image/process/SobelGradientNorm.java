@@ -8,11 +8,11 @@ import static java.lang.Math.min;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.scalar.Float32Array;
-import net.sci.array.scalar.Scalar;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayOperator;
 

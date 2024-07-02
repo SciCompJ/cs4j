@@ -3,7 +3,7 @@
  */
 package net.sci.image.morphology.reconstruct;
 
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 
 /**
  * <p>

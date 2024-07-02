@@ -7,9 +7,9 @@ import java.io.File;
 import java.io.IOException;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.image.Image;
 
 /**

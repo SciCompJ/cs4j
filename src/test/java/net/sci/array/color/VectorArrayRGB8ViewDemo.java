@@ -5,9 +5,9 @@ package net.sci.array.color;
 
 import java.io.IOException;
 
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.vector.VectorArray;
-import net.sci.array.vector.VectorArray2D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.VectorArray;
+import net.sci.array.numeric.VectorArray2D;
 import net.sci.image.Image;
 import net.sci.image.io.TiffImageReader;
 

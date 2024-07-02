@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.TriFunction;
+import net.sci.array.numeric.TriFunction;
 
 /**
  * @author dlegland

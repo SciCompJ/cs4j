@@ -3,7 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray3D;
 
 /**
  * @author dlegland

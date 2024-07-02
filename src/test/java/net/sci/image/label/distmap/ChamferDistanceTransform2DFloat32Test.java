@@ -26,8 +26,8 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.image.binary.distmap.ChamferMask2D;
 
 public class ChamferDistanceTransform2DFloat32Test {

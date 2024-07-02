@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import net.sci.array.binary.BinaryArray;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array2D;
 
 import org.junit.Test;
 

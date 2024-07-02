@@ -6,8 +6,8 @@ package net.sci.image.analyze.region2d;
 import java.util.Map;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.IntArray2D;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray2D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.analyze.RegionAnalyzer;

@@ -3,10 +3,10 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArrayUInt8View;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.vector.VectorArray;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.VectorArray;
+import net.sci.array.numeric.impl.ScalarArrayUInt8View;
 
 /**
  * Encapsulates a vector array and computes a RGB representation on-the-fly.

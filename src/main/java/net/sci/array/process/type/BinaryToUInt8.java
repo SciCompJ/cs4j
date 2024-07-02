@@ -10,12 +10,12 @@ import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.scalar.UInt8Array3D;
 
 /**
  * Converts a Binary array into a UInt8 array, by converting <code>false</code>

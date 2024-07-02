@@ -10,9 +10,9 @@ import net.sci.array.Array2D;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array2D;
 import net.sci.array.generic.GenericArray2D;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.geom.geom2d.Vector2D;
 
 public class BoxFilterTest

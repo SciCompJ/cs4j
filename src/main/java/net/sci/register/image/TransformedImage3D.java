@@ -5,7 +5,7 @@ package net.sci.register.image;
 
 import net.sci.array.interp.LinearInterpolator3D;
 import net.sci.array.interp.ScalarFunction3D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Transform3D;
 

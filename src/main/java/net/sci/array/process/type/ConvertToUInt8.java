@@ -9,13 +9,13 @@ import net.sci.array.ArrayOperator;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.color.RGB8Array2D;
 import net.sci.array.color.RGB8Array3D;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array3D;
 
 /**
  * Converts an array into a UInt8Array the same size.

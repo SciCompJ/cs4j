@@ -8,8 +8,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * @author dlegland

@@ -5,8 +5,8 @@ package net.sci.image.process.segment;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.ScalarArrayOperator;
-import net.sci.array.scalar.ScalarArray;
 import net.sci.image.ImageArrayOperator;
 
 /**

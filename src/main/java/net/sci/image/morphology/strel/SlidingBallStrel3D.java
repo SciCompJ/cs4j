@@ -5,9 +5,9 @@ package net.sci.image.morphology.strel;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.IntArray3D;
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.IntArray3D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt8Array3D;
 
 /**
  * <pre>{@code

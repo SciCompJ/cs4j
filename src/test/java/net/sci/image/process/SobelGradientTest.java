@@ -12,12 +12,12 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.Float32Array3D;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.vector.Float32VectorArray2D;
-import net.sci.array.vector.Float32VectorArray3D;
-import net.sci.array.vector.VectorArray;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.Float32Array3D;
+import net.sci.array.numeric.Float32VectorArray2D;
+import net.sci.array.numeric.Float32VectorArray3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.VectorArray;
 import net.sci.image.Image;
 
 /**

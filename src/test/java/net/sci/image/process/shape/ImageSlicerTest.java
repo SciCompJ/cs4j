@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.UInt8Array3D;
+import net.sci.array.numeric.UInt8Array3D;
 import net.sci.axis.NumericalAxis;
 import net.sci.image.Calibration;
 import net.sci.image.Image;

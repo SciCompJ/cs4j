@@ -6,9 +6,9 @@ package net.sci.image.analyze;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.scalar.Int32Array2D;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.Int32Array2D;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 
 /**
  * @author dlegland

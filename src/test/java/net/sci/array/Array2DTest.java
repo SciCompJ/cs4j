@@ -5,10 +5,11 @@ package net.sci.array;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array;
 
 import org.junit.Test;
+
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array;
 
 /**
  * @author dlegland

@@ -3,8 +3,8 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.Int32Array;
-import net.sci.array.scalar.UInt8;
+import net.sci.array.numeric.Int32Array;
+import net.sci.array.numeric.UInt8;
 
 /**
  * Implementation of multidimensional array of RGB8, by keeping value in a buffer if Int32.

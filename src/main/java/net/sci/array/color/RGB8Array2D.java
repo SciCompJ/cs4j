@@ -5,10 +5,10 @@ package net.sci.array.color;
 
 import java.util.Locale;
 
+import net.sci.array.numeric.IntVectorArray2D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.process.type.ConvertToUInt8;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.vector.IntVectorArray2D;
 
 /**
  * @author dlegland
@@ -276,12 +276,12 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8,UInt8> implement
         }
 
         @Override
-        public net.sci.array.scalar.UInt8Array.Iterator iterator()
+        public net.sci.array.numeric.UInt8Array.Iterator iterator()
         {
             return new Iterator();
         }
 
-        class Iterator implements net.sci.array.scalar.UInt8Array.Iterator
+        class Iterator implements net.sci.array.numeric.UInt8Array.Iterator
         {
             int indX = -1;
             int indY = 0;

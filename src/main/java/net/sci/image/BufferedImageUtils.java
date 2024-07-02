@@ -18,13 +18,13 @@ import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.UInt8Array;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.vector.VectorArray;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.VectorArray;
 import net.sci.image.process.shape.ImageSlicer;
 
 /**

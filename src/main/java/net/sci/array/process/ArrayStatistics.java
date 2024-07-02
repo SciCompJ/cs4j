@@ -3,8 +3,8 @@
  */
 package net.sci.array.process;
 
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.Scalar;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Collection of static methods for computing descriptive statistics on

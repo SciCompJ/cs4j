@@ -4,9 +4,10 @@
 package net.sci.array.process.math;
 
 import static org.junit.Assert.assertEquals;
-import net.sci.array.scalar.Float32Array2D;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.vector.VectorArray;
+
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.VectorArray;
 
 import org.junit.Test;
 

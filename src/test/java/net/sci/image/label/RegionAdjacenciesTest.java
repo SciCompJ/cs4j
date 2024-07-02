@@ -9,8 +9,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import net.sci.array.scalar.BufferedUInt8Array2D;
-import net.sci.array.scalar.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.impl.BufferedUInt8Array2D;
 import net.sci.image.label.RegionAdjacencies.LabelPair;
 
 /**

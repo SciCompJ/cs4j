@@ -6,11 +6,11 @@ package net.sci.array.process.shape;
 import static org.junit.Assert.assertEquals;
 import net.sci.array.Array;
 import net.sci.array.Array3D;
-import net.sci.array.scalar.UInt8;
-import net.sci.array.scalar.UInt8Array2D;
-import net.sci.array.scalar.UInt8Array3D;
-import net.sci.array.vector.Float32Vector;
-import net.sci.array.vector.Float32VectorArray3D;
+import net.sci.array.numeric.Float32Vector;
+import net.sci.array.numeric.Float32VectorArray3D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.array.numeric.UInt8Array3D;
 
 import org.junit.Test;
 

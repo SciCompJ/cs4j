@@ -5,8 +5,8 @@ package net.sci.image.morphology.watershed;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 import net.sci.image.Connectivity2D;
 import net.sci.image.binary.BinaryImages;
 import net.sci.image.morphology.MinimaAndMaxima;

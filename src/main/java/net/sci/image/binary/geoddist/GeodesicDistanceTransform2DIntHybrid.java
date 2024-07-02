@@ -7,9 +7,9 @@ import java.util.Deque;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.IntArray2D;
-import net.sci.array.scalar.UInt16Array;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.UInt16Array;
 import net.sci.image.binary.distmap.ChamferMask2D;
 import net.sci.image.binary.distmap.DistanceTransform;
 

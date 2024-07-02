@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.scalar.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray2D;
 
 import org.junit.Test;
 

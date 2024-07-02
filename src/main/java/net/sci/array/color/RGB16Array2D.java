@@ -3,9 +3,9 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.scalar.UInt16;
-import net.sci.array.scalar.UInt16Array2D;
-import net.sci.array.vector.IntVectorArray2D;
+import net.sci.array.numeric.IntVectorArray2D;
+import net.sci.array.numeric.UInt16;
+import net.sci.array.numeric.UInt16Array2D;
 
 /**
  * @author dlegland
@@ -200,12 +200,12 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16,UInt16> implem
         }
 
         @Override
-        public net.sci.array.scalar.UInt16Array.Iterator iterator()
+        public net.sci.array.numeric.UInt16Array.Iterator iterator()
         {
             return new Iterator();
         }
 
-        class Iterator implements net.sci.array.scalar.UInt16Array.Iterator
+        class Iterator implements net.sci.array.numeric.UInt16Array.Iterator
         {
             int indX = -1;
             int indY = 0;

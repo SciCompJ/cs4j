@@ -7,8 +7,8 @@ import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.UInt8Array;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.UInt8Array;
 
 import static java.lang.Math.min;
 import static java.lang.Math.max;

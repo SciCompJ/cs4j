@@ -7,14 +7,14 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.ArrayWrapperStub;
+import net.sci.array.numeric.Int;
+import net.sci.array.numeric.Int32;
+import net.sci.array.numeric.Int32Array;
+import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.Numeric;
 import net.sci.array.numeric.NumericArray;
-import net.sci.array.scalar.Int;
-import net.sci.array.scalar.Int32;
-import net.sci.array.scalar.Int32Array;
-import net.sci.array.scalar.IntArray;
-import net.sci.array.scalar.Scalar;
-import net.sci.array.scalar.ScalarArray;
+import net.sci.array.numeric.Scalar;
+import net.sci.array.numeric.ScalarArray;
 
 /**
  * Computes the additive inverse, or opposite, of the numerical values in the
@@ -183,7 +183,7 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         }
 
         @Override
-        public net.sci.array.scalar.ScalarArray.Factory<S> factory()
+        public net.sci.array.numeric.ScalarArray.Factory<S> factory()
         {
             return array.factory();
         }
@@ -237,7 +237,7 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         }
 
         @Override
-        public net.sci.array.scalar.Int32Array.Factory factory()
+        public net.sci.array.numeric.Int32Array.Factory factory()
         {
             return Int32Array.defaultFactory;
         }

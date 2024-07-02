@@ -7,9 +7,9 @@ import java.util.function.BiFunction;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
-import net.sci.array.scalar.ScalarArray;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 
 /**
  * Base class for operators that combines the values from two scalar arrays the

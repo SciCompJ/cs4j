@@ -28,7 +28,9 @@ import java.util.Collection;
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.scalar.*;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt16;
+import net.sci.array.numeric.UInt16Array3D;
 import net.sci.image.binary.distmap.ChamferMask3D.Offset;
 
 

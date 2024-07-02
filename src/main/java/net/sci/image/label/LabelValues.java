@@ -3,7 +3,12 @@ package net.sci.image.label;
 import java.util.Map;
 
 import net.sci.array.Arrays;
-import net.sci.array.scalar.*;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.IntArray3D;
+import net.sci.array.numeric.ScalarArray;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
 
 
 /**

@@ -7,10 +7,10 @@ import java.io.IOException;
 import org.junit.Test;
 
 import net.sci.array.Array;
-import net.sci.array.scalar.Int16Array;
-import net.sci.array.scalar.ScalarArray2D;
-import net.sci.array.scalar.ScalarArray3D;
-import net.sci.array.scalar.UInt16Array;
+import net.sci.array.numeric.Int16Array;
+import net.sci.array.numeric.ScalarArray2D;
+import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt16Array;
 import net.sci.image.Image;
 
 public class MetaImageReaderTest
