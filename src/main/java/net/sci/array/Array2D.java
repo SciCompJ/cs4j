@@ -7,7 +7,7 @@ import java.io.PrintStream;
 import java.util.Locale;
 import java.util.function.BiFunction;
 
-import net.sci.array.generic.BufferedGenericArray2D;
+import net.sci.array.impl.BufferedGenericArray2D;
 
 /**
  * Base implementation for 2D arrays.

@@ -9,8 +9,7 @@ import org.junit.runners.Suite;
     Array2DTest.class,
     Array3DTest.class,
     ArrayNDTest.class,
-    DefaultPositionIteratorTest.class,
-	})
+    })
 public class AllTests {
   //nothing
 }

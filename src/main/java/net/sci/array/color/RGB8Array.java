@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayWrapperStub;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.IntVectorArray;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8;

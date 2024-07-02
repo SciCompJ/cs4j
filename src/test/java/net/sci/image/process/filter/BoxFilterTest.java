@@ -9,7 +9,7 @@ import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array2D;
-import net.sci.array.generic.GenericArray2D;
+import net.sci.array.impl.GenericArray2D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.UInt8Array3D;

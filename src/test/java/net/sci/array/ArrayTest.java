@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 import org.junit.Test;
 
-import net.sci.array.generic.GenericArray;
+import net.sci.array.impl.GenericArray;
 
 
 /**

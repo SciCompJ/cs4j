@@ -13,7 +13,7 @@ import java.util.Deque;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Arrays;
-import net.sci.array.ReverseOrderPositionIterator;
+import net.sci.array.impl.ReverseOrderPositionIterator;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.image.Connectivity;
 import net.sci.image.Connectivity2D;

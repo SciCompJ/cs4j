@@ -6,7 +6,7 @@ package net.sci.array;
 import java.io.PrintStream;
 import java.util.Locale;
 
-import net.sci.array.generic.BufferedGenericArray3D;
+import net.sci.array.impl.BufferedGenericArray3D;
 import net.sci.array.numeric.TriFunction;
 
 /**

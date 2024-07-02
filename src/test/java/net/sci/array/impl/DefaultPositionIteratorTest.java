@@ -1,9 +1,9 @@
 /**
  * 
  */
-package net.sci.array;
+package net.sci.array.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class DefaultPositionIteratorTest
 {
 
     /**
-     * Test method for {@link net.sci.array.DefaultPositionIterator#forward()}.
+     * Test method for {@link net.sci.array.impl.DefaultPositionIterator#forward()}.
      */
     @Test
     public final void testForward_2d()
@@ -32,7 +32,7 @@ public class DefaultPositionIteratorTest
     }
 
     /**
-     * Test method for {@link net.sci.array.DefaultPositionIterator#forward()}.
+     * Test method for {@link net.sci.array.impl.DefaultPositionIterator#forward()}.
      */
     @Test
     public final void testForward_3d()

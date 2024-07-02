@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.generic;
+package net.sci.array.impl;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;

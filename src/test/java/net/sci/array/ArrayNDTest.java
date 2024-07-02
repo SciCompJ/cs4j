@@ -4,9 +4,10 @@
 package net.sci.array;
 
 import static org.junit.Assert.assertNotNull;
-import net.sci.array.generic.BufferedGenericArrayND;
 
 import org.junit.Test;
+
+import net.sci.array.impl.BufferedGenericArrayND;
 
 /**
  * @author dlegland

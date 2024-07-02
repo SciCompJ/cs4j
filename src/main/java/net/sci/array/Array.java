@@ -7,7 +7,8 @@ import java.util.function.Function;
 
 import net.sci.algo.Algo;
 import net.sci.algo.AlgoListener;
-import net.sci.array.generic.GenericArray;
+import net.sci.array.impl.DefaultPositionIterator;
+import net.sci.array.impl.GenericArray;
 import net.sci.array.process.shape.Flip;
 import net.sci.array.process.shape.PermuteDimensions;
 import net.sci.array.process.shape.Reshape;

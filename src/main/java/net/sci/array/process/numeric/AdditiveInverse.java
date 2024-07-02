@@ -6,7 +6,7 @@ package net.sci.array.process.numeric;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
-import net.sci.array.ArrayWrapperStub;
+import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.Int;
 import net.sci.array.numeric.Int32;
 import net.sci.array.numeric.Int32Array;

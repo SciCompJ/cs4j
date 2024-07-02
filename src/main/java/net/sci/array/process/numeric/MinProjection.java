@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 import net.sci.array.Array;
 import net.sci.array.Array2D;
-import net.sci.array.generic.GenericArray2D;
+import net.sci.array.impl.GenericArray2D;
 import net.sci.array.numeric.ScalarArray;
 
 /**

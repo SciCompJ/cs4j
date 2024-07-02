@@ -7,8 +7,8 @@ import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayWrapperStub;
 import net.sci.array.Arrays;
+import net.sci.array.impl.ArrayWrapperStub;
 
 /**
  * Specialization of the Array interface that contains Scalar values.

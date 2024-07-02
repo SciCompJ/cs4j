@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.Array2D;
-import net.sci.array.generic.GenericArray2D;
+import net.sci.array.impl.GenericArray2D;
 
 /**
  * @author dlegland

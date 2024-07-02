@@ -6,7 +6,7 @@ package net.sci.array.numeric;
 import java.util.function.Function;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayWrapperStub;
+import net.sci.array.impl.ArrayWrapperStub;
 
 /**
  * Interface for arrays containing instances of Int. Provides several method for

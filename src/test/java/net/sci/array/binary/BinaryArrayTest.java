@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.Array2D;
-import net.sci.array.generic.GenericArray2D;
+import net.sci.array.impl.GenericArray2D;
 import net.sci.array.numeric.Float32Array2D;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt8;

@@ -4,7 +4,7 @@
 package net.sci.array.process.numeric;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.ArrayWrapperStub;
+import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.Scalar;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.ScalarArrayOperator;

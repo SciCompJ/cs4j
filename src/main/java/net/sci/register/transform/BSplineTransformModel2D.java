@@ -4,7 +4,7 @@
 package net.sci.register.transform;
 
 import net.sci.array.Array2D;
-import net.sci.array.generic.GenericArray2D;
+import net.sci.array.impl.GenericArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Vector2D;
 import net.sci.util.MathUtils;

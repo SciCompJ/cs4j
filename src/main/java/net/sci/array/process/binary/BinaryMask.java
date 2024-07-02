@@ -5,9 +5,9 @@ package net.sci.array.process.binary;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.ArrayWrapperStub;
 import net.sci.array.Arrays;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.impl.ArrayWrapperStub;
 
 /**
  * Creates new array by keeping only values for which binary mask is set to

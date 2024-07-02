@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.array.generic;
+package net.sci.array.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -18,7 +18,7 @@ import net.sci.array.Array3D;
 public class BufferedGenericArray3DTest
 {
     /**
-     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#BufferedGenericArray3D(int, int, int, Object)}.
+     * Test method for {@link net.sci.array.impl.BufferedGenericArray3D#BufferedGenericArray3D(int, int, int, Object)}.
      */
     @Test
     public final void testCreate()
@@ -29,7 +29,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#get(int, int, int)}.
+     * Test method for {@link net.sci.array.impl.BufferedGenericArray3D#get(int, int, int)}.
      */
     @Test
     public final void testGetIntInt()
@@ -42,7 +42,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#set(int, int, int, java.lang.Object)}.
+     * Test method for {@link net.sci.array.impl.BufferedGenericArray3D#set(int, int, int, java.lang.Object)}.
      */
     @Test
     public final void testSetIntIntT()
@@ -53,7 +53,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#duplicate()}.
+     * Test method for {@link net.sci.array.impl.BufferedGenericArray3D#duplicate()}.
      */
     @Test
     public final void testDuplicate()
@@ -69,7 +69,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.generic.BufferedGenericArray3D#iterator()}.
+     * Test method for {@link net.sci.array.impl.BufferedGenericArray3D#iterator()}.
      */
     @Test
     public final void testIterator()
@@ -92,7 +92,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.generic.GenericArray3D#slices()}.
+     * Test method for {@link net.sci.array.impl.GenericArray3D#slices()}.
      */
     @Test
     public final void testSlices()
@@ -112,7 +112,7 @@ public class BufferedGenericArray3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.generic.GenericArray3D#slices()}.
+     * Test method for {@link net.sci.array.impl.GenericArray3D#slices()}.
      */
     @Test
     public final void testSliceView()

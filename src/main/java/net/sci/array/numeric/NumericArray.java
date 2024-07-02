@@ -5,7 +5,7 @@ package net.sci.array.numeric;
 
 import net.sci.algo.AlgoListener;
 import net.sci.array.Array;
-import net.sci.array.ArrayWrapperStub;
+import net.sci.array.impl.ArrayWrapperStub;
 
 /**
  * Specialization of Array interface that supports elementary arithmetic

@@ -6,8 +6,8 @@ package net.sci.array.binary;
 import java.util.function.Function;
 
 import net.sci.array.Array;
-import net.sci.array.ArrayWrapperStub;
 import net.sci.array.Arrays;
+import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.process.binary.BinaryMask;

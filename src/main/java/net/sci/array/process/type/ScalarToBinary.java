@@ -7,7 +7,6 @@ import java.util.TreeMap;
 import java.util.function.Function;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.ArrayWrapperStub;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
@@ -16,6 +15,7 @@ import net.sci.array.binary.BinaryRow;
 import net.sci.array.binary.Run;
 import net.sci.array.binary.RunLengthBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray3D;
+import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;

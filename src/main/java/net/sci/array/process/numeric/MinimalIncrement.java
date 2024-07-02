@@ -5,7 +5,7 @@ package net.sci.array.process.numeric;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.ArrayWrapperStub;
+import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.Float32;
 import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.Float64;

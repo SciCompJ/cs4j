@@ -5,11 +5,11 @@ package net.sci.array.process.type;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.ArrayWrapperStub;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array;

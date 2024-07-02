@@ -12,7 +12,7 @@ import org.junit.runners.Suite;
     net.sci.array.numeric.AllTests.class,
     net.sci.array.vector.AllTests.class,
     net.sci.array.color.AllTests.class,
-    net.sci.array.generic.AllTests.class,
+    net.sci.array.impl.AllTests.class,
     net.sci.array.process.AllTestsRecurse.class,
 	})
 public class AllTestsRecurse {

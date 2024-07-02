@@ -1,4 +1,4 @@
-package net.sci.array.generic;
+package net.sci.array.impl;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -8,6 +8,8 @@ import org.junit.runners.Suite;
 	// generic classes
     BufferedGenericArray2DTest.class,
     BufferedGenericArray3DTest.class,
+    DefaultPositionIteratorTest.class,
+    ReverseOrderPositionIteratorTest.class,
     })
 public class AllTests {
   //nothing

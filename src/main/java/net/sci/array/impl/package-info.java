@@ -6,4 +6,4 @@
  * @author dlegland
  *
  */
-package net.sci.array.generic;
+package net.sci.array.impl;

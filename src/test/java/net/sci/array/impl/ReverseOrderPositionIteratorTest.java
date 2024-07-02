@@ -1,9 +1,9 @@
 /**
  * 
  */
-package net.sci.array;
+package net.sci.array.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

@@ -5,7 +5,7 @@ package net.sci.array.numeric;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.ArrayWrapperStub;
+import net.sci.array.impl.ArrayWrapperStub;
 
 /**
  * Specialization of the interface VectorArray for arrays of vectors that

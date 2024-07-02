@@ -1,7 +1,9 @@
 /**
  * 
  */
-package net.sci.array;
+package net.sci.array.impl;
+
+import net.sci.array.Array;
 
 /**
  * A skeleton implementation for arrays that wrap another array, keeping size

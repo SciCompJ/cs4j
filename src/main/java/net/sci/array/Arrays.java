@@ -3,7 +3,7 @@
  */
 package net.sci.array;
 
-import net.sci.array.generic.GenericArray;
+import net.sci.array.impl.GenericArray;
 
 /**
  * A collection of utility methods for arrays.
