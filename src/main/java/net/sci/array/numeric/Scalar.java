@@ -12,7 +12,7 @@ package net.sci.array.numeric;
  *
  * @author dlegland
  */
-public abstract class Scalar<S extends Scalar<S>> implements Numeric<S>
+public interface Scalar<S extends Scalar<S>> extends Numeric<S>
 {
     /**
      * Returns the smallest value (closest or equal to negative infinity) that
@@ -20,7 +20,7 @@ public abstract class Scalar<S extends Scalar<S>> implements Numeric<S>
      * 
      * @return the smallest value that can be represented with this type
      */
-    public abstract S typeMin();
+    public S typeMin();
     
     /**
      * Returns the largest value (closest or equal to positive infinity) that
@@ -28,7 +28,7 @@ public abstract class Scalar<S extends Scalar<S>> implements Numeric<S>
      * 
      * @return the largest value that can be represented with this type
      */
-    public abstract S typeMax();
+    public S typeMax();
     
     /**
      * Creates a new Scalar from the specified double value.
@@ -37,7 +37,7 @@ public abstract class Scalar<S extends Scalar<S>> implements Numeric<S>
      *            the value
      * @return the Scalar corresponding to the input value.
      */
-    public abstract S fromValue(double v);
+    public S fromValue(double v);
     
     // methods that depend on the current value
     
@@ -46,5 +46,5 @@ public abstract class Scalar<S extends Scalar<S>> implements Numeric<S>
      * 
      * @return the value as a double
      */
-    public abstract double getValue();
+    public double getValue();
 }

@@ -10,7 +10,7 @@ package net.sci.array.numeric;
  * @author dlegland
  *
  */
-public class Float32 extends Scalar<Float32>
+public class Float32 implements Scalar<Float32>
 {
     // =============================================================
     // Public constants

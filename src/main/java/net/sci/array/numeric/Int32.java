@@ -10,7 +10,7 @@ package net.sci.array.numeric;
  * @author dlegland
  *
  */
-public class Int32 extends Int<Int32>
+public class Int32 implements Int<Int32>
 {
     // =============================================================
     // Public constants

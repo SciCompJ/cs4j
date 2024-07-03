@@ -12,14 +12,14 @@ package net.sci.array.numeric;
  * 
  * @author dlegland
  */
-public abstract class Int<I extends Int<I>> extends Scalar<I>
+public interface Int<I extends Int<I>> extends Scalar<I>
 {
     /**
      * Return the integer value corresponding to this Int instance.
      * 
      * @return the integer value corresponding to this Int instance.
      */
-	public abstract int getInt();
+	public int getInt();
 	
 	/**
      * Creates a new instance of type I from the specified integer value.
@@ -28,8 +28,8 @@ public abstract class Int<I extends Int<I>> extends Scalar<I>
      *            the integer value
      * @return the instance of type I that corresponds to the value
      */
-	public abstract I fromInt(int value);
+	public I fromInt(int value);
 	
     @Override
-	public abstract I fromValue(double v);
+	public I fromValue(double v);
 }

@@ -11,13 +11,15 @@ import net.sci.array.numeric.Int;
  * @author dlegland
  *
  */
-public class Binary extends Int<Binary>
+public class Binary implements Int<Binary>
 {
     // =============================================================
     // Constants
 
+    /** The binary constant corresponding to a FALSE state. */
     public static final Binary FALSE = new Binary(false);
 
+    /** The binary constant corresponding to a TRUE state. */
     public static final Binary TRUE = new Binary(true);
     
 

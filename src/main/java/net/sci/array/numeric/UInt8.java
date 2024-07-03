@@ -9,7 +9,7 @@ package net.sci.array.numeric;
  * @author dlegland
  *
  */
-public class UInt8 extends Int<UInt8>
+public class UInt8 implements Int<UInt8>
 {
     // =============================================================
     // Public constants

@@ -15,7 +15,7 @@ import net.sci.array.numeric.UInt8;
  * @author dlegland
  *
  */
-public class RGB8 extends IntVector<RGB8,UInt8> implements Color
+public class RGB8 implements IntVector<RGB8,UInt8>, Color
 {
     // =============================================================
     // Constants

@@ -13,7 +13,7 @@ import static java.lang.Float.floatToRawIntBits;
  * @author dlegland
  *
  */
-public class Float32Vector extends Vector<Float32Vector, Float32>
+public class Float32Vector implements Vector<Float32Vector, Float32>
 {
     // =============================================================
     // Class variables

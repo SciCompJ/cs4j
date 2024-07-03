@@ -13,7 +13,7 @@ import static java.lang.Double.doubleToLongBits;
  * @author dlegland
  *
  */
-public class Float64Vector extends Vector<Float64Vector, Float64>
+public class Float64Vector implements Vector<Float64Vector, Float64>
 {
     // =============================================================
     // Class variables

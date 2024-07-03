@@ -16,7 +16,7 @@ package net.sci.array.numeric;
  *
  * @author dlegland
  */
-public abstract class IntVector<V extends Vector<V, I>, I extends Int<I>> extends Vector<V, I>
+public interface IntVector<V extends Vector<V, I>, I extends Int<I>> extends Vector<V, I>
 {
     /**
      * Returns the sample values into an integer array.

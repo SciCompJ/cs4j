@@ -9,7 +9,7 @@ package net.sci.array.numeric;
  * @author dlegland
  *
  */
-public class UInt16 extends Int<UInt16>
+public class UInt16 implements Int<UInt16>
 {
     // =============================================================
     // Constants

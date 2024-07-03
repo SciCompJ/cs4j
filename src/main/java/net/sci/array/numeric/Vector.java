@@ -13,7 +13,7 @@ package net.sci.array.numeric;
  *
  * @author dlegland
  */
-public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>> implements Numeric<V>
+public interface Vector<V extends Vector<V,S>, S extends Scalar<S>> extends Numeric<V>
 {
     // =============================================================
     // Static methods
@@ -64,7 +64,7 @@ public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>> impleme
      * 
      * @return the number of components of this vector. 
      */
-    public abstract int size();
+    public int size();
 
     
     // =============================================================
@@ -75,7 +75,7 @@ public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>> impleme
      * 
      * @return the set of values that constitutes this vector.
      */
-    public abstract double[] getValues();
+    public double[] getValues();
 
     /**
      * Returns the set of values that constitutes this vector.
@@ -84,7 +84,7 @@ public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>> impleme
      *            an array used to store the result
      * @return the set of values that constitutes this vector.
      */
-    public abstract double[] getValues(double[] values);
+    public double[] getValues(double[] values);
 
     /**
      * Returns the value at the specified index as a double.
@@ -93,7 +93,7 @@ public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>> impleme
      *            the index of element
      * @return the value at the specified index.
      */
-    public abstract double getValue(int i);
+    public double getValue(int i);
 
     /**
      * Returns the value at the specified index.
@@ -102,6 +102,6 @@ public abstract class Vector<V extends Vector<V,S>, S extends Scalar<S>> impleme
      *            the index of element
      * @return the value at the specified index.
      */
-    public abstract S get(int i);
+    public S get(int i);
 
 }

@@ -10,7 +10,7 @@ package net.sci.array.numeric;
  * @author dlegland
  *
  */
-public class Int16 extends Int<Int16>
+public class Int16 implements Int<Int16>
 {
     // =============================================================
     // Constants

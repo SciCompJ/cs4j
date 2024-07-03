@@ -13,7 +13,7 @@ import net.sci.array.numeric.UInt16;
  * @author dlegland
  *
  */
-public class RGB16 extends IntVector<RGB16,UInt16> implements Color
+public class RGB16 implements IntVector<RGB16,UInt16>, Color
 {
     // =============================================================
     // Static constants
