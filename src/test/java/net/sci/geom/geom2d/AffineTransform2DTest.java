@@ -42,4 +42,43 @@ public class AffineTransform2DTest
                
         assertTrue(trans1.almostEquals(trans2, 0.01));
     }
+    
+    /**
+     * Test method for {@link net.sci.geom.geom2d.AffineTransform2D#fromBasis(net.sci.geom.geom2d.Vector2D, net.sci.geom.geom2d.Vector2D)}.
+     */
+    @Test
+    public final void testFromBasisVector2DVector2D()
+    {
+        Vector2D v1 = new Vector2D( 3,  3);
+        Vector2D v2 = new Vector2D(-3,  3);
+        
+        AffineTransform2D transfo = AffineTransform2D.fromBasis(v1, v2);
+        
+        Point2D p00 = new Point2D(0, 0);
+        assertTrue(p00.transform(transfo).almostEquals(new Point2D(0, 0), 0.001));
+        Point2D p10 = new Point2D(1, 0);
+        assertTrue(p10.transform(transfo).almostEquals(new Point2D(3, 3), 0.001));
+        Point2D p01 = new Point2D(0, 1);
+        assertTrue(p01.transform(transfo).almostEquals(new Point2D(-3, 3), 0.001));
+    }
+    
+    /**
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#fromBasis(net.sci.geom.geom3d.Vector3D, net.sci.geom.geom3d.Vector3D, net.sci.geom.geom3d.Vector3D, net.sci.geom.geom3d.Vector3D)}.
+     */
+    @Test
+    public final void testFromBasisVector3DVector3DVector3DVector3D()
+    {
+        Vector2D v1 = new Vector2D( 3,  3);
+        Vector2D v2 = new Vector2D(-3,  3);
+        Vector2D vt = new Vector2D( 4,  3);
+        
+        AffineTransform2D transfo = AffineTransform2D.fromBasis(v1, v2, vt);
+        
+        Point2D p00 = new Point2D(0, 0);
+        assertTrue(p00.transform(transfo).almostEquals(new Point2D(4, 3), 0.001));
+        Point2D p10 = new Point2D(1, 0);
+        assertTrue(p10.transform(transfo).almostEquals(new Point2D(7, 6), 0.001));
+        Point2D p01 = new Point2D(0, 1);
+        assertTrue(p01.transform(transfo).almostEquals(new Point2D(1, 6), 0.001));
+    }
 }

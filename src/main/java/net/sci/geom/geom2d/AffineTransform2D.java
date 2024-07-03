@@ -296,6 +296,45 @@ public interface AffineTransform2D extends Transform2D
         return new MatrixAffineTransform2D(matrix[0][0], matrix[0][1], matrix[0][2], matrix[1][0], matrix[1][1], matrix[1][2]);
 	}
 	
+    /**
+     * Creates a new Transform from a pair of basis vectors. In practice, the
+     * matrix of the resulting transform is obtained by concatenating the two
+     * (column) vectors and padding with 0 or 1 values.
+     * 
+     * @param v1
+     *            the vector corresponding to the first axis of the basis.
+     * @param v2
+     *            the vector corresponding to the second axis of the basis.
+     * @return the resulting transform
+     */
+    public static AffineTransform2D fromBasis(Vector2D v1, Vector2D v2)
+    {
+        return new MatrixAffineTransform2D(
+                v1.x(), v2.x(), 0, 
+                v1.y(), v2.y(), 0);
+    }
+    
+    /**
+     * Creates a new Transform from a pair of basis vectors, and a translation
+     * part. In practice, the matrix of the resulting transform is obtained by
+     * concatenating the three (column) vectors and adding an homogenization
+     * (0,0,1) row.
+     * 
+     * @param v1
+     *            the vector corresponding to the first axis of the basis.
+     * @param v2
+     *            the vector corresponding to the second axis of the basis.
+     * @param trans
+     *            the translation part of the resulting transform.
+     * @return the resulting transform
+     */
+    public static AffineTransform2D fromBasis(Vector2D v1, Vector2D v2, Vector2D trans)
+    {
+        return new MatrixAffineTransform2D(
+                v1.x(), v2.x(), trans.x(), 
+                v1.y(), v2.y(), trans.y());
+    }
+
 	
 	// ===================================================================
 	// New methods declaration

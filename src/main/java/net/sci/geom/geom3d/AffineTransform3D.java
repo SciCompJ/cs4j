@@ -188,6 +188,51 @@ public interface AffineTransform3D extends Transform3D
                 mat[1][0], mat[1][1], mat[1][2], mat[1][3], 
                 mat[2][0], mat[2][1], mat[2][2], mat[2][3]);
     }
+    
+    /**
+     * Creates a new Transform from a series of three basis vector. In practice,
+     * the matrix of the resulting transform is obtained by concatenating the
+     * three (column) vectors and padding with 0 or 1 values.
+     * 
+     * @param v1
+     *            the vector corresponding to the first axis of the basis.
+     * @param v2
+     *            the vector corresponding to the second axis of the basis.
+     * @param v3
+     *            the vector corresponding to the third axis of the basis.
+     * @return the resulting transform
+     */
+    public static AffineTransform3D fromBasis(Vector3D v1, Vector3D v2, Vector3D v3)
+    {
+        return new MatrixAffineTransform3D(
+                v1.x(), v2.x(), v3.x(), 0, 
+                v1.y(), v2.y(), v3.y(), 0, 
+                v1.z(), v2.z(), v3.z(), 0);
+    }
+    
+    /**
+     * Creates a new Transform from a series of three basis vector, and a
+     * translation part. In practice, the matrix of the resulting transform is
+     * obtained by concatenating the four (column) vectors and adding an
+     * homogenization (0,0,0,1) row.
+     * 
+     * @param v1
+     *            the vector corresponding to the first axis of the basis.
+     * @param v2
+     *            the vector corresponding to the second axis of the basis.
+     * @param v3
+     *            the vector corresponding to the third axis of the basis.
+     * @param trans
+     *            the translation part of the resulting transform.
+     * @return the resulting transform
+     */
+    public static AffineTransform3D fromBasis(Vector3D v1, Vector3D v2, Vector3D v3, Vector3D trans)
+    {
+        return new MatrixAffineTransform3D(
+                v1.x(), v2.x(), v3.x(), trans.x(), 
+                v1.y(), v2.y(), v3.y(), trans.y(), 
+                v1.z(), v2.z(), v3.z(), trans.z());
+    }
 
 
     // ===================================================================
