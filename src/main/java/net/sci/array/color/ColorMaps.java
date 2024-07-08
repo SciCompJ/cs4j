@@ -174,9 +174,9 @@ public class ColorMaps
         {
             ArrayList<Color> baseColors = new ArrayList<Color>(5);
             baseColors.add(new RGB8(0, 0, 127));
-            baseColors.add(RGB8.BLUE);
+            baseColors.add(new RGB8(0, 127, 255));
             baseColors.add(RGB8.WHITE);
-            baseColors.add(RGB8.RED);
+            baseColors.add(new RGB8(255, 127, 0));
             baseColors.add(new RGB8(127, 0, 0));
             ColorMap map = new DefaultColorMap(baseColors);
             return interpolate(map, nColors);
