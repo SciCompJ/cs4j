@@ -255,7 +255,7 @@ public interface UInt16Array extends IntArray<UInt16>
      * Sets the value at the specified position, by clamping the value between 0
      * and 2^16-1.
      * 
-     * @see net.sci.array.Array2D#setValue(int, int, double)
+     * @see net.sci.array.Array2D#setValues(int, int, double)
      */
     @Override
     public default void setValue(int[] pos, double value)
