@@ -502,6 +502,19 @@ public class BinaryRow implements Iterable<Run>
     // Range management
 
     /**
+     * Returns the integer bounds of the elements within this row.
+     * 
+     * @return the integer bounds of the elements within this row, as a two
+     *         elements array containing min and max coordinates.
+     */
+    public int[] intBounds()
+    {
+        int xmin = runs.firstEntry().getKey();
+        int xmax = runs.lastEntry().getValue().right;
+        return new int[] {xmin, xmax};
+    }
+    
+    /**
      * Checks if the row contains all the elements between the positions
      * <code>x1</code> (included) and <code>x2</code> (included).
      * 
