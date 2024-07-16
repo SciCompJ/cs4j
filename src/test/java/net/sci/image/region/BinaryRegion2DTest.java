@@ -65,7 +65,7 @@ public class BinaryRegion2DTest
     }
     
     /**
-     * Test method for {@link net.sci.image.region.BinaryRegion2D#positionIterator()}.
+     * Test method for {@link net.sci.image.region.BinaryRegion2D#positions()}.
      */
     @Test
     public final void testPositions()
@@ -94,7 +94,7 @@ public class BinaryRegion2DTest
      * Test method for {@link net.sci.image.region.BinaryRegion2D#positionIterator()}.
      */
     @Test
-    public final void testPositions2()
+    public final void testPositionIterator()
     {
         BinaryRegion2D region = new BinaryRegion2D();
         for (int y = 2; y < 5; y++)
@@ -120,4 +120,26 @@ public class BinaryRegion2DTest
         assertEquals(8, count);
     }
     
+    /**
+     * Test method for {@link net.sci.image.region.BinaryRegion2D#intBounds()}.
+     */
+    @Test
+    public final void testIntBounds()
+    {
+        BinaryRegion2D region = new BinaryRegion2D();
+        region.set( 6,  4, true);
+        region.set( 8,  5, true);
+        region.set( 5,  6, true);
+        region.set( 3,  7, true);
+        region.set( 4,  8, true);
+        region.set( 5,  9, true);
+        
+        int[][] bounds = region.intBounds();
+        
+        assertEquals(3, bounds[0][0]);
+        assertEquals(8, bounds[0][1]);
+        assertEquals(4, bounds[1][0]);
+        assertEquals(9, bounds[1][1]);
+    }
+
 }

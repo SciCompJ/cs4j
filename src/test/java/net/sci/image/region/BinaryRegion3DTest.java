@@ -52,7 +52,7 @@ public class BinaryRegion3DTest
     }
     
     /**
-     * Test method for {@link net.sci.image.region.BinaryRegion2D#positionIterator()}.
+     * Test method for {@link net.sci.image.region.BinaryRegion3D#positions()}.
      */
     @Test
     public final void testPositions()
@@ -70,10 +70,10 @@ public class BinaryRegion3DTest
     }
     
     /**
-     * Test method for {@link net.sci.image.region.BinaryRegion2D#positionIterator()}.
+     * Test method for {@link net.sci.image.region.BinaryRegion3D#positionIterator()}.
      */
     @Test
-    public final void testPositions2()
+    public final void testPositionIterator()
     {
         BinaryRegion3D region = createHollowCube();
         
@@ -89,6 +89,40 @@ public class BinaryRegion3DTest
         }
         
         assertEquals(26, count);
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.region.BinaryRegion3D#intBounds()}.
+     */
+    @Test
+    public final void testIntBounds()
+    {
+        BinaryRegion3D region = new BinaryRegion3D();
+        region.set(10, 10, 10, true);
+        region.set( 2, 10, 10, true);
+        region.set( 3, 10, 10, true);
+        region.set( 4, 10, 10, true);
+        region.set(18, 10, 10, true);
+        region.set(19, 10, 10, true);
+        region.set( 9,  3, 10, true);
+        region.set(10,  3, 10, true);
+        region.set(10, 18, 10, true);
+        region.set(11, 18, 10, true);
+        region.set(11, 10,  4, true);
+        region.set(12, 10,  4, true);
+        region.set(13, 10,  4, true);
+        region.set( 6, 10, 17, true);
+        region.set( 7, 10, 17, true);
+        region.set( 8, 10, 17, true);
+        
+        int[][] bounds = region.intBounds();
+        
+        assertEquals( 2, bounds[0][0]);
+        assertEquals(19, bounds[0][1]);
+        assertEquals( 3, bounds[1][0]);
+        assertEquals(18, bounds[1][1]);
+        assertEquals( 4, bounds[2][0]);
+        assertEquals(17, bounds[2][1]);
     }
 
     private static final BinaryRegion3D createHollowCube()

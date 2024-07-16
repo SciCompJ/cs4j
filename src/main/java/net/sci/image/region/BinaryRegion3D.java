@@ -38,26 +38,20 @@ public class BinaryRegion3D implements BinaryRegion
     
     
     // =============================================================
-    // Methods
+    // Getter and Setter
     
     /**
-     * Counts the number of elements within this binary region.
+     * Returns a boolean flag indicating whether the region contains the
+     * specified position.
      * 
-     * @return the number of elements within this binary region.
+     * @param x
+     *            the x-coordinate of the region.
+     * @param y
+     *            the y-coordinate of the region
+     * @param z
+     *            the z-coordinate of the region
+     * @return true if the region contains the specified coordinates
      */
-    public long elementCount()
-    {
-        long count = 0;
-        for (HashMap<Integer, BinaryRow> slice : slices.values())
-        {
-            for (BinaryRow row : slice.values())
-            {
-                count += row.elementCount();
-            }
-        }
-        return count;
-    }
-    
     public boolean get(int x, int y, int z)
     {
         HashMap<Integer, BinaryRow> slice = slices.get(z);
@@ -66,7 +60,19 @@ public class BinaryRegion3D implements BinaryRegion
         if (row == null) return false;
         return row.get(x);
     }
-    
+
+    /**
+     * Updates the content of the region for the specified position.
+     * 
+     * @param x
+     *            the x-coordinate of the region.
+     * @param y
+     *            the y-coordinate of the region
+     * @param z
+     *            the z-coordinate of the region
+     * @param state
+     *            the new state of the region for the specified position
+     */
     public void set(int x, int y, int z, boolean state)
     {
         if (state)
@@ -78,7 +84,7 @@ public class BinaryRegion3D implements BinaryRegion
             setFalse(x, y, z);
         }
     }
-    
+
     private void setTrue(int x, int y, int z)
     {
         HashMap<Integer, BinaryRow> slice = slices.get(z);
@@ -99,7 +105,7 @@ public class BinaryRegion3D implements BinaryRegion
             row.set(x, true);
         }
     }
-    
+
     private void setFalse(int x, int y, int z)
     {
         HashMap<Integer, BinaryRow> slice = slices.get(z);
@@ -117,6 +123,70 @@ public class BinaryRegion3D implements BinaryRegion
         }
     }
 
+
+    // =============================================================
+    // Methods implementing the BinaryRegion interface
+    
+    public int[][] intBounds()
+    {
+        // initializes with arbitrary large values
+        int xmin = Integer.MAX_VALUE;
+        int xmax = Integer.MIN_VALUE;
+        int ymin = Integer.MAX_VALUE;
+        int ymax = Integer.MIN_VALUE;
+        int zmin = Integer.MAX_VALUE;
+        int zmax = Integer.MIN_VALUE;
+        
+        // iterate over all rows
+        for (HashMap.Entry<Integer, HashMap<Integer, BinaryRow>> slice : slices.entrySet())
+        {
+            // update z bounds
+            int z = slice.getKey();
+            zmin = Math.min(z, zmin);
+            zmax = Math.max(z, zmax);
+            
+            HashMap<Integer, BinaryRow> rows = slice.getValue();
+            for (HashMap.Entry<Integer, BinaryRow> row : rows.entrySet())
+            {
+                // update y bounds
+                int y = row.getKey();
+                ymin = Math.min(y, ymin);
+                ymax = Math.max(y, ymax);
+                
+                // update x bounds
+                int[] bnd = row.getValue().intBounds();
+                xmin = Math.min(xmin, bnd[0]);
+                xmax = Math.max(xmax, bnd[1]);
+            }
+        }
+        
+        // create bounds array
+        return new int[][] { { xmin, xmax }, { ymin, ymax }, { zmin, zmax } };
+    }
+    
+    public boolean isEmpty()
+    {
+        return this.slices.isEmpty();
+    }
+
+    /**
+     * Counts the number of elements within this binary region.
+     * 
+     * @return the number of elements within this binary region.
+     */
+    public long elementCount()
+    {
+        long count = 0;
+        for (HashMap<Integer, BinaryRow> slice : slices.values())
+        {
+            for (BinaryRow row : slice.values())
+            {
+                count += row.elementCount();
+            }
+        }
+        return count;
+    }
+    
     /**
      * Allows to iterate over positions in a region.
      * 
@@ -126,7 +196,6 @@ public class BinaryRegion3D implements BinaryRegion
      *     doProcessing(array, pos);
      * }
      * }
-     * </pre>
      * 
      * @see #positionIterator()
      * 
@@ -158,6 +227,8 @@ public class BinaryRegion3D implements BinaryRegion
     {
         return 3;
     }
+    
+    
     // =============================================================
     // Implementation of an iterator class over positions
     
