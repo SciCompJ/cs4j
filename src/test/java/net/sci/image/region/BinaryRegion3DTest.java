@@ -51,6 +51,46 @@ public class BinaryRegion3DTest
         assertFalse(region.get(3, 3, 3));
     }
     
+    /**
+     * Test method for {@link net.sci.image.region.BinaryRegion2D#positionIterator()}.
+     */
+    @Test
+    public final void testPositions()
+    {
+        BinaryRegion3D region = createHollowCube();
+        
+        int count = 0;
+        for (@SuppressWarnings("unused") int[] pos : region.positions())
+        {
+            count++;
+//            System.out.println(String.format("[%2d,%2d,%2d]", pos[0], pos[1], pos[2]));
+        }
+        
+        assertEquals(26, count);
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.region.BinaryRegion2D#positionIterator()}.
+     */
+    @Test
+    public final void testPositions2()
+    {
+        BinaryRegion3D region = createHollowCube();
+        
+        BinaryRegion.PositionIterator iter = region.positionIterator();
+        int[] pos = new int[3];
+        
+        int count = 0; 
+        while(iter.hasNext())
+        {
+            count++;
+            iter.next(pos);
+//            System.out.println(String.format("[%2d,%2d,%2d]", pos[0], pos[1], pos[2]));
+        }
+        
+        assertEquals(26, count);
+    }
+
     private static final BinaryRegion3D createHollowCube()
     {
         BinaryRegion3D region = new BinaryRegion3D();

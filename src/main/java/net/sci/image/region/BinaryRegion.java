@@ -3,6 +3,8 @@
  */
 package net.sci.image.region;
 
+import java.util.Iterator;
+
 import net.sci.array.Dimensional;
 
 /**
@@ -18,4 +20,11 @@ public interface BinaryRegion extends Dimensional
      * @return the number of elements within this binary region.
      */
     public long elementCount();
+    
+    public Iterable<int[]> positions();
+    
+    public interface PositionIterator extends Iterator<int[]>
+    {
+        public void next(int[] pos);
+    }
 }

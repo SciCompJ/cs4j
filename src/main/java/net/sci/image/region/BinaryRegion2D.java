@@ -4,8 +4,10 @@
 package net.sci.image.region;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import net.sci.array.binary.BinaryRow;
+import net.sci.array.binary.Run;
 
 /**
  * A region within an array, without explicit specification of array bounds.
@@ -91,6 +93,38 @@ public class BinaryRegion2D implements BinaryRegion
         }
     }
     
+    /**
+     * Allows to iterate over positions in a region.
+     * 
+     * {@snippet :
+     * for (int[] pos : region.positions())
+     * {
+     *     doProcessing(array, pos);
+     * }
+     * }
+     * </pre>
+     * 
+     * @see #positionIterator()
+     * 
+     * @return an Iterable over region positions.
+     */
+    @Override
+    public Iterable<int[]> positions()
+    {
+        return new Iterable<int[]>()
+        {
+            public java.util.Iterator<int[]> iterator()
+            {
+                return positionIterator();
+            }
+        };
+    }
+    
+    public BinaryRegion.PositionIterator positionIterator()
+    {
+        return new PositionIterator();
+    }
+    
     
     // =============================================================
     // Implementation of the Dimensional interface
@@ -99,5 +133,86 @@ public class BinaryRegion2D implements BinaryRegion
     public int dimensionality()
     {
         return 2;
+    }
+    
+    
+    // =============================================================
+    // Implementation of an iterator class over positions
+    
+    private class PositionIterator implements BinaryRegion.PositionIterator
+    {
+        /**
+         * Iterator over the rows. Uses HashMap entry in order to keep row index
+         * information.
+         */
+        Iterator<HashMap.Entry<Integer,BinaryRow>> rowIterator;
+        HashMap.Entry<Integer,BinaryRow> currentRow;
+        Iterator<Run> runIterator;
+        Run currentRun = null;
+        /** index of position within the run. If equals to -1, no more position.*/
+        int posIndex = -1;
+        
+        public PositionIterator()
+        {
+            // setup row iterator and current row
+            rowIterator = rows.entrySet().iterator();
+            if (!rowIterator.hasNext()) return;
+            currentRow = rowIterator.next();
+            
+            // setup run iterator and current run
+            runIterator = currentRow.getValue().iterator();
+            if (!runIterator.hasNext()) return;
+            currentRun = runIterator.next();
+            posIndex = 0;
+        }
+        
+        @Override
+        public boolean hasNext()
+        {
+            return posIndex >= 0;
+        }
+
+        @Override
+        public int[] next()
+        {
+            int[] pos = new int[2];
+            next(pos);
+            return pos;
+        }
+        
+        public void next(int[] pos)
+        {
+            pos[0] = this.currentRun.left + posIndex;
+            pos[1] = this.currentRow.getKey();
+            incrementPosition();
+        }
+        
+        private void incrementPosition()
+        {
+            posIndex++;
+            if (posIndex >= currentRun.length()) nextRun();
+        }
+        
+        private void nextRun()
+        {
+            posIndex = -1;
+            if (runIterator.hasNext()) 
+            {
+                currentRun = runIterator.next();
+                posIndex = 0;
+            }
+            else if (rowIterator.hasNext())
+            {
+                // switch to next row, and call again nextRun()
+                nextRow();
+                nextRun();
+            }
+        }
+        
+        private void nextRow()
+        {
+            currentRow = rowIterator.next();
+            runIterator = currentRow.getValue().iterator();
+        }
     }
 }
