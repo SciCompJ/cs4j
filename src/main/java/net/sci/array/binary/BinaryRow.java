@@ -46,58 +46,104 @@ public class BinaryRow implements Iterable<Run>
         // create structure to iterate over both rows in parallel.
         RunIteratorPair rip = new RunIteratorPair(row1, row2);
         
-        // main iteration, breaking when both run1 and run2 are null
+        // main iteration, while there are remaining runs in both row1 and row2,
+        // and breaking when either run1 or run2 becomes null
         // (assumes we start from background)
-        while(rip.run1 != null || rip.run2 != null)
+        while(rip.run1 != null && rip.run2 != null)
         {
-            // case of first row with no more runs
-            if (rip.run1 == null)
+            resRow.addRun(createNextUnionRun(rip));
+        }
+        
+        // one of the two rows has no more runs, but there may be some runs left
+        // in the other
+        if (rip.run1 != null)
+        {
+            // add remaining runs of row1
+            resRow.addRun(rip.run1);
+            while (rip.runs1.hasNext())
             {
-                // add remaining runs of row2
-                resRow.addRun(rip.run2);
-                while (rip.runs2.hasNext())
-                {
-                    resRow.addRun(rip.runs2.next());
-                }
-                break;
+                resRow.addRun(rip.runs1.next());
             }
-            
-            // case of second row with no more runs
-            if (rip.run2 == null)
+        } 
+        else if (rip.run2 != null)
+        {
+            // add remaining runs of row2
+            resRow.addRun(rip.run2);
+            while (rip.runs2.hasNext())
             {
-                // add remaining runs of row1
-                resRow.addRun(rip.run1);
-                resRow.runs.put(rip.run1.left, rip.run1);
-                while (rip.runs1.hasNext())
-                {
-                    resRow.addRun(rip.runs1.next());
-                }
-                break;
+                resRow.addRun(rip.runs2.next());
             }
-            
-            // From here, there are remaining runs in both row1 and row2 
-            
-            // start processing with the run with the lowest left value
-            // -> enforce run1 to have the lowest left value 
-            if (rip.run1.left > rip.run2.left)
-            {
-                rip.swap();
-            }
-
-            // initialize new run with current run1
-            int newLeft = rip.run1.left;
-            int newRight = rip.run1.right;
-            
-            // process next run 
-            rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
-            
-            // update right value of new run, and add it to list of runs
-            newRight = rip.findRightExtremityOfUnion(newRight);
-            resRow.addRun(new Run(newLeft, newRight));
         }
         
         // create the new row from list of runs
         return resRow;
+    }
+    
+    /**
+     * Iterates over the runs until we find the right extremity of the current
+     * union of runs, and returns the new run resulting from the union.
+     * Requires <code>rip.run1</code> and <code>rip.run2</code> to be non null.
+     * 
+     * Removes all the runs (in each row) whose right extremity is before or
+     * equal to the returned value.
+     * 
+     * @param rip
+     *            the iterator over the pair of runs. The current runs will be
+     *            updated during the search.
+     * @param newRight
+     *            the initial value for finding right extremity of current union
+     * @return the position of the right extremity of the union
+     */
+    private static final Run createNextUnionRun(RunIteratorPair rip)
+    {
+        // start processing with the run with the lowest left value
+        // -> enforce run1 to have the lowest left value 
+        if (rip.run1.left > rip.run2.left)
+        {
+            rip.swap();
+        }
+
+        // initialize new run with current run1
+        int newLeft = rip.run1.left;
+        int newRight = rip.run1.right;
+        
+        // process next run 
+        rip.run1 = rip.runs1.hasNext() ? rip.runs1.next() : null;
+        
+        // process the loop until right extremity is found
+        while (true)
+        {
+            // identify the next run in row2 with a right extremity greater than
+            // current "newRight" value
+            // (uses short-circuit evaluation)
+            while(rip.run2 != null && rip.run2.right <= newRight)
+            {
+                rip.run2 = rip.runs2.hasNext() ? rip.runs2.next() : null;
+            }
+            
+            // if there is no more run in second row, then the current right
+            // is the one from current run
+            if (rip.run2 == null)
+            {
+                return new Run(newLeft, newRight);
+            }
+
+            // if the next run in second row starts *after* the end of
+            // current run (with at least one pixel in between), then we
+            // need to stop iteration to create a new run.
+            if (rip.run2.left > newRight + 1)
+            {
+                return new Run(newLeft, newRight);
+            }
+            
+            // run2 ends after run1. Need to update right extremity and
+            // check the other runs in first row.
+            newRight = rip.run2.right;
+            rip.run2 = rip.runs2.hasNext() ? rip.runs2.next() : null;
+            
+            // as run2 is the new current run, need to swap
+            rip.swap();
+        }
     }
     
     /**
@@ -156,93 +202,6 @@ public class BinaryRow implements Iterable<Run>
         // create the new row from list of runs
         return row;
     }
-    
-//    /**
-//     * Computes the dilation of a row using another row as structuring element.
-//     * 
-//     * @param row1
-//     *            the row to dilate.
-//     * @param row2
-//     *            the row to dilate with.
-//     * @return the result of the dilation of the two rows.
-//     */
-//    public static final BinaryRow dilation(BinaryRow row1, BinaryRow row)
-//    {
-//        BinaryRow res = row1.duplicate();
-//        for (Run run : row)
-//        {
-//            BinaryRow resDil = dilationLeftRight(row1, -run.left, run.right);
-//            res = union(res, resDil);
-//        }
-//        return res;
-//    }
-//    
-//    /**
-//     * Computes the erosion of a row using another row as structuring element.
-//     * 
-//     * @param row1
-//     *            the row to erode.
-//     * @param row2
-//     *            the row used for erosion.
-//     * @return the result of the erosion of the two rows.
-//     */
-//    public static final BinaryRow erosion(BinaryRow row1, BinaryRow row2)
-//    {
-//        BinaryRow res = row1.duplicate();
-//        for (Run run : row2)
-//        {
-//            BinaryRow resEro = dilationLeftRight(row1, run.left, -run.right);
-//            res = intersection(res, resEro);
-//        }
-//        return res;
-//    }
-//
-//    private static final BinaryRow dilationLeftRight(BinaryRow row, int leftDilate, int rightDilate)
-//    {
-//        // create result runs
-//        TreeSet<Run> newRuns = new TreeSet<Run>();
-//        
-//        Iterator<Run> iter = row.iterator();
-//        Run currentRun = iter.hasNext() ? iter.next() : null;
-//        
-//        while(currentRun != null)
-//        {
-//            // init extremities of new run
-//            int newLeft = currentRun.left - leftDilate;
-//            int newRight = currentRun.right + rightDilate;
-//            
-//            // switch to next run
-//            currentRun = iter.hasNext() ? iter.next() : null;
-//            
-//            // if leftDilate or rightDilate is negative, this may delete some runs
-//            // here, we simply iterate
-//            if (newLeft > newRight)
-//            {
-//                continue;
-//            }
-//            
-//            // in case of last run, creates new run and finalize 
-//            if (currentRun == null)
-//            {
-//                newRuns.add(new Run(newLeft, newRight));
-//                break;
-//            }
-//            
-//            // iterate while right extremity overlap with left extremity of next run
-//            while (currentRun != null && currentRun.left - leftDilate - 1 <= newRight)
-//            {
-//                // overlap -> need to update right extremity
-//                newRight = currentRun.right + rightDilate;
-//                // and update current run
-//                currentRun = iter.hasNext() ? iter.next() : null;
-//            }
-//            
-//            newRuns.add(new Run(newLeft, newRight));
-//        }
-//        
-//        // create the new row from list of runs
-//        return new BinaryRow(newRuns);
-//    }
     
     
     // =============================================================
@@ -970,8 +929,10 @@ public class BinaryRow implements Iterable<Run>
     // Inner class implementations
     
     /**
-     * Keep references to both iterators, as well as references to current runs in
-     * each row.
+     * Keep references to both iterators, as well as references to the current
+     * run in each row.
+     * 
+     * Used to compute the union or the intersection of two BinaryRow instances. 
      */
     private static final class RunIteratorPair
     {
@@ -999,69 +960,6 @@ public class BinaryRow implements Iterable<Run>
             }
         }
         
-        /**
-         * Iterates over the runs until we find the right extremity of the
-         * current union of runs, and returns the right extremity if the union.
-         * 
-         * Removes all the runs (in each row) whose right extremity is before or
-         * equal to the returned value.
-         * 
-         * @param newRight
-         *            the initial value for finding right extremity of current
-         *            union
-         * @return the position of the right extremity of the union
-         */
-        public int findRightExtremityOfUnion(int newRight)
-        {
-            // process the loop until right extremity is found
-            while (true)
-            {
-                // identify the next run in row2 with a right extremity greater than current "newRight" value
-                discardAllRunsInRuns2BeforeRightValue(newRight);
-                
-                // if there is no more run in second row, then the current right
-                // is the one from current run
-                if (this.run2 == null)
-                {
-                    return newRight;
-                }
-    
-                // if the next run in second row starts *after* the end of
-                // current run (with at least one pixel in between), then we
-                // need to stop iteration to create a new run.
-                if (this.run2.left > newRight + 1)
-                {
-                    return newRight;
-                }
-                
-                // run2 ends after run1. Need to update right extremity and
-                // check other runs in first row.
-                newRight = this.run2.right;
-                
-                // as run2 is the new current run, need to swap
-                this.swap();
-                
-                // iterate
-                this.run1 = this.runs1.hasNext() ? this.runs1.next() : null;
-            }
-        }
-    
-        private void discardAllRunsInRuns2BeforeRightValue(int value)
-        {
-            while (true)
-            {
-                if (this.run2 == null)
-                {
-                    return;
-                }
-                if (this.run2.right > value)
-                {
-                    return;
-                }
-                this.run2 = this.runs2.hasNext() ? this.runs2.next() : null;
-            }
-        }
-    
         public void swap()
         {
             Iterator<Run> runs0 = runs1;
@@ -1074,4 +972,3 @@ public class BinaryRow implements Iterable<Run>
         }
     }
 }
-
