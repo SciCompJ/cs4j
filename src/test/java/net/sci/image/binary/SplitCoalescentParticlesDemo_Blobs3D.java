@@ -7,7 +7,7 @@ import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.Connectivity3D;
 import net.sci.image.Image;
-import net.sci.image.process.filter.BoxFilter;
+import net.sci.image.filtering.BoxFilter;
 
 /**
  * Demonstrates the use of the class <code>SplitCoalescentParticles</code>.

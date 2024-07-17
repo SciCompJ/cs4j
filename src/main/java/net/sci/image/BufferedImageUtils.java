@@ -25,7 +25,7 @@ import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.VectorArray;
-import net.sci.image.process.shape.ImageSlicer;
+import net.sci.image.shape.ImageSlicer;
 
 /**
  * Collection of methods for managing conversion to java BufferedImage

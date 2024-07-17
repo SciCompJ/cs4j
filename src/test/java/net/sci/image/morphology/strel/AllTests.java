@@ -3,7 +3,7 @@ package net.sci.image.morphology.strel;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
-import net.sci.image.morphology.filter.BoxDilationNaiveTest;
+import net.sci.image.morphology.filtering.BoxDilationNaiveTest;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({

@@ -13,10 +13,10 @@ import net.sci.array.binary.BinaryArray;
  * structuring element.
  * 
  * @see net.sci.image.morphology.Strel
- * @see net.sci.image.morphology.filter.BinaryDilation
- * @see net.sci.image.morphology.filter.BinaryErosion
- * @see net.sci.image.morphology.filter.BinaryOpening
- * @see net.sci.image.morphology.filter.BinaryClosing
+ * @see net.sci.image.morphology.filtering.BinaryDilation
+ * @see net.sci.image.morphology.filtering.BinaryErosion
+ * @see net.sci.image.morphology.filtering.BinaryOpening
+ * @see net.sci.image.morphology.filtering.BinaryClosing
  * @see MorphologicalFilter
  * 
  * @author dlegland

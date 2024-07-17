@@ -10,9 +10,9 @@ import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.Connectivity2D;
 import net.sci.image.Connectivity3D;
 import net.sci.image.Image;
-import net.sci.image.morphology.reconstruct.KillBorders;
-import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid;
-import net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid;
+import net.sci.image.morphology.reconstruction.KillBorders;
+import net.sci.image.morphology.reconstruction.MorphologicalReconstruction2DHybrid;
+import net.sci.image.morphology.reconstruction.MorphologicalReconstruction3DHybrid;
 
 /**
  * <p>
@@ -23,8 +23,8 @@ import net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid;
  * 
  * @author dlegland
  *
- * @see net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid 
- * @see net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid 
+ * @see net.sci.image.morphology.reconstruction.MorphologicalReconstruction2DHybrid 
+ * @see net.sci.image.morphology.reconstruction.MorphologicalReconstruction3DHybrid 
  */
 public class MorphologicalReconstruction
 {

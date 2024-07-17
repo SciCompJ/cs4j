@@ -12,10 +12,10 @@ import net.sci.image.Connectivity2D;
 import net.sci.image.Connectivity3D;
 import net.sci.image.morphology.extrema.RegionalExtrema2D;
 import net.sci.image.morphology.extrema.RegionalExtrema3D;
-import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2D;
-import net.sci.image.morphology.reconstruct.MorphologicalReconstruction2DHybrid;
-import net.sci.image.morphology.reconstruct.MorphologicalReconstruction3D;
-import net.sci.image.morphology.reconstruct.MorphologicalReconstruction3DHybrid;
+import net.sci.image.morphology.reconstruction.MorphologicalReconstruction2D;
+import net.sci.image.morphology.reconstruction.MorphologicalReconstruction2DHybrid;
+import net.sci.image.morphology.reconstruction.MorphologicalReconstruction3D;
+import net.sci.image.morphology.reconstruction.MorphologicalReconstruction3DHybrid;
 
 /**
  * A collection of static methods for computing regional and extended minima and

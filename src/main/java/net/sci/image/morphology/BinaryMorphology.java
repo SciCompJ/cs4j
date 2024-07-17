@@ -7,20 +7,20 @@ import net.sci.array.Arrays;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.image.morphology.filter.BinaryBlackTopHat;
-import net.sci.image.morphology.filter.BinaryClosing;
-import net.sci.image.morphology.filter.BinaryDilation;
-import net.sci.image.morphology.filter.BinaryErosion;
-import net.sci.image.morphology.filter.BinaryGradient;
-import net.sci.image.morphology.filter.BinaryInnerGradient;
-import net.sci.image.morphology.filter.BinaryOpening;
-import net.sci.image.morphology.filter.BinaryOuterGradient;
-import net.sci.image.morphology.filter.BinaryWhiteTopHat;
-import net.sci.image.morphology.reconstruct.BinaryFillHoles2D;
-import net.sci.image.morphology.reconstruct.BinaryFillHoles3D;
-import net.sci.image.morphology.reconstruct.BinaryKillBorders;
-import net.sci.image.morphology.reconstruct.RunLengthBinaryReconstruction2D;
-import net.sci.image.morphology.reconstruct.RunLengthBinaryReconstruction3D;
+import net.sci.image.morphology.filtering.BinaryBlackTopHat;
+import net.sci.image.morphology.filtering.BinaryClosing;
+import net.sci.image.morphology.filtering.BinaryDilation;
+import net.sci.image.morphology.filtering.BinaryErosion;
+import net.sci.image.morphology.filtering.BinaryGradient;
+import net.sci.image.morphology.filtering.BinaryInnerGradient;
+import net.sci.image.morphology.filtering.BinaryOpening;
+import net.sci.image.morphology.filtering.BinaryOuterGradient;
+import net.sci.image.morphology.filtering.BinaryWhiteTopHat;
+import net.sci.image.morphology.reconstruction.BinaryFillHoles2D;
+import net.sci.image.morphology.reconstruction.BinaryFillHoles3D;
+import net.sci.image.morphology.reconstruction.BinaryKillBorders;
+import net.sci.image.morphology.reconstruction.RunLengthBinaryReconstruction2D;
+import net.sci.image.morphology.reconstruction.RunLengthBinaryReconstruction3D;
 
 
 /**
@@ -39,7 +39,7 @@ public class BinaryMorphology
     /**
      * Performs morphological dilation on the input binary array.
      * 
-     * @see net.sci.image.morphology.filter.BinaryDilation
+     * @see net.sci.image.morphology.filtering.BinaryDilation
      * 
      * @param array
      *            the binary input array to process
@@ -56,7 +56,7 @@ public class BinaryMorphology
      * Performs morphological erosion on the input binary array. 
      * 
      * 
-     * @see net.sci.image.morphology.filter.BinaryErosion
+     * @see net.sci.image.morphology.filtering.BinaryErosion
      * 
      * @param array
      *            the binary input array to process
@@ -72,7 +72,7 @@ public class BinaryMorphology
     /**
      * Performs morphological opening on the input binary array.
      * 
-     * @see net.sci.image.morphology.filter.BinaryOpening
+     * @see net.sci.image.morphology.filtering.BinaryOpening
      * 
      * 
      * @param array
@@ -90,7 +90,7 @@ public class BinaryMorphology
     /**
      * Performs closing on the input binary array.
      * 
-     * @see net.sci.image.morphology.filter.BinaryClosing
+     * @see net.sci.image.morphology.filtering.BinaryClosing
      * 
      * @param array
      *            the binary input array to process
@@ -108,7 +108,7 @@ public class BinaryMorphology
      * is obtained by computing the set-difference between the results of the
      * dilation and of the erosion.
      * 
-     * @see net.sci.image.morphology.filter.BinaryGradient
+     * @see net.sci.image.morphology.filtering.BinaryGradient
      * 
      * @param array
      *            the binary input array to process
@@ -126,7 +126,7 @@ public class BinaryMorphology
      * inner gradient is obtained by computing the set-difference between the
      * results of the array and of the erosion.
      * 
-     * @see net.sci.image.morphology.filter.BinaryInnerGradient
+     * @see net.sci.image.morphology.filtering.BinaryInnerGradient
      * 
      * @param array
      *            the binary input array to process
@@ -144,7 +144,7 @@ public class BinaryMorphology
      * outer gradient is obtained by computing the set-difference between the
      * result of the dilation and the original array.
      * 
-     * @see net.sci.image.morphology.filter.BinaryOuterGradient
+     * @see net.sci.image.morphology.filtering.BinaryOuterGradient
      * 
      * @param array
      *            the binary input array to process
@@ -163,7 +163,7 @@ public class BinaryMorphology
      * opening. The effect is to retain foreground elements smaller than the
      * structuring element.
      * 
-     * @see net.sci.image.morphology.filter.BinaryWhiteTopHat
+     * @see net.sci.image.morphology.filtering.BinaryWhiteTopHat
      * 
      * @param array
      *            the binary input array to process
@@ -182,7 +182,7 @@ public class BinaryMorphology
      * effect is to retain background elements smaller than the structuring
      * element.
      * 
-     * @see net.sci.image.morphology.filter.BinaryBlackTopHat
+     * @see net.sci.image.morphology.filtering.BinaryBlackTopHat
      * 
      * @param array
      *            the binary input array to process

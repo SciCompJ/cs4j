@@ -4,16 +4,16 @@
 package net.sci.image.morphology;
 
 import net.sci.array.Array;
-import net.sci.image.morphology.filter.BlackTopHat;
-import net.sci.image.morphology.filter.Closing;
-import net.sci.image.morphology.filter.Dilation;
-import net.sci.image.morphology.filter.Erosion;
-import net.sci.image.morphology.filter.Gradient;
-import net.sci.image.morphology.filter.OuterGradient;
-import net.sci.image.morphology.filter.Laplacian;
-import net.sci.image.morphology.filter.Opening;
-import net.sci.image.morphology.filter.InnerGradient;
-import net.sci.image.morphology.filter.WhiteTopHat;
+import net.sci.image.morphology.filtering.BlackTopHat;
+import net.sci.image.morphology.filtering.Closing;
+import net.sci.image.morphology.filtering.Dilation;
+import net.sci.image.morphology.filtering.Erosion;
+import net.sci.image.morphology.filtering.Gradient;
+import net.sci.image.morphology.filtering.InnerGradient;
+import net.sci.image.morphology.filtering.Laplacian;
+import net.sci.image.morphology.filtering.Opening;
+import net.sci.image.morphology.filtering.OuterGradient;
+import net.sci.image.morphology.filtering.WhiteTopHat;
 
 /**
  * <p>

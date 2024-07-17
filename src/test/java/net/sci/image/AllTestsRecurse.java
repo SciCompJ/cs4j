@@ -14,7 +14,6 @@ import org.junit.runners.Suite;
     net.sci.image.io.AllTests.class,
     net.sci.image.label.AllTestsRecurse.class,
 	net.sci.image.morphology.AllTestsRecurse.class,
-	net.sci.image.process.AllTestsRecurse.class,
 	})
 public class AllTestsRecurse {
   //nothing

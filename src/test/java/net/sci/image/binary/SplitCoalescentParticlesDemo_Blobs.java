@@ -6,7 +6,7 @@ package net.sci.image.binary;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.image.Image;
-import net.sci.image.process.filter.GaussianFilter5x5;
+import net.sci.image.filtering.GaussianFilter5x5;
 
 /**
  * Demonstrates the use of the class <code>SplitCoalescentParticles</code>.
