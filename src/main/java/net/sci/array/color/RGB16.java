@@ -23,19 +23,38 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     /** The RGB16 value corresponding to the black color. */
     public static final RGB16 BLACK = new RGB16(0, 0, 0);
 
+    /** The RGB16 value corresponding to the white color. */
+    public static final RGB16 WHITE = new RGB16(UInt16.MAX_INT, UInt16.MAX_INT, UInt16.MAX_INT);
+    /** The RGB16 value corresponding to the red color. */
+    public static final RGB16 RED = new RGB16(UInt16.MAX_INT, 0, 0);
+    /** The RGB16 value corresponding to the green color. */
+    public static final RGB16 GREEN = new RGB16(0, UInt16.MAX_INT, 0);
+    /** The RGB16 value corresponding to the blue color. */
+    public static final RGB16 BLUE = new RGB16(0, 0, UInt16.MAX_INT);
+    /** The RGB16 value corresponding to the cyan color. */
+    public static final RGB16 CYAN = new RGB16(0, UInt16.MAX_INT, UInt16.MAX_INT);
+    /** The RGB16 value corresponding to the magenta color. */
+    public static final RGB16 MAGENTA = new RGB16(UInt16.MAX_INT, 0, UInt16.MAX_INT);
+    /** The RGB16 value corresponding to the yellow color. */
+    public static final RGB16 YELLOW = new RGB16(UInt16.MAX_INT, UInt16.MAX_INT, 0);
+    /**
+     * The RGB16 value corresponding to the gray color (all sample values equal
+     * to UInt16.MAX_INT/2).
+     */
+    public static final RGB16 GRAY = new RGB16(UInt16.MAX_INT / 2, UInt16.MAX_INT / 2, UInt16.MAX_INT / 2);
+    /**
+     * The RGB16 value corresponding to the light gray color (all sample values
+     * equal to UInt16.MAX_INT/4).
+     */
+    public static final RGB16 DARK_GRAY = new RGB16(UInt16.MAX_INT / 4, UInt16.MAX_INT / 4, UInt16.MAX_INT / 4);
+    /**
+     * The RGB16 value corresponding to the dark gray color (all sample values
+     * equal to UInt16.MAX_INT*3/4).
+     */
+    public static final RGB16 LIGHT_GRAY = new RGB16(UInt16.MAX_INT * 3 / 4, UInt16.MAX_INT * 3 / 4, UInt16.MAX_INT * 3 / 4);    
     
     // =============================================================
     // Static methods
-
-    private final static int clampUInt16(int value)
-    {
-        return Math.min(Math.max(value, 0), 0x00FFFF);
-    }
-
-    private final static int clampUInt16(double value)
-    {
-        return (int) Math.min(Math.max(value, 0), 0x00FFFF);
-    }
 
     /**
      * Converts an array of 3 RGB values into an int code
@@ -44,11 +63,11 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      *            the three values of red, green and blue components
      * @return the corresponding intCode
      */
-    public static final long intCode(int[] rgb)
+    public static final long longCode(int[] rgb)
     {
-        long r = clampUInt16(rgb[0]);
-        long g = clampUInt16(rgb[1]);
-        long b = clampUInt16(rgb[2]);
+        long r = UInt16.clamp(rgb[0]);
+        long g = UInt16.clamp(rgb[1]);
+        long b = UInt16.clamp(rgb[2]);
         return b << 32 | g << 16 | r;   
     }
     
@@ -98,7 +117,7 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      */
     public final static RGB16 fromValue(double value)
     {
-        int val = clampUInt16(value);
+        int val = UInt16.convert(value);
         return new RGB16(val, val, val);
     }
 
@@ -136,9 +155,9 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      */
     public RGB16(int red, int green, int blue)
     {
-        long r = clampUInt16(red);
-        long g = clampUInt16(green);
-        long b = clampUInt16(blue);
+        long r = UInt16.clamp(red);
+        long g = UInt16.clamp(green);
+        long b = UInt16.clamp(blue);
         this.longCode = b << 32 | g << 16 | r;
     }
 
@@ -154,9 +173,9 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      */
     public RGB16(int[] rgb)
     {
-        long r = clampUInt16(rgb[0]);
-        long g = clampUInt16(rgb[1]);
-        long b = clampUInt16(rgb[2]);
+        long r = UInt16.clamp(rgb[0]);
+        long g = UInt16.clamp(rgb[1]);
+        long b = UInt16.clamp(rgb[2]);
         this.longCode = b << 32 | g << 16 | r;   
     }   
 
@@ -172,9 +191,9 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      */
     public RGB16(double red, double green, double blue)
     {
-        long r = clampUInt16(red);
-        long g = clampUInt16(green);
-        long b = clampUInt16(blue);
+        long r = UInt16.convert(red);
+        long g = UInt16.convert(green);
+        long b = UInt16.convert(blue);
         this.longCode = b << 32 | g << 16 | r;
     }
     
@@ -187,7 +206,7 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      * 
      * @return a long-based representation of this RGB16 color.
      */
-    public long getLongCode()
+    public long longCode()
     {
         return this.longCode;
     }
@@ -451,24 +470,24 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     @Override
     public RGB16 plus(RGB16 other)
     {
-        int r = this.getSample(0) + other.getSample(0);
-        int g = this.getSample(1) + other.getSample(1);
-        int b = this.getSample(2) + other.getSample(2);
-        return new RGB16(r, g, b);
+        long r = Math.min(this.getSample(0) + other.getSample(0), UInt16.MAX_INT);
+        long g = Math.min(this.getSample(1) + other.getSample(1), UInt16.MAX_INT);
+        long b = Math.min(this.getSample(2) + other.getSample(2), UInt16.MAX_INT);
+        return new RGB16(b << 32 | g << 16 | r);
     }
 
     @Override
     public RGB16 minus(RGB16 other)
     {
-        int r = this.getSample(0) - other.getSample(0);
-        int g = this.getSample(1) - other.getSample(1);
-        int b = this.getSample(2) - other.getSample(2);
-        return new RGB16(r, g, b);
+        long r = Math.min(this.getSample(0) - other.getSample(0), 0);
+        long g = Math.min(this.getSample(1) - other.getSample(1), 0);
+        long b = Math.min(this.getSample(2) - other.getSample(2), 0);
+        return new RGB16(b << 32 | g << 16 | r);
     }
 
     /**
      * Always returns the color BLACK, that corresponds to a triplet of negative
-     * values clamped between 0 and 255.
+     * values clamped between 0 and <code>UInt16.MAX_INT</code>.
      * 
      * @return the color RGB8.BLACK
      */
@@ -477,6 +496,7 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     {
         return RGB16.BLACK;
     }
+    
     @Override
     public RGB16 times(double k)
     {

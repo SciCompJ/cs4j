@@ -549,19 +549,19 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     @Override
     public RGB8 plus(RGB8 other)
     {
-        int r = this.getSample(0) + other.getSample(0);
-        int g = this.getSample(1) + other.getSample(1);
-        int b = this.getSample(2) + other.getSample(2);
-        return new RGB8(r, g, b);
+        int r = Math.min(this.getSample(0) + other.getSample(0), UInt8.MAX_INT);
+        int g = Math.min(this.getSample(1) + other.getSample(1), UInt8.MAX_INT);
+        int b = Math.min(this.getSample(2) + other.getSample(2), UInt8.MAX_INT);
+        return RGB8.fromIntCode(b << 16 | g << 8 | r);
     }
 
     @Override
     public RGB8 minus(RGB8 other)
     {
-        int r = this.getSample(0) - other.getSample(0);
-        int g = this.getSample(1) - other.getSample(1);
-        int b = this.getSample(2) - other.getSample(2);
-        return new RGB8(r, g, b);
+        int r = Math.max(this.getSample(0) - other.getSample(0), 0);
+        int g = Math.max(this.getSample(1) - other.getSample(1), 0);
+        int b = Math.max(this.getSample(2) - other.getSample(2), 0);
+        return RGB8.fromIntCode(b << 16 | g << 8 | r);
     }
 
     /**
