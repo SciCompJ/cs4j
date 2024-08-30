@@ -7,23 +7,23 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
 
-import net.sci.array.numeric.Float32Array2D;
-import net.sci.array.numeric.Float32Array3D;
+import net.sci.array.numeric.Int16Array2D;
+import net.sci.array.numeric.Int16Array3D;
 
 /**
- * Map the content of a binary file onto a 3D array of Float32.
+ * Map the content of a binary file onto a 3D array of Int16.
  * 
  * The data must be contiguous within the file, and not compressed. 
  * 
- * For convenience, the data for the current slice are cached in a float buffer.
+ * For convenience, the data for the current slice are cached in a buffer.
  * 
  * @author dlegland
  *
  */
-public class FileMappedFloat32Array3D extends Float32Array3D
+public class FileMappedInt16Array3D extends Int16Array3D
 {
     // =============================================================
     // Class variables
@@ -58,31 +58,32 @@ public class FileMappedFloat32Array3D extends Float32Array3D
     /**
      * The current slice (updated when reading data at different z-value).
      */
-    Float32Array2D currentSlice;
+    Int16Array2D currentSlice;
 
+    
     
     // =============================================================
     // Constructor
     
-    public FileMappedFloat32Array3D(String filePath, long offset, int size0, int size1, int size2)
+    public FileMappedInt16Array3D(String filePath, long offset, int size0, int size1, int size2)
     {
         this(filePath, offset, size0, size1, size2, ByteOrder.BIG_ENDIAN);
     }
 
-    public FileMappedFloat32Array3D(String filePath, long offset, int size0, int size1, int size2, ByteOrder byteOrder)
+    public FileMappedInt16Array3D(String filePath, long offset, int size0, int size1, int size2, ByteOrder byteOrder)
     {
         super(size0, size1, size2);
         this.filePath = filePath;
         this.offset = offset;
 
         // initialize byte buffer for storing current slice data
-        byte[] byteArray = new byte[size0 * size1 * 4];
+        byte[] byteArray = new byte[size0 * size1 * 2];
         this.byteBuffer = ByteBuffer.wrap(byteArray);
         this.byteBuffer.order(byteOrder);
         
         // wrap the byte buffer into a Float32Array2D
-        FloatBuffer buffer = this.byteBuffer.asFloatBuffer();
-        this.currentSlice = new FloatBufferFloat32Array2D(size0, size1, buffer);
+        ShortBuffer buffer = this.byteBuffer.asShortBuffer();
+        this.currentSlice = new ShortBufferInt16Array2D(size0, size1, buffer);
     }
 
     private void ensureCurrentSliceIndex(int index)
@@ -114,7 +115,7 @@ public class FileMappedFloat32Array3D extends Float32Array3D
     private void readCurrentSlice()
     {
         // compute offset of slice beginning
-        long numel = this.size0 * this.size1 * 4;
+        long numel = this.size0 * this.size1 * 2;
         long start = this.offset;
         if (currentSliceIndex > 0)
         {
@@ -165,7 +166,7 @@ public class FileMappedFloat32Array3D extends Float32Array3D
     }
     
     // =============================================================
-    // Implementation of the Float32Array3D interface
+    // Implementation of the UInt16Array3D interface
     
     /**
      * Updates the cache data with that of the selected slice index, and returns
@@ -175,29 +176,30 @@ public class FileMappedFloat32Array3D extends Float32Array3D
      * use of the duplicate() method is encouraged to ensure validity of slice
      * data.
      */
-    public Float32Array2D slice(int sliceIndex)
+    public Int16Array2D slice(int sliceIndex)
     {
         ensureCurrentSliceIndex(sliceIndex);
         return this.currentSlice;
     }
     
     @Override
-    public float getFloat(int x, int y, int z)
+    public short getShort(int x, int y, int z)
     {
         ensureCurrentSliceIndex(z);
-        return this.currentSlice.getFloat(x, y);
+        return this.currentSlice.getShort(x, y);
     }
 
     @Override
-    public void setFloat(int x, int y, int z, float f)
+    public void setShort(int x, int y, int z, short f)
     {
-        throw new RuntimeException("Modification of data in FileMappedFloat32Array3D is not available");
+        throw new RuntimeException("Modification of data in FileMappedUInt16Array3D is not available");
     }
+    
 
     @Override
     public double getValue(int[] pos)
     {
         ensureCurrentSliceIndex(pos[2]);
-        return this.currentSlice.getFloat(pos[0], pos[1]);
+        return this.currentSlice.getShort(pos[0], pos[1]);
     }
 }

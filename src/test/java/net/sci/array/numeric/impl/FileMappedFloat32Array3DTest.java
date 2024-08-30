@@ -185,6 +185,6 @@ public class FileMappedFloat32Array3DTest
         Path path = Paths.get("src", "test", "resources", "images", "raw", "xyzRamp_6x5x4_float32_lsb.raw");
         String fileName = path.toString();
         
-        return new FileMappedFloat32Array3D(fileName, 0, ByteOrder.LITTLE_ENDIAN, 6, 5, 4);
+        return new FileMappedFloat32Array3D(fileName, 0L, 6, 5, 4, ByteOrder.LITTLE_ENDIAN);
     }
 }

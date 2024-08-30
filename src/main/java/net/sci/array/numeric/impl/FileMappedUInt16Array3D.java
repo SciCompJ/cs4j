@@ -6,6 +6,7 @@ package net.sci.array.numeric.impl;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
 
@@ -66,6 +67,11 @@ public class FileMappedUInt16Array3D extends UInt16Array3D
     
     public FileMappedUInt16Array3D(String filePath, long offset, int size0, int size1, int size2)
     {
+        this(filePath, offset, size0, size1, size2, ByteOrder.BIG_ENDIAN);
+    }
+
+    public FileMappedUInt16Array3D(String filePath, long offset, int size0, int size1, int size2, ByteOrder byteOrder)
+    {
         super(size0, size1, size2);
         this.filePath = filePath;
         this.offset = offset;
@@ -73,6 +79,7 @@ public class FileMappedUInt16Array3D extends UInt16Array3D
         // initialize byte buffer for storing current slice data
         byte[] byteArray = new byte[size0 * size1 * 2];
         this.byteBuffer = ByteBuffer.wrap(byteArray);
+        this.byteBuffer.order(byteOrder);
         
         // wrap the byte buffer into a Float32Array2D
         ShortBuffer buffer = this.byteBuffer.asShortBuffer();
