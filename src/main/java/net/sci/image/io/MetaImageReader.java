@@ -24,47 +24,20 @@ import net.sci.image.Image;
  */
 public class MetaImageReader implements ImageReader
 {
-    File file;
-    
-    public MetaImageReader(File file) throws IOException
-    {
-        this.file = file;
-    }
-    
-    public MetaImageReader(String fileName) throws IOException
-    {
-        this.file = new File(fileName);
-    }
-    
-    @Override
-    public Image readImage() throws IOException
-    {
-        MetaImageInfo info = readInfo(this.file);
-        
-        Array<?> data;
-        
-        boolean virtualType = 
-                info.elementType == MetaImageInfo.ElementType.UINT8
-                || info.elementType == MetaImageInfo.ElementType.UINT16
-                || info.elementType == MetaImageInfo.ElementType.INT16
-                || info.elementType == MetaImageInfo.ElementType.FLOAT32;
-        if (info.nDims == 3 && virtualType)
-        {
-            data = readVirtualImageData(info);
-        }
-        else
-        {
-            data = readImageData(info);
-        }
-        
-        Image image = new Image(data);
-        image.setNameFromFileName(file.getName());
-        image.setFilePath(file.getPath());
-        
-        return image;
-    }
-    
-    public MetaImageInfo readInfo(File file) throws IOException
+    /**
+     * Opens a MetaImage file containing header, and returns the file info
+     * required to read the binary data as an instance of MetaImageInfo.
+     * 
+     * A large number of tags is managed. In case an unknown tag is encountered,
+     * a warning is displayed on current output stream.
+     * 
+     * @param file
+     *            the file containing the header of the MetaImage file
+     * @return the MetaImageInfo instance containing parsed info
+     * @throws IOException
+     *             if file was not found or was malformed
+     */
+    public static final MetaImageInfo readFileInfo(File file) throws IOException
     {
         // create new empty file info
         MetaImageInfo info = new MetaImageInfo();
@@ -125,7 +98,7 @@ public class MetaImageReader implements ImageReader
             {
                 info.elementSpacing = parseDoubleArray(valueString, info.nDims);
             }
-            else if (tag.equalsIgnoreCase("ElementNuberOfChannels")) 
+            else if (tag.equalsIgnoreCase("ElementNumberOfChannels")) 
             {
                 info.elementNumberOfChannels = Integer.parseInt(valueString);
             }
@@ -136,6 +109,10 @@ public class MetaImageReader implements ImageReader
             else if (tag.equalsIgnoreCase("Offset")) 
             {
                 info.offset = parseDoubleArray(valueString, info.nDims);
+            }
+            else if (tag.equalsIgnoreCase("Orientation")) 
+            {
+                info.orientation = valueString;
             }
             else if (tag.equalsIgnoreCase("AnatomicalOrientation")) 
             {
@@ -210,7 +187,7 @@ public class MetaImageReader implements ImageReader
         return buffer.toString();
     }
     
-    private int[] parseIntegerArray(String string, int expectedLength)
+    private static final int[] parseIntegerArray(String string, int expectedLength)
     {
         int[] res = new int[expectedLength];
         
@@ -224,7 +201,7 @@ public class MetaImageReader implements ImageReader
         return res;
     }
     
-    private double[] parseDoubleArray(String string, int expectedLength)
+    private static final double[] parseDoubleArray(String string, int expectedLength)
     {
         double[] res = new double[expectedLength];
         
@@ -236,6 +213,59 @@ public class MetaImageReader implements ImageReader
         scanner.close();
         
         return res;
+    }
+    
+    File file;
+    
+    public MetaImageReader(File file) throws IOException
+    {
+        this.file = file;
+    }
+    
+    public MetaImageReader(String fileName) throws IOException
+    {
+        this.file = new File(fileName);
+    }
+    
+    @Override
+    public Image readImage() throws IOException
+    {
+        MetaImageInfo info = readFileInfo(this.file);
+        
+        Array<?> data;
+        
+        boolean virtualType = 
+                info.elementType == MetaImageInfo.ElementType.UINT8
+                || info.elementType == MetaImageInfo.ElementType.UINT16
+                || info.elementType == MetaImageInfo.ElementType.INT16
+                || info.elementType == MetaImageInfo.ElementType.FLOAT32;
+        if (info.nDims == 3 && virtualType)
+        {
+            data = readVirtualImageData(info);
+        }
+        else
+        {
+            data = readImageData(info);
+        }
+        
+        Image image = new Image(data);
+        image.setNameFromFileName(file.getName());
+        image.setFilePath(file.getPath());
+        
+        // Update image spatial calibration
+        double[] spacing = null;
+        double[] origin = null;
+        if (info.elementSize != null) spacing = info.elementSize;
+        if (info.elementSpacing != null) spacing = info.elementSpacing;
+        if (info.offset != null) origin = info.offset;
+        if (spacing != null)
+        {
+            if (origin == null) origin = new double[spacing.length];
+            Calibration calib = image.getCalibration();
+            calib.setSpatialCalibration(spacing, origin, "");        
+        }
+        
+        return image;
     }
     
     public Array<?> readImageData(MetaImageInfo info) throws IOException
