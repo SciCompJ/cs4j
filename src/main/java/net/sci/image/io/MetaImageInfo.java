@@ -105,7 +105,7 @@ public final class MetaImageInfo
 	public String elementDataFile = null;
 
 	/** the size of the header (determined only when reading files). */
-	public int headerSize = 0;
+	public long headerSize = 0L;
 
 	// values for spatial calibration
 	public double[] elementSpacing = null;

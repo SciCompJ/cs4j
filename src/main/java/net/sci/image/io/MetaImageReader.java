@@ -3,10 +3,9 @@
  */
 package net.sci.image.io;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 import java.util.Scanner;
 
@@ -47,150 +46,152 @@ public class MetaImageReader implements ImageReader
 
 	}
 
-	public MetaImageInfo readInfo(File file) throws IOException 
-	{
-		MetaImageInfo info = new MetaImageInfo();
+    public MetaImageInfo readInfo(File file) throws IOException 
+    {
+        // create new empty file info
+        MetaImageInfo info = new MetaImageInfo();
 
-		// open a buffered text reader on the file
-		BufferedReader textReader = new BufferedReader(new FileReader(file));
-		Scanner scanner = new Scanner(textReader);
+        // open file for reading binary data, keeping possibility to store file offset
+        RandomAccessFile raf = new RandomAccessFile(file, "r");
+        
+        // Read image information until we find the 'ElementDataFile' tag
+        while (info.elementDataFile == null) 
+        {
+            // read next line (parse binary data), and split into tag and value
+            String line = readNextLine(raf);
+            Scanner lineScanner = new Scanner(line);
+            lineScanner.useDelimiter("=");
+            String tag = lineScanner.next().trim();
+            String valueString = lineScanner.next().trim();
+            lineScanner.close();
 
-		// Read image information until we find the 'ElementDataFile' tag
-		while (info.elementDataFile == null) 
-		{
-			String line = readNextLine(scanner);
-			Scanner lineScanner = new Scanner(line);
-			lineScanner.useDelimiter("=");
-			String tag = lineScanner.next().trim();
-			String valueString = lineScanner.next().trim();
-			lineScanner.close();
+            // Start by mandatory tags
+            if (tag.equalsIgnoreCase("ObjectType")) 
+            {
+                info.ObjectTypeName = valueString;
+            }
+            else if (tag.equalsIgnoreCase("NDims")) 
+            {
+                info.nDims = Integer.parseInt(valueString);
+            }
+            else if (tag.equalsIgnoreCase("DimSize")) 
+            {
+                info.dimSize = parseIntegerArray(valueString, info.nDims);
+            }
+            else if (tag.equalsIgnoreCase("ElementType")) 
+            {
+                info.elementTypeName = valueString;
+                info.elementType = MetaImageInfo.ElementType.parseMET(valueString);
+            }
+            else if (tag.equalsIgnoreCase("ElementDataFile"))
+            {
+                info.elementDataFile = valueString;
+                if (valueString.compareToIgnoreCase("LOCAL") == 0)
+                {
+                    info.elementDataFile = file.getName();
+                    info.headerSize = raf.getFilePointer();
+                }
+            }
 
-			//				System.out.println("  Found tag: " + tag + " with value: " + valueString);
+            // Some tags are commonly used for spatial calibration
 
-			// Start by mandatory tags
-			if (tag.equalsIgnoreCase("ObjectType")) 
-			{
-				info.ObjectTypeName = valueString;
-			}
-			else if (tag.equalsIgnoreCase("NDims")) 
-			{
-				info.nDims = Integer.parseInt(valueString);
-			}
-			else if (tag.equalsIgnoreCase("DimSize")) 
-			{
-				info.dimSize = parseIntegerArray(valueString, info.nDims);
-			}
-			else if (tag.equalsIgnoreCase("ElementType")) 
-			{
-				info.elementTypeName = valueString;
-				info.elementType = MetaImageInfo.ElementType.parseMET(valueString);
-			}
-			else if (tag.equalsIgnoreCase("ElementDataFile"))
-			{
-				info.elementDataFile = valueString;
-			}
+            else if (tag.equalsIgnoreCase("HeaderSize")) 
+            {
+                info.headerSize = Integer.parseInt(valueString);
+            }
+            else if (tag.equalsIgnoreCase("ElementSize")) 
+            {
+                info.elementSize = parseDoubleArray(valueString, info.nDims);
+            }
+            else if (tag.equalsIgnoreCase("ElementSpacing")) 
+            {
+                info.elementSpacing = parseDoubleArray(valueString, info.nDims);
+            }
+            else if (tag.equalsIgnoreCase("ElementNuberOfChannels")) 
+            {
+                info.elementNumberOfChannels = Integer.parseInt(valueString);
+            }
+            else if (tag.equalsIgnoreCase("ElementByteOrderMSB")) 
+            {
+                info.elementByteOrderMSB = Boolean.parseBoolean(valueString);
+            }
+            else if (tag.equalsIgnoreCase("Offset")) 
+            {
+                info.offset = parseDoubleArray(valueString, info.nDims);
+            }
+            else if (tag.equalsIgnoreCase("AnatomicalOrientation")) 
+            {
+                info.anatomicalOrientation = valueString;
+            }
+            else if (tag.equalsIgnoreCase("CenterOfRotation")) 
+            {
+                info.centerOfRotation = parseDoubleArray(valueString, info.nDims);
+            }
+            else if (tag.equalsIgnoreCase("ElementSpacing")) 
+            {
+                info.elementSpacing = parseDoubleArray(valueString, info.nDims);
+            }
+            else if (tag.equalsIgnoreCase("BinaryData")) 
+            {
+                info.binaryData = Boolean.parseBoolean(valueString);
+            }
+            else if (tag.equalsIgnoreCase("BinaryDataByteOrderMSB")) 
+            {
+                info.binaryDataByteOrderMSB = Boolean.parseBoolean(valueString);
+            }
+            else if (tag.equalsIgnoreCase("CompressedData")) 
+            {
+                info.compressedData = Boolean.parseBoolean(valueString);
+            }
+            else if (tag.equalsIgnoreCase("CompressedDataSize")) 
+            {
+                info.compressedDataSize = Integer.parseInt(valueString);
+            }
 
-			// Some tags are commonly used for spatial calibration
+            else 
+            {
+                System.out.println("Unprocessed tag: " + tag);
+            }
 
-			else if (tag.equalsIgnoreCase("HeaderSize")) 
-			{
-				info.headerSize = Integer.parseInt(valueString);
-			}
-			else if (tag.equalsIgnoreCase("ElementSize")) 
-			{
-				info.elementSize = parseDoubleArray(valueString, info.nDims);
-			}
-			else if (tag.equalsIgnoreCase("ElementSpacing")) 
-			{
-				info.elementSpacing = parseDoubleArray(valueString, info.nDims);
-			}
-			else if (tag.equalsIgnoreCase("ElementNuberOfChannels")) 
-			{
-				info.elementNumberOfChannels = Integer.parseInt(valueString);
-			}
-			else if (tag.equalsIgnoreCase("ElementByteOrderMSB")) 
-			{
-				info.elementByteOrderMSB = Boolean.parseBoolean(valueString);
-			}
-			else if (tag.equalsIgnoreCase("Offset")) 
-			{
-				info.offset = parseDoubleArray(valueString, info.nDims);
-			}
-			else if (tag.equalsIgnoreCase("AnatomicalOrientation")) 
-			{
-				info.anatomicalOrientation = valueString;
-			}
-			else if (tag.equalsIgnoreCase("CenterOfRotation")) 
-			{
-				info.centerOfRotation = parseDoubleArray(valueString, info.nDims);
-			}
-			else if (tag.equalsIgnoreCase("ElementSpacing")) 
-			{
-				info.elementSpacing = parseDoubleArray(valueString, info.nDims);
-			}
-			else if (tag.equalsIgnoreCase("BinaryData")) 
-			{
-				info.binaryData = Boolean.parseBoolean(valueString);
-			}
-			else if (tag.equalsIgnoreCase("BinaryDataByteOrderMSB")) 
-			{
-				info.binaryDataByteOrderMSB = Boolean.parseBoolean(valueString);
-			}
-			else if (tag.equalsIgnoreCase("CompressedData")) 
-			{
-				info.compressedData = Boolean.parseBoolean(valueString);
-			}
-			else if (tag.equalsIgnoreCase("CompressedDataSize")) 
-			{
-				info.compressedDataSize = Integer.parseInt(valueString);
-			}
+        }
+        raf.close();
 
-			else 
-			{
-				System.out.println("Unprocessed tag: " + tag);
-			}
+        // init element size if it was not read
+        if (info.elementSize == null)
+        {
+            if (info.elementSpacing != null) 
+            {
+                info.elementSize = info.elementSpacing;
+            }
+            else 
+            {
+                info.elementSize = new double[info.nDims];
+                for (int d = 0; d < info.nDims; d++)
+                    info.elementSize[d] = 1;
+            }
+        }
 
-		}
-		textReader.close();
+        // init element spacing if it was not read
+        if (info.elementSpacing == null)
+        {
+            info.elementSpacing = info.elementSize;
+        }
 
-		// init element size if it was not read
-		if (info.elementSize == null)
-		{
-			if (info.elementSpacing != null) 
-			{
-				info.elementSize = info.elementSpacing;
-			}
-			else 
-			{
-				info.elementSize = new double[info.nDims];
-				for (int d = 0; d < info.nDims; d++)
-					info.elementSize[d] = 1;
-			}
-		}
-
-		// init element spacing if it was not read
-		if (info.elementSpacing == null)
-		{
-			info.elementSpacing = info.elementSize;
-		}
-
-		return info;
-	}
-
-	private String readNextLine(Scanner scanner) 
-	{
-		while (true) 
-		{
-			String line = scanner.nextLine();
-			if (line.trim().isEmpty())
-				continue;
-			if (line.trim().startsWith("#"))
-				continue;
-
-			return line;
-		}
-	}
-
+        return info;
+    }
+    
+    private final static String readNextLine(RandomAccessFile raf) throws IOException
+    {
+        StringBuffer buffer = new StringBuffer();
+        while (true)
+        {
+            byte b = raf.readByte();
+            if (b == (byte) 0x0A) break;
+            buffer.append((char) b);
+        }
+        return buffer.toString();
+    }
+    
 	private int[] parseIntegerArray(String string, int expectedLength)
 	{
 		int[] res = new int[expectedLength];
