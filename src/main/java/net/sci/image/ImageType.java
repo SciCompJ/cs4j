@@ -175,7 +175,19 @@ public interface ImageType
         @Override
         public void setupDisplaySettings(Image image)
         {
-            image.displaySettings.displayRange = new double[] { 0.0, 1.0};
+            Array<?> array = image.getData();
+            if (array instanceof IntArray)
+            {
+                // for integer arrays, use range defined by type
+                double minVal = ((IntArray<?>) array).typeMin().getValue();
+                double maxVal = ((IntArray<?>) array).typeMax().getValue();
+                image.displaySettings.displayRange = new double[] { minVal, maxVal};
+            }
+            else
+            {
+                // default value range for floating point values
+                image.displaySettings.displayRange = new double[] { 0.0, 1.0};
+            }
         }
 
         @Override
