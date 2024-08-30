@@ -10,6 +10,11 @@ import java.nio.ByteOrder;
 import java.util.Scanner;
 
 import net.sci.array.Array;
+import net.sci.array.numeric.impl.FileMappedFloat32Array3D;
+import net.sci.array.numeric.impl.FileMappedInt16Array3D;
+import net.sci.array.numeric.impl.FileMappedUInt16Array3D;
+import net.sci.array.numeric.impl.FileMappedUInt8Array3D;
+import net.sci.image.Calibration;
 import net.sci.image.Image;
 
 /**
@@ -19,38 +24,51 @@ import net.sci.image.Image;
  */
 public class MetaImageReader implements ImageReader
 {
-	File file;
-
-	public MetaImageReader(File file) throws IOException 
-	{
-		this.file = file;
-	}
-
-	public MetaImageReader(String fileName) throws IOException
-	{
-		this.file = new File(fileName);
-	}
-
-
-	@Override
-	public Image readImage() throws IOException
-	{
-		MetaImageInfo info = readInfo(this.file);
-
-		Array<?> data = readImageData(info);
-
-		Image image = new Image(data);
-		image.setNameFromFileName(file.getName());
-		image.setFilePath(file.getPath());
-		return image;
-
-	}
-
-    public MetaImageInfo readInfo(File file) throws IOException 
+    File file;
+    
+    public MetaImageReader(File file) throws IOException
+    {
+        this.file = file;
+    }
+    
+    public MetaImageReader(String fileName) throws IOException
+    {
+        this.file = new File(fileName);
+    }
+    
+    @Override
+    public Image readImage() throws IOException
+    {
+        MetaImageInfo info = readInfo(this.file);
+        
+        Array<?> data;
+        
+        boolean virtualType = 
+                info.elementType == MetaImageInfo.ElementType.UINT8
+                || info.elementType == MetaImageInfo.ElementType.UINT16
+                || info.elementType == MetaImageInfo.ElementType.INT16
+                || info.elementType == MetaImageInfo.ElementType.FLOAT32;
+        if (info.nDims == 3 && virtualType)
+        {
+            data = readVirtualImageData(info);
+        }
+        else
+        {
+            data = readImageData(info);
+        }
+        
+        Image image = new Image(data);
+        image.setNameFromFileName(file.getName());
+        image.setFilePath(file.getPath());
+        
+        return image;
+    }
+    
+    public MetaImageInfo readInfo(File file) throws IOException
     {
         // create new empty file info
         MetaImageInfo info = new MetaImageInfo();
-
+        
         // open file for reading binary data, keeping possibility to store file offset
         RandomAccessFile raf = new RandomAccessFile(file, "r");
         
@@ -192,73 +210,87 @@ public class MetaImageReader implements ImageReader
         return buffer.toString();
     }
     
-	private int[] parseIntegerArray(String string, int expectedLength)
-	{
-		int[] res = new int[expectedLength];
-
-		Scanner scanner = new Scanner(string);
-		for (int i = 0; i < expectedLength; i++) {
-			res[i] = scanner.nextInt();
-		}
-		scanner.close();
-
-		return res;
-	}
-
-	private double[] parseDoubleArray(String string, int expectedLength)
-	{
-		double[] res = new double[expectedLength];
-
-		Scanner scanner = new Scanner(string);
-		for (int i = 0; i < expectedLength; i++) {
-			res[i] = Double.parseDouble(scanner.next());
-		}
-		scanner.close();
-
-		return res;
-	}
-	
-	public Array<?> readImageData(MetaImageInfo info) throws IOException 
-	{
-	    File dataFile = new File(this.file.getParent(), info.elementDataFile);
-	    ByteOrder order = info.binaryDataByteOrderMSB ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
+    private int[] parseIntegerArray(String string, int expectedLength)
+    {
+        int[] res = new int[expectedLength];
+        
+        Scanner scanner = new Scanner(string);
+        for (int i = 0; i < expectedLength; i++)
+        {
+            res[i] = scanner.nextInt();
+        }
+        scanner.close();
+        
+        return res;
+    }
+    
+    private double[] parseDoubleArray(String string, int expectedLength)
+    {
+        double[] res = new double[expectedLength];
+        
+        Scanner scanner = new Scanner(string);
+        for (int i = 0; i < expectedLength; i++)
+        {
+            res[i] = Double.parseDouble(scanner.next());
+        }
+        scanner.close();
+        
+        return res;
+    }
+    
+    public Array<?> readImageData(MetaImageInfo info) throws IOException
+    {
+        File dataFile = new File(this.file.getParent(), info.elementDataFile);
+        ByteOrder order = info.binaryDataByteOrderMSB ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
         ImageBinaryDataReader reader = new ImageBinaryDataReader(dataFile, order);
         reader.seek(info.headerSize);
-
-		Array<?> array;
-		switch(info.elementType)
-		{
-		case UINT8:
-			array = reader.readUInt8Array(info.dimSize);
-			break;
-		
-		case UINT16:
-            array = reader.readUInt16Array(info.dimSize);
-			break;
-
-        case INT16:
-            array = reader.readInt16Array(info.dimSize);
-            break;
+        
+        Array<?> array = switch (info.elementType)
+        {
+            case UINT8   -> reader.readUInt8Array(info.dimSize);
+            case UINT16  -> reader.readUInt16Array(info.dimSize);
+            case INT16   -> reader.readInt16Array(info.dimSize);
+            case INT32   -> reader.readInt32Array(info.dimSize);
+            case FLOAT32 -> reader.readFloat32Array(info.dimSize);
+            case FLOAT64 -> reader.readFloat64Array(info.dimSize);
             
-        case INT32:
-            array = reader.readInt32Array(info.dimSize);
-            break;
-            
-		case FLOAT32:
-            array = reader.readFloat32Array(info.dimSize);
-			break;
-			
-		case FLOAT64:
-            array = reader.readFloat64Array(info.dimSize);
-			break;
-			
-//			case BOOLEAN:
-		default:
-		    reader.close();
-			throw new RuntimeException("Unable to process files with data type: " + info.elementTypeName);
-		}
+            // case BOOLEAN:
+            default ->
+            {
+                reader.close();
+                throw new RuntimeException("Unable to process files with data type: " + info.elementTypeName);
+            }
+        };
+        
+        reader.close();
+        return array;
+    }
+    
+    public Array<?> readVirtualImageData(MetaImageInfo info) throws IOException 
+    {
+        // check data validity
+        if (info.dimSize.length != 3)
+        {
+            throw new RuntimeException("File-mapped arrays can be only 3D images");
+        }
+        
+        // retrieve information
+        File dataFile = new File(this.file.getParent(), info.elementDataFile);
+        String path = dataFile.getAbsolutePath();
+        long offset = info.headerSize;
+        int size0 = info.dimSize[0];
+        int size1 = info.dimSize[1];
+        int size2 = info.dimSize[2];
+        ByteOrder order = info.binaryDataByteOrderMSB ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN;
 
-		reader.close();
-		return array;
-	}
+        return switch(info.elementType)
+        {
+            case UINT8   -> new FileMappedUInt8Array3D(path, offset, size0, size1, size2);
+            case UINT16  -> new FileMappedUInt16Array3D(path, offset, size0, size1, size2, order);
+            case INT16   -> new FileMappedInt16Array3D(path, offset, size0, size1, size2, order);
+            case FLOAT32 -> new FileMappedFloat32Array3D(path, offset, size0, size1, size2, order);
+            
+            default -> throw new RuntimeException("Unable to process files with data type: " + info.elementTypeName);
+        };
+    }
 }
