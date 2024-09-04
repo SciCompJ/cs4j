@@ -88,7 +88,10 @@ public class UInt8 implements Int<UInt8>
     // Constructors
     
     /**
-     * Creates a new instance of UInt8 using the specified value.
+     * Creates a new instance of UInt8 using the specified integer value. The
+     * integer value is first restricted to the valid interval of UInt8 values,
+     * then casted into a byte. Negative integers will be casted to zero-value
+     * UInt8.
      * 
      * @param value
      *            the value stored within this UInt8
@@ -99,7 +102,9 @@ public class UInt8 implements Int<UInt8>
     }
     
     /**
-     * Creates a new instance of UInt8 using the specified byte value.
+     * Creates a new instance of UInt8 using the specified byte value. Note that
+     * negative byte values will be converted to positive UInt8 greater than
+     * 127.
      * 
      * @param value
      *            the byte value stored within this UInt8

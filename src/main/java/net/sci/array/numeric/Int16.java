@@ -90,7 +90,18 @@ public class Int16 implements Int<Int16>
     // Constructor
 
     /**
-     * Creates a new instance of Int16 using the specified value.
+     * Creates a new instance of Int16 using the specified short value.
+     * 
+     * @param value
+     *            the value stored within this Int16
+     */
+    public Int16(short value)
+    {
+        this.value = value;
+    }
+    
+    /**
+     * Creates a new instance of Int16 using the specified integer value.
      * 
      * @param value
      *            the value stored within this Int16

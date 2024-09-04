@@ -89,7 +89,23 @@ public class UInt16 implements Int<UInt16>
     // Constructor
     
     /**
-     * Creates a new instance of UInt16 using the specified value.
+     * Creates a new instance of UInt16 using the specified short. Note that
+     * negative short values will be converted to positive UInt16 greater than
+     * 32767.
+     * 
+     * @param value
+     *            the short value used to represent inner value.
+     */
+    public UInt16(short value)
+    {
+        this.value = value;
+    }
+
+    /**
+     * Creates a new instance of UInt16 using the specified integer value. The
+     * integer value is first restricted to the valid interval of UInt16 values,
+     * then casted into a short. Negative integers will be casted to zero-value
+     * UInt16.
      * 
      * @param value
      *            the value stored within this UInt16
@@ -99,7 +115,7 @@ public class UInt16 implements Int<UInt16>
         this.value = (short) clamp(value);
     }
     
-
+    
     // =============================================================
     // Class methods
 
