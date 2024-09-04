@@ -52,48 +52,70 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
         return new Wrapper<I>(array);
     }
     
-    
-	// =============================================================
-	// New default methods
+    // =============================================================
+    // New default methods
 
-	/**
-	 * Returns the minimum integer value within this array.
-	 * 
-	 * @return the minimal int value within this array
-	 */
-	public default int minInt()
-	{
-		int vMin = Integer.MAX_VALUE;
-		for (I i : this)
-		{
-			vMin = Math.min(vMin, i.getInt());
-		}
-		return vMin;
-	}
+    /**
+     * Returns the minimum integer value within this array.
+     * 
+     * @return the minimal int value within this array
+     */
+    public default int minInt()
+    {
+        int vMin = Integer.MAX_VALUE;
+        for (I i : this)
+        {
+            vMin = Math.min(vMin, i.getInt());
+        }
+        return vMin;
+    }
 
-	/**
-	 * Returns the maximum integer value within this array.
-	 * 
-	 * @return the maximal int value within this array
-	 */
-	public default int maxInt()
-	{
-		int vMax = Integer.MIN_VALUE;
-		for (I i : this)
-		{
-			vMax = Math.max(vMax, i.getInt());
-		}
-		return vMax;
-	}
-	
+    /**
+     * Returns the maximum integer value within this array.
+     * 
+     * @return the maximal int value within this array
+     */
+    public default int maxInt()
+    {
+        int vMax = Integer.MIN_VALUE;
+        for (I i : this)
+        {
+            vMax = Math.max(vMax, i.getInt());
+        }
+        return vMax;
+    }
     
-	// =============================================================
-	// New methods
+    /**
+     * Returns the range of integer values within this array of ints.
+     * 
+     * The range may contain positive or negative infinite.
+     * 
+     * @return an array with two elements, containing the lowest and the largest
+     *         int values within this array.
+     * @see #valueRange()
+     */
+    public default int[] intRange()
+    {
+        int vMin = Integer.MAX_VALUE;
+        int vMax = Integer.MIN_VALUE;
+        for (int[] pos : positions())
+        {
+            int value = getInt(pos);
+            vMin = Math.min(vMin, value);
+            vMax = Math.max(vMax, value);
+        }
+        return new int[]{vMin, vMax};        
+    }
+    
+
+    // =============================================================
+    // New methods
 
     /**
      * Fills the array with the specified integer value.
      * 
-     * @param value the value to fill the array with
+     * @param value
+     *            the value to fill the array with
      */
     public default void fillInt(int value)
     {
@@ -119,27 +141,27 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
             this.setInt(pos, fun.apply(pos));
         }
     }
-    
+
     /**
-	 * Returns the value at the specified position as an integer.
-	 * 
-	 * @param pos
-	 *            the position
-	 * @return the integer value
-	 */
-	public int getInt(int[] pos);
-	
-	/**
-	 * Sets the value at the specified position as an integer.
-	 * 
-	 * @param pos
-	 *            the position
-	 * @param value
-	 *            the new integer value
-	 */
-	public void setInt(int[] pos, int value);
+     * Returns the value at the specified position as an integer.
+     * 
+     * @param pos
+     *            the position
+     * @return the integer value
+     */
+    public int getInt(int[] pos);
 
+    /**
+     * Sets the value at the specified position as an integer.
+     * 
+     * @param pos
+     *            the position
+     * @param value
+     *            the new integer value
+     */
+    public void setInt(int[] pos, int value);
 
+    
     // =============================================================
     // Specialization of the ScalarArray interface
 
@@ -155,43 +177,56 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
     }
     
     /**
-     * Returns the range of finite values within this scalar array.
-     * 
-     * Does not take into account eventual NaN or infinite values, so the result
-     * array always contains finite values (except if all values within array
-     * are infinite).
+     * Returns the range of values within this scalar array. This methods
+     * overrides the default method for scalar arrays, by computing min and max
+     * integer values, and converting to an array of doubles.
      * 
      * @return an array with two elements, containing the lowest and the largest
-     *         finite values within this Array instance
+     *         values within this array
+     * 
+     * @see #intRange()
+     * @see #finiteValueRange()
+     */
+    @Override
+    public default double[] valueRange()
+    {
+        int[] range = intRange();
+        return new double[]{range[0], range[1]};
+    }
+
+    /**
+     * Returns the range of finite values within this scalar array. This methods
+     * overrides the default method for scalar arrays, by computing min and max
+     * integer values, and converting to an array of doubles.
+     * 
+     * Can not contains infinite values due to integer type definition.
+     * 
+     * @return an array with two elements, containing the lowest and the largest
+     *         finite values within this array
+     * 
+     * @see #intRange()
      * @see #valueRange()
      */
     @Override
     public default double[] finiteValueRange()
     {
-        int vMin = Integer.MAX_VALUE;
-        int vMax = Integer.MIN_VALUE;
-        for (int[] pos : positions())
-        {
-            int value = getInt(pos);
-            vMin = Math.min(vMin, value);
-            vMax = Math.max(vMax, value);
-        }
-        return new double[]{vMin, vMax};
+        return valueRange();
     }
+    
 
-	// =============================================================
-	// Specialization of the Array interface
+    // =============================================================
+    // Specialization of the Array interface
 
-	@Override
-	public IntArray<I> newInstance(int... dims);
+    @Override
+    public IntArray<I> newInstance(int... dims);
 
-	@Override
-	public default IntArray<I> duplicate()
-	{
-	    IntArray<I> res = this.newInstance(this.size());
-	    res.fillInts(pos -> getInt(pos));
-	    return res;
-	}
+    @Override
+    public default IntArray<I> duplicate()
+    {
+        IntArray<I> res = this.newInstance(this.size());
+        res.fillInts(pos -> getInt(pos));
+        return res;
+    }
 
     @Override
     public default double getValue(int[] pos)
@@ -341,44 +376,44 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
          * @param value
          *            the value to set.
          */
-		public void setInt(int value);
-		
-		/**
-		 * Moves this iterator to the next element and updates the value with
-		 * the specified integer value (optional operation).
-		 * 
-		 * @param intValue
-		 *            the new value at the next position
-		 */
-		public default void setNextInt(int intValue)
-		{
-			forward();
-			setInt(intValue);
-		}
-		
-		/**
-		 * Iterates and returns the next int value.
-		 * 
-		 * @return the next int value.
-		 */
-		public default int nextInt()
-		{
-			forward();
-			return getInt();
-		}
-		
-		@Override
-		public default double getValue()
-		{
-			return get().getValue();
-		}
-		
-		@Override
-		public default void setValue(double value)
-		{
-			setInt((int) value);
-		}
-	}
+        public void setInt(int value);
+
+        /**
+         * Moves this iterator to the next element and updates the value with
+         * the specified integer value (optional operation).
+         * 
+         * @param intValue
+         *            the new value at the next position
+         */
+        public default void setNextInt(int intValue)
+        {
+            forward();
+            setInt(intValue);
+        }
+
+        /**
+         * Iterates and returns the next int value.
+         * 
+         * @return the next int value.
+         */
+        public default int nextInt()
+        {
+            forward();
+            return getInt();
+        }
+
+        @Override
+        public default double getValue()
+        {
+            return get().getValue();
+        }
+
+        @Override
+        public default void setValue(double value)
+        {
+            setInt((int) value);
+        }
+    }
 
     /**
      * Utility class the wraps an array of <code>Int</code> into an instance of

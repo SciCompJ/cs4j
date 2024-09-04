@@ -63,26 +63,27 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
      * Returns the range of values within this scalar array.
      * 
      * Does not take into account eventual NaN values, so the result never
-     * contains NaN values. 
+     * contains NaN values. However, the range may contain positive or negative
+     * infinite.
      * 
      * @return an array with two elements, containing the lowest and the largest
      *         finite values within this Array instance
      * @see #finiteValueRange()
      */
-	public default double[] valueRange()
-	{
-		double vMin = Double.POSITIVE_INFINITY;
-		double vMax = Double.NEGATIVE_INFINITY;
-		for (double v : values())
-		{
-			if (!Double.isNaN(v))
-			{
-				vMin = Math.min(vMin, v);
-				vMax = Math.max(vMax, v);
-			}
-		}
-		return new double[]{vMin, vMax};
-	}
+    public default double[] valueRange()
+    {
+        double vMin = Double.POSITIVE_INFINITY;
+        double vMax = Double.NEGATIVE_INFINITY;
+        for (double v : values())
+        {
+            if (!Double.isNaN(v))
+            {
+                vMin = Math.min(vMin, v);
+                vMax = Math.max(vMax, v);
+            }
+        }
+        return new double[] { vMin, vMax };
+    }
 
     /**
      * Returns the range of finite values within this scalar array.
@@ -107,46 +108,46 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
                 vMax = Math.max(vMax, v);
             }
         }
-        return new double[]{vMin, vMax};
+        return new double[] { vMin, vMax };
     }
 
-	/**
-	 * Returns the minimum value within this scalar array.
-	 * 
-	 * Does not take into account eventual NaN values.
-	 * 
-	 * @return the minimal value within this array
-	 */
-	public default double minValue()
-	{
-		double vMin = Double.POSITIVE_INFINITY;
-		for (double v : values())
-		{
-			if (!Double.isNaN(v))
-			{
-				vMin = Math.min(vMin, v);
-			}
-		}
-		return vMin;
-	}
+    /**
+     * Returns the minimum value within this scalar array.
+     * 
+     * Does not take into account eventual NaN values.
+     * 
+     * @return the minimal value within this array
+     */
+    public default double minValue()
+    {
+        double vMin = Double.POSITIVE_INFINITY;
+        for (double v : values())
+        {
+            if (!Double.isNaN(v))
+            {
+                vMin = Math.min(vMin, v);
+            }
+        }
+        return vMin;
+    }
 
-	/**
-	 * Returns the maximum value within this scalar array.
-	 * 
-	 * Does not take into account eventual NaN values.
-	 * 
-	 * @return the maximal value within this array
-	 */
-	public default double maxValue()
-	{
-		double vMax = Double.NEGATIVE_INFINITY;
-		for (double v : values())
-		{
-			if (!Double.isNaN(v))
-			{
-				vMax = Math.max(vMax, v);
-			}
-		}
+    /**
+     * Returns the maximum value within this scalar array.
+     * 
+     * Does not take into account eventual NaN values.
+     * 
+     * @return the maximal value within this array
+     */
+    public default double maxValue()
+    {
+        double vMax = Double.NEGATIVE_INFINITY;
+        for (double v : values())
+        {
+            if (!Double.isNaN(v))
+            {
+                vMax = Math.max(vMax, v);
+            }
+        }
         return vMax;
     }
 
@@ -155,26 +156,28 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
      * 
      * @param value the value to fill the array with
      */
-	public default void fillValue(double value)
-	{
-		Iterator<S> iter = iterator();
-		while(iter.hasNext())
-		{
-			iter.forward();
-			iter.setValue(value);
-		}
-	}
-	
-	/**
-	 * Fills the values within this array by using a function of the position (given as an integer array).
-	 * 
-	 * <pre>{@code
-	 * Float32Array2D array = Float32Array2D.create(20, 20);
-	 * array.fillValues(pos -> Math.max(Math.hypot(pos[0] - 10.0, pos[1] - 10.0), 0));
-	 * }</pre>
-	 * 
-	 * @param fun the function that computes a value depending on the position.
-	 */
+    public default void fillValue(double value)
+    {
+        Iterator<S> iter = iterator();
+        while (iter.hasNext())
+        {
+            iter.forward();
+            iter.setValue(value);
+        }
+    }
+
+    /**
+     * Fills the values within this array by using a function of the position
+     * (given as an integer array).
+     * 
+     * <pre>{@code
+     * Float32Array2D array = Float32Array2D.create(20, 20);
+     * array.fillValues(pos -> Math.max(Math.hypot(pos[0] - 10.0, pos[1] - 10.0), 0));
+     * }</pre>
+     * 
+     * @param fun
+     *            the function that computes a value depending on the position.
+     */
     public default void fillValues(Function<int[], Double> fun)
     {
         for (int[] pos : this.positions())
@@ -576,18 +579,19 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
             }
         };
     }
-	
-	
+
+
     // =============================================================
     // Specialization of the Factory interface
 
-	/**
-	 * A factory for building new ScalarArray instances.
-	 *
-	 * @param <S> the type of Scalar.
-	 */
-	public interface Factory<S extends Scalar<S>> extends Array.Factory<S>
-	{
+    /**
+     * A factory for building new ScalarArray instances.
+     *
+     * @param <S>
+     *            the type of Scalar.
+     */
+    public interface Factory<S extends Scalar<S>> extends Array.Factory<S>
+    {
         /**
          * Creates a new scalar array of the specified dimensions, initialized
          * with zeros.
@@ -596,7 +600,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
          *            the dimensions of the new array
          * @return a new scalar array initialized with zeros
          */
-	    public ScalarArray<S> create(int... dims);
+        public ScalarArray<S> create(int... dims);
 
         /**
          * Creates a new scalar array with the specified dimensions, filled with
@@ -614,42 +618,42 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
             res.fill(value);
             return res;
         }
-	}
-	
-	
-	// =============================================================
-	// Inner interface
+    }
 
-	/**
-	 * Iterator over the Scalar objects within this array.
-	 *
-	 * @param <S> the type of Scalar elements
-	 */
-	public interface Iterator<S extends Scalar<S>> extends Array.Iterator<S>
-	{
-		/**
-		 * Moves this iterator to the next element and updates the value with
-		 * the specified scalar value (optional operation).
-		 * 
-		 * @param value
-		 *            the new value at the next position
-		 */
-		public default void setNextValue(double value)
-		{
-			forward();
-			setValue(value);
-		}
-		
+    // =============================================================
+    // Inner interface
+
+    /**
+     * Iterator over the Scalar objects within this array.
+     *
+     * @param <S>
+     *            the type of Scalar elements
+     */
+    public interface Iterator<S extends Scalar<S>> extends Array.Iterator<S>
+    {
+        /**
+         * Moves this iterator to the next element and updates the value with
+         * the specified scalar value (optional operation).
+         * 
+         * @param value
+         *            the new value at the next position
+         */
+        public default void setNextValue(double value)
+        {
+            forward();
+            setValue(value);
+        }
+
         /**
          * Returns the next value as a double.
          * 
          * @return the next value as a double
          */
-		public default double nextValue()
-		{
-			return next().getValue();
-		}
-    
+        public default double nextValue()
+        {
+            return next().getValue();
+        }
+
         /**
          * Returns the value at the current iterator position as a double value
          * 

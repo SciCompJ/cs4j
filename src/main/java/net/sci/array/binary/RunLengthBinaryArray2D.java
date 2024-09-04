@@ -44,16 +44,16 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     }
     
     
-	// =============================================================
-	// Class fields
-    
+    // =============================================================
+    // Class fields
+
     /**
      * The rows representing this binary array. Does not keep empty rows, and
      * stores a null instead.
      */
     BinaryRow[] rows;
 
-	
+    
     // =============================================================
     // Constructors
 

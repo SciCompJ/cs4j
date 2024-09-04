@@ -71,14 +71,14 @@ public interface BinaryArray extends IntArray<Binary>
      *         zero value, depending on the state of the corresponding element
      *         in this binary mask
      */
-	public default <T> Array<T> mask(Array<T> array)
-	{
-	    return BinaryMask.createView(array, this);
-	}
+    public default <T> Array<T> mask(Array<T> array)
+    {
+        return BinaryMask.createView(array, this);
+    }
 
-	/**
-     * Converts an array to a binary array, by thresholding all values
-     * strictly greater than zero.
+    /**
+     * Converts an array to a binary array, by thresholding all values strictly
+     * greater than zero.
      *
      * @see net.sci.array.binary.process.ConvertToBinary
      * 
@@ -86,10 +86,10 @@ public interface BinaryArray extends IntArray<Binary>
      *            an array
      * @return the binary array corresponding to values greater than zero.
      */
-	public static BinaryArray convert(Array<?> array)
-	{
-	    return new ConvertToBinary().process(array);
-	}
+    public static BinaryArray convert(Array<?> array)
+    {
+        return new ConvertToBinary().process(array);
+    }
 
     /**
      * Encapsulates the specified array into a new BinaryArray, by creating a
@@ -358,6 +358,20 @@ public interface BinaryArray extends IntArray<Binary>
     // =============================================================
     // Specialization of the IntArray interface
     
+    /**
+     * Returns the array <code>{0,1}</code>, except if the array if full of
+     * <code>true</code> or <code>false</code> values; in these cases, returns
+     * either <code>{0,0}</code> or <code>{1,1}</code>.
+     */
+    @Override
+    public default int[] intRange()
+    {
+        long nTrue = this.trueElementCount();  
+        if (nTrue == 0) return new int[] {0, 0};
+        if (nTrue == this.elementCount()) return new int[] {1, 1};
+        return new int[] {0, 1};
+    }
+    
     @Override
     public default int getInt(int[] pos)
     {
@@ -532,67 +546,66 @@ public interface BinaryArray extends IntArray<Binary>
         };
     }
 
-	
-	// =============================================================
-	// Inner interface
+    // =============================================================
+    // Inner interface
 
-	public class TrueElementsPositionIterator implements PositionIterator
-	{
-	    /** The reference binary array */
-		BinaryArray array;
-		
-		/** Iterator on the binary array */
-		PositionIterator iter;
-		
-		/** the position on the current true element */
-		int[] currentPos = null;
+    public class TrueElementsPositionIterator implements PositionIterator
+    {
+        /** The reference binary array */
+        BinaryArray array;
 
-		public TrueElementsPositionIterator(BinaryArray array)
-		{
-			this.array = array;
-			iter = array.positionIterator();
-			findNextPos();
-		}
-		
-		@Override
-		public boolean hasNext()
-		{
-			return currentPos != null;
-		}
+        /** Iterator on the binary array */
+        PositionIterator iter;
 
-		@Override
-		public void forward()
-		{
-			findNextPos();			
-		}
+        /** the position on the current true element */
+        int[] currentPos = null;
 
-		private void findNextPos()
-		{
-			currentPos = null;
-			while (iter.hasNext())
-			{
-				iter.forward();
-				if (array.getBoolean(iter.get()))
-				{
-					currentPos = iter.get();
-					break;
-				}
-			}
-		}
+        public TrueElementsPositionIterator(BinaryArray array)
+        {
+            this.array = array;
+            iter = array.positionIterator();
+            findNextPos();
+        }
 
-		@Override
-		public int[] next()
-		{
-			int[] pos = currentPos;
-			forward();
-			return pos;
-		}
+        @Override
+        public boolean hasNext()
+        {
+            return currentPos != null;
+        }
 
-		@Override
-		public int[] get()
-		{
-			return currentPos;
-		}
+        @Override
+        public void forward()
+        {
+            findNextPos();
+        }
+
+        private void findNextPos()
+        {
+            currentPos = null;
+            while (iter.hasNext())
+            {
+                iter.forward();
+                if (array.getBoolean(iter.get()))
+                {
+                    currentPos = iter.get();
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public int[] next()
+        {
+            int[] pos = currentPos;
+            forward();
+            return pos;
+        }
+
+        @Override
+        public int[] get()
+        {
+            return currentPos;
+        }
 
         @Override
         public int[] get(int[] pos)
@@ -602,23 +615,23 @@ public interface BinaryArray extends IntArray<Binary>
         }
 
         @Override
-		public int get(int dim)
-		{
-			return currentPos[dim];
-		}
-	}
+        public int get(int dim)
+        {
+            return currentPos[dim];
+        }
+    }
 
-	// =============================================================
-	// Inner interface
-	
-	/**
-	 * Iterator over the elements of a binary array.
-	 * 
-	 * Provides nextBoolean() method to avoid class casts.
-	 */
-	public interface Iterator extends IntArray.Iterator<Binary>
-	{
-		/**
+    // =============================================================
+    // Inner interface
+
+    /**
+     * Iterator over the elements of a binary array.
+     * 
+     * Provides nextBoolean() method to avoid class casts.
+     */
+    public interface Iterator extends IntArray.Iterator<Binary>
+    {
+        /**
          * Moves this iterator to the next element and updates the value with
          * the specified boolean (optional operation).
          * 
@@ -654,37 +667,38 @@ public interface BinaryArray extends IntArray<Binary>
          *            the new state for the current position
          */
         public void setBoolean(boolean b);
-        
-		@Override
-		public default int getInt()
-		{
-			return getBoolean() ? 1 : 0; 
-		}
 
-		@Override
-		public default void setInt(int value)
-		{
-			setBoolean(value > 0);
-		}
+        @Override
+        public default int getInt()
+        {
+            return getBoolean() ? 1 : 0;
+        }
 
-		@Override
-		public default Binary get()
-		{
-		    return new Binary(getBoolean());
-		}
+        @Override
+        public default void setInt(int value)
+        {
+            setBoolean(value > 0);
+        }
 
-		@Override
-		public default void set(Binary value)
-		{
-		    setBoolean(value.getBoolean());
-		}
-	}
-	
+        @Override
+        public default Binary get()
+        {
+            return new Binary(getBoolean());
+        }
+
+        @Override
+        public default void set(Binary value)
+        {
+            setBoolean(value.getBoolean());
+        }
+    }
+
     /**
      * Wraps explicitly an array containing <code>Binary</code> elements into an
      * instance of <code>BinaryArray</code>.
      * 
      * Usage:
+     * 
      * <pre>
      * {@code
      * Array<Binary> array = ...
@@ -758,18 +772,18 @@ public interface BinaryArray extends IntArray<Binary>
         // =============================================================
         // Specialization of the Array interface
 
-    	public Iterable<int[]> trueElementPositions()
-    	{
-    		return new Iterable<int[]>()
-    		{
-    			@Override
-    			public java.util.Iterator<int[]> iterator()
-    			{
-    				return new ItemPositionIterator();
-    			}
-    		};
-    	}
-    	
+        public Iterable<int[]> trueElementPositions()
+        {
+            return new Iterable<int[]>()
+            {
+                @Override
+                public java.util.Iterator<int[]> iterator()
+                {
+                    return new ItemPositionIterator();
+                }
+            };
+        }
+
         @Override
         public Binary get(int[] pos)
         {
@@ -787,56 +801,56 @@ public interface BinaryArray extends IntArray<Binary>
         {
             return new Iterator(array.iterator());
         }
-        
-    	private class ItemPositionIterator implements PositionIterator
-    	{
-    		PositionIterator iter;
-    		int[] nextPos = null;
 
-    		public ItemPositionIterator()
-    		{
-    			iter = positionIterator();
-    			findNextPos();
-    		}
-    		
-    		@Override
-    		public boolean hasNext()
-    		{
-    			return nextPos != null;
-    		}
+        private class ItemPositionIterator implements PositionIterator
+        {
+            PositionIterator iter;
+            int[] nextPos = null;
 
-    		@Override
-    		public void forward()
-    		{
-    			findNextPos();			
-    		}
+            public ItemPositionIterator()
+            {
+                iter = positionIterator();
+                findNextPos();
+            }
 
-    		private void findNextPos()
-    		{
-    			nextPos = null;
-    			while (iter.hasNext())
-    			{
-    				iter.forward();
-    				if (getBoolean(iter.get()))
-    				{
-    					nextPos = iter.get();
-    					break;
-    				}
-    			}
-    		}
+            @Override
+            public boolean hasNext()
+            {
+                return nextPos != null;
+            }
 
-    		@Override
-    		public int[] next()
-    		{
-    			forward();
-    			return nextPos;
-    		}
+            @Override
+            public void forward()
+            {
+                findNextPos();
+            }
 
-    		@Override
-    		public int[] get()
-    		{
-    			return nextPos;
-    		}
+            private void findNextPos()
+            {
+                nextPos = null;
+                while (iter.hasNext())
+                {
+                    iter.forward();
+                    if (getBoolean(iter.get()))
+                    {
+                        nextPos = iter.get();
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public int[] next()
+            {
+                forward();
+                return nextPos;
+            }
+
+            @Override
+            public int[] get()
+            {
+                return nextPos;
+            }
 
             @Override
             public int[] get(int[] pos)
@@ -846,16 +860,16 @@ public interface BinaryArray extends IntArray<Binary>
             }
 
             @Override
-    		public int get(int dim)
-    		{
-    			return nextPos[dim];
-    		}
-    	}
+            public int get(int dim)
+            {
+                return nextPos[dim];
+            }
+        }
 
-    	class Iterator implements BinaryArray.Iterator
+        class Iterator implements BinaryArray.Iterator
         {
             ScalarArray.Iterator<?> iter;
-            
+
             public Iterator(ScalarArray.Iterator<?> iter)
             {
                 this.iter = iter;
