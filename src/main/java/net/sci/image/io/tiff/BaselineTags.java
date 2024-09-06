@@ -4,9 +4,20 @@
 package net.sci.image.io.tiff;
 
 import java.io.IOException;
+import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sci.array.Array;
+import net.sci.array.binary.BinaryArray;
+import net.sci.array.color.RGB8;
+import net.sci.array.color.RGB8Array;
+import net.sci.array.numeric.Int16Array;
+import net.sci.array.numeric.Int32Array;
+import net.sci.array.numeric.UInt16Array;
+import net.sci.array.numeric.UInt8Array;
+import net.sci.image.Image;
+import net.sci.image.ImageType;
 import net.sci.image.io.BinaryDataReader;
 import net.sci.image.io.tiff.TiffFileInfo.Compression;
 import net.sci.image.io.tiff.TiffFileInfo.PixelType;
@@ -35,6 +46,14 @@ public class BaselineTags implements TagSet
         public void process(TiffFileInfo info)
         {
             info.subFileType = TiffFileInfo.SubFileType.fromValue(value);
+        }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.LONG;
+            this.count = 1;
+            this.value = 0;
+            return this;
         }
     }
 
@@ -72,6 +91,14 @@ public class BaselineTags implements TagSet
         {
             info.width = value;
         }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.LONG;
+            this.count = 1;
+            this.value = image.getSize(0);
+            return this;
+        }
     }
     
     /**
@@ -89,10 +116,30 @@ public class BaselineTags implements TagSet
         {
             info.height = value;
         }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.LONG;
+            this.count = 1;
+            this.value = image.getSize(1);
+            return this;
+        }
     }
 
     /**
-     * 258 - Number of bits per component.
+     * 258 - Number of bits per component, as an array of short with as many
+     * elements as the number of pixel elements. Number of pixel elements
+     * corresponds to number of channels.
+     * 
+     * <ul>
+     * <li>8 or 16 for gray-scale images</li>
+     * <li>32 for floating point images images</li>
+     * <li>8 or 16 for color images</li>
+     * <li>can also be 1 (for binary images), or 12 or 14 for gray-scale
+     * images</li>
+     * </ul>
+     * 
+     * After initialization, the content of the tag is the PixelType.
      */
     public static final class BitsPerSample extends TiffTag
     {
@@ -145,6 +192,28 @@ public class BaselineTags implements TagSet
         {
             info.pixelType = (PixelType) this.content;
         }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.SHORT;
+            
+            if (image.getType() == ImageType.GRAYSCALE)
+            {
+                this.count = 1;
+                this.value = 8;
+                this.content = null;
+            }
+            else if (image.getType() == ImageType.COLOR)
+            {
+                if (RGB8.class.isAssignableFrom(image.getData().elementClass()))
+                {
+                    this.count = 3;
+                    this.content = new short[] {8, 8, 8};
+                }
+            }
+                 
+            return this;
+        }
     }
 
     /**
@@ -161,6 +230,14 @@ public class BaselineTags implements TagSet
         public void process(TiffFileInfo info)
         {
             info.compression = Compression.fromValue(value);
+        }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.SHORT;
+            this.count = 1;
+            this.value = 1; // no compression
+            return this;
         }
     }
 
@@ -180,6 +257,14 @@ public class BaselineTags implements TagSet
         {
             info.photometricInterpretation = value;
             info.whiteIsZero = value == 0;
+        }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.SHORT;
+            this.count = 1;
+            this.value = 1; // default: black is zero
+            return this;
         }
     }
     
@@ -266,6 +351,11 @@ public class BaselineTags implements TagSet
         {
             info.imageDescription = (String) this.content;
         }
+        
+        public int contentSize()
+        {
+            return ((String) this.content).length();
+        }
     }
     
     /**
@@ -313,6 +403,13 @@ public class BaselineTags implements TagSet
         {
             info.stripOffsets = (int[]) this.content;
         }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.LONG;
+            this.count = 1;
+            return this;
+        }
     }
     
     /**
@@ -334,7 +431,7 @@ public class BaselineTags implements TagSet
     }
     
     /**
-     * 277 - The number of components per pixel.
+     * 277 - The number of components per pixel. Type=SHORT, count=1.
      */
     public static final class SamplesPerPixel extends TiffTag
     {
@@ -359,10 +456,24 @@ public class BaselineTags implements TagSet
                 info.pixelType = PixelType.ARGB;
             }
         }
+        public TiffTag init(Image image)
+        {
+            int samplesPerPixel = 1;
+            Array<?> array = image.getData();
+            if (array instanceof RGB8Array)
+            {
+                samplesPerPixel = 3;
+            }
+            
+            this.type = Type.LONG;
+            this.count = 1;
+            this.value = samplesPerPixel;
+            return this;
+        }
     }
 
     /**
-     * 278 - RowsPerStrip", "The number of rows per strip.
+     * 278 - RowsPerStrip, The number of rows per strip. Type = LONG, count=1.
      */
     public static final class RowsPerStrip extends TiffTag
     {
@@ -371,10 +482,20 @@ public class BaselineTags implements TagSet
         {
             super(CODE, "RowsPerStrip", "The number of rows per strip");
         }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.LONG;
+            this.count = 1;
+            this.value = image.getSize(1);
+            return this;
+        }
     }
     
     /**
      * 279 - For each strip, the number of bytes in the strip after compression.
+     * Type = LONG, count=1. Corresponds to the product of image elements with
+     * byte number per element.
      */
     public static final class StripByteCounts extends TiffTag
     {
@@ -392,6 +513,38 @@ public class BaselineTags implements TagSet
         public void process(TiffFileInfo info)
         {
             info.stripLengths = (int[]) this.content;
+        }
+        
+        public TiffTag init(Image image)
+        {
+            int bytesPerPixel = 1;
+            Array<?> array = image.getData();
+            if (array instanceof UInt8Array || array instanceof BinaryArray)
+            {
+                bytesPerPixel = 1;
+            }
+            else if (array instanceof UInt16Array || array instanceof Int16Array)
+            {
+                bytesPerPixel = 2;
+            }
+            else if (array instanceof Int32Array)
+            {
+                bytesPerPixel = 4;
+            }
+            else if (array instanceof RGB8Array)
+            {
+                bytesPerPixel = 3;
+            }
+            else
+            {
+                throw new RuntimeException("Unable to determine bytes per pixel for array with class: " + array.getClass());
+            }
+            
+            int imageSize = image.getSize(0) * image.getSize(1) * bytesPerPixel;
+            this.type = Type.LONG;
+            this.count = 1;
+            this.value = imageSize;
+            return this;
         }
     }
     
@@ -442,6 +595,21 @@ public class BaselineTags implements TagSet
             if (xScale != 0.0)
                 info.pixelWidth = 1.0 / xScale;
         }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.RATIONAL;
+            this.count = 1;
+            // value will be initialized with content offset
+            this.content = new int[] {1, 1}; // TODO: update with resolution
+            return this;
+        }
+        
+        public int contentSize()
+        {
+            // two 32-bit integer values -> 2*4
+            return 8; 
+        }
     }
     
     /**
@@ -466,6 +634,21 @@ public class BaselineTags implements TagSet
             double yScale = (double) this.content;
             if (yScale != 0.0)
                 info.pixelHeight = 1.0 / yScale;
+        }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.RATIONAL;
+            this.count = 1;
+            // value will be initialized with content offset
+            this.content = new int[] {1, 1}; // TODO: update with resolution
+            return this;
+        }
+        
+        public int contentSize()
+        {
+            // two 32-bit integer values -> 2*4
+            return 8; 
         }
     }
     
@@ -587,6 +770,14 @@ public class BaselineTags implements TagSet
                 throw new RuntimeException("Illegal value for TiffTag 'ResolutionUnit': " + value);
             }
         }
+        
+        public TiffTag init(Image image)
+        {
+            this.type = Type.SHORT;
+            this.count = 1;
+            this.value = 1; // default: no unit
+            return this;
+        }
     }
     
     /**
@@ -655,12 +846,56 @@ public class BaselineTags implements TagSet
         
         public void init(BinaryDataReader dataReader) throws IOException
         {
-            this.content = readColorMap(dataReader, count / 3);
+            // Allocate memory for raw array
+            // (each triplet of components is stored in two bytes)
+            int lutLength = count / 3;
+            int nBytes = count * 2;
+            byte[] lut16 = new byte[nBytes];
+            
+            // convert state to long offset for reading large buffer
+            long offset = ((long) this.value) & 0xffffffffL;
+
+            // read the full raw array
+            long saveLoc = dataReader.getFilePointer();
+            dataReader.seek(offset);
+            int nRead = dataReader.readByteArray(lut16);
+            dataReader.seek(saveLoc);
+            if (nRead != nBytes)
+            {
+                throw new IOException(
+                        "Could not decode the color palette from TIFF File");
+            }
+            
+            // convert raw array into N-by-3 look-up table
+            int[][] lut = new int[lutLength][3];
+            int j = 0;
+            if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
+                j++;
+            for (int i = 0; i < lutLength; i++)
+            {
+                lut[i][0] = lut16[j] & 0x00FF;
+                lut[i][1] = lut16[j + 512] & 0x00FF;
+                lut[i][2] = lut16[j + 1024] & 0x00FF;
+                j += 2;
+            }
+            
+            // store result into LUT
+            this.content = lut;
         }
         
         public void process(TiffFileInfo info)
         {
             info.lut = (int[][]) this.content;
+        }
+        
+        /**
+         * Return 256 * 3 * 2 (256 entries, 3 channels, using 16-bits integers).
+         * 
+         * @return the size of colormap data
+         */
+        public int contentSize()
+        {
+            return 768 * 2; // in 16-bit words
         }
     }
     

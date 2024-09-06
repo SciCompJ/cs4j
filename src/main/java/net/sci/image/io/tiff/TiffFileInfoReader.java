@@ -169,7 +169,7 @@ public class TiffFileInfoReader
 
 		// create a new FileInfo instance
 		TiffFileInfo info = new TiffFileInfo();
-		info.byteOrder = this.byteOrder;
+		info.byteOrder = dataReader.getOrder();
 		
 		// retrieve the list of Tiff Tags that can be interpreted
 		Map<Integer, TiffTag> tagMap = TiffTag.getAllTags();

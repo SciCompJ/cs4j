@@ -4,9 +4,11 @@
 package net.sci.image.io.tiff;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteOrder;
 import java.util.Map;
 
+import net.sci.image.Image;
 import net.sci.image.io.BinaryDataReader;
 
 /**
@@ -32,25 +34,59 @@ public class TiffTag
 	 */
     public static enum Type 
 	{
-		UNKNOWN,
-		BYTE,
-		ASCII,
-		SHORT,
-		LONG,
-		RATIONAL;
+        /** Unknown type of tag (code 0)*/
+		UNKNOWN(0),
+        /** Tag value stored with single byte(s) (code 1) */
+		BYTE(1),
+        /** Tag content stored in ASCII (code 2)*/
+		ASCII(2),
+        /** Tag value or content stored with 16-bits integer (code 3)*/
+		SHORT(3),
+        /** Tag value or content stored with 32-bits integer (code 4)*/
+		LONG(4),
+        /**
+         * Tag content stored with rational (code 5), i.e. by storing each value
+         * with a pair of 4-byte integers.
+         */
+		RATIONAL(5);
 		
+        int code;
+        
+        private Type(int code)
+        {
+            this.code = code;
+        }
+        
+        public int code()
+        {
+            return code;
+        }
+        
 		public static final Type getType(int typeCode)
 		{
-			switch (typeCode)
+			return switch (typeCode)
 			{
-			case 1: return BYTE;
-			case 2: return ASCII;
-			case 3: return SHORT;
-			case 4: return LONG;
-			case 5: return RATIONAL;
-			default: return UNKNOWN;
-			}
+			case 1 -> BYTE;
+			case 2 -> ASCII;
+			case 3 -> SHORT;
+			case 4 -> LONG;
+			case 5 -> RATIONAL;
+			default -> UNKNOWN;
+			};
 		}
+		
+        public int byteCount()
+        {
+            return switch (this)
+            {
+                case BYTE -> 1;
+                case ASCII -> 1;
+                case SHORT -> 2;
+                case LONG -> 4;
+                case RATIONAL -> 8;
+                default -> 0;
+            };
+        }
 	};
 
 	
@@ -82,7 +118,7 @@ public class TiffTag
 	/** An optional description of this tag */
 	public String description = null;
 	
-	/** The TagSet instance this tag belon gto. Can be null."
+	/** The TagSet instance this tag belongs to. Can be null."
 	 */
 	public TagSet tagSet = null;
 	
@@ -106,7 +142,7 @@ public class TiffTag
      * The data contained by this tag, that have to be interpreted depending on
      * the type.
      */
-	public Object content;
+	public Object content = null;
 
 	
 	// =============================================================
@@ -140,35 +176,27 @@ public class TiffTag
      */
 	public void readContent(BinaryDataReader dataReader) throws IOException
 	{
+	    // TODO: move into Type enum?
 		// parse tag data
-		switch (this.type)
-		{
-		case BYTE:
-			this.content = Integer.valueOf(value);
-			break;
-		case SHORT:
-			this.content = Integer.valueOf(value);
-			break;
-		case LONG:
-			this.content = Integer.valueOf(value);
-			break;
-		case ASCII:
-			this.content = readAscii(dataReader);
-			break;
-		case RATIONAL:
-			// convert tag value to long offset for reading large buffer
-			this.content = readRational(dataReader);
-			break;
-			
-		case UNKNOWN:
-			System.err.println("Could not interpret tag with code: "
-					+ this.code + " (" + this.name + ")");
-			break;
-		}		
+	    this.content = switch(this.type)
+        {
+            case BYTE -> Integer.valueOf(value);
+            case SHORT -> Integer.valueOf(value);
+            case LONG -> Integer.valueOf(value);
+            case ASCII -> readAscii(dataReader);
+            case RATIONAL -> readRational(dataReader);
+            default -> {
+                System.err.println("Could not interpret tag with code: " + this.code + " (" + this.name + ")");
+                yield 0; 
+            }
+        };
 	}
 	
     /**
-     * Initializes the content field of this tag, based on value and eventually data reader.
+     * Initializes the content field of this tag, based on value and eventually
+     * data reader.
+     * 
+     * This method is called during image reading.
      * 
      * @param dataReader
      *            the instance of DataReader used to read information
@@ -177,9 +205,10 @@ public class TiffTag
      */
 	public void init(BinaryDataReader dataReader) throws IOException
 	{
+	    //TODO; could add a default implementation; merge with readContent?
 	}
 	
-    /**
+	/**
      * Updates the specified FileInfo data structure according to the current
      * value of the tag.
      * 
@@ -190,48 +219,253 @@ public class TiffTag
     {
     }
     
-	
+	/**
+     * Initializes the type, count, and value (and eventually also the content)
+     * of this tag, based on the content and the meta-data of the specified
+     * image.
+     * 
+     * This method is called during image writing. Default: initializes to
+     * type=SHORT, count=1, and value=0.
+     * 
+     * @param image
+     *            the image used to initialize the tag
+     * @return the reference to this tag (for chaining operations)
+     */
+    public TiffTag init(Image image)
+    {
+        this.type = Type.SHORT;
+        this.count = 1;
+        this.value = 0;
+        return this;
+    }
+    
+    /**
+     * Sets the value of this tag, to populate either the {@code value} or the
+     * {@code content} field. The {@code value} parameter is first casted
+     * according to the type of the tag. If {@code value} parameter fits into 4
+     * bytes, the {@code value} field of the tag is populated. Otherwise, the
+     * {@code content} field is initialized, and the value field will be later
+     * populated with offset to content.
+     * 
+     * @param value
+     *            the value of the entry
+     */
+    public void setValue(Object value)
+    {
+        // check the contents correspond to tag type
+        switch(this.type)
+        {
+            case BYTE -> {
+                if (value instanceof byte[] array)
+                {
+                    this.count = array.length;
+                    if (array.length == 1)
+                    {
+                        this.value = array[0];
+                        this.content = null;
+                    }
+                    else
+                    {
+                        this.content = array;
+                    }
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is BYTE, content must be an array of bytes");
+                }
+            }
+            case SHORT -> {
+                if (value instanceof short[] array)
+                {
+                    this.count = array.length;
+                    if (array.length == 1)
+                    {
+                        this.value = array[0];
+                        this.content = null;
+                    }
+                    else
+                    {
+                        this.content = array;
+                    }
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is SHORT, content must be an array of short");
+                }
+            }
+            case LONG -> {
+                if (value instanceof int[] array)
+                {
+                    this.count = array.length;
+                    if (array.length == 1)
+                    {
+                        this.value = array[0];
+                        this.content = null;
+                    }
+                    else
+                    {
+                        this.content = array;
+                    }
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is LONG, content must be an array of int");
+                }
+            }
+            case ASCII -> {
+                if (value instanceof String string)
+                {
+                    byte[] bytes = string.getBytes();
+                    this.content = bytes;
+                    this.count = bytes.length;
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is ASCII, content must be a String");
+                }
+            }
+            case RATIONAL -> {
+                if (!(value instanceof int[]))
+                {
+                    throw new RuntimeException("If tag type is RATIONAL, content must be an array of int");
+                }
+                
+                this.content = value;
+                this.count = 2;
+            }
+            default -> {
+                System.err.println("Could not interpret tag with code: " + this.code + " (" + this.name + ")");
+                 
+            }
+        }
+    }
+    
+    /**
+     * Writes the entry corresponding to this tag into the specified stream,
+     * with the specified byte order.
+     * 
+     * @param out
+     *            the stream to write in
+     * @param order
+     *            the byte order
+     * @return the number of bytes that will need to be written on the IFD data
+     * @throws IOException 
+     */
+    public int writeEntry(OutputStream out, ByteOrder order, int currentDataOffset) throws IOException
+    { 
+        writeShort(out, order, this.code);
+        writeShort(out, order, type.code());
+        writeInt(out, order, count);
+        if (count == 1 && type.equals(TiffTag.Type.SHORT))
+        {
+            writeShort(out, order, value);
+            writeShort(out, order, 0);
+        }
+        else if (content != null)
+        {
+            // write the offset to content data 
+            writeInt(out, order, value);
+        }
+        else
+        {
+            writeInt(out, order, value);
+        }
+        
+        return contentSize();
+    }
+    
+    /**
+     * Writes the entry corresponding to this tag into the specified stream,
+     * with the specified byte order.
+     * 
+     * @param out
+     *            the stream to write in
+     * @param order
+     *            the byte order
+     * @throws IOException 
+     */
+    public void writeEntry(OutputStream out, ByteOrder order) throws IOException
+    { 
+        writeShort(out, order, this.code);
+        writeShort(out, order, type.code());
+        writeInt(out, order, count);
+        if (count == 1 && type.equals(TiffTag.Type.SHORT))
+        {
+            writeShort(out, order, value);
+            writeShort(out, order, 0);
+        }
+        else if (content != null)
+        {
+            // write the offset to content data 
+            writeInt(out, order, value);
+        }
+        else
+        {
+            writeInt(out, order, value);
+        }
+    }
+
+    /**
+     * Returns the number if bytes used by the content of this tag, or 0 if the
+     * value fits within less that 4 bytes.
+     * 
+     * @return the number of bytes used to store the content of this tag.
+     */
+    public int contentSize()
+    {
+        return content == null ? 0 : count * type.byteCount();
+    }
+
+    /**
+     * Writes the data of this entry into the specified stream, with the
+     * specified byte order. The number of bytes that will be written must be
+     * the same as the result of the {@code writeEntry()} method.
+     * 
+     * @param out
+     *            the stream to write in
+     * @param order
+     *            the byte order
+     * @throws IOException 
+     */
+    public void writeContent(OutputStream out, ByteOrder order) throws IOException
+    {
+        if (content == null) return;
+        switch (type)
+        {
+            case BYTE -> {
+                byte[] data = (byte[]) content;
+                out.write(data);
+            }
+            case ASCII -> {
+                byte[] data = ((String) content).getBytes();
+                out.write(data);
+            }
+            case SHORT -> {
+                for (short s : (short[]) content)
+                {
+                    writeShort(out, order, s);
+                }
+            }
+            case LONG -> {
+                for (int data : (int[]) content)
+                {
+                    writeInt(out, order, data);
+                }
+            }
+            case RATIONAL -> {
+                int[] data = (int[]) content;
+                writeInt(out, order, data[0]);
+                writeInt(out, order, data[1]);
+            }
+            default -> System.err.println("Unable to write tag with code " + code);
+        }
+    }
+    
+    
 	// =============================================================
 	// protected methods used by subclasses
 	
-	protected int[][] readColorMap(BinaryDataReader dataReader, int lutLength)
-			throws IOException
-	{
-		// Allocate memory for raw array
-	    // (each triplet of components is stored in two bytes)
-		int nBytes = 3 * lutLength * 2;
-		byte[] lut16 = new byte[nBytes];
-		
-		// convert state to long offset for reading large buffer
-		long offset = ((long) this.value) & 0xffffffffL;
-
-		// read the full raw array
-		long saveLoc = dataReader.getFilePointer();
-		dataReader.seek(offset);
-		int nRead = dataReader.readByteArray(lut16);
-		dataReader.seek(saveLoc);
-		if (nRead != nBytes)
-		{
-			throw new IOException(
-					"Could not decode the color palette from TIFF File");
-		}
-		
-		// convert raw array into N-by-3 look-up table
-		int[][] lut = new int[lutLength][3];
-		int j = 0;
-		if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
-			j++;
-		for (int i = 0; i < lutLength; i++)
-		{
-			lut[i][0] = lut16[j] & 0x00FF;
-			lut[i][1] = lut16[j + 512] & 0x00FF;
-			lut[i][2] = lut16[j + 1024] & 0x00FF;
-			j += 2;
-		}
-		return lut;
-	}
-
-	protected String readAscii(BinaryDataReader dataReader) throws IOException
+    protected String readAscii(BinaryDataReader dataReader) throws IOException
 	{
 		// Allocate memory for string buffer
 		byte[] data = new byte[this.count];
@@ -373,6 +607,39 @@ public class TiffTag
 		else
 			return 0.0;
 	}
+
+    private static final void writeShort(OutputStream out, ByteOrder order, int v) throws IOException
+    {
+        if (order == ByteOrder.LITTLE_ENDIAN)
+        {
+            out.write(v & 255);
+            out.write((v >>> 8) & 255);
+        }
+        else
+        {
+            out.write((v >>> 8) & 255);
+            out.write(v & 255);
+        }
+    }
+
+    private static final void writeInt(OutputStream out, ByteOrder order, int v) throws IOException
+    {
+        if (order == ByteOrder.LITTLE_ENDIAN)
+        {
+            out.write(v & 255);
+            out.write((v >>> 8) & 255);
+            out.write((v >>> 16) & 255);
+            out.write((v >>> 24) & 255);
+        }
+        else
+        {
+            out.write((v >>> 24) & 255);
+            out.write((v >>> 16) & 255);
+            out.write((v >>> 8) & 255);
+            out.write(v & 255);
+        }
+    }
+
 
 	public boolean equals(Object obj)
 	{

@@ -258,26 +258,35 @@ public class TiffFileInfo
 	public SubFileType subFileType;
 	
 	/**
-	 * Spatial calibration info 
+	 * The size of the pixel in the X-direction. Default is 1.
 	 */
 	public double pixelWidth = 1;
+
+	/**
+     * The size of the pixel in the Y-direction. Default is 1.
+     */
 	public double pixelHeight = 1;
+
+	/**
+     * The unit string for pixel size. Default is empty string.
+     */
 	public String unit = "";
 		
     /**
      * The compression mode of the data stored within the file.
+     * Default is NONE.
      */
 	public Compression compression = Compression.NONE;
 	
 	/**
-	 * The orientation of the image.
+	 * The orientation of the image. Default is Top-Left.
 	 */
 	public Orientation orientation = Orientation.TOPLEFT;
 	
 	/**
-	 * An optional description for the image.
+	 * An optional description for the image. Default is null.
 	 */
-	public String imageDescription;
+	public String imageDescription = null;
 	
 	/** Info for reading image buffer */
 	public int[] stripOffsets;
