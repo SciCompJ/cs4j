@@ -21,9 +21,7 @@
  */
 package net.sci.image.binary.distmap;
 
-import net.sci.algo.Algo;
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.Scalar;
 import net.sci.array.numeric.ScalarArray;
@@ -33,22 +31,24 @@ import net.sci.array.numeric.ScalarArray3D;
 /**
  * Interface for computing distance maps from binary 3D images.
  */
-public interface DistanceTransform3D extends Algo, ArrayOperator
+public interface DistanceTransform3D extends DistanceTransform
 {
-	/**
-	 * Computes the distance map from a 3D binary image. 
-	 * Distance is computed for each foreground (white) pixel, as the 
-	 * chamfer distance to the nearest background (black) pixel.
-	 * 
-	 * @param array a 3D binary image with white pixels (255) as foreground
-	 * @return a new 3D image containing: <ul>
-	 * <li> 0 for each background pixel </li>
-	 * <li> the distance to the nearest background pixel otherwise</li>
-	 * </ul>
-	 */
-	public ScalarArray3D<?> process3d(BinaryArray3D array);
-
-	/**
+    /**
+     * Computes the distance map from a 3D binary image. Distance is computed
+     * for each foreground (white) pixel, as the chamfer distance to the nearest
+     * background (black) pixel.
+     * 
+     * @param array
+     *            a 3D binary image with white pixels (255) as foreground
+     * @return a new 3D image containing:
+     *         <ul>
+     *         <li>0 for each background pixel</li>
+     *         <li>the distance to the nearest background pixel otherwise</li>
+     *         </ul>
+     */
+    public ScalarArray3D<?> process3d(BinaryArray3D array);
+    
+    /**
      * Process the input scalar array and return the result in a new array.
      * 
      * The input array must be an instance of BinaryArray.

@@ -30,42 +30,42 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
 {
     // ==================================================
     // Class variables
-
+    
     /**
      * The chamfer mask used to propagate distances to neighbor pixels.
      */
     ChamferMask2D mask;
-
+    
     /**
      * Flag for dividing final distance map by the value first weight. This
      * results in distance map values closer to Euclidean, but with non integer
      * values.
      */
     private boolean normalizeMap = true;
-
+    
     
     // ==================================================
-    // Constructors 
+    // Constructors
     
-	public ChamferDistanceTransform2DFloat32(ChamferMask2D mask)
-	{
+    public ChamferDistanceTransform2DFloat32(ChamferMask2D mask)
+    {
         this.mask = mask;
-	}
-
-	public ChamferDistanceTransform2DFloat32(ChamferMask2D mask, boolean normalize)
-	{
+    }
+    
+    public ChamferDistanceTransform2DFloat32(ChamferMask2D mask, boolean normalize)
+    {
         this.mask = mask;
-		this.normalizeMap = normalize;
-	}
-
-	
+        this.normalizeMap = normalize;
+    }
+    
+    
     // ==================================================
     // Implementation of the DistanceTransform interface
-
+    
     @Override
     public Result computeResult(BinaryArray array)
     {
-        if (array.dimensionality() != 2) throw new IllegalArgumentException("Requires an array of dimensionity 2");
+        if (array.dimensionality() != 2) throw new IllegalArgumentException("Requires an array of dimensionality 2");
         BinaryArray2D array2d = BinaryArray2D.wrap(array);
         
         // Allocate result array
@@ -74,7 +74,7 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
         // Two iterations are enough to compute distance map to boundary
         forwardIteration(distMap, array2d);
         double distMax = backwardIteration(distMap, array2d);
-
+        
         // Normalize values by the first weight
         if (this.normalizeMap)
         {
@@ -86,36 +86,37 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
         return new DistanceTransform.Result(distMap, distMax);
     }
     
-
+    
     // ==================================================
     // Implementation of the DistanceTransform2D interface
-
-	public Float32Array2D process2d(BinaryArray2D array)
-	{
+    
+    public Float32Array2D process2d(BinaryArray2D array)
+    {
         // Allocate result array
-	    Float32Array2D distMap = initializeResult(array);
+        Float32Array2D distMap = initializeResult(array);
         
         // Two iterations are enough to compute distance map to boundary
         forwardIteration(distMap, array);
         backwardIteration(distMap, array);
-
+        
         // Normalize values by the first weight
         if (this.normalizeMap)
         {
             normalizeResult(distMap, array);
         }
         
-        this.fireStatusChanged(new AlgoEvent(this, ""));        
+        this.fireStatusChanged(new AlgoEvent(this, ""));
         return distMap;
-	}
-	
+    }
+    
+    
     // ==================================================
-    // Inner computation methods 
+    // Inner computation methods
     
     private Float32Array2D initializeResult(BinaryArray2D array)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Initialization"));
-
+        
         // size of image
         int sizeX = array.size(0);
         int sizeY = array.size(1);
@@ -136,23 +137,22 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
         return result;
     }
     
-	private void forwardIteration(Float32Array2D distMap, BinaryArray2D maskImage)
-	{
+    private void forwardIteration(Float32Array2D distMap, BinaryArray2D maskImage)
+    {
         this.fireStatusChanged(new AlgoEvent(this, "Forward Scan"));
         
         // size of image
         int sizeX = maskImage.size(0);
         int sizeY = maskImage.size(1);
         Collection<Offset> offsets = mask.getForwardOffsets();
-
+        
         // Iterate over pixels
         for (int y = 0; y < sizeY; y++)
         {
             for (int x = 0; x < sizeX; x++)
             {
                 // process only pixels within the mask
-                if (!maskImage.getBoolean(x, y))
-                    continue;
+                if (!maskImage.getBoolean(x, y)) continue;
                 
                 // current distance value
                 float currentDist = distMap.getFloat(x, y);
@@ -166,10 +166,7 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
                     int y2 = y + offset.dy;
                     
                     // check bounds
-                    if (x2 < 0 || x2 >= sizeX)
-                        continue;
-                    if (y2 < 0 || y2 >= sizeY)
-                        continue;
+                    if (!distMap.containsPosition(x2, y2)) continue;
                     
                     if (maskImage.getBoolean(x2, y2))
                     {
@@ -183,7 +180,7 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
                     }
                 }
                 
-                if (newDist < currentDist) 
+                if (newDist < currentDist)
                 {
                     distMap.setFloat(x, y, newDist);
                 }
@@ -191,10 +188,10 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
         } // end of processing for current line
         
         this.fireProgressChanged(this, sizeY, sizeY);
-	} // end of forward iteration
-
-	private double backwardIteration(Float32Array2D distMap, BinaryArray2D maskImage)
-	{
+    } // end of forward iteration
+    
+    private double backwardIteration(Float32Array2D distMap, BinaryArray2D maskImage)
+    {
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
         
         // size of image
@@ -211,8 +208,7 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
             for (int x = sizeX - 1; x >= 0; x--)
             {
                 // process only pixels within the mask
-                if (!maskImage.getBoolean(x, y))
-                    continue;
+                if (!maskImage.getBoolean(x, y)) continue;
                 
                 // current distance value
                 float currentDist = distMap.getFloat(x, y);
@@ -226,10 +222,7 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
                     int y2 = y + offset.dy;
                     
                     // check bounds
-                    if (x2 < 0 || x2 >= sizeX)
-                        continue;
-                    if (y2 < 0 || y2 >= sizeY)
-                        continue;
+                    if (!distMap.containsPosition(x2, y2)) continue;
                     
                     if (maskImage.getBoolean(x2, y2))
                     {
@@ -243,23 +236,23 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
                     }
                 }
                 
-                if (newDist < currentDist) 
+                if (newDist < currentDist)
                 {
                     distMap.setFloat(x, y, newDist);
                 }
                 
                 distMax = Math.max(distMax, newDist);
             }
-        } // end of processing for current line 
+        } // end of processing for current line
         
         this.fireProgressChanged(this, sizeY, sizeY);
         return distMax;
-	} // end of backward iteration
-	
+    } // end of backward iteration
+    
     private void normalizeResult(Float32Array2D distMap, BinaryArray2D array)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Normalization"));
-
+        
         // size of image
         int sizeX = array.size(0);
         int sizeY = array.size(1);

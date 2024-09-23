@@ -62,31 +62,31 @@ import net.sci.image.binary.distmap.ChamferMask3D.Offset;
  */
 public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceTransform, ChamferDistanceTransform3D
 {
-	// ==============================================================
-	// class members
-
+    // ==============================================================
+    // class members
+    
     /**
      * The chamfer mask used to propagate distances to neighbor voxels.
      */
-	private ChamferMask3D mask;
-
-    /** 
+    private ChamferMask3D mask;
+    
+    /**
      * The factory to use for creating the result array.
      */
     private IntArray.Factory<?> factory = UInt16Array.defaultFactory;
     
-	/**
-	 * Flag for dividing final distance map by the value first weight. 
-	 * This results in distance map values closer to euclidean, but with 
-	 * non integer values. 
-	 */
-	private boolean normalizeMap = true;
-
-
-	// ==============================================================
-	// Constructors
-
-	/**
+    /**
+     * Flag for dividing final distance map by the value first weight. This
+     * results in distance map values closer to euclidean, but with non integer
+     * values.
+     */
+    private boolean normalizeMap = true;
+    
+    
+    // ==============================================================
+    // Constructors
+    
+    /**
      * Default constructor that specifies the chamfer mask.
      * 
      * @param mask
@@ -96,38 +96,73 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
     {
         this.mask = mask;
     }
-
+    
     /**
-	 * Constructor specifying the chamfer mask and the optional
-	 * normalization option.
-	 * 
+     * Constructor specifying the chamfer mask and the optional normalization
+     * option.
+     * 
      * @param mask
      *            the chamfer mask to use for propagating distances.
-	 * @param normalize
-	 *            flag indicating whether the final distance map should be
-	 *            normalized by the first weight
-	 */
-	public ChamferDistanceTransform3DInt(ChamferMask3D mask, boolean normalize)
-	{
-		this.mask = mask;
-		this.normalizeMap = normalize;
-	}
-
-	/**
+     * @param normalize
+     *            flag indicating whether the final distance map should be
+     *            normalized by the first weight
+     */
+    public ChamferDistanceTransform3DInt(ChamferMask3D mask, boolean normalize)
+    {
+        this.mask = mask;
+        this.normalizeMap = normalize;
+    }
+    
+    /**
      * Set the factory for creating the result array.
      * 
      * @param factory
      *            the factory for creating the result array.
      */
-	public void setFactory(IntArray.Factory<?> factory)
+    public void setFactory(IntArray.Factory<?> factory)
     {
         this.factory = factory;
     }
-
+    
+    
+    // ==================================================
+    // Implementation of the DistanceTransform3D interface
+    
+    /**
+     * Computes the distance map from a 3D binary image. Distance is computed
+     * for each foreground (white) pixel, as the chamfer distance to the nearest
+     * background (black) pixel.
+     * 
+     * @param array
+     *            a 3D binary image with white pixels as foreground
+     * @return a new 3D image containing:
+     *         <ul>
+     *         <li>0 for each background pixel</li>
+     *         <li>the distance to the nearest background pixel otherwise</li>
+     *         </ul>
+     */
+    public ScalarArray3D<?> process3d(BinaryArray3D array)
+    {
+        // create new empty image, and fill it with black
+        IntArray3D<?> distMap = initializeResult(array);
+        
+        // Two iterations are enough to compute distance map to boundary
+        forwardIteration(distMap, array);
+        backwardIteration(distMap, array);
+        
+        // Normalize values by the first weight
+        if (this.normalizeMap)
+        {
+            normalizeResult(distMap, array);
+        }
+        
+        return distMap;
+    }
+    
     
     // ==================================================
     // Implementation of the DistanceTransform interface
-
+    
     @Override
     public Result computeResult(BinaryArray array)
     {
@@ -140,56 +175,23 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
         // Two iterations are enough to compute distance map to boundary
         forwardIteration(distMap, array3d);
         int distMax = backwardIteration(distMap, array3d);
-
+        
         // Normalize values by the first weight
         if (this.normalizeMap)
         {
             normalizeResult(distMap, array3d);
             double w0 = mask.getIntegerNormalizationWeight();
-            distMax = (int)(distMax / w0);
+            distMax = (int) (distMax / w0);
         }
         
         return new DistanceTransform.Result(distMap, distMax);
     }
     
-
-    // ==================================================
-    // Implementation of the DistanceTransform3D interface
-
-	/**
-	 * Computes the distance map from a 3D binary image. 
-	 * Distance is computed for each foreground (white) pixel, as the 
-	 * chamfer distance to the nearest background (black) pixel.
-	 * 
-	 * @param array a 3D binary image with white pixels as foreground
-	 * @return a new 3D image containing: <ul>
-	 * <li> 0 for each background pixel </li>
-	 * <li> the distance to the nearest background pixel otherwise</li>
-	 * </ul>
-	 */
-	public ScalarArray3D<?> process3d(BinaryArray3D array) 
-	{
-		// create new empty image, and fill it with black
-		IntArray3D<?> distMap = initializeResult(array);
-
-		// Two iterations are enough to compute distance map to boundary
-		forwardIteration(distMap, array);
-		backwardIteration(distMap, array);
-
-		// Normalize values by the first weight
-		if (this.normalizeMap) 
-		{
-		    normalizeResult(distMap, array);
-		}
-				
-		return distMap;
-	}
-	
-	
-    // ==================================================
-    // Inner computation methods 
     
-	/**
+    // ==================================================
+    // Inner computation methods
+    
+    /**
      * Initializes empty image with either 0 (background) or Inf (foreground)
      *
      * @param array
@@ -200,7 +202,7 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
     private IntArray3D<?> initializeResult(BinaryArray3D array)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Initialization"));
-
+        
         // size of image
         int sizeX = array.size(0);
         int sizeY = array.size(1);
@@ -208,7 +210,7 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
         
         // create new empty image, and fill it max value within mask
         IntArray3D<?> result = IntArray3D.wrap(factory.create(sizeX, sizeY, sizeZ));
-
+        
         // initialize empty image with either 0 (background) or Inf (foreground)
         int maxValue = result.typeMax().getInt();
         for (int z = 0; z < sizeZ; z++)
@@ -223,15 +225,15 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
                 }
             }
         }
-        fireProgressChanged(this, 1, 1); 
+        fireProgressChanged(this, 1, 1);
         return result;
     }
-
-    //	private void forwardIteration() 
+    
+    // private void forwardIteration()
     private void forwardIteration(IntArray3D<?> distMap, BinaryArray3D maskImage)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Forward Scan"));
-
+        
         // size of image
         int sizeX = maskImage.size(0);
         int sizeY = maskImage.size(1);
@@ -241,21 +243,20 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
         Collection<Offset> offsets = this.mask.getForwardOffsets();
         
         // iterate on image voxels
-		for (int z = 0; z < sizeZ; z++)
-		{
-			fireProgressChanged(this, z, sizeZ); 
-			for (int y = 0; y < sizeY; y++)
-			{
-				for (int x = 0; x < sizeX; x++)
-				{
+        for (int z = 0; z < sizeZ; z++)
+        {
+            fireProgressChanged(this, z, sizeZ);
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
                     // process only pixels within the mask
-                    if (!maskImage.getBoolean(x, y, z))
-                        continue;
-
+                    if (!maskImage.getBoolean(x, y, z)) continue;
+                    
                     // current distance value
                     int currentDist = distMap.getInt(x, y, z);
                     int newDist = currentDist;
-
+                    
                     for (Offset offset : offsets)
                     {
                         int x2 = x + offset.dx;
@@ -263,22 +264,22 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
                         int z2 = z + offset.dz;
                         
                         // check that current neighbor is within image
-                        if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY && z2 >= 0 && z2 < sizeZ)
-                        {
-                            newDist = min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
-                        }
+                        if (!distMap.containsPosition(x2, y2, z2)) continue;
+                        
+                        // update min distance, using fact that background distance is zero
+                        newDist = min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
                     }
-
-                    if (newDist < currentDist) 
+                    
+                    if (newDist < currentDist)
                     {
                         distMap.setInt(x, y, z, newDist);
                     }
-				}
-			}
-		}
-		fireProgressChanged(this, 1, 1); 
-	}
-
+                }
+            }
+        }
+        fireProgressChanged(this, 1, 1);
+    }
+    
     private int backwardIteration(IntArray3D<?> distMap, BinaryArray3D maskImage)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
@@ -290,26 +291,25 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
         
         // create array of forward shifts
         Collection<Offset> offsets = this.mask.getBackwardOffsets();
-
+        
         // initialize largest distance to 0
         int distMax = 0;
         
         // Iterate over pixels
         for (int z = sizeZ - 1; z >= 0; z--)
         {
-            fireProgressChanged(this, sizeZ-1-z, sizeZ);
+            fireProgressChanged(this, sizeZ - 1 - z, sizeZ);
             for (int y = sizeY - 1; y >= 0; y--)
             {
                 for (int x = sizeX - 1; x >= 0; x--)
                 {
                     // process only pixels within the mask
-                    if (!maskImage.getBoolean(x, y, z))
-                        continue;
-
+                    if (!maskImage.getBoolean(x, y, z)) continue;
+                    
                     // current distance value
                     int currentDist = distMap.getInt(x, y, z);
                     int newDist = currentDist;
-
+                    
                     for (Offset offset : offsets)
                     {
                         int x2 = x + offset.dx;
@@ -317,13 +317,13 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
                         int z2 = z + offset.dz;
                         
                         // check that current neighbor is within image
-                        if (x2 >= 0 && x2 < sizeX && y2 >= 0 && y2 < sizeY && z2 >= 0 && z2 < sizeZ)
-                        {
-                            newDist = min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
-                        }
+                        if (!distMap.containsPosition(x2, y2, z2)) continue;
+                        
+                        // update min distance, using fact that background distance is zero
+                        newDist = min(newDist, distMap.getInt(x2, y2, z2) + offset.intWeight);
                     }
-
-                    if (newDist < currentDist) 
+                    
+                    if (newDist < currentDist)
                     {
                         distMap.setInt(x, y, z, newDist);
                     }
@@ -336,11 +336,11 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
         this.fireProgressChanged(this, sizeZ, sizeZ);
         return distMax;
     } // end of backward iteration
-
-	private void normalizeResult(IntArray3D<?> distMap, BinaryArray3D array)
+    
+    private void normalizeResult(IntArray3D<?> distMap, BinaryArray3D array)
     {
         this.fireStatusChanged(new AlgoEvent(this, "Normalization"));
-
+        
         // size of image
         int sizeX = array.size(0);
         int sizeY = array.size(1);
@@ -348,7 +348,7 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
         
         // retrieve the minimum weight
         double w0 = mask.getIntegerNormalizationWeight();
-                
+        
         for (int z = 0; z < sizeZ; z++)
         {
             for (int y = 0; y < sizeY; y++)

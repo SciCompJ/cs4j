@@ -9,6 +9,7 @@ import java.util.Collection;
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoStub;
 import net.sci.array.ArrayOperator;
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16Array2D;
@@ -49,59 +50,87 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
      * The chamfer mask used to propagate distances to neighbor pixels.
      */
     ChamferMask2D mask;
-
-	/**
-	 * Flag for dividing final distance map by the value first weight. 
-	 * This results in distance map values closer to Euclidean, but with 
-	 * non integer values. 
-	 */
-	private boolean normalizeMap = true;
-	
-	
-    // ==================================================
-    // Constructors 
     
-	public ChamferDistanceTransform2DUInt16(ChamferMask2D mask)
-	{
-		this.mask = mask;
-	}
-
-	public ChamferDistanceTransform2DUInt16(ChamferMask2D mask, boolean normalize)
-	{
-        this.mask = mask;
-		this.normalizeMap = normalize;
-	}
-
-	
+    /**
+     * Flag for dividing final distance map by the value first weight. This
+     * results in distance map values closer to Euclidean, but with non integer
+     * values.
+     */
+    private boolean normalizeMap = true;
+    
+    
     // ==================================================
-    // Computation methods 
-
-	public UInt16Array2D process2d(BinaryArray2D array)
-	{
-	    // Allocate result array
+    // Constructors
+    
+    public ChamferDistanceTransform2DUInt16(ChamferMask2D mask)
+    {
+        this.mask = mask;
+    }
+    
+    public ChamferDistanceTransform2DUInt16(ChamferMask2D mask, boolean normalize)
+    {
+        this.mask = mask;
+        this.normalizeMap = normalize;
+    }
+    
+    
+    // ==================================================
+    // Computation methods
+    
+    public UInt16Array2D process2d(BinaryArray2D array)
+    {
+        // Allocate result array
         UInt16Array2D distMap = initializeResult(array);
-		
-		// Two iterations are enough to compute distance map to boundary
-		forwardIteration(distMap, array);
-		backwardIteration(distMap, array);
-
+        
+        // Two iterations are enough to compute distance map to boundary
+        forwardIteration(distMap, array);
+        backwardIteration(distMap, array);
+        
         // Normalize values by the first weight
         if (this.normalizeMap)
         {
             normalizeResult(distMap, array);
         }
-		
-		return distMap;
-	}
-
-	
-    // ==================================================
-    // Inner computation methods 
+        
+        return distMap;
+    }
     
-	private UInt16Array2D initializeResult(BinaryArray2D array)
-	{
+    
+    // ==================================================
+    // Implementation of the DistanceTransform interface
+    
+    @Override
+    public Result computeResult(BinaryArray array)
+    {
+        if (array.dimensionality() != 2) throw new IllegalArgumentException("Requires an array of dimensionality 2");
+        BinaryArray2D array2d = BinaryArray2D.wrap(array);
+        
+        // Allocate result array
+        UInt16Array2D distMap = initializeResult(array2d);
+        
+        // Two iterations are enough to compute distance map to boundary
+        forwardIteration(distMap, array2d);
+        int distMax = backwardIteration(distMap, array2d);
+        
+        // Normalize values by the first weight
+        if (this.normalizeMap)
+        {
+            normalizeResult(distMap, array2d);
+            double w0 = mask.getIntegerNormalizationWeight();
+            distMax = (int) (distMax / w0);
+        }
+        
+        return new DistanceTransform.Result(distMap, distMax);
+    }
+    
+    
+    // ==================================================
+    // Inner computation methods
+    
+    private UInt16Array2D initializeResult(BinaryArray2D array)
+    {
         this.fireStatusChanged(new AlgoEvent(this, "Initialization"));
-
+        
         // size of image
         int sizeX = array.size(0);
         int sizeY = array.size(1);
@@ -120,11 +149,10 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         }
         
         return result;
-	}
-	
-	
-	private void forwardIteration(UInt16Array2D distMap, BinaryArray2D maskImage)
-	{
+    }
+    
+    private void forwardIteration(UInt16Array2D distMap, BinaryArray2D maskImage)
+    {
         this.fireStatusChanged(new AlgoEvent(this, "Forward Scan"));
         
         // size of image
@@ -134,13 +162,12 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         
         // Iterate over pixels
         for (int y = 0; y < sizeY; y++)
-		{
-			for (int x = 0; x < sizeX; x++)
-			{
-				// process only pixels within the mask
-				if (!maskImage.getBoolean(x, y))
-					continue;
-				
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                // process only pixels within the mask
+                if (!maskImage.getBoolean(x, y)) continue;
+                
                 // current distance value
                 int currentDist = distMap.getInt(x, y);
                 int newDist = currentDist;
@@ -153,10 +180,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                     int y2 = y + offset.dy;
                     
                     // check bounds
-                    if (x2 < 0 || x2 >= sizeX)
-                        continue;
-                    if (y2 < 0 || y2 >= sizeY)
-                        continue;
+                    if (!distMap.containsPosition(x2, y2)) continue;
                     
                     if (maskImage.getBoolean(x2, y2))
                     {
@@ -174,15 +198,15 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                 {
                     distMap.setInt(x, y, newDist);
                 }
-			}
-		} // end of processing for current line
-		
-		this.fireProgressChanged(this, sizeY, sizeY);
-
-	} // end of forward iteration
-
-	private void backwardIteration(UInt16Array2D distMap, BinaryArray2D maskImage)
-	{
+            }
+        } // end of processing for current line
+        
+        this.fireProgressChanged(this, sizeY, sizeY);
+        
+    } // end of forward iteration
+    
+    private int backwardIteration(UInt16Array2D distMap, BinaryArray2D maskImage)
+    {
         this.fireStatusChanged(new AlgoEvent(this, "Backward Scan"));
         
         // size of image
@@ -190,15 +214,17 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         int sizeY = maskImage.size(1);
         Collection<Offset> offsets = mask.getBackwardOffsets();
         
+        // initialize largest distance to 0
+        int distMax = 0;
+        
         // Iterate over pixels
         for (int y = sizeY - 1; y >= 0; y--)
-		{
-			for (int x = sizeX - 1; x >= 0; x--)
-			{
-				// process only pixels within the mask
-				if (!maskImage.getBoolean(x, y))
-					continue;
-				
+        {
+            for (int x = sizeX - 1; x >= 0; x--)
+            {
+                // process only pixels within the mask
+                if (!maskImage.getBoolean(x, y)) continue;
+                
                 // current distance value
                 int currentDist = distMap.getInt(x, y);
                 int newDist = currentDist;
@@ -211,10 +237,7 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                     int y2 = y + offset.dy;
                     
                     // check bounds
-                    if (x2 < 0 || x2 >= sizeX)
-                        continue;
-                    if (y2 < 0 || y2 >= sizeY)
-                        continue;
+                    if (!distMap.containsPosition(x2, y2)) continue;
                     
                     if (maskImage.getBoolean(x2, y2))
                     {
@@ -232,16 +255,19 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
                 {
                     distMap.setInt(x, y, newDist);
                 }
-			}
-		} // end of processing for current line 
-		
-		this.fireProgressChanged(this, sizeY, sizeY);
-	} // end of backward iteration
-
-	private void normalizeResult(UInt16Array2D distMap, BinaryArray2D array)
-	{
+                
+                distMax = Math.max(distMax, newDist);
+            }
+        } // end of processing for current line
+        
+        this.fireProgressChanged(this, sizeY, sizeY);
+        return distMax;
+    } // end of backward iteration
+    
+    private void normalizeResult(UInt16Array2D distMap, BinaryArray2D array)
+    {
         this.fireStatusChanged(new AlgoEvent(this, "Normalization"));
-
+        
         // size of image
         int sizeX = array.size(0);
         int sizeY = array.size(1);
@@ -249,17 +275,17 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         // retrieve the minimum weight
         double w0 = mask.getIntegerNormalizationWeight();
         
-	    for (int y = 0; y < sizeY; y++)
-	    {
-	        for (int x = 0; x < sizeX; x++) 
-	        {
-	            if (array.getBoolean(x, y)) 
-	            {
-	                distMap.setInt(x, y, (int) Math.round(distMap.getInt(x, y) / w0));
-	            }
-	        }
-	    }
-	}
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                if (array.getBoolean(x, y))
+                {
+                    distMap.setInt(x, y, (int) Math.round(distMap.getInt(x, y) / w0));
+                }
+            }
+        }
+    }
     
     
     // ==================================================

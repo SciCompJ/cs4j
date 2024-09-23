@@ -25,17 +25,33 @@ public interface DistanceTransform extends ArrayOperator, Algo
     public Result computeResult(BinaryArray array);
     
     /**
-     * Stores the results of distance transform computed on a binary image.
+     * Stores the result of distance transform computed on a binary image, 
+     * together with the maximum distance within the distance map.
      */
     public class Result
     {
+        /**
+         * The distance map array.
+         */
         public ScalarArray<?> distanceMap;
+        
+        /**
+         * The maximum distance within the array.
+         */
         public double maxDistance;
         
-        public Result(ScalarArray<?> distMap, double distMax)
+        /**
+         * Initializes a new Result data class.
+         * 
+         * @param distMap
+         *            The distance map array
+         * @param maxDist
+         *            The maximum distance within the array
+         */
+        public Result(ScalarArray<?> distMap, double maxDist)
         {
             this.distanceMap = distMap;
-            this.maxDistance = distMax;
+            this.maxDistance = maxDist;
         }
     }
 }

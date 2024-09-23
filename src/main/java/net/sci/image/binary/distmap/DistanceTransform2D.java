@@ -21,9 +21,7 @@
  */
 package net.sci.image.binary.distmap;
 
-import net.sci.algo.Algo;
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.Scalar;
 import net.sci.array.numeric.ScalarArray;
@@ -33,28 +31,30 @@ import net.sci.array.numeric.ScalarArray2D;
 /**
  * Interface for computing distance maps from binary 2D images.
  */
-public interface DistanceTransform2D extends Algo, ArrayOperator
+public interface DistanceTransform2D extends DistanceTransform
 {
-	/**
-	 * Computes the distance map from a 2D binary image. 
-	 * Distance is computed for each foreground (white) pixel, as the 
-	 * chamfer distance to the nearest background (black) pixel.
-	 * 
-	 * @param array a 2D boolean array with white pixels as foreground
-	 * @return a new 2D array containing: <ul>
-	 * <li> 0 for each background pixel </li>
-	 * <li> the distance to the nearest background pixel otherwise</li>
-	 * </ul>
-	 */
-	public ScalarArray2D<?> process2d(BinaryArray2D array);
-	
+    /**
+     * Computes the distance map from a 2D binary image. Distance is computed
+     * for each foreground (white) pixel, as the chamfer distance to the nearest
+     * background (black) pixel.
+     * 
+     * @param array
+     *            a 2D boolean array with white pixels as foreground
+     * @return a new 2D array containing:
+     *         <ul>
+     *         <li>0 for each background pixel</li>
+     *         <li>the distance to the nearest background pixel otherwise</li>
+     *         </ul>
+     */
+    public ScalarArray2D<?> process2d(BinaryArray2D array);
+    
     /**
      * Process the input scalar array and return the result in a new array.
      * 
      * The input array must be an instance of BinaryArray.
      * 
      * @param array
-     *            the input array, must be 2D and be instance of BinaryArray. 
+     *            the input array, must be 2D and be instance of BinaryArray.
      * @return the operator result as a new instance of ScalarArray.
      * @throws IllegalArgumentException
      *             if the input array is not an instance of BinaryArray
