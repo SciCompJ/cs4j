@@ -132,12 +132,15 @@ public abstract class Array3D<T> implements Array<T>
      * @param z
      *            the third coordinate of the position to check
      * @return true if the array contains the specified position.
+     * 
+     * @see #containsPosition(int[])
      */
     public boolean containsPosition(int x, int y, int z)
     {
-        if (x < 0 || y < 0) return false;
+        if (x < 0 || y < 0 || z < 0) return false;
         if (x >= this.size0) return false;
         if (y >= this.size1) return false;
+        if (z >= this.size2) return false;
         return true;
     }
 
@@ -314,6 +317,13 @@ public abstract class Array3D<T> implements Array<T>
 	public PositionIterator positionIterator()
     {
         return new PositionIterator3D();
+    }
+
+    @Override
+    public boolean containsPosition(int[] pos)
+    {
+        if (pos.length != 3) return false;
+        return containsPosition(pos[0], pos[1], pos[2]);
     }
 
 	/**

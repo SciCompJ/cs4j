@@ -125,6 +125,8 @@ public abstract class Array2D<T> implements Array<T>
      * @param y
      *            the second coordinate of the position to check
      * @return true if the array contains the specified position.
+     * 
+     * @see #containsPosition(int[])
      */
 	public boolean containsPosition(int x, int y)
 	{
@@ -237,13 +239,12 @@ public abstract class Array2D<T> implements Array<T>
 	@Override
 	public int size(int dim)
 	{
-		switch(dim)
-		{
-		case 0: return this.size0;
-		case 1: return this.size1;
-		default:
-			throw new IllegalArgumentException("Dimension argument must be 0 or 1");
-		}
+        return switch (dim)
+        {
+            case 0 -> this.size0;
+            case 1 -> this.size1;
+            default -> throw new IllegalArgumentException("Dimension argument must be 0 or 1");
+        };
 	}
 
 	@Override
@@ -253,6 +254,13 @@ public abstract class Array2D<T> implements Array<T>
     public PositionIterator positionIterator()
     {
         return new PositionIterator2D();
+    }
+    
+    @Override
+    public boolean containsPosition(int[] pos)
+    {
+        if (pos.length != 2) return false;
+        return containsPosition(pos[0], pos[1]);
     }
 
 	/**
