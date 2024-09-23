@@ -80,7 +80,7 @@ public class Array2DTest
      * Test method for {@link net.sci.array.Array2D#fill(java.util.function.BiFunction)}.
      */
     @Test
-    public final void testPopulate()
+    public final void testFill()
     {
         Array2D<String> array = Array2D.create(5, 4, "");
         String[] digits = {"A", "B", "C", "D", "E", "F"};  

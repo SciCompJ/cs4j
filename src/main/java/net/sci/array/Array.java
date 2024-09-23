@@ -312,6 +312,32 @@ public interface Array<T> extends Iterable<T>, Dimensional
         return new DefaultPositionIterator(this.size());
     }
     
+    /**
+     * Checks whether the specified position is inside the bounds of this array.
+     * The number of elements of the position must match that of the array, and
+     * each index must be comprised between 0 and the size of the array along
+     * the corresponding dimension.
+     * 
+     * @param pos
+     *            the position to check
+     * @return <code>true</code> if the position corresponds to an element
+     *         within the array, or <code>false</code> if the position is
+     *         outside array bounds
+     */
+    public default boolean containsPosition(int[] pos)
+    {
+        // check dimensionality
+        int nd = this.dimensionality();
+        if (pos.length != this.dimensionality()) return false;
+        
+        // check bounds
+        for (int d = 0; d < nd; d++)
+        {
+            if (pos[d] < 0 || pos[d] >= this.size(d)) return false;
+        }
+        return true;
+    }
+    
 	/**
      * Returns an iterator over the elements of the array, for implementing the
      * Iterable interface.

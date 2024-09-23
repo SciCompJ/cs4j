@@ -10,6 +10,7 @@ import java.util.function.Function;
 import org.junit.Test;
 
 import net.sci.array.impl.GenericArray;
+import net.sci.array.numeric.UInt8Array2D;
 
 
 /**
@@ -18,6 +19,27 @@ import net.sci.array.impl.GenericArray;
  */
 public class ArrayTest
 {
+    /**
+     * Test method for {@link net.sci.array.Array#containsPosition(int[])}.
+     */
+    @Test
+    public final void testContainsPosition()
+    {
+        UInt8Array2D array = UInt8Array2D.create(8, 6);
+        
+        assertTrue(array.containsPosition(new int[] {0, 0}));
+        assertTrue(array.containsPosition(new int[] {7, 0}));
+        assertTrue(array.containsPosition(new int[] {0, 5}));
+        assertTrue(array.containsPosition(new int[] {7, 5}));
+
+        assertFalse(array.containsPosition(new int[] {0, 0, 0}));
+        
+        assertFalse(array.containsPosition(new int[] {-1, 0}));
+        assertFalse(array.containsPosition(new int[] {8, 0}));
+        assertFalse(array.containsPosition(new int[] {0, -1}));
+        assertFalse(array.containsPosition(new int[] {0, 6}));
+    }
+    
     /**
      * Test method for {@link net.sci.array.Array#fill(java.util.function.Function)}.
      */
