@@ -32,34 +32,34 @@ import net.sci.array.numeric.ScalarArray2D;
  */
 public class NearestNeighborInterpolator2D implements ScalarFunction2D
 {
-	// ===================================================================
-	// class variables
-
+    // ===================================================================
+    // class variables
+    
     /**
      * The array containing values to interpolate.
      */
-	ScalarArray2D<?> array;
-	
-	/**
-	 * The state returned when sampling point is outside image bounds.
-	 */
-	double padValue = 0;
-	
-	
-	// ===================================================================
-	// constructors
-
+    ScalarArray2D<?> array;
+    
+    /**
+     * The state returned when sampling point is outside image bounds.
+     */
+    double padValue = 0;
+    
+    
+    // ===================================================================
+    // constructors
+    
     /**
      * Creates a new nearest-neighbor interpolator for a 2D scalar array.
      * 
      * @param array
      *            the array containing values to interpolate.
      */
-	public NearestNeighborInterpolator2D(ScalarArray2D<?> array)
-	{
-		this.array = array;
-	}
-	
+    public NearestNeighborInterpolator2D(ScalarArray2D<?> array)
+    {
+        this.array = array;
+    }
+    
     /**
      * Creates a new nearest-neighbor interpolator for a 2D scalar array.
      * 
@@ -69,16 +69,16 @@ public class NearestNeighborInterpolator2D implements ScalarFunction2D
      *            the value returned when interpolating outside of array bounds.
      *            Default value is 0.0.
      */
-	public NearestNeighborInterpolator2D(ScalarArray2D<?> array, double padValue)
-	{
-		this.array = array;
-		this.padValue = padValue;
-	}
-
-	
-	// ===================================================================
-	// implementation of the BivariateFunction interface
-
+    public NearestNeighborInterpolator2D(ScalarArray2D<?> array, double padValue)
+    {
+        this.array = array;
+        this.padValue = padValue;
+    }
+    
+    
+    // ===================================================================
+    // implementation of the ScalarFunction2D interface
+    
     /**
      * Evaluates value within the 2D scalar array. Returns pad value if position
      * is outside array bound.
@@ -89,23 +89,18 @@ public class NearestNeighborInterpolator2D implements ScalarFunction2D
      *            the y-coordinate of the position to evaluate
      * @return the value evaluated at the (x,y) position
      */
-	public double evaluate(double x, double y)
-	{
-		// compute indices
-		int i = (int) Math.round(x);
-		int j = (int) Math.round(y);
-		
-		// check if point is located within interpolation area
-		int[] dims = this.array.size();
-		boolean isInside = i >= 0 && j >= 0 && i < dims[0] && j < dims[1];
-		if (!isInside)
-		{
-			return this.padValue;
-		}
-		
-		// Returns the state of the closest image point
-		double val = this.array.getValue(i, j);
-
-		return val;
-	}
+    public double evaluate(double x, double y)
+    {
+        // compute indices
+        int i = (int) Math.round(x);
+        int j = (int) Math.round(y);
+        
+        // check if point is located within interpolation area
+        if (!array.containsPosition(i, j)) return this.padValue;
+        
+        // Returns the state of the closest image point
+        double val = this.array.getValue(i, j);
+        
+        return val;
+    }
 }

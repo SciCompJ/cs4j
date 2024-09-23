@@ -31,34 +31,34 @@ import net.sci.array.numeric.ScalarArray2D;
  */
 public class LinearInterpolator2D implements ScalarFunction2D
 {
-	// ===================================================================
-	// class variables
-
+    // ===================================================================
+    // class variables
+    
     /**
      * The array containing values to interpolate.
      */
-	ScalarArray2D<?> array;
-	
-	/**
-	 * The state returned when sampling point is outside image bounds.
-	 */
-	double padValue = 0;
-	
-	
-	// ===================================================================
-	// constructors
-
-	/**
+    ScalarArray2D<?> array;
+    
+    /**
+     * The state returned when sampling point is outside image bounds.
+     */
+    double padValue = 0;
+    
+    
+    // ===================================================================
+    // constructors
+    
+    /**
      * Creates a new linear interpolator for a 2D scalar array.
      * 
      * @param array
      *            the array containing values to interpolate.
      */
-	public LinearInterpolator2D(ScalarArray2D<?> array)
-	{
-		this.array = array;
-	}
-	
+    public LinearInterpolator2D(ScalarArray2D<?> array)
+    {
+        this.array = array;
+    }
+    
     /**
      * Creates a new linear interpolator for a 2D scalar array.
      * 
@@ -68,19 +68,19 @@ public class LinearInterpolator2D implements ScalarFunction2D
      *            the value returned when interpolating outside of array bounds.
      *            Default value is 0.0.
      */
-	public LinearInterpolator2D(ScalarArray2D<?> array, double padValue)
-	{
-		this.array = array;
-		this.padValue = padValue;
-	}
-	
-
-	// ===================================================================
-	// implementation of the BivariateFunction interface
-
+    public LinearInterpolator2D(ScalarArray2D<?> array, double padValue)
+    {
+        this.array = array;
+        this.padValue = padValue;
+    }
+    
+    
+    // ===================================================================
+    // implementation of the ScalarFunction2D interface
+    
     /**
-     * Evaluates value within a 2D array. Returns stored pad value if
-     * evaluation is outside image bounds.
+     * Evaluates value within a 2D array. Returns stored pad value if evaluation
+     * is outside image bounds.
      * 
      * @param x
      *            the x-coordinate of the position to evaluate
@@ -88,34 +88,34 @@ public class LinearInterpolator2D implements ScalarFunction2D
      *            the y-coordinate of the position to evaluate
      * @return the value evaluated at the (x,y) position
      */
-	public double evaluate(double x, double y)
-	{
-		// select points located inside interpolation area
-		// (smaller than image size)
-		int[] dims = this.array.size();
-		boolean isInside = x >= 0 && y >= 0 && x < (dims[0]-1) && y < (dims[1]-1);
-		if (!isInside)
-		{
-			return this.padValue;
-		}
-		
-		// compute indices
-		int i = (int) Math.floor(x);
-		int j = (int) Math.floor(y);
-		
-		// compute distances to lower-left corner of pixel
-		double dx = (x - i);
-		double dy = (y - j);
-		
-		// values of the 4 pixels around each current point
-		double val11 = this.array.getValue(i,   j) 	 * (1-dx) * (1-dy);
-		double val12 = this.array.getValue(i+1, j) 	 *    dx  * (1-dy);
-		double val21 = this.array.getValue(i,   j+1) * (1-dx) *    dy;
-		double val22 = this.array.getValue(i+1, j+1) *    dx  *    dy;
-		
-		// compute result values
-		double val = val11 + val12 + val21 + val22;
-
-		return val;
-	}
+    public double evaluate(double x, double y)
+    {
+        // select points located inside interpolation area
+        // (smaller than image size)
+        int[] dims = this.array.size();
+        boolean isInside = x >= 0 && y >= 0 && x < (dims[0] - 1) && y < (dims[1] - 1);
+        if (!isInside)
+        {
+            return this.padValue;
+        }
+        
+        // compute indices
+        int i = (int) Math.floor(x);
+        int j = (int) Math.floor(y);
+        
+        // compute distances to lower-left corner of pixel
+        double dx = (x - i);
+        double dy = (y - j);
+        
+        // values of the 4 pixels around each current point
+        double val11 = this.array.getValue(i, j) * (1 - dx) * (1 - dy);
+        double val12 = this.array.getValue(i + 1, j) * dx * (1 - dy);
+        double val21 = this.array.getValue(i, j + 1) * (1 - dx) * dy;
+        double val22 = this.array.getValue(i + 1, j + 1) * dx * dy;
+        
+        // compute result values
+        double val = val11 + val12 + val21 + val22;
+        
+        return val;
+    }
 }

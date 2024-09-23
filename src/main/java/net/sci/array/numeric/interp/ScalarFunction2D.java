@@ -11,14 +11,14 @@ package net.sci.array.numeric.interp;
  */
 public interface ScalarFunction2D
 {
-	/**
-	 * Evaluates a position given as a couple of coordinates.
-	 * 
-	 * @param x
-	 *            the x-coordinate of the position
-	 * @param y
-	 *            the y-coordinate of the position
-	 * @return the function evaluated at the given position
-	 */
-	public double evaluate(double x, double y);
+    /**
+     * Evaluates a position given as a couple of coordinates.
+     * 
+     * @param x
+     *            the x-coordinate of the position
+     * @param y
+     *            the y-coordinate of the position
+     * @return the function evaluated at the given position
+     */
+    public double evaluate(double x, double y);
 }

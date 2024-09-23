@@ -32,34 +32,33 @@ import net.sci.array.numeric.ScalarArray3D;
  */
 public class NearestNeighborInterpolator3D implements ScalarFunction3D
 {
-	// ===================================================================
-	// class variables
-
+    // ===================================================================
+    // class variables
+    
     /**
      * The array containing values to interpolate.
      */
-	ScalarArray3D<?> array;
-	
-	/**
-	 * The state returned when sampling point is outside image bounds.
-	 */
-	double padValue = 0;
-	
-	
-	// ===================================================================
-	// constructors
-
+    ScalarArray3D<?> array;
+    
+    /**
+     * The state returned when sampling point is outside image bounds.
+     */
+    double padValue = 0;
+    
+    // ===================================================================
+    // constructors
+    
     /**
      * Creates a new nearest-neighbor interpolator for a 3D scalar array.
      * 
      * @param array
      *            the array containing values to interpolate.
      */
-	public NearestNeighborInterpolator3D(ScalarArray3D<?> array)
-	{
-		this.array = array;
-	}
-	
+    public NearestNeighborInterpolator3D(ScalarArray3D<?> array)
+    {
+        this.array = array;
+    }
+    
     /**
      * Creates a new nearest-neighbor interpolator for a 3D scalar array.
      * 
@@ -69,16 +68,16 @@ public class NearestNeighborInterpolator3D implements ScalarFunction3D
      *            the value returned when interpolating outside of array bounds.
      *            Default value is 0.0.
      */
-	public NearestNeighborInterpolator3D(ScalarArray3D<?> array, double padValue)
-	{
-		this.array = array;
-		this.padValue = padValue;
-	}
-
-	
-	// ===================================================================
-	// implementation of the BivariateFunction interface
-
+    public NearestNeighborInterpolator3D(ScalarArray3D<?> array, double padValue)
+    {
+        this.array = array;
+        this.padValue = padValue;
+    }
+    
+    
+    // ===================================================================
+    // implementation of the ScalarFunction3D interface
+    
     /**
      * Evaluates value within the 3D scalar array. Returns pad value if position
      * is outside array bound.
@@ -91,21 +90,18 @@ public class NearestNeighborInterpolator3D implements ScalarFunction3D
      *            the z-coordinate of the position to evaluate
      * @return the value evaluated at the (x,y,z) position
      */
-	public double evaluate(double x, double y, double z)
-	{
-		// compute indices
-		int i = (int) Math.round(x);
+    public double evaluate(double x, double y, double z)
+    {
+        // compute indices
+        int i = (int) Math.round(x);
         int j = (int) Math.round(y);
         int k = (int) Math.round(z);
-		
-		// check if point is located within interpolation area
-		int[] dims = this.array.size();
-        if (i < 0 || i >= dims[0]) return this.padValue;
-        if (j < 0 || j >= dims[1]) return this.padValue;
-        if (k < 0 || k >= dims[2]) return this.padValue;
-		
-		// Returns the state of the closest image point
-		return this.array.getValue(i, j, k);
-	}
-	
+        
+        // check if point is located within interpolation area
+        if (!array.containsPosition(i, j, k)) return this.padValue;
+        
+        // Returns the state of the closest image point
+        return this.array.getValue(i, j, k);
+    }
+    
 }
