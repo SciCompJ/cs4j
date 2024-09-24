@@ -57,7 +57,6 @@ public interface ComponentsLabeling extends ArrayOperator, ImageArrayOperator
         BinaryArray array = BinaryArray.wrap(image.getData());
         IntArray<?> result = createEmptyLabelMap(array);
         int nLabels = processBinary(array, result);
-        System.out.println("number of labels: " + nLabels); 
         Image resultImage = new Image(result, ImageType.LABEL, image);
         resultImage.getDisplaySettings().setDisplayRange(new double[] {0, nLabels});
         return resultImage;

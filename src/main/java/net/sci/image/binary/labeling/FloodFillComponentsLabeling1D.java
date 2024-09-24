@@ -5,20 +5,13 @@ package net.sci.image.binary.labeling;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.Arrays;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray1D;
-import net.sci.array.numeric.Int32Array;
-import net.sci.array.numeric.Int32Array1D;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.IntArray1D;
 import net.sci.array.numeric.ScalarArray1D;
 import net.sci.array.numeric.UInt16Array;
-import net.sci.array.numeric.UInt16Array1D;
-import net.sci.array.numeric.UInt8Array;
-import net.sci.array.numeric.UInt8Array1D;
-import net.sci.image.Image;
-import net.sci.image.ImageArrayOperator;
-import net.sci.image.ImageType;
 
 /**
  * Computes the labels of the connected components in a binary image. The type
@@ -29,115 +22,97 @@ import net.sci.image.ImageType;
  * connected component is associated with a new label.
  *
  * @see net.sci.image.morphology.FloodFill
+ * @see FloodFillComponentsLabeling2D
  * 
  * @author dlegland
  *
  */
-public class FloodFillComponentsLabeling1D extends AlgoStub implements ImageArrayOperator
+public class FloodFillComponentsLabeling1D extends AlgoStub implements ComponentsLabeling
 {
     // ==============================================================
     // Class variables
-    
-	/**
-	 * The number of bits for representing the result label image. Can be 8, 16
-	 * (default), or 32.
-	 */
-	int bitDepth = 16;
-	
 
-	// ==============================================================
-    // Constructors
+    /**
+     * The factory of IntArray for creating new label maps.
+     */
+    IntArray.Factory<?> factory = UInt16Array.defaultFactory;
     
-	/**
-	 * Constructor with default output bitdepth equal to 16.  
-	 */
-	public FloodFillComponentsLabeling1D()
-	{
-	}
-	
-	/**
+
+    // ==============================================================
+    // Constructors
+
+    /**
+     * Constructor with default output bitdepth equal to 16.
+     */
+    public FloodFillComponentsLabeling1D()
+    {
+    }
+
+    /**
+     * Constructor specifying the factory for creating new empty label maps.
+     * 
+     * @param labelMapFactory
+     *            the factory used to create new label maps.
+     */
+    public FloodFillComponentsLabeling1D(IntArray.Factory<?> labelMapFactory)
+    {
+        this.factory = labelMapFactory;
+    }
+
+    /**
      * Constructor specifying the bitdepth of result label image
      * 
      * @param bitDepth
      *            the bit depth of the result (8, 16, or 32)
      */
-	public FloodFillComponentsLabeling1D(int bitDepth)
-	{
-		this.bitDepth = bitDepth;
-		checkBitDepth();
-	}
-	
-    /**
-     * Throw an exception if bit depth is different from 8, 16 or 32. 
-     */
-    private void checkBitDepth()
+    public FloodFillComponentsLabeling1D(int bitDepth)
     {
-        if (bitDepth != 8 && bitDepth != 16 && bitDepth != 32)
-        {
-            throw new IllegalArgumentException("Bit depth must be 8, 16 or 32, not " + bitDepth);
-        }
+        this.factory = ComponentsLabeling.chooseIntArrayFactory(bitDepth);
     }
-    
+
 
     // ==============================================================
     // Processing methods
-    
-	public IntArray1D<?> processBinary1d(BinaryArray1D image)
-	{
-		// get image size
-		int sizeX = image.size(0);
-		int maxLabel;
 
-		// Depending on bitDepth, create result image, and choose max label 
-		// number
-		IntArray1D<?> labels;
-		switch (this.bitDepth) {
-		case 8: 
-			labels = UInt8Array1D.create(sizeX);
-			maxLabel = 255;
-			break; 
-		case 16: 
-			labels = UInt16Array1D.create(sizeX);
-			maxLabel = 65535;
-			break;
-		case 32:
-			labels = Int32Array1D.create(sizeX);
-			maxLabel = 0x01 << 31 - 1;
-			break;
-		default:
-			throw new IllegalArgumentException(
-					"Bit Depth should be 8, 16 or 32.");
-		}
+    public IntArray1D<?> processBinary1d(BinaryArray1D array)
+    {
+        IntArray1D<?> labelMap = IntArray1D.wrap(this.factory.create(array.size()));
+        processBinary1d(array, labelMap);
+        return labelMap;
+    }
 
-		// the label counter
-		int nLabels = 0;
+    public int processBinary1d(BinaryArray1D array, IntArray1D<?> labelMap)
+    {
+        // get image size
+        int sizeX = array.size(0);
+        int maxLabel = labelMap.sampleElement().typeMax().getInt();
 
-		// iterate on image pixels to find new regions
-		for (int x = 0; x < sizeX; x++) 
-		{
-		    this.fireProgressChanged(this, x, sizeX);
-		    if (!image.getBoolean(x))
-		        continue;
-		    if (labels.getInt(x) > 0)
-		        continue;
+        // the label counter
+        int nLabels = 0;
 
-		    // a new label is found: check current label number  
-		    if (nLabels == maxLabel)
-		    {
-		        throw new RuntimeException("Max number of label reached (" + maxLabel + ")");
-		    }
+        // iterate on image pixels to find new regions
+        for (int x = 0; x < sizeX; x++)
+        {
+            this.fireProgressChanged(this, x, sizeX);
+            if (!array.getBoolean(x)) continue;
+            if (labelMap.getInt(x) > 0) continue;
 
-		    // increment label index, and propagate
-		    nLabels++;
-		    floodFillInt(image, x, labels, nLabels);
-		}
-		this.fireProgressChanged(this, 1, 1);
+            // a new label is found: check current label number
+            if (nLabels == maxLabel)
+            {
+                throw new RuntimeException("Max number of label reached (" + maxLabel + ")");
+            }
 
-//		labels.setMinAndMax(0, nLabels);
-		return labels;
-	}
-	
-	/**
+            // increment label index, and propagate
+            nLabels++;
+            floodFillInt(array, x, labelMap, nLabels);
+        }
+        this.fireProgressChanged(this, 1, 1);
+
+        return nLabels;
+    }
+
+    /**
      * Assigns in <code>labelImage</code> all the neighbor pixels of (x) that
      * have the same value in <code>image</code>, the specified new label value
      * (<code>value</code>), using the specified connectivity.
@@ -176,57 +151,48 @@ public class FloodFillComponentsLabeling1D extends AlgoStub implements ImageArra
             output.setInt(x, value);
         }
     }
-    
-	/**
-	 * Calls the "createEmptyOutputArray" methods from ArrayOperator interface
-	 * for creating the result array, and put the result in a new label image.
-	 * 
-	 * @param image
-	 *            the reference image
-	 * @return a new instance of Image that can be used for processing input
-	 *         image.
-	 */
-	public Image createEmptyOutputImage(Image image)
-	{
-		Array<?> array = image.getData();
-		Array<?> newArray = createEmptyOutputArray(array);
-		Image result = new Image(newArray, image);
-		result.setType(ImageType.LABEL);
-		return result;
-	}
 
-	/**
-	 * Creates a new array that can be used as output for processing the given
-	 * input array.
-	 * 
-	 * @param array
-	 *            the reference array
-	 * @return a new instance of Array that can be used for processing input
-	 *         array.
-	 */
-	public IntArray<?> createEmptyOutputArray(Array<?> array)
-	{
-		int[] dims = array.size();
-		switch (this.bitDepth) {
-		case 8: 
-			return UInt8Array.create(dims);
-		case 16: 
-			return UInt16Array.create(dims);
-		case 32:
-			return Int32Array.create(dims);
-		default:
-			throw new IllegalArgumentException(
-					"Bit Depth should be 8, 16 or 32.");
-		}
-	}
 
-	@Override
-	public Image process(Image image)
-	{
-	    Array<?> result = process(image.getData());
-	    return new Image(result, ImageType.LABEL, image);
-	}
-	
+    // ==============================================================
+    // Implementation of the ComponentsLabeling interface
+
+    @Override
+    public int processBinary(BinaryArray array, IntArray<?> labelMap)
+    {
+        if (array.dimensionality() != 1)
+        {
+            throw new IllegalArgumentException("Requires a BinaryArray of dimensionality 1");
+        }
+        if (labelMap.dimensionality() != 1)
+        {
+            throw new IllegalArgumentException("Requires a Label Map of dimensionality 1");
+        }
+        if (!Arrays.isSameSize(array, labelMap))
+        {
+            throw new IllegalArgumentException("Input and Output arrays must have same dimensions");
+        }
+        return processBinary1d(BinaryArray1D.wrap(array), IntArray1D.wrap(labelMap));
+    }
+
+    /**
+     * Creates a new array that can be used as output for processing the given
+     * input array.
+     * 
+     * @param array
+     *            the reference array
+     * @return a new instance of Array that can be used for processing input
+     *         array.
+     */
+    @Override
+    public IntArray1D<?> createEmptyLabelMap(Array<?> array)
+    {
+        return IntArray1D.wrap(this.factory.create(array.size()));
+    }
+
+
+    // ==============================================================
+    // Implementation of the ArrayOperator interface
+
     @Override
     public <T> Array<?> process(Array<T> array)
     {

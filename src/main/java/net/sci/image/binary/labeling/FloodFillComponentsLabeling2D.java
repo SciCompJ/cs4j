@@ -149,11 +149,11 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements Component
         return labels;
     }
 
-    public int processBinary2d(BinaryArray2D source, IntArray2D<?> labelMap)
+    public int processBinary2d(BinaryArray2D array, IntArray2D<?> labelMap)
     {
         // get image size
-        int sizeX = source.size(0);
-        int sizeY = source.size(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
         int maxLabel = labelMap.sampleElement().typeMax().getInt();
 
         // the label counter
@@ -165,7 +165,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements Component
             this.fireProgressChanged(this, y, sizeY);
             for (int x = 0; x < sizeX; x++)
             {
-                if (!source.getBoolean(x, y)) continue;
+                if (!array.getBoolean(x, y)) continue;
                 if (labelMap.getInt(x, y) > 0) continue;
 
                 // a new label is found: check current label number
@@ -176,7 +176,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements Component
 
                 // increment label index, and propagate
                 nLabels++;
-                FloodFill.floodFillInt(source, x, y, labelMap, nLabels, this.connectivity);
+                FloodFill.floodFillInt(array, x, y, labelMap, nLabels, this.connectivity);
             }
         }
         this.fireProgressChanged(this, 1, 1);
@@ -215,6 +215,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements Component
      * @return a new instance of Array that can be used for processing input
      *         array.
      */
+    @Override
     public IntArray2D<?> createEmptyLabelMap(Array<?> array)
     {
         return IntArray2D.wrap(this.factory.create(array.size()));

@@ -239,6 +239,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements Component
      * @return a new instance of Array that can be used for processing input
      *         array.
      */
+    @Override
     public IntArray3D<?> createEmptyLabelMap(Array<?> array)
     {
         return IntArray3D.wrap(this.factory.create(array.size()));
