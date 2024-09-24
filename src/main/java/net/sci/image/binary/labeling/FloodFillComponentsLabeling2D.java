@@ -5,17 +5,13 @@ package net.sci.image.binary.labeling;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.Arrays;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.array.numeric.Int32Array;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.UInt16Array;
-import net.sci.array.numeric.UInt8Array;
 import net.sci.image.Connectivity2D;
-import net.sci.image.Image;
-import net.sci.image.ImageArrayOperator;
-import net.sci.image.ImageType;
 import net.sci.image.morphology.FloodFill;
 
 /**
@@ -27,37 +23,41 @@ import net.sci.image.morphology.FloodFill;
  * connected component is associated with a new label.
  *
  * @see net.sci.image.morphology.FloodFill2D
+ * @see FloodFillComponentsLabeling3D
+ * 
  * @author dlegland
  *
  */
-public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArrayOperator
+public class FloodFillComponentsLabeling2D extends AlgoStub implements ComponentsLabeling
 {
     // ==============================================================
     // Class variables
-    
-	/** 
-	 * The connectivity of the components, either 4 (default) or 8.
-	 */
-	Connectivity2D connectivity = Connectivity2D.C4;
 
-	/**
-	 * The factory of IntArray for creating new label maps.
-	 */
-    IntArray.Factory<?> factory = UInt16Array.defaultFactory;
-	
-
-	// ==============================================================
-    // Constructors
-    
-	/**
-	 * Constructor with default connectivity 4 and default output bitdepth equal to 16.  
-	 */
-	public FloodFillComponentsLabeling2D()
-	{
-	}
-	
     /**
-     * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
+     * The connectivity of the components, either 4 (default) or 8.
+     */
+    Connectivity2D connectivity = Connectivity2D.C4;
+
+    /**
+     * The factory of IntArray for creating new label maps.
+     */
+    IntArray.Factory<?> factory = UInt16Array.defaultFactory;
+
+    
+    // ==============================================================
+    // Constructors
+
+    /**
+     * Constructor with default connectivity 4 and default output bitdepth equal
+     * to 16.
+     */
+    public FloodFillComponentsLabeling2D()
+    {
+    }
+
+    /**
+     * Constructor specifying the connectivity and using default output bitdepth
+     * equal to 16.
      * 
      * @param connectivity
      *            the connectivity of connected components (4 or 8)
@@ -94,10 +94,10 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
     public FloodFillComponentsLabeling2D(Connectivity2D connectivity, int bitDepth)
     {
         this(connectivity);
-        this.factory = chooseFactory(bitDepth);
+        this.factory = ComponentsLabeling.chooseIntArrayFactory(bitDepth);
     }
-    
-	/**
+
+    /**
      * Constructor specifying the connectivity and using default output bit
      * depth equal to 16.
      * 
@@ -105,151 +105,125 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
      *            the integer value for connectivity of connected components (4
      *            or 8)
      */
-	public FloodFillComponentsLabeling2D(int connectivity)
-	{
-		this(Connectivity2D.fromValue(connectivity));
-	}
-	
-	/**
-	 * Constructor specifying the connectivity and the bitdepth of result label
-	 * image
-	 * 
-	 * @param connectivity
-	 *            the integer value for connectivity of connected components (4 or 8)
-	 * @param bitDepth
-	 *            the bit depth of the result (8, 16, or 32)
-	 */
-	public FloodFillComponentsLabeling2D(int connectivity, int bitDepth)
-	{
-		this(connectivity);
-        this.factory = chooseFactory(bitDepth);
-	}
-	
-	/**
-	 * Throw an exception if connectivity is not 4 or 8 (necessary for FloodFill algorithms). 
-	 */
-	private void checkConnectivity()
-	{
-	    if (connectivity != Connectivity2D.C4 && connectivity != Connectivity2D.C8)
+    public FloodFillComponentsLabeling2D(int connectivity)
+    {
+        this(Connectivity2D.fromValue(connectivity));
+    }
+
+    /**
+     * Constructor specifying the connectivity and the bitdepth of result label
+     * image
+     * 
+     * @param connectivity
+     *            the integer value for connectivity of connected components (4
+     *            or 8)
+     * @param bitDepth
+     *            the bit depth of the result (8, 16, or 32)
+     */
+    public FloodFillComponentsLabeling2D(int connectivity, int bitDepth)
+    {
+        this(connectivity);
+        this.factory = ComponentsLabeling.chooseIntArrayFactory(bitDepth);
+    }
+
+    /**
+     * Throw an exception if connectivity is not 4 or 8 (necessary for FloodFill
+     * algorithms).
+     */
+    private void checkConnectivity()
+    {
+        if (connectivity != Connectivity2D.C4 && connectivity != Connectivity2D.C8)
         {
             throw new IllegalArgumentException("Connectivity must be either 4 or 8, not " + connectivity);
         }
 	}
   
-    private static final IntArray.Factory<?> chooseFactory(int bitDepth)
+
+    // ==============================================================
+    // Processing methods
+
+    public IntArray2D<?> processBinary2d(BinaryArray2D array)
     {
-        return switch (bitDepth)
+        IntArray2D<?> labels = createEmptyLabelMap(array);
+        processBinary2d(array, labels);
+        return labels;
+    }
+
+    public int processBinary2d(BinaryArray2D source, IntArray2D<?> labelMap)
+    {
+        // get image size
+        int sizeX = source.size(0);
+        int sizeY = source.size(1);
+        int maxLabel = labelMap.sampleElement().typeMax().getInt();
+
+        // the label counter
+        int nLabels = 0;
+
+        // iterate on image pixels to find new regions
+        for (int y = 0; y < sizeY; y++)
         {
-            case 8 -> UInt8Array.defaultFactory;
-            case 16 -> UInt16Array.defaultFactory;
-            case 32 -> Int32Array.defaultFactory;
-            default -> throw new IllegalArgumentException("Bit Depth should be 8, 16 or 32.");
-        };
+            this.fireProgressChanged(this, y, sizeY);
+            for (int x = 0; x < sizeX; x++)
+            {
+                if (!source.getBoolean(x, y)) continue;
+                if (labelMap.getInt(x, y) > 0) continue;
+
+                // a new label is found: check current label number
+                if (nLabels == maxLabel)
+                {
+                    throw new RuntimeException("Max number of label reached (" + maxLabel + ")");
+                }
+
+                // increment label index, and propagate
+                nLabels++;
+                FloodFill.floodFillInt(source, x, y, labelMap, nLabels, this.connectivity);
+            }
+        }
+        this.fireProgressChanged(this, 1, 1);
+
+        return nLabels;
     }
 
     
     // ==============================================================
-    // Processing methods
+    // Implementation of the ComponentsLabeling interface
+
+    @Override
+    public int processBinary(BinaryArray array, IntArray<?> labelMap)
+    {
+        if (array.dimensionality() != 2)
+        {
+            throw new IllegalArgumentException("Requires a BinaryArray of dimensionality 2");
+        }
+        if (labelMap.dimensionality() != 2)
+        {
+            throw new IllegalArgumentException("Requires a Label Map of dimensionality 2");
+        }
+        if (!Arrays.isSameSize(array, labelMap))
+        {
+            throw new IllegalArgumentException("Input and Output arrays must have same dimensions");
+        }
+        return processBinary2d(BinaryArray2D.wrap(array), IntArray2D.wrap(labelMap));
+    }
+
+    /**
+     * Creates a new array that can be used as output for processing the given
+     * input array.
+     * 
+     * @param array
+     *            the reference array
+     * @return a new instance of Array that can be used for processing input
+     *         array.
+     */
+    public IntArray2D<?> createEmptyLabelMap(Array<?> array)
+    {
+        return IntArray2D.wrap(this.factory.create(array.size()));
+    }
+
     
-	public IntArray2D<?> processBinary2d(BinaryArray2D array)
-	{
-		// Create result image
-		IntArray2D<?> labels = IntArray2D.wrap(factory.create(array.size()));
-		
-        processBinary2d(array, labels);
-		
-		return labels;
-	}
-	
-	public int processBinary2d(BinaryArray2D source, IntArray2D<?> target)
-	{
-		// get image size
-		int sizeX = source.size(0);
-		int sizeY = source.size(1);
-		int maxLabel = target.sampleElement().typeMax().getInt();
+    // ==============================================================
+    // Implementation of the ArrayOperator interface
 
-		// the label counter
-		int nLabels = 0;
-
-		// iterate on image pixels to find new regions
-		for (int y = 0; y < sizeY; y++) 
-		{
-			this.fireProgressChanged(this, y, sizeY);
-			for (int x = 0; x < sizeX; x++) 
-			{
-				if (!source.getBoolean(x,y))
-					continue;
-				if (target.getInt(x, y) > 0)
-					continue;
-
-				// a new label is found: check current label number  
-				if (nLabels == maxLabel)
-				{
-					throw new RuntimeException("Max number of label reached (" + maxLabel + ")");
-				}
-				
-				// increment label index, and propagate
-				nLabels++;
-				FloodFill.floodFillInt(source, x, y, target, nLabels, this.connectivity);
-			}
-		}
-		this.fireProgressChanged(this, 1, 1);
-		
-		return nLabels;
-	}
-
-	/**
-	 * Calls the "createEmptyOutputArray" methods from ArrayOperator interface
-	 * for creating the result array, and put the result in a new label image.
-	 * 
-	 * @param image
-	 *            the reference image
-	 * @return a new instance of Image that can be used for processing input
-	 *         image.
-	 */
-	public Image createEmptyOutputImage(Image image)
-	{
-//		Array<?> array = image.getData();
-//		Array<?> newArray = createEmptyOutputArray(array);
-//		Image result = new Image(newArray, image);
-//		result.setType(ImageType.LABEL);
-//		return result;
-        BinaryArray array = BinaryArray.wrap(image.getData());
-        IntArray<?> result = createEmptyOutputArray(array);
-        int nLabels = processBinary2d(BinaryArray2D.wrap(array), IntArray2D.wrap(result));
-        Image resultImage = new Image(result, ImageType.LABEL, image);
-        resultImage.getDisplaySettings().setDisplayRange(new double[] {0, nLabels});
-        return resultImage;
-	}
-
-	/**
-	 * Creates a new array that can be used as output for processing the given
-	 * input array.
-	 * 
-	 * @param array
-	 *            the reference array
-	 * @return a new instance of Array that can be used for processing input
-	 *         array.
-	 */
-	public IntArray<?> createEmptyOutputArray(Array<?> array)
-	{
-		return this.factory.create(array.size());
-	}
-
-	@Override
-	public Image process(Image image)
-	{
-//	    Array<?> result = process(image.getData());
-//	    return new Image(result, ImageType.LABEL, image);
-        BinaryArray array = BinaryArray.wrap(image.getData());
-        IntArray<?> result = createEmptyOutputArray(array);
-        int nLabels = processBinary2d(BinaryArray2D.wrap(array), IntArray2D.wrap(result));
-        System.out.println("nb labels: " + nLabels); 
-        Image resultImage = new Image(result, ImageType.LABEL, image);
-        resultImage.getDisplaySettings().setDisplayRange(new double[] {0, nLabels});
-        return resultImage;
-	}
-	
     @Override
     public <T> Array<?> process(Array<T> array)
     {
@@ -261,7 +235,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements ImageArra
         {
             throw new IllegalArgumentException("Requires a BinaryArray of dimensionality 2");
         }
-        IntArray<?> result = createEmptyOutputArray(array);
+        IntArray<?> result = createEmptyLabelMap(array);
         processBinary2d(BinaryArray2D.wrap((BinaryArray) array), IntArray2D.wrap(result));
         return result;
     }
