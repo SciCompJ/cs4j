@@ -84,20 +84,6 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements Component
     }
     
     /**
-     * Constructor specifying the connectivity and the bitdepth.  
-     * 
-     * @param connectivity
-     *            the connectivity of connected components (4 or 8)
-     * @param bitDepth
-     *            the bit depth of the result (8, 16, or 32)
-     */
-    public FloodFillComponentsLabeling2D(Connectivity2D connectivity, int bitDepth)
-    {
-        this(connectivity);
-        this.factory = ComponentsLabeling.chooseIntArrayFactory(bitDepth);
-    }
-
-    /**
      * Constructor specifying the connectivity and using default output bit
      * depth equal to 16.
      * 
@@ -108,22 +94,6 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements Component
     public FloodFillComponentsLabeling2D(int connectivity)
     {
         this(Connectivity2D.fromValue(connectivity));
-    }
-
-    /**
-     * Constructor specifying the connectivity and the bitdepth of result label
-     * image
-     * 
-     * @param connectivity
-     *            the integer value for connectivity of connected components (4
-     *            or 8)
-     * @param bitDepth
-     *            the bit depth of the result (8, 16, or 32)
-     */
-    public FloodFillComponentsLabeling2D(int connectivity, int bitDepth)
-    {
-        this(connectivity);
-        this.factory = ComponentsLabeling.chooseIntArrayFactory(bitDepth);
     }
 
     /**

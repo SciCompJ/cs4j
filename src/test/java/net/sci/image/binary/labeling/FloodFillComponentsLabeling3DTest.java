@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.IntArray3D;
+import net.sci.array.numeric.UInt8Array;
 import net.sci.image.Connectivity3D;
 
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class FloodFillComponentsLabeling3DTest
 
         // compute labels of the binary image
         FloodFillComponentsLabeling3D algo = new FloodFillComponentsLabeling3D(Connectivity3D.C6,
-                8);
+                UInt8Array.defaultFactory);
         IntArray3D<?> labels = algo.processBinary3d(array);
 
         // check labels and empty regions

@@ -88,21 +88,6 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements Component
         this.factory = labelMapFactory;
     }
     
-    /**
-     * Constructor specifying the connectivity and the bitdepth of result label
-     * image
-     * 
-     * @param connectivity
-     *            the connectivity of connected components (6 or 26)
-     * @param bitDepth
-     *            the bit depth of the result (8, 16, or 32)
-     */
-    public FloodFillComponentsLabeling3D(Connectivity3D connectivity, int bitDepth)
-    {
-        this(connectivity);
-        this.factory = ComponentsLabeling.chooseIntArrayFactory(bitDepth);
-    }
-    
 	/**
      * Constructor specifying the connectivity and using default output bitdepth equal to 16.  
      * 
@@ -118,21 +103,6 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements Component
     	{
     		throw new IllegalArgumentException("Connectivity must be either 6 or 26, not " + connectivity);
         }
-    }
-
-    /**
-     * Constructor specifying the connectivity and the bitdepth of result label
-     * image
-     * 
-     * @param connectivity
-     *            the connectivity of connected components (6 or 26)
-     * @param bitDepth
-     *            the bit depth of the result (8, 16, or 32)
-     */
-    public FloodFillComponentsLabeling3D(int connectivity, int bitDepth)
-    {
-        this(connectivity);
-        this.factory = ComponentsLabeling.chooseIntArrayFactory(bitDepth);
     }
     
 

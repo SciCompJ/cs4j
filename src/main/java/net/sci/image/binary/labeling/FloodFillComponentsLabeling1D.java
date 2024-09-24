@@ -59,17 +59,6 @@ public class FloodFillComponentsLabeling1D extends AlgoStub implements Component
         this.factory = labelMapFactory;
     }
 
-    /**
-     * Constructor specifying the bitdepth of result label image
-     * 
-     * @param bitDepth
-     *            the bit depth of the result (8, 16, or 32)
-     */
-    public FloodFillComponentsLabeling1D(int bitDepth)
-    {
-        this.factory = ComponentsLabeling.chooseIntArrayFactory(bitDepth);
-    }
-
 
     // ==============================================================
     // Processing methods

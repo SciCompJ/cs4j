@@ -5,6 +5,7 @@ package net.sci.image.morphology.watershed;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray1D;
+import net.sci.array.numeric.Int32Array;
 import net.sci.array.numeric.IntArray1D;
 import net.sci.array.numeric.ScalarArray1D;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling1D;
@@ -39,7 +40,7 @@ public class Watershed1D extends AlgoStub
         
         // compute labels of the minima
         this.fireStatusChanged(this, "Connected component labeling of minima");
-        FloodFillComponentsLabeling1D algo = new FloodFillComponentsLabeling1D(32);
+        FloodFillComponentsLabeling1D algo = new FloodFillComponentsLabeling1D(Int32Array.defaultFactory);
         IntArray1D<?> markers = algo.processBinary1d(minima);
         
         // compute marker-based watershed

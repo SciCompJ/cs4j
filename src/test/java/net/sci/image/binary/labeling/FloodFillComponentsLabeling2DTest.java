@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.UInt8Array;
 import net.sci.image.Connectivity2D;
 
 public class FloodFillComponentsLabeling2DTest
@@ -29,7 +30,7 @@ public class FloodFillComponentsLabeling2DTest
 
         // compute labels of the binary image
         FloodFillComponentsLabeling2D algo = new FloodFillComponentsLabeling2D(Connectivity2D.C4,
-                8);
+                UInt8Array.defaultFactory);
         IntArray2D<?> labels = algo.processBinary2d(array);
 
         // check labels and empty regions
@@ -51,7 +52,7 @@ public class FloodFillComponentsLabeling2DTest
         BinaryArray2D array = createImage_fiveSquares();
         
         // compute labels of the binary image
-        FloodFillComponentsLabeling2D algo = new FloodFillComponentsLabeling2D(Connectivity2D.C4, 8);
+        FloodFillComponentsLabeling2D algo = new FloodFillComponentsLabeling2D(Connectivity2D.C4, UInt8Array.defaultFactory);
         IntArray2D<?> labels = algo.processBinary2d(array);
         
         // check labels and empty regions
@@ -73,7 +74,7 @@ public class FloodFillComponentsLabeling2DTest
         BinaryArray2D array = createImage_fiveSquares();
         
         // compute labels of the binary image
-        FloodFillComponentsLabeling2D algo = new FloodFillComponentsLabeling2D(Connectivity2D.C8, 8);
+        FloodFillComponentsLabeling2D algo = new FloodFillComponentsLabeling2D(Connectivity2D.C8, UInt8Array.defaultFactory);
         IntArray2D<?> labels = algo.processBinary2d(array);
         
         // check labels and empty regions
