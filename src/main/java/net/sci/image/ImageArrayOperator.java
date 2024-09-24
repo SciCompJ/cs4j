@@ -17,11 +17,21 @@ import net.sci.array.ArrayOperator;
  */
 public interface ImageArrayOperator extends ArrayOperator, ImageOperator
 {
-	@Override
-	public default Image process(Image image)
-	{
-		Array<?> array = image.getData();
-		Array<?> result = process(array);
-		return new Image(result, image);
-	}
+    /**
+     * Default implementation of the interface, that applies the
+     * <code>process</code> method to the image data, and creates a new Image
+     * from the result, using the input image as parent.
+     * 
+     * @param image
+     *            the image to process
+     * @return a new Image instance containing the result of operator, and
+     *         initialized with the input image.
+     */
+    @Override
+    public default Image process(Image image)
+    {
+        Array<?> array = image.getData();
+        Array<?> result = process(array);
+        return new Image(result, image);
+    }
 }

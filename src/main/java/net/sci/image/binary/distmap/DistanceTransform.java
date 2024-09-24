@@ -7,11 +7,14 @@ import net.sci.algo.Algo;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.numeric.ScalarArray;
+import net.sci.image.Image;
+import net.sci.image.ImageArrayOperator;
+import net.sci.image.ImageType;
 
 /**
  * General interface for operators implementing distance transform.
  */
-public interface DistanceTransform extends ArrayOperator, Algo
+public interface DistanceTransform extends ArrayOperator, Algo, ImageArrayOperator
 {
     /**
      * Computes distance transform on the specified binary array, and returns
@@ -54,4 +57,29 @@ public interface DistanceTransform extends ArrayOperator, Algo
             this.maxDistance = maxDist;
         }
     }
+    
+    
+    // ==================================================
+    // Override the ImageArrayProcessor interface
+    
+    /**
+     * Overrides default behavior of ImageArrayOperator interface to return an
+     * instance of Image initialized with the type "DISTANCE", and a display
+     * range between 0 and the maximum distance within the map.
+     * 
+     * @param image
+     *            the image to process (image data must be binary)
+     * @return a new Image instance of type DISTANCE, containing the distance
+     *         map, and initialized with the input image.
+     */
+    @Override
+    public default Image process(Image image)
+    {
+        BinaryArray array = BinaryArray.wrap(image.getData());
+        Result res = computeResult(array);
+        Image resultImage = new Image(res.distanceMap, ImageType.DISTANCE, image);
+        resultImage.getDisplaySettings().setDisplayRange(new double[] {0, res.maxDistance});
+        return resultImage;
+    }
+    
 }

@@ -116,8 +116,10 @@ public class ChamferDistanceTransform2DUInt16 extends AlgoStub implements
         if (this.normalizeMap)
         {
             normalizeResult(distMap, array2d);
+            
+            // normalize distMax such that it is greater than actual max value
             double w0 = mask.getIntegerNormalizationWeight();
-            distMax = (int) (distMax / w0);
+            distMax = (int) Math.ceil(distMax / w0);
         }
         
         return new DistanceTransform.Result(distMap, distMax);

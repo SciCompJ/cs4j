@@ -38,7 +38,7 @@ import net.sci.image.binary.distmap.ChamferMask2D.Offset;
  * @see ChamferDistanceTransform3DInt
  * @see ChamferDistanceTransform2DFloat32
  */
-public class ChamferDistanceTransform2DInt extends AlgoStub implements DistanceTransform, ChamferDistanceTransform2D
+public class ChamferDistanceTransform2DInt extends AlgoStub implements ChamferDistanceTransform2D
 {
     // ==================================================
     // Class variables
@@ -103,6 +103,7 @@ public class ChamferDistanceTransform2DInt extends AlgoStub implements DistanceT
     }
     
     
+
     // ==================================================
     // Implementation of the DistanceTransform2D interface
     
@@ -145,8 +146,10 @@ public class ChamferDistanceTransform2DInt extends AlgoStub implements DistanceT
         if (this.normalizeMap)
         {
             normalizeResult(distMap, array2d);
+            
+            // normalize distMax such that it is greater than actual max value
             double w0 = mask.getIntegerNormalizationWeight();
-            distMax = (int) (distMax / w0);
+            distMax = (int) Math.ceil(distMax / w0);
         }
         
         return new DistanceTransform.Result(distMap, distMax);
