@@ -3,11 +3,14 @@
  */
 package net.sci.image.analyze.region2d;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.UInt8Array2D;
+import net.sci.image.label.LabelImages;
 
 /**
  * @author dlegland
@@ -54,6 +57,38 @@ public class BinaryConfigurationsHistogram2DTest
         assertEquals(1, histo[15]); // four pixels
     }
 
+    /**
+     * Test method for {@link net.sci.image.analyze.region2d.BinaryConfigurationsHistogram2D#process(net.sci.array.numeric.IntArray2D, int[])}.
+     */
+    @Test
+    public final void test_process_IntArray2D_allLabels()
+    {
+        IntArray2D<?> array = createFourRegionsLabelMap();
+        int[] labels = LabelImages.findAllLabels(array);
+        
+        int[][] histo = new BinaryConfigurationsHistogram2D().process(array, labels);
+        
+        // check size of histograms
+        assertEquals(histo.length, labels.length);
+        assertEquals(histo[0].length, 16);
+    }
+
+    /**
+     * Test method for {@link net.sci.image.analyze.region2d.BinaryConfigurationsHistogram2D#process(net.sci.array.numeric.IntArray2D, int[])}.
+     */
+    @Test
+    public final void test_process_IntArray2D_selectedLabels()
+    {
+        IntArray2D<?> array = createFourRegionsLabelMap();
+        int[] labels = new int[] {5, 8, 9};
+        
+        int[][] histo = new BinaryConfigurationsHistogram2D().process(array, labels);
+        
+        // check size of histograms
+        assertEquals(histo.length, labels.length);
+        assertEquals(histo[0].length, 16);
+    }
+    
     /**
      * Test method for {@link net.sci.image.analyze.region2d.BinaryConfigurationsHistogram2D#processInnerFrame(net.sci.array.binary.BinaryArray2D)}.
      */
@@ -105,4 +140,27 @@ public class BinaryConfigurationsHistogram2DTest
         }
     }
 
+
+    /**
+     * Creates a label map containing four regions.
+     * 
+     * @return a label map containing four regions.
+     */
+    private static final UInt8Array2D createFourRegionsLabelMap()
+    {
+        UInt8Array2D array = UInt8Array2D.create(8, 8);
+        array.setInt(1, 1, 3);
+        for (int i = 3; i < 7; i++)
+        {
+            array.setInt(i, 1, 5);
+            array.setInt(1, i, 8);
+        }
+        for (int i = 3; i < 7; i++)
+        {
+            for (int j = 3; j < 7; j++)
+            {
+            }
+        }
+        return array;
+    }
 }
