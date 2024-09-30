@@ -23,18 +23,18 @@ public class BinaryConfigurationsHistogram3D extends AlgoStub
 {
     // ==================================================
     // Static methods
-
-	/**
-	 * Applies look-up-table of values for each configuration, based on the
-	 * array of count for each binary configuration.
-	 * 
-	 * @param histogram
-	 *            the count of each type of 2-by-2-by-2 binary configurations,
-	 *            as a 256 array
-	 * @param lut
-	 *            the value to associate to each configuration
-	 * @return the sum of the products of counts by the associated value
-	 */
+    
+    /**
+     * Applies look-up-table of values for each configuration, based on the
+     * array of count for each binary configuration.
+     * 
+     * @param histogram
+     *            the count of each type of 2-by-2-by-2 binary configurations,
+     *            as a 256 array
+     * @param lut
+     *            the value to associate to each configuration
+     * @return the sum of the products of counts by the associated value
+     */
     public static final double applyLut(int[] histogram, double[] lut)
     {
         double sum = 0;
@@ -44,18 +44,18 @@ public class BinaryConfigurationsHistogram3D extends AlgoStub
         }
         return sum;
     }
-
-	/**
-	 * Applies look-up-table of values for each configuration of each region,
-	 * based on the array of count for each binary configuration.
-	 * 
-	 * @param histograms
-	 *            the count of each type of 2-by-2-by-2 binary configurations,
-	 *            as a 256 array
-	 * @param lut
-	 *            the value to associate to each configuration
-	 * @return the sum of the products of counts by the associated value
-	 */
+    
+    /**
+     * Applies look-up-table of values for each configuration of each region,
+     * based on the array of count for each binary configuration.
+     * 
+     * @param histograms
+     *            the count of each type of 2-by-2-by-2 binary configurations,
+     *            as a 256 array
+     * @param lut
+     *            the value to associate to each configuration
+     * @return the sum of the products of counts by the associated value
+     */
     public static final double[] applyLut(int[][] histograms, double[] lut)
     {
         double[] sums = new double[histograms.length];
@@ -65,6 +65,7 @@ public class BinaryConfigurationsHistogram3D extends AlgoStub
         }
         return sums;
     }
+    
 
     // ==================================================
     // Constructors
@@ -339,8 +340,9 @@ public class BinaryConfigurationsHistogram3D extends AlgoStub
                     localLabels.clear();
                     for (int label : configValues)
                     {
-                        if (label == 0)
-                            continue;
+                        // process only the requested labels
+                        if (!labelIndices.containsKey(label)) continue;
+                        
                         // keep only one instance of each label
                         if (!localLabels.contains(label))
                             localLabels.add(label);

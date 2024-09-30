@@ -159,6 +159,7 @@ public class BinaryConfigurationsHistogram2DTest
         {
             for (int j = 3; j < 7; j++)
             {
+                array.setInt(1, i, 9);
             }
         }
         return array;
