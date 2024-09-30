@@ -23,8 +23,8 @@ import net.sci.image.analyze.region3d.IntrinsicVolumes3DUtils;
  * spatial calibration of the image. For label images, the list of region labels
  * within images should be specified as an array of integers.
  *
- * @see net.sci.image.analyze.region2d.IntrinsicVolumesAnalyzer2D
- * @see net.sci.image.analyze.region3d.IntrinsicVolumesAnalyzer3D
+ * @see net.sci.image.analyze.region2d.IntrinsicVolumes2D
+ * @see net.sci.image.analyze.region3d.IntrinsicVolumes3D
  * 
  * @author dlegland
  */

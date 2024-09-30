@@ -18,7 +18,7 @@ import net.sci.table.Table;
  * @author dlegland
  *
  */
-public class IntrinsicVolumesAnalyzer2D extends RegionAnalyzer2D<IntrinsicVolumesAnalyzer2D.Result> implements AlgoListener
+public class IntrinsicVolumes2D extends RegionAnalyzer2D<IntrinsicVolumes2D.Result> implements AlgoListener
 {
     // ==================================================
     // Static methods
@@ -48,7 +48,7 @@ public class IntrinsicVolumesAnalyzer2D extends RegionAnalyzer2D<IntrinsicVolume
     /**
      * Default empty constructor.
      */
-    public IntrinsicVolumesAnalyzer2D()
+    public IntrinsicVolumes2D()
     {
     }
     
@@ -97,7 +97,7 @@ public class IntrinsicVolumesAnalyzer2D extends RegionAnalyzer2D<IntrinsicVolume
     // General methods
 
     @Override
-    public Table createTable(Map<Integer, IntrinsicVolumesAnalyzer2D.Result> results)
+    public Table createTable(Map<Integer, IntrinsicVolumes2D.Result> results)
     {
         // Initialize a new result table
         Table table = Table.create(results.size(), 3);

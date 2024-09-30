@@ -5,13 +5,14 @@ package net.sci.image.analyze.region2d;
 
 import net.sci.image.Calibration;
 import net.sci.image.Connectivity2D;
-import net.sci.image.analyze.region2d.IntrinsicVolumesAnalyzer2D.Result;
+import net.sci.image.analyze.region2d.IntrinsicVolumes2D.Result;
 
 /**
- * Utility functions for classes that compute 2D intrinsic volumes measures.
+ * Utility functions for classes that compute 2D intrinsic volumes measures:
+ * area, perimeter, Euler number.
  * 
- * @see inra.ijpb.measure.IntrinsicVolumes2D
- * 
+ * @see IntrinsicVolumes2D
+ *  
  * @author dlegland
  */
 public class IntrinsicVolumes2DUtils

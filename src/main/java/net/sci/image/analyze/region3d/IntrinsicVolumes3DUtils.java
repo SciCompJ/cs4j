@@ -8,9 +8,10 @@ import net.sci.geom.geom3d.Vector3D;
 import net.sci.image.Calibration;
 
 /**
- * Utility functions for classes that compute 3D intrinsic volumes measures.
+ * Utility functions for classes that compute 3D intrinsic volumes measures:
+ * volume, surface area, mean breadth, and Euler number.
  * 
- * @see IntrinsicVolumesAnalyzer3D
+ * @see IntrinsicVolumes3D
  * 
  * @author dlegland
  *

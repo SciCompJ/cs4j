@@ -20,12 +20,12 @@ import net.sci.table.Table;
  * facilitate usage when no algorithm monitoring is necessary.
  * 
  * @see inra.ijpb.measure.IntrinsicVolumes3D
- * @see inra.ijpb.measure.region2d.IntrinsicVolumesAnalyzer2D
+ * @see IntrinsicVolumes2D.ijpb.measure.region2d.IntrinsicVolumesAnalyzer2D
  * 
  * @author dlegland
  *
  */
-public class IntrinsicVolumesAnalyzer3D extends RegionAnalyzer3D<IntrinsicVolumesAnalyzer3D.Result>
+public class IntrinsicVolumes3D extends RegionAnalyzer3D<IntrinsicVolumes3D.Result>
         implements AlgoListener
 {
     // ==================================================
@@ -58,7 +58,7 @@ public class IntrinsicVolumesAnalyzer3D extends RegionAnalyzer3D<IntrinsicVolume
     /**
      * Default empty constructor.
      */
-    public IntrinsicVolumesAnalyzer3D()
+    public IntrinsicVolumes3D()
     {
     }
     
