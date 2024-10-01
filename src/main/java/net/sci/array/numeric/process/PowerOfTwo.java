@@ -12,7 +12,7 @@ import net.sci.array.numeric.ScalarArray;
  * Computes the square of each element of an array of scalars.
  * 
  * @author dlegland
- *
+ * @see ApplyFunction
  */
 public class PowerOfTwo extends AlgoStub implements ScalarArrayOperator
 {

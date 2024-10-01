@@ -12,18 +12,35 @@ import net.sci.array.numeric.ScalarArray;
  * Adds a scalar value to an array containing Scalar value.
  * 
  * @author dlegland
- *
+ * @see ApplyFunction
  */
 public class AddValue extends AlgoStub implements ScalarArrayOperator
 {
     /** the value to add to each element of the original array.*/
     double value;
     
+    /**
+     * Creates a new operator that will add a constant value to each element of
+     * an array.
+     * 
+     * @param value
+     *            the value to add
+     */
     public AddValue(double value)
     {
         this.value = value;
     }
     
+    /**
+     * Creates a view that applies the addition to the specified array.
+     * 
+     * @param <S>
+     *            the type of data within the input array. View array has same
+     *            type.
+     * @param array
+     *            the array to process
+     * @return a view that applies the addition to the specified array.
+     */
     public <S extends Scalar<S>> ScalarArray<?> createView(ScalarArray<S> array)
     {
         return new View<S>(array);

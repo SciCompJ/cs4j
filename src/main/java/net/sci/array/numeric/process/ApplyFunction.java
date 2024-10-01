@@ -13,6 +13,17 @@ import net.sci.array.numeric.ScalarArray;
 
 /**
  * Applies a scalar function to each element of a scalar array.
+ * {@snippet lang="java" :
+ * // create an initial array initialize with distance to center 
+ * UInt8Array2D array = UInt8Array2D.create(20, 20);
+ * array.fillInts((x,y)-> (int) (10 * Math.hypot(x - 10.0, y - 10.0)));
+ * // create the operator 
+ * ApplyFunction op = new ApplyFunction(v -> v > 100 ? 0 : Math.sqrt(10000 - v*v));
+ * // apply function to array and get a new array
+ * UInt8Array2D array = UInt8Array2D.wrap(UInt8Array.wrap(op.processScalar(array)));
+ * // alternatively, can create a view to avoid memory allocation
+ * UInt8Array2D view = UInt8Array2D.wrap(UInt8Array.wrap(op.createView(array)));
+ * }
  * 
  * @see net.sci.array.numeric.ScalarArray#apply(java.util.function.UnaryOperator)
  */
@@ -20,11 +31,28 @@ public class ApplyFunction extends AlgoStub implements ArrayOperator, ScalarArra
 {
     Function<Double, Double> function;
     
+    /**
+     * Creates a new operator based on a function that map double values to
+     * double values.
+     * 
+     * @param function
+     *            the function to apply to array data
+     */
     public ApplyFunction(Function<Double, Double> function)
     {
         this.function = function;
     }
  
+    /**
+     * Creates a view that applies the inner function to the specified array.
+     * 
+     * @param <S>
+     *            the type of data within the input array. View array has same
+     *            type.
+     * @param array
+     *            the array to process
+     * @return a view that applies the inner function to the specified array.
+     */
     public <S extends Scalar<S>> ScalarArray<?> createView(ScalarArray<S> array)
     {
         return new ScalarView<S>(array);
