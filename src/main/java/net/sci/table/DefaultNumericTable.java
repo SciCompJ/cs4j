@@ -132,7 +132,7 @@ public class DefaultNumericTable implements NumericTable
      * 
      * @return an array of integers containing the dimensions of this table
      */
-    public int[] getSize()
+    public int[] size()
     {
         return new int[]{this.nRows, this.nCols};
     }

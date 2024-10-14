@@ -108,13 +108,13 @@ public interface Table
     public static Table selectColumns(Table table, int[] columnIndices)
     {
         // get column counts
-    	int nc = table.columnCount();
-    	int nc2 = columnIndices.length;
-    	
-    	// create array of columns
-    	Column[] cols = new Column[nc2];
-    	for (int ic = 0; ic < nc2; ic++)
-    	{
+        int nc = table.columnCount();
+        int nc2 = columnIndices.length;
+
+        // create array of columns
+        Column[] cols = new Column[nc2];
+        for (int ic = 0; ic < nc2; ic++)
+        {
             // check validity of column index
             int index = columnIndices[ic];
             if (index < 0)
@@ -127,20 +127,20 @@ public interface Table
             }
             
             // keep reference to column
-    	    cols[ic] = table.column(index);
-    	}
-    	
-    	// create table from column array
-        Table result = Table.create(cols);
-        
-        // setup row names
-        String[] rowNames = table.getRowNames(); 
-		if (rowNames != null)
-		{
-		    result.setRowNames(rowNames);
-		}
+            cols[ic] = table.column(index);
+        }
 
-		return result;
+        // create table from column array
+        Table result = Table.create(cols);
+
+        // setup row names
+        String[] rowNames = table.getRowNames();
+        if (rowNames != null)
+        {
+            result.setRowNames(rowNames);
+        }
+
+        return result;
     }
     
     
@@ -153,7 +153,7 @@ public interface Table
      * 
      * @return an array of integers containing the dimensions of this table
      */
-    public int[] getSize();
+    public int[] size();
     
     
     /**
@@ -416,6 +416,11 @@ public interface Table
      */
     public interface Columns<C extends Column> extends Iterable<C>
     {
+        /**
+         * Returns the number of columns within the table.
+         * 
+         * @return the number of columns.
+         */
         public int size();
         
 //        /**

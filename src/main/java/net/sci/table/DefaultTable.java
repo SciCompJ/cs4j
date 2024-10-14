@@ -29,94 +29,91 @@ public class DefaultTable implements Table
     // =============================================================
     // Class variables
 
-	/**
-	 * Inner data array, first index corresponds to columns.
-	 */
-	double[][] data;
+    /**
+     * Inner data array, first index corresponds to columns.
+     */
+    double[][] data;
 
-	/**
-	 * Number of columns
-	 */
-	int nCols;
-	
+    /**
+     * Number of columns
+     */
+    int nCols;
+
     /**
      * Number of Rows
      */
-	int nRows;
+    int nRows;
 
-	String name = "";
-	String[] colNames = null;
-	String[] rowNames = null;
+    String name = "";
+    String[] colNames = null;
+    String[] rowNames = null;
 
-	/**
-	 * The list of levels for each column, or null if a column is numeric.
-	 */
-	ArrayList<String[]> levels = null;
+    /**
+     * The list of levels for each column, or null if a column is numeric.
+     */
+    ArrayList<String[]> levels = null;
 
-	
-	// =============================================================
+    // =============================================================
     // Constructors
 
-	/**
-	 * Creates a new data table with the given number of rows and columns.
-	 * 
-	 * @param nRows
-	 *            the number of rows
-	 * @param nCols
-	 *            the number of columns
-	 */
-	public DefaultTable(int nRows, int nCols)
-	{
-		this(new double[nCols][nRows]);
+    /**
+     * Creates a new data table with the given number of rows and columns.
+     * 
+     * @param nRows
+     *            the number of rows
+     * @param nCols
+     *            the number of columns
+     */
+    public DefaultTable(int nRows, int nCols)
+    {
+        this(new double[nCols][nRows]);
         this.nCols = nCols;
         this.nRows = nRows;
-	}
+    }
 
-	public DefaultTable(double[][] data, String[] colNames, String[] rowNames)
-	{
-		this(data);
+    public DefaultTable(double[][] data, String[] colNames, String[] rowNames)
+    {
+        this(data);
 
-		if (colNames.length != this.nCols)
-			throw new IllegalArgumentException(
-					"Number of column names should match number of data columns");
-		this.colNames = colNames;
+        if (colNames.length != this.nCols) throw new IllegalArgumentException(
+                "Number of column names should match number of data columns");
+        this.colNames = colNames;
 
-		if (rowNames.length != this.nRows)
-			throw new IllegalArgumentException(
-					"Number of row names should match number of data rows");
-		this.rowNames = rowNames;
+        if (rowNames.length != this.nRows) throw new IllegalArgumentException(
+                "Number of row names should match number of data rows");
+        this.rowNames = rowNames;
 
-	}
+    }
 
-	/**
+    /**
      * Initialize the data, the number of columns and rows.
      * 
      * @param data
      *            the initial data of the table
      */
-	public DefaultTable(double[][] data)
-	{
-		this.data = data;
+    public DefaultTable(double[][] data)
+    {
+        this.data = data;
 
-		this.nCols = data.length;
-		if (this.nCols > 0)
-		{
-			this.nRows = data[0].length;
-		} 
-		else
-		{
-			this.nRows = 0;
-		}
-		
-		// initialize levels
-		this.levels = new ArrayList<>(this.nCols);
-		for (int c = 0; c < nCols; c++)
-		{
-		    this.levels.add(null);
-		}
-	}
+        this.nCols = data.length;
+        if (this.nCols > 0)
+        {
+            this.nRows = data[0].length;
+        }
+        else
+        {
+            this.nRows = 0;
+        }
+
+        // initialize levels
+        this.levels = new ArrayList<>(this.nCols);
+        for (int c = 0; c < nCols; c++)
+        {
+            this.levels.add(null);
+        }
+    }
     
-    
+
     // =============================================================
     // Management of factor levels
 	
@@ -181,7 +178,7 @@ public class DefaultTable implements Table
      * 
      * @return an array of integers containing the dimensions of this table
      */
-    public int[] getSize()
+    public int[] size()
     {
         return new int[]{this.nRows, this.nCols};
     }
@@ -801,17 +798,17 @@ public class DefaultTable implements Table
         {
             return nCols;
         }
-
+        
         @Override
         public Iterator<Column> iterator()
         {
             return new ColumnIterator();
         }
-	}
-	
-	public class ColumnIterator implements Iterator<Column>
-	{
-	    int index = 0;
+    }
+
+    public class ColumnIterator implements Iterator<Column>
+    {
+        int index = 0;
 
         @Override
         public boolean hasNext()
