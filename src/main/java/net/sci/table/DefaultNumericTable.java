@@ -557,9 +557,21 @@ public class DefaultNumericTable implements NumericTable
         }
 
         @Override
+        public Double get(int row)
+        {
+            return data[colIndex][row];
+        }
+
+        @Override
         public double getValue(int row)
         {
             return data[colIndex][row];
+        }
+
+        @Override
+        public void setValue(int row, double value)
+        {
+            data[colIndex][row] = value;
         }
 
         @Override

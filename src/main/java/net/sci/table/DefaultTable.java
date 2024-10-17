@@ -737,6 +737,13 @@ public class DefaultTable implements Table
         }
 
         @Override
+        public String get(int row)
+        {
+            int index = (int) data[colIndex][row];
+            return this.colLevels[index];
+        }
+        
+        @Override
         public String getName(int row)
         {
             int index = (int) data[colIndex][row];
@@ -757,6 +764,18 @@ public class DefaultTable implements Table
             super(index);
         }
         
+        @Override
+        public Double get(int row)
+        {
+            return data[colIndex][row];
+        }
+        
+        @Override
+        public void setValue(int row, double value)
+        {
+            data[colIndex][row] = value;
+        }
+
         @Override
         public void copyValues(double[] values, int index)
         {

@@ -5,6 +5,7 @@ package net.sci.table;
 
 /**
  * A column within a table, containing values and identified by a name.
+ * Column values may be of any type: numerical values (double), String, date...
  * 
  * A column do not carry any information about row names.
  * 
@@ -37,6 +38,15 @@ public interface Column
      * @param row
      *            the row index within this column
      * @return the value at specified row index
+     */
+    public Object get(int row);
+    
+    /**
+     * Returns the numeric value at the i-th row.
+     * 
+     * @param row
+     *            the row index within this column
+     * @return the numeric value at specified row index
      */
     public double getValue(int row);
     
