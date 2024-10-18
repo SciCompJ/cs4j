@@ -59,10 +59,12 @@ public interface NumericTable extends Table
         return res;
     }
     
+    
     // =============================================================
     // Management of data
     
     public void setColumnValues(int colIndex, double[] values);
+    
     
     // =============================================================
     // Management of columns
