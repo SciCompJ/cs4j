@@ -3,8 +3,15 @@
  */
 package net.sci.table;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
  * Implements the Table interface based on a collection of columns, allowing
@@ -39,6 +46,61 @@ public class ColumnsTable implements Table
         {
             this.columns.add(col);
         }
+    }
+
+
+    // =============================================================
+    // Implementation of the Table interface
+
+    /**
+     * Opens a new JFrame and shows this table inside
+     * 
+     * @param the instance of the widget used for display 
+     */
+    public JFrame show()
+    {
+        int nRows = rowCount();
+        int nCols = columnCount();
+        
+        // Need to cast to object array...
+        Object[][] dats = new Object[nRows][nCols];
+        String[] colNames = new String[nCols];
+        for (int c = 0; c < nCols; c++)
+        {
+            Column col = columns.get(c);
+            colNames[c] = col.getName();
+            for (int r = 0; r < nRows; r++)
+            {
+                dats[r][c] = col.get(r);
+            }
+        }
+
+        // Create JTable instance
+        JTable table = new JTable(dats, colNames);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        // Create the frame containing the table
+        JFrame frame = new JFrame("Data Table");
+        frame.setPreferredSize(new Dimension(400, 300));
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        // Setup layout
+        Container panel = frame.getContentPane();
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        JTable rowTable = new RowNumberTable(table);
+        scrollPane.setRowHeaderView(rowTable);
+        scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,
+                rowTable.getTableHeader());
+
+        // panel.add(table.getTableHeader(), BorderLayout.NORTH);
+        panel.add(table.getTableHeader(), BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        frame.pack();
+
+        // show !
+        frame.setVisible(true);
+        return frame;
     }
 
     // =============================================================
@@ -276,5 +338,30 @@ public class ColumnsTable implements Table
         {
             return column(index++);
         }    
+    }
+    
+    /**
+     * Small demonstration of the usage of the DefaultNumericTable class.
+     * 
+     * @param args optional arguments, not used
+     */
+    public final static void main(String[] args)
+    {
+        Column[] columns = new Column[] { 
+                NumericColumn.create("Length", new double[15]), 
+                NumericColumn.create("Area", new double[15]), 
+                NumericColumn.create("Diam.", new double[15]), 
+                NumericColumn.create("Number", new double[15]), 
+                NumericColumn.create("Density", new double[15]), 
+        };
+        ColumnsTable table = new ColumnsTable(columns);
+        
+        table.printInfo(System.out);
+        
+        System.out.println(table);
+//      tbl.print();
+        
+//      JFrame frame = table.show();
+//      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
