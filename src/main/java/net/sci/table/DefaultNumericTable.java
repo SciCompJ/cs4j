@@ -610,6 +610,14 @@ public class DefaultNumericTable implements NumericTable
         }
 
         @Override
+        public Column duplicate()
+        {
+            double[] values = new double[nRows];
+            System.arraycopy(data[colIndex], 0, values, 0, nRows);
+            return NumericColumn.create(name, values);
+        }
+
+        @Override
         public Iterator<Double> iterator()
         {
             return new RowIterator();

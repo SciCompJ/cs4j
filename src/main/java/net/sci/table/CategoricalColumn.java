@@ -9,6 +9,11 @@ package net.sci.table;
  */
 public interface CategoricalColumn extends Column
 {
+    public static CategoricalColumn create(String name, int[] indices, String[] levels)
+    {
+        return new DefaultCategoricalColumn(name, indices, levels);
+    }
+    
     /**
      * Returns the category name for the specified row index.
      * 

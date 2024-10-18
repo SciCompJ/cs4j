@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import javax.swing.JFrame;
@@ -755,6 +756,18 @@ public class DefaultTable implements Table
         {
             return DefaultTable.this.getLevels(colIndex);
         }
+        
+        @Override
+        public Column duplicate()
+        {
+            int[] indices = new int[nRows];
+            for (int r = 0; r < nRows; r++)
+            {
+                indices[r] = (int) data[colIndex][r];
+            }
+            String[] levels = Arrays.copyOf(colLevels, colLevels.length);
+            return CategoricalColumn.create(name, indices, levels);
+        }
 	}
 
 	class NumericColumnView extends ColumnView implements NumericColumn
@@ -780,6 +793,14 @@ public class DefaultTable implements Table
         public void copyValues(double[] values, int index)
         {
             System.arraycopy(data[colIndex], 0, values, index, nRows);
+        }
+
+        @Override
+        public Column duplicate()
+        {
+            double[] values = new double[nRows];
+            System.arraycopy(data[colIndex], 0, values, 0, nRows);
+            return NumericColumn.create(name, values);
         }
 
         @Override

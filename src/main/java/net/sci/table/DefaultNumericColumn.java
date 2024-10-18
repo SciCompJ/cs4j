@@ -73,4 +73,12 @@ public class DefaultNumericColumn implements NumericColumn
     {
         System.arraycopy(this.data, 0, values, index, this.data.length);
     }
+
+    @Override
+    public Column duplicate()
+    {
+        double[] values = new double[this.data.length];
+        System.arraycopy(this.data, 0, values, 0, this.data.length);
+        return new DefaultNumericColumn(this.name, values);
+    }
 }

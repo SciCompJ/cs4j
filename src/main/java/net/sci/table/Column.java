@@ -51,7 +51,16 @@ public interface Column
     public double getValue(int row);
     
     /**
+     * Returns the set of values within this column as an array of double.
+     * 
      * @return the set of values within this column as an array of double.
      */
     public double[] getValues();
+    
+    /**
+     * Creates a new writable version of this column.
+     * 
+     * @return a deep copy of this column.
+     */
+    public Column duplicate();
 }
