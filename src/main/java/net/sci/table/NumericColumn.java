@@ -41,6 +41,13 @@ public interface NumericColumn extends Column, Iterable<Double>
     public double getValue(int row);
     
     /**
+     * Returns the set of values within this column as an array of double.
+     * 
+     * @return the set of values within this column as an array of double.
+     */
+    public double[] getValues();
+    
+    /**
      * Changes the numerical value of the specified row.
      * 
      * @param row

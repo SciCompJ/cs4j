@@ -315,6 +315,12 @@ public class ColumnsTable implements Table
         {
             return columnCount();
         }
+
+        @Override
+        public Column get(int index)
+        {
+            return columns.get(index);
+        }
         
         @Override
         public Iterator<Column> iterator()

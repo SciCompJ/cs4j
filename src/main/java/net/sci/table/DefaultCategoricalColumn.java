@@ -71,7 +71,7 @@ public class DefaultCategoricalColumn implements CategoricalColumn
     }
 
     @Override
-    public String[] getLevels()
+    public String[] levels()
     {
         return this.levels;
     }

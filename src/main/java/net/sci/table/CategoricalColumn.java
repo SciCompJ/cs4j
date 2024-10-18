@@ -4,6 +4,9 @@
 package net.sci.table;
 
 /**
+ * A Table column containing categorical data. Categorical data are selected
+ * from a finite number of levels.
+ * 
  * @author dlegland
  *
  */
@@ -23,5 +26,12 @@ public interface CategoricalColumn extends Column
      */
     public String getName(int row);
     
-    public String[] getLevels();
+    /**
+     * Returns the different levels that can be represented within this
+     * categorical column.
+     * 
+     * @return the different levels that can be represented within this
+     *         categorical column.
+     */
+    public String[] levels();
 }

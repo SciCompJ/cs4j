@@ -654,6 +654,12 @@ public class DefaultNumericTable implements NumericTable
         }
 
         @Override
+        public NumericColumn get(int index)
+        {
+            return new ColumnView(index);
+        }
+
+        @Override
         public Iterator<NumericColumn> iterator()
         {
             return new ColumnIterator();

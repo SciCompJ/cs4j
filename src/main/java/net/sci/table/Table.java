@@ -365,7 +365,7 @@ public interface Table
             else
             {
                 stream.print("categorical");
-                int nLevels = ((CategoricalColumn) col).getLevels().length;
+                int nLevels = ((CategoricalColumn) col).levels().length;
                 stream.print("  with " + nLevels + " levels");
             }
             stream.println();
@@ -422,6 +422,15 @@ public interface Table
          * @return the number of columns.
          */
         public int size();
+        
+        /**
+         * Retrieves the column at the specified index.
+         * 
+         * @param index
+         *            the index of the column.
+         * @return the column at the specified index.
+         */
+        public C get(int index);
         
 //        /**
 //         * Returns a subset of the columns as specified by the index list.
