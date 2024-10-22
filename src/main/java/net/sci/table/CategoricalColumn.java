@@ -34,4 +34,15 @@ public interface CategoricalColumn extends Column
      *         categorical column.
      */
     public String[] levels();
+
+    @Override
+    public default String contentSummary()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("categorical");
+        int nLevels = levels().length;
+        sb.append(" with " + nLevels + " levels");
+
+        return sb.toString();
+    }
 }

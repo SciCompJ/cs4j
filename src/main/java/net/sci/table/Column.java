@@ -63,4 +63,11 @@ public interface Column
      * @return a deep copy of this column.
      */
     public Column duplicate();
+    
+    /**
+     * Returns a short summary of the content of the table.
+     * 
+     * @return a short summary of the content of the table.
+     */
+    public String contentSummary();
 }

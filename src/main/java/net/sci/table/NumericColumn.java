@@ -3,6 +3,7 @@
  */
 package net.sci.table;
 
+import java.util.Locale;
 import java.util.function.BiFunction;
 
 /**
@@ -32,22 +33,6 @@ public interface NumericColumn extends Column, Iterable<Double>
     }
     
     /**
-     * Returns the numerical value of the specified row.
-     * 
-     * @param row
-     *            the row index
-     * @return the value at specified row index
-     */
-    public double getValue(int row);
-    
-    /**
-     * Returns the set of values within this column as an array of double.
-     * 
-     * @return the set of values within this column as an array of double.
-     */
-    public double[] getValues();
-    
-    /**
      * Changes the numerical value of the specified row.
      * 
      * @param row
@@ -67,4 +52,37 @@ public interface NumericColumn extends Column, Iterable<Double>
      *            the starting index within the target array
      */
     public void copyValues(double[] values, int index);
+    
+    /**
+     * Returns the numerical value of the specified row.
+     * 
+     * @param row
+     *            the row index
+     * @return the value at specified row index
+     */
+    public double getValue(int row);
+    
+    /**
+     * Returns the set of values within this column as an array of double.
+     * 
+     * @return the set of values within this column as an array of double.
+     */
+    public double[] getValues();
+    
+    @Override
+    public default String contentSummary()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("numeric");
+        double minVal = Double.POSITIVE_INFINITY;
+        double maxVal = Double.NEGATIVE_INFINITY;
+        for (double v : getValues())
+        {
+            minVal = Math.min(minVal, v);
+            maxVal = Math.max(maxVal, v);
+        }
+        sb.append(String.format(Locale.ENGLISH, " [%7.3f ; %7.3f]", minVal, maxVal));
+
+        return sb.toString();
+    }
 }

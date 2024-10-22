@@ -349,26 +349,7 @@ public interface Table
         int c = 0;
         for (Column col : columns())
         {
-            stream.print(String.format(format, c++, col.getName() + ":"));
-            if (col instanceof NumericColumn)
-            {
-                stream.print("numerical  ");
-                double minVal = Double.POSITIVE_INFINITY;
-                double maxVal = Double.NEGATIVE_INFINITY;
-                for (double v : (NumericColumn) col)
-                {
-                    minVal = Math.min(minVal, v);
-                    maxVal = Math.max(maxVal, v);
-                }
-                stream.print(String.format("  [ %7.3f ; %7.3f ]", minVal, maxVal));
-            }
-            else
-            {
-                stream.print("categorical");
-                int nLevels = ((CategoricalColumn) col).levels().length;
-                stream.print("  with " + nLevels + " levels");
-            }
-            stream.println();
+            stream.println(String.format(format, c++, col.getName() + ":") + col.contentSummary());
         }
     }
 
@@ -414,6 +395,7 @@ public interface Table
      * A container of columns.
      *
      */
+    // TODO: make Columns inherit Collection? List?
     public interface Columns<C extends Column> extends Iterable<C>
     {
         /**
