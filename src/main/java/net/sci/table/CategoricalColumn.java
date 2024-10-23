@@ -33,14 +33,14 @@ public interface CategoricalColumn extends Column
      * @return the different levels that can be represented within this
      *         categorical column.
      */
-    public String[] levels();
+    public String[] levelNames();
 
     @Override
     public default String contentSummary()
     {
         StringBuilder sb = new StringBuilder();
         sb.append("categorical");
-        int nLevels = levels().length;
+        int nLevels = levelNames().length;
         sb.append(" with " + nLevels + " levels");
 
         return sb.toString();

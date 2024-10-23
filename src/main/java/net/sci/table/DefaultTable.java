@@ -243,7 +243,7 @@ public class DefaultTable implements Table
         // copy levels
         if (col instanceof CategoricalColumn)
         {
-            this.levels.set(c, ((CategoricalColumn) col).levels());
+            this.levels.set(c, ((CategoricalColumn) col).levelNames());
         }
 
         // copy name
@@ -752,7 +752,7 @@ public class DefaultTable implements Table
         }
 
         @Override
-        public String[] levels()
+        public String[] levelNames()
         {
             return DefaultTable.this.getLevels(colIndex);
         }
