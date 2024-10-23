@@ -5,6 +5,8 @@ package net.sci.table;
 
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 
 /**
  * Defines the interface for storing measurements.
@@ -362,15 +364,29 @@ public interface Table
         int nCols = columnCount();
         String[] colNames = getColumnNames();
         String[] rowNames = getRowNames();
+        
+        // determine max size of row names
+        int maxLength = 0;
+        if (rowNames!=null)
+        {
+            maxLength = Arrays.stream(rowNames)
+                    .map(str -> str.length())
+                    .mapToInt(v -> v)
+                    .max()
+                    .orElseThrow(NoSuchElementException::new);
+        }
 
         // First display column headers
+        String rowPattern = "%" + maxLength + "s ";
         if (colNames != null)
         {
+            if (rowNames != null)
+            {
+                System.out.print(String.format(rowPattern, ""));
+            }
             for (int c = 0; c < nCols; c++)
             {
-                if (rowNames != null)
-                    System.out.print("\t");
-                System.out.print(colNames[c] + "\t");
+                System.out.print(colNames[c] + " ");
             }
             System.out.println();
         }
@@ -380,12 +396,29 @@ public interface Table
         {
             // row header
             if (rowNames != null)
-                System.out.print(rowNames[r] + "\t");
-
+            {
+                System.out.print(String.format(rowPattern, rowNames[r]));
+            }
+            
             // row data
             for (int c = 0; c < nCols; c++)
             {
-                System.out.print(this.get(r, c) + "\t");
+                Object obj = this.get(r, c);
+                String str;
+                if (obj instanceof Double)
+                {
+                    str = String.format(Locale.ENGLISH, "%.3f", obj);
+                }
+                else if (obj instanceof String)
+                {
+                    str = (String) obj;
+                }
+                else
+                {
+                    str = obj.toString();
+                }
+                    
+                System.out.print(str + "\t");
             }
             System.out.println();
         }
