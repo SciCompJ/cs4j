@@ -12,6 +12,9 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import net.sci.axis.Axis;
+import net.sci.axis.CategoricalAxis;
+
 /**
  * Default implementation for the Tables that can contains only numeric value.
  * 
@@ -53,10 +56,10 @@ public class DefaultNumericTable implements NumericTable
      */
 	String[] colNames = null;
 	
-	/**
-	 * The name of the rows.
-	 */
-	String[] rowNames = null;
+    /**
+     * The categorical axis containing meta-data for rows.
+     */
+    CategoricalAxis rowAxis = null;
 
 
 	// =============================================================
@@ -88,7 +91,7 @@ public class DefaultNumericTable implements NumericTable
 		if (rowNames.length != this.nRows)
 			throw new IllegalArgumentException(
 					"Number of row names should match number of data rows");
-		this.rowNames = rowNames;
+        this.rowAxis = new CategoricalAxis("", rowNames);
 	}
 
     public DefaultNumericTable(double[][] data)
@@ -349,42 +352,56 @@ public class DefaultNumericTable implements NumericTable
         
         // copy column names
         String[] rowNames = new String[nRows+1];
-        if (this.rowNames != null)
+        if (this.rowAxis != null)
         {
-            System.arraycopy(this.rowNames, 0, rowNames, 0, nRows);
+            System.arraycopy(this.rowAxis.itemNames(), 0, rowNames, 0, nRows);
         }
         rowNames[nRows] = name;
-        this.rowNames = rowNames;
+        this.rowAxis = new CategoricalAxis("", rowNames);
     }
     
-	public String[] getRowNames()
-	{
-		return this.rowNames;
-	}
+    @Override
+    public Axis rowAxis()
+    {
+        return this.rowAxis;
+    }
+
+    public String[] getRowNames()
+    {
+        return this.rowAxis != null ? rowAxis.itemNames() : null;
+    }
 
     public void setRowNames(String[] names)
     {
-        if (names != null && names.length != this.nRows)
+        if (names.length != this.nRows)
+        {
             throw new IllegalArgumentException(
                     "String array must have same length as the number of rows.");
-        this.rowNames = names;
+        }
+        
+        if (this.rowAxis == null)
+        {
+            this.rowAxis = new CategoricalAxis("", names);
+        }
+        else
+        {
+            this.rowAxis = new CategoricalAxis(this.rowAxis.getName(), names);
+        }
     }
 
     public String getRowName(int rowIndex)
     {
-        if (this.rowNames == null)
-            return null;
-        return this.rowNames[rowIndex];
+        return this.rowAxis != null ? rowAxis.itemName(rowIndex) : null;
     }
 
     @Override
     public void setRowName(int rowIndex, String name)
     {
-        if (this.rowNames == null)
+        if (this.rowAxis == null)
         {
-            this.rowNames = new String[nRows];
+            this.rowAxis = new CategoricalAxis("", new String[nRows]);
         }
-        this.rowNames[rowIndex] = name;
+        this.rowAxis.setItemName(rowIndex, name);
     }
 
 	

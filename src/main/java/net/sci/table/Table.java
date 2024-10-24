@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
+import net.sci.axis.Axis;
+
 /**
  * Defines the interface for storing measurements.
  *   
@@ -243,6 +245,8 @@ public interface Table
      * @return the array of row names of the table.
      */
     public String[] getRowNames();
+    
+    public Axis rowAxis();
 
     public void setRowNames(String[] names);
 

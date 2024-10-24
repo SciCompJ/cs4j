@@ -91,6 +91,11 @@ public class CategoricalAxis implements Axis
         return this.itemNames[index];
     }
     
+    public void setItemName(int index, String string)
+    {
+        this.itemNames[index] = string;
+    }
+    
     /**
      * Returns an array containing all the names of the items describing the
      * axis.

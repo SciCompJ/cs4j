@@ -9,10 +9,14 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
+import net.sci.axis.Axis;
+import net.sci.axis.CategoricalAxis;
 
 /**
  * Implements the Table interface allowing both numerical and categorical columns.
@@ -47,7 +51,11 @@ public class DefaultTable implements Table
 
     String name = "";
     String[] colNames = null;
-    String[] rowNames = null;
+
+    /**
+     * The categorical axis containing meta-data for rows.
+     */
+    CategoricalAxis rowAxis = null;
 
     /**
      * The list of levels for each column, or null if a column is numeric.
@@ -82,8 +90,7 @@ public class DefaultTable implements Table
 
         if (rowNames.length != this.nRows) throw new IllegalArgumentException(
                 "Number of row names should match number of data rows");
-        this.rowNames = rowNames;
-
+        this.rowAxis = new CategoricalAxis("", rowNames);
     }
 
     /**
@@ -380,39 +387,48 @@ public class DefaultTable implements Table
         return this.nRows;
     }
 
+    @Override
+    public Axis rowAxis()
+    {
+        return this.rowAxis;
+    }
+
     public String[] getRowNames()
 	{
-		return this.rowNames;
+        return this.rowAxis != null ? rowAxis.itemNames() : null;
 	}
 
     public void setRowNames(String[] names)
     {
-        if (names != null)
+        if (names.length != this.nRows)
         {
-            if (names.length != this.nRows)
-            {
-                throw new IllegalArgumentException(
-                        "String array must have same length as the number of rows.");
-            }
+            throw new IllegalArgumentException(
+                    "String array must have same length as the number of rows.");
         }
-        this.rowNames = names;
+        
+        if (this.rowAxis == null)
+        {
+            this.rowAxis = new CategoricalAxis("", names);
+        }
+        else
+        {
+            this.rowAxis = new CategoricalAxis(this.rowAxis.getName(), names);
+        }
     }
 
     public String getRowName(int rowIndex)
     {
-        if (this.rowNames == null)
-            return null;
-        return this.rowNames[rowIndex];
+        return this.rowAxis != null ? rowAxis.itemName(rowIndex) : null;
     }
 
     @Override
     public void setRowName(int rowIndex, String name)
     {
-        if (this.rowNames == null)
+        if (this.rowAxis == null)
         {
-            this.rowNames = new String[nRows];
+            this.rowAxis = new CategoricalAxis("", new String[nRows]);
         }
-        this.rowNames[rowIndex] = name;
+        this.rowAxis.setItemName(rowIndex, name);
     }
 
 	
@@ -557,15 +573,11 @@ public class DefaultTable implements Table
         
         // compute column sizes
         int rowNamesSize = 0;
-        if (this.rowNames != null)
+        if (this.rowAxis != null)
         {
-            for (String name : rowNames)
-            {
-                rowNamesSize = Math.max(rowNamesSize, name.length());  
-            }
+            rowNamesSize = Stream.of(rowAxis.itemNames()).map(String::length).mapToInt(v->v).max().orElse(0);
         }
         int[] colSizes = computeColSizes();
-        
         
         StringBuilder sb = new StringBuilder();
 

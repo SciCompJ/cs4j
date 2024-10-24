@@ -13,6 +13,9 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import net.sci.axis.Axis;
+import net.sci.axis.CategoricalAxis;
+
 /**
  * Implements the Table interface based on a collection of columns, allowing
  * both numerical and categorical columns.
@@ -27,8 +30,11 @@ public class ColumnsTable implements Table
     
     String name;
     
-    String[] rowNames = null;
-    
+    /**
+     * The categorical axis containing meta-data for rows.
+     */
+    CategoricalAxis rowAxis = null;
+
 
     // =============================================================
     // Constructors
@@ -220,39 +226,49 @@ public class ColumnsTable implements Table
         return columns.get(0).length();
     }
 
+    @Override
+    public Axis rowAxis()
+    {
+        return this.rowAxis;
+    }
+
     public String[] getRowNames()
     {
-        return this.rowNames;
+        return this.rowAxis != null ? rowAxis.itemNames() : null;
     }
 
     public void setRowNames(String[] names)
     {
-        if (names != null)
+        if (names.length != this.columns.get(0).length())
         {
-            if (names.length != rowCount())
-            {
-                throw new IllegalArgumentException(
-                        "String array must have same length as the number of rows.");
-            }
+            throw new IllegalArgumentException(
+                    "String array must have same length as the number of rows.");
         }
-        this.rowNames = names;
+        
+        if (this.rowAxis == null)
+        {
+            this.rowAxis = new CategoricalAxis("", names);
+        }
+        else
+        {
+            this.rowAxis = new CategoricalAxis(this.rowAxis.getName(), names);
+        }
     }
 
     public String getRowName(int rowIndex)
     {
-        if (this.rowNames == null)
-            return null;
-        return this.rowNames[rowIndex];
+        return this.rowAxis != null ? rowAxis.itemName(rowIndex) : null;
     }
 
     @Override
     public void setRowName(int rowIndex, String name)
     {
-        if (this.rowNames == null)
+        if (this.rowAxis == null)
         {
-            this.rowNames = new String[rowCount()];
+            int nRows= columns.get(0).length();
+            this.rowAxis = new CategoricalAxis("", new String[nRows]);
         }
-        this.rowNames[rowIndex] = name;
+        this.rowAxis.setItemName(rowIndex, name);
     }
 
 
