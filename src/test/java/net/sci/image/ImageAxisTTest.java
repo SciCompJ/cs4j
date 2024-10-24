@@ -25,7 +25,7 @@ public class ImageAxisTTest
         NumericalAxis axis = new ImageAxis.T(1.5, 0.5, "ms");
         NumericalAxis dup = axis.duplicate();
         
-        assertTrue(dup.getType() == ImageAxis.Type.TIME);
+        assertTrue(dup.type() == ImageAxis.Type.TIME);
         assertTrue(dup instanceof ImageAxis.T);
     }
     

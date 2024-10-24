@@ -42,7 +42,7 @@ public interface Axis
     /**
      * @return the type of this axis
      */
-    public Type getType();
+    public Type type();
     
     /**
      * @return a short name (typically one-digit length) used for building

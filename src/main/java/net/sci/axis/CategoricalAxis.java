@@ -3,6 +3,7 @@
  */
 package net.sci.axis;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -79,16 +80,30 @@ public class CategoricalAxis implements Axis
     }
     
     /**
+     * Returns the name a specific item within the axis.
+     * 
      * @param index
      *            the index of the category
      * @return the name of the category for the given index
      */
-    public String getItemName(int index)
+    public String itemName(int index)
     {
         return this.itemNames[index];
     }
     
-    public Type getType()
+    /**
+     * Returns an array containing all the names of the items describing the
+     * axis.
+     * 
+     * @return an array containing all the names of the items describing the
+     *         axis.
+     */
+    public String[] itemNames()
+    {
+        return Arrays.copyOf(this.itemNames, this.itemNames.length);
+    }
+    
+    public Type type()
     {
         return this.type;
     }
@@ -124,12 +139,7 @@ public class CategoricalAxis implements Axis
     @Override
     public CategoricalAxis duplicate()
     {
-        String[] names = new String[this.itemNames.length];
-        for (int i = 0; i < names.length; i++)
-        {
-            names[i] = this.itemNames[i];
-        }
-        return new CategoricalAxis(this.name, this.type, this.itemNames);
+        return new CategoricalAxis(this.name, this.type, Arrays.copyOf(this.itemNames, this.itemNames.length));
     }
  
     @Override

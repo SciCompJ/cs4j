@@ -281,7 +281,7 @@ public class Calibration
         int d = 0;
         for (ImageAxis axis : this.axes)
         {
-            if (axis.getType() == ImageAxis.Type.SPACE)
+            if (axis.type() == ImageAxis.Type.SPACE)
             {
                 spaceAxes[d++] = axis;
             }
@@ -294,7 +294,7 @@ public class Calibration
         int n = 0;
         for (ImageAxis axis : this.axes)
         {
-            if (axis.getType() == ImageAxis.Type.SPACE) n++;
+            if (axis.type() == ImageAxis.Type.SPACE) n++;
         }
         return n;
     }

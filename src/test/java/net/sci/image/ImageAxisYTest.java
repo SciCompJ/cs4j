@@ -25,7 +25,7 @@ public class ImageAxisYTest
         NumericalAxis axis = new ImageAxis.Y(1.5, 0.5, "0xB5m");
         NumericalAxis dup = axis.duplicate();
         
-        assertTrue(dup.getType() == ImageAxis.Type.SPACE);
+        assertTrue(dup.type() == ImageAxis.Type.SPACE);
         assertTrue(dup instanceof ImageAxis.Y);
     }
     

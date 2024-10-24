@@ -132,7 +132,7 @@ public class NumericalAxis implements Axis
     // =============================================================
     // Getters / setters
 
-    public Type getType()
+    public Type type()
     {
         return this.type;
     }

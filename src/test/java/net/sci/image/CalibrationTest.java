@@ -30,7 +30,7 @@ public class CalibrationTest
         
         Axis axis = calib.getChannelAxis();
         assertNotNull(axis);
-        assertTrue(axis.getType() == Axis.Type.CHANNEL);
+        assertTrue(axis.type() == Axis.Type.CHANNEL);
         assertTrue(axis instanceof CategoricalAxis);
         
         CategoricalAxis caxis = (CategoricalAxis) axis;
@@ -52,7 +52,7 @@ public class CalibrationTest
         
         Axis axis = calib.getChannelAxis();
         assertNotNull(axis);
-        assertTrue(axis.getType() == Axis.Type.CHANNEL);
+        assertTrue(axis.type() == Axis.Type.CHANNEL);
     }
     
     /**
@@ -66,7 +66,7 @@ public class CalibrationTest
         
         Axis axis = calib.getXAxis();
         assertNotNull(axis);
-        assertTrue(axis.getType() == Axis.Type.SPACE);
+        assertTrue(axis.type() == Axis.Type.SPACE);
     }
     
     /**
@@ -80,7 +80,7 @@ public class CalibrationTest
         
         Axis axis = calib.getYAxis();
         assertNotNull(axis);
-        assertTrue(axis.getType() == Axis.Type.SPACE);
+        assertTrue(axis.type() == Axis.Type.SPACE);
     }
     
     /**
@@ -94,7 +94,7 @@ public class CalibrationTest
         
         Axis axis = calib.getZAxis();
         assertNotNull(axis);
-        assertTrue(axis.getType() == Axis.Type.SPACE);
+        assertTrue(axis.type() == Axis.Type.SPACE);
     }
     
     /**

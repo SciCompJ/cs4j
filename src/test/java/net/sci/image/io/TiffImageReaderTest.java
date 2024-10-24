@@ -215,8 +215,8 @@ public class TiffImageReaderTest
         ImageAxis[] axes = image.getCalibration().getAxes();
         assertEquals(2, axes.length);
         
-        assertTrue(axes[0].getType() == ImageAxis.Type.SPACE);
-        assertTrue(axes[1].getType() == ImageAxis.Type.SPACE);
+        assertTrue(axes[0].type() == ImageAxis.Type.SPACE);
+        assertTrue(axes[1].type() == ImageAxis.Type.SPACE);
     }
 
     /**
@@ -240,8 +240,8 @@ public class TiffImageReaderTest
         ImageAxis[] axes = image.getCalibration().getAxes();
         assertEquals(2, axes.length);
         
-        assertTrue(axes[0].getType() == ImageAxis.Type.SPACE);
-        assertTrue(axes[1].getType() == ImageAxis.Type.SPACE);
+        assertTrue(axes[0].type() == ImageAxis.Type.SPACE);
+        assertTrue(axes[1].type() == ImageAxis.Type.SPACE);
         
         ImageAxis xAxis = axes[0];
         assertEquals(0.350, ((NumericalAxis) xAxis).getSpacing(), .001);
