@@ -12,7 +12,6 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import net.sci.axis.Axis;
 import net.sci.axis.CategoricalAxis;
 import net.sci.table.Column;
 import net.sci.table.NumericColumn;
@@ -30,7 +29,7 @@ import net.sci.table.Table;
  * @author David Legland
  *
  */
-public class DefaultNumericTable implements NumericTable
+public class DefaultNumericTable extends TableStub implements NumericTable
 {
     // =============================================================
     // Class variables
@@ -51,20 +50,10 @@ public class DefaultNumericTable implements NumericTable
 	int nRows;
 
     /**
-     * The name of this table
-     */
-    String name = "";
-    
-    /**
      * The name of the columns.
      */
 	String[] colNames = null;
 	
-    /**
-     * The categorical axis containing meta-data for rows.
-     */
-    CategoricalAxis rowAxis = null;
-
 
 	// =============================================================
     // Constructors
@@ -128,32 +117,6 @@ public class DefaultNumericTable implements NumericTable
         {
             this.setValue(r, colIndex, values[r]);
         }
-    }
-
-    // =============================================================
-    // General methods
-    
-    /**
-     * Returns the dimensions of this table: first the number of rows, then the
-     * number of columns.
-     * 
-     * @return an array of integers containing the dimensions of this table
-     */
-    public int[] size()
-    {
-        return new int[]{this.nRows, this.nCols};
-    }
-
-    @Override
-    public String getName()
-    {
-        return this.name;
-    }
-
-    @Override
-    public void setName(String name)
-    {
-        this.name = name;
     }
 
     // =============================================================
@@ -364,51 +327,7 @@ public class DefaultNumericTable implements NumericTable
         this.rowAxis = new CategoricalAxis("", rowNames);
     }
     
-    @Override
-    public Axis rowAxis()
-    {
-        return this.rowAxis;
-    }
-
-    public String[] getRowNames()
-    {
-        return this.rowAxis != null ? rowAxis.itemNames() : null;
-    }
-
-    public void setRowNames(String[] names)
-    {
-        if (names.length != this.nRows)
-        {
-            throw new IllegalArgumentException(
-                    "String array must have same length as the number of rows.");
-        }
-        
-        if (this.rowAxis == null)
-        {
-            this.rowAxis = new CategoricalAxis("", names);
-        }
-        else
-        {
-            this.rowAxis = new CategoricalAxis(this.rowAxis.getName(), names);
-        }
-    }
-
-    public String getRowName(int rowIndex)
-    {
-        return this.rowAxis != null ? rowAxis.itemName(rowIndex) : null;
-    }
-
-    @Override
-    public void setRowName(int rowIndex, String name)
-    {
-        if (this.rowAxis == null)
-        {
-            this.rowAxis = new CategoricalAxis("", new String[nRows]);
-        }
-        this.rowAxis.setItemName(rowIndex, name);
-    }
-
-	
+    
     // =============================================================
     // Getters and setters for values
 
