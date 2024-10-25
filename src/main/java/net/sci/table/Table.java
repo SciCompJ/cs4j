@@ -9,6 +9,8 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import net.sci.axis.Axis;
+import net.sci.table.impl.DefaultNumericTable;
+import net.sci.table.impl.DefaultTable;
 
 /**
  * Defines the interface for storing measurements.

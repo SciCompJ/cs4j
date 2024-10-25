@@ -13,8 +13,8 @@ import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.Polygon2D;
 import net.sci.geom.geom2d.polygon.process.GiftWrappingConvexHull2D;
 import net.sci.image.Calibration;
-import net.sci.table.DefaultTable;
 import net.sci.table.Table;
+import net.sci.table.impl.DefaultTable;
 
 /**
  * Compute the convex hull of each region within a label image and returns a

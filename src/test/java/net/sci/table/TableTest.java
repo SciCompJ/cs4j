@@ -19,7 +19,6 @@ import net.sci.table.io.TableReader;
  */
 public class TableTest
 {
-
     /**
      * Test method for {@link net.sci.table.Table#create(net.sci.table.Column[])}.
      */
@@ -36,27 +35,11 @@ public class TableTest
     }
 
     /**
-     * Test method for {@link net.sci.table.Table#create(java.lang.String[], net.sci.table.Column[])}.
-     */
-    @Test
-    public final void testCreateStringArrayColumnArray()
-    {
-        Table table0 = Table.create(10, 5);
-        Column col0 = table0.column(0);
-        Column col1 = table0.column(1);
-        
-        Table table = Table.create(col0, col1);
-        
-        assertEquals(2, table.columnCount());
-        assertTrue(table instanceof NumericTable);
-    }
-
-    /**
      * Test method for {@link net.sci.table.Table#selectColumns(net.sci.table.Table, int[])}.
      * @throws IOException 
      */
     @Test
-    public final void testSelectColumns() throws IOException
+    public final void test_selectColumns() throws IOException
     {
         String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();
         TableReader reader = new DelimitedTableReader();
@@ -74,6 +57,47 @@ public class TableTest
         }
     }
 
-    // TODO: create defaukt table (iris?), select clumns, and create table from selected columsn.
+    /**
+     * Test method for {@link net.sci.table.impl.DefaultTable#columns()}.
+     * @throws IOException 
+     */
+    @Test
+    public final void test_columns() throws IOException
+    {
+        String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();
+        
+        TableReader reader = new DelimitedTableReader();
+        
+        Table table = reader.readTable(new File(fileName));
+
+        int nr = table.rowCount();
+        int nc = table.columnCount();
+
+        int count = 0;
+        for (Column col : table.columns())
+        {
+            count++;
+            assertEquals(nr, col.length());
+        }
+
+        assertEquals(nc, count);
+    }
+
+    /**
+     * Test method for {@link net.sci.table.impl.DefaultTable#columns()}.
+     * @throws IOException 
+     */
+    public final void test_printInfos() throws IOException
+    {
+        String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();
+        
+        TableReader reader = new DelimitedTableReader();
+        
+        Table table = reader.readTable(new File(fileName));
+
+        table.printInfo(System.out);
+    }
+
+   // TODO: create defaukt table (iris?), select clumns, and create table from selected columsn.
 //    private Table createEmptyTab
 }

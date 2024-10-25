@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 import net.sci.table.CategoricalColumn;
 import net.sci.table.Column;
-import net.sci.table.ColumnsTable;
 import net.sci.table.NumericColumn;
 import net.sci.table.Table;
+import net.sci.table.impl.ColumnsTable;
 
 /**
  * Read a table from a delimited file. Many options can be set, such as the type

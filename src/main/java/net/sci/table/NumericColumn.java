@@ -6,6 +6,8 @@ package net.sci.table;
 import java.util.Locale;
 import java.util.function.BiFunction;
 
+import net.sci.table.impl.DefaultNumericColumn;
+
 /**
  * A column in a Table that contains only numeric values.
  * 

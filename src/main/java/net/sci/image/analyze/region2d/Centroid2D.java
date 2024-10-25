@@ -11,8 +11,8 @@ import net.sci.axis.NumericalAxis;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;
 import net.sci.image.label.LabelImages;
-import net.sci.table.DefaultTable;
 import net.sci.table.Table;
+import net.sci.table.impl.DefaultTable;
 
 
 /**

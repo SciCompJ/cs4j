@@ -1,4 +1,4 @@
-package net.sci.table;
+package net.sci.table.impl;
 
 import java.awt.*;
 import java.beans.*;

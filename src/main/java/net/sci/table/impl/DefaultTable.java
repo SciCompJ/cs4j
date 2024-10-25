@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.table;
+package net.sci.table.impl;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -17,6 +17,10 @@ import javax.swing.JTable;
 
 import net.sci.axis.Axis;
 import net.sci.axis.CategoricalAxis;
+import net.sci.table.CategoricalColumn;
+import net.sci.table.Column;
+import net.sci.table.NumericColumn;
+import net.sci.table.Table;
 
 /**
  * Implements the Table interface allowing both numerical and categorical columns.

@@ -3,6 +3,8 @@
  */
 package net.sci.table;
 
+import net.sci.table.impl.DefaultCategoricalColumn;
+
 /**
  * A Table column containing categorical data. Categorical data are selected
  * from a finite number of levels.

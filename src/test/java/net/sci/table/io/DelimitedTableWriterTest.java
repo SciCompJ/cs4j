@@ -3,8 +3,8 @@ package net.sci.table.io;
 import java.io.File;
 import java.io.IOException;
 
-import net.sci.table.DefaultNumericTable;
 import net.sci.table.Table;
+import net.sci.table.impl.DefaultNumericTable;
 
 import org.junit.Test;
 

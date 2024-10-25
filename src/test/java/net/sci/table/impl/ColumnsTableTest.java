@@ -1,15 +1,17 @@
 /**
  * 
  */
-package net.sci.table;
+package net.sci.table.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
 
+import net.sci.table.Column;
+import net.sci.table.Table;
 import net.sci.table.io.DelimitedTableReader;
 import net.sci.table.io.TableReader;
 
@@ -19,7 +21,7 @@ import net.sci.table.io.TableReader;
 public class ColumnsTableTest
 {
     /**
-     * Test method for {@link net.sci.table.ColumnsTable#columns()}.
+     * Test method for {@link net.sci.table.impl.ColumnsTable#columns()}.
      * @throws IOException 
      */
     @Test
@@ -41,7 +43,7 @@ public class ColumnsTableTest
     }
 
     /**
-     * Test method for {@link net.sci.table.ColumnsTable#columns()}.
+     * Test method for {@link net.sci.table.impl.ColumnsTable#columns()}.
      * @throws IOException 
      */
     public final void testPrintInfos() throws IOException
@@ -53,7 +55,7 @@ public class ColumnsTableTest
 
 
     /**
-     * Test method for {@link net.sci.table.ColumnsTable#size()}.
+     * Test method for {@link net.sci.table.impl.ColumnsTable#size()}.
      */
     @Test
     public final void testSize() throws IOException

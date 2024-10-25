@@ -1,10 +1,13 @@
 /**
  * 
  */
-package net.sci.table;
+package net.sci.table.impl;
 
 import java.util.Arrays;
 import java.util.Iterator;
+
+import net.sci.table.Column;
+import net.sci.table.NumericColumn;
 
 /**
  * Default implementation for columns containing numeric values.

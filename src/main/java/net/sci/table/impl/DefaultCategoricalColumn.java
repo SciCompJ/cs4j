@@ -1,9 +1,12 @@
 /**
  * 
  */
-package net.sci.table;
+package net.sci.table.impl;
 
 import java.util.Arrays;
+
+import net.sci.table.CategoricalColumn;
+import net.sci.table.Column;
 
 /**
  * Default implementation for categorical columns.

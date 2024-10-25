@@ -5,6 +5,8 @@ package net.sci.table;
 
 import java.util.ArrayList;
 
+import net.sci.table.impl.DefaultNumericTable;
+
 /**
  * A table that contains only numeric columns.
  * 
