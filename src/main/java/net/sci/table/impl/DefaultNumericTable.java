@@ -3,14 +3,9 @@
  */
 package net.sci.table.impl;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.util.Iterator;
 
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import net.sci.axis.CategoricalAxis;
 import net.sci.table.Column;
@@ -34,58 +29,55 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     // =============================================================
     // Class variables
 
-	/**
-	 * Inner data array, first index corresponds to columns.
-	 */
-	double[][] data;
+    /**
+     * Inner data array, first index corresponds to columns.
+     */
+    double[][] data;
 
-	/**
-	 * Number of columns in the table
-	 */
-	int nCols;
+    /**
+     * Number of columns in the table
+     */
+    int nCols;
 
-	/**
+    /**
      * Number of rows in the table
      */
-	int nRows;
+    int nRows;
 
     /**
      * The name of the columns.
      */
-	String[] colNames = null;
-	
+    String[] colNames = null;
+    
 
-	// =============================================================
+    // =============================================================
     // Constructors
 
-	/**
-	 * Creates a new data table with the given number of rows and columns.
-	 * 
-	 * @param nRows
-	 *            the number of rows
-	 * @param nCols
-	 *            the number of columns
-	 */
-	public DefaultNumericTable(int nRows, int nCols)
-	{
-		this(new double[nCols][nRows]);
-	}
+    /**
+     * Creates a new data table with the given number of rows and columns.
+     * 
+     * @param nRows
+     *            the number of rows
+     * @param nCols
+     *            the number of columns
+     */
+    public DefaultNumericTable(int nRows, int nCols)
+    {
+        this(new double[nCols][nRows]);
+    }
 
-	public DefaultNumericTable(double[][] data, String[] colNames, String[] rowNames)
-	{
-		this(data);
+    public DefaultNumericTable(double[][] data, String[] colNames, String[] rowNames)
+    {
+        this(data);
 
+        if (colNames.length != this.nCols) throw new IllegalArgumentException(
+                "Number of column names should match number of data columns");
+        this.colNames = colNames;
 
-		if (colNames.length != this.nCols)
-			throw new IllegalArgumentException(
-					"Number of column names should match number of data columns");
-		this.colNames = colNames;
-
-		if (rowNames.length != this.nRows)
-			throw new IllegalArgumentException(
-					"Number of row names should match number of data rows");
+        if (rowNames.length != this.nRows) throw new IllegalArgumentException(
+                "Number of row names should match number of data rows");
         this.rowAxis = new CategoricalAxis("", rowNames);
-	}
+    }
 
     public DefaultNumericTable(double[][] data)
     {
@@ -118,6 +110,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
             this.setValue(r, colIndex, values[r]);
         }
     }
+    
 
     // =============================================================
     // Management of columns
@@ -232,9 +225,9 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     }
 
     public String[] getColumnNames()
-	{
-		return this.colNames;
-	}
+    {
+        return this.colNames;
+    }
 
     public void setColumnNames(String[] names)
     {
@@ -262,18 +255,16 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     }
 
     public int findColumnIndex(String name)
-	{
-		if (name == null || this.colNames == null)
-			return -1;
-		for (int c = 0; c < this.nCols; c++)
-		{
-			if (name.equals(this.colNames[c]))
-				return c;
-		}
-		return -1;
-	}
+    {
+        if (name == null || this.colNames == null) return -1;
+        for (int c = 0; c < this.nCols; c++)
+        {
+            if (name.equals(this.colNames[c])) return c;
+        }
+        return -1;
+    }
+    
 
-	
     // =============================================================
     // Management of rows
     
@@ -379,11 +370,11 @@ public class DefaultNumericTable extends TableStub implements NumericTable
      */
     public double[] getRowValues(int rowIndex)
     {
-    	double[] values = new double[this.nCols];
-    	for (int c = 0; c < this.nCols; c++)
-    	{
-    		values[c] = this.data[c][rowIndex];
-    	}
+        double[] values = new double[this.nCols];
+        for (int c = 0; c < this.nCols; c++)
+        {
+            values[c] = this.data[c][rowIndex];
+        }
         return values;
     }
     
@@ -420,67 +411,21 @@ public class DefaultNumericTable extends TableStub implements NumericTable
 
 
 	/**
-	 * Opens a new JFrame and shows this table inside
-	 * 
-	 * @param the instance of the widget used for display 
-	 */
-	public JFrame show()
-	{
-		// Need to cast to object array...
-		Object[][] dats = new Object[this.nRows][this.nCols];
-		for (int r = 0; r < this.nRows; r++)
-		{
-			for (int c = 0; c < this.nCols; c++)
-			{
-				dats[r][c] = this.data[c][r];
-			}
-		}
-
-		// Create JTable instance
-		JTable table = new JTable(dats, this.colNames);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-
-		// Create the frame containing the table
-		JFrame frame = new JFrame("Data Table");
-		frame.setPreferredSize(new Dimension(400, 300));
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		// Setup layout
-		Container panel = frame.getContentPane();
-
-		JScrollPane scrollPane = new JScrollPane(table);
-		JTable rowTable = new RowNumberTable(table);
-		scrollPane.setRowHeaderView(rowTable);
-		scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,
-				rowTable.getTableHeader());
-
-		// panel.add(table.getTableHeader(), BorderLayout.NORTH);
-		panel.add(table.getTableHeader(), BorderLayout.NORTH);
-		panel.add(scrollPane, BorderLayout.CENTER);
-		frame.pack();
-
-		// show !
-		frame.setVisible(true);
-		return frame;
-	}
-
-	/**
      * Small demonstration of the usage of the DefaultNumericTable class.
      * 
      * @param args
      *            optional arguments, not used.
      */
-	public final static void main(String[] args)
-	{
-		DefaultNumericTable tbl = new DefaultNumericTable(15, 5);
-        tbl.setColumnNames(new String[] { "Length", "Area", "Diam.",
-                "Number", "Density" });
-		tbl.print();
-		
-		JFrame frame = tbl.show();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-	
+    public final static void main(String[] args)
+    {
+        DefaultNumericTable tbl = new DefaultNumericTable(15, 5);
+        tbl.setColumnNames(new String[] { "Length", "Area", "Diam.", "Number", "Density" });
+        tbl.print();
+
+        JFrame frame = tbl.show();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
     class ColumnView implements NumericColumn
     {
         int colIndex;
@@ -560,14 +505,14 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         @Override
         public Iterator<Double> iterator()
         {
-            return new RowIterator();
+            return new ValueIterator();
         }
         
-        class RowIterator implements Iterator<Double>
+        class ValueIterator implements Iterator<Double>
         {
             int index = 0;
             
-            public RowIterator()
+            public ValueIterator()
             {
             }
 
