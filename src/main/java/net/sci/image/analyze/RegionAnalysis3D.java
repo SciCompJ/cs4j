@@ -111,7 +111,7 @@ public class RegionAnalysis3D
         // size of input image
         int sizeX = image.size(0);
         int sizeY = image.size(1);
-        int sizeZ = image.size(1);
+        int sizeZ = image.size(2);
 
         // compute centroid of each region
         for (int z = 0; z < sizeZ; z++) 
