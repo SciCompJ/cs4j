@@ -18,16 +18,13 @@ import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.numeric.Float32Array;
-import net.sci.array.numeric.Float64Array;
-import net.sci.array.numeric.Int16Array;
-import net.sci.array.numeric.Int32Array;
 import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt16Array2D;
 import net.sci.array.numeric.UInt16Array3D;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.UInt8Array3D;
+import net.sci.image.Calibration;
 import net.sci.image.Image;
 
 /**
@@ -134,37 +131,20 @@ public class MetaImageWriter extends AlgoStub implements ImageWriter
         System.arraycopy(image.getSize(), 0, info.dimSize, 0, nd);
 
         // determine element data type
-        // TODO: include color / multi-channel types
         Array<?> array = image.getData();
-        if (array instanceof UInt8Array || array instanceof BinaryArray)
+        info.elementType = MetaImageInfo.ElementType.fromArrayClass(array);
+        
+        // setup spatial calibration
+        Calibration calib = image.getCalibration(); 
+        if (calib.isCalibrated())
         {
-            info.elementType = MetaImageInfo.ElementType.UINT8;
-        }
-        else if (array instanceof UInt16Array)
-        {
-            info.elementType = MetaImageInfo.ElementType.UINT16;
-        }
-        else if (array instanceof Int16Array)
-        {
-            info.elementType = MetaImageInfo.ElementType.INT16;
-        }
-        else if (array instanceof Int32Array)
-        {
-            info.elementType = MetaImageInfo.ElementType.INT32;
-        }
-        else if (array instanceof Float32Array)
-        {
-            info.elementType = MetaImageInfo.ElementType.FLOAT32;
-        }
-        else if (array instanceof Float64Array)
-        {
-            info.elementType = MetaImageInfo.ElementType.FLOAT64;
-        }
-        else
-        {
-            throw new IllegalArgumentException(
-                    "Unable to determine MetaImage Type for image containing data with class "
-                            + array.getClass());
+            double[] spacings = new double[nd];
+            for (int d = 0; d < nd; d++)
+            {
+                spacings[d] = calib.getAxis(d).getSpacing();
+            }
+            info.elementSize = spacings;
+            info.elementSpacing = spacings;
         }
 
         return info;
@@ -192,17 +172,24 @@ public class MetaImageWriter extends AlgoStub implements ImageWriter
      */
     private MetaImageInfo writeHeader(OutputStream stream) throws IOException
     {
+        // convert stream
         PrintStream ps = new PrintStream(stream);
 
+        // write data type and dimension info
         printTag(ps, "ObjectType", "Image");
         printTag(ps, "NDims", info.nDims);
-        String dimString = Integer.toString(info.dimSize[0]);
-        for (int d = 1; d < info.dimSize.length; d++)
-        {
-            dimString = dimString + " " + info.dimSize[d];
-        }
-        printTag(ps, "DimSize", dimString);
+        printTag(ps, "DimSize", createString(info.dimSize));
         printTag(ps, "ElementType", info.elementType.getMetString());
+        
+        // write spatial calibration if present
+        if (info.elementSize != null)
+        {
+            printTag(ps, "ElementSize", createString(info.elementSize));
+        }
+        if (info.elementSpacing != null)
+        {
+            printTag(ps, "ElementSpacing", createString(info.elementSpacing));
+        }
         
         // in case of data type stored with more than 1 byte, need to specify byte order
         if (info.elementType.bytesPerElement > 1)
@@ -210,16 +197,38 @@ public class MetaImageWriter extends AlgoStub implements ImageWriter
             // always use MSB encoding to simplify implementation
             printTag(ps, "BinaryDataByteOrderMSB", "true");
         }
-        // TODO: add other optional info fields
 
+        // this tag should be the last one in the header, according to specification
         printTag(ps, "ElementDataFile", info.elementDataFile);
 
         return info;
     }
     
-    private void printTag(PrintStream ps, String tagName, Object tagValue)
+    private static final void printTag(PrintStream ps, String tagName, Object tagValue)
     {
         ps.printf(Locale.US, "%s = %s\n", tagName, tagValue.toString());
+    }
+    
+    private static final String createString(int[] values)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format(Locale.US, "%d", values[0]));
+        for (int i = 1; i < values.length; i++)
+        {
+            sb.append(String.format(Locale.US, " %d", values[i]));
+        }
+        return sb.toString();
+    }
+    
+    private static final String createString(double[] values)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format(Locale.US, "%f", values[0]));
+        for (int i = 1; i < values.length; i++)
+        {
+            sb.append(String.format(Locale.US, " %f", values[i]));
+        }
+        return sb.toString();
     }
 
     private void writeImageData(OutputStream stream, Array<?> array) throws IOException

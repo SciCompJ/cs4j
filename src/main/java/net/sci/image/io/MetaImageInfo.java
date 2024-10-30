@@ -3,6 +3,15 @@
  */
 package net.sci.image.io;
 
+import net.sci.array.Array;
+import net.sci.array.binary.BinaryArray;
+import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Int16Array;
+import net.sci.array.numeric.Int32Array;
+import net.sci.array.numeric.UInt16Array;
+import net.sci.array.numeric.UInt8Array;
+
 /**
  * MetaImage file format manager. Contains declaration of constants, and handles
  * file info.
@@ -49,6 +58,49 @@ public final class MetaImageInfo
             
             // unknown value
             throw new IllegalArgumentException("Unable to parse ElementType with label: " + metString);
+        }
+        
+        /**
+         * Determines the most appropriate element type for storing data of the
+         * specified array, or throw an exception if none can be found.
+         * 
+         * @param array
+         *            an array
+         * @return the most appropriate element type for storing data of the
+         *         array
+         */
+        public static final ElementType fromArrayClass(Array<?> array)
+        {
+            if (array instanceof UInt8Array || array instanceof BinaryArray)
+            {
+                return MetaImageInfo.ElementType.UINT8;
+            }
+            else if (array instanceof UInt16Array)
+            {
+                return MetaImageInfo.ElementType.UINT16;
+            }
+            else if (array instanceof Int16Array)
+            {
+                return MetaImageInfo.ElementType.INT16;
+            }
+            else if (array instanceof Int32Array)
+            {
+                return MetaImageInfo.ElementType.INT32;
+            }
+            else if (array instanceof Float32Array)
+            {
+                return MetaImageInfo.ElementType.FLOAT32;
+            }
+            else if (array instanceof Float64Array)
+            {
+                return MetaImageInfo.ElementType.FLOAT64;
+            }
+            else
+            {
+                throw new IllegalArgumentException(
+                        "Unable to determine MetaImage ElementType for array with class: "
+                                + array.getClass());
+            }
         }
         
         /**
