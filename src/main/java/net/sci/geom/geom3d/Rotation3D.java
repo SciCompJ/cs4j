@@ -40,7 +40,7 @@ public class Rotation3D
      */
     public static final Rotation3D fromMatrix(double[][] matrix)
     {
-        // check input validity
+        // check size of input matrix
         int nRows = matrix.length;
         int nCols = matrix[0].length;
         if (nRows != nCols || (nRows != 3 && nRows != 4) || (nCols != 3 && nCols != 4))
@@ -48,10 +48,11 @@ public class Rotation3D
             throw new IllegalArgumentException("Requires a 4-by-4 or a 3-by-3 rotation matrix.");
         }
         
+        // check determinant, allowing also determinant equal to -1 
         Matrix mat = new Matrix(matrix);
-        if (Math.abs(mat.det() - 1) > 1e-8)
+        if (Math.abs(mat.det()) - 1 > 1e-8)
         {
-            throw new IllegalArgumentException("Requires a rotation matrix with determinant equal to 1.0.");
+            throw new IllegalArgumentException("Requires a rotation matrix with determinant equal to 1.0, here equal to " + mat.det());
         }
         
         // Use formula from Wikipedia, english version
