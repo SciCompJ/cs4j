@@ -67,91 +67,116 @@ public class SlicedInt16Array3D extends Int16Array3D
         return res;
     }
     
-    
-	// =============================================================
-	// Class fields
+
+    // =============================================================
+    // Class fields
 
     /**
      * The inner array of 2D Int16 arrays.
      */
     ArrayList<Int16Array2D> slices;
+    
 
-	
-	// =============================================================
-	// Constructors
+    // =============================================================
+    // Constructors
 
-	/**
-	 * Creates a new instance by specifying the dimensions, and creates slice
-	 * instances.
-	 * 
-	 * @param size0
-	 *            size of array in first dimension
-	 * @param size1
-	 *            size of array in second dimension
-	 * @param size2
-	 *            size of array in third dimension, corresponding to slice
-	 *            number
-	 */
-	public SlicedInt16Array3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-		this.slices = new ArrayList<>(size2);
-		for (int z = 0; z < size2; z++)
-		{
-			this.slices.add(Int16Array2D.create(size0, size1));
-		}
-	}
+    /**
+     * Creates a new instance by specifying the dimensions, and creates slice
+     * instances.
+     * 
+     * @param size0
+     *            size of array in first dimension
+     * @param size1
+     *            size of array in second dimension
+     * @param size2
+     *            size of array in third dimension, corresponding to slice
+     *            number
+     */
+    public SlicedInt16Array3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+        this.slices = new ArrayList<>(size2);
+        for (int z = 0; z < size2; z++)
+        {
+            this.slices.add(Int16Array2D.create(size0, size1));
+        }
+    }
 
-	/**
-	 * Creates a new instance by specifying the list of slices.
-	 * 
-	 * @param slices the list of slices composing the new 3D array.
-	 */
-	public SlicedInt16Array3D(Collection<? extends Int16Array> slices)
-	{
-		super(0,0,0);
-		if (slices.size() == 0)
-		{
-			return;
-		}
-		
-		// check slices dimensionality
-		for (Int16Array slice : slices)
-		{
-			if (slice.dimensionality() < 2)
-			{
-				throw new IllegalArgumentException("Slices must have two dimensions");
-			}
-		}
-		
-		// check slices have same dimensions
-		Int16Array slice0 = slices.iterator().next();
-		int size0 = slice0.size(0);
-		int size1 = slice0.size(1);
-		for (Int16Array slice : slices)
-		{
-			if (slice.size(0) != size0 || slice.size(1) != size1)
-			{
-				throw new IllegalArgumentException("All slices must have the same size");
-			}
-		}
-		
-		// update size information
-		this.size0 = size0;
-		this.size1 = size1;
-		this.size2 = slices.size();
-		
-		// Create and populate the slice array
-		this.slices = new ArrayList<>(size2);
-		for (Int16Array slice : slices)
-		{
-			this.slices.add(Int16Array2D.wrap(slice));
-		}
-	}
+    /**
+     * Creates a new instance by specifying the dimensions, and creates slice
+     * instances using the specified factory.
+     * 
+     * @param size0
+     *            size of array in first dimension
+     * @param size1
+     *            size of array in second dimension
+     * @param size2
+     *            size of array in third dimension, corresponding to slice
+     *            number
+     * @param factory
+     *            the factory for initializing the slices
+     */
+    public SlicedInt16Array3D(int size0, int size1, int size2, Int16Array.Factory sliceFactory)
+    {
+        super(size0, size1, size2);
+        this.slices = new ArrayList<>(size2);
+        for (int z = 0; z < size2; z++)
+        {
+            this.slices.add(Int16Array2D.wrap(sliceFactory.create(size0, size1)));
+        }
+    }
 
+    /**
+     * Creates a new instance by specifying the list of slices.
+     * 
+     * @param slices
+     *            the list of slices composing the new 3D array.
+     */
+    public SlicedInt16Array3D(Collection<? extends Int16Array> slices)
+    {
+        super(0, 0, 0);
+        if (slices.size() == 0)
+        {
+            return;
+        }
 
-	// =============================================================
-	// Specialization of the UInt8Array3D interface
+        // check slices dimensionality
+        for (Int16Array slice : slices)
+        {
+            if (slice.dimensionality() < 2)
+            {
+                throw new IllegalArgumentException("Slices must have two dimensions");
+            }
+        }
+
+        // check slices have same dimensions
+        Int16Array slice0 = slices.iterator().next();
+        int size0 = slice0.size(0);
+        int size1 = slice0.size(1);
+        for (Int16Array slice : slices)
+        {
+            if (slice.size(0) != size0 || slice.size(1) != size1)
+            {
+                throw new IllegalArgumentException("All slices must have the same size");
+            }
+        }
+
+        // update size information
+        this.size0 = size0;
+        this.size1 = size1;
+        this.size2 = slices.size();
+
+        // Create and populate the slice array
+        this.slices = new ArrayList<>(size2);
+        for (Int16Array slice : slices)
+        {
+            this.slices.add(Int16Array2D.wrap(slice));
+        }
+    }
+    
+
+    // =============================================================
+    // Specialization of the Int16Array3D interface
 
     @Override
     public short getShort(int x, int y, int z)
@@ -165,28 +190,32 @@ public class SlicedInt16Array3D extends Int16Array3D
         this.slices.get(z).setShort(x, y, s);
     }
 
-    /* (non-Javadoc)
-	 * @see net.sci.array.scalar.Int16Array3D#getShort(int, int, int)
-	 */
-	@Override
-	public short getShort(int[]  pos)
-	{
-		return this.slices.get(pos[2]).getShort(pos[0], pos[1]);
-	}
-		
-	/* (non-Javadoc)
-	 * @see net.sci.array.scalar.Int16Array3D#setShort(int, int, int, short)
-	 */
-	@Override
-	public void setShort(int[] pos, short s)
-	{
-		this.slices.get(pos[2]).setShort(pos[0], pos[1], s);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.scalar.Int16Array3D#getShort(int, int, int)
+     */
+    @Override
+    public short getShort(int[] pos)
+    {
+        return this.slices.get(pos[2]).getShort(pos[0], pos[1]);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.scalar.Int16Array3D#setShort(int, int, int, short)
+     */
+    @Override
+    public void setShort(int[] pos, short s)
+    {
+        this.slices.get(pos[2]).setShort(pos[0], pos[1], s);
+    }
 
     
     // =============================================================
     // Specialization of the ScalarArray interface
-    
+
     @Override
     public Iterable<Double> values()
     {

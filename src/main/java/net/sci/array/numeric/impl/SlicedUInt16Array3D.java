@@ -74,86 +74,113 @@ public class SlicedUInt16Array3D extends UInt16Array3D
     /**
      * The inner array of 2D UInt16 arrays.
      */
-	ArrayList<UInt16Array2D> slices;
-	
-	
-	// =============================================================
-	// Constructors
+    ArrayList<UInt16Array2D> slices;
+    
 
-	/**
-	 * Creates a new instance by specifying the dimensions, and creates slice
-	 * instances.
-	 * 
-	 * @param size0
-	 *            size of array in first dimension
-	 * @param size1
-	 *            size of array in second dimension
-	 * @param size2
-	 *            size of array in third dimension, corresponding to slice
-	 *            number
-	 */
-	public SlicedUInt16Array3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-		this.slices = new ArrayList<>(size2);
-		for (int z = 0; z < size2; z++)
-		{
-			this.slices.add(UInt16Array2D.create(size0, size1));
-		}
-	}
+    // =============================================================
+    // Constructors
 
-	/**
-	 * Creates a new instance by specifying the list of slices.
-	 * 
-	 * @param slices the list of slices composing the new 3D array.
-	 */
-	public SlicedUInt16Array3D(Collection<? extends UInt16Array> slices)
-	{
-		super(0,0,0);
-		if (slices.size() == 0)
-		{
-			return;
-		}
-		
-		// check slices dimensionality
-		for (UInt16Array slice : slices)
-		{
-			if (slice.dimensionality() < 2)
-			{
-				throw new IllegalArgumentException("Slices must have two dimensions");
-			}
-		}
-		
-		// check slices have same dimensions
-		UInt16Array slice0 = slices.iterator().next();
-		int size0 = slice0.size(0);
-		int size1 = slice0.size(1);
-		for (UInt16Array slice : slices)
-		{
-			if (slice.size(0) != size0 || slice.size(1) != size1)
-			{
-				throw new IllegalArgumentException("All slices must have the same size");
-			}
-		}
-		
-		// update size information
-		this.size0 = size0;
-		this.size1 = size1;
-		this.size2 = slices.size();
-		
-		// Create and populate the slice array
-		this.slices = new ArrayList<>(size2);
-		for (UInt16Array slice : slices)
-		{
-			this.slices.add(UInt16Array2D.wrap(slice));
-		}
-	}
+    /**
+     * Creates a new instance by specifying the dimensions, and creates slice
+     * instances.
+     * 
+     * @param size0
+     *            size of array in first dimension
+     * @param size1
+     *            size of array in second dimension
+     * @param size2
+     *            size of array in third dimension, corresponding to slice
+     *            number
+     */
+    public SlicedUInt16Array3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+        this.slices = new ArrayList<>(size2);
+        for (int z = 0; z < size2; z++)
+        {
+            this.slices.add(UInt16Array2D.create(size0, size1));
+        }
+    }
 
+    /**
+     * Creates a new instance by specifying the dimensions, and creates slice
+     * instances using the specified factory.
+     * 
+     * @param size0
+     *            size of array in first dimension
+     * @param size1
+     *            size of array in second dimension
+     * @param size2
+     *            size of array in third dimension, corresponding to slice
+     *            number
+     * @param factory
+     *            the factory for initializing the slices
+     */
+    public SlicedUInt16Array3D(int size0, int size1, int size2, UInt16Array.Factory sliceFactory)
+    {
+        super(size0, size1, size2);
+        this.slices = new ArrayList<>(size2);
+        for (int z = 0; z < size2; z++)
+        {
+            this.slices.add(UInt16Array2D.wrap(sliceFactory.create(size0, size1)));
+        }
+    }
 
-	// =============================================================
-	// Specialization of the UInt16Array3D interface
+    /**
+     * Creates a new instance by specifying the list of slices.
+     * 
+     * @param slices
+     *            the list of slices composing the new 3D array.
+     */
+    public SlicedUInt16Array3D(Collection<? extends UInt16Array> slices)
+    {
+        super(0, 0, 0);
+        if (slices.size() == 0)
+        {
+            return;
+        }
 
-    /* (non-Javadoc)
+        // check slices dimensionality
+        for (UInt16Array slice : slices)
+        {
+            if (slice.dimensionality() < 2)
+            {
+                throw new IllegalArgumentException("Slices must have two dimensions");
+            }
+        }
+
+        // check slices have same dimensions
+        UInt16Array slice0 = slices.iterator().next();
+        int size0 = slice0.size(0);
+        int size1 = slice0.size(1);
+        for (UInt16Array slice : slices)
+        {
+            if (slice.size(0) != size0 || slice.size(1) != size1)
+            {
+                throw new IllegalArgumentException("All slices must have the same size");
+            }
+        }
+
+        // update size information
+        this.size0 = size0;
+        this.size1 = size1;
+        this.size2 = slices.size();
+
+        // Create and populate the slice array
+        this.slices = new ArrayList<>(size2);
+        for (UInt16Array slice : slices)
+        {
+            this.slices.add(UInt16Array2D.wrap(slice));
+        }
+    }
+    
+
+    // =============================================================
+    // Specialization of the UInt16Array3D interface
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.array.scalar.UInt16Array3D#getShort(int, int, int)
      */
     @Override

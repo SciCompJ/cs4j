@@ -74,84 +74,109 @@ public class SlicedFloat64Array3D extends Float64Array3D
     /**
      * The inner array of 2D Float64 arrays.
      */
-	ArrayList<Float64Array2D> slices;
+    ArrayList<Float64Array2D> slices;
+    
 
-	
-	// =============================================================
-	// Constructors
+    // =============================================================
+    // Constructors
 
-	/**
-	 * Creates a new instance by specifying the dimensions, and creates slice
-	 * instances.
-	 * 
-	 * @param size0
-	 *            size of array in first dimension
-	 * @param size1
-	 *            size of array in second dimension
-	 * @param size2
-	 *            size of array in third dimension, corresponding to slice
-	 *            number
-	 */
-	public SlicedFloat64Array3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-		this.slices = new ArrayList<>(size2);
-		for (int z = 0; z < size2; z++)
-		{
-			this.slices.add(Float64Array2D.create(size0, size1));
-		}
-	}
+    /**
+     * Creates a new instance by specifying the dimensions, and creates slice
+     * instances.
+     * 
+     * @param size0
+     *            size of array in first dimension
+     * @param size1
+     *            size of array in second dimension
+     * @param size2
+     *            size of array in third dimension, corresponding to slice
+     *            number
+     */
+    public SlicedFloat64Array3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+        this.slices = new ArrayList<>(size2);
+        for (int z = 0; z < size2; z++)
+        {
+            this.slices.add(Float64Array2D.create(size0, size1));
+        }
+    }
 
-	/**
-	 * Creates a new instance by specifying the list of slices.
-	 * 
-	 * @param slices the list of slices composing the new 3D array.
-	 */
-	public SlicedFloat64Array3D(Collection<? extends Float64Array> slices)
-	{
-		super(0,0,0);
-		if (slices.size() == 0)
-		{
-			return;
-		}
-		
-		// check slices dimensionality
-		for (Float64Array slice : slices)
-		{
-			if (slice.dimensionality() < 2)
-			{
-				throw new IllegalArgumentException("Slices must have two dimensions");
-			}
-		}
-		
-		// check slices have same dimensions
-		Float64Array slice0 = slices.iterator().next();
-		int size0 = slice0.size(0);
-		int size1 = slice0.size(1);
-		for (Float64Array slice : slices)
-		{
-			if (slice.size(0) != size0 || slice.size(1) != size1)
-			{
-				throw new IllegalArgumentException("All slices must have the same size");
-			}
-		}
-		
-		// update size information
-		this.size0 = size0;
-		this.size1 = size1;
-		this.size2 = slices.size();
-		
-		// Create and populate the slice array
-		this.slices = new ArrayList<>(size2);
-		for (Float64Array slice : slices)
-		{
-			this.slices.add(Float64Array2D.wrap(slice));
-		}
-	}
+    /**
+     * Creates a new instance by specifying the dimensions, and creates slice
+     * instances using the specified factory.
+     * 
+     * @param size0
+     *            size of array in first dimension
+     * @param size1
+     *            size of array in second dimension
+     * @param size2
+     *            size of array in third dimension, corresponding to slice
+     *            number
+     * @param factory
+     *            the factory for initializing the slices
+     */
+    public SlicedFloat64Array3D(int size0, int size1, int size2, Float64Array.Factory sliceFactory)
+    {
+        super(size0, size1, size2);
+        this.slices = new ArrayList<>(size2);
+        for (int z = 0; z < size2; z++)
+        {
+            this.slices.add(Float64Array2D.wrap(sliceFactory.create(size0, size1)));
+        }
+    }
 
-	
-	// =============================================================
-	// Specialization of the ScalarArray3D interface
+    /**
+     * Creates a new instance by specifying the list of slices.
+     * 
+     * @param slices
+     *            the list of slices composing the new 3D array.
+     */
+    public SlicedFloat64Array3D(Collection<? extends Float64Array> slices)
+    {
+        super(0, 0, 0);
+        if (slices.size() == 0)
+        {
+            return;
+        }
+
+        // check slices dimensionality
+        for (Float64Array slice : slices)
+        {
+            if (slice.dimensionality() < 2)
+            {
+                throw new IllegalArgumentException("Slices must have two dimensions");
+            }
+        }
+
+        // check slices have same dimensions
+        Float64Array slice0 = slices.iterator().next();
+        int size0 = slice0.size(0);
+        int size1 = slice0.size(1);
+        for (Float64Array slice : slices)
+        {
+            if (slice.size(0) != size0 || slice.size(1) != size1)
+            {
+                throw new IllegalArgumentException("All slices must have the same size");
+            }
+        }
+
+        // update size information
+        this.size0 = size0;
+        this.size1 = size1;
+        this.size2 = slices.size();
+
+        // Create and populate the slice array
+        this.slices = new ArrayList<>(size2);
+        for (Float64Array slice : slices)
+        {
+            this.slices.add(Float64Array2D.wrap(slice));
+        }
+    }
+    
+
+    // =============================================================
+    // Specialization of the ScalarArray3D interface
 
     @Override
     public double getValue(int x, int y, int z)
@@ -165,16 +190,18 @@ public class SlicedFloat64Array3D extends Float64Array3D
         this.slices.get(z).setValue(x, y, value);
     }
 
-    /* (non-Javadoc)
-	 * @see net.sci.array.scalar.Float64Array3D#getDouble(int, int, int)
-	 */
-	@Override
-	public double getValue(int[] pos)
-	{
-	    return this.slices.get(pos[2]).getValue(pos[0], pos[1]);
-	}
-		
-	   
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.scalar.Float64Array3D#getDouble(int, int, int)
+     */
+    @Override
+    public double getValue(int[] pos)
+    {
+        return this.slices.get(pos[2]).getValue(pos[0], pos[1]);
+    }
+    
+
     // =============================================================
     // Specialization of the ScalarArray interface
     

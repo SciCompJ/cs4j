@@ -74,86 +74,113 @@ public class SlicedInt32Array3D extends Int32Array3D
     /**
      * The inner array of 2D Int32 arrays.
      */
-	ArrayList<Int32Array2D> slices;
+    ArrayList<Int32Array2D> slices;
+    
 
-	
-	// =============================================================
-	// Constructors
+    // =============================================================
+    // Constructors
 
-	/**
-	 * Creates a new instance by specifying the dimensions, and creates slice
-	 * instances.
-	 * 
-	 * @param size0
-	 *            size of array in first dimension
-	 * @param size1
-	 *            size of array in second dimension
-	 * @param size2
-	 *            size of array in third dimension, corresponding to slice
-	 *            number
-	 */
-	public SlicedInt32Array3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-		this.slices = new ArrayList<>(size2);
-		for (int z = 0; z < size2; z++)
-		{
-			this.slices.add(Int32Array2D.create(size0, size1));
-		}
-	}
+    /**
+     * Creates a new instance by specifying the dimensions, and creating slice
+     * instance for each z-index.
+     * 
+     * @param size0
+     *            size of array in first dimension
+     * @param size1
+     *            size of array in second dimension
+     * @param size2
+     *            size of array in third dimension, corresponding to slice
+     *            number
+     */
+    public SlicedInt32Array3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+        this.slices = new ArrayList<>(size2);
+        for (int z = 0; z < size2; z++)
+        {
+            this.slices.add(Int32Array2D.create(size0, size1));
+        }
+    }
 
-	/**
-	 * Creates a new instance by specifying the list of slices.
-	 * 
-	 * @param slices the list of slices composing the new 3D array.
-	 */
-	public SlicedInt32Array3D(Collection<? extends Int32Array> slices)
-	{
-		super(0,0,0);
-		if (slices.size() == 0)
-		{
-			return;
-		}
-		
-		// check slices dimensionality
-		for (Int32Array slice : slices)
-		{
-			if (slice.dimensionality() < 2)
-			{
-				throw new IllegalArgumentException("Slices must have two dimensions");
-			}
-		}
-		
-		// check slices have same dimensions
-		Int32Array slice0 = slices.iterator().next();
-		int size0 = slice0.size(0);
-		int size1 = slice0.size(1);
-		for (Int32Array slice : slices)
-		{
-			if (slice.size(0) != size0 || slice.size(1) != size1)
-			{
-				throw new IllegalArgumentException("All slices must have the same size");
-			}
-		}
-		
-		// update size information
-		this.size0 = size0;
-		this.size1 = size1;
-		this.size2 = slices.size();
-		
-		// Create and populate the slice array
-		this.slices = new ArrayList<>(size2);
-		for (Int32Array slice : slices)
-		{
-			this.slices.add(Int32Array2D.wrap(slice));
-		}
-	}
+    /**
+     * Creates a new instance by specifying the dimensions, and creates slice
+     * instances using the specified factory.
+     * 
+     * @param size0
+     *            size of array in first dimension
+     * @param size1
+     *            size of array in second dimension
+     * @param size2
+     *            size of array in third dimension, corresponding to slice
+     *            number
+     * @param factory
+     *            the factory for initializing the slices
+     */
+    public SlicedInt32Array3D(int size0, int size1, int size2, Int32Array.Factory sliceFactory)
+    {
+        super(size0, size1, size2);
+        this.slices = new ArrayList<>(size2);
+        for (int z = 0; z < size2; z++)
+        {
+            this.slices.add(Int32Array2D.wrap(sliceFactory.create(size0, size1)));
+        }
+    }
 
+    /**
+     * Creates a new instance by specifying the list of slices.
+     * 
+     * @param slices
+     *            the list of slices composing the new 3D array.
+     */
+    public SlicedInt32Array3D(Collection<? extends Int32Array> slices)
+    {
+        super(0, 0, 0);
+        if (slices.size() == 0)
+        {
+            return;
+        }
 
-	// =============================================================
-	// Specialization of the UInt32Array3D interface
+        // check slices dimensionality
+        for (Int32Array slice : slices)
+        {
+            if (slice.dimensionality() < 2)
+            {
+                throw new IllegalArgumentException("Slices must have two dimensions");
+            }
+        }
 
-    /* (non-Javadoc)
+        // check slices have same dimensions
+        Int32Array slice0 = slices.iterator().next();
+        int size0 = slice0.size(0);
+        int size1 = slice0.size(1);
+        for (Int32Array slice : slices)
+        {
+            if (slice.size(0) != size0 || slice.size(1) != size1)
+            {
+                throw new IllegalArgumentException("All slices must have the same size");
+            }
+        }
+
+        // update size information
+        this.size0 = size0;
+        this.size1 = size1;
+        this.size2 = slices.size();
+
+        // Create and populate the slice array
+        this.slices = new ArrayList<>(size2);
+        for (Int32Array slice : slices)
+        {
+            this.slices.add(Int32Array2D.wrap(slice));
+        }
+    }
+    
+
+    // =============================================================
+    // Specialization of the UInt32Array3D interface
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.array.scalar.Int32Array3D#getInt(int, int, int)
      */
     @Override
