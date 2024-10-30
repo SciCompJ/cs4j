@@ -137,44 +137,60 @@ public class Int32Row implements Iterable<Int32Run>
     
     private void setValue(int pos, int value)
     {
-        // retrieve the run before position, if it exists
-        Entry<Integer, Int32Run> entry = this.runs.floorEntry(pos);
-        Int32Run prevRun = entry != null ? entry.getValue() : null;
-        
-        // Does previous run (if it exist) contains position to update?
-        if (prevRun != null && prevRun.contains(pos))
+        // retrieve the "current" run, that starts before position, if it exists
+        Int32Run currRun = floorRun(pos);
+        // Does current run (if it exist) contains position to update?
+        if (currRun != null && currRun.contains(pos))
         {
             // if the run is associated with the same value, nothing to do
-            if (prevRun.value == value)
+            if (currRun.value == value)
             {
                 return;
             }
 
-            // otherwise, need to update previous run
-            // 1. make the previous run end just before inserted value
-            // (in case previous run start at pos, just remove current run)
-            runs.remove(prevRun.left);
-            if (prevRun.left < pos)
+            // in case current run start at pos, we also need to check if
+            // the run before can be expanded be one.
+            if (currRun.left == pos)
             {
-                addNewRun(prevRun.left, pos - 1, prevRun.value);
+                Int32Run prevRun = floorRun(pos - 1);
+                if (prevRun != null && prevRun.contains(pos - 1) && prevRun.value == value)
+                {
+                    // update previous run by expanding to the right
+                    runs.put(prevRun.left, new Int32Run(prevRun.left, pos, value));
+                    // if current run is greater than 1, update its left extremity, otherwise simply remove it
+                    runs.remove(pos);
+                    if (currRun.right > pos)
+                    {
+                        addNewRun(pos+1, currRun.right, currRun.value);
+                    }
+                    return;
+                }
             }
             
-            // 2. manage the end of the previous run, between pos and prevRun.rigth
-            if (prevRun.right > pos)
+            // otherwise, need to update current run
+            // 1. make the current run end just before inserted value
+            // (in case current run start at pos, just remove current run)
+            runs.remove(currRun.left);
+            if (currRun.left < pos)
+            {
+                addNewRun(currRun.left, pos - 1, currRun.value);
+            }
+            
+            // 2. manage the end of the current run, between pos and currRun.rigth
+            if (currRun.right > pos)
             {
                 // create new single-position run
                 addNewRun(pos, pos, value);
                 // add the remaining of previous run after current position
-                addNewRun(pos+1, prevRun.right, prevRun.value);
+                addNewRun(pos+1, currRun.right, currRun.value);
                 return;
             }
             else
             {
-                // pos is at the right end of previous run:
-                // nothing to add from previous run, but need to check if we can expand from next run
+                // pos is at the right end of current run:
+                // nothing to add from current run, but need to check if we can expand from next run
                 // retrieve the run after position, if it exists
-                entry = runs.ceilingEntry(pos);
-                Int32Run nextRun = entry != null ? entry.getValue() : null;
+                Int32Run nextRun = floorRun(pos + 1);
                 if (nextRun != null && nextRun.contains(pos + 1) && nextRun.value == value)
                 {
                     // expand the next run from the left
@@ -191,29 +207,26 @@ public class Int32Row implements Iterable<Int32Run>
         }
         
         // retrieve the run after position, if it exists
-        entry = runs.ceilingEntry(pos);
-        Int32Run nextRun = entry != null ? entry.getValue() : null;
+        Int32Run nextRun = floorRun(pos + 1);
 
         // case of 'joining' addition
         
         // is there a run just before (with same value)?
-        if (prevRun != null && prevRun.contains(pos - 1) && prevRun.value == value)
+        if (currRun != null && currRun.contains(pos - 1) && currRun.value == value)
         {
             if (nextRun != null && nextRun.contains(pos + 1)  && nextRun.value == value)
             {
                 // merge the two runs separated by the element we just added
-                Int32Run newRun = new Int32Run(prevRun.left, nextRun.right, value);
+                Int32Run newRun = new Int32Run(currRun.left, nextRun.right, value);
                 // replace the two runs by the new one
-                runs.remove(prevRun.left);
-                runs.remove(nextRun.left);
-                runs.put(newRun.left, newRun);
+                runs.put(currRun.left, newRun);
                 return;
             }
             else
             {
-                // replace previous run by a new run extended to the right
-                Int32Run newRun = new Int32Run(prevRun.left, pos, value);
-                runs.put(prevRun.left, newRun);
+                // replace current run by a new run extended to the right
+                Int32Run newRun = new Int32Run(currRun.left, pos, value);
+                runs.put(currRun.left, newRun);
                 return;
             }
         }
@@ -273,6 +286,8 @@ public class Int32Row implements Iterable<Int32Run>
     
 
     /**
+     * Returns the number of runs within this row.
+     * 
      * @return the number of runs within this row.
      */
     public int runCount()
@@ -292,6 +307,26 @@ public class Int32Row implements Iterable<Int32Run>
     }
     
     /**
+     * Returns the right-most run with left extremity lower than or equal to
+     * pos, if it exists, or null otherwise.
+     * 
+     * @param pos
+     *            the x-position of an element within the row
+     * @return the right-most run that could contain the specified position, or
+     *         null if there is no such Run.
+     */
+    private Int32Run floorRun(int pos)
+    {
+        Entry<Integer, Int32Run> entry = this.runs.floorEntry(pos);
+        return entry != null ? entry.getValue() : null;
+    }
+    
+    /**
+     * Returns the run containing the specified position, if it exists, or null
+     * otherwise. The containing run must have left extremity lower than or
+     * equal to <code>pos</code>, and right extremity greater than or equal to
+     * <code>pos</code>.
+     * 
      * @param pos
      *            the x-position of an element within the row
      * @return the Run containing the specified position, or null if there is no

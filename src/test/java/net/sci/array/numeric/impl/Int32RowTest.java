@@ -132,11 +132,34 @@ public class Int32RowTest
         {
             row.set(i, values[i]);
         }
+        assertEquals(3, row.runCount());
 
         row.set(2, 3);
         assertEquals(2, row.get(1));
         assertEquals(3, row.get(2));
         assertEquals(3, row.get(3));
+    }
+
+    /**
+     * Test method for {@link net.sci.array.numeric.impl.Int32Row#set(int, int)}.
+     */
+    @Test
+    public final void test_setZero_expandRightBeforeCurrentRun()
+    {
+        Int32Row row = new Int32Row();
+        row.set(2, 2);
+        row.set(3, 2);
+        row.set(4, 3);
+        row.set(5, 3);
+        assertEquals(2, row.runCount());
+        
+        // this should replace the run (2,3,2), instead of creating a new one
+        row.set(4, 2);
+        
+        assertEquals(2, row.get(3));
+        assertEquals(2, row.get(4));
+        assertEquals(3, row.get(5));
+        assertEquals(2, row.runCount());
     }
 
     /**
