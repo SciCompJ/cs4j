@@ -3,23 +3,29 @@
  */
 package net.sci.image.label;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.Int;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.IntArray3D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.image.binary.distmap.ChamferMask2D;
-import net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid;
 import net.sci.image.label.distmap.ChamferDistanceTransform2DFloat32;
 import net.sci.image.label.distmap.ChamferDistanceTransform2DUInt16;
 import net.sci.image.label.distmap.DistanceTransform2D;
 import net.sci.image.label.geoddist.GeodesicDistanceTransform2D;
 import net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid;
+import net.sci.image.label.geoddist.GeodesicDistanceTransform2DUInt16Hybrid;
 
 /**
  * A collection of static methods for processing label images.
@@ -29,6 +35,132 @@ import net.sci.image.label.geoddist.GeodesicDistanceTransform2DFloat32Hybrid;
  */
 public class LabelImages
 {
+    // ==============================================================
+    // Global methods
+    
+    /**
+     * Returns the binary array with value equals to {@code true} only when the
+     * corresponding value in the input array equals {@code label}.
+     * 
+     * @param labelMap
+     *            the input label map
+     * @param label
+     *            the label of the region to binarize. Using a value equal to
+     *            zero binarizes the background.
+     * @return a binary image of the selected label.
+     */
+    public static final BinaryArray binarize(IntArray<?> labelMap, int label)
+    {
+        BinaryArray res = BinaryArray.create(labelMap.size());
+        res.fillBooleans(pos -> labelMap.getInt(pos) == label);
+        return res;
+    }
+    
+    public static final <I extends Int<I>> IntArray<I> cropLabel(IntArray<I> labelMap, int label, int border)
+    {
+        // Compute bounds of region identified by label
+        int[][] bounds = labelBounds(labelMap, label);
+        
+        // Compute size of result, taking into account border
+        int nd = labelMap.dimensionality();
+        int[] dims = new int[nd];
+        for (int d = 0; d < nd; d++)
+        {
+            dims[d] = bounds[d][1] - bounds[d][0] + 1 + 2 * border; 
+        }
+        
+        IntArray<I> res = labelMap.newInstance(dims);
+        int[] pos2 = new int[nd];
+        for (int[] pos : res.positions())
+        {
+            // compute position within original array
+            for (int d = 0; d < nd; d++)
+            {
+                pos2[d] = pos[d] + bounds[d][0] - border;
+            }
+            if (labelMap.getInt(pos2) == label)
+            {
+                res.setInt(pos, label);
+            }
+        }
+
+        return res;
+    }
+    
+    private static final <I extends Int<I>> int[][] labelBounds(IntArray<I> labelMap, int label)
+    {
+        if (labelMap.dimensionality() == 2)
+        {
+            // Initialize label bounds
+            int xmin = Integer.MAX_VALUE;
+            int xmax = Integer.MIN_VALUE;
+            int ymin = Integer.MAX_VALUE;
+            int ymax = Integer.MIN_VALUE;
+
+            int sizeX = labelMap.size(0);
+            int sizeY = labelMap.size(1);
+            IntArray2D<I> labelMap2d = IntArray2D.wrap(labelMap); 
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    // process only specified label
+                    int val = labelMap2d.getInt(x, y);
+                    if (val == label)
+                    {
+                        // update bounds of current label
+                        xmin = min(xmin, x);
+                        xmax = max(xmax, x);
+                        ymin = min(ymin, y);
+                        ymax = max(ymax, y);
+                    }
+                }
+            }
+            return new int[][] { { xmin, xmax }, { ymin, ymax } };
+        }
+        else if (labelMap.dimensionality() == 3)
+        {
+            // Initialize label bounds
+            int xmin = Integer.MAX_VALUE;
+            int xmax = Integer.MIN_VALUE;
+            int ymin = Integer.MAX_VALUE;
+            int ymax = Integer.MIN_VALUE;
+            int zmin = Integer.MAX_VALUE;
+            int zmax = Integer.MIN_VALUE;
+
+            int sizeX = labelMap.size(0);
+            int sizeY = labelMap.size(1);
+            int sizeZ = labelMap.size(2);
+            IntArray3D<I> labelMap3d = IntArray3D.wrap(labelMap); 
+            for (int z = 0; z < sizeZ; z++)
+            {
+                for (int y = 0; y < sizeY; y++)
+                {
+                    for (int x = 0; x < sizeX; x++)
+                    {
+                        // process only specified label
+                        int val = labelMap3d.getInt(x, y, z);
+                        if (val == label)
+                        {
+                            // update bounds of current label
+                            xmin = min(xmin, x);
+                            xmax = max(xmax, x);
+                            ymin = min(ymin, y);
+                            ymax = max(ymax, y);
+                            zmin = min(zmin, z);
+                            zmax = max(zmax, z);
+                        }
+                    }
+                }
+            }
+            return new int[][] { { xmin, xmax }, { ymin, ymax } , { zmin, zmax } };
+        }
+        else
+        {
+            throw new RuntimeException("Implemented onlty for dimensions 2 and 3");
+        }
+    }
+    
     
     // ==============================================================
     // Utility methods
