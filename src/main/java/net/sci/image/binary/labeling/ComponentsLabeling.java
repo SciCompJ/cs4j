@@ -3,10 +3,10 @@ package net.sci.image.binary.labeling;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
 import net.sci.array.binary.BinaryArray;
-import net.sci.array.numeric.Int32Array;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.impl.RunLengthInt32ArrayFactory;
 import net.sci.image.Image;
 import net.sci.image.ImageArrayOperator;
 import net.sci.image.ImageType;
@@ -21,10 +21,14 @@ public interface ComponentsLabeling extends ArrayOperator, ImageArrayOperator
      * Choose an IntArray factory based on a bit depth. This method is used to
      * facilitate conversion from ImageJ code.
      * 
+     * In case of bit depth equal to 32, returns an instance of
+     * <code>RunLengthInt32ArrayFactory</code> in order to reduce memory
+     * footprint.
+     * 
      * @param bitDepth
      *            the number of bits for representing integers, that must be 8,
      *            16 or 32.
-     * @return an instance of UInt8Array, UInt16Array, or UInt32Array.
+     * @return a factory for UInt8Array, UInt16Array, or UInt32Array.
      */
     public static IntArray.Factory<?> chooseIntArrayFactory(int bitDepth)
     {
@@ -32,7 +36,7 @@ public interface ComponentsLabeling extends ArrayOperator, ImageArrayOperator
         {
             case 8 -> UInt8Array.defaultFactory;
             case 16 -> UInt16Array.defaultFactory;
-            case 32 -> Int32Array.defaultFactory;
+            case 32 -> new RunLengthInt32ArrayFactory();
             default -> throw new IllegalArgumentException("Bit Depth should be 8, 16 or 32.");
         };
     }
