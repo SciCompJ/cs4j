@@ -13,10 +13,10 @@ import net.sci.array.numeric.Float32Array3D;
  * @author dlegland
  *
  */
-public class NearestNeighborInterpolator3DTest
+public class NearestNeighborInterpolatedArray3DTest
 {
     /**
-     * Test method for {@link net.sci.array.numeric.interp.LinearInterpolator2D#evaluate(double, double)}.
+     * Test method for {@link net.sci.array.numeric.interp.LinearInterpolatedArray2D#evaluate(double, double)}.
      */
     @Test
     public final void testEvaluate_simple()
@@ -25,7 +25,7 @@ public class NearestNeighborInterpolator3DTest
         Float32Array3D array = Float32Array3D.create(10, 10, 10);
         array.setValue(5, 5, 5, 100.0);
         // Create interpolator for input array
-        NearestNeighborInterpolator3D interp = new NearestNeighborInterpolator3D(array);
+        NearestNeighborInterpolatedArray3D interp = new NearestNeighborInterpolatedArray3D(array);
         
         // evaluate value close to the defined value
         double value = interp.evaluate(4.6, 4.6, 4.6);
@@ -33,7 +33,7 @@ public class NearestNeighborInterpolator3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.numeric.interp.NearestNeighborInterpolator3D#evaluate(double, double, double)}.
+     * Test method for {@link net.sci.array.numeric.interp.NearestNeighborInterpolatedArray3D#evaluate(double, double, double)}.
      */
     @Test
     public final void testEvaluate_bounds()
@@ -52,7 +52,7 @@ public class NearestNeighborInterpolator3DTest
         }
 
         // Create interpolator for input array
-        NearestNeighborInterpolator3D interp = new NearestNeighborInterpolator3D(array);
+        NearestNeighborInterpolatedArray3D interp = new NearestNeighborInterpolatedArray3D(array);
         
         // check in the middle of array
         assertEquals(100.0, interp.evaluate(5.0, 5.0, 5.0), 0.01);

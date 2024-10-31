@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.array.numeric.ScalarArray2D;
-import net.sci.array.numeric.interp.LinearInterpolator2D;
+import net.sci.array.numeric.interp.LinearInterpolatedArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.io.TiffImageReader;
 import net.sci.optim.NelderMeadSimplexOptimizer;
@@ -42,8 +42,8 @@ public class TranslationModel2DDemo
 		ScalarArray2D<?> image2 = (ScalarArray2D<?>) reader.readImage().getData();
 
 		// Create interpolators
-		LinearInterpolator2D interp1 = new LinearInterpolator2D(image1);
-		LinearInterpolator2D interp2 = new LinearInterpolator2D(image2);
+		LinearInterpolatedArray2D interp1 = new LinearInterpolatedArray2D(image1);
+		LinearInterpolatedArray2D interp2 = new LinearInterpolatedArray2D(image2);
 
 		
 		// Create parametric transform model		

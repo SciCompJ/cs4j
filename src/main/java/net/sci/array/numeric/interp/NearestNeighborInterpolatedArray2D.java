@@ -7,7 +7,8 @@ import net.sci.array.numeric.ScalarArray2D;
 
 
 /**
- * Evaluates values within a 2D scalar array using bi-linear interpolation.
+ * Evaluates values within a 2D scalar array using nearest-neighbor
+ * interpolation.
  * 
  * This implementation allows to specify the value that will be returned when
  * evaluating outside of array bounds.
@@ -17,19 +18,19 @@ import net.sci.array.numeric.ScalarArray2D;
     Float32Array2D array = Float32Array2D.create(10, 10);
     array.setValue(5, 5, 100.0);
     // Create interpolator for input array
-    LinearInterpolator2D interp = new LinearInterpolator2D(array);
+    NearestNeighborInterpolator2D interp = new NearestNeighborInterpolator2D(array);
     // evaluate value close to the defined value
     double value = interp.evaluate(4.6, 4.6);
-    // should obtain 36.0 (equal to 100 * 0.60 * 0.60)
+    // should obtain 100.0, the value of the nearest neighbor
  * }</pre>
  * 
- * @see NearestNeighborInterpolator2D
- * @see LinearInterpolator3D
+ * @see NearestNeighborInterpolatedArray3D
+ * @see LinearInterpolatedArray2D
  * 
  * @author dlegland
  *
  */
-public class LinearInterpolator2D implements ScalarFunction2D
+public class NearestNeighborInterpolatedArray2D implements ScalarFunction2D
 {
     // ===================================================================
     // class variables
@@ -49,18 +50,18 @@ public class LinearInterpolator2D implements ScalarFunction2D
     // constructors
     
     /**
-     * Creates a new linear interpolator for a 2D scalar array.
+     * Creates a new nearest-neighbor interpolator for a 2D scalar array.
      * 
      * @param array
      *            the array containing values to interpolate.
      */
-    public LinearInterpolator2D(ScalarArray2D<?> array)
+    public NearestNeighborInterpolatedArray2D(ScalarArray2D<?> array)
     {
         this.array = array;
     }
     
     /**
-     * Creates a new linear interpolator for a 2D scalar array.
+     * Creates a new nearest-neighbor interpolator for a 2D scalar array.
      * 
      * @param array
      *            the array containing values to interpolate.
@@ -68,7 +69,7 @@ public class LinearInterpolator2D implements ScalarFunction2D
      *            the value returned when interpolating outside of array bounds.
      *            Default value is 0.0.
      */
-    public LinearInterpolator2D(ScalarArray2D<?> array, double padValue)
+    public NearestNeighborInterpolatedArray2D(ScalarArray2D<?> array, double padValue)
     {
         this.array = array;
         this.padValue = padValue;
@@ -79,8 +80,8 @@ public class LinearInterpolator2D implements ScalarFunction2D
     // implementation of the ScalarFunction2D interface
     
     /**
-     * Evaluates value within a 2D array. Returns stored pad value if evaluation
-     * is outside image bounds.
+     * Evaluates value within the 2D scalar array. Returns pad value if position
+     * is outside array bound.
      * 
      * @param x
      *            the x-coordinate of the position to evaluate
@@ -90,31 +91,15 @@ public class LinearInterpolator2D implements ScalarFunction2D
      */
     public double evaluate(double x, double y)
     {
-        // select points located inside interpolation area
-        // (smaller than image size)
-        int[] dims = this.array.size();
-        boolean isInside = x >= 0 && y >= 0 && x < (dims[0] - 1) && y < (dims[1] - 1);
-        if (!isInside)
-        {
-            return this.padValue;
-        }
-        
         // compute indices
-        int i = (int) Math.floor(x);
-        int j = (int) Math.floor(y);
+        int i = (int) Math.round(x);
+        int j = (int) Math.round(y);
         
-        // compute distances to lower-left corner of pixel
-        double dx = (x - i);
-        double dy = (y - j);
+        // check if point is located within interpolation area
+        if (!array.containsPosition(i, j)) return this.padValue;
         
-        // values of the 4 pixels around each current point
-        double val11 = this.array.getValue(i, j) * (1 - dx) * (1 - dy);
-        double val12 = this.array.getValue(i + 1, j) * dx * (1 - dy);
-        double val21 = this.array.getValue(i, j + 1) * (1 - dx) * dy;
-        double val22 = this.array.getValue(i + 1, j + 1) * dx * dy;
-        
-        // compute result values
-        double val = val11 + val12 + val21 + val22;
+        // Returns the state of the closest image point
+        double val = this.array.getValue(i, j);
         
         return val;
     }

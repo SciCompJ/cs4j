@@ -13,10 +13,11 @@ import net.sci.array.numeric.Float32Array2D;
  * @author dlegland
  *
  */
-public class NearestNeighborInterpolator2DTest
+public class LinearInterpolatedArray2DTest
 {
+
     /**
-     * Test method for {@link net.sci.array.numeric.interp.LinearInterpolator2D#evaluate(double, double)}.
+     * Test method for {@link net.sci.array.numeric.interp.LinearInterpolatedArray2D#evaluate(double, double)}.
      */
     @Test
     public final void testEvaluate_simple()
@@ -25,14 +26,14 @@ public class NearestNeighborInterpolator2DTest
         Float32Array2D array = Float32Array2D.create(10, 10);
         array.setValue(5, 5, 100.0);
         // Create interpolator for input array
-        NearestNeighborInterpolator2D interp = new NearestNeighborInterpolator2D(array);
+        LinearInterpolatedArray2D interp = new LinearInterpolatedArray2D(array);
         // evaluate value close to the defined value
         double value = interp.evaluate(4.6, 4.6);
-        assertEquals(100.0, value, 0.01);
+        assertEquals(36.0, value, 0.01);
     }
     
     /**
-     * Test method for {@link net.sci.array.numeric.interp.NearestNeighborInterpolator2D#evaluate(double, double)}.
+     * Test method for {@link net.sci.array.numeric.interp.LinearInterpolatedArray2D#evaluate(double, double)}.
      */
     @Test
     public final void testEvaluate_bounds()
@@ -48,7 +49,7 @@ public class NearestNeighborInterpolator2DTest
         }
         
         // Create interpolator for input array
-        NearestNeighborInterpolator2D interp = new NearestNeighborInterpolator2D(array);
+        LinearInterpolatedArray2D interp = new LinearInterpolatedArray2D(array);
         
         // check in the middle of array
         assertEquals(100.0, interp.evaluate(5.0, 5.0), 0.01);

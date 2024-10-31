@@ -4,7 +4,7 @@
 package net.sci.register.image;
 
 import net.sci.array.numeric.ScalarArray3D;
-import net.sci.array.numeric.interp.LinearInterpolator3D;
+import net.sci.array.numeric.interp.LinearInterpolatedArray3D;
 import net.sci.array.numeric.interp.ScalarFunction3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Transform3D;
@@ -21,7 +21,7 @@ public class TransformedImage3D implements ScalarFunction3D
 	
 	public TransformedImage3D(ScalarArray3D<?> image, Transform3D transform)
 	{
-		this.image = new LinearInterpolator3D(image);
+		this.image = new LinearInterpolatedArray3D(image);
 		this.transform = transform;
 	}
 

@@ -24,13 +24,13 @@ import net.sci.array.numeric.ScalarArray3D;
     assertEquals(21.60, value, 0.01);
  * }</pre>
  * 
- * @see NearestNeighborInterpolator3D
- * @see LinearInterpolator2D
+ * @see NearestNeighborInterpolatedArray3D
+ * @see LinearInterpolatedArray2D
  * 
  * @author dlegland
  *
  */
-public class LinearInterpolator3D implements ScalarFunction3D
+public class LinearInterpolatedArray3D implements ScalarFunction3D
 {
     // ===================================================================
     // class variables
@@ -55,7 +55,7 @@ public class LinearInterpolator3D implements ScalarFunction3D
      * @param array
      *            the array containing values to interpolate.
      */
-    public LinearInterpolator3D(ScalarArray3D<?> array)
+    public LinearInterpolatedArray3D(ScalarArray3D<?> array)
     {
         this.array = array;
     }
@@ -69,7 +69,7 @@ public class LinearInterpolator3D implements ScalarFunction3D
      *            the value returned when interpolating outside of array bounds.
      *            Default value is 0.0.
      */
-    public LinearInterpolator3D(ScalarArray3D<?> array, double padValue)
+    public LinearInterpolatedArray3D(ScalarArray3D<?> array, double padValue)
     {
         this.array = array;
         this.padValue = padValue;

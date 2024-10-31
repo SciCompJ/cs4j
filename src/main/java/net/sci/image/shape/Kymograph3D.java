@@ -8,7 +8,7 @@ import net.sci.array.Array;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
-import net.sci.array.numeric.interp.LinearInterpolator2D;
+import net.sci.array.numeric.interp.LinearInterpolatedArray2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.Polyline2D;
 import net.sci.image.ImageArrayOperator;
@@ -83,7 +83,7 @@ public class Kymograph3D extends AlgoStub implements ImageArrayOperator
         {
             // create interpolator on slice
             ScalarArray2D<?> slice = source.slice(z);
-            LinearInterpolator2D interp = new LinearInterpolator2D(slice);
+            LinearInterpolatedArray2D interp = new LinearInterpolatedArray2D(slice);
             
             // iterate on polyline vertices
             for (int iv = 0; iv < nv; iv++)

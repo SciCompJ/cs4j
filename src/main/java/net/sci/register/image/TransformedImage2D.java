@@ -6,7 +6,7 @@ package net.sci.register.image;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Transform2D;
 import net.sci.array.numeric.ScalarArray2D;
-import net.sci.array.numeric.interp.LinearInterpolator2D;
+import net.sci.array.numeric.interp.LinearInterpolatedArray2D;
 import net.sci.array.numeric.interp.ScalarFunction2D;
 
 /**
@@ -21,7 +21,7 @@ public class TransformedImage2D implements ScalarFunction2D
 	
 	public TransformedImage2D(ScalarArray2D<?> image, Transform2D transform)
 	{
-		this.image = new LinearInterpolator2D(image);
+		this.image = new LinearInterpolatedArray2D(image);
 		this.transform = transform;
 	}
 

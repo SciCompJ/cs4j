@@ -13,10 +13,10 @@ import net.sci.array.numeric.Float32Array3D;
  * @author dlegland
  *
  */
-public class LinearInterpolator3DTest
+public class LinearInterpolatedArray3DTest
 {
     /**
-     * Test method for {@link net.sci.array.numeric.interp.LinearInterpolator2D#evaluate(double, double)}.
+     * Test method for {@link net.sci.array.numeric.interp.LinearInterpolatedArray2D#evaluate(double, double)}.
      */
     @Test
     public final void testEvaluate_simple()
@@ -25,7 +25,7 @@ public class LinearInterpolator3DTest
         Float32Array3D array = Float32Array3D.create(10, 10, 10);
         array.setValue(5, 5, 5, 100.0);
         // Create interpolator for input array
-        LinearInterpolator3D interp = new LinearInterpolator3D(array);
+        LinearInterpolatedArray3D interp = new LinearInterpolatedArray3D(array);
         // evaluate value close to the defined value
         double value = interp.evaluate(4.6, 4.6, 4.6);
         // should obtain 21.60 (equal to 100 * 0.60 * 0.60 * 0.60)
@@ -33,7 +33,7 @@ public class LinearInterpolator3DTest
     }
     
     /**
-     * Test method for {@link net.sci.array.numeric.interp.NearestNeighborInterpolator3D#evaluate(double, double, double)}.
+     * Test method for {@link net.sci.array.numeric.interp.NearestNeighborInterpolatedArray3D#evaluate(double, double, double)}.
      */
     @Test
     public final void testEvaluate_bounds()
@@ -52,7 +52,7 @@ public class LinearInterpolator3DTest
         }
 
         // Create interpolator for input array
-        LinearInterpolator3D interp = new LinearInterpolator3D(array);
+        LinearInterpolatedArray3D interp = new LinearInterpolatedArray3D(array);
         
         // check in the middle of array
         assertEquals(100.0, interp.evaluate(5.0, 5.0, 5.0), 0.01);

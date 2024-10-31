@@ -10,7 +10,7 @@ import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.VectorArray;
 import net.sci.array.numeric.VectorArray2D;
-import net.sci.array.numeric.interp.LinearInterpolator2D;
+import net.sci.array.numeric.interp.LinearInterpolatedArray2D;
 import net.sci.image.ImageArrayOperator;
 
 /**
@@ -52,7 +52,7 @@ public class RotationAroundCenter extends AlgoStub implements ImageArrayOperator
 	public void processScalar2d(ScalarArray2D<?> source, ScalarArray2D<?> target)
 	{
 		// Create interpolator for input array
-		LinearInterpolator2D interp = new LinearInterpolator2D(source);
+		LinearInterpolatedArray2D interp = new LinearInterpolatedArray2D(source);
 				
 		// output array size
 		int sizeX = target.size(0);
