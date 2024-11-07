@@ -42,6 +42,18 @@ public interface Column
     public Object get(int row);
     
     /**
+     * Returns a string representation of the element at the specified row.
+     * Default behavior is to convert the result of the <code>get()</code>
+     * method into a String instance, but more efficient behaviors may be
+     * implemented.
+     * 
+     * @param row
+     *            the row index within this column
+     * @return a String representation of the element at the specified row.
+     */
+    public String getString(int row);
+    
+    /**
      * Returns the numeric value at the i-th row.
      * 
      * @param row

@@ -684,7 +684,7 @@ public class DefaultTable extends TableStub
         }
         
         @Override
-        public String getName(int row)
+        public String getString(int row)
         {
             int index = (int) data[colIndex][row];
             return this.colLevels[index];

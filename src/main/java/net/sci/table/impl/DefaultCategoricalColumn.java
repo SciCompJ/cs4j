@@ -11,7 +11,7 @@ import net.sci.table.Column;
 /**
  * Default implementation for categorical columns.
  */
-public class DefaultCategoricalColumn implements CategoricalColumn
+public class DefaultCategoricalColumn extends ColumnStub implements CategoricalColumn
 {
     String name;
     int[] data;
@@ -19,7 +19,7 @@ public class DefaultCategoricalColumn implements CategoricalColumn
 
     public DefaultCategoricalColumn(String name, int[] indices, String[] levels)
     {
-        this.name = name;
+        super(name);
         this.data = indices;
         this.levels = levels;
     }
@@ -30,19 +30,6 @@ public class DefaultCategoricalColumn implements CategoricalColumn
     {
         return this.data.length;
     }
-
-    @Override
-    public String getName()
-    {
-        return this.name;
-    }
-
-    @Override
-    public void setName(String newName)
-    {
-        this.name = newName;
-    }
-
 
     @Override
     public Object get(int row)
@@ -68,16 +55,17 @@ public class DefaultCategoricalColumn implements CategoricalColumn
     }
 
     @Override
-    public String getName(int row)
-    {
-        return this.levels[this.data[row]];
-    }
-
-    @Override
     public String[] levelNames()
     {
         return this.levels;
     }
+
+    @Override
+    public String getString(int row)
+    {
+        return this.levels[this.data[row]];
+    }
+
 
     @Override
     public Column duplicate()

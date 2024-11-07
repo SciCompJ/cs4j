@@ -13,7 +13,9 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import net.sci.table.CategoricalColumn;
 import net.sci.table.Column;
+import net.sci.table.LogicalColumn;
 import net.sci.table.NumericColumn;
 import net.sci.table.Table;
 
@@ -307,11 +309,10 @@ public class ColumnsTable extends TableStub
     public final static void main(String[] args)
     {
         Column[] columns = new Column[] { 
-                NumericColumn.create("Length", new double[15]), 
-                NumericColumn.create("Area", new double[15]), 
-                NumericColumn.create("Diam.", new double[15]), 
-                NumericColumn.create("Number", new double[15]), 
-                NumericColumn.create("Density", new double[15]), 
+                NumericColumn.create("Length", new double[] {1.5, 2.5, 3.5, 4.5, 5.5}),
+                NumericColumn.create("Number", new double[] {3, 5, 1, 8, 2}), 
+                LogicalColumn.create("Check", new boolean[] {true, true, false, true, false}), 
+                CategoricalColumn.create("Factor", new int[] {0, 1, 2, 1, 2}, new String[] {"Red", "Green", "Blue"}), 
         };
         ColumnsTable table = new ColumnsTable(columns);
         

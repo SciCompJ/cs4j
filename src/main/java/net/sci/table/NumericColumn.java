@@ -88,6 +88,12 @@ public interface NumericColumn extends Column, Iterable<Double>
     }
     
     @Override
+    public default String getString(int row)
+    {
+        return Double.toString(this.getValue(row));
+    }
+    
+    @Override
     public default String contentSummary()
     {
         StringBuilder sb = new StringBuilder();

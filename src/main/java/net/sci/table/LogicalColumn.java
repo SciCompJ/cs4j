@@ -41,6 +41,12 @@ public interface LogicalColumn extends NumericColumn
     }
     
     @Override
+    public default String getString(int row)
+    {
+        return Boolean.toString(this.getState(row));
+    }
+    
+    @Override
     public default double getValue(int row)
     {
         return this.getState(row) ? 1.0 : 0.0;

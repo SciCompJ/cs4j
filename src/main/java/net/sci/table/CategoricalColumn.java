@@ -20,15 +20,6 @@ public interface CategoricalColumn extends Column
     }
     
     /**
-     * Returns the category name for the specified row index.
-     * 
-     * @param row
-     *            the row index (0-based)
-     * @return the category name for specified row index
-     */
-    public String getName(int row);
-    
-    /**
      * Returns the different levels that can be represented within this
      * categorical column.
      * 
@@ -37,6 +28,16 @@ public interface CategoricalColumn extends Column
      */
     public String[] levelNames();
 
+    /**
+     * Returns the category name for the specified row index.
+     * 
+     * @param row
+     *            the row index (0-based)
+     * @return the category name for specified row index
+     */
+    @Override
+    public String getString(int row);
+    
     @Override
     public default String contentSummary()
     {

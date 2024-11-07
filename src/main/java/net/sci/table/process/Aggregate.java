@@ -54,7 +54,7 @@ public class Aggregate
         
         for (int r = 0; r < column.length(); r++)
         {
-            String level = groups.getName(r);
+            String level = groups.getString(r);
             for (int j = 0; j < nGroups; j++)
             {
                 if (levels[j].equals(level))

@@ -13,14 +13,14 @@ import net.sci.table.LogicalColumn;
 /**
  * 
  */
-public class DefaultLogicalColumn implements LogicalColumn
+public class DefaultLogicalColumn extends ColumnStub implements LogicalColumn
 {
     String name;
     boolean[] data;
 
     public DefaultLogicalColumn(String name, boolean[] values)
     {
-        this.name = name;
+        super(name);
         this.data = values;
     }
     
@@ -28,18 +28,6 @@ public class DefaultLogicalColumn implements LogicalColumn
     public int length()
     {
         return this.data.length;
-    }
-    
-    @Override
-    public String getName()
-    {
-        return this.name;
-    }
-    
-    @Override
-    public void setName(String newName)
-    {
-        this.name = newName;
     }
     
     @Override

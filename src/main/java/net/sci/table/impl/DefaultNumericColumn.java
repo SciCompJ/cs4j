@@ -12,14 +12,14 @@ import net.sci.table.NumericColumn;
 /**
  * Default implementation for columns containing numeric values.
  */
-public class DefaultNumericColumn implements NumericColumn
+public class DefaultNumericColumn extends ColumnStub implements NumericColumn
 {
     String name;
     double[] data;
     
     public DefaultNumericColumn(String name, double[] values)
     {
-        this.name = name;
+        super(name);
         this.data = values;
     }
     
@@ -27,18 +27,6 @@ public class DefaultNumericColumn implements NumericColumn
     public int length()
     {
         return this.data.length;
-    }
-
-    @Override
-    public String getName()
-    {
-        return this.name;
-    }
-
-    @Override
-    public void setName(String newName)
-    {
-        this.name = newName;
     }
 
     @Override
