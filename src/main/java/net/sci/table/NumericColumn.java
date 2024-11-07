@@ -11,6 +11,8 @@ import net.sci.table.impl.DefaultNumericColumn;
 /**
  * A column in a Table that contains only numeric values.
  * 
+ * @see FloatColumn
+ * 
  * @author dlegland
  *
  */
@@ -35,7 +37,16 @@ public interface NumericColumn extends Column, Iterable<Double>
     }
     
     /**
-     * Changes the numerical value of the specified row.
+     * Returns the numerical value at the specified row index
+     * 
+     * @param row
+     *            the row index
+     * @return the value at specified row index
+     */
+    public double getValue(int row);
+    
+    /**
+     * Changes the numerical value at the specified row index
      * 
      * @param row
      *            the row index
@@ -46,6 +57,21 @@ public interface NumericColumn extends Column, Iterable<Double>
     public void setValue(int row, double value);
     
     /**
+     * Returns the set of values within this column as an array of double.
+     * 
+     * @return the set of values within this column as an array of double.
+     */
+    public default double[] getValues()
+    {
+        double[] values = new double[this.length()];
+        for (int i = 0; i < length(); i++)
+        {
+            values[i] = this.getValue(i);
+        }
+        return values;
+    }
+    
+    /**
      * Copies the values from this column into the specified array.
      * 
      * @param values
@@ -53,23 +79,13 @@ public interface NumericColumn extends Column, Iterable<Double>
      * @param index
      *            the starting index within the target array
      */
-    public void copyValues(double[] values, int index);
-    
-    /**
-     * Returns the numerical value of the specified row.
-     * 
-     * @param row
-     *            the row index
-     * @return the value at specified row index
-     */
-    public double getValue(int row);
-    
-    /**
-     * Returns the set of values within this column as an array of double.
-     * 
-     * @return the set of values within this column as an array of double.
-     */
-    public double[] getValues();
+    public default void copyValues(double[] values, int index)
+    {
+        for (int i = 0; i < length(); i++)
+        {
+            values[index + i] = this.getValue(i);
+        }
+    }
     
     @Override
     public default String contentSummary()

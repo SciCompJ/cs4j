@@ -729,12 +729,6 @@ public class DefaultTable extends TableStub
         }
 
         @Override
-        public void copyValues(double[] values, int index)
-        {
-            System.arraycopy(data[colIndex], 0, values, index, nRows);
-        }
-
-        @Override
         public Column duplicate()
         {
             double[] values = new double[nRows];
