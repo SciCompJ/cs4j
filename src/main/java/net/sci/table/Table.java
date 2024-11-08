@@ -5,7 +5,6 @@ package net.sci.table;
 
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import net.sci.axis.Axis;
@@ -104,6 +103,25 @@ public interface Table
         
         // setup meta-data
         table.setRowNames(rowNames);
+        return table;
+    }
+    
+    /**
+     * Creates a new data table from a series of columns, and a row axis.
+     * 
+     * @param rowAxis
+     *            an axis object describing the rows of the table
+     * @param columns
+     *            the columns
+     * @return a new Table instance            
+     */
+    public static Table create(Axis rowAxis, Column... columns)
+    {
+        // initialize table
+        ColumnsTable table = new ColumnsTable(columns);
+        
+        // setup meta-data
+        table.setRowAxis(rowAxis);
         return table;
     }
     
@@ -382,47 +400,53 @@ public interface Table
         String rowPattern = "%" + maxLength + "s ";
         if (colNames != null)
         {
+            StringBuilder sb = new StringBuilder();
             if (rowNames != null)
             {
-                System.out.print(String.format(rowPattern, ""));
+                String rowNameHeader = rowAxis() != null ? rowAxis().getName() : "";
+//                if (rowAxis() != null) sb.append(String.format(rowPattern, rowAxis().getName()));
+                sb.append(String.format(rowPattern, rowNameHeader));
             }
             for (int c = 0; c < nCols; c++)
             {
-                System.out.print(colNames[c] + " ");
+                sb.append(colNames[c] + " ");
             }
-            System.out.println();
+            System.out.println(sb.toString());
         }
 
         // Then display content of each row
         for (int r = 0; r < nRows; r++)
         {
+            StringBuilder sb = new StringBuilder();
+            
             // row header
             if (rowNames != null)
             {
-                System.out.print(String.format(rowPattern, rowNames[r]));
+                sb.append(String.format(rowPattern, rowNames[r]));
             }
             
             // row data
             for (int c = 0; c < nCols; c++)
             {
-                Object obj = this.get(r, c);
-                String str;
-                if (obj instanceof Double)
-                {
-                    str = String.format(Locale.ENGLISH, "%.3f", obj);
-                }
-                else if (obj instanceof String)
-                {
-                    str = (String) obj;
-                }
-                else
-                {
-                    str = obj.toString();
-                }
-                    
-                System.out.print(str + "\t");
+                sb.append(this.column(c).getString(r) + "\t");
+//                Object obj = this.get(r, c);
+//                String str;
+//                if (obj instanceof Double)
+//                {
+//                    str = String.format(Locale.ENGLISH, "%.3f", obj);
+//                }
+//                else if (obj instanceof String)
+//                {
+//                    str = (String) obj;
+//                }
+//                else
+//                {
+//                    str = obj.toString();
+//                }
+//                    
+//                System.out.print(str + "\t");
             }
-            System.out.println();
+            System.out.println(sb.toString());
         }
     }
 

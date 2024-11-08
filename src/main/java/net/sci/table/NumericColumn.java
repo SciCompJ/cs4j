@@ -90,7 +90,7 @@ public interface NumericColumn extends Column, Iterable<Double>
     @Override
     public default String getString(int row)
     {
-        return Double.toString(this.getValue(row));
+        return String.format(Locale.ENGLISH, "%.3f", this.getValue(row));
     }
     
     @Override

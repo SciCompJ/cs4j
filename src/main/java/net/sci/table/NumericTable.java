@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import net.sci.axis.Axis;
+import net.sci.axis.CategoricalAxis;
 import net.sci.table.impl.DefaultNumericTable;
 import net.sci.table.impl.RowNumberTable;
 
@@ -43,7 +45,29 @@ public interface NumericTable extends Table
     {
         return new DefaultNumericTable(nRows, nColumns);
     }
-    
+
+    /**
+     * Creates a new numeric data table from an Axis instance describing rows,
+     * and a number of columns.
+     * 
+     * @param rowAxis
+     *            the axis describing the rows.
+     * @param nColumns
+     *            the number of columns
+     * @return a new Table instance
+     */
+    public static NumericTable create(Axis rowAxis, int nColumns)
+    {
+        if (!(rowAxis instanceof CategoricalAxis))
+        {
+            throw new RuntimeException("Row axis must be an instance of CategoricalAxis");
+        }
+        int nRows = ((CategoricalAxis) rowAxis).length();
+        DefaultNumericTable table = new DefaultNumericTable(nRows, nColumns);
+        table.setRowAxis(rowAxis);
+        return table;
+    }
+
     public static NumericTable keepNumericColumns(Table table)
     {
         // identifies index of numeric columns

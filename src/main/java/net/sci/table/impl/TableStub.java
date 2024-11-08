@@ -60,6 +60,18 @@ public abstract class TableStub implements Table
         return this.rowAxis;
     }
 
+    public void setRowAxis(Axis axis)
+    {
+        if (axis != null)
+        {
+            if (!(axis instanceof CategoricalAxis))
+            {
+                throw new RuntimeException("Row axis must be an instance of CategoricalAxis");
+            }
+        }
+        this.rowAxis = (CategoricalAxis) axis;
+    }
+
     public String[] getRowNames()
     {
         return this.rowAxis != null ? rowAxis.itemNames() : null;
