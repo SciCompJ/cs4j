@@ -14,7 +14,6 @@ import net.sci.table.NumericColumn;
  */
 public class DefaultNumericColumn extends ColumnStub implements NumericColumn
 {
-    String name;
     double[] data;
     
     public DefaultNumericColumn(String name, double[] values)

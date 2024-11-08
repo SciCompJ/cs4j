@@ -7,17 +7,16 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 
-import net.sci.table.Column;
-import net.sci.table.LogicalColumn;
+import net.sci.table.IntegerColumn;
 
 /**
  * 
  */
-public class DefaultLogicalColumn extends ColumnStub implements LogicalColumn
+public class DefaultIntegerColumn extends ColumnStub implements IntegerColumn
 {
-    boolean[] data;
+    int[] data;
 
-    public DefaultLogicalColumn(String name, boolean[] values)
+    public DefaultIntegerColumn(String name, int[] values)
     {
         super(name);
         this.data = values;
@@ -32,30 +31,30 @@ public class DefaultLogicalColumn extends ColumnStub implements LogicalColumn
     @Override
     public Object get(int row)
     {
-        return Boolean.valueOf(this.data[row]);
+        return Integer.valueOf(this.data[row]);
     }
     
     @Override
     public void setValue(int row, double value)
     {
-        this.data[row] = value > 0.0; 
+        this.data[row] = (int) value; 
     }
 
     @Override
-    public Column duplicate()
+    public IntegerColumn duplicate()
     {
-        boolean[] data2 = Arrays.copyOf(this.data, this.data.length);
-        return new DefaultLogicalColumn(this.name, data2);
+        int[] data2 = Arrays.copyOf(this.data, this.data.length);
+        return new DefaultIntegerColumn(this.name, data2);
     }
     
     @Override
-    public boolean getState(int row)
+    public int getInt(int row)
     {
         return this.data[row];
     }
     
     @Override
-    public void setState(int row, boolean b)
+    public void setInt(int row, int b)
     {
         this.data[row] = b;
     }
@@ -64,7 +63,7 @@ public class DefaultLogicalColumn extends ColumnStub implements LogicalColumn
     public Iterator<Double> iterator()
     {
         return IntStream.range(0, this.data.length)
-                .mapToObj(idx -> this.data[idx] ? 1.0 : 0.0).iterator();
+                .mapToObj(idx -> (double) this.data[idx]).iterator();
     }
     
 }

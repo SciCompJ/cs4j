@@ -13,7 +13,6 @@ import net.sci.table.Column;
  */
 public class DefaultCategoricalColumn extends ColumnStub implements CategoricalColumn
 {
-    String name;
     int[] data;
     String[] levels;
 
