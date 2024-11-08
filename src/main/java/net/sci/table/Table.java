@@ -9,6 +9,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import net.sci.axis.Axis;
+import net.sci.table.impl.ColumnsTable;
 import net.sci.table.impl.DefaultNumericTable;
 import net.sci.table.impl.DefaultTable;
 
@@ -74,7 +75,7 @@ public interface Table
         int nRows = columns[0].length();
         
         // If all columns are numeric, should return a numeric table
-        if (Arrays.stream(columns).allMatch(col -> (col instanceof NumericColumn)))
+        if (Arrays.stream(columns).allMatch(col -> (col instanceof FloatColumn)))
         {
             NumericTable table = new DefaultNumericTable(nRows, nCols);
             for (int c = 0; c < nCols; c++)
@@ -84,12 +85,7 @@ public interface Table
             return table;
         }
         
-        Table table = new DefaultTable(nRows, nCols);
-        for (int c = 0; c < nCols; c++)
-        {
-            table.setColumn(c, columns[c]);
-        }
-        return table;
+        return new ColumnsTable(columns);
     }
     
     /**

@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 
 import net.sci.axis.CategoricalAxis;
 import net.sci.table.Column;
+import net.sci.table.FloatColumn;
 import net.sci.table.NumericColumn;
 import net.sci.table.NumericTable;
 import net.sci.table.Table;
@@ -426,7 +427,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    class ColumnView implements NumericColumn
+    class ColumnView implements FloatColumn
     {
         int colIndex;
         

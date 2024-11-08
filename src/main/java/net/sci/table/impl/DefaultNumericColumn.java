@@ -7,12 +7,15 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import net.sci.table.Column;
-import net.sci.table.NumericColumn;
+import net.sci.table.FloatColumn;
 
 /**
  * Default implementation for columns containing numeric values.
+ * 
+ * Stores the values as floating-point values; hence the class also implements
+ * the <code>FloatColumn</code> interface.
  */
-public class DefaultNumericColumn extends ColumnStub implements NumericColumn
+public class DefaultNumericColumn extends ColumnStub implements FloatColumn
 {
     double[] data;
     

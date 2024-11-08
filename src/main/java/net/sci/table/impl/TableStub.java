@@ -67,7 +67,7 @@ public abstract class TableStub implements Table
 
     public void setRowNames(String[] names)
     {
-        if (names.length != column(0).length())
+        if (names != null && names.length != column(0).length())
         {
             throw new IllegalArgumentException(
                     "String array must have same length as the number of rows.");
