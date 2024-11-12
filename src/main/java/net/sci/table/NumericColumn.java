@@ -3,8 +3,10 @@
  */
 package net.sci.table;
 
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.function.BiFunction;
+import java.util.stream.IntStream;
 
 import net.sci.table.impl.DefaultNumericColumn;
 
@@ -72,6 +74,26 @@ public interface NumericColumn extends Column
             values[i] = function.apply(col1.getValue(i), col2.getValue(i));
         }
         return NumericColumn.create(null, values);
+    }
+    
+    /**
+     * Returns an Iterable over the values of this column given as double
+     * elements.
+     * 
+     * @return an Iterable over the values as double
+     */
+    public default Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public Iterator<Double> iterator()
+            {
+                return IntStream.range(0, length())
+                        .mapToObj(idx -> getValue(idx))
+                        .iterator();
+            }
+        };
     }
     
     /**

@@ -26,9 +26,16 @@ public class DefaultNumericColumn extends ColumnStub implements FloatColumn
     }
     
     @Override
-    public int length()
+    public Iterable<Double> values()
     {
-        return this.data.length;
+        return new Iterable<Double>()
+        {
+            @Override
+            public Iterator<Double> iterator()
+            {
+                return Arrays.stream(data).iterator();
+            }
+        };
     }
 
     @Override
@@ -65,6 +72,12 @@ public class DefaultNumericColumn extends ColumnStub implements FloatColumn
     public void copyValues(double[] values, int index)
     {
         System.arraycopy(this.data, 0, values, index, this.data.length);
+    }
+
+    @Override
+    public int length()
+    {
+        return this.data.length;
     }
 
     @Override

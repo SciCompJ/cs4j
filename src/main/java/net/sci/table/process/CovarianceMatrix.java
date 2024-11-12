@@ -45,7 +45,7 @@ public class CovarianceMatrix implements TableOperator
         for (int c= 0; c < nc; c++)
         {
             double cumsum = 0;
-            for (double v : table.column(c).getValues())
+            for (double v : table.column(c).values())
             {
                 cumsum += v;
             }
@@ -60,10 +60,9 @@ public class CovarianceMatrix implements TableOperator
 
             // compute variance of column i
             double var = 0;
-            for (int k = 0; k < nr; k++)
+            for (double v : colI.values())
             {
-                double v1 = colI.getValue(k) - means[i];
-                var += v1 * v1;
+                var += (v - means[i]) * (v - means[i]);
             }
             covMat.setValue(i, i, var / (nr - 1));
 

@@ -5,6 +5,7 @@ package net.sci.table.impl;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.stream.IntStream;
 
 import net.sci.table.IntegerColumn;
 
@@ -21,6 +22,21 @@ public class DefaultIntegerColumn extends ColumnStub implements IntegerColumn
         this.data = values;
     }
     
+    @Override
+    public Iterable<Double> values()
+    {
+        return new Iterable<Double>()
+        {
+            @Override
+            public Iterator<Double> iterator()
+            {
+                return IntStream.range(0, data.length)
+                        .mapToObj(idx -> (double) data[idx])
+                        .iterator();
+            }
+        };
+    }
+
     @Override
     public int length()
     {
