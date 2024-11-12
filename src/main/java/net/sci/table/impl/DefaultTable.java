@@ -661,32 +661,32 @@ public class DefaultTable extends TableStub
             return NumericColumn.create(name, values);
         }
 
-        @Override
-        public Iterator<Double> iterator()
-        {
-            return new RowIterator();
-        }
-        
-        class RowIterator implements Iterator<Double>
-        {
-            int index = 0;
-            
-            public RowIterator()
-            {
-            }
-
-            @Override
-            public boolean hasNext()
-            {
-                return index < nRows;
-            }
-
-            @Override
-            public Double next()
-            {
-                return data[colIndex][index++];
-            }
-        }
+//        @Override
+//        public Iterator<Double> iterator()
+//        {
+//            return new RowIterator();
+//        }
+//        
+//        class RowIterator implements Iterator<Double>
+//        {
+//            int index = 0;
+//            
+//            public RowIterator()
+//            {
+//            }
+//
+//            @Override
+//            public boolean hasNext()
+//            {
+//                return index < nRows;
+//            }
+//
+//            @Override
+//            public Double next()
+//            {
+//                return data[colIndex][index++];
+//            }
+//        }
     }
 	
 	private class Columns implements Table.Columns<Column>

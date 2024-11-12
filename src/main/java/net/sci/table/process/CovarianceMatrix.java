@@ -45,7 +45,7 @@ public class CovarianceMatrix implements TableOperator
         for (int c= 0; c < nc; c++)
         {
             double cumsum = 0;
-            for (double v : table.column(c))
+            for (double v : table.column(c).getValues())
             {
                 cumsum += v;
             }

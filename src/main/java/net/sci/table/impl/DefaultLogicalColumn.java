@@ -61,10 +61,9 @@ public class DefaultLogicalColumn extends ColumnStub implements LogicalColumn
     }
 
     @Override
-    public Iterator<Double> iterator()
+    public Iterator<Boolean> iterator()
     {
         return IntStream.range(0, this.data.length)
-                .mapToObj(idx -> this.data[idx] ? 1.0 : 0.0).iterator();
+                .mapToObj(idx -> this.data[idx]).iterator();
     }
-    
 }

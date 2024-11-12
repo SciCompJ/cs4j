@@ -10,19 +10,19 @@ import org.junit.Test;
 /**
  * 
  */
-public class LogicalColumnTest
+public class FloatColumnTest
 {
     
     /**
-     * Test method for {@link net.sci.table.LogicalColumn#getValues()}.
+     * Test method for {@link net.sci.table.FloatColumn#getValues()}.
      */
     @Test
     public final void testGetValues()
     {
-        LogicalColumn column = createLogicalColumn();
+        FloatColumn column = createFloatColumn();
         double[] vals = column.getValues();
         assertEquals(5, vals.length);
-        assertEquals(0.0, vals[2], 0.01);
+        assertEquals(5.3, vals[2], 0.01);
     }
     
     /**
@@ -31,8 +31,8 @@ public class LogicalColumnTest
     @Test
     public final void testGetValue()
     {
-        LogicalColumn column = createLogicalColumn();
-        assertEquals(0.0, column.getValue(2), 0.01);
+        FloatColumn column = createFloatColumn();
+        assertEquals(5.3, column.getValue(2), 0.01);
     }
     
     /**
@@ -41,22 +41,22 @@ public class LogicalColumnTest
     @Test
     public final void testIterator()
     {
-        LogicalColumn column = createLogicalColumn();
+        FloatColumn column = createFloatColumn();
         int count = 0;
         double sum = 0.0;
-        for (boolean b : column)
+        for (double v : column)
         {
-            sum += b ? 1 : 0;
+            sum += v;
             count++;
         }
         
         assertEquals(5, count);
-        assertEquals(2, sum, 0.01);
+        assertEquals(26.1, sum, 0.01);
     }
     
-    private LogicalColumn createLogicalColumn()
+    private FloatColumn createFloatColumn()
     {
-        boolean[] values = new boolean[] {true, false, false, true, false};
-        return LogicalColumn.create("values", values);
+        double[] values = new double[] {3.0, 4.5, 5.3, 6.1, 7.2};
+        return FloatColumn.create("values", values);
     }
 }

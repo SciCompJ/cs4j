@@ -16,7 +16,7 @@ import net.sci.table.impl.DefaultNumericColumn;
  * @author dlegland
  *
  */
-public interface NumericColumn extends Column, Iterable<Double>
+public interface NumericColumn extends Column
 {
     /**
      * Creates a new numeric column from a name and a list of values.
@@ -44,6 +44,13 @@ public interface NumericColumn extends Column, Iterable<Double>
      * Creates a new numeric column by combining the values of two columns
      * through the specified function. The new column has the same length as the
      * input columns.
+     * 
+     * Example:
+     * {@snippet lang = "java" :
+        NumericColumn col1 = NumericColumn.create("col1", new double[] {1.0, 2.0, 3.0});
+        NumericColumn col2 = NumericColumn.create("col2", new double[] {0.4, 0.5, 0.6});
+        NumericColumn res = NumericColumn.process(col1, col2, (a,b) -> a + b);
+     * }
      * 
      * @param col1
      *            the first column to process

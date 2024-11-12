@@ -8,7 +8,7 @@ import net.sci.table.impl.DefaultLogicalColumn;
 /**
  * A column containing only logical values, either true or false.
  */
-public interface LogicalColumn extends NumericColumn
+public interface LogicalColumn extends NumericColumn, Iterable<Boolean>
 {
     /**
      * Creates a new logical column from a name and a list of (boolean) values.

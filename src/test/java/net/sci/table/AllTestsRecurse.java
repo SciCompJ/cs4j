@@ -9,8 +9,9 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     AllTests.class,
-    net.sci.table.cluster.AllTests.class,
     net.sci.table.io.AllTests.class,
+    net.sci.table.impl.AllTests.class,
+    net.sci.table.cluster.AllTests.class,
     net.sci.table.process.AllTests.class,
 	})
 public class AllTestsRecurse {

@@ -134,7 +134,7 @@ public class PCA
             for (int c = 0; c < nc; c++)
             {
                 double sum = 0;
-                for (double v : (NumericColumn) table.column(c))
+                for (double v : ((NumericColumn) table.column(c)).getValues())
                 {
                     v -= this.meanValues[c];
                     sum += v * v;
@@ -176,7 +176,7 @@ public class PCA
     {
         int nr = column.length();
         double sum = 0;
-        for (double v : column) 
+        for (double v : column.getValues()) 
         {
             sum += v;
         }

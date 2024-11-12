@@ -12,7 +12,6 @@ import org.junit.Test;
  */
 public class NumericColumnTest
 {
-    
     /**
      * Test method for {@link net.sci.table.NumericColumn#getValues()}.
      */
@@ -26,7 +25,7 @@ public class NumericColumnTest
     }
     
     /**
-     * Test method for {@link net.sci.table.Column#getValue(int)}.
+     * Test method for {@link net.sci.table.NumericColumn#getValue(int)}.
      */
     @Test
     public final void testGetValue()
@@ -36,22 +35,21 @@ public class NumericColumnTest
     }
     
     /**
-     * Test method for {@link java.lang.Iterable#iterator()}.
+     * Test method for {@link net.sci.table.NumericColumn#process(NumericColumn,NumericColumn,java.util.function.BiFunction)}.
      */
     @Test
-    public final void testIterator()
+    public final void testProcess()
     {
-        NumericColumn column = createNumericColumn();
-        int count = 0;
-        double sum = 0.0;
-        for (double v : column)
-        {
-            sum += v;
-            count++;
-        }
+        NumericColumn col1 = NumericColumn.create("col1", new double[] {1.0, 2.0, 3.0});
+        NumericColumn col2 = NumericColumn.create("col2", new double[] {0.4, 0.5, 0.6});
         
-        assertEquals(5, count);
-        assertEquals(26.1, sum, 0.01);
+        NumericColumn res = NumericColumn.process(col1, col2, (a,b) -> a + b);
+        
+        double[] exp = new double[] {1.4, 2.5, 3.6};
+        for (int i = 0; i < 3; i++)
+        {
+            assertEquals(exp[i], res.getValue(i), 0.01);
+        }
     }
     
     private NumericColumn createNumericColumn()

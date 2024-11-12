@@ -8,7 +8,7 @@ import net.sci.table.impl.DefaultIntegerColumn;
 /**
  * A column containing integer values, positive or negative.
  */
-public interface IntegerColumn extends NumericColumn
+public interface IntegerColumn extends NumericColumn, Iterable<Integer>
 {
     /**
      * Creates a new column of integer values from a name and a list of (itneger) values.
