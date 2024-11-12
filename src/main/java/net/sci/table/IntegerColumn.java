@@ -10,6 +10,23 @@ import net.sci.table.impl.DefaultIntegerColumn;
  */
 public interface IntegerColumn extends NumericColumn
 {
+    /**
+     * Creates a new column of integer values from a name and a list of (itneger) values.
+     * 
+     * Example:
+     * {@snippet lang = "java" :
+     * int[] values = new int[] { 1, 4, 2, 1, 8, 0, 2, 3 };
+     * IntegerColumn column = IntegerColumn.create("Values", values);
+     * int colLength = column.length(); // returns 8
+     * }
+     * 
+     * @param name
+     *            the name of the column
+     * @param values
+     *            the array of values within the column. The size of this array
+     *            determines the size of the column.
+     * @return a new numeric column.
+     */
     public static IntegerColumn create(String name, int[] values)
     {
         return new DefaultIntegerColumn(name, values);

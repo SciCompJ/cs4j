@@ -10,6 +10,23 @@ import net.sci.table.impl.DefaultLogicalColumn;
  */
 public interface LogicalColumn extends NumericColumn
 {
+    /**
+     * Creates a new logical column from a name and a list of (boolean) values.
+     * 
+     * Example:
+     * {@snippet lang = "java" :
+     * boolean[] values = new boolean[] { true, false, true, true, false, false, false, true };
+     * LogicalColumn column = LogicalColumn.create("Values", values);
+     * int colLength = column.length(); // returns 8
+     * }
+     * 
+     * @param name
+     *            the name of the column
+     * @param values
+     *            the array of values within the column. The size of this array
+     *            determines the size of the column.
+     * @return a new numeric column.
+     */
     public static LogicalColumn create(String name, boolean[] values)
     {
         return new DefaultLogicalColumn(name, values);

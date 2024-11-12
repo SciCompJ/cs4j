@@ -334,18 +334,6 @@ public class DefaultTable extends TableStub
         this.colNames[colIndex] = name;
     }
 
-    public int findColumnIndex(String name)
-	{
-		if (name == null || this.colNames == null)
-			return -1;
-		for (int c = 0; c < this.nCols; c++)
-		{
-			if (name.equals(this.colNames[c]))
-				return c;
-		}
-		return -1;
-	}
-
 
     // =============================================================
     // Management of rows

@@ -68,6 +68,15 @@ public interface NumericTable extends Table
         return table;
     }
 
+    /**
+     * Creates a new numeric table from an arbitrary table, by keeping only the
+     * numeric columns.
+     * 
+     * @param table
+     *            the input table
+     * @return a new (numeric) table containing only the numeric columns of the
+     *         original table.
+     */
     public static NumericTable keepNumericColumns(Table table)
     {
         // identifies index of numeric columns
@@ -102,9 +111,10 @@ public interface NumericTable extends Table
     // Global management of table
     
     /**
-     * Opens a new JFrame and shows this table inside
+     * Opens a new JFrame and displays the content of this table.
      * 
-     * @param the instance of the widget used for display 
+     * @return the reference to the graphical widget that was created (usually a
+     *         JFrame).
      */
     public default JFrame show()
     {
@@ -149,7 +159,18 @@ public interface NumericTable extends Table
     // =============================================================
     // Management of data
     
-    public void setColumnValues(int colIndex, double[] values);
+    /**
+     * Changes the values of the specified column.
+     * 
+     * @param colIndex
+     *            the index of the column within the table.
+     * @param values
+     *            the new values of the column.
+     */
+    public default void setColumnValues(int colIndex, double[] values)
+    {
+        column(colIndex).setValues(values);
+    }
     
     
     // =============================================================
@@ -171,5 +192,13 @@ public interface NumericTable extends Table
      */
     public NumericColumn column(int c);
     
+    /**
+     * Adds a row to this numeric table (optional operation).
+     * 
+     * @param name
+     *            the name of the row to add
+     * @param values
+     *            the values corresponding to this row
+     */
     public void addRow(String name, double[] values);
 }

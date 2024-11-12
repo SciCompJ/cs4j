@@ -125,6 +125,19 @@ public interface Table
         return table;
     }
     
+    /**
+     * Creates a new table by keeping a selection of the columns. Order of
+     * columns in the new table is defined by the <code>columnIndices</code>
+     * argument. Columns are not necessarily duplicated.
+     * The row axis of the new table is the same as the original table. 
+     * 
+     * @param table
+     *            the table to select columns from.
+     * @param columnIndices
+     *            the indices of the columns that will be used to populate the
+     *            new table
+     * @return the new table.
+     */
     public static Table selectColumns(Table table, int[] columnIndices)
     {
         // get column counts
@@ -217,21 +230,79 @@ public interface Table
      */
     public Column column(int c);
     
+    // TODO: remove?
     public void setColumn(int c, Column col);
 
+    /**
+     * Adds a new (numeric) column to ths table. The column is defined by a name
+     * and a series of value.
+     * 
+     * @param name
+     *            the name of the column to add
+     * @param values
+     *            the values that compose the column. Array length must match
+     *            row count of the table.
+     */
     public void addColumn(String name, double[] values);
     
+    // TODO: remove?
     public void removeColumn(int c);
     
+    /**
+     * Returns the names of the columns within this table as a simple String
+     * array.
+     * 
+     * @return the names of the columns within this table as a string array.
+     */
     public String[] getColumnNames();
 
+    /**
+     * Changes the name of the columns within the table.
+     * 
+     * @param names
+     *            the new names of the columns.
+     */
+    // TODO: remove?
     public void setColumnNames(String[] names);
 
+    /**
+     * Returns the name of the column at the specified position.
+     * 
+     * @param colIndex
+     *            the index of the column.
+     * @return the name of the column.
+     */
     public String getColumnName(int colIndex);
 
+    /**
+     * Changes the name of the column at the specified position.
+     * 
+     * @param colIndex
+     *            the index of the column.
+     * @param name
+     *            the new name of the column.
+     */
     public void setColumnName(int colIndex, String name);
 
-    public int findColumnIndex(String name);
+    /**
+     * Retrieve the index of a column from its name. If no column with the
+     * specified name is found, an exception is thrown.
+     * 
+     * @param name
+     *            the name of the column
+     * @return the index of the column with the specified name
+     */
+    public default int findColumnIndex(String name)
+    {
+        for (int c = 0; c < this.columnCount(); c++)
+        {
+            if (name.equals(column(c).getName()))
+            {
+                return c;
+            }
+        }
+        throw new RuntimeException("Table does not contain any column with name: " + name);
+    }
 
 
     // =============================================================
@@ -262,6 +333,12 @@ public interface Table
      */
     public String[] getRowNames();
     
+    /**
+     * Returns the Axis instance that describes the rows of this table, if it
+     * exists.
+     * 
+     * @return the Axis instance that describes the rows of this table.
+     */
     public Axis rowAxis();
 
     public void setRowNames(String[] names);
@@ -404,7 +481,6 @@ public interface Table
             if (rowNames != null)
             {
                 String rowNameHeader = rowAxis() != null ? rowAxis().getName() : "";
-//                if (rowAxis() != null) sb.append(String.format(rowPattern, rowAxis().getName()));
                 sb.append(String.format(rowPattern, rowNameHeader));
             }
             for (int c = 0; c < nCols; c++)
@@ -429,22 +505,6 @@ public interface Table
             for (int c = 0; c < nCols; c++)
             {
                 sb.append(this.column(c).getString(r) + "\t");
-//                Object obj = this.get(r, c);
-//                String str;
-//                if (obj instanceof Double)
-//                {
-//                    str = String.format(Locale.ENGLISH, "%.3f", obj);
-//                }
-//                else if (obj instanceof String)
-//                {
-//                    str = (String) obj;
-//                }
-//                else
-//                {
-//                    str = obj.toString();
-//                }
-//                    
-//                System.out.print(str + "\t");
             }
             System.out.println(sb.toString());
         }
@@ -453,6 +513,7 @@ public interface Table
     /**
      * A container of columns.
      *
+     * @param <C> the type of columns within the table
      */
     // TODO: make Columns inherit Collection? List?
     public interface Columns<C extends Column> extends Iterable<C>
@@ -472,14 +533,5 @@ public interface Table
          * @return the column at the specified index.
          */
         public C get(int index);
-        
-//        /**
-//         * Returns a subset of the columns as specified by the index list.
-//         * 
-//         * @param indices
-//         *            the indices of the columns to return
-//         * @return a new list of views on the reduced list of columns
-//         */
-//        public Columns<T> select(int[] indices);
     }
 }

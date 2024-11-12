@@ -15,11 +15,15 @@ package net.sci.table;
 public interface Column
 {
     /**
+     * Returns the number of elements within this column.
+     * 
      * @return the number of elements within this column
      */
     public int length();
     
     /**
+     * Returns the name associated with this column.
+     * 
      * @return the name associated with this column
      */
     public String getName();
@@ -54,16 +58,32 @@ public interface Column
     public String getString(int row);
     
     /**
-     * Returns the numeric value at the i-th row.
+     * Returns the numeric value at the specified row index (optional
+     * operation). Whether this operation is valid or not is left to specialized
+     * implementations.
      * 
      * @param row
      *            the row index within this column
      * @return the numeric value at specified row index
      */
     public double getValue(int row);
-    
+
     /**
-     * Returns the set of values within this column as an array of double.
+     * Changes the numerical value at the specified row index (optional
+     * operation). Whether this operation is valid or not is left to specialized
+     * implementations.
+     * 
+     * @param row
+     *            the row index
+     * @param value
+     *            the new value at specified row index
+     */
+    public void setValue(int row, double value);
+
+    /**
+     * Returns the set of values within this column as an array of double
+     * (optional operation). Whether this operation is valid or not is left to
+     * specialized implementations.
      * 
      * @return the set of values within this column as an array of double.
      */

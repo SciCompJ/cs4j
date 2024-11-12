@@ -185,19 +185,6 @@ public class ColumnsTable extends TableStub
     }
 
     @Override
-    public int findColumnIndex(String name)
-    {
-        for (int c = 0; c < this.columnCount(); c++)
-        {
-            if (name.equals(columns.get(c).getName()))
-            {
-                return c;
-            }
-        }
-        throw new RuntimeException("Table does not contain any column with name: " + name);
-    }
-
-    @Override
     public double[] getColumnValues(int colIndex)
     {
         return columns.get(colIndex).getValues();

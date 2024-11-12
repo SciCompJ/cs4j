@@ -14,6 +14,28 @@ import net.sci.table.impl.DefaultCategoricalColumn;
  */
 public interface CategoricalColumn extends Column
 {
+    /**
+     * Creates a new categorical column from a name, the array of level index
+     * for each element, and the array of level names.
+     * 
+     * Example:
+     * {@snippet lang="java" :
+     * int[] indices = new int[]{0, 1, 2, 1, 2, 2, 0, 0};
+     * String[] names = new String[]{"Setosa", "Virginica", "Versicolor"};
+     * CategoricalColumn column = CategoricalColumn.create("Species", indices, names);
+     * int colLength = column.length(); // returns 8
+     * }
+     * 
+     * @param name
+     *            the name of the column
+     * @param indices
+     *            the array of level index for each element. The size of this
+     *            array determines the size of the column.
+     * @param levels
+     *            the name of each level. The length of this array determines
+     *            the maximum index value.
+     * @return a new categorical column.
+     */
     public static CategoricalColumn create(String name, int[] indices, String[] levels)
     {
         return new DefaultCategoricalColumn(name, indices, levels);
@@ -38,6 +60,12 @@ public interface CategoricalColumn extends Column
     @Override
     public String getString(int row);
     
+    @Override
+    public default void setValue(int row, double value)
+    {
+        throw new RuntimeException("Can not change the value of a Categorical column");
+    }
+
     @Override
     public default String contentSummary()
     {

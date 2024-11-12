@@ -255,16 +255,6 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         this.colNames[colIndex] = name;
     }
 
-    public int findColumnIndex(String name)
-    {
-        if (name == null || this.colNames == null) return -1;
-        for (int c = 0; c < this.nCols; c++)
-        {
-            if (name.equals(this.colNames[c])) return c;
-        }
-        return -1;
-    }
-    
 
     // =============================================================
     // Management of rows
@@ -276,7 +266,6 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     {
         return this.nRows;
     }
-
 
     /**
      * Adds a new numeric row.
