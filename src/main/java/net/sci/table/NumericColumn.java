@@ -53,7 +53,7 @@ public interface NumericColumn extends Column, Iterable<Double>
      *            the function to apply to each pair of values
      * @return a new numeric column
      */
-    public static NumericColumn combine(NumericColumn col1, NumericColumn col2,
+    public static NumericColumn process(NumericColumn col1, NumericColumn col2,
             BiFunction<Double, Double, Double> function)
     {
         int n = col1.length();

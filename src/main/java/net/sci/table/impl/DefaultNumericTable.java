@@ -136,23 +136,6 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         return new ColumnView(c);
     }
 
-    @Override
-    public void setColumn(int c, Column col)
-    {
-        // check type
-        if (!(col instanceof NumericColumn))
-        {
-            throw new IllegalArgumentException("Requires a numeric column as argument");
-        }
-        
-        // copy column values
-        NumericColumn numCol = (NumericColumn) col;
-        numCol.copyValues(this.data[c], 0);
-
-        // copy name
-        setColumnName(c, col.getName());
-    }
-
     /**
      * Adds a new numeric column.
      * 
@@ -192,39 +175,6 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     }
     
     
-    @Override
-    public void removeColumn(int colIndex)
-    {
-        if (colIndex < 0 || colIndex >= nCols)
-        {
-            throw new IllegalArgumentException("Illegal column index: " + colIndex);
-        }
-
-        // create new data array
-        double[][] data = new double[nCols-1][nRows];
-        
-        // duplicate columns before index
-        for (int c = 0; c < colIndex; c++)
-        {
-            System.arraycopy(data[c], 0, this.data[c], 0, nRows);
-        }
-        // duplicate columns after index
-        for (int c = colIndex+1; c < nCols; c++)
-        {
-            System.arraycopy(data[c-1], 0, this.data[c], 0, nRows);
-        }
-        this.data = data;
-        
-        // copy column names
-        if (this.colNames != null)
-        {
-            String[] colNames = new String[nCols-1];
-            System.arraycopy(colNames, 0, this.colNames, 0, colIndex - 1);
-            System.arraycopy(colNames, colIndex, this.colNames, colIndex + 1, nCols - 1 - colIndex);
-            this.colNames = colNames;
-        }
-    }
-
     public String[] getColumnNames()
     {
         return this.colNames;

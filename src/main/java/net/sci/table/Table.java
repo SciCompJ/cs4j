@@ -79,7 +79,7 @@ public interface Table
             NumericTable table = new DefaultNumericTable(nRows, nCols);
             for (int c = 0; c < nCols; c++)
             {
-                table.setColumn(c, columns[c]);
+                table.setColumnValues(c, columns[c].getValues());
             }
             return table;
         }
@@ -230,9 +230,6 @@ public interface Table
      */
     public Column column(int c);
     
-    // TODO: remove?
-    public void setColumn(int c, Column col);
-
     /**
      * Adds a new (numeric) column to ths table. The column is defined by a name
      * and a series of value.
@@ -244,9 +241,6 @@ public interface Table
      *            row count of the table.
      */
     public void addColumn(String name, double[] values);
-    
-    // TODO: remove?
-    public void removeColumn(int c);
     
     /**
      * Returns the names of the columns within this table as a simple String
@@ -262,7 +256,6 @@ public interface Table
      * @param names
      *            the new names of the columns.
      */
-    // TODO: remove?
     public void setColumnNames(String[] names);
 
     /**
@@ -515,7 +508,6 @@ public interface Table
      *
      * @param <C> the type of columns within the table
      */
-    // TODO: make Columns inherit Collection? List?
     public interface Columns<C extends Column> extends Iterable<C>
     {
         /**

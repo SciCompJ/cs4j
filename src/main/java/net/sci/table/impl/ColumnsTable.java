@@ -137,22 +137,10 @@ public class ColumnsTable extends TableStub
     }
 
     @Override
-    public void setColumn(int c, Column col)
-    {
-        this.columns.set(c, col);
-    }
-
-    @Override
     public void addColumn(String name, double[] values)
     {
         Column col = NumericColumn.create(name, values);
         this.columns.add(col);
-    }
-
-    @Override
-    public void removeColumn(int c)
-    {
-        this.columns.remove(c);
     }
 
     @Override

@@ -96,7 +96,7 @@ public interface NumericTable extends Table
         int c2 = 0;
         for (int c : indices)
         {
-            res.setColumn(c2, table.column(c));
+            res.setColumnValues(c2, table.column(c).getValues());
             c2++;
         }
         
