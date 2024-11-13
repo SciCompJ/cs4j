@@ -3,6 +3,7 @@
  */
 package net.sci.table.process;
 
+import net.sci.axis.CategoricalAxis;
 import net.sci.table.CategoricalColumn;
 import net.sci.table.Column;
 import net.sci.table.NumericColumn;
@@ -34,7 +35,7 @@ public class Aggregate
         {
             rowNames[i] = groups.getName() + "=" + levels[i];
         }
-        res.setRowNames(rowNames);
+        res.setRowAxis(new CategoricalAxis("Levels", rowNames));
         res.setName(table.getName()+"-mean");
         
         return res;

@@ -332,7 +332,14 @@ public interface Table
      * 
      * @return the Axis instance that describes the rows of this table.
      */
-    public Axis rowAxis();
+    public Axis getRowAxis();
+    
+    /**
+     * Changes the meta-data associated to the row axis by specifying a new Axis instance.
+     * 
+     * @param axis the Axis instance that describes the rows of this table.
+     */
+    public void setRowAxis(Axis axis);
 
     public void setRowNames(String[] names);
 
@@ -473,7 +480,7 @@ public interface Table
             StringBuilder sb = new StringBuilder();
             if (rowNames != null)
             {
-                String rowNameHeader = rowAxis() != null ? rowAxis().getName() : "";
+                String rowNameHeader = getRowAxis() != null ? getRowAxis().getName() : "";
                 sb.append(String.format(rowPattern, rowNameHeader));
             }
             for (int c = 0; c < nCols; c++)

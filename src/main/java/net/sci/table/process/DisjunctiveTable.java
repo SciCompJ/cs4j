@@ -23,7 +23,7 @@ public class DisjunctiveTable
         }
         
         LogicalColumn[] columns = process((CategoricalColumn) column);
-        return Table.create(table.getRowNames(), columns);
+        return Table.create(table.getRowAxis(), columns);
     }
     
     public static final LogicalColumn[] process(CategoricalColumn column)

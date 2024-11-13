@@ -55,7 +55,7 @@ public abstract class TableStub implements Table
     // Management of rows
     
     @Override
-    public Axis rowAxis()
+    public Axis getRowAxis()
     {
         return this.rowAxis;
     }

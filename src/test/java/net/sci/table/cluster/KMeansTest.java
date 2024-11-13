@@ -37,7 +37,7 @@ public class KMeansTest
 		Table classes = kmeans.process(data);
 		
 		assertEquals(150, classes.rowCount());
-		Axis rowAxis = classes.rowAxis();
+		Axis rowAxis = classes.getRowAxis();
 		assertNotNull(rowAxis);
 		assertTrue(rowAxis instanceof CategoricalAxis);
 //		for (int i = 0; i < 150; i++)
@@ -62,7 +62,7 @@ public class KMeansTest
         
         assertEquals(3, centroids.rowCount());
         assertEquals(4, centroids.columnCount());
-        Axis rowAxis = centroids.rowAxis();
+        Axis rowAxis = centroids.getRowAxis();
         assertNotNull(rowAxis);
         assertTrue(rowAxis instanceof CategoricalAxis);
         assertEquals(rowAxis.getName(), "Class");

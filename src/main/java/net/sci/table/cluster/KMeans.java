@@ -197,7 +197,7 @@ public class KMeans implements TableOperator
         
         // Create result column
         IntegerColumn classCol = IntegerColumn.create("Class", classes);
-        Table res = Table.create(table.rowAxis(), classCol);
+        Table res = Table.create(table.getRowAxis(), classCol);
         res.setName(table.getName() + "-KM" + this.nClasses + "_predict");
 
         return res;
