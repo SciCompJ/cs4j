@@ -26,7 +26,6 @@ import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.VectorArray;
-import net.sci.axis.Axis;
 import net.sci.axis.CategoricalAxis;
 
 /**
@@ -108,7 +107,7 @@ public interface ImageType
         @Override
         public void setupCalibration(Image image)
         {
-            image.calibration.channelAxis = new CategoricalAxis("Grayscale", Axis.Type.CHANNEL, new String[] { "Value" });
+            image.calibration.channelAxis = new CategoricalAxis("Grayscale", new String[] { "Value" });
         }
 
         @Override
@@ -169,7 +168,7 @@ public interface ImageType
         @Override
         public void setupCalibration(Image image)
         {
-            image.calibration.channelAxis = new CategoricalAxis("Intensity", Axis.Type.CHANNEL, new String[] { "Value" });
+            image.calibration.channelAxis = new CategoricalAxis("Intensity", new String[] { "Value" });
         }
 
         @Override
@@ -257,7 +256,7 @@ public interface ImageType
         @Override
         public void setupCalibration(Image image)
         {
-            image.calibration.channelAxis = new CategoricalAxis("Distance", Axis.Type.CHANNEL, new String[] { "Distance" });
+            image.calibration.channelAxis = new CategoricalAxis("Distance", new String[] { "Distance" });
         }
         
         @Override
@@ -341,7 +340,7 @@ public interface ImageType
         @Override
         public void setupCalibration(Image image)
         {
-            image.calibration.channelAxis = new CategoricalAxis("Value", Axis.Type.CHANNEL, new String[] { "Value" });
+            image.calibration.channelAxis = new CategoricalAxis("Value", new String[] { "Value" });
         }
 
         @Override
@@ -416,7 +415,7 @@ public interface ImageType
         @Override
         public void setupCalibration(Image image)
         {
-            image.calibration.channelAxis = new CategoricalAxis("Label", Axis.Type.CHANNEL, new String[] { "Label" });
+            image.calibration.channelAxis = new CategoricalAxis("Label", new String[] { "Label" });
         }
 
         @Override
@@ -561,7 +560,7 @@ public interface ImageType
         {
             // update calibration
             String[] channelNames = new String[]{"Red", "Green", "Blue"};
-            image.calibration.channelAxis = new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames);
+            image.calibration.channelAxis = new CategoricalAxis("Channels", channelNames);
         }
         
         @Override
@@ -616,7 +615,7 @@ public interface ImageType
         {
             // update calibration
             String[] channelNames = new String[]{"Real", "Imag"};
-            image.calibration.channelAxis = new CategoricalAxis("Parts", Axis.Type.CHANNEL, channelNames);
+            image.calibration.channelAxis = new CategoricalAxis("Parts", channelNames);
         }
         
         @Override
@@ -677,7 +676,7 @@ public interface ImageType
             }
             
             // update calibration
-            image.calibration.channelAxis = new CategoricalAxis("Dimensions", Axis.Type.CHANNEL, channelNames);
+            image.calibration.channelAxis = new CategoricalAxis("Dimensions", channelNames);
         }
         
         @Override
@@ -744,7 +743,7 @@ public interface ImageType
             }
             
             // update calibration
-            image.calibration.channelAxis = new CategoricalAxis("Channels", Axis.Type.CHANNEL, channelNames);
+            image.calibration.channelAxis = new CategoricalAxis("Channels", channelNames);
         }
         
         @Override

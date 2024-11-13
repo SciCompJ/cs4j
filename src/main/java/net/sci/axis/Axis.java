@@ -12,19 +12,6 @@ package net.sci.axis;
 public interface Axis
 {
     // =============================================================
-    // Enumerations
-
-    enum Type 
-    {
-        SPACE, 
-        CHANNEL, 
-        TIME, 
-        WAVELENGTH,
-        UNKNOWN
-    };
-    
-    
-    // =============================================================
     // Method declarations
 
     /**
@@ -39,11 +26,6 @@ public interface Axis
      */
     public void setName(String name);
 
-    /**
-     * @return the type of this axis
-     */
-    public Type type();
-    
     /**
      * @return a short name (typically one-digit length) used for building
      *         derived names

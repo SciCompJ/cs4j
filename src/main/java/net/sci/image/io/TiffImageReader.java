@@ -20,7 +20,6 @@ import net.sci.array.numeric.impl.FileMappedFloat32Array3D;
 import net.sci.array.numeric.impl.FileMappedUInt16Array3D;
 import net.sci.array.numeric.impl.FileMappedUInt8Array3D;
 import net.sci.array.shape.Reshape;
-import net.sci.axis.Axis;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
@@ -665,7 +664,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             axes.add(createYAxis(info.pixelHeight, axes.get(0).getUnitName()));
 
             // Initialize optional C, Z and T axes
-            if (sizeC > 1) axes.add(new ImageAxis("Channel", Axis.Type.CHANNEL, 1, 0, ""));
+            if (sizeC > 1) axes.add(new ImageAxis("Channel", ImageAxis.Type.CHANNEL, 1, 0, ""));
             if (sizeZ > 1) axes.add(createZAxis(info.pixelHeight, axes.get(0).getUnitName()));
             if (sizeT > 1) axes.add(createTAxis(1.0, "sec"));
             

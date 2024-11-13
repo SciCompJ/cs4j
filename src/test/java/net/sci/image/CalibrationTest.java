@@ -10,6 +10,7 @@ import org.junit.Test;
 import net.sci.array.color.RGB8Array2D;
 import net.sci.axis.Axis;
 import net.sci.axis.CategoricalAxis;
+import net.sci.image.ImageAxis.Type;
 
 /**
  * @author dlegland
@@ -30,7 +31,6 @@ public class CalibrationTest
         
         Axis axis = calib.getChannelAxis();
         assertNotNull(axis);
-        assertTrue(axis.type() == Axis.Type.CHANNEL);
         assertTrue(axis instanceof CategoricalAxis);
         
         CategoricalAxis caxis = (CategoricalAxis) axis;
@@ -52,7 +52,6 @@ public class CalibrationTest
         
         Axis axis = calib.getChannelAxis();
         assertNotNull(axis);
-        assertTrue(axis.type() == Axis.Type.CHANNEL);
     }
     
     /**
@@ -64,9 +63,9 @@ public class CalibrationTest
         double[] resol = new double[] {2.5, 2.5, 2.8};
         Calibration calib = new Calibration(resol, "�m");
         
-        Axis axis = calib.getXAxis();
+        ImageAxis axis = calib.getXAxis();
         assertNotNull(axis);
-        assertTrue(axis.type() == Axis.Type.SPACE);
+        assertTrue(axis.type() == Type.SPACE);
     }
     
     /**
@@ -78,9 +77,9 @@ public class CalibrationTest
         double[] resol = new double[] {2.5, 2.5, 2.8};
         Calibration calib = new Calibration(resol, "�m");
         
-        Axis axis = calib.getYAxis();
+        ImageAxis axis = calib.getYAxis();
         assertNotNull(axis);
-        assertTrue(axis.type() == Axis.Type.SPACE);
+        assertTrue(axis.type() == Type.SPACE);
     }
     
     /**
@@ -92,9 +91,9 @@ public class CalibrationTest
         double[] resol = new double[] {2.5, 2.5, 2.8};
         Calibration calib = new Calibration(resol, "�m");
         
-        Axis axis = calib.getZAxis();
+        ImageAxis axis = calib.getZAxis();
         assertNotNull(axis);
-        assertTrue(axis.type() == Axis.Type.SPACE);
+        assertTrue(axis.type() == Type.SPACE);
     }
     
     /**

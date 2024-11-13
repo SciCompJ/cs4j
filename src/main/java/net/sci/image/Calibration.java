@@ -7,7 +7,6 @@ import java.io.PrintStream;
 
 import net.sci.axis.CategoricalAxis;
 import net.sci.axis.NumericalAxis;
-import net.sci.axis.Axis.Type;
 
 /**
  * Contains information for calibration of spatial axes, and eventually channels
@@ -32,7 +31,7 @@ public class Calibration
      * 
      * Default is a categorical axis with only one item named "value".
      */
-    CategoricalAxis channelAxis = new CategoricalAxis("Channels", Type.CHANNEL, new String[] {"Value"});
+    CategoricalAxis channelAxis = new CategoricalAxis("Channels", new String[] {"Value"});
     
     
     // =============================================================

@@ -21,8 +21,6 @@ public class NumericalAxis implements Axis
      */
     protected String name;
 
-    protected Type type;
-    
     /**
      * The spacing between two elements along this axis
      */
@@ -64,7 +62,9 @@ public class NumericalAxis implements Axis
      */
     public NumericalAxis(String name, double spacing, double origin)
     {
-        this(name, Type.UNKNOWN, spacing, origin, "");
+        this.name = name;
+        this.spacing = spacing;
+        this.origin = origin;
     }
 
     /**
@@ -81,14 +81,14 @@ public class NumericalAxis implements Axis
      * @param unitName
      *            the name of the unit
      */
-    public NumericalAxis(String name, Axis.Type type, double spacing, double origin, String unitName)
+    public NumericalAxis(String name, double spacing, double origin, String unitName)
     {
         this.name = name;
-        this.type = type;
         this.spacing = spacing;
         this.origin = origin;
         this.unitName = unitName;
     }
+    
 
     // =============================================================
     // General methods
@@ -132,11 +132,6 @@ public class NumericalAxis implements Axis
     // =============================================================
     // Getters / setters
 
-    public Type type()
-    {
-        return this.type;
-    }
-    
     /**
      * @return the name
      */
@@ -187,13 +182,13 @@ public class NumericalAxis implements Axis
     @Override
     public NumericalAxis duplicate()
     {
-        return new NumericalAxis(this.name, this.type, this.spacing, this.origin, this.unitName);
+        return new NumericalAxis(this.name, this.spacing, this.origin, this.unitName);
     }
     
     @Override
     public String toString()
     {
-        String format = "NumericalAxis(name=\"%s\", type=%s, spacing=%.4g, origin=%.4g, unit=\"%s\")";
-        return String.format(Locale.ENGLISH, format, this.name, this.type, this.spacing, this.origin, this.unitName);
+        String format = "NumericalAxis(name=\"%s\", spacing=%.4g, origin=%.4g, unit=\"%s\")";
+        return String.format(Locale.ENGLISH, format, this.name, this.spacing, this.origin, this.unitName);
     }
 }

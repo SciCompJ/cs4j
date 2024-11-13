@@ -3,7 +3,8 @@
  */
 package net.sci.image;
 
-import net.sci.axis.Axis;
+import java.util.Locale;
+
 import net.sci.axis.NumericalAxis;
 
 /**
@@ -15,6 +16,21 @@ import net.sci.axis.NumericalAxis;
  */
 public class ImageAxis extends NumericalAxis
 {
+    // =============================================================
+    // Enumerations
+
+    public enum Type 
+    {
+        SPACE, 
+        CHANNEL, 
+        TIME, 
+        WAVELENGTH,
+        UNKNOWN
+    };
+    
+    protected Type type;
+    
+
     // =============================================================
     // Constructors
     
@@ -57,16 +73,23 @@ public class ImageAxis extends NumericalAxis
      * @param unitName
      *            the name of the unit
      */
-    public ImageAxis(String name, Axis.Type type, double spacing, double origin, String unitName)
+    public ImageAxis(String name, Type type, double spacing, double origin, String unitName)
     {
-        super(name, type, spacing, origin, unitName);
+        super(name, spacing, origin, unitName);
     }
 
     
     // =============================================================
     // New methods
     
-    
+    /**
+     * @return the type of this axis
+     */
+    public Type type()
+    {
+        return type;
+    }
+
     public boolean isCalibrated()
     {
         if (this.name != null) return true;
@@ -84,6 +107,13 @@ public class ImageAxis extends NumericalAxis
     public ImageAxis duplicate()
     {
         return new ImageAxis(this.name, this.type, this.spacing, this.origin, this.unitName);
+    }
+    
+    @Override
+    public String toString()
+    {
+        String format = "ImageAxis(name=\"%s\", type=%s, spacing=%.4g, origin=%.4g, unit=\"%s\")";
+        return String.format(Locale.ENGLISH, format, this.name, this.type, this.spacing, this.origin, this.unitName);
     }
 
     

@@ -3,11 +3,9 @@
  */
 package net.sci.image;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
-import net.sci.axis.NumericalAxis;
 
 /**
  * @author dlegland
@@ -22,8 +20,8 @@ public class ImageAxisTTest
     @Test
     public final void testDuplicate()
     {
-        NumericalAxis axis = new ImageAxis.T(1.5, 0.5, "ms");
-        NumericalAxis dup = axis.duplicate();
+        ImageAxis axis = new ImageAxis.T(1.5, 0.5, "ms");
+        ImageAxis dup = axis.duplicate();
         
         assertTrue(dup.type() == ImageAxis.Type.TIME);
         assertTrue(dup instanceof ImageAxis.T);

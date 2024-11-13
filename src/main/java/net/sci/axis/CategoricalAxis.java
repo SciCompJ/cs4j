@@ -23,11 +23,6 @@ public class CategoricalAxis implements Axis
     String name;
 
     /**
-     * The type of axis
-     */
-    Type type;
-    
-    /**
      * The name of each item / category within this axis.
      */
     String[] itemNames;
@@ -49,24 +44,6 @@ public class CategoricalAxis implements Axis
         this.name = name;
         this.itemNames = itemNames;
     }
-
-    /**
-     * Creates a new axis by specifying its name, its type, and the name of each item.
-     * 
-     * @param name
-     *            the name of the axis
-     * @param type
-     *            the type of the axis
-     * @param itemNames
-     *            the name of each item
-     */
-    public CategoricalAxis(String name, Axis.Type type, String[] itemNames)
-    {
-        this.type = type;
-        this.name = name;
-        this.itemNames = itemNames;
-    }
-
     
     // =============================================================
     // getters / setters
@@ -108,11 +85,6 @@ public class CategoricalAxis implements Axis
         return Arrays.copyOf(this.itemNames, this.itemNames.length);
     }
     
-    public Type type()
-    {
-        return this.type;
-    }
-    
 
     // =============================================================
     // Methods overriding the Axis interface
@@ -144,7 +116,7 @@ public class CategoricalAxis implements Axis
     @Override
     public CategoricalAxis duplicate()
     {
-        return new CategoricalAxis(this.name, this.type, Arrays.copyOf(this.itemNames, this.itemNames.length));
+        return new CategoricalAxis(this.name, Arrays.copyOf(this.itemNames, this.itemNames.length));
     }
  
     @Override
@@ -165,7 +137,7 @@ public class CategoricalAxis implements Axis
             }
             itemString = itemString + "}";
         }
-        String format = "CategoricalAxis(name=\"%s\", type=%s, items=%s)";
-        return String.format(Locale.ENGLISH, format, this.name, this.type, itemString);
+        String format = "CategoricalAxis(name=\"%s\", items=%s)";
+        return String.format(Locale.ENGLISH, format, this.name, itemString);
     }
 }
