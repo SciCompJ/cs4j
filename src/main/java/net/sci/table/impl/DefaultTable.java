@@ -707,6 +707,15 @@ public class DefaultTable extends TableStub
         }
 
         @Override
+        public Stream<Column> stream()
+        {
+            Iterator<Column> iter = iterator();
+            return Stream.generate(() -> null)
+                    .takeWhile(x -> iter.hasNext())
+                    .map(n -> iter.next());
+        }
+        
+        @Override
         public Iterator<Column> iterator()
         {
             return new ColumnIterator();

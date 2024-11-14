@@ -6,6 +6,7 @@ package net.sci.table;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 import net.sci.axis.Axis;
 import net.sci.table.impl.ColumnsTable;
@@ -532,5 +533,7 @@ public interface Table
          * @return the column at the specified index.
          */
         public C get(int index);
+        
+        public Stream<Column> stream();
     }
 }

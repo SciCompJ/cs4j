@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -251,7 +252,13 @@ public class ColumnsTable extends TableStub
         {
             return columns.get(index);
         }
-        
+ 
+        @Override
+        public Stream<Column> stream()
+        {
+            return columns.stream();
+        }
+       
         @Override
         public Iterator<Column> iterator()
         {

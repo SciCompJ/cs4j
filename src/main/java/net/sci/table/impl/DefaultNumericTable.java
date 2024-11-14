@@ -4,6 +4,7 @@
 package net.sci.table.impl;
 
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 import javax.swing.JFrame;
 
@@ -482,6 +483,15 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         public NumericColumn get(int index)
         {
             return new ColumnView(index);
+        }
+        
+        @Override
+        public Stream<Column> stream()
+        {
+            Iterator<NumericColumn> iter = iterator();
+            return Stream.generate(() -> null)
+                    .takeWhile(x -> iter.hasNext())
+                    .map(n -> iter.next());
         }
 
         @Override

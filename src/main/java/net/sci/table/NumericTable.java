@@ -6,7 +6,6 @@ package net.sci.table;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -102,18 +101,12 @@ public interface NumericTable extends Table
      */
     public static NumericTable keepNumericColumns(Table table)
     {
-        // keep numeric columns within a list
-        // TODO: replace with stream?
-        ArrayList<NumericColumn> columns = new ArrayList<NumericColumn>();
-        for (Column column : table.columns())
-        {
-            if (column instanceof NumericColumn)
-            {
-                columns.add((NumericColumn) column);
-            }
-        }
-        
-        return NumericTable.create(table.getRowAxis(), columns.toArray(new NumericColumn[] {}));
+        // keep only numeric columns
+        NumericColumn[] columns = table.columns().stream()
+                .filter(c -> c instanceof NumericColumn)
+                .toArray(NumericColumn[]::new);
+        // create news table keeping meta data
+        return NumericTable.create(table.getRowAxis(), columns);
     }
     
 
