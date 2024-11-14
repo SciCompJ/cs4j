@@ -47,6 +47,29 @@ public interface NumericTable extends Table
     }
 
     /**
+     * Creates a new data table from a series of columns, and a row axis.
+     * 
+     * @param rowAxis
+     *            an axis object describing the rows of the table
+     * @param columns
+     *            the columns
+     * @return a new Table instance            
+     */
+    public static NumericTable create(Axis rowAxis, NumericColumn... columns)
+    {
+        // initialize table
+        NumericTable table = create(rowAxis, columns.length);
+        
+        for (int c = 0; c < columns.length; c++)
+        {
+            NumericColumn column = columns[c];
+            table.setColumnValues(c, column.getValues());
+            table.setColumnName(c, column.getName());
+        }
+        return table;
+    }
+    
+    /**
      * Creates a new numeric data table from an Axis instance describing rows,
      * and a number of columns.
      * 
@@ -79,31 +102,18 @@ public interface NumericTable extends Table
      */
     public static NumericTable keepNumericColumns(Table table)
     {
-        // identifies index of numeric columns
-        ArrayList<Integer> indices = new ArrayList<Integer>();
-        for (int c = 0; c < table.columnCount(); c++)
+        // keep numeric columns within a list
+        // TODO: replace with stream?
+        ArrayList<NumericColumn> columns = new ArrayList<NumericColumn>();
+        for (Column column : table.columns())
         {
-            if (table.column(c) instanceof NumericColumn)
+            if (column instanceof NumericColumn)
             {
-                indices.add(c);
+                columns.add((NumericColumn) column);
             }
         }
         
-        // create the result table
-        int nRows = table.rowCount();
-        NumericTable res = NumericTable.create(nRows, indices.size());
-        
-        int c2 = 0;
-        for (int c : indices)
-        {
-            res.setColumnValues(c2, table.column(c).getValues());
-            c2++;
-        }
-        
-        // copy row names
-        res.setRowNames(table.getRowNames());
-        
-        return res;
+        return NumericTable.create(table.getRowAxis(), columns.toArray(new NumericColumn[] {}));
     }
     
 
