@@ -81,6 +81,7 @@ public interface Table
             for (int c = 0; c < nCols; c++)
             {
                 table.setColumnValues(c, columns[c].getValues());
+                table.setColumnName(c, columns[c].getName());
             }
             return table;
         }

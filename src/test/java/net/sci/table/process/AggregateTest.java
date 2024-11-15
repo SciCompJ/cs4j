@@ -44,7 +44,9 @@ public class AggregateTest
         assertEquals(res.rowCount(), 3);
         assertEquals(res.columnCount(), data.columnCount());
         
-        res.print();
+        assertEquals(res.column(0).getName(), data.column(0).getName());
+        
+//        res.print();
     }
 
 }
