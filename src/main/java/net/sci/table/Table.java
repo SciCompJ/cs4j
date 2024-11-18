@@ -168,12 +168,9 @@ public interface Table
         // create table from column array
         Table result = Table.create(cols);
 
-        // setup row names
-        String[] rowNames = table.getRowNames();
-        if (rowNames != null)
-        {
-            result.setRowNames(rowNames);
-        }
+        // copy meta-data
+        result.setRowAxis(table.getRowAxis());
+        result.setName(table.getName());
 
         return result;
     }
