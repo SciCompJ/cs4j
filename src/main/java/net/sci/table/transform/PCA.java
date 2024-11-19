@@ -5,6 +5,8 @@ package net.sci.table.transform;
 
 import Jama.Matrix;
 import Jama.SingularValueDecomposition;
+import net.sci.axis.CategoricalAxis;
+import net.sci.table.Column;
 import net.sci.table.NumericColumn;
 import net.sci.table.Table;
 
@@ -18,6 +20,7 @@ public class PCA
     boolean scaled = true;
     
     double[] meanValues;
+    double[] scalings;
     
     Table scores;
 
@@ -45,9 +48,9 @@ public class PCA
             throw new IllegalArgumentException("Requires table with more rows than columns");
         }
         // Check all columns are numeric
-        for (int c = 0; c < nc; c++)
+        for (Column column : table.columns())
         {
-            if (!(table.column(c) instanceof NumericColumn))
+            if (!(column instanceof NumericColumn))
             {
                 throw new IllegalArgumentException("Requires table with numeric columns only");
             }
@@ -56,30 +59,22 @@ public class PCA
         // get table name
         String name = table.getName();
         
-        // First step is to recenter the data (keep the mean in the meanValues field).
+        // First step is to remove mean and scale the data. Keep the mean and
+        // the scaling factors within the "meanValues" and "scalings" fields.
         Table cTable = recenterAndScale(table);
         
         // Compute covariance matrix = cData' * cData;
         Matrix covMat = covarianceMatrix(cTable);
 
-        
         // Diagonalisation of the covariance matrix.
         SingularValueDecomposition svd = new SingularValueDecomposition(covMat);
-
         
         // Extract eigen values
         this.eigenValues = eigenValuesMatrixToTable(svd.getS());
-        if (name == null)
-        {
-            this.eigenValues.setName("Eigen Values");
-        }
-        else
-        {
-            this.eigenValues.setName("Eigen Values of " + name);
-        }
+        this.eigenValues.setName(createNewName("Eigen Values", name));
         
         // convert matrix U into Loadings table
-        this.loadings= matrixToTable(svd.getU());
+        this.loadings = matrixToTable(svd.getU());
         for (int c = 0; c < nc; c++)
         {
             this.loadings.setRowName(c, table.getColumnName(c));
@@ -88,27 +83,13 @@ public class PCA
         // setup column names
         for (int c = 0; c < nc; c++)
         {
-            this.loadings.setColumnName(c, "CP" + c);
+            this.loadings.setColumnName(c, "CP" + (c+1));
         }
-        if (name == null)
-        {
-            this.loadings.setName("Loadings");
-        }
-        else
-        {
-            this.loadings.setName("Loadings of " + name);
-        }
+        this.loadings.setName(createNewName("Loadings", name));
 
         // Also compute scores
         this.scores = transform(table);
-        if (name == null)
-        {
-            this.scores.setName("Scores");
-        }
-        else
-        {
-            this.scores.setName("Scores of " + name);
-        }
+        this.scores.setName(createNewName("Scores", name));
 
         return this;
     }
@@ -127,63 +108,62 @@ public class PCA
         
         // create result
         Table res = Table.create(nr, nc);
+        
+        // compute variances 
+        this.scalings = new double[nc];
         if (this.scaled)
         {
-            // compute variance
-            double[] vars = new double[nc];
             for (int c = 0; c < nc; c++)
             {
-                double sum = 0;
-                for (double v : ((NumericColumn) table.column(c)).values())
-                {
-                    v -= this.meanValues[c];
-                    sum += v * v;
-                }
-                
+                double var = Math.sqrt(computeVariance((NumericColumn) table.column(c), meanValues[c]));
                 // avoid degenerate cases
-                vars[c] = Math.sqrt(sum / (nr - 1));
-                if (vars[c] < 1e-10)
-                {
-                    vars[c] = 1.0;
-                }
-            }            
-
-            // remove mean and variance
-            for (int c = 0; c < nc; c++)
-            {
-                for (int r = 0; r < nr; r++)
-                {
-                    res.setValue(r, c, (table.getValue(r, c) - this.meanValues[c]) / vars[c]);
-                }
-            }            
+                this.scalings[c] = Math.max(var, 1e-10);
+            }
         }
         else
         {
-            // simply remove the mean
             for (int c = 0; c < nc; c++)
             {
-                for (int r = 0; r < nr; r++)
-                {
-                    res.setValue(r, c, table.getValue(r, c) - this.meanValues[c]);
-                }
-            }            
+                this.scalings[c] = 1.0;
+            }
+        }
+        
+        // removes the mean and divides by variance (that can be 1)
+        for (int c = 0; c < nc; c++)
+        {
+            for (int r = 0; r < nr; r++)
+            {
+                res.setValue(r, c, (table.getValue(r, c) - this.meanValues[c]) / this.scalings[c]);
+            }
         }
         
         return res;
     }
 
-    private double computeMean(NumericColumn column)
+    private static final double computeMean(NumericColumn column)
     {
-        int nr = column.length();
         double sum = 0;
         for (double v : column.values())
         {
             sum += v;
         }
-        return sum / nr;
+        return sum / column.length();
     }
     
-    private Matrix covarianceMatrix(Table cTable)
+    private static final double computeVariance(NumericColumn column, double columnMean)
+    {
+        double sum = 0;
+        for (double v : column.values())
+        {
+            v -= columnMean;
+            sum += v * v;
+        }
+
+        // normalize by column length
+        return sum / (column.length() - 1);
+    }
+    
+    private static final Matrix covarianceMatrix(Table cTable)
     {
         int nr = cTable.rowCount();
         int nc = cTable.columnCount();
@@ -224,7 +204,7 @@ public class PCA
      *            the matrix to convert
      * @return the converted table.
      */
-    private Table matrixToTable(Matrix matrix)
+    private static final Table matrixToTable(Matrix matrix)
     {
         int nRows = matrix.getRowDimension();
         int nCols = matrix.getColumnDimension();
@@ -250,7 +230,7 @@ public class PCA
      *            the diagonal matrix of the eigen values
      * @return the eigen values table
      */
-    private Table eigenValuesMatrixToTable(Matrix S)
+    private static final Table eigenValuesMatrixToTable(Matrix S)
     {
         int nRows = S.getRowDimension();
         
@@ -279,11 +259,16 @@ public class PCA
         // set up names
         for (int row = 0; row < nRows; row++)
         {
-            String name = "CP" + row;
+            String name = "CP" + (row+1);
             tab.setRowName(row, name);
         }
 
         return tab;
+    }
+    
+    private static final String createNewName(String baseName, String parentTableName)
+    {
+        return parentTableName == null ? baseName : baseName + " of " + parentTableName;
     }
 
     /**
@@ -314,16 +299,16 @@ public class PCA
                 double value = 0;
                 for (int k = 0; k < nc; k++)
                 {
-                    value += table.getValue(r, k) * this.loadings.getValue(k, c); 
+                    double valCR = (table.getValue(r, k) - meanValues[k]) / scalings[k];
+                    value += valCR * this.loadings.getValue(k, c); 
                 }
                 res.setValue(r, c, value);
             }
-            
-            res.setRowName(r, table.getRowName(r));
         }
 
-        // setup column names
+        // setup meta data
         res.setColumnNames(this.loadings.getColumnNames());
+        res.setRowAxis(table.getRowAxis());
 
         return res;
     }
@@ -341,5 +326,20 @@ public class PCA
     public Table scores()
     {
         return this.scores;
+    }
+    
+    public Table normalisationData()
+    {
+        int nc = loadings.rowCount();
+        Table res = Table.create(2, nc);
+        for (int c = 0; c < nc; c++)
+        {
+            res.setValue(0, c, meanValues[c]);
+            res.setValue(1, c, scalings[c]);
+        }
+        
+        res.setRowAxis(new CategoricalAxis("",  new String[] {"mean", "variance"}));
+        res.setColumnNames(loadings.getRowNames());
+        return res;
     }
 }
