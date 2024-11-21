@@ -11,7 +11,12 @@ import net.sci.table.NumericColumn;
 import net.sci.table.Table;
 
 /**
- * Transform a table using Principal Component Analysis.
+ * Transform a table using Principal Component Analysis (PCA).
+ * 
+ * It is possible to choose scaled or non-scaled PCA. PCA must be scaled if the
+ * features correspond to values in different units, or corresponding to
+ * different quantities. In the case of chemometrics data, it is more common to
+ * use non-scaled PCA.
  * 
  * @author dlegland
  */
@@ -30,10 +35,26 @@ public class PCA
     
     
     /**
-     * Default empty constructor.
+     * Default empty constructor, corresponding to scaled PCA.
      */
     public PCA()
     {
+    }
+
+    /**
+     * Choose whether this principal component analysis Analysis operator should
+     * scale the features before computing the covariance matrix.
+     * 
+     * PCA must be scaled if the features correspond to values in different
+     * units, or corresponding to different quantities. In the case of
+     * chemometrics data, it is more common to use non-scaled PCA.
+     * 
+     * @param scale
+     *            the scaling flag (default is true)
+     */
+    public PCA(boolean scale)
+    {
+        this.scaled = scale;
     }
 
     public PCA fit(Table table)
@@ -59,6 +80,15 @@ public class PCA
         // get table name
         String name = table.getName();
         
+        // create axis describing principal components
+        String[] cpNames = new String[nc];
+        for (int c = 0; c < nc; c++)
+        {
+            cpNames[c] = "CP" + (c+1);
+        }
+        CategoricalAxis cpAxis = new CategoricalAxis(createNewName("Loadings", name), cpNames);
+        
+        
         // First step is to remove mean and scale the data. Keep the mean and
         // the scaling factors within the "meanValues" and "scalings" fields.
         Table cTable = recenterAndScale(table);
@@ -72,20 +102,13 @@ public class PCA
         // Extract eigen values
         this.eigenValues = eigenValuesMatrixToTable(svd.getS());
         this.eigenValues.setName(createNewName("Eigen Values", name));
+        this.eigenValues.setRowAxis(cpAxis.duplicate());
         
         // convert matrix U into Loadings table
         this.loadings = matrixToTable(svd.getU());
-        for (int c = 0; c < nc; c++)
-        {
-            this.loadings.setRowName(c, table.getColumnName(c));
-        }
-
-        // setup column names
-        for (int c = 0; c < nc; c++)
-        {
-            this.loadings.setColumnName(c, "CP" + (c+1));
-        }
         this.loadings.setName(createNewName("Loadings", name));
+        this.loadings.setRowAxis(table.getColumnAxis().duplicate());
+        this.loadings.setColumnAxis(cpAxis.duplicate());
 
         // Also compute scores
         this.scores = transform(table);
@@ -165,10 +188,11 @@ public class PCA
     
     private static final Matrix covarianceMatrix(Table cTable)
     {
+        // retrieve table size
         int nr = cTable.rowCount();
         int nc = cTable.columnCount();
         
-        // Compute covariance matrix = cData' * cData;
+        // compute covariance matrix = cData' * cData;
         Matrix covMat = new Matrix(nc, nc);
         for (int c1 = 0; c1 < nc; c1++)
         {
@@ -181,7 +205,7 @@ public class PCA
             }
             covMat.set(c1, c1, var / (nr - 1));
 
-            // compute covariance with other variables that are not yet computed
+            // compute covariance with the variables that are not yet computed
             for (int c2 = c1+1; c2 < nc; c2++)
             {
                 double sum = 0;
@@ -208,7 +232,7 @@ public class PCA
     {
         int nRows = matrix.getRowDimension();
         int nCols = matrix.getColumnDimension();
-        Table table = Table.create(nRows,  nCols);
+        Table table = Table.create(nRows, nCols);
         
         for (int row = 0; row < nRows; row++)
         {
@@ -256,13 +280,6 @@ public class PCA
             tab.setValue(row, 2, buffer);
         }
 
-        // set up names
-        for (int row = 0; row < nRows; row++)
-        {
-            String name = "CP" + (row+1);
-            tab.setRowName(row, name);
-        }
-
         return tab;
     }
     
@@ -307,8 +324,9 @@ public class PCA
         }
 
         // setup meta data
-        res.setColumnNames(this.loadings.getColumnNames());
+        res.setColumnAxis(this.loadings.getColumnAxis().duplicate());
         res.setRowAxis(table.getRowAxis());
+        res.setName(table.getName() + "-PCA");
 
         return res;
     }
@@ -338,8 +356,10 @@ public class PCA
             res.setValue(1, c, scalings[c]);
         }
         
-        res.setRowAxis(new CategoricalAxis("",  new String[] {"mean", "variance"}));
-        res.setColumnNames(loadings.getRowNames());
+        res.setRowAxis(new CategoricalAxis("", new String[] {"mean", "variance"}));
+        res.setColumnAxis(loadings.getRowAxis());
+        res.setName("PCA reference");
+        
         return res;
     }
 }
