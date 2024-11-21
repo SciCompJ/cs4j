@@ -14,9 +14,9 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import net.sci.table.CategoricalColumn;
+import net.sci.axis.Axis;
+import net.sci.axis.CategoricalAxis;
 import net.sci.table.Column;
-import net.sci.table.LogicalColumn;
 import net.sci.table.NumericColumn;
 import net.sci.table.Table;
 
@@ -145,6 +145,34 @@ public class ColumnsTable extends TableStub
     }
 
     @Override
+    public Axis getColumnAxis()
+    {
+        return new ColumnAxisAdapter(this);
+    }
+
+    @Override
+    public void setColumnAxis(Axis axis)
+    {
+        // changes the name of each column based on the item values in axis
+        if (axis instanceof CategoricalAxis catAxis)
+        {
+            if (catAxis.length() != rowCount())
+            {
+                throw new RuntimeException("Input axis must have as many elements as column count");
+            }
+            for (int c = 0; c < columnCount(); c++)
+            {
+                columns.get(c).setName(catAxis.itemName(c));
+            }
+        }
+        else
+        {
+            throw new RuntimeException("Can not manage Axis with class: " + axis.getClass().getName());
+        }
+    }
+
+
+    @Override
     public String[] getColumnNames()
     {
         return this.columns.stream()
@@ -266,7 +294,7 @@ public class ColumnsTable extends TableStub
         }
     }
 
-    public class ColumnIterator implements Iterator<Column>
+    private class ColumnIterator implements Iterator<Column>
     {
         int index = 0;
 
@@ -281,29 +309,5 @@ public class ColumnsTable extends TableStub
         {
             return column(index++);
         }    
-    }
-    
-    /**
-     * Small demonstration of the usage of the DefaultNumericTable class.
-     * 
-     * @param args optional arguments, not used
-     */
-    public final static void main(String[] args)
-    {
-        Column[] columns = new Column[] { 
-                NumericColumn.create("Length", new double[] {1.5, 2.5, 3.5, 4.5, 5.5}),
-                NumericColumn.create("Number", new double[] {3, 5, 1, 8, 2}), 
-                LogicalColumn.create("Check", new boolean[] {true, true, false, true, false}), 
-                CategoricalColumn.create("Factor", new int[] {0, 1, 2, 1, 2}, new String[] {"Red", "Green", "Blue"}), 
-        };
-        ColumnsTable table = new ColumnsTable(columns);
-        
-        table.printInfo(System.out);
-        
-        System.out.println(table);
-//      tbl.print();
-        
-//      JFrame frame = table.show();
-//      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

@@ -230,6 +230,20 @@ public interface Table
     public Column column(int c);
     
     /**
+     * Returns the Axis instance that describes the columns of this table.
+     * 
+     * @return the Axis instance that describes the columns of this table.
+     */
+    public Axis getColumnAxis();
+    
+    /**
+     * Changes the meta-data associated to the columns axis by specifying a new Axis instance.
+     * 
+     * @param axis the Axis instance that describes the columns of this table.
+     */
+    public void setColumnAxis(Axis axis);
+
+    /**
      * Adds a new (numeric) column to ths table. The column is defined by a name
      * and a series of value.
      * 
@@ -319,13 +333,6 @@ public interface Table
 //    public void addRow(String name, double[] values);
     
     /**
-     * Returns the array of row names of the table. May be null.
-     * 
-     * @return the array of row names of the table.
-     */
-    public String[] getRowNames();
-    
-    /**
      * Returns the Axis instance that describes the rows of this table, if it
      * exists.
      * 
@@ -340,6 +347,13 @@ public interface Table
      */
     public void setRowAxis(Axis axis);
 
+    /**
+     * Returns the array of row names of the table. May be null.
+     * 
+     * @return the array of row names of the table.
+     */
+    public String[] getRowNames();
+    
     public void setRowNames(String[] names);
 
     public String getRowName(int rowIndex);

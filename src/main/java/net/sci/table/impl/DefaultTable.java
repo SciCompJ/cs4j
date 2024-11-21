@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import net.sci.axis.Axis;
 import net.sci.axis.CategoricalAxis;
 import net.sci.table.CategoricalColumn;
 import net.sci.table.Column;
@@ -241,6 +242,35 @@ public class DefaultTable extends TableStub
         this.nCols++;
 	}
 	
+    @Override
+    public Axis getColumnAxis()
+    {
+        return new ColumnAxisAdapter(this);
+    }
+
+    @Override
+    public void setColumnAxis(Axis axis)
+    {
+        // changes the name of each column based on the item values in axis
+        if (axis instanceof CategoricalAxis catAxis)
+        {
+            if (catAxis.length() != columnCount())
+            {
+                throw new RuntimeException("Input axis must have as many elements as column count");
+            }
+            
+            if (colNames == null)
+            {
+                colNames = new String[nCols];
+            }
+            System.arraycopy(catAxis.itemNames(), 0, colNames, 0, nCols);
+        }
+        else
+        {
+            throw new RuntimeException("Can not manage Axis with class: " + axis.getClass().getName());
+        }
+    }
+
     public String[] getColumnNames()
     {
         return this.colNames;
@@ -722,7 +752,7 @@ public class DefaultTable extends TableStub
         }
     }
 
-    public class ColumnIterator implements Iterator<Column>
+    private class ColumnIterator implements Iterator<Column>
     {
         int index = 0;
 
