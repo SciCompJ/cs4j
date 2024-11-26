@@ -17,6 +17,44 @@ import net.sci.table.impl.DefaultCategoricalColumn;
 public interface CategoricalColumn extends Column
 {
     /**
+     * Creates a new categorical column from a name, and a list of item level
+     * names. The resulting column has same size as the array of levels.
+     * 
+     * {@snippet lang="java" :
+     * String[] levels = new String[]{"true", "true", "false", "true", "false"};
+     * CategoricalColumn column = CategoricalColumn.create("Levels", levels);
+     * int colLength = column.length(); // returns 5
+     * }
+     * 
+     * @param name
+     *            the name of the column
+     * @param levels
+     *            the name of each element within the column
+     * @return a new categorical column.
+     */
+    public static CategoricalColumn create(String name, String[] levels)
+    {
+        int nRows = levels.length;
+        
+        ArrayList<String> uniqueLevels = new ArrayList<String>();
+        int[] indices = new int[nRows];
+        for (int i = 0; i < nRows; i++)
+        {
+            String level = levels[i];
+            int index = uniqueLevels.indexOf(level);
+            if (index == -1)
+            {
+                index = uniqueLevels.size();
+                uniqueLevels.add(level);
+            }
+            indices[i] = index;
+        }
+        
+        String[] levelNames = uniqueLevels.toArray(new String[] {});
+        return create(name, indices, levelNames);
+    }
+    
+    /**
      * Creates a new categorical column from a name, the array of level index
      * for each element, and the array of level names.
      * 
@@ -33,14 +71,14 @@ public interface CategoricalColumn extends Column
      * @param indices
      *            the array of level index for each element. The size of this
      *            array determines the size of the column.
-     * @param levels
+     * @param levelNames
      *            the name of each level. The length of this array determines
      *            the maximum index value.
      * @return a new categorical column.
      */
-    public static CategoricalColumn create(String name, int[] indices, String[] levels)
+    public static CategoricalColumn create(String name, int[] indices, String[] levelNames)
     {
-        return new DefaultCategoricalColumn(name, indices, levels);
+        return new DefaultCategoricalColumn(name, indices, levelNames);
     }
     
     /**
@@ -82,8 +120,23 @@ public interface CategoricalColumn extends Column
      */
     public String[] levelNames();
     
+    /**
+     * Returns the level index at the specified row.
+     * 
+     * @param row
+     *            the row index
+     * @return the level index at the specified row
+     */
     public int getLevelIndex(int row);
 
+    /**
+     * Changes the level index at the specified row.
+     * 
+     * @param row
+     *            the row index
+     * @param index
+     *            the new index at the specified row
+     */
     public void setLevelIndex(int row, int index);
 
     /**
