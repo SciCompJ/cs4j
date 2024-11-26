@@ -32,6 +32,8 @@ public class ColumnsTable extends TableStub
     
     ArrayList<Column> columns;
     
+    ColumnAxisAdapter columnAxis;
+    
 
     // =============================================================
     // Constructors
@@ -49,6 +51,8 @@ public class ColumnsTable extends TableStub
         {
             this.columns.add(col);
         }
+        
+        this.columnAxis = new ColumnAxisAdapter(this);
     }
 
 
@@ -147,7 +151,7 @@ public class ColumnsTable extends TableStub
     @Override
     public Axis getColumnAxis()
     {
-        return new ColumnAxisAdapter(this);
+        return this.columnAxis;
     }
 
     @Override

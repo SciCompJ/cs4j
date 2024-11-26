@@ -48,10 +48,8 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     int nRows;
 
     /**
-     * The name of the columns.
+     * The axis describing columns
      */
-//    String[] colNames = null;
-    
     CategoricalAxis columnAxis = null;
     
 

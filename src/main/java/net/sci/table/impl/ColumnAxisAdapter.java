@@ -11,6 +11,8 @@ import net.sci.table.Table;
 /**
  * Adapter class that mimics behavior of Categorical Axis, by referring to
  * the inner collection of columns for getter and accessors.
+ * 
+ * (not used anymore, as all class implementations now embed column axis).
  */
 public class ColumnAxisAdapter extends CategoricalAxis
 {
@@ -59,16 +61,6 @@ public class ColumnAxisAdapter extends CategoricalAxis
         return table.columns().stream().map(c -> c.getName()).toArray(String[]::new);
     }
     
-    /**
-     * Changes the name of the axis
-     * 
-     * @param name the name to set
-     */
-    public void setName(String name)
-    {
-        throw new RuntimeException("Can not change name of this class");
-    }
-
     @Override
     public CategoricalAxis duplicate()
     {

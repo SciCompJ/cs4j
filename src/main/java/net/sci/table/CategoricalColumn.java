@@ -3,6 +3,8 @@
  */
 package net.sci.table;
 
+import java.util.ArrayList;
+
 import net.sci.table.impl.DefaultCategoricalColumn;
 
 /**
@@ -42,6 +44,36 @@ public interface CategoricalColumn extends Column
     }
     
     /**
+     * Converts an integer column into a categorical column by considering each
+     * unique value in the input column as a level.
+     * 
+     * @param column
+     *            the column to convert
+     * @return the converted categorical column, with same length
+     */
+    public static CategoricalColumn convert(IntegerColumn column)
+    {
+        ArrayList<Integer> uniqueValues = new ArrayList<Integer>();
+        for (int i = 0; i < column.length(); i++)
+        {
+            int val = column.getInt(i);
+            if (!uniqueValues.contains(val))
+            {
+                uniqueValues.add(val);
+            }
+        }
+        
+        String[] levels = uniqueValues.stream().map(val -> "" + val).toArray(String[]::new);
+        int[] indices = new int[column.length()];
+        for (int i = 0; i < column.length(); i++)
+        {
+            indices[i] = uniqueValues.indexOf(column.get(i));
+        }
+        
+        return create(column.getName(), indices, levels); 
+    }
+    
+    /**
      * Returns the different levels that can be represented within this
      * categorical column.
      * 
@@ -49,6 +81,10 @@ public interface CategoricalColumn extends Column
      *         categorical column.
      */
     public String[] levelNames();
+    
+    public int getLevelIndex(int row);
+
+    public void setLevelIndex(int row, int index);
 
     /**
      * Returns the category name for the specified row index.

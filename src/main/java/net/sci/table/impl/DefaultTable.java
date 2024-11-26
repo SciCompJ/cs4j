@@ -53,7 +53,10 @@ public class DefaultTable extends TableStub
      */
     int nRows;
 
-    String[] colNames = null;
+    /**
+     * The axis describing columns
+     */
+    CategoricalAxis columnAxis = null;
 
     /**
      * The list of levels for each column, or null if a column is numeric.
@@ -85,7 +88,7 @@ public class DefaultTable extends TableStub
 
         if (colNames.length != this.nCols) throw new IllegalArgumentException(
                 "Number of column names should match number of data columns");
-        this.colNames = colNames;
+        this.columnAxis = new CategoricalAxis("", colNames);
 
         if (rowNames.length != this.nRows) throw new IllegalArgumentException(
                 "Number of row names should match number of data rows");
@@ -111,6 +114,8 @@ public class DefaultTable extends TableStub
         {
             this.nRows = 0;
         }
+        
+        this.columnAxis = new CategoricalAxis("", new String[nCols]);
 
         // initialize levels
         this.levels = new ArrayList<>(this.nCols);
@@ -123,13 +128,13 @@ public class DefaultTable extends TableStub
 
     // =============================================================
     // Management of factor levels
-	
-	public boolean isNumericColumn(int col)
-	{
-	    return this.levels.get(col) == null;
-	}
 
-	/**
+    public boolean isNumericColumn(int col)
+    {
+        return this.levels.get(col) == null;
+    }
+
+    /**
      * Returns the levels of the factor column specified by the column index, or
      * null if the column contains quantitative data.
      * 
@@ -185,21 +190,21 @@ public class DefaultTable extends TableStub
     }
 
     /**
-	 * Returns the number of columns (measurements, variables) in the data
-	 * table.
-	 */
-	public int columnCount()
-	{
-		return this.nCols;
-	}
+     * Returns the number of columns (measurements, variables) in the data
+     * table.
+     */
+    public int columnCount()
+    {
+        return this.nCols;
+    }
 
-	@Override
+    @Override
     public Column column(int c)
     {
-	    if (isNumericColumn(c))
-	        return new NumericColumnView(c);
-	    else
-	        return new CategoricalColumnView(c);
+        if (isNumericColumn(c))
+            return new NumericColumnView(c);
+        else
+            return new CategoricalColumnView(c);
     }
 
     /**
@@ -210,42 +215,39 @@ public class DefaultTable extends TableStub
      * @param values
      *            the values of the new column
      */
-	public void addColumn(String name, double[] values)
-	{
-	    if (values.length != nRows)
-	    {
-	        throw new IllegalArgumentException("Requires an array with " + nRows + " values");
-	    }
-	    
-	    // create new data array
-	    double[][] newData = new double[nCols+1][nRows];
-	    
+    public void addColumn(String name, double[] values)
+    {
+        if (values.length != nRows)
+        {
+            throw new IllegalArgumentException("Requires an array with " + nRows + " values");
+        }
+
+        // create new data array
+        double[][] newData = new double[nCols + 1][nRows];
+
         // copy columns
-	    System.arraycopy(this.data, 0, newData, 0, nCols);
-	    
-	    // copy new values
+        System.arraycopy(this.data, 0, newData, 0, nCols);
+
+        // copy new values
         System.arraycopy(values, 0, newData[nCols], 0, nRows);
         this.data = newData;
-        
+
         // add empty level array
         this.levels.add(null);
-        
+
         // copy column names
-        String[] newColNames = new String[nCols+1];
-        if (this.colNames != null)
-        {
-            System.arraycopy(this.colNames, 0, newColNames, 0, nCols);
-        }
-        newColNames[nCols] = name;
-        this.colNames = newColNames;
-        
+        String[] colNames = new String[nCols + 1];
+        System.arraycopy(columnAxis.itemNames(), 0, colNames, 0, nCols);
+        colNames[nCols] = name;
+        columnAxis = new CategoricalAxis(columnAxis.getName(), colNames);
+
         this.nCols++;
-	}
-	
+    }
+
     @Override
     public Axis getColumnAxis()
     {
-        return new ColumnAxisAdapter(this);
+        return columnAxis;
     }
 
     @Override
@@ -258,12 +260,7 @@ public class DefaultTable extends TableStub
             {
                 throw new RuntimeException("Input axis must have as many elements as column count");
             }
-            
-            if (colNames == null)
-            {
-                colNames = new String[nCols];
-            }
-            System.arraycopy(catAxis.itemNames(), 0, colNames, 0, nCols);
+            this.columnAxis = catAxis;
         }
         else
         {
@@ -273,38 +270,33 @@ public class DefaultTable extends TableStub
 
     public String[] getColumnNames()
     {
-        return this.colNames;
+        return columnAxis.itemNames();
     }
 
-	public void setColumnNames(String[] names)
-	{
-		if (names.length != this.nCols)
-			throw new IllegalArgumentException(
-					"String array must have same length as the number of columns.");
-		this.colNames = names;
-	}
+    public void setColumnNames(String[] names)
+    {
+        if (names.length != this.nCols) throw new IllegalArgumentException(
+                "String array must have same length as the number of columns.");
+        columnAxis = new CategoricalAxis(columnAxis.getName(), names);
+    }
 
     public String getColumnName(int colIndex)
     {
-        if (this.colNames == null)
-            return null;
-        return this.colNames[colIndex];
+        return columnAxis.itemName(colIndex);
     }
 
-	@Override
+    @Override
     public void setColumnName(int colIndex, String name)
     {
-        if (this.colNames == null)
-        {
-            this.colNames = new String[nCols];
-        }
-        this.colNames[colIndex] = name;
+        String[] names = columnAxis.itemNames();
+        names[colIndex] = name;
+        this.columnAxis = new CategoricalAxis(columnAxis.getName(), names);
     }
-
+    
 
     // =============================================================
     // Management of rows
-    
+
     /**
      * Returns the number of rows (individuals, observations) in the data table.
      */
@@ -312,8 +304,8 @@ public class DefaultTable extends TableStub
     {
         return this.nRows;
     }
+    
 
-	
     // =============================================================
     // Getters and setters for values
 
@@ -359,11 +351,11 @@ public class DefaultTable extends TableStub
      */
     public double[] getRowValues(int rowIndex)
     {
-    	double[] values = new double[this.nCols];
-    	for (int c = 0; c < this.nCols; c++)
-    	{
-    		values[c] = this.data[c][rowIndex];
-    	}
+        double[] values = new double[this.nCols];
+        for (int c = 0; c < this.nCols; c++)
+        {
+            values[c] = this.data[c][rowIndex];
+        }
         return values;
     }
     
@@ -398,51 +390,50 @@ public class DefaultTable extends TableStub
         this.data[col][row] = value;
     }
 
-
-	/**
-	 * Opens a new JFrame and shows this table inside
+    /**
+     * Opens a new JFrame and shows this table inside
      * 
-     * @param the instance of the widget used for display 
-	 */
-	public JFrame show()
-	{
-		// Need to cast to object array...
-		Object[][] dats = new Object[this.nRows][this.nCols];
-		for (int r = 0; r < this.nRows; r++)
-		{
-			for (int c = 0; c < this.nCols; c++)
-			{
-				dats[r][c] = this.data[c][r];
-			}
-		}
+     * @param the
+     *            instance of the widget used for display
+     */
+    public JFrame show()
+    {
+        // Need to cast to object array...
+        Object[][] dats = new Object[this.nRows][this.nCols];
+        for (int r = 0; r < this.nRows; r++)
+        {
+            for (int c = 0; c < this.nCols; c++)
+            {
+                dats[r][c] = this.data[c][r];
+            }
+        }
 
-		// Create JTable instance
-		JTable table = new JTable(dats, this.colNames);
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        // Create JTable instance
+        JTable table = new JTable(dats, this.columnAxis.itemNames());
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-		// Create the frame containing the table
-		JFrame frame = new JFrame("Data Table");
-		frame.setPreferredSize(new Dimension(400, 300));
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        // Create the frame containing the table
+        JFrame frame = new JFrame("Data Table");
+        frame.setPreferredSize(new Dimension(400, 300));
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		// Setup layout
-		Container panel = frame.getContentPane();
+        // Setup layout
+        Container panel = frame.getContentPane();
 
-		JScrollPane scrollPane = new JScrollPane(table);
-		JTable rowTable = new RowNumberTable(table);
-		scrollPane.setRowHeaderView(rowTable);
-		scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER,
-				rowTable.getTableHeader());
+        JScrollPane scrollPane = new JScrollPane(table);
+        JTable rowTable = new RowNumberTable(table);
+        scrollPane.setRowHeaderView(rowTable);
+        scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, rowTable.getTableHeader());
 
-		// panel.add(table.getTableHeader(), BorderLayout.NORTH);
-		panel.add(table.getTableHeader(), BorderLayout.NORTH);
-		panel.add(scrollPane, BorderLayout.CENTER);
-		frame.pack();
+        // panel.add(table.getTableHeader(), BorderLayout.NORTH);
+        panel.add(table.getTableHeader(), BorderLayout.NORTH);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        frame.pack();
 
-		// show !
-		frame.setVisible(true);
-		return frame;
-	}
+        // show !
+        frame.setVisible(true);
+        return frame;
+    }
 
 	@Override
     public String toString()
@@ -499,74 +490,75 @@ public class DefaultTable extends TableStub
         
         return sb.toString();
     }
-	
-	private int[] computeColSizes()
-	{
-	    int SIZE_MAX = 16;
-	    
-	    int[] colSizes = new int[nCols];
-	    for (int c = 0; c <nCols; c++)
-	    {
-	        // default size
-	        int size = 10;
-	        
-	        // use specific processing for factor columns with levels
-	        if (!isNumericColumn(c))
-	        {
-	            String[] colLevels = this.levels.get(c);
-	            if (colLevels != null)
-	            {
-	                for (String s : colLevels)
-	                {
-	                    size = Math.max(size, s.length());
-	                }
-	            }
-	        }
-	        
-	        // include size of column name
-	        if (colNames != null)
-	        {
-	            size = Math.max(size, colNames[c].length());
-	        }
-	        
-	        // avoid too long sizes
-	        colSizes[c] = Math.min(size, SIZE_MAX);
-	    }
-	    return colSizes;
-	}
-    
-	private static final String spaces(int nSpaces)
-	{
-	    StringBuilder sb = new StringBuilder(nSpaces);
-	    for (int i = 0; i < nSpaces; i++)
-	    {
-	        sb.append(" ");
-	    }
-	    return sb.toString();
-	}
+
+    private int[] computeColSizes()
+    {
+        int SIZE_MAX = 16;
+
+        int[] colSizes = new int[nCols];
+        String[] colNames = columnAxis.itemNames();
+        for (int c = 0; c < nCols; c++)
+        {
+            // default size
+            int size = 10;
+
+            // use specific processing for factor columns with levels
+            if (!isNumericColumn(c))
+            {
+                String[] colLevels = this.levels.get(c);
+                if (colLevels != null)
+                {
+                    for (String s : colLevels)
+                    {
+                        size = Math.max(size, s.length());
+                    }
+                }
+            }
+
+            // include size of column name
+            if (colNames != null)
+            {
+                size = Math.max(size, colNames[c].length());
+            }
+
+            // avoid too long sizes
+            colSizes[c] = Math.min(size, SIZE_MAX);
+        }
+        return colSizes;
+    }
+
+    private static final String spaces(int nSpaces)
+    {
+        StringBuilder sb = new StringBuilder(nSpaces);
+        for (int i = 0; i < nSpaces; i++)
+        {
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
 
     /**
-	 * Small demonstration of the usage of the DefaultNumericTable class.
-	 * 
-	 * @param args optional arguments, not used
-	 */
-	public final static void main(String[] args)
-	{
-		DefaultTable tbl = new DefaultTable(15, 5);
-        tbl.setColumnNames(new String[] { "Length", "Area", "Diam.",
-                "Number", "Density" });
-		
+     * Small demonstration of the usage of the DefaultNumericTable class.
+     * 
+     * @param args
+     *            optional arguments, not used
+     */
+    public final static void main(String[] args)
+    {
+        DefaultTable tbl = new DefaultTable(15, 5);
+        tbl.setColumnNames(new String[] { "Length", "Area", "Diam.", "Number", "Density" });
+
         tbl.printInfo(System.out);
-        
+
         System.out.println(tbl);
-//      tbl.print();
-        
-//		JFrame frame = tbl.show();
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-	
-	abstract class ColumnView implements Column
-	{
+        // tbl.print();
+
+        // JFrame frame = tbl.show();
+        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    abstract class ColumnView implements Column
+    {
         int colIndex;
 
         public ColumnView(int index)
@@ -582,26 +574,13 @@ public class DefaultTable extends TableStub
         
         public String getName()
         {
-            if (colNames == null)
-                return null;
-            return colNames[colIndex];
+            return columnAxis.itemName(colIndex);
         }
-
 
         @Override
         public void setName(String newName)
         {
-            if (colNames == null)
-            {
-                colNames = new String[nCols];
-            }
-            if (colNames.length != nCols)
-            {
-                String[] newColNames = new String[nCols];
-                System.arraycopy(colNames, 0, newColNames, 0, Math.min(nCols, colNames.length));
-            }
-            
-            colNames[colIndex] = newName;
+            setColumnName(colIndex, newName);
         }
 
         @Override
@@ -615,20 +594,43 @@ public class DefaultTable extends TableStub
         {
             return data[colIndex];
         }
-	}
-	
-	class CategoricalColumnView extends ColumnView implements CategoricalColumn
-	{
-	    String[] colLevels;
-	    
-	    public CategoricalColumnView(int index)
-	    {
+    }
+
+    class CategoricalColumnView extends ColumnView implements CategoricalColumn
+    {
+        String[] colLevels;
+
+        public CategoricalColumnView(int index)
+        {
             super(index);
-	        this.colLevels = levels.get(colIndex);
-	        if (this.colLevels == null)
-	        {
-	            throw new IllegalArgumentException("column index must have levels been initialized");
-	        }
+            this.colLevels = levels.get(colIndex);
+            if (this.colLevels == null)
+            {
+                throw new IllegalArgumentException(
+                        "column index must have levels been initialized");
+            }
+        }
+
+        @Override
+        public int getLevelIndex(int row)
+        {
+            return (int) DefaultTable.this.data[colIndex][row];
+        }
+
+        @Override
+        public void setLevelIndex(int row, int index)
+        {
+            if (index >= colLevels.length || index < 0)
+            {
+                throw new IllegalArgumentException("Index must be smaller than level number");
+            }
+            DefaultTable.this.data[colIndex][row] = index;
+        }
+
+        @Override
+        public int length()
+        {
+            return nRows;
         }
 
         @Override
@@ -690,37 +692,10 @@ public class DefaultTable extends TableStub
             System.arraycopy(data[colIndex], 0, values, 0, nRows);
             return NumericColumn.create(name, values);
         }
-
-//        @Override
-//        public Iterator<Double> iterator()
-//        {
-//            return new RowIterator();
-//        }
-//        
-//        class RowIterator implements Iterator<Double>
-//        {
-//            int index = 0;
-//            
-//            public RowIterator()
-//            {
-//            }
-//
-//            @Override
-//            public boolean hasNext()
-//            {
-//                return index < nRows;
-//            }
-//
-//            @Override
-//            public Double next()
-//            {
-//                return data[colIndex][index++];
-//            }
-//        }
     }
-	
-	private class Columns implements Table.Columns<Column>
-	{
+
+    private class Columns implements Table.Columns<Column>
+    {
         @Override
         public int size()
         {

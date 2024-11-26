@@ -3,6 +3,8 @@
  */
 package net.sci.table;
 
+import java.util.Locale;
+
 import net.sci.table.impl.DefaultIntegerColumn;
 
 /**
@@ -40,6 +42,16 @@ public interface IntegerColumn extends NumericColumn, Iterable<Integer>
      * @return the integer value at the specified row index.
      */
     public int getInt(int row);
+    
+    public default int[] getIntValues()
+    {
+        int[] values = new int[this.length()];
+        for (int i = 0; i < length(); i++)
+        {
+            values[i] = this.getInt(i);
+        }
+        return values;
+    }
     
     /**
      * Changes the integer value at the specified row index (optional
@@ -86,6 +98,16 @@ public interface IntegerColumn extends NumericColumn, Iterable<Integer>
     {
         StringBuilder sb = new StringBuilder();
         sb.append("integer");
+
+        int minVal = Integer.MAX_VALUE;
+        int maxVal = Integer.MIN_VALUE;
+        for (int i = 0; i < length(); i++)
+        {
+            int v = getInt(i);
+            minVal = Math.min(minVal, v);
+            maxVal = Math.max(maxVal, v);
+        }
+        sb.append(String.format(Locale.ENGLISH, " [%d ; %d]", minVal, maxVal));
 
         return sb.toString();
     }   

@@ -25,6 +25,23 @@ public class DefaultCategoricalColumn extends ColumnStub implements CategoricalC
     
     
     @Override
+    public int getLevelIndex(int row)
+    {
+        return this.data[row];
+    }
+
+    @Override
+    public void setLevelIndex(int row, int index)
+    {
+        if (index >= levels.length || index < 0)
+        {
+            throw new IllegalArgumentException("Index must be smaller than level number");
+        }
+        this.data[row] = index;
+    }
+
+
+    @Override
     public int length()
     {
         return this.data.length;
