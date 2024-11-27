@@ -387,7 +387,7 @@ public class MinimaAndMaxima
      *            a binary array of maxima
      * @return the result of maxima imposition
      */
-    public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array, ScalarArray2D<?> maxima)
+    public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array, BinaryArray2D maxima)
     {
         return imposeMaxima(array, maxima, DEFAULT_CONNECTIVITY_2D);
     }
@@ -404,7 +404,7 @@ public class MinimaAndMaxima
      *            the connectivity for maxima, that should be either 4 or 8
      * @return the result of maxima imposition
      */
-    public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array, ScalarArray2D<?> maxima, Connectivity2D conn)
+    public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array, BinaryArray2D maxima, Connectivity2D conn)
     {
         ScalarArray2D<?> marker = array.duplicate();
         ScalarArray2D<?> mask = array.duplicate();
@@ -441,8 +441,7 @@ public class MinimaAndMaxima
      *            a binary array of maxima
      * @return the result of maxima imposition
      */
-    public final static ScalarArray3D<?> imposeMaxima(ScalarArray3D<?> array,
-            ScalarArray3D<?> maxima)
+    public final static ScalarArray3D<?> imposeMaxima(ScalarArray3D<?> array, BinaryArray3D maxima)
     {
         return imposeMaxima(array, maxima, DEFAULT_CONNECTIVITY_3D);
     }
@@ -459,8 +458,8 @@ public class MinimaAndMaxima
      *            the connectivity for maxima, that should be either 4 or 8
      * @return the result of maxima imposition
      */
-    public final static ScalarArray3D<?> imposeMaxima(ScalarArray3D<?> array,
-            ScalarArray3D<?> maxima, Connectivity3D conn)
+    public final static ScalarArray3D<?> imposeMaxima(ScalarArray3D<?> array, BinaryArray3D maxima,
+            Connectivity3D conn)
     {
         ScalarArray3D<?> marker = array.duplicate();
         ScalarArray3D<?> mask = array.duplicate();
@@ -501,8 +500,7 @@ public class MinimaAndMaxima
      *            a binary array of minima 
      * @return the result of minima imposition
      */
-    public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array,
-            ScalarArray2D<?> minima)
+    public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array, BinaryArray2D minima)
     {
         return imposeMinima(array, minima, DEFAULT_CONNECTIVITY_2D);
     }
@@ -519,8 +517,8 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the result of minima imposition
      */
-    public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array,
-            ScalarArray2D<?> minima, Connectivity2D conn)
+    public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array, BinaryArray2D minima,
+            Connectivity2D conn)
     {
         int sizeX = array.size(0);
         int sizeY = array.size(1);
@@ -557,7 +555,7 @@ public class MinimaAndMaxima
      *            a binary array of minima
      * @return the result of minima imposition
      */
-    public final static ScalarArray3D<?> imposeMinima(ScalarArray3D<?> array, ScalarArray3D<?> minima)
+    public final static ScalarArray3D<?> imposeMinima(ScalarArray3D<?> array, BinaryArray3D minima)
     {
         return imposeMinima(array, minima, DEFAULT_CONNECTIVITY_3D);
     }
@@ -574,7 +572,7 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 6 or 26
      * @return the result of minima imposition
      */
-    public final static ScalarArray3D<?> imposeMinima(ScalarArray3D<?> array, ScalarArray3D<?> minima, Connectivity3D conn)
+    public final static ScalarArray3D<?> imposeMinima(ScalarArray3D<?> array, BinaryArray3D minima, Connectivity3D conn)
     {
         int sizeX = array.size(0);
         int sizeY = array.size(1);
