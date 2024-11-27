@@ -76,6 +76,7 @@ public class ImageAxis extends NumericalAxis
     public ImageAxis(String name, Type type, double spacing, double origin, String unitName)
     {
         super(name, spacing, origin, unitName);
+        this.type = type;
     }
 
     
