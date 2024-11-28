@@ -227,7 +227,7 @@ public class MinimaAndMaximaTest
     }
     
     @Test
-    public final void testImposeMinima_ScalarArray2D_simpleProfile()
+    public final void testImposeMinima_simpleProfile()
     {
         UInt8Array2D array = createSimpleProfileArrray2D();
         BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
@@ -245,15 +245,47 @@ public class MinimaAndMaximaTest
     }
     
     @Test
+    public final void testImposeMinima__ramp()
+    {
+        UInt8Array2D array = create_ramp_7x5_UInt8();
+        BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
+        minima.setBoolean(2, 2, true);
+        minima.setBoolean(5, 2, true);
+
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity2D.C4);
+
+        // check markers correspond to minimal values
+        assertEquals(0.0, res.getValue(2, 2), 0.01);
+        assertEquals(0.0, res.getValue(5, 2), 0.01);
+        // keep relative ordering of other values
+        assertTrue(res.getValue(5, 1) > res.getValue(3, 1));
+        assertTrue(res.getValue(5, 3) > res.getValue(3, 3));
+    }
+    
+    @Test
+    public final void testImposeMaxima__ramp()
+    {
+        UInt8Array2D array = create_ramp_7x5_UInt8();
+        BinaryArray2D maxima = BinaryArray2D.create(array.size(0), array.size(1));
+        maxima.setBoolean(2, 2, true);
+        maxima.setBoolean(5, 2, true);
+
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima(array, maxima, Connectivity2D.C4);
+
+        // check markers correspond to maximal values
+        assertEquals(255.0, res.getValue(2, 2), 0.01);
+        assertEquals(255.0, res.getValue(5, 2), 0.01);
+        // keep relative ordering of other values
+        assertTrue(res.getValue(5, 1) > res.getValue(3, 1));
+        assertTrue(res.getValue(5, 3) > res.getValue(3, 3));
+    }
+    
+    @Test
     public final void testImposeMinima_ScalarArray2D_MinimaWithinZeroRegion()
     {
-        UInt8Array2D array = UInt8Array2D.fromIntArray(new int[][] {
-            {50, 0, 0, 0, 0, 0, 50},
-            {50, 0, 0, 0, 0, 0, 50},
-            {50, 0, 0, 0, 0, 0, 50},
-            {50, 0, 0, 0, 0, 0, 50},
-            {50, 0, 0, 0, 0, 0, 50},
-            });
+        int[] profile = new int[] {50, 0, 0, 0, 0, 0, 50};
+        UInt8Array2D array = UInt8Array2D.create(profile.length, 5);
+        array.fillInts((x,y) -> profile[x]);
         BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
         minima.setBoolean(1, 2, true);
         minima.setBoolean(5, 2, true);
@@ -274,13 +306,16 @@ public class MinimaAndMaximaTest
         int[] values = new int[] {70, 20, 50, 40, 60, 30, 50, 10, 50, 40, 70};
         int nRows = 5;
         UInt8Array2D array = UInt8Array2D.create(values.length, nRows);
-        for (int y = 0; y < nRows; y++)
-        {
-            for (int x = 0; x < values.length; x++)
-            {
-                array.setInt(x, y, values[x]);
-            }
-        }
+        array.fillInts((x,y) -> values[x]);
+        return array;
+    }
+    
+    private UInt8Array2D create_ramp_7x5_UInt8()
+    {
+        int[] values = new int[] {10, 20, 30, 40, 50, 60, 70};
+        int nRows = 5;
+        UInt8Array2D array = UInt8Array2D.create(values.length, nRows);
+        array.fillInts((x,y) -> values[x]);
         return array;
     }
 }
