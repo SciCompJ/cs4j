@@ -82,6 +82,7 @@ public class CategoricalAxis implements Axis
      */
     public String[] itemNames()
     {
+        if (this.itemNames == null) return null;
         return Arrays.copyOf(this.itemNames, this.itemNames.length);
     }
     
