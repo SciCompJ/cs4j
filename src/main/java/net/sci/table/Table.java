@@ -5,13 +5,13 @@ package net.sci.table;
 
 import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import net.sci.axis.Axis;
 import net.sci.table.impl.ColumnsTable;
 import net.sci.table.impl.DefaultNumericTable;
 import net.sci.table.impl.DefaultTable;
+import net.sci.table.impl.TablePrinter;
 
 /**
  * Defines the interface for storing measurements.
@@ -470,57 +470,7 @@ public interface Table
      */
     public default void print()
     {
-        int nRows = rowCount();
-        int nCols = columnCount();
-        String[] colNames = getColumnNames();
-        String[] rowNames = getRowNames();
-        
-        // determine max size of row names
-        int maxLength = 0;
-        if (rowNames!=null)
-        {
-            maxLength = Arrays.stream(rowNames)
-                    .map(str -> str.length())
-                    .mapToInt(v -> v)
-                    .max()
-                    .orElseThrow(NoSuchElementException::new);
-        }
-
-        // First display column headers
-        String rowPattern = "%" + maxLength + "s ";
-        if (colNames != null)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (rowNames != null)
-            {
-                String rowNameHeader = getRowAxis() != null ? getRowAxis().getName() : "";
-                sb.append(String.format(rowPattern, rowNameHeader));
-            }
-            for (int c = 0; c < nCols; c++)
-            {
-                sb.append(colNames[c] + " ");
-            }
-            System.out.println(sb.toString());
-        }
-
-        // Then display content of each row
-        for (int r = 0; r < nRows; r++)
-        {
-            StringBuilder sb = new StringBuilder();
-            
-            // row header
-            if (rowNames != null)
-            {
-                sb.append(String.format(rowPattern, rowNames[r]));
-            }
-            
-            // row data
-            for (int c = 0; c < nCols; c++)
-            {
-                sb.append(this.column(c).getString(r) + "\t");
-            }
-            System.out.println(sb.toString());
-        }
+        System.out.println(new TablePrinter().print(this));
     }
 
     /**

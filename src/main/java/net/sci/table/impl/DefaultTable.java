@@ -435,108 +435,6 @@ public class DefaultTable extends TableStub
         return frame;
     }
 
-	@Override
-    public String toString()
-    {
-        // retrieve general info
-        int nRows = rowCount();
-        int nCols = columnCount();
-        String[] colNames = getColumnNames();
-        String[] rowNames = getRowNames();
-        
-        // compute column sizes
-        int rowNamesSize = 0;
-        if (this.rowAxis != null)
-        {
-            rowNamesSize = Stream.of(rowAxis.itemNames()).map(String::length).mapToInt(v->v).max().orElse(0);
-        }
-        int[] colSizes = computeColSizes();
-        
-        StringBuilder sb = new StringBuilder();
-
-        // First display column headers
-        if (colNames != null)
-        {
-            if (rowNames != null)
-            {
-                sb.append(spaces(rowNamesSize + 1));
-            }
-            for (int c = 0; c < nCols; c++)
-            {
-                String pattern = "%" + colSizes[c] + "s ";
-                sb.append(String.format(pattern, colNames[c]));
-            }
-            sb.append("\n");
-        }
-
-        // Then display content of each row
-        for (int r = 0; r < nRows; r++)
-        {
-            // row header
-            if (rowNames != null)
-            {
-                String pattern = "%-" + rowNamesSize + "s ";
-                sb.append(String.format(pattern, rowNames[r]));
-            }
-            
-            // row data
-            for (int c = 0; c < nCols; c++)
-            {
-                String pattern = "%" + colSizes[c] + "s ";
-                sb.append(String.format(pattern, "" + this.get(r, c)));
-            }
-            sb.append("\n");
-        }
-        
-        return sb.toString();
-    }
-
-    private int[] computeColSizes()
-    {
-        int SIZE_MAX = 16;
-
-        int[] colSizes = new int[nCols];
-        String[] colNames = columnAxis.itemNames();
-        for (int c = 0; c < nCols; c++)
-        {
-            // default size
-            int size = 10;
-
-            // use specific processing for factor columns with levels
-            if (!isNumericColumn(c))
-            {
-                String[] colLevels = this.levels.get(c);
-                if (colLevels != null)
-                {
-                    for (String s : colLevels)
-                    {
-                        size = Math.max(size, s.length());
-                    }
-                }
-            }
-
-            // include size of column name
-            if (colNames != null)
-            {
-                size = Math.max(size, colNames[c].length());
-            }
-
-            // avoid too long sizes
-            colSizes[c] = Math.min(size, SIZE_MAX);
-        }
-        return colSizes;
-    }
-
-    private static final String spaces(int nSpaces)
-    {
-        StringBuilder sb = new StringBuilder(nSpaces);
-        for (int i = 0; i < nSpaces; i++)
-        {
-            sb.append(" ");
-        }
-        return sb.toString();
-    }
-
     /**
      * Small demonstration of the usage of the DefaultNumericTable class.
      * 
@@ -545,13 +443,20 @@ public class DefaultTable extends TableStub
      */
     public final static void main(String[] args)
     {
-        DefaultTable tbl = new DefaultTable(15, 5);
-        tbl.setColumnNames(new String[] { "Length", "Area", "Diam.", "Number", "Density" });
+        DefaultTable tbl = new DefaultTable(20, 3);
+        tbl.setColumnNames(new String[] { "t", "sin(t)", "cos(t)"});
+        for (int i = 0; i < 20; i++)
+        {
+            double t = i * Math.PI / 20;
+            tbl.setValue(i, 0, t);
+            tbl.setValue(i, 1, Math.sin(t));
+            tbl.setValue(i, 2, Math.cos(t));
+        }
 
         tbl.printInfo(System.out);
 
-        System.out.println(tbl);
-        // tbl.print();
+//        System.out.println(tbl);
+         tbl.print();
 
         // JFrame frame = tbl.show();
         // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
