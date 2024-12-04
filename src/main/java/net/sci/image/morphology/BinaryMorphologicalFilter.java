@@ -23,6 +23,9 @@ import net.sci.array.binary.BinaryArray;
  */
 public abstract class BinaryMorphologicalFilter extends AlgoStub implements ArrayOperator
 {
+    // =============================================================
+    // Inner variables
+    
     /**
      * The structuring element used by concrete implementations.
      */
@@ -34,6 +37,10 @@ public abstract class BinaryMorphologicalFilter extends AlgoStub implements Arra
      */
     protected boolean padding = true;
 
+    
+    // =============================================================
+    // Constructors
+    
     /**
      * Initializes the inner structuring element.
      * 
@@ -60,6 +67,10 @@ public abstract class BinaryMorphologicalFilter extends AlgoStub implements Arra
         this.padding = padding;
     }
 
+    
+    // =============================================================
+    // Processing methods
+    
     /**
      * Apply this morphological operation on the (binary) input array.
      * 
@@ -95,8 +106,7 @@ public abstract class BinaryMorphologicalFilter extends AlgoStub implements Arra
         }
         else
         {
-            throw new RuntimeException(
-                    "Requires an instance of BinaryArray");
+            throw new RuntimeException("Requires an instance of BinaryArray");
         }
     }
 

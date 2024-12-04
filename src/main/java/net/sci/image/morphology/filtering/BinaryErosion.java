@@ -32,6 +32,9 @@ import net.sci.image.morphology.strel.Strel3D;
  */
 public class BinaryErosion extends BinaryMorphologicalFilter
 {
+    // =============================================================
+    // Static computation methods
+    
     /**
      * Computes the erosion of a row using another row as structuring element.
      * 
@@ -52,6 +55,153 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         return res;
     }
     
+    public static final RunLengthBinaryArray2D padArray2d(RunLengthBinaryArray2D array, int leftPad, int rightPad)
+    {
+        // array dimensions
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        
+        // create result array
+        HashMap<Integer, BinaryRow> resRows = new HashMap<Integer, BinaryRow>();
+        
+        // iterate over row indices
+        for (int yRow : array.nonEmptyRowIndices())
+        {
+            if (!array.isEmptyRow(yRow))
+            {
+                BinaryRow row = array.getRow(yRow);
+                row = padRow(row, sizeX, leftPad, rightPad);
+                resRows.put(yRow, row);
+            }
+        }
+        
+        // create result array
+        return new RunLengthBinaryArray2D(sizeX, sizeY, resRows);
+    }
+
+    /**
+     * Shifts all the runs within the input array by the given amount to the
+     * left.
+     * 
+     * @param array
+     *            the array to shift.
+     * @param dx
+     *            the shift amount (positive to the right)
+     * @return the new shifted array
+     */
+    private static final HashMap<Integer, BinaryRow> shiftRows(RunLengthBinaryArray2D array, int dx)
+    {
+        HashMap<Integer, BinaryRow> resRows = new HashMap<Integer, BinaryRow>();
+        for (int y : array.nonEmptyRowIndices())
+        {
+           resRows.put(y, array.getRow(y).shift(dx));
+        }
+        return resRows;
+    }
+
+    public static final RunLengthBinaryArray3D padArray3d(RunLengthBinaryArray3D array, int leftPad, int rightPad)
+    {
+        // array dimensions
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
+        
+        // create result array
+        HashMap<Integer, HashMap<Integer, BinaryRow>> resSlices = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
+                
+        // iterate over slice indices
+        for (int zSlice : array.nonEmptySliceIndices())
+        {
+            Collection<Integer> yRowIndices = array.nonEmptySliceRowIndices(zSlice);
+            
+            // prepare a map for storing result
+            HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>(yRowIndices.size());
+            
+            // iterate over row indices within current slice
+            for (int yRow : yRowIndices)
+            {
+                BinaryRow row = array.getRow(yRow, zSlice);
+                row = padRow(row, sizeX, leftPad, rightPad);
+                sliceRows.put(yRow, row);
+            }
+            
+            // store rows within slice
+            resSlices.put(zSlice, sliceRows);
+        }
+        
+        // create result array
+        RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ, resSlices);
+        return res;
+    }
+    
+    /**
+     * Shifts all the runs within the 3D input array by the given amount to the
+     * left.
+     * 
+     * @param array
+     *            the array to shift.
+     * @param dx
+     *            the shift amount (positive to the right)
+     * @return the new shifted array
+     */
+    private static final HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
+    {
+        // create
+        HashMap<Integer, HashMap<Integer, BinaryRow>> resRows = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
+    
+        // iterate over non-empty slices 
+        for (int z : array.nonEmptySliceIndices())
+        {
+            HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>();
+            for (int y : array.nonEmptySliceRowIndices(z))
+            {
+              sliceRows.put(y, array.getRow(y, z).shift(dx));
+          }
+          resRows.put(z, sliceRows);
+      }
+        
+        // return
+        return resRows;
+    }
+
+    /**
+     * Ensures the input row can be considered as larger row, by optionally
+     * adding <code>true</code> elements before first element and after first
+     * element when the extremities of the row are set to <code>true</code>.
+     * When an extremity (either to 0 one or the length-1 one) contains zero,
+     * then it is not necessary to pad.
+     * 
+     * @param row
+     *            the row to pad (assumed to start at zero)
+     * @param length
+     *            the length of the row
+     * @param leftPad
+     *            the pad length before first element
+     * @param rightPad
+     *            the pad length after last element
+     * @return the padded row
+     */
+    private static final BinaryRow padRow(BinaryRow row, int length, int leftPad, int rightPad)
+    {
+        if (row.get(0))
+        {
+            Run run = new Run(-leftPad, -1);
+            row = BinaryRow.union(row, new BinaryRow(run));
+        }
+    
+        if (row.get(length - 1))
+        {
+            Run run = new Run(length, length + rightPad - 1);
+            row = BinaryRow.union(row, new BinaryRow(run));
+        }
+        
+        return row;
+    }
+
+    
+    // =============================================================
+    // Constructors
+    
     public BinaryErosion(Strel strel)
     {
         super(strel);
@@ -61,6 +211,10 @@ public class BinaryErosion extends BinaryMorphologicalFilter
     {
         super(strel, padding);
     }
+    
+    
+    // =============================================================
+    // Computation methods
     
     /**
      * Performs morphological erosion on a 2D binary array. The input is
@@ -76,7 +230,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
      */
     public BinaryArray2D processBinary2d(BinaryArray2D array)
     {
-        // cast to Strel2D and retrieve size and offset
+        // cast to Strel2D, and retrieve size and offset
         Strel2D strel2d = Strel2D.wrap(strel);
         int[] strelSize = strel2d.size();
         int[] strelOffset = strel2d.maskOffset();
@@ -97,7 +251,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
             fireStatusChanged(this, "Pad array");
             int padLeft = strelSize[0] - strelOffset[0];
             int padRight = strelOffset[0];
-            rleArray = pad(rleArray, padLeft, padRight);
+            rleArray = padArray2d(rleArray, padLeft, padRight);
         }
         
         // array dimensions
@@ -114,7 +268,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
             fireProgressChanged(this, y, sizeY);
             
             // initialize full result row
-            BinaryRow resRow = new BinaryRow().complement(sizeX);
+            BinaryRow resRow = new BinaryRow(new Run(0, sizeX - 1));
             
             // iterate over rows of structuring element
             for (int yStrel = 0; yStrel < strelSize[1]; yStrel++)
@@ -148,60 +302,12 @@ public class BinaryErosion extends BinaryMorphologicalFilter
             
             if (!resRow.isEmpty())
             {
-                res.setRow(y, resRow.crop(0, sizeY - 1));
+                res.setRow(y, resRow.crop(0, sizeX - 1));
             }
         }
 
         fireProgressChanged(this, 1, 1);
         return res;
-    }
-    
-    private RunLengthBinaryArray2D pad(RunLengthBinaryArray2D array, int leftPad, int rightPad)
-    {
-        // array dimensions
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-        
-        // create result array
-        HashMap<Integer, BinaryRow> resRows = new HashMap<Integer, BinaryRow>();
-        
-        // iterate over row indices
-        Collection<Integer> indices = array.nonEmptyRowIndices();
-        int nInds = indices.size();
-        for (int yRow : indices)
-        {
-            fireProgressChanged(this, yRow, nInds);
-            if (!array.isEmptyRow(yRow))
-            {
-                BinaryRow row = array.getRow(yRow);
-                row = pad(row, sizeX, leftPad, rightPad);
-                resRows.put(yRow, row);
-            }
-        }
-        
-        // create result array
-        RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY, resRows);
-        return res;
-    }
-    
-    /**
-     * Shifts all the runs within the input array by the given amount to the
-     * left.
-     * 
-     * @param array
-     *            the array to shift.
-     * @param dx
-     *            the shift amount (positive to the right)
-     * @return the new shifted array
-     */
-    private HashMap<Integer, BinaryRow> shiftRows(RunLengthBinaryArray2D array, int dx)
-    {
-        HashMap<Integer, BinaryRow> resRows = new HashMap<Integer, BinaryRow>();
-        for (int y : array.nonEmptyRowIndices())
-        {
-           resRows.put(y, array.getRow(y).shift(dx));
-        }
-        return resRows;
     }
     
     /**
@@ -218,7 +324,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
      */
     public BinaryArray3D processBinary3d(BinaryArray3D array)
     {
-        // cast to Strel2D and retrieve size and offset
+        // cast to Strel3D, and retrieve size and offset
         Strel3D strel3d = Strel3D.wrap(strel);
         int[] strelSize = strel3d.size();
         int[] strelOffset = strel3d.maskOffset();
@@ -239,7 +345,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
             fireStatusChanged(this, "Pad array");
             int padLeft = strelSize[0] - strelOffset[0];
             int padRight = strelOffset[0];
-            rleArray = pad(rleArray, padLeft, padRight);
+            rleArray = padArray3d(rleArray, padLeft, padRight);
         }
         
         // array dimensions
@@ -260,7 +366,7 @@ public class BinaryErosion extends BinaryMorphologicalFilter
             for (int y = 0; y < sizeY; y++)
             {
                 // initialize full result row
-                BinaryRow resRow = new BinaryRow().complement(sizeX);
+                BinaryRow resRow = new BinaryRow(new Run(0, sizeX - 1));
 
                 // iterate over rows of structuring element
                 for (int zStrel = 0; zStrel < strelSize[2]; zStrel++)
@@ -321,108 +427,9 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         return new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ, slices);
     }
     
-    private RunLengthBinaryArray3D pad(RunLengthBinaryArray3D array, int leftPad, int rightPad)
-    {
-        // array dimensions
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-        int sizeZ = array.size(2);
-        
-        // create result array
-        HashMap<Integer, HashMap<Integer, BinaryRow>> resSlices = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
-                
-        // iterate over slice indices
-        Collection<Integer> zSliceIndices = array.nonEmptySliceIndices();
-        int nSlices = zSliceIndices.size();
-        for (int zSlice : zSliceIndices)
-        {
-            fireProgressChanged(this, zSlice, nSlices);
-            
-            Collection<Integer> yRowIndices = array.nonEmptySliceRowIndices(zSlice);
-            
-            // prepare a map for storing result
-            HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>(yRowIndices.size());
-            
-            // iterate over row indices within current slice
-            for (int yRow : yRowIndices)
-            {
-                BinaryRow row = array.getRow(yRow, zSlice);
-                row = pad(row, sizeX, leftPad, rightPad);
-                sliceRows.put(yRow, row);
-            }
-            
-            // store rows within slice
-            resSlices.put(zSlice, sliceRows);
-        }
-        
-        // create result array
-        RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ, resSlices);
-        return res;
-    }
     
-    /**
-     * Shifts all the runs within the 3D input array by the given amount to the
-     * left.
-     * 
-     * @param array
-     *            the array to shift.
-     * @param dx
-     *            the shift amount (positive to the right)
-     * @return the new shifted array
-     */
-    private HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
-    {
-        // create
-        HashMap<Integer, HashMap<Integer, BinaryRow>> resRows = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
-
-        // iterate over non-empty slices 
-        for (int z : array.nonEmptySliceIndices())
-        {
-            HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>();
-            for (int y : array.nonEmptySliceRowIndices(z))
-            {
-              sliceRows.put(y, array.getRow(y, z).shift(dx));
-          }
-          resRows.put(z, sliceRows);
-      }
-        
-        // return
-        return resRows;
-    }
-    
-    /**
-     * Ensures the input row can be considered as larger row, by optionally
-     * adding <code>true</code> elements before first element and after first
-     * element when the extremities of the row are set to <code>true</code>.
-     * When an extremity (either to 0 one or the length-1 one) contains zero,
-     * then it is not necessary to pad.
-     * 
-     * @param row
-     *            the row to pad (assumed to start at zero)
-     * @param length
-     *            the length of the row
-     * @param leftPad
-     *            the pad length before first element
-     * @param rightPad
-     *            the pad length after last element
-     * @return the padded row
-     */
-    private BinaryRow pad(BinaryRow row, int length, int leftPad, int rightPad)
-    {
-        if (row.get(0))
-        {
-            Run run = new Run(-leftPad, -1);
-            row = BinaryRow.union(row, new BinaryRow(run));
-        }
-
-        if (row.get(length - 1))
-        {
-            Run run = new Run(length, length + rightPad - 1);
-            row = BinaryRow.union(row, new BinaryRow(run));
-        }
-        
-        return row;
-    }
+    // =============================================================
+    // Implementation of the BinaryMorphologicalFilter class 
     
     @Override
     public BinaryArray processBinary(BinaryArray array)
