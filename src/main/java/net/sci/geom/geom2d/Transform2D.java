@@ -3,6 +3,8 @@
  */
 package net.sci.geom.geom2d;
 
+import net.sci.geom.Transform;
+
 /**
  * General interface for transforms in 2D space. Input is a 2D point, and output
  * is a 2D point.
@@ -13,7 +15,7 @@ package net.sci.geom.geom2d;
  * @author dlegland
  *
  */
-public interface Transform2D
+public interface Transform2D extends Transform
 {
     /**
      * Transforms a points and returns the result as a new 3D point.
@@ -39,5 +41,11 @@ public interface Transform2D
     public default Point2D transform(double x, double y)
     {
         return transform(new Point2D(x, y));
+    }
+    
+    @Override
+    public default int dimensionality()
+    {
+        return 2;
     }
 }

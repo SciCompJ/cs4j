@@ -3,6 +3,8 @@
  */
 package net.sci.geom.geom3d;
 
+import net.sci.geom.Transform;
+
 /**
  * General interface for transforms in 3D space. Input is a 3D point, and output
  * is a 3D point.
@@ -12,10 +14,10 @@ package net.sci.geom.geom3d;
  * 
  * @author dlegland
  */
-public interface Transform3D
+public interface Transform3D extends Transform
 {
     /**
-     * Transforms a points and returns the result as a new 3D point.
+     * Transforms a point and returns the result as a new 3D point.
      * 
      * @param point
      *            the point to transform.
@@ -41,4 +43,10 @@ public interface Transform3D
 	{
 	    return transform(new Point3D(x, y, z));
 	}
+	
+    @Override
+    public default int dimensionality()
+    {
+        return 3;
+    }
 }
