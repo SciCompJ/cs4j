@@ -46,6 +46,35 @@ public interface NumericTable extends Table
     }
 
     /**
+     * Creates a new data table from a series of columns.
+     * 
+     * @param columns
+     *            the columns
+     * @return a new Table instance            
+     */
+    public static NumericTable create(NumericColumn... columns)
+    {
+        // check input
+        if (columns.length == 0)
+        {
+            throw new IllegalArgumentException("Requires at least one column");
+        }
+        
+        // initialize table
+        int nRows = columns[0].length();
+        NumericTable table = create(nRows, columns.length);
+        
+        // update column values
+        for (int c = 0; c < columns.length; c++)
+        {
+            NumericColumn column = columns[c];
+            table.setColumnValues(c, column.getValues());
+            table.setColumnName(c, column.getName());
+        }
+        return table;
+    }
+    
+    /**
      * Creates a new data table from a series of columns, and a row axis.
      * 
      * @param rowAxis
@@ -80,9 +109,13 @@ public interface NumericTable extends Table
      */
     public static NumericTable create(Axis rowAxis, int nColumns)
     {
+        if (rowAxis == null)
+        {
+            throw new IllegalArgumentException("When creating a table, RowAxis argument can not be null");
+        }
         if (!(rowAxis instanceof CategoricalAxis))
         {
-            throw new RuntimeException("Row axis must be an instance of CategoricalAxis");
+            throw new IllegalArgumentException("Row axis must be an instance of CategoricalAxis");
         }
         int nRows = ((CategoricalAxis) rowAxis).length();
         DefaultNumericTable table = new DefaultNumericTable(nRows, nColumns);
@@ -105,8 +138,16 @@ public interface NumericTable extends Table
         NumericColumn[] columns = table.columns().stream()
                 .filter(c -> c instanceof NumericColumn)
                 .toArray(NumericColumn[]::new);
-        // create news table keeping meta data
-        return NumericTable.create(table.getRowAxis(), columns);
+        
+        // create new table
+        NumericTable res = NumericTable.create(columns);
+        
+        // keep meta data
+        if (table.getRowAxis() != null)
+        {
+            res.setRowAxis(table.getRowAxis().duplicate());
+        }
+        return res;
     }
     
 
