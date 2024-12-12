@@ -4,11 +4,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.UInt8Array2D;
 
 public class LabelImagesTest
 {
-    
     @Test
     public void testFindAllLabels()
     {
@@ -34,5 +34,57 @@ public class LabelImagesTest
         assertEquals(1, labels[0]);
         assertEquals(9, labels[8]);
     }
+
+    /**
+     * Test method for {@link net.sci.image.label.LabelImages#cropLabel(net.sci.array.numeric.IntArray, int, int)}.
+     */
+    @Test
+    public final void testCropLabel()
+    {
+        UInt8Array2D array = createFourRegionsLabelMap();
+        
+        IntArray<?> res = LabelImages.cropLabel(array, 7, 0);
+        
+        assertTrue(res.elementClass().equals(array.elementClass()));
+        assertEquals(res.size(0), 5);
+        assertEquals(res.size(1), 5);
+    }
+
+    /**
+     * Test method for {@link net.sci.image.label.LabelImages#keepLabels(net.sci.array.numeric.IntArray, int[])}.
+     */
+    @Test
+    public final void test_keepLabels_intArray()
+    {
+        UInt8Array2D array = createFourRegionsLabelMap();
+        
+        IntArray<?> res = LabelImages.keepLabels(array, new int[] {4, 5});
+        
+        assertTrue(res.elementClass().equals(array.elementClass()));
+        assertEquals(res.size(0), array.size(0));
+        assertEquals(res.size(1), array.size(1));
+        assertEquals(res.getInt(new int[] {1, 1}), 0);
+        assertEquals(res.getInt(new int[] {1, 5}), 4);
+        assertEquals(res.getInt(new int[] {5, 1}), 5);
+        assertEquals(res.getInt(new int[] {5, 5}), 0);
+    }
     
+    private static final UInt8Array2D createFourRegionsLabelMap()
+    {
+        UInt8Array2D array = UInt8Array2D.create(8, 8);
+        array.setInt(1, 1, 3);
+        for (int i = 3; i < 8; i++)
+        {
+            array.setInt(1, i, 4);
+            array.setInt(i, 1, 5);
+        }
+        for (int i = 3; i < 8; i++)
+        {
+            for (int j = 3; j < 8; j++)
+            {
+                array.setInt(i, j, 7);
+            }
+        }
+        return array;
+    }
 }

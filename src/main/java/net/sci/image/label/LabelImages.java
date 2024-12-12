@@ -6,7 +6,10 @@ package net.sci.image.label;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -203,7 +206,7 @@ public class LabelImages
     }
     
     /**
-     * Create associative array to retrieve the index corresponding each label.
+     * Create associative array to retrieve the index corresponding to each label.
      * 
      * Usage:
      * <pre>{@code
@@ -230,6 +233,90 @@ public class LabelImages
         return labelIndices;
     }
 
+    /**
+     * Computes the number of elements (pixels or voxels) composing each region
+     * within the label map.
+     * 
+     * @param labelMap
+     *            a label image containing region label of each element, or zero
+     *            for background.
+     * @param labels
+     *            the array of region labels to process
+     * @return an array the same size as labels, containing the number of
+     *         elements of each region
+     */
+    public static final int[] elementCounts(IntArray<?> labelMap, int[] labels)
+    {
+        // create associative array to identify the index of each label
+        HashMap<Integer, Integer> labelIndices = mapLabelIndices(labels);
+
+        // initialize result
+        int nLabels = labels.length;
+        int[] counts = new int[nLabels];
+    
+        // iterate over array elements
+        IntArray.Iterator<?> iter = labelMap.iterator();
+        while(iter.hasNext())
+        {
+            int label = iter.nextInt();
+            if (label == 0)
+                continue;
+            
+            if (labelIndices.containsKey(label))
+            {
+                counts[labelIndices.get(label)]++;
+            }
+        }
+
+        return counts;
+    }
+    
+    /**
+     * Creates a new array of integers containing only the specified labels.
+     * 
+     * @param labelMap
+     *            a planar label image
+     * @param labels
+     *            the collection of label values to keep
+     * @return a new int array containing only the specified labels
+     */
+    public static final <I extends Int<I>> IntArray<I> keepLabels(IntArray<I> labelMap,
+            Collection<Integer> labelsToKeep)
+    {
+        IntArray<I> res = labelMap.newInstance(labelMap.size());
+        
+        for (int[] pos : res.positions())
+        {
+            int label = labelMap.getInt(pos);
+            if (label == 0) continue;
+            if (labelsToKeep.contains(label))
+            {
+                res.setInt(pos, label);
+            }
+        }
+        
+        return res;
+    }
+    
+    /**
+     * Creates a new array of integers containing only the specified labels.
+     * 
+     * @param labelMap
+     *            a planar label image
+     * @param labels
+     *            the array of label values to keep
+     * @return a new int array containing only the specified labels
+     */
+    public static final <I extends Int<I>> IntArray<I> keepLabels(IntArray<I> labelMap, int[] labels)
+    {
+        // convert int array to collection
+        HashSet<Integer> labelSet = new HashSet<Integer>(labels.length);
+        labelSet.addAll(Arrays.stream(labels).boxed().toList());
+        
+        // call the version of the method based on collection
+        return keepLabels(labelMap, labelSet);
+    }
+    
     
     // ==============================================================
     // Distance maps
