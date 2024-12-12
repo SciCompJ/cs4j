@@ -27,6 +27,7 @@ import net.sci.array.ArrayOperator;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
+import net.sci.image.binary.distmap.ChamferMask2D;
 
 
 /**
@@ -37,19 +38,44 @@ import net.sci.array.numeric.ScalarArray2D;
  */
 public interface DistanceTransform2D extends Algo, ArrayOperator
 {
-	/**
-	 * Computes the distance map from a 2D binary image. 
-	 * Distance is computed for each foreground (white) pixel, as the 
-	 * chamfer distance to the nearest background (black) pixel.
-	 * 
-	 * @param array a 2D boolean array with white pixels as foreground
-	 * @return a new 2D array containing: <ul>
-	 * <li> 0 for each background pixel </li>
-	 * <li> the distance to the nearest background pixel otherwise</li>
-	 * </ul>
-	 */
-	public ScalarArray2D<?> process2d(IntArray2D<?> array);
-	
+    /**
+     * Create a default algorithm for 2D chamfer mask based distance transform
+     * on label maps, by specifying whether floating point computation should be
+     * used, and if result distance map should be normalized.
+     * 
+     * @param chamferMask
+     *            the 2D chamfer mask to use for propagating distances
+     * @param floatingPoint
+     *            boolean flag indicating whether result should be provided as
+     *            <code>Float32</code> (if true) or as <code>UInt16</code> (if
+     *            false).
+     * @param normalize
+     *            indicates whether the resulting distance map should be
+     *            normalized (divide distances by the first chamfer weight)
+     * @return an algorithm for computing chamfer distance maps on label maps.
+     */
+    public static DistanceTransform2D create(ChamferMask2D chamferMask, boolean floatingPoint, boolean normalize)
+    {
+        return floatingPoint
+                ? new ChamferDistanceTransform2DFloat32(chamferMask, normalize)
+                : new ChamferDistanceTransform2DUInt16(chamferMask, normalize);    
+    }
+
+    /**
+     * Computes the distance map from a 2D binary image. Distance is computed
+     * for each foreground (white) pixel, as the chamfer distance to the nearest
+     * background (black) pixel.
+     * 
+     * @param array
+     *            a 2D boolean array with white pixels as foreground
+     * @return a new 2D array containing:
+     *         <ul>
+     *         <li>0 for each background pixel</li>
+     *         <li>the distance to the nearest background pixel otherwise</li>
+     *         </ul>
+     */
+    public ScalarArray2D<?> process2d(IntArray2D<?> array);
+
     /**
      * Process the input scalar array and return the result in a new array.
      * 

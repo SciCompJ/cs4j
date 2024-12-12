@@ -339,7 +339,7 @@ public class LabelImages
      */
     public static final ScalarArray2D<?> distanceMap2d(IntArray2D<?> labelMap) 
     {
-        return distanceMap2d(labelMap, new short[]{5, 7, 11}, true);
+        return distanceMap2d(labelMap, ChamferMask2D.CHESSKNIGHT, false, true);
     }
     
     /**
@@ -370,10 +370,7 @@ public class LabelImages
     public static final ScalarArray2D<?> distanceMap2d(IntArray2D<?> labelMap,
             ChamferMask2D chamferMask, boolean floatingPoint, boolean normalize)
     {
-        DistanceTransform2D algo = floatingPoint
-                ? new ChamferDistanceTransform2DFloat32(chamferMask, normalize)
-                : new ChamferDistanceTransform2DUInt16(chamferMask, normalize);
-        return algo.process2d(labelMap);
+        return DistanceTransform2D.create(chamferMask, floatingPoint, normalize).process2d(labelMap);
     }
 
     /**

@@ -26,25 +26,24 @@ import net.sci.image.binary.distmap.ChamferMask2D.Offset;
  * @author David Legland
  * @see ChamferDistanceTransform2DUInt16
  */
-public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements ArrayOperator, DistanceTransform2D
+public class ChamferDistanceTransform2DFloat32 extends AlgoStub
+        implements ArrayOperator, DistanceTransform2D
 {
     // ==================================================
     // Class variables
 
-	/**
+    /**
      * The chamfer mask used to propagate distances to neighbor pixels.
      */
     ChamferMask2D mask;
 
+    /**
+     * Flag for dividing final distance map by the value first weight. This
+     * results in distance map values closer to Euclidean, but with non integer
+     * values.
+     */
+    private boolean normalizeMap = true;
 
-	/**
-	 * Flag for dividing final distance map by the value first weight. 
-	 * This results in distance map values closer to Euclidean, but with 
-	 * non integer values. 
-	 */
-	private boolean normalizeMap = true;
-	
-	
     // ==================================================
     // Constructors 
     
@@ -59,21 +58,21 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
         this.normalizeMap = normalize;
     }
 
-	public ChamferDistanceTransform2DFloat32(float[] weights, boolean normalize)
-	{
-		this.mask = ChamferMask2D.fromWeights(weights);
-		this.normalizeMap = normalize;
-	}
+    public ChamferDistanceTransform2DFloat32(float[] weights, boolean normalize)
+    {
+        this.mask = ChamferMask2D.fromWeights(weights);
+        this.normalizeMap = normalize;
+    }
+    
 
-	
     // ==================================================
-    // Computation methods 
+    // Computation methods
 
-	public Float32Array2D process2d(IntArray2D<?> labelMap)
-	{
+    public Float32Array2D process2d(IntArray2D<?> labelMap)
+    {
         // Allocate result array
-	    Float32Array2D distMap = initializeResult(labelMap);
-        
+        Float32Array2D distMap = initializeResult(labelMap);
+
         // Two iterations are enough to compute distance map to boundary
         forwardIteration(distMap, labelMap);
         backwardIteration(distMap, labelMap);
@@ -87,6 +86,7 @@ public class ChamferDistanceTransform2DFloat32 extends AlgoStub implements Array
         this.fireStatusChanged(new AlgoEvent(this, ""));        
         return distMap;
 	}
+    
 	
     // ==================================================
     // Inner computation methods 
