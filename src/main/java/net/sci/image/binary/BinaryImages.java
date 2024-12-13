@@ -8,7 +8,6 @@ import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray1D;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.numeric.Float32Array2D;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.IntArray1D;
 import net.sci.array.numeric.IntArray2D;
@@ -20,19 +19,12 @@ import net.sci.image.Connectivity2D;
 import net.sci.image.Connectivity3D;
 import net.sci.image.Image;
 import net.sci.image.ImageType;
-import net.sci.image.binary.distmap.ChamferDistanceTransform2DFloat32;
-import net.sci.image.binary.distmap.ChamferDistanceTransform2DUInt16;
-import net.sci.image.binary.distmap.ChamferDistanceTransform3DFloat32;
-import net.sci.image.binary.distmap.ChamferDistanceTransform3DUInt16;
 import net.sci.image.binary.distmap.ChamferMask2D;
 import net.sci.image.binary.distmap.ChamferMask3D;
 import net.sci.image.binary.distmap.DistanceTransform2D;
 import net.sci.image.binary.distmap.DistanceTransform3D;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform2D;
-import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloat32Hybrid;
-import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Hybrid;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform3D;
-import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid;
 import net.sci.image.binary.labeling.ComponentsLabeling;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling1D;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling2D;
@@ -346,64 +338,20 @@ public class BinaryImages
         return algo.process2d(array);
     }
 
-    /**
-     * <p>
-     * Computes the distance map from a boolean 2D array, by specifying weights
-     * and normalization.
-     * </p>
-     * 
-     * <p>
-     * Distance is computed for each foreground (white) pixel, as the chamfer
-     * distance to the nearest background (black) pixel. Result is given as a
-     * new instance of IntArray2D.
-     * </p>
-     * 
-     * @param array
-     *            the input binary image
-     * @param weights
-     *            an array of chamfer weights, with at least two values
-     * @param normalize
-     *            indicates whether the resulting distance map should be
-     *            normalized (divide distances by the first chamfer weight)
-     * @return the distance map obtained after applying the distance transform
-     */
-    public static final IntArray2D<?> distanceMap2d(BinaryArray2D array, short[] weights,
-            boolean normalize)
-    {
-        ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
-        ChamferDistanceTransform2DUInt16 algo = new ChamferDistanceTransform2DUInt16(mask,
-                normalize);
-        return algo.process2d(array);
-    }
 
     /**
-     * <p>
-     * Computes the distance map from a boolean array, by specifying weights and
-     * normalization.
-     * </p>
-     * 
-     * <p>
-     * Distance is computed for each foreground (white) pixel, as the chamfer
-     * distance to the nearest background (black) pixel. Result is given in a
-     * new instance of FloatArray2D.
-     * </p>
+     * Computes the distance map from a boolean 3D array. Distance is computed
+     * for each foreground (white) pixel, as the chamfer distance to the nearest
+     * background (black) pixel.
      * 
      * @param array
-     *            the input binary array
-     * @param weights
-     *            an array of chamfer weights, with at least two values
-     * @param normalize
-     *            indicates whether the resulting distance map should be
-     *            normalized (divide distances by the first chamfer weight)
+     *            the input boolean array
      * @return the distance map obtained after applying the distance transform
      */
-    public static final Float32Array2D distanceMap2d(BinaryArray2D array, float[] weights,
-            boolean normalize)
+    public static final ScalarArray3D<?> distanceMap3d(BinaryArray3D array)
     {
-        ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
-        ChamferDistanceTransform2DFloat32 algo = new ChamferDistanceTransform2DFloat32(mask,
-                normalize);
-        return algo.process2d(array);
+        DistanceTransform3D algo = DistanceTransform3D.create(ChamferMask3D.BORGEFORS, false, true);
+        return algo.process3d(array);
     }
 
     /**
@@ -436,68 +384,6 @@ public class BinaryImages
         return algo.process3d(array);
     }
 
-    /**
-     * Computes the distance map from a boolean 3D array. Distance is computed
-     * for each foreground (white) pixel, as the chamfer distance to the nearest
-     * background (black) pixel.
-     * 
-     * @param array
-     *            the input boolean array
-     * @return the distance map obtained after applying the distance transform
-     */
-    public static final ScalarArray3D<?> distanceMap3d(BinaryArray3D array)
-    {
-        ChamferMask3D mask = ChamferMask3D.BORGEFORS;
-        ChamferDistanceTransform3DUInt16 algo = new ChamferDistanceTransform3DUInt16(mask);
-        return algo.process3d(array);
-    }
-
-    /**
-     * Computes the distance map from a boolean 3D array. Distance is computed
-     * for each foreground (white) pixel, as the chamfer distance to the nearest
-     * background (black) pixel.
-     * 
-     * @param array
-     *            the input boolean array
-     * @param weights
-     *            an array of chamfer weights, with at least three values
-     * @param normalize
-     *            indicates whether the resulting distance map should be
-     *            normalized (divide distances by the first chamfer weight)
-     * @return the distance map obtained after applying the distance transform
-     */
-    public static final ScalarArray3D<?> distanceMap3d(BinaryArray3D array, short[] weights,
-            boolean normalize)
-    {
-        ChamferMask3D mask = ChamferMask3D.fromWeights(weights);
-        ChamferDistanceTransform3DUInt16 algo = new ChamferDistanceTransform3DUInt16(mask,
-                normalize);
-        return algo.process3d(array);
-    }
-
-    /**
-     * Computes the distance map from a boolean 3D array. Distance is computed
-     * for each foreground (white) pixel, as the chamfer distance to the nearest
-     * background (black) pixel.
-     * 
-     * @param array
-     *            the input boolean array
-     * @param weights
-     *            an array of chamfer weights, with at least three values
-     * @param normalize
-     *            indicates whether the resulting distance map should be
-     *            normalized (divide distances by the first chamfer weight)
-     * @return the distance map obtained after applying the distance transform
-     */
-    public static final ScalarArray3D<?> distanceMap3d(BinaryArray3D array, float[] weights,
-            boolean normalize)
-    {
-        ChamferMask3D mask = ChamferMask3D.fromWeights(weights);
-        ChamferDistanceTransform3DFloat32 algo = new ChamferDistanceTransform3DFloat32(mask,
-                normalize);
-        return algo.process3d(array);
-    }
-    
 
     // ==============================================================
     // Geodesic Distance maps
@@ -608,54 +494,6 @@ public class BinaryImages
     /**
      * Computes the geodesic distance transform (or geodesic distance map) of a
      * binary image of marker, constrained to a binary mask.
-     * Returns the result in a new instance of UInt16Array2D.
-     * 
-     * @param marker
-     *            the binary image of marker
-     * @param mask
-     *            the binary image of mask
-     * @param weights
-     *            an array of chamfer weights, with at least two values
-     * @param normalize
-     *            indicates whether the resulting distance map should be
-     *            normalized (divide distances by the first chamfer weight)
-     * @return the geodesic distance map in a new ScalarArray
-     */
-    public static final ScalarArray2D<?> geodesicDistanceMap2d(BinaryArray2D marker,
-            BinaryArray2D mask, short[] weights, boolean normalize) 
-    {
-        GeodesicDistanceTransform2D algo;
-        algo = new GeodesicDistanceTransform2DUInt16Hybrid(weights, normalize);
-        return algo.process2d(marker, mask);
-    }
-    
-    /**
-     * Computes the geodesic distance transform (or geodesic distance map) of a
-     * binary image of marker, constrained to a binary mask. 
-     * Returns the result in a new instance of Float32Array2D.
-     * 
-     * @param marker
-     *            the binary image of marker
-     * @param mask
-     *            the binary image of mask
-     * @param weights
-     *            an array of chamfer weights, with at least two values
-     * @param normalize
-     *            indicates whether the resulting distance map should be
-     *            normalized (divide distances by the first chamfer weight)
-     * @return the geodesic distance map in a new ScalarArray2D
-     */
-    public static final ScalarArray2D<?> geodesicDistanceMap2d(BinaryArray2D marker,
-            BinaryArray2D mask, float[] weights, boolean normalize) 
-    {
-        GeodesicDistanceTransform2D algo;
-        algo = new GeodesicDistanceTransform2DFloat32Hybrid(weights, normalize);
-        return algo.process2d(marker, mask);
-    }
-    
-    /**
-     * Computes the geodesic distance transform (or geodesic distance map) of a
-     * binary image of marker, constrained to a binary mask.
      * Returns the result in a new instance of Float32Array3D
      * 
      * @param marker
@@ -666,7 +504,7 @@ public class BinaryImages
      */
     public static final ScalarArray3D<?> geodesicDistanceMap3d(BinaryArray3D marker, BinaryArray3D mask) 
     {
-        return geodesicDistanceMap3d(marker, mask, new float[]{3, 4, 5}, true);
+        return geodesicDistanceMap3d(marker, mask, ChamferMask3D.BORGEFORS, true, true);
     }
     
     /**
@@ -696,30 +534,6 @@ public class BinaryImages
         return algo.process3d(marker, mask);
     }
 
-    
-    /**
-     * Computes the geodesic distance transform (or geodesic distance map) of a
-     * binary image of marker, constrained to a binary mask. 
-     * Returns the result in a new instance of Float32Array2D.
-     * 
-     * @param marker
-     *            the binary image of marker
-     * @param mask
-     *            the binary image of mask
-     * @param weights
-     *            an array of chamfer weights, with at least two values
-     * @param normalize
-     *            indicates whether the resulting distance map should be
-     *            normalized (divide distances by the first chamfer weight)
-     * @return the geodesic distance map in a new ImageProcessor
-     */
-    public static final ScalarArray3D<?> geodesicDistanceMap3d(BinaryArray3D marker,
-            BinaryArray3D mask, float[] weights, boolean normalize) 
-    {
-        GeodesicDistanceTransform3D algo;
-        algo = new GeodesicDistanceTransform3DFloat32Hybrid(weights, normalize);
-        return algo.process3d(marker, mask);
-    }
     
     // ==============================================================
     // Utility methods
