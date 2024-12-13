@@ -108,7 +108,7 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
     @Override
     public Result computeResult(BinaryArray array)
     {
-        if (array.dimensionality() != 3) throw new IllegalArgumentException("Requires an array of dimensionity 3");
+        if (array.dimensionality() != 3) throw new IllegalArgumentException("Requires an array of dimensionality 3");
         BinaryArray3D array3d = BinaryArray3D.wrap(array);
         
         // Allocate result array
@@ -135,11 +135,11 @@ public class ChamferDistanceTransform3DFloat32 extends AlgoStub implements Dista
     
     /**
      * Computes the distance map from a 3D binary image. Distance is computed
-     * for each foreground (white) pixel, as the chamfer distance to the nearest
-     * background (black) pixel.
+     * for each foreground (<code>true</code>) pixel, as the chamfer distance to
+     * the nearest background (<code>false</code>) pixel.
      * 
      * @param array
-     *            a 3D binary image with white pixels (255) as foreground
+     *            a 3D binary image
      * @return a new 3D image containing:
      *         <ul>
      *         <li>0 for each background pixel</li>

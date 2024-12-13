@@ -38,6 +38,9 @@ import net.sci.image.binary.distmap.ChamferMask2D;
  */
 public interface DistanceTransform2D extends Algo, ArrayOperator
 {
+    // ==================================================
+    // Static factories
+    
     /**
      * Create a default algorithm for 2D chamfer mask based distance transform
      * on label maps, by specifying whether floating point computation should be
@@ -61,6 +64,9 @@ public interface DistanceTransform2D extends Algo, ArrayOperator
                 : new ChamferDistanceTransform2DUInt16(chamferMask, normalize);    
     }
 
+    // ==================================================
+    // New methods
+    
     /**
      * Computes the distance map from a 2D binary image. Distance is computed
      * for each foreground (white) pixel, as the chamfer distance to the nearest
@@ -75,6 +81,10 @@ public interface DistanceTransform2D extends Algo, ArrayOperator
      *         </ul>
      */
     public ScalarArray2D<?> process2d(IntArray2D<?> array);
+
+    
+    // ==================================================
+    // Specialization of ArrayOperator interface
 
     /**
      * Process the input scalar array and return the result in a new array.

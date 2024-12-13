@@ -33,6 +33,37 @@ import net.sci.array.numeric.ScalarArray3D;
  */
 public interface DistanceTransform3D extends DistanceTransform
 {
+    // ==================================================
+    // Static factories
+
+    /**
+     * Create a default algorithm for 3D chamfer mask based distance transform
+     * on binary images, by specifying whether floating point computation should
+     * be used, and if result distance map should be normalized.
+     * 
+     * @param chamferMask
+     *            the 3D chamfer mask to use for propagating distances
+     * @param floatingPoint
+     *            boolean flag indicating whether result should be provided as
+     *            <code>Float32</code> (if true) or as <code>UInt16</code> (if
+     *            false).
+     * @param normalize
+     *            indicates whether the resulting distance map should be
+     *            normalized (divide distances by the first chamfer weight)
+     * @return an algorithm for computing chamfer distance maps on binary
+     *         images.
+     */
+    public static DistanceTransform3D create(ChamferMask3D chamferMask, boolean floatingPoint, boolean normalize)
+    {
+        return floatingPoint
+                ? new ChamferDistanceTransform3DFloat32(chamferMask, normalize)
+                : new ChamferDistanceTransform3DUInt16(chamferMask, normalize);    
+    }
+    
+
+    // ==================================================
+    // New methods
+
     /**
      * Computes the distance map from a 3D binary image. Distance is computed
      * for each foreground (white) pixel, as the chamfer distance to the nearest
@@ -47,7 +78,11 @@ public interface DistanceTransform3D extends DistanceTransform
      *         </ul>
      */
     public ScalarArray3D<?> process3d(BinaryArray3D array);
+
     
+    // ==================================================
+    // Specialization of ArrayOperator interface
+
     /**
      * Process the input scalar array and return the result in a new array.
      * 

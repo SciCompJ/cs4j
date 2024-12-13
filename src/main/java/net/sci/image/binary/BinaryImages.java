@@ -298,7 +298,7 @@ public class BinaryImages
      */
     public static final ScalarArray2D<?> distanceMap(BinaryArray2D array)
     {
-        return distanceMap(array, new short[] { 5, 7, 11 }, true);
+        return distanceMap(array, ChamferMask2D.CHESSKNIGHT, false, true);
     }
 
     /**
@@ -328,9 +328,7 @@ public class BinaryImages
     public static final ScalarArray2D<?> distanceMap(BinaryArray2D array,
             ChamferMask2D mask, boolean floatingPoint, boolean normalize)
     {
-        DistanceTransform2D algo = floatingPoint 
-                ? new ChamferDistanceTransform2DFloat32(mask, normalize)
-                : new ChamferDistanceTransform2DUInt16(mask, normalize);
+        DistanceTransform2D algo = DistanceTransform2D.create(mask, floatingPoint, normalize);
         return algo.process2d(array);
     }
 
@@ -420,9 +418,7 @@ public class BinaryImages
     public static final ScalarArray3D<?> distanceMap(BinaryArray3D array,
             ChamferMask3D mask, boolean floatingPoint, boolean normalize)
     {
-        DistanceTransform3D algo = floatingPoint 
-                ? new ChamferDistanceTransform3DFloat32(mask, normalize)
-                : new ChamferDistanceTransform3DUInt16(mask, normalize);
+        DistanceTransform3D algo = DistanceTransform3D.create(mask, floatingPoint, normalize);
         return algo.process3d(array);
     }
 
@@ -506,26 +502,12 @@ public class BinaryImages
      */
     public static final Image geodesicDistanceMap(Image marker, Image mask)
     {
+        // retrieve array to call more specific method
         BinaryArray markerArray = getBinaryArray(marker);
         BinaryArray maskArray = getBinaryArray(mask);
-
-        // Dispatch to appropriate function depending on dimension
-        Array<?> distMap;
-        if (markerArray instanceof BinaryArray2D && maskArray instanceof BinaryArray2D) 
-        {
-            // process planar image
-            distMap = geodesicDistanceMap2d((BinaryArray2D) markerArray, (BinaryArray2D) maskArray);
-        } 
-        else if (markerArray instanceof BinaryArray3D && maskArray instanceof BinaryArray3D) 
-        {
-            // process 3D image
-            distMap = geodesicDistanceMap3d((BinaryArray3D) markerArray, (BinaryArray3D) maskArray);
-        }
-        else
-        {
-            throw new RuntimeException("Can not manage binary array of class: " + markerArray.getClass());
-        }
+        Array<?> distMap = geodesicDistanceMap(markerArray, maskArray);
         
+        // create result image by keeping spatial calibration
         return new Image(distMap, mask);
     }
     
