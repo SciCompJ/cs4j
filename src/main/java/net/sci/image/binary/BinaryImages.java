@@ -252,33 +252,49 @@ public class BinaryImages
      *            an Image object containing a binary array
      * @return a new Image containing the distance map
      * 
-     * @see net.sci.image.binary.distmap.DistanceTransform2D
-     * @see net.sci.image.binary.distmap.DistanceTransform3D
+     * @see net.sci.image.binary.BinaryImages#distanceMap2d(BinaryArray2D)
+     * @see net.sci.image.binary.BinaryImages#distanceMap3d(BinaryArray3D)
      */
     public static final Image distanceMap(Image image)
     {
+        // computes distance map on inner binary array
         BinaryArray array = getBinaryArray(image);
+        Array<?> distMap = distanceMap(array);
 
-        // Dispatch to appropriate function depending on dimension
-        Array<?> distMap;
+        // create new image by keeping calibration
+        return new Image(distMap, image);
+    }
+
+    /**
+     * <p>
+     * Computes the distance map (or distance transform) from a binary array.
+     * Distance is computed for each foreground (white) pixel, as the chamfer
+     * distance to the nearest background (black) pixel.
+     * </p>
+     * 
+     * @param array
+     *            the input boolean array
+     * @return a new Array containing the distance map result
+     */
+    public static final ScalarArray<?> distanceMap(BinaryArray array)
+    {
+        // Dispatch to appropriate method depending on dimension
         if (array instanceof BinaryArray2D)
         {
             // process planar image
-            distMap = distanceMap((BinaryArray2D) array);
+            return distanceMap2d((BinaryArray2D) array);
         }
         else if (array instanceof BinaryArray3D)
         {
             // process 3D image
-            distMap = distanceMap((BinaryArray3D) array);
+            return distanceMap3d((BinaryArray3D) array);
         }
         else
         {
             throw new RuntimeException("Can not manage binary array of class: " + array.getClass());
         }
-
-        return new Image(distMap, image);
     }
-
+    
     /**
      * <p>
      * Computes the distance map (or distance transform) from a boolean 2D
@@ -295,9 +311,9 @@ public class BinaryImages
      *            the input boolean array
      * @return a new Array2D containing the distance map result
      */
-    public static final ScalarArray2D<?> distanceMap(BinaryArray2D array)
+    public static final ScalarArray2D<?> distanceMap2d(BinaryArray2D array)
     {
-        return distanceMap(array, ChamferMask2D.CHESSKNIGHT, false, true);
+        return distanceMap2d(array, ChamferMask2D.CHESSKNIGHT, false, true);
     }
 
     /**
@@ -308,8 +324,7 @@ public class BinaryImages
      * 
      * <p>
      * Distance is computed for each foreground (white) pixel, as the chamfer
-     * distance to the nearest background (black) pixel. Result is given as a
-     * new instance of IntArray2D.
+     * distance to the nearest background (black) pixel.  
      * </p>
      * 
      * @param array
@@ -324,7 +339,7 @@ public class BinaryImages
      *            normalized (divide distances by the first chamfer weight)
      * @return the distance map obtained after applying the distance transform
      */
-    public static final ScalarArray2D<?> distanceMap(BinaryArray2D array,
+    public static final ScalarArray2D<?> distanceMap2d(BinaryArray2D array,
             ChamferMask2D mask, boolean floatingPoint, boolean normalize)
     {
         DistanceTransform2D algo = DistanceTransform2D.create(mask, floatingPoint, normalize);
@@ -352,7 +367,7 @@ public class BinaryImages
      *            normalized (divide distances by the first chamfer weight)
      * @return the distance map obtained after applying the distance transform
      */
-    public static final IntArray2D<?> distanceMap(BinaryArray2D array, short[] weights,
+    public static final IntArray2D<?> distanceMap2d(BinaryArray2D array, short[] weights,
             boolean normalize)
     {
         ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
@@ -382,7 +397,7 @@ public class BinaryImages
      *            normalized (divide distances by the first chamfer weight)
      * @return the distance map obtained after applying the distance transform
      */
-    public static final Float32Array2D distanceMap(BinaryArray2D array, float[] weights,
+    public static final Float32Array2D distanceMap2d(BinaryArray2D array, float[] weights,
             boolean normalize)
     {
         ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
@@ -414,7 +429,7 @@ public class BinaryImages
      *            normalized (divide distances by the first chamfer weight)
      * @return the distance map obtained after applying the distance transform
      */
-    public static final ScalarArray3D<?> distanceMap(BinaryArray3D array,
+    public static final ScalarArray3D<?> distanceMap3d(BinaryArray3D array,
             ChamferMask3D mask, boolean floatingPoint, boolean normalize)
     {
         DistanceTransform3D algo = DistanceTransform3D.create(mask, floatingPoint, normalize);
@@ -430,7 +445,7 @@ public class BinaryImages
      *            the input boolean array
      * @return the distance map obtained after applying the distance transform
      */
-    public static final ScalarArray3D<?> distanceMap(BinaryArray3D array)
+    public static final ScalarArray3D<?> distanceMap3d(BinaryArray3D array)
     {
         ChamferMask3D mask = ChamferMask3D.BORGEFORS;
         ChamferDistanceTransform3DUInt16 algo = new ChamferDistanceTransform3DUInt16(mask);
@@ -451,7 +466,7 @@ public class BinaryImages
      *            normalized (divide distances by the first chamfer weight)
      * @return the distance map obtained after applying the distance transform
      */
-    public static final ScalarArray3D<?> distanceMap(BinaryArray3D array, short[] weights,
+    public static final ScalarArray3D<?> distanceMap3d(BinaryArray3D array, short[] weights,
             boolean normalize)
     {
         ChamferMask3D mask = ChamferMask3D.fromWeights(weights);
@@ -474,7 +489,7 @@ public class BinaryImages
      *            normalized (divide distances by the first chamfer weight)
      * @return the distance map obtained after applying the distance transform
      */
-    public static final ScalarArray3D<?> distanceMap(BinaryArray3D array, float[] weights,
+    public static final ScalarArray3D<?> distanceMap3d(BinaryArray3D array, float[] weights,
             boolean normalize)
     {
         ChamferMask3D mask = ChamferMask3D.fromWeights(weights);

@@ -41,13 +41,13 @@ package net.sci.image.binary.distmap;
  * ChamferMask2D chamferMask = ChamferMasks2D.BORGEFORS.getMask();
  * boolean normalize = true;
  * DistanceTransform dt = new ChamferDistanceTransform2DFloat(chamferMask, normalize);
- * ImageProcessor result = dt.distanceMap(inputImage);
+ * Array result = dt.distanceMap(inputArray);
  * </code>
  * </pre>
  *
  * 
- * @see BinaryImages#distanceMap(ij.ImageStack)
- * @see inra.ijpb.binary.distmap.ChamferDistanceTransform3DShort
+ * @see BinaryImages#distanceMap(BinaryArray)
+ * @see net.sci.image.binary.distmap.ChamferDistanceTransform2D
  */
 public enum ChamferMasks2D
 {

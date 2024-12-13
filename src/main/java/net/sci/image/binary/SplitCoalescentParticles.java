@@ -63,7 +63,7 @@ public class SplitCoalescentParticles extends AlgoStub implements ArrayOperator
     public BinaryArray2D processBinary2d(BinaryArray2D array)
     {
         this.fireStatusChanged(this, "distance map");
-        ScalarArray2D<?> distMap = BinaryImages.distanceMap(array);
+        ScalarArray2D<?> distMap = BinaryImages.distanceMap2d(array);
         ScalarArray2D<?> inverted =  ScalarArray2D.wrap((ScalarArray<?>) new AdditiveInverse().view(distMap));
         
         this.fireStatusChanged(this, "extended minima");
@@ -84,7 +84,7 @@ public class SplitCoalescentParticles extends AlgoStub implements ArrayOperator
     public BinaryArray3D processBinary3d(BinaryArray3D array)
     {
         this.fireStatusChanged(this, "distance map");
-        ScalarArray3D<?> distMap = BinaryImages.distanceMap(array);
+        ScalarArray3D<?> distMap = BinaryImages.distanceMap3d(array);
         ScalarArray3D<?> inverted =  ScalarArray3D.wrap((ScalarArray<?>) new AdditiveInverse().view(distMap));
         
         this.fireStatusChanged(this, "extended minima");

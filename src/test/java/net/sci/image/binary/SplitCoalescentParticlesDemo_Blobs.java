@@ -22,7 +22,7 @@ public class SplitCoalescentParticlesDemo_Blobs
         markers.fill(true);
         markers.setBoolean(120, 80, false);
         markers.setBoolean(80, 120, false);
-        ScalarArray2D<?> distMap = BinaryImages.distanceMap(markers);
+        ScalarArray2D<?> distMap = BinaryImages.distanceMap2d(markers);
         
         ScalarArray2D<?> distMap2 = (ScalarArray2D<?>) new GaussianFilter5x5().process(distMap);
         

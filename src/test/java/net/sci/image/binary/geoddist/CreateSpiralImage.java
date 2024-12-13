@@ -33,7 +33,7 @@ public class CreateSpiralImage
         marker.setBoolean(centerX+1, centerX+1, false);
         
         // Create concentric squares
-        ScalarArray<?> distMap = BinaryImages.distanceMap(marker, ChamferMask2D.CHESSBOARD, false, false);
+        ScalarArray<?> distMap = BinaryImages.distanceMap2d(marker, ChamferMask2D.CHESSBOARD, false, false);
         BinaryArray2D spiral = BinaryArray2D.create(sizeX, sizeX);
         spiral.fillBooleans(pos -> (distMap.getValue(pos) % 4) >= 2);
         

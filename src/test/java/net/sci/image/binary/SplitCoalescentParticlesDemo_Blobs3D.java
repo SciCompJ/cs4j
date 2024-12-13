@@ -23,7 +23,7 @@ public class SplitCoalescentParticlesDemo_Blobs3D
         markers.fill(true);
         markers.setBoolean(61, 42, 52, false);
         markers.setBoolean(43, 64, 48, false);
-        ScalarArray3D<?> distMap = BinaryImages.distanceMap(markers);
+        ScalarArray3D<?> distMap = BinaryImages.distanceMap3d(markers);
         
         ScalarArray3D<?> distMap2 = (ScalarArray3D<?>) new BoxFilter(new int[]{3, 3, 3}).process(distMap);
         
