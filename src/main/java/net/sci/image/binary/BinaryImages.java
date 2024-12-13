@@ -33,7 +33,6 @@ import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DFloat32Hybrid;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform2DUInt16Hybrid;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform3D;
 import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DFloat32Hybrid;
-import net.sci.image.binary.geoddist.GeodesicDistanceTransform3DUInt16Hybrid;
 import net.sci.image.binary.labeling.ComponentsLabeling;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling1D;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling2D;
@@ -587,10 +586,7 @@ public class BinaryImages
     public static final ScalarArray2D<?> geodesicDistanceMap2d(BinaryArray2D marker,
             BinaryArray2D mask, ChamferMask2D chamferMask, boolean floatingPoint, boolean normalize) 
     {
-        GeodesicDistanceTransform2D algo;
-        algo = floatingPoint
-                ? new GeodesicDistanceTransform2DFloat32Hybrid(chamferMask, normalize)
-                : new GeodesicDistanceTransform2DUInt16Hybrid(chamferMask, normalize);
+        GeodesicDistanceTransform2D algo = GeodesicDistanceTransform2D.create(chamferMask, floatingPoint, normalize);
         return algo.process2d(marker, mask);
     }
     
@@ -681,10 +677,7 @@ public class BinaryImages
     public static final ScalarArray3D<?> geodesicDistanceMap3d(BinaryArray3D marker,
             BinaryArray3D mask, ChamferMask3D chamferMask, boolean floatingPoint, boolean normalize) 
     {
-        GeodesicDistanceTransform3D algo;
-        algo = floatingPoint
-                ? new GeodesicDistanceTransform3DFloat32Hybrid(chamferMask, normalize)
-                : new GeodesicDistanceTransform3DUInt16Hybrid(chamferMask, normalize);
+        GeodesicDistanceTransform3D algo = GeodesicDistanceTransform3D.create(chamferMask, floatingPoint, normalize);
         return algo.process3d(marker, mask);
     }
 
