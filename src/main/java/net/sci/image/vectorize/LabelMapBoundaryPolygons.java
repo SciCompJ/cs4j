@@ -34,8 +34,14 @@ public class LabelMapBoundaryPolygons
     
     enum VertexLocation
     {
+        /** Considers that boundary totally encloses the squares around the pixels. */
         CORNER,
+        /**
+         * Creates a boundary the joins the middle point of the edges between
+         * boundary pixels and adjacent background pixels.
+         */
         EDGE_CENTER,
+        /** Creates a boundary that joins the centers of adjacent boundary pixels. */
         PIXEL;
     }
     
@@ -77,6 +83,12 @@ public class LabelMapBoundaryPolygons
             {
                 return new Position(pos.x + 1, pos.y + 1, DOWN);
             }
+
+            @Override
+            int directionMask()
+            {
+                return 0x01;
+            }
         },
         
         UP
@@ -109,6 +121,12 @@ public class LabelMapBoundaryPolygons
             public Position turnRight(Position pos)
             {
                 return new Position(pos.x + 1, pos.y - 1, RIGHT);
+            }
+
+            @Override
+            int directionMask()
+            {
+                return 0x02;
             }
         },
         
@@ -143,6 +161,12 @@ public class LabelMapBoundaryPolygons
             {
                 return new Position(pos.x - 1, pos.y - 1, UP);
             }
+
+            @Override
+            int directionMask()
+            {
+                return 0x04;
+            }
         },
         
         DOWN
@@ -176,6 +200,12 @@ public class LabelMapBoundaryPolygons
             {
                 return new Position(pos.x - 1, pos.y + 1, LEFT);
             }
+
+            @Override
+            int directionMask()
+            {
+                return 0x08;
+            }
         };
 
         /**
@@ -194,8 +224,8 @@ public class LabelMapBoundaryPolygons
         public abstract Point2D getVertex(Position pos);
         
         /**
-         * Keeps current reference pixel and turn direction by +90 degrees in
-         * counter-clockwise direction.
+         * Keeps current reference pixel and turns the direction by +90 degrees
+         * in counter-clockwise direction.
          * 
          * @param pos
          *            the position to update
@@ -214,24 +244,35 @@ public class LabelMapBoundaryPolygons
         public abstract Position forward(Position pos);
         
         /**
-         * Keeps current reference pixel and turn direction by -90 degrees in
-         * counter-clockwise direction.
+         * Keeps current reference pixel and turns the direction by -90 degrees
+         * in counter-clockwise direction.
          * 
          * @param pos
          *            the position to update
          * @return the new position
          */
         public abstract Position turnRight(Position pos);
+
+        /**
+         * Returns an integer mask of boolean flags used to identify the
+         * direction(s) a pixel was traveled through.
+         * 
+         * @return the integer mask of boolean flags.
+         */
+        abstract int directionMask();
     }
     
     /**
      * Identifies the position of the boundary tracker. The Position is composed
-     * of the (x,y) coordinates, and of a direction of tracking.
+     * of the (x,y) coordinates of the current pixel, and of a direction of tracking.
      */
     static final class Position
     {
+        /** The x-coordinate of this position's reference pixel. */
         int x;
+        /** The y-coordinate of this position's reference pixel. */
         int y;
+        /** The current travel direction along the boundary. */
         Direction direction;
         
         Position(int x, int y, Direction direction)
@@ -246,24 +287,32 @@ public class LabelMapBoundaryPolygons
             return this.direction.getVertex(this);
         }
         
-        public Point2D getVertex(Position pos, VertexLocation vertex)
+        /**
+         * Computes the position of the current boundary vertex, based on the
+         * position of the reference pixel, and on the type of vertex used to
+         * build the boundary.
+         * 
+         * @param vertex
+         *            the location of the boundary vertex with respect to the
+         *            current pixel
+         * @return a new boundary vertex position
+         */
+        public Point2D getVertex(VertexLocation vertex)
         {
-            switch (vertex)
+            return switch (vertex)
             {
-                case CORNER: 
-                    return this.direction.getVertex(this);
-                case EDGE_CENTER: 
-                    switch(direction)
-                    {
-                        case DOWN: return new Point2D(this.x - 0.5, this.y);
-                        case UP:   return new Point2D(this.x + 0.5, this.y);
-                        case LEFT: return new Point2D(this.x, this.y - 0.5);
-                        case RIGHT: return new Point2D(this.x, this.y + 0.5);
-                    }
-                case PIXEL: 
-                    return new Point2D(this.x, this.y);
-                default: throw new IllegalArgumentException("Unexpected value: " + vertex);
-            }
+                case CORNER -> this.direction.getVertex(this);
+                case EDGE_CENTER -> switch(direction)
+                {
+                    case DOWN -> new Point2D(this.x - 0.5, this.y);
+                    case UP -> new Point2D(this.x + 0.5, this.y);
+                    case LEFT -> new Point2D(this.x, this.y - 0.5);
+                    case RIGHT -> new Point2D(this.x, this.y + 0.5);
+                    default -> throw new IllegalArgumentException("Unexpected Direction enum value: " + direction);
+                };
+                case PIXEL-> new Point2D(this.x, this.y);
+                default-> throw new IllegalArgumentException("Unexpected VertexLocation enum value: " + vertex);
+            };
         }
         
         @Override
@@ -303,10 +352,7 @@ public class LabelMapBoundaryPolygons
     public LabelMapBoundaryPolygons(Connectivity2D conn)
     {
         if (conn != Connectivity2D.C4 && conn != Connectivity2D.C8)
-        {
-            throw new IllegalArgumentException(
-                    "Connectivity must be either C4 or C8");
-        }
+        { throw new IllegalArgumentException("Connectivity must be either C4 or C8"); }
         this.conn = conn;
     }
     
@@ -348,7 +394,7 @@ public class LabelMapBoundaryPolygons
         // iterate over boundary until we come back at initial position
         do
         {
-            vertices.add(pos.getVertex(pos, vertex));
+            vertices.add(pos.getVertex(vertex));
             
             // compute position of the two other points in current 2-by-2 configuration
             int[][] shifts = pos.direction.coordsShifts();
@@ -449,7 +495,7 @@ public class LabelMapBoundaryPolygons
                     continue;
                 }
                 // if the boundary was already tracked, no need to work again
-                if ((maskArray.getInt(x, y) & 0x08) > 0)
+                if ((maskArray.getInt(x, y) & Direction.DOWN.directionMask()) > 0)
                 {
                     continue;
                 }
@@ -516,17 +562,10 @@ public class LabelMapBoundaryPolygons
         do
         {
             // update vertices
-            vertices.add(pos.getVertex(pos, vertex));
+            vertices.add(pos.getVertex(vertex));
             
             // mark the current pixel with integer that depends on position
-            int mask = maskArray.getInt(pos.x, pos.y);
-            switch (pos.direction)
-            {
-            case RIGHT: mask = mask | 0x01; break;
-            case UP:    mask = mask | 0x02; break;
-            case LEFT:  mask = mask | 0x04; break;
-            case DOWN:  mask = mask | 0x08; break;
-            }
+            int mask = maskArray.getInt(pos.x, pos.y) | pos.direction.directionMask();
             maskArray.setInt(pos.x, pos.y, mask);
             
             // compute position of the two other points in current 2-by-2 configuration
