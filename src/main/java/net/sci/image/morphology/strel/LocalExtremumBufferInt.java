@@ -1,20 +1,18 @@
 package net.sci.image.morphology.strel;
 
 /**
- * <p>
- * Computes the maximum in a local buffer around current point.
- * </p>
- * <p>
- * This implementation considers a circular buffer (when a value is added, 
- * it replaces the first value that was inserted) 
- * that makes it possible to update extrema if needed.
- * </p>
- * <p>
- * Works only for Grayscale images coded between 0 and 255.
- * </p>
- * 
- * @author David Legland
+ * Computes the maximum integer value in a local buffer. Used by several
+ * in-place strel implementations.
  *
+ * This implementation considers a circular buffer: when a value is added, it
+ * replaces the first value that was inserted. This makes it possible to update
+ * extrema only when necessary needed.
+ * 
+ * Works for integer values.
+ * 
+ * @see LocalExtremumBufferDouble
+ * @see LinearHorizontalStrel
+ * @see VerticalHorizontalStrel
  */
 public class LocalExtremumBufferInt implements LocalExtremum 
 {
@@ -26,9 +24,10 @@ public class LocalExtremumBufferInt implements LocalExtremum
 	boolean updateNeeded = false;
 	
 	/**
-	 * Use a sign flag for managing both min and max.
-	 * sign = +1 -> compute max values
-	 * sign = -1 -> compute min values
+	 * Uses a sign flag for managing both min and max.
+	 * 
+	 * sign = +1 -> computes maximum values
+	 * sign = -1 -> computes minimum values
 	 */
 	int sign;
 	
@@ -50,9 +49,7 @@ public class LocalExtremumBufferInt implements LocalExtremum
 	 */
 	public LocalExtremumBufferInt(int n)
 	{
-		this.buffer = new int[n];
-		for (int i = 0; i < n; i++)
-			this.buffer[i] = 0;
+        initializeBuffer(n, Integer.MIN_VALUE);
 	}
 	
 	/**
@@ -83,10 +80,15 @@ public class LocalExtremumBufferInt implements LocalExtremum
 	 */
 	public LocalExtremumBufferInt(int n, int value) 
 	{
-		this.buffer = new int[n];
-		for (int i = 0; i < n; i++)
-			this.buffer[i] = value;
-		this.maxValue = value;
+	    initializeBuffer(n, value);
+	}
+	
+	private void initializeBuffer(int n, int value)
+	{
+        this.buffer = new int[n];
+        for (int i = 0; i < n; i++)
+            this.buffer[i] = value;
+        this.maxValue = value;
 	}
 
 	/**
@@ -111,8 +113,8 @@ public class LocalExtremumBufferInt implements LocalExtremum
 	public void add(int value) 
 	{
 		// add the new value, and remove the oldest one
-		addValue(value);
-		removeValue(this.buffer[this.bufferIndex]);
+		notifyAddValue(value);
+		notifyRemoveValue(this.buffer[this.bufferIndex]);
 		
 		// update local circular buffer
 		this.buffer[this.bufferIndex] = value;
@@ -125,7 +127,7 @@ public class LocalExtremumBufferInt implements LocalExtremum
 	 * @param value
 	 *            the value to add
 	 */
-	private void addValue(int value) 
+	private void notifyAddValue(int value) 
 	{
 		// update max value
 		if (value * sign > this.maxValue * sign) 
@@ -141,37 +143,13 @@ public class LocalExtremumBufferInt implements LocalExtremum
 	 * @param value
 	 *            the value to remove
 	 */
-	private void removeValue(int value) 
+	private void notifyRemoveValue(int value) 
 	{
 		// update max value if needed
 		if (value == this.maxValue) 
 		{
 			updateNeeded = true;
 		}
-	}
-	
-	private void updateMaxValue() 
-	{
-		if (sign == 1)
-		{
-			// find the maximum value in the buffer
-			this.maxValue = Integer.MIN_VALUE;
-			for (int i = 0; i < buffer.length; i++) 
-			{
-				this.maxValue = Math.max(this.maxValue, this.buffer[i]);
-			}
-		}
-		else
-		{
-			// find the maximum value in the buffer
-			this.maxValue = Integer.MAX_VALUE;
-			for (int i = 0; i < buffer.length; i++) 
-			{
-				this.maxValue = Math.min(this.maxValue, this.buffer[i]);
-			}
-		}
-		
-		updateNeeded = false;
 	}
 	
 	/**
@@ -187,7 +165,7 @@ public class LocalExtremumBufferInt implements LocalExtremum
 	
 	/**
 	 * Resets histogram by considering it is filled with the given value. 
-	 * Update max and max accordingly.
+	 * Update max value accordingly.
 	 * 
 	 * @param value
 	 *            the new value of all elements in buffer
@@ -206,16 +184,40 @@ public class LocalExtremumBufferInt implements LocalExtremum
 	}
 
 	/**
-	 * Returns the maximum value stored in this local histogram
-	 * @return the maximum value in neighborhood
+	 * Returns the maximum value stored in this local buffer
+	 * @return the maximum value in buffer
 	 */
 	public int getMax()
 	{
 		if (updateNeeded)
 		{
-			updateMaxValue();
+			recomputeMaxValue();
 		}
 		
 		return this.maxValue;
 	}
+
+    private void recomputeMaxValue() 
+    {
+    	if (sign == 1)
+    	{
+    		// find the maximum value in the buffer
+    		this.maxValue = Integer.MIN_VALUE;
+    		for (int i = 0; i < buffer.length; i++) 
+    		{
+    			this.maxValue = Math.max(this.maxValue, this.buffer[i]);
+    		}
+    	}
+    	else
+    	{
+    		// find the maximum value in the buffer
+    		this.maxValue = Integer.MAX_VALUE;
+    		for (int i = 0; i < buffer.length; i++) 
+    		{
+    			this.maxValue = Math.min(this.maxValue, this.buffer[i]);
+    		}
+    	}
+    	
+    	updateNeeded = false;
+    }
 }

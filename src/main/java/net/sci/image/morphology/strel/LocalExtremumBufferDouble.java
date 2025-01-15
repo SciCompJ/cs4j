@@ -1,31 +1,33 @@
 package net.sci.image.morphology.strel;
 
 /**
- * <p>
- * Computes the maximum in a local buffer around current point.
- * </p>
- * <p>
- * This implementation considers a circular buffer (when a value is added, it
- * replaces the first value that was inserted) that makes it possible to update
- * extremum if needed.
- * </p>
+ * Computes the maximum floating point value in a local buffer. Used by several
+ * in-place strel implementations.
+ *
+ * This implementation considers a circular buffer: when a value is added, it
+ * replaces the first value that was inserted. This makes it possible to update
+ * extrema only when necessary needed.
  * 
- * @author David Legland
+ * Works for floating point values, using double primitive type.
  * 
+ * @see LocalExtremumBufferInt
+ * @see LinearHorizontalStrel
+ * @see VerticalHorizontalStrel
  */
 public class LocalExtremumBufferDouble implements LocalExtremum 
 {
 	/**
 	 * Current max value
 	 */
-	double maxValue = Double.MIN_VALUE;
+	double maxValue = Double.NEGATIVE_INFINITY;
 
 	boolean updateNeeded = false;
 	
 	/**
-	 * Use a sign flag for managing both min and max.
-	 * sign = +1 -> compute max values
-	 * sign = -1 -> compute min values
+	 * Uses a sign flag for managing both min and max.
+	 * 
+	 * sign = +1 -> computes maximum values
+	 * sign = -1 -> computes minimum values
 	 */
 	int sign;
 	
@@ -47,9 +49,7 @@ public class LocalExtremumBufferDouble implements LocalExtremum
 	 */
 	public LocalExtremumBufferDouble(int n) 
 	{
-		this.buffer = new double[n];
-		for (int i = 0; i < n; i++)
-			this.buffer[i] = 0;
+        initializeBuffer(n, Double.NEGATIVE_INFINITY);
 	}
 	
 	/**
@@ -80,10 +80,16 @@ public class LocalExtremumBufferDouble implements LocalExtremum
 	 */
 	public LocalExtremumBufferDouble(int n, double value) 
 	{
-		this.buffer = new double[n];
-		for (int i = 0; i < n; i++)
-			this.buffer[i] = value;
+	    initializeBuffer(n, value);
 		this.maxValue = value;
+	}
+	
+	private void initializeBuffer(int n, double value)
+	{
+        this.buffer = new double[n];
+        for (int i = 0; i < n; i++)
+            this.buffer[i] = value;
+        this.maxValue = value;
 	}
 
 	/**
@@ -106,8 +112,8 @@ public class LocalExtremumBufferDouble implements LocalExtremum
 	public void add(double value) 
 	{
 		// add the new value, and remove the oldest one
-		addValue(value);
-		removeValue(this.buffer[this.bufferIndex]);
+		notifyAddValue(value);
+		notifyRemoveValue(this.buffer[this.bufferIndex]);
 		
 		// update local circular buffer
 		this.buffer[this.bufferIndex] = value;
@@ -120,7 +126,7 @@ public class LocalExtremumBufferDouble implements LocalExtremum
 	 * @param value
 	 *            the value to add
 	 */
-	private void addValue(double value) 
+	private void notifyAddValue(double value) 
 	{
 		// update max value
 		if (value * sign > this.maxValue * sign) 
@@ -136,7 +142,7 @@ public class LocalExtremumBufferDouble implements LocalExtremum
 	 * @param value
 	 *            the value to remove
 	 */
-	private void removeValue(double value) 
+	private void notifyRemoveValue(double value) 
 	{
 		// update max value if needed
 		if (value == this.maxValue) 
@@ -158,7 +164,7 @@ public class LocalExtremumBufferDouble implements LocalExtremum
 	
 	/**
 	 * Resets histogram by considering it is filled with the given value. 
-	 * Update max and max accordingly.
+	 * Update max value accordingly.
 	 * 
 	 * @param value
 	 *            the new value of all elements in buffer
@@ -177,40 +183,40 @@ public class LocalExtremumBufferDouble implements LocalExtremum
 	}
 
 	/**
-	 * Returns the maximum value stored in this local histogram
-	 * @return the maximum value in neighborhood
+	 * Returns the maximum value stored in this local buffer
+	 * @return the maximum value in buffer
 	 */
 	public double getMax() 
 	{
 		if (updateNeeded) 
 		{
-			updateMaxValue();
+			recomputeMaxValue();
 		}
 		
 		return this.maxValue;
 	}
 
-	private void updateMaxValue() 
-	{
-		if (sign == 1)
-		{
-			// find the maximum value in the buffer
-			this.maxValue = Double.NEGATIVE_INFINITY;
-			for (int i = 0; i < buffer.length; i++) 
-			{
-				this.maxValue = Math.max(this.maxValue, this.buffer[i]);
-			}
-		}
-		else
-		{
-			// find the maximum value in the buffer
-			this.maxValue = Double.POSITIVE_INFINITY;
-			for (int i = 0; i < buffer.length; i++) 
-			{
-				this.maxValue = Math.min(this.maxValue, this.buffer[i]);
-			}
-		}
-		
-		updateNeeded = false;
-	}
+    private void recomputeMaxValue() 
+    {
+    	if (sign == 1)
+    	{
+    		// find the maximum value in the buffer
+    		this.maxValue = Double.NEGATIVE_INFINITY;
+    		for (int i = 0; i < buffer.length; i++) 
+    		{
+    			this.maxValue = Math.max(this.maxValue, this.buffer[i]);
+    		}
+    	}
+    	else
+    	{
+    		// find the maximum value in the buffer
+    		this.maxValue = Double.POSITIVE_INFINITY;
+    		for (int i = 0; i < buffer.length; i++) 
+    		{
+    			this.maxValue = Math.min(this.maxValue, this.buffer[i]);
+    		}
+    	}
+    	
+    	updateNeeded = false;
+    }
 }
