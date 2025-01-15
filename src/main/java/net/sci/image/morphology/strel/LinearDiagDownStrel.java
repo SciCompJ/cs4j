@@ -112,7 +112,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
      * ?>)
      */
     @Override
-    public void inPlaceDilation(ScalarArray2D<?> image)
+    public void inPlaceDilation(ScalarArray2D<?> array)
     {
         // If size is one, there is no need to compute
         if (size <= 1)
@@ -120,17 +120,17 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
             return;
         }
 
-        if (image instanceof UInt8Array2D)
-            inPlaceDilationGray8((UInt8Array2D) image);
+        if (array instanceof UInt8Array2D)
+            inPlaceDilationGray8((UInt8Array2D) array);
         else
-            inPlaceDilationFloat(image);
+            inPlaceDilationFloat(array);
     }
 
-    private void inPlaceDilationGray8(UInt8Array2D image)
+    private void inPlaceDilationGray8(UInt8Array2D array)
     {
         // get image size
-        int sizeX = image.size(0);
-        int sizeY = image.size(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
 
         // Consider all diagonal lines with direction vector (+1,+1) that
         // intersect image.
@@ -166,16 +166,16 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
             // init local histogram image values after current pos
             while (t < Math.min(tmin + this.offset, tmax))
             {
-                localMax.add(image.getInt(t, t + d));
+                localMax.add(array.getInt(t, t + d));
                 t++;
             }
 
             // process position that do not touch lower-right image boundary
             while (t < tmax)
             {
-                localMax.add(image.getInt(t, t + d));
+                localMax.add(array.getInt(t, t + d));
                 int t2 = t - this.offset;
-                image.setInt(t2, t2 + d, localMax.getMax());
+                array.setInt(t2, t2 + d, localMax.getMax());
                 t++;
             }
 
@@ -187,7 +187,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
                 int x = t - this.offset;
                 int y = t + d - this.offset;
                 if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-                    image.setInt(x, y, localMax.getMax());
+                    array.setInt(x, y, localMax.getMax());
                 t++;
             }
         }
@@ -196,11 +196,11 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
         fireProgressChanged(this, dmax - dmin, dmax - dmin);
     }
 
-    private void inPlaceDilationFloat(ScalarArray2D<?> image)
+    private void inPlaceDilationFloat(ScalarArray2D<?> array)
     {
         // get image size
-        int sizeX = image.size(0);
-        int sizeY = image.size(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
 
         // Consider all diagonal lines with direction vector (+1,+1) that
         // intersect image.
@@ -236,16 +236,16 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
             // init local histogram image values after current pos
             while (t < Math.min(tmin + this.offset, tmax))
             {
-                localMax.add(image.getValue(t, t + d));
+                localMax.add(array.getValue(t, t + d));
                 t++;
             }
 
             // process position that do not touch lower-right image boundary
             while (t < tmax)
             {
-                localMax.add(image.getValue(t, t + d));
+                localMax.add(array.getValue(t, t + d));
                 int t2 = t - this.offset;
-                image.setValue(t2, t2 + d, localMax.getMax());
+                array.setValue(t2, t2 + d, localMax.getMax());
                 t++;
             }
 
@@ -257,7 +257,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
                 int x = t - this.offset;
                 int y = t + d - this.offset;
                 if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-                    image.setValue(x, y, localMax.getMax());
+                    array.setValue(x, y, localMax.getMax());
                 t++;
             }
         }
@@ -274,7 +274,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
      * >)
      */
     @Override
-    public void inPlaceErosion(ScalarArray2D<?> image)
+    public void inPlaceErosion(ScalarArray2D<?> array)
     {
         // If size is one, there is no need to compute
         if (size <= 1)
@@ -282,17 +282,17 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
             return;
         }
 
-        if (image instanceof UInt8Array2D)
-            inPlaceErosionGray8((UInt8Array2D) image);
+        if (array instanceof UInt8Array2D)
+            inPlaceErosionGray8((UInt8Array2D) array);
         else
-            inPlaceErosionFloat(image);
+            inPlaceErosionFloat(array);
     }
 
-    private void inPlaceErosionGray8(UInt8Array2D image)
+    private void inPlaceErosionGray8(UInt8Array2D array)
     {
         // get image size
-        int sizeX = image.size(0);
-        int sizeY = image.size(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
 
         // Consider all diagonal lines with direction vector (+1,+1) that
         // intersect image.
@@ -331,15 +331,15 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
             // init local histogram image values after current pos
             while (t < Math.min(tmin + dt0, tmax))
             {
-                localMin.add(image.getInt(t, t + d));
+                localMin.add(array.getInt(t, t + d));
                 t++;
             }
 
             // process position that do not touch lower-right image boundary
             while (t < tmax)
             {
-                localMin.add(image.getInt(t, t + d));
-                image.setInt(t - dt0, t + d - dt0, localMin.getMax());
+                localMin.add(array.getInt(t, t + d));
+                array.setInt(t - dt0, t + d - dt0, localMin.getMax());
                 t++;
             }
 
@@ -352,7 +352,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
                 int y = t + d - dt0;
                 if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
                 {
-                    image.setInt(x, y, localMin.getMax());
+                    array.setInt(x, y, localMin.getMax());
                 }
                 t++;
             }
@@ -362,11 +362,11 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
         fireProgressChanged(this, dmax - dmin, dmax - dmin);
     }
 
-    private void inPlaceErosionFloat(ScalarArray2D<?> image)
+    private void inPlaceErosionFloat(ScalarArray2D<?> array)
     {
         // get image size
-        int sizeX = image.size(0);
-        int sizeY = image.size(1);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
 
         // Consider all diagonal lines with direction vector (+1,+1) that
         // intersect image.
@@ -405,15 +405,15 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
             // init local histogram image values after current pos
             while (t < Math.min(tmin + dt0, tmax))
             {
-                localMin.add(image.getValue(t, t + d));
+                localMin.add(array.getValue(t, t + d));
                 t++;
             }
 
             // process position that do not touch lower-right image boundary
             while (t < tmax)
             {
-                localMin.add(image.getValue(t, t + d));
-                image.setValue(t - dt0, t + d - dt0, localMin.getMax());
+                localMin.add(array.getValue(t, t + d));
+                array.setValue(t - dt0, t + d - dt0, localMin.getMax());
                 t++;
             }
 
@@ -425,7 +425,7 @@ public class LinearDiagDownStrel extends AbstractStrel2D implements InPlaceStrel
                 int x = t - dt0;
                 int y = t + d - dt0;
                 if (x >= 0 && y >= 0 && x < sizeX && y < sizeY)
-                    image.setValue(x, y, localMin.getMax());
+                    array.setValue(x, y, localMin.getMax());
                 t++;
             }
         }

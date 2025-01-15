@@ -24,18 +24,16 @@ public class ShiftedCross3x3Strel
      * pixel.
      * <p>
      * 
-     * The structuring has the following shape (x: neighbor, o: reference pixel,
-     * .: irrelevant): s *
+     * The structuring element has the following shape (x: neighbor, o:
+     * reference pixel, .: irrelevant):
      * 
-     * <pre>
-     * <code>
-    	 *  . . . . . 
-    	 *  . . x . . 
-    	 *  . x x o . 
-    	 *  . . x . . 
-    	 *  . . . . . 
-    	 * </code>
-     * </pre>
+     * {@snippet :
+     *  . . . . . 
+     *  . . x . . 
+     *  . x x o . 
+     *  . . x . . 
+     *  . . . . .
+     * } 
      */
     public final static InPlaceStrel2D LEFT = new ShiftedCross3x3Strel.Left();
 
@@ -44,18 +42,16 @@ public class ShiftedCross3x3Strel
      * pixel.
      * <p>
      * 
-     * The structuring has the following shape (x: neighbor, o: reference pixel,
-     * .: irrelevant):
+     * The structuring element has the following shape (x: neighbor, o:
+     * reference pixel, .: irrelevant):
      * 
-     * <pre>
-     * <code>
+     * {@snippet :
      *  . . . . . 
      *  . . x . . 
      *  . o x x . 
      *  . . x . . 
      *  . . . . . 
-     * </code>
-     * </pre>
+     * }
      */
     public final static InPlaceStrel2D RIGHT = new ShiftedCross3x3Strel.Right();
 
@@ -151,19 +147,19 @@ public class ShiftedCross3x3Strel
          * @see InPlaceStrel#inPlaceDilation(ij.process.ScalarArray2D<?>)
          */
         @Override
-        public void inPlaceDilation(ScalarArray2D<?> image)
+        public void inPlaceDilation(ScalarArray2D<?> array)
         {
-            if (image instanceof UInt8Array2D)
-                inPlaceDilationGray8((UInt8Array2D) image);
+            if (array instanceof UInt8Array2D)
+                inPlaceDilationGray8((UInt8Array2D) array);
             else
-                inPlaceDilationFloat(image);
+                inPlaceDilationFloat(array);
         }
 
-        private void inPlaceDilationGray8(UInt8Array2D image)
+        private void inPlaceDilationGray8(UInt8Array2D array)
         {
             // size of image
-            int sizeX = image.size(0);
-            int sizeY = image.size(1);
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
 
             int[][] buffer = new int[3][sizeX];
 
@@ -172,7 +168,7 @@ public class ShiftedCross3x3Strel
             {
                 buffer[0][x] = UInt8.MIN_INT;
                 buffer[1][x] = UInt8.MIN_INT;
-                buffer[2][x] = image.getInt(x, 0);
+                buffer[2][x] = array.getInt(x, 0);
             }
 
             // Iterate over image lines
@@ -190,7 +186,7 @@ public class ShiftedCross3x3Strel
                 if (y < sizeY - 1)
                 {
                     for (int x = 0; x < sizeX; x++)
-                        tmp[x] = image.getInt(x, y + 1);
+                        tmp[x] = array.getInt(x, y + 1);
                 }
                 else
                 {
@@ -201,17 +197,17 @@ public class ShiftedCross3x3Strel
 
                 // process first two pixels independently
                 valMax = Math.max(buffer[1][0], UInt8.MIN_INT);
-                image.setInt(valMax, 0, y);
+                array.setInt(valMax, 0, y);
                 valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1], buffer[2][0],
                         UInt8.MIN_INT);
-                image.setInt(valMax, 1, y);
+                array.setInt(valMax, 1, y);
 
                 // Iterate over pixel of the line, starting from the third one
                 for (int x = 2; x < sizeX; x++)
                 {
                     valMax = max5(buffer[0][x - 1], buffer[1][x - 2], buffer[1][x - 1],
                             buffer[1][x], buffer[2][x - 1]);
-                    image.setInt(valMax, x, y);
+                    array.setInt(valMax, x, y);
                 }
             }
 
@@ -219,11 +215,11 @@ public class ShiftedCross3x3Strel
             fireProgressChanged(this, sizeY, sizeY);
         }
 
-        private void inPlaceDilationFloat(ScalarArray2D<?> image)
+        private void inPlaceDilationFloat(ScalarArray2D<?> array)
         {
             // size of image
-            int sizeX = image.size(0);
-            int sizeY = image.size(1);
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
 
             double[][] buffer = new double[3][sizeX];
 
@@ -232,7 +228,7 @@ public class ShiftedCross3x3Strel
             {
                 buffer[0][x] = Double.NEGATIVE_INFINITY;
                 buffer[1][x] = Double.NEGATIVE_INFINITY;
-                buffer[2][x] = image.getValue(x, 0);
+                buffer[2][x] = array.getValue(x, 0);
             }
 
             // Iterate over image lines
@@ -250,7 +246,7 @@ public class ShiftedCross3x3Strel
                 if (y < sizeY - 1)
                 {
                     for (int x = 0; x < sizeX; x++)
-                        tmp[x] = image.getValue(x, y + 1);
+                        tmp[x] = array.getValue(x, y + 1);
                 }
                 else
                 {
@@ -261,17 +257,17 @@ public class ShiftedCross3x3Strel
 
                 // process first two pixels independently
                 valMax = Math.max(buffer[1][0], Double.NEGATIVE_INFINITY);
-                image.setValue(0, y, valMax);
+                array.setValue(0, y, valMax);
                 valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1], buffer[2][0],
                         Double.NEGATIVE_INFINITY);
-                image.setValue(1, y, valMax);
+                array.setValue(1, y, valMax);
 
                 // Iterate over pixel of the line, starting from the third one
                 for (int x = 2; x < sizeX; x++)
                 {
                     valMax = max5(buffer[0][x - 1], buffer[1][x - 2], buffer[1][x - 1],
                             buffer[1][x], buffer[2][x - 1]);
-                    image.setValue(x, y, valMax);
+                    array.setValue(x, y, valMax);
                 }
             }
 
@@ -285,12 +281,12 @@ public class ShiftedCross3x3Strel
          * @see InPlaceStrel#inPlaceErosion(ij.process.ScalarArray2D<?>)
          */
         @Override
-        public void inPlaceErosion(ScalarArray2D<?> image)
+        public void inPlaceErosion(ScalarArray2D<?> array)
         {
-            if (image instanceof UInt8Array2D)
-                inPlaceErosionGray8((UInt8Array2D) image);
+            if (array instanceof UInt8Array2D)
+                inPlaceErosionGray8((UInt8Array2D) array);
             else
-                inPlaceErosionFloat(image);
+                inPlaceErosionFloat(array);
         }
 
         private void inPlaceErosionGray8(UInt8Array2D image)
@@ -353,11 +349,11 @@ public class ShiftedCross3x3Strel
             fireProgressChanged(this, sizeY, sizeY);
         }
 
-        private void inPlaceErosionFloat(ScalarArray2D<?> image)
+        private void inPlaceErosionFloat(ScalarArray2D<?> array)
         {
             // size of image
-            int sizeX = image.size(0);
-            int sizeY = image.size(1);
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
 
             double[][] buffer = new double[3][sizeX];
 
@@ -366,7 +362,7 @@ public class ShiftedCross3x3Strel
             {
                 buffer[0][x] = Double.POSITIVE_INFINITY;
                 buffer[1][x] = Double.POSITIVE_INFINITY;
-                buffer[2][x] = image.getValue(x, 0);
+                buffer[2][x] = array.getValue(x, 0);
             }
 
             // Iterate over image lines
@@ -384,7 +380,7 @@ public class ShiftedCross3x3Strel
                 if (y < sizeY - 1)
                 {
                     for (int x = 0; x < sizeX; x++)
-                        tmp[x] = image.getValue(x, y + 1);
+                        tmp[x] = array.getValue(x, y + 1);
                 }
                 else
                 {
@@ -395,17 +391,17 @@ public class ShiftedCross3x3Strel
 
                 // process first pixel independently
                 valMin = Math.min(buffer[1][0], Double.POSITIVE_INFINITY);
-                image.setValue(0, y, valMin);
+                array.setValue(0, y, valMin);
                 valMin = min5(buffer[0][0], buffer[1][0], buffer[1][1], buffer[2][0],
                         Double.POSITIVE_INFINITY);
-                image.setValue(1, y, valMin);
+                array.setValue(1, y, valMin);
 
                 // Iterate over pixel of the line
                 for (int x = 2; x < sizeX; x++)
                 {
                     valMin = min5(buffer[0][x - 1], buffer[1][x - 2], buffer[1][x - 1],
                             buffer[1][x], buffer[2][x - 1]);
-                    image.setValue(x, y, valMin);
+                    array.setValue(x, y, valMin);
                 }
             }
 
@@ -506,19 +502,19 @@ public class ShiftedCross3x3Strel
          * @see InPlaceStrel#inPlaceDilation(ij.process.ScalarArray2D<?>)
          */
         @Override
-        public void inPlaceDilation(ScalarArray2D<?> image)
+        public void inPlaceDilation(ScalarArray2D<?> array)
         {
-            if (image instanceof UInt8Array2D)
-                inPlaceDilationGray8((UInt8Array2D) image);
+            if (array instanceof UInt8Array2D)
+                inPlaceDilationGray8((UInt8Array2D) array);
             else
-                inPlaceDilationFloat(image);
+                inPlaceDilationFloat(array);
         }
 
-        private void inPlaceDilationGray8(UInt8Array2D image)
+        private void inPlaceDilationGray8(UInt8Array2D array)
         {
             // size of image
-            int sizeX = image.size(0);
-            int sizeY = image.size(1);
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
 
             int[][] buffer = new int[3][sizeX];
 
@@ -527,7 +523,7 @@ public class ShiftedCross3x3Strel
             {
                 buffer[0][x] = UInt8.MIN_INT;
                 buffer[1][x] = UInt8.MIN_INT;
-                buffer[2][x] = image.getInt(x, 0);
+                buffer[2][x] = array.getInt(x, 0);
             }
 
             // Iterate over image lines
@@ -545,7 +541,7 @@ public class ShiftedCross3x3Strel
                 if (y < sizeY - 1)
                 {
                     for (int x = 0; x < sizeX; x++)
-                        tmp[x] = image.getInt(x, y + 1);
+                        tmp[x] = array.getInt(x, y + 1);
                 }
                 else
                 {
@@ -559,26 +555,26 @@ public class ShiftedCross3x3Strel
                 {
                     valMax = max5(buffer[0][x + 1], buffer[1][x], buffer[1][x + 1],
                             buffer[1][x + 2], buffer[2][x + 1]);
-                    image.setInt(x, y, valMax);
+                    array.setInt(x, y, valMax);
                 }
 
                 // process last two pixels independently
                 valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2], buffer[1][sizeX - 1],
                         buffer[2][sizeX - 1], UInt8.MIN_INT);
-                image.setInt(sizeX - 2, y, valMax);
+                array.setInt(sizeX - 2, y, valMax);
                 valMax = Math.max(buffer[1][sizeX - 1], UInt8.MIN_INT);
-                image.setInt(sizeX - 1, y, valMax);
+                array.setInt(sizeX - 1, y, valMax);
             }
 
             // clear the progress bar
             fireProgressChanged(this, sizeY, sizeY);
         }
 
-        private void inPlaceDilationFloat(ScalarArray2D<?> image)
+        private void inPlaceDilationFloat(ScalarArray2D<?> array)
         {
             // size of image
-            int sizeX = image.size(0);
-            int sizeY = image.size(1);
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
 
             double[][] buffer = new double[3][sizeX];
 
@@ -587,7 +583,7 @@ public class ShiftedCross3x3Strel
             {
                 buffer[0][x] = Double.NEGATIVE_INFINITY;
                 buffer[1][x] = Double.NEGATIVE_INFINITY;
-                buffer[2][x] = image.getValue(x, 0);
+                buffer[2][x] = array.getValue(x, 0);
             }
 
             // Iterate over image lines
@@ -605,7 +601,7 @@ public class ShiftedCross3x3Strel
                 if (y < sizeY - 1)
                 {
                     for (int x = 0; x < sizeX; x++)
-                        tmp[x] = image.getValue(x, y + 1);
+                        tmp[x] = array.getValue(x, y + 1);
                 }
                 else
                 {
@@ -619,15 +615,15 @@ public class ShiftedCross3x3Strel
                 {
                     valMax = max5(buffer[0][x + 1], buffer[1][x], buffer[1][x + 1],
                             buffer[1][x + 2], buffer[2][x + 1]);
-                    image.setValue(x, y, valMax);
+                    array.setValue(x, y, valMax);
                 }
 
                 // process last two pixels independently
                 valMax = max5(buffer[0][sizeX - 1], buffer[1][sizeX - 2], buffer[1][sizeX - 1],
                         buffer[2][sizeX - 1], Double.NEGATIVE_INFINITY);
-                image.setValue(sizeX - 2, y, valMax);
+                array.setValue(sizeX - 2, y, valMax);
                 valMax = Math.max(buffer[1][sizeX - 1], Double.NEGATIVE_INFINITY);
-                image.setValue(sizeX - 1, y, valMax);
+                array.setValue(sizeX - 1, y, valMax);
             }
 
             // clear the progress bar
@@ -640,19 +636,19 @@ public class ShiftedCross3x3Strel
          * @see InPlaceStrel#inPlaceErosion(ij.process.ScalarArray2D<?>)
          */
         @Override
-        public void inPlaceErosion(ScalarArray2D<?> image)
+        public void inPlaceErosion(ScalarArray2D<?> array)
         {
-            if (image instanceof UInt8Array2D)
-                inPlaceErosionGray8((UInt8Array2D) image);
+            if (array instanceof UInt8Array2D)
+                inPlaceErosionGray8((UInt8Array2D) array);
             else
-                inPlaceErosionFloat(image);
+                inPlaceErosionFloat(array);
         }
 
-        private void inPlaceErosionGray8(UInt8Array2D image)
+        private void inPlaceErosionGray8(UInt8Array2D array)
         {
             // size of image
-            int sizeX = image.size(0);
-            int sizeY = image.size(1);
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
 
             int[][] buffer = new int[3][sizeX];
 
@@ -661,7 +657,7 @@ public class ShiftedCross3x3Strel
             {
                 buffer[0][x] = UInt8.MAX_INT;
                 buffer[1][x] = UInt8.MAX_INT;
-                buffer[2][x] = image.getInt(x, 0);
+                buffer[2][x] = array.getInt(x, 0);
             }
 
             // Iterate over image lines
@@ -679,7 +675,7 @@ public class ShiftedCross3x3Strel
                 if (y < sizeY - 1)
                 {
                     for (int x = 0; x < sizeX; x++)
-                        tmp[x] = image.getInt(x, y + 1);
+                        tmp[x] = array.getInt(x, y + 1);
                 }
                 else
                 {
@@ -693,26 +689,26 @@ public class ShiftedCross3x3Strel
                 {
                     valMin = min5(buffer[0][x + 1], buffer[1][x], buffer[1][x + 1],
                             buffer[1][x + 2], buffer[2][x + 1]);
-                    image.setInt(x, y, valMin);
+                    array.setInt(x, y, valMin);
                 }
 
                 // process last two pixels independently
                 valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2], buffer[1][sizeX - 1],
                         buffer[2][sizeX - 1], UInt8.MAX_INT);
-                image.setInt(sizeX - 2, y, valMin);
+                array.setInt(sizeX - 2, y, valMin);
                 valMin = Math.min(buffer[1][sizeX - 1], UInt8.MAX_INT);
-                image.setInt(sizeX - 1, y, valMin);
+                array.setInt(sizeX - 1, y, valMin);
             }
 
             // clear the progress bar
             fireProgressChanged(this, sizeY, sizeY);
         }
 
-        private void inPlaceErosionFloat(ScalarArray2D<?> image)
+        private void inPlaceErosionFloat(ScalarArray2D<?> array)
         {
             // size of image
-            int sizeX = image.size(0);
-            int sizeY = image.size(1);
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
 
             double[][] buffer = new double[3][sizeX];
 
@@ -721,7 +717,7 @@ public class ShiftedCross3x3Strel
             {
                 buffer[0][x] = Double.POSITIVE_INFINITY;
                 buffer[1][x] = Double.POSITIVE_INFINITY;
-                buffer[2][x] = image.getValue(x, 0);
+                buffer[2][x] = array.getValue(x, 0);
             }
 
             // Iterate over image lines
@@ -739,7 +735,7 @@ public class ShiftedCross3x3Strel
                 if (y < sizeY - 1)
                 {
                     for (int x = 0; x < sizeX; x++)
-                        tmp[x] = image.getValue(x, y + 1);
+                        tmp[x] = array.getValue(x, y + 1);
                 }
                 else
                 {
@@ -753,15 +749,15 @@ public class ShiftedCross3x3Strel
                 {
                     valMin = min5(buffer[0][x + 1], buffer[1][x], buffer[1][x + 1],
                             buffer[1][x + 2], buffer[2][x + 1]);
-                    image.setValue(x, y, valMin);
+                    array.setValue(x, y, valMin);
                 }
 
                 // process last two pixels independently
                 valMin = min5(buffer[0][sizeX - 1], buffer[1][sizeX - 2], buffer[1][sizeX - 1],
                         buffer[2][sizeX - 1], Double.POSITIVE_INFINITY);
-                image.setValue(sizeX - 2, y, valMin);
+                array.setValue(sizeX - 2, y, valMin);
                 valMin = Math.min(buffer[1][sizeX - 1], Double.POSITIVE_INFINITY);
-                image.setValue(sizeX - 1, y, valMin);
+                array.setValue(sizeX - 1, y, valMin);
             }
 
             // clear the progress bar

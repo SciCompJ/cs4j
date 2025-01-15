@@ -220,11 +220,7 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
     public BinaryArray3D binaryMask()
     {
         BinaryArray3D mask = BinaryArray3D.create(1, 1, this.size);
-        for (int i = 0; i < this.size; i++)
-        {
-            mask.setBoolean(0, 0, i, true);
-        }
-
+        mask.fill(true);
         return mask;
     }
 

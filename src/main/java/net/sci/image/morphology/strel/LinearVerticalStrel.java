@@ -111,7 +111,7 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
      * ScalarArray2D<?>)
      */
     @Override
-    public void inPlaceDilation(ScalarArray2D<?> image)
+    public void inPlaceDilation(ScalarArray2D<?> array)
     {
         // If size is one, there is no need to compute
         if (size <= 1)
@@ -119,17 +119,17 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
             return;
         }
 
-        if (image instanceof UInt8Array2D)
-            inPlaceDilationGray8((UInt8Array2D) image);
+        if (array instanceof UInt8Array2D)
+            inPlaceDilationGray8((UInt8Array2D) array);
         else
-            inPlaceDilationFloat(image);
+            inPlaceDilationFloat(array);
     }
 
-    private void inPlaceDilationGray8(UInt8Array2D image)
+    private void inPlaceDilationGray8(UInt8Array2D array)
     {
         // get image size
-        int width = image.size(0);
-        int height = image.size(1);
+        int width = array.size(0);
+        int height = array.size(1);
 
         // shifts between reference position and last position
         int shift = this.size - this.offset - 1;
@@ -149,21 +149,21 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
             // init local histogram with neighbor values
             for (int y = 0; y < Math.min(shift, height); y++)
             {
-                localMax.add(image.getInt(x, y));
+                localMax.add(array.getInt(x, y));
             }
 
             // iterate along "middle" values
             for (int y = 0; y < height - shift; y++)
             {
-                localMax.add(image.getInt(x, y + shift));
-                image.setInt(x, y, localMax.getMax());
+                localMax.add(array.getInt(x, y + shift));
+                array.setInt(x, y, localMax.getMax());
             }
 
             // process pixels at the end of the line
             for (int y = Math.max(0, height - shift); y < height; y++)
             {
                 localMax.add(UInt8.MIN_INT);
-                image.setInt(x, y, localMax.getMax());
+                array.setInt(x, y, localMax.getMax());
             }
         }
 
@@ -171,11 +171,11 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
         fireProgressChanged(this, width, width);
     }
 
-    private void inPlaceDilationFloat(ScalarArray2D<?> image)
+    private void inPlaceDilationFloat(ScalarArray2D<?> array)
     {
         // get image size
-        int width = image.size(0);
-        int height = image.size(1);
+        int width = array.size(0);
+        int height = array.size(1);
 
         // shifts between reference position and last position
         int shift = this.size - this.offset - 1;
@@ -195,21 +195,21 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
             // init local histogram with neighbor values
             for (int y = 0; y < Math.min(shift, height); y++)
             {
-                localMax.add(image.getValue(x, y));
+                localMax.add(array.getValue(x, y));
             }
 
             // iterate along "middle" values
             for (int y = 0; y < height - shift; y++)
             {
-                localMax.add(image.getValue(x, y + shift));
-                image.setValue(x, y, localMax.getMax());
+                localMax.add(array.getValue(x, y + shift));
+                array.setValue(x, y, localMax.getMax());
             }
 
             // process pixels at the end of the line
             for (int y = Math.max(0, height - shift); y < height; y++)
             {
                 localMax.add(Double.NEGATIVE_INFINITY);
-                image.setValue(x, y, localMax.getMax());
+                array.setValue(x, y, localMax.getMax());
             }
         }
 
@@ -225,7 +225,7 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
      * ScalarArray2D<?>)
      */
     @Override
-    public void inPlaceErosion(ScalarArray2D<?> image)
+    public void inPlaceErosion(ScalarArray2D<?> array)
     {
         // If size is one, there is no need to compute
         if (size <= 1)
@@ -233,17 +233,17 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
             return;
         }
 
-        if (image instanceof UInt8Array2D)
-            inPlaceErosionGray8((UInt8Array2D) image);
+        if (array instanceof UInt8Array2D)
+            inPlaceErosionGray8((UInt8Array2D) array);
         else
-            inPlaceErosionFloat(image);
+            inPlaceErosionFloat(array);
     }
 
-    private void inPlaceErosionGray8(UInt8Array2D image)
+    private void inPlaceErosionGray8(UInt8Array2D array)
     {
         // get image size
-        int width = image.size(0);
-        int height = image.size(1);
+        int width = array.size(0);
+        int height = array.size(1);
 
         // shifts between reference position and last position
         int shift = this.size - this.offset - 1;
@@ -263,21 +263,21 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
             // init local histogram with neighbor values
             for (int y = 0; y < Math.min(shift, height); y++)
             {
-                localMin.add(image.getInt(x, y));
+                localMin.add(array.getInt(x, y));
             }
 
             // iterate along "middle" values
             for (int y = 0; y < height - shift; y++)
             {
-                localMin.add(image.getInt(x, y + shift));
-                image.setInt(x, y, localMin.getMax());
+                localMin.add(array.getInt(x, y + shift));
+                array.setInt(x, y, localMin.getMax());
             }
 
             // process pixels at the end of the line
             for (int y = Math.max(0, height - shift); y < height; y++)
             {
                 localMin.add(UInt8.MAX_INT);
-                image.setInt(x, y, localMin.getMax());
+                array.setInt(x, y, localMin.getMax());
             }
         }
 
@@ -285,11 +285,11 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
         fireProgressChanged(this, width, width);
     }
 
-    private void inPlaceErosionFloat(ScalarArray2D<?> image)
+    private void inPlaceErosionFloat(ScalarArray2D<?> array)
     {
         // get image size
-        int width = image.size(0);
-        int height = image.size(1);
+        int width = array.size(0);
+        int height = array.size(1);
 
         // shifts between reference position and last position
         int shift = this.size - this.offset - 1;
@@ -309,21 +309,21 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
             // init local histogram with neighbor values
             for (int y = 0; y < Math.min(shift, height); y++)
             {
-                localMin.add(image.getValue(x, y));
+                localMin.add(array.getValue(x, y));
             }
 
             // iterate along "middle" values
             for (int y = 0; y < height - shift; y++)
             {
-                localMin.add(image.getValue(x, y + shift));
-                image.setValue(x, y, localMin.getMax());
+                localMin.add(array.getValue(x, y + shift));
+                array.setValue(x, y, localMin.getMax());
             }
 
             // process pixels at the end of the line
             for (int y = Math.max(0, height - shift); y < height; y++)
             {
                 localMin.add(Double.POSITIVE_INFINITY);
-                image.setValue(x, y, localMin.getMax());
+                array.setValue(x, y, localMin.getMax());
             }
         }
 
@@ -343,11 +343,7 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
     public BinaryArray2D binaryMask()
     {
         BinaryArray2D mask = BinaryArray2D.create(1, this.size);
-        for (int i = 0; i < this.size; i++)
-        {
-            mask.setBoolean(0, i, true);
-        }
-
+        mask.fill(true);
         return mask;
     }
 
