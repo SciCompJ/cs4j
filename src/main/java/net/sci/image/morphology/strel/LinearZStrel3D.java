@@ -14,22 +14,24 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
 {
     // ==================================================
     // Static methods
-    
-    public final static LinearZStrel3D fromDiameter(int diam) {
+
+    public final static LinearZStrel3D fromDiameter(int diam)
+    {
         return new LinearZStrel3D(diam);
     }
-    
-    public final static LinearZStrel3D fromRadius(int radius) {
+
+    public final static LinearZStrel3D fromRadius(int radius)
+    {
         return new LinearZStrel3D(2 * radius + 1, radius);
     }
     
-    
+
     // ==================================================
     // Class variables
 
     /**
-     * Number of element in this structuring element. Corresponds to the
-     * length in the Z direction.
+     * Number of element in this structuring element. Corresponds to the length
+     * in the Z direction.
      */
     int size;
 
@@ -38,7 +40,7 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
      * elements before the reference element.
      */
     int offset;
-
+    
 
     // ==================================================
     // Constructors
@@ -89,7 +91,7 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
         }
         this.offset = offset;
     }
-
+    
 
     // ==================================================
     // Methods implementing InPlaceStrel3D
@@ -98,17 +100,17 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
     public void inPlaceDilation(ScalarArray3D<?> array)
     {
         // get image dimensions
-        int sizeX = array.size(0); 
+        int sizeX = array.size(0);
         int sizeY = array.size(1);
         int sizeZ = array.size(2);
-        
+
         // shifts between reference position and last position
         int shift = this.size - this.offset - 1;
-        
+
         // create local histogram instance
-        LocalExtremumBufferDouble localMax = new LocalExtremumBufferDouble(
-                this.size, LocalExtremum.Type.MAXIMUM);
-        
+        LocalExtremumBufferDouble localMax = new LocalExtremumBufferDouble(this.size,
+                LocalExtremum.Type.MAXIMUM);
+
         // Iterate on image z-columns
         for (int y = 0; y < sizeY; y++)
         {
@@ -125,40 +127,40 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
                 }
 
                 // iterate along "middle" values
-                for (int z = 0; z < sizeZ - shift; z++) 
+                for (int z = 0; z < sizeZ - shift; z++)
                 {
                     localMax.add(array.getValue(x, y, z + shift));
                     array.setValue(x, y, z, localMax.getMax());
                 }
 
                 // process pixels at the end of the line
-                for (int z = Math.max(0, sizeZ - shift); z < sizeZ; z++) 
+                for (int z = Math.max(0, sizeZ - shift); z < sizeZ; z++)
                 {
                     localMax.add(Double.NEGATIVE_INFINITY);
                     array.setValue(x, y, z, localMax.getMax());
                 }
             }
         }
-        
+
         // clear the progress bar
-        fireProgressChanged(this, sizeY, sizeY);      
+        fireProgressChanged(this, sizeY, sizeY);
     }
 
     @Override
     public void inPlaceErosion(ScalarArray3D<?> array)
     {
         // get image dimensions
-        int sizeX = array.size(0); 
+        int sizeX = array.size(0);
         int sizeY = array.size(1);
         int sizeZ = array.size(2);
-        
+
         // shifts between reference position and last position
         int shift = this.size - this.offset - 1;
-        
+
         // create local histogram instance
-        LocalExtremumBufferDouble localMin = new LocalExtremumBufferDouble(
-                this.size, LocalExtremum.Type.MINIMUM);
-        
+        LocalExtremumBufferDouble localMin = new LocalExtremumBufferDouble(this.size,
+                LocalExtremum.Type.MINIMUM);
+
         // Iterate on image z-columns
         for (int y = 0; y < sizeY; y++)
         {
@@ -175,78 +177,89 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
                 }
 
                 // iterate along "middle" values
-                for (int z = 0; z < sizeZ - shift; z++) 
+                for (int z = 0; z < sizeZ - shift; z++)
                 {
                     localMin.add(array.getValue(x, y, z + shift));
                     array.setValue(x, y, z, localMin.getMax());
                 }
 
                 // process pixels at the end of the line
-                for (int z = Math.max(0, sizeZ - shift); z < sizeZ; z++) 
+                for (int z = Math.max(0, sizeZ - shift); z < sizeZ; z++)
                 {
                     localMin.add(Double.POSITIVE_INFINITY);
                     array.setValue(x, y, z, localMin.getMax());
                 }
             }
         }
-        
-        // clear the progress bar
-        fireProgressChanged(this, sizeY, sizeY);      
-    }
 
+        // clear the progress bar
+        fireProgressChanged(this, sizeY, sizeY);
+    }
+    
 
     // ==================================================
     // Methods implementing Strel3D
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.image.morphology.Strel3D#getSize()
      */
     @Override
     public int[] size()
     {
-        return new int[] { 1, 1, this.size};
+        return new int[] { 1, 1, this.size };
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.image.morphology.Strel3D#getMask3D()
      */
     @Override
     public BinaryArray3D binaryMask()
     {
         BinaryArray3D mask = BinaryArray3D.create(1, 1, this.size);
-        for (int i = 0; i < this.size; i++) 
+        for (int i = 0; i < this.size; i++)
         {
             mask.setBoolean(0, 0, i, true);
         }
-        
+
         return mask;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.image.morphology.Strel3D#getOffset()
      */
     @Override
     public int[] maskOffset()
     {
-        return new int[]{0, 0, this.offset};
+        return new int[] { 0, 0, this.offset };
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.image.morphology.Strel3D#getShifts3D()
      */
     @Override
     public int[][] shifts()
     {
         int[][] shifts = new int[this.size][3];
-        for (int i = 0; i < this.size; i++) {
+        for (int i = 0; i < this.size; i++)
+        {
             shifts[i][0] = 0;
             shifts[i][1] = 0;
             shifts[i][2] = i - this.offset;
         }
         return shifts;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.image.morphology.Strel3D#reverse()
      */
     @Override
@@ -254,5 +267,5 @@ public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
     {
         return new LinearZStrel3D(this.size, this.size - this.offset - 1);
     }
-    
+
 }
