@@ -4,9 +4,8 @@
 package net.sci.image.morphology.strel;
 
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.ScalarArray2D;
-import net.sci.array.numeric.UInt8;
-import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * A vertical linear structuring element of a given length. Provides methods for
@@ -119,56 +118,59 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
             return;
         }
 
-        if (array instanceof UInt8Array2D)
-            inPlaceDilationGray8((UInt8Array2D) array);
+        if (array instanceof IntArray2D<?>)
+            inPlaceDilationInt((IntArray2D<?>) array);
         else
             inPlaceDilationFloat(array);
     }
 
-    private void inPlaceDilationGray8(UInt8Array2D array)
+    private void inPlaceDilationInt(IntArray2D<?> array)
     {
-        // get image size
-        int width = array.size(0);
-        int height = array.size(1);
-
-        // shifts between reference position and last position
-        int shift = this.size - this.offset - 1;
+        // retrieve minimum value allowed within array
+        final int defaultValue = array.typeMin().getInt(); 
 
         // create local histogram instance
         LocalExtremumBufferInt localMax = new LocalExtremumBufferInt(size,
                 LocalExtremum.Type.MAXIMUM);
 
+        // get image size
+        final int sizeX = array.size(0);
+        final int sizeY = array.size(1);
+        
+        // shifts between reference position and last position
+        final int shift = this.size - this.offset - 1;
+
         // Iterate on image columns
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < sizeX; x++)
         {
-            fireProgressChanged(this, x, width);
+            fireProgressChanged(this, x, sizeX);
 
             // reset local histogram
-            localMax.fill(UInt8.MIN_INT);
+            localMax.fill(defaultValue);
 
             // init local histogram with neighbor values
-            for (int y = 0; y < Math.min(shift, height); y++)
+            for (int y = 0; y < Math.min(shift, sizeY); y++)
             {
                 localMax.add(array.getInt(x, y));
             }
 
             // iterate along "middle" values
-            for (int y = 0; y < height - shift; y++)
+            for (int y = 0; y < sizeY - shift; y++)
             {
                 localMax.add(array.getInt(x, y + shift));
                 array.setInt(x, y, localMax.getMax());
             }
 
             // process pixels at the end of the line
-            for (int y = Math.max(0, height - shift); y < height; y++)
+            for (int y = Math.max(0, sizeY - shift); y < sizeY; y++)
             {
-                localMax.add(UInt8.MIN_INT);
+                localMax.add(defaultValue);
                 array.setInt(x, y, localMax.getMax());
             }
         }
 
         // clear the progress bar
-        fireProgressChanged(this, width, width);
+        fireProgressChanged(this, sizeX, sizeX);
     }
 
     private void inPlaceDilationFloat(ScalarArray2D<?> array)
@@ -233,56 +235,59 @@ public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel
             return;
         }
 
-        if (array instanceof UInt8Array2D)
-            inPlaceErosionGray8((UInt8Array2D) array);
+        if (array instanceof IntArray2D<?>)
+            inPlaceErosionInt((IntArray2D<?>) array);
         else
             inPlaceErosionFloat(array);
     }
 
-    private void inPlaceErosionGray8(UInt8Array2D array)
+    private void inPlaceErosionInt(IntArray2D<?> array)
     {
-        // get image size
-        int width = array.size(0);
-        int height = array.size(1);
-
-        // shifts between reference position and last position
-        int shift = this.size - this.offset - 1;
+        // retrieve maximum value allowed within array
+        final int defaultValue = array.typeMax().getInt(); 
 
         // create local histogram instance
         LocalExtremumBufferInt localMin = new LocalExtremumBufferInt(size,
                 LocalExtremum.Type.MINIMUM);
 
+        // get image size
+        final int sizeX = array.size(0);
+        final int sizeY = array.size(1);
+        
+        // shifts between reference position and last position
+        final int shift = this.size - this.offset - 1;
+
         // Iterate on image columns
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < sizeX; x++)
         {
-            fireProgressChanged(this, x, width);
+            fireProgressChanged(this, x, sizeX);
 
             // reset local histogram
-            localMin.fill(UInt8.MAX_INT);
+            localMin.fill(defaultValue);
 
             // init local histogram with neighbor values
-            for (int y = 0; y < Math.min(shift, height); y++)
+            for (int y = 0; y < Math.min(shift, sizeY); y++)
             {
                 localMin.add(array.getInt(x, y));
             }
 
             // iterate along "middle" values
-            for (int y = 0; y < height - shift; y++)
+            for (int y = 0; y < sizeY - shift; y++)
             {
                 localMin.add(array.getInt(x, y + shift));
                 array.setInt(x, y, localMin.getMax());
             }
 
             // process pixels at the end of the line
-            for (int y = Math.max(0, height - shift); y < height; y++)
+            for (int y = Math.max(0, sizeY - shift); y < sizeY; y++)
             {
-                localMin.add(UInt8.MAX_INT);
+                localMin.add(defaultValue);
                 array.setInt(x, y, localMin.getMax());
             }
         }
 
         // clear the progress bar
-        fireProgressChanged(this, width, width);
+        fireProgressChanged(this, sizeX, sizeX);
     }
 
     private void inPlaceErosionFloat(ScalarArray2D<?> array)

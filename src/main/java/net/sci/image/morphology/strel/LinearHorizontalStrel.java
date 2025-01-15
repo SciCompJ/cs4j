@@ -4,9 +4,8 @@
 package net.sci.image.morphology.strel;
 
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.ScalarArray2D;
-import net.sci.array.numeric.UInt8;
-import net.sci.array.numeric.UInt8Array2D;
 
 /**
  * An horizontal linear structuring element of a given length. Provides methods
@@ -117,24 +116,27 @@ public class LinearHorizontalStrel extends AbstractStrel2D implements InPlaceStr
             return;
         }
 
-        if (array instanceof UInt8Array2D)
-            inPlaceDilationGray8((UInt8Array2D) array);
+        if (array instanceof IntArray2D<?>)
+            inPlaceDilationInt((IntArray2D<?>) array);
         else
             inPlaceDilationFloat(array);
     }
 
-    private void inPlaceDilationGray8(UInt8Array2D array)
+    private void inPlaceDilationInt(IntArray2D<?> array)
     {
-        // get image size
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-
-        // shifts between reference position and last position
-        int shift = this.size - this.offset - 1;
+        // retrieve minimum value allowed within array
+        final int defaultValue = array.typeMin().getInt(); 
 
         // create local histogram instance
         LocalExtremumBufferInt localMax = new LocalExtremumBufferInt(size,
                 LocalExtremum.Type.MAXIMUM);
+
+        // get image size
+        final int sizeX = array.size(0);
+        final int sizeY = array.size(1);
+        
+        // shifts between reference position and last position
+        final int shift = this.size - this.offset - 1;
 
         // Iterate on image rows
         for (int y = 0; y < sizeY; y++)
@@ -142,7 +144,7 @@ public class LinearHorizontalStrel extends AbstractStrel2D implements InPlaceStr
             fireProgressChanged(this, y, sizeY);
 
             // init local histogram with background values
-            localMax.fill(UInt8.MIN_INT);
+            localMax.fill(defaultValue);
 
             // add neighbor values
             for (int x = 0; x < Math.min(shift, sizeX); x++)
@@ -160,7 +162,7 @@ public class LinearHorizontalStrel extends AbstractStrel2D implements InPlaceStr
             // process pixels at the end of the line
             for (int x = Math.max(0, sizeX - shift); x < sizeX; x++)
             {
-                localMax.add(UInt8.MIN_INT);
+                localMax.add(defaultValue);
                 array.setInt(x, y, localMax.getMax());
             }
         }
@@ -229,24 +231,27 @@ public class LinearHorizontalStrel extends AbstractStrel2D implements InPlaceStr
             return;
         }
 
-        if (array instanceof UInt8Array2D)
-            inPlaceErosionGray8((UInt8Array2D) array);
+        if (array instanceof IntArray2D<?>)
+            inPlaceErosionInt((IntArray2D<?>) array);
         else
             inPlaceErosionFloat(array);
     }
 
-    private void inPlaceErosionGray8(UInt8Array2D array)
+    private void inPlaceErosionInt(IntArray2D<?> array)
     {
-        // get image size
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-
-        // shifts between reference position and last position
-        int shift = this.size - this.offset - 1;
+        // retrieve maximum value allowed within array
+        final int defaultValue = array.typeMax().getInt(); 
 
         // create local histogram instance
         LocalExtremumBufferInt localMin = new LocalExtremumBufferInt(size,
                 LocalExtremum.Type.MINIMUM);
+
+        // get image size
+        final int sizeX = array.size(0);
+        final int sizeY = array.size(1);
+        
+        // shifts between reference position and last position
+        final int shift = this.size - this.offset - 1;
 
         // Iterate on image rows
         for (int y = 0; y < sizeY; y++)
@@ -254,7 +259,7 @@ public class LinearHorizontalStrel extends AbstractStrel2D implements InPlaceStr
             fireProgressChanged(this, y, sizeY);
 
             // reset local histogram
-            localMin.fill(UInt8.MAX_INT);
+            localMin.fill(defaultValue);
 
             // init local histogram with neighbor values
             for (int x = 0; x < Math.min(shift, sizeX); x++)
@@ -272,7 +277,7 @@ public class LinearHorizontalStrel extends AbstractStrel2D implements InPlaceStr
             // process pixels at the end of the line
             for (int x = Math.max(0, sizeX - shift); x < sizeX; x++)
             {
-                localMin.add(UInt8.MAX_INT);
+                localMin.add(defaultValue);
                 array.setInt(x, y, localMin.getMax());
             }
         }
