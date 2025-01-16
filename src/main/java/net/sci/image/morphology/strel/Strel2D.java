@@ -38,62 +38,70 @@ public interface Strel2D extends Strel
     // ===================================================================
     // Enumeration
     
-	/**
-	 * An enumeration of the different possible structuring element shapes. 
-	 * Each item of the enumeration can create Strel instances of specific
-	 * class and of given size.
-	 */
-	public enum Shape
-	{
-		/**
-		 * Disk of a given radius
-		 * @see NaiveDiskStrel 
-		 */
-		DISK("Disk", "Disk"),
-
-		/** 
-		 * Square of a given side
-		 * @see SquareStrel 
-		 */
-		SQUARE("Square", "Sqr"),
-		
-		/** 
-		 * Diamond of a given diameter
-		 * @see DiamondStrel
-		 * @see Cross3x3Strel 
-		 */
-		DIAMOND("Diamond", "Dmd"),
-		
-		/** 
-		 * Octagon of a given diameter
-		 * @see OctagonStrel
-		 */
-		OCTAGON("Octagon", "Oct"),
-		
-		/**
-		 * Horizontal line of a given length 
-		 * @see LinearHorizontalStrel
-		 */
-		LINE_HORIZ("Horizontal Line", "LineH"),
-		
-		/** 
-		 * Vertical line of a given length 
-		 * @see LinearVerticalStrel
-		 */
-		LINE_VERT("Vertical Line", "LineV"),
-		
-		/**
-		 * Diagonal line of a given length 
-		 * @see LinearDiagUpStrel
-		 */
-		LINE_DIAG_UP("Line 45 degrees", "Line045"),
-		
-		/** 
-		 * Diagonal line of a given length 
-		 * @see LinearDiagDownStrel
-		 */
-		LINE_DIAG_DOWN("Line 135 degrees", "Line135");
-		
+    /**
+     * An enumeration of the different possible structuring element shapes. Each
+     * item of the enumeration can create Strel instances of specific class and
+     * of given size.
+     */
+    public enum Shape
+    {
+        /**
+         * Disk of a given radius
+         * 
+         * @see NaiveDiskStrel
+         */
+        DISK("Disk", "Disk"),
+        
+        /**
+         * Square of a given side
+         * 
+         * @see SquareStrel
+         */
+        SQUARE("Square", "Sqr"),
+        
+        /**
+         * Diamond of a given diameter
+         * 
+         * @see DiamondStrel
+         * @see Cross3x3Strel
+         */
+        DIAMOND("Diamond", "Dmd"),
+        
+        /**
+         * Octagon of a given diameter
+         * 
+         * @see OctagonStrel
+         */
+        OCTAGON("Octagon", "Oct"),
+        
+        /**
+         * Horizontal line of a given length
+         * 
+         * @see LinearHorizontalStrel
+         */
+        LINE_HORIZ("Horizontal Line", "LineH"),
+        
+        /**
+         * Vertical line of a given length
+         * 
+         * @see LinearVerticalStrel
+         */
+        LINE_VERT("Vertical Line", "LineV"),
+        
+        /**
+         * Diagonal line of a given length
+         * 
+         * @see LinearDiagUpStrel
+         */
+        LINE_DIAG_UP("Line 45 degrees", "Line045"),
+        
+        /**
+         * Diagonal line of a given length
+         * 
+         * @see LinearDiagDownStrel
+         */
+        LINE_DIAG_DOWN("Line 135 degrees", "Line135");
+        
         /**
          * Returns a set of labels for most of classical structuring elements.
          * 
@@ -125,76 +133,67 @@ public interface Strel2D extends Strel
          */
         public static Shape fromLabel(String label)
         {
-        	if (label != null)
-        		label = label.toLowerCase();
-        	for (Shape s : Shape.values()) 
-        	{
-        		if (s.label.toLowerCase().equals(label))
-        			return s;
-        	}
-        	throw new IllegalArgumentException("Unable to parse Strel.Shape with label: " + label);
+            if (label != null) label = label.toLowerCase();
+            for (Shape s : Shape.values())
+            {
+                if (s.label.toLowerCase().equals(label)) return s;
+            }
+            throw new IllegalArgumentException("Unable to parse Strel.Shape with label: " + label);
         }
-
+        
         private final String label;
         
         private final String suffix;
         
-		private Shape(String label, String suffix) 
-		{
-			this.label = label;
-			this.suffix = suffix;
-		}
-		
-		/**
-		 * Creates a structuring element of the given type and with the
-		 * specified radius. The final size is given by 2 * radius + 1, to
-		 * take into account the central pixel.
-		 * 
-		 * @param radius the radius of the structuring element, in pixels
-		 * @return a new structuring element
-		 * 
-		 */
-		public Strel2D fromRadius(int radius)
-		{
-			if (this == DISK) 
-				return new NaiveDiskStrel(radius);
-			return fromDiameter(2 * radius + 1);
-		}
-		
-		/**
-		 * Creates a structuring element of the given type and with the
-		 * specified diameter.
-		 * 
-		 * @param diam
-		 *            the orthogonal diameter of the structuring element (max of
-		 *            x and y sizes), in pixels
-		 * @return a new structuring element
-		 */
-		public Strel2D fromDiameter(int diam) 
-		{
-			if (this == DISK) 
-				return new NaiveDiskStrel((diam - 1.0) * 0.5);
-			if (this == SQUARE) 
-				return new SquareStrel(diam);
-			if (this == DIAMOND) {
-				if (diam == 3)
-					return new Cross3x3Strel();
-				return new DiamondStrel(diam);
-			}
-			if (this == OCTAGON) 
-				return new OctagonStrel(diam);
-			if (this == LINE_HORIZ) 
-				return new LinearHorizontalStrel(diam);
-			if (this == LINE_VERT) 
-				return new LinearVerticalStrel(diam);
-			if (this == LINE_DIAG_UP) 
-				return new LinearDiagUpStrel(diam);
-			if (this == LINE_DIAG_DOWN) 
-				return new LinearDiagDownStrel(diam);
-			
-			throw new IllegalArgumentException("No default method for creating element of type " + this.label);
-		}
-		
+        private Shape(String label, String suffix)
+        {
+            this.label = label;
+            this.suffix = suffix;
+        }
+        
+        /**
+         * Creates a structuring element of the given type and with the
+         * specified radius. The final size is given by 2 * radius + 1, to take
+         * into account the central pixel.
+         * 
+         * @param radius
+         *            the radius of the structuring element, in pixels
+         * @return a new structuring element
+         *            
+         */
+        public Strel2D fromRadius(int radius)
+        {
+            if (this == DISK) return new NaiveDiskStrel(radius);
+            return fromDiameter(2 * radius + 1);
+        }
+        
+        /**
+         * Creates a structuring element of the given type and with the
+         * specified diameter.
+         * 
+         * @param diam
+         *            the orthogonal diameter of the structuring element (max of
+         *            x and y sizes), in pixels
+         * @return a new structuring element
+         */
+        public Strel2D fromDiameter(int diam)
+        {
+            return switch (this)
+            {
+                case DISK -> new NaiveDiskStrel((diam - 1.0) * 0.5);
+                case SQUARE ->  new SquareStrel(diam);
+                case DIAMOND -> (diam == 3) ? new Cross3x3Strel() : new DiamondStrel(diam);
+                case OCTAGON -> new OctagonStrel(diam);
+                case LINE_HORIZ -> new LinearHorizontalStrel(diam);
+                case LINE_VERT -> new LinearVerticalStrel(diam);
+                case LINE_DIAG_UP -> new LinearDiagUpStrel(diam);
+                case LINE_DIAG_DOWN -> new LinearDiagDownStrel(diam);
+                
+                default -> throw new IllegalArgumentException(
+                        "No default method for creating element of type " + this.label);
+            };
+        }
+        
         /**
          * Returns the suffix associated to this Strel shape. The suffix is a
          * short (2-3 characters) string used to identify the shape and that can
@@ -214,9 +213,9 @@ public interface Strel2D extends Strel
         {
         	return this.label;
         }
-	}
+    }
 	
-	
+    
     // ===================================================================
     // Static methods
     
@@ -237,7 +236,7 @@ public interface Strel2D extends Strel
         }
         throw new RuntimeException("Unable to wrap a strel with class: " + strel.getClass());
     }
-	
+    
     
     // ===================================================================
     // High-level operations
@@ -317,22 +316,22 @@ public interface Strel2D extends Strel
      */
     @Override
     public Strel2D reverse();
-
+    
 
     // ===================================================================
     // Low-level operations
     
     /**
-	 * Returns the size of the structuring element, as an array of size in each
-	 * direction. The first index corresponds to the number of pixels in the x
-	 * direction.
-	 * 
-	 * @return the size of the structuring element
-	 */
+     * Returns the size of the structuring element, as an array of size in each
+     * direction. The first index corresponds to the number of pixels in the x
+     * direction.
+     * 
+     * @return the size of the structuring element
+     */
     @Override
-	public int[] size();
-
-	/**
+    public int[] size();
+    
+    /**
      * Returns the structuring element as a binary array. The position of the
      * reference element within the mask can be obtained by the
      * <code>maskOffset()</code> method.
@@ -340,30 +339,30 @@ public interface Strel2D extends Strel
      * @return the mask of the structuring element
      */
     @Override
-	public BinaryArray2D binaryMask();
-
-	/**
-	 * Returns the offset in the mask. The first value corresponds to the shift
-	 * in the x direction.
-	 * 
-	 * @return the offset in the mask
-	 */
+    public BinaryArray2D binaryMask();
+    
+    /**
+     * Returns the offset in the mask. The first value corresponds to the shift
+     * in the x direction.
+     * 
+     * @return the offset in the mask
+     */
     @Override
-	public int[] maskOffset();
-
-	/**
-	 * Returns the structuring element as a set of shifts. The size of the
-	 * result is N-by-2, where N is the number of elements of the structuring
-	 * element. The first value corresponds to the shift in the x direction.
-	 * 
-	 * @return a set of shifts
-	 */
+    public int[] maskOffset();
+    
+    /**
+     * Returns the structuring element as a set of shifts. The size of the
+     * result is N-by-2, where N is the number of elements of the structuring
+     * element. The first value corresponds to the shift in the x direction.
+     * 
+     * @return a set of shifts
+     */
     @Override
-	public int[][] shifts();
-	
-	@Override
-	public default int dimensionality()
-	{
-	    return 2;
-	}
+    public int[][] shifts();
+    
+    @Override
+    public default int dimensionality()
+    {
+        return 2;
+    }
 }

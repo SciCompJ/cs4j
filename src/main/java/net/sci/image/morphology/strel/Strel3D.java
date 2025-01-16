@@ -277,26 +277,26 @@ public interface Strel3D extends Strel
      */
     @Override
     public BinaryArray3D binaryMask();
-
-	/**
-	 * Returns the offset in the mask for each direction. 
-	 * The first value corresponds to the shift in the x direction.
-	 * 
-	 * @return the offset in the mask
-	 */
+    
+    /**
+     * Returns the offset in the mask for each direction. The first value
+     * corresponds to the shift in the x direction.
+     * 
+     * @return the offset in the mask
+     */
     @Override
-	public int[] maskOffset();
-
-	/**
-	 * Returns the structuring element as a set of shifts. The size of the
-	 * result is N-by-3, where N is the number of elements of the structuring
-	 * element. The first value corresponds to the shift in the x direction.
-	 * 
-	 * @return a set of shifts
-	 */
+    public int[] maskOffset();
+    
+    /**
+     * Returns the structuring element as a set of shifts. The size of the
+     * result is N-by-3, where N is the number of elements of the structuring
+     * element. The first value corresponds to the shift in the x direction.
+     * 
+     * @return a set of shifts
+     */
     @Override
-	public int[][] shifts();
-
+    public int[][] shifts();
+    
     @Override
     public default int dimensionality()
     {

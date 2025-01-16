@@ -11,10 +11,9 @@ package net.sci.image.morphology.strel;
  */
 public interface LocalExtremum
 {
-	public enum Type
-	{
-		MINIMUM,
-		MAXIMUM
-	};
-
+    public enum Type
+    {
+        MINIMUM, MAXIMUM
+    };
+    
 }

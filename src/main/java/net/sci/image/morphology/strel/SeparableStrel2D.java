@@ -19,17 +19,17 @@ import java.util.Collection;
  */
 public interface SeparableStrel2D extends Strel2D
 {
-	/**
-	 * Decomposes this separable structuring element into a set of smaller
-	 * structuring elements that can be used for in place processing of input
-	 * arrays.
-	 * 
-	 * @return a set of elementary structuring elements
-	 */
-	public Collection<InPlaceStrel2D> decompose();
-
-	/**
-	 * @return this instance of separable Strel
-	 */
-	public SeparableStrel2D reverse();
+    /**
+     * Decomposes this separable structuring element into a set of smaller
+     * structuring elements that can be used for in place processing of input
+     * arrays.
+     * 
+     * @return a set of elementary structuring elements
+     */
+    public Collection<InPlaceStrel2D> decompose();
+    
+    /**
+     * @return this instance of separable Strel
+     */
+    public SeparableStrel2D reverse();
 }
