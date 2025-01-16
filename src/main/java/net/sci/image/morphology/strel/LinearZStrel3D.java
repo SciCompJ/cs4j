@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.ScalarArray3D;
 
@@ -10,7 +11,7 @@ import net.sci.array.numeric.ScalarArray3D;
  * @author dlegland
  *
  */
-public class LinearZStrel3D extends AbstractStrel3D implements InPlaceStrel3D
+public class LinearZStrel3D extends AlgoStub implements InPlaceStrel3D
 {
     // ==================================================
     // Static methods

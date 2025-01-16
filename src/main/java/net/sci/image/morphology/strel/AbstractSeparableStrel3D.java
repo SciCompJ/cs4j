@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
+import net.sci.algo.AlgoStub;
 import net.sci.array.numeric.ScalarArray3D;
 
 /**
@@ -15,8 +16,7 @@ import net.sci.array.numeric.ScalarArray3D;
  * @author David Legland
  *
  */
-public abstract class AbstractSeparableStrel3D extends AbstractStrel3D 
-implements SeparableStrel3D, AlgoListener 
+public abstract class AbstractSeparableStrel3D extends AlgoStub implements SeparableStrel3D, AlgoListener
 {
 	public ScalarArray3D<?> dilation(ScalarArray3D<?> image)
 	{

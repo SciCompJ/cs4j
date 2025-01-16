@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.ScalarArray2D;
@@ -17,7 +18,7 @@ import net.sci.array.numeric.ScalarArray2D;
  * @author David Legland
  *
  */
-public class LinearVerticalStrel extends AbstractStrel2D implements InPlaceStrel2D
+public class LinearVerticalStrel extends AlgoStub implements InPlaceStrel2D
 {
 
     // ==================================================

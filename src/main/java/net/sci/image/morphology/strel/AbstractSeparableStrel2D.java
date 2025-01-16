@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
+import net.sci.algo.AlgoStub;
 import net.sci.array.numeric.ScalarArray2D;
 
 /**
@@ -15,8 +16,7 @@ import net.sci.array.numeric.ScalarArray2D;
  * @author David Legland
  *
  */
-public abstract class AbstractSeparableStrel2D extends AbstractStrel2D 
-implements SeparableStrel2D, AlgoListener 
+public abstract class AbstractSeparableStrel2D extends AlgoStub implements SeparableStrel2D, AlgoListener
 {
 	public ScalarArray2D<?> dilation(ScalarArray2D<?> image)
 	{

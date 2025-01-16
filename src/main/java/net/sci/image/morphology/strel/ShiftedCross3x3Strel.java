@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.strel;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.ScalarArray2D;
@@ -68,7 +69,7 @@ public class ShiftedCross3x3Strel
      *  . . . . . 
      * </pre></code>
      */
-    private final static class Left extends AbstractStrel2D implements InPlaceStrel2D
+    private final static class Left extends AlgoStub implements InPlaceStrel2D
     {
 
         /**
@@ -426,7 +427,7 @@ public class ShiftedCross3x3Strel
      *  . . . . . 
      * </pre></code>
      */
-    private final static class Right extends AbstractStrel2D implements InPlaceStrel2D
+    private final static class Right extends AlgoStub implements InPlaceStrel2D
     {
 
         /**
