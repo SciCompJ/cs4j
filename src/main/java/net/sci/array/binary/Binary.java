@@ -172,6 +172,16 @@ public class Binary implements Int<Binary>
     
     
     // =============================================================
+    // Implementation of the Comparable interface
+
+    @Override
+    public int compareTo(Binary other)
+    {
+        return Boolean.compare(this.state, other.state);
+    }
+    
+    
+    // =============================================================
     // Override Object methods
 
     @Override

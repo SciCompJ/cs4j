@@ -4,6 +4,7 @@
 package net.sci.array.numeric;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -21,6 +22,21 @@ public class UInt16Test
     {
         UInt16 data = new UInt16(-10);
         assertEquals(0, data.getInt());
+    }
+
+    /**
+     * Test method for {@link net.sci.array.numeric.UInt16#compareTo(net.sci.array.numeric.UInt16)}.
+     */
+    @Test
+    public final void testCompareTo()
+    {
+        UInt16 v1 = new UInt16(500);
+        UInt16 v2 = new UInt16(40000);
+        UInt16 v3 = new UInt16(500);
+        
+        assertTrue(v1.compareTo(v2) < 0);
+        assertTrue(v2.compareTo(v1) > 0);
+        assertTrue(v1.compareTo(v3) == 0);
     }
 
     /**

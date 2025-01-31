@@ -166,6 +166,16 @@ public class Int32 implements Int<Int32>
     
 
     // =============================================================
+    // Implementation of the Comparable interface
+
+    @Override
+    public int compareTo(Int32 other)
+    {
+        return this.getInt() - other.getInt();
+    }
+    
+    
+    // =============================================================
     // Override Object methods
 
     public boolean equals(Object that)

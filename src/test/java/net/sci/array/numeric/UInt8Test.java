@@ -4,6 +4,7 @@
 package net.sci.array.numeric;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -21,6 +22,21 @@ public class UInt8Test
     {
         UInt8 data = new UInt8(-10);
         assertEquals(0, data.getInt());
+    }
+
+    /**
+     * Test method for {@link net.sci.array.numeric.UInt8#compareTo(net.sci.array.numeric.UInt8)}.
+     */
+    @Test
+    public final void testCompareTo()
+    {
+        UInt8 v1 = new UInt8(50);
+        UInt8 v2 = new UInt8(200);
+        UInt8 v3 = new UInt8(50);
+        
+        assertTrue(v1.compareTo(v2) < 0);
+        assertTrue(v2.compareTo(v1) > 0);
+        assertTrue(v1.compareTo(v3) == 0);
     }
 
     /**

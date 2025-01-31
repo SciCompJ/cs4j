@@ -12,7 +12,7 @@ package net.sci.array.numeric;
  *
  * @author dlegland
  */
-public interface Scalar<S extends Scalar<S>> extends Numeric<S>
+public interface Scalar<S extends Scalar<S>> extends Numeric<S>, Comparable<S>
 {
     /**
      * Returns the smallest value (closest or equal to negative infinity) that

@@ -141,6 +141,16 @@ public class Float64 implements Scalar<Float64>
     
 
     // =============================================================
+    // Implementation of the Comparable interface
+
+    @Override
+    public int compareTo(Float64 other)
+    {
+        return Double.compare(this.value, other.value);
+    }
+    
+    
+    // =============================================================
     // Override Object methods
 
     public boolean equals(Object that)

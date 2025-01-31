@@ -219,6 +219,16 @@ public class UInt16 implements Int<UInt16>
     
 
     // =============================================================
+    // Implementation of the Comparable interface
+
+    @Override
+    public int compareTo(UInt16 other)
+    {
+        return this.getInt() - other.getInt();
+    }
+    
+    
+    // =============================================================
     // Override Object methods
 
     public boolean equals(Object that)

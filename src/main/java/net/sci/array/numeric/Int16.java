@@ -208,6 +208,16 @@ public class Int16 implements Int<Int16>
     
 
     // =============================================================
+    // Implementation of the Comparable interface
+
+    @Override
+    public int compareTo(Int16 other)
+    {
+        return this.getInt() - other.getInt();
+    }
+    
+    
+    // =============================================================
     // Override Object methods
 
     public boolean equals(Object that)

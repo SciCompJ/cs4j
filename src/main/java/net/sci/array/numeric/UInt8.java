@@ -216,6 +216,16 @@ public class UInt8 implements Int<UInt8>
         return new UInt8((int) ((this.value & 0x00FF) / k));
     }
     
+
+    // =============================================================
+    // Implementation of the Comparable interface
+
+    @Override
+    public int compareTo(UInt8 other)
+    {
+        return this.getInt() - other.getInt();
+    }
+    
     
     // =============================================================
     // Override Object methods

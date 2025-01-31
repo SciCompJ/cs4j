@@ -153,6 +153,16 @@ public class Float32 implements Scalar<Float32>
     
 
     // =============================================================
+    // Implementation of the Comparable interface
+
+    @Override
+    public int compareTo(Float32 other)
+    {
+        return Float.compare(this.value, other.value);
+    }
+    
+    
+    // =============================================================
     // Override Object methods
 
     public boolean equals(Object that)
