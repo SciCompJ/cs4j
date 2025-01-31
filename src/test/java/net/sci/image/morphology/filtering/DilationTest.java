@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import net.sci.array.Array;
+import net.sci.array.Array2D;
 import net.sci.array.color.RGB8Array2D;
 import net.sci.image.morphology.strel.SquareStrel;
 import net.sci.image.morphology.strel.Strel2D;
@@ -45,7 +46,38 @@ public class DilationTest
         // blue
         assertEquals(255, res2d.getSample( 3, 10, 2));
         assertEquals(255, res2d.getSample( 5, 12, 2));
-        
     }
     
+    @Test
+    public void testDilation_Array2DofString_Square3x3()
+    {
+        String[] strings = new String[] {
+                "Berlin", "London", "Madrid", "Paris", "Rome", "Tokyo"
+        };
+        int[][] inds = new int[][] {
+            {5, 5, 3, 4, 6, 2}, 
+            {4, 2, 4, 3, 6, 5},
+            {1, 3, 5, 2, 2, 3}, 
+            {4, 1, 5, 3, 3, 4}, 
+        };
+        
+        Array2D<String> array = Array2D.create(inds[0].length, inds.length, "");
+        array.fill((x,y) -> strings[inds[y][x] - 1]);
+//        array.printContent(System.out, " %7s");
+        
+        Strel2D strel = new SquareStrel(3);
+        
+        @SuppressWarnings("unchecked")
+        Array<String> res = (Array<String>) new Dilation(strel).process(array);
+//        Array2D.wrap(res).printContent(System.out, " %7s");
+        
+        assertEquals(2, res.dimensionality());
+        assertEquals(array.size(0), res.size(0));
+        assertEquals(array.size(1), res.size(1));
+        
+        Array2D<String> res2d = (Array2D<String>) Array2D.wrap(res);
+        assertEquals("Rome", res2d.get(1, 1));
+        assertEquals("Tokyo", res2d.get(3, 2));
+        assertEquals("Paris", res2d.get(4, 3));
+    }
 }
