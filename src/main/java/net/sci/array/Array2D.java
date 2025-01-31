@@ -149,7 +149,7 @@ public abstract class Array2D<T> implements Array<T>
         printContent(System.out);
     }
     
-	/**
+    /**
      * Prints the content of this array on the specified stream.
      * 
      * Default behavior converts each element into a string. Specialized array
@@ -160,11 +160,27 @@ public abstract class Array2D<T> implements Array<T>
      */
     public void printContent(PrintStream stream)
     {
+        printContent(stream, " %s");
+    }
+
+    /**
+     * Prints the content of this array on the specified stream.
+     * 
+     * Default behavior converts each element into a string. Specialized array
+     * classed can use more relevant conversion.
+     * 
+     * @param stream
+     *            the stream to print on.
+     * @param stringFormat
+     *            the string formatter for array content formatted as string. Example: " [%8s]".
+     */
+    public void printContent(PrintStream stream, String stringFormat)
+    {
         for (int y = 0; y < this.size1; y++)
         {
             for (int x = 0; x < this.size0; x++)
             {
-                stream.print(String.format(Locale.ENGLISH, " %s", get(x, y)));
+                stream.print(String.format(Locale.ENGLISH, stringFormat, get(x, y)));
             }
             stream.println();
         }
