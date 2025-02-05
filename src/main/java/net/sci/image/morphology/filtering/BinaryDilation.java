@@ -193,7 +193,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
      *            the shift amount (positive to the right)
      * @return the new shifted array
      */
-    private HashMap<Integer, BinaryRow> shiftRowsToLeft(RunLengthBinaryArray2D array, int dx)
+    private static final HashMap<Integer, BinaryRow> shiftRowsToLeft(RunLengthBinaryArray2D array, int dx)
     {
         HashMap<Integer, BinaryRow> resRows = new HashMap<Integer, BinaryRow>();
         for (int y : array.nonEmptyRowIndices())
@@ -316,7 +316,7 @@ public class BinaryDilation extends BinaryMorphologicalFilter
      *            the shift amount (positive to the right)
      * @return the new shifted array
      */
-    private HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
+    private static final HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
     {
         // create array
         HashMap<Integer, HashMap<Integer, BinaryRow>> resRows = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
@@ -340,12 +340,11 @@ public class BinaryDilation extends BinaryMorphologicalFilter
     public BinaryArray processBinary(BinaryArray array)
     {
         int nd = array.dimensionality();
-        switch (nd)
+        return switch (nd)
         {
-            case 2: return processBinary2d(BinaryArray2D.wrap(array));
-            case 3: return processBinary3d(BinaryArray3D.wrap(array));
-            default:
-                throw new IllegalArgumentException("Requires an array of dimensionality 2, not " + nd);
-        }
+            case 2 -> processBinary2d(BinaryArray2D.wrap(array));
+            case 3 -> processBinary3d(BinaryArray3D.wrap(array));
+            default -> throw new IllegalArgumentException("Requires an array of dimensionality 2 or 3, not " + nd);
+        };
     }
 }

@@ -79,26 +79,6 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         return new RunLengthBinaryArray2D(sizeX, sizeY, resRows);
     }
 
-    /**
-     * Shifts all the runs within the input array by the given amount to the
-     * left.
-     * 
-     * @param array
-     *            the array to shift.
-     * @param dx
-     *            the shift amount (positive to the right)
-     * @return the new shifted array
-     */
-    private static final HashMap<Integer, BinaryRow> shiftRows(RunLengthBinaryArray2D array, int dx)
-    {
-        HashMap<Integer, BinaryRow> resRows = new HashMap<Integer, BinaryRow>();
-        for (int y : array.nonEmptyRowIndices())
-        {
-           resRows.put(y, array.getRow(y).shift(dx));
-        }
-        return resRows;
-    }
-
     public static final RunLengthBinaryArray3D padArray3d(RunLengthBinaryArray3D array, int leftPad, int rightPad)
     {
         // array dimensions
@@ -134,36 +114,6 @@ public class BinaryErosion extends BinaryMorphologicalFilter
         return res;
     }
     
-    /**
-     * Shifts all the runs within the 3D input array by the given amount to the
-     * left.
-     * 
-     * @param array
-     *            the array to shift.
-     * @param dx
-     *            the shift amount (positive to the right)
-     * @return the new shifted array
-     */
-    private static final HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
-    {
-        // create
-        HashMap<Integer, HashMap<Integer, BinaryRow>> resRows = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
-    
-        // iterate over non-empty slices 
-        for (int z : array.nonEmptySliceIndices())
-        {
-            HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>();
-            for (int y : array.nonEmptySliceRowIndices(z))
-            {
-              sliceRows.put(y, array.getRow(y, z).shift(dx));
-          }
-          resRows.put(z, sliceRows);
-      }
-        
-        // return
-        return resRows;
-    }
-
     /**
      * Ensures the input row can be considered as larger row, by optionally
      * adding <code>true</code> elements before first element and after first
@@ -311,6 +261,26 @@ public class BinaryErosion extends BinaryMorphologicalFilter
     }
     
     /**
+     * Shifts all the runs within the input array by the given amount to the
+     * left.
+     * 
+     * @param array
+     *            the array to shift.
+     * @param dx
+     *            the shift amount (positive to the right)
+     * @return the new shifted array
+     */
+    private static final HashMap<Integer, BinaryRow> shiftRows(RunLengthBinaryArray2D array, int dx)
+    {
+        HashMap<Integer, BinaryRow> resRows = new HashMap<Integer, BinaryRow>();
+        for (int y : array.nonEmptyRowIndices())
+        {
+           resRows.put(y, array.getRow(y).shift(dx));
+        }
+        return resRows;
+    }
+
+    /**
      * Performs morphological erosion on a 3D binary array. The input is
      * converted into an instance of <code>RunLengthBinaryArray3D</code> when
      * necessary.
@@ -431,16 +401,45 @@ public class BinaryErosion extends BinaryMorphologicalFilter
     // =============================================================
     // Implementation of the BinaryMorphologicalFilter class 
     
+    /**
+     * Shifts all the runs within the 3D input array by the given amount to the
+     * left.
+     * 
+     * @param array
+     *            the array to shift.
+     * @param dx
+     *            the shift amount (positive to the right)
+     * @return the new shifted array
+     */
+    private static final HashMap<Integer, HashMap<Integer, BinaryRow>> shiftRows(RunLengthBinaryArray3D array, int dx)
+    {
+        // create
+        HashMap<Integer, HashMap<Integer, BinaryRow>> resRows = new HashMap<Integer, HashMap<Integer, BinaryRow>>();
+    
+        // iterate over non-empty slices 
+        for (int z : array.nonEmptySliceIndices())
+        {
+            HashMap<Integer, BinaryRow> sliceRows = new HashMap<Integer, BinaryRow>();
+            for (int y : array.nonEmptySliceRowIndices(z))
+            {
+              sliceRows.put(y, array.getRow(y, z).shift(dx));
+          }
+          resRows.put(z, sliceRows);
+      }
+        
+        // return
+        return resRows;
+    }
+
     @Override
     public BinaryArray processBinary(BinaryArray array)
     {
         int nd = array.dimensionality();
-        switch (nd)
+        return switch (nd)
         {
-            case 2: return processBinary2d(BinaryArray2D.wrap(array));
-            case 3: return processBinary3d(BinaryArray3D.wrap(array));
-            default:
-                throw new IllegalArgumentException("Requires an array of dimensionality 2, not " + nd);
-        }
+            case 2 -> processBinary2d(BinaryArray2D.wrap(array));
+            case 3 -> processBinary3d(BinaryArray3D.wrap(array));
+            default -> throw new IllegalArgumentException("Requires an array of dimensionality 2 or 3, not " + nd);
+        };
     }
 }

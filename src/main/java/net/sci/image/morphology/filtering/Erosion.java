@@ -15,9 +15,11 @@ import net.sci.image.morphology.strel.Strel3D;
 
 /**
  * Morphological erosion, that consists in computing the minimum value in the
- * neighborhood defined by the structuring element. </p>
+ * neighborhood defined by the structuring element.
+ * </p>
  * 
  * Example of use:
+ * 
  * <pre>
  * {@code
  * Array inputArray = ...
@@ -26,6 +28,11 @@ import net.sci.image.morphology.strel.Strel3D;
  * Array result = filter.process(inputArray);
  * }
  * </pre>
+ * 
+ * @see net.sci.image.morphology.filtering.BinaryErosion
+ * @see net.sci.image.morphology.filtering.Dilation
+ * @see net.sci.image.morphology.filtering.Closing
+ * @see net.sci.image.morphology.filtering.Opening
  * 
  * @author dlegland
  *

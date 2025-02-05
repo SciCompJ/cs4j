@@ -30,6 +30,7 @@ import net.sci.image.morphology.strel.Strel3D;
  * @see Erosion
  * @see InnerGradient
  * @see OuterGradient
+ * @see BinaryGradient
  * @see Laplacian
  * 
  * @author dlegland

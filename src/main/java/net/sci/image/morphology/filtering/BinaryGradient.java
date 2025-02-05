@@ -21,6 +21,7 @@ import net.sci.image.morphology.Strel;
  * @see BinaryErosion
  * @see BinaryClosing
  * @see Opening
+ * @see Gradient
  * 
  * @author dlegland
  *

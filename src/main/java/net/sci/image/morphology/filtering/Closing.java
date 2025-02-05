@@ -25,8 +25,12 @@ import net.sci.image.morphology.strel.Strel3D;
  * }
  * </pre>
  * 
+ * @see net.sci.image.morphology.filtering.Erosion
+ * @see net.sci.image.morphology.filtering.Dilation
+ * @see net.sci.image.morphology.filtering.Opening
+ * @see net.sci.image.morphology.filtering.BinaryClosing
+ * 
  * @author dlegland
- *
  */
 public class Closing extends MorphologicalFilter
 {

@@ -13,9 +13,11 @@ import net.sci.image.morphology.strel.Strel3D;
 
 /**
  * Morphological opening, that consists in computing a morphological erosion
- * followed by a morphological dilation. </p>
+ * followed by a morphological dilation.
+ * </p>
  * 
  * Example of use:
+ * 
  * <pre>
  * {@code
  * Array inputArray = ...
@@ -24,6 +26,11 @@ import net.sci.image.morphology.strel.Strel3D;
  * Array result = filter.process(inputArray);
  * }
  * </pre>
+ *
+ * @see net.sci.image.morphology.filtering.Erosion
+ * @see net.sci.image.morphology.filtering.Dilation
+ * @see net.sci.image.morphology.filtering.Closing
+ * @see net.sci.image.morphology.filtering.BinaryOpening
  * 
  * @author dlegland
  *

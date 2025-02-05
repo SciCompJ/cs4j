@@ -27,14 +27,39 @@ import net.sci.image.morphology.strel.Strel3D;
  * }
  * </pre>
  * 
+ * @see net.sci.image.morphology.filtering.BinaryDilation
+ * @see net.sci.image.morphology.filtering.Erosion
+ * @see net.sci.image.morphology.filtering.Closing
+ * @see net.sci.image.morphology.filtering.Opening
+ * 
  * @author dlegland
- *
  */
 public class Dilation extends MorphologicalFilter
 {
     public Dilation(Strel strel)
     {
         super(strel);
+    }
+    
+    public ScalarArray<?> processScalar(ScalarArray<?> array)
+    {
+        int nd = array.dimensionality();
+        if (nd == 2)
+        {
+            Strel2D strel2d = Strel2D.wrap(this.strel);
+            strel2d.addAlgoListener(this);
+            return strel2d.dilation(ScalarArray2D.wrapScalar2d(array));
+        }
+        else if (nd == 3)
+        {
+            Strel3D strel3d = Strel3D.wrap(this.strel);
+            strel3d.addAlgoListener(this);
+            return strel3d.dilation(ScalarArray3D.wrapScalar3d(array));
+        }
+        else
+        {
+            throw new IllegalArgumentException("Requires an array of dimensionality 2 or 3, not " + nd);
+        }
     }
     
     public <C extends Comparable<C>> Array<C> processComparable(Array<C> array)
@@ -73,27 +98,6 @@ public class Dilation extends MorphologicalFilter
         return res;
     }
 
-    public ScalarArray<?> processScalar(ScalarArray<?> array)
-    {
-        int nd = array.dimensionality();
-        if (nd == 2)
-        {
-            Strel2D strel2d = Strel2D.wrap(this.strel);
-            strel2d.addAlgoListener(this);
-            return strel2d.dilation(ScalarArray2D.wrapScalar2d(array));
-        }
-        else if (nd == 3)
-        {
-            Strel3D strel3d = Strel3D.wrap(this.strel);
-            strel3d.addAlgoListener(this);
-            return strel3d.dilation(ScalarArray3D.wrapScalar3d(array));
-        }
-        else
-        {
-            throw new IllegalArgumentException("Requires an array of dimensionality 2 or 3, not " + nd);
-        }
-    }
-    
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public <T> Array<?> process(Array<T> array)
