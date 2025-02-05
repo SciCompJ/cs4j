@@ -62,6 +62,15 @@ public class Dilation extends MorphologicalFilter
         }
     }
     
+    /**
+     * Implementation of dilation for arrays containing instances of Comparable.
+     * 
+     * @param <C>
+     *            the type of comparable stored within the array
+     * @param array
+     *            the array to process
+     * @return a new array containing the result of dilation
+     */
     public <C extends Comparable<C>> Array<C> processComparable(Array<C> array)
     {
         int[] dims = array.size();

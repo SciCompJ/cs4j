@@ -44,6 +44,15 @@ public class Erosion extends MorphologicalFilter
         super(strel);
     }
     
+    /**
+     * Implementation of erosion for arrays containing instances of Comparable.
+     * 
+     * @param <C>
+     *            the type of comparable stored within the array
+     * @param array
+     *            the array to process
+     * @return a new array containing the result of erosion
+     */
     public <C extends Comparable<C>> Array<C> processComparable(Array<C> array)
     {
         int[] dims = array.size();

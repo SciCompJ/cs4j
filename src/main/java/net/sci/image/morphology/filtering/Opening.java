@@ -3,6 +3,7 @@
  */
 package net.sci.image.morphology.filtering;
 
+import net.sci.array.Array;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
@@ -62,5 +63,17 @@ public class Opening extends MorphologicalFilter
             throw new IllegalArgumentException("Requires an array of dimensionality 2 or 3, not " + nd);
         }
     }
-
+    
+    @Override
+    public <T> Array<?> process(Array<T> array)
+    {
+        if (array instanceof ScalarArray)
+        {
+            return processScalar((ScalarArray<?>) array);
+        }
+        
+        Dilation dilation = new Dilation(strel);
+        Erosion erosion = new Erosion(strel.reverse());
+        return dilation.process(erosion.process(array));
+    }
 }
