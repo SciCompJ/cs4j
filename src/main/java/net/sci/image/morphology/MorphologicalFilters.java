@@ -24,160 +24,19 @@ import net.sci.image.morphology.filtering.WhiteTopHat;
  * <p>
  * Example of use:
  * <pre>
- * {@code
+ * {@snippet lang="java" :
  * Array<?> array = ...
  * Strel se = SquareStrel.fromDiameter(5);
  * Array<?> grad = MorphologicalFilters.gradient(array, se);
  * Image res = new Image(grad, "Gradient");
  * res.show(); 
- *  }</pre>
- *
+ * }
  * 
  * @see Strel
  * @author dlegland
  */
 public class MorphologicalFilters
 {
-    // =======================================================================
-    // Inner enumeration
-    
-    /**
-     * A pre-defined set of basis morphological operations, that can be easily 
-     * used with a GenericDialog.</p>
-     *  
-     * Example:
-     * <pre>
-     * {@code
-     * // Use a generic dialog to define an operator 
-     * GenericDialog gd = new GenericDialog();
-     * gd.addChoice("Operation", Operation.getAllLabels();
-     * gd.showDialog();
-     * Operation op = Operation.fromLabel(gd.getNextChoice());
-     * // Apply the operation on the current array
-     * Array<?> array = image.getData();
-     * op.apply(array, SquareStrel.fromRadius(2));
-     * }</pre>
-     */
-    public enum Operation
-    {
-        /** Morphological erosion (local minima) */
-        EROSION("Erosion", "Ero"),
-        /** Morphological dilation (local maxima) */
-        DILATION("Dilation", "Dil"),
-        /** Morphological opening (erosion followed by dilation) */
-        OPENING("Opening", "Op"),
-        /** Morphological closing (dilation followed by erosion) */
-        CLOSING("Closing", "Cl"),
-        /** White Top-Hat */
-        TOPHAT("White Top Hat", "WTH"),
-        /** Black Top-Hat */
-        BOTTOMHAT("Black Top Hat", "BTH"),
-        /** Morphological gradient (difference of dilation with erosion) */
-        GRADIENT("Gradient", "MGrad"),
-        /**
-         * Morphological laplacian (difference of the outer gradient with the
-         * inner gradient, equal to DIL+ERO-2*Img).
-         */
-        LAPLACIAN("Laplacian", "MLap"),
-        /** Morphological internal gradient (difference of original image with erosion) */
-        INNER_GRADIENT("Inner Gradient", "InnGrad"), 
-        /** Morphological internal gradient (difference of dilation with original image) */
-        OUTER_GRADIENT("Outer Gradient", "OutGrad");
-
-        
-        /**
-         * A label that can be used for display in graphical widgets.
-         */
-        private final String label;
-        
-        /**
-         * A suffix intended to be used for creating result image names. 
-         */
-        private String suffix;
-        
-        
-        private Operation(String label, String suffix) 
-        {
-            this.label = label;
-            this.suffix = suffix;
-        }
-        
-        /**
-         * Applies the current operator to the input array.
-         * 
-         * @param array
-         *            the array to process
-         * @param strel
-         *            the structuring element to use
-         * @return the result of morphological operation applied to array
-         */
-        public Array<?> process(Array<?> array, Strel strel) 
-        {
-            return createOperator(strel).process(array);
-        }
-        
-        public MorphologicalFilter createOperator(Strel strel)
-        {
-            if (this == DILATION) return new Dilation(strel);
-            if (this == EROSION) return new Erosion(strel);
-            if (this == CLOSING) return new Closing(strel);
-            if (this == OPENING) return new Opening(strel);
-            if (this == TOPHAT) return new WhiteTopHat(strel);
-            if (this == BOTTOMHAT) return new BlackTopHat(strel);
-            if (this == GRADIENT) return new Gradient(strel);
-            if (this == LAPLACIAN) return new Laplacian(strel, 0.0);
-            if (this == INNER_GRADIENT) return new InnerGradient(strel);
-            if (this == OUTER_GRADIENT) return new OuterGradient(strel);
-            throw new RuntimeException(
-                    "Unable to process the " + this + " morphological operation");
-        }
-        
-        public String suffix()
-        {
-            return suffix;
-        }
-        
-        public String toString() 
-        {
-            return this.label;
-        }
-        
-        public static String[] getAllLabels()
-        {
-            int n = Operation.values().length;
-            String[] result = new String[n];
-            
-            int i = 0;
-            for (Operation op : Operation.values())
-                result[i++] = op.label;
-            
-            return result;
-        }
-        
-        /**
-         * Determines the operation type from its label.
-         * 
-         * @param opLabel
-         *            the label of the operation
-         * @return the parsed Operation
-         * @throws IllegalArgumentException
-         *             if label is not recognized.
-         */
-        public static Operation fromLabel(String opLabel)
-        {
-            if (opLabel != null)
-                opLabel = opLabel.toLowerCase();
-            for (Operation op : Operation.values()) 
-            {
-                String cmp = op.label.toLowerCase();
-                if (cmp.equals(opLabel))
-                    return op;
-            }
-            throw new IllegalArgumentException("Unable to parse Operation with label: " + opLabel);
-        }
-    }
-
-    
     // =======================================================================
     // Static methods to perform common morphological operations
     
