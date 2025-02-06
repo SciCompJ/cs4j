@@ -31,14 +31,14 @@ import net.sci.image.morphology.reconstruction.MorphologicalReconstruction3DHybr
  * Example of use:
  * 
  * <pre>
- * {@code
- *	// Get current image processor
- *	ScalarArray2D<?> image = IJ.getImage().getProcessor();
- *	// Computes extended minima with a dynamic of 15, using the 4-connectivity
- *	ScalarArray2D<?> minima = MinimaAndMaxima.extendedMinima(image, 15, 4); 
- *	// Display result in a new imagePlus
- *	ImagePlus res = new ImagePlus("Minima", minima);
- *	res.show(); 
+ * {@snippet lang="java" :
+ * // Get current image processor
+ * ScalarArray2D<?> image = IJ.getImage().getProcessor();
+ * // Computes extended minima with a dynamic of 15, using the 4-connectivity
+ * ScalarArray2D<?> minima = MinimaAndMaxima.extendedMinima(image, 15, 4); 
+ * // Create a new image and display in a frame
+ * Image res = new Image(minima, "Minima");
+ * res.show();  
  * }</pre>
  * 
  * @see MorphologicalReconstruction
