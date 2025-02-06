@@ -109,7 +109,7 @@ public class LinearHorizontalStrel extends AlgoStub implements InPlaceStrel2D
      * ScalarArray2D)
      */
     @Override
-    public void inPlaceDilation(ScalarArray2D<?> array)
+    public void inPlaceDilation2d(ScalarArray2D<?> array)
     {
         // If size is one, there is no need to compute
         if (size <= 1)
@@ -224,7 +224,7 @@ public class LinearHorizontalStrel extends AlgoStub implements InPlaceStrel2D
      * @see inra.ijpb.morphology.InPlaceStrel#inPlaceErosion(ScalarArray2D)
      */
     @Override
-    public void inPlaceErosion(ScalarArray2D<?> array)
+    public void inPlaceErosion2d(ScalarArray2D<?> array)
     {
         // If size is one, there is no need to compute
         if (size <= 1)

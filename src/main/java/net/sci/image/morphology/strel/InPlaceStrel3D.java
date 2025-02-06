@@ -35,7 +35,7 @@ public interface InPlaceStrel3D extends Strel3D
      * @param array
      *            the input array to dilate
      */
-    public void inPlaceDilation(ScalarArray3D<?> array);
+    public void inPlaceDilation3d(ScalarArray3D<?> array);
     
     /**
      * Performs a morphological erosion on the array given as argument, and
@@ -44,7 +44,7 @@ public interface InPlaceStrel3D extends Strel3D
      * @param array
      *            the input array to erode
      */
-    public void inPlaceErosion(ScalarArray3D<?> array);
+    public void inPlaceErosion3d(ScalarArray3D<?> array);
     
 
     // ===================================================================
@@ -53,30 +53,30 @@ public interface InPlaceStrel3D extends Strel3D
     public default ScalarArray3D<?> dilation(ScalarArray3D<?> array)
     {
         ScalarArray3D<?> result = array.duplicate();
-        this.inPlaceDilation(result);
+        this.inPlaceDilation3d(result);
         return result;
     }
 
     public default ScalarArray3D<?> erosion(ScalarArray3D<?> array)
     {
         ScalarArray3D<?> result = array.duplicate();
-        this.inPlaceErosion(result);
+        this.inPlaceErosion3d(result);
         return result;
     }
 
     public default ScalarArray3D<?> closing(ScalarArray3D<?> array)
     {
         ScalarArray3D<?> result = array.duplicate();
-        this.inPlaceDilation(result);
-        this.reverse().inPlaceErosion(result);
+        this.inPlaceDilation3d(result);
+        this.reverse().inPlaceErosion3d(result);
         return result;
     }
 
     public default ScalarArray3D<?> opening(ScalarArray3D<?> array)
     {
         ScalarArray3D<?> result = array.duplicate();
-        this.inPlaceErosion(result);
-        this.reverse().inPlaceDilation(result);
+        this.inPlaceErosion3d(result);
+        this.reverse().inPlaceDilation3d(result);
         return result;
     }
 

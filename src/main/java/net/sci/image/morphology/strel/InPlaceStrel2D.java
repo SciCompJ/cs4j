@@ -26,7 +26,7 @@ public interface InPlaceStrel2D extends Strel2D
      * @param image
      *            the input image to dilate
      */
-    public void inPlaceDilation(ScalarArray2D<?> image);
+    public void inPlaceDilation2d(ScalarArray2D<?> image);
     
     /**
      * Performs erosion of the image given as argument, and stores the result in
@@ -35,7 +35,7 @@ public interface InPlaceStrel2D extends Strel2D
      * @param image
      *            the input image to erode
      */
-    public void inPlaceErosion(ScalarArray2D<?> image);
+    public void inPlaceErosion2d(ScalarArray2D<?> image);
     
     
     // ===================================================================
@@ -44,30 +44,30 @@ public interface InPlaceStrel2D extends Strel2D
     public default ScalarArray2D<?> dilation(ScalarArray2D<?> array)
     {
         ScalarArray2D<?> result = array.duplicate();
-        this.inPlaceDilation(result);
+        this.inPlaceDilation2d(result);
         return result;
     }
     
     public default ScalarArray2D<?> erosion(ScalarArray2D<?> array)
     {
         ScalarArray2D<?> result = array.duplicate();
-        this.inPlaceErosion(result);
+        this.inPlaceErosion2d(result);
         return result;
     }
     
     public default ScalarArray2D<?> closing(ScalarArray2D<?> array)
     {
         ScalarArray2D<?> result = array.duplicate();
-        this.inPlaceDilation(result);
-        this.reverse().inPlaceErosion(result);
+        this.inPlaceDilation2d(result);
+        this.reverse().inPlaceErosion2d(result);
         return result;
     }
     
     public default ScalarArray2D<?> opening(ScalarArray2D<?> array)
     {
         ScalarArray2D<?> result = array.duplicate();
-        this.inPlaceErosion(result);
-        this.reverse().inPlaceDilation(result);
+        this.inPlaceErosion2d(result);
+        this.reverse().inPlaceDilation2d(result);
         return result;
     }
     

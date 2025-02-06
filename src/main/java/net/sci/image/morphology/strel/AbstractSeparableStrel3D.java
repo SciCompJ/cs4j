@@ -137,14 +137,14 @@ public abstract class AbstractSeparableStrel3D extends AlgoStub implements Separ
     private void runDilation(ScalarArray3D<?> array, InPlaceStrel3D strel)
     {
         strel.addAlgoListener(this);
-        strel.inPlaceDilation(array);
+        strel.inPlaceDilation3d(array);
         strel.removeAlgoListener(this);
     }
     
     private void runErosion(ScalarArray3D<?> array, InPlaceStrel3D strel)
     {
         strel.addAlgoListener(this);
-        strel.inPlaceErosion(array);
+        strel.inPlaceErosion3d(array);
         strel.removeAlgoListener(this);
     }
     

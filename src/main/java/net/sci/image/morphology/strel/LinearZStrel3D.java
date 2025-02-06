@@ -98,7 +98,7 @@ public class LinearZStrel3D extends AlgoStub implements InPlaceStrel3D
     // Methods implementing InPlaceStrel3D
 
     @Override
-    public void inPlaceDilation(ScalarArray3D<?> array)
+    public void inPlaceDilation3d(ScalarArray3D<?> array)
     {
         // get image dimensions
         int sizeX = array.size(0);
@@ -148,7 +148,7 @@ public class LinearZStrel3D extends AlgoStub implements InPlaceStrel3D
     }
 
     @Override
-    public void inPlaceErosion(ScalarArray3D<?> array)
+    public void inPlaceErosion3d(ScalarArray3D<?> array)
     {
         // get image dimensions
         int sizeX = array.size(0);

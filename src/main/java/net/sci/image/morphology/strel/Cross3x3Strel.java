@@ -87,7 +87,7 @@ public class Cross3x3Strel extends AlgoStub implements InPlaceStrel2D
      * @see net.sci.array.data.Array2D)
      */
     @Override
-    public void inPlaceDilation(ScalarArray2D<?> array)
+    public void inPlaceDilation2d(ScalarArray2D<?> array)
     {
         if (array instanceof UInt8Array2D)
             inPlaceDilationGray8((UInt8Array2D) array);
@@ -248,7 +248,7 @@ public class Cross3x3Strel extends AlgoStub implements InPlaceStrel2D
      * Array2D<?>)
      */
     @Override
-    public void inPlaceErosion(ScalarArray2D<?> array)
+    public void inPlaceErosion2d(ScalarArray2D<?> array)
     {
         if (array instanceof UInt8Array2D)
             inPlaceErosionGray8((UInt8Array2D) array);

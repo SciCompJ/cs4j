@@ -61,13 +61,14 @@ public class ShiftedCross3x3Strel
      * </p>
      * 
      * The structuring has the following shape (x: neighbor, o: reference pixel,
-     * .: irrelevant): <code><pre>
+     * .: irrelevant):
+     * {@snippet :
      *  . . . . . 
      *  . . x . . 
      *  . x x o . 
      *  . . x . . 
      *  . . . . . 
-     * </pre></code>
+     * }
      */
     private final static class Left extends AlgoStub implements InPlaceStrel2D
     {
@@ -147,7 +148,7 @@ public class ShiftedCross3x3Strel
          * @see InPlaceStrel#inPlaceDilation(ij.process.ScalarArray2D<?>)
          */
         @Override
-        public void inPlaceDilation(ScalarArray2D<?> array)
+        public void inPlaceDilation2d(ScalarArray2D<?> array)
         {
             if (array instanceof IntArray2D<?>)
                 inPlaceDilationInt((IntArray2D<?>) array);
@@ -199,16 +200,16 @@ public class ShiftedCross3x3Strel
 
                 // process first pixel independently
                 valMax = Math.max(buffer[1][0], defaultValue);
-                array.setInt(valMax, 0, y);
+                array.setInt(0, y, valMax);
                 valMax = max5(buffer[0][0], buffer[1][0], buffer[1][1], buffer[2][0], defaultValue);
-                array.setInt(valMax, 1, y);
+                array.setInt(1, y, valMax);
 
                 // Iterate over pixel of the line, starting from the third one
                 for (int x = 2; x < sizeX; x++)
                 {
                     valMax = max5(buffer[0][x - 1], buffer[1][x - 2], buffer[1][x - 1],
                             buffer[1][x], buffer[2][x - 1]);
-                    array.setInt(valMax, x, y);
+                    array.setInt(x, y, valMax);
                 }
             }
 
@@ -282,7 +283,7 @@ public class ShiftedCross3x3Strel
          * @see InPlaceStrel#inPlaceErosion(ij.process.ScalarArray2D<?>)
          */
         @Override
-        public void inPlaceErosion(ScalarArray2D<?> array)
+        public void inPlaceErosion2d(ScalarArray2D<?> array)
         {
             if (array instanceof IntArray2D<?>)
                 inPlaceErosionInt((IntArray2D<?>) array);
@@ -335,16 +336,16 @@ public class ShiftedCross3x3Strel
 
                 // process first pixel independently
                 valMin = Math.min(buffer[1][0], defaultValue);
-                array.setInt(valMin, 0, y);
+                array.setInt(0, y, valMin);
                 valMin = min5(buffer[0][0], buffer[1][0], buffer[1][1], buffer[2][0], defaultValue);
-                array.setInt(valMin, 1, y);
+                array.setInt(1, y, valMin);
 
                 // Iterate over pixel of the line
                 for (int x = 2; x < sizeX; x++)
                 {
                     valMin = min5(buffer[0][x - 1], buffer[1][x - 2], buffer[1][x - 1],
                             buffer[1][x], buffer[2][x - 1]);
-                    array.setInt(valMin, x, y);
+                    array.setInt(x, y, valMin);
                 }
             }
 
@@ -419,13 +420,14 @@ public class ShiftedCross3x3Strel
      * </p>
      * 
      * The structuring has the following shape (x: neighbor, o: reference pixel,
-     * .: irrelevant): <code><pre>
+     * .: irrelevant):
+     * {@snippet :
      *  . . . . . 
      *  . . x . . 
      *  . o x x . 
      *  . . x . . 
      *  . . . . . 
-     * </pre></code>
+     * }
      */
     private final static class Right extends AlgoStub implements InPlaceStrel2D
     {
@@ -505,7 +507,7 @@ public class ShiftedCross3x3Strel
          * @see InPlaceStrel#inPlaceDilation(ij.process.ScalarArray2D<?>)
          */
         @Override
-        public void inPlaceDilation(ScalarArray2D<?> array)
+        public void inPlaceDilation2d(ScalarArray2D<?> array)
         {
             if (array instanceof IntArray2D<?>)
                 inPlaceDilationInt((IntArray2D<?>) array);
@@ -642,7 +644,7 @@ public class ShiftedCross3x3Strel
          * @see InPlaceStrel#inPlaceErosion(ij.process.ScalarArray2D<?>)
          */
         @Override
-        public void inPlaceErosion(ScalarArray2D<?> array)
+        public void inPlaceErosion2d(ScalarArray2D<?> array)
         {
             if (array instanceof IntArray2D<?>)
                 inPlaceErosionInt((IntArray2D<?>) array);
