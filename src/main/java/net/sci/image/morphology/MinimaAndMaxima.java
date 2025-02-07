@@ -3,8 +3,18 @@
  */
 package net.sci.image.morphology;
 
+import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.Float32Array3D;
+import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Float64Array2D;
+import net.sci.array.numeric.Float64Array3D;
+import net.sci.array.numeric.IntArray;
+import net.sci.array.numeric.IntArray2D;
+import net.sci.array.numeric.IntArray3D;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.numeric.process.AddValue;
@@ -406,31 +416,34 @@ public class MinimaAndMaxima
      */
     public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array, BinaryArray2D maxima, Connectivity2D conn)
     {
-        ScalarArray2D<?> marker = array.duplicate();
-        ScalarArray2D<?> mask = array.duplicate();
-
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-        for (int y = 0; y < sizeY; y++)
+        ScalarArray2D<?> marker;
+        ScalarArray2D<?> mask;
+        if (array instanceof IntArray2D)
         {
-            for (int x = 0; x < sizeX; x++)
-            {
-                if (maxima.getValue(x, y) > 0)
-                {
-                    marker.setValue(x, y, Double.MAX_VALUE);
-                    mask.setValue(x, y, Double.MAX_VALUE);
-                }
-                else
-                {
-                    marker.setValue(x, y, Double.NEGATIVE_INFINITY);
-                    mask.setValue(x, y, array.getValue(x, y) - 1); // TODO: potential problem for floating-point arrays
-                }
-            }
+            marker = IntArray2D.wrap(array.newInstance(array.size()));
+            mask = IntArray2D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_maxima_int((IntArray<?>)array, maxima, (IntArray<?>) marker, (IntArray<?>) mask);
+        }
+        else if (array instanceof Float32Array)
+        {
+            marker = Float32Array2D.wrap(array.newInstance(array.size()));
+            mask = Float32Array2D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_maxima_float32((Float32Array) array, maxima, (Float32Array) marker, (Float32Array) mask);
+        }
+        else if (array instanceof Float64Array)
+        {
+            marker = Float64Array2D.wrap(array.newInstance(array.size()));
+            mask = Float64Array2D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_maxima_float64((Float64Array) array, maxima, (Float64Array) marker, (Float64Array) mask);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
         }
 
         return MorphologicalReconstruction.reconstructByDilation(marker, mask, conn);
     }
-
+    
     /**
      * Imposes the maxima given by marker array into the input array, using the
      * default connectivity.
@@ -461,30 +474,29 @@ public class MinimaAndMaxima
     public final static ScalarArray3D<?> imposeMaxima(ScalarArray3D<?> array, BinaryArray3D maxima,
             Connectivity3D conn)
     {
-        ScalarArray3D<?> marker = array.duplicate();
-        ScalarArray3D<?> mask = array.duplicate();
-        
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-        int sizeZ = array.size(2);
-        for (int z = 0; z < sizeZ; z++)
+        ScalarArray3D<?> marker;
+        ScalarArray3D<?> mask;
+        if (array instanceof IntArray3D)
         {
-            for (int y = 0; y < sizeY; y++)
-            {
-                for (int x = 0; x < sizeX; x++)
-                {
-                    if (maxima.getValue(x, y, z) > 0)
-                    {
-                        marker.setValue(x, y, z, Double.MAX_VALUE);
-                        mask.setValue(x, y, z, Double.MAX_VALUE);
-                    } 
-                    else
-                    {
-                        marker.setValue(x, y, z, Double.NEGATIVE_INFINITY);
-                        mask.setValue(x, y, z, array.getValue(x, y, z) - 1 ); // TODO: potential problem for floating-point arrays
-                    }
-                }
-            }
+            marker = IntArray3D.wrap(array.newInstance(array.size()));
+            mask = IntArray3D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_maxima_int((IntArray<?>)array, maxima, (IntArray<?>) marker, (IntArray<?>) mask);
+        }
+        else if (array instanceof Float32Array)
+        {
+            marker = Float32Array3D.wrap(array.newInstance(array.size()));
+            mask = Float32Array3D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_maxima_float32((Float32Array) array, maxima, (Float32Array) marker, (Float32Array) mask);
+        }
+        else if (array instanceof Float64Array)
+        {
+            marker = Float64Array3D.wrap(array.newInstance(array.size()));
+            mask = Float64Array3D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_maxima_float64((Float64Array) array, maxima, (Float64Array) marker, (Float64Array) mask);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
         }
         
         return MorphologicalReconstruction.reconstructByDilation(marker, mask, conn);
@@ -520,26 +532,29 @@ public class MinimaAndMaxima
     public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array, BinaryArray2D minima,
             Connectivity2D conn)
     {
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-        
-        ScalarArray2D<?> marker = array.duplicate();
-        ScalarArray2D<?> mask = array.duplicate();
-        for (int y = 0; y < sizeY; y++)
+        ScalarArray2D<?> marker;
+        ScalarArray2D<?> mask;
+        if (array instanceof IntArray2D)
         {
-            for (int x = 0; x < sizeX; x++)
-            {
-                if (minima.getValue(x, y) > 0)
-                {
-                    marker.setValue(x, y, Double.NEGATIVE_INFINITY);
-                    mask.setValue(x, y, Double.NEGATIVE_INFINITY);
-                } 
-                else
-                {
-                    marker.setValue(x, y, Double.MAX_VALUE);
-                    mask.setValue(x, y, array.getValue(x, y) + 1); // TODO: potential problem for floating-point arrays
-                }
-            }
+            marker = IntArray2D.wrap(array.newInstance(array.size()));
+            mask = IntArray2D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_minima_int((IntArray<?>)array, minima, (IntArray<?>) marker, (IntArray<?>) mask);
+        }
+        else if (array instanceof Float32Array)
+        {
+            marker = Float32Array2D.wrap(array.newInstance(array.size()));
+            mask = Float32Array2D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_minima_float32((Float32Array) array, minima, (Float32Array) marker, (Float32Array) mask);
+        }
+        else if (array instanceof Float64Array)
+        {
+            marker = Float64Array2D.wrap(array.newInstance(array.size()));
+            mask = Float64Array2D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_minima_float64((Float64Array) array, minima, (Float64Array) marker, (Float64Array) mask);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
         }
         
         return MorphologicalReconstruction.reconstructByErosion(marker, mask, conn);
@@ -574,33 +589,136 @@ public class MinimaAndMaxima
      */
     public final static ScalarArray3D<?> imposeMinima(ScalarArray3D<?> array, BinaryArray3D minima, Connectivity3D conn)
     {
-        int sizeX = array.size(0);
-        int sizeY = array.size(1);
-        int sizeZ = array.size(2);
-
-        ScalarArray3D<?> marker = array.duplicate();
-        ScalarArray3D<?> mask = array.duplicate();
-        for (int z = 0; z < sizeZ; z++)
+        ScalarArray3D<?> marker;
+        ScalarArray3D<?> mask;
+        if (array instanceof IntArray3D)
         {
-            for (int y = 0; y < sizeY; y++)
-            {
-                for (int x = 0; x < sizeX; x++)
-                {
-                    if (minima.getValue(x, y, z) > 0)
-                    {
-                        marker.setValue(x, y, z, Double.NEGATIVE_INFINITY);
-                        mask.setValue(x, y, z, Double.NEGATIVE_INFINITY);
-                    }
-                    else
-                    {
-                        marker.setValue(x, y, z, Double.MAX_VALUE);
-                        mask.setValue(x, y, z, array.getValue(x, y, z) + 1); // TODO: potential problem for floating-point arrays
-                    }
-                }
-            }
+            marker = IntArray3D.wrap(array.newInstance(array.size()));
+            mask = IntArray3D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_minima_int((IntArray<?>)array, minima, (IntArray<?>) marker, (IntArray<?>) mask);
         }
+        else if (array instanceof Float32Array)
+        {
+            marker = Float32Array3D.wrap(array.newInstance(array.size()));
+            mask = Float32Array3D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_minima_float32((Float32Array) array, minima, (Float32Array) marker, (Float32Array) mask);
+        }
+        else if (array instanceof Float64Array)
+        {
+            marker = Float64Array3D.wrap(array.newInstance(array.size()));
+            mask = Float64Array3D.wrap(array.newInstance(array.size()));
+            initializeMarkerAndMask_minima_float64((Float64Array) array, minima, (Float64Array) marker, (Float64Array) mask);
+        }
+        else
+        {
+            throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
+        }
+        
         return MorphologicalReconstruction.reconstructByErosion(marker, mask, conn);
     }
+
+    private static final void initializeMarkerAndMask_maxima_int(IntArray<?> array, BinaryArray maxima, IntArray<?> marker, IntArray<?> mask)
+    {
+        for (int[] pos : array.positions())
+        {
+            if (maxima.getBoolean(pos))
+            {
+                marker.setInt(pos, Integer.MAX_VALUE);
+                mask.setInt(pos, Integer.MAX_VALUE);
+            }
+            else
+            {
+                marker.setInt(pos, Integer.MIN_VALUE);
+                mask.setInt(pos, array.getInt(pos) - 1);
+            }
+        }
+    }
+
+    private static final void initializeMarkerAndMask_maxima_float32(Float32Array array, BinaryArray maxima, Float32Array marker, Float32Array mask)
+    {
+        for (int[] pos : array.positions())
+        {
+            if (maxima.getBoolean(pos))
+            {
+                marker.setFloat(pos, Float.MAX_VALUE);
+                mask.setFloat(pos, Float.MAX_VALUE);
+            }
+            else
+            {
+                marker.setFloat(pos, Float.NEGATIVE_INFINITY);
+                mask.setFloat(pos, Math.nextDown(array.getFloat(pos)));
+            }
+        }
+    }
+
+    private static final void initializeMarkerAndMask_maxima_float64(Float64Array array, BinaryArray maxima, Float64Array marker, Float64Array mask)
+    {
+        for (int[] pos : array.positions())
+        {
+            if (maxima.getBoolean(pos))
+            {
+                marker.setValue(pos, Double.MAX_VALUE);
+                mask.setValue(pos, Double.MAX_VALUE);
+            }
+            else
+            {
+                marker.setValue(pos, Double.NEGATIVE_INFINITY);
+                mask.setValue(pos, Math.nextDown(array.getValue(pos)));
+            }
+        }
+    }
+
+    private static final void initializeMarkerAndMask_minima_int(IntArray<?> array, BinaryArray minima, IntArray<?> marker, IntArray<?> mask)
+    {
+        for (int[] pos : array.positions())
+        {
+            if (minima.getBoolean(pos))
+            {
+                marker.setInt(pos, Integer.MIN_VALUE);
+                mask.setInt(pos, Integer.MIN_VALUE);
+            }
+            else
+            {
+                marker.setInt(pos, Integer.MAX_VALUE);
+                mask.setInt(pos, array.getInt(pos) + 1);
+            }
+        }
+    }
+
+    private static final void initializeMarkerAndMask_minima_float32(Float32Array array, BinaryArray minima, Float32Array marker, Float32Array mask)
+    {
+        for (int[] pos : array.positions())
+        {
+            if (minima.getBoolean(pos))
+            {
+                marker.setFloat(pos, Float.NEGATIVE_INFINITY);
+                mask.setFloat(pos, Float.NEGATIVE_INFINITY);
+            }
+            else
+            {
+                marker.setFloat(pos, Float.POSITIVE_INFINITY);
+                mask.setFloat(pos, Math.nextUp(array.getFloat(pos)));
+            }
+        }
+    }
+
+    private static final void initializeMarkerAndMask_minima_float64(Float64Array array, BinaryArray minima, Float64Array marker, Float64Array mask)
+    {
+        for (int[] pos : array.positions())
+        {
+            if (minima.getBoolean(pos))
+            {
+                marker.setValue(pos, Double.NEGATIVE_INFINITY);
+                mask.setValue(pos, Double.NEGATIVE_INFINITY);
+            }
+            else
+            {
+                marker.setValue(pos, Double.POSITIVE_INFINITY);
+                mask.setValue(pos, Math.nextUp(array.getValue(pos)));
+            }
+        }
+    }
+    
 
     // ==============================================================
     // Constructor
