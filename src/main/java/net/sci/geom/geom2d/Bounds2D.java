@@ -9,7 +9,8 @@ import net.sci.geom.Bounds;
 import net.sci.geom.geom2d.polygon.Polygon2D;
 
 /**
- * Contains the bounds of a planar geometry.
+ * Contains the bounds of a planar geometry. Provides method for converting to
+ * rectangle geometry.
  * 
  * @author dlegland
  *
@@ -44,9 +45,8 @@ public class Bounds2D implements Bounds
             ymax = Math.max(p.y, ymax);
         }
 
-        return new Bounds2D(xmin, xmax, ymin, ymax);        
+        return new Bounds2D(xmin, xmax, ymin, ymax);
     }
-    
 
     // ===================================================================
     // class variables
@@ -65,20 +65,20 @@ public class Bounds2D implements Bounds
     {
         this(0, 0, 0, 0);
     }
-    
+
     /**
-	 * Main constructor, given bounds for x coordinate, then bounds for y
-	 * coordinate.
-	 * 
-	 * @param xmin
-	 *            the minimum value along the first dimension
-	 * @param xmax
-	 *            the maximum value along the first dimension
-	 * @param ymin
-	 *            the minimum value along the second dimension
-	 * @param ymax
-	 *            the maximum value along the second dimension
-	 */
+     * Main constructor, given bounds for x coordinate, then bounds for y
+     * coordinate.
+     * 
+     * @param xmin
+     *            the minimum value along the first dimension
+     * @param xmax
+     *            the maximum value along the first dimension
+     * @param ymin
+     *            the minimum value along the second dimension
+     * @param ymax
+     *            the maximum value along the second dimension
+     */
     public Bounds2D(double xmin, double xmax, double ymin, double ymax)
     {
         this.xmin = xmin;
@@ -88,13 +88,13 @@ public class Bounds2D implements Bounds
     }
     
     /**
-	 * Constructor from 2 points, giving extreme coordinates of the box.
-	 * 
-	 * @param p1
-	 *            a point corresponding to a corner of the box
-	 * @param p2
-	 *            a point corresponding to a corner of the box, opposite of p1
-	 */
+     * Constructor from 2 points, giving extreme coordinates of the box.
+     * 
+     * @param p1
+     *            a point corresponding to a corner of the box
+     * @param p2
+     *            a point corresponding to a corner of the box, opposite of p1
+     */
     public Bounds2D(Point2D p1, Point2D p2)
     {
         double x1 = p1.x();
@@ -113,7 +113,7 @@ public class Bounds2D implements Bounds
     
     /**
      * Computes the bounds corresponding to the union of this bounds and the
-     * input bounds. The maximal extend in each direction is kept.
+     * input bounds. The maximal extent in each direction is kept.
      * 
      * @param that
      *            the Bounds2D to combine with
@@ -127,66 +127,53 @@ public class Bounds2D implements Bounds
         double ymax = Math.max(this.ymax, that.ymax);
         return new Bounds2D(xmin, xmax, ymin, ymax);
     }
-    
+
     /**
-	 * Converts this bounding box to a rectangular polyon.
-	 * 
-	 * @return the polygon corresponding to this bounding box
-	 */
+     * Converts this bounding box to a rectangular polyon.
+     * 
+     * @return the polygon corresponding to this bounding box
+     */
     public Polygon2D getRectangle()
     {
-    	Point2D p1 = new Point2D(this.xmin, this.ymin);
-    	Point2D p2 = new Point2D(this.xmax, this.ymin);
-    	Point2D p3 = new Point2D(this.xmax, this.ymax);
-    	Point2D p4 = new Point2D(this.xmin, this.ymax);
-    	Polygon2D poly = Polygon2D.create(p1, p2, p3, p4);
-    	return poly;
+        Point2D p1 = new Point2D(this.xmin, this.ymin);
+        Point2D p2 = new Point2D(this.xmax, this.ymin);
+        Point2D p3 = new Point2D(this.xmax, this.ymax);
+        Point2D p4 = new Point2D(this.xmin, this.ymax);
+        Polygon2D poly = Polygon2D.create(p1, p2, p3, p4);
+        return poly;
     }
 
     
     // ===================================================================
     // Tests of inclusion
-    
+
     /**
-	 * Checks if this box contains the given point.
-	 * 
-	 * @param point
-	 *            the test point
-	 * @return true if the point is inside the bounding box
-	 */
+     * Checks if this box contains the given point.
+     * 
+     * @param point
+     *            the test point
+     * @return true if the point is inside the bounding box
+     */
     public boolean contains(Point2D point)
     {
-        double x = point.x();
-        double y = point.y();
-        if (x < xmin)
-            return false;
-        if (y < ymin)
-            return false;
-        if (x > xmax)
-            return false;
-        if (y > ymax)
-            return false;
-        return true;
+        return contains(point.x(), point.y());
     }
-    
+
     /**
      * Checks if this box contains the point defined by the given coordinates.
-	 * @param x
-	 *            the x-coordinate of the test point
-	 * @param y
-	 *            the y-coordinate of the test point
-	 * @return true if the point is inside the bounding box
+     * 
+     * @param x
+     *            the x-coordinate of the test point
+     * @param y
+     *            the y-coordinate of the test point
+     * @return true if the point is inside the bounding box
      */
     public boolean contains(double x, double y)
     {
-        if (x < xmin)
-            return false;
-        if (y < ymin)
-            return false;
-        if (x > xmax)
-            return false;
-        if (y > ymax)
-            return false;
+        if (x < xmin) return false;
+        if (y < ymin) return false;
+        if (x > xmax) return false;
+        if (y > ymax) return false;
         return true;
     }
 
@@ -201,32 +188,32 @@ public class Bounds2D implements Bounds
     // ===================================================================
     // Accessors to Box2D fields
     
-    public double getXMin()
+    public double xMin()
     {
         return xmin;
     }
     
-    public double getXMax()
+    public double xMax()
     {
         return xmax;
     }
     
-    public double getYMin()
+    public double yMin()
     {
         return ymin;
     }
     
-    public double getYMax()
+    public double yMax()
     {
         return ymax;
     }
     
-    public double getSizeX()
+    public double xExtent()
     {
         return xmax - xmin;
     }
     
-    public double getSizeY()
+    public double yExtent()
     {
         return ymax - ymin;
     }

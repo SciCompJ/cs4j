@@ -47,10 +47,10 @@ public class RegionBounds2D extends RegionAnalyzer2D<Bounds2D>
             // current diameter
             Bounds2D bound = map.get(label);
             
-            table.setValue(row, 0, bound.getXMin());
-            table.setValue(row, 1, bound.getXMax());
-            table.setValue(row, 2, bound.getYMin());
-            table.setValue(row, 3, bound.getYMax());
+            table.setValue(row, 0, bound.xMin());
+            table.setValue(row, 1, bound.xMax());
+            table.setValue(row, 2, bound.yMin());
+            table.setValue(row, 3, bound.yMax());
             row++;
         }
     

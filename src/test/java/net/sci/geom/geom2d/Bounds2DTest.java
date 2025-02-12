@@ -91,23 +91,23 @@ public class Bounds2DTest
     }
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.Bounds2D#getSizeX()}.
+     * Test method for {@link net.sci.geom.geom2d.Bounds2D#xExtent()}.
      */
     @Test
     public final void testGetSizeX()
     {
         Bounds2D bounds = new Bounds2D(10, 50, 20, 30);
-        assertEquals(40.0, bounds.getSizeX(), 0.01);
+        assertEquals(40.0, bounds.xExtent(), 0.01);
     }
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.Bounds2D#getSizeY()}.
+     * Test method for {@link net.sci.geom.geom2d.Bounds2D#yExtent()}.
      */
     @Test
     public final void testGetSizeY()
     {
         Bounds2D bounds = new Bounds2D(10, 50, 20, 30);
-        assertEquals(10.0, bounds.getSizeY(), 0.01);
+        assertEquals(10.0, bounds.yExtent(), 0.01);
     }
 
 }

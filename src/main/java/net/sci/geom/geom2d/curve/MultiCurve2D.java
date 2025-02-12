@@ -31,8 +31,7 @@ public class MultiCurve2D implements CurveShape2D
     
     public MultiCurve2D(Collection<? extends Curve2D> curves)
     {
-        this.curves = new ArrayList<Curve2D>(curves.size());
-        this.curves.addAll(curves);
+        this.curves = new ArrayList<Curve2D>(curves);
     }
     
     public MultiCurve2D(Curve2D... curves)
@@ -110,10 +109,10 @@ public class MultiCurve2D implements CurveShape2D
         for (Curve2D curve : curves)
         {
             Bounds2D box = curve.bounds();
-            xmin = Math.min(xmin, box.getXMin());
-            xmax = Math.max(xmax, box.getXMax());
-            ymin = Math.min(ymin, box.getYMin());
-            ymax = Math.max(ymax, box.getYMax());
+            xmin = Math.min(xmin, box.xMin());
+            xmax = Math.max(xmax, box.xMax());
+            ymin = Math.min(ymin, box.yMin());
+            ymax = Math.max(ymax, box.yMax());
         }
         
         return new Bounds2D(xmin, xmax, ymin, ymax);
