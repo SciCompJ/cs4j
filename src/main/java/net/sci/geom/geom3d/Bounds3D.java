@@ -23,7 +23,7 @@ public class Bounds3D implements Bounds
      * empty, returns infinite bounds.
      * 
      * @param points
-     *            the bounds to bound
+     *            the points to bound
      * @return the bounds of the points.
      */
     public static final Bounds3D of(Iterable<Point3D> points)
@@ -147,49 +147,49 @@ public class Bounds3D implements Bounds
     
 
     // ===================================================================
-    // Accessors to Box2D fields
+    // Accessors to Bounds3D fields
     
-    public double getXMin()
+    public double xMin()
     {
         return xmin;
     }
     
-    public double getXMax()
+    public double xMax()
     {
         return xmax;
     }
     
-    public double getYMin()
+    public double yMin()
     {
         return ymin;
     }
     
-    public double getYMax()
+    public double yMax()
     {
         return ymax;
     }
     
-    public double getZMin()
+    public double zMin()
     {
         return zmin;
     }
     
-    public double getZMax()
+    public double zMax()
     {
         return zmax;
     }
     
-    public double getSizeX()
+    public double xExtent()
     {
         return xmax - xmin;
     }
     
-    public double getSizeY()
+    public double yExtent()
     {
         return ymax - ymin;
     }
     
-    public double getSizeZ()
+    public double zExtent()
     {
         return zmax - zmin;
     }
@@ -203,22 +203,28 @@ public class Bounds3D implements Bounds
      */
     public boolean contains(Point3D point)
     {
-        double x = point.x();
-        double y = point.y();
-        double z = point.z();
-        
-        if (x < xmin)
-            return false;
-        if (y < ymin)
-            return false;
-        if (z < zmin)
-            return false;
-        if (x > xmax)
-            return false;
-        if (y > ymax)
-            return false;
-        if (z > zmax)
-            return false;
+        return contains(point.x(), point.y(), point.z());
+    }
+
+    /**
+     * Checks if this bounds contains the given point.
+     * 
+     * @param x
+     *            the x-coordinate of the point to evaluate
+     * @param y
+     *            the y-coordinate of the point to evaluate
+     * @param z
+     *            the z-coordinate of the point to evaluate
+     * @return true if the 3D point is within this 3D bounds
+     */
+    public boolean contains(double x, double y, double z)
+    {
+        if (x < xmin) return false;
+        if (y < ymin) return false;
+        if (z < zmin) return false;
+        if (x > xmax) return false;
+        if (y > ymax) return false;
+        if (z > zmax) return false;
         return true;
     }
 
@@ -233,18 +239,12 @@ public class Bounds3D implements Bounds
      */
     public boolean isFinite()
     {
-        if (isInfinite(xmin))
-            return false;
-        if (isInfinite(ymin))
-            return false;
-        if (isInfinite(zmin))
-            return false;
-        if (isInfinite(xmax))
-            return false;
-        if (isInfinite(ymax))
-            return false;
-        if (isInfinite(zmax))
-            return false;
+        if (isInfinite(xmin)) return false;
+        if (isInfinite(ymin)) return false;
+        if (isInfinite(zmin)) return false;
+        if (isInfinite(xmax)) return false;
+        if (isInfinite(ymax)) return false;
+        if (isInfinite(zmax)) return false;
         return true;
     }
     
