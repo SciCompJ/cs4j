@@ -3,9 +3,10 @@
  */
 package net.sci.geom.geom2d.curve;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Curve2D;
 
 /**
@@ -26,11 +27,12 @@ public interface Contour2D extends Curve2D, Boundary2D
     @Override
     public default Collection<? extends Contour2D> curves() 
     {
-        ArrayList<Contour2D> res = new ArrayList<Contour2D>(1);
-        res.add(this);
-        return res;
+        return List.of(this);
     }    
     
     @Override
     public Contour2D duplicate();
+    
+    @Override
+    public Contour2D transform(AffineTransform2D transfo);
 }
