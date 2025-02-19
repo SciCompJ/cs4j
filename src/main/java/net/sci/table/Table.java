@@ -5,6 +5,8 @@ package net.sci.table;
 
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.stream.Stream;
 
 import net.sci.axis.Axis;
@@ -82,6 +84,42 @@ public interface Table
             {
                 table.setColumnValues(c, columns[c].getValues());
                 table.setColumnName(c, columns[c].getName());
+            }
+            return table;
+        }
+        
+        return new ColumnsTable(columns);
+    }
+    
+    /**
+     * Creates a new data table from a collection of columns. If all columns are
+     * instances of NumericColumn, returns a NumericTable.
+     * 
+     * @param columns
+     *            the columns that will constitute the table
+     * @return a new Table instance
+     */
+    public static Table create(Collection<Column> columns)
+    {
+        if (columns.size() == 0)
+        {
+            throw new RuntimeException("Requires at least one column to create a table");
+        }
+        
+        // retrieve table size
+        int nCols = columns.size();
+        int nRows = columns.iterator().next().length();
+        
+        // If all columns are numeric, should return a numeric table
+        if (columns.stream().allMatch(col -> (col instanceof FloatColumn)))
+        {
+            NumericTable table = new DefaultNumericTable(nRows, nCols);
+            Iterator<Column> iter = columns.iterator();
+            for (int c = 0; c < nCols; c++)
+            {
+                NumericColumn column = (NumericColumn) iter.next();
+                table.setColumnValues(c, column.getValues());
+                table.setColumnName(c, column.getName());
             }
             return table;
         }

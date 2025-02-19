@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -39,7 +40,8 @@ public class ColumnsTable extends TableStub
     // Constructors
 
     /**
-     * Creates a new table from a list of columns. All columns must have same length.
+     * Creates a new table from a list of columns. All columns must have same
+     * length.
      * 
      * @param columns
      *            the columns that will constitute the table
@@ -52,6 +54,20 @@ public class ColumnsTable extends TableStub
             this.columns.add(col);
         }
         
+        this.columnAxis = new ColumnAxisAdapter(this);
+    }
+
+    /**
+     * Creates a new table from a collection of columns. All columns must have
+     * same length.
+     * 
+     * @param columns
+     *            the columns that will constitute the table
+     */
+    public ColumnsTable(Collection<Column> columns)
+    {
+        this.columns = new ArrayList<Column>(columns.size());
+        this.columns.addAll(columns);
         this.columnAxis = new ColumnAxisAdapter(this);
     }
 
