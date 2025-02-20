@@ -44,7 +44,7 @@ public class SlidingDiskStrelDemo
         
         // display result
         System.out.println("Dilation of Float32Array2D:");
-        dilatedF32.printContent(System.out);
+        dilatedF32.printContent(System.out, "%5.2f");
     }
     
 }

@@ -19,7 +19,7 @@ public interface Int<I extends Int<I>> extends Scalar<I>
      * 
      * @return the integer value corresponding to this Int instance.
      */
-	public int getInt();
+	public int intValue();
 	
 	/**
      * Creates a new instance of type I from the specified integer value.

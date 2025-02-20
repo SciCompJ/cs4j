@@ -151,9 +151,9 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         // iterate over elements of all arrays simultaneously
         while (rgbIter.hasNext())
         {
-            int r = rIter.next().getInt();
-            int g = gIter.next().getInt();
-            int b = bIter.next().getInt();
+            int r = rIter.next().intValue();
+            int g = gIter.next().intValue();
+            int b = bIter.next().intValue();
             rgbIter.setNext(new RGB16(r, g, b));
         }
         

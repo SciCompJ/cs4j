@@ -21,7 +21,7 @@ public class UInt8Test
     public final void test_constructorFromInt()
     {
         UInt8 data = new UInt8(-10);
-        assertEquals(0, data.getInt());
+        assertEquals(0, data.intValue());
     }
 
     /**
@@ -50,7 +50,7 @@ public class UInt8Test
         
         UInt8 res = v1.plus(v2);
         
-        assertEquals(255, res.getInt());
+        assertEquals(255, res.intValue());
     }
 
     /**
@@ -64,7 +64,7 @@ public class UInt8Test
         
         UInt8 res = v1.minus(v2);
         
-        assertEquals(0, res.getInt());
+        assertEquals(0, res.intValue());
     }
 
     /**
@@ -77,7 +77,7 @@ public class UInt8Test
         
         UInt8 res = v1.times(2);
         
-        assertEquals(255, res.getInt());
+        assertEquals(255, res.intValue());
     }
 
     /**
@@ -90,7 +90,7 @@ public class UInt8Test
         
         UInt8 res = v1.divideBy(2);
         
-        assertEquals(100, res.getInt());
+        assertEquals(100, res.intValue());
     }
 
 }

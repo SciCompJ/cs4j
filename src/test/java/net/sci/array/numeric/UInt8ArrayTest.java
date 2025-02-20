@@ -68,7 +68,7 @@ public class UInt8ArrayTest
         
         // changing the view should change original array
         array8.setInt(new int[] {4, 3}, 99);
-        assertEquals(99, array.get(4, 3).getInt());
+        assertEquals(99, array.get(4, 3).intValue());
     }
 
 	/**

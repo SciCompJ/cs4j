@@ -21,7 +21,7 @@ public class UInt16Test
     public final void test_constructorFromInt()
     {
         UInt16 data = new UInt16(-10);
-        assertEquals(0, data.getInt());
+        assertEquals(0, data.intValue());
     }
 
     /**
@@ -50,7 +50,7 @@ public class UInt16Test
         
         UInt16 res = v1.plus(v2);
         
-        assertEquals(UInt16.MAX_INT, res.getInt());
+        assertEquals(UInt16.MAX_INT, res.intValue());
     }
 
     /**
@@ -64,7 +64,7 @@ public class UInt16Test
         
         UInt16 res = v1.minus(v2);
         
-        assertEquals(20_000, res.getInt());
+        assertEquals(20_000, res.intValue());
     }
 
     /**
@@ -78,7 +78,7 @@ public class UInt16Test
         
         UInt16 res = v1.minus(v2);
         
-        assertEquals(0, res.getInt());
+        assertEquals(0, res.intValue());
     }
 
     /**
@@ -91,7 +91,7 @@ public class UInt16Test
         
         UInt16 res = v1.times(2);
         
-        assertEquals(UInt16.MAX_INT, res.getInt());
+        assertEquals(UInt16.MAX_INT, res.intValue());
     }
 
     /**
@@ -104,7 +104,7 @@ public class UInt16Test
         
         UInt16 res = v1.divideBy(2);
         
-        assertEquals(20_000, res.getInt());
+        assertEquals(20_000, res.intValue());
     }
 
 

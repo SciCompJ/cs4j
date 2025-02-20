@@ -46,7 +46,7 @@ public class DenseUInt16ArrayFactory extends AlgoStub implements UInt16Array.Fac
     {
         UInt16Array array = create(dims);
         fireStatusChanged(this, "Fill default value");
-        array.fillInt(value.getInt());
+        array.fillInt(value.intValue());
         return array;
     }
 }

@@ -46,7 +46,7 @@ public class DenseInt16ArrayFactory extends AlgoStub implements Int16Array.Facto
     {
         Int16Array array = create(dims);
         fireStatusChanged(this, "Fill default value");
-        array.fillInt(value.getInt());
+        array.fillInt(value.intValue());
         return array;
     }
 }

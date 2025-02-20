@@ -107,7 +107,7 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 	public void set(int[] pos, Int32 value)
 	{
 		int index = subsToInd(pos);
-		this.buffer[index] = value.getInt();
+		this.buffer[index] = value.intValue();
 	}
 
     
@@ -211,7 +211,7 @@ public class BufferedInt32ArrayND extends Int32ArrayND
 		@Override
 		public void set(Int32 value)
 		{
-			buffer[index] = value.getInt();
+			buffer[index] = value.intValue();
 		}
 		
 		@Override

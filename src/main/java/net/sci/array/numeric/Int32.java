@@ -79,7 +79,7 @@ public class Int32 implements Int<Int32>
     // Class methods
 
     @Override
-    public int getInt()
+    public int intValue()
     {
         return value;
     }
@@ -171,7 +171,7 @@ public class Int32 implements Int<Int32>
     @Override
     public int compareTo(Int32 other)
     {
-        return this.getInt() - other.getInt();
+        return this.intValue() - other.intValue();
     }
     
     

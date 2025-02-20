@@ -46,7 +46,7 @@ public class DenseUInt8ArrayFactory extends AlgoStub implements UInt8Array.Facto
     {
         UInt8Array array = create(dims);
         fireStatusChanged(this, "Fill default value");
-        array.fillInt(value.getInt());
+        array.fillInt(value.intValue());
         return array;
     }
 }

@@ -124,7 +124,7 @@ public class FloodFillComponentsLabeling2D extends AlgoStub implements Component
         // get image size
         int sizeX = array.size(0);
         int sizeY = array.size(1);
-        int maxLabel = labelMap.sampleElement().typeMax().getInt();
+        int maxLabel = labelMap.sampleElement().typeMax().intValue();
 
         // the label counter
         int nLabels = 0;

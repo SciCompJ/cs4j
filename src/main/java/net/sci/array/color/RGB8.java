@@ -87,7 +87,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
 
     public final static RGB8 fromUInt8(UInt8 value)
     {
-        int val = UInt8.clamp(value.getInt());
+        int val = UInt8.clamp(value.intValue());
         return new RGB8(val << 16 | val << 8 | val);
     }
 

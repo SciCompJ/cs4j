@@ -165,7 +165,7 @@ public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements Ge
         IntArray3D<?> distMap = IntArray3D.wrap(factory.create(sizeX, sizeY, sizeZ));
 	    
         // initialize empty image with either 0 (in marker), or max int value (outside marker)
-        int maxValue = distMap.typeMax().getInt();
+        int maxValue = distMap.typeMax().intValue();
         distMap.fillInts((x,y,z) -> marker.getBoolean(x, y, z) ? 0 : maxValue);
         
         return distMap;
@@ -398,7 +398,7 @@ public class GeodesicDistanceTransform3DIntHybrid extends AlgoStub implements Ge
         int sizeY = distMap.size(1);
         int sizeZ = distMap.size(2);
         double w0 = mask.getIntegerNormalizationWeight();
-        int maxValue = distMap.typeMax().getInt();
+        int maxValue = distMap.typeMax().intValue();
 
 	    for (int z = 0; z < sizeZ; z++)
 	    {

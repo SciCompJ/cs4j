@@ -21,7 +21,7 @@ public class Int16Test
     public final void test_constructorFromInt()
     {
         Int16 data = new Int16(-10);
-        assertEquals(-10, data.getInt());
+        assertEquals(-10, data.intValue());
     }
 
     /**
@@ -73,7 +73,7 @@ public class Int16Test
         
         Int16 res = v1.plus(v2);
         
-        assertEquals(Int16.MAX_INT, res.getInt());
+        assertEquals(Int16.MAX_INT, res.intValue());
     }
 
     /**
@@ -87,7 +87,7 @@ public class Int16Test
         
         Int16 res = v1.minus(v2);
         
-        assertEquals(5_000, res.getInt());
+        assertEquals(5_000, res.intValue());
     }
 
     /**
@@ -101,7 +101,7 @@ public class Int16Test
         
         Int16 res = v1.minus(v2);
         
-        assertEquals(-30, res.getInt());
+        assertEquals(-30, res.intValue());
     }
 
     /**
@@ -114,7 +114,7 @@ public class Int16Test
         
         Int16 res = v1.times(2);
         
-        assertEquals(Int16.MAX_INT, res.getInt());
+        assertEquals(Int16.MAX_INT, res.intValue());
     }
 
     /**
@@ -127,7 +127,7 @@ public class Int16Test
         
         Int16 res = v1.divideBy(2);
         
-        assertEquals(10_000, res.getInt());
+        assertEquals(10_000, res.intValue());
     }
 
 }

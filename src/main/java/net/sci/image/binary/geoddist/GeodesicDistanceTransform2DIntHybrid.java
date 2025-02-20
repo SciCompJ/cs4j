@@ -167,7 +167,7 @@ public class GeodesicDistanceTransform2DIntHybrid extends AlgoStub implements Ge
 
         // Allocate memory
         IntArray2D<?> distMap = IntArray2D.wrap(factory.create(sizeX, sizeY));
-        int maxValue = distMap.typeMax().getInt();
+        int maxValue = distMap.typeMax().intValue();
 
         // initialize empty image with either 0 (in marker), or max int value
         // (outside marker
@@ -369,7 +369,7 @@ public class GeodesicDistanceTransform2DIntHybrid extends AlgoStub implements Ge
         int sizeX = distMap.size(0);
         int sizeY = distMap.size(1);
         double w0 = mask.getIntegerNormalizationWeight();
-        int maxValue = distMap.typeMax().getInt();
+        int maxValue = distMap.typeMax().intValue();
 
         // iterate over pixels
         for (int y = 0; y < sizeY; y++)

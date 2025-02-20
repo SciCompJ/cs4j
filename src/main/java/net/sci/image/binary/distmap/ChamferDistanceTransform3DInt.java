@@ -212,7 +212,7 @@ public class ChamferDistanceTransform3DInt extends AlgoStub implements DistanceT
         IntArray3D<?> result = IntArray3D.wrap(factory.create(sizeX, sizeY, sizeZ));
         
         // initialize empty image with either 0 (background) or Inf (foreground)
-        int maxValue = result.typeMax().getInt();
+        int maxValue = result.typeMax().intValue();
         for (int z = 0; z < sizeZ; z++)
         {
             fireProgressChanged(this, z, sizeZ);

@@ -89,7 +89,7 @@ public interface Int32Array extends IntArray<Int32>
         Int32Array result = Int32Array.create(array.size());
         for (int[] pos : array.positions())
         {
-            result.setInt(pos, ((Int32) array.get(pos)).getInt());
+            result.setInt(pos, ((Int32) array.get(pos)).intValue());
         }
         return result;
     }
@@ -210,7 +210,7 @@ public interface Int32Array extends IntArray<Int32>
     @Override
     public default void set(int[] pos, Int32 value)
     {
-        setInt(pos, value.getInt());
+        setInt(pos, value.intValue());
     }
 
 	@Override
@@ -292,7 +292,7 @@ public interface Int32Array extends IntArray<Int32>
 		@Override
 		public default void set(Int32 value)
 		{
-			setInt(value.getInt());
+			setInt(value.intValue());
 		}
 	}
 
@@ -322,7 +322,7 @@ public interface Int32Array extends IntArray<Int32>
         @Override
         public int getInt(int[] pos)
         {
-            return array.get(pos).getInt();
+            return array.get(pos).intValue();
         }
 
         @Override

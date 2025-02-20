@@ -35,7 +35,7 @@ public class RunLengthInt32ArrayFactory extends AlgoStub implements Int32Array.F
     {
         Int32Array array = create(dims);
         fireStatusChanged(this, "Fill default value");
-        array.fillInt(value.getInt());
+        array.fillInt(value.intValue());
         return array;
     }
 }

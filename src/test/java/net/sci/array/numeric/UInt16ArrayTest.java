@@ -64,6 +64,6 @@ public class UInt16ArrayTest
         
         // changing the view should change original array
         array16.setInt(new int[] {4, 3}, 9999);
-        assertEquals(9999, array.get(4, 3).getInt());
+        assertEquals(9999, array.get(4, 3).intValue());
     }
 }

@@ -220,7 +220,7 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         @Override
         public void set(int[] pos, Int32 value)
         {
-            int v = -value.getInt();
+            int v = -value.intValue();
             array.set(pos, array.sampleElement().fromInt(v));
         }
 

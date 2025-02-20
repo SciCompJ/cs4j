@@ -124,7 +124,7 @@ public class UInt8 implements Int<UInt8>
     }
 
     @Override
-    public int getInt()
+    public int intValue()
     {
         return value & 0x00FF;
     }
@@ -223,7 +223,7 @@ public class UInt8 implements Int<UInt8>
     @Override
     public int compareTo(UInt8 other)
     {
-        return this.getInt() - other.getInt();
+        return this.intValue() - other.intValue();
     }
     
     

@@ -169,7 +169,7 @@ public class ChamferDistanceTransform2DInt extends AlgoStub implements ChamferDi
         
         // create new empty image, and fill it with black
         IntArray2D<?> result = IntArray2D.wrap(factory.create(sizeX, sizeY));
-        int maxValue = result.typeMax().getInt();
+        int maxValue = result.typeMax().intValue();
         
         // initialize empty image with either 0 (background) or Inf (foreground)
         for (int y = 0; y < sizeY; y++)

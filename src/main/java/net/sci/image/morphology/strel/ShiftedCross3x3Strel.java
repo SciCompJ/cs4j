@@ -163,7 +163,7 @@ public class ShiftedCross3x3Strel
             int sizeY = array.size(1);
 
             // retrieve minimum value allowed within array
-            final int defaultValue = array.typeMin().getInt();
+            final int defaultValue = array.typeMin().intValue();
             int[][] buffer = new int[3][sizeX];
 
             // init buffer with background and first two lines
@@ -298,7 +298,7 @@ public class ShiftedCross3x3Strel
             int sizeY = array.size(1);
 
             // retrieve maximum value allowed within array
-            final int defaultValue = array.typeMax().getInt(); 
+            final int defaultValue = array.typeMax().intValue(); 
 
             int[][] buffer = new int[3][sizeX];
 
@@ -524,7 +524,7 @@ public class ShiftedCross3x3Strel
             int[][] buffer = new int[3][sizeX];
 
             // retrieve minimum value allowed within array
-            final int defaultValue = array.typeMin().getInt();
+            final int defaultValue = array.typeMin().intValue();
             
             // init buffer with background and first two lines
             for (int x = 0; x < sizeX; x++)
@@ -659,7 +659,7 @@ public class ShiftedCross3x3Strel
             int sizeY = array.size(1);
 
             // retrieve maximum value allowed within array
-            final int defaultValue = array.typeMax().getInt(); 
+            final int defaultValue = array.typeMax().intValue(); 
 
             int[][] buffer = new int[3][sizeX];
 

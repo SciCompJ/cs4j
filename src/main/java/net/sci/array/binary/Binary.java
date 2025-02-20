@@ -80,7 +80,7 @@ public class Binary implements Int<Binary>
     }
 
     @Override
-    public int getInt()
+    public int intValue()
     {
         return state ? 1 : 0;
     }

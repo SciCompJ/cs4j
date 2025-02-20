@@ -133,7 +133,7 @@ public class LinearDiagDownStrel extends AlgoStub implements InPlaceStrel2D
         int sizeY = array.size(1);
 
         // retrieve minimum value allowed within array
-        final int defaultValue = array.typeMin().getInt();
+        final int defaultValue = array.typeMin().intValue();
         
         // create local histogram instance
         LocalExtremumBufferInt localMax = new LocalExtremumBufferInt(size,
@@ -294,7 +294,7 @@ public class LinearDiagDownStrel extends AlgoStub implements InPlaceStrel2D
     private void inPlaceErosionInt(IntArray2D<?> array)
     {
         // retrieve maximum value allowed within array
-        final int defaultValue = array.typeMax().getInt(); 
+        final int defaultValue = array.typeMax().intValue(); 
 
         // create local histogram instance
         LocalExtremumBufferInt localMin = new LocalExtremumBufferInt(size,

@@ -124,7 +124,7 @@ public class FloodFillComponentsLabeling3D extends AlgoStub implements Component
         int sizeZ = image.size(2);
 
         // identify the maximum label index
-        int maxLabel = labelMap.sampleElement().typeMax().getInt();
+        int maxLabel = labelMap.sampleElement().typeMax().intValue();
 
         fireStatusChanged(this, "Compute Labels...");
 

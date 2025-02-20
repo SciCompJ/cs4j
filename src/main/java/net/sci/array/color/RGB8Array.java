@@ -865,7 +865,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         @Override
         public void set(int[] pos, UInt8 value)
         {
-            RGB8 rgb = new RGB8(value.getInt());
+            RGB8 rgb = new RGB8(value.intValue());
             parent.set(pos, rgb);
         }
 

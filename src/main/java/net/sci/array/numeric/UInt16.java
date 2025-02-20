@@ -125,7 +125,7 @@ public class UInt16 implements Int<UInt16>
     }
 
     @Override
-    public int getInt()
+    public int intValue()
     {
         return value & 0x00FFFF;
     }
@@ -224,7 +224,7 @@ public class UInt16 implements Int<UInt16>
     @Override
     public int compareTo(UInt16 other)
     {
-        return this.getInt() - other.getInt();
+        return this.intValue() - other.intValue();
     }
     
     

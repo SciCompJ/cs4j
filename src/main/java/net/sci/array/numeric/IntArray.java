@@ -65,7 +65,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
         int vMin = Integer.MAX_VALUE;
         for (I i : this)
         {
-            vMin = Math.min(vMin, i.getInt());
+            vMin = Math.min(vMin, i.intValue());
         }
         return vMin;
     }
@@ -80,7 +80,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
         int vMax = Integer.MIN_VALUE;
         for (I i : this)
         {
-            vMax = Math.max(vMax, i.getInt());
+            vMax = Math.max(vMax, i.intValue());
         }
         return vMax;
     }
@@ -471,7 +471,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
         @Override
         public int getInt(int[] pos)
         {
-            return array.get(pos).getInt();
+            return array.get(pos).intValue();
         }
 
         @Override
