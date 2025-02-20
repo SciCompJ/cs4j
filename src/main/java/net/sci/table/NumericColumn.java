@@ -167,6 +167,23 @@ public interface NumericColumn extends Column
     }
     
     @Override
+    public default NumericColumn newInstance(String name, int colLength)
+    {
+        return FloatColumn.create(name, new double[colLength]);
+    }
+    
+    @Override
+    public default NumericColumn duplicate()
+    {
+        NumericColumn res = newInstance(getName(), length());
+        for (int i = 0; i < length(); i++)
+        {
+            res.setValue(i, getValue(i));
+        }
+        return res;
+    }
+    
+    @Override
     public default String contentSummary()
     {
         StringBuilder sb = new StringBuilder();

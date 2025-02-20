@@ -15,37 +15,6 @@ package net.sci.table;
 public interface Column
 {
     /**
-     * Returns the number of elements within this column.
-     * 
-     * @return the number of elements within this column
-     */
-    public int length();
-    
-    /**
-     * Returns the name associated with this column.
-     * 
-     * @return the name associated with this column
-     */
-    public String getName();
-    
-    /**
-     * Changes the name associated with this column (optional operation).
-     * 
-     * @param newName
-     *            the new name of the column
-     */
-    public void setName(String newName);
-    
-    /**
-     * Returns the value at the i-th row.
-     * 
-     * @param row
-     *            the row index within this column
-     * @return the value at specified row index
-     */
-    public Object get(int row);
-    
-    /**
      * Returns a string representation of the element at the specified row.
      * Default behavior is to convert the result of the <code>get()</code>
      * method into a String instance, but more efficient behaviors may be
@@ -88,6 +57,50 @@ public interface Column
      * @return the set of values within this column as an array of double.
      */
     public double[] getValues();
+
+    /**
+     * Returns the number of elements within this column.
+     * 
+     * @return the number of elements within this column
+     */
+    public int length();
+    
+    /**
+     * Returns the name associated with this column.
+     * 
+     * @return the name associated with this column
+     */
+    public String getName();
+    
+    /**
+     * Changes the name associated with this column (optional operation).
+     * 
+     * @param newName
+     *            the new name of the column
+     */
+    public void setName(String newName);
+    
+    /**
+     * Returns the value at the i-th row.
+     * 
+     * @param row
+     *            the row index within this column
+     * @return the value at specified row index
+     */
+    public Object get(int row);
+    
+    
+    /**
+     * Creates a new Column with the same class of content as this column and
+     * with the specified size. The content of the new column is arbitrary.
+     * 
+     * @param name
+     *            the name of the new column
+     * @param colLength
+     *            the length of the new column
+     * @return a new Column with the same class of elements.
+     */
+    public Column newInstance(String name, int colLength);
     
     /**
      * Creates a new writable version of this column.

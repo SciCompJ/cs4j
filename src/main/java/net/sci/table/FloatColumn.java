@@ -36,4 +36,13 @@ public interface FloatColumn extends NumericColumn, Iterable<Double>
     {
         return new DefaultNumericColumn(name, values);
     }
+    
+    @Override
+    public default FloatColumn newInstance(String name, int colLength)
+    {
+        return create(name, new double[colLength]);
+    }
+
+    @Override
+    public FloatColumn duplicate();
 }

@@ -155,14 +155,31 @@ public interface CategoricalColumn extends Column
         throw new RuntimeException("Can not change the value of a Categorical column");
     }
 
+    /**
+     * Creates a new Categorical column with the specified length, using the
+     * same levels as the original column.
+     * 
+     * @param name
+     *            the name of the new column
+     * @param colLength
+     *            the length of the new column
+     * @return a new Categorical column.
+     */
+    @Override
+    public default CategoricalColumn newInstance(String name, int colLength)
+    {
+        return create(name, new int[colLength], levelNames());
+    }
+    
+    @Override
+    public CategoricalColumn duplicate();
+    
     @Override
     public default String contentSummary()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.append("categorical");
-        int nLevels = levelNames().length;
-        sb.append(" with " + nLevels + " levels");
-
-        return sb.toString();
+        return new StringBuilder()
+                .append("categorical")
+                .append(" with " + levelNames().length + " levels")
+                .toString();
     }
 }

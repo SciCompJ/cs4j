@@ -94,6 +94,15 @@ public interface IntegerColumn extends NumericColumn, Iterable<Integer>
     }
     
     @Override
+    public default IntegerColumn newInstance(String name, int colLength)
+    {
+        return create(name, new int[colLength]);
+    }
+
+    @Override
+    public IntegerColumn duplicate();
+    
+    @Override
     public default String contentSummary()
     {
         StringBuilder sb = new StringBuilder();

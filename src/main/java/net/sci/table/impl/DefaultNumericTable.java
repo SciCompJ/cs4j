@@ -445,11 +445,11 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         }
 
         @Override
-        public Column duplicate()
+        public FloatColumn duplicate()
         {
             double[] values = new double[nRows];
             System.arraycopy(data[colIndex], 0, values, 0, nRows);
-            return NumericColumn.create(name, values);
+            return FloatColumn.create(name, values);
         }
 
         @Override

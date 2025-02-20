@@ -81,6 +81,15 @@ public interface LogicalColumn extends NumericColumn, Iterable<Boolean>
     }
     
     @Override
+    public default LogicalColumn newInstance(String name, int colLength)
+    {
+        return create(name, new boolean[colLength]);
+    }
+    
+    @Override
+    public LogicalColumn duplicate();
+    
+    @Override
     public default String contentSummary()
     {
         StringBuilder sb = new StringBuilder();

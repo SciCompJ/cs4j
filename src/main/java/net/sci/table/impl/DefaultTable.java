@@ -559,7 +559,7 @@ public class DefaultTable extends TableStub
         }
         
         @Override
-        public Column duplicate()
+        public CategoricalColumn duplicate()
         {
             int[] indices = new int[nRows];
             for (int r = 0; r < nRows; r++)
@@ -591,7 +591,7 @@ public class DefaultTable extends TableStub
         }
 
         @Override
-        public Column duplicate()
+        public NumericColumn duplicate()
         {
             double[] values = new double[nRows];
             System.arraycopy(data[colIndex], 0, values, 0, nRows);

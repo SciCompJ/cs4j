@@ -6,7 +6,6 @@ package net.sci.table.impl;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import net.sci.table.Column;
 import net.sci.table.FloatColumn;
 
 /**
@@ -81,7 +80,7 @@ public class DefaultNumericColumn extends ColumnStub implements FloatColumn
     }
 
     @Override
-    public Column duplicate()
+    public FloatColumn duplicate()
     {
         double[] values = new double[this.data.length];
         System.arraycopy(this.data, 0, values, 0, this.data.length);

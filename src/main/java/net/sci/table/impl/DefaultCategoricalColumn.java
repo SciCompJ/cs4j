@@ -6,7 +6,6 @@ package net.sci.table.impl;
 import java.util.Arrays;
 
 import net.sci.table.CategoricalColumn;
-import net.sci.table.Column;
 
 /**
  * Default implementation for categorical columns.
@@ -19,8 +18,8 @@ public class DefaultCategoricalColumn extends ColumnStub implements CategoricalC
     public DefaultCategoricalColumn(String name, int[] indices, String[] levels)
     {
         super(name);
-        this.data = indices;
-        this.levels = levels;
+        this.data = Arrays.copyOf(indices, indices.length);
+        this.levels = Arrays.copyOf(levels, levels.length);
     }
     
     
@@ -82,9 +81,8 @@ public class DefaultCategoricalColumn extends ColumnStub implements CategoricalC
         return this.levels[this.data[row]];
     }
 
-
     @Override
-    public Column duplicate()
+    public CategoricalColumn duplicate()
     {
         int[] indices = Arrays.copyOf(this.data, this.data.length);
         String[] levels = Arrays.copyOf(this.levels, this.levels.length);

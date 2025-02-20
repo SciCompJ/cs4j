@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 
-import net.sci.table.Column;
 import net.sci.table.LogicalColumn;
 
 /**
@@ -42,7 +41,7 @@ public class DefaultLogicalColumn extends ColumnStub implements LogicalColumn
     }
 
     @Override
-    public Column duplicate()
+    public LogicalColumn duplicate()
     {
         boolean[] data2 = Arrays.copyOf(this.data, this.data.length);
         return new DefaultLogicalColumn(this.name, data2);
