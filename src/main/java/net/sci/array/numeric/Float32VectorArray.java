@@ -36,15 +36,12 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
 
     public static Float32VectorArray create(int[] dims, int sizeV)
     {
-        switch (dims.length)
+        return switch (dims.length)
         {
-            case 2:
-                return Float32VectorArray2D.create(dims[0], dims[1], sizeV);
-            case 3:
-                return Float32VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
-            default:
-                return Float32VectorArrayND.create(dims, sizeV);
-        }
+            case 2 -> Float32VectorArray2D.create(dims[0], dims[1], sizeV);
+            case 3 -> Float32VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
+            default -> Float32VectorArrayND.create(dims, sizeV);
+        };
     }
     
     @SuppressWarnings("unchecked")
@@ -305,7 +302,6 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         {
             return new Iterable<Float32Array>()
             {
-
                 @Override
                 public java.util.Iterator<Float32Array> iterator()
                 {

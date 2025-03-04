@@ -36,15 +36,12 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
 
     public static Float64VectorArray create(int[] dims, int sizeV)
     {
-        switch (dims.length)
+        return switch (dims.length)
         {
-            case 2:
-                return Float64VectorArray2D.create(dims[0], dims[1], sizeV);
-            case 3:
-                return Float64VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
-            default:
-                return Float64VectorArrayND.create(dims, sizeV);
-        }
+            case 2 -> Float64VectorArray2D.create(dims[0], dims[1], sizeV);
+            case 3 -> Float64VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
+            default -> Float64VectorArrayND.create(dims, sizeV);
+        };
     }
     
     @SuppressWarnings("unchecked")
