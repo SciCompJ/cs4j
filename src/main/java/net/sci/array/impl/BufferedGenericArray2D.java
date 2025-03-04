@@ -7,8 +7,9 @@ import net.sci.array.Array;
 import net.sci.array.Array2D;
 
 /**
+ * @param <T> the type of elements stored within the array.
+ * 
  * @author dlegland
- *
  */
 public class BufferedGenericArray2D<T> extends GenericArray2D<T>
 {
@@ -74,14 +75,14 @@ public class BufferedGenericArray2D<T> extends GenericArray2D<T>
         System.arraycopy(this.buffer, 0, newBuffer, 0, n);
         return new BufferedGenericArray2D<T>(this.size0, this.size1, (T[]) newBuffer);
     }
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Class<T> elementClass()
-	{
-		return (Class<T>) initValue.getClass();
-	}
-
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<T> elementClass()
+    {
+        return (Class<T>) initValue.getClass();
+    }
+    
     @Override
     public Iterator iterator()
     {

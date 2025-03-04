@@ -8,8 +8,9 @@ import net.sci.array.Array3D;
 import net.sci.util.MathUtils;
 
 /**
+ * @param <T> the type of elements stored within the array.
+ * 
  * @author dlegland
- *
  */
 public class BufferedGenericArray3D<T> extends GenericArray3D<T>
 {
@@ -119,14 +120,14 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
         System.arraycopy(this.buffer, 0, newBuffer, 0, n);
         return new BufferedGenericArray3D<T>(this.size0, this.size1, this.size2, (T[]) newBuffer);
     }
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Class<T> elementClass()
-	{
-		return (Class<T>) initValue.getClass();
-	}
-
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<T> elementClass()
+    {
+        return (Class<T>) initValue.getClass();
+    }
+    
     @Override
     public Iterator iterator()
     {

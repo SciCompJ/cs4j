@@ -9,6 +9,8 @@ import net.sci.array.Array;
 /**
  * Interface for array implementation based on a generic data type.
  * 
+ * @param <T> the type of elements stored within the array.
+ * 
  * @author dlegland
  *
  */
@@ -19,15 +21,12 @@ public interface GenericArray<T> extends Array<T>
 
     public static <T> GenericArray<T> create(int[] dims, T value)
     {
-        switch (dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return new BufferedGenericArray2D<T>(dims[0], dims[1], value);
-        case 3:
-            return new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], value);
-        default:
-            return new BufferedGenericArrayND<T>(dims, value);
-        }
+            case 2 -> new BufferedGenericArray2D<T>(dims[0], dims[1], value);
+            case 3 -> new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], value);
+            default -> new BufferedGenericArrayND<T>(dims, value);
+        };
     }
 
 
@@ -46,21 +45,20 @@ public interface GenericArray<T> extends Array<T>
     /**
      * The default factory for generation of GenericArray instances containing
      * values with type T.
+     * 
+     * @param <T> the type of elements stored within the array.
      */
     public static class DefaultFactory<T> extends AlgoStub implements Array.Factory<T>
     {
         @Override
         public GenericArray<T> create(int[] dims, T value)
         {
-            switch (dims.length)
+            return switch (dims.length)
             {
-            case 2:
-                return new BufferedGenericArray2D<T>(dims[0], dims[1], value);
-            case 3:
-                return new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], value);
-            default:
-                return new BufferedGenericArrayND<T>(dims, value);
-            }
+                case 2 -> new BufferedGenericArray2D<T>(dims[0], dims[1], value);
+                case 3 -> new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], value);
+                default -> new BufferedGenericArrayND<T>(dims, value);
+            };
         }
     };
 }

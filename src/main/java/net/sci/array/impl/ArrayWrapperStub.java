@@ -10,6 +10,8 @@ import net.sci.array.Array;
  * and dimensionality of the inner array.
  * 
  * The type of the two arrays may differ.
+ * 
+ * @param <T> the type of elements stored within the array.
  */
 public abstract class ArrayWrapperStub<T> implements Array<T>
 {

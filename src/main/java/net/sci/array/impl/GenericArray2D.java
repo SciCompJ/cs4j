@@ -6,6 +6,11 @@ package net.sci.array.impl;
 import net.sci.array.Array2D;
 
 /**
+ * Default implementation for a 2D array containing elements with an arbitrary
+ * type.
+ * 
+ * @param <T> the type of elements stored within the array.
+ * 
  * @author dlegland
  *
  */
@@ -30,7 +35,7 @@ public abstract class GenericArray2D<T> extends Array2D<T> implements GenericArr
     @Override
     public GenericArray<T> newInstance(int... dims)
     {
-        return GenericArray.create(dims, iterator().next());
+        return GenericArray.create(dims, this.sampleElement());
     }
     
 }
