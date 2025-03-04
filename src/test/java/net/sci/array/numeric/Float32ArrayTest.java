@@ -64,7 +64,7 @@ public class Float32ArrayTest
         
         // changing the view should change original array
         array32.setFloat(new int[] {4, 3}, 9999.9f);
-        assertEquals(9999.9f, array.get(4, 3).getFloat(), 0.01f);
+        assertEquals(9999.9f, array.get(4, 3).floatValue(), 0.01f);
     }
 
 }

@@ -441,7 +441,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector, 
         @Override
         public void set(int x, int y, int z, Float32 f)
         {
-            Float32VectorArray3D.this.setFloat(x, y, z, channel, f.getFloat());
+            Float32VectorArray3D.this.setFloat(x, y, z, channel, f.floatValue());
         }
 
         @Override

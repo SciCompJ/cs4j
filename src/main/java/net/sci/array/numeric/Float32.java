@@ -65,9 +65,11 @@ public class Float32 implements Scalar<Float32>
     // Class methods
 
     /**
+     * Returns the content of this Float32 as a float value.
+     * 
      * @return this value as a float
      */
-    public float getFloat()
+    public float floatValue()
     {
         return value;
     }

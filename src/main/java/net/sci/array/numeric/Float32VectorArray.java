@@ -417,7 +417,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         @Override
         public void set(int[] pos, Float32 value)
         {
-            array.setFloat(pos, channel, value.getFloat());
+            array.setFloat(pos, channel, value.floatValue());
         }
 
         @Override

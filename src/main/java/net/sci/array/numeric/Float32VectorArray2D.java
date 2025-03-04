@@ -183,7 +183,7 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector, 
         @Override
         public void set(int x, int y, Float32 value)
         {
-            Float32VectorArray2D.this.setFloat(x, y, channel, value.getFloat());
+            Float32VectorArray2D.this.setFloat(x, y, channel, value.floatValue());
         }
 
         @Override
