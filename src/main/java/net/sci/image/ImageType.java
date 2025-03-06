@@ -178,8 +178,8 @@ public interface ImageType
             if (array instanceof IntArray)
             {
                 // for integer arrays, use range defined by type
-                double minVal = ((IntArray<?>) array).typeMin().getValue();
-                double maxVal = ((IntArray<?>) array).typeMax().getValue();
+                double minVal = ((IntArray<?>) array).typeMin().value();
+                double maxVal = ((IntArray<?>) array).typeMax().value();
                 image.displaySettings.displayRange = new double[] { minVal, maxVal};
             }
             else

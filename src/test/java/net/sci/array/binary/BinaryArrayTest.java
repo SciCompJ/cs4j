@@ -86,7 +86,7 @@ public class BinaryArrayTest
         double acc = 0;
         for (UInt8 val : mask.selectElements(array))
         {
-            acc += val.getValue();
+            acc += val.value();
         }
         
         assertEquals(30*4+10*2, acc, 0.01);

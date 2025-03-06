@@ -108,7 +108,7 @@ public class Binary implements Int<Binary>
     }
 
     @Override
-    public double getValue()
+    public double value()
     {
         return state ? 1 : 0;
     }

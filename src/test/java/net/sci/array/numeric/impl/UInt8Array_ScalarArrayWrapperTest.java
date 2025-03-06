@@ -51,7 +51,7 @@ public class UInt8Array_ScalarArrayWrapperTest
 		double sum = 0;
 		for (UInt8 val : wrap) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		assertEquals(2400, sum, .01);
@@ -71,7 +71,7 @@ public class UInt8Array_ScalarArrayWrapperTest
 		double sum = 0;
 		for (UInt8 val : wrap) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		assertEquals(3000, sum, .01);

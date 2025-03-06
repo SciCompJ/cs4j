@@ -38,7 +38,7 @@ public class BufferedFloat64Array2DTest
 		double sum = 0;
 		for (Float64 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
         assertEquals(20, count);

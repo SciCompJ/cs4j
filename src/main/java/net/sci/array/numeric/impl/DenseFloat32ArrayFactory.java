@@ -46,7 +46,7 @@ public class DenseFloat32ArrayFactory extends AlgoStub implements Float32Array.F
     {
         Float32Array array = create(dims);
         fireStatusChanged(this, "Fill default value");
-        array.fillValue(value.getValue());
+        array.fillValue(value.value());
         return array;
     }
 }

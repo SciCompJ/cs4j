@@ -405,7 +405,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
         @Override
         public default double getValue()
         {
-            return get().getValue();
+            return get().value();
         }
 
         @Override

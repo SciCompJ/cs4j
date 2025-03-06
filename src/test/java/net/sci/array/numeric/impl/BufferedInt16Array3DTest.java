@@ -57,7 +57,7 @@ public class BufferedInt16Array3DTest
 		double sum = 0;
 		for (Int16 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		

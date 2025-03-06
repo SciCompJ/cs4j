@@ -39,7 +39,7 @@ public class Complement extends AlgoStub implements ArrayOperator
         this.complement = complement;
         if (complement instanceof Scalar)
         {
-            this.complementValue = ((Scalar<?>) complement).getValue();
+            this.complementValue = ((Scalar<?>) complement).value();
         }
     }
     

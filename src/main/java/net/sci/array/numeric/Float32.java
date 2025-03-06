@@ -96,7 +96,7 @@ public class Float32 implements Scalar<Float32>
      * @see net.sci.array.type.Scalar#getValue()
      */
     @Override
-    public double getValue()
+    public double value()
     {
         return value;
     }

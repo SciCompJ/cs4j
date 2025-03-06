@@ -351,7 +351,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector,F
         @Override
         public void set(int x, int y, int z, Float64 value)
         {
-            Float64VectorArray3D.this.setValue(x, y, z, channel, value.getValue());
+            Float64VectorArray3D.this.setValue(x, y, z, channel, value.value());
         }
 
 

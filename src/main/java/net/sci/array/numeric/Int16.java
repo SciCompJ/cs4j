@@ -149,7 +149,7 @@ public class Int16 implements Int<Int16>
     }
 
     @Override
-    public double getValue()
+    public double value()
     {
         return value;
     }

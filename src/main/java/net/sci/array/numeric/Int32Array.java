@@ -375,7 +375,7 @@ public interface Int32Array extends IntArray<Int32>
 		@Override
 		public void set(int[] pos, Int32 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(pos, value.value());
 		}
 	}
 

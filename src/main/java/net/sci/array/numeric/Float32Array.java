@@ -96,7 +96,7 @@ public interface Float32Array extends ScalarArray<Float32>
     private static Float32Array convertScalarArray(ScalarArray<?> array)
     {
         Float32Array result = Float32Array.create(array.size());
-        result.fillValues(pos -> ((Scalar<?>) array.get(pos)).getValue());
+        result.fillValues(pos -> ((Scalar<?>) array.get(pos)).value());
         return result;
     }
     
@@ -377,7 +377,7 @@ public interface Float32Array extends ScalarArray<Float32>
         @Override
         public double getValue(int[] pos)
         {
-            return array.get(pos).getValue();
+            return array.get(pos).value();
         }
 
         @Override
@@ -436,7 +436,7 @@ public interface Float32Array extends ScalarArray<Float32>
 		@Override
 		public void set(int[] pos, Float32 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(pos, value.value());
 		}
 	}
 

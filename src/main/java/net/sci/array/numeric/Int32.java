@@ -107,7 +107,7 @@ public class Int32 implements Int<Int32>
     }
 
     @Override
-    public double getValue()
+    public double value()
     {
         return value;
     }

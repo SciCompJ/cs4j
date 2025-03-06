@@ -56,7 +56,7 @@ public class BufferedUInt8Array3DTest
 		double sum = 0;
 		for (UInt8 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		

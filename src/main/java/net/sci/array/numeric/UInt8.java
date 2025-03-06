@@ -152,7 +152,7 @@ public class UInt8 implements Int<UInt8>
     }
 
     @Override
-    public double getValue()
+    public double value()
     {
         return value & 0x00FF;
     }

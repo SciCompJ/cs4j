@@ -793,7 +793,7 @@ public interface BinaryArray extends IntArray<Binary>
         @Override
         public void set(int[] pos, Binary value)
         {
-            array.setValue(pos, value.getValue());
+            array.setValue(pos, value.value());
         }
 
         @Override
@@ -884,7 +884,7 @@ public interface BinaryArray extends IntArray<Binary>
             @Override
             public void setBoolean(boolean b)
             {
-                iter.setValue(new Binary(b).getValue());
+                iter.setValue(new Binary(b).value());
             }
 
             @Override
@@ -896,7 +896,7 @@ public interface BinaryArray extends IntArray<Binary>
             @Override
             public void set(Binary value)
             {
-                iter.setValue(value.getValue());
+                iter.setValue(value.value());
             }
             
             @Override

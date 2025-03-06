@@ -44,7 +44,7 @@ public class BufferedInt16Array2DTest
 		double sum = 0;
 		for (Int16 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		assertEquals(30000, sum, .01);

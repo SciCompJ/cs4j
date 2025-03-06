@@ -57,7 +57,7 @@ public class BufferedInt32Array3DTest
 		double sum = 0;
 		for (Int32 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		

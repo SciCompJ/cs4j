@@ -46,5 +46,5 @@ public interface Scalar<S extends Scalar<S>> extends Numeric<S>, Comparable<S>
      * 
      * @return the value as a double
      */
-    public double getValue();
+    public double value();
 }

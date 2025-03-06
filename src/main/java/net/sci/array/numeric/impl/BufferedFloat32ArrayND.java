@@ -93,7 +93,7 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
 	public void set(int[] pos, Float32 value)
 	{
 		int index = subsToInd(pos);
-		this.buffer[index] = (float) value.getValue();
+		this.buffer[index] = (float) value.value();
 	}
 
 	@Override
@@ -218,7 +218,7 @@ public class BufferedFloat32ArrayND extends Float32ArrayND
         @Override
         public void set(Float32 value)
         {
-        	buffer[index] = (float) value.getValue();
+        	buffer[index] = (float) value.value();
         }
 
         @Override

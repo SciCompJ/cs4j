@@ -451,7 +451,7 @@ public interface UInt16Array extends IntArray<UInt16>
 		@Override
 		public void set(int[] pos, UInt16 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(pos, value.value());
 		}
 	}
 	

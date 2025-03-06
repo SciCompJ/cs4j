@@ -156,7 +156,7 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector,F
         @Override
         public void set(int x, int y, Float64 value)
         {
-            Float64VectorArray2D.this.setValue(x, y, channel, value.getValue());
+            Float64VectorArray2D.this.setValue(x, y, channel, value.value());
         }
 
 

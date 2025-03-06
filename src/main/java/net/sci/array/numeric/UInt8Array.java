@@ -484,7 +484,7 @@ public interface UInt8Array extends IntArray<UInt8>
 		@Override
 		public void set(int[] pos, UInt8 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(pos, value.value());
 		}
 	}
 	

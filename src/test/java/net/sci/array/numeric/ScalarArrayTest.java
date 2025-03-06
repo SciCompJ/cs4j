@@ -72,7 +72,7 @@ public class ScalarArrayTest
         double sum0 = 0;
         for (Scalar<?> v : array)
         {
-            sum0 += v.getValue();
+            sum0 += v.value();
         }
         
         ScalarArray<?> res = array.reshape(4, 3, 2);
@@ -88,7 +88,7 @@ public class ScalarArrayTest
         double sum2 = 0;
         for (Scalar<?> v : res)
         {
-            sum2 += v.getValue();
+            sum2 += v.value();
         }
         assertEquals(sum0, sum2, .01);
     }

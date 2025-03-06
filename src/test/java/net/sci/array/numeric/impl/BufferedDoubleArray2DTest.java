@@ -20,7 +20,7 @@ public class BufferedDoubleArray2DTest
 		double sum = 0;
 		for (Float64 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		

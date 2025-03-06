@@ -23,7 +23,7 @@ public class BufferedInt32ArrayNDTest
 		double sum = 0;
 		for (Int32 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 	

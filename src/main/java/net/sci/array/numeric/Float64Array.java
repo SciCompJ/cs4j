@@ -91,7 +91,7 @@ public interface Float64Array extends ScalarArray<Float64>
         Float64Array result = Float64Array.create(array.size());
         for (int[] pos : array.positions())
         {
-            result.setValue(pos, ((Float64) array.get(pos)).getValue());
+            result.setValue(pos, ((Float64) array.get(pos)).value());
         }
         return result;
     }
@@ -198,7 +198,7 @@ public interface Float64Array extends ScalarArray<Float64>
     @Override
     public default void set(int[] pos, Float64 value)
     {
-        setValue(pos, value.getValue());
+        setValue(pos, value.value());
     }
 
 	@Override
@@ -286,7 +286,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		@Override
 		public default void set(Float64 value)
 		{
-			setValue(value.getValue());
+			setValue(value.value());
 		}
 	}
 
@@ -316,7 +316,7 @@ public interface Float64Array extends ScalarArray<Float64>
         @Override
         public double getValue(int[] pos)
         {
-            return array.get(pos).getValue();
+            return array.get(pos).value();
         }
 
         @Override
@@ -367,7 +367,7 @@ public interface Float64Array extends ScalarArray<Float64>
 		@Override
 		public void set(int[] pos, Float64 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(pos, value.value());
 		}
 	}
 

@@ -41,7 +41,7 @@ public class DenseBinaryArrayFactory extends AlgoStub implements BinaryArray.Fac
     public BinaryArray create(int[] dims, Binary value)
     {
         BinaryArray array = create(dims);
-        array.fillValue(value.getValue());
+        array.fillValue(value.value());
         return array;
     }
 }

@@ -423,7 +423,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
      */
     public default ScalarArray<S> plus(S v)
     {
-        return plus(v.getValue());
+        return plus(v.value());
     }
 
     /**
@@ -436,7 +436,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
      */
     public default ScalarArray<S> minus(S v)
     {
-        return minus(v.getValue());
+        return minus(v.value());
     }
     
     @Override
@@ -651,7 +651,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
          */
         public default double nextValue()
         {
-            return next().getValue();
+            return next().value();
         }
 
         /**
@@ -727,7 +727,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
         @Override
         public double getValue(int[] pos)
         {
-            return array.get(pos).getValue();
+            return array.get(pos).value();
         }
 
         @Override

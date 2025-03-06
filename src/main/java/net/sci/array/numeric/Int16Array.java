@@ -425,7 +425,7 @@ public interface Int16Array extends IntArray<Int16>
 		@Override
 		public void set(int[] pos, Int16 value)
 		{
-			array.setValue(pos, value.getValue());
+			array.setValue(pos, value.value());
 		}
 	}
 	

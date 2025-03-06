@@ -38,7 +38,7 @@ public class BufferedFloat32Array3DTest
 		double sum = 0;
 		for (Float32 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
         assertEquals(60, count);

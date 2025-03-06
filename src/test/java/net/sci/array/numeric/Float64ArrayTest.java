@@ -64,7 +64,7 @@ public class Float64ArrayTest
         
         // changing the view should change original array
         array64.setValue(new int[] {4, 3}, 9999.9);
-        assertEquals(9999.9, array.get(4, 3).getValue(), 0.01);
+        assertEquals(9999.9, array.get(4, 3).value(), 0.01);
     }
 
 }

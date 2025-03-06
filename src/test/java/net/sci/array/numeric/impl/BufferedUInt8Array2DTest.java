@@ -40,7 +40,7 @@ public class BufferedUInt8Array2DTest
         double sum = 0;
         for (UInt8 val : array) 
         {
-            sum += val.getValue();
+            sum += val.value();
             count++;
         }
         assertEquals(300, sum, .01);
@@ -75,7 +75,7 @@ public class BufferedUInt8Array2DTest
 		double sum = 0;
 		for (UInt8 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		assertEquals(300, sum, .01);
@@ -95,7 +95,7 @@ public class BufferedUInt8Array2DTest
 		double sum = 0;
 		for (UInt8 val : array2) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		assertEquals(240, sum, .01);

@@ -379,7 +379,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         @Override
         public void set(int[] pos, Float64 value)
         {
-            array.setValue(pos, channel, value.getValue());
+            array.setValue(pos, channel, value.value());
         }
 
         @Override

@@ -44,7 +44,7 @@ public class BufferedUInt16Array2DTest
 		double sum = 0;
 		for (UInt16 val : array) 
 		{
-			sum += val.getValue();
+			sum += val.value();
 			count++;
 		}
 		assertEquals(30000, sum, .01);
