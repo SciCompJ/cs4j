@@ -26,21 +26,41 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
     // =============================================================
     // Constructors
 
-    public Float64Vector(int nChannels)
+    /**
+     * Creates a new vector with the specified number of components.
+     * 
+     * @param nComps the number of components of this vector.
+     */
+    public Float64Vector(int nComps)
     {
-        this.data = new double[nChannels];
+        this.data = new double[nComps];
     }
 
+    /**
+     * Creates a new vector based on the specified array of double values.
+     * 
+     * This implementation keeps reference to the specified array. To avoid
+     * modifying the initial array, either use a copy of the initial array, or
+     * use the {@code duplicate} method of the new vector instance.
+     * 
+     * @param array
+     *            the array containing vector components.
+     */
     public Float64Vector(double[] array)
     {
-        this.data = new double[array.length];
-        System.arraycopy(array, 0, this.data, 0, array.length);
+        this.data = array;
     }
 
     
     // =============================================================
     // New methods
 
+    /**
+     * Creates a new Float64Vector with same size and containing the same
+     * values, but using a different inner array of double value.
+     * 
+     * @return a copy of this vector.
+     */
     public Float64Vector duplicate()
     {
         Float64Vector res = new Float64Vector(this.data.length);

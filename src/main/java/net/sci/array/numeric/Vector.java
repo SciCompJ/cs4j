@@ -60,7 +60,7 @@ public interface Vector<V extends Vector<V,S>, S extends Scalar<S>> extends Nume
     // Interface methods
     
     /**
-     * Returns the number of component of this vector.
+     * Returns the number of components of this vector.
      * 
      * @return the number of components of this vector. 
      */

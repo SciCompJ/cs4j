@@ -26,15 +26,29 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     // =============================================================
     // Constructors
 
-    public Float32Vector(int nChannels)
+    /**
+     * Creates a new vector with the specified number of components.
+     * 
+     * @param nComps the number of components of this vector.
+     */
+    public Float32Vector(int nComps)
     {
-        this.data = new float[nChannels];
+        this.data = new float[nComps];
     }
 
+    /**
+     * Creates a new vector based on the specified array of float values.
+     * 
+     * This implementation keeps reference to the specified array. To avoid
+     * modifying the initial array, either use a copy of the initial array, or
+     * use the {@code duplicate} method of the new vector instance.
+     * 
+     * @param array
+     *            the array containing vector components.
+     */
     public Float32Vector(float[] array)
     {
-        this.data = new float[array.length];
-        System.arraycopy(array, 0, this.data, 0, array.length);
+        this.data = array;
     }
 
     public Float32Vector(double[] array)
@@ -73,6 +87,26 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
         return this.data[c];
     }
     
+    /**
+     * Changes the specified component of the float vector. No bound checking is
+     * performed.
+     * 
+     * @param c
+     *            the index of the component
+     * @param value
+     *            the new value of the specified component
+     */
+    public void setFloat(int c, float value)
+    {
+        this.data[c] = value;
+    }
+    
+    /**
+     * Creates a new Float32Vector with same size and containing the same
+     * values, but using a different inner array of float value.
+     * 
+     * @return a copy of this vector.
+     */
     public Float32Vector duplicate()
     {
         Float32Vector res = new Float32Vector(this.data.length);
@@ -96,12 +130,7 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     @Override
     public double[] getValues()
     {
-        double[] res = new double[this.data.length];
-        for(int c = 0; c < this.data.length; c++)
-        {
-            res[c] = this.data[c];
-        }
-        return res;
+        return getValues(new double[this.data.length]);
     }
 
     /**
