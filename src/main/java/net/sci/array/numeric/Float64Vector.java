@@ -20,7 +20,7 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
     // =============================================================
     // Class variables
 
-    double[] data;
+    final double[] data;
 
     
     // =============================================================
@@ -39,6 +39,17 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
 
     
     // =============================================================
+    // New methods
+
+    public Float64Vector duplicate()
+    {
+        Float64Vector res = new Float64Vector(this.data.length);
+        System.arraycopy(this.data, 0, res.data, 0, this.data.length);
+        return res;
+    }
+    
+    
+    // =============================================================
     // Implementation of Vector interface
 
     @Override
@@ -53,9 +64,7 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
     @Override
     public double[] getValues()
     {
-        double[] res = new double[this.data.length];
-        System.arraycopy(this.data, 0, res, 0, this.data.length);
-        return res;
+        return getValues(new double[this.data.length]);
     }
 
     /**
@@ -64,10 +73,7 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
     @Override
     public double[] getValues(double[] values)
     {
-        for (int c = 0; c < this.data.length; c++)
-        {
-            values[c] = this.data[c];
-        }
+        System.arraycopy(this.data, 0, values, 0, this.data.length);
         return values;
     }
 
@@ -81,10 +87,23 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
     }
 
     @Override
+    public void setValue(int i, double value)
+    {
+        this.data[i] = value;
+    }
+
+    @Override
     public Float64 get(int i)
     {
         return new Float64(this.data[i]);
     }
+    
+    @Override
+    public void set(int i, Float64 value)
+    {
+        this.data[i] = value.value();
+    }
+    
     
     // =============================================================
     // Implementation of the Numeric interface

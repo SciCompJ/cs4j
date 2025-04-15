@@ -600,11 +600,23 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
 
     @Override
+    public void setValue(int i, double value)
+    {
+        throw new RuntimeException("RGB8 is an immutable class");
+    }
+
+    @Override
     public UInt8 get(int c)
     {
         return new UInt8(getSample(c));
     }
 
+    @Override
+    public void set(int i, UInt8 value)
+    {
+        throw new RuntimeException("RGB8 is an immutable class");
+    }
+    
     @Override
     public int size()
     {

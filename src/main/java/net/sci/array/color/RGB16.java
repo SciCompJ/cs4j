@@ -516,11 +516,23 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     }
 
     @Override
+    public void setValue(int i, double value)
+    {
+        throw new RuntimeException("RGB16 is an immutable class");
+    }
+
+    @Override
     public UInt16 get(int c)
     {
         return new UInt16(getSample(c));
     }
 
+    @Override
+    public void set(int i, UInt16 value)
+    {
+        throw new RuntimeException("RGB16 is an immutable class");
+    }
+    
     @Override
     public int size()
     {

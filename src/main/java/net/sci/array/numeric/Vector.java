@@ -96,6 +96,17 @@ public interface Vector<V extends Vector<V,S>, S extends Scalar<S>> extends Nume
     public double getValue(int i);
 
     /**
+     * Changes the numerical value at the specified index, using a double
+     * (optional operation).
+     * 
+     * @param i
+     *            the index of element
+     * @param value
+     *            the new element value at specified index
+     */
+    public void setValue(int i, double value);
+
+    /**
      * Returns the value at the specified index.
      * 
      * @param i
@@ -104,4 +115,13 @@ public interface Vector<V extends Vector<V,S>, S extends Scalar<S>> extends Nume
      */
     public S get(int i);
 
+    /**
+     * Changes the value at the specified index (optional operation).
+     * 
+     * @param i
+     *            the index of element
+     * @param value
+     *            the new element value at specified index
+     */
+    public void set(int i, S value);
 }

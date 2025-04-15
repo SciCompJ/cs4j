@@ -20,7 +20,7 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     // =============================================================
     // Class variables
 
-    float[] data;
+    final float[] data;
     
 
     // =============================================================
@@ -73,6 +73,13 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
         return this.data[c];
     }
     
+    public Float32Vector duplicate()
+    {
+        Float32Vector res = new Float32Vector(this.data.length);
+        System.arraycopy(this.data, 0, res.data, 0, this.data.length);
+        return res;
+    }
+    
 
     // =============================================================
     // Implementation of Vector interface
@@ -120,9 +127,21 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     }
 
     @Override
+    public void setValue(int i, double value)
+    {
+        this.data[i] = (float) value;
+    }
+
+    @Override
     public Float32 get(int c)
     {
         return new Float32(this.data[c]);
+    }
+    
+    @Override
+    public void set(int i, Float32 value)
+    {
+        this.data[i] = value.floatValue();
     }
     
     
