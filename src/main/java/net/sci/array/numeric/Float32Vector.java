@@ -5,6 +5,8 @@ package net.sci.array.numeric;
 
 import static java.lang.Float.floatToRawIntBits;
 
+import net.sci.util.HashCodeBuilder;
+
 /**
  * A vector containing 32-bits floating point values (floats).
  *
@@ -193,19 +195,19 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     // =============================================================
     // Override Object methods
 
-    public boolean equals(Object that)
+    public boolean equals(Object obj)
     {
         // check for self-comparison
-        if (this == that) return true;
+        if (this == obj) return true;
         
         // check for class
-        if (that instanceof Float32Vector thatVector)
+        if (obj instanceof Float32Vector that)
         {
             // now a proper field-by-field evaluation can be made
-            if (this.data.length != thatVector.data.length) return false;
+            if (this.data.length != that.data.length) return false;
             for (int i = 0; i < this.data.length; i++)
             {
-                if (floatToRawIntBits(this.data[i]) != floatToRawIntBits(thatVector.data[i])) return false;
+                if (floatToRawIntBits(this.data[i]) != floatToRawIntBits(that.data[i])) return false;
             }
             return true;
         }
@@ -214,25 +216,8 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     
     public int hashCode()
     {
-        int code = 23;
-        for (float f : this.data)
-        {
-            code = hash(code, floatToRawIntBits(f));
-        }
-        return code;
-    }
-
-    /** longs. */
-    private static int hash(int aSeed, int anInt)
-    {
-        return firstTerm(aSeed) + (int) (anInt ^ (anInt >>> 16));
-    }
-
-    // PRIVATE
-    private static final int ODD_PRIME_NUMBER = 37;
-
-    private static int firstTerm(int aSeed)
-    {
-        return ODD_PRIME_NUMBER * aSeed;
+        return new HashCodeBuilder()
+                .append(this.data)
+                .build();
     }
 }

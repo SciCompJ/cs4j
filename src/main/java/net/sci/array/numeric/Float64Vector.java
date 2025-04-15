@@ -5,6 +5,8 @@ package net.sci.array.numeric;
 
 import static java.lang.Double.doubleToLongBits;
 
+import net.sci.util.HashCodeBuilder;
+
 /**
  * A vector containing 64-bits floating point values (doubles).
  *
@@ -153,19 +155,19 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
     // =============================================================
     // Override Object methods
 
-    public boolean equals(Object that)
+    public boolean equals(Object obj)
     {
         // check for self-comparison
-        if (this == that) return true;
+        if (this == obj) return true;
         
         // check for class
-        if (that instanceof Float64Vector thatVector)
+        if (obj instanceof Float64Vector that)
         {
             // now a proper field-by-field evaluation can be made
-            if (this.data.length != thatVector.data.length) return false;
+            if (this.data.length != that.data.length) return false;
             for (int i = 0; i < this.data.length; i++)
             {
-                if (doubleToLongBits(this.data[i]) != doubleToLongBits(thatVector.data[i])) return false;
+                if (doubleToLongBits(this.data[i]) != doubleToLongBits(that.data[i])) return false;
             }
             return true;
         }
@@ -174,25 +176,8 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
 
     public int hashCode()
     {
-        int code = 23;
-        for (double d : this.data)
-        {
-            code = hash(code, doubleToLongBits(d));
-        }
-        return code;
-    }
-
-    /** longs. */
-    private static int hash(int aSeed, long aLong)
-    {
-        return firstTerm(aSeed) + (int) (aLong ^ (aLong >>> 32));
-    }
-
-    // PRIVATE
-    private static final int ODD_PRIME_NUMBER = 37;
-
-    private static int firstTerm(int aSeed)
-    {
-        return ODD_PRIME_NUMBER * aSeed;
+        return new HashCodeBuilder()
+                .append(this.data)
+                .build();
     }
 }
