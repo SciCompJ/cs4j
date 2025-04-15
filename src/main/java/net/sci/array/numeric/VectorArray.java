@@ -9,6 +9,8 @@ import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
+import net.sci.array.numeric.process.VectorArrayL2Norm;
+import net.sci.array.numeric.process.VectorArrayMaxNorm;
 
 /**
  * Arrays containing vector of floating-point values.
@@ -37,17 +39,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      */
     public static ScalarArray<?> norm(VectorArray<?, ?> array)
     {
-        // allocate memory for result
-        Float32Array result = Float32Array.create(array.size());
-
-        // iterate over both arrays in parallel
-        double[] values = new double[array.channelCount()];
-        for(int[] pos : array.positions())
-        {
-            result.setValue(pos, Vector.norm(array.getValues(pos, values)));
-        }
-
-        return result;
+        return new VectorArrayL2Norm().processVector(array);
     }
 
     /**
@@ -64,18 +56,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      */
     public static ScalarArray<?> maxNorm(VectorArray<?, ?> array)
     {
-        // allocate memory for result
-        Float32Array result = Float32Array.create(array.size());
-        
-        // iterate over both arrays in parallel
-        double[] values = new double[array.channelCount()];
-        for(int[] pos : array.positions())
-        {
-            array.getValues(pos, values);
-            result.setValue(pos, Vector.maxNorm(values));
-        }
-
-        return result;
+        return new VectorArrayMaxNorm().processVector(array);
     }
 
     
