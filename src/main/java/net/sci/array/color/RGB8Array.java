@@ -28,7 +28,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     // =============================================================
     // Static variables
 
-    public static final Factory factory = new DenseRGB8ArrayFactory();
+    public static final Factory defaultFactory = new DenseRGB8ArrayFactory();
     
     
     // =============================================================
@@ -36,7 +36,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
 
     public static RGB8Array create(int... dims)
     {
-        return factory.create(dims);
+        return defaultFactory.create(dims);
     }
 
     /**
@@ -652,9 +652,9 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     }
 
     @Override
-    public default Array.Factory<RGB8> factory()
+    public default Factory factory()
     {
-        return factory;
+        return defaultFactory;
     }
 
     @Override
@@ -818,7 +818,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         }
     }
 
-    static class Wrapper  extends ArrayWrapperStub<RGB8> implements RGB8Array
+    static class Wrapper extends ArrayWrapperStub<RGB8> implements RGB8Array
     {
         Array<RGB8> array;
         
@@ -891,7 +891,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     /**
      * Specialization of the ArrayFactory for generating instances of RGB8Array.
      */
-    public interface Factory extends IntVectorArray.Factory<RGB8>
+    public interface Factory extends IntVectorArray.Factory<RGB8,UInt8>
     {
         /**
          * Creates a new RGB8Array of the specified dimensions, initialized
@@ -901,8 +901,14 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
          *            the dimensions of the new array
          * @return a new RGB8Array initialized with zeros
          */
-        public RGB8Array create(int... dims);
+        public RGB8Array create(int[] dims);
 
+        public default RGB8Array create(int[] dims, int nComponents)
+        {
+            if (nComponents == 3) return create(dims);
+            throw new RuntimeException("Can not create a RGB8Array with number of components other than 3");
+        }
+        
         /**
          * Creates a new RGB8Array with the specified dimensions, filled with
          * the specified initial value.

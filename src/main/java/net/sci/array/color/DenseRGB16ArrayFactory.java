@@ -19,17 +19,12 @@ public class DenseRGB16ArrayFactory extends AlgoStub implements RGB16Array.Facto
     public RGB16Array create(int... dims)
     {
         fireStatusChanged(this, "Allocating memory");
-            switch (dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return new BufferedPackedShortRGB16Array2D(dims[0], dims[1]);
-        case 3:
-        {
-            return new BufferedPackedShortRGB16Array3D(dims[0], dims[1], dims[2]);
-        }
-        default:
-            return new BufferedPackedShortRGB16ArrayND(dims);
-        }
+            case 2 -> new BufferedPackedShortRGB16Array2D(dims[0], dims[1]);
+            case 3 -> new BufferedPackedShortRGB16Array3D(dims[0], dims[1], dims[2]);
+            default -> new BufferedPackedShortRGB16ArrayND(dims);
+        };
     }
 
     @Override

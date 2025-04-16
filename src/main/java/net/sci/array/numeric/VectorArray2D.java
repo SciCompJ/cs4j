@@ -3,7 +3,6 @@
  */
 package net.sci.array.numeric;
 
-import net.sci.array.Array;
 import net.sci.array.Array2D;
 
 /**
@@ -296,7 +295,7 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
         }
 
         @Override
-        public Array.Factory<V> factory()
+        public VectorArray.Factory<V,S> factory()
         {
             return this.array.factory();
         }

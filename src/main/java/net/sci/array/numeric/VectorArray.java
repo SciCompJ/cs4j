@@ -429,12 +429,38 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
         return result;
     }
     
-    public VectorArray.Iterator<V, S> iterator();
+    @Override
+    public Factory<V,S> factory();
+    
+    @Override
+    public Iterator<V, S> iterator();
     
     
     // =============================================================
     // Inner interface
     
+    /**
+     * Specialization of the Array Factory for generating instances of
+     * VectorArray. Provides a new method for creating arrays with specified
+     * dimension and number of components.
+     */
+    public interface Factory<V extends Vector<V, S>, S extends Scalar<S>> extends Array.Factory<V>
+    {
+        /**
+         * Creates a new VectorArray with the specified dimensions and number of
+         * components. Note that for some specialization of VectorArray, the
+         * number of components may be fixed, and this method may throw an
+         * exception.
+         * 
+         * @param dims
+         *            the dimensions of the array to be created
+         * @param nComopnents
+         *            the number of components of the vectors
+         * @return a new instance of VectorArray
+         */
+        public VectorArray<V,S> create(int[] dims, int nComponents);
+    }
+
     public interface Iterator<V extends Vector<V, S>, S extends Scalar<S>> extends Array.Iterator<V>
     {
         /**

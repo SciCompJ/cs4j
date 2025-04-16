@@ -3,7 +3,6 @@
  */
 package net.sci.array.numeric;
 
-import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.impl.ArrayWrapperStub;
 
@@ -19,7 +18,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
     // =============================================================
     // Static variables
 
-    public static final Array.Factory<Float64Vector> factory = new DefaultFactory()
+    public static final Factory defaultFactory = new Factory()
     {
         @Override
         public Float64VectorArray create(int[] dims, Float64Vector value)
@@ -27,6 +26,12 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
             Float64VectorArray array = Float64VectorArray.create(dims, value.size());
             array.fill(value);
             return array;
+        }
+
+        @Override
+        public Float64VectorArray create(int[] dims, int nComponents)
+        {
+            return Float64VectorArray.create(dims, nComponents);
         }
     };
     
@@ -114,9 +119,9 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
     }
 
     @Override
-    public default Array.Factory<Float64Vector> factory()
+    public default Factory factory()
     {
-        return factory;
+        return defaultFactory;
     }
 
     @Override
@@ -124,15 +129,10 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
     {
         // create output array
         Float64VectorArray result = Float64VectorArray.create(this.size(), this.channelCount());
-
-        // initialize iterators
-        Array.PositionIterator iter1 = this.positionIterator();
-        Array.PositionIterator iter2 = result.positionIterator();
         
-        // copy values into output array
-        while(iter1.hasNext())
+        for (int[] pos : result.positions())
         {
-            result.setValues(iter2.next(), this.getValues(iter1.next()));
+            result.setValues(pos, this.getValues(pos));
         }
         
         // return output
@@ -221,9 +221,10 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
     // Specialization of the Factory interface
 
     /**
-     * Specialization of the ArrayFactory for generating instances of Float64VectorArray.
+     * Specialization of the {@code VectorArray.Factory} for generating instances of
+     * {@code Float64VectorArray}.
      */
-    public interface Factory extends VectorArray.Factory<Float64Vector>
+    public interface Factory extends VectorArray.Factory<Float64Vector, Float64>
     {
         /**
          * Creates a new Float64VectorArray with the specified dimensions, filled with
@@ -236,22 +237,11 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
          * @return a new instance of Float64VectorArray
          */
         public Float64VectorArray create(int[] dims, Float64Vector value);
+        
+        @Override
+        public Float64VectorArray create(int[] dims, int nComponents);
     }
 
-    /**
-     * The default factory for generation of Float64VectorArray instances.
-     */
-    public static class DefaultFactory extends AlgoStub implements Factory
-    {
-        @Override
-        public Float64VectorArray create(int[] dims, Float64Vector value)
-        {
-            Float64VectorArray array = Float64VectorArray.create(dims, value.size());
-            array.fill(value);
-            return array;
-        }
-    };
-    
     /**
      * Wraps an array containing <code>Float64Vector</code> instances into an
      * explicit instance of <code>Float64VectorArray</code>.

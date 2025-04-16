@@ -3,7 +3,6 @@
  */
 package net.sci.array.numeric;
 
-import net.sci.array.Array;
 import net.sci.array.Array3D;
 
 /**
@@ -163,7 +162,7 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
     @Override
     public VectorArray3D<V, S> duplicate()
     {
-        VectorArray3D<V, S> result = VectorArray3D.wrap(newInstance(this.size0, this.size1));
+        VectorArray3D<V, S> result = VectorArray3D.wrap(newInstance(this.size0, this.size1, this.size2));
         
         double[] buf = new double[this.channelCount()];
         
@@ -347,7 +346,7 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
         }
 
         @Override
-        public Array.Factory<V> factory()
+        public VectorArray.Factory<V,S> factory()
         {
             return this.array.factory();
         }
@@ -525,7 +524,7 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
             }
 
             @Override
-            public VectorArray.Factory<V> factory()
+            public VectorArray.Factory<V,S> factory()
             {
                 return Wrapper.this.factory();
             }

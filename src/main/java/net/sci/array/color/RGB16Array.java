@@ -25,7 +25,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     // =============================================================
     // Static variables
 
-    public static final Factory factory = new DenseRGB16ArrayFactory();
+    public static final Factory defaultFactory = new DenseRGB16ArrayFactory();
     
     
     // =============================================================
@@ -33,7 +33,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
 
     public static RGB16Array create(int... dims)
     {
-        return factory.create(dims);
+        return defaultFactory.create(dims);
     }
 
     /**
@@ -464,9 +464,9 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     }
 
     @Override
-    public default Array.Factory<RGB16> factory()
+    public default Factory factory()
     {
-        return factory;
+        return defaultFactory;
     }
 
     @Override
@@ -665,7 +665,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     /**
      * Specialization of the ArrayFactory for generating instances of RGB16Array.
      */
-    public interface Factory extends IntVectorArray.Factory<RGB16>
+    public interface Factory extends IntVectorArray.Factory<RGB16, UInt16>
     {
         /**
          * Creates a new RGB16Array of the specified dimensions, initialized
@@ -677,6 +677,12 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
          */
         public RGB16Array create(int... dims);
 
+        public default RGB16Array create(int[] dims, int nComponents)
+        {
+            if (nComponents == 3) return create(dims);
+            throw new RuntimeException("Can not create a RGB16Array with number of components other than 3");
+        }
+        
         /**
          * Creates a new RGB16Array with the specified dimensions, filled with
          * the specified initial value.

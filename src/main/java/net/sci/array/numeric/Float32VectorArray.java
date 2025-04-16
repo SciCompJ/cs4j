@@ -19,7 +19,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
     // =============================================================
     // Static variables
 
-    public static final Array.Factory<Float32Vector> factory = new DefaultFactory()
+    public static final Factory defaultFactory = new Factory()
     {
         @Override
         public Float32VectorArray create(int[] dims, Float32Vector value)
@@ -27,6 +27,12 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
             Float32VectorArray array = Float32VectorArray.create(dims, value.size());
             array.fill(value);
             return array;
+        }
+
+        @Override
+        public Float32VectorArray create(int[] dims, int nComponents)
+        {
+            return Float32VectorArray.create(dims, nComponents);
         }
     };
     
@@ -122,9 +128,9 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
     }
 
     @Override
-    public default Array.Factory<Float32Vector> factory()
+    public default Factory factory()
     {
-        return factory;
+        return defaultFactory;
     }
 
     @Override
@@ -133,16 +139,11 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         // create output array
         Float32VectorArray result = Float32VectorArray.create(this.size(), this.channelCount());
 
-        // initialize iterators
-        Array.PositionIterator iter1 = this.positionIterator();
-        Array.PositionIterator iter2 = result.positionIterator();
-
-        // copy values into output array
-        while (iter1.hasNext())
+        for (int[] pos : result.positions())
         {
-            result.setValues(iter2.next(), this.getValues(iter1.next()));
+            result.setValues(pos, this.getValues(pos));
         }
-
+        
         // return output
         return result;
     }
@@ -230,7 +231,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
      * Specialization of the ArrayFactory for generating instances of
      * Float32VectorArray.
      */
-    public interface Factory extends VectorArray.Factory<Float32Vector>
+    public interface Factory extends VectorArray.Factory<Float32Vector, Float32>
     {
         /**
          * Creates a new Float32VectorArray with the specified dimensions, filled with
@@ -243,12 +244,16 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
          * @return a new instance of Float32VectorArray
          */
         public Float32VectorArray create(int[] dims, Float32Vector value);
+        
+        @Override
+        public Float32VectorArray create(int[] dims, int nComponents);
+        
     }
 
     /**
      * The default factory for generation of Float32VectorArray instances.
      */
-    public static class DefaultFactory extends AlgoStub implements Factory
+    public static class DefaultFactory extends AlgoStub implements VectorArray.Factory<Float32Vector, Float32>
     {
         @Override
         public Float32VectorArray create(int[] dims, Float32Vector value)
@@ -256,6 +261,12 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
             Float32VectorArray array = Float32VectorArray.create(dims, value.size());
             array.fill(value);
             return array;
+        }
+
+        @Override
+        public VectorArray<Float32Vector, Float32> create(int[] dims, int nComponents)
+        {
+            return Float32VectorArray.create(dims, nComponents);
         }
     };
     
