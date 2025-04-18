@@ -39,6 +39,11 @@ public interface ImageType
     // =============================================================
     // Implementation of global constants
 
+    /**
+     * Grayscale image type, ususally corresponding to integer data with
+     * non-negative values. Images are rendered using a linear variation from
+     * black to white. Values are rescaled according to the display range.
+     */
     public final static ImageType GRAYSCALE = new ImageType()
     {
         @Override
@@ -139,6 +144,11 @@ public interface ImageType
         }
     };
 
+    /**
+     * Intensity image type, corresponding to data with scalar values that can
+     * be positive or negative. Images are rendered using a linear variation
+     * from black to white. Values are rescaled according to the display range.
+     */
     public final static ImageType INTENSITY = new ImageType()
     {
         @Override
@@ -197,6 +207,10 @@ public interface ImageType
     };
 
 
+    /**
+     * Distance image type, corresponding to data with scalar positive values.
+     * For floating point values, NaN values are considered as background.
+     */
     public final static ImageType DISTANCE = new ImageType()
     {
         @Override
@@ -279,6 +293,12 @@ public interface ImageType
         }
     };
 
+    /**
+     * Binary image type, containing array of @code Binary} data type.
+     * 
+     * Represented with two colors, usually Red for foreground and white for
+     * background.
+     */
     public final static ImageType BINARY = new ImageType()
     {
         @Override
@@ -356,6 +376,13 @@ public interface ImageType
         }
     };
     
+    /**
+     * Label image type. Image data can be integers, of floating point values
+     * restricted to integers.
+     * 
+     * Labels are represented with colors, using a cyclic colormap. The value 0
+     * correspond to the background and is represented with a specific color.
+     */
     public final static ImageType LABEL = new ImageType()
     {
         @Override
@@ -374,7 +401,7 @@ public interface ImageType
             ColorMap lut = image.getDisplaySettings().getColorMap();
             if (lut == null)
             {
-                lut = ColorMaps.GRAY.createColorMap(256); 
+                lut = ColorMaps.GLASBEY.createColorMap(256); 
             }
 
             // Computes the color model
@@ -389,7 +416,7 @@ public interface ImageType
             
             // Populate the raster
             WritableRaster raster = bufImg.getRaster();
-            int nLabels = lut.size() - 1;
+            int nColors = lut.size() - 1;
             for (int y = 0; y < sizeY; y++)
             {
                 for (int x = 0; x < sizeX; x++)
@@ -397,7 +424,7 @@ public interface ImageType
                     int index = intArray.getInt(x, y);
                     if (index > 0)
                     {
-                        index = ((index - 1) % nLabels) + 1;
+                        index = ((index - 1) % nColors) + 1;
                     }
                     raster.setSample(x, y, 0, index); 
                 }
@@ -442,6 +469,9 @@ public interface ImageType
         }
     };
 
+    /**
+     * Color image type, usually containing either RGB8 or RGB16 data.
+     */
     public final static ImageType COLOR = new ImageType()
     {
         @Override
@@ -586,6 +616,10 @@ public interface ImageType
         }
     };
     
+    /**
+     * Complex image type, composed of two components (real and imaginary).
+     * Represented with the module if the complex values.
+     */
     public final static ImageType COMPLEX = new ImageType()
     {
         @Override
@@ -631,6 +665,12 @@ public interface ImageType
         }
     };
 
+    /**
+     * Gradient image type, containing values with Vector type. The difference
+     * with the vector type is the initialization of the channel names.
+     * 
+     * Represented with the norm of the vectors.
+     */
     public final static ImageType GRADIENT = new ImageType()
     {
         @Override
@@ -692,6 +732,11 @@ public interface ImageType
         }
     };
 
+    /**
+     * Gradient image type, containing values with Vector type.
+     * 
+     * Represented with the norm of the vectors.
+     */
     public final static ImageType VECTOR = new ImageType()
     {
         @Override
@@ -752,7 +797,112 @@ public interface ImageType
             return "Vector";
         }
     };
+    
+    /**
+     * Image type with values that vary around zero. Examples are deviations
+     * from a standard value, components of gradient vectors...
+     * 
+     * For floating point values, NaN values are considered as background.
+     */
+    public final static ImageType DIVERGING = new ImageType()
+    {
+        @Override
+        public BufferedImage createAwtImage(Image image)
+        {
+            // Check adequacy of array type with image type
+            Array<?> array = image.getData();
+            if (array.dimensionality() != 2)
+            {
+                throw new RuntimeException("Requires an image with array dimensionality equal to 2");
+            }
+            if (!(array instanceof ScalarArray))
+            {
+                throw new RuntimeException("Divergent images must contain an array of Scalars");
+            }
+            ScalarArray2D<?> array2d = ScalarArray2D.wrapScalar2d((ScalarArray<?>) array);
+            DisplaySettings settings = image.getDisplaySettings();
+            
+            // extract LUT from image, or create one otherwise
+            ColorMap lut = settings.getColorMap();
+            if (lut == null)
+            {
+                lut = ColorMaps.BLUE_WHITE_RED.createColorMap(256); 
+            }
 
+            // Computes the color model
+            IndexColorModel cm = createIndexColorModel(lut, settings.backgroundColor);
+            
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
+            
+            // Create the AWT image
+            BufferedImage bufImg = new BufferedImage(sizeX, sizeY, BufferedImage.TYPE_BYTE_INDEXED, cm);
+           
+            // Populate the raster
+            WritableRaster raster = bufImg.getRaster();
+            double v0 = settings.getDisplayRange()[0];
+            double v1 = settings.getDisplayRange()[1];
+            double range = (v1 - v0); 
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    double value = array2d.getValue(x, y);
+                    int index = Double.isFinite(value) ? (int) Math.clamp((value - v0) * 255.0 / range, 0, 254) + 1 : 0;
+                    raster.setSample(x, y, 0, index);
+                }
+            }
+
+            return bufImg;
+        }
+
+        @Override
+        public boolean isCompatibleWith(Array<?> array)
+        {
+            return Scalar.class.isAssignableFrom(array.elementClass());
+        }
+
+        @Override
+        public void setupCalibration(Image image)
+        {
+            image.getCalibration().setChannelAxis(new CategoricalAxis("Value", new String[] { "Value" }));
+        }
+
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
+            DisplaySettings settings = image.getDisplaySettings();
+            
+            // updates display range
+            Array<?> array = image.getData();
+            if (array instanceof IntArray)
+            {
+                // for integer arrays, use range defined by type
+                double maxVal = ((IntArray<?>) array).typeMax().value();
+                image.displaySettings.displayRange = new double[] { -maxVal, maxVal};
+            }
+            else
+            {
+                // default value range for floating point values
+                image.displaySettings.displayRange = new double[] { 0.0, 1.0};
+            }
+            
+            // compute JET lut by default
+            settings.setColorMap(ColorMaps.BLUE_WHITE_RED.createColorMap(256));
+            // Display NaN values as green.
+            settings.setBackgroundColor(RGB8.GREEN);
+        }
+
+        @Override
+        public String toString()
+        {
+            return "Value";
+        }
+    };
+
+    /**
+     * An Unknown image type.
+     */
     public final static ImageType UNKNOWN = new ImageType()
     {
         @Override
@@ -825,6 +975,14 @@ public interface ImageType
      */
     public java.awt.image.BufferedImage createAwtImage(Image image);
     
+    /**
+     * Checks if the array specified as parameter is compatible with this image
+     * type.
+     * 
+     * @param array
+     *            an array containing image data
+     * @return true if the array class is compatible with this image type.
+     */
     public boolean isCompatibleWith(Array<?> array);
     
     /**
@@ -832,8 +990,8 @@ public interface ImageType
      * method is intended to be called during initialization of Image class.
      * Updates some settings such as channel names.
      * 
-     * @param array
-     *            the image data
+     * @param image
+     *            the image to calibrate
      */
     public void setupCalibration(Image image);
     

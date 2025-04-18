@@ -533,7 +533,7 @@ public class Image
 	
     public boolean isScalarImage()
     {
-        return isGrayscaleImage() || isLabelImage() || this.type == ImageType.INTENSITY || this.type == ImageType.DISTANCE;
+        return isGrayscaleImage() || isLabelImage() || this.type == ImageType.INTENSITY || this.type == ImageType.DISTANCE || this.type == ImageType.DIVERGING;
     }
 
     public boolean isLabelImage()
