@@ -3,8 +3,6 @@
  */
 package net.sci.image.io.tiff;
 
-import java.io.IOException;
-import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +18,6 @@ import net.sci.array.numeric.UInt8Array;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.ImageType;
-import net.sci.image.io.BinaryDataReader;
 import net.sci.image.io.tiff.TiffFileInfo.Compression;
 import net.sci.image.io.tiff.TiffFileInfo.PixelType;
 
@@ -45,11 +42,13 @@ public class BaselineTags implements TagSet
             super(CODE, "NewSubfileType", "A general indication of the kind of data contained in this subfile");
         }
     
+        @Override
         public void process(TiffFileInfo info)
         {
             info.subFileType = TiffFileInfo.SubFileType.fromValue(value);
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.LONG;
@@ -71,6 +70,7 @@ public class BaselineTags implements TagSet
             super(CODE, "SubfileType", "(deprecated) A general indication of the kind of data contained in this subfile");
         }
     
+        @Override
         public void process(TiffFileInfo info)
         {
             System.out.println("Warning: TiffTag with code 255 (SubFileType) is deprecated.");
@@ -89,11 +89,13 @@ public class BaselineTags implements TagSet
             super(CODE, "ImageWidth", "The number of columns in the image");
         }
     
+        @Override
         public void process(TiffFileInfo info)
         {
             info.width = value;
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.LONG;
@@ -114,11 +116,13 @@ public class BaselineTags implements TagSet
             super(CODE, "ImageHeight", "The number of rows of pixels in the image");
         }
     
+        @Override
         public void process(TiffFileInfo info)
         {
             info.height = value;
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.LONG;
@@ -150,51 +154,48 @@ public class BaselineTags implements TagSet
         {
             super(CODE, "BitsPerSample", "Number of bits per component");
         }
-    
-        public void init(BinaryDataReader dataReader) throws IOException
+        
+        /**
+         * Initializes the "pixelType" field of the specified FileInfo. 
+         */
+        @Override
+        public void process(TiffFileInfo info)
         {
             if (count == 1)
             {
-                // Scalar type images (grayscale)
+                // Scalar image types (grayscale)
                 if (value == 8)
-                    this.content = PixelType.GRAY8;
+                    info.pixelType = PixelType.GRAY8;
                 else if (value == 16)
-                    this.content = PixelType.GRAY16_UNSIGNED;
+                    info.pixelType = PixelType.GRAY16_UNSIGNED;
                 else if (value == 32)
-                    this.content = PixelType.GRAY32_FLOAT;
+                    info.pixelType = PixelType.GRAY32_FLOAT;
                 else if (value == 12)
-                    this.content = PixelType.GRAY12_UNSIGNED;
+                    info.pixelType = PixelType.GRAY12_UNSIGNED;
                 else if (value == 1)
-                    this.content = PixelType.BITMAP;
+                    info.pixelType = PixelType.BITMAP;
                 else
-                    throw new IOException(
-                            "Unsupported BitsPerSample: " + value);
+                    throw new RuntimeException("Unsupported BitsPerSample: " + value);
             } 
             else if (count == 3)
             {
                 // Case of color images stored as 3 bands/channels
-                int bitDepth = readShort(dataReader);
+                int bitDepth = ((int[]) this.content)[0];
 
                 if (bitDepth == 8)
                 {
-                    this.content = PixelType.RGB;
+                    info.pixelType = PixelType.RGB;
                 } else if (bitDepth == 16)
                 {
-                    this.content = PixelType.RGB48;
+                    info.pixelType = PixelType.RGB48;
                 } else
                 {
-                    throw new IOException(
-                            "Can only open 8 and 16 bit/channel RGB images ("
-                                    + bitDepth + ")");
+                    throw new RuntimeException("Can only open 8 and 16 bit/channel RGB images (" + bitDepth + ")");
                 }
             }
         }
         
-        public void process(TiffFileInfo info)
-        {
-            info.pixelType = (PixelType) this.content;
-        }
-        
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.SHORT;
@@ -229,11 +230,13 @@ public class BaselineTags implements TagSet
             super(CODE, "CompressionMode", "Compression scheme used on the image data");
         }
     
+        @Override
         public void process(TiffFileInfo info)
         {
             info.compression = Compression.fromValue(value);
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.SHORT;
@@ -255,12 +258,14 @@ public class BaselineTags implements TagSet
             super(CODE, "PhotometricInterpretation", "The color space of the image data");
         }
     
+        @Override
         public void process(TiffFileInfo info)
         {
             info.photometricInterpretation = value;
             info.whiteIsZero = value == 0;
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.SHORT;
@@ -327,6 +332,7 @@ public class BaselineTags implements TagSet
                     "The logical order of bits within a byte");
         }
 
+        @Override
         public void process(TiffFileInfo info)
         {
             if (value == 2)
@@ -349,11 +355,7 @@ public class BaselineTags implements TagSet
                     "A string that describes the subject of the image");
         }
         
-        public void init(BinaryDataReader dataReader) throws IOException
-        {
-            this.content = readAscii(dataReader);
-        }
-        
+        @Override
         public void process(TiffFileInfo info)
         {
             info.imageDescription = (String) this.content;
@@ -401,16 +403,14 @@ public class BaselineTags implements TagSet
             super(CODE, "StripOffsets", "For each strip, the byte offset of that strip");
         }
         
-        public void init(BinaryDataReader dataReader) throws IOException
-        {
-            this.content = readArray(dataReader);
-        }
-        
+        @Override
         public void process(TiffFileInfo info)
         {
-            info.stripOffsets = (int[]) this.content;
+            
+            info.stripOffsets = this.count == 1 ? new int[] {this.value} : (int[]) this.content;
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.LONG;
@@ -431,6 +431,7 @@ public class BaselineTags implements TagSet
             super(CODE, "Orientation", "The orientation of the image with respect to the rows and columns");
         }
 
+        @Override
         public void process(TiffFileInfo info)
         {
             info.orientation = TiffFileInfo.Orientation.fromValue(value);
@@ -448,6 +449,7 @@ public class BaselineTags implements TagSet
             super(CODE, "SamplesPerPixel", "The number of components per pixel");
         }
         
+        @Override
         public void process(TiffFileInfo info)
         {
             // Eventually update pixel type value
@@ -463,6 +465,8 @@ public class BaselineTags implements TagSet
                 info.pixelType = PixelType.ARGB;
             }
         }
+        
+        @Override
         public TiffTag init(Image image)
         {
             int samplesPerPixel = 1;
@@ -490,6 +494,7 @@ public class BaselineTags implements TagSet
             super(CODE, "RowsPerStrip", "The number of rows per strip");
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.LONG;
@@ -512,16 +517,13 @@ public class BaselineTags implements TagSet
             super(CODE, "StripByteCounts", "For each strip, the number of bytes in the strip after compression");
         }
 
-        public void init(BinaryDataReader dataReader) throws IOException
-        {
-            this.content = readArray(dataReader);
-        }
-        
+        @Override
         public void process(TiffFileInfo info)
         {
-            info.stripLengths = (int[]) this.content;
+            info.stripLengths = this.count == 1 ? new int[] {this.value} : (int[]) this.content;
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             int bytesPerPixel = 1;
@@ -591,11 +593,7 @@ public class BaselineTags implements TagSet
             super(CODE, "XResolution", "The number of pixels per ResolutionUnit in the ImageWidth direction");
         }
 
-        public void init(BinaryDataReader dataReader) throws IOException
-        {
-            this.content = readRational(dataReader);
-        }
-        
+        @Override
         public void process(TiffFileInfo info)
         {
             double xScale = (double) this.content;
@@ -603,6 +601,7 @@ public class BaselineTags implements TagSet
                 info.pixelWidth = 1.0 / xScale;
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.RATIONAL;
@@ -615,12 +614,6 @@ public class BaselineTags implements TagSet
             this.content = createSpacingRational(xspacing);
             // (value will be initialized with content offset)
             return this;
-        }
-        
-        public int contentSize()
-        {
-            // two 32-bit integer values -> 2*4
-            return 8; 
         }
     }
     
@@ -636,11 +629,7 @@ public class BaselineTags implements TagSet
             super(CODE, "YResolution", "The number of pixels per ResolutionUnit in the ImageHeight direction");
         }
         
-        public void init(BinaryDataReader dataReader) throws IOException
-        {
-            this.content = readRational(dataReader);
-        }
-
+        @Override
         public void process(TiffFileInfo info)
         {
             double yScale = (double) this.content;
@@ -648,6 +637,7 @@ public class BaselineTags implements TagSet
                 info.pixelHeight = 1.0 / yScale;
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.RATIONAL;
@@ -659,12 +649,6 @@ public class BaselineTags implements TagSet
             this.content = createSpacingRational(yspacing);
             // (value will be initialized with content offset)
             return this;
-        }
-        
-        public int contentSize()
-        {
-            // two 32-bit integer values -> 2*4
-            return 8; 
         }
     }
     
@@ -680,6 +664,7 @@ public class BaselineTags implements TagSet
             super(CODE, "PlanarConfiguration", "How the components of each pixel are stored");
         }
 
+        @Override
         public void process(TiffFileInfo info)
         {
             if (value == 2 && info.pixelType == PixelType.RGB48)
@@ -749,10 +734,6 @@ public class BaselineTags implements TagSet
         {
             super(CODE, "GrayResponseCurve", "For grayscale data, the optical density of each possible pixel value");
         }
-        public void init(BinaryDataReader dataReader) throws IOException
-        {
-            this.content = readShortArray(dataReader);
-        }
     }
     
     /**
@@ -767,26 +748,20 @@ public class BaselineTags implements TagSet
             super(CODE, "ResolutionUnit", "The unit of measurement for XResolution and YResolution");
         }
         
+        @Override
         public void process(TiffFileInfo info)
         {
-            if (value == 1)
+            info.unit = switch (value)
             {
-                info.unit = "";
-            }
-            else if (value == 2)
-            {
-                info.unit = "inch";
-            }
-            else if (value == 3)
-            {
-                info.unit = "cm";
-            }
-            else
-            {
-                throw new RuntimeException("Illegal value for TiffTag 'ResolutionUnit': " + value);
-            }
+                case 1 -> "";
+                case 2 -> "inch";
+                case 3 -> "cm";
+                default -> throw new RuntimeException("Illegal value for TiffTag 'ResolutionUnit': " + value);
+            };
+            
         }
         
+        @Override
         public TiffTag init(Image image)
         {
             this.type = Type.SHORT;
@@ -860,58 +835,26 @@ public class BaselineTags implements TagSet
             super(CODE, "ColorMap", "A color map for palette color images");
         }
         
-        public void init(BinaryDataReader dataReader) throws IOException
-        {
-            // Allocate memory for raw array
-            // (each triplet of components is stored in two bytes)
-            int lutLength = count / 3;
-            int nBytes = count * 2;
-            byte[] lut16 = new byte[nBytes];
-            
-            // convert state to long offset for reading large buffer
-            long offset = ((long) this.value) & 0xffffffffL;
-
-            // read the full raw array
-            long saveLoc = dataReader.getFilePointer();
-            dataReader.seek(offset);
-            int nRead = dataReader.readByteArray(lut16);
-            dataReader.seek(saveLoc);
-            if (nRead != nBytes)
-            {
-                throw new IOException(
-                        "Could not decode the color palette from TIFF File");
-            }
-            
-            // convert raw array into N-by-3 look-up table
-            int[][] lut = new int[lutLength][3];
-            int j = 0;
-            if (dataReader.getOrder() == ByteOrder.LITTLE_ENDIAN)
-                j++;
-            for (int i = 0; i < lutLength; i++)
-            {
-                lut[i][0] = lut16[j] & 0x00FF;
-                lut[i][1] = lut16[j + 512] & 0x00FF;
-                lut[i][2] = lut16[j + 1024] & 0x00FF;
-                j += 2;
-            }
-            
-            // store result into LUT
-            this.content = lut;
-        }
-        
         public void process(TiffFileInfo info)
         {
-            info.lut = (int[][]) this.content;
-        }
-        
-        /**
-         * Return 256 * 3 * 2 (256 entries, 3 channels, using 16-bits integers).
-         * 
-         * @return the size of colormap data
-         */
-        public int contentSize()
-        {
-            return 768 * 2; // in 16-bit words
+            // class cast
+            int[] lut16 = (int[]) this.content;
+            
+            // Allocate memory for resulting LUT
+            int lutLength = count / 3;
+            int[][] lut = new int[lutLength][3];
+            
+            // convert raw array into N-by-3 look-up table
+            int j = 0;
+            for (int i = 0; i < lutLength; i++)
+            {
+                lut[i][0] = lut16[j];
+                lut[i][1] = lut16[j + 256];
+                lut[i][2] = lut16[j + 512];
+                j ++;
+            }
+            
+            info.lut = lut;
         }
     }
     

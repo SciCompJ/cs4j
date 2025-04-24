@@ -34,7 +34,12 @@ public class LsmTags implements TagSet
             super(CODE, "LSMInfo", "LSM Info");
         }
         
-        public void init(BinaryDataReader dataReader) throws IOException
+        /**
+         * Override default behavior to parse data structure specific to LSM file.
+         * Result is a Map, stored in content fields. 
+         */
+        @Override
+        public void readContent(BinaryDataReader dataReader) throws IOException
         {
             Map<String, Object> map = new TreeMap<>();
             

@@ -208,8 +208,8 @@ public class TiffFileInfoReader
 						+ type + ", count=" + count + ", value=" + tag.content);
 			}
 
-			// call the initialization procedure specific to tag
-			tag.init(this.dataReader);
+//			// call the initialization procedure specific to tag
+//			tag.init(this.dataReader);
 
 			// populates the current TiffFileInfo instance
             tag.process(info);
