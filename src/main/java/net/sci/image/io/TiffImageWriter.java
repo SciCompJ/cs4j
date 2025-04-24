@@ -76,7 +76,10 @@ public class TiffImageWriter implements ImageWriter
         // sample size
         tags.add(new BaselineTags.BitsPerSample().init(image));
 
-        // photometric interpretation (1 entry)
+        // compression mode (default is none)
+        tags.add(new BaselineTags.CompressionMode().init(image));
+        
+        // photometric interpretation
         tags.add(new BaselineTags.PhotometricInterpretation().init(image));
         
         // the offset to write image data (content initialized later)
@@ -317,20 +320,27 @@ public class TiffImageWriter implements ImageWriter
     {
         // TODO: need to specify byte order?
         BufferedOutputStream bos = new BufferedOutputStream(this.out);
-        if (array instanceof UInt8Array)
+        if (array instanceof UInt8Array array2)
         {
-            UInt8Array array8 = (UInt8Array) array;
-            for (int[] pos : array8.positions())
+            for (int[] pos : array2.positions())
             {
-                bos.write(array8.getByte(pos));
+                bos.write(array2.getByte(pos));
             }
         }
-        else if (array instanceof UInt16Array)
+        else if (array instanceof UInt16Array array2)
         {
-            UInt16Array array16 = (UInt16Array) array;
-            for (int[] pos : array16.positions())
+            for (int[] pos : array2.positions())
             {
-                bos.write(array16.getShort(pos));
+                bos.write(array2.getShort(pos));
+            }
+        }
+        else if (array instanceof RGB8Array array2)
+        {
+            for (int[] pos : array2.positions())
+            {
+                bos.write((byte) array2.getSample(pos, 0));
+                bos.write((byte) array2.getSample(pos, 1));
+                bos.write((byte) array2.getSample(pos, 2));
             }
         }
         else
