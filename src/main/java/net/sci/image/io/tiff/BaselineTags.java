@@ -10,12 +10,14 @@ import java.util.Map;
 
 import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
+import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.numeric.Int16Array;
 import net.sci.array.numeric.Int32Array;
 import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt8Array;
+import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.ImageType;
 import net.sci.image.io.BinaryDataReader;
@@ -263,7 +265,12 @@ public class BaselineTags implements TagSet
         {
             this.type = Type.SHORT;
             this.count = 1;
-            this.value = 1; // default: black is zero
+            // default: black is zero
+            this.value = 1;
+            if (image.getData() instanceof RGB8Array || image.getData() instanceof RGB16Array)
+            {
+                this.value = 2;
+            }
             return this;
         }
     }
@@ -600,8 +607,13 @@ public class BaselineTags implements TagSet
         {
             this.type = Type.RATIONAL;
             this.count = 1;
-            // value will be initialized with content offset
-            this.content = new int[] {1, 1}; // TODO: update with resolution
+            
+            // retrieve calibration
+            Calibration calib = image.getCalibration();
+            double xspacing = calib.getXAxis().getSpacing();
+            
+            this.content = createSpacingRational(xspacing);
+            // (value will be initialized with content offset)
             return this;
         }
         
@@ -640,8 +652,12 @@ public class BaselineTags implements TagSet
         {
             this.type = Type.RATIONAL;
             this.count = 1;
-            // value will be initialized with content offset
-            this.content = new int[] {1, 1}; // TODO: update with resolution
+            
+            // retrieve calibration
+            Calibration calib = image.getCalibration();
+            double yspacing = calib.getYAxis().getSpacing();
+            this.content = createSpacingRational(yspacing);
+            // (value will be initialized with content offset)
             return this;
         }
         
@@ -997,5 +1013,17 @@ public class BaselineTags implements TagSet
     public String getName()
     {
         return "Baseline";
+    }
+    
+    private static final int[] createSpacingRational(double spacing)
+    {
+        // store calibration as 1_000_000 over spacing (IJ default behavior)
+        double value = 1.0 / spacing;
+        double denom = 1_000_000.0;
+        if (value * denom > Integer.MAX_VALUE)
+        {
+            denom /= Integer.MAX_VALUE;
+        }
+        return new int[] { (int) (value * denom), (int) denom };
     }
 }
