@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 
 import net.sci.array.Array;
 import net.sci.array.color.RGB8Array;
@@ -18,9 +17,8 @@ import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.image.Image;
 import net.sci.image.io.tiff.BaselineTags;
+import net.sci.image.io.tiff.ImageFileDirectory;
 import net.sci.image.io.tiff.TiffTag;
-
-import static net.sci.image.io.tiff.TiffFileInfo.PixelType;
 
 /**
  * Writer for images in TIFF format.
@@ -51,74 +49,62 @@ public class TiffImageWriter implements ImageWriter
         // check if image is 3D
         boolean bigTiff = false;
         
-        // initialize the collection of tags
-        ArrayList<TiffTag> tags = new ArrayList<TiffTag>();
+        ImageFileDirectory ifd = new ImageFileDirectory();
         
-        // count the number of entries. Nine are mandatory:
-        // 1. new type file
-        // 2. width
-        // 3. height
-        // 4. bits per sample
-        // 5. photometric interpretation
-        // 6. strip offsets
-        // 7. samples per pixel
-        // 8. rows per strip
-        // 9. strip byte counts
-        // other are optional.
+        // initialize the collection of tags
+        // Depending on the type of images, some of the tags are mandatory
 
         // file type
-        tags.add(new BaselineTags.NewSubfileType().init(image));
+        ifd.addEntry(new BaselineTags.NewSubfileType().initFrom(image));
         
         // image dimension
-        tags.add(new BaselineTags.ImageWidth().init(image));
-        tags.add(new BaselineTags.ImageHeight().init(image));
+        ifd.addEntry(new BaselineTags.ImageWidth().initFrom(image));
+        ifd.addEntry(new BaselineTags.ImageHeight().initFrom(image));
         
-        // sample size
-        tags.add(new BaselineTags.BitsPerSample().init(image));
+        // number of bits per sample
+        ifd.addEntry(new BaselineTags.BitsPerSample().initFrom(image));
 
         // compression mode (default is none)
-        tags.add(new BaselineTags.CompressionMode().init(image));
+        ifd.addEntry(new BaselineTags.CompressionMode().initFrom(image));
         
         // photometric interpretation
-        tags.add(new BaselineTags.PhotometricInterpretation().init(image));
+        ifd.addEntry(new BaselineTags.PhotometricInterpretation().initFrom(image));
         
         // the offset to write image data (content initialized later)
-        TiffTag imageOffsetTag = new BaselineTags.StripOffsets().init(image);
-        tags.add(imageOffsetTag);
+        TiffTag imageOffsetTag = new BaselineTags.StripOffsets().initFrom(image);
+        ifd.addEntry(imageOffsetTag);
         
         // the number of elements (samples) per pixel. 1 for grayscale, 3 for colors.
-        tags.add(new BaselineTags.SamplesPerPixel().init(image));
+        ifd.addEntry(new BaselineTags.SamplesPerPixel().initFrom(image));
 
         // determines how to write image data. Data is organized in one or more "strips".
         // Each strip contain data for one or more image rows.
         // Default: only one strip that contains all rows. RowsPerStrip contains row number, 
         // and StripByteCount contains data size.
-        tags.add(new BaselineTags.RowsPerStrip().init(image));
-        tags.add(new BaselineTags.StripByteCounts().init(image));
+        ifd.addEntry(new BaselineTags.RowsPerStrip().initFrom(image));
+        ifd.addEntry(new BaselineTags.StripByteCounts().initFrom(image));
         
         // meta-data
-        tags.add(new BaselineTags.XResolution().init(image));
-        tags.add(new BaselineTags.YResolution().init(image));
-        tags.add(new BaselineTags.ResolutionUnit().init(image));
+        ifd.addEntry(new BaselineTags.XResolution().initFrom(image));
+        ifd.addEntry(new BaselineTags.YResolution().initFrom(image));
+        ifd.addEntry(new BaselineTags.ResolutionUnit().initFrom(image));
         
         // determine size of IFD, in bytes.
         // -> entry count (2 bytes) + 12 bytes per entry + next offset (4 bytes).
-        int ifdSize = 2 + tags.size() * ENTRY_SIZE + 4;
+        int ifdSize = ifd.byteCount();
         
         // the offset to the beginning of IFD data
         int tagDataOffset = HEADER_SIZE + ifdSize;
-        int ifdDataSize = 0;
+        int ifdDataSize = ifd.entryDataByteCount();
         
-        // setup offset of tags with content (except the "strip offsets" tag)
-        for (TiffTag tag : tags)
+        // setup the offset of entries with content
+        for (TiffTag tag : ifd.entries())
         {
-            if (tag.code == BaselineTags.StripOffsets.CODE) continue;
             int size = tag.contentSize();
             if (size > 0)
             {
                 tag.value = tagDataOffset;
                 tagDataOffset += size;
-                ifdDataSize += size;
             }
         }
         
@@ -127,8 +113,7 @@ public class TiffImageWriter implements ImageWriter
         imageOffsetTag.value = (int) imageOffset;
         
         // compute offset to next IFD
-        PixelType pixelType = determinePixelType(image);
-        long imageSize = computeImageSize(image, pixelType);
+        long imageSize = computeImageSize(image);
         int nImages = 1;
         long nextIFD = 0L;
         if (image.getDimension() > 2)
@@ -139,6 +124,7 @@ public class TiffImageWriter implements ImageWriter
             long stackSize = (long) imageSize * nImages;
             nextIFD = imageOffset + stackSize;
         }
+        ifd.setOffset(nextIFD);
         
         // open output stream
         this.out = new FileOutputStream(this.file);
@@ -146,68 +132,43 @@ public class TiffImageWriter implements ImageWriter
         writeHeader();
         
         // Write current image file directory
-        
-        // write number of entries
-        writeShort(tags.size());
-        
-        // Write list of tags / entries
-        for (TiffTag tag : tags)
-        {
-            tag.writeEntry(out, order);
-        }
-        
-        // write offset to next IFD
-        writeInt((int) nextIFD);
-        // (end of IFD)
+        ifd.write(out, order);
 
         // Write content of the different tags
-        // (need to use the same order as the one used to define tag data offset
-        for (TiffTag tag : tags)
-        {
-            tag.writeContent(out, order);
-        }
+        ifd.writeEntryData(out, order);
                 
         // Finally, image data (the whole array)
         writeImageData(image.getData());
         
+        
         // Process optional remaining images
-        // TODO: manage case of large TIFF a la ImageJ
         if (nextIFD > 0L)
         {
             // for remaining IFD, do not copy all information
             // -> adapt the size of the IFD
             // -> use same pointers within the tags
-            int ifdSize2 = ifdSize;
-//            if (metaDataSize > 0)
-//            {
-//                metaDataSize = 0;
-//                nEntries -= 2;
-//                ifdSize2 -= 2 * 12;
-//            }
+            ImageFileDirectory ifd2 = duplicate(ifd);
+            int ifdSize2 = ifd2.byteCount();
+            imageOffsetTag = ifd2.getEntry(BaselineTags.StripOffsets.CODE);
             
             // iterate over remaining image planes
             for (int i = 1; i < nImages; i++)
             {
+                
                 nextIFD += ifdSize2;
                 if (i == nImages - 1)
                     nextIFD = 0;
                     
                 imageOffset += imageSize;
                 imageOffsetTag.value = (int) imageOffset;
+                ifd2.setOffset(nextIFD);
                 
-                // write new IFD
-                // write number of entries
-                writeShort(tags.size());
-                // Write list of tags / entries
-                for (TiffTag tag : tags)
-                {
-                    tag.writeEntry(out, order);
-                }
-                writeInt((int) nextIFD);
+                ifd2.write(out, order);
             }
         } 
         else if (bigTiff)
         {
+            // TODO: manage case of large TIFF a la ImageJ
             System.out.println("Image is too large to fit within TIFF format.");
         }
         
@@ -237,76 +198,54 @@ public class TiffImageWriter implements ImageWriter
        }
     }
 
-    private PixelType determinePixelType(Image image)
-    {
-        // sample size
-        Array<?> array = image.getData();
-        if (array instanceof UInt8Array)
-        {
-            return PixelType.GRAY8;
-        }
-        else if (array instanceof UInt16Array)
-        {
-            return PixelType.GRAY16_UNSIGNED;
-        }
-        else if (array instanceof Int16Array)
-        {
-            return PixelType.GRAY16_SIGNED;
-        }
-        else if (array instanceof RGB8Array)
-        {
-            return PixelType.RGB;
-        }
-        else
-        {
-            throw new RuntimeException("Unable to save tiff file for image data with class: " + array.getClass().getName());
-        }
-    }
-    
-    private long computeImageSize(Image image, PixelType pixelType)
+    private long computeImageSize(Image image)
     {
         // image size
         int sizeX = image.getSize(0);
         int sizeY = image.getSize(1);
-        int bytesPerPixel = pixelType.getByteNumber();;
+        
+        // image type
+        int bytesPerPixel = bytesPerPixel(image);
+        
+        // image size a number of bytes
         long bytesPerPlane = (long) sizeX * sizeY * bytesPerPixel;
         long imageSize = bytesPerPlane <= 0xffffffffL ? (int) bytesPerPlane : 0;
-        
         return imageSize;   
     }
     
-    private final void writeShort(int v) throws IOException
+    private int bytesPerPixel(Image image)
     {
-        if (littleEndian)
+        Array<?> array = image.getData();
+        
+        // use pattern matching
+        return switch (array)
         {
-            out.write(v & 255);
-            out.write((v >>> 8) & 255);
-        }
-        else
-        {
-            out.write((v >>> 8) & 255);
-            out.write(v & 255);
-        }
+            case UInt8Array x -> 1;
+            case UInt16Array x -> 2;
+            case Int16Array x -> 2;
+            case RGB8Array x -> 3;
+            default -> throw new RuntimeException(
+                    "Unable to determine pixel type for image data with class: " + array.getClass().getName());
+        };
     }
-
-    private final void writeInt(int v) throws IOException
+    
+    /**
+     * Duplicates this ImageFileDirectory, to facilitate writing of a new image
+     * with nearly the same entries.
+     * 
+     * @return a new instance of {@code ImageFileDirectory} initialized with
+     *         same entries.
+     */
+    private ImageFileDirectory duplicate(ImageFileDirectory ifd)
     {
-        if (littleEndian)
+        ImageFileDirectory newIFD = new ImageFileDirectory();
+        for (TiffTag tag : ifd.entries())
         {
-            out.write(v & 255);
-            out.write((v >>> 8) & 255);
-            out.write((v >>> 16) & 255);
-            out.write((v >>> 24) & 255);
+            newIFD.addEntry(tag);
         }
-        else
-        {
-            out.write((v >>> 24) & 255);
-            out.write((v >>> 16) & 255);
-            out.write((v >>> 8) & 255);
-            out.write(v & 255);
-        }
+        return newIFD;
     }
-
+    
     /**
      * Writes all the data within the array, using the natural position iterator
      * of the array.

@@ -5,6 +5,8 @@ package net.sci.image.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -24,17 +26,18 @@ import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
 import net.sci.image.io.tiff.BaselineTags;
-import net.sci.image.io.tiff.TiffFileInfo;
-import net.sci.image.io.tiff.TiffFileInfoReader;
+import net.sci.image.io.tiff.ExtensionTags;
+import net.sci.image.io.tiff.ImageFileDirectory;
+import net.sci.image.io.tiff.ImageFileDirectoryReader;
 import net.sci.image.io.tiff.TiffImageDataReader;
 import net.sci.image.io.tiff.TiffTag;
 
 /**
- * Provides methods for reading Image files in TIFF Format. Relies on the classes
- * TiffFileInfoReader (for reading Tiff File Infos) and TiffImageDataReader
- * (for reading image data).
+ * Provides methods for reading Image files in TIFF Format. Relies on the
+ * classes ImageFileDirectoryReader (for reading Tiff File Image Directories)
+ * and TiffImageDataReader (for reading image data).
  * 
- * @see net.sci.image.io.tiff.TiffFileInfoReader
+ * @see net.sci.image.io.tiff.ImageFileDirectoryReader
  * @see net.sci.image.io.tiff.TiffImageDataReader
  * 
  * @author David Legland
@@ -42,51 +45,106 @@ import net.sci.image.io.tiff.TiffTag;
  */
 public class TiffImageReader extends AlgoStub implements ImageReader
 {
-	// =============================================================
-	// Class variables
-	
+    // =============================================================
+    // Class variables
+    
     /**
-     * The name of the file to read the data from.
-     * Initialized at construction.
+     * The name of the file to read the data from. Initialized at construction.
      */
     String filePath;
-
-	/**
-	 * The list of file info stored in the TIFF file.
-	 */
-	ArrayList<TiffFileInfo> fileInfoList;
-	
-	
-	// =============================================================
-	// Constructor
-
-	public TiffImageReader(String fileName) throws IOException
-	{
-		this(new File(fileName));
-	}
-
-	public TiffImageReader(File file) throws IOException
-	{
-		this.filePath = file.getPath();
-		this.fileInfoList = new TiffFileInfoReader(this.filePath).readImageFileDirectories();
-	}
-
-	
-	// =============================================================
-	// Management of Image File directories
-	
-	/**
+    
+    ByteOrder byteOrder;
+    
+    /**
+     * The list of file info stored in the TIFF file.
+     */
+    ArrayList<ImageFileDirectory> fileDirectories;
+    
+    
+    // =============================================================
+    // Constructor
+    
+    public TiffImageReader(String fileName) throws IOException
+    {
+        this(new File(fileName));
+    }
+    
+    public TiffImageReader(File file) throws IOException
+    {
+        this.filePath = file.getPath();
+        this.byteOrder = determineByteOrder(file);
+        
+        this.fileDirectories = new ImageFileDirectoryReader(this.filePath, byteOrder).readImageFileDirectories();
+    }
+    
+    
+    // =============================================================
+    // Global management of file
+    
+    /**
+     * Opens the input stream, and reads the main header of the TIFF file. The header is composed of 8 bytes:
+     * <ul>
+     * <li>2 bytes for indicating the byte order</li>
+     * <li>2 bytes for the magic number 42</li>
+     * <li>4 bytes for indicating the offset of the first Image File Directory</li>
+     * </ul>
+     * 
+     * @throws IOException if a reading problem occured
+     * @throws RuntimeException if the endianess of the magic number could not be read
+     */
+    private ByteOrder determineByteOrder(File file) throws IOException
+    {
+        // open the stream
+        RandomAccessFile inputStream = new RandomAccessFile(file, "r");
+        
+        // read the two bytes indicating endianness
+        int b1 = inputStream.read();
+        int b2 = inputStream.read();
+        int byteOrderInfo = ((b2 << 8) + b1);
+    
+        // Determine file endianness
+        // If a problem occur, this may be the sign of an file in another format
+        ByteOrder byteOrder = switch (byteOrderInfo)
+        {
+            case 0x4949 -> ByteOrder.LITTLE_ENDIAN;
+            case 0x4d4d -> ByteOrder.BIG_ENDIAN;
+            default -> {
+                inputStream.close();
+                throw new RuntimeException("Could not decode endianness of TIFF File: " + file.getName());
+            }
+        };
+        
+        // Create binary data reader from current input stream
+        BinaryDataReader dataReader = new BinaryDataReader(inputStream, byteOrder);
+        int magicNumber = dataReader.readShort();
+        dataReader.close();
+        inputStream.close();
+        
+        // Read the magic number indicating tiff format
+        if (magicNumber != 42)
+        {
+            throw new RuntimeException("Invalid TIFF file: magic number is different from 42");
+        }
+        
+        return byteOrder;
+    }
+    
+    
+    // =============================================================
+    // Management of Image File directories
+    
+    /**
      * Returns the set of image file directories stored within this TIFF File.
      * 
      * @return the collection of TiffFileInfo stored within this file.
      */
-    public Collection<TiffFileInfo> getImageFileDirectories()
+    public Collection<ImageFileDirectory> getImageFileDirectories()
     {
-        return this.fileInfoList;
+        return this.fileDirectories;
     }
     
     
-	// =============================================================
+    // =============================================================
     // Methods for reading images
     
     /**
@@ -101,29 +159,33 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     public Image readImage(int index) throws IOException
     {
         // check validity of index input
-        if (index >= this.fileInfoList.size())
+        if (index >= this.fileDirectories.size())
         {
-            throw new IllegalArgumentException("Requires an index below the number of images ("
-                    + this.fileInfoList.size() + ")");
+            throw new IllegalArgumentException(
+                    "Requires an index below the number of images (" + this.fileDirectories.size() + ")");
         }
-    
+        
         // Read File information of the image stored in the file
-        TiffFileInfo fileInfo = this.fileInfoList.get(index);
+        ImageFileDirectory ifd = this.fileDirectories.get(index);
         
         // Read image data
         TiffImageDataReader reader = createImageDataReader();
-        Array<?> data = reader.readImageData(fileInfo);
-    
+        Array<?> data = reader.readImageData(ifd);
+        
         // Create new Image
         Image image = new Image(data);
         
-        // Add Image meta-data
-        if (fileInfo.lut != null)
-        {
-            image.getDisplaySettings().setColorMap(new DefaultColorMap(fileInfo.lut));
-        }
-        image.tiffTags = fileInfo.tags;
+        // Setup spatial calibration
+        setupSpatialCalibration(image, ifd);
         
+        // setup LUT
+        int[][] lut = retrieveLut(ifd);
+        if (lut != null)
+        {
+            image.getDisplaySettings().setColorMap(new DefaultColorMap(lut));
+        }
+        addTiffTags(image, ifd.entries());
+
         return image;
     }
 
@@ -135,46 +197,47 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     @Override
     public Image readImage() throws IOException
     {
-    	// Read the set of image information in the file
-    	if (this.fileInfoList.size() == 0)
-    	{
-    		throw new RuntimeException("Could not read any meta-information from file");
-    	}
-    
-    	// Read File information of the first image stored in the file
-    	TiffFileInfo info = this.fileInfoList.get(0);
-        
-    	// Check if the file was saved by ImageJ software
-    	// in that case, use specific processing
-    	if (hasImageJDescription(info))
+        // Read the set of image information in the file
+        if (this.fileDirectories.size() == 0)
         {
-    	    System.out.println("Found ImageJ description, use special processing");
-    	    return readImageJImage(info, false);
+            throw new RuntimeException("Could not read any meta-information from file");
         }
-    	
+        
+        // Read File information of the first image stored in the file
+        ImageFileDirectory ifd = this.fileDirectories.get(0);
+        
+        // Check if the file was saved by ImageJ software
+        // in that case, use specific processing
+        if (hasImageJDescription(ifd))
+        {
+            System.out.println("Found ImageJ description, use special processing");
+            return readImageJImage(ifd, false);
+        }
+        
         // Read image data
         Array<?> data = readImageData();
-    
-    	// Create new Image
-    	Image image = new Image(data);
-        image.tiffTags = info.tags;
-    	
+        
+        // Create new Image
+        Image image = new Image(data);
+        addTiffTags(image, ifd.entries());
+        
         // setup the file related to the image
-    	image.setNameFromFileName(filePath);
+        image.setNameFromFileName(filePath);
         image.setFilePath(this.filePath);
-    
+        
         // Setup spatial calibration
-    	setupSpatialCalibration(image, info);
-    	
-    	// setup LUT
-    	if (info.lut != null)
-    	{
-    		image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
-    	}
-    	
-    	return image;
+        setupSpatialCalibration(image, ifd);
+        
+        // setup LUT
+        int[][] lut = retrieveLut(ifd);
+        if (lut != null)
+        {
+            image.getDisplaySettings().setColorMap(new DefaultColorMap(lut));
+        }
+        
+        return image;
     }
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -183,49 +246,52 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     public Image readVirtualImage3D() throws IOException
     {
         // Read the set of image information in the file
-        if (this.fileInfoList.size() == 0)
+        if (this.fileDirectories.size() == 0)
         {
             throw new RuntimeException("Could not read any meta-information from file");
         }
-    
+        
         // Read File information of the first image stored in the file
-        TiffFileInfo info = this.fileInfoList.get(0);
+        ImageFileDirectory ifd = this.fileDirectories.get(0);
         
         // Check if the file was saved by ImageJ software
-        if (hasImageJDescription(info))
+        if (hasImageJDescription(ifd))
         {
             System.out.println("Found ImageJ description, use special processing");
-            return readImageJImage(info, true);
+            return readImageJImage(ifd, true);
         }
         
-        if (info.pixelType != TiffFileInfo.PixelType.GRAY8)
+        int bitsPerSample = ifd.getValue(BaselineTags.BitsPerSample.CODE);
+        int samplesPerPixel = ifd.getValue(BaselineTags.SamplesPerPixel.CODE);
+        
+        if (bitsPerSample != 8 || samplesPerPixel != 1)
         {
             throw new RuntimeException("Virtual stacks are available only for UInt8 arrays.");
         }
-        if (info.compression != TiffFileInfo.Compression.NONE)
+        if (ifd.getValue(BaselineTags.CompressionMode.CODE) != 1)
         {
-            throw new RuntimeException("Virtual stacks not implemented for TIFF files compressed with mode " + info.compression);
+            throw new RuntimeException("Virtual stacks not implemented for TIFF files compressed with mode " + "NONE");
         }
         
-    
         // Read (virtual) image data
-        Array<?> data = createFileMappedArray(info, this.fileInfoList.size());
+        Array<?> data = createFileMappedArray(ifd, this.fileDirectories.size());
         
         // Create new Image
         Image image = new Image(data);
-        image.tiffTags = info.tags;
+        addTiffTags(image, ifd.entries());
         
         // setup the file related to the image
         image.setNameFromFileName(filePath);
         image.setFilePath(this.filePath);
-    
+        
         // Setup spatial calibration
-        setupSpatialCalibration(image, info);
+        setupSpatialCalibration(image, ifd);
         
         // setup LUT
-        if (info.lut != null)
+        int[][] lut = retrieveLut(ifd);
+        if (lut != null)
         {
-            image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
+            image.getDisplaySettings().setColorMap(new DefaultColorMap(lut));
         }
         
         return image;
@@ -235,15 +301,15 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     // =============================================================
     // Management of Images saved by the ImageJ software
 
-    private boolean hasImageJDescription(TiffFileInfo info)
+    private boolean hasImageJDescription(ImageFileDirectory info)
     {
         // Get the  description tag, or null if not initialized
-        TiffTag tag = info.tags.get(BaselineTags.ImageDescription.CODE);
+        TiffTag tag = info.getEntry(BaselineTags.ImageDescription.CODE);
         if (tag == null)
         {
             return false;
         }
-    
+        
         // extract description string
         String description = (String) tag.content;
         if (!description.startsWith("ImageJ"))
@@ -258,7 +324,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      * If the description tag has a content beginning with "ImageJ", this
      * method use a specific process to extract image data as saved by ImageJ.
      * 
-     * @param info
+     * @param ifd
      *            The set of Tiff Tags of the image
      * @param description
      *            the content of the tag 270, as a String
@@ -266,10 +332,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      * @throws IOException
      *             if an I/O error occurred
      */
-    private Image readImageJImage(TiffFileInfo info, boolean virtual) throws IOException
+    private Image readImageJImage(ImageFileDirectory ifd, boolean virtual) throws IOException
     {
         // Get the description tag, or null if not initialized
-        TiffTag tag = info.tags.get(BaselineTags.ImageDescription.CODE);
+        TiffTag tag = ifd.getEntry(BaselineTags.ImageDescription.CODE);
         if (tag == null)
         {
             throw new IllegalArgumentException("Requires a description TiffTag with index 270");
@@ -289,8 +355,8 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         int nImages = tokens.getIntValue("images", 1);
 
         // determine the size along each of the five dimensions
-        int sizeX = info.width;
-        int sizeY = info.height;
+        int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
+        int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
         int sizeC = tokens.getIntValue("channels", 1);
         int sizeZ = tokens.getIntValue("slices", 1);
         int sizeT = tokens.getIntValue("frames", 1);
@@ -313,17 +379,17 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         if (nImages == 1)
         {
             // Read image data
-            data = readImageData(info);
+            data = readImageData(ifd);
         }
         else if (!virtual)
         {
             // Read the totality of image data as a 3D array stored in memory
-            data = readImage3DData(info, nImages);
+            data = readImage3DData(ifd, nImages);
         }
         else
         {
             // Read a virtual image by creating a file-mapped array 
-            data = createFileMappedArray(info, nImages);
+            data = createFileMappedArray(ifd, nImages);
         }
 
         // number of dimensions of final array
@@ -353,7 +419,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
 
         // Create new Image
         Image image = new Image(data);
-        image.setCalibration(tokens.createCalibration(info, sizeC, sizeZ, sizeT));
+        image.setCalibration(tokens.createCalibration(ifd, sizeC, sizeZ, sizeT));
 
         // calibrate display range if information exists
         if (tokens.hasToken("min") && tokens.hasToken("max"))
@@ -364,9 +430,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         }
         
         // setup LUT
-        if (info.lut != null)
+        int[][] lut = retrieveLut(ifd);
+        if (lut != null)
         {
-            image.getDisplaySettings().setColorMap(new DefaultColorMap(info.lut));
+            image.getDisplaySettings().setColorMap(new DefaultColorMap(lut));
         }
 
         // setup the file related to the image
@@ -374,11 +441,19 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         image.setFilePath(this.filePath);
 
         // keep the tiff tags within Image
-        image.tiffTags = info.tags;
+        addTiffTags(image, ifd.entries());
 
         return image;
     }
 
+    private static final void addTiffTags(Image image, Collection<TiffTag> tags)
+    {
+        for (TiffTag tag : tags)
+        {
+            image.tiffTags.put(tag.code, tag);
+        }
+    }
+    
     
     // =============================================================
     // Methods for reading image data
@@ -397,7 +472,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         TiffImageDataReader reader = createImageDataReader();
 
         // Read all images and return a 3D array
-        return reader.readImageStack(this.fileInfoList);
+        return reader.readImageStack(this.fileDirectories);
 	}
 	
     /**
@@ -412,15 +487,15 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     public Array<?> readImageData(int index) throws IOException
     {
         // check validity of index input
-        if (index >= this.fileInfoList.size())
+        if (index >= this.fileDirectories.size())
         {
             throw new IllegalArgumentException("Requires an index below the number of images ("
-                    + this.fileInfoList.size() + ")");
+                    + this.fileDirectories.size() + ")");
         }
-        TiffFileInfo info = this.fileInfoList.get(index);
+        ImageFileDirectory ifd = this.fileDirectories.get(index);
         
         TiffImageDataReader reader = createImageDataReader();
-        return reader.readImageData(info);
+        return reader.readImageData(ifd);
     }
     
 	/**
@@ -441,13 +516,13 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         if (isStackImage())
         {
             // Read all images and return a 3D array
-            return reader.readImageStack(this.fileInfoList);
+            return reader.readImageStack(this.fileDirectories);
         }
         else
         {
             // Read File information of the first image stored in the file
-            TiffFileInfo info0 = this.fileInfoList.get(0);
-            return reader.readImageData(info0);
+            ImageFileDirectory ifd0 = this.fileDirectories.get(0);
+            return reader.readImageData(ifd0);
         }
     }
 
@@ -458,19 +533,24 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     private boolean isStackImage()
     {
         // single image is not stack by definition
-        if (fileInfoList.size() == 1)
+        if (fileDirectories.size() == 1)
         {
             return false;
         }
         
         // Read File information of the first image stored in the file
-        TiffFileInfo info0 = fileInfoList.iterator().next();
+        ImageFileDirectory ifd0 = fileDirectories.iterator().next();
+        int refSizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
+        int refSizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        
         
         // If file contains several images, check if we should read a stack
         // Condition: all images must have same size
-        for (TiffFileInfo info : fileInfoList)
+        for (ImageFileDirectory ifd : fileDirectories)
         {
-            if (info.width != info0.width || info.height != info0.height)
+            int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
+            int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+            if (sizeX != refSizeX || sizeY != refSizeY)
             {
                 return false;
             }
@@ -483,22 +563,23 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     /**
      * Reads the buffer from the current stream and specified info.
      * 
-     * @param info
+     * @param ifd
      *            an instance of TiffFileInfo
      * @return the data array corresponding to the specified TiffFileInfo
      * @throws IOException
      *             if an error occurs
      */
-	public Array<?> readImageData(TiffFileInfo info) throws IOException
-	{
+    public Array<?> readImageData(ImageFileDirectory ifd) throws IOException
+    {
         TiffImageDataReader reader = createImageDataReader();
-        return reader.readImageData(info);
-	}
-	
-	/**
-     * Reads the whole image data array from the chosen file, and the specified info.
+        return reader.readImageData(ifd);
+    }
+    
+    /**
+     * Reads the whole image data array from the chosen file, and the specified
+     * info.
      * 
-     * @param info
+     * @param ifd
      *            an instance of TiffFileInfo
      * @param nImages
      *            the number of images to read (product of channel, slice, and
@@ -507,10 +588,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      * @throws IOException
      *             if an error occurs
      */
-    private Array<?> readImage3DData(TiffFileInfo info, int nImages) throws IOException
+    private Array<?> readImage3DData(ImageFileDirectory ifd, int nImages) throws IOException
     {
         // Use try-with-resource, closing the reader at the end of the try block
-        try (ImageBinaryDataReader reader = new ImageBinaryDataReader(new File(this.filePath), info.byteOrder))
+        try (ImageBinaryDataReader reader = new ImageBinaryDataReader(new File(this.filePath), this.byteOrder))
         {
             // Catch algorithm events of the data reader and propagate them to the TiffImageReader listeners
             reader.addAlgoListener(new AlgoListener()
@@ -528,24 +609,45 @@ public class TiffImageReader extends AlgoStub implements ImageReader
                 }
             });
 
-            reader.seek(info.stripOffsets[0]);
+            int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
+            int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+            
+            int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null);
+            reader.seek(stripOffsets[0]);
 
-            return switch(info.pixelType)
+            int[] bitsPerSample = ifd.getIntArrayValue(BaselineTags.BitsPerSample.CODE, null);
+            int samplesPerPixel = ifd.getValue(BaselineTags.SamplesPerPixel.CODE);
+
+            if (samplesPerPixel == 1)
             {
-                case GRAY8, COLOR8 
-                    -> reader.readUInt8Array3D(info.width, info.height, nImages);
-                case BITMAP 
-                    -> throw new RuntimeException("Reading Bitmap Tiff files not supported");
-                case GRAY16_UNSIGNED, GRAY12_UNSIGNED 
-                    -> reader.readUInt16Array3D(info.width, info.height, nImages);
-                case GRAY32_INT 
-                    -> reader.readInt32Array3D(info.width, info.height, nImages);
-                case GRAY32_FLOAT 
-                    -> reader.readFloat32Array3D(info.width, info.height, nImages);
-                case RGB, BGR, ARGB, ABGR, BARG, RGB_PLANAR, RGB48 
-                    -> throw new IOException("Can not read stack with data type " + info.pixelType);
-                default -> throw new IOException("Can not read stack with data type " + info.pixelType);
-            };
+                return switch (bitsPerSample[0])
+                {
+                    case 8 -> reader.readUInt8Array3D(sizeX, sizeY, nImages);
+                    case 12, 16 -> reader.readUInt16Array3D(sizeX, sizeY, nImages);
+                    case 32 ->
+                    {
+                        int sampleFormatCode = ifd.getIntValue(ExtensionTags.SampleFormat.CODE, 1); 
+                        if (sampleFormatCode == 2)
+                            yield reader.readInt32Array3D(sizeX, sizeY, nImages);
+                        else if (sampleFormatCode == 3)
+                            yield reader.readFloat32Array3D(sizeX, sizeY, nImages);
+                        else
+                        {
+                            throw new RuntimeException("Sample type not managed for 32 bits data");
+                        }                    
+                    }
+                    default -> throw new IOException(
+                            "Can not read stack with data type " + bitsPerSample + " bits per sample");
+                };
+            }
+            else if (samplesPerPixel == 3)
+            {
+                throw new IOException("Not implemented for color data");
+            }
+            else
+            {
+                throw new IOException("Can not read stack with data type " + bitsPerSample + " bits per sample");
+            }
         }
         catch(IOException ex)
         {
@@ -553,23 +655,44 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         }
     }
     
-    private Array<?> createFileMappedArray(TiffFileInfo info, int nImages) throws IOException
+    private Array<?> createFileMappedArray(ImageFileDirectory ifd, int nImages) throws IOException
     {
-        return switch (info.pixelType)
-        {
-            case GRAY8, COLOR8 -> new FileMappedUInt8Array3D(this.filePath, info.stripOffsets[0], info.width,
-                    info.height, nImages);
-            case GRAY32_FLOAT -> new FileMappedFloat32Array3D(this.filePath, info.stripOffsets[0], info.width,
-                    info.height, nImages);
-            case GRAY16_UNSIGNED -> new FileMappedUInt16Array3D(this.filePath, info.stripOffsets[0], info.width,
-                    info.height, nImages);
-            case BITMAP, GRAY12_UNSIGNED, GRAY32_INT -> throw new IOException(
-                    "Virtual images not supported for data type: " + info.pixelType);
-            case RGB, BGR, ARGB, ABGR, BARG, RGB_PLANAR, RGB48 -> throw new IOException(
-                    "Virtual images not supported for color type: " + info.pixelType);
+        int bitsPerSample = ifd.getValue(BaselineTags.BitsPerSample.CODE);
+        int samplesPerPixel = ifd.getValue(BaselineTags.SamplesPerPixel.CODE);
         
-            default -> throw new IOException("Can not read stack with data type " + info.pixelType);
-        };
+        int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
+        int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+        int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null);
+
+        if (samplesPerPixel == 1)
+        {
+            return switch (bitsPerSample)
+            {
+                case 8 -> new FileMappedUInt8Array3D(this.filePath, stripOffsets[0], sizeX, sizeY, nImages);
+                case 12, 16 -> new FileMappedUInt16Array3D(this.filePath, stripOffsets[0], sizeX, sizeY, nImages);
+                // TODO: add case of 32-bits integer
+                case 32 -> 
+                {
+                    int sampleFormatCode = ifd.getIntValue(ExtensionTags.SampleFormat.CODE, 1); 
+                    if (sampleFormatCode == 3)
+                        yield new FileMappedFloat32Array3D(this.filePath, stripOffsets[0], sizeX, sizeY, nImages);
+                    else
+                    {
+                        throw new RuntimeException("32 bits virtual 3D arrays implemented only for Float32 data");
+                    }
+                }
+                default -> throw new RuntimeException(
+                        "Can not read stack with data type " + bitsPerSample + " bits per sample");
+            };
+        }
+        else if (samplesPerPixel == 3)
+        {
+            throw new RuntimeException("Not implemented for color data");
+        }
+        else
+        {
+            throw new RuntimeException("Can not read stack with data type " + bitsPerSample + " bits per sample");
+        }
     }
     
     /**
@@ -583,7 +706,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      */
     private TiffImageDataReader createImageDataReader() throws IOException
     {
-        TiffImageDataReader reader = new TiffImageDataReader(this.filePath);
+        TiffImageDataReader reader = new TiffImageDataReader(new File(this.filePath), this.byteOrder);
         
         // add an algo listener that simply propagates the events to the
         // listener(s) of the TiffImageReader class
@@ -605,19 +728,60 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         return reader;
     }
 
-    private static void setupSpatialCalibration(Image image, TiffFileInfo info)
+    private static void setupSpatialCalibration(Image image, ImageFileDirectory ifd)
     {
-        String unit = info.unit;
+        String unit = unitString(ifd);
         int nd = image.getDimension();
         ImageAxis[] axes = new ImageAxis[nd];
-        axes[0] = new ImageAxis.X(info.pixelWidth, 0, unit);
-        axes[1] = new ImageAxis.Y(info.pixelHeight, 0, unit);
+        double spacingX = 1.0 / ifd.getDoubleValue(BaselineTags.XResolution.CODE, 1.0);
+        double spacingY = 1.0 / ifd.getDoubleValue(BaselineTags.YResolution.CODE, 1.0);
+        axes[0] = new ImageAxis.X(spacingX, 0, unit);
+        axes[1] = new ImageAxis.Y(spacingY, 0, unit);
         if (axes.length > 2)
         {
             axes[2] = new ImageAxis.Z();
         }
         
         image.setCalibration(new Calibration(axes));
+    }
+    
+    private static final String unitString(ImageFileDirectory ifd)
+    {
+        TiffTag unitTag = ifd.getEntry(BaselineTags.ResolutionUnit.CODE);
+        if (unitTag == null) return "";
+        return switch (unitTag.value)
+        {
+            case 1 -> "";
+            case 2 -> "Inch";
+            case 3 -> "Centimeter";
+            default -> "";
+        };
+    }
+    
+    private static final int[][] retrieveLut(ImageFileDirectory ifd)
+    {
+        int[][] lut = null;
+        TiffTag tag = ifd.getEntry(BaselineTags.ColorMap.CODE);
+        if (tag != null)
+        {
+            // class cast
+            int[] lut16 = (int[]) tag.content;
+            
+            // Allocate memory for resulting LUT
+            int lutLength = tag.count / 3;
+            lut = new int[lutLength][3];
+            
+            // convert raw array into N-by-3 look-up table
+            int j = 0;
+            for (int i = 0; i < lutLength; i++)
+            {
+                lut[i][0] = lut16[j];
+                lut[i][1] = lut16[j + 256];
+                lut[i][2] = lut16[j + 512];
+                j ++;
+            }
+         }
+        return lut;
     }
     
     /**
@@ -655,17 +819,19 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             this.tokens = tokens;
         }
         
-        public Calibration createCalibration(TiffFileInfo info, int sizeC, int sizeZ, int sizeT)
+        public Calibration createCalibration(ImageFileDirectory ifd, int sizeC, int sizeZ, int sizeT)
         {
             ArrayList<ImageAxis> axes = new ArrayList<ImageAxis>(5);
 
             // Initialize mandatory X and Y axes
-            axes.add(createXAxis(info.pixelWidth, ""));
-            axes.add(createYAxis(info.pixelHeight, axes.get(0).getUnitName()));
+            double spacingX = 1.0 / ifd.getDoubleValue(BaselineTags.XResolution.CODE, 1.0);
+            double spacingY = 1.0 / ifd.getDoubleValue(BaselineTags.YResolution.CODE, 1.0);
+            axes.add(createXAxis(spacingX, ""));
+            axes.add(createYAxis(spacingY, axes.get(0).getUnitName()));
 
             // Initialize optional C, Z and T axes
             if (sizeC > 1) axes.add(new ImageAxis("Channel", ImageAxis.Type.CHANNEL, 1, 0, ""));
-            if (sizeZ > 1) axes.add(createZAxis(info.pixelHeight, axes.get(0).getUnitName()));
+            if (sizeZ > 1) axes.add(createZAxis(1.0, axes.get(0).getUnitName()));
             if (sizeT > 1) axes.add(createTAxis(1.0, "sec"));
             
             return new Calibration(axes.toArray(new ImageAxis[] {}));

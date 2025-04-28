@@ -161,6 +161,39 @@ public class TiffTag
     // public new methods
     
     /**
+     * Initializes the type, count, and value of this tag.
+     * 
+     * @return the reference to this tag (for chaining operations)
+     */
+    public TiffTag init(Type type, int count, int value)
+    {
+        this.type = type;
+        this.count = count;
+        this.value = value;
+        return this;
+    }
+    
+    /**
+     * Initializes the type, count, and value (and eventually also the content)
+     * of this tag, based on the content and the meta-data of the specified
+     * image.
+     * 
+     * This method is called during image writing. Default: initializes to
+     * type=SHORT, count=1, and value=0.
+     * 
+     * @param image
+     *            the image used to initialize the tag
+     * @return the reference to this tag (for chaining operations)
+     */
+    public TiffTag initFrom(Image image)
+    {
+        this.type = Type.SHORT;
+        this.count = 1;
+        this.value = 0;
+        return this;
+    }
+
+    /**
      * Initialize the content of the tag from the data reader, given its code
      * and the specified value.
      * 
@@ -197,7 +230,7 @@ public class TiffTag
                 this.content = readAscii(dataReader);
                 break;
             case RATIONAL:
-                // Assume only one rational is specified // TODO: allow arrays
+                // Assume only one rational is specified
                 this.content = readRational(dataReader);
                 break;
             default:
@@ -211,34 +244,14 @@ public class TiffTag
      * Updates the specified FileInfo data structure according to the current
      * value of the tag.
      * 
-     * @param info
-     *            an instance of TiffFileInfo.
+     * @param image
+     *            the image to update
      */
-    public void process(TiffFileInfo info)
+    public void update(Image image)
     {
     }
     
 	/**
-     * Initializes the type, count, and value (and eventually also the content)
-     * of this tag, based on the content and the meta-data of the specified
-     * image.
-     * 
-     * This method is called during image writing. Default: initializes to
-     * type=SHORT, count=1, and value=0.
-     * 
-     * @param image
-     *            the image used to initialize the tag
-     * @return the reference to this tag (for chaining operations)
-     */
-    public TiffTag init(Image image)
-    {
-        this.type = Type.SHORT;
-        this.count = 1;
-        this.value = 0;
-        return this;
-    }
-    
-    /**
      * Sets the value of this tag, to populate either the {@code value} or the
      * {@code content} field. The {@code value} parameter is first casted
      * according to the type of the tag. If {@code value} parameter fits into 4
@@ -623,6 +636,17 @@ public class TiffTag
             out.write((v >>> 8) & 255);
             out.write(v & 255);
         }
+    }
+    
+    /**
+     * Returns the code of this tag as a hashcode.
+     * 
+     * @return the code associated to this tag.
+     */
+    @Override
+    public int hashCode()
+    {
+        return this.code;
     }
     
     public boolean equals(Object obj)
