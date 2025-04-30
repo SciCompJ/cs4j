@@ -31,6 +31,7 @@ import net.sci.image.io.tiff.ImageFileDirectory;
 import net.sci.image.io.tiff.ImageFileDirectoryReader;
 import net.sci.image.io.tiff.TiffImageDataReader;
 import net.sci.image.io.tiff.TiffTag;
+import net.sci.image.io.tiff.ExtensionTags.SampleFormat;
 
 /**
  * Provides methods for reading Image files in TIFF Format. Relies on the
@@ -261,10 +262,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             return readImageJImage(ifd, true);
         }
         
-        int bitsPerSample = ifd.getValue(BaselineTags.BitsPerSample.CODE);
-        int samplesPerPixel = ifd.getValue(BaselineTags.SamplesPerPixel.CODE);
-        
-        if (bitsPerSample != 8 || samplesPerPixel != 1)
+        if (determinePixelType(ifd) != PixelType.UINT8)
         {
             throw new RuntimeException("Virtual stacks are available only for UInt8 arrays.");
         }
@@ -466,8 +464,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      * @throws IOException
      *             if an error occurs.
      */
-	public Array3D<?> readImageStack()
-			throws IOException
+    public Array3D<?> readImageStack() throws IOException
 	{
         TiffImageDataReader reader = createImageDataReader();
 
@@ -543,7 +540,6 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         int refSizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
         int refSizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
         
-        
         // If file contains several images, check if we should read a stack
         // Condition: all images must have same size
         for (ImageFileDirectory ifd : fileDirectories)
@@ -615,83 +611,52 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null);
             reader.seek(stripOffsets[0]);
 
-            int[] bitsPerSample = ifd.getIntArrayValue(BaselineTags.BitsPerSample.CODE, null);
-            int samplesPerPixel = ifd.getValue(BaselineTags.SamplesPerPixel.CODE);
-
-            if (samplesPerPixel == 1)
+            PixelType pixelType = determinePixelType(ifd);
+            if (pixelType == PixelType.UINT8)
             {
-                return switch (bitsPerSample[0])
-                {
-                    case 8 -> reader.readUInt8Array3D(sizeX, sizeY, nImages);
-                    case 12, 16 -> reader.readUInt16Array3D(sizeX, sizeY, nImages);
-                    case 32 ->
-                    {
-                        int sampleFormatCode = ifd.getIntValue(ExtensionTags.SampleFormat.CODE, 1); 
-                        if (sampleFormatCode == 2)
-                            yield reader.readInt32Array3D(sizeX, sizeY, nImages);
-                        else if (sampleFormatCode == 3)
-                            yield reader.readFloat32Array3D(sizeX, sizeY, nImages);
-                        else
-                        {
-                            throw new RuntimeException("Sample type not managed for 32 bits data");
-                        }                    
-                    }
-                    default -> throw new IOException(
-                            "Can not read stack with data type " + bitsPerSample + " bits per sample");
-                };
+                return reader.readUInt8Array3D(sizeX, sizeY, nImages);
             }
-            else if (samplesPerPixel == 3)
+            else if (pixelType == PixelType.UINT12 || pixelType == PixelType.UINT16)
             {
-                throw new IOException("Not implemented for color data");
+                return reader.readUInt16Array3D(sizeX, sizeY, nImages);
+            }
+            else if (pixelType == PixelType.INT32)
+            {
+                return reader.readInt32Array3D(sizeX, sizeY, nImages);
+            }
+            else if (pixelType == PixelType.FLOAT32)
+            {
+                return reader.readFloat32Array3D(sizeX, sizeY, nImages);
             }
             else
             {
-                throw new IOException("Can not read stack with data type " + bitsPerSample + " bits per sample");
+                throw new IOException("Can not read stack with data type " + pixelType + " pixel typee");
             }
-        }
-        catch(IOException ex)
-        {
-            throw(ex);
         }
     }
     
     private Array<?> createFileMappedArray(ImageFileDirectory ifd, int nImages) throws IOException
     {
-        int bitsPerSample = ifd.getValue(BaselineTags.BitsPerSample.CODE);
-        int samplesPerPixel = ifd.getValue(BaselineTags.SamplesPerPixel.CODE);
-        
         int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
         int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
         int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null);
-
-        if (samplesPerPixel == 1)
+        
+        PixelType pixelType = determinePixelType(ifd);
+        if (pixelType == PixelType.UINT8)
         {
-            return switch (bitsPerSample)
-            {
-                case 8 -> new FileMappedUInt8Array3D(this.filePath, stripOffsets[0], sizeX, sizeY, nImages);
-                case 12, 16 -> new FileMappedUInt16Array3D(this.filePath, stripOffsets[0], sizeX, sizeY, nImages);
-                // TODO: add case of 32-bits integer
-                case 32 -> 
-                {
-                    int sampleFormatCode = ifd.getIntValue(ExtensionTags.SampleFormat.CODE, 1); 
-                    if (sampleFormatCode == 3)
-                        yield new FileMappedFloat32Array3D(this.filePath, stripOffsets[0], sizeX, sizeY, nImages);
-                    else
-                    {
-                        throw new RuntimeException("32 bits virtual 3D arrays implemented only for Float32 data");
-                    }
-                }
-                default -> throw new RuntimeException(
-                        "Can not read stack with data type " + bitsPerSample + " bits per sample");
-            };
+            return new FileMappedUInt8Array3D(this.filePath, stripOffsets[0], sizeX, sizeY, nImages);
         }
-        else if (samplesPerPixel == 3)
+        else if (pixelType == PixelType.UINT12 || pixelType == PixelType.UINT16)
         {
-            throw new RuntimeException("Not implemented for color data");
+            return new FileMappedUInt16Array3D(this.filePath, stripOffsets[0], sizeX, sizeY, nImages);
+        }
+        else if (pixelType == PixelType.FLOAT32)
+        {
+            return new FileMappedFloat32Array3D(this.filePath, stripOffsets[0], sizeX, sizeY, nImages);
         }
         else
         {
-            throw new RuntimeException("Can not read stack with data type " + bitsPerSample + " bits per sample");
+            throw new RuntimeException("Can not read stack with " + pixelType + " pixel type");
         }
     }
     
@@ -728,6 +693,55 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         return reader;
     }
 
+    public static final PixelType determinePixelType(ImageFileDirectory ifd)
+    {
+        // read data type info
+        int samplesPerPixel = ifd.getValue(BaselineTags.SamplesPerPixel.CODE);
+        int[] bitsPerSample = ifd.getIntArrayValue(BaselineTags.BitsPerSample.CODE, null);
+        int sampleFormat = ifd.getIntValue(ExtensionTags.SampleFormat.CODE, 1);
+        
+        return switch (samplesPerPixel)
+        {
+            // case of scalar image data
+            case 1 -> switch (bitsPerSample[0])
+            {
+                case 1 -> PixelType.BINARY;
+                case 8 -> PixelType.UINT8;
+                case 12 -> PixelType.UINT12;
+                case 16 -> switch (sampleFormat)
+                {
+                    case SampleFormat.UNSIGNED_INTEGER -> PixelType.UINT16;
+                    case SampleFormat.SIGNED_INTEGER -> PixelType.INT16;
+                    default -> throw new RuntimeException(
+                            "sample format is not managed: " + sampleFormat);
+                };
+                case 32 -> switch (sampleFormat)
+                {
+                    case SampleFormat.SIGNED_INTEGER -> PixelType.INT32;
+                    case SampleFormat.FLOATING_POINT -> PixelType.FLOAT32;
+                    default -> throw new RuntimeException(
+                            "sample format is not managed: " + sampleFormat);
+                };
+                default -> throw new RuntimeException(
+                        "Number of bits per sample for 3-samples image is not managed: "
+                                + bitsPerSample);
+            };
+            
+            // case of image data with 3 samples -> usually color
+            case 3 -> switch (bitsPerSample[0])
+            {
+                case 8 -> PixelType.RGB8;
+                case 16 -> PixelType.RGB16;
+                default -> throw new RuntimeException(
+                        "Number of bits per sample for 3-samples image is not managed: "
+                                + bitsPerSample);
+            };
+            
+            default -> throw new RuntimeException(
+                    "Number of samples per pixel is not managed: " + samplesPerPixel);
+        };
+    }
+    
     private static void setupSpatialCalibration(Image image, ImageFileDirectory ifd)
     {
         String unit = unitString(ifd);

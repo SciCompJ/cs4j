@@ -57,6 +57,12 @@ public class ExtensionTags implements TagSet
     public static final class SampleFormat extends TiffTag
     {
         public static final int CODE = 339;
+        
+        public static final int UNSIGNED_INTEGER = 1;
+        public static final int SIGNED_INTEGER = 2;
+        public static final int FLOATING_POINT = 3;
+        public static final int UNDEFINED = 4;
+        
         public SampleFormat()
         {
             super(CODE, "SampleFormat", "Specifies how to interpret each data sample in a pixel");
