@@ -201,6 +201,7 @@ public class SobelGradient extends AlgoStub implements ImageArrayOperator
         // create result image and update default display
         Image resImage = new Image(result, image);
         resImage.getDisplaySettings().setDisplayRange(new double[] {-maxVal, maxVal});
+        resImage.setName(image.getName() + "-grad");
         return resImage;
     }
     
