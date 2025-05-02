@@ -6,7 +6,9 @@ package net.sci.image.io.tiff;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -19,9 +21,7 @@ import net.sci.array.binary.BufferedBinaryArray2D;
 import net.sci.array.binary.SlicedBinaryArray3D;
 import net.sci.array.color.BufferedPackedByteRGB8Array2D;
 import net.sci.array.color.BufferedPackedShortRGB16Array2D;
-import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array2D;
-import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array2D;
 import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt16Array3D;
@@ -50,25 +50,24 @@ import net.sci.image.io.TiffImageReader;
  */
 public class TiffImageDataReader extends AlgoStub
 {
-	// =============================================================
-	// Class variables
-	
+    // =============================================================
+    // Class variables
+
     /**
-     * The name of the file to read the data from.
-     * Initialized at construction.
+     * The name of the file to read the data from. Initialized at construction.
      */
     String filePath;
     
     ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
-    
+
     
     // =============================================================
-	// Constructor
+    // Constructor
 
-	public TiffImageDataReader(String fileName) throws IOException
-	{
-		this(new File(fileName));
-	}
+    public TiffImageDataReader(String fileName) throws IOException
+    {
+        this(new File(fileName));
+    }
 
     public TiffImageDataReader(File file) throws IOException
     {
@@ -80,12 +79,12 @@ public class TiffImageDataReader extends AlgoStub
         this.filePath = file.getPath();
         this.byteOrder = byteOrder;
     }
+    
 
-	
-	// =============================================================
-	// Methods
-	
-	/**
+    // =============================================================
+    // Methods
+
+    /**
      * Reads the image data from the current stream and specified
      * ImageFileDirectory.
      * 
@@ -112,14 +111,14 @@ public class TiffImageDataReader extends AlgoStub
         int bytesPerPixel = pixelType.byteCount();
         int nBytes = nPixels * bytesPerPixel;
 
-        // allocate memory for image byte data
-        byte[] buffer = new byte[nBytes];
+        // allocate an array of bytes for storing raw data
+        byte[] byteArray = new byte[nBytes];
         
         // read data from input stream
         int nRead = 0;
         try (RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r"))
         {
-            nRead = readByteBuffer(stream, ifd, buffer);
+            nRead = readByteBuffer(stream, ifd, byteArray);
         }
 
         // Check all buffer elements have been read
@@ -131,22 +130,22 @@ public class TiffImageDataReader extends AlgoStub
         // Transform raw buffer into interpreted buffer
         if (pixelType == PixelType.UINT8)
         {
-            return new BufferedUInt8Array2D(sizeX, sizeY, buffer);
+            return new BufferedUInt8Array2D(sizeX, sizeY, byteArray);
         }
         else if (pixelType == PixelType.UINT12 || pixelType == PixelType.UINT16)
         {
             // Store data as short array
-            short[] shortBuffer = convertToShortArray(buffer, this.byteOrder);
+            short[] shortBuffer = convertToShortArray(byteArray, this.byteOrder);
             return new BufferedUInt16Array2D(sizeX, sizeY, shortBuffer);
         }
         else if (pixelType == PixelType.INT32)
         {
-            int[] intBuffer = convertToIntArray(buffer, this.byteOrder);
+            int[] intBuffer = convertToIntArray(byteArray, this.byteOrder);
             return new BufferedInt32Array2D(sizeX, sizeY, intBuffer);
         }
         else if (pixelType == PixelType.FLOAT32)
         {
-            float[] floatBuffer = convertToFloatArray(buffer, this.byteOrder);
+            float[] floatBuffer = convertToFloatArray(byteArray, this.byteOrder);
             return new BufferedFloat32Array2D(sizeX, sizeY, floatBuffer);
         }
         else if (pixelType == PixelType.RGB8)
@@ -160,10 +159,9 @@ public class TiffImageDataReader extends AlgoStub
             {
                 for (int x = 0; x < sizeX; x++)
                 {
-                    int r = buffer[index++] & 0x00FF;
-                    int g = buffer[index++] & 0x00FF;
-                    int b = buffer[index++] & 0x00FF;
-                    rgb2d.set(x, y, new RGB8(r, g, b));
+                    rgb2d.setSample(x, y, 0, byteArray[index++] & 0x00FF);
+                    rgb2d.setSample(x, y, 1, byteArray[index++] & 0x00FF);
+                    rgb2d.setSample(x, y, 2, byteArray[index++] & 0x00FF);
                 }
             }
             return rgb2d;
@@ -172,16 +170,16 @@ public class TiffImageDataReader extends AlgoStub
         {
             RGB16Array2D rgb2d = new BufferedPackedShortRGB16Array2D(sizeX, sizeY);
             
+            ShortBuffer shortBuffer = ByteBuffer.wrap(byteArray).order(this.byteOrder).asShortBuffer();
+            
             // fill array with re-ordered buffer content
-            int index = 0;
             for (int y = 0; y < sizeY; y++)
             {
                 for (int x = 0; x < sizeX; x++)
                 {
-                    int r = convertBytesToShort(buffer[index++], buffer[index++], this.byteOrder) & 0x00FFFF;
-                    int g = convertBytesToShort(buffer[index++], buffer[index++], this.byteOrder) & 0x00FFFF;
-                    int b = convertBytesToShort(buffer[index++], buffer[index++], this.byteOrder) & 0x00FFFF;
-                    rgb2d.set(x, y, new RGB16(r, g, b));
+                    rgb2d.setSample(x, y, 0, shortBuffer.get() & 0x00FFFF);
+                    rgb2d.setSample(x, y, 1, shortBuffer.get() & 0x00FFFF);
+                    rgb2d.setSample(x, y, 2, shortBuffer.get() & 0x00FFFF);
                 }
             }
             return rgb2d;
@@ -233,8 +231,8 @@ public class TiffImageDataReader extends AlgoStub
             throw new RuntimeException("Image data is too large to fit in a single java array");
         }
         
-        // allocate buffer
-        byte[] buffer = new byte[nBytes];
+        // allocate an array of bytes for storing raw data
+        byte[] byteArray = new byte[nBytes];
         
         RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
 
@@ -243,7 +241,7 @@ public class TiffImageDataReader extends AlgoStub
         int nRead = 0;
         for (ImageFileDirectory info : ifdList)
         {
-            nRead += readByteArray(stream, info, buffer, offset);
+            nRead += readByteArray(stream, info, byteArray, offset);
             offset += bytesPerPlane;
         }
         
@@ -258,12 +256,12 @@ public class TiffImageDataReader extends AlgoStub
         // Transform raw buffer into interpreted buffer
         if (pixelType == PixelType.INT32)
         {
-            int[] intBuffer = convertToIntArray(buffer, this.byteOrder);
+            int[] intBuffer = convertToIntArray(byteArray, this.byteOrder);
             return new BufferedInt32Array3D(sizeX, sizeY, sizeZ, intBuffer);
         }
         else if (pixelType == PixelType.FLOAT32)
         {
-            float[] floatBuffer = convertToFloatArray(buffer, this.byteOrder);
+            float[] floatBuffer = convertToFloatArray(byteArray, this.byteOrder);
             return new BufferedFloat32Array3D(sizeX, sizeY, sizeZ, floatBuffer);
         }
         else
@@ -475,26 +473,26 @@ public class TiffImageDataReader extends AlgoStub
         return res;
     }
 
-
     /**
-	 * Read an array of bytes into a pre-allocated buffer, by iterating over the
-	 * strips, and returns the number of bytes read.
-	 */
-	private int readByteBuffer(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer)
-			throws IOException
-	{
+     * Read an array of bytes into a pre-allocated buffer, by iterating over the
+     * strips, and returns the number of bytes read.
+     */
+    private int readByteBuffer(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer)
+            throws IOException
+    {
         TiffTag compressionTag = ifd.getEntry(BaselineTags.CompressionMode.CODE);
         int compressionCode = compressionTag != null ? compressionTag.value : 1;
-        
+
         return switch (compressionCode)
         {
             case 1 -> readByteArrayUncompressed(stream, ifd, buffer);
             case 32773 -> readByteArrayPackBits(stream, ifd, buffer);
-            default -> throw new RuntimeException("Unsupported code for compression mode: " + compressionCode);
+            default -> throw new RuntimeException(
+                    "Unsupported code for compression mode: " + compressionCode);
         };
-	}
+    }
 
-	/**
+    /**
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
@@ -524,39 +522,40 @@ public class TiffImageDataReader extends AlgoStub
         return totalRead;
     }
 
-    private int readByteArrayPackBits(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer)
-			throws IOException
-	{
+    private int readByteArrayPackBits(RandomAccessFile stream, ImageFileDirectory ifd,
+            byte[] buffer) throws IOException
+    {
         // retrieve strips info
         int[] stripOffsets = entryValueAsIntArray(ifd, BaselineTags.StripOffsets.CODE);
         int[] stripByteCounts = entryValueAsIntArray(ifd, BaselineTags.StripByteCounts.CODE);
         if (stripOffsets.length != stripByteCounts.length)
         {
-            throw new RuntimeException("Strip offsets and strip byte counts arrays must have same length");
+            throw new RuntimeException(
+                    "Strip offsets and strip byte counts arrays must have same length");
         }
-        
-		// Number of strips
-		int nStrips = stripOffsets.length;
 
-		// Compute the number of bytes per strip
-		int nBytes = 0;
-		for (int i = 0; i < nStrips; i++)
-			nBytes += stripByteCounts[i];
-		byte[] compressedBytes = new byte[nBytes];
+        // Number of strips
+        int nStrips = stripOffsets.length;
 
-		// read each compressed strip
-		int offset = 0;
-		for (int i = 0; i < nStrips; i++)
-		{
-			stream.seek(stripOffsets[i] & 0xffffffffL);
+        // Compute the number of bytes per strip
+        int nBytes = 0;
+        for (int i = 0; i < nStrips; i++)
+            nBytes += stripByteCounts[i];
+        byte[] compressedBytes = new byte[nBytes];
+
+        // read each compressed strip
+        int offset = 0;
+        for (int i = 0; i < nStrips; i++)
+        {
+            stream.seek(stripOffsets[i] & 0xffffffffL);
             int nRead = stream.read(compressedBytes, offset, stripByteCounts[i]);
-			offset += nRead;
-		}
+            offset += nRead;
+        }
 
-		int nRead = PackBits.uncompressPackBits(compressedBytes, buffer);
-		return nRead;
-	}
-    
+        int nRead = PackBits.uncompressPackBits(compressedBytes, buffer);
+        return nRead;
+    }
+
     /**
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
@@ -644,85 +643,24 @@ public class TiffImageDataReader extends AlgoStub
     // =============================================================
     // Conversion of byte arrays to other arrays
     
-    private final static short[] convertToShortArray(byte[] byteBuffer, ByteOrder order)
+    private final static short[] convertToShortArray(byte[] byteArray, ByteOrder order)
     {
-        // Store data as short array
-        int nPixels = byteBuffer.length / 2;
-        short[] shortBuffer = new short[nPixels];
-        
-        // convert byte array into short array
-        for (int i = 0; i < nPixels; i++)
-        {
-            int b1 = byteBuffer[2 * i] & 0x00FF;
-            int b2 = byteBuffer[2 * i + 1] & 0x00FF;
-
-            // encode bytes to short
-            if (order == ByteOrder.LITTLE_ENDIAN)
-                shortBuffer[i] = (short) ((b2 << 8) | b1);
-            else
-                shortBuffer[i] = (short) ((b1 << 8) | b2);
-        }
-        
-        return shortBuffer;
+        short[] shortArray = new short[byteArray.length / 2];
+        ByteBuffer.wrap(byteArray).order(order).asShortBuffer().get(shortArray);
+        return shortArray;
     }
 
-    private final static int[] convertToIntArray(byte[] byteBuffer, ByteOrder order)
+    private final static int[] convertToIntArray(byte[] byteArray, ByteOrder order)
     {
-        // Store data as short array
-        int nPixels = byteBuffer.length / 4;
-        int[] intBuffer = new int[nPixels];
-        
-        // convert byte array into int array
-        for (int i = 0; i < nPixels; i++)
-        {
-            int b1 = byteBuffer[4 * i + 0] & 0x00FF;
-            int b2 = byteBuffer[4 * i + 1] & 0x00FF;
-            int b3 = byteBuffer[4 * i + 2] & 0x00FF;
-            int b4 = byteBuffer[4 * i + 3] & 0x00FF;
-
-            // encode bytes to short
-            if (order == ByteOrder.LITTLE_ENDIAN)
-                intBuffer[i] = (b4 << 24) | (b3 << 16) | (b2 << 8) | b1;
-            else
-                intBuffer[i] = (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
-        }
-        
-        return intBuffer;
+        int[] intArray = new int[byteArray.length / 4];
+        ByteBuffer.wrap(byteArray).order(order).asIntBuffer().put(intArray);
+        return intArray;
     }
 
-    private final static float[] convertToFloatArray(byte[] byteBuffer, ByteOrder order)
+    private final static float[] convertToFloatArray(byte[] byteArray, ByteOrder order)
     {
-        // Store data as short array
-        int nFloats = byteBuffer.length / 4;
-        float[] floatBuffer = new float[nFloats];
-        
-        // convert byte array into float array
-        for (int i = 0; i < nFloats; i++)
-        {
-            int b1 = byteBuffer[4 * i + 0] & 0x00FF;
-            int b2 = byteBuffer[4 * i + 1] & 0x00FF;
-            int b3 = byteBuffer[4 * i + 2] & 0x00FF;
-            int b4 = byteBuffer[4 * i + 3] & 0x00FF;
-
-            // encode bytes to float
-            if (order == ByteOrder.LITTLE_ENDIAN)
-                floatBuffer[i] = Float.intBitsToFloat((b4 << 24) | (b3 << 16) | (b2 << 8) | b1);
-            else
-                floatBuffer[i] = Float.intBitsToFloat((b1 << 24) | (b2 << 16) | (b3 << 8) | b4);
-        }
-        
-        return floatBuffer;
-    }
-
-    private static final short convertBytesToShort(byte b1, byte b2, ByteOrder order)
-    {
-        int v1 = b1 & 0x00FF;
-        int v2 = b2 & 0x00FF;
-        
-        // encode bytes to short
-        if (order == ByteOrder.LITTLE_ENDIAN)
-            return (short) ((v2 << 8) | v1);
-        else
-            return (short) ((v1 << 8) | v2);
+        float[] floatArray = new float[byteArray.length / 4];
+        ByteBuffer.wrap(byteArray).order(order).asFloatBuffer().get(floatArray);
+        return floatArray;
     }
 }
