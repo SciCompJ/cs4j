@@ -698,12 +698,16 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         // read data type info
         int samplesPerPixel = ifd.getValue(BaselineTags.SamplesPerPixel.CODE);
         int[] bitsPerSample = ifd.getIntArrayValue(BaselineTags.BitsPerSample.CODE, null);
+        if (bitsPerSample.length != samplesPerPixel)
+        {
+            throw new RuntimeException("Requires content of the \"BitsPerSample\" tag to have number elements consistent with the \"SamplePerElement\" tag");
+        }
         int sampleFormat = ifd.getIntValue(ExtensionTags.SampleFormat.CODE, 1);
         
-        return switch (samplesPerPixel)
+        // case of scalar image data
+        if (samplesPerPixel == 1)
         {
-            // case of scalar image data
-            case 1 -> switch (bitsPerSample[0])
+            return switch (bitsPerSample[0])
             {
                 case 1 -> PixelType.BINARY;
                 case 8 -> PixelType.UINT8;
@@ -722,24 +726,36 @@ public class TiffImageReader extends AlgoStub implements ImageReader
                     default -> throw new RuntimeException(
                             "sample format is not managed: " + sampleFormat);
                 };
+                case 64 -> switch (sampleFormat)
+                {
+                    case SampleFormat.FLOATING_POINT -> PixelType.FLOAT64;
+                    default -> throw new RuntimeException(
+                            "64-bits image data can only be floating point");
+                };
                 default -> throw new RuntimeException(
-                        "Number of bits per sample for 3-samples image is not managed: "
+                        "Number of bits per sample for scalar image data is not managed: "
                                 + bitsPerSample);
             };
-            
-            // case of image data with 3 samples -> usually color
-            case 3 -> switch (bitsPerSample[0])
-            {
-                case 8 -> PixelType.RGB8;
-                case 16 -> PixelType.RGB16;
-                default -> throw new RuntimeException(
-                        "Number of bits per sample for 3-samples image is not managed: "
-                                + bitsPerSample);
-            };
-            
-            default -> throw new RuntimeException(
-                    "Number of samples per pixel is not managed: " + samplesPerPixel);
-        };
+        }
+        
+        // check for color image data type
+        if (samplesPerPixel == 3 && sampleFormat == SampleFormat.UNSIGNED_INTEGER)
+        {
+            if (bitsPerSample[0] == 8) return PixelType.RGB8;
+            if (bitsPerSample[0] == 16) return PixelType.RGB16;
+            throw new RuntimeException("In case of 3-sample integer data, bits per samples must be either 8 or 16");
+        }
+        
+        // remaining types are vector data, and are implemented only for floating point data
+        if (sampleFormat != SampleFormat.FLOATING_POINT)
+        {
+            throw new RuntimeException("Image data with several samples must be either color or floating point");
+        }
+        
+        if (bitsPerSample[0] == 32) return new PixelType.Float32Vector(samplesPerPixel);
+        if (bitsPerSample[0] == 64) return new PixelType.Float64Vector(samplesPerPixel);
+
+        throw new RuntimeException("Unable to determine pixele type");
     }
     
     private static void setupSpatialCalibration(Image image, ImageFileDirectory ifd)

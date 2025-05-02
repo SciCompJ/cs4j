@@ -15,6 +15,9 @@ import net.sci.array.Array;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float32VectorArray;
+import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Float64VectorArray;
 import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.image.Calibration;
@@ -316,13 +319,42 @@ public class TiffImageWriter implements ImageWriter
                 dos.writeFloat(array2.getFloat(pos));
             }
         }
-        else if (array instanceof RGB8Array array2)
+        else if (array instanceof Float64Array array2)
         {
             for (int[] pos : array2.positions())
             {
-                dos.write((byte) array2.getSample(pos, 0));
-                dos.write((byte) array2.getSample(pos, 1));
-                dos.write((byte) array2.getSample(pos, 2));
+                dos.writeDouble(array2.getValue(pos));
+            }
+        }
+        else if (array instanceof RGB8Array rgbArray)
+        {
+            for (int[] pos : rgbArray.positions())
+            {
+                dos.write((byte) rgbArray.getSample(pos, 0));
+                dos.write((byte) rgbArray.getSample(pos, 1));
+                dos.write((byte) rgbArray.getSample(pos, 2));
+            }
+        }
+        else if (array instanceof Float32VectorArray vectorArray)
+        {
+            int nc = vectorArray.channelCount();
+            for (int[] pos : vectorArray.positions())
+            {
+                for (int c = 0; c < nc; c++)
+                {
+                    dos.writeFloat(vectorArray.getFloat(pos, c));
+                }
+            }
+        }
+        else if (array instanceof Float64VectorArray vectorArray)
+        {
+            int nc = vectorArray.channelCount();
+            for (int[] pos : vectorArray.positions())
+            {
+                for (int c = 0; c < nc; c++)
+                {
+                    dos.writeDouble(vectorArray.getValue(pos, c));
+                }
             }
         }
         else

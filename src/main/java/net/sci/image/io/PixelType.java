@@ -7,7 +7,9 @@ import net.sci.array.binary.BinaryArray;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8Array;
 import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float32VectorArray;
 import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Float64VectorArray;
 import net.sci.array.numeric.Int16Array;
 import net.sci.array.numeric.Int32Array;
 import net.sci.array.numeric.UInt16Array;
@@ -44,13 +46,31 @@ public class PixelType
             case Float64Array x -> FLOAT64;
             case RGB8Array x -> RGB8;
             case RGB16Array x -> RGB16;
+            case Float32VectorArray vectorArray -> new Float32Vector(vectorArray.channelCount());
+            case Float64VectorArray vectorArray -> new Float64Vector(vectorArray.channelCount());
             default -> throw new RuntimeException("Unable to retrieve pixel type of image");
         };
     }
     
+    /**
+     * The number of samples per pixel, corresponding to number of channels or components.
+     */
     private final int sampleCount;
+    
+    /**
+     * The number of bits necessary to represent the value of a sample/channel value.
+     */
     private final int bitsPerSample;
+    
+    /**
+     * Boolean flag for integer data.
+     */
     private final boolean isInteger;
+    
+    /**
+     * In case of integer data, a boolean flag indicating whether the data type
+     * supports signed (i.e. both positive and negative) values.
+     */
     private final boolean isSigned;
     
     /**
@@ -114,5 +134,23 @@ public class PixelType
         this.bitsPerSample = bitsPerSample;
         this.isInteger = isInteger;
         this.isSigned = isSigned;
+    }
+    
+    public static class Float32Vector extends PixelType
+    {
+        int nChannels;
+        public Float32Vector(int nChannels)
+        {
+            super(nChannels, 32, false, true);
+        }
+    }
+    
+    public static class Float64Vector extends PixelType
+    {
+        int nChannels;
+        public Float64Vector(int nChannels)
+        {
+            super(nChannels, 64, false, true);
+        }
     }
 }

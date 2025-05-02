@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +26,9 @@ import net.sci.array.color.RGB16Array2D;
 import net.sci.array.color.RGB8Array2D;
 import net.sci.array.numeric.Float32Array2D;
 import net.sci.array.numeric.Float32Array3D;
+import net.sci.array.numeric.Float32VectorArray2D;
+import net.sci.array.numeric.Float64Array2D;
+import net.sci.array.numeric.Float64VectorArray2D;
 import net.sci.array.numeric.Int32Array2D;
 import net.sci.array.numeric.Int32Array3D;
 import net.sci.array.numeric.UInt16Array;
@@ -103,9 +108,11 @@ public class TiffImageDataReader extends AlgoStub
             return readBinaryArray2D(ifd);
         }
         
-        // determine size of buffer, proportional to pixel number
+        // retrieve image size
         int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
         int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+        
+        // determine size of buffer, proportional to pixel number
         int nPixels = sizeX * sizeY;
         int bytesPerPixel = pixelType.byteCount();
         int nBytes = nPixels * bytesPerPixel;
@@ -147,12 +154,17 @@ public class TiffImageDataReader extends AlgoStub
             float[] floatBuffer = convertToFloatArray(byteArray, this.byteOrder);
             return Float32Array2D.wrap(floatBuffer, sizeX, sizeY);
         }
+        else if (pixelType == PixelType.FLOAT64)
+        {
+            double[] doubleBuffer = convertToDoubleArray(byteArray, this.byteOrder);
+            return Float64Array2D.wrap(doubleBuffer, sizeX, sizeY);
+        }
         else if (pixelType == PixelType.RGB8)
         {
             // allocate memory for array
             RGB8Array2D rgb2d = new BufferedPackedByteRGB8Array2D(sizeX, sizeY);
             
-            // fill array with re-ordered buffer content
+            // fill array with buffer content
             int index = 0;
             for (int y = 0; y < sizeY; y++)
             {
@@ -167,11 +179,12 @@ public class TiffImageDataReader extends AlgoStub
         }
         else if (pixelType == PixelType.RGB16)
         {
+            // allocate result array
             RGB16Array2D rgb2d = new BufferedPackedShortRGB16Array2D(sizeX, sizeY);
             
             ShortBuffer shortBuffer = ByteBuffer.wrap(byteArray).order(this.byteOrder).asShortBuffer();
             
-            // fill array with re-ordered buffer content
+            // fill array with type-converted buffer content
             for (int y = 0; y < sizeY; y++)
             {
                 for (int x = 0; x < sizeX; x++)
@@ -183,9 +196,49 @@ public class TiffImageDataReader extends AlgoStub
             }
             return rgb2d;
         }
+        else if (pixelType instanceof PixelType.Float32Vector floatVectorType)
+        {
+            // allocate result array
+            int nc = floatVectorType.sampleCount();
+            Float32VectorArray2D vectorArray = Float32VectorArray2D.create(sizeX, sizeY, nc);
+            FloatBuffer floatBuffer = ByteBuffer.wrap(byteArray).order(this.byteOrder).asFloatBuffer();
+            
+            // fill array with type-converted buffer content
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    for (int c = 0; c < nc; c++)
+                    {
+                        vectorArray.setFloat(x, y, c, floatBuffer.get());
+                    }
+                }
+            }
+            return vectorArray;
+        }
+        else if (pixelType instanceof PixelType.Float64Vector floatVectorType)
+        {
+            // allocate result array
+            int nc = floatVectorType.sampleCount();
+            Float64VectorArray2D vectorArray = Float64VectorArray2D.create(sizeX, sizeY, nc);
+            DoubleBuffer doubleBuffer = ByteBuffer.wrap(byteArray).order(this.byteOrder).asDoubleBuffer();
+            
+            // fill array with type-converted buffer content
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    for (int c = 0; c < nc; c++)
+                    {
+                        vectorArray.setValue(x, y, c, doubleBuffer.get());
+                    }
+                }
+            }
+            return vectorArray;
+        }
         else
         {
-            throw new RuntimeException("Number of samples par pixel must be either 1 or 3.");
+            throw new RuntimeException("Could not read data for pixel type with class: " + pixelType.getClass().getName());
         }
     }
     
@@ -659,5 +712,12 @@ public class TiffImageDataReader extends AlgoStub
         float[] floatArray = new float[byteArray.length / 4];
         ByteBuffer.wrap(byteArray).order(order).asFloatBuffer().get(floatArray);
         return floatArray;
+    }
+
+    private final static double[] convertToDoubleArray(byte[] byteArray, ByteOrder order)
+    {
+        double[] doubleArray = new double[byteArray.length / 8];
+        ByteBuffer.wrap(byteArray).order(order).asDoubleBuffer().get(doubleArray);
+        return doubleArray;
     }
 }
