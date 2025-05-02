@@ -6,6 +6,7 @@ package net.sci.array.numeric;
 import java.util.Locale;
 
 import net.sci.array.Array2D;
+import net.sci.array.numeric.impl.BufferedFloat64Array3D;
 
 /**
  * @author dlegland
@@ -13,25 +14,49 @@ import net.sci.array.Array2D;
  */
 public abstract class Float64Array3D extends ScalarArray3D<Float64> implements Float64Array
 {
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
-	/**
-	 * Creates a new 3D array containing Float64 values.
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param size2
-	 *            the size of the array along the third dimension
-	 * @return a new instance of Float64Array3D
-	 */
-	public static final Float64Array3D create(int size0, int size1, int size2)
-	{
-	    return wrap(Float64Array.create(size0, size1, size2));
-	}
-	
+    /**
+     * Creates a new 3D array containing Float64 values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of Float64Array3D
+     */
+    public static final Float64Array3D create(int size0, int size1, int size2)
+    {
+        return wrap(Float64Array.create(size0, size1, size2));
+    }
+
+    /**
+     * Wraps the double array into an instance of Float64Array3D with the
+     * specified dimensions. The new array will be backed by the given double
+     * array; that is, modifications to the double buffer will cause the array
+     * to be modified and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to double to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of Float64Array3D
+     */
+    public static final Float64Array3D wrap(double[] buffer, int size0, int size1, int size2)
+    {
+        return new BufferedFloat64Array3D(size0, size1, size2, buffer);
+    }
+    
     /**
      * Encapsulates the specified instance of Float64Array into a new
      * Float64Array3D, by creating a Wrapper if necessary. If the original array
@@ -49,25 +74,27 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
         }
         return new Wrapper(array);
     }
-	
-	// =============================================================
-	// Constructor
 
-	/**
-	 * Initialize the protected size variables. 
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param size2
-	 *            the size of the array along the third dimension
-	 */
-	protected Float64Array3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-	}
+    
+    // =============================================================
+    // Constructor
 
+    /**
+     * Initialize the protected size variables.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     */
+    protected Float64Array3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+    }
+
+    
     // =============================================================
     // Management of slices
 
@@ -167,21 +194,25 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
     {
        setValue(pos[0], pos[1], pos[2], value);
     }
+    
 
-	
-	// =============================================================
-	// Implementation of Array interface
+    // =============================================================
+    // Implementation of Array interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.ScalarArray#newInstance(int[])
-	 */
-	@Override
-	public Float64Array newInstance(int... dims)
-	{
-		return Float64Array.create(dims);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.data.ScalarArray#newInstance(int[])
+     */
+    @Override
+    public Float64Array newInstance(int... dims)
+    {
+        return Float64Array.create(dims);
+    }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.sci.array.data.FloatArray#duplicate()
      */
     @Override

@@ -3,20 +3,53 @@
  */
 package net.sci.array.numeric;
 
+import net.sci.array.numeric.impl.BufferedFloat32Array2D;
+
 /**
  * @author dlegland
  *
  */
 public abstract class Float32Array2D extends ScalarArray2D<Float32> implements Float32Array
 {
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
-	public static final Float32Array2D create(int size0, int size1)
-	{
-		return wrap(Float32Array.create(size0, size1));
-	}
-	
+    /**
+     * Creates a new 2D array containing Float32 values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of Float32Array2D
+     */
+    public static final Float32Array2D create(int size0, int size1)
+    {
+        return wrap(Float32Array.create(size0, size1));
+    }
+
+    /**
+     * Wraps the float array into an instance of Float32Array2D with the
+     * specified dimensions. The new array will be backed by the given float
+     * array; that is, modifications to the float buffer will cause the array to
+     * be modified and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to float to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of Float32Array2D
+     */
+    public static final Float32Array2D wrap(float[] buffer, int size0, int size1)
+    {
+        return new BufferedFloat32Array2D(size0, size1, buffer);
+    }
+
     /**
      * Creates a new Float32Array2D from a two-dimensional array of floats. The
      * first index of the float array is the second dimension of the result array,
@@ -60,28 +93,28 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         }
         return new Wrapper(array);
     }
+
     
+    // =============================================================
+    // Constructor
 
-	// =============================================================
-	// Constructor
-
-	/**
-	 * Initialize the protected size variables. 
-	 *
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 */
-	protected Float32Array2D(int size0, int size1)
-	{
-		super(size0, size1);
-	}
-	
+    /**
+     * Initialize the protected size variables.
+     *
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     */
+    protected Float32Array2D(int size0, int size1)
+    {
+        super(size0, size1);
+    }
+    
 
     // =============================================================
     // New methods
-	
+
     public abstract float getFloat(int x, int y);
 
     public abstract void setFloat(int x, int y, float value);
@@ -152,17 +185,17 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         setValue(pos[0], pos[1], value);
     }
     
-	
-	// =============================================================
-	// Specialization of Array 
 
-	@Override
-	public Float32Array newInstance(int... dims)
-	{
-		return Float32Array.create(dims);
-	}
+    // =============================================================
+    // Specialization of Array
 
-	@Override
+    @Override
+    public Float32Array newInstance(int... dims)
+    {
+        return Float32Array.create(dims);
+    }
+
+    @Override
     public Float32Array2D duplicate()
     {
         Float32Array2D res = Float32Array2D.create(size0, size1);

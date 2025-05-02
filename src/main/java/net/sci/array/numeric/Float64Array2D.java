@@ -3,20 +3,44 @@
  */
 package net.sci.array.numeric;
 
+import net.sci.array.numeric.impl.BufferedFloat64Array2D;
+
 /**
  * @author dlegland
  *
  */
 public abstract class Float64Array2D extends ScalarArray2D<Float64> implements Float64Array
 {
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
-	public static final Float64Array2D create(int size0, int size1)
-	{
-		return wrap(Float64Array.create(size0, size1));
-	}
-	
+    public static final Float64Array2D create(int size0, int size1)
+    {
+        return wrap(Float64Array.create(size0, size1));
+    }
+
+    /**
+     * Wraps the double array into an instance of Float64Array2D with the
+     * specified dimensions. The new array will be backed by the given double
+     * array; that is, modifications to the double buffer will cause the array
+     * to be modified and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to double to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of Float64Array2D
+     */
+    public static final Float64Array2D wrap(double[] buffer, int size0, int size1)
+    {
+        return new BufferedFloat64Array2D(size0, size1, buffer);
+    }
+    
     /**
      * Creates a new Float64Array2D from a two-dimensional array of double. The
      * first index of the double array is the second dimension of the result array,

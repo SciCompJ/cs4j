@@ -54,54 +54,54 @@ public class BufferedUInt8Array2D extends UInt8Array2D
         // return converted array
         return res;
     }
+
     
-    
-	// =============================================================
-	// Class fields
+    // =============================================================
+    // Class fields
 
     /**
      * The array of bytes that stores array values.
      */
-	byte[] buffer;
+    byte[] buffer;
+    
 
-	
-	// =============================================================
-	// Constructors
+    // =============================================================
+    // Constructors
 
-	/**
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 */
-	public BufferedUInt8Array2D(int size0, int size1)
-	{
-		super(size0, size1);
-		this.buffer = new byte[size0 * size1];
-	}
+    /**
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     */
+    public BufferedUInt8Array2D(int size0, int size1)
+    {
+        super(size0, size1);
+        this.buffer = new byte[size0 * size1];
+    }
 
-	/**
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param buffer
-	 *            the buffer containing the byte values
-	 */
-	public BufferedUInt8Array2D(int size0, int size1, byte[] buffer)
-	{
-		super(size0, size1);
-		if (buffer.length < size0 * size1)
-		{
-			throw new IllegalArgumentException("Buffer size does not match image dimensions");
-		}
-		this.buffer = buffer;
-	}
+    /**
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param buffer
+     *            the buffer containing the byte values
+     */
+    public BufferedUInt8Array2D(int size0, int size1, byte[] buffer)
+    {
+        super(size0, size1);
+        if (buffer.length < size0 * size1)
+        {
+            throw new IllegalArgumentException("Buffer size does not match image dimensions");
+        }
+        this.buffer = buffer;
+    }
+    
 
-
-	// =============================================================
-	// Implementation of the UInt8Array2D interface
+    // =============================================================
+    // Implementation of the UInt8Array2D interface
 
     /* (non-Javadoc)
      * @see net.sci.array.scalar.UInt8Array2D#getByte(int, int)

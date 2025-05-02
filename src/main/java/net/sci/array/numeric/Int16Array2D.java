@@ -3,6 +3,8 @@
  */
 package net.sci.array.numeric;
 
+import net.sci.array.numeric.impl.BufferedInt16Array2D;
+
 /**
  * @author dlegland
  *
@@ -24,6 +26,28 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	    return wrap(Int16Array.create(size0, size1));
 	}
 	
+    /**
+     * Wraps the short array into an instance of Int16Array2D with the
+     * specified dimensions. The new array will be backed by the given short
+     * array; that is, modifications to the short buffer will cause the array to
+     * be modified and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to short to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of Int16Array2D
+     */
+    public static final Int16Array2D wrap(short[] buffer, int size0, int size1)
+    {
+        return new BufferedInt16Array2D(size0, size1, buffer);
+    }
+
     /**
      * Creates a new Int16Array2D from a two-dimensional array of integers. The
      * first index of the int array is the second dimension of the result array,

@@ -6,6 +6,7 @@ package net.sci.array.numeric;
 import java.util.Locale;
 
 import net.sci.array.Array2D;
+import net.sci.array.numeric.impl.BufferedInt32Array3D;
 
 /**
  * @author dlegland
@@ -13,8 +14,8 @@ import net.sci.array.Array2D;
  */
 public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Array
 {
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
     /**
      * Creates a new 3D array containing Int32 values.
@@ -27,11 +28,35 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
      *            the size of the array along the third dimension
      * @return a new instance of Int32Array3D
      */
-	public static final Int32Array3D create(int size0, int size1, int size2)
-	{
+    public static final Int32Array3D create(int size0, int size1, int size2)
+    {
         return wrap(Int32Array.create(size0, size1, size2));
-	}
-	
+    }
+
+    /**
+     * Wraps the int array into an instance of Int32Array3D with the specified
+     * dimensions. The new array will be backed by the given int array; that is,
+     * modifications to the int buffer will cause the array to be modified and
+     * vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to int to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of Int32Array2D
+     */
+    public static final Int32Array3D wrap(int[] buffer, int size0, int size1, int size2)
+    {
+        return new BufferedInt32Array3D(size0, size1, size2, buffer);
+    }
+
     /**
      * Encapsulates the specified instance of Int32Array into a new
      * Int32Array3D, by creating a Wrapper if necessary. If the original array
@@ -49,17 +74,17 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
         }
         return new Wrapper(array);
     }
-    
-    
-	// =============================================================
-	// Constructor
 
-	protected Int32Array3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-	}
-	
+    
+    // =============================================================
+    // Constructor
 
+    protected Int32Array3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+    }
+
+    
     // =============================================================
     // Specialization of the Array3D interface
 
@@ -137,23 +162,23 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
     {
         setInt(x, y, z, value.value);
     }
-    
 
+    
     // =============================================================
     // Specialization of Array interface
-       
-	@Override
-	public Int32Array3D duplicate()
-	{
-	    Int32Array3D res = Int32Array3D.create(this.size0, this.size1, this.size2);
-	    res.fillInts(pos -> this.getInt(pos));
-	    return res;
-	}
-	
 
+    @Override
+    public Int32Array3D duplicate()
+    {
+        Int32Array3D res = Int32Array3D.create(this.size0, this.size1, this.size2);
+        res.fillInts(pos -> this.getInt(pos));
+        return res;
+    }
+
+    
     // =============================================================
     // Implementation of inner classes
-    
+
     /**
      * Wraps a Int32 array with three dimensions into a Int32Array3D.
      */

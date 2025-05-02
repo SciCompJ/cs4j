@@ -38,6 +38,30 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
 	    return wrap(BinaryArray.create(size0, size1, size2));
 	}
 	
+    /**
+     * Wraps the boolean array into an instance of BinaryArray3D with the
+     * specified dimensions. The new array will be backed by the given boolean
+     * array; that is, modifications to the boolean buffer will cause the array
+     * to be modified and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to boolean to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of BinaryArray3D
+     */
+    public static final BinaryArray3D wrap(boolean[] buffer, int size0, int size1, int size2)
+    {
+        return new BufferedBinaryArray3D(size0, size1, size2, buffer);
+    }
+
     public final static BinaryArray3D wrap(BinaryArray array)
     {
         if (array instanceof BinaryArray3D)

@@ -18,8 +18,8 @@ import net.sci.util.MathUtils;
  */
 public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16Array
 {
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
     /**
      * Creates a new 3D array containing UInt16 values.
@@ -32,14 +32,38 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
      *            the size of the array along the third dimension
      * @return a new instance of UInt16Array3D
      */
-	public static final UInt16Array3D create(int size0, int size1, int size2)
-	{
+    public static final UInt16Array3D create(int size0, int size1, int size2)
+    {
         if (MathUtils.prod(size0, size1, size2) < Integer.MAX_VALUE)
             return new BufferedUInt16Array3D(size0, size1, size2);
-        else 
+        else
             return new SlicedUInt16Array3D(size0, size1, size2);
-	}
-	
+    }
+
+    /**
+     * Wraps the short array into an instance of UInt16Array3D with the
+     * specified dimensions. The new array will be backed by the given short
+     * array; that is, modifications to the short buffer will cause the array to
+     * be modified and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to short to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of UInt16Array3D
+     */
+    public static final UInt16Array3D wrap(short[] buffer, int size0, int size1, int size2)
+    {
+        return new BufferedUInt16Array3D(size0, size1, size2, buffer);
+    }
+
     /**
      * Encapsulates the specified instance of UInt16Array into a new
      * UInt16Array3D, by creating a Wrapper if necessary. If the original array
@@ -57,27 +81,27 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
         }
         return new Wrapper(array);
     }
-    
-	
-	// =============================================================
-	// Constructor
-	/**
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param size2
-	 *            the size of the array along the third dimension
-	 */
-	protected UInt16Array3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-	}
 
-	
+    
+    // =============================================================
+    // Constructor
+    /**
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     */
+    protected UInt16Array3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+    }
+
+    
     // =============================================================
     // New methods
-    
+
     public abstract short getShort(int x, int y, int z);
 
     public abstract void setShort(int x, int y, int z, short s);
@@ -138,7 +162,7 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
         setShort(pos[0], pos[1], pos[2], s);
     }
 
-	
+    
     // =============================================================
     // Management of slices
 
@@ -205,18 +229,11 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
         return new SliceIterator();
     }
 
-	// =============================================================
-	// Specialization of the UInt16Array interface
+    
+    // =============================================================
+    // Specialization of Array interface
 
-
-	// =============================================================
-	// Specialization of IntArrayND interface
-
-
-	// =============================================================
-	// Specialization of Array3D interface
-
-	@Override
+    @Override
     public UInt16Array3D duplicate()
     {
         // create output array
@@ -235,17 +252,13 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
         return res;
     }
 
-	
-	// =============================================================
-	// Specialization of Array interface
-	
-	@Override
-	public UInt16Array newInstance(int... dims)
-	{
-		return UInt16Array.create(dims);
-	}
-	
-	
+    @Override
+    public UInt16Array newInstance(int... dims)
+    {
+        return UInt16Array.create(dims);
+    }
+
+    
     // =============================================================
     // Implementation of inner classes
     

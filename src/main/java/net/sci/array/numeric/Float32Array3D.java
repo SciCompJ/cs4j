@@ -6,6 +6,7 @@ package net.sci.array.numeric;
 import java.util.Locale;
 
 import net.sci.array.Array2D;
+import net.sci.array.numeric.impl.BufferedFloat32Array3D;
 
 /**
  * @author dlegland
@@ -13,25 +14,49 @@ import net.sci.array.Array2D;
  */
 public abstract class Float32Array3D extends ScalarArray3D<Float32> implements Float32Array
 {
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
-	/**
-	 * Creates a new 3D array containing Float32 values.
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param size2
-	 *            the size of the array along the third dimension
-	 * @return a new instance of Float32Array3D
-	 */
-	public static final Float32Array3D create(int size0, int size1, int size2)
-	{
+    /**
+     * Creates a new 3D array containing Float32 values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of Float32Array3D
+     */
+    public static final Float32Array3D create(int size0, int size1, int size2)
+    {
         return wrap(Float32Array.create(size0, size1, size2));
-	}
-	
+    }
+
+    /**
+     * Wraps the float array into an instance of Float32Array3D with the
+     * specified dimensions. The new array will be backed by the given float
+     * array; that is, modifications to the float buffer will cause the array to
+     * be modified and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to float to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of Float32Array2D
+     */
+    public static final Float32Array3D wrap(float[] buffer, int size0, int size1, int size2)
+    {
+        return new BufferedFloat32Array3D(size0, size1, size2, buffer);
+    }
+
     /**
      * Encapsulates the specified instance of Float32Array into a new
      * Float32Array3D, by creating a Wrapper if necessary. If the original array
@@ -49,28 +74,27 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
         }
         return new Wrapper(array);
     }
+
     
+    // =============================================================
+    // Constructor
 
-	
-	// =============================================================
-	// Constructor
+    /**
+     * Initialize the protected size variables.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     */
+    protected Float32Array3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+    }
 
-	/**
-	 * Initialize the protected size variables. 
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param size2
-	 *            the size of the array along the third dimension
-	 */
-	protected Float32Array3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-	}
-
-
+    
     // =============================================================
     // New methods
     
@@ -206,22 +230,26 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
     }
 
     
-	// =============================================================
-	// Implementation of Array interface
+    // =============================================================
+    // Implementation of Array interface
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.ScalarArray#newInstance(int[])
-	 */
-	@Override
-	public Float32Array newInstance(int... dims)
-	{
-		return Float32Array.create(dims);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.data.ScalarArray#newInstance(int[])
+     */
+    @Override
+    public Float32Array newInstance(int... dims)
+    {
+        return Float32Array.create(dims);
+    }
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.data.FloatArray#duplicate()
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.data.FloatArray#duplicate()
+     */
+    @Override
     public Float32Array3D duplicate()
     {
         Float32Array3D res = Float32Array3D.create(size0, size1, size2);

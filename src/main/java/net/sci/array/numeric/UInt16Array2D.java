@@ -11,21 +11,43 @@ import net.sci.array.numeric.impl.BufferedUInt16Array2D;
  */
 public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16Array
 {
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
-	/**
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @return a new instance of UInt16Array2D
-	 */
-	public static final UInt16Array2D create(int size0, int size1)
-	{
-		return new BufferedUInt16Array2D(size0, size1);
-	}
-	
+    /**
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of UInt16Array2D
+     */
+    public static final UInt16Array2D create(int size0, int size1)
+    {
+        return wrap(UInt16Array.create(size0, size1));
+    }
+
+    /**
+     * Wraps the short array into an instance of UInt16Array2D with the
+     * specified dimensions. The new array will be backed by the given short
+     * array; that is, modifications to the short buffer will cause the array to
+     * be modified and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to short to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of UInt16Array2D
+     */
+    public static final UInt16Array2D wrap(short[] buffer, int size0, int size1)
+    {
+        return new BufferedUInt16Array2D(size0, size1, buffer);
+    }
+
     /**
      * Creates a new UInt16Array2D from a two-dimensional array of integers. The
      * first index of the int array is the second dimension of the result array,
@@ -70,25 +92,25 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
         }
         return new Wrapper(array);
     }
-    
-    
-	// =============================================================
-	// Constructor
 
-	/**
-	 * Initialize the protected size variables. 
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 */
-	protected UInt16Array2D(int size0, int size1)
-	{
-		super(size0, size1);
-	}
+    
+    // =============================================================
+    // Constructor
 
-	
+    /**
+     * Initialize the protected size variables.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     */
+    protected UInt16Array2D(int size0, int size1)
+    {
+        super(size0, size1);
+    }
+
+    
     // =============================================================
     // New methods
     
@@ -142,19 +164,19 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
         setShort(x, y, value.value);
     }
 
-	
-	// =============================================================
-	// Specialization of Array interface
-	
-	@Override
-	public UInt16Array newInstance(int... dims)
-	{
-		return UInt16Array.create(dims);
-	}
+    
+    // =============================================================
+    // Specialization of Array interface
 
-	@Override
-	public UInt16Array2D duplicate()
-	{
+    @Override
+    public UInt16Array newInstance(int... dims)
+    {
+        return UInt16Array.create(dims);
+    }
+
+    @Override
+    public UInt16Array2D duplicate()
+    {
         // create output array
         UInt16Array2D res = UInt16Array2D.create(this.size0, this.size1);
 

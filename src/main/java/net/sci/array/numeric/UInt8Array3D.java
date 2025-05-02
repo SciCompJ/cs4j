@@ -6,6 +6,7 @@ package net.sci.array.numeric;
 import java.util.Locale;
 
 import net.sci.array.Array2D;
+import net.sci.array.numeric.impl.BufferedUInt8Array3D;
 
 /**
  * @author dlegland
@@ -13,8 +14,8 @@ import net.sci.array.Array2D;
  */
 public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Array
 {
-	// =============================================================
-	// Static methods
+    // =============================================================
+    // Static methods
 
     /**
      * Creates a new 3D array containing UInt8 values. Uses the default factory,
@@ -28,11 +29,35 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
      *            the size of the array along the third dimension
      * @return a new instance of UInt8Array3D
      */
-	public static final UInt8Array3D create(int size0, int size1, int size2)
-	{
+    public static final UInt8Array3D create(int size0, int size1, int size2)
+    {
         return wrap(UInt8Array.create(size0, size1, size2));
-	}
-	
+    }
+
+    /**
+     * Wraps the byte array into an instance of UInt8Array3D with the specified
+     * dimensions. The new array will be backed by the given byte array; that
+     * is, modifications to the byte buffer will cause the array to be modified
+     * and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to byte to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @return a new instance of UInt8Array2D
+     */
+    public static final UInt8Array3D wrap(byte[] buffer, int size0, int size1, int size2)
+    {
+        return new BufferedUInt8Array3D(size0, size1, size2, buffer);
+    }
+
     /**
      * Encapsulates the instance of UInt8Array into a new UInt8Array3D, by
      * creating a Wrapper if necessary. If the original array is already an
@@ -50,34 +75,33 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         }
         return new Wrapper(array);
     }
+
+    
+    // =============================================================
+    // Constructor
+
+    /**
+     * Initialize the protected size variables.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     */
+    protected UInt8Array3D(int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+    }
     
 
-	// =============================================================
-	// Constructor
+    // =============================================================
+    // New methods
 
-	/**
-	 * Initialize the protected size variables. 
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param size2
-	 *            the size of the array along the third dimension
-	 */
-	protected UInt8Array3D(int size0, int size1, int size2)
-	{
-		super(size0, size1, size2);
-	}
-
-	
-	// =============================================================
-	// New methods
-
-	public abstract byte getByte(int x, int y, int z);
+    public abstract byte getByte(int x, int y, int z);
 
     public abstract void setByte(int x, int y, int z, byte b);
-    
 	
     // =============================================================
     // Management of slices
@@ -183,36 +207,35 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
         setByte(x, y, z, (byte) UInt8.clamp(value));
     }
 
-
+    
     // =============================================================
-	// Specialization of the ScalarArray3D interface
+    // Specialization of the ScalarArray3D interface
 
     @Override
     public void setValue(int x, int y, int z, double value)
     {
         setByte(x, y, z, (byte) UInt8.convert(value));
     }
-    
 
-	// =============================================================
-	// Specialization of Array3D interface
+    
+    // =============================================================
+    // Specialization of Array3D interface
 
     @Override
     public UInt8 get(int x, int y, int z)
     {
         return new UInt8(getByte(x, y, z));
     }
-    
+
     @Override
     public void set(int x, int y, int z, UInt8 value)
     {
         setByte(x, y, z, value.value);
     }
-    
 
-	// =============================================================
-	// Specialization of Array interface
-	
+    
+    // =============================================================
+    // Specialization of Array interface
 
     @Override
     public UInt8Array3D duplicate()

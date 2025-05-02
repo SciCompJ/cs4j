@@ -3,6 +3,8 @@
  */
 package net.sci.array.numeric;
 
+import net.sci.array.numeric.impl.BufferedUInt8Array2D;
+
 /**
  * @author dlegland
  *
@@ -22,12 +24,34 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
      *            the size of the array along the second dimension
      * @return a new instance of UInt8Array2D
      */
-	public static final UInt8Array2D create(int size0, int size1)
-	{
-		return wrap(UInt8Array.create(size0, size1));
-	}
-	
-	/**
+    public static final UInt8Array2D create(int size0, int size1)
+    {
+        return wrap(UInt8Array.create(size0, size1));
+    }
+    
+    /**
+     * Wraps the byte array into an instance of UInt8Array2D with the specified
+     * dimensions. The new array will be backed by the given byte array; that
+     * is, modifications to the byte buffer will cause the array to be modified
+     * and vice versa.
+     * 
+     * The number of elements of the buffer must be at least the product of
+     * array dimensions.
+     * 
+     * @param buffer
+     *            the array to byte to encapsulate
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of UInt8Array2D
+     */
+    public static final UInt8Array2D wrap(byte[] buffer, int size0, int size1)
+    {
+        return new BufferedUInt8Array2D(size0, size1, buffer);
+    }
+
+    /**
      * Creates a new UInt8Array2D from a two-dimensional array of integers. The
      * first index of the int array is the second dimension of the result array,
      * i.e. <code>intArray[y][x]</code> is the same value as
