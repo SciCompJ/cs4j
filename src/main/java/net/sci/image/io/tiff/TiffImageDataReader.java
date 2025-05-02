@@ -17,22 +17,21 @@ import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.binary.BufferedBinaryArray2D;
 import net.sci.array.binary.SlicedBinaryArray3D;
 import net.sci.array.color.BufferedPackedByteRGB8Array2D;
 import net.sci.array.color.BufferedPackedShortRGB16Array2D;
 import net.sci.array.color.RGB16Array2D;
 import net.sci.array.color.RGB8Array2D;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.Float32Array3D;
+import net.sci.array.numeric.Int32Array2D;
+import net.sci.array.numeric.Int32Array3D;
 import net.sci.array.numeric.UInt16Array;
+import net.sci.array.numeric.UInt16Array2D;
 import net.sci.array.numeric.UInt16Array3D;
 import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.UInt8Array3D;
-import net.sci.array.numeric.impl.BufferedFloat32Array2D;
-import net.sci.array.numeric.impl.BufferedFloat32Array3D;
-import net.sci.array.numeric.impl.BufferedInt32Array2D;
-import net.sci.array.numeric.impl.BufferedInt32Array3D;
-import net.sci.array.numeric.impl.BufferedUInt16Array2D;
-import net.sci.array.numeric.impl.BufferedUInt8Array2D;
 import net.sci.array.numeric.impl.SlicedUInt16Array3D;
 import net.sci.array.numeric.impl.SlicedUInt8Array3D;
 import net.sci.image.io.PackBits;
@@ -130,23 +129,23 @@ public class TiffImageDataReader extends AlgoStub
         // Transform raw buffer into interpreted buffer
         if (pixelType == PixelType.UINT8)
         {
-            return new BufferedUInt8Array2D(sizeX, sizeY, byteArray);
+            return UInt8Array2D.wrap(byteArray, sizeX, sizeY);
         }
         else if (pixelType == PixelType.UINT12 || pixelType == PixelType.UINT16)
         {
             // Store data as short array
             short[] shortBuffer = convertToShortArray(byteArray, this.byteOrder);
-            return new BufferedUInt16Array2D(sizeX, sizeY, shortBuffer);
+            return UInt16Array2D.wrap(shortBuffer, sizeX, sizeY);
         }
         else if (pixelType == PixelType.INT32)
         {
             int[] intBuffer = convertToIntArray(byteArray, this.byteOrder);
-            return new BufferedInt32Array2D(sizeX, sizeY, intBuffer);
+            return Int32Array2D.wrap(intBuffer, sizeX, sizeY);
         }
         else if (pixelType == PixelType.FLOAT32)
         {
             float[] floatBuffer = convertToFloatArray(byteArray, this.byteOrder);
-            return new BufferedFloat32Array2D(sizeX, sizeY, floatBuffer);
+            return Float32Array2D.wrap(floatBuffer, sizeX, sizeY);
         }
         else if (pixelType == PixelType.RGB8)
         {
@@ -257,12 +256,12 @@ public class TiffImageDataReader extends AlgoStub
         if (pixelType == PixelType.INT32)
         {
             int[] intBuffer = convertToIntArray(byteArray, this.byteOrder);
-            return new BufferedInt32Array3D(sizeX, sizeY, sizeZ, intBuffer);
+            return Int32Array3D.wrap(intBuffer, sizeX, sizeY, sizeZ);
         }
         else if (pixelType == PixelType.FLOAT32)
         {
             float[] floatBuffer = convertToFloatArray(byteArray, this.byteOrder);
-            return new BufferedFloat32Array3D(sizeX, sizeY, sizeZ, floatBuffer);
+            return Float32Array3D.wrap(floatBuffer, sizeX, sizeY, sizeZ);
         }
         else
         {
@@ -313,7 +312,7 @@ public class TiffImageDataReader extends AlgoStub
                 throw new IOException("Could read only " + nRead + " bytes over the " + bytesPerPlane + " expected");
             }
             
-            arrayList.add(new BufferedUInt8Array2D(sizeX, sizeY, buffer));
+            arrayList.add(UInt8Array2D.wrap(buffer, sizeX, sizeY));
         }
         
         stream.close();
@@ -368,7 +367,7 @@ public class TiffImageDataReader extends AlgoStub
             }
             
             short[] shortBuffer = convertToShortArray(buffer, this.byteOrder);
-            arrayList.add(new BufferedUInt16Array2D(sizeX, sizeY, shortBuffer));
+            arrayList.add(UInt16Array2D.wrap(shortBuffer, sizeX, sizeY));
         }
         
         stream.close();
@@ -469,8 +468,7 @@ public class TiffImageDataReader extends AlgoStub
         }
 
         // create result 2D array
-        BinaryArray2D res = new BufferedBinaryArray2D(sizeX, sizeY, booleanBuffer);
-        return res;
+        return BinaryArray2D.wrap(booleanBuffer, sizeX, sizeY);
     }
 
     /**
@@ -629,8 +627,7 @@ public class TiffImageDataReader extends AlgoStub
             offset0 += nRead;
         }
 
-        int nRead = PackBits.uncompressPackBits(compressedBytes, buffer, offset);
-        return nRead;
+        return PackBits.uncompressPackBits(compressedBytes, buffer, offset);
     }
 
     private static final int[] entryValueAsIntArray(ImageFileDirectory ifd, int tagCode)
