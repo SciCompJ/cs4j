@@ -6,6 +6,8 @@ package net.sci.image.io.tiff;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sci.image.io.PixelType;
+
 /**
  * An incomplete list of extension tags.
  * 
@@ -58,14 +60,30 @@ public class ExtensionTags implements TagSet
     {
         public static final int CODE = 339;
         
-        public static final int UNSIGNED_INTEGER = 1;
-        public static final int SIGNED_INTEGER = 2;
-        public static final int FLOATING_POINT = 3;
-        public static final int UNDEFINED = 4;
+        public static final short UNSIGNED_INTEGER = 1;
+        public static final short SIGNED_INTEGER = 2;
+        public static final short FLOATING_POINT = 3;
+        public static final short UNDEFINED = 4;
         
         public SampleFormat()
         {
             super(CODE, "SampleFormat", "Specifies how to interpret each data sample in a pixel");
+            this.type = Type.SHORT;
+            this.count = 1;
+            this.value = UNDEFINED;
+        }
+        
+        /**
+         * Initializes from pixel type.
+         * @param pixelType the type of pixel
+         * @return a reference to this tag.
+         */
+        public TiffTag init(PixelType pixelType)
+        {
+            setShortValue(pixelType.isInteger()
+                    ? pixelType.isSigned() ? SampleFormat.SIGNED_INTEGER : SampleFormat.UNSIGNED_INTEGER
+                    : SampleFormat.FLOATING_POINT);
+            return this;
         }
     }
 

@@ -168,6 +168,12 @@ public class TiffTag
     /**
      * Initializes the type, count, and value of this tag.
      * 
+     * @param type
+     *            the type of data this tag contain
+     * @param count
+     *            the number of elementary data
+     * @param value
+     *            an initial value for the tag
      * @return the reference to this tag (for chaining operations)
      */
     public TiffTag init(Type type, int count, int value)
@@ -179,8 +185,8 @@ public class TiffTag
     }
     
     /**
-     * Sets the {@code value} field from the specified value, and sets up the
-     * {@code type} field to BYTE and the {@code count} field to 1.
+     * Sets the {@code value} field from the specified single byte value, and
+     * sets up the {@code type} field to BYTE and the {@code count} field to 1.
      * 
      * @param value
      *            the byte value to set up.
@@ -194,8 +200,8 @@ public class TiffTag
     }
 
     /**
-     * Sets the {@code value} field from the specified value, and sets up the
-     * {@code type} field to SHORT and the {@code count} field to 1.
+     * Sets the {@code value} field from the specified single short value, and
+     * sets up the {@code type} field to SHORT and the {@code count} field to 1.
      * 
      * @param value
      *            the shirt integer value to set up.
@@ -209,8 +215,8 @@ public class TiffTag
     }
 
     /**
-     * Sets the {@code value} field from the specified value, and sets up the
-     * {@code type} field to LONGs and the {@code count} field to 1.
+     * Sets the {@code value} field from the specified single integer value, and
+     * sets up the {@code type} field to LONGs and the {@code count} field to 1.
      * 
      * @param value
      *            the integer value to set up.
@@ -500,8 +506,13 @@ public class TiffTag
                 out.write(data);
             }
             case ASCII -> {
-                byte[] data = ((String) content).getBytes();
-                out.write(data);
+//                    byte[] data = ((String) content).getBytes();
+                    out.write((byte[]) content);
+//                }
+//                else
+//                {
+//                    throw new RuntimeException("Content of tag " + this.code + " (" + this.name + ") must be a String");
+//                }
             }
             case SHORT -> {
                 for (short s : (short[]) content)

@@ -26,6 +26,8 @@ public class BaselineTags implements TagSet
         {
             super(CODE, "NewSubfileType", "A general indication of the kind of data contained in this subfile");
             this.type = Type.LONG;
+            this.count = 1;
+            this.value = 0;
         }
     }
 
@@ -91,21 +93,55 @@ public class BaselineTags implements TagSet
             super(CODE, "BitsPerSample", "Number of bits per component");
             this.type = Type.SHORT;
         }
+        
+        /**
+         * Initializes value or content based on number of samples (per pixel),
+         * and number of bits for each sample.
+         * 
+         * @param samplesPerPixel
+         *            the number of samples per pixel
+         * @param bitsPerSingleSample
+         *            the number of bits used to represent a single sample
+         * @return the reference to this tag
+         */
+        public TiffTag init(int samplesPerPixel, int bitsPerSingleSample)
+        {
+            if (samplesPerPixel == 1)
+            {
+                setShortValue((short) bitsPerSingleSample);
+            }
+            else
+            {
+                // convert single value into an array of short
+                short[] bps = new short[samplesPerPixel];
+                for (int c = 0; c < samplesPerPixel; c++)
+                {
+                    bps[c] = (short) bitsPerSingleSample;
+                }
+                setValue(bps);
+            }
+            
+            return this;
+        }
     }
 
     /**
      * 259 - Compression scheme used on the image data.
      */
-    public static final class CompressionMode extends TiffTag
+    public static final class Compression extends TiffTag
     {
         public static final int CODE = 259;
         
-        public CompressionMode()
+        public static final int NONE = 1;
+        public static final int CCITT = 2;
+        public static final int PACKBITS = 32773;
+        
+        public Compression()
         {
             super(CODE, "CompressionMode", "Compression scheme used on the image data");
             this.type = Type.SHORT;
             this.count = 1;
-            this.value = 1; // no compression
+            this.value = NONE; // no compression
         }
     }
 
@@ -127,7 +163,7 @@ public class BaselineTags implements TagSet
         {
             super(CODE, "PhotometricInterpretation", "The color space of the image data");
             this.type = Type.SHORT;
-            this.count = 1;
+            this.count = BLACK_IS_ZERO;
         }
     }
     
@@ -451,6 +487,7 @@ public class BaselineTags implements TagSet
         public Software()
         {
             super(CODE, "Software", "Name and version number of the software package(s) used to create the image");
+            this.type = Type.ASCII;
         }
     }
     
@@ -467,6 +504,7 @@ public class BaselineTags implements TagSet
         public DateTime()
         {
             super(CODE, "DateTime", "Date and time of image creation");
+            this.type = Type.ASCII;
         }
     }
     
@@ -479,6 +517,7 @@ public class BaselineTags implements TagSet
         public Artist()
         {
             super(CODE, "Artist", "Person who created the image");
+            this.type = Type.ASCII;
         }
     }
     
@@ -490,7 +529,8 @@ public class BaselineTags implements TagSet
         public static final int CODE = 316;
         public HostComputer()
         {
-            super(CODE, "HostComputer", "The precision of the information contained in the GrayResponseCurve");
+            super(CODE, "HostComputer", "The computer and/or operating system in use at the time of image creation");
+            this.type = Type.ASCII;
         }
     }
     
@@ -545,7 +585,7 @@ public class BaselineTags implements TagSet
         add(tags, new ImageWidth());
         add(tags, new ImageHeight());
         add(tags, new BitsPerSample());
-        add(tags, new CompressionMode());
+        add(tags, new Compression());
 
         add(tags, new PhotometricInterpretation());
         add(tags, new Threshholding());

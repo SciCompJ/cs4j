@@ -10,6 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteOrder;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.util.Date;
 
 import net.sci.array.Array;
 import net.sci.array.color.RGB16Array;
@@ -23,9 +26,11 @@ import net.sci.array.numeric.UInt8Array;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.io.tiff.BaselineTags;
+import net.sci.image.io.tiff.BaselineTags.PhotometricInterpretation;
 import net.sci.image.io.tiff.ExtensionTags.SampleFormat;
 import net.sci.image.io.tiff.ImageFileDirectory;
 import net.sci.image.io.tiff.TiffTag;
+import net.sci.image.io.tiff.TiffTag.Type;
 
 /**
  * Writer for images in TIFF format.
@@ -179,31 +184,21 @@ public class TiffImageWriter implements ImageWriter
         ifd.addEntry(new BaselineTags.ImageWidth().setIntValue(sizeX));
         ifd.addEntry(new BaselineTags.ImageHeight().setIntValue(sizeY));
         
-        // number of bits per sample
-        TiffTag bitsPerSampleTag = new BaselineTags.BitsPerSample();
-        if (samplesPerPixel == 1)
+        // number of bits per sample (use tag-specific initialization method)
+        ifd.addEntry(new BaselineTags.BitsPerSample().init(samplesPerPixel, bitsPerSample));
+
+        // compression mode (default is none)
+        ifd.addEntry(new BaselineTags.Compression());
+        
+        // photometric interpretation
+        TiffTag photometricInterpretationTag = new PhotometricInterpretation();
+        if (image.getData() instanceof RGB8Array || image.getData() instanceof RGB16Array)
         {
-            bitsPerSampleTag.setShortValue((short) bitsPerSample);
+            photometricInterpretationTag.setIntValue(PhotometricInterpretation.RGB);
         }
         else
         {
-            short[] bps = new short[samplesPerPixel];
-            for (int c = 0; c < samplesPerPixel; c++)
-            {
-                bps[c] = (short) bitsPerSample;
-            }
-            bitsPerSampleTag.setValue(bps);
-        }
-        ifd.addEntry(bitsPerSampleTag);
-
-        // compression mode (default is none)
-        ifd.addEntry(new BaselineTags.CompressionMode());
-        
-        // photometric interpretation
-        TiffTag photometricInterpretationTag = new BaselineTags.PhotometricInterpretation();
-        if (image.getData() instanceof RGB8Array || image.getData() instanceof RGB16Array)
-        {
-            photometricInterpretationTag.setIntValue(2); // color code
+            photometricInterpretationTag.setIntValue(PhotometricInterpretation.BLACK_IS_ZERO);
         }
         ifd.addEntry(photometricInterpretationTag);
         
@@ -229,17 +224,20 @@ public class TiffImageWriter implements ImageWriter
         ifd.addEntry(new BaselineTags.YResolution().setValue(createSpacingRational(yspacing)));
         ifd.addEntry(new BaselineTags.ResolutionUnit().setIntValue(1));
 
+        // planar configuration required only when samples per pixel > 1
+        if (samplesPerPixel > 1)
+        {
+            // init to "Chunky" format (recommended value from specification)
+            ifd.addEntry(new BaselineTags.PlanarConfiguration().init(Type.SHORT, 1, 1));
+        }
+        
         // --- Extension tags ---
-        int sampleFormatCode = 4;
-        if (pixelType.isInteger()) 
-        {
-            sampleFormatCode = pixelType.isSigned() ? SampleFormat.SIGNED_INTEGER : SampleFormat.UNSIGNED_INTEGER;
-        }
-        else
-        {
-            sampleFormatCode = SampleFormat.FLOATING_POINT;
-        }
-        ifd.addEntry(new SampleFormat().setIntValue(sampleFormatCode));
+        ifd.addEntry(new SampleFormat().init(pixelType));
+        
+        // add non-mandatoy tag(s)
+        DateFormat formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String dateString = formatter.format(new Date(System.currentTimeMillis()));
+        ifd.addEntry(new BaselineTags.DateTime().setValue(dateString));
         
         return ifd;
     }

@@ -531,7 +531,7 @@ public class TiffImageDataReader extends AlgoStub
     private int readByteBuffer(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer)
             throws IOException
     {
-        TiffTag compressionTag = ifd.getEntry(BaselineTags.CompressionMode.CODE);
+        TiffTag compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
         int compressionCode = compressionTag != null ? compressionTag.value : 1;
 
         return switch (compressionCode)
@@ -614,7 +614,7 @@ public class TiffImageDataReader extends AlgoStub
     private int readByteArray(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer, int offset)
             throws IOException
     {
-        TiffTag compressionTag = ifd.getEntry(BaselineTags.CompressionMode.CODE);
+        TiffTag compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
         int compressionCode = compressionTag != null ? compressionTag.value : 1;
         
         return switch (compressionCode)
