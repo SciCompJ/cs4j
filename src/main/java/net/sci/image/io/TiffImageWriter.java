@@ -4,6 +4,7 @@
 package net.sci.image.io;
 
 import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,12 +12,15 @@ import java.io.OutputStream;
 import java.nio.ByteOrder;
 
 import net.sci.array.Array;
+import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8Array;
-import net.sci.array.numeric.Int16Array;
+import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt8Array;
+import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.io.tiff.BaselineTags;
+import net.sci.image.io.tiff.ExtensionTags.SampleFormat;
 import net.sci.image.io.tiff.ImageFileDirectory;
 import net.sci.image.io.tiff.TiffTag;
 
@@ -36,7 +40,10 @@ public class TiffImageWriter implements ImageWriter
     
     File file;
     OutputStream out;
-    boolean littleEndian = true;
+//    boolean littleEndian = false;
+    
+    /** Byte order to use for writing binary data. Use BIG_ENDIAN as default */
+    ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
     
     public TiffImageWriter(File file)
     {
@@ -49,45 +56,17 @@ public class TiffImageWriter implements ImageWriter
         // check if image is 3D
         boolean bigTiff = false;
         
-        ImageFileDirectory ifd = new ImageFileDirectory();
+        int sizeX = image.getSize(0);
+        int sizeY = image.getSize(1);
+        PixelType pixelType = PixelType.fromImage(image);
+        int samplesPerPixel = pixelType.sampleCount();
+        int bitsPerSample = pixelType.bitsPerSample();
         
-        // initialize the collection of tags
-        // Depending on the type of images, some of the tags are mandatory
+        // image size as number of bytes
+        long bytesPerPlane = ((long) sizeX) * sizeY * samplesPerPixel * (bitsPerSample / 8);
+        long imageSize = bytesPerPlane <= 0xffffffffL ? (int) bytesPerPlane : 0;
 
-        // file type
-        ifd.addEntry(new BaselineTags.NewSubfileType().initFrom(image));
-        
-        // image dimension
-        ifd.addEntry(new BaselineTags.ImageWidth().initFrom(image));
-        ifd.addEntry(new BaselineTags.ImageHeight().initFrom(image));
-        
-        // number of bits per sample
-        ifd.addEntry(new BaselineTags.BitsPerSample().initFrom(image));
-
-        // compression mode (default is none)
-        ifd.addEntry(new BaselineTags.CompressionMode().initFrom(image));
-        
-        // photometric interpretation
-        ifd.addEntry(new BaselineTags.PhotometricInterpretation().initFrom(image));
-        
-        // the offset to write image data (content initialized later)
-        TiffTag imageOffsetTag = new BaselineTags.StripOffsets().initFrom(image);
-        ifd.addEntry(imageOffsetTag);
-        
-        // the number of elements (samples) per pixel. 1 for grayscale, 3 for colors.
-        ifd.addEntry(new BaselineTags.SamplesPerPixel().initFrom(image));
-
-        // determines how to write image data. Data is organized in one or more "strips".
-        // Each strip contain data for one or more image rows.
-        // Default: only one strip that contains all rows. RowsPerStrip contains row number, 
-        // and StripByteCount contains data size.
-        ifd.addEntry(new BaselineTags.RowsPerStrip().initFrom(image));
-        ifd.addEntry(new BaselineTags.StripByteCounts().initFrom(image));
-        
-        // meta-data
-        ifd.addEntry(new BaselineTags.XResolution().initFrom(image));
-        ifd.addEntry(new BaselineTags.YResolution().initFrom(image));
-        ifd.addEntry(new BaselineTags.ResolutionUnit().initFrom(image));
+        ImageFileDirectory ifd = initImageFileDirectory(image);
         
         // determine size of IFD, in bytes.
         // -> entry count (2 bytes) + 12 bytes per entry + next offset (4 bytes).
@@ -110,10 +89,10 @@ public class TiffImageWriter implements ImageWriter
         
         // determine image offset after IFD data 
         long imageOffset = HEADER_SIZE + ifdSize + ifdDataSize;
+        TiffTag imageOffsetTag = ifd.getEntry(BaselineTags.StripOffsets.CODE);
         imageOffsetTag.value = (int) imageOffset;
         
         // compute offset to next IFD
-        long imageSize = computeImageSize(image);
         int nImages = 1;
         long nextIFD = 0L;
         if (image.getDimension() > 2)
@@ -128,14 +107,13 @@ public class TiffImageWriter implements ImageWriter
         
         // open output stream
         this.out = new FileOutputStream(this.file);
-        ByteOrder order = littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN;
         writeHeader();
         
         // Write current image file directory
-        ifd.write(out, order);
+        ifd.write(out, byteOrder);
 
         // Write content of the different tags
-        ifd.writeEntryData(out, order);
+        ifd.writeEntryData(out, byteOrder);
                 
         // Finally, image data (the whole array)
         writeImageData(image.getData());
@@ -163,7 +141,7 @@ public class TiffImageWriter implements ImageWriter
                 imageOffsetTag.value = (int) imageOffset;
                 ifd2.setOffset(nextIFD);
                 
-                ifd2.write(out, order);
+                ifd2.write(out, byteOrder);
             }
         } 
         else if (bigTiff)
@@ -175,6 +153,94 @@ public class TiffImageWriter implements ImageWriter
         this.out.close();
     }
     
+    private ImageFileDirectory initImageFileDirectory(Image image)
+    {
+        int sizeX = image.getSize(0);
+        int sizeY = image.getSize(1);
+        PixelType pixelType = PixelType.fromImage(image);
+        int samplesPerPixel = pixelType.sampleCount();
+        int bitsPerSample = pixelType.bitsPerSample();
+        
+        // image size as number of bytes
+        long bytesPerPlane = ((long) sizeX) * sizeY * samplesPerPixel * (bitsPerSample / 8);
+        
+        ImageFileDirectory ifd = new ImageFileDirectory();
+        
+        // initialize the collection of tags
+        // Depending on the type of images, some of the tags are mandatory
+
+        // file type
+        ifd.addEntry(new BaselineTags.NewSubfileType());
+        
+        // image dimension
+        ifd.addEntry(new BaselineTags.ImageWidth().setIntValue(sizeX));
+        ifd.addEntry(new BaselineTags.ImageHeight().setIntValue(sizeY));
+        
+        // number of bits per sample
+        TiffTag bitsPerSampleTag = new BaselineTags.BitsPerSample();
+        if (samplesPerPixel == 1)
+        {
+            bitsPerSampleTag.setShortValue((short) bitsPerSample);
+        }
+        else
+        {
+            short[] bps = new short[samplesPerPixel];
+            for (int c = 0; c < samplesPerPixel; c++)
+            {
+                bps[c] = (short) bitsPerSample;
+            }
+            bitsPerSampleTag.setValue(bps);
+        }
+        ifd.addEntry(bitsPerSampleTag);
+
+        // compression mode (default is none)
+        ifd.addEntry(new BaselineTags.CompressionMode());
+        
+        // photometric interpretation
+        TiffTag photometricInterpretationTag = new BaselineTags.PhotometricInterpretation();
+        if (image.getData() instanceof RGB8Array || image.getData() instanceof RGB16Array)
+        {
+            photometricInterpretationTag.setIntValue(2); // color code
+        }
+        ifd.addEntry(photometricInterpretationTag);
+        
+        // the offset to write image data (content initialized later)
+        TiffTag imageOffsetTag = new BaselineTags.StripOffsets().initFrom(image);
+        ifd.addEntry(imageOffsetTag);
+        
+        // the number of elements (samples) per pixel. 1 for grayscale, 3 for colors.
+        ifd.addEntry(new BaselineTags.SamplesPerPixel().setShortValue((short) samplesPerPixel));
+
+        // determines how to write image data. Data is organized in one or more "strips".
+        // Each strip contain data for one or more image rows.
+        // Default: only one strip that contains all rows. RowsPerStrip contains row number, 
+        // and StripByteCount contains total number of bytes of an image plane.
+        ifd.addEntry(new BaselineTags.RowsPerStrip().setIntValue(sizeY));
+        ifd.addEntry(new BaselineTags.StripByteCounts().setIntValue((int) bytesPerPlane));
+        
+        // save calibration from image
+        Calibration calib = image.getCalibration();
+        double xspacing = calib.getXAxis().getSpacing();
+        double yspacing = calib.getYAxis().getSpacing();
+        ifd.addEntry(new BaselineTags.XResolution().setValue(createSpacingRational(xspacing)));
+        ifd.addEntry(new BaselineTags.YResolution().setValue(createSpacingRational(yspacing)));
+        ifd.addEntry(new BaselineTags.ResolutionUnit().setIntValue(1));
+
+        // --- Extension tags ---
+        int sampleFormatCode = 4;
+        if (pixelType.isInteger()) 
+        {
+            sampleFormatCode = pixelType.isSigned() ? SampleFormat.SIGNED_INTEGER : SampleFormat.UNSIGNED_INTEGER;
+        }
+        else
+        {
+            sampleFormatCode = SampleFormat.FLOATING_POINT;
+        }
+        ifd.addEntry(new SampleFormat().setIntValue(sampleFormatCode));
+        
+        return ifd;
+    }
+        
     /**
      * Writes the header of the TIFF file, composed of a sequence of eight
      * bytes. The sequence starts either with "II" (Intel byte order, of
@@ -182,7 +248,7 @@ public class TiffImageWriter implements ImageWriter
      */
     private void writeHeader() throws IOException
     {
-       if (this.littleEndian)
+       if (this.byteOrder == ByteOrder.LITTLE_ENDIAN)
        {
            // Start with "II" (Intel byte order, little-endian)
            // Then magic number "42" as a short, 
@@ -196,37 +262,6 @@ public class TiffImageWriter implements ImageWriter
            // then offset to first IFD, equal to 8, as 32-bits integer.
            out.write(new byte[] {77, 77, 0, 42, 0, 0, 0, 8});
        }
-    }
-
-    private long computeImageSize(Image image)
-    {
-        // image size
-        int sizeX = image.getSize(0);
-        int sizeY = image.getSize(1);
-        
-        // image type
-        int bytesPerPixel = bytesPerPixel(image);
-        
-        // image size a number of bytes
-        long bytesPerPlane = (long) sizeX * sizeY * bytesPerPixel;
-        long imageSize = bytesPerPlane <= 0xffffffffL ? (int) bytesPerPlane : 0;
-        return imageSize;   
-    }
-    
-    private int bytesPerPixel(Image image)
-    {
-        Array<?> array = image.getData();
-        
-        // use pattern matching
-        return switch (array)
-        {
-            case UInt8Array x -> 1;
-            case UInt16Array x -> 2;
-            case Int16Array x -> 2;
-            case RGB8Array x -> 3;
-            default -> throw new RuntimeException(
-                    "Unable to determine pixel type for image data with class: " + array.getClass().getName());
-        };
     }
     
     /**
@@ -257,35 +292,55 @@ public class TiffImageWriter implements ImageWriter
      */
     public void writeImageData(Array<?> array) throws IOException
     {
-        // TODO: need to specify byte order?
-        BufferedOutputStream bos = new BufferedOutputStream(this.out);
+        // Create DataOutputStream to write formatted data.
+        // DataOutputStream use necessarily BIG_ENDIAN byte order.
+        DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(this.out));
         if (array instanceof UInt8Array array2)
         {
             for (int[] pos : array2.positions())
             {
-                bos.write(array2.getByte(pos));
+                dos.write(array2.getByte(pos));
             }
         }
         else if (array instanceof UInt16Array array2)
         {
             for (int[] pos : array2.positions())
             {
-                bos.write(array2.getShort(pos));
+                dos.writeShort(array2.getShort(pos));
+            }
+        }
+        else if (array instanceof Float32Array array2)
+        {
+            for (int[] pos : array2.positions())
+            {
+                dos.writeFloat(array2.getFloat(pos));
             }
         }
         else if (array instanceof RGB8Array array2)
         {
             for (int[] pos : array2.positions())
             {
-                bos.write((byte) array2.getSample(pos, 0));
-                bos.write((byte) array2.getSample(pos, 1));
-                bos.write((byte) array2.getSample(pos, 2));
+                dos.write((byte) array2.getSample(pos, 0));
+                dos.write((byte) array2.getSample(pos, 1));
+                dos.write((byte) array2.getSample(pos, 2));
             }
         }
         else
         {
             throw new RuntimeException("Can not manage arays with class: " + array.getClass()); 
         }
-        bos.flush();
+        dos.flush();
+    }
+
+    private static final int[] createSpacingRational(double spacing)
+    {
+        // store calibration as 1_000_000 over spacing (IJ default behavior)
+        double value = 1.0 / spacing;
+        double denom = 1_000_000.0;
+        if (value * denom > Integer.MAX_VALUE)
+        {
+            denom /= Integer.MAX_VALUE;
+        }
+        return new int[] { (int) (value * denom), (int) denom };
     }
 }

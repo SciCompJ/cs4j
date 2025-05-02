@@ -6,19 +6,6 @@ package net.sci.image.io.tiff;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.sci.array.Array;
-import net.sci.array.binary.BinaryArray;
-import net.sci.array.color.RGB16Array;
-import net.sci.array.color.RGB8;
-import net.sci.array.color.RGB8Array;
-import net.sci.array.numeric.Int16Array;
-import net.sci.array.numeric.Int32Array;
-import net.sci.array.numeric.UInt16Array;
-import net.sci.array.numeric.UInt8Array;
-import net.sci.image.Calibration;
-import net.sci.image.Image;
-import net.sci.image.ImageType;
-
 /**
  * The list of baseline TIFF Tags.
  * 
@@ -38,15 +25,7 @@ public class BaselineTags implements TagSet
         public NewSubfileType()
         {
             super(CODE, "NewSubfileType", "A general indication of the kind of data contained in this subfile");
-        }
-    
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.LONG;
-            this.count = 1;
-            this.value = 0;
-            return this;
         }
     }
 
@@ -72,15 +51,7 @@ public class BaselineTags implements TagSet
         public ImageWidth()
         {
             super(CODE, "ImageWidth", "The number of columns in the image");
-        }
-        
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.LONG;
-            this.count = 1;
-            this.value = image.getSize(0);
-            return this;
         }
     }
     
@@ -93,15 +64,7 @@ public class BaselineTags implements TagSet
         public ImageHeight()
         {
             super(CODE, "ImageHeight", "The number of rows of pixels in the image");
-        }
-    
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.LONG;
-            this.count = 1;
-            this.value = image.getSize(1);
-            return this;
         }
     }
 
@@ -126,29 +89,7 @@ public class BaselineTags implements TagSet
         public BitsPerSample()
         {
             super(CODE, "BitsPerSample", "Number of bits per component");
-        }
-        
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.SHORT;
-            
-            if (image.getType() == ImageType.GRAYSCALE)
-            {
-                this.count = 1;
-                this.value = 8;
-                this.content = null;
-            }
-            else if (image.getType() == ImageType.COLOR)
-            {
-                if (RGB8.class.isAssignableFrom(image.getData().elementClass()))
-                {
-                    this.count = 3;
-                    this.content = new short[] {8, 8, 8};
-                }
-            }
-                 
-            return this;
         }
     }
 
@@ -158,45 +99,35 @@ public class BaselineTags implements TagSet
     public static final class CompressionMode extends TiffTag
     {
         public static final int CODE = 259;
+        
         public CompressionMode()
         {
             super(CODE, "CompressionMode", "Compression scheme used on the image data");
-        }
-    
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.SHORT;
             this.count = 1;
             this.value = 1; // no compression
-            return this;
         }
     }
 
-    
     /**
-     * 262 - The color space of the image data.
+     * 262 - The color space of the image data. This tag is required, and no
+     * default value is specified.
      */
     public static final class PhotometricInterpretation extends TiffTag
     {
         public static final int CODE = 262;
+        
+        public static final int WHITE_IS_ZERO = 0;
+        public static final int BLACK_IS_ZERO = 1;
+        public static final int RGB = 2;
+        public static final int PALETTE_COLOR = 3;
+        public static final int TRANSPARENCY_MASK = 4;
+        
         public PhotometricInterpretation()
         {
             super(CODE, "PhotometricInterpretation", "The color space of the image data");
-        }
-    
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.SHORT;
             this.count = 1;
-            // default: black is zero
-            this.value = 1;
-            if (image.getData() instanceof RGB8Array || image.getData() instanceof RGB16Array)
-            {
-                this.value = 2;
-            }
-            return this;
         }
     }
     
@@ -300,7 +231,8 @@ public class BaselineTags implements TagSet
     }
     
     /**
-     * 273 - For each strip, the byte offset of that strip.
+     * 273 - For each strip, the byte offset of that strip. The value is either
+     * a single offset, or an array of offset.
      */
     public static final class StripOffsets extends TiffTag
     {
@@ -309,14 +241,8 @@ public class BaselineTags implements TagSet
         public StripOffsets()
         {
             super(CODE, "StripOffsets", "For each strip, the byte offset of that strip");
-        }
-        
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.LONG;
             this.count = 1;
-            return this;
         }
     }
     
@@ -342,27 +268,15 @@ public class BaselineTags implements TagSet
         public SamplesPerPixel()
         {
             super(CODE, "SamplesPerPixel", "The number of components per pixel");
-        }
-        
-        @Override
-        public TiffTag initFrom(Image image)
-        {
-            int samplesPerPixel = 1;
-            Array<?> array = image.getData();
-            if (array instanceof RGB8Array)
-            {
-                samplesPerPixel = 3;
-            }
-            
-            this.type = Type.LONG;
+            this.type = Type.SHORT;
             this.count = 1;
-            this.value = samplesPerPixel;
-            return this;
         }
     }
 
     /**
      * 278 - RowsPerStrip, The number of rows per strip. Type = LONG, count=1.
+     * Use of a single strip is not recommended. It is recommended to choose
+     * RowsPerStrip such that each strip is about 8K bytes.
      */
     public static final class RowsPerStrip extends TiffTag
     {
@@ -370,15 +284,8 @@ public class BaselineTags implements TagSet
         public RowsPerStrip()
         {
             super(CODE, "RowsPerStrip", "The number of rows per strip");
-        }
-        
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.LONG;
             this.count = 1;
-            this.value = image.getSize(1);
-            return this;
         }
     }
     
@@ -393,39 +300,8 @@ public class BaselineTags implements TagSet
         public StripByteCounts()
         {
             super(CODE, "StripByteCounts", "For each strip, the number of bytes in the strip after compression");
-        }
-
-        @Override
-        public TiffTag initFrom(Image image)
-        {
-            int bytesPerPixel = 1;
-            Array<?> array = image.getData();
-            if (array instanceof UInt8Array || array instanceof BinaryArray)
-            {
-                bytesPerPixel = 1;
-            }
-            else if (array instanceof UInt16Array || array instanceof Int16Array)
-            {
-                bytesPerPixel = 2;
-            }
-            else if (array instanceof Int32Array)
-            {
-                bytesPerPixel = 4;
-            }
-            else if (array instanceof RGB8Array)
-            {
-                bytesPerPixel = 3;
-            }
-            else
-            {
-                throw new RuntimeException("Unable to determine bytes per pixel for array with class: " + array.getClass());
-            }
-            
-            int imageSize = image.getSize(0) * image.getSize(1) * bytesPerPixel;
             this.type = Type.LONG;
             this.count = 1;
-            this.value = imageSize;
-            return this;
         }
     }
     
@@ -463,21 +339,8 @@ public class BaselineTags implements TagSet
         public XResolution()
         {
             super(CODE, "XResolution", "The number of pixels per ResolutionUnit in the ImageWidth direction");
-        }
-
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.RATIONAL;
             this.count = 1;
-            
-            // retrieve calibration
-            Calibration calib = image.getCalibration();
-            double xspacing = calib.getXAxis().getSpacing();
-            
-            this.content = createSpacingRational(xspacing);
-            // (value will be initialized with content offset)
-            return this;
         }
     }
     
@@ -491,20 +354,8 @@ public class BaselineTags implements TagSet
         public YResolution()
         {
             super(CODE, "YResolution", "The number of pixels per ResolutionUnit in the ImageHeight direction");
-        }
-        
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.RATIONAL;
             this.count = 1;
-            
-            // retrieve calibration
-            Calibration calib = image.getCalibration();
-            double yspacing = calib.getYAxis().getSpacing();
-            this.content = createSpacingRational(yspacing);
-            // (value will be initialized with content offset)
-            return this;
         }
     }
     
@@ -585,15 +436,9 @@ public class BaselineTags implements TagSet
         public ResolutionUnit()
         {
             super(CODE, "ResolutionUnit", "The unit of measurement for XResolution and YResolution");
-        }
-        
-        @Override
-        public TiffTag initFrom(Image image)
-        {
             this.type = Type.SHORT;
             this.count = 1;
             this.value = 1; // default: no unit
-            return this;
         }
     }
     
@@ -760,17 +605,5 @@ public class BaselineTags implements TagSet
     public String getName()
     {
         return "Baseline";
-    }
-    
-    private static final int[] createSpacingRational(double spacing)
-    {
-        // store calibration as 1_000_000 over spacing (IJ default behavior)
-        double value = 1.0 / spacing;
-        double denom = 1_000_000.0;
-        if (value * denom > Integer.MAX_VALUE)
-        {
-            denom /= Integer.MAX_VALUE;
-        }
-        return new int[] { (int) (value * denom), (int) denom };
     }
 }

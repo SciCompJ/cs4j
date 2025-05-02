@@ -155,6 +155,11 @@ public class TiffTag
         this.code = code;
         this.name = name;
         this.description = description;
+        
+        // setup default values
+        this.type = Type.SHORT;
+        this.count = 1;
+        this.value = 0;
     }
     
     // =============================================================
@@ -173,6 +178,51 @@ public class TiffTag
         return this;
     }
     
+    /**
+     * Sets the {@code value} field from the specified value, and sets up the
+     * {@code type} field to BYTE and the {@code count} field to 1.
+     * 
+     * @param value
+     *            the byte value to set up.
+     */
+    public TiffTag setByteValue(byte value)
+    {
+        this.type = Type.BYTE;
+        this.count = 1;
+        this.value = value;
+        return this;
+    }
+
+    /**
+     * Sets the {@code value} field from the specified value, and sets up the
+     * {@code type} field to SHORT and the {@code count} field to 1.
+     * 
+     * @param value
+     *            the shirt integer value to set up.
+     */
+    public TiffTag setShortValue(short value)
+    {
+        this.type = Type.SHORT;
+        this.count = 1;
+        this.value = value;
+        return this;
+    }
+
+    /**
+     * Sets the {@code value} field from the specified value, and sets up the
+     * {@code type} field to LONGs and the {@code count} field to 1.
+     * 
+     * @param value
+     *            the integer value to set up.
+     */
+    public TiffTag setIntValue(int value)
+    {
+        this.type = Type.LONG;
+        this.count = 1;
+        this.value = value;
+        return this;
+    }
+
     /**
      * Initializes the type, count, and value (and eventually also the content)
      * of this tag, based on the content and the meta-data of the specified
@@ -262,7 +312,7 @@ public class TiffTag
      * @param value
      *            the value of the entry
      */
-    public void setValue(Object value)
+    public TiffTag setValue(Object value)
     {
         // check the contents correspond to tag type
         switch(this.type)
@@ -343,13 +393,14 @@ public class TiffTag
                 }
                 
                 this.content = value;
-                this.count = 2;
+                this.count = 1;
             }
             default -> {
                 System.err.println("Could not interpret tag with code: " + this.code + " (" + this.name + ")");
-                 
             }
         }
+        
+        return this;
     }
     
     /**
