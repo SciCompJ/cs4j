@@ -13,8 +13,8 @@ import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.binary.BinaryRow;
 import net.sci.array.binary.Run;
-import net.sci.array.binary.RunLengthBinaryArray2D;
 import net.sci.array.binary.RunLengthBinaryArray3D;
+import net.sci.array.binary.RunLengthBinaryArrayFactory;
 import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
@@ -26,19 +26,21 @@ import net.sci.array.numeric.process.ScalarArrayOperator;
  * function.
  *
  * Example:
- * <pre>{@code
+ * {@snippet lang=java :
  * ScalarToBinary threshold20 = new ScalarToBinary(x -> x >= 20);
  * UInt8Array2D array = UInt8Array2D.create(10, 10);
  * array.fillInts((x,y) -> x + y * 10);
  * BinaryArray2D res = BinaryArray2D.wrap(threshold20.processScalar(array));
- * res.print(System.out);
- * }</pre>
+ * res.printContent(System.out);
+ * }
  * @author dlegland
  *
  */
 public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
 {
     Function<Double,Boolean> fun;
+    
+    BinaryArray.Factory factory = BinaryArray.defaultFactory;
     
     /**
      * Creates a new converter, based on the default conversion function that
@@ -47,6 +49,12 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
     public ScalarToBinary()
     {
         this(x -> x > 0);
+    }
+    
+    public ScalarToBinary setFactory(BinaryArray.Factory factory)
+    {
+        this.factory = factory;
+        return this;
     }
     
     /**
@@ -98,18 +106,18 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
         }
     }
     
-    private BinaryArray2D processScalar2d(ScalarArray2D<?> source)
+    private BinaryArray2D processScalar2d(ScalarArray2D<?> array)
     {
-        int sizeX = source.size(0);
-        int sizeY = source.size(1);
-        RunLengthBinaryArray2D res = new RunLengthBinaryArray2D(sizeX, sizeY);
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        BinaryArray2D res = BinaryArray2D.wrap(factory.create(sizeX, sizeY));
         
         for (int y = 0; y < sizeY; y++)
         {
             this.fireProgressChanged(this, y, sizeY);
             for (int x = 0; x < sizeX; x++)
             {
-                res.setBoolean(x,  y, this.fun.apply(source.getValue(x, y)));
+                res.setBoolean(x, y, this.fun.apply(array.getValue(x, y)));
             }
         }
         this.fireProgressChanged(this, sizeY, sizeY);
@@ -118,10 +126,41 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
     
     private BinaryArray3D processScalar3d(ScalarArray3D<?> source)
     {
+        if (factory instanceof RunLengthBinaryArrayFactory)
+        {
+            return processScalar3d_rle(source);
+        }
+        
         // retrieve array size
         int sizeX = source.size(0);
         int sizeY = source.size(1);
         int sizeZ = source.size(2);
+        BinaryArray3D res = BinaryArray3D.wrap(factory.create(sizeX, sizeY, sizeZ));
+//        RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
+        
+        // iterate over slices
+        for (int z = 0; z < sizeZ; z++)
+        {
+            this.fireProgressChanged(this, z, sizeZ);
+            
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    res.setBoolean(x, y, z, this.fun.apply(source.getValue(x, y, z)));
+                }
+            }
+        }
+        this.fireProgressChanged(this, sizeZ, sizeZ);
+        return res;
+    }
+    
+    private BinaryArray3D processScalar3d_rle(ScalarArray3D<?> array)
+    {
+        // retrieve array size
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        int sizeZ = array.size(2);
         RunLengthBinaryArray3D res = new RunLengthBinaryArray3D(sizeX, sizeY, sizeZ);
         
         // iterate over slices
@@ -138,14 +177,14 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
                 while (true)
                 {
                     // find beginning of first run
-                    while(!(this.fun.apply(source.getValue(x1, y, z))))
+                    while(!(this.fun.apply(array.getValue(x1, y, z))))
                     {
                         if (++x1 == sizeX) break currentRow;
                     }
                     
                     // find the end of current run
                     int x2 = x1;
-                    while (this.fun.apply(source.getValue(x2, y, z)))
+                    while (this.fun.apply(array.getValue(x2, y, z)))
                     {
                         if (++x2 == sizeX) break;
                     }
@@ -167,7 +206,7 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
     
     private BinaryArray processScalarNd(ScalarArray<?> array)
     {
-        BinaryArray res = BinaryArray.create(array.size());
+        BinaryArray res = factory.create(array.size());
         res.fillBooleans(pos -> fun.apply(array.getValue(pos)));
         return res;
     }
