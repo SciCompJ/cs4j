@@ -64,6 +64,13 @@ public class TiffTag
             return code;
         }
         
+        /**
+         * Identifies the type from an integer code as read from a tiff entry.
+         * 
+         * @param typeCode
+         *            the code of the type
+         * @return the corresponding type
+         */
         public static final Type getType(int typeCode)
         {
             return switch (typeCode)
@@ -103,7 +110,8 @@ public class TiffTag
     // Class variables
     
     /**
-     * The integer code used to identify this tag.
+     * The integer code used to identify this tag. Called "tag" in the TIFF
+     * specification.
      */
     public int code;
     
@@ -119,7 +127,9 @@ public class TiffTag
     public TagSet tagSet = null;
     
     /**
-     * The type of value stored by this tag.
+     * The type of value stored by this tag. Type is usually defined at
+     * creation, but in some cases it may be necessary to adapt the type to the
+     * image.
      */
     public Type type;
     
@@ -144,12 +154,32 @@ public class TiffTag
     // =============================================================
     // Constructor
     
+    /**
+     * Creates a new Tiff Tag.
+     * 
+     * @param code
+     *            the code of the tag (in the TIFF specification, the code is
+     *            called the tag, and the TiffTag is called an "entry").
+     * @param name
+     *            the short name of the tag, to facilitate interpretation
+     */
     public TiffTag(int code, String name)
     {
         this.code = code;
         this.name = name;
     }
     
+    /**
+     * Creates a new Tiff Tag.
+     * 
+     * @param code
+     *            the code of the tag (in the TIFF specification, the code is
+     *            called the tag, and the TiffTag is called an "entry").
+     * @param name
+     *            the short name of the tag, to facilitate interpretation
+     * @param description
+     *            a more complete description of the tag
+     */
     public TiffTag(int code, String name, String description)
     {
         this.code = code;
@@ -158,6 +188,31 @@ public class TiffTag
         
         // setup default values
         this.type = Type.SHORT;
+        this.count = 1;
+        this.value = 0;
+    }
+    
+    /**
+     * Creates a new Tiff Tag.
+     * 
+     * @param code
+     *            the code of the tag (in the TIFF specification, the code is
+     *            called the tag, and the TiffTag is called an "entry").
+     * @param type
+     *            the type of the data stored in the tag
+     * @param name
+     *            the short name of the tag, to facilitate interpretation
+     * @param description
+     *            a more complete description of the tag
+     */
+    public TiffTag(int code, Type type, String name, String description)
+    {
+        this.code = code;
+        this.name = name;
+        this.description = description;
+        
+        // setup default values
+        this.type = type;
         this.count = 1;
         this.value = 0;
     }
@@ -185,14 +240,33 @@ public class TiffTag
     }
     
     /**
+     * Changes the initial type of this tag. 
+     * 
+     * @param type
+     *            the new type of data contained within this tag
+     * @return the reference to this tag (for chaining operations)
+     */
+    public TiffTag setType(Type type)
+    {
+        this.type = type;
+        return this;
+    }
+    
+    /**
      * Sets the {@code value} field from the specified single byte value, and
      * sets up the {@code type} field to BYTE and the {@code count} field to 1.
      * 
      * @param value
      *            the byte value to set up.
+     * @return the reference to this tag (for chaining operations)
      */
     public TiffTag setByteValue(byte value)
     {
+        if (this.type != Type.BYTE)
+        {
+            System.err.println(String.format("Set value of tag %d as a BYTE, while its type is %s",
+                    this.code, this.type));
+        }
         this.type = Type.BYTE;
         this.count = 1;
         this.value = value;
@@ -205,9 +279,15 @@ public class TiffTag
      * 
      * @param value
      *            the shirt integer value to set up.
+     * @return the reference to this tag (for chaining operations)
      */
     public TiffTag setShortValue(short value)
     {
+        if (this.type != Type.SHORT)
+        {
+            System.err.println(String.format("Set value of tag %d as a SHORT, while its type is %s",
+                    this.code, this.type));
+        }
         this.type = Type.SHORT;
         this.count = 1;
         this.value = value;
@@ -220,9 +300,15 @@ public class TiffTag
      * 
      * @param value
      *            the integer value to set up.
+     * @return the reference to this tag (for chaining operations)
      */
     public TiffTag setIntValue(int value)
     {
+        if (this.type != Type.LONG)
+        {
+            System.err.println(String.format("Set value of tag %d as a LONG, while its type is %s",
+                    this.code, this.type));
+        }
         this.type = Type.LONG;
         this.count = 1;
         this.value = value;
@@ -476,7 +562,8 @@ public class TiffTag
 
     /**
      * Returns the number if bytes used by the content of this tag, or 0 if the
-     * value fits within less that 4 bytes.
+     * value fits within less that 4 bytes. This method is used to determine the
+     * size of the tag data when writing a file.
      * 
      * @return the number of bytes used to store the content of this tag.
      */

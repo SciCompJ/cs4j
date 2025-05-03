@@ -27,10 +27,11 @@ import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.io.tiff.BaselineTags;
 import net.sci.image.io.tiff.BaselineTags.PhotometricInterpretation;
+import net.sci.image.io.tiff.BaselineTags.PlanarConfiguration;
+import net.sci.image.io.tiff.BaselineTags.ResolutionUnit;
 import net.sci.image.io.tiff.ExtensionTags.SampleFormat;
 import net.sci.image.io.tiff.ImageFileDirectory;
 import net.sci.image.io.tiff.TiffTag;
-import net.sci.image.io.tiff.TiffTag.Type;
 
 /**
  * Writer for images in TIFF format.
@@ -194,11 +195,11 @@ public class TiffImageWriter implements ImageWriter
         TiffTag photometricInterpretationTag = new PhotometricInterpretation();
         if (image.getData() instanceof RGB8Array || image.getData() instanceof RGB16Array)
         {
-            photometricInterpretationTag.setIntValue(PhotometricInterpretation.RGB);
+            photometricInterpretationTag.setShortValue(PhotometricInterpretation.RGB);
         }
         else
         {
-            photometricInterpretationTag.setIntValue(PhotometricInterpretation.BLACK_IS_ZERO);
+            photometricInterpretationTag.setShortValue(PhotometricInterpretation.BLACK_IS_ZERO);
         }
         ifd.addEntry(photometricInterpretationTag);
         
@@ -222,13 +223,13 @@ public class TiffImageWriter implements ImageWriter
         double yspacing = calib.getYAxis().getSpacing();
         ifd.addEntry(new BaselineTags.XResolution().setValue(createSpacingRational(xspacing)));
         ifd.addEntry(new BaselineTags.YResolution().setValue(createSpacingRational(yspacing)));
-        ifd.addEntry(new BaselineTags.ResolutionUnit().setIntValue(1));
+        ifd.addEntry(new BaselineTags.ResolutionUnit().setShortValue(ResolutionUnit.NO_UNIT));
 
         // planar configuration required only when samples per pixel > 1
         if (samplesPerPixel > 1)
         {
             // init to "Chunky" format (recommended value from specification)
-            ifd.addEntry(new BaselineTags.PlanarConfiguration().init(Type.SHORT, 1, 1));
+            ifd.addEntry(new BaselineTags.PlanarConfiguration().setShortValue(PlanarConfiguration.CHUNKY));
         }
         
         // --- Extension tags ---
