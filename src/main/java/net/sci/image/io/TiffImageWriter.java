@@ -41,15 +41,21 @@ import net.sci.image.io.tiff.TiffTag;
  */
 public class TiffImageWriter implements ImageWriter
 {
+    /**
+     * The number of bytes necessary to write the header.
+     */
     static final int HEADER_SIZE = 8;
+
+    /**
+     * The number of bytes necessary to write tag / an entry into ad Image File
+     * Directory (without tag data).
+     */
     static final int ENTRY_SIZE = 12;
-    static final int BPS_DATA_SIZE = 6;
-    static final int MAP_SIZE = 768; // in 16-bit words
-    static final int SCALE_DATA_SIZE = 16;
+    
+    boolean useImagejDescription = true;
     
     File file;
     OutputStream out;
-//    boolean littleEndian = false;
     
     /** Byte order to use for writing binary data. Use BIG_ENDIAN as default */
     ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
@@ -62,18 +68,8 @@ public class TiffImageWriter implements ImageWriter
     @Override
     public void writeImage(Image image) throws IOException
     {
-        // check if image is 3D
-        boolean bigTiff = false;
-        
-        int sizeX = image.getSize(0);
-        int sizeY = image.getSize(1);
-        PixelType pixelType = PixelType.fromImage(image);
-        int samplesPerPixel = pixelType.sampleCount();
-        int bitsPerSample = pixelType.bitsPerSample();
-        
-        // image size as number of bytes
-        long bytesPerPlane = ((long) sizeX) * sizeY * samplesPerPixel * (bitsPerSample / 8);
-        long imageSize = bytesPerPlane <= 0xffffffffL ? (int) bytesPerPlane : 0;
+        // single image size as number of bytes
+        long sliceImageByteCount = computeSliceImageByteCount(image);
 
         ImageFileDirectory ifd = initImageFileDirectory(image);
         
@@ -102,17 +98,25 @@ public class TiffImageWriter implements ImageWriter
         imageOffsetTag.value = (int) imageOffset;
         
         // compute offset to next IFD
-        int nImages = 1;
+        int nImages = image.getDimension() > 2 ? image.getSize(2) : 1;
+        boolean bigTiff = false;
         long nextIFD = 0L;
-        if (image.getDimension() > 2)
+        if (nImages > 1)
         {
-            nImages = image.getSize(2);
-            // in the case of 3D image data, store all image data together, 
+            // in the case of 3D image data, store the whole image data together, 
             // then writes all the additional IFD 
-            long stackSize = (long) imageSize * nImages;
+            long stackSize = (long) sliceImageByteCount * nImages;
             nextIFD = imageOffset + stackSize;
+
+            // determine whether the whole image can fit within the 4GB limit
+            bigTiff = nextIFD + (nImages - 1) * ifdSize >= 0xffffffffL;
+            if (bigTiff)
+            {
+                nextIFD = 0L;
+            }
         }
         ifd.setOffset(nextIFD);
+        
         
         // open output stream
         this.out = new FileOutputStream(this.file);
@@ -128,7 +132,7 @@ public class TiffImageWriter implements ImageWriter
         writeImageData(image.getData());
         
         
-        // Process optional remaining images
+        // Process optional remaining Image File Directories
         if (nextIFD > 0L)
         {
             // for remaining IFD, do not copy all information
@@ -136,17 +140,17 @@ public class TiffImageWriter implements ImageWriter
             // -> use same pointers within the tags
             ImageFileDirectory ifd2 = duplicate(ifd);
             int ifdSize2 = ifd2.byteCount();
-            imageOffsetTag = ifd2.getEntry(BaselineTags.StripOffsets.CODE);
             
             // iterate over remaining image planes
             for (int i = 1; i < nImages; i++)
             {
-                
                 nextIFD += ifdSize2;
                 if (i == nImages - 1)
                     nextIFD = 0;
                     
-                imageOffset += imageSize;
+                // update entry values of IFD
+                imageOffset += sliceImageByteCount;
+                imageOffsetTag = ifd2.getEntry(BaselineTags.StripOffsets.CODE);
                 imageOffsetTag.value = (int) imageOffset;
                 ifd2.setOffset(nextIFD);
                 
@@ -155,8 +159,8 @@ public class TiffImageWriter implements ImageWriter
         } 
         else if (bigTiff)
         {
-            // TODO: manage case of large TIFF a la ImageJ
-            System.out.println("Image is too large to fit within TIFF format.");
+            System.out.println("Stack is larger than 4GB, and most TIFF readers will only open the first image.\nUse this information to open as raw:");
+            System.out.println(createImportString(image, ifd));
         }
         
         this.out.close();
@@ -171,7 +175,7 @@ public class TiffImageWriter implements ImageWriter
         int bitsPerSample = pixelType.bitsPerSample();
         
         // image size as number of bytes
-        long bytesPerPlane = ((long) sizeX) * sizeY * samplesPerPixel * (bitsPerSample / 8);
+        long sliceImageByteCount = computeSliceImageByteCount(image);
         
         ImageFileDirectory ifd = new ImageFileDirectory();
         
@@ -203,6 +207,13 @@ public class TiffImageWriter implements ImageWriter
         }
         ifd.addEntry(photometricInterpretationTag);
         
+        // create special description string that can be interpreted by ImageJ
+        if (useImagejDescription)
+        {
+            String description = createImagejDescriptionString(image);
+            ifd.addEntry(new BaselineTags.ImageDescription().setValue(description));
+        }
+        
         // the offset to write image data (content initialized later)
         TiffTag imageOffsetTag = new BaselineTags.StripOffsets().initFrom(image);
         ifd.addEntry(imageOffsetTag);
@@ -215,7 +226,7 @@ public class TiffImageWriter implements ImageWriter
         // Default: only one strip that contains all rows. RowsPerStrip contains row number, 
         // and StripByteCount contains total number of bytes of an image plane.
         ifd.addEntry(new BaselineTags.RowsPerStrip().setIntValue(sizeY));
-        ifd.addEntry(new BaselineTags.StripByteCounts().setIntValue((int) bytesPerPlane));
+        ifd.addEntry(new BaselineTags.StripByteCounts().setIntValue((int) sliceImageByteCount));
         
         // save calibration from image
         Calibration calib = image.getCalibration();
@@ -242,7 +253,108 @@ public class TiffImageWriter implements ImageWriter
         
         return ifd;
     }
+    
+    /**
+     * Creates a string that can be interpreted by the ImageJ software to read
+     * TIFF images, in particular for reading files larger than 4GB.
+     * 
+     * In the current implementation, only management of 3D XYZ images is
+     * implemented.
+     * 
+     * @param image
+     *            the image that need to be saved
+     * @return a string instance that will be saved into the "description" entry
+     *         of the Tiff file.
+     */
+    private String createImagejDescriptionString(Image image) 
+    {
+        int sizeZ = image.getDimension() > 2 ? image.getSize(2) : 1;
         
+        StringBuffer sb = new StringBuffer(100);
+        
+        // use an arbitrary version of ImageJ
+        sb.append("ImageJ=1.54m\n");
+        
+        if (image.getDimension() > 2)
+        {
+            sb.append("images=" + image.getSize(2) + "\n");
+        }
+        if (sizeZ > 1)
+        {
+            sb.append("slices=" + sizeZ + "\n");
+        }
+        
+        // add calibration info
+        Calibration cal = image.getCalibration();
+        if (cal.isCalibrated() && cal.getXAxis().getUnitName() != null)
+        {
+            addEscapedString(sb, "unit=" + cal.getXAxis().getUnitName() + "\n");
+        }
+        if (sizeZ > 1) 
+        {
+            if (cal.isCalibrated() && cal.getXAxis().getUnitName() != null)
+            {
+                sb.append("spacing=" + cal.getZAxis().getSpacing() + "\n");
+            }
+            sb.append("loop=" + "false" + "\n");
+        }
+        
+        sb.append((char)0);
+        return new String(sb);
+    }
+     
+    /**
+     * Appends a string to the specified StringBuffer, by escaping special
+     * character.
+     * 
+     * @param sb
+     *            the StringBuffer to update
+     * @param str
+     *            the String to append
+     */
+    private static final void addEscapedString(StringBuffer sb, String str)
+    {
+        for (int i = 0; i < str.length(); i++)
+        {
+            char c = str.charAt(i);
+            if (c >= 0x20 && c < 0x7f && c != '\\')
+            {
+                // classical character
+                sb.append(c);
+            }
+            else if (c <= 0xffff)
+            { 
+                // (supplementary unicode characters >0xffff unsupported)
+                sb.append("\\u");
+                sb.append(int2hex(c, 4));
+            }
+        }
+    }
+    
+    private static final long computeSliceImageByteCount(Image image)
+    {
+        int sizeX = image.getSize(0);
+        int sizeY = image.getSize(1);
+        PixelType pixelType = PixelType.fromImage(image);
+        int samplesPerPixel = pixelType.sampleCount();
+        int bitsPerSample = pixelType.bitsPerSample();
+        
+        // image size as number of bytes
+        return ((long) sizeX) * sizeY * samplesPerPixel * (bitsPerSample / 8);
+    }
+    
+    private static final int[] createSpacingRational(double spacing)
+    {
+        // store calibration as 1_000_000 over spacing (IJ default behavior)
+        double value = 1.0 / spacing;
+        double denom = 1_000_000.0;
+        if (value * denom > Integer.MAX_VALUE)
+        {
+            denom /= Integer.MAX_VALUE;
+        }
+        return new int[] { (int) (value * denom), (int) denom };
+    }
+
     /**
      * Writes the header of the TIFF file, composed of a sequence of eight
      * bytes. The sequence starts either with "II" (Intel byte order, of
@@ -363,15 +475,50 @@ public class TiffImageWriter implements ImageWriter
         dos.flush();
     }
 
-    private static final int[] createSpacingRational(double spacing)
+    private String createImportString(Image image, ImageFileDirectory ifd)
     {
-        // store calibration as 1_000_000 over spacing (IJ default behavior)
-        double value = 1.0 / spacing;
-        double denom = 1_000_000.0;
-        if (value * denom > Integer.MAX_VALUE)
+        int nImages = image.getDimension() > 2 ? image.getSize(2) : 1;
+        PixelType pixelType = PixelType.fromImage(image);
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append("name=").append(file.getName());
+        sb.append(", path=").append(file.getParent());
+        sb.append(", width=").append(image.getSize(0));
+        sb.append(", height=").append(image.getSize(1));
+        sb.append(", nImages=").append(nImages);
+        long offset = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null)[0];
+        sb.append(", offset=").append(offset);
+        sb.append(", type=").append(image.getData().elementClass().getSimpleName());
+        sb.append(", byteOrder=").append(this.byteOrder);
+        sb.append(", format=").append("tif");
+        sb.append(", samples=").append(pixelType.sampleCount());
+        return sb.toString();
+    }
+    
+
+    /** The 16 hexadecimal digits from '0' to 'F' */
+    private static final char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+            'F' };
+
+    /**
+     * Converts an integer into a zero-padded hex string of fixed length given
+     * by the {@code digits} parameter. If the number is too large, it is
+     * truncated by keeping only the lowest digits.
+     * 
+     * @param i
+     *            the value to convert
+     * @param nDigits
+     *            the number of digits of the result
+     * @return an hexadecimal representation of the integer
+     */
+    private static final String int2hex(int i, int nDigits)
+    {
+        char[] buf = new char[nDigits];
+        for (int pos = nDigits - 1; pos >= 0; pos--)
         {
-            denom /= Integer.MAX_VALUE;
+            buf[pos] = hexDigits[i & 0xf];
+            i >>>= 4;
         }
-        return new int[] { (int) (value * denom), (int) denom };
+        return new String(buf);
     }
 }

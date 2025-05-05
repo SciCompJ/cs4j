@@ -227,11 +227,6 @@ public class BaselineTags implements TagSet
             super(CODE, Type.ASCII, "ImageDescription", 
                     "A string that describes the subject of the image");
         }
-        
-        public int contentSize()
-        {
-            return ((String) this.content).length();
-        }
     }
     
     /**

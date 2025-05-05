@@ -593,13 +593,7 @@ public class TiffTag
                 out.write(data);
             }
             case ASCII -> {
-//                    byte[] data = ((String) content).getBytes();
-                    out.write((byte[]) content);
-//                }
-//                else
-//                {
-//                    throw new RuntimeException("Content of tag " + this.code + " (" + this.name + ") must be a String");
-//                }
+                out.write((byte[]) content);
             }
             case SHORT -> {
                 for (short s : (short[]) content)
