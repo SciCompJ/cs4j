@@ -10,19 +10,41 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteOrder;
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.Array2D;
+import net.sci.array.Array3D;
+import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
+import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
+import net.sci.array.color.RGB8Array2D;
+import net.sci.array.numeric.Float32;
 import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.Float32Vector;
 import net.sci.array.numeric.Float32VectorArray;
+import net.sci.array.numeric.Float64;
 import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Float64Array2D;
+import net.sci.array.numeric.Float64Vector;
 import net.sci.array.numeric.Float64VectorArray;
+import net.sci.array.numeric.Int16;
+import net.sci.array.numeric.Int16Array;
+import net.sci.array.numeric.Int16Array2D;
+import net.sci.array.numeric.Int32;
+import net.sci.array.numeric.Int32Array;
+import net.sci.array.numeric.Int32Array2D;
+import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16Array;
+import net.sci.array.numeric.UInt16Array2D;
+import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.io.tiff.BaselineTags;
@@ -39,7 +61,7 @@ import net.sci.image.io.tiff.TiffTag;
  * @author dlegland
  *
  */
-public class TiffImageWriter implements ImageWriter
+public class TiffImageWriter extends AlgoStub implements ImageWriter
 {
     /**
      * The number of bytes necessary to write the header.
@@ -65,12 +87,27 @@ public class TiffImageWriter implements ImageWriter
         this.file = file;
     }
     
+    /**
+     * Specifies whether this writer should use a description that can be
+     * interpreted by the ImageJ software.
+     * 
+     * @param useImagejDescription
+     *            a boolean flag
+     * @return a reference to this writer
+     */
+    public TiffImageWriter useImagejDescription(boolean useImagejDescription)
+    {
+        this.useImagejDescription = useImagejDescription;
+        return this;
+    }
+    
     @Override
     public void writeImage(Image image) throws IOException
     {
         // single image size as number of bytes
         long sliceImageByteCount = computeSliceImageByteCount(image);
 
+        this.fireStatusChanged(this, "Setup ImageFileDIrectory");
         ImageFileDirectory ifd = initImageFileDirectory(image);
         
         // determine size of IFD, in bytes.
@@ -91,6 +128,8 @@ public class TiffImageWriter implements ImageWriter
                 tagDataOffset += size;
             }
         }
+        
+        this.fireStatusChanged(this, "Setup Image tags data");
         
         // determine image offset after IFD data 
         long imageOffset = HEADER_SIZE + ifdSize + ifdDataSize;
@@ -123,12 +162,15 @@ public class TiffImageWriter implements ImageWriter
         writeHeader();
         
         // Write current image file directory
+        this.fireStatusChanged(this, "Write IFD entries");
         ifd.write(out, byteOrder);
 
         // Write content of the different tags
+        this.fireStatusChanged(this, "Write IFD entry data");
         ifd.writeEntryData(out, byteOrder);
                 
         // Finally, image data (the whole array)
+        this.fireStatusChanged(this, "Write Image data");
         writeImageData(image.getData());
         
         
@@ -406,71 +448,171 @@ public class TiffImageWriter implements ImageWriter
      */
     public void writeImageData(Array<?> array) throws IOException
     {
+        switch (array.dimensionality())
+        {
+            case 2 -> writeImageData2d(Array2D.wrap(array));
+            case 3 -> 
+            {
+                Array3D<?> array3d = Array3D.wrap(array);
+                int sizeZ = array.size(2);
+                for (int z = 0; z < sizeZ; z++)
+                {
+                    this.fireProgressChanged(this, z, sizeZ);
+                    writeImageData2d(array3d.slice(z));
+                }
+                this.fireProgressChanged(this, 1, 1);
+            }
+            default ->
+            {
+                throw new RuntimeException("Unable to manage an array with dimensionality: " + array.dimensionality());
+            }
+        }
+    }
+
+    /**
+     * Writes all the data within the array, using the natural position iterator
+     * of the array.
+     * 
+     * @param array
+     *            the array to write into the file.
+     * @throws IOException
+     *             if an I/O Exception occurred
+     */
+    private void writeImageData2d(Array2D<?> array) throws IOException
+    {
+        // retrieve array size
+        int sizeX = array.size(0);
+        int sizeY = array.size(1);
+        
         // Create DataOutputStream to write formatted data.
         // DataOutputStream use necessarily BIG_ENDIAN byte order.
         DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(this.out));
-        if (array instanceof UInt8Array array2)
+        
+        // Dispatch processing depending on element class
+        Class<?> elementClass = array.elementClass();
+        if (elementClass == UInt8.class)
         {
-            for (int[] pos : array2.positions())
+            UInt8Array2D array2 = UInt8Array2D.wrap(UInt8Array.wrap(array));
+            for (int y = 0; y < sizeY; y++)
             {
-                dos.write(array2.getByte(pos));
-            }
-        }
-        else if (array instanceof UInt16Array array2)
-        {
-            for (int[] pos : array2.positions())
-            {
-                dos.writeShort(array2.getShort(pos));
-            }
-        }
-        else if (array instanceof Float32Array array2)
-        {
-            for (int[] pos : array2.positions())
-            {
-                dos.writeFloat(array2.getFloat(pos));
-            }
-        }
-        else if (array instanceof Float64Array array2)
-        {
-            for (int[] pos : array2.positions())
-            {
-                dos.writeDouble(array2.getValue(pos));
-            }
-        }
-        else if (array instanceof RGB8Array rgbArray)
-        {
-            for (int[] pos : rgbArray.positions())
-            {
-                dos.write((byte) rgbArray.getSample(pos, 0));
-                dos.write((byte) rgbArray.getSample(pos, 1));
-                dos.write((byte) rgbArray.getSample(pos, 2));
-            }
-        }
-        else if (array instanceof Float32VectorArray vectorArray)
-        {
-            int nc = vectorArray.channelCount();
-            for (int[] pos : vectorArray.positions())
-            {
-                for (int c = 0; c < nc; c++)
+                for (int x = 0; x < sizeX; x++)
                 {
-                    dos.writeFloat(vectorArray.getFloat(pos, c));
+                    dos.write(array2.getByte(x, y));
                 }
             }
         }
-        else if (array instanceof Float64VectorArray vectorArray)
+        else if (elementClass == UInt16.class)
         {
-            int nc = vectorArray.channelCount();
-            for (int[] pos : vectorArray.positions())
+            UInt16Array2D array2 = UInt16Array2D.wrap(UInt16Array.wrap(array));
+            for (int y = 0; y < sizeY; y++)
             {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    dos.writeShort(array2.getShort(x, y));
+                }
+            }
+        }
+        else if (elementClass == Int16.class)
+        {
+            Int16Array2D array2 = Int16Array2D.wrap(Int16Array.wrap(array));
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    dos.writeShort(array2.getShort(x, y));
+                }
+            }
+        }
+        else if (elementClass == Int32.class)
+        {
+            Int32Array2D array2 = Int32Array2D.wrap(Int32Array.wrap(array));
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    dos.writeInt(array2.getInt(x, y));
+                }
+            }
+        }
+        else if (elementClass == Float32.class)
+        {
+            Float32Array2D array2 = Float32Array2D.wrap(Float32Array.wrap(array));
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    dos.writeFloat(array2.getFloat(x, y));
+                }
+            }
+        }
+        else if (elementClass == Float64.class)
+        {
+            Float64Array2D array2 = Float64Array2D.wrap(Float64Array.wrap(array));
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    dos.writeDouble(array2.getValue(x, y));
+                }
+            }
+        }
+        else if (elementClass == RGB8.class)
+        {
+            RGB8Array2D array2 = RGB8Array2D.wrap(RGB8Array.wrap(array));
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    dos.write(array2.getSample(x, y, 0));
+                    dos.write(array2.getSample(x, y, 1));
+                    dos.write(array2.getSample(x, y, 2));
+                }
+            }
+        }
+        else if (elementClass == RGB16.class)
+        {
+            RGB16Array.Iterator iter = RGB16Array.wrap(array).iterator();
+            while (iter.hasNext())
+            {
+                iter.forward();
+                dos.writeShort(iter.getSample(0));
+                dos.writeShort(iter.getSample(1));
+                dos.writeShort(iter.getSample(2));
+            }
+        }
+        else if (elementClass == Float32Vector.class)
+        {
+            Float32VectorArray vectorArray = Float32VectorArray.wrap(array);
+            int nc = vectorArray.channelCount();
+            
+            Float32VectorArray.Iterator iter = vectorArray.iterator();
+            while (iter.hasNext())
+            {
+                iter.forward();
                 for (int c = 0; c < nc; c++)
                 {
-                    dos.writeDouble(vectorArray.getValue(pos, c));
+                    dos.writeFloat((float) iter.getValue(c));
+                }
+            }
+        }
+        else if (elementClass == Float64Vector.class)
+        {
+            Float64VectorArray vectorArray = Float64VectorArray.wrap(array);
+            int nc = vectorArray.channelCount();
+            
+            Float64VectorArray.Iterator iter = vectorArray.iterator();
+            while (iter.hasNext())
+            {
+                iter.forward();
+                for (int c = 0; c < nc; c++)
+                {
+                    dos.writeDouble(iter.getValue(c));
                 }
             }
         }
         else
         {
-            throw new RuntimeException("Can not manage arays with class: " + array.getClass()); 
+            throw new RuntimeException("Can not manage arrays with class: " + array.getClass()); 
         }
         dos.flush();
     }
