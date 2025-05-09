@@ -163,8 +163,9 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         
         // open output stream
         OutputStream out = new BufferedOutputStream(new FileOutputStream(this.file));
-        // Byte order to use for writing binary data. Use BIG_ENDIAN as default.
-        ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
+        // Byte order to use for writing binary data. 
+        // Use BIG_ENDIAN as default for writing images, initialized at creation of IFD
+        ByteOrder byteOrder = ifd.getByteOrder();
 
         
         // write Tiff ID, and offset to first IFD
@@ -172,11 +173,11 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         
         // Write current image file directory
         this.fireStatusChanged(this, "Write IFD entries");
-        ifd.write(out, byteOrder);
+        ifd.write(out);
 
         // Write content of the different tags
         this.fireStatusChanged(this, "Write IFD entry data");
-        ifd.writeEntryData(out, byteOrder);
+        ifd.writeEntryData(out);
                 
         // Finally, image data (the whole array)
         this.fireStatusChanged(this, "Write Image data");
@@ -205,13 +206,13 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
                 imageOffsetTag.value = (int) imageOffset;
                 ifd2.setOffset(nextIFD);
                 
-                ifd2.write(out, byteOrder);
+                ifd2.write(out);
             }
         } 
         else if (bigTiff)
         {
             System.out.println("Stack is larger than 4GB, and most TIFF readers will only open the first image.\nUse this information to open as raw:");
-            System.out.println(createImportString(image, ifd, byteOrder));
+            System.out.println(createImportString(image, ifd));
         }
         
         out.close();
@@ -228,7 +229,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         // image size as number of bytes
         long sliceImageByteCount = computeSliceImageByteCount(image);
         
-        ImageFileDirectory ifd = new ImageFileDirectory();
+        ImageFileDirectory ifd = new ImageFileDirectory().setByteOrder(ByteOrder.BIG_ENDIAN);
         
         // initialize the collection of tags
         // Depending on the type of images, some of the tags are mandatory
@@ -436,9 +437,10 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      * @return a new instance of {@code ImageFileDirectory} initialized with
      *         same entries.
      */
-    private ImageFileDirectory duplicate(ImageFileDirectory ifd)
+    private static final ImageFileDirectory duplicate(ImageFileDirectory ifd)
     {
-        ImageFileDirectory newIFD = new ImageFileDirectory();
+        ImageFileDirectory newIFD = new ImageFileDirectory()
+                .setByteOrder(ifd.getByteOrder());
         for (TiffTag tag : ifd.entries())
         {
             newIFD.addEntry(tag);
@@ -627,7 +629,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         dos.flush();
     }
 
-    private String createImportString(Image image, ImageFileDirectory ifd, ByteOrder byteOrder)
+    private String createImportString(Image image, ImageFileDirectory ifd)
     {
         int nImages = image.getDimension() > 2 ? image.getSize(2) : 1;
         PixelType pixelType = PixelType.fromImage(image);
@@ -641,7 +643,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         long offset = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null)[0];
         sb.append(", offset=").append(offset);
         sb.append(", type=").append(image.getData().elementClass().getSimpleName());
-        sb.append(", byteOrder=").append(byteOrder);
+        sb.append(", byteOrder=").append(ifd.getByteOrder());
         sb.append(", format=").append("tif");
         sb.append(", samples=").append(pixelType.sampleCount());
         return sb.toString();

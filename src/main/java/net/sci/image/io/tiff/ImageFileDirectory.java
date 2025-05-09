@@ -16,11 +16,24 @@ import java.util.LinkedHashSet;
  */
 public class ImageFileDirectory
 {
+    // =============================================================
+    // Constants
+    
     /**
      * The number of bytes necessary to represent a Tiff Entry (tag) into a
      * file.
      */
     private static final int ENTRY_SIZE = 12;
+    
+    
+    // =============================================================
+    // Class variables
+    
+    /**
+     * The byte order of the file containing this ImageFileDirectory.
+     * Initialized to BIG_ENDIAN as default.
+     */
+    ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
     
     /**
      * The list of Tiff entries within this image file directory. Use a
@@ -34,9 +47,44 @@ public class ImageFileDirectory
      */
     long offset;
     
+    
+    // =============================================================
+    // Constructor
+    
+    /**
+     * Creates a new ImageFileDirectory instance.
+     */
     public ImageFileDirectory()
     {
     }
+    
+    
+    // =============================================================
+    // Accessors and mutators
+    
+    /**
+     * 
+     * @return
+     */
+    public ByteOrder getByteOrder()
+    {
+        return this.byteOrder;
+    }
+    
+    public ImageFileDirectory setByteOrder(ByteOrder byteOrder)
+    {
+        this.byteOrder = byteOrder;
+        return this;
+    }
+    
+    public void setOffset(long offset)
+    {
+        this.offset = offset;
+    }
+    
+    
+    // =============================================================
+    // Management of entries
     
     /**
      * Adds an entry / a tag to the list of entries.
@@ -52,11 +100,6 @@ public class ImageFileDirectory
     public Collection<TiffTag> entries()
     {
         return Collections.unmodifiableCollection(this.entries);
-    }
-    
-    public void setOffset(long offset)
-    {
-        this.offset = offset;
     }
     
     /**
@@ -193,31 +236,29 @@ public class ImageFileDirectory
      * 
      * @param out
      *            the Stream to write in
-     * @param order
-     *            the ByteOrder of the stream
      * @throws IOException
      *             if a problem occurs
      */
-    public void write(OutputStream out, ByteOrder order) throws IOException
+    public void write(OutputStream out) throws IOException
     {
         // write number of entries
-        writeShort(out, order, entries.size());
+        writeShort(out, this.byteOrder, entries.size());
         
         // Write list of tags / entries
         for (TiffTag tag : entries)
         {
-            tag.writeEntry(out, order);
+            tag.writeEntry(out, this.byteOrder);
         }
         
         // write offset to next IFD
-        writeInt(out, order, (int) offset);
+        writeInt(out, this.byteOrder, (int) offset);
     }
     
-    public void writeEntryData(OutputStream out, ByteOrder order) throws IOException
+    public void writeEntryData(OutputStream out) throws IOException
     {
         for (TiffTag tag : entries)
         {
-            tag.writeContent(out, order);
+            tag.writeContent(out, this.byteOrder);
         }
     }
     

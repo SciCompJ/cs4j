@@ -218,7 +218,7 @@ public class TiffTag
     }
     
     // =============================================================
-    // public new methods
+    // public methods
     
     /**
      * Initializes the type, count, and value of this tag.
