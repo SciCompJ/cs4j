@@ -6,6 +6,10 @@ package net.sci.image.io.tiff;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sci.array.Array;
+import net.sci.array.color.RGB16Array;
+import net.sci.array.color.RGB8Array;
+
 /**
  * The list of baseline TIFF Tags.
  * 
@@ -151,6 +155,28 @@ public class BaselineTags implements TagSet
         public static final short RGB = 2;
         public static final short PALETTE_COLOR = 3;
         public static final short TRANSPARENCY_MASK = 4;
+        
+        /**
+         * Determines the photometric interpretation that is the most suited to
+         * the specified data array.
+         * 
+         * @param imageData
+         *            an instance of array containing image data
+         * @return the most adequate photometric interpretation
+         */
+        public static final PhotometricInterpretation of(Array<?> imageData)
+        {
+            PhotometricInterpretation tag = new PhotometricInterpretation();
+            if (imageData instanceof RGB8Array || imageData instanceof RGB16Array)
+            {
+                tag.setShortValue(PhotometricInterpretation.RGB);
+            }
+            else
+            {
+                tag.setShortValue(PhotometricInterpretation.BLACK_IS_ZERO);
+            }
+            return tag;
+        }
         
         public PhotometricInterpretation()
         {

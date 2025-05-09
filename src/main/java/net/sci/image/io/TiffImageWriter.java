@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.nio.ByteOrder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import net.sci.algo.AlgoStub;
@@ -65,6 +66,9 @@ import net.sci.image.io.tiff.TiffTag;
  */
 public class TiffImageWriter extends AlgoStub implements ImageWriter
 {
+    // =============================================================
+    // Constants
+    
     /**
      * The number of bytes necessary to write the header.
      */
@@ -76,9 +80,26 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      */
     static final int ENTRY_SIZE = 12;
     
+    
+    // =============================================================
+    // Class variables
+    
+    /**
+     * The file to write image in.
+     */
+    File file;
+    
     boolean useImagejDescription = true;
     
-    File file;
+    /**
+     * A list of tags that user can specify, and that will be saved within the
+     * Tiff file.
+     */
+    ArrayList<TiffTag> customTags = new ArrayList<>(4);
+    
+    
+    // =============================================================
+    // Constructor
     
     /**
      * Creates a new TiffImageWriter from a file.
@@ -90,6 +111,10 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
     {
         this.file = file;
     }
+    
+    
+    // =============================================================
+    // Setup methods
     
     /**
      * Specifies whether this writer should use a description that can be
@@ -105,6 +130,16 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         return this;
     }
     
+    public TiffImageWriter addCustomTag(TiffTag tag)
+    {
+        this.customTags.add(tag);
+        return this;
+    }
+    
+    
+    // =============================================================
+    // General methods
+    
     @Override
     public void writeImage(Image image) throws IOException
     {
@@ -116,6 +151,17 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         if (ifd.getByteOrder() != ByteOrder.BIG_ENDIAN)
         {
             throw new RuntimeException("Can only write TIFF file with BIG_ENDIAN byte order");
+        }
+        
+        // add custom tags
+        for (TiffTag tag : customTags)
+        {
+            if (ifd.getEntry(tag.code) != null)
+            {
+                System.err.println("Duplicate tag with code " + tag.code + ", skipping last entries");
+                continue;
+            }
+            ifd.addEntry(tag);
         }
         
         // determine size of IFD, in bytes.
@@ -251,17 +297,8 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         // compression mode (default is none)
         ifd.addEntry(new BaselineTags.Compression());
         
-        // photometric interpretation
-        TiffTag photometricInterpretationTag = new PhotometricInterpretation();
-        if (image.getData() instanceof RGB8Array || image.getData() instanceof RGB16Array)
-        {
-            photometricInterpretationTag.setShortValue(PhotometricInterpretation.RGB);
-        }
-        else
-        {
-            photometricInterpretationTag.setShortValue(PhotometricInterpretation.BLACK_IS_ZERO);
-        }
-        ifd.addEntry(photometricInterpretationTag);
+        // photometric interpretation (use tag-specific static factory)
+        ifd.addEntry(PhotometricInterpretation.of(image.getData()));
         
         // create special description string that can be interpreted by ImageJ
         if (useImagejDescription)

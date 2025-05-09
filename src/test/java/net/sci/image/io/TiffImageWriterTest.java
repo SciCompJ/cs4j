@@ -4,6 +4,7 @@
 package net.sci.image.io;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -26,6 +27,8 @@ import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.UInt8Array3D;
 import net.sci.array.numeric.VectorArray;
 import net.sci.image.Image;
+import net.sci.image.io.tiff.BaselineTags;
+import net.sci.image.io.tiff.TiffTag;
 
 /**
  * @author dlegland
@@ -62,6 +65,46 @@ public class TiffImageWriterTest
         assertEquals(array2.getValue(new int[] {9, 0}),  9.0, 0.01);
         assertEquals(array2.getValue(new int[] {0, 7}), 70.0, 0.01);
         assertEquals(array2.getValue(new int[] {9, 7}), 79.0, 0.01);
+        
+        boolean b = outputFile.delete();
+        assertTrue(b);
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.io.TiffImageWriter#writeImage(net.sci.image.Image)}.
+     * @throws IOException 
+     */
+    @Test
+    public void testWriteImage_UInt8_10x8_customTag() throws IOException
+    {
+        UInt8Array2D array = UInt8Array2D.create(10, 8);
+        array.fillInts((x,y) -> 10 * y + x);
+        Image image = new Image(array);
+        
+        File outputFile = new File("testWriteTiff.tif");
+        TiffImageWriter writer = new TiffImageWriter(outputFile);
+        String softwareString = "CS4J Test Suite";
+        writer.addCustomTag(new BaselineTags.Software().setValue(softwareString));
+        writer.writeImage(image);
+        
+        assertTrue(outputFile.exists());
+        
+        TiffImageReader reader = new TiffImageReader(outputFile);
+        Image image2 = reader.readImage();
+        
+        assertEquals(2, image2.getDimension());
+        assertEquals(10, image2.getSize(0));
+        assertEquals(8, image2.getSize(1));
+        
+        ScalarArray<?> array2 = (ScalarArray<?>) image2.getData();
+        assertEquals(array2.getValue(new int[] {0, 0}),  0.0, 0.01);
+        assertEquals(array2.getValue(new int[] {9, 0}),  9.0, 0.01);
+        assertEquals(array2.getValue(new int[] {0, 7}), 70.0, 0.01);
+        assertEquals(array2.getValue(new int[] {9, 7}), 79.0, 0.01);
+        
+        TiffTag softwareTag = image2.tiffTags.get(BaselineTags.Software.CODE);
+        assertNotNull(softwareTag);
+        assertEquals(softwareString, (String) softwareTag.content);
         
         boolean b = outputFile.delete();
         assertTrue(b);
