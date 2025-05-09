@@ -13,8 +13,8 @@ import java.util.Map;
 import net.sci.image.io.BinaryDataReader;
 
 /**
- * Read one or several ImageFileDirectory instances data from a Tiff File. These
- * file infos can later be used to read image data from the same TIFF file.
+ * Read one or several instances of {@code ImageFileDirectory} from a Tiff File.
+ * These file info can later be used to read image data from the same Tiff file.
  * 
  * 
  */
@@ -83,17 +83,17 @@ public class ImageFileDirectoryReader
             throw new RuntimeException("Found negative offset in tiff file");
         }
 
-        ArrayList<ImageFileDirectory> infoList = new ArrayList<ImageFileDirectory>();
+        ArrayList<ImageFileDirectory> ifdList = new ArrayList<ImageFileDirectory>();
         while (offset > 0L)
         {
             dataReader.seek(offset);
-            ImageFileDirectory info = readNextImageFileDirectory();
-            infoList.add(info);
-            offset = info.offset;
+            ImageFileDirectory ifd = readNextImageFileDirectory();
+            ifdList.add(ifd);
+            offset = ifd.offset;
         }
         dataReader.close();
         
-        return infoList;
+        return ifdList;
     }
     
     /**
@@ -113,6 +113,8 @@ public class ImageFileDirectoryReader
 
         // create a new ImageFileDirectory instance
         ImageFileDirectory ifd = new ImageFileDirectory();
+        // store byte order within ImageFileDirectory
+        ifd.setByteOrder(byteOrder);
         
         // retrieve the list of Tiff Tags that can be interpreted
         Map<Integer, TiffTag> tagMap = TiffTag.getAllTags();

@@ -113,6 +113,10 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
 
         this.fireStatusChanged(this, "Setup ImageFileDIrectory");
         ImageFileDirectory ifd = initImageFileDirectory(image);
+        if (ifd.getByteOrder() != ByteOrder.BIG_ENDIAN)
+        {
+            throw new RuntimeException("Can only write TIFF file with BIG_ENDIAN byte order");
+        }
         
         // determine size of IFD, in bytes.
         // -> entry count (2 bytes) + 12 bytes per entry + next offset (4 bytes).
