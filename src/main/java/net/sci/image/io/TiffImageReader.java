@@ -5,7 +5,6 @@ package net.sci.image.io;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -77,65 +76,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     public TiffImageReader(Path path) throws IOException
     {
         this.path = path;
-        ByteOrder byteOrder = determineByteOrder(path);
-        this.fileDirectories = new ImageFileDirectoryReader(this.path.toFile(), byteOrder).readImageFileDirectories();
-    }
-    
-    
-    // =============================================================
-    // Global management of file
-    
-    /**
-     * Opens the input stream, and reads the main header of the TIFF file. The
-     * header is composed of 8 bytes:
-     * <ul>
-     * <li>2 bytes for indicating the byte order</li>
-     * <li>2 bytes for the magic number 42</li>
-     * <li>4 bytes for indicating the offset of the first Image File
-     * Directory</li>
-     * </ul>
-     * 
-     * @throws IOException
-     *             if a reading problem occurred
-     * @throws RuntimeException
-     *             if the byte order of the magic number could not be read
-     */
-    private ByteOrder determineByteOrder(Path path) throws IOException
-    {
-        // open the stream
-        RandomAccessFile inputStream = new RandomAccessFile(path.toFile(), "r");
-        
-        // read the two bytes indicating endianness
-        int b1 = inputStream.read();
-        int b2 = inputStream.read();
-        int byteOrderInfo = ((b2 << 8) + b1);
-    
-        // associate the two bytes to a byte order
-        // If a problem occur, this may be the sign of an file in another format
-        ByteOrder byteOrder = switch (byteOrderInfo)
-        {
-            case 0x4949 -> ByteOrder.LITTLE_ENDIAN;
-            case 0x4d4d -> ByteOrder.BIG_ENDIAN;
-            default -> {
-                inputStream.close();
-                throw new RuntimeException("Could not decode endianness of TIFF File: " + path.getFileName());
-            }
-        };
-        
-        // Create binary data reader from current input stream
-        
-        BinaryDataReader dataReader = new BinaryDataReader(inputStream, byteOrder);
-        int magicNumber = dataReader.readShort();
-        dataReader.close();
-        inputStream.close();
-        
-        // Read the magic number indicating tiff format
-        if (magicNumber != 42)
-        {
-            throw new RuntimeException("Invalid TIFF file: magic number is different from 42");
-        }
-        
-        return byteOrder;
+        this.fileDirectories = new ImageFileDirectoryReader(this.path.toFile()).readImageFileDirectories();
     }
     
     

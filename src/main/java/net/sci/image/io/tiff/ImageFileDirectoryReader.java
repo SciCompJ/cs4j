@@ -13,8 +13,8 @@ import java.util.Map;
 import net.sci.image.io.BinaryDataReader;
 
 /**
- * Read one or several instances of {@code ImageFileDirectory} from a Tiff File.
- * These file info can later be used to read image data from the same Tiff file.
+ * Read all the instances of {@code ImageFileDirectory} from a Tiff File. These
+ * file info can later be used to read image data from the same Tiff file.
  * 
  * 
  */
@@ -30,28 +30,22 @@ public class ImageFileDirectoryReader
     String filePath;
     
     /**
-     * The file stream from which data are extracted, and which manages data endianness.
+     * The file stream from which data are extracted, and which manages data byte-order.
      */
     BinaryDataReader dataReader;
 
-    /**
-     * The byte order used within the open stream.
-     */
-    ByteOrder byteOrder;
-    
     
     // =============================================================
     // Constructor
 
-    public ImageFileDirectoryReader(String fileName, ByteOrder byteOrder) throws IOException
+    public ImageFileDirectoryReader(String fileName) throws IOException
     {
-        this(new File(fileName), byteOrder);
+        this(new File(fileName));
     }
 
-    public ImageFileDirectoryReader(File file, ByteOrder byteOrder) throws IOException
+    public ImageFileDirectoryReader(File file) throws IOException
     {
         this.filePath = file.getPath();
-        this.byteOrder = byteOrder;
     }
     
     
@@ -68,32 +62,67 @@ public class ImageFileDirectoryReader
     public ArrayList<ImageFileDirectory> readImageFileDirectories() throws IOException
     {
         // open the stream from file name
-        RandomAccessFile inputStream = new RandomAccessFile(this.filePath, "r");
-        // Create binary data reader from input stream
-        this.dataReader = new BinaryDataReader(inputStream, this.byteOrder);
-        
-        // Read file offset of first Image
-        dataReader.seek(4);
-        long offset = ((long) dataReader.readInt()) & 0xffffffffL;
-        // System.out.println("offset: " + offset);
-
-        if (offset < 0L)
+        try (RandomAccessFile raf = new RandomAccessFile(this.filePath, "r"))
         {
+            // Create binary data reader from input stream
+            this.dataReader = new BinaryDataReader(raf, determineByteOrder(raf));
+
+            // check the magic number indicating tiff format
+            int magicNumber = dataReader.readShort();
+            if (magicNumber != 42)
+            { throw new RuntimeException("Invalid TIFF file: magic number is different from 42"); }
+
+            // Read file offset of first IFD
+            long offset = ((long) dataReader.readInt()) & 0xffffffffL;
+            // System.out.println("offset: " + offset);
+
+            if (offset < 0L)
+            { throw new IOException("Found negative offset in tiff file"); }
+
+            ArrayList<ImageFileDirectory> ifdList = new ArrayList<ImageFileDirectory>();
+            do
+            {
+                ImageFileDirectory ifd = readImageFileDirectory(dataReader, offset);
+                ifdList.add(ifd);
+                offset = ifd.offset;
+            } while (offset > 0L);
+
             dataReader.close();
-            throw new RuntimeException("Found negative offset in tiff file");
-        }
 
-        ArrayList<ImageFileDirectory> ifdList = new ArrayList<ImageFileDirectory>();
-        while (offset > 0L)
-        {
-            dataReader.seek(offset);
-            ImageFileDirectory ifd = readNextImageFileDirectory();
-            ifdList.add(ifd);
-            offset = ifd.offset;
+            return ifdList;
         }
-        dataReader.close();
-        
-        return ifdList;
+        catch (IOException ex)
+        {
+            throw new RuntimeException("Impossible to read Image File directory", ex);
+        }
+    }
+    
+    /**
+     * Reads the the first two bytes of the input stream to determine its byte order.
+     * 
+     * @throws IOException
+     *             if a reading problem occurred
+     * @throws RuntimeException
+     *             if the byte order could not be decoded
+     */
+    private ByteOrder determineByteOrder(RandomAccessFile raf) throws IOException
+    {
+        // read the two bytes indicating endianness
+        int b1 = raf.read();
+        int b2 = raf.read();
+        int byteOrderInfo = ((b2 << 8) + b1);
+    
+        // associate the two bytes to a byte order
+        // If a problem occur, this may be the sign of an file in another format
+        return switch (byteOrderInfo)
+        {
+            case 0x4949 -> ByteOrder.LITTLE_ENDIAN;
+            case 0x4d4d -> ByteOrder.BIG_ENDIAN;
+            default -> {
+                raf.close();
+                throw new RuntimeException("Could not decode endianness of TIFF File: " + filePath);
+            }
+        };
     }
     
     /**
@@ -102,8 +131,10 @@ public class ImageFileDirectoryReader
      * Reads the main IFD info: the entry number, the different entries, and the
      * offset to the next IFD.
      */
-    private ImageFileDirectory readNextImageFileDirectory() throws IOException
+    private ImageFileDirectory readImageFileDirectory(BinaryDataReader dataReader, long offset) throws IOException
     {
+    	dataReader.seek(offset);
+    	
         // Read and control the number of entries
         int nEntries = dataReader.readShort();
         if (nEntries < 1 || nEntries > 1000)
@@ -114,7 +145,7 @@ public class ImageFileDirectoryReader
         // create a new ImageFileDirectory instance
         ImageFileDirectory ifd = new ImageFileDirectory();
         // store byte order within ImageFileDirectory
-        ifd.setByteOrder(byteOrder);
+        ifd.setByteOrder(dataReader.getOrder());
         
         // retrieve the list of Tiff Tags that can be interpreted
         Map<Integer, TiffTag> tagMap = TiffTag.getAllTags();
@@ -164,17 +195,14 @@ public class ImageFileDirectoryReader
     {
         // read tag data info
         int typeValue = dataReader.readShort();
-        TiffTag.Type type;
         try 
         {
-            type = TiffTag.Type.getType(typeValue); 
+        	 return TiffTag.Type.getType(typeValue); 
         }
         catch(IllegalArgumentException ex)
         {
-            throw new RuntimeException(String.format("Tag with code %d has incorrect type value: %d", tagCode, typeValue));
+            throw new RuntimeException(String.format("Tag with code %d has unknown type value: %d", tagCode, typeValue));
         }
-        
-        return type;
     }
 
     private int readTagValue(TiffTag.Type type, int count) throws IOException
