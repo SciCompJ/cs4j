@@ -41,7 +41,6 @@ import net.sci.array.numeric.impl.SlicedUInt16Array3D;
 import net.sci.array.numeric.impl.SlicedUInt8Array3D;
 import net.sci.image.io.PackBits;
 import net.sci.image.io.PixelType;
-import net.sci.image.io.TiffImageReader;
 
 /**
  * Read the binary data from a TIFF file based on one or several TiffFileInfo
@@ -100,7 +99,7 @@ public class TiffImageDataReader extends AlgoStub
      */
     public Array<?> readImageData(ImageFileDirectory ifd) throws IOException
     {
-        PixelType pixelType = TiffImageReader.determinePixelType(ifd);
+        PixelType pixelType = ifd.determinePixelType();
         
         // special case of binary images
         if (pixelType == PixelType.BINARY)
@@ -259,7 +258,7 @@ public class TiffImageDataReader extends AlgoStub
         
         // read data type info
         ImageFileDirectory ifd0 = ifdList.iterator().next();
-        PixelType pixelType = TiffImageReader.determinePixelType(ifd0);
+        PixelType pixelType = ifd0.determinePixelType();
         
         // When possible, calls a specialized method that uses a "sliced" representation of 3D array
         if (pixelType == PixelType.UINT8) return readImageStack_Gray8(ifdList);
@@ -484,9 +483,9 @@ public class TiffImageDataReader extends AlgoStub
         
         // read byte buffer containing binary data
         int nRead = 0;
-        try (RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");)
+        try (RandomAccessFile raf = new RandomAccessFile(new File(this.filePath), "r");)
         {
-            nRead = readByteBuffer(stream, ifd, buffer);
+            nRead = readByteBuffer(raf, ifd, buffer);
         }
         
         // Check all buffer elements have been read
@@ -528,7 +527,7 @@ public class TiffImageDataReader extends AlgoStub
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
-    private int readByteBuffer(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer)
+    private int readByteBuffer(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer)
             throws IOException
     {
         TiffTag compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
@@ -536,8 +535,8 @@ public class TiffImageDataReader extends AlgoStub
 
         return switch (compressionCode)
         {
-            case 1 -> readByteArrayUncompressed(stream, ifd, buffer);
-            case 32773 -> readByteArrayPackBits(stream, ifd, buffer);
+            case 1 -> readByteArrayUncompressed(raf, ifd, buffer);
+            case 32773 -> readByteArrayPackBits(raf, ifd, buffer);
             default -> throw new RuntimeException(
                     "Unsupported code for compression mode: " + compressionCode);
         };
@@ -547,7 +546,7 @@ public class TiffImageDataReader extends AlgoStub
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
-    private int readByteArrayUncompressed(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer)
+    private int readByteArrayUncompressed(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer)
             throws IOException
     {
         // retrieve strips info
@@ -564,8 +563,8 @@ public class TiffImageDataReader extends AlgoStub
         // read each strip successively
         for (int i = 0; i < stripOffsets.length; i++)
         {
-            stream.seek(stripOffsets[i] & 0xffffffffL);
-            int nRead = stream.read(buffer, offset, stripByteCounts[i]);
+            raf.seek(stripOffsets[i] & 0xffffffffL);
+            int nRead = raf.read(buffer, offset, stripByteCounts[i]);
             offset += nRead;
             totalRead += nRead;
         }
@@ -573,7 +572,7 @@ public class TiffImageDataReader extends AlgoStub
         return totalRead;
     }
 
-    private int readByteArrayPackBits(RandomAccessFile stream, ImageFileDirectory ifd,
+    private int readByteArrayPackBits(RandomAccessFile raf, ImageFileDirectory ifd,
             byte[] buffer) throws IOException
     {
         // retrieve strips info
@@ -598,8 +597,8 @@ public class TiffImageDataReader extends AlgoStub
         int offset = 0;
         for (int i = 0; i < nStrips; i++)
         {
-            stream.seek(stripOffsets[i] & 0xffffffffL);
-            int nRead = stream.read(compressedBytes, offset, stripByteCounts[i]);
+            raf.seek(stripOffsets[i] & 0xffffffffL);
+            int nRead = raf.read(compressedBytes, offset, stripByteCounts[i]);
             offset += nRead;
         }
 
@@ -611,7 +610,7 @@ public class TiffImageDataReader extends AlgoStub
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
-    private int readByteArray(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer, int offset)
+    private int readByteArray(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer, int offset)
             throws IOException
     {
         TiffTag compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
@@ -619,8 +618,8 @@ public class TiffImageDataReader extends AlgoStub
         
         return switch (compressionCode)
         {
-            case 1 -> readByteArrayUncompressed(stream, ifd, buffer, offset);
-            case 32773 -> readByteArrayPackBits(stream, ifd, buffer, offset);
+            case 1 -> readByteArrayUncompressed(raf, ifd, buffer, offset);
+            case 32773 -> readByteArrayPackBits(raf, ifd, buffer, offset);
             default -> throw new RuntimeException("Unsupported compression mode: " + compressionCode);
         };
     }
@@ -629,7 +628,7 @@ public class TiffImageDataReader extends AlgoStub
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
-    private int readByteArrayUncompressed(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer,
+    private int readByteArrayUncompressed(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer,
             int offset) throws IOException
     {
         int[] stripOffsets = entryValueAsIntArray(ifd, BaselineTags.StripOffsets.CODE);
@@ -644,8 +643,8 @@ public class TiffImageDataReader extends AlgoStub
         // read each strip successively
         for (int i = 0; i < stripOffsets.length; i++)
         {
-            stream.seek(stripOffsets[i] & 0xffffffffL);
-            int nRead = stream.read(buffer, offset, stripByteCounts[i]);
+            raf.seek(stripOffsets[i] & 0xffffffffL);
+            int nRead = raf.read(buffer, offset, stripByteCounts[i]);
             offset += nRead;
             totalRead += nRead;
         }
@@ -653,11 +652,11 @@ public class TiffImageDataReader extends AlgoStub
         return totalRead;
     }
 
-    private int readByteArrayPackBits(RandomAccessFile stream, ImageFileDirectory ifd, byte[] buffer, int offset)
+    private int readByteArrayPackBits(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer, int offset)
             throws IOException
     {
-        int[] stripOffsets = entryValueAsIntArray(ifd, BaselineTags.StripOffsets.CODE);
-        int[] stripByteCounts = entryValueAsIntArray(ifd, BaselineTags.StripByteCounts.CODE);
+        int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null);
+        int[] stripByteCounts = ifd.getIntArrayValue(BaselineTags.StripByteCounts.CODE, null);
         if (stripOffsets.length != stripByteCounts.length)
         {
             throw new RuntimeException("Strip offsets and strip byte counts arrays must have same length");
@@ -675,8 +674,8 @@ public class TiffImageDataReader extends AlgoStub
         int offset0 = 0;
         for (int i = 0; i < stripOffsets.length; i++)
         {
-            stream.seek(stripOffsets[i] & 0xffffffffL);
-            int nRead = stream.read(compressedBytes, offset0, stripByteCounts[i]);
+            raf.seek(stripOffsets[i] & 0xffffffffL);
+            int nRead = raf.read(compressedBytes, offset0, stripByteCounts[i]);
             offset0 += nRead;
         }
 
