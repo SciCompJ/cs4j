@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -102,7 +103,10 @@ public class TiffImageWriterTest
         assertEquals(array2.getValue(new int[] {0, 7}), 70.0, 0.01);
         assertEquals(array2.getValue(new int[] {9, 7}), 79.0, 0.01);
         
-        TiffTag softwareTag = image2.tiffTags.get(BaselineTags.Software.CODE);
+        assertNotNull(image2.metadata.containsKey("tiff-tags"));
+        @SuppressWarnings("unchecked")
+        Map<Integer, TiffTag> map = (Map<Integer, TiffTag>) image2.metadata.get("tiff-tags"); 
+        TiffTag softwareTag = map.get(BaselineTags.Software.CODE);
         assertNotNull(softwareTag);
         assertEquals(softwareString, (String) softwareTag.content);
         

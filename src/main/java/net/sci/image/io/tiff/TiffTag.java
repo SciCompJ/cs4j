@@ -346,50 +346,35 @@ public class TiffTag
      */
     public void readContent(BinaryDataReader dataReader) throws IOException
     {
-        switch (this.type)
+        this.content = switch (this.type)
         {
-            case BYTE:
-                if (this.count == 1)
-                    this.content = Integer.valueOf(value);
-                else
-                    this.content = readByteArray(dataReader);
-                break;
-            case SHORT:
-                if (this.count == 1)
-                    this.content = Integer.valueOf(value);
-                else
-                    // convert short array into int array
-                    this.content = readShortArray(dataReader);
-                break;
-            case LONG:
-                if (this.count == 1)
-                    this.content = Integer.valueOf(value);
-                else
-                    this.content = readIntArray(dataReader);
-                break;
-            case ASCII:
-                // Automatically convert byte array to String
-                this.content = readAscii(dataReader);
-                break;
-            case RATIONAL:
-                // Assume only one rational is specified
-                this.content = readRational(dataReader);
-                break;
-            default:
+            case BYTE -> count == 1 ? Integer.valueOf(value) : readByteArray(dataReader);
+            case SHORT -> count == 1 ? Integer.valueOf(value) : readShortArray(dataReader);
+            case LONG -> count == 1 ? Integer.valueOf(value) : readIntArray(dataReader);
+            case ASCII -> readAscii(dataReader); // Automatically convert byte array to String
+            case RATIONAL -> readRational(dataReader); // Assume only one rational is specified
+            default ->
+            {
                 System.err.println("Could not interpret tag with code: " + this.code + " (" + this.name + ")");
-                this.content = null;
-                break;
-        }
+                yield null;
+            }
+        };
     }
     
     /**
-     * Updates the specified FileInfo data structure according to the current
-     * value of the tag.
+     * After the value has been read, updates the specified image according to
+     * the current value of the tag.
+     * 
+     * Default implementation does nothing. For custom tags, this method can be
+     * used to update image metadata or annotations.
      * 
      * @param image
      *            the image to update
+     * @param ifd
+     *            the ImageFileDirectory this tag belongs to, in case the tag
+     *            requires to know the value of additional tags.
      */
-    public void update(Image image)
+    public void update(Image image, ImageFileDirectory ifd)
     {
     }
     
@@ -716,6 +701,8 @@ public class TiffTag
         }
         
         // restore pointer and return result
+        // TODO: not sure we need to restore location? 
+        // (as next tag will use new offset...)
         dataReader.seek(saveLoc);
         return res;
     }

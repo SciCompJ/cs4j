@@ -29,7 +29,6 @@ import net.sci.array.numeric.VectorArray;
 import net.sci.image.io.ImageIOImageReader;
 import net.sci.image.io.MetaImageReader;
 import net.sci.image.io.TiffImageReader;
-import net.sci.image.io.tiff.TiffTag;
 
 /**
  * A multi-dimensional image, represented by a multi-dimensional array together
@@ -123,17 +122,21 @@ public class Image
      */
     DisplaySettings displaySettings = new DisplaySettings(); 
 
-    // TODO: find a better way to store meta data
     /**
-     * The optional list of TIFF tags read from file, indexed by Tiff Tag code
+     * Meta-data for the image, stored as a map of String to objects. Meta-data
+     * specific to a software or a plugin can be concatenated into a single data
+     * structure, and stored by using the name of the software or plugin as a
+     * key.
+     * 
+     * Tiff tags read from a Tiff file are associated to the "tiff" key.
      */
-	public Map<Integer, TiffTag> tiffTags = new TreeMap<Integer, TiffTag>();
-	
-
-	// =============================================================
-	// Constructors
-
-	/**
+    public Map<String, Object> metadata = new TreeMap<String, Object>();
+    
+    
+    // =============================================================
+    // Constructors
+    
+    /**
      * Constructor from data array, trying to infer type from data type and
      * shape.
      * 
@@ -298,9 +301,6 @@ public class Image
         {
             this.calibration.axes = parent.calibration.duplicateAxes(); 
         }
-        
-        // copy meta-data if any (may be obsolete...)
-        this.tiffTags = parent.tiffTags;
 	}
 	
 	

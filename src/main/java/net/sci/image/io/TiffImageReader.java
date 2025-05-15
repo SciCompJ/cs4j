@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
@@ -344,12 +345,24 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         return image;
     }
 
+    /**
+     * Creates a new hash map of the tags indexed with their key, and add the
+     * map to the metadata of the image with the "tiff-tags" key.
+     * 
+     * @param image
+     *            the image to update
+     * @param tags
+     *            the list of tags
+     */
     private static final void addTiffTags(Image image, Collection<TiffTag> tags)
     {
+        Map<Integer, TiffTag> map = new TreeMap<Integer, TiffTag>(); 
         for (TiffTag tag : tags)
         {
-            image.tiffTags.put(tag.code, tag);
+            map.put(tag.code, tag);
         }
+        
+        image.metadata.put("tiff-tags", map);
     }
     
     
@@ -613,6 +626,12 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         // setup the file related to the image
         image.setNameFromFileName(path.getFileName().toString());
         image.setFilePath(path.toString());
+        
+        // iterate over tags to call the "update()" method
+        for (TiffTag tag : ifd.entries())
+        {
+            tag.update(image, ifd);
+        }
     }
 
     private static void setupSpatialCalibration(Image image, ImageFileDirectory ifd)
