@@ -11,9 +11,20 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Read data with various formats from a binary file taking into account
+ * Read data with various formats from a binary file, by taking into account
  * byte-order. This is the low-level class for reading binary data.
- * Outputs can be primitive types or arrays of primitive types. 
+ * 
+ * Provides outputs in various formats:
+ * <ul>
+ * <li>primitive types,</li>
+ * <li>arrays of primitive types,</li>
+ * <li>String,</li>
+ * <li>...</li>
+ * </ul>
+ * 
+ * Access to data is performed through a {@code RandomAccessFile}. The position
+ * within the file can be changed via the {@code seek(long)} method, that calls
+ * the corresponding method of the {@RandomAccessFile}.
  * 
  * @see java.io.DataInput
  * 
@@ -25,7 +36,7 @@ public class BinaryDataReader implements Closeable
     // =============================================================
     // Class variables
 
-    RandomAccessFile inputStream;
+    RandomAccessFile raf;
 
     ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 
@@ -35,23 +46,23 @@ public class BinaryDataReader implements Closeable
 
     public BinaryDataReader(File file) throws IOException
     {
-        this.inputStream = new RandomAccessFile(file, "r");
+        this.raf = new RandomAccessFile(file, "r");
     }
 
     public BinaryDataReader(File file, ByteOrder order) throws IOException
     {
-        this.inputStream = new RandomAccessFile(file, "r");
+        this.raf = new RandomAccessFile(file, "r");
         setOrder(order);
     }
 
     public BinaryDataReader(RandomAccessFile raf) throws IOException
     {
-        this.inputStream = raf;
+        this.raf = raf;
     }
 
     public BinaryDataReader(RandomAccessFile raf, ByteOrder order) throws IOException
     {
-        this.inputStream = raf;
+        this.raf = raf;
         setOrder(order);
     }
     
@@ -59,11 +70,22 @@ public class BinaryDataReader implements Closeable
     // =============================================================
     // Class methods
 
+    /**
+     * Retrieve the byte order associated to this data reader.
+     * 
+     * @return the byte order of this reader
+     */
     public ByteOrder getOrder()
     {
         return byteOrder;
     }
 
+    /**
+     * Changes the byte order of this data reader
+     * 
+     * @param order
+     *            the new value of byte order.
+     */
     public void setOrder(ByteOrder order)
     {
         this.byteOrder = order;
@@ -91,7 +113,7 @@ public class BinaryDataReader implements Closeable
      */
     public int readByteArray(byte[] b, int off, int len) throws IOException
     {
-        return this.inputStream.read(b, off, len);
+        return this.raf.read(b, off, len);
     }
 
     /**
@@ -108,58 +130,126 @@ public class BinaryDataReader implements Closeable
      */
     public int readByteArray(byte[] buffer) throws IOException
     {
-        return this.inputStream.read(buffer);
+        return this.raf.read(buffer);
     }
 
-    public int readShortArray(short[] shortArray, int off, int len) throws IOException
+    /**
+     * Reads up to <code>n</code> short values from this reader, and populates
+     * the specified array.
+     * 
+     * @param shortArray
+     *            the array that will contain the values (must have length equal
+     *            to at least offset+n).
+     * @param offset
+     *            starting position in the destination array
+     * @param n
+     *            the number of values to read
+     * @return the total number of values read, or -1 if there is no more data
+     *         because the end of this file has been reached.
+     * @throws IOException
+     *             If the first byte cannot be read for any reason other than
+     *             end of file
+     */
+    public int readShortArray(short[] shortArray, int offset, int n) throws IOException
     {
         // read byte array of adequate length
-        byte[] byteArray = new byte[len * 2];
+        byte[] byteArray = new byte[n * 2];
         int nRead = readByteArray(byteArray) / 2;
 
-        ByteBuffer.wrap(byteArray).order(byteOrder).asShortBuffer().get(shortArray, off, len);
+        ByteBuffer.wrap(byteArray).order(byteOrder).asShortBuffer().get(shortArray, offset, n);
 
         // return number of data read
         return nRead;
     }
 
-    public int readIntArray(int[] intArray, int off, int len) throws IOException
+    /**
+     * Reads up to <code>n</code> integer values from this reader, and populates
+     * the specified array.
+     * 
+     * @param intArray
+     *            the array that will contain the values (must have length equal
+     *            to at least offset+n).
+     * @param offset
+     *            starting position in the destination array
+     * @param n
+     *            the number of values to read
+     * @return the total number of values read, or -1 if there is no more data
+     *         because the end of this file has been reached.
+     * @throws IOException
+     *             If the first byte cannot be read for any reason other than
+     *             end of file
+     */
+    public int readIntArray(int[] intArray, int offset, int n) throws IOException
     {
         // fill up array
-        int pos = off;
-        for (int c = 0; c < len; c++)
+        int pos = offset;
+        for (int c = 0; c < n; c++)
         {
             intArray[pos++] = (int) readInt();
         }
         
         // return number of data read
-        return len;
+        return n;
     }
 
-    public int readFloatArray(float[] floatArray, int off, int len) throws IOException
+    /**
+     * Reads up to <code>n</code> float values from this reader, and populates
+     * the specified array.
+     * 
+     * @param shortArray
+     *            the array that will contain the values (must have length equal
+     *            to at least offset+n).
+     * @param offset
+     *            starting position in the destination array
+     * @param n
+     *            the number of values to read
+     * @return the total number of values read, or -1 if there is no more data
+     *         because the end of this file has been reached.
+     * @throws IOException
+     *             If the first byte cannot be read for any reason other than
+     *             end of file
+     */
+    public int readFloatArray(float[] floatArray, int offset, int n) throws IOException
     {
         // fill up array
-        int pos = off;
-        for (int c = 0; c < len; c++)
+        int pos = offset;
+        for (int c = 0; c < n; c++)
         {
             floatArray[pos++] = (float) readFloat();
         }
         
         // return number of data read
-        return len;
+        return n;
     }
 
-    public int readDoubleArray(double[] doubleArray, int off, int len) throws IOException
+    /**
+     * Reads up to <code>n</code> double precision floating-point values
+     * ("double") from this reader, and populates the specified array.
+     * 
+     * @param shortArray
+     *            the array that will contain the values (must have length equal
+     *            to at least offset+n).
+     * @param offset
+     *            starting position in the destination array
+     * @param n
+     *            the number of values to read
+     * @return the total number of values read, or -1 if there is no more data
+     *         because the end of this file has been reached.
+     * @throws IOException
+     *             If the first byte cannot be read for any reason other than
+     *             end of file
+     */
+    public int readDoubleArray(double[] doubleArray, int offset, int n) throws IOException
     {
         // fill up array
-        int pos = off;
-        for (int c = 0; c < len; c++)
+        int pos = offset;
+        for (int c = 0; c < n; c++)
         {
             doubleArray[pos++] = readDouble();
         }
         
         // return number of data read
-        return len;
+        return n;
     }
 
     
@@ -175,7 +265,7 @@ public class BinaryDataReader implements Closeable
      */
     public byte readByte() throws IOException
     {
-        return inputStream.readByte();
+        return raf.readByte();
     }
 
     /**
@@ -188,8 +278,8 @@ public class BinaryDataReader implements Closeable
     public int readShort() throws IOException
     {
         // read bytes
-        int b1 = inputStream.read();
-        int b2 = inputStream.read();
+        int b1 = raf.read();
+        int b2 = raf.read();
 
         // encode bytes to short
         if (byteOrder == ByteOrder.LITTLE_ENDIAN)
@@ -208,10 +298,10 @@ public class BinaryDataReader implements Closeable
    public int readInt() throws IOException
    {
        // read bytes
-       int b1 = inputStream.read();
-       int b2 = inputStream.read();
-       int b3 = inputStream.read();
-       int b4 = inputStream.read();
+       int b1 = raf.read();
+       int b2 = raf.read();
+       int b3 = raf.read();
+       int b4 = raf.read();
 
        // encode bytes to integer
        if (byteOrder == ByteOrder.LITTLE_ENDIAN)
@@ -230,10 +320,10 @@ public class BinaryDataReader implements Closeable
     public float readFloat() throws IOException
     {
         // read bytes
-        int b1 = inputStream.read();
-        int b2 = inputStream.read();
-        int b3 = inputStream.read();
-        int b4 = inputStream.read();
+        int b1 = raf.read();
+        int b2 = raf.read();
+        int b3 = raf.read();
+        int b4 = raf.read();
 
         // encode bytes to integer
         if (byteOrder == ByteOrder.LITTLE_ENDIAN)
@@ -252,14 +342,14 @@ public class BinaryDataReader implements Closeable
     public double readDouble() throws IOException
     {
         // read bytes
-        long b1 = inputStream.read();
-        long b2 = inputStream.read();
-        long b3 = inputStream.read();
-        long b4 = inputStream.read();
-        long b5 = inputStream.read();
-        long b6 = inputStream.read();
-        long b7 = inputStream.read();
-        long b8 = inputStream.read();
+        long b1 = raf.read();
+        long b2 = raf.read();
+        long b3 = raf.read();
+        long b4 = raf.read();
+        long b5 = raf.read();
+        long b6 = raf.read();
+        long b7 = raf.read();
+        long b8 = raf.read();
 
         // encode bytes to integer
         if (byteOrder == ByteOrder.LITTLE_ENDIAN)
@@ -267,7 +357,23 @@ public class BinaryDataReader implements Closeable
         else
             return Double.longBitsToDouble((b1 << 56) + (b2 << 48) + (b3 << 40) + (b4 << 32) + (b5 << 24) + (b6 << 16) + (b7 << 8) + b8);
     }
-
+    
+    /**
+     * Reads a string with the specified number of characters. The number of
+     * bytes read is twice the number of characters.
+     * 
+     * @return the string obtained by reading the next {@code nChars}
+     *         characters.
+     * @throws IOException
+     *             if an error occurs
+     */
+    public String readString(int nChars) throws IOException
+    {
+        int n = nChars * 2;
+        byte[] buffer = new byte[n];
+        this.raf.read(buffer, 0, n);
+        return ByteBuffer.wrap(buffer).order(this.byteOrder).asCharBuffer().toString();
+    }
 	
 
 	/**
@@ -282,7 +388,7 @@ public class BinaryDataReader implements Closeable
      */
     public void seek(long pos) throws IOException
     {
-        this.inputStream.seek(pos);
+        this.raf.seek(pos);
     }
 
     /**
@@ -295,11 +401,14 @@ public class BinaryDataReader implements Closeable
      */
     public long getFilePointer() throws IOException
     {
-        return this.inputStream.getFilePointer();
+        return this.raf.getFilePointer();
     }
 
+    /**
+     * Closes this reader, and the underlying file.
+     */
     public void close() throws IOException
     {
-        this.inputStream.close();
+        this.raf.close();
     }
 }
