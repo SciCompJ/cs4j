@@ -3,6 +3,7 @@ package net.sci.image.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import net.sci.array.numeric.impl.FileMappedUInt8Array3D;
 import net.sci.axis.NumericalAxis;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
+import net.sci.image.io.tiff.ImagejMetadata;
 
 public class TiffImageReaderTest
 {
@@ -249,26 +251,35 @@ public class TiffImageReaderTest
         assertEquals(0.350, ((NumericalAxis) yAxis).getSpacing(), .001);
     }
     
-//    /**
-//     * Read a 5D Tiff image as saved by ImageJ.
-//     * 
-//     * @throws IOException
-//     */
-//    @Test
-//    public void testReadImage_5D_Mitosis() throws IOException
-//    {
-//        String fileName = getClass().getResource("/images/imagej/mitosis.tif").getFile();
-//        
-//        TiffImageReader reader = new TiffImageReader(fileName);
-//        Image image = reader.readImage();
-//        
-//        Array<?> array = image.getData();
-//        assertEquals(5, array.dimensionality());
-//        
-//        assertEquals(2, array.size(2));
-//        assertEquals(5, array.size(3));
-//        assertEquals(51, array.size(4));
-//    }
+    /**
+     * Read a TIFF image containing meta data saved by the ImageJ software.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void testReadImage_metadata_ImageJ() throws IOException
+    {
+        String fileName = getClass().getResource("/images/imagej/blobs_withMetadata.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(2, image.getDimension());
+        assertEquals(256, image.getSize(0));
+        assertEquals(254, image.getSize(1));
+        
+        assertTrue(image.metadata.containsKey("imagej"));
+        ImagejMetadata metadata = (ImagejMetadata) image.metadata.get("imagej");
+        
+//        System.out.println(metadata);
+        
+        assertNotNull(metadata.roiData);
+        assertNotNull(metadata.overlayData);
+        assertEquals(metadata.overlayData.length, 2);
+        assertNotNull(metadata.properties);
+        assertEquals(metadata.properties.length, 2);
+    }
+    
 
     // The following code depends on local configuration. It is kept as comment intentionally.
 //    /**

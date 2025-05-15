@@ -50,6 +50,7 @@ public class LsmTags implements TagSet
             long offset = ((long) this.value) & 0xffffffffL;
             dataReader.seek(offset+8);
 
+            // TODO: move this code into the "update()" method, so the byte order can be correctly handled
             map.put("dimX", dataReader.readInt());
             map.put("dimY", dataReader.readInt());
             map.put("dimZ", dataReader.readInt());
