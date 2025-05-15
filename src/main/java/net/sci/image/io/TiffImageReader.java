@@ -679,11 +679,13 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             
             // convert raw array into N-by-3 look-up table
             int j = 0;
+            
+            // for each color, keep only the most significant byte of the component
             for (int i = 0; i < lutLength; i++)
             {
-                lut[i][0] = lut16[j];
-                lut[i][1] = lut16[j + 256];
-                lut[i][2] = lut16[j + 512];
+                lut[i][0] = lut16[j] >> 8;
+                lut[i][1] = lut16[j + 256] >> 8;
+                lut[i][2] = lut16[j + 512] >> 8;
                 j ++;
             }
          }
