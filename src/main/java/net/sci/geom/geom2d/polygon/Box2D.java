@@ -72,6 +72,40 @@ public class Box2D implements Polygon2D
     
     
     // ===================================================================
+    // Accessors
+    
+    /**
+     * Returns the center of this, as an instance of Point2D.
+     * 
+     * @return the center of the box.
+     */
+    public Point2D center()
+    {
+        return new Point2D((this.xmin + this.xmax) / 2, (this.ymin + this.ymax) / 2);
+    }
+    
+    /**
+     * Returns the size of the box along the x-direction.
+     * 
+     * @return the size of the box along the x-direction.
+     */
+    public double sizeX()
+    {
+        return this.xmax - this.xmin;
+    }
+    
+    /**
+     * Returns the size of the box along the y-direction.
+     * 
+     * @return the size of the box along the y-direction.
+     */
+    public double sizeY()
+    {
+        return this.ymax - this.ymin;
+    }
+    
+    
+    // ===================================================================
     // Implementation of the Polygon2D interface
     
     @Override
@@ -83,8 +117,8 @@ public class Box2D implements Polygon2D
     @Override
     public double signedArea()
     {
-        double dx = xmax- xmin;
-        double dy = ymax- ymin;
+        double dx = xmax - xmin;
+        double dy = ymax - ymin;
         return dx * dy;
     }
 
