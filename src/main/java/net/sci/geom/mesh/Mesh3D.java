@@ -138,12 +138,13 @@ public interface Mesh3D extends Geometry3D
      *            the vertex to remove.
      */
     public void removeVertex(Vertex vertex);
+    
 
     // ===================================================================
     // Management of edges ? 
     
     /**
-     * @return the number of edges in this mesh.
+     * @return the number of edges in this mesh (optional operation).
      */
     public int edgeCount();
 
@@ -166,7 +167,8 @@ public interface Mesh3D extends Geometry3D
     public Edge addEdge(Vertex v1, Vertex v2);
     
     /**
-     * Removes an edge from this mesh. The edge should not belong to any face.
+     * Removes an edge from this mesh (optional operation). The edge should not
+     * belong to any face.
      * 
      * @param edge
      *            the edge to remove.
@@ -198,6 +200,7 @@ public interface Mesh3D extends Geometry3D
     @Override
     public Mesh3D duplicate();
     
+    
     // ===================================================================
     // Inner interfaces
 
@@ -215,15 +218,6 @@ public interface Mesh3D extends Geometry3D
          * @return the normal of this vertex, as a 3D Vector
          */
         public Vector3D normal();
-//        public default Vector3D normal()
-//        {
-//            Vector3D normal = new Vector3D();
-//            for (Mesh3D.Face face : vertexFaces(this))
-//            {
-//                normal.plus(face.normal());
-//            }
-//            return normal.normalize();
-//        }
         
         /**
          * @return the parent mesh of this vertex.
@@ -258,6 +252,7 @@ public interface Mesh3D extends Geometry3D
     
     /**
      * Interface representing an edge, a mesh element with dimension 1.
+     * The management of edges by Mesh implementations is optional.
      */
     public interface Edge
     {
