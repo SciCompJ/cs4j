@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
     net.sci.geom.geom2d.AllTestsRecurse.class,
     net.sci.geom.geom3d.AllTestsRecurse.class,
     net.sci.geom.graph.AllTests.class,
-    net.sci.geom.mesh.AllTestsRecurse.class,
+    net.sci.geom.mesh3d.AllTestsRecurse.class,
 	})
 public class AllTestsRecurse {
   //nothing

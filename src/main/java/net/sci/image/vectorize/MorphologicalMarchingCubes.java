@@ -8,9 +8,9 @@ import java.util.HashMap;
 import net.sci.algo.AlgoStub;
 import net.sci.array.numeric.ScalarArray3D;
 import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.mesh.Mesh3D;
-import net.sci.geom.mesh.SimpleTriMesh3D;
-import net.sci.geom.mesh.TriMesh3D;
+import net.sci.geom.mesh3d.Mesh3D;
+import net.sci.geom.mesh3d.SimpleTriMesh3D;
+import net.sci.geom.mesh3d.TriMesh3D;
 
 /**
  * Marching cubes algorithm based on a connectivity option for foreground /
