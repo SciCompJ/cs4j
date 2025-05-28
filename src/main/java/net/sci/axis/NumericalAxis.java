@@ -3,116 +3,21 @@
  */
 package net.sci.axis;
 
-import java.util.Locale;
-
 /**
- * Numeric axis, for spatial, time, wave-length... axes.
+ * Numerical axis, for spatial, time, wave-length... axes. Numerical axes are
+ * not necessarily "bounded", and may provide values for any index.
+ * 
+ * @see CategoricalAxis
+ * @see LinearNumericalAxis
  * 
  * @author dlegland
- *
  */
-public class NumericalAxis implements Axis
+public interface NumericalAxis extends Axis
 {
-    // =============================================================
-    // Class variables
-   
-    /**
-     * The name for this axis.
-     */
-    protected String name;
-
-    /**
-     * The spacing between two elements along this axis
-     */
-    protected double spacing;
-    
-    /**
-     * The position of the first element (with index 0) on this axis.
-     */
-    protected double origin;
-    
-    /**
-     * The unit name associated to this axis.
-     */
-    protected String unitName;
-
-
-    // =============================================================
-    // Constructors
-    
-    /**
-     * Creates a new numerical axis
-     * 
-     * @param name the name of the numerical axis
-     */
-    public NumericalAxis(String name)
-    {
-        this(name, 1.0, 0.0);
-    }
-
-    /**
-     * Creates a new numerical axis
-     * 
-     * @param name
-     *            the name of the numerical axis
-     * @param spacing
-     *            the spacing between each tick of the axis
-     * @param origin
-     *            the origin of the axis (position of the first tick)
-     */
-    public NumericalAxis(String name, double spacing, double origin)
-    {
-        this.name = name;
-        this.spacing = spacing;
-        this.origin = origin;
-    }
-
-    /**
-     * Constructor with initial value for all fields.
-     * 
-     * @param name
-     *            the name of the axis
-     * @param type
-     *            the type of axis
-     * @param spacing
-     *            the spacing between two elements of the array
-     * @param origin
-     *            the position of the first element of the array
-     * @param unitName
-     *            the name of the unit
-     */
-    public NumericalAxis(String name, double spacing, double origin, String unitName)
-    {
-        this.name = name;
-        this.spacing = spacing;
-        this.origin = origin;
-        this.unitName = unitName;
-    }
-    
-
     // =============================================================
     // General methods
 
-    /**
-     * @return the physical length of the given number of elements 
-     */
-    public double physicalLength(int number)
-    {
-        return number * this.spacing;
-    }
-    
-    /**
-     * @return the physical range occupied by the given number of elements  
-     */
-    public double[] physicalRange(int number)
-    {
-        return new double[] {this.origin - 0.5 * this.spacing, this.origin + this.spacing * (number - 0.5)};
-    }
-    
-    public double indexToValue(double index)
-    {
-        return index * this.spacing + this.origin;
-    }
+    public double indexToValue(double index);
     
     /**
      * Returns the closest index that corresponds to the specified value.
@@ -123,72 +28,20 @@ public class NumericalAxis implements Axis
      *            a numerical value on the axis
      * @return the closest index that corresponds to this value
      */
-    public int valueToIndex(double value)
-    {
-        return (int) Math.round((value - this.origin) / this.spacing);
-    }
+    public int valueToIndex(double value);
     
     
     // =============================================================
     // Getters / setters
 
-    /**
-     * @return the name
-     */
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
+    public String getUnitName();
     
-    public String getUnitName()
-    {
-        return unitName;
-    }
-    
-    public void setUnitName(String unitName)
-    {
-        this.unitName = unitName;
-    }
-    
-    public double getSpacing()
-    {
-        return spacing;
-    }
-
-    public void setSpacing(double spacing)
-    {
-        this.spacing = spacing;
-    }
-    
-    public double getOrigin()
-    {
-        return origin;
-    }
-
-    public void setOrigin(double origin)
-    {
-        this.origin = origin;
-    }
+    public void setUnitName(String unitName);
     
     
     // =============================================================
     // Methods overriding Object
     
     @Override
-    public NumericalAxis duplicate()
-    {
-        return new NumericalAxis(this.name, this.spacing, this.origin, this.unitName);
-    }
-    
-    @Override
-    public String toString()
-    {
-        String format = "NumericalAxis(name=\"%s\", spacing=%.4g, origin=%.4g, unit=\"%s\")";
-        return String.format(Locale.ENGLISH, format, this.name, this.spacing, this.origin, this.unitName);
-    }
+    public NumericalAxis duplicate();
 }

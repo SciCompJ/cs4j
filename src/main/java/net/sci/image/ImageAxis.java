@@ -5,7 +5,7 @@ package net.sci.image;
 
 import java.util.Locale;
 
-import net.sci.axis.NumericalAxis;
+import net.sci.axis.LinearNumericalAxis;
 
 /**
  * Specialization of the NumericalAxis class for recurrent types of axes used
@@ -14,7 +14,7 @@ import net.sci.axis.NumericalAxis;
  * @author dlegland
  *
  */
-public class ImageAxis extends NumericalAxis
+public class ImageAxis extends LinearNumericalAxis
 {
     // =============================================================
     // Enumerations

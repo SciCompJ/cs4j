@@ -15,12 +15,12 @@ public abstract class TableStub implements Table
     // =============================================================
     // Class variables
 
-    String name = "";
+    protected String name = "";
 
     /**
      * The categorical axis containing meta-data for rows.
      */
-    CategoricalAxis rowAxis = null;
+    protected CategoricalAxis rowAxis = null;
 
     
     // =============================================================
