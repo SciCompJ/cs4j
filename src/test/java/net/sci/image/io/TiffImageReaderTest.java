@@ -19,7 +19,6 @@ import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt16Array2D;
 import net.sci.array.numeric.UInt8Array3D;
 import net.sci.array.numeric.impl.FileMappedUInt8Array3D;
-import net.sci.axis.NumericalAxis;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
 import net.sci.image.io.tiff.ImagejMetadata;
@@ -246,9 +245,9 @@ public class TiffImageReaderTest
         assertTrue(axes[1].type() == ImageAxis.Type.SPACE);
         
         ImageAxis xAxis = axes[0];
-        assertEquals(0.350, ((NumericalAxis) xAxis).getSpacing(), .001);
+        assertEquals(0.350, ((ImageAxis) xAxis).getSpacing(), .001);
         ImageAxis yAxis = axes[1];
-        assertEquals(0.350, ((NumericalAxis) yAxis).getSpacing(), .001);
+        assertEquals(0.350, ((ImageAxis) yAxis).getSpacing(), .001);
     }
     
     /**

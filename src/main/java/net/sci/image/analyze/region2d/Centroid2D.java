@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sci.array.numeric.IntArray2D;
-import net.sci.axis.NumericalAxis;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.image.Calibration;
+import net.sci.image.ImageAxis;
 import net.sci.image.label.LabelImages;
 import net.sci.table.Table;
 import net.sci.table.impl.DefaultTable;
@@ -172,8 +172,8 @@ public class Centroid2D extends RegionAnalyzer2D<Point2D>
 		double ox = 0, oy = 0;
 		if (calib != null)
 		{
-		    NumericalAxis xAxis = calib.getXAxis(); 
-		    NumericalAxis yAxis = calib.getYAxis(); 
+		    ImageAxis xAxis = calib.getXAxis(); 
+		    ImageAxis yAxis = calib.getYAxis(); 
             sx = xAxis.getSpacing();
             sy = yAxis.getSpacing();
             ox = xAxis.getOrigin();

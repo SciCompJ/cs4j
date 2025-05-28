@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sci.array.numeric.IntArray2D;
-import net.sci.axis.NumericalAxis;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.curve.Ellipse2D;
 import net.sci.image.Calibration;
+import net.sci.image.ImageAxis;
 import net.sci.image.label.LabelImages;
 import net.sci.table.Table;
 
@@ -94,10 +94,10 @@ public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
         double oy = 0.0, sy = 1.0;
         if (calib != null)
         {
-            NumericalAxis xAxis = calib.getXAxis(); 
+            ImageAxis xAxis = calib.getXAxis(); 
             ox = xAxis.getOrigin();
             sx = xAxis.getSpacing();
-            NumericalAxis yAxis = calib.getYAxis(); 
+            ImageAxis yAxis = calib.getYAxis(); 
             oy = yAxis.getOrigin();
             sy = yAxis.getSpacing();
         }

@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sci.array.numeric.IntArray3D;
-import net.sci.axis.NumericalAxis;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.image.Calibration;
+import net.sci.image.ImageAxis;
 import net.sci.image.label.LabelImages;
 import net.sci.table.Table;
 import net.sci.table.impl.DefaultTable;
@@ -164,9 +164,9 @@ public class Centroid3D extends RegionAnalyzer3D<Point3D>
 		double ox = 0, oy = 0, oz = 1;
 		if (calib != null)
 		{
-		    NumericalAxis xAxis = calib.getXAxis(); 
-            NumericalAxis yAxis = calib.getYAxis(); 
-            NumericalAxis zAxis = calib.getZAxis(); 
+		    ImageAxis xAxis = calib.getXAxis(); 
+		    ImageAxis yAxis = calib.getYAxis(); 
+		    ImageAxis zAxis = calib.getZAxis(); 
             sx = xAxis.getSpacing();
             sy = yAxis.getSpacing();
             sz = zAxis.getSpacing();

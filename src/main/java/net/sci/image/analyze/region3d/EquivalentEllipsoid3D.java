@@ -7,10 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.sci.array.numeric.IntArray3D;
-import net.sci.axis.NumericalAxis;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.surface.Ellipsoid3D;
 import net.sci.image.Calibration;
+import net.sci.image.ImageAxis;
 import net.sci.image.label.LabelImages;
 import net.sci.table.Table;
 
@@ -169,13 +169,13 @@ public class EquivalentEllipsoid3D extends RegionAnalyzer3D<Ellipsoid3D>
         double oz = 0.0, sz = 1.0;
         if (calib != null)
         {
-            NumericalAxis xAxis = calib.getXAxis(); 
+            ImageAxis xAxis = calib.getXAxis(); 
             ox = xAxis.getOrigin();
             sx = xAxis.getSpacing();
-            NumericalAxis yAxis = calib.getYAxis(); 
+            ImageAxis yAxis = calib.getYAxis(); 
             oy = yAxis.getOrigin();
             sy = yAxis.getSpacing();
-            NumericalAxis zAxis = calib.getZAxis(); 
+            ImageAxis zAxis = calib.getZAxis(); 
             oz = zAxis.getOrigin();
             sz = zAxis.getSpacing();
         }

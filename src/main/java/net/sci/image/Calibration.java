@@ -6,7 +6,6 @@ package net.sci.image;
 import java.io.PrintStream;
 
 import net.sci.axis.CategoricalAxis;
-import net.sci.axis.NumericalAxis;
 
 /**
  * Contains information for calibration of spatial axes, and eventually channels
@@ -131,8 +130,7 @@ public class Calibration
         double[] res = new double[nd];
         for (int d = 0; d < nd; d++)
         {
-            NumericalAxis numax = (NumericalAxis) spaceAxes[d];
-            res[d] = arraySize[d] * numax.getSpacing();
+            res[d] = arraySize[d] * spaceAxes[d].getSpacing();
         }
         
         return res;
@@ -161,8 +159,7 @@ public class Calibration
         double[][] res = new double[nd][2];
         for (int d = 0; d < nd; d++)
         {
-            NumericalAxis numax = (NumericalAxis) spaceAxes[d];
-            res[d] = numax.physicalRange(arraySize[d]);
+            res[d] = spaceAxes[d].physicalRange(arraySize[d]);
         }
         
         return res;
