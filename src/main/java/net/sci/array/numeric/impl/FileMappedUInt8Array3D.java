@@ -16,7 +16,7 @@ import net.sci.array.numeric.UInt8Array3D;
  * 
  * The data must be contiguous within the file, and not compressed. 
  * 
- * For convenience, the data for the current slice are cached in a byte buffer.
+ * For convenience, the data for the current slice are cached in a byte array.
  * 
  * @author dlegland
  *
@@ -55,8 +55,7 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
     /**
      * The current slice (updated when reading data at different z-value).
      */
-    BufferedUInt8Array2D currentSlice;
-
+    UInt8Array2D currentSlice;
     
     
     // =============================================================
@@ -70,7 +69,7 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
 
         // initialize current cached slice
         this.byteArray = new byte[size0 * size1];
-        this.currentSlice = new BufferedUInt8Array2D(size0, size1, byteArray);
+        this.currentSlice = UInt8Array2D.wrap(this.byteArray, size0, size1);
     }
 
     private void ensureCurrentSliceIndex(int index)
@@ -114,11 +113,7 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
         try
         {
             ensureFileChannelIsOpen();
-
-            this.fileChannel.position(start);
-
-            // read data
-            this.fileChannel.read(buffer);
+            this.fileChannel.read(buffer, start);
         }
         catch(IOException ex)
         {
