@@ -77,8 +77,8 @@ public class MorphologicalReconstruction
      *            the image to process
      * @return a new image with borders removed
      *            
-     * @see #killBorders(ScalarArray2D)
-     * @see #killBorders(ScalarArray3D)
+     * @see #killBorders2d(ScalarArray2D)
+     * @see #killBorders3d(ScalarArray3D)
      */
     public static final Image killBorders(Image image)
     {
@@ -86,11 +86,11 @@ public class MorphologicalReconstruction
         Array<?> res;
         if (array instanceof ScalarArray2D)
         {
-            res = killBorders((ScalarArray2D<?>) array);
+            res = killBorders2d((ScalarArray2D<?>) array);
         }
         else if (array instanceof ScalarArray3D)
         {
-            res = killBorders((ScalarArray3D<?>) array);
+            res = killBorders3d((ScalarArray3D<?>) array);
         }
         else
         {
@@ -105,13 +105,13 @@ public class MorphologicalReconstruction
      * morphological reconstruction by dilation initialized with image boundary.
      * 
      * 
-     * @see #fillHoles(ScalarArray2D)
+     * @see #fillHoles2d(ScalarArray2D)
      * 
      * @param array
      *            the image to process
      * @return a new image with borders removed
      */
-    public static final ScalarArray2D<?> killBorders(ScalarArray2D<?> array)
+    public static final ScalarArray2D<?> killBorders2d(ScalarArray2D<?> array)
     {
         return new KillBorders().processScalar2d(array);
     }
@@ -120,14 +120,14 @@ public class MorphologicalReconstruction
      * Removes the border of the input 3D array. The principle is to perform a
      * morphological reconstruction by dilation initialized with image boundary.
      * 
-     * @see #fillHoles(ScalarArray3D)
-     * @see #killBorders(ScalarArray2D)
+     * @see #fillHoles3d(ScalarArray3D)
+     * @see #killBorders2d(ScalarArray2D)
      * 
      * @param array
      *            the image to process
      * @return a new image with borders removed
      */
-    public static final ScalarArray3D<?> killBorders(ScalarArray3D<?> array)
+    public static final ScalarArray3D<?> killBorders3d(ScalarArray3D<?> array)
     {
         return new KillBorders().processScalar3d(array);
     }
@@ -139,8 +139,8 @@ public class MorphologicalReconstruction
      *            the image to process
      * @return a new image with holes filled
      *            
-     * @see #fillHoles(ScalarArray2D)
-     * @see #fillHoles(ScalarArray3D)
+     * @see #fillHoles2d(ScalarArray2D)
+     * @see #fillHoles3d(ScalarArray3D)
      */
     public static final Image fillHoles(Image image)
     {
@@ -148,11 +148,11 @@ public class MorphologicalReconstruction
         Array<?> res;
         if (array instanceof ScalarArray2D)
         {
-            res = fillHoles((ScalarArray2D<?>) array);
+            res = fillHoles2d((ScalarArray2D<?>) array);
         }
         else if (array instanceof ScalarArray3D)
         {
-            res = fillHoles((ScalarArray3D<?>) array);
+            res = fillHoles3d((ScalarArray3D<?>) array);
         }
         else
         {
@@ -169,14 +169,14 @@ public class MorphologicalReconstruction
      * array without the borders, and performing morphological reconstruction by
      * erosion.
      * 
-     * @see #fillHoles(ScalarArray3D)
-     * @see #killBorders(ScalarArray2D)
+     * @see #fillHoles3d(ScalarArray3D)
+     * @see #killBorders2d(ScalarArray2D)
      * 
      * @param array
      *            the image to process
      * @return a new image with holes filled
      */
-    public static final ScalarArray2D<?> fillHoles(ScalarArray2D<?> array)
+    public static final ScalarArray2D<?> fillHoles2d(ScalarArray2D<?> array)
     {
         // Image size
         int sizeX = array.size(0);
@@ -193,7 +193,7 @@ public class MorphologicalReconstruction
         }
         
         // Reconstruct image from borders to find touching structures
-        return reconstructByErosion(marker, array);
+        return reconstructByErosion2d(marker, array);
     }
     
     /**
@@ -203,14 +203,14 @@ public class MorphologicalReconstruction
      * array without the borders, and performing morphological reconstruction by
      * erosion.
      * 
-     * @see #fillHoles(ScalarArray2D)
-     * @see #killBorders(ScalarArray3D)
+     * @see #fillHoles2d(ScalarArray2D)
+     * @see #killBorders3d(ScalarArray3D)
      * 
      * @param array
      *            the image to process
      * @return a new image with holes filled
      */
-    public static final ScalarArray3D<?> fillHoles(ScalarArray3D<?> array)
+    public static final ScalarArray3D<?> fillHoles3d(ScalarArray3D<?> array)
     {
         // Image size
         int sizeX = array.size(0);
@@ -231,7 +231,7 @@ public class MorphologicalReconstruction
         }
         
         // Reconstruct image from borders to find touching structures
-        return reconstructByErosion(marker, array);
+        return reconstructByErosion3d(marker, array);
     }
     
     
@@ -274,7 +274,7 @@ public class MorphologicalReconstruction
             }
             
             Connectivity2D conn = Connectivity2D.C4;
-            result = reconstructByDilation((ScalarArray2D<?>) marker, (ScalarArray2D<?>) mask, conn);
+            result = reconstructByDilation2d((ScalarArray2D<?>) marker, (ScalarArray2D<?>) mask, conn);
         }
         else if (nd == 3)
         {
@@ -284,7 +284,7 @@ public class MorphologicalReconstruction
             }
             
             Connectivity3D conn = Connectivity3D.C6;
-            result = reconstructByDilation((ScalarArray3D<?>) marker, (ScalarArray3D<?>) mask, conn);
+            result = reconstructByDilation3d((ScalarArray3D<?>) marker, (ScalarArray3D<?>) mask, conn);
         }
         else
         {
@@ -332,7 +332,7 @@ public class MorphologicalReconstruction
             }
             
             Connectivity2D conn = Connectivity2D.C4;
-            result = reconstructByErosion((ScalarArray2D<?>) marker, (ScalarArray2D<?>) mask, conn);
+            result = reconstructByErosion2d((ScalarArray2D<?>) marker, (ScalarArray2D<?>) mask, conn);
         }
         else if (nd == 3)
         {
@@ -342,7 +342,7 @@ public class MorphologicalReconstruction
             }
             
             Connectivity3D conn = Connectivity3D.C6;
-            result = reconstructByErosion((ScalarArray3D<?>) marker, (ScalarArray3D<?>) mask, conn);
+            result = reconstructByErosion3d((ScalarArray3D<?>) marker, (ScalarArray3D<?>) mask, conn);
         }
         else
         {
@@ -352,6 +352,58 @@ public class MorphologicalReconstruction
         // Create result image from result array
         Image resultImage = new Image(result, maskImage.getType(), maskImage);
         return resultImage;
+    }
+    
+    
+    // ==================================================
+    // Static methods, for any dimensionality
+    
+    /**
+     * Static method to computes the morphological reconstruction by dilation of
+     * the marker image under the mask image.
+     *
+     * @param marker
+     *            input marker array
+     * @param mask
+     *            input mask array
+     * @return the result of morphological reconstruction
+     */
+    public final static ScalarArray<?> reconstructByDilation(ScalarArray<?> marker, ScalarArray<?> mask)
+    {
+        if (marker.dimensionality() == 2 && mask.dimensionality() == 2)
+        {
+            return reconstructByDilation2d(ScalarArray2D.wrap(marker), ScalarArray2D.wrap(mask));
+        }
+        else if (marker.dimensionality() == 3 && mask.dimensionality() == 3)
+        {
+            return reconstructByDilation3d(ScalarArray3D.wrap(marker), ScalarArray3D.wrap(mask));
+        }
+        
+        throw new RuntimeException("Requires marker and mask arrays to be both either 2D or 3D arrays.");
+    }
+    
+    /**
+     * Static method to computes the morphological reconstruction by erosion of
+     * the marker image under the mask image.
+     *
+     * @param marker
+     *            input marker array
+     * @param mask
+     *            input mask array
+     * @return the result of morphological reconstruction
+     */
+    public final static ScalarArray<?> reconstructByErosion(ScalarArray<?> marker, ScalarArray<?> mask)
+    {
+        if (marker.dimensionality() == 2 && mask.dimensionality() == 2)
+        {
+            return reconstructByErosion2d(ScalarArray2D.wrap(marker), ScalarArray2D.wrap(mask));
+        }
+        else if (marker.dimensionality() == 3 && mask.dimensionality() == 3)
+        {
+            return reconstructByErosion3d(ScalarArray3D.wrap(marker), ScalarArray3D.wrap(mask));
+        }
+        
+        throw new RuntimeException("Requires marker and mask arrays to be both either 2D or 3D arrays.");
     }
     
     
@@ -368,9 +420,9 @@ public class MorphologicalReconstruction
      *            input mask array
      * @return the result of morphological reconstruction
      */
-    public final static ScalarArray2D<?> reconstructByDilation(ScalarArray2D<?> marker, ScalarArray2D<?> mask)
+    public final static ScalarArray2D<?> reconstructByDilation2d(ScalarArray2D<?> marker, ScalarArray2D<?> mask)
     {
-        return reconstructByDilation(marker, mask, Connectivity2D.C4);
+        return reconstructByDilation2d(marker, mask, Connectivity2D.C4);
     }
     
     /**
@@ -385,7 +437,7 @@ public class MorphologicalReconstruction
      *            the planar connectivity (usually C4 or C8)
      * @return the result of morphological reconstruction
      */
-    public final static ScalarArray2D<?> reconstructByDilation(ScalarArray2D<?> marker, ScalarArray2D<?> mask,
+    public final static ScalarArray2D<?> reconstructByDilation2d(ScalarArray2D<?> marker, ScalarArray2D<?> mask,
             Connectivity2D conn)
     {
         MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(Type.BY_DILATION, conn);
@@ -402,9 +454,9 @@ public class MorphologicalReconstruction
      *            input mask array
      * @return the result of morphological reconstruction
      */
-    public final static ScalarArray2D<?> reconstructByErosion(ScalarArray2D<?> marker, ScalarArray2D<?> mask)
+    public final static ScalarArray2D<?> reconstructByErosion2d(ScalarArray2D<?> marker, ScalarArray2D<?> mask)
     {
-        return reconstructByErosion(marker, mask, Connectivity2D.C4);
+        return reconstructByErosion2d(marker, mask, Connectivity2D.C4);
     }
     
     /**
@@ -419,7 +471,7 @@ public class MorphologicalReconstruction
      *            the planar connectivity (usually C4 or C8)
      * @return the result of morphological reconstruction
      */
-    public final static ScalarArray2D<?> reconstructByErosion(ScalarArray2D<?> marker, ScalarArray2D<?> mask,
+    public final static ScalarArray2D<?> reconstructByErosion2d(ScalarArray2D<?> marker, ScalarArray2D<?> mask,
             Connectivity2D conn)
     {
         MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(Type.BY_EROSION, conn);
@@ -440,9 +492,9 @@ public class MorphologicalReconstruction
      *            input mask array
      * @return the result of morphological reconstruction
      */
-    public final static ScalarArray3D<?> reconstructByDilation(ScalarArray3D<?> marker, ScalarArray3D<?> mask)
+    public final static ScalarArray3D<?> reconstructByDilation3d(ScalarArray3D<?> marker, ScalarArray3D<?> mask)
     {
-        return reconstructByDilation(marker, mask, Connectivity3D.C6);
+        return reconstructByDilation3d(marker, mask, Connectivity3D.C6);
     }
     
     /**
@@ -457,7 +509,7 @@ public class MorphologicalReconstruction
      *            the planar connectivity (usually C6 or C26)
      * @return the result of morphological reconstruction
      */
-    public final static ScalarArray3D<?> reconstructByDilation(ScalarArray3D<?> marker, ScalarArray3D<?> mask,
+    public final static ScalarArray3D<?> reconstructByDilation3d(ScalarArray3D<?> marker, ScalarArray3D<?> mask,
             Connectivity3D conn)
     {
         MorphologicalReconstruction3DHybrid algo = new MorphologicalReconstruction3DHybrid(Type.BY_DILATION, conn);
@@ -474,9 +526,9 @@ public class MorphologicalReconstruction
      *            input mask array
      * @return the result of morphological reconstruction
      */
-    public final static ScalarArray3D<?> reconstructByErosion(ScalarArray3D<?> marker, ScalarArray3D<?> mask)
+    public final static ScalarArray3D<?> reconstructByErosion3d(ScalarArray3D<?> marker, ScalarArray3D<?> mask)
     {
-        return reconstructByErosion(marker, mask, Connectivity3D.C6);
+        return reconstructByErosion3d(marker, mask, Connectivity3D.C6);
     }
     
     /**
@@ -491,7 +543,7 @@ public class MorphologicalReconstruction
      *            the planar connectivity (usually C6 or C26)
      * @return the result of morphological reconstruction
      */
-    public final static ScalarArray3D<?> reconstructByErosion(ScalarArray3D<?> marker, ScalarArray3D<?> mask,
+    public final static ScalarArray3D<?> reconstructByErosion3d(ScalarArray3D<?> marker, ScalarArray3D<?> mask,
             Connectivity3D conn)
     {
         MorphologicalReconstruction3DHybrid algo = new MorphologicalReconstruction3DHybrid(Type.BY_EROSION, conn);

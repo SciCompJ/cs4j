@@ -441,7 +441,7 @@ public class MinimaAndMaxima
             throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
         }
 
-        return MorphologicalReconstruction.reconstructByDilation(marker, mask, conn);
+        return MorphologicalReconstruction.reconstructByDilation2d(marker, mask, conn);
     }
     
     /**
@@ -499,7 +499,7 @@ public class MinimaAndMaxima
             throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
         }
         
-        return MorphologicalReconstruction.reconstructByDilation(marker, mask, conn);
+        return MorphologicalReconstruction.reconstructByDilation3d(marker, mask, conn);
     }
 
     /**
@@ -557,7 +557,7 @@ public class MinimaAndMaxima
             throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
         }
         
-        return MorphologicalReconstruction.reconstructByErosion(marker, mask, conn);
+        return MorphologicalReconstruction.reconstructByErosion2d(marker, mask, conn);
     }
 
     /**
@@ -614,7 +614,7 @@ public class MinimaAndMaxima
             throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
         }
         
-        return MorphologicalReconstruction.reconstructByErosion(marker, mask, conn);
+        return MorphologicalReconstruction.reconstructByErosion3d(marker, mask, conn);
     }
 
     private static final void initializeMarkerAndMask_maxima_int(IntArray<?> array, BinaryArray maxima, IntArray<?> marker, IntArray<?> mask)

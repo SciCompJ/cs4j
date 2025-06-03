@@ -48,14 +48,14 @@ public class MorphologicalReconstructionTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MorphologicalReconstruction#killBorders(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MorphologicalReconstruction#killBorders2d(net.sci.array.scalar.ScalarArray2D)}.
      */
     @Test
     public final void testKillBorders_BinaryArray2D()
     {
         BinaryArray2D array = create_BinaryArray2D_NineSquares();
 
-        BinaryArray2D res = (BinaryArray2D) MorphologicalReconstruction.killBorders(array);
+        BinaryArray2D res = (BinaryArray2D) MorphologicalReconstruction.killBorders2d(array);
 
         assertFalse(res.getBoolean(0, 0));
         assertFalse(res.getBoolean(0, 4));
@@ -69,14 +69,14 @@ public class MorphologicalReconstructionTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MorphologicalReconstruction#killBorders(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MorphologicalReconstruction#killBorders2d(net.sci.array.scalar.ScalarArray2D)}.
      */
     @Test
     public final void testKillBorders_UInt8Array2D()
     {
         UInt8Array2D array = create_UInt8Array2D_NineSquares();
 
-        UInt8Array2D res = (UInt8Array2D) MorphologicalReconstruction.killBorders(array);
+        UInt8Array2D res = (UInt8Array2D) MorphologicalReconstruction.killBorders2d(array);
 
         assertEquals(res.getInt(0, 0), 0);
         assertEquals(res.getInt(0, 4), 0);
@@ -104,14 +104,14 @@ public class MorphologicalReconstructionTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MorphologicalReconstruction#fillHoles(net.sci.array.scalar.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MorphologicalReconstruction#fillHoles2d(net.sci.array.scalar.ScalarArray2D)}.
      */
     @Test
     public final void testFillHoles_BinaryArray2D()
     {
         BinaryArray2D array = create_BinaryArray2D_NineSquares().complement();
 
-        BinaryArray2D res = (BinaryArray2D) MorphologicalReconstruction.fillHoles(array);
+        BinaryArray2D res = (BinaryArray2D) MorphologicalReconstruction.fillHoles2d(array);
 
         assertFalse(res.getBoolean(0, 0));
         assertFalse(res.getBoolean(0, 4));

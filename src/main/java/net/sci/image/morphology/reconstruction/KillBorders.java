@@ -48,7 +48,7 @@ public class KillBorders extends AlgoStub implements ArrayOperator
         
         // Reconstruct image from borders to find touching structures
         this.fireStatusChanged(this, "Reconstruction");
-        ScalarArray2D<?> result = MorphologicalReconstruction.reconstructByDilation(marker, array);
+        ScalarArray2D<?> result = MorphologicalReconstruction.reconstructByDilation2d(marker, array);
         
         // removes result from original image
         this.fireStatusChanged(this, "Finalize result");
@@ -68,7 +68,7 @@ public class KillBorders extends AlgoStub implements ArrayOperator
      * Removes the border of the input 3D array. The principle is to perform a
      * morphological reconstruction by dilation initialized with image boundary.
      * 
-     * @see #fillHoles(ScalarArray3D)
+     * @see #fillHoles2d(ScalarArray3D)
      * @see #processScalar2d(ScalarArray2D)
      * 
      * @param array
@@ -98,7 +98,7 @@ public class KillBorders extends AlgoStub implements ArrayOperator
         
         // Reconstruct image from borders to find touching structures
         this.fireStatusChanged(this, "Reconstruction");
-        ScalarArray3D<?> result = MorphologicalReconstruction.reconstructByDilation(marker, array);
+        ScalarArray3D<?> result = MorphologicalReconstruction.reconstructByDilation3d(marker, array);
         
         // removes result from original image
         this.fireStatusChanged(this, "Finalize result");

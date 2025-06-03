@@ -85,7 +85,7 @@ public class HysteresisThreshold extends AlgoStub
         BinaryArray2D lowerSeg = BinaryArray2D.create(array.size(0), array.size(1));
         lowerSeg.fillBooleans(pos -> array.getValue(pos) >= lowerValue);
 
-        return BinaryArray2D.wrap(BinaryArray.wrap(MorphologicalReconstruction.reconstructByDilation(upperSeg, lowerSeg)));
+        return BinaryArray2D.wrap(BinaryArray.wrap(MorphologicalReconstruction.reconstructByDilation2d(upperSeg, lowerSeg)));
     }
 
     private BinaryArray3D processScalar3d(ScalarArray3D<?> array)
@@ -98,6 +98,6 @@ public class HysteresisThreshold extends AlgoStub
         BinaryArray3D lowerSeg = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
         lowerSeg.fillBooleans(pos -> array.getValue(pos) >= lowerValue);
 
-        return BinaryArray3D.wrap(BinaryArray.wrap(MorphologicalReconstruction.reconstructByDilation(upperSeg, lowerSeg)));
+        return BinaryArray3D.wrap(BinaryArray.wrap(MorphologicalReconstruction.reconstructByDilation3d(upperSeg, lowerSeg)));
     }
 }
