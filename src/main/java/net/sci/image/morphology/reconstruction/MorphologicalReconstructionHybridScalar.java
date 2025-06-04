@@ -16,7 +16,6 @@ import net.sci.array.Arrays;
 import net.sci.array.impl.ReverseOrderPositionIterator;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.image.connectivity.Connectivity;
-import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 import net.sci.image.morphology.MorphologicalReconstruction.Type;
 
@@ -37,8 +36,8 @@ import net.sci.image.morphology.MorphologicalReconstruction.Type;
  * </ol>
  * </p>
  * 
- * @see MorphologicalREconstruction2DHybrid
- * @see MorphologicalREconstruction3DHybrid
+ * @see MorphologicalReconstruction2DHybrid
+ * @see MorphologicalReconstruction3DHybrid
  * 
  * @author dlegland
  */
@@ -50,7 +49,7 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
     /**
      * The connectivity of the algorithm.
      */
-    protected Connectivity connectivity = Connectivity2D.C4;
+    protected Connectivity connectivity;
 
     /**
      * The type of morphological reconstruction.
@@ -127,7 +126,6 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
     public void setReconstructionType(MorphologicalReconstruction.Type reconstructionType) 
     {
         this.reconstructionType = reconstructionType;
-//        this.sign = reconstructionType.getSign();
     }
 
     /**
@@ -168,10 +166,6 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
         {
             throw new IllegalArgumentException("Marker and Mask images must have the same size");
         }
-        if (connectivity.dimensionality() != mask.dimensionality())
-        {
-            throw new IllegalArgumentException("Connectivity must have same dimensionality as marker and mask, currently " + connectivity.dimensionality());
-        }
         
         fireStatusChanged(this, "Initialize result");
         ScalarArray<?> result = initializeResult(marker, mask);
@@ -198,20 +192,28 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
         {
             throw new IllegalArgumentException("Result and Mask images must have the same size");
         }
-        if (connectivity.dimensionality() != mask.dimensionality())
+        
+        // check connectivity, creating a default one if necessary
+        Connectivity conn = this.connectivity;
+        if (conn == null)
         {
-            throw new IllegalArgumentException("Connectivity must have same dimensionality as marker and mask, currently " + connectivity.dimensionality());
+            conn = Connectivity.createOrtho(result.dimensionality());
+        }
+        if (conn.dimensionality() != mask.dimensionality())
+        {
+            throw new IllegalArgumentException("Connectivity must have same dimensionality as marker and mask, currently " + conn.dimensionality());
         }
         
         fireStatusChanged(this, "Morpho. Rec. Forward");
-        forwardScan(result, mask);
+        forwardScan(result, mask, conn);
 
         fireStatusChanged(this, "Morpho. Rec. Backward");
-        Deque<int[]> queue = backwardScan(result, mask);
+        Deque<int[]> queue = backwardScan(result, mask, conn);
         
         fireStatusChanged(this, "Morpho. Rec. Process Queue");
-        processQueue(result, queue, mask);
+        processQueue(result, queue, mask, conn);
     }
+    
     
     // ==================================================
     // Specific processing methods
@@ -248,12 +250,12 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
     /**
      * Update result image using pixels in the upper left neighborhood.
      */
-    private void forwardScan(ScalarArray<?> result, ScalarArray<?> mask) 
+    private void forwardScan(ScalarArray<?> result, ScalarArray<?> mask, Connectivity conn) 
     {
         // initializations
         int[] dims = mask.size();
         int sign = reconstructionType.getSign();
-        Collection<int[]> forwardOffsets = forwardOffsets(connectivity);
+        Collection<int[]> forwardOffsets = forwardOffsets(conn);
         
         // process positions
         for(int[] pos : result.positions())
@@ -302,12 +304,12 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
     /**
      * Update result image using pixels in the lower-right neighborhood.
      */
-    private Deque<int[]> backwardScan(ScalarArray<?> result, ScalarArray<?> mask) 
+    private Deque<int[]> backwardScan(ScalarArray<?> result, ScalarArray<?> mask, Connectivity conn) 
     {
         // initializations
         int[] dims = mask.size();
         int sign = reconstructionType.getSign();
-        Collection<int[]> backwardOffsets = backwardOffsets(connectivity);
+        Collection<int[]> backwardOffsets = backwardOffsets(conn);
         
         // create the queue containing the positions that need update
         Deque<int[]> queue = new ArrayDeque<>();
@@ -388,7 +390,7 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
         return offsets;
     }
     
-    private void processQueue(ScalarArray<?> result, Deque<int[]> queue, ScalarArray<?> mask)
+    private void processQueue(ScalarArray<?> result, Deque<int[]> queue, ScalarArray<?> mask, Connectivity conn)
     {
         int sign = reconstructionType.getSign();
         int[] dims = mask.size();
@@ -402,7 +404,7 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
             value = result.getValue(pos) * sign;
             
             // compare with each one of the neighbors
-            for (int[] pos2 : connectivity.neighbors(pos))
+            for (int[] pos2 : conn.neighbors(pos))
             {
                 if(isWithinBounds(pos2, dims))
                 {
@@ -421,7 +423,7 @@ public class MorphologicalReconstructionHybridScalar extends AlgoStub
             result.setValue(pos, value * sign);
             
             // Eventually add each neighbor
-            for (int[] pos2 : connectivity.neighbors(pos))
+            for (int[] pos2 : conn.neighbors(pos))
             {
                 if(!isWithinBounds(pos2, dims))
                 {

@@ -14,6 +14,7 @@ import net.sci.image.connectivity.Connectivity3D;
 import net.sci.image.morphology.reconstruction.KillBorders;
 import net.sci.image.morphology.reconstruction.MorphologicalReconstruction2DHybrid;
 import net.sci.image.morphology.reconstruction.MorphologicalReconstruction3DHybrid;
+import net.sci.image.morphology.reconstruction.MorphologicalReconstructionHybridScalar;
 
 /**
  * <p>
@@ -88,12 +89,7 @@ public class MorphologicalReconstruction
         @SuppressWarnings({ "unchecked", "rawtypes" })
         ScalarArray<?> scalarArray = ScalarArray.wrap((Array<Scalar>) array);
 
-        Array<?> res = switch (array.dimensionality())
-        {
-            case 2 -> killBorders2d(ScalarArray2D.wrap(scalarArray));
-            case 3 -> killBorders3d(ScalarArray3D.wrap(scalarArray));
-            default -> throw new RuntimeException("Requires an image containing a 2D or 3D scalar array");
-        };
+        ScalarArray<?> res = killBorders(scalarArray);
         
         return new Image(res, image.getType(), image);
     }
@@ -295,6 +291,9 @@ public class MorphologicalReconstruction
     /**
      * Static method to computes the morphological reconstruction by dilation of
      * the marker image constrained by the mask image.
+     * 
+     * Both images must have the same size. Meta-data are propagated from mask
+     * image to result image.
      *
      * @param markerImage
      *            input marker image
@@ -304,55 +303,39 @@ public class MorphologicalReconstruction
      */
     public final static Image reconstructByDilation(Image markerImage, Image maskImage)
     {
+        // retrieve image data
         Array<?> marker = markerImage.getData();
         Array<?> mask = maskImage.getData();
         
+        // basic check-up
         if (marker.dimensionality() != mask.dimensionality())
         {
             throw new IllegalArgumentException("Both images must have same dimensionality");
         }
-        if (!(marker instanceof ScalarArray && mask instanceof ScalarArray))
+        if (!Scalar.class.isAssignableFrom(marker.elementClass()) || !Scalar.class.isAssignableFrom(mask.elementClass()))
         {
-            throw new IllegalArgumentException("Both images must be instances of SclalarArray");
+            throw new IllegalArgumentException("Both images must contain array of Scalar");
         }
         
-        Array<?> result;
-        int nd = marker.dimensionality();
+        // convert to scalar arrays
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        ScalarArray<?> marker2 = ScalarArray.wrap((Array<Scalar>) marker);
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        ScalarArray<?> mask2 = ScalarArray.wrap((Array<Scalar>) mask);
         
-        // dispatch processing depending on array dimensionality
-        if (nd == 2)
-        {
-            if (!(marker instanceof ScalarArray2D && mask instanceof ScalarArray2D))
-            {
-                throw new IllegalArgumentException("Both images must be instances of ScalarArray2D");
-            }
-            
-            Connectivity2D conn = Connectivity2D.C4;
-            result = reconstructByDilation2d((ScalarArray2D<?>) marker, (ScalarArray2D<?>) mask, conn);
-        }
-        else if (nd == 3)
-        {
-            if (!(marker instanceof ScalarArray3D && mask instanceof ScalarArray3D))
-            {
-                throw new IllegalArgumentException("Both images must be instances of ScalarArray3D");
-            }
-            
-            Connectivity3D conn = Connectivity3D.C6;
-            result = reconstructByDilation3d((ScalarArray3D<?>) marker, (ScalarArray3D<?>) mask, conn);
-        }
-        else
-        {
-            throw new RuntimeException("Unable to process arrays with dimension " + nd);
-        }
+        // compute reconstruction
+        Array<?> result = reconstructByDilation(marker2, mask2);
         
-        // Create result image from result array
-        Image resultImage = new Image(result, maskImage.getType(), maskImage);
-        return resultImage;
+        // Create result image, keeping information from mask image
+        return new Image(result, maskImage.getType(), maskImage);
     }
     
     /**
      * Static method to computes the morphological reconstruction by erosion of
      * the marker image constrained by the mask image.
+     *
+     * Both images must have the same size. Meta-data are propagated from mask
+     * image to result image.
      *
      * @param markerImage
      *            input marker image
@@ -362,50 +345,31 @@ public class MorphologicalReconstruction
      */
     public final static Image reconstructByErosion(Image markerImage, Image maskImage)
     {
+        // retrieve image data
         Array<?> marker = markerImage.getData();
         Array<?> mask = maskImage.getData();
         
+        // basic check-up
         if (marker.dimensionality() != mask.dimensionality())
         {
             throw new IllegalArgumentException("Both images must have same dimensionality");
         }
-        if (!(marker instanceof ScalarArray && mask instanceof ScalarArray))
+        if (!Scalar.class.isAssignableFrom(marker.elementClass()) || !Scalar.class.isAssignableFrom(mask.elementClass()))
         {
-            throw new IllegalArgumentException("Both images must be instances of ScalarArray");
+            throw new IllegalArgumentException("Both images must contain array of Scalar");
         }
         
-        Array<?> result;
-        int nd = marker.dimensionality();
+        // convert to scalar arrays
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        ScalarArray<?> marker2 = ScalarArray.wrap((Array<Scalar>) marker);
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        ScalarArray<?> mask2 = ScalarArray.wrap((Array<Scalar>) mask);
         
-        // dispatch processing depending on array dimensionality
-        if (nd == 2)
-        {
-            if (!(marker instanceof ScalarArray2D && mask instanceof ScalarArray2D))
-            {
-                throw new IllegalArgumentException("Both images must be instances of ScalarArray2D");
-            }
-            
-            Connectivity2D conn = Connectivity2D.C4;
-            result = reconstructByErosion2d((ScalarArray2D<?>) marker, (ScalarArray2D<?>) mask, conn);
-        }
-        else if (nd == 3)
-        {
-            if (!(marker instanceof ScalarArray3D && mask instanceof ScalarArray3D))
-            {
-                throw new IllegalArgumentException("Both images must be instances of ScalarArray3D");
-            }
-            
-            Connectivity3D conn = Connectivity3D.C6;
-            result = reconstructByErosion3d((ScalarArray3D<?>) marker, (ScalarArray3D<?>) mask, conn);
-        }
-        else
-        {
-            throw new RuntimeException("Unable to process arrays with dimension " + nd);
-        }
+        // compute reconstruction
+        Array<?> result = reconstructByErosion(marker2, mask2);
         
-        // Create result image from result array
-        Image resultImage = new Image(result, maskImage.getType(), maskImage);
-        return resultImage;
+        // Create result image, keeping information from mask image
+        return new Image(result, maskImage.getType(), maskImage);
     }
     
     
@@ -424,16 +388,17 @@ public class MorphologicalReconstruction
      */
     public final static ScalarArray<?> reconstructByDilation(ScalarArray<?> marker, ScalarArray<?> mask)
     {
-        if (marker.dimensionality() == 2 && mask.dimensionality() == 2)
+        if (marker.dimensionality() != mask.dimensionality())
         {
-            return reconstructByDilation2d(ScalarArray2D.wrap(marker), ScalarArray2D.wrap(mask));
-        }
-        else if (marker.dimensionality() == 3 && mask.dimensionality() == 3)
-        {
-            return reconstructByDilation3d(ScalarArray3D.wrap(marker), ScalarArray3D.wrap(mask));
+            throw new RuntimeException("Requires marker and mask arrays to have the same dimensionality.");
         }
         
-        throw new RuntimeException("Requires marker and mask arrays to be both either 2D or 3D arrays.");
+        return switch (marker.dimensionality())
+        {
+            case 2 -> reconstructByDilation2d(ScalarArray2D.wrap(marker), ScalarArray2D.wrap(mask));
+            case 3 -> reconstructByDilation3d(ScalarArray3D.wrap(marker), ScalarArray3D.wrap(mask));
+            default -> new MorphologicalReconstructionHybridScalar(Type.BY_DILATION).process(marker, mask);
+        };
     }
     
     /**
@@ -448,16 +413,17 @@ public class MorphologicalReconstruction
      */
     public final static ScalarArray<?> reconstructByErosion(ScalarArray<?> marker, ScalarArray<?> mask)
     {
-        if (marker.dimensionality() == 2 && mask.dimensionality() == 2)
+        if (marker.dimensionality() != mask.dimensionality())
         {
-            return reconstructByErosion2d(ScalarArray2D.wrap(marker), ScalarArray2D.wrap(mask));
-        }
-        else if (marker.dimensionality() == 3 && mask.dimensionality() == 3)
-        {
-            return reconstructByErosion3d(ScalarArray3D.wrap(marker), ScalarArray3D.wrap(mask));
+            throw new RuntimeException("Requires marker and mask arrays to have the same dimensionality.");
         }
         
-        throw new RuntimeException("Requires marker and mask arrays to be both either 2D or 3D arrays.");
+        return switch (marker.dimensionality())
+        {
+            case 2 -> reconstructByErosion2d(ScalarArray2D.wrap(marker), ScalarArray2D.wrap(mask));
+            case 3 -> reconstructByErosion3d(ScalarArray3D.wrap(marker), ScalarArray3D.wrap(mask));
+            default -> new MorphologicalReconstructionHybridScalar(Type.BY_EROSION).process(marker, mask);
+        };
     }
     
     
