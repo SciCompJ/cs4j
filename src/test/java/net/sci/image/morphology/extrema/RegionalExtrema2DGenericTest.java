@@ -7,7 +7,7 @@ import org.junit.Test;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.UInt8Array2D;
-import net.sci.image.Connectivity2D;
+import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.morphology.MinimaAndMaxima;
 
 public class RegionalExtrema2DGenericTest

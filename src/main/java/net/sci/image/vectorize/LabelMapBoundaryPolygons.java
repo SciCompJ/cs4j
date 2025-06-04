@@ -10,7 +10,7 @@ import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.Polygon2D;
-import net.sci.image.Connectivity2D;
+import net.sci.image.connectivity.Connectivity2D;
 
 import java.util.HashMap;
 

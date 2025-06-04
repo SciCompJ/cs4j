@@ -11,7 +11,7 @@ import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.UInt16Array;
-import net.sci.image.Connectivity2D;
+import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.morphology.FloodFill;
 
 /**

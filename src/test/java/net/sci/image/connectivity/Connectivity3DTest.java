@@ -1,9 +1,9 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.image.connectivity;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ import org.junit.Test;
 public class Connectivity3DTest
 {
     /**
-     * Test method for {@link net.sci.image.Connectivity3D#convert(net.sci.image.Connectivity)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity3D#convert(net.sci.image.connectivity.Connectivity)}.
      */
     @Test
     public final void testWrap_conn2dC4()
@@ -25,7 +25,7 @@ public class Connectivity3DTest
     }
 
     /**
-     * Test method for {@link net.sci.image.Connectivity3D#convert(net.sci.image.Connectivity)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity3D#convert(net.sci.image.connectivity.Connectivity)}.
      */
     @Test
     public final void testWrap_conn2dC8()
@@ -37,7 +37,7 @@ public class Connectivity3DTest
     }
 
     /**
-     * Test method for {@link net.sci.image.Connectivity#offsets()}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#offsets()}.
      */
     @Test
     public final void testOffsets_C6()
@@ -47,7 +47,7 @@ public class Connectivity3DTest
     }
 
     /**
-     * Test method for {@link net.sci.image.Connectivity#offsets()}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#offsets()}.
      */
     @Test
     public final void testOffsets_C26()

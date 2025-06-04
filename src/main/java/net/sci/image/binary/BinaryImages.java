@@ -15,8 +15,6 @@ import net.sci.array.numeric.IntArray3D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
-import net.sci.image.Connectivity2D;
-import net.sci.image.Connectivity3D;
 import net.sci.image.Image;
 import net.sci.image.ImageType;
 import net.sci.image.binary.distmap.ChamferMask2D;
@@ -29,6 +27,8 @@ import net.sci.image.binary.labeling.ComponentsLabeling;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling1D;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling2D;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling3D;
+import net.sci.image.connectivity.Connectivity2D;
+import net.sci.image.connectivity.Connectivity3D;
 
 /**
  * A collection of static methods for operating on binary images (2D/3D).

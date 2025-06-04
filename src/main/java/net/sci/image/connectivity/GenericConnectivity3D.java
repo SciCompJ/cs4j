@@ -1,41 +1,41 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.image.connectivity;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Generic class for defining connectivities for 2D images.
+ * Generic class for defining connectivities for 3D images.
  * 
  * Connectivity is defined by a series of offsets, each offset being defined as
- * an array of two integers.
+ * an array of three integers.
  */
-public class GenericConnectivity2D implements Connectivity2D
+public class GenericConnectivity3D implements Connectivity3D
 {
     /**
      * The offsets that define the connectivity, as a list of int arrays with
-     * two elements.
+     * three elements.
      */
     ArrayList<int[]> offsets;
     
     /**
-     * Initializes a new Connectivity2D instance by locally storing the list of
+     * Initializes a new Connectivity3D instance by locally storing the list of
      * offsets.
      * 
      * @param offsets
      *            the offsets that define the connectivity, as a list of int
-     *            arrays with two elements.
+     *            arrays with three elements.
      */
-    public GenericConnectivity2D(Collection<int[]> offsets)
+    public GenericConnectivity3D(Collection<int[]> offsets)
     {
         this.offsets = new ArrayList<int[]>(offsets.size());
         for (int[] offset : offsets)
         {
-            if (offset.length != 2) 
+            if (offset.length != 3) 
             {
-                throw new RuntimeException("Offset must be two-elements int arrays");
+                throw new RuntimeException("Offset must be three-elements int arrays");
             }
             this.offsets.add(offset);
         }

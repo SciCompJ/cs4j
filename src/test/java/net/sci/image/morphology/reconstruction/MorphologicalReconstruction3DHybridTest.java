@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.numeric.UInt8Array3D;
-import net.sci.image.Connectivity3D;
+import net.sci.image.connectivity.Connectivity3D;
 import net.sci.image.morphology.MorphologicalReconstruction;
 
 /**

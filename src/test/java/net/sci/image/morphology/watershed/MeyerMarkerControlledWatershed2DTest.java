@@ -15,8 +15,8 @@ import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.geom.geom2d.MultiPoint2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.image.Connectivity2D;
 import net.sci.image.binary.BinaryImages;
+import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.morphology.MinimaAndMaxima;
 
 /**

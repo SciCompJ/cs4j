@@ -14,8 +14,8 @@ import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.process.ScalarArrayOperator;
-import net.sci.image.Connectivity2D;
 import net.sci.image.ImageArrayOperator;
+import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.morphology.FloodFill;
 import net.sci.image.morphology.MinimaAndMaxima;
 

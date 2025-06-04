@@ -7,7 +7,7 @@ import org.junit.Test;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.UInt8Array;
-import net.sci.image.Connectivity2D;
+import net.sci.image.connectivity.Connectivity2D;
 
 public class FloodFillComponentsLabeling2DTest
 {

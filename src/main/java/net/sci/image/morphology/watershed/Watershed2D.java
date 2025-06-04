@@ -7,8 +7,8 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.ScalarArray2D;
-import net.sci.image.Connectivity2D;
 import net.sci.image.binary.BinaryImages;
+import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.morphology.MinimaAndMaxima;
 import net.sci.image.morphology.extrema.RegionalExtrema2D;
 

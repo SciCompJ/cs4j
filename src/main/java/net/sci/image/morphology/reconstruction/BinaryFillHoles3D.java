@@ -13,7 +13,7 @@ import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.binary.BinaryRow;
 import net.sci.array.binary.Run;
 import net.sci.array.binary.RunLengthBinaryArray3D;
-import net.sci.image.Connectivity3D;
+import net.sci.image.connectivity.Connectivity3D;
 
 /**
  * Fill holes algorithm, based on morphological reconstruction, but

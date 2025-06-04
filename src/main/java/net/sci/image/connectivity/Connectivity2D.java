@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.image.connectivity;
 
 import java.util.ArrayList;
 import java.util.Collection;

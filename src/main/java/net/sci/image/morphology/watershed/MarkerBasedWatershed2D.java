@@ -7,7 +7,7 @@ import net.sci.array.Arrays;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.ScalarArray2D;
-import net.sci.image.Connectivity2D;
+import net.sci.image.connectivity.Connectivity2D;
 
 /**
  * Tentative implementation of Watershed algorithm for planar scalar images.

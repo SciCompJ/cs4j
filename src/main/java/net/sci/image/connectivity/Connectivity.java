@@ -1,12 +1,28 @@
-package net.sci.image;
+package net.sci.image.connectivity;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.array.Dimensional;
 
+/**
+ * Definition of the connectivity within a multidimensional array or image.
+ * 
+ * @see Connectivity2D
+ * @see Connectivity3D
+ */
 public interface Connectivity extends Dimensional
 {
+    /**
+     * Creates an orthogonal connectivity, that considers two neighbors per
+     * dimension: one before and one after. This corresponds to the connectivity
+     * C4 in 2D arrays, or C6 in 3D arrays. The number of offsets of this
+     * connectivity equals twice the number of dimensions.
+     * 
+     * @param nd
+     *            the dimensionality of the connectivity
+     * @return a new Connectivity with two offset per dimension
+     */
     public static Connectivity createOrtho(int nd)
     {
         ArrayList<int[]> offsets = new ArrayList<int[]>(2 * nd);

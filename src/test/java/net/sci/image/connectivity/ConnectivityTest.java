@@ -1,9 +1,9 @@
 /**
  * 
  */
-package net.sci.image;
+package net.sci.image.connectivity;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ import org.junit.Test;
 public class ConnectivityTest
 {
     /**
-     * Test method for {@link net.sci.image.Connectivity#createOrtho(int)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#createOrtho(int)}.
      */
     @Test
     public final void testCreateOrtho_D2()
@@ -24,7 +24,7 @@ public class ConnectivityTest
     }
     
     /**
-     * Test method for {@link net.sci.image.Connectivity#createOrtho(int)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#createOrtho(int)}.
      */
     @Test
     public final void testCreateOrtho_D3()
@@ -35,7 +35,7 @@ public class ConnectivityTest
     }
     
     /**
-     * Test method for {@link net.sci.image.Connectivity#createOrtho(int)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#createOrtho(int)}.
      */
     @Test
     public final void testCreateOrtho_D4()
@@ -46,7 +46,7 @@ public class ConnectivityTest
     }
     
     /**
-     * Test method for {@link net.sci.image.Connectivity#convertDimensionality(net.sci.image.Connectivity, int)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#convertDimensionality(net.sci.image.connectivity.Connectivity, int)}.
      */
     @Test
     public final void testConvertDimensionality_3D_to_2D_C6()
@@ -60,7 +60,7 @@ public class ConnectivityTest
     }
 
     /**
-     * Test method for {@link net.sci.image.Connectivity#convertDimensionality(net.sci.image.Connectivity, int)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#convertDimensionality(net.sci.image.connectivity.Connectivity, int)}.
      */
     @Test
     public final void testConvertDimensionality_3D_to_2D_C26()
@@ -74,7 +74,7 @@ public class ConnectivityTest
     }
 
     /**
-     * Test method for {@link net.sci.image.Connectivity#convertDimensionality(net.sci.image.Connectivity, int)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#convertDimensionality(net.sci.image.connectivity.Connectivity, int)}.
      */
     @Test
     public final void testConvertDimensionality_2D_to_3D_C4()
@@ -88,7 +88,7 @@ public class ConnectivityTest
     }
 
     /**
-     * Test method for {@link net.sci.image.Connectivity#convertDimensionality(net.sci.image.Connectivity, int)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#convertDimensionality(net.sci.image.connectivity.Connectivity, int)}.
      */
     @Test
     public final void testConvertDimensionality_2D_to_3D_C8()
@@ -102,7 +102,7 @@ public class ConnectivityTest
     }
 
     /**
-     * Test method for {@link net.sci.image.Connectivity#convertDimensionality(net.sci.image.Connectivity, int)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#convertDimensionality(net.sci.image.connectivity.Connectivity, int)}.
      */
     @Test
     public final void testConvertDimensionality_2D_to_3D_C6()
@@ -116,7 +116,7 @@ public class ConnectivityTest
     }
 
     /**
-     * Test method for {@link net.sci.image.Connectivity#convertDimensionality(net.sci.image.Connectivity, int)}.
+     * Test method for {@link net.sci.image.connectivity.Connectivity#convertDimensionality(net.sci.image.connectivity.Connectivity, int)}.
      */
     @Test
     public final void testConvertDimensionality_3D_to_4D_C26()

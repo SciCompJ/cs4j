@@ -4,8 +4,8 @@
 package net.sci.image.analyze.region2d;
 
 import net.sci.image.Calibration;
-import net.sci.image.Connectivity2D;
 import net.sci.image.analyze.region2d.IntrinsicVolumes2D.Result;
+import net.sci.image.connectivity.Connectivity2D;
 
 /**
  * Utility functions for classes that compute 2D intrinsic volumes measures:
