@@ -5,7 +5,13 @@ package net.sci.image.morphology;
 
 import static org.junit.Assert.*;
 
+import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.numeric.Float32;
+import net.sci.array.numeric.Float32Array;
+import net.sci.array.numeric.Float32Array2D;
+import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.image.Image;
 import net.sci.image.ImageType;
@@ -101,6 +107,106 @@ public class MorphologicalReconstructionTest
         Image res = MorphologicalReconstruction.fillHoles(image);
 
         assertTrue(res.getType() == ImageType.BINARY);
+    }
+
+    /**
+     * Test method for {@link net.sci.image.morphology.MorphologicalReconstruction#fillHoles(net.sci.image.Image)}.
+     */
+    @Test
+    public final void testFillHoles_Array_UInt8_2D()
+    {
+        UInt8Array2D array = UInt8Array2D.fromIntArray(new int[][] {
+            { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
+            { 10,  0, 10,  0,  0,  0, 20,  0,  0,  0, 10},
+            { 10,  0, 40, 40, 40, 40, 40, 40, 40,  0, 10},
+            { 10,  0, 40,  0,  5,  0,  9,  0, 40,  0, 10},
+            { 10,  0, 40,  0, 90, 90, 90,  0, 40,  0, 10},
+            { 10,  0, 50, 20, 90, 10, 90, 10, 40,  0, 10},
+            { 10,  0, 40,  0, 90, 80, 90,  0, 40,  0, 10},
+            { 10,  0, 40,  0,  0, 10,  0,  0, 40,  0, 10},
+            { 10,  0, 40, 40, 40, 40, 40, 40, 40,  0, 10},
+            { 10,  0, 40,  0,  0,  0, 30,  0,  0,  0, 10},
+            { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
+        });
+        
+        Array<?> res = MorphologicalReconstruction.fillHoles(array);
+
+        assertEquals(res.dimensionality(), 2);
+        assertEquals(res.size(0), array.size(0));
+        assertEquals(res.size(1), array.size(1));
+        assertEquals(res.elementClass(), UInt8.class);
+        
+        // cast
+        UInt8Array2D res2 = UInt8Array2D.wrap(UInt8Array.wrap(res));
+//        res2.printContent();
+        
+        // check borders
+        assertEquals(10, res2.getInt(5, 0));
+        assertEquals(10, res2.getInt(0, 5));
+        assertEquals(10, res2.getInt(5, 10));
+        assertEquals(10, res2.getInt(10, 5));
+        // check first inner ring
+        assertEquals(10, res2.getInt(5, 1));
+        assertEquals(10, res2.getInt(1, 5));
+        assertEquals(10, res2.getInt(5, 9));
+        assertEquals(10, res2.getInt(9, 5));
+        // check second inner ring
+        assertEquals(40, res2.getInt(5, 3));
+        assertEquals(40, res2.getInt(3, 5));
+        assertEquals(40, res2.getInt(5, 7));
+        assertEquals(40, res2.getInt(7, 5));
+        // inner-most ring
+        assertEquals(80, res2.getInt(5, 5));
+    }
+
+    /**
+     * Test method for {@link net.sci.image.morphology.MorphologicalReconstruction#fillHoles(net.sci.image.Image)}.
+     */
+    @Test
+    public final void testFillHoles_Array_Float32_2D()
+    {
+        Float32Array2D array = Float32Array2D.fromFloatArray(new float[][] {
+            { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
+            { 10,  0, 10,  0,  0,  0, 20,  0,  0,  0, 10},
+            { 10,  0, 40, 40, 40, 40, 40, 40, 40,  0, 10},
+            { 10,  0, 40,  0,  5,  0,  9,  0, 40,  0, 10},
+            { 10,  0, 40,  0, 90, 90, 90,  0, 40,  0, 10},
+            { 10,  0, 50, 20, 90, 10, 90, 10, 40,  0, 10},
+            { 10,  0, 40,  0, 90, 80, 90,  0, 40,  0, 10},
+            { 10,  0, 40,  0,  0, 10,  0,  0, 40,  0, 10},
+            { 10,  0, 40, 40, 40, 40, 40, 40, 40,  0, 10},
+            { 10,  0, 40,  0,  0,  0, 30,  0,  0,  0, 10},
+            { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
+        });
+        
+        Array<?> res = MorphologicalReconstruction.fillHoles(array);
+
+        assertEquals(res.dimensionality(), 2);
+        assertEquals(res.size(0), array.size(0));
+        assertEquals(res.size(1), array.size(1));
+        assertEquals(res.elementClass(), Float32.class);
+        
+        // cast
+        Float32Array2D res2 = Float32Array2D.wrap(Float32Array.wrap(res));
+//        res2.printContent();
+        
+        // check borders
+        assertEquals(10, res2.getValue(5, 0), 0.01);
+        assertEquals(10, res2.getValue(0, 5), 0.01);
+        assertEquals(10, res2.getValue(5, 10), 0.01);
+        assertEquals(10, res2.getValue(10, 5), 0.01);
+        // check first inner ring
+        assertEquals(10, res2.getValue(5, 1), 0.01);
+        assertEquals(10, res2.getValue(1, 5), 0.01);
+        assertEquals(10, res2.getValue(5, 9), 0.01);
+        assertEquals(10, res2.getValue(9, 5), 0.01);
+        // check second inner ring
+        assertEquals(40, res2.getValue(5, 3), 0.01);
+        assertEquals(40, res2.getValue(3, 5), 0.01);
+        assertEquals(40, res2.getValue(5, 7), 0.01);
+        assertEquals(40, res2.getValue(7, 5), 0.01);
+        // inner-most ring
+        assertEquals(80, res2.getValue(5, 5), 0.01);
     }
 
     /**

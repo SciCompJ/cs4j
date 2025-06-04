@@ -4,6 +4,7 @@
 package net.sci.image.morphology;
 
 import net.sci.array.Array;
+import net.sci.array.numeric.Scalar;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
@@ -54,15 +55,12 @@ public class MorphologicalReconstruction
          */
         public int getSign()
         {
-            switch (this)
+            return switch (this)
             {
-                case BY_DILATION:
-                    return +1;
-                case BY_EROSION:
-                    return -1;
-                default:
-                    throw new RuntimeException("Unknown case: " + this.toString());
-            }
+                case BY_DILATION -> +1;
+                case BY_EROSION -> -1;
+                default -> throw new RuntimeException("Unknown case: " + this.toString());
+            };
         }
     }
     
@@ -83,21 +81,37 @@ public class MorphologicalReconstruction
     public static final Image killBorders(Image image)
     {
         Array<?> array = image.getData();
-        Array<?> res;
-        if (array instanceof ScalarArray2D)
+        if (!Scalar.class.isAssignableFrom(array.elementClass()))
         {
-            res = killBorders2d((ScalarArray2D<?>) array);
+            throw new RuntimeException("Requires an array containing scalar elements");
         }
-        else if (array instanceof ScalarArray3D)
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        ScalarArray<?> scalarArray = ScalarArray.wrap((Array<Scalar>) array);
+
+        Array<?> res = switch (array.dimensionality())
         {
-            res = killBorders3d((ScalarArray3D<?>) array);
-        }
-        else
-        {
-            throw new RuntimeException("Requires an image containing a 2D or 3D scalar array");
-        }
+            case 2 -> killBorders2d(ScalarArray2D.wrap(scalarArray));
+            case 3 -> killBorders3d(ScalarArray3D.wrap(scalarArray));
+            default -> throw new RuntimeException("Requires an image containing a 2D or 3D scalar array");
+        };
         
         return new Image(res, image.getType(), image);
+    }
+    
+    /**
+     * Removes the border of the input array. The principle is to perform a
+     * morphological reconstruction by dilation initialized with image boundary.
+     * 
+     * 
+     * @see #fillHoles(ScalarArray)
+     * 
+     * @param array
+     *            the image to process
+     * @return a new image with borders removed
+     */
+    public static final ScalarArray<?> killBorders(ScalarArray<?> array)
+    {
+        return new KillBorders().process(array);
     }
     
     /**
@@ -139,28 +153,47 @@ public class MorphologicalReconstruction
      *            the image to process
      * @return a new image with holes filled
      *            
-     * @see #fillHoles2d(ScalarArray2D)
-     * @see #fillHoles3d(ScalarArray3D)
+     * @see #fillHoles(ScalarArray)
+     * @see #killBorders(Image)
      */
     public static final Image fillHoles(Image image)
     {
         Array<?> array = image.getData();
-        Array<?> res;
-        if (array instanceof ScalarArray2D)
+        if (!Scalar.class.isAssignableFrom(array.elementClass()))
         {
-            res = fillHoles2d((ScalarArray2D<?>) array);
+            throw new RuntimeException("Requires an array containing scalar elements");
         }
-        else if (array instanceof ScalarArray3D)
-        {
-            res = fillHoles3d((ScalarArray3D<?>) array);
-        }
-        else
-        {
-            throw new RuntimeException("Requires an image containing a 2D or 3D scalar array");
-        }
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        ScalarArray<?> scalarArray = ScalarArray.wrap((Array<Scalar>) array);
+        
+        Array<?> res = fillHoles(ScalarArray.wrap(scalarArray));
         
         return new Image(res, image.getType(), image);
     }
+    
+    /**
+     * Fills the holes within the input array.
+     *
+     * The method consists in creating a marker image corresponding to the full
+     * array without the borders, and performing morphological reconstruction by
+     * erosion.
+     * 
+     * @see #fillHoles3d(ScalarArray3D)
+     * 
+     * @param array
+     *            the array to process
+     * @return a new array with holes filled
+     */
+    public static final ScalarArray<?> fillHoles(ScalarArray<?> array)
+    {
+        return switch (array.dimensionality())
+        {
+            case 2 -> fillHoles2d(ScalarArray2D.wrap(array));
+            case 3 -> fillHoles3d(ScalarArray3D.wrap(array));
+            default -> fillHolesNd(ScalarArray.wrap(array));
+        };
+    }
+    
     
     /**
      * Fills the holes in the input array.
@@ -173,8 +206,8 @@ public class MorphologicalReconstruction
      * @see #killBorders2d(ScalarArray2D)
      * 
      * @param array
-     *            the image to process
-     * @return a new image with holes filled
+     *            the array to process
+     * @return a new array with holes filled
      */
     public static final ScalarArray2D<?> fillHoles2d(ScalarArray2D<?> array)
     {
@@ -207,8 +240,8 @@ public class MorphologicalReconstruction
      * @see #killBorders3d(ScalarArray3D)
      * 
      * @param array
-     *            the image to process
-     * @return a new image with holes filled
+     *            the array to process
+     * @return a new array with holes filled
      */
     public static final ScalarArray3D<?> fillHoles3d(ScalarArray3D<?> array)
     {
@@ -234,7 +267,28 @@ public class MorphologicalReconstruction
         return reconstructByErosion3d(marker, array);
     }
     
-    
+    private static final ScalarArray<?> fillHolesNd(ScalarArray<?> array)
+    {
+        // retrieve array dimensions
+        int[] dims = array.size();
+        int nd = dims.length;
+        
+        // Initialize marker image with max value everywhere except at borders
+        ScalarArray<?> marker = array.duplicate();
+        pos:
+        for (int[] pos : marker.positions())
+        {
+            for (int d = 0; d < nd; d++)
+            {
+                if (pos[d] == 0 || pos[d] == dims[d] - 1) continue pos;
+            }
+            marker.setValue(pos, Double.POSITIVE_INFINITY);
+        }
+        
+        // Reconstruct image from borders to find touching structures
+        return reconstructByErosion(marker, array);
+    }
+
     // ==================================================
     // Morphological reconstructions shortcuts
     
