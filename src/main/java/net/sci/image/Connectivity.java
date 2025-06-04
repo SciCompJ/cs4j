@@ -1,11 +1,29 @@
 package net.sci.image;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.array.Dimensional;
 
 public interface Connectivity extends Dimensional
 {
+    public static Connectivity createOrtho(int nd)
+    {
+        ArrayList<int[]> offsets = new ArrayList<int[]>(2 * nd);
+        for (int d = 0; d < nd; d++)
+        {
+            int[] minus = new int[nd];
+            minus[d] = -1;
+            offsets.add(minus);
+            
+            int[] plus = new int[nd];
+            plus[d] = +1;
+            offsets.add(plus);
+        }
+        
+        return new GenericConnectivityND(offsets);
+    }
+    
     /**
      * Converts a connectivity defined for a given dimensionality to a
      * connectivity defined for the specified dimensionality.
@@ -30,7 +48,7 @@ public interface Connectivity extends Dimensional
         {
             case 2 -> Connectivity2D.convert(conn);
             case 3 -> Connectivity3D.convert(conn);
-            default -> throw new RuntimeException("Can not manage connectivities other than 2 or 3");
+            default -> GenericConnectivityND.convert(conn, newDim);
         };
     }
     

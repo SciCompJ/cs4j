@@ -13,6 +13,39 @@ import org.junit.Test;
 public class ConnectivityTest
 {
     /**
+     * Test method for {@link net.sci.image.Connectivity#createOrtho(int)}.
+     */
+    @Test
+    public final void testCreateOrtho_D2()
+    {
+        Connectivity conn = Connectivity.createOrtho(2);
+        assertEquals(2, conn.dimensionality());
+        assertEquals(4, conn.offsets().size());
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.Connectivity#createOrtho(int)}.
+     */
+    @Test
+    public final void testCreateOrtho_D3()
+    {
+        Connectivity conn = Connectivity.createOrtho(3);
+        assertEquals(3, conn.dimensionality());
+        assertEquals(6, conn.offsets().size());
+    }
+    
+    /**
+     * Test method for {@link net.sci.image.Connectivity#createOrtho(int)}.
+     */
+    @Test
+    public final void testCreateOrtho_D4()
+    {
+        Connectivity conn = Connectivity.createOrtho(4);
+        assertEquals(4, conn.dimensionality());
+        assertEquals(8, conn.offsets().size());
+    }
+    
+    /**
      * Test method for {@link net.sci.image.Connectivity#convertDimensionality(net.sci.image.Connectivity, int)}.
      */
     @Test
@@ -80,6 +113,20 @@ public class ConnectivityTest
         
         assertEquals(3, res.dimensionality());
         assertEquals(6, res.offsets().size());
+    }
+
+    /**
+     * Test method for {@link net.sci.image.Connectivity#convertDimensionality(net.sci.image.Connectivity, int)}.
+     */
+    @Test
+    public final void testConvertDimensionality_3D_to_4D_C26()
+    {
+        Connectivity conn = Connectivity3D.C26;
+        
+        Connectivity res = Connectivity.convertDimensionality(conn, 4);
+        
+        assertEquals(4, res.dimensionality());
+        assertEquals(26, res.offsets().size());
     }
 
 }
