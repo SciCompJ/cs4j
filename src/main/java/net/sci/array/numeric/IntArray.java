@@ -425,12 +425,6 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
     static class Wrapper<I extends Int<I>> extends ArrayWrapperStub<I> implements IntArray<I>
     {
         /**
-         * the array to wrap. Already stored in super class, but store it here
-         * as well to keep type of generic.
-         */
-        Array<I> array;
-        
-        /**
          * Keep a sample element to allow the creation of generic arrays, and to
          * retrieve type-related information.
          */
@@ -439,7 +433,6 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
         protected Wrapper(Array<I> array)
         {
             super(array);
-            this.array = array;
             this.sample = array.sampleElement();
         }
 
@@ -468,40 +461,46 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
             return sample.typeMax();
         }
         
+        @SuppressWarnings("unchecked")
         @Override
         public int getInt(int[] pos)
         {
-            return array.get(pos).intValue();
+            return ((Array<I>) array).get(pos).intValue();
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void setInt(int[] pos, int value)
         {
-            array.set(pos, sample.fromInt(value));
+            ((Array<I>) array).set(pos, sample.fromInt(value));
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void setValue(int[] pos, double value)
         {
-            array.set(pos, sample.fromValue(value));
+            ((Array<I>) array).set(pos, sample.fromValue(value));
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public I get(int[] pos)
         {
-            return array.get(pos);
+            return ((Array<I>) array).get(pos);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void set(int[] pos, I value)
         {
-            array.set(pos, value);
+            ((Array<I>) array).set(pos, value);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public IntArray<I> newInstance(int... dims)
         {
-            return IntArray.wrap(array.newInstance(array.size()));
+            return IntArray.wrap(((Array<I>) array).newInstance(dims));
         }
 
         @Override
@@ -509,10 +508,11 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
         {
             return new net.sci.array.numeric.IntArray.Factory<I>() 
             {
+                @SuppressWarnings("unchecked")
                 @Override
                 public IntArray<I> create(int... dims)
                 {
-                    return IntArray.wrap(array.newInstance(array.size()));
+                    return IntArray.wrap(((Array<I>) array).newInstance(dims));
                 }
             };
         }
