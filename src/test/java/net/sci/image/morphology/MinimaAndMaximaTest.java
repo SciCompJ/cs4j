@@ -26,7 +26,7 @@ import net.sci.image.connectivity.Connectivity3D;
 public class MinimaAndMaximaTest
 {
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima2d(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testRegionalMaxima_ScalarArray2D_C4()
@@ -47,7 +47,7 @@ public class MinimaAndMaximaTest
         
         UInt8Array2D image = UInt8Array2D.fromIntArray(data);
         
-        BinaryArray2D maxima = MinimaAndMaxima.regionalMaxima(image, Connectivity2D.C4);
+        BinaryArray2D maxima = MinimaAndMaxima.regionalMaxima2d(image, Connectivity2D.C4);
         
         assertFalse(maxima.getBoolean(0, 0));
         assertTrue(maxima.getBoolean(1, 1));
@@ -57,7 +57,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima2d(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testRegionalMaxima_ScalarArray2D_C8()
@@ -78,7 +78,7 @@ public class MinimaAndMaximaTest
         
         UInt8Array2D image = UInt8Array2D.fromIntArray(data);
         
-        BinaryArray2D maxima = MinimaAndMaxima.regionalMaxima(image, Connectivity2D.C8);
+        BinaryArray2D maxima = MinimaAndMaxima.regionalMaxima2d(image, Connectivity2D.C8);
         
         assertFalse(maxima.getBoolean(0, 0));
         assertFalse(maxima.getBoolean(1, 1));
@@ -88,7 +88,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMinima(net.sci.array.numeric.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMinima2d(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testRegionalMinima_ScalarArray2D_C4()
@@ -104,7 +104,7 @@ public class MinimaAndMaximaTest
         
         UInt8Array2D image = UInt8Array2D.fromIntArray(data);
         
-        BinaryArray2D maxima = MinimaAndMaxima.regionalMinima(image, Connectivity2D.C4);
+        BinaryArray2D maxima = MinimaAndMaxima.regionalMinima2d(image, Connectivity2D.C4);
         
         assertFalse(maxima.getBoolean(0, 0));
         assertTrue(maxima.getBoolean(1, 1));
@@ -115,7 +115,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMinima(net.sci.array.numeric.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMinima2d(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testRegionalMinima_ScalarArray2D_C8()
@@ -131,7 +131,7 @@ public class MinimaAndMaximaTest
         
         UInt8Array2D image = UInt8Array2D.fromIntArray(data);
         
-        BinaryArray2D maxima = MinimaAndMaxima.regionalMinima(image, Connectivity2D.C8);
+        BinaryArray2D maxima = MinimaAndMaxima.regionalMinima2d(image, Connectivity2D.C8);
         
         assertFalse(maxima.getBoolean(0, 0));
         assertTrue(maxima.getBoolean(1, 1));
@@ -142,7 +142,7 @@ public class MinimaAndMaximaTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima2d(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testExtendedMaxima_ScalarArray2D_C4()
@@ -161,7 +161,7 @@ public class MinimaAndMaximaTest
         };
         UInt8Array2D array = UInt8Array2D.fromIntArray(data);
         
-        BinaryArray2D maxima = MinimaAndMaxima.extendedMaxima(array, 20, Connectivity2D.C4);
+        BinaryArray2D maxima = MinimaAndMaxima.extendedMaxima2d(array, 20, Connectivity2D.C4);
         
         assertFalse(maxima.getBoolean(0, 0));
         assertTrue(maxima.getBoolean(3, 3));
@@ -171,7 +171,7 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima2d(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testExtendedMinima_ScalarArray2D_C4()
@@ -189,7 +189,7 @@ public class MinimaAndMaximaTest
         };
         UInt8Array2D array = UInt8Array2D.fromIntArray(data);
         
-        BinaryArray2D minima = MinimaAndMaxima.extendedMinima(array, 30, Connectivity2D.C4);
+        BinaryArray2D minima = MinimaAndMaxima.extendedMinima2d(array, 30, Connectivity2D.C4);
         
         assertFalse(minima.getBoolean(0, 0));
         assertTrue(minima.getBoolean(2, 2));
@@ -201,14 +201,14 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima2d(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testExtendedMinima_ScalarArray2D_simpleProfile_H10()
     {
         UInt8Array2D array = createSimpleProfileArrray2D();
         
-        BinaryArray2D minima = MinimaAndMaxima.extendedMinima(array, 10, Connectivity2D.C4);
+        BinaryArray2D minima = MinimaAndMaxima.extendedMinima2d(array, 10, Connectivity2D.C4);
         
         boolean[] expH10 = new boolean[] {false, true, false, false, false, true, false, true, false, false, false};
         for (int x = 0; x < array.size(0); x++)
@@ -218,14 +218,14 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray2D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima2d(net.sci.array.numeric.ScalarArray2D)}.
      */
     @Test
     public final void testExtendedMinima_ScalarArray2D_simpleProfile_H20()
     {
         UInt8Array2D array = createSimpleProfileArrray2D();
         
-        BinaryArray2D minima = MinimaAndMaxima.extendedMinima(array, 20, Connectivity2D.C4);
+        BinaryArray2D minima = MinimaAndMaxima.extendedMinima2d(array, 20, Connectivity2D.C4);
         
         boolean[] expH10 = new boolean[] {false, true, false, false, false, false, false, true, false, false, false};
         for (int x = 0; x < array.size(0); x++)
@@ -235,14 +235,14 @@ public class MinimaAndMaximaTest
     }
     
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray3D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima3d(net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testExtendedMinima_ScalarArray3D_simpleProfile_H10()
     {
         UInt8Array3D array = createSimpleProfileArrray3D();
         
-        BinaryArray3D minima = MinimaAndMaxima.extendedMinima(array, 10, Connectivity3D.C6);
+        BinaryArray3D minima = MinimaAndMaxima.extendedMinima3d(array, 10, Connectivity3D.C6);
         
         boolean[] expH10 = new boolean[] {false, true, false, false, false, true, false, true, false, false, false};
         for (int x = 0; x < array.size(0); x++)
@@ -252,14 +252,14 @@ public class MinimaAndMaximaTest
     }
 
     /**
-     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima(net.sci.array.numeric.ScalarArray3D)}.
+     * Test method for {@link net.sci.image.morphology.MinimaAndMaxima#regionalMaxima3d(net.sci.array.numeric.ScalarArray3D)}.
      */
     @Test
     public final void testExtendedMinima_ScalarArray3D_simpleProfile_H20()
     {
         UInt8Array3D array = createSimpleProfileArrray3D();
         
-        BinaryArray3D minima = MinimaAndMaxima.extendedMinima(array, 20, Connectivity3D.C6);
+        BinaryArray3D minima = MinimaAndMaxima.extendedMinima3d(array, 20, Connectivity3D.C6);
         
         boolean[] expH10 = new boolean[] {false, true, false, false, false, false, false, true, false, false, false};
         for (int x = 0; x < array.size(0); x++)
@@ -276,8 +276,8 @@ public class MinimaAndMaximaTest
         minima.setBoolean(3, 2, true);
         minima.setBoolean(9, 2, true);
 
-        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity2D.C4);
-        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima(res, Connectivity2D.C4);
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima2d(array, minima, Connectivity2D.C4);
+        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima2d(res, Connectivity2D.C4);
 
         boolean[] exp = new boolean[] {false, false, false, true, false, false, false, false, false, true, false};
         for (int x = 0; x < array.size(0); x++)
@@ -294,7 +294,7 @@ public class MinimaAndMaximaTest
         minima.setBoolean(2, 2, true);
         minima.setBoolean(5, 2, true);
 
-        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity2D.C4);
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima2d(array, minima, Connectivity2D.C4);
 
         // check markers correspond to minimal values
         assertEquals(0.0, res.getValue(2, 2), 0.01);
@@ -312,10 +312,10 @@ public class MinimaAndMaximaTest
         minima.setBoolean(2, 2, true);
         minima.setBoolean(5, 2, true);
 
-        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity2D.C4);
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima2d(array, minima, Connectivity2D.C4);
         
         // check markers correspond to minimal values
-        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima(res, Connectivity2D.C4);
+        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima2d(res, Connectivity2D.C4);
         assertFalse(minima2.getBoolean(1, 2));
         assertTrue(minima2.getBoolean(2, 2));
         assertFalse(minima2.getBoolean(3, 2));
@@ -336,10 +336,10 @@ public class MinimaAndMaximaTest
         minima.setBoolean(2, 2, true);
         minima.setBoolean(5, 2, true);
 
-        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity2D.C4);
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima2d(array, minima, Connectivity2D.C4);
         
         // check markers correspond to minimal values
-        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima(res, Connectivity2D.C4);
+        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima2d(res, Connectivity2D.C4);
         assertFalse(minima2.getBoolean(1, 2));
         assertTrue(minima2.getBoolean(2, 2));
         assertFalse(minima2.getBoolean(3, 2));
@@ -360,7 +360,7 @@ public class MinimaAndMaximaTest
         minima.setBoolean(2, 2, 2, true);
         minima.setBoolean(5, 2, 2, true);
     
-        ScalarArray3D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity3D.C6);
+        ScalarArray3D<?> res = MinimaAndMaxima.imposeMinima3d(array, minima, Connectivity3D.C6);
     
         // check markers correspond to minimal values
         assertEquals(0.0, res.getValue(2, 2, 2), 0.01);
@@ -378,10 +378,10 @@ public class MinimaAndMaximaTest
         minima.setBoolean(2, 2, 2, true);
         minima.setBoolean(5, 2, 2, true);
     
-        ScalarArray3D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity3D.C6);
+        ScalarArray3D<?> res = MinimaAndMaxima.imposeMinima3d(array, minima, Connectivity3D.C6);
     
         // check markers correspond to minimal values
-        BinaryArray3D minima2 = MinimaAndMaxima.regionalMinima(res, Connectivity3D.C6);
+        BinaryArray3D minima2 = MinimaAndMaxima.regionalMinima3d(res, Connectivity3D.C6);
         assertFalse(minima2.getBoolean(1, 2, 2));
         assertTrue(minima2.getBoolean(2, 2, 2));
         assertFalse(minima2.getBoolean(3, 2, 2));
@@ -402,10 +402,10 @@ public class MinimaAndMaximaTest
         minima.setBoolean(2, 2, 2, true);
         minima.setBoolean(5, 2, 2, true);
     
-        ScalarArray3D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity3D.C6);
+        ScalarArray3D<?> res = MinimaAndMaxima.imposeMinima3d(array, minima, Connectivity3D.C6);
     
         // check markers correspond to minimal values
-        BinaryArray3D minima2 = MinimaAndMaxima.regionalMinima(res, Connectivity3D.C6);
+        BinaryArray3D minima2 = MinimaAndMaxima.regionalMinima3d(res, Connectivity3D.C6);
         assertFalse(minima2.getBoolean(1, 2, 2));
         assertTrue(minima2.getBoolean(2, 2, 2));
         assertFalse(minima2.getBoolean(3, 2, 2));
@@ -428,8 +428,8 @@ public class MinimaAndMaximaTest
         minima.setBoolean(1, 2, true);
         minima.setBoolean(5, 2, true);
     
-        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima(array, minima, Connectivity2D.C4);
-        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima(res, Connectivity2D.C4);
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMinima2d(array, minima, Connectivity2D.C4);
+        BinaryArray2D minima2 = MinimaAndMaxima.regionalMinima2d(res, Connectivity2D.C4);
     
         boolean[] exp = new boolean[] {false, true, false, false, false, true, false};
         for (int x = 0; x < array.size(0); x++)
@@ -446,7 +446,7 @@ public class MinimaAndMaximaTest
         maxima.setBoolean(2, 2, true);
         maxima.setBoolean(5, 2, true);
     
-        ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima(array, maxima, Connectivity2D.C4);
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima2d(array, maxima, Connectivity2D.C4);
     
         // check markers correspond to maximal values
         assertEquals(255.0, res.getValue(2, 2), 0.01);
@@ -464,10 +464,10 @@ public class MinimaAndMaximaTest
         maxima.setBoolean(2, 2, true);
         maxima.setBoolean(5, 2, true);
 
-        ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima(array, maxima, Connectivity2D.C4);
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima2d(array, maxima, Connectivity2D.C4);
         
         // check markers correspond to minimal values
-        BinaryArray2D minima2 = MinimaAndMaxima.regionalMaxima(res, Connectivity2D.C4);
+        BinaryArray2D minima2 = MinimaAndMaxima.regionalMaxima2d(res, Connectivity2D.C4);
         assertFalse(minima2.getBoolean(1, 2));
         assertTrue(minima2.getBoolean(2, 2));
         assertFalse(minima2.getBoolean(3, 2));
@@ -488,10 +488,10 @@ public class MinimaAndMaximaTest
         maxima.setBoolean(2, 2, true);
         maxima.setBoolean(5, 2, true);
 
-        ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima(array, maxima, Connectivity2D.C4);
+        ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima2d(array, maxima, Connectivity2D.C4);
         
         // check markers correspond to minimal values
-        BinaryArray2D minima2 = MinimaAndMaxima.regionalMaxima(res, Connectivity2D.C4);
+        BinaryArray2D minima2 = MinimaAndMaxima.regionalMaxima2d(res, Connectivity2D.C4);
         assertFalse(minima2.getBoolean(1, 2));
         assertTrue(minima2.getBoolean(2, 2));
         assertFalse(minima2.getBoolean(3, 2));
@@ -512,7 +512,7 @@ public class MinimaAndMaximaTest
         minima.setBoolean(2, 2, 2, true);
         minima.setBoolean(5, 2, 2, true);
 
-        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima(array, minima, Connectivity3D.C6);
+        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima3d(array, minima, Connectivity3D.C6);
 
         // check markers correspond to minimal values
         assertEquals(255.0, res.getValue(2, 2, 2), 0.01);
@@ -530,10 +530,10 @@ public class MinimaAndMaximaTest
         minima.setBoolean(2, 2, 2, true);
         minima.setBoolean(5, 2, 2, true);
 
-        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima(array, minima, Connectivity3D.C6);
+        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima3d(array, minima, Connectivity3D.C6);
 
         // check markers correspond to maximal values
-        BinaryArray3D minima2 = MinimaAndMaxima.regionalMaxima(res, Connectivity3D.C6);
+        BinaryArray3D minima2 = MinimaAndMaxima.regionalMaxima3d(res, Connectivity3D.C6);
         assertFalse(minima2.getBoolean(1, 2, 2));
         assertTrue(minima2.getBoolean(2, 2, 2));
         assertFalse(minima2.getBoolean(3, 2, 2));
@@ -554,10 +554,10 @@ public class MinimaAndMaximaTest
         minima.setBoolean(2, 2, 2, true);
         minima.setBoolean(5, 2, 2, true);
 
-        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima(array, minima, Connectivity3D.C6);
+        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima3d(array, minima, Connectivity3D.C6);
 
         // check markers correspond to maximal values
-        BinaryArray3D minima2 = MinimaAndMaxima.regionalMaxima(res, Connectivity3D.C6);
+        BinaryArray3D minima2 = MinimaAndMaxima.regionalMaxima3d(res, Connectivity3D.C6);
         assertFalse(minima2.getBoolean(1, 2, 2));
         assertTrue(minima2.getBoolean(2, 2, 2));
         assertFalse(minima2.getBoolean(3, 2, 2));

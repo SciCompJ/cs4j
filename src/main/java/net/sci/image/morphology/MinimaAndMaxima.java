@@ -87,9 +87,9 @@ public class MinimaAndMaxima
      *            the array to process
      * @return the regional maxima of input array
      */
-    public final static BinaryArray2D regionalMaxima(ScalarArray2D<?> array)
+    public final static BinaryArray2D regionalMaxima2d(ScalarArray2D<?> array)
     {
-        return regionalMaxima(array, DEFAULT_CONNECTIVITY_2D);
+        return regionalMaxima2d(array, DEFAULT_CONNECTIVITY_2D);
     }
 
     /**
@@ -102,7 +102,7 @@ public class MinimaAndMaxima
      *            the connectivity for maxima, that should be either 4 or 8
      * @return the regional maxima of input array
      */
-    public final static BinaryArray2D regionalMaxima(ScalarArray2D<?> array, Connectivity2D conn)
+    public final static BinaryArray2D regionalMaxima2d(ScalarArray2D<?> array, Connectivity2D conn)
     {
         RegionalExtrema2D algo = new RegionalExtrema2D();
         algo.setConnectivity(conn);
@@ -119,9 +119,9 @@ public class MinimaAndMaxima
      *            the array to process
      * @return the regional minima of input array
      */
-    public final static BinaryArray3D regionalMaxima(ScalarArray3D<?> array) 
+    public final static BinaryArray3D regionalMaxima3d(ScalarArray3D<?> array) 
     {
-        return regionalMaxima(array, DEFAULT_CONNECTIVITY_3D);
+        return regionalMaxima3d(array, DEFAULT_CONNECTIVITY_3D);
     }
     
     /**
@@ -134,7 +134,7 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the regional minima of input array
      */
-    public final static BinaryArray3D regionalMaxima(ScalarArray3D<?> array, Connectivity3D conn) 
+    public final static BinaryArray3D regionalMaxima3d(ScalarArray3D<?> array, Connectivity3D conn) 
     {
         RegionalExtrema3D algo = new RegionalExtrema3D();
         algo.setConnectivity(conn);
@@ -151,9 +151,9 @@ public class MinimaAndMaxima
      *            the array to process
      * @return the regional minima of input array
      */
-    public final static BinaryArray2D regionalMinima(ScalarArray2D<?> array)
+    public final static BinaryArray2D regionalMinima2d(ScalarArray2D<?> array)
     {
-        return regionalMinima(array, DEFAULT_CONNECTIVITY_2D);
+        return regionalMinima2d(array, DEFAULT_CONNECTIVITY_2D);
     }
 
     /**
@@ -166,7 +166,7 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the regional minima of input array
      */
-    public final static BinaryArray2D regionalMinima(ScalarArray2D<?> array, Connectivity2D conn) 
+    public final static BinaryArray2D regionalMinima2d(ScalarArray2D<?> array, Connectivity2D conn) 
     {
         RegionalExtrema2D algo = new RegionalExtrema2D();
         algo.setConnectivity(conn);
@@ -183,9 +183,9 @@ public class MinimaAndMaxima
      *            the array to process
      * @return the regional minima of input array
      */
-    public final static BinaryArray3D regionalMinima(ScalarArray3D<?> array) 
+    public final static BinaryArray3D regionalMinima3d(ScalarArray3D<?> array) 
     {
-        return regionalMinima(array, DEFAULT_CONNECTIVITY_3D);
+        return region1alMinima3d(array, DEFAULT_CONNECTIVITY_3D);
     }
 
     /**
@@ -198,7 +198,7 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the regional minima of input array
      */
-    public final static BinaryArray3D regionalMinima(ScalarArray3D<?> array, Connectivity3D conn) 
+    public final static BinaryArray3D region1alMinima3d(ScalarArray3D<?> array, Connectivity3D conn) 
     {
         RegionalExtrema3D algo = new RegionalExtrema3D();
         algo.setConnectivity(conn);
@@ -222,9 +222,9 @@ public class MinimaAndMaxima
      *            the minimal difference between a maxima and its boundary
      * @return the extended maxima of input array
      */
-    public final static BinaryArray2D extendedMaxima(ScalarArray2D<?> array, double dynamic)
+    public final static BinaryArray2D extendedMaxima2d(ScalarArray2D<?> array, double dynamic)
     {
-        return extendedMaxima(array, dynamic, DEFAULT_CONNECTIVITY_2D);
+        return extendedMaxima2d(array, dynamic, DEFAULT_CONNECTIVITY_2D);
     }
 
     /**
@@ -240,7 +240,7 @@ public class MinimaAndMaxima
      *            the connectivity for maxima, that should be either 4 or 8
      * @return the extended maxima of input array
      */
-    public final static BinaryArray2D extendedMaxima(ScalarArray2D<?> array,
+    public final static BinaryArray2D extendedMaxima2d(ScalarArray2D<?> array,
             double dynamic, Connectivity2D conn)
     {
         ScalarArray2D<?> mask = ScalarArray2D.wrapScalar2d(new AddValue(dynamic).createView(array));
@@ -249,7 +249,7 @@ public class MinimaAndMaxima
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
         ScalarArray2D<?> rec = algo.process(array, mask);
         
-        return regionalMaxima(rec, conn);
+        return regionalMaxima2d(rec, conn);
     }
 
     /**
@@ -263,10 +263,10 @@ public class MinimaAndMaxima
      *            the minimal difference between a maxima and its boundary 
      * @return the extended maxima of input array
      */
-    public final static BinaryArray3D extendedMaxima(ScalarArray3D<?> array,
+    public final static BinaryArray3D extendedMaxima3d(ScalarArray3D<?> array,
             double dynamic)
     {
-        return extendedMaxima(array, dynamic, DEFAULT_CONNECTIVITY_3D);
+        return extendedMaxima3d(array, dynamic, DEFAULT_CONNECTIVITY_3D);
     }
 
     /**
@@ -282,7 +282,7 @@ public class MinimaAndMaxima
      *            the connectivity for maxima, that should be either 6 or 26
      * @return the extended maxima of input array
      */
-    public final static BinaryArray3D extendedMaxima(ScalarArray3D<?> array,
+    public final static BinaryArray3D extendedMaxima3d(ScalarArray3D<?> array,
             double dynamic, Connectivity3D conn)
     {
         ScalarArray3D<?> mask = ScalarArray3D.wrapScalar3d(new AddValue(dynamic).createView(array));
@@ -291,7 +291,7 @@ public class MinimaAndMaxima
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
         ScalarArray3D<?> rec = algo.process(array, mask);
         
-        return regionalMaxima(rec, conn);
+        return regionalMaxima3d(rec, conn);
     }
 
     /**
@@ -305,9 +305,9 @@ public class MinimaAndMaxima
      *            the minimal difference between a minima and its boundary
      * @return the extended minima of input array
      */
-    public final static BinaryArray2D extendedMinima(ScalarArray2D<?> array, double dynamic)
+    public final static BinaryArray2D extendedMinima2d(ScalarArray2D<?> array, double dynamic)
     {
-        return extendedMinima(array, dynamic, DEFAULT_CONNECTIVITY_2D);
+        return extendedMinima2d(array, dynamic, DEFAULT_CONNECTIVITY_2D);
     }
 
     /**
@@ -323,14 +323,14 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the extended minima of input array
      */
-    public final static BinaryArray2D extendedMinima(ScalarArray2D<?> array, double dynamic, Connectivity2D conn)
+    public final static BinaryArray2D extendedMinima2d(ScalarArray2D<?> array, double dynamic, Connectivity2D conn)
     {
         ScalarArray2D<?> marker = ScalarArray2D.wrapScalar2d(new AddValue(dynamic).createView(array));
 
         MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(MorphologicalReconstruction.Type.BY_EROSION, conn);
         ScalarArray2D<?> rec = algo.process(marker, array);
 
-        return regionalMinima(rec, conn);
+        return regionalMinima2d(rec, conn);
     }
 
     /**
@@ -344,10 +344,10 @@ public class MinimaAndMaxima
      *            the minimal difference between a minima and its boundary
      * @return the extended minima of input array
      */
-    public final static BinaryArray3D extendedMinima(ScalarArray3D<?> array,
+    public final static BinaryArray3D extendedMinima3d(ScalarArray3D<?> array,
             double dynamic)
     {
-        return extendedMinima(array, dynamic, DEFAULT_CONNECTIVITY_3D);
+        return extendedMinima3d(array, dynamic, DEFAULT_CONNECTIVITY_3D);
     }
 
     /**
@@ -363,7 +363,7 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 6 or 26
      * @return the extended minima of input array
      */
-    public final static BinaryArray3D extendedMinima(ScalarArray3D<?> array,
+    public final static BinaryArray3D extendedMinima3d(ScalarArray3D<?> array,
             double dynamic, Connectivity3D conn)
     {
         ScalarArray3D<?> marker = ScalarArray3D.wrapScalar3d(new AddValue(dynamic).createView(array));
@@ -372,7 +372,7 @@ public class MinimaAndMaxima
                 MorphologicalReconstruction.Type.BY_EROSION, conn);
         ScalarArray3D<?> rec = algo.process(marker, array);
 
-        return regionalMinima(rec, conn);
+        return region1alMinima3d(rec, conn);
     }
     
 
@@ -389,9 +389,9 @@ public class MinimaAndMaxima
      *            a binary array of maxima
      * @return the result of maxima imposition
      */
-    public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array, BinaryArray2D maxima)
+    public final static ScalarArray2D<?> imposeMaxima2d(ScalarArray2D<?> array, BinaryArray2D maxima)
     {
-        return imposeMaxima(array, maxima, DEFAULT_CONNECTIVITY_2D);
+        return imposeMaxima2d(array, maxima, DEFAULT_CONNECTIVITY_2D);
     }
 
     /**
@@ -406,7 +406,7 @@ public class MinimaAndMaxima
      *            the connectivity for maxima, that should be either 4 or 8
      * @return the result of maxima imposition
      */
-    public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array, BinaryArray2D maxima, Connectivity2D conn)
+    public final static ScalarArray2D<?> imposeMaxima2d(ScalarArray2D<?> array, BinaryArray2D maxima, Connectivity2D conn)
     {
         return new MaximaImposition(conn).processScalar2d(array, maxima);
     }
@@ -421,9 +421,9 @@ public class MinimaAndMaxima
      *            a binary array of maxima
      * @return the result of maxima imposition
      */
-    public final static ScalarArray3D<?> imposeMaxima(ScalarArray3D<?> array, BinaryArray3D maxima)
+    public final static ScalarArray3D<?> imposeMaxima3d(ScalarArray3D<?> array, BinaryArray3D maxima)
     {
-        return imposeMaxima(array, maxima, DEFAULT_CONNECTIVITY_3D);
+        return imposeMaxima3d(array, maxima, DEFAULT_CONNECTIVITY_3D);
     }
     
     /**
@@ -435,10 +435,10 @@ public class MinimaAndMaxima
      * @param maxima
      *            a binary array of maxima 
      * @param conn
-     *            the connectivity for maxima, that should be either 4 or 8
+     *            the connectivity for maxima, that should be either 6 or 26
      * @return the result of maxima imposition
      */
-    public final static ScalarArray3D<?> imposeMaxima(ScalarArray3D<?> array, BinaryArray3D maxima,
+    public final static ScalarArray3D<?> imposeMaxima3d(ScalarArray3D<?> array, BinaryArray3D maxima,
             Connectivity3D conn)
     {
         return new MaximaImposition(conn).processScalar3d(array, maxima);
@@ -454,9 +454,9 @@ public class MinimaAndMaxima
      *            a binary array of minima 
      * @return the result of minima imposition
      */
-    public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array, BinaryArray2D minima)
+    public final static ScalarArray2D<?> imposeMinima2d(ScalarArray2D<?> array, BinaryArray2D minima)
     {
-        return imposeMinima(array, minima, DEFAULT_CONNECTIVITY_2D);
+        return imposeMinima2d(array, minima, DEFAULT_CONNECTIVITY_2D);
     }
     
     /**
@@ -471,7 +471,7 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the result of minima imposition
      */
-    public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array, BinaryArray2D minima,
+    public final static ScalarArray2D<?> imposeMinima2d(ScalarArray2D<?> array, BinaryArray2D minima,
             Connectivity2D conn)
     {
         return new MinimaImposition(conn).processScalar2d(array, minima);
@@ -487,9 +487,9 @@ public class MinimaAndMaxima
      *            a binary array of minima
      * @return the result of minima imposition
      */
-    public final static ScalarArray3D<?> imposeMinima(ScalarArray3D<?> array, BinaryArray3D minima)
+    public final static ScalarArray3D<?> imposeMinima3d(ScalarArray3D<?> array, BinaryArray3D minima)
     {
-        return imposeMinima(array, minima, DEFAULT_CONNECTIVITY_3D);
+        return imposeMinima3d(array, minima, DEFAULT_CONNECTIVITY_3D);
     }
 
     /**
@@ -504,7 +504,7 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 6 or 26
      * @return the result of minima imposition
      */
-    public final static ScalarArray3D<?> imposeMinima(ScalarArray3D<?> array, BinaryArray3D minima, Connectivity3D conn)
+    public final static ScalarArray3D<?> imposeMinima3d(ScalarArray3D<?> array, BinaryArray3D minima, Connectivity3D conn)
     {
         return new MinimaImposition(conn).processScalar3d(array, minima);
     }

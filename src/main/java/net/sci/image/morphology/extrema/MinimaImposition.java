@@ -11,7 +11,9 @@ import net.sci.array.numeric.Float32;
 import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.Float64;
 import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Int;
 import net.sci.array.numeric.IntArray;
+import net.sci.array.Array;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
@@ -156,11 +158,12 @@ public class MinimaImposition extends AlgoStub
         return data[0];
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private static final ScalarArray<?>[] initializeMarkerAndMask(ScalarArray<?> array, BinaryArray minima)
     {
-        if (array instanceof IntArray)
+        if (Int.class.isAssignableFrom(array.elementClass()))
         {
-            return initializeMarkerAndMask_int((IntArray<?>) array, minima);
+            return initializeMarkerAndMask_int(IntArray.wrap((Array<Int>) array), minima);
         }
         else if (array.elementClass() == Float32.class)
         {

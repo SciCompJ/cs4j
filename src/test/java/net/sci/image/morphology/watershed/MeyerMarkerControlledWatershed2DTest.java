@@ -37,7 +37,7 @@ public class MeyerMarkerControlledWatershed2DTest
         });
         
         Connectivity2D conn = Connectivity2D.C4;
-        BinaryArray2D minima = MinimaAndMaxima.regionalMinima(relief, conn);
+        BinaryArray2D minima = MinimaAndMaxima.regionalMinima2d(relief, conn);
         IntArray2D<?> markers = BinaryImages.componentsLabeling(minima, conn, 32);
         
         MeyerMarkerControlledWatershed2D algo = new MeyerMarkerControlledWatershed2D();
@@ -148,7 +148,7 @@ public class MeyerMarkerControlledWatershed2DTest
         });
         
         Connectivity2D conn = Connectivity2D.C4;
-        BinaryArray2D minima = MinimaAndMaxima.regionalMinima(relief, conn);
+        BinaryArray2D minima = MinimaAndMaxima.regionalMinima2d(relief, conn);
         
         MeyerMarkerControlledWatershed2D algo = new MeyerMarkerControlledWatershed2D();
         algo.connectivity = conn;

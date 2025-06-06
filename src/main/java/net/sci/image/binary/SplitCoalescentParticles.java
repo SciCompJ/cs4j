@@ -68,9 +68,9 @@ public class SplitCoalescentParticles extends AlgoStub implements ArrayOperator
         
         this.fireStatusChanged(this, "extended minima");
         Connectivity2D conn2d = Connectivity2D.convert(this.conn);
-        BinaryArray2D minima = MinimaAndMaxima.extendedMinima(inverted, this.dynamic, conn2d);
+        BinaryArray2D minima = MinimaAndMaxima.extendedMinima2d(inverted, this.dynamic, conn2d);
         this.fireStatusChanged(this, "impose minima");
-        ScalarArray2D<?> imposed = MinimaAndMaxima.imposeMinima(inverted, minima, conn2d);
+        ScalarArray2D<?> imposed = MinimaAndMaxima.imposeMinima2d(inverted, minima, conn2d);
         this.fireStatusChanged(this, "watershed");
         ScalarArray2D<?> wat = new Watershed2D(conn2d).process(imposed);
         
@@ -89,9 +89,9 @@ public class SplitCoalescentParticles extends AlgoStub implements ArrayOperator
         
         this.fireStatusChanged(this, "extended minima");
         Connectivity3D conn3d = Connectivity3D.convert(this.conn);
-        BinaryArray3D minima = MinimaAndMaxima.extendedMinima(inverted, this.dynamic, conn3d);
+        BinaryArray3D minima = MinimaAndMaxima.extendedMinima3d(inverted, this.dynamic, conn3d);
         this.fireStatusChanged(this, "impose minima");
-        ScalarArray3D<?> imposed = MinimaAndMaxima.imposeMinima(inverted, minima, conn3d);
+        ScalarArray3D<?> imposed = MinimaAndMaxima.imposeMinima3d(inverted, minima, conn3d);
         this.fireStatusChanged(this, "watershed");
         ScalarArray3D<?> wat = new Watershed3D(conn3d).process(imposed);
         
