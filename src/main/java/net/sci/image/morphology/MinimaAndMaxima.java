@@ -3,23 +3,14 @@
  */
 package net.sci.image.morphology;
 
-import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
-import net.sci.array.numeric.Float32Array;
-import net.sci.array.numeric.Float32Array2D;
-import net.sci.array.numeric.Float32Array3D;
-import net.sci.array.numeric.Float64Array;
-import net.sci.array.numeric.Float64Array2D;
-import net.sci.array.numeric.Float64Array3D;
-import net.sci.array.numeric.IntArray;
-import net.sci.array.numeric.IntArray2D;
-import net.sci.array.numeric.IntArray3D;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.numeric.process.AddValue;
 import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.connectivity.Connectivity3D;
+import net.sci.image.morphology.extrema.MaximaImposition;
 import net.sci.image.morphology.extrema.MinimaImposition;
 import net.sci.image.morphology.extrema.RegionalExtrema2D;
 import net.sci.image.morphology.extrema.RegionalExtrema3D;
@@ -417,32 +408,7 @@ public class MinimaAndMaxima
      */
     public final static ScalarArray2D<?> imposeMaxima(ScalarArray2D<?> array, BinaryArray2D maxima, Connectivity2D conn)
     {
-        ScalarArray2D<?> marker;
-        ScalarArray2D<?> mask;
-        if (array instanceof IntArray2D)
-        {
-            marker = IntArray2D.wrap(array.newInstance(array.size()));
-            mask = IntArray2D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_maxima_int((IntArray<?>)array, maxima, (IntArray<?>) marker, (IntArray<?>) mask);
-        }
-        else if (array instanceof Float32Array)
-        {
-            marker = Float32Array2D.wrap(array.newInstance(array.size()));
-            mask = Float32Array2D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_maxima_float32((Float32Array) array, maxima, (Float32Array) marker, (Float32Array) mask);
-        }
-        else if (array instanceof Float64Array)
-        {
-            marker = Float64Array2D.wrap(array.newInstance(array.size()));
-            mask = Float64Array2D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_maxima_float64((Float64Array) array, maxima, (Float64Array) marker, (Float64Array) mask);
-        }
-        else
-        {
-            throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
-        }
-
-        return MorphologicalReconstruction.reconstructByDilation2d(marker, mask, conn);
+        return new MaximaImposition(conn).processScalar2d(array, maxima);
     }
     
     /**
@@ -475,32 +441,7 @@ public class MinimaAndMaxima
     public final static ScalarArray3D<?> imposeMaxima(ScalarArray3D<?> array, BinaryArray3D maxima,
             Connectivity3D conn)
     {
-        ScalarArray3D<?> marker;
-        ScalarArray3D<?> mask;
-        if (array instanceof IntArray3D)
-        {
-            marker = IntArray3D.wrap(array.newInstance(array.size()));
-            mask = IntArray3D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_maxima_int((IntArray<?>)array, maxima, (IntArray<?>) marker, (IntArray<?>) mask);
-        }
-        else if (array instanceof Float32Array)
-        {
-            marker = Float32Array3D.wrap(array.newInstance(array.size()));
-            mask = Float32Array3D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_maxima_float32((Float32Array) array, maxima, (Float32Array) marker, (Float32Array) mask);
-        }
-        else if (array instanceof Float64Array)
-        {
-            marker = Float64Array3D.wrap(array.newInstance(array.size()));
-            mask = Float64Array3D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_maxima_float64((Float64Array) array, maxima, (Float64Array) marker, (Float64Array) mask);
-        }
-        else
-        {
-            throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
-        }
-        
-        return MorphologicalReconstruction.reconstructByDilation3d(marker, mask, conn);
+        return new MaximaImposition(conn).processScalar3d(array, maxima);
     }
 
     /**
@@ -568,57 +509,6 @@ public class MinimaAndMaxima
         return new MinimaImposition(conn).processScalar3d(array, minima);
     }
 
-    private static final void initializeMarkerAndMask_maxima_int(IntArray<?> array, BinaryArray maxima, IntArray<?> marker, IntArray<?> mask)
-    {
-        for (int[] pos : array.positions())
-        {
-            if (maxima.getBoolean(pos))
-            {
-                marker.setInt(pos, Integer.MAX_VALUE);
-                mask.setInt(pos, Integer.MAX_VALUE);
-            }
-            else
-            {
-                marker.setInt(pos, Integer.MIN_VALUE);
-                mask.setInt(pos, array.getInt(pos) - 1);
-            }
-        }
-    }
-
-    private static final void initializeMarkerAndMask_maxima_float32(Float32Array array, BinaryArray maxima, Float32Array marker, Float32Array mask)
-    {
-        for (int[] pos : array.positions())
-        {
-            if (maxima.getBoolean(pos))
-            {
-                marker.setFloat(pos, Float.MAX_VALUE);
-                mask.setFloat(pos, Float.MAX_VALUE);
-            }
-            else
-            {
-                marker.setFloat(pos, Float.NEGATIVE_INFINITY);
-                mask.setFloat(pos, Math.nextDown(array.getFloat(pos)));
-            }
-        }
-    }
-
-    private static final void initializeMarkerAndMask_maxima_float64(Float64Array array, BinaryArray maxima, Float64Array marker, Float64Array mask)
-    {
-        for (int[] pos : array.positions())
-        {
-            if (maxima.getBoolean(pos))
-            {
-                marker.setValue(pos, Double.MAX_VALUE);
-                mask.setValue(pos, Double.MAX_VALUE);
-            }
-            else
-            {
-                marker.setValue(pos, Double.NEGATIVE_INFINITY);
-                mask.setValue(pos, Math.nextDown(array.getValue(pos)));
-            }
-        }
-    }
-    
 
     // ==============================================================
     // Constructor
