@@ -4,6 +4,7 @@
 package net.sci.image.morphology.extrema;
 
 import net.sci.algo.AlgoStub;
+import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
@@ -11,6 +12,7 @@ import net.sci.array.numeric.Float32;
 import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.Float64;
 import net.sci.array.numeric.Float64Array;
+import net.sci.array.numeric.Int;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
@@ -156,11 +158,12 @@ public class MaximaImposition extends AlgoStub
         return data[0];
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private static final ScalarArray<?>[] initializeMarkerAndMask(ScalarArray<?> array, BinaryArray maxima)
     {
-        if (array instanceof IntArray)
+        if (Int.class.isAssignableFrom(array.elementClass()))
         {
-            return initializeMarkerAndMask_int((IntArray<?>) array, maxima);
+            return initializeMarkerAndMask_int(IntArray.wrap((Array<Int>) array), maxima);
         }
         else if (array.elementClass() == Float32.class)
         {

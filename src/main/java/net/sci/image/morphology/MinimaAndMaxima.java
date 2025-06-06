@@ -185,7 +185,7 @@ public class MinimaAndMaxima
      */
     public final static BinaryArray3D regionalMinima3d(ScalarArray3D<?> array) 
     {
-        return region1alMinima3d(array, DEFAULT_CONNECTIVITY_3D);
+        return regionalMinima3d(array, DEFAULT_CONNECTIVITY_3D);
     }
 
     /**
@@ -198,7 +198,7 @@ public class MinimaAndMaxima
      *            the connectivity for minima, that should be either 4 or 8
      * @return the regional minima of input array
      */
-    public final static BinaryArray3D region1alMinima3d(ScalarArray3D<?> array, Connectivity3D conn) 
+    public final static BinaryArray3D regionalMinima3d(ScalarArray3D<?> array, Connectivity3D conn) 
     {
         RegionalExtrema3D algo = new RegionalExtrema3D();
         algo.setConnectivity(conn);
@@ -372,7 +372,7 @@ public class MinimaAndMaxima
                 MorphologicalReconstruction.Type.BY_EROSION, conn);
         ScalarArray3D<?> rec = algo.process(marker, array);
 
-        return region1alMinima3d(rec, conn);
+        return regionalMinima3d(rec, conn);
     }
     
 

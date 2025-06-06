@@ -15,10 +15,12 @@ import net.sci.array.numeric.Float64Array2D;
 import net.sci.array.numeric.Float64Array3D;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
+import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.UInt8Array3D;
 import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.connectivity.Connectivity3D;
+import net.sci.image.morphology.extrema.TestArrays;
 
 /**
  * 
@@ -104,14 +106,14 @@ public class MinimaAndMaximaTest
         
         UInt8Array2D image = UInt8Array2D.fromIntArray(data);
         
-        BinaryArray2D maxima = MinimaAndMaxima.regionalMinima2d(image, Connectivity2D.C4);
+        BinaryArray2D minima = MinimaAndMaxima.regionalMinima2d(image, Connectivity2D.C4);
         
-        assertFalse(maxima.getBoolean(0, 0));
-        assertTrue(maxima.getBoolean(1, 1));
-        assertTrue(maxima.getBoolean(2, 2));
-        assertTrue(maxima.getBoolean(3, 3));
-        assertTrue(maxima.getBoolean(2, 4));
-        assertFalse(maxima.getBoolean(3, 4));
+        assertFalse(minima.getBoolean(0, 0));
+        assertTrue(minima.getBoolean(1, 1));
+        assertTrue(minima.getBoolean(2, 2));
+        assertTrue(minima.getBoolean(3, 3));
+        assertTrue(minima.getBoolean(2, 4));
+        assertFalse(minima.getBoolean(3, 4));
     }
 
     /**
@@ -131,14 +133,14 @@ public class MinimaAndMaximaTest
         
         UInt8Array2D image = UInt8Array2D.fromIntArray(data);
         
-        BinaryArray2D maxima = MinimaAndMaxima.regionalMinima2d(image, Connectivity2D.C8);
+        BinaryArray2D minima = MinimaAndMaxima.regionalMinima2d(image, Connectivity2D.C8);
         
-        assertFalse(maxima.getBoolean(0, 0));
-        assertTrue(maxima.getBoolean(1, 1));
-        assertTrue(maxima.getBoolean(2, 2));
-        assertTrue(maxima.getBoolean(3, 3));
-        assertFalse(maxima.getBoolean(2, 4));
-        assertFalse(maxima.getBoolean(3, 4));
+        assertFalse(minima.getBoolean(0, 0));
+        assertTrue(minima.getBoolean(1, 1));
+        assertTrue(minima.getBoolean(2, 2));
+        assertTrue(minima.getBoolean(3, 3));
+        assertFalse(minima.getBoolean(2, 4));
+        assertFalse(minima.getBoolean(3, 4));
     }
     
     /**
@@ -206,7 +208,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testExtendedMinima_ScalarArray2D_simpleProfile_H10()
     {
-        UInt8Array2D array = createSimpleProfileArrray2D();
+        UInt8Array2D array = TestArrays.createSimpleProfileArrray2D();
         
         BinaryArray2D minima = MinimaAndMaxima.extendedMinima2d(array, 10, Connectivity2D.C4);
         
@@ -223,7 +225,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testExtendedMinima_ScalarArray2D_simpleProfile_H20()
     {
-        UInt8Array2D array = createSimpleProfileArrray2D();
+        UInt8Array2D array = TestArrays.createSimpleProfileArrray2D();
         
         BinaryArray2D minima = MinimaAndMaxima.extendedMinima2d(array, 20, Connectivity2D.C4);
         
@@ -240,7 +242,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testExtendedMinima_ScalarArray3D_simpleProfile_H10()
     {
-        UInt8Array3D array = createSimpleProfileArrray3D();
+        UInt8Array3D array = TestArrays.createSimpleProfileArrray3D();
         
         BinaryArray3D minima = MinimaAndMaxima.extendedMinima3d(array, 10, Connectivity3D.C6);
         
@@ -257,7 +259,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testExtendedMinima_ScalarArray3D_simpleProfile_H20()
     {
-        UInt8Array3D array = createSimpleProfileArrray3D();
+        UInt8Array3D array = TestArrays.createSimpleProfileArrray3D();
         
         BinaryArray3D minima = MinimaAndMaxima.extendedMinima3d(array, 20, Connectivity3D.C6);
         
@@ -271,7 +273,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMinima_simpleProfile()
     {
-        UInt8Array2D array = createSimpleProfileArrray2D();
+        UInt8Array2D array = TestArrays.createSimpleProfileArrray2D();
         BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
         minima.setBoolean(3, 2, true);
         minima.setBoolean(9, 2, true);
@@ -289,7 +291,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMinima_ramp_uint8()
     {
-        UInt8Array2D array = create_ramp_7x5_UInt8();
+        UInt8Array2D array = TestArrays.create_ramp_7x5_UInt8();
         BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
         minima.setBoolean(2, 2, true);
         minima.setBoolean(5, 2, true);
@@ -307,7 +309,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMinima_ramp_float32()
     {
-        Float32Array2D array = create_ramp_7x5_Float32();
+        Float32Array2D array = TestArrays.create_ramp_7x5_Float32();
         BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
         minima.setBoolean(2, 2, true);
         minima.setBoolean(5, 2, true);
@@ -331,7 +333,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMinima_ramp_float64()
     {
-        Float64Array2D array = create_ramp_7x5_Float64();
+        Float64Array2D array = TestArrays.create_ramp_7x5_Float64();
         BinaryArray2D minima = BinaryArray2D.create(array.size(0), array.size(1));
         minima.setBoolean(2, 2, true);
         minima.setBoolean(5, 2, true);
@@ -355,7 +357,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMinima_ramp3d_uint8()
     {
-        UInt8Array3D array = create_ramp_7x5x5_UInt8();
+        UInt8Array3D array = TestArrays.create_ramp_7x5x5_UInt8();
         BinaryArray3D minima = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
         minima.setBoolean(2, 2, 2, true);
         minima.setBoolean(5, 2, 2, true);
@@ -373,7 +375,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMinima_ramp3d_float32()
     {
-        Float32Array3D array = create_ramp_7x5x5_Float32();
+        Float32Array3D array = TestArrays.create_ramp_7x5x5_Float32();
         BinaryArray3D minima = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
         minima.setBoolean(2, 2, 2, true);
         minima.setBoolean(5, 2, 2, true);
@@ -397,7 +399,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMinima_ramp3d_float64()
     {
-        Float64Array3D array = create_ramp_7x5x5_Float64();
+        Float64Array3D array = TestArrays.create_ramp_7x5x5_Float64();
         BinaryArray3D minima = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
         minima.setBoolean(2, 2, 2, true);
         minima.setBoolean(5, 2, 2, true);
@@ -441,7 +443,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMaxima_ramp_uint8()
     {
-        UInt8Array2D array = create_ramp_7x5_UInt8();
+        UInt8Array2D array = TestArrays.create_ramp_7x5_UInt8();
         BinaryArray2D maxima = BinaryArray2D.create(array.size(0), array.size(1));
         maxima.setBoolean(2, 2, true);
         maxima.setBoolean(5, 2, true);
@@ -449,8 +451,8 @@ public class MinimaAndMaximaTest
         ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima2d(array, maxima, Connectivity2D.C4);
     
         // check markers correspond to maximal values
-        assertEquals(255.0, res.getValue(2, 2), 0.01);
-        assertEquals(255.0, res.getValue(5, 2), 0.01);
+        assertEquals(UInt8.MAX_INT, res.getValue(2, 2), 0.01);
+        assertEquals(UInt8.MAX_INT, res.getValue(5, 2), 0.01);
         // keep relative ordering of other values
         assertTrue(res.getValue(5, 1) > res.getValue(3, 1));
         assertTrue(res.getValue(5, 3) > res.getValue(3, 3));
@@ -459,7 +461,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMaxima_ramp_float32()
     {
-        Float32Array2D array = create_ramp_7x5_Float32();
+        Float32Array2D array = TestArrays.create_ramp_7x5_Float32();
         BinaryArray2D maxima = BinaryArray2D.create(array.size(0), array.size(1));
         maxima.setBoolean(2, 2, true);
         maxima.setBoolean(5, 2, true);
@@ -467,13 +469,13 @@ public class MinimaAndMaximaTest
         ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima2d(array, maxima, Connectivity2D.C4);
         
         // check markers correspond to minimal values
-        BinaryArray2D minima2 = MinimaAndMaxima.regionalMaxima2d(res, Connectivity2D.C4);
-        assertFalse(minima2.getBoolean(1, 2));
-        assertTrue(minima2.getBoolean(2, 2));
-        assertFalse(minima2.getBoolean(3, 2));
-        assertFalse(minima2.getBoolean(4, 2));
-        assertTrue(minima2.getBoolean(5, 2));
-        assertFalse(minima2.getBoolean(6, 2));
+        BinaryArray2D maxima2 = MinimaAndMaxima.regionalMaxima2d(res, Connectivity2D.C4);
+        assertFalse(maxima2.getBoolean(1, 2));
+        assertTrue(maxima2.getBoolean(2, 2));
+        assertFalse(maxima2.getBoolean(3, 2));
+        assertFalse(maxima2.getBoolean(4, 2));
+        assertTrue(maxima2.getBoolean(5, 2));
+        assertFalse(maxima2.getBoolean(6, 2));
 
         // keep relative ordering of other values
         assertTrue(res.getValue(5, 1) > res.getValue(3, 1));
@@ -483,7 +485,7 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMaxima_ramp_float64()
     {
-        Float64Array2D array = create_ramp_7x5_Float64();
+        Float64Array2D array = TestArrays.create_ramp_7x5_Float64();
         BinaryArray2D maxima = BinaryArray2D.create(array.size(0), array.size(1));
         maxima.setBoolean(2, 2, true);
         maxima.setBoolean(5, 2, true);
@@ -491,13 +493,13 @@ public class MinimaAndMaximaTest
         ScalarArray2D<?> res = MinimaAndMaxima.imposeMaxima2d(array, maxima, Connectivity2D.C4);
         
         // check markers correspond to minimal values
-        BinaryArray2D minima2 = MinimaAndMaxima.regionalMaxima2d(res, Connectivity2D.C4);
-        assertFalse(minima2.getBoolean(1, 2));
-        assertTrue(minima2.getBoolean(2, 2));
-        assertFalse(minima2.getBoolean(3, 2));
-        assertFalse(minima2.getBoolean(4, 2));
-        assertTrue(minima2.getBoolean(5, 2));
-        assertFalse(minima2.getBoolean(6, 2));
+        BinaryArray2D maxima2 = MinimaAndMaxima.regionalMaxima2d(res, Connectivity2D.C4);
+        assertFalse(maxima2.getBoolean(1, 2));
+        assertTrue(maxima2.getBoolean(2, 2));
+        assertFalse(maxima2.getBoolean(3, 2));
+        assertFalse(maxima2.getBoolean(4, 2));
+        assertTrue(maxima2.getBoolean(5, 2));
+        assertFalse(maxima2.getBoolean(6, 2));
 
         // keep relative ordering of other values
         assertTrue(res.getValue(5, 1) > res.getValue(3, 1));
@@ -507,12 +509,12 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMaxima_ramp3d_uint8()
     {
-        UInt8Array3D array = create_ramp_7x5x5_UInt8();
-        BinaryArray3D minima = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
-        minima.setBoolean(2, 2, 2, true);
-        minima.setBoolean(5, 2, 2, true);
+        UInt8Array3D array = TestArrays.create_ramp_7x5x5_UInt8();
+        BinaryArray3D maxima = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
+        maxima.setBoolean(2, 2, 2, true);
+        maxima.setBoolean(5, 2, 2, true);
 
-        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima3d(array, minima, Connectivity3D.C6);
+        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima3d(array, maxima, Connectivity3D.C6);
 
         // check markers correspond to minimal values
         assertEquals(255.0, res.getValue(2, 2, 2), 0.01);
@@ -525,21 +527,21 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMaxima_ramp3d_float32()
     {
-        Float32Array3D array = create_ramp_7x5x5_Float32();
-        BinaryArray3D minima = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
-        minima.setBoolean(2, 2, 2, true);
-        minima.setBoolean(5, 2, 2, true);
+        Float32Array3D array = TestArrays.create_ramp_7x5x5_Float32();
+        BinaryArray3D maxima = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
+        maxima.setBoolean(2, 2, 2, true);
+        maxima.setBoolean(5, 2, 2, true);
 
-        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima3d(array, minima, Connectivity3D.C6);
+        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima3d(array, maxima, Connectivity3D.C6);
 
         // check markers correspond to maximal values
-        BinaryArray3D minima2 = MinimaAndMaxima.regionalMaxima3d(res, Connectivity3D.C6);
-        assertFalse(minima2.getBoolean(1, 2, 2));
-        assertTrue(minima2.getBoolean(2, 2, 2));
-        assertFalse(minima2.getBoolean(3, 2, 2));
-        assertFalse(minima2.getBoolean(4, 2, 2));
-        assertTrue(minima2.getBoolean(5, 2, 2));
-        assertFalse(minima2.getBoolean(6, 2, 2));
+        BinaryArray3D maxima2 = MinimaAndMaxima.regionalMaxima3d(res, Connectivity3D.C6);
+        assertFalse(maxima2.getBoolean(1, 2, 2));
+        assertTrue(maxima2.getBoolean(2, 2, 2));
+        assertFalse(maxima2.getBoolean(3, 2, 2));
+        assertFalse(maxima2.getBoolean(4, 2, 2));
+        assertTrue(maxima2.getBoolean(5, 2, 2));
+        assertFalse(maxima2.getBoolean(6, 2, 2));
 
         // keep relative ordering of other values
         assertTrue(res.getValue(5, 1, 1) > res.getValue(3, 1, 1));
@@ -549,97 +551,25 @@ public class MinimaAndMaximaTest
     @Test
     public final void testImposeMaxima_ramp3d_float64()
     {
-        Float64Array3D array = create_ramp_7x5x5_Float64();
-        BinaryArray3D minima = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
-        minima.setBoolean(2, 2, 2, true);
-        minima.setBoolean(5, 2, 2, true);
+        Float64Array3D array = TestArrays.create_ramp_7x5x5_Float64();
+        BinaryArray3D maxima = BinaryArray3D.create(array.size(0), array.size(1), array.size(2));
+        maxima.setBoolean(2, 2, 2, true);
+        maxima.setBoolean(5, 2, 2, true);
 
-        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima3d(array, minima, Connectivity3D.C6);
+        ScalarArray3D<?> res = MinimaAndMaxima.imposeMaxima3d(array, maxima, Connectivity3D.C6);
 
         // check markers correspond to maximal values
-        BinaryArray3D minima2 = MinimaAndMaxima.regionalMaxima3d(res, Connectivity3D.C6);
-        assertFalse(minima2.getBoolean(1, 2, 2));
-        assertTrue(minima2.getBoolean(2, 2, 2));
-        assertFalse(minima2.getBoolean(3, 2, 2));
-        assertFalse(minima2.getBoolean(4, 2, 2));
-        assertTrue(minima2.getBoolean(5, 2, 2));
-        assertFalse(minima2.getBoolean(6, 2, 2));
+        BinaryArray3D maxima2 = MinimaAndMaxima.regionalMaxima3d(res, Connectivity3D.C6);
+        assertFalse(maxima2.getBoolean(1, 2, 2));
+        assertTrue(maxima2.getBoolean(2, 2, 2));
+        assertFalse(maxima2.getBoolean(3, 2, 2));
+        assertFalse(maxima2.getBoolean(4, 2, 2));
+        assertTrue(maxima2.getBoolean(5, 2, 2));
+        assertFalse(maxima2.getBoolean(6, 2, 2));
 
         // keep relative ordering of other values
         assertTrue(res.getValue(5, 1, 1) > res.getValue(3, 1, 1));
         assertTrue(res.getValue(5, 3, 1) > res.getValue(3, 3, 1));
     }
     
-    private UInt8Array2D createSimpleProfileArrray2D()
-    {
-        int[] values = new int[] {70, 20, 50, 40, 60, 30, 50, 10, 50, 40, 70};
-        int nRows = 5;
-        UInt8Array2D array = UInt8Array2D.create(values.length, nRows);
-        array.fillInts((x,y) -> values[x]);
-        return array;
-    }
-    
-    private UInt8Array3D createSimpleProfileArrray3D()
-    {
-        int[] values = new int[] {70, 20, 50, 40, 60, 30, 50, 10, 50, 40, 70};
-        int nRows = 5;
-        UInt8Array3D array = UInt8Array3D.create(values.length, nRows, nRows);
-        array.fillInts((x,y,z) -> values[x]);
-        return array;
-    }
-    
-    private UInt8Array2D create_ramp_7x5_UInt8()
-    {
-        int[] values = new int[] {10, 20, 30, 40, 50, 60, 70};
-        int nRows = 5;
-        UInt8Array2D array = UInt8Array2D.create(values.length, nRows);
-        array.fillInts((x,y) -> values[x]);
-        return array;
-    }
-    
-    private Float32Array2D create_ramp_7x5_Float32()
-    {
-        double[] values = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7};
-        int nRows = 5;
-        Float32Array2D array = Float32Array2D.create(values.length, nRows);
-        array.fillValues((x,y) -> values[x]);
-        return array;
-    }
-    
-    private Float64Array2D create_ramp_7x5_Float64()
-    {
-        double[] values = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7};
-        int nRows = 5;
-        Float64Array2D array = Float64Array2D.create(values.length, nRows);
-        array.fillValues((x,y) -> values[x]);
-        return array;
-    }
-    
-    private UInt8Array3D create_ramp_7x5x5_UInt8()
-    {
-        int[] values = new int[] {10, 20, 30, 40, 50, 60, 70};
-        int nRows = 5;
-        UInt8Array3D array = UInt8Array3D.create(values.length, nRows, nRows);
-        array.fillInts((x,y,z) -> values[x]);
-        return array;
-    }
-    
-    private Float32Array3D create_ramp_7x5x5_Float32()
-    {
-        double[] values = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7};
-        int nRows = 5;
-        Float32Array3D array = Float32Array3D.create(values.length, nRows, nRows);
-        array.fillValues((x,y,z) -> values[x]);
-        return array;
-    }
-
-    private Float64Array3D create_ramp_7x5x5_Float64()
-    {
-        double[] values = new double[] {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7};
-        int nRows = 5;
-        Float64Array3D array = Float64Array3D.create(values.length, nRows, nRows);
-        array.fillValues((x,y,z) -> values[x]);
-        return array;
-    }
-
 }

@@ -6,7 +6,11 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	RegionalExtrema2DTest.class,
+    MaximaImpositionTest.class,
+    MinimaImpositionTest.class,
+    RegionalExtrema2DTest.class,
+    RegionalExtrema2DGenericTest.class,
+    RegionalExtrema3DTest.class,
 	})
 public class AllTests {
   //nothing
