@@ -170,6 +170,56 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
         // arrays
         ScalarArray2D<?> result = initializeResult(marker, mask);
         
+        processInPlace(result, mask);
+        
+        return result;
+    }
+    
+    private ScalarArray2D<?> initializeResult(ScalarArray2D<?> marker, ScalarArray2D<?> mask)
+    {
+        // retrieve image size
+        int sizeX = marker.size(0);
+        int sizeY = marker.size(1);
+        
+        // Create result image the same size as the mask image
+        ScalarArray2D<?> result = ScalarArray2D.wrap(mask.newInstance(sizeX, sizeY));
+        
+        for (int y = 0; y < sizeY; y++)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                double v1 = marker.getValue(x, y) * this.sign;
+                double v2 = mask.getValue(x, y) * this.sign;
+                result.setValue(x, y, Math.min(v1, v2) * this.sign);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Applies morphological reconstruction algorithm directly to the specified
+     * result array.
+     * 
+     * @param result
+     *            the array that will be used for morphological reconstruction,
+     *            and that will be updated during the process.
+     * @param mask
+     *            the mask array used to constrain the reconstruction
+     */
+    public void processInPlace(ScalarArray2D<?> result, ScalarArray2D<?> mask)
+    {
+        // Check sizes are consistent
+        if (!Arrays.isSameSize(result, mask))
+        {
+            throw new IllegalArgumentException("Result and Mask images must have the same size");
+        }
+        
+        // Check connectivity has a correct value
+        if (connectivity != Connectivity2D.C4 && connectivity != Connectivity2D.C8)
+        {
+            throw new RuntimeException("Connectivity for planar images must be either 4 or 8, not " + connectivity);
+        }
+        
         // Display current status
         fireStatusChanged(this, "Morpho. Rec. Forward");
         
@@ -208,35 +258,8 @@ public class MorphologicalReconstruction2DHybrid extends AlgoStub implements Mor
         {
             processQueueC8(result, queue, mask);
         }
-        
-        return result;
     }
-    
-    
-    // ==================================================
-    // Inner processing methods
-    
-    private ScalarArray2D<?> initializeResult(ScalarArray2D<?> marker, ScalarArray2D<?> mask)
-    {
-        // retrieve image size
-        int sizeX = marker.size(0);
-        int sizeY = marker.size(1);
-        
-        // Create result image the same size as the mask image
-        ScalarArray2D<?> result = ScalarArray2D.wrap(mask.newInstance(sizeX, sizeY));
-        
-        for (int y = 0; y < sizeY; y++)
-        {
-            for (int x = 0; x < sizeX; x++)
-            {
-                double v1 = marker.getValue(x, y) * this.sign;
-                double v2 = mask.getValue(x, y) * this.sign;
-                result.setValue(x, y, Math.min(v1, v2) * this.sign);
-            }
-        }
-        return result;
-    }
-    
+
     /**
      * Update result image using pixels in the upper left neighborhood, using
      * the 4-adjacency.

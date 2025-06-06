@@ -173,17 +173,7 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
         fireStatusChanged(this, "Initialize result");
         ScalarArray3D<?> result = initializeResult(marker, mask);
         
-        // Display current status
-        fireStatusChanged(this, "Forward iteration");
-        forwardScan(result, mask);
-        
-        // Display current status
-        fireStatusChanged(this, "Backward iteration");
-        Deque<int[]> queue = backwardScanInitQueue(result, mask);
-        
-        // Display current status
-        fireStatusChanged(this, "Process queue");
-        processQueue(result, queue, mask);
+        processInPlace(result, mask);
         
         return result;
     }
@@ -223,6 +213,45 @@ public class MorphologicalReconstruction3DHybrid extends AlgoStub implements Mor
         return result;
     }
     
+    /**
+     * Run the morphological reconstruction algorithm using the specified arrays
+     * as argument.
+     * 
+     * @param marker
+     *            the 3D array of the marker
+     * @param mask
+     *            the 3D array of the mask
+     * @return the morphological reconstruction of the marker array constrained
+     *         to the mask array
+     */
+    public void processInPlace(ScalarArray3D<?> result, ScalarArray3D<?> mask)
+    {
+        // Check dimensions consistency
+        if (!Arrays.isSameSize(result, mask))
+        {
+            throw new IllegalArgumentException("Result and Mask images must have the same size");
+        }
+        
+        // Check connectivity has a correct value
+        if (connectivity != Connectivity3D.C6 && connectivity != Connectivity3D.C26)
+        {
+            throw new RuntimeException("Connectivity for stacks must be either 6 or 26, not " + connectivity);
+        }
+        
+        // Display current status
+        fireStatusChanged(this, "Forward iteration");
+        forwardScan(result, mask);
+        
+        // Display current status
+        fireStatusChanged(this, "Backward iteration");
+        Deque<int[]> queue = backwardScanInitQueue(result, mask);
+        
+        // Display current status
+        fireStatusChanged(this, "Process queue");
+        processQueue(result, queue, mask);
+    }
+    
+
     private void forwardScan(ScalarArray3D<?> result, ScalarArray3D<?> mask)
     {
         if (this.connectivity == Connectivity3D.C6)
