@@ -18,8 +18,9 @@ import net.sci.array.numeric.ScalarArray3D;
 import net.sci.image.connectivity.Connectivity;
 import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.connectivity.Connectivity3D;
-import net.sci.image.morphology.MorphologicalReconstruction;
 import net.sci.image.morphology.MorphologicalReconstruction.Type;
+import net.sci.image.morphology.reconstruction.MorphologicalReconstruction2DHybrid;
+import net.sci.image.morphology.reconstruction.MorphologicalReconstruction3DHybrid;
 import net.sci.image.morphology.reconstruction.MorphologicalReconstructionHybridScalar;
 
 /**
@@ -108,8 +109,11 @@ public class MinimaImposition extends AlgoStub
     {
         Connectivity2D conn2d = this.conn != null ? Connectivity2D.convert(this.conn) : Connectivity2D.C4; 
         ScalarArray<?>[] data = initializeMarkerAndMask(array, minima);
-        // TODO: add a "processInPlace" method somewhere
-        return MorphologicalReconstruction.reconstructByErosion2d(ScalarArray2D.wrap(data[0]), ScalarArray2D.wrap(data[1]), conn2d);
+        ScalarArray2D<?> result = ScalarArray2D.wrap(data[0]);
+        
+        MorphologicalReconstruction2DHybrid algo = new MorphologicalReconstruction2DHybrid(Type.BY_EROSION, conn2d);
+        algo.processInPlace(result, ScalarArray2D.wrap(data[1]));
+        return result;
     }
     
     /**
@@ -126,8 +130,11 @@ public class MinimaImposition extends AlgoStub
     {
         Connectivity3D conn3d = this.conn != null ? Connectivity3D.convert(this.conn) : Connectivity3D.C6; 
         ScalarArray<?>[] data = initializeMarkerAndMask(array, minima);
-        // TODO: add a "processInPlace" method somewhere
-        return MorphologicalReconstruction.reconstructByErosion3d(ScalarArray3D.wrap(data[0]), ScalarArray3D.wrap(data[1]), conn3d);
+        ScalarArray3D<?> result = ScalarArray3D.wrap(data[0]);
+        
+        MorphologicalReconstruction3DHybrid algo = new MorphologicalReconstruction3DHybrid(Type.BY_EROSION, conn3d);
+        algo.processInPlace(result, ScalarArray3D.wrap(data[1]));
+        return result;
     }
 
     /**

@@ -6,7 +6,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	// generic classes
-	FloodFillTest.class,
+    FloodFillTest.class,
+    MinimaAndMaximaTest.class,
     MorphologicalReconstructionTest.class,
 	})
 public class AllTests {

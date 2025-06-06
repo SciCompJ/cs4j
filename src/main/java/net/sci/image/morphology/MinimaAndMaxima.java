@@ -256,7 +256,6 @@ public class MinimaAndMaxima
         
         MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
-        // TODO: could use processInPlace()
         ScalarArray2D<?> rec = algo.process(array, mask);
         
         return regionalMaxima(rec, conn);
@@ -299,7 +298,6 @@ public class MinimaAndMaxima
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
-        // TODO: could use processInPlace()
         ScalarArray3D<?> rec = algo.process(array, mask);
         
         return regionalMaxima(rec, conn);
@@ -339,7 +337,6 @@ public class MinimaAndMaxima
         ScalarArray2D<?> marker = ScalarArray2D.wrapScalar2d(new AddValue(dynamic).createView(array));
 
         MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(MorphologicalReconstruction.Type.BY_EROSION, conn);
-        // TODO: could use processInPlace()
         ScalarArray2D<?> rec = algo.process(marker, array);
 
         return regionalMinima(rec, conn);
@@ -382,7 +379,6 @@ public class MinimaAndMaxima
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(
                 MorphologicalReconstruction.Type.BY_EROSION, conn);
-        // TODO: could use processInPlace()
         ScalarArray3D<?> rec = algo.process(marker, array);
 
         return regionalMinima(rec, conn);
