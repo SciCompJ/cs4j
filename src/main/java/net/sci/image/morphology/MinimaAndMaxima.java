@@ -20,6 +20,7 @@ import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.numeric.process.AddValue;
 import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.connectivity.Connectivity3D;
+import net.sci.image.morphology.extrema.MinimaImposition;
 import net.sci.image.morphology.extrema.RegionalExtrema2D;
 import net.sci.image.morphology.extrema.RegionalExtrema3D;
 import net.sci.image.morphology.reconstruction.MorphologicalReconstruction2D;
@@ -255,6 +256,7 @@ public class MinimaAndMaxima
         
         MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
+        // TODO: could use processInPlace()
         ScalarArray2D<?> rec = algo.process(array, mask);
         
         return regionalMaxima(rec, conn);
@@ -297,6 +299,7 @@ public class MinimaAndMaxima
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
+        // TODO: could use processInPlace()
         ScalarArray3D<?> rec = algo.process(array, mask);
         
         return regionalMaxima(rec, conn);
@@ -336,6 +339,7 @@ public class MinimaAndMaxima
         ScalarArray2D<?> marker = ScalarArray2D.wrapScalar2d(new AddValue(dynamic).createView(array));
 
         MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(MorphologicalReconstruction.Type.BY_EROSION, conn);
+        // TODO: could use processInPlace()
         ScalarArray2D<?> rec = algo.process(marker, array);
 
         return regionalMinima(rec, conn);
@@ -378,6 +382,7 @@ public class MinimaAndMaxima
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(
                 MorphologicalReconstruction.Type.BY_EROSION, conn);
+        // TODO: could use processInPlace()
         ScalarArray3D<?> rec = algo.process(marker, array);
 
         return regionalMinima(rec, conn);
@@ -532,32 +537,7 @@ public class MinimaAndMaxima
     public final static ScalarArray2D<?> imposeMinima(ScalarArray2D<?> array, BinaryArray2D minima,
             Connectivity2D conn)
     {
-        ScalarArray2D<?> marker;
-        ScalarArray2D<?> mask;
-        if (array instanceof IntArray2D)
-        {
-            marker = IntArray2D.wrap(array.newInstance(array.size()));
-            mask = IntArray2D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_minima_int((IntArray<?>)array, minima, (IntArray<?>) marker, (IntArray<?>) mask);
-        }
-        else if (array instanceof Float32Array)
-        {
-            marker = Float32Array2D.wrap(array.newInstance(array.size()));
-            mask = Float32Array2D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_minima_float32((Float32Array) array, minima, (Float32Array) marker, (Float32Array) mask);
-        }
-        else if (array instanceof Float64Array)
-        {
-            marker = Float64Array2D.wrap(array.newInstance(array.size()));
-            mask = Float64Array2D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_minima_float64((Float64Array) array, minima, (Float64Array) marker, (Float64Array) mask);
-        }
-        else
-        {
-            throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
-        }
-        
-        return MorphologicalReconstruction.reconstructByErosion2d(marker, mask, conn);
+        return new MinimaImposition(conn).processScalar2d(array, minima);
     }
 
     /**
@@ -589,32 +569,7 @@ public class MinimaAndMaxima
      */
     public final static ScalarArray3D<?> imposeMinima(ScalarArray3D<?> array, BinaryArray3D minima, Connectivity3D conn)
     {
-        ScalarArray3D<?> marker;
-        ScalarArray3D<?> mask;
-        if (array instanceof IntArray3D)
-        {
-            marker = IntArray3D.wrap(array.newInstance(array.size()));
-            mask = IntArray3D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_minima_int((IntArray<?>)array, minima, (IntArray<?>) marker, (IntArray<?>) mask);
-        }
-        else if (array instanceof Float32Array)
-        {
-            marker = Float32Array3D.wrap(array.newInstance(array.size()));
-            mask = Float32Array3D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_minima_float32((Float32Array) array, minima, (Float32Array) marker, (Float32Array) mask);
-        }
-        else if (array instanceof Float64Array)
-        {
-            marker = Float64Array3D.wrap(array.newInstance(array.size()));
-            mask = Float64Array3D.wrap(array.newInstance(array.size()));
-            initializeMarkerAndMask_minima_float64((Float64Array) array, minima, (Float64Array) marker, (Float64Array) mask);
-        }
-        else
-        {
-            throw new RuntimeException("Can not process array with class: " + array.getClass().getName());
-        }
-        
-        return MorphologicalReconstruction.reconstructByErosion3d(marker, mask, conn);
+        return new MinimaImposition(conn).processScalar3d(array, minima);
     }
 
     private static final void initializeMarkerAndMask_maxima_int(IntArray<?> array, BinaryArray maxima, IntArray<?> marker, IntArray<?> mask)
@@ -664,57 +619,6 @@ public class MinimaAndMaxima
             {
                 marker.setValue(pos, Double.NEGATIVE_INFINITY);
                 mask.setValue(pos, Math.nextDown(array.getValue(pos)));
-            }
-        }
-    }
-
-    private static final void initializeMarkerAndMask_minima_int(IntArray<?> array, BinaryArray minima, IntArray<?> marker, IntArray<?> mask)
-    {
-        for (int[] pos : array.positions())
-        {
-            if (minima.getBoolean(pos))
-            {
-                marker.setInt(pos, Integer.MIN_VALUE);
-                mask.setInt(pos, Integer.MIN_VALUE);
-            }
-            else
-            {
-                marker.setInt(pos, Integer.MAX_VALUE);
-                mask.setInt(pos, array.getInt(pos) + 1);
-            }
-        }
-    }
-
-    private static final void initializeMarkerAndMask_minima_float32(Float32Array array, BinaryArray minima, Float32Array marker, Float32Array mask)
-    {
-        for (int[] pos : array.positions())
-        {
-            if (minima.getBoolean(pos))
-            {
-                marker.setFloat(pos, Float.NEGATIVE_INFINITY);
-                mask.setFloat(pos, Float.NEGATIVE_INFINITY);
-            }
-            else
-            {
-                marker.setFloat(pos, Float.POSITIVE_INFINITY);
-                mask.setFloat(pos, Math.nextUp(array.getFloat(pos)));
-            }
-        }
-    }
-
-    private static final void initializeMarkerAndMask_minima_float64(Float64Array array, BinaryArray minima, Float64Array marker, Float64Array mask)
-    {
-        for (int[] pos : array.positions())
-        {
-            if (minima.getBoolean(pos))
-            {
-                marker.setValue(pos, Double.NEGATIVE_INFINITY);
-                mask.setValue(pos, Double.NEGATIVE_INFINITY);
-            }
-            else
-            {
-                marker.setValue(pos, Double.POSITIVE_INFINITY);
-                mask.setValue(pos, Math.nextUp(array.getValue(pos)));
             }
         }
     }
