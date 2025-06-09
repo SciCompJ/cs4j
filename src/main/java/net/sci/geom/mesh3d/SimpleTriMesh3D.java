@@ -274,14 +274,10 @@ public class SimpleTriMesh3D implements TriMesh3D
     {
     	if (vertex instanceof Vertex)
     	{
-    		Vertex vertex2 = (Vertex) vertex;
-            if (vertex2.mesh() == this)
-            {
-    			return vertex2.index;		
-            }
+    	    return ((Vertex) vertex).index;		
     	}
 
-    	throw new RuntimeException("vertex does not belong to mesh");
+    	throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
     }
 
     public Point3D vertexPosition(int index)
@@ -431,11 +427,7 @@ public class SimpleTriMesh3D implements TriMesh3D
     {
     	if (face instanceof Face)
     	{
-    		Face face2 = (Face) face;
-            if (face2.mesh() == this)
-            {
-    			return face2.index;		
-            }
+    		return ((Face) face).index;		
     	}
 
     	throw new RuntimeException("vertex does not belong to mesh");
@@ -576,12 +568,6 @@ public class SimpleTriMesh3D implements TriMesh3D
             return normal.normalize();
         }
 
-        @Override
-        public Mesh3D mesh()
-        {
-        	return SimpleTriMesh3D.this;
-        }
-
        
         // ===================================================================
         // Override equals and hashcode to allow indexing
@@ -594,11 +580,6 @@ public class SimpleTriMesh3D implements TriMesh3D
                 return false;
             }
             Vertex that = (Vertex) obj;
-            
-            if (this.mesh() != that.mesh())
-            {
-            	return false;
-            }
             return this.index == that.index;
         }
         
@@ -669,13 +650,6 @@ public class SimpleTriMesh3D implements TriMesh3D
             return faceVertices;
         }
         
-        @Override
-        public Mesh3D mesh()
-        {
-        	return SimpleTriMesh3D.this;
-        }
-
-
         // ===================================================================
         // Override equals and hashcode to allow indexing
         
@@ -689,10 +663,6 @@ public class SimpleTriMesh3D implements TriMesh3D
             
             Face that = (Face) obj;
             if (this.index != that.index) return false;
-            if (this.mesh() != that.mesh())
-            {
-            	return false;
-            }
             return true;
         }
         

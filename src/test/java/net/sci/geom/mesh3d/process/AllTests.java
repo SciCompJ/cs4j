@@ -7,6 +7,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 	// generic classes
     SmoothTest.class,
+    IntersectionMeshPlaneTest.class,
 	})
 public class AllTests {
   //nothing

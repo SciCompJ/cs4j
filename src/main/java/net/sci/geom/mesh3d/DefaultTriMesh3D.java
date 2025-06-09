@@ -724,14 +724,10 @@ public class DefaultTriMesh3D implements TriMesh3D
     {
     	if (face instanceof Face)
     	{
-    		Face face2 = (Face) face;
-            if (face2.mesh() == this)
-            {
-    			return face2.index;		
-            }
+    		return ((Face) face).index;		
     	}
 
-    	throw new RuntimeException("face does not belong to mesh");
+    	throw new IllegalArgumentException("Face should be an instance of inner Face implementation");
     }
 
     @Override
@@ -880,12 +876,6 @@ public class DefaultTriMesh3D implements TriMesh3D
             return normal.normalize();
         }
         
-        @Override
-        public Mesh3D mesh()
-        {
-        	return DefaultTriMesh3D.this;
-        }
-
 
         // ===================================================================
         // Override equals and hashcode to allow indexing
@@ -900,7 +890,6 @@ public class DefaultTriMesh3D implements TriMesh3D
             
             Vertex that = (Vertex) obj;
             if (this.index != that.index) return false;
-            if (this.mesh() != that.mesh()) return false;
             return true;
         }
         
@@ -971,12 +960,6 @@ public class DefaultTriMesh3D implements TriMesh3D
             return faceVertices;
         }
 
-        @Override
-        public Mesh3D mesh()
-        {
-        	return DefaultTriMesh3D.this;
-        }
-
 
         // ===================================================================
         // Override equals and hashcode to allow indexing
@@ -991,7 +974,6 @@ public class DefaultTriMesh3D implements TriMesh3D
             
             Face that = (Face) obj;
             if (this.index != that.index) return false;
-            if (this.mesh() != that.mesh()) return false;
             return true;
         }
         
@@ -1080,12 +1062,6 @@ public class DefaultTriMesh3D implements TriMesh3D
             return this.iv2 - that.iv2;
         }
 
-        @Override
-        public Mesh3D mesh()
-        {
-        	return DefaultTriMesh3D.this;
-        }
-
 
         // ===================================================================
         // Override equals and hashcode to allow indexing
@@ -1101,7 +1077,6 @@ public class DefaultTriMesh3D implements TriMesh3D
             Edge that = (Edge) obj;
             if (this.iv1 != that.iv1) return false;
             if (this.iv2 != that.iv2) return false;
-            if (this.mesh() != that.mesh()) return false;
             return true;
         }
         

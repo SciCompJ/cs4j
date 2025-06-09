@@ -218,11 +218,6 @@ public interface Mesh3D extends Geometry3D
          * @return the normal of this vertex, as a 3D Vector
          */
         public Vector3D normal();
-        
-        /**
-         * @return the parent mesh of this vertex.
-         */
-        public Mesh3D mesh();
     }
     
     /**
@@ -240,13 +235,7 @@ public interface Mesh3D extends Geometry3D
          */
         public Vector3D normal();
         
-        
         public Iterable<Vertex> vertices();
-        
-        /**
-         * @return the parent mesh of this face.
-         */
-        public Mesh3D mesh();
     }
     
     
@@ -293,11 +282,6 @@ public interface Mesh3D extends Geometry3D
          * @return the line segment that represents this edge.
          */
         public LineSegment3D curve();
-        
-        /**
-         * @return the parent mesh of this edge.
-         */
-        public Mesh3D mesh();
     }
     
 }
