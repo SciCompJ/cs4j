@@ -42,7 +42,7 @@ public class Mesh3DTest
     @Test
     public final void testEdges_Iterator()
     {
-        Mesh3D mesh = Meshes3D.createOctahedron();
+        EdgeMesh3D mesh = (EdgeMesh3D) Meshes3D.createOctahedron();
         
         int count = 0;
         for (@SuppressWarnings("unused") Edge e : mesh.edges())
@@ -71,7 +71,7 @@ public class Mesh3DTest
     public final void testEdges()
     {
         // Create an octahedron
-        Mesh3D mesh = Meshes3D.createOctahedron();
+        EdgeMesh3D mesh = (EdgeMesh3D) Meshes3D.createOctahedron();
         assertEquals(12, mesh.edgeCount());
     }
     
@@ -79,7 +79,7 @@ public class Mesh3DTest
     public final void testIntersectEdgesWithPlane()
     {
         // Create an octahedron
-        Mesh3D mesh = Meshes3D.createOctahedron();
+        EdgeMesh3D mesh = (EdgeMesh3D) Meshes3D.createOctahedron();
         
         Point3D p0 = new Point3D(0, 0, .5);
         Vector3D v1 = new Vector3D(1, 0, 0);

@@ -24,7 +24,7 @@ import net.sci.geom.geom3d.Vector3D;
  * @author dlegland
  *
  */
-public class DefaultTriMesh3D implements TriMesh3D
+public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D
 {
     // ===================================================================
     // Static factories

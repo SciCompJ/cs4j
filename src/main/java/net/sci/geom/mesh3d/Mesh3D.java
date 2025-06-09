@@ -49,16 +49,6 @@ public interface Mesh3D extends Geometry3D
     // Topological queries
     
     /**
-     * Returns the collection of edges adjacent to a given vertex (optional
-     * operation).
-     * 
-     * @param vertex
-     *            the vertex
-     * @return the edges adjacent to the specified vertex
-     */
-    public Collection<? extends Edge> vertexEdges(Vertex vertex);
-
-    /**
      * Returns the collection of faces adjacent to a given vertex.
      * 
      * @param vertex
@@ -75,26 +65,6 @@ public interface Mesh3D extends Geometry3D
      * @return the neighbors of the reference vertex
      */
     public Collection<? extends Vertex> vertexNeighbors(Vertex vertex);
-    
-    /**
-     * Returns the collection of vertices adjacent to a given edge (optional
-     * operation).
-     * 
-     * @param edge
-     *            the edge
-     * @return the vertices adjacent to the specified edge
-     */
-    public Collection<? extends Vertex> edgeVertices(Edge edge);
-    
-    /**
-     * Returns the collection of faces adjacent to a given edge (optional
-     * operation).
-     * 
-     * @param edge
-     *            the edge
-     * @return the faces adjacent to the specified edge
-     */
-    public Collection<? extends Face> edgeFaces(Edge edge);
     
     /**
      * Returns the collection of vertices adjacent to a given face.
@@ -140,42 +110,6 @@ public interface Mesh3D extends Geometry3D
     public void removeVertex(Vertex vertex);
     
 
-    // ===================================================================
-    // Management of edges ? 
-    
-    /**
-     * @return the number of edges in this mesh (optional operation).
-     */
-    public int edgeCount();
-
-    /**
-     * Returns the collection of edges within this mesh (optional operation).
-     * 
-     * @return the collection of edges within this mesh.
-     */
-    public Iterable<? extends Edge> edges();
-
-    /**
-     * Adds an edge to this mesh structure (optional operation).
-     * 
-     * @param v1
-     *            the source vertex
-     * @param v2
-     *            the target vertex
-     * @return the edge instance
-     */
-    public Edge addEdge(Vertex v1, Vertex v2);
-    
-    /**
-     * Removes an edge from this mesh (optional operation). The edge should not
-     * belong to any face.
-     * 
-     * @param edge
-     *            the edge to remove.
-     */
-    public void removeEdge(Edge edge);
-
-    
     // ===================================================================
     // Management of faces
 

@@ -129,12 +129,6 @@ public class SimpleTriMesh3D implements TriMesh3D
     // Topological queries
     
     @Override
-    public Collection<Edge> vertexEdges(Mesh3D.Vertex vertex)
-    {
-        throw new UnsupportedOperationException("This implementation does not support edges");
-    }
-
-    @Override
     public Collection<Mesh3D.Face> vertexFaces(Mesh3D.Vertex vertex)
     {
         int index = getVertex(vertex).index;
@@ -183,18 +177,6 @@ public class SimpleTriMesh3D implements TriMesh3D
             vertices.add(new Vertex(ind));
         }
         return vertices;
-    }
-
-    @Override
-    public Collection<Mesh3D.Vertex> edgeVertices(Edge edge)
-    {
-        throw new UnsupportedOperationException("This implementation does not support edges");
-    }
-
-    @Override
-    public Collection<Mesh3D.Face> edgeFaces(Edge edge)
-    {
-        throw new UnsupportedOperationException("This implementation does not support edges");
     }
 
     @Override
@@ -304,33 +286,6 @@ public class SimpleTriMesh3D implements TriMesh3D
             throw new IllegalArgumentException("Vertex should be an instance of inner Vertex implementation");
         }
         return (Vertex) vertex;
-    }
-
-
-    // ===================================================================
-    // Management of edges
-    
-    @Override
-    public int edgeCount()
-    {
-        return 0;
-    }
-
-    public Iterable<Mesh3D.Edge> edges()
-    {
-        throw new UnsupportedOperationException("This implementation does not support edges");
-    }
-
-    @Override
-    public Edge addEdge(Mesh3D.Vertex v1, Mesh3D.Vertex v2)
-    {
-        throw new UnsupportedOperationException("This implementation does not support edges");
-    }
-
-    @Override
-    public void removeEdge(Edge edge)
-    {
-        throw new UnsupportedOperationException("This implementation does not support edges");
     }
 
 

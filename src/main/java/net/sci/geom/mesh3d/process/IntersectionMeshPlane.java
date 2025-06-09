@@ -12,8 +12,8 @@ import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.polyline.LineString3D;
 import net.sci.geom.geom3d.polyline.LinearRing3D;
 import net.sci.geom.geom3d.polyline.Polyline3D;
+import net.sci.geom.mesh3d.EdgeMesh3D;
 import net.sci.geom.mesh3d.Mesh3D;
-import net.sci.geom.mesh3d.TriMesh3D;
 
 /**
  * @author dlegland
@@ -21,7 +21,7 @@ import net.sci.geom.mesh3d.TriMesh3D;
  */
 public class IntersectionMeshPlane
 {
-    public static final Collection<Polyline3D> intersectionMeshPlane(TriMesh3D mesh, Plane3D plane)
+    public static final Collection<Polyline3D> intersectionMeshPlane(EdgeMesh3D mesh, Plane3D plane)
     {
         // isolate list of edges that intersect plane
         ArrayList<Mesh3D.Edge> intersectingEdges = new ArrayList<Mesh3D.Edge>();
