@@ -75,16 +75,6 @@ public interface Mesh3D extends Geometry3D
      */
     public Collection<? extends Vertex> faceVertices(Face face);
     
-    /**
-     * Returns the collection of edges adjacent to a given face (optional
-     * operation).
-     * 
-     * @param face
-     *            the face
-     * @return the edges adjacent to the specified face
-     */
-    public Collection<? extends Edge> faceEdges(Face face);
-   
 
     // ===================================================================
     // Management of vertices

@@ -158,7 +158,7 @@ public class IntersectionMeshPlane
         }
     }
     
-    private static final Mesh3D.Edge oppositeEdge(Mesh3D mesh, Mesh3D.Face face, Mesh3D.Edge edge, Collection<Mesh3D.Edge> intersectingEdges)
+    private static final Mesh3D.Edge oppositeEdge(EdgeMesh3D mesh, Mesh3D.Face face, Mesh3D.Edge edge, Collection<Mesh3D.Edge> intersectingEdges)
     {
         for (Mesh3D.Edge edg : mesh.faceEdges(face))
         {

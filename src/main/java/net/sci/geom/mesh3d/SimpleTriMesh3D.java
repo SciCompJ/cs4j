@@ -190,13 +190,7 @@ public class SimpleTriMesh3D implements TriMesh3D
         return verts;
     }
 
-    @Override
-    public Collection<Edge> faceEdges(Mesh3D.Face face)
-    {
-        throw new UnsupportedOperationException("This implementation does not support edges");
-    }
-
-
+    
     // ===================================================================
     // Management of vertices
 
