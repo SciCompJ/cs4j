@@ -86,7 +86,7 @@ public class Triangle3D implements Polygon3D
 
 
     @Override
-    public Collection<Point3D> vertices()
+    public Collection<Point3D> vertexPositions()
     {
         return Arrays.asList(p1, p2, p3);
     }

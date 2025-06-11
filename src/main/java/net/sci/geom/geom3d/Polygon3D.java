@@ -22,7 +22,7 @@ public interface Polygon3D extends Geometry3D
     /**
      * @return the list of vertices that compose this polygon.
      */
-    public Collection<Point3D> vertices();
+    public Collection<Point3D> vertexPositions();
 
 
     // ===================================================================
