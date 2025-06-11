@@ -7,14 +7,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.mesh3d.Mesh3D;
+import net.sci.geom.mesh3d.SimplePolygonalMesh3D;
 import net.sci.geom.mesh3d.SimpleTriMesh3D;
 
 /**
+ * Read a 3D mesh from a text file using the OFF format.
+ * 
  * @author dlegland
  *
  */
@@ -51,8 +55,8 @@ public class OffMeshReader implements MeshReader
         int nFaces = scanner.nextInt();
         scanner.close();
         
-        SimpleTriMesh3D mesh = new SimpleTriMesh3D(nVertices, nFaces);
-        
+        // read vertices
+        ArrayList<Point3D> vertices = new ArrayList<Point3D>(nVertices); 
         for (int iVertex = 0; iVertex < nVertices; iVertex++)
         {
             Scanner s = new Scanner(readNextNonCommentLine(reader));
@@ -60,28 +64,41 @@ public class OffMeshReader implements MeshReader
             double vx = s.nextDouble();
             double vy = s.nextDouble();
             double vz = s.nextDouble();
-            mesh.addVertex(new Point3D(vx, vy, vz));
+            vertices.add(new Point3D(vx, vy, vz));
             s.close();
         }
         
+        // read faces
+        boolean triMesh = true;
+        ArrayList<int[]> faces = new ArrayList<int[]>(nFaces); 
         for (int iFace = 0; iFace < nFaces; iFace++)
         {
             Scanner s = new Scanner(readNextNonCommentLine(reader));
-            if (s.nextInt() != 3)
+            int nvf = s.nextInt();
+            if (nvf != 3) triMesh = false;
+            int[] inds = new int[nvf];
+            for (int iv = 0; iv < nvf; iv++)
             {
-                s.close();
-                throw new RuntimeException("Can only process triangular meshes");
+                inds[iv] = s.nextInt();
             }
-            int iv1 = s.nextInt();
-            int iv2 = s.nextInt();
-            int iv3 = s.nextInt();
-            mesh.addFace(iv1, iv2, iv3);
+            faces.add(inds);
             s.close();
         }
         
         reader.close();
 
-        return mesh;
+        // create mesh, choosing best type depending on number of vertices per face
+        if (triMesh)
+        {
+            SimpleTriMesh3D mesh = new SimpleTriMesh3D(nVertices, nFaces);
+            for (Point3D v : vertices) mesh.addVertex(v);
+            for (int[] face : faces) mesh.addFace(face[0], face[1], face[2]);
+            return mesh;
+        }
+        else
+        {
+            return new SimplePolygonalMesh3D(vertices, faces);
+        }
     }
     
     private String readNextNonCommentLine(LineNumberReader reader) throws IOException
