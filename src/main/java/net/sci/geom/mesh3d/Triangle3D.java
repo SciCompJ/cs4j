@@ -85,6 +85,16 @@ public class Triangle3D implements Polygon3D
     }
 
 
+    /**
+     * Always return 3.
+     */
+    @Override
+    public int vertexCount()
+    {
+        return 3;
+    }
+
+
     @Override
     public Collection<Point3D> vertexPositions()
     {
