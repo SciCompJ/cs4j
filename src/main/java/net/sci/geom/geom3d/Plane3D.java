@@ -16,7 +16,7 @@ public class Plane3D implements Geometry3D
     // class variables
 
     /**
-     * Coordinates of the origin ofthe plane
+     * Coordinates of the origin of the plane
      */
     protected double x0, y0, z0;
 
@@ -227,7 +227,10 @@ public class Plane3D implements Geometry3D
     }
     
     /**
-     * Computes the projection of the point on this plane and returns result in coordinate of plane.
+     * Computes the projection of the point on this plane and returns result in
+     * coordinate of plane.
+     * 
+     * @see #point(double, double)
      * 
      * @param point
      *            the point to project
@@ -238,14 +241,34 @@ public class Plane3D implements Geometry3D
         Point3D origin = origin();
 
         // origin and direction vectors of the plane
-        Vector3D d1 = new Vector3D(dx1, dy1, dz1);
-        Vector3D d2 = new Vector3D(dx2, dy2, dz2);
+        Vector3D v1 = new Vector3D(dx1, dy1, dz1);
+        Vector3D v2 = new Vector3D(dx2, dy2, dz2);
         
         Vector3D diffPoint = new Vector3D(origin, point);
-        double s = Vector3D.dotProduct(diffPoint, d1) / d1.norm();
-        double t = Vector3D.dotProduct(diffPoint, d2) / d2.norm();
+        double s = Vector3D.dotProduct(diffPoint, v1) / (dx1 * dx1 + dy1 * dy1 + dz1 * dz1);
+        double t = Vector3D.dotProduct(diffPoint, v2) / (dx2 * dx2 + dy2 * dy2 + dz2 * dz2);
 
         return new Point2D(s, t);
+    }
+    
+    /**
+     * Returns the coordinates of the 3D point belonging to the plane and
+     * defined by the two parametric coordinates {@code u} and {@code v}.
+     * 
+     * @see #projection2d(Point3D)
+     * 
+     * @param u
+     *            the coordinate along the first direction vector of the plane
+     * @param v
+     *            the coordinate along the second direction vector of the plane
+     * @return the corresponding 3D point
+     */
+    public Point3D point(double u, double v)
+    {
+        double x = x0 + u * dx1 + v * dx2;
+        double y = y0 + u * dy1 + v * dy2;
+        double z = z0 + u * dz1 + v * dz2;
+        return new Point3D(x, y, z);
     }
     
     public Plane3D transform(AffineTransform3D trans)

@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
+import net.sci.geom.geom2d.Point2D;
+
 /**
  * @author dlegland
  *
@@ -48,6 +50,72 @@ public class Plane3DTest
         Point3D proj = plane.projection(point);
 
         assertTrue(exp.almostEquals(proj, .01));
+    }
+    
+    @Test
+    public final void test_projection2d_planeXY()
+    {
+        Plane3D plane = new Plane3D(new Point3D(10, 10, 10), new Vector3D(10, 0, 0), new Vector3D(0, 10, 0));
+        Point3D point = new Point3D(30, 40, 50);
+
+        Point2D proj = plane.projection2d(point);
+
+        Point2D exp = new Point2D(2, 3);
+        assertTrue(exp.almostEquals(proj, .01));
+    }
+    
+    @Test
+    public final void test_projection2d_planeXZ()
+    {
+        Plane3D plane = new Plane3D(new Point3D(10, 10, 10), new Vector3D(10, 0, 0), new Vector3D(0, 0, 10));
+        Point3D point = new Point3D(30, 40, 50);
+
+        Point2D proj = plane.projection2d(point);
+
+        Point2D exp = new Point2D(2, 4);
+        assertTrue(exp.almostEquals(proj, .01));
+    }
+    
+    @Test
+    public final void test_projection2d_planeYZ()
+    {
+        Plane3D plane = new Plane3D(new Point3D(10, 10, 10), new Vector3D(0, 10, 0), new Vector3D(0, 0, 10));
+        Point3D point = new Point3D(30, 40, 50);
+
+        Point2D proj = plane.projection2d(point);
+
+        Point2D exp = new Point2D(3, 4);
+        assertTrue(exp.almostEquals(proj, .01));
+    }
+    
+    @Test
+    public final void test_point_planeXY()
+    {
+        Plane3D plane = new Plane3D(new Point3D(10, 10, 10), new Vector3D(10, 0, 0), new Vector3D(0, 10, 0));
+        Point3D point = plane.point(2, 3);
+
+        Point3D exp = new Point3D(30, 40, 10);
+        assertTrue(exp.almostEquals(point, .01));
+    }
+    
+    @Test
+    public final void test_point_planeXZ()
+    {
+        Plane3D plane = new Plane3D(new Point3D(10, 10, 10), new Vector3D(10, 0, 0), new Vector3D(0, 0, 10));
+        Point3D point = plane.point(2, 3);
+
+        Point3D exp = new Point3D(30, 10, 40);
+        assertTrue(exp.almostEquals(point, .01));
+    }
+    
+    @Test
+    public final void test_point_planeYZ()
+    {
+        Plane3D plane = new Plane3D(new Point3D(10, 10, 10), new Vector3D(0, 10, 0), new Vector3D(0, 0, 10));
+        Point3D point = plane.point(2, 3);
+
+        Point3D exp = new Point3D(10, 30, 40);
+        assertTrue(exp.almostEquals(point, .01));
     }
     
     /**
