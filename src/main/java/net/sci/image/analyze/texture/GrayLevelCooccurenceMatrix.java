@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.image.analyze;
+package net.sci.image.analyze.texture;
 
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
@@ -11,8 +11,11 @@ import net.sci.array.numeric.IntArray2D;
 import net.sci.array.numeric.ScalarArray2D;
 
 /**
+ * Computation of gray-level co-occcurence matrix within a grayscale image. The
+ * computation of the matrix depends on an offset parameter that corresponds to
+ * the difference of position between two pixels.
+ * 
  * @author dlegland
- *
  */
 public class GrayLevelCooccurenceMatrix extends AlgoStub implements ArrayOperator
 {
