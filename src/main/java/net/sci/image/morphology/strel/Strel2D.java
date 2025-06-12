@@ -3,16 +3,15 @@
  */
 package net.sci.image.morphology.strel;
 
-import net.sci.array.Array2D;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.image.morphology.Strel;
 
 /**
- * Interface for planar structuring elements.
+ * Interface for 2D structuring elements.
  * 
- * <pre>
- * {@code
+ * Example of use:
+ * {@snippet lang="java":
  * // Creates a 5x5 square structuring element
  * Strel2D strel = Strel2D.Shape.SQUARE.fromDiameter(5);
  * 
@@ -20,16 +19,14 @@ import net.sci.image.morphology.Strel;
  * UInt8Array2D array = UInt8Array2D.create(9, 9);
  * array.setValue(4, 4, 255);
  * 
- * // applies dilation on array
+ * // applies morphological dilation on array
  * ScalarArray2D<?> dilated = strel.dilation(array);
  * 
  * // display result
- * System.out.println(dilated);
- * 
+ * dilated.printContent(System.out);
  * }
- * </pre>
  *
- * @see Strel2D
+ * @see Strel3D
  * 
  * @author David Legland
  */
@@ -163,7 +160,7 @@ public interface Strel2D extends Strel
          */
         public Strel2D fromRadius(int radius)
         {
-            if (this == DISK) return new NaiveDiskStrel(radius);
+            if (this == DISK) return new SlidingDiskStrel(radius);
             return fromDiameter(2 * radius + 1);
         }
         
@@ -180,7 +177,7 @@ public interface Strel2D extends Strel
         {
             return switch (this)
             {
-                case DISK -> new NaiveDiskStrel((diam - 1.0) * 0.5);
+                case DISK -> new SlidingDiskStrel((diam - 1.0) * 0.5);
                 case SQUARE ->  new SquareStrel(diam);
                 case DIAMOND -> (diam == 3) ? new Cross3x3Strel() : new DiamondStrel(diam);
                 case OCTAGON -> new OctagonStrel(diam);
@@ -248,9 +245,9 @@ public interface Strel2D extends Strel
      * @param array
      *            the input image
      * @return the result of dilation with this structuring element
-     * @see #erosion(Array2D)
-     * @see #closing(Array2D)
-     * @see #opening(Array2D)
+     * @see #erosion(ScalarArray2D)
+     * @see #closing(ScalarArray2D)
+     * @see #opening(ScalarArray2D)
      */
     public ScalarArray2D<?> dilation(ScalarArray2D<?> array);
 
@@ -261,9 +258,9 @@ public interface Strel2D extends Strel
      * @param array
      *            the input image
      * @return the result of erosion with this structuring element
-     * @see #dilation(Array2D)
-     * @see #closing(Array2D)
-     * @see #opening(Array2D)
+     * @see #dilation(ScalarArray2D)
+     * @see #closing(ScalarArray2D)
+     * @see #opening(ScalarArray2D)
      */
     public ScalarArray2D<?> erosion(ScalarArray2D<?> array);
 
@@ -277,9 +274,9 @@ public interface Strel2D extends Strel
      * @param array
      *            the input image
      * @return the result of closing with this structuring element
-     * @see #dilation(Array2D)
-     * @see #erosion(Array2D)
-     * @see #opening(Array2D)
+     * @see #dilation(ScalarArray2D)
+     * @see #erosion(ScalarArray2D)
+     * @see #opening(ScalarArray2D)
      * @see #reverse()
      */
     public default ScalarArray2D<?> closing(ScalarArray2D<?> array)
@@ -297,9 +294,9 @@ public interface Strel2D extends Strel
      * @param array
      *            the input image
      * @return the result of opening with this structuring element
-     * @see #dilation(Array2D)
-     * @see #erosion(Array2D)
-     * @see #closing(Array2D)
+     * @see #dilation(ScalarArray2D)
+     * @see #erosion(ScalarArray2D)
+     * @see #closing(ScalarArray2D)
      * @see #reverse()
      */
     public default ScalarArray2D<?> opening(ScalarArray2D<?> array)
@@ -353,13 +350,19 @@ public interface Strel2D extends Strel
     /**
      * Returns the structuring element as a set of shifts. The size of the
      * result is N-by-2, where N is the number of elements of the structuring
-     * element. The first value corresponds to the shift in the x direction.
+     * element. For each shift, the first value corresponds to the shift in the
+     * x direction.
      * 
      * @return a set of shifts
      */
     @Override
     public int[][] shifts();
     
+    /**
+     * Returns a dimensionality equals to 2.
+     * 
+     * @returns the value 2.
+     */
     @Override
     public default int dimensionality()
     {
