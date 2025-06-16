@@ -17,7 +17,8 @@ import net.sci.geom.geom2d.PrincipalAxes2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
 
 /**
- * An ellipse, defined by a center, two semi-axis lengths, and one orientation angle in degrees.
+ * An ellipse, defined by a center, two semi-axis lengths, and one orientation
+ * angle in degrees.
  * 
  * @author dlegland
  *
@@ -34,6 +35,57 @@ public class Ellipse2D implements Contour2D
     // ===================================================================
     // Static methods
     
+    /**
+     * Creates a new instance of Ellipse2D enclosed within the bounding box
+     * defined by two corner points.
+     * 
+     * @param p1
+     *            the first corner point
+     * @param p2
+     *            the second corner point
+     * @return a new Ellipse2D fully enclosed within the bounds of the two
+     *         points
+     */
+    public static final Ellipse2D fromCorners(Point2D p1, Point2D p2)
+    {
+        return fromCorners(p1.x(), p1.y(), p2.x(), p2.y());
+    }
+
+    /**
+     * Creates a new instance of Ellipse2D based on the coordinates of two
+     * points delimiting the bounding box of the ellipse.
+     * 
+     * @param x1
+     *            the x-coordinate of the first corner point
+     * @param y1
+     *            the y-coordinate of the first corner point
+     * @param x2
+     *            the x-coordinate of the second corner point
+     * @param y2
+     *            the y-coordinate of the second corner point
+     * @return a new Ellipse2D fully enclosed within the bounds of the two
+     *         points
+     */
+    public static final Ellipse2D fromCorners(double x1, double y1, double x2, double y2)
+    {
+        // compute ellipse parameters
+        double xc = (x1 + x2) * 0.5;
+        double yc = (y1 + y2) * 0.5;
+        double ra = Math.abs(x2 - x1) * 0.5;
+        double rb = Math.abs(y2 - y1) * 0.5;
+        double theta = 0;
+        
+        // ensure ra >= rb
+        if (ra < rb)
+        {
+            double tmp = ra;
+            ra = rb;
+            rb = tmp;
+            theta = 90;
+        }
+        return new Ellipse2D(xc, yc, ra, rb, theta);
+    }
+
     /**
      * Creates a new Ellipse2D instance from a center and the unique
      * coefficients of the inertia matrix. The diagonal coefficients of the

@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 
 import net.sci.geom.geom2d.Bounds2D;
-import net.sci.geom.geom2d.Domain2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
@@ -17,6 +16,49 @@ import net.sci.geom.geom2d.Point2D;
  */
 public class Box2D implements Polygon2D
 {
+    // ===================================================================
+    // Static methods
+    
+    /**
+     * Creates a new instance of Box2D from two opposite corner points.
+     * 
+     * @param p1
+     *            the first corner point
+     * @param p2
+     *            the second corner point
+     * @return a new Ellipse2D fully enclosed within the bounds of the two
+     *         points
+     */
+    public static final Box2D fromCorners(Point2D p1, Point2D p2)
+    {
+        return fromCorners(p1.x(), p1.y(), p2.x(), p2.y());
+    }
+
+    /**
+     * Creates a new instance of Box2D from the coordinates of two opposite
+     * corner points.
+     * 
+     * @param x1
+     *            the x-coordinate of the first corner point
+     * @param y1
+     *            the y-coordinate of the first corner point
+     * @param x2
+     *            the x-coordinate of the second corner point
+     * @param y2
+     *            the y-coordinate of the second corner point
+     * @return a new Ellipse2D fully enclosed within the bounds of the two
+     *         points
+     */
+    public static final Box2D fromCorners(double x1, double y1, double x2, double y2)
+    {
+        double xmin = Math.min(x1, x2);
+        double xmax = Math.max(x1, x2);
+        double ymin = Math.min(y1, y2);
+        double ymax = Math.max(y1, y2);
+        return new Box2D(xmin, xmax, ymin, ymax);
+    }
+    
+
     // ===================================================================
     // class variables
 
@@ -214,7 +256,7 @@ public class Box2D implements Polygon2D
     }
     
     @Override
-    public Domain2D duplicate()
+    public Box2D duplicate()
     {
         return new Box2D(xmin, xmax, ymin, ymax);
     }
