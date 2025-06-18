@@ -423,6 +423,54 @@ public class Ellipse2D implements Contour2D
         return theta;
     }
     
+    public Point2D project(Point2D p)
+    {
+        return project(p.x(), p.y());
+    }
+    
+    public Point2D project(double x, double y)
+    {
+        double[] normCoords = toAlignedEllipse(new double[] {x, y});
+        
+        // restrict to first quadrant
+        boolean flipX = normCoords[0] < 0;
+        boolean flipY = normCoords[1] < 0;
+        if (flipX)
+        {
+            normCoords[0] = -normCoords[0];
+        }
+        if (flipY)
+        {
+            normCoords[1] = -normCoords[1];
+        }
+        
+        double[] newCoords;
+        if (this.r1 >= this.r2)
+        {
+             newCoords = projPointAlignedEllipse(this.r1, this.r2, normCoords[0], normCoords[1]);
+        }
+        else
+        {
+            // use symmetric wrt to xy-diagonal
+            newCoords = projPointAlignedEllipse(this.r2, this.r1, normCoords[1], normCoords[0]);
+        }
+        
+        // flip back
+        if (flipX)
+        {
+            newCoords[0] = -newCoords[0];
+        }
+        if (flipY)
+        {
+            newCoords[1] = -newCoords[1];
+        }
+        
+        // convert to global coordinates, and to point
+        newCoords = fromAlignedEllipse(newCoords);
+        
+        return new Point2D(newCoords[0], newCoords[1]);
+    }
+
 
     // ===================================================================
     // Methods implementing the Boundary2D interface
@@ -590,6 +638,32 @@ public class Ellipse2D implements Contour2D
         };
     }
     
+    /**
+     * Computes the coordinates in the original space, from the coordinates of
+     * the space of the ellipse centered, aligned with x-axis, and with same
+     * size.
+     * 
+     * @param coords
+     *            the coordinates in the normalized space
+     * @return the coordinates in original space
+     */
+    private double[] fromAlignedEllipse(double[] coords)
+    {
+        // compute rotation coefficients
+        double thetaRadians = Math.toRadians(this.theta);
+        double cot = Math.cos(thetaRadians);
+        double sit = Math.sin(thetaRadians);
+        
+        // compute translated coordinates
+        double xn = coords[0];  
+        double yn = coords[1];
+        
+        return new double[] {
+                xn * cot - yn * sit + this.xc, 
+                xn * sit + yn * cot + this.yc, 
+        };
+    }
+    
     /* (non-Javadoc)
      * @see net.sci.geom.Geometry#isBounded()
      */
@@ -708,6 +782,79 @@ public class Ellipse2D implements Contour2D
     }
     
 
+    /**
+     * Projects a point onto an ellipse, in normalized coordinates
+     * (centered ellipse with largest axis oriented along the x-axis). Assumes
+     * {@code r1 > r2}, and query point {@code (qx, qy)} within the first quadrant.
+     *
+     * @param r1
+     *            the semi-axis length along the x-axis
+     * @param r2
+     *            the semi-axis length along the y-axis
+     * @param qx
+     *            the x-coordinate of the query point
+     * @param qy
+     *            the y-coordinate of the query point
+     * @return the distance of the point to the ellipse
+     */
+    private static final double[] projPointAlignedEllipse(double r1, double r2, double qx, double qy)
+    {
+        // coordinates of the projected point
+        double xProj, yProj;
+        
+        // tolerance to decide whether point is on one of the main axes 
+        double tol = r1 * 1e-15; 
+        if (qy > tol)
+        {
+            if (qx > tol)
+            {
+                // need to compute the unique root "tbar" of F(t) within (-r2*r2, infinity)
+                
+                // small change of variable
+                double z0 = qx / r1;
+                double z1 = qy / r2;
+                double g = z0 * z0 + z1 * z1 - 1;
+                if (g != 0)
+                {
+                    double r0 = (r1 / r2) * (r1 / r2);
+                    double sbar = findRoot(r0, z0, z1, g);
+                    xProj = r0 * qx / (sbar + r0);
+                    yProj = qy / (sbar + 1);
+                }
+                else
+                {
+                    xProj = qx;
+                    yProj = qy;
+                }
+            }
+            else
+            {
+                // process  case y0 == 0
+                xProj = qx;
+                yProj = r2;
+            }
+        }
+        else
+        {
+            // process case y1 == 0
+            double numer0 = r1 * qx;
+            double denom0 = r1 * r1 - r2 * r2;
+            if (numer0 < denom0)
+            {
+                double xde0 = numer0 / denom0;
+                xProj = r1 * xde0;
+                yProj = r2 * Math.sqrt(1 - xde0 * xde0);
+            }
+            else
+            {
+                xProj = r1;
+                yProj = 0;
+            }
+        }
+        
+        return new double[] {xProj, yProj};
+    }
+    
     /**
      * Robust root finder based on bisection method. Code from David Eberly, in
      * "Distance from a Point to an Ellipse, an Ellipsoid, or a Hyperellipsoid".
