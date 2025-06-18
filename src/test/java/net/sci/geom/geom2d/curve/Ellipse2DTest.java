@@ -97,4 +97,181 @@ public class Ellipse2DTest
         assertEquals(resSca.r2, expSca.r2, 1e-3);
         assertEquals(resSca.theta, expSca.theta, 1e-3);
     }
+    
+    /**
+     * Test method for {@link net.sci.geom.geom2d.curve.Ellipse2D#distance(double, double)}.
+     */
+    @Test
+    public final void test_distance_centered_aligned()
+    {
+        Ellipse2D elli = new Ellipse2D(0, 0, 30, 20, 0);
+        double dist;
+        
+        // positive x axis (outside)
+        dist = elli.distance(new Point2D(35, 0));
+        assertEquals(5.0, dist, 0.001);
+        
+        // positive x axis (inside)
+        dist = elli.distance(new Point2D(25, 0));
+        assertEquals(5.0, dist, 0.001);
+        
+        // negative x axis (outside)
+        dist = elli.distance(new Point2D(-35, 0));
+        assertEquals(5.0, dist, 0.001);
+        
+        // negative x axis (inside)
+        dist = elli.distance(new Point2D(-25, 0));
+        assertEquals(5.0, dist, 0.001);
+        
+        // positive y axis (outside)
+        dist = elli.distance(new Point2D(0, 25));
+        assertEquals(5.0, dist, 0.001);
+        
+        // positive y axis (inside)
+        dist = elli.distance(new Point2D(0, 15));
+        assertEquals(5.0, dist, 0.001);
+        
+        // negative y axis (outside)
+        dist = elli.distance(new Point2D(0, -25));
+        assertEquals(5.0, dist, 0.001);
+        
+        // negative y axis (inside)
+        dist = elli.distance(new Point2D(0, -15));
+        assertEquals(5.0, dist, 0.001);
+    }
+    
+    /**
+     * Test method for
+     * {@link net.sci.geom.geom2d.curve.Ellipse2D#distance(double, double)}.
+     * 
+     * Computes distance with various points, and compare with a polyline with
+     * "large enough" number of vertices
+     */
+    @Test
+    public final void test_distance_centered_aligned_variousPoints()
+    {
+        Ellipse2D elli = new Ellipse2D(0, 0, 30, 20, 0);
+        LinearRing2D ring = elli.asPolyline(2000);
+        Point2D point;
+        
+        
+        // several points outside of the ellipse
+        
+        point = new Point2D(35, 10);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(25, 25);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(-25, 25);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(25, -25);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(25, -25);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        
+        // several points inside the ellipse
+        
+        point = new Point2D(18, 4);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(-18, 4);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(18, -4);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(-18, -4);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        
+        // several points on the ellipse
+        
+        point = elli.point(0.2);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+        
+        point = elli.point(0.8);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+        
+        point = elli.point(2.1);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+        
+        point = elli.point(4.3);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+        
+        point = elli.point(6.0);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+    }
+    /**
+     * Test method for
+     * {@link net.sci.geom.geom2d.curve.Ellipse2D#distance(double, double)}.
+     * 
+     * Computes distance with various points, and compare with a polyline with
+     * "large enough" number of vertices
+     */
+    @Test
+    public final void test_distance_50_30_40_20_30_variousPoints()
+    {
+        Ellipse2D elli = new Ellipse2D(50, 30, 40, 20, 30);
+        LinearRing2D ring = elli.asPolyline(1440);
+        Point2D point;
+        
+        AffineTransform2D tra = AffineTransform2D.createTranslation(50, 30); 
+        AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(30));
+        AffineTransform2D transfo = tra.compose(rot); 
+
+        
+        // several points outside of the ellipse
+        
+        point = new Point2D(45, 0).transform(transfo);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(25, 25).transform(transfo);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(-25, 25).transform(transfo);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(25, -25).transform(transfo);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(25, -25).transform(transfo);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        
+        // several points inside the ellipse
+        
+        point = new Point2D(18, 4).transform(transfo);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(-18, 4).transform(transfo);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(18, -4).transform(transfo);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        point = new Point2D(-18, -4).transform(transfo);
+        assertEquals(ring.distance(point), elli.distance(point), 0.0001);
+        
+        
+        // several points on the ellipse
+        
+        point = elli.point(0.2);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+        
+        point = elli.point(0.8);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+        
+        point = elli.point(2.1);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+        
+        point = elli.point(4.3);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+        
+        point = elli.point(6.0);
+        assertEquals(0.0, elli.distance(point), 0.0001);
+    }
 }

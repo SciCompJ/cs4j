@@ -17,7 +17,7 @@ import net.sci.geom.geom2d.PrincipalAxes2D;
 import net.sci.geom.geom2d.polygon.LinearRing2D;
 
 /**
- * An ellipse, defined by a center, two semi-axis lengths, and one orientation
+ * An ellipse, defined by a center, two semi-axis lengths, and an orientation
  * angle in degrees.
  * 
  * @author dlegland
@@ -553,9 +553,42 @@ public class Ellipse2D implements Contour2D
     @Override
     public double distance(double x, double y)
     {
-        // TODO could be more precise
-        ensurePolylineExist();
-        return ring.distance(x, y);
+        double[] normCoords = toAlignedEllipse(new double[] {x, y});
+        // restrict to first quadrant
+        normCoords[0] = Math.abs(normCoords[0]);
+        normCoords[1] = Math.abs(normCoords[1]);
+        
+        if (this.r1 >= this.r2)
+        {
+            return distancePointEllipse(this.r1, this.r2, normCoords[0], normCoords[1]);
+        }
+        else
+        {
+            // use symmetric wrt to xy-diagonal
+            return distancePointEllipse(this.r2, this.r1, normCoords[1], normCoords[0]);
+        }
+    }
+    
+    /**
+     * Computes the coordinates in the space of the ellipse centered, aligned with x-axis, and with same size.
+     * @param coords the coordinates in the original space
+     * @return the coordinates in normalized space
+     */
+    private double[] toAlignedEllipse(double[] coords)
+    {
+        // compute translated coordinates
+        double xt = coords[0] - this.xc;  
+        double yt = coords[1] - this.yc;
+        
+        // compute rotation coefficients
+        double thetaRadians = Math.toRadians(-this.theta);
+        double cot = Math.cos(thetaRadians);
+        double sit = Math.sin(thetaRadians);
+        
+        return new double[] {
+                xt * cot - yt * sit, 
+                xt * sit + yt * cot, 
+        };
     }
     
     /* (non-Javadoc)
@@ -591,4 +624,146 @@ public class Ellipse2D implements Contour2D
             ring = asPolyline(120);
         }
     }
+    
+    /**
+     * Computes the distance of a point to an ellipse, in normalized coordinates
+     * (centered ellipse with largest axis oriented along the x-axis). Assumes
+     * e0 > e1.
+     *
+     * @param e0
+     *            the semi-axis length along the x-axis
+     * @param e1
+     *            the semi-axis length along the y-axis
+     * @param y0
+     *            the x-coordinate of the query point
+     * @param y1
+     *            the y-coordinate of the query point
+     * @return the distance of the point to the ellipse
+     */
+    private static final double distancePointEllipse(double e0, double e1, double y0, double y1)
+    {
+        double distance;
+        double x0, x1;
+        
+        if (y1 > 0)
+        {
+            if (y0 > 0)
+            {
+                // need to compute the unique root "tbar" of F(t) within (-e1*e1, infinity)
+                
+                // small change of variable
+                double z0 = y0 / e0;
+                double z1 = y1 / e1;
+                double g = z0 * z0 + z1 * z1 - 1;
+                if (g != 0)
+                {
+                    double r0 = (e0 / e1) * (e0 / e1);
+                    double sbar = findRoot(r0, z0, z1, g);
+                    x0 = r0 * y0 / (sbar + r0);
+                    x1 = y1 / (sbar + 1);
+                    distance = Math.hypot(x0 - y0, x1 - y1);
+                }
+                else
+                {
+                    x0 = y0;
+                    x1 = y1;
+                    distance = 0;
+                }
+            }
+            else
+            {
+                // process  case y0 == 0
+                x0 = y0;
+                x1 = e1;
+                distance = Math.abs(y1 - e1);
+            }
+        }
+        else
+        {
+            // process case y1 == 0
+            double numer0 = e0 * y0;
+            double denom0 = e0 * e0 - e1 * e1;
+            if (numer0 < denom0)
+            {
+                double xde0 = numer0 / denom0;
+                x0 = e0 * xde0;
+                x1 = e1 * Math.sqrt(1 - xde0 * xde0);
+                distance = Math.hypot(x0 - y0, x1);
+            }
+            else
+            {
+                x0 = e0;
+                x1 = 0;
+                distance = Math.abs(y0 - e0);
+            }
+        }
+        
+        return distance;
+    }
+    
+    /**
+     * Robust root finder based on bisection method. Code from David Eberly, in
+     * "Distance from a Point to an Ellipse, an Ellipsoid, or a Hyperellipsoid".
+     * 
+     * Function to solve:
+     * <pre>
+     *            e0 z0             e1 z1 
+     * F(t) = ( ---------- )^2 + (---------- )^2 - 1 = 0 
+     *          t + e0^2           t + e1^2
+     * </pre>
+     * 
+     * @param r0
+     *            the ratio of squared extent, equal to (e0^2 / e1^2).
+     * @param z0
+     *            the first coordinate
+     * @param z1
+     *            the second coordinate
+     * @param g
+     *            quantity related to (equal to?) the signed distance
+     * @return the value of {@code t} such that {@code F(t) = 0}.
+     */
+    private static final double findRoot(double r0, double z0, double z1, double g)
+    {
+        // First transform the problem into  the following equation:
+        //      
+        // G(s) = ( r0 * z0 / (s + r0) )^2  + ( z1 / (s + 1))^2 - 1 
+        // with s ranging from -1 to infinity
+        
+        // compute interval containing the root
+        double n0 = r0 * z0;
+        double s0 = z1 - 1;
+        double s1 = g < 0 ? 0 : Math.hypot(n0, z1) - 1;
+        
+        // the result value
+        double s = 0;
+        
+        // iterate. Use a fixed iteration number, but 
+        // see Eberly's paper for number of iterations
+        final int maxIters = 100;
+        for (int i = 0; i < maxIters; i++)
+        {
+            // cut in the middle of the interval
+            s = (s0 + s1) * 0.5;
+            if (s == s0 || s == s1) break;
+            
+            
+            double ratio0 = n0 / (s + r0);
+            double ratio1 = z1 / (s + 1);
+            g = ratio0 * ratio0 + ratio1 * ratio1 - 1;
+            if (g > 0)
+            {
+                s0 = s;
+            }
+            else if (g < 0)
+            {
+                s1 = s;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return s;
+    }
+    
 }
