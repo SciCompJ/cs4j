@@ -205,6 +205,7 @@ public class Ellipse2DTest
         point = elli.point(6.0);
         assertEquals(0.0, elli.distance(point), 0.0001);
     }
+    
     /**
      * Test method for
      * {@link net.sci.geom.geom2d.curve.Ellipse2D#distance(double, double)}.
@@ -273,5 +274,246 @@ public class Ellipse2DTest
         
         point = elli.point(6.0);
         assertEquals(0.0, elli.distance(point), 0.0001);
+    }
+    
+
+    /**
+     * Test method for {@link net.sci.geom.geom2d.curve.Ellipse2D#signedDistance(net.sci.geom.geom2d.Point2D)}.
+     */
+    @Test
+    public final void test_signedDistance_centered_aligned()
+    {
+        Ellipse2D elli = new Ellipse2D(0, 0, 30, 20, 0);
+        double dist;
+        
+        // positive x axis (outside)
+        dist = elli.signedDistance(new Point2D(35, 0));
+        assertEquals(5.0, dist, 0.001);
+        
+        // positive x axis (inside, close to apex)
+        dist = elli.signedDistance(new Point2D(25, 0));
+        assertEquals(-5.0, dist, 0.001);
+        
+        // positive x axis (inside, close to center)
+        dist = elli.signedDistance(new Point2D(5, 0));
+        assertEquals(-19.5, dist, 0.01);
+        
+        
+        // negative x axis (outside)
+        dist = elli.signedDistance(new Point2D(-35, 0));
+        assertEquals(5.0, dist, 0.001);
+        
+        // negative x axis (inside, close to apex)
+        dist = elli.signedDistance(new Point2D(-25, 0));
+        assertEquals(-5.0, dist, 0.001);
+        
+        // negative x axis (inside, close to center)
+        dist = elli.signedDistance(new Point2D(-5, 0));
+        assertEquals(-19.5, dist, 0.01);
+        
+        
+        // negative x axis (outside)
+        dist = elli.signedDistance(new Point2D(-35, 0));
+        assertEquals( 5.0, dist, 0.001);
+        
+        // negative x axis (inside)
+        dist = elli.signedDistance(new Point2D(-25, 0));
+        assertEquals(-5.0, dist, 0.001);
+        
+        
+        // positive y axis (outside)
+        dist = elli.signedDistance(new Point2D(0, 25));
+        assertEquals(5.0, dist, 0.001);
+        
+        // positive y axis (inside)
+        dist = elli.signedDistance(new Point2D(0, 15));
+        assertEquals(-5.0, dist, 0.001);
+        
+        
+        // negative y axis (outside)
+        dist = elli.signedDistance(new Point2D(0, -25));
+        assertEquals(5.0, dist, 0.001);
+        
+        // negative y axis (inside)
+        dist = elli.signedDistance(new Point2D(0, -15));
+        assertEquals(-5.0, dist, 0.001);
+    }
+    
+    /**
+     * Test method for
+     * {@link net.sci.geom.geom2d.curve.Ellipse2D#signedDistance(net.sci.geom.geom2d.Point2D)}.
+     * 
+     * Computes distance with various points, and compare with a polyline with
+     * "large enough" number of vertices
+     */
+    @Test
+    public final void test_signedDistance_50_30_40_20_30_variousPoints()
+    {
+        Ellipse2D elli = new Ellipse2D(50, 30, 40, 20, 30);
+        LinearRing2D ring = elli.asPolyline(1440);
+        Point2D point;
+        
+        AffineTransform2D tra = AffineTransform2D.createTranslation(50, 30); 
+        AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(30));
+        AffineTransform2D transfo = tra.compose(rot); 
+
+        
+        // several points outside of the ellipse
+        // -> signed distance is positive
+        
+        point = new Point2D(45, 0).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(25, 25).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(-25, 25).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(25, -25).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(25, -25).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        
+        // several points inside the ellipse
+        // -> signed distance is negative
+        
+        point = new Point2D(18, 4).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(-18, 4).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(18, -4).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(-18, -4).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(5, 0.0001).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        point = new Point2D(5, 0).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(-5, 0).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(0, 5).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(0, -5).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        
+        // several points on the ellipse
+        // -> signed distance is zero
+        
+        point = elli.point(0.2);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
+        
+        point = elli.point(0.8);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
+        
+        point = elli.point(2.1);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
+        
+        point = elli.point(4.3);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
+        
+        point = elli.point(6.0);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
+    }
+    
+    /**
+     * Test method for
+     * {@link net.sci.geom.geom2d.curve.Ellipse2D#signedDistance(net.sci.geom.geom2d.Point2D)}.
+     * 
+     * Case of an ellipse with R2 > R1.
+     * Computes distance with various points, and compare with a polyline with
+     * "large enough" number of vertices.
+     */
+    @Test
+    public final void test_signedDistance_50_30_20_40_30_variousPoints()
+    {
+        Ellipse2D elli = new Ellipse2D(50, 30, 20, 40, 30);
+        LinearRing2D ring = elli.asPolyline(1440);
+        Point2D point;
+        
+        AffineTransform2D tra = AffineTransform2D.createTranslation(50, 30); 
+        AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(30));
+        AffineTransform2D transfo = tra.compose(rot); 
+
+        
+        // several points outside of the ellipse
+        // -> signed distance is positive
+        
+        point = new Point2D(25, 0).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(0, 45).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(25, 25).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(-25, 25).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(25, -25).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(25, -25).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        
+        // several points inside the ellipse
+        // -> signed distance is negative
+        
+        point = new Point2D(18, 4).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(-18, 4).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(18, -4).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(-18, -4).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(5, 0.0001).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        point = new Point2D(5, 0).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(-5, 0).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(0, 5).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        point = new Point2D(0, -5).transform(transfo);
+        assertEquals(ring.signedDistance(point), elli.signedDistance(point), 0.0001);
+        
+        
+        // several points on the ellipse
+        // -> signed distance is zero
+        
+        point = elli.point(0.2);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
+        
+        point = elli.point(0.8);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
+        
+        point = elli.point(2.1);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
+        
+        point = elli.point(4.3);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
+        
+        point = elli.point(6.0);
+        assertEquals(0.0, elli.signedDistance(point), 0.0001);
     }
 }

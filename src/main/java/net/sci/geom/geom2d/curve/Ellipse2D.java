@@ -282,19 +282,19 @@ public class Ellipse2D implements Contour2D
     // Class variables
     
     /** X-coordinate of the center. */
-    protected double  xc;
+    final double xc;
 
     /** Y-coordinate of the center. */
-    protected double  yc;
+    final double yc;
 
     /** Length of semi-major axis. Must be positive. */
-    protected double  r1;
+    final double r1;
     
     /** Length of semi-minor axis. Must be positive. */
-    protected double  r2;
+    final double r2;
 
     /** Orientation of major semi-axis, in degrees, between 0 and 180. */
-    protected double  theta  = 0;
+    final double theta;
 
     /**
      * Private instance of Polyline2D used to approximate computation of
@@ -347,6 +347,7 @@ public class Ellipse2D implements Contour2D
         this.r2 = r2;
         this.theta = theta;
     }
+    
 
     // ===================================================================
     // Specific methods
@@ -422,22 +423,31 @@ public class Ellipse2D implements Contour2D
         return theta;
     }
     
-    
+
     // ===================================================================
     // Methods implementing the Boundary2D interface
     
     public double signedDistance(Point2D point)
     {
-        // TODO: could be more precise
-        ensurePolylineExist();
-        return ring.signedDistance(point.x(), point.y());
+        return signedDistance(point.x(), point.y());
     }
 
     public double signedDistance(double x, double y)
     {
-        // TODO: could be more precise
-        ensurePolylineExist();
-        return ring.signedDistance(x, y);
+        double[] normCoords = toAlignedEllipse(new double[] {x, y});
+        // restrict to first quadrant
+        normCoords[0] = Math.abs(normCoords[0]);
+        normCoords[1] = Math.abs(normCoords[1]);
+        
+        if (this.r1 >= this.r2)
+        {
+            return signedDistancePointAlignedEllipse(this.r1, this.r2, normCoords[0], normCoords[1]);
+        }
+        else
+        {
+            // use symmetric wrt to xy-diagonal
+            return signedDistancePointAlignedEllipse(this.r2, this.r1, normCoords[1], normCoords[0]);
+        }
     }
 
     public boolean isInside(Point2D point)
@@ -496,9 +506,7 @@ public class Ellipse2D implements Contour2D
     {
         Ellipse2D result = Ellipse2D.transformCentered(this, trans);
         Point2D center = this.center().transform(trans);
-        result.xc = center.x();
-        result.yc = center.y();
-        return result;
+        return new Ellipse2D(center, result.r1, result.r2, result.theta);
     }
 
 
@@ -516,15 +524,16 @@ public class Ellipse2D implements Contour2D
     }
     
     /**
-	 * Apply to the point the transform that transforms this ellipse into unit
-	 * circle, and computes distance to origin.
-	 * 
-	 * @param x
-	 *            the x-coordinate of the point
-	 * @param y
-	 *            the y-coordinate of the point
-	 * @return the distance of the transformed point to the origin
-	 */
+     * Applies to the point the transform that transforms this ellipse into unit
+     * circle, and computes distance to origin. This quasi-distance can be used
+     * to determine whether the point lies within or outside the ellipse.
+     * 
+     * @param x
+     *            the x-coordinate of the point
+     * @param y
+     *            the y-coordinate of the point
+     * @return the distance of the transformed point to the origin
+     */
     private double quasiDistanceToCenter(double x, double y)
     {
     	// recenter point
@@ -553,25 +562,15 @@ public class Ellipse2D implements Contour2D
     @Override
     public double distance(double x, double y)
     {
-        double[] normCoords = toAlignedEllipse(new double[] {x, y});
-        // restrict to first quadrant
-        normCoords[0] = Math.abs(normCoords[0]);
-        normCoords[1] = Math.abs(normCoords[1]);
-        
-        if (this.r1 >= this.r2)
-        {
-            return distancePointEllipse(this.r1, this.r2, normCoords[0], normCoords[1]);
-        }
-        else
-        {
-            // use symmetric wrt to xy-diagonal
-            return distancePointEllipse(this.r2, this.r1, normCoords[1], normCoords[0]);
-        }
+        return Math.abs(this.signedDistance(x, y));
     }
     
     /**
-     * Computes the coordinates in the space of the ellipse centered, aligned with x-axis, and with same size.
-     * @param coords the coordinates in the original space
+     * Computes the coordinates in the space of the ellipse centered, aligned
+     * with x-axis, and with same size.
+     * 
+     * @param coords
+     *            the coordinates in the original space
      * @return the coordinates in normalized space
      */
     private double[] toAlignedEllipse(double[] coords)
@@ -606,7 +605,7 @@ public class Ellipse2D implements Contour2D
     @Override
     public Bounds2D bounds()
     {
-        // TODO could be more precise
+        // TODO should try to avoid use of inner polyline
         ensurePolylineExist();
         return ring.bounds();
     }
@@ -626,94 +625,102 @@ public class Ellipse2D implements Contour2D
     }
     
     /**
-     * Computes the distance of a point to an ellipse, in normalized coordinates
-     * (centered ellipse with largest axis oriented along the x-axis). Assumes
-     * e0 > e1.
+     * Computes the signed distance of a point to an ellipse, in normalized
+     * coordinates (centered ellipse with largest axis oriented along the
+     * x-axis). Assumes {@code r1 > r2}, and query point {@code (qx, qy)} within
+     * the first quadrant.
      *
-     * @param e0
+     * Code adapted from David Eberly, in "Distance from a Point to an Ellipse,
+     * an Ellipsoid, or a Hyperellipsoid".
+     * 
+     * @param r1
      *            the semi-axis length along the x-axis
-     * @param e1
+     * @param r2
      *            the semi-axis length along the y-axis
-     * @param y0
+     * @param qx
      *            the x-coordinate of the query point
-     * @param y1
+     * @param qy
      *            the y-coordinate of the query point
      * @return the distance of the point to the ellipse
      */
-    private static final double distancePointEllipse(double e0, double e1, double y0, double y1)
+    private static final double signedDistancePointAlignedEllipse(double r1, double r2, double qx, double qy)
     {
         double distance;
-        double x0, x1;
+        // coordinates of the projected point
+        double xProj, yProj;
         
-        if (y1 > 0)
+        // tolerance to decide whether point is on one of the main axes 
+        double tol = r1 * 1e-15; 
+        if (qy > tol)
         {
-            if (y0 > 0)
+            if (qx > tol)
             {
-                // need to compute the unique root "tbar" of F(t) within (-e1*e1, infinity)
+                // need to compute the unique root "tbar" of F(t) within (-r2*r2, infinity)
                 
                 // small change of variable
-                double z0 = y0 / e0;
-                double z1 = y1 / e1;
+                double z0 = qx / r1;
+                double z1 = qy / r2;
                 double g = z0 * z0 + z1 * z1 - 1;
                 if (g != 0)
                 {
-                    double r0 = (e0 / e1) * (e0 / e1);
+                    double r0 = (r1 / r2) * (r1 / r2);
                     double sbar = findRoot(r0, z0, z1, g);
-                    x0 = r0 * y0 / (sbar + r0);
-                    x1 = y1 / (sbar + 1);
-                    distance = Math.hypot(x0 - y0, x1 - y1);
+                    xProj = r0 * qx / (sbar + r0);
+                    yProj = qy / (sbar + 1);
+                    distance = Math.hypot(xProj - qx, yProj - qy);
+                    
+                    // returns negative distance when point is inside ellipse
+                    if (g < 0) distance *= -1;
                 }
                 else
                 {
-                    x0 = y0;
-                    x1 = y1;
                     distance = 0;
                 }
             }
             else
             {
-                // process  case y0 == 0
-                x0 = y0;
-                x1 = e1;
-                distance = Math.abs(y1 - e1);
+                // process  case qx == 0 (point on vertical axis)
+                distance = qy - r2;
             }
         }
         else
         {
-            // process case y1 == 0
-            double numer0 = e0 * y0;
-            double denom0 = e0 * e0 - e1 * e1;
+            // process case qy == 0 (point on horizontal axis)
+            double numer0 = r1 * qx;
+            double denom0 = r1 * r1 - r2 * r2;
             if (numer0 < denom0)
             {
+                // point projects on ellipse from inside
                 double xde0 = numer0 / denom0;
-                x0 = e0 * xde0;
-                x1 = e1 * Math.sqrt(1 - xde0 * xde0);
-                distance = Math.hypot(x0 - y0, x1);
+                xProj = r1 * xde0;
+                yProj = r2 * Math.sqrt(1 - xde0 * xde0);
+                distance = Math.hypot(xProj - qx, yProj) * -1;
             }
             else
             {
-                x0 = e0;
-                x1 = 0;
-                distance = Math.abs(y0 - e0);
+                xProj = r1;
+                yProj = 0;
+                distance = qx - r1;
             }
         }
         
         return distance;
     }
     
+
     /**
      * Robust root finder based on bisection method. Code from David Eberly, in
      * "Distance from a Point to an Ellipse, an Ellipsoid, or a Hyperellipsoid".
      * 
      * Function to solve:
      * <pre>
-     *            e0 z0             e1 z1 
+     *            r1 z0             r2 z1 
      * F(t) = ( ---------- )^2 + (---------- )^2 - 1 = 0 
-     *          t + e0^2           t + e1^2
+     *          t + r1^2           t + r2^2
      * </pre>
      * 
      * @param r0
-     *            the ratio of squared extent, equal to (e0^2 / e1^2).
+     *            the ratio of squared extent, equal to (r1^2 / r2^2).
      * @param z0
      *            the first coordinate
      * @param z1
