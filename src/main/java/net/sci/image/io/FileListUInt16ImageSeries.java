@@ -5,6 +5,7 @@ package net.sci.image.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import net.sci.array.Array;
 import net.sci.array.numeric.UInt16Array;
@@ -42,6 +43,12 @@ public class FileListUInt16ImageSeries extends UInt16Array3D
      */
     UInt16Array2D currentSlice;
 
+    /**
+     * A boolean flag that toggles the display of messages about the reading
+     * process. Default is false (no message display).
+     */
+    public boolean verbose = false;
+    
 
     // =============================================================
     // Constructor
@@ -99,13 +106,16 @@ public class FileListUInt16ImageSeries extends UInt16Array3D
     {
         // retrieve current file
         File file = this.fileList[this.currentSliceIndex];
-        System.out.println(String.format("Read slice %d, file=%s", this.currentSliceIndex, file.getName()));
+        if (verbose)
+        {
+            System.out.printf(Locale.ENGLISH, "Read slice %d, file=%s%n", this.currentSliceIndex, file.getName());
+        }
         
         // check file existence
         if (!file.exists())
         {
-           throw new RuntimeException(
-                    String.format("Unable to find file for slice %d (%s)", this.currentSliceIndex, file.getName()));
+            throw new RuntimeException(String.format("Unable to find file for slice %d (%s)",
+                    this.currentSliceIndex, file.getName()));
         }
         
         // read image data for current slice
@@ -115,7 +125,7 @@ public class FileListUInt16ImageSeries extends UInt16Array3D
         // check type and dimension of slice data
         if (!(sliceData instanceof UInt16Array))
         {
-            throw new RuntimeException("Requires an image containing UInt8 data, not " + sliceData.elementClass());
+            throw new RuntimeException("Requires an image containing UInt16 data, not " + sliceData.elementClass());
         }
         if (sliceData.dimensionality() != 2)
         {

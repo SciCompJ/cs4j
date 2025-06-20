@@ -5,6 +5,7 @@ package net.sci.image.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import net.sci.array.Array;
 import net.sci.array.numeric.UInt8Array;
@@ -42,6 +43,12 @@ public class FileListUInt8ImageSeries extends UInt8Array3D
      */
     UInt8Array2D currentSlice;
 
+    /**
+     * A boolean flag that toggles the display of messages about the reading
+     * process. Default is false (no message display).
+     */
+    public boolean verbose = false;
+    
 
     // =============================================================
     // Constructor
@@ -99,8 +106,10 @@ public class FileListUInt8ImageSeries extends UInt8Array3D
     {
         // retrieve current file
         File file = this.fileList[this.currentSliceIndex];
-        System.out.println(String.format("Read slice %d, file=%s", this.currentSliceIndex, file.getName()));
-        //        System.out.println(file.getAbsolutePath());
+        if (verbose)
+        {
+            System.out.printf(Locale.ENGLISH, "Read slice %d, file=%s%n", this.currentSliceIndex, file.getName());
+        }
         
         // check file existence
         if (!file.exists())
