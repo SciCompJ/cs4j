@@ -58,6 +58,12 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      */
     ArrayList<ImageFileDirectory> fileDirectories;
     
+    /**
+     * A boolean flag that toggles the display of messages about the reading
+     * process. Default is false (no message display).
+     */
+    public boolean verbose = false;
+    
     
     // =============================================================
     // Constructor
@@ -149,7 +155,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         // in that case, use specific processing
         if (hasImageJDescription(ifd))
         {
-            System.out.println("Found ImageJ description, use special processing");
+            if (verbose)
+            {
+                System.out.println("Found ImageJ description, use special processing");
+            }
             return readImageJImage(ifd, false);
         }
         
@@ -182,7 +191,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         // Check if the file was saved by ImageJ software
         if (hasImageJDescription(ifd))
         {
-            System.out.println("Found ImageJ description, use special processing");
+            if (verbose)
+            {
+                System.out.println("Found ImageJ description, use special processing");
+            }
             return readImageJImage(ifd, true);
         }
         
