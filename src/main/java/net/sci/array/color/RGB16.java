@@ -10,8 +10,11 @@ import net.sci.array.numeric.UInt16;
  * A color that is represented by a triplet of red, green and blue components,
  * each of them being coded as UInt16.
  * 
+ * Immutable class.
+ * 
+ * @see RGB8
+ * 
  * @author dlegland
- *
  */
 public class RGB16 implements IntVector<RGB16,UInt16>, Color
 {
@@ -52,31 +55,78 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      * equal to UInt16.MAX_INT*3/4).
      */
     public static final RGB16 LIGHT_GRAY = new RGB16(UInt16.MAX_INT * 3 / 4, UInt16.MAX_INT * 3 / 4, UInt16.MAX_INT * 3 / 4);    
+
     
     // =============================================================
     // Static methods
 
     /**
-     * Converts an array of 3 RGB values into an int code
+     * Creates a new RGB16 value from an integer code.
      * 
-     * @param rgbValues
+     * @param intCode
+     *            the integer code of the color
+     * @return the corresponding color as an RGB16
+     */
+    public static final RGB16 fromIntCode(long longCode)
+    {
+        return new RGB16(longCode);
+    }
+    
+    /**
+     * Creates a new RGB16 value from an UInt16 value, using this value for each
+     * component of the color.
+     * 
+     * @param value
+     *            the integer value of each component
+     * @return the corresponding color as an RGB16
+     */
+    public final static RGB16 fromUInt16(UInt16 value)
+    {
+        long val = (long) value.intValue(); // no need to clamp
+        return new RGB16(val << 32 | val << 16 | val);
+    }
+
+    /**
+     * Converts an array of 3 RGB values into a integer code encoded with 64 bits.
+     * 
+     * @param rgb
      *            the three values of red, green and blue components
      * @return the corresponding intCode
      */
     public static final long longCode(int[] rgb)
     {
-        long r = UInt16.clamp(rgb[0]);
-        long g = UInt16.clamp(rgb[1]);
-        long b = UInt16.clamp(rgb[2]);
-        return b << 32 | g << 16 | r;   
+        return longCode(rgb[0], rgb[1], rgb[2]);
     }
     
     /**
-     * Converts the int code representing a RGBvalue into the three components
+     * Computes the (long) integer code corresponding to the triplet of channel
+     * values given as three integers between 0 and {@code UInt16.MAX_INT}.
+     * 
+     * @param r
+     *            the value of the red channel, between 0 and
+     *            {@code UInt16.MAX_INT}
+     * @param g
+     *            the value of the green channel, between 0 and
+     *            {@code UInt16.MAX_INT}
+     * @param b
+     *            the value of the blue channel, between 0 and
+     *            {@code UInt16.MAX_INT}
+     * @return the corresponding integer code
+     */
+    public static final long longCode(int r, int g, int b)
+    {
+        long rl = (long) UInt16.clamp(r);
+        long gl = (long) UInt16.clamp(g);
+        long bl = (long) UInt16.clamp(b);
+        return (bl & 0x00FFFF) << 32 | (gl & 0x00FFFF) << 16 | (rl & 0x00FFFF);
+    }
+    
+    /**
+     * Converts the int code representing a RGB value into the three components
      * as integers.
      * 
-     * @param intCode
-     *            the int code of the RGB color
+     * @param longCode
+     *            the int code (as a long) of the RGB color
      * @return the three red, green and blue components
      */
     public static final int[] rgbValues(long longCode)
@@ -92,7 +142,7 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      * Converts the int code representing a RGB value into the three components
      * as integers.
      * 
-     * @param intCode
+     * @param longCode
      *            the int code of the RGB color
      * @param rgbValues
      *            the pre-allocated array of int
@@ -125,6 +175,12 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     // =============================================================
     // Class variables
 
+    /**
+     * The integer value corresponding to the concatenation of the red, green
+     * and blue components, each encoded with 16 bits.
+     * 
+     * {@code longCode = 0x0000BBBBGGGGRRRR}
+     */
     long longCode;
     
 
@@ -164,12 +220,8 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     /**
      * Creates a new color by specifying the int value of each component.
      * 
-     * @param red
-     *            the value of the red component, between 0 and 2^16-1
-     * @param green
-     *            the value of the green component, between 0 and 2^16-1
-     * @param blue
-     *            the value of the blue component, between 0 and 2^16-1
+     * @param rgb
+     *            the array of component values
      */
     public RGB16(int[] rgb)
     {
@@ -257,6 +309,8 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     // Extraction of color components
     
     /**
+     * Returns the red component of this color.
+     * 
      * @return the red component of this color, between 0 and 1.
      */
     public double red()
@@ -266,6 +320,8 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     }
     
     /**
+     * Returns the green component of this color.
+     * 
      * @return the green component of this color, between 0 and 1.
      */
     public double green()
@@ -275,7 +331,9 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     }
     
     /**
-     * @return the red component of this color, between 0 and 1.
+     * Returns the blue component of this color.
+     * 
+     * @return the blue component of this color, between 0 and 1.
      */
     public double blue()
     {
@@ -283,14 +341,6 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
             
     }
     
-    /**
-     * Returns the hue component of this color, coded between 0 and 1.
-     * 
-     * @return the hue value of this color, between 0 and 1. 
-     * 
-     * @see <a href= "http://www.rapidtables.com/convert/color/rgb-to-hsv.htm">
-     *      http://www.rapidtables.com/convert/color/rgb-to-hsv.htm</a>
-     */
     public double hue()
     {
         int r = (int) (this.longCode & 0x00FFFF);
@@ -302,7 +352,7 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
         double cmin = Math.min(Math.min(r, g), b);
         double delta = cmax - cmin;
         
-        // case of gray colors. Maybe return NaN ?
+        // case of gray colors.
         if (delta < 0.0001) 
         {
             return 0;
@@ -357,6 +407,9 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     }
     
     /**
+     * Returns the luminance (or luma) of this color, obtained as a linear
+     * combination of the three channel values. 
+     * 
      * @return the luma / luminance of this color, between 0 and 1. 
      */
     public double luminance()
@@ -452,6 +505,8 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     {
         return 3;
     }
+    
+    
     // =============================================================
     // Implementation of the Numeric interface
     

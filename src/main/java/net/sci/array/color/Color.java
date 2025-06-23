@@ -42,7 +42,18 @@ public interface Color
     /**
      * Returns the hue component of this color, coded between 0 and 1.
      * 
-     * @return the hue value of this color, between 0 and 1.
+     * Typical hue values:
+     * <ul>
+     * <li>0.000: red</li>
+     * <li>0.167 (1/6): yellow</li>
+     * <li>0.333 (1/3): green</li>
+     * <li>0.500 (1/2): cyan</li>
+     * <li>0.667 (2/3): blue</li>
+     * <li>0.833 (5/6): magenta</li>
+     * <li>1.000: red</li>
+     * </ul>
+     * 
+     * @return the hue value of this color, between 0 and 1. 
      * 
      * @see <a href= "http://www.rapidtables.com/convert/color/rgb-to-hsv.htm">
      *      http://www.rapidtables.com/convert/color/rgb-to-hsv.htm</a>

@@ -716,19 +716,19 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
             }
         };
     }
-
 	
-	// =============================================================
-	// Inner interface
-
-	@Override
-	public default Class<RGB8> elementClass()
-	{
-		return RGB8.class;
-	}
-
-	public interface Iterator extends IntVectorArray.Iterator<RGB8,UInt8>
-	{
+    
+    // =============================================================
+    // Inner interface
+    
+    @Override
+    public default Class<RGB8> elementClass()
+    {
+        return RGB8.class;
+    }
+    
+    public interface Iterator extends IntVectorArray.Iterator<RGB8, UInt8>
+    {
         @Override
         public default int getSample(int c)
         {
@@ -740,17 +740,17 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         {
             return get().getValue(c);
         }
-
-		@Override
-		public default void setValue(int c, double value)
-		{
-			int[] samples = get().getSamples();
-			samples[c] = UInt8.convert(value);
-			set(new RGB8(samples[0], samples[1], samples[2]));
-		}
-	}
-
-	
+        
+        @Override
+        public default void setValue(int c, double value)
+        {
+            int[] samples = get().getSamples();
+            samples[c] = UInt8.convert(value);
+            set(new RGB8(samples[0], samples[1], samples[2]));
+        }
+    }
+    
+    
     // =============================================================
     // Inner classes
 
@@ -838,24 +838,25 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         public void set(int[] pos, RGB8 rgb)
         {
             array.set(pos, rgb);
-        }        
+        }
     }
     
     /**
-	 * 
-	 * @author dlegland
-	 * @see UInt8Array.ScalarArrayWrapper
-	 */
-	class UInt8View extends ArrayWrapperStub<UInt8> implements UInt8Array
-	{
-	    RGB8Array parent;
-	    
-	    UInt8View(RGB8Array parent)
-	    {
-	        super(parent);
-	        this.parent = parent;
-	    }
-
+     * Wraps this color image into a virtual array of {@code UInt8}.
+     *  
+     * @author dlegland
+     * @see UInt8Array.ScalarArrayWrapper
+     */
+    class UInt8View extends ArrayWrapperStub<UInt8> implements UInt8Array
+    {
+        RGB8Array parent;
+        
+        UInt8View(RGB8Array parent)
+        {
+            super(parent);
+            this.parent = parent;
+        }
+        
         @Override
         public UInt8 get(int[] pos)
         {
@@ -881,8 +882,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
             RGB8 rgb = new RGB8(b & 0x00FF);
             parent.set(pos, rgb);
         }
-
-	}
+    }
 	
     
     // =============================================================

@@ -12,8 +12,9 @@ import net.sci.array.numeric.UInt8;
  * 
  * Immutable class.
  * 
+ * @see RGB16
+ * 
  * @author dlegland
- *
  */
 public class RGB8 implements IntVector<RGB8,UInt8>, Color
 {
@@ -80,14 +81,29 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
         return new RGB8(intCode);
     }
 
+    /**
+     * Creates a new RGB8 value from an integer code.
+     * 
+     * @param intCode
+     *            the integer code of the color
+     * @return the corresponding color as an RGB8
+     */
     public static final RGB8 fromIntCode(int intCode)
     {
         return new RGB8(intCode);
     }
 
+    /**
+     * Creates a new RGB8 value from an UInt8 value, using this value for each
+     * component of the color.
+     * 
+     * @param value
+     *            the integer value of each component
+     * @return the corresponding color as an RGB8
+     */
     public final static RGB8 fromUInt8(UInt8 value)
     {
-        int val = UInt8.clamp(value.intValue());
+        int val = value.intValue(); // no need to clamp
         return new RGB8(val << 16 | val << 8 | val);
     }
 
@@ -131,21 +147,30 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     /**
      * Converts an array of 3 RGB values into an int code
      * 
-     * @param rgbValues
+     * @param rgb
      *            the three values of red, green and blue components
      * @return the corresponding intCode
      */
     public static final int intCode(int[] rgb)
     {
-        int r = rgb[0] & 0x00FF;
-        int g = rgb[1] & 0x00FF;
-        int b = rgb[2] & 0x00FF;
-        return b << 16 | g << 8 | r;   
+        return intCode(rgb[0], rgb[1], rgb[2]);
     }
     
+    /**
+     * Computes the integer code corresponding to the triplet of channel values
+     * given as three integers between 0 and 255.
+     * 
+     * @param r
+     *            the value of the red channel, between 0 and 255
+     * @param g
+     *            the value of the green channel, between 0 and 255
+     * @param b
+     *            the value of the blue channel, between 0 and 255
+     * @return the corresponding integer code
+     */
     public static final int intCode(int r, int g, int b)
     {
-        return (b & 0x00FF) << 16 | (g & 0x00FF) << 8 | (r & 0x00FF);   
+        return (UInt8.clamp(r) & 0x00FF) << 16 | (UInt8.clamp(g) & 0x00FF) << 8 | (UInt8.clamp(b) & 0x00FF);
     }
     
     /**
@@ -153,7 +178,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
      * as integers.
      * 
      * @param intCode
-     *            the int code of the RGB color
+     *            the integer code of the RGB color
      * @return the three red, green and blue components
      */
     public static final int[] rgbValues(int intCode)
@@ -187,6 +212,12 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     // =============================================================
     // Class variables
 
+    /**
+     * The integer value corresponding to the concatenation of the red, green
+     * and blue components, each encoded with 8 bits.
+     * 
+     * {@code intCode = 0x00BBGGRR}
+     */
     private final int intCode;
     
 
@@ -226,12 +257,8 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     /**
      * Creates a new color by specifying the int value of each component.
      * 
-     * @param red
-     *            the value of the red component, between 0 and 255
-     * @param green
-     *            the value of the green component, between 0 and 255
-     * @param blue
-     *            the value of the blue component, between 0 and 255
+     * @param rgb
+     *            the array of component values
      */
     public RGB8(int[] rgb)
     {
@@ -302,7 +329,10 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
     
     /**
-     * @return an integer value corresponding to the maximum value within channels.
+     * Returns the maximum value within channels.
+     * 
+     * @return an integer value corresponding to the maximum value within
+     *         channels.
      */
     public int maxSample()
     {
@@ -314,6 +344,8 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     // Extraction of color components
     
     /**
+     * Returns the red component of this color.
+     * 
      * @return the red component of this color, between 0 and 1.
      */
     public double red()
@@ -323,33 +355,38 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
     
     /**
+     * Returns the red component of this color as an integer value.
+     * 
      * @return the red component of this color, as an integer between 0 and 255.
      */
-    public double intRed()
+    public int intRed()
     {
         return this.intCode & 0x00FF;
-            
     }
     
     /**
+     * Returns the green component of this color.
+     * 
      * @return the green component of this color, between 0 and 1.
      */
     public double green()
     {
         return ((this.intCode >> 8) & 0x00FF) / 255.0;
-            
     }
     
     /**
+     * Returns the green component of this color as an integer value.
+     * 
      * @return the green component of this color, as an integer between 0 and 255.
      */
-    public double intGreen()
+    public int intGreen()
     {
         return (this.intCode >> 8) & 0x00FF;
-            
     }
     
     /**
+     * Returns the blue component of this color.
+     * 
      * @return the blue component of this color, between 0 and 1.
      */
     public double blue()
@@ -358,21 +395,15 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
     
     /**
+     * Returns the blue component of this color as an integer value.
+     * 
      * @return the blue component of this color, as an integer between 0 and 255.
      */
-    public double intBlue()
+    public int intBlue()
     {
         return (this.intCode >> 16) & 0x00FF;
     }
 
-    /**
-     * Returns the hue component of this color, coded between 0 and 1.
-     * 
-     * @return the hue value of this color, between 0 and 1. 
-     * 
-     * @see <a href= "http://www.rapidtables.com/convert/color/rgb-to-hsv.htm">
-     *      http://www.rapidtables.com/convert/color/rgb-to-hsv.htm</a>
-     */
     public double hue()
     {
         int r = this.intCode & 0x00FF;
@@ -384,7 +415,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
         double cmin = Math.min(Math.min(r, g), b);
         double delta = cmax - cmin;
         
-        // case of gray colors. Maybe return NaN ?
+        // case of gray colors.
         if (delta < 0.0001) 
         {
             return 0;
@@ -435,7 +466,10 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
     
     /**
-     * @return the luma / luminance of this color, between 0 and 1. 
+     * Returns the luminance (or luma) of this color, obtained as a linear
+     * combination of the three channel values. 
+     * 
+     * @return the luma / luminance of this color, between 0 and 1.
      */
     public double luminance()
     {
@@ -481,14 +515,14 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
             case 0 -> this.intCode & 0x00FF;
             case 1 -> (this.intCode >> 8) & 0x00FF;
             case 2 -> (this.intCode >> 16) & 0x00FF;
-            default -> throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
+            default -> throw new IllegalArgumentException("Channel index must be comprised between 0 and 2");
         };
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see net.sci.array.type.Vector#getValues()
+     * @see net.sci.array.numeric.Vector#getValues()
      */
     @Override
     public double[] getValues()
@@ -511,7 +545,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     /*
      * (non-Javadoc)
      * 
-     * @see net.sci.array.type.Vector#getValue(int)
+     * @see net.sci.array.numeric.Vector#getValue(int)
      */
     @Override
     public double getValue(int c)
@@ -612,7 +646,9 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     {
         if (obj == this) return true;
         if (obj instanceof RGB8 that)
-        { return this.intCode == that.intCode; }
+        {
+            return this.intCode == that.intCode;
+        }
         return false;
     }
 
