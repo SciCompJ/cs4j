@@ -93,6 +93,22 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
 
     /**
+     * Creates a new RGB8 value from a gray value between 0 and 255, using this
+     * value for each component of the color.
+     * 
+     * @see #grayValue()
+     * 
+     * @param value
+     *            the integer value of each component
+     * @return the corresponding color as an RGB8
+     */
+    public final static RGB8 fromGrayValue(int value)
+    {
+        int val = UInt8.clamp(value);
+        return new RGB8(val << 16 | val << 8 | val);
+    }
+
+    /**
      * Creates a new RGB8 value from an UInt8 value, using this value for each
      * component of the color.
      * 
@@ -313,6 +329,22 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     {
         return this.intCode;
     }
+    
+    /**
+     * Converts this RGB8 into its corresponding gray value. The resulting gray
+     * value ranges between 0 and 255.
+     * 
+     * @see #fromGrayValue(int)
+     * 
+     * @return the gray value corresponding to this color, between 0 and 255.
+     */
+    public int grayValue()
+    {
+        int r = this.intCode & 0x00FF;
+        int g = (this.intCode >> 8) & 0x00FF;
+        int b = (this.intCode >> 16) & 0x00FF;
+        return UInt8.convert(0.2989 * r + 0.5870 * g + 0.1140 * b);
+    }
 
     /**
      * Converts this RGB8 value into an instance of UInt8, by computing the
@@ -322,10 +354,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
      */
     public UInt8 toUInt8()
     {
-        int r = this.intCode & 0x00FF;
-        int g = (this.intCode >> 8) & 0x00FF;
-        int b = (this.intCode >> 16) & 0x00FF;
-        return new UInt8(UInt8.convert(0.2989 * r + 0.5870 * g + 0.1140 * b));
+        return new UInt8(grayValue());
     }
     
     /**

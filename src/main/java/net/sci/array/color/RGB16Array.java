@@ -666,21 +666,26 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         @Override
         public void set(int[] pos, UInt16 value)
         {
-            RGB16 rgb = new RGB16(value.intValue());
+            RGB16 rgb = RGB16.fromUInt16(value);
             parent.set(pos, rgb);
+        }
+
+        @Override
+        public int getInt(int[] pos)
+        {
+            return parent.get(pos).grayValue();
         }
 
         @Override
         public short getShort(int[] pos)
         {
-            return get(pos).getShort();
+            return (short) parent.get(pos).grayValue();
         }
 
         @Override
-        public void setShort(int[] pos, short b)
+        public void setShort(int[] pos, short s)
         {
-            int v = b & 0x00FFFF;
-            RGB16 rgb = new RGB16(v, v, v);
+            RGB16 rgb = RGB16.fromGrayValue(s & 0x00FFFF);
             parent.set(pos, rgb);
         }
     }

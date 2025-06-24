@@ -73,6 +73,22 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     }
     
     /**
+     * Creates a new RGB16 value from a gray value between 0 and 2^16-1, using
+     * this value for each component of the color.
+     * 
+     * @see #grayValue()
+     * 
+     * @param value
+     *            the integer value of each component
+     * @return the corresponding color as an RGB16
+     */
+    public final static RGB16 fromGrayValue(int value)
+    {
+        long val = (long) UInt16.clamp(value);
+        return new RGB16(val << 32 | val << 16 | val);
+    }
+
+    /**
      * Creates a new RGB16 value from an UInt16 value, using this value for each
      * component of the color.
      * 
@@ -264,6 +280,22 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     }
 
     /**
+     * Converts this RGB16 into its corresponding gray value. The resulting gray
+     * value ranges between 0 and 2^16-1.
+     * 
+     * @see #fromGrayValue(int)
+     * 
+     * @return the gray value corresponding to this color, between 0 and 2^16-1.
+     */
+    public int grayValue()
+    {
+        int r = (int) (this.longCode & 0x00FFFF);
+        int g = (int) ((this.longCode >> 16) & 0x00FFFF);
+        int b = (int) ((this.longCode >> 32) & 0x00FFFF);
+        return UInt16.convert(0.2989 * r + 0.5870 * g + 0.1140 * b);
+    }
+
+    /**
      * Converts this RGB16 value into an instance of UInt16, by computing the
      * luminance of the color. Note that the coefficients used for computation
      * are based on RGB8 conversion, and are not accurate enough to ensure that
@@ -273,10 +305,7 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      */
     public UInt16 toUInt16()
     {
-        int r = (int) (this.longCode & 0x00FFFF);
-        int g = (int) ((this.longCode >> 16) & 0x00FFFF);
-        int b = (int) ((this.longCode >> 32) & 0x00FFFF);
-        return new UInt16(UInt16.convert(0.2989 * r + 0.5870 * g + 0.1140 * b));
+        return new UInt16(grayValue());
     }
 
     /**
