@@ -55,7 +55,6 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
      *            a double value corresponding to grayscale value, between 0 and
      *            255
      * @return the corresponding RGB8 instance
-     * @see #getValue()
      */
     public final static RGB8 fromValue(double value)
     {
@@ -170,7 +169,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
      */
     public static final int intCode(int r, int g, int b)
     {
-        return (UInt8.clamp(r) & 0x00FF) << 16 | (UInt8.clamp(g) & 0x00FF) << 8 | (UInt8.clamp(b) & 0x00FF);
+        return UInt8.clamp(r) << 16 | UInt8.clamp(g) << 8 | UInt8.clamp(b);
     }
     
     /**
@@ -316,16 +315,17 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
 
     /**
-     * Converts this RGB8 value into an instance of UInt8.
+     * Converts this RGB8 value into an instance of UInt8, by computing the
+     * luminance of the color.
      * 
-     * @return the UInt8 instance corresponding to the maximum channel value.
+     * @return the UInt8 instance corresponding to this color.
      */
     public UInt8 toUInt8()
     {
         int r = this.intCode & 0x00FF;
         int g = (this.intCode >> 8) & 0x00FF;
         int b = (this.intCode >> 16) & 0x00FF;
-        return new UInt8((byte) Math.max(Math.max(r, g), b));
+        return new UInt8(UInt8.convert(0.2989 * r + 0.5870 * g + 0.1140 * b));
     }
     
     /**

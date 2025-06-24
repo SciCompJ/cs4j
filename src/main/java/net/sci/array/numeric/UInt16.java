@@ -33,8 +33,8 @@ public class UInt16 implements Int<UInt16>
     public static final UInt16 MIN_VALUE = new UInt16(MIN_INT);
     
     /**
-     * The UInt8 equal to the largest value that can be represented with this
-     * type, corresponding to 255.
+     * The UInt16 equal to the largest value that can be represented with this
+     * type, corresponding to 2^16-1.
      */
     public static final UInt16 MAX_VALUE = new UInt16(MAX_INT);
     

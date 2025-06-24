@@ -264,16 +264,19 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     }
 
     /**
-     * Converts this RGB16 value into an instance of UInt16.
+     * Converts this RGB16 value into an instance of UInt16, by computing the
+     * luminance of the color. Note that the coefficients used for computation
+     * are based on RGB8 conversion, and are not accurate enough to ensure that
+     * back conversion to RGB16 yields the same result.
      * 
-     * @return the RGB16 instance corresponding to the maximum channel value.
+     * @return the UInt16 instance corresponding to this color.
      */
     public UInt16 toUInt16()
     {
         int r = (int) (this.longCode & 0x00FFFF);
-        int g = (int) ((this.longCode >> 8) & 0x00FFFF);
-        int b = (int) ((this.longCode >> 16) & 0x00FFFF);
-        return new UInt16(Math.max(Math.max(r, g), b));
+        int g = (int) ((this.longCode >> 16) & 0x00FFFF);
+        int b = (int) ((this.longCode >> 32) & 0x00FFFF);
+        return new UInt16(UInt16.convert(0.2989 * r + 0.5870 * g + 0.1140 * b));
     }
 
     /**
@@ -285,8 +288,8 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     public int getInt()
     {
         int r = (int) (this.longCode & 0x00FFFF);
-        int g = (int) ((this.longCode >> 8) & 0x00FFFF);
-        int b = (int) ((this.longCode >> 16) & 0x00FFFF);
+        int g = (int) ((this.longCode >> 16) & 0x00FFFF);
+        int b = (int) ((this.longCode >> 32) & 0x00FFFF);
         return Math.max(Math.max(r, g), b);
     }
 
