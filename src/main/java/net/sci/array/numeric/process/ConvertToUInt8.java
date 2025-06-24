@@ -266,7 +266,7 @@ public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
         UInt8Array result = UInt8Array.create(array.size());
         for (int[] pos : array.positions())
         {
-            result.setInt(pos, array.getMaxSample(pos));
+            result.setInt(pos, array.getGrayValue(pos));
         }
         return result;
     }
@@ -284,7 +284,7 @@ public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
             this.fireProgressChanged(this, y, sizeY);
             for (int x = 0; x < sizeX; x++)
             {
-                result.setInt(x, y, array.getMaxSample(x, y));
+                result.setInt(x, y, array.getGrayValue(x, y));
             }
         }
         
@@ -308,7 +308,7 @@ public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
             {
                 for (int x = 0; x < sizeX; x++)
                 {
-                    result.setInt(x, y, z, array.getMaxSample(x, y, z));
+                    result.setInt(x, y, z, array.getGrayValue(x, y, z));
                 }
             }
         }
