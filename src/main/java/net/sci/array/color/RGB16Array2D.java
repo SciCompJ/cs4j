@@ -29,7 +29,31 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16,UInt16> implem
 	{
 		super(size0, size1);
 	}
+	
 
+    // =============================================================
+    // Implementation of new methods
+
+    /**
+     * Returns the corresponding gray value of the RGB16 element at the specified
+     * position.
+     * 
+     * The aim of this method is to facilitate the conversion of RGB16 arrays
+     * into grayscale (UInt16) arrays.
+     * 
+     * @see RGB16.grayValue()
+     * 
+     * @param x
+     *            the x-coordinate of the array element
+     * @param y
+     *            the y-coordinate of the array element
+     * @return largest value within the samples, as an integer.
+     */
+    public int getGrayValue(int x, int y)
+    {
+        return get(x, y).grayValue();
+    }
+    
 
 	// =============================================================
 	// Implementation of the RGB16Array interface
@@ -47,7 +71,7 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16,UInt16> implem
 		{
 	        for (int x = 0; x < size0; x++)
 	        {
-	            result.setInt(x, y, this.get(x, y).getInt());
+	            result.setInt(x, y, this.getGrayValue(x, y));
 	        }
 		}
 		
@@ -55,6 +79,12 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16,UInt16> implem
 		return result;
 	}
 	
+    @Override
+    public int getGrayValue(int[] pos)
+    {
+        return getGrayValue(pos[0], pos[1]);
+    }
+    
 	
     // =============================================================
     // Specialization of IntVectorArray2D interface

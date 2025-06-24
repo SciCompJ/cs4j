@@ -16,6 +16,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
 
     UInt16Array buffer;
     
+    
     // =============================================================
     // Constructor
 
@@ -32,7 +33,18 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
         bufDims[nd] = 3;
         this.buffer = UInt16Array.create(bufDims);
     }
+    
 
+    // =============================================================
+    // Implementation of the RGB16Array interface
+
+    @Override
+    public int getGrayValue(int[] pos)
+    {
+        int[] rgb = getSamples(pos);
+        return RGB16.grayValue(rgb[0], rgb[1], rgb[2]);
+    }
+    
 
     // =============================================================
     // Implementation of the IntVectorArray interface

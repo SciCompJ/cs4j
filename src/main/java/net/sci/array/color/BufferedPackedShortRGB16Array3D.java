@@ -26,6 +26,7 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
      */
 	UInt16Array buffer;
 	
+	
 	// =============================================================
 	// Constructor
 
@@ -49,6 +50,22 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 		this.buffer = buffer;
 	}
 
+
+    // =============================================================
+    // Implementation of the RGB16Array interface
+
+    @Override
+    public int getGrayValue(int x, int y, int z)
+    {
+        int r = this.buffer.getInt(new int[] {x, y, z, 0});
+        int g = this.buffer.getInt(new int[] {x, y, z, 1});
+        int b = this.buffer.getInt(new int[] {x, y, z, 2});
+        return RGB16.grayValue(r, g, b);
+    }
+    
+
+    // =============================================================
+    // Implementation of the VectorArray3D interface
 
     @Override
     public int[] getSamples(int x, int y, int z)
@@ -91,10 +108,6 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
     {
         this.buffer.setInt(new int[] {x, y, z, c}, intValue);
     }
-
-    
-	// =============================================================
-	// Implementation of the VectorArray3D interface
 
 	/* (non-Javadoc)
 	 * @see net.sci.array.data.vector.VectorArray3D#getValues(int, int, int)

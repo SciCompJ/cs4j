@@ -275,7 +275,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         
         for (int[] pos : result.positions())
         {
-            result.setInt(pos, this.get(pos).getInt());
+            result.setInt(pos, this.getGrayValue(pos));
         }
         
         return result;
@@ -308,7 +308,25 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         return res;
     }
 
+    /**
+     * Returns the corresponding gray value of the RGB16 element at the specified
+     * position.
+     * 
+     * The aim of this method is to facilitate the conversion of RGB16 arrays
+     * into grayscale (UInt16) arrays.
+     * 
+     * @see RGB16.grayValue()
+     * 
+     * @param pos
+     *            the position within array
+     * @return largest value within the samples, as an integer.
+     */
+    public default int getGrayValue(int[] pos)
+    {
+        return get(pos).grayValue();
+    }
     
+
     // =============================================================
     // Default implementations of IntVectorArray interface
     

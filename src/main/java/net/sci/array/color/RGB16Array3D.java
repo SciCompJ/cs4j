@@ -5,7 +5,6 @@ package net.sci.array.color;
 
 import net.sci.array.numeric.IntVectorArray3D;
 import net.sci.array.numeric.UInt16;
-import net.sci.array.numeric.UInt16Array;
 import net.sci.array.numeric.UInt16Array3D;
 
 /**
@@ -32,6 +31,32 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16,UInt16> implem
 	}
 
 
+    // =============================================================
+    // Implementation of new methods
+
+    /**
+     * Returns the corresponding gray value of the RGB16 element at the specified
+     * position.
+     * 
+     * The aim of this method is to facilitate the conversion of RGB16 arrays
+     * into grayscale (UInt16) arrays.
+     * 
+     * @see RGB16.grayValue()
+     * 
+     * @param x
+     *            the x-coordinate of the array element
+     * @param y
+     *            the y-coordinate of the array element
+     * @param z
+     *            the z-coordinate of the array element
+     * @return largest value within the samples, as an integer.
+     */
+    public int getGrayValue(int x, int y, int z)
+    {
+        return get(x, y, z).grayValue();
+    }
+    
+
 	// =============================================================
 	// Implementation of the RGB16Array interface
 
@@ -43,16 +68,27 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16,UInt16> implem
 		int size2 = this.size(2);
 		UInt16Array3D result = UInt16Array3D.create(size0, size1, size2);
 		
-		RGB16Array.Iterator rgb16Iter = iterator();
-		UInt16Array.Iterator uint16Iter = result.iterator();
-		while(rgb16Iter.hasNext() && uint16Iter.hasNext())
-		{
-			uint16Iter.setNextInt(rgb16Iter.next().getInt());
-		}
+        // iterate over pixels
+        for (int z = 0; z < size2; z++)
+        {
+            for (int y = 0; y < size1; y++)
+            {
+                for (int x = 0; x < size0; x++)
+                {
+                    result.setInt(x, y, z, this.getGrayValue(x, y, z));
+                }
+            }
+        }
 		
 		return result;
 	}
 
+    @Override
+    public int getGrayValue(int[] pos)
+    {
+        return getGrayValue(pos[0], pos[1], pos[2]);
+    }
+    
     // =============================================================
     // Specialization of IntVectorArray3D interface
 

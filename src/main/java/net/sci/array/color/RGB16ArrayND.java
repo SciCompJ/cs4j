@@ -34,7 +34,13 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16,UInt16> implement
 	// =============================================================
 	// Implementation of the RGB16Array interface
 
-
+    @Override
+    public int getGrayValue(int[] pos)
+    {
+        int[] rgb = getSamples(pos);
+        return RGB16.grayValue(rgb[0], rgb[1], rgb[2]);
+    }
+    
 
     // =============================================================
     // Implementation of VectorArray interface

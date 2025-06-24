@@ -138,6 +138,23 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     }
     
     /**
+     * Computes the gray value of the color given by its three red, green and
+     * blue components.
+     * 
+     * @param r
+     *            the value of the red component, between 0 and {@code UInt16.MAX_INT}.
+     * @param g
+     *            the value of the green component, between 0 and {@code UInt16.MAX_INT}.
+     * @param b
+     *            the value of the blue component, between 0 and {@code UInt16.MAX_INT}.
+     * @return the corresponding gray value, between 0 and {@code UInt16.MAX_INT}.
+     */
+    public final static int grayValue(int r, int g, int b)
+    {
+        return UInt16.convert(0.2989 * r + 0.5870 * g + 0.1140 * b);
+    }
+    
+    /**
      * Converts the int code representing a RGB value into the three components
      * as integers.
      * 
@@ -285,14 +302,14 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      * 
      * @see #fromGrayValue(int)
      * 
-     * @return the gray value corresponding to this color, between 0 and 2^16-1.
+     * @return the gray value corresponding to this color, between 0 and {@code UInt16.MAX_INT}.
      */
     public int grayValue()
     {
         int r = (int) (this.longCode & 0x00FFFF);
         int g = (int) ((this.longCode >> 16) & 0x00FFFF);
         int b = (int) ((this.longCode >> 32) & 0x00FFFF);
-        return UInt16.convert(0.2989 * r + 0.5870 * g + 0.1140 * b);
+        return grayValue(r, g, b);
     }
 
     /**
@@ -308,34 +325,6 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
         return new UInt16(grayValue());
     }
 
-    /**
-     * Converts this RGB8 value into an integer value representing the maximum
-     * channel value, coded between 0 and 2^16-1.
-     * 
-     * @return an integer value corresponding to the maximum channel value.
-     */
-    public int getInt()
-    {
-        int r = (int) (this.longCode & 0x00FFFF);
-        int g = (int) ((this.longCode >> 16) & 0x00FFFF);
-        int b = (int) ((this.longCode >> 32) & 0x00FFFF);
-        return Math.max(Math.max(r, g), b);
-    }
-
-    /**
-     * Converts this RGB8 value into a floating-point value value representing
-     * the maximum channel value.
-     * 
-     * @return a double value corresponding to the maximum channel value.
-     */
-    public double getValue()
-    {
-        int r = (int) (this.longCode & 0x00FFFF);
-        int g = (int) ((this.longCode >> 16) & 0x00FFFF);
-        int b = (int) ((this.longCode >> 32) & 0x00FFFF);
-        return Math.max(Math.max(r, g), b);
-    }
-    
     
     // =============================================================
     // Extraction of color components

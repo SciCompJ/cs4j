@@ -41,7 +41,20 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 		}
 		this.buffer = buffer;
 	}
+	
 
+    // =============================================================
+    // Implementation of the RGB16Array interface
+
+    @Override
+    public int getGrayValue(int x, int y)
+    {
+        int r = this.buffer.getInt(x, y, 0);
+        int g = this.buffer.getInt(x, y, 1);
+        int b = this.buffer.getInt(x, y, 2);
+        return RGB16.grayValue(r, g, b);
+    }
+    
 
     // =============================================================
     // Implementation of the IntVectorArray2D interface
