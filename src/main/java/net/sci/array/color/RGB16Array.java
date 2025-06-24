@@ -13,6 +13,7 @@ import net.sci.array.impl.ArrayWrapperStub;
 import net.sci.array.numeric.IntVectorArray;
 import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16Array;
+import net.sci.array.numeric.UInt8Array;
 
 /**
  * An array that contains colors represented as instances of RGB16 type.
@@ -278,6 +279,11 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         }
         
         return result;
+    }
+
+    public default UInt16Array createUInt16View()
+    {
+        return new UInt16View(this);
     }
 
     /**
@@ -629,6 +635,54 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         {
             array.set(pos, rgb);
         }        
+    }
+    
+    
+    // =============================================================
+    // UInt16 wrapper
+
+    /**
+     * Wraps this color image into a virtual array of {@code UInt16}.
+     *  
+     * @author dlegland
+     * @see UInt8Array.ScalarArrayWrapper
+     */
+    static class UInt16View extends ArrayWrapperStub<UInt16> implements UInt16Array
+    {
+        RGB16Array parent;
+        
+        UInt16View(RGB16Array parent)
+        {
+            super(parent);
+            this.parent = parent;
+        }
+        
+        @Override
+        public UInt16 get(int[] pos)
+        {
+            return parent.get(pos).toUInt16();
+        }
+
+        @Override
+        public void set(int[] pos, UInt16 value)
+        {
+            RGB16 rgb = new RGB16(value.intValue());
+            parent.set(pos, rgb);
+        }
+
+        @Override
+        public short getShort(int[] pos)
+        {
+            return get(pos).getShort();
+        }
+
+        @Override
+        public void setShort(int[] pos, short b)
+        {
+            int v = b & 0x00FFFF;
+            RGB16 rgb = new RGB16(v, v, v);
+            parent.set(pos, rgb);
+        }
     }
     
 

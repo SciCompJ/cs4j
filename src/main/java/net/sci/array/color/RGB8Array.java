@@ -860,13 +860,13 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         @Override
         public UInt8 get(int[] pos)
         {
-            return new UInt8(parent.get(pos).maxSample());
+            return parent.get(pos).toUInt8();
         }
 
         @Override
         public void set(int[] pos, UInt8 value)
         {
-            RGB8 rgb = new RGB8(value.intValue());
+            RGB8 rgb = RGB8.fromUInt8(value);
             parent.set(pos, rgb);
         }
 
@@ -879,7 +879,8 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         @Override
         public void setByte(int[] pos, byte b)
         {
-            RGB8 rgb = new RGB8(b & 0x00FF);
+            int v = b & 0x00FF;
+            RGB8 rgb = new RGB8(v, v, v);
             parent.set(pos, rgb);
         }
     }
