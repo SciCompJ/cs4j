@@ -47,6 +47,28 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
     // Implementation of new methods
 
     /**
+     * Returns the corresponding gray value of the RGB8 element at the specified
+     * position.
+     * 
+     * The aim of this method is to facilitate the conversion of RGB8 arrays
+     * into grayscale (UInt8) arrays.
+     * 
+     * @see RGB8.grayValue()
+     * 
+     * @param x
+     *            the x-coordinate of the array element
+     * @param y
+     *            the y-coordinate of the array element
+     * @param z
+     *            the z-coordinate of the array element
+     * @return largest value within the samples, as an integer.
+     */
+    public int getGrayValue(int x, int y, int z)
+    {
+        return get(x, y, z).grayValue();
+    }
+    
+    /**
      * Returns the largest value within the samples of the RGB8 element at the
      * specified position.
      * 
@@ -96,6 +118,12 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
 	    return UInt8Array3D.wrap(new ConvertToUInt8().processRGB8(this));
 	}
 	
+    @Override
+    public int getGrayValue(int[] pos)
+    {
+        return getGrayValue(pos[0], pos[1], pos[2]);
+    }
+    
     @Override
     public int getMaxSample(int[] pos)
     {

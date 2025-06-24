@@ -441,11 +441,26 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     }
 
     /**
-     * Returns the largest value within the samples of the RGB8 element at the
-     * specified position.
+     * Returns the corresponding gray value of the RGB8 element at the specified
+     * position.
      * 
      * The aim of this method is to facilitate the conversion of RGB8 arrays
      * into grayscale (UInt8) arrays.
+     * 
+     * @see RGB8.grayValue()
+     * 
+     * @param pos
+     *            the position within array
+     * @return largest value within the samples, as an integer.
+     */
+    public default int getGrayValue(int[] pos)
+    {
+        return get(pos).grayValue();
+    }
+    
+    /**
+     * Returns the largest value within the samples of the RGB8 element at the
+     * specified position.
      * 
      * @see RGB8.maxSample()
      * 
@@ -873,13 +888,13 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         @Override
         public int getInt(int[] pos)
         {
-            return parent.get(pos).grayValue();
+            return parent.getGrayValue(pos);
         }
 
         @Override
         public byte getByte(int[] pos)
         {
-            return (byte) parent.get(pos).grayValue();
+            return (byte) parent.getGrayValue(pos);
         }
 
         @Override

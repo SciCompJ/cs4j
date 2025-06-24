@@ -40,6 +40,12 @@ public class UInt8ArrayRGB8View implements RGB8Array
     // Methods implementing the RGB8Array interface
 
     @Override
+    public int getGrayValue(int[] pos)
+    {
+        return baseArray.getInt(pos);
+    }
+    
+    @Override
     public int getMaxSample(int[] pos)
     {
         return baseArray.getInt(pos);

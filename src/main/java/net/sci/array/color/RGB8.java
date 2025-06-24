@@ -123,6 +123,23 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
 
     /**
+     * Computes the gray value of the color given by its three red, green and
+     * blue components.
+     * 
+     * @param r
+     *            the value of the red component, between 0 and 255.
+     * @param g
+     *            the value of the green component, between 0 and 255.
+     * @param b
+     *            the value of the blue component, between 0 and 255.
+     * @return the corresponding gray value, between 0 and 255.
+     */
+    public final static int grayValue(int r, int g, int b)
+    {
+        return UInt8.convert(0.2989 * r + 0.5870 * g + 0.1140 * b);
+    }
+    
+    /**
      * @param intCode
      *            an RGB8 value encoded into an integer.
      * @return the maximum component of the rgb value, as an integer between 0
@@ -343,7 +360,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
         int r = this.intCode & 0x00FF;
         int g = (this.intCode >> 8) & 0x00FF;
         int b = (this.intCode >> 16) & 0x00FF;
-        return UInt8.convert(0.2989 * r + 0.5870 * g + 0.1140 * b);
+        return grayValue(r, g, b);
     }
 
     /**

@@ -43,6 +43,16 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
     // Override some methods of the RGB8Array2D class
 	
     @Override
+    public int getGrayValue(int x, int y)
+    {
+        int intCode = this.buffer.getInt(x, y);
+        int r = intCode & 0x00FF;
+        int g = (intCode >> 8) & 0x00FF;
+        int b = (intCode >> 16) & 0x00FF;
+        return RGB8.grayValue(r, g, b);
+    }
+    
+    @Override
     public int getMaxSample(int x, int y)
     {
         int intCode = this.buffer.getInt(x, y);

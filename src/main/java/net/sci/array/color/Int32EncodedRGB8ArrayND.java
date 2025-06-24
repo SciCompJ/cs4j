@@ -43,6 +43,16 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
     // Implementation of the RGB8Array interface
 
     @Override
+    public int getGrayValue(int[] pos)
+    {
+        int intCode = this.buffer.getInt(pos);
+        int r = intCode & 0x00FF;
+        int g = (intCode >> 8) & 0x00FF;
+        int b = (intCode >> 16) & 0x00FF;
+        return RGB8.grayValue(r, g, b);
+    }
+    
+    @Override
     public int getMaxSample(int[] pos)
     {
         int intCode = this.buffer.getInt(pos);
