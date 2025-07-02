@@ -3,6 +3,7 @@
  */
 package net.sci.array.color;
 
+import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.VectorArray;
@@ -151,15 +152,6 @@ public class VectorArrayRGB8View implements RGB8Array
     }
 
     /* (non-Javadoc)
-     * @see net.sci.array.Array#positionIterator()
-     */
-    @Override
-    public net.sci.array.Array.PositionIterator positionIterator()
-    {
-        return this.array.positionIterator();
-    }
-
-    /* (non-Javadoc)
      * @see net.sci.array.Array#dimensionality()
      */
     @Override
@@ -196,7 +188,7 @@ public class VectorArrayRGB8View implements RGB8Array
     {
         return new Iterator()
         {
-            PositionIterator iter = positionIterator();
+            PositionIterator iter = new DefaultPositionIterator(VectorArrayRGB8View.this.size());
 
             @Override
             public boolean hasNext()

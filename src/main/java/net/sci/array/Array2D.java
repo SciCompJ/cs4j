@@ -266,10 +266,16 @@ public abstract class Array2D<T> implements Array<T>
 	@Override
 	public abstract Array2D<T> duplicate();
 
-	
-    public PositionIterator positionIterator()
+	@Override
+    public Iterable<int[]> positions()
     {
-        return new PositionIterator2D();
+        return new Iterable<int[]>()
+        {
+            public java.util.Iterator<int[]> iterator()
+            {
+                return new PositionIterator2D();
+            }
+        };
     }
     
     @Override

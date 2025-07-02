@@ -247,10 +247,4 @@ public class BinaryOverlayRGB8Array implements RGB8Array
     {
         return wrappedArray.size(dim);
     }
-
-    @Override
-    public PositionIterator positionIterator()
-    {
-        return wrappedArray.positionIterator();
-    }
 }

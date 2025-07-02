@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import net.sci.array.Array;
 import net.sci.array.impl.ArrayWrapperStub;
+import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.numeric.impl.BufferedUInt16Array2D;
 import net.sci.array.numeric.impl.BufferedUInt16Array3D;
 import net.sci.array.numeric.impl.BufferedUInt16ArrayND;
@@ -293,7 +294,7 @@ public interface UInt16Array extends IntArray<UInt16>
     {
         return new Iterator()
         {
-            PositionIterator iter = positionIterator();
+            PositionIterator iter = new DefaultPositionIterator(UInt16Array.this.size());
 
             @Override
             public boolean hasNext()
@@ -386,12 +387,6 @@ public interface UInt16Array extends IntArray<UInt16>
             this.array = array;
         }
         
-        @Override
-        public PositionIterator positionIterator()
-        {
-            return array.positionIterator();
-        }
-
         @Override
         public short getShort(int[] pos)
         {

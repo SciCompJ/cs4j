@@ -210,10 +210,4 @@ public class MergeChannelsRGB8Array implements RGB8Array
     {
         return redChannel.size(dim);
     }
-
-    @Override
-    public PositionIterator positionIterator()
-    {
-        return redChannel.positionIterator();
-    }
 }

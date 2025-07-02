@@ -3,6 +3,7 @@
  */
 package net.sci.array.color;
 
+import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.numeric.UInt16Array;
 
 /**
@@ -197,7 +198,7 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
 
         public Iterator()
         {
-            this.iter = positionIterator();
+            this.iter = new DefaultPositionIterator(size());
         }
         
         @Override

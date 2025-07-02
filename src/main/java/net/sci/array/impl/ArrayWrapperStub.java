@@ -23,13 +23,13 @@ public abstract class ArrayWrapperStub<T> implements Array<T>
     }
 
     /**
-     * Override the default implementation to return position iterator of
-     * wrapped array.
+     * Override the default implementation to return an iterator of positions
+     * within the wrapped array.
      */
     @Override
-    public PositionIterator positionIterator()
+    public Iterable<int[]> positions()
     {
-        return array.positionIterator();
+        return array.positions();
     }
 
     @Override

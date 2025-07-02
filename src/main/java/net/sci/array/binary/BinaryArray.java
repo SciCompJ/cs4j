@@ -10,6 +10,7 @@ import net.sci.array.Arrays;
 import net.sci.array.binary.process.BinaryMask;
 import net.sci.array.binary.process.ConvertToBinary;
 import net.sci.array.impl.ArrayWrapperStub;
+import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.ScalarArray;
 
@@ -505,7 +506,7 @@ public interface BinaryArray extends IntArray<Binary>
     {
         return new Iterator()
         {
-            PositionIterator iter = positionIterator();
+            PositionIterator iter = new DefaultPositionIterator(BinaryArray.this.size());
 
             @Override
             public boolean hasNext()
@@ -563,7 +564,7 @@ public interface BinaryArray extends IntArray<Binary>
         public TrueElementsPositionIterator(BinaryArray array)
         {
             this.array = array;
-            iter = array.positionIterator();
+            iter = new DefaultPositionIterator(array.size());
             findNextPos();
         }
 
@@ -809,7 +810,7 @@ public interface BinaryArray extends IntArray<Binary>
 
             public ItemPositionIterator()
             {
-                iter = positionIterator();
+                iter = new DefaultPositionIterator(array.size());
                 findNextPos();
             }
 

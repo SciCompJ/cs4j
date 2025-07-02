@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import net.sci.array.Array;
 import net.sci.array.impl.ArrayWrapperStub;
+import net.sci.array.impl.DefaultPositionIterator;
 
 /**
  * Interface for arrays containing instances of Int. Provides several method for
@@ -256,7 +257,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
     {
         return new Iterator<I>()
         {
-            PositionIterator iter = positionIterator();
+            PositionIterator iter = new DefaultPositionIterator(IntArray.this.size());
             // keep an array of coordinates to avoid repetitive allocation of array
             int[] pos = new int[dimensionality()];
 

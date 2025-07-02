@@ -104,12 +104,4 @@ public class ScalarArrayUInt8View implements UInt8Array
         return array.size(dim);
     }
 
-    /* (non-Javadoc)
-     * @see net.sci.array.Array#positionIterator()
-     */
-    @Override
-    public net.sci.array.Array.PositionIterator positionIterator()
-    {
-        return array.positionIterator();
-    }
 }

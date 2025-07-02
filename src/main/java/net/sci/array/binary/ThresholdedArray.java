@@ -114,14 +114,4 @@ public class ThresholdedArray implements BinaryArray
     {
         return array.size(dim);
     }
-    
-    /* (non-Javadoc)
-     * @see net.sci.array.Array#positionIterator()
-     */
-    @Override
-    public PositionIterator positionIterator()
-    {
-        return array.positionIterator();
-    }
-    
 }

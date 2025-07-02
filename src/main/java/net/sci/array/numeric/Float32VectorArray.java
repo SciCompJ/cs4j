@@ -6,6 +6,7 @@ package net.sci.array.numeric;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.impl.ArrayWrapperStub;
+import net.sci.array.impl.DefaultPositionIterator;
 
 /**
  * Specialization of the interface VectorArray for arrays of vectors that
@@ -164,7 +165,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
     {
         return new Iterator()
         {
-            PositionIterator iter = positionIterator();
+            PositionIterator iter = new DefaultPositionIterator(Float32VectorArray.this.size());
 
             @Override
             public boolean hasNext()

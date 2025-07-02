@@ -4,7 +4,6 @@
 package net.sci.array.numeric.process;
 
 import net.sci.array.Array;
-import net.sci.array.Array.PositionIterator;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.VectorArray;
 
@@ -26,10 +25,8 @@ public interface VectorArrayMarginalOperator extends ScalarArrayOperator
 			ScalarArray<?> resultChannel = processScalar(source.channel(c));
 
 			// copy result values into target array
-			PositionIterator posIter = resultChannel.positionIterator();
-			while (posIter.hasNext())
+			for (int[] pos : resultChannel.positions())
 			{
-			    int[] pos = posIter.next();
 			    target.setValue(pos, c, resultChannel.getValue(pos));
 			}
 		}

@@ -297,20 +297,9 @@ public interface Array<T> extends Iterable<T>, Dimensional
         {
             public java.util.Iterator<int[]> iterator()
             {
-                return positionIterator();
+                return new DefaultPositionIterator(Array.this.size());
             }
         };
-    }
-    
-    /**
-     * Return an instance if PositionIterator that allows to iterate over the
-     * positions of a multi-dimensional array.
-     * 
-     * @return an instance of PositionIterator
-     */
-    public default PositionIterator positionIterator()
-    {
-        return new DefaultPositionIterator(this.size());
     }
     
     /**
@@ -350,9 +339,10 @@ public interface Array<T> extends Iterable<T>, Dimensional
     {
         return new Iterator<T>()
         {
-            PositionIterator iter = positionIterator();
+            int[] dims = Array.this.size();
+            PositionIterator iter = new DefaultPositionIterator(dims);
             // keep an array of coordinates to avoid repetitive allocation of array
-            int[] pos = new int[dimensionality()];
+            int[] pos = new int[dims.length];
 
             @Override
             public boolean hasNext()

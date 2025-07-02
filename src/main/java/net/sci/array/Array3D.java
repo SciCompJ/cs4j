@@ -314,10 +314,18 @@ public abstract class Array3D<T> implements Array<T>
 		}
 	}
 	
-	public PositionIterator positionIterator()
+    @Override
+    public Iterable<int[]> positions()
     {
-        return new PositionIterator3D();
+        return new Iterable<int[]>()
+        {
+            public java.util.Iterator<int[]> iterator()
+            {
+                return new PositionIterator3D();
+            }
+        };
     }
+    
 
     @Override
     public boolean containsPosition(int[] pos)
@@ -366,17 +374,13 @@ public abstract class Array3D<T> implements Array<T>
         
         public int get(int dim)
         {
-            switch (dim)
+            return switch (dim)
             {
-            case 0:
-                return posX;
-            case 1:
-                return posY;
-            case 2:
-                return posZ;
-            default:
-                throw new IllegalArgumentException("Requires dimension beween 0 and 2");
-            }
+                case 0 -> posX;
+                case 1 -> posY;
+                case 2 -> posZ;
+                default -> throw new IllegalArgumentException("Requires dimension beween 0 and 2");
+            };
         }
         
         @Override

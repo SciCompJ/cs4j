@@ -8,6 +8,7 @@ import java.util.function.Function;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
+import net.sci.array.impl.DefaultPositionIterator;
 
 /**
  * Computes a crude sub-sampled (decimated) version of the input array, by
@@ -123,7 +124,7 @@ public class SubSample extends AlgoStub implements ArrayOperator
         int[] pos2 = new int[nd];
         
 	    // copy elements of input array to result
-	    Array.PositionIterator iter = result.positionIterator();
+	    Array.PositionIterator iter = new DefaultPositionIterator(result.size());
 	    while(iter.hasNext())
 	    {
 	        int[] pos = iter.next();

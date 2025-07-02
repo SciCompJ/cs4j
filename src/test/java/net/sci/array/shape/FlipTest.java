@@ -93,10 +93,8 @@ public class FlipTest
     {
         int[] dims = new int[] {6, 4};
         UInt16Array array = UInt16Array.create(dims);
-        Array.PositionIterator iter = array.positionIterator();
-        while(iter.hasNext())
+        for (int[] pos : array.positions())
         {
-            int[] pos = iter.next();
             int value = 0;
             for (int d = 0; d < 2; d++)
             {

@@ -165,15 +165,6 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
      }
 
      /* (non-Javadoc)
-      * @see net.sci.array.Array#positionIterator()
-      */
-     @Override
-     public net.sci.array.Array.PositionIterator positionIterator()
-     {
-         return this.array1.positionIterator();
-     }
-
-     /* (non-Javadoc)
       * @see net.sci.array.Array#dimensionality()
       */
      @Override
