@@ -143,6 +143,7 @@ public class Centroid2D extends RegionAnalyzer2D<Point2D>
             table.setValue(row, 1, point.y());
             row++;
 		}
+        table.getRowAxis().setName("Label");
 	
 		return table;
 	}
