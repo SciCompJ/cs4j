@@ -51,7 +51,7 @@ public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
             Ellipse2D ellipse = map.get(label);
             
             // add an entry to the resulting data table
-            table.setValue(row, "Label", label);
+            table.setRowName(row, Integer.toString(label));
             
             // coordinates of centroid
             Point2D center = ellipse.center();
@@ -68,6 +68,11 @@ public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
             row++;
         }
     
+        // setup meta-data
+        table.setName("MaxFeret");
+        table.getRowAxis().setName("Label");
+        
+        // return created table
         return table;
     }
 

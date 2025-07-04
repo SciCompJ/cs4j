@@ -120,6 +120,11 @@ public class IntrinsicVolumes2D extends RegionAnalyzer2D<IntrinsicVolumes2D.Resu
             row++;
         }
     
+        // setup meta-data
+        table.setName("Morphology");
+        table.getRowAxis().setName("Label");
+        
+        // return created table
         return table;
     }
 

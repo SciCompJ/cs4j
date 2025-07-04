@@ -12,9 +12,10 @@ import net.sci.image.Calibration;
 import net.sci.image.ImageAxis;
 import net.sci.image.label.LabelImages;
 import net.sci.table.Table;
-import net.sci.table.impl.DefaultTable;
 
 /**
+ * Computes the bounds of each region within a label map.
+ * 
  * @author dlegland
  *
  */
@@ -34,8 +35,8 @@ public class RegionBounds2D extends RegionAnalyzer2D<Bounds2D>
     public Table createTable(Map<Integer, Bounds2D> map)
     {
         // Initialize a new result table
-        DefaultTable table = new DefaultTable(map.size(), 4);
-        table.setColumnNames(new String[] {"Bounds.XMin", "Bounds.XMax", "Bounds.YMin", "Bounds.YMax"});
+        String[] colNames = new String[] {"Bounds.XMin", "Bounds.XMax", "Bounds.YMin", "Bounds.YMax"};
+        Table table = Table.create(map.size(), colNames);
     
         // convert the (key, value) pairs in the map into a table with one row
         // per label
@@ -53,7 +54,12 @@ public class RegionBounds2D extends RegionAnalyzer2D<Bounds2D>
             table.setValue(row, 3, bound.yMax());
             row++;
         }
-    
+        
+        // setup meta-data
+        table.setName("RegionBounds");
+        table.getRowAxis().setName("Label");
+        
+        // return created table
         return table;
     }
 

@@ -219,7 +219,6 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
     {
         // Create data table
         String[] colNames = new String[] { 
-                "Label",
                 "Box.CenterX", 
                 "Box.CenterY",
                 "Box.Size1",
@@ -233,7 +232,7 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
         {
             // add an entry to the resulting data table
             int c = 0;
-            table.setValue(iRow, c++, label);
+            table.setRowName(iRow, Integer.toString(label));
             
             // add coordinates of origin pixel (IJ coordinate system)
             OrientedBox2D box = results.get(label);
@@ -248,7 +247,11 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
             iRow++;
         }
         
-        // return the created array
+        // setup meta-data
+        table.setName("OrientedBox");
+        table.getRowAxis().setName("Label");
+        
+        // return created table
         return table;
     }
 

@@ -14,7 +14,6 @@ import net.sci.geom.geom2d.polygon.process.GiftWrappingConvexHull2D;
 import net.sci.image.Calibration;
 import net.sci.image.ImageAxis;
 import net.sci.table.Table;
-import net.sci.table.impl.DefaultTable;
 
 /**
  * Compute the convex hull of each region within a label image and returns a
@@ -81,6 +80,7 @@ public class ConvexHull extends RegionAnalyzer2D<Polygon2D>
         return convexHulls;
     }
     
+    
     // ==================================================
     // Constructor
 
@@ -106,7 +106,7 @@ public class ConvexHull extends RegionAnalyzer2D<Polygon2D>
     public Table createTable(Map<Integer, Polygon2D> map)
     {
         // Initialize a new result table
-        DefaultTable table = new DefaultTable(map.size(), 3);
+        Table table = Table.create(map.size(), 3);
         table.setColumnNames(new String[] {"Hull.Centroid.X", "Hull.Centroid.Y", "Hull.Area"});
     
         // Convert all results that were computed during execution of the
@@ -125,6 +125,10 @@ public class ConvexHull extends RegionAnalyzer2D<Polygon2D>
             i++;
         }
     
+        // setup meta-data
+        table.setName("MaxFeret");
+        table.getRowAxis().setName("Label");
+        
         return table;
     }
 
@@ -142,15 +146,6 @@ public class ConvexHull extends RegionAnalyzer2D<Polygon2D>
      */
     public Polygon2D[] analyzeRegions(IntArray2D<?> image, int[] labels, Calibration calib)
     {
-//        // size of image
-//        int sizeX = image.size(0);
-//        int sizeY = image.size(1);
-//
-//        // create associative array to know index of each label
-//        HashMap<Integer, Integer> labelIndices = LabelImages.mapLabelIndices(labels);
-//        
-//        int nLabels = labelIndices.size();
-        
         Polygon2D[] convexHulls = convexHull(image, labels);
 
         // Extract spatial calibration

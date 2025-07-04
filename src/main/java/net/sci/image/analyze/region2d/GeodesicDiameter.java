@@ -274,11 +274,12 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
         int iRow = 0;
         for (int label : results.keySet())
         {
+            table.setRowName(iRow, Integer.toString(label));
+            
             // current diameter
             Result res = results.get(label);
             
             // add an entry to the resulting data table
-            table.setValue(iRow, "Label", label);
             table.setValue(iRow, "GeodesicDiameter", res.diameter);
             
             // coordinates of max inscribed circle
@@ -296,6 +297,11 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
             iRow++;
         }
     
+        // setup meta-data
+        table.setName("GeodesicDiameter");
+        table.getRowAxis().setName("Label");
+        
+        // return the created array
         return table;
     }
 
