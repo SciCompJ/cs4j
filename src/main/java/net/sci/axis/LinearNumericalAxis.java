@@ -110,7 +110,8 @@ public class LinearNumericalAxis implements NumericalAxis
         return new double[] {this.origin - 0.5 * this.spacing, this.origin + this.spacing * (number - 0.5)};
     }
     
-    public double indexToValue(double index)
+    @Override
+    public double indexToValue(int index)
     {
         return index * this.spacing + this.origin;
     }
@@ -124,6 +125,7 @@ public class LinearNumericalAxis implements NumericalAxis
      *            a numerical value on the axis
      * @return the closest index that corresponds to this value
      */
+    @Override
     public int valueToIndex(double value)
     {
         return (int) Math.round((value - this.origin) / this.spacing);

@@ -17,7 +17,14 @@ public interface NumericalAxis extends Axis
     // =============================================================
     // General methods
 
-    public double indexToValue(double index);
+    /**
+     * Returns the numerical value corresponding to the specified index.
+     * 
+     * @param index
+     *            the index within the axis
+     * @return the numerical value corresponding to the index
+     */
+    public double indexToValue(int index);
     
     /**
      * Returns the closest index that corresponds to the specified value.
