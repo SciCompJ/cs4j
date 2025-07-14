@@ -54,6 +54,22 @@ public class FloatColumnTest
         assertEquals(26.1, sum, 0.01);
     }
     
+    /**
+     * Test method for {@link net.sci.table.FloatColumn#selectRows(int[])}.
+     */
+    @Test
+    public final void testSelectRowsIntArray()
+    {
+        FloatColumn column = createFloatColumn();
+        int[] inds = new int[] {1, 3, 4};
+        
+        FloatColumn res = column.selectRows(inds);
+        
+        assertEquals(inds.length, res.length());
+        assertEquals(column.getValue(1), res.getValue(0), 0.01);
+        assertEquals(column.getValue(4), res.getValue(2), 0.01);
+    }
+
     private FloatColumn createFloatColumn()
     {
         double[] values = new double[] {3.0, 4.5, 5.3, 6.1, 7.2};

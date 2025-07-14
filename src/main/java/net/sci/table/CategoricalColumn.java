@@ -4,6 +4,7 @@
 package net.sci.table;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 import net.sci.table.impl.DefaultCategoricalColumn;
 
@@ -139,6 +140,15 @@ public interface CategoricalColumn extends Column
      */
     public void setLevelIndex(int row, int index);
 
+    @Override
+    public default CategoricalColumn selectRows(int[] rowIndices)
+    {
+        int[] newIndices = IntStream.of(rowIndices)
+                .map(index -> getLevelIndex(index))
+                .toArray();
+        return create(this.getName(), newIndices, levelNames());
+    }
+    
     /**
      * Returns the category name for the specified row index.
      * 

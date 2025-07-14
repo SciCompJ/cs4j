@@ -15,6 +15,18 @@ package net.sci.table;
 public interface Column
 {
     /**
+     * Returns a selection of the elements within the column, keeping as much
+     * meta data as possible.
+     * 
+     * @param rowIndices
+     *            the array of indices of the rows to keep. May contain
+     *            duplicates.
+     * @return a new Column with same type of data and containing the selection
+     *         of rows
+     */
+    public Column selectRows(int[] rowIndices);
+    
+    /**
      * Returns a string representation of the element at the specified row.
      * Default behavior is to convert the result of the <code>get()</code>
      * method into a String instance, but more efficient behaviors may be

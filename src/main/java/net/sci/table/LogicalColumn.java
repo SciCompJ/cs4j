@@ -52,6 +52,17 @@ public interface LogicalColumn extends NumericColumn, Iterable<Boolean>
     public void setState(int row, boolean b);
     
     @Override
+    public default LogicalColumn selectRows(int[] rowIndices)
+    {
+        boolean[] newStates = new boolean[rowIndices.length];
+        for (int i = 0; i < rowIndices.length; i++)
+        {
+            newStates[i] = getState(rowIndices[i]);
+        }
+        return create(this.getName(), newStates);
+    }
+    
+    @Override
     public default Object get(int row)
     {
         return Boolean.valueOf(this.getState(row));

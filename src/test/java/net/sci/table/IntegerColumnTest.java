@@ -63,6 +63,22 @@ public class IntegerColumnTest
         assertEquals(15, sum, 0.01);
     }
     
+    /**
+     * Test method for {@link net.sci.table.IntegerColumn#selectRows(int[])}.
+     */
+    @Test
+    public final void testSelectRowsIntArray()
+    {
+        IntegerColumn column = createIntegerColumn();
+        int[] inds = new int[] {1, 3, 4};
+        
+        IntegerColumn res = column.selectRows(inds);
+        
+        assertEquals(inds.length, res.length());
+        assertEquals(column.getInt(1), res.getInt(0), 0.01);
+        assertEquals(column.getInt(4), res.getInt(2), 0.01);
+    }
+
     private IntegerColumn createIntegerColumn()
     {
         int[] values = new int[] {1, 2, 3, 4, 5};

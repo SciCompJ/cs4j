@@ -4,6 +4,7 @@
 package net.sci.table;
 
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 import net.sci.table.impl.DefaultIntegerColumn;
 
@@ -63,6 +64,15 @@ public interface IntegerColumn extends NumericColumn, Iterable<Integer>
      *            the new integer value
      */
     public void setInt(int row, int value);
+    
+    @Override
+    public default IntegerColumn selectRows(int[] rowIndices)
+    {
+        int[] newValues = IntStream.of(rowIndices)
+                .map(index -> getInt(index))
+                .toArray();
+        return create(this.getName(), newValues);
+    }
     
     @Override
     public default Object get(int row)

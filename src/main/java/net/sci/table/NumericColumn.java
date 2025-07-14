@@ -161,6 +161,15 @@ public interface NumericColumn extends Column
     }
     
     @Override
+    public default NumericColumn selectRows(int[] rowIndices)
+    {
+        double[] newValues = IntStream.of(rowIndices)
+                .mapToDouble(index -> getValue(index))
+                .toArray();
+        return create(this.getName(), newValues);
+    }
+    
+    @Override
     public default String getString(int row)
     {
         return String.format(Locale.ENGLISH, "%.3f", this.getValue(row));

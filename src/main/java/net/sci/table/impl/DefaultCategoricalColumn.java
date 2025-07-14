@@ -12,8 +12,15 @@ import net.sci.table.CategoricalColumn;
  */
 public class DefaultCategoricalColumn extends ColumnStub implements CategoricalColumn
 {
-    int[] data;
+    /**
+     * The array of level names. 
+     */
     String[] levels;
+    
+    /**
+     * The array of level indices. Values must range between 0 and nLevels-1.
+     */
+    int[] data;
 
     public DefaultCategoricalColumn(String name, int[] indices, String[] levels)
     {

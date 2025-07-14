@@ -3,6 +3,8 @@
  */
 package net.sci.table;
 
+import java.util.stream.IntStream;
+
 import net.sci.table.impl.DefaultNumericColumn;
 
 /**
@@ -35,6 +37,15 @@ public interface FloatColumn extends NumericColumn, Iterable<Double>
     public static FloatColumn create(String name, double[] values)
     {
         return new DefaultNumericColumn(name, values);
+    }
+    
+    @Override
+    public default FloatColumn selectRows(int[] rowIndices)
+    {
+        double[] newValues = IntStream.of(rowIndices)
+                .mapToDouble(index -> getValue(index))
+                .toArray();
+        return create(this.getName(), newValues);
     }
     
     @Override

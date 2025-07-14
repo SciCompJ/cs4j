@@ -54,6 +54,23 @@ public class LogicalColumnTest
         assertEquals(2, sum, 0.01);
     }
     
+    /**
+     * Test method for {@link net.sci.table.LogicalColumn#selectRows(int[])}.
+     */
+    @Test
+    public final void testSelectRowsIntArray()
+    {
+        LogicalColumn column = createLogicalColumn();
+        int[] inds = new int[] {1, 3, 4};
+        
+        LogicalColumn res = column.selectRows(inds);
+        
+        assertEquals(inds.length, res.length());
+        assertEquals(column.getState(1), res.getState(0));
+        assertEquals(column.getState(3), res.getState(1));
+        assertEquals(column.getState(4), res.getState(2));
+    }
+
     private LogicalColumn createLogicalColumn()
     {
         boolean[] values = new boolean[] {true, false, false, true, false};
