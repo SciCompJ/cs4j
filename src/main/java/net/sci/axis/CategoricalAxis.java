@@ -5,6 +5,7 @@ package net.sci.axis;
 
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
 /**
  * Categorical axis, that encapsulates a series of item names.
@@ -14,6 +15,26 @@ import java.util.Locale;
  */
 public class CategoricalAxis implements Axis
 {
+    // =============================================================
+    // Static factories
+    
+    /**
+     * Creates a new CategoricalAxis instance with the specified name and
+     * levels. This method has to be preferred over the call to constructor,
+     * that may become protected in a future release.
+     * 
+     * @param name
+     *            the name of the axis
+     * @param levels
+     *            the list of unique levels describing axis
+     * @return a new instance of CategoricalAxis
+     */
+    public static final CategoricalAxis create(String name, String[] levels)
+    {
+        return new CategoricalAxis(name, levels);
+    }
+    
+    
     // =============================================================
     // Class fields
     
@@ -45,10 +66,13 @@ public class CategoricalAxis implements Axis
         this.itemNames = itemNames;
     }
     
+    
     // =============================================================
     // getters / setters
     
     /**
+     * Returns the number of items in the axis.
+     * 
      * @return the number of items on this axis, corresponding to its length
      */
     public int length()
@@ -110,16 +134,25 @@ public class CategoricalAxis implements Axis
         this.name = name;
     }
 
-    
-    // =============================================================
-    // Methods overriding Object
-    
+    @Override
+    public CategoricalAxis selectElements(int[] indices)
+    {
+        String[] newItems = IntStream.of(indices)
+                .mapToObj(index -> (String) itemName(index))
+                .toArray(String[]::new);
+        return new CategoricalAxis(getName(), newItems);
+    }
+
     @Override
     public CategoricalAxis duplicate()
     {
         return new CategoricalAxis(this.name, Arrays.copyOf(this.itemNames, this.itemNames.length));
     }
  
+    
+    // =============================================================
+    // Methods overriding Object
+    
     @Override
     public String toString()
     {

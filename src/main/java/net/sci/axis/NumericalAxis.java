@@ -3,6 +3,8 @@
  */
 package net.sci.axis;
 
+import java.util.stream.IntStream;
+
 /**
  * Numerical axis, for spatial, time, wave-length... axes. Numerical axes are
  * not necessarily "bounded", and may provide values for any index.
@@ -45,7 +47,15 @@ public interface NumericalAxis extends Axis
     
     public void setUnitName(String unitName);
     
-    
+    @Override
+    public default NumericalAxis selectElements(int[] indices)
+    {
+        double[] newValues = IntStream.of(indices)
+                .mapToDouble(index -> indexToValue(index))
+                .toArray();
+        return new GenericNumericalAxis(getName(), newValues, getUnitName());
+    }
+
     // =============================================================
     // Methods overriding Object
     

@@ -36,6 +36,18 @@ public interface Axis
     }
     
     /**
+     * Returns a new axis based on a selection of this axis elements' specified
+     * by an array of indices.
+     * 
+     * @param indices
+     *            the array of indices of the elements to keep. Should not
+     *            contain duplicate.
+     * @return a new Axis with same type as this axis and containing the
+     *         selection of elements
+     */
+    public Axis selectElements(int[] indices);
+    
+    /**
      * Duplicates this axis.
      * 
      * @return a duplicated axis
