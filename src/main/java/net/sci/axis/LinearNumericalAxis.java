@@ -94,22 +94,6 @@ public class LinearNumericalAxis implements NumericalAxis
     // =============================================================
     // General methods
 
-    /**
-     * @return the physical length of the given number of elements 
-     */
-    public double physicalLength(int number)
-    {
-        return number * this.spacing;
-    }
-    
-    /**
-     * @return the physical range occupied by the given number of elements  
-     */
-    public double[] physicalRange(int number)
-    {
-        return new double[] {this.origin - 0.5 * this.spacing, this.origin + this.spacing * (number - 0.5)};
-    }
-    
     @Override
     public double indexToValue(int index)
     {

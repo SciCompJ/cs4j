@@ -138,7 +138,8 @@ public class Calibration
     
 
     /**
-     * Converts the size of an array into its equivalent physical extent.
+     * Converts the size of an array containing image data into its equivalent
+     * physical extent.
      * 
      * @param arraySize
      *            the size of the array
@@ -159,7 +160,9 @@ public class Calibration
         double[][] res = new double[nd][2];
         for (int d = 0; d < nd; d++)
         {
-            res[d] = spaceAxes[d].physicalRange(arraySize[d]);
+            double origin = spaceAxes[d].getOrigin();
+            double spacing = spaceAxes[d].getSpacing();
+            res[d] = new double[] {origin - spacing * 0.5, origin + (arraySize[d] - 0.5) * spacing}; 
         }
         
         return res;
