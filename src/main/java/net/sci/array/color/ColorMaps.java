@@ -61,7 +61,7 @@ public class ColorMaps
             ArrayList<Color> colors = new ArrayList<Color>(nColors);
             for (int i = 0; i < nColors; i++)
             {
-                int gray = (int) (i * 255.0 / nColors);
+                int gray = (int) (i * 256.0 / nColors + 0.5);
                 colors.add(new RGB8(gray, gray, gray));
             }
             return new DefaultColorMap(colors);
@@ -278,10 +278,43 @@ public class ColorMaps
                 colors.add(new RGB8(r[i], g[i], b[i]));
             }
             
-            return  colors;
+            return colors;
         }
     };
     
+    public static final ColorMapFactory HSV = new ColorMapFactory()
+    {
+        @Override
+        public ColorMap createColorMap(int nColors)
+        {
+            // create map
+            ArrayList<Color> colors = new ArrayList<Color>(nColors);
+            
+            // cast elements
+            for (int i = 0; i < nColors; i++) 
+            {
+                colors.add(hueColor(((double) i) / nColors));
+            }
+            return new DefaultColorMap(colors);
+        }
+
+        private RGB8 hueColor(double hue_unitRange)
+        {
+            int X = (int) ((1.0 - Math.abs((hue_unitRange * 6) % 2 - 1)) * 255);
+            int portion = (int) Math.floor(hue_unitRange * 6);
+            return switch (portion)
+            {
+                case 0 -> new RGB8(255, X, 0);
+                case 1 -> new RGB8(X, 255, 0);
+                case 2 -> new RGB8(0, 255, X);
+                case 3 -> new RGB8(0, X, 255);
+                case 4 -> new RGB8(X, 0, 255);
+                case 5 -> new RGB8(255, 0, X);
+                default -> throw new RuntimeException("Input value of hue must be within 0 and 1");
+            };
+        }
+    };
+            
     /**
      * Private constructor to prevent instantiation
      */
