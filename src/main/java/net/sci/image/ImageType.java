@@ -40,9 +40,12 @@ public interface ImageType
     // Implementation of global constants
 
     /**
-     * Grayscale image type, ususally corresponding to integer data with
-     * non-negative values. Images are rendered using a linear variation from
-     * black to white. Values are rescaled according to the display range.
+     * Grayscale image type, usually corresponding to integer data with
+     * non-negative values. All the values within array are expected to be
+     * finite (i.e., no NaN or infinite values).
+     * 
+     * Images are rendered using a linear variation from black to white. Values
+     * are rescaled according to the display range.
      */
     public final static ImageType GRAYSCALE = new ImageType()
     {
@@ -233,7 +236,7 @@ public interface ImageType
             ColorMap lut = settings.getColorMap();
             if (lut == null)
             {
-                lut = ColorMaps.GRAY.createColorMap(256); 
+                lut = ColorMaps.GRAY.createColorMap(255); 
             }
     
             // Computes the color model
@@ -401,7 +404,7 @@ public interface ImageType
             ColorMap lut = image.getDisplaySettings().getColorMap();
             if (lut == null)
             {
-                lut = ColorMaps.GLASBEY.createColorMap(256); 
+                lut = ColorMaps.GLASBEY.createColorMap(255); 
             }
 
             // Computes the color model
@@ -826,7 +829,7 @@ public interface ImageType
             ColorMap lut = settings.getColorMap();
             if (lut == null)
             {
-                lut = ColorMaps.BLUE_WHITE_RED.createColorMap(256); 
+                lut = ColorMaps.BLUE_WHITE_RED.createColorMap(255); 
             }
 
             // Computes the color model
@@ -891,6 +894,98 @@ public interface ImageType
             settings.setColorMap(ColorMaps.BLUE_WHITE_RED.createColorMap(256));
             // Display NaN values as green.
             settings.setBackgroundColor(RGB8.GREEN);
+        }
+
+        @Override
+        public String toString()
+        {
+            return "Value";
+        }
+    };
+
+    /**
+     * Image type containing angle values. Values range within a finite
+     * interval, with a periodic or cyclic behavior: the minimal and maximal
+     * bounds of the interval correspond to the same value.
+     * 
+     * For floating point values, NaN values are considered as background.
+     */
+    public final static ImageType ANGLE = new ImageType()
+    {
+        @Override
+        public BufferedImage createAwtImage(Image image)
+        {
+            // Check adequacy of array type with image type
+            Array<?> array = image.getData();
+            if (array.dimensionality() != 2)
+            {
+                throw new RuntimeException("Requires an image with array dimensionality equal to 2");
+            }
+            if (!(array instanceof ScalarArray))
+            {
+                throw new RuntimeException("Divergent images must contain an array of Scalars");
+            }
+            ScalarArray2D<?> array2d = ScalarArray2D.wrapScalar2d((ScalarArray<?>) array);
+            DisplaySettings settings = image.getDisplaySettings();
+            
+            // extract LUT from image, or create one otherwise
+            ColorMap lut = settings.getColorMap();
+            if (lut == null)
+            {
+                lut = ColorMaps.HSV.createColorMap(255); 
+            }
+
+            // Computes the color model
+            IndexColorModel cm = createIndexColorModel(lut, settings.backgroundColor);
+            
+            int sizeX = array.size(0);
+            int sizeY = array.size(1);
+            
+            // Create the AWT image
+            BufferedImage bufImg = new BufferedImage(sizeX, sizeY, BufferedImage.TYPE_BYTE_INDEXED, cm);
+           
+            // Populate the raster
+            WritableRaster raster = bufImg.getRaster();
+            double v0 = settings.getDisplayRange()[0];
+            double v1 = settings.getDisplayRange()[1];
+            double range = (v1 - v0); 
+            for (int y = 0; y < sizeY; y++)
+            {
+                for (int x = 0; x < sizeX; x++)
+                {
+                    double value = array2d.getValue(x, y);
+                    int index = Double.isFinite(value) ? (int) Math.clamp((value - v0) * 255.0 / range, 0, 254) + 1 : 0;
+                    raster.setSample(x, y, 0, index);
+                }
+            }
+
+            return bufImg;
+        }
+
+        @Override
+        public boolean isCompatibleWith(Array<?> array)
+        {
+            return Scalar.class.isAssignableFrom(array.elementClass());
+        }
+
+        @Override
+        public void setupCalibration(Image image)
+        {
+            image.getCalibration().setChannelAxis(new CategoricalAxis("Value", new String[] { "Angle" }));
+        }
+
+        @Override
+        public void setupDisplaySettings(Image image)
+        {
+            DisplaySettings settings = image.getDisplaySettings();
+            
+            // default value range for floating point values
+            image.displaySettings.displayRange = new double[] { 0.0, 1.0};
+            
+            // compute HSV lut by default
+            settings.setColorMap(ColorMaps.HSV.createColorMap(255));
+            // Display NaN values as black.
+            settings.setBackgroundColor(RGB8.BLACK);
         }
 
         @Override
