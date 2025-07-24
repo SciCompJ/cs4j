@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import net.sci.table.Table;
 
@@ -41,4 +42,19 @@ public class DelimitedTableReaderTest
         assertEquals(5, table.columnCount());
     }
 
+    @Test
+    public final void testReadTable_InputStream_IrisData() throws IOException
+    {
+        String filePath = "tables/iris/iris.data";
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(filePath);
+
+        DelimitedTableReader reader = new DelimitedTableReader(",");
+        reader.setReadHeader(false);
+        reader.setReadRowNames(false);
+
+        Table table = reader.readTable(stream);
+
+        assertEquals(150, table.rowCount());
+        assertEquals(5, table.columnCount());
+    }
 }

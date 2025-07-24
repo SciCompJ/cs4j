@@ -3,11 +3,15 @@
  */
 package net.sci.table.io;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import net.sci.table.CategoricalColumn;
 import net.sci.table.Column;
@@ -128,35 +132,48 @@ public class DelimitedTableReader implements TableReader
     @Override
     public Table readTable(File file) throws IOException
     {
+        // read the table from a stream obtained from the file
+        FileInputStream stream = new FileInputStream(file);
+        Table table = readTable(stream);
+        
+        // also set the name of the table to the name of the file
+        table.setName(file.getName());
+        return table;
+    }
+    
+    /**
+     * Reads a data table from the specified input stream.
+     * 
+     * @param stream
+     *            the stream to read data from
+     * @return a new Table
+     * @throws IOException
+     *             if a problem occurred during reading
+     */
+    public Table readTable(InputStream stream) throws IOException
+    {
         // meta data for table
         int nCols;
         ArrayList<ArrayList<String>> columnTokens;
         String[] colNames;
         ArrayList<String> rowNames = new ArrayList<String>();
-
-        // Create text reader from file
-        LineNumberReader reader;
-        try
-        {
-            reader = new LineNumberReader(new FileReader(file));
-        }
-        catch (IOException ex)
-        {
-            throw new RuntimeException("Could not open file: " + file, ex);
-        }
-
+        
+        // Create text reader from the stream
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream));
+        LineNumberReader reader = new LineNumberReader(br);
+        
         // optionally skip some lines
         for (int r = 0; r < skipLines; r++)
         {
             reader.readLine();
         }
-
+        
         String delimiterRegexp = "[" + delimiters + "]+";
-
+        
         // parse header line
         String firstLine = reader.readLine();
         String[] lineTokens = firstLine.split(delimiterRegexp);
-
+        
         // parse first line to identify number of columns
         if (readHeader)
         {
@@ -174,14 +191,14 @@ public class DelimitedTableReader implements TableReader
             nCols = lineTokens.length;
             colNames = new String[nCols];
         }
-
+        
         // Allocate array lists for columns
         columnTokens = new ArrayList<ArrayList<String>>(nCols);
         for (int c = 0; c < nCols; c++)
         {
             columnTokens.add(new ArrayList<String>());
         }
-
+        
         if (!readHeader)
         {
             // read column values as strings
@@ -191,7 +208,7 @@ public class DelimitedTableReader implements TableReader
                 columnTokens.get(c).add(lineTokens[c + offset]);
             }
         }
-
+        
         // read regular lines
         while (true)
         {
@@ -204,7 +221,7 @@ public class DelimitedTableReader implements TableReader
             {
                 break;
             }
-
+            
             // read tokens of current row
             lineTokens = line.split(delimiterRegexp);
             if (readRowNames)
@@ -225,9 +242,9 @@ public class DelimitedTableReader implements TableReader
                 }
             }
         }
-
+        
         reader.close();
-
+        
         // convert columns
         Column[] columns = new Column[nCols];
         for (int c = 0; c < nCols; c++)
@@ -235,16 +252,13 @@ public class DelimitedTableReader implements TableReader
             columns[c] = createColumn(colNames[c], columnTokens.get(c));
         }
         Table table = new ColumnsTable(columns);
-
+        
         // populates meta-data
         if (readRowNames)
         {
             table.setRowNames(rowNames.toArray(new String[0]));
         }
-
-        // also set the name of the table to the name of the file
-        table.setName(file.getName());
-
+        
         return table;
     }
     
@@ -307,16 +321,9 @@ public class DelimitedTableReader implements TableReader
     private static final CategoricalColumn createCategoricalColumn(String name, ArrayList<String> tokens)
     {
         // first compute levels
-        ArrayList<String> levelTokens = new ArrayList<String>();
-        for (String token : tokens)
-        {
-            if (!(levelTokens.contains(token)))
-            {
-                levelTokens.add(token);
-            }
-        }
+        List<String> levelTokens = tokens.stream().distinct().toList(); 
         
-        // then compute level index for each tokn
+        // then compute level index for each token
         int nRows = tokens.size();
         int[] indices = new int[nRows];
         for (int r = 0; r < nRows; r++)
@@ -324,6 +331,6 @@ public class DelimitedTableReader implements TableReader
             String token = tokens.get(r);
             indices[r] = levelTokens.indexOf(token);
         }
-        return CategoricalColumn.create(name, indices, levelTokens.toArray(new String[] {}));
+        return CategoricalColumn.create(name, indices, levelTokens.toArray(new String[0]));
     }
 }
