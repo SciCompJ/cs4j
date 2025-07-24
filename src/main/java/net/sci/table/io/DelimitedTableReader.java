@@ -20,9 +20,18 @@ import net.sci.table.Table;
 import net.sci.table.impl.ColumnsTable;
 
 /**
- * Read a table from a delimited file. Many options can be set, such as the type
- * of delimiter, the number of lines to skip, or the presence/absence of row
- * names.
+ * Reads a table from a delimited file. Many options can be set through the
+ * Builder class, such as the type of delimiter, the number of lines to skip, or
+ * the presence/absence of row names.
+ * 
+ * {@snippet lang = "java" :
+ * DelimitedTableReader reader = DelimitedTableReader.builder()
+ *      .delimiters(",")
+ *      .readHeader(true)
+ *      .readRowNames(false)
+ *      .build();
+ * Table table = reader.readTable(fileOrInputStream);
+ * }
  * 
  * @author dlegland
  *
@@ -66,6 +75,11 @@ public class DelimitedTableReader implements TableReader
      * Specifies if row names are present in the file. Default is true.
      */
     private boolean readRowNames = true;
+    
+    /**
+     * If true, simply avoid special processing for quotes. Default is false.
+     */
+    private boolean ignoreQuotes = false;
 
     
     // =============================================================
@@ -94,6 +108,7 @@ public class DelimitedTableReader implements TableReader
     // =============================================================
     // Accessors and mutators
 
+    @Deprecated
     public String getDelimiters()
     {
         return delimiters;
@@ -109,6 +124,7 @@ public class DelimitedTableReader implements TableReader
         this.delimiters = delimiters;
     }
 
+    @Deprecated
     public boolean isReadHeader()
     {
         return readHeader;
@@ -124,6 +140,7 @@ public class DelimitedTableReader implements TableReader
         this.readHeader = readHeader;
     }
 
+    @Deprecated
     public int getSkipLines()
     {
         return skipLines;
@@ -139,6 +156,7 @@ public class DelimitedTableReader implements TableReader
         this.skipLines = skipLines;
     }
 
+    @Deprecated
     public boolean isReadRowNames()
     {
         return readRowNames;
@@ -202,11 +220,11 @@ public class DelimitedTableReader implements TableReader
             reader.readLine();
         }
         
+        // convert list of delimiters into a regexp string
         String delimiterRegexp = "[" + delimiters + "]+";
         
         // parse header line
-        String firstLine = reader.readLine();
-        String[] lineTokens = firstLine.split(delimiterRegexp);
+        String[] lineTokens = parseTokens(reader.readLine(), delimiterRegexp);
         
         // parse first line to identify number of columns
         if (readHeader)
@@ -257,7 +275,7 @@ public class DelimitedTableReader implements TableReader
             }
             
             // read tokens of current row
-            lineTokens = line.split(delimiterRegexp);
+            lineTokens = parseTokens(line, delimiterRegexp);
             if (readRowNames)
             {
                 rowNames.add(lineTokens[0]);
@@ -294,6 +312,85 @@ public class DelimitedTableReader implements TableReader
         }
         
         return table;
+    }
+    
+    private String[] parseTokens(String line, String delimiterRegexp)
+    {
+        return this.ignoreQuotes ? line.split(delimiterRegexp) : splitQuotedTokens(line, delimiterRegexp);
+    }
+    
+    /**
+     * Splits the input string into tokens, using the specified delimiters, and
+     * taking into account tokens delimited with double quotes.
+     * 
+     * @param string
+     *            the String to parse
+     * @param delimiters
+     *            the token delimiters
+     * @return the list of tokens within the String
+     */
+    static final String[] splitQuotedTokens(String string, String delimiters)
+    {
+        ArrayList<String> tokens = new ArrayList<String>();
+        
+        String delimiterRegexp = "[" + delimiters + "]+";
+        
+        // iterate over token starts
+        String remainingString = string;
+        while (!remainingString.isEmpty())
+        {
+            if (remainingString.startsWith("\""))
+            {
+                // Process token enclosed with quotes
+                String[] splitted = splitToNextNonEscapedQuote(remainingString);
+                tokens.add(splitted[0]);
+                
+                if (splitted.length == 1 || splitted[1].isEmpty())
+                {
+                    break;
+                }
+                // otherwise, use the second part as new remaining string
+                String[] remainingTokens = splitted[1].split(delimiterRegexp, 2);
+                remainingString = remainingTokens.length > 1 ? remainingTokens[1] : "";
+            }
+            else
+            {
+                // process "regular" token
+                // iterate over next delimiter, or end of string
+                String[] splitted = remainingString.split(delimiterRegexp, 2);
+                tokens.add(splitted[0]);
+                
+                // otherwise, use the second part as new remaining string 
+                remainingString = splitted.length > 1 ? splitted[1] : "";
+            }
+        }
+        
+        return tokens.toArray(String[]::new);
+    }
+    
+    private static final String[] splitToNextNonEscapedQuote(String string)
+    {
+        int startIndex = 1;
+        int index;
+        while (true)
+        {
+            index = string.indexOf('"', startIndex);
+            if (index < 0) throw new RuntimeException("Could not find closing quote");
+            
+            // check escaped quotes
+            if (index < string.length() - 1)
+            {
+                if (string.charAt(index + 1) == '"')
+                {
+                    startIndex = index + 2;
+                    continue;
+                }
+            }
+            break;
+        }
+        String sub1 = string.substring(1, index);
+        String sub2 = string.substring(index+1);
+        return new String[] {sub1, sub2};
     }
     
     private static final Column createColumn(String name, ArrayList<String> tokens)
@@ -373,7 +470,11 @@ public class DelimitedTableReader implements TableReader
      */
     public static class Builder
     {
-        private DelimitedTableReader reader = new DelimitedTableReader();
+        private String delimiters = " \t";
+        private boolean readHeader = true;
+        private int skipLines = 0;
+        private boolean readRowNames = true;
+        private boolean ignoreQuotes = false;
         
         private Builder()
         {
@@ -389,12 +490,12 @@ public class DelimitedTableReader implements TableReader
          */
         public Builder delimiters(String delimiters)
         {
-            reader.delimiters = delimiters;
+            this.delimiters = delimiters;
             return this;
         }
         
         /**
-         * Chooses whether the header line must be read. Default is {@ode true}.
+         * Chooses whether the header line must be read. Default is {@code true}.
          * 
          * @param readHeader
          *            the boolean flag for reading the header
@@ -402,7 +503,7 @@ public class DelimitedTableReader implements TableReader
          */
         public Builder readHeader(boolean readHeader)
         {
-            reader.readHeader = readHeader;
+            this.readHeader = readHeader;
             return this;
         }
 
@@ -416,7 +517,7 @@ public class DelimitedTableReader implements TableReader
          */
         public Builder skipLines(int skipLines)
         {
-            reader.skipLines = skipLines;
+            this.skipLines = skipLines;
             return this;
         }
 
@@ -430,12 +531,37 @@ public class DelimitedTableReader implements TableReader
          */
         public Builder readRowNames(boolean readRowNames)
         {
-            reader.readRowNames = readRowNames;
+            this.readRowNames = readRowNames;
             return this;
         }
         
+        /**
+         * Chooses whether processing of quotes should be avoided. If true,
+         * simply avoid special processing for quotes. Default is false.
+         * 
+         * @param ignoreQuotes
+         *            the boolean flag for ignoring the quotes
+         * @return a reference to the Builder class.
+         */
+        public Builder ignoreQuotes(boolean ignoreQuotes)
+        {
+            this.ignoreQuotes = ignoreQuotes;
+            return this;
+        }
+        
+        /**
+         * Creates a new instance of DelimitedTableReader based on current
+         * settings.
+         * 
+         * @return a correctly initialized DelimitedTableReader
+         */
         public DelimitedTableReader build()
         {
+            DelimitedTableReader reader = new DelimitedTableReader(delimiters);
+            reader.readHeader = this.readHeader;
+            reader.skipLines = this.skipLines;
+            reader.readRowNames = this.readRowNames;
+            reader.ignoreQuotes = this.ignoreQuotes;
             return reader;
         }
     }
