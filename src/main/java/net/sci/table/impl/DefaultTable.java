@@ -207,6 +207,23 @@ public class DefaultTable extends TableStub
             return new CategoricalColumnView(c);
     }
 
+    @Override
+    public void addColumn(Column column)
+    {
+        if (column instanceof NumericColumn numCol)
+        {
+            addColumn(numCol.getName(), numCol.getValues());
+        }
+        else if (column instanceof CategoricalColumn catCol)
+        {
+            addCategoricalColumn(catCol);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Can not add columns with type: " + column.getClass().getName());
+        }
+    }
+
     /**
      * Adds a new numeric column.
      * 
@@ -244,6 +261,36 @@ public class DefaultTable extends TableStub
         this.nCols++;
     }
 
+    private void addCategoricalColumn(CategoricalColumn column)
+    {
+        if (column.length() != nRows)
+        {
+            throw new IllegalArgumentException("Requires a column with length " + nRows);
+        }
+
+        // create new data array
+        double[][] newData = new double[nCols + 1][nRows];
+
+        // copy columns
+        System.arraycopy(this.data, 0, newData, 0, nCols);
+
+        // copy new values
+        System.arraycopy(column.getValues(), 0, newData[nCols], 0, nRows);
+        this.data = newData;
+
+        // copy level array from original column
+        String[] levelNames = column.levelNames();
+        this.levels.add(Arrays.copyOf(levelNames, levelNames.length));
+
+        // copy column names, and create new column axis
+        String[] colNames = new String[nCols + 1];
+        System.arraycopy(columnAxis.itemNames(), 0, colNames, 0, nCols);
+        colNames[nCols] = column.getName();
+        columnAxis = new CategoricalAxis(columnAxis.getName(), colNames);
+
+        this.nCols++;
+    }
+    
     @Override
     public Axis getColumnAxis()
     {

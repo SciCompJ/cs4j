@@ -31,8 +31,15 @@ public class ColumnsTable extends TableStub
     // =============================================================
     // Class variables
     
+    /**
+     * The list of columns that constitute this table.
+     */
     ArrayList<Column> columns;
     
+    /**
+     * The description of the column axis. Use a specific class to interpret
+     * column names as axis element names.
+     */
     ColumnAxisAdapter columnAxis;
     
 
@@ -73,7 +80,7 @@ public class ColumnsTable extends TableStub
 
 
     // =============================================================
-    // Implementation of the Table interface
+    // Utility methods
 
     /**
      * Opens a new JFrame and shows this table inside
@@ -126,6 +133,7 @@ public class ColumnsTable extends TableStub
         return frame;
     }
 
+    
     // =============================================================
     // Implementation of the Table interface
 
@@ -134,10 +142,6 @@ public class ColumnsTable extends TableStub
     {
         return new int[] {rowCount(), columns.size()};
     }
-
-    
-    // =============================================================
-    // Implementation of the Table interface
 
     @Override
     public int columnCount()
@@ -158,8 +162,31 @@ public class ColumnsTable extends TableStub
     }
 
     @Override
+    public void addColumn(Column column)
+    {
+        if (!columns.isEmpty())
+        {
+            if (column.length() != rowCount())
+            {
+                throw new IllegalArgumentException(
+                        "new column must have same length as existing columns in table: " + rowCount());
+            }
+        }
+        this.columns.add(column);
+    }
+    
+    @Override
     public void addColumn(String name, double[] values)
     {
+        if (!columns.isEmpty())
+        {
+            if (values.length != rowCount())
+            {
+                throw new IllegalArgumentException(
+                        "new column must have same length as existing columns in table: " + rowCount());
+            }
+        }
+        
         Column col = NumericColumn.create(name, values);
         this.columns.add(col);
     }

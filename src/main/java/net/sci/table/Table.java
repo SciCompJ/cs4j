@@ -282,16 +282,29 @@ public interface Table
     public void setColumnAxis(Axis axis);
 
     /**
-     * Adds a new (numeric) column to ths table. The column is defined by a name
-     * and a series of value.
+     * Adds a new column to the table (optional operation). The new column must
+     * have the same number of rows as the existing columns.
      * 
-     * @param name
+     * @param column
+     *            the column to add
+     * @throws IllegalArgumentException
+     *             if the column has a a different length than existing columns
+     */
+    public void addColumn(Column column);
+    
+    /**
+     * Adds a new (numeric) column to this table (optional operation). The
+     * column is defined by a name and a series of value.
+     * 
+     * @param colName
      *            the name of the column to add
      * @param values
      *            the values that compose the column. Array length must match
      *            row count of the table.
+     * @throws IllegalArgumentException
+     *             if array has a a different length than existing columns
      */
-    public void addColumn(String name, double[] values);
+    public void addColumn(String colName, double[] values);
     
     /**
      * Returns the names of the columns within this table as a simple String

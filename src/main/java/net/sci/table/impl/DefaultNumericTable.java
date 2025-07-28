@@ -140,15 +140,28 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         return new ColumnView(c);
     }
 
+    @Override
+    public void addColumn(Column column)
+    {
+        if (column instanceof NumericColumn numericColumn)
+        {
+            addColumn(numericColumn.getName(), numericColumn.getValues());
+        }
+        else
+        {
+            throw new IllegalArgumentException("Can only add numeric columns to a NumericTable");
+        }
+    }
+
     /**
      * Adds a new numeric column.
      * 
-     * @param name
+     * @param colName
      *            the name of the new column
      * @param values
      *            the values of the new column
      */
-    public void addColumn(String name, double[] values)
+    public void addColumn(String colName, double[] values)
     {
         if (values.length != nRows)
         {
@@ -171,7 +184,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         // copy column names
         String[] colNames = new String[nCols+1];
         System.arraycopy(columnAxis.itemNames(), 0, colNames, 0, nCols);
-        colNames[nCols] = name;
+        colNames[nCols] = colName;
         
         columnAxis = new CategoricalAxis(columnAxis.getName(), colNames);
     }
