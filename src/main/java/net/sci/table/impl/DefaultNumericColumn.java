@@ -14,7 +14,7 @@ import net.sci.table.FloatColumn;
  * Stores the values as floating-point values; hence the class also implements
  * the <code>FloatColumn</code> interface.
  */
-public class DefaultNumericColumn extends ColumnStub implements FloatColumn
+public class DefaultNumericColumn extends NumericColumnStub implements FloatColumn
 {
     double[] data;
     
@@ -84,6 +84,8 @@ public class DefaultNumericColumn extends ColumnStub implements FloatColumn
     {
         double[] values = new double[this.data.length];
         System.arraycopy(this.data, 0, values, 0, this.data.length);
-        return new DefaultNumericColumn(this.name, values);
+        DefaultNumericColumn dup = new DefaultNumericColumn(this.name, values);
+        dup.setUnitName(unitName);
+        return dup;
     }
 }

@@ -56,12 +56,18 @@ public class DefaultTable extends TableStub
     /**
      * The axis describing columns
      */
-    CategoricalAxis columnAxis = null;
+    CategoricalAxis columnAxis;
 
     /**
      * The list of levels for each column, or null if a column is numeric.
      */
-    ArrayList<String[]> levels = null;
+    ArrayList<String[]> levels;
+    
+    /**
+     * The array of unit names associated to columns. Must have length equal to
+     * the number of columns.
+     */
+    String[] unitNames = null;
     
 
     // =============================================================
@@ -86,12 +92,16 @@ public class DefaultTable extends TableStub
     {
         this(data);
 
-        if (colNames.length != this.nCols) throw new IllegalArgumentException(
-                "Number of column names should match number of data columns");
+        if (colNames.length != this.nCols)
+        {
+            throw new IllegalArgumentException("Number of column names should match number of data columns");
+        }
         this.columnAxis = new CategoricalAxis("", colNames);
-
-        if (rowNames.length != this.nRows) throw new IllegalArgumentException(
-                "Number of row names should match number of data rows");
+        
+        if (rowNames.length != this.nRows)
+        {
+            throw new IllegalArgumentException("Number of row names should match number of data rows");
+        }
         this.rowAxis = new CategoricalAxis("", rowNames);
     }
 
@@ -123,6 +133,8 @@ public class DefaultTable extends TableStub
         {
             this.levels.add(null);
         }
+        
+        this.unitNames = new String[nCols];
     }
     
 
@@ -213,6 +225,9 @@ public class DefaultTable extends TableStub
         if (column instanceof NumericColumn numCol)
         {
             addColumn(numCol.getName(), numCol.getValues());
+            
+            // import meta-data
+            this.unitNames[nCols-1] = numCol.getUnitName();
         }
         else if (column instanceof CategoricalColumn catCol)
         {
@@ -259,6 +274,8 @@ public class DefaultTable extends TableStub
         columnAxis = new CategoricalAxis(columnAxis.getName(), colNames);
 
         this.nCols++;
+        // 
+        updateUnitNameArray();
     }
 
     private void addCategoricalColumn(CategoricalColumn column)
@@ -289,8 +306,19 @@ public class DefaultTable extends TableStub
         columnAxis = new CategoricalAxis(columnAxis.getName(), colNames);
 
         this.nCols++;
+        updateUnitNameArray();
     }
     
+    private void updateUnitNameArray()
+    {
+        // check  if already up-to-date
+        if (this.unitNames.length == nCols) return;
+        
+        String[] newNames = new String[nCols];
+        System.arraycopy(this.unitNames, 0, newNames, 0, this.unitNames.length);
+        this.unitNames = newNames;
+    }
+
     @Override
     public Axis getColumnAxis()
     {
@@ -608,13 +636,15 @@ public class DefaultTable extends TableStub
         @Override
         public CategoricalColumn duplicate()
         {
+            String colName = columnAxis.itemName(colIndex);
+            // copy floating point values into int array
             int[] indices = new int[nRows];
             for (int r = 0; r < nRows; r++)
             {
                 indices[r] = (int) data[colIndex][r];
             }
             String[] levels = Arrays.copyOf(colLevels, colLevels.length);
-            return CategoricalColumn.create(name, indices, levels);
+            return CategoricalColumn.create(colName, indices, levels);
         }
 	}
 
@@ -623,6 +653,18 @@ public class DefaultTable extends TableStub
         public NumericColumnView(int index)
         {
             super(index);
+        }
+        
+        @Override
+        public String getUnitName()
+        {
+            return unitNames[colIndex];
+        }
+
+        @Override
+        public void setUnitName(String unitName)
+        {
+            unitNames[colIndex] = unitName;
         }
         
         @Override
@@ -640,9 +682,12 @@ public class DefaultTable extends TableStub
         @Override
         public NumericColumn duplicate()
         {
+            String colName = columnAxis.itemName(colIndex);
             double[] values = new double[nRows];
             System.arraycopy(data[colIndex], 0, values, 0, nRows);
-            return NumericColumn.create(name, values);
+            NumericColumn dup = NumericColumn.create(colName, values);
+            dup.setUnitName(unitNames[colIndex]);
+            return dup;
         }
     }
 

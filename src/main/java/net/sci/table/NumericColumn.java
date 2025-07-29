@@ -20,6 +20,9 @@ import net.sci.table.impl.DefaultNumericColumn;
  */
 public interface NumericColumn extends Column
 {
+    // =============================================================
+    // Static methods
+
     /**
      * Creates a new numeric column from a name and a list of values.
      * 
@@ -75,6 +78,26 @@ public interface NumericColumn extends Column
         }
         return NumericColumn.create(null, values);
     }
+    
+    
+    // =============================================================
+    // New methods
+
+    /**
+     * Returns the name of the unit associated to this numeric column, or null
+     * if no unit is associated to the column/
+     * 
+     * @return the name of the unit associated to the column.
+     */
+    public String getUnitName();
+    
+    /**
+     * Returns the name of the unit associated to this numeric column, or null
+     * if no unit is associated to the column/
+     * 
+     * @return the name of the unit associated to the column.
+     */
+    public void setUnitName(String unitName);
     
     /**
      * Returns an Iterable over the values of this column given as double
@@ -160,6 +183,10 @@ public interface NumericColumn extends Column
         }
     }
     
+    
+    // =============================================================
+    // Specialization of Column interface
+
     @Override
     public default NumericColumn selectRows(int[] rowIndices)
     {

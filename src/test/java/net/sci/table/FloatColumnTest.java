@@ -17,6 +17,20 @@ public class FloatColumnTest
      * Test method for {@link net.sci.table.FloatColumn#getValues()}.
      */
     @Test
+    public final void test_duplicate_keepUnitName()
+    {
+        FloatColumn column = createFloatColumn();
+        column.setUnitName("micron");
+        
+        FloatColumn dup = column.duplicate();
+        
+        assertEquals("micron", dup.getUnitName());
+    }
+    
+    /**
+     * Test method for {@link net.sci.table.FloatColumn#getValues()}.
+     */
+    @Test
     public final void testGetValues()
     {
         FloatColumn column = createFloatColumn();

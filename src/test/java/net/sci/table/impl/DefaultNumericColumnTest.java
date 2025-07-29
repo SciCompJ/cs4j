@@ -12,12 +12,22 @@ import org.junit.Test;
  */
 public class DefaultNumericColumnTest
 {
+    /**
+     * Test method for {@link net.sci.table.Column#addColumn(String,double[])}.
+     */
+    @Test
+    public final void test_addColumn()
+    {
+        DefaultNumericColumn column = createNumericColumn();
+        assertEquals(5.3, column.getValue(2), 0.01);
+    }
+    
     
     /**
      * Test method for {@link net.sci.table.NumericColumn#getValues()}.
      */
     @Test
-    public final void testGetValues()
+    public final void test_getValues()
     {
         DefaultNumericColumn column = createNumericColumn();
         double[] vals = column.getValues();
@@ -39,7 +49,7 @@ public class DefaultNumericColumnTest
      * Test method for {@link java.lang.Iterable#iterator()}.
      */
     @Test
-    public final void testIterator()
+    public final void test_iterator()
     {
         DefaultNumericColumn column = createNumericColumn();
         int count = 0;

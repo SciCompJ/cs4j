@@ -10,9 +10,9 @@ import java.util.stream.IntStream;
 import net.sci.table.LogicalColumn;
 
 /**
- * 
+ * Default implementation for Table column containing logical values.
  */
-public class DefaultLogicalColumn extends ColumnStub implements LogicalColumn
+public class DefaultLogicalColumn extends NumericColumnStub implements LogicalColumn
 {
     boolean[] data;
 

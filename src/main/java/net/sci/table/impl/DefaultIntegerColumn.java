@@ -12,7 +12,7 @@ import net.sci.table.IntegerColumn;
 /**
  * 
  */
-public class DefaultIntegerColumn extends ColumnStub implements IntegerColumn
+public class DefaultIntegerColumn extends NumericColumnStub implements IntegerColumn
 {
     int[] data;
 

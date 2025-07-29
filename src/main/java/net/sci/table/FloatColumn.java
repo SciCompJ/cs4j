@@ -55,5 +55,10 @@ public interface FloatColumn extends NumericColumn, Iterable<Double>
     }
 
     @Override
-    public FloatColumn duplicate();
+    public default FloatColumn duplicate()
+    {
+        FloatColumn dup = FloatColumn.create(getName(), getValues());
+        dup.setUnitName(getUnitName());
+        return dup;
+    }
 }
