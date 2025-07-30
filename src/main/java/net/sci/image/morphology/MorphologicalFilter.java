@@ -7,9 +7,9 @@ import net.sci.algo.AlgoEvent;
 import net.sci.algo.AlgoListener;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
-import net.sci.array.ArrayOperator;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.VectorArray;
+import net.sci.image.ImageArrayOperator;
 
 /**
  * Base class for morphological filters, based on a structuring element.
@@ -24,7 +24,7 @@ import net.sci.array.numeric.VectorArray;
  * @author dlegland
  *
  */
-public abstract class MorphologicalFilter extends AlgoStub implements ArrayOperator, AlgoListener
+public abstract class MorphologicalFilter extends AlgoStub implements ImageArrayOperator, AlgoListener
 {
     /**
      * The structuring element used by concrete implementations.
