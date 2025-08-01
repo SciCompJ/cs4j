@@ -79,6 +79,36 @@ public interface NumericColumn extends Column
         return NumericColumn.create(null, values);
     }
     
+    /**
+     * Concatenates two numeric columns. Returns a new column whose length is
+     * the sum of the two columns, and containing all the values of each column.
+     * The type of the new column is the one of the first column. The name of
+     * the first column is used as name of the result column.
+     * 
+     * @param col1
+     *            the first column
+     * @param col2
+     *            the second column
+     * @return the concatenated column
+     */
+    public static NumericColumn concatenate(NumericColumn col1, NumericColumn col2)
+    {
+        int n1 = col1.length();
+        int n2 = col2.length();
+        
+        NumericColumn res = col1.newInstance(col1.getName(), n1+n2);
+        
+        for (int i = 0; i < n1; i++)
+        {
+            res.setValue(i, col1.getValue(i));
+        }
+        for (int i = 0; i < n2; i++)
+        {
+            res.setValue(i+n1, col2.getValue(i));
+        }
+        return res;
+    }
+    
     
     // =============================================================
     // New methods

@@ -52,6 +52,24 @@ public class NumericColumnTest
         }
     }
     
+    /**
+     * Test method for {@link net.sci.table.NumericColumn#concatenate(NumericColumn,NumericColumn)}.
+     */
+    @Test
+    public final void test_concatenate()
+    {
+        NumericColumn col1 = NumericColumn.create("col1", new double[] {1.0, 2.0, 3.0});
+        NumericColumn col2 = NumericColumn.create("col2", new double[] {0.4, 0.5, 0.6, 0.7});
+        
+        NumericColumn res = NumericColumn.concatenate(col1, col2);
+        
+        double[] exp = new double[] {1.0, 2.0, 3.0, 0.4, 0.5, 0.6, 0.7};
+        for (int i = 0; i < exp.length; i++)
+        {
+            assertEquals(exp[i], res.getValue(i), 0.01);
+        }
+    }
+    
     private NumericColumn createNumericColumn()
     {
         double[] values = new double[] {3.0, 4.5, 5.3, 6.1, 7.2};
