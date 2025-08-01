@@ -17,6 +17,9 @@ import net.sci.table.impl.DefaultCategoricalColumn;
  */
 public interface CategoricalColumn extends Column
 {
+    // =============================================================
+    // static methods
+
     /**
      * Creates a new categorical column from a name, and a list of item level
      * names. The resulting column has same size as the array of levels.
@@ -113,6 +116,38 @@ public interface CategoricalColumn extends Column
     }
     
     /**
+     * Concatenates two categorical columns. Returns a new column whose length
+     * is the sum of the two columns, and containing all levels of each column.
+     * The name of the first column is used as name of the result column.
+     * 
+     * @param col1
+     *            the first column
+     * @param col2
+     *            the second column
+     * @return the concatenated column
+     */
+    public static CategoricalColumn concatenate(CategoricalColumn col1, CategoricalColumn col2)
+    {
+        int n1 = col1.length();
+        int n2 = col2.length();
+        
+        String[] allItems = new String[n1+n2];
+        for (int i = 0; i < n1; i++)
+        {
+            allItems[i] = col1.getString(i);
+        }
+        for (int i = 0; i < n2; i++)
+        {
+            allItems[n1 + i] = col2.getString(i);
+        }
+        return create(col1.getName(), allItems);
+    }
+
+    
+    // =============================================================
+    // New methods
+
+    /**
      * Returns the different levels that can be represented within this
      * categorical column.
      * 
@@ -139,6 +174,10 @@ public interface CategoricalColumn extends Column
      *            the new index at the specified row
      */
     public void setLevelIndex(int row, int index);
+
+    
+    // =============================================================
+    // Specialization of the Column interface
 
     @Override
     public default CategoricalColumn selectRows(int[] rowIndices)
