@@ -3,7 +3,6 @@
  */
 package net.sci.geom.geom2d.polygon;
 
-import java.util.Collection;
 import java.util.List;
 
 import net.sci.geom.geom2d.Bounds2D;
@@ -165,7 +164,7 @@ public class Box2D implements Polygon2D
     }
 
     @Override
-    public Collection<Point2D> vertexPositions()
+    public List<Point2D> vertexPositions()
     {
         return List.of(
                 new Point2D(xmin, ymin),

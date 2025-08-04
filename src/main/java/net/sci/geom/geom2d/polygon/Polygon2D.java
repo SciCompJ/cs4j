@@ -6,6 +6,7 @@ package net.sci.geom.geom2d.polygon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Point2D;
@@ -131,6 +132,9 @@ public interface Polygon2D extends PolygonalDomain2D
     
     // ===================================================================
     // Specialization of the PolygonalDomain2D interface    
+    
+    @Override
+    public List<Point2D> vertexPositions();
     
     @Override
     public default Polygon2D transform(AffineTransform2D trans)

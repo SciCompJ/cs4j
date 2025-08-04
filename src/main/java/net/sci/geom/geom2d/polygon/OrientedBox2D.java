@@ -4,8 +4,8 @@
 package net.sci.geom.geom2d.polygon;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Bounds2D;
@@ -22,16 +22,16 @@ public class OrientedBox2D implements Polygon2D
     // ===================================================================
     // Class variables
     
-    /** X-coordinate of the center. */
+    /** X-coordinate of the box center. */
     protected final double xc;
 
-    /** Y-coordinate of the center. */
+    /** Y-coordinate of the box center. */
     protected final double yc;
 
-    /** Length of first size. Must be positive. */
+    /** Length of first side. Must be positive. */
     protected final double size1;
     
-    /** Length of second size. Must be positive. Usually smaller than first side. */
+    /** Length of second side. Must be positive. Usually smaller than first side. */
     protected final double size2;
 
     /**
@@ -152,7 +152,7 @@ public class OrientedBox2D implements Polygon2D
     }
 
     @Override
-    public Collection<Point2D> vertexPositions()
+    public List<Point2D> vertexPositions()
     {
         // create the "local to global" affine transform
         AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(this.theta));

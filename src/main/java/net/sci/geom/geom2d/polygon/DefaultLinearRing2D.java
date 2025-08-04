@@ -6,6 +6,7 @@ package net.sci.geom.geom2d.polygon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
@@ -158,7 +159,7 @@ public class DefaultLinearRing2D implements LinearRing2D
     /**
      * Returns the inner collection of vertices.
      */
-    public Collection<Point2D> vertexPositions()
+    public List<Point2D> vertexPositions()
     {
         return vertices;
     }
