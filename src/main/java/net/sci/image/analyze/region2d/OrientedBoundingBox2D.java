@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.sci.array.numeric.IntArray2D;
+import net.sci.geom.geom2d.FeretDiameters;
+import net.sci.geom.geom2d.FeretDiameters.AngleDiameterPair;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.polygon.OrientedBox2D;
 import net.sci.geom.geom2d.polygon.Polygon2D;
@@ -43,7 +45,7 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
         double cx = center.x();
         double cy = center.y();
         
-        List<Point2D> vertices = List.copyOf(convexHull.vertexPositions());
+        List<Point2D> vertices = convexHull.vertexPositions();
         AngleDiameterPair minFeret = FeretDiameters.minFeretDiameter(vertices);
         
         // recenter the convex hull
@@ -115,7 +117,7 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
      *            the spatial calibration of the points
      * @return the oriented box of this set of points, in calibrated coordinates
      */
-    public static final OrientedBox2D orientedBoundingBox(ArrayList<? extends Point2D> points, Calibration calib)
+    public static final OrientedBox2D orientedBoundingBox(Collection<Point2D> points, Calibration calib)
     {
         // Compute convex hull to reduce complexity
         Polygon2D convexHull = Polygons2D.convexHull(points);

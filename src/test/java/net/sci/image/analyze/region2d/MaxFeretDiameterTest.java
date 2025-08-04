@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import net.sci.geom.geom2d.PointPair2D;
 import net.sci.image.Image;
 import net.sci.table.Table;
 
