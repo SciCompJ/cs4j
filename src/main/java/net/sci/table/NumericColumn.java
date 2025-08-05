@@ -24,6 +24,26 @@ public interface NumericColumn extends Column
     // Static methods
 
     /**
+     * Creates a new numeric column from a name and with the specified length.
+     * 
+     * Example:
+     * {@snippet lang = "java" :
+     * NumericColumn column = NumericColumn.create("Values", 8);
+     * int colLength = column.length(); // returns 8
+     * }
+     * 
+     * @param name
+     *            the name of the column
+     * @param nValues
+     *            the number of values the new column can contain.
+     * @return a new numeric column.
+     */
+    public static NumericColumn create(String name, int nValues)
+    {
+        return new DefaultNumericColumn(name, nValues);
+    }
+    
+    /**
      * Creates a new numeric column from a name and a list of values.
      * 
      * Example:

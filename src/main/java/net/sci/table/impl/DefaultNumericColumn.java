@@ -18,6 +18,12 @@ public class DefaultNumericColumn extends NumericColumnStub implements FloatColu
 {
     double[] data;
     
+    public DefaultNumericColumn(String name, int nValues)
+    {
+        super(name);
+        this.data = new double[nValues];
+    }
+    
     public DefaultNumericColumn(String name, double[] values)
     {
         super(name);
