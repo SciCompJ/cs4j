@@ -10,7 +10,9 @@ import java.util.List;
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Domain2D;
+import net.sci.geom.geom2d.FeretDiameters;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.FeretDiameters.AngleDiameterPair;
 
 /**
  * An oriented Box in 2 dimensions.
@@ -19,6 +21,85 @@ import net.sci.geom.geom2d.Point2D;
  */
 public class OrientedBox2D implements Polygon2D
 {
+    /**
+     * Computes the object-oriented bounding box of a set of points. The methods
+     * identifies the orientation of the box that minimizes its width.
+     * 
+     * @param points
+     *            a list of points (not necessarily ordered)
+     * @return the oriented bounding box of this set of points.
+     */
+    public static final OrientedBox2D orientedBoundingBox(List<Point2D> points)
+    {
+        // Compute convex hull to reduce complexity
+        Polygon2D convexHull = Polygons2D.convexHull(points);
+        
+        // compute convex hull centroid
+        Point2D center = convexHull.centroid();
+        double cx = center.x();
+        double cy = center.y();
+        
+        List<Point2D> vertices = convexHull.vertexPositions();
+        AngleDiameterPair minFeret = FeretDiameters.minFeretDiameter(vertices);
+        
+        // recenter the convex hull
+        ArrayList<Point2D> centeredHull = new ArrayList<Point2D>(vertices.size());
+        for (Point2D p : vertices)
+        {
+            centeredHull.add(p.translate(-cx, -cy));
+        }
+        
+        // orientation of the main axis
+        // pre-compute trigonometric functions
+        double cot = Math.cos(minFeret.angle);
+        double sit = Math.sin(minFeret.angle);
+
+        // compute elongation in direction of rectangle length and width
+        double xmin = Double.MAX_VALUE;
+        double ymin = Double.MAX_VALUE;
+        double xmax = Double.MIN_VALUE;
+        double ymax = Double.MIN_VALUE;
+        for (Point2D p : centeredHull)
+        {
+            // coordinates of current point
+            double x = p.x(); 
+            double y = p.y();
+            
+            // compute rotated coordinates
+            double x2 = x * cot + y * sit; 
+            double y2 = - x * sit + y * cot;
+            
+            // update bounding box
+            xmin = Math.min(xmin, x2);
+            ymin = Math.min(ymin, y2);
+            xmax = Math.max(xmax, x2);
+            ymax = Math.max(ymax, y2);
+        }
+        
+        // position of the center with respect to the centroid computed before
+        double dl = (xmax + xmin) / 2;
+        double dw = (ymax + ymin) / 2;
+
+        // change coordinates from rectangle to user-space
+        double dx  = dl * cot - dw * sit;
+        double dy  = dl * sit + dw * cot;
+
+        // coordinates of oriented box center
+        cx += dx;
+        cy += dy;
+
+        // size of the rectangle
+        double length = ymax - ymin;
+        double width  = xmax - xmin;
+        
+        // store angle in degrees, between 0 and 180
+        double angle = (Math.toDegrees(minFeret.angle) + 270) % 180;
+
+        // Store results in a new instance of OrientedBox2D
+        return new OrientedBox2D(cx, cy, length, width, angle);
+    }
+    
+
     // ===================================================================
     // Class variables
     

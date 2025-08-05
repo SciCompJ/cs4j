@@ -121,9 +121,9 @@ public class Ellipse2D implements Contour2D
      * 
      * @param axes
      *            the instance of PrincipalAxes2D to convert
-     * @return the equivalent ellipse
+     * @return the corresponding ellipse
      */
-    public Ellipse2D fromAxes(PrincipalAxes2D axes)
+    public static final Ellipse2D fromAxes(PrincipalAxes2D axes)
     {
         double[] sca = axes.scalings();
         double theta = Math.toDegrees(axes.rotationAngle());
