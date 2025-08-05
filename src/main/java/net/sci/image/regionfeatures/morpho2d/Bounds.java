@@ -15,6 +15,7 @@ import net.sci.image.Calibration;
 import net.sci.image.label.LabelImages;
 import net.sci.image.regionfeatures.RegionFeatures;
 import net.sci.image.regionfeatures.RegionTabularFeature;
+import net.sci.table.NumericColumn;
 import net.sci.table.Table;
 
 /**
@@ -119,9 +120,16 @@ public class Bounds extends AlgoStub implements RegionTabularFeature
         Object obj = data.results.get(this.getClass());
         if (obj instanceof Bounds2D[] array)
         {
+            // add new empty columns to table
+            String unitName = data.labelMap.getCalibration().getXAxis().getUnitName();
             for (String colName : colNames)
             {
-                table.addColumn(colName, new double[array.length]);
+                NumericColumn col = NumericColumn.create(colName, new double[array.length]);
+                if (unitName != null)
+                {
+                    col.setUnitName(unitName);
+                }
+                table.addColumn(col);
             }
             
             for (int r = 0; r < array.length; r++)
@@ -140,14 +148,5 @@ public class Bounds extends AlgoStub implements RegionTabularFeature
         {
             throw new RuntimeException("Requires object argument to be an array of Bounds2D");
         }
-    }
-    
-    @Override
-    public String[] columnUnitNames(RegionFeatures data)
-    {
-        // setup table info
-        Calibration calib = data.labelMap.getCalibration();
-        String unitName = calib.getXAxis().getUnitName();
-        return new String[] { unitName, unitName, unitName, unitName };
     }
 }

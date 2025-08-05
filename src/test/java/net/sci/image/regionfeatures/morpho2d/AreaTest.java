@@ -4,12 +4,15 @@
 package net.sci.image.regionfeatures.morpho2d;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.image.Image;
 import net.sci.image.regionfeatures.RegionFeatures;
+import net.sci.table.Column;
+import net.sci.table.NumericColumn;
 import net.sci.table.Table;
 
 /**
@@ -66,13 +69,15 @@ public class AreaTest
         String unitName = "pix";
         labelMap.getCalibration().getXAxis().setUnitName(unitName);
         labelMap.getCalibration().getYAxis().setUnitName(unitName);
-        RegionFeatures data = RegionFeatures.initialize(labelMap);
+        RegionFeatures data = RegionFeatures.initialize(labelMap)
+                .add(Area.class)
+                .computeAll();
         
-        Area feature = new Area();
-        String[] res = feature.columnUnitNames(data);
-                
-        assertEquals(res.length, 1);
-        assertEquals(unitName + "^2", res[0]);
+        Table table = new Area().createTable(data);
+        Column col = table.column(0);
+        
+        assertTrue(col instanceof NumericColumn);
+        assertEquals(unitName + "^2", ((NumericColumn) col).getUnitName());
     }
     
     private static final Image createLabelMapImage()

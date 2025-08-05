@@ -52,8 +52,9 @@ public class Area extends SingleValueFeature
     }
     
     @Override
-    public String[] columnUnitNames(RegionFeatures data)
+    public String columnUnitName(RegionFeatures data)
     {
-        return new String[] {data.labelMap.getCalibration().getXAxis().getUnitName() + "^2"};
+        String unitName = data.labelMap.getCalibration().getXAxis().getUnitName();
+        return unitName != null && !unitName.isBlank() ? unitName + "^2" : null;
     }
 }

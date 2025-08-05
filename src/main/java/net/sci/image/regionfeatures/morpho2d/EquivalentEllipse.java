@@ -16,6 +16,7 @@ import net.sci.image.Calibration;
 import net.sci.image.label.LabelImages;
 import net.sci.image.regionfeatures.RegionFeatures;
 import net.sci.image.regionfeatures.RegionTabularFeature;
+import net.sci.table.NumericColumn;
 import net.sci.table.Table;
 
 /**
@@ -39,7 +40,7 @@ public class EquivalentEllipse extends AlgoStub implements RegionTabularFeature
     }
 
     @Override
-    public Object compute(RegionFeatures data)
+    public Ellipse2D[] compute(RegionFeatures data)
     {
         // retrieve image data
         Array<?> array = data.labelMap.getData();
@@ -68,7 +69,7 @@ public class EquivalentEllipse extends AlgoStub implements RegionTabularFeature
         // create associative array to know index of each label
         HashMap<Integer, Integer> labelIndices = LabelImages.mapLabelIndices(labels);
 
-        // allocate memory for result
+        // allocate memory for temporary arrays
         int nLabels = labels.length;
         int[] counts = new int[nLabels];
         double[] cx = new double[nLabels];
@@ -105,7 +106,7 @@ public class EquivalentEllipse extends AlgoStub implements RegionTabularFeature
             cy[i] = cy[i] / counts[i];
         }
 
-        // compute centered inertia matrix of each label
+        // compute centered inertia matrix of each region
         fireStatusChanged(this, "Compute Inertia Matrices");
         for (int y = 0; y < sizeY; y++) 
         {
@@ -150,17 +151,27 @@ public class EquivalentEllipse extends AlgoStub implements RegionTabularFeature
     public void updateTable(Table table, RegionFeatures data)
     {
         Object obj = data.results.get(this.getClass());
-        if (obj instanceof Ellipse2D[] array)
+        if (obj instanceof Ellipse2D[] ellipses)
         {
-            for (String colName : colNames)
+            // add new empty columns to table
+            String unitName = data.labelMap.getCalibration().getXAxis().getUnitName();
+            for (int i = 0; i < 4; i++)
             {
-                table.addColumn(colName, new double[array.length]);
+                NumericColumn col = NumericColumn.create(colNames[i], ellipses.length);
+                if (unitName != null && !unitName.isBlank())
+                {
+                    col.setUnitName(unitName);
+                }
+                table.addColumn(col);
             }
+            NumericColumn orientCol = NumericColumn.create(colNames[4], ellipses.length);
+            orientCol.setUnitName("degree");
+            table.addColumn(orientCol);
             
-            for (int r = 0; r < array.length; r++)
+            for (int r = 0; r < ellipses.length; r++)
             {
                 // current ellipse
-                Ellipse2D ellipse = array[r];
+                Ellipse2D ellipse = ellipses[r];
                 
                 // coordinates of centroid
                 Point2D center = ellipse.center();
@@ -179,15 +190,6 @@ public class EquivalentEllipse extends AlgoStub implements RegionTabularFeature
         {
             throw new RuntimeException("Requires object argument to be an array of Ellipse2D");
         }
-    }
-    
-    @Override
-    public String[] columnUnitNames(RegionFeatures data)
-    {
-        // setup table info
-        Calibration calib = data.labelMap.getCalibration();
-        String unitName = calib.getXAxis().getUnitName();
-        return new String[] { unitName, unitName, unitName, unitName, "degree" };
     }
 
 }

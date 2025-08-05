@@ -57,10 +57,10 @@ public abstract class SingleValueFeature implements RegionTabularFeature
         if (obj instanceof double[] values)
         {
             NumericColumn numCol = NumericColumn.create(this.name, values);
-            String[] unitNames = columnUnitNames(data);
-            if (unitNames != null)
+            String unitName = columnUnitName(data);
+            if (unitName != null)
             {
-                numCol.setUnitName(unitNames[0]);
+                numCol.setUnitName(unitName);
             }
             table.addColumn(numCol);
         }
@@ -68,5 +68,21 @@ public abstract class SingleValueFeature implements RegionTabularFeature
         {
             throw new RuntimeException("Requires object argument to be an array of double");
         }
+    }
+    
+    /**
+     * Returns either {@code null}, or the name of the unit of the computed
+     * feature.
+     * 
+     * Default behavior is to return {@code null}, meaning unit name is
+     * unspecified.
+     * 
+     * @param data
+     *            the class containing all the computed features.
+     * @return the unit name of the computed feature
+     */
+    public String columnUnitName(RegionFeatures data)
+    {
+        return null;
     }
 }

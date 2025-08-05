@@ -12,6 +12,7 @@ import net.sci.image.Calibration;
 import net.sci.image.label.LabelImages;
 import net.sci.image.regionfeatures.RegionFeatures;
 import net.sci.image.regionfeatures.RegionTabularFeature;
+import net.sci.table.NumericColumn;
 import net.sci.table.Table;
 
 /**
@@ -121,17 +122,24 @@ public class Centroid extends AlgoStub implements RegionTabularFeature
     public void updateTable(Table table, RegionFeatures data)
     {
         Object obj = data.results.get(this.getClass());
-        if (obj instanceof Point2D[] array)
+        if (obj instanceof Point2D[] points)
         {
+            // add new empty columns to table
+            String unitName = data.labelMap.getCalibration().getXAxis().getUnitName();
             for (String colName : colNames)
             {
-                table.addColumn(colName, new double[array.length]);
+                NumericColumn col = NumericColumn.create(colName, points.length);
+                if (unitName != null && !unitName.isBlank())
+                {
+                    col.setUnitName(unitName);
+                }
+                table.addColumn(col);
             }
             
-            for (int r = 0; r < array.length; r++)
+            for (int r = 0; r < points.length; r++)
             {
                 // current bounds
-                Point2D centroid = array[r];
+                Point2D centroid = points[r];
                 
                 // put bounds values
                 table.setValue(r, colNames[0], centroid.x());
@@ -143,14 +151,4 @@ public class Centroid extends AlgoStub implements RegionTabularFeature
             throw new RuntimeException("Requires object argument to be an array of Bounds2D");
         }
     }
-    
-    @Override
-    public String[] columnUnitNames(RegionFeatures data)
-    {
-        // setup table info
-        Calibration calib = data.labelMap.getCalibration();
-        String unitName = calib.getXAxis().getUnitName();
-        return new String[] { unitName, unitName, unitName, unitName };
-    }
-    
 }

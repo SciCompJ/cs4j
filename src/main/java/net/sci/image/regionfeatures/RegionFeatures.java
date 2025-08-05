@@ -21,11 +21,7 @@ import net.sci.array.numeric.IntArray;
 import net.sci.axis.CategoricalAxis;
 import net.sci.image.Image;
 import net.sci.image.label.LabelImages;
-import net.sci.table.CategoricalColumn;
-import net.sci.table.Column;
-import net.sci.table.NumericColumn;
 import net.sci.table.Table;
-import net.sci.table.impl.ColumnsTable;
 
 /**
  * The main class of the plugin, that gathers all the information necessary to
@@ -39,25 +35,6 @@ import net.sci.table.impl.ColumnsTable;
  */
 public class RegionFeatures extends AlgoStub
 {
-    // ==================================================
-    // Enumerations
-    
-    /**
-     * Specifies how to manage the display of unit names.
-     */
-    public enum UnitDisplay
-    {
-        /** Do not display unit names */
-        NONE,
-        /** Append unit names to column names */
-        COLUMN_NAMES,
-        /** Create new columns containing unit names */
-        NEW_COLUMNS,
-        /** Create a new table with column names as rows, ands unit names in a column */
-        NEW_TABLE
-    }
-    
-    
     // ==================================================
     // Static methods
     
@@ -119,8 +96,6 @@ public class RegionFeatures extends AlgoStub
     public Map<Class<? extends Feature>, Object> results;
     
     public Color[] labelColors;
-    
-    public UnitDisplay unitDisplay = UnitDisplay.NONE;
     
     
     // ==================================================
@@ -259,28 +234,12 @@ public class RegionFeatures extends AlgoStub
      */
     public Table createTable()
     {
-        return createTables()[0];
-    }
-    
-    /**
-     * Returns an array containing two Tables: one with the feature
-     * results, another one containing the unit associated to each column in the
-     * first table.
-     * 
-     * @return an array of two Table.
-     */
-    public Table[] createTables()
-    {
         // ensure everything is computed
         this.fireStatusChanged(this, "RegionFeatures: compute all features");
         computeAll();
         
         this.fireStatusChanged(this, "RegionFeatures: create result tables");
         Table fullTable = initializeRegionTable();
-        ColumnsTable columnUnitsTable = new ColumnsTable();
-        
-        ArrayList<String> allColNames = new ArrayList<>();
-        ArrayList<String> allUnitNames = new ArrayList<>();
         
         // update the global table with each feature
         for (Class<? extends Feature> featureClass : this.featureClasses)
@@ -293,108 +252,53 @@ public class RegionFeatures extends AlgoStub
             Feature feature = getFeature(featureClass);
             if (feature instanceof RegionTabularFeature tabularFeature)
             {
-                // create table associated to feature
-                Table table = tabularFeature.createTable(this);
-                
-                // also retrieve information about columns 
-                String[] colNames = table.getColumnNames();
-                String[] unitNames = tabularFeature.columnUnitNames(this);
-                
-                // switch processing depending on the strategy for managing unit names
-                switch(unitDisplay)
-                {
-                    case NONE:
-                        // simply append columns to the full table
-                        for (Column col : table.columns())
-                        {
-                            fullTable.addColumn(col);
-                        }
-                        break;
-                    case COLUMN_NAMES:
-                        // update columns names before appending to the full tables
-                        for (Column col : table.columns())
-                        {
-                            Column col2 = col.duplicate();
-                            System.out.println("col name: " + col.getName() + " / " + col2.getName());
-                            
-                            // append unit name to column name if necessary
-                            if (col2 instanceof NumericColumn numCol)
-                            {
-                                String unitName = numCol.getUnitName();
-                                if (unitName != null)
-                                {
-                                    col2.setName(String.format("%s_(%s)", col.getName(), unitName));
-                                }
-                            }
-                            fullTable.addColumn(col2);
-                        }
-                        break;
-                        
-                    case NEW_COLUMNS:
-                        // append columns and new columns containing unit names
-                        for (Column col : table.columns())
-                        {
-                            fullTable.addColumn(col);
-                            
-                            // add a new colmumn containing unit name 
-                            if (col instanceof NumericColumn numCol)
-                            {
-                                String unitName = numCol.getUnitName();
-                                if (unitName != null)
-                                {
-                                    // add a new column containing unit name
-                                    String unitColName = col.getName() + "_unit";
-                                    int[] indices = new int[col.length()];
-                                    CategoricalColumn unitCol = CategoricalColumn.create(unitColName, indices, new String[] {unitName});
-                                    fullTable.addColumn(unitCol);
-                                }
-                            }
-                        }
-                        break;
-                        
-                    case NEW_TABLE:
-                        // append full table, and update the columnUnits table
-                        for (Column col : table.columns())
-                        {
-                            fullTable.addColumn(col);
-                        }
-                        // TODO: could be updated
-                        for (int c = 0; c < colNames.length; c++)
-                        {
-                            allColNames.add(colNames[c]);
-                            String unitName = unitNames != null && c < unitNames.length ? unitNames[c] : ""; 
-                            allUnitNames.add(unitName);
-                        }
-                        break;
-
-                    default:
-                        throw new RuntimeException("Unknown strategy for managing units");
-                }
+                tabularFeature.updateTable(fullTable, this);
             }
         }
         
-        if (unitDisplay == UnitDisplay.NEW_TABLE)
-        {
-            CategoricalColumn unitColumn = CategoricalColumn.create("Unit", allUnitNames.toArray(String[]::new));
-            CategoricalAxis rowAxis = CategoricalAxis.create("Feature", allColNames.toArray(String[]::new));
-            columnUnitsTable = new ColumnsTable(unitColumn);
-            columnUnitsTable.setRowAxis(rowAxis);
-        }
-        
-        return new Table[] {fullTable, columnUnitsTable};
+        return fullTable;
     }
     
-    public RegionFeatures unitDisplay(UnitDisplay unitDisplay)
-    {
-        this.unitDisplay = unitDisplay;
-        return this;
-    }
-    
-    public RegionFeatures displayUnitsInTable(boolean flag)
-    {
-        this.unitDisplay = flag ? UnitDisplay.COLUMN_NAMES : UnitDisplay.NONE;
-        return this;
-    }
+//    /**
+//     * Returns an array containing two Tables: one with the feature
+//     * results, another one containing the unit associated to each column in the
+//     * first table.
+//     * 
+//     * @return an array of two Table.
+//     */
+//    public Table[] createTables()
+//    {
+//        // ensure everything is computed
+//        this.fireStatusChanged(this, "RegionFeatures: compute all features");
+//        computeAll();
+//        
+//        this.fireStatusChanged(this, "RegionFeatures: create result tables");
+//        Table fullTable = initializeRegionTable();
+//        ColumnsTable columnUnitsTable = new ColumnsTable();
+//        
+//        // update the global table with each feature
+//        for (Class<? extends Feature> featureClass : this.featureClasses)
+//        {
+//            if (!isComputed(featureClass))
+//            {
+//                throw new RuntimeException("Feature has not been computed: " + featureClass);
+//            }
+//            
+//            Feature feature = getFeature(featureClass);
+//            if (feature instanceof RegionTabularFeature tabularFeature)
+//            {
+//                tabularFeature.updateTable(fullTable, this);
+////                // create table associated to feature
+////                Table table = tabularFeature.createTable(this);
+////                for (Column col : table.columns())
+////                {
+////                    fullTable.addColumn(col);
+////                }
+//            }
+//        }
+//        
+//        return new Table[] {fullTable, columnUnitsTable};
+//    }
     
     public Table initializeRegionTable()
     {

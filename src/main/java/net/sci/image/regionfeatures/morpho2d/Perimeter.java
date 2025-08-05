@@ -42,6 +42,7 @@ public class Perimeter extends SingleValueFeature
     
     public String[] columnUnitNames(RegionFeatures data)
     {
-        return new String[] {data.labelMap.getCalibration().getXAxis().getUnitName()};
+        String unitName = data.labelMap.getCalibration().getXAxis().getUnitName();
+        return unitName != null && !unitName.isBlank() ? new String[] {unitName} : null;
     }
 }
