@@ -40,9 +40,10 @@ public class Perimeter extends SingleValueFeature
         return Arrays.asList(Perimeter_Crofton_D4.class);
     }
     
-    public String[] columnUnitNames(RegionFeatures data)
+    @Override
+    public String columnUnitName(RegionFeatures data)
     {
         String unitName = data.labelMap.getCalibration().getXAxis().getUnitName();
-        return unitName != null && !unitName.isBlank() ? new String[] {unitName} : null;
+        return unitName != null && !unitName.isBlank() ? unitName : null;
     }
 }

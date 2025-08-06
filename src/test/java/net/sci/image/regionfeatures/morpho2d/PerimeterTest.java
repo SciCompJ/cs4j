@@ -70,10 +70,9 @@ public class PerimeterTest
         RegionFeatures data = RegionFeatures.initialize(labelMap);
         
         Perimeter feature = new Perimeter();
-        String[] res = feature.columnUnitNames(data);
+        String res = feature.columnUnitName(data);
                 
-        assertEquals(res.length, 1);
-        assertEquals(unitName, res[0]);
+        assertEquals(unitName, res);
     }
     
     private static final Image createLabelMapImage()
