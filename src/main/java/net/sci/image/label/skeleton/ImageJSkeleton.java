@@ -1,14 +1,17 @@
 /**
  * 
  */
-package net.sci.image.binary.skeleton;
+package net.sci.image.label.skeleton;
 
 import net.sci.algo.AlgoStub;
-import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.numeric.IntArray2D;
 
 /**
- * Apply skeletonization on a binary image, using an adaptation of the
- * skeletonization code from ImageJ.
+ * Apply skeletonization on a binary image or to a label map.
+ * 
+ * Adaptation of the skeletonization code from ImageJ. In the case of a label
+ * map, all regions are skeletonized during the same process.
+ * 
  * 
  * Note: original IJ algo clears pixels on the boundary. This is not the case
  * here.
@@ -63,10 +66,10 @@ public class ImageJSkeleton extends AlgoStub
     {
     }
 
-    public BinaryArray2D process2d(BinaryArray2D array)
+    public IntArray2D<?> process2d(IntArray2D<?> array)
     {
         // create result image
-        BinaryArray2D result = array.duplicate();
+        IntArray2D<?> result = array.duplicate();
         
         int removedPixels;
         do
@@ -98,14 +101,14 @@ public class ImageJSkeleton extends AlgoStub
      *            should be removed or not
      * @return the number of removed pixels.
      */
-    private int thin(BinaryArray2D array, int[] table, int pass)
+    private int thin(IntArray2D<?> array, int[] table, int pass)
     {
         // get image size
         int sizeX = array.size(0);
         int sizeY = array.size(1);
         
         // keep information about original pixels
-        BinaryArray2D copy = array.duplicate();
+        IntArray2D<?> copy = array.duplicate();
         
         // count the number of removed pixels
         int removedPixels = 0;
@@ -117,12 +120,15 @@ public class ImageJSkeleton extends AlgoStub
         {
             for (int  x = 0; x < sizeX; x++)
             {
+                // retrieve label of current pixel
+                int label = copy.getInt(x, y);
+                
                 // do not process background pixels
-                if (!copy.getBoolean(x, y))
+                if (label == 0)
                 {
                     continue;
                 }
-
+                
                 // determine index of current 3-by-3 configuration
                 int index = 0;
                 // Process neighbor pixels on previous line
@@ -130,41 +136,41 @@ public class ImageJSkeleton extends AlgoStub
                 {
                     if (x > 0)
                     {
-                        if (copy.getBoolean(x-1, y-1)) index |=  1;
+                        if (copy.getInt(x-1, y-1) == label) index |=  1;
                     }
-                    if (copy.getBoolean(x, y-1)) index |=  2;
+                    if (copy.getInt(x, y-1) == label) index |=  2;
                     if (x < sizeX - 1)
                     {
-                        if (copy.getBoolean(x+1, y-1)) index |=  4;
+                        if (copy.getInt(x+1, y-1) == label) index |=  4;
                     }
                 }
                 // Process neighbor pixels on current line
                 if (x > 0)
                 {
-                    if (copy.getBoolean(x-1, y)) index |= 128;
+                    if (copy.getInt(x-1, y) == label) index |= 128;
                 }
                 if (x < sizeX - 1)
                 {
-                    if (copy.getBoolean(x+1, y)) index |= 8;
+                    if (copy.getInt(x+1, y) == label) index |= 8;
                 }
                 // Process neighbor pixels on next line
                 if (y < sizeY-1)
                 {
                     if (x > 0)
                     {
-                        if (copy.getBoolean(x-1, y+1)) index |= 64;
+                        if (copy.getInt(x-1, y+1) == label) index |= 64;
                     }
-                    if (copy.getBoolean(x, y+1)) index |= 32;
+                    if (copy.getInt(x, y+1) == label) index |= 32;
                     if (x < sizeX - 1)
                     {
-                        if (copy.getBoolean(x+1, y+1)) index |= 16;
+                        if (copy.getInt(x+1, y+1) == label) index |= 16;
                     }
                 }
                 
                 int code = table[index];
                 if ((code & pass) > 0)
                 {
-                    array.setBoolean(x, y, false);
+                    array.setInt(x, y, 0);
                     removedPixels++;
                 }
             }

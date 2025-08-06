@@ -27,6 +27,7 @@ import net.sci.image.binary.labeling.ComponentsLabeling;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling1D;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling2D;
 import net.sci.image.binary.labeling.FloodFillComponentsLabeling3D;
+import net.sci.image.binary.skeleton.ImageJSkeleton;
 import net.sci.image.connectivity.Connectivity2D;
 import net.sci.image.connectivity.Connectivity3D;
 
@@ -534,6 +535,20 @@ public class BinaryImages
         return algo.process3d(marker, mask);
     }
 
+    /**
+     * Computes the skeleton of a binary array, and returns another binary array.
+     * 
+     * Uses an adaptation of the algorithm from ImageJ.
+     * 
+     * @param array
+     *            a binary array
+     * @return a binary array with {@code true} values for skeleton elements
+     */
+    public static final BinaryArray2D skeleton(BinaryArray2D array) 
+    {
+        return new ImageJSkeleton().process2d(array);
+    }
+    
     
     // ==============================================================
     // Utility methods
