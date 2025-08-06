@@ -155,9 +155,9 @@ public class EquivalentEllipse extends AlgoStub implements RegionTabularFeature
         {
             // add new empty columns to table
             String unitName = data.labelMap.getCalibration().getXAxis().getUnitName();
-            for (int i = 0; i < 4; i++)
+            for (int iCol = 0; iCol < 4; iCol++)
             {
-                NumericColumn col = NumericColumn.create(colNames[i], ellipses.length);
+                NumericColumn col = NumericColumn.create(colNames[iCol], ellipses.length);
                 if (unitName != null && !unitName.isBlank())
                 {
                     col.setUnitName(unitName);
