@@ -24,7 +24,9 @@ public class Point2D implements Geometry2D, Point
     
     /**
      * Computes the centroid of a collection of points.
-     * @param points the points to consider.
+     * 
+     * @param points
+     *            the points to consider.
      * @return the centroid of the input points.
      */
     public static final Point2D centroid(Point2D... points)
@@ -36,6 +38,35 @@ public class Point2D implements Geometry2D, Point
         {
             xc += p.x;
             yc += p.y;
+        }
+        
+        return new Point2D(xc / np, yc / np);
+    }
+    
+    /**
+     * Computes the centroid of a collection of points identified by two
+     * coordinate arrays with the same length.
+     * 
+     * @param xCoords
+     *            the x-coordinates of the points
+     * @param yCoords
+     *            the y-coordinates of the points
+     * @return the centroid of the input points.
+     */
+    public static final Point2D centroid(double[] xCoords, double[] yCoords)
+    {
+        if (yCoords.length != xCoords.length)
+        {
+            throw new IllegalArgumentException("Coordinate arrays must have same length");
+        }
+        
+        double xc = 0;
+        double yc = 0;
+        int np = xCoords.length;
+        for (int i = 0; i < np; i++)
+        {
+            xc += xCoords[i];
+            yc += yCoords[i];
         }
         
         return new Point2D(xc / np, yc / np);

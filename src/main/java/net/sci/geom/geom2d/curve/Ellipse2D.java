@@ -85,6 +85,46 @@ public class Ellipse2D implements Contour2D
         }
         return new Ellipse2D(xc, yc, ra, rb, theta);
     }
+    
+    /**
+     * Computes an equivalent ellipse from a set of points specified by their
+     * coordinates.
+     * 
+     * @param xData
+     *            the x-coordinates of the points
+     * @param yData
+     *            the x-coordinates of the points
+     * @return the equivalent ellipse with same statistical moments up to the
+     *         second order.
+     */
+    public static final Ellipse2D equivalentEllipse(double[] xData, double[] yData)
+    {
+        // retrieve centroid
+        Point2D center = Point2D.centroid(xData, yData);
+        double cx = center.x();
+        double cy = center.y();
+        
+        // commute second-order coefficients
+        double Ixx = 0, Iyy = 0, Ixy = 0;
+        int np = xData.length;
+        for (int i = 0; i < np; i++)
+        {
+            double x = xData[i] - cx;
+            double y = yData[i] - cy;
+            Ixx += x * x;
+            Ixy += x * y;
+            Iyy += y * y;
+        }
+        
+        // normalize
+        Ixx /= np;
+        Ixy /= np;
+        Iyy /= np;
+        
+        // fit ellipse
+        return fromInertiaCoefficients(center, Ixx, Iyy, Ixy);
+    }
+    
 
     /**
      * Creates a new Ellipse2D instance from a center and the unique
