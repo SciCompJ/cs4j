@@ -5,9 +5,9 @@ package net.sci.geom.geom3d.polyline;
 
 import java.util.Collection;
 
-import net.sci.geom.geom2d.polygon.LinearRing2D;
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.polygon2d.LinearRing2D;
 
 /**
  * <p>
@@ -15,7 +15,7 @@ import net.sci.geom.geom3d.Point3D;
  * </p>
  * 
  * @see LineString3D
- * @see net.sci.geom.geom2d.polygon.LinearRing2D
+ * @see net.sci.geom.polygon2d.LinearRing2D
  * 
  * @author dlegland
  */

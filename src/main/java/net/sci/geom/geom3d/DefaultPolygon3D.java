@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.polygon.Polygon2D;
 import net.sci.geom.geom3d.polyline.LinearRing3D;
+import net.sci.geom.polygon2d.Polygon2D;
 
 /**
  * A 3D polygon whose boundary is a single (3D) linear ring.

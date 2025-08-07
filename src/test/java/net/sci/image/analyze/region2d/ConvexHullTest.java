@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.numeric.UInt8Array2D;
-import net.sci.geom.geom2d.polygon.Polygon2D;
+import net.sci.geom.polygon2d.Polygon2D;
 
 /**
  * @author dlegland

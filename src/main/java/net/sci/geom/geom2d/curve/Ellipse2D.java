@@ -14,7 +14,7 @@ import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.PrincipalAxes2D;
-import net.sci.geom.geom2d.polygon.LinearRing2D;
+import net.sci.geom.polygon2d.LinearRing2D;
 
 /**
  * An ellipse, defined by a center, two semi-axis lengths, and an orientation

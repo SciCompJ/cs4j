@@ -9,8 +9,8 @@ import java.util.Collection;
 
 import net.sci.algo.AlgoStub;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.polygon.Polygon2D;
-import net.sci.geom.geom2d.polygon.Polygons2D;
+import net.sci.geom.polygon2d.Polygon2D;
+import net.sci.geom.polygon2d.Polygons2D;
 import net.sci.image.regionfeatures.Feature;
 import net.sci.image.regionfeatures.RegionFeatures;
 

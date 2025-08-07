@@ -4,9 +4,10 @@
 package net.sci.geom.geom2d;
 
 import static org.junit.Assert.*;
-import net.sci.geom.geom2d.polygon.PolygonalDomain2D;
 
 import org.junit.Test;
+
+import net.sci.geom.polygon2d.PolygonalDomain2D;
 
 /**
  * @author dlegland

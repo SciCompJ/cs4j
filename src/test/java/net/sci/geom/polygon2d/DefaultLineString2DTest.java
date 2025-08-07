@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.polygon;
+package net.sci.geom.polygon2d;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -88,7 +88,7 @@ public class DefaultLineString2DTest
     
     
 	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLineString2D#closestVertexIndex(net.sci.geom.geom2d.Point2D)}.
+	 * Test method for {@link net.sci.geom.polygon2d.DefaultLineString2D#closestVertexIndex(net.sci.geom.geom2d.Point2D)}.
 	 */
 	@Test
 	public final void testClosestVertexIndex()
@@ -109,7 +109,7 @@ public class DefaultLineString2DTest
 	}
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLineString2D#resampleBySpacing()}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultLineString2D#resampleBySpacing()}.
      */
     @Test
     public final void testResampleBySpacing()
@@ -129,7 +129,7 @@ public class DefaultLineString2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.LinearRing2D#asPolyline(int)}.
+     * Test method for {@link net.sci.geom.polygon2d.LinearRing2D#asPolyline(int)}.
      */
     @Test
     public final void testAsPolyline_Int()
@@ -149,7 +149,7 @@ public class DefaultLineString2DTest
     }
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLineString2D#length()}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultLineString2D#length()}.
      */
     @Test
     public final void testLength()
@@ -166,7 +166,7 @@ public class DefaultLineString2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLineString2D#getPoint()}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultLineString2D#getPoint()}.
      */
     @Test
     public final void testGetPointAtLength()
@@ -195,7 +195,7 @@ public class DefaultLineString2DTest
     }
 
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLineString2D#getPoint()}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultLineString2D#getPoint()}.
      */
     @Test
     public final void testGetPoint_lastPoint()
@@ -211,7 +211,7 @@ public class DefaultLineString2DTest
     }
     
 	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLineString2D#edges()}.
+	 * Test method for {@link net.sci.geom.polygon2d.DefaultLineString2D#edges()}.
 	 */
 	@Test
 	public final void testEdges()
@@ -232,7 +232,7 @@ public class DefaultLineString2DTest
 
 
 	/**
-	 * Test method for {@link net.sci.geom.geom2d.polygon.DefaultLineString2D#distance(net.sci.geom.geom2d.Point2D)}.
+	 * Test method for {@link net.sci.geom.polygon2d.DefaultLineString2D#distance(net.sci.geom.geom2d.Point2D)}.
 	 */
 	@Test
 	public final void testDistance()

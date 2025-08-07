@@ -5,8 +5,8 @@ package net.sci.geom.geom2d;
 
 import java.util.List;
 
-import net.sci.geom.geom2d.polygon.Polygon2D;
-import net.sci.geom.geom2d.polygon.Polygons2D;
+import net.sci.geom.polygon2d.Polygon2D;
+import net.sci.geom.polygon2d.Polygons2D;
 
 /**
  * Utility methods for computing minimal and maximal Feret diameters.
@@ -25,7 +25,7 @@ public class FeretDiameters
      *            a collection of planar points
      * @return the maximum Feret diameter of the point set
      * 
-     * @see net.sci.geom.geom2d.polygon.Polygons2D#convexHull(java.util.Collection)
+     * @see net.sci.geom.polygon2d.Polygons2D#convexHull(java.util.Collection)
      */
     public final static PointPair2D maxFeretDiameter(List<Point2D> points)
     {
@@ -65,7 +65,7 @@ public class FeretDiameters
      *            a collection of planar points
      * @return the minimum Feret diameter of the point set
      * 
-     * @see net.sci.geom.geom2d.polygon.Polygons2D#convexHull(java.util.Collection)
+     * @see net.sci.geom.polygon2d.Polygons2D#convexHull(java.util.Collection)
      */
     public final static AngleDiameterPair minFeretDiameter(List<Point2D> points)
     {

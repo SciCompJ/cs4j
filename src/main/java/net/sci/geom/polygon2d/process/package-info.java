@@ -4,4 +4,4 @@
  * @author dlegland
  *
  */
-package net.sci.geom.geom2d.polygon.process;
+package net.sci.geom.polygon2d.process;

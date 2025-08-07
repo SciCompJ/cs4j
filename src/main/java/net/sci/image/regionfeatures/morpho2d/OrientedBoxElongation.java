@@ -6,7 +6,7 @@ package net.sci.image.regionfeatures.morpho2d;
 import java.util.Arrays;
 import java.util.Collection;
 
-import net.sci.geom.geom2d.polygon.OrientedBox2D;
+import net.sci.geom.polygon2d.OrientedBox2D;
 import net.sci.image.regionfeatures.Feature;
 import net.sci.image.regionfeatures.RegionFeatures;
 import net.sci.image.regionfeatures.SingleValueFeature;

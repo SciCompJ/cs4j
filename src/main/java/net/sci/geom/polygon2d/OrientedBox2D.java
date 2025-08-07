@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.polygon;
+package net.sci.geom.polygon2d;
 
 import java.util.ArrayList;
 import java.util.Collections;

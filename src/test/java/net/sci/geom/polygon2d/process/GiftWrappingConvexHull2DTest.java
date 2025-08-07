@@ -1,28 +1,25 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.polygon;
+package net.sci.geom.polygon2d.process;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
 import org.junit.Test;
 
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.polygon2d.Polygon2D;
 
 /**
  * @author dlegland
  *
  */
-public class Polygons2DTest
+public class GiftWrappingConvexHull2DTest
 {
-
-    /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.Polygons2D#convexHull(java.util.Collection)}.
-     */
     @Test
-    public void testConvexHull_FivePoints()
+    public final void test_FivePoints()
     {
         ArrayList<Point2D> points = new ArrayList<Point2D>(5);
         points.add(new Point2D(15, 15));
@@ -31,16 +28,14 @@ public class Polygons2DTest
         points.add(new Point2D(20, 10));
         points.add(new Point2D(20, 20));
         
-        Polygon2D hull = Polygons2D.convexHull(points);
+        GiftWrappingConvexHull2D algo = new GiftWrappingConvexHull2D();
+        Polygon2D hull = algo.process(points);
         
         assertEquals(4, hull.vertexCount());
     }
-
-    /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.Polygons2D#convexHull(java.util.Collection)}.
-     */
+    
     @Test
-    public void testConvexHull_ORourke()
+    public final void test_ORourke()
     {
         ArrayList<Point2D> points = new ArrayList<Point2D>(19);
         points.add(new Point2D( 3,  3));
@@ -64,8 +59,14 @@ public class Polygons2DTest
         points.add(new Point2D( 7,  4));
         assertEquals(19, points.size());
                         
-        Polygon2D hull = Polygons2D.convexHull(points);
+        GiftWrappingConvexHull2D algo = new GiftWrappingConvexHull2D();
+        Polygon2D hull = algo.process(points);
         
+//        System.out.println("Hull vertex number: " + hull.vertexNumber());
+//        for (Point2D p : hull.vertexPositions())
+//        {
+//            System.out.println("p: " + p.getX() + " " + p.getY());
+//        }
         assertEquals(8, hull.vertexCount());
     }
 
@@ -87,11 +88,9 @@ public class Polygons2DTest
      *        o--o        o
      *           |        |
      *           x--o--o--x
-     *
-     * Test method for {@link net.sci.geom.geom2d.polygon.Polygons2D#convexHull(java.util.Collection)}.
      */
     @Test
-    public void testConvexHull_TypicalContourPolygonFromBoundaryImage()
+    public final void test_TypicalContourPolygonFromBoundaryImage()
     {
         ArrayList<Point2D> points = new ArrayList<Point2D>(32);
         points.add(new Point2D(50, 90)); points.add(new Point2D(60, 90)); points.add(new Point2D(70, 90));
@@ -107,9 +106,13 @@ public class Polygons2DTest
         
         assertEquals(32, points.size());
                         
-        Polygon2D hull = Polygons2D.convexHull(points);
-        
+        GiftWrappingConvexHull2D algo = new GiftWrappingConvexHull2D();
+        Polygon2D hull = algo.process(points);
+//        System.out.println("Hull vertex number: " + hull.vertexNumber());
+//        for (Point2D p : hull.vertexPositions())
+//        {
+//            System.out.println("p: " + p.getX() + " " + p.getY());
+//        }
         assertEquals(9, hull.vertexCount());
     }
-
 }

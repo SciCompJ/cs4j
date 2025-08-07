@@ -6,12 +6,12 @@ package net.sci.geom.geom3d.polyline;
 import java.util.Collection;
 
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.polygon.Polyline2D;
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Curve3D;
 import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.polygon2d.Polyline2D;
 
 /**
  * @author dlegland

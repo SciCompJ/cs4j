@@ -11,7 +11,7 @@ import net.sci.geom.geom2d.curve.Boundary2D;
  * The boundary of a planar domain is an instance of Boundary2D, that inherits
  * the CurveShape2D interface.
  *
- * @see net.sci.geom.geom2d.polygon.PolygonalDomain2D
+ * @see net.sci.geom.polygon2d.PolygonalDomain2D
  * @see net.sci.geom.geom2d.curve.Boundary2D
  * 
  * @author dlegland

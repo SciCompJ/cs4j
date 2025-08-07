@@ -11,12 +11,12 @@ import net.sci.array.numeric.ScalarArray2D;
 import net.sci.geom.geom2d.Geometry2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.curve.MultiCurve2D;
-import net.sci.geom.geom2d.polygon.LineString2D;
-import net.sci.geom.geom2d.polygon.LinearRing2D;
-import net.sci.geom.geom2d.polygon.Polyline2D;
 import net.sci.geom.graph.AdjListDirectedGraph2D;
 import net.sci.geom.graph.DirectedGraph2D;
 import net.sci.geom.graph.Graph2D;
+import net.sci.geom.polygon2d.LineString2D;
+import net.sci.geom.polygon2d.LinearRing2D;
+import net.sci.geom.polygon2d.Polyline2D;
 
 /**
  * Computes the set of curves (polylines) corresponding to isocontour of a

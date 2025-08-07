@@ -6,7 +6,7 @@ package net.sci.geom.geom2d;
 import static java.lang.Double.isInfinite;
 
 import net.sci.geom.Bounds;
-import net.sci.geom.geom2d.polygon.Polygon2D;
+import net.sci.geom.polygon2d.Polygon2D;
 
 /**
  * Contains the bounds of a planar geometry. Provides method for converting to

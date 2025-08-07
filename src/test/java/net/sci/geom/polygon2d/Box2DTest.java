@@ -1,9 +1,10 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.polygon;
+package net.sci.geom.polygon2d;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
 
@@ -18,7 +19,7 @@ public class Box2DTest
 {
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.Box2D#fromCorners(net.sci.geom.geom2d.Point2D, net.sci.geom.geom2d.Point2D)}.
+     * Test method for {@link net.sci.geom.polygon2d.Box2D#fromCorners(net.sci.geom.geom2d.Point2D, net.sci.geom.geom2d.Point2D)}.
      */
     @Test
     public final void testFromCornersPoint2DPoint2D()
@@ -35,7 +36,7 @@ public class Box2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.Box2D#center()}.
+     * Test method for {@link net.sci.geom.polygon2d.Box2D#center()}.
      */
     @Test
     public final void testCenter()
@@ -50,7 +51,7 @@ public class Box2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.Box2D#vertexPositions()}.
+     * Test method for {@link net.sci.geom.polygon2d.Box2D#vertexPositions()}.
      */
     @Test
     public final void testVertexPositions()
@@ -77,7 +78,7 @@ public class Box2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.Box2D#vertexCount()}.
+     * Test method for {@link net.sci.geom.polygon2d.Box2D#vertexCount()}.
      */
     @Test
     public final void testVertexCount()

@@ -10,7 +10,7 @@ import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.numeric.interp.LinearInterpolatedArray2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.polygon.Polyline2D;
+import net.sci.geom.polygon2d.Polyline2D;
 import net.sci.image.ImageArrayOperator;
 
 /**

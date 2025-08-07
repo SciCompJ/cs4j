@@ -1,9 +1,11 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.polygon;
+package net.sci.geom.polygon2d;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -19,7 +21,7 @@ import net.sci.geom.geom2d.Point2D;
 public class DefaultPolygon2DTest
 {
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#signedArea()}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultPolygon2D#signedArea()}.
      */
     @Test
     public final void testCentroid()
@@ -35,7 +37,7 @@ public class DefaultPolygon2DTest
     
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#signedArea()}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultPolygon2D#signedArea()}.
      */
     @Test
     public final void testSignedArea()
@@ -46,7 +48,7 @@ public class DefaultPolygon2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#signedArea()}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultPolygon2D#signedArea()}.
      */
     @Test
     public final void testSignedArea_reverse()
@@ -57,7 +59,7 @@ public class DefaultPolygon2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#contains(net.sci.geom.geom2d.Point2D)}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultPolygon2D#contains(net.sci.geom.geom2d.Point2D)}.
      */
     @Test
     public final void testContainsPoint2D()
@@ -69,7 +71,7 @@ public class DefaultPolygon2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#contains(net.sci.geom.geom2d.Point2D)}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultPolygon2D#contains(net.sci.geom.geom2d.Point2D)}.
      */
     @Test
     public final void testContainsPoint2D_UShape()
@@ -92,7 +94,7 @@ public class DefaultPolygon2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#distance(net.sci.geom.geom2d.Point2D)}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultPolygon2D#distance(net.sci.geom.geom2d.Point2D)}.
      */
     @Test
     public final void testDistance()
@@ -103,7 +105,7 @@ public class DefaultPolygon2DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom2d.polygon.DefaultPolygon2D#bounds()}.
+     * Test method for {@link net.sci.geom.polygon2d.DefaultPolygon2D#bounds()}.
      */
     @Test
     public final void testBoundingBox()

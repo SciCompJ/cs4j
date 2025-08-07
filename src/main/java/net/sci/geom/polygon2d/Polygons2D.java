@@ -1,12 +1,12 @@
 /**
  * 
  */
-package net.sci.geom.geom2d.polygon;
+package net.sci.geom.polygon2d;
 
 import java.util.Collection;
 
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.polygon.process.GiftWrappingConvexHull2D;
+import net.sci.geom.polygon2d.process.GiftWrappingConvexHull2D;
 
 /**
  * A set of static methods operating on polygons.
@@ -27,7 +27,7 @@ public class Polygons2D
      *            a set of points in the 2D space
      * @return the convex hull of the points, as a Polygon2D
      * 
-     * @see net.sci.geom.geom2d.polygon.process.GiftWrappingConvexHull2D 
+     * @see net.sci.geom.polygon2d.process.GiftWrappingConvexHull2D 
      */
 	public static final Polygon2D convexHull(Collection<? extends Point2D> points)
 	{

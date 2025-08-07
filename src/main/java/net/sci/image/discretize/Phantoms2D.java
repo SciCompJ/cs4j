@@ -6,7 +6,7 @@ package net.sci.image.discretize;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.geom.geom2d.Domain2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.polygon.PolygonalDomain2D;
+import net.sci.geom.polygon2d.PolygonalDomain2D;
 
 /**
  * Generate 2D phantom images.

@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import net.sci.array.numeric.UInt8Array2D;
-import net.sci.geom.geom2d.polygon.OrientedBox2D;
+import net.sci.geom.polygon2d.OrientedBox2D;
 import net.sci.image.Image;
 import net.sci.image.regionfeatures.RegionFeatures;
 import net.sci.table.Table;

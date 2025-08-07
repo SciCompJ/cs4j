@@ -11,7 +11,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.geom.geom2d.FeretDiameters;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.PointPair2D;
-import net.sci.geom.geom2d.polygon.Polygon2D;
+import net.sci.geom.polygon2d.Polygon2D;
 import net.sci.image.Calibration;
 import net.sci.image.regionfeatures.Feature;
 import net.sci.image.regionfeatures.RegionFeatures;

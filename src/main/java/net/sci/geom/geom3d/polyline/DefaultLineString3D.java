@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import net.sci.geom.geom2d.polygon.LinearRing2D;
 import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
+import net.sci.geom.polygon2d.LinearRing2D;
 
 /**
  * <p>

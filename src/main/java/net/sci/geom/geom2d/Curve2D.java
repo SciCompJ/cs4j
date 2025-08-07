@@ -6,7 +6,7 @@ package net.sci.geom.geom2d;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.sci.geom.geom2d.polygon.Polyline2D;
+import net.sci.geom.polygon2d.Polyline2D;
 
 /**
  * A continuous curve embedded in the 2D plane.

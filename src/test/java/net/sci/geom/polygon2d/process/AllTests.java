@@ -1,4 +1,4 @@
-package net.sci.geom.geom2d.polygon.process;
+package net.sci.geom.polygon2d.process;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

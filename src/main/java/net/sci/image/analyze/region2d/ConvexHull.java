@@ -9,8 +9,8 @@ import java.util.Map;
 import net.sci.array.numeric.IntArray2D;
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.polygon.Polygon2D;
-import net.sci.geom.geom2d.polygon.process.GiftWrappingConvexHull2D;
+import net.sci.geom.polygon2d.Polygon2D;
+import net.sci.geom.polygon2d.process.GiftWrappingConvexHull2D;
 import net.sci.image.Calibration;
 import net.sci.image.ImageAxis;
 import net.sci.table.Table;
@@ -19,7 +19,7 @@ import net.sci.table.Table;
  * Compute the convex hull of each region within a label image and returns a
  * collection of polygons.
  * 
- * @see net.sci.geom.geom2d.polygon.Polygon2D
+ * @see net.sci.geom.polygon2d.Polygon2D
  * 
  * @author dlegland
  *
