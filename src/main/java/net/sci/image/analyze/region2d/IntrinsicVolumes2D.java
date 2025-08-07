@@ -57,6 +57,8 @@ public class IntrinsicVolumes2D extends RegionAnalyzer2D<IntrinsicVolumes2D.Resu
     // Getter / Setter
 
     /**
+     * Returns the number of directions used to compute perimeter
+     * 
      * @return the number of directions used to compute perimeter
      */
     public int getDirectionNumber()
@@ -65,6 +67,8 @@ public class IntrinsicVolumes2D extends RegionAnalyzer2D<IntrinsicVolumes2D.Resu
     }
 
     /**
+     * Sets the number of directions for computing perimeter.
+     * 
      * @param directionNumber
      *            the number of directions used to compute perimeter (either 2
      *            or 4, default is 4)
@@ -75,6 +79,8 @@ public class IntrinsicVolumes2D extends RegionAnalyzer2D<IntrinsicVolumes2D.Resu
     }
 
     /**
+     * Returns the connectivity used for computing Euler number
+     * 
      * @return the connectivity used for computing Euler number
      */
     public int getConnectivity()
@@ -83,6 +89,8 @@ public class IntrinsicVolumes2D extends RegionAnalyzer2D<IntrinsicVolumes2D.Resu
     }
 
     /**
+     * Sets the the connectivity for computing Euler number.
+     * 
      * @param connectivity
      *            the connectivity for computing Euler number (either 4 or 8,
      *            default is 4)

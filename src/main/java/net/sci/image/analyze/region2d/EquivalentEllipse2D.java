@@ -23,6 +23,13 @@ import net.sci.table.Table;
 public class EquivalentEllipse2D extends RegionAnalyzer2D<Ellipse2D>
 {
     /**
+     * Default empty constructor.
+     */
+    public EquivalentEllipse2D()
+    {
+    }
+    
+    /**
      * Utility method that transforms the mapping between labels and equivalent
      * ellipses instances into a Table containing summary parameters of all
      * ellipses.

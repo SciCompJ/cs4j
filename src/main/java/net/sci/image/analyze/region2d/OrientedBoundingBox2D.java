@@ -20,8 +20,11 @@ import net.sci.image.ImageAxis;
 import net.sci.table.Table;
 
 /**
- * @author dlegland
+ * Computes the oriented bounding box of the regions within a label map.
  *
+ * @see OrientedBox2D
+ * 
+ * @author dlegland
  */
 public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
 {
@@ -35,7 +38,7 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
      *            a list of points (not necessarily ordered)
      * @return the oriented box of this set of points.
      */
-    public static final OrientedBox2D orientedBoundingBox(ArrayList<? extends Point2D> points)
+    public static final OrientedBox2D orientedBoundingBox(List<Point2D> points)
     {
         // Compute convex hull to reduce complexity
         Polygon2D convexHull = Polygons2D.convexHull(points);
@@ -212,7 +215,14 @@ public class OrientedBoundingBox2D extends RegionAnalyzer2D<OrientedBox2D>
         return res;
     }
     
-
+    /**
+     * Default empty constructor.
+     */
+    public OrientedBoundingBox2D()
+    {
+    }
+    
+    
     // ==================================================
     // Implementation of RegionAnalyzer interface
 

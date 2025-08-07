@@ -21,6 +21,13 @@ import net.sci.table.Table;
  */
 public class RegionBounds2D extends RegionAnalyzer2D<Bounds2D>
 {
+    /**
+     * Default empty constructor.
+     */
+    public RegionBounds2D()
+    {
+    }
+    
     // ==================================================
     // Implementation of RegionAnalyzer interface
 

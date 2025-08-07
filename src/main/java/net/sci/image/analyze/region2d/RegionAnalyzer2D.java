@@ -5,6 +5,7 @@ package net.sci.image.analyze.region2d;
 
 import java.util.Map;
 
+import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.numeric.IntArray;
 import net.sci.array.numeric.IntArray2D;
@@ -18,15 +19,21 @@ import net.sci.table.Table;
  * Base implementation of RegionAnalyzer interface for planar binary/label
  * images.
  *
- * @param T
+ * @param <T>
  *            the type of the data computed for each region. May be a class
  *            instance, or a single Numeric type.
  * @author dlegland
  *           
  */
-public abstract class RegionAnalyzer2D<T> extends net.sci.algo.AlgoStub
-        implements net.sci.image.analyze.RegionAnalyzer<T>
+public abstract class RegionAnalyzer2D<T> extends AlgoStub implements RegionAnalyzer<T>
 {
+    /**
+     * Default empty constructor.
+     */
+    protected RegionAnalyzer2D()
+    {
+    }
+    
     /**
      * Computes an instance of the generic type T for each region in input label
      * image.

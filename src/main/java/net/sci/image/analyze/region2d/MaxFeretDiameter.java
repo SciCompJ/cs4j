@@ -19,7 +19,7 @@ import net.sci.table.Table;
 /**
  * Computes maximum Feret Diameter for each region of a binary or label image.
  * 
- * @see FeretDiameters2D
+ * @see FeretDiameters
  * @see PointPair2D
  * 
  * @author dlegland
@@ -30,9 +30,23 @@ public class MaxFeretDiameter extends RegionAnalyzer2D<PointPair2D>
 	// ==================================================
 	// Static methods 
 	
-	public final static PointPair2D[] maxFeretDiameters(IntArray2D<?> image, int[] labels, Calibration calib)
+    /**
+     * Computes the maximum Feret diameter for each region within the label map
+     * and specified by the list of lab
+     * 
+     * @param array
+     *            the array of integer values used as label map for representing
+     *            the regions
+     * @param labels
+     *            the labels of the regions to process
+     * @param calib
+     *            the spatial calibration of the label map
+     * @return an array of Point pairs with as many elements as the
+     *         {@code labels} argument.
+     */
+	public final static PointPair2D[] maxFeretDiameters(IntArray2D<?> array, int[] labels, Calibration calib)
 	{
-		return new MaxFeretDiameter().analyzeRegions(image, labels, calib);
+		return new MaxFeretDiameter().analyzeRegions(array, labels, calib);
 	}
 	
 	
@@ -53,7 +67,7 @@ public class MaxFeretDiameter extends RegionAnalyzer2D<PointPair2D>
 	 * Converts the result of maximum Feret diameters computation to a
 	 * ResultsTable that can be displayed within ImageJ.
 	 * 
-	 * @param maxDiamsMap
+	 * @param results
 	 *            the map of PointPair2D for each label within a label image
 	 * @return a ResultsTable instance
 	 */

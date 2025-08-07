@@ -239,6 +239,17 @@ public class RegionBoundaries
 		return points;
 	}
 
+    /**
+     * Retrieves the points of located at the middle of the boundary edges of
+     * the regions within the label map array. These points can be used to build
+     * convex hull or compute max Feret diameter.
+     * 
+     * @param labelArray
+     *            the array containing the different regions
+     * @param labels
+     *            the labels of the regions within the label map
+     * @return the set of boundary points.
+     */
     public static final ArrayList<Point2D>[] boundaryPixelsMiddleEdges(IntArray2D<?> labelArray, int[] labels)
     {
         // size of image
@@ -308,6 +319,15 @@ public class RegionBoundaries
         return result;
     }
     
+    /**
+     * Retrieves the points of located at the middle of the boundary edges of
+     * the region within the binary array. These points can be used to build
+     * convex hull or compute max Feret diameter.
+     * 
+     * @param binaryArray
+     *            the binary array containing the region
+     * @return the set of boundary points.
+     */
 	public static final ArrayList<Point2D> boundaryPixelsMiddleEdges(IntArray2D<?> binaryArray)
 	{
 		// size of image

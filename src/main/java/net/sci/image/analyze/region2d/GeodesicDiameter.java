@@ -62,9 +62,9 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
     /**
      * Creates a new geodesic diameter computation operator.
      * 
-     * @param weights
-     *            the array of weights for orthogonal, diagonal, and eventually
-     *            chess-knight moves neighbors
+     * @param mask
+     *            the chamfer mask that will be used to propagate weights to
+     *            neighbor pixels
      */
     public GeodesicDiameter(ChamferMask2D mask) 
     {
@@ -87,20 +87,25 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
     // ==================================================
     // Setters/Getters
     
+    /**
+     * Returns the boolean flag indicating if the path should be computed.
+     * 
+     * @return the boolean flag indicating if the path should be computed.
+     */
     public boolean getComputePaths()
     {
         return this.computePaths;
     }
     
+    /**
+     * Sets the boolean flag indicating if the path should be computed.
+     * 
+     * @param bool
+     *            the boolean flag
+     */
     public void setComputePaths(boolean bool)
     {
         this.computePaths = bool;
-    }
-
-    public void setChamferWeights(float[] weights)
-    {
-        ChamferMask2D mask = ChamferMask2D.fromWeights(weights);
-        this.geodesicDistanceTransform = new GeodesicDistanceTransform2DFloat32Hybrid(mask, true);
     }
 
 
@@ -365,11 +370,16 @@ public class GeodesicDiameter extends RegionAnalyzer2D<GeodesicDiameter.Result>
     /**
      * Inner class used for representing results of geodesic diameters
      * computations. Each instance corresponds to a single region / particle.
-     * 
-     * @author dlegland
      */
     public class Result
     {
+        /**
+         * Default empty constructor.
+         */
+        public Result()
+        {
+        }
+        
         /** The geodesic diameter of the region. */
         public double diameter;
 
