@@ -29,11 +29,23 @@ public class MultiCurve2D implements CurveShape2D
     // ===================================================================
     // Constructors
     
+    /**
+     * Creates a new MutliCurve2D instance from a collection of curves.
+     * 
+     * @param curves
+     *            the curves that compose the multicurve
+     */
     public MultiCurve2D(Collection<? extends Curve2D> curves)
     {
         this.curves = new ArrayList<Curve2D>(curves);
     }
     
+    /**
+     * Creates a new MutliCurve2D instance from a collection of curves.
+     * 
+     * @param curves
+     *            the curves that compose the multicurve
+     */
     public MultiCurve2D(Curve2D... curves)
     {
         this.curves = new ArrayList<Curve2D>(curves.length);

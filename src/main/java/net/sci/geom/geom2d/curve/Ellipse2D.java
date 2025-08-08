@@ -104,7 +104,7 @@ public class Ellipse2D implements Contour2D
         double cx = center.x();
         double cy = center.y();
         
-        // commute second-order coefficients
+        // compute second-order coefficients
         double Ixx = 0, Iyy = 0, Ixy = 0;
         int np = xData.length;
         for (int i = 0; i < np; i++)
@@ -432,12 +432,19 @@ public class Ellipse2D implements Contour2D
         return this.r1 * this.r2 * Math.PI;
     }
     
+    /**
+     * Returns the center of this ellipse.
+     * 
+     * @return the center of the ellipse.
+     */
     public Point2D center()
     {
         return new Point2D(xc, yc);
     }
     
-    /** 
+    /**
+     * Returns the length of the semi-major axis.
+     * 
      * @return the length of the semi-major axis.
      */
     public double semiMajorAxisLength()
@@ -445,7 +452,9 @@ public class Ellipse2D implements Contour2D
         return r1;
     }
     
-    /** 
+    /**
+     * Returns the length of the semi-minor axis.
+     * 
      * @return the length of the semi-minor axis.
      */
     public double semiMinorAxisLength()
@@ -463,11 +472,29 @@ public class Ellipse2D implements Contour2D
         return theta;
     }
     
+    /**
+     * Computes the coordinates of the orthogonal projection of the specified
+     * point onto the ellipse.
+     * 
+     * @param p
+     *            the point to project
+     * @return the orthogonal projection of the point
+     */
     public Point2D project(Point2D p)
     {
         return project(p.x(), p.y());
     }
     
+    /**
+     * Computes the coordinates of the orthogonal projection of the specified
+     * point onto the ellipse.
+     * 
+     * @param x
+     *            the x-coordinate of the point to project
+     * @param y
+     *            the y-coordinate of the point to project
+     * @return the orthogonal projection of the point
+     */
     public Point2D project(double x, double y)
     {
         double[] normCoords = toAlignedEllipse(new double[] {x, y});

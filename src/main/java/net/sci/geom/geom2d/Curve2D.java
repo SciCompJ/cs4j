@@ -68,6 +68,10 @@ public interface Curve2D extends CurveShape2D
     public abstract double t1();
 
     /**
+     * Checks whether this curve is closed (result is true) or open (result is
+     * false). When the curve is closed, the last point coincides with the first
+     * point.
+     * 
      * @return true if this curve is closed.
      */
     boolean isClosed();

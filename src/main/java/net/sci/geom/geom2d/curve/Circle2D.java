@@ -70,19 +70,28 @@ public class Circle2D implements Contour2D
     // Specific methods
     
     /**
-     * @return an ellipse that can be super-imposed on this circle 
+     * Converts this circle into an instance of Ellipse2D.
+     * 
+     * @return an ellipse that can be super-imposed on this circle
      */
     public Ellipse2D asEllipse()
     {
         return new Ellipse2D(xc, yc, radius, radius, 0);
     }
     
+    /**
+     * Returns the center of this circle.
+     * 
+     * @return the center of the circle.
+     */
     public Point2D center()
     {
         return new Point2D(xc, yc);
     }
     
-    /** 
+    /**
+     * Returns the radius of the circle.
+     * 
      * @return the radius of the circle
      */
     public double radius()

@@ -16,6 +16,8 @@ import net.sci.geom.Curve;
 public interface CurveShape2D extends Curve, Geometry2D
 {
     /**
+     * Returns the curves that compose this curve shape.
+     * 
      * @return the collection of continuous curves that forms this curve shape.
      */
     public Collection<? extends Curve2D> curves();
