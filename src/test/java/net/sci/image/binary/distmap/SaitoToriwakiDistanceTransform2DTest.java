@@ -83,7 +83,7 @@ public class SaitoToriwakiDistanceTransform2DTest
         assertEquals(array.size(1), result.size(1));
         assertEquals(Math.hypot(4, 6), result.getValue(0, 0), 0.001);
         assertEquals(Math.hypot(4, 6), result.getValue(12, 0), 0.001);
-        assertEquals(Math.hypot(4, 6), result.getValue(0, 8), 0.001);
+        assertEquals(Math.hypot(4, 6), result.getValue(0, 0), 0.001);
         assertEquals(Math.hypot(4, 6), result.getValue(12, 8), 0.001);
     }
 

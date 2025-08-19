@@ -13,7 +13,7 @@ import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt8Array2D;
 
 /**
- * Computes Euclidean distance transform of a binary array using algorithm of
+ * Computes Euclidean distance transform of a 2D binary array using algorithm of
  * Saito and Toriwaki (1994). Uses floating point computations.
  */
 public class SaitoToriwakiDistanceTransform2D extends AlgoStub implements ArrayOperator, DistanceTransform2D
