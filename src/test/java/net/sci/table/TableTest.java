@@ -41,9 +41,7 @@ public class TableTest
     @Test
     public final void test_selectColumns() throws IOException
     {
-        String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();
-        TableReader reader = new DelimitedTableReader();
-        Table table = reader.readTable(new File(fileName));
+        Table table = readFisherIrisTable();
         
         table = Table.selectColumns(table, new int[] {0, 1, 2, 3});
 
@@ -64,11 +62,7 @@ public class TableTest
     @Test
     public final void test_columns() throws IOException
     {
-        String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();
-        
-        TableReader reader = new DelimitedTableReader();
-        
-        Table table = reader.readTable(new File(fileName));
+        Table table = readFisherIrisTable();
 
         int nr = table.rowCount();
         int nc = table.columnCount();
@@ -89,15 +83,16 @@ public class TableTest
      */
     public final void test_printInfos() throws IOException
     {
-        String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();
-        
-        TableReader reader = new DelimitedTableReader();
-        
-        Table table = reader.readTable(new File(fileName));
+        Table table = readFisherIrisTable();
 
         table.printInfo(System.out);
     }
-
-   // TODO: create defaukt table (iris?), select clumns, and create table from selected columsn.
-//    private Table createEmptyTab
+    
+    private Table readFisherIrisTable() throws IOException
+    {
+        String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();
+        TableReader reader = new DelimitedTableReader();
+        Table table = reader.readTable(new File(fileName));
+        return table;
+    }
 }
