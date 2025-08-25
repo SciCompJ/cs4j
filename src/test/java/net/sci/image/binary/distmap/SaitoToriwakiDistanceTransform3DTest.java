@@ -21,7 +21,7 @@ public class SaitoToriwakiDistanceTransform3DTest
      * Test method for {@link net.sci.image.binary.distmap.SaitoToriwakiDistanceTransform3D#process3d(net.sci.array.binary.BinaryArray3D)}.
      */
     @Test
-    public void test_process3d_centerd_rectangle()
+    public void test_process3d_centered_rectangle()
     {
         // Create a black image with a white 8-by-6 rectangle in the middle
         BinaryArray3D array = BinaryArray3D.create(14, 12, 10);
