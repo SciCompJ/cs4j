@@ -170,8 +170,8 @@ public class Image
 	}
 
 	/**
-     * Creates a new image, initialized by image data, and keeping meta-data
-     * from parent image.
+     * Creates a new image, initialized by image data, and keeping meta-data and
+     * display settings from parent image.
      * 
      * @param data
      *            the initial data array for this image
@@ -184,6 +184,7 @@ public class Image
 
 		// additional processing to take into account parent image
 		copySettings(parent);
+		copyDisplaySettings(parent);
 	}
 	
 	/**
@@ -270,31 +271,6 @@ public class Image
 		this.name = parent.name;
 		this.extension = parent.extension;
 		
-        // Check if parent type is compatible with data
-        // (escape the case of binary images, that should not be considered as intensity nor distance)
-        if (parent.type.isCompatibleWith(this.data) && this.data.elementClass() != Binary.class)
-		{
-		    // update type and refresh calibration
-		    this.type = parent.type;
-		    this.type.setupCalibration(this);
-		    
-		    if (this.type == ImageType.COLOR)
-		    {
-		        // Additional processing to propagate settings only if same data type
-		        if (this.data.elementClass() == RGB8.class && parent.data.elementClass() == RGB8.class)
-		        {
-		            this.displaySettings = parent.displaySettings.duplicate();
-		        }
-                if (this.data.elementClass() == RGB16.class && parent.data.elementClass() == RGB16.class)
-                {
-                    this.displaySettings = parent.displaySettings.duplicate();
-                }
-		    }
-		    else
-		    {
-		        this.displaySettings = parent.displaySettings.duplicate();
-		    }
-		}
 		
         // duplicate the spatial calibration if appropriate
         if (Arrays.isSameSize(this.data, parent.data))
@@ -302,6 +278,36 @@ public class Image
             this.calibration.axes = parent.calibration.duplicateAxes(); 
         }
 	}
+	
+    private void copyDisplaySettings(Image parent)
+    {
+        // Check if parent type is compatible with data
+        // (escape the case of binary images, that should not be considered as intensity nor distance)
+        if (parent.type.isCompatibleWith(this.data) && this.data.elementClass() != Binary.class)
+        {
+            // update type and refresh calibration
+            this.type = parent.type;
+            this.type.setupCalibration(this);
+            
+            if (this.type == ImageType.COLOR)
+            {
+                // Additional processing to propagate settings only if same data type
+                if (this.data.elementClass() == RGB8.class && parent.data.elementClass() == RGB8.class)
+                {
+                    this.displaySettings = parent.displaySettings.duplicate();
+                }
+                if (this.data.elementClass() == RGB16.class && parent.data.elementClass() == RGB16.class)
+                {
+                    this.displaySettings = parent.displaySettings.duplicate();
+                }
+            }
+            else
+            {
+                this.displaySettings = parent.displaySettings.duplicate();
+            }
+        }
+    }
+	
 	
 	
     // =============================================================

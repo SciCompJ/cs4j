@@ -404,7 +404,7 @@ public interface ImageType
             ColorMap lut = image.getDisplaySettings().getColorMap();
             if (lut == null)
             {
-                lut = ColorMaps.GLASBEY.createColorMap(255); 
+                lut = ColorMaps.GLASBEY_DARK.createColorMap(255); 
             }
 
             // Computes the color model
@@ -459,9 +459,9 @@ public interface ImageType
         
             image.displaySettings.displayRange = new double[]{0, 255};
             
-            // default display of label maps: Glasbey LUT and white background
+            // default display of label maps: Glasbey DARK LUT and white background
             image.displaySettings.backgroundColor = RGB8.WHITE;
-            ColorMap colorMap = ColorMaps.GLASBEY.createColorMap(255);
+            ColorMap colorMap = ColorMaps.GLASBEY_DARK.createColorMap(255);
             image.displaySettings.colorMap = colorMap;
         }
 
