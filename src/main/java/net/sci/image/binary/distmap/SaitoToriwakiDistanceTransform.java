@@ -124,6 +124,7 @@ public class SaitoToriwakiDistanceTransform extends AlgoStub implements ArrayOpe
     public Result computeResult(BinaryArray array, double[] spacings)
     {
         // allocate memory for result array
+        this.fireStatusChanged(this, "Allocate memory");
         ScalarArray<?> output = factory.create(array.size());
         
         // dispatch processing according to dimensionality
@@ -176,6 +177,8 @@ public class SaitoToriwakiDistanceTransform extends AlgoStub implements ArrayOpe
         {
             throw new IllegalArgumentException("Spacing array must have length 2");
         }
+        
+        this.fireStatusChanged(this, "Allocate memory");
         ScalarArray2D<?> output = ScalarArray2D.wrapScalar2d(factory.create(array.size()));
         
         processStep1(array, output, spacings[0]);
@@ -219,8 +222,10 @@ public class SaitoToriwakiDistanceTransform extends AlgoStub implements ArrayOpe
         double absoluteMaximum = (sizeX + sizeY) * spacingX;
         
         // forward scan
+        this.fireStatusChanged(this, "Process X-direction, forward pass");
         for (int y = 0; y < sizeY; y++)
         {
+            this.fireProgressChanged(this, y, sizeY);
             double df = absoluteMaximum;
             for (int x = 0; x < sizeX; x++)
             {
@@ -231,8 +236,10 @@ public class SaitoToriwakiDistanceTransform extends AlgoStub implements ArrayOpe
         }
         
         // backward scan
+        this.fireStatusChanged(this, "Process X-direction, backward pass");
         for (int y = sizeY - 1; y >= 0; y--)
         {
+            this.fireProgressChanged(this, sizeY-1-y, sizeY);
             double db = absoluteMaximum;
             for (int x = sizeX - 1; x >= 0; x--)
             {
@@ -254,8 +261,11 @@ public class SaitoToriwakiDistanceTransform extends AlgoStub implements ArrayOpe
         double dy2 = spacingY * spacingY;
         
         // iterate over y-columns of the array
+        this.fireStatusChanged(this, "Process Y-direction");
         for (int x = 0; x < sizeX; x++)
         {
+            this.fireProgressChanged(this, x, sizeX);
+            
             // init buffer
             for (int y = 0; y < sizeY; y++)
             {
@@ -370,8 +380,10 @@ public class SaitoToriwakiDistanceTransform extends AlgoStub implements ArrayOpe
         double absoluteMaximum = (sizeX + sizeY) * sx;
         
         // forward scan
+        this.fireStatusChanged(this, "Process X-direction, forward pass");
         for (int z = 0; z < sizeZ; z++)
         {
+            this.fireProgressChanged(this, z, sizeZ);
             for (int y = 0; y < sizeY; y++)
             {
                 double df = absoluteMaximum;
@@ -385,8 +397,10 @@ public class SaitoToriwakiDistanceTransform extends AlgoStub implements ArrayOpe
         }
         
         // backward scan
+        this.fireStatusChanged(this, "Process X-direction, backward pass");
         for (int z = 0; z < sizeZ; z++)
         {
+            this.fireProgressChanged(this, z, sizeZ);
             for (int y = sizeY - 1; y >= 0; y--)
             {
                 double db = absoluteMaximum;
@@ -413,8 +427,10 @@ public class SaitoToriwakiDistanceTransform extends AlgoStub implements ArrayOpe
         double distMax = 0.0;
 
         // iterate over y-columns of the array
+        this.fireStatusChanged(this, "Process Y-direction");
         for (int z = 0; z < sizeZ; z++)
         {
+            this.fireProgressChanged(this, z, sizeZ);
             for (int x = 0; x < sizeX; x++)
             {
                 // init buffer
@@ -467,8 +483,10 @@ public class SaitoToriwakiDistanceTransform extends AlgoStub implements ArrayOpe
         double distMax = 0.0;
 
         // iterate over y-columns of the array
+        this.fireStatusChanged(this, "Process Z-direction");
         for (int y = 0; y < sizeY; y++)
         {
+            this.fireProgressChanged(this, y, sizeY);
             for (int x = 0; x < sizeX; x++)
             {
                 // init buffer
