@@ -61,6 +61,23 @@ public class DefaultNumericTableTest
         assertEquals(colName, table.getColumnName(3));
     }
     
+    /**
+     * Test method for {@link net.sci.table.impl.DefaultNumericTable#addRow(java.lang.String, double[])}.
+     */
+    @Test
+    public final void test_addRow()
+    {
+        DefaultNumericTable table = createSampleTable();
+        
+        table.addRow("rowA", new double[] {51, 52, 53});
+        table.addRow("rowB", new double[] {61, 62, 63});
+        table.addRow("rowC", new double[] {71, 72, 73});
+        
+        assertEquals(5+3, table.rowCount());
+        assertEquals("rowB", table.getRowName(6));
+        assertEquals(63, table.getValue(6, 2), 0.01);
+    }
+    
     private static final DefaultNumericTable createSampleTable()
     {
         double[][] data = new double[3][5];

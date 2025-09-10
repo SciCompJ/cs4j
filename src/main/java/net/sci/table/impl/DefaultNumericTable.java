@@ -301,7 +301,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         // duplicate existing columns
         for (int c = 0; c < nCols; c++)
         {
-            System.arraycopy(data[c], 0, this.data[c], 0, nRows);
+            System.arraycopy(this.data[c], 0, data[c], 0, nRows);
         }
         
         // copy new values
@@ -311,7 +311,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         }
         this.data = data;
         
-        // copy column names
+        // copy row names
         String[] rowNames = new String[nRows+1];
         if (this.rowAxis != null)
         {
@@ -319,6 +319,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         }
         rowNames[nRows] = name;
         this.rowAxis = new CategoricalAxis("", rowNames);
+        this.nRows++;
     }
     
     
