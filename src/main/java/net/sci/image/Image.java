@@ -202,6 +202,10 @@ public class Image
 		
 		// additional processing to take into account parent image
 		copySettings(parent);
+		if (type == parent.type)
+		{
+	        copyDisplaySettings(parent);
+		}
 	}
 	
 	/**
