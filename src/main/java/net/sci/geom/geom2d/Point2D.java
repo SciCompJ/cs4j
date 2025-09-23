@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 import net.sci.geom.Point;
@@ -17,7 +18,7 @@ import net.sci.geom.Point;
  * @author dlegland
  *
  */
-public class Point2D implements Geometry2D, Point
+public class Point2D implements PointShape2D, Point
 {
     // ===================================================================
     // Static methods
@@ -321,23 +322,38 @@ public class Point2D implements Geometry2D, Point
     }
     
     
-	
-	// ===================================================================
+    // ===================================================================
     // Implementation of the Point interface
 
     @Override
     public double get(int dim)
     {
-        switch(dim)
+        return switch (dim)
         {
-        case 0: return this.x;
-        case 1: return this.y;
-        default:
-            throw new IllegalArgumentException("Dimension should be comprised between 0 and 1");
-        }
+            case 0 -> this.x;
+            case 1 -> this.y;
+            default -> throw new IllegalArgumentException(
+                    "Dimension should be either 0 or 1");
+        };
+    }
+    
+    
+    // ===================================================================
+    // Implementation of the PointShape2D interface
+
+    @Override
+    public int pointCount()
+    {
+        return 1;
+    }
+    
+    @Override
+    public Collection<? extends Point2D> points()
+    {
+        return List.of(this);
     }
 
-    
+
     // ===================================================================
     // Implementation of the Geometry2D interface
 
@@ -385,14 +401,6 @@ public class Point2D implements Geometry2D, Point
     // ===================================================================
     // Implementation of the Geometry interface
 
-    /**
-     * Returns true, as a point is bounded by definition.
-     */
-    public boolean isBounded()
-    {
-        return true;
-    }
-
     @Override
     public Bounds2D bounds()
     {
@@ -406,10 +414,6 @@ public class Point2D implements Geometry2D, Point
     }
 
 
-//	public Point2d transform(Transform2d trans) 
-//	{
-//		return trans.transform(this);
-//	}
     // ===================================================================
     // Override Object interface
 

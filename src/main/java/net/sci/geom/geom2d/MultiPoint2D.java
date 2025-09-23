@@ -5,6 +5,7 @@ package net.sci.geom.geom2d;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import net.sci.geom.MultiPoint;
 
@@ -14,7 +15,7 @@ import net.sci.geom.MultiPoint;
  * @author dlegland
  *
  */
-public class MultiPoint2D implements MultiPoint, Geometry2D
+public class MultiPoint2D implements MultiPoint, PointShape2D
 {
     // ===================================================================
     // Static factories
@@ -109,11 +110,20 @@ public class MultiPoint2D implements MultiPoint, Geometry2D
         this.points.add(p);
     }
     
+    // ===================================================================
+    // Methods implementing the PointShape2D interface
+    
     public int pointCount()
     {
         return this.points.size();
     }
     
+    @Override
+    public Collection<? extends Point2D> points()
+    {
+        return Collections.unmodifiableList(this.points);
+    }
+
 
     // ===================================================================
     // Methods implementing the Geometry2D interface
