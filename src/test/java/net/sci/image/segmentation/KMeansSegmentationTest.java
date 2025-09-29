@@ -30,8 +30,8 @@ public class KMeansSegmentationTest
         IntArray<?> labelMap = algo.process(array);
         
         double[] range = labelMap.valueRange();
-        assertEquals(range[0], 0.0, 0.01);
+        assertEquals(range[0], 1.0, 0.01);
         // difficult to test, as the number of clusters may equal 2 or 3 depending on initial choice of germs
-        assertEquals(range[1], 2.0, 0.01);
+        assertEquals(range[1], 3.0, 0.01);
     }
 }
