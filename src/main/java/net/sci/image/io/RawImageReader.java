@@ -11,8 +11,9 @@ import net.sci.array.Array;
 import net.sci.image.Image;
 
 /**
- * @author dlegland
- *
+ * Read "raw" image data from a binary file, by choosing array size, data type,
+ * and byte order.
+ * 
  */
 public class RawImageReader implements ImageReader
 {
@@ -122,37 +123,21 @@ public class RawImageReader implements ImageReader
     
     public Array<?> readImageData() throws IOException 
     {
-        ImageBinaryDataReader reader = new ImageBinaryDataReader(this.file, this.byteOrder);
-        reader.seek(this.offset);
-
-        Array<?> array;
-        switch(this.type)
+        try(ImageBinaryDataReader reader = new ImageBinaryDataReader(this.file, this.byteOrder))
         {
-        case UINT8:
-            array = reader.readUInt8Array(this.size); break;
-        
-        case UINT16:
-            array = reader.readUInt16Array(this.size); break;
-
-        case INT16:
-            array = reader.readInt16Array(this.size); break;
+            reader.seek(this.offset);
             
-        case INT32:
-            array = reader.readInt32Array(this.size); break;
-
-        case FLOAT32:
-            array = reader.readFloat32Array(this.size); break;
-
-        case FLOAT64:
-            array = reader.readFloat64Array(this.size); break;
-
-        default:
-            reader.close();
-            throw new RuntimeException("Unable to process files with data type: " + type);
+            return switch (this.type)
+            {
+                case UINT8 -> reader.readUInt8Array(this.size);
+                case UINT16 -> reader.readUInt16Array(this.size);
+                case INT16 -> reader.readInt16Array(this.size);
+                case INT32 -> reader.readInt32Array(this.size);
+                case FLOAT32 -> reader.readFloat32Array(this.size);
+                case FLOAT64 -> reader.readFloat64Array(this.size);
+                default -> throw new RuntimeException(
+                        "Unable to process files with data type: " + type);
+            };
         }
-        
-        reader.close();
-        return array;
     }
-
 }
