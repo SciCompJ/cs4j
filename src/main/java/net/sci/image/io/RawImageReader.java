@@ -22,18 +22,18 @@ public class RawImageReader implements ImageReader
      */
     public enum DataType 
     {
-        UINT8(1),
-        UINT16(2),
-        INT16(2),
-        INT32(4),
-        FLOAT32(4),
-        FLOAT64(8);
+        UINT8(PixelType.UINT8),
+        UINT16(PixelType.UINT16),
+        INT16(PixelType.INT16),
+        INT32(PixelType.INT32),
+        FLOAT32(PixelType.FLOAT32),
+        FLOAT64(PixelType.FLOAT64);
         
-        int bytesPerElement;
+        PixelType pixelType;
         
-        private DataType(int bytesPerElement)
+        private DataType(PixelType pixelType)
         {
-            this.bytesPerElement = bytesPerElement;
+            this.pixelType = pixelType;
         }
         
         /**
@@ -62,7 +62,17 @@ public class RawImageReader implements ImageReader
         
         public int getBytePerElement()
         {
-            return this.bytesPerElement;
+            return this.pixelType.byteCount();
+        }
+        
+        /**
+         * Returns the corresponding pixel type.
+         * 
+         * @return the corresponding pixel type.
+         */
+        public PixelType getPixelType()
+        {
+            return this.pixelType;
         }
     }
 
@@ -119,6 +129,23 @@ public class RawImageReader implements ImageReader
 		image.setNameFromFileName(file.getName());
 		image.setFilePath(file.getPath());
 		return image;
+    }
+    
+    /* (non-Javadoc)
+     * @see net.sci.image.io.ImageReader#readImage()
+     */
+    public Image readVirtualImage3D() throws IOException
+    {
+        Image image = new Image(readVirtualImageData());
+        image.setNameFromFileName(file.getName());
+        image.setFilePath(file.getPath());
+        return image;
+    }
+    
+    private Array<?> readVirtualImageData() throws IOException 
+    {
+        PixelType pixelType = type.getPixelType();
+        return ImageIO.createFileMappedArray(file.toPath(), offset, size, pixelType, byteOrder);
     }
     
     public Array<?> readImageData() throws IOException 
