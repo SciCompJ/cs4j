@@ -151,15 +151,13 @@ public class ImageBinaryDataReader extends AlgoStub implements Closeable
     
     public UInt8Array readUInt8Array(int[] dims) throws IOException 
     {
-        switch(dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return readUInt8Array2D(dims[0], dims[1]);
-        case 3:
-            return readUInt8Array3D(dims[0], dims[1], dims[2]);
-        default:
-            throw new RuntimeException(String.format("Not yet implemented for array with dimensions %d", dims.length));
-        }
+            case 2 -> readUInt8Array2D(dims[0], dims[1]);
+            case 3 -> readUInt8Array3D(dims[0], dims[1], dims[2]);
+            default -> throw new RuntimeException(
+                    String.format("Not yet implemented for array with dimensions %d", dims.length));
+        };
     }
     
     public UInt8Array2D readUInt8Array2D(int sizeX, int sizeY) throws IOException
@@ -191,15 +189,13 @@ public class ImageBinaryDataReader extends AlgoStub implements Closeable
     
     public UInt16Array readUInt16Array(int[] dims) throws IOException 
     {
-        switch(dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return readUInt16Array2D(dims[0], dims[1]);
-        case 3:
-            return readUInt16Array3D(dims[0], dims[1], dims[2]);
-        default:
-            throw new RuntimeException(String.format("Not yet implemented for array with dimensions %d", dims.length));
-        }
+            case 2 -> readUInt16Array2D(dims[0], dims[1]);
+            case 3 -> readUInt16Array3D(dims[0], dims[1], dims[2]);
+            default -> throw new RuntimeException(
+                    String.format("Not yet implemented for array with dimensions %d", dims.length));
+        };
     }
     
     public UInt16Array2D readUInt16Array2D(int sizeX, int sizeY) throws IOException
@@ -229,15 +225,13 @@ public class ImageBinaryDataReader extends AlgoStub implements Closeable
     
     public Int16Array readInt16Array(int[] dims) throws IOException 
     {
-        switch(dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return readInt16Array2D(dims[0], dims[1]);
-        case 3:
-            return readInt16Array3D(dims[0], dims[1], dims[2]);
-        default:
-            throw new RuntimeException(String.format("Not yet implemented for array with dimensions %d", dims.length));
-        }
+            case 2 -> readInt16Array2D(dims[0], dims[1]);
+            case 3 -> readInt16Array3D(dims[0], dims[1], dims[2]);
+            default -> throw new RuntimeException(
+                    String.format("Not yet implemented for array with dimensions %d", dims.length));
+        };
     }
     
     public Int16Array2D readInt16Array2D(int sizeX, int sizeY) throws IOException
@@ -268,15 +262,13 @@ public class ImageBinaryDataReader extends AlgoStub implements Closeable
     
     public Int32Array readInt32Array(int[] dims) throws IOException 
     {
-        switch(dims.length)
+        return switch(dims.length)
         {
-        case 2:
-            return readInt32Array2D(dims[0], dims[1]);
-        case 3:
-            return readInt32Array3D(dims[0], dims[1], dims[2]);
-        default:
-            throw new RuntimeException(String.format("Not yet implemented for array with dimensions %d", dims.length));
-        }
+            case 2 -> readInt32Array2D(dims[0], dims[1]);
+            case 3 -> readInt32Array3D(dims[0], dims[1], dims[2]);
+            default -> throw new RuntimeException(
+                    String.format("Not yet implemented for array with dimensions %d", dims.length));
+        };
     }
     
     public Int32Array2D readInt32Array2D(int sizeX, int sizeY) throws IOException
@@ -306,15 +298,13 @@ public class ImageBinaryDataReader extends AlgoStub implements Closeable
     
     public Float32Array readFloat32Array(int[] dims) throws IOException 
     {
-        switch(dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return readFloat32Array2D(dims[0], dims[1]);
-        case 3:
-            return readFloat32Array3D(dims[0], dims[1], dims[2]);
-        default:
-            throw new RuntimeException(String.format("Not yet implemented for array with dimensions %d", dims.length));
-        }
+            case 2 -> readFloat32Array2D(dims[0], dims[1]);
+            case 3 -> readFloat32Array3D(dims[0], dims[1], dims[2]);
+            default -> throw new RuntimeException(
+                    String.format("Not yet implemented for array with dimensions %d", dims.length));
+        };
     }
     
     public Float32Array2D readFloat32Array2D(int sizeX, int sizeY) throws IOException
@@ -344,15 +334,13 @@ public class ImageBinaryDataReader extends AlgoStub implements Closeable
     
     public Float64Array readFloat64Array(int[] dims) throws IOException 
     {
-        switch(dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return readFloat64Array2D(dims[0], dims[1]);
-        case 3:
-            return readFloat64Array3D(dims[0], dims[1], dims[2]);
-        default:
-            throw new RuntimeException(String.format("Not yet implemented for array with dimensions %d", dims.length));
-        }
+            case 2 -> readFloat64Array2D(dims[0], dims[1]);
+            case 3 -> readFloat64Array3D(dims[0], dims[1], dims[2]);
+            default -> throw new RuntimeException(
+                    String.format("Not yet implemented for array with dimensions %d", dims.length));
+        };
     }
     
     public Float64Array2D readFloat64Array2D(int sizeX, int sizeY) throws IOException
