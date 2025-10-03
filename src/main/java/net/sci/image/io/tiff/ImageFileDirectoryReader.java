@@ -154,7 +154,7 @@ public class ImageFileDirectoryReader
         for (int i = 0; i < nEntries; i++)
         {
             // read tag code
-            int tagCode = dataReader.readShort();
+            int tagCode = dataReader.readShort() & 0x00FFFF;
             
             // read type of tag data
             TiffTag.Type type = readTagType(tagCode);
@@ -194,7 +194,7 @@ public class ImageFileDirectoryReader
     private TiffTag.Type readTagType(int tagCode) throws IOException
     {
         // read tag data info
-        int typeValue = dataReader.readShort();
+        int typeValue = dataReader.readShort() & 0x00FFFF;
         try 
         {
         	 return TiffTag.Type.getType(typeValue); 
@@ -210,7 +210,7 @@ public class ImageFileDirectoryReader
         int value;
         if (type == TiffTag.Type.SHORT && count == 1)
         {
-            value = dataReader.readShort();
+            value = dataReader.readShort() & 0x00FFFF;
             dataReader.readShort();
         }
         else
