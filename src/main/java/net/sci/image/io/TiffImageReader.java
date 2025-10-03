@@ -19,9 +19,6 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.array.color.DefaultColorMap;
-import net.sci.array.numeric.impl.FileMappedFloat32Array3D;
-import net.sci.array.numeric.impl.FileMappedUInt16Array3D;
-import net.sci.array.numeric.impl.FileMappedUInt8Array3D;
 import net.sci.array.shape.Reshape;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
@@ -564,28 +561,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     
     private Array<?> createFileMappedArray(ImageFileDirectory ifd, int nImages) throws IOException
     {
+        long offset = (long) ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null)[0];
         int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
         int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
-        int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null);
-        
-        String filePath = path.toString();
+        int[] dims = new int[] {sizeX, sizeY, nImages};
         PixelType pixelType = ifd.determinePixelType();
-        if (pixelType == PixelType.UINT8)
-        {
-            return new FileMappedUInt8Array3D(filePath, stripOffsets[0], sizeX, sizeY, nImages);
-        }
-        else if (pixelType == PixelType.UINT12 || pixelType == PixelType.UINT16)
-        {
-            return new FileMappedUInt16Array3D(filePath, stripOffsets[0], sizeX, sizeY, nImages);
-        }
-        else if (pixelType == PixelType.FLOAT32)
-        {
-            return new FileMappedFloat32Array3D(filePath, stripOffsets[0], sizeX, sizeY, nImages);
-        }
-        else
-        {
-            throw new RuntimeException("Can not read stack with " + pixelType + " pixel type");
-        }
+        ByteOrder byteOrder = ifd.getByteOrder();
+        
+        return ImageIO.createFileMappedArray(path, offset, dims, pixelType, byteOrder);
     }
     
     /**
