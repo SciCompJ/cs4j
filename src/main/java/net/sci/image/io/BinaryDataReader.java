@@ -16,8 +16,8 @@ import java.nio.ByteOrder;
  * 
  * Provides outputs in various formats:
  * <ul>
- * <li>primitive types,</li>
- * <li>arrays of primitive types,</li>
+ * <li>primitive type,</li>
+ * <li>array of primitive type,</li>
  * <li>String,</li>
  * <li>...</li>
  * </ul>
@@ -36,8 +36,15 @@ public class BinaryDataReader implements Closeable
     // =============================================================
     // Class variables
 
+    /**
+     * The random-access file used to read binary data, initialized at class
+     * instantiation.
+     */
     RandomAccessFile raf;
 
+    /**
+     * The byte order of the data stream. Default is Little-endian.
+     */
     ByteOrder byteOrder = ByteOrder.LITTLE_ENDIAN;
 
     
@@ -181,15 +188,14 @@ public class BinaryDataReader implements Closeable
      */
     public int readIntArray(int[] intArray, int offset, int n) throws IOException
     {
-        // fill up array
-        int pos = offset;
-        for (int c = 0; c < n; c++)
-        {
-            intArray[pos++] = (int) readInt();
-        }
-        
+        // read byte array of adequate length
+        byte[] byteArray = new byte[n * 4];
+        int nRead = readByteArray(byteArray) / 4;
+
+        ByteBuffer.wrap(byteArray).order(byteOrder).asIntBuffer().get(intArray, offset, n);
+
         // return number of data read
-        return n;
+        return nRead;
     }
 
     /**
@@ -211,15 +217,14 @@ public class BinaryDataReader implements Closeable
      */
     public int readFloatArray(float[] floatArray, int offset, int n) throws IOException
     {
-        // fill up array
-        int pos = offset;
-        for (int c = 0; c < n; c++)
-        {
-            floatArray[pos++] = (float) readFloat();
-        }
-        
+        // read byte array of adequate length
+        byte[] byteArray = new byte[n * 4];
+        int nRead = readByteArray(byteArray) / 4;
+
+        ByteBuffer.wrap(byteArray).order(byteOrder).asFloatBuffer().get(floatArray, offset, n);
+
         // return number of data read
-        return n;
+        return nRead;
     }
 
     /**
@@ -241,15 +246,14 @@ public class BinaryDataReader implements Closeable
      */
     public int readDoubleArray(double[] doubleArray, int offset, int n) throws IOException
     {
-        // fill up array
-        int pos = offset;
-        for (int c = 0; c < n; c++)
-        {
-            doubleArray[pos++] = readDouble();
-        }
-        
+        // read byte array of adequate length
+        byte[] byteArray = new byte[n * 8];
+        int nRead = readByteArray(byteArray) / 8;
+
+        ByteBuffer.wrap(byteArray).order(byteOrder).asDoubleBuffer().get(doubleArray, offset, n);
+
         // return number of data read
-        return n;
+        return nRead;
     }
 
     
@@ -275,17 +279,14 @@ public class BinaryDataReader implements Closeable
      * @throws IOException
      *             if an error occurs
      */
-    public int readShort() throws IOException
+    public short readShort() throws IOException
     {
-        // read bytes
-        int b1 = raf.read();
-        int b2 = raf.read();
+        // read byte array of adequate length
+        byte[] byteArray = new byte[2];
+        readByteArray(byteArray);
 
-        // encode bytes to short
-        if (byteOrder == ByteOrder.LITTLE_ENDIAN)
-            return ((b2 << 8) + b1);
-        else
-            return ((b1 << 8) + b2);
+        // convert to short by wrapping to a short buffer 
+        return ByteBuffer.wrap(byteArray).order(byteOrder).asShortBuffer().get();
     }
 
    /**
@@ -297,17 +298,12 @@ public class BinaryDataReader implements Closeable
     */
    public int readInt() throws IOException
    {
-       // read bytes
-       int b1 = raf.read();
-       int b2 = raf.read();
-       int b3 = raf.read();
-       int b4 = raf.read();
+       // read byte array of adequate length
+       byte[] byteArray = new byte[4];
+       readByteArray(byteArray);
 
-       // encode bytes to integer
-       if (byteOrder == ByteOrder.LITTLE_ENDIAN)
-           return ((b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
-       else
-           return ((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
+       // convert to int by wrapping to a int buffer 
+       return ByteBuffer.wrap(byteArray).order(byteOrder).asIntBuffer().get();
    }
 
    /**
@@ -319,21 +315,16 @@ public class BinaryDataReader implements Closeable
      */
     public float readFloat() throws IOException
     {
-        // read bytes
-        int b1 = raf.read();
-        int b2 = raf.read();
-        int b3 = raf.read();
-        int b4 = raf.read();
+        // read byte array of adequate length
+        byte[] byteArray = new byte[4];
+        readByteArray(byteArray);
 
-        // encode bytes to integer
-        if (byteOrder == ByteOrder.LITTLE_ENDIAN)
-            return Float.intBitsToFloat((b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
-        else
-            return Float.intBitsToFloat((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
+        // convert to float by wrapping to a float buffer 
+        return ByteBuffer.wrap(byteArray).order(byteOrder).asFloatBuffer().get();
     }
 
     /**
-     * Reads the next floating point value from the stream.
+     * Reads the next double preision floating point value from the stream.
      * 
      * @return the next double value within this stream
      * @throws IOException
@@ -341,21 +332,12 @@ public class BinaryDataReader implements Closeable
      */
     public double readDouble() throws IOException
     {
-        // read bytes
-        long b1 = raf.read();
-        long b2 = raf.read();
-        long b3 = raf.read();
-        long b4 = raf.read();
-        long b5 = raf.read();
-        long b6 = raf.read();
-        long b7 = raf.read();
-        long b8 = raf.read();
+        // read byte array of adequate length
+        byte[] byteArray = new byte[8];
+        readByteArray(byteArray);
 
-        // encode bytes to integer
-        if (byteOrder == ByteOrder.LITTLE_ENDIAN)
-            return Double.longBitsToDouble((b8 << 56) + (b7 << 48) + (b6 << 40) + (b5 << 32) + (b4 << 24) + (b3 << 16) + (b2 << 8) + b1);
-        else
-            return Double.longBitsToDouble((b1 << 56) + (b2 << 48) + (b3 << 40) + (b4 << 32) + (b5 << 24) + (b6 << 16) + (b7 << 8) + b8);
+        // convert to double by wrapping to a double buffer 
+        return ByteBuffer.wrap(byteArray).order(byteOrder).asDoubleBuffer().get();
     }
     
     /**
