@@ -36,6 +36,49 @@ import net.sci.axis.CategoricalAxis;
  */
 public interface ImageType
 {
+    /**
+     * Determines the type of image that best matches the type of the inner data array.
+     * @param array the array containing image data
+     * @return the type of image that best matches the type of the inner data array
+     */
+    public static ImageType chooseBestType(Array<?> array)
+    {
+        if (array.elementClass() == Binary.class)
+        {
+            return ImageType.BINARY;
+        }
+        else if (array.elementClass() == UInt8.class)
+        {
+            return ImageType.GRAYSCALE;
+        } 
+        else if (array.elementClass() == UInt16.class)
+        {
+            return ImageType.GRAYSCALE;
+        }
+        else if (array instanceof ScalarArray) 
+        {
+            return ImageType.INTENSITY;
+        }
+        else if (array.elementClass() == RGB8.class)
+        {
+            return ImageType.COLOR;
+        } 
+        else if (array.elementClass() == RGB16.class)
+        {
+            return ImageType.COLOR;
+        } 
+        else if (array instanceof VectorArray) 
+        {
+            return ImageType.VECTOR;
+        }
+        else
+        {
+            System.out.println("Could not determine image type for data of class " + array.getClass());
+            return ImageType.UNKNOWN;
+        }
+    }
+    
+    
     // =============================================================
     // Implementation of global constants
 
