@@ -78,34 +78,35 @@ public class Image
 	}
 	
 
-	// =============================================================
-	// Class fields
-
-	/**
-	 * The multi-dimensional array containing image data.
-	 */
-	Array<?> data;
-	
-	/**
-	 * The size of image, including physical and time dimensions.
-	 */
-	int[] size;
-	
-	/**
-	 * The type of image, giving information on how to interpret image element.
-	 */
-	ImageType type;
-	
-	/**
-	 * The name of the image, used to identify it and populate GUI widgets.
-	 */
-	String name = "";
-	
-	/**
-	 * The extension of the image when it was read from a file, or an empty String otherwise.
-	 */
-	String extension = "";
-	
+    // =============================================================
+    // Class fields
+    
+    /**
+     * The multi-dimensional array containing image data.
+     */
+    Array<?> data;
+    
+    /**
+     * The size of image, including physical and time dimensions.
+     */
+    int[] size;
+    
+    /**
+     * The type of image, giving information on how to interpret image element.
+     */
+    ImageType type;
+    
+    /**
+     * The name of the image, used to identify it and populate GUI widgets.
+     */
+    String name = "";
+    
+    /**
+     * The extension of the image when it was read from a file, or an empty
+     * String otherwise.
+     */
+    String extension = "";
+    
     /**
      * The name of the full path to the image file, if loaded from a file.
      */
@@ -183,7 +184,7 @@ public class Image
 		this(data);
 
 		// additional processing to take into account parent image
-		copySettings(parent);
+		copyMetaData(parent);
 		copyDisplaySettings(parent);
 	}
 	
@@ -196,18 +197,18 @@ public class Image
      * @param parent
      *            the parent image used for inferring meta data
      */
-	public Image(Array<?> data, ImageType type, Image parent)
-	{
-		this(data, type);
-		
-		// additional processing to take into account parent image
-		copySettings(parent);
-		if (type == parent.type)
-		{
-	        copyDisplaySettings(parent);
-		}
-	}
-	
+    public Image(Array<?> data, ImageType type, Image parent)
+    {
+        this(data, type);
+        
+        // additional processing to take into account parent image
+        copyMetaData(parent);
+        if (type == parent.type)
+        {
+            copyDisplaySettings(parent);
+        }
+    }
+    
 	/**
 	 * Determines the type of image from the type of the inner data array.
 	 */
@@ -265,24 +266,22 @@ public class Image
 		System.arraycopy(dataSize, 0, this.size, 0, nd);
 	}
 
-	private void setupDisplayRange()
-	{
-	    this.type.setupDisplaySettings(this);
-	}
-	
-	private void copySettings(Image parent)
-	{
-		this.name = parent.name;
-		this.extension = parent.extension;
-		
-		
+    private void setupDisplayRange()
+    {
+        this.type.setupDisplaySettings(this);
+    }
+    
+    private void copyMetaData(Image parent)
+    {
+        this.name = parent.name;
+        
         // duplicate the spatial calibration if appropriate
         if (Arrays.isSameSize(this.data, parent.data))
         {
-            this.calibration.axes = parent.calibration.duplicateAxes(); 
+            this.calibration.axes = parent.calibration.duplicateAxes();
         }
-	}
-	
+    }
+    
     private void copyDisplaySettings(Image parent)
     {
         // Check if parent type is compatible with data
