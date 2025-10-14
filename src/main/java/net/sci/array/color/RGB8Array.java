@@ -8,10 +8,10 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
+import net.sci.array.PositionIterator;
 import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.impl.ArrayWrapperStub;
-import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.numeric.IntVectorArray;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8;
@@ -698,7 +698,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     {
         return new Iterator()
         {
-            PositionIterator iter = new DefaultPositionIterator(RGB8Array.this.size());
+            PositionIterator iter = PositionIterator.of(RGB8Array.this);
 
             @Override
             public boolean hasNext()

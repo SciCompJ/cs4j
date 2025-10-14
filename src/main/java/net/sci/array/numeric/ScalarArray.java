@@ -8,8 +8,8 @@ import java.util.function.UnaryOperator;
 
 import net.sci.array.Array;
 import net.sci.array.Arrays;
+import net.sci.array.PositionIterator;
 import net.sci.array.impl.ArrayWrapperStub;
-import net.sci.array.impl.DefaultPositionIterator;
 
 /**
  * Specialization of the Array interface that contains Scalar values.
@@ -240,7 +240,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
             {
                 return new java.util.Iterator<Double>()
                 {
-                    PositionIterator iter = new DefaultPositionIterator(ScalarArray.this.size());
+                    PositionIterator iter = PositionIterator.of(ScalarArray.this);
 
                     @Override
                     public boolean hasNext()
@@ -539,7 +539,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     {
         return new Iterator<S>()
         {
-            PositionIterator iter = new DefaultPositionIterator(ScalarArray.this.size());
+            PositionIterator iter = PositionIterator.of(ScalarArray.this);
             // keep an array of coordinates to avoid repetitive allocation of array
             int[] pos = new int[dimensionality()];
 

@@ -3,7 +3,7 @@
  */
 package net.sci.array.impl;
 
-import net.sci.array.Array.PositionIterator;
+import net.sci.array.PositionIterator;
 
 /**
  * Iterator over the positions of an array that starts from the last element,

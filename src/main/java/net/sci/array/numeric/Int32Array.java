@@ -6,8 +6,8 @@ package net.sci.array.numeric;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.PositionIterator;
 import net.sci.array.impl.ArrayWrapperStub;
-import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.numeric.impl.BufferedInt32Array2D;
 import net.sci.array.numeric.impl.BufferedInt32Array3D;
 import net.sci.array.numeric.impl.BufferedInt32ArrayND;
@@ -243,7 +243,7 @@ public interface Int32Array extends IntArray<Int32>
     {
         return new Iterator()
         {
-            PositionIterator iter = new DefaultPositionIterator(Int32Array.this.size());
+            PositionIterator iter = PositionIterator.of(Int32Array.this);
 
             @Override
             public boolean hasNext()

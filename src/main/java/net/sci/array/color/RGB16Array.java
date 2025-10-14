@@ -8,9 +8,9 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import net.sci.array.Array;
+import net.sci.array.PositionIterator;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.impl.ArrayWrapperStub;
-import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.numeric.IntVectorArray;
 import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16Array;
@@ -530,7 +530,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     {
         return new Iterator()
         {
-            PositionIterator iter = new DefaultPositionIterator(RGB16Array.this.size());
+            PositionIterator iter = PositionIterator.of(RGB16Array.this);
 
             @Override
             public boolean hasNext()

@@ -9,7 +9,6 @@ import java.util.function.Function;
 
 import net.sci.algo.Algo;
 import net.sci.algo.AlgoListener;
-import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.impl.GenericArray;
 import net.sci.array.shape.Flip;
 import net.sci.array.shape.PermuteDimensions;
@@ -299,7 +298,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
         {
             public java.util.Iterator<int[]> iterator()
             {
-                return new DefaultPositionIterator(Array.this.size());
+                return PositionIterator.of(Array.this);
             }
         };
     }
@@ -341,10 +340,9 @@ public interface Array<T> extends Iterable<T>, Dimensional
     {
         return new Iterator<T>()
         {
-            int[] dims = Array.this.size();
-            PositionIterator iter = new DefaultPositionIterator(dims);
+            PositionIterator iter = PositionIterator.of(Array.this);
             // keep an array of coordinates to avoid repetitive allocation of array
-            int[] pos = new int[dims.length];
+            int[] pos = new int[dimensionality()];
 
             @Override
             public boolean hasNext()
@@ -377,49 +375,6 @@ public interface Array<T> extends Iterable<T>, Dimensional
                 Array.this.set(iter.get(pos), value);
             }
         };
-    }
-    
-    
-
-    /**
-     * Iterator over the element positions in this array. Can be used to design
-     * operators based on the neighborhood of each element.
-     * 
-     * @author dlegland
-     *
-     */
-    public interface PositionIterator extends java.util.Iterator<int[]>
-    {
-        /**
-         * Moves this iterator to the next position.
-         */
-        public void forward();
-        
-        /**
-         * Returns the current position.
-         * 
-         * @return the current position.
-         */
-        public int[] get();
-        
-        /**
-         * Returns a specific coordinate from the current position.
-         * 
-         * @param dim
-         *            the dimension, between 0 and dimensionality - 1
-         * @return the specified coordinate
-         */
-        public int get(int dim);
-        
-        /**
-         * Returns the current position in a pre-allocated array.
-         * 
-         * @param pos
-         *            the pre-allocated array for storing current position
-         * @return the current position
-         */
-        public int[] get(int[] pos);
-        
     }
     
     /**

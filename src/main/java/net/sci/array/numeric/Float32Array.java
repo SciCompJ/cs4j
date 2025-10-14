@@ -6,8 +6,8 @@ package net.sci.array.numeric;
 import java.util.function.Function;
 
 import net.sci.array.Array;
+import net.sci.array.PositionIterator;
 import net.sci.array.impl.ArrayWrapperStub;
-import net.sci.array.impl.DefaultPositionIterator;
 import net.sci.array.numeric.impl.BufferedFloat32Array2D;
 import net.sci.array.numeric.impl.BufferedFloat32Array3D;
 import net.sci.array.numeric.impl.BufferedFloat32ArrayND;
@@ -258,7 +258,7 @@ public interface Float32Array extends ScalarArray<Float32>
     {
         return new Iterator()
         {
-            PositionIterator iter = new DefaultPositionIterator(Float32Array.this.size());
+            PositionIterator iter = PositionIterator.of(Float32Array.this);
 
             @Override
             public boolean hasNext()
