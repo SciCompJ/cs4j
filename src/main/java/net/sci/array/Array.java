@@ -3,6 +3,8 @@
  */
 package net.sci.array;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 import net.sci.algo.Algo;
@@ -429,7 +431,7 @@ public interface Array<T> extends Iterable<T>, Dimensional
      * @param <T>
      *            The type of the array, that is kept after computing the view.
      */
-    static class ReshapeView<T> implements Array<T>
+    static class ReshapeView<T> implements Array.View<T>
     {
         /** 
          * The array to synchronize with. /*
@@ -462,6 +464,12 @@ public interface Array<T> extends Iterable<T>, Dimensional
             this.array = array;
             this.newDims = newDims;
             this.coordsMapping = coordsMapping;
+        }
+
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
         }
 
         /* (non-Javadoc)
@@ -579,6 +587,28 @@ public interface Array<T> extends Iterable<T>, Dimensional
          *            the new value to be set in the array.
          */
         public void set(T value);
+    }
+    
+
+    // ==================================================
+    // Declaration of a View interface
+    
+    /**
+     * Specialization of the Array interface for arrays that do not store data,
+     * but instead rely on the values of one or several other array. The values
+     * of the array are computed "on the fly" when required.
+     * 
+     * @param <T>
+     *            the type of the data within the array.
+     */
+    public interface View<T> extends Array<T>
+    {
+        /**
+         * Returns the list of array(s) this array depends on.
+         * 
+         * @return the list of parent array(s).
+         */
+        public Collection<Array<?>> parentArrays();
     }
     
 
