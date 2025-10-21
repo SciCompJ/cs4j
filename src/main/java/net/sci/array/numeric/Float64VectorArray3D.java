@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedFloat64VectorArray3D;
 
 /**
@@ -142,7 +146,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector,F
     // =============================================================
     // Inner classes for Array3D
     
-    private class SliceView extends Float64VectorArray2D
+    private class SliceView extends Float64VectorArray2D implements Array.View<Float64Vector>
     {
         int sliceIndex;
         
@@ -201,6 +205,12 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector,F
             Float64VectorArray3D.this.setValue(x, y, sliceIndex, c, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(Float64VectorArray3D.this);
+        }
+        
         @Override
         public Float64Vector get(int[] pos)
         {
@@ -320,7 +330,7 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector,F
     // =============================================================
     // Inner classes for VectorArray
 
-    private class ChannelView extends Float64Array3D
+    private class ChannelView extends Float64Array3D implements Array.View<Float64>
     {
         int channel;
         
@@ -354,13 +364,6 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector,F
             Float64VectorArray3D.this.setValue(x, y, z, channel, value.value());
         }
 
-
-        @Override
-        public net.sci.array.numeric.Float64Array.Iterator iterator()
-        {
-            return new Iterator();
-        }
-
         @Override
         public double getValue(int[] pos)
         {
@@ -373,6 +376,19 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector,F
             Float64VectorArray3D.this.setValue(pos[0], pos[1], pos[2], channel, value);
         }
         
+
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(Float64VectorArray3D.this);
+        }
+        
+        @Override
+        public net.sci.array.numeric.Float64Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
         class Iterator implements net.sci.array.numeric.Float64Array.Iterator
         {
             int indX = -1;

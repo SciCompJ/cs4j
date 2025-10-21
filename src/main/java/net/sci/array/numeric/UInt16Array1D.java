@@ -3,6 +3,11 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
+
 /**
  * Specialization of Array for 1D arrays of UInt16 values.
  * 
@@ -146,7 +151,7 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
     /**
      * Wraps a UInt16 array with two dimensions into a UInt16Array1D.
      */
-    private static class Wrapper extends UInt16Array1D
+    private static class Wrapper extends UInt16Array1D implements Array.View<UInt16>
     {
         UInt16Array array;
 
@@ -199,6 +204,12 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
             this.array.setInt(pos, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         /**
          * Simply returns an iterator on the original array.
          */

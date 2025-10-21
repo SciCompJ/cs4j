@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedInt32Array2D;
 
 /**
@@ -147,7 +151,7 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
     /**
      * Wraps a Int32 array with two dimensions into a Int32Array2D.
      */
-    private static class Wrapper extends Int32Array2D
+    private static class Wrapper extends Int32Array2D implements Array.View<Int32>
     {
         Int32Array array;
 
@@ -187,6 +191,12 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
             this.array.setInt(pos, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         /**
          * Simply returns an iterator on the original array.
          */

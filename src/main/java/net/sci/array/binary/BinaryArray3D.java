@@ -3,8 +3,11 @@
  */
 package net.sci.array.binary;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
+import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.numeric.IntArray3D;
 import net.sci.array.numeric.TriFunction;
@@ -329,7 +332,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
     // =============================================================
     // Inner Wrapper class
 
-    private static class Wrapper extends BinaryArray3D
+    private static class Wrapper extends BinaryArray3D implements Array.View<Binary>
     {
         private BinaryArray array;
         
@@ -371,6 +374,12 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         }
 
         @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
+        @Override
         public BinaryArray.Factory factory()
         {
             return this.array.factory();
@@ -389,7 +398,7 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         }
     }
     
-    private class SliceView extends BinaryArray2D
+    private class SliceView extends BinaryArray2D implements Array.View<Binary>
     {
         int sliceIndex;
         
@@ -426,6 +435,12 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         public void setBoolean(int[] pos, boolean bool)
         {
             BinaryArray3D.this.setBoolean(pos[0], pos[1], this.sliceIndex, bool);            
+        }
+        
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(BinaryArray3D.this);
         }
     }
     

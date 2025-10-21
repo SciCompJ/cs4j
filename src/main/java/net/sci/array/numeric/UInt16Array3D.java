@@ -3,8 +3,11 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
+import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.numeric.impl.BufferedUInt16Array3D;
 import net.sci.array.numeric.impl.SlicedUInt16Array3D;
@@ -265,7 +268,7 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
     /**
      * Wraps a UInt16 array with three dimensions into a UInt16Array3D.
      */
-    private static class Wrapper extends UInt16Array3D
+    private static class Wrapper extends UInt16Array3D implements Array.View<UInt16>
     {
         UInt16Array array;
 
@@ -306,6 +309,12 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
             this.array.setShort(pos, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         /**
          * Simply returns an iterator on the original array.
          */
@@ -316,7 +325,7 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
         }
     }
 
-    private class SliceView extends UInt16Array2D
+    private class SliceView extends UInt16Array2D implements Array.View<UInt16>
     {
         int sliceIndex;
         
@@ -351,6 +360,12 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
             return UInt16Array3D.this.getShort(pos[0], pos[1], this.sliceIndex);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(UInt16Array3D.this);
+        }
+        
         @Override
         public net.sci.array.numeric.UInt16Array.Iterator iterator()
         {

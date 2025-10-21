@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedFloat32VectorArray2D;
 
 /**
@@ -146,7 +150,7 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector, 
 	@Override
 	public abstract Float32VectorArray2D duplicate();
 
-    private class ChannelView extends Float32Array2D
+    private class ChannelView extends Float32Array2D implements Array.View<Float32>
     {
         int channel;
         
@@ -193,17 +197,23 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector, 
         }
 
         @Override
-        public net.sci.array.numeric.Float32Array.Iterator iterator()
-        {
-            return new Iterator();
-        }
-
-        @Override
         public void setValue(int[] pos, double value)
         {
             Float32VectorArray2D.this.setValue(pos[0], pos[1], channel, value);
         }
         
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(Float32VectorArray2D.this);
+        }
+        
+        @Override
+        public net.sci.array.numeric.Float32Array.Iterator iterator()
+        {
+            return new Iterator();
+        }
+
         class Iterator implements net.sci.array.numeric.Float32Array.Iterator
         {
             int indX = -1;

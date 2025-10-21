@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedUInt8Array2D;
 
 /**
@@ -206,7 +210,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	/**
      * Wraps a UInt8 array into a UInt8Array2D, with two dimensions.
      */
-    private static class Wrapper extends UInt8Array2D
+    private static class Wrapper extends UInt8Array2D implements Array.View<UInt8>
     {
         UInt8Array array;
 
@@ -246,6 +250,12 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
             this.array.setByte(pos, b);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         /**
          * Simply returns an iterator on the original array.
          */

@@ -3,6 +3,9 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
 import net.sci.array.Array;
 import net.sci.array.PositionIterator;
 import net.sci.array.impl.ArrayWrapperStub;
@@ -344,7 +347,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
      * @see Float64VectorArray#channel(int)
      * @see Float64VectorArray#channelIterator()
      */
-    static class ChannelView implements Float64Array
+    static class ChannelView implements Float64Array, Array.View<Float64>
     {
         Float64VectorArray array;
         int channel;
@@ -383,6 +386,12 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         public void setValue(int[] pos, double value)
         {
             array.setValue(pos, channel, value);
+        }
+        
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
         }
 
         @Override

@@ -3,6 +3,9 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.PositionIterator;
@@ -387,7 +390,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
      * @see Float32VectorArray#channel(int)
      * @see Float32VectorArray#channelIterator()
      */
-    static class ChannelView implements Float32Array
+    static class ChannelView implements Float32Array, Array.View<Float32>
     {
         Float32VectorArray array;
         int channel;
@@ -417,18 +420,6 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         }
 
         @Override
-        public Float32 get(int[] pos)
-        {
-            return array.get(pos).get(channel);
-        }
-
-        @Override
-        public void set(int[] pos, Float32 value)
-        {
-            array.setFloat(pos, channel, value.floatValue());
-        }
-
-        @Override
         public double getValue(int[] pos)
         {
             return array.getValue(pos, channel);
@@ -438,6 +429,24 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         public void setValue(int[] pos, double value)
         {
             array.setFloat(pos, channel, (float) value);
+        }
+
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+
+        @Override
+        public Float32 get(int[] pos)
+        {
+            return array.get(pos).get(channel);
+        }
+
+        @Override
+        public void set(int[] pos, Float32 value)
+        {
+            array.setFloat(pos, channel, value.floatValue());
         }
 
         @Override

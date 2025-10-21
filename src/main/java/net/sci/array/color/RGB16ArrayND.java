@@ -3,6 +3,10 @@
  */
 package net.sci.array.color;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16ArrayND;
 import net.sci.array.numeric.VectorArrayND;
@@ -92,7 +96,7 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16,UInt16> implement
 	// =============================================================
 	// Inner class implementations
 
-    private class ChannelView extends UInt16ArrayND
+    private class ChannelView extends UInt16ArrayND implements Array.View<UInt16>
     {
         int channel;
         
@@ -122,6 +126,12 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16,UInt16> implement
             RGB16ArrayND.this.setSamples(pos, samples);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(RGB16ArrayND.this);
+        }
+        
         @Override
         public net.sci.array.numeric.UInt16Array.Iterator iterator()
         {

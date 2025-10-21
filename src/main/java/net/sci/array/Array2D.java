@@ -4,6 +4,8 @@
 package net.sci.array;
 
 import java.io.PrintStream;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.function.BiFunction;
 
@@ -351,23 +353,23 @@ public abstract class Array2D<T> implements Array<T>
             return pos;
         }
     }
-
-    private static class Wrapper<T> extends Array2D<T>
-	{
-		private Array<T> array;
-		
-		protected Wrapper(Array<T> array)
-		{
-			super(0, 0);
-			if (array.dimensionality() < 2)
-			{
-				throw new IllegalArgumentException("Requires an array with at least two dimensions");
-			}
-			this.array = array;
-			this.size0 = array.size(0);
-			this.size1 = array.size(1);
-		}
-
+    
+    private static class Wrapper<T> extends Array2D<T> implements Array.View<T>
+    {
+        private Array<T> array;
+        
+        protected Wrapper(Array<T> array)
+        {
+            super(0, 0);
+            if (array.dimensionality() < 2)
+            {
+                throw new IllegalArgumentException("Requires an array with at least two dimensions");
+            }
+            this.array = array;
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+        }
+        
         @Override
         public T get(int x, int y)
         {
@@ -382,7 +384,13 @@ public abstract class Array2D<T> implements Array<T>
             this.array.set(new int[] {x, y}, value);
         }
 
-		@Override
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }	
+        
+        @Override
 		public Array<T> newInstance(int... dims)
 		{
 			return this.array.newInstance(dims);
@@ -439,5 +447,6 @@ public abstract class Array2D<T> implements Array<T>
 		{
 			return array.iterator();
 		}
+
 	}
 }

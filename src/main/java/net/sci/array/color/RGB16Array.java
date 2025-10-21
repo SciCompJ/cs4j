@@ -6,6 +6,7 @@ package net.sci.array.color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import net.sci.array.Array;
 import net.sci.array.PositionIterator;
@@ -575,7 +576,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
      * @see RGB16Array.#channel(int)
      * @see RGB16Array.#channelIterator()
      */
-    static class ChannelView implements UInt16Array
+    static class ChannelView implements UInt16Array, Array.View<UInt16>
     {
         RGB16Array array;
         int channel;
@@ -607,7 +608,12 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
             array.setSample(pos, channel, shortValue & 0x00FFFF);
         }
 
-
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }   
+        
         @Override
         public int dimensionality()
         {

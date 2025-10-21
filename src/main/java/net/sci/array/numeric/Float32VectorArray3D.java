@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedFloat32VectorArray3D;
 
 /**
@@ -207,7 +211,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector, 
     // =============================================================
     // Inner classes for Array3D
     
-    private class SliceView extends Float32VectorArray2D
+    private class SliceView extends Float32VectorArray2D implements Array.View<Float32Vector>
     {
         int sliceIndex;
         
@@ -306,6 +310,12 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector, 
         }
 
         @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(Float32VectorArray3D.this);
+        }
+        
+        @Override
         public Float32VectorArray.Iterator iterator()
         {
             return new Iterator();
@@ -392,7 +402,7 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector, 
     // =============================================================
     // Inner classes for VectorArray
 
-    private class ChannelView extends Float32Array3D
+    private class ChannelView extends Float32Array3D implements Array.View<Float32>
     {
         int channel;
         
@@ -444,6 +454,12 @@ public abstract class Float32VectorArray3D extends VectorArray3D<Float32Vector, 
             Float32VectorArray3D.this.setFloat(x, y, z, channel, f.floatValue());
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(Float32VectorArray3D.this);
+        }
+        
         @Override
         public net.sci.array.numeric.Float32Array.Iterator iterator()
         {

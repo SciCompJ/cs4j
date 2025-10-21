@@ -3,6 +3,9 @@
  */
 package net.sci.array.impl;
 
+import java.util.Collection;
+import java.util.List;
+
 import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.util.MathUtils;
@@ -221,7 +224,7 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
     // =============================================================
     // Inner classes for Array3D
     
-    private class SliceView extends GenericArray2D<T>
+    private class SliceView extends GenericArray2D<T> implements Array.View<T>
     {
         int sliceIndex;
         
@@ -250,6 +253,12 @@ public class BufferedGenericArray3D<T> extends GenericArray3D<T>
             BufferedGenericArray3D.this.set(x, y, sliceIndex, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(BufferedGenericArray3D.this);
+        }   
+        
         @Override
         public T get(int[] pos)
         {

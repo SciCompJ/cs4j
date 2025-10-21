@@ -3,8 +3,11 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
+import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.numeric.impl.BufferedInt32Array3D;
 
@@ -182,7 +185,7 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
     /**
      * Wraps a Int32 array with three dimensions into a Int32Array3D.
      */
-    private static class Wrapper extends Int32Array3D
+    private static class Wrapper extends Int32Array3D implements Array.View<Int32>
     {
         Int32Array array;
 
@@ -223,6 +226,12 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
             this.array.setInt(pos, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         /**
          * Simply returns an iterator on the original array.
          */
@@ -233,7 +242,7 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
         }
     }
 
-    private class SliceView extends Int32Array2D
+    private class SliceView extends Int32Array2D implements Array.View<Int32>
     {
         int sliceIndex;
         
@@ -272,6 +281,12 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
             Int32Array3D.this.setInt(pos[0], pos[1], this.sliceIndex, value);            
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(Int32Array3D.this);
+        }
+        
         @Override
         public net.sci.array.numeric.Int32Array.Iterator iterator()
         {

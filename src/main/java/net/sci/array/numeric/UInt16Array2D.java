@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedUInt16Array2D;
 
 /**
@@ -194,7 +198,7 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
     /**
      * Wraps a UInt16 array with two dimensions into a UInt16Array2D.
      */
-    private static class Wrapper extends UInt16Array2D
+    private static class Wrapper extends UInt16Array2D implements Array.View<UInt16>
     {
         UInt16Array array;
 
@@ -234,6 +238,12 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
             this.array.setShort(pos, b);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         /**
          * Simply returns an iterator on the original array.
          */

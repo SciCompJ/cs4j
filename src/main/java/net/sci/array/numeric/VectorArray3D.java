@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.Array3D;
 
 /**
@@ -185,7 +189,7 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
     // =============================================================
     // Inner Wrapper class
     
-    private static class Wrapper<V extends Vector<V, S>, S extends Scalar<S>> extends VectorArray3D<V, S>
+    private static class Wrapper<V extends Vector<V, S>, S extends Scalar<S>> extends VectorArray3D<V, S> implements Array.View<V>
     {
         // --------------------------------------------------------
         // class variable
@@ -335,6 +339,11 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
             return new ChannelIterator();
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
         
         // --------------------------------------------------------
         // Implementation of Array interface
@@ -389,7 +398,7 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
         // --------------------------------------------------------
         // View on a specific slice of the Vector array
 
-        private class SliceView extends VectorArray2D<V,S>
+        private class SliceView extends VectorArray2D<V,S> implements Array.View<V>
         {
             int sliceIndex;
             
@@ -490,6 +499,15 @@ public abstract class VectorArray3D<V extends Vector<V, S>, S extends Scalar<S>>
             }
             
 
+            // --------------------------------------------------------
+            // Implements Array.View
+
+            @Override
+            public Collection<Array<?>> parentArrays()
+            {
+                return List.of(array);
+            }
+            
             // --------------------------------------------------------
             // Implements Array
 

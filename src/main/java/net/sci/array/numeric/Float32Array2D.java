@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedFloat32Array2D;
 
 /**
@@ -213,7 +217,7 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
     /**
      * Wraps a Float32 array with two dimensions into a Float32Array2D.
      */
-    private static class Wrapper extends Float32Array2D
+    private static class Wrapper extends Float32Array2D implements Array.View<Float32>
     {
         Float32Array array;
 
@@ -264,6 +268,12 @@ public abstract class Float32Array2D extends ScalarArray2D<Float32> implements F
         {
             this.array.setValue(pos, value);
         }
+        
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }   
         
         /**
          * Simply returns an iterator on the original array.

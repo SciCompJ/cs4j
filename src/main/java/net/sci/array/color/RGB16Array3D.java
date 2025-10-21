@@ -3,6 +3,10 @@
  */
 package net.sci.array.color;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.IntVectorArray3D;
 import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16Array3D;
@@ -219,7 +223,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16,UInt16> implem
 	// =============================================================
     // Inner classes for Array3D
     
-    private class SliceView extends RGB16Array2D
+    private class SliceView extends RGB16Array2D implements Array.View<RGB16>
     {
         int sliceIndex;
         
@@ -285,6 +289,12 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16,UInt16> implem
             RGB16Array3D.this.set(x, y, sliceIndex, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(RGB16Array3D.this);
+        }   
+        
         @Override
         public RGB16 get(int[] pos)
         {
@@ -365,7 +375,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16,UInt16> implem
     // =============================================================
     // Inner classes for VectorArray
 
-    private class ChannelView extends UInt16Array3D
+    private class ChannelView extends UInt16Array3D implements Array.View<UInt16>
     {
         int channel;
         
@@ -405,6 +415,12 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16,UInt16> implem
             RGB16Array3D.this.setSample(pos[0], pos[1], pos[2], channel, s & 0x00FFFF);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(RGB16Array3D.this);
+        }
+        
         @Override
         public net.sci.array.numeric.UInt16Array.Iterator iterator()
         {

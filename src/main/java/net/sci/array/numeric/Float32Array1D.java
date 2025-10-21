@@ -3,6 +3,11 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
+
 /**
  * Specialization of Array for 1D arrays of Float32 values.
  * 
@@ -144,7 +149,7 @@ public abstract class Float32Array1D extends ScalarArray1D<Float32> implements F
     /**
      * Wraps a Float32 array with two dimensions into a Float32Array1D.
      */
-    private static class Wrapper extends Float32Array1D
+    private static class Wrapper extends Float32Array1D implements Array.View<Float32>
     {
         Float32Array array;
 
@@ -173,6 +178,12 @@ public abstract class Float32Array1D extends ScalarArray1D<Float32> implements F
             this.array.setValue(new int[] {x}, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         /**
          * Simply returns an iterator on the original array.
          */

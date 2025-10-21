@@ -3,6 +3,10 @@
  */
 package net.sci.array.color;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8ArrayND;
 import net.sci.array.numeric.VectorArrayND;
@@ -49,13 +53,13 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8,UInt8> implements R
     public Iterable<UInt8ArrayND> channels()
     {
         return new Iterable<UInt8ArrayND>()
-                {
-                    @Override
-                    public java.util.Iterator<UInt8ArrayND> iterator()
-                    {
-                        return new ChannelIterator();
-                    }
-                };
+        {
+            @Override
+            public java.util.Iterator<UInt8ArrayND> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
     }
 
     @Override
@@ -87,7 +91,7 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8,UInt8> implements R
 	@Override
 	public abstract RGB8ArrayND duplicate();
 	
-    private class ChannelView extends UInt8ArrayND
+    private class ChannelView extends UInt8ArrayND implements Array.View<UInt8>
     {
         int channel;
         
@@ -117,6 +121,12 @@ public abstract class RGB8ArrayND extends VectorArrayND<RGB8,UInt8> implements R
             RGB8ArrayND.this.setSamples(pos, samples);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(RGB8ArrayND.this);
+        }   
+        
         @Override
         public net.sci.array.numeric.UInt8Array.Iterator iterator()
         {

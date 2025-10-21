@@ -3,8 +3,11 @@
  */
 package net.sci.array.color;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
+import net.sci.array.Array;
 import net.sci.array.numeric.IntVectorArray2D;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array2D;
@@ -261,7 +264,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8,UInt8> implement
     // =============================================================
     // View implementations
 
-	private class ChannelView extends UInt8Array2D
+	private class ChannelView extends UInt8Array2D implements Array.View<UInt8>
     {
         int channel;
         
@@ -301,6 +304,12 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8,UInt8> implement
             RGB8Array2D.this.setSample(pos[0], pos[1], channel, byteValue & 0x00FF);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(RGB8Array2D.this);
+        }   
+        
         @Override
         public net.sci.array.numeric.UInt8Array.Iterator iterator()
         {

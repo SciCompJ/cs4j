@@ -4,8 +4,11 @@
 package net.sci.array.binary;
 
 import java.io.PrintStream;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.BiFunction;
 
+import net.sci.array.Array;
 import net.sci.array.numeric.IntArray2D;
 
 /**
@@ -300,7 +303,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     // =============================================================
     // Inner Wrapper class
 
-    private static class Wrapper extends BinaryArray2D
+    private static class Wrapper extends BinaryArray2D implements Array.View<Binary>
     {
         private BinaryArray array;
         
@@ -340,6 +343,12 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
             this.array.setBoolean(pos, state);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         @Override
         public BinaryArray.Factory factory()
         {

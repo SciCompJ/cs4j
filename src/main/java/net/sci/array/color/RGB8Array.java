@@ -6,6 +6,7 @@ package net.sci.array.color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import net.sci.array.Array;
 import net.sci.array.PositionIterator;
@@ -776,7 +777,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      * 
      * @see RGB8Array.#channelIterator()
      */
-    static class ChannelView implements UInt8Array
+    static class ChannelView implements UInt8Array, Array.View<UInt8>
     {
         RGB8Array array;
         int channel;
@@ -808,7 +809,12 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
             array.setSample(pos, channel, byteValue & 0x00FF);
         }
 
-
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         @Override
         public int dimensionality()
         {

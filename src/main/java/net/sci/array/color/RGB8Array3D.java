@@ -3,6 +3,10 @@
  */
 package net.sci.array.color;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.IntVectorArray3D;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array3D;
@@ -261,7 +265,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
 	// =============================================================
     // Inner classes for Array3D
     
-    private class SliceView extends RGB8Array2D
+    private class SliceView extends RGB8Array2D implements Array.View<RGB8>
     {
         int sliceIndex;
         
@@ -327,6 +331,12 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
             RGB8Array3D.this.set(x, y, sliceIndex, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(RGB8Array3D.this);
+        }   
+        
         @Override
         public RGB8 get(int[] pos)
         {
@@ -406,7 +416,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
     // =============================================================
     // Inner classes for VectorArray3D
     
-    private class ChannelView extends UInt8Array3D
+    private class ChannelView extends UInt8Array3D implements Array.View<UInt8>
     {
         int channel;
         
@@ -446,6 +456,12 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
             RGB8Array3D.this.setSample(pos[0], pos[1], pos[2], channel, byteValue);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(RGB8Array3D.this);
+        }   
+        
         @Override
         public net.sci.array.numeric.UInt8Array.Iterator iterator()
         {
@@ -546,7 +562,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
     /**
      * Wraps a RGB8 array into a RGB8Array3D, with three dimensions.
      */
-    private static class Wrapper extends RGB8Array3D
+    private static class Wrapper extends RGB8Array3D implements Array.View<RGB8>
     {
         RGB8Array array;
 
@@ -595,6 +611,12 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
             array.set(new int[] {x, y, z}, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }   
+        
         /**
          * Simply returns an iterator on the original array.
          */

@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.Array2D;
 
 /**
@@ -259,7 +263,7 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
     // =============================================================
     // Inner Wrapper class
 
-    private static class Wrapper<V extends Vector<V,S>, S extends Scalar<S>> extends VectorArray2D<V,S>
+    private static class Wrapper<V extends Vector<V,S>, S extends Scalar<S>> extends VectorArray2D<V,S> implements Array.View<V>
     {
         private VectorArray<V,S> array;
         
@@ -289,18 +293,6 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
         }
 
         @Override
-        public VectorArray<V,S> newInstance(int... dims)
-        {
-            return this.array.newInstance(dims);
-        }
-
-        @Override
-        public VectorArray.Factory<V,S> factory()
-        {
-            return this.array.factory();
-        }
-
-        @Override
         public V get(int[] pos)
         {
             // return value from specified position
@@ -312,18 +304,6 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
         {
             // set value at specified position
             this.array.set(pos, value);
-        }
-
-        @Override
-        public Class<V> elementClass()
-        {
-            return array.elementClass();
-        }
-
-        @Override
-        public VectorArray.Iterator<V,S> iterator()
-        {
-            return array.iterator();
         }
 
         @Override
@@ -390,6 +370,38 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
             array.setValues(pos, values);
         }
         
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
+        
+        @Override
+        public VectorArray<V,S> newInstance(int... dims)
+        {
+            return this.array.newInstance(dims);
+        }
+
+        @Override
+        public VectorArray.Factory<V,S> factory()
+        {
+            return this.array.factory();
+        }
+
+        @Override
+        public Class<V> elementClass()
+        {
+            return array.elementClass();
+        }
+
+        @Override
+        public VectorArray.Iterator<V,S> iterator()
+        {
+            return array.iterator();
+        }
+
+
         private class ChannelIterator implements java.util.Iterator<ScalarArray2D<?>> 
         {
             int channel = -1;
@@ -407,6 +419,5 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
                 return ScalarArray2D.wrap(array.channel(channel));
             }
         }
-
     }
 }

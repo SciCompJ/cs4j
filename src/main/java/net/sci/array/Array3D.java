@@ -4,6 +4,8 @@
 package net.sci.array;
 
 import java.io.PrintStream;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import net.sci.array.impl.BufferedGenericArray3D;
@@ -406,7 +408,7 @@ public abstract class Array3D<T> implements Array<T>
         }
     }
     
-    private static class Wrapper<T> extends Array3D<T>
+    private static class Wrapper<T> extends Array3D<T> implements Array.View<T>
     {
         private Array<T> array;
         
@@ -464,6 +466,12 @@ public abstract class Array3D<T> implements Array<T>
 
 
         @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }   
+        
+        @Override
         public Array<T> newInstance(int... dims)
         {
             return this.array.newInstance(dims);
@@ -514,7 +522,7 @@ public abstract class Array3D<T> implements Array<T>
             return array.elementClass();
         }
         
-        private class SliceView extends Array2D<T>
+        private class SliceView extends Array2D<T> implements Array.View<T>
         {
             int sliceIndex;
             
@@ -553,6 +561,12 @@ public abstract class Array3D<T> implements Array<T>
                 Wrapper.this.set(pos[0], pos[1], this.sliceIndex, value);
             }
 
+            @Override
+            public Collection<Array<?>> parentArrays()
+            {
+                return List.of(array);
+            }   
+            
             @Override
             public Array<T> newInstance(int... dims)
             {

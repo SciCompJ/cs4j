@@ -3,6 +3,11 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
+
 /**
  * Specialization of Array for 1D arrays of Int16 values.
  * 
@@ -132,7 +137,7 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
     /**
      * Wraps a Int16 array with two dimensions into a Int16Array1D.
      */
-    private static class Wrapper extends Int16Array1D
+    private static class Wrapper extends Int16Array1D implements Array.View<Int16>
     {
         Int16Array array;
 
@@ -185,6 +190,12 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
             this.array.setInt(pos, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         /**
          * Simply returns an iterator on the original array.
          */

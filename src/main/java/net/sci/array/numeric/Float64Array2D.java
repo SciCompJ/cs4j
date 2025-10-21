@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedFloat64Array2D;
 
 /**
@@ -170,7 +174,7 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
     /**
      * Wraps a Float64 array with two dimensions into a Float64Array2D.
      */
-    private static class Wrapper extends Float64Array2D
+    private static class Wrapper extends Float64Array2D implements Array.View<Float64>
     {
         Float64Array array;
 
@@ -210,6 +214,12 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
             this.array.setValue(pos, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }   
+        
         /**
          * Simply returns an iterator on the original array.
          */

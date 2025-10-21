@@ -3,8 +3,11 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
+import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.numeric.impl.BufferedFloat32Array3D;
 
@@ -272,7 +275,7 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
     /**
      * Wraps a Float32 array with three dimensions into a Float32Array3D.
      */
-    private static class Wrapper extends Float32Array3D
+    private static class Wrapper extends Float32Array3D implements Array.View<Float32>
     {
         Float32Array array;
 
@@ -313,6 +316,12 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
             this.array.setFloat(pos, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }   
+        
         /**
          * Simply returns an iterator on the original array.
          */
@@ -324,7 +333,7 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
     }
     
     
-    private class SliceView extends Float32Array2D
+    private class SliceView extends Float32Array2D implements Array.View<Float32>
     {
         int sliceIndex;
         
@@ -387,6 +396,12 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
             Float32Array3D.this.setValue(pos[0], pos[1], sliceIndex, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(Float32Array3D.this);
+        }   
+        
         @Override
         public net.sci.array.numeric.Float32Array.Iterator iterator()
         {

@@ -3,6 +3,11 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
+
 /**
  * Specialization of Array for 1D arrays of UInt8 values.
  * 
@@ -132,7 +137,7 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
     /**
      * Wraps a UInt8 array with two dimensions into a UInt8Array1D.
      */
-    private static class Wrapper extends UInt8Array1D
+    private static class Wrapper extends UInt8Array1D implements Array.View<UInt8>
     {
         UInt8Array array;
 
@@ -191,6 +196,12 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
             this.array.setInt(pos, value);
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+        
         /**
          * Simply returns an iterator on the original array.
          */
