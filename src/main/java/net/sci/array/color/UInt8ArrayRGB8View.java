@@ -3,6 +3,10 @@
  */
 package net.sci.array.color;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.UInt8Array;
 
 /**
@@ -12,7 +16,7 @@ import net.sci.array.numeric.UInt8Array;
  * @author dlegland
  *
  */
-public class UInt8ArrayRGB8View implements RGB8Array
+public class UInt8ArrayRGB8View implements RGB8Array, Array.View<RGB8>
 {
     // =============================================================
     // Class variables
@@ -75,6 +79,16 @@ public class UInt8ArrayRGB8View implements RGB8Array
     }
     
 
+    // =============================================================
+    // Methods implementing the Array.View interface
+
+    @Override
+    public Collection<Array<?>> parentArrays()
+    {
+        return List.of(baseArray);
+    }   
+    
+    
     // =============================================================
     // Methods implementing the Array interface
 

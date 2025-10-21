@@ -3,7 +3,11 @@
  */
 package net.sci.array.shape;
 
+import java.util.Collection;
+import java.util.List;
+
 import net.sci.array.Array;
+import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.numeric.Scalar;
 import net.sci.array.numeric.ScalarArray;
@@ -51,7 +55,7 @@ public class Padding
      * 
      * Array res = new Padding.PaddedArray(array, 1, paddingObj); 
      */
-    public static class PaddedArray<T> implements Array<T>
+    public static class PaddedArray<T> implements Array<T>, Array.View<T>
     {
         Array<T> array;
         
@@ -87,6 +91,12 @@ public class Padding
                 this.paddedSize[d] = array.size(d) + padBefore[d] + padAfter[d];
             }
         }
+        
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }   
         
         @Override
         public T get(int[] pos)
@@ -190,7 +200,7 @@ public class Padding
      * 
      * BinaryArray res = new Padding.PaddedBinaryArray(array, 1, false); 
      */
-    public static class PaddedBinaryArray implements BinaryArray
+    public static class PaddedBinaryArray implements BinaryArray, Array.View<Binary>
     {
         BinaryArray array;
         int[] padBefore;
@@ -239,6 +249,12 @@ public class Padding
             throw new RuntimeException("Can not modify a padded array");
         }
 
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }   
+        
         @Override
         public int dimensionality()
         {

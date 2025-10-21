@@ -3,6 +3,9 @@
  */
 package net.sci.array.color;
 
+import java.util.Collection;
+import java.util.List;
+
 import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.binary.Binary;
@@ -23,7 +26,7 @@ import net.sci.array.numeric.UInt8Array;
  * @author dlegland
  *
  */
-public class BinaryOverlayRGB8Array implements RGB8Array
+public class BinaryOverlayRGB8Array implements RGB8Array, Array.View<RGB8>
 {
     // =============================================================
     // class members
@@ -182,7 +185,7 @@ public class BinaryOverlayRGB8Array implements RGB8Array
     {
         if (binaryMask.getBoolean(pos))
         {
-            if (binaryMask.getBoolean(pos))
+            if (opacity == 1.0)
             {
                 return overlayColor.getValue(channel);
             }
@@ -204,6 +207,16 @@ public class BinaryOverlayRGB8Array implements RGB8Array
         throw new RuntimeException("Can not modify values of a view class");
     }
     
+    
+    // =============================================================
+    // Methods implementing the Array.View interface
+
+    @Override
+    public Collection<Array<?>> parentArrays()
+    {
+        return List.of(wrappedArray, binaryMask);
+    }   
+
     
     // =============================================================
     // Implementation of Array interface

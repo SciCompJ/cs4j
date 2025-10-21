@@ -90,23 +90,20 @@ public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
     public UInt8Array processScalar(ScalarArray<?> array)
     {
         // dispatch processing according to dimensionality
-        int nd = array.dimensionality();
-        if (nd == 2)
+        return switch (array.dimensionality())
         {
-            return processScalar2d(ScalarArray2D.wrapScalar2d(array));
-        }
-        else if (nd == 3)
-        {
-            return processScalar3d(ScalarArray3D.wrapScalar3d(array));
-        }
-        
-        // use generic version (without monitoring)
-        UInt8Array result = UInt8Array.create(array.size());
-        for (int[] pos : array.positions())
-        {
-            result.setInt(pos, UInt8.convert(array.getValue(pos)));
-        }
-        return result;
+            case 2 -> processScalar2d(ScalarArray2D.wrapScalar2d(array));
+            case 3 -> processScalar3d(ScalarArray3D.wrapScalar3d(array));
+            default -> {
+                // use generic version (without monitoring)
+                UInt8Array result = UInt8Array.create(array.size());
+                for (int[] pos : array.positions())
+                {
+                    result.setInt(pos, UInt8.convert(array.getValue(pos)));
+                }
+                yield result;
+            }
+        };
     }
     
     private UInt8Array2D processScalar2d(ScalarArray2D<?> array)

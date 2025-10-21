@@ -42,21 +42,12 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
     public UInt8Array processBinary(BinaryArray array)
     {
         // Dispatch to specialized methods depending on array dimensionality
-        switch (array.dimensionality())
+        return switch (array.dimensionality())
         {
-            case 2:
-            {
-                return processBinary2d(BinaryArray2D.wrap(array));
-            }   
-            case 3:
-            {
-                return processBinary3d(BinaryArray3D.wrap(array));
-            }   
-            default:
-            {
-                return processBinaryNd(array);
-            }
-        }
+            case 2 -> processBinary2d(BinaryArray2D.wrap(array));
+            case 3 -> processBinary3d(BinaryArray3D.wrap(array));
+            default -> processBinaryNd(array);
+        };
     }
     
     private UInt8Array2D processBinary2d(BinaryArray2D array)

@@ -1,5 +1,9 @@
 package net.sci.array.color;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8Array;
@@ -18,7 +22,7 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
  * 
  * @author dlegland
  *
- */public class ScalarArraysDifferenceView implements RGB8Array
+ */public class ScalarArraysDifferenceView implements RGB8Array, Array.View<RGB8>
 {
      // =============================================================
      // Class variables
@@ -136,6 +140,16 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
      }
 
 
+     // =============================================================
+     // Methods implementing the Array.View interface
+
+     @Override
+     public Collection<Array<?>> parentArrays()
+     {
+         return List.of(array1, array2);
+     }   
+     
+     
      // =============================================================
      // Implementation of Array interface
      

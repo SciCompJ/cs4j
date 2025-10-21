@@ -28,16 +28,13 @@ public class Complement extends AlgoStub
     
     public BinaryArray process(BinaryArray array)
     {
-        if (array.dimensionality() == 2)
+        // Dispatch to specialized methods depending on array dimensionality
+        return switch (array.dimensionality())
         {
-            return process2d(BinaryArray2D.wrap(array));
-        }
-        else if (array.dimensionality() == 3)
-        {
-            return process3d(BinaryArray3D.wrap(array));
-        }
-        
-        return processNd(array);
+            case 2 -> process2d(BinaryArray2D.wrap(array));
+            case 3 -> process3d(BinaryArray3D.wrap(array));
+            default -> processNd(array);
+        };
     }
     
     private BinaryArray2D process2d(BinaryArray2D array)

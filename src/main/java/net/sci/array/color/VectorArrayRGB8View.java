@@ -3,7 +3,10 @@
  */
 package net.sci.array.color;
 
-import net.sci.array.PositionIterator;
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.VectorArray;
@@ -15,7 +18,7 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
  * @author dlegland
  *
  */
-public class VectorArrayRGB8View implements RGB8Array
+public class VectorArrayRGB8View implements RGB8Array, Array.View<RGB8>
 {
     // =============================================================
     // Class variables
@@ -125,6 +128,15 @@ public class VectorArrayRGB8View implements RGB8Array
     
 
     // =============================================================
+    // Methods implementing the Array.View interface
+
+    @Override
+    public Collection<Array<?>> parentArrays()
+    {
+        return List.of(array);
+    }   
+    
+    // =============================================================
     // Implementation of Array interface
     
     /* (non-Javadoc)
@@ -178,59 +190,6 @@ public class VectorArrayRGB8View implements RGB8Array
     {
         return this.array.size(dim);
     }
-
-
-    /* (non-Javadoc)
-     * @see net.sci.array.color.RGB8Array#iterator()
-     */
-    @Override
-    public Iterator iterator()
-    {
-        return new Iterator()
-        {
-            PositionIterator iter = PositionIterator.of(VectorArrayRGB8View.this);
-
-            @Override
-            public boolean hasNext()
-            {
-                return iter.hasNext();
-            }
-
-            @Override
-            public void forward()
-            {
-                iter.forward();
-            }
-
-            @Override
-            public RGB8 get()
-            {
-                return VectorArrayRGB8View.this.get(iter.get());
-            }
-
-            @Override
-            public void set(RGB8 value)
-            {
-                throw new RuntimeException("Can not modify values of a VectorArrayRGB8View");
-            }
-
-            @Override
-            public double getValue(int c)
-            {
-                int channel = channels[c];
-                double val = array.getValue(iter.get(), channel);
-                return 255 * scaleValue(val, extents[c]);
-            }
-
-            @Override
-            public void setValue(int c, double value)
-            {
-                throw new RuntimeException("Can not modify values of a VectorArrayRGB8View");
-            }
-        };
-    }
-
-    
 
     private class ChannelIterator implements java.util.Iterator<UInt8Array> 
     {

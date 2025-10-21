@@ -3,6 +3,10 @@
  */
 package net.sci.array.numeric.impl;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array;
@@ -17,7 +21,7 @@ import net.sci.array.numeric.UInt8Array;
  * @author dlegland
  *
  */
-public class ScalarArrayUInt8View implements UInt8Array
+public class ScalarArrayUInt8View implements UInt8Array, Array.View<UInt8>
 {
     // =============================================================
     // Class members
@@ -74,6 +78,15 @@ public class ScalarArrayUInt8View implements UInt8Array
     }
 
 
+    // =============================================================
+    // Methods implementing the Array.View interface
+
+    @Override
+    public Collection<Array<?>> parentArrays()
+    {
+        return List.of(array);
+    }   
+    
     // =============================================================
     // Specialization of the Array interface
 
