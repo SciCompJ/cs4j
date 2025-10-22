@@ -96,12 +96,9 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
         // allocate memory for result
         Float32Array result = Float32Array.create(size());
         
-        // iterate over both arrays in parallel
+        // fill values in result array, using buffer to avoid repetition of array allocation 
         double[] values = new double[channelCount()];
-        for (int[] pos : this.positions())
-        {
-            result.setValue(pos, Vector.norm(getValues(pos, values)));
-        }
+        result.fillValues(pos -> Vector.norm(getValues(pos, values)));
         
         return result;
     }
@@ -124,14 +121,14 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      *            index of the channel to view
      * @return a view on the channel
      */
-    public ScalarArray<?> channel(int channel);
+    public ScalarArray<S> channel(int channel);
 
     /**
      * Iterates over the channels
      * 
      * @return an iterator over the (scalar) channels
      */
-    public Iterable<? extends ScalarArray<?>> channels();
+    public Iterable<? extends ScalarArray<S>> channels();
     
     public java.util.Iterator<? extends ScalarArray<?>> channelIterator();
     

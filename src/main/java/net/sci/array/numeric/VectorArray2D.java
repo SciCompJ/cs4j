@@ -195,13 +195,13 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
 	// =============================================================
 	// Specialization of VectorArray interface
 
-	public abstract ScalarArray2D<?> channel(int channel);
+	public abstract ScalarArray2D<S> channel(int channel);
 
     /**
      * Iterates over the channels
      * @return 
      */
-    public abstract Iterable<? extends ScalarArray2D<?>> channels();
+    public abstract Iterable<? extends ScalarArray2D<S>> channels();
 
     public abstract java.util.Iterator<? extends ScalarArray2D<?>> channelIterator();
 
@@ -313,18 +313,18 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
         }
 
         @Override
-        public ScalarArray2D<?> channel(int channel)
+        public ScalarArray2D<S> channel(int channel)
         {
             return ScalarArray2D.wrap(array.channel(channel));
         }
 
         @Override
-        public Iterable<? extends ScalarArray2D<?>> channels()
+        public Iterable<? extends ScalarArray2D<S>> channels()
         {
-            return new Iterable<ScalarArray2D<?>>()
+            return new Iterable<ScalarArray2D<S>>()
                     {
                         @Override
-                        public java.util.Iterator<ScalarArray2D<?>> iterator()
+                        public java.util.Iterator<ScalarArray2D<S>> iterator()
                         {
                             return new ChannelIterator();
                         }
@@ -332,7 +332,7 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
         }
 
         @Override
-        public java.util.Iterator<ScalarArray2D<?>> channelIterator()
+        public java.util.Iterator<ScalarArray2D<S>> channelIterator()
         {
             return new ChannelIterator();
         }
@@ -402,7 +402,7 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
         }
 
 
-        private class ChannelIterator implements java.util.Iterator<ScalarArray2D<?>> 
+        private class ChannelIterator implements java.util.Iterator<ScalarArray2D<S>> 
         {
             int channel = -1;
 
@@ -413,7 +413,7 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
             }
 
             @Override
-            public ScalarArray2D<?> next()
+            public ScalarArray2D<S> next()
             {
                 channel++;
                 return ScalarArray2D.wrap(array.channel(channel));
