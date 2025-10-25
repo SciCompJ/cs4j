@@ -3,6 +3,10 @@
  */
 package net.sci.array.color;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.Arrays;
 import net.sci.array.numeric.UInt8Array;
 
@@ -12,7 +16,7 @@ import net.sci.array.numeric.UInt8Array;
  * @author dlegland
  *
  */
-public class MergeChannelsRGB8Array implements RGB8Array
+public class MergeChannelsRGB8Array implements RGB8Array, Array.View<RGB8>
 {
     // =============================================================
     // Inner members
@@ -174,6 +178,16 @@ public class MergeChannelsRGB8Array implements RGB8Array
     }
     
     
+    // =============================================================
+    // Implementation of the Array.View interface
+
+    @Override
+    public Collection<Array<?>> parentArrays()
+    {
+        return List.of(redChannel, greenChannel, blueChannel);
+    }
+
+
     // =============================================================
     // Implementation of the Array interface
 

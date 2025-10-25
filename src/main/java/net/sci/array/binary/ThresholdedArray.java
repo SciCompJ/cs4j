@@ -3,6 +3,10 @@
  */
 package net.sci.array.binary;
 
+import java.util.Collection;
+import java.util.List;
+
+import net.sci.array.Array;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.impl.ScalarArrayUInt8View;
 
@@ -32,7 +36,7 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
  * @see ScalarArrayUInt8View
  * @author dlegland
  */
-public class ThresholdedArray implements BinaryArray
+public class ThresholdedArray implements BinaryArray, Array.View<Binary>
 {
     // =============================================================
     // Class members
@@ -82,6 +86,16 @@ public class ThresholdedArray implements BinaryArray
     public void setBoolean(int[] pos, boolean state)
     {
         throw new RuntimeException("Unauthorized operation: can not modify a type conversion view");
+    }
+    
+
+    // =============================================================
+    // Implementation of the Array.View interface
+
+    @Override
+    public Collection<Array<?>> parentArrays()
+    {
+        return List.of(array);
     }
     
 
