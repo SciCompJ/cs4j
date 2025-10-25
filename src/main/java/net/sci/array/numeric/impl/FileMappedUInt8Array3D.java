@@ -177,4 +177,14 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
     {
         throw new RuntimeException("Modification of data in FileMappedUInt8Array3D is not available");
     }
+    
+    /**
+     * Returns false, as the view can not be modified.
+     * 
+     * @return false
+     */
+    public boolean isModifiable()
+    {
+        return false;
+    }    
 }

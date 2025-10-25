@@ -229,5 +229,15 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
         {
             throw new RuntimeException("Can not modify a binary view of a scalar array");
         }
+        
+        /**
+         * Returns false, as the view can not be modified.
+         * 
+         * @return false
+         */
+        public boolean isModifiable()
+        {
+            return false;
+        }
     }
 }

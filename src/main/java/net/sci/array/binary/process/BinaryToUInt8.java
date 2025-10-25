@@ -121,5 +121,16 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
         {
             throw new RuntimeException("Non-writable view");
         }
+        
+        /**
+         * Returns false, as the view can not be modified.
+         * 
+         * @return false
+         */
+        public boolean isModifiable()
+        {
+            return false;
+        }
+        
     }
 }

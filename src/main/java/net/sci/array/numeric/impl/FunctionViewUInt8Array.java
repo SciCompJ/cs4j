@@ -79,6 +79,16 @@ public class FunctionViewUInt8Array implements UInt8Array
     // =============================================================
     // Implementation of the Array interface
     
+    /**
+     * Returns false, as the view can not be modified.
+     * 
+     * @return false
+     */
+    public boolean isModifiable()
+    {
+        return false;
+    }
+    
     @Override
     public int dimensionality()
     {

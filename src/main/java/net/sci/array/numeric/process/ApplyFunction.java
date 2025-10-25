@@ -87,6 +87,18 @@ public class ApplyFunction extends AlgoStub implements ArrayOperator, ScalarArra
         }
 
         @Override
+        public double getValue(int[] pos)
+        {
+            return function.apply(array.getValue(pos));
+        }
+
+        @Override
+        public void setValue(int[] pos, double value)
+        {
+            throw new RuntimeException("Can not modify value of a view");
+        }
+
+        @Override
         public Class<S> elementClass()
         {
             return array.elementClass();
@@ -104,18 +116,16 @@ public class ApplyFunction extends AlgoStub implements ArrayOperator, ScalarArra
             throw new RuntimeException("Can not modify value of a view");
         }
 
-        @Override
-        public double getValue(int[] pos)
+        /**
+         * Returns false, as the view can not be modified.
+         * 
+         * @return false
+         */
+        public boolean isModifiable()
         {
-            return function.apply(array.getValue(pos));
+            return false;
         }
-
-        @Override
-        public void setValue(int[] pos, double value)
-        {
-            throw new RuntimeException("Can not modify value of a view");
-        }
-
+        
         @Override
         public ScalarArray<S> newInstance(int... dims)
         {

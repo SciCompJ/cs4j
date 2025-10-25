@@ -163,6 +163,16 @@ public class VectorArrayRGB8View implements RGB8Array, Array.View<RGB8>
         throw new RuntimeException("Can not modify values");
     }
 
+    /**
+     * Returns false, as the view can not be modified.
+     * 
+     * @return false
+     */
+    public boolean isModifiable()
+    {
+        return false;
+    }
+    
     /* (non-Javadoc)
      * @see net.sci.array.Array#dimensionality()
      */

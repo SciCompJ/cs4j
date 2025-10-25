@@ -105,6 +105,16 @@ public class UInt8ArrayRGB8View implements RGB8Array, Array.View<RGB8>
         throw new RuntimeException("Can not modify values of a view class");
     }
 
+    /**
+     * Returns false, as the view can not be modified.
+     * 
+     * @return false
+     */
+    public boolean isModifiable()
+    {
+        return false;
+    }
+    
     @Override
     public int[] size()
     {

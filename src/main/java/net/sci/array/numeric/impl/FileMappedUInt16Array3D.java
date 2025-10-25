@@ -195,7 +195,16 @@ public class FileMappedUInt16Array3D extends UInt16Array3D
         throw new RuntimeException("Modification of data in FileMappedUInt16Array3D is not available");
     }
     
-
+    /**
+     * Returns false, as the view can not be modified.
+     * 
+     * @return false
+     */
+    public boolean isModifiable()
+    {
+        return false;
+    }
+    
     @Override
     public double getValue(int[] pos)
     {

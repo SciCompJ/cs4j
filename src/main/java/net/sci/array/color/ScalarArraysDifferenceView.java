@@ -178,6 +178,16 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
          throw new RuntimeException("Can not modify values");
      }
 
+     /**
+      * Returns false, as the view can not be modified.
+      * 
+      * @return false
+      */
+     public boolean isModifiable()
+     {
+         return false;
+     }
+     
      /* (non-Javadoc)
       * @see net.sci.array.Array#dimensionality()
       */

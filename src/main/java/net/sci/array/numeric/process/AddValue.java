@@ -88,6 +88,16 @@ public class AddValue extends AlgoStub implements ScalarArrayOperator
             throw new RuntimeException("Can not modify value of a view");
         }
 
+        /**
+         * Returns false, as the view can not be modified.
+         * 
+         * @return false
+         */
+        public boolean isModifiable()
+        {
+            return false;
+        }
+        
         @Override
         public Class<S> elementClass()
         {

@@ -17,11 +17,20 @@ import net.sci.array.shape.Squeeze;
 import net.sci.util.MathUtils;
 
 /**
- * N-dimensional array with generic type.
+ * N-dimensional array with generic type. The interface exposes methods for
+ * retrieving array dimensions, getting/setting elements, iterating over either
+ * the elements or the (multi-dimensional) positions within the array. It also
+ * provides default implementations for utility methods (reshape, squeeze,
+ * fill...).
+ * 
+ * A static factory can be used to create new arrays knowing their size and a
+ * sample element within the array. The sample element is mostly used to
+ * identify the best implementation.
  *
  * @see Arrays
  *
- * @param <T> the type of elements stored within the array.
+ * @param <T>
+ *            the type of elements stored within the array.
  * 
  * @author dlegland
  */
@@ -210,14 +219,37 @@ public interface Array<T> extends Iterable<T>, Dimensional
     public T get(int[] pos);
     
     /**
-     * Sets the value at the given position.
+     * Sets the value at the given position (optional operation).
+     * 
+     * Some array implementations may not be modifiable. In this a call to a
+     * {@code set()} operation should throw an exception. Moreover, the
+     * {@code isModifiable()} method should be modified to return false.
      * 
      * @param pos
      *            the position, as an array of indices
      * @param value
      *            the new value for the given position
+     * @see #isModifiable()
      */
     public void set(int[] pos, T value);
+    
+    /**
+     * A utility method indicating whether the array can be modified or not. If
+     * the array is not modifiable, it is expected that {@code set(...)} method
+     * throw an exception.
+     * 
+     * Default behavior is to return true, and must be overloaded for
+     * non-modifiable arrays.
+     * 
+     * @return true if the array can be modified via a {@code set()} method,
+     *         false otherwise
+     * 
+     * @see #set(int[], Object)
+     */
+    public default boolean isModifiable()
+    {
+        return true;
+    }
     
     /**
      * Returns a sample element with the same type as the elements in the array.

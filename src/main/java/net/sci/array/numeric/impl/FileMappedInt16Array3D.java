@@ -192,10 +192,19 @@ public class FileMappedInt16Array3D extends Int16Array3D
     @Override
     public void setShort(int x, int y, int z, short f)
     {
-        throw new RuntimeException("Modification of data in FileMappedUInt16Array3D is not available");
+        throw new RuntimeException("Modification of data in FileMappedInt16Array3D is not available");
     }
     
-
+    /**
+     * Returns false, as the view can not be modified.
+     * 
+     * @return false
+     */
+    public boolean isModifiable()
+    {
+        return false;
+    }
+    
     @Override
     public double getValue(int[] pos)
     {

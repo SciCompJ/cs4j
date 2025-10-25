@@ -90,6 +90,16 @@ public class ScalarArrayUInt8View implements UInt8Array, Array.View<UInt8>
     // =============================================================
     // Specialization of the Array interface
 
+    /**
+     * Returns false, as the view can not be modified.
+     * 
+     * @return false
+     */
+    public boolean isModifiable()
+    {
+        return false;
+    }
+    
     /* (non-Javadoc)
      * @see net.sci.array.Array#dimensionality()
      */

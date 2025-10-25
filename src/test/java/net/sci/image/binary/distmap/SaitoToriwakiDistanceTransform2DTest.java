@@ -70,7 +70,7 @@ public class SaitoToriwakiDistanceTransform2DTest
     @Test
     public void test_process2d_fromCenter()
     {
-        // Create a white image, with only the corners missing
+        // Create a white image, with a black pixel in the middle
         BinaryArray2D array = BinaryArray2D.create(13, 9);
         array.fill(true);
         array.setBoolean(6, 4, false);
@@ -81,9 +81,9 @@ public class SaitoToriwakiDistanceTransform2DTest
         assertNotNull(result);
         assertEquals(array.size(0), result.size(0));
         assertEquals(array.size(1), result.size(1));
-        assertEquals(Math.hypot(4, 6), result.getValue(0, 0), 0.001);
+        assertEquals(Math.hypot(4, 6), result.getValue( 0, 0), 0.001);
         assertEquals(Math.hypot(4, 6), result.getValue(12, 0), 0.001);
-        assertEquals(Math.hypot(4, 6), result.getValue(0, 0), 0.001);
+        assertEquals(Math.hypot(4, 6), result.getValue( 0, 8), 0.001);
         assertEquals(Math.hypot(4, 6), result.getValue(12, 8), 0.001);
     }
 
