@@ -34,7 +34,7 @@ public class CategoricalColumnTest
      * Test method for {@link net.sci.table.CategoricalColumn#convert(net.sci.table.IntegerColumn)}.
      */
     @Test
-    public final void test_convert()
+    public final void test_convert_integerColumn()
     {
         int[] intValues = new int[]{1, 2, 2, 1, 3, 2};
         IntegerColumn intCol = IntegerColumn.create("name", intValues);
@@ -42,6 +42,21 @@ public class CategoricalColumnTest
         CategoricalColumn col = CategoricalColumn.convert(intCol);
         
         assertEquals(intValues.length, col.length());
+        assertEquals(3, col.levelNames().length);
+    }
+
+    /**
+     * Test method for {@link net.sci.table.CategoricalColumn#convert(net.sci.table.IntegerColumn)}.
+     */
+    @Test
+    public final void test_convert_floatColumn()
+    {
+        double[] floatValues = new double[]{1.2, 2.3, 2.3, 1.2, 3.4, 2.3};
+        FloatColumn floatCol = FloatColumn.create("name", floatValues);
+        
+        CategoricalColumn col = CategoricalColumn.convert(floatCol);
+        
+        assertEquals(floatValues.length, col.length());
         assertEquals(3, col.levelNames().length);
     }
 

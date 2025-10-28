@@ -86,33 +86,29 @@ public interface CategoricalColumn extends Column
     }
     
     /**
-     * Converts an integer column into a categorical column by considering each
-     * unique value in the input column as a level.
+     * Converts an arbitrary column into a categorical column by considering
+     * each unique value in the input column as a level. If the input column is
+     * already an instance of CategoricalColumn, it is simply returned.
      * 
      * @param column
      *            the column to convert
      * @return the converted categorical column, with same length
      */
-    public static CategoricalColumn convert(IntegerColumn column)
+    public static CategoricalColumn convert(Column column)
     {
-        ArrayList<Integer> uniqueValues = new ArrayList<Integer>();
-        for (int i = 0; i < column.length(); i++)
+        if (column instanceof CategoricalColumn)
         {
-            int val = column.getInt(i);
-            if (!uniqueValues.contains(val))
-            {
-                uniqueValues.add(val);
-            }
+            return (CategoricalColumn) column;
         }
         
-        String[] levels = uniqueValues.stream().map(val -> "" + val).toArray(String[]::new);
-        int[] indices = new int[column.length()];
-        for (int i = 0; i < column.length(); i++)
+        int nRows = column.length();
+        String[] levels = new String[nRows];
+        for (int iRow = 0; iRow < nRows; iRow++)
         {
-            indices[i] = uniqueValues.indexOf(column.get(i));
+            levels[iRow] = "" + column.getValue(iRow);
         }
         
-        return create(column.getName(), indices, levels); 
+        return create(column.getName(), levels);
     }
     
     /**
