@@ -199,9 +199,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         {
             throw new RuntimeException("Virtual stacks are available only for UInt8 arrays.");
         }
-        if (ifd.getValue(BaselineTags.Compression.CODE) != 1)
+        int compressionCode = ifd.getValue(BaselineTags.Compression.CODE);
+        if (compressionCode != BaselineTags.Compression.NONE)
         {
-            throw new RuntimeException("Virtual stacks not implemented for TIFF files compressed with mode " + "NONE");
+            throw new RuntimeException("Virtual stacks not implemented for TIFF files compressed with compression code " + compressionCode);
         }
         
         // Read (virtual) image data
