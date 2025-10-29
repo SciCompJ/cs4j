@@ -3,6 +3,8 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 import net.sci.array.Array;
@@ -447,7 +449,7 @@ public interface Float32Array extends ScalarArray<Float32>
      *
      * @see Float32Array#reshapeView(int[], Function)
      */
-    static class ReshapeView implements Float32Array
+    static class ReshapeView implements Float32Array, Array.View<Float32>
     {
         Float32Array array;
         
@@ -502,6 +504,12 @@ public interface Float32Array extends ScalarArray<Float32>
         public void setValue(int[] pos, double value)
         {
             array.setValue(coordsMapping.apply(pos), value);
+        }
+
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
         }
 
         /* (non-Javadoc)

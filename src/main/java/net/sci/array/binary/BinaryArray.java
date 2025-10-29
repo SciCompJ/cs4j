@@ -3,6 +3,8 @@
  */
 package net.sci.array.binary;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 import net.sci.array.Array;
@@ -926,7 +928,7 @@ public interface BinaryArray extends IntArray<Binary>
      *
      * @see BinaryArray#reshapeView(int[], Function)
      */
-    static class ReshapeView implements BinaryArray
+    static class ReshapeView implements BinaryArray, Array.View<Binary>
     {
         BinaryArray array;
         
@@ -969,6 +971,12 @@ public interface BinaryArray extends IntArray<Binary>
         public void setBoolean(int[] pos, boolean bool)
         {
             array.setBoolean(coordsMapping.apply(pos), bool);
+        }
+
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
         }
 
         /* (non-Javadoc)

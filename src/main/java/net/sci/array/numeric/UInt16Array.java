@@ -3,6 +3,8 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 import net.sci.array.Array;
@@ -456,7 +458,7 @@ public interface UInt16Array extends IntArray<UInt16>
      *
      * @see UInt16Array#reshapeView(int[], Function)
      */
-    static class ReshapeView implements UInt16Array
+    static class ReshapeView implements UInt16Array, Array.View<UInt16>
     {
         UInt16Array array;
         
@@ -535,6 +537,12 @@ public interface UInt16Array extends IntArray<UInt16>
         public void setValue(int[] pos, double value)
         {
             array.setValue(coordsMapping.apply(pos), value);
+        }
+
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
         }
 
         /* (non-Javadoc)

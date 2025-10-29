@@ -3,6 +3,8 @@
  */
 package net.sci.array.numeric;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
 import net.sci.array.Array;
@@ -495,7 +497,7 @@ public interface UInt8Array extends IntArray<UInt8>
      *
      * @see UInt8Array#reshapeView(int[], Function)
      */
-	static class ReshapeView implements UInt8Array
+	static class ReshapeView implements UInt8Array, Array.View<UInt8>
 	{
 	    UInt8Array array;
 	    
@@ -576,7 +578,13 @@ public interface UInt8Array extends IntArray<UInt8>
 	        array.setValue(coordsMapping.apply(pos), value);
 	    }
 
-	    /* (non-Javadoc)
+	    @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+
+        /* (non-Javadoc)
 	     * @see net.sci.array.Array#dimensionality()
 	     */
 	    @Override
