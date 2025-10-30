@@ -262,10 +262,22 @@ public interface Table
     
     /**
      * Returns a view to the specified column.
-     * @param c the column index, 0-based
+     * 
+     * @param c
+     *            the column index, 0-based
      * @return a view or a reference to the column
      */
     public Column column(int c);
+    
+    /**
+     * Replaces the column at the specified index (optional operation).
+     * 
+     * @param c
+     *            the column index, 0-based
+     * @param column
+     *            the column to put in table
+     */
+    public void setColumn(int c, Column column);
     
     /**
      * Returns the Axis instance that describes the columns of this table.

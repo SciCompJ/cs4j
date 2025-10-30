@@ -150,6 +150,41 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     }
 
     @Override
+    public void setColumn(int c, Column column)
+    {
+        if (c == nCols)
+        {
+            addColumn(column);
+            return;
+        }
+        
+        if (c < 0 || c > nCols)
+        {
+            throw new IllegalArgumentException("Illegal column index: " + c);
+        }
+        if (column.length() != nRows)
+        {
+            throw new IllegalArgumentException("Column length must match table size:" + column.length() + "!=" + nRows);
+        }
+        
+        if (column instanceof NumericColumn numericColumn)
+        {
+            for (int iRow = 0; iRow < nRows; iRow++)
+            {
+                this.data[c][iRow] = numericColumn.getValue(iRow);
+            }
+            
+            // setup meta-data
+            this.columnAxis.setItemName(c, numericColumn.getName());
+            this.unitNames[c] = numericColumn.getUnitName();
+        }
+        else
+        {
+            throw new IllegalArgumentException("Can only add numeric columns to a NumericTable");
+        }
+    }
+
+    @Override
     public void addColumn(Column column)
     {
         if (column instanceof NumericColumn numericColumn)

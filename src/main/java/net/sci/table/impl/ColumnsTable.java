@@ -162,6 +162,27 @@ public class ColumnsTable extends TableStub
     }
 
     @Override
+    public void setColumn(int c, Column column)
+    {
+        if (c == columnCount())
+        {
+            addColumn(column);
+            return;
+        }
+        
+        if (c < 0 || c > columnCount())
+        {
+            throw new IllegalArgumentException("Illegal column index: " + c);
+        }
+        if (column.length() != rowCount())
+        {
+            throw new IllegalArgumentException("Column length must match table size:" + column.length() + "!=" + rowCount());
+        }
+        
+        this.columns.set(c, column);
+    }
+    
+    @Override
     public void addColumn(Column column)
     {
         if (!columns.isEmpty())

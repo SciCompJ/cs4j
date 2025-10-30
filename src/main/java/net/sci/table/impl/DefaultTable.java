@@ -220,6 +220,52 @@ public class DefaultTable extends TableStub
     }
 
     @Override
+    public void setColumn(int c, Column column)
+    {
+        if (c == columnCount())
+        {
+            addColumn(column);
+            return;
+        }
+        
+        if (c < 0 || c > columnCount())
+        {
+            throw new IllegalArgumentException("Illegal column index: " + c);
+        }
+        if (column.length() != rowCount())
+        {
+            throw new IllegalArgumentException("Column length must match table size:" + column.length() + "!=" + rowCount());
+        }
+        
+        if (column instanceof NumericColumn numCol)
+        {
+            for (int i = 0; i < numCol.length(); i++)
+            {
+                this.data[c][i] = numCol.getValue(i);
+            }
+            
+            // import meta-data
+            setColumnName(c, numCol.getName());
+            this.unitNames[c] = numCol.getUnitName();
+        }
+        else if (column instanceof CategoricalColumn catCol)
+        {
+            for (int i = 0; i < catCol.length(); i++)
+            {
+                this.data[c][i] = catCol.getLevelIndex(i);
+            }
+            
+            // import meta-data
+            this.levels.set(c, catCol.levelNames());
+            setColumnName(c, catCol.getName());
+        }
+        else
+        {
+            throw new IllegalArgumentException("Can not add columns with type: " + column.getClass().getName());
+        }
+    }
+    
+    @Override
     public void addColumn(Column column)
     {
         if (column instanceof NumericColumn numCol)
