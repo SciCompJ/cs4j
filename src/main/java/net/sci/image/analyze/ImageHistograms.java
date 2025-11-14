@@ -10,8 +10,12 @@ import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
 import net.sci.array.color.RGB8Array;
+import net.sci.array.color.RGB8Array2D;
+import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.process.Histogram;
+import net.sci.geom.geom2d.Bounds2D;
+import net.sci.geom.geom2d.Domain2D;
 
 /**
  * A collection of static methods for computing histograms within images.
@@ -49,7 +53,7 @@ public class ImageHistograms
      *            the input array.
      * @return the histogram of the RGB8 values, as a 3-by-256 integer array.
      */
-    public static final Histogram.Result[] histogramRGB8(RGB8Array array)
+    public static final Histogram.Result[] histogramsRGB8(RGB8Array array)
     {
         // allocate memory for counts of values within each channel
         int[][] histo = new int[3][256];
@@ -86,7 +90,7 @@ public class ImageHistograms
      * @return the histogram of the RGB16 values, as a 4-by-256 integer array.
      *         The first array contains value of bin centers.
      */
-    public static final Histogram.Result[] histogramRGB16(RGB16Array array)
+    public static final Histogram.Result[] histogramsRGB16(RGB16Array array)
     {
         // determines max red, green and blue values
         int rMax = 0, gMax = 0, bMax = 0;
@@ -129,6 +133,111 @@ public class ImageHistograms
         return res;
     }
     
+    /**
+     * Computes histogram in a domain of a 2D array.
+     * 
+     * @param array
+     *            the scalar array to analyze
+     * @param domain
+     *            the domain for selecting values
+     * @param range
+     *            gray value range for computing histogram
+     * @param nBins
+     *            the number of bins of the resulting histogram
+     * @return the histogram within the specified domain
+     */
+    public static final Histogram.Result histogramScalar(ScalarArray2D<?> array, Domain2D domain, double[] range, int nBins)
+    {
+        // compute the width of an individual bin
+        double binWidth = (range[1] - range[0]) / (nBins - 1);
+        
+        // compute bin centers
+        double[] xData = new double[nBins];
+        for (int i = 0; i < nBins; i++)
+        {
+            xData[i] = range[0] + binWidth * i;
+        }
+        
+        // allocate memory for result
+        int[] counts = new int[nBins];
+        
+        // compute bounding box of domain to avoid unnecessary computations
+        Bounds2D bbox = domain.bounds();
+        int xmin = (int) Math.max(0, Math.floor(bbox.xMin()));
+        int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.xMax()));
+        int ymin = (int) Math.max(0, Math.floor(bbox.yMin()));
+        int ymax = (int) Math.min(array.size(1), Math.ceil(bbox.yMax()));
+        
+        // iterate over samples to update the histogram
+        for (int y = ymin; y < ymax; y++)
+        {
+            for (int x = xmin; x < xmax; x++)
+            {
+                if (domain.contains(x, y))
+                {
+                    double value = array.getValue(x, y);
+                    int binIndex = (int) Math.round((value - range[0] - binWidth / 2) / binWidth);
+                    binIndex = Math.min(Math.max(binIndex, 0), nBins - 1);
+                    counts[binIndex]++;
+                }
+            }
+        }
+        
+        return new Histogram.Result(xData, counts);
+    }
+    
+    /**
+     * Computes histogram of an array of RGB8 elements, and returns the result
+     * in a data table.
+     * 
+     * The data table has four columns. The first column contains the bin center
+     * (from 0 to 255). The three other columns contain the count of the
+     * corresponding red, green and blue channels respectively.
+     * 
+     * @param array
+     *            the input array of RGB8 elements
+     * @return a new instance of DefaultNumericTable containing the resulting histogram.
+     */
+    public static final Histogram.Result[] histogramsRGB8(RGB8Array2D array, Domain2D domain)
+    {
+        // allocate memory for result
+        int[][] histo = new int[3][256];
+        
+        // compute bounding box f domain to avoid unnecessary computations
+        Bounds2D bbox = domain.bounds();
+        int xmin = (int) Math.max(0, Math.floor(bbox.xMin()));
+        int xmax = (int) Math.min(array.size(0), Math.ceil(bbox.xMax()));
+        int ymin = (int) Math.max(0, Math.floor(bbox.yMin()));
+        int ymax = (int) Math.min(array.size(1), Math.ceil(bbox.yMax()));
+        
+        // iterate over samples to update the histogram
+        for (int y = ymin; y < ymax; y++)
+        {
+            for (int x = xmin; x < xmax; x++)
+            {
+                if (domain.contains(x, y))
+                {
+                    RGB8 rgb = array.get(x, y);
+                    int r = rgb.getSample(0);
+                    int g = rgb.getSample(1);
+                    int b = rgb.getSample(2);
+                    histo[0][r]++;
+                    histo[1][g]++;
+                    histo[2][b]++;
+                }
+            }
+        }
+
+        // create Histogram objects
+        Histogram.Result[] res = new Histogram.Result[3];
+        double[] xdata = linearRange(256);
+        for (int i = 0; i < 3; i++)
+        {
+            res[i] = new Histogram.Result(xdata, histo[i]);
+        }
+        return res;
+    }
+
     /**
      * Computes a linear range of values between 0 and {@code nValues-1}.
      * @param nValues
