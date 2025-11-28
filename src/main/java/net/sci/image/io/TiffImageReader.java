@@ -611,10 +611,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         setupSpatialCalibration(image, ifd);
         
         // setup LUT
-        int[][] lut = retrieveLut(ifd);
-        if (lut != null)
+        int[][] colormap = retrieveColorMap(ifd);
+        if (colormap != null)
         {
-            image.getDisplaySettings().setColorMap(new DefaultColorMap(lut));
+            image.getDisplaySettings().setColorMap(new DefaultColorMap(colormap));
         }
         
         addTiffTags(image, ifd.entries());
@@ -660,9 +660,18 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         };
     }
     
-    private static final int[][] retrieveLut(ImageFileDirectory ifd)
+    /**
+     * Retrieve the color map stored within the {@code ColorMap} tag, and
+     * converted it into an array of values between 0 and 255.
+     * 
+     * @param ifd
+     *            the ImageFileDirectory containing the tags
+     * @return an N-by-3 array of integers, containing for each color, the red,
+     *         green and blue components, each one between 0 and 255.
+     *         Returns {@code null} if no colormap is found.
+     */
+    private static final int[][] retrieveColorMap(ImageFileDirectory ifd)
     {
-        int[][] lut = null;
         TiffTag tag = ifd.getEntry(BaselineTags.ColorMap.CODE);
         if (tag != null)
         {
@@ -671,21 +680,25 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             
             // Allocate memory for resulting LUT
             int lutLength = tag.count / 3;
-            lut = new int[lutLength][3];
+            int[][] lut = new int[lutLength][3];
             
             // convert raw array into N-by-3 look-up table
             int j = 0;
             
-            // for each color, keep only the most significant byte of the component
+            // for each color, keep only the most significant byte of the
+            // component,
+            // and convert to byte
             for (int i = 0; i < lutLength; i++)
             {
-                lut[i][0] = lut16[j] >> 8;
-                lut[i][1] = lut16[j + 256] >> 8;
-                lut[i][2] = lut16[j + 512] >> 8;
-                j ++;
+                lut[i][0] = (lut16[j] >> 8) & 0x00FF;
+                lut[i][1] = (lut16[j + 256] >> 8) & 0x00FF;
+                lut[i][2] = (lut16[j + 512] >> 8) & 0x00FF;
+                j++;
             }
-         }
-        return lut;
+            return lut;
+        }
+        
+        return null;
     }
     
     /**

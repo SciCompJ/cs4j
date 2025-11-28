@@ -12,6 +12,8 @@ import org.junit.Test;
 
 import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray2D;
+import net.sci.array.color.Color;
+import net.sci.array.color.ColorMap;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array2D;
 import net.sci.array.numeric.ScalarArray;
@@ -26,7 +28,7 @@ import net.sci.image.io.tiff.ImagejMetadata;
 public class TiffImageReaderTest
 {
 	@Test
-	public void testReadImage_Gray8_2D() throws IOException
+	public void test_UInt8_2D() throws IOException
 	{
 		String fileName = getClass().getResource("/images/grains.tif").getFile();
 		
@@ -43,7 +45,7 @@ public class TiffImageReaderTest
 	}
 
     @Test
-    public void testReadImage_Binary_2D_WheatGrain() throws IOException
+    public void test_Binary_2D_WheatGrain() throws IOException
     {
         String fileName = getClass().getResource("/images/binary/L_150_1_segXY_sub20.tif").getFile();
         
@@ -62,7 +64,7 @@ public class TiffImageReaderTest
     }
 
 	@Test
-	public void testReadImage_Float_2D_grains() throws IOException
+	public void test_Float_2D_grains() throws IOException
 	{
 		String fileName = getClass().getResource("/images/grains_float.tif").getFile();
 		
@@ -83,7 +85,7 @@ public class TiffImageReaderTest
 	 * @throws IOException
 	 */
 	@Test
-	public void testReadImage_Cameraman() throws IOException
+	public void test_Cameraman() throws IOException
 	{
 		String fileName = getClass().getResource("/images/cameraman.tif").getFile();
 		
@@ -98,7 +100,7 @@ public class TiffImageReaderTest
 	}
 
 	@Test
-	public void testReadImage_Gray8_3D_Stack() throws IOException
+	public void test_UInt8_3D_Stack() throws IOException
 	{
 		String fileName = getClass().getResource("/images/mri.tif").getFile();
 		
@@ -114,7 +116,7 @@ public class TiffImageReaderTest
 	}
 
 	@Test
-	public void testReadImage_RGB8_2D() throws IOException
+	public void test_RGB8_2D() throws IOException
 	{
 		String fileName = getClass().getResource("/images/lena_color_512.tif").getFile();
 		
@@ -134,7 +136,7 @@ public class TiffImageReaderTest
 	 * @throws IOException
 	 */
 	@Test
-	public void testReadImage_UInt16_M51() throws IOException
+	public void test_UInt16_M51() throws IOException
 	{
 		String fileName = getClass().getResource("/images/m51.tif").getFile();
 		
@@ -162,7 +164,7 @@ public class TiffImageReaderTest
 	 * @throws IOException
 	 */
     @Test
-    public void testReadImage_RGB16_2D() throws IOException
+    public void test_RGB16_2D() throws IOException
     {
         // image size 324x238
         String fileName = getClass().getResource("/images/imagej/hela-cells-crop.tif").getFile();
@@ -195,13 +197,47 @@ public class TiffImageReaderTest
         assertEquals(1673, rgb.getSample(2));
     }
 
+    @Test
+    public void test_UInt8_2D_colormap() throws IOException
+    {
+        String fileName = getClass().getResource("/images/grains-segmented-lbl2.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(2, image.getDimension());
+
+        ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
+        assertEquals(256, data.size(0));
+        assertEquals(256, data.size(1));
+        
+        // retrieve colormap instance
+        ColorMap colormap = image.getDisplaySettings().getColorMap();
+        assertNotNull(colormap);
+        assertEquals(256, colormap.size());
+        
+        // first color corresponds to white
+        assertSameColor(colormap.getColor(0), 255, 255, 255);
+        // check also some other colors
+        assertSameColor(colormap.getColor(1), 170, 255,  12);
+        assertSameColor(colormap.getColor(2), 129, 255, 121);
+        assertSameColor(colormap.getColor(255), 255, 85, 101);
+    }
+    
+    private static final void assertSameColor(Color color, int r, int g, int b)
+    {
+        assertEquals(r, (int) (color.red() * 255));
+        assertEquals(g, (int) (color.green() * 255));
+        assertEquals(b, (int) (color.blue() * 255));
+    }
+
     /**
      * Read a TIFF image containing spatial calibration info.
      * 
      * @throws IOException
      */
     @Test
-    public void testReadImage_SpatialCalibration() throws IOException
+    public void test_SpatialCalibration_float() throws IOException
     {
         // image size 324x238
         String fileName = getClass().getResource("/images/arabidopsis_embryo/16c_Col0_PFS_DAPI_015_C2_cropf_z054.tif").getFile();
@@ -226,7 +262,7 @@ public class TiffImageReaderTest
      * @throws IOException
      */
     @Test
-    public void testReadImage_2D_SpatialCalibration() throws IOException
+    public void test_SpatialCalibration() throws IOException
     {
         // image size 109x112
         String fileName = getClass().getResource("/images/arabidopsis_embryo/31c_Col0_762_crop_z061.tif").getFile();
@@ -256,7 +292,7 @@ public class TiffImageReaderTest
      * @throws IOException
      */
     @Test
-    public void testReadImage_metadata_ImageJ() throws IOException
+    public void test_metadata_ImageJ() throws IOException
     {
         String fileName = getClass().getResource("/images/imagej/blobs_withMetadata.tif").getFile();
         
@@ -305,7 +341,7 @@ public class TiffImageReaderTest
      * @throws IOException
      */
     @Test
-    public void testReadImage_3D_Virtual_mri() throws IOException
+    public void test_Virtual3D_mri() throws IOException
     {
         String fileName = getClass().getResource("/images/imagej/mri_ij.tif").getFile();
         
