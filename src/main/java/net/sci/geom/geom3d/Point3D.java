@@ -19,6 +19,48 @@ public class Point3D implements Point, Geometry3D
     // ===================================================================
     // Static methods
 
+    /**
+     * Computes the Euclidean distance between two points.
+     * 
+     * @param p1
+     *            the first point
+     * @param p2
+     *            the second point
+     * @return the distance between the two points
+     */
+    public static final double distance(Point3D p1, Point3D p2)
+    {
+        double h = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+        return Math.hypot(p2.z - p1.z, h);
+    }
+    
+    /**
+     * Computes the squared Euclidean distance between two points. AS it does
+     * not involve square root computation, the squared distance may be faster
+     * to compute than the classical Euclidean distance.
+     * 
+     * @param p1
+     *            the first point
+     * @param p2
+     *            the second point
+     * @return the squared distance between the two points
+     */
+    public static final double squaredDistance(Point3D p1, Point3D p2)
+    {
+        double dx = p2.x - p1.x;
+        double dy = p2.y - p1.y;
+        double dz = p2.z - p1.z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+    
+    /**
+     * Computes the centroid of a collection of points. The coordinates of the
+     * centroid are the mean of the coordinates of the points.
+     * 
+     * @param points
+     *            the collection of points.
+     * @return the centroid of the points
+     */
     public static final Point3D centroid(Point3D... points)
     {
         double xc = 0;
@@ -312,17 +354,14 @@ public class Point3D implements Point, Geometry3D
     @Override
     public double get(int dim)
     {
-        switch (dim)
+        return switch (dim)
         {
-            case 0:
-                return this.x;
-            case 1:
-                return this.y;
-            case 2:
-                return this.z;
-            default:
-                throw new IllegalArgumentException("Dimension should be comprised between 0 and 2");
-        }
+            case 0 -> this.x;
+            case 1 -> this.y;
+            case 2 -> this.z;
+            default -> throw new IllegalArgumentException(
+                    "Dimension should be comprised between 0 and 2");
+        };
     }
     
 
