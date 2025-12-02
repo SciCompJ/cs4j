@@ -3,10 +3,10 @@
  */
 package net.sci.geom.geom3d;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import net.sci.geom.MultiPoint;
+import net.sci.geom.geom3d.impl.ArrayListMultiPoint3D;
 
 
 /**
@@ -15,24 +15,24 @@ import net.sci.geom.MultiPoint;
  * @author dlegland
  *
  */
-public class MultiPoint3D implements MultiPoint, Geometry3D
+public interface MultiPoint3D extends MultiPoint, Geometry3D
 {
     // ===================================================================
     // Static factories
     
     /** Empty constructor. */
-    public static final MultiPoint3D create()
+    public static MultiPoint3D create()
     {
-        return new MultiPoint3D(10);
+        return new ArrayListMultiPoint3D(10);
     }
     
     /**
      * Empty constructor that specifies the initial capacity of the underlying
      * buffer.
      */
-    public static final MultiPoint3D create(int initialCapacity)
+    public static MultiPoint3D create(int initialCapacity)
     {
-        return new MultiPoint3D(initialCapacity);
+        return new ArrayListMultiPoint3D(initialCapacity);
     }
     
     /**
@@ -42,53 +42,22 @@ public class MultiPoint3D implements MultiPoint, Geometry3D
      *            the collection of points that compose the geometry
      * @return a new instance of MultiPoint3D
      */
-    public static final MultiPoint3D create(Collection<Point3D> points)
+    public static MultiPoint3D create(Collection<Point3D> points)
     {
-        return new MultiPoint3D(points);
-    }
-
-    
-    // ===================================================================
-    // Class variables
-
-    /**
-     * The inner array of points.
-     */
-    ArrayList<Point3D> points;
-
-    
-    // ===================================================================
-    // Constructors
-
-    /** Empty constructor. */
-    private MultiPoint3D(int initialCapacity)
-    {
-        this.points = new ArrayList<Point3D>(initialCapacity);
-    }
-
-    /**
-     * Constructor from a collection of points.
-     * 
-     * @param points
-     *            the collection of points that compose the geometry
-     */
-    private MultiPoint3D(Collection<Point3D> points)
-    {
-        this.points = new ArrayList<Point3D>(points.size());
-        this.points.addAll(points);
+        return new ArrayListMultiPoint3D(points);
     }
 
 
     // ===================================================================
     // New methods
     
-    public Point3D centroid()
+    public default Point3D centroid()
     {
         double sx = 0;
         double sy = 0;
         double sz = 0;
         int n = 0;
-        for (Point3D p : points)
+        for (Point3D p : points())
         {
             sx += p.x;
             sy += p.y;
@@ -100,23 +69,22 @@ public class MultiPoint3D implements MultiPoint, Geometry3D
         return new Point3D(sx / n, sy / n, sz / n);
     }
     
-    public PrincipalAxes3D principalAxes()
+    public default PrincipalAxes3D principalAxes()
     {
-        return PrincipalAxes3D.fromPoints(points);
+        return PrincipalAxes3D.fromPoints(points());
     }
     
     
     // ===================================================================
     // Point management methods
     
-    public void addPoint(Point3D p)
-    {
-        this.points.add(p);
-    }
+    public Collection<Point3D> points();
     
-    public int pointCount()
+    public void addPoint(Point3D p);
+    
+    public default int pointCount()
     {
-        return this.points.size();
+        return this.points().size();
     }
     
 
@@ -127,15 +95,15 @@ public class MultiPoint3D implements MultiPoint, Geometry3D
      * Return true by definition.
      */
     @Override
-    public boolean isBounded()
+    public default boolean isBounded()
     {
         return true;
     }
 
     @Override
-    public boolean contains(Point3D q, double eps)
+    public default boolean contains(Point3D q, double eps)
     {
-        for (Point3D p : this.points)
+        for (Point3D p : this.points())
         {
             if (p.contains(q, eps))
             {
@@ -150,10 +118,10 @@ public class MultiPoint3D implements MultiPoint, Geometry3D
      * point does not contain any point.
      */
     @Override
-    public double distance(double x, double y, double z)
+    public default double distance(double x, double y, double z)
     {
         double minDist = Double.POSITIVE_INFINITY;
-        for (Point3D p : this.points)
+        for (Point3D p : points())
         {
             minDist = Math.min(minDist, p.distance(x, y, z));
         }
@@ -161,14 +129,11 @@ public class MultiPoint3D implements MultiPoint, Geometry3D
     }
 
     @Override
-    public Bounds3D bounds()
+    public default Bounds3D bounds()
     {
-        return Bounds3D.of(points);
+        return Bounds3D.of(points());
     }
 
     @Override
-    public MultiPoint3D duplicate()
-    {
-       return new MultiPoint3D(points);
-    }
+    public MultiPoint3D duplicate();
 }
