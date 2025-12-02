@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import net.sci.geom.geom3d.impl.MatrixAffineTransform3D;
+
 /**
  * @author dlegland
  *

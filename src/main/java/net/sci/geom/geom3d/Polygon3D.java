@@ -5,12 +5,28 @@ package net.sci.geom.geom3d;
 
 import java.util.Collection;
 
+import net.sci.geom.geom3d.impl.DefaultPolygon3D;
+
 /**
+ * A 3D polygon, embedded within a plane.
+ * 
  * @author dlegland
  *
  */
 public interface Polygon3D extends Geometry3D
 {
+    /**
+     * Constructor from an array of points
+     * 
+     * @param vertices
+     *            the vertices stored in an array of Point3D
+     */
+    public static Polygon3D create(Point3D... vertices)
+    {
+        return new DefaultPolygon3D(vertices);
+    }
+    
+
     // ===================================================================
     // New methods
     

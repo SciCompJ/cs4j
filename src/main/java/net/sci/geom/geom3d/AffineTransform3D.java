@@ -3,6 +3,8 @@
  */
 package net.sci.geom.geom3d;
 
+import net.sci.geom.geom3d.impl.MatrixAffineTransform3D;
+
 /**
  * General interface for affine transforms in the 3D space. Contains the
  * definition of affine transform methods, as well as a collection of static

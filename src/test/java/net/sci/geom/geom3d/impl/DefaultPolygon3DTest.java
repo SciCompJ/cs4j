@@ -1,13 +1,16 @@
 /**
  * 
  */
-package net.sci.geom.geom3d;
+package net.sci.geom.geom3d.impl;
 
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
 import org.junit.Test;
+
+import net.sci.geom.geom3d.Bounds3D;
+import net.sci.geom.geom3d.Point3D;
 
 /**
  * 
@@ -16,7 +19,7 @@ public class DefaultPolygon3DTest
 {
     
     /**
-     * Test method for {@link net.sci.geom.geom3d.DefaultPolygon3D#closestVertexIndex(net.sci.geom.geom3d.Point3D)}.
+     * Test method for {@link net.sci.geom.geom3d.impl.DefaultPolygon3D#closestVertexIndex(net.sci.geom.geom3d.Point3D)}.
      */
     @Test
     public final void testClosestVertexIndex()
@@ -41,7 +44,7 @@ public class DefaultPolygon3DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom3d.DefaultPolygon3D#contains(net.sci.geom.geom3d.Point3D, double)}.
+     * Test method for {@link net.sci.geom.geom3d.impl.DefaultPolygon3D#contains(net.sci.geom.geom3d.Point3D, double)}.
      */
     @Test
     public final void testContains()
@@ -58,7 +61,7 @@ public class DefaultPolygon3DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom3d.DefaultPolygon3D#distance(double, double, double)}.
+     * Test method for {@link net.sci.geom.geom3d.impl.DefaultPolygon3D#distance(double, double, double)}.
      */
     @Test
     public final void testDistance_diagonal_samePlane()
@@ -75,7 +78,7 @@ public class DefaultPolygon3DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom3d.DefaultPolygon3D#distance(double, double, double)}.
+     * Test method for {@link net.sci.geom.geom3d.impl.DefaultPolygon3D#distance(double, double, double)}.
      */
     @Test
     public final void testDistance_diagonal_otherPlane()
@@ -92,7 +95,7 @@ public class DefaultPolygon3DTest
     }
     
     /**
-     * Test method for {@link net.sci.geom.geom3d.DefaultPolygon3D#bounds()}.
+     * Test method for {@link net.sci.geom.geom3d.impl.DefaultPolygon3D#bounds()}.
      */
     @Test
     public final void testBounds()
@@ -104,12 +107,12 @@ public class DefaultPolygon3DTest
         DefaultPolygon3D poly = new DefaultPolygon3D(points);
         
         Bounds3D bounds = poly.bounds();
-        assertEquals(bounds.xmin, 10, 0.01);
-        assertEquals(bounds.xmax, 20, 0.01);
-        assertEquals(bounds.ymin, 10, 0.01);
-        assertEquals(bounds.ymax, 20, 0.01);
-        assertEquals(bounds.zmin, 10, 0.01);
-        assertEquals(bounds.zmax, 20, 0.01);
+        assertEquals(bounds.xMin(), 10, 0.01);
+        assertEquals(bounds.xMax(), 20, 0.01);
+        assertEquals(bounds.yMin(), 10, 0.01);
+        assertEquals(bounds.yMax(), 20, 0.01);
+        assertEquals(bounds.zMin(), 10, 0.01);
+        assertEquals(bounds.zMax(), 20, 0.01);
     }
     
 }

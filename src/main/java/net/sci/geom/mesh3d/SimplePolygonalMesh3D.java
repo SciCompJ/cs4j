@@ -11,10 +11,10 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import net.sci.geom.geom3d.Bounds3D;
-import net.sci.geom.geom3d.DefaultPolygon3D;
 import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Polygon3D;
 import net.sci.geom.geom3d.Vector3D;
+import net.sci.geom.geom3d.impl.DefaultPolygon3D;
 
 /**
  * Implementation of a polygonal 3D mesh where faces may have an arbitrary number of vertices.
