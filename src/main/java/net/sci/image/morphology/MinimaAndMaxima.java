@@ -5,6 +5,7 @@ package net.sci.image.morphology;
 
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.binary.BinaryArray3D;
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.numeric.process.AddValue;
@@ -243,7 +244,7 @@ public class MinimaAndMaxima
     public final static BinaryArray2D extendedMaxima2d(ScalarArray2D<?> array,
             double dynamic, Connectivity2D conn)
     {
-        ScalarArray2D<?> mask = ScalarArray2D.wrapScalar2d(new AddValue(dynamic).createView(array));
+        ScalarArray2D<?> mask = ScalarArray2D.wrapScalar2d((ScalarArray<?>) new AddValue(dynamic).createView(array));
         
         MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
@@ -285,7 +286,7 @@ public class MinimaAndMaxima
     public final static BinaryArray3D extendedMaxima3d(ScalarArray3D<?> array,
             double dynamic, Connectivity3D conn)
     {
-        ScalarArray3D<?> mask = ScalarArray3D.wrapScalar3d(new AddValue(dynamic).createView(array));
+        ScalarArray3D<?> mask = ScalarArray3D.wrapScalar3d((ScalarArray<?>) new AddValue(dynamic).createView(array));
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(
                 MorphologicalReconstruction.Type.BY_DILATION, conn);
@@ -325,7 +326,7 @@ public class MinimaAndMaxima
      */
     public final static BinaryArray2D extendedMinima2d(ScalarArray2D<?> array, double dynamic, Connectivity2D conn)
     {
-        ScalarArray2D<?> marker = ScalarArray2D.wrapScalar2d(new AddValue(dynamic).createView(array));
+        ScalarArray2D<?> marker = ScalarArray2D.wrapScalar2d((ScalarArray<?>) new AddValue(dynamic).createView(array));
 
         MorphologicalReconstruction2D algo = new MorphologicalReconstruction2DHybrid(MorphologicalReconstruction.Type.BY_EROSION, conn);
         ScalarArray2D<?> rec = algo.process(marker, array);
@@ -366,7 +367,7 @@ public class MinimaAndMaxima
     public final static BinaryArray3D extendedMinima3d(ScalarArray3D<?> array,
             double dynamic, Connectivity3D conn)
     {
-        ScalarArray3D<?> marker = ScalarArray3D.wrapScalar3d(new AddValue(dynamic).createView(array));
+        ScalarArray3D<?> marker = ScalarArray3D.wrapScalar3d((ScalarArray<?>) new AddValue(dynamic).createView(array));
         
         MorphologicalReconstruction3D algo = new MorphologicalReconstruction3DHybrid(
                 MorphologicalReconstruction.Type.BY_EROSION, conn);

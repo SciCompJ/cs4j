@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt8Array2D;
 
@@ -45,7 +46,7 @@ public class AddValueTest
         UInt8Array2D array = UInt8Array2D.create(6, 4);
         array.fillInts((x, y) -> y * 10 + x);
         
-        ScalarArray2D<?> res = ScalarArray2D.wrapScalar2d(new AddValue(10.0).createView(array));
+        ScalarArray2D<?> res = ScalarArray2D.wrapScalar2d((ScalarArray<?>) new AddValue(10.0).createView(array));
         
         assertEquals(array.size(0), res.size(0));
         assertEquals(array.size(1), res.size(1));
