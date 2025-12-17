@@ -551,7 +551,7 @@ public interface ImageType
             BufferedImage bufImg = new BufferedImage(sizeX, sizeY, BufferedImage.TYPE_INT_RGB);
             WritableRaster raster = bufImg.getRaster();
             
-            int[] pos = new int[3];
+            int[] pos = new int[2];
             for (int y = 0; y < sizeY; y++)
             {
                 pos[1] = y;
@@ -561,7 +561,6 @@ public interface ImageType
                     RGB8 rgb = array.get(pos);
                     for (int c = 0; c < 3; c++)
                     {
-                        pos[2] = c;
                         raster.setSample(x, y, c, rgb.getSample(c));
                     }
                 }
