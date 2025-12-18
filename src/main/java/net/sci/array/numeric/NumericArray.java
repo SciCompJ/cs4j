@@ -12,6 +12,8 @@ import net.sci.array.impl.ArrayWrapperStub;
  * operations (plus, minus...).
  * 
  * Main sub-interfaces are ScalarArray and VectorArray.
+ *
+ * @param <N> the type of numeric data within the array
  * 
  * @author dlegland
  */
