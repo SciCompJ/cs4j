@@ -25,6 +25,7 @@ import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt8;
+import net.sci.array.numeric.Vector;
 import net.sci.array.numeric.VectorArray;
 import net.sci.axis.CategoricalAxis;
 
@@ -37,45 +38,31 @@ import net.sci.axis.CategoricalAxis;
 public interface ImageType
 {
     /**
-     * Determines the type of image that best matches the type of the inner data array.
-     * @param array the array containing image data
-     * @return the type of image that best matches the type of the inner data array
+     * Determines the type of image that best matches the type of the inner data
+     * array.
+     * 
+     * @param array
+     *            the array containing image data
+     * @return the type of image that best matches the type of the inner data
+     *         array
      */
     public static ImageType chooseBestType(Array<?> array)
     {
-        if (array.elementClass() == Binary.class)
+        return switch (array.sampleElement())
         {
-            return ImageType.BINARY;
-        }
-        else if (array.elementClass() == UInt8.class)
-        {
-            return ImageType.GRAYSCALE;
-        } 
-        else if (array.elementClass() == UInt16.class)
-        {
-            return ImageType.GRAYSCALE;
-        }
-        else if (array instanceof ScalarArray) 
-        {
-            return ImageType.INTENSITY;
-        }
-        else if (array.elementClass() == RGB8.class)
-        {
-            return ImageType.COLOR;
-        } 
-        else if (array.elementClass() == RGB16.class)
-        {
-            return ImageType.COLOR;
-        } 
-        else if (array instanceof VectorArray) 
-        {
-            return ImageType.VECTOR;
-        }
-        else
-        {
-            System.out.println("Could not determine image type for data of class " + array.getClass());
-            return ImageType.UNKNOWN;
-        }
+            case Binary b -> ImageType.BINARY;
+            case UInt8 i -> ImageType.GRAYSCALE;
+            case UInt16 i -> ImageType.GRAYSCALE;
+            case Scalar<?> s -> ImageType.INTENSITY;
+            case RGB8 rgb -> ImageType.COLOR;
+            case RGB16 rgb -> ImageType.COLOR;
+            case Vector<?,?> v -> ImageType.VECTOR;
+            default -> 
+            {
+                System.out.println("Could not determine image type for data of class " + array.getClass());
+                yield ImageType.UNKNOWN;
+            }
+        };
     }
     
     
@@ -791,11 +778,12 @@ public interface ImageType
             Array<?> array = image.getData();
             checkDimensionalityIs2(array);
             // Check if the array contains Vector data
-            if (!(array instanceof VectorArray))
+            if (!Vector.class.isAssignableFrom(array.elementClass()))
             {
                 throw new RuntimeException("Vector images must refer to a VectorArray");
             }
-            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm((VectorArray<?,?>) array));
+            @SuppressWarnings({ "unchecked", "rawtypes" })
+            ScalarArray2D<?> norm = ScalarArray2D.wrapScalar2d(VectorArray.norm(VectorArray.wrap((Array<? extends Vector>) array)));
             
             return createAwtImage_scalar(norm, image.getDisplaySettings());
         }
@@ -817,13 +805,13 @@ public interface ImageType
         {
             // check image data type
             Array<?> array = image.getData();
-            if (!(array instanceof VectorArray))
+            if (!Vector.class.isAssignableFrom(array.elementClass()))
             {
                 throw new RuntimeException("Image to calibrate must refer to an array of Vector");
             }
             
             // compute name of channels
-            int nChannels = ((VectorArray<?,?>) array).channelCount();
+            int nChannels = ((Vector<?,?>) array.sampleElement()).size();
             String[] channelNames = new String[nChannels];
             int nDigits = (int) Math.ceil(Math.log10(nChannels));
             String pattern = "C%0" + nDigits + "d";
