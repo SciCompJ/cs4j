@@ -531,8 +531,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
      * Returns an iterator over the elements of the array, for implementing the
      * Iterable interface.
      * 
-     * Provides a default implementation based on the
-     * position iterator.
+     * Provides a default implementation based on the position iterator.
      */
     @Override
     public default ScalarArray.Iterator<S> iterator()
@@ -752,7 +751,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
         @Override
         public ScalarArray<S> newInstance(int... dims)
         {
-            return ScalarArray.wrap(array.newInstance(array.size()));
+            return ScalarArray.wrap(array.newInstance(dims));
         }
 
         @Override
@@ -763,7 +762,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
                 @Override
                 public ScalarArray<S> create(int... dims)
                 {
-                    return ScalarArray.wrap(array.newInstance(array.size()));
+                    return ScalarArray.wrap(array.newInstance(dims));
                 }
             };
         }
