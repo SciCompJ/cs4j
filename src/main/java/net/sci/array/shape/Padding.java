@@ -244,6 +244,25 @@ public class Padding extends AlgoStub implements ArrayOperator
         this.mode = mode;
     }
     
+    public Padding(int[] padBefore, int[] padAfter, Mode mode)
+    {
+        int nd = padBefore.length;
+        this.padSizes = new int[nd][2];
+        for (int d = 0; d < nd; d++)
+        {
+            this.padSizes[d][0] = padBefore[d];
+            this.padSizes[d][1] = padAfter[d];
+        }
+        
+        this.mode = mode;
+    }
+    
+    public Padding(int[][] padSizes, Mode mode)
+    {
+        this.padSizes = padSizes;
+        this.mode = mode;
+    }
+    
     
     // =============================================================
     // Processing methods
