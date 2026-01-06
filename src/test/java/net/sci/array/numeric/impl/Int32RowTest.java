@@ -76,6 +76,7 @@ public class Int32RowTest
         }
 
         row.set(6, 3);
+        assertEquals(2, row.runCount());
         assertEquals(3, row.get(5));
         assertEquals(3, row.get(6));
         assertEquals(3, row.get(7));

@@ -220,6 +220,7 @@ public class Int32Row implements Iterable<Int32Run>
                 Int32Run newRun = new Int32Run(currRun.left, nextRun.right, value);
                 // replace the two runs by the new one
                 runs.put(currRun.left, newRun);
+                runs.remove(nextRun.left);
                 return;
             }
             else
