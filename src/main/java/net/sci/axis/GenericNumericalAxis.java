@@ -84,9 +84,11 @@ public class GenericNumericalAxis implements NumericalAxis
     // General methods
 
     /**
-     * @return the physical range occupied by the given number of elements  
+     * Returns the range of values stored within this axis.
+     * 
+     * @return the range of values stored within this axis.
      */
-    public double[] physicalRange()
+    public double[] valueRange()
     {
         double mini = Double.POSITIVE_INFINITY;
         double maxi = Double.NEGATIVE_INFINITY;
@@ -99,7 +101,7 @@ public class GenericNumericalAxis implements NumericalAxis
     }
     
     @Override
-    public double indexToValue(int index)
+    public double getValue(int index)
     {
         return this.values[(int) index];
     }
@@ -113,7 +115,7 @@ public class GenericNumericalAxis implements NumericalAxis
      * @return the closest index that corresponds to this value
      */
     @Override
-    public int valueToIndex(double value)
+    public int valueIndex(double value)
     {
         int index = -1;
         double minDiff = Double.POSITIVE_INFINITY;

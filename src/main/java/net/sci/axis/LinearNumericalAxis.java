@@ -7,7 +7,9 @@ import java.util.Locale;
 
 /**
  * An implementation of NumericalAxis where the values change regularly from an
- * origin, by incrementing with a constant value.
+ * origin, by incrementing with a constant value. As the axis values usually
+ * refer to the same quantity, it is also possible to refer to the unit name of
+ * the axis.
  * 
  * @author dlegland
  *
@@ -42,17 +44,20 @@ public class LinearNumericalAxis implements NumericalAxis
     // Constructors
     
     /**
-     * Creates a new numerical axis
+     * Creates a new numerical axis with default spacing an origin. Values start
+     * at zero and increment by one for each index.
      * 
-     * @param name the name of the numerical axis
+     * @param name
+     *            the name of the numerical axis
      */
     public LinearNumericalAxis(String name)
     {
-        this(name, 1.0, 0.0);
+        this(name, 1.0, 0.0, "");
     }
 
     /**
-     * Creates a new numerical axis
+     * Creates a new numerical axis, specifying the spacing between two items,
+     * and the origin.
      * 
      * @param name
      *            the name of the numerical axis
@@ -63,18 +68,15 @@ public class LinearNumericalAxis implements NumericalAxis
      */
     public LinearNumericalAxis(String name, double spacing, double origin)
     {
-        this.name = name;
-        this.spacing = spacing;
-        this.origin = origin;
+        this(name, spacing, origin, "");
     }
 
     /**
-     * Constructor with initial value for all fields.
+     * Creates a new numerical axis, specifying the spacing between two items,
+     * the origin, and the unit name associated to this axis.
      * 
      * @param name
      *            the name of the axis
-     * @param type
-     *            the type of axis
      * @param spacing
      *            the spacing between two elements of the array
      * @param origin
@@ -95,7 +97,7 @@ public class LinearNumericalAxis implements NumericalAxis
     // General methods
 
     @Override
-    public double indexToValue(int index)
+    public double getValue(int index)
     {
         return index * this.spacing + this.origin;
     }
@@ -110,7 +112,7 @@ public class LinearNumericalAxis implements NumericalAxis
      * @return the closest index that corresponds to this value
      */
     @Override
-    public int valueToIndex(double value)
+    public int valueIndex(double value)
     {
         return (int) Math.round((value - this.origin) / this.spacing);
     }

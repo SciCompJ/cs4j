@@ -36,6 +36,15 @@ public interface Axis
     }
     
     /**
+     * Returns the name a specific item within the axis.
+     * 
+     * @param index
+     *            the index of the item on the axis (starting from 0)
+     * @return the name of the item for the given index
+     */
+    public String itemName(int index);
+
+    /**
      * Returns a new axis based on a selection of this axis elements' specified
      * by an array of indices.
      * 
