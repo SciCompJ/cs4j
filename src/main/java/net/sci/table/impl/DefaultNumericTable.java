@@ -3,6 +3,7 @@
  */
 package net.sci.table.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -11,7 +12,6 @@ import javax.swing.JFrame;
 import net.sci.axis.Axis;
 import net.sci.axis.CategoricalAxis;
 import net.sci.table.Column;
-import net.sci.table.FloatColumn;
 import net.sci.table.NumericColumn;
 import net.sci.table.NumericTable;
 import net.sci.table.Table;
@@ -33,34 +33,30 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     // Class variables
 
     /**
-     * Inner data array, first index corresponds to columns.
+     * The list of columns that constitute this table.
      */
-    double[][] data;
-
-    /**
-     * Number of columns in the table
-     */
-    int nCols;
-
-    /**
-     * Number of rows in the table
-     */
-    int nRows;
-
-    /**
-     * The axis describing columns
-     */
-    CategoricalAxis columnAxis;
+    ArrayList<NumericColumn> columns;
     
     /**
-     * The array of unit names associated to columns. May be null. Otherwise,
-     * must have length equal to the number of columns.
+     * The description of the column axis. Use a specific class to interpret
+     * column names as axis element names.
      */
-    String[] unitNames;
+    ColumnAxisAdapter columnAxis;
     
 
     // =============================================================
     // Constructors
+
+    public DefaultNumericTable(NumericColumn... cols)
+    {
+        this.columns = new ArrayList<NumericColumn>(cols.length);
+        for (NumericColumn col : cols)
+        {
+            this.columns.add(col);
+        }
+        
+        this.columnAxis = new ColumnAxisAdapter(this);
+    }
 
     /**
      * Creates a new data table with the given number of rows and columns.
@@ -72,42 +68,36 @@ public class DefaultNumericTable extends TableStub implements NumericTable
      */
     public DefaultNumericTable(int nRows, int nCols)
     {
-        this(new double[nCols][nRows]);
+        this.columns = new ArrayList<NumericColumn>(nCols);
+        for (int i = 0; i < nCols; i++)
+        {
+            this.columns.add(NumericColumn.create("", new double[nRows]));
+        }
+        
+        this.columnAxis = new ColumnAxisAdapter(this);
     }
 
     public DefaultNumericTable(double[][] data, String[] colNames, String[] rowNames)
     {
-        this(data);
-
-        if (colNames.length != this.nCols)
+        this.columns = new ArrayList<NumericColumn>(data.length);
+        for (int i = 0; i < data.length; i++)
         {
-            throw new IllegalArgumentException("Number of column names should match number of data columns");
+            this.columns.add(NumericColumn.create(colNames[i], data[i]));
         }
-        this.columnAxis = new CategoricalAxis("", colNames);
         
-        if (rowNames.length != this.nRows)
-        {
-            throw new IllegalArgumentException("Number of row names should match number of data rows");
-        }
+        this.columnAxis = new ColumnAxisAdapter(this);
         this.rowAxis = new CategoricalAxis("", rowNames);
     }
 
     public DefaultNumericTable(double[][] data)
     {
-        this.data = data;
-
-        this.nCols = data.length;
-        if (this.nCols > 0)
+        this.columns = new ArrayList<NumericColumn>(data.length);
+        for (double[] colValues : data)
         {
-            this.nRows = data[0].length;
-        } 
-        else
-        {
-            this.nRows = 0;
+            this.columns.add(NumericColumn.create("", colValues));
         }
         
-        this.columnAxis = new CategoricalAxis("", new String[nCols]);
-        this.unitNames = new String[nCols];
+        this.columnAxis = new ColumnAxisAdapter(this);
     }
 
 
@@ -116,9 +106,10 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     
     public void setColumnValues(int colIndex, double[] values)
     {
-        if (values.length != this.nRows)
+        int nRows = rowCount();
+        if (values.length != nRows)
         {
-            throw new IllegalArgumentException("Values array must have same length as row number in table: " + this.nRows);
+            throw new IllegalArgumentException("Values array must have same length as row number in table: " + nRows);
         }
         
         for (int r = 0; r < nRows; r++)
@@ -134,7 +125,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     @Override
     public int columnCount()
     {
-    	return this.nCols;
+    	return this.columns.size();
     }
 
     @Override
@@ -146,12 +137,18 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     @Override
     public NumericColumn column(int c)
     {
-        return new ColumnView(c);
+        return this.columns.get(c);
     }
 
     @Override
     public void setColumn(int c, Column column)
     {
+        if (column.length() != rowCount())
+        {
+            throw new IllegalArgumentException("Column length must match table size:" + column.length() + "!=" + rowCount());
+        }
+        
+        int nCols = columnCount();
         if (c == nCols)
         {
             addColumn(column);
@@ -162,21 +159,10 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         {
             throw new IllegalArgumentException("Illegal column index: " + c);
         }
-        if (column.length() != nRows)
-        {
-            throw new IllegalArgumentException("Column length must match table size:" + column.length() + "!=" + nRows);
-        }
         
-        if (column instanceof NumericColumn numericColumn)
+        if (column instanceof NumericColumn numCol)
         {
-            for (int iRow = 0; iRow < nRows; iRow++)
-            {
-                this.data[c][iRow] = numericColumn.getValue(iRow);
-            }
-            
-            // setup meta-data
-            this.columnAxis.setItemName(c, numericColumn.getName());
-            this.unitNames[c] = numericColumn.getUnitName();
+            this.columns.set(c, numCol);
         }
         else
         {
@@ -187,13 +173,9 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     @Override
     public void addColumn(Column column)
     {
-        if (column instanceof NumericColumn numericColumn)
+        if (column instanceof NumericColumn numCol)
         {
-            // copy column values
-            addColumn(numericColumn.getName(), numericColumn.getValues());
-            
-            // import meta-data
-            this.unitNames[nCols-1] = numericColumn.getUnitName();
+            this.columns.add(numCol);
         }
         else
         {
@@ -211,46 +193,14 @@ public class DefaultNumericTable extends TableStub implements NumericTable
      */
     public void addColumn(String colName, double[] values)
     {
-        if (values.length != nRows)
+        if (values.length != this.rowCount())
         {
-            throw new IllegalArgumentException("Requires an array with " + nRows + " values");
+            throw new IllegalArgumentException("Requires an array with " + this.rowCount() + " values");
         }
         
-        // create new data array
-        double[][] data = new double[nCols+1][nRows];
-        
-        // duplicate existing columns
-        for (int c = 0; c < nCols; c++)
-        {
-            System.arraycopy(data[c], 0, this.data[c], 0, nRows);
-        }
-        
-        // copy new values
-        System.arraycopy(data[nCols], 0, values, 0, nRows);
-        this.data = data;
-        
-        // copy column names
-        String[] colNames = new String[nCols+1];
-        System.arraycopy(columnAxis.itemNames(), 0, colNames, 0, nCols);
-        colNames[nCols] = colName;
-        
-        columnAxis = new CategoricalAxis(columnAxis.getName(), colNames);
-        
-        nCols++;
-        // also update unit names
-        updateUnitNameArray();
+        this.columns.add(NumericColumn.create(colName, values));
     }
     
-    private void updateUnitNameArray()
-    {
-        // check  if already up-to-date
-        if (this.unitNames.length == nCols) return;
-        
-        String[] newNames = new String[nCols];
-        System.arraycopy(this.unitNames, 0, newNames, 0, this.unitNames.length);
-        this.unitNames = newNames;
-    }
-
     @Override
     public Axis getColumnAxis()
     {
@@ -263,11 +213,15 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         // changes the name of each column based on the item values in axis
         if (axis instanceof CategoricalAxis catAxis)
         {
-            if (catAxis.length() != columnCount())
+            int nCols = columnCount();
+            if (catAxis.length() != nCols)
             {
                 throw new RuntimeException("Input axis must have as many elements as column count");
             }
-            this.columnAxis = catAxis;
+            for (int c = 0; c < nCols; c++)
+            {
+                this.columns.get(c).setName(catAxis.itemName(c));
+            }
         }
         else
         {
@@ -282,12 +236,16 @@ public class DefaultNumericTable extends TableStub implements NumericTable
 
     public void setColumnNames(String[] names)
     {
-        if (names != null && names.length != this.nCols)
+        int nCols = this.columnCount();
+        if (names != null && names.length != nCols)
         {
             throw new IllegalArgumentException(
                     "String array must have same length as the number of columns.");
         }
-        columnAxis = new CategoricalAxis(columnAxis.getName(), names);
+        for (int c = 0; c < nCols; c++)
+        {
+            this.columns.get(c).setName(names[c]);
+        }
     }
 
     public String getColumnName(int colIndex)
@@ -298,9 +256,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     @Override
     public void setColumnName(int colIndex, String name)
     {
-        String[] names = columnAxis.itemNames();
-        names[colIndex] = name;
-        this.columnAxis = new CategoricalAxis(columnAxis.getName(), names);
+        this.columns.get(colIndex).setName(name);
     }
 
 
@@ -312,7 +268,8 @@ public class DefaultNumericTable extends TableStub implements NumericTable
      */
     public int rowCount()
     {
-        return this.nRows;
+        if (columns.size() == 0) return 0;
+        return columns.get(0).length();
     }
 
     /**
@@ -325,36 +282,40 @@ public class DefaultNumericTable extends TableStub implements NumericTable
      */
     public void addRow(String name, double[] values)
     {
+        int nCols = this.columnCount();
+        int nRows = this.rowCount();
         if (values.length != nCols)
         {
             throw new IllegalArgumentException("Requires an array with " + nCols+ " values");
         }
         
-        // create new data array
-        double[][] data = new double[nCols][nRows+1];
-        
-        // duplicate existing columns
+        // iterate over columns to create new columns with same type and with
+        // one more item
         for (int c = 0; c < nCols; c++)
         {
-            System.arraycopy(this.data[c], 0, data[c], 0, nRows);
+            NumericColumn col = columns.get(c);
+            
+            // fill new column
+            NumericColumn newCol = col.newInstance(col.getName(), nRows + 1);
+            for (int r = 0; r < nRows; r++)
+            {
+                newCol.setValue(r, col.getValue(r));
+            }
+            newCol.setValue(nRows, values[c]);
+            
+            this.columns.set(c, newCol);
         }
-        
-        // copy new values
-        for (int c = 0; c < nCols; c++)
-        {
-            data[c][nRows] = values[c];
-        }
-        this.data = data;
         
         // copy row names
         String[] rowNames = new String[nRows+1];
+        String axisName = "";
         if (this.rowAxis != null)
         {
             System.arraycopy(this.rowAxis.itemNames(), 0, rowNames, 0, nRows);
+            axisName = this.rowAxis.getName(); 
         }
         rowNames[nRows] = name;
-        this.rowAxis = new CategoricalAxis("", rowNames);
-        this.nRows++;
+        this.rowAxis = new CategoricalAxis(axisName, rowNames);
     }
     
     
@@ -378,7 +339,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
      */
     public double getValue(int row, int col)
     {
-        return this.data[col][row];
+        return this.columns.get(col).getValue(row);
     }
 
     /**
@@ -393,7 +354,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     public double getValue(int row, String colName)
     {
         int col = this.findColumnIndex(colName);
-        return this.data[col][row];
+        return this.columns.get(col).getValue(row);
     }
 
     /**
@@ -401,7 +362,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
      */
     public double[] getColumnValues(int colIndex)
     {
-        return this.data[colIndex];
+        return this.columns.get(colIndex).getValues();
     }
     
     /**
@@ -409,10 +370,11 @@ public class DefaultNumericTable extends TableStub implements NumericTable
      */
     public double[] getRowValues(int rowIndex)
     {
-        double[] values = new double[this.nCols];
-        for (int c = 0; c < this.nCols; c++)
+        int nCols = this.columnCount();
+        double[] values = new double[nCols];
+        for (int c = 0; c < nCols; c++)
         {
-            values[c] = this.data[c][rowIndex];
+            values[c] = this.columns.get(c).getValue(rowIndex);
         }
         return values;
     }
@@ -429,7 +391,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
      */
     public void setValue(int row, int col, double value)
     {
-        this.data[col][row] = value;
+        this.columns.get(col).setValue(row, value);
     }
 
     /**
@@ -445,7 +407,7 @@ public class DefaultNumericTable extends TableStub implements NumericTable
     public void setValue(int row, String colName, double value)
     {
         int col = this.findColumnIndex(colName);
-        this.data[col][row] = value;
+        this.columns.get(col).setValue(row, value);
     }
 
 
@@ -465,121 +427,18 @@ public class DefaultNumericTable extends TableStub implements NumericTable
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    class ColumnView implements FloatColumn
-    {
-        int colIndex;
-        
-        public ColumnView(int index)
-        {
-            this.colIndex = index;
-        }
-
-        @Override
-        public String getUnitName()
-        {
-            return unitNames[colIndex];
-        }
-
-        @Override
-        public void setUnitName(String unitName)
-        {
-            unitNames[colIndex] = unitName;
-        }
-        
-        @Override
-        public void copyValues(double[] values, int index)
-        {
-            System.arraycopy(data[colIndex], 0, values, index, nRows);
-        }
-
-        @Override
-        public Double get(int row)
-        {
-            return data[colIndex][row];
-        }
-
-        @Override
-        public double getValue(int row)
-        {
-            return data[colIndex][row];
-        }
-
-        @Override
-        public void setValue(int row, double value)
-        {
-            data[colIndex][row] = value;
-        }
-
-        @Override
-        public double[] getValues()
-        {
-            return data[colIndex];
-        }
-        
-        @Override
-        public int length()
-        {
-            return nRows;
-        }
-        
-        public String getName()
-        {
-            return columnAxis.itemName(colIndex);
-        }
-
-        @Override
-        public void setName(String newName)
-        {
-            setColumnName(colIndex, newName);
-        }
-
-        @Override
-        public FloatColumn duplicate()
-        {
-            double[] values = new double[nRows];
-            System.arraycopy(data[colIndex], 0, values, 0, nRows);
-            String colName = columnAxis.itemName(colIndex); 
-            FloatColumn dup = FloatColumn.create(colName, values);
-            dup.setUnitName(unitNames[colIndex]);
-            return dup;
-        }
-
-        @Override
-        public Iterator<Double> iterator()
-        {
-            return new ValueIterator();
-        }
-        
-        class ValueIterator implements Iterator<Double>
-        {
-            int index = 0;
-            
-            @Override
-            public boolean hasNext()
-            {
-                return index < nRows;
-            }
-
-            @Override
-            public Double next()
-            {
-                return data[colIndex][index++];
-            }
-        }
-    }
-
     private class Columns implements Table.Columns<NumericColumn>
     {
         @Override
         public int size()
         {
-            return nCols;
+            return columnCount();
         }
 
         @Override
         public NumericColumn get(int index)
         {
-            return new ColumnView(index);
+            return columns.get(index);
         }
         
         @Override

@@ -12,10 +12,12 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import net.sci.table.CategoricalColumn;
 import net.sci.table.Column;
 import net.sci.table.NumericColumn;
+import net.sci.table.NumericTable;
 import net.sci.table.Table;
 import net.sci.table.impl.ColumnsTable;
 
@@ -303,7 +305,19 @@ public class DelimitedTableReader implements TableReader
         {
             columns[c] = createColumn(colNames[c], columnTokens.get(c));
         }
-        Table table = new ColumnsTable(columns);
+        
+        Table table;
+        if (Stream.of(columns).allMatch(col -> col instanceof NumericColumn))
+        {
+            NumericColumn[] numCols = Stream.of(columns)
+                    .map(col -> (NumericColumn) col)
+                    .toArray(NumericColumn[]::new);
+            table = NumericTable.create(numCols);
+        }
+        else
+        {
+            table = new ColumnsTable(columns);
+        }
         
         // populates meta-data
         if (readRowNames)

@@ -60,18 +60,7 @@ public interface NumericTable extends Table
             throw new IllegalArgumentException("Requires at least one column");
         }
         
-        // initialize table
-        int nRows = columns[0].length();
-        NumericTable table = create(nRows, columns.length);
-        
-        // update column values
-        for (int c = 0; c < columns.length; c++)
-        {
-            NumericColumn column = columns[c];
-            table.setColumnValues(c, column.getValues());
-            table.setColumnName(c, column.getName());
-        }
-        return table;
+        return new DefaultNumericTable(columns);
     }
     
     /**
@@ -86,14 +75,8 @@ public interface NumericTable extends Table
     public static NumericTable create(Axis rowAxis, NumericColumn... columns)
     {
         // initialize table
-        NumericTable table = create(rowAxis, columns.length);
-        
-        for (int c = 0; c < columns.length; c++)
-        {
-            NumericColumn column = columns[c];
-            table.setColumnValues(c, column.getValues());
-            table.setColumnName(c, column.getName());
-        }
+        NumericTable table = new DefaultNumericTable(columns);
+        table.setRowAxis(rowAxis);
         return table;
     }
     
