@@ -8,6 +8,7 @@ import Jama.SingularValueDecomposition;
 import net.sci.axis.CategoricalAxis;
 import net.sci.table.Column;
 import net.sci.table.NumericColumn;
+import net.sci.table.NumericTable;
 import net.sci.table.Table;
 
 /**
@@ -22,9 +23,17 @@ import net.sci.table.Table;
  */
 public class PCA
 {
+    /**
+     * The boolean option to scale the data.
+     */
     boolean scaled = true;
     
+    /** The mean value within each column of the original data table. */
     double[] meanValues;
+    /**
+     * The standard deviation of each column of the original data table, used to
+     * scale the values if requested.
+     */
     double[] scalings;
     
     Table scores;
@@ -138,9 +147,9 @@ public class PCA
         {
             for (int c = 0; c < nc; c++)
             {
-                double var = Math.sqrt(computeVariance((NumericColumn) table.column(c), meanValues[c]));
+                double std = Math.sqrt(computeVariance((NumericColumn) table.column(c), meanValues[c]));
                 // avoid degenerate cases
-                this.scalings[c] = Math.max(var, 1e-10);
+                this.scalings[c] = Math.max(std, 1e-10);
             }
         }
         else
@@ -222,17 +231,17 @@ public class PCA
     }
     
     /**
-     * Converts a JAMA matrix into a Table instance.
+     * Converts a JAMA matrix into a Numeric Table instance.
      * 
      * @param matrix
      *            the matrix to convert
      * @return the converted table.
      */
-    private static final Table matrixToTable(Matrix matrix)
+    private static final NumericTable matrixToTable(Matrix matrix)
     {
         int nRows = matrix.getRowDimension();
         int nCols = matrix.getColumnDimension();
-        Table table = Table.create(nRows, nCols);
+        NumericTable table = NumericTable.create(nRows, nCols);
         
         for (int row = 0; row < nRows; row++)
         {
@@ -254,11 +263,11 @@ public class PCA
      *            the diagonal matrix of the eigen values
      * @return the eigen values table
      */
-    private static final Table eigenValuesMatrixToTable(Matrix S)
+    private static final NumericTable eigenValuesMatrixToTable(Matrix S)
     {
         int nRows = S.getRowDimension();
         
-        Table tab = Table.create(nRows, 3);
+        NumericTable tab = NumericTable.create(nRows, 3);
         tab.setColumnNames(new String[]{"EigenValues", "Inertia", "Cumulated"});
         
         // compute sum of inertia
@@ -295,7 +304,7 @@ public class PCA
      *            the date table whose dimension has to be reduced
      * @return the transformed data table
      */
-    public Table transform(Table table)
+    public NumericTable transform(Table table)
     {
         // get table size
         int nr = table.rowCount();
@@ -308,7 +317,7 @@ public class PCA
         }
         
         // Computes scores
-        Table res = Table.create(nr, nc);
+        NumericTable res = NumericTable.create(nr, nc);
         for (int r = 0; r < nr; r++)
         {
             for (int c = 0; c < nc; c++)
@@ -346,10 +355,16 @@ public class PCA
         return this.scores;
     }
     
-    public Table normalisationData()
+    /**
+     * Returns the normalization data as a data table.
+     * 
+     * @return a numeric table containing mean value and scaling (standard
+     *         deviation) for each column.
+     */
+    public NumericTable normalisationData()
     {
         int nc = loadings.rowCount();
-        Table res = Table.create(2, nc);
+        NumericTable res = NumericTable.create(2, nc);
         for (int c = 0; c < nc; c++)
         {
             res.setValue(0, c, meanValues[c]);
