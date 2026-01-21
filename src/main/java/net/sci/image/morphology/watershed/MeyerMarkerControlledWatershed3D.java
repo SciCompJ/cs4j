@@ -15,7 +15,7 @@ import net.sci.image.connectivity.Connectivity3D;
  * Watershed algorithm with markers and dams following Meyer implementation.
  * 
  * The watershed is propagated from (outer) boundary pixels of the specified
- * markers. Pixels to update are stored in an <code>OrderedQueue</code> instance
+ * markers. Pixels to update are stored in an <code>OrderedQueue</code> instance.
  * 
  * References:
  * <ul>
@@ -70,7 +70,7 @@ public class MeyerMarkerControlledWatershed3D extends AlgoStub
      */
     public MeyerMarkerControlledWatershed3D(Connectivity3D conn)
     {
-        
+        this.connectivity = conn;
     }
     
     
