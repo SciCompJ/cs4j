@@ -61,7 +61,7 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
             this.fireProgressChanged(this, y, sizeY);
             for (int x = 0; x < sizeX; x++)
             {
-                res.setInt(x, y, array.getBoolean(x,y) ? 255 : 0);
+                res.setByte(x, y, array.getBoolean(x,y) ? (byte) 255 : 0);
             }
         }
         this.fireProgressChanged(this, sizeY, sizeY);
@@ -85,7 +85,7 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
             {
                 for (int x = 0; x < sizeX; x++)
                 {
-                    res.setInt(x, y, z, array.getBoolean(x,y,z) ? 255 : 0);
+                    res.setByte(x, y, z, array.getBoolean(x,y,z) ? (byte) 255 : 0);
                 }
             }
         }
@@ -107,7 +107,17 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
         public View(Array<?> array)
         {
             super(array);
+            if (array.elementClass() != Binary.class)
+            {
+                throw new IllegalArgumentException("Requires input array to contains Binary values");
+            }
             this.array = BinaryArray.wrap(array);
+        }
+
+        @Override
+        public int getInt(int[] pos)
+        {
+            return array.getBoolean(pos) ? 255 : 0;
         }
 
         @Override
