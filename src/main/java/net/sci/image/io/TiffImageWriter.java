@@ -19,6 +19,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.Array2D;
 import net.sci.array.Array3D;
+import net.sci.array.binary.process.BinaryToUInt8;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array;
 import net.sci.array.color.RGB8;
@@ -143,6 +144,13 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
     @Override
     public void writeImage(Image image) throws IOException
     {
+        // In case of binary image, convert to image of UInt8 (using a view) 
+        if (image.isBinaryImage())
+        {
+            UInt8Array array2 = new BinaryToUInt8.View(image.getData());
+            image = new Image(array2, image);
+        }
+        
         // single image size as number of bytes
         long sliceImageByteCount = computeSliceImageByteCount(image);
 
@@ -424,16 +432,33 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         }
     }
     
+    /**
+     * Computes the number of bytes required to store data for a single slice of
+     * the image.
+     * 
+     * @param image
+     *            the image to sore
+     * @return the number of bytes required to store a slice
+     */
     private static final long computeSliceImageByteCount(Image image)
     {
+        // retrieve image size and pixel type data
         int sizeX = image.getSize(0);
         int sizeY = image.getSize(1);
         PixelType pixelType = PixelType.fromImage(image);
         int samplesPerPixel = pixelType.sampleCount();
         int bitsPerSample = pixelType.bitsPerSample();
         
+        // first compute number of bits
+        long nBits = ((long) sizeX) * sizeY * samplesPerPixel * bitsPerSample;
+        
         // image size as number of bytes
-        return ((long) sizeX) * sizeY * samplesPerPixel * (bitsPerSample / 8);
+        long nBytes = nBits / 8;
+        
+        // in case of binary image, use one byte per bit
+        if (pixelType == PixelType.BINARY) nBytes = nBits;
+        
+        return nBytes;
     }
     
     private static final int[] createSpacingRational(double spacing)
@@ -525,6 +550,9 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
     /**
      * Writes all the data within the array, using the natural position iterator
      * of the array.
+     * 
+     * Note that arrays of Binary are stored as bytes, using values 0 for
+     * {@code false} and 255 for {@code true}.
      * 
      * @param array
      *            the array to write into the file.
