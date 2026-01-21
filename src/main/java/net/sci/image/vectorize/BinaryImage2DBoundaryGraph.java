@@ -12,6 +12,8 @@ import net.sci.geom.graph.Graph2D;
 import net.sci.geom.graph.SimpleGraph2D;
 
 /**
+ * Computes a geometric graph based on a binary image. The vertices of the graph
+ * correspond to corners of the boundary pixels.
  * 
  * @see LabelMapBoundaryPolygons
  * 
@@ -102,44 +104,14 @@ public class BinaryImage2DBoundaryGraph extends AlgoStub
 	 * 
 	 * @author dlegland
 	 */
-	static class IntPoint2D implements Comparable<IntPoint2D>
+	static record IntPoint2D(int x, int y) implements Comparable<IntPoint2D>
 	{
-		int x;
-		int y;
-		
-		public IntPoint2D(int x, int y)
-		{
-			this.x = x;
-			this.y = y;
-		}
-		
 		@Override
 		public int compareTo(IntPoint2D that)
 		{
 			if (this.x != that.x)
 				return this.x - that.x;
 			return this.y - that.y;
-		}
-
-		@Override
-		public int hashCode()
-		{
-			// uses values givenby J. Bloch.
-			int res = 23;
-			res =  res * 37 + this.x;
-			res =  res * 37 + this.y;
-			return res;
-		}
-		
-		@Override
-		public boolean equals(Object that)
-		{
-			if (that instanceof IntPoint2D)
-			{
-				IntPoint2D ip = (IntPoint2D) that;
-				return this.x == ip.x && this.y == ip.y;
-			}
-			return false;
 		}
 	}
 }

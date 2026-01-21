@@ -6,9 +6,9 @@ package net.sci.image.vectorize;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import jdk.incubator.vector.VectorOperators.Binary;
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
+import net.sci.array.binary.Binary;
 import net.sci.array.binary.BinaryArray;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.Int32Array2D;
@@ -60,7 +60,7 @@ public class BinaryImage2DChangComponentsLabeling extends AlgoStub
     public IntArray<?> process(Array<?> array)
     {
         if (array.dimensionality() != 2) throw new RuntimeException("Requires a 2D array as input");
-        if (array.elementClass() != Binary.class) throw new RuntimeException("Requires an array containin Binary elements as input");
+        if (array.elementClass() != Binary.class) throw new RuntimeException("Requires an array containing Binary elements as input");
         
         return processBinary2d(BinaryArray2D.wrap(BinaryArray.wrap(array)));
     }
