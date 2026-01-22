@@ -712,6 +712,15 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     {
         Map<String, String> tokens;
         
+        /**
+         * Parses the "description" string from an image Tiff File, and converts
+         * the different items into a key-value Map.
+         * 
+         * @param description
+         *            the description string (typically obtained from the
+         *            "ImageDescription" tag)
+         * @return a map of key-value pairs describing ImageJ meta data.
+         */
         public static ImageJTokens parse(String description)
         {
             Map<String, String> imagejTokens = new HashMap<>();
@@ -721,11 +730,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             {
                 // split key and value, separated by "="
                 String[] tokens = item.split("=");
-                if (tokens.length < 2)
+                if (tokens.length > 1)
                 {
-                    continue;
+                    imagejTokens.put(tokens[0].trim(), tokens[1].trim());
                 }
-                imagejTokens.put(tokens[0].trim(), tokens[1].trim());
             }
             
             return new ImageJTokens(imagejTokens);
@@ -743,12 +751,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             // Initialize mandatory X and Y axes
             double spacingX = 1.0 / ifd.getDoubleValue(BaselineTags.XResolution.CODE, 1.0);
             double spacingY = 1.0 / ifd.getDoubleValue(BaselineTags.YResolution.CODE, 1.0);
-            axes.add(createXAxis(spacingX, ""));
-            axes.add(createYAxis(spacingY, axes.get(0).getUnitName()));
+            ImageAxis xAxis = createXAxis(spacingX, "");
+            axes.add(xAxis);
+            axes.add(createYAxis(spacingY, xAxis.getUnitName()));
 
             // Initialize optional C, Z and T axes
             if (sizeC > 1) axes.add(new ImageAxis("Channel", ImageAxis.Type.CHANNEL, 1, 0, ""));
-            if (sizeZ > 1) axes.add(createZAxis(1.0, axes.get(0).getUnitName()));
+            // assume default spacing in Z is the same as for x-axis
+            if (sizeZ > 1) axes.add(createZAxis(xAxis.getSpacing(), xAxis.getUnitName()));
             if (sizeT > 1) axes.add(createTAxis(1.0, "sec"));
             
             return new Calibration(axes.toArray(new ImageAxis[] {}));
