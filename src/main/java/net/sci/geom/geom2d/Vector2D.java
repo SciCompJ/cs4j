@@ -7,6 +7,9 @@ import java.util.Locale;
 import net.sci.array.Dimensional;
 import net.sci.array.numeric.Numeric;
 
+/**
+ * Implementation of a two-dimensional vector.
+ */
 public class Vector2D implements Dimensional, Numeric<Vector2D>
 {
     // ===================================================================
@@ -45,7 +48,7 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
 	}
 	
 	/**
-	 * Tests if the two vectors are perpendicular
+	 * Tests if the two vectors are perpendicular.
 	 * 
 	 * @param v1
 	 *            the first vector
@@ -63,44 +66,113 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
 	}
 
 	/**
-	 * Get the dot product of the two vectors, defined by :
-	 * <p>
-	 * <code> dx1*dy2 + dx2*dy1</code>
-	 * <p>
-	 * Dot product is zero if the vectors defined by the 2 vectors are
-	 * orthogonal. It is positive if vectors are in the same direction, and
-	 * negative if they are in opposite direction.
-	 * 
-	 * @param v1
-	 *            the first vector
-	 * @param v2
-	 *            the second vector
-	 * @return the dot product of <code>v1</code> and <code>v2</code>.
-	 */
+     * Get the dot product of two vectors. If the two vectors are given by
+     * {@code v1 = (vx1,vy1)} and {@code v2 = (vx2,vy2)}, then their dot product
+     * is given by:
+     * <p>
+     * {@code vx1 * vx2 + vy2 * vy2}
+     * <p>
+     * 
+     * Dot product is zero if the vectors defined by the 2 vectors are
+     * orthogonal. It is positive if vectors are in the same direction, and
+     * negative if they are in opposite direction.
+     * 
+     * @param v1
+     *            the first vector
+     * @param v2
+     *            the second vector
+     * @return the dot product of <code>v1</code> and <code>v2</code>.
+     */
 	public static double dotProduct(Vector2D v1, Vector2D v2)
 	{
 		return v1.x * v2.x + v1.y * v2.y;
 	}
 
+    /**
+     * Get the dot product of two vectors given by their coordinates. This
+     * method is a low-level version of the method with same name that accepts
+     * two vectors as input arguments. If the two vectors are given by
+     * {@code v1 = (vx1,vy1)} and {@code v2 = (vx2,vy2)}, then their dot product
+     * is given by:
+     * <p>
+     * {@code vx1 * vx2 + vy2 * vy2}
+     * <p>
+     * 
+     * Dot product is zero if the vectors defined by the 2 vectors are
+     * orthogonal. It is positive if vectors are in the same direction, and
+     * negative if they are in opposite direction.
+     * 
+     * @see #dotProduct(Vector2D, Vector2D)
+     * 
+     * @param vx1
+     *            the x-coordinate of the first vector
+     * @param vy1
+     *            the y-coordinate of the first vector
+     * @param vx2
+     *            the x-coordinate of the second vector
+     * @param vy2
+     *            the y-coordinate of the second vector
+     * @return the dot product of <code>v1</code> and <code>v2</code>.
+     */
+    public static double dotProduct(double vx1, double vy1, double vx2, double vy2)
+    {
+        return vx1 * vx2 + vy1 * vy2;
+    }
+    
 	/**
-	 * Get the cross product of the two vectors, defined by :
-	 * <p>
-	 * <code> dx1*dy2 - dx2*dy1</code>
-	 * <p>
-	 * Cross product is zero for colinear vectors. It is positive if angle
-	 * between vector 1 and vector 2 is comprised between 0 and PI, and negative
-	 * otherwise.
-	 * 
-	 * @param v1
-	 *            the first vector
-	 * @param v2
-	 *            the second vector
-	 * @return the cross product of <code>v1</code> and <code>v2</code>.
-	 */
+     * Get the cross product of two vectors. If the two vectors are given by
+     * {@code v1 = (vx1,vy1)} and {@code v2 = (vx2,vy2)}, then their cross
+     * product is given by:
+     * <p>
+     * {@code vx1 * vy2 - vx2 * vy1}
+     * <p>
+     * 
+     * Cross product is zero for colinear vectors. It is positive if angle
+     * between vector 1 and vector 2 is comprised between 0 and PI, and negative
+     * otherwise.
+     * 
+     * @param v1
+     *            the first vector
+     * @param v2
+     *            the second vector
+     * @return the cross product of <code>v1</code> and <code>v2</code>.
+     */
 	public static double crossProduct(Vector2D v1, Vector2D v2)
 	{
 		return v1.x * v2.y - v2.x * v1.y;
 	}
+    
+    /**
+     * Get the cross product of two vectors given by their coordinates. This
+     * method is a low-level version of the method with same name that accepts
+     * two vectors as input arguments. If the two vectors are given by
+     * {@code v1 = (vx1,vy1)} and {@code v2 = (vx2,vy2)}, then their cross
+     * product is given by:
+     * <p>
+     * {@code vx1 * vy2 - vx2 * vy1}
+     * <p>
+     * 
+     * Cross product is zero for colinear vectors. It is positive if angle
+     * between vector 1 and vector 2 is comprised between 0 and PI, and negative
+     * otherwise.
+     * 
+     * @see #crossProduct(Vector2D, Vector2D)
+     * 
+     * @param vx1
+     *            the x-coordinate of the first vector
+     * @param vy1
+     *            the y-coordinate of the first vector
+     * @param vx2
+     *            the x-coordinate of the second vector
+     * @param vy2
+     *            the y-coordinate of the second vector
+     * @return the cross product of the vectors given by their coordinates.
+     */
+    public static double crossProduct(double vx1, double vy1, double vx2, double vy2)
+    {
+        return vx1 * vy2 - vx2 * vy1;
+    }
+    
     
 	// ===================================================================
 	// class variables
@@ -115,14 +187,14 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
 	// ===================================================================
 	// constructors
 
-	/** Empty constructor, similar to Vector2d(0,0) */
+	/** Empty constructor, resulting in a null vector with coordinates (0,0). */
 	public Vector2D()
 	{
 		this(0, 0);
 	}
 
 	/**
-	 * New Vector2d given by its coordinates.
+	 * New Vector2D given initialized with its coordinates.
 	 * 
 	 * @param x
 	 *            the x-coordinate of the vector

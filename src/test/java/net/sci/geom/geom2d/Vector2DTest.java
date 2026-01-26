@@ -52,4 +52,61 @@ public class Vector2DTest
         assertTrue(exp.almostEquals(v1n, eps));
     }
     
+    /**
+     * Test method for {@link net.sci.geom.geom2d.Vector2D#dotProduct(net.sci.geom.geom2d.Vector2D, net.sci.geom.geom2d.Vector2D)}.
+     */
+    @Test
+    public final void test_dotProduct_Vector2DVector2D()
+    {
+        double dot1 = Vector2D.dotProduct(new Vector2D(1, 0), new Vector2D(0, 1));
+        assertEquals(0.0, dot1, 0.01);
+
+        double dot2 = Vector2D.dotProduct(new Vector2D(30, 0), new Vector2D(0, 20));
+        assertEquals(0.0, dot2, 0.01);
+
+        double dot3 = Vector2D.dotProduct(new Vector2D(3, 4), new Vector2D(4, 5));
+        assertEquals(32.0, dot3, 0.01);
+    }
+    
+    /**
+     * Test method for {@link net.sci.geom.geom2d.Vector2D#dotProduct(double, double, double, double)}.
+     */
+    @Test
+    public final void test_dotProduct_DoubleDoubleDoubleDouble()
+    {
+        double dot1 = Vector2D.dotProduct(1, 0, 0, 1);
+        assertEquals(0.0, dot1, 0.01);
+        
+        double dot2 = Vector2D.dotProduct(30, 0, 0, 20);
+        assertEquals(0.0, dot2, 0.01);
+
+        double dot3 = Vector2D.dotProduct(3, 4, 4, 5);
+        assertEquals(32.0, dot3, 0.01);
+    }
+    
+    /**
+     * Test method for {@link net.sci.geom.geom2d.Vector2D#crossProduct(net.sci.geom.geom2d.Vector2D, net.sci.geom.geom2d.Vector2D)}.
+     */
+    @Test
+    public final void test_crossProduct_Vector2DVector2D()
+    {
+        double dot1 = Vector2D.crossProduct(new Vector2D(1, 0), new Vector2D(0, 1));
+        assertEquals(1.0, dot1, 0.01);
+
+        double dot2 = Vector2D.crossProduct(new Vector2D(30, 0), new Vector2D(20, 0));
+        assertEquals(0.0, dot2, 0.01);
+    }
+    
+    /**
+     * Test method for {@link net.sci.geom.geom2d.Vector2D#crossProduct(double, double, double, double)}.
+     */
+    @Test
+    public final void test_crossProduct_DoubleDoubleDoubleDouble()
+    {
+        double dot1 = Vector2D.crossProduct(1, 0, 0, 1);
+        assertEquals(1.0, dot1, 0.01);
+
+        double dot2 = Vector2D.crossProduct(30, 0, 20, 0);
+        assertEquals(0.0, dot2, 0.01);
+    }
 }

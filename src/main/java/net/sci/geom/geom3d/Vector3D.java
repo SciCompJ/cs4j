@@ -11,8 +11,7 @@ import net.sci.array.Dimensional;
 import net.sci.array.numeric.Numeric;
 
 /**
- * @author dlegland
- *
+ * Implementation of a three-dimensional vector.
  */
 public class Vector3D implements Dimensional, Numeric<Vector3D>
 {
@@ -95,9 +94,11 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
     }
 
     /**
-     * Get the dot product of the two vectors, defined by :
+     * Get the dot product of two vectors. If the two vectors are given by
+     * {@code v1 = (vx1,vy1,vz1)} and {@code v2 = (vx2,vy2,vz2)}, then their dot product
+     * is given by:
      * <p>
-     * <code> dx1*dy2 + dx2*dy1</code>
+     * {@code vx1 * vx2 + vy2 * vy2 + vz1 * vz2}
      * <p>
      * Dot product is zero if the vectors defined by the 2 vectors are
      * orthogonal. It is positive if vectors are in the same direction, and
@@ -112,6 +113,40 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
     public static double dotProduct(Vector3D v1, Vector3D v2)
     {
         return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+    }
+
+    /**
+     * Get the dot product of two vectors given by their coordinates. This
+     * method is a low-level version of the method with same name that accepts
+     * two vectors as input arguments. If the two vectors are given by
+     * {@code v1 = (vx1,vy1,vz1)} and {@code v2 = (vx2,vy2,vz2)}, then their dot
+     * product is given by:
+     * <p>
+     * {@code vx1 * vx2 + vy2 * vy2 + vz1 * vz2}
+     * <p>
+     * Dot product is zero if the vectors defined by the 2 vectors are
+     * orthogonal. It is positive if vectors are in the same direction, and
+     * negative if they are in opposite direction.
+     * 
+     * @see #dotProduct(Vector3D, Vector3D)
+     * 
+     * @param vx1
+     *            the x-coordinate of the first vector
+     * @param vy1
+     *            the y-coordinate of the first vector
+     * @param vz1
+     *            the z-coordinate of the first vector
+     * @param vx2
+     *            the x-coordinate of the second vector
+     * @param vy2
+     *            the y-coordinate of the second vector
+     * @param vz2
+     *            the z-coordinate of the second vector
+     * @return the dot product of the two vectors
+     */
+    public static double dotProduct(double vx1, double vy1, double vz1, double vx2, double vy2, double vz2)
+    {
+        return vx1 * vx2 + vy1 * vy2 + vz1 * vz2;
     }
 
     /**
@@ -131,6 +166,37 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
                 v1.y * v2.z - v1.z * v2.y, 
                 v1.z * v2.x - v1.x * v2.z, 
                 v1.x * v2.y - v1.y * v2.x);
+    }
+    
+    /**
+     * Computes the 3D cross product of two vectors given by their coordinates. This
+     * method is a low-level version of the method with same name that accepts
+     * two vectors as input arguments.
+     * 
+     * Cross product is zero for colinear vectors. 
+     * 
+     * @see #crossProduct(Vector3D, Vector3D)
+     * 
+     * @param vx1
+     *            the x-coordinate of the first vector
+     * @param vy1
+     *            the y-coordinate of the first vector
+     * @param vz1
+     *            the z-coordinate of the first vector
+     * @param vx2
+     *            the x-coordinate of the second vector
+     * @param vy2
+     *            the y-coordinate of the second vector
+     * @param vz2
+     *            the z-coordinate of the second vector
+     * @return the cross product of the two vectors
+     */
+    public static Vector3D crossProduct(double vx1, double vy1, double vz1, double vx2, double vy2, double vz2)
+    {
+        return new Vector3D(
+                vy1 * vz2 - vz1 * vy2, 
+                vz1 * vx2 - vx1 * vz2, 
+                vx1 * vy2 - vy1 * vx2);
     }
     
     /**
