@@ -503,10 +503,9 @@ public class MorphologicalMarchingCubes extends AlgoStub
                     }
                 }
             }
-            
-            this.fireProgressChanged(this, 1, 1);
         }
         
+        this.fireProgressChanged(this, 1, 1);
         return mesh;
     }
     
