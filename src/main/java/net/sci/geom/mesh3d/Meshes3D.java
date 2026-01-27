@@ -3,6 +3,7 @@
  */
 package net.sci.geom.mesh3d;
 
+import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Point3D;
 
 /**
@@ -12,12 +13,33 @@ import net.sci.geom.geom3d.Point3D;
  */
 public class Meshes3D
 {
-    
     /**
-     * Private constructor to prevent instantiation.
+     * Creates a cuboidal mesh with rectangle faces corresponding to the
+     * specified 3D bounds.
+     * 
+     * @param bounds
+     *            an instance of Bounds
+     * @return a 3D mesh with rectangle faces that corresponds to the bounds
      */
-    private Meshes3D()
+    public static final Mesh3D fromBounds(Bounds3D bounds)
     {
+        SimplePolygonalMesh3D mesh = new SimplePolygonalMesh3D(8, 6);
+        Mesh3D.Vertex v000 = mesh.addVertex(new Point3D(bounds.xMin(), bounds.yMin(), bounds.zMin()));
+        Mesh3D.Vertex v001 = mesh.addVertex(new Point3D(bounds.xMax(), bounds.yMin(), bounds.zMin()));
+        Mesh3D.Vertex v010 = mesh.addVertex(new Point3D(bounds.xMin(), bounds.yMax(), bounds.zMin()));
+        Mesh3D.Vertex v011 = mesh.addVertex(new Point3D(bounds.xMax(), bounds.yMax(), bounds.zMin()));
+        Mesh3D.Vertex v100 = mesh.addVertex(new Point3D(bounds.xMin(), bounds.yMin(), bounds.zMax()));
+        Mesh3D.Vertex v101 = mesh.addVertex(new Point3D(bounds.xMax(), bounds.yMin(), bounds.zMax()));
+        Mesh3D.Vertex v110 = mesh.addVertex(new Point3D(bounds.xMin(), bounds.yMax(), bounds.zMax()));
+        Mesh3D.Vertex v111 = mesh.addVertex(new Point3D(bounds.xMax(), bounds.yMax(), bounds.zMax()));
+        
+        mesh.addFace(new Mesh3D.Vertex[] {v000, v010, v011, v001});
+        mesh.addFace(new Mesh3D.Vertex[] {v100, v101, v111, v110});
+        mesh.addFace(new Mesh3D.Vertex[] {v001, v011, v111, v101});
+        mesh.addFace(new Mesh3D.Vertex[] {v000, v100, v110, v010});
+        mesh.addFace(new Mesh3D.Vertex[] {v000, v001, v101, v100});
+        mesh.addFace(new Mesh3D.Vertex[] {v010, v110, v111, v011});
+        return mesh;
     }
     
     /**
@@ -64,5 +86,12 @@ public class Meshes3D
         mesh.addFace(2, 5, 3);
         mesh.addFace(0, 3, 5);
         return mesh;
+    }
+    
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private Meshes3D()
+    {
     }
 }

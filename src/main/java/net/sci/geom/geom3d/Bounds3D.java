@@ -232,6 +232,17 @@ public class Bounds3D implements Bounds
     // ===================================================================
     // Implementation of the Bounds interface
     
+    public boolean almostEquals(Bounds3D box, double eps)
+    {
+        if (Math.abs(box.xmin - xmin) > eps) return false;
+        if (Math.abs(box.xmax - xmax) > eps) return false;
+        if (Math.abs(box.ymin - ymin) > eps) return false;
+        if (Math.abs(box.ymax - ymax) > eps) return false;
+        if (Math.abs(box.zmin - zmin) > eps) return false;
+        if (Math.abs(box.zmax - zmax) > eps) return false;
+        return true;
+    }
+
     /**
      * Checks if the bounds are finite.
      *
@@ -251,37 +262,37 @@ public class Bounds3D implements Bounds
     @Override
     public double minCoord(int d)
     {
-        switch(d)
+        return switch (d)
         {
-        case 0: return this.xmin;
-        case 1: return this.ymin;
-        case 2: return this.zmin;
-        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
-        }
+            case 0 -> this.xmin;
+            case 1 -> this.ymin;
+            case 2 -> this.zmin;
+            default -> throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
+        };
     }
     
     @Override
     public double maxCoord(int d)
     {
-        switch(d)
+        return switch(d)
         {
-        case 0: return this.xmax;
-        case 1: return this.ymax;
-        case 2: return this.zmax;
-        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
-        }
+            case 0 -> this.xmax;
+            case 1 -> this.ymax;
+            case 2 -> this.zmax;
+            default -> throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
+        };
     }
     
     @Override
     public double size(int d)
     {
-        switch(d)
+        return switch (d)
         {
-        case 0: return this.xmax - this.xmin;
-        case 1: return this.ymax - this.ymin;
-        case 2: return this.zmax - this.zmin;
-        default: throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
-        }
+            case 0 -> this.xmax - this.xmin;
+            case 1 -> this.ymax - this.ymin;
+            case 2 -> this.zmax - this.zmin;
+            default -> throw new IllegalArgumentException("Dimension index must be between 0 and 2, not " + d);
+        };
     }
 
     @Override
