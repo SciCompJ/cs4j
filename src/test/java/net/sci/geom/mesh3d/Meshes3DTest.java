@@ -51,4 +51,19 @@ public class Meshes3DTest
         assertEquals(8, mesh.faceCount());
     }
     
+    /**
+     * Test method for {@link net.sci.geom.mesh3d.Meshes3D#triangulate(net.sci.geom.mesh3d.Mesh3D)}.
+     */
+    @Test
+    public final void test_triangulate()
+    {
+        Bounds3D bounds = new Bounds3D(0, 50, 0, 40, 0, 30);
+        Mesh3D mesh = Meshes3D.fromBounds(bounds);
+
+        TriMesh3D trimesh = Meshes3D.triangulate(mesh);
+        
+        assertEquals(8, trimesh.vertexCount());
+        assertEquals(12, trimesh.faceCount());
+    }
+    
 }

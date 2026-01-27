@@ -3,6 +3,9 @@
  */
 package net.sci.geom.mesh3d;
 
+import java.util.HashMap;
+import java.util.Iterator;
+
 import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Point3D;
 
@@ -86,6 +89,39 @@ public class Meshes3D
         mesh.addFace(2, 5, 3);
         mesh.addFace(0, 3, 5);
         return mesh;
+    }
+    
+    public static final TriMesh3D triangulate(Mesh3D mesh)
+    {
+        int nv = mesh.vertexCount();
+        SimpleTriMesh3D trimesh = new SimpleTriMesh3D(nv, mesh.faceCount());
+        HashMap<Mesh3D.Vertex, Mesh3D.Vertex> vertexMap = new HashMap<>(nv);
+        
+        for (Mesh3D.Vertex v : mesh.vertices())
+        {
+            Mesh3D.Vertex v2 = trimesh.addVertex(v.position());
+            vertexMap.put(v, v2);
+        }
+        
+        for (Mesh3D.Face face : mesh.faces())
+        {
+            if (face.vertexCount() < 3)
+            {
+                throw new RuntimeException("Can not triangulate a face with less than three vertices");
+            }
+            
+            Iterator<Mesh3D.Vertex> iter = face.vertices().iterator();
+            Mesh3D.Vertex v0 = iter.next();
+            Mesh3D.Vertex v1 = iter.next();
+            while (iter.hasNext())
+            {
+                Mesh3D.Vertex v2 = iter.next();
+                trimesh.addFace(vertexMap.get(v0), vertexMap.get(v1), vertexMap.get(v2));
+                v1 = v2;
+            }
+        }
+        
+        return trimesh;
     }
     
     /**
