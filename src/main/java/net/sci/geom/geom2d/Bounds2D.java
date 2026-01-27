@@ -6,7 +6,6 @@ package net.sci.geom.geom2d;
 import static java.lang.Double.isInfinite;
 
 import net.sci.geom.Bounds;
-import net.sci.geom.polygon2d.Polygon2D;
 
 /**
  * Contains the bounds of a planar geometry. Provides method for converting to
@@ -126,21 +125,6 @@ public class Bounds2D implements Bounds
         double ymin = Math.min(this.ymin, that.ymin);
         double ymax = Math.max(this.ymax, that.ymax);
         return new Bounds2D(xmin, xmax, ymin, ymax);
-    }
-
-    /**
-     * Converts this bounding box to a rectangular polyon.
-     * 
-     * @return the polygon corresponding to this bounding box
-     */
-    public Polygon2D getRectangle()
-    {
-        Point2D p1 = new Point2D(this.xmin, this.ymin);
-        Point2D p2 = new Point2D(this.xmax, this.ymin);
-        Point2D p3 = new Point2D(this.xmax, this.ymax);
-        Point2D p4 = new Point2D(this.xmin, this.ymax);
-        Polygon2D poly = Polygon2D.create(p1, p2, p3, p4);
-        return poly;
     }
 
     

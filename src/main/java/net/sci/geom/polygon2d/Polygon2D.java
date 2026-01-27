@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.sci.geom.geom2d.AffineTransform2D;
+import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
@@ -78,6 +79,20 @@ public interface Polygon2D extends PolygonalDomain2D
         return new DefaultPolygon2D(xcoords, ycoords);
     }
     
+    /**
+     * Creates a new rectangular polygon corresponding to the specified bounds.
+     * 
+     * @return the polygon corresponding to the bounds.
+     */
+    public static Polygon2D fromBounds(Bounds2D bounds)
+    {
+        Point2D p1 = new Point2D(bounds.xMin(), bounds.yMin());
+        Point2D p2 = new Point2D(bounds.xMax(), bounds.yMin());
+        Point2D p3 = new Point2D(bounds.xMax(), bounds.yMax());
+        Point2D p4 = new Point2D(bounds.xMin(), bounds.yMax());
+        return create(p1, p2, p3, p4);
+    }
+
     
     // ===================================================================
     // New methods 

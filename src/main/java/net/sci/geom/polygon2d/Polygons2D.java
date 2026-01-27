@@ -35,7 +35,6 @@ public class Polygons2D
 		return algo.process(points);
 	}
 	
-	
 	/**
 	 * Private constructor to prevent instantiation.
 	 */
