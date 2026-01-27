@@ -110,9 +110,9 @@ public class Point3D implements Point, Geometry3D
     {
         if (t <= 0) return p1;
         if (t >= 1) return p2;
-        double x = p1.x() * (1.0 - t) + p2.x() * t;
-        double y = p1.y() * (1.0 - t) + p2.y() * t;
-        double z = p1.z() * (1.0 - t) + p2.z() * t;
+        double x = p1.x * (1.0 - t) + p2.x * t;
+        double y = p1.y * (1.0 - t) + p2.y * t;
+        double z = p1.z * (1.0 - t) + p2.z * t;
         return new Point3D(x, y, z);
     }
     
@@ -225,7 +225,7 @@ public class Point3D implements Point, Geometry3D
      */
     public Point3D plus(Vector3D v)
     {
-        return new Point3D(this.x + v.x(), this.y + v.y(), this.z + v.z());
+        return new Point3D(this.x + v.x, this.y + v.y, this.z + v.z);
     }
 
     /**
@@ -238,7 +238,7 @@ public class Point3D implements Point, Geometry3D
      */
     public Point3D minus(Vector3D v)
     {
-        return new Point3D(this.x - v.x(), this.y - v.y(), this.z - v.z());
+        return new Point3D(this.x - v.x, this.y - v.y, this.z - v.z);
     }
     
 
@@ -255,7 +255,7 @@ public class Point3D implements Point, Geometry3D
      */
     public Point3D plus(Point3D p)
     {
-        return new Point3D(this.x + p.x(), this.y + p.y(), this.z + p.z());
+        return new Point3D(this.x + p.x, this.y + p.y, this.z + p.z);
     }
 
     /**
@@ -269,7 +269,7 @@ public class Point3D implements Point, Geometry3D
      */
     public Point3D minus(Point3D p)
     {
-        return new Point3D(this.x - p.x(), this.y - p.y(), this.z - p.z());
+        return new Point3D(this.x - p.x, this.y - p.y, this.z - p.z);
     }
 
     /**

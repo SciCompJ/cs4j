@@ -169,6 +169,28 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
     }
     
     /**
+     * Computes the 3D cross product of the two vectors that can be obtained
+     * from the first specified point as origin, and one of the two other points
+     * as destination.
+     * 
+     * Cross product is zero for colinear vectors.
+     * 
+     * @param p0
+     *            the origin point of the two vectors
+     * @param p1
+     *            the destination point of the first vector
+     * @param p1
+     *            the destination point of the second vector
+     * @return the cross product of the two vectors.
+     */
+    public static Vector3D crossProduct(Point3D p0, Point3D p1, Point3D p2)
+    {
+        return crossProduct(
+                p1.x - p0.x, p1.y - p0.y, p1.z - p0.z, 
+                p2.x - p0.x, p2.y - p0.y, p2.z - p0.z);
+    }
+    
+    /**
      * Computes the 3D cross product of two vectors given by their coordinates. This
      * method is a low-level version of the method with same name that accepts
      * two vectors as input arguments.
