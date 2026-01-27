@@ -150,6 +150,13 @@ public interface Mesh3D extends Geometry3D
     public interface Face
     {
         /**
+         * Counts the number of vertices of this face.
+         * 
+         * @return the number of vertices of this face.
+         */
+        public int vertexCount();
+        
+        /**
          * @return the 3D polygon representing this face.
          */
         public Polygon3D polygon();

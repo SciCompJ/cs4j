@@ -25,4 +25,13 @@ public interface TriMesh3D extends Mesh3D
      * @return the index of the newly created face
      */
     public Mesh3D.Face addFace(Mesh3D.Vertex v1, Mesh3D.Vertex v2, Mesh3D.Vertex v3);
+    
+    public interface Face extends Mesh3D.Face
+    {
+        @Override
+        public default int vertexCount()
+        {
+            return 3;
+        }
+    }
 }

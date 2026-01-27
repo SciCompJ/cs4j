@@ -556,7 +556,7 @@ public class SimpleTriMesh3D implements TriMesh3D
         }
     }
 
-    public class Face implements Mesh3D.Face
+    public class Face implements TriMesh3D.Face
     {
         /**
          * The index of the face, used to retrieve index vertices in "faces" array.

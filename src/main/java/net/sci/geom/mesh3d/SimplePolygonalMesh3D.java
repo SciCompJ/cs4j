@@ -603,13 +603,19 @@ public class SimplePolygonalMesh3D implements Mesh3D
         @Override
         public Vector3D normal()
         {
-            int[] indices = faces.get(this.index);
-            Point3D p1 = vertexPositions.get(indices[0]);
-            Vector3D v12 = new Vector3D(p1, vertexPosition(indices[1]));
-            Vector3D v13 = new Vector3D(p1, vertexPosition(indices[2]));
-            return Vector3D.crossProduct(v12, v13);
+            int[] inds = faces.get(this.index);
+            return Vector3D.crossProduct(
+                    vertexPositions.get(inds[0]), 
+                    vertexPositions.get(inds[1]),
+                    vertexPositions.get(inds[2]));
         }
         
+        @Override
+        public int vertexCount()
+        {
+            return faces.get(this.index).length;
+        }
+
         public Collection<Mesh3D.Vertex> vertices()
         {
             int[] indices = faces.get(this.index);
