@@ -22,16 +22,14 @@ import net.sci.table.Table;
 import net.sci.table.impl.ColumnsTable;
 
 /**
- * Reads a table from a delimited file. Many options can be set through the
- * Builder class, such as the type of delimiter, the number of lines to skip, or
+ * Reads a table from a delimited file. Many options can be set, such as the type of delimiter, the number of lines to skip, or
  * the presence/absence of row names.
  * 
  * {@snippet lang = "java" :
- * DelimitedTableReader reader = DelimitedTableReader.builder()
- *      .delimiters(",")
- *      .readHeader(true)
- *      .readRowNames(false)
- *      .build();
+ * DelimitedTableReader reader = new DelimitedTableReader()
+ *      .setDelimiters(",")
+ *      .setReadHeader(true)
+ *      .setReadRowNames(false);
  * Table table = reader.readTable(fileOrInputStream);
  * }
  * 
@@ -40,20 +38,6 @@ import net.sci.table.impl.ColumnsTable;
  */
 public class DelimitedTableReader implements TableReader
 {
-    // =============================================================
-    // Static methods
-
-    /**
-     * Returns a new Builder class for creating new instances of
-     * DelimitedTableReader.
-     * 
-     * @return a new Builder class.
-     */
-    public static final Builder builder()
-    {
-        return new Builder();
-    }
-    
     // =============================================================
     // Class variables
 
@@ -110,68 +94,88 @@ public class DelimitedTableReader implements TableReader
     // =============================================================
     // Accessors and mutators
 
-    @Deprecated
     public String getDelimiters()
     {
         return delimiters;
     }
 
     /**
-     * @deprecated replaced by Builder class
+     * Sets up the delimiter to use between tokens within table.
+     * 
      * @param delimiters
+     *            the String containing the delimiter. May contain several
+     *            delimiter characters.
      */
-    @Deprecated
-    public void setDelimiters(String delimiters)
+    public DelimitedTableReader setDelimiters(String delimiters)
     {
         this.delimiters = delimiters;
+        return this;
     }
 
-    @Deprecated
     public boolean isReadHeader()
     {
         return readHeader;
     }
 
     /**
-     * @deprecated replaced by Builder class
+     * Chooses whether the header line must be read. Default is {@code true}.
+     * 
      * @param readHeader
+     *            the boolean flag for reading the header
      */
-    @Deprecated
-    public void setReadHeader(boolean readHeader)
+    public DelimitedTableReader setReadHeader(boolean readHeader)
     {
         this.readHeader = readHeader;
+        return this;
     }
 
-    @Deprecated
     public int getSkipLines()
     {
         return skipLines;
     }
 
     /**
-     * @deprecated replaced by Builder class
+     * Sets up the number of lines to skip before starting to read data.
+     * Default is zero
+     * 
      * @param skipLines
+     *            the number of lines to skip
      */
-    @Deprecated
-    public void setSkipLines(int skipLines)
+    public DelimitedTableReader setSkipLines(int skipLines)
     {
         this.skipLines = skipLines;
+        return this;
     }
 
-    @Deprecated
     public boolean isReadRowNames()
     {
         return readRowNames;
     }
 
     /**
-     * @deprecated replaced by Builder class
+     * Chooses whether the file contains row names. If yes, row names are
+     * used to populate the row axis of the result table. Default is true.
+     * 
      * @param readRowNames
+     *            the boolean flag for reading row names
      */
-    @Deprecated
-    public void setReadRowNames(boolean readRowNames)
+    public DelimitedTableReader setReadRowNames(boolean readRowNames)
     {
         this.readRowNames = readRowNames;
+        return this;
+    }
+    
+    /**
+     * Chooses whether processing of quotes should be avoided. If true,
+     * simply avoid special processing for quotes. Default is false.
+     * 
+     * @param ignoreQuotes
+     *            the boolean flag for ignoring the quotes
+     */
+    public DelimitedTableReader setIgnoreQuotes(boolean ignoreQuotes)
+    {
+        this.ignoreQuotes = ignoreQuotes;
+        return this;
     }
 
     
@@ -477,106 +481,5 @@ public class DelimitedTableReader implements TableReader
             indices[r] = levelTokens.indexOf(token);
         }
         return CategoricalColumn.create(name, indices, levelTokens.toArray(new String[0]));
-    }
-    
-    /**
-     * Builder class for the DelimitedTableReader class.
-     */
-    public static class Builder
-    {
-        private String delimiters = " \t";
-        private boolean readHeader = true;
-        private int skipLines = 0;
-        private boolean readRowNames = true;
-        private boolean ignoreQuotes = false;
-        
-        private Builder()
-        {
-        }
-        
-        /**
-         * Sets up the delimiter to use between tokens within table.
-         * 
-         * @param delimiters
-         *            the String containing the delimiter. May contain several
-         *            delimiter characters.
-         * @return a reference to the Builder class.
-         */
-        public Builder delimiters(String delimiters)
-        {
-            this.delimiters = delimiters;
-            return this;
-        }
-        
-        /**
-         * Chooses whether the header line must be read. Default is {@code true}.
-         * 
-         * @param readHeader
-         *            the boolean flag for reading the header
-         * @return a reference to the Builder class.
-         */
-        public Builder readHeader(boolean readHeader)
-        {
-            this.readHeader = readHeader;
-            return this;
-        }
-
-        /**
-         * Sets up the number of lines to skip before starting to read data.
-         * Default is zero
-         * 
-         * @param skipLines
-         *            the number of lines to skip
-         * @return a reference to the Builder class.
-         */
-        public Builder skipLines(int skipLines)
-        {
-            this.skipLines = skipLines;
-            return this;
-        }
-
-        /**
-         * Chooses whether the file contains row names. If yes, row names are
-         * used to populate the row axis of the result table. Default is true.
-         * 
-         * @param readRowNames
-         *            the boolean flag for reading row names
-         * @return a reference to the Builder class.
-         */
-        public Builder readRowNames(boolean readRowNames)
-        {
-            this.readRowNames = readRowNames;
-            return this;
-        }
-        
-        /**
-         * Chooses whether processing of quotes should be avoided. If true,
-         * simply avoid special processing for quotes. Default is false.
-         * 
-         * @param ignoreQuotes
-         *            the boolean flag for ignoring the quotes
-         * @return a reference to the Builder class.
-         */
-        public Builder ignoreQuotes(boolean ignoreQuotes)
-        {
-            this.ignoreQuotes = ignoreQuotes;
-            return this;
-        }
-        
-        /**
-         * Creates a new instance of DelimitedTableReader based on current
-         * settings.
-         * 
-         * @return a correctly initialized DelimitedTableReader
-         */
-        public DelimitedTableReader build()
-        {
-            DelimitedTableReader reader = new DelimitedTableReader(delimiters);
-            reader.readHeader = this.readHeader;
-            reader.skipLines = this.skipLines;
-            reader.readRowNames = this.readRowNames;
-            reader.ignoreQuotes = this.ignoreQuotes;
-            return reader;
-        }
     }
 }

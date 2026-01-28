@@ -32,11 +32,10 @@ public class DelimitedTableReaderTest
         String fileName = getClass().getResource("/tables/iris/iris.data").getFile();
         File file = new File(fileName);
 
-        DelimitedTableReader reader = DelimitedTableReader.builder()
-                .delimiters(",")
-                .readHeader(false)
-                .readRowNames(false)
-                .build();
+        DelimitedTableReader reader = new DelimitedTableReader()
+                .setDelimiters(",")
+                .setReadHeader(false)
+                .setReadRowNames(false);
 
         Table table = reader.readTable(file);
 
@@ -50,11 +49,10 @@ public class DelimitedTableReaderTest
         String filePath = "tables/iris/iris.data";
         InputStream stream = getClass().getClassLoader().getResourceAsStream(filePath);
 
-        DelimitedTableReader reader = DelimitedTableReader.builder()
-                .delimiters(",")
-                .readHeader(false)
-                .readRowNames(false)
-                .build();
+        DelimitedTableReader reader = new DelimitedTableReader()
+                .setDelimiters(",")
+                .setReadHeader(false)
+                .setReadRowNames(false);
 
         Table table = reader.readTable(stream);
 
