@@ -15,13 +15,13 @@ The library is at the basis of the development of the [Imago application](https:
 
 ## Installation
 
-Simply clone the project, or download the latest version.
+Simply clone the project, or download [the latest version]([https://github.com/SciCompJ/CS4J/releases).
 
-The managment of dependencies is performed by maven (see the pom.xml file).
+The managment of dependencies is performed by maven (see the [pom.xml](https://github.com/SciCompJ/cs4j/blob/main/pom.xml) file).
 
 ## Quick example
 
-Below is an example application that demonstrate several features of the library: 
+Below is an example application that demonstrates several features of the library: 
 image import, image filtering and segmentation, connected component labeling,
 computation of morphometric features from label map, save results table as text file.
 Note that the imports are not explicited.
