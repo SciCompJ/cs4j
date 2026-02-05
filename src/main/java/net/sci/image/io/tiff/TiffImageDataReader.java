@@ -285,9 +285,8 @@ public class TiffImageDataReader extends AlgoStub
         // allocate an array of bytes for storing raw data
         byte[] byteArray = new byte[nBytes];
         
-        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-
         // Read the byte array
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
         int offset = 0;
         int nRead = 0;
         for (ImageFileDirectory info : ifdList)
@@ -295,7 +294,6 @@ public class TiffImageDataReader extends AlgoStub
             nRead += readByteArray(stream, info, byteArray, offset);
             offset += bytesPerPlane;
         }
-        
         stream.close();
 
         // Check the whole buffer has been read
@@ -527,7 +525,7 @@ public class TiffImageDataReader extends AlgoStub
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
-    private int readByteBuffer(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer)
+    private static final int readByteBuffer(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer)
             throws IOException
     {
         TiffTag compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
@@ -546,7 +544,7 @@ public class TiffImageDataReader extends AlgoStub
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
-    private int readByteArrayUncompressed(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer)
+    private static final int readByteArrayUncompressed(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer)
             throws IOException
     {
         // retrieve strips info
@@ -572,7 +570,7 @@ public class TiffImageDataReader extends AlgoStub
         return totalRead;
     }
 
-    private int readByteArrayPackBits(RandomAccessFile raf, ImageFileDirectory ifd,
+    private static final int readByteArrayPackBits(RandomAccessFile raf, ImageFileDirectory ifd,
             byte[] buffer) throws IOException
     {
         // retrieve strips info
@@ -588,10 +586,7 @@ public class TiffImageDataReader extends AlgoStub
         int nStrips = stripOffsets.length;
 
         // Compute the number of bytes per strip
-        int nBytes = 0;
-        for (int i = 0; i < nStrips; i++)
-            nBytes += stripByteCounts[i];
-        byte[] compressedBytes = new byte[nBytes];
+        byte[] compressedBytes = new byte[sum(stripByteCounts)];
 
         // read each compressed strip
         int offset = 0;
@@ -602,15 +597,14 @@ public class TiffImageDataReader extends AlgoStub
             offset += nRead;
         }
 
-        int nRead = PackBits.uncompressPackBits(compressedBytes, buffer);
-        return nRead;
+        return PackBits.uncompressPackBits(compressedBytes, buffer);
     }
 
     /**
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
-    private int readByteArray(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer, int offset)
+    private static final int readByteArray(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer, int offset)
             throws IOException
     {
         TiffTag compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
@@ -628,7 +622,7 @@ public class TiffImageDataReader extends AlgoStub
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
-    private int readByteArrayUncompressed(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer,
+    private static final int readByteArrayUncompressed(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer,
             int offset) throws IOException
     {
         int[] stripOffsets = entryValueAsIntArray(ifd, BaselineTags.StripOffsets.CODE);
@@ -652,7 +646,7 @@ public class TiffImageDataReader extends AlgoStub
         return totalRead;
     }
 
-    private int readByteArrayPackBits(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer, int offset)
+    private static final int readByteArrayPackBits(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer, int offset)
             throws IOException
     {
         int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null);
@@ -663,12 +657,7 @@ public class TiffImageDataReader extends AlgoStub
         }
 
         // Compute the number of bytes per strip
-        int nBytes = 0;
-        for (int i = 0; i < stripOffsets.length; i++)
-        {
-            nBytes += stripByteCounts[i];
-        }
-        byte[] compressedBytes = new byte[nBytes];
+        byte[] compressedBytes = new byte[sum(stripByteCounts)];
 
         // read each compressed strip
         int offset0 = 0;
@@ -687,33 +676,43 @@ public class TiffImageDataReader extends AlgoStub
         TiffTag tag = ifd.getEntry(tagCode);
         return tag.count == 1 ? new int[] {tag.value} : (int[]) tag.content;
     }
+    
+    private static final int sum(int[] values)
+    {
+        int sum = 0;
+        for (int v : values)
+        {
+            sum += v;
+        }
+        return sum;
+    }
 
     
     // =============================================================
     // Conversion of byte arrays to other arrays
     
-    private final static short[] convertToShortArray(byte[] byteArray, ByteOrder order)
+    private static final short[] convertToShortArray(byte[] byteArray, ByteOrder order)
     {
         short[] shortArray = new short[byteArray.length / 2];
         ByteBuffer.wrap(byteArray).order(order).asShortBuffer().get(shortArray);
         return shortArray;
     }
 
-    private final static int[] convertToIntArray(byte[] byteArray, ByteOrder order)
+    private static final int[] convertToIntArray(byte[] byteArray, ByteOrder order)
     {
         int[] intArray = new int[byteArray.length / 4];
         ByteBuffer.wrap(byteArray).order(order).asIntBuffer().put(intArray);
         return intArray;
     }
 
-    private final static float[] convertToFloatArray(byte[] byteArray, ByteOrder order)
+    private static final float[] convertToFloatArray(byte[] byteArray, ByteOrder order)
     {
         float[] floatArray = new float[byteArray.length / 4];
         ByteBuffer.wrap(byteArray).order(order).asFloatBuffer().get(floatArray);
         return floatArray;
     }
 
-    private final static double[] convertToDoubleArray(byte[] byteArray, ByteOrder order)
+    private static final double[] convertToDoubleArray(byte[] byteArray, ByteOrder order)
     {
         double[] doubleArray = new double[byteArray.length / 8];
         ByteBuffer.wrap(byteArray).order(order).asDoubleBuffer().get(doubleArray);
