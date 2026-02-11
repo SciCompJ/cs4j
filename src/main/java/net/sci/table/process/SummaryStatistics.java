@@ -96,14 +96,7 @@ public class SummaryStatistics
      */
     public static final double std(NumericColumn col)
     {
-        double mean = mean(col);
-        double sumSq = 0.0;
-        for (double value : col.values())
-        {
-            double vc = value - mean;
-            sumSq += vc * vc;
-        }
-        return Math.sqrt(sumSq / (col.length() - 1.0));
+        return Math.sqrt(var(col));
     }
 
     /**
@@ -124,9 +117,13 @@ public class SummaryStatistics
     }
 
     /**
-     * Computes the variance of values within a numeric column.
+     * Computes the variance of the values within a numeric column.
+     * Normalizes the result by (N-1), where N is the number of values.
      * 
      * @see #std(NumericColumn)
+     * @see <a href=
+     *      "https://en.wikipedia.org/wiki/Variance#Population_variance_and_sample_variance">
+     *      https://en.wikipedia.org/wiki/Variance#Population_variance_and_sample_variance</a>
      * 
      * @param col
      *            a numeric column
@@ -141,7 +138,7 @@ public class SummaryStatistics
             double vc = value - mean;
             sumSq += vc * vc;
         }
-        return sumSq / col.length();
+        return sumSq / (col.length() - 1);
     }
 
     public Table process(Table table)
