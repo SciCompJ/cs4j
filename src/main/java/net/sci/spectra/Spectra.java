@@ -67,6 +67,13 @@ public class Spectra extends TableStub implements NumericTable
         this(new double[nRows][nCols]);
     }
 
+    /**
+     * Creates a new Spectra from the 2D array of values. The first indexing of
+     * the array corresponds to the rows, the second indexing to the columns.
+     * 
+     * @param data
+     *            the Nr-by-Nc array containing the spectra data.
+     */
     public Spectra(double[][] data)
     {
         this.data = data;
@@ -444,15 +451,6 @@ public class Spectra extends TableStub implements NumericTable
         }
         
         @Override
-        public void copyValues(double[] values, int index)
-        {
-            for (int r = 0; r < nRows; r++)
-            {
-                values[index++] = data[r][colIndex];
-            }
-        }
-
-        @Override
         public Double get(int row)
         {
             return data[row][colIndex];
@@ -468,14 +466,6 @@ public class Spectra extends TableStub implements NumericTable
         public void setValue(int row, double value)
         {
             data[row][colIndex] = value;
-        }
-
-        @Override
-        public double[] getValues()
-        {
-            double[] res = new double[nRows];
-            copyValues(res, 0);
-            return res;
         }
         
         @Override
