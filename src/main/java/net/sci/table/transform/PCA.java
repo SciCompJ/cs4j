@@ -10,6 +10,7 @@ import net.sci.table.Column;
 import net.sci.table.NumericColumn;
 import net.sci.table.NumericTable;
 import net.sci.table.Table;
+import net.sci.table.process.SummaryStatistics;
 
 /**
  * Transform a table using Principal Component Analysis (PCA).
@@ -19,10 +20,35 @@ import net.sci.table.Table;
  * different quantities. In the case of chemometrics data, it is more common to
  * use non-scaled PCA.
  * 
+ * {@snippet lang="java" :
+ * PCA pca = new PCA();
+ * pca.fit(table);
+ * Table scores = pca.scores();
+ * }
+ * 
  * @author dlegland
  */
 public class PCA
 {
+    /**
+     * Applies Principal Component Analysis (PCA) on the specified data table,
+     * that must contain only numeric columns.
+     * 
+     * @param table
+     *            the table to transform.
+     * @param scaled
+     *            a boolean flag indicating whether the PCa must be scaled or
+     *            not.
+     * @return the result of PCA applied on the table, corresponding to the
+     *         "scores" of the PCA.
+     */
+    public static final Table process(Table table, boolean scaled)
+    {
+        PCA pca = new PCA(scaled);
+        pca.fit(table);
+        return pca.transform(table);
+    }
+    
     /**
      * The boolean option to scale the data.
      */
@@ -36,10 +62,19 @@ public class PCA
      */
     double[] scalings;
     
+    /**
+     * The Table containing the scores of the transformed data table.
+     */
     Table scores;
 
+    /**
+     * The Table containing the loadings computed from the input data table.
+     */
     Table loadings;
     
+    /**
+     * The Table containing the eigen values computed from the input data table.
+     */
     Table eigenValues;
     
     
@@ -135,7 +170,7 @@ public class PCA
         this.meanValues = new double[nc];
         for (int c = 0; c < nc; c++)
         {
-            this.meanValues[c] = computeMean((NumericColumn) table.column(c));
+            this.meanValues[c] = SummaryStatistics.mean((NumericColumn) table.column(c));
         }
         
         // create result
@@ -172,16 +207,6 @@ public class PCA
         return res;
     }
 
-    private static final double computeMean(NumericColumn column)
-    {
-        double sum = 0;
-        for (double v : column.values())
-        {
-            sum += v;
-        }
-        return sum / column.length();
-    }
-    
     private static final double computeVariance(NumericColumn column, double columnMean)
     {
         double sum = 0;
@@ -335,21 +360,42 @@ public class PCA
         // setup meta data
         res.setColumnAxis(this.loadings.getColumnAxis().duplicate());
         res.setRowAxis(table.getRowAxis());
-        res.setName(table.getName() + "-PCA");
+        res.setName(table.getName() + "-scores");
 
         return res;
     }
     
+    /**
+     * Returns the Table containing eigen values of the result of the principal
+     * components analysis.
+     * 
+     * @return a Table with three columns and as many rows as the number of
+     *         components.
+     */
     public Table eigenValues()
     {
         return this.eigenValues;
     }
     
+    /**
+     * Returns the Table containing loadings of the result of the principal
+     * components analysis.
+     * 
+     * @return a Table with as many columns as the number of components, and as
+     *         many rows as the number of columns in the original data table.
+     */
     public Table loadings()
     {
         return this.loadings;
     }
     
+    /**
+     * Returns the Table containing scores of the result of the principal
+     * components analysis.
+     * 
+     * @return a Table with as many columns as the number of components, and as
+     *         many rows as the number of rows in the original data table.
+     */
     public Table scores()
     {
         return this.scores;
