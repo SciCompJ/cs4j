@@ -464,7 +464,7 @@ public class Ellipsoid3D implements Geometry3D
         AffineTransform3D sca = AffineTransform3D.createScaling(r1, r2, r3);
         AffineTransform3D rot = AffineTransform3D.fromMatrix(orientation().affineMatrix());
         AffineTransform3D tra = AffineTransform3D.createTranslation(center);
-        return tra.concatenate(rot).concatenate(sca);
+        return AffineTransform3D.compose(tra, rot, sca);
     }
     
     private AffineTransform3D globalToLocalTransform()
@@ -472,7 +472,6 @@ public class Ellipsoid3D implements Geometry3D
         AffineTransform3D tra = AffineTransform3D.createTranslation(-center.x(), -center.y(), -center.z());
         AffineTransform3D rot = AffineTransform3D.fromMatrix(orientation().inverse().affineMatrix());
         AffineTransform3D sca = AffineTransform3D.createScaling(1.0 / r1, 1.0 / r2, 1.0 / r3);
-        return sca.concatenate(rot).concatenate(tra);
+        return AffineTransform3D.compose(sca, rot, tra);
     }
-
 }

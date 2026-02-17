@@ -339,6 +339,31 @@ public interface AffineTransform2D extends Transform2D
         return new MatrixAffineTransform2D(v1.x(), v2.x(), trans.x(), v1.y(), v2.y(), trans.y());
     }
     
+
+    // ===================================================================
+    // Static methods
+    
+    /**
+     * Computes the Affine transform resulting from the composition of the
+     * specified transforms. The resulting transform is equivalent in applying
+     * successively all the transforms, from the last one to the first one.
+     * 
+     * @see #compose(AffineTransform2D)
+     * 
+     * @param transfos
+     *            the transforms to concatenate
+     * @return the result of transform composition / concatenation.
+     */
+    public static AffineTransform2D compose(AffineTransform2D... transfos)
+    {
+        AffineTransform2D res = IDENTITY;
+        for (AffineTransform2D transfo : transfos)
+        {
+            res = res.compose(transfo);
+        }
+        return res;
+    }
+    
     
     // ===================================================================
     // New methods declaration
