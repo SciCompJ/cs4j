@@ -250,16 +250,38 @@ public interface AffineTransform3D extends Transform3D
      * 
      * @param transfos
      *            the transforms to concatenate
-     * @return the result of transform composition / concatenation.
+     * @return the result of transforms composition / concatenation.
      */
     public static AffineTransform3D compose(AffineTransform3D... transfos)
     {
-        AffineTransform3D res = IDENTITY;
-        for (AffineTransform3D transfo : transfos)
+        // initialize coeffs with first transform
+        double[][] m1 = transfos[0].affineMatrix();
+        
+        // update coeffs with remaining transforms
+        double[][] mNew = new double[3][4];
+        for (int i = 1; i < transfos.length; i++)
         {
-            res = res.compose(transfo);
+            double[][] m2 = transfos[i].affineMatrix();
+            mNew[0][0] = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0] + m1[0][2] * m2[2][0];
+            mNew[0][1] = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1] + m1[0][2] * m2[2][1];
+            mNew[0][2] = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2] * m2[2][2];
+            mNew[0][3] = m1[0][0] * m2[0][3] + m1[0][1] * m2[1][3] + m1[0][2] * m2[2][3] + m1[0][3];
+            mNew[1][0] = m1[1][0] * m2[0][0] + m1[1][1] * m2[1][0] + m1[1][2] * m2[2][0];
+            mNew[1][1] = m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1] + m1[1][2] * m2[2][1];
+            mNew[1][2] = m1[1][0] * m2[0][2] + m1[1][1] * m2[1][2] + m1[1][2] * m2[2][2];
+            mNew[1][3] = m1[1][0] * m2[0][3] + m1[1][1] * m2[1][3] + m1[1][2] * m2[2][3] + m1[1][3];
+            mNew[2][0] = m1[2][0] * m2[0][0] + m1[2][1] * m2[1][0] + m1[2][2] * m2[2][0];
+            mNew[2][1] = m1[2][0] * m2[0][1] + m1[2][1] * m2[1][1] + m1[2][2] * m2[2][1];
+            mNew[2][2] = m1[2][0] * m2[0][2] + m1[2][1] * m2[1][2] + m1[2][2] * m2[2][2];
+            mNew[2][3] = m1[2][0] * m2[0][3] + m1[2][1] * m2[1][3] + m1[2][2] * m2[2][3] + m1[2][3];
+            m1 = mNew;
         }
-        return res;
+        
+        // encapsulate coeffs within an AffineTransform class
+        return new MatrixAffineTransform3D(
+                m1[0][0], m1[0][1], m1[0][2], m1[0][3], 
+                m1[1][0], m1[1][1], m1[1][2], m1[1][3], 
+                m1[2][0], m1[2][1], m1[2][2], m1[2][3]);
     }
     
 

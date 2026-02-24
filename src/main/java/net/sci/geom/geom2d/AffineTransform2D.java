@@ -352,16 +352,29 @@ public interface AffineTransform2D extends Transform2D
      * 
      * @param transfos
      *            the transforms to concatenate
-     * @return the result of transform composition / concatenation.
+     * @return the result of transforms composition / concatenation.
      */
     public static AffineTransform2D compose(AffineTransform2D... transfos)
     {
-        AffineTransform2D res = IDENTITY;
-        for (AffineTransform2D transfo : transfos)
+     // initialize coeffs with first transform
+        double[][] m1 = transfos[0].affineMatrix();
+
+        // update coeffs with remaining transforms
+        double[][] mNew = new double[2][3];
+        for (int i = 1; i < transfos.length; i++)
         {
-            res = res.compose(transfo);
+            double[][] m2 = transfos[i].affineMatrix();
+            mNew[0][0] = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0];
+            mNew[0][1] = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1];
+            mNew[0][2] = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2];
+            mNew[1][0] = m1[1][0] * m2[0][0] + m1[1][1] * m2[1][0];
+            mNew[1][1] = m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1];
+            mNew[1][2] = m1[1][0] * m2[0][2] + m1[1][1] * m2[1][2] + m1[1][2];
+            m1 = mNew;
         }
-        return res;
+        
+        // encapsulate coeffs within an AffineTransform class
+        return new MatrixAffineTransform2D(m1[0][0], m1[0][1], m1[0][2], m1[1][0], m1[1][1], m1[1][2]);
     }
     
     

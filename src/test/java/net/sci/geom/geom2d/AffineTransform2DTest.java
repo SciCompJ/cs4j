@@ -32,6 +32,21 @@ public class AffineTransform2DTest
      * Test method for {@link net.sci.geom.geom2d.AffineTransform2D#compose(net.sci.geom.geom2d.AffineTransform2D)}.
      */
     @Test
+    public final void test_static_compose_TraRotTra()
+    {
+        AffineTransform2D tra = AffineTransform2D.createTranslation(10, 20);
+        AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(30));
+        
+        AffineTransform2D res = AffineTransform2D.compose(tra, rot, tra.inverse());
+               
+        AffineTransform2D exp = AffineTransform2D.createRotation(10, 20, Math.toRadians(30));
+        assertTrue(res.almostEquals(exp, 0.011));
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.geom2d.AffineTransform2D#compose(net.sci.geom.geom2d.AffineTransform2D)}.
+     */
+    @Test
     public final void test_compose_associative_TraRotTra()
     {
         AffineTransform2D tra = AffineTransform2D.createTranslation(10, 20);

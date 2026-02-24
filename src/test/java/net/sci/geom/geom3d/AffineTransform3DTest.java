@@ -13,12 +13,11 @@ import org.junit.Test;
  */
 public class AffineTransform3DTest
 {
-
     /**
      * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#compose(net.sci.geom.geom3d.AffineTransform3D)}.
      */
     @Test
-    public final void testConcatenate()
+    public final void test_compose_TraRotTra()
     {
         AffineTransform3D tra = AffineTransform3D.createTranslation(30, 40, 50);
         AffineTransform3D rot = AffineTransform3D.createRotationOx(Math.toRadians(30));
@@ -33,7 +32,22 @@ public class AffineTransform3DTest
      * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#compose(net.sci.geom.geom3d.AffineTransform3D)}.
      */
     @Test
-    public final void testConcatenate_RotationsZXYX()
+    public final void test_static_compose_TraRotTra()
+    {
+        AffineTransform3D tra = AffineTransform3D.createTranslation(30, 40, 50);
+        AffineTransform3D rot = AffineTransform3D.createRotationOx(Math.toRadians(30));
+        
+        AffineTransform3D trans = AffineTransform3D.compose(tra, rot, tra.inverse());
+               
+        AffineTransform3D exp = AffineTransform3D.createRotationOx(new Point3D(30, 40, 50), Math.toRadians(30));
+        assertTrue(exp.almostEquals(trans, 0.01));
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#compose(net.sci.geom.geom3d.AffineTransform3D)}.
+     */
+    @Test
+    public final void test_compose_RotationsZXYX()
     {
         AffineTransform3D rot1 = AffineTransform3D.createRotationOz(Math.PI/2);
         AffineTransform3D rot2 = AffineTransform3D.createRotationOx(Math.PI/2);
@@ -50,7 +64,7 @@ public class AffineTransform3DTest
      * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#compose(net.sci.geom.geom3d.AffineTransform3D)}.
      */
     @Test
-    public final void testConcatenate_RotationsYZXZ()
+    public final void test_compose_RotationsYZXZ()
     {
         // dummy angle
         double alpha = 0.20;
@@ -69,7 +83,7 @@ public class AffineTransform3DTest
      * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#fromBasis(net.sci.geom.geom3d.Vector3D, net.sci.geom.geom3d.Vector3D, net.sci.geom.geom3d.Vector3D)}.
      */
     @Test
-    public final void testFromBasisVector3DVector3DVector3D()
+    public final void test_fromBasis_3Vectors()
     {
         Vector3D v1 = new Vector3D( 3,  3, 1);
         Vector3D v2 = new Vector3D(-3,  3, 1);
@@ -91,7 +105,7 @@ public class AffineTransform3DTest
      * Test method for {@link net.sci.geom.geom3d.AffineTransform3D#fromBasis(net.sci.geom.geom3d.Vector3D, net.sci.geom.geom3d.Vector3D, net.sci.geom.geom3d.Vector3D, net.sci.geom.geom3d.Vector3D)}.
      */
     @Test
-    public final void testFromBasisVector3DVector3DVector3DVector3D()
+    public final void test_fromBasis_4Vectors()
     {
         Vector3D v1 = new Vector3D( 3,  3, 1);
         Vector3D v2 = new Vector3D(-3,  3, 1);
