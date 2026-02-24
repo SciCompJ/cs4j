@@ -289,7 +289,7 @@ public class Ellipsoid3D implements Geometry3D
      * 
      * @param point
      *            a point in the plane
-     * @return the signed distance of the point to the boundary
+     * @return the signed distance from the point to the boundary
      * 
      * @see net.sci.geom.geom2d.Geometry2D#distance(Point2D)
      */
@@ -361,17 +361,11 @@ public class Ellipsoid3D implements Geometry3D
         // use a discrete approximation of the ellipsoid
         Collection<Point3D> verts = surfaceVertices(240, 120);
         
-        // initialize distance
-        double dist = Double.POSITIVE_INFINITY;
-        
-        // iterate over vertices
-        for (Point3D point : verts)
-        {
-            dist = Math.min(dist, point.distance(x, y, z));
-        }
-        
-        // concatenate into a new Bounds3D object
-        return dist;
+        // keep min distance over vertices
+        return verts.stream()
+                .mapToDouble(v -> v.distance(x, y, z))
+                .min()
+                .orElse(Double.POSITIVE_INFINITY);
     }
 
     @Override
@@ -417,14 +411,14 @@ public class Ellipsoid3D implements Geometry3D
     
     private Collection<Point3D> surfaceVertices(int nPhi, int nTheta)
     {
-        // pre-compute angle values for phi
-        double[] phiList = new double[nPhi+1];
-        for (int i = 0; i <= nPhi; i++)
+        // pre-compute angle values for phi (azimut)
+        double[] phiList = new double[nPhi];
+        for (int i = 0; i < nPhi; i++)
         {
             phiList[i] = i * 2.0 * Math.PI / (double) nPhi;
         }
         
-        // pre-compute sin and cos values for theta
+        // pre-compute sin and cos values for theta (colatitude)
         double[] sinTheta = new double[nTheta+1];
         double[] cosTheta = new double[nTheta+1];
         for (int i = 0; i <= nTheta; i++)
@@ -438,10 +432,10 @@ public class Ellipsoid3D implements Geometry3D
         AffineTransform3D transfo = localToGlobalTransform();
         
         // allocate memory
-        ArrayList<Point3D> res = new ArrayList<Point3D>((nTheta+1) * (nPhi+1));
+        ArrayList<Point3D> res = new ArrayList<Point3D>((nTheta+1) * nPhi);
         
         // iterate over pairs of spherical coordinates
-        for (int iPhi = 0; iPhi <= nPhi; iPhi++)
+        for (int iPhi = 0; iPhi < nPhi; iPhi++)
         {
             // pre-compute trigonometric projections of phi
             double cosPhi = Math.cos(phiList[iPhi]);
