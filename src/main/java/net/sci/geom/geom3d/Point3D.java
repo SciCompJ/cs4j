@@ -391,9 +391,29 @@ public class Point3D implements Point, Geometry3D
     // ===================================================================
     // Override Object's methods
 
+    public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (obj instanceof Point3D that)
+        {
+            return this.x == that.x && this.y == that.y && this.z == that.z; 
+        }
+        return false;
+    }
+    
+    public int hashCode()
+    {
+        int hash = 17;
+        hash = hash * 31 + Double.hashCode(x);
+        hash = hash * 31 + Double.hashCode(y);
+        hash = hash * 31 + Double.hashCode(z);
+        return hash;
+    }
+    
+
     @Override
     public String toString()
     {
-        return String.format(Locale.ENGLISH, "Point3D(%f, %f, %f)", x, y, z);
+        return String.format(Locale.ENGLISH, "Point3D(%g, %g, %g)", x, y, z);
     }
 }

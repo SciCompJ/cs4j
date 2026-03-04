@@ -1,6 +1,3 @@
-/**
- * 
- */
 package net.sci.geom.geom2d;
 
 import java.util.ArrayList;
@@ -415,12 +412,29 @@ public class Point2D implements PointShape2D, Point
 
 
     // ===================================================================
-    // Override Object interface
+    // Override Object's methods
 
+    public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (obj instanceof Point2D that)
+        {
+            return this.x == that.x && this.y == that.y; 
+        }
+        return false;
+    }
+    
+    public int hashCode()
+    {
+        int hash = 17;
+        hash = hash * 31 + Double.hashCode(x);
+        hash = hash * 31 + Double.hashCode(y);
+        return hash;
+    }
+    
     @Override
     public String toString()
     {
-        return String.format(Locale.ENGLISH, "Point2D(%g,%g)", this.x, this.y);
+        return String.format(Locale.ENGLISH, "Point2D(%g, %g)", this.x, this.y);
     }
-
 }
