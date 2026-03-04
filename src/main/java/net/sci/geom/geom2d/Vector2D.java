@@ -317,6 +317,7 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
 	{
 		return x * v.y - v.x * y;
 	}
+	
 
     // ===================================================================
     // Accessors
@@ -336,6 +337,35 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
     {
         return y;
     }
+
+
+    // ===================================================================
+    // Geometry-like  methods
+    
+    /**
+     * Returns the result of the given transformation applied to this vector.
+     * 
+     * @param trans
+     *            the transformation to apply
+     * @return the transformed vector
+     */
+    public Vector2D transform(AffineTransform2D trans)
+    {
+        return trans.transform(this);
+    }
+
+    public boolean almostEquals(Vector2D vect, double eps)
+    {
+        if (Math.abs(vect.x - x) > eps) return false;
+        if (Math.abs(vect.y - y) > eps) return false;
+        return true;
+    }
+
+    public Vector2D duplicate()
+    {
+        return new Vector2D(x, y);
+    }
+    
 
     // ===================================================================
     // Implementation of the Numeric interface
@@ -418,30 +448,7 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
     // ===================================================================
     // Geometry methods
     
-    /**
-     * Returns the result of the given transformation applied to this vector.
-     * 
-     * @param trans
-     *            the transformation to apply
-     * @return the transformed vector
-     */
-    public Vector2D transform(AffineTransform2D trans)
-    {
-        return trans.transform(this);
-    }
-
-    public boolean almostEquals(Vector2D vect, double eps)
-    {
-        if (Math.abs(vect.x - x) > eps) return false;
-        if (Math.abs(vect.y - y) > eps) return false;
-        return true;
-    }
     
-    
-    public Vector2D duplicate()
-    {
-        return new Vector2D(x, y);
-    }
     
 
 	// ===================================================================
@@ -458,12 +465,29 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
 
 
     // ===================================================================
-    // Override Object interface
+    // Override Object's methods
 
+    public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (obj instanceof Vector2D that)
+        {
+            return this.x == that.x && this.y == that.y; 
+        }
+        return false;
+    }
+    
+    public int hashCode()
+    {
+        int hash = 17;
+        hash = hash * 31 + Double.hashCode(x);
+        hash = hash * 31 + Double.hashCode(y);
+        return hash;
+    }
+    
     @Override
     public String toString()
     {
-        return String.format(Locale.ENGLISH, "Point2D(%g,%g)", this.x, this.y);
+        return String.format(Locale.ENGLISH, "Vector2D(%g, %g)", this.x, this.y);
     }
-
 }

@@ -393,6 +393,28 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
 
     
     // ===================================================================
+    // General geometry-like methods
+
+    public Vector3D transform(AffineTransform3D trans)
+    {
+        return trans.transform(this);
+    }
+
+    public Vector3D duplicate()
+    {
+        return new Vector3D(x, y, z);
+    }
+    
+    public boolean almostEquals(Vector3D that, double tol)
+    {
+        if (Math.abs(this.x - that.x) > tol) return false;
+        if (Math.abs(this.y - that.y) > tol) return false;
+        if (Math.abs(this.z - that.z) > tol) return false;
+        return true;
+    }
+    
+    
+    // ===================================================================
     // Implementation of the Numeric interface
     
     @Override
@@ -472,28 +494,6 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
     
 
     // ===================================================================
-    // General geometry methods
-
-    public Vector3D transform(AffineTransform3D trans)
-    {
-        return trans.transform(this);
-    }
-
-    public Vector3D duplicate()
-    {
-        return new Vector3D(x, y, z);
-    }
-    
-    public boolean almostEquals(Vector3D that, double tol)
-    {
-        if (Math.abs(this.x - that.x) > tol) return false;
-        if (Math.abs(this.y - that.y) > tol) return false;
-        if (Math.abs(this.z - that.z) > tol) return false;
-        return true;
-    }
-    
-
-    // ===================================================================
     // Implements Dimensional interface
 
     /**
@@ -507,12 +507,32 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
         return 3;
     }
 	
+    
     // ===================================================================
     // Override Object's methods
 
+    public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (obj instanceof Vector3D that)
+        {
+            return this.x == that.x && this.y == that.y && this.z == that.z; 
+        }
+        return false;
+    }
+    
+    public int hashCode()
+    {
+        int hash = 17;
+        hash = hash * 31 + Double.hashCode(x);
+        hash = hash * 31 + Double.hashCode(y);
+        hash = hash * 31 + Double.hashCode(z);
+        return hash;
+    }
+    
     @Override
     public String toString()
     {
-        return String.format(Locale.ENGLISH, "Vector3D(%f, %f, %f)", x, y, z);
+        return String.format(Locale.ENGLISH, "Vector3D(%g, %g, %g)", x, y, z);
     }
 }
