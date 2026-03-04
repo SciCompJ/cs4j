@@ -10,6 +10,7 @@ import static java.lang.Math.sin;
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom2d.Vector2D;
 import net.sci.geom.polygon2d.LinearRing2D;
 
 /**
@@ -20,14 +21,79 @@ import net.sci.geom.polygon2d.LinearRing2D;
  */
 public class Circle2D implements Contour2D
 {
+    /**
+     * Computes the circumscribed circle, commonly referred to as circumcircle,
+     * of three points. Computation is based on equations from Wikipedia.
+     * 
+     * See <a href=
+     * "https://en.wikipedia.org/wiki/Circumcircle#Cartesian_coordinates_2">https://en.wikipedia.org/wiki/Circumcircle</a>
+     * 
+     * @param p1
+     *            the first point
+     * @param p2
+     *            the second point
+     * @param p3
+     *            the third point
+     * @return the unique circle that contains the three points, if it exists
+     */
+    public static final Circle2D circumCircle(Point2D p1, Point2D p2, Point2D p3)
+    {
+        // find the point with lowest distance from origin, and apply a shift to
+        // translate this point on the origin
+        double d1 = sqNorm(p1);  
+        double d2 = sqNorm(p2);  
+        double d3 = sqNorm(p3);
+        
+        Point2D refPoint;
+        Vector2D pB, pC;
+        if (d1 <= d2 && d1 <= d3)
+        {
+            refPoint = p1;
+            pB = new Vector2D(p1, p2); 
+            pC = new Vector2D(p1, p3);
+        }
+        else if (d2 <= d1 && d2 <= d3)
+        {
+            refPoint = p2;
+            pB = new Vector2D(p2, p1); 
+            pC = new Vector2D(p2, p3);
+        }
+        else // if (d3 <= d1 && d3 <= d2)
+        {
+            refPoint = p3;
+            pB = new Vector2D(p3, p1); 
+            pC = new Vector2D(p3, p2);
+        }
+        
+        double denom = 2 * (pB.x() * pC.y() - pB.y() * pC.x());
+        double sqNormB = sqNorm(pB);
+        double sqNormC = sqNorm(pC);
+        double ux =  (pC.y() * sqNormB - pB.y() * sqNormC) / denom;
+        double uy =  (pB.x() * sqNormC - pC.x() * sqNormB) / denom;
+        double r = Math.hypot(ux, uy);
+                
+        return new Circle2D(refPoint.x() + ux, refPoint.y() + uy, r);
+    }
+    
+    private final static double sqNorm(Point2D p)
+    {
+        return p.x() * p.x() + p.y() * p.y();
+    }
+    
+    private final static double sqNorm(Vector2D v)
+    {
+        return v.x() * v.x() + v.y() * v.y();
+    }
+    
+    
     // ===================================================================
     // Class variables
     
     /** X-coordinate of the center. */
-    protected double  xc;
+    protected double xc;
 
     /** Y-coordinate of the center. */
-    protected double  yc;
+    protected double yc;
 
     /** The radius of the circle */
     protected double radius;
@@ -122,6 +188,26 @@ public class Circle2D implements Contour2D
         return 2 * Math.PI * this.radius;
     }
 
+    
+    /**
+     * Checks if this circle is equal to the specified circle up to the absolute
+     * tolerance value given as parameter. The tolerance is used to compare
+     * position of centers and circle radius.
+     * 
+     * @param circle
+     *            the circle to compare with
+     * @param eps
+     *            the (absolute) tolerance on center coordinates and radius
+     * @return true if the circles are equal up to the <code>eps</code>
+     *         tolerance value.
+     */
+    public boolean almostEquals(Circle2D circle, double eps)
+    {
+        if (!this.center().almostEquals(circle.center(), eps)) return false;
+        if (Math.abs(circle.radius - this.radius) > eps) return false;
+        return true;
+    }
+    
     
     // ===================================================================
     // Methods implementing the Boundary2D interface

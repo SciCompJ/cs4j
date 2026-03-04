@@ -7,11 +7,38 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import net.sci.geom.geom2d.Point2D;
+
 /**
  * 
  */
 public class Circle2DTest
 {
+    /**
+     * Test method for {@link net.sci.geom.geom2d.curve.Circle2D#circumCircle(net.sci.geom.geom2d.Point2D, net.sci.geom.geom2d.Point2D, net.sci.geom.geom2d.Point2D)}.
+     */
+    @Test
+    public final void test_circumCircle_simpleCases()
+    {
+        Point2D p1 = new Point2D(20, 30);
+        Point2D p2 = new Point2D(20, 50);
+        Point2D p3 = new Point2D(40, 50);
+        Point2D p4 = new Point2D(40, 30);
+        
+        Circle2D exp = new Circle2D(30, 40, Math.sqrt(2) * 10);
+        
+        Circle2D circ1 = Circle2D.circumCircle(p1, p2, p3);
+        assertTrue(exp.almostEquals(circ1, 0.0001));
+        
+        Circle2D circ2 = Circle2D.circumCircle(p2, p3, p4);
+        assertTrue(exp.almostEquals(circ2, 0.0001));
+        
+        Circle2D circ3 = Circle2D.circumCircle(p3, p4, p1);
+        assertTrue(exp.almostEquals(circ3, 0.0001));
+        
+        Circle2D circ4 = Circle2D.circumCircle(p4, p1, p2);
+        assertTrue(exp.almostEquals(circ4, 0.0001));
+    }
 
     /**
      * Test method for {@link net.sci.geom2d.curve.Circle2D#area()}.
