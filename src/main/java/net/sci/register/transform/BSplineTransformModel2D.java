@@ -78,7 +78,7 @@ public class BSplineTransformModel2D extends ParametricTransform2D
         Array2D<Vector2D> shifts = GenericArray2D.create(gridSize[0], gridSize[1], new Vector2D());
         for (int iy = 0; iy < gridSize[1]; iy++)
         {
-            int index = iy * gridSize[0];
+            int index = iy * gridSize[0] * 2;
             for (int ix = 0; ix < gridSize[0]; ix++)
             {
                 double vx = this.parameters[index + ix];
