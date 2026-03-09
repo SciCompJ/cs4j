@@ -404,7 +404,7 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8,UInt8> implement
     /**
      * Wraps a RGB8 array into a RGB8Array2D, with two dimensions.
      */
-    private static class Wrapper extends RGB8Array2D
+    private static class Wrapper extends RGB8Array2D implements Array.View<RGB8>
     {
         RGB8Array array;
 
@@ -420,6 +420,12 @@ public abstract class RGB8Array2D extends IntVectorArray2D<RGB8,UInt8> implement
             this.array = array;
         }
         
+        @Override
+        public Collection<Array<?>> parentArrays()
+        {
+            return List.of(array);
+        }
+
         @Override
         public int getSample(int x, int y, int c)
         {
