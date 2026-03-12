@@ -88,24 +88,57 @@ public class Vector2DTest
      * Test method for {@link net.sci.geom.geom2d.Vector2D#crossProduct(net.sci.geom.geom2d.Vector2D, net.sci.geom.geom2d.Vector2D)}.
      */
     @Test
-    public final void test_crossProduct_Vector2DVector2D()
+    public final void test_crossProduct_Vectors_orthogonalUnitVectors()
     {
-        double dot1 = Vector2D.crossProduct(new Vector2D(1, 0), new Vector2D(0, 1));
-        assertEquals(1.0, dot1, 0.01);
-
-        double dot2 = Vector2D.crossProduct(new Vector2D(30, 0), new Vector2D(20, 0));
-        assertEquals(0.0, dot2, 0.01);
+        double dot = Vector2D.crossProduct(new Vector2D(1, 0), new Vector2D(0, 1));
+        assertEquals(1.0, dot, 0.01);
     }
     
+    /**
+     * Test method for {@link net.sci.geom.geom2d.Vector2D#crossProduct(net.sci.geom.geom2d.Vector2D, net.sci.geom.geom2d.Vector2D)}.
+     */
+    @Test
+    public final void test_crossProduct_Vectors_parallelVectors()
+    {
+        double dot = Vector2D.crossProduct(new Vector2D(30, 0), new Vector2D(20, 0));
+        assertEquals(0.0, dot, 0.01);
+    }
+    
+
+    /**
+     * Test method for {@link net.sci.geom.geom2d.Point2D#crossProduct(net.sci.geom.geom2d.Point2D, net.sci.geom.geom2d.Point2D, net.sci.geom.geom2d.Point2D)}.
+     */
+    @Test
+    public final void test_crossProduct_Points_orthogonalUnitVectors()
+    {
+        double dot1 = Vector2D.crossProduct(new Point2D(0, 0), new Point2D(1, 0), new Point2D(0, 1));
+        assertEquals(1.0, dot1, 0.01);
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.geom2d.Point2D#crossProduct(net.sci.geom.geom2d.Point2D, net.sci.geom.geom2d.Point2D, net.sci.geom.geom2d.Point2D)}.
+     */
+    @Test
+    public final void test_crossProduct_Points_parallelVectors()
+    {
+        double dot1 = Vector2D.crossProduct(new Point2D(10, 10), new Point2D(30, 10), new Point2D(20, 10));
+        assertEquals(0.0, dot1, 0.01);
+        
+        double dot2 = Vector2D.crossProduct(new Point2D(10, 10), new Point2D(10+30, 10+40), new Point2D(10+60, 10+80));
+        assertEquals(0.0, dot2, 0.01);
+    }
+
     /**
      * Test method for {@link net.sci.geom.geom2d.Vector2D#crossProduct(double, double, double, double)}.
      */
     @Test
-    public final void test_crossProduct_DoubleDoubleDoubleDouble()
+    public final void test_crossProduct_Doubles()
     {
+        // orthogonal vectors
         double dot1 = Vector2D.crossProduct(1, 0, 0, 1);
         assertEquals(1.0, dot1, 0.01);
 
+        // parallel vectors
         double dot2 = Vector2D.crossProduct(30, 0, 20, 0);
         assertEquals(0.0, dot2, 0.01);
     }

@@ -143,6 +143,33 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
 	}
     
     /**
+     * Computes the cross product of the two vectors obtained by using the first
+     * point as source and the two other points as target.
+     * 
+     * Cross product is zero for colinear vectors. It is positive if angle
+     * between vector 1 and vector 2 is comprised between 0 and PI, and negative
+     * otherwise.
+     * 
+     * @see #crossProduct(Vector2D,Vector2D)
+     * 
+     * @param p0
+     *            the origin point of both vectors
+     * @param p1
+     *            the target point of first vector
+     * @param p2
+     *            the target point of second vector
+     * @return the cross product of vectors {@code P0-P1} and {@code P0-P2}.
+     */
+    public static double crossProduct(Point2D p0, Point2D p1, Point2D p2)
+    {
+        double dx1 = p1.x - p0.x;
+        double dy1 = p1.y - p0.y;
+        double dx2 = p2.x - p0.x;
+        double dy2 = p2.y - p0.y;
+        return dx1 * dy2 - dx2 * dy1;
+    }
+    
+    /**
      * Get the cross product of two vectors given by their coordinates. This
      * method is a low-level version of the method with same name that accepts
      * two vectors as input arguments. If the two vectors are given by
