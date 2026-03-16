@@ -16,10 +16,14 @@ import net.sci.array.color.Color;
 import net.sci.array.color.ColorMap;
 import net.sci.array.color.RGB16;
 import net.sci.array.color.RGB16Array2D;
+import net.sci.array.numeric.Float32Array3D;
 import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt16Array2D;
+import net.sci.array.numeric.UInt16Array3D;
 import net.sci.array.numeric.UInt8Array3D;
+import net.sci.array.numeric.impl.FileMappedFloat32Array3D;
+import net.sci.array.numeric.impl.FileMappedUInt16Array3D;
 import net.sci.array.numeric.impl.FileMappedUInt8Array3D;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
@@ -336,7 +340,7 @@ public class TiffImageReaderTest
 //    }
 
     /**
-     * Read a 3D Tiff image as saved by ImageJ.
+     * Reads a 3D Tiff image as saved by ImageJ.
      * 
      * @throws IOException
      */
@@ -357,5 +361,86 @@ public class TiffImageReaderTest
         
 //        Image sliceImage = new Image(array.slice(13));
 //        sliceImage.show();
+    }
+    
+    /**
+     * Reads a 3D Tiff image as saved by Matlab.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void test_Virtual3D_mri_uint8_uncompressed_matlab() throws IOException
+    {
+        String fileName = getClass().getResource("/images/matlab/mri_uint8_uncompressed.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readVirtualImage3D();
+        
+        assertEquals(128, image.getSize(0));
+        assertEquals(128, image.getSize(1));
+        assertEquals(27, image.getSize(2));
+        
+        UInt8Array3D array = (UInt8Array3D ) image.getData();
+        assertTrue(array instanceof FileMappedUInt8Array3D);
+        
+        TiffImageReader refReader = new TiffImageReader(fileName);
+        UInt8Array3D refArray = (UInt8Array3D) refReader.readImageStack();
+        
+        // check that few random positions lead to same values 
+        assertEquals(refArray.getInt(50, 50, 10), array.getInt(50, 50, 10));
+    }
+    
+    /**
+     * Reads a 3D Tiff image as saved by Matlab.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void test_Virtual3D_mri_uint16_uncompressed_matlab() throws IOException
+    {
+        String fileName = getClass().getResource("/images/matlab/mri_uint16_uncompressed.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readVirtualImage3D();
+        
+        assertEquals(128, image.getSize(0));
+        assertEquals(128, image.getSize(1));
+        assertEquals(27, image.getSize(2));
+        
+        UInt16Array3D array = (UInt16Array3D) image.getData();
+        assertTrue(array instanceof FileMappedUInt16Array3D);
+        
+        TiffImageReader refReader = new TiffImageReader(fileName);
+        UInt16Array3D refArray = (UInt16Array3D) refReader.readImageStack();
+        
+        // check that few random positions lead to same values 
+        assertEquals(refArray.getInt(50, 50, 10), array.getInt(50, 50, 10));
+    }
+    
+    /**
+     * Reads a 3D Tiff image as saved by Matlab.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void test_Virtual3D_mri_float32_uncompressed_matlab() throws IOException
+    {
+        String fileName = getClass().getResource("/images/matlab/mri_float32_uncompressed.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readVirtualImage3D();
+        
+        assertEquals(128, image.getSize(0));
+        assertEquals(128, image.getSize(1));
+        assertEquals(27, image.getSize(2));
+        
+        Float32Array3D array = (Float32Array3D) image.getData();
+        assertTrue(array instanceof FileMappedFloat32Array3D);
+        
+        TiffImageReader refReader = new TiffImageReader(fileName);
+        Float32Array3D refArray = (Float32Array3D) refReader.readImageStack();
+        
+        // check that few random positions lead to same values 
+        assertEquals(refArray.getValue(50, 50, 10), array.getValue(50, 50, 10), 0.01);
     }
 }

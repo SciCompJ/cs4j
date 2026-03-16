@@ -195,10 +195,10 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             return readImageJImage(ifd, true);
         }
         
-        if (ifd.determinePixelType() != PixelType.UINT8)
-        {
-            throw new RuntimeException("Virtual stacks are available only for UInt8 arrays.");
-        }
+//        if (ifd.determinePixelType() != PixelType.UINT8)
+//        {
+//            throw new RuntimeException("Virtual stacks are available only for UInt8 arrays.");
+//        }
         int compressionCode = ifd.getValue(BaselineTags.Compression.CODE);
         if (compressionCode != BaselineTags.Compression.NONE)
         {
@@ -206,7 +206,8 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         }
         
         // Read (virtual) image data
-        Array<?> data = createFileMappedArray(ifd, this.fileDirectories.size());
+        Array<?> data = createFileMappedArray(this.path, this.fileDirectories);
+//        Array<?> data = createFileMappedArray(ifd, this.fileDirectories.size());
         
         // Create new Image
         Image image = new Image(data);
@@ -570,6 +571,26 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         ByteOrder byteOrder = ifd.getByteOrder();
         
         return ImageIO.createFileMappedArray(path, offset, dims, pixelType, byteOrder);
+    }
+    
+    private static final Array<?> createFileMappedArray(Path path, ArrayList<ImageFileDirectory> fileDirectories) throws IOException
+    {
+        ImageFileDirectory ifd0 = fileDirectories.getFirst();
+        int nImages = fileDirectories.size();
+        
+        long[] offsets = new long[nImages];
+        for (int z = 0; z < nImages; z++)
+        {
+            offsets[z] = (long) fileDirectories.get(z).getIntArrayValue(BaselineTags.StripOffsets.CODE, null)[0];
+        }
+        
+        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int[] dims = new int[] {sizeX, sizeY, nImages};
+        PixelType pixelType = ifd0.determinePixelType();
+        ByteOrder byteOrder = ifd0.getByteOrder();
+        
+        return ImageIO.createFileMappedArray(path, offsets, dims, pixelType, byteOrder);
     }
     
     /**

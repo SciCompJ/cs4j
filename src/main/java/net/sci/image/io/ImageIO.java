@@ -38,6 +38,31 @@ public class ImageIO
         }
     }
     
+    public static final Array<?> createFileMappedArray(Path path, long[] offsets, int[] dims, PixelType pixelType, ByteOrder byteOrder) throws IOException
+    {
+        String filePath = path.toString();
+        if (pixelType == PixelType.UINT8)
+        {
+            return new FileMappedUInt8Array3D(filePath, offsets, dims[0], dims[1], dims[2]);
+        }
+        else if (pixelType == PixelType.UINT12 || pixelType == PixelType.UINT16)
+        {
+            return new FileMappedUInt16Array3D(filePath, offsets, dims[0], dims[1], dims[2], byteOrder);
+        }
+        else if (pixelType == PixelType.INT16)
+        {
+            return new FileMappedUInt16Array3D(filePath, offsets, dims[0], dims[1], dims[2], byteOrder);
+        }
+        else if (pixelType == PixelType.FLOAT32)
+        {
+            return new FileMappedFloat32Array3D(filePath, offsets, dims[0], dims[1], dims[2], byteOrder);
+        }
+        else
+        {
+            throw new RuntimeException("Can not read stack with " + pixelType + " pixel type");
+        }
+    }
+    
 
     /**
      * Private constructor to prevent instantiation. 

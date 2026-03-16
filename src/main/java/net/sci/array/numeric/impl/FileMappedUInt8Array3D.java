@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.UInt8Array3D;
@@ -32,9 +33,9 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
     String filePath;
     
     /**
-     * The position in the file corresponding to the beginning of the data.
+     * The position in the file corresponding to the beginning of each slide data.
      */
-    long offset;
+    long[] offsets;
     
     /**
      * The file channel used to read the data from the file.
@@ -65,7 +66,27 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
     {
         super(size0, size1, size2);
         this.filePath = filePath;
-        this.offset = offset;
+        int sliceItemCount = size0 * size1;
+        
+        // initialize slice offset, assuming there are fully packed
+        this.offsets = new long[size2];
+        for (int z = 0; z < size2; z++)
+        {
+            this.offsets[z] = offset + z * sliceItemCount;
+        }
+
+        // initialize current cached slice
+        this.byteArray = new byte[sliceItemCount];
+        this.currentSlice = UInt8Array2D.wrap(this.byteArray, size0, size1);
+    }
+
+    public FileMappedUInt8Array3D(String filePath, long[] offsets, int size0, int size1, int size2)
+    {
+        super(size0, size1, size2);
+        this.filePath = filePath;
+        
+        // secure copy of offset array
+        this.offsets = Arrays.copyOf(offsets, size2);
 
         // initialize current cached slice
         this.byteArray = new byte[size0 * size1];
@@ -100,20 +121,11 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
 
     private void readCurrentSlice()
     {
-        long numel = this.size0 * this.size1;
         ByteBuffer buffer = ByteBuffer.wrap(this.byteArray);
-        
-        // compute offset of slice beginning
-        long start = this.offset;
-        if (currentSliceIndex > 0)
-        {
-            start += numel * ((long) currentSliceIndex);
-        }
-        
         try
         {
             ensureFileChannelIsOpen();
-            this.fileChannel.read(buffer, start);
+            this.fileChannel.read(buffer, this.offsets[currentSliceIndex]);
         }
         catch(IOException ex)
         {

@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 
 import net.sci.array.numeric.Int16Array2D;
 import net.sci.array.numeric.Int16Array3D;
@@ -34,9 +35,9 @@ public class FileMappedInt16Array3D extends Int16Array3D
     String filePath;
     
     /**
-     * The position in the file corresponding to the beginning of the data.
+     * The position in the file corresponding to the beginning of each slide data.
      */
-    long offset;
+    long[] offsets;
     
     /**
      * The file channel used to read the data from the file.
@@ -74,10 +75,17 @@ public class FileMappedInt16Array3D extends Int16Array3D
     {
         super(size0, size1, size2);
         this.filePath = filePath;
-        this.offset = offset;
+
+        // initialize slice offset, assuming there are fully packed
+        int sliceItemCount = size0 * size1 * 2;
+        this.offsets = new long[size2];
+        for (int z = 0; z < size2; z++)
+        {
+            this.offsets[z] = offset + z * sliceItemCount;
+        }
 
         // initialize byte buffer for storing current slice data
-        byte[] byteArray = new byte[size0 * size1 * 2];
+        byte[] byteArray = new byte[sliceItemCount];
         this.byteBuffer = ByteBuffer.wrap(byteArray);
         this.byteBuffer.order(byteOrder);
         
@@ -86,6 +94,29 @@ public class FileMappedInt16Array3D extends Int16Array3D
         this.currentSlice = new ShortBufferInt16Array2D(size0, size1, buffer);
     }
 
+    public FileMappedInt16Array3D(String filePath, long[] offsets, int size0, int size1, int size2, ByteOrder byteOrder)
+    {
+        super(size0, size1, size2);
+        this.filePath = filePath;
+        
+        // secure copy of offset array
+        this.offsets = Arrays.copyOf(offsets, size2);
+
+        initializeSliceData(byteOrder);
+    }
+    
+    private void initializeSliceData(ByteOrder byteOrder)
+    {
+        // initialize a byte buffer for storing current slice data
+        byte[] byteArray = new byte[size0 * size1 * 2];
+        this.byteBuffer = ByteBuffer.wrap(byteArray);
+        this.byteBuffer.order(byteOrder);
+        
+        // wrap the byte buffer into an Int16Array2D
+        ShortBuffer buffer = this.byteBuffer.asShortBuffer();
+        this.currentSlice = new ShortBufferInt16Array2D(size0, size1, buffer);
+    }
+    
     private void ensureCurrentSliceIndex(int index)
     {
         if (index != this.currentSliceIndex)
@@ -114,14 +145,6 @@ public class FileMappedInt16Array3D extends Int16Array3D
 
     private void readCurrentSlice()
     {
-        // compute offset of slice beginning
-        long numel = this.size0 * this.size1 * 2;
-        long start = this.offset;
-        if (currentSliceIndex > 0)
-        {
-            start += numel * ((long) currentSliceIndex);
-        }
-        
         try
         {
             ensureFileChannelIsOpen();
@@ -130,7 +153,7 @@ public class FileMappedInt16Array3D extends Int16Array3D
             this.byteBuffer.position(0);
 
             // read data
-            this.fileChannel.read(this.byteBuffer, start);
+            this.fileChannel.read(this.byteBuffer, this.offsets[currentSliceIndex]);
         }
         catch(IOException ex)
         {
