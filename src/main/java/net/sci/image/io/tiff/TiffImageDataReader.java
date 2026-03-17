@@ -24,11 +24,13 @@ import net.sci.array.color.BufferedPackedByteRGB8Array2D;
 import net.sci.array.color.BufferedPackedShortRGB16Array2D;
 import net.sci.array.color.RGB16Array2D;
 import net.sci.array.color.RGB8Array2D;
+import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.Float32Array2D;
 import net.sci.array.numeric.Float32Array3D;
 import net.sci.array.numeric.Float32VectorArray2D;
 import net.sci.array.numeric.Float64Array2D;
 import net.sci.array.numeric.Float64VectorArray2D;
+import net.sci.array.numeric.Int32Array;
 import net.sci.array.numeric.Int32Array2D;
 import net.sci.array.numeric.Int32Array3D;
 import net.sci.array.numeric.UInt16Array;
@@ -37,6 +39,8 @@ import net.sci.array.numeric.UInt16Array3D;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.UInt8Array3D;
+import net.sci.array.numeric.impl.SlicedFloat32Array3D;
+import net.sci.array.numeric.impl.SlicedInt32Array3D;
 import net.sci.array.numeric.impl.SlicedUInt16Array3D;
 import net.sci.array.numeric.impl.SlicedUInt8Array3D;
 import net.sci.image.io.PackBits;
@@ -241,9 +245,9 @@ public class TiffImageDataReader extends AlgoStub
         }
     }
     
-	/**
-     * Reads all the image into this file as a single 3D array. All images must
-     * have the same dimensions.
+    /**
+     * Reads all the image within the file as a single 3D array. All images must
+     * have the same dimensions and same pixel type.
      * 
      * @return an instance of Array3D containing all image data within the file.
      * @throws IOException
@@ -260,69 +264,20 @@ public class TiffImageDataReader extends AlgoStub
         ImageFileDirectory ifd0 = ifdList.iterator().next();
         PixelType pixelType = ifd0.determinePixelType();
         
-        // When possible, calls a specialized method that uses a "sliced" representation of 3D array
+        // calls a specialized method that uses a "sliced" representation of 3D array
         if (pixelType == PixelType.UINT8) return readImageStack_Gray8(ifdList);
         if (pixelType == PixelType.UINT16 || pixelType == PixelType.UINT12) return readImageStack_Gray16(ifdList);
-        if (pixelType == PixelType.BINARY) return readImageStack_Bitmap(ifdList);
+        if (pixelType == PixelType.BINARY) return readImageStack_Binary(ifdList);
+        if (pixelType == PixelType.INT32) return readImageStack_Int32(ifdList);
+        if (pixelType == PixelType.FLOAT32) return readImageStack_Float32(ifdList);
         
-        // Compute image size
-        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
-        int sizeZ = ifdList.size();
-        
-        // Compute size of buffer buffer for each plane
-        int pixelsPerPlane = sizeX * sizeY;
-        int bytesPerPixels = pixelType.byteCount();
-        int bytesPerPlane  = pixelsPerPlane * bytesPerPixels;
-        
-        // compute total number of expected bytes
-        int nBytes = bytesPerPlane * sizeZ;
-        if (nBytes < 0)
-        {
-            throw new RuntimeException("Image data is too large to fit in a single java array");
-        }
-        
-        // allocate an array of bytes for storing raw data
-        byte[] byteArray = new byte[nBytes];
-        
-        // Read the byte array
-        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-        int offset = 0;
-        int nRead = 0;
-        for (ImageFileDirectory info : ifdList)
-        {
-            nRead += readByteArray(stream, info, byteArray, offset);
-            offset += bytesPerPlane;
-        }
-        stream.close();
-
-        // Check the whole buffer has been read
-        if (nRead != nBytes)
-        {
-            throw new IOException("Could read only " + nRead + " bytes over the " + nBytes + " expected");
-        }
-        
-        // Transform raw buffer into interpreted buffer
-        if (pixelType == PixelType.INT32)
-        {
-            int[] intBuffer = convertToIntArray(byteArray, this.byteOrder);
-            return Int32Array3D.wrap(intBuffer, sizeX, sizeY, sizeZ);
-        }
-        else if (pixelType == PixelType.FLOAT32)
-        {
-            float[] floatBuffer = convertToFloatArray(byteArray, this.byteOrder);
-            return Float32Array3D.wrap(floatBuffer, sizeX, sizeY, sizeZ);
-        }
-        else
-        {
-            throw new IOException("Can not read stack with data " + bytesPerPixels + " bytes per pixels");
-        }
+        throw new IOException("Can not read stack with data " + pixelType.byteCount() + " bytes per pixels");
     }
     
-    private UInt8Array3D readImageStack_Gray8(Collection<ImageFileDirectory> fileInfoList) throws IOException
+    private UInt8Array3D readImageStack_Gray8(Collection<ImageFileDirectory> ifdList) throws IOException
     {
         // read data type info
-        ImageFileDirectory ifd0 = fileInfoList.iterator().next();
+        ImageFileDirectory ifd0 = ifdList.iterator().next();
         int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
         int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
         
@@ -335,7 +290,7 @@ public class TiffImageDataReader extends AlgoStub
         // Compute image size
         int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
         int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
-        int sizeZ = fileInfoList.size();
+        int sizeZ = ifdList.size();
         
         // Compute size of buffer buffer for each plane
         int pixelsPerPlane = sizeX * sizeY;
@@ -347,14 +302,14 @@ public class TiffImageDataReader extends AlgoStub
         RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
 
         // iterate over slices to create each 2D array
-        int nSlices = fileInfoList.size();
+        int nSlices = ifdList.size();
         int currentSliceIndex = 0;
-        for (ImageFileDirectory info : fileInfoList)
+        for (ImageFileDirectory ifd : ifdList)
         {
             this.fireProgressChanged(this, currentSliceIndex++, nSlices);
             
             byte[] buffer = new byte[bytesPerPlane];
-            int nRead = readByteBuffer(stream, info, buffer);
+            int nRead = readByteBuffer(stream, ifd, buffer);
 
             // Check the whole buffer has been read
             if (nRead != bytesPerPlane)
@@ -372,10 +327,10 @@ public class TiffImageDataReader extends AlgoStub
         return new SlicedUInt8Array3D(arrayList);
     }
     
-    private UInt16Array3D readImageStack_Gray16(Collection<ImageFileDirectory> fileInfoList) throws IOException
+    private UInt16Array3D readImageStack_Gray16(Collection<ImageFileDirectory> ifdList) throws IOException
     {
         // read data type info
-        ImageFileDirectory ifd0 = fileInfoList.iterator().next();
+        ImageFileDirectory ifd0 = ifdList.iterator().next();
         int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
         int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
         
@@ -388,7 +343,7 @@ public class TiffImageDataReader extends AlgoStub
         // Compute image size
         int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
         int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
-        int sizeZ = fileInfoList.size();
+        int sizeZ = ifdList.size();
         
         // Compute size of buffer buffer for each plane
         int pixelsPerPlane = sizeX * sizeY;
@@ -401,14 +356,14 @@ public class TiffImageDataReader extends AlgoStub
         RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
 
         // iterate over slices to create each 2D array
-        int nSlices = fileInfoList.size();
+        int nSlices = ifdList.size();
         int currentSliceIndex = 0;
-        for (ImageFileDirectory info : fileInfoList)
+        for (ImageFileDirectory ifd : ifdList)
         {
             this.fireProgressChanged(this, currentSliceIndex++, nSlices);
             
             byte[] buffer = new byte[bytesPerPlane];
-            int nRead = readByteBuffer(stream, info, buffer);
+            int nRead = readByteBuffer(stream, ifd, buffer);
 
             // Check the whole buffer has been read
             if (nRead != bytesPerPlane)
@@ -427,10 +382,120 @@ public class TiffImageDataReader extends AlgoStub
         return new SlicedUInt16Array3D(arrayList);
     }
     
-    private BinaryArray3D readImageStack_Bitmap(Collection<ImageFileDirectory> fileInfoList) throws IOException
+    private Int32Array3D readImageStack_Int32(Collection<ImageFileDirectory> ifdList) throws IOException
     {
         // read data type info
-        ImageFileDirectory ifd0 = fileInfoList.iterator().next();
+        ImageFileDirectory ifd0 = ifdList.iterator().next();
+        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
+        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        
+        // check IFD entries validity
+        if(bitsPerSample[0] != 32 || samplesPerPixel != 1) 
+        {
+            throw new RuntimeException("Can only process Int32 arrays");
+        }
+        
+        // Compute image size
+        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeZ = ifdList.size();
+        
+        // Compute size of buffer buffer for each plane
+        int pixelsPerPlane = sizeX * sizeY;
+        int bytesPerPixels = 4;
+        int bytesPerPlane  = pixelsPerPlane * bytesPerPixels;
+
+        // create the container
+        ArrayList<Int32Array> arrayList = new ArrayList<>(sizeZ);
+        
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+        // iterate over slices to create each 2D array
+        int nSlices = ifdList.size();
+        int currentSliceIndex = 0;
+        for (ImageFileDirectory ifd : ifdList)
+        {
+            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+            
+            byte[] buffer = new byte[bytesPerPlane];
+            int nRead = readByteBuffer(stream, ifd, buffer);
+
+            // Check the whole buffer has been read
+            if (nRead != bytesPerPlane)
+            {
+                throw new IOException(String.format("Could read only %d bytes over the %d expected", nRead, bytesPerPlane));
+            }
+            
+            int[] intBuffer = convertToIntArray(buffer, this.byteOrder);
+            arrayList.add(Int32Array2D.wrap(intBuffer, sizeX, sizeY));
+        }
+        
+        stream.close();
+        
+        // create a new instance of 3D array that stores each slice
+        this.fireProgressChanged(this, nSlices, nSlices);
+        return new SlicedInt32Array3D(arrayList);
+    }
+    
+    private Float32Array3D readImageStack_Float32(Collection<ImageFileDirectory> ifdList) throws IOException
+    {
+        // read data type info
+        ImageFileDirectory ifd0 = ifdList.iterator().next();
+        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
+        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        
+        // check IFD entries validity
+        if(bitsPerSample[0] != 32 || samplesPerPixel != 1) 
+        {
+            throw new RuntimeException("Can only process Float32 arrays");
+        }
+        
+        // Compute image size
+        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeZ = ifdList.size();
+        
+        // Compute size of buffer buffer for each plane
+        int pixelsPerPlane = sizeX * sizeY;
+        int bytesPerPixels = 4;
+        int bytesPerPlane  = pixelsPerPlane * bytesPerPixels;
+
+        // create the container
+        ArrayList<Float32Array> arrayList = new ArrayList<>(sizeZ);
+        
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+        // iterate over slices to create each 2D array
+        int nSlices = ifdList.size();
+        int currentSliceIndex = 0;
+        for (ImageFileDirectory ifd : ifdList)
+        {
+            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+            
+            byte[] buffer = new byte[bytesPerPlane];
+            int nRead = readByteBuffer(stream, ifd, buffer);
+
+            // Check the whole buffer has been read
+            if (nRead != bytesPerPlane)
+            {
+                throw new IOException(String.format("Could read only %d bytes over the %d expected", nRead, bytesPerPlane));
+            }
+            
+            float[] intBuffer = convertToFloatArray(buffer, this.byteOrder);
+            arrayList.add(Float32Array2D.wrap(intBuffer, sizeX, sizeY));
+        }
+        
+        stream.close();
+        
+        // create a new instance of 3D array that stores each slice
+        this.fireProgressChanged(this, nSlices, nSlices);
+        return new SlicedFloat32Array3D(arrayList);
+    }
+    
+    private BinaryArray3D readImageStack_Binary(Collection<ImageFileDirectory> ifdList) throws IOException
+    {
+        // read data type info
+        ImageFileDirectory ifd0 = ifdList.iterator().next();
         int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
         int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
 
@@ -441,7 +506,7 @@ public class TiffImageDataReader extends AlgoStub
         }
         
         // Compute image size
-        int nSlices = fileInfoList.size();
+        int nSlices = ifdList.size();
         
         // create the container
         ArrayList<BinaryArray2D> arrayList = new ArrayList<>(nSlices);
@@ -450,10 +515,10 @@ public class TiffImageDataReader extends AlgoStub
 
         // iterate over slices to create each 2D array
         int currentSliceIndex = 0;
-        for (ImageFileDirectory info : fileInfoList)
+        for (ImageFileDirectory ifd : ifdList)
         {
             this.fireProgressChanged(this, currentSliceIndex++, nSlices);
-            BinaryArray2D sliceData = readBinaryArray2D(info);
+            BinaryArray2D sliceData = readBinaryArray2D(ifd);
             arrayList.add(sliceData);
         }
         
@@ -533,8 +598,8 @@ public class TiffImageDataReader extends AlgoStub
 
         return switch (compressionCode)
         {
-            case 1 -> readByteArrayUncompressed(raf, ifd, buffer);
-            case 32773 -> readByteArrayPackBits(raf, ifd, buffer);
+            case BaselineTags.Compression.NONE -> readByteArrayUncompressed(raf, ifd, buffer);
+            case BaselineTags.Compression.PACKBITS -> readByteArrayPackBits(raf, ifd, buffer);
             default -> throw new RuntimeException(
                     "Unsupported code for compression mode: " + compressionCode);
         };
@@ -598,77 +663,6 @@ public class TiffImageDataReader extends AlgoStub
         }
 
         return PackBits.uncompressPackBits(compressedBytes, buffer);
-    }
-
-    /**
-     * Read an array of bytes into a pre-allocated buffer, by iterating over the
-     * strips, and returns the number of bytes read.
-     */
-    private static final int readByteArray(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer, int offset)
-            throws IOException
-    {
-        TiffTag compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
-        int compressionCode = compressionTag != null ? compressionTag.value : 1;
-        
-        return switch (compressionCode)
-        {
-            case 1 -> readByteArrayUncompressed(raf, ifd, buffer, offset);
-            case 32773 -> readByteArrayPackBits(raf, ifd, buffer, offset);
-            default -> throw new RuntimeException("Unsupported compression mode: " + compressionCode);
-        };
-    }
-
-    /**
-     * Read an array of bytes into a pre-allocated buffer, by iterating over the
-     * strips, and returns the number of bytes read.
-     */
-    private static final int readByteArrayUncompressed(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer,
-            int offset) throws IOException
-    {
-        int[] stripOffsets = entryValueAsIntArray(ifd, BaselineTags.StripOffsets.CODE);
-        int[] stripByteCounts = entryValueAsIntArray(ifd, BaselineTags.StripByteCounts.CODE);
-        if (stripOffsets.length != stripByteCounts.length)
-        {
-            throw new RuntimeException("Strip offsets and strip byte counts arrays must have same length");
-        }
-
-        int totalRead = 0;
-
-        // read each strip successively
-        for (int i = 0; i < stripOffsets.length; i++)
-        {
-            raf.seek(stripOffsets[i] & 0xffffffffL);
-            int nRead = raf.read(buffer, offset, stripByteCounts[i]);
-            offset += nRead;
-            totalRead += nRead;
-        }
-
-        return totalRead;
-    }
-
-    private static final int readByteArrayPackBits(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer, int offset)
-            throws IOException
-    {
-        int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null);
-        int[] stripByteCounts = ifd.getIntArrayValue(BaselineTags.StripByteCounts.CODE, null);
-        if (stripOffsets.length != stripByteCounts.length)
-        {
-            throw new RuntimeException("Strip offsets and strip byte counts arrays must have same length");
-        }
-
-        // Compute the number of bytes per strip
-        byte[] compressedBytes = new byte[sum(stripByteCounts)];
-
-        // read each compressed strip
-        int offset0 = 0;
-        for (int i = 0; i < stripOffsets.length; i++)
-        {
-            raf.seek(stripOffsets[i] & 0xffffffffL);
-            int nRead = raf.read(compressedBytes, offset0, stripByteCounts[i]);
-            offset0 += nRead;
-        }
-
-        return PackBits.uncompressPackBits(compressedBytes, buffer, offset);
     }
 
     private static final int[] entryValueAsIntArray(ImageFileDirectory ifd, int tagCode)
