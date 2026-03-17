@@ -274,231 +274,13 @@ public class TiffImageDataReader extends AlgoStub
         throw new IOException("Can not read stack with data " + pixelType.byteCount() + " bytes per pixels");
     }
     
-    private UInt8Array3D readImageStack_Gray8(Collection<ImageFileDirectory> ifdList) throws IOException
-    {
-        // read data type info
-        ImageFileDirectory ifd0 = ifdList.iterator().next();
-        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
-        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
-        
-        // check IFD entries validity
-        if(samplesPerPixel != 1 || bitsPerSample[0] != 8) 
-        {
-            throw new RuntimeException("Can only process UInt8 arrays");
-        }
-        
-        // Compute image size
-        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
-        int sizeZ = ifdList.size();
-        
-        // Compute size of buffer buffer for each plane
-        int pixelsPerPlane = sizeX * sizeY;
-        int bytesPerPlane  = pixelsPerPlane;
-
-        // create the container
-        ArrayList<UInt8Array> arrayList = new ArrayList<>(sizeZ);
-        
-        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-
-        // iterate over slices to create each 2D array
-        int nSlices = ifdList.size();
-        int currentSliceIndex = 0;
-        for (ImageFileDirectory ifd : ifdList)
-        {
-            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
-            
-            byte[] buffer = new byte[bytesPerPlane];
-            int nRead = readByteBuffer(stream, ifd, buffer);
-
-            // Check the whole buffer has been read
-            if (nRead != bytesPerPlane)
-            {
-                throw new IOException("Could read only " + nRead + " bytes over the " + bytesPerPlane + " expected");
-            }
-            
-            arrayList.add(UInt8Array2D.wrap(buffer, sizeX, sizeY));
-        }
-        
-        stream.close();
-        
-        // create a new instance of 3D array that stores each slice
-        this.fireProgressChanged(this, nSlices, nSlices);
-        return new SlicedUInt8Array3D(arrayList);
-    }
-    
-    private UInt16Array3D readImageStack_Gray16(Collection<ImageFileDirectory> ifdList) throws IOException
-    {
-        // read data type info
-        ImageFileDirectory ifd0 = ifdList.iterator().next();
-        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
-        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
-        
-        // check IFD entries validity
-        if(bitsPerSample[0] != 16 || samplesPerPixel != 1) 
-        {
-            throw new RuntimeException("Can only process UInt16 arrays");
-        }
-        
-        // Compute image size
-        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
-        int sizeZ = ifdList.size();
-        
-        // Compute size of buffer buffer for each plane
-        int pixelsPerPlane = sizeX * sizeY;
-        int bytesPerPixels = 2;
-        int bytesPerPlane  = pixelsPerPlane * bytesPerPixels;
-
-        // create the container
-        ArrayList<UInt16Array> arrayList = new ArrayList<>(sizeZ);
-        
-        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-
-        // iterate over slices to create each 2D array
-        int nSlices = ifdList.size();
-        int currentSliceIndex = 0;
-        for (ImageFileDirectory ifd : ifdList)
-        {
-            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
-            
-            byte[] buffer = new byte[bytesPerPlane];
-            int nRead = readByteBuffer(stream, ifd, buffer);
-
-            // Check the whole buffer has been read
-            if (nRead != bytesPerPlane)
-            {
-                throw new IOException(String.format("Could read only %d bytes over the %d expected", nRead, bytesPerPlane));
-            }
-            
-            short[] shortBuffer = convertToShortArray(buffer, this.byteOrder);
-            arrayList.add(UInt16Array2D.wrap(shortBuffer, sizeX, sizeY));
-        }
-        
-        stream.close();
-        
-        // create a new instance of 3D array that stores each slice
-        this.fireProgressChanged(this, nSlices, nSlices);
-        return new SlicedUInt16Array3D(arrayList);
-    }
-    
-    private Int32Array3D readImageStack_Int32(Collection<ImageFileDirectory> ifdList) throws IOException
-    {
-        // read data type info
-        ImageFileDirectory ifd0 = ifdList.iterator().next();
-        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
-        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
-        
-        // check IFD entries validity
-        if(bitsPerSample[0] != 32 || samplesPerPixel != 1) 
-        {
-            throw new RuntimeException("Can only process Int32 arrays");
-        }
-        
-        // Compute image size
-        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
-        int sizeZ = ifdList.size();
-        
-        // Compute size of buffer buffer for each plane
-        int pixelsPerPlane = sizeX * sizeY;
-        int bytesPerPixels = 4;
-        int bytesPerPlane  = pixelsPerPlane * bytesPerPixels;
-
-        // create the container
-        ArrayList<Int32Array> arrayList = new ArrayList<>(sizeZ);
-        
-        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-
-        // iterate over slices to create each 2D array
-        int nSlices = ifdList.size();
-        int currentSliceIndex = 0;
-        for (ImageFileDirectory ifd : ifdList)
-        {
-            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
-            
-            byte[] buffer = new byte[bytesPerPlane];
-            int nRead = readByteBuffer(stream, ifd, buffer);
-
-            // Check the whole buffer has been read
-            if (nRead != bytesPerPlane)
-            {
-                throw new IOException(String.format("Could read only %d bytes over the %d expected", nRead, bytesPerPlane));
-            }
-            
-            int[] intBuffer = convertToIntArray(buffer, this.byteOrder);
-            arrayList.add(Int32Array2D.wrap(intBuffer, sizeX, sizeY));
-        }
-        
-        stream.close();
-        
-        // create a new instance of 3D array that stores each slice
-        this.fireProgressChanged(this, nSlices, nSlices);
-        return new SlicedInt32Array3D(arrayList);
-    }
-    
-    private Float32Array3D readImageStack_Float32(Collection<ImageFileDirectory> ifdList) throws IOException
-    {
-        // read data type info
-        ImageFileDirectory ifd0 = ifdList.iterator().next();
-        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
-        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
-        
-        // check IFD entries validity
-        if(bitsPerSample[0] != 32 || samplesPerPixel != 1) 
-        {
-            throw new RuntimeException("Can only process Float32 arrays");
-        }
-        
-        // Compute image size
-        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
-        int sizeZ = ifdList.size();
-        
-        // Compute size of buffer buffer for each plane
-        int pixelsPerPlane = sizeX * sizeY;
-        int bytesPerPixels = 4;
-        int bytesPerPlane  = pixelsPerPlane * bytesPerPixels;
-
-        // create the container
-        ArrayList<Float32Array> arrayList = new ArrayList<>(sizeZ);
-        
-        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-
-        // iterate over slices to create each 2D array
-        int nSlices = ifdList.size();
-        int currentSliceIndex = 0;
-        for (ImageFileDirectory ifd : ifdList)
-        {
-            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
-            
-            byte[] buffer = new byte[bytesPerPlane];
-            int nRead = readByteBuffer(stream, ifd, buffer);
-
-            // Check the whole buffer has been read
-            if (nRead != bytesPerPlane)
-            {
-                throw new IOException(String.format("Could read only %d bytes over the %d expected", nRead, bytesPerPlane));
-            }
-            
-            float[] intBuffer = convertToFloatArray(buffer, this.byteOrder);
-            arrayList.add(Float32Array2D.wrap(intBuffer, sizeX, sizeY));
-        }
-        
-        stream.close();
-        
-        // create a new instance of 3D array that stores each slice
-        this.fireProgressChanged(this, nSlices, nSlices);
-        return new SlicedFloat32Array3D(arrayList);
-    }
-    
     private BinaryArray3D readImageStack_Binary(Collection<ImageFileDirectory> ifdList) throws IOException
     {
         // read data type info
         ImageFileDirectory ifd0 = ifdList.iterator().next();
         int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
         int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
-
+    
         // check IFD entries validity
         if(samplesPerPixel != 1 || bitsPerSample[0] != 1) 
         {
@@ -512,7 +294,7 @@ public class TiffImageDataReader extends AlgoStub
         ArrayList<BinaryArray2D> arrayList = new ArrayList<>(nSlices);
         
         RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
-
+    
         // iterate over slices to create each 2D array
         int currentSliceIndex = 0;
         for (ImageFileDirectory ifd : ifdList)
@@ -528,7 +310,7 @@ public class TiffImageDataReader extends AlgoStub
         this.fireProgressChanged(this, nSlices, nSlices);
         return new SlicedBinaryArray3D(arrayList);
     }
-    
+
     /**
      * Reads a boolean array from the stream, using the specified FileInfo.
      * 
@@ -581,11 +363,229 @@ public class TiffImageDataReader extends AlgoStub
                 }
             }
         }
-
+    
         // create result 2D array
         return BinaryArray2D.wrap(booleanBuffer, sizeX, sizeY);
     }
 
+    private UInt8Array3D readImageStack_Gray8(Collection<ImageFileDirectory> ifdList) throws IOException
+    {
+        // read data type info
+        ImageFileDirectory ifd0 = ifdList.iterator().next();
+        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
+        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        
+        // check IFD entries validity
+        if(samplesPerPixel != 1 || bitsPerSample[0] != 8) 
+        {
+            throw new RuntimeException("Can only process UInt8 arrays");
+        }
+        
+        // Compute image size
+        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeZ = ifdList.size();
+        
+        // Compute size of byte buffer for each plane
+        int nPixels = sizeX * sizeY;
+        int nBytes  = nPixels;
+
+        // create the container
+        ArrayList<UInt8Array> arrayList = new ArrayList<>(sizeZ);
+        
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+        // iterate over slices to create each 2D array
+        int nSlices = ifdList.size();
+        int currentSliceIndex = 0;
+        for (ImageFileDirectory ifd : ifdList)
+        {
+            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+            
+            byte[] buffer = new byte[nBytes];
+            int nRead = readByteBuffer(stream, ifd, buffer);
+
+            // Check the whole buffer has been read
+            if (nRead != nBytes)
+            {
+                throw new IOException("Could read only " + nRead + " bytes over the " + nBytes + " expected");
+            }
+            
+            arrayList.add(UInt8Array2D.wrap(buffer, sizeX, sizeY));
+        }
+        
+        stream.close();
+        
+        // create a new instance of 3D array that stores each slice
+        this.fireProgressChanged(this, nSlices, nSlices);
+        return new SlicedUInt8Array3D(arrayList);
+    }
+    
+    private UInt16Array3D readImageStack_Gray16(Collection<ImageFileDirectory> ifdList) throws IOException
+    {
+        // read data type info
+        ImageFileDirectory ifd0 = ifdList.iterator().next();
+        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
+        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        
+        // check IFD entries validity
+        if(bitsPerSample[0] != 16 || samplesPerPixel != 1) 
+        {
+            throw new RuntimeException("Can only process UInt16 arrays");
+        }
+        
+        // Compute image size
+        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeZ = ifdList.size();
+        
+        // Compute size of buffer buffer for each plane
+        int nPixels = sizeX * sizeY;
+        int bytesPerPixels = 2;
+        int nBytes = nPixels * bytesPerPixels;
+
+        // create the container
+        ArrayList<UInt16Array> arrayList = new ArrayList<>(sizeZ);
+        
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+        // iterate over slices to create each 2D array
+        int nSlices = ifdList.size();
+        int currentSliceIndex = 0;
+        for (ImageFileDirectory ifd : ifdList)
+        {
+            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+            
+            byte[] buffer = new byte[nBytes];
+            int nRead = readByteBuffer(stream, ifd, buffer);
+
+            // Check the whole buffer has been read
+            if (nRead != nBytes)
+            {
+                throw new IOException(String.format("Could read only %d bytes over the %d expected", nRead, nBytes));
+            }
+            
+            short[] shortBuffer = convertToShortArray(buffer, this.byteOrder);
+            arrayList.add(UInt16Array2D.wrap(shortBuffer, sizeX, sizeY));
+        }
+        
+        stream.close();
+        
+        // create a new instance of 3D array that stores each slice
+        this.fireProgressChanged(this, nSlices, nSlices);
+        return new SlicedUInt16Array3D(arrayList);
+    }
+    
+    private Int32Array3D readImageStack_Int32(Collection<ImageFileDirectory> ifdList) throws IOException
+    {
+        // read data type info
+        ImageFileDirectory ifd0 = ifdList.iterator().next();
+        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
+        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        
+        // check IFD entries validity
+        if(bitsPerSample[0] != 32 || samplesPerPixel != 1) 
+        {
+            throw new RuntimeException("Can only process Int32 arrays");
+        }
+        
+        // Compute image size
+        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeZ = ifdList.size();
+        
+        // Compute size of buffer buffer for each plane
+        int nPixels = sizeX * sizeY;
+        int bytesPerPixels = 4;
+        int nBytes = nPixels * bytesPerPixels;
+
+        // create the container
+        ArrayList<Int32Array> arrayList = new ArrayList<>(sizeZ);
+        
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+        // iterate over slices to create each 2D array
+        int nSlices = ifdList.size();
+        int currentSliceIndex = 0;
+        for (ImageFileDirectory ifd : ifdList)
+        {
+            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+            
+            byte[] buffer = new byte[nBytes];
+            int nRead = readByteBuffer(stream, ifd, buffer);
+
+            // Check the whole buffer has been read
+            if (nRead != nBytes)
+            {
+                throw new IOException(String.format("Could read only %d bytes over the %d expected", nRead, nBytes));
+            }
+            
+            int[] intBuffer = convertToIntArray(buffer, this.byteOrder);
+            arrayList.add(Int32Array2D.wrap(intBuffer, sizeX, sizeY));
+        }
+        
+        stream.close();
+        
+        // create a new instance of 3D array that stores each slice
+        this.fireProgressChanged(this, nSlices, nSlices);
+        return new SlicedInt32Array3D(arrayList);
+    }
+    
+    private Float32Array3D readImageStack_Float32(Collection<ImageFileDirectory> ifdList) throws IOException
+    {
+        // read data type info
+        ImageFileDirectory ifd0 = ifdList.iterator().next();
+        int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
+        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        
+        // check IFD entries validity
+        if(bitsPerSample[0] != 32 || samplesPerPixel != 1) 
+        {
+            throw new RuntimeException("Can only process Float32 arrays");
+        }
+        
+        // Compute image size
+        int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeZ = ifdList.size();
+        
+        // Compute size of buffer buffer for each plane
+        int nPixels = sizeX * sizeY;
+        int bytesPerPixels = 4;
+        int nBytes = nPixels * bytesPerPixels;
+
+        // create the container
+        ArrayList<Float32Array> arrayList = new ArrayList<>(sizeZ);
+        
+        RandomAccessFile stream = new RandomAccessFile(new File(this.filePath), "r");
+
+        // iterate over slices to create each 2D array
+        int nSlices = ifdList.size();
+        int currentSliceIndex = 0;
+        for (ImageFileDirectory ifd : ifdList)
+        {
+            this.fireProgressChanged(this, currentSliceIndex++, nSlices);
+            
+            byte[] buffer = new byte[nBytes];
+            int nRead = readByteBuffer(stream, ifd, buffer);
+
+            // Check the whole buffer has been read
+            if (nRead != nBytes)
+            {
+                throw new IOException(String.format("Could read only %d bytes over the %d expected", nRead, nBytes));
+            }
+            
+            float[] intBuffer = convertToFloatArray(buffer, this.byteOrder);
+            arrayList.add(Float32Array2D.wrap(intBuffer, sizeX, sizeY));
+        }
+        
+        stream.close();
+        
+        // create a new instance of 3D array that stores each slice
+        this.fireProgressChanged(this, nSlices, nSlices);
+        return new SlicedFloat32Array3D(arrayList);
+    }
+    
     /**
      * Read an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.

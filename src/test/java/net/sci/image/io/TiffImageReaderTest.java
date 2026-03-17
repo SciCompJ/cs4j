@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import net.sci.array.Array;
 import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.color.Color;
 import net.sci.array.color.ColorMap;
@@ -32,7 +31,7 @@ import net.sci.image.io.tiff.ImagejMetadata;
 public class TiffImageReaderTest
 {
 	@Test
-	public void test_UInt8_2D() throws IOException
+	public void test_UInt8_2D_grains() throws IOException
 	{
 		String fileName = getClass().getResource("/images/grains.tif").getFile();
 		
@@ -101,22 +100,6 @@ public class TiffImageReaderTest
 		ScalarArray2D<?> data = (ScalarArray2D<?>) image.getData();
 		assertEquals(512, data.size(0));
 		assertEquals(512, data.size(1));
-	}
-
-	@Test
-	public void test_UInt8_3D_Stack() throws IOException
-	{
-		String fileName = getClass().getResource("/images/mri.tif").getFile();
-		
-		TiffImageReader reader = new TiffImageReader(fileName);
-		Image image = reader.readImage();
-		
-		assertEquals(3, image.getDimension());
-
-		Array<?> data = image.getData();
-		assertEquals(128, data.size(0));
-		assertEquals(128, data.size(1));
-		assertEquals( 27, data.size(2));
 	}
 
 	@Test
@@ -228,13 +211,147 @@ public class TiffImageReaderTest
         assertSameColor(colormap.getColor(255), 255, 85, 101);
     }
     
-    private static final void assertSameColor(Color color, int r, int g, int b)
+    @Test
+    public void test_UInt8_3D_Stack_mri_imagej() throws IOException
     {
-        assertEquals(r, (int) (color.red() * 255));
-        assertEquals(g, (int) (color.green() * 255));
-        assertEquals(b, (int) (color.blue() * 255));
+    	String fileName = getClass().getResource("/images/mri.tif").getFile();
+    	
+    	TiffImageReader reader = new TiffImageReader(fileName);
+    	Image image = reader.readImage();
+    	
+    	assertEquals(3, image.getDimension());
+        
+        UInt8Array3D array = (UInt8Array3D) image.getData();
+        assertEquals(128, array.size(0));
+        assertEquals(128, array.size(1));
+        assertEquals( 27, array.size(2));
     }
 
+    /**
+     * Reads a 3D Tiff image as saved by Matlab.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void test_UInt8_3D_uncompressed_mri_matlab() throws IOException
+    {
+        String fileName = getClass().getResource("/images/matlab/mri_uint8_uncompressed.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(3, image.getDimension());
+        
+        UInt8Array3D array = (UInt8Array3D) image.getData();
+        assertEquals(128, array.size(0));
+        assertEquals(128, array.size(1));
+        assertEquals( 27, array.size(2));
+        
+        // check values at few arbitrary positions
+        assertEquals(61, array.getInt(50, 50, 10));
+        assertEquals(52, array.getInt(60, 40, 8));
+    }
+    
+    /**
+     * Reads a 3D Tiff image as saved by Matlab.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void test_UInt16_3D_uncompressed_mri_matlab() throws IOException
+    {
+        String fileName = getClass().getResource("/images/matlab/mri_uint16_uncompressed.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(3, image.getDimension());
+        
+        UInt16Array3D array = (UInt16Array3D) image.getData();
+        assertEquals(128, array.size(0));
+        assertEquals(128, array.size(1));
+        assertEquals( 27, array.size(2));
+        
+        // check values at few arbitrary positions
+        assertEquals(610, array.getInt(50, 50, 10));
+        assertEquals(520, array.getInt(60, 40, 8));
+    }
+    
+    /**
+     * Reads a 3D Tiff image as saved by Matlab.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void test_Float32_3D_uncompressed_mri_matlab() throws IOException
+    {
+        String fileName = getClass().getResource("/images/matlab/mri_float32_uncompressed.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(3, image.getDimension());
+        
+        Float32Array3D array = (Float32Array3D) image.getData();
+        assertEquals(128, array.size(0));
+        assertEquals(128, array.size(1));
+        assertEquals( 27, array.size(2));
+        
+        // check values at few arbitrary positions 
+        assertEquals(6.1, array.getValue(50, 50, 10), 0.01);
+        assertEquals(5.2, array.getValue(60, 40, 8), 0.01);
+    }
+    
+    /**
+     * Reads a 3D Tiff image as saved by Matlab.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void test_UInt8_3D_packbits_mri_matlab() throws IOException
+    {
+        String fileName = getClass().getResource("/images/matlab/mri_uint8_packbits.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(3, image.getDimension());
+        
+        UInt8Array3D array = (UInt8Array3D) image.getData();
+        assertEquals(128, array.size(0));
+        assertEquals(128, array.size(1));
+        assertEquals( 27, array.size(2));
+        
+        // check values at few arbitrary positions
+        assertEquals(61, array.getInt(50, 50, 10));
+        assertEquals(52, array.getInt(60, 40, 8));
+    }
+    
+    /**
+     * Reads a 3D Tiff image as saved by Matlab.
+     * 
+     * @throws IOException
+     */
+    @Test
+    public void test_UInt16_3D_packbits_mri_matlab() throws IOException
+    {
+        String fileName = getClass().getResource("/images/matlab/mri_uint16_packbits.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        Image image = reader.readImage();
+        
+        assertEquals(3, image.getDimension());
+        
+        UInt16Array3D array = (UInt16Array3D) image.getData();
+        assertEquals(128, array.size(0));
+        assertEquals(128, array.size(1));
+        assertEquals( 27, array.size(2));
+        
+        // check values at few arbitrary positions 
+        assertEquals(610, array.getInt(50, 50, 10));
+        assertEquals(520, array.getInt(60, 40, 8));
+    }
+    
     /**
      * Read a TIFF image containing spatial calibration info.
      * 
@@ -442,5 +559,12 @@ public class TiffImageReaderTest
         
         // check that few random positions lead to same values 
         assertEquals(refArray.getValue(50, 50, 10), array.getValue(50, 50, 10), 0.01);
+    }
+
+    private static final void assertSameColor(Color color, int r, int g, int b)
+    {
+        assertEquals(r, (int) (color.red() * 255));
+        assertEquals(g, (int) (color.green() * 255));
+        assertEquals(b, (int) (color.blue() * 255));
     }
 }
