@@ -201,6 +201,25 @@ public class ImageFileDirectory
     }
     
     /**
+     * Returns either the value or the content of the tag specified by its code
+     * as array of integers, throwing an Exception if the tag does not exist
+     * within this directory.
+     * 
+     * @param tagCode
+     *            the code of the tag
+     * @return the value of the tag
+     * @throws RuntimeException
+     *             if the tag does not exist in this directory
+     */
+    public int[] getIntArrayValue(int tagCode)
+    {
+        TiffTag tag = getEntry(tagCode);
+        if (tag == null) throw new RuntimeException("Could not find entry with tag code: " + tagCode);
+        return tag.count == 1 ? new int[] {tag.value} : (int[]) tag.content;
+    }
+  
+
+    /**
      * Returns the number of bytes necessary to write this directory.
      * The number of bytes is computed as:
      * <ul>

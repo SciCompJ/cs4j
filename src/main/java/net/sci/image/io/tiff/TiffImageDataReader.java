@@ -279,7 +279,7 @@ public class TiffImageDataReader extends AlgoStub
         // read data type info
         ImageFileDirectory ifd0 = ifdList.iterator().next();
         int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
-        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        int[] bitsPerSample = ifd0.getIntArrayValue(BaselineTags.BitsPerSample.CODE);
     
         // check IFD entries validity
         if(samplesPerPixel != 1 || bitsPerSample[0] != 1) 
@@ -373,7 +373,7 @@ public class TiffImageDataReader extends AlgoStub
         // read data type info
         ImageFileDirectory ifd0 = ifdList.iterator().next();
         int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
-        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        int[] bitsPerSample = ifd0.getIntArrayValue(BaselineTags.BitsPerSample.CODE);
         
         // check IFD entries validity
         if(samplesPerPixel != 1 || bitsPerSample[0] != 8) 
@@ -426,7 +426,7 @@ public class TiffImageDataReader extends AlgoStub
         // read data type info
         ImageFileDirectory ifd0 = ifdList.iterator().next();
         int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
-        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        int[] bitsPerSample = ifd0.getIntArrayValue(BaselineTags.BitsPerSample.CODE);
         
         // check IFD entries validity
         if(bitsPerSample[0] != 16 || samplesPerPixel != 1) 
@@ -481,7 +481,7 @@ public class TiffImageDataReader extends AlgoStub
         // read data type info
         ImageFileDirectory ifd0 = ifdList.iterator().next();
         int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
-        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        int[] bitsPerSample = ifd0.getIntArrayValue(BaselineTags.BitsPerSample.CODE);
         
         // check IFD entries validity
         if(bitsPerSample[0] != 32 || samplesPerPixel != 1) 
@@ -536,7 +536,7 @@ public class TiffImageDataReader extends AlgoStub
         // read data type info
         ImageFileDirectory ifd0 = ifdList.iterator().next();
         int samplesPerPixel = ifd0.getValue(BaselineTags.SamplesPerPixel.CODE);
-        int[] bitsPerSample = entryValueAsIntArray(ifd0, BaselineTags.BitsPerSample.CODE);
+        int[] bitsPerSample = ifd0.getIntArrayValue(BaselineTags.BitsPerSample.CODE);
         
         // check IFD entries validity
         if(bitsPerSample[0] != 32 || samplesPerPixel != 1) 
@@ -613,8 +613,8 @@ public class TiffImageDataReader extends AlgoStub
             throws IOException
     {
         // retrieve strips info
-        int[] stripOffsets = entryValueAsIntArray(ifd, BaselineTags.StripOffsets.CODE);
-        int[] stripByteCounts = entryValueAsIntArray(ifd, BaselineTags.StripByteCounts.CODE);
+        int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE);
+        int[] stripByteCounts = ifd.getIntArrayValue(BaselineTags.StripByteCounts.CODE);
         if (stripOffsets.length != stripByteCounts.length)
         {
             throw new RuntimeException("Strip offsets and strip byte counts arrays must have same length");
@@ -639,8 +639,8 @@ public class TiffImageDataReader extends AlgoStub
             byte[] buffer) throws IOException
     {
         // retrieve strips info
-        int[] stripOffsets = entryValueAsIntArray(ifd, BaselineTags.StripOffsets.CODE);
-        int[] stripByteCounts = entryValueAsIntArray(ifd, BaselineTags.StripByteCounts.CODE);
+        int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE);
+        int[] stripByteCounts = ifd.getIntArrayValue(BaselineTags.StripByteCounts.CODE);
         if (stripOffsets.length != stripByteCounts.length)
         {
             throw new RuntimeException(
@@ -665,12 +665,6 @@ public class TiffImageDataReader extends AlgoStub
         return PackBits.uncompressPackBits(compressedBytes, buffer);
     }
 
-    private static final int[] entryValueAsIntArray(ImageFileDirectory ifd, int tagCode)
-    {
-        TiffTag tag = ifd.getEntry(tagCode);
-        return tag.count == 1 ? new int[] {tag.value} : (int[]) tag.content;
-    }
-    
     private static final int sum(int[] values)
     {
         int sum = 0;
