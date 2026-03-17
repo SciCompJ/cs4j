@@ -26,6 +26,7 @@ import net.sci.image.ImageAxis;
 import net.sci.image.io.tiff.BaselineTags;
 import net.sci.image.io.tiff.ImageFileDirectory;
 import net.sci.image.io.tiff.ImageFileDirectoryReader;
+import net.sci.image.io.tiff.TiffFileUInt8Array3D;
 import net.sci.image.io.tiff.TiffImageDataReader;
 import net.sci.image.io.tiff.TiffTag;
 
@@ -195,10 +196,16 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             return readImageJImage(ifd, true);
         }
         
-//        if (ifd.determinePixelType() != PixelType.UINT8)
-//        {
-//            throw new RuntimeException("Virtual stacks are available only for UInt8 arrays.");
-//        }
+        // specific case of UInt8Array3D
+        if (ifd.determinePixelType() == PixelType.UINT8)
+        {
+            Array<?> data = TiffFileUInt8Array3D.open(this.path.toString(), this.fileDirectories);
+            // Create new Image
+            Image image = new Image(data);
+            setupImageMetaData(image, ifd);
+            return image;
+        }
+        
         int compressionCode = ifd.getValue(BaselineTags.Compression.CODE);
         if (compressionCode != BaselineTags.Compression.NONE)
         {
@@ -207,7 +214,6 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         
         // Read (virtual) image data
         Array<?> data = createFileMappedArray(this.path, this.fileDirectories);
-//        Array<?> data = createFileMappedArray(ifd, this.fileDirectories.size());
         
         // Create new Image
         Image image = new Image(data);

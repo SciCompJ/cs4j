@@ -23,7 +23,6 @@ import net.sci.array.numeric.UInt16Array3D;
 import net.sci.array.numeric.UInt8Array3D;
 import net.sci.array.numeric.impl.FileMappedFloat32Array3D;
 import net.sci.array.numeric.impl.FileMappedUInt16Array3D;
-import net.sci.array.numeric.impl.FileMappedUInt8Array3D;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
 import net.sci.image.io.tiff.ImagejMetadata;
@@ -472,12 +471,6 @@ public class TiffImageReaderTest
         assertEquals(128, image.getSize(0));
         assertEquals(128, image.getSize(1));
         assertEquals(27, image.getSize(2));
-        
-        UInt8Array3D array = (UInt8Array3D ) image.getData();
-        assertTrue(array instanceof FileMappedUInt8Array3D);
-        
-//        Image sliceImage = new Image(array.slice(13));
-//        sliceImage.show();
     }
     
     /**
@@ -498,7 +491,6 @@ public class TiffImageReaderTest
         assertEquals(27, image.getSize(2));
         
         UInt8Array3D array = (UInt8Array3D ) image.getData();
-        assertTrue(array instanceof FileMappedUInt8Array3D);
         
         TiffImageReader refReader = new TiffImageReader(fileName);
         UInt8Array3D refArray = (UInt8Array3D) refReader.readImageStack();
