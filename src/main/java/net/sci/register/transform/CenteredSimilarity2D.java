@@ -3,8 +3,8 @@
  */
 package net.sci.register.transform;
 
+import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Transform2D;
 
 /**
  * Transformation model for a centered similarity: rotation+scaling around the
@@ -13,7 +13,7 @@ import net.sci.geom.geom2d.Transform2D;
  * @author dlegland
  *
  */
-public class CenteredSimilarity2D implements Transform2D
+public class CenteredSimilarity2D implements AffineTransform2D
 {
     public double centerX = 0.0;
     public double centerY = 0.0;
@@ -34,6 +34,22 @@ public class CenteredSimilarity2D implements Transform2D
         this.shiftY = ty;
     }
     
+    @Override
+    public double[][] affineMatrix()
+    {
+        // pre-compute rotation coefficients
+        double k = Math.pow(2, logScaling);
+        double theta = Math.toRadians(angleDeg);
+        double cot = k * Math.cos(theta);
+        double sit = k * Math.sin(theta);
+        
+        // apply translation and recenter to global center
+        return new double[][] {
+            {cot, -sit, centerX * (1 - cot) + centerY * sit + shiftX},
+            {sit,  cot, centerY * (1 - cot) - centerX * sit + shiftY},
+        };
+    }
+
     @Override
     public Point2D transform(Point2D point)
     {
