@@ -173,11 +173,11 @@ public class ColorMaps
         public ColorMap createColorMap(int nColors)
         {
             ArrayList<Color> baseColors = new ArrayList<Color>(5);
-            baseColors.add(new RGB8(0, 0, 127));
-            baseColors.add(new RGB8(0, 127, 255));
-            baseColors.add(RGB8.WHITE);
-            baseColors.add(new RGB8(255, 127, 0));
-            baseColors.add(new RGB8(127, 0, 0));
+            baseColors.add(new RGB8(0, 0, 127));    // dark blue
+            baseColors.add(new RGB8(0, 127, 255));  // light blue
+            baseColors.add(RGB8.WHITE);             // white
+            baseColors.add(new RGB8(255, 0, 0));    // red
+            baseColors.add(new RGB8(127, 0, 0));    // dark red
             ColorMap map = new DefaultColorMap(baseColors);
             return interpolate(map, nColors);
         }
