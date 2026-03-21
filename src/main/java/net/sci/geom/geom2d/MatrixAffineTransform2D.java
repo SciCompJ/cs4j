@@ -114,4 +114,13 @@ public class MatrixAffineTransform2D implements AffineTransform2D
 				{0, 0, 1}
 		};
 	}
+	
+    @Override
+    public double[][] jacobian(Point2D point)
+    {
+        return new double[][] {
+            {this.m00, this.m01}, 
+            {this.m10, this.m11}, 
+        };
+    }
 }

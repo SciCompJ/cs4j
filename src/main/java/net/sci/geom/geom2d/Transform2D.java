@@ -43,6 +43,18 @@ public interface Transform2D extends Transform
         return transform(new Point2D(x, y));
     }
     
+    /**
+     * Computes the Jacobian of the transform at the specified position. The
+     * Jacobian is composed of the spatial derivatives of each coordinate
+     * transform along each coordinate. It is returned as a 2-by-2 array of
+     * double.
+     * 
+     * @param point
+     *            the position to comute the Jacobian.
+     * @return the jacobian matrix at the given point.
+     */
+    public double[][] jacobian(Point2D point);
+    
     @Override
     public default int dimensionality()
     {

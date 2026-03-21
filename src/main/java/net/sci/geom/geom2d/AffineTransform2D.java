@@ -477,6 +477,15 @@ public interface AffineTransform2D extends Transform2D
                 vx * mat[1][0] + vy * mat[1][1]);
     }
     
+    @Override
+    public default double[][] jacobian(Point2D point)
+    {
+        double[][] matrix = affineMatrix();
+        return new double[][] {
+            {matrix[0][0], matrix[0][1]}, 
+            {matrix[1][0], matrix[1][1]}};
+    }
+    
     /**
      * Compares the matrix elements of this affine transform those of the
      * specified transform, and returns true if all elements are equals up to
