@@ -28,10 +28,64 @@ import net.sci.table.impl.TableStub;
 public class Spectra extends TableStub implements NumericTable
 {
     // =============================================================
+    // Static factories
+    
+    /**
+     * Converts a (numerical) data table into a {@code Spectra} instance. All
+     * columns of the data table must be numeric.
+     * 
+     * @param table
+     *            the table to convert
+     * @return an instance of Spectra with the same values as in the table.
+     * @throws RuntimeException
+     *              if one the columns is not numeric.
+     */
+    public static final Spectra convert(Table table)
+    {
+        if (table.columns().stream().anyMatch(col -> !(col instanceof NumericColumn)))
+        {
+            throw new RuntimeException("All Table columns must be numeric");
+        }
+        
+        // retrieve data size
+        int nr = table.rowCount();
+        int nc = table.columnCount();
+        
+        // pick values
+        Spectra spectra = new Spectra(nr, nc);
+        for (int r = 0; r < nr; r++)
+        {
+            for (int c = 0; c < nc; c++)
+            {
+                spectra.setValue(r, c, table.getValue(r, c));
+            }
+        }
+        
+        spectra.setRowAxis(table.getRowAxis().duplicate());
+        Axis colAxis = table.getColumnAxis();
+        if (colAxis != null)
+        {
+            double[] colValues = new double[nc];
+            for (int c = 0; c <nc; c++)
+            {
+                colValues[c] = Double.parseDouble(colAxis.itemName(c));
+            }
+            NumericalAxis colAxis2 = NumericalAxis.create(colAxis.getName(), colValues);
+            spectra.setColumnAxis(colAxis2);
+        }
+        
+        spectra.setName(table.getName());
+        
+        return spectra;
+    }
+    
+
+    // =============================================================
     // Class variables
 
     /**
-     * Inner data array, first index corresponds to spectra.
+     * Inner data array, first index corresponds to spectra, second index
+     * correspond to wavelength / wave number...
      */
     double[][] data;
 
