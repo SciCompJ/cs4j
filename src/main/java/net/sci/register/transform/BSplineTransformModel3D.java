@@ -123,7 +123,7 @@ public class BSplineTransformModel3D extends ParametricTransform3D
      * Computes the Jacobian matrix of the transform at the specified point. The
      * Jacobian matrix is obtained from the partial derivatives along each
      * dimension of the function of each coordinate. The result is stored in a
-     * 2-by-2 array of double.
+     * 3-by-3 array of double.
      * 
      * @param point
      *            the position to compute the Jacobian
@@ -187,8 +187,8 @@ public class BSplineTransformModel3D extends ParametricTransform3D
         // Iterate over neighbor tile vertices
         for (int iz = -1; iz <= 2; iz++)
         {
-            int zt2 = yt + iz;
-            if (zt2 < 0 || zt2 >= gridSize[1]) continue;
+            int zt2 = zt + iz;
+            if (zt2 < 0 || zt2 >= gridSize[2]) continue;
             int zIndex = zt2 * gridSize[0] * gridSize[1];
             
             // compute z-coefficients of bezier function and derivative
@@ -237,7 +237,7 @@ public class BSplineTransformModel3D extends ParametricTransform3D
     }
     
     // =============================================================
-    // Implementation of the Transform2D interface
+    // Implementation of the Transform3D interface
 
     @Override
     public Point3D transform(Point3D point)
