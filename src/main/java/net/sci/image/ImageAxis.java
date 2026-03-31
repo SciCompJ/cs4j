@@ -84,6 +84,39 @@ public class ImageAxis extends LinearNumericalAxis
     // New methods
     
     /**
+     * Returns the "calibrated" value of the value specified as an index. At the
+     * difference of the {@code getValue()} method, this method accepts a
+     * floating point value as input argument.
+     * 
+     * @see #uncalibrate(double)
+     * @param index
+     *            the uncalibrated floating point value, within the 0...(N-1)
+     *            domain
+     * @return the calibrated value along the axis
+     */
+    public double calibrate(double index)
+    {
+        return index * this.spacing + this.origin;
+    }
+    
+    /**
+     * Computes the floating point index corresponding to the specified
+     * calibrated value. At the difference of the {@code valueIndex()} method,
+     * this method return a floating point value as output argument, without
+     * rounding nor clamping. The result must be converted to an integer and
+     * clamped if following operation is array indexing.
+     * 
+     * @see #calibrate(double)
+     * @param value
+     *            the calibrated value along the axis
+     * @return the floating point value corresponding to the index.
+     */
+    public double uncalibrate(double value)
+    {
+        return (value - this.origin) / this.spacing;
+    }
+    
+    /**
      * @return the type of this axis
      */
     public Type type()
