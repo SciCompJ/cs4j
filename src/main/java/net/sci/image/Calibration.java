@@ -6,6 +6,8 @@ package net.sci.image;
 import java.io.PrintStream;
 
 import net.sci.axis.CategoricalAxis;
+import net.sci.geom.geom2d.Point2D;
+import net.sci.geom.geom3d.Point3D;
 
 /**
  * Contains information for calibration of spatial axes, and eventually channels
@@ -108,6 +110,36 @@ public class Calibration
     // =============================================================
     // Methods
 
+    /**
+     * Computes the calibrated coordinates of the specified 2D point.
+     * 
+     * @param p
+     *            a point in array coordinates
+     * @return the calibrated coordinates of the point.
+     */
+    public Point2D calibrate(Point2D p)
+    {
+        double xc = getXAxis().calibrate(p.x());
+        double yc = getYAxis().calibrate(p.y());
+        return new Point2D(xc, yc);
+    }
+    
+    /**
+     * Computes the calibrated coordinates of the specified 3D point.
+     * 
+     * @param p
+     *            a point in array coordinates
+     * @return the calibrated coordinates of the point.
+     */
+    public Point3D calibrate(Point3D p)
+    {
+        double xc = getXAxis().calibrate(p.x());
+        double yc = getYAxis().calibrate(p.y());
+        double zc = getZAxis().calibrate(p.z());
+        return new Point3D(xc, yc, zc);
+    }
+    
+    
     /**
      * Converts the size of an array into its equivalent physical size.
      * 
