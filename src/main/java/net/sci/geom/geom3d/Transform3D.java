@@ -44,6 +44,18 @@ public interface Transform3D extends Transform
 	    return transform(new Point3D(x, y, z));
 	}
 	
+    /**
+     * Computes the Jacobian of the transform at the specified position. The
+     * Jacobian is composed of the spatial derivatives of each coordinate
+     * transform along each coordinate. It is returned as a 3-by-3 array of
+     * double.
+     * 
+     * @param point
+     *            the position to compute the Jacobian.
+     * @return the jacobian matrix at the given point.
+     */
+    public double[][] jacobian(Point3D point);
+    
     @Override
     public default int dimensionality()
     {

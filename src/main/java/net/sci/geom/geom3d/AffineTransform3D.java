@@ -372,6 +372,17 @@ public interface AffineTransform3D extends Transform3D
                 vx * mat[2][0] + vy * mat[2][1] + vz * mat[2][2]);
     }
     
+    @Override
+    public default double[][] jacobian(Point3D point)
+    {
+        double[][] matrix = affineMatrix();
+        return new double[][] {
+            {matrix[0][0], matrix[0][1], matrix[0][2]}, 
+            {matrix[1][0], matrix[1][1], matrix[1][2]},
+            {matrix[2][0], matrix[2][1], matrix[2][2]}
+        };
+    }
+    
     /**
      * Compares the matrix elements of this affine transform those of the
      * specified transform, and returns true if all elements are equals up to

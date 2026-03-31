@@ -50,7 +50,7 @@ public interface Transform2D extends Transform
      * double.
      * 
      * @param point
-     *            the position to comute the Jacobian.
+     *            the position to compute the Jacobian.
      * @return the jacobian matrix at the given point.
      */
     public double[][] jacobian(Point2D point);
