@@ -21,6 +21,20 @@ public class Point2D implements PointShape2D, Point
     // Static methods
     
     /**
+     * Creates a new {@code Point2D} with the specified Cartesian coordinates.
+     * 
+     * @param x
+     *            the x-coordinate of the point
+     * @param y
+     *            the y-coordinate of the point
+     * @return the new point
+     */
+    public static final Point2D of(double x, double y)
+    {
+        return new Point2D(x, y);
+    }
+    
+    /**
      * Computes the centroid of a collection of points.
      * 
      * @param points

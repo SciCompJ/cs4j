@@ -13,6 +13,25 @@ package net.sci.geom.geom2d;
 public class LineSegment2D implements LinearGeometry2D
 {
     // =============================================================
+    // Static factories
+    
+    /**
+     * Creates a new {@code LineSegment} using the two specified points as
+     * extremities.
+     * 
+     * @param p1
+     *            the first point of the line segment.
+     * @param p2
+     *            the last point of the line segment.
+     * @return the new line segment
+     */
+    public static final LineSegment2D of(Point2D p1, Point2D p2)
+    {
+        return new LineSegment2D(p1, p2);
+    }
+    
+
+    // =============================================================
     // class variables
 
     private double x1;
@@ -24,6 +43,15 @@ public class LineSegment2D implements LinearGeometry2D
     // =============================================================
     // Constructor
     
+    /**
+     * Creates a new {@code LineSegment} using the two specified points as
+     * extremities.
+     * 
+     * @param p1
+     *            the first point of the line segment.
+     * @param p2
+     *            the last point of the line segment.
+     */
     public LineSegment2D(Point2D p1, Point2D p2)
     {
         this.x1 = p1.x();

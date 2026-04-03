@@ -14,6 +14,40 @@ import net.sci.geom.geom2d.curve.Contour2D;
  */
 public class StraightLine2D implements LinearGeometry2D, Contour2D
 {
+    // =============================================================
+    // Static factories
+    
+    /**
+     * Creates a new {@code StraightLine2D} passing through the two specified
+     * points.
+     * 
+     * @param p1
+     *            the first point defining the line.
+     * @param p2
+     *            the second point defining the line.
+     * @return the new straight line.
+     */
+    public static final StraightLine2D of(Point2D p1, Point2D p2)
+    {
+        return new StraightLine2D(p1, p2);
+    }
+    
+    /**
+     * Creates a new {@code StraightLine2D} passing through the specified point
+     * (the origin) and whose direction is given by the specified vector.
+     * 
+     * @param p0
+     *            the origin point of the line.
+     * @param vect
+     *            the direction vector of the line
+     * @return the new straight line.
+     */
+    public static final StraightLine2D of(Point2D p0, Vector2D vect)
+    {
+        return new StraightLine2D(p0, vect);
+    }
+    
+    
     // ===================================================================
     // class variables
 
@@ -31,6 +65,15 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     // ===================================================================
     // Constructors
 
+    /**
+     * Creates a new {@code StraightLine2D} passing through the two specified
+     * points.
+     * 
+     * @param p1
+     *            the first point defining the line.
+     * @param p2
+     *            the second point defining the line.
+     */
     public StraightLine2D(Point2D p1, Point2D p2)
     {
         this.x0 = p1.x();
