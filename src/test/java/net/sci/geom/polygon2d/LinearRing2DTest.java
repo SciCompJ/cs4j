@@ -340,11 +340,14 @@ public class LinearRing2DTest
                 new Point2D(50, 40),
                 new Point2D(10, 40));
         
-        Point2D p1 = new Point2D(20, 15);
-        assertEquals(5, poly.signedDistance(p1), .1);
+        Point2D pBelow = new Point2D(20, 15);
+        assertEquals(5, poly.signedDistance(pBelow), 0.1);
         
-        Point2D p2 = new Point2D(20, 25);
-        assertEquals(-5, poly.signedDistance(p2), .1);
+        Point2D pInside = new Point2D(20, 25);
+        assertEquals(-5, poly.signedDistance(pInside), 0.1);
+        
+        Point2D pLeft = new Point2D( 5, 30);
+        assertEquals(5, poly.signedDistance(pLeft), 0.1);
         
 	}
 }
