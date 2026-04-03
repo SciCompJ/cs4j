@@ -16,6 +16,34 @@ import net.sci.geom.geom2d.Point2D;
  */
 public class LineString2DTest
 {
+    /**
+     * Test method for {@link net.sci.geom.polygon2d.LineString2D#projectedPosition(net.sci.geom.geom2d.Point2D)}.
+     */
+    @Test
+    public final void test_projectedPosition_CCurve()
+    {
+        // line string with edge lengths 40, 20, and 40.
+        LineString2D poly = LineString2D.create(
+                Point2D.of(20, 20),
+                Point2D.of(40, 20),
+                Point2D.of(40, 40),
+                Point2D.of(20, 40));
+
+        // first vertex
+        assertEquals(0.0, poly.projectedPosition(Point2D.of(15, 15)), 0.01);
+        // intermediate vertices
+        assertEquals(1.0, poly.projectedPosition(Point2D.of(45, 15)), 0.01);
+        assertEquals(2.0, poly.projectedPosition(Point2D.of(45, 45)), 0.01);
+        // last vertex
+        assertEquals(3.0, poly.projectedPosition(Point2D.of(15, 45)), 0.01);
+
+        // intermediate points
+        assertEquals(0.5, poly.projectedPosition(Point2D.of(30, 15)), 0.01);
+        assertEquals(1.5, poly.projectedPosition(Point2D.of(45, 30)), 0.01);
+        assertEquals(2.5, poly.projectedPosition(Point2D.of(30, 45)), 0.01);
+    }
+    
+
     @Test
     public final void testInterpolate_LineString2D_LineString2D_TwoRectangles()
     {

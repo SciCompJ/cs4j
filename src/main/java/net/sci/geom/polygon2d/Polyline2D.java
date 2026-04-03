@@ -43,7 +43,6 @@ public interface Polyline2D extends Curve2D
     }
     
     
-    
     // ===================================================================
     // New methods for polylines
     
@@ -133,6 +132,37 @@ public interface Polyline2D extends Curve2D
     	return proj;
     }
 
+    /**
+     * Computes the position of the orthogonal projection of the specified point
+     * onto this polyline. In the case of a point belonging to the polyline, the
+     * result must be consistent with the method
+     * {@code #getPointAtLength(double)};
+     * 
+     * @param point
+     *            the point to project
+     * @return the position on the polyline corresponding to the projection of the point.
+     */
+    public default double projectedPosition(Point2D point)
+    {
+        // init
+        double minDist = Double.POSITIVE_INFINITY;
+        double pos = Double.NaN;
+        
+        // iterate over edges to find the closest one
+        for (int iEdge = 0; iEdge < edgeCount(); iEdge++)
+        {
+            LineSegment2D seg = edge(iEdge).curve();
+            double dist = seg.distance(point);
+            if (dist < minDist)
+            {
+                pos = iEdge + seg.projectedPosition(point);
+                minDist = dist;
+            }
+        }
+        
+        return pos;
+    }
+    
 
     // ===================================================================
     // Global management of vertices

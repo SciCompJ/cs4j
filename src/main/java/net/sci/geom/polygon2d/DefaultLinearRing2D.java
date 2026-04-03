@@ -96,10 +96,7 @@ public class DefaultLinearRing2D implements LinearRing2D
         }
     }
     
-    // ===================================================================
-    // Methods specific to LinearRing2D
     
-
     // ===================================================================
     // Management of vertices
     
@@ -149,10 +146,7 @@ public class DefaultLinearRing2D implements LinearRing2D
         return new Vertex(index);
     }
     
-    // ===================================================================
-    // Methods specific to LinearRing2D
-    
-    
+   
     // ===================================================================
     // Management of vertices
     
