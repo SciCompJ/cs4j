@@ -101,34 +101,14 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     
 
     // ===================================================================
-    // Methods specific to StraightLine2D 
-    
-    /**
-     * Computes the coordinates of the projection of the specified point on this
-     * line.
-     * 
-     * @param point
-     *            a point
-     * @return the projection of the point on this line
-     */
-    public Point2D project(Point2D point)
-    {
-        // compute position on the line
-        double t = projectedPosition(point);
-
-        // compute position of intersection point
-        return new Point2D(x0 + t * dx, y0 + t * dy);
-    }
-
-    
-    // ===================================================================
     // Implementation of the LinearGeometry interface 
 
+    @Override
     public double projectedPosition(Point2D point)
     {
         if (Math.hypot(dx, dy) < Geometry2D.MIN_VECTOR_NORM)
         {
-            throw new RuntimeException("The direction vector of the line hastoo small norm");
+            throw new RuntimeException("The direction vector of the line has too small norm");
         }
 
         double denom = dx * dx + dy * dy;
@@ -139,7 +119,7 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     {
         if (Math.hypot(dx, dy) < Geometry2D.MIN_VECTOR_NORM)
         {
-            throw new RuntimeException("The direction vector of the line hastoo small norm");
+            throw new RuntimeException("The direction vector of the line has too small norm");
         }
 
         double denom = dx * dx + dy * dy;
@@ -147,6 +127,8 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
     }
     
     /**
+     * Returns true by definition.
+     * 
      * @return true
      */
     @Override
@@ -157,6 +139,7 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
 
     /**
      * Returns the origin point of this line.
+     * @return the origin point of this line.
      */
     public Point2D origin() 
     {
@@ -165,19 +148,18 @@ public class StraightLine2D implements LinearGeometry2D, Contour2D
 
     /**
      * Returns the direction vector of this line.
+     * @return the direction vector of this line.
      */
     public Vector2D direction() 
     {
         return new Vector2D(dx, dy);
     }
 
-
     @Override
     public StraightLine2D supportingLine()
     {
         return this;
     }
-    
     
 
     // ===================================================================

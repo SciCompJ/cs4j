@@ -64,6 +64,12 @@ public class LineSegment2D implements LinearGeometry2D
     // =============================================================
     // General methods
     
+    /**
+     * Returns the length of this line segment, as the distance between its two
+     * extremities.
+     * 
+     * @return the length of this line segment.
+     */
     public double length()
     {
         return Math.hypot(x2 - x1, y2 - y1);
@@ -85,7 +91,7 @@ public class LineSegment2D implements LinearGeometry2D
 
     
     // ===================================================================
-    // Implementation of the LinearGeometry interface 
+    // Methods that could be implementation from LinearGeometry2D 
     
     /**
 	 * Compute the orthogonal projection of the input point onto this line segment.
@@ -111,7 +117,18 @@ public class LineSegment2D implements LinearGeometry2D
       
       return new Point2D(x1 + t * dx, y1 + t * dy);
 	}
+    
 
+    // ===================================================================
+    // Implementation of the LinearGeometry2D interface 
+    
+    @Override
+    public double projectedPosition(Point2D point)
+    {
+        double pos = supportingLine().projectedPosition(point);
+        return Math.min(Math.max(pos, 0.0), 1.0);
+    }
+    
 
 	@Override
     public boolean containsProjection(Point2D point, double tol)

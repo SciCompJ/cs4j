@@ -159,8 +159,34 @@ public interface LinearGeometry2D extends Curve2D
         return LinearGeometry2D.intersection(this, line);
     }
 
-//    public double projectedPosition(Point2D point);
-//    
+    /**
+     * Computes the coordinates of the projection of the specified point on this
+     * line.
+     * 
+     * @param point
+     *            the point to project
+     * @return the projection of the point on this line
+     */
+    public default Point2D project(Point2D point)
+    {
+        // compute position on the line
+        double t = projectedPosition(point);
+
+        // compute position of projected point
+        return point(t);
+    }
+
+    /**
+     * Computes the position of the orthogonal projection of the specified
+     * point. The result is bounded by the min and max parameterization values
+     * of the curve.
+     * 
+     * @param point
+     *            the point to project.
+     * @return the position of the projection on the line.
+     */
+    public double projectedPosition(Point2D point);
+    
     /**
      * Returns true if the orthogonal projection of the specified point is
      * contains within this linear geometry.
