@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 
 import net.sci.geom.geom2d.Bounds2D;
-import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
 
 /**
@@ -28,6 +27,7 @@ public class DefaultPolygon2D implements Polygon2D
      * first one.
      */
     protected ArrayList<Point2D> vertices;
+    protected DefaultLinearRing2D boundary;
     
     
     // ===================================================================
@@ -39,12 +39,14 @@ public class DefaultPolygon2D implements Polygon2D
     public DefaultPolygon2D()
     {
         vertices = new ArrayList<Point2D>();
+        this.boundary = new DefaultLinearRing2D();
     }
     
     public DefaultPolygon2D(Collection<? extends Point2D> points)
     {
         this.vertices = new ArrayList<Point2D>(points.size());
         this.vertices.addAll(points);
+        this.boundary = new DefaultLinearRing2D(points);
     }
 
     /**
@@ -58,6 +60,7 @@ public class DefaultPolygon2D implements Polygon2D
         this.vertices = new ArrayList<Point2D>(vertices.length);
         for (Point2D vertex : vertices)
             this.vertices.add(vertex);
+        this.boundary = new DefaultLinearRing2D(vertices);
     }
     
     /**
@@ -73,6 +76,7 @@ public class DefaultPolygon2D implements Polygon2D
         this.vertices = new ArrayList<Point2D>(xcoords.length);
         for (int i = 0; i < xcoords.length; i++)
             this.vertices.add(new Point2D(xcoords[i], ycoords[i]));
+        this.boundary = new DefaultLinearRing2D(vertices);
     }
     
     /**
@@ -85,6 +89,7 @@ public class DefaultPolygon2D implements Polygon2D
     public DefaultPolygon2D(int nVertices)
     {
         this.vertices = new ArrayList<Point2D>(nVertices);
+        this.boundary = new DefaultLinearRing2D(nVertices);
     }
     
     
@@ -94,27 +99,23 @@ public class DefaultPolygon2D implements Polygon2D
     @Override
     public Iterable<LinearRing2D> rings()
     {
-        ArrayList<LinearRing2D> rings = new ArrayList<LinearRing2D>(1); 
-        rings.add(LinearRing2D.create(this.vertices));
-        return rings;
+        return List.of(this.boundary);
     }
 
     @Override
     public DefaultPolygon2D complement()
     {
         // create a new collection of vertices in reverse order, keeping first vertex unchanged.
-        int n = this.vertexCount();
+        int n = this.boundary.vertexCount();
         ArrayList<Point2D> newVertices = new ArrayList<Point2D>(n);
-        newVertices.add(this.vertices.get(0));
+        newVertices.add(this.boundary.vertexPosition(0));
         for (int i = 1; i < n; i++)
         {
-            newVertices.add(this.vertices.get(n-i));
+            newVertices.add(this.boundary.vertexPosition(n-i));
         }
         
         // create a new SimplePolygon2D with this new set of vertices
-        DefaultPolygon2D reverse = new DefaultPolygon2D(0);
-        reverse.vertices = newVertices;
-        return reverse;
+        return new DefaultPolygon2D(newVertices);
     }
 
     /**
@@ -128,23 +129,9 @@ public class DefaultPolygon2D implements Polygon2D
      * 
      * @return the signed area of the polygon.
      */
-    public double signedArea() {
-        double area = 0;
-        
-        // number of vertices
-        int n = this.vertices.size();
-    
-        // initialize with the last vertex
-        Point2D prev = this.vertices.get(n-1);
-        
-        // iterate on edges
-        for (Point2D point : vertices)
-        {
-            area += prev.x() * point.y() - prev.y() * point.x();
-            prev = point;
-        }
-        
-        return area /= 2;
+    public double signedArea() 
+    {
+        return boundary.signedArea();
     }
     
 
@@ -159,7 +146,7 @@ public class DefaultPolygon2D implements Polygon2D
      */
     public List<Point2D> vertexPositions() 
     {
-        return vertices;
+        return this.boundary.vertexPositions();
     }
         
     /**
@@ -167,34 +154,34 @@ public class DefaultPolygon2D implements Polygon2D
      */
     public int vertexCount()
     {
-        return this.vertices.size();
+        return this.boundary.vertexPositions().size();
     }
 
     @Override
     public Iterable<? extends Vertex> vertices()
     {
-        return boundary().vertices();
+        return this.boundary.vertices();
     }
 
     @Override
     public Vertex vertex(int index)
     {
-        return boundary().vertex(index);
+        return this.boundary.vertex(index);
     }
 
     public void addVertex(Point2D vertexPosition)
     {
-        this.vertices.add(vertexPosition);
+        this.boundary.addVertex(vertexPosition);
     }
     
     public void removeVertex(int vertexIndex)
     {
-        this.vertices.remove(vertexIndex);
+        this.boundary.removeVertex(vertexIndex);
     }
     
     public Point2D vertexPosition(int vertexIndex)
     {
-        return this.vertices.get(vertexIndex);
+        return this.boundary.vertexPosition(vertexIndex);
     }
     
     /**
@@ -206,20 +193,7 @@ public class DefaultPolygon2D implements Polygon2D
      */
     public int closestVertexIndex(Point2D point)
     {
-        double minDist = Double.POSITIVE_INFINITY;
-        int index = -1;
-        
-        for (int i = 0; i < vertices.size(); i++)
-        {
-            double dist = vertices.get(i).distance(point);
-            if (dist < minDist)
-            {
-                index = i;
-                minDist = dist;
-            }
-        }
-        
-        return index;
+        return this.boundary.closestVertexIndex(point);
     }
     
     
@@ -229,7 +203,7 @@ public class DefaultPolygon2D implements Polygon2D
     @Override
     public LinearRing2D boundary()
     {
-        return LinearRing2D.create(this.vertices);
+        return this.boundary;
     }
     
     /**
@@ -257,73 +231,9 @@ public class DefaultPolygon2D implements Polygon2D
      */
     public boolean contains(double x, double y)
     {
-        double area = 0;
-    
-        // the winding number counter
-        int winding = 0;
-    
-        // initialize with the last vertex
-        Point2D previous = this.vertices.get(vertices.size() - 1);
-        double xprev = previous.x();
-        double yprev = previous.y();
-    
-        // iterate on vertices, keeping coordinates of previous vertex in memory
-        for (Point2D current : vertices)
-        {
-            // coordinates of current vertex
-            double xcurr = current.x();
-            double ycurr = current.y();
-    
-            // update area computation
-            area += xprev * ycurr - yprev * xcurr;
-            
-            
-            if (yprev <= y)
-            {
-                // detect upward crossing
-                if (ycurr > y) 
-                    if (isLeft(xprev, yprev, xcurr, ycurr, x, y) > 0)
-                        winding++;
-            }
-            else
-            {
-                // detect downward crossing
-                if (ycurr <= y)
-                    if (isLeft(xprev, yprev, xcurr, ycurr, x, y) < 0)
-                        winding--;
-            }
-            
-            // for next iteration
-            xprev = xcurr;
-            yprev = ycurr;
-            previous = current;
-        }
-    
-        if (area > 0) 
-        {
-            return winding == 1;
-        }
-        else 
-        {
-            return winding == 0;
-        }
+        return this.boundary.isInside(x, y);
     }
 
-    /**
-     * Tests if the point p3 is Left|On|Right of the infinite line formed by p1 and p2.
-     * 
-     * Input:  three points P0, P1, and P2
-     * Return: >0 for P2 left of the line through P0 and P1
-     *         =0 for P2 on the line
-     *         <0 for P2 right of the line
-     *         
-     * See: the January 2001 Algorithm "Area of 2D and 3D Triangles and Polygons"
-     */
-    private final static int isLeft(double x1, double y1, double x2, double y2, double x3, double y3)
-    {
-        return (int) Math.signum((x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1));
-    }
-    
     
     // ===================================================================
     // Implementation of the Geometry2D interface
@@ -345,23 +255,7 @@ public class DefaultPolygon2D implements Polygon2D
 
     private boolean boundaryContains(Point2D point, double eps)
     {
-        // Extract the vertex of the collection
-        Point2D previous = vertices.get(vertices.size() - 1);
-        
-        // iterate over pairs of adjacent vertices
-        for (Point2D current : this.vertices)
-        {
-            LineSegment2D edge = new LineSegment2D(previous, current);
-            // avoid problem of degenerated line segments
-            if (edge.length() == 0)
-                continue;
-            if (edge.contains(point, eps))
-                return true;
-            
-            previous = current;
-        }
-        
-        return false;
+        return this.boundary.contains(point, eps);
     }
     
     /**
@@ -400,12 +294,12 @@ public class DefaultPolygon2D implements Polygon2D
     @Override
     public Bounds2D bounds()
     {
-        return Bounds2D.of(vertices);
+        return boundary.bounds();
     }
     
     @Override
     public Polygon2D duplicate()
     {
-        return new DefaultPolygon2D(this.vertices);
+        return new DefaultPolygon2D(this.boundary.vertexPositions());
     }
 }
