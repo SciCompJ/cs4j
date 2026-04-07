@@ -13,10 +13,8 @@ import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Vector2D;
 
 /**
- * <p>
- * Default implementation for line strings. A line string is an open polyline
- * whose last point is NOT connected to the first one.
- * </p>
+ * Default implementation for linear rings, based on an inner array of vertex
+ * positions.
  * 
  * @see LineString2D
  * @see LinearRing2D
@@ -46,7 +44,7 @@ public class DefaultLineString2D implements LineString2D
 
     public DefaultLineString2D() 
     {
-        this.vertices = new ArrayList<Point2D>();
+        super();
     }
 
     /**
@@ -69,7 +67,7 @@ public class DefaultLineString2D implements LineString2D
         }
     }
     
-    public DefaultLineString2D(Collection<? extends Point2D> vertices)
+    public DefaultLineString2D(Collection<Point2D> vertices)
     {
         this.vertices = new ArrayList<Point2D>(vertices.size());
         this.vertices.addAll(vertices);
@@ -101,12 +99,12 @@ public class DefaultLineString2D implements LineString2D
     }
 
     @Override
-    public Iterable<Polyline2D.Vertex> vertices()
+    public Iterable<Polygonal2D.Vertex> vertices()
     {
-        return new Iterable<Polyline2D.Vertex>()
+        return new Iterable<Polygonal2D.Vertex>()
         {
             @Override
-            public Iterator<Polyline2D.Vertex> iterator()
+            public Iterator<Polygonal2D.Vertex> iterator()
             {
                 return new VertexIterator();
             }
@@ -139,9 +137,9 @@ public class DefaultLineString2D implements LineString2D
      *            the vertex index, between 0 and (vertexCount-1)
      * @return the vertex at the specified index.
      */
-    public Polyline2D.Vertex vertex(int index)
+    public Polygonal2D.Vertex vertex(int index)
     {
-        return new Vertex(index);
+        return new LocalVertex(index);
     }
     
     public Point2D vertexPosition(int vertexIndex)
@@ -229,23 +227,22 @@ public class DefaultLineString2D implements LineString2D
         return vertices.size() - 1;
     }
 
-    public Polyline2D.Edge edge(int edgeIndex)
+    public Polygonal2D.Edge edge(int edgeIndex)
     {
     	if (edgeIndex < 0 || edgeIndex >= vertices.size()-1)
     	{
     		throw new RuntimeException("Edge index out of bounds: " + edgeIndex);
     	}
-    	return new Edge(edgeIndex);
+    	return new LocalEdge(edgeIndex);
     }
     
     @Override
-	public Iterable<? extends Polyline2D.Edge> edges()
+	public Iterable<? extends Polygonal2D.Edge> edges()
 	{
-		return new Iterable<Polyline2D.Edge>() 
+		return new Iterable<Polygonal2D.Edge>() 
 		{
-
 			@Override
-			public Iterator<Polyline2D.Edge> iterator()
+			public Iterator<Polygonal2D.Edge> iterator()
 			{
 				return new EdgeIterator();
 			}
@@ -285,11 +282,11 @@ public class DefaultLineString2D implements LineString2D
     // ===================================================================
     // Inner class implementations
     
-	private class Vertex implements Polyline2D.Vertex
+	private class LocalVertex implements Polygonal2D.Vertex
     {
     	int index;
     	
-    	public Vertex(int index)
+    	public LocalVertex(int index)
     	{
     		this.index = index;
     	}
@@ -312,25 +309,25 @@ public class DefaultLineString2D implements LineString2D
         }
     }
     
-	private class Edge implements Polyline2D.Edge
+	private class LocalEdge implements Polygonal2D.Edge
     {
     	int index;
 
-    	public Edge(int index)
+    	public LocalEdge(int index)
     	{
     		this.index = index;
     	}
     	
 		@Override
-		public Polyline2D.Vertex source()
+		public Polygonal2D.Vertex source()
 		{
-			return new Vertex(this.index);
+			return new LocalVertex(this.index);
 		}
 
 		@Override
-		public Polyline2D.Vertex target()
+		public Polygonal2D.Vertex target()
 		{
-			return new Vertex(this.index + 1);
+			return new LocalVertex(this.index + 1);
 		}
 
 		@Override
@@ -345,7 +342,7 @@ public class DefaultLineString2D implements LineString2D
     // ===================================================================
     // Vertex and Edge iterator implementations
     
-    private class VertexIterator implements Iterator<Polyline2D.Vertex>
+    private class VertexIterator implements Iterator<Polygonal2D.Vertex>
     {
         /**
          * Index of current vertex in iterator. 
@@ -359,14 +356,14 @@ public class DefaultLineString2D implements LineString2D
         }
 
         @Override
-        public Polyline2D.Vertex next()
+        public Polygonal2D.Vertex next()
         {
-            return new Vertex(this.index++);
+            return new LocalVertex(this.index++);
         }
         
     }
 
-    private class EdgeIterator implements Iterator<Polyline2D.Edge>
+    private class EdgeIterator implements Iterator<Polygonal2D.Edge>
     {
     	/**
     	 * Index of the first vertex of current edge
@@ -380,9 +377,9 @@ public class DefaultLineString2D implements LineString2D
 		}
 
 		@Override
-		public Edge next()
+		public LocalEdge next()
 		{
-			return new Edge(this.index++);
+			return new LocalEdge(this.index++);
 		}
     }
 

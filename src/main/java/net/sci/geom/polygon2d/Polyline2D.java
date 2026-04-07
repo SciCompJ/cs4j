@@ -13,7 +13,6 @@ import net.sci.geom.geom2d.Curve2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.LinearGeometry2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Vector2D;
 
 /**
  * <p>
@@ -24,22 +23,30 @@ import net.sci.geom.geom2d.Vector2D;
  * 
  * @author dlegland
  * @see LineString2D
+ * @see LinearRing2D
  */
-public interface Polyline2D extends Curve2D
+public interface Polyline2D extends Curve2D, Polygonal2D
 {
     // ===================================================================
     // Static factories
     
-    public static Polyline2D create(List<Point2D> vertices, boolean closed)
+    /**
+     * Returns either an instance of {@code LinearRing2D}, or an instance of
+     * {@code LineString2D}, depending on the value of the {@code closed} flag.
+     * 
+     * @param vertices
+     *            the vertices that compose the new polyline
+     * @param closed
+     *            a boolean flag indicating whether the resulting polyline is
+     *            closed
+     * @return the new polyline
+     * 
+     * @see LineString2D
+     * @see LinearRing2D
+     */
+   public static Polyline2D create(List<Point2D> vertices, boolean closed)
     {
-        if (closed)
-        {
-            return LinearRing2D.create(vertices);
-        }
-        else
-        {
-            return LineString2D.create(vertices);
-        }
+       return closed ? LinearRing2D.create(vertices) : LineString2D.create(vertices);
     }
     
     
@@ -86,7 +93,7 @@ public interface Polyline2D extends Curve2D
     public default Collection<Point2D> intersections(LinearGeometry2D line)
     {
     	ArrayList<Point2D> inters = new ArrayList<Point2D>();
-    	for (Edge edge : edges())
+    	for (Polygonal2D.Edge edge : edges())
     	{
     		Point2D point = edge.curve().intersection(line);
     		if (point != null)
@@ -118,7 +125,7 @@ public interface Polyline2D extends Curve2D
     	double y = point.y();
     	Point2D proj = vertexPosition(0);
     
-    	for (Edge edge : edges())
+    	for (Polygonal2D.Edge edge : edges())
     	{
     		LineSegment2D seg = edge.curve();
     		dist = seg.distance(x, y);
@@ -189,11 +196,11 @@ public interface Polyline2D extends Curve2D
     public int vertexCount();
 
     /**
-     * Returns an iterable over  the vertices of the polyline.
+     * Returns an {@code Iterable} over the vertices of this polyline.
      * 
      * @return the positions of the vertices
      */
-    public Iterable<? extends Vertex> vertices();
+    public Iterable<? extends Polygonal2D.Vertex> vertices();
 
     /**
      * Adds a new vertex at the specified location.
@@ -202,6 +209,13 @@ public interface Polyline2D extends Curve2D
      */
     public void addVertex(Point2D pos);
     
+    /**
+     * Returns the position of a vertex identified by its index.
+     * 
+     * @param vertexIndex
+     *            the index of the vertex
+     * @return the position of the vertex
+     */
     public Point2D vertexPosition(int vertexIndex);
     
     /**
@@ -224,9 +238,14 @@ public interface Polyline2D extends Curve2D
      */
     public int edgeCount();
     
-    public Iterable<? extends Edge> edges();
+    /**
+     * Returns an {@code Iterable} over the edges of this polyline.
+     * 
+     * @return the edges of this polyline
+     */
+    public Iterable<? extends Polygonal2D.Edge> edges();
     
-    public Edge edge(int edgeIndex);
+    public Polygonal2D.Edge edge(int edgeIndex);
 
 
     // ===================================================================
@@ -249,7 +268,7 @@ public interface Polyline2D extends Curve2D
     public default boolean contains(Point2D point, double eps)
     {
         // Iterate on the line segments forming the polyline
-    	for (Edge edge : edges())
+    	for (Polygonal2D.Edge edge : edges())
     	{
     		if (edge.curve().contains(point, eps)) 
     		{
@@ -274,7 +293,7 @@ public interface Polyline2D extends Curve2D
         double minDist = Double.POSITIVE_INFINITY;
         
         // Iterate on the line segments forming the polyline
-        for (Edge edge : edges())
+        for (Polygonal2D.Edge edge : edges())
         {
             minDist = Math.min(minDist, edge.curve().distance(x, y));
         }
@@ -301,57 +320,4 @@ public interface Polyline2D extends Curve2D
     @Override
     public Polyline2D duplicate();
     
-
-    // ===================================================================
-    // Inner interfaces 
-    
-    /**
-     * A vertex of the polyline, used to encapsulate the position.
-     * 
-     * The normal vector at the vertex may also be defined (optional operation).
-     * 
-     * @see Edge
-     */
-    public interface Vertex
-    {
-        /**
-         * @return the position of this vertex, as a Point2D.
-         */
-        public Point2D position();
-        
-        /**
-         * Returns the normal computed at this vertex (optional operation). 
-         * Default is to throw an Exception.
-         * 
-         * @return the normal computed at this vertex, as a Vector2D.
-         */
-        public default Vector2D normal()
-        {
-            throw new RuntimeException("Unimplemented operation");
-        }
-    }
-
-    /**
-     * An edge of the polyline, defined by the source and target vertices.
-     * 
-     * @see Vertex
-     */
-    public interface Edge
-    {
-        /**
-         * @return the source vertex of this edge.
-         */
-        public Vertex source();
-        
-        /**
-         * @return the target vertex of this edge.
-         */
-        public Vertex target();
-        
-        /**
-         * @return the line segment geometry corresponding to this edge.
-         */
-        public LineSegment2D curve(); 
-    }
-
 }

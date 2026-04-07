@@ -65,22 +65,22 @@ public class DefaultLineString2DTest
                 new Point2D(10, 40));
         poly.computeNormals();
         
-        Polyline2D.Vertex v0 = poly.vertex(0);
+        Polygonal2D.Vertex v0 = poly.vertex(0);
         Vector2D n0 = v0.normal();
         assertEquals( 0.000, n0.x(), 0.001);
         assertEquals(-1.000, n0.y(), 0.001);
         
-        Polyline2D.Vertex v1 = poly.vertex(1);
+        Polygonal2D.Vertex v1 = poly.vertex(1);
         Vector2D n1 = v1.normal();
         assertEquals( 0.707, n1.x(), 0.001);
         assertEquals(-0.707, n1.y(), 0.001);
         
-        Polyline2D.Vertex v2 = poly.vertex(2);
+        Polygonal2D.Vertex v2 = poly.vertex(2);
         Vector2D n2 = v2.normal();
         assertEquals( 0.707, n2.x(), 0.001);
         assertEquals( 0.707, n2.y(), 0.001);
         
-        Polyline2D.Vertex v3 = poly.vertex(3);
+        Polygonal2D.Vertex v3 = poly.vertex(3);
         Vector2D n3 = v3.normal();
         assertEquals( 0.000, n3.x(), 0.001);
         assertEquals(+1.000, n3.y(), 0.001);
@@ -223,7 +223,7 @@ public class DefaultLineString2DTest
 				new Point2D(10, 40));
 		
 		int count = 0;
-		for (@SuppressWarnings("unused") Polyline2D.Edge edge : poly.edges())
+		for (@SuppressWarnings("unused") Polygonal2D.Edge edge : poly.edges())
 		{
 			count++;
 		}

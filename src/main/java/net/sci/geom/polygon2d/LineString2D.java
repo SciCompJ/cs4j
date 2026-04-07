@@ -30,7 +30,7 @@ public interface LineString2D extends Polyline2D
     // ===================================================================
     // Static methods
     
-    public static LineString2D create(Collection<? extends Point2D> vertices)
+    public static LineString2D create(Collection<Point2D> vertices)
     {
         return new DefaultLineString2D(vertices);
     }
@@ -238,10 +238,6 @@ public interface LineString2D extends Polyline2D
         return prev;
     }
 
-
-    // ===================================================================
-    // Management of edges
-    
 
     // ===================================================================
     // Methods implementing the Curve2D interface

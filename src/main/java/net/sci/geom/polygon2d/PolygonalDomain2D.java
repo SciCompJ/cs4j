@@ -16,7 +16,7 @@ import net.sci.geom.geom2d.Point2D;
  * @author dlegland
  *
  */
-public interface PolygonalDomain2D extends Domain2D
+public interface PolygonalDomain2D extends Domain2D, Polygonal2D
 {
     // ===================================================================
     // New methods

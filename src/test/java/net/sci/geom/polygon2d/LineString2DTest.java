@@ -187,7 +187,7 @@ public class LineString2DTest
                 new Point2D(10, 40));
         
         int count = 0;
-        for (@SuppressWarnings("unused") Polyline2D.Vertex v : poly.vertices())
+        for (@SuppressWarnings("unused") Polygonal2D.Vertex v : poly.vertices())
         {
             count++;
         }
@@ -207,7 +207,7 @@ public class LineString2DTest
                 new Point2D(10, 40));
         
         int count = 0;
-        for (@SuppressWarnings("unused") Polyline2D.Edge edge : poly.edges())
+        for (@SuppressWarnings("unused") Polygonal2D.Edge edge : poly.edges())
         {
             count++;
         }

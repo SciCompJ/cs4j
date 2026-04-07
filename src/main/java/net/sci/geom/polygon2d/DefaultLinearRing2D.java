@@ -14,19 +14,8 @@ import net.sci.geom.geom2d.Vector2D;
 
 
 /**
- * <p>
- * A LinearRing2D is a polyline whose last point is connected to the first one.
- * This is typically the boundary of a (Simple)Polygon2D. For open polylines,
- * the class LineString2D may be used.
- * </p>
- * 
- * <p>
- * The name 'LinearRing2D' was used for 2 reasons:
- * <ul>
- * <li>it is short</li>
- * <li>it is consistent with the JTS name</li>
- * </ul>
- * </p>
+ * Default implementation for linear rings, based on an inner array of vertex
+ * positions.
  * 
  * @see Polyline2D
  * @see LineString2D
@@ -111,12 +100,12 @@ public class DefaultLinearRing2D implements LinearRing2D
     }
 
     @Override
-    public Iterable<Polyline2D.Vertex> vertices()
+    public Iterable<Polygonal2D.Vertex> vertices()
     {
-        return new Iterable<Polyline2D.Vertex>()
+        return new Iterable<Polygonal2D.Vertex>()
         {
             @Override
-            public Iterator<Polyline2D.Vertex> iterator()
+            public Iterator<Polygonal2D.Vertex> iterator()
             {
                 return new VertexIterator();
             }
@@ -141,9 +130,9 @@ public class DefaultLinearRing2D implements LinearRing2D
      *            the vertex index, between 0 and (vertexCount-1)
      * @return the vertex at the specified index.
      */
-    public Polyline2D.Vertex vertex(int index)
+    public Polygonal2D.Vertex vertex(int index)
     {
-        return new Vertex(index);
+        return new LocalVertex(index);
     }
     
    
@@ -219,22 +208,22 @@ public class DefaultLinearRing2D implements LinearRing2D
         return vertices.size();
     }
 
-    public Polyline2D.Edge edge(int edgeIndex)
+    public Polygonal2D.Edge edge(int edgeIndex)
     {
     	if (edgeIndex < 0 || edgeIndex >= vertices.size())
     	{
     		throw new RuntimeException("Edge index out of bounds: " + edgeIndex);
     	}
-    	return new Edge(edgeIndex);
+    	return new LocalEdge(edgeIndex);
     }
     
     @Override
-	public Iterable<? extends Polyline2D.Edge> edges()
+	public Iterable<? extends Polygonal2D.Edge> edges()
 	{
-		return new Iterable<Polyline2D.Edge>() 
+		return new Iterable<Polygonal2D.Edge>() 
 		{
 			@Override
-			public Iterator<Polyline2D.Edge> iterator()
+			public Iterator<Polygonal2D.Edge> iterator()
 			{
 				return new EdgeIterator();
 			}
@@ -254,11 +243,11 @@ public class DefaultLinearRing2D implements LinearRing2D
     // ===================================================================
     // Inner class implementations
     
-	private class Vertex implements Polyline2D.Vertex
+	private class LocalVertex implements Polygonal2D.Vertex
     {
     	int index;
     	
-    	public Vertex(int index)
+    	public LocalVertex(int index)
     	{
     		this.index = index;
     	}
@@ -282,25 +271,25 @@ public class DefaultLinearRing2D implements LinearRing2D
     }
     
 	
-	private class Edge implements Polyline2D.Edge
+	private class LocalEdge implements Polygonal2D.Edge
     {
     	int index;
 
-    	public Edge(int index)
+    	public LocalEdge(int index)
     	{
     		this.index = index;
     	}
     	
 		@Override
-		public Polyline2D.Vertex source()
+		public Polygonal2D.Vertex source()
 		{
-			return new Vertex(this.index);
+			return new LocalVertex(this.index);
 		}
 
 		@Override
-		public Polyline2D.Vertex target()
+		public Polygonal2D.Vertex target()
 		{
-			return new Vertex((this.index + 1) % vertices.size());
+			return new LocalVertex((this.index + 1) % vertices.size());
 		}
 
 		@Override
@@ -316,7 +305,7 @@ public class DefaultLinearRing2D implements LinearRing2D
     // ===================================================================
     // Vertex and Edge iterator implementations
     
-    private class VertexIterator implements Iterator<Polyline2D.Vertex>
+    private class VertexIterator implements Iterator<Polygonal2D.Vertex>
     {
         /**
          * Index of current vertex in iterator. 
@@ -330,14 +319,14 @@ public class DefaultLinearRing2D implements LinearRing2D
         }
 
         @Override
-        public Polyline2D.Vertex next()
+        public Polygonal2D.Vertex next()
         {
-            return new Vertex(this.index++);
+            return new LocalVertex(this.index++);
         }
         
     }
 
-    private class EdgeIterator implements Iterator<Polyline2D.Edge>
+    private class EdgeIterator implements Iterator<Polygonal2D.Edge>
     {
     	/**
     	 * Index of the first vertex of current edge
@@ -351,9 +340,9 @@ public class DefaultLinearRing2D implements LinearRing2D
 		}
 
 		@Override
-		public Edge next()
+		public LocalEdge next()
 		{
-			return new Edge(this.index++);
+			return new LocalEdge(this.index++);
 		}
     }
     
