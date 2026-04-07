@@ -146,9 +146,10 @@ public class DefaultPolygon2D implements Polygon2D
         
         return area /= 2;
     }
+    
 
     // ===================================================================
-    // Implementation of the Polygon2D interface
+    // Implementation of the Polygonal2D interface
     
     /**
      * Returns the vertex positions of this polygon. The result is a pointer to the inner
@@ -167,6 +168,18 @@ public class DefaultPolygon2D implements Polygon2D
     public int vertexCount()
     {
         return this.vertices.size();
+    }
+
+    @Override
+    public Iterable<? extends Vertex> vertices()
+    {
+        return boundary().vertices();
+    }
+
+    @Override
+    public Vertex vertex(int index)
+    {
+        return boundary().vertex(index);
     }
 
     public void addVertex(Point2D vertexPosition)
@@ -395,5 +408,4 @@ public class DefaultPolygon2D implements Polygon2D
     {
         return new DefaultPolygon2D(this.vertices);
     }
-
 }

@@ -121,8 +121,10 @@ public class OrientedBox2D implements Polygon2D
      */
     protected final double theta;
     
-    // buffer the coordinates of boundary vertices
-    private LinearRing2D boundary;
+    /**
+     * Used to store the coordinates of boundary vertices
+     */
+    private final LinearRing2D boundary;
     
     
     // ==================================================
@@ -168,10 +170,10 @@ public class OrientedBox2D implements Polygon2D
         this.size2 = width;
         this.theta = orientInDegrees;
         
-        computeBoundary();
+        this.boundary = computeBoundary();
     }
     
-    private void computeBoundary()
+    private final LinearRing2D computeBoundary()
     {
         // create the "local to global" affine transform
         AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(this.theta));
@@ -186,7 +188,7 @@ public class OrientedBox2D implements Polygon2D
         vertices.add(new Point2D(-size1/2,  size2/2).transform(transfo));
         
         // create boundary
-        this.boundary = LinearRing2D.create(vertices);
+        return LinearRing2D.create(vertices);
     }
     
     
@@ -227,43 +229,12 @@ public class OrientedBox2D implements Polygon2D
     }
 
     @Override
-    public int vertexCount()
-    {
-        return 4;
-    }
-
-    @Override
-    public List<Point2D> vertexPositions()
-    {
-        // create the "local to global" affine transform
-        AffineTransform2D rot = AffineTransform2D.createRotation(Math.toRadians(this.theta));
-        AffineTransform2D tra = AffineTransform2D.createTranslation(xc, yc);
-        AffineTransform2D transfo = tra.compose(rot);
-        
-        // create vertex array
-        ArrayList<Point2D> vertices = new ArrayList<>(4);
-        vertices.add(new Point2D(-size1/2, -size2/2).transform(transfo));
-        vertices.add(new Point2D( size1/2, -size2/2).transform(transfo));
-        vertices.add(new Point2D( size1/2,  size2/2).transform(transfo));
-        vertices.add(new Point2D(-size1/2,  size2/2).transform(transfo));
-        
-        // return vertices
-        return this.boundary.vertexPositions();
-    }
-
-    @Override
-    public void addVertex(Point2D vertexPosition)
-    {
-        throw new RuntimeException("Can not add vertex to this geometry");
-    }
-    
-    @Override
     public Iterable<LinearRing2D> rings()
     {
         return Collections.singleton(this.boundary);
     }
-
     
+
     // ===================================================================
     // Implementation of the PolygonalDomain2D interface
     
@@ -277,6 +248,53 @@ public class OrientedBox2D implements Polygon2D
     public LinearRing2D boundary()
     {
         return this.boundary;
+    }
+
+
+    // ===================================================================
+    // Implementation of the Polygonal2D interface
+    
+    @Override
+    public int vertexCount()
+    {
+        return 4;
+    }
+
+    @Override
+    public void addVertex(Point2D vertexPosition)
+    {
+        throw new RuntimeException("Can not add vertex to this geometry");
+    }
+    
+    @Override
+    public void removeVertex(int vertexIndex)
+    {
+        throw new RuntimeException("Can not remove a vertex from this geometry");
+    }
+
+    @Override
+    public Iterable<? extends Vertex> vertices()
+    {
+        return this.boundary.vertices();
+    }
+
+    @Override
+    public Vertex vertex(int index)
+    {
+        return this.boundary.vertex(index);
+    }
+
+    @Override
+    public List<Point2D> vertexPositions()
+    {
+        // return boundary vertices
+        return this.boundary.vertexPositions();
+    }
+
+    @Override
+    public Point2D vertexPosition(int vertexIndex)
+    {
+        return this.boundary.vertexPosition(vertexIndex);
     }
 
     

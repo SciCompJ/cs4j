@@ -3,7 +3,7 @@
  */
 package net.sci.geom.polygon2d;
 
-import java.util.Collection;
+import java.util.List;
 
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Domain2D;
@@ -54,7 +54,7 @@ public interface PolygonalDomain2D extends Domain2D, Polygonal2D
      * 
      * @return the vertex positions of this polygon
      */
-    public Collection<Point2D> vertexPositions();
+    public List<Point2D> vertexPositions();
         
     /**
      * @return the number of vertices in this polygon.

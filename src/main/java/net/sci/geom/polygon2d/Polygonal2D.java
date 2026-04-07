@@ -3,6 +3,8 @@
  */
 package net.sci.geom.polygon2d;
 
+import java.util.List;
+
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Vector2D;
@@ -21,6 +23,53 @@ import net.sci.geom.geom2d.Vector2D;
  */
 public interface Polygonal2D
 {
+    // ===================================================================
+    // Management of vertices
+    
+    /**
+     * Returns the number of vertices.
+     * 
+     * @return the number of vertices
+     */
+    public int vertexCount();
+
+    public Iterable<? extends Vertex> vertices();
+
+    public void addVertex(Point2D vertexPosition);
+    
+    public void removeVertex(int vertexIndex);
+    
+    /**
+     * Returns the vertex at a given index.
+     * 
+     * @param index
+     *            the vertex index, between 0 and (vertexCount-1)
+     * @return the vertex at the specified index.
+     */
+    public Vertex vertex(int index);
+    
+    /**
+     * Returns the inner collection of points that contain the vertex
+     * positions.
+     * 
+     * @return a list of points corresponding to the vertex positions
+     */
+    public List<Point2D> vertexPositions();
+
+    /**
+     * Returns the position of a vertex identified by its index.
+     * 
+     * @param index
+     *            the index of the vertex
+     * @return the position of the vertex
+     */
+    public Point2D vertexPosition(int index);
+    
+    
+    // ===================================================================
+    // Inner interfaces declaration
+    
+    
     /**
      * A vertex of a polyline or polygon, used to encapsulate the position.
      * 
@@ -28,7 +77,7 @@ public interface Polygonal2D
      * 
      * @see Edge
      */
-    public interface Vertex
+    public static interface Vertex
     {
         /**
          * @return the position of this vertex, as a Point2D.
@@ -52,7 +101,7 @@ public interface Polygonal2D
      * 
      * @see Vertex
      */
-    public interface Edge
+    public static interface Edge
     {
         /**
          * @return the source vertex of this edge.

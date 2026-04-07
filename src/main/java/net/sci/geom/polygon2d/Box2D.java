@@ -163,29 +163,9 @@ public class Box2D implements Polygon2D
         return dx * dy;
     }
 
-    @Override
-    public List<Point2D> vertexPositions()
-    {
-        return List.of(
-                new Point2D(xmin, ymin),
-                new Point2D(xmax, ymin),
-                new Point2D(xmax, ymax),
-                new Point2D(xmin, ymax)
-                );
-    }
-
-    @Override
-    public int vertexCount()
-    {
-        return 4;
-    }
-
-
-    @Override
-    public void addVertex(Point2D vertexPosition)
-    {
-        throw new RuntimeException("Can not add vertices to a Box2D");
-    }
+    
+    // ===================================================================
+    // Implementation of the PolygonalDomain2D interface
     
     /**
      * Returns a new polygon whose boundary is the same as this box, but in
@@ -211,6 +191,64 @@ public class Box2D implements Polygon2D
     }
     
 
+    // ===================================================================
+    // Implementation of the Polygonal2D interface
+    
+    @Override
+    public int vertexCount()
+    {
+        return 4;
+    }
+
+    @Override
+    public Iterable<? extends Vertex> vertices()
+    {
+        return boundary().vertices();
+    }
+
+    @Override
+    public Vertex vertex(int index)
+    {
+        return boundary().vertex(index);
+    }
+
+    @Override
+    public void addVertex(Point2D vertexPosition)
+    {
+        throw new RuntimeException("Can not add vertices to a Box2D");
+    }
+    
+    @Override
+    public void removeVertex(int vertexIndex)
+    {
+        throw new RuntimeException("Can not remove a vertex from this geometry");
+    }
+
+    @Override
+    public Point2D vertexPosition(int index)
+    {
+        return switch(index)
+        {
+            case 0 -> new Point2D(xmin, ymin);
+            case 1 -> new Point2D(xmax, ymin);
+            case 2 -> new Point2D(xmax, ymax);
+            case 3 -> new Point2D(xmin, ymax);
+            default -> throw new RuntimeException("Vertex index must be compriszed between 0 and 3");
+        };
+    }
+    
+    @Override
+    public List<Point2D> vertexPositions()
+    {
+        return List.of(
+                new Point2D(xmin, ymin),
+                new Point2D(xmax, ymin),
+                new Point2D(xmax, ymax),
+                new Point2D(xmin, ymax)
+                );
+    }
+
+    
     // ===================================================================
     // Implementation of the Geometry2D interface
     
@@ -259,4 +297,5 @@ public class Box2D implements Polygon2D
     {
         return new Box2D(xmin, xmax, ymin, ymax);
     }
+
 }
