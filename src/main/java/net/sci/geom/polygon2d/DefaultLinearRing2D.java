@@ -9,7 +9,6 @@ import java.util.Iterator;
 
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Vector2D;
 
 
 /**
@@ -61,41 +60,6 @@ public class DefaultLinearRing2D extends VertexContainer2D implements LinearRing
     }
     
     
-    // ===================================================================
-    // Management of vertex normals
-    
-    /**
-     * Recomputes normal associated to each vertex, by computing tangents of
-     * adjacent vertices.
-     */
-    public void computeNormals()
-    {
-        // allocate memory for storing normals
-        this.clearNormals();
-        int nVertices = this.vertices.size();
-        this.vertexNormals.ensureCapacity(nVertices);
-        
-        // compute tangent of last edge
-        Point2D V0 = this.vertices.get(nVertices - 1);
-        Point2D V1 = this.vertices.get(0);
-        Vector2D T0 = new Vector2D(V0, V1).normalize();
-        
-        // process regular vertices
-        final double k = Math.sqrt(2) / 2.0;
-        for (int i = 0; i < nVertices; i++)
-        {
-            V0 = V1;
-            V1 = this.vertices.get((i + 1) % nVertices);
-            Vector2D T1 = new Vector2D(V0, V1).normalize();
-            
-            // compute average of the two normalized tangent vectors, and rotate
-            this.vertexNormals.add(T0.plus(T1).times(k).rotate90(-1));
-            
-            T0 = T1;
-        }
-    }
-    
-
     // ===================================================================
     // Management of edges
     

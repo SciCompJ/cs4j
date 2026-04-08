@@ -9,7 +9,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.geom2d.Vector2D;
 
 /**
  * @author dlegland
@@ -55,38 +54,6 @@ public class DefaultLineString2DTest
         assertEquals(poly2.vertexCount(), 5);
     }
  
-    @Test
-    public final void testVertexNormal()
-    {
-        DefaultLineString2D poly = new DefaultLineString2D(
-                new Point2D(10, 20),
-                new Point2D(50, 20),
-                new Point2D(50, 40),
-                new Point2D(10, 40));
-        poly.computeNormals();
-        
-        Polygonal2D.Vertex v0 = poly.vertex(0);
-        Vector2D n0 = v0.normal();
-        assertEquals( 0.000, n0.x(), 0.001);
-        assertEquals(-1.000, n0.y(), 0.001);
-        
-        Polygonal2D.Vertex v1 = poly.vertex(1);
-        Vector2D n1 = v1.normal();
-        assertEquals( 0.707, n1.x(), 0.001);
-        assertEquals(-0.707, n1.y(), 0.001);
-        
-        Polygonal2D.Vertex v2 = poly.vertex(2);
-        Vector2D n2 = v2.normal();
-        assertEquals( 0.707, n2.x(), 0.001);
-        assertEquals( 0.707, n2.y(), 0.001);
-        
-        Polygonal2D.Vertex v3 = poly.vertex(3);
-        Vector2D n3 = v3.normal();
-        assertEquals( 0.000, n3.x(), 0.001);
-        assertEquals(+1.000, n3.y(), 0.001);
-    }
-    
-    
 	/**
 	 * Test method for {@link net.sci.geom.polygon2d.DefaultLineString2D#closestVertexIndex(net.sci.geom.geom2d.Point2D)}.
 	 */

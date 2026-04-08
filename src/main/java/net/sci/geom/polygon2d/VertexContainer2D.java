@@ -68,31 +68,7 @@ public class VertexContainer2D implements Polygonal2D
 
     
     // ===================================================================
-    // Utility methods
-    
-    
-    
-
-    // ===================================================================
-    // Management of vertex normals
-    
-    public void clearNormals()
-    {
-        this.vertexNormals.clear();
-    }
-
-    /**
-     * Does nothing, but can be overridden for setting up the inner
-     * {@code normal} variable.
-     */
-    public void computeNormals()
-    {
-    }
-
-
-    // ===================================================================
     // Management of vertices
-   
     
     /**
      * Computes the index of the closest vertex to the input query point.
@@ -144,13 +120,11 @@ public class VertexContainer2D implements Polygonal2D
     public void addVertex(Point2D vertexPosition)
     {
         this.vertices.add(vertexPosition);
-        clearNormals();
     }
     
     public void removeVertex(int vertexIndex)
     {
         this.vertices.remove(vertexIndex);
-        clearNormals();
     }
     
     /**
@@ -192,6 +166,9 @@ public class VertexContainer2D implements Polygonal2D
     // ===================================================================
     // Inner class implementations
     
+    /**
+     * Wraps the index of a vertex into a {@code Vertex} class.
+     */
     protected class LocalVertex implements Vertex
     {
         int index;
@@ -205,17 +182,6 @@ public class VertexContainer2D implements Polygonal2D
         public Point2D position()
         {
             return vertices.get(this.index);
-        }
-        
-        @Override
-        public Vector2D normal()
-        {
-            if (vertexNormals.size() > 0)
-            {
-                return vertexNormals.get(this.index);
-            }
-            
-            throw new RuntimeException("Normal vectors have not been computed");
         }
     }
     
