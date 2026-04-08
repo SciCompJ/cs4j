@@ -42,7 +42,7 @@ public class DefaultPolygon2D implements Polygon2D
         this.boundary = new DefaultLinearRing2D();
     }
     
-    public DefaultPolygon2D(Collection<? extends Point2D> points)
+    public DefaultPolygon2D(Collection<Point2D> points)
     {
         this.vertices = new ArrayList<Point2D>(points.size());
         this.vertices.addAll(points);

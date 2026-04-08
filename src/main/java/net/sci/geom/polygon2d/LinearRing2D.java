@@ -61,7 +61,7 @@ public interface LinearRing2D extends Polyline2D, Contour2D
         return new DefaultLinearRing2D(vertices);
     }
     
-    public static LinearRing2D create(Collection<? extends Point2D> vertices)
+    public static LinearRing2D create(Collection<Point2D> vertices)
     {
         return new DefaultLinearRing2D(vertices);
     }

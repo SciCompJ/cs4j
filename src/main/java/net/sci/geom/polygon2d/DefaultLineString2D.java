@@ -6,7 +6,6 @@ package net.sci.geom.polygon2d;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
@@ -21,24 +20,8 @@ import net.sci.geom.geom2d.Vector2D;
  * 
  * @author dlegland
  */
-public class DefaultLineString2D implements LineString2D
+public class DefaultLineString2D extends VertexContainer2D implements LineString2D
 {
-    // ===================================================================
-    // Class variables
-    
-    /**
-     * The array of coordinates for each vertex.
-     */
-    private ArrayList<Point2D> vertices;
-    
-    /**
-     * An optional array of vectors used to store the normal for each vertex.
-     * 
-     * Always initialized, but has a size of zero by default.
-     */
-    private ArrayList<Vector2D> vertexNormals = new ArrayList<Vector2D>(0);
-    
-    
     // ===================================================================
     // Constructors
 
@@ -55,7 +38,7 @@ public class DefaultLineString2D implements LineString2D
      */
     public DefaultLineString2D(int nVertices)
     {
-        this.vertices = new ArrayList<Point2D>(nVertices);
+        super(nVertices);
     }
     
     public DefaultLineString2D(Point2D... vertices)
@@ -69,118 +52,22 @@ public class DefaultLineString2D implements LineString2D
     
     public DefaultLineString2D(Collection<Point2D> vertices)
     {
-        this.vertices = new ArrayList<Point2D>(vertices.size());
-        this.vertices.addAll(vertices);
+        super(vertices);
     }
     
     public DefaultLineString2D(double[] xcoords, double[] ycoords)
     {
-        this.vertices = new ArrayList<Point2D>(xcoords.length);
-        int n = xcoords.length;
-        this.vertices.ensureCapacity(n);
-        for (int i = 0; i < n; i++)
-        {
-            vertices.add(new Point2D(xcoords[i], ycoords[i]));
-        }
+        super(xcoords, ycoords);
     }
-    
  
-    // ===================================================================
-    // Management of vertices
-    
-    /**
-     * Returns the number of vertices.
-     * 
-     * @return the number of vertices
-     */
-    public int vertexCount()
-    {
-        return vertices.size();
-    }
-
-    @Override
-    public Iterable<Polygonal2D.Vertex> vertices()
-    {
-        return new Iterable<Polygonal2D.Vertex>()
-        {
-            @Override
-            public Iterator<Polygonal2D.Vertex> iterator()
-            {
-                return new VertexIterator();
-            }
-
-        };
-    }
-
-    /**
-     * Returns the inner collection of vertices.
-     */
-    public List<Point2D> vertexPositions()
-    {
-        return vertices;
-    }
-    
-    public void addVertex(Point2D vertexPosition)
-    {
-        this.vertices.add(vertexPosition);
-    }
-    
-    public void removeVertex(int vertexIndex)
-    {
-        this.vertices.remove(vertexIndex);
-    }
-    
-    /**
-     * Returns the vertex at a given index.
-     * 
-     * @param index
-     *            the vertex index, between 0 and (vertexCount-1)
-     * @return the vertex at the specified index.
-     */
-    public Polygonal2D.Vertex vertex(int index)
-    {
-        return new LocalVertex(index);
-    }
-    
-    public Point2D vertexPosition(int vertexIndex)
-    {
-        return this.vertices.get(vertexIndex);
-    }
-    
-    /**
-     * Computes the index of the closest vertex to the input query point.
-     * 
-     * @param point
-     *            the query point
-     * @return the index of the closest vertex to the query point
-     */
-    public int closestVertexIndex(Point2D point)
-    {
-        double minDist = Double.POSITIVE_INFINITY;
-        int index = -1;
-        
-        for (int i = 0; i < vertices.size(); i++)
-        {
-            double dist = vertices.get(i).distance(point);
-            if (dist < minDist)
-            {
-                index = i;
-                minDist = dist;
-            }
-        }
-        
-        return index;
-    }
-    
     
     // ===================================================================
     // Management of vertex normals
     
-    public void clearNormals()
-    {
-        this.vertexNormals.clear();
-    }
-    
+    /**
+     * Recomputes normal associated to each vertex, by computing tangents of
+     * adjacent vertices.
+     */
     public void computeNormals()
     {
         // allocate memory for storing normals
@@ -216,10 +103,6 @@ public class DefaultLineString2D implements LineString2D
     
 
     // ===================================================================
-    // Methods implementing the Polyline2D interface
-
-
-    // ===================================================================
     // Management of edges
     
     public int edgeCount()
@@ -227,7 +110,7 @@ public class DefaultLineString2D implements LineString2D
         return vertices.size() - 1;
     }
 
-    public Polygonal2D.Edge edge(int edgeIndex)
+    public Edge edge(int edgeIndex)
     {
     	if (edgeIndex < 0 || edgeIndex >= vertices.size()-1)
     	{
@@ -237,12 +120,12 @@ public class DefaultLineString2D implements LineString2D
     }
     
     @Override
-	public Iterable<? extends Polygonal2D.Edge> edges()
+	public Iterable<? extends Edge> edges()
 	{
-		return new Iterable<Polygonal2D.Edge>() 
+		return new Iterable<Edge>() 
 		{
 			@Override
-			public Iterator<Polygonal2D.Edge> iterator()
+			public Iterator<Edge> iterator()
 			{
 				return new EdgeIterator();
 			}
@@ -282,34 +165,7 @@ public class DefaultLineString2D implements LineString2D
     // ===================================================================
     // Inner class implementations
     
-	private class LocalVertex implements Polygonal2D.Vertex
-    {
-    	int index;
-    	
-    	public LocalVertex(int index)
-    	{
-    		this.index = index;
-    	}
-
-		@Override
-		public Point2D position()
-		{
-			return vertices.get(this.index);
-		}
-		
-		@Override
-        public Vector2D normal()
-        {
-		    if (vertexNormals.size() > 0)
-		    {
-	            return vertexNormals.get(this.index);
-		    }
-		    
-            throw new RuntimeException("Normal vectors have not been computed");
-        }
-    }
-    
-	private class LocalEdge implements Polygonal2D.Edge
+	private class LocalEdge implements Edge
     {
     	int index;
 
@@ -319,13 +175,13 @@ public class DefaultLineString2D implements LineString2D
     	}
     	
 		@Override
-		public Polygonal2D.Vertex source()
+		public Vertex source()
 		{
 			return new LocalVertex(this.index);
 		}
 
 		@Override
-		public Polygonal2D.Vertex target()
+		public Vertex target()
 		{
 			return new LocalVertex(this.index + 1);
 		}
@@ -339,31 +195,7 @@ public class DefaultLineString2D implements LineString2D
 		}
     }
     
-    // ===================================================================
-    // Vertex and Edge iterator implementations
-    
-    private class VertexIterator implements Iterator<Polygonal2D.Vertex>
-    {
-        /**
-         * Index of current vertex in iterator. 
-         */
-        int index = 0;
-
-        @Override
-        public boolean hasNext()
-        {
-            return index < vertices.size();
-        }
-
-        @Override
-        public Polygonal2D.Vertex next()
-        {
-            return new LocalVertex(this.index++);
-        }
-        
-    }
-
-    private class EdgeIterator implements Iterator<Polygonal2D.Edge>
+    private class EdgeIterator implements Iterator<Edge>
     {
     	/**
     	 * Index of the first vertex of current edge
@@ -382,5 +214,4 @@ public class DefaultLineString2D implements LineString2D
 			return new LocalEdge(this.index++);
 		}
     }
-
 }

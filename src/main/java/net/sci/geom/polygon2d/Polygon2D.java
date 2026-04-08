@@ -31,7 +31,7 @@ public interface Polygon2D extends PolygonalDomain2D
      *            the vertices stored in an array of Point2D
      * @return a new polygon formed by the vertices
      */
-    public static Polygon2D create(Collection<? extends Point2D> vertices)
+    public static Polygon2D create(Collection<Point2D> vertices)
     {
         return new DefaultPolygon2D(vertices);
     }
