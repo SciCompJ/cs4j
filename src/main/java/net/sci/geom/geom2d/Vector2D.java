@@ -21,12 +21,62 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
     // ===================================================================
     // Static methods
 
-	public static boolean isParallel(Vector2D v1, Vector2D v2)
+    /**
+     * Creates a new {@code Vector2D} with the specified Cartesian coordinates.
+     * 
+     * @param x
+     *            the x-coordinate of the vector
+     * @param y
+     *            the y-coordinate of the vector
+     * @return the new vector
+     */
+    public static final Vector2D of(double x, double y)
+    {
+        return new Vector2D(x, y);
+    }
+    
+    /**
+     * Creates a new {@code Vector2D} between two points.
+     * 
+     * @param p1
+     *            the origin of the vector
+     * @param p2
+     *            the destination of the vector
+     * @return the new vector
+     */
+    public static final Vector2D of(Point2D p1, Point2D p2)
+    {
+        return new Vector2D(p2.x - p1.x, p2.y - p1.y);
+    }
+
+    /**
+     * Check whether two vectors are parallel, with respect to the default
+     * tolerance.
+     * 
+     * @param v1
+     *            the first vector
+     * @param v2
+     *            the second vector
+     * @return true if the two vectors are parallel
+     */
+	public static final boolean isParallel(Vector2D v1, Vector2D v2)
 	{
 		return isParallel(v1, v2, DEFAULT_TOL);
 	}
 	
-	public static boolean isParallel(Vector2D v1, Vector2D v2, double tol)
+    /**
+     * Check whether two vectors are parallel, with respect to the specified
+     * tolerance.
+     * 
+     * @param v1
+     *            the first vector
+     * @param v2
+     *            the second vector
+     * @param tol
+     *            the tolerance for computation
+     * @return true if the two vectors are parallel
+     */
+	public static final boolean isParallel(Vector2D v1, Vector2D v2, double tol)
 	{
 		v1 = v1.normalize();
 		v2 = v2.normalize();
@@ -34,7 +84,8 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
 	}
 
 	/**
-	 * Tests if the two vectors are perpendicular
+	 * Tests if the two vectors are perpendicular, with respect to the default
+     * tolerance.
 	 * 
 	 * @param v1
 	 *            the first vector to test
@@ -48,14 +99,15 @@ public class Vector2D implements Dimensional, Numeric<Vector2D>
 	}
 	
 	/**
-	 * Tests if the two vectors are perpendicular.
+	 * Tests if the two vectors are perpendicular, with respect to the specified
+     * tolerance.
 	 * 
 	 * @param v1
 	 *            the first vector
 	 * @param v2
 	 *            the second vector
 	 * @param tol
-	 *            the tolerance used for testing the product
+	 *            the tolerance used for testing the dot product
 	 * @return true if the vectors are perpendicular
 	 */
 	public static boolean isPerpendicular(Vector2D v1, Vector2D v2, double tol)
