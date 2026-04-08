@@ -10,7 +10,7 @@ import net.sci.array.numeric.Numeric;
 /**
  * Implementation of a two-dimensional vector.
  */
-public class Vector2D implements Dimensional, Numeric<Vector2D>
+public final class Vector2D implements Dimensional, Numeric<Vector2D>
 {
     // ===================================================================
     // constants

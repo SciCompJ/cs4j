@@ -15,7 +15,7 @@ import net.sci.geom.Point;
  * @author dlegland
  *
  */
-public class Point2D implements PointShape2D, Point
+public final class Point2D implements PointShape2D, Point
 {
     // ===================================================================
     // Static methods

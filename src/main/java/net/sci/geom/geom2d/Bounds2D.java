@@ -14,7 +14,7 @@ import net.sci.geom.Bounds;
  * @author dlegland
  *
  */
-public class Bounds2D implements Bounds
+public final class Bounds2D implements Bounds
 {
     // ===================================================================
     // Static factories
