@@ -26,7 +26,6 @@ public class DefaultPolygon2D implements Polygon2D
      * The inner ordered list of vertices. The last point is connected to the
      * first one.
      */
-    protected ArrayList<Point2D> vertices;
     protected DefaultLinearRing2D boundary;
     
     
@@ -38,14 +37,11 @@ public class DefaultPolygon2D implements Polygon2D
      */
     public DefaultPolygon2D()
     {
-        vertices = new ArrayList<Point2D>();
         this.boundary = new DefaultLinearRing2D();
     }
     
     public DefaultPolygon2D(Collection<Point2D> points)
     {
-        this.vertices = new ArrayList<Point2D>(points.size());
-        this.vertices.addAll(points);
         this.boundary = new DefaultLinearRing2D(points);
     }
 
@@ -57,9 +53,6 @@ public class DefaultPolygon2D implements Polygon2D
      */
     public DefaultPolygon2D(Point2D... vertices)
     {
-        this.vertices = new ArrayList<Point2D>(vertices.length);
-        for (Point2D vertex : vertices)
-            this.vertices.add(vertex);
         this.boundary = new DefaultLinearRing2D(vertices);
     }
     
@@ -73,10 +66,7 @@ public class DefaultPolygon2D implements Polygon2D
      */
     public DefaultPolygon2D(double[] xcoords, double[] ycoords)
     {
-        this.vertices = new ArrayList<Point2D>(xcoords.length);
-        for (int i = 0; i < xcoords.length; i++)
-            this.vertices.add(new Point2D(xcoords[i], ycoords[i]));
-        this.boundary = new DefaultLinearRing2D(vertices);
+        this.boundary = new DefaultLinearRing2D(xcoords, ycoords);
     }
     
     /**
@@ -88,7 +78,6 @@ public class DefaultPolygon2D implements Polygon2D
 	 */
     public DefaultPolygon2D(int nVertices)
     {
-        this.vertices = new ArrayList<Point2D>(nVertices);
         this.boundary = new DefaultLinearRing2D(nVertices);
     }
     
@@ -200,6 +189,13 @@ public class DefaultPolygon2D implements Polygon2D
     // ===================================================================
     // Implementation of the Region2D interface
     
+    /**
+     * Returns a reference to the linear ring that defines this polygon.
+     * Modifications to the linear ring correspond to modifications to the
+     * polygon, and vice-versa.
+     * 
+     * @return the boundary of this polygon
+     */
     @Override
     public LinearRing2D boundary()
     {
@@ -270,7 +266,6 @@ public class DefaultPolygon2D implements Polygon2D
             return 0;
         
         // computes distance to boundary
-        LinearRing2D boundary = LinearRing2D.create(this.vertices);
         return boundary.distance(x, y);
     }
     
@@ -300,6 +295,6 @@ public class DefaultPolygon2D implements Polygon2D
     @Override
     public Polygon2D duplicate()
     {
-        return new DefaultPolygon2D(this.boundary.vertexPositions());
+        return new DefaultPolygon2D(this.boundary.vertices);
     }
 }

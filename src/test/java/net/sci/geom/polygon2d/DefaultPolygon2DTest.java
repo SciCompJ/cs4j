@@ -100,8 +100,9 @@ public class DefaultPolygon2DTest
     public final void testDistance()
     {
         DefaultPolygon2D poly = createDiamondPolygon();
-        assertEquals(10, poly.distance(new Point2D(40, 20)), .01);
-        assertEquals(5 * Math.sqrt(2), poly.distance(new Point2D(10, 10)), .01);
+        assertEquals(10, poly.distance(new Point2D(40, 20)), 0.01);
+        assertEquals(5 * Math.sqrt(2), poly.distance(new Point2D(10, 10)), 0.01);
+        assertEquals(0.0, poly.distance(new Point2D(20, 20)), 0.01);
     }
     
     /**
