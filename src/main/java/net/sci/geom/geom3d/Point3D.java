@@ -11,10 +11,10 @@ import net.sci.geom.geom2d.Point2D;
 /**
  * A three-dimensional point.
  * 
- * @author dlegland
- *
+ * @see Vector3D
+ * @see MultiPoint3D
  */
-public class Point3D implements Point, Geometry3D
+public final class Point3D implements Point, Geometry3D
 {
     // ===================================================================
     // Static factories

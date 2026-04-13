@@ -12,8 +12,10 @@ import net.sci.array.numeric.Numeric;
 
 /**
  * Implementation of a three-dimensional vector.
+ * 
+ * @see Point3D
  */
-public class Vector3D implements Dimensional, Numeric<Vector3D>
+public final class Vector3D implements Dimensional, Numeric<Vector3D>
 {
     // ===================================================================
     // Private constants
