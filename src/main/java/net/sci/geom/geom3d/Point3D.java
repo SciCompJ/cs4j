@@ -17,6 +17,25 @@ import net.sci.geom.geom2d.Point2D;
 public class Point3D implements Point, Geometry3D
 {
     // ===================================================================
+    // Static factories
+    
+    /**
+     * Creates a new {@code Point3D} with the specified Cartesian coordinates.
+     * 
+     * @param x
+     *            the x-coordinate of the point
+     * @param y
+     *            the y-coordinate of the point
+     * @param z
+     *            the z-coordinate of the point
+     * @return the new point
+     */
+    public static final Point3D of(double x, double y, double z)
+    {
+        return new Point3D(x, y, z);
+    }
+
+    // ===================================================================
     // Static methods
 
     /**

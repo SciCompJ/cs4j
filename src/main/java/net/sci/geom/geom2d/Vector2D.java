@@ -19,7 +19,7 @@ public final class Vector2D implements Dimensional, Numeric<Vector2D>
 	
 	
     // ===================================================================
-    // Static methods
+    // Static factories
 
     /**
      * Creates a new {@code Vector2D} with the specified Cartesian coordinates.
@@ -48,6 +48,22 @@ public final class Vector2D implements Dimensional, Numeric<Vector2D>
     {
         return new Vector2D(p2.x - p1.x, p2.y - p1.y);
     }
+
+    /**
+     * Creates a new {@code Vector3D} with same coordinates as the specified point.
+     * 
+     * @param p
+     *            the point to convert
+     * @return the new vector
+     */
+    public static final Vector2D of(Point2D p)
+    {
+        return new Vector2D(p.x, p.y);
+    }
+    
+    
+    // ===================================================================
+    // Static utility methods
 
     /**
      * Check whether two vectors are parallel, with respect to the default

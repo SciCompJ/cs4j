@@ -47,7 +47,53 @@ public class Vector3D implements Dimensional, Numeric<Vector3D>
     
     
     // ===================================================================
-    // Static methods
+    // Static factories
+    
+    /**
+     * Creates a new {@code Vector3D} with the specified Cartesian coordinates.
+     * 
+     * @param x
+     *            the x-coordinate of the vector
+     * @param y
+     *            the y-coordinate of the vector
+     * @param z
+     *            the z-coordinate of the vector
+     * @return the new vector
+     */
+    public static final Vector3D of(double x, double y, double z)
+    {
+        return new Vector3D(x, y, z);
+    }
+    
+    /**
+     * Creates a new {@code Vector3D} between two points.
+     * 
+     * @param p1
+     *            the origin of the vector
+     * @param p2
+     *            the destination of the vector
+     * @return the new vector
+     */
+    public static final Vector3D of(Point3D p1, Point3D p2)
+    {
+        return new Vector3D(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
+    }
+    
+    /**
+     * Creates a new {@code Vector3D} with same coordinates as the specified point.
+     * 
+     * @param p
+     *            the point to convert
+     * @return the new vector
+     */
+    public static final Vector3D of(Point3D p)
+    {
+        return new Vector3D(p.x, p.y, p.z);
+    }
+    
+
+    // ===================================================================
+    // Static utility methods
 
     public static boolean isParallel(Vector3D v1, Vector3D v2)
     {
