@@ -6,12 +6,10 @@ package net.sci.table;
 import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.stream.Stream;
 
 import net.sci.axis.Axis;
 import net.sci.table.impl.ColumnsTable;
-import net.sci.table.impl.DefaultNumericTable;
 import net.sci.table.impl.DefaultTable;
 import net.sci.table.impl.TablePrinter;
 
@@ -59,11 +57,12 @@ public interface Table
     
     /**
      * Creates a new data table from a series of columns. If all columns are
-     * instances of NumericColumn, returns a NumericTable.
+     * instances of {@code NumericColumn}, returns a table that implements the
+     * {@code NumericTable} interface.
      * 
      * @param columns
      *            the columns that will constitute the table
-     * @return a new Table instance
+     * @return a new {@code Table} instance
      */
     public static Table create(Column... columns)
     {
@@ -72,20 +71,13 @@ public interface Table
             throw new RuntimeException("Requires at least one column to create a table");
         }
         
-        // retrieve table size
-        int nCols = columns.length;
-        int nRows = columns[0].length();
-        
-        // If all columns are numeric, should return a numeric table
-        if (Arrays.stream(columns).allMatch(col -> (col instanceof FloatColumn)))
+        // If all columns are numeric, return a numeric table
+        if (Arrays.stream(columns).allMatch(col -> col instanceof NumericColumn))
         {
-            NumericTable table = new DefaultNumericTable(nRows, nCols);
-            for (int c = 0; c < nCols; c++)
-            {
-                table.setColumnValues(c, columns[c].getValues());
-                table.setColumnName(c, columns[c].getName());
-            }
-            return table;
+            NumericColumn[] numCols = Stream.of(columns)
+                    .map(col -> (NumericColumn) col)
+                    .toArray(NumericColumn[]::new);
+            return NumericTable.create(numCols);
         }
         
         return new ColumnsTable(columns);
@@ -106,22 +98,13 @@ public interface Table
             throw new RuntimeException("Requires at least one column to create a table");
         }
         
-        // retrieve table size
-        int nCols = columns.size();
-        int nRows = columns.iterator().next().length();
-        
-        // If all columns are numeric, should return a numeric table
-        if (columns.stream().allMatch(col -> (col instanceof FloatColumn)))
+        // If all columns are numeric, return a numeric table
+        if (columns.stream().allMatch(col -> col instanceof NumericColumn))
         {
-            NumericTable table = new DefaultNumericTable(nRows, nCols);
-            Iterator<Column> iter = columns.iterator();
-            for (int c = 0; c < nCols; c++)
-            {
-                NumericColumn column = (NumericColumn) iter.next();
-                table.setColumnValues(c, column.getValues());
-                table.setColumnName(c, column.getName());
-            }
-            return table;
+            NumericColumn[] numCols = columns.stream()
+                    .map(col -> (NumericColumn) col)
+                    .toArray(NumericColumn[]::new);
+            return NumericTable.create(numCols);
         }
         
         return new ColumnsTable(columns);

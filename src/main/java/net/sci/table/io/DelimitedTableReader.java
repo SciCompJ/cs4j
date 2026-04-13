@@ -316,18 +316,7 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
         }
         this.fireProgressChanged(this, 0, 1);
         
-        Table table;
-        if (Stream.of(columns).allMatch(col -> col instanceof NumericColumn))
-        {
-            NumericColumn[] numCols = Stream.of(columns)
-                    .map(col -> (NumericColumn) col)
-                    .toArray(NumericColumn[]::new);
-            table = NumericTable.create(numCols);
-        }
-        else
-        {
-            table = new ColumnsTable(columns);
-        }
+        Table table = Table.create(columns);
         
         // populates meta-data
         if (readRowNames)
