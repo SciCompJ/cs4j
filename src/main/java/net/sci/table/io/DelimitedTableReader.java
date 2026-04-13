@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import net.sci.algo.AlgoStub;
 import net.sci.table.CategoricalColumn;
 import net.sci.table.Column;
 import net.sci.table.NumericColumn;
@@ -36,7 +37,7 @@ import net.sci.table.impl.ColumnsTable;
  * @author dlegland
  *
  */
-public class DelimitedTableReader implements TableReader
+public class DelimitedTableReader extends AlgoStub implements TableReader
 {
     // =============================================================
     // Class variables
@@ -220,6 +221,7 @@ public class DelimitedTableReader implements TableReader
         BufferedReader br = new BufferedReader(new InputStreamReader(stream));
         LineNumberReader reader = new LineNumberReader(br);
         
+        this.fireStatusChanged(this, "read header");
         // optionally skip some lines
         for (int r = 0; r < skipLines; r++)
         {
@@ -267,6 +269,7 @@ public class DelimitedTableReader implements TableReader
             }
         }
         
+        this.fireStatusChanged(this, "read data");
         // read regular lines
         while (true)
         {
@@ -303,12 +306,15 @@ public class DelimitedTableReader implements TableReader
         
         reader.close();
         
+        this.fireStatusChanged(this, "convert columns");
         // convert columns
         Column[] columns = new Column[nCols];
         for (int c = 0; c < nCols; c++)
         {
+            this.fireProgressChanged(this, c, nCols);
             columns[c] = createColumn(colNames[c], columnTokens.get(c));
         }
+        this.fireProgressChanged(this, 0, 1);
         
         Table table;
         if (Stream.of(columns).allMatch(col -> col instanceof NumericColumn))
