@@ -12,15 +12,12 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import net.sci.algo.AlgoStub;
 import net.sci.table.CategoricalColumn;
 import net.sci.table.Column;
 import net.sci.table.NumericColumn;
-import net.sci.table.NumericTable;
 import net.sci.table.Table;
-import net.sci.table.impl.ColumnsTable;
 
 /**
  * Reads a table from a delimited file. Many options can be set, such as the type of delimiter, the number of lines to skip, or
