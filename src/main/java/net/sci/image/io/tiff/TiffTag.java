@@ -32,39 +32,26 @@ public class TiffTag
     /**
      * The type of data stored by a tag.
      */
-    public static enum Type
+    // TODO: rename to as "FieldType"?
+    public static abstract class Type
     {
         /** Unknown type of tag (code 0) */
-        UNKNOWN(0, 0),
+        public static final Type UNKNOWN = new UnknownType();
         /** Tag value stored with single byte(s) (code 1) */
-        BYTE(1, 1),
+        public static final Type BYTE = new ByteType();
         /** Tag content stored in ASCII (code 2) */
-        ASCII(2, 1),
+        public static final Type ASCII = new AsciiType();
         /** Tag value or content stored with 16-bits integer (code 3) */
-        SHORT(3, 2),
+        public static final Type SHORT = new ShortType();
         /** Tag value or content stored with 32-bits integer (code 4) */
-        LONG(4, 4),
+        public static final Type LONG = new LongType();
         /**
          * Tag content stored with rational (code 5), i.e. by storing each value
          * with a pair of 4-byte integers.
          */
-        RATIONAL(5, 8),
+        public static final Type RATIONAL = new RationalType();
         /** Tag value(s) stored with double precision (64-bits) floating point (code 12) */
-        DOUBLE(12, 8);
-        
-        int code;
-        int byteCount;
-        
-        private Type(int code, int byteCount)
-        {
-            this.code = code;
-            this.byteCount = byteCount;
-        }
-        
-        public int code()
-        {
-            return code;
-        }
+        public static final Type DOUBLE = new DoubleType();
         
         /**
          * Identifies the type from an integer code as read from a tiff entry.
@@ -82,17 +69,435 @@ public class TiffTag
                 case 3 -> SHORT;
                 case 4 -> LONG;
                 case 5 -> RATIONAL;
-//                case 5 -> RATIONAL;
-//                case 5 -> RATIONAL;
-//                case 5 -> RATIONAL;
                 case 12 -> DOUBLE;
                 default -> UNKNOWN;
             };
         }
         
+        int code;
+        int byteCount;
+        
+        private Type(int code, int byteCount)
+        {
+            this.code = code;
+            this.byteCount = byteCount;
+        }
+        
+        public int code()
+        {
+            return code;
+        }
+        
         public int byteCount()
         {
-            return byteCount;
+            return this.byteCount;
+        }
+        
+        /**
+         * Initialize the content of the tag from the data reader, given its code
+         * and the specified value.
+         * 
+         * @param dataReader
+         *            the instance of DataReader to read optional information from
+         * @throws IOException
+         *             if tried to read from the file and problem occurred
+         */
+        public abstract void readTagContent(TiffTag tag, BinaryDataReader dataReader) throws IOException;
+        
+        /**
+         * Creates a short summary of the content, based on the value or content
+         * stored within the tag.
+         * 
+         * @return a short summary of the content of this tag.
+         */
+        public abstract String contentSummary(TiffTag tag);
+
+        /**
+         * Sets the value of this tag, to populate either the {@code value} or the
+         * {@code content} field. The {@code value} parameter is first casted
+         * according to the type of the tag. If {@code value} parameter fits into 4
+         * bytes, the {@code value} field of the tag is populated. Otherwise, the
+         * {@code content} field is initialized, and the value field will be later
+         * populated with offset to content.
+         * 
+         * @param value
+         *            the value of the entry
+         */
+        public abstract TiffTag setValue(TiffTag tag, Object value);
+
+        /**
+         * Writes the data of this entry into the specified stream, with the
+         * specified byte order. The number of bytes that will be written must be
+         * the same as the result of the {@code writeEntry()} method.
+         * 
+         * @param out
+         *            the stream to write in
+         * @param order
+         *            the byte order
+         * @throws IOException 
+         */
+        public abstract void writeTagContent(TiffTag tag, OutputStream out, ByteOrder order) throws IOException;
+
+        public static final class UnknownType extends Type
+        {
+            public UnknownType()
+            {
+                super(0, 0);
+            }
+
+            @Override
+            public void readTagContent(TiffTag tag, BinaryDataReader dataReader) throws IOException
+            {
+            }
+            
+            @Override
+            public String contentSummary(TiffTag tag)
+            {
+                return "";
+            }
+
+            @Override
+            public TiffTag setValue(TiffTag tag, Object value)
+            {
+                tag.content = value;
+                return tag;
+            }
+
+            @Override
+            public void writeTagContent(TiffTag tag, OutputStream out, ByteOrder order)
+                    throws IOException
+            {
+                // do nothing...
+            }
+        }
+        
+        public static final class ByteType extends Type
+        {
+            public ByteType()
+            {
+                super(1, 1);
+            }
+
+            @Override
+            public void readTagContent(TiffTag tag, BinaryDataReader dataReader) throws IOException
+            {
+                tag.content = tag.count == 1 ? Integer.valueOf(tag.value) : tag.readByteArray(dataReader);
+            }
+            
+            @Override
+            public String contentSummary(TiffTag tag)
+            {
+                return tag.count == 1 ? Integer.toString(tag.value) : createDesc((byte[]) tag.content, 5);
+            }
+            
+            private static final String createDesc(byte[] array, int nMax)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append("{");
+                sb.append(Byte.toString(array[0]));
+                for (int i = 1; i < Math.min(array.length, nMax); i++)
+                {
+                    sb.append(",").append(Byte.toString(array[i]));
+                }
+                if (array.length > nMax)
+                {
+                    sb.append("...");
+                }
+                sb.append("}");
+                return sb.toString();
+            }
+
+            @Override
+            public TiffTag setValue(TiffTag tag, Object value)
+            {
+                if (value instanceof byte[] array)
+                {
+                    tag.count = array.length;
+                    if (array.length == 1)
+                    {
+                        tag.value = array[0];
+                        tag.content = null;
+                    }
+                    else
+                    {
+                        tag.content = array;
+                    }
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is BYTE, content must be an array of bytes");
+                }
+                return tag;
+            }
+            
+            @Override
+            public void writeTagContent(TiffTag tag, OutputStream out, ByteOrder order)
+                    throws IOException
+            {
+                if (tag.content == null) return;
+                out.write((byte[]) tag.content);
+            }
+        }
+        
+        public static final class AsciiType extends Type
+        {
+            public AsciiType()
+            {
+                super(2, 1);
+            }
+
+            @Override
+            public void readTagContent(TiffTag tag, BinaryDataReader dataReader) throws IOException
+            {
+                tag.content = tag.readAscii(dataReader); // Automatically convert byte array to String
+            }
+            
+            @Override
+            public String contentSummary(TiffTag tag)
+            {
+                return (String) tag.content;
+            }
+
+            @Override
+            public TiffTag setValue(TiffTag tag, Object value)
+            {
+                if (value instanceof String string)
+                {
+                    byte[] bytes = string.getBytes();
+                    tag.content = bytes;
+                    tag.count = bytes.length;
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is ASCII, content must be a String");
+                }
+                return tag;
+            }
+            
+            @Override
+            public void writeTagContent(TiffTag tag, OutputStream out, ByteOrder order)
+                    throws IOException
+            {
+                if (tag.content == null) return;
+                out.write((byte[]) tag.content);
+            }
+            
+        }
+        
+        public static final class ShortType extends Type
+        {
+            public ShortType()
+            {
+                super(3, 2);
+            }
+
+            @Override
+            public void readTagContent(TiffTag tag, BinaryDataReader dataReader) throws IOException
+            {
+                tag.content = tag.count == 1 ? Integer.valueOf(tag.value) : tag.readShortArray(dataReader);
+            }
+            
+            @Override
+            public String contentSummary(TiffTag tag)
+            {
+                return tag.count == 1 ? Integer.toString(tag.value) : createDesc((short[]) tag.content, 5);
+            }
+
+            private static final String createDesc(short[] array, int nMax)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append("{");
+                sb.append(Short.toString(array[0]));
+                for (int i = 1; i < Math.min(array.length, nMax); i++)
+                {
+                    sb.append(",").append(Short.toString(array[i]));
+                }
+                if (array.length > nMax)
+                {
+                    sb.append("...");
+                }
+                sb.append("}");
+                return sb.toString();
+            }
+            
+            @Override
+            public TiffTag setValue(TiffTag tag, Object value)
+            {
+                if (value instanceof short[] array)
+                {
+                    tag.count = array.length;
+                    if (array.length == 1)
+                    {
+                        tag.value = array[0];
+                        tag.content = null;
+                    }
+                    else
+                    {
+                        tag.content = array;
+                    }
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is SHORT, content must be an array of short");
+                }
+                return tag;
+            }
+            
+            @Override
+            public void writeTagContent(TiffTag tag, OutputStream out, ByteOrder order)
+                    throws IOException
+            {
+                if (tag.content == null) return;
+                for (short s : (short[]) tag.content)
+                {
+                    writeShort(out, order, s);
+                }
+            }
+        }
+        
+        public static final class LongType extends Type
+        {
+            public LongType()
+            {
+                super(4, 4);
+            }
+
+            @Override
+            public void readTagContent(TiffTag tag, BinaryDataReader dataReader) throws IOException
+            {
+                tag.content = tag.count == 1 ? Integer.valueOf(tag.value) : tag.readIntArray(dataReader);
+            }
+            
+            @Override
+            public String contentSummary(TiffTag tag)
+            {
+                return tag.count == 1 ? Integer.toString(tag.value) : createDesc((int[]) tag.content, 5);
+            }
+
+            @Override
+            public TiffTag setValue(TiffTag tag, Object value)
+            {
+                if (value instanceof int[] array)
+                {
+                    tag.count = array.length;
+                    if (array.length == 1)
+                    {
+                        tag.value = array[0];
+                        tag.content = null;
+                    }
+                    else
+                    {
+                        tag.content = array;
+                    }
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is LONG, content must be an array of int");
+                }
+                return tag;
+            }
+            
+            @Override
+            public void writeTagContent(TiffTag tag, OutputStream out, ByteOrder order)
+                    throws IOException
+            {
+                if (tag.content == null) return;
+                for (int value : (int[]) tag.content)
+                {
+                    writeInt(out, order, value);
+                }
+            }
+            
+        }
+        
+        public static final class RationalType extends Type
+        {
+            public RationalType()
+            {
+                super(5, 8);
+            }
+
+            @Override
+            public void readTagContent(TiffTag tag, BinaryDataReader dataReader) throws IOException
+            {
+                tag.content = tag.readRational(dataReader); // Assume only one rational is specified
+            }
+            
+            @Override
+            public String contentSummary(TiffTag tag)
+            {
+                return Double.toString((double) tag.content);
+            }
+
+            @Override
+            public TiffTag setValue(TiffTag tag, Object value)
+            {
+                if (!(value instanceof int[]))
+                {
+                    throw new RuntimeException("If tag type is RATIONAL, content must be an array of int");
+                }
+                
+                tag.content = value;
+                tag.count = 1;
+                return tag;
+            }
+            
+            @Override
+            public void writeTagContent(TiffTag tag, OutputStream out, ByteOrder order)
+                    throws IOException
+            {
+                if (tag.content == null) return;
+                int[] data = (int[]) tag.content;
+                writeInt(out, order, data[0]);
+                writeInt(out, order, data[1]);
+            }
+        }
+        
+        public static final class DoubleType extends Type
+        {
+            public DoubleType()
+            {
+                super(12, 8);
+            }
+
+            @Override
+            public void readTagContent(TiffTag tag, BinaryDataReader dataReader) throws IOException
+            {
+                tag.content = tag.readDoubleArray(dataReader);
+            }
+            
+            @Override
+            public String contentSummary(TiffTag tag)
+            {
+                return createDesc((double[]) tag.content, 5);
+            }
+            
+            @Override
+            public TiffTag setValue(TiffTag tag, Object value)
+            {
+                if (value instanceof double[] array)
+                {
+                    tag.content = array;
+                    tag.count = array.length;
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is DOUBLE, content must be an array of int");
+                }
+                return tag;
+            }
+            
+            @Override
+            public void writeTagContent(TiffTag tag, OutputStream out, ByteOrder order)
+                    throws IOException
+            {
+                if (tag.content == null) return;
+                for (double value : (double[]) tag.content)
+                {
+                    writeDouble(out, order, value);
+                }
+            }
+           
         }
     };
     
@@ -352,16 +757,7 @@ public class TiffTag
      */
     public void readContent(BinaryDataReader dataReader) throws IOException
     {
-        this.content = switch (this.type)
-        {
-            case BYTE -> count == 1 ? Integer.valueOf(value) : readByteArray(dataReader);
-            case SHORT -> count == 1 ? Integer.valueOf(value) : readShortArray(dataReader);
-            case LONG -> count == 1 ? Integer.valueOf(value) : readIntArray(dataReader);
-            case ASCII -> readAscii(dataReader); // Automatically convert byte array to String
-            case RATIONAL -> readRational(dataReader); // Assume only one rational is specified
-            case DOUBLE -> readDoubleArray(dataReader);
-            default -> null;
-        };
+        this.type.readTagContent(this, dataReader);
     }
     
     /**
@@ -372,50 +768,7 @@ public class TiffTag
      */
     public String contentSummary()
     {
-        return switch (this.type)
-        {
-            case BYTE -> count == 1 ? Integer.toString(value) : createDesc((byte[]) this.content, 5);
-            case SHORT -> count == 1 ? Integer.toString(value) : createDesc((short[]) this.content, 5);
-            case LONG -> count == 1 ? Integer.toString(value) : createDesc((int[]) this.content, 5);
-            case ASCII -> (String) this.content;
-            case RATIONAL -> Double.toString((double) this.content);
-            case DOUBLE -> createDesc((double[]) this.content, 5);
-            default -> null;
-        };
-    }
-    
-    private static final String createDesc(byte[] array, int nMax)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append(Byte.toString(array[0]));
-        for (int i = 1; i < Math.min(array.length, nMax); i++)
-        {
-            sb.append(",").append(Byte.toString(array[i]));
-        }
-        if (array.length > nMax)
-        {
-            sb.append("...");
-        }
-        sb.append("}");
-        return sb.toString();
-    }
-    
-    private static final String createDesc(short[] array, int nMax)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append(Short.toString(array[0]));
-        for (int i = 1; i < Math.min(array.length, nMax); i++)
-        {
-            sb.append(",").append(Short.toString(array[i]));
-        }
-        if (array.length > nMax)
-        {
-            sb.append("...");
-        }
-        sb.append("}");
-        return sb.toString();
+        return this.type.contentSummary(this);
     }
     
     private static final String createDesc(int[] array, int nMax)
@@ -482,93 +835,7 @@ public class TiffTag
      */
     public TiffTag setValue(Object value)
     {
-        // check the contents correspond to tag type
-        switch(this.type)
-        {
-            case BYTE -> {
-                if (value instanceof byte[] array)
-                {
-                    this.count = array.length;
-                    if (array.length == 1)
-                    {
-                        this.value = array[0];
-                        this.content = null;
-                    }
-                    else
-                    {
-                        this.content = array;
-                    }
-                }
-                else
-                {
-                    throw new RuntimeException("If tag type is BYTE, content must be an array of bytes");
-                }
-            }
-            case SHORT -> {
-                if (value instanceof short[] array)
-                {
-                    this.count = array.length;
-                    if (array.length == 1)
-                    {
-                        this.value = array[0];
-                        this.content = null;
-                    }
-                    else
-                    {
-                        this.content = array;
-                    }
-                }
-                else
-                {
-                    throw new RuntimeException("If tag type is SHORT, content must be an array of short");
-                }
-            }
-            case LONG -> {
-                if (value instanceof int[] array)
-                {
-                    this.count = array.length;
-                    if (array.length == 1)
-                    {
-                        this.value = array[0];
-                        this.content = null;
-                    }
-                    else
-                    {
-                        this.content = array;
-                    }
-                }
-                else
-                {
-                    throw new RuntimeException("If tag type is LONG, content must be an array of int");
-                }
-            }
-            case ASCII -> {
-                if (value instanceof String string)
-                {
-                    byte[] bytes = string.getBytes();
-                    this.content = bytes;
-                    this.count = bytes.length;
-                }
-                else
-                {
-                    throw new RuntimeException("If tag type is ASCII, content must be a String");
-                }
-            }
-            case RATIONAL -> {
-                if (!(value instanceof int[]))
-                {
-                    throw new RuntimeException("If tag type is RATIONAL, content must be an array of int");
-                }
-                
-                this.content = value;
-                this.count = 1;
-            }
-            default -> {
-                System.err.println("Could not interpret tag with code: " + this.code + " (" + this.name + ")");
-            }
-        }
-        
-        return this;
+        return this.type.setValue(this, value);
     }
     
     /**
@@ -661,35 +928,7 @@ public class TiffTag
      */
     public void writeContent(OutputStream out, ByteOrder order) throws IOException
     {
-        if (content == null) return;
-        switch (type)
-        {
-            case BYTE -> {
-                byte[] data = (byte[]) content;
-                out.write(data);
-            }
-            case ASCII -> {
-                out.write((byte[]) content);
-            }
-            case SHORT -> {
-                for (short s : (short[]) content)
-                {
-                    writeShort(out, order, s);
-                }
-            }
-            case LONG -> {
-                for (int data : (int[]) content)
-                {
-                    writeInt(out, order, data);
-                }
-            }
-            case RATIONAL -> {
-                int[] data = (int[]) content;
-                writeInt(out, order, data[0]);
-                writeInt(out, order, data[1]);
-            }
-            default -> System.err.println("Unable to write tag with code " + code);
-        }
+        this.type.writeTagContent(this, out, order);
     }
     
     
@@ -871,6 +1110,33 @@ public class TiffTag
             out.write((v >>> 16) & 255);
             out.write((v >>> 8) & 255);
             out.write(v & 255);
+        }
+    }
+    
+    private static final void writeDouble(OutputStream out, ByteOrder order, double v) throws IOException
+    {
+        long bits = Double.doubleToLongBits(v);
+        if (order == ByteOrder.LITTLE_ENDIAN)
+        {
+            out.write((byte) (bits & 255));
+            out.write((byte) ((bits >>> 8) & 255));
+            out.write((byte) ((bits >>> 16) & 255));
+            out.write((byte) ((bits >>> 24) & 255));
+            out.write((byte) ((bits >>> 32) & 255));
+            out.write((byte) ((bits >>> 40) & 255));
+            out.write((byte) ((bits >>> 48) & 255));
+            out.write((byte) ((bits >>> 56) & 255));
+        }
+        else
+        {
+            out.write((byte) ((bits >>> 56) & 255));
+            out.write((byte) ((bits >>> 48) & 255));
+            out.write((byte) ((bits >>> 40) & 255));
+            out.write((byte) ((bits >>> 32) & 255));
+            out.write((byte) ((bits >>> 24) & 255));
+            out.write((byte) ((bits >>> 16) & 255));
+            out.write((byte) ((bits >>> 8) & 255));
+            out.write((byte) (bits & 255));
         }
     }
     
