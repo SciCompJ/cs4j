@@ -353,11 +353,7 @@ public class TiffTag
             case LONG -> count == 1 ? Integer.valueOf(value) : readIntArray(dataReader);
             case ASCII -> readAscii(dataReader); // Automatically convert byte array to String
             case RATIONAL -> readRational(dataReader); // Assume only one rational is specified
-            default ->
-            {
-                System.err.println("Could not interpret tag with code: " + this.code + " (" + this.name + ")");
-                yield null;
-            }
+            default -> null;
         };
     }
     
@@ -504,7 +500,7 @@ public class TiffTag
         else if (content != null)
         {
             // write the offset to content data 
-            writeInt(out, order, value);
+            writeInt(out, order, value); // TODO: duplicate code, check this!
         }
         else
         {
@@ -537,7 +533,7 @@ public class TiffTag
         else if (content != null)
         {
             // write the offset to content data 
-            writeInt(out, order, value);
+            writeInt(out, order, value); // TODO: duplicate code, check this!
         }
         else
         {
@@ -546,9 +542,9 @@ public class TiffTag
     }
 
     /**
-     * Returns the number if bytes used by the content of this tag, or 0 if the
-     * value fits within less that 4 bytes. This method is used to determine the
-     * size of the tag data when writing a file.
+     * Returns the number of bytes necessary to write the content of this tag,
+     * or 0 if the value fits within less that 4 bytes. This method is used to
+     * determine the size of the tag data when writing a file.
      * 
      * @return the number of bytes used to store the content of this tag.
      */
@@ -695,10 +691,11 @@ public class TiffTag
         
         // fill up array
         dataReader.seek(offset);
-        for (int c = 0; c < this.count; c++)
-        {
-            res[c] = dataReader.readInt();
-        }
+        dataReader.readIntArray(res, 0, this.count);
+//        for (int c = 0; c < this.count; c++)
+//        {
+//            res[c] = dataReader.readInt();
+//        }
         
         // restore pointer and return result
         // TODO: not sure we need to restore location? 

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import net.sci.image.io.BinaryDataReader;
+import net.sci.image.io.tiff.TiffTag.Type;
 
 /**
  * Read all the instances of {@code ImageFileDirectory} from a Tiff File. These
@@ -157,7 +158,12 @@ public class ImageFileDirectoryReader
             int tagCode = dataReader.readShort() & 0x00FFFF;
             
             // read type of tag data
-            TiffTag.Type type = readTagType(tagCode);
+            int typeValue = dataReader.readShort() & 0x00FFFF;
+            TiffTag.Type type = TiffTag.Type.getType(typeValue); 
+            if (type == Type.UNKNOWN)
+            {
+                System.out.println(String.format("Tag with code %d has an unknown type value: %d, it will likely be ignored", tagCode, typeValue));
+            }
             
             // reader number of data and value / offset
             int count = dataReader.readInt();
@@ -189,20 +195,6 @@ public class ImageFileDirectoryReader
         ifd.offset = ((long) dataReader.readInt()) & 0xffffffffL;
         
         return ifd;
-    }
-
-    private TiffTag.Type readTagType(int tagCode) throws IOException
-    {
-        // read tag data info
-        int typeValue = dataReader.readShort() & 0x00FFFF;
-        try 
-        {
-        	 return TiffTag.Type.getType(typeValue); 
-        }
-        catch(IllegalArgumentException ex)
-        {
-            throw new RuntimeException(String.format("Tag with code %d has unknown type value: %d", tagCode, typeValue));
-        }
     }
 
     private int readTagValue(TiffTag.Type type, int count) throws IOException
