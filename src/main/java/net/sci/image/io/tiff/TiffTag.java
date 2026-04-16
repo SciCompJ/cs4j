@@ -50,6 +50,8 @@ public class TiffTag
          * with a pair of 4-byte integers.
          */
         public static final Type RATIONAL = new RationalType();
+        /** Tag value(s) stored with single precision (32-bits) floating point (code 11) */
+        public static final Type FLOAT = new FloatType();
         /** Tag value(s) stored with double precision (64-bits) floating point (code 12) */
         public static final Type DOUBLE = new DoubleType();
         
@@ -453,6 +455,83 @@ public class TiffTag
             }
         }
         
+        public static final class FloatType extends Type
+        {
+            public FloatType()
+            {
+                super(11, 4);
+            }
+
+            @Override
+            public void readTagContent(TiffTag tag, BinaryDataReader dataReader) throws IOException
+            {
+                tag.content = tag.readFloatArray(dataReader);
+            }
+            
+            @Override
+            public String contentSummary(TiffTag tag)
+            {
+                return createDesc((float[]) tag.content, 5);
+            }
+            
+            private static final String createDesc(float[] array, int nMax)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append("{");
+                sb.append(Float.toString(array[0]));
+                for (int i = 1; i < Math.min(array.length, nMax); i++)
+                {
+                    sb.append(",").append(Float.toString(array[i]));
+                }
+                if (array.length > nMax)
+                {
+                    sb.append("...");
+                }
+                sb.append("}");
+                return sb.toString();
+            }
+            
+            @Override
+            public TiffTag setValue(TiffTag tag, Object value)
+            {
+                if (value instanceof float[] array)
+                {
+                    tag.content = array;
+                    tag.count = array.length;
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is FLOAT, content must be an array of float");
+                }
+                return tag;
+            }
+            
+            @Override
+            public void writeTagContent(TiffTag tag, OutputStream out, ByteOrder order)
+                    throws IOException
+            {
+                if (tag.content == null) return;
+                for (float value : (float[]) tag.content)
+                {
+                    int bits = Float.floatToIntBits(value);
+                    if (order == ByteOrder.LITTLE_ENDIAN)
+                    {
+                        out.write((byte) (bits & 255));
+                        out.write((byte) ((bits >>> 8) & 255));
+                        out.write((byte) ((bits >>> 16) & 255));
+                        out.write((byte) ((bits >>> 24) & 255));
+                    }
+                    else
+                    {
+                        out.write((byte) ((bits >>> 24) & 255));
+                        out.write((byte) ((bits >>> 16) & 255));
+                        out.write((byte) ((bits >>> 8) & 255));
+                        out.write((byte) (bits & 255));
+                    }
+                }
+            }
+        }
+        
         public static final class DoubleType extends Type
         {
             public DoubleType()
@@ -472,6 +551,24 @@ public class TiffTag
                 return createDesc((double[]) tag.content, 5);
             }
             
+            private static final String createDesc(double[] array, int nMax)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append("{");
+                sb.append(Double.toString(array[0]));
+                for (int i = 1; i < Math.min(array.length, nMax); i++)
+                {
+                    sb.append(",").append(Double.toString(array[i]));
+                }
+                if (array.length > nMax)
+                {
+                    sb.append("...");
+                }
+                sb.append("}");
+                return sb.toString();
+            }
+            
+            
             @Override
             public TiffTag setValue(TiffTag tag, Object value)
             {
@@ -482,7 +579,7 @@ public class TiffTag
                 }
                 else
                 {
-                    throw new RuntimeException("If tag type is DOUBLE, content must be an array of int");
+                    throw new RuntimeException("If tag type is DOUBLE, content must be an array of double");
                 }
                 return tag;
             }
@@ -494,10 +591,31 @@ public class TiffTag
                 if (tag.content == null) return;
                 for (double value : (double[]) tag.content)
                 {
-                    writeDouble(out, order, value);
+                    long bits = Double.doubleToLongBits(value);
+                    if (order == ByteOrder.LITTLE_ENDIAN)
+                    {
+                        out.write((byte) (bits & 255));
+                        out.write((byte) ((bits >>> 8) & 255));
+                        out.write((byte) ((bits >>> 16) & 255));
+                        out.write((byte) ((bits >>> 24) & 255));
+                        out.write((byte) ((bits >>> 32) & 255));
+                        out.write((byte) ((bits >>> 40) & 255));
+                        out.write((byte) ((bits >>> 48) & 255));
+                        out.write((byte) ((bits >>> 56) & 255));
+                    }
+                    else
+                    {
+                        out.write((byte) ((bits >>> 56) & 255));
+                        out.write((byte) ((bits >>> 48) & 255));
+                        out.write((byte) ((bits >>> 40) & 255));
+                        out.write((byte) ((bits >>> 32) & 255));
+                        out.write((byte) ((bits >>> 24) & 255));
+                        out.write((byte) ((bits >>> 16) & 255));
+                        out.write((byte) ((bits >>> 8) & 255));
+                        out.write((byte) (bits & 255));
+                    }
                 }
             }
-           
         }
     };
     
@@ -788,23 +906,6 @@ public class TiffTag
         return sb.toString();
     }
     
-    private static final String createDesc(double[] array, int nMax)
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("{");
-        sb.append(Double.toString(array[0]));
-        for (int i = 1; i < Math.min(array.length, nMax); i++)
-        {
-            sb.append(",").append(Double.toString(array[i]));
-        }
-        if (array.length > nMax)
-        {
-            sb.append("...");
-        }
-        sb.append("}");
-        return sb.toString();
-    }
-    
     /**
      * After the value has been read, updates the specified image according to
      * the current value of the tag.
@@ -1061,6 +1162,26 @@ public class TiffTag
             return 0.0;
     }
     
+    private float[] readFloatArray(BinaryDataReader dataReader) throws IOException
+    {
+        // convert tag value to long offset for reading large buffer
+        long offset = ((long) this.value) & 0xffffffffL;
+        
+        // allocate memory for result
+        float[] res = new float[this.count];
+        
+        // save pointer location
+        long saveLoc = dataReader.getFilePointer();
+        
+        // fill up array
+        dataReader.seek(offset);
+        dataReader.readFloatArray(res, 0, this.count);
+        
+        // restore pointer and return result
+        dataReader.seek(saveLoc);
+        return res;
+    }
+    
     private double[] readDoubleArray(BinaryDataReader dataReader) throws IOException
     {
         // convert tag value to long offset for reading large buffer
@@ -1110,33 +1231,6 @@ public class TiffTag
             out.write((v >>> 16) & 255);
             out.write((v >>> 8) & 255);
             out.write(v & 255);
-        }
-    }
-    
-    private static final void writeDouble(OutputStream out, ByteOrder order, double v) throws IOException
-    {
-        long bits = Double.doubleToLongBits(v);
-        if (order == ByteOrder.LITTLE_ENDIAN)
-        {
-            out.write((byte) (bits & 255));
-            out.write((byte) ((bits >>> 8) & 255));
-            out.write((byte) ((bits >>> 16) & 255));
-            out.write((byte) ((bits >>> 24) & 255));
-            out.write((byte) ((bits >>> 32) & 255));
-            out.write((byte) ((bits >>> 40) & 255));
-            out.write((byte) ((bits >>> 48) & 255));
-            out.write((byte) ((bits >>> 56) & 255));
-        }
-        else
-        {
-            out.write((byte) ((bits >>> 56) & 255));
-            out.write((byte) ((bits >>> 48) & 255));
-            out.write((byte) ((bits >>> 40) & 255));
-            out.write((byte) ((bits >>> 32) & 255));
-            out.write((byte) ((bits >>> 24) & 255));
-            out.write((byte) ((bits >>> 16) & 255));
-            out.write((byte) ((bits >>> 8) & 255));
-            out.write((byte) (bits & 255));
         }
     }
     
