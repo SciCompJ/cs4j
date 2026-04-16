@@ -185,7 +185,7 @@ public class ImageFileDirectoryReader
             if (unknownTag)
             {
                 System.out.println("Unknown tag with code " + tagCode + ". Type="
-                        + type + ", count=" + count + ", value=" + tag.content);
+                        + type + ", count=" + count + ", content=" + tag.contentSummary());
             }
 
             ifd.addEntry(tag);

@@ -48,7 +48,9 @@ public class TiffTag
          * Tag content stored with rational (code 5), i.e. by storing each value
          * with a pair of 4-byte integers.
          */
-        RATIONAL(5, 8);
+        RATIONAL(5, 8),
+        /** Tag value(s) stored with double precision (64-bits) floating point (code 12) */
+        DOUBLE(12, 8);
         
         int code;
         int byteCount;
@@ -80,6 +82,10 @@ public class TiffTag
                 case 3 -> SHORT;
                 case 4 -> LONG;
                 case 5 -> RATIONAL;
+//                case 5 -> RATIONAL;
+//                case 5 -> RATIONAL;
+//                case 5 -> RATIONAL;
+                case 12 -> DOUBLE;
                 default -> UNKNOWN;
             };
         }
@@ -353,8 +359,97 @@ public class TiffTag
             case LONG -> count == 1 ? Integer.valueOf(value) : readIntArray(dataReader);
             case ASCII -> readAscii(dataReader); // Automatically convert byte array to String
             case RATIONAL -> readRational(dataReader); // Assume only one rational is specified
+            case DOUBLE -> readDoubleArray(dataReader);
             default -> null;
         };
+    }
+    
+    /**
+     * Creates a short summary of the content, based on the value or content
+     * stored within the tag.
+     * 
+     * @return a short summary of the content of this tag.
+     */
+    public String contentSummary()
+    {
+        return switch (this.type)
+        {
+            case BYTE -> count == 1 ? Integer.toString(value) : createDesc((byte[]) this.content, 5);
+            case SHORT -> count == 1 ? Integer.toString(value) : createDesc((short[]) this.content, 5);
+            case LONG -> count == 1 ? Integer.toString(value) : createDesc((int[]) this.content, 5);
+            case ASCII -> (String) this.content;
+            case RATIONAL -> Double.toString((double) this.content);
+            case DOUBLE -> createDesc((double[]) this.content, 5);
+            default -> null;
+        };
+    }
+    
+    private static final String createDesc(byte[] array, int nMax)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append(Byte.toString(array[0]));
+        for (int i = 1; i < Math.min(array.length, nMax); i++)
+        {
+            sb.append(",").append(Byte.toString(array[i]));
+        }
+        if (array.length > nMax)
+        {
+            sb.append("...");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+    
+    private static final String createDesc(short[] array, int nMax)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append(Short.toString(array[0]));
+        for (int i = 1; i < Math.min(array.length, nMax); i++)
+        {
+            sb.append(",").append(Short.toString(array[i]));
+        }
+        if (array.length > nMax)
+        {
+            sb.append("...");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+    
+    private static final String createDesc(int[] array, int nMax)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append(Integer.toString(array[0]));
+        for (int i = 1; i < Math.min(array.length, nMax); i++)
+        {
+            sb.append(",").append(Integer.toString(array[i]));
+        }
+        if (array.length > nMax)
+        {
+            sb.append("...");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+    
+    private static final String createDesc(double[] array, int nMax)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        sb.append(Double.toString(array[0]));
+        for (int i = 1; i < Math.min(array.length, nMax); i++)
+        {
+            sb.append(",").append(Double.toString(array[i]));
+        }
+        if (array.length > nMax)
+        {
+            sb.append("...");
+        }
+        sb.append("}");
+        return sb.toString();
     }
     
     /**
@@ -692,14 +787,8 @@ public class TiffTag
         // fill up array
         dataReader.seek(offset);
         dataReader.readIntArray(res, 0, this.count);
-//        for (int c = 0; c < this.count; c++)
-//        {
-//            res[c] = dataReader.readInt();
-//        }
         
         // restore pointer and return result
-        // TODO: not sure we need to restore location? 
-        // (as next tag will use new offset...)
         dataReader.seek(saveLoc);
         return res;
     }
@@ -731,6 +820,26 @@ public class TiffTag
             return (double) numerator / denominator;
         else
             return 0.0;
+    }
+    
+    private double[] readDoubleArray(BinaryDataReader dataReader) throws IOException
+    {
+        // convert tag value to long offset for reading large buffer
+        long offset = ((long) this.value) & 0xffffffffL;
+        
+        // allocate memory for result
+        double[] res = new double[this.count];
+        
+        // save pointer location
+        long saveLoc = dataReader.getFilePointer();
+        
+        // fill up array
+        dataReader.seek(offset);
+        dataReader.readDoubleArray(res, 0, this.count);
+        
+        // restore pointer and return result
+        dataReader.seek(saveLoc);
+        return res;
     }
     
     private static final void writeShort(OutputStream out, ByteOrder order, int v) throws IOException
