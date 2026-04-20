@@ -20,6 +20,7 @@ import net.sci.array.numeric.ScalarArray;
 import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt16Array2D;
 import net.sci.array.numeric.UInt16Array3D;
+import net.sci.array.numeric.UInt8Array2D;
 import net.sci.array.numeric.UInt8Array3D;
 import net.sci.array.numeric.impl.FileMappedFloat32Array3D;
 import net.sci.array.numeric.impl.FileMappedUInt16Array3D;
@@ -551,6 +552,33 @@ public class TiffImageReaderTest
         
         // check that few random positions lead to same values 
         assertEquals(refArray.getValue(50, 50, 10), array.getValue(50, 50, 10), 0.01);
+    }
+
+    @Test
+    public void test_multiPageTiff_differentSizeImages() throws IOException
+    {
+        String fileName = getClass().getResource("/images/matlab/multiPageTiffFile.tif").getFile();
+        
+        TiffImageReader reader = new TiffImageReader(fileName);
+        
+        Image image1 = reader.readImage(0);
+        Image image2 = reader.readImage(1);
+        Image image3 = reader.readImage(2);
+        
+        assertEquals(2, image1.getDimension());
+        UInt8Array2D array1 = (UInt8Array2D) image1.getData();
+        assertEquals(300, array1.size(0));
+        assertEquals(200, array1.size(1));
+        
+        assertEquals(2, image2.getDimension());
+        UInt16Array2D array2 = (UInt16Array2D) image2.getData();
+        assertEquals(30, array2.size(0));
+        assertEquals(20, array2.size(1));
+        
+        assertEquals(2, image3.getDimension());
+        BinaryArray2D array3 = (BinaryArray2D) image3.getData();
+        assertEquals(50, array3.size(0));
+        assertEquals(40, array3.size(1));
     }
 
     private static final void assertSameColor(Color color, int r, int g, int b)

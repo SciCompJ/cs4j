@@ -223,6 +223,7 @@ public class TiffTag
         this.value = 0;
     }
     
+    
     // =============================================================
     // public methods
     
