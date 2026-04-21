@@ -3,12 +3,12 @@
  */
 package net.sci.image.io.tiff;
 
-import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import net.sci.image.io.BinaryDataReader;
+import net.sci.image.Image;
 
 /**
  * Management of LSM Tags.
@@ -39,34 +39,29 @@ public class LsmTags implements TagSet
          * Result is a Map, stored in content fields. 
          */
         @Override
-        public void readContent(BinaryDataReader dataReader) throws IOException
+        public void update(Image image, ImageFileDirectory ifd)
         {
+//            System.out.println("updating image info from LSM file");
+            
+            ByteBuffer buffer = ByteBuffer.wrap((byte []) this.content);
+            buffer.order(ifd.byteOrder);
+            
             Map<String, Object> map = new TreeMap<>();
             
-            // keep reader pointer
-            long pos0 = dataReader.getFilePointer();
-
-            // convert tag value to long offset for reading large buffer
-            long offset = ((long) this.value) & 0xffffffffL;
-            dataReader.seek(offset+8);
-
-            // TODO: move this code into the "update()" method, so the byte order can be correctly handled
-            map.put("dimX", dataReader.readInt());
-            map.put("dimY", dataReader.readInt());
-            map.put("dimZ", dataReader.readInt());
-            map.put("dimC", dataReader.readInt());
-            map.put("dimT", dataReader.readInt());
-            dataReader.seek(dataReader.getFilePointer() + 12);
-            map.put("voxelSizeX", dataReader.readDouble());
-            map.put("voxelSizeY", dataReader.readDouble());
-            map.put("voxelSizeZ", dataReader.readDouble());
-            map.put("specScan", dataReader.readShort() & 0x00FFFF);
+            buffer.position(8);
+            map.put("dimX", buffer.getInt());
+            map.put("dimY", buffer.getInt());
+            map.put("dimZ", buffer.getInt());
+            map.put("dimC", buffer.getInt());
+            map.put("dimT", buffer.getInt());
+            buffer.position(buffer.position() + 12);
+            map.put("voxelSizeX", buffer.getDouble());
+            map.put("voxelSizeY", buffer.getDouble());
+            map.put("voxelSizeZ", buffer.getDouble());
+            map.put("specScan", buffer.getShort() & 0x00FFFF);
             
-            // revert reader to initial position
-            dataReader.seek(pos0);
-            
-            this.content = map;
-        }           
+            image.metadata.put("lsm", map);
+        }
     }
 
 

@@ -9,7 +9,6 @@ import java.nio.ByteOrder;
 import java.util.Map;
 
 import net.sci.image.Image;
-import net.sci.image.io.BinaryDataReader;
 
 /**
  * Manages tag information in TIFF files.
@@ -82,9 +81,6 @@ public class TiffTag
                 case 3 -> SHORT;
                 case 4 -> LONG;
                 case 5 -> RATIONAL;
-//                case 5 -> RATIONAL;
-//                case 5 -> RATIONAL;
-//                case 5 -> RATIONAL;
                 case 12 -> DOUBLE;
                 default -> UNKNOWN;
             };
@@ -342,29 +338,6 @@ public class TiffTag
         return this;
     }
 
-    /**
-     * Initialize the content of the tag from the data reader, given its code
-     * and the specified value.
-     * 
-     * @param dataReader
-     *            the instance of DataReader to read optional information from
-     * @throws IOException
-     *             if tried to read from the file and problem occurred
-     */
-    public void readContent(BinaryDataReader dataReader) throws IOException
-    {
-        this.content = switch (this.type)
-        {
-            case BYTE -> count == 1 ? Integer.valueOf(value) : readByteArray(dataReader);
-            case SHORT -> count == 1 ? Integer.valueOf(value) : readShortArray(dataReader);
-            case LONG -> count == 1 ? Integer.valueOf(value) : readIntArray(dataReader);
-            case ASCII -> readAscii(dataReader); // Automatically convert byte array to String
-            case RATIONAL -> readRational(dataReader); // Assume only one rational is specified
-            case DOUBLE -> readDoubleArray(dataReader);
-            default -> null;
-        };
-    }
-    
     /**
      * Creates a short summary of the content, based on the value or content
      * stored within the tag.
@@ -694,154 +667,6 @@ public class TiffTag
     }
     
     
-    // =============================================================
-    // protected methods used by subclasses
-    
-    private String readAscii(BinaryDataReader dataReader) throws IOException
-    {
-        // Allocate memory for string buffer
-        byte[] data = new byte[this.count];
-        
-        // read string buffer
-        if (this.count <= 4)
-        {
-            // unpack integer
-            int value = this.value;
-            for (int i = 0; i < this.count; i++)
-            {
-                data[i] = (byte) (value & 0x00FF);
-                value = value >> 8;
-            }
-        }
-        else
-        {
-            // convert state to long offset for reading large buffer
-            long offset = ((long) this.value) & 0xffffffffL;
-            
-            long pos0 = dataReader.getFilePointer();
-            dataReader.seek(offset);
-            dataReader.readByteArray(data);
-            dataReader.seek(pos0);
-        }
-        
-        return new String(data);
-    }
-    
-    private byte[] readByteArray(BinaryDataReader dataReader) throws IOException
-    {
-        // allocate memory for result
-        byte[] res = new byte[this.count];
-        
-        // save pointer location
-        long saveLoc = dataReader.getFilePointer();
-        
-        // convert tag value to long offset
-        long offset = ((long) this.value) & 0xffffffffL;
-        dataReader.seek(offset);
-        
-        // fill up array
-        int nRead = dataReader.readByteArray(res);
-        if (nRead != this.count)
-        {
-            throw new RuntimeException("Could not read all the required bytes");
-        }
-        
-        // restore pointer and return result
-        dataReader.seek(saveLoc);
-        return res;
-    }
-    
-    private int[] readShortArray(BinaryDataReader dataReader) throws IOException
-    {
-        // convert tag value to long offset for reading large buffer
-        long offset = ((long) this.value) & 0xffffffffL;
-        
-        // allocate memory for result
-        int[] res = new int[this.count];
-        
-        // save pointer location
-        long saveLoc = dataReader.getFilePointer();
-        
-        // fill up array
-        dataReader.seek(offset);
-        for (int c = 0; c < this.count; c++)
-        {
-            res[c] = dataReader.readShort();
-        }
-        
-        // restore pointer and return result
-        dataReader.seek(saveLoc);
-        return res;
-    }
-    
-    private int[] readIntArray(BinaryDataReader dataReader) throws IOException
-    {
-        // convert tag value to long offset for reading large buffer
-        long offset = ((long) this.value) & 0xffffffffL;
-        
-        // allocate memory for result
-        int[] res = new int[this.count];
-        
-        // save pointer location
-        long saveLoc = dataReader.getFilePointer();
-        
-        // fill up array
-        dataReader.seek(offset);
-        dataReader.readIntArray(res, 0, this.count);
-        
-        // restore pointer and return result
-        dataReader.seek(saveLoc);
-        return res;
-    }
-    
-    /**
-     * Reads the rational value at the given position, as the ratio of two
-     * integers.
-     * 
-     * @param dataReader
-     *            the instance of BinaryDataReader to read from
-     * @return the approximated rational content at the specified position, as a
-     *         double
-     * @throws IOException
-     *             if an I/O Exception occurs
-     */
-    private double readRational(BinaryDataReader dataReader) throws IOException
-    {
-        // convert tag value to long offset for reading large buffer
-        long offset = ((long) this.value) & 0xffffffffL;
-        
-        long saveLoc = dataReader.getFilePointer();
-        dataReader.seek(offset);
-        
-        int numerator = dataReader.readInt();
-        int denominator = dataReader.readInt();
-        dataReader.seek(saveLoc);
-        
-        if (denominator != 0)
-            return (double) numerator / denominator;
-        else
-            return 0.0;
-    }
-    
-    private double[] readDoubleArray(BinaryDataReader dataReader) throws IOException
-    {
-        // convert tag value to long offset for reading large buffer
-        long offset = ((long) this.value) & 0xffffffffL;
-        
-        // allocate memory for result
-        double[] res = new double[this.count];
-        
-        // save pointer location
-        long saveLoc = dataReader.getFilePointer();
-        
-        // fill up array
-        dataReader.seek(offset);
-        dataReader.readDoubleArray(res, 0, this.count);
-        
-        // restore pointer and return result
-        dataReader.seek(saveLoc);
-        return res;
-    }
     
     private static final void writeShort(OutputStream out, ByteOrder order, int v) throws IOException
     {

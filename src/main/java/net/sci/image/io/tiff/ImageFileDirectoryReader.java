@@ -17,7 +17,6 @@ import net.sci.image.io.tiff.TiffTag.Type;
  * Read all the instances of {@code ImageFileDirectory} from a Tiff File. These
  * file info can later be used to read image data from the same Tiff file.
  * 
- * 
  */
 public class ImageFileDirectoryReader
 {
@@ -180,7 +179,7 @@ public class ImageFileDirectoryReader
             
             // init tag info
             tag.init(type, count, value);
-            tag.readContent(dataReader);
+            readContent(tag);
 
             if (unknownTag)
             {
@@ -210,6 +209,175 @@ public class ImageFileDirectoryReader
             value = dataReader.readInt();
         }
         return value;
+    }
+    
+    /**
+     * Initialize the content of the tag from the data reader, given its code
+     * and the specified value.
+     * 
+     * @param dataReader
+     *            the instance of DataReader to read optional information from
+     * @throws IOException
+     *             if tried to read from the file and problem occurred
+     */
+    private void readContent(TiffTag tag) throws IOException
+    {
+        tag.content = switch (tag.type)
+        {
+            case BYTE -> tag.count == 1 ? Integer.valueOf(tag.value) : readByteArray(tag);
+            case SHORT -> tag.count == 1 ? Integer.valueOf(tag.value) : readShortArray(tag);
+            case LONG -> tag.count == 1 ? Integer.valueOf(tag.value) : readIntArray(tag);
+            case ASCII -> readAscii(tag); // Automatically convert byte array to String
+            case RATIONAL -> readRational(tag); // Assume only one rational is specified
+            case DOUBLE -> readDoubleArray(tag);
+            default -> null;
+        };
+    }
+    
+    private byte[] readByteArray(TiffTag tag) throws IOException
+    {
+        // allocate memory for result
+        byte[] res = new byte[tag.count];
+        
+        // save pointer location
+        long saveLoc = dataReader.getFilePointer();
+        
+        // convert tag value to long offset
+        long offset = ((long) tag.value) & 0xffffffffL;
+        dataReader.seek(offset);
+        
+        // fill up array
+        int nRead = dataReader.readByteArray(res);
+        if (nRead != tag.count)
+        {
+            throw new RuntimeException("Could not read all the required bytes");
+        }
+        
+        // restore pointer and return result
+        dataReader.seek(saveLoc);
+        return res;
+    }
+    
+    private String readAscii(TiffTag tag) throws IOException
+    {
+        // Allocate memory for string buffer
+        byte[] data = new byte[tag.count];
+        
+        // read string buffer
+        if (tag.count <= 4)
+        {
+            // unpack integer
+            int value = tag.value;
+            for (int i = 0; i < tag.count; i++)
+            {
+                data[i] = (byte) (value & 0x00FF);
+                value = value >> 8;
+            }
+        }
+        else
+        {
+            // convert state to long offset for reading large buffer
+            long offset = ((long) tag.value) & 0xffffffffL;
+            
+            long pos0 = dataReader.getFilePointer();
+            dataReader.seek(offset);
+            dataReader.readByteArray(data);
+            dataReader.seek(pos0);
+        }
+        
+        return new String(data);
+    }
+    
+    private int[] readShortArray(TiffTag tag) throws IOException
+    {
+        // convert tag value to long offset for reading large buffer
+        long offset = ((long) tag.value) & 0xffffffffL;
+        
+        // allocate memory for result
+        int[] res = new int[tag.count];
+        
+        // save pointer location
+        long saveLoc = dataReader.getFilePointer();
+        
+        // fill up array
+        dataReader.seek(offset);
+        for (int c = 0; c < tag.count; c++)
+        {
+            res[c] = dataReader.readShort();
+        }
+        
+        // restore pointer and return result
+        dataReader.seek(saveLoc);
+        return res;
+    }
+    
+    private int[] readIntArray(TiffTag tag) throws IOException
+    {
+        // convert tag value to long offset for reading large buffer
+        long offset = ((long) tag.value) & 0xffffffffL;
+        
+        // allocate memory for result
+        int[] res = new int[tag.count];
+        
+        // save pointer location
+        long saveLoc = dataReader.getFilePointer();
+        
+        // fill up array
+        dataReader.seek(offset);
+        dataReader.readIntArray(res, 0, tag.count);
+        
+        // restore pointer and return result
+        dataReader.seek(saveLoc);
+        return res;
+    }
+    
+    /**
+     * Reads the rational value at the given position, as the ratio of two
+     * integers.
+     * 
+     * @param dataReader
+     *            the instance of BinaryDataReader to read from
+     * @return the approximated rational content at the specified position, as a
+     *         double
+     * @throws IOException
+     *             if an I/O Exception occurs
+     */
+    private double readRational(TiffTag tag) throws IOException
+    {
+        // convert tag value to long offset for reading large buffer
+        long offset = ((long) tag.value) & 0xffffffffL;
+        
+        long saveLoc = dataReader.getFilePointer();
+        dataReader.seek(offset);
+        
+        int numerator = dataReader.readInt();
+        int denominator = dataReader.readInt();
+        dataReader.seek(saveLoc);
+        
+        if (denominator != 0)
+            return (double) numerator / denominator;
+        else
+            return 0.0;
+    }
+    
+    private double[] readDoubleArray(TiffTag tag) throws IOException
+    {
+        // convert tag value to long offset for reading large buffer
+        long offset = ((long) tag.value) & 0xffffffffL;
+        
+        // allocate memory for result
+        double[] res = new double[tag.count];
+        
+        // save pointer location
+        long saveLoc = dataReader.getFilePointer();
+        
+        // fill up array
+        dataReader.seek(offset);
+        dataReader.readDoubleArray(res, 0, tag.count);
+        
+        // restore pointer and return result
+        dataReader.seek(saveLoc);
+        return res;
     }
     
 

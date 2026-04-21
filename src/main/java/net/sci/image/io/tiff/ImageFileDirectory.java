@@ -14,8 +14,11 @@ import net.sci.image.io.PixelType;
 import net.sci.image.io.tiff.ExtensionTags.SampleFormat;
 
 /**
- * Data structure used to write image data into Tiff File. Intended to replace
- * the TiffFileInfo class in a future release.
+ * Data structure used to represent image information stored within a TIFF file.
+ * An {@code ImageFileDirectory} contains a series of tags describing how a
+ * single image is stored within the file. It also contains an offsed used to
+ * reference the next {@code ImageFileDirectory} within the file. If the offset
+ * is zero, this is the last {@code ImageFileDirectory} within the file.
  */
 public class ImageFileDirectory
 {
