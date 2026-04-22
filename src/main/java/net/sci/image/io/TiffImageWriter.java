@@ -231,11 +231,12 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         
         // Write current image file directory
         this.fireStatusChanged(this, "Write IFD entries");
-        ifd.write(out);
+        writeEntries(out, byteOrder, ifd);
+//        ifd.write(out);
 
         // Write content of the different tags
         this.fireStatusChanged(this, "Write IFD entry data");
-        ifd.writeEntryData(out);
+        writeEntryData(out, byteOrder, ifd);
                 
         // Finally, image data (the whole array)
         this.fireStatusChanged(this, "Write Image data");
@@ -264,7 +265,8 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
                 imageOffsetTag.value = (int) imageOffset;
                 ifd2.setOffset(nextIFD);
                 
-                ifd2.write(out);
+                writeEntries(out, byteOrder, ifd2);
+//                ifd2.write(out);
             }
         } 
         else if (bigTiff)
@@ -494,6 +496,146 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
            // then offset to first IFD, equal to 8, as 32-bits integer.
            out.write(new byte[] {77, 77, 0, 42, 0, 0, 0, 8});
        }
+    }
+    
+    /**
+     * Write this ImageFileDirectory into the specified stream: first writes the
+     * number of entries, then the different tags/entries, and finally the
+     * offset to the next ImageFileDirectory.
+     * 
+     * @param out
+     *            the Stream to write in
+     * @throws IOException
+     *             if a problem occurs
+     */
+    private void writeEntries(OutputStream out, ByteOrder order, ImageFileDirectory ifd) throws IOException
+    {
+        // write number of entries
+        writeShort(out, order, ifd.entries().size());
+        
+        // Write list of tags / entries
+        for (TiffTag tag : ifd.entries())
+        {
+            writeEntry(out, order, tag);
+        }
+        
+        // write offset to next IFD
+        writeInt(out, order, (int) ifd.getOffset());
+    }
+    
+    /**
+     * Writes the entry corresponding to this tag into the specified stream,
+     * with the specified byte order.
+     * 
+     * @param out
+     *            the stream to write in
+     * @param order
+     *            the byte order
+     * @throws IOException 
+     */
+    private void writeEntry(OutputStream out, ByteOrder order, TiffTag tag) throws IOException
+    { 
+        writeShort(out, order, tag.code);
+        writeShort(out, order, tag.type.code());
+        writeInt(out, order, tag.count);
+        if (tag.count == 1 && tag.type.equals(TiffTag.Type.SHORT))
+        {
+            writeShort(out, order, tag.value);
+            writeShort(out, order, 0);
+        }
+        else if (tag.content != null)
+        {
+            // write the offset to content data 
+            writeInt(out, order, tag.value); // TODO: duplicate code, check this!
+        }
+        else
+        {
+            writeInt(out, order, tag.value);
+        }
+    }
+
+    private void writeEntryData(OutputStream out, ByteOrder order, ImageFileDirectory ifd) throws IOException
+    {
+        for (TiffTag tag : ifd.entries())
+        {
+            writeTagContent(out, order, tag);
+        }
+    }
+    
+    /**
+     * Writes the data of this entry into the specified stream, with the
+     * specified byte order. The number of bytes that will be written must be
+     * the same as the result of the {@code writeEntry()} method.
+     * 
+     * @param out
+     *            the stream to write in
+     * @param order
+     *            the byte order
+     * @throws IOException 
+     */
+    private void writeTagContent(OutputStream out, ByteOrder order, TiffTag tag) throws IOException
+    {
+        if (tag.content == null) return;
+        switch (tag.type)
+        {
+            case BYTE -> {
+                byte[] data = (byte[]) tag.content;
+                out.write(data);
+            }
+            case ASCII -> {
+                out.write((byte[]) tag.content);
+            }
+            case SHORT -> {
+                for (short s : (short[]) tag.content)
+                {
+                    writeShort(out, order, s);
+                }
+            }
+            case LONG -> {
+                for (int data : (int[]) tag.content)
+                {
+                    writeInt(out, order, data);
+                }
+            }
+            case RATIONAL -> {
+                int[] data = (int[]) tag.content;
+                writeInt(out, order, data[0]);
+                writeInt(out, order, data[1]);
+            }
+            default -> System.err.println("Unable to write tag with code " + tag.code);
+        }
+    }
+    
+    private static final void writeShort(OutputStream out, ByteOrder order, int v) throws IOException
+    {
+        if (order == ByteOrder.LITTLE_ENDIAN)
+        {
+            out.write(v & 255);
+            out.write((v >>> 8) & 255);
+        }
+        else
+        {
+            out.write((v >>> 8) & 255);
+            out.write(v & 255);
+        }
+    }
+
+    private static final void writeInt(OutputStream out, ByteOrder order, int v) throws IOException
+    {
+        if (order == ByteOrder.LITTLE_ENDIAN)
+        {
+            out.write(v & 255);
+            out.write((v >>> 8) & 255);
+            out.write((v >>> 16) & 255);
+            out.write((v >>> 24) & 255);
+        }
+        else
+        {
+            out.write((v >>> 24) & 255);
+            out.write((v >>> 16) & 255);
+            out.write((v >>> 8) & 255);
+            out.write(v & 255);
+        }
     }
     
     /**

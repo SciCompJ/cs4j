@@ -3,9 +3,6 @@
  */
 package net.sci.image.io.tiff;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteOrder;
 import java.util.Map;
 
 import net.sci.image.Image;
@@ -546,71 +543,6 @@ public class TiffTag
     }
     
     /**
-     * Writes the entry corresponding to this tag into the specified stream,
-     * with the specified byte order.
-     * 
-     * @param out
-     *            the stream to write in
-     * @param order
-     *            the byte order
-     * @return the number of bytes that will need to be written on the IFD data
-     * @throws IOException 
-     */
-    public int writeEntry(OutputStream out, ByteOrder order, int currentDataOffset) throws IOException
-    { 
-        writeShort(out, order, this.code);
-        writeShort(out, order, type.code());
-        writeInt(out, order, count);
-        if (count == 1 && type.equals(TiffTag.Type.SHORT))
-        {
-            writeShort(out, order, value);
-            writeShort(out, order, 0);
-        }
-        else if (content != null)
-        {
-            // write the offset to content data 
-            writeInt(out, order, value); // TODO: duplicate code, check this!
-        }
-        else
-        {
-            writeInt(out, order, value);
-        }
-        
-        return contentSize();
-    }
-    
-    /**
-     * Writes the entry corresponding to this tag into the specified stream,
-     * with the specified byte order.
-     * 
-     * @param out
-     *            the stream to write in
-     * @param order
-     *            the byte order
-     * @throws IOException 
-     */
-    public void writeEntry(OutputStream out, ByteOrder order) throws IOException
-    { 
-        writeShort(out, order, this.code);
-        writeShort(out, order, type.code());
-        writeInt(out, order, count);
-        if (count == 1 && type.equals(TiffTag.Type.SHORT))
-        {
-            writeShort(out, order, value);
-            writeShort(out, order, 0);
-        }
-        else if (content != null)
-        {
-            // write the offset to content data 
-            writeInt(out, order, value); // TODO: duplicate code, check this!
-        }
-        else
-        {
-            writeInt(out, order, value);
-        }
-    }
-
-    /**
      * Returns the number of bytes necessary to write the content of this tag,
      * or 0 if the value fits within less that 4 bytes. This method is used to
      * determine the size of the tag data when writing a file.
@@ -620,84 +552,6 @@ public class TiffTag
     public int contentSize()
     {
         return content == null ? 0 : count * type.byteCount();
-    }
-
-    /**
-     * Writes the data of this entry into the specified stream, with the
-     * specified byte order. The number of bytes that will be written must be
-     * the same as the result of the {@code writeEntry()} method.
-     * 
-     * @param out
-     *            the stream to write in
-     * @param order
-     *            the byte order
-     * @throws IOException 
-     */
-    public void writeContent(OutputStream out, ByteOrder order) throws IOException
-    {
-        if (content == null) return;
-        switch (type)
-        {
-            case BYTE -> {
-                byte[] data = (byte[]) content;
-                out.write(data);
-            }
-            case ASCII -> {
-                out.write((byte[]) content);
-            }
-            case SHORT -> {
-                for (short s : (short[]) content)
-                {
-                    writeShort(out, order, s);
-                }
-            }
-            case LONG -> {
-                for (int data : (int[]) content)
-                {
-                    writeInt(out, order, data);
-                }
-            }
-            case RATIONAL -> {
-                int[] data = (int[]) content;
-                writeInt(out, order, data[0]);
-                writeInt(out, order, data[1]);
-            }
-            default -> System.err.println("Unable to write tag with code " + code);
-        }
-    }
-    
-    
-    
-    private static final void writeShort(OutputStream out, ByteOrder order, int v) throws IOException
-    {
-        if (order == ByteOrder.LITTLE_ENDIAN)
-        {
-            out.write(v & 255);
-            out.write((v >>> 8) & 255);
-        }
-        else
-        {
-            out.write((v >>> 8) & 255);
-            out.write(v & 255);
-        }
-    }
-    
-    private static final void writeInt(OutputStream out, ByteOrder order, int v) throws IOException
-    {
-        if (order == ByteOrder.LITTLE_ENDIAN)
-        {
-            out.write(v & 255);
-            out.write((v >>> 8) & 255);
-            out.write((v >>> 16) & 255);
-            out.write((v >>> 24) & 255);
-        }
-        else
-        {
-            out.write((v >>> 24) & 255);
-            out.write((v >>> 16) & 255);
-            out.write((v >>> 8) & 255);
-            out.write(v & 255);
-        }
     }
     
     /**

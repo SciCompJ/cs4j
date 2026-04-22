@@ -3,8 +3,6 @@
  */
 package net.sci.image.io.tiff;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.ByteOrder;
 import java.util.Collection;
 import java.util.Collections;
@@ -81,6 +79,11 @@ public class ImageFileDirectory
     {
         this.byteOrder = byteOrder;
         return this;
+    }
+    
+    public long getOffset()
+    {
+        return this.offset;
     }
     
     public void setOffset(long offset)
@@ -323,71 +326,5 @@ public class ImageFileDirectory
         if (bitsPerSample[0] == 64) return new PixelType.Float64Vector(samplesPerPixel);
 
         throw new RuntimeException("Unable to determine pixel type");
-    }
-
-    
-    /**
-     * Write this ImageFileDirectory into the specified stream: first writes the
-     * number of entries, then the different tags/entries, and finally the
-     * offset to the next ImageFileDirectory.
-     * 
-     * @param out
-     *            the Stream to write in
-     * @throws IOException
-     *             if a problem occurs
-     */
-    public void write(OutputStream out) throws IOException
-    {
-        // write number of entries
-        writeShort(out, this.byteOrder, entries.size());
-        
-        // Write list of tags / entries
-        for (TiffTag tag : entries)
-        {
-            tag.writeEntry(out, this.byteOrder);
-        }
-        
-        // write offset to next IFD
-        writeInt(out, this.byteOrder, (int) offset);
-    }
-    
-    public void writeEntryData(OutputStream out) throws IOException
-    {
-        for (TiffTag tag : entries)
-        {
-            tag.writeContent(out, this.byteOrder);
-        }
-    }
-    
-    private static final void writeShort(OutputStream out, ByteOrder order, int v) throws IOException
-    {
-        if (order == ByteOrder.LITTLE_ENDIAN)
-        {
-            out.write(v & 255);
-            out.write((v >>> 8) & 255);
-        }
-        else
-        {
-            out.write((v >>> 8) & 255);
-            out.write(v & 255);
-        }
-    }
-
-    private static final void writeInt(OutputStream out, ByteOrder order, int v) throws IOException
-    {
-        if (order == ByteOrder.LITTLE_ENDIAN)
-        {
-            out.write(v & 255);
-            out.write((v >>> 8) & 255);
-            out.write((v >>> 16) & 255);
-            out.write((v >>> 24) & 255);
-        }
-        else
-        {
-            out.write((v >>> 24) & 255);
-            out.write((v >>> 16) & 255);
-            out.write((v >>> 8) & 255);
-            out.write(v & 255);
-        }
     }
 }
