@@ -219,24 +219,21 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         ifd.setOffset(nextIFD);
         
         
-        // open output stream
+        // Open output stream.
+        // Always use BIG_ENDIAN byte order for writing images, to simplify implementation,
+        // as Java Outputstream uses only big-endian order
         OutputStream out = new BufferedOutputStream(new FileOutputStream(this.file));
-        // Byte order to use for writing binary data. 
-        // Use BIG_ENDIAN as default for writing images, initialized at creation of IFD
-        ByteOrder byteOrder = ifd.getByteOrder();
-
         
         // write Tiff ID, and offset to first IFD
-        writeHeader(out, byteOrder);
+        writeHeader(out);
         
         // Write current image file directory
         this.fireStatusChanged(this, "Write IFD entries");
-        writeEntries(out, byteOrder, ifd);
-//        ifd.write(out);
+        writeEntries(out, ifd);
 
         // Write content of the different tags
         this.fireStatusChanged(this, "Write IFD entry data");
-        writeEntryData(out, byteOrder, ifd);
+        writeEntryData(out, ifd);
                 
         // Finally, image data (the whole array)
         this.fireStatusChanged(this, "Write Image data");
@@ -265,8 +262,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
                 imageOffsetTag.value = (int) imageOffset;
                 ifd2.setOffset(nextIFD);
                 
-                writeEntries(out, byteOrder, ifd2);
-//                ifd2.write(out);
+                writeEntries(out, ifd2);
             }
         } 
         else if (bigTiff)
@@ -479,23 +475,15 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      * Writes the header of the TIFF file, composed of a sequence of eight
      * bytes. The sequence starts either with "II" (Intel byte order, of
      * little-endian) or "MM" (Motorola byte order, of big-endian).
+     * 
+     * Current implementation uses "MM" (Big-endian order) as only possibility.
      */
-    private void writeHeader(OutputStream out, ByteOrder order) throws IOException
+    private void writeHeader(OutputStream out) throws IOException
     {
-       if (order == ByteOrder.LITTLE_ENDIAN)
-       {
-           // Start with "II" (Intel byte order, little-endian)
-           // Then magic number "42" as a short, 
-           // then offset to first IFD, equal to 8, as 32-bits integer.
-           out.write(new byte[] {73, 73, 42, 0, 8, 0, 0, 0});
-       }
-       else
-       {
-           // Start with "MM" (Motorola byte order, big-endian)
-           // Then magic number "42" as a short, 
-           // then offset to first IFD, equal to 8, as 32-bits integer.
-           out.write(new byte[] {77, 77, 0, 42, 0, 0, 0, 8});
-       }
+        // Start with "MM" (Motorola byte order, big-endian)
+        // Then magic number "42" as a short, 
+        // then offset to first IFD, equal to 8, as 32-bits integer.
+        out.write(new byte[] {77, 77, 0, 42, 0, 0, 0, 8});
     }
     
     /**
@@ -508,19 +496,19 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      * @throws IOException
      *             if a problem occurs
      */
-    private void writeEntries(OutputStream out, ByteOrder order, ImageFileDirectory ifd) throws IOException
+    private void writeEntries(OutputStream out, ImageFileDirectory ifd) throws IOException
     {
         // write number of entries
-        writeShort(out, order, ifd.entries().size());
+        writeShort(out, ifd.entries().size());
         
         // Write list of tags / entries
         for (TiffTag tag : ifd.entries())
         {
-            writeEntry(out, order, tag);
+            writeEntry(out, tag);
         }
         
         // write offset to next IFD
-        writeInt(out, order, (int) ifd.getOffset());
+        writeInt(out, (int) ifd.getOffset());
     }
     
     /**
@@ -533,32 +521,32 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      *            the byte order
      * @throws IOException 
      */
-    private void writeEntry(OutputStream out, ByteOrder order, TiffTag tag) throws IOException
+    private void writeEntry(OutputStream out, TiffTag tag) throws IOException
     { 
-        writeShort(out, order, tag.code);
-        writeShort(out, order, tag.type.code());
-        writeInt(out, order, tag.count);
+        writeShort(out, tag.code);
+        writeShort(out, tag.type.code());
+        writeInt(out, tag.count);
         if (tag.count == 1 && tag.type.equals(TiffTag.Type.SHORT))
         {
-            writeShort(out, order, tag.value);
-            writeShort(out, order, 0);
+            writeShort(out, tag.value);
+            writeShort(out, 0);
         }
         else if (tag.content != null)
         {
             // write the offset to content data 
-            writeInt(out, order, tag.value); // TODO: duplicate code, check this!
+            writeInt(out, tag.value); // TODO: duplicate code, check this!
         }
         else
         {
-            writeInt(out, order, tag.value);
+            writeInt(out, tag.value);
         }
     }
 
-    private void writeEntryData(OutputStream out, ByteOrder order, ImageFileDirectory ifd) throws IOException
+    private void writeEntryData(OutputStream out, ImageFileDirectory ifd) throws IOException
     {
         for (TiffTag tag : ifd.entries())
         {
-            writeTagContent(out, order, tag);
+            writeTagContent(out, tag);
         }
     }
     
@@ -573,7 +561,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      *            the byte order
      * @throws IOException 
      */
-    private void writeTagContent(OutputStream out, ByteOrder order, TiffTag tag) throws IOException
+    private void writeTagContent(OutputStream out, TiffTag tag) throws IOException
     {
         if (tag.content == null) return;
         switch (tag.type)
@@ -588,54 +576,36 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
             case SHORT -> {
                 for (short s : (short[]) tag.content)
                 {
-                    writeShort(out, order, s);
+                    writeShort(out, s);
                 }
             }
             case LONG -> {
                 for (int data : (int[]) tag.content)
                 {
-                    writeInt(out, order, data);
+                    writeInt(out, data);
                 }
             }
             case RATIONAL -> {
                 int[] data = (int[]) tag.content;
-                writeInt(out, order, data[0]);
-                writeInt(out, order, data[1]);
+                writeInt(out, data[0]);
+                writeInt(out, data[1]);
             }
             default -> System.err.println("Unable to write tag with code " + tag.code);
         }
     }
     
-    private static final void writeShort(OutputStream out, ByteOrder order, int v) throws IOException
+    private static final void writeShort(OutputStream out, int v) throws IOException
     {
-        if (order == ByteOrder.LITTLE_ENDIAN)
-        {
-            out.write(v & 255);
-            out.write((v >>> 8) & 255);
-        }
-        else
-        {
-            out.write((v >>> 8) & 255);
-            out.write(v & 255);
-        }
+        out.write((v >>> 8) & 255);
+        out.write(v & 255);
     }
 
-    private static final void writeInt(OutputStream out, ByteOrder order, int v) throws IOException
+    private static final void writeInt(OutputStream out, int v) throws IOException
     {
-        if (order == ByteOrder.LITTLE_ENDIAN)
-        {
-            out.write(v & 255);
-            out.write((v >>> 8) & 255);
-            out.write((v >>> 16) & 255);
-            out.write((v >>> 24) & 255);
-        }
-        else
-        {
-            out.write((v >>> 24) & 255);
-            out.write((v >>> 16) & 255);
-            out.write((v >>> 8) & 255);
-            out.write(v & 255);
-        }
+        out.write((v >>> 24) & 255);
+        out.write((v >>> 16) & 255);
+        out.write((v >>> 8) & 255);
+        out.write(v & 255);
     }
     
     /**
@@ -647,8 +617,8 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      */
     private static final ImageFileDirectory duplicate(ImageFileDirectory ifd)
     {
-        ImageFileDirectory newIFD = new ImageFileDirectory()
-                .setByteOrder(ifd.getByteOrder());
+        ImageFileDirectory newIFD = new ImageFileDirectory();
+        newIFD.setByteOrder(ifd.getByteOrder());
         for (TiffTag tag : ifd.entries())
         {
             newIFD.addEntry(tag);
