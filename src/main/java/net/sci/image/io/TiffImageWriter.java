@@ -6,6 +6,7 @@ package net.sci.image.io;
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -62,16 +63,28 @@ import net.sci.image.io.tiff.TiffTag;
  * 
  * Uses BIG_ENDIAN byte order.
  * 
+ * {@snippet lang="java" :
+    Image image = ...
+    try(TiffImageWriter writer = new TiffImageWriter("outputFile.tif"))
+    {
+        writer.writeImage(image);
+    }
+    catch (Exception e)
+    {
+        e.printStackTrace();
+    }
+ * }
+ * 
  * @author dlegland
  *
  */
-public class TiffImageWriter extends AlgoStub implements ImageWriter
+public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoCloseable
 {
     // =============================================================
     // Constants
     
     /**
-     * The number of bytes necessary to write the header.
+     * The number of bytes necessary to write the header of the TIFF file.
      */
     static final int HEADER_SIZE = 8;
 
@@ -98,6 +111,9 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      */
     ArrayList<TiffTag> customTags = new ArrayList<>(4);
     
+    /** The output stream, open at creation.*/
+    OutputStream out;
+    
     
     // =============================================================
     // Constructor
@@ -107,10 +123,16 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      * 
      * @param file
      *            the file to write the Tiff image into.
+     * @throws FileNotFoundException 
      */
-    public TiffImageWriter(File file)
+    public TiffImageWriter(File file) throws FileNotFoundException
     {
         this.file = file;
+        
+        // Open output stream.
+        // Always use BIG_ENDIAN byte order for writing images, to simplify implementation,
+        // as Java Outputstream uses only big-endian order
+        this.out = new BufferedOutputStream(new FileOutputStream(this.file));
     }
     
     
@@ -219,25 +241,20 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
         ifd.setOffset(nextIFD);
         
         
-        // Open output stream.
-        // Always use BIG_ENDIAN byte order for writing images, to simplify implementation,
-        // as Java Outputstream uses only big-endian order
-        OutputStream out = new BufferedOutputStream(new FileOutputStream(this.file));
-        
         // write Tiff ID, and offset to first IFD
-        writeHeader(out);
+        writeHeader();
         
         // Write current image file directory
         this.fireStatusChanged(this, "Write IFD entries");
-        writeEntries(out, ifd);
+        writeEntries(ifd);
 
         // Write content of the different tags
         this.fireStatusChanged(this, "Write IFD entry data");
-        writeEntryData(out, ifd);
+        writeEntryData(ifd);
                 
         // Finally, image data (the whole array)
         this.fireStatusChanged(this, "Write Image data");
-        writeImageData(out, image.getData());
+        writeImageData(image.getData());
         
         
         // Process optional remaining Image File Directories
@@ -262,7 +279,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
                 imageOffsetTag.value = (int) imageOffset;
                 ifd2.setOffset(nextIFD);
                 
-                writeEntries(out, ifd2);
+                writeEntries(ifd2);
             }
         } 
         else if (bigTiff)
@@ -270,8 +287,6 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
             System.out.println("Stack is larger than 4GB, and most TIFF readers will only open the first image.\nUse this information to open as raw:");
             System.out.println(createImportString(image, ifd));
         }
-        
-        out.close();
     }
     
     private ImageFileDirectory initImageFileDirectory(Image image)
@@ -478,7 +493,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      * 
      * Current implementation uses "MM" (Big-endian order) as only possibility.
      */
-    private void writeHeader(OutputStream out) throws IOException
+    private void writeHeader() throws IOException
     {
         // Start with "MM" (Motorola byte order, big-endian)
         // Then magic number "42" as a short, 
@@ -496,19 +511,19 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      * @throws IOException
      *             if a problem occurs
      */
-    private void writeEntries(OutputStream out, ImageFileDirectory ifd) throws IOException
+    private void writeEntries(ImageFileDirectory ifd) throws IOException
     {
         // write number of entries
-        writeShort(out, ifd.entries().size());
+        writeShort(ifd.entries().size());
         
         // Write list of tags / entries
         for (TiffTag tag : ifd.entries())
         {
-            writeEntry(out, tag);
+            writeEntry(tag);
         }
         
         // write offset to next IFD
-        writeInt(out, (int) ifd.getOffset());
+        writeInt((int) ifd.getOffset());
     }
     
     /**
@@ -521,32 +536,32 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      *            the byte order
      * @throws IOException 
      */
-    private void writeEntry(OutputStream out, TiffTag tag) throws IOException
+    private void writeEntry(TiffTag tag) throws IOException
     { 
-        writeShort(out, tag.code);
-        writeShort(out, tag.type.code());
-        writeInt(out, tag.count);
+        writeShort(tag.code);
+        writeShort(tag.type.code());
+        writeInt(tag.count);
         if (tag.count == 1 && tag.type.equals(TiffTag.Type.SHORT))
         {
-            writeShort(out, tag.value);
-            writeShort(out, 0);
+            writeShort(tag.value);
+            writeShort(0);
         }
         else if (tag.content != null)
         {
             // write the offset to content data 
-            writeInt(out, tag.value); // TODO: duplicate code, check this!
+            writeInt(tag.value); // TODO: duplicate code, check this!
         }
         else
         {
-            writeInt(out, tag.value);
+            writeInt(tag.value);
         }
     }
 
-    private void writeEntryData(OutputStream out, ImageFileDirectory ifd) throws IOException
+    private void writeEntryData(ImageFileDirectory ifd) throws IOException
     {
         for (TiffTag tag : ifd.entries())
         {
-            writeTagContent(out, tag);
+            writeTagContent(tag);
         }
     }
     
@@ -561,46 +576,42 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      *            the byte order
      * @throws IOException 
      */
-    private void writeTagContent(OutputStream out, TiffTag tag) throws IOException
+    private void writeTagContent(TiffTag tag) throws IOException
     {
         if (tag.content == null) return;
         switch (tag.type)
         {
-            case BYTE -> {
-                byte[] data = (byte[]) tag.content;
-                out.write(data);
-            }
-            case ASCII -> {
-                out.write((byte[]) tag.content);
-            }
+            case BYTE -> out.write((byte[]) tag.content);
+            case ASCII -> out.write((byte[]) tag.content);
+            
             case SHORT -> {
                 for (short s : (short[]) tag.content)
                 {
-                    writeShort(out, s);
+                    writeShort(s);
                 }
             }
             case LONG -> {
                 for (int data : (int[]) tag.content)
                 {
-                    writeInt(out, data);
+                    writeInt(data);
                 }
             }
             case RATIONAL -> {
                 int[] data = (int[]) tag.content;
-                writeInt(out, data[0]);
-                writeInt(out, data[1]);
+                writeInt(data[0]);
+                writeInt(data[1]);
             }
             default -> System.err.println("Unable to write tag with code " + tag.code);
         }
     }
     
-    private static final void writeShort(OutputStream out, int v) throws IOException
+    private void writeShort(int v) throws IOException
     {
         out.write((v >>> 8) & 255);
         out.write(v & 255);
     }
 
-    private static final void writeInt(OutputStream out, int v) throws IOException
+    private void writeInt(int v) throws IOException
     {
         out.write((v >>> 24) & 255);
         out.write((v >>> 16) & 255);
@@ -635,11 +646,11 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      * @throws IOException
      *             if an I/O Exception occurred
      */
-    private void writeImageData(OutputStream out, Array<?> array) throws IOException
+    private void writeImageData(Array<?> array) throws IOException
     {
         switch (array.dimensionality())
         {
-            case 2 -> writeImageData2d(out, Array2D.wrap(array));
+            case 2 -> writeImageData2d(Array2D.wrap(array));
             case 3 -> 
             {
                 // in case of 3D data, iterate over the 2D slices, notifying each new slice 
@@ -648,7 +659,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
                 for (int z = 0; z < sizeZ; z++)
                 {
                     this.fireProgressChanged(this, z, sizeZ);
-                    writeImageData2d(out, array3d.slice(z));
+                    writeImageData2d(array3d.slice(z));
                 }
                 this.fireProgressChanged(this, 1, 1);
             }
@@ -671,7 +682,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
      * @throws IOException
      *             if an I/O Exception occurred
      */
-    private void writeImageData2d(OutputStream out, Array2D<?> array) throws IOException
+    private void writeImageData2d(Array2D<?> array) throws IOException
     {
         // retrieve array size
         int sizeX = array.size(0);
@@ -855,5 +866,14 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter
             i >>>= 4;
         }
         return new String(buf);
+    }
+
+    /**
+     * Closes the output stream that was open for writing images.
+     */
+    @Override
+    public void close() throws Exception
+    {
+        this.out.close();
     }
 }

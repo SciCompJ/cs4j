@@ -50,8 +50,14 @@ public class TiffImageWriterTest
         Image image = new Image(array);
         
         File outputFile = new File("testWriteTiff.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
-        writer.writeImage(image);
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
@@ -83,11 +89,18 @@ public class TiffImageWriterTest
         array.fillInts((x,y) -> 10 * y + x);
         Image image = new Image(array);
         
-        File outputFile = new File("testWriteTiff.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
         String softwareString = "CS4J Test Suite";
-        writer.addCustomTag(new BaselineTags.Software().setValue(softwareString));
-        writer.writeImage(image);
+        
+        File outputFile = new File("testWriteTiff.tif");
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.addCustomTag(new BaselineTags.Software().setValue(softwareString));
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
@@ -127,8 +140,14 @@ public class TiffImageWriterTest
         Image image = new Image(array);
         
         File outputFile = new File("testWriteTiff.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
-        writer.writeImage(image);
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
@@ -161,8 +180,14 @@ public class TiffImageWriterTest
         Image image = new Image(array);
         
         File outputFile = new File("test_writeTiff_uint16_10x8.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
-        writer.writeImage(image);
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
@@ -195,8 +220,14 @@ public class TiffImageWriterTest
         Image image = new Image(array);
         
         File outputFile = new File("test_writeTiff_float32_10x8.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
-        writer.writeImage(image);
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
@@ -229,8 +260,14 @@ public class TiffImageWriterTest
         Image image = new Image(array);
         
         File outputFile = new File("test_writeTiff_float64_10x8.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
-        writer.writeImage(image);
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
@@ -263,8 +300,14 @@ public class TiffImageWriterTest
         Image image = new Image(array);
         
         File outputFile = new File("test_writeTiff_float32Vector_10x8.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
-        writer.writeImage(image);
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
@@ -300,8 +343,14 @@ public class TiffImageWriterTest
         Image image = new Image(array);
         
         File outputFile = new File("test_writeTiff_float64Vector_10x8.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
-        writer.writeImage(image);
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
@@ -337,8 +386,14 @@ public class TiffImageWriterTest
         Image image = new Image(array);
         
         File outputFile = new File("test_writeTiff_rgb8_20x10.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
-        writer.writeImage(image);
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
@@ -371,8 +426,14 @@ public class TiffImageWriterTest
         Image image = new Image(array);
         
         File outputFile = new File("testWriteTiff3d.tif");
-        TiffImageWriter writer = new TiffImageWriter(outputFile);
-        writer.writeImage(image);
+        try(TiffImageWriter writer = new TiffImageWriter(outputFile))
+        {
+            writer.writeImage(image);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         
         assertTrue(outputFile.exists());
         
