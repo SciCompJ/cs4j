@@ -384,7 +384,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
     {
         int sizeZ = image.getDimension() > 2 ? image.getSize(2) : 1;
         
-        StringBuffer sb = new StringBuffer(100);
+        StringBuilder sb = new StringBuilder(100);
         
         // use an arbitrary version of ImageJ
         sb.append("ImageJ=1.54m\n");
@@ -426,7 +426,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
      * @param str
      *            the String to append
      */
-    private static final void addEscapedString(StringBuffer sb, String str)
+    private static final void addEscapedString(StringBuilder sb, String str)
     {
         for (int i = 0; i < str.length(); i++)
         {
@@ -439,8 +439,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
             else if (c <= 0xffff)
             { 
                 // (supplementary unicode characters >0xffff unsupported)
-                sb.append("\\u");
-                sb.append(int2hex(c, 4));
+                sb.append("\\u").append(Integer.toHexString(c).toUpperCase());
             }
         }
     }
@@ -545,11 +544,6 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         {
             writeShort(tag.value);
             writeShort(0);
-        }
-        else if (tag.content != null)
-        {
-            // write the offset to content data 
-            writeInt(tag.value); // TODO: duplicate code, check this!
         }
         else
         {
@@ -839,33 +833,6 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         sb.append(", format=").append("tif");
         sb.append(", samples=").append(pixelType.sampleCount());
         return sb.toString();
-    }
-    
-
-    /** The 16 hexadecimal digits from '0' to 'F' */
-    private static final char[] hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-            'F' };
-
-    /**
-     * Converts an integer into a zero-padded hex string of fixed length given
-     * by the {@code digits} parameter. If the number is too large, it is
-     * truncated by keeping only the lowest digits.
-     * 
-     * @param i
-     *            the value to convert
-     * @param nDigits
-     *            the number of digits of the result
-     * @return an hexadecimal representation of the integer
-     */
-    private static final String int2hex(int i, int nDigits)
-    {
-        char[] buf = new char[nDigits];
-        for (int pos = nDigits - 1; pos >= 0; pos--)
-        {
-            buf[pos] = hexDigits[i & 0xf];
-            i >>>= 4;
-        }
-        return new String(buf);
     }
 
     /**
