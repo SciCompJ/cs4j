@@ -23,74 +23,6 @@ import net.sci.image.Image;
 public class TiffTag
 {
     // =============================================================
-    // Static constants
-    
-    /**
-     * The type of data stored by a tag.
-     */
-    public static enum Type
-    {
-        /** Unknown type of tag (code 0) */
-        UNKNOWN(0, 0),
-        /** Tag value stored with single byte(s) (code 1) */
-        BYTE(1, 1),
-        /** Tag content stored in ASCII (code 2) */
-        ASCII(2, 1),
-        /** Tag value or content stored with 16-bits integer (code 3) */
-        SHORT(3, 2),
-        /** Tag value or content stored with 32-bits integer (code 4) */
-        LONG(4, 4),
-        /**
-         * Tag content stored with rational (code 5), i.e. by storing each value
-         * with a pair of 4-byte integers.
-         */
-        RATIONAL(5, 8),
-        /** Tag value(s) stored with double precision (64-bits) floating point (code 12) */
-        DOUBLE(12, 8);
-        
-        int code;
-        int byteCount;
-        
-        private Type(int code, int byteCount)
-        {
-            this.code = code;
-            this.byteCount = byteCount;
-        }
-        
-        public int code()
-        {
-            return code;
-        }
-        
-        /**
-         * Identifies the type from an integer code as read from a tiff entry.
-         * 
-         * @param typeCode
-         *            the code of the type
-         * @return the corresponding type
-         */
-        public static final Type getType(int typeCode)
-        {
-            return switch (typeCode)
-            {
-                case 1 -> BYTE;
-                case 2 -> ASCII;
-                case 3 -> SHORT;
-                case 4 -> LONG;
-                case 5 -> RATIONAL;
-                case 12 -> DOUBLE;
-                default -> UNKNOWN;
-            };
-        }
-        
-        public int byteCount()
-        {
-            return byteCount;
-        }
-    };
-    
-    
-    // =============================================================
     // static methods
     
     /**
@@ -130,7 +62,7 @@ public class TiffTag
      * creation, but in some cases it may be necessary to adapt the type to the
      * image.
      */
-    public Type type;
+    public Entry.Type type;
     
     
     // =============================================================
@@ -169,7 +101,7 @@ public class TiffTag
         this.description = description;
         
         // setup default values
-        this.type = Type.SHORT;
+        this.type = Entry.Type.SHORT;
     }
     
     /**
@@ -185,7 +117,7 @@ public class TiffTag
      * @param description
      *            a more complete description of the tag
      */
-    public TiffTag(int code, Type type, String name, String description)
+    public TiffTag(int code, Entry.Type type, String name, String description)
     {
         this.code = code;
         this.name = name;
@@ -202,22 +134,7 @@ public class TiffTag
     
     public Entry newEntry()
     {
-        Entry.Type entryType = convertType(this.type);
-        return new Entry(this.code, entryType, 1, 0);
-    }
-    
-    private static final Entry.Type convertType(TiffTag.Type tagType)
-    {
-        return switch (tagType)
-        {
-            case BYTE -> Entry.Type.BYTE;
-            case ASCII -> Entry.Type.ASCII;
-            case SHORT -> Entry.Type.SHORT;
-            case LONG -> Entry.Type.LONG;
-            case RATIONAL -> Entry.Type.RATIONAL;
-            case DOUBLE -> Entry.Type.DOUBLE;
-            default -> Entry.Type.UNKNOWN;
-        };
+        return new Entry(this.code, this.type, 1, 0);
     }
     
     /**

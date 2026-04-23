@@ -28,7 +28,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 254;
         public NewSubfileType()
         {
-            super(CODE, Type.LONG, "NewSubfileType", "A general indication of the kind of data contained in this subfile");
+            super(CODE, Entry.Type.LONG, "NewSubfileType", "A general indication of the kind of data contained in this subfile");
 //            this.value = 0;
         }
     }
@@ -54,7 +54,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 256;
         public ImageWidth()
         {
-            super(CODE, Type.LONG, "ImageWidth", "The number of columns in the image");
+            super(CODE, Entry.Type.LONG, "ImageWidth", "The number of columns in the image");
         }
     }
     
@@ -66,7 +66,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 257;
         public ImageHeight()
         {
-            super(CODE, Type.LONG, "ImageHeight", "The number of rows of pixels in the image");
+            super(CODE, Entry.Type.LONG, "ImageHeight", "The number of rows of pixels in the image");
         }
     }
 
@@ -90,7 +90,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 258;
         public BitsPerSample()
         {
-            super(CODE, Type.SHORT, "BitsPerSample", "Number of bits per component");
+            super(CODE, Entry.Type.SHORT, "BitsPerSample", "Number of bits per component");
         }
         
         /**
@@ -138,7 +138,7 @@ public class BaselineTags implements TagSet
         
         public Compression()
         {
-            super(CODE, Type.SHORT, "CompressionMode", "Compression scheme used on the image data");
+            super(CODE, Entry.Type.SHORT, "CompressionMode", "Compression scheme used on the image data");
 //            this.value = NONE; // no compression
         }
     }
@@ -175,31 +175,9 @@ public class BaselineTags implements TagSet
             return entry;
         }
         
-//        /**
-//         * Determines the photometric interpretation that is the most suited to
-//         * the specified data array.
-//         * 
-//         * @param imageData
-//         *            an instance of array containing image data
-//         * @return the most adequate photometric interpretation
-//         */
-//        public static final PhotometricInterpretation of(Array<?> imageData)
-//        {
-//            PhotometricInterpretation tag = new PhotometricInterpretation();
-//            if (imageData instanceof RGB8Array || imageData instanceof RGB16Array)
-//            {
-//                tag.setShortValue(PhotometricInterpretation.RGB);
-//            }
-//            else
-//            {
-//                tag.setShortValue(PhotometricInterpretation.BLACK_IS_ZERO);
-//            }
-//            return tag;
-//        }
-        
         public PhotometricInterpretation()
         {
-            super(CODE, Type.SHORT, "PhotometricInterpretation", "The color space of the image data");
+            super(CODE, Entry.Type.SHORT, "PhotometricInterpretation", "The color space of the image data");
 //            this.count = BLACK_IS_ZERO;
         }
     }
@@ -228,7 +206,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 264;
         public CellWidth()
         {
-            super(CODE, Type.SHORT, "CellWidth", 
+            super(CODE, Entry.Type.SHORT, "CellWidth", 
                     "The width of the dithering or halftoning matrix used to create a dithered or halftoned bilevel file");
         }
     }
@@ -242,7 +220,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 265;
         public CellHeight()
         {
-            super(CODE, Type.SHORT, "CellHeight", 
+            super(CODE, Entry.Type.SHORT, "CellHeight", 
                     "The length of the dithering or halftoning matrix used to create a dithered or halftoned bilevel file");
         }
     }
@@ -255,7 +233,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 266;
         public FillOrder()
         {
-            super(CODE, Type.SHORT, "FillOrder", 
+            super(CODE, Entry.Type.SHORT, "FillOrder", 
                     "The logical order of bits within a byte");
         }
     }
@@ -269,7 +247,7 @@ public class BaselineTags implements TagSet
         
         public ImageDescription()
         {
-            super(CODE, Type.ASCII, "ImageDescription", 
+            super(CODE, Entry.Type.ASCII, "ImageDescription", 
                     "A string that describes the subject of the image");
         }
     }
@@ -282,7 +260,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 271;
         public Make()
         {
-            super(CODE, Type.ASCII, "Make", "The scanner manufacturer");
+            super(CODE, Entry.Type.ASCII, "Make", "The scanner manufacturer");
         }
     }
     
@@ -294,7 +272,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 272;
         public Model()
         {
-            super(CODE, Type.ASCII, "Model", "The scanner model name or number");
+            super(CODE, Entry.Type.ASCII, "Model", "The scanner model name or number");
         }
     }
     
@@ -308,7 +286,7 @@ public class BaselineTags implements TagSet
         
         public StripOffsets()
         {
-            super(CODE, Type.LONG, "StripOffsets", "For each strip, the byte offset of that strip");
+            super(CODE, Entry.Type.LONG, "StripOffsets", "For each strip, the byte offset of that strip");
         }
     }
     
@@ -321,7 +299,7 @@ public class BaselineTags implements TagSet
         
         public Orientation()
         {
-            super(CODE, Type.SHORT, "Orientation", "The orientation of the image with respect to the rows and columns");
+            super(CODE, Entry.Type.SHORT, "Orientation", "The orientation of the image with respect to the rows and columns");
         }
     }
     
@@ -333,7 +311,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 277;
         public SamplesPerPixel()
         {
-            super(CODE, Type.SHORT, "SamplesPerPixel", "The number of components per pixel");
+            super(CODE, Entry.Type.SHORT, "SamplesPerPixel", "The number of components per pixel");
         }
     }
 
@@ -347,7 +325,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 278;
         public RowsPerStrip()
         {
-            super(CODE, Type.LONG, "RowsPerStrip", "The number of rows per strip");
+            super(CODE, Entry.Type.LONG, "RowsPerStrip", "The number of rows per strip");
         }
     }
     
@@ -361,7 +339,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 279;
         public StripByteCounts()
         {
-            super(CODE, Type.LONG, "StripByteCounts", "For each strip, the number of bytes in the strip after compression");
+            super(CODE, Entry.Type.LONG, "StripByteCounts", "For each strip, the number of bytes in the strip after compression");
         }
     }
     
@@ -373,7 +351,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 280;
         public MinSampleValue()
         {
-            super(CODE, Type.SHORT, "MinSampleValue", "The minimum component value used");
+            super(CODE, Entry.Type.SHORT, "MinSampleValue", "The minimum component value used");
         }
     }
     
@@ -385,7 +363,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 281;
         public MaxSampleValue()
         {
-            super(CODE, Type.SHORT, "MaxSampleValue", "The maximum component value used");
+            super(CODE, Entry.Type.SHORT, "MaxSampleValue", "The maximum component value used");
         }
     }
     
@@ -398,7 +376,7 @@ public class BaselineTags implements TagSet
         
         public XResolution()
         {
-            super(CODE, Type.RATIONAL, "XResolution",
+            super(CODE, Entry.Type.RATIONAL, "XResolution",
                     "The number of pixels per ResolutionUnit in the ImageWidth direction");
         }
     }
@@ -412,7 +390,7 @@ public class BaselineTags implements TagSet
         
         public YResolution()
         {
-            super(CODE, Type.RATIONAL, "YResolution",
+            super(CODE, Entry.Type.RATIONAL, "YResolution",
                     "The number of pixels per ResolutionUnit in the ImageHeight direction");
         }
     }
@@ -429,7 +407,7 @@ public class BaselineTags implements TagSet
         
         public PlanarConfiguration()
         {
-            super(CODE, Type.SHORT, "PlanarConfiguration", "How the components of each pixel are stored");
+            super(CODE, Entry.Type.SHORT, "PlanarConfiguration", "How the components of each pixel are stored");
 //            this.value = CHUNKY;
         }
     }
@@ -442,7 +420,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 288;
         public FreeOffsets()
         {
-            super(CODE, Type.LONG, "FreeOffsets",
+            super(CODE, Entry.Type.LONG, "FreeOffsets",
                     "For each string of contiguous unused bytes in a TIFF file, the byte offset of the string");
         }
     }
@@ -455,7 +433,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 289;
         public FreeByteCounts()
         {
-            super(CODE, Type.LONG, "FreeByteCounts",
+            super(CODE, Entry.Type.LONG, "FreeByteCounts",
                     "For each string of contiguous unused bytes in a TIFF file, the number of bytes in the string");
         }
     }
@@ -468,7 +446,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 290;
         public GrayResponseUnit()
         {
-            super(CODE, Type.SHORT, "GrayResponseUnit",
+            super(CODE, Entry.Type.SHORT, "GrayResponseUnit",
                     "The precision of the information contained in the GrayResponseCurve");
         }
     }
@@ -487,7 +465,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 291;
         public GrayResponseCurve()
         {
-            super(CODE, Type.SHORT, "GrayResponseCurve",
+            super(CODE, Entry.Type.SHORT, "GrayResponseCurve",
                     "For grayscale data, the optical density of each possible pixel value");
         }
     }
@@ -505,7 +483,7 @@ public class BaselineTags implements TagSet
         
         public ResolutionUnit()
         {
-            super(CODE, Type.SHORT, "ResolutionUnit",
+            super(CODE, Entry.Type.SHORT, "ResolutionUnit",
                     "The unit of measurement for XResolution and YResolution");
 //            this.value = INCH; // default: inch
         }
@@ -519,7 +497,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 305;
         public Software()
         {
-            super(CODE, Type.ASCII, "Software",
+            super(CODE, Entry.Type.ASCII, "Software",
                     "Name and version number of the software package(s) used to create the image");
         }
     }
@@ -536,7 +514,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 306;
         public DateTime()
         {
-            super(CODE, Type.ASCII, "DateTime", "Date and time of image creation");
+            super(CODE, Entry.Type.ASCII, "DateTime", "Date and time of image creation");
         }
     }
     
@@ -548,7 +526,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 315;
         public Artist()
         {
-            super(CODE, Type.ASCII, "Artist", "Person who created the image");
+            super(CODE, Entry.Type.ASCII, "Artist", "Person who created the image");
         }
     }
     
@@ -560,7 +538,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 316;
         public HostComputer()
         {
-            super(CODE, Type.ASCII, "HostComputer", "The computer and/or operating system in use at the time of image creation");
+            super(CODE, Entry.Type.ASCII, "HostComputer", "The computer and/or operating system in use at the time of image creation");
         }
     }
     
@@ -573,7 +551,7 @@ public class BaselineTags implements TagSet
         
         public ColorMap()
         {
-            super(CODE, Type.SHORT, "ColorMap", "A color map for palette color images");
+            super(CODE, Entry.Type.SHORT, "ColorMap", "A color map for palette color images");
         }
     }
     
@@ -585,7 +563,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 338;
         public ExtraSamples()
         {
-            super(CODE, Type.SHORT, "ExtraSamples", "Description of extra components");
+            super(CODE, Entry.Type.SHORT, "ExtraSamples", "Description of extra components");
         }
     }
     
@@ -597,7 +575,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 33432;
         public Copyright()
         {
-            super(CODE, Type.ASCII, "Copyright", "Copyright notice");
+            super(CODE, Entry.Type.ASCII, "Copyright", "Copyright notice");
         }
     }
     

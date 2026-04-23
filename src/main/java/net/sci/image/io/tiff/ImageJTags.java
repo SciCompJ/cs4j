@@ -25,7 +25,7 @@ public class ImageJTags implements TagSet
         public static final int CODE = 50838;
         public ImageJMetaDataCounts()
         {
-            super(CODE, Type.LONG, "ImageJMetaDataCounts", "ImageJ Metadata counts");
+            super(CODE, Entry.Type.LONG, "ImageJMetaDataCounts", "ImageJ Metadata counts");
         }
     }
 
@@ -55,7 +55,7 @@ public class ImageJTags implements TagSet
         
         public ImageJMetaData()
         {
-            super(CODE, Type.BYTE, "ImageJMetaData", "ImageJ Metadata");
+            super(CODE, Entry.Type.BYTE, "ImageJMetaData", "ImageJ Metadata");
         }
         
         @Override
