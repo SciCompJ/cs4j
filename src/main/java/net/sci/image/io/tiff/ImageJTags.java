@@ -77,7 +77,8 @@ public class ImageJTags implements TagSet
 //            System.out.println("]");
             
             // wrap content into a byte buffer with same byte order as IFD
-            ByteBuffer buffer = ByteBuffer.wrap((byte[]) this.content).order(ifd.getByteOrder());
+            Entry entry = ifd.getEntry(CODE);
+            ByteBuffer buffer = ByteBuffer.wrap((byte[]) entry.content).order(ifd.getByteOrder());
             
             // check validity of the beginning of the buffer
             int hdrSize = metaDataCounts[0];

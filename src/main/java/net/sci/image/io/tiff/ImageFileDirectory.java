@@ -44,7 +44,7 @@ public class ImageFileDirectory
      * LinkedHashSet to allow fast indexing while keeping reading order of
      * entries.
      */
-    LinkedHashSet<TiffTag> entries = new LinkedHashSet<TiffTag>();
+    LinkedHashSet<Entry> entries = new LinkedHashSet<Entry>();
     
     /**
      * The offset to the next IFD.
@@ -96,32 +96,37 @@ public class ImageFileDirectory
     // Management of entries
     
     /**
-     * Adds an entry / a tag to the list of entries.
+     * Adds an entry to this IFD.
      * 
-     * @param tag
-     *            the tag to add.
+     * @param entry
+     *            the entry to add.
      */
-    public void addEntry(TiffTag tag)
+    public void addEntry(Entry entry)
     {
-        this.entries.add(tag);
+        this.entries.add(entry);
     }
     
-    public Collection<TiffTag> entries()
+    public Collection<Entry> entries()
     {
         return Collections.unmodifiableCollection(this.entries);
     }
     
+    public int entryCount()
+    {
+        return this.entries.size();
+    }
+    
     /**
-     * Returns the tag specified by the code, or null if the tag does not exist
-     * within the directory.
+     * Retrieves the entry corresponding to the specified tag code, or null if
+     * the entry does not exist within the directory.
      * 
      * @param tagCode
-     *            the code of the tag
-     * @return the tag specified by the code
+     *            the tag code of the entry
+     * @return the entry specified by the code
      */
-    public TiffTag getEntry(int tagCode)
+    public Entry getEntry(int tagCode)
     {
-        for (TiffTag tag : entries)
+        for (Entry tag : entries)
         {
             if (tag.code == tagCode) 
             {
@@ -132,8 +137,8 @@ public class ImageFileDirectory
     }
     
     /**
-     * Returns the value if the {@code value} field, throwing an exception if
-     * the tag does not exist in this directory.
+     * Returns the value of the entry corresponding to the specified tag code,
+     * throwing an exception if the entry does not exist in this directory.
      * 
      * @param tagCode
      *            the code of the tag
@@ -143,7 +148,7 @@ public class ImageFileDirectory
      */
     public int getValue(int tagCode)
     {
-        TiffTag entry = getEntry(tagCode);
+        Entry entry = getEntry(tagCode);
         if (entry == null)
         {
             throw new RuntimeException("Requires Image File Directory to contain entry with tag " + tagCode);
@@ -165,8 +170,8 @@ public class ImageFileDirectory
      */
     public int getIntValue(int tagCode, int defaultValue)
     {
-        TiffTag tag = getEntry(tagCode);
-        return tag != null ? tag.value : defaultValue;
+        Entry entry = getEntry(tagCode);
+        return entry != null ? entry.value : defaultValue;
     }
     
     /**
@@ -183,8 +188,8 @@ public class ImageFileDirectory
      */
     public double getDoubleValue(int tagCode, double defaultValue)
     {
-        TiffTag tag = getEntry(tagCode);
-        return tag != null ? (double) tag.content : defaultValue;
+        Entry entry = getEntry(tagCode);
+        return entry != null ? (double) entry.content : defaultValue;
     }
     
     /**
@@ -201,9 +206,9 @@ public class ImageFileDirectory
      */
     public int[] getIntArrayValue(int tagCode, int[] defaultValue)
     {
-        TiffTag tag = getEntry(tagCode);
-        if (tag == null) return defaultValue;
-        return tag.count == 1 ? new int[] {tag.value} : (int[]) tag.content;
+        Entry entry = getEntry(tagCode);
+        if (entry == null) return defaultValue;
+        return entry.count == 1 ? new int[] {entry.value} : (int[]) entry.content;
     }
     
     /**
@@ -219,9 +224,9 @@ public class ImageFileDirectory
      */
     public int[] getIntArrayValue(int tagCode)
     {
-        TiffTag tag = getEntry(tagCode);
-        if (tag == null) throw new RuntimeException("Could not find entry with tag code: " + tagCode);
-        return tag.count == 1 ? new int[] {tag.value} : (int[]) tag.content;
+        Entry entry = getEntry(tagCode);
+        if (entry == null) throw new RuntimeException("Could not find entry with tag code: " + tagCode);
+        return entry.count == 1 ? new int[] {entry.value} : (int[]) entry.content;
     }
   
 
@@ -238,7 +243,7 @@ public class ImageFileDirectory
      */
     public int byteCount()
     {
-        return 2 + entries.size() * ENTRY_SIZE + 4;
+        return 2 + entryCount() * ENTRY_SIZE + 4;
     }
     
     /**
@@ -250,9 +255,9 @@ public class ImageFileDirectory
     public int entryDataByteCount()
     {
         int size = 0;
-        for (TiffTag tag : entries)
+        for (Entry entry : entries)
         {
-            size += tag.contentSize();
+            size += entry.contentSize();
         }
         return size;
     }

@@ -29,7 +29,7 @@ public class BaselineTags implements TagSet
         public NewSubfileType()
         {
             super(CODE, Type.LONG, "NewSubfileType", "A general indication of the kind of data contained in this subfile");
-            this.value = 0;
+//            this.value = 0;
         }
     }
 
@@ -103,11 +103,12 @@ public class BaselineTags implements TagSet
          *            the number of bits used to represent a single sample
          * @return the reference to this tag
          */
-        public TiffTag init(int samplesPerPixel, int bitsPerSingleSample)
+        public Entry newEntry(int samplesPerPixel, int bitsPerSingleSample)
         {
+            Entry entry = newEntry();
             if (samplesPerPixel == 1)
             {
-                setShortValue((short) bitsPerSingleSample);
+                entry.setShortValue((short) bitsPerSingleSample);
             }
             else
             {
@@ -117,10 +118,10 @@ public class BaselineTags implements TagSet
                 {
                     bps[c] = (short) bitsPerSingleSample;
                 }
-                setValue(bps);
+                entry.setValue(bps);
             }
             
-            return this;
+            return entry;
         }
     }
 
@@ -138,7 +139,7 @@ public class BaselineTags implements TagSet
         public Compression()
         {
             super(CODE, Type.SHORT, "CompressionMode", "Compression scheme used on the image data");
-            this.value = NONE; // no compression
+//            this.value = NONE; // no compression
         }
     }
 
@@ -164,24 +165,42 @@ public class BaselineTags implements TagSet
          *            an instance of array containing image data
          * @return the most adequate photometric interpretation
          */
-        public static final PhotometricInterpretation of(Array<?> imageData)
+        public static final Entry createEntry(Array<?> imageData)
         {
-            PhotometricInterpretation tag = new PhotometricInterpretation();
+            Entry entry = new Entry(CODE, Entry.Type.SHORT, 1, BLACK_IS_ZERO);
             if (imageData instanceof RGB8Array || imageData instanceof RGB16Array)
             {
-                tag.setShortValue(PhotometricInterpretation.RGB);
+                entry.setShortValue(RGB);
             }
-            else
-            {
-                tag.setShortValue(PhotometricInterpretation.BLACK_IS_ZERO);
-            }
-            return tag;
+            return entry;
         }
+        
+//        /**
+//         * Determines the photometric interpretation that is the most suited to
+//         * the specified data array.
+//         * 
+//         * @param imageData
+//         *            an instance of array containing image data
+//         * @return the most adequate photometric interpretation
+//         */
+//        public static final PhotometricInterpretation of(Array<?> imageData)
+//        {
+//            PhotometricInterpretation tag = new PhotometricInterpretation();
+//            if (imageData instanceof RGB8Array || imageData instanceof RGB16Array)
+//            {
+//                tag.setShortValue(PhotometricInterpretation.RGB);
+//            }
+//            else
+//            {
+//                tag.setShortValue(PhotometricInterpretation.BLACK_IS_ZERO);
+//            }
+//            return tag;
+//        }
         
         public PhotometricInterpretation()
         {
             super(CODE, Type.SHORT, "PhotometricInterpretation", "The color space of the image data");
-            this.count = BLACK_IS_ZERO;
+//            this.count = BLACK_IS_ZERO;
         }
     }
     
@@ -411,7 +430,7 @@ public class BaselineTags implements TagSet
         public PlanarConfiguration()
         {
             super(CODE, Type.SHORT, "PlanarConfiguration", "How the components of each pixel are stored");
-            this.value = CHUNKY;
+//            this.value = CHUNKY;
         }
     }
 
@@ -488,7 +507,7 @@ public class BaselineTags implements TagSet
         {
             super(CODE, Type.SHORT, "ResolutionUnit",
                     "The unit of measurement for XResolution and YResolution");
-            this.value = INCH; // default: inch
+//            this.value = INCH; // default: inch
         }
     }
     

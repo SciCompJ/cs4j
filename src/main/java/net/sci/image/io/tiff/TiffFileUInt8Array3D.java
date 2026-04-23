@@ -147,8 +147,7 @@ public class TiffFileUInt8Array3D extends UInt8Array3D
     
     private static int readByteBuffer(FileChannel fileChannel, ImageFileDirectory ifd, byte[] byteArray) throws IOException
     {
-        TiffTag compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
-        int compressionCode = compressionTag != null ? compressionTag.value : 1;
+        int compressionCode = ifd.getIntValue(BaselineTags.Compression.CODE, BaselineTags.Compression.NONE);
 
         return switch (compressionCode)
         {

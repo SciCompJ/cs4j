@@ -30,7 +30,7 @@ import net.sci.array.numeric.UInt8Array3D;
 import net.sci.array.numeric.VectorArray;
 import net.sci.image.Image;
 import net.sci.image.io.tiff.BaselineTags;
-import net.sci.image.io.tiff.TiffTag;
+import net.sci.image.io.tiff.Entry;
 
 /**
  * @author dlegland
@@ -94,7 +94,8 @@ public class TiffImageWriterTest
         File outputFile = new File("testWriteTiff.tif");
         try(TiffImageWriter writer = new TiffImageWriter(outputFile))
         {
-            writer.addCustomTag(new BaselineTags.Software().setValue(softwareString));
+//            writer.addCustomTag(new BaselineTags.Software().setValue(softwareString));
+            writer.addCustomTag(new Entry(BaselineTags.Software.CODE, Entry.Type.ASCII,1,0).setValue(softwareString));
             writer.writeImage(image);
         }
         catch (Exception e)
@@ -119,10 +120,10 @@ public class TiffImageWriterTest
         
         assertNotNull(image2.metadata.containsKey("tiff-tags"));
         @SuppressWarnings("unchecked")
-        Map<Integer, TiffTag> map = (Map<Integer, TiffTag>) image2.metadata.get("tiff-tags"); 
-        TiffTag softwareTag = map.get(BaselineTags.Software.CODE);
-        assertNotNull(softwareTag);
-        assertEquals(softwareString, (String) softwareTag.content);
+        Map<Integer, Entry> map = (Map<Integer, Entry>) image2.metadata.get("tiff-tags"); 
+        Entry softwareEntry = map.get(BaselineTags.Software.CODE);
+        assertNotNull(softwareEntry);
+        assertEquals(softwareString, (String) softwareEntry.content);
         
         boolean b = outputFile.delete();
         assertTrue(b);

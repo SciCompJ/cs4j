@@ -24,6 +24,7 @@ import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.ImageAxis;
 import net.sci.image.io.tiff.BaselineTags;
+import net.sci.image.io.tiff.Entry;
 import net.sci.image.io.tiff.ImageFileDirectory;
 import net.sci.image.io.tiff.ImageFileDirectoryReader;
 import net.sci.image.io.tiff.TiffFileUInt8Array3D;
@@ -55,6 +56,8 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      * The list of file info stored in the TIFF file.
      */
     ArrayList<ImageFileDirectory> fileDirectories;
+    
+    Map<Integer, TiffTag> tiffTags = TiffTag.getAllTags();
     
     /**
      * A boolean flag that toggles the display of messages about the reading
@@ -229,14 +232,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     private boolean hasImageJDescription(ImageFileDirectory info)
     {
         // Get the  description tag, or null if not initialized
-        TiffTag tag = info.getEntry(BaselineTags.ImageDescription.CODE);
-        if (tag == null)
+        Entry entry = info.getEntry(BaselineTags.ImageDescription.CODE);
+        if (entry == null)
         {
             return false;
         }
         
         // extract description string
-        String description = (String) tag.content;
+        String description = (String) entry.content;
         if (!description.startsWith("ImageJ"))
         {
             return false;
@@ -260,14 +263,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     private Image readImageJImage(ImageFileDirectory ifd, boolean virtual) throws IOException
     {
         // Get the description tag, or null if not initialized
-        TiffTag tag = ifd.getEntry(BaselineTags.ImageDescription.CODE);
-        if (tag == null)
+        Entry entry = ifd.getEntry(BaselineTags.ImageDescription.CODE);
+        if (entry == null)
         {
             throw new IllegalArgumentException("Requires a description TiffTag with index 270");
         }
 
         // extract description string
-        String description = (String) tag.content; 
+        String description = (String) entry.content; 
         if (!description.startsWith("ImageJ"))
         {
             throw new IllegalArgumentException("Description tag must start with \"ImageJ\"");
@@ -368,17 +371,13 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      * 
      * @param image
      *            the image to update
-     * @param tags
-     *            the list of tags
+     * @param entries
+     *            the list of Tiff entries
      */
-    private static final void addTiffTags(Image image, Collection<TiffTag> tags)
+    private static final void addTiffTags(Image image, Collection<Entry> entries)
     {
-        Map<Integer, TiffTag> map = new TreeMap<Integer, TiffTag>(); 
-        for (TiffTag tag : tags)
-        {
-            map.put(tag.code, tag);
-        }
-        
+        Map<Integer, Entry> map = new TreeMap<Integer, Entry>();
+        entries.stream().forEach(entry -> map.put(entry.code, entry));
         image.metadata.put("tiff-tags", map);
     }
     
@@ -651,9 +650,13 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         image.setFilePath(path.toString());
         
         // iterate over tags to call the "update()" method
-        for (TiffTag tag : ifd.entries())
+        for (Entry entry : ifd.entries())
         {
-            tag.update(image, ifd);
+            TiffTag tag = tiffTags.get(entry.code);
+            if (tag != null)
+            {
+                tag.update(image, ifd);
+            }
         }
     }
 
@@ -676,9 +679,9 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     
     private static final String unitString(ImageFileDirectory ifd)
     {
-        TiffTag unitTag = ifd.getEntry(BaselineTags.ResolutionUnit.CODE);
-        if (unitTag == null) return "";
-        return switch (unitTag.value)
+        Entry entry = ifd.getEntry(BaselineTags.ResolutionUnit.CODE);
+        if (entry == null) return "";
+        return switch (entry.value)
         {
             case 1 -> "";
             case 2 -> "Inch";
@@ -699,14 +702,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
      */
     private static final int[][] retrieveColorMap(ImageFileDirectory ifd)
     {
-        TiffTag tag = ifd.getEntry(BaselineTags.ColorMap.CODE);
-        if (tag != null)
+        Entry entry = ifd.getEntry(BaselineTags.ColorMap.CODE);
+        if (entry != null)
         {
             // class cast
-            int[] lut16 = (int[]) tag.content;
+            int[] lut16 = (int[]) entry.content;
             
             // Allocate memory for resulting LUT
-            int lutLength = tag.count / 3;
+            int lutLength = entry.count / 3;
             int[][] lut = new int[lutLength][3];
             
             // convert raw array into N-by-3 look-up table

@@ -51,9 +51,11 @@ import net.sci.array.numeric.UInt8Array2D;
 import net.sci.image.Calibration;
 import net.sci.image.Image;
 import net.sci.image.io.tiff.BaselineTags;
+import net.sci.image.io.tiff.BaselineTags.Compression;
 import net.sci.image.io.tiff.BaselineTags.PhotometricInterpretation;
 import net.sci.image.io.tiff.BaselineTags.PlanarConfiguration;
 import net.sci.image.io.tiff.BaselineTags.ResolutionUnit;
+import net.sci.image.io.tiff.Entry;
 import net.sci.image.io.tiff.ExtensionTags.SampleFormat;
 import net.sci.image.io.tiff.ImageFileDirectory;
 import net.sci.image.io.tiff.TiffTag;
@@ -110,6 +112,11 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
      * Tiff file.
      */
     ArrayList<TiffTag> customTags = new ArrayList<>(4);
+    /**
+     * A list of tags that user can specify, and that will be saved within the
+     * Tiff file.
+     */
+    ArrayList<Entry> customEntries = new ArrayList<>(4);
     
     /** The output stream, open at creation.*/
     OutputStream out;
@@ -158,6 +165,11 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         this.customTags.add(tag);
         return this;
     }
+    public TiffImageWriter addCustomTag(Entry entry)
+    {
+        this.customEntries.add(entry);
+        return this;
+    }
     
     
     // =============================================================
@@ -184,14 +196,14 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         }
         
         // add custom tags
-        for (TiffTag tag : customTags)
+        for (Entry entry : customEntries)
         {
-            if (ifd.getEntry(tag.code) != null)
+            if (ifd.getEntry(entry.code) != null)
             {
-                System.err.println("Duplicate tag with code " + tag.code + ", skipping last entries");
+                System.err.println("Duplicate tag with code " + entry.code + ", skipping last entries");
                 continue;
             }
-            ifd.addEntry(tag);
+            ifd.addEntry(entry);
         }
         
         // determine size of IFD, in bytes.
@@ -203,7 +215,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         int ifdDataSize = ifd.entryDataByteCount();
         
         // setup the offset of entries with content
-        for (TiffTag tag : ifd.entries())
+        for (Entry tag : ifd.entries())
         {
             int size = tag.contentSize();
             if (size > 0)
@@ -217,8 +229,8 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         
         // determine image offset after IFD data 
         long imageOffset = HEADER_SIZE + ifdSize + ifdDataSize;
-        TiffTag imageOffsetTag = ifd.getEntry(BaselineTags.StripOffsets.CODE);
-        imageOffsetTag.value = (int) imageOffset;
+        Entry imageOffsetEntry = ifd.getEntry(BaselineTags.StripOffsets.CODE);
+        imageOffsetEntry.value = (int) imageOffset;
         
         // compute offset to next IFD
         int nImages = image.getDimension() > 2 ? image.getSize(2) : 1;
@@ -275,8 +287,8 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
                     
                 // update entry values of IFD
                 imageOffset += sliceImageByteCount;
-                imageOffsetTag = ifd2.getEntry(BaselineTags.StripOffsets.CODE);
-                imageOffsetTag.value = (int) imageOffset;
+                imageOffsetEntry = ifd2.getEntry(BaselineTags.StripOffsets.CODE);
+                imageOffsetEntry.value = (int) imageOffset;
                 ifd2.setOffset(nextIFD);
                 
                 writeEntries(ifd2);
@@ -306,64 +318,64 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         // Depending on the type of images, some of the tags are mandatory
 
         // file type
-        ifd.addEntry(new BaselineTags.NewSubfileType());
+        ifd.addEntry(new BaselineTags.NewSubfileType().newEntry());
         
         // image dimension
-        ifd.addEntry(new BaselineTags.ImageWidth().setIntValue(sizeX));
-        ifd.addEntry(new BaselineTags.ImageHeight().setIntValue(sizeY));
+        ifd.addEntry(new BaselineTags.ImageWidth().newEntry().setIntValue(sizeX));
+        ifd.addEntry(new BaselineTags.ImageHeight().newEntry().setIntValue(sizeY));
         
         // number of bits per sample (use tag-specific initialization method)
-        ifd.addEntry(new BaselineTags.BitsPerSample().init(samplesPerPixel, bitsPerSample));
+        ifd.addEntry(new BaselineTags.BitsPerSample().newEntry(samplesPerPixel, bitsPerSample));
 
         // compression mode (default is none)
-        ifd.addEntry(new BaselineTags.Compression());
+        ifd.addEntry(new BaselineTags.Compression().newEntry().setShortValue((short) Compression.NONE));
         
         // photometric interpretation (use tag-specific static factory)
-        ifd.addEntry(PhotometricInterpretation.of(image.getData()));
+        ifd.addEntry(PhotometricInterpretation.createEntry(image.getData()));
         
         // create special description string that can be interpreted by ImageJ
         if (useImagejDescription)
         {
             String description = createImagejDescriptionString(image);
-            ifd.addEntry(new BaselineTags.ImageDescription().setValue(description));
+            ifd.addEntry(new BaselineTags.ImageDescription().newEntry().setValue(description));
         }
         
         // the offset to write image data (content initialized later)
-        TiffTag imageOffsetTag = new BaselineTags.StripOffsets().initFrom(image);
+        Entry imageOffsetTag = new BaselineTags.StripOffsets().newEntry();
         ifd.addEntry(imageOffsetTag);
         
         // the number of elements (samples) per pixel. 1 for grayscale, 3 for colors.
-        ifd.addEntry(new BaselineTags.SamplesPerPixel().setShortValue((short) samplesPerPixel));
+        ifd.addEntry(new BaselineTags.SamplesPerPixel().newEntry().setShortValue((short) samplesPerPixel));
 
         // determines how to write image data. Data is organized in one or more "strips".
         // Each strip contain data for one or more image rows.
         // Default: only one strip that contains all rows. RowsPerStrip contains row number, 
         // and StripByteCount contains total number of bytes of an image plane.
-        ifd.addEntry(new BaselineTags.RowsPerStrip().setIntValue(sizeY));
-        ifd.addEntry(new BaselineTags.StripByteCounts().setIntValue((int) sliceImageByteCount));
+        ifd.addEntry(new BaselineTags.RowsPerStrip().newEntry().setIntValue(sizeY));
+        ifd.addEntry(new BaselineTags.StripByteCounts().newEntry().setIntValue((int) sliceImageByteCount));
         
         // save calibration from image
         Calibration calib = image.getCalibration();
         double xspacing = calib.getXAxis().getSpacing();
         double yspacing = calib.getYAxis().getSpacing();
-        ifd.addEntry(new BaselineTags.XResolution().setValue(createSpacingRational(xspacing)));
-        ifd.addEntry(new BaselineTags.YResolution().setValue(createSpacingRational(yspacing)));
-        ifd.addEntry(new BaselineTags.ResolutionUnit().setShortValue(ResolutionUnit.NO_UNIT));
+        ifd.addEntry(new BaselineTags.XResolution().newEntry().setValue(createSpacingRational(xspacing)));
+        ifd.addEntry(new BaselineTags.YResolution().newEntry().setValue(createSpacingRational(yspacing)));
+        ifd.addEntry(new BaselineTags.ResolutionUnit().newEntry().setShortValue(ResolutionUnit.NO_UNIT));
 
         // planar configuration required only when samples per pixel > 1
         if (samplesPerPixel > 1)
         {
             // init to "Chunky" format (recommended value from specification)
-            ifd.addEntry(new BaselineTags.PlanarConfiguration().setShortValue(PlanarConfiguration.CHUNKY));
+            ifd.addEntry(new BaselineTags.PlanarConfiguration().newEntry().setShortValue(PlanarConfiguration.CHUNKY));
         }
         
         // --- Extension tags ---
-        ifd.addEntry(new SampleFormat().init(pixelType));
+        ifd.addEntry(new SampleFormat().newEntry(pixelType));
         
         // add non-mandatoy tag(s)
         DateFormat formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
         String dateString = formatter.format(new Date(System.currentTimeMillis()));
-        ifd.addEntry(new BaselineTags.DateTime().setValue(dateString));
+        ifd.addEntry(new BaselineTags.DateTime().newEntry().setValue(dateString));
         
         return ifd;
     }
@@ -513,10 +525,10 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
     private void writeEntries(ImageFileDirectory ifd) throws IOException
     {
         // write number of entries
-        writeShort(ifd.entries().size());
+        writeShort(ifd.entryCount());
         
         // Write list of tags / entries
-        for (TiffTag tag : ifd.entries())
+        for (Entry tag : ifd.entries())
         {
             writeEntry(tag);
         }
@@ -535,27 +547,27 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
      *            the byte order
      * @throws IOException 
      */
-    private void writeEntry(TiffTag tag) throws IOException
+    private void writeEntry(Entry entry) throws IOException
     { 
-        writeShort(tag.code);
-        writeShort(tag.type.code());
-        writeInt(tag.count);
-        if (tag.count == 1 && tag.type.equals(TiffTag.Type.SHORT))
+        writeShort(entry.code);
+        writeShort(entry.type.code());
+        writeInt(entry.count);
+        if (entry.count == 1 && entry.type.equals(Entry.Type.SHORT))
         {
-            writeShort(tag.value);
+            writeShort(entry.value);
             writeShort(0);
         }
         else
         {
-            writeInt(tag.value);
+            writeInt(entry.value);
         }
     }
 
     private void writeEntryData(ImageFileDirectory ifd) throws IOException
     {
-        for (TiffTag tag : ifd.entries())
+        for (Entry entry : ifd.entries())
         {
-            writeTagContent(tag);
+            writeEntryContent(entry);
         }
     }
     
@@ -570,32 +582,32 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
      *            the byte order
      * @throws IOException 
      */
-    private void writeTagContent(TiffTag tag) throws IOException
+    private void writeEntryContent(Entry entry) throws IOException
     {
-        if (tag.content == null) return;
-        switch (tag.type)
+        if (entry.content == null) return;
+        switch (entry.type)
         {
-            case BYTE -> out.write((byte[]) tag.content);
-            case ASCII -> out.write((byte[]) tag.content);
+            case BYTE -> out.write((byte[]) entry.content);
+            case ASCII -> out.write((byte[]) entry.content);
             
             case SHORT -> {
-                for (short s : (short[]) tag.content)
+                for (short s : (short[]) entry.content)
                 {
                     writeShort(s);
                 }
             }
             case LONG -> {
-                for (int data : (int[]) tag.content)
+                for (int data : (int[]) entry.content)
                 {
                     writeInt(data);
                 }
             }
             case RATIONAL -> {
-                int[] data = (int[]) tag.content;
+                int[] data = (int[]) entry.content;
                 writeInt(data[0]);
                 writeInt(data[1]);
             }
-            default -> System.err.println("Unable to write tag with code " + tag.code);
+            default -> System.err.println("Unable to write tag with code " + entry.code);
         }
     }
     
@@ -624,9 +636,9 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
     {
         ImageFileDirectory newIFD = new ImageFileDirectory();
         newIFD.setByteOrder(ifd.getByteOrder());
-        for (TiffTag tag : ifd.entries())
+        for (Entry entry : ifd.entries())
         {
-            newIFD.addEntry(tag);
+            newIFD.addEntry(entry);
         }
         return newIFD;
     }
@@ -683,7 +695,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         int sizeY = array.size(1);
         
         // Create DataOutputStream to write formatted data.
-        // DataOutputStream use necessarily BIG_ENDIAN byte order.
+        // DataOutputStream necessarily uses BIG_ENDIAN byte order.
         DataOutputStream dos = new DataOutputStream(out);
         
         // Dispatch processing depending on element class

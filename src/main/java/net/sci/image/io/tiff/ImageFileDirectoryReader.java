@@ -11,10 +11,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import net.sci.image.io.BinaryDataReader;
-import net.sci.image.io.tiff.TiffTag.Type;
 
 /**
- * Read all the instances of {@code ImageFileDirectory} from a Tiff File. These
+ * Reads all the instances of {@code ImageFileDirectory} from a Tiff File. These
  * file info can later be used to read image data from the same Tiff file.
  * 
  */
@@ -70,19 +69,23 @@ public class ImageFileDirectoryReader
             // check the magic number indicating tiff format
             int magicNumber = dataReader.readShort();
             if (magicNumber != 42)
-            { throw new RuntimeException("Invalid TIFF file: magic number is different from 42"); }
-
+            {
+                throw new RuntimeException("Invalid TIFF file: magic number is different from 42");
+            }
+            
             // Read file offset of first IFD
             long offset = ((long) dataReader.readInt()) & 0xffffffffL;
             // System.out.println("offset: " + offset);
-
+            
             if (offset < 0L)
-            { throw new IOException("Found negative offset in tiff file"); }
-
+            {
+                throw new IOException("Found negative offset in tiff file");
+            }
+            
             ArrayList<ImageFileDirectory> ifdList = new ArrayList<ImageFileDirectory>();
             do
             {
-                ImageFileDirectory ifd = readImageFileDirectory(dataReader, offset);
+                ImageFileDirectory ifd = readImageFileDirectory(offset);
                 ifdList.add(ifd);
                 offset = ifd.offset;
             } while (offset > 0L);
@@ -131,7 +134,7 @@ public class ImageFileDirectoryReader
      * Reads the main IFD info: the entry number, the different entries, and the
      * offset to the next IFD.
      */
-    private ImageFileDirectory readImageFileDirectory(BinaryDataReader dataReader, long offset) throws IOException
+    private ImageFileDirectory readImageFileDirectory(long offset) throws IOException
     {
     	dataReader.seek(offset);
     	
@@ -153,41 +156,24 @@ public class ImageFileDirectoryReader
         // Read each entry
         for (int i = 0; i < nEntries; i++)
         {
-            // read tag code
-            int tagCode = dataReader.readShort() & 0x00FFFF;
-            
-            // read type of tag data
-            int typeValue = dataReader.readShort() & 0x00FFFF;
-            TiffTag.Type type = TiffTag.Type.getType(typeValue); 
-            if (type == Type.UNKNOWN)
-            {
-                System.out.println(String.format("Tag with code %d has an unknown type value: %d, it will likely be ignored", tagCode, typeValue));
-            }
-            
-            // reader number of data and value / offset
-            int count = dataReader.readInt();
-            int value = readTagValue(type, count);
-
-            TiffTag tag = tagMap.get(tagCode);
+            Entry entry = readEntry();
+            readContent(entry);
             
             // if tag was not found, create a default empty tag
+            TiffTag tag = tagMap.get(entry.code);
             boolean unknownTag = tag == null;
             if (unknownTag)
             {
-                tag = new TiffTag(tagCode, "Unknown");
+                tag = new TiffTag(entry.code, "Unknown");
             }
             
-            // init tag info
-            tag.init(type, count, value);
-            readContent(tag);
-
             if (unknownTag)
             {
-                System.out.println("Unknown tag with code " + tagCode + ". Type="
-                        + type + ", count=" + count + ", content=" + tag.contentSummary());
+                System.out.println("Unknown tag with code " + entry.code + ". Type="
+                        + entry.type + ", count=" + entry.count + ", content=" + entry.contentSummary());
             }
 
-            ifd.addEntry(tag);
+            ifd.addEntry(entry);
         }
 
         // read offset to next IFD
@@ -195,11 +181,32 @@ public class ImageFileDirectoryReader
         
         return ifd;
     }
+    
+    private Entry readEntry() throws IOException
+    {
+        // read tag code
+        int tagCode = dataReader.readShort() & 0x00FFFF;
+        
+        // read type of tag data
+        int typeValue = dataReader.readShort() & 0x00FFFF;
+        Entry.Type type = Entry.Type.getType(typeValue); 
+        if (type == Entry.Type.UNKNOWN)
+        {
+            System.out.println(String.format("Tag with code %d has an unknown type value: %d, it will likely be ignored", tagCode, typeValue));
+        }
+        
+        // reader number of data and value / offset
+        int count = dataReader.readInt();
+        int value = readEntryValue(type, count);
+        
+        return new Entry(tagCode, type, count, value);
+        
+    }
 
-    private int readTagValue(TiffTag.Type type, int count) throws IOException
+    private int readEntryValue(Entry.Type type, int count) throws IOException
     {
         int value;
-        if (type == TiffTag.Type.SHORT && count == 1)
+        if (type == Entry.Type.SHORT && count == 1)
         {
             value = dataReader.readShort() & 0x00FFFF;
             dataReader.readShort();
@@ -212,7 +219,7 @@ public class ImageFileDirectoryReader
     }
     
     /**
-     * Initialize the content of the tag from the data reader, given its code
+     * Initialize the content of the entry from the data reader, given its code
      * and the specified value.
      * 
      * @param dataReader
@@ -220,35 +227,35 @@ public class ImageFileDirectoryReader
      * @throws IOException
      *             if tried to read from the file and problem occurred
      */
-    private void readContent(TiffTag tag) throws IOException
+    private void readContent(Entry entry) throws IOException
     {
-        tag.content = switch (tag.type)
+        entry.content = switch (entry.type)
         {
-            case BYTE -> tag.count == 1 ? Integer.valueOf(tag.value) : readByteArray(tag);
-            case SHORT -> tag.count == 1 ? Integer.valueOf(tag.value) : readShortArray(tag);
-            case LONG -> tag.count == 1 ? Integer.valueOf(tag.value) : readIntArray(tag);
-            case ASCII -> readAscii(tag); // Automatically convert byte array to String
-            case RATIONAL -> readRational(tag); // Assume only one rational is specified
-            case DOUBLE -> readDoubleArray(tag);
+            case BYTE -> entry.count == 1 ? Integer.valueOf(entry.value) : readByteArray(entry);
+            case SHORT -> entry.count == 1 ? Integer.valueOf(entry.value) : readShortArray(entry);
+            case LONG -> entry.count == 1 ? Integer.valueOf(entry.value) : readIntArray(entry);
+            case ASCII -> readAscii(entry); // Automatically convert byte array to String
+            case RATIONAL -> readRational(entry); // Assume only one rational is specified
+            case DOUBLE -> readDoubleArray(entry);
             default -> null;
         };
     }
     
-    private byte[] readByteArray(TiffTag tag) throws IOException
+    private byte[] readByteArray(Entry entry) throws IOException
     {
         // allocate memory for result
-        byte[] res = new byte[tag.count];
+        byte[] res = new byte[entry.count];
         
         // save pointer location
         long saveLoc = dataReader.getFilePointer();
         
         // convert tag value to long offset
-        long offset = ((long) tag.value) & 0xffffffffL;
+        long offset = ((long) entry.value) & 0xffffffffL;
         dataReader.seek(offset);
         
         // fill up array
         int nRead = dataReader.readByteArray(res);
-        if (nRead != tag.count)
+        if (nRead != entry.count)
         {
             throw new RuntimeException("Could not read all the required bytes");
         }
@@ -258,17 +265,17 @@ public class ImageFileDirectoryReader
         return res;
     }
     
-    private String readAscii(TiffTag tag) throws IOException
+    private String readAscii(Entry entry) throws IOException
     {
         // Allocate memory for string buffer
-        byte[] data = new byte[tag.count];
+        byte[] data = new byte[entry.count];
         
         // read string buffer
-        if (tag.count <= 4)
+        if (entry.count <= 4)
         {
             // unpack integer
-            int value = tag.value;
-            for (int i = 0; i < tag.count; i++)
+            int value = entry.value;
+            for (int i = 0; i < entry.count; i++)
             {
                 data[i] = (byte) (value & 0x00FF);
                 value = value >> 8;
@@ -277,7 +284,7 @@ public class ImageFileDirectoryReader
         else
         {
             // convert state to long offset for reading large buffer
-            long offset = ((long) tag.value) & 0xffffffffL;
+            long offset = ((long) entry.value) & 0xffffffffL;
             
             long pos0 = dataReader.getFilePointer();
             dataReader.seek(offset);
@@ -288,20 +295,20 @@ public class ImageFileDirectoryReader
         return new String(data);
     }
     
-    private int[] readShortArray(TiffTag tag) throws IOException
+    private int[] readShortArray(Entry entry) throws IOException
     {
         // convert tag value to long offset for reading large buffer
-        long offset = ((long) tag.value) & 0xffffffffL;
+        long offset = ((long) entry.value) & 0xffffffffL;
         
         // allocate memory for result
-        int[] res = new int[tag.count];
+        int[] res = new int[entry.count];
         
         // save pointer location
         long saveLoc = dataReader.getFilePointer();
         
         // fill up array
         dataReader.seek(offset);
-        for (int c = 0; c < tag.count; c++)
+        for (int c = 0; c < entry.count; c++)
         {
             res[c] = dataReader.readShort();
         }
@@ -311,20 +318,20 @@ public class ImageFileDirectoryReader
         return res;
     }
     
-    private int[] readIntArray(TiffTag tag) throws IOException
+    private int[] readIntArray(Entry entry) throws IOException
     {
         // convert tag value to long offset for reading large buffer
-        long offset = ((long) tag.value) & 0xffffffffL;
+        long offset = ((long) entry.value) & 0xffffffffL;
         
         // allocate memory for result
-        int[] res = new int[tag.count];
+        int[] res = new int[entry.count];
         
         // save pointer location
         long saveLoc = dataReader.getFilePointer();
         
         // fill up array
         dataReader.seek(offset);
-        dataReader.readIntArray(res, 0, tag.count);
+        dataReader.readIntArray(res, 0, entry.count);
         
         // restore pointer and return result
         dataReader.seek(saveLoc);
@@ -342,10 +349,10 @@ public class ImageFileDirectoryReader
      * @throws IOException
      *             if an I/O Exception occurs
      */
-    private double readRational(TiffTag tag) throws IOException
+    private double readRational(Entry entry) throws IOException
     {
         // convert tag value to long offset for reading large buffer
-        long offset = ((long) tag.value) & 0xffffffffL;
+        long offset = ((long) entry.value) & 0xffffffffL;
         
         long saveLoc = dataReader.getFilePointer();
         dataReader.seek(offset);
@@ -360,20 +367,20 @@ public class ImageFileDirectoryReader
             return 0.0;
     }
     
-    private double[] readDoubleArray(TiffTag tag) throws IOException
+    private double[] readDoubleArray(Entry entry) throws IOException
     {
         // convert tag value to long offset for reading large buffer
-        long offset = ((long) tag.value) & 0xffffffffL;
+        long offset = ((long) entry.value) & 0xffffffffL;
         
         // allocate memory for result
-        double[] res = new double[tag.count];
+        double[] res = new double[entry.count];
         
         // save pointer location
         long saveLoc = dataReader.getFilePointer();
         
         // fill up array
         dataReader.seek(offset);
-        dataReader.readDoubleArray(res, 0, tag.count);
+        dataReader.readDoubleArray(res, 0, entry.count);
         
         // restore pointer and return result
         dataReader.seek(saveLoc);

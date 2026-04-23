@@ -42,8 +42,8 @@ public class LsmTags implements TagSet
         public void update(Image image, ImageFileDirectory ifd)
         {
 //            System.out.println("updating image info from LSM file");
-            
-            ByteBuffer buffer = ByteBuffer.wrap((byte []) this.content);
+            Entry entry = ifd.getEntry(CODE);
+            ByteBuffer buffer = ByteBuffer.wrap((byte []) entry.content);
             buffer.order(ifd.byteOrder);
             
             Map<String, Object> map = new TreeMap<>();

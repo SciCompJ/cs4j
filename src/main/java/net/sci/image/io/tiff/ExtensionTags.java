@@ -69,8 +69,8 @@ public class ExtensionTags implements TagSet
         {
             super(CODE, "SampleFormat", "Specifies how to interpret each data sample in a pixel");
             this.type = Type.SHORT;
-            this.count = 1;
-            this.value = UNDEFINED;
+//            this.count = 1;
+//            this.value = UNDEFINED;
         }
         
         /**
@@ -78,12 +78,13 @@ public class ExtensionTags implements TagSet
          * @param pixelType the type of pixel
          * @return a reference to this tag.
          */
-        public TiffTag init(PixelType pixelType)
+        public Entry newEntry(PixelType pixelType)
         {
-            setShortValue(pixelType.isInteger()
+            Entry entry = newEntry();
+            entry.setShortValue(pixelType.isInteger()
                     ? pixelType.isSigned() ? SampleFormat.SIGNED_INTEGER : SampleFormat.UNSIGNED_INTEGER
                     : SampleFormat.FLOATING_POINT);
-            return this;
+            return entry;
         }
     }
 
@@ -124,5 +125,4 @@ public class ExtensionTags implements TagSet
     {
         return "Extension";
     }
-    
 }

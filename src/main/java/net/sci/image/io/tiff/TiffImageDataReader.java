@@ -115,7 +115,7 @@ public class TiffImageDataReader extends AlgoStub
         int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
         int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
         
-        // determine size of buffer, proportional to pixel number
+        // determine size of buffer, proportional to pixel count
         int nPixels = sizeX * sizeY;
         int bytesPerPixel = pixelType.byteCount();
         int nBytes = nPixels * bytesPerPixel;
@@ -593,7 +593,7 @@ public class TiffImageDataReader extends AlgoStub
     private static final int readByteBuffer(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer)
             throws IOException
     {
-        TiffTag compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
+        Entry compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
         int compressionCode = compressionTag != null ? compressionTag.value : 1;
 
         return switch (compressionCode)
