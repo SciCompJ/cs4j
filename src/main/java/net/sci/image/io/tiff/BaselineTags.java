@@ -4,6 +4,7 @@
 package net.sci.image.io.tiff;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.sci.array.Array;
@@ -29,7 +30,6 @@ public class BaselineTags implements TagSet
         public NewSubfileType()
         {
             super(CODE, Entry.Type.LONG, "NewSubfileType", "A general indication of the kind of data contained in this subfile");
-//            this.value = 0;
         }
     }
 
@@ -42,7 +42,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 255;
         public SubfileType()
         {
-            super(CODE, "SubfileType", "(deprecated) A general indication of the kind of data contained in this subfile");
+            super(CODE, Entry.Type.LONG, "SubfileType", "(deprecated) A general indication of the kind of data contained in this subfile");
         }
     }
     
@@ -54,19 +54,19 @@ public class BaselineTags implements TagSet
         public static final int CODE = 256;
         public ImageWidth()
         {
-            super(CODE, Entry.Type.LONG, "ImageWidth", "The number of columns in the image");
+            super(CODE, List.of(Entry.Type.LONG, Entry.Type.SHORT), "ImageWidth", "The number of columns in the image");
         }
     }
     
     /**
      * 257 - The number of rows of pixels in the image.
      */
-    public static final class ImageHeight extends TiffTag
+    public static final class ImageLength extends TiffTag
     {
         public static final int CODE = 257;
-        public ImageHeight()
+        public ImageLength()
         {
-            super(CODE, Entry.Type.LONG, "ImageHeight", "The number of rows of pixels in the image");
+            super(CODE, List.of(Entry.Type.LONG, Entry.Type.SHORT), "ImageLength", "The number of rows of pixels in the image");
         }
     }
 
@@ -138,8 +138,7 @@ public class BaselineTags implements TagSet
         
         public Compression()
         {
-            super(CODE, Entry.Type.SHORT, "CompressionMode", "Compression scheme used on the image data");
-//            this.value = NONE; // no compression
+            super(CODE, Entry.Type.SHORT, "CompressionMode", "Compression scheme used on the image data", NONE);
         }
     }
 
@@ -177,8 +176,7 @@ public class BaselineTags implements TagSet
         
         public PhotometricInterpretation()
         {
-            super(CODE, Entry.Type.SHORT, "PhotometricInterpretation", "The color space of the image data");
-//            this.count = BLACK_IS_ZERO;
+            super(CODE, Entry.Type.SHORT, "PhotometricInterpretation", "The color space of the image data", BLACK_IS_ZERO);
         }
     }
     
@@ -286,7 +284,7 @@ public class BaselineTags implements TagSet
         
         public StripOffsets()
         {
-            super(CODE, Entry.Type.LONG, "StripOffsets", "For each strip, the byte offset of that strip");
+            super(CODE, List.of(Entry.Type.LONG, Entry.Type.SHORT), "StripOffsets", "For each strip, the byte offset of that strip");
         }
     }
     
@@ -325,7 +323,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 278;
         public RowsPerStrip()
         {
-            super(CODE, Entry.Type.LONG, "RowsPerStrip", "The number of rows per strip");
+            super(CODE, List.of(Entry.Type.LONG, Entry.Type.SHORT), "RowsPerStrip", "The number of rows per strip");
         }
     }
     
@@ -339,7 +337,7 @@ public class BaselineTags implements TagSet
         public static final int CODE = 279;
         public StripByteCounts()
         {
-            super(CODE, Entry.Type.LONG, "StripByteCounts", "For each strip, the number of bytes in the strip after compression");
+            super(CODE, List.of(Entry.Type.LONG, Entry.Type.SHORT), "StripByteCounts", "For each strip, the number of bytes in the strip after compression");
         }
     }
     
@@ -407,8 +405,7 @@ public class BaselineTags implements TagSet
         
         public PlanarConfiguration()
         {
-            super(CODE, Entry.Type.SHORT, "PlanarConfiguration", "How the components of each pixel are stored");
-//            this.value = CHUNKY;
+            super(CODE, Entry.Type.SHORT, "PlanarConfiguration", "How the components of each pixel are stored", CHUNKY);
         }
     }
 
@@ -484,8 +481,7 @@ public class BaselineTags implements TagSet
         public ResolutionUnit()
         {
             super(CODE, Entry.Type.SHORT, "ResolutionUnit",
-                    "The unit of measurement for XResolution and YResolution");
-//            this.value = INCH; // default: inch
+                    "The unit of measurement for XResolution and YResolution", INCH);
         }
     }
     
@@ -591,7 +587,7 @@ public class BaselineTags implements TagSet
         add(tags, new SubfileType());
         
         add(tags, new ImageWidth());
-        add(tags, new ImageHeight());
+        add(tags, new ImageLength());
         add(tags, new BitsPerSample());
         add(tags, new Compression());
 

@@ -113,7 +113,7 @@ public class TiffImageDataReader extends AlgoStub
         
         // retrieve image size
         int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd.getValue(BaselineTags.ImageLength.CODE);
         
         // determine size of buffer, proportional to pixel count
         int nPixels = sizeX * sizeY;
@@ -319,7 +319,7 @@ public class TiffImageDataReader extends AlgoStub
     {
         // image size
         int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd.getValue(BaselineTags.ImageLength.CODE);
         
         // need to adapt scan size
         int scanLength = (int) Math.ceil(sizeX / 8.0);
@@ -383,7 +383,7 @@ public class TiffImageDataReader extends AlgoStub
         
         // Compute image size
         int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageLength.CODE);
         int sizeZ = ifdList.size();
         
         // Compute size of byte buffer for each plane
@@ -436,7 +436,7 @@ public class TiffImageDataReader extends AlgoStub
         
         // Compute image size
         int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageLength.CODE);
         int sizeZ = ifdList.size();
         
         // Compute size of buffer buffer for each plane
@@ -491,7 +491,7 @@ public class TiffImageDataReader extends AlgoStub
         
         // Compute image size
         int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageLength.CODE);
         int sizeZ = ifdList.size();
         
         // Compute size of buffer buffer for each plane
@@ -546,7 +546,7 @@ public class TiffImageDataReader extends AlgoStub
         
         // Compute image size
         int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageLength.CODE);
         int sizeZ = ifdList.size();
         
         // Compute size of buffer buffer for each plane

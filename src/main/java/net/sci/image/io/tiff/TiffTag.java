@@ -3,6 +3,7 @@
  */
 package net.sci.image.io.tiff;
 
+import java.util.List;
 import java.util.Map;
 
 import net.sci.image.Image;
@@ -58,11 +59,14 @@ public class TiffTag
     public TagSet tagSet = null;
     
     /**
-     * The type of value stored by this tag. Type is usually defined at
-     * creation, but in some cases it may be necessary to adapt the type to the
-     * image.
+     * The list of valid types for the value stored by entries with this.
      */
-    public Entry.Type type;
+    List<Entry.Type> validTypes;
+    
+    /**
+     * The default value used to initialize new entries.
+     */
+    int defaultValue;
     
     
     // =============================================================
@@ -72,23 +76,20 @@ public class TiffTag
      * Creates a new Tiff Tag.
      * 
      * @param code
-     *            the code of the tag (in the TIFF specification, the code is
-     *            called the tag, and the TiffTag is called an "entry").
+     *            the code of the tag
      * @param name
      *            the short name of the tag, to facilitate interpretation
      */
     public TiffTag(int code, String name)
     {
-        this.code = code;
-        this.name = name;
+        this(code, name, null);
     }
     
     /**
      * Creates a new Tiff Tag.
      * 
      * @param code
-     *            the code of the tag (in the TIFF specification, the code is
-     *            called the tag, and the TiffTag is called an "entry").
+     *            the code of the tag
      * @param name
      *            the short name of the tag, to facilitate interpretation
      * @param description
@@ -101,15 +102,14 @@ public class TiffTag
         this.description = description;
         
         // setup default values
-        this.type = Entry.Type.SHORT;
+        this.validTypes = List.of(Entry.Type.BYTE, Entry.Type.SHORT, Entry.Type.LONG);
     }
     
     /**
      * Creates a new Tiff Tag.
      * 
      * @param code
-     *            the code of the tag (in the TIFF specification, the code is
-     *            called the tag, and the TiffTag is called an "entry").
+     *            the code of the tag
      * @param type
      *            the type of the data stored in the tag
      * @param name
@@ -119,12 +119,72 @@ public class TiffTag
      */
     public TiffTag(int code, Entry.Type type, String name, String description)
     {
+        this(code, type, name, description, 0);
+    }
+    
+    /**
+     * Creates a new Tiff Tag.
+     * 
+     * @param code
+     *            the code of the tag
+     * @param type
+     *            the type of the data stored in the tag
+     * @param name
+     *            the short name of the tag, to facilitate interpretation
+     * @param default
+     *            the default value used to initialize new entries
+     * @param description
+     *            a more complete description of the tag
+     */
+    public TiffTag(int code, Entry.Type type, String name, String description, int defaultValue)
+    {
         this.code = code;
         this.name = name;
         this.description = description;
         
         // setup default values
-        this.type = type;
+        this.validTypes = List.of(type);
+        this.defaultValue = 0;
+    }
+    
+    /**
+     * Creates a new Tiff Tag.
+     * 
+     * @param code
+     *            the code of the tag
+     * @param type
+     *            the type of the data stored in the tag
+     * @param name
+     *            the short name of the tag, to facilitate interpretation
+     * @param description
+     *            a more complete description of the tag
+     */
+    public TiffTag(int code, List<Entry.Type> validTypes, String name, String description)
+    {
+        this(code, validTypes, name, description, 0);
+    }
+    
+    /**
+     * Creates a new Tiff Tag.
+     * 
+     * @param code
+     *            the code of the tag
+     * @param type
+     *            the type of the data stored in the tag
+     * @param name
+     *            the short name of the tag, to facilitate interpretation
+     * @param description
+     *            a more complete description of the tag
+     */
+    public TiffTag(int code, List<Entry.Type> validTypes, String name, String description, int defaultValue)
+    {
+        this.code = code;
+        this.name = name;
+        this.description = description;
+        
+        // setup default values
+        this.validTypes = validTypes;
+        this.defaultValue = defaultValue;
     }
     
     
@@ -134,7 +194,7 @@ public class TiffTag
     
     public Entry newEntry()
     {
-        return new Entry(this.code, this.type, 1, 0);
+        return new Entry(this.code, this.validTypes.getFirst(), 1, this.defaultValue);
     }
     
     /**

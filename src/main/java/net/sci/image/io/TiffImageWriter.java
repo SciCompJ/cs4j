@@ -322,7 +322,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         
         // image dimension
         ifd.addEntry(new BaselineTags.ImageWidth().newEntry().setIntValue(sizeX));
-        ifd.addEntry(new BaselineTags.ImageHeight().newEntry().setIntValue(sizeY));
+        ifd.addEntry(new BaselineTags.ImageLength().newEntry().setIntValue(sizeY));
         
         // number of bits per sample (use tag-specific initialization method)
         ifd.addEntry(new BaselineTags.BitsPerSample().newEntry(samplesPerPixel, bitsPerSample));

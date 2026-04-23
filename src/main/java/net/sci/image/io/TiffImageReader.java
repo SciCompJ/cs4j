@@ -284,7 +284,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
 
         // determine the size along each of the five dimensions
         int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd.getValue(BaselineTags.ImageLength.CODE);
         int sizeC = tokens.getIntValue("channels", 1);
         int sizeZ = tokens.getIntValue("slices", 1);
         int sizeT = tokens.getIntValue("frames", 1);
@@ -468,14 +468,14 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         // Read File information of the first image stored in the file
         ImageFileDirectory ifd0 = fileDirectories.iterator().next();
         int refSizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int refSizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int refSizeY = ifd0.getValue(BaselineTags.ImageLength.CODE);
         
         // If file contains several images, check if we should read a stack
         // Condition: all images must have same size
         for (ImageFileDirectory ifd : fileDirectories)
         {
             int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
-            int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+            int sizeY = ifd.getValue(BaselineTags.ImageLength.CODE);
             if (sizeX != refSizeX || sizeY != refSizeY)
             {
                 return false;
@@ -537,7 +537,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             });
 
             int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
-            int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+            int sizeY = ifd.getValue(BaselineTags.ImageLength.CODE);
             
             int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null);
             reader.seek(stripOffsets[0]);
@@ -570,7 +570,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
     {
         long offset = (long) ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE, null)[0];
         int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd.getValue(BaselineTags.ImageLength.CODE);
         int[] dims = new int[] {sizeX, sizeY, nImages};
         PixelType pixelType = ifd.determinePixelType();
         ByteOrder byteOrder = ifd.getByteOrder();
@@ -590,7 +590,7 @@ public class TiffImageReader extends AlgoStub implements ImageReader
         }
         
         int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageLength.CODE);
         int[] dims = new int[] {sizeX, sizeY, nImages};
         PixelType pixelType = ifd0.determinePixelType();
         ByteOrder byteOrder = ifd0.getByteOrder();

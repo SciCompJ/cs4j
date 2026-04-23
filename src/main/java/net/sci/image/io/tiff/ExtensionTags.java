@@ -67,10 +67,7 @@ public class ExtensionTags implements TagSet
         
         public SampleFormat()
         {
-            super(CODE, "SampleFormat", "Specifies how to interpret each data sample in a pixel");
-            this.type = Entry.Type.SHORT;
-//            this.count = 1;
-//            this.value = UNDEFINED;
+            super(CODE, Entry.Type.SHORT, "SampleFormat", "Specifies how to interpret each data sample in a pixel", UNSIGNED_INTEGER);
         }
         
         /**

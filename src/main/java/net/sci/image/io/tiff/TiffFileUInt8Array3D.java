@@ -33,7 +33,7 @@ public class TiffFileUInt8Array3D extends UInt8Array3D
         ImageFileDirectory ifd0 = ifdList.iterator().next();
         // Compute image size
         int sizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
-        int sizeY = ifd0.getValue(BaselineTags.ImageHeight.CODE);
+        int sizeY = ifd0.getValue(BaselineTags.ImageLength.CODE);
         int sizeZ = ifdList.size();
 
         return new TiffFileUInt8Array3D(filePath, ifdList, sizeX, sizeY, sizeZ);
