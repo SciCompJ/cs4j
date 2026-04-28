@@ -320,14 +320,16 @@ public class Entry
      */
     public String contentSummary()
     {
-        return switch (this.type)
+        // note that byte and short arrays are read as int arrays
+        return switch (this.content)
         {
-            case BYTE -> count == 1 ? Integer.toString(value) : createDesc((byte[]) this.content, 5);
-            case SHORT -> count == 1 ? Integer.toString(value) : createDesc((short[]) this.content, 5);
-            case LONG -> count == 1 ? Integer.toString(value) : createDesc((int[]) this.content, 5);
-            case ASCII -> (String) this.content;
-            case RATIONAL -> Double.toString((double) this.content);
-            case DOUBLE -> createDesc((double[]) this.content, 5);
+            case Integer i -> Integer.toString(i);
+            case Double d -> Double.toString(d);
+            case byte[] array -> createDesc(array, 5);
+            case short[] array -> createDesc(array, 5);
+            case int[] array -> createDesc(array, 5);
+            case double[] array -> createDesc(array, 5);
+            case String str -> str;
             default -> null;
         };
     }

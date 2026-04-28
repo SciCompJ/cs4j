@@ -222,6 +222,8 @@ public class ImageFileDirectoryReader
      * Initialize the content of the entry from the data reader, given its code
      * and the specified value.
      * 
+     * Note that values with type SHORT are read as integer values.
+     * 
      * @param dataReader
      *            the instance of DataReader to read optional information from
      * @throws IOException
@@ -295,6 +297,15 @@ public class ImageFileDirectoryReader
         return new String(data);
     }
     
+    /**
+     * Read an array of SHORT values as ana array of integers.
+     * 
+     * @param entry
+     *            the entry containing content info
+     * @return the array of integer values corresponding to the entry content
+     * @throws IOException
+     *             if a problem occurred
+     */
     private int[] readShortArray(Entry entry) throws IOException
     {
         // convert tag value to long offset for reading large buffer
