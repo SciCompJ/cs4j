@@ -58,12 +58,11 @@ import net.sci.image.io.tiff.BaselineTags.ResolutionUnit;
 import net.sci.image.io.tiff.Entry;
 import net.sci.image.io.tiff.ExtensionTags.SampleFormat;
 import net.sci.image.io.tiff.ImageFileDirectory;
-import net.sci.image.io.tiff.TiffTag;
 
 /**
  * Writer for images in TIFF format.
  * 
- * Uses BIG_ENDIAN byte order.
+ * Uses BIG_ENDIAN byte order ("MM" format).
  * 
  * {@snippet lang="java" :
     Image image = ...
@@ -76,6 +75,15 @@ import net.sci.image.io.tiff.TiffTag;
         e.printStackTrace();
     }
  * }
+ * 
+ * The strategy for writing image data is as follow:
+ * <ul>
+ * <li>write the header</li>
+ * <li>write the Image File Directory corresponding to the 2D image, or to the first slice of the 3D image</li>
+ * <li>write the entry data of the first IFD</li>
+ * <li>write the whole image data (in the case of a 3D image, write the whole volume in a sequential array)</li>
+ * <li>write the remaining IFDs, if necessary</li>
+ * </ul>
  * 
  * @author dlegland
  *
@@ -96,6 +104,12 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
      */
     static final int ENTRY_SIZE = 12;
     
+    /**
+     * The largest possible size of strips, in bytes. If images rows occupy more
+     * bytes, this limit can be overridden.
+     */
+    static final int MAX_STRIP_SIZE = 8192;
+    
     
     // =============================================================
     // Class variables
@@ -108,12 +122,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
     boolean useImagejDescription = true;
     
     /**
-     * A list of tags that user can specify, and that will be saved within the
-     * Tiff file.
-     */
-    ArrayList<TiffTag> customTags = new ArrayList<>(4);
-    /**
-     * A list of tags that user can specify, and that will be saved within the
+     * A list of tag entries that user can specify, and that will be saved within the
      * Tiff file.
      */
     ArrayList<Entry> customEntries = new ArrayList<>(4);
@@ -160,11 +169,6 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         return this;
     }
     
-    public TiffImageWriter addCustomTag(TiffTag tag)
-    {
-        this.customTags.add(tag);
-        return this;
-    }
     public TiffImageWriter addCustomTag(Entry entry)
     {
         this.customEntries.add(entry);
@@ -178,22 +182,23 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
     @Override
     public void writeImage(Image image) throws IOException
     {
-        // In case of binary image, convert to image of UInt8 (using a view) 
+        // In case of binary image, convert to image of UInt8 (using a view)
+        // TODO: make conversion to UINT8 an option
         if (image.isBinaryImage())
         {
             UInt8Array array2 = new BinaryToUInt8.View(image.getData());
             image = new Image(array2, image);
         }
         
-        // single image size as number of bytes
-        long sliceImageByteCount = computeSliceImageByteCount(image);
-
         this.fireStatusChanged(this, "Setup ImageFileDIrectory");
         ImageFileDirectory ifd = initImageFileDirectory(image);
         if (ifd.getByteOrder() != ByteOrder.BIG_ENDIAN)
         {
             throw new RuntimeException("Can only write TIFF file with BIG_ENDIAN byte order");
         }
+        
+        // single image size as number of bytes
+        long sliceImageByteCount = computeSliceImageByteCount(image);
         
         // add custom tags
         for (Entry entry : customEntries)
@@ -229,8 +234,11 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         
         // determine image offset after IFD data 
         long imageOffset = HEADER_SIZE + ifdSize + ifdDataSize;
-        Entry imageOffsetEntry = ifd.getEntry(BaselineTags.StripOffsets.CODE);
-        imageOffsetEntry.value = (int) imageOffset;
+        
+        // determine real strip offsets
+        int[] stripLengths = ifd.getIntArrayValue(BaselineTags.StripByteCounts.CODE);
+        int[] stripOffsets = computeStripOffsets(imageOffset, stripLengths);
+        ifd.getEntry(BaselineTags.StripOffsets.CODE).setValue(stripOffsets);
         
         // compute offset to next IFD
         int nImages = image.getDimension() > 2 ? image.getSize(2) : 1;
@@ -253,7 +261,8 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         ifd.setOffset(nextIFD);
         
         
-        // write Tiff ID, and offset to first IFD
+        // write Tiff identifier, and offset to the first IFD
+        // TODO: manage case of multi-page tiff
         writeHeader();
         
         // Write current image file directory
@@ -284,11 +293,10 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
                 nextIFD += ifdSize2;
                 if (i == nImages - 1)
                     nextIFD = 0;
-                    
+                
                 // update entry values of IFD
                 imageOffset += sliceImageByteCount;
-                imageOffsetEntry = ifd2.getEntry(BaselineTags.StripOffsets.CODE);
-                imageOffsetEntry.value = (int) imageOffset;
+                ifd2.getEntry(BaselineTags.StripOffsets.CODE).setValue(computeStripOffsets(imageOffset, stripLengths));
                 ifd2.setOffset(nextIFD);
                 
                 writeEntries(ifd2);
@@ -308,9 +316,6 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         PixelType pixelType = PixelType.fromImage(image);
         int samplesPerPixel = pixelType.sampleCount();
         int bitsPerSample = pixelType.bitsPerSample();
-        
-        // image size as number of bytes
-        long sliceImageByteCount = computeSliceImageByteCount(image);
         
         ImageFileDirectory ifd = new ImageFileDirectory().setByteOrder(ByteOrder.BIG_ENDIAN);
         
@@ -333,26 +338,20 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         // photometric interpretation (use tag-specific static factory)
         ifd.addEntry(PhotometricInterpretation.createEntry(image.getData()));
         
-        // create special description string that can be interpreted by ImageJ
-        if (useImagejDescription)
-        {
-            String description = createImagejDescriptionString(image);
-            ifd.addEntry(new BaselineTags.ImageDescription().newEntry().setValue(description));
-        }
-        
-        // the offset to write image data (content initialized later)
-        Entry imageOffsetTag = new BaselineTags.StripOffsets().newEntry();
-        ifd.addEntry(imageOffsetTag);
-        
         // the number of elements (samples) per pixel. 1 for grayscale, 3 for colors.
         ifd.addEntry(new BaselineTags.SamplesPerPixel().newEntry().setShortValue((short) samplesPerPixel));
 
         // determines how to write image data. Data is organized in one or more "strips".
         // Each strip contain data for one or more image rows.
-        // Default: only one strip that contains all rows. RowsPerStrip contains row number, 
-        // and StripByteCount contains total number of bytes of an image plane.
-        ifd.addEntry(new BaselineTags.RowsPerStrip().newEntry().setIntValue(sizeY));
-        ifd.addEntry(new BaselineTags.StripByteCounts().newEntry().setIntValue((int) sliceImageByteCount));
+        long imageByteCount = computeSliceImageByteCount(image);
+        int rowsPerStrip = computeRowsPerStrip(imageByteCount, sizeY);
+        int[] stripLengths = computeStripByteCounts(imageByteCount, sizeY, rowsPerStrip);
+        int[] stripOffsets = computeStripOffsets(0L, stripLengths);
+        
+        // initialize temporary dummy value, to initialize entry data size
+        ifd.addEntry(new BaselineTags.StripOffsets().newEntry().setValue(stripOffsets));
+        ifd.addEntry(new BaselineTags.RowsPerStrip().newEntry().setIntValue(rowsPerStrip));
+        ifd.addEntry(new BaselineTags.StripByteCounts().newEntry().setValue(stripLengths));
         
         // save calibration from image
         Calibration calib = image.getCalibration();
@@ -369,10 +368,18 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
             ifd.addEntry(new BaselineTags.PlanarConfiguration().newEntry().setShortValue(PlanarConfiguration.CHUNKY));
         }
         
+        
+        // create special description string that can be interpreted by ImageJ
+        if (useImagejDescription)
+        {
+            String description = createImagejDescriptionString(image);
+            ifd.addEntry(new BaselineTags.ImageDescription().newEntry().setValue(description));
+        }
+        
         // --- Extension tags ---
         ifd.addEntry(new SampleFormat().newEntry(pixelType));
         
-        // add non-mandatoy tag(s)
+        // add non-mandatory tag(s)
         DateFormat formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
         String dateString = formatter.format(new Date(System.currentTimeMillis()));
         ifd.addEntry(new BaselineTags.DateTime().newEntry().setValue(dateString));
@@ -456,6 +463,61 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         }
     }
     
+    private static final int computeRowsPerStrip(long sliceImageByteCount, int nRows)
+    {
+        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
+        return Math.max(Math.ceilDiv(MAX_STRIP_SIZE, nBytesPerRow), 1);
+    }
+    
+//    private static final int computeRowsPerStrip(Image image)
+//    {
+//        // single image size as number of bytes
+//        long sliceImageByteCount = computeSliceImageByteCount(image);
+//        
+//        // compute strip data
+//        int nRows = image.getSize(1);
+//        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
+//        return Math.max(Math.ceilDiv(MAX_STRIP_SIZE, nBytesPerRow), 1);
+//    }
+    
+    private static final int[] computeStripByteCounts(long sliceImageByteCount, int nRows, int rowsPerStrip)
+    {
+        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
+        int nStrips = Math.ceilDiv(nRows, rowsPerStrip);
+        int stripByteCount = rowsPerStrip  * nBytesPerRow;
+
+        int[] stripLengths = new int[nStrips];
+        for (int iStrip = 0; iStrip < nStrips; iStrip++)
+        {
+            stripLengths[iStrip] = stripByteCount;
+        }
+        stripLengths[nStrips - 1] = (int) (sliceImageByteCount - ((nStrips - 1) * stripByteCount));
+        
+        return stripLengths;
+    }
+    
+//    private static final int[] computeStripByteCounts(Image image)
+//    {
+//        // single image size as number of bytes
+//        long sliceImageByteCount = computeSliceImageByteCount(image);
+//        
+//        // compute strip data
+//        int nRows = image.getSize(1);
+//        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
+//        int rowsPerStrip = Math.max(Math.ceilDiv(MAX_STRIP_SIZE, nBytesPerRow), 1);
+//        int nStrips = Math.ceilDiv(nRows, rowsPerStrip);
+//        int stripByteCount = rowsPerStrip  * nBytesPerRow;
+//
+//        int[] stripLengths = new int[nStrips];
+//        for (int iStrip = 0; iStrip < nStrips; iStrip++)
+//        {
+//            stripLengths[iStrip] = stripByteCount;
+//        }
+//        stripLengths[nStrips - 1] = (int) (sliceImageByteCount - ((nStrips - 1) * stripByteCount));
+//        
+//        return stripLengths;
+//    }
+    
     /**
      * Computes the number of bytes required to store data for a single slice of
      * the image.
@@ -483,6 +545,17 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         if (pixelType == PixelType.BINARY) nBytes = nBits;
         
         return nBytes;
+    }
+    
+    private static final int[] computeStripOffsets(long imageOffset, int[] stripByteCounts)
+    {
+        int[] offsets = new int[stripByteCounts.length];
+        offsets[0] = (int) imageOffset;
+        for (int iStrip = 1; iStrip < stripByteCounts.length; iStrip++)
+        {
+            offsets[iStrip] = (int) (offsets[iStrip - 1] + stripByteCounts[iStrip - 1]);
+        }
+        return offsets;
     }
     
     private static final int[] createSpacingRational(double spacing)

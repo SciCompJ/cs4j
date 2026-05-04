@@ -56,7 +56,7 @@ public class ImageFileDirectory
     // Constructor
     
     /**
-     * Creates a new ImageFileDirectory instance.
+     * Creates a new {@code ImageFileDirectory} instance.
      */
     public ImageFileDirectory()
     {
@@ -234,9 +234,9 @@ public class ImageFileDirectory
      * Returns the number of bytes necessary to write this directory.
      * The number of bytes is computed as:
      * <ul>
-     * <li> 2 bytes for the number of entries/li>
-     * <li> 12 bytes per entry/li>
-     * <li> 4 bytes for the offset to the next Image File Directory/li>
+     * <li> 2 bytes for the number of entries</li>
+     * <li> 12 bytes per entry</li>
+     * <li> 4 bytes for the offset to the next Image File Directory</li>
      * </ul>
      * 
      * @return the number of bytes necessary to write this directory.
