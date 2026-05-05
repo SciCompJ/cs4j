@@ -94,7 +94,6 @@ public class TiffImageWriterTest
         File outputFile = new File("testWriteTiff.tif");
         try(TiffImageWriter writer = new TiffImageWriter(outputFile))
         {
-//            writer.addCustomTag(new BaselineTags.Software().setValue(softwareString));
             writer.addCustomTag(new Entry(BaselineTags.Software.CODE, Entry.Type.ASCII,1,0).setValue(softwareString));
             writer.writeImage(image);
         }

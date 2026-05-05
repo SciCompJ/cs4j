@@ -269,15 +269,17 @@ public class ImageFileDirectoryReader
     
     private String readAscii(Entry entry) throws IOException
     {
+        if (entry.count == 0) return "";
+        
         // Allocate memory for string buffer
-        byte[] data = new byte[entry.count];
+        byte[] data = new byte[entry.count - 1];
         
         // read string buffer
         if (entry.count <= 4)
         {
             // unpack integer
             int value = entry.value;
-            for (int i = 0; i < entry.count; i++)
+            for (int i = 0; i < entry.count - 1; i++)
             {
                 data[i] = (byte) (value & 0x00FF);
                 value = value >> 8;

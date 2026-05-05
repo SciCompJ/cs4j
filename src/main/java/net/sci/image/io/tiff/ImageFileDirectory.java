@@ -6,7 +6,8 @@ package net.sci.image.io.tiff;
 import java.nio.ByteOrder;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 import net.sci.image.io.PixelType;
 import net.sci.image.io.tiff.ExtensionTags.SampleFormat;
@@ -40,11 +41,10 @@ public class ImageFileDirectory
     ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
     
     /**
-     * The list of Tiff entries within this image file directory. Use a
-     * LinkedHashSet to allow fast indexing while keeping reading order of
-     * entries.
+     * The list of Tiff entries within this image file directory. Use a TreeSet
+     * to force increasing order of tags (as requested by TIFF specification).
      */
-    LinkedHashSet<Entry> entries = new LinkedHashSet<Entry>();
+    TreeSet<Entry> entries;
     
     /**
      * The offset to the next IFD.
@@ -60,6 +60,15 @@ public class ImageFileDirectory
      */
     public ImageFileDirectory()
     {
+        // create a new tree set using a comparator based on entry tag codes
+        this.entries = new TreeSet<Entry>(new Comparator<Entry>()
+        {
+            @Override
+            public int compare(Entry e1, Entry e2)
+            {
+                return Integer.compare(e1.code, e2.code);
+            }
+        });
     }
     
     
@@ -254,12 +263,9 @@ public class ImageFileDirectory
      */
     public int entryDataByteCount()
     {
-        int size = 0;
-        for (Entry entry : entries)
-        {
-            size += entry.contentSize();
-        }
-        return size;
+        return entries.stream()
+                .mapToInt(entry -> entry.contentSize())
+                .sum();
     }
     
     /**

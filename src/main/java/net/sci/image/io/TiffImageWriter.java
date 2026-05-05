@@ -267,11 +267,14 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         
         // Write current image file directory
         this.fireStatusChanged(this, "Write IFD entries");
-        writeEntries(ifd);
+        writeIFD(ifd);
 
         // Write content of the different tags
         this.fireStatusChanged(this, "Write IFD entry data");
-        writeEntryData(ifd);
+        for (Entry entry : ifd.entries())
+        {
+            writeEntryContent(entry);
+        }
                 
         // Finally, image data (the whole array)
         this.fireStatusChanged(this, "Write Image data");
@@ -299,7 +302,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
                 ifd2.getEntry(BaselineTags.StripOffsets.CODE).setValue(computeStripOffsets(imageOffset, stripLengths));
                 ifd2.setOffset(nextIFD);
                 
-                writeEntries(ifd2);
+                writeIFD(ifd2);
             }
         } 
         else if (bigTiff)
@@ -368,7 +371,6 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
             ifd.addEntry(new BaselineTags.PlanarConfiguration().newEntry().setShortValue(PlanarConfiguration.CHUNKY));
         }
         
-        
         // create special description string that can be interpreted by ImageJ
         if (useImagejDescription)
         {
@@ -421,7 +423,8 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         Calibration cal = image.getCalibration();
         if (cal.isCalibrated() && cal.getXAxis().getUnitName() != null)
         {
-            addEscapedString(sb, "unit=" + cal.getXAxis().getUnitName() + "\n");
+            addEscapedString(sb, "unit=" + cal.getXAxis().getUnitName());
+            sb.append("\n");
         }
         if (sizeZ > 1) 
         {
@@ -432,7 +435,6 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
             sb.append("loop=" + "false" + "\n");
         }
         
-        sb.append((char)0);
         return new String(sb);
     }
      
@@ -457,66 +459,11 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
             }
             else if (c <= 0xffff)
             { 
-                // (supplementary unicode characters >0xffff unsupported)
+                // (supplementary Unicode characters >0xffff unsupported)
                 sb.append("\\u").append(Integer.toHexString(c).toUpperCase());
             }
         }
     }
-    
-    private static final int computeRowsPerStrip(long sliceImageByteCount, int nRows)
-    {
-        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
-        return Math.max(Math.ceilDiv(MAX_STRIP_SIZE, nBytesPerRow), 1);
-    }
-    
-//    private static final int computeRowsPerStrip(Image image)
-//    {
-//        // single image size as number of bytes
-//        long sliceImageByteCount = computeSliceImageByteCount(image);
-//        
-//        // compute strip data
-//        int nRows = image.getSize(1);
-//        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
-//        return Math.max(Math.ceilDiv(MAX_STRIP_SIZE, nBytesPerRow), 1);
-//    }
-    
-    private static final int[] computeStripByteCounts(long sliceImageByteCount, int nRows, int rowsPerStrip)
-    {
-        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
-        int nStrips = Math.ceilDiv(nRows, rowsPerStrip);
-        int stripByteCount = rowsPerStrip  * nBytesPerRow;
-
-        int[] stripLengths = new int[nStrips];
-        for (int iStrip = 0; iStrip < nStrips; iStrip++)
-        {
-            stripLengths[iStrip] = stripByteCount;
-        }
-        stripLengths[nStrips - 1] = (int) (sliceImageByteCount - ((nStrips - 1) * stripByteCount));
-        
-        return stripLengths;
-    }
-    
-//    private static final int[] computeStripByteCounts(Image image)
-//    {
-//        // single image size as number of bytes
-//        long sliceImageByteCount = computeSliceImageByteCount(image);
-//        
-//        // compute strip data
-//        int nRows = image.getSize(1);
-//        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
-//        int rowsPerStrip = Math.max(Math.ceilDiv(MAX_STRIP_SIZE, nBytesPerRow), 1);
-//        int nStrips = Math.ceilDiv(nRows, rowsPerStrip);
-//        int stripByteCount = rowsPerStrip  * nBytesPerRow;
-//
-//        int[] stripLengths = new int[nStrips];
-//        for (int iStrip = 0; iStrip < nStrips; iStrip++)
-//        {
-//            stripLengths[iStrip] = stripByteCount;
-//        }
-//        stripLengths[nStrips - 1] = (int) (sliceImageByteCount - ((nStrips - 1) * stripByteCount));
-//        
-//        return stripLengths;
-//    }
     
     /**
      * Computes the number of bytes required to store data for a single slice of
@@ -545,6 +492,29 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         if (pixelType == PixelType.BINARY) nBytes = nBits;
         
         return nBytes;
+    }
+
+
+    private static final int computeRowsPerStrip(long sliceImageByteCount, int nRows)
+    {
+        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
+        return Math.max(Math.ceilDiv(MAX_STRIP_SIZE, nBytesPerRow), 1);
+    }
+    
+    private static final int[] computeStripByteCounts(long sliceImageByteCount, int nRows, int rowsPerStrip)
+    {
+        int nBytesPerRow = (int) (sliceImageByteCount / nRows);
+        int nStrips = Math.ceilDiv(nRows, rowsPerStrip);
+        int stripByteCount = rowsPerStrip  * nBytesPerRow;
+
+        int[] stripLengths = new int[nStrips];
+        for (int iStrip = 0; iStrip < nStrips; iStrip++)
+        {
+            stripLengths[iStrip] = stripByteCount;
+        }
+        stripLengths[nStrips - 1] = (int) (sliceImageByteCount - ((nStrips - 1) * stripByteCount));
+        
+        return stripLengths;
     }
     
     private static final int[] computeStripOffsets(long imageOffset, int[] stripByteCounts)
@@ -595,7 +565,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
      * @throws IOException
      *             if a problem occurs
      */
-    private void writeEntries(ImageFileDirectory ifd) throws IOException
+    private void writeIFD(ImageFileDirectory ifd) throws IOException
     {
         // write number of entries
         writeShort(ifd.entryCount());
@@ -636,14 +606,6 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         }
     }
 
-    private void writeEntryData(ImageFileDirectory ifd) throws IOException
-    {
-        for (Entry entry : ifd.entries())
-        {
-            writeEntryContent(entry);
-        }
-    }
-    
     /**
      * Writes the data of this entry into the specified stream, with the
      * specified byte order. The number of bytes that will be written must be

@@ -274,7 +274,7 @@ public class Entry
             case ASCII -> {
                 if (value instanceof String string)
                 {
-                    byte[] bytes = string.getBytes();
+                    byte[] bytes = (string + "\u0000").getBytes();
                     this.content = bytes;
                     this.count = bytes.length;
                 }
@@ -338,14 +338,17 @@ public class Entry
     {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
-        sb.append(Byte.toString(array[0]));
-        for (int i = 1; i < Math.min(array.length, nMax); i++)
+        if (array.length > 0)
         {
-            sb.append(",").append(Byte.toString(array[i]));
-        }
-        if (array.length > nMax)
-        {
-            sb.append("...");
+            sb.append(Byte.toString(array[0]));
+            for (int i = 1; i < Math.min(array.length, nMax); i++)
+            {
+                sb.append(",").append(Byte.toString(array[i]));
+            }
+            if (array.length > nMax)
+            {
+                sb.append("...");
+            }
         }
         sb.append("}");
         return sb.toString();
