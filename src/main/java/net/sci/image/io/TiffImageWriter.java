@@ -130,6 +130,12 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
     /** The output stream, open at creation.*/
     OutputStream out;
     
+    /**
+     * An option for automatically converting binary input images into UInt8
+     * arrays.
+     */
+    boolean convertBinaryToUInt8 = true;
+    
     
     // =============================================================
     // Constructor
@@ -183,8 +189,7 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
     public void writeImage(Image image) throws IOException
     {
         // In case of binary image, convert to image of UInt8 (using a view)
-        // TODO: make conversion to UINT8 an option
-        if (image.isBinaryImage())
+        if (image.isBinaryImage() && convertBinaryToUInt8)
         {
             UInt8Array array2 = new BinaryToUInt8.View(image.getData());
             image = new Image(array2, image);
@@ -299,7 +304,8 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
                 
                 // update entry values of IFD
                 imageOffset += sliceImageByteCount;
-                ifd2.getEntry(BaselineTags.StripOffsets.CODE).setValue(computeStripOffsets(imageOffset, stripLengths));
+                stripOffsets = computeStripOffsets(imageOffset, stripLengths);
+                ifd2.getEntry(BaselineTags.StripOffsets.CODE).setValue(stripOffsets);
                 ifd2.setOffset(nextIFD);
                 
                 writeIFD(ifd2);
