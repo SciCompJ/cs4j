@@ -195,15 +195,18 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
             image = new Image(array2, image);
         }
         
-        this.fireStatusChanged(this, "Setup ImageFileDIrectory");
+        // uses three offsets for the IFD, the data of IFD entries, and image data
+        long nextIfdOffset = 0L;
+        long ifdDataOffset = 0L;
+        long imageDataOffset = 0L;
+        
+        
+        this.fireStatusChanged(this, "Setup ImageFileDirectory");
         ImageFileDirectory ifd = initImageFileDirectory(image);
         if (ifd.getByteOrder() != ByteOrder.BIG_ENDIAN)
         {
             throw new RuntimeException("Can only write TIFF file with BIG_ENDIAN byte order");
         }
-        
-        // single image size as number of bytes
-        long sliceImageByteCount = computeSliceImageByteCount(image);
         
         // add custom tags
         for (Entry entry : customEntries)
@@ -220,54 +223,44 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         // -> entry count (2 bytes) + 12 bytes per entry + next offset (4 bytes).
         int ifdSize = ifd.byteCount();
         
-        // the offset to the beginning of IFD data
-        int tagDataOffset = HEADER_SIZE + ifdSize;
-        int ifdDataSize = ifd.entryDataByteCount();
-        
         // setup the offset of entries with content
-        for (Entry tag : ifd.entries())
-        {
-            int size = tag.contentSize();
-            if (size > 0)
-            {
-                tag.value = tagDataOffset;
-                tagDataOffset += size;
-            }
-        }
+        ifdDataOffset = setupEntryOffsets(ifd, HEADER_SIZE + ifdSize);
         
         this.fireStatusChanged(this, "Setup Image tags data");
         
         // determine image offset after IFD data 
-        long imageOffset = HEADER_SIZE + ifdSize + ifdDataSize;
+        int ifdDataSize = ifd.entryDataByteCount();
+        imageDataOffset = HEADER_SIZE + ifdSize + ifdDataSize;
         
-        // determine real strip offsets
+        // compute image data strip information
         int[] stripLengths = ifd.getIntArrayValue(BaselineTags.StripByteCounts.CODE);
-        int[] stripOffsets = computeStripOffsets(imageOffset, stripLengths);
+        int[] stripOffsets = computeStripOffsets(imageDataOffset, stripLengths);
         ifd.getEntry(BaselineTags.StripOffsets.CODE).setValue(stripOffsets);
         
-        // compute offset to next IFD
+        // retrieve image data for computing next IFD
+        long sliceImageByteCount = computeSliceImageByteCount(image);
         int nImages = image.getDimension() > 2 ? image.getSize(2) : 1;
+        
+        // compute offset to next IFD
         boolean bigTiff = false;
-        long nextIFD = 0L;
         if (nImages > 1)
         {
             // in the case of 3D image data, store the whole image data together, 
             // then writes all the additional IFD 
             long stackSize = (long) sliceImageByteCount * nImages;
-            nextIFD = imageOffset + stackSize;
+            nextIfdOffset = imageDataOffset + stackSize;
 
             // determine whether the whole image can fit within the 4GB limit
-            bigTiff = nextIFD + (nImages - 1) * ifdSize >= 0xffffffffL;
+            bigTiff = nextIfdOffset + (nImages - 1) * (ifdSize + ifdDataSize) >= 0xffffffffL;
             if (bigTiff)
             {
-                nextIFD = 0L;
+                nextIfdOffset = 0L;
             }
         }
-        ifd.setOffset(nextIFD);
+        ifd.setOffset(nextIfdOffset);
         
         
         // write Tiff identifier, and offset to the first IFD
-        // TODO: manage case of multi-page tiff
         writeHeader();
         
         // Write current image file directory
@@ -287,28 +280,36 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         
         
         // Process optional remaining Image File Directories
-        if (nextIFD > 0L)
+        if (nextIfdOffset > 0L)
         {
             // for remaining IFD, do not copy all information
             // -> adapt the size of the IFD
             // -> use same pointers within the tags
             ImageFileDirectory ifd2 = duplicate(ifd);
             int ifdSize2 = ifd2.byteCount();
+            ifdDataSize = ifd2.entryDataByteCount();
             
             // iterate over remaining image planes
             for (int i = 1; i < nImages; i++)
             {
-                nextIFD += ifdSize2;
+                ifdDataOffset = nextIfdOffset + ifdSize2;
+                nextIfdOffset = ifdDataOffset + ifdDataSize;
                 if (i == nImages - 1)
-                    nextIFD = 0;
+                    nextIfdOffset = 0;
                 
                 // update entry values of IFD
-                imageOffset += sliceImageByteCount;
-                stripOffsets = computeStripOffsets(imageOffset, stripLengths);
+                imageDataOffset += sliceImageByteCount;
+                stripOffsets = computeStripOffsets(imageDataOffset, stripLengths);
                 ifd2.getEntry(BaselineTags.StripOffsets.CODE).setValue(stripOffsets);
-                ifd2.setOffset(nextIFD);
+                ifd2.setOffset(nextIfdOffset);
+                
+                setupEntryOffsets(ifd2, ifdDataOffset);
                 
                 writeIFD(ifd2);
+                for (Entry entry : ifd2.entries())
+                {
+                    writeEntryContent(entry);
+                }
             }
         } 
         else if (bigTiff)
@@ -544,6 +545,32 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
             denom /= Integer.MAX_VALUE;
         }
         return new int[] { (int) (value * denom), (int) denom };
+    }
+
+    /**
+     * Setup the offset of the entries with content by populating their
+     * {@code value} field.
+     * 
+     * @param ifd
+     *            the IFD whose entries need update
+     * @param ifdDataOffset
+     *            the initial offset of the entry data (for entries with non
+     *            empty content)
+     * @return the offset of the first byte after the IFD entry data
+     */
+    private static final long setupEntryOffsets(ImageFileDirectory ifd, long ifdDataOffset)
+    {
+        // setup the offset of entries with content
+        for (Entry entry : ifd.entries())
+        {
+            int size = entry.contentSize();
+            if (size > 0)
+            {
+                entry.value = (int) ifdDataOffset;
+                ifdDataOffset += size;
+            }
+        }
+        return ifdDataOffset;
     }
 
     /**
