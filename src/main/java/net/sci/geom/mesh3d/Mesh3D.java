@@ -12,7 +12,19 @@ import net.sci.geom.geom3d.Polygon3D;
 import net.sci.geom.geom3d.Vector3D;
 
 /**
- * A polygonal mesh in 3D space
+ * A polygonal mesh in 3D space. Meshes are defined by vertices, defined by a
+ * position as a Point3D, and faces that connect three or more vertices.
+ * 
+ * Several classes implement {@code Mesh3D}, with variants in:
+ * <ul>
+ * <li>the number of vertices of each face (3, 4, or arbitrary)</li>
+ * <li>the possibility to modify the mesh by adding and/or removing vertices or
+ * faces</li>
+ * <li>the ability to query topological information from the mesh (e.g. to
+ * retrieve the list of faces connected to a vertex)</li>
+ * <li>the possibility to manage edges between vertices</li>
+ * <li>...</li>
+ * </ul>
  * 
  * @author dlegland
  *
@@ -44,25 +56,32 @@ public interface Mesh3D extends Geometry3D
         }
         return closest;
     }
+    
 
     // ===================================================================
     // Topological queries
     
     /**
-     * Returns the collection of faces adjacent to a given vertex.
+     * Returns the collection of faces adjacent to a given vertex (optional
+     * operation).
      * 
      * @param vertex
      *            the vertex
      * @return the faces adjacent to the specified vertex
+     * @throws UnsupportedOperationException
+     *             if topological queries are not supported by this mesh
      */
     public Collection<? extends Face> vertexFaces(Vertex vertex);
     
     /**
-     * Returns the neighbor vertices of a given vertex. Neighbors correspond to
-     * a vertex that shares either a face or an edge.
+     * Returns the neighbor vertices of a given vertex (optional operation).
+     * Neighbors correspond to a vertex that shares either a face or an edge.
      * 
-     * @param vertex the reference vertex
+     * @param vertex
+     *            the reference vertex
      * @return the neighbors of the reference vertex
+     * @throws UnsupportedOperationException
+     *             if topological queries are not supported by this mesh
      */
     public Collection<? extends Vertex> vertexNeighbors(Vertex vertex);
     
@@ -89,13 +108,25 @@ public interface Mesh3D extends Geometry3D
      */
     public Iterable<? extends Vertex> vertices();
 
+    /**
+     * Adds a new vertex to this mesh (optional operation).
+     * 
+     * @param point
+     *            the position of the vertex to add
+     * @return the newly created vertex
+     * @throws UnsupportedOperationException
+     *             if adding vertices is not supported by this mesh
+     */
     public Vertex addVertex(Point3D point);
 
     /**
-     * Removes a vertex from this mesh. The vertex should not belong to any face or any edge.
+     * Removes a vertex from this mesh (optional operation). The vertex should
+     * not belong to any face or any edge.
      * 
      * @param vertex
      *            the vertex to remove.
+     * @throws UnsupportedOperationException
+     *             if removing vertices is not supported by this mesh
      */
     public void removeVertex(Vertex vertex);
     
@@ -114,10 +145,12 @@ public interface Mesh3D extends Geometry3D
     public Iterable<? extends Face> faces();
 
     /**
-     * Removes a face from this mesh.
+     * Removes a face from this mesh (optional operation).
      * 
      * @param face
      *            the face to remove.
+     * @throws UnsupportedOperationException
+     *             if removing vertices is not supported by this mesh
      */
     public void removeFace(Face face);
 
@@ -139,7 +172,12 @@ public interface Mesh3D extends Geometry3D
         public Point3D position();
 
         /**
+         * Computes or retrieves the normal vector associated to a vertex
+         * (optional operation).
+         * 
          * @return the normal of this vertex, as a 3D Vector
+         * @throws UnsupportedOperationException
+         *             if removing vertices is not supported by this mesh
          */
         public Vector3D normal();
     }
