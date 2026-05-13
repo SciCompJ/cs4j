@@ -32,7 +32,7 @@ public class BinaryImageBoundaryFacetMidPointsTest
         });
         
         BinaryImageBoundaryFacetMidPoints algo = new BinaryImageBoundaryFacetMidPoints();
-        List<Point2D> pts = BinaryImageBoundaryFacetMidPoints.reduce(algo.processBinary2d(array));
+        List<Point2D> pts = BinaryImageBoundaryFacetMidPoints.reduceMap2d(algo.processBinary2d(array));
         
         assertEquals(10, pts.size());
     }
@@ -50,7 +50,7 @@ public class BinaryImageBoundaryFacetMidPointsTest
         });
         
         BinaryImageBoundaryFacetMidPoints algo = new BinaryImageBoundaryFacetMidPoints();
-        List<Point2D> pts = BinaryImageBoundaryFacetMidPoints.reduce(algo.processBinary2d(array));
+        List<Point2D> pts = BinaryImageBoundaryFacetMidPoints.reduceMap2d(algo.processBinary2d(array));
         
         assertEquals(12, pts.size());
     }
