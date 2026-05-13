@@ -38,6 +38,32 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     }
 
     /**
+     * Creates a new {@code BinaryArray2D} from a two-dimensional array of booleans. The
+     * first index of the int array is the second dimension of the result array,
+     * i.e. {@code booleanArray[y][x]} is the same value as
+     * {@code array.getBoolean(x,y)}.
+     * 
+     * @param intArray
+     *            the array of integers containing the values.
+     * @return a new instance of UInt8Array2D initialized with the values of
+     *         <code>intArray</code>
+     */
+    public static final BinaryArray2D of(boolean[][] booleanArray)
+    {
+        int size1 = booleanArray.length;
+        int size0 = booleanArray[0].length;
+        BinaryArray2D res = BinaryArray2D.create(size0, size1);
+        for (int y = 0; y < size1; y++)
+        {
+            for (int x = 0; x < size0; x++)
+            {
+                res.setBoolean(x, y, booleanArray[y][x]);
+            }
+        }
+        return res;
+    }
+
+    /**
      * Wraps the boolean array into an instance of BinaryArray2D with the
      * specified dimensions. The new array will be backed by the given boolean
      * array; that is, modifications to the boolean buffer will cause the array
@@ -69,6 +95,8 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     }
 
     
+    
+
     // =============================================================
     // Constructor
 
