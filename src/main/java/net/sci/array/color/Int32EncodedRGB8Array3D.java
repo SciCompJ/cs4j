@@ -91,27 +91,16 @@ public class Int32EncodedRGB8Array3D extends RGB8Array3D
     @Override
     public int getSample(int x, int y, int z, int c)
     {
-        return get(x, y, z).getSample(c);
+        int intCode = this.buffer.getInt(x, y, z);
+        return RGB8.getIntCodeSample(intCode, c);
     }
 
     @Override
     public void setSample(int x, int y, int z, int c, int intValue)
     {
         int intCode = this.buffer.getInt(x, y, z);
-        int r = intCode & 0x00FF;
-        int g = intCode & 0x00FF00;
-        int b = intCode & 0x00FF0000;
-        intValue = UInt8.clamp(intValue);
-        
-        switch (c)
-        {
-        case 0: r = intValue; break;
-        case 1: g = intValue << 8; break;
-        case 2: b = intValue << 16; break;
-        default: throw new IllegalArgumentException("Channel number must be comprised between 0 and 2");
-        }
-        intCode = r | g | b;
-        this.buffer.setInt(intCode, x, y, z);
+        intCode = RGB8.setIntCodeSample(intCode, c, intValue);
+        this.buffer.setInt(x, y, z, intCode);
     }
 
     @Override

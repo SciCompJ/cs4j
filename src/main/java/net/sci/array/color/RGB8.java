@@ -221,6 +221,59 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
         rgb[2] = (intCode >> 16) & 0x00FF;
         return rgb;
     }
+    
+    /**
+     * Retrieves the sample value corresponding to a given channel index from an
+     * RGB8 intcode.
+     * 
+     * @param intCode
+     *            the integer code representing the RGB value
+     * @param c
+     *            the channel index
+     * @return the sample value
+     */
+    public static final int getIntCodeSample(int intCode, int c)
+    {
+        return switch (c)
+        {
+            case 0 -> intCode & 0x00FF;
+            case 1 -> (intCode >> 8) & 0x00FF;
+            case 2 -> (intCode >> 16) & 0x00FF;
+            default -> throw new IllegalArgumentException(
+                    "Invalid channel index: " + c + " (must be comprised between 0 and 2)");
+        };
+    }
+
+    /**
+     * Changes the sample value corresponding to a given channel index from an
+     * RGB8 intcode, and returns the new intcode.
+     * 
+     * @param intCode
+     *            the integer code representing the RGB value
+     * @param c
+     *            the channel index
+     * @param value
+     *            the sample value
+     * @return the integer code representing the modified RGB8 value
+     */
+    public static final int setIntCodeSample(int intCode, int c, int intValue)
+    {
+        int r = intCode & 0x00FF;
+        int g = intCode & 0x00FF00;
+        int b = intCode & 0x00FF0000;
+        intValue = UInt8.clamp(intValue);
+        
+        switch (c)
+        {
+            case 0 -> r = intValue;
+            case 1 -> g = intValue << 8;
+            case 2 -> b = intValue << 16;
+            default -> throw new IllegalArgumentException(
+                    "Invalid channel index: " + c + " (must be comprised between 0 and 2)");
+        }
+        
+        return r | g | b;
+    }
 
     /**
      * Converts the int code representing a RGB value into the three components
