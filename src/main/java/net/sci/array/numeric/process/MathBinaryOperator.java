@@ -66,61 +66,6 @@ public class MathBinaryOperator extends AlgoStub
     public Array<?> process(Array<?> array1, Array<?> array2)
     {
         return process(array1, array2, array1.newInstance(array1.size()));
-//        checkSameSize(array1, array2);
-//        int nd = array1.dimensionality();
-//        
-//        
-//        // first dispatch processing depending on element class
-//        Class<?> elementClass1 = array1.elementClass();
-//        if (Scalar.class.isAssignableFrom(elementClass1))
-//        {
-//            if (!Scalar.class.isAssignableFrom(array1.elementClass())) 
-//            {
-//                throw new RuntimeException(
-//                        "If first array contains scalar, the second array must contain scalar as well");
-//            }
-//            
-//            // convert to scalar arrays
-//            @SuppressWarnings({ "unchecked", "rawtypes" })
-//            ScalarArray<?> scalarArray1 = ScalarArray.wrap((Array<? extends Scalar>) array1);
-//            @SuppressWarnings({ "unchecked", "rawtypes" })
-//            ScalarArray<?> scalarArray2 = ScalarArray.wrap((Array<? extends Scalar>) array2);
-//            ScalarArray<?> res = scalarArray1.newInstance(array1.size());
-//            
-//            return switch (nd)
-//            {
-//                case 2 -> processScalar2d(
-//                        ScalarArray2D.wrapScalar2d(scalarArray1), 
-//                        ScalarArray2D.wrapScalar2d(scalarArray2), 
-//                        ScalarArray2D.wrapScalar2d(res));
-//                case 3 -> processScalar3d(
-//                        ScalarArray3D.wrapScalar3d(scalarArray1), 
-//                        ScalarArray3D.wrapScalar3d(scalarArray2), 
-//                        ScalarArray3D.wrapScalar3d(res));
-//                default -> 
-//                {
-//                    res.fillValues(pos -> fun.apply(scalarArray1.getValue(pos), scalarArray2.getValue(pos)));
-//                    yield res;
-//                }
-//            };
-//            
-//        }
-//        else if (Vector.class.isAssignableFrom(elementClass1))
-//        {
-//            // convert to arrays of vectors
-//            @SuppressWarnings({ "unchecked", "rawtypes" })
-//            VectorArray<?,?> vectorArray1 = VectorArray.wrap((Array<? extends Vector>) array1);
-//            @SuppressWarnings({ "unchecked", "rawtypes" })
-//            VectorArray<?,?> vectorArray2 = VectorArray.wrap((Array<? extends Vector>) array2);
-//            VectorArray<?,?> res = vectorArray1.newInstance(array1.size());
-//            
-//            // call specialized method
-//            return processVector(vectorArray1, vectorArray2, res);
-//        }
-//        else
-//        {
-//            throw new RuntimeException("Not implemented for arrays with element class: " + elementClass1.getName());
-//        }
     }
     
     public Array<?> process(Array<?> array1, Array<?> array2, Array<?> output)
@@ -221,19 +166,16 @@ public class MathBinaryOperator extends AlgoStub
         checkSameSize(array1, array2);
         checkSameSize(array1, output);
         
-        if (array1.dimensionality() == 2)
+        return switch (array1.dimensionality())
         {
-            return processScalar2d(ScalarArray2D.wrapScalar2d(array1), ScalarArray2D.wrapScalar2d(array2), ScalarArray2D.wrapScalar2d(output));
-        }
-        else if (array1.dimensionality() == 3)
-        {
-            return processScalar3d(ScalarArray3D.wrapScalar3d(array1), ScalarArray3D.wrapScalar3d(array2), ScalarArray3D.wrapScalar3d(output));
-        }
-        else
-        {
-            output.fillValues(pos -> fun.apply(array1.getValue(pos), array2.getValue(pos)));
-            return output;
-        }
+            case 2 -> processScalar2d(ScalarArray2D.wrapScalar2d(array1), ScalarArray2D.wrapScalar2d(array2), ScalarArray2D.wrapScalar2d(output));
+            case 3 -> processScalar3d(ScalarArray3D.wrapScalar3d(array1), ScalarArray3D.wrapScalar3d(array2), ScalarArray3D.wrapScalar3d(output));
+            default -> 
+            {
+                output.fillValues(pos -> fun.apply(array1.getValue(pos), array2.getValue(pos)));
+                yield output;
+            }
+        };
     }
 
     private ScalarArray2D<?> processScalar2d(ScalarArray2D<?> array1, ScalarArray2D<?> array2, ScalarArray2D<?> res)
@@ -296,7 +238,7 @@ public class MathBinaryOperator extends AlgoStub
     {
         if (!Arrays.isSameDimensionality(array1, array2))
         {
-            throw new IllegalArgumentException("Arrays must have same dimension");
+            throw new IllegalArgumentException("Arrays must have same dimensionality");
         }
         if (!Arrays.isSameSize(array1, array2))
         {
