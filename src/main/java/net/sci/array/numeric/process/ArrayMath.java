@@ -265,7 +265,7 @@ public class ArrayMath
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a + b);
-        op.process(array1, array2, output);
+        op.processScalar(array1, array2, output);
         return output;
     }
     
@@ -276,7 +276,7 @@ public class ArrayMath
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a - b);
-        op.process(array1, array2, output);
+        op.processScalar(array1, array2, output);
         return output;
     }
     
@@ -287,7 +287,7 @@ public class ArrayMath
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a * b);
-        op.process(array1, array2, output);
+        op.processScalar(array1, array2, output);
         return output;
     }
     
@@ -298,7 +298,7 @@ public class ArrayMath
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a / b);
-        op.process(array1, array2, output);
+        op.processScalar(array1, array2, output);
         return output;
     }
     
@@ -309,7 +309,7 @@ public class ArrayMath
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator((a, b) -> a % b);
-        op.process(array1, array2, output);
+        op.processScalar(array1, array2, output);
         return output;
     }
     
@@ -320,7 +320,7 @@ public class ArrayMath
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator(java.lang.Math::min);
-        op.process(array1, array2, output);
+        op.processScalar(array1, array2, output);
         return output;
     }
     
@@ -331,7 +331,7 @@ public class ArrayMath
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator(java.lang.Math::max);
-        op.process(array1, array2, output);
+        op.processScalar(array1, array2, output);
         return output;
     }
     
@@ -356,7 +356,7 @@ public class ArrayMath
     {
         checkArrays(array1, array2, output);
         MathBinaryOperator op = new MathBinaryOperator(fun);
-        op.process(array1, array2, output);
+        op.processScalar(array1, array2, output);
         return output;
     }
     
