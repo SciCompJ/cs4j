@@ -320,6 +320,8 @@ public class Entry
      */
     public String contentSummary()
     {
+        if (this.content == null) return "(null)";
+        
         // note that byte and short arrays are read as int arrays
         return switch (this.content)
         {
@@ -330,7 +332,7 @@ public class Entry
             case int[] array -> createDesc(array, 5);
             case double[] array -> createDesc(array, 5);
             case String str -> str;
-            default -> null;
+            default -> "(unknown)";
         };
     }
     
