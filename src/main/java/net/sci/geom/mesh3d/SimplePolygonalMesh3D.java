@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.stream.IntStream;
 
 import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Point3D;
@@ -216,15 +217,10 @@ public class SimplePolygonalMesh3D implements Mesh3D
     }
 
     @Override
-    public Collection<Mesh3D.Vertex> faceVertices(Mesh3D.Face face)
+    public Collection<? extends Mesh3D.Vertex> faceVertices(Mesh3D.Face face)
     {
         int[] inds = faces.get(getFace(face).index);
-        ArrayList<Mesh3D.Vertex> verts = new ArrayList<Mesh3D.Vertex>(inds.length);
-        for (int index : inds) 
-        {
-            verts.add(new Vertex(index));
-        }
-        return verts;
+        return IntStream.of(inds).mapToObj(i -> new Vertex(i)).toList();
     }
 
 
@@ -299,6 +295,7 @@ public class SimplePolygonalMesh3D implements Mesh3D
         return vertexPositions.get(index);
     }
 
+    @Override
     public Collection<Point3D> vertexPositions()
     {
         return vertexPositions();

@@ -350,20 +350,12 @@ public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D
     public void removeVertex(Mesh3D.Vertex vertex)
     {
         throw new UnsupportedOperationException("This implementation does not support vertex removal");
-//        int index = getVertex(vertex).index;
-//        for (int[] inds : faces)
-//        {
-//            if (inds[0] == index || inds[1] == index || inds[2] == index)
-//            {
-//                throw new RuntimeException("Can not remove a vertex if it belongs to a face");
-//            }
-//        }
-//        vertexPositions.set(index, null);
     }
 
     /* (non-Javadoc)
      * @see Mesh3D#vertices()
      */
+    @Override
     public Collection<Point3D> vertexPositions()
     {
         return this.vertexPositions;

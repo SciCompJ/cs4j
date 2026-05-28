@@ -261,6 +261,7 @@ public class SimpleTriMesh3D implements TriMesh3D
         return vertexPositions.get(index);
     }
 
+    @Override
     public Collection<Point3D> vertexPositions()
     {
         return vertexPositions();

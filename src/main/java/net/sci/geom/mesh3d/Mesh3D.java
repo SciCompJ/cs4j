@@ -130,7 +130,15 @@ public interface Mesh3D extends Geometry3D
      */
     public void removeVertex(Vertex vertex);
     
+    /**
+     * Returns the positions of the vertices defining this mesh.
+     * 
+     * @return the vertex positions of this mesh
+     */
 
+    public Iterable<Point3D> vertexPositions();
+    
+    
     // ===================================================================
     // Management of faces
 
