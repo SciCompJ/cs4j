@@ -119,7 +119,7 @@ public class MultiPoint2D implements MultiPoint, PointShape2D
     }
     
     @Override
-    public Collection<? extends Point2D> points()
+    public Collection<Point2D> points()
     {
         return Collections.unmodifiableList(this.points);
     }

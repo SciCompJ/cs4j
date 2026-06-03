@@ -110,7 +110,7 @@ public class Meshes3D
                 throw new RuntimeException("Can not triangulate a face with less than three vertices");
             }
             
-            Iterator<Mesh3D.Vertex> iter = face.vertices().iterator();
+            Iterator<? extends Mesh3D.Vertex> iter = face.vertices().iterator();
             Mesh3D.Vertex v0 = iter.next();
             Mesh3D.Vertex v1 = iter.next();
             while (iter.hasNext())

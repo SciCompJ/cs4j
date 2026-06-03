@@ -830,7 +830,7 @@ public class DefaultTriMesh3D implements TriMesh3D, EdgeMesh3D
         // copy edges using vertex mapping
         for (Mesh3D.Face face : faces())
         {
-            Iterator<Mesh3D.Vertex> iter = face.vertices().iterator();
+            Iterator<? extends Mesh3D.Vertex> iter = face.vertices().iterator();
             Mesh3D.Vertex v1 = vertexMap.get(iter.next());
             Mesh3D.Vertex v2 = vertexMap.get(iter.next());
             Mesh3D.Vertex v3 = vertexMap.get(iter.next());

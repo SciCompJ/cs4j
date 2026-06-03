@@ -203,16 +203,25 @@ public interface Mesh3D extends Geometry3D
         public int vertexCount();
         
         /**
+         * Returns the 3D polygon representing this face.
+         * 
          * @return the 3D polygon representing this face.
          */
         public Polygon3D polygon();
         
         /**
+         * Returns the normal of this face as a 3D vector.
+         * 
          * @return the normal of this face.
          */
         public Vector3D normal();
         
-        public Iterable<Vertex> vertices();
+        /**
+         * Returns an {@code Iterable} over the vertices of this face.
+         * 
+         * @return an {@code Iterable} over the vertices of this face.
+         */
+        public Iterable<? extends Vertex> vertices();
     }
     
     
