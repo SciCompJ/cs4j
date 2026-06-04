@@ -35,17 +35,12 @@ public interface Complex64Array extends ComplexArray<Complex64>
 
     public static Complex64Array create(int... dims)
     {
-        
-        switch (dims.length)
+        return switch (dims.length)
         {
-        case 2:
-            return Complex64Array2D.create(dims[0], dims[1]);
-//        case 3:
-//            return Float64Array3D.create(dims[0], dims[1], dims[2]);
-            // TODO: complete for other dimensions
-        default:
-            throw new RuntimeException("Not yet implemented");
-        }
+            case 2 -> Complex64Array2D.create(dims[0], dims[1]);
+            case 3 -> Complex64Array3D.create(dims[0], dims[1], dims[2]);
+            default -> throw new RuntimeException("Not yet implemented");
+        };
     }
    
     public static Complex64Array wrap(ComplexArray<?> array)
