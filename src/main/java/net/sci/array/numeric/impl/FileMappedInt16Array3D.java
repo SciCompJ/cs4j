@@ -77,7 +77,7 @@ public class FileMappedInt16Array3D extends Int16Array3D
         this.filePath = filePath;
 
         // initialize slice offset, assuming there are fully packed
-        int sliceItemCount = size0 * size1 * 2;
+        long sliceItemCount = size0 * size1 * 2;
         this.offsets = new long[size2];
         for (int z = 0; z < size2; z++)
         {
@@ -85,13 +85,7 @@ public class FileMappedInt16Array3D extends Int16Array3D
         }
 
         // initialize byte buffer for storing current slice data
-        byte[] byteArray = new byte[sliceItemCount];
-        this.byteBuffer = ByteBuffer.wrap(byteArray);
-        this.byteBuffer.order(byteOrder);
-        
-        // wrap the byte buffer into a Float32Array2D
-        ShortBuffer buffer = this.byteBuffer.asShortBuffer();
-        this.currentSlice = new ShortBufferInt16Array2D(size0, size1, buffer);
+        initializeSliceData(byteOrder);
     }
 
     public FileMappedInt16Array3D(String filePath, long[] offsets, int size0, int size1, int size2, ByteOrder byteOrder)

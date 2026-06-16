@@ -66,7 +66,8 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
     {
         super(size0, size1, size2);
         this.filePath = filePath;
-        int sliceItemCount = size0 * size1;
+        // use a long to avoid negative result when computing offset
+        long sliceItemCount = size0 * size1;
         
         // initialize slice offset, assuming there are fully packed
         this.offsets = new long[size2];
@@ -76,7 +77,7 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
         }
 
         // initialize current cached slice
-        this.byteArray = new byte[sliceItemCount];
+        this.byteArray = new byte[(int) sliceItemCount];
         this.currentSlice = UInt8Array2D.wrap(this.byteArray, size0, size1);
     }
 

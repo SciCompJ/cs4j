@@ -77,7 +77,7 @@ public class FileMappedUInt16Array3D extends UInt16Array3D
         this.filePath = filePath;
 
         // initialize slice offset, assuming there are fully packed
-        int sliceItemCount = size0 * size1 * 2;
+        long sliceItemCount = size0 * size1 * 2;
         this.offsets = new long[size2];
         for (int z = 0; z < size2; z++)
         {

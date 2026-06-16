@@ -76,7 +76,7 @@ public class FileMappedFloat32Array3D extends Float32Array3D
         this.filePath = filePath;
 
         // initialize slice offset, assuming there are fully packed
-        int sliceItemCount = size0 * size1 * 4;
+        long sliceItemCount = size0 * size1 * 4;
         this.offsets = new long[size2];
         for (int z = 0; z < size2; z++)
         {
