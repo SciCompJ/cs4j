@@ -108,6 +108,12 @@ public class AdjListDirectedGraph2D implements DirectedGraph2D
         return this.vertices.size();
     }
     
+    @Override
+    public Iterable<Point2D> vertexPositions()
+    {
+        return this.vertices.stream().map(v -> v.position).toList();
+    }
+
     public Iterable<? extends DirectedGraph2D.Vertex> vertices()
     {
         return this.vertices;

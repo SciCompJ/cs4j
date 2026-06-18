@@ -89,6 +89,12 @@ public class SimpleGraph2D implements Graph2D
         return new Vertex(this.vertices.size());
     }
     
+    @Override
+    public Iterable<Point2D> vertexPositions()
+    {
+        return this.vertices;
+    }
+
     public Point2D vertexPosition(int index)
     {
         return this.vertices.get(index);

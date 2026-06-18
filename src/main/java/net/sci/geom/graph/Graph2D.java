@@ -50,6 +50,8 @@ public interface Graph2D extends Geometry2D
     // ===================================================================
     // Vertex management
     
+    public Iterable<Point2D> vertexPositions();
+
     public int vertexCount();
     
     public Iterable<? extends Vertex> vertices();
