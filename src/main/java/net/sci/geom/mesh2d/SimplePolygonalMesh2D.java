@@ -241,7 +241,7 @@ public class SimplePolygonalMesh2D implements Mesh2D
     @Override
     public Collection<Point2D> vertexPositions()
     {
-        return vertexPositions();
+        return vertexPositions;
     }
 
     /**
