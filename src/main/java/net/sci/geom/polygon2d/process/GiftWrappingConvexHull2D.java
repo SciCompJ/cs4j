@@ -28,9 +28,11 @@ public class GiftWrappingConvexHull2D
 {
     private static final double TWO_PI = 2 * Math.PI;
  
+    /**
+     * Default empty constructor.
+     */
     public GiftWrappingConvexHull2D()
     {
-        
     }
     
     /**
@@ -42,6 +44,11 @@ public class GiftWrappingConvexHull2D
      */
     public Polygon2D process(Collection<? extends Point2D> points)
     {
+        if (points.size() < 3)
+        {
+            throw new RuntimeException("Requires at least three points to compute aconvex hull");
+        }
+        
         // Init iteration on points
         Point2D lowestPoint = findLowestRightmostPoint(points);
 

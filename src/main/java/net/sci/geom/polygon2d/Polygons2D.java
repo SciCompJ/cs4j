@@ -31,6 +31,11 @@ public class Polygons2D
      */
 	public static final Polygon2D convexHull(Collection<? extends Point2D> points)
 	{
+        if (points.size() < 3)
+        {
+            throw new RuntimeException("Requires at least three points to compute aconvex hull");
+        }
+
 		GiftWrappingConvexHull2D algo = new GiftWrappingConvexHull2D();
 		return algo.process(points);
 	}
