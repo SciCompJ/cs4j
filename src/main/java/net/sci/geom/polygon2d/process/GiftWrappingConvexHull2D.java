@@ -46,7 +46,7 @@ public class GiftWrappingConvexHull2D
     {
         if (points.size() < 3)
         {
-            throw new RuntimeException("Requires at least three points to compute aconvex hull");
+            throw new RuntimeException("Requires at least three points to compute a convex hull");
         }
         
         // Init iteration on points

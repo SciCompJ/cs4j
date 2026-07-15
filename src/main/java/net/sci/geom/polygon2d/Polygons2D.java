@@ -16,7 +16,7 @@ import net.sci.geom.polygon2d.process.GiftWrappingConvexHull2D;
  */
 public class Polygons2D
 {
-	/**
+    /**
      * Computes the convex hull of a set of points and return the result as a
      * single Polygon2D.
      * 
@@ -27,23 +27,23 @@ public class Polygons2D
      *            a set of points in the 2D space
      * @return the convex hull of the points, as a Polygon2D
      * 
-     * @see net.sci.geom.polygon2d.process.GiftWrappingConvexHull2D 
+     * @see net.sci.geom.polygon2d.process.GiftWrappingConvexHull2D
      */
-	public static final Polygon2D convexHull(Collection<? extends Point2D> points)
-	{
-        if (points.size() < 3)
+    public static final Polygon2D convexHull(Collection<? extends Point2D> points)
+    {
+        if (points.size() < 3) 
         {
-            throw new RuntimeException("Requires at least three points to compute aconvex hull");
+            throw new RuntimeException("Requires at least three points to compute a convex hull");
         }
 
-		GiftWrappingConvexHull2D algo = new GiftWrappingConvexHull2D();
-		return algo.process(points);
-	}
-	
-	/**
-	 * Private constructor to prevent instantiation.
-	 */
-	private Polygons2D()
-	{
-	}
+        GiftWrappingConvexHull2D algo = new GiftWrappingConvexHull2D();
+        return algo.process(points);
+    }
+
+    /**
+     * Private constructor to prevent instantiation.
+     */
+    private Polygons2D()
+    {
+    }
 }
