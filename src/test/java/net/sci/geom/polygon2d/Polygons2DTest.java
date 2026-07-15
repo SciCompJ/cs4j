@@ -4,6 +4,7 @@
 package net.sci.geom.polygon2d;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,34 @@ import net.sci.geom.geom2d.Point2D;
  */
 public class Polygons2DTest
 {
+    /**
+     * Test method for {@link net.sci.geom.polygon2d.Polygons2D#centroid(net.sci.geom.polygon2d.Polygon2D)}.
+     */
+    @Test
+    public final void test_centroid_rect30x20()
+    {
+        Polygon2D poly = Polygon2D.create(Point2D.of(10, 10), Point2D.of(40, 10), Point2D.of(40, 30), Point2D.of(10, 30));
+        
+        Point2D res = Polygons2D.centroid(poly);
+        
+        Point2D exp = Point2D.of(25, 20);
+        assertTrue(exp.almostEquals(res, 0.01));
+    }
+
+    /**
+     * Test method for {@link net.sci.geom.polygon2d.Polygons2D#signedArea(net.sci.geom.polygon2d.Polygon2D)}.
+     */
+    @Test
+    public final void test_signedArea_rect30x20()
+    {
+        Polygon2D poly = Polygon2D.create(Point2D.of(10, 10), Point2D.of(40, 10), Point2D.of(40, 30), Point2D.of(10, 30));
+        
+        double res = Polygons2D.signedArea(poly);
+        
+        double exp = 600;
+        assertEquals(exp, res, 0.01);
+    }
+    
     /**
      * Test method for {@link net.sci.geom.polygon2d.Polygons2D#convexHull(java.util.Collection)}.
      */
