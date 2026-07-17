@@ -60,7 +60,7 @@ public interface Float64Array extends ScalarArray<Float64>
      * <li>instances of ScalarArray</li>
      * </ul>
      * 
-     * @see UInt8Array.#convert(Array)
+     * @see UInt8Array.convert(Array)
      * 
      * @param array
      *            the array to convert

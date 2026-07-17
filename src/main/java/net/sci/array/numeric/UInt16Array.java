@@ -59,7 +59,7 @@ public interface UInt16Array extends IntArray<UInt16>
      * <li>instances of ScalarArray</li>
      * </ul>
      * 
-     * @see UInt8Array.#convert(Array)
+     * @see UInt8Array.convert(Array)
      * 
      * @param array
      *            the array to convert

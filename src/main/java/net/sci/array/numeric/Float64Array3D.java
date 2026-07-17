@@ -12,6 +12,11 @@ import net.sci.array.Array2D;
 import net.sci.array.numeric.impl.BufferedFloat64Array3D;
 
 /**
+ * Base class for three-dimensional arrays containing {@code Float64} elements.
+ * 
+ * @see Float32Array3D
+ * @see Float64Array2D
+ * 
  * @author dlegland
  *
  */

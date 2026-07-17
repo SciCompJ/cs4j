@@ -10,7 +10,12 @@ import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedInt32Array2D;
 
 /**
- * Specialization of Array for 2D arrays of Int32 values.
+ * Base class for two-dimensional arrays containing {@code Int32} elements.
+ * 
+ * @see UInt8Array2D
+ * @see UInt16Array2D
+ * @see Int16Array2D
+ * @see Int32Array3D
  * 
  * @author dlegland
  *

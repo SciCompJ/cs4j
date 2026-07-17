@@ -10,6 +10,13 @@ import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedUInt16Array2D;
 
 /**
+ * Base class for two-dimensional arrays containing {@code UInt16} elements.
+ * 
+ * @see UInt8Array2D
+ * @see Int16Array2D
+ * @see Int32Array2D
+ * @see UInt16Array3D
+ * 
  * @author dlegland
  *
  */

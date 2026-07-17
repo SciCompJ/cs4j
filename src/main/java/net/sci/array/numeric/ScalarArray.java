@@ -213,20 +213,17 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
      * array. This allows to query information about the population of values
      * using constructs like the following:
      * 
-     * <pre>
-     * {@code
+     * {@snippet :
      *     double vMin = Double.POSITIVE_INFINTIY;
      *     for (double v : array.values())
      *     {
      *         vMin = Math.min(v, vMin);
      *     }
      * }
-     * </pre>
      * 
      * Default behavior is to wrap a position iterator, and return values
      * according to the <code>getValue(int...)</code> method.
      * 
-     * @see #positionIterator()
      * @see #get(int...)
      * 
      * @return an Iterable over the (double) values within the array.

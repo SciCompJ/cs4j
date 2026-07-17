@@ -598,6 +598,12 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Specialization of the Array Factory for generating instances of
      * VectorArray. Provides a new method for creating arrays with specified
      * dimension and number of components.
+     * 
+     * @param <V>
+     *            the type of the vector
+     * @param <S>
+     *            the type of the elements contained by this vector
+     *           
      */
     public interface Factory<V extends Vector<V, S>, S extends Scalar<S>> extends Array.Factory<V>
     {
@@ -822,6 +828,12 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
     /**
      * Utility class that implements a view on a channel of a vector array
      * as a {@code ScalarArray}.
+     * 
+     * @param <V>
+     *            the type of the vector
+     * @param <S>
+     *            the type of the elements contained by this vector
+     *           
      */
     class ElementScalarArrayView<V extends Vector<V, S>, S extends Scalar<S>> extends ArrayWrapperStub<S> implements ScalarArray<S>, Array.View<S>
     {

@@ -4,7 +4,17 @@
 package net.sci.array.numeric;
 
 /**
- * A simple functional interface declaration to be used with Array3D.populate() methods.
+ * A simple functional interface declaration to be used with Array3D.populate()
+ * methods.
+ * 
+ * @param <T>
+ *            The type of the first input argument
+ * @param <U>
+ *            The type of the second input argument
+ * @param <V>
+ *            The type of the third input argument
+ * @param <R>
+ *            The type of the result.
  * 
  * @see net.sci.array.numeric.ScalarArray3D#fillValues(TriFunction)
  * @see net.sci.array.numeric.IntArray3D#fillInts(TriFunction)

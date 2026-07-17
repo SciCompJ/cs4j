@@ -10,6 +10,11 @@ import net.sci.array.Array;
 import net.sci.array.numeric.impl.BufferedFloat64Array2D;
 
 /**
+ * Base class for two-dimensional arrays containing {@code Float64} elements.
+ * 
+ * @see Float32Array2D
+ * @see Float64Array3D
+ * 
  * @author dlegland
  *
  */

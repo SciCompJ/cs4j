@@ -4,8 +4,12 @@
 package net.sci.array.numeric;
 
 /**
- * Definitions of Numeric type, parent types for Scalar and Vector.
- *  
+ * Definitions of Numeric type, parent type for Scalar and Vector.
+ * 
+ * @param <N>
+ *            The type of numeric
+ * @see Scalar
+ * @see Vector
  */
 public interface Numeric<N extends Numeric<N>>
 {

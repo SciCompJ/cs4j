@@ -8,7 +8,13 @@ import java.util.Locale;
 import java.util.function.BiFunction;
 
 /**
- * Specialization of Array for 2D arrays of integer values.
+ * Base class for three-dimensional arrays containing elements implementing the {@code Int} interface.
+ * 
+ * @see UInt8Array2D
+ * @see UInt16Array2D
+ * @see Int16Array2D
+ * @see Int32Array2D
+ * @see IntArray3D
  * 
  * @author dlegland
  *
@@ -82,12 +88,10 @@ public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> impl
      * two variables.
      * 
      * Example:
-     * <pre>
-     * {@code
+     * {@snippet :
      * ScalarArray2D<?> array = UInt8Array2D.create(5, 4);
      * array.fillInts((x, y) -> x + y * 10);
      * }
-     * </pre>
      * 
      * @param fun
      *            a function of two variables that returns an integer. The two
@@ -95,9 +99,12 @@ public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> impl
      */
     public void fillInts(BiFunction<Integer,Integer,Integer> fun)
     {
-        for (int[] pos : this.positions())
+        for (int y = 0; y < this.size1; y++)
         {
-            this.setInt(pos, fun.apply(pos[0], pos[1]));
+            for (int x = 0; x < this.size0; x++)
+            {
+                this.setInt(x, y, fun.apply(x, y));
+            }
         }
     }
     
@@ -165,35 +172,24 @@ public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> impl
     }
 
     
-	// =============================================================
-	// Specialization of Array interface
+    // =============================================================
+    // Specialization of Array interface
 
     @Override
-    public IntArray2D<I> duplicate()
-    {
-        IntArray2D<I> res = IntArray2D.wrap(this.factory().create(this.size()));
-        for (int y = 0; y < this.size1; y++)
-        {
-            for (int x = 0; x < this.size0; x++)
-            {
-                res.setInt(x, y, this.getInt(x, y));
-            }
-        }
-        return res;
-    }
-	
-    
-	// =============================================================
-	// Override Object methods
+    public abstract IntArray2D<I> duplicate();
 
-	@Override
+    
+    // =============================================================
+    // Override Object methods
+
+    @Override
     public String toString()
     {
-	    return String.format(Locale.ENGLISH, "(%d x %d) Int array.", this.size0, this.size1);
+        return String.format(Locale.ENGLISH, "(%d x %d) Int array.", this.size0, this.size1);
     }
 
-
-	// =============================================================
+    
+    // =============================================================
     // Inner wrapper class
 
 	/**
@@ -294,6 +290,20 @@ public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> impl
         public void set(int[] pos, I value)
         {
             array.set(pos, value);
+        }
+
+        @Override
+        public IntArray2D<I> duplicate()
+        {
+            IntArray2D<I> res = IntArray2D.wrap(array.factory().create(this.size()));
+            for (int y = 0; y < this.size1; y++)
+            {
+                for (int x = 0; x < this.size0; x++)
+                {
+                    res.setInt(x, y, array.getInt(new int[] {x, y}));
+                }
+            }
+            return res;
         }
     }
 }

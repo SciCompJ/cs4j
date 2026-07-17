@@ -31,7 +31,7 @@ public abstract class ScalarArray3D<S extends Scalar<S>> extends Array3D<S> impl
      * Same as wrap method, but use different name to avoid runtime class cast
      * exceptions.
      * 
-     * @param T
+     * @param <S>
      *            the type of data within the array
      * @param array
      *            an instance of ScalarArray with three dimensions

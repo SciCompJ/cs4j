@@ -14,7 +14,12 @@ import net.sci.array.numeric.impl.SlicedUInt16Array3D;
 import net.sci.util.MathUtils;
 
 /**
- * Base implementation for 3D arrays containing Int16 values.
+ * Base class for three-dimensional arrays containing {@code UInt16} elements.
+ * 
+ * @see UInt8Array3D
+ * @see Int16Array3D
+ * @see Int32Array3D
+ * @see UInt16Array2D
  * 
  * @author dlegland
  *

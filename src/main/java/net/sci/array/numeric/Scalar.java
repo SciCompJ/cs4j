@@ -10,6 +10,9 @@ package net.sci.array.numeric;
  * @param <S>
  *            the type of Scalar.
  *
+ * @see Int
+ * @see Vector
+ * 
  * @author dlegland
  */
 public interface Scalar<S extends Scalar<S>> extends Numeric<S>, Comparable<S>

@@ -7,6 +7,14 @@ import java.io.PrintStream;
 import java.util.Locale;
 
 /**
+ * Base class for three-dimensional arrays containing elements implementing the {@code Int} interface.
+ * 
+ * @see UInt8Array3D
+ * @see UInt16Array3D
+ * @see Int16Array3D
+ * @see Int32Array3D
+ * @see IntArray2D
+ * 
  * @author dlegland
  *
  */

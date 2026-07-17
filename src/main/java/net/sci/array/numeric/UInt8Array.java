@@ -33,7 +33,7 @@ public interface UInt8Array extends IntArray<UInt8>
     /**
      * The default factory for UInt8Array instances.
      * 
-     * @see UInt8Array.#create(int...)
+     * @see UInt8Array.create(int...)
      */
     public static final Factory defaultFactory = new DenseUInt8ArrayFactory();
     
@@ -91,7 +91,7 @@ public interface UInt8Array extends IntArray<UInt8>
      * <li>instances of ScalarArray</li>
      * </ul>
      * 
-     * @see UInt8Array.#convert(ScalarArray, double, double)
+     * @see UInt8Array.convert(ScalarArray, double, double)
      * 
      * @param array
      *            the array to convert

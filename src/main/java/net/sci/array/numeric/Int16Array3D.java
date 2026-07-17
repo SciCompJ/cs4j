@@ -12,7 +12,12 @@ import net.sci.array.Array2D;
 import net.sci.array.numeric.impl.BufferedInt16Array3D;
 
 /**
- * Base implementation for 3D arrays containing Int16 values.
+ * Base class for three-dimensional arrays containing {@code Int16} elements.
+ * 
+ * @see UInt8Array3D
+ * @see UInt16Array3D
+ * @see Int32Array3D
+ * @see Int16Array2D
  * 
  * @author dlegland
  *

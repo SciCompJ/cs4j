@@ -12,6 +12,13 @@ import net.sci.array.Array2D;
 import net.sci.array.numeric.impl.BufferedUInt8Array3D;
 
 /**
+ * Base class for three-dimensional arrays containing {@code UInt8} elements.
+ * 
+ * @see UInt16Array3D
+ * @see Int16Array3D
+ * @see Int32Array3D
+ * @see UInt8Array2D
+ * 
  * @author dlegland
  *
  */

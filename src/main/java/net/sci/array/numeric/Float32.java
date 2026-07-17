@@ -27,8 +27,14 @@ public class Float32 implements Scalar<Float32>
      */
     public static final Float32 MAX_VALUE = new Float32(Float.POSITIVE_INFINITY);
     
+    /**
+     * The Float32 instance corresponding to value 1.
+     */
     public final static Float32 ONE = new Float32(1.0f);
     
+    /**
+     * The Float32 instance corresponding to value 0.
+     */
     public final static Float32 ZERO = new Float32(0.0f);
     
     
