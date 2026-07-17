@@ -47,7 +47,7 @@ public class MinimaAndMaximaTest
             { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10}
         };
         
-        UInt8Array2D image = UInt8Array2D.fromIntArray(data);
+        UInt8Array2D image = UInt8Array2D.of(data);
         
         BinaryArray2D maxima = MinimaAndMaxima.regionalMaxima2d(image, Connectivity2D.C4);
         
@@ -78,7 +78,7 @@ public class MinimaAndMaximaTest
             { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10}
         };
         
-        UInt8Array2D image = UInt8Array2D.fromIntArray(data);
+        UInt8Array2D image = UInt8Array2D.of(data);
         
         BinaryArray2D maxima = MinimaAndMaxima.regionalMaxima2d(image, Connectivity2D.C8);
         
@@ -104,7 +104,7 @@ public class MinimaAndMaximaTest
             {50, 50, 50, 50, 50},
         };
         
-        UInt8Array2D image = UInt8Array2D.fromIntArray(data);
+        UInt8Array2D image = UInt8Array2D.of(data);
         
         BinaryArray2D minima = MinimaAndMaxima.regionalMinima2d(image, Connectivity2D.C4);
         
@@ -131,7 +131,7 @@ public class MinimaAndMaximaTest
             {50, 50, 50, 50, 50},
         };
         
-        UInt8Array2D image = UInt8Array2D.fromIntArray(data);
+        UInt8Array2D image = UInt8Array2D.of(data);
         
         BinaryArray2D minima = MinimaAndMaxima.regionalMinima2d(image, Connectivity2D.C8);
         
@@ -161,7 +161,7 @@ public class MinimaAndMaximaTest
             { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
             { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10}
         };
-        UInt8Array2D array = UInt8Array2D.fromIntArray(data);
+        UInt8Array2D array = UInt8Array2D.of(data);
         
         BinaryArray2D maxima = MinimaAndMaxima.extendedMaxima2d(array, 20, Connectivity2D.C4);
         
@@ -189,7 +189,7 @@ public class MinimaAndMaximaTest
             { 50, 50, 50, 50, 50, 50, 50, 50, 50},
             { 50, 50, 50, 50, 50, 50, 50, 50, 50},
         };
-        UInt8Array2D array = UInt8Array2D.fromIntArray(data);
+        UInt8Array2D array = UInt8Array2D.of(data);
         
         BinaryArray2D minima = MinimaAndMaxima.extendedMinima2d(array, 30, Connectivity2D.C4);
         

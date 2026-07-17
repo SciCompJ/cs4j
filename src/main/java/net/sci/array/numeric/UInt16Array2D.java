@@ -63,7 +63,7 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
      * @return a new instance of UInt16Array2D initialized with the values of
      *         <code>intArray</code>
      */
-    public static final UInt16Array2D fromIntArray(int[][] intArray)
+    public static final UInt16Array2D of(int[][] intArray)
     {
         int size1 = intArray.length;
         int size0 = intArray[0].length;

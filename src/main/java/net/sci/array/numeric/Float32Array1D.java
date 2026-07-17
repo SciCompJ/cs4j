@@ -30,9 +30,9 @@ public abstract class Float32Array1D extends ScalarArray1D<Float32> implements F
      * @param array
      *            the array of floats containing the values.
      * @return a new instance of Float32Array1D initialized with the values of
-     *         <code>array</code>
+     *         {@code array}
      */
-    public static final Float32Array1D fromFloatArray(float[] array)
+    public static final Float32Array1D of(float[] array)
     {
         int size0 = array.length;
         Float32Array1D res = Float32Array1D.create(size0);

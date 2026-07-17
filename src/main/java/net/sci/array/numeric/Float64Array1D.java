@@ -30,13 +30,13 @@ public abstract class Float64Array1D extends ScalarArray1D<Float64> implements F
      * @param array
      *            the array of doubles containing the values.
      * @return a new instance of Float64Array1D initialized with the values of
-     *         <code>array</code>
+     *         {@code array}
      */
-    public static final Float64Array1D fromDoubleArray(double[] array)
+    public static final Float64Array1D of(double[] array)
     {
-        int size0 = array.length;
-        Float64Array1D res = Float64Array1D.create(size0);
-        for (int x = 0; x < size0; x++)
+        int size = array.length;
+        Float64Array1D res = Float64Array1D.create(size);
+        for (int x = 0; x < size; x++)
         {
             res.setValue(x, array[x]);
         }

@@ -15,14 +15,14 @@ public class UInt16Array2DTest
 {
 
     /**
-     * Test method for {@link net.sci.array.numeric.UInt16Array2D#fromIntArray(int[][])}.
+     * Test method for {@link net.sci.array.numeric.UInt16Array2D#of(int[][])}.
      */
     @Test
     public final void testFromIntArray()
     {
         int[][] values = new int[][] {{10, 11, 12, 13}, {20, 21, 22, 23}, {30, 31, 32, 33}};
         
-        UInt16Array2D array = UInt16Array2D.fromIntArray(values);
+        UInt16Array2D array = UInt16Array2D.of(values);
         
         assertEquals(4, array.size(0));
         assertEquals(3, array.size(1));

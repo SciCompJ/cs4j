@@ -123,12 +123,10 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
      * 
      * Example:
      * 
-     * <pre>
-     * {@code
+     * {@snippet :
      * BinaryArray2D array = BinaryArray2D.create(5, 4);
      * array.fillBooleans((x, y) -> (x + y * 10) > 20);
      * }
-     * </pre>
      * 
      * @param fun
      *            a function of two variables that returns a boolean. The two
@@ -136,9 +134,12 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
      */
     public void fillBooleans(BiFunction<Integer, Integer, Boolean> fun)
     {
-        for (int[] pos : this.positions())
+        for (int y = 0; y < this.size1; y++)
         {
-            this.setBoolean(pos, fun.apply(pos[0], pos[1]));
+            for (int x = 0; x < this.size0; x++)
+            {
+                this.setBoolean(x, y, fun.apply(x, y));
+            }
         }
     }
 
@@ -267,8 +268,8 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     {
         for (int y = 0; y < this.size1; y++)
         {
-            for (int x = 0; x < this.size0; x++)
             {
+            for (int x = 0; x < this.size0; x++)
                 stream.print(getBoolean(x, y) ? "X" : ".");
             }
             stream.println();

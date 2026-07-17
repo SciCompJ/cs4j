@@ -178,7 +178,7 @@ public class FloodFillTest
     @Test
     public final void testFloodFill_Pair_C8()
     {
-        UInt8Array2D array = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D array = UInt8Array2D.of(new int[][] {
             { 10, 10, 10, 20, 20, 20, 10, 10, 10, 10, 20, 20, 10, 10, 10 },
             { 10, 10, 20, 20, 20, 20, 20, 20, 10, 20, 20, 20, 20, 10, 10 },
             { 10, 20, 10, 10, 10, 10, 20, 20, 10, 20, 10, 10, 20, 20, 10 },
@@ -215,7 +215,7 @@ public class FloodFillTest
     @Test
     public final void testFloodFill_Pair_EmptySquaresC4()
     {
-        UInt8Array2D array = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D array = UInt8Array2D.of(new int[][] {
             {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
             {10, 20, 20, 20, 10, 10, 10, 30, 30, 30, 10},
             {10, 20, 20, 20, 10, 10, 10, 30, 30, 30, 10},

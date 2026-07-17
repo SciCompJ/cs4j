@@ -92,7 +92,7 @@ public class IntrinsicVolumes2DTest
      */
     private static final UInt8Array2D createFourRegionsLabelMap()
     {
-        UInt8Array2D array = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D array = UInt8Array2D.of(new int[][] {
             {0, 0, 0, 0, 0, 0, 0, 0}, 
             {0, 3, 0, 5, 5, 5, 5, 0}, 
             {0, 0, 0, 0, 0, 0, 0, 0}, 

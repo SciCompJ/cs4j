@@ -66,7 +66,7 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
      * @return a new instance of UInt8Array2D initialized with the values of
      *         <code>intArray</code>
      */
-    public static final UInt8Array2D fromIntArray(int[][] intArray)
+    public static final UInt8Array2D of(int[][] intArray)
     {
         int size1 = intArray.length;
         int size0 = intArray[0].length;

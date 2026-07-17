@@ -30,7 +30,7 @@ public class MeyerMarkerControlledWatershed2DTest
     @Test
     public final void testProcessInPlace()
     {
-        UInt8Array2D relief = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D relief = UInt8Array2D.of(new int[][] {
             { 4, 13, 25, 18, 6},
             { 0, 10, 30, 15, 5},
             { 8, 12, 20, 17, 7},
@@ -103,14 +103,14 @@ public class MeyerMarkerControlledWatershed2DTest
     @Test
     public final void test_FourCrossing_watershed()
     {
-        UInt8Array2D relief = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D relief = UInt8Array2D.of(new int[][] {
             { 1,  2, 21,  5,  4},
             { 3,  4, 22,  7,  6},
             {10, 11, 50, 40, 41},
             { 6,  5, 23,  5,  7},
             { 3,  4, 24,  4,  3},
         });
-        Int32Array2D labelMap =Int32Array2D.fromIntArray(new int[][] {
+        Int32Array2D labelMap =Int32Array2D.of(new int[][] {
             {1, 0, 0, 0, 2}, 
             {0, 0, 0, 0, 0}, 
             {0, 0, 0, 0, 0}, 
@@ -139,7 +139,7 @@ public class MeyerMarkerControlledWatershed2DTest
     @Test
     public final void test_invertedWedge()
     {
-        UInt8Array2D relief = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D relief = UInt8Array2D.of(new int[][] {
             { 4, 13, 25, 18, 6},
             { 0, 60, 30, 70, 6},
             { 4, 50, 30, 80, 5},

@@ -116,7 +116,7 @@ public class MorphologicalReconstructionTest
     @Test
     public final void testFillHoles_Array_UInt8_2D()
     {
-        UInt8Array2D array = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D array = UInt8Array2D.of(new int[][] {
             { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
             { 10,  0, 10,  0,  0,  0, 20,  0,  0,  0, 10},
             { 10,  0, 40, 40, 40, 40, 40, 40, 40,  0, 10},
@@ -356,7 +356,7 @@ public class MorphologicalReconstructionTest
     @Test
     public final void testFillHoles_Array_Float32_2D()
     {
-        Float32Array2D array = Float32Array2D.fromFloatArray(new float[][] {
+        Float32Array2D array = Float32Array2D.of(new float[][] {
             { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10},
             { 10,  0, 10,  0,  0,  0, 20,  0,  0,  0, 10},
             { 10,  0, 40, 40, 40, 40, 40, 40, 40,  0, 10},

@@ -24,7 +24,7 @@ public class ImageTypeTest
     @Test
     public final void test_createAwtImage_label()
     {
-        UInt8Array2D array = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D array = UInt8Array2D.of(new int[][] {
             {1, 1, 1, 2, 2, 2},
             {1, 1, 4, 4, 2, 2},
             {5, 5, 4, 4, 9, 9},

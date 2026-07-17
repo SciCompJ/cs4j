@@ -260,7 +260,7 @@ public class MorphologicalReconstructionHybridScalarTest
             { BG, FG, FG, FG, FG, FG, FG, FG, FG, BG, FG, FG, BG, FG, FG, BG },
             { BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG, BG }
         };
-        return UInt8Array2D.fromIntArray(data);
+        return UInt8Array2D.of(data);
     }
 
     /**

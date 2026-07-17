@@ -74,7 +74,7 @@ public class ShiftedCross3x3StrelLeftTest
         UInt8Array2D array = create_UInt8Array2D_10x10_Square4x4();
         Strel2D strel = ShiftedCross3x3Strel.LEFT;
         
-        UInt8Array2D expected = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D expected = UInt8Array2D.of(new int[][] {
             {  0,   0,   0,   0,   0,   0,   0,   0,   0,   0}, 
             {  0,   0,   0,   0,   0,   0,   0,   0,   0,   0}, 
             {  0,   0,   0,   0, 255, 255, 255, 255,   0,   0}, 
@@ -106,7 +106,7 @@ public class ShiftedCross3x3StrelLeftTest
         Float32Array2D array = create_Float32Array2D_10x10_Square4x4();
         Strel2D strel = ShiftedCross3x3Strel.LEFT;
         
-        Float32Array2D expected = Float32Array2D.fromFloatArray(new float[][] {
+        Float32Array2D expected = Float32Array2D.of(new float[][] {
             {  0,    0,    0,    0,    0,    0,    0,    0,    0,    0}, 
             {  0,    0,    0,    0,    0,    0,    0,    0,    0,    0}, 
             {  0,    0,    0,    0, 3.2f, 3.2f, 3.2f, 3.2f,    0,    0}, 
@@ -138,7 +138,7 @@ public class ShiftedCross3x3StrelLeftTest
         UInt8Array2D array = create_UInt8Array2D_10x10_Square4x4();
         Strel2D strel = ShiftedCross3x3Strel.LEFT;
         
-        UInt8Array2D expected = UInt8Array2D.fromIntArray(new int[][] {
+        UInt8Array2D expected = UInt8Array2D.of(new int[][] {
             {  0,   0,   0,   0,   0,   0,   0,   0,   0,   0}, 
             {  0,   0,   0,   0,   0,   0,   0,   0,   0,   0}, 
             {  0,   0,   0,   0,   0,   0,   0,   0,   0,   0}, 
@@ -170,7 +170,7 @@ public class ShiftedCross3x3StrelLeftTest
         Float32Array2D array = create_Float32Array2D_10x10_Square4x4();
         Strel2D strel = ShiftedCross3x3Strel.LEFT;
         
-        Float32Array2D expected = Float32Array2D.fromFloatArray(new float[][] {
+        Float32Array2D expected = Float32Array2D.of(new float[][] {
             {  0,   0,   0,   0,   0,   0,   0,   0,   0,   0}, 
             {  0,   0,   0,   0,   0,   0,   0,   0,   0,   0}, 
             {  0,   0,   0,   0,   0,   0,   0,   0,   0,   0}, 

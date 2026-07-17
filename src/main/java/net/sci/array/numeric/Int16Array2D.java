@@ -55,15 +55,15 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
     /**
      * Creates a new Int16Array2D from a two-dimensional array of integers. The
      * first index of the int array is the second dimension of the result array,
-     * i.e. <code>intArray[y][x]</code> is the same value as
-     * <code>array.getInt(x,y)</code>.
+     * i.e. {@code intArray[y][x]} is the same value as
+     * {@code array.getInt(x,y)}.
      * 
      * @param intArray
      *            the array of integers containing the values.
      * @return a new instance of Int16Array2D initialized with the values of
-     *         <code>intArray</code>
+     *         {@code intArray}
      */
-    public static final Int16Array2D fromIntArray(int[][] intArray)
+    public static final Int16Array2D of(int[][] intArray)
     {
         int size1 = intArray.length;
         int size0 = intArray[0].length;
