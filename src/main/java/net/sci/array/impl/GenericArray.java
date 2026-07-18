@@ -33,7 +33,7 @@ public interface GenericArray<T> extends Array<T>
     @Override
     public default GenericArray<T> newInstance(int... dims)
     {
-        return GenericArray.create(dims, iterator().next());
+        return GenericArray.create(dims, sampleElement());
     }
     
     @Override

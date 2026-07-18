@@ -4,6 +4,7 @@
 package net.sci.array.impl;
 
 import net.sci.array.Array;
+import net.sci.array.ArrayND;
 import net.sci.util.MathUtils;
 
 
@@ -15,7 +16,7 @@ import net.sci.util.MathUtils;
  * 
  * @author dlegland
  */
-public class BufferedGenericArrayND<T> extends GenericArrayND<T>
+public class BufferedGenericArrayND<T> extends ArrayND<T> implements GenericArray<T>
 {
     // =============================================================
     // Class fields
