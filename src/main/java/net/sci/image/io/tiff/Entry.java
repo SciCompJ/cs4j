@@ -37,7 +37,49 @@ public class Entry
          * with a pair of 4-byte integers.
          */
         RATIONAL(5, 8),
-        /** Tag value(s) stored with double precision (64-bits) floating point (code 12) */
+        
+        /**
+         * An 8-bit signed (twos-complement) integer (code 6).
+         * @since TIFF 6.0
+         */
+        SBYTE(6, 1),
+        /**
+         * An 8-bit byte that may contain anything, depending on the definition
+         * of the field (code 7)
+         * 
+         * @since TIFF 6.0
+         */
+        UNDEFINED(7, 1),
+        /**
+         * A 16-bit (2-byte) signed (twos-complement) integer
+         * (code 8)
+         * @since TIFF 6.0
+         */
+        SSHORT(8, 2),
+        /**
+         * A 32-bit (4-byte) signed (twos-complement) integer
+         * (code 9)
+         * @since TIFF 6.0
+         */
+        SLONG(9, 4),
+        /**
+         * Two SLONG’s: the first represents the numerator of a fraction, the
+         * second the denominator (code 10)
+         * 
+         * @since TIFF 6.0
+         */
+        SRATIONAL(10, 8),
+        /**
+         * Tag value(s) stored with single precision (32-bits) floating point
+         * (code 11)
+         * @since TIFF 6.0
+         */
+        FLOAT(11, 4),
+        /**
+         * Tag value(s) stored with double precision (64-bits) floating point
+         * (code 12)
+         * @since TIFF 6.0
+         */
         DOUBLE(12, 8);
         
         int code;
@@ -70,6 +112,12 @@ public class Entry
                 case 3 -> SHORT;
                 case 4 -> LONG;
                 case 5 -> RATIONAL;
+                case 6 -> SBYTE;
+                case 7 -> UNDEFINED;
+                case 8 -> SSHORT;
+                case 9 -> SLONG;
+                case 10 -> SRATIONAL;
+                case 11 -> FLOAT;
                 case 12 -> DOUBLE;
                 default -> UNKNOWN;
             };
@@ -144,12 +192,14 @@ public class Entry
      */
     public Entry setByteValue(byte value)
     {
-        if (this.type != Type.BYTE)
+        // display error, but process
+        if (this.type != Type.BYTE && this.type != Type.SBYTE)
         {
             System.err.println(String.format("Set value of tag %d as a BYTE, while its type is %s",
                     this.code, this.type));
+            this.type = Type.BYTE;
         }
-        this.type = Type.BYTE;
+        
         this.count = 1;
         this.value = value;
         return this;
@@ -160,17 +210,19 @@ public class Entry
      * sets up the {@code type} field to SHORT and the {@code count} field to 1.
      * 
      * @param value
-     *            the shirt integer value to set up.
+     *            the short integer value to set up.
      * @return the reference to this tag (for chaining operations)
      */
     public Entry setShortValue(short value)
     {
-        if (this.type != Type.SHORT)
+        // display error, but process
+        if (this.type != Type.SHORT && this.type != Type.SSHORT)
         {
             System.err.println(String.format("Set value of tag %d as a SHORT, while its type is %s",
                     this.code, this.type));
+            this.type = Type.SHORT;
         }
-        this.type = Type.SHORT;
+        
         this.count = 1;
         this.value = value;
         return this;
@@ -186,12 +238,14 @@ public class Entry
      */
     public Entry setIntValue(int value)
     {
-        if (this.type != Type.LONG)
+        // display error, but process
+        if (this.type != Type.LONG && this.type != Type.SLONG)
         {
             System.err.println(String.format("Set value of tag %d as a LONG, while its type is %s",
                     this.code, this.type));
+            this.type = Type.LONG;
         }
-        this.type = Type.LONG;
+        
         this.count = 1;
         this.value = value;
         return this;
@@ -214,7 +268,7 @@ public class Entry
         // check the contents correspond to tag type
         switch(this.type)
         {
-            case BYTE -> {
+            case BYTE, SBYTE -> {
                 if (value instanceof byte[] array)
                 {
                     this.count = array.length;
@@ -230,10 +284,10 @@ public class Entry
                 }
                 else
                 {
-                    throw new RuntimeException("If tag type is BYTE, content must be an array of bytes");
+                    throw new RuntimeException("If tag type is BYTE or SBYTE, content must be an array of bytes");
                 }
             }
-            case SHORT -> {
+            case SHORT, SSHORT -> {
                 if (value instanceof short[] array)
                 {
                     this.count = array.length;
@@ -249,10 +303,10 @@ public class Entry
                 }
                 else
                 {
-                    throw new RuntimeException("If tag type is SHORT, content must be an array of short");
+                    throw new RuntimeException("If tag type is SHORT or SSHORT, content must be an array of short");
                 }
             }
-            case LONG -> {
+            case LONG, SLONG -> {
                 if (value instanceof int[] array)
                 {
                     this.count = array.length;
@@ -268,7 +322,7 @@ public class Entry
                 }
                 else
                 {
-                    throw new RuntimeException("If tag type is LONG, content must be an array of int");
+                    throw new RuntimeException("If tag type is LONG or SLONG, content must be an array of int");
                 }
             }
             case ASCII -> {
@@ -291,6 +345,37 @@ public class Entry
                 
                 this.content = value;
                 this.count = 1;
+            }
+            case SRATIONAL -> {
+                if (!(value instanceof int[]))
+                {
+                    throw new RuntimeException("If tag type is SRATIONAL, content must be an array of int");
+                }
+                
+                this.content = value;
+                this.count = 1;
+            }
+            case FLOAT -> {
+                if (value instanceof float[] array)
+                {
+                    this.content = array;
+                    this.count = array.length;
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is FLOAT, content must be an array of float");
+                }
+            }
+            case DOUBLE -> {
+                if (value instanceof double[] array)
+                {
+                    this.content = array;
+                    this.count = array.length;
+                }
+                else
+                {
+                    throw new RuntimeException("If tag type is DOUBLE, content must be an array of double");
+                }
             }
             default -> {
                 System.err.println("Could not interpret tag with code: " + this.code);

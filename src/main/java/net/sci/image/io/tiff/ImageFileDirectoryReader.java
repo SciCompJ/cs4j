@@ -233,11 +233,12 @@ public class ImageFileDirectoryReader
     {
         entry.content = switch (entry.type)
         {
-            case BYTE -> entry.count == 1 ? Integer.valueOf(entry.value) : readByteArray(entry);
-            case SHORT -> entry.count == 1 ? Integer.valueOf(entry.value) : readShortArray(entry);
-            case LONG -> entry.count == 1 ? Integer.valueOf(entry.value) : readIntArray(entry);
+            case BYTE, SBYTE -> entry.count == 1 ? Integer.valueOf(entry.value) : readByteArray(entry);
+            case SHORT, SSHORT -> entry.count == 1 ? Integer.valueOf(entry.value) : readShortArray(entry);
+            case LONG, SLONG -> entry.count == 1 ? Integer.valueOf(entry.value) : readIntArray(entry);
             case ASCII -> readAscii(entry); // Automatically convert byte array to String
-            case RATIONAL -> readRational(entry); // Assume only one rational is specified
+            case RATIONAL, SRATIONAL -> readRational(entry); // Assume only one rational is specified
+            case FLOAT -> readFloatArray(entry);
             case DOUBLE -> readDoubleArray(entry);
             default -> null;
         };
@@ -378,6 +379,26 @@ public class ImageFileDirectoryReader
             return (double) numerator / denominator;
         else
             return 0.0;
+    }
+    
+    private float[] readFloatArray(Entry entry) throws IOException
+    {
+        // convert tag value to long offset for reading large buffer
+        long offset = ((long) entry.value) & 0xffffffffL;
+        
+        // allocate memory for result
+        float[] res = new float[entry.count];
+        
+        // save pointer location
+        long saveLoc = dataReader.getFilePointer();
+        
+        // fill up array
+        dataReader.seek(offset);
+        dataReader.readFloatArray(res, 0, entry.count);
+        
+        // restore pointer and return result
+        dataReader.seek(saveLoc);
+        return res;
     }
     
     private double[] readDoubleArray(Entry entry) throws IOException
