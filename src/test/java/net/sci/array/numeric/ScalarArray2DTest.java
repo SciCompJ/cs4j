@@ -18,18 +18,22 @@ public class ScalarArray2DTest
 {
     
     /**
-     * Test method for {@link net.sci.array.numeric.ScalarArray2D#wrap(net.sci.array.scalar.ScalarArray)}.
+     * Creates an instance of BufferedUInt8ArrayND, and wraps into a
+     * ScalarArray2D.
+     * 
+     * Test method for
+     * {@link net.sci.array.numeric.ScalarArray2D#wrap(net.sci.array.scalar.ScalarArray)}.
      */
     @Test
     public final void testWrapScalarArrayOfT()
     {
-        UInt8Array array0 = BufferedUInt8ArrayND.create(10, 10);
+        UInt8Array array0 = new BufferedUInt8ArrayND(new int[] {5, 4});
         ScalarArray2D<?> array = ScalarArray2D.wrap(array0);
         
         assertTrue(array instanceof ScalarArray2D);
         assertEquals(array.dimensionality(), 2);
-        assertEquals(array.size(0), 10);
-        assertEquals(array.size(1), 10);
+        assertEquals(array.size(0), 5);
+        assertEquals(array.size(1), 4);
     }
     
     /**

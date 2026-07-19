@@ -9,6 +9,7 @@ import net.sci.array.numeric.impl.BufferedUInt8ArrayND;
  * @author dlegland
  *
  */
+@Deprecated
 public abstract class UInt8ArrayND extends IntArrayND<UInt8> implements UInt8Array
 {
 	// =============================================================
@@ -21,7 +22,7 @@ public abstract class UInt8ArrayND extends IntArrayND<UInt8> implements UInt8Arr
 	 *            the dimensions of the array
 	 * @return a new instance of UInt8ArrayND
 	 */
-	public static UInt8ArrayND create(int... dims)
+	public static UInt8Array create(int... dims)
 	{
 		return new BufferedUInt8ArrayND(dims);
 	}

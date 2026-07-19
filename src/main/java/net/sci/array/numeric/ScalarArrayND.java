@@ -13,6 +13,7 @@ import net.sci.array.ArrayND;
  * @author dlegland
  *
  */
+@Deprecated
 public abstract class ScalarArrayND<S extends Scalar<S>> extends ArrayND<S> implements ScalarArray<S>
 {
 

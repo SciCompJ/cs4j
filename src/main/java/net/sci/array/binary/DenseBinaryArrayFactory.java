@@ -24,7 +24,7 @@ public class DenseBinaryArrayFactory extends AlgoStub implements BinaryArray.Fac
             case 1 -> new BufferedBinaryArray1D(dims[0]);
             case 2 -> new BufferedBinaryArray2D(dims[0], dims[1]);
             case 3 -> create3d(dims[0], dims[1], dims[2]);
-            default -> BufferedBinaryArrayND.create(dims);
+            default -> new BufferedBinaryArrayND(dims);
         };
     }
     

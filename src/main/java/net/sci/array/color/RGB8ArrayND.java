@@ -15,12 +15,13 @@ import net.sci.array.numeric.VectorArrayND;
  * @author dlegland
  *
  */
+@Deprecated
 public abstract class RGB8ArrayND extends VectorArrayND<RGB8,UInt8> implements RGB8Array
 {
 	// =============================================================
 	// Static methods
 
-	public static final RGB8ArrayND create(int...sizes)
+	public static final RGB8Array create(int...sizes)
 	{
 		return new Int32EncodedRGB8ArrayND(sizes);
 	}

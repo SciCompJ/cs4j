@@ -3,9 +3,10 @@
  */
 package net.sci.array.numeric.impl;
 
+import net.sci.array.ArrayND;
+import net.sci.array.numeric.Float64Array;
 import net.sci.array.numeric.Float64Vector;
 import net.sci.array.numeric.Float64VectorArray;
-import net.sci.array.numeric.Float64VectorArrayND;
 import net.sci.util.MathUtils;
 
 /**
@@ -14,7 +15,7 @@ import net.sci.util.MathUtils;
  * @author dlegland
  *
  */
-public class BufferedFloat64VectorArrayND extends Float64VectorArrayND
+public class BufferedFloat64VectorArrayND extends ArrayND<Float64Vector> implements Float64VectorArray
 {
 	// =============================================================
 	// Class members
@@ -119,6 +120,54 @@ public class BufferedFloat64VectorArrayND extends Float64VectorArrayND
         this.buffer[index] = value;
     }
 
+    // =============================================================
+    // Implementation of Float64VectorArray methods
+
+    public Iterable<Float64Array> channels()
+    {
+        return new Iterable<Float64Array>()
+        {
+            @Override
+            public java.util.Iterator<Float64Array> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
+    }
+
+    /**
+     * Returns a view on the channel specified by the given index.
+     * 
+     * @param channel
+     *            index of the channel to view
+     * @return a view on the channel
+     */
+    public Float64Array channel(int channel)
+    {
+        return new ChannelView(this, channel);
+    }
+    
+    public java.util.Iterator<Float64Array> channelIterator()
+    {
+        return new ChannelIterator();
+    }
+
+    private class ChannelIterator implements java.util.Iterator<Float64Array> 
+    {
+        int channel = 0;
+
+        @Override
+        public boolean hasNext()
+        {
+            return channel < channelCount();
+        }
+
+        @Override
+        public Float64Array next()
+        {
+            return new ChannelView(BufferedFloat64VectorArrayND.this, channel++);
+        }
+    }
 
     // =============================================================
     // Implementation of the Array interface

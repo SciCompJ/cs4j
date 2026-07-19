@@ -10,6 +10,7 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.PositionIterator;
 import net.sci.array.impl.ArrayWrapperStub;
+import net.sci.array.numeric.impl.BufferedFloat32VectorArrayND;
 
 /**
  * Specialization of the interface VectorArray for arrays of vectors that
@@ -50,7 +51,7 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         {
             case 2 -> Float32VectorArray2D.create(dims[0], dims[1], sizeV);
             case 3 -> Float32VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
-            default -> Float32VectorArrayND.create(dims, sizeV);
+            default -> new BufferedFloat32VectorArrayND(dims, sizeV);
         };
     }
     

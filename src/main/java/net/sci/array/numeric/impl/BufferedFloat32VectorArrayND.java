@@ -3,9 +3,10 @@
  */
 package net.sci.array.numeric.impl;
 
+import net.sci.array.ArrayND;
+import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.Float32Vector;
 import net.sci.array.numeric.Float32VectorArray;
-import net.sci.array.numeric.Float32VectorArrayND;
 import net.sci.util.MathUtils;
 
 /**
@@ -14,7 +15,7 @@ import net.sci.util.MathUtils;
  * @author dlegland
  *
  */
-public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
+public class BufferedFloat32VectorArrayND extends ArrayND<Float32Vector> implements Float32VectorArray
 {
 	// =============================================================
 	// Class members
@@ -136,7 +137,42 @@ public class BufferedFloat32VectorArrayND extends Float32VectorArrayND
         this.buffer[index] = (float) value;
     }
 
+    // =============================================================
+    // Implementation of VectorArray interface
+
+    public Iterable<Float32Array> channels()
+    {
+        return new Iterable<Float32Array>()
+        {
+            @Override
+            public java.util.Iterator<Float32Array> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
+    }
     
+    public java.util.Iterator<Float32Array> channelIterator()
+    {
+        return new ChannelIterator();
+    }
+
+    private class ChannelIterator implements java.util.Iterator<Float32Array> 
+    {
+        int channel = 0;
+
+        @Override
+        public boolean hasNext()
+        {
+            return channel < channelCount();
+        }
+
+        @Override
+        public Float32Array next()
+        {
+            return new ChannelView(BufferedFloat32VectorArrayND.this, channel++);
+        }
+    }
     // =============================================================
     // Implementation of the Array interface
     

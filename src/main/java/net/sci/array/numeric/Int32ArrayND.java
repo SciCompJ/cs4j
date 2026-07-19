@@ -9,6 +9,7 @@ import net.sci.array.numeric.impl.BufferedInt32ArrayND;
  * @author dlegland
  *
  */
+@Deprecated
 public abstract class Int32ArrayND extends IntArrayND<Int32> implements Int32Array
 {
 	// =============================================================
@@ -21,7 +22,7 @@ public abstract class Int32ArrayND extends IntArrayND<Int32> implements Int32Arr
 	 *            the dimensions of the array
 	 * @return a new instance of Int32ArrayND
 	 */
-	public static Int32ArrayND create(int... dims)
+	public static Int32Array create(int... dims)
 	{
 		return new BufferedInt32ArrayND(dims);
 	}

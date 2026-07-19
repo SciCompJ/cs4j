@@ -18,12 +18,15 @@ public class ScalarArray3DTest
 {
     
     /**
+     * Creates an instance of BufferedUInt8ArrayND, and wraps into a
+     * ScalarArray2D.
+     * 
      * Test method for {@link net.sci.array.numeric.ScalarArray3D#wrap(net.sci.array.scalar.ScalarArray)}.
      */
     @Test
     public final void testWrapScalarArrayOfT()
     {
-        UInt8Array array0 = BufferedUInt8ArrayND.create(5, 4, 3);
+        UInt8Array array0 = new BufferedUInt8ArrayND(new int[] {5, 4, 3});
         ScalarArray3D<?> array = ScalarArray3D.wrapScalar3d(array0);
         
         assertTrue(array instanceof ScalarArray3D);

@@ -3,16 +3,16 @@
  */
 package net.sci.array.numeric.impl;
 
+import net.sci.array.ArrayND;
 import net.sci.array.numeric.Int16;
 import net.sci.array.numeric.Int16Array;
-import net.sci.array.numeric.Int16ArrayND;
 import net.sci.util.MathUtils;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedInt16ArrayND extends Int16ArrayND
+public class BufferedInt16ArrayND extends ArrayND<Int16> implements Int16Array
 {
 	// =============================================================
 	// Class fields

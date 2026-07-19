@@ -7,7 +7,6 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.numeric.Float32;
 import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.Float32Array3D;
-import net.sci.array.numeric.Float32ArrayND;
 import net.sci.util.MathUtils;
 
 /**
@@ -28,7 +27,7 @@ public class DenseFloat32ArrayFactory extends AlgoStub implements Float32Array.F
             case 1 -> new BufferedFloat32Array1D(dims[0]);
             case 2 -> new BufferedFloat32Array2D(dims[0], dims[1]);
             case 3 -> create3d(dims[0], dims[1], dims[2]);
-            default -> Float32ArrayND.create(dims);
+            default -> new BufferedFloat32ArrayND(dims);
         };
     }
 

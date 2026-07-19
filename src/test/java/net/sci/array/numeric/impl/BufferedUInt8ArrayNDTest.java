@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array;
-import net.sci.array.numeric.UInt8ArrayND;
 
 public class BufferedUInt8ArrayNDTest
 {
@@ -15,7 +14,7 @@ public class BufferedUInt8ArrayNDTest
 	public void testGetSet()
 	{
 		// create array with 2*3*4 = 24 elements 
-		UInt8Array array = UInt8ArrayND.create(4, 3, 2);
+		UInt8Array array = UInt8Array.create(new int[] {4, 3, 2});
 		array.fillInt(10);
 
 		// iterate over elements, count and sum them

@@ -7,7 +7,6 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.numeric.Float64;
 import net.sci.array.numeric.Float64Array;
 import net.sci.array.numeric.Float64Array3D;
-import net.sci.array.numeric.Float64ArrayND;
 import net.sci.util.MathUtils;
 
 /**
@@ -28,7 +27,7 @@ public class DenseFloat64ArrayFactory extends AlgoStub implements Float64Array.F
             case 1 -> new BufferedFloat64Array1D(dims[0]);
             case 2 -> new BufferedFloat64Array2D(dims[0], dims[1]);
             case 3 -> create3d(dims[0], dims[1], dims[2]);
-            default -> Float64ArrayND.create(dims);
+            default -> new BufferedFloat64ArrayND(dims);
         };
     }
 

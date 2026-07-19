@@ -3,16 +3,16 @@
  */
 package net.sci.array.numeric.impl;
 
+import net.sci.array.ArrayND;
 import net.sci.array.numeric.Float64;
 import net.sci.array.numeric.Float64Array;
-import net.sci.array.numeric.Float64ArrayND;
 import net.sci.util.MathUtils;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedFloat64ArrayND extends Float64ArrayND
+public class BufferedFloat64ArrayND extends ArrayND<Float64> implements Float64Array
 {
 	// =============================================================
 	// Class fields

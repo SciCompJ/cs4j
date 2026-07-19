@@ -7,7 +7,6 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.numeric.Int16;
 import net.sci.array.numeric.Int16Array;
 import net.sci.array.numeric.Int16Array3D;
-import net.sci.array.numeric.Int16ArrayND;
 import net.sci.util.MathUtils;
 
 /**
@@ -28,7 +27,7 @@ public class DenseInt16ArrayFactory extends AlgoStub implements Int16Array.Facto
             case 1 -> new BufferedInt16Array1D(dims[0]);
             case 2 -> new BufferedInt16Array2D(dims[0], dims[1]);
             case 3 -> create3d(dims[0], dims[1], dims[2]);
-            default -> Int16ArrayND.create(dims);
+            default -> new BufferedInt16ArrayND(dims);
         };
     }
     

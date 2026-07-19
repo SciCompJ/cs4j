@@ -9,6 +9,7 @@ import net.sci.array.numeric.impl.BufferedInt16ArrayND;
  * @author dlegland
  *
  */
+@Deprecated
 public abstract class Int16ArrayND extends IntArrayND<Int16> implements Int16Array
 {
 	// =============================================================
@@ -21,7 +22,7 @@ public abstract class Int16ArrayND extends IntArrayND<Int16> implements Int16Arr
 	 *            the dimensions of the array
 	 * @return a new instance of Int16ArrayND
 	 */
-	public static Int16ArrayND create(int... dims)
+	public static Int16Array create(int... dims)
 	{
 		return new BufferedInt16ArrayND(dims);
 	}

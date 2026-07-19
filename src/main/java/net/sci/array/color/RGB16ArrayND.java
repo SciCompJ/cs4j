@@ -15,12 +15,13 @@ import net.sci.array.numeric.VectorArrayND;
  * @author dlegland
  *
  */
+@Deprecated
 public abstract class RGB16ArrayND extends VectorArrayND<RGB16,UInt16> implements RGB16Array
 {
 	// =============================================================
 	// Static methods
 
-	public static final RGB16ArrayND create(int... dims)
+	public static final RGB16Array create(int... dims)
 	{
 		return new BufferedPackedShortRGB16ArrayND(dims);
 	}
@@ -64,13 +65,13 @@ public abstract class RGB16ArrayND extends VectorArrayND<RGB16,UInt16> implement
     public Iterable<UInt16ArrayND> channels()
     {
         return new Iterable<UInt16ArrayND>()
-                {
-                    @Override
-                    public java.util.Iterator<UInt16ArrayND> iterator()
-                    {
-                        return new ChannelIterator();
-                    }
-                };
+        {
+            @Override
+            public java.util.Iterator<UInt16ArrayND> iterator()
+            {
+                return new ChannelIterator();
+            }
+        };
     }
 
     @Override

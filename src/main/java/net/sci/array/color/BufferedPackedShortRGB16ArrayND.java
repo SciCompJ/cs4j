@@ -3,6 +3,7 @@
  */
 package net.sci.array.color;
 
+import net.sci.array.ArrayND;
 import net.sci.array.PositionIterator;
 import net.sci.array.numeric.UInt16Array;
 
@@ -10,7 +11,7 @@ import net.sci.array.numeric.UInt16Array;
  * @author dlegland
  *
  */
-public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
+public class BufferedPackedShortRGB16ArrayND extends ArrayND<RGB16> implements RGB16Array
 {
     // =============================================================
     // Class variables
@@ -172,9 +173,9 @@ public class BufferedPackedShortRGB16ArrayND extends RGB16ArrayND
      * @see net.sci.array.color.RGB16ArrayND#duplicate()
      */
     @Override
-    public RGB16ArrayND duplicate()
+    public RGB16Array duplicate()
     {
-        RGB16ArrayND result = new BufferedPackedShortRGB16ArrayND(this.sizes);
+        RGB16Array result = new BufferedPackedShortRGB16ArrayND(this.sizes);
         int[] samples = new int[3];
         for (int[] pos : result.positions())
         {

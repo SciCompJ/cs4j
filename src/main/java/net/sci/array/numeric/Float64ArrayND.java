@@ -9,6 +9,7 @@ import net.sci.array.numeric.impl.BufferedFloat64ArrayND;
  * @author dlegland
  *
  */
+@Deprecated
 public abstract class Float64ArrayND extends ScalarArrayND<Float64> implements Float64Array
 {
 	// =============================================================
@@ -21,7 +22,7 @@ public abstract class Float64ArrayND extends ScalarArrayND<Float64> implements F
 	 *            the dimensions of the array
 	 * @return a new instance of Float64ArrayND
 	 */
-	public static Float64ArrayND create(int... dims)
+	public static Float64Array create(int... dims)
 	{
 		return new BufferedFloat64ArrayND(dims);
 	}

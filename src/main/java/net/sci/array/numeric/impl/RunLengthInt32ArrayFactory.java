@@ -6,7 +6,6 @@ package net.sci.array.numeric.impl;
 import net.sci.algo.AlgoStub;
 import net.sci.array.numeric.Int32;
 import net.sci.array.numeric.Int32Array;
-import net.sci.array.numeric.Int32ArrayND;
 
 /**
  * A factory for Int32 arrays that generates run-length encoded representation
@@ -26,7 +25,7 @@ public class RunLengthInt32ArrayFactory extends AlgoStub implements Int32Array.F
             case 1 -> new BufferedInt32Array1D(dims[0]);
             case 2 -> new RunLengthInt32Array2D(dims[0], dims[1]);
             case 3 -> new RunLengthInt32Array3D(dims[0], dims[1], dims[2]);
-            default -> Int32ArrayND.create(dims);
+            default -> new BufferedInt32ArrayND(dims);
         };
     }
 

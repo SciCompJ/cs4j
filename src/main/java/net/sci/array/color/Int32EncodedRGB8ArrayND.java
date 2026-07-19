@@ -3,6 +3,7 @@
  */
 package net.sci.array.color;
 
+import net.sci.array.ArrayND;
 import net.sci.array.numeric.Int32Array;
 import net.sci.array.numeric.UInt8;
 
@@ -16,7 +17,7 @@ import net.sci.array.numeric.UInt8;
  * @author dlegland
  *
  */
-public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
+public class Int32EncodedRGB8ArrayND extends ArrayND<RGB8> implements RGB8Array
 {
 	// =============================================================
 	// Class variables
@@ -174,7 +175,7 @@ public class Int32EncodedRGB8ArrayND extends RGB8ArrayND
 	 * @see net.sci.array.color.RGB8Array2D#duplicate()
 	 */
 	@Override
-	public RGB8ArrayND duplicate()
+	public RGB8Array duplicate()
 	{
 		Int32Array newBuffer = this.buffer.duplicate();
 		return new Int32EncodedRGB8ArrayND(newBuffer);

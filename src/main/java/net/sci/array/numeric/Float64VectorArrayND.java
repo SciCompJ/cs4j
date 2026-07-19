@@ -12,12 +12,13 @@ import net.sci.array.numeric.impl.BufferedFloat64VectorArrayND;
  * @author dlegland
  *
  */
+@Deprecated
 public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector,Float64> implements Float64VectorArray
 {
     // =============================================================
     // Static methods
     
-    public static final Float64VectorArrayND create(int[] sizes, int sizeV)
+    public static final Float64VectorArray create(int[] sizes, int sizeV)
     {
         return new BufferedFloat64VectorArrayND(sizes, sizeV);
     }

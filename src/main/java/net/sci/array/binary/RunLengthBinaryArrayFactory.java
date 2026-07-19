@@ -23,7 +23,7 @@ public class RunLengthBinaryArrayFactory extends AlgoStub implements BinaryArray
         {
             case 2 -> new RunLengthBinaryArray2D(dims[0], dims[1]);
             case 3 -> new RunLengthBinaryArray3D(dims[0], dims[1], dims[2]);
-            default -> BinaryArrayND.create(dims);
+            default -> new BufferedBinaryArrayND(dims);
         };
     }
 

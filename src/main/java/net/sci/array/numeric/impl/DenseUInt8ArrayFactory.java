@@ -7,7 +7,6 @@ import net.sci.algo.AlgoStub;
 import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.UInt8Array3D;
-import net.sci.array.numeric.UInt8ArrayND;
 import net.sci.util.MathUtils;
 
 /**
@@ -28,7 +27,7 @@ public class DenseUInt8ArrayFactory extends AlgoStub implements UInt8Array.Facto
             case 1 -> new BufferedUInt8Array1D(dims[0]);
             case 2 -> new BufferedUInt8Array2D(dims[0], dims[1]);
             case 3 -> create3d(dims[0], dims[1], dims[2]);
-            default -> UInt8ArrayND.create(dims);
+            default -> new BufferedUInt8ArrayND(dims);
         };
     }
 

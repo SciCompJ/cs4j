@@ -9,6 +9,7 @@ import java.util.List;
 import net.sci.array.Array;
 import net.sci.array.PositionIterator;
 import net.sci.array.impl.ArrayWrapperStub;
+import net.sci.array.numeric.impl.BufferedFloat64VectorArrayND;
 
 /**
  * Specialization of the interface VectorArray for arrays of vectors that
@@ -49,7 +50,7 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         {
             case 2 -> Float64VectorArray2D.create(dims[0], dims[1], sizeV);
             case 3 -> Float64VectorArray3D.create(dims[0], dims[1], dims[2], sizeV);
-            default -> Float64VectorArrayND.create(dims, sizeV);
+            default -> new BufferedFloat64VectorArrayND(dims, sizeV);
         };
     }
     

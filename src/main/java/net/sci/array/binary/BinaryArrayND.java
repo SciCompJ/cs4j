@@ -9,6 +9,7 @@ import net.sci.array.numeric.IntArrayND;
  * @author dlegland
  *
  */
+@Deprecated
 public abstract class BinaryArrayND extends IntArrayND<Binary> implements BinaryArray
 {
 	// =============================================================
@@ -21,7 +22,7 @@ public abstract class BinaryArrayND extends IntArrayND<Binary> implements Binary
 	 *            the dimensions of the array
 	 * @return a new instance of BinaryArrayND
 	 */
-	public static BinaryArrayND create(int... dims)
+	public static BinaryArray create(int... dims)
 	{
 		return new BufferedBinaryArrayND(dims);
 	}

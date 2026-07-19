@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import net.sci.array.numeric.Int32;
 import net.sci.array.numeric.Int32Array;
-import net.sci.array.numeric.Int32ArrayND;
 
 public class BufferedInt32ArrayNDTest
 {
@@ -15,7 +14,7 @@ public class BufferedInt32ArrayNDTest
 	public void testGetSet()
 	{
 		// create array with 2*3*4 = 24 elements 
-		Int32Array array = Int32ArrayND.create(4, 3, 2);
+		Int32Array array = Int32Array.create(new int[] {4, 3, 2});
 		array.fillInt(10);
 
 		// iterate over elements, count and sum them

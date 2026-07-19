@@ -3,13 +3,14 @@
  */
 package net.sci.array.binary;
 
+import net.sci.array.ArrayND;
 import net.sci.util.MathUtils;
 
 /**
  * @author dlegland
  *
  */
-public class BufferedBinaryArrayND extends BinaryArrayND
+public class BufferedBinaryArrayND extends ArrayND<Binary> implements BinaryArray
 {
 	// =============================================================
 	// Class fields
