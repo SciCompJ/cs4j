@@ -77,8 +77,25 @@ public abstract class IntArray1D<I extends Int<I>> extends ScalarArray1D<I> impl
     // =============================================================
     // New methods
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as an integer.
+     * 
+     * @param x
+     *            the coordinate index of the element
+     * @return the integer value at the specified position
+     */
     public abstract int getInt(int x);
 
+    /**
+     * Updates the element value at the specified position, using the specified
+     * integer value.
+     * 
+     * @param x
+     *            the coordinate index of the element
+     * @param value
+     *            the new integer value
+     */
     public abstract void setInt(int x, int value);
     
 

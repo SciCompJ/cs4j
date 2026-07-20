@@ -115,6 +115,11 @@ public class Int16 implements Int<Int16>
     // =============================================================
     // Class methods
 
+    /**
+     * Returns the value of this {@code Int16} as a (signed) short.
+     * 
+     * @return the (signed) short value corresponding to this {@code Int16}
+     */
     public short getShort()
     {
         return value;

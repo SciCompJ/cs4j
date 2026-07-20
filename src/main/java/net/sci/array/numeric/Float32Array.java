@@ -28,18 +28,45 @@ public interface Float32Array extends ScalarArray<Float32>
 {
     // =============================================================
     // Static variables
-
+    
+    /**
+     * The default factory for creating multi-dimensional arrays containing
+     * {@code Float32} values.
+     */
     public static final Factory defaultFactory = new DenseFloat32ArrayFactory();
 
     
     // =============================================================
     // Static methods
     
+    /**
+     * Creates a new Float32Array with the specified dimensions. When possible,
+     * the most appropriate implementation class is chosen according to the
+     * dimensionality and the total number of elements of the array.
+     * 
+     * @param dims
+     *            the size of the array to create.
+     * @return a new instance of {@code Float32Array}
+     */
     public static Float32Array create(int... dims)
     {
         return defaultFactory.create(dims);
     }
     
+    /**
+     * Creates a new {@code Float32Array} based on the specified buffer containing
+     * array elements. The buffer is not duplicated during creation of Array
+     * instance, so changing values within buffer will change values within
+     * array, and vice-versa.
+     * 
+     * @param dims
+     *            the size of the array to create
+     * @param buffer
+     *            the double array containing array elements. Length must equal
+     *            product of array dimensions.
+     * @return a new instance of {@code Float32Array} based on the specified
+     *         buffer.
+     */
     public static Float32Array create(int[] dims, float[] buffer)
     {
         return switch (dims.length)
@@ -132,6 +159,15 @@ public interface Float32Array extends ScalarArray<Float32>
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
+    /**
+     * Encapsulates the instance of Scalar array into a new Float32Array, by
+     * creating a Wrapper if necessary. 
+     * If the original array is already an instance of Float32Array, it is returned.  
+     * 
+     * @param array
+     *            the original array
+     * @return a Float32Array view of the original array
+     */
     public static Float32Array wrapScalar(ScalarArray<?> array)
     {
         if (array instanceof Float32Array)
@@ -145,6 +181,14 @@ public interface Float32Array extends ScalarArray<Float32>
     // =============================================================
     // New methods
 	
+    /**
+     * Computes value of elements within array, by using the specified function
+     * that associates {@code Float} values to array of coordinate indices.
+     * 
+     * @param fun
+     *            the mapping function between coordinate indices and Float value
+     *            of element
+     */
     public default void fillFloats(Function<int[], Float> fun)
     {
         for (int[] pos : this.positions())
@@ -311,10 +355,25 @@ public interface Float32Array extends ScalarArray<Float32>
 	// =============================================================
 	// Inner interface
 
+    /**
+     * A specialization of the {@code Array.Iterator} interface to iterate over
+     * the elements of this array.
+     */
 	public interface Iterator extends ScalarArray.Iterator<Float32>
 	{
+        /**
+         * Returns the float value at current iterator position.
+         * 
+         * @return the current int value.
+         */
         public float getFloat();
 
+        /**
+         * Updates the element value at the current iterator position.
+         * 
+         * @param value
+         *            the float value at the specified position
+         */
         public void setFloat(float value);
         
         @Override
@@ -343,22 +402,28 @@ public interface Float32Array extends ScalarArray<Float32>
 	}
 	
     /**
-     * Wraps explicitly an array containing <code>Float32</code> elements into an
-     * instance of <code>Float32Array</code>.
+     * Utility class to wrap arrays containing {@code Float32} elements into an
+     * instance of {@code Float32Array}.
      * 
+     * The view is able to modify values of the original array.
+     *
      * Usage:
-     * <pre>
-     * {@code
+     * {@snippet :
      * Array<Float32> array = ...
-     * Float32Array newArray = new Float32Array.Wrapper(array);
-     * newArray.getFloat(...);  
+     * Float32Array intArray = new Float32Array.Wrapper(array);
+     * intArray.getInt(...);
      * }
-     * </pre>
      */
     static class Wrapper extends ArrayWrapperStub<Float32> implements Float32Array
     {
         Array<Float32> array;
         
+        /**
+         * Creates a new {@code Float32Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Array<Float32> array)
         {
             super(array);

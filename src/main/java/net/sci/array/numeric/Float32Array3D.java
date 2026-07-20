@@ -106,8 +106,33 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
     // =============================================================
     // New methods
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a float.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @return the float value at the specified position
+     */
     public abstract float getFloat(int x, int y, int z);
     
+    /**
+     * Updates the element value at the specified position, using the specified
+     * float value.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @param value
+     *            the new float value
+     */
     public abstract void setFloat(int x, int y, int z, float value);
     
     
@@ -284,6 +309,12 @@ public abstract class Float32Array3D extends ScalarArray3D<Float32> implements F
     {
         Float32Array array;
 
+        /**
+         * Creates a new {@code Float32Array3D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Float32Array array)
         {
             super(0, 0, 0);

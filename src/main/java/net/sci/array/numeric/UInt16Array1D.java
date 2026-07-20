@@ -19,6 +19,13 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 1D array containing UInt16 values.
+     * 
+     * @param size0
+     *            the size of the array
+     * @return a new instance of UInt16Array1D
+     */
 	public static final UInt16Array1D create(int size0)
 	{
 	    return wrap(UInt16Array.create(size0));
@@ -32,6 +39,27 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
      * @return a new instance of UInt16Array1D initialized with the values of
      *         <code>intArray</code>
      */
+    public static final UInt16Array1D of(int[] intArray)
+    {
+        int size0 = intArray.length;
+        UInt16Array1D res = UInt16Array1D.create(size0);
+        for (int x = 0; x < size0; x++)
+        {
+            res.setInt(x, intArray[x]);
+        }
+        return res;
+    }
+    
+    /**
+     * Creates a new UInt16Array1D from an array of integers. 
+     * 
+     * @deprecated replaced by of(int[])
+     * @param intArray
+     *            the array of integers containing the values.
+     * @return a new instance of UInt16Array1D initialized with the values of
+     *         <code>intArray</code>
+     */
+    @Deprecated
     public static final UInt16Array1D fromIntArray(int[] intArray)
     {
         int size0 = intArray.length;
@@ -62,39 +90,58 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
     }
     
     
-	// =============================================================
-	// Constructor
-
-	/**
-	 * Initialize the protected size variables. 
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 */
-	protected UInt16Array1D(int size0)
-	{
-		super(size0);
-	}
-	
-	
+    // =============================================================
+    // Constructor
+    
+    /**
+     * Initialize the protected size variables.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     */
+    protected UInt16Array1D(int size0)
+    {
+        super(size0);
+    }
+    
+    
     // =============================================================
     // New method(s)
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a (signed) short.
+     * 
+     * @param pos
+     *            the coordinate index of the element
+     * @return the short value at the specified position
+     */
     public abstract short getShort(int pos);
     
-    public abstract void setShort(int pos, short value);
+    /**
+     * Updates the element value at the specified position, using the specified
+     * (signed) short value.
+     * 
+     * @param pos
+     *            the coordinate index of the element
+     * @param s
+     *            the new short value
+     */
+    public abstract void setShort(int pos, short s);
     
     
     // =============================================================
     // Specialization of UInt16Array interface
     
+    @Override
     public short getShort(int[] pos)
     {
         return getShort(pos[0]);
     }
     
+    @Override
     public void setShort(int pos[], short value)
     {
         setShort(pos[0], value);
@@ -117,9 +164,9 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
     }
 
     
-	// =============================================================
-	// Specialization of Array interface
-	
+    // =============================================================
+    // Specialization of Array interface
+    
     @Override
     public UInt16Array1D duplicate()
     {
@@ -155,6 +202,12 @@ public abstract class UInt16Array1D extends IntArray1D<UInt16> implements UInt16
     {
         UInt16Array array;
 
+        /**
+         * Creates a new {@code UInt16Array1D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(UInt16Array array)
         {
             super(0);

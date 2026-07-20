@@ -25,6 +25,16 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 2D array containing Int32 values. Uses the default factory,
+     * and a wrapper to Int32Array2D if necessary.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of Int32Array
+     */
 	public static final Int32Array2D create(int size0, int size1)
 	{
 	    return wrap(Int32Array.create(size0, size1));
@@ -40,7 +50,7 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
      * array dimensions.
      * 
      * @param buffer
-     *            the array to int to encapsulate
+     *            the array of integer values to encapsulate
      * @param size0
      *            the size of the array along the first dimension
      * @param size1
@@ -160,6 +170,12 @@ public abstract class Int32Array2D extends IntArray2D<Int32> implements Int32Arr
     {
         Int32Array array;
 
+        /**
+         * Creates a new {@code Int32Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Int32Array array)
         {
             super(0, 0);

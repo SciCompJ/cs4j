@@ -622,6 +622,16 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
         public VectorArray<V,S> create(int[] dims, int nComponents);
     }
 
+    /**
+     * A specialization of the {@code Array.Iterator} interface to iterate over
+     * the elements of this array.
+     * 
+     * @param <V>
+     *            the type of the vector
+     * @param <S>
+     *            the type of the elements contained by this vector
+     *            
+     */
     public interface Iterator<V extends Vector<V, S>, S extends Scalar<S>> extends Array.Iterator<V>
     {
         /**
@@ -672,6 +682,15 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
     // =============================================================
     // Inner classes
 
+    /**
+     * Utility class to wrap arrays containing elements implementing the
+     * {@code Vector} interface into an instance of {@code VectorArray}.
+     * 
+     * @param <V>
+     *            the type of vector elements wrapped by the array
+     * @param <S>
+     *            the type of elements within the vectors
+     */
     public class Wrapper<V extends Vector<V, S>, S extends Scalar<S>> extends ArrayWrapperStub<V> implements VectorArray<V, S>
     {
         /**
@@ -840,6 +859,14 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
         VectorArray<V,S> array;
         int channel;
         
+        /**
+         * Creates the View array from the specified array and channel index.
+         * 
+         * @param array
+         *            the array to wrap
+         * @param channel
+         *            the index of the channel corresponding to the result array
+         */
         public ElementScalarArrayView(VectorArray<V,S> array, int channel)
         {
             super(array);

@@ -23,6 +23,15 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
     // =============================================================
     // Static methods
 
+    /**
+     * Creates a new 2D array containing Float64 values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @return a new instance of Float64Array2D
+     */
     public static final Float64Array2D create(int size0, int size1)
     {
         return wrap(Float64Array.create(size0, size1));
@@ -183,6 +192,12 @@ public abstract class Float64Array2D extends ScalarArray2D<Float64> implements F
     {
         Float64Array array;
 
+        /**
+         * Creates a new {@code Float64Array2D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Float64Array array)
         {
             super(0, 0);

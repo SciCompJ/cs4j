@@ -18,6 +18,15 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector,F
     // =============================================================
     // Static methods
     
+    @Deprecated
+    /**
+     * foo
+     * @param sizes
+     *            sd
+     * @param sizeV
+     *            dd
+     * @return d
+     */
     public static final Float64VectorArray create(int[] sizes, int sizeV)
     {
         return new BufferedFloat64VectorArrayND(sizes, sizeV);
@@ -27,6 +36,7 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector,F
     // =============================================================
     // Constructors
     
+    @Deprecated
     protected Float64VectorArrayND(int[] sizes)
     {
         super(sizes);
@@ -36,6 +46,7 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector,F
     // =============================================================
     // Implementation of Float64VectorArray methods
 
+    @Deprecated
 	public Iterable<Float64Array> channels()
     {
         return new Iterable<Float64Array>()
@@ -55,11 +66,13 @@ public abstract class Float64VectorArrayND extends VectorArrayND<Float64Vector,F
      *            index of the channel to view
      * @return a view on the channel
      */
+    @Deprecated
     public Float64Array channel(int channel)
     {
         return new ChannelView(this, channel);
     }
     
+    @Deprecated
     public java.util.Iterator<Float64Array> channelIterator()
     {
         return new ChannelIterator();

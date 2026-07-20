@@ -118,6 +118,11 @@ public class UInt8 implements Int<UInt8>
     // =============================================================
     // Methods
     
+    /**
+     * Returns the value of this {@code UInt8} as a (signed) byte.
+     * 
+     * @return the (signed) byte value corresponding to this {@code UInt8}
+     */
     public byte getByte()
     {
         return value;

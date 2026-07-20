@@ -106,8 +106,33 @@ public abstract class IntArray3D<I extends Int<I>> extends ScalarArray3D<I> impl
     // =============================================================
     // New methods
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as an integer.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @return the integer value at the specified position
+     */
     public abstract int getInt(int x, int y, int z);
 
+    /**
+     * Updates the element value at the specified position, using the specified
+     * int value.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @param value
+     *            the new int value
+     */
     public abstract void setInt(int x, int y, int z, int value);
 
     

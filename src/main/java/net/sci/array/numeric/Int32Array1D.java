@@ -19,6 +19,13 @@ public abstract class Int32Array1D extends IntArray1D<Int32> implements Int32Arr
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 1D array containing Int32 values. 
+     * 
+     * @param size0
+     *            the size of the array
+     * @return a new instance of Int32Array
+     */
 	public static final Int32Array1D create(int size0)
 	{
 	    return wrap(Int32Array.create(size0));
@@ -32,6 +39,28 @@ public abstract class Int32Array1D extends IntArray1D<Int32> implements Int32Arr
      * @return a new instance of Int32Array1D initialized with the values of
      *         <code>intArray</code>
      */
+    public static final Int32Array1D of(int[] intArray)
+    {
+        int size0 = intArray.length;
+        Int32Array1D res = Int32Array1D.create(size0);
+        for (int x = 0; x < size0; x++)
+        {
+            res.setInt(x, intArray[x]);
+        }
+        return res;
+    }
+    
+    /**
+     * Creates a new Int32Array1D from an array of integers.
+     * 
+     * @deprecated replaced by of(int[])
+     * 
+     * @param intArray
+     *            the array of integers containing the values.
+     * @return a new instance of Int32Array1D initialized with the values of
+     *         <code>intArray</code>
+     */
+    @Deprecated
     public static final Int32Array1D fromIntArray(int[] intArray)
     {
         int size0 = intArray.length;
@@ -117,6 +146,12 @@ public abstract class Int32Array1D extends IntArray1D<Int32> implements Int32Arr
     {
         Int32Array array;
 
+        /**
+         * Creates a new {@code Int32Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Int32Array array)
         {
             super(0);

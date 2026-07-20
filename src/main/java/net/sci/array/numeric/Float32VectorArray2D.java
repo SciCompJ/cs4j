@@ -21,6 +21,17 @@ public abstract class Float32VectorArray2D extends VectorArray2D<Float32Vector, 
     // =============================================================
     // Static methods
 
+    /**
+     * Creates a new 2D array containing vectors of Float32 values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param sizeV
+     *            the size of the vectors
+     * @return a new instance of Float32VectorArray3D
+     */
     public static final Float32VectorArray2D create(int size0, int size1, int sizeV)
     {
         return new BufferedFloat32VectorArray2D(size0, size1, sizeV);

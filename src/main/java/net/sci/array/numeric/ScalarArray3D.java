@@ -18,6 +18,19 @@ public abstract class ScalarArray3D<S extends Scalar<S>> extends Array3D<S> impl
     // =============================================================
     // Static methods
 
+    /**
+     * Wraps the (scalar) elements of specified array into an instance of
+     * {@code ScalarArray3D}. If the original array is already an instance of
+     * ScalarArray3D, it is returned. Otherwise, a wrapper encapsulating the
+     * original array is returned.
+     * 
+     * @param <S>
+     *            the type of scalar data stored within the array
+     * @param array
+     *            the array to wrap
+     * @return an instance of ScalarArray3D. If the input array is already an
+     *         instance of ScalarArray3D, it is returned.
+     */
     public final static <S extends Scalar<S>> ScalarArray3D<S> wrap(ScalarArray<S> array)
     {
         if (array instanceof ScalarArray3D)
@@ -89,11 +102,11 @@ public abstract class ScalarArray3D<S extends Scalar<S>> extends Array3D<S> impl
      * integer indices.
      * 
      * @param x
-     *            index over the first array dimension
+     *            the coordinate index along the first array dimension
      * @param y
-     *            index over the second array dimension
+     *            the coordinate index along the second array dimension
      * @param z
-     *            index over the third array dimension
+     *            the coordinate index along the third array dimension
      * @return the double value at the specified position
      */
     public abstract double getValue(int x, int y, int z);
@@ -103,11 +116,11 @@ public abstract class ScalarArray3D<S extends Scalar<S>> extends Array3D<S> impl
      * three integer indices.
      * 
      * @param x
-     *            index over the first array dimension
+     *            the coordinate index along the first array dimension
      * @param y
-     *            index over the second array dimension
+     *            the coordinate index along the second array dimension
      * @param z
-     *            index over the third array dimension
+     *            the coordinate index along the third array dimension
      * @param value
      *            the new value at the specified index
      */

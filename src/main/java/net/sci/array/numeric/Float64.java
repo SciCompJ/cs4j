@@ -27,8 +27,14 @@ public class Float64 implements Scalar<Float64>
      */
     public static final Float64 MAX_VALUE = new Float64(Double.POSITIVE_INFINITY);
     
+    /**
+     * The Float64 instance corresponding to the value one.
+     */
     public final static Float64 ONE = new Float64(1.0);
     
+    /**
+     * The Float64 instance corresponding to the value zero.
+     */
     public final static Float64 ZERO = new Float64(0.0);
     
     

@@ -116,8 +116,31 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
     // =============================================================
     // New methods
 
+    /**
+     * Retrieves the boolean state at the specified position.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @return the boolean state at the specified position
+     */
     public abstract boolean getBoolean(int x, int y, int z);
 
+    /**
+     * Updates the boolean state at the specified position.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @param b
+     *            the new boolean value
+     */
     public abstract void setBoolean(int x, int y, int z, boolean b);
 
 

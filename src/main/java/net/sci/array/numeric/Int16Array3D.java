@@ -90,7 +90,7 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
     // Constructor
 
     /**
-     * Initialize the protected size variables.
+     * Initializes the protected size variables.
      * 
      * @param size0
      *            the size of the array along the first dimension
@@ -108,8 +108,33 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
     // =============================================================
     // New methods
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a short.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @return the short value at the specified position
+     */
     public abstract short getShort(int x, int y, int z);
 
+    /**
+     * Updates the element value at the specified position, using the specified
+     * short value.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @param s
+     *            the new short value
+     */
     public abstract void setShort(int x, int y, int z, short s);
 
 
@@ -259,6 +284,12 @@ public abstract class Int16Array3D extends IntArray3D<Int16> implements Int16Arr
     {
         Int16Array array;
 
+        /**
+         * Creates a new {@code Int16Array3D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Int16Array array)
         {
             super(0, 0, 0);

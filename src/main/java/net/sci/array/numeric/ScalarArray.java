@@ -28,8 +28,10 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     // static methods
 
     /**
-     * Wraps the specified array containing Scalar data into an instance of
-     * ScalarArray.
+     * Wraps the elements of specified array into an instance of
+     * {@code ScalarArray}. If the original array is already an instance of
+     * ScalarArray, it is returned. Otherwise, a wrapper encapsulating the
+     * original array is returned.
      * 
      * Example of use:
      * {@snippet lang="java" :

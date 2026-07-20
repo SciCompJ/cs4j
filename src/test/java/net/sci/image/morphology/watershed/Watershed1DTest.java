@@ -23,7 +23,7 @@ public class Watershed1DTest
     @Test
     public final void testProcess_ThreeRegions()
     {
-        Int32Array1D array = Int32Array1D.fromIntArray(new int[] {10, 30, 20, 5, 15, 25, 40, 35, 15});
+        Int32Array1D array = Int32Array1D.of(new int[] {10, 30, 20, 5, 15, 25, 40, 35, 15});
         
         Watershed1D algo = new Watershed1D();
         IntArray1D<?> res = algo.process(array);

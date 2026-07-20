@@ -251,6 +251,12 @@ public abstract class Float64Array3D extends ScalarArray3D<Float64> implements F
     {
         Float64Array array;
 
+        /**
+         * Creates a new {@code Float64Array3D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Float64Array array)
         {
             super(0, 0, 0);

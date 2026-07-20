@@ -30,16 +30,43 @@ public interface Int16Array extends IntArray<Int16>
     // =============================================================
     // Static variables
 
+    /**
+     * The default factory for creating multi-dimensional arrays containing
+     * {@code Int16} values.
+     */
     public static final Factory defaultFactory = new DenseInt16ArrayFactory();
 
     // =============================================================
     // Static methods
     
+    /**
+     * Creates a new Int16Array with the specified dimensions. When possible,
+     * the most appropriate implementation class is chosen according to the
+     * dimensionality and the total number of elements of the array.
+     * 
+     * @param dims
+     *            the size of the array to create.
+     * @return a new instance of {@code Int16Array}
+     */
     public static Int16Array create(int... dims)
     {
         return defaultFactory.create(dims);
     }
     
+    /**
+     * Creates a new {@code Int16Array} based on the specified buffer containing
+     * array elements. The buffer is not duplicated during creation of Array
+     * instance, so changing values within buffer will change values within
+     * array, and vice-versa.
+     * 
+     * @param dims
+     *            the size of the array to create
+     * @param buffer
+     *            the double array containing array elements. Length must equal
+     *            product of array dimensions.
+     * @return a new instance of {@code Int16Array} based on the specified
+     *         buffer.
+     */
     public static Int16Array create(int[] dims, short[] buffer)
     {
         return switch (dims.length)
@@ -60,7 +87,7 @@ public interface Int16Array extends IntArray<Int16>
      * <li>instances of ScalarArray</li>
      * </ul>
      * 
-     * @see UInt8Array.convert(Array)
+     * @see UInt8Array#convert(Array)
      * 
      * @param array
      *            the array to convert
@@ -110,9 +137,10 @@ public interface Int16Array extends IntArray<Int16>
     }
     
     /**
-     * Encapsulates the specified array into a new Int16Array, by creating a
-     * Wrapper if necessary. If the original array is already an instance of
-     * Int16Array, it is returned.
+     * Wraps the elements of specified array into an instance of
+     * {@code Int16Array}. If the original array is already an instance of
+     * Int16Array, it is returned. Otherwise, a wrapper encapsulating the
+     * original array is returned.
      * 
      * @param array
      *            the original array
@@ -138,6 +166,16 @@ public interface Int16Array extends IntArray<Int16>
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
 
+    /**
+     * Wraps the (scalar) elements of specified array into an instance of
+     * {@code Int16Array}. If the original array is already an instance of
+     * Int16Array, it is returned. Otherwise, a wrapper encapsulating the
+     * original array is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Int16 view of the original array
+     */
 	public static Int16Array wrapScalar(ScalarArray<?> array)
 	{
 		if (array instanceof Int16Array)
@@ -151,6 +189,14 @@ public interface Int16Array extends IntArray<Int16>
 	// =============================================================
 	// New methods
 
+    /**
+     * Computes value of elements within array, by using the specified function
+     * that associates {@code Short} values to array of coordinate indices.
+     * 
+     * @param fun
+     *            the mapping function between coordinate indices and short value
+     *            of element
+     */
     public default void fillShorts(Function<int[], Short> fun)
     {
         for (int[] pos : this.positions())
@@ -159,8 +205,25 @@ public interface Int16Array extends IntArray<Int16>
         }
     }
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a short.
+     * 
+     * @param pos
+     *            the array of coordinate indices of the position
+     * @return the short value at the specified position
+     */
 	public short getShort(int[] pos);
 	
+    /**
+     * Updates the element value at the specified position, using the specified
+     * short value.
+     * 
+     * @param pos
+     *            the array of coordinates of the position
+     * @param value
+     *            the new short value at the specified position
+     */
 	public void setShort(int[] pos, short value);
 	
 	
@@ -309,60 +372,78 @@ public interface Int16Array extends IntArray<Int16>
             }
         };
     }
-
-	
-
-
-	// =============================================================
-	// Inner interface
-
-	public interface Iterator extends IntArray.Iterator<Int16>
-	{
-		public short getShort();
-		public void setShort(short s);
-		
-		@Override
-		public default int getInt()
-		{
-			return getShort(); 
-		}
-
-		@Override
-		public default void setInt(int value)
-		{
-			setShort((short) Int16.clamp(value));
-		}
-
-		@Override
-		public default Int16 get()
-		{
-			return new Int16(getShort());
-		}
-		
-		@Override
-		public default void set(Int16 value)
-		{
-			setShort(value.getShort());
-		}
-	}
-	
+    
+    
+    // =============================================================
+    // Inner interface
+    
     /**
-     * Wraps explicitly an array containing <code>Int16</code> elements into an
-     * instance of <code>Int16Array</code>.
+     * A specialization of the {@code Array.Iterator} interface to iterate over
+     * the elements of this array.
+     */
+    public interface Iterator extends IntArray.Iterator<Int16>
+    {
+        /**
+         * Retrieves the element value at the current iterator position.
+         * 
+         * @return the (signed) short value at the specified position
+         */
+        public short getShort();
+        
+        /**
+         * Updates the element value at the current iterator position.
+         * 
+         * @param s
+         *            the (signed) short value at the specified position
+         */
+        public void setShort(short s);
+        
+        @Override
+        public default int getInt()
+        {
+            return getShort();
+        }
+        
+        @Override
+        public default void setInt(int value)
+        {
+            setShort((short) Int16.clamp(value));
+        }
+        
+        @Override
+        public default Int16 get()
+        {
+            return new Int16(getShort());
+        }
+        
+        @Override
+        public default void set(Int16 value)
+        {
+            setShort(value.getShort());
+        }
+    }
+    
+    /**
+     * Utility class to wrap arrays containing {@code Int16} elements into an
+     * instance of {@code Int16Array}.
      * 
      * Usage:
-     * <pre>
-     * {@code
+     * {@snippet :
      * Array<Int16> array = ...
-     * Int16Array newArray = new Int16Array.Wrapper(array);
-     * newArray.getInt(...);  
+     * Int16Array intArray = new Int16Array.Wrapper(array);
+     * intArray.getInt(...);
      * }
-     * </pre>
      */
     static class Wrapper extends ArrayWrapperStub<Int16> implements Int16Array
     {
         Array<Int16> array;
         
+        /**
+         * Creates a new {@code Int16Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Array<Int16> array)
         {
             super(array);
@@ -393,6 +474,12 @@ public interface Int16Array extends IntArray<Int16>
 	{
 		ScalarArray<?> array;
 		
+        /**
+         * Creates a new {@code Int16Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
 		    super(array);

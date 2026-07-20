@@ -23,6 +23,10 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
     // =============================================================
     // Static variables
 
+    /**
+     * The default factory for creating multi-dimensional arrays containing
+     * vectors of {@code Float32} values.
+     */
     public static final Factory defaultFactory = new Factory()
     {
         @Override
@@ -44,6 +48,15 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
     // =============================================================
     // Static methods
 
+    /**
+     * Creates a new multi-dimensianal array containing vectors of Float64 values.
+     * 
+     * @param dims
+     *            the size of the array
+     * @param sizeV
+     *            the size of the vectors
+     * @return a new instance of Float64VectorArray
+     */
     public static Float64VectorArray create(int[] dims, int sizeV)
     {
         return switch (dims.length)
@@ -54,6 +67,15 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         };
     }
     
+    /**
+     * Encapsulates the specified array into a new Float64VectorArray, by
+     * creating a Wrapper if necessary. If the original array is already an
+     * instance of Float64VectorArray, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Float64VectorArray view of the original array
+     */
     @SuppressWarnings("unchecked")
     public static Float64VectorArray wrap(Array<?> array)
     {
@@ -258,6 +280,12 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         Array<Float64Vector> array;
         int channelCount;
         
+        /**
+         * Creates a new {@code Float64VectorArray} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Array<Float64Vector> array)
         {
             super(array);
@@ -344,6 +372,9 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
      * Utility class that implements a view on a channel of a
      * <code>Float64VectorArray</code> array as a an instance of
      * <code>Float64Array</code>.
+     * 
+     * The view is able to modify values of the original array.
+     *
      *
      * @see Float64VectorArray#channel(int)
      * @see Float64VectorArray#channelIterator()
@@ -353,6 +384,14 @@ public interface Float64VectorArray extends VectorArray<Float64Vector, Float64>
         Float64VectorArray array;
         int channel;
         
+        /**
+         * Creates a view on the specified channel of the specified array.
+         * 
+         * @param array
+         *            the array to retrieve the values from
+         * @param channel
+         *            the channel index within the array
+         */
         public ChannelView(Float64VectorArray array, int channel)
         {
             if (channel < 0 || channel >= array.channelCount())

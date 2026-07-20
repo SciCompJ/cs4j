@@ -24,6 +24,10 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
     // =============================================================
     // Static variables
 
+    /**
+     * The default factory for creating multi-dimensional arrays containing
+     * vectors of {@code Float32} values.
+     */
     public static final Factory defaultFactory = new Factory()
     {
         @Override
@@ -45,6 +49,15 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
     // =============================================================
     // Static methods
 
+    /**
+     * Creates a new multi-dimensianal array containing vectors of Float32 values.
+     * 
+     * @param dims
+     *            the size of the array
+     * @param sizeV
+     *            the size of the vectors
+     * @return a new instance of Float32VectorArray
+     */
     public static Float32VectorArray create(int[] dims, int sizeV)
     {
         return switch (dims.length)
@@ -55,6 +68,15 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         };
     }
     
+    /**
+     * Encapsulates the specified array into a new Float32VectorArray, by
+     * creating a Wrapper if necessary. If the original array is already an
+     * instance of Float32VectorArray, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @return a Float32VectorArray view of the original array
+     */
     @SuppressWarnings("unchecked")
     public static Float32VectorArray wrap(Array<?> array)
     {
@@ -273,6 +295,9 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         {
             return Float32VectorArray.create(dims, nComponents);
         }
+        
+        // private constructor
+        private DefaultFactory(){}
     };
     
     /**
@@ -286,6 +311,12 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         Array<Float32Vector> array;
         int channelCount;
         
+        /**
+         * Creates a new {@code Float32VectorArray} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Array<Float32Vector> array)
         {
             super(array);
@@ -396,6 +427,14 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
         Float32VectorArray array;
         int channel;
         
+        /**
+         * Creates a view on the specified channel of the specified array.
+         * 
+         * @param array
+         *            the array to retrieve the values from
+         * @param channel
+         *            the channel index within the array
+         */
         public ChannelView(Float32VectorArray array, int channel)
         {
             if (channel < 0 || channel >= array.channelCount())

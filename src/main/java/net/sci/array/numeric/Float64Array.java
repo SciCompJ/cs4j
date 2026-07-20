@@ -29,17 +29,44 @@ public interface Float64Array extends ScalarArray<Float64>
     // =============================================================
     // Static variables
 
+    /**
+     * The default factory for creating multi-dimensional arrays containing
+     * {@code Float64} values.
+     */
     public static final Factory defaultFactory = new DenseFloat64ArrayFactory();
 
     
     // =============================================================
     // Static methods
     
+    /**
+     * Creates a new Float64Array with the specified dimensions. When possible,
+     * the most appropriate implementation class is chosen according to the
+     * dimensionality and the total number of elements of the array.
+     * 
+     * @param dims
+     *            the size of the array to create.
+     * @return a new instance of {@code Float64Array}
+     */
     public static Float64Array create(int... dims)
     {
         return defaultFactory.create(dims);
     }
     
+    /**
+     * Creates a new {@code Float64Array} based on the specified buffer containing
+     * array elements. The buffer is not duplicated during creation of Array
+     * instance, so changing values within buffer will change values within
+     * array, and vice-versa.
+     * 
+     * @param dims
+     *            the size of the array to create
+     * @param buffer
+     *            the double array containing array elements. Length must equal
+     *            product of array dimensions.
+     * @return a new instance of {@code Float64Array} based on the specified
+     *         buffer.
+     */
     public static Float64Array create(int[] dims, double[] buffer)
     {
         return switch (dims.length)
@@ -60,7 +87,7 @@ public interface Float64Array extends ScalarArray<Float64>
      * <li>instances of ScalarArray</li>
      * </ul>
      * 
-     * @see UInt8Array.convert(Array)
+     * @see UInt8Array#convert(Array)
      * 
      * @param array
      *            the array to convert
@@ -139,6 +166,15 @@ public interface Float64Array extends ScalarArray<Float64>
                 "Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
+    /**
+     * Encapsulates the instance of Scalar array into a new Float64Array, by
+     * creating a Wrapper if necessary. 
+     * If the original array is already an instance of Float64Array, it is returned.  
+     * 
+     * @param array
+     *            the original array
+     * @return a Float64Array view of the original array
+     */
     public static Float64Array wrapScalar(ScalarArray<?> array)
     {
         if (array instanceof Float64Array)
@@ -278,6 +314,10 @@ public interface Float64Array extends ScalarArray<Float64>
 	// =============================================================
 	// Inner interface
 
+    /**
+     * A specialization of the {@code Array.Iterator} interface to iterate over
+     * the elements of this array.
+     */
 	public interface Iterator extends ScalarArray.Iterator<Float64>
 	{
 		@Override
@@ -294,22 +334,26 @@ public interface Float64Array extends ScalarArray<Float64>
 	}
 
     /**
-     * Wraps explicitly an array containing <code>Float64</code> elements into an
-     * instance of <code>Float64Array</code>.
+     * Utility class to wrap arrays containing {@code Float64} elements into an
+     * instance of {@code Float64Array}.
      * 
      * Usage:
-     * <pre>
-     * {@code
+     * {@snippet :
      * Array<Float64> array = ...
-     * Float64Array newArray = new Float64Array.Wrapper(array);
-     * newArray.getValue(...);  
+     * Float64Array intArray = new Float64Array.Wrapper(array);
+     * intArray.getInt(...);
      * }
-     * </pre>
      */
     static class Wrapper extends ArrayWrapperStub<Float64> implements Float64Array
     {
         Array<Float64> array;
         
+        /**
+         * Creates a new {@code Float64Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Array<Float64> array)
         {
             super(array);
@@ -340,6 +384,12 @@ public interface Float64Array extends ScalarArray<Float64>
 	{
 		ScalarArray<?> array;
 		
+        /**
+         * Creates a new {@code Float64Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
 		    super(array);

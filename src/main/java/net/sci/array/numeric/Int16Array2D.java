@@ -26,6 +26,8 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	// Static methods
 
 	/**
+     * Creates a new 2D array containing Int16 values.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 * @param size1
@@ -123,8 +125,29 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
 	// =============================================================
 	// New methods
 	
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a short.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @return the short value at the specified position
+     */
     public abstract short getShort(int x, int y);
 
+    /**
+     * Updates the element value at the specified position, using the specified
+     * short value.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param s
+     *            the new short value
+     */
     public abstract void setShort(int x, int y, short s);
     
 	
@@ -217,6 +240,12 @@ public abstract class Int16Array2D extends IntArray2D<Int16> implements Int16Arr
     {
         Int16Array array;
 
+        /**
+         * Creates a new {@code Int16Array2D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Int16Array array)
         {
             super(0, 0);

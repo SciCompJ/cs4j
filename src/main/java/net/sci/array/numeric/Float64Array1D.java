@@ -19,6 +19,13 @@ public abstract class Float64Array1D extends ScalarArray1D<Float64> implements F
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 1D array containing Float64 values.
+     * 
+     * @param size0
+     *            the size of the array
+     * @return a new instance of Float64Array1D
+     */
 	public static final Float64Array1D create(int size0)
 	{
 	    return wrap(Float64Array.create(size0));
@@ -121,6 +128,12 @@ public abstract class Float64Array1D extends ScalarArray1D<Float64> implements F
     {
         Float64Array array;
 
+        /**
+         * Creates a new {@code Float64Array1D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Float64Array array)
         {
             super(0);

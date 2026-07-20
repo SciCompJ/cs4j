@@ -19,6 +19,13 @@ public abstract class Float32Array1D extends ScalarArray1D<Float32> implements F
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 1D array containing Float32 values.
+     * 
+     * @param size0
+     *            the size of the array
+     * @return a new instance of Float32Array1D
+     */
 	public static final Float32Array1D create(int size0)
 	{
 	    return wrap(Float32Array.create(size0));
@@ -82,8 +89,25 @@ public abstract class Float32Array1D extends ScalarArray1D<Float32> implements F
     // =============================================================
     // New methods
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a float short.
+     * 
+     * @param x
+     *            the coordinate index of the element
+     * @return the float value at the specified position
+     */
     public abstract float getFloat(int x);
     
+    /**
+     * Updates the element value at the specified position, using the specified
+     * float value.
+     * 
+     * @param x
+     *            the coordinate index of the element
+     * @param value
+     *            the new float value
+     */
     public abstract void setFloat(int x, float value);
     
     
@@ -153,6 +177,12 @@ public abstract class Float32Array1D extends ScalarArray1D<Float32> implements F
     {
         Float32Array array;
 
+        /**
+         * Creates a new {@code Float32Array1D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Float32Array array)
         {
             super(0);

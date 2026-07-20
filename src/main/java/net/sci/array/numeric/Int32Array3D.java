@@ -196,6 +196,12 @@ public abstract class Int32Array3D extends IntArray3D<Int32> implements Int32Arr
     {
         Int32Array array;
 
+        /**
+         * Creates a new {@code Int32Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Int32Array array)
         {
             super(0, 0, 0);

@@ -119,6 +119,11 @@ public class UInt16 implements Int<UInt16>
     // =============================================================
     // Class methods
 
+    /**
+     * Returns the value of this {@code UInt16} as a (signed) short.
+     * 
+     * @return the (signed) short value corresponding to this {@code UInt16}
+     */
     public short getShort()
     {
         return value;

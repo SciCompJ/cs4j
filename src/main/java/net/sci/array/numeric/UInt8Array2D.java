@@ -127,8 +127,29 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
 	// =============================================================
 	// New methods
 	
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a byte.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @return the byte value at the specified position
+     */
     public abstract byte getByte(int x, int y);
     
+    /**
+     * Updates the element value at the specified position, using the specified
+     * byte value.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param b
+     *            the new byte value
+     */
     public abstract void setByte(int x, int y, byte b);
 	
 	
@@ -221,6 +242,12 @@ public abstract class UInt8Array2D extends IntArray2D<UInt8> implements UInt8Arr
     {
         UInt8Array array;
 
+        /**
+         * Creates a new {@code UInt8Array2D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(UInt8Array array)
         {
             super(0, 0);

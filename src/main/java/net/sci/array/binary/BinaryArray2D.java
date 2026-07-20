@@ -147,8 +147,27 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     // =============================================================
     // New methods
 
+    /**
+     * Retrieves the boolean state at the specified position.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @return the boolean state at the specified position
+     */
     public abstract boolean getBoolean(int x, int y);
 
+    /**
+     * Updates the boolean state at the specified position.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param b
+     *            the new boolean value
+     */
     public abstract void setBoolean(int x, int y, boolean b);
 
     

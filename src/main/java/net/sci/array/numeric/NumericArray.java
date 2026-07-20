@@ -13,8 +13,9 @@ import net.sci.array.impl.ArrayWrapperStub;
  * 
  * Main sub-interfaces are ScalarArray and VectorArray.
  *
- * @param <N> the type of numeric data within the array
- * 
+ * @param <N>
+ *            the type of numeric data within the array
+ *            
  * @author dlegland
  */
 public interface NumericArray<N extends Numeric<N>> extends Array<N>
@@ -22,6 +23,19 @@ public interface NumericArray<N extends Numeric<N>> extends Array<N>
     // =============================================================
     // static methods
 
+    /**
+     * Wraps the elements of specified array into an instance of
+     * {@code NumericArray}. If the original array is already an instance of
+     * NumericArray, it is returned. Otherwise, a wrapper encapsulating the
+     * original array is returned.
+     * 
+     * @param <N>
+     *            the type of numeric data within the array
+     * @param array
+     *            the original array
+     * @return a view of the original array that implements the
+     *         {@code NumericArray} interface
+     */
     public static <N extends Numeric<N>> NumericArray<N> wrap(Array<N> array)
     {
         if (array instanceof  NumericArray) return (NumericArray<N>) array;
@@ -108,6 +122,13 @@ public interface NumericArray<N extends Numeric<N>> extends Array<N>
         return res;
     }
 
+    /**
+     * Utility class to wrap arrays containing elements implementing the
+     * {@code Numeric} interface into an instance of {@code NumericArray}.
+     * 
+     * @param <N>
+     *            the type of numeric wrapped by the array
+     */
     public static class Wrapper<N extends Numeric<N>> extends ArrayWrapperStub<N> implements NumericArray<N>
     {
         Array<N> array;

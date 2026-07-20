@@ -19,6 +19,13 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 1D array containing Int16 values.
+     * 
+     * @param size0
+     *            the size of the array
+     * @return a new instance of Int16Array1D
+     */
 	public static final Int16Array1D create(int size0)
 	{
 	    return wrap(Int16Array.create(size0));
@@ -32,6 +39,30 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
      * @return a new instance of Int16Array1D initialized with the values of
      *         <code>intArray</code>
      */
+    public static final Int16Array1D of(int[] intArray)
+    {
+        int size0 = intArray.length;
+        Int16Array1D res = Int16Array1D.create(size0);
+        for (int x = 0; x < size0; x++)
+        {
+            res.setInt(x, intArray[x]);
+        }
+        return res;
+    }
+    
+    /**
+     * Creates a new Int16Array1D from an array of integers. 
+     * 
+     * @deprecated replaced by of
+     * 
+     * @see #of(int[])
+     * 
+     * @param intArray
+     *            the array of integers containing the values.
+     * @return a new instance of Int16Array1D initialized with the values of
+     *         <code>intArray</code>
+     */
+    @Deprecated
     public static final Int16Array1D fromIntArray(int[] intArray)
     {
         int size0 = intArray.length;
@@ -82,9 +113,26 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
     // =============================================================
     // New method(s)
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a (signed) short.
+     * 
+     * @param pos
+     *            the coordinate index of the element
+     * @return the short value at the specified position
+     */
     public abstract short getShort(int pos);
     
-    public abstract void setShort(int pos, short value);
+    /**
+     * Updates the element value at the specified position, using the specified
+     * (signed) short value.
+     * 
+     * @param pos
+     *            the coordinate index of the element
+     * @param s
+     *            the new short value
+     */
+    public abstract void setShort(int pos, short s);
     
 	
     // =============================================================
@@ -141,6 +189,12 @@ public abstract class Int16Array1D extends IntArray1D<Int16> implements Int16Arr
     {
         Int16Array array;
 
+        /**
+         * Creates a new {@code Int16Array1D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Int16Array array)
         {
             super(0);

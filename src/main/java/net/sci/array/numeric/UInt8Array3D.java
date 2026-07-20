@@ -109,8 +109,33 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
     // =============================================================
     // New methods
 
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a byte.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @return the byte value at the specified position
+     */
     public abstract byte getByte(int x, int y, int z);
 
+    /**
+     * Updates the element value at the specified position, using the specified
+     * byte value.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @param b
+     *            the new byte value
+     */
     public abstract void setByte(int x, int y, int z, byte b);
 	
     // =============================================================
@@ -275,6 +300,12 @@ public abstract class UInt8Array3D extends IntArray3D<UInt8> implements UInt8Arr
     {
         UInt8Array array;
     
+        /**
+         * Creates a new {@code UInt8Array3D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(UInt8Array array)
         {
             super(0, 0, 0);

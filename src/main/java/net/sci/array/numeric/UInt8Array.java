@@ -33,7 +33,7 @@ public interface UInt8Array extends IntArray<UInt8>
     /**
      * The default factory for UInt8Array instances.
      * 
-     * @see UInt8Array.create(int...)
+     * @see UInt8Array#create(int...)
      */
     public static final Factory defaultFactory = new DenseUInt8ArrayFactory();
     
@@ -44,10 +44,11 @@ public interface UInt8Array extends IntArray<UInt8>
     /**
      * Creates a new UInt8Array with the specified dimensions. When possible,
      * the most appropriate implementation class is chosen according to the
-     * dimensionality and the total size (number of elements) of the array.
+     * dimensionality and the total number of elements of the array.
      * 
      * @param dims
      *            the size of the array to create.
+     * @return a new instance of {@code UInt8Array}
      */
     public static UInt8Array create(int... dims)
     {
@@ -55,16 +56,18 @@ public interface UInt8Array extends IntArray<UInt8>
     }
     
     /**
-     * Creates a new UInt8Array based on the specified byte buffer. The byte
-     * buffer is not duplicated during creation of Array instance, so changing
-     * values within buffer will change values within array, and vice-versa.
+     * Creates a new {@code UInt8Array} based on the specified buffer containing
+     * array elements. The buffer is not duplicated during creation of Array
+     * instance, so changing values within buffer will change values within
+     * array, and vice-versa.
      * 
      * @param dims
      *            the size of the array to create
      * @param buffer
      *            the array of byte containing array values. Length must equal
      *            product of dimensions.
-     * @return a UInt8Array based on the specified buffer.
+     * @return a new instance of {@code UInt8Array} based on the specified
+     *         buffer.
      */
     public static UInt8Array create(int[] dims, byte[] buffer)
     {
@@ -76,6 +79,17 @@ public interface UInt8Array extends IntArray<UInt8>
         };
     }
     
+    /**
+     * Creates a view on this array by providing the size of the result array
+     * and a function that maps array of coordinate indices to a floating point
+     * value.
+     * 
+     * @param dims
+     *            the size of result array
+     * @param fun
+     *            the function that computes values from coordinates
+     * @return a virtual array that computes element values on the fly
+     */
     public static UInt8Array createView(int[] dims, Function<int[], Double> fun)
     {
         return new FunctionViewUInt8Array(dims, fun);
@@ -91,7 +105,7 @@ public interface UInt8Array extends IntArray<UInt8>
      * <li>instances of ScalarArray</li>
      * </ul>
      * 
-     * @see UInt8Array.convert(ScalarArray, double, double)
+     * @see UInt8Array#convert(ScalarArray, double, double)
      * 
      * @param array
      *            the array to convert
@@ -136,10 +150,11 @@ public interface UInt8Array extends IntArray<UInt8>
         return result;
     }
     
-	/**
-     * Encapsulates the specified array into a new UInt8Array, by creating a
-     * Wrapper if necessary. If the original array is already an instance of
-     * UInt8Array, it is returned.
+    /**
+     * Wraps the elements of specified array into an instance of
+     * {@code UInt8Array}. If the original array is already an instance of
+     * UInt8Array, it is returned. Otherwise, a wrapper encapsulating the
+     * original array is returned.
      * 
      * @param array
      *            the original array
@@ -187,6 +202,14 @@ public interface UInt8Array extends IntArray<UInt8>
     // =============================================================
     // New methods
     
+    /**
+     * Computes value of elements within array, by using the specified function
+     * that associates {@code Byte} values to array of coordinate indices.
+     * 
+     * @param fun
+     *            the mapping function between coordinate indices and byte value
+     *            of element
+     */
     public default void fillBytes(Function<int[], Byte> fun)
     {
         for (int[] pos : this.positions())
@@ -195,8 +218,25 @@ public interface UInt8Array extends IntArray<UInt8>
         }
     }
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a byte.
+     * 
+     * @param pos
+     *            the array of coordinates of the position
+     * @return the byte value at the specified position
+     */
     public byte getByte(int[] pos);
     
+    /**
+     * Updates the element value at the specified position, using the specified
+     * byte value.
+     * 
+     * @param pos
+     *            the array of coordinates of the position
+     * @param value
+     *            the new byte value at the specified position
+     */
     public void setByte(int[] pos, byte value);
     
     
@@ -365,62 +405,81 @@ public interface UInt8Array extends IntArray<UInt8>
             }
         };
     }
-
-	
-	// =============================================================
-	// Inner interface
-
-	public interface Iterator extends IntArray.Iterator<UInt8>
-	{
-		public byte getByte();
-		public void setByte(byte b);
-		
-		@Override
-		public default int getInt()
-		{
-			return getByte() & 0x00FF; 
-		}
-
-		/**
-		 * Sets the value at the specified position, by clamping the value between 0
-		 * and 255.
-		 */
-		@Override
-		public default void setInt(int value)
-		{
-			setByte((byte) UInt8.clamp(value));
-		}
-
-		@Override
-		public default UInt8 get()
-		{
-			return new UInt8(getByte());
-		}
-		
-		@Override
-		public default void set(UInt8 value)
-		{
-			setByte(value.getByte());
-		}
-	}
-	
+    
+    // =============================================================
+    // Inner interface
+    
     /**
-     * Wraps explicitly an array containing <code>UInt8</code> elements into an
-     * instance of <code>UInt8Array</code>.
+     * A specialization of the {@code Array.Iterator} interface to iterate over
+     * the elements of this array.
+     */
+    public interface Iterator extends IntArray.Iterator<UInt8>
+    {
+        /**
+         * Retrieves the element value at the current iterator position.
+         * 
+         * @return the byte value at the specified position
+         */
+        public byte getByte();
+        
+        /**
+         * Updates the element value at the current iterator position.
+         * 
+         * @param b
+         *            the byte value at the specified position
+         */
+        public void setByte(byte b);
+        
+        @Override
+        public default int getInt()
+        {
+            return getByte() & 0x00FF;
+        }
+        
+        /**
+         * Sets the value at the specified position, by clamping the value
+         * between 0 and 255.
+         */
+        @Override
+        public default void setInt(int value)
+        {
+            setByte((byte) UInt8.clamp(value));
+        }
+        
+        @Override
+        public default UInt8 get()
+        {
+            return new UInt8(getByte());
+        }
+        
+        @Override
+        public default void set(UInt8 value)
+        {
+            setByte(value.getByte());
+        }
+    }
+    
+    /**
+     * Utility class to wrap arrays containing {@code UInt8} elements into an
+     * instance of {@code UInt8Array}.
      * 
      * Usage:
-     * <pre>
-     * {@code
+     * {@snippet :
      * Array<UInt8> array = ...
-     * UInt8Array newArray = new UInt8Array.Wrapper(array);
-     * newArray.getInt(...);  
+     * UInt8Array intArray = new UInt8Array.Wrapper(array);
+     * intArray.getInt(...);
      * }
-     * </pre>
      */
 	static class Wrapper extends ArrayWrapperStub<UInt8> implements UInt8Array
 	{
 	    Array<UInt8> array;
 	    
+	    /**
+         * Creates a new {@code UInt8Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
 	    public Wrapper(Array<UInt8> array)
 	    {
 	        super(array);
@@ -452,6 +511,12 @@ public interface UInt8Array extends IntArray<UInt8>
 	    /** The parent array */
 		ScalarArray<?> array;
 		
+		/**
+         * Creates the wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap
+         */
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
 		    super(array);

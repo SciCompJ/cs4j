@@ -27,17 +27,44 @@ public interface BinaryArray extends IntArray<Binary>
     // =============================================================
     // Static variables
 
+    /**
+     * The default factory for creating multi-dimensional arrays containing
+     * {@code Binary} values.
+     */
     public static final Factory defaultFactory = new RunLengthBinaryArrayFactory();
     
     
     // =============================================================
     // Static methods
     
+    /**
+     * Creates a new BinaryArray with the specified dimensions. When possible,
+     * the most appropriate implementation class is chosen according to the
+     * dimensionality and the total number of elements of the array.
+     * 
+     * @param dims
+     *            the size of the array to create.
+     * @return a new instance of {@code BinaryArray}
+     */
     public static BinaryArray create(int... dims)
     {
         return defaultFactory.create(dims);
     }
     
+    /**
+     * Creates a new {@code BinaryArray} based on the specified buffer
+     * containing array elements. The buffer is not duplicated during creation
+     * of Array instance, so changing values within buffer will change values
+     * within array, and vice-versa.
+     * 
+     * @param dims
+     *            the size of the array to create
+     * @param buffer
+     *            the array of booleans containing array values. Length must
+     *            equal product of dimensions.
+     * @return a new instance of {@code BinaryArray} based on the specified
+     *         buffer.
+     */
     public static BinaryArray create(int[] dims, boolean[] buffer)
     {
         return switch (dims.length)
@@ -58,13 +85,13 @@ public interface BinaryArray extends IntArray<Binary>
      * 
      * Example:
      * 
-     * <pre>{@code
+     * {@snippet :
      * UInt8Array2D array = UInt8Array2D.create(8, 6);
      * array.fillInts((x, y) -> y * 10 + x);
      * BinaryArray2D binaryArray = BinaryArray2D.create(8, 6);
      * binaryArray.fillBooleans((x, y) -> x > 3 && y > 2);
      * UInt8Array2D masked = UInt8Array2D.wrap2d(UInt8Array.wrap(binaryArray.mask(array)));
-     * }</pre>
+     * }
      * 
      * @param <T>
      *            the type of data contained within array
@@ -659,6 +686,8 @@ public interface BinaryArray extends IntArray<Binary>
         }
         
         /**
+         * Retrieves the state at the current position of the iterator.
+         * 
          * @return the current state pointed by this iterator
          */
         public boolean getBoolean();
@@ -714,6 +743,12 @@ public interface BinaryArray extends IntArray<Binary>
     {
         Array<Binary> array;
         
+        /**
+         * Creates a new {@code BinaryArray} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Array<Binary> array)
         {
             super(array);

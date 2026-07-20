@@ -186,8 +186,4 @@ public abstract class IntVectorArray3D<V extends IntVector<V,I>, I extends Int<I
      */
     @Override
     public abstract IntVectorArray3D<V, I> duplicate();
-    
-    public interface Iterator<V extends IntVector<V,I>, I extends Int<I>> extends IntVectorArray.Iterator<V,I>
-    {
-    }
 }

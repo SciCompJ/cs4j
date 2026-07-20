@@ -34,6 +34,13 @@ public interface IntVector<V extends Vector<V, I>, I extends Int<I>> extends Vec
      */
     public abstract int[] getSamples(int[] intArray);
     
+    /**
+     * Returns the sample value for the specified channel index.
+     * 
+     * @param channel
+     *            the channel index
+     * @return the sample value at the given channel index
+     */
     public abstract int getSample(int channel);
 
 }

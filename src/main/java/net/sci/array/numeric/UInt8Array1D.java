@@ -19,6 +19,13 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 1D array containing UInt8 values.
+     * 
+     * @param size0
+     *            the size of the array
+     * @return a new instance of UInt8Array1D
+     */
 	public static final UInt8Array1D create(int size0)
 	{
 	    return wrap(UInt8Array.create(size0));
@@ -32,6 +39,27 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
      * @return a new instance of UInt8Array1D initialized with the values of
      *         <code>intArray</code>
      */
+    public static final UInt8Array1D of(int[] intArray)
+    {
+        int size0 = intArray.length;
+        UInt8Array1D res = UInt8Array1D.create(size0);
+        for (int x = 0; x < size0; x++)
+        {
+            res.setInt(x, intArray[x]);
+        }
+        return res;
+    }
+    
+    /**
+     * Creates a new UInt8Array1D from an array of integers. 
+     * 
+     * @deprecated replaced by of(int[])
+     * @param intArray
+     *            the array of integers containing the values.
+     * @return a new instance of UInt8Array1D initialized with the values of
+     *         <code>intArray</code>
+     */
+    @Deprecated
     public static final UInt8Array1D fromIntArray(int[] intArray)
     {
         int size0 = intArray.length;
@@ -82,8 +110,25 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
     // =============================================================
     // New method(s)
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a byte.
+     * 
+     * @param pos
+     *            the coordinate index of the element
+     * @return the byte value at the specified position
+     */
     public abstract byte getByte(int pos);
 
+    /**
+     * Updates the element value at the specified position, using the specified
+     * byte value.
+     * 
+     * @param pos
+     *            the coordinate index of the element
+     * @param value
+     *            the new byte value
+     */
     public abstract void setByte(int pos, byte value);
 
     
@@ -141,6 +186,12 @@ public abstract class UInt8Array1D extends IntArray1D<UInt8> implements UInt8Arr
     {
         UInt8Array array;
 
+        /**
+         * Creates a new {@code UInt8Array1D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(UInt8Array array)
         {
             super(0);

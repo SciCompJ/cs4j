@@ -21,6 +21,19 @@ public abstract class Float64VectorArray3D extends VectorArray3D<Float64Vector,F
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 3D array containing vectors of Float64 values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @param sizeV
+     *            the size of the vectors
+     * @return a new instance of Float64VectorArray3D
+     */
 	public static final Float64VectorArray3D create(int size0, int size1, int size2, int sizeV)
 	{
 		return new BufferedFloat64VectorArray3D(size0, size1, size2, sizeV);

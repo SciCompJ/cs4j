@@ -110,8 +110,33 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
     // =============================================================
     // New methods
 
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a (signed) short.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @return the (signed) short value at the specified position
+     */
     public abstract short getShort(int x, int y, int z);
 
+    /**
+     * Updates the element value at the specified position, using the specified
+     * (signed) short value.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param z
+     *            the coordinate index along the third dimension
+     * @param s
+     *            the new (signed) short value
+     */
     public abstract void setShort(int x, int y, int z, short s);
 
     
@@ -160,11 +185,13 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
     // =============================================================
     // Specialization of the UInt16Array interface
 
+    @Override
     public short getShort(int[] pos)
     {
         return getShort(pos[0], pos[1], pos[2]);
     }
 
+    @Override
     public void setShort(int[] pos, short s)
     {
         setShort(pos[0], pos[1], pos[2], s);
@@ -174,6 +201,7 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
     // =============================================================
     // Management of slices
 
+    @Override
     public UInt16Array2D slice(int sliceIndex)
     {
         return new SliceView(sliceIndex);
@@ -277,6 +305,12 @@ public abstract class UInt16Array3D extends IntArray3D<UInt16> implements UInt16
     {
         UInt16Array array;
 
+        /**
+         * Creates a new {@code UInt16Array3D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(UInt16Array array)
         {
             super(0, 0, 0);

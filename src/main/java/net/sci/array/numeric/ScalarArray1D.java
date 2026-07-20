@@ -12,7 +12,7 @@ import net.sci.array.Array1D;
  * Specialization of Array for 1D arrays of scalar values.
  * 
  * @param <S>
- *            the type of Scalar.
+ *            the type of scalar elements within the array
  * @author dlegland
  *
  */
@@ -25,6 +25,8 @@ public abstract class ScalarArray1D<S extends Scalar<S>> extends Array1D<S> impl
      * Same as wrap method, but use different name to avoid runtime class cast
      * exceptions.
      * 
+     * @param <S>
+     *            the type of scalar elements within the array
      * @param array
      *            an instance of ScalarArray with two dimensions
      * @return an instance of ScalarArray2D

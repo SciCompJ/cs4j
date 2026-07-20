@@ -147,7 +147,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
      * Returns the value at the specified position as an integer.
      * 
      * @param pos
-     *            the position
+     *            the position, as an array of coordinate indices
      * @return the integer value
      */
     public int getInt(int[] pos);
@@ -156,7 +156,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
      * Sets the value at the specified position as an integer.
      * 
      * @param pos
-     *            the position
+     *            the position, as an array of coordinate indices
      * @param value
      *            the new integer value
      */
@@ -365,7 +365,7 @@ public interface IntArray<I extends Int<I>> extends ScalarArray<I>
 	public interface Iterator<I extends Int<I>> extends ScalarArray.Iterator<I>
 	{
         /**
-         * Returns the current int value.
+         * Returns the integer value at current iterator position.
          * 
          * @return the current int value.
          */

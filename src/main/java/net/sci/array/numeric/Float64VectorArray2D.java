@@ -21,6 +21,17 @@ public abstract class Float64VectorArray2D extends VectorArray2D<Float64Vector,F
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new 2D array containing vectors of Float64 values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param sizeV
+     *            the size of the vectors
+     * @return a new instance of Float64VectorArray2D
+     */
 	public static final Float64VectorArray2D create(int size0, int size1, int sizeV)
 	{
 		return new BufferedFloat64VectorArray2D(size0, size1, sizeV);

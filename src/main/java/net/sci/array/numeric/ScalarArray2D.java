@@ -22,6 +22,19 @@ public abstract class ScalarArray2D<S extends Scalar<S>> extends Array2D<S> impl
 	// =============================================================
 	// Static methods
 
+    /**
+     * Wraps the (scalar) elements of specified array into an instance of
+     * {@code ScalarArray2D}. If the original array is already an instance of
+     * ScalarArray2D, it is returned. Otherwise, a wrapper encapsulating the
+     * original array is returned.
+     * 
+     * @param <S>
+     *            the type of scalar data stored within the array
+     * @param array
+     *            the array to wrap
+     * @return an instance of ScalarArray2D. If the input array is already an
+     *         instance of ScalarArray2D, it is returned.
+     */
     public final static <S extends Scalar<S>> ScalarArray2D<S> wrap(ScalarArray<S> array)
     {
         if (array instanceof ScalarArray2D)

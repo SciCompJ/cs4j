@@ -26,6 +26,9 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
     // Static methods
 
     /**
+     * Creates a new 2D array containing UInt16 values. Uses the default factory,
+     * and a wrapper to UInt16Array2D if necessary.
+     * 
      * @param size0
      *            the size of the array along the first dimension
      * @param size1
@@ -125,8 +128,29 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
     // =============================================================
     // New methods
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a (signed) short.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @return the (signed) short value at the specified position
+     */
     public abstract short getShort(int x, int y);
 
+    /**
+     * Updates the element value at the specified position, using the specified
+     * (signed) short value.
+     * 
+     * @param x
+     *            the coordinate index along the first dimension
+     * @param y
+     *            the coordinate index along the second dimension
+     * @param s
+     *            the new short value
+     */
     public abstract void setShort(int x, int y, short s);
 
     
@@ -149,11 +173,13 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
     // =============================================================
     // Specialization of the Int16Array interface
 
+    @Override
     public short getShort(int [] pos)
     {
         return getShort(pos[0], pos[1]);
     }
 
+    @Override
     public void setShort(int [] pos, short s)
     {
         setShort(pos[0], pos[1], s);
@@ -209,6 +235,12 @@ public abstract class UInt16Array2D extends IntArray2D<UInt16> implements UInt16
     {
         UInt16Array array;
 
+        /**
+         * Creates a new {@code UInt16Array2D} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(UInt16Array array)
         {
             super(0, 0);

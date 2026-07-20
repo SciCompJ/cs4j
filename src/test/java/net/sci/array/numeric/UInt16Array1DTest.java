@@ -14,14 +14,14 @@ import org.junit.Test;
 public class UInt16Array1DTest
 {
     /**
-     * Test method for {@link net.sci.array.numeric.UInt16Array1D#fromIntArray(int[])}.
+     * Test method for {@link net.sci.array.numeric.UInt16Array1D#of(int[])}.
      */
     @Test
-    public final void testFromIntArray()
+    public final void test_of()
     {
         int[] values = new int[] {10, 11, 12, 13, 14, 15};
         
-        UInt16Array1D array = UInt16Array1D.fromIntArray(values);
+        UInt16Array1D array = UInt16Array1D.of(values);
         
         assertEquals(6, array.size(0));
         assertEquals(10, array.getInt(0));
@@ -35,7 +35,7 @@ public class UInt16Array1DTest
     @Test
     public final void testIterator()
     {
-        UInt16Array1D array = UInt16Array1D.fromIntArray(new int[] {1, 2, 3, 4, 5, 6});
+        UInt16Array1D array = UInt16Array1D.of(new int[] {1, 2, 3, 4, 5, 6});
         
         UInt16Array.Iterator iter = array.iterator();
         int sum = 0;

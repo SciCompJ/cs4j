@@ -65,6 +65,7 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     // New methods
 
     /**
+     * Returns a defensive copy of the inner float data.
      * @return a defensive copy of the inner float data.
      */
     public float[] getFloats()

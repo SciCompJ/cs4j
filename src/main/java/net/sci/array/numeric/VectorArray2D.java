@@ -25,6 +25,19 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
     // =============================================================
     // Static methods
 
+    /**
+     * Encapsulates the instance of VectorArray into a new VectorArray2D, by
+     * creating a Wrapper if necessary. If the original array is already an
+     * instance of UInt8Array2D, it is returned.
+     * 
+     * @param array
+     *            the original array
+     * @param <V>
+     *            the type of the vector contained within the array
+     * @param <S>
+     *            the type of the elements contained by the vector
+     * @return a VectorArray3D view of the original array
+     */
     public final static <V extends Vector<V, S>, S extends Scalar<S>> VectorArray2D<V, S> wrap(VectorArray<V,S> array)
     {
         if (array instanceof VectorArray2D)
@@ -157,6 +170,15 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
     // =============================================================
 	// New abstract methods
 
+    /**
+     * Returns the vector values at a given position within the array.
+     * 
+     * @param x
+     *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
+     * @return the array of vector values at the specified position
+     */
     public abstract double[] getValues(int x, int y);
     
     /**
@@ -173,6 +195,17 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
      */
     public abstract double[] getValues(int x, int y, double[] values);
     
+    /**
+     * Updates the vector values at a given position within the array.
+     * 
+     * @param x
+     *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
+     * @param values
+     *            the array of new vector values (must have same length as the
+     *            vectors in the array)
+     */
 	public abstract void setValues(int x, int y, double[] values);
 	
 	/**
@@ -189,6 +222,19 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
 	 */
 	public abstract double getValue(int x, int y, int c);
 	
+    /**
+     * Returns the scalar value for the specified position and the specified
+     * component index.
+     * 
+     * @param x
+     *            the x-position of the vector
+     * @param y
+     *            the y-position of the vector
+     * @param c
+     *            the component index to investigate
+     * @param value
+     *            the new value at the given position and component index
+     */
 	public abstract void setValue(int x, int y, int c, double value);
 
 
@@ -199,7 +245,7 @@ public abstract class VectorArray2D<V extends Vector<V, S>, S extends Scalar<S>>
 
     /**
      * Iterates over the channels
-     * @return 
+     * @return  the channels
      */
     public abstract Iterable<? extends ScalarArray2D<S>> channels();
 

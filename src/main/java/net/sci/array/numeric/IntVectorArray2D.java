@@ -148,8 +148,4 @@ public abstract class IntVectorArray2D<V extends IntVector<V, I>, I extends Int<
      */
     @Override
     public abstract IntVectorArray2D<V,I> duplicate();
-    
-    public interface Iterator<V extends IntVector<V,I>, I extends Int<I>> extends IntVectorArray.Iterator<V,I>
-    {
-    }
 }
