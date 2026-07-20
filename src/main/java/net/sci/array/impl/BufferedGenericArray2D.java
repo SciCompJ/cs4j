@@ -7,8 +7,13 @@ import net.sci.array.Array;
 import net.sci.array.Array2D;
 
 /**
- * @param <T> the type of elements stored within the array.
+ * Concrete implementation of a 2D array containing generic data stored in a
+ * linear buffer of Object instances. Elements are casted to and from generic
+ * type T when necessary.
  * 
+ * @param <T>
+ *            the type of elements stored within the array.
+ *            
  * @author dlegland
  */
 public class BufferedGenericArray2D<T> extends GenericArray2D<T>
@@ -26,6 +31,17 @@ public class BufferedGenericArray2D<T> extends GenericArray2D<T>
     // =============================================================
     // Constructors
 
+    /**
+     * Creates a new 2D array with the specified size, using the sample element to
+     * initialize array.
+     * 
+     * @param size0
+     *            the size of the array to create in the first direction
+     * @param size1
+     *            the size of the array to create in the second direction
+     * @param initValue
+     *            the value used to initialize the array
+     */
     public BufferedGenericArray2D(int size0, int size1, T initValue)
     {
         super(size0, size1);
@@ -34,6 +50,17 @@ public class BufferedGenericArray2D<T> extends GenericArray2D<T>
         fill(initValue);
     }
     
+    /**
+     * Creates a new 2D array with the specified size, using the specified array
+     * to initialize content.
+     * 
+     * @param size0
+     *            the size of the array to create in the first direction
+     * @param size1
+     *            the size of the array to create in the second direction
+     * @param buffer
+     *            the array containing elements of the new array
+     */
     public BufferedGenericArray2D(int size0, int size1, T[] buffer)
     {
         super(size0, size1);

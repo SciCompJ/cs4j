@@ -17,18 +17,33 @@ import net.sci.array.Array;
 public interface GenericArray<T> extends Array<T>
 {
     // =============================================================
-    // Specialization of Array interface
+    // Static factories
 
-    public static <T> GenericArray<T> create(int[] dims, T value)
+    /**
+     * Creates a new array with the specified size, using the sample element to
+     * initialize array.
+     * 
+     * @param <T>
+     *            the type of elements within array
+     * @param dims
+     *            the size of the array to create
+     * @param initValue
+     *            the value used to initialize the array
+     * @return the new array
+     */
+    public static <T> GenericArray<T> create(int[] dims, T initValue)
     {
         return switch (dims.length)
         {
-            case 2 -> new BufferedGenericArray2D<T>(dims[0], dims[1], value);
-            case 3 -> new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], value);
-            default -> new BufferedGenericArrayND<T>(dims, value);
+            case 2 -> new BufferedGenericArray2D<T>(dims[0], dims[1], initValue);
+            case 3 -> new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], initValue);
+            default -> new BufferedGenericArrayND<T>(dims, initValue);
         };
     }
 
+
+    // =============================================================
+    // Specialization of Array interface
 
     @Override
     public default GenericArray<T> newInstance(int... dims)
@@ -50,6 +65,8 @@ public interface GenericArray<T> extends Array<T>
      */
     public static class DefaultFactory<T> extends AlgoStub implements Array.Factory<T>
     {
+        private DefaultFactory() {};
+        
         @Override
         public GenericArray<T> create(int[] dims, T value)
         {

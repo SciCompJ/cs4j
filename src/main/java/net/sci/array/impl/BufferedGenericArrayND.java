@@ -9,11 +9,14 @@ import net.sci.util.MathUtils;
 
 
 /**
- * Concrete array containing generic data stored in a linear Object buffer.
- * Elements are casted to and from generic type T when necessary.
+ * Concrete implementation of a n-dimensional array containing generic data
+ * stored in a linear buffer of Object instances. Elements are casted to and
+ * from generic type T when necessary.
  * 
- * @param <T> the type of elements stored within the array.
  * 
+ * @param <T>
+ *            the type of elements stored within the array.
+ *            
  * @author dlegland
  */
 public class BufferedGenericArrayND<T> extends ArrayND<T> implements GenericArray<T>

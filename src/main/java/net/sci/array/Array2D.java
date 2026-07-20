@@ -14,7 +14,9 @@ import net.sci.array.impl.BufferedGenericArray2D;
 /**
  * Base implementation for 2D arrays.
  * 
- * Provides implementation for array interface, some of them relying on newly defined methods.
+ * @param <T> the type of elements within the array
+ *  
+ * @see Array3D
  * 
  * @author dlegland
  *

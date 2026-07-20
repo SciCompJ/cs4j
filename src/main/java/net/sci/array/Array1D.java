@@ -7,8 +7,11 @@ import java.io.PrintStream;
 import java.util.Locale;
 
 /**
- * Simplification interface for 1D arrays.
+ * Base implementation for one-dimensional arrays.
+ *
  * 
+ * @param <T> the type of elements within the array
+ *  
  * @see Array2D
  * @see Array3D
  * 
@@ -175,9 +178,16 @@ public abstract class Array1D<T> implements Array<T>
 	public abstract Array1D<T> duplicate();
 
 	
-    public PositionIterator positionIterator()
+    @Override
+    public Iterable<int[]> positions()
     {
-        return new PositionIterator1D();
+        return new Iterable<int[]>()
+        {
+            public java.util.Iterator<int[]> iterator()
+            {
+                return new PositionIterator1D();
+            }
+        };
     }
 
 	/**

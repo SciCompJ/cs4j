@@ -12,10 +12,13 @@ import net.sci.array.impl.BufferedGenericArray3D;
 import net.sci.array.numeric.TriFunction;
 
 /**
- * Base implementation for three-dimensional array.
+ * Base implementation for three-dimensional arrays.
+ * 
+ * @param <T> the type of elements within the array
+ *  
+ * @see Array2D
  * 
  * @author dlegland
- *
  */
 public abstract class Array3D<T> implements Array<T>
 {

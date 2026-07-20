@@ -151,6 +151,16 @@ public class Histograms
         return histo;
     }
     
+    /**
+     * Computes the position of histogram bin centers, given value range and
+     * number of bins.
+     * 
+     * @param range
+     *            the range of values
+     * @param nBins
+     *            the number of bins
+     * @return an array of values corresponding to the center of the bins
+     */
 	public static final double[] computeBinPositions(double[] range, int nBins)
 	{
 		// compute the array of possible thresholds

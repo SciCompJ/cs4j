@@ -11,8 +11,6 @@ import net.sci.array.shape.*;
  * 
  * Implementation of the operators are in the @link{net.sci.array.process.shape} package.
  * 
- * @see{net.sci.array.process.shape}
- * 
  * @author dlegland
  */
 public class Shape
@@ -21,7 +19,7 @@ public class Shape
      * Decimates the number of elements of the input array, by retaining only
      * one element over k in each dimension.
      * 
-     * <pre>{@code
+     * {@snippet :
      *    // create an empty array with only one non-unit dimension
      *    UInt8Array2D array = new BufferedUInt8Array2D(64, 64);
      *    array.populateValues((x,y) -> (double) x + y * 10.0);
@@ -34,7 +32,7 @@ public class Shape
      *    
      *    // the following should equal 1
      *    int newDim = res.dimensionality();
-     * }</pre>
+     * }
      * 
      * @param <T>
      *            The type of the input array
@@ -54,7 +52,7 @@ public class Shape
     /**
      * Flips the content of an array along the specified dimension.
      * 
-     * <pre>{@code
+     * {@snippet :
      *    // create an empty array with only one non-unit dimension
      *    UInt8Array2D array = new BufferedUInt8Array2D(6, 4);
      *    array.populateValues((x,y) -> (double) x + y * 10.0);
@@ -67,7 +65,7 @@ public class Shape
      *    
      *    // the following should equal 1
      *    int newDim = res.dimensionality();
-     * }</pre>
+     * }
      * 
      * @param <T>
      *            The type of the input array
@@ -88,7 +86,7 @@ public class Shape
     /**
      * Removess array dimensions whose size is 1.
      * 
-     * <pre>{@code
+     * {@snippet :
      *    // create an empty array with only one non-unit dimension
      *    UInt8Array array = UInt8Array.create(new int[]{1, 10, 1});
      *    
@@ -97,7 +95,7 @@ public class Shape
      *    
      *    // the following should equal 1
      *    int newDim = res.dimensionality();
-     * }</pre>
+     * }
      * 
      * @param <T>
      *            The type of the input array
@@ -137,7 +135,7 @@ public class Shape
      * Permutes the dimensions of an array.
      * 
      * <p>Example:
-     * <pre>{@code
+     * {@snippet :
         // create input 5x4x3 array
         int[] dims = new int[] {5, 4, 3};
         Array<?> array = UInt8Array.create(dims);
@@ -147,7 +145,7 @@ public class Shape
         Array<?> result = Shape.permuteDimensions(array, order);
         // resulting dimensions should be: int[] {3, 5, 4};
         int[] newDims = result.size(); 
-     * }</pre>
+     * }
      * 
      * @param <T>
      *            The type of the input array

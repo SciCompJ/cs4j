@@ -19,6 +19,20 @@ public abstract class GenericArray2D<T> extends Array2D<T> implements GenericArr
     // =============================================================
     // Static factory
     
+    /**
+     * Creates a new array with the specified size, using the sample element to
+     * initialize array.
+     * 
+     * @param <T>
+     *            the type of elements within array
+     * @param size0
+     *            the size of the array to create in the first direction
+     * @param size1
+     *            the size of the array to create in the second direction
+     * @param initValue
+     *            the value used to initialize the array
+     * @return the new array
+     */
     public static final <T> GenericArray2D<T> create(int size0, int size1, T initValue)
     {
         return new BufferedGenericArray2D<T>(size0, size1, initValue);

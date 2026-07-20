@@ -7,6 +7,11 @@ package net.sci.array;
 /**
  * Base implementation for arrays of any dimensionality.
  * 
+ * @param <T> the type of elements within the array
+ *  
+ * @see Array2D
+ * @see Array3D
+ * 
  * @author dlegland
  */
 public abstract class ArrayND<T> implements Array<T>
