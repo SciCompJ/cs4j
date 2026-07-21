@@ -95,8 +95,29 @@ public interface Float32VectorArray extends VectorArray<Float32Vector, Float32>
     // =============================================================
     // New methods
 
+    /**
+     * Retrieves the vector element value for the specified position and channel
+     * index.
+     * 
+     * @param pos
+     *            the array of coordinate indices of the position
+     * @param channel
+     *            the channel index
+     * @return the vector element value
+     */
     public float getFloat(int[] pos, int channel);
     
+    /**
+     * Updates the vector element value for the specified position and channel
+     * index.
+     * 
+     * @param pos
+     *            the array of coordinate indices of the position
+     * @param channel
+     *            the channel index
+     * @param value
+     *            the new value
+     */
     public void setFloat(int[] pos, int channel, float value);
     
     

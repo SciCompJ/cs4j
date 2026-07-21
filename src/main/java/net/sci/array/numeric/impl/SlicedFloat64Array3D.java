@@ -113,7 +113,7 @@ public class SlicedFloat64Array3D extends Float64Array3D
      * @param size2
      *            size of array in third dimension, corresponding to slice
      *            number
-     * @param factory
+     * @param sliceFactory
      *            the factory for initializing the slices
      */
     public SlicedFloat64Array3D(int size0, int size1, int size2, Float64Array.Factory sliceFactory)

@@ -197,8 +197,25 @@ public interface Float32Array extends ScalarArray<Float32>
         }
     }
     
+    /**
+     * Retrieves the element value at the specified position, and returns the
+     * result as a float.
+     * 
+     * @param pos
+     *            the array of coordinates of the position
+     * @return the float value at the specified position
+     */
     public float getFloat(int[] pos);
     
+    /**
+     * Updates the element value at the specified position, using the specified
+     * float value.
+     * 
+     * @param pos
+     *            the array of coordinates of the position
+     * @param value
+     *            the new float value at the specified position
+     */
     public void setFloat(int[] pos, float value);
 
 
@@ -466,6 +483,12 @@ public interface Float32Array extends ScalarArray<Float32>
 	{
 		ScalarArray<?> array;
 		
+		/**
+         * Creates a new {@code Float32Array} wrapper from the specified array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
 		public ScalarArrayWrapper(ScalarArray<?> array)
 		{
 		    super(array);

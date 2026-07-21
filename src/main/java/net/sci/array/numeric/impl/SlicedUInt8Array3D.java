@@ -112,7 +112,7 @@ public class SlicedUInt8Array3D extends UInt8Array3D
      * @param size2
      *            size of array in third dimension, corresponding to slice
      *            number
-     * @param factory
+     * @param sliceFactory
      *            the factory for initializing the slices
      */
     public SlicedUInt8Array3D(int size0, int size1, int size2, UInt8Array.Factory sliceFactory)

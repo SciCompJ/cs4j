@@ -10,6 +10,9 @@ import java.util.function.BiFunction;
 /**
  * Base class for three-dimensional arrays containing elements implementing the {@code Int} interface.
  * 
+ * @param <I>
+ *            the type of Int stored within the array
+ *            
  * @see UInt8Array2D
  * @see UInt16Array2D
  * @see Int16Array2D

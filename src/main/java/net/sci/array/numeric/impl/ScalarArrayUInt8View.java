@@ -36,6 +36,9 @@ public class ScalarArrayUInt8View implements UInt8Array, Array.View<UInt8>
     // Constructors
 
     /**
+     * Creates a new array containing {@code UInt8} elements, using the
+     * specified buffer of short values.
+     * 
      * 
      * @param array
      *            the original scalar array to convert

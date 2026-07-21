@@ -76,6 +76,8 @@ public class RunLengthInt32Array3D extends Int32Array3D
    // Management of rows
    
    /**
+    * Retrieves the row of integer values at the given (y,z)-coordinates.
+    * 
     * @param y
     *            the y-coordinate of the row
     * @param z
@@ -90,7 +92,7 @@ public class RunLengthInt32Array3D extends Int32Array3D
    }
 
    /**
-    * Sets the row at the given (y,z)-coordinates.
+    * Sets the row of integer values at the given (y,z)-coordinates.
     * 
     * @param y
     *            the y-index of the row.
@@ -128,7 +130,17 @@ public class RunLengthInt32Array3D extends Int32Array3D
            }
        }
    }
-   
+
+   /**
+    * Checks whether the elements located at the specified {@code (y,z)}
+    * coordinates are all zero.
+    * 
+    * @param y
+    *            the y-coordinate of the row
+    * @param z
+    *            the z-coordinate of the row
+    * @return true if there is no element with a value different from zero
+    */
    public boolean isEmptyRow(int y, int z)
    {
        Int32Row[] slice = slices[z];

@@ -9,6 +9,9 @@ import java.util.Locale;
 /**
  * Base class for three-dimensional arrays containing elements implementing the {@code Int} interface.
  * 
+ * @param <I>
+ *            the type of Int stored within the array
+ *            
  * @see UInt8Array3D
  * @see UInt16Array3D
  * @see Int16Array3D

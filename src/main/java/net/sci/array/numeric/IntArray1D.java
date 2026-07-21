@@ -7,8 +7,11 @@ import java.io.PrintStream;
 import java.util.Locale;
 
 /**
- * Specialization of Array for 2D arrays of integer values.
+ * Specialization of Array for 1D arrays containing integer values.
  * 
+ * @param <I>
+ *            the type of Int stored within the array
+ *            
  * @author dlegland
  *
  */

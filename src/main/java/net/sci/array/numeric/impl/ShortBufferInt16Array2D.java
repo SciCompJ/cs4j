@@ -29,6 +29,9 @@ public class ShortBufferInt16Array2D extends Int16Array2D
 	// Constructors
 
 	/**
+     * Creates a new array containing {@code Int16} elements, using the
+     * specified buffer of short values.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 * @param size1

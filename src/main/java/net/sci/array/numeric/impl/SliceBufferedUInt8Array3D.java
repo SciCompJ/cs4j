@@ -105,7 +105,7 @@ public class SliceBufferedUInt8Array3D extends UInt8Array3D
     }
 
     /**
-     * @throws a RuntimeException, as this operation is not authorized.
+     * @throws RuntimeException as this operation is not authorized.
      */
     @Override
     public void setByte(int x, int y, int z, byte b)
@@ -164,35 +164,4 @@ public class SliceBufferedUInt8Array3D extends UInt8Array3D
         }
     }
 
-
-    public static final void main(String... args)
-    {
-        UInt8Array3D refArray = UInt8Array3D.create(10, 10, 10);
-        refArray.fillValues((x,y,z) -> (double) (x + y * 10.0 + Math.floor(z / 5.0) * 2.0));
-
-        SliceBufferedUInt8Array3D array = new SliceBufferedUInt8Array3D(refArray, 2);
-
-        System.out.println("read slice 0"); // need to load slice 0
-        array.getValue(0, 0, 0);
-        array.getValue(0, 1, 0);
-        array.getValue(4, 1, 0);
-        array.getValue(5, 4, 0);
-        System.out.println("read slice 1");  // need to load slice 1
-        array.getValue(0, 0, 1);
-        array.getValue(0, 1, 1);
-        System.out.println("read slice 0 again");  // slice 0 is already buffered
-        array.getValue(0, 0, 0);
-        array.getValue(0, 1, 0);
-        array.getValue(4, 1, 0);
-        System.out.println("read slice 2");  // need to load slice 2, this will remove slice 0 from buffer
-        array.getValue(0, 0, 2);
-        array.getValue(0, 1, 2);
-        System.out.println("read slice 1 again");  // slice 1 is already buffered
-        array.getValue(0, 0, 1);
-        array.getValue(0, 1, 1);
-        System.out.println("read slice 0 again"); // need to load slice 0 again
-        array.getValue(0, 0, 0);
-        array.getValue(0, 1, 0);
-        array.getValue(4, 1, 0);
-    }
 }

@@ -28,13 +28,16 @@ public class ShortBufferUInt16Array2D extends UInt16Array2D
 	// Constructors
 
 	/**
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param buffer
-	 *            the buffer containing the values
-	 */
+     * Creates a new array containing {@code UInt16} elements, using the
+     * specified buffer of short values.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param buffer
+     *            the buffer containing the values
+     */
 	public ShortBufferUInt16Array2D(int size0, int size1, ShortBuffer buffer)
 	{
 		super(size0, size1);

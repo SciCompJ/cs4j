@@ -22,10 +22,21 @@ public class Int32Run implements Comparable<Int32Run>
     public final int right;
     
     /**
-     * The value stored within this run, as an int.
+     * The integer value stored within this run.
      */
     public final int value;
     
+    /**
+     * Creates a new run from the two bounds (inclusive) and the associated
+     * value.
+     * 
+     * @param left
+     *            the left bound of the run (inclusive)
+     * @param right
+     *            the right bound of the run (inclusive)
+     * @param value
+     *            the integer value associated to the run
+     */
     public Int32Run(int left, int right, int value)
     {
         if (right < left)
@@ -37,11 +48,21 @@ public class Int32Run implements Comparable<Int32Run>
         this.value = value;
     }
     
+    /**
+     * Retrieves the length of this row.
+     * 
+     * @return the length of this row.
+     */
     public int length()
     {
         return right - left + 1;
     }
     
+    /**
+     * Retrieves the integer value associated to this row.
+     * 
+     * @return the integer value associated to this row.
+     */
     public int value()
     {
         return value;
@@ -59,6 +80,11 @@ public class Int32Run implements Comparable<Int32Run>
         return pos >= left && pos <= right;
     }
     
+    /**
+     * Duplicates this run.
+     * 
+     * @return the duplicated run
+     */
     public Int32Run duplicate()
     {
         return new Int32Run(this.left, this.right, this.value);

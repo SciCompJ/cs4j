@@ -48,6 +48,8 @@ public abstract class ScalarArray2D<S extends Scalar<S>> extends Array2D<S> impl
      * Same as wrap method, but use different name to avoid runtime class cast
      * exceptions.
      * 
+     * @param <S>
+     *            the type of data within the array
      * @param array
      *            an instance of ScalarArray with two dimensions
      * @return an instance of ScalarArray2D

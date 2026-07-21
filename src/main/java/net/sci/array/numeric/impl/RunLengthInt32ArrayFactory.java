@@ -17,6 +17,13 @@ import net.sci.array.numeric.Int32Array;
  */
 public class RunLengthInt32ArrayFactory extends AlgoStub implements Int32Array.Factory
 {
+    /**
+     * Default empty factory.
+     */
+    public RunLengthInt32ArrayFactory()
+    {
+    }
+    
     @Override
     public Int32Array create(int... dims)
     {

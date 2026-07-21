@@ -113,7 +113,7 @@ public class SlicedInt16Array3D extends Int16Array3D
      * @param size2
      *            size of array in third dimension, corresponding to slice
      *            number
-     * @param factory
+     * @param sliceFactory
      *            the factory for initializing the slices
      */
     public SlicedInt16Array3D(int size0, int size1, int size2, Int16Array.Factory sliceFactory)
