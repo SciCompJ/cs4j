@@ -5,6 +5,8 @@ package net.sci.array.numeric;
 
 import static java.lang.Double.doubleToLongBits;
 
+import java.util.Arrays;
+
 import net.sci.util.HashCodeBuilder;
 
 /**
@@ -17,6 +19,23 @@ import net.sci.util.HashCodeBuilder;
  */
 public class Float64Vector implements Vector<Float64Vector, Float64>
 {
+    // =============================================================
+    // Static factories
+
+    /**
+     * Creates a new vector of {@code Float32} based on the specified array of
+     * double values.
+     * 
+     * @param array
+     *            the array containing vector components.
+     * @return the new vector
+     */
+    public static final Float64Vector of(double[] array)
+    {
+        return new Float64Vector(Arrays.copyOf(array, array.length));
+    }
+    
+    
     // =============================================================
     // Class variables
 
@@ -45,6 +64,7 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
      * 
      * @param array
      *            the array containing vector components.
+     * @see #duplicate()
      */
     public Float64Vector(double[] array)
     {
@@ -57,15 +77,13 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
 
     /**
      * Creates a new Float64Vector with same size and containing the same
-     * values, but using a different inner array of double value.
+     * values, but using a copy of the inner array of double values.
      * 
      * @return a copy of this vector.
      */
     public Float64Vector duplicate()
     {
-        Float64Vector res = new Float64Vector(this.data.length);
-        System.arraycopy(this.data, 0, res.data, 0, this.data.length);
-        return res;
+        return new Float64Vector(Arrays.copyOf(this.data, this.data.length));
     }
     
     

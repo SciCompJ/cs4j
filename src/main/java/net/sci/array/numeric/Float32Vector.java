@@ -5,6 +5,8 @@ package net.sci.array.numeric;
 
 import static java.lang.Float.floatToRawIntBits;
 
+import java.util.Arrays;
+
 import net.sci.util.HashCodeBuilder;
 
 /**
@@ -17,6 +19,41 @@ import net.sci.util.HashCodeBuilder;
  */
 public class Float32Vector implements Vector<Float32Vector, Float32>
 {
+    // =============================================================
+    // Static factories
+
+    /**
+     * Creates a new vector of {@code Float32} based on the specified array of
+     * float values. The array of values is duplicated before vector creation.
+     * 
+     * @param array
+     *            the array containing vector components.
+     * @return the new vector
+     */
+    public static final Float32Vector of(float[] array)
+    {
+        return new Float32Vector(Arrays.copyOf(array, array.length));
+    }
+
+    /**
+     * Creates a new vector of {@code Float32} based on the specified array of
+     * double values.
+     * 
+     * @param array
+     *            the array containing vector components.
+     * @return the new vector
+     */
+    public static final Float32Vector of(double[] array)
+    {
+        float[] data = new float[array.length];
+        for (int c = 0; c < array.length; c++)
+        {
+            data[c] = (float) array[c];
+        }
+        return new Float32Vector(data);
+    }
+    
+
     // =============================================================
     // Class variables
 
@@ -37,7 +74,8 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     }
 
     /**
-     * Creates a new vector based on the specified array of float values.
+     * Creates a new vector of {@code Float32} based on the specified array of
+     * float values.
      * 
      * This implementation keeps reference to the specified array. To avoid
      * modifying the initial array, either use a copy of the initial array, or
@@ -45,12 +83,20 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
      * 
      * @param array
      *            the array containing vector components.
+     * @see #duplicate()
      */
     public Float32Vector(float[] array)
     {
         this.data = array;
     }
 
+    /**
+     * Creates a new vector of {@code Float32} based on the specified array of
+     * double values.
+     * 
+     * @param array
+     *            the array containing vector components.
+     */
     public Float32Vector(double[] array)
     {
         this.data = new float[array.length];
@@ -104,15 +150,13 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     
     /**
      * Creates a new Float32Vector with same size and containing the same
-     * values, but using a different inner array of float value.
+     * values, but using a copy of the inner array of float values.
      * 
      * @return a copy of this vector.
      */
     public Float32Vector duplicate()
     {
-        Float32Vector res = new Float32Vector(this.data.length);
-        System.arraycopy(this.data, 0, res.data, 0, this.data.length);
-        return res;
+        return new Float32Vector(Arrays.copyOf(this.data, this.data.length));
     }
     
 
