@@ -61,9 +61,11 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
     private boolean readRowNames = true;
     
     /**
-     * If true, simply avoid special processing for quotes. Default is false.
+     * Boolean flag for parsing strings enclosed with double quotes. Default is
+     * true. Setting the value to false may make the reading faster, at the
+     * condition that there is no double quotes in the file.
      */
-    private boolean ignoreQuotes = false;
+    private boolean parseDoubleQuotes = true;
 
     
     // =============================================================
@@ -167,12 +169,31 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
      * Chooses whether processing of quotes should be avoided. If true,
      * simply avoid special processing for quotes. Default is false.
      * 
+     * @deprecated replaced by method setParseDoubleQuotes()
+     * @see #setParseDoubleQuotes(boolean)
+     * 
      * @param ignoreQuotes
      *            the boolean flag for ignoring the quotes
      */
+    @Deprecated
     public DelimitedTableReader setIgnoreQuotes(boolean ignoreQuotes)
     {
-        this.ignoreQuotes = ignoreQuotes;
+        this.parseDoubleQuotes = !ignoreQuotes;
+        System.err.println("Warning: methode \"setIgnoreQuotes(boolean)\" is deprecated and will be removed in a near future");
+        return this;
+    }
+
+    /**
+     * Chooses whether processing of quotes should be processed. If true,
+     * strings can be enclosed with double quotes, allowing them to contain
+     * white spaces and/or comas. Default is true.
+     * 
+     * @param parseQuotes
+     *            the boolean flag for parsing the quotes
+     */
+    public DelimitedTableReader setParseDoubleQuotes(boolean parseQuotes)
+    {
+        this.parseDoubleQuotes = parseQuotes;
         return this;
     }
 
@@ -327,7 +348,7 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
     private String[] parseTokens(String line, String delimiterRegexp)
     {
         line = line.strip();
-        return this.ignoreQuotes ? line.split(delimiterRegexp) : splitQuotedTokens(line, delimiterRegexp);
+        return this.parseDoubleQuotes ? splitQuotedTokens(line, delimiterRegexp) : line.split(delimiterRegexp);
     }
     
     /**
