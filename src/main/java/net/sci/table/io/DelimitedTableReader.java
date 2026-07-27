@@ -326,6 +326,7 @@ public class DelimitedTableReader extends AlgoStub implements TableReader
     
     private String[] parseTokens(String line, String delimiterRegexp)
     {
+        line = line.strip();
         return this.ignoreQuotes ? line.split(delimiterRegexp) : splitQuotedTokens(line, delimiterRegexp);
     }
     
