@@ -13,6 +13,20 @@ import org.junit.Test;
 public class DelimitedTableReaderTest
 {
     @Test
+    public final void test_readTable_NumericData24x4() throws IOException
+    {
+        String fileName = getClass().getResource("/tables/numericData_24x4.txt").getFile();
+        File file = new File(fileName);
+
+        TableReader reader = new DelimitedTableReader().setReadRowNames(false);
+
+        Table table = reader.readTable(file);
+
+        assertEquals(24, table.rowCount());
+        assertEquals(4, table.columnCount());
+    }
+
+    @Test
     public final void test_readTable_Iris() throws IOException
     {
         String fileName = getClass().getResource("/tables/iris/fisherIris.txt").getFile();
