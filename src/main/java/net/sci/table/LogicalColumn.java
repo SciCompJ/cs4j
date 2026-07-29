@@ -3,6 +3,8 @@
  */
 package net.sci.table;
 
+import java.util.function.Function;
+
 import net.sci.table.impl.DefaultLogicalColumn;
 
 /**
@@ -30,6 +32,28 @@ public interface LogicalColumn extends NumericColumn, Iterable<Boolean>
     public static LogicalColumn create(String name, boolean[] values)
     {
         return new DefaultLogicalColumn(name, values);
+    }
+    
+    /**
+     * Creates a new logical column by converting numeric values in the
+     * specified numeric column using the specified function.
+     * 
+     * @param col
+     *            the column containing numeric values
+     * @param fun
+     *            the conversion function from double to boolean
+     * @return the resulting logical column
+     */
+    public static LogicalColumn convert(NumericColumn col, Function<Double, Boolean> fun)
+    {
+        int n = col.length();
+        LogicalColumn res = LogicalColumn.create(col.getName(), new boolean[n]);
+        for (int i = 0; i < n; i++)
+        {
+            res.setState(i, fun.apply(col.getValue(i)));
+        }
+        return res;
+        
     }
     
     /**

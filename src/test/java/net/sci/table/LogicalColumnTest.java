@@ -12,7 +12,21 @@ import org.junit.Test;
  */
 public class LogicalColumnTest
 {
-    
+    /**
+     * Test method for {@link net.sci.table.LogicalColumn#convert(net.sci.table.NumericColumn, java.util.function.Function)}.
+     */
+    @Test
+    public final void test_convert_NumericColumn_Function()
+    {
+        NumericColumn col = NumericColumn.create("origin", new double[] {1, 4, 5, 6, 8, 9});
+        
+        LogicalColumn res = LogicalColumn.convert(col, v -> v > 5);
+        
+        assertEquals(col.length(), res.length());
+        assertFalse(res.getState(0));
+        assertTrue(res.getState(5));
+    }
+
     /**
      * Test method for {@link net.sci.table.LogicalColumn#getValues()}.
      */
