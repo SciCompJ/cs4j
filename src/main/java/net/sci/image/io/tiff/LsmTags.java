@@ -12,10 +12,18 @@ import net.sci.image.Image;
 
 /**
  * Management of LSM Tags.
+ * Returns the content of the "LSM Info" Tiff tag as a map, using name of the properties as keys. 
+ * Example to retrieve the spatial calibration:
+ * {@snippet :
+ * Map<String, Object> info = image.metadata.get("lsm");
+ * double voxelSizeX_microns = ((double) info.get("voxelSizeX")) / 1_000_000.0;
+ * double voxelSizeY_microns = ((double) info.get("voxelSizeY")) / 1_000_000.0;
+ * }
  *
  *
+ * @see <a href="https://imagej.net/ij/plugins/lsm-reader.html">LSM Reader</a>, by Patrick Pirrotte, Yannick Krempp and Jerome Mutterer
  * @see <a href="https://fr.mathworks.com/matlabcentral/fileexchange/8412-lsm-file-toolbox"> LSM File Toolbox</a> by Peter Li
- * @ee <a href="https://fr.mathworks.com/matlabcentral/fileexchange/46892-zeiss-laser-scanning-confocal-microscope-lsm-file-reader"> LSM File Reader</a> by Chao-Yuan Yeh
+ * @see <a href="https://fr.mathworks.com/matlabcentral/fileexchange/46892-zeiss-laser-scanning-confocal-microscope-lsm-file-reader"> LSM File Reader</a> by Chao-Yuan Yeh
  * 
  * @author dlegland
  *
@@ -54,13 +62,32 @@ public class LsmTags implements TagSet
             map.put("dimZ", buffer.getInt());
             map.put("dimC", buffer.getInt());
             map.put("dimT", buffer.getInt());
-            buffer.position(buffer.position() + 12);
+            
+            map.put("intensityDataType", buffer.getInt());
+            map.put("thumbnailX", buffer.getInt());
+            map.put("thumbnailY", buffer.getInt());
+           
             map.put("voxelSizeX", buffer.getDouble());
             map.put("voxelSizeY", buffer.getDouble());
             map.put("voxelSizeZ", buffer.getDouble());
-            map.put("specScan", buffer.getShort() & 0x00FFFF);
-            
+            map.put("specScan", buffer.getFloat());
+
+            buffer.position(0x001C);
+            map.put("numberOfLasers", buffer.get() & 0x00FF);
+
+            buffer.position(0x0058);
+            map.put("scanType", buffer.getShort() & 0x00FFFF);
+            buffer.position(0x006C);
+            map.put("offsetChannelColors", buffer.getInt());
+            buffer.position(0x0078);
+            map.put("offsetChannelDataTypes", buffer.getInt());
+
             image.metadata.put("lsm", map);
+            
+//            for (String key : map.keySet())
+//            {
+//                System.out.println(key + ": " + map.get(key));
+//            }
         }
     }
 
