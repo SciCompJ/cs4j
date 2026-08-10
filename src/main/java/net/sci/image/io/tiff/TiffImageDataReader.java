@@ -587,29 +587,10 @@ public class TiffImageDataReader extends AlgoStub
     }
     
     /**
-     * Read an array of bytes into a pre-allocated buffer, by iterating over the
+     * Reads an array of bytes into a pre-allocated buffer, by iterating over the
      * strips, and returns the number of bytes read.
      */
     private static final int readByteBuffer(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer)
-            throws IOException
-    {
-        Entry compressionTag = ifd.getEntry(BaselineTags.Compression.CODE);
-        int compressionCode = compressionTag != null ? compressionTag.value : 1;
-
-        return switch (compressionCode)
-        {
-            case BaselineTags.Compression.NONE -> readByteArrayUncompressed(raf, ifd, buffer);
-            case BaselineTags.Compression.PACKBITS -> readByteArrayPackBits(raf, ifd, buffer);
-            default -> throw new RuntimeException(
-                    "Unsupported code for compression mode: " + compressionCode);
-        };
-    }
-
-    /**
-     * Read an array of bytes into a pre-allocated buffer, by iterating over the
-     * strips, and returns the number of bytes read.
-     */
-    private static final int readByteArrayUncompressed(RandomAccessFile raf, ImageFileDirectory ifd, byte[] buffer)
             throws IOException
     {
         // retrieve strips info
@@ -620,49 +601,41 @@ public class TiffImageDataReader extends AlgoStub
             throw new RuntimeException("Strip offsets and strip byte counts arrays must have same length");
         }
         
+        int compressionCode = ifd.getIntValue(BaselineTags.Compression.CODE, BaselineTags.Compression.NONE);
+        return switch (compressionCode)
+        {
+            case BaselineTags.Compression.NONE -> readStripData(raf, buffer, stripOffsets, stripByteCounts);
+            case BaselineTags.Compression.PACKBITS -> readByteArrayPackBits(raf, buffer, stripOffsets, stripByteCounts);
+            default -> throw new RuntimeException(
+                    "Unsupported code for compression mode: " + compressionCode);
+        };
+    }
+
+    private static final int readByteArrayPackBits(RandomAccessFile raf, byte[] dest, int[] stripOffsets, int[] stripByteCounts) throws IOException
+    {
+        // create temporary buffer to read compressed data
+        byte[] compressedBytes = new byte[sum(stripByteCounts)];
+        readStripData(raf, compressedBytes, stripOffsets, stripByteCounts);
+
+        // uncompress data
+        return PackBits.uncompressPackBits(compressedBytes, dest);
+    }
+    
+    private static final int readStripData(RandomAccessFile raf, byte[] dest, int[] stripOffsets, int[] stripByteCounts) throws IOException
+    {
         int totalRead = 0;
         int offset = 0;
-    
+
         // read each strip successively
         for (int i = 0; i < stripOffsets.length; i++)
         {
             raf.seek(stripOffsets[i] & 0xffffffffL);
-            int nRead = raf.read(buffer, offset, stripByteCounts[i]);
+            int nRead = raf.read(dest, offset, stripByteCounts[i]);
             offset += nRead;
             totalRead += nRead;
         }
-    
+
         return totalRead;
-    }
-
-    private static final int readByteArrayPackBits(RandomAccessFile raf, ImageFileDirectory ifd,
-            byte[] buffer) throws IOException
-    {
-        // retrieve strips info
-        int[] stripOffsets = ifd.getIntArrayValue(BaselineTags.StripOffsets.CODE);
-        int[] stripByteCounts = ifd.getIntArrayValue(BaselineTags.StripByteCounts.CODE);
-        if (stripOffsets.length != stripByteCounts.length)
-        {
-            throw new RuntimeException(
-                    "Strip offsets and strip byte counts arrays must have same length");
-        }
-
-        // Number of strips
-        int nStrips = stripOffsets.length;
-
-        // Compute the number of bytes per strip
-        byte[] compressedBytes = new byte[sum(stripByteCounts)];
-
-        // read each compressed strip
-        int offset = 0;
-        for (int i = 0; i < nStrips; i++)
-        {
-            raf.seek(stripOffsets[i] & 0xffffffffL);
-            int nRead = raf.read(compressedBytes, offset, stripByteCounts[i]);
-            offset += nRead;
-        }
-
-        return PackBits.uncompressPackBits(compressedBytes, buffer);
     }
 
     private static final int sum(int[] values)
