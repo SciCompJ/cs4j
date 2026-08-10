@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -465,17 +466,19 @@ public class TiffImageReader extends AlgoStub implements ImageReader
             return false;
         }
         
-        // Read File information of the first image stored in the file
-        ImageFileDirectory ifd0 = fileDirectories.iterator().next();
+        // Read image size from first IFD
+        Iterator<ImageFileDirectory> iter = fileDirectories.iterator();
+        ImageFileDirectory ifd0 = iter.next();
         int refSizeX = ifd0.getValue(BaselineTags.ImageWidth.CODE);
         int refSizeY = ifd0.getValue(BaselineTags.ImageLength.CODE);
         
         // If file contains several images, check if we should read a stack
         // Condition: all images must have same size
-        for (ImageFileDirectory ifd : fileDirectories)
+        while(iter.hasNext())
         {
-            int sizeX = ifd.getValue(BaselineTags.ImageWidth.CODE);
-            int sizeY = ifd.getValue(BaselineTags.ImageLength.CODE);
+            ImageFileDirectory ifd = iter.next();
+            int sizeX = ifd.getIntValue(BaselineTags.ImageWidth.CODE, -1);
+            int sizeY = ifd.getIntValue(BaselineTags.ImageLength.CODE, -1);
             if (sizeX != refSizeX || sizeY != refSizeY)
             {
                 return false;
