@@ -11,44 +11,86 @@ import net.sci.array.Array;
 import net.sci.array.Array3D;
 import net.sci.array.numeric.Float32VectorArray;
 import net.sci.array.numeric.Float32VectorArray3D;
+import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array3D;
 
 /**
  * @author dlegland
  *
  */
-@Deprecated
-public class SlicerTest
+public class SliceTest
 {
-	/**
-	 * Test method for {@link net.sci.array.shape.Slicer#process(net.sci.array.Array)}.
-	 */
-	@Test
-	@Deprecated
-	public final void testProcess_UInt8Array3D()
-	{
-		UInt8Array3D array = createUInt8Array3D();
-		Slicer slicer = new Slicer(new int[]{0, 1}, new int[]{1, 1, 1});
-		
-		Array<?> result = slicer.process(array);
-		assertEquals(2, result.dimensionality());
-		assertEquals(array.size(0), result.size(0));
-		assertEquals(array.size(1), result.size(1));
-
-		assertEquals(array.get(3, 2, 1), result.get(new int[]{3, 2}));
-	}
-	
     /**
-     * Test method for {@link net.sci.array.shape.Slicer#process(net.sci.array.Array)}.
+     * Test method for {@link net.sci.array.shape.Slice#process(net.sci.array.Array)}.
      */
     @Test
-    @Deprecated
+    public final void testProcess_UInt8Array3D()
+    {
+        UInt8Array3D array = createUInt8Array3D();
+        Slice op = new Slice(new int[]{0, 1}, new int[]{1, 1, 1});
+        
+        Array<?> result = op.process(array);
+        assertEquals(2, result.dimensionality());
+        assertEquals(array.size(0), result.size(0));
+        assertEquals(array.size(1), result.size(1));
+
+        assertEquals(array.get(3, 2, 1), result.get(new int[]{3, 2}));
+    }
+    
+    /**
+     * Test method for {@link net.sci.array.shape.Slice#createView(net.sci.array.Array)}.
+     */
+    @Test
+    public final void test_createView_UInt8Array3D()
+    {
+        UInt8Array3D array = createUInt8Array3D();
+        Slice op = new Slice(new int[]{0, 1}, new int[]{1, 1, 1});
+        
+        Array<UInt8> res = op.createView(array);
+        assertEquals(2, res.dimensionality());
+        assertEquals(array.size(0), res.size(0));
+        assertEquals(array.size(1), res.size(1));
+
+        assertEquals(array.get(3, 2, 1), res.get(new int[]{3, 2}));
+
+        // modify the view, and check that original array is modified
+        assertEquals(array.get(3, 2, 1), res.get(new int[]{3, 2}));
+        res.set(new int[] {3, 2}, new UInt8(100));
+        assertEquals(100, array.getInt(3, 2, 1));
+    }
+    
+    /**
+     * Test method for {@link net.sci.array.shape.Slice#createView(net.sci.array.Array)}.
+     */
+    @Test
+    public final void test_createView_UInt8Array3D_zy()
+    {
+        UInt8Array3D array = createUInt8Array3D();
+        Slice op = new Slice(new int[]{2, 1}, new int[]{1, 1, 1});
+        
+        Array<UInt8> res = op.createView(array);
+        assertEquals(2, res.dimensionality());
+        assertEquals(array.size(2), res.size(0));
+        assertEquals(array.size(1), res.size(1));
+
+        assertEquals(array.get(1, 3, 2), res.get(new int[]{2, 3}));
+
+        // modify the view, and check that original array is modified
+        assertEquals(array.get(1, 3, 2), res.get(new int[]{2, 3}));
+        res.set(new int[] {2, 3}, new UInt8(100));
+        assertEquals(100, array.getInt(1, 3, 2));
+    }
+    
+    /**
+     * Test method for {@link net.sci.array.shape.Slice#process(net.sci.array.Array)}.
+     */
+    @Test
     public final void testProcess_VectorArray3D()
     {
         Float32VectorArray3D array = createVectorArray3D();
-        Slicer slicer = new Slicer(new int[]{0, 1}, new int[]{1, 1, 1});
+        Slice op = new Slice(new int[]{0, 1}, new int[]{1, 1, 1});
         
-        Float32VectorArray result = (Float32VectorArray) slicer.process(array);
+        Float32VectorArray result = (Float32VectorArray) op.process(array);
         assertEquals(2, result.dimensionality());
         assertEquals(array.size(0), result.size(0));
         assertEquals(array.size(1), result.size(1));
@@ -57,16 +99,15 @@ public class SlicerTest
     }
 
     /**
-     * Test method for {@link net.sci.array.shape.Slicer#process(net.sci.array.Array)}.
+     * Test method for {@link net.sci.array.shape.Slice#process(net.sci.array.Array)}.
      */
     @Test
-    @Deprecated
     public final void testProcess_StringArray3D()
     {
         Array3D<String> array = createStringArray3D();
-        Slicer slicer = new Slicer(new int[]{0, 1}, new int[]{1, 1, 1});
+        Slice op = new Slice(new int[]{0, 1}, new int[]{1, 1, 1});
         
-        Array<?> result = slicer.process(array);
+        Array<?> result = op.process(array);
         assertEquals(2, result.dimensionality());
         assertEquals(array.size(0), result.size(0));
         assertEquals(array.size(1), result.size(1));
@@ -78,8 +119,8 @@ public class SlicerTest
 //    {
 //        UInt8Array3D array = createUInt8Array3D();
 //
-//        Slicer slicer = new Slicer(2, 1);
-//        Array<?> view = slicer.createView(array);
+//        Slice Slice = new Slice(2, 1);
+//        Array<?> view = Slice.createView(array);
 //        
 //        assertEquals(2, view.dimensionality());
 //        assertEquals(array.size(0), view.size(0));
@@ -104,8 +145,8 @@ public class SlicerTest
 //    {
 //        Array3D<String> array = createStringArray3D();
 //
-//        Slicer slicer = new Slicer(2, 1);
-//        Array<?> view = slicer.createView(array);
+//        Slice Slice = new Slice(2, 1);
+//        Array<?> view = Slice.createView(array);
 //        
 //        assertEquals(2, view.dimensionality());
 //        assertEquals(array.size(0), view.size(0));

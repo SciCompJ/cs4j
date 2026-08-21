@@ -14,7 +14,7 @@ import org.junit.runners.Suite;
     Rotate90Test.class,
     Rotate3D90Test.class,
     SimpleSlicerTest.class,
-    SlicerTest.class,
+    SliceTest.class,
     SqueezeTest.class,
     SubSampleTest.class,
 	})

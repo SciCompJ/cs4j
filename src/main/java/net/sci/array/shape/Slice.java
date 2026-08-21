@@ -3,6 +3,9 @@
  */
 package net.sci.array.shape;
 
+import java.util.function.Function;
+import java.util.stream.IntStream;
+
 import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 import net.sci.array.ArrayOperator;
@@ -14,14 +17,11 @@ import net.sci.array.numeric.ScalarArray;
  * to the result array. The dimensionality of the output array corresponds to
  * the number of dimensions provided for slicing.
  * 
- * @deprecated renamed as Slice
- * 
- * @see Slice
+ * @see SimpleSlicer
  * 
  * @author dlegland
  */
-@Deprecated
-public class Slicer extends AlgoStub implements ArrayOperator
+public class Slice extends AlgoStub implements ArrayOperator
 {
  	// =============================================================
     // Class members
@@ -53,7 +53,7 @@ public class Slicer extends AlgoStub implements ArrayOperator
      *            the position (within the original array) of an element
      *            belonging to the sliced array.
      */
-	public Slicer(int[] dims, int[] pos)
+	public Slice(int[] dims, int[] pos)
 	{
 		this.dims = dims;
 		this.refPos = pos;
@@ -63,6 +63,34 @@ public class Slicer extends AlgoStub implements ArrayOperator
 	// =============================================================
     // Methods
 
+
+    /**
+     * Creates a view array that will perform coordinate reindexing on the fly when
+     * elements will be requested.
+     * 
+     * @param <T>
+     *            the type of the input array. Output array have same type.
+     * @param array
+     *            the array to flip
+     * @return a slice view on the input array.
+     */
+    public <T> Array<T> createView(Array<T> array)
+    {
+        int[] newDims = IntStream.of(dims).map(d -> array.size(d)).toArray();
+        Function<int[], int[]> mapping = (int[] pos) -> {
+            int[] pos2 = new int[refPos.length];
+            System.arraycopy(refPos, 0, pos2, 0, refPos.length);
+            for (int d = 0; d < dims.length; d++)
+            {
+                pos2[dims[d]] = pos[d];
+            }
+            return pos2;
+        };
+
+        return array.reshapeView(newDims, mapping);
+    }
+    
+    
 	@Override
 	public <T> Array<T> process(Array<T> source)
 	{
