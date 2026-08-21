@@ -267,6 +267,22 @@ public interface Array<T> extends Iterable<T>, Dimensional
     }
     
     /**
+     * Checks whether the elements stored within this array are instance of the
+     * specified class or interface.
+     * 
+     * @param aClass
+     *            the class to check
+     * @return true if the elements stored within this array are instance of the
+     *         specified class or interface.
+     * 
+     * @see #elementClass()
+     */
+    public default boolean elementInstanceOf(Class<?> aClass)
+    {
+        return aClass.isAssignableFrom(this.elementClass());
+    }
+    
+    /**
      * Returns the class of the elements stored in this array.
      * 
      * @return the class of the elements stored in this array.
