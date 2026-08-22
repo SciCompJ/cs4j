@@ -283,11 +283,11 @@ public class ImageFileDirectory
         {
             throw new RuntimeException("Requires content of the \"BitsPerSample\" tag to have number elements consistent with the \"SamplePerElement\" tag");
         }
-        int sampleFormat = getIntValue(ExtensionTags.SampleFormat.CODE, 1);
         
         // case of scalar image data
         if (samplesPerPixel == 1)
         {
+            int sampleFormat = getIntValue(ExtensionTags.SampleFormat.CODE, 1);
             return switch (bitsPerSample[0])
             {
                 case 1 -> PixelType.BINARY;
@@ -320,7 +320,8 @@ public class ImageFileDirectory
         }
         
         // check for color image data type
-        if (samplesPerPixel == 3 && sampleFormat == SampleFormat.UNSIGNED_INTEGER)
+        int[] sampleFormats = getIntArrayValue(ExtensionTags.SampleFormat.CODE, new int[] {1, 1, 1});
+        if (samplesPerPixel == 3 && sampleFormats[0] == SampleFormat.UNSIGNED_INTEGER)
         {
             if (bitsPerSample[0] == 8) return PixelType.RGB8;
             if (bitsPerSample[0] == 16) return PixelType.RGB16;
@@ -328,7 +329,7 @@ public class ImageFileDirectory
         }
         
         // remaining types are vector data, and are implemented only for floating point data
-        if (sampleFormat != SampleFormat.FLOATING_POINT)
+        if (sampleFormats[0] != SampleFormat.FLOATING_POINT)
         {
             throw new RuntimeException("Image data with several samples must be either color or floating point");
         }
