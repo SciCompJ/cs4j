@@ -317,26 +317,31 @@ public class ImageFileDirectory
                         "Number of bits per sample for scalar image data is not managed: "
                                 + bitsPerSample);
             };
-        }
-        
-        // check for color image data type
-        int[] sampleFormats = getIntArrayValue(ExtensionTags.SampleFormat.CODE, new int[] {1, 1, 1});
-        if (samplesPerPixel == 3 && sampleFormats[0] == SampleFormat.UNSIGNED_INTEGER)
+        } 
+        else
         {
-            if (bitsPerSample[0] == 8) return PixelType.RGB8;
-            if (bitsPerSample[0] == 16) return PixelType.RGB16;
-            throw new RuntimeException("In case of 3-sample integer data, bits per samples must be either 8 or 16");
-        }
-        
-        // remaining types are vector data, and are implemented only for floating point data
-        if (sampleFormats[0] != SampleFormat.FLOATING_POINT)
-        {
+            // case of multi-value pixel images
+            // determine sample format, using default value
+            int[] defaults = new int[samplesPerPixel];
+            for (int i = 0; i < samplesPerPixel; i++) defaults[i] = 1;
+            int[] sampleFormats = getIntArrayValue(ExtensionTags.SampleFormat.CODE, defaults);
+            
+            // check for color image data type
+            if (samplesPerPixel == 3 && sampleFormats[0] == SampleFormat.UNSIGNED_INTEGER)
+            {
+                if (bitsPerSample[0] == 8) return PixelType.RGB8;
+                if (bitsPerSample[0] == 16) return PixelType.RGB16;
+                throw new RuntimeException("In case of 3-sample integer data, bits per samples must be either 8 or 16");
+            }
+
+            // remaining types are vector data, and are implemented only for floating point data
+            if (sampleFormats[0] == SampleFormat.FLOATING_POINT)
+            {
+                if (bitsPerSample[0] == 32) return new PixelType.Float32Vector(samplesPerPixel);
+                if (bitsPerSample[0] == 64) return new PixelType.Float64Vector(samplesPerPixel);
+            }
+
             throw new RuntimeException("Image data with several samples must be either color or floating point");
         }
-        
-        if (bitsPerSample[0] == 32) return new PixelType.Float32Vector(samplesPerPixel);
-        if (bitsPerSample[0] == 64) return new PixelType.Float64Vector(samplesPerPixel);
-
-        throw new RuntimeException("Unable to determine pixel type");
     }
 }

@@ -386,7 +386,22 @@ public class TiffImageWriter extends AlgoStub implements ImageWriter, AutoClosea
         }
         
         // --- Extension tags ---
-        ifd.addEntry(new SampleFormat().newEntry(pixelType));
+        if (samplesPerPixel == 1)
+        {
+            ifd.addEntry(new SampleFormat().newEntry(pixelType));
+        }
+        else
+        {
+            short format = pixelType.isInteger()
+                    ? pixelType.isSigned() ? SampleFormat.SIGNED_INTEGER : SampleFormat.UNSIGNED_INTEGER
+                    : SampleFormat.FLOATING_POINT;
+            short[] values = new short[samplesPerPixel];
+            for (int i = 0; i < samplesPerPixel; i++)
+            {
+                values[i] = format;
+            }
+            ifd.addEntry(new SampleFormat().newEntry().setValue(values));
+        }
         
         // add non-mandatory tag(s)
         DateFormat formatter = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
