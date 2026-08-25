@@ -92,4 +92,21 @@ public abstract class ArrayND<T> implements Array<T>
 	{
 		return this.sizes[dim];
 	}
+	
+	
+    // =============================================================
+    // Override Object methods
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder("(" + this.size(0));
+        for (int i = 1; i < this.dimensionality(); i++)
+        {
+            sb.append(" x " + this.size(i));
+        }
+        sb.append(") ").append(this.elementClass().getSimpleName()).append(" array");
+        return sb.toString();
+    }
+    
 }

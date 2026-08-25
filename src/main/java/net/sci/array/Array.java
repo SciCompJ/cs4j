@@ -425,6 +425,10 @@ public interface Array<T> extends Iterable<T>, Dimensional
         };
     }
     
+    
+    // =============================================================
+    // Inner classes
+    
     /**
      * Utility class for creating a reshape view on an array using arbitrary
      * coordinate mapping.

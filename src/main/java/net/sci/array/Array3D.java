@@ -338,6 +338,20 @@ public abstract class Array3D<T> implements Array<T>
         if (pos.length != 3) return false;
         return containsPosition(pos[0], pos[1], pos[2]);
     }
+    
+
+    // =============================================================
+    // Override Object methods
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.ENGLISH, "(%d x %d x %d) %s array", this.size0, this.size1, this.size2, this.elementClass().getSimpleName());
+    }
+    
+
+    // =============================================================
+    // Inner classes
 
 	/**
      * Iterator over the positions of a 3D array.

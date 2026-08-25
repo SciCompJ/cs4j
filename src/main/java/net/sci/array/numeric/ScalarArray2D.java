@@ -179,41 +179,24 @@ public abstract class ScalarArray2D<S extends Scalar<S>> extends Array2D<S> impl
     }
     
     
-	// =============================================================
-	// Specialization of the Array interface
-
-	@Override
-	public ScalarArray2D<S> duplicate()
-	{
-	    ScalarArray2D<S> res = ScalarArray2D.wrapScalar2d(this.factory().create(this.size()));
-	    for (int y = 0; y < this.size1; y++)
-	    {
-	        for (int x = 0; x < this.size0; x++)
-	        {
-	            res.setValue(x, y, this.getValue(x, y));
-	        }
-	    }
-	    return res;
-	}
-	    
-
-	
     // =============================================================
-    // Override Object methods
+    // Specialization of the Array interface
 
-    /**
-     * Overrides the method to display a String representation of this values
-     * within the array.
-     * 
-     * @return a String representation of the inner values of the array.
-     */
     @Override
-    public String toString()
+    public ScalarArray2D<S> duplicate()
     {
-        return String.format(Locale.ENGLISH, "(%d x %d) Scalar array with values:", this.size0, this.size1);
+        ScalarArray2D<S> res = ScalarArray2D.wrapScalar2d(this.factory().create(this.size()));
+        for (int y = 0; y < this.size1; y++)
+        {
+            for (int x = 0; x < this.size0; x++)
+            {
+                res.setValue(x, y, this.getValue(x, y));
+            }
+        }
+        return res;
     }
     
-    
+
     // =============================================================
     // Inner implementation of iterator on double values
 	
@@ -242,25 +225,23 @@ public abstract class ScalarArray2D<S extends Scalar<S>> extends Array2D<S> impl
         }
     }
 	
-	
-	// =============================================================
-	// Inner Wrapper class
 
-	private static class Wrapper<S extends Scalar<S>> extends ScalarArray2D<S>
-	{
-		private ScalarArray<S> array;
-		
-		protected Wrapper(ScalarArray<S> array)
-		{
-			super(0, 0);
-			if (array.dimensionality() < 2)
-			{
-				throw new IllegalArgumentException("Requires an array with at least two dimensions");
-			}
-			this.array = array;
-			this.size0 = array.size(0);
-			this.size1 = array.size(1);
-		}
+    // =============================================================
+    // Inner Wrapper class
+
+    private static class Wrapper<S extends Scalar<S>> extends ScalarArray2D<S>
+    {
+        private ScalarArray<S> array;
+
+        protected Wrapper(ScalarArray<S> array)
+        {
+            super(0, 0);
+            if (array.dimensionality() < 2)
+            { throw new IllegalArgumentException("Requires an array with at least two dimensions"); }
+            this.array = array;
+            this.size0 = array.size(0);
+            this.size1 = array.size(1);
+        }
 
         @Override
         public double getValue(int x, int y)

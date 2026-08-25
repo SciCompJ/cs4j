@@ -207,8 +207,8 @@ public abstract class Array2D<T> implements Array<T>
     public abstract T get(int x, int y);
     
     /**
-     * Changes the value of an element in the array at the position given by
-     * two integer indices.
+     * Changes the value of an element in the array at the position given by two
+     * integer indices.
      * 
      * @param x
      *            index over the first array dimension
@@ -219,58 +219,64 @@ public abstract class Array2D<T> implements Array<T>
      */
     public abstract void set(int x, int y, T value);
     
-	
-	// =============================================================
-	// Specialization of the Array interface
+
+    // =============================================================
+    // Specialization of the Array interface
 
     @Override
     public T get(int[] pos)
     {
         return get(pos[0], pos[1]);
     }
-    
+
     @Override
     public void set(int[] pos, T value)
     {
         set(pos[0], pos[1], value);
     }
-    
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#dimensionality()
-	 */
-	@Override
-	public int dimensionality()
-	{
-		return 2;
-	}
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#getSize()
-	 */
-	@Override
-	public int[] size()
-	{
-		return new int[]{this.size0, this.size1};
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.Array#dimensionality()
+     */
+    @Override
+    public int dimensionality()
+    {
+        return 2;
+    }
 
-	/* (non-Javadoc)
-	 * @see net.sci.array.Array#getSize(int)
-	 */
-	@Override
-	public int size(int dim)
-	{
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.Array#getSize()
+     */
+    @Override
+    public int[] size()
+    {
+        return new int[] { this.size0, this.size1 };
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.array.Array#getSize(int)
+     */
+    @Override
+    public int size(int dim)
+    {
         return switch (dim)
         {
             case 0 -> this.size0;
             case 1 -> this.size1;
             default -> throw new IllegalArgumentException("Dimension argument must be 0 or 1");
         };
-	}
+    }
 
-	@Override
-	public abstract Array2D<T> duplicate();
+    @Override
+    public abstract Array2D<T> duplicate();
 
-	@Override
+    @Override
     public Iterable<int[]> positions()
     {
         return new Iterable<int[]>()
@@ -288,6 +294,21 @@ public abstract class Array2D<T> implements Array<T>
         if (pos.length != 2) return false;
         return containsPosition(pos[0], pos[1]);
     }
+
+    
+    
+    // =============================================================
+    // Override Object methods
+
+    @Override
+    public String toString()
+    {
+        return String.format(Locale.ENGLISH, "(%d x %d) %s array", this.size0, this.size1, this.elementClass().getSimpleName());
+    }
+
+
+    // =============================================================
+    // Inner classes
 
 	/**
      * Iterator over the positions of an array.

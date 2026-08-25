@@ -204,16 +204,6 @@ public abstract class IntArray2D<I extends Int<I>> extends ScalarArray2D<I> impl
 
     
     // =============================================================
-    // Override Object methods
-
-    @Override
-    public String toString()
-    {
-        return String.format(Locale.ENGLISH, "(%d x %d) Int array.", this.size0, this.size1);
-    }
-
-    
-    // =============================================================
     // Inner wrapper class
 
 	/**
