@@ -109,4 +109,14 @@ public abstract class TableStub implements Table
         }
         this.rowAxis.setItemName(rowIndex, name);
     }
+    
+    
+    // =============================================================
+    // Override Object methods
+
+    @Override
+    public String toString()
+    {
+        return String.format("(%d x %d) Table", rowCount(), columnCount());
+    }
 }

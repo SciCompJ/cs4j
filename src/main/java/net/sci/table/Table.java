@@ -518,7 +518,7 @@ public interface Table
     {
         System.out.println(new TablePrinter().print(this));
     }
-
+    
     /**
      * A container of columns.
      *

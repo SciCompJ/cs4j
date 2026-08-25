@@ -571,4 +571,22 @@ public class Image
         frame.pack();
         frame.setVisible(true);
     }
+    
+    // =============================================================
+    // Override Object methods
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder("(" + this.size[0]);
+        for (int i = 1; i < this.getDimension(); i++)
+        {
+            sb.append(" x " + this.size[i]);
+        }
+        sb.append(") ")
+            .append(this.type)
+            .append(" image of ")
+            .append(this.data.elementClass().getSimpleName());
+        return sb.toString();
+    }
 }
