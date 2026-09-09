@@ -10,43 +10,55 @@ import net.sci.array.numeric.interp.LinearInterpolatedArray2D;
 import net.sci.array.numeric.interp.ScalarFunction2D;
 
 /**
+ * Wraps an interpolated image (or more generally a 2D function) and a geometric
+ * transform to view the result as a function. Note that the transform is
+ * applied in the reverse way: the transform is applied to the point in target
+ * reference space, and the transformed coordinates are evaluated in the source
+ * space.
+ * 
+ * @see TransformedImage3D
+ * 
  * @author dlegland
  *
  */
 public class TransformedImage2D implements ScalarFunction2D
 {
-	Transform2D transform;
-	
-	ScalarFunction2D image;
-	
-	public TransformedImage2D(ScalarArray2D<?> image, Transform2D transform)
-	{
-		this.image = new LinearInterpolatedArray2D(image);
-		this.transform = transform;
-	}
+    Transform2D transform;
 
-	public TransformedImage2D(ScalarFunction2D image, Transform2D transform)
-	{
-		this.image = image;
-		this.transform = transform;
-	}
+    ScalarFunction2D image;
 
-	public Transform2D getTransform()
-	{
-		return transform;
-	}
-	
-	@Override
-	public double evaluate(double x, double y)
-	{
-		Point2D p = new Point2D(x, y);
-		p = transform.transform(p);
-		return this.image.evaluate(p.x(), p.y());
-	}
+    public TransformedImage2D(ScalarArray2D<?> image, Transform2D transform)
+    {
+        this(image, transform, 0.0);
+    }
 
-	public double evaluate(Point2D p)
-	{
-		p = transform.transform(p);
-		return this.image.evaluate(p.x(), p.y());
+    public TransformedImage2D(ScalarArray2D<?> image, Transform2D transform, double padValue)
+    {
+        this(new LinearInterpolatedArray2D(image, padValue), transform);
+    }
+
+    public TransformedImage2D(ScalarFunction2D image, Transform2D transform)
+    {
+        this.image = image;
+        this.transform = transform;
+    }
+
+    public Transform2D getTransform()
+    {
+        return transform;
+    }
+
+    @Override
+    public double evaluate(double x, double y)
+    {
+        Point2D p = new Point2D(x, y);
+        p = transform.transform(p);
+        return this.image.evaluate(p.x(), p.y());
+    }
+
+    public double evaluate(Point2D p)
+    {
+        p = transform.transform(p);
+        return this.image.evaluate(p.x(), p.y());
 	}
 }

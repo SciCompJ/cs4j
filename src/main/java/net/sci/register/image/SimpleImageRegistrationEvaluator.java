@@ -16,35 +16,36 @@ import net.sci.register.transform.ParametricTransform2D;
  */
 public class SimpleImageRegistrationEvaluator implements ScalarFunction
 {
-	ScalarFunction2D refImage;
+    ScalarFunction2D refImage;
 
-	TransformedImage2D transformedImage;
-	
-	ImageToImageMetric2D metric;
-	
-	Collection<Point2D> points;
-	
-	public SimpleImageRegistrationEvaluator(ScalarFunction2D refImage,
-			TransformedImage2D transformedImage, ImageToImageMetric2D metric,
-			Collection<Point2D> points)
-	{
-		this.refImage = refImage;
-		this.transformedImage = transformedImage;
-		this.metric = metric;
-		this.points = points;
-	}
-	
-	/* (non-Javadoc)
-	 * @see net.sci.optim.ScalarFunction#evaluate(double[])
-	 */
-	@Override
-	public double evaluate(double[] theta)
-	{
-		// TODO: check class conversion
-		ParametricTransform2D transform = (ParametricTransform2D) this.transformedImage.getTransform();
-		transform.setParameters(theta);
-		
-		return metric.evaluate(refImage, transformedImage, points);
-	}
+    TransformedImage2D transformedImage;
+
+    ImageToImageMetric2D metric;
+
+    Collection<Point2D> points;
+
+    public SimpleImageRegistrationEvaluator(ScalarFunction2D refImage, TransformedImage2D transformedImage, 
+            ImageToImageMetric2D metric, Collection<Point2D> points)
+    {
+        this.refImage = refImage;
+        this.transformedImage = transformedImage;
+        this.metric = metric;
+        this.points = points;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sci.optim.ScalarFunction#evaluate(double[])
+     */
+    @Override
+    public double evaluate(double[] theta)
+    {
+        // TODO: check class conversion
+        ParametricTransform2D transform = (ParametricTransform2D) this.transformedImage.getTransform();
+        transform.setParameters(theta);
+
+        return metric.evaluate(refImage, transformedImage, points);
+    }
 
 }

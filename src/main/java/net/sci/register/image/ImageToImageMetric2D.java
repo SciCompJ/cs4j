@@ -16,17 +16,6 @@ import net.sci.geom.geom2d.Point2D;
  */
 public abstract class ImageToImageMetric2D
 {
-	
-//	BivariateFunction img1;
-//	BivariateFunction img2;
-//	
-//	Collection<Point2d> points;
-//	
-//	/**
-//	 * Evaluates the difference between two images, and returns a scalar state.
-//	 */
-//	public abstract double evaluate();
-	
 	/**
      * Evaluates the difference between two images, using the specified
      * positions.
