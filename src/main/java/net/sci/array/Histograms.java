@@ -55,27 +55,44 @@ public class Histograms
      * @return the histogram of the scalar values, as an array with
      *         <code>nBins</code> entries.
      */
-	public static final int[] histogramScalar(ScalarArray<?> array, double[] range, int nBins)
-	{
-		// compute the width of an individual bin
-		double binWidth = (range[1] - range[0]) / (nBins - 1);
-		// and the beginning of the first bin
-		double v0 = range[0] - binWidth / 2;
+    public static final int[] histogramScalar(ScalarArray<?> array, double[] range, int nBins)
+    {
+        return histogramScalar(array.values(), range, nBins);
+    }
+    
+    /**
+     * Computes the histogram of an iterable over double values.
+     * 
+     * @param iterable
+     *            an Iterable of Double values
+     * @param range
+     *            the range of values for computing histogram.
+     * @param nBins
+     *            the number of bins of the output histogram.
+     * @return the histogram of the scalar values, as an array with
+     *         <code>nBins</code> entries.
+     */
+    public static final int[] histogramScalar(Iterable<Double> iterable, double[] range, int nBins)
+    {
+        // compute the width of an individual bin
+        double binWidth = (range[1] - range[0]) / (nBins - 1);
+        // and the beginning of the first bin
+        double v0 = range[0] - binWidth / 2;
         
-		// allocate memory for result
-		int[] histo = new int[nBins];
-		
-		// iterate over samples to update the histogram
-		for(double v : array.values())
-		{
-			int binIndex = (int) java.lang.Math.round((v - v0) / binWidth);
-			binIndex = min(max(binIndex, 0), nBins - 1);
-			histo[binIndex]++;
-		}
-		
-		return histo;
-	}
-	
+        // allocate memory for result
+        int[] histo = new int[nBins];
+        
+        // iterate over samples to update the histogram
+        for(double v : iterable)
+        {
+            int binIndex = (int) java.lang.Math.round((v - v0) / binWidth);
+            binIndex = min(max(binIndex, 0), nBins - 1);
+            histo[binIndex]++;
+        }
+        
+        return histo;
+    }
+    
     /**
      * Computes the histogram of an array containing RGB8 values. One histogram
      * is computed for each channel. The histogram of each channel contains 256
