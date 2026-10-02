@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import net.sci.array.binary.BinaryArray2D;
-import net.sci.geom.polygon2d.Polyline2D;
+import net.sci.geom.poly2d.Polyline2D;
 
 /**
  * @author dlegland

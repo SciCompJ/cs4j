@@ -7,7 +7,7 @@ import java.util.Collection;
 
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.polygon2d.LinearRing2D;
+import net.sci.geom.poly2d.LinearRing2D;
 
 /**
  * <p>
@@ -15,7 +15,7 @@ import net.sci.geom.polygon2d.LinearRing2D;
  * </p>
  * 
  * @see LineString3D
- * @see net.sci.geom.polygon2d.LinearRing2D
+ * @see net.sci.geom.poly2d.LinearRing2D
  * 
  * @author dlegland
  */

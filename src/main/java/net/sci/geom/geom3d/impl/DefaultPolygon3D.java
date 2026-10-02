@@ -14,7 +14,7 @@ import net.sci.geom.geom3d.Point3D;
 import net.sci.geom.geom3d.Polygon3D;
 import net.sci.geom.geom3d.Vector3D;
 import net.sci.geom.geom3d.polyline.LinearRing3D;
-import net.sci.geom.polygon2d.Polygon2D;
+import net.sci.geom.poly2d.Polygon2D;
 
 /**
  * A 3D polygon whose boundary is a single (3D) linear ring.

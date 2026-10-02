@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 import net.sci.geom.geom3d.AffineTransform3D;
 import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.polygon2d.LineString2D;
+import net.sci.geom.poly2d.LineString2D;
 
 /**
  * <p>
@@ -18,7 +18,7 @@ import net.sci.geom.polygon2d.LineString2D;
  * </p>
  * 
  * @see LinearRing3D
- * @see net.sci.geom.polygon2d.LineString2D
+ * @see net.sci.geom.poly2d.LineString2D
  * 
  * @author dlegland
  */

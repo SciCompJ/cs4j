@@ -11,7 +11,7 @@ import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.geom2d.Vector2D;
-import net.sci.geom.polygon2d.LinearRing2D;
+import net.sci.geom.poly2d.LinearRing2D;
 
 /**
  * An circle, defined by a center and a radius.

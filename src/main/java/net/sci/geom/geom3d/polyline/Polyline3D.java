@@ -11,7 +11,7 @@ import net.sci.geom.geom3d.Bounds3D;
 import net.sci.geom.geom3d.Curve3D;
 import net.sci.geom.geom3d.LineSegment3D;
 import net.sci.geom.geom3d.Point3D;
-import net.sci.geom.polygon2d.Polyline2D;
+import net.sci.geom.poly2d.Polyline2D;
 
 /**
  * @author dlegland

@@ -14,8 +14,8 @@ import net.sci.array.binary.BinaryArray2D;
 import net.sci.array.numeric.Int32Array2D;
 import net.sci.array.numeric.IntArray;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.polygon2d.LinearRing2D;
-import net.sci.geom.polygon2d.Polyline2D;
+import net.sci.geom.poly2d.LinearRing2D;
+import net.sci.geom.poly2d.Polyline2D;
 
 /**
  * Performs a combined connected-component labeling and a contour tracing as

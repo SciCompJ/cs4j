@@ -17,8 +17,8 @@ import net.sci.geom.geom2d.curve.MultiCurve2D;
 import net.sci.geom.graph.AdjListDirectedGraph2D;
 import net.sci.geom.graph.DirectedGraph2D;
 import net.sci.geom.graph.Graph2D;
-import net.sci.geom.polygon2d.LineString2D;
-import net.sci.geom.polygon2d.LinearRing2D;
+import net.sci.geom.poly2d.LineString2D;
+import net.sci.geom.poly2d.LinearRing2D;
 
 /**
  * @author dlegland

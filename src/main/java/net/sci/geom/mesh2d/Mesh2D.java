@@ -8,7 +8,7 @@ import java.util.Collection;
 import net.sci.geom.geom2d.Geometry2D;
 import net.sci.geom.geom2d.LineSegment2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.polygon2d.Polygon2D;
+import net.sci.geom.poly2d.Polygon2D;
 
 /**
  * A polygonal mesh in 2D plane. Meshes are defined by vertices, defined by a

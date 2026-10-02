@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 import net.sci.geom.geom2d.Bounds2D;
 import net.sci.geom.geom2d.Point2D;
-import net.sci.geom.polygon2d.Polygon2D;
+import net.sci.geom.poly2d.Polygon2D;
 
 /**
  * Implementation of a polygonal 2D mesh where faces may have an arbitrary
