@@ -5,12 +5,13 @@ package net.sci.image.analyze.region2d;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import net.sci.array.numeric.IntArray2D;
 import net.sci.geom.geom2d.AffineTransform2D;
 import net.sci.geom.geom2d.Point2D;
 import net.sci.geom.poly2d.Polygon2D;
-import net.sci.geom.poly2d.process.GiftWrappingConvexHull2D;
+import net.sci.geom.poly2d.Polygons2D;
 import net.sci.image.Calibration;
 import net.sci.image.ImageAxis;
 import net.sci.table.Table;
@@ -63,21 +64,11 @@ public class ConvexHull extends RegionAnalyzer2D<Polygon2D>
      */
     public static final Polygon2D[] convexHull(IntArray2D<?> labelArray, int[] labels) 
     {
-        // create associative array to know index of each label
-        int nLabels = labels.length;
-
-        // allocate memory for result
-        Polygon2D[] convexHulls = new Polygon2D[nLabels];
-        
         ArrayList<Point2D>[] arrays = RegionBoundaries.boundaryPixelsMiddleEdges(labelArray, labels);
         
-        GiftWrappingConvexHull2D algo = new GiftWrappingConvexHull2D();
-        for (int i = 0; i < nLabels; i++)
-        {
-            convexHulls[i] = algo.process(arrays[i]);
-        }
-
-        return convexHulls;
+        return Stream.of(arrays)
+                .map(pts -> Polygons2D.convexHull(pts))
+                .toArray(Polygon2D[]::new);
     }
     
     
