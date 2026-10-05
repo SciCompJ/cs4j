@@ -81,14 +81,14 @@ public class UInt8Test
     }
 
     /**
-     * Test method for {@link net.sci.array.numeric.UInt8#divideBy(double)}.
+     * Test method for {@link net.sci.array.numeric.UInt8#dividedBy(double)}.
      */
     @Test
     public final void testDivideBy()
     {
         UInt8 v1 = new UInt8(200);
         
-        UInt8 res = v1.divideBy(2);
+        UInt8 res = v1.dividedBy(2);
         
         assertEquals(100, res.intValue());
     }

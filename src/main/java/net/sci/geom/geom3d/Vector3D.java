@@ -535,7 +535,7 @@ public final class Vector3D implements Dimensional, Numeric<Vector3D>
      * @return the scaled vector
      */
     @Override
-    public Vector3D divideBy(double k)
+    public Vector3D dividedBy(double k)
     {
         return new Vector3D(this.x / k, this.y / k, this.z / k);
     }

@@ -95,14 +95,14 @@ public class UInt16Test
     }
 
     /**
-     * Test method for {@link net.sci.array.numeric.UInt16#divideBy(double)}.
+     * Test method for {@link net.sci.array.numeric.UInt16#dividedBy(double)}.
      */
     @Test
     public final void testDivideBy()
     {
         UInt16 v1 = new UInt16(40_000);
         
-        UInt16 res = v1.divideBy(2);
+        UInt16 res = v1.dividedBy(2);
         
         assertEquals(20_000, res.intValue());
     }

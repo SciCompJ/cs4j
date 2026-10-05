@@ -154,7 +154,7 @@ public class Float32 implements Scalar<Float32>
     }
 
     @Override
-    public Float32 divideBy(double k)
+    public Float32 dividedBy(double k)
     {
         return new Float32((float) (this.value / k));
     }    

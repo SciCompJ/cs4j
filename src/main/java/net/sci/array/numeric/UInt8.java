@@ -216,7 +216,7 @@ public class UInt8 implements Int<UInt8>
     }
 
     @Override
-    public UInt8 divideBy(double k)
+    public UInt8 dividedBy(double k)
     {
         return new UInt8((int) ((this.value & 0x00FF) / k));
     }

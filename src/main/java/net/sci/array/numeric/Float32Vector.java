@@ -276,7 +276,7 @@ public class Float32Vector implements Vector<Float32Vector, Float32>
     }
 
     @Override
-    public Float32Vector divideBy(double k)
+    public Float32Vector dividedBy(double k)
     {
         float[] vals = new float[this.data.length];
         for (int i = 0; i < this.data.length; i++)

@@ -731,7 +731,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
 
     @Override
-    public RGB8 divideBy(double k)
+    public RGB8 dividedBy(double k)
     {
         int r = (int) (this.getSample(0) / k);
         int g = (int) (this.getSample(1) / k);

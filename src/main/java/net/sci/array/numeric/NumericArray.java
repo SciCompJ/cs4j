@@ -103,7 +103,7 @@ public interface NumericArray<N extends Numeric<N>> extends Array<N>
     public default NumericArray<N> divideBy(double k)
     {
         NumericArray<N> res = this.newInstance(this.size());
-        res.fill(pos -> this.get(pos).divideBy(k));
+        res.fill(pos -> this.get(pos).dividedBy(k));
         return res;        
     }
     

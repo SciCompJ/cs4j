@@ -217,7 +217,7 @@ public class UInt16 implements Int<UInt16>
     }
 
     @Override
-    public UInt16 divideBy(double k)
+    public UInt16 dividedBy(double k)
     {
         return new UInt16((int) ((this.value & 0x00FFFF) / k));
     }    

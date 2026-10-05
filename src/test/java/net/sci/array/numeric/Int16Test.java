@@ -118,14 +118,14 @@ public class Int16Test
     }
 
     /**
-     * Test method for {@link net.sci.array.numeric.Int16#divideBy(double)}.
+     * Test method for {@link net.sci.array.numeric.Int16#dividedBy(double)}.
      */
     @Test
     public final void testDivideBy()
     {
         Int16 v1 = new Int16(20_000);
         
-        Int16 res = v1.divideBy(2);
+        Int16 res = v1.dividedBy(2);
         
         assertEquals(10_000, res.intValue());
     }

@@ -168,7 +168,7 @@ public class Complex64 implements Complex<Complex64>
     }
 
     @Override
-    public Complex64 divideBy(double k)
+    public Complex64 dividedBy(double k)
     {
         return new Complex64(this.real / k, this.imag / k);
     }

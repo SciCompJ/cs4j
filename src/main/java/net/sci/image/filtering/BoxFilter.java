@@ -584,7 +584,7 @@ public final class BoxFilter extends AlgoStub implements ImageArrayOperator, Vec
             }
             
             // setup result in target array
-            target.set(pos, sum.divideBy(boxSize));
+            target.set(pos, sum.dividedBy(boxSize));
         }
     }
     

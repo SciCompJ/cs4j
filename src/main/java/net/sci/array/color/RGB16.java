@@ -595,7 +595,7 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     }
 
     @Override
-    public RGB16 divideBy(double k)
+    public RGB16 dividedBy(double k)
     {
         int r = (int) (this.getSample(0) / k);
         int g = (int) (this.getSample(1) / k);

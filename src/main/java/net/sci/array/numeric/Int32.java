@@ -159,7 +159,7 @@ public class Int32 implements Int<Int32>
     }
 
     @Override
-    public Int32 divideBy(double k)
+    public Int32 dividedBy(double k)
     {
         return new Int32((int) (this.value / k));
     }

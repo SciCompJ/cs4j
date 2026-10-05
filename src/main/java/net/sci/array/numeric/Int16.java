@@ -206,7 +206,7 @@ public class Int16 implements Int<Int16>
     }
 
     @Override
-    public Int16 divideBy(double k)
+    public Int16 dividedBy(double k)
     {
         return new Int16(Int16.convert(this.value / k));
     }

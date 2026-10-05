@@ -52,6 +52,6 @@ public interface Complex<C extends Complex<C>> extends Numeric<C>
     public C plus(C complex);
     public C minus(C complex);
     public C times(double value);
-    public C divideBy(double value);
+    public C dividedBy(double value);
     
 }

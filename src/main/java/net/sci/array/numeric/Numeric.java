@@ -29,7 +29,8 @@ public interface Numeric<N extends Numeric<N>>
     public N zero();
 
     /**
-     * Adds another numeric to this numeric, and returns the result of addition.
+     * Returns the result of the addition of this numeric with the other
+     * numeric.
      * 
      * @param other
      *            the numeric to add.
@@ -38,7 +39,8 @@ public interface Numeric<N extends Numeric<N>>
     public N plus(N other);
 
     /**
-     * Subtracts another numeric from this numeric, and returns the result of subtraction.
+     * Returns the result of the subtraction of another numeric from this
+     * numeric.
      * 
      * @param other
      *            the numeric to subtract.
@@ -48,31 +50,33 @@ public interface Numeric<N extends Numeric<N>>
     
     /**
      * Returns the opposite of this value, i.e. the value symmetric to this
-     * value with respect to zero. Note that the result may be truncated
-     * according to the range of values allowed by the data type. For example,
-     * the negative of an unsigned type will result in value zero.
+     * value with respect to zero.
+     * 
+     * Note that the result may be truncated according to the range of values
+     * allowed by the data type. For example, the negative of an unsigned type
+     * will result in value zero.
      * 
      * @return the opposite of this value.
      */
     public N opposite();
 
     /**
-     * Multiplies this numeric by a scalar constant, and returns the result of
-     * multiplication.
+     * Returns the result of the multiplication of this numeric by a floating
+     * point value.
      * 
      * @param k
-     *            the scaling factor
+     *            the numeric value to multiply by
      * @return the result of multiplication.
      */
     public N times(double k);
 
     /**
-     * Divides this numeric by a scalar constant, and returns the result of
-     * division.
+     * Returns the result of the division of this numeric by a floating point
+     * value.
      * 
      * @param k
-     *            the scaling factor
+     *            the numeric value to divide by
      * @return the result of division.
      */
-    public N divideBy(double k);
+    public N dividedBy(double k);
 }

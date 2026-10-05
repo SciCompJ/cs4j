@@ -165,7 +165,7 @@ public class Binary implements Int<Binary>
     }
 
     @Override
-    public Binary divideBy(double k)
+    public Binary dividedBy(double k)
     {
         return new Binary((this.state ? 1 : 0) / k > 0);
     }

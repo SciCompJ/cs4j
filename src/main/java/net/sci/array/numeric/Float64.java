@@ -140,7 +140,7 @@ public class Float64 implements Scalar<Float64>
     }
 
     @Override
-    public Float64 divideBy(double k)
+    public Float64 dividedBy(double k)
     {
         return new Float64(this.value / k);
     }    

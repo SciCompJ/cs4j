@@ -535,7 +535,7 @@ public final class Vector2D implements Dimensional, Numeric<Vector2D>
      * @return the scaled vector
      */
     @Override
-    public Vector2D divideBy(double k)
+    public Vector2D dividedBy(double k)
     {
         return new Vector2D(this.x / k, this.y / k);
     }

@@ -200,7 +200,7 @@ public class Float64Vector implements Vector<Float64Vector, Float64>
     }
 
     @Override
-    public Float64Vector divideBy(double k)
+    public Float64Vector dividedBy(double k)
     {
         double[] vals = new double[this.data.length];
         for (int i = 0; i < this.data.length; i++)
