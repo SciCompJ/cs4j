@@ -26,12 +26,28 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 	// =============================================================
 	// Constructor
 
+    /**
+     * Creates a new empty array of RGB16, with the specified size.
+     * 
+     * @param size0
+     *            the array size along the first dimension
+     * @param size1
+     *            the array size along the second dimension
+     */
 	public BufferedPackedShortRGB16Array2D(int size0, int size1)
 	{
 		super(size0, size1);
 		this.buffer = UInt16Array3D.create(size0, size1, 3);
 	}
 
+    /**
+     * Creates a new 2D array of RGB16 from the specified 3D array of UInt16
+     * containing the color components. The resulting array has one dimension
+     * less than the array of components.
+     * 
+     * @param buffer
+     *            the array containing the components of the color array.
+     */
 	public BufferedPackedShortRGB16Array2D(UInt16Array3D buffer)
 	{
 		super(buffer.size(0), buffer.size(1));

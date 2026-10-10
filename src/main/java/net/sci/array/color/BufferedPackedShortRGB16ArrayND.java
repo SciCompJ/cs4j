@@ -8,6 +8,9 @@ import net.sci.array.PositionIterator;
 import net.sci.array.numeric.UInt16Array;
 
 /**
+ * Implementation of a color array of any dimension containing RGB16 elements,
+ * using another multi-dimensonal array of UInt16 for storing color components.
+ * 
  * @author dlegland
  *
  */
@@ -16,6 +19,10 @@ public class BufferedPackedShortRGB16ArrayND extends ArrayND<RGB16> implements R
     // =============================================================
     // Class variables
 
+    /**
+     * The inner array for storing underlying UInt16 values.
+     * Component index is the last one.
+     */
     UInt16Array buffer;
     
     
@@ -23,6 +30,8 @@ public class BufferedPackedShortRGB16ArrayND extends ArrayND<RGB16> implements R
     // Constructor
 
     /**
+     * Creates a new empty array of RGB16, with the specified size.
+     * 
      * @param sizes the size of the array
      */
     public BufferedPackedShortRGB16ArrayND(int... sizes)

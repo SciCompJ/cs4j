@@ -25,12 +25,29 @@ public class Int32EncodedRGB8Array2D extends RGB8Array2D
 	// =============================================================
 	// Constructor
 
+    /**
+     * Creates a new empty array of RGB8 with the specified size,
+     * storing color components within an array of Int32.
+     * 
+     * @param size0
+     *            the array size along the first dimension
+     * @param size1
+     *            the array size along the second dimension
+     */
 	public Int32EncodedRGB8Array2D(int size0, int size1)
 	{
 		super(size0, size1);
 		this.buffer = Int32Array2D.create(size0, size1);
 	}
 
+    /**
+     * Creates a new array of RGB8 from the specified array of Int32 containing
+     * the packed color components. The resulting array has the same size as the
+     * array of components.
+     * 
+     * @param buffer
+     *            the array containing the components of the color array.
+     */
 	public Int32EncodedRGB8Array2D(Int32Array2D buffer)
 	{
 		super(buffer.size(0), buffer.size(1));

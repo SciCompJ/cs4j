@@ -21,17 +21,37 @@ public class BufferedPackedByteRGB8Array2D extends RGB8Array2D
 	// =============================================================
 	// Class variables
 
+    /**
+     * The inner array for storing underlying UInt8 values.
+     * Indexed in (x, y, c) order.
+     */
 	UInt8Array3D buffer;
 	
 	// =============================================================
 	// Constructor
 
+	/**
+     * Creates a new empty array of RGB8, with the specified size.
+     * 
+     * @param size0
+     *            the array size along the first dimension
+     * @param size1
+     *            the array size along the second dimension
+     */
 	public BufferedPackedByteRGB8Array2D(int size0, int size1)
 	{
 		super(size0, size1);
 		this.buffer = UInt8Array3D.create(size0, size1, 3);
 	}
 
+    /**
+     * Creates a new array of RGB8 from the specified array of UInt8 containing
+     * the color components. The resulting array has one dimension less than the
+     * array of components.
+     * 
+     * @param buffer
+     *            the array containing the components of the color array.
+     */
 	public BufferedPackedByteRGB8Array2D(UInt8Array3D buffer)
 	{
 		super(buffer.size(0), buffer.size(1));

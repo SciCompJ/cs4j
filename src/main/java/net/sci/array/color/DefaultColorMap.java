@@ -17,7 +17,8 @@ public class DefaultColorMap implements ColorMap
     /**
      * Creates a new color map from a list of colors.
      * 
-     * @param the list of colors for this colormap
+     * @param colors
+     *            the list of colors for this colormap
      */
     public DefaultColorMap(ArrayList<Color> colors)
     {
@@ -28,7 +29,8 @@ public class DefaultColorMap implements ColorMap
     /**
      * Creates a new color map from a list of colors.
      * 
-     * @param the list of colors for this colormap
+     * @param array
+     *            the list of colors for this colormap
      */
     public DefaultColorMap(int[][] array)
     {

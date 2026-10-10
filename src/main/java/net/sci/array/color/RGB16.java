@@ -63,8 +63,8 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
     /**
      * Creates a new RGB16 value from an integer code.
      * 
-     * @param intCode
-     *            the integer code of the color
+     * @param longCode
+     *            the 64-bits integer code of the color
      * @return the corresponding color as an RGB16
      */
     public static final RGB16 fromIntCode(long longCode)
@@ -164,11 +164,7 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      */
     public static final int[] rgbValues(long longCode)
     {
-        int[] rgb = new int[3];
-        rgb[0] = (int) (longCode & 0x00FFFF);
-        rgb[1] = (int) ((longCode >> 16) & 0x00FFFF);
-        rgb[2] = (int) ((longCode >> 32) & 0x00FFFF);
-        return rgb;
+        return rgbValues(longCode, new int[3]);
     }
 
     /**
@@ -177,8 +173,8 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      * 
      * @param longCode
      *            the int code of the RGB color
-     * @param rgbValues
-     *            the pre-allocated array of int
+     * @param rgb
+     *            the pre-allocated array of integer values
      * @return the three red, green and blue components
      */
     public static final int[] rgbValues(long longCode, int[] rgb)
@@ -196,7 +192,7 @@ public class RGB16 implements IntVector<RGB16,UInt16>, Color
      *            a double value corresponding to grayscale value, between 0 and
      *            2^16-1.
      * @return the corresponding RGB16 instance
-     * @see #getValue()
+     * @see #grayValue()
      */
     public final static RGB16 fromValue(double value)
     {

@@ -28,12 +28,23 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     // =============================================================
     // Static variables
 
+    /**
+     * The default factory for arrays of RGB16.
+     */
     public static final Factory defaultFactory = new DenseRGB16ArrayFactory();
     
     
     // =============================================================
     // Static methods
 
+    /**
+     * Creates a new instance of RGB16Array with the specified size, by using
+     * the default factory.
+     * 
+     * @param dims
+     *            the dimensions of the array to create.
+     * @return the new array.
+     */
     public static RGB16Array create(int... dims)
     {
         return defaultFactory.create(dims);
@@ -283,6 +294,11 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         return result;
     }
 
+    /**
+     * Creates a view on the grayscale values of this color array.
+     * 
+     * @return a view on the grayscale values of this color array.
+     */
     public default UInt16Array createUInt16View()
     {
         return new UInt16View(this);
@@ -317,7 +333,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
      * The aim of this method is to facilitate the conversion of RGB16 arrays
      * into grayscale (UInt16) arrays.
      * 
-     * @see RGB16.grayValue()
+     * @see RGB16#grayValue()
      * 
      * @param pos
      *            the position within array
@@ -525,7 +541,7 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
      * Default iterator over RGB16 values of the RGB16Array, based on the
      * positionIterator.
      * 
-     * @see #positionIterator()
+     * @see PositionIterator
      */
     public default Iterator iterator()
     {
@@ -573,14 +589,22 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
      * Utility class that implements a view on a channel of a RGB16 array as a
      * UInt16Array.
      * 
-     * @see RGB16Array.#channel(int)
-     * @see RGB16Array.#channelIterator()
+     * @see RGB16Array#channel(int)
+     * @see RGB16Array#channelIterator()
      */
     static class ChannelView implements UInt16Array, Array.View<UInt16>
     {
         RGB16Array array;
         int channel;
         
+        /**
+         * Creates a new view on the specified channel of the given array.
+         * 
+         * @param array
+         *            the array containing colors
+         * @param channel
+         *            the channel index.
+         */
         public ChannelView(RGB16Array array, int channel)
         {
             int nChannels = 3;
@@ -633,10 +657,20 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
         }
     }
 	
+    /**
+     * Convenience class for wrapping an array of RGB16 into an instance of
+     * RGB16Array.
+     */
     static class Wrapper extends ArrayWrapperStub<RGB16> implements RGB16Array
     {
         Array<RGB16> array;
         
+        /**
+         * Wraps an array of RGB16 into an instance of RGB16Array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Array<RGB16> array)
         {
             super(array);
@@ -713,6 +747,9 @@ public interface RGB16Array extends IntVectorArray<RGB16,UInt16>, ColorArray<RGB
     // =============================================================
     // Inner interface
 
+    /**
+     * Iterator over the elements of a RGB16Array.
+     */
     public interface Iterator extends IntVectorArray.Iterator<RGB16, UInt16>
     {
         @Override

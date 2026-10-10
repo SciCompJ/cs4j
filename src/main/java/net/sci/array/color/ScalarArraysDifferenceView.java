@@ -76,6 +76,25 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
          this(array1, 0.0, 255.0, array2, 0.0, 255.0);
      }
      
+     /**
+      * Creates a new difference view between two array containing scalar
+      * values. For each array, two bounds values can be specified. The lower
+      * bound will be mapped to black component, the upper bound to saturated
+      * color.
+      * 
+      * @param array1
+      *            the first array (represented in magenta).
+      * @param vmin1
+      *            the lower bound of values for first array
+      * @param vmax1
+      *            the upper bound of values for first array
+      * @param array2
+      *            the second array (represented in green).
+      * @param vmin2
+      *            the lower bound of values for second array
+      * @param vmax2
+      *            the upper bound of values for second array
+      */
      public ScalarArraysDifferenceView(ScalarArray<?> array1, double vmin1, double vmax1, ScalarArray<?> array2, double vmin2, double vmax2)
      {
          if (!Arrays.isSameDimensionality(array1, array2))

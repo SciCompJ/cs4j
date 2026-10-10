@@ -42,15 +42,10 @@ public class BinaryArrayRGB8View implements RGB8Array, Array.View<RGB8>
 
     /**
      * Creates a new view on a binary array, by using black color for
-     * <code>false</code> elements and white color for <code>true</code>
-     * elements.
+     * {@code false} elements and white color for {@code true} elements.
      * 
      * @param array
      *            the binary array to wrap
-     * @param bgColor
-     *            the color associated to <code>false</code> elements
-     * @param fgColor
-     *            the color associated to <code>true</code> elements
      */
     public BinaryArrayRGB8View(BinaryArray array)
     {

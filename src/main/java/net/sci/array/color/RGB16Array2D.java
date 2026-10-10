@@ -12,6 +12,9 @@ import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16Array2D;
 
 /**
+ * Base class for implementation of two-dimensional arrays containing colors
+ * represented as RGB16.
+ * 
  * @author dlegland
  *
  */
@@ -20,6 +23,16 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16,UInt16> implem
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new two-dimensional array of RGB16 with the specified
+     * dimensions.
+     * 
+     * @param size0
+     *            the array size along the first dimension
+     * @param size1
+     *            the array size along the second dimension
+     * @return the new array
+     */
 	public static final RGB16Array2D create(int size0, int size1)
 	{
 		return new BufferedPackedShortRGB16Array2D(size0, size1);
@@ -45,7 +58,7 @@ public abstract class RGB16Array2D extends IntVectorArray2D<RGB16,UInt16> implem
      * The aim of this method is to facilitate the conversion of RGB16 arrays
      * into grayscale (UInt16) arrays.
      * 
-     * @see RGB16.grayValue()
+     * @see RGB16#grayValue()
      * 
      * @param x
      *            the x-coordinate of the array element

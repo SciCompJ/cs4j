@@ -15,10 +15,17 @@ import net.sci.algo.AlgoStub;
  */
 public class DenseRGB16ArrayFactory extends AlgoStub implements RGB16Array.Factory
 {
+    /**
+     * Default empty constructor.
+     */
+    public DenseRGB16ArrayFactory()
+    {
+    }
+    
     @Override
     public RGB16Array create(int... dims)
     {
-        fireStatusChanged(this, "Allocating memory");
+        fireStatusChanged(this, "Allocate memory");
         return switch (dims.length)
         {
             case 2 -> new BufferedPackedShortRGB16Array2D(dims[0], dims[1]);

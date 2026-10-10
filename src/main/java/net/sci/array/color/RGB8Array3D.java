@@ -13,7 +13,8 @@ import net.sci.array.numeric.UInt8Array3D;
 import net.sci.array.numeric.process.ConvertToUInt8;
 
 /**
- * Base class for implementation of 3D arrays containing colors represented as RGB8.
+ * Base class for implementation of three-dimensional arrays containing colors
+ * represented as RGB8.
  * 
  * @author dlegland
  *
@@ -23,11 +24,32 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new three-dimensional array of RGB8 with the specified
+     * dimensions.
+     * 
+     * @param size0
+     *            the array size along the first dimension
+     * @param size1
+     *            the array size along the second dimension
+     * @param size2
+     *            the array size along the third dimension
+     * @return the new array
+     */
 	public static final RGB8Array3D create(int size0, int size1, int size2)
 	{
 		return new Int32EncodedRGB8Array3D(size0, size1, size2);
 	}
 	
+    /**
+     * Wraps the specified {@code RGB8Array} into an instance of
+     * {@code RGB8Array2D}. If the array is already an instance of
+     * {@code RGB8Array2D}, it is returned.
+     * 
+     * @param array
+     *            the array to wrap
+     * @return the wrapped array.
+     */
     public static final RGB8Array3D wrap(RGB8Array array)
     {
         if (array instanceof RGB8Array3D)
@@ -57,7 +79,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
      * The aim of this method is to facilitate the conversion of RGB8 arrays
      * into grayscale (UInt8) arrays.
      * 
-     * @see RGB8.grayValue()
+     * @see RGB8#grayValue()
      * 
      * @param x
      *            the x-coordinate of the array element
@@ -79,7 +101,7 @@ public abstract class RGB8Array3D extends IntVectorArray3D<RGB8,UInt8> implement
      * The aim of this method is to facilitate the conversion of RGB8 arrays
      * into grayscale (UInt8) arrays.
      * 
-     * @see RGB8.maxSample()
+     * @see RGB8#maxSample()
      * 
      * @param x
      *            the x-coordinate of the array element

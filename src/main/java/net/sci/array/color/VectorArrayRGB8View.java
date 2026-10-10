@@ -32,6 +32,24 @@ public class VectorArrayRGB8View implements RGB8Array, Array.View<RGB8>
     // =============================================================
     // Constructors
 
+    /**
+     * Creates a new color view from three components from a vector image.
+     * 
+     * @param array
+     *            the reference vector array
+     * @param c1
+     *            the component index for red channel
+     * @param extent1
+     *            the range of values that will map the [0,255] interval.
+     * @param c2
+     *            the component index for green channel
+     * @param extent2
+     *            the range of values that will map the [0,255] interval.
+     * @param c3
+     *            the component index for blue channel
+     * @param extent3
+     *            the range of values that will map the [0,255] interval.
+     */
     public VectorArrayRGB8View(VectorArray<?,?> array, int c1, double[] extent1,
             int c2, double[] extent2, int c3, double[] extent3)
     {
@@ -40,6 +58,30 @@ public class VectorArrayRGB8View implements RGB8Array, Array.View<RGB8>
         this.extents = new double[][]{extent1, extent2, extent3};
     }
     
+    /**
+     * Creates a new color view from three components from a vector image.
+     * 
+     * @param array
+     *            the reference vector array
+     * @param c1
+     *            the component index for red channel
+     * @param min1
+     *            the value of component 1 that will be mapped to 0.
+     * @param max1
+     *            the value of component 1 that will be mapped to 255.
+     * @param c2
+     *            the component index for green channel
+     * @param min2
+     *            the value of component 2 that will be mapped to 0.
+     * @param max2
+     *            the value of component 2 that will be mapped to 255.
+     * @param c3
+     *            the component index for blue channel
+     * @param min3
+     *            the value of component 3 that will be mapped to 0.
+     * @param max3
+     *            the value of component 3 that will be mapped to 255.
+     */
     public VectorArrayRGB8View(VectorArray<?,?> array, 
             int c1, double min1, double max1, 
             int c2, double min2, double max2, 
@@ -50,6 +92,18 @@ public class VectorArrayRGB8View implements RGB8Array, Array.View<RGB8>
         this.extents = new double[][]{{min1, max1}, {min2, max2}, {min3, max3}};
     }
     
+    /**
+     * Creates a new color view from three components from a vector image.
+     * 
+     * @param array
+     *            the reference vector array
+     * @param c1
+     *            the component index for red channel
+     * @param c2
+     *            the component index for green channel
+     * @param c3
+     *            the component index for blue channel
+     */
     public VectorArrayRGB8View(VectorArray<?,?> array, int c1, int c2, int c3)
     {
         this.array = array;

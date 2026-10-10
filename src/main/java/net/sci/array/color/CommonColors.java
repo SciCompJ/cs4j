@@ -45,16 +45,27 @@ import java.util.EnumSet;
  */
 public enum CommonColors
 {
+    /** The white color */
 	WHITE("White", 		RGB8.WHITE), 
+    /** The black color */
 	BLACK("Black", 		RGB8.BLACK), 
+    /** The red color */
 	RED("Red", 			RGB8.RED), 
+    /** The green color */
 	GREEN("Green", 		RGB8.GREEN), 
+    /** The blue color */
 	BLUE("Blue", 		RGB8.BLUE), 
+    /** The cyan color */
 	CYAN("Cyan", 		RGB8.CYAN), 
+    /** The magenta color */
 	MAGENTA("Magenta", 	RGB8.MAGENTA), 
+    /** The yellow color */
 	YELLOW("Yellow", 	RGB8.YELLOW), 
+    /** The gray color */
 	GRAY("Gray", 		RGB8.GRAY), 
+    /** The dark gray color */
 	DARK_GRAY("Dark Gray", 	 RGB8.DARK_GRAY), 
+    /** The light gray color */
 	LIGHT_GRAY("Light Gray", RGB8.LIGHT_GRAY);
 
 	/** The name of the color, as displayed in a widget */
@@ -75,29 +86,40 @@ public enum CommonColors
 	}
 
 	/**
-	 * @return the label associated to this enumeration item
-	 */
+     * Returns the label associated to this enumeration item
+     * 
+     * @return the label associated to this enumeration item
+     */
 	public String getLabel() 
 	{
 		return label;
 	}
 
 	/**
-	 * @return the java color corresponding to this enumeration item
-	 */
+     * Returns the java color corresponding to this enumeration item
+     * 
+     * @return the java color corresponding to this enumeration item
+     */
 	public Color getColor() 
 	{
 		return color;
 	}
 	
 	/**
-	 * @return a string representation of this enumeration item
-	 */
+     * Returns a string representation of this enumeration item
+     * 
+     * @return a string representation of this enumeration item
+     */
 	public String toString() 
 	{
 		return label;
 	}
 	
+	/**
+     * Returns all the labels of this enumeration, as an array of strings.
+     * 
+     * @return the labels of the elements within this enumeration
+     */
 	public static String[] getAllLabels()
 	{
 		int n = CommonColors.values().length;
@@ -132,6 +154,11 @@ public enum CommonColors
 		throw new IllegalArgumentException("Unable to parse Color with label: " + label);
 	}
 
+	/**
+     * Returns the set of colors within this enum.
+     * 
+     * @return the set of colors within this enum.
+     */
 	public static EnumSet<CommonColors> all()
 	{
 	    return EnumSet.allOf(CommonColors.class);

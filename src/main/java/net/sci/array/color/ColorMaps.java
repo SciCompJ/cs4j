@@ -11,6 +11,9 @@ import java.util.ArrayList;
  */
 public class ColorMaps
 {
+    /**
+     * A color map corresponding to a gradient from black to red color.
+     */
     public static final ColorMapFactory RED = new ColorMapFactory()
     {
         @Override
@@ -25,6 +28,9 @@ public class ColorMaps
         }
     };
     
+    /**
+     * A color map corresponding to a gradient from black to green color.
+     */
     public static final ColorMapFactory GREEN = new ColorMapFactory()
     {
         @Override
@@ -39,6 +45,9 @@ public class ColorMaps
         }
     };
     
+    /**
+     * A color map corresponding to a gradient from black to blue color.
+     */
     public static final ColorMapFactory BLUE = new ColorMapFactory()
     {
         @Override
@@ -53,6 +62,9 @@ public class ColorMaps
         }
     };
     
+    /**
+     * A color map corresponding to a gradient from black to white.
+     */
     public static final ColorMapFactory GRAY = new ColorMapFactory()
     {
         @Override
@@ -68,6 +80,10 @@ public class ColorMaps
         }
     };
 
+    /**
+     * A color map corresponding to a gradient from black to white, with first
+     * color replaced by blue, and last color replaced by red.
+     */
     public static final ColorMapFactory BLUE_GRAY_RED = new ColorMapFactory()
     {
         @Override
@@ -85,6 +101,9 @@ public class ColorMaps
         }
     };
     
+    /**
+     * An adaptation of the "Jet" color map from the Matlab software.
+     */
     public static final ColorMapFactory JET = new ColorMapFactory()
     {
         @Override
@@ -128,6 +147,9 @@ public class ColorMaps
         }
     };
     
+    /**
+     * The "Fire" color map from the ImageJ software .
+     */
     public static final ColorMapFactory FIRE = new ColorMapFactory()
     {
         @Override
@@ -167,6 +189,10 @@ public class ColorMaps
         }
     };
     
+    /**
+     * A divergent color map, showing a gradient from dark blue to white, then a
+     * gradient from white to dark red.
+     */
     public static final ColorMapFactory BLUE_WHITE_RED = new ColorMapFactory()
     {
         @Override
@@ -476,6 +502,10 @@ public class ColorMaps
         }
     };
     
+    /**
+     * A color map containing a cyclic set of saturated colors, from red to
+     * green, then to blue, then to red again.
+     */
     public static final ColorMapFactory HSV = new ColorMapFactory()
     {
         @Override

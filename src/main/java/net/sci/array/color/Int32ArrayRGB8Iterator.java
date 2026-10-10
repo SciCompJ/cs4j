@@ -22,7 +22,14 @@ import net.sci.array.numeric.UInt8;
 public class Int32ArrayRGB8Iterator implements RGB8Array.Iterator
 {
     Int32Array.Iterator intIterator;
-    
+
+    /**
+     * Creates an iterator of RGB8 values over the elements of an array
+     * containing Int32 elements.
+     * 
+     * @param array
+     *            the array to iterate.
+     */
     public Int32ArrayRGB8Iterator(Int32Array array)
     {
         this.intIterator = array.iterator();

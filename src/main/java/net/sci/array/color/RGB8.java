@@ -140,6 +140,8 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
     }
     
     /**
+     * Computes the maximum values over the three channel components.
+     * 
      * @param intCode
      *            an RGB8 value encoded into an integer.
      * @return the maximum component of the rgb value, as an integer between 0
@@ -252,7 +254,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
      *            the integer code representing the RGB value
      * @param c
      *            the channel index
-     * @param value
+     * @param intValue
      *            the sample value
      * @return the integer code representing the modified RGB8 value
      */
@@ -281,7 +283,7 @@ public class RGB8 implements IntVector<RGB8,UInt8>, Color
      * 
      * @param intCode
      *            the int code of the RGB color
-     * @param rgbValues
+     * @param rgb
      *            the pre-allocated array of int
      * @return the three red, green and blue components
      */

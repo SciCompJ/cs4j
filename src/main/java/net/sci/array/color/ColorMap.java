@@ -4,7 +4,8 @@
 package net.sci.array.color;
 
 /**
- * Color map definition for intensity or label images.
+ * General definition of a color map, that can contain an arbitrary number of
+ * colors.
  * 
  * @author dlegland
  *
@@ -21,7 +22,9 @@ public interface ColorMap
     public Color getColor(int i);
     
     /**
-     * @return the number of colors stored in this color map
+     * Return the number of colors stored within this color map
+     * 
+     * @return the number of colors stored within this color map
      */
     public int size();
 }

@@ -30,12 +30,30 @@ public class BufferedPackedShortRGB16Array3D extends RGB16Array3D
 	// =============================================================
 	// Constructor
 
+    /**
+     * Creates a new empty array of RGB8, with the specified size.
+     * 
+     * @param size0
+     *            the array size along the first dimension
+     * @param size1
+     *            the array size along the second dimension
+     * @param size2
+     *            the array size along the third dimension
+     */
 	public BufferedPackedShortRGB16Array3D(int size0, int size1, int size2)
 	{
 		super(size0, size1, size2);
 		this.buffer = UInt16Array.create(size0, size1, size2, 3);
 	}
 
+    /**
+     * Creates a new 3D array of RGB16 from the specified 4D array of UInt16
+     * containing the color components. The resulting array has one dimension
+     * less than the array of components.
+     * 
+     * @param buffer
+     *            the array containing the components of the color array.
+     */
 	public BufferedPackedShortRGB16Array3D(UInt16Array buffer)
 	{
 		super(buffer.size(0), buffer.size(1), buffer.size(1));

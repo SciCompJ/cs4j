@@ -12,6 +12,9 @@ import net.sci.array.numeric.UInt16;
 import net.sci.array.numeric.UInt16Array3D;
 
 /**
+ * Base class for implementation of three-dimensional arrays containing colors
+ * represented as RGB16.
+ * 
  * @author dlegland
  *
  */
@@ -20,6 +23,18 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16,UInt16> implem
 	// =============================================================
 	// Static methods
 
+    /**
+     * Creates a new three-dimensional array of RGB16 with the specified
+     * dimensions.
+     * 
+     * @param size0
+     *            the array size along the first dimension
+     * @param size1
+     *            the array size along the second dimension
+     * @param size2
+     *            the array size along the third dimension
+     * @return the new array
+     */
 	public static final RGB16Array3D create(int size0, int size1, int size2)
 	{
 		return new BufferedPackedShortRGB16Array3D(size0, size1, size2);
@@ -45,7 +60,7 @@ public abstract class RGB16Array3D extends IntVectorArray3D<RGB16,UInt16> implem
      * The aim of this method is to facilitate the conversion of RGB16 arrays
      * into grayscale (UInt16) arrays.
      * 
-     * @see RGB16.grayValue()
+     * @see RGB16#grayValue()
      * 
      * @param x
      *            the x-coordinate of the array element

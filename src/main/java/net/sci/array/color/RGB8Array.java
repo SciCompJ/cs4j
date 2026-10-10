@@ -30,12 +30,23 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     // =============================================================
     // Static variables
 
+    /**
+     * The default factory for arrays of RGB8.
+     */
     public static final Factory defaultFactory = new DenseRGB8ArrayFactory();
     
     
     // =============================================================
     // Static methods
 
+    /**
+     * Creates a new instance of RGB8Array with the specified size, by using
+     * the default factory.
+     * 
+     * @param dims
+     *            the dimensions of the array to create.
+     * @return the new array.
+     */
     public static RGB8Array create(int... dims)
     {
         return defaultFactory.create(dims);
@@ -181,9 +192,13 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      * @param baseArray
      *            the array to use as base
      * @param binaryMask
-     *            the binary array that specifies the array elements to colorize.
+     *            the binary array that specifies the array elements to
+     *            colorize.
      * @param overlayColor
      *            the overlay color
+     * @param overlayOpacity
+     *            the overlay opacity, as a floating point value between 0
+     *            (fully transparent) and 1 (fully opaque).
      * @return a new color array corresponding to the overlay.
      */
     public static RGB8Array binaryOverlay(Array<?> baseArray, BinaryArray binaryMask, RGB8 overlayColor, double overlayOpacity)
@@ -437,6 +452,11 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         return new ConvertToUInt8().processRGB8(this);
     }
 
+    /**
+     * Creates a view on the grayscale values of this color array.
+     * 
+     * @return a view on the grayscale values of this color array.
+     */
     public default UInt8Array createUInt8View()
     {
         return new UInt8View(this);
@@ -449,7 +469,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      * The aim of this method is to facilitate the conversion of RGB8 arrays
      * into grayscale (UInt8) arrays.
      * 
-     * @see RGB8.grayValue()
+     * @see RGB8#grayValue()
      * 
      * @param pos
      *            the position within array
@@ -464,7 +484,7 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      * Returns the largest value within the samples of the RGB8 element at the
      * specified position.
      * 
-     * @see RGB8.maxSample()
+     * @see RGB8#maxSample()
      * 
      * @param pos
      *            the position within array
@@ -690,10 +710,10 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
     }
 
     /**
-     * Default iterator over RGB8 values of the RGB8Array, based on the
+     * Default iterator over RGB8 values of the RGB8Array, based on a
      * positionIterator.
      * 
-     * @see #positionIterator()
+     * @see PositionIterator
      */
 	public default Iterator iterator()
     {
@@ -744,6 +764,9 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         return RGB8.class;
     }
     
+    /**
+     * Iterator over the elements of a RGB8Array.
+     */
     public interface Iterator extends IntVectorArray.Iterator<RGB8, UInt8>
     {
         @Override
@@ -775,13 +798,21 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
      * Utility class that implements a view on a channel of a RGB8 array as a
      * UInt8Array.
      * 
-     * @see RGB8Array.#channelIterator()
+     * @see RGB8Array#channelIterator()
      */
     static class ChannelView implements UInt8Array, Array.View<UInt8>
     {
         RGB8Array array;
         int channel;
         
+        /**
+         * Creates a new view on the specified channel of the given array.
+         * 
+         * @param array
+         *            the array containing colors
+         * @param channel
+         *            the channel index.
+         */
         public ChannelView(RGB8Array array, int channel)
         {
             int nChannels = 3;
@@ -834,10 +865,20 @@ public interface RGB8Array extends IntVectorArray<RGB8,UInt8>, ColorArray<RGB8>
         }
     }
 
+    /**
+     * Convenience class for wrapping an array of RGB8 into an instance of
+     * RGB8Array.
+     */
     static class Wrapper extends ArrayWrapperStub<RGB8> implements RGB8Array
     {
         Array<RGB8> array;
         
+        /**
+         * Wraps an array of RGB8 into an instance of RGB8Array.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public Wrapper(Array<RGB8> array)
         {
             super(array);

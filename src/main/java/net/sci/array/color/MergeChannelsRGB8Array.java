@@ -40,6 +40,16 @@ public class MergeChannelsRGB8Array implements RGB8Array, Array.View<RGB8>
     // =============================================================
     // Constructor
 
+    /**
+     * Creates a new RGB8Array view that combines three UInt8Array instances.
+     * 
+     * @param redChannel
+     *            the array containing the red values
+     * @param greenChannel
+     *            the array containing the green values
+     * @param blueChannel
+     *            the array containing the blue values
+     */
     public MergeChannelsRGB8Array(UInt8Array redChannel, UInt8Array greenChannel, UInt8Array blueChannel)
     {
         if (!Arrays.isSameDimensionality(redChannel, greenChannel) || !Arrays.isSameDimensionality(redChannel, blueChannel))

@@ -15,16 +15,21 @@ import net.sci.algo.AlgoStub;
  */
 public class DenseRGB8ArrayFactory extends AlgoStub implements RGB8Array.Factory
 {
+    /**
+     * Default empty constructor.
+     */
+    public DenseRGB8ArrayFactory()
+    {
+    }
+    
     @Override
     public RGB8Array create(int[] dims)
     {
+        fireStatusChanged(this, "Allocate memory");
         return switch (dims.length)
         {
             case 2 -> new Int32EncodedRGB8Array2D(dims[0], dims[1]);
-            case 3 -> {
-                fireStatusChanged(this, "Allocating memory");
-                yield new Int32EncodedRGB8Array3D(dims[0], dims[1], dims[2]);
-            }
+            case 3 -> new Int32EncodedRGB8Array3D(dims[0], dims[1], dims[2]);
             default -> new Int32EncodedRGB8ArrayND(dims);
         };
     }

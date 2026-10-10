@@ -8,6 +8,12 @@ import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.ScalarArray;
 
 /**
+ * An array that contains elements that implements the Color interface.
+ *
+ * Provides convenience methods for accessing channels as arrays.
+ * 
+ * @param <T> the type of color of array elements
+ * 
  * @author dlegland
  *
  */
@@ -17,6 +23,8 @@ public interface ColorArray<T extends Color>  extends Array<T>
     // New methods specific to ColorArray
 
     /**
+     * Returns the red channel of this array, with elements between 0 and 1.
+     * 
      * @return the red channel of this array, with elements between 0 and 1.
      */
     public default ScalarArray<?> redChannel()
@@ -39,6 +47,8 @@ public interface ColorArray<T extends Color>  extends Array<T>
     }
     
     /**
+     * Returns the green channel of this array, with elements between 0 and 1.
+     * 
      * @return the green channel of this array, with elements between 0 and 1.
      */
     public default ScalarArray<?> greenChannel()
@@ -61,6 +71,8 @@ public interface ColorArray<T extends Color>  extends Array<T>
     }
     
     /**
+     * Returns the blue channel of this array, with elements between 0 and 1.
+     * 
      * @return the blue channel of this array, with elements between 0 and 1.
      */
     public default ScalarArray<?> blueChannel()
@@ -83,6 +95,8 @@ public interface ColorArray<T extends Color>  extends Array<T>
     }
     
     /**
+     * Returns the hue channel of this array, with elements between 0 and 1.
+     * 
      * @return the hue channel of this array, with elements between 0 and 1.
      */
     public default ScalarArray<?> hueChannel()
@@ -105,6 +119,8 @@ public interface ColorArray<T extends Color>  extends Array<T>
     }
     
     /**
+     * Returns the saturation channel of this array, with elements between 0 and 1.
+     * 
      * @return the saturation channel of this array, with elements between 0 and 1.
      */
     public default ScalarArray<?> saturationChannel()
@@ -127,7 +143,11 @@ public interface ColorArray<T extends Color>  extends Array<T>
     }
     
     /**
-     * @return the luminance channel of this array, with elements between 0 and 1.
+     * Returns the luminance channel of this array, with elements between 0 and
+     * 1.
+     * 
+     * @return the luminance channel of this array, with elements between 0 and
+     *         1.
      */
     public default ScalarArray<?> luminanceChannel()
     {
