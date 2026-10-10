@@ -118,13 +118,13 @@ public class MergeChannelsRGB8Array implements RGB8Array, Array.View<RGB8>
      */
     public UInt8Array channel(int channel)
     {
-        switch(channel)
+        return switch(channel)
         {
-            case 0: return redChannel;
-            case 1: return greenChannel;
-            case 2: return blueChannel;
-            default: throw new RuntimeException("channel index must be comprised between 0 and 2");
-        }
+            case 0 -> redChannel;
+            case 1 -> greenChannel;
+            case 2 -> blueChannel;
+            default -> throw new RuntimeException("channel index must be comprised between 0 and 2");
+        };
     }
     
     public Iterable<? extends UInt8Array> channels()
@@ -172,13 +172,13 @@ public class MergeChannelsRGB8Array implements RGB8Array, Array.View<RGB8>
     @Override
     public double getValue(int[] pos, int channel)
     {
-        switch(channel)
+        return switch(channel)
         {
-            case 0: return redChannel.getValue(pos);
-            case 1: return greenChannel.getValue(pos);
-            case 2: return blueChannel.getValue(pos);
-            default: throw new RuntimeException("channel index must be comprised between 0 and 2");
-        }
+            case 0 -> redChannel.getValue(pos);
+            case 1 -> greenChannel.getValue(pos);
+            case 2 -> blueChannel.getValue(pos);
+            default -> throw new RuntimeException("channel index must be comprised between 0 and 2");
+        };
     }
 
     @Override

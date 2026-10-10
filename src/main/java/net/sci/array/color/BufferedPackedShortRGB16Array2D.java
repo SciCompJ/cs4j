@@ -265,14 +265,12 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
 		@Override
 		public double getValue(int c)
 		{
-			switch(c)
-			{
-			case 0: return buffer.getInt(posX, posY, 0);
-			case 1: return buffer.getInt(posX, posY, 1);
-			case 2: return buffer.getInt(posX, posY, 2);
-			default: throw new IllegalArgumentException(
-					"Channel index must be comprised between 0 and 2, not " + c);
-			}
+            if (c < 0 || c > 2)
+            {
+                throw new IllegalArgumentException(
+                        "Channel index must be comprised between 0 and 2, not " + c);
+            }
+		    return buffer.getInt(posX, posY, c);
 		}
 
         @Override
@@ -287,14 +285,12 @@ public class BufferedPackedShortRGB16Array2D extends RGB16Array2D
         @Override
 		public void setValue(int c, double value)
 		{
-			switch(c)
-			{
-			case 0: buffer.setInt(posX, posY, 0, UInt16.convert(value));
-			case 1: buffer.setInt(posX, posY, 1, UInt16.convert(value));
-			case 2: buffer.setInt(posX, posY, 2, UInt16.convert(value));
-			default: new IllegalArgumentException(
-					"Channel index must be comprised between 0 and 2, not " + c);
-			}
+            if (c < 0 || c > 2)
+            {
+                throw new IllegalArgumentException(
+                        "Channel index must be comprised between 0 and 2, not " + c);
+            }
+            buffer.setInt(posX, posY, 0, UInt16.convert(value));
 		}
 
 		@Override

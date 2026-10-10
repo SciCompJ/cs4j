@@ -58,17 +58,14 @@ public class Int32ArrayRGB8Iterator implements RGB8Array.Iterator
     public double getValue(int c)
     {
         int intCode = intIterator.getInt();
-        switch (c)
+        return switch (c)
         {
-        case 0:
-            return intCode & 0x00FF;
-        case 1:
-            return (intCode >> 8) & 0x00FF;
-        case 2:
-            return (intCode >> 16) & 0x00FF;
-        }
-        throw new IllegalArgumentException(
-                "Channel number must be comprised between 0 and 2, not " + c);
+            case 0 -> intCode & 0x00FF;
+            case 1 -> (intCode >> 8) & 0x00FF;
+            case 2 -> (intCode >> 16) & 0x00FF;
+            default -> throw new IllegalArgumentException(
+                    "Channel index must be comprised between 0 and 2, not " + c);
+        };
     }
     
     @Override
