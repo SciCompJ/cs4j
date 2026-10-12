@@ -203,10 +203,11 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     
     /**
      * Sets the value at the given position as a numeric double.
-     * @param value
-     *            the new value for the given position
+     * 
      * @param pos
      *            the position, as an array of indices
+     * @param value
+     *            the new value for the given position
      */
     public void setValue(int[] pos, double value);
     

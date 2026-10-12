@@ -6,6 +6,8 @@ package net.sci.array;
 import java.io.PrintStream;
 import java.util.Locale;
 
+import net.sci.array.impl.BufferedGenericArray1D;
+
 /**
  * Base implementation for one-dimensional arrays.
  *
@@ -22,10 +24,22 @@ public abstract class Array1D<T> implements Array<T>
 	// =============================================================
 	// static methods
 
-//    public static <T> Array1D<T> create(int sizeX, int sizeY, T init)
-//    {
-//        return new BufferedGenericArray2D<T>(sizeX, sizeY, init);
-//    }
+    /**
+     * Creates a new array with the specified size, containing the specified
+     * initial value.
+     * 
+     * @param <T>
+     *            the type of data
+     * @param size
+     *            the size of the array to create in the first direction
+     * @param init
+     *            the initial value within the array (repeated within the array)
+     * @return a new array initialized with the default value.
+     */
+    public static <T> Array1D<T> create(int size, T init)
+    {
+        return new BufferedGenericArray1D<T>(size, init);
+    }
     
     /**
      * Wraps the specified array into an instance of Array1D containing the same

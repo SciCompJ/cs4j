@@ -35,6 +35,7 @@ public interface GenericArray<T> extends Array<T>
     {
         return switch (dims.length)
         {
+            case 1 -> new BufferedGenericArray1D<T>(dims[0], initValue);
             case 2 -> new BufferedGenericArray2D<T>(dims[0], dims[1], initValue);
             case 3 -> new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], initValue);
             default -> new BufferedGenericArrayND<T>(dims, initValue);

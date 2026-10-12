@@ -22,14 +22,13 @@ public abstract class ScalarArray1D<S extends Scalar<S>> extends Array1D<S> impl
 	// Static methods
 
     /**
-     * Same as wrap method, but use different name to avoid runtime class cast
-     * exceptions.
+     * Wraps an instance of a one-dimensional {@code ScalarArray} into a
+     * {@code ScalarArray1D}. If the specified array is already an instance of
+     * {@code ScalarArray1D}, it is returned.
      * 
-     * @param <S>
-     *            the type of scalar elements within the array
      * @param array
-     *            an instance of ScalarArray with two dimensions
-     * @return an instance of ScalarArray2D
+     *            the array to wrap
+     * @return the wrapped array.
      */
     public final static <S extends Scalar<S>> ScalarArray1D<S> wrapScalar1d(ScalarArray<S> array)
     {
