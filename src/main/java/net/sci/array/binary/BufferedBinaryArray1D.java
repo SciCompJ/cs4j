@@ -60,17 +60,23 @@ public class BufferedBinaryArray1D extends BinaryArray1D
 	// =============================================================
 	// Constructors
 
-	/**
-     * @param size0
-     *            the size of the array in the first dimension
+    /**
+     * Creates a new {@code BufferedBinaryArray1D} with the specified size.
+     * 
+     * @param size
+     *            the size of the array
      */
-	public BufferedBinaryArray1D(int size0)
+	public BufferedBinaryArray1D(int size)
 	{
-		super(size0);
-		this.buffer = new boolean[size0];
+		super(size);
+		this.buffer = new boolean[size];
 	}
 
     /**
+     * Creates a new {@code BufferedBinaryArray1D} with the specified
+     * size, using the specified buffer to store data. The length of the
+     * buffer must match the product of array size.
+     * 
      * @param size0
      *            the size of the array in the first dimension
      * @param buffer

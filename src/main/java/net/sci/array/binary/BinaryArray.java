@@ -150,6 +150,13 @@ public interface BinaryArray extends IntArray<Binary>
         throw new IllegalArgumentException("Can not wrap an array with class " + array.getClass() + " and type " + array.elementClass());
     }
     
+    /**
+     * Wraps the specified scalar array into an array of {@code Binary}.
+     * 
+     * @param array
+     *            the array to wrap.
+     * @return a {@code BinaryArray} view on the scalar array.
+     */
     public static BinaryArray wrapScalar(ScalarArray<?> array)
     {
         if (array instanceof BinaryArray)
@@ -328,10 +335,30 @@ public interface BinaryArray extends IntArray<Binary>
         }
     }
     
+    /**
+     * Returns the boolean value at the given position.
+     * 
+     * @param pos
+     *            the position, as an array of indices
+     * @return the boolean value at the given position
+     */
     public boolean getBoolean(int[] pos);
     
+    /**
+     * Sets the boolean value at the given position.
+     * @param pos
+     *            the position, as an array of indices
+     * @param state
+     *            the new boolean value for the given position
+     */
     public void setBoolean(int[] pos, boolean state);
     
+    /**
+     * Counts the number of elements with value {@code true} in this array, as a
+     * long int.
+     * 
+     * @return the number of elements with value {@code true}
+     */
     public default long trueElementCount()
     {
         long count = 0;
@@ -363,6 +390,13 @@ public interface BinaryArray extends IntArray<Binary>
         };
     }
     
+    /**
+     * Returns an Iterator over the positions of only {@code true} elements
+     * within the array.
+     * 
+     * @return an Iterator over the positions of only {@code true} elements
+     *         within the array.
+     */
     public default PositionIterator trueElementPositionIterator()
     {
         return new TrueElementsPositionIterator(this);
@@ -421,7 +455,7 @@ public interface BinaryArray extends IntArray<Binary>
     /*
      * (non-Javadoc)
      * 
-     * @see net.sci.array.Array2D#getValue(int, int)
+     * @see net.sci.array.numeric.ScalarArray#getValue(int[])
      */
     @Override
     public default double getValue(int[] pos)
@@ -430,15 +464,15 @@ public interface BinaryArray extends IntArray<Binary>
     }
     
     /**
-     * Sets the value at the specified position, using true if value is greater
-     * than zero.
+     * Sets the inner boolean value at the specified position, using true if
+     * value is greater than zero.
      * 
      * @param pos
      *            the position to modify
      * @param value
      *            the value to set up. The position is set to true if value is
      *            greater than zero, and to false otherwise.
-     *            
+     * 
      */
     @Override
     public default void setValue(int[] pos, double value)
@@ -579,6 +613,10 @@ public interface BinaryArray extends IntArray<Binary>
     // =============================================================
     // Inner interface
 
+    /**
+     * An utility class that iterates over the positions of the elements set to
+     * {@code true}.
+     */
     public class TrueElementsPositionIterator implements PositionIterator
     {
         /** The reference binary array */
@@ -590,6 +628,12 @@ public interface BinaryArray extends IntArray<Binary>
         /** the position on the current true element */
         int[] currentPos = null;
 
+        /**
+         * Creates an iterator over the true elements of the specified array.
+         * 
+         * @param array
+         *            the array to iterate.
+         */
         public TrueElementsPositionIterator(BinaryArray array)
         {
             this.array = array;
@@ -726,18 +770,16 @@ public interface BinaryArray extends IntArray<Binary>
     }
 
     /**
-     * Wraps explicitly an array containing <code>Binary</code> elements into an
-     * instance of <code>BinaryArray</code>.
+     * Wraps explicitly an array containing {@code Binary} elements into an
+     * instance of {@code BinaryArray}.
      * 
      * Usage:
      * 
-     * <pre>
-     * {@code
+     * {@snippet :
      * Array<Binary> array = ...
      * BinaryArray newArray = new BinaryArray.Wrapper(array);
      * newArray.getBoolean(...);  
      * }
-     * </pre>
      */
     static class Wrapper extends ArrayWrapperStub<Binary> implements BinaryArray
     {
@@ -769,21 +811,27 @@ public interface BinaryArray extends IntArray<Binary>
     }
     
     /**
-     * Wraps a scalar array into a BinaryArray with same dimension.
+     * Wraps a scalar array into a BinaryArray with same dimensions.
      * 
      * Conversion between scalar and binary:
      * <ul>
-     * <li>scalar value &gt; 0: binary value TRUE</li>
-     * <li>scalar value &lt; or = 0: binary value FALSE</li>
+     * <li>scalar value &gt; 0: binary value {@code TRUE}</li>
+     * <li>scalar value &lt; or = 0: binary value {@code FALSE}</li>
      * </ul>
      * 
-     * @see BinaryArray#wrap(net.sci.array.numeric.ScalarArray)
+     * @see wrapScalar(net.sci.array.numeric.ScalarArray)
      */
     static class ScalarArrayWrapper extends ArrayWrapperStub<Binary> implements BinaryArray
     {
         /** The parent array */
         ScalarArray<?> array;
         
+        /**
+         * Creates a Binary wrapper around the specified {@code ScalarArray}.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public ScalarArrayWrapper(ScalarArray<?> array)
         {
             super(array);

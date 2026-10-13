@@ -13,7 +13,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
- * A single row within a multidimensional binary array, using run-length
+ * A single row within a multi-dimensional binary array, using run-length
  * encoding for representing binary data.
  * 
  * Note that the length of the row is not stored, and that the run indices may
@@ -30,13 +30,15 @@ public class BinaryRow implements Iterable<Run>
     // Static methods
 
     /**
-     * Computes the union of two rows.
+     * Computes the row resulting from the union (in the sense of binary OR) of
+     * two rows.
+     * 
      * 
      * @param row1
      *            the first row
      * @param row2
      *            the second row
-     * @return the result if the union of the two rows
+     * @return the union of the two rows
      */
     public static final BinaryRow union(BinaryRow row1, BinaryRow row2)
     {
@@ -147,11 +149,14 @@ public class BinaryRow implements Iterable<Run>
     }
     
     /**
-     * Computes the intersection of this row with the input row.
+     * Computes the row resulting from the intersection (in the sense of binary
+     * AND) of two rows.
      * 
+     * @param row1
+     *            the first row
      * @param row2
-     *            the row to combine with
-     * @return the result if the intersection of this row and the other row.
+     *            the second row
+     * @return the intersection of the tow rows.
      */
     public static final BinaryRow intersection(BinaryRow row1, BinaryRow row2)
     {
@@ -241,6 +246,9 @@ public class BinaryRow implements Iterable<Run>
     
     /**
      * Creates a new binary row containing a single run.
+     * 
+     * @param run
+     *            the run that composes this row.
      */
     public BinaryRow(Run run)
     {
@@ -251,7 +259,7 @@ public class BinaryRow implements Iterable<Run>
     /**
      * Creates a new binary row by using an existing map of Runs.
      * 
-     * @param runs
+     * @param runMap
      *            the map of runs representing this row.
      */
     public BinaryRow(Map<Integer, Run> runMap)
@@ -535,6 +543,16 @@ public class BinaryRow implements Iterable<Run>
         return run.right >= x2;
     }
     
+    /**
+     * Sets the range of position within the row to the specified boolean state.
+     * 
+     * @param x1
+     *            the first position to update (included)
+     * @param x2
+     *            the last position to update (included)
+     * @param state
+     *            the state of the positions
+     */
     public void setRange(int x1, int x2, boolean state)
     {
         if (state)
@@ -659,7 +677,9 @@ public class BinaryRow implements Iterable<Run>
     // Getter and Setter for data
 
     /**
-     * @return the number of elements with value TRUE within this row.
+     * Counts the number of elements with value {@code true} within this row.
+     * 
+     * @return the number of elements with value {@code true} within this row.
      */
     public int elementCount()
     {
@@ -671,18 +691,23 @@ public class BinaryRow implements Iterable<Run>
         return count;
     }
     
+    /**
+     * Checks if this row is empty, i.e. does not contain any run.
+     * 
+     * @return {@code true} if this row is empty
+     */
     public boolean isEmpty()
     {
         return this.runs.isEmpty();
     }
     
     /**
-     * Checks if the row contains the element at the specified position.
+     * Checks if the row contains the element at the specified position, i.e. if
+     * the row contains a run that contain the specified posiiton.
      * 
      * @param pos
      *            the index of the element (0-based).
-     * @return true if the row contains the element at the specified
-     *         position.
+     * @return true if the row contains the element at the specified position.
      */
     public boolean get(int pos)
     {
@@ -696,6 +721,14 @@ public class BinaryRow implements Iterable<Run>
         return pos <= run.right;
     }
     
+    /**
+     * Changes the state of the row element at the specified position.
+     * 
+     * @param pos
+     *            the position of the element.
+     * @param state
+     *            the new state.
+     */
     public void set(int pos, boolean state)
     {
         if (state)
@@ -803,6 +836,8 @@ public class BinaryRow implements Iterable<Run>
     }
     
     /**
+     * Counts the number of runs within this row.
+     * 
      * @return the number of runs within this row.
      */
     public int runCount()
@@ -810,6 +845,11 @@ public class BinaryRow implements Iterable<Run>
         return runs.size();
     }
     
+    /**
+     * Returns an unmodifiable view collection of {@code Run} within this row.
+     * 
+     * @return the runs within this row.
+     */
     public Collection<Run> runs()
     {
         return Collections.unmodifiableCollection(this.runs.values());
@@ -827,6 +867,8 @@ public class BinaryRow implements Iterable<Run>
     }
     
     /**
+     * Returns the set of run within this row that intersect the specified run.
+     * 
      * @param run
      *            a query run
      * @return all the runs within the row with an element contained inside the
@@ -848,6 +890,10 @@ public class BinaryRow implements Iterable<Run>
     }
     
     /**
+     * Returns a collection of runs from this row that belong at least one
+     * element larger than or equal to {@code posMin}, and smaller than or equal
+     * to {@code posMax}.
+     * 
      * @param posMin
      *            a position within the row
      * @param posMax
@@ -884,10 +930,13 @@ public class BinaryRow implements Iterable<Run>
     }
     
     /**
+     * Returns the run of this row that contains the specified position, or null
+     * if there is no such Run (i.e., the state at the given position is
+     * {@code false}).
+     * 
      * @param pos
      *            the x-position of an element within the row
-     * @return the Run containing the specified position, or null if there is no
-     *         such Run (the state at the given position is "false").
+     * @return the Run containing the specified position.
      */
     public Run containingRun(int pos)
     {
@@ -901,6 +950,11 @@ public class BinaryRow implements Iterable<Run>
         return pos <= run.right ? run : null;
     }
     
+    /**
+     * Duplicates this row.
+     * 
+     * @return a deep-copy of this row.
+     */
     public BinaryRow duplicate()
     {
         BinaryRow row = new BinaryRow();

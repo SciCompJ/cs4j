@@ -121,10 +121,13 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
     // Management of rows
 	
     /**
+     * Returns the row at the specified index, or null if the row at specified
+     * index is empty.
+     * 
      * @param y
-     *            the index of the row
-     * @return the row at the specified index, or null if the row at specified
-     *         index is empty.
+     *            the y-coordinate of the row
+     * @return the row at the specified position, or null if the row at
+     *         specified position is empty.
      */
 	public BinaryRow getRow(int y)
     {
@@ -154,12 +157,25 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
         rows[y] = null;
     }
     
+    /**
+     * Checks whether the row at the specified position is empty.
+     * 
+     * @param y
+     *            the row-index of the row
+     * @return {@code true} if the specified row is empty
+     */
     public boolean isEmptyRow(int y)
     {
         if (rows[y] == null) return true;
         return rows[y].isEmpty();
     }
     
+    /**
+     * Returns the list of indices corresponding to non-empty rows. Indices are
+     * given in increasing order.
+     * 
+     * @return the list of indices corresponding to non-empty rows.
+     */
     public Collection<Integer> nonEmptyRowIndices()
     {
         ArrayList<Integer> list = new ArrayList<>(size1);
@@ -287,10 +303,26 @@ public class RunLengthBinaryArray2D extends BinaryArray2D
      * Utility class that converts a 2D binary array into an instance of
      * RunLengthBinaryArray2D.
      * 
-     * @see RunLengthBinaryArray2D.#convert(BinaryArray2D)
+     * @see #convert(BinaryArray2D)
      */
     public static class Converter extends AlgoStub
     {
+        /**
+         * Default empty constructor.
+         */
+        public Converter()
+        {
+        }
+        
+        /**
+         * Converts the specified binary array into an instance of
+         * {@code RunLengthBinaryArray2D}. It he input array is already an
+         * instance of {@code RunLengthBinaryArray2D}, it is returned.
+         * 
+         * @param array
+         *            the array to convert
+         * @return the corresponding {@code RunLengthBinaryArray2D}
+         */
         public RunLengthBinaryArray2D process(BinaryArray2D array)
         {
             if (array instanceof RunLengthBinaryArray2D)

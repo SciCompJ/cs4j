@@ -65,6 +65,15 @@ public abstract class BinaryArray3D extends IntArray3D<Binary> implements Binary
         return new BufferedBinaryArray3D(size0, size1, size2, buffer);
     }
 
+    /**
+     * Wraps an instance of a three-dimensional {@code BinaryArray} into a
+     * {@code BinaryArray3D}. If the specified array is already an instance of
+     * {@code BinaryArray3D}, it is returned.
+     * 
+     * @param array
+     *            the array to wrap
+     * @return the wrapped array.
+     */
     public final static BinaryArray3D wrap(BinaryArray array)
     {
         if (array instanceof BinaryArray3D)

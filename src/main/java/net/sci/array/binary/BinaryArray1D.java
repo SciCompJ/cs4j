@@ -6,7 +6,7 @@ package net.sci.array.binary;
 import net.sci.array.numeric.IntArray1D;
 
 /**
- * A one-dimensional array containing boolean values.
+ * Base implementation for one-dimensional arrays containing boolean values.
  * 
  * @author dlegland
  *
@@ -22,8 +22,6 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
      * 
      * @param size0
      *            the size of the array along the first dimension
-     * @param size1
-     *            the size of the array along the second dimension
      * @return a new BinaryArray2D with the requested size.
      */
 	public static final BinaryArray1D create(int size0)
@@ -31,6 +29,15 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
 		return wrap(BinaryArray.create(size0));
 	}
 
+    /**
+     * Wraps an instance of a one-dimensional {@code BinaryArray} into a
+     * {@code BinaryArray1D}. If the specified array is already an instance of
+     * {@code BinaryArray1D}, it is returned.
+     * 
+     * @param array
+     *            the array to wrap
+     * @return the wrapped array.
+     */
     public final static BinaryArray1D wrap(BinaryArray array)
     {
         if (array instanceof BinaryArray1D)
@@ -59,8 +66,23 @@ public abstract class BinaryArray1D extends IntArray1D<Binary> implements Binary
 	// =============================================================
 	// New methods
 
-	public abstract boolean getBoolean(int x);
-	
+    /**
+     * Returns the boolean value corresponding to the specified index.
+     * 
+     * @param x
+     *            index over the first array dimension
+     * @return the boolean value at the specified position
+     */
+    public abstract boolean getBoolean(int x);
+
+    /**
+     * Changes the boolean value corresponding at the specified index.
+     * 
+     * @param x
+     *            index of the element to change
+     * @param b
+     *            the boolean value at the specified position
+     */
     public abstract void setBoolean(int x, boolean b);
     
 	

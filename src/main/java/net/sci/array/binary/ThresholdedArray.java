@@ -17,7 +17,7 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
  * Can not be modified.
  * 
  * Example of use:
- * <pre>{@code
+ * {@snippet :
  *   // create scalar array
  *   Float32Array2D array = Float32Array2D.create(20, 20);
  *   array.populateValues((pos) -> 10 - Math.hypot(pos[0] - 9.5, pos[1] - 9.5));
@@ -31,7 +31,7 @@ import net.sci.array.numeric.impl.ScalarArrayUInt8View;
  *   BinaryArray2D view2d = BinaryArray2D.wrap(view);
  *   System.out.println("Binary view:");
  *   view2d.print(System.out);
- * }</pre>
+ * }
  * 
  * @see ScalarArrayUInt8View
  * @author dlegland
@@ -55,11 +55,27 @@ public class ThresholdedArray implements BinaryArray, Array.View<Binary>
     // =============================================================
     // Constructors
 
+    /**
+     * Creates a view representing the result of a threshold operation on a
+     * scalar. A threshold value equal to 0 is used.
+     * 
+     * @param array
+     *            the array to threshold.
+     */
     public ThresholdedArray(ScalarArray<?> array)
     {
         this(array, 0.0);
     }
     
+    /**
+     * Creates a view representing the result of a threshold operation on a
+     * scalar.
+     * 
+     * @param array
+     *            the array to threshold.
+     * @param thresholdValue
+     *            the threshold value.
+     */
     public ThresholdedArray(ScalarArray<?> array, double thresholdValue)
     {
         this.array = array;

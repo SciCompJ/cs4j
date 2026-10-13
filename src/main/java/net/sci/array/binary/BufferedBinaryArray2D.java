@@ -65,6 +65,9 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 	// Constructors
 
 	/**
+     * Creates a new {@code BufferedBinaryArray2D} with the specified
+     * dimensions.
+     * 
      * @param size0
      *            the size of the array in the first dimension
      * @param size1
@@ -77,6 +80,10 @@ public class BufferedBinaryArray2D extends BinaryArray2D
 	}
 
     /**
+     * Creates a new {@code BufferedBinaryArray2D} with the specified
+     * dimensions, using the specified buffer to store data. The length of the
+     * buffer must match the product of array dimensions.
+     * 
      * @param size0
      *            the size of the array in the first dimension
      * @param size1

@@ -75,6 +75,9 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 	// Constructors
 
 	/**
+     * Creates a new {@code BufferedBinaryArray3D} with the specified
+     * dimensions.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 * @param size1
@@ -98,16 +101,19 @@ public class BufferedBinaryArray3D extends BinaryArray3D
 	}
 
 	/**
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param size2
-	 *            the size of the array along the third dimension
-	 * @param buffer
-	 *            the buffer containing the boolean values
-	 */
+     * Creates a new {@code BufferedBinaryArray3D} with the specified
+     * dimensions, using the specified buffer to store data. The length of the
+     * buffer must match the product of array dimensions.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @param buffer
+     *            the buffer containing the boolean values
+     */
 	public BufferedBinaryArray3D(int size0, int size1, int size2, boolean[] buffer)
 	{
 		super(size0, size1, size2);

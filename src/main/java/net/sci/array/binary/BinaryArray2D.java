@@ -38,12 +38,12 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     }
 
     /**
-     * Creates a new {@code BinaryArray2D} from a two-dimensional array of booleans. The
-     * first index of the int array is the second dimension of the result array,
-     * i.e. {@code booleanArray[y][x]} is the same value as
+     * Creates a new {@code BinaryArray2D} from a two-dimensional array of
+     * booleans. The first index of the boolean array is the second dimension of
+     * the result array, i.e. {@code booleanArray[y][x]} is the same value as
      * {@code array.getBoolean(x,y)}.
      * 
-     * @param intArray
+     * @param booleanArray
      *            the array of integers containing the values.
      * @return a new instance of UInt8Array2D initialized with the values of
      *         <code>intArray</code>
@@ -64,7 +64,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     }
 
     /**
-     * Wraps the boolean array into an instance of BinaryArray2D with the
+     * Wraps the boolean array into an instance of {@code BinaryArray2D} with the
      * specified dimensions. The new array will be backed by the given boolean
      * array; that is, modifications to the boolean buffer will cause the array
      * to be modified and vice versa.
@@ -73,7 +73,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
      * array dimensions.
      * 
      * @param buffer
-     *            the array to boolean to encapsulate
+     *            the array of boolean values to encapsulate
      * @param size0
      *            the size of the array along the first dimension
      * @param size1
@@ -85,6 +85,15 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
         return new BufferedBinaryArray2D(size0, size1, buffer);
     }
 
+    /**
+     * Wraps an instance of a two-dimensional {@code BinaryArray} into a
+     * {@code BinaryArray2D}. If the specified array is already an instance of
+     * {@code BinaryArray2D}, it is returned.
+     * 
+     * @param array
+     *            the array to wrap
+     * @return the wrapped array.
+     */
     public final static BinaryArray2D wrap(BinaryArray array)
     {
         if (array instanceof BinaryArray2D)
@@ -264,7 +273,7 @@ public abstract class BinaryArray2D extends IntArray2D<Binary> implements Binary
     /**
      * Sets the logical state at the specified position.
      * 
-     * @see net.sci.array.Array2D#setValue(int, int, double)
+     * @see #setValue(int, int, double)
      */
     @Override
     public void setValue(int[] pos, double value)

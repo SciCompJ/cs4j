@@ -7,6 +7,10 @@ import net.sci.array.ArrayND;
 import net.sci.util.MathUtils;
 
 /**
+ * Implementation of a multi-dimensional array of B{@code Binary}, with
+ * arbitrary number of dimensions, stores the data in a linear array of
+ * booleans.
+ * 
  * @author dlegland
  *
  */
@@ -22,8 +26,12 @@ public class BufferedBinaryArrayND extends ArrayND<Binary> implements BinaryArra
 	// Constructors
 
 	/**
-	 * @param sizes the dimensions of this array
-	 */
+     * Creates a new {@code BufferedBinaryArrayND} with the specified
+     * dimensions.
+     * 
+     * @param sizes
+     *            the dimensions of this array
+     */
 	public BufferedBinaryArrayND(int[] sizes)
 	{
 		super(sizes);
@@ -39,14 +47,16 @@ public class BufferedBinaryArrayND extends ArrayND<Binary> implements BinaryArra
 		this.buffer = new boolean[(int) elCount]; 
 	}
 
-	/**
-	 * Initialize a new multidimensional array, using the specified buffer.
-	 * 
-	 * @param sizes
-	 *            the dimensions of the array
-	 * @param buffer
-	 *            the array containing buffer for this image
-	 */
+    /**
+     * Creates a new {@code BufferedBinaryArrayND} with the specified
+     * dimensions, using the specified buffer to store data. The length of the
+     * buffer must match the product of array dimensions.
+     * 
+     * @param sizes
+     *            the dimensions of the array
+     * @param buffer
+     *            the array containing buffer for this image
+     */
 	public BufferedBinaryArrayND(int[] sizes, boolean[] buffer)
 	{
 		super(sizes);

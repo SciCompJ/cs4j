@@ -16,6 +16,13 @@ import net.sci.util.MathUtils;
  */
 public class DenseBinaryArrayFactory extends AlgoStub implements BinaryArray.Factory
 {
+    /**
+     * Default empty constructor.
+     */
+    public DenseBinaryArrayFactory()
+    {
+    }
+    
     @Override
     public BinaryArray create(int... dims)
     {

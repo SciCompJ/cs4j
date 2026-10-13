@@ -74,6 +74,11 @@ public class Binary implements Int<Binary>
     // =============================================================
     // Methods
 
+    /**
+     * Returns the {@code boolean} value encapsulated by this {@code Binary}.
+     * 
+     * @return the inner {@code boolean} value
+     */
     public boolean getBoolean()
     {
         return state;

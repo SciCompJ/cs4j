@@ -108,6 +108,12 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	// =============================================================
     // New methods
 	
+   /**
+    * Returns the list of indices corresponding to the z-coordinate of non-empty
+    * slices. Indices are given in increasing order.
+    * 
+    * @return the list of z-coordinates corresponding to non-empty slices.
+    */
     public Collection<Integer> nonEmptySliceIndices()
     {
         ArrayList<Integer> list = new ArrayList<>(size2);
@@ -121,6 +127,15 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
         return list;
     }
     
+    /**
+     * Returns the list of y-coordinate corresponding to non-empty rows within
+     * the slice specified by the given z-coordinate.
+     * 
+     * @param sliceIndex
+     *            the z-coordinate of the slice to consider
+     * @return the list of y-coordinate corresponding to non-empty rows within
+     *         the given slice.
+     */
     public Collection<Integer> nonEmptySliceRowIndices(int sliceIndex)
     {
         if (this.slices[sliceIndex] == null)
@@ -174,6 +189,9 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
     // Management of rows
 	
     /**
+     * Returns the row at the specified position, or null if the row at specified
+     * index is empty.
+     * 
      * @param y
      *            the y-coordinate of the row
      * @param z
@@ -191,9 +209,9 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
      * Sets the row at the given (y,z)-coordinates.
      * 
      * @param y
-     *            the y-index of the row.
+     *            the y-coordinate of the row
      * @param z
-     *            the z-index of the row.
+     *            the z-coordinate of the row
      * @param row
      *            the row to store within the array, that can be empty.
      */
@@ -227,6 +245,15 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
         }
     }
     
+    /**
+     * Checks whether the row at the specified position is empty.
+     * 
+     * @param y
+     *            the y-coordinate of the row
+     * @param z
+     *            the z-coordinate of the row
+     * @return {@code true} if the specified row is empty
+     */
     public boolean isEmptyRow(int y, int z)
     {
         BinaryRow[] slice = slices[z];
@@ -380,9 +407,6 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
 	// =============================================================
 	// Implementation of the Array interface
 	
-    /**
-     * @return a new instance of RunLengthBinaryArray3D
-     */
     @Override
     public RunLengthBinaryArray3D duplicate()
     {
@@ -419,10 +443,26 @@ public class RunLengthBinaryArray3D extends BinaryArray3D
      * Utility class that converts a 3D binary array into an instance of
      * RunLengthBinaryArray3D.
      * 
-     * @see RunLengthBinaryArray3D.#convert(BinaryArray3D)
+     * @see #convert(BinaryArray3D)
      */
     public static class Converter extends AlgoStub
     {
+        /**
+         * Default empty constructor.
+         */
+        public Converter()
+        {
+        }
+
+        /**
+         * Converts the specified binary array into an instance of
+         * {@code RunLengthBinaryArray3D}. It he input array is already an
+         * instance of {@code RunLengthBinaryArray3D}, it is returned.
+         * 
+         * @param array
+         *            the array to convert
+         * @return the corresponding {@code RunLengthBinaryArray3D}
+         */
         public RunLengthBinaryArray3D process(BinaryArray3D array)
         {
             if (array instanceof RunLengthBinaryArray3D)

@@ -16,6 +16,13 @@ import net.sci.algo.AlgoStub;
  */
 public class RunLengthBinaryArrayFactory extends AlgoStub implements BinaryArray.Factory
 {
+    /**
+     * Default empty constructor.
+     */
+    public RunLengthBinaryArrayFactory()
+    {
+    }
+    
     @Override
     public BinaryArray create(int... dims)
     {
