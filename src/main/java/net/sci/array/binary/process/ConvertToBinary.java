@@ -19,11 +19,11 @@ import net.sci.array.numeric.process.ConvertToUInt8;
  * Converts a scalar array to a binary array, by setting to <code>true</code>
  * all the elements whose initial value is strictly greater than zero.
  * 
- * <pre>{@code
+ * {@snippet :
     // Create and run operator
     ConvertToBinary algo = new ConvertToBinary();
     BinaryArray result = algo.process(array);
- * }</pre>
+ * }
  * 
  * @see ConvertToUInt8
  * 
@@ -32,6 +32,13 @@ import net.sci.array.numeric.process.ConvertToUInt8;
  */
 public class ConvertToBinary extends AlgoStub implements ArrayOperator
 {
+    /**
+     * Default empty constructor.
+     */
+    public ConvertToBinary()
+    {
+    }
+    
     @Override
     public <T> BinaryArray process(Array<T> array)
     {

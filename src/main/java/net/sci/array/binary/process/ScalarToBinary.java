@@ -33,8 +33,8 @@ import net.sci.array.numeric.process.ScalarArrayOperator;
  * BinaryArray2D res = BinaryArray2D.wrap(threshold20.processScalar(array));
  * res.printContent(System.out);
  * }
- * @author dlegland
  *
+ * @author dlegland
  */
 public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
 {
@@ -51,17 +51,11 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
         this(x -> x > 0);
     }
     
-    public ScalarToBinary setFactory(BinaryArray.Factory factory)
-    {
-        this.factory = factory;
-        return this;
-    }
-    
     /**
      * Creates a new converter, using the specified conversion function.
      * 
-     * @param the
-     *            conversion function from a double value to boolean
+     * @param fun
+     *            the conversion function from a double value to boolean
      */
     public ScalarToBinary(Function<Double,Boolean> fun)
     {
@@ -69,16 +63,39 @@ public class ScalarToBinary extends AlgoStub implements ScalarArrayOperator
     }
     
     /**
+     * Changes the factory used to create result binary arrays.
+     * 
+     * Example:
+     * {@snippet :
+     * BinaryArray res = new ScalarToBinary(x -> x > 50)
+     *      .setFactory(new RunLengthBinaryArrayFactory())
+     *      .processScalar(aScalarArray);
+     * }
+     * 
+     * @param factory
+     *            the factory
+     * @return the operator instance, to facilitate operation chaining.
+     */
+    public ScalarToBinary setFactory(BinaryArray.Factory factory)
+    {
+        this.factory = factory;
+        return this;
+    }
+
+    /**
      * Creates a view on a scalar array by using the inner conversion function.
      * 
      * Syntax:
-     * <pre>{@code
+     * {@snippet :
+     * Function<Double,Boolean> fun = x -> x > 120;
      * ScalarToBinary converter = new ScalarToBinary(fun);
-     * BinaryArray view = converter.createView(array); 
-     * }</pre>
+     * BinaryArray view = converter.createView(array);
+     * }
      * 
-     * @author dlegland
-     *
+     * @param array
+     *            the scalar array to "view" as a binary one
+     * @return
+     *            a binary array view on the input array.
      */
     public BinaryArray createView(ScalarArray<?> array)
     {

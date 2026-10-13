@@ -25,6 +25,9 @@ import net.sci.array.numeric.process.ScalarArrayOperator;
  */
 public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
 {
+    /**
+     * Default empty constructor.
+     */
     public BinaryToUInt8()
     {
     }
@@ -39,6 +42,13 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
         return processBinary(BinaryArray.wrap(array));
     }
 
+    /**
+     * Process the binary array.
+     * 
+     * @param array
+     *            the binary array to process.
+     * @return the converted array.
+     */
     public UInt8Array processBinary(BinaryArray array)
     {
         // Dispatch to specialized methods depending on array dimensionality
@@ -100,10 +110,20 @@ public class BinaryToUInt8 extends AlgoStub implements ScalarArrayOperator
         return res;
     }
     
+    /**
+     * View class on an array of {@code Binary}, that converts {@code true}
+     * values to 255, and {@code false} values to 0.
+     */
     public static class View extends ArrayWrapperStub<UInt8> implements UInt8Array
     {
         BinaryArray array;
         
+        /**
+         * Creates a view class on the specified array of Binary.
+         * 
+         * @param array
+         *            the array to wrap to an instance of {@code UInt8Array}.
+         */
         public View(Array<?> array)
         {
             super(array);

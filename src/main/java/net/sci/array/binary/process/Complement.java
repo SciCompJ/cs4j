@@ -26,6 +26,13 @@ public class Complement extends AlgoStub
     {
     }
     
+    /**
+     * Computes the complement of the specified the binary array.
+     * 
+     * @param array
+     *            the binary array to process.
+     * @return the converted array.
+     */
     public BinaryArray process(BinaryArray array)
     {
         // Dispatch to specialized methods depending on array dimensionality

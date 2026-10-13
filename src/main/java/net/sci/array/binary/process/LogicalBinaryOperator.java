@@ -197,6 +197,16 @@ public class LogicalBinaryOperator extends AlgoStub
     // =============================================================
     // Implementation methods
     
+    /**
+     * Computes the result of the logical operator applied on each pair of
+     * binary elements with the two input arrays.
+     * 
+     * @param array1
+     *            the first binary array
+     * @param array2
+     *            the second binary array
+     * @return the result of logical operation
+     */
     public BinaryArray process(BinaryArray array1, BinaryArray array2)
     {
         checkSameSize(array1, array2);
@@ -217,6 +227,19 @@ public class LogicalBinaryOperator extends AlgoStub
         }
     }
     
+    /**
+     * Computes the result of the logical operator applied on each pair of
+     * binary elements with the two input arrays, and store the result in the
+     * third array.
+     * 
+     * @param array1
+     *            the first binary array
+     * @param array2
+     *            the second binary array
+     * @param output
+     *            the array used to store computation result.
+     * @return the result of logical operation
+     */
     public BinaryArray process(BinaryArray array1, BinaryArray array2, BinaryArray output)
     {
         checkSameSize(array1, array2);

@@ -11,18 +11,49 @@ import net.sci.array.impl.ArrayWrapperStub;
 
 /**
  * Creates new array by keeping only values for which binary mask is set to
- * <code>true</code>.
+ * {@code true}.
  * 
  * @author dlegland
  *
  */
 public class BinaryMask extends AlgoStub
 {
+    /**
+     * Creates new "masked array" view by keeping values from input array only
+     * when corresponding binary mask is set to {@code true}.
+     * 
+     * @param <T>
+     *            the type of data within the array
+     * @param array
+     *            the input array
+     * @param mask
+     *            the binary mask
+     * @return a virtual array corresponding to the masked array
+     */
     public static final <T> Array<T> createView(Array<T> array, BinaryArray mask)
     {
         return new View<T>(array, mask);
     }
     
+    /**
+     * Default empty constructor.
+     */
+    public BinaryMask()
+    {
+    }
+    
+    /**
+     * Creates new array by keeping only values for which binary mask is set to
+     * {@code true}.
+     * 
+     * @param <T>
+     *            the type of input array
+     * @param array
+     *            the input array
+     * @param mask
+     *            the binary array corresponding to the mask
+     * @return the masked array.
+     */
     public <T> Array<T> process(Array<T> array, BinaryArray mask)
     {
         // check input validity
@@ -124,6 +155,13 @@ public class BinaryMask extends AlgoStub
         return res;
     }
     
+    /**
+     * Masked array view class, that keeps reference to input array and to
+     * binary mask, and that computes values on the fly.
+     * 
+     * @param <T>
+     *            the type of data within the array
+     */
     static class View<T> extends ArrayWrapperStub<T>
     {
         /**
@@ -143,6 +181,15 @@ public class BinaryMask extends AlgoStub
          */
         T zero;
         
+        /**
+         * Creates new "masked array" view by keeping values from input array
+         * only when corresponding binary mask is set to {@code true}.
+         * 
+         * @param array
+         *            the input array
+         * @param mask
+         *            the binary mask
+         */
         public View(Array<T> array, BinaryArray mask)
         {
             super(array);
