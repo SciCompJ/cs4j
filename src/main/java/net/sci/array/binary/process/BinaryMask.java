@@ -10,8 +10,8 @@ import net.sci.array.binary.BinaryArray;
 import net.sci.array.impl.ArrayWrapperStub;
 
 /**
- * Creates new array by keeping only values for which binary mask is set to
- * {@code true}.
+ * Creates new array by keeping only the values for which the binary mask is set
+ * to {@code true}.
  * 
  * @author dlegland
  *
@@ -33,6 +33,25 @@ public class BinaryMask extends AlgoStub
     public static final <T> Array<T> createView(Array<T> array, BinaryArray mask)
     {
         return new View<T>(array, mask);
+    }
+    
+    /**
+     * Creates new "masked array" view by keeping values from input array only
+     * when corresponding binary mask is set to {@code true}.
+     * 
+     * @param <T>
+     *            the type of data within the array
+     * @param array
+     *            the input array
+     * @param mask
+     *            the binary mask
+     * @param bgValue
+     *            the value returned when binary mask is {@code false}
+     * @return a virtual array corresponding to the masked array
+     */
+    public static final <T> Array<T> createView(Array<T> array, BinaryArray mask, T bgValue)
+    {
+        return new View<T>(array, mask, bgValue);
     }
     
     /**
@@ -62,32 +81,12 @@ public class BinaryMask extends AlgoStub
             throw new IllegalArgumentException("Both arrays must have same size");
         }
         
-        // dispatch according to array dimensionality
-        if (array.dimensionality() == 2)
+        return switch (array.dimensionality())
         {
-            return process2d(array, mask);
-        }
-        else if (array.dimensionality() == 3)
-        {
-            return process3d(array, mask);
-        }
-        
-        // process ND case 
-        
-        // allocate result array
-        Array<T> res = array.newInstance(array.size());
-        
-        // iterate over positions
-        for (int[] pos : res.positions())
-        {
-            if (mask.getBoolean(pos))
-            {
-                res.set(pos, array.get(pos));
-            }
-        }
-        
-        // return result
-        return res;
+            case 2 -> process2d(array, mask);
+            case 3 -> process3d(array, mask);
+            default -> processNd(array, mask);
+        };
     }
     
     private <T> Array<T> process2d(Array<T> array, BinaryArray mask)
@@ -155,6 +154,24 @@ public class BinaryMask extends AlgoStub
         return res;
     }
     
+    private <T> Array<T> processNd(Array<T> array, BinaryArray mask)
+    {
+        // allocate result array
+        Array<T> res = array.newInstance(array.size());
+        
+        // iterate over positions
+        for (int[] pos : res.positions())
+        {
+            if (mask.getBoolean(pos))
+            {
+                res.set(pos, array.get(pos));
+            }
+        }
+        
+        // return result
+        return res;
+    }
+    
     /**
      * Masked array view class, that keeps reference to input array and to
      * binary mask, and that computes values on the fly.
@@ -177,7 +194,7 @@ public class BinaryMask extends AlgoStub
         
         /**
          * The value returned when the corresponding mask element is set to
-         * <code>false</code>.
+         *  {@code false}.
          */
         T zero;
         
@@ -192,6 +209,22 @@ public class BinaryMask extends AlgoStub
          */
         public View(Array<T> array, BinaryArray mask)
         {
+            this(array, mask, array.newInstance(new int[] {1,1}).get(new int[] {0, 0}));
+        }
+
+        /**
+         * Creates new "masked array" view by keeping values from input array
+         * only when corresponding binary mask is set to {@code true}.
+         * 
+         * @param array
+         *            the input array
+         * @param mask
+         *            the binary mask
+         * @param background
+         *            the value returned when binary mask is {@code false}
+         */
+        public View(Array<T> array, BinaryArray mask, T background)
+        {
             super(array);
             
             // check same size
@@ -205,7 +238,7 @@ public class BinaryMask extends AlgoStub
             this.mask = mask;
             
             // initialize "zero" element
-            zero = array.newInstance(new int[] {1,1}).get(new int[] {0, 0});
+            zero = background;
         }
 
         @Override
