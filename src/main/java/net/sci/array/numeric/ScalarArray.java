@@ -449,7 +449,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     }
 
     @Override
-    public default ScalarArray<S> divideBy(double k)
+    public default ScalarArray<S> dividedBy(double k)
     {
         ScalarArray<S> res = newInstance(size());
         res.fillValues(pos -> this.getValue(pos) / k);

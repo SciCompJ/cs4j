@@ -100,7 +100,7 @@ public interface NumericArray<N extends Numeric<N>> extends Array<N>
      *            the factor to divide by
      * @return a new array with the elements divided
      */
-    public default NumericArray<N> divideBy(double k)
+    public default NumericArray<N> dividedBy(double k)
     {
         NumericArray<N> res = this.newInstance(this.size());
         res.fill(pos -> this.get(pos).dividedBy(k));

@@ -405,7 +405,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      * Multiplies each component of each vector element within this array with
      * the specified value, and returns the new array.
      * 
-     * @see #divideBy(double)
+     * @see #dividedBy(double)
      * 
      * @param v
      *            the value to multiply with
@@ -440,7 +440,7 @@ public interface VectorArray<V extends Vector<V, S>, S extends Scalar<S>> extend
      *            the value to divide by
      * @return a new array with the result of division.
      */
-    public default VectorArray<V,S> divideBy(double v)
+    public default VectorArray<V,S> dividedBy(double v)
     {
         VectorArray<V,S> res = newInstance(size());
         
