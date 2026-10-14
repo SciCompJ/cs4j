@@ -9,7 +9,11 @@ import java.util.Map.Entry;
 import net.sci.array.numeric.Int32Array3D;
 
 /**
+ * Sparse implementation of three-dimensional array of {@code Int32}, that stores
+ * data in an array of {@code Int32Row}. This type of implementation usually
+ * uses less memory when data is composed of large blocks of homogeneous values.
  * 
+ * @see Int32Row
  */
 public class RunLengthInt32Array3D extends Int32Array3D
 {

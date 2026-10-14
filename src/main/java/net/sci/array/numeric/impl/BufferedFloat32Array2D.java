@@ -69,6 +69,8 @@ public class BufferedFloat32Array2D extends Float32Array2D
 	// Constructors
 
 	/**
+     * Creates a new empty array with the specified size.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 * @param size1
@@ -81,6 +83,9 @@ public class BufferedFloat32Array2D extends Float32Array2D
 	}
 
 	/**
+     * Creates a new array with the specified size, using the specified buffer
+     * to store the data.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 * @param size1
@@ -97,6 +102,7 @@ public class BufferedFloat32Array2D extends Float32Array2D
 		}
 		this.buffer = buffer;
 	}
+	
 
     // =============================================================
     // Specialization of FloatArray2D

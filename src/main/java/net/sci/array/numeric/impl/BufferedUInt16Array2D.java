@@ -69,6 +69,8 @@ public class BufferedUInt16Array2D extends UInt16Array2D
 	// Constructors
 
 	/**
+     * Creates a new empty array with the specified size.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 * @param size1
@@ -81,6 +83,9 @@ public class BufferedUInt16Array2D extends UInt16Array2D
 	}
 
 	/**
+     * Creates a new array with the specified size, using the specified buffer
+     * to store the data.
+     * 
 	 * 
 	 * @param size0
 	 *            the size of the array along the first dimension

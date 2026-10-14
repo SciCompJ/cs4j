@@ -9,6 +9,9 @@ import net.sci.array.numeric.Int32Array;
 import net.sci.util.MathUtils;
 
 /**
+ * Implementation for {@code Int32Array} of any dimensionality that stores
+ * data in a linear array of int.
+ * 
  * @author dlegland
  *
  */
@@ -24,6 +27,8 @@ public class BufferedInt32ArrayND extends ArrayND<Int32> implements Int32Array
 	// Constructors
 
 	/**
+     * Creates a new empty array with the specified size.
+     * 
 	 * @param sizes the dimensions of this array
 	 */
 	public BufferedInt32ArrayND(int[] sizes)

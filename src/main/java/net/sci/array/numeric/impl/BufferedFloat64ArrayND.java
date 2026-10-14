@@ -9,6 +9,9 @@ import net.sci.array.numeric.Float64Array;
 import net.sci.util.MathUtils;
 
 /**
+ * Implementation for {@code Float64Array} of any dimensionality that stores
+ * data in a linear array of double.
+ * 
  * @author dlegland
  *
  */

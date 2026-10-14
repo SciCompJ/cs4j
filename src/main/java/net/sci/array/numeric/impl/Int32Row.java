@@ -11,7 +11,7 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 /**
- * A single row within a multidimensional array of Int32, using run-length
+ * A single row within a multidimensional array of {@code Int32}, using run-length
  * encoding for representing int data.
  * 
  * Note that the length of the row is not stored, and that the run indices may
@@ -63,6 +63,9 @@ public class Int32Row implements Iterable<Int32Run>
     
     /**
      * Creates a new row of integers containing a single run.
+     * 
+     * @param run
+     *            the run that compose this row
      */
     public Int32Row(Int32Run run)
     {
@@ -73,7 +76,7 @@ public class Int32Row implements Iterable<Int32Run>
     /**
      * Creates a new row of integers by using an existing map of Runs.
      * 
-     * @param runs
+     * @param runMap
      *            the map of runs representing this row.
      */
     public Int32Row(Map<Integer, Int32Run> runMap)
@@ -87,6 +90,8 @@ public class Int32Row implements Iterable<Int32Run>
     // Getter and Setter for data
 
     /**
+     * Counts the number of non-zeros elements within this array.
+     * 
      * @return the number of elements with non-zero value within this row.
      */
     public int elementCount()
@@ -99,6 +104,11 @@ public class Int32Row implements Iterable<Int32Run>
         return count;
     }
     
+    /**
+     * Checks whether this row is empty.
+     * 
+     * @return true if the row does not contain any non-zero element.
+     */
     public boolean isEmpty()
     {
         return this.runs.isEmpty();
@@ -123,6 +133,14 @@ public class Int32Row implements Iterable<Int32Run>
         return pos <= run.right ? run.value : 0;
     }
     
+    /**
+     * Changes the value of the row at the specified position.
+     * 
+     * @param pos
+     *            the index of the element (0-based).
+     * @param value
+     *            the new value at the specified position.
+     */
     public void set(int pos, int value)
     {
         if (value != 0)
@@ -296,6 +314,11 @@ public class Int32Row implements Iterable<Int32Run>
         return runs.size();
     }
     
+    /**
+     * Returns the collection of {@code Run} that constitute this row.
+     * 
+     * @return the collection of {@code Run} that constitute this row.
+     */
     public Collection<Int32Run> runs()
     {
         return Collections.unmodifiableCollection(this.runs.values());

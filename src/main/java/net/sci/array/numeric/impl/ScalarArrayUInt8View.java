@@ -16,7 +16,7 @@ import net.sci.array.numeric.UInt8Array;
  * max values for conversion.
  * 
  * @see UInt8Array.ScalarArrayWrapper
- * @see ScalarArrayThresholdView
+ * @see net.sci.array.binary.ThresholdedArray
  * 
  * @author dlegland
  *

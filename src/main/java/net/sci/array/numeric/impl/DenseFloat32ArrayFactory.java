@@ -19,6 +19,13 @@ import net.sci.util.MathUtils;
  */
 public class DenseFloat32ArrayFactory extends AlgoStub implements Float32Array.Factory
 {
+    /**
+     * Default empty factory.
+     */
+    public DenseFloat32ArrayFactory()
+    {
+    }
+    
     @Override
     public Float32Array create(int... dims)
     {

@@ -9,6 +9,9 @@ import net.sci.array.numeric.Float32Array;
 import net.sci.util.MathUtils;
 
 /**
+ * Implementation for {@code Float32Array} of any dimensionality that stores
+ * data in a linear array of floats.
+ * 
  * @author dlegland
  *
  */

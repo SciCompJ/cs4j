@@ -28,13 +28,16 @@ public class FloatBufferFloat32Array2D extends Float32Array2D
 	// Constructors
 
 	/**
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param size1
-	 *            the size of the array along the second dimension
-	 * @param buffer
-	 *            the buffer containing the values
-	 */
+     * Creates a new array with the specified size, using the specified instance
+     * of {@code FloatBuffer} to store the data.
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param buffer
+     *            the buffer containing the values
+     */
 	public FloatBufferFloat32Array2D(int size0, int size1, FloatBuffer buffer)
 	{
 		super(size0, size1);

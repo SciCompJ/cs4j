@@ -65,6 +65,8 @@ public class BufferedInt16Array1D extends Int16Array1D
 	// Constructors
 
 	/**
+     * Creates a new empty array with the specified size.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 */
@@ -75,6 +77,9 @@ public class BufferedInt16Array1D extends Int16Array1D
 	}
 
 	/**
+     * Creates a new array with the specified size, using the specified buffer
+     * to store the data.
+     * 
 	 * 
 	 * @param size0
 	 *            the size of the array along the first dimension

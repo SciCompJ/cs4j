@@ -19,6 +19,13 @@ import net.sci.util.MathUtils;
  */
 public class DenseUInt8ArrayFactory extends AlgoStub implements UInt8Array.Factory
 {
+    /**
+     * Default empty factory.
+     */
+    public DenseUInt8ArrayFactory()
+    {
+    }
+    
     @Override
     public UInt8Array create(int... dims)
     {

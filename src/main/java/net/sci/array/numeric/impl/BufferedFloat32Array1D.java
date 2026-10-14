@@ -65,6 +65,8 @@ public class BufferedFloat32Array1D extends Float32Array1D
 	// Constructors
 
 	/**
+	 * Creates a new empty array with the specified size.
+	 * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 */
@@ -75,12 +77,15 @@ public class BufferedFloat32Array1D extends Float32Array1D
 	}
 
 	/**
-	 * 
-	 * @param size0
-	 *            the size of the array along the first dimension
-	 * @param buffer
-	 *            the buffer containing the values
-	 */
+     * Creates a new array with the specified size, using the specified buffer
+     * to store the data.
+     * 
+     * 
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param buffer
+     *            the buffer containing the values
+     */
 	public BufferedFloat32Array1D(int size0, float[] buffer)
 	{
 		super(size0);

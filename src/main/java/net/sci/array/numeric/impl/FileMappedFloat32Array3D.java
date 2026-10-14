@@ -65,11 +65,49 @@ public class FileMappedFloat32Array3D extends Float32Array3D
     // =============================================================
     // Constructor
     
+    /**
+     * Creates a new instance of {@code Float32Array3D} that maps data to the
+     * specified file location, and using the default byte order. Assumes that
+     * data are provided contiguously: each slice follows the previous one
+     * without any data in between.
+     * 
+     * @param filePath
+     *            the name of the file containing binary data
+     * @param offset
+     *            the offsets corresponding to the beginning of the first slice
+     *            of data.
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     */
     public FileMappedFloat32Array3D(String filePath, long offset, int size0, int size1, int size2)
     {
         this(filePath, offset, size0, size1, size2, ByteOrder.BIG_ENDIAN);
     }
 
+    /**
+     * Creates a new instance of {@code Float32Array3D} that maps data to the
+     * specified file location. Assumes that data are provided contiguously:
+     * each slice follows the previous one without any data in between.
+     * 
+     * @param filePath
+     *            the name of the file containing binary data
+     * @param offset
+     *            the offsets corresponding to the beginning of the first slice
+     *            of data.
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @param byteOrder
+     *            the byte order used to decode {@code float} values from the
+     *            input byte stream.
+     */
     public FileMappedFloat32Array3D(String filePath, long offset, int size0, int size1, int size2, ByteOrder byteOrder)
     {
         super(size0, size1, size2);
@@ -86,6 +124,25 @@ public class FileMappedFloat32Array3D extends Float32Array3D
         initializeSliceData(byteOrder);
     }
 
+    /**
+     * Creates a new instance of {@code Float32Array3D} that maps data to the
+     * specified file location.
+     * 
+     * @param filePath
+     *            the name of the file containing binary data
+     * @param offsets
+     *            the series of offsets corresponding to the beginning of each
+     *            slice of data
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     * @param byteOrder
+     *            the byte order used to decode {@code float} values from the
+     *            input byte stream.
+     */
     public FileMappedFloat32Array3D(String filePath, long[] offsets, int size0, int size1, int size2, ByteOrder byteOrder)
     {
         super(size0, size1, size2);
@@ -166,6 +223,7 @@ public class FileMappedFloat32Array3D extends Float32Array3D
      * Closes the underlying input stream.
      * 
      * @throws IOException
+     *             if the inner input stream can not be closed
      */
     public void close() throws IOException
     {
@@ -179,6 +237,7 @@ public class FileMappedFloat32Array3D extends Float32Array3D
             this.raf = null;
         }
     }
+    
     
     // =============================================================
     // Implementation of the Float32Array3D interface

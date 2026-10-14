@@ -62,6 +62,23 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
     // =============================================================
     // Constructor
     
+    /**
+     * Creates a new instance of {@code UInt8Array3D} that maps data to the
+     * specified file location. Assumes that data are provided contiguously:
+     * each slice follows the previous one without any data in between.
+     * 
+     * @param filePath
+     *            the name of the file containing binary data
+     * @param offset
+     *            the offsets corresponding to the beginning of the first slice
+     *            of data.
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     */
     public FileMappedUInt8Array3D(String filePath, long offset, int size0, int size1, int size2)
     {
         super(size0, size1, size2);
@@ -81,6 +98,22 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
         this.currentSlice = UInt8Array2D.wrap(this.byteArray, size0, size1);
     }
 
+    /**
+     * Creates a new instance of {@code UInt8Array3D} that maps data to the
+     * specified file location.
+     * 
+     * @param filePath
+     *            the name of the file containing binary data
+     * @param offsets
+     *            the series of offsets corresponding to the beginning of each
+     *            slice of data
+     * @param size0
+     *            the size of the array along the first dimension
+     * @param size1
+     *            the size of the array along the second dimension
+     * @param size2
+     *            the size of the array along the third dimension
+     */
     public FileMappedUInt8Array3D(String filePath, long[] offsets, int size0, int size1, int size2)
     {
         super(size0, size1, size2);
@@ -147,6 +180,7 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
      * Closes the underlying input stream.
      * 
      * @throws IOException
+     *             if the inner input stream could not be closed
      */
     public void close() throws IOException
     {
@@ -160,6 +194,7 @@ public class FileMappedUInt8Array3D extends UInt8Array3D
             this.raf = null;
         }
     }
+    
     
     // =============================================================
     // Implementation of the UInt8Array3D interface

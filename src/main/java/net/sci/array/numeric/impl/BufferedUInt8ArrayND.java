@@ -9,6 +9,9 @@ import net.sci.array.numeric.UInt8Array;
 import net.sci.util.MathUtils;
 
 /**
+ * Implementation for {@code UInt8Array} of any dimensionality that stores
+ * data in a linear array of byte.
+ * 
  * @author dlegland
  *
  */
@@ -24,6 +27,8 @@ public class BufferedUInt8ArrayND extends ArrayND<UInt8> implements UInt8Array
 	// Constructors
 
 	/**
+     * Creates a new empty array with the specified size.
+     * 
 	 * @param sizes the dimensions of this array
 	 */
 	public BufferedUInt8ArrayND(int[] sizes)
@@ -42,7 +47,9 @@ public class BufferedUInt8ArrayND extends ArrayND<UInt8> implements UInt8Array
 	}
 
 	/**
-	 * Initialize a new multidimensional array, using the specified buffer.
+     * Creates a new array with the specified size, using the specified buffer
+     * to store the data.
+     * 
 	 * 
 	 * @param sizes
 	 *            the dimensions of the array

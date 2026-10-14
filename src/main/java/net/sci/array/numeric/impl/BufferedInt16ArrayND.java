@@ -9,6 +9,9 @@ import net.sci.array.numeric.Int16Array;
 import net.sci.util.MathUtils;
 
 /**
+ * Implementation for {@code Int16Array} of any dimensionality that stores
+ * data in a linear array of short.
+ * 
  * @author dlegland
  *
  */
@@ -24,6 +27,8 @@ public class BufferedInt16ArrayND extends ArrayND<Int16> implements Int16Array
 	// Constructors
 
 	/**
+     * Creates a new empty array with the specified size.
+     * 
 	 * @param sizes the dimensions of this array
 	 */
 	public BufferedInt16ArrayND(int[] sizes)
@@ -42,6 +47,9 @@ public class BufferedInt16ArrayND extends ArrayND<Int16> implements Int16Array
 	}
 
 	/**
+     * Creates a new array with the specified size, using the specified buffer
+     * to store the data.
+     * 
 	 * Initialize a new multidimensional array, using the specified buffer.
 	 * 
 	 * @param sizes
@@ -64,11 +72,26 @@ public class BufferedInt16ArrayND extends ArrayND<Int16> implements Int16Array
 	// =============================================================
 	// New specific methods
 	
+	/**
+     * Returns the integer value at the specified position.
+     * 
+     * @param i
+     *            the position index within the array
+     * @return the value at the specified position
+     */
 	public int getInt(int i)
 	{
 		return buffer[i];
 	}
 	
+    /**
+     * Changes the integer value at the specified position.
+     * 
+     * @param i
+     *            the position index within the array
+     * @param value
+     *            the new value at the specified position
+     */
 	public void setInt(int i, int value)
 	{
 		buffer[i] = (short) Int16.clamp(value);

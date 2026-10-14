@@ -65,6 +65,8 @@ public class BufferedUInt8Array1D extends UInt8Array1D
 	// Constructors
 
 	/**
+     * Creates a new empty array with the specified size.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 */
@@ -75,7 +77,9 @@ public class BufferedUInt8Array1D extends UInt8Array1D
 	}
 
 	/**
-	 * 
+     * Creates a new array with the specified size, using the specified buffer
+     * to store the data.
+     * 
 	 * @param size0
 	 *            the size of the array along the first dimension
 	 * @param buffer

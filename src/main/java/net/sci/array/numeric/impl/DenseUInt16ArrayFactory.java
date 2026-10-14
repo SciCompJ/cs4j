@@ -19,6 +19,13 @@ import net.sci.util.MathUtils;
  */
 public class DenseUInt16ArrayFactory extends AlgoStub implements UInt16Array.Factory
 {
+    /**
+     * Default empty factory.
+     */
+    public DenseUInt16ArrayFactory()
+    {
+    }
+    
     @Override
     public UInt16Array create(int... dims)
     {

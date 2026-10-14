@@ -19,6 +19,13 @@ import net.sci.util.MathUtils;
  */
 public class DenseFloat64ArrayFactory extends AlgoStub implements Float64Array.Factory
 {
+    /**
+     * Default empty factory.
+     */
+    public DenseFloat64ArrayFactory()
+    {
+    }
+    
     @Override
     public Float64Array create(int... dims)
     {

@@ -9,6 +9,9 @@ import net.sci.array.numeric.UInt16Array;
 import net.sci.util.MathUtils;
 
 /**
+ * Implementation for {@code UInt16Array} of any dimensionality that stores
+ * data in a linear array of short.
+ * 
  * @author dlegland
  *
  */
@@ -24,6 +27,8 @@ public class BufferedUInt16ArrayND extends ArrayND<UInt16> implements UInt16Arra
 	// Constructors
 
 	/**
+     * Creates a new empty array with the specified size.
+     * 
 	 * @param sizes the dimensions of this array
 	 */
 	public BufferedUInt16ArrayND(int[] sizes)
@@ -42,8 +47,9 @@ public class BufferedUInt16ArrayND extends ArrayND<UInt16> implements UInt16Arra
 	}
 
 	/**
-	 * Initialize a new multidimensional array, using the specified buffer.
-	 * 
+     * Creates a new array with the specified size, using the specified buffer
+     * to store the data.
+     * 
 	 * @param sizes
 	 *            the dimensions of the array
 	 * @param buffer
