@@ -6,6 +6,11 @@ package net.sci.array.binary;
 /**
  * A one-dimensional interval of integers, defined by its left and right bounds.
  * 
+ * {@code Run} is used as base element of a {@code BinaryRow}. It is immutable
+ * by design.
+ * 
+ * @see BinaryRow
+ * 
  * @author dlegland
  *
  */
@@ -63,15 +68,6 @@ public class Run implements Comparable<Run>
         return pos >= left && pos <= right;
     }
     
-    /**
-     * Duplicates this run.
-     * @return a copy of this run.
-     */
-    public Run duplicate()
-    {
-        return new Run(this.left, this.right);
-    }
-
     /**
      * Compares solely on the start position value.
      */

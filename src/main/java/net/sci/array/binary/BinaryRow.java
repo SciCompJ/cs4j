@@ -960,7 +960,7 @@ public class BinaryRow implements Iterable<Run>
         BinaryRow row = new BinaryRow();
         for (Run run : this.runs.values())
         {
-            row.runs.put(run.left, run.duplicate());
+            row.runs.put(run.left, run);
         }
         return row;
     }
