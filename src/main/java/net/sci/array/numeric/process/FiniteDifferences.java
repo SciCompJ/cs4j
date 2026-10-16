@@ -10,6 +10,9 @@ import net.sci.array.Arrays;
 import net.sci.array.numeric.ScalarArray;
 
 /**
+ * Computes the derivative in a specific direction using central finite
+ * differentiation.
+ * 
  * @author dlegland
  *
  */

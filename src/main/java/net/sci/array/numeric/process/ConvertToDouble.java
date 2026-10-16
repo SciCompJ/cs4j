@@ -12,6 +12,8 @@ import net.sci.array.numeric.ScalarArray;
 
 
 /**
+ * Converts a scalar array into an array of floating-point values.
+ * 
  * @author dlegland
  *
  */
@@ -34,6 +36,16 @@ public class ConvertToDouble extends AlgoStub implements ArrayOperator
         return result;
     }
 
+	/**
+     * Converts a scalar array into an array of floating-point values, using the
+     * second input argument as output for the conversion.
+     * 
+     * @param source
+     *            the array to convert
+     * @param target
+     *            the output array
+     * @return a reference to the output array
+     */
     public ScalarArray<?> convert(ScalarArray<?> source, ScalarArray<?> target)
     {
         // check inputs

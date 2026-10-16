@@ -95,6 +95,12 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         throw new IllegalArgumentException("Array must contain instances of Numeric");
     }
     
+    /**
+     * Wrapper class for additive inverse on an array of Numeric.
+     * 
+     * @param <N>
+     *            the type of {@code Numeric} within the array.
+     */
     public static class NumericView<N extends Numeric<N>> extends ArrayWrapperStub<N> implements NumericArray<N>
     {
         NumericArray<N> array;
@@ -136,6 +142,12 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         }
     }
     
+    /**
+     * Wrapper class for additive inverse on an array of Scalar.
+     * 
+     * @param <S>
+     *            the type of {@code Scalar} within the array.
+     */
     public static class ScalarView<S extends Scalar<S>> extends ArrayWrapperStub<S> implements ScalarArray<S>
     {
         ScalarArray<S> array;
@@ -189,6 +201,12 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
         }
     }
     
+    /**
+     * Wrapper class for additive inverse on an array of Int.
+     * 
+     * @param <I>
+     *            the type of {@code Int} within the array.
+     */
     public static class IntView<I extends Int<I>> extends ArrayWrapperStub<Int32> implements Int32Array
     {
         IntArray<I> array;

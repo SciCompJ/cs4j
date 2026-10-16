@@ -44,8 +44,8 @@ public class ArrayMath
      * @param value
      *            the value to add
      * @param result
-     *            the output array
-     * @return the result of the element-wise addition
+     *            the array used to store the computation result
+     * @return the reference to the result array.
      */
     public static final ScalarArray<? extends Scalar<?>> add(
             ScalarArray<? extends Scalar<?>> array, double value,
@@ -78,15 +78,17 @@ public class ArrayMath
     }
     
 	/**
-	 * Subtracts the specified value to each element of the input array, and returns
-	 * the result in a new array.
-	 * 
-	 * @param array
-	 *            the input array
-	 * @param value
-	 *            the value to subtract
-     * @return the result of the element-wise subtraction
-	 */
+     * Subtracts the specified value to each element of the input array, and
+     * returns the result in a new array.
+     * 
+     * @param array
+     *            the input array
+     * @param value
+     *            the value to subtract
+     * @param result
+     *            the array used to store the computation result
+     * @return the reference to the result array.
+     */
     public static final ScalarArray<? extends Scalar<?>> subtract(
             ScalarArray<? extends Scalar<?>> array, double value,
             ScalarArray<? extends Scalar<?>> result)
@@ -124,9 +126,13 @@ public class ArrayMath
      *            the input array
      * @param value
      *            the value to multiply by
-     * @return the result of the element-wise multiplication
+     * @param result
+     *            the array used to store the computation result
+     * @return the reference to the result array.
      */
-    public static final ScalarArray<? extends Scalar<?>> multiply(ScalarArray<? extends Scalar<?>> array, double value, ScalarArray<? extends Scalar<?>> result)
+    public static final ScalarArray<? extends Scalar<?>> multiply(
+            ScalarArray<? extends Scalar<?>> array, double value,
+            ScalarArray<? extends Scalar<?>> result)
     {
         // iterate over elements of each array
         for (int[] pos : result.positions())
@@ -161,9 +167,13 @@ public class ArrayMath
 	 *            the input array
 	 * @param value
 	 *            the value to divide by
-	 * @return the result of the element-wise division
+     * @param result
+     *            the array used to store the computation result
+     * @return the reference to the result array.
 	 */
-	public static final ScalarArray<? extends Scalar<?>> divide(ScalarArray<? extends Scalar<?>> array, double value, ScalarArray<? extends Scalar<?>> result)
+    public static final ScalarArray<? extends Scalar<?>> divide(
+            ScalarArray<? extends Scalar<?>> array, double value,
+            ScalarArray<? extends Scalar<?>> result)
 	{
         // iterate over elements of each array
         for (int[] pos : result.positions())
@@ -198,8 +208,8 @@ public class ArrayMath
      * @param value
      *            the value to compare with
      * @param result
-     *            the output array
-     * @return the result of the element-wise comparison
+     *            the array used to store the computation result
+     * @return the reference to the result array.
      */
     public static final ScalarArray<? extends Scalar<?>> min(
             ScalarArray<? extends Scalar<?>> array, double value,
@@ -258,6 +268,19 @@ public class ArrayMath
     // =============================================================
     // Operations involving two arrays
 
+    /**
+     * Computes element-wise addition of the elements between two arrays, and
+     * uses the third array to store the results. All arrays must have the same
+     * size.
+     * 
+     * @param array1
+     *            the first array containing element to add
+     * @param array2
+     *            the second array containing element to add
+     * @param output
+     *            the array used to store the results
+     * @return the reference to the output array
+     */
     public static final ScalarArray<? extends Scalar<?>> add(
             ScalarArray<? extends Scalar<?>> array1,
             ScalarArray<? extends Scalar<?>> array2,
@@ -269,6 +292,19 @@ public class ArrayMath
         return output;
     }
     
+    /**
+     * Computes element-wise subtraction of the elements between two arrays, and
+     * uses the third array to store the results. All arrays must have the same
+     * size.
+     * 
+     * @param array1
+     *            the first array containing element to subtract
+     * @param array2
+     *            the second array containing element to subtract
+     * @param output
+     *            the array used to store the results
+     * @return the reference to the output array
+     */
     public static final ScalarArray<? extends Scalar<?>> subtract(
             ScalarArray<? extends Scalar<?>> array1,
             ScalarArray<? extends Scalar<?>> array2,
@@ -280,6 +316,19 @@ public class ArrayMath
         return output;
     }
     
+    /**
+     * Computes element-wise multiplication of the elements between two arrays,
+     * and uses the third array to store the results. All arrays must have the
+     * same size.
+     * 
+     * @param array1
+     *            the first array containing element to multiply
+     * @param array2
+     *            the second array containing element to multiply
+     * @param output
+     *            the array used to store the results
+     * @return the reference to the output array
+     */
     public static final ScalarArray<? extends Scalar<?>> multiply(
             ScalarArray<? extends Scalar<?>> array1,
             ScalarArray<? extends Scalar<?>> array2,
@@ -291,6 +340,19 @@ public class ArrayMath
         return output;
     }
     
+    /**
+     * Computes element-wise division of the elements between two arrays, and
+     * uses the third array to store the results. All arrays must have the same
+     * size.
+     * 
+     * @param array1
+     *            the first array containing element to divide
+     * @param array2
+     *            the second array containing element to divide
+     * @param output
+     *            the array used to store the results
+     * @return the reference to the output array
+     */
     public static final ScalarArray<? extends Scalar<?>> divide(
             ScalarArray<? extends Scalar<?>> array1,
             ScalarArray<? extends Scalar<?>> array2,
@@ -302,6 +364,18 @@ public class ArrayMath
         return output;
     }
     
+    /**
+     * Computes element-wise modulo of the elements between two arrays, and uses
+     * the third array to store the results. All arrays must have the same size.
+     * 
+     * @param array1
+     *            the array containing first value of modulo
+     * @param array2
+     *            the array containing second value of modulo
+     * @param output
+     *            the array used to store the results
+     * @return the reference to the output array
+     */
     public static final ScalarArray<? extends Scalar<?>> modulo(
             ScalarArray<? extends Scalar<?>> array1,
             ScalarArray<? extends Scalar<?>> array2,
@@ -313,6 +387,18 @@ public class ArrayMath
         return output;
     }
     
+    /**
+     * Computes element-wise minimum of the elements between two arrays, and uses
+     * the third array to store the results. All arrays must have the same size.
+     * 
+     * @param array1
+     *            the array containing first value to compare
+     * @param array2
+     *            the array containing second value to compare
+     * @param output
+     *            the array used to store the results
+     * @return the reference to the output array
+     */
     public static final ScalarArray<? extends Scalar<?>> min(
             ScalarArray<? extends Scalar<?>> array1,
             ScalarArray<? extends Scalar<?>> array2,
@@ -324,6 +410,18 @@ public class ArrayMath
         return output;
     }
     
+    /**
+     * Computes element-wise maximum of the elements between two arrays, and uses
+     * the third array to store the results. All arrays must have the same size.
+     * 
+     * @param array1
+     *            the array containing first value to compare
+     * @param array2
+     *            the array containing second value to compare
+     * @param output
+     *            the array used to store the results
+     * @return the reference to the output array
+     */
     public static final ScalarArray<? extends Scalar<?>> max(
             ScalarArray<? extends Scalar<?>> array1,
             ScalarArray<? extends Scalar<?>> array2,

@@ -54,6 +54,13 @@ public class AddValue extends AlgoStub implements ScalarArrayOperator
         return res;
     }
     
+    /**
+     * Wrapper class for adding a scalar value to each element of a scalar
+     * array.
+     * 
+     * @param <S>
+     *            the type of {@code Scalar} within the array.
+     */
     public class View <S extends Scalar<S>> extends ArrayWrapperStub<S> implements ScalarArray<S>
     {
         ScalarArray<S> array;
