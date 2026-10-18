@@ -18,6 +18,15 @@ import net.sci.array.numeric.ScalarArray;
  */
 public class MedianProjection extends ProjectionOperator
 {
+    /**
+     * Computes the median value from the specified array of values, by sorting
+     * the values within the array.
+     * The input array of values is modified during processing.
+     * 
+     * @param values
+     *            the array of values.
+     * @return the median of the values within the array.
+     */
     public static final double median(double[] values)
     {
         Arrays.sort(values);

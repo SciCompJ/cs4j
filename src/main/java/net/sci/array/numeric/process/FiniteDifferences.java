@@ -112,6 +112,15 @@ public class FiniteDifferences extends AlgoStub implements ArrayOperator
         return target;
     }
 
+    /**
+     * Processes an array of scalar values, using the second argument to store
+     * the result.
+     * 
+     * @param source
+     *            the array to process
+     * @param target
+     *            the array used to store result values
+     */
     public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
     {
         // check dimensionality of inputs

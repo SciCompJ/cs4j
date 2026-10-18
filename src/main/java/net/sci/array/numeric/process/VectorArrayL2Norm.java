@@ -19,6 +19,13 @@ import net.sci.array.numeric.VectorArray;
 public class VectorArrayL2Norm extends AlgoStub implements ArrayOperator
 {
     /**
+     * Default empty constructor.
+     */
+    public VectorArrayL2Norm()
+    {
+    }
+    
+    /**
      * The factory used to create output array.
      */
     protected ScalarArray.Factory<?> factory = Float32Array.defaultFactory;

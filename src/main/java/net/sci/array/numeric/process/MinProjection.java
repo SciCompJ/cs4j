@@ -6,8 +6,6 @@ package net.sci.array.numeric.process;
 import java.util.Comparator;
 
 import net.sci.array.Array;
-import net.sci.array.Array2D;
-import net.sci.array.impl.GenericArray2D;
 import net.sci.array.numeric.ScalarArray;
 
 /**
@@ -15,6 +13,8 @@ import net.sci.array.numeric.ScalarArray;
  * 
  * Returns an array with the same number of dimension of the input. The size of
  * the output along the projection dimension is equal to 1.
+ * 
+ * @see MaxProjection
  * 
  * @author dlegland
  *
@@ -40,6 +40,17 @@ public class MinProjection extends ProjectionOperator
     // =============================================================
     // New methods
     
+    /**
+     * Processes the specified array, by providing the comparator to use.
+     * 
+     * @param <C>
+     *            the type of elements within the array
+     * @param array
+     *            the array to process
+     * @param comparator
+     *            the comparator of elements
+     * @return the min-projection along the specified dimension
+     */
     public <C> Array<C> process(Array<C> array, Comparator<C> comparator)
     {
         int[] dims = computeOutputArrayDimensions(array);
@@ -48,6 +59,19 @@ public class MinProjection extends ProjectionOperator
         return res;
     }
     
+    /**
+     * Processes the specified input array, using the second argument to store
+     * the result.
+     * 
+     * @param <C>
+     *            the type of elements within the array
+     * @param source
+     *            the array to process
+     * @param target
+     *            the array used to store the result
+     * @param comparator
+     *            the comparator of elements
+     */
     public <C> void process(Array<? extends C> source, Array<? super C> target, Comparator<C> comparator)
     {
         // create position pointer for source image
@@ -84,6 +108,7 @@ public class MinProjection extends ProjectionOperator
     // =============================================================
     // Implementation of ProjectionOperator interface
     
+    @Override
     public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
     {
         // create position pointer for source image
@@ -110,20 +135,5 @@ public class MinProjection extends ProjectionOperator
             // copy value of selected position
             target.setValue(pos, minValue);
         }
-    }
-    
-    public final static void main(String... args)
-    {
-        String[] digits = {"A", "B", "C", "D", "E", "F"};
-        Array2D<String> array = GenericArray2D.create(6, 4, "");
-        array.fill((x,y) -> digits[y] + digits[x]);
-        System.out.println("input:");
-        array.printContent(System.out);
-        
-        MinProjection proj = new MinProjection(1);
-        Array<String> res = proj.process(array, Comparator.comparing((String x) -> x));
-        
-        System.out.println("output:");
-        Array2D.wrap(res).printContent(System.out);
     }
 }

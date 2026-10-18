@@ -30,6 +30,13 @@ import net.sci.array.numeric.UInt8Array3D;
  */
 public class ConvertToUInt8 extends AlgoStub implements ArrayOperator
 {
+    /**
+     * Default empty constructor.
+     */
+    public ConvertToUInt8()
+    {
+    }
+    
     @Override
     public <T> UInt8Array process(Array<T> array)
     {

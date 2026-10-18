@@ -65,6 +65,12 @@ public class AddValue extends AlgoStub implements ScalarArrayOperator
     {
         ScalarArray<S> array;
         
+        /**
+         * Default constructor from the array to wrap.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
         public View(ScalarArray<S> array)
         {
             super(array);

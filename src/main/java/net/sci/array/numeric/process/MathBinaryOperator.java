@@ -21,8 +21,8 @@ import net.sci.array.numeric.VectorArray;
  * 
  * The result scalar array can also be specified. 
  * 
- * Example
- * <pre>{@code
+ * Example:
+ * {@snippet :
     // create operator to add values from two arrays 
     MathBinaryOperator op = new MathBinaryOperator((a,b) -> a + b);
     // initialize demo arrays
@@ -32,8 +32,8 @@ import net.sci.array.numeric.VectorArray;
     array2.fillValues((x,y) -> (double) y * 10);
     // Apply operator and display result
     UInt8Array2D res = (UInt8Array2D) op.process(array1, array2);
-    res.print(System.out);
- * }</pre>
+    res.printContent(System.out);
+ * }
  * 
  * @author dlegland
  *
@@ -46,14 +46,14 @@ public class MathBinaryOperator extends AlgoStub
     BiFunction<Double,Double,Double> fun;
     
     /**
-     * Creates a new operator from a function that associates a double to a pair
-     * of double.
+     * Creates a new operator from a function that associates a floating-point
+     * value to a pair of floating-point values.
      * 
-     * Example:
-     * 
-     * <pre>
-     * {@code MathBinaryOperator op = new MathBinaryOperator((a,b) -> a + b);
-     * }</pre>
+     * Example that create an addition operator between two arrays:
+     * {@snippet :
+     * MathBinaryOperator addOp = new MathBinaryOperator((a, b) -> a + b);
+     * Array res = addOp.process(scalarArray1, scalarArray2);
+     * }
      * 
      * @param fun
      *            the function defining this operator.
@@ -63,11 +63,33 @@ public class MathBinaryOperator extends AlgoStub
         this.fun = fun;
     }
     
+    /**
+     * Applies the element-wise operator to each pair of elements from the two
+     * input arrays.
+     * 
+     * @param array1
+     *            the first array to get elements from
+     * @param array2
+     *            the second array to get elements from
+     * @return the array containing the result of element-wise operator.
+     */
     public Array<?> process(Array<?> array1, Array<?> array2)
     {
         return process(array1, array2, array1.newInstance(array1.size()));
     }
     
+    /**
+     * Applies the element-wise operator to each pair of elements from the two
+     * input arrays, and stores the result in the specified output array.
+     * 
+     * @param array1
+     *            the first array to get elements from
+     * @param array2
+     *            the second array to get elements from
+     * @param output
+     *            the array to store operation results
+     * @return the array containing the result of element-wise operator.
+     */
     public Array<?> process(Array<?> array1, Array<?> array2, Array<?> output)
     {
         checkSameSize(array1, array2);
@@ -75,11 +97,10 @@ public class MathBinaryOperator extends AlgoStub
         int nd = array1.dimensionality();
         
         // first dispatch processing depending on element class of first array
-        Class<?> elementClass1 = array1.elementClass();
-        if (Scalar.class.isAssignableFrom(elementClass1))
+        if (array1.elementInstanceOf(Scalar.class))
         {
             // check compatibility of the other arrays
-            if (!Scalar.class.isAssignableFrom(array2.elementClass()) || !Scalar.class.isAssignableFrom(output.elementClass())) 
+            if (!array2.elementInstanceOf(Scalar.class) || !output.elementInstanceOf(Scalar.class)) 
             {
                 throw new RuntimeException(
                         "If first array contains scalar values, the second array must contain scalar values as well");
@@ -93,6 +114,7 @@ public class MathBinaryOperator extends AlgoStub
             @SuppressWarnings({ "unchecked", "rawtypes" })
             ScalarArray<?> res = ScalarArray.wrap((Array<? extends Scalar>) output);
             
+            // switch to specialized methods that also fire algorithm events
             return switch (nd)
             {
                 case 2 -> processScalar2d(
@@ -111,7 +133,7 @@ public class MathBinaryOperator extends AlgoStub
             };
             
         }
-        else if (Vector.class.isAssignableFrom(elementClass1))
+        else if (array1.elementInstanceOf(Vector.class))
         {
             // check compatibility of the other arrays
             if (!Vector.class.isAssignableFrom(array2.elementClass()) || !Vector.class.isAssignableFrom(output.elementClass())) 
@@ -133,39 +155,46 @@ public class MathBinaryOperator extends AlgoStub
         }
         else
         {
-            throw new RuntimeException("Not implemented for arrays with element class: " + elementClass1.getName());
+            throw new RuntimeException("Not implemented for arrays with element class: " + array1.elementClass().getName());
         }
     }
     
+    /**
+     * Applies the element-wise operator to each pair of elements from the two
+     * input arrays.
+     * 
+     * @param array1
+     *            the first array to get elements from
+     * @param array2
+     *            the second array to get elements from
+     * @return the array containing the result of element-wise operator.
+     */
     public ScalarArray<?> processScalar(ScalarArray<?> array1, ScalarArray<?> array2)
     {
         checkSameSize(array1, array2);
-        
-        // dispatch processing according to dimension,
-        // making it possible to track progress
-        if (array1.dimensionality() == 2)
-        {
-            ScalarArray2D<?> res = ScalarArray2D.wrapScalar2d(array1.newInstance(array1.size()));
-            return processScalar2d(ScalarArray2D.wrapScalar2d(array1), ScalarArray2D.wrapScalar2d(array2), res);
-        }
-        else if (array1.dimensionality() == 3)
-        {
-            ScalarArray3D<?> res = ScalarArray3D.wrapScalar3d(array1.newInstance(array1.size()));
-            return processScalar3d(ScalarArray3D.wrapScalar3d(array1), ScalarArray3D.wrapScalar3d(array2), res);
-        }
-        else
-        {
-            ScalarArray<?> res = array1.newInstance(array1.size());
-            res.fillValues(pos -> fun.apply(array1.getValue(pos), array2.getValue(pos)));
-            return res;
-        }
+        return processScalar(array1, array2, array1.newInstance(array1.size()));
     }
     
+    /**
+     * Applies the element-wise operator to each pair of elements from the two
+     * input scalar arrays, and stores the result in the specified output scalar
+     * array.
+     * 
+     * @param array1
+     *            the first array to get elements from
+     * @param array2
+     *            the second array to get elements from
+     * @param output
+     *            the array to store operation results
+     * @return the array containing the result of element-wise operator.
+     */
     public ScalarArray<?> processScalar(ScalarArray<?> array1, ScalarArray<?> array2, ScalarArray<?> output)
     {
         checkSameSize(array1, array2);
         checkSameSize(array1, output);
         
+        // dispatch processing according to dimension,
+        // making it possible to track progress
         return switch (array1.dimensionality())
         {
             case 2 -> processScalar2d(ScalarArray2D.wrapScalar2d(array1), ScalarArray2D.wrapScalar2d(array2), ScalarArray2D.wrapScalar2d(output));
@@ -216,6 +245,19 @@ public class MathBinaryOperator extends AlgoStub
         return res;
     }
     
+    /**
+     * Applies the element-wise operator to each pair of elements from the two
+     * input vector arrays, and stores the result in the specified output vector
+     * array.
+     * 
+     * @param array1
+     *            the first array to get elements from
+     * @param array2
+     *            the second array to get elements from
+     * @param output
+     *            the array to store operation results
+     * @return the array containing the result of element-wise operator.
+     */
     public VectorArray<?,?> processVector(VectorArray<?,?> array1, VectorArray<?,?> array2, VectorArray<?,?> output)
     {
         checkSameSize(array1, array2);

@@ -19,6 +19,13 @@ import net.sci.array.numeric.ScalarArray;
  */
 public class ConvertToDouble extends AlgoStub implements ArrayOperator
 {
+    /**
+     * Default empty constructor.
+     */
+    public ConvertToDouble()
+    {
+    }
+    
 	@Override
     public <T> ScalarArray<?> process(Array<T> array)
     {

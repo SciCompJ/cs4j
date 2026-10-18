@@ -19,6 +19,14 @@ public class KeepValueRange extends AlgoStub implements ScalarArrayOperator
     double minValue;
     double maxValue;
     
+    /**
+     * Creates an operator that keeps values within the specified range.
+     * 
+     * @param minValue
+     *            the lower bound of the value range
+     * @param maxValue
+     *            the upper bound of the value range
+     */
     public KeepValueRange(double minValue, double maxValue)
     {
         this.minValue = minValue;
@@ -35,27 +43,31 @@ public class KeepValueRange extends AlgoStub implements ScalarArrayOperator
      */
     public void processScalar(ScalarArray<?> input, ScalarArray<?> output)
     {
+        // check input
         int nd = input.dimensionality();
         if (output.dimensionality() != nd)
         {
             throw new RuntimeException("Input and output arrays must have same dimensionality");
         }
         
-        if (nd == 2)
+        // dispatch according to dimensionality
+        switch (nd)
         {
-            processScalar2d(ScalarArray2D.wrapScalar2d(input), ScalarArray2D.wrapScalar2d(output));
-        }
-        else if (nd == 3)
-        {
-            processScalar3d(ScalarArray3D.wrapScalar3d(input), ScalarArray3D.wrapScalar3d(output));
-        }
-        else
-        {
-            processScalarNd(input, output);
+            case 2 -> processScalar2d(ScalarArray2D.wrapScalar2d(input), ScalarArray2D.wrapScalar2d(output));
+            case 3 -> processScalar3d(ScalarArray3D.wrapScalar3d(input), ScalarArray3D.wrapScalar3d(output));
+            default -> processScalarNd(input, output);
         }
     }
     
-    public void processScalarNd(ScalarArray<?> input, ScalarArray<?> output)
+    /**
+     * Processes an input array and populates the output array.
+     * 
+     * @param input
+     *            the input array
+     * @param output
+     *            the output array
+     */
+    private void processScalarNd(ScalarArray<?> input, ScalarArray<?> output)
     {
         for (int[] pos : output.positions())
         {

@@ -57,11 +57,13 @@ public class Smoothing1D extends AlgoStub implements ArrayOperator
     }
     
     /**
-     * Creates a new operator for computing smoothing of a given size along the specified
-     * dimension.
+     * Creates a new operator for computing smoothing of a given size along the
+     * specified dimension.
      * 
      * @param dim
      *            the dimension to operate on
+     * @param size
+     *            the size of the smoothing window
      */
     // TODO: choose name -> UniformSmoothing1D
     // TODO: same parameter order as in Python?
@@ -97,6 +99,15 @@ public class Smoothing1D extends AlgoStub implements ArrayOperator
         return target;
     }
 
+    /**
+     * Applies smoothing to the first array, using the second array to store the
+     * result.
+     * 
+     * @param source
+     *            the input array to process
+     * @param target
+     *            the array used to store results
+     */
     public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
     {
         // check dimensionality of inputs

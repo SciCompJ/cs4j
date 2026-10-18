@@ -212,7 +212,7 @@ public interface ScalarArray<S extends Scalar<S>> extends NumericArray<S>
     public void setValue(int[] pos, double value);
     
     /**
-     * Returns an <code>Iterable</code> over the (double) values within the
+     * Returns an {@code Iterable} over the (double) values within the
      * array. This allows to query information about the population of values
      * using constructs like the following:
      * 

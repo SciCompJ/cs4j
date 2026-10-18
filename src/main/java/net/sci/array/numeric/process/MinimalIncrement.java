@@ -32,6 +32,13 @@ import net.sci.array.numeric.ScalarArray;
 public class MinimalIncrement extends AlgoStub implements ScalarArrayOperator
 {
     /**
+     * Default empty constructor.
+     */
+    public MinimalIncrement()
+    {
+    }
+    
+    /**
      * Creates an incremented view on the input array. The incremented values
      * are computed only when required, without having to allocate memory for
      * result.
@@ -50,17 +57,17 @@ public class MinimalIncrement extends AlgoStub implements ScalarArrayOperator
     public static final Array<?> createView(Array<?> array)
     {
         // dispatch processing according to type of element contained by array
-        if (Int.class.isAssignableFrom(array.elementClass()))
+        if (array.elementInstanceOf(Int.class))
         {
             return new IntView(IntArray.wrap((Array<? extends Int>) array));
         }
-        else if (Float32.class.isAssignableFrom(array.elementClass()))
+        else if (array.elementInstanceOf(Float32.class))
         {
-            return new Float32View(Float32Array.wrap((Array<Float32>) array));
+            return new Float32View(Float32Array.wrap(array));
         }
-        else if (Float64.class.isAssignableFrom(array.elementClass()))
+        else if (array.elementInstanceOf(Float64.class))
         {
-            return new Float64View(Float64Array.wrap((Array<Float64>) array));
+            return new Float64View(Float64Array.wrap(array));
         }
         else
         {
@@ -105,6 +112,15 @@ public class MinimalIncrement extends AlgoStub implements ScalarArrayOperator
         }
     }
     
+    /**
+     * Specialized method for the processing of {@code IntArray} instances, that
+     * adds the value 1.
+     * 
+     * @param array
+     *            the array to process.
+     * @return an array with the same type, containing values larger that in the
+     *         input array
+     */
     public IntArray<?> processInt(IntArray<?> array)
     {
         IntArray<?> res = array.newInstance(array.size());
@@ -115,6 +131,15 @@ public class MinimalIncrement extends AlgoStub implements ScalarArrayOperator
         return res;
     }
 
+    /**
+     * Specialized method for the processing of {@code Float32Array} instances,
+     * that uses the {@code Math.nextUp(float)} method.
+     * 
+     * @param array
+     *            the array to process.
+     * @return an array with the same type, containing values larger that in the
+     *         input array
+     */
     public Float32Array processFloat32(Float32Array array)
     {
         Float32Array res = array.newInstance(array.size());
@@ -125,6 +150,15 @@ public class MinimalIncrement extends AlgoStub implements ScalarArrayOperator
         return res;
     }
     
+    /**
+     * Specialized method for the processing of {@code Float64Array} instances,
+     * that uses the {@code Math.nextUp(double)} method.
+     * 
+     * @param array
+     *            the array to process.
+     * @return an array with the same type, containing values larger that in the
+     *         input array
+     */
     public Float64Array processFloat64(Float64Array array)
     {
         Float64Array res = array.newInstance(array.size());
@@ -135,9 +169,21 @@ public class MinimalIncrement extends AlgoStub implements ScalarArrayOperator
         return res;
     }
     
-    public static class IntView<I extends Int<I>> extends ArrayWrapperStub<I> implements IntArray<I>
+    /**
+     * Wrapper class for arrays of arrays of {@code Int}.
+     * 
+     * @param <I>
+     *            the type of integer within the array
+     */
+    private static class IntView<I extends Int<I>> extends ArrayWrapperStub<I> implements IntArray<I>
     {
-        public IntView(IntArray<I> array)
+        /**
+         * Creates a new wrapper on the array of int.
+         * 
+         * @param array
+         *            the array to wrap.
+         */
+        protected IntView(IntArray<I> array)
         {
             super(array);
         }
@@ -190,9 +236,12 @@ public class MinimalIncrement extends AlgoStub implements ScalarArrayOperator
         }
     }
     
-    public static class Float32View extends ArrayWrapperStub<Float32> implements Float32Array
+    /**
+     * Wrapper class for arrays of arrays of {@code Float32}.
+     */
+    private static class Float32View extends ArrayWrapperStub<Float32> implements Float32Array
     {
-        protected Float32View(Array<?> array)
+        protected Float32View(Float32Array array)
         {
             super(array);
         }
@@ -210,9 +259,12 @@ public class MinimalIncrement extends AlgoStub implements ScalarArrayOperator
         }
     }
     
-    public static class Float64View extends ArrayWrapperStub<Float64> implements Float64Array
+    /**
+     * Wrapper class for arrays of arrays of {@code Float64}.
+     */
+    private static class Float64View extends ArrayWrapperStub<Float64> implements Float64Array
     {
-        protected Float64View(Array<?> array)
+        protected Float64View(Float64Array array)
         {
             super(array);
         }

@@ -14,6 +14,8 @@ import net.sci.array.numeric.ScalarArray;
  * Returns an array with the same number of dimension of the input. The size of
  * the output along the projection dimension is equal to 1.
  * 
+ * @see MinProjection
+ * 
  * @author dlegland
  *
  */
@@ -38,6 +40,17 @@ public class MaxProjection extends ProjectionOperator
     // =============================================================
     // New methods
     
+    /**
+     * Processes the specified array, by providing the comparator to use.
+     * 
+     * @param <C>
+     *            the type of elements within the array
+     * @param array
+     *            the array to process
+     * @param comparator
+     *            the comparator of elements
+     * @return the max-projection along the specified dimension
+     */
     public <C> Array<C> process(Array<C> array, Comparator<C> comparator)
     {
         int[] dims = computeOutputArrayDimensions(array);
@@ -46,6 +59,19 @@ public class MaxProjection extends ProjectionOperator
         return res;
     }
     
+    /**
+     * Processes the specified input array, using the second argument to store
+     * the result.
+     * 
+     * @param <C>
+     *            the type of elements within the array
+     * @param source
+     *            the array to process
+     * @param target
+     *            the array used to store the result
+     * @param comparator
+     *            the comparator of elements
+     */
     public <C> void process(Array<? extends C> source, Array<? super C> target, Comparator<C> comparator)
     {
         // create position pointer for source image
@@ -82,6 +108,7 @@ public class MaxProjection extends ProjectionOperator
     // =============================================================
     // Implementation of ProjectionOperator interface
     
+    @Override
     public void processScalar(ScalarArray<?> source, ScalarArray<?> target)
     {
         // create position pointer for source image

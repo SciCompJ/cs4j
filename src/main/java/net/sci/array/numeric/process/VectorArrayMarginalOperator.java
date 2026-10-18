@@ -16,6 +16,15 @@ import net.sci.array.numeric.VectorArray;
  */
 public interface VectorArrayMarginalOperator extends ScalarArrayOperator
 {
+    /**
+     * Apply the operator to the specified input array, using the specified
+     * output array to store the result of computation.
+     * 
+     * @param source
+     *            the array to process
+     * @param target
+     *            the array to store computation results
+     */
     public default void processVector(VectorArray<?, ?> source, VectorArray<?, ?> target)
 	{
 		// iterate over channels

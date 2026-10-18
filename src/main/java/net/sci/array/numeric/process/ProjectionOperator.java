@@ -48,6 +48,16 @@ public abstract class ProjectionOperator extends AlgoStub implements ScalarArray
     // =============================================================
     // New methods
     
+    /**
+     * Processes the specified input array of scalar, using the second argument
+     * to store the result, and using the natural comparator on floating point
+     * values.
+     * 
+     * @param source
+     *            the array to process
+     * @param target
+     *            the array used to store the result
+     */
     public abstract void processScalar(ScalarArray<?> source, ScalarArray<?> target);
 
 

@@ -6,7 +6,7 @@ package net.sci.array.numeric.process;
 import net.sci.array.numeric.ScalarArray;
 
 /**
- * Computes maximum intensity projection along a specified dimension.
+ * Computes average intensity projection along a specified dimension.
  * 
  * Returns an array with the same number of dimension of the input. The size of
  * the output along the projection dimension is equal to 1.

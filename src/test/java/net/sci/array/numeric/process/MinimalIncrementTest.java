@@ -12,8 +12,6 @@ import net.sci.array.numeric.Float32Array;
 import net.sci.array.numeric.Float32Array2D;
 import net.sci.array.numeric.Float64Array;
 import net.sci.array.numeric.Float64Array2D;
-import net.sci.array.numeric.IntArray;
-import net.sci.array.numeric.UInt8;
 import net.sci.array.numeric.UInt8Array;
 import net.sci.array.numeric.UInt8Array2D;
 
@@ -45,7 +43,7 @@ public class MinimalIncrementTest
         UInt8Array2D array = UInt8Array2D.create(4, 3);
         array.fillInts((x,y) -> y * 10+x);
         
-        IntArray<UInt8> res = new MinimalIncrement.IntView<UInt8>(array);
+        UInt8Array res = UInt8Array.wrap(MinimalIncrement.createView(array));
         UInt8Array2D res2 = UInt8Array2D.wrap(UInt8Array.wrap(res));
 
         assertTrue(res2.getInt(0, 0) > array.getInt(0, 0));

@@ -24,7 +24,7 @@ public interface NumericArray<N extends Numeric<N>> extends Array<N>
     // static methods
 
     /**
-     * Wraps the elements of specified array into an instance of
+     * Wraps an array containing {@code Numeric} elements into an instance of
      * {@code NumericArray}. If the original array is already an instance of
      * NumericArray, it is returned. Otherwise, a wrapper encapsulating the
      * original array is returned.

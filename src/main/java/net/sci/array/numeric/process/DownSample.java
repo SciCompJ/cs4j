@@ -21,14 +21,29 @@ public class DownSample extends AlgoStub implements ScalarArrayOperator
     int kernelSize;
     double[] coeffs;
     
+    /**
+     * Default empty constructor, using down-sampling by a factor 2.
+     */
     public DownSample()
     {
-        this.factor = 2;
-        init();
+        this(2);
     }
     
+    /**
+     * Constructor that specifies the down-sampling factor. The factor must be a
+     * positive integer greater than 1.
+     * 
+     * @param factor
+     *            the down-sampling factor
+     * @throws IllegalArgumentException
+     *             if down-sampling factor is not greater than 1
+     */
     public DownSample(int factor)
     {
+        if (factor < 2)
+        {
+            throw new IllegalArgumentException("Requires a down sampling factor grater than 1");
+        }
         this.factor = factor;
         init();
     }
@@ -59,20 +74,21 @@ public class DownSample extends AlgoStub implements ScalarArrayOperator
     @Override
     public ScalarArray<?> processScalar(ScalarArray<?> array)
     {
-        if (array.dimensionality() == 2)
+        return switch(array.dimensionality())
         {
-            return processScalar2d(ScalarArray2D.wrapScalar2d(array));
-        }
-        else if (array.dimensionality() == 3)
-        {
-            return processScalar3d(ScalarArray3D.wrapScalar3d(array));
-        }
-        else
-        {
-            throw new RuntimeException("Input dimension must be 2 or 3");
-        }
+            case 2 -> processScalar2d(ScalarArray2D.wrapScalar2d(array));
+            case 3 -> processScalar3d(ScalarArray3D.wrapScalar3d(array));
+            default -> throw new RuntimeException("Input dimension must be 2 or 3");
+        };
     }
     
+    /**
+     * Processes a 3D array of scalar values.
+     * 
+     * @param array
+     *            the array to process
+     * @return the result array
+     */
     public ScalarArray3D<?> processScalar3d(ScalarArray3D<?> array)
     {
         int sizeZ = array.size(2);
@@ -165,6 +181,13 @@ public class DownSample extends AlgoStub implements ScalarArrayOperator
         return res;
     }
 
+    /**
+     * Processes a 2D array of scalar values.
+     * 
+     * @param array
+     *            the array to process
+     * @return the result array
+     */
     public ScalarArray2D<?> processScalar2d(ScalarArray2D<?> array)
     {
         int sizeY = array.size(1);

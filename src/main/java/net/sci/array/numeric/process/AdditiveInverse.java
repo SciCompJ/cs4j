@@ -24,6 +24,23 @@ import net.sci.array.numeric.ScalarArray;
  */
 public class AdditiveInverse extends AlgoStub implements ArrayOperator
 {
+    /**
+     * Default empty constructor.
+     */
+    public AdditiveInverse()
+    {
+    }
+    
+    /**
+     * Creates a view on an array that provides the additive inverse of the
+     * array elements.
+     * 
+     * @param <N>
+     *            the type of numeric element within the array
+     * @param array
+     *            the wrapped array
+     * @return a view on the input array
+     */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public <N extends Numeric<N>> Array<N> view(Array<N> array)
     {
@@ -41,7 +58,9 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
     }
     
     /**
-     * Applies specific processing for scalar arrays.
+     * Computes the additive inverse of element of an array of scalar values. As
+     * this method uses floating point computation, it is potentially more
+     * efficient than its numeric counterpart.
      * 
      * @param <S>
      *            the type of the scalar values
@@ -58,8 +77,8 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
     }
     
     /**
-     * Applies processing to an array of numeric values. Uses the
-     * <code>opposite()</code> method of each element within the input array.
+     * Computes the additive inverse of element of an array of numeric values.
+     * Uses the {@code opposite()} method of each element.
      * 
      * @param <N>
      *            the type of the numeric values
@@ -79,13 +98,13 @@ public class AdditiveInverse extends AlgoStub implements ArrayOperator
     public <T> Array<?> process(Array<T> array)
     {
         // switch processing depending on data type
-        if (Scalar.class.isAssignableFrom(array.elementClass()))
+        if (array.elementInstanceOf(Scalar.class))
         {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             ScalarArray<?> numArray = ScalarArray.wrap((Array<Scalar>) array);
             return processScalar(numArray);
         }
-        else if (Numeric.class.isAssignableFrom(array.elementClass()))
+        else if (array.elementInstanceOf(Numeric.class))
         {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             NumericArray<?> numArray = NumericArray.wrap((Array<Numeric>) array);
