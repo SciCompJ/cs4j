@@ -3,7 +3,6 @@
  */
 package net.sci.array.impl;
 
-import net.sci.algo.AlgoStub;
 import net.sci.array.Array;
 
 /**
@@ -33,15 +32,14 @@ public interface GenericArray<T> extends Array<T>
      */
     public static <T> GenericArray<T> create(int[] dims, T initValue)
     {
-        return switch (dims.length)
-        {
-            case 1 -> new BufferedGenericArray1D<T>(dims[0], initValue);
-            case 2 -> new BufferedGenericArray2D<T>(dims[0], dims[1], initValue);
-            case 3 -> new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], initValue);
-            default -> new BufferedGenericArrayND<T>(dims, initValue);
-        };
+        return new DenseGenericArrayFactory<T>().create(dims, initValue);
     }
 
+    public static <T> Array.Factory<T> defaultFactory()
+    {
+        return new DenseGenericArrayFactory<T>();
+    }
+    
 
     // =============================================================
     // Specialization of Array interface
@@ -53,30 +51,8 @@ public interface GenericArray<T> extends Array<T>
     }
     
     @Override
-    public default Array.Factory<T> factory()
+    public default GenericArray.Factory<T> factory()
     {
-        return new DefaultFactory<T>();
+        return new DenseGenericArrayFactory<T>();
     }
-    
-    /**
-     * The default factory for generation of GenericArray instances containing
-     * values with type T.
-     * 
-     * @param <T> the type of elements stored within the array.
-     */
-    public static class DefaultFactory<T> extends AlgoStub implements Array.Factory<T>
-    {
-        private DefaultFactory() {};
-        
-        @Override
-        public GenericArray<T> create(int[] dims, T value)
-        {
-            return switch (dims.length)
-            {
-                case 2 -> new BufferedGenericArray2D<T>(dims[0], dims[1], value);
-                case 3 -> new BufferedGenericArray3D<T>(dims[0], dims[1], dims[2], value);
-                default -> new BufferedGenericArrayND<T>(dims, value);
-            };
-        }
-    };
 }
