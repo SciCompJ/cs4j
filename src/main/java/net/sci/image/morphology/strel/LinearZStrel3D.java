@@ -8,6 +8,9 @@ import net.sci.array.binary.BinaryArray3D;
 import net.sci.array.numeric.ScalarArray3D;
 
 /**
+ * Implementation of a 3D linear structuring elements in the z-direction. This
+ * implementation is used for decomposition of the cube structuring element.
+ * 
  * @author dlegland
  *
  */

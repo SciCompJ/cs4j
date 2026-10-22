@@ -17,13 +17,11 @@ import net.sci.image.morphology.filtering.WhiteTopHat;
 
 /**
  * <p>
- * Collection of static methods for morphological filters,
- * as well as an enumeration of available methods.
+ * Collection of static methods for morphological filters.
  * </p>
  * 
  * <p>
  * Example of use:
- * <pre>
  * {@snippet lang="java" :
  * Array<?> array = ...
  * Strel se = SquareStrel.fromDiameter(5);
@@ -46,8 +44,8 @@ public class MorphologicalFilters
      * Dilation is obtained by extracting the maximum value among pixels in the
      * neighborhood given by the structuring element.
      * 
-     * This methods is mainly a wrapper to the dilation method of the strel
-     * object.
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code Dilation} operator class.
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
@@ -56,7 +54,7 @@ public class MorphologicalFilters
      * @return the result of the dilation
      * 
      * @see #erosion(Array, Strel)
-     * @see Strel#dilation(Array)
+     * @see Dilation
      */
     public static Array<?> dilation(Array<?> array, Strel strel)
     {
@@ -68,17 +66,17 @@ public class MorphologicalFilters
      * extracting the minimum value among pixels in the neighborhood given by
      * the structuring element.
      * 
-     * This methods is mainly a wrapper to the erosion method of the strel
-     * object.
-     * 
-     * @see #dilation(Array, Strel)
-     * @see Strel#erosion(Array)
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code Erosion} operator class.
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
      * @param strel
      *            the structuring element used for erosion
      * @return the result of the erosion
+     * 
+     * @see #dilation(Array, Strel)
+     * @see Erosion
      */
     public static Array<?> erosion(Array<?> array, Strel strel)
     {
@@ -91,16 +89,18 @@ public class MorphologicalFilters
      * The opening is obtained by performing an erosion followed by an dilation
      * with the reversed structuring element.
      * 
-     * This methods is mainly a wrapper to the opening method of the strel object.
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code Opening} operator class.
      * 
-     * @see #closing(Array, Strel)
-     * @see Strel#opening(Array)
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
      * @param strel
      *            the structuring element used for opening
      * @return the result of the morphological opening
+     * 
+     * @see #closing(Array, Strel)
+     * @see Opening
      */
     public static Array<?> opening(Array<?> array, Strel strel)
     {
@@ -113,15 +113,17 @@ public class MorphologicalFilters
      * The closing is obtained by performing a dilation followed by an erosion
      * with the reversed structuring element.
      *  
-     * This methods is mainly a wrapper to the opening method of the strel object.
-     * @see #opening(Array, Strel)
-     * @see Strel#closing(Array)
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code Closing} operator class.
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
      * @param strel
      *            the structuring element used for closing
      * @return the result of the morphological closing
+     * 
+     * @see #opening(Array, Strel)
+     * @see Closing
      */
     public static Array<?> closing(Array<?> array, Strel strel) 
     {
@@ -133,16 +135,19 @@ public class MorphologicalFilters
      * The white top hat is obtained by subtracting the result of an opening 
      * from the original array.
      *  
-     * The white top hat enhances light structures smaller than the structuring element.
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code WhiteTopHat} operator class.
      * 
-     * @see #blackTopHat(Array, Strel)
-     * @see #opening(Array, Strel)
+     * The white top hat enhances light structures smaller than the structuring element.
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
      * @param strel
      *            the structuring element used for computing white top-hat
      * @return the result of the white top-hat
+     * 
+     * @see #blackTopHat(Array, Strel)
+     * @see WhiteTopHat
      */
     public static Array<?> whiteTopHat(Array<?> array, Strel strel)
     {
@@ -156,14 +161,17 @@ public class MorphologicalFilters
      *  
      * The black top hat enhances dark structures smaller than the structuring element.
      * 
-     * @see #whiteTopHat(Array, Strel)
-     * @see #closing(Array, Strel)
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code BlackTopHat} operator class.
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
      * @param strel
      *            the structuring element used for black top-hat
      * @return the result of the black top-hat
+     * 
+     * @see #whiteTopHat(Array, Strel)
+     * @see BlackTopHat
      */
     public static Array<?> blackTopHat(Array<?> array, Strel strel)
     {
@@ -175,14 +183,17 @@ public class MorphologicalFilters
      * The morphological gradient is obtained by from the difference of array 
      * dilation and array erosion computed with the same structuring element. 
      * 
-     * @see #erosion(Array, Strel)
-     * @see #dilation(Array, Strel)
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code Gradient} operator class.
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
      * @param strel
      *            the structuring element used for morphological gradient
      * @return the result of the morphological gradient
+     * 
+     * @see #erosion(Array, Strel)
+     * @see Gradient
      */
     public static Array<?> gradient(Array<?> array, Strel strel)
     {
@@ -198,15 +209,19 @@ public class MorphologicalFilters
      * 
      * Homogeneous regions appear as gray.
      * 
-     * @see #erosion(Array, Strel)
-     * @see #dilation(Array, Strel)
-     * @see #gradient(Array, Strel)
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code Laplacian} operator class.
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
      * @param strel
      *            the structuring element used for morphological laplacian
      * @return the result of the morphological laplacian
+     * 
+     * @see #erosion(Array, Strel)
+     * @see #dilation(Array, Strel)
+     * @see #gradient(Array, Strel)
+     * @see Laplacian
      */
     public static Array<?> laplacian(Array<?> array, Strel strel) 
     {
@@ -218,15 +233,19 @@ public class MorphologicalFilters
      * The morphological internal gradient is obtained by from the difference 
      * of original array with the result of an erosion.
      * 
-     * @see #erosion(Array, Strel)
-     * @see #gradient(Array, Strel)
-     * @see #outerGradient(Array, Strel)
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code InnerGradient} operator class.
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
      * @param strel
      *            the structuring element used for morphological internal gradient
      * @return the result of the morphological internal gradient
+     * 
+     * @see #erosion(Array, Strel)
+     * @see #gradient(Array, Strel)
+     * @see #outerGradient(Array, Strel)
+     * @see InnerGradient
      */
     public static Array<?> innerGradient(Array<?> array, Strel strel)
     {
@@ -238,14 +257,18 @@ public class MorphologicalFilters
      * The morphological external gradient is obtained by from the difference 
      * of the result of a dilation and of the original array .
      * 
-     * @see #dilation(Array, Strel)
-     * @see #innerGradient(Array, Strel)
+     * This methods is mainly a wrapper to the {@code process()} method of the
+     * {@code OuterGradient} operator class.
      * 
      * @param array
      *            the input array to process (grayscale or RGB)
      * @param strel
      *            the structuring element used for morphological external gradient
      * @return the result of the morphological external gradient
+     * 
+     * @see #dilation(Array, Strel)
+     * @see #innerGradient(Array, Strel)
+     * @see OuterGradient
      */
     public static Array<?> outerGradient(Array<?> array, Strel strel) 
     {

@@ -10,20 +10,26 @@ import net.sci.array.numeric.ScalarArray2D;
 import net.sci.array.numeric.UInt8Array2D;
 
 /**
- * <pre>{@code
-    // Creates a disk structuring element with radius 6
-    Strel2D strel = new SlidingDiskStrel(6);
-    
-    // Creates a simple array with white dot in the middle
-    UInt8Array2D array = UInt8Array2D.create(15, 15);
-    array.setValue(7, 7, 255);
-    
-    // applies dilation on array
-    ScalarArray2D<?> dilated = strel.dilation(array);
-    
-    // display result
-    dilated.print(System.out);
- * }</pre>
+ * An implementation of disk structuring element that uses a local
+ * histogram of the gray values within the neighborhood to reduce the
+ * computational complexity.
+ * 
+ * 
+ * {@snippet :
+ * // Creates a disk structuring element with radius 6
+ * Strel2D strel = new SlidingDiskStrel(6);
+ * 
+ * // Creates a simple array with white dot in the middle
+ * UInt8Array2D array = UInt8Array2D.create(15, 15);
+ * array.setValue(7, 7, 255);
+ * 
+ * // applies dilation on array
+ * ScalarArray2D<?> dilated = strel.dilation(array);
+ * 
+ * // display result
+ * dilated.print(System.out);
+ * }
+ *
  * @author dlegland
  *
  */

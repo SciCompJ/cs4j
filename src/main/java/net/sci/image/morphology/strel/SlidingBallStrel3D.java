@@ -10,20 +10,25 @@ import net.sci.array.numeric.ScalarArray3D;
 import net.sci.array.numeric.UInt8Array3D;
 
 /**
- * <pre>{@code
-    // Creates a 3D ball structuring element with radius 3
-    Strel3D strel = new SlidingBallStrel3D(3);
-    
-    // Creates a simple array with white dot in the middle
-    UInt8Array3D array = UInt8Array3D.create(9, 9, 9);
-    array.setValue(4, 4, 4, 255);
-    
-    // applies dilation on array
-    ScalarArray3D<?> dilated = strel.dilation(array);
-    
-    // display result
-    dilated.print(System.out);
- * }</pre>
+ * An implementation of 3D ball structuring element that uses a local histogram
+ * of the gray values within the neighborhood to reduce the computational
+ * complexity.
+ * 
+ * {@snippet :
+ * // Creates a 3D ball structuring element with radius 3
+ * Strel3D strel = new SlidingBallStrel3D(3);
+ * 
+ * // Creates a simple array with white dot in the middle
+ * UInt8Array3D array = UInt8Array3D.create(9, 9, 9);
+ * array.setValue(4, 4, 4, 255);
+ * 
+ * // applies dilation on array
+ * ScalarArray3D<?> dilated = strel.dilation(array);
+ * 
+ * // display result
+ * dilated.print(System.out);
+ * }
+ * 
  * @author dlegland
  *
  */

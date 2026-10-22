@@ -190,7 +190,7 @@ public class BinaryMorphology
      *            the structuring element used for top hat
      * @return the result of the black top hat.
      */
-    public static final BinaryArray blakTophHat(BinaryArray array, Strel strel)
+    public static final BinaryArray blackTopHat(BinaryArray array, Strel strel)
     {
         return new BinaryBlackTopHat(strel).process(array);
     }
