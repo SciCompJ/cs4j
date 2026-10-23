@@ -57,7 +57,7 @@ public class FindNonZeroElements
     public Collection<? extends Point> process(Array<?> array)
     {
         // first check type
-        if (Scalar.class.isAssignableFrom(array.elementClass()))
+        if (array.elementInstanceOf(Scalar.class))
         {
             @SuppressWarnings({ "unchecked", "rawtypes" })
             ScalarArray<?> scalarArray = ScalarArray.wrap((Array<? extends Scalar>) array);
@@ -65,7 +65,7 @@ public class FindNonZeroElements
             return switch (scalarArray.dimensionality())
             {
                 case 2 -> process2d(ScalarArray2D.wrap(scalarArray));
-                case 3 -> process2d(ScalarArray2D.wrap(scalarArray));
+                case 3 -> process3d(ScalarArray3D.wrap(scalarArray));
                 default -> throw new IllegalArgumentException("Implemented only for 2D and 3D arrays, not: " + scalarArray.dimensionality());
             };
         }
